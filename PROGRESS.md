@@ -9,14 +9,21 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 - Cleared a shorter supported iPhone-class 375 x 667 / 200% text-pressure route
   audit. The first full sweep exposed `/progress` with the lower-priority
   `Explore first` card visible in the floating tab-bar hit zone, where its
-  center hit the surrounding paywall wrapper instead of the button. ProGate now
-  defers that secondary no-card card below the first support-floor Progress
+  center hit the surrounding paywall wrapper instead of the button. Cache-cleared
+  follow-ups also exposed lower-priority Recommendation Preferences, Shelf
+  Manual, and Skin Notes controls peeking into the bottom edge. ProGate now
+  defers the secondary no-card card below the first support-floor Progress
   viewport while keeping compliance, dismiss, pricing, store-unavailable
-  feedback, and `Start free trial` complete. The focused `/progress` rerun and
-  final 49-route Expo web sweep report zero failed routes in
-  `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-667-full-postfix/`,
-  with the bug record in
-  `docs/e2e-bug-reports/2026-07-09-text-pressure-200-iphone-375-667-progress-paywall.md`.
+  feedback, and `Start free trial` complete; Recommendation Preferences and Skin
+  Notes push lower-priority controls below the first viewport; compact Shelf
+  Manual keeps the first screen to name, brand/category, and Continue. Focused
+  reruns and the final cache-cleared 49-route Expo web sweep report zero failed
+  routes in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-667-full-postfix3-clear/`,
+  with bug records in
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-200-iphone-375-667-progress-paywall.md`
+  and
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-200-iphone-375-667-follow-up-clearance.md`.
 
 - Hardened the Tas handoff audit around the accepted device support floor.
   `docs:tas-todo-audit:strict` now fails if `docs/FOR_TAS_TO_DO.md` drifts

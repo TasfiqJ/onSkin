@@ -47,7 +47,7 @@ describe('Community route contracts', () => {
     expect(source).toContain('const splitShortCommunity = height < 410;');
     expect(source).toContain('const microShortCommunity = height < 380;');
     expect(source).toContain(
-      'const supportFloorTextPressureCommunity = width <= 390 && height >= 640 && height < 700;',
+      'const supportFloorTextPressureCommunity = width <= 390 && height < 700;',
     );
     expect(source).toContain('const modernPhoneCommunity = height < 980;');
     expect(source).toContain("ultraShortCommunity\n              ? 'pb-20 pt-0'");
@@ -77,7 +77,7 @@ describe('Community route contracts', () => {
       'keepUltraShortNarrowSectionBelowFold\n                      ? { marginTop: 176 }',
     );
     expect(source).toContain(': keepSupportFloorSectionBelowFold');
-    expect(source).toContain('? { marginTop: 96 }');
+    expect(source).toContain('? { marginTop: 160 }');
     expect(source).toContain(': keepNarrowSectionBelowFold');
     expect(source).toContain('? { marginTop: 140 }');
     expect(source).toContain(': keepShortModernSectionBelowFold');
@@ -88,6 +88,7 @@ describe('Community route contracts', () => {
       'const keepNarrowNextNoteBelowFold = narrowCompactCommunity && noteIndex > 0;',
     );
     expect(source).toContain('const keepModernSensitiveNoteBelowFold =');
+    expect(source).toContain('const keepSupportFloorSensitiveFirstNoteBelowFold =');
     expect(source).toContain('const keepSupportFloorSensitiveNoteBelowFold =');
     expect(source).toContain(
       "g.topic.slug === 'sensitive-skin' &&\n                    noteIndex > 0;",
@@ -95,6 +96,8 @@ describe('Community route contracts', () => {
     expect(source).toContain(
       'keepNextNoteBelowFold\n                          ? { marginTop: 72 }',
     );
+    expect(source).toContain(': keepSupportFloorSensitiveFirstNoteBelowFold');
+    expect(source).toContain('? { marginTop: 280 }');
     expect(source).toContain(': keepSupportFloorSensitiveNoteBelowFold');
     expect(source).toContain('? { marginTop: 224 }');
     expect(source).toContain(': keepModernSensitiveNoteBelowFold');
@@ -205,7 +208,9 @@ describe('Community route contracts', () => {
     );
     expect(source).toContain("className={supportFloorMissingNote ? 'mt-2' : 'mt-6'}");
     expect(source).toContain("label={supportFloorMissingNote ? 'Back' : 'Back to Skin Notes'}");
-    expect(source).toContain("className={supportFloorMissingNote ? 'min-h-[48px] py-2' : undefined}");
+    expect(source).toContain(
+      "className={supportFloorMissingNote ? 'min-h-[48px] py-2' : undefined}",
+    );
     expect(source).toContain('accessibilityLabel="Back to Skin Notes"');
     expect(source).toContain('router.replace(APP_COMMUNITY_ROUTE)');
     expect(source).not.toContain('This note isn’t available right now.');

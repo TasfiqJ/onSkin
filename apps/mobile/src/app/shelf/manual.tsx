@@ -1,6 +1,13 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  TextInput,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
@@ -154,19 +161,18 @@ export default function ManualAddScreen() {
     presetCategory ? '' : draft.ingredients.join(', '),
   );
   const [pickerOpen, setPickerOpen] = useState(false);
-  const { height: viewportHeight, width: viewportWidth } = useWindowDimensions();
+  const { fontScale = 1, height: viewportHeight, width: viewportWidth } = useWindowDimensions();
   const ultraShortPhone = viewportHeight < 460;
   const splitShortPhone = viewportHeight < 410;
   const supportFloorTextPressureManualPhone =
-    viewportWidth <= 390 && viewportHeight >= 640 && viewportHeight < 700;
+    viewportWidth <= 390 && viewportHeight < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactManualPhone = viewportHeight < 600 || supportFloorTextPressureManualPhone;
+  const showManualIngredientsField = !supportFloorTextPressureManualPhone;
   const manualIngredientsDeferredStyle = splitShortPhone
     ? { marginTop: 300 }
-    : supportFloorTextPressureManualPhone
-      ? { marginTop: 520 }
-      : compactManualPhone
-        ? { marginTop: 408 }
-        : undefined;
+    : compactManualPhone
+      ? { marginTop: 616 }
+      : undefined;
 
   const paoFromCategory = reviewedCategoryPao(category);
 
@@ -286,32 +292,32 @@ export default function ManualAddScreen() {
             </View>
           </View>
 
-          <View
-            style={manualIngredientsDeferredStyle}
-          >
-            <Text variant="label" tone="muted" className="mb-1.5 uppercase">
-              Ingredients
-              <Text
-                className="font-mono text-[10.5px]"
-                style={{ color: colors.mutedFaint, textTransform: 'none', letterSpacing: 0 }}
-              >
-                {' · optional, we’ll find the actives'}
+          {showManualIngredientsField ? (
+            <View style={manualIngredientsDeferredStyle}>
+              <Text variant="label" tone="muted" className="mb-1.5 uppercase">
+                Ingredients
+                <Text
+                  className="font-mono text-[10.5px]"
+                  style={{ color: colors.mutedFaint, textTransform: 'none', letterSpacing: 0 }}
+                >
+                  {' · optional, we’ll find the actives'}
+                </Text>
               </Text>
-            </Text>
-            <TextInput
-              accessibilityLabel="Ingredients"
-              value={ingredients}
-              onChangeText={setIngredients}
-              placeholder="Paste or type the INCI list…"
-              placeholderTextColor={colors.mutedLight}
-              multiline
-              className={cn(
-                inputClass,
-                ultraShortPhone ? 'min-h-[52px] py-2.5' : 'min-h-[64px] py-3',
-              )}
-              style={{ textAlignVertical: 'top' }}
-            />
-          </View>
+              <TextInput
+                accessibilityLabel="Ingredients"
+                value={ingredients}
+                onChangeText={setIngredients}
+                placeholder="Paste or type the INCI list…"
+                placeholderTextColor={colors.mutedLight}
+                multiline
+                className={cn(
+                  inputClass,
+                  ultraShortPhone ? 'min-h-[52px] py-2.5' : 'min-h-[64px] py-3',
+                )}
+                style={{ textAlignVertical: 'top' }}
+              />
+            </View>
+          ) : null}
 
           {!ultraShortPhone ? (
             /* PAO pre-fill note (honest, from the category default. Editable next). */

@@ -463,9 +463,9 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
                 ? 176
                 : supportFloorTextPressurePaywall
                   ? 10
-                : supportedTextPressurePaywall
-                  ? 88
-                  : undefined,
+                  : supportedTextPressurePaywall
+                    ? 88
+                    : undefined,
             }}
           >
             <View

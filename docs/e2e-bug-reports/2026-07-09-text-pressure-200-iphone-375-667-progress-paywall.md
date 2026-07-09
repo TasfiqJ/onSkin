@@ -56,9 +56,9 @@ For the support-floor Progress contextual paywall, defer the lower-priority `Exp
 ## Post-Fix Evidence
 
 - Focused screenshot/report set: `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-667-progress-postfix/`
-- Full screenshot/report set: `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-667-full-postfix/`
-- Summary: `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-667-full-postfix/summary.json`
-- UI snapshot: `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-667-full-postfix/progress.json`
+- Full screenshot/report set: `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-667-full-postfix3-clear/`
+- Summary: `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-667-full-postfix3-clear/summary.json`
+- UI snapshot: `test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-667-full-postfix3-clear/progress.json`
 - Terminal transcript: `npm run e2e:text-pressure`
 
 ## Remaining Risk

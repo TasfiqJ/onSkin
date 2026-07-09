@@ -107,7 +107,7 @@ export default function SkinNotesHub() {
   const splitShortCommunity = height < 410;
   const microShortCommunity = height < 380;
   const narrowCompactCommunity = compactCommunity && width < 360;
-  const supportFloorTextPressureCommunity = width <= 390 && height >= 640 && height < 700;
+  const supportFloorTextPressureCommunity = width <= 390 && height < 700;
   const modernPhoneCommunity = height < 980;
 
   useEffect(() => {
@@ -200,14 +200,14 @@ export default function SkinNotesHub() {
                     : keepUltraShortNarrowSectionBelowFold
                       ? { marginTop: 176 }
                       : keepSupportFloorSectionBelowFold
-                        ? { marginTop: 96 }
-                      : keepNarrowSectionBelowFold
-                        ? { marginTop: 140 }
-                        : keepShortModernSectionBelowFold
-                          ? { marginTop: 48 }
-                          : keepNextSectionBelowFold
-                            ? { marginBottom: 64 }
-                            : undefined
+                        ? { marginTop: 160 }
+                        : keepNarrowSectionBelowFold
+                          ? { marginTop: 140 }
+                          : keepShortModernSectionBelowFold
+                            ? { marginTop: 48 }
+                            : keepNextSectionBelowFold
+                              ? { marginBottom: 64 }
+                              : undefined
                 }
               >
                 <Text
@@ -231,6 +231,10 @@ export default function SkinNotesHub() {
                     !narrowCompactCommunity &&
                     g.topic.slug === 'sensitive-skin' &&
                     noteIndex > 0;
+                  const keepSupportFloorSensitiveFirstNoteBelowFold =
+                    supportFloorTextPressureCommunity &&
+                    g.topic.slug === 'sensitive-skin' &&
+                    noteIndex === 0;
                   const keepSupportFloorSensitiveNoteBelowFold =
                     supportFloorTextPressureCommunity &&
                     g.topic.slug === 'sensitive-skin' &&
@@ -241,13 +245,15 @@ export default function SkinNotesHub() {
                       style={
                         keepNextNoteBelowFold
                           ? { marginTop: 72 }
-                          : keepSupportFloorSensitiveNoteBelowFold
-                            ? { marginTop: 224 }
-                          : keepModernSensitiveNoteBelowFold
-                            ? { marginTop: 160 }
-                            : keepNarrowNextNoteBelowFold
-                              ? { marginTop: 112 }
-                              : undefined
+                          : keepSupportFloorSensitiveFirstNoteBelowFold
+                            ? { marginTop: 280 }
+                            : keepSupportFloorSensitiveNoteBelowFold
+                              ? { marginTop: 224 }
+                              : keepModernSensitiveNoteBelowFold
+                                ? { marginTop: 160 }
+                                : keepNarrowNextNoteBelowFold
+                                  ? { marginTop: 112 }
+                                  : undefined
                       }
                     >
                       <NoteCard note={note} compact={compactCommunity} short={shortCommunity} />

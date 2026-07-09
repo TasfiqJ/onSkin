@@ -171,14 +171,14 @@ export default function PreferencesScreen() {
       : undefined;
   const splitShortPreferenceDeferredGroupStyle =
     supportFloorPreferences || supportFloorTextPressurePreferences
-      ? { marginTop: 224 }
+      ? { marginTop: 400 }
       : { marginTop: 192 };
   const modernTextPressureBudgetGroupStyle =
     supportFloorPreferences || boundaryTextPressurePreferences
       ? { marginTop: 320 }
       : (modernTextPressurePreferences || tallTextPressurePreferences) && !compactPreferences
-      ? { marginTop: 112 }
-      : undefined;
+        ? { marginTop: 112 }
+        : undefined;
   const modernTextPressureTextureGroupStyle = androidMidTextPressurePreferences
     ? { marginTop: 184 }
     : modernTextPressurePreferences && !compactPreferences

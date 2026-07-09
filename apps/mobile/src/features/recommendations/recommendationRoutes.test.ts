@@ -192,7 +192,7 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('numberOfLines={1}');
     expect(source).toContain('const splitShortPreferenceDeferredGroupStyle =');
     expect(source).toContain('supportFloorPreferences || supportFloorTextPressurePreferences');
-    expect(source).toContain('? { marginTop: 224 }');
+    expect(source).toContain('? { marginTop: 400 }');
     expect(source).toContain(': { marginTop: 192 };');
     expect(source).toContain('const modernTextPressurePreferences = height < 900;');
     expect(source).toContain('const boundaryTextPressurePreferences =');

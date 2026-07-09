@@ -200,9 +200,7 @@ describe('paywall mobile contracts', () => {
       'const progressTextPressurePaywall = insideProgressPhotoPaywall && supportedTextPressurePaywall;',
     );
     expect(proGate).toContain('const supportFloorProgressExploreFirstDeferred =');
-    expect(proGate).toContain(
-      'supportFloorTextPressurePaywall && insideProgressPhotoPaywall;',
-    );
+    expect(proGate).toContain('supportFloorTextPressurePaywall && insideProgressPhotoPaywall;');
     expect(proGate).toContain('compactProgressPhotoPaywall ||\n    progressTextPressurePaywall ||');
     expect(proGate).toContain('progressTextPressurePaywall ||\n    boundaryTextPressurePaywall ||');
     expect(proGate).toContain('const microShortDeferredCtaStyle = microShortPaywall');

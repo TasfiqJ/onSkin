@@ -533,13 +533,19 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('accessibilityLabel="Close category picker"');
     expect(source).toContain('useSafeAreaInsets');
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
+    expect(source).toContain('Platform,');
+    expect(source).toContain('useWindowDimensions,');
+    expect(source).toContain('fontScale = 1,');
     expect(source).toContain('const ultraShortPhone = viewportHeight < 460;');
     expect(source).toContain('const splitShortPhone = viewportHeight < 410;');
     expect(source).toContain(
-      'const supportFloorTextPressureManualPhone =\n    viewportWidth <= 390 && viewportHeight >= 640 && viewportHeight < 700;',
+      "viewportWidth <= 390 && viewportHeight < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
     );
     expect(source).toContain(
       'const compactManualPhone = viewportHeight < 600 || supportFloorTextPressureManualPhone;',
+    );
+    expect(source).toContain(
+      'const showManualIngredientsField = !supportFloorTextPressureManualPhone;',
     );
     expect(source).toContain('const insets = useSafeAreaInsets();');
     expect(source).toContain('const ultraShortSheet = viewportHeight < 460;');
@@ -573,8 +579,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('compactManualPhone');
     expect(source).toContain('const manualIngredientsDeferredStyle = splitShortPhone');
     expect(source).toContain('? { marginTop: 300 }');
-    expect(source).toContain('? { marginTop: 520 }');
-    expect(source).toContain('? { marginTop: 408 }');
+    expect(source).toContain('? { marginTop: 616 }');
+    expect(source).toContain('compactManualPhone\n      ? { marginTop: 616 }');
+    expect(source).toContain('{showManualIngredientsField ? (');
     expect(source).toContain('style={manualIngredientsDeferredStyle}');
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain(
