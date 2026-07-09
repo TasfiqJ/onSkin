@@ -9,6 +9,13 @@ below against both `ANALYTICS_ALLOWED_EVENTS` and runtime `track(...)` calls in
 non-test app source. A beta event is not considered ready if it is only
 documented or allowlisted.
 
+Phase H required events from `docs/CODEX_IMPLEMENTATION_PROMPT.md` are pinned
+as a non-negotiable subset of the minimum coverage. Do not remove or rename:
+`onboarding_started`, `product_added`, `first_useful_insight`,
+`conflict_detected`, `routine_created`, `first_checkoff_completed`,
+`routine_checkoff_completed`, `cycle_night_completed`, `photo_baseline_added`,
+`paywall_shown`, `reverse_trial_started`, or `purchase_completed`.
+
 ## Privacy Rules
 
 - Event properties must be from `ANALYTICS_ALLOWED_PROP_KEYS`.

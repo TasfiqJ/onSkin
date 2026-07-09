@@ -19,6 +19,20 @@ const env = envSnapshot();
 const registryPath = 'apps/mobile/src/lib/analytics/eventRegistry.ts';
 const trackerPath = 'apps/mobile/src/lib/analytics/track.ts';
 const schemaPath = 'docs/phase-10/beta-event-schema.md';
+const REQUIRED_PHASE_H_EVENTS = [
+  'onboarding_started',
+  'product_added',
+  'first_useful_insight',
+  'conflict_detected',
+  'routine_created',
+  'first_checkoff_completed',
+  'routine_checkoff_completed',
+  'cycle_night_completed',
+  'photo_baseline_added',
+  'paywall_shown',
+  'reverse_trial_started',
+  'purchase_completed',
+];
 
 for (const file of [registryPath, trackerPath, schemaPath])
   block(errors, exists(file), `${file} is missing.`);
@@ -104,6 +118,7 @@ function runtimeTrackedEvents() {
 }
 
 const betaEvents = minimumBetaEvents();
+const betaEventSet = new Set(betaEvents);
 const trackedEvents = runtimeTrackedEvents();
 
 block(
@@ -111,6 +126,13 @@ block(
   betaEvents.length >= 30,
   'Beta event schema must list the minimum V1 beta event coverage.',
 );
+for (const event of REQUIRED_PHASE_H_EVENTS) {
+  block(
+    errors,
+    betaEventSet.has(event),
+    `Phase H beta event contract is missing from Minimum Event Coverage: ${event}.`,
+  );
+}
 for (const event of betaEvents) {
   block(
     errors,

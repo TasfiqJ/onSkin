@@ -82,6 +82,7 @@ for (const file of closedBetaPacketRequiredSourceFiles) {
 }
 
 const betaPacketBuilder = read('scripts/phase10/build-beta-packet.mjs');
+const betaAnalyticsAudit = read('scripts/phase10/beta-analytics-audit.mjs');
 block(
   errors,
   betaPacketBuilder.includes('const sourceFiles = phase10SourceFiles();') &&
@@ -103,6 +104,12 @@ block(
   /Closed beta packet generated with a dirty Git worktree/.test(betaPacketBuilder) &&
     /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(betaPacketBuilder),
   'Phase 10 closed beta packet must warn on dirty worktrees and expose Git status in Markdown.',
+);
+block(
+  errors,
+  betaAnalyticsAudit.includes('REQUIRED_PHASE_H_EVENTS') &&
+    betaAnalyticsAudit.includes('Phase H beta event contract'),
+  'Phase 10 beta analytics audit must pin the required Phase H event contract.',
 );
 
 block(
