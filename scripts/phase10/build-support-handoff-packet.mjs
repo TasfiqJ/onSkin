@@ -148,7 +148,7 @@ function fileRecord(path) {
 }
 
 function extractArray(source, constName, blockers) {
-  const pattern = new RegExp(`const ${constName} = \\\\[([\\\\s\\\\S]*?)\\\\] as const;`);
+  const pattern = new RegExp(`const ${constName} = \\[([\\s\\S]*?)\\] as const;`);
   const match = source.match(pattern);
   if (!match) {
     blockers.push(`${routePath} is missing ${constName}.`);
