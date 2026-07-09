@@ -33,6 +33,7 @@ const generatedOutputPaths = [
 const sourceHashPaths = [
   'package.json',
   '.env.example',
+  'scripts/phase4/build-source-worklist.mjs',
   'scripts/phase4/beta-coverage-report.mjs',
   'scripts/phase4/beta-coverage-report-smoke.mjs',
   'scripts/phase4/catalog-qa-report.mjs',
@@ -40,6 +41,8 @@ const sourceHashPaths = [
   'scripts/phase9/lib.mjs',
   'docs/FOR_TAS_TO_DO.md',
   'docs/phase-4/beta-coverage-report.md',
+  'docs/phase-4/generated/source-worklist.json',
+  'docs/phase-4/generated/source-worklist.md',
   'docs/phase-4/observability-dashboard.md',
   'docs/phase-4/phase-4-exit-review.md',
   'docs/phase-4/generated/catalog-qa-report.json',

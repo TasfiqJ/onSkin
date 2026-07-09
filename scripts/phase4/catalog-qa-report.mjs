@@ -15,6 +15,7 @@ const reportOutputPaths = [jsonOutputPath, mdOutputPath].map((path) =>
 const requiredSourceHashPaths = [
   'package.json',
   'scripts/phase4/catalog-qa-report.mjs',
+  'scripts/phase4/build-source-worklist.mjs',
   'scripts/phase4/beta-coverage-report.mjs',
   'scripts/phase4/beta-coverage-report-smoke.mjs',
   'scripts/phase4/import-obf-snapshot.mjs',
@@ -28,6 +29,8 @@ const requiredSourceHashPaths = [
   'docs/phase-4/beta-coverage-report.md',
   'docs/phase-4/catalog-source-memo-cosing.md',
   'docs/phase-4/catalog-source-memo-open-beauty-facts.md',
+  'docs/phase-4/generated/source-worklist.json',
+  'docs/phase-4/generated/source-worklist.md',
   'docs/phase-4/odbl-compliance-memo.md',
   'docs/phase-4/phase-4-exit-review.md',
 ];
