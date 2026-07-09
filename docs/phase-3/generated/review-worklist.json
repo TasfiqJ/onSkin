@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T11:31:47.700Z",
+  "generatedAt": "2026-07-09T11:43:42.231Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for clinical and cosmetic chemistry launch gates.",
   "strict": false,
-  "gitSha": "4c54cc9a6d5e904a46ad27b22ba9fbba2c433b60",
+  "gitSha": "248b75ff3a7f96ee7ca953d8a44097e96bbff8f6",
   "gitStatus": "",
   "reviewLogs": [
     {
