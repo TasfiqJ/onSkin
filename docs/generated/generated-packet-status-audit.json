@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T20:53:16.096Z",
+  "generatedAt": "2026-07-09T20:53:43.107Z",
   "status": "pass",
   "strict": false,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
