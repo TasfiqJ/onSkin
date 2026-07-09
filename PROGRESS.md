@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Extended direct-entry onboarding and downgrade paywall compact support-band
+  guards through 430 x 640 at 200% text pressure. Focused mobile route
+  contracts pass, and the five-route Expo web audit for `/onboarding/age`,
+  `/onboarding/goals`, `/onboarding/products`, `/onboarding/paywall`, and
+  `/paywall/downgrade` reports zero failed routes in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-onboarding-paywall-430-640-current/`.
+
 - Added `npm run launch:verify` as a root non-mutating launch-readiness sweep
   for source changes that should not rebuild generated packets. The readiness
   status audit now requires the command and verifies it includes source-packet,

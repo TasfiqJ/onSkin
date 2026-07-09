@@ -65,7 +65,7 @@ export default function PaywallScreen() {
   const monthlyEquivalent = annualDisplay.pricePerMonthLabel;
   const quizCompletion = getQuizCompletionState(quizAnswers);
   const supportFloorTextPressurePaywall =
-    width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
+    width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPaywall = height < 640 || supportFloorTextPressurePaywall;
 
   function onStartTrial() {
@@ -153,7 +153,7 @@ export default function PaywallScreen() {
             </Text>
           </View>
           <View className="flex-row items-baseline justify-between">
-            <View>
+            <View style={{ flexShrink: 1, minWidth: 0 }}>
               <Text variant="bodySm" style={{ color: 'rgba(250,247,242,0.6)' }}>
                 {annualDisplay.introLabel}
               </Text>
@@ -179,7 +179,15 @@ export default function PaywallScreen() {
                 adjustsFontSizeToFit
                 minimumFontScale={0.86}
                 numberOfLines={1}
-                style={{ color: 'rgba(250,247,242,0.55)', textAlign: 'right' }}
+                style={{
+                  color: 'rgba(250,247,242,0.55)',
+                  flexShrink: 0,
+                  fontSize: compactPaywall ? 10.5 : undefined,
+                  letterSpacing: 0,
+                  lineHeight: compactPaywall ? 13 : undefined,
+                  minWidth: compactPaywall ? 104 : 92,
+                  textAlign: 'right',
+                }}
               >{`${monthlyEquivalent}/mo`}</Text>
             ) : null}
           </View>

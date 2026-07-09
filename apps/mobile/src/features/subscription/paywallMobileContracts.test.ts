@@ -49,7 +49,7 @@ describe('paywall mobile contracts', () => {
     const downgrade = readAppRoute('paywall/downgrade.tsx');
     expect(downgrade).toContain('const supportFloorTextPressurePaywall =');
     expect(downgrade).toContain(
-      "width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
+      "width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
     );
     expect(downgrade).toContain(
       'const compactPaywall = height < 640 || supportFloorTextPressurePaywall;',
@@ -410,6 +410,8 @@ describe('paywall mobile contracts', () => {
       "style={{ flexShrink: 0, letterSpacing: 0, minWidth: 92, textAlign: 'right' }}",
     );
     expect(upsell).toContain("style={{ letterSpacing: 0, textAlign: 'right' }}");
+    expect(onboardingPaywall).toContain('<View style={{ flexShrink: 1, minWidth: 0 }}>');
+    expect(onboardingPaywall).toContain('minWidth: compactPaywall ? 104 : 92');
   });
 
   it('keeps contextual routine paywalls value-first for first-time free users', () => {
@@ -681,7 +683,7 @@ describe('paywall mobile contracts', () => {
     expect(source).toContain('const compactPaywall = height < 640');
     expect(source).toContain('const supportFloorTextPressurePaywall =');
     expect(source).toContain(
-      "width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
+      "width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
     );
     expect(source).toContain(
       'const compactPaywall = height < 640 || supportFloorTextPressurePaywall;',

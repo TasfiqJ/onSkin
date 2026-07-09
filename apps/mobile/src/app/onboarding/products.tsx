@@ -128,7 +128,7 @@ export default function ProductsScreen() {
   const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);
   const added = data?.items ?? [];
   const supportFloorTextPressurePhone =
-    width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
+    width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPhone = height < 640 || supportFloorTextPressurePhone;
   const compactFooterAdds = compactPhone && name.trim().length > 0;
   const showCompactCategoryFooter = compactFooterAdds;

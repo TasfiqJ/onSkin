@@ -79,7 +79,7 @@ describe('onboarding route contracts', () => {
     for (const source of [age, goals, products]) {
       expect(source).toContain('const supportFloorTextPressurePhone =');
       expect(source).toContain(
-        "width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
+        "width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web')",
       );
       expect(source).toContain(
         'const compactPhone = height < 640 || supportFloorTextPressurePhone;',

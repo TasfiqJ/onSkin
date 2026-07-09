@@ -24,7 +24,7 @@ export default function DowngradeScreen() {
   const annual = offering.data?.annual ?? null;
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const supportFloorTextPressurePaywall =
-    width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
+    width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPaywall = height < 640 || supportFloorTextPressurePaywall;
 
   function onRenew() {

@@ -45,6 +45,14 @@ Fresh verification through 2026-07-09:
   320 x 480 with zero failed routes, zero clipped visible controls, zero blocked
   center hit-tests, and zero unexpected browser logs. Evidence:
   `test-results/human-e2e/2026-07-09/support-floor-480-config-spacing-guard/`.
+- A focused 430 x 640 / 200% support-band pass now covers the direct-entry
+  onboarding and downgrade paywall routes omitted from the earlier 430-wide
+  route sweep. `/onboarding/age`, `/onboarding/goals`,
+  `/onboarding/products`, `/onboarding/paywall`, and `/paywall/downgrade`
+  report zero failed routes, zero clipped visible controls, zero sub-44 visible
+  controls, zero blocked center hit-tests, zero horizontal overflow, and zero
+  disallowed browser logs. Evidence:
+  `test-results/human-e2e/2026-07-09/text-pressure-200-onboarding-paywall-430-640-current/`.
 - Settings Privacy direct entries and contextual Progress paywalls have fresh
   2026-07-09 browser evidence for the Terms-row support-floor spacer, compact
   tall-phone paywall compliance header, and compact visible Explore-first copy
