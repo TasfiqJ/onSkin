@@ -1,9 +1,9 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-09T18:27:36.123Z
+Generated: 2026-07-09T18:29:14.017Z
 Status: pass
-Git SHA: 03fb31af74c81f76fab88391b2d8c7b8a040f68e
-Git status: DIRTY
+Git SHA: b519d16499c6aa6d8584e56a4d4f6d10c09b9bc1
+Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
 privacy/security, and IP/FTO review logs into an operator handoff. It does
@@ -16,7 +16,7 @@ reviewers must inspect before launch gates can close.
 - Source files hashed: 232
 - Missing source files: 0
 - Blockers: 0
-- Warnings: 1
+- Warnings: 0
 
 ## Items
 
@@ -718,4 +718,4 @@ Sources:
 
 ## Warnings
 
-- Phase 3 review worklist generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.
+- None.
