@@ -1,7 +1,7 @@
 {
-  "baseUrl": "http://localhost:8281",
+  "baseUrl": "http://localhost:8289",
   "evidenceDir": "test-results/human-e2e/2026-07-09/support-floor-480-config-spacing-guard",
-  "generatedAt": "2026-07-09T10:57:01.445Z",
+  "generatedAt": "2026-07-09T11:26:36.246Z",
   "routeCount": 49,
   "scale": 1,
   "status": "pass",
@@ -118,7 +118,7 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/recommendations/preferences",
-      "scaledCount": 22
+      "scaledCount": 21
     },
     {
       "disallowedLogCount": 0,
@@ -142,7 +142,7 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/community/ask",
-      "scaledCount": 5
+      "scaledCount": 6
     },
     {
       "disallowedLogCount": 0,
@@ -202,13 +202,13 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/settings/privacy",
-      "scaledCount": 71
+      "scaledCount": 61
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/trend/optin",
-      "scaledCount": 5
+      "scaledCount": 6
     },
     {
       "disallowedLogCount": 0,

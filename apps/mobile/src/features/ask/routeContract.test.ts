@@ -112,7 +112,7 @@ describe('Ask route launch contracts', () => {
       "const SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict'];",
     );
     expect(home).toContain('const SUPPORT_FLOOR_PROMPT_LABELS: Record<SuggestedPromptKey, string> = {');
-    expect(home).toContain("conflict: 'Check shelf conflicts'");
+    expect(home).toContain("conflict: 'Conflicts'");
     expect(home).toContain("tonight: 'Plan tonight'");
     expect(home).toContain("fit: 'Check product fit'");
     expect(home).toContain('const { height, width } = useWindowDimensions();');

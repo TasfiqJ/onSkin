@@ -151,6 +151,9 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain(
       'const tallTextPressurePreferences = width <= 430 && height >= 900 && height < 980;',
     );
+    expect(source).toContain('const showPreferencesSubtitle = !compactPreferences;');
+    expect(source).toContain('{showPreferencesSubtitle ? (');
+    expect(source).toContain('{REC_COPY.preferences.subtitle}');
     expect(source).toContain('const valuesLabelClassName = ultraShortPreferences');
     expect(source).toContain("? 'mb-1.5 mt-3'");
     expect(source).toContain("? 'mb-1.5 mt-12'");
@@ -173,7 +176,7 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('dense?: boolean');
     expect(source).toContain('ultraDense?: boolean');
     expect(source).toContain('numberOfLines={1}');
-    expect(source).toContain('const splitShortPreferenceDeferredGroupStyle = { marginTop: 176 };');
+    expect(source).toContain('const splitShortPreferenceDeferredGroupStyle = { marginTop: 192 };');
     expect(source).toContain('const modernTextPressurePreferences = height < 900;');
     expect(source).toContain('const modernTextPressureBudgetGroupStyle =');
     expect(source).toContain('modernTextPressurePreferences || tallTextPressurePreferences');

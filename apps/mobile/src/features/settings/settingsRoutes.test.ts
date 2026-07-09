@@ -38,11 +38,11 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 0;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 8;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_SCROLL_NUDGE = 48;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 312;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_PHOTO_PROMISE_MARGIN = 192;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 232;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN = 120;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TALL_POLICY_CONSUMER_HEALTH_MARGIN = 220;');
@@ -70,13 +70,15 @@ describe('Settings route contracts', () => {
     expect(you).toContain('const privacyDirectEntryScrollNudge = microShortPrivacyEntry');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE');
+    expect(you).toContain('? PRIVACY_DIRECT_ENTRY_SUPPORT_SCROLL_NUDGE');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE');
     expect(you).toContain('? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE');
     expect(you).toContain('const narrowPrivacyWithdrawStyle = supportFloorPrivacyEntry');
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN }');
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN }');
-    expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_SUPPORT_PHOTO_PROMISE_MARGIN }');
+    expect(you).not.toContain('PRIVACY_DIRECT_ENTRY_SUPPORT_PHOTO_PROMISE_MARGIN');
+    expect(you).toContain('label="Photos & the no-AI-score promise"');
     expect(you).toContain(
       'privacyCardY.current - PRIVACY_DIRECT_ENTRY_TOP_OFFSET + privacyDirectEntryScrollNudge',
     );
@@ -405,14 +407,26 @@ describe('Settings route contracts', () => {
     expect(source).toContain('const { height, width } = useWindowDimensions();');
     expect(source).toContain('const ultraShortSubscription = height < 460;');
     expect(source).toContain('const splitShortSubscription = height < 410;');
-    expect(source).toContain('const supportFloorSubscription = width <= 430 || height < 640;');
+    expect(source).toContain('const supportFloorSubscription = width <= 320 && height < 520;');
     expect(source).toContain('const compactSubscription = true;');
     expect(source).toContain('const hideFreeSubscriptionBody = true;');
+    expect(source).toContain(
+      "const freePlanTitle = supportFloorSubscription ? 'Free plan' : PAYWALL_COPY.manage.freeTitle;",
+    );
+    expect(source).toContain(
+      "const upgradeCtaLabel = supportFloorSubscription ? 'See Pro' : PAYWALL_COPY.manage.upgradeCta;",
+    );
+    expect(source).toContain(
+      "const restoreLabel = supportFloorSubscription ? 'Restore' : PAYWALL_COPY.manage.restoreRow;",
+    );
+    expect(source).toContain('min-h-[44px] flex-row items-center justify-between py-1');
     expect(source).toContain('min-h-[48px] flex-row items-center justify-between py-3.5');
     expect(source).toContain('min-h-[48px] flex-row items-center justify-between py-2.5');
+    expect(source).toContain('numberOfLines={supportFloor ? 1 : undefined}');
+    expect(source).toContain('style={supportFloor ? { fontSize: 14, lineHeight: 17 } : undefined}');
     expect(source).toContain('compact={compactSubscription}');
     expect(source).toContain(
-      "contentContainerClassName={compactSubscription ? 'px-5 pb-8' : 'px-5 pb-10'}",
+      "supportFloorSubscription ? 'px-5 pb-4' : compactSubscription ? 'px-5 pb-8' : 'px-5 pb-10'",
     );
     expect(source).toContain('{hideFreeSubscriptionBody ? null : (');
     expect(source).toContain("className={compactSubscription ? 'mt-1.5' : 'mt-2'}");
@@ -444,10 +458,12 @@ describe('Settings route contracts', () => {
     );
     expect(source).toContain('const feedbackLabel = subscriptionFeedback ? (');
     expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain('label={PAYWALL_COPY.manage.restoreRow}');
+    expect(source).toContain('label={restoreLabel}');
+    expect(source).toContain('accessibilityLabel={PAYWALL_COPY.manage.restoreRow}');
     expect(source).toContain('label="Terms"');
     expect(source).toContain('label="Privacy"');
     expect(source).toContain('compact={compactSubscription}');
+    expect(source).toContain('supportFloor={supportFloorSubscription}');
     expect(source).toContain('{hideFreeSubscriptionBody ? null : (');
     expect(source).not.toContain(
       '<Row label={PAYWALL_COPY.manage.restoreRow} last onPress={onRestore} />',

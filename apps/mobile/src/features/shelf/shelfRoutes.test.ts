@@ -141,12 +141,14 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const { height, width } = useWindowDimensions();');
     expect(source).toContain('const shortPhone = height < 700 || width <= 430;');
     expect(source).toContain('const ultraShortPhone = height < 560 || width <= 320;');
+    expect(source).toContain('const supportFloorPhone = width <= 320 && height < 520;');
     expect(source).toContain('const splitShortPhone = height < 410;');
     expect(source).toContain('const microShortPhone = height < 380;');
     expect(source).toContain('const tallTextPressurePhone =');
     expect(source).toContain('(width <= 430 && height >= 900 && height < 980) ||');
     expect(source).toContain('(height <= 430 && width >= 900 && width < 980);');
     expect(source).toContain('const compactPressurePhone = shortPhone;');
+    expect(source).toContain('const showScanRecovery = !supportFloorPhone;');
     expect(source).toContain("? 'min-h-[320px] px-6 pb-2 pt-2'");
     expect(source).toContain("? 'min-h-[320px] px-6 pb-3 pt-2'");
     expect(source).toMatch(/:\s*shortPhone\s*\?\s*'min-h-\[340px\] px-6 pb-4 pt-2'/);
@@ -168,10 +170,12 @@ describe('Shelf route mobile contracts', () => {
       'const compactSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;',
     );
     expect(source).toContain('? { marginTop: 24 }');
-    expect(source).not.toContain('const supportFloorPhone =');
     expect(source).toContain('const compactScanRecoveryStyle = compactPressurePhone');
+    expect(source).toContain('compactPressurePhone && !supportFloorPhone');
     expect(source).toContain('? { transform: [{ translateY: -26 }] }');
-    expect(source).toContain('const compactManualRecoveryStyle = microShortPhone');
+    expect(source).toContain('const compactManualRecoveryStyle = supportFloorPhone');
+    expect(source).toContain('? undefined');
+    expect(source).toContain('{showScanRecovery ? (');
     expect(source).toContain('<View style={compactSecondaryRecoveryStyle}>');
     expect(source).toContain('? { marginTop: 40, transform: [{ translateY: -32 }] }');
     expect(source).toContain('tallTextPressurePhone');

@@ -179,7 +179,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8281/settings/notifications",
+  "location": "http://localhost:8289/settings/notifications",
   "textOverflows": [],
   "textStart": "< Notifications UTILITY · YOUR ROUTINE Morning routine 7:30 AM Evening · tonight’s step 9:30 PM GENTLE NUDGES · CAPPED Streak & adherence Replenishment Progress-photo nudge PROMOTIONAL Tips & announcements off by default we cap gentle nudges so they never stack up",
   "viewport": {
@@ -189,7 +189,7 @@
   "route": "/settings/notifications",
   "scaledCount": 15,
   "textScale": 1,
-  "url": "http://localhost:8281/settings/notifications",
+  "url": "http://localhost:8289/settings/notifications",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

@@ -179,7 +179,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8281/shelf",
+  "location": "http://localhost:8289/shelf",
   "textOverflows": [],
   "textStart": "Shelf All Actives 7d Today Prog. Shelf You",
   "viewport": {
@@ -189,7 +189,7 @@
   "route": "/shelf",
   "scaledCount": 8,
   "textScale": 1,
-  "url": "http://localhost:8281/shelf",
+  "url": "http://localhost:8289/shelf",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

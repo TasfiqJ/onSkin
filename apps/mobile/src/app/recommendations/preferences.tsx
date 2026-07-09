@@ -128,6 +128,7 @@ export default function PreferencesScreen() {
   const splitShortPreferences = height < 600;
   const modernTextPressurePreferences = height < 900;
   const tallTextPressurePreferences = width <= 430 && height >= 900 && height < 980;
+  const showPreferencesSubtitle = !compactPreferences;
   const valuesLabelClassName = ultraShortPreferences
     ? 'mb-1.5 mt-2.5'
     : shortPreferences
@@ -160,7 +161,7 @@ export default function PreferencesScreen() {
     : ultraShortPreferences
       ? { marginTop: 48 }
       : undefined;
-  const splitShortPreferenceDeferredGroupStyle = { marginTop: 176 };
+  const splitShortPreferenceDeferredGroupStyle = { marginTop: 192 };
   const modernTextPressureBudgetGroupStyle =
     (modernTextPressurePreferences || tallTextPressurePreferences) && !compactPreferences
       ? { marginTop: 112 }
@@ -251,17 +252,11 @@ export default function PreferencesScreen() {
         >
           {REC_COPY.preferences.title}
         </Text>
-        <Text
-          variant="bodySm"
-          tone="muted"
-          className={
-            ultraShortPreferences || shortPreferences
-              ? 'mt-1 text-[12.5px] leading-[16px]'
-              : 'mt-1.5'
-          }
-        >
-          {REC_COPY.preferences.subtitle}
-        </Text>
+        {showPreferencesSubtitle ? (
+          <Text variant="bodySm" tone="muted" className="mt-1.5">
+            {REC_COPY.preferences.subtitle}
+          </Text>
+        ) : null}
         {saveFailed ? (
           <View
             accessibilityRole="alert"

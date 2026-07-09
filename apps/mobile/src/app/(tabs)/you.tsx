@@ -71,11 +71,11 @@ const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;
 const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 0;
 const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;
 const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 8;
+const PRIVACY_DIRECT_ENTRY_SUPPORT_SCROLL_NUDGE = 48;
 const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;
 const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;
 const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 0;
-const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 312;
-const PRIVACY_DIRECT_ENTRY_SUPPORT_PHOTO_PROMISE_MARGIN = 192;
+const PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN = 232;
 const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;
 const PRIVACY_DIRECT_ENTRY_DATA_MARGIN = 72;
 const PRIVACY_DIRECT_ENTRY_POLICY_CONSUMER_HEALTH_MARGIN = 120;
@@ -340,6 +340,8 @@ export default function YouScreen() {
     ? PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE
     : ultraShortPrivacyEntry
       ? PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE
+      : supportFloorPrivacyEntry
+        ? PRIVACY_DIRECT_ENTRY_SUPPORT_SCROLL_NUDGE
       : shortPrivacyEntry
         ? PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE
         : narrowPhone
@@ -763,17 +765,19 @@ export default function YouScreen() {
           </Card>
         ) : null}
 
-        <Card
-          className={compactPhone ? undefined : 'mt-4'}
-          style={compactPhone ? { marginTop: COMPACT_FOR_YOU_TOP_MARGIN } : undefined}
-        >
-          <Text variant="label" tone="muted" className="mb-1">
-            FOR YOU
-          </Text>
-          {forYouRows.map(({ label, href, hint }) => (
-            <Row key={href} label={label} hint={hint} onPress={() => router.push(href)} />
-          ))}
-        </Card>
+        {privacyDirectEntry ? null : (
+          <Card
+            className={compactPhone ? undefined : 'mt-4'}
+            style={compactPhone ? { marginTop: COMPACT_FOR_YOU_TOP_MARGIN } : undefined}
+          >
+            <Text variant="label" tone="muted" className="mb-1">
+              FOR YOU
+            </Text>
+            {forYouRows.map(({ label, href, hint }) => (
+              <Row key={href} label={label} hint={hint} onPress={() => router.push(href)} />
+            ))}
+          </Card>
+        )}
 
         {phase7Flags.commerce ? (
           <Card className="mt-4">
@@ -885,19 +889,13 @@ export default function YouScreen() {
               {renderPrivacyFeedback('data_sharing', 'privacy')}
             </>
           ) : null}
-          <View
-            style={
-              supportFloorPrivacyEntry
-                ? { marginTop: PRIVACY_DIRECT_ENTRY_SUPPORT_PHOTO_PROMISE_MARGIN }
-                : undefined
-            }
-          >
+          {privacyDirectEntry ? null : (
             <Row
               label="Photos & the no-AI-score promise"
               compact={compactPhone}
               onPress={() => router.push('/progress/about')}
             />
-          </View>
+          )}
           {phase7Flags.trend ? (
             <Row
               label="Changes in your own photos"

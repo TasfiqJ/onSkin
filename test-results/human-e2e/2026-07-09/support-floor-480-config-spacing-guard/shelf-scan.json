@@ -129,9 +129,9 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8281/shelf/scan",
+  "location": "http://localhost:8289/shelf/scan",
   "textOverflows": [],
-  "textStart": "x torch = Scan label S Search catalog + Add it by hand",
+  "textStart": "x torch Camera permission is needed for barcode scanning. You can still search, scan the label path, or add by hand. = Scan label S Search catalog + Add it by hand",
   "viewport": {
     "width": 320,
     "height": 480
@@ -139,7 +139,7 @@
   "route": "/shelf/scan",
   "scaledCount": 8,
   "textScale": 1,
-  "url": "http://localhost:8281/shelf/scan",
+  "url": "http://localhost:8289/shelf/scan",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

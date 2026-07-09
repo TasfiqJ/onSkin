@@ -129,7 +129,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8281/cycle/recovery",
+  "location": "http://localhost:8289/cycle/recovery",
   "textOverflows": [],
   "textStart": "Terms · Privacy · Restore x Unlock your full skin-cycling scheduler. $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial",
   "viewport": {
@@ -139,7 +139,7 @@
   "route": "/cycle/recovery",
   "scaledCount": 3,
   "textScale": 1,
-  "url": "http://localhost:8281/cycle/recovery",
+  "url": "http://localhost:8289/cycle/recovery",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

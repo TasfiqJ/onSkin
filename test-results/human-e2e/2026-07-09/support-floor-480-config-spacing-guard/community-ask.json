@@ -29,7 +29,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8281/community/ask",
+  "location": "http://localhost:8289/community/ask",
   "textOverflows": [],
   "textStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved. Back to Skin Notes",
   "viewport": {
@@ -37,9 +37,9 @@
     "height": 480
   },
   "route": "/community/ask",
-  "scaledCount": 5,
+  "scaledCount": 6,
   "textScale": 1,
-  "url": "http://localhost:8281/community/ask",
+  "url": "http://localhost:8289/community/ask",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

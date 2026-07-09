@@ -41,27 +41,39 @@ function fmtDate(iso: string | null): string {
 
 function Row({
   label,
+  accessibilityLabel,
   last,
   onPress,
   compact = false,
+  supportFloor = false,
 }: {
   label: string;
+  accessibilityLabel?: string;
   last?: boolean;
   onPress: () => void;
   compact?: boolean;
+  supportFloor?: boolean;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel ?? label}
       onPress={onPress}
       className={
-        compact
-          ? 'min-h-[48px] flex-row items-center justify-between py-2.5'
-          : 'min-h-[48px] flex-row items-center justify-between py-3.5'
+        supportFloor
+          ? 'min-h-[44px] flex-row items-center justify-between py-1'
+          : compact
+            ? 'min-h-[48px] flex-row items-center justify-between py-2.5'
+            : 'min-h-[48px] flex-row items-center justify-between py-3.5'
       }
       style={last ? undefined : { borderBottomWidth: 1, borderBottomColor: colors.hairline }}
     >
-      <Text variant="body" className="font-sans-semibold">
+      <Text
+        variant="body"
+        className="font-sans-semibold"
+        numberOfLines={supportFloor ? 1 : undefined}
+        style={supportFloor ? { fontSize: 14, lineHeight: 17 } : undefined}
+      >
         {label}
       </Text>
       <Text style={{ color: colors.mutedLight, fontSize: 18 }}>›</Text>
@@ -77,9 +89,12 @@ export default function SubscriptionScreen() {
   const [subscriptionFeedback, setSubscriptionFeedback] = useState<string | null>(null);
   const ultraShortSubscription = height < 460;
   const splitShortSubscription = height < 410;
-  const supportFloorSubscription = width <= 430 || height < 640;
+  const supportFloorSubscription = width <= 320 && height < 520;
   const compactSubscription = true;
   const hideFreeSubscriptionBody = true;
+  const freePlanTitle = supportFloorSubscription ? 'Free plan' : PAYWALL_COPY.manage.freeTitle;
+  const upgradeCtaLabel = supportFloorSubscription ? 'See Pro' : PAYWALL_COPY.manage.upgradeCta;
+  const restoreLabel = supportFloorSubscription ? 'Restore' : PAYWALL_COPY.manage.restoreRow;
   const isPro = data?.isPro ?? false;
 
   async function openStore() {
@@ -174,11 +189,15 @@ export default function SubscriptionScreen() {
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={compactSubscription ? 'px-5 pb-8' : 'px-5 pb-10'}
+        contentContainerClassName={
+          supportFloorSubscription ? 'px-5 pb-4' : compactSubscription ? 'px-5 pb-8' : 'px-5 pb-10'
+        }
       >
         <View
           className={
-            ultraShortSubscription
+            supportFloorSubscription
+              ? 'mb-1 flex-row items-center gap-2 pt-0'
+              : ultraShortSubscription
               ? 'mb-1 flex-row items-center gap-3 pt-1'
               : 'mb-3 flex-row items-center gap-3 pt-1'
           }
@@ -187,7 +206,10 @@ export default function SubscriptionScreen() {
             accessibilityLabel="Back"
             onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
           />
-          <Text variant="title" style={{ fontSize: ultraShortSubscription ? 26 : 28 }}>
+          <Text
+            variant="title"
+            style={{ fontSize: supportFloorSubscription ? 21 : ultraShortSubscription ? 26 : 28 }}
+          >
             {PAYWALL_COPY.manage.title}
           </Text>
         </View>
@@ -283,15 +305,22 @@ export default function SubscriptionScreen() {
           <>
             <View
               className={
-                splitShortSubscription || supportFloorSubscription
-                  ? 'mb-2 rounded-card bg-paper-raised p-3'
+                supportFloorSubscription
+                  ? 'mb-1 rounded-card bg-paper-raised p-2'
+                  : splitShortSubscription
+                    ? 'mb-2 rounded-card bg-paper-raised p-3'
                   : compactSubscription
                     ? 'mb-3 rounded-card bg-paper-raised p-4'
                     : 'mb-4 rounded-card bg-paper-raised p-5'
               }
               style={{ borderWidth: 1, borderColor: colors.hairline }}
             >
-              <Text variant="titleSm">{PAYWALL_COPY.manage.freeTitle}</Text>
+              <Text
+                variant="titleSm"
+                style={supportFloorSubscription ? { fontSize: 19, lineHeight: 22 } : undefined}
+              >
+                {freePlanTitle}
+              </Text>
               {hideFreeSubscriptionBody ? null : (
                 <Text
                   variant="bodySm"
@@ -304,37 +333,57 @@ export default function SubscriptionScreen() {
               )}
               <Pressable
                 accessibilityRole="button"
+                accessibilityLabel={PAYWALL_COPY.manage.upgradeCta}
                 onPress={() => router.push('/paywall/upsell?feature=full_routine')}
                 className={
-                  splitShortSubscription || supportFloorSubscription
-                    ? 'mt-2.5 h-[48px] items-center justify-center rounded-pill'
+                  supportFloorSubscription
+                    ? 'mt-1.5 h-[44px] items-center justify-center rounded-pill'
+                    : splitShortSubscription
+                      ? 'mt-2.5 h-[48px] items-center justify-center rounded-pill'
                     : compactSubscription
                       ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
                       : 'mt-4 h-[50px] items-center justify-center rounded-pill'
                 }
                 style={{ backgroundColor: colors.clay }}
               >
-                <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
-                  {PAYWALL_COPY.manage.upgradeCta}
+                <Text
+                  className="font-sans-semibold"
+                  style={{
+                    color: colors.paper,
+                    fontSize: supportFloorSubscription ? 13 : 16,
+                    lineHeight: supportFloorSubscription ? 15 : undefined,
+                  }}
+                >
+                  {upgradeCtaLabel}
                 </Text>
               </Pressable>
             </View>
-            <View className="rounded-[18px] bg-paper-raised px-[18px]">
+            <View
+              className={
+                supportFloorSubscription
+                  ? 'rounded-[18px] bg-paper-raised px-3'
+                  : 'rounded-[18px] bg-paper-raised px-[18px]'
+              }
+            >
               <Row
-                label={PAYWALL_COPY.manage.restoreRow}
+                label={restoreLabel}
+                accessibilityLabel={PAYWALL_COPY.manage.restoreRow}
                 onPress={onRestore}
                 compact={compactSubscription}
+                supportFloor={supportFloorSubscription}
               />
               <Row
                 label="Terms"
                 onPress={() => void onPolicy(TERMS_URL)}
                 compact={compactSubscription}
+                supportFloor={supportFloorSubscription}
               />
               <Row
                 label="Privacy"
                 last
                 onPress={() => void onPolicy(PRIVACY_URL)}
                 compact={compactSubscription}
+                supportFloor={supportFloorSubscription}
               />
               {feedbackLabel}
             </View>

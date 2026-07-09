@@ -28,20 +28,45 @@
     {
       "center": {
         "x": 160,
-        "y": 132
+        "y": 134
       },
       "centerBlocked": false,
       "hitInside": true,
       "hitTag": "DIV",
-      "hitText": "Check shelf conflicts",
-      "label": "Check shelf conflicts ›",
+      "hitText": "Conflicts",
+      "label": "Conflicts ›",
       "partialClip": false,
       "rect": {
-        "bottom": 156,
+        "bottom": 158,
         "height": 48,
         "left": 24,
         "right": 296,
-        "top": 108,
+        "top": 110,
+        "visibleHeight": 48,
+        "visibleWidth": 272,
+        "width": 272
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 188
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Plan tonight",
+      "label": "Plan tonight ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 212,
+        "height": 48,
+        "left": 24,
+        "right": 296,
+        "top": 164,
         "visibleHeight": 48,
         "visibleWidth": 272,
         "width": 272
@@ -104,9 +129,9 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8281/ask",
+  "location": "http://localhost:8289/ask",
   "textOverflows": [],
-  "textStart": "< ✦ Ask GROUNDED IN YOUR SHELF RIGHT NOW Check shelf conflicts › ↑ AI advisor · disclosed honestly · your context stays on this device",
+  "textStart": "< ✦ Ask GROUNDED IN YOUR SHELF RIGHT NOW Conflicts › Plan tonight › ↑ AI advisor · disclosed honestly · your context stays on this device",
   "viewport": {
     "width": 320,
     "height": 480
@@ -114,7 +139,7 @@
   "route": "/ask",
   "scaledCount": 8,
   "textScale": 1,
-  "url": "http://localhost:8281/ask",
+  "url": "http://localhost:8289/ask",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

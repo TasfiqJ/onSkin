@@ -29,7 +29,7 @@ const EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict', 'tonight'
 const SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict', 'tonight'];
 const SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER: readonly SuggestedPromptKey[] = ['conflict'];
 const SUPPORT_FLOOR_PROMPT_LABELS: Record<SuggestedPromptKey, string> = {
-  conflict: 'Check shelf conflicts',
+  conflict: 'Conflicts',
   tonight: 'Plan tonight',
   fit: 'Check product fit',
 };

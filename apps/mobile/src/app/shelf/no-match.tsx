@@ -16,20 +16,24 @@ export default function NoMatchScreen() {
   const { height, width } = useWindowDimensions();
   const shortPhone = height < 700 || width <= 430;
   const ultraShortPhone = height < 560 || width <= 320;
+  const supportFloorPhone = width <= 320 && height < 520;
   const splitShortPhone = height < 410;
   const microShortPhone = height < 380;
   const tallTextPressurePhone =
     (width <= 430 && height >= 900 && height < 980) ||
     (height <= 430 && width >= 900 && width < 980);
   const compactPressurePhone = shortPhone;
+  const showScanRecovery = !supportFloorPhone;
   const compactSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;
-  const compactScanRecoveryStyle = compactPressurePhone
+  const compactScanRecoveryStyle = compactPressurePhone && !supportFloorPhone
     ? { transform: [{ translateY: -26 }] }
     : undefined;
-  const compactManualRecoveryStyle = microShortPhone
-    ? { marginTop: 40, transform: [{ translateY: -32 }] }
-    : tallTextPressurePhone
-      ? { marginTop: 96, transform: [{ translateY: -32 }] }
+  const compactManualRecoveryStyle = supportFloorPhone
+    ? undefined
+    : microShortPhone
+      ? { marginTop: 40, transform: [{ translateY: -32 }] }
+      : tallTextPressurePhone
+        ? { marginTop: 96, transform: [{ translateY: -32 }] }
       : compactPressurePhone
         ? { marginTop: 32, transform: [{ translateY: -32 }] }
         : undefined;
@@ -148,29 +152,31 @@ export default function NoMatchScreen() {
           hideSubtitle={ultraShortPhone}
           onPress={goSearch}
         />
-        <View style={compactSecondaryRecoveryStyle}>
-          <NoMatchAction
-            icon="I"
-            title={compactPressurePhone ? 'Scan ingredients' : 'Scan the ingredient list'}
-            subtitle="We'll read the INCI text"
-            accessibilityLabel="Scan the ingredient list. We'll read the INCI text"
-            compact={shortPhone}
-            ultraCompact={shortPhone}
-            hideSubtitle={compactPressurePhone}
-            style={compactScanRecoveryStyle}
-            onPress={goOcr}
-          />
-          <View style={compactManualRecoveryStyle}>
+        {showScanRecovery ? (
+          <View style={compactSecondaryRecoveryStyle}>
             <NoMatchAction
-              icon="+"
-              title="Add it by hand"
-              subtitle="Always works, even offline"
+              icon="I"
+              title={compactPressurePhone ? 'Scan ingredients' : 'Scan the ingredient list'}
+              subtitle="We'll read the INCI text"
+              accessibilityLabel="Scan the ingredient list. We'll read the INCI text"
               compact={shortPhone}
               ultraCompact={shortPhone}
-              hideSubtitle={ultraShortPhone}
-              onPress={goManual}
+              hideSubtitle={compactPressurePhone}
+              style={compactScanRecoveryStyle}
+              onPress={goOcr}
             />
           </View>
+        ) : null}
+        <View style={compactManualRecoveryStyle}>
+          <NoMatchAction
+            icon="+"
+            title="Add it by hand"
+            subtitle="Always works, even offline"
+            compact={shortPhone}
+            ultraCompact={shortPhone}
+            hideSubtitle={ultraShortPhone}
+            onPress={goManual}
+          />
         </View>
       </View>
 
