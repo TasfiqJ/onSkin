@@ -203,6 +203,17 @@ const gates = [
     expected: '49 Expo web direct-entry routes have zero modern-phone 200% text-pressure failures.',
   },
   {
+    id: 'android-412-200-text-pressure',
+    title: '412 x 915 supported Android-class 200% text-pressure route sweep',
+    kind: 'summary-status',
+    required: false,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-412-915-postfix2`,
+    evidence: 'summary.json',
+    expected:
+      '49 Expo web direct-entry routes have zero Android-class 200% text-pressure failures.',
+  },
+  {
     id: 'modern-430-200-text-pressure',
     title: '430 x 932 supported-phone 200% text-pressure route sweep',
     kind: 'summary-status',

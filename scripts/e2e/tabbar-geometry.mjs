@@ -18,7 +18,9 @@ const shouldStartServer = !process.env.TABBAR_E2E_BASE_URL;
 const viewports = [
   { name: '320x568', width: 320, height: 568 },
   { name: '390x568', width: 390, height: 568 },
+  { name: '412x915', width: 412, height: 915 },
 ];
+const compactProgressLabelMaxWidth = 414;
 const tabs = [
   { id: 'bottom-tab-today', label: 'Today', route: 'today' },
   { compactLabel: 'Prog.', id: 'bottom-tab-progress', label: 'Progress', route: 'progress' },
@@ -350,8 +352,9 @@ const snapshotExpression = `(() => {
   const tabListStyle = tabList ? getComputedStyle(tabList) : null;
   const tabs = tabSpecs.map((tab) => {
     const node = document.querySelector('[data-testid="' + tab.id + '"]');
-    const compactTabLabels = window.innerWidth <= 390;
-    const visibleLabel = compactTabLabels && tab.compactLabel ? tab.compactLabel : tab.label;
+    const compactProgressLabel =
+      tab.route === 'progress' && window.innerWidth <= ${compactProgressLabelMaxWidth};
+    const visibleLabel = compactProgressLabel && tab.compactLabel ? tab.compactLabel : tab.label;
     const labelNode = ownTextNode(node, visibleLabel);
     const rect = rectOf(node);
     const labelRect = rectOf(labelNode);
@@ -375,6 +378,7 @@ const snapshotExpression = `(() => {
       labelScrollWidth: labelNode?.scrollWidth ?? null,
       labelText: labelNode?.textContent?.trim() ?? null,
       rect,
+      route: tab.route,
       selected,
       text: node?.textContent?.replace(/\\s+/g, ' ').trim() ?? null,
     };
@@ -417,9 +421,10 @@ function validateSnapshot(snapshot, expectedSelectedLabel, viewportName) {
   );
 
   for (const tab of snapshot.tabs) {
-    const compactTabLabels = snapshot.innerWidth <= 390;
+    const compactProgressLabel =
+      tab.route === 'progress' && snapshot.innerWidth <= compactProgressLabelMaxWidth;
     const expectedVisibleLabel =
-      compactTabLabels && tab.compactLabel ? tab.compactLabel : tab.label;
+      compactProgressLabel && tab.compactLabel ? tab.compactLabel : tab.label;
     assert(tab.rect, `${viewportName}: missing ${tab.label} tab`);
     assert(
       tab.labelText === expectedVisibleLabel,

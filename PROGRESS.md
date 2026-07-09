@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared a supported Android-class 412 x 915 / 200% text-pressure route
+  audit. The first sweep exposed a 3 px `Progress` tab-label overflow in
+  `/settings/privacy`; after the compact visible label fix, the full route
+  sequence exposed a stale privacy direct-entry scroll anchor that could leave
+  `Withdraw health-data consent` partly under the floating tab bar. The tab bar
+  now uses the compact visible `Prog.` label through 414 px while preserving the
+  full `Progress tab` accessibility label, and privacy direct entries re-scroll
+  from the freshly measured privacy-card Y. Focused navigation/settings tests
+  pass, the dedicated tabbar E2E harness now covers 412 x 915, and the final
+  49-route Expo web sweep reports zero failed routes in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-android-412-915-postfix2/`,
+  with the bug record in
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-200-android-412-clearance.md`.
+
 - Promoted the supported iPhone-class 375 x 812 / 200% text-pressure sweep into
   the durable human-E2E manifest. The generated manifest now records that
   evidence as a supported-phone gate alongside the 320 x 480 launch support
@@ -5943,20 +5957,40 @@ Wealthsimple-style floating tab bar: the app correctly rendered the narrow-phone
 Progress label as `Prog.` with the full `Progress tab` accessibility label, but
 `npm run e2e:tabbar-geometry` still expected visible `Progress` at 320 x 568.
 
-Updated `scripts/e2e/tabbar-geometry.mjs` so the runner separates stable tab
-identity from viewport-specific visible copy. The gate now accepts the compact
-visible label at 320 px and 390 px while continuing to require the full
+Updated the floating tab bar so the visible Progress label stays compact through
+the 414 px compact-phone band, then updated `scripts/e2e/tabbar-geometry.mjs`
+so the runner separates stable tab identity from viewport-specific visible copy
+and carries each tab route into validation. The gate now accepts the compact
+visible label at 320 px, 390 px, and 412 px while continuing to require the full
 accessibility label and center hit-tests for every tab.
 
-Post-fix headless Chrome Expo web evidence at 320 x 568 and 390 x 568 verifies
-Today, `Prog.`, Shelf, and You render as direct one-line labels; the floating
-bar stays 66 px tall and pill-shaped; tab targets remain 54 px tall; label boxes
-are 19 px; each selected route has exactly one selected tab; all tab centers
-hit-test correctly; horizontal overflow is zero; and browser warn/error logs are
-empty. Evidence and bug report are in
-`test-results/human-e2e/2026-07-09/navigation-tabbar-geometry-current/` and
+Post-fix headless Chrome Expo web evidence at 320 x 568, 390 x 568, and
+412 x 915 verifies Today, `Prog.`, Shelf, and You render as direct one-line
+labels; the floating bar stays 66 px tall and pill-shaped; tab targets remain
+54 px tall; label boxes are 19 px; each selected route has exactly one selected
+tab; all tab centers hit-test correctly; horizontal overflow is zero; and
+browser warn/error logs are empty. Evidence and bug report are in
+`test-results/human-e2e/2026-07-09/navigation-tabbar-412-compact-current/` and
 `docs/e2e-bug-reports/2026-07-09-tabbar-geometry-compact-label-harness.md`.
 Native iOS/Android Dynamic Type, safe-area, and screen-reader traversal remain
+device QA follow-up.
+
+### Settings Privacy direct-entry scroll retry (2026-07-09)
+
+Hardened `/settings/privacy` after the redirect into the You tab could rely on a
+later effect before the privacy card's measured offset was used. The privacy
+card now stores its current layout y-value and, when the direct privacy entry is
+active, runs an immediate non-animated scroll retry from `onLayout` before the
+existing frame/timeout retries.
+
+Post-fix headless Chrome Expo web evidence at the 320 x 480 launch support floor
+opens `/settings/privacy`, resolves to `/you?section=privacy`, keeps the
+`Marketing emails` switch complete at 52 x 48, shows `Withdraw health-data
+consent` as a complete 232 x 48 button above the floating tab bar with a clean
+center hit-test, and reports zero clipped controls, blocked hit centers,
+horizontal overflow, or disallowed browser logs. Evidence is in
+`test-results/human-e2e/2026-07-09/settings-privacy-direct-entry-current/`.
+Native iOS/Android safe-area, screen-reader, and Dynamic Type behavior remain
 device QA follow-up.
 
 ### Skipped-route 375x667 / 200% text-pressure clearance (2026-07-09)

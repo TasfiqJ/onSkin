@@ -29,11 +29,14 @@ describe('tab bar treatment', () => {
     expect(source).toContain('FLOATING_TAB_BAR_HORIZONTAL_PADDING');
     expect(source).toContain('MIN_TAB_TOUCH_TARGET');
     expect(source).toContain('TAB_ITEM_HEIGHT');
+    expect(source).toContain('COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH = 414');
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RESET');
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RING');
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('tabBarHorizontalInset');
-    expect(source).toContain('const narrowTabLabels = viewportWidth <= 390;');
+    expect(source).toContain(
+      'const compactProgressTabLabel = viewportWidth <= COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH;',
+    );
     expect(source).toContain('function TabBarIcon');
     expect(source).toContain('function TodayIcon');
     expect(source).toContain('function ProgressIcon');
@@ -119,7 +122,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('minimumFontScale={0.86}');
     expect(source).toContain('numberOfLines={1}');
     expect(source).toContain(
-      "narrowTabLabels && route.name === 'progress' ? 'Prog.' : displayLabel",
+      "compactProgressTabLabel && route.name === 'progress' ? 'Prog.' : displayLabel",
     );
     expect(source).toContain('{visibleLabel}');
     expect(source).toContain('TAB_ICON_BY_ROUTE');
@@ -162,5 +165,6 @@ describe('tab bar treatment', () => {
     expect(usableWidth / 4).toBeGreaterThanOrEqual(74);
     expect(source).toContain('minimumFontScale={0.86}');
     expect(source).toContain('maxFontSizeMultiplier={1.08}');
+    expect(source).toContain('COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH = 414');
   });
 });

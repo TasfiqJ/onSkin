@@ -15,7 +15,7 @@ Tester: Codex
 
 ## Expected Result
 
-The first support-floor viewport keeps the visible privacy controls complete and leaves lower destructive actions fully below the floating tab bar until the user scrolls.
+The first support-floor viewport keeps visible privacy controls complete and never leaves lower destructive actions partially covered by the floating tab bar; a destructive action is acceptable only when it is fully visible, 44 px+, and center-hit-testable.
 
 ## Actual Result
 
@@ -48,7 +48,7 @@ Increase the support-floor-only withdraw margin so the lower destructive action 
 
 ## Verification Flow After Fix
 
-1. Reopen `/settings/privacy` at 320 x 480 and confirm `Withdraw health-data consent` is not visible in the first viewport.
+1. Reopen `/settings/privacy` at 320 x 480 and confirm `Withdraw health-data consent` is either below the first viewport or fully visible above the floating tab bar with its center hit-test landing inside the button.
 2. Confirm visible controls report zero clipping, sub-44 targets, blocked centers, and horizontal overflow.
 3. Scroll down and confirm `Withdraw health-data consent` is reachable as a complete 44 px+ button with no blocked center.
 
@@ -59,6 +59,8 @@ Increase the support-floor-only withdraw margin so the lower destructive action 
 - UI snapshot: `test-results/human-e2e/2026-07-09/settings-privacy-support-floor-withdraw-current/01-support-floor-first-viewport.json`
 - UI snapshot: `test-results/human-e2e/2026-07-09/settings-privacy-support-floor-withdraw-current/02-support-floor-scrolled-withdraw.json`
 - Logs: `test-results/human-e2e/2026-07-09/settings-privacy-support-floor-withdraw-current/summary.json`
+- Follow-up UI snapshot: `test-results/human-e2e/2026-07-09/settings-privacy-direct-entry-current/settings-privacy.json`
+- Follow-up summary: `test-results/human-e2e/2026-07-09/settings-privacy-direct-entry-current/summary.json`
 
 ## Remaining Risk
 

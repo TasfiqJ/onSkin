@@ -91,7 +91,15 @@ describe('Settings route contracts', () => {
     expect(you).toContain(
       '}, [privacyDirectEntry, privacyCardReady, privacyDirectEntryScrollNudge]);',
     );
-    expect(you).toContain('privacyCardY.current = event.nativeEvent.layout.y;');
+    expect(you).toContain('const nextPrivacyCardY = event.nativeEvent.layout.y;');
+    expect(you).toContain('privacyCardY.current = nextPrivacyCardY;');
+    expect(you).toContain('if (privacyDirectEntry) {');
+    expect(you).toContain('const scrollToCurrentPrivacyCard = () => {');
+    expect(you).toContain(
+      'nextPrivacyCardY -\n                      PRIVACY_DIRECT_ENTRY_TOP_OFFSET +',
+    );
+    expect(you).toContain('requestAnimationFrame(scrollToCurrentPrivacyCard);');
+    expect(you).toContain('setTimeout(scrollToCurrentPrivacyCard, 80);');
     expect(you).toContain("className={compactPhone && privacyDirectEntry ? undefined : 'mt-4'}");
     expect(you).toContain('? { marginTop: PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN }');
     expect(you).toContain("privacyDirectEntry && row.key === 'consumerHealthPrivacy'");
@@ -108,7 +116,7 @@ describe('Settings route contracts', () => {
     expect(you).toContain('{privacyDirectEntry ? null : (');
     expect(you).toContain('<Card className="mt-4">');
 
-    const privacyAnchorIndex = you.indexOf('privacyCardY.current = event.nativeEvent.layout.y;');
+    const privacyAnchorIndex = you.indexOf('const nextPrivacyCardY = event.nativeEvent.layout.y;');
     expect(privacyAnchorIndex).toBeGreaterThan(you.indexOf('SECURITY'));
     expect(privacyAnchorIndex).toBeGreaterThan(you.indexOf('REMINDERS'));
     expect(you.indexOf('PRIVACY &amp; CONSENT')).toBeGreaterThan(privacyAnchorIndex);

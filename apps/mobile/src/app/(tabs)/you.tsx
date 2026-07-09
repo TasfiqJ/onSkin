@@ -342,13 +342,13 @@ export default function YouScreen() {
       ? PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE
       : supportFloorPrivacyEntry
         ? PRIVACY_DIRECT_ENTRY_SUPPORT_SCROLL_NUDGE
-      : shortPrivacyEntry
-        ? PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE
-        : narrowPhone
-          ? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE
-          : compactPhone
-            ? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE
-            : 0;
+        : shortPrivacyEntry
+          ? PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE
+          : narrowPhone
+            ? PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE
+            : compactPhone
+              ? PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE
+              : 0;
   const narrowPrivacyWithdrawStyle = supportFloorPrivacyEntry
     ? { marginTop: PRIVACY_DIRECT_ENTRY_SUPPORT_WITHDRAW_MARGIN }
     : privacyDirectEntry && narrowPhone
@@ -854,8 +854,24 @@ export default function YouScreen() {
         <Card
           className="mt-4"
           onLayout={(event) => {
-            privacyCardY.current = event.nativeEvent.layout.y;
+            const nextPrivacyCardY = event.nativeEvent.layout.y;
+            privacyCardY.current = nextPrivacyCardY;
             setPrivacyCardReady(true);
+            if (privacyDirectEntry) {
+              const scrollToCurrentPrivacyCard = () => {
+                scrollRef.current?.scrollTo({
+                  animated: false,
+                  y: Math.max(
+                    nextPrivacyCardY -
+                      PRIVACY_DIRECT_ENTRY_TOP_OFFSET +
+                      privacyDirectEntryScrollNudge,
+                    0,
+                  ),
+                });
+              };
+              requestAnimationFrame(scrollToCurrentPrivacyCard);
+              setTimeout(scrollToCurrentPrivacyCard, 80);
+            }
           }}
         >
           <Text variant="label" tone="muted" className="mb-1">
