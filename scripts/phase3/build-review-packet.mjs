@@ -2,7 +2,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
-import { command } from '../phase9/lib.mjs';
+import { command, gitStatusExcludingGeneratedEvidence } from '../phase9/lib.mjs';
 
 const root = process.cwd();
 const packetOutDir = process.env.PHASE3_REVIEW_PACKET_OUT_DIR ?? 'docs/phase-3/generated';
@@ -88,17 +88,7 @@ function fileRecord(packet, relPath) {
 }
 
 function gitStatusExcludingGeneratedPacket() {
-  const excluded = new Set(packetOutputPaths);
-  return command('git', ['status', '--short'])
-    .split(/\r?\n/)
-    .map((line) => line.trimEnd())
-    .filter(Boolean)
-    .filter((line) => {
-      const statusPath = line.slice(3).replace(/\\/g, '/');
-      return !excluded.has(statusPath);
-    })
-    .join('\n')
-    .trim();
+  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
 }
 
 const files = Object.entries(packets).flatMap(([packet, paths]) =>

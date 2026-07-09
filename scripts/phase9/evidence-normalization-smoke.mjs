@@ -1,5 +1,14 @@
 #!/usr/bin/env node
-import { block, evidenceFlagEnabled, printResult, read } from './lib.mjs';
+import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import {
+  block,
+  evidenceFlagEnabled,
+  gitStatusExcludingGeneratedEvidence,
+  printResult,
+  read,
+  root,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -227,6 +236,30 @@ for (const [value, expected] of [
     evidenceFlagEnabled(value) === expected,
     `evidenceFlagEnabled(${JSON.stringify(value)}) must be ${expected}.`,
   );
+}
+
+const generatedTempPath = `docs/phase-9/generated/.evidence-normalization-smoke-${process.pid}.tmp`;
+const sourceTempPath = `.evidence-normalization-smoke-${process.pid}.tmp`;
+const generatedTempAbs = resolve(root, generatedTempPath);
+const sourceTempAbs = resolve(root, sourceTempPath);
+try {
+  mkdirSync(dirname(generatedTempAbs), { recursive: true });
+  writeFileSync(generatedTempAbs, 'generated evidence smoke\n');
+  writeFileSync(sourceTempAbs, 'source dirty smoke\n');
+  const gitStatus = gitStatusExcludingGeneratedEvidence([generatedTempPath]);
+  block(
+    errors,
+    !gitStatus.includes(generatedTempPath),
+    'gitStatusExcludingGeneratedEvidence must ignore explicitly generated evidence outputs.',
+  );
+  block(
+    errors,
+    gitStatus.includes(sourceTempPath),
+    'gitStatusExcludingGeneratedEvidence must still report source-like dirty paths.',
+  );
+} finally {
+  if (existsSync(generatedTempAbs)) unlinkSync(generatedTempAbs);
+  if (existsSync(sourceTempAbs)) unlinkSync(sourceTempAbs);
 }
 
 printResult('Phase 5/6/7/8/9/10/11 evidence normalization smoke', errors, warnings);

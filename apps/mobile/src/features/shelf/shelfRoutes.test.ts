@@ -73,6 +73,10 @@ describe('Shelf route mobile contracts', () => {
   it('keeps scan fallback rows complete on compact text-pressure phones', () => {
     const source = readAppRoute('shelf/scan.tsx');
 
+    expect(source).toContain('const { height, width } = useWindowDimensions();');
+    expect(source).toContain(
+      'const supportFloorTextPressureScan = width <= 390 && height >= 640 && height < 700;',
+    );
     expect(source).toContain('const splitShortScanSurface = height < 460;');
     expect(source).toContain('const compactScanSurface = height < 640');
     expect(source).toContain('hideSubtitle={compactScanSurface}');
@@ -407,6 +411,10 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('shelf/scan.tsx');
 
     expect(source).toContain('useWindowDimensions');
+    expect(source).toContain('const { height, width } = useWindowDimensions();');
+    expect(source).toContain(
+      'const supportFloorTextPressureScan = width <= 390 && height >= 640 && height < 700;',
+    );
     expect(source).toContain('const compactScanSurface = height < 640');
     expect(source).toContain('const splitShortScanSurface = height < 460;');
     expect(source).toContain('const showScanPreview = !splitShortScanSurface || canShowCamera;');
@@ -521,7 +529,12 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const ultraShortPhone = viewportHeight < 460;');
     expect(source).toContain('const splitShortPhone = viewportHeight < 410;');
-    expect(source).toContain('const compactManualPhone = viewportHeight < 600;');
+    expect(source).toContain(
+      'const supportFloorTextPressureManualPhone =\n    viewportWidth <= 390 && viewportHeight >= 640 && viewportHeight < 700;',
+    );
+    expect(source).toContain(
+      'const compactManualPhone = viewportHeight < 600 || supportFloorTextPressureManualPhone;',
+    );
     expect(source).toContain('const insets = useSafeAreaInsets();');
     expect(source).toContain('const ultraShortSheet = viewportHeight < 460;');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 48);');
@@ -552,8 +565,11 @@ describe('Shelf route mobile contracts', () => {
       "compactManualPhone ? 'h-[48px] gap-0.5 px-2.5' : 'h-[50px] gap-1 px-3'",
     );
     expect(source).toContain('compactManualPhone');
+    expect(source).toContain('const manualIngredientsDeferredStyle = splitShortPhone');
     expect(source).toContain('? { marginTop: 300 }');
+    expect(source).toContain('? { marginTop: 520 }');
     expect(source).toContain('? { marginTop: 408 }');
+    expect(source).toContain('style={manualIngredientsDeferredStyle}');
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain(
       'className="overflow-hidden rounded-t-sheet bg-paper px-6 pb-10 pt-4"',

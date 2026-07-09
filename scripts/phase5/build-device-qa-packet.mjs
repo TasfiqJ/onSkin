@@ -5,6 +5,7 @@ import { join, relative, resolve } from 'node:path';
 import {
   command,
   evidenceFlagEnabled,
+  gitStatusExcludingGeneratedEvidence,
   normalizeNamedSignoff,
   placeholderEnvValue,
 } from '../phase9/lib.mjs';
@@ -130,17 +131,7 @@ function readJson(path) {
 }
 
 function gitStatusExcludingGeneratedPacket() {
-  const excluded = new Set(packetOutputPaths);
-  return command('git', ['status', '--short'])
-    .split(/\r?\n/)
-    .map((line) => line.trimEnd())
-    .filter(Boolean)
-    .filter((line) => {
-      const statusPath = line.slice(3).replace(/\\/g, '/');
-      return !excluded.has(statusPath);
-    })
-    .join('\n')
-    .trim();
+  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
 }
 
 function looksLikeEasBuildEvidence(value) {

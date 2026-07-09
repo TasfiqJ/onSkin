@@ -6,6 +6,7 @@ import {
   envSnapshot,
   evidenceFlagEnabled,
   exists,
+  gitStatusExcludingGeneratedEvidence,
   hash,
   listFiles,
   markdownList,
@@ -30,17 +31,7 @@ const packetOutputPaths = [
 ].map((path) => path.replace(/\\/g, '/'));
 
 function gitStatusExcludingGeneratedPacket() {
-  const excluded = new Set(packetOutputPaths);
-  return command('git', ['status', '--short'])
-    .split(/\r?\n/)
-    .map((line) => line.trimEnd())
-    .filter(Boolean)
-    .filter((line) => {
-      const statusPath = line.slice(3).replace(/\\/g, '/');
-      return !excluded.has(statusPath);
-    })
-    .join('\n')
-    .trim();
+  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
 }
 
 const sourceFiles = [

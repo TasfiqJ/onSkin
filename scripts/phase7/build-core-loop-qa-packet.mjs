@@ -2,7 +2,12 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
-import { command, evidenceFlagEnabled, normalizeNamedSignoff } from '../phase9/lib.mjs';
+import {
+  command,
+  evidenceFlagEnabled,
+  gitStatusExcludingGeneratedEvidence,
+  normalizeNamedSignoff,
+} from '../phase9/lib.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -142,17 +147,7 @@ for (const scenario of scenarios) {
 }
 
 function gitStatusExcludingGeneratedPacket() {
-  const excluded = new Set(packetOutputPaths);
-  return command('git', ['status', '--short'])
-    .split(/\r?\n/)
-    .map((line) => line.trimEnd())
-    .filter(Boolean)
-    .filter((line) => {
-      const statusPath = line.slice(3).replace(/\\/g, '/');
-      return !excluded.has(statusPath);
-    })
-    .join('\n')
-    .trim();
+  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
 }
 
 function hashFile(path) {

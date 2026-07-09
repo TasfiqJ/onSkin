@@ -124,9 +124,10 @@ export default function PreferencesScreen() {
   const compactPreferences = height < 640;
   const shortPreferences = height < 600;
   const supportFloorPreferences = width <= 320 && height < 520;
+  const supportFloorTextPressurePreferences = width <= 390 && height >= 640 && height < 700;
   const ultraShortPreferences = height < 460;
   const microShortPreferences = height < 380;
-  const splitShortPreferences = height < 600;
+  const splitShortPreferences = height < 600 || supportFloorTextPressurePreferences;
   const modernTextPressurePreferences = height < 900;
   const tallTextPressurePreferences = width <= 430 && height >= 900 && height < 980;
   const showPreferencesSubtitle = !compactPreferences;
@@ -165,9 +166,10 @@ export default function PreferencesScreen() {
     : ultraShortPreferences
       ? { marginTop: 48 }
       : undefined;
-  const splitShortPreferenceDeferredGroupStyle = supportFloorPreferences
-    ? { marginTop: 224 }
-    : { marginTop: 192 };
+  const splitShortPreferenceDeferredGroupStyle =
+    supportFloorPreferences || supportFloorTextPressurePreferences
+      ? { marginTop: 224 }
+      : { marginTop: 192 };
   const modernTextPressureBudgetGroupStyle =
     (modernTextPressurePreferences || tallTextPressurePreferences) && !compactPreferences
       ? { marginTop: 112 }

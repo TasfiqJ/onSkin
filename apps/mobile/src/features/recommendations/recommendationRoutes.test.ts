@@ -146,9 +146,14 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('const compactPreferences = height < 640');
     expect(source).toContain('const shortPreferences = height < 600;');
     expect(source).toContain('const supportFloorPreferences = width <= 320 && height < 520;');
+    expect(source).toContain(
+      'const supportFloorTextPressurePreferences = width <= 390 && height >= 640 && height < 700;',
+    );
     expect(source).toContain('const ultraShortPreferences = height < 460;');
     expect(source).toContain('const microShortPreferences = height < 380;');
-    expect(source).toContain('const splitShortPreferences = height < 600;');
+    expect(source).toContain(
+      'const splitShortPreferences = height < 600 || supportFloorTextPressurePreferences;',
+    );
     expect(source).toContain(
       'const tallTextPressurePreferences = width <= 430 && height >= 900 && height < 980;',
     );
@@ -181,7 +186,8 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('dense?: boolean');
     expect(source).toContain('ultraDense?: boolean');
     expect(source).toContain('numberOfLines={1}');
-    expect(source).toContain('const splitShortPreferenceDeferredGroupStyle = supportFloorPreferences');
+    expect(source).toContain('const splitShortPreferenceDeferredGroupStyle =');
+    expect(source).toContain('supportFloorPreferences || supportFloorTextPressurePreferences');
     expect(source).toContain('? { marginTop: 224 }');
     expect(source).toContain(': { marginTop: 192 };');
     expect(source).toContain('const modernTextPressurePreferences = height < 900;');

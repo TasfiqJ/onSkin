@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 105.9140625,
+        "y": 277
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Fragrance-free",
+      "label": "Fragrance-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 301,
+        "height": 48,
+        "left": 24,
+        "right": 187.828125,
+        "top": 253,
+        "visibleHeight": 48,
+        "visibleWidth": 163.828125,
+        "width": 163.828125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 231.9140625,
+        "y": 277
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Vegan",
+      "label": "Vegan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 301,
+        "height": 48,
+        "left": 191.828125,
+        "right": 272,
+        "top": 253,
+        "visibleHeight": 48,
+        "visibleWidth": 80.171875,
+        "width": 80.171875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 93.2734375,
+        "y": 329
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Cruelty-free",
+      "label": "Cruelty-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 353,
+        "height": 48,
+        "left": 24,
+        "right": 162.546875,
+        "top": 305,
+        "visibleHeight": 48,
+        "visibleWidth": 138.546875,
+        "width": 138.546875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 121.1796875,
+        "y": 601
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Non-comedogenic",
+      "label": "Non-comedogenic",
+      "partialClip": false,
+      "rect": {
+        "bottom": 625,
+        "height": 48,
+        "left": 24,
+        "right": 218.359375,
+        "top": 577,
+        "visibleHeight": 48,
+        "visibleWidth": 194.359375,
+        "width": 194.359375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 288.6796875,
+        "y": 601
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Sustainable",
+      "label": "Sustainable",
+      "partialClip": false,
+      "rect": {
+        "bottom": 625,
+        "height": 48,
+        "left": 222.359375,
+        "right": 355,
+        "top": 577,
+        "visibleHeight": 48,
+        "visibleWidth": 132.640625,
+        "width": 132.640625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8364/recommendations/preferences",
+  "textOverflows": [],
+  "textStart": "< Preferences Preferences VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+  "viewport": {
+    "width": 390,
+    "height": 640
+  },
+  "route": "/recommendations/preferences",
+  "scaledCount": 21,
+  "textScale": 1.7,
+  "url": "http://localhost:8364/recommendations/preferences",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -46,6 +46,9 @@ describe('Community route contracts', () => {
     expect(source).toContain('const ultraShortCommunity = height < 460;');
     expect(source).toContain('const splitShortCommunity = height < 410;');
     expect(source).toContain('const microShortCommunity = height < 380;');
+    expect(source).toContain(
+      'const supportFloorTextPressureCommunity = width <= 390 && height >= 640 && height < 700;',
+    );
     expect(source).toContain('const modernPhoneCommunity = height < 980;');
     expect(source).toContain("ultraShortCommunity\n              ? 'pb-20 pt-0'");
     expect(source).toContain(
@@ -81,12 +84,15 @@ describe('Community route contracts', () => {
       'const keepNarrowNextNoteBelowFold = narrowCompactCommunity && noteIndex > 0;',
     );
     expect(source).toContain('const keepModernSensitiveNoteBelowFold =');
+    expect(source).toContain('const keepSupportFloorSensitiveNoteBelowFold =');
     expect(source).toContain(
       "g.topic.slug === 'sensitive-skin' &&\n                    noteIndex > 0;",
     );
     expect(source).toContain(
       'keepNextNoteBelowFold\n                          ? { marginTop: 72 }',
     );
+    expect(source).toContain(': keepSupportFloorSensitiveNoteBelowFold');
+    expect(source).toContain('? { marginTop: 224 }');
     expect(source).toContain(': keepModernSensitiveNoteBelowFold');
     expect(source).toContain('? { marginTop: 160 }');
     expect(source).toContain(': keepNarrowNextNoteBelowFold');

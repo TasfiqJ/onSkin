@@ -7,6 +7,7 @@ export {
   envSnapshot,
   evidenceFlagEnabled,
   exists,
+  gitStatusExcludingGeneratedEvidence,
   has,
   hash,
   listFiles,

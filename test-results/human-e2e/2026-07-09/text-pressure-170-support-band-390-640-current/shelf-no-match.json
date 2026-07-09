@@ -1,0 +1,95 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 338,
+        "y": 385
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close",
+      "partialClip": false,
+      "rect": {
+        "bottom": 409,
+        "height": 48,
+        "left": 314,
+        "right": 362,
+        "top": 361,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 446.796875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Search catalog",
+      "label": "Search catalog. Try name or brand instead",
+      "partialClip": false,
+      "rect": {
+        "bottom": 470.796875,
+        "height": 48,
+        "left": 28,
+        "right": 362,
+        "top": 422.796875,
+        "visibleHeight": 48,
+        "visibleWidth": 334,
+        "width": 334
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 498.796875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Add it by hand",
+      "label": "Add it by hand. Always works, even offline",
+      "partialClip": false,
+      "rect": {
+        "bottom": 522.796875,
+        "height": 48,
+        "left": 28,
+        "right": 362,
+        "top": 474.796875,
+        "visibleHeight": 48,
+        "visibleWidth": 334,
+        "width": 334
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8364/shelf/no-match",
+  "textOverflows": [],
+  "textStart": "x Not found yet. S Search catalog + Add it by hand",
+  "viewport": {
+    "width": 390,
+    "height": 640
+  },
+  "route": "/shelf/no-match",
+  "scaledCount": 6,
+  "textScale": 1.7,
+  "url": "http://localhost:8364/shelf/no-match",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

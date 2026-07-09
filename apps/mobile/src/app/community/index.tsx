@@ -107,6 +107,7 @@ export default function SkinNotesHub() {
   const splitShortCommunity = height < 410;
   const microShortCommunity = height < 380;
   const narrowCompactCommunity = compactCommunity && width < 360;
+  const supportFloorTextPressureCommunity = width <= 390 && height >= 640 && height < 700;
   const modernPhoneCommunity = height < 980;
 
   useEffect(() => {
@@ -226,12 +227,18 @@ export default function SkinNotesHub() {
                     !narrowCompactCommunity &&
                     g.topic.slug === 'sensitive-skin' &&
                     noteIndex > 0;
+                  const keepSupportFloorSensitiveNoteBelowFold =
+                    supportFloorTextPressureCommunity &&
+                    g.topic.slug === 'sensitive-skin' &&
+                    noteIndex > 0;
                   return (
                     <View
                       key={note.id}
                       style={
                         keepNextNoteBelowFold
                           ? { marginTop: 72 }
+                          : keepSupportFloorSensitiveNoteBelowFold
+                            ? { marginTop: 224 }
                           : keepModernSensitiveNoteBelowFold
                             ? { marginTop: 160 }
                             : keepNarrowNextNoteBelowFold

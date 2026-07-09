@@ -6,6 +6,26 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared the 390 x 640 support-band 170% text-pressure follow-up. ProGate,
+  Recommendation Preferences, Shelf scan/manual, and Skin Notes now share density
+  guards that move lower-priority body copy, secondary chips, scan fallback
+  rows, and later note cards below the first viewport instead of leaving partial
+  bottom-edge targets. Focused subscription, recommendation, shelf, and
+  community route contracts pass together, and the 49-route Expo web
+  text-pressure sweep at 390 x 640 reports zero failed routes, zero clipped
+  controls, zero sub-44 visible controls, zero blocked hit centers, zero
+  horizontal overflow, and zero disallowed browser logs. Evidence is in
+  `test-results/human-e2e/2026-07-09/text-pressure-170-support-band-390-640-current/`.
+
+- Hardened generated packet provenance for coordinated refreshes. The Phase
+  3-11 packet builders now use a shared generated-evidence status filter, so
+  generated launch packets can be rebuilt in one pass without treating sibling
+  generated outputs as dirty source evidence while still reporting real
+  source-like worktree changes. `phase9:evidence-normalization-smoke` now
+  asserts that generated outputs are filtered and source files are not, and
+  `docs/TESTING_STRATEGY.md` documents
+  `docs:generated-packet-status-audit:check` as the multi-packet refresh gate.
+
 - Cleared the 320 x 480 launch-floor text-pressure follow-up at both 200% and
   170%. The current-source sweeps reproduced bottom-edge or blocked controls
   in Settings Privacy direct entry, Settings Subscription, Recommendation

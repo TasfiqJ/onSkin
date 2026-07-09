@@ -108,7 +108,7 @@ function activeIngredients(product: CatalogProductSummary): {
 
 export default function ScanScreen() {
   const isFocused = useIsFocused();
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const [permission, requestPermission] = useCameraPermissions();
   const { reset } = useIntake();
   const [torch, setTorch] = useState(false);
@@ -129,7 +129,8 @@ export default function ScanScreen() {
   const canShowPermissionRecovery =
     !permissionGranted && (forceDeniedCameraPermission || (cameraEnabled && Boolean(permission)));
   const canShowCamera = cameraEnabled && permissionGranted;
-  const compactScanSurface = height < 640;
+  const supportFloorTextPressureScan = width <= 390 && height >= 640 && height < 700;
+  const compactScanSurface = height < 640 || supportFloorTextPressureScan;
   const splitShortScanSurface = height < 460;
   const showScanPreview = !splitShortScanSurface || canShowCamera;
 

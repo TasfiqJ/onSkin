@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 195,
+        "y": 576
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Back to Skin Notes",
+      "label": "Back to Skin Notes",
+      "partialClip": false,
+      "rect": {
+        "bottom": 604,
+        "height": 56,
+        "left": 24,
+        "right": 366,
+        "top": 548,
+        "visibleHeight": 56,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8364/community/people-like-you",
+  "textOverflows": [],
+  "textStart": "BETA Community posting is not in this beta Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful. No user post is accepted until the review desk and consent copy are production-approved. Back to Skin Notes",
+  "viewport": {
+    "width": 390,
+    "height": 640
+  },
+  "route": "/community/people-like-you",
+  "scaledCount": 5,
+  "textScale": 1.7,
+  "url": "http://localhost:8364/community/people-like-you",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

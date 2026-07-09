@@ -2,7 +2,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, extname, relative, resolve } from 'node:path';
-import { command } from '../phase9/lib.mjs';
+import { command, gitStatusExcludingGeneratedEvidence } from '../phase9/lib.mjs';
 
 const root = process.cwd();
 const check = process.argv.includes('--check');
@@ -141,17 +141,7 @@ function requiredEvidenceFor(bucket) {
 }
 
 function gitStatusExcludingGeneratedPacket() {
-  const excluded = new Set(packetOutputPaths);
-  return command('git', ['status', '--short'])
-    .split(/\r?\n/)
-    .map((line) => line.trimEnd())
-    .filter(Boolean)
-    .filter((line) => {
-      const statusPath = line.slice(3).replace(/\\/g, '/');
-      return !excluded.has(statusPath);
-    })
-    .join('\n')
-    .trim();
+  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
 }
 
 function normalizeGeneratedMarkdown(text) {

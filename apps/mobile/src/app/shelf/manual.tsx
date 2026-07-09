@@ -154,10 +154,19 @@ export default function ManualAddScreen() {
     presetCategory ? '' : draft.ingredients.join(', '),
   );
   const [pickerOpen, setPickerOpen] = useState(false);
-  const { height: viewportHeight } = useWindowDimensions();
+  const { height: viewportHeight, width: viewportWidth } = useWindowDimensions();
   const ultraShortPhone = viewportHeight < 460;
   const splitShortPhone = viewportHeight < 410;
-  const compactManualPhone = viewportHeight < 600;
+  const supportFloorTextPressureManualPhone =
+    viewportWidth <= 390 && viewportHeight >= 640 && viewportHeight < 700;
+  const compactManualPhone = viewportHeight < 600 || supportFloorTextPressureManualPhone;
+  const manualIngredientsDeferredStyle = splitShortPhone
+    ? { marginTop: 300 }
+    : supportFloorTextPressureManualPhone
+      ? { marginTop: 520 }
+      : compactManualPhone
+        ? { marginTop: 408 }
+        : undefined;
 
   const paoFromCategory = reviewedCategoryPao(category);
 
@@ -278,13 +287,7 @@ export default function ManualAddScreen() {
           </View>
 
           <View
-            style={
-              splitShortPhone
-                ? { marginTop: 300 }
-                : compactManualPhone
-                  ? { marginTop: 408 }
-                  : undefined
-            }
+            style={manualIngredientsDeferredStyle}
           >
             <Text variant="label" tone="muted" className="mb-1.5 uppercase">
               Ingredients

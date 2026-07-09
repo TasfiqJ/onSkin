@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
 import {
   command,
+  gitStatusExcludingGeneratedEvidence,
   normalizeNamedSignoff,
   normalizeProductionUrl,
 } from '../phase9/lib.mjs';
@@ -73,17 +74,7 @@ function hashRepoFile(path) {
 }
 
 function gitStatusExcludingGeneratedReport() {
-  const excluded = new Set(generatedOutputPaths);
-  return command('git', ['status', '--short'])
-    .split(/\r?\n/)
-    .map((line) => line.trimEnd())
-    .filter(Boolean)
-    .filter((line) => {
-      const statusPath = line.slice(3).replace(/\\/g, '/');
-      return !excluded.has(statusPath);
-    })
-    .join('\n')
-    .trim();
+  return gitStatusExcludingGeneratedEvidence(generatedOutputPaths);
 }
 
 function asObject(value) {
