@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-09T20:01:59.540Z
+Generated: 2026-07-09T20:05:17.889Z
 
-Git SHA: 0862000f75f901ef1c765f4ee8352f03eef82649
+Git SHA: 676658747ec5a6e8c4399709c629b8cdc6c24acf
 
 Git status: clean
 
@@ -30,7 +30,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-| package.json | present | 15497 | 9cc48a02054d19f2ad076e1e9dd0a8253b7b2fa93cc14420f666951ba0255a2b |
+| package.json | present | 15530 | 48908797640f6aeaeb9941f8e552cc0978bd7bb6bc366be3c98a4ce98b63b289 |
 | scripts/phase4/catalog-qa-report.mjs | present | 6680 | 9abfd57fc1937cd3f958955f2a0a747e2b9a420560443b11c658feb9d3b482ee |
 | scripts/phase4/build-source-worklist.mjs | present | 17182 | 1ab08d0a3392148f47e43b141c1a831b420d8110e5a37e780ac41dd685cfd1d6 |
 | scripts/phase4/beta-coverage-report.mjs | present | 21522 | ed306d7329101f4369f5e7d971a8361f75e15eb3397288de990999e6c19aac69 |
@@ -50,7 +50,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | docs/phase-4/beta-coverage-report.md | present | 2125 | d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2022 | 313a2e63ddaeae7d9621bb04fede565d7a6b2c65086b2a171af6467b5f976b78 |
 | docs/phase-4/catalog-source-memo-open-beauty-facts.md | present | 2335 | a44a08bcdff16133b3dd39a153252d10275774f1977aaf4bcd3add7df616dfa8 |
-| docs/phase-4/generated/source-worklist.json | present | 35121 | bc602a632f0b58ecb45f7f882943abea49de0dbe9a21a2eb540b89a3232bd4fc |
-| docs/phase-4/generated/source-worklist.md | present | 22472 | 361842e6840dc9a2bd846a6d243fd7703e43353c0d505f58a0e7a12d19264c5f |
+| docs/phase-4/generated/source-worklist.json | present | 35121 | de6b4d56c5d947949e74247ef30ebb485c24aba24821e39a6945496c03ac6357 |
+| docs/phase-4/generated/source-worklist.md | present | 22472 | b383b848800fe8ba2d5034aa3eda92cf833fa6bf0fe11242efe9071103b7d6c3 |
 | docs/phase-4/odbl-compliance-memo.md | present | 2020 | 6316be05d79992a32321bd291e7b9eb965da14c12c9c0a3feb7e9ce0dfd69a79 |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |
