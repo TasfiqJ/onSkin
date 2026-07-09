@@ -6,6 +6,13 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Hardened the Phase 9-11 release verification chain so `phase9:verify`,
+  `phase10:verify`, and `phase11:verify` run the strict generated-packet status
+  audit immediately after their packet builders. The Phase 9 release smoke,
+  Phase 10 beta readiness, and Phase 11 launch readiness contracts now enforce
+  the audit step so release, beta, and public-launch packet hashes cannot be
+  left stale after verification.
+
 - Hardened the Phase 6 entitlement E2E fixture path so
   `EXPO_PUBLIC_E2E_ENTITLEMENT` and `EXPO_PUBLIC_E2E_ENTITLEMENT_DELAY_MS` are
   ignored outside development builds. The mobile source contract and

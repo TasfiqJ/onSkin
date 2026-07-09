@@ -103,6 +103,11 @@ npm run docs:generated-packet-status-audit:check
 That audit is the gate that proves committed generated packet hashes are current
 and no packet records dirty source evidence.
 
+Phase 9, Phase 10, and Phase 11 verification commands must also run the strict
+generated-packet status audit immediately after their release, closed-beta, or
+public-launch packet builders. This prevents RC/beta/launch verification from
+leaving a freshly generated packet set with stale recorded hashes.
+
 ## Performance Checks
 
 Monitor:

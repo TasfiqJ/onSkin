@@ -190,9 +190,17 @@ for (const script of [
   'phase9:dependency-sbom',
   'phase9:qa-packet',
   'phase9:verify',
+  'docs:generated-packet-status-audit:strict',
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
+block(
+  errors,
+  /phase9:qa-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
+    packageJson.scripts?.['phase9:verify'] ?? '',
+  ),
+  'phase9:verify must run the strict generated-packet status audit after building the release QA packet.',
+);
 
 block(
   errors,

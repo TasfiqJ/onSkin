@@ -67,9 +67,17 @@ for (const script of [
   'phase10:beta-analytics-audit',
   'phase10:beta-packet',
   'phase10:verify',
+  'docs:generated-packet-status-audit:strict',
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
+block(
+  errors,
+  /phase10:beta-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
+    packageJson.scripts?.['phase10:verify'] ?? '',
+  ),
+  'phase10:verify must run the strict generated-packet status audit after building the closed beta packet.',
+);
 
 const closedBetaPacketSourceFiles = new Set(phase10SourceFiles());
 for (const file of closedBetaPacketRequiredSourceFiles) {

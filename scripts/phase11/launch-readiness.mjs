@@ -66,9 +66,17 @@ for (const script of [
   'phase11:ring-gates',
   'phase11:launch-packet',
   'phase11:verify',
+  'docs:generated-packet-status-audit:strict',
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
+block(
+  errors,
+  /phase11:launch-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
+    packageJson.scripts?.['phase11:verify'] ?? '',
+  ),
+  'phase11:verify must run the strict generated-packet status audit after building the public launch packet.',
+);
 
 const publicLaunchPacketSourceFiles = new Set(phase11SourceFiles());
 for (const file of publicLaunchPacketRequiredSourceFiles) {
