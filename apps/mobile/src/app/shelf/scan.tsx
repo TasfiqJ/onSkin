@@ -263,7 +263,13 @@ export default function ScanScreen() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
-      <View className="flex-1 px-6" style={splitShortScanSurface ? { minHeight: 68 } : undefined}>
+      <View
+        className="flex-1 px-6"
+        style={[
+          splitShortScanSurface ? { minHeight: 68 } : undefined,
+          { position: 'relative', zIndex: 2 },
+        ]}
+      >
         <View
           className="mt-2 flex-row items-center justify-between"
           style={{ position: 'relative', zIndex: 20 }}
@@ -405,6 +411,7 @@ export default function ScanScreen() {
               ? 'rounded-t-sheet bg-night-surface px-5 pb-4 pt-3'
               : 'rounded-t-sheet bg-night-surface px-7 pb-10 pt-6'
         }
+        style={{ position: 'relative', zIndex: 1 }}
       >
         {state.kind === 'looking_up' ? (
           <View className="mb-4 flex-row items-center gap-3">

@@ -81,6 +81,7 @@ export const ANALYTICS_ALLOWED_EVENTS = [
   'routine_edited',
   'routine_checkoff_completed',
   'routine_created',
+  'routine_plan_viewed',
   'screen_viewed',
   'scan_matched',
   'scan_no_match',

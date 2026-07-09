@@ -33,7 +33,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RING');
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('tabBarHorizontalInset');
-    expect(source).toContain('const narrowTabLabels = viewportWidth <= 340;');
+    expect(source).toContain('const narrowTabLabels = viewportWidth <= 390;');
     expect(source).toContain('function TabBarIcon');
     expect(source).toContain('function TodayIcon');
     expect(source).toContain('function ProgressIcon');

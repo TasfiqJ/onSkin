@@ -17,6 +17,43 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   config checks guard both values, and the human-E2E manifest now blocks on the
   support-floor route sweep while recording smaller stress evidence separately.
 
+- Re-verified the launch support-floor layout slice after narrowing the QA
+  contract to real supported devices instead of browser-only micro-short
+  heights. A focused Codex in-app browser pass on Expo web port 8255 now covers
+  `/today` at 390 x 844 and 320 x 480, `/settings/privacy` at 390 x 844 and the
+  320 x 480 support floor, `/recommendations/preferences` at 390 x 844,
+  `/shelf/scan` and `/shelf/no-match` at 320 x 480, and `/routine/plan` at
+  390 x 844, plus `/community` at 390 x 844 and 320 x 480. The pass first found
+  `/settings/privacy` direct-entry clipping:
+  a policy row peeked into the 390 x 844 floating-tab zone and the 320 x 480
+  scroll nudge clipped the Marketing emails switch above the viewport. The
+  direct-entry short-phone scroll nudge and policy spacer are now calibrated.
+  The same pass also caught a Community partial card at both checked sizes; its
+  modern-phone sunscreen spacer and narrow supported-floor section spacing now
+  keep lower-priority note cards complete or fully below the first viewport. The
+  final 10-case sweep reports zero failed routes, zero clipped controls, zero
+  blocked hit centers, zero sub-44 visible controls, zero horizontal overflow,
+  zero dialogs, and zero unexpected current-origin browser logs. Evidence is in
+  `test-results/human-e2e/2026-07-09/routine-analytics-layout-current/` and
+  `docs/e2e-bug-reports/2026-07-09-settings-privacy-support-floor-direct-entry.md`
+  plus `docs/e2e-bug-reports/2026-07-09-community-support-floor-partial-card.md`.
+
+- Cleared the modern-phone 390 x 844 / 200% text-pressure route audit after
+  the first pass failed 16 routes across contextual paywalls, the floating tab
+  bar, Recommendation Preferences, Settings Privacy, Shelf scan/no-match, and
+  Skin Notes. ProGate now hides nonessential monthly-equivalent pricing under
+  supported-phone 200% pressure, the tab bar abbreviates only the visible
+  Progress label at 390 px, Recommendation Preferences uses dense chips,
+  Settings Privacy pushes policy rows below the first direct-entry viewport,
+  Shelf scan/no-match keep visible hit targets complete, and Skin Notes moves a
+  later Sunscreen section fully below the first short modern-phone viewport.
+  Focused Settings/Shelf/paywall/navigation/recommendation/community contracts
+  pass, and the final 49-route sweep reports zero failed routes with evidence
+  in
+  `test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-4/`
+  and
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-200-modern-390-clearance.md`.
+
 - Cleared the harsher 320 x 360 / 200% micro-short text-pressure route
   audit after the 320 x 390 / 200% sweep had already passed. The 360 px pass
   reproduced contextual paywall and direct-upsell CTA clipping or blocked

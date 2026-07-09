@@ -91,7 +91,9 @@ function Toggle({
       }}
     >
       <Text
+        adjustsFontSizeToFit
         className="font-sans-medium text-[13.5px]"
+        minimumFontScale={0.78}
         numberOfLines={1}
         style={{
           color: active ? colors.paper : colors.inkSoft,
@@ -124,6 +126,7 @@ export default function PreferencesScreen() {
   const ultraShortPreferences = height < 460;
   const microShortPreferences = height < 380;
   const splitShortPreferences = height < 600;
+  const modernTextPressurePreferences = height < 900;
   const valuesLabelClassName = ultraShortPreferences
     ? 'mb-1.5 mt-2.5'
     : shortPreferences
@@ -286,8 +289,8 @@ export default function PreferencesScreen() {
           {BUDGETS.map((b) => (
             <Toggle
               key={b}
-              dense={compactPreferences}
-              fill={!compactPreferences}
+              dense={compactPreferences || modernTextPressurePreferences}
+              fill={!compactPreferences && !modernTextPressurePreferences}
               ultraDense={ultraShortPreferences || shortPreferences}
               label={BUDGET_LABEL[b] ?? b}
               active={p.budget === b}

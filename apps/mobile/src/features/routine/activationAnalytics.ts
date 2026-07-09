@@ -55,9 +55,10 @@ export async function recordRoutinePlanAnalytics({
   isExample: boolean;
   source: 'example' | 'routine_plan';
 }): Promise<void> {
-  track('routine_created', { source });
+  track('routine_plan_viewed', { source });
 
   if (isExample) return;
+  track('routine_created', { source });
 
   const flags = await loadFlags();
   let changed = false;

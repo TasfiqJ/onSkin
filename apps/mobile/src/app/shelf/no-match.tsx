@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Pressable, View, useWindowDimensions } from 'react-native';
+import { Pressable, type StyleProp, View, type ViewStyle, useWindowDimensions } from 'react-native';
 
 import { RouteIconButton, Sheet, Text } from '@/components/ui';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
@@ -19,7 +19,10 @@ export default function NoMatchScreen() {
   const splitShortPhone = height < 410;
   const microShortPhone = height < 380;
   const compactPressurePhone = shortPhone;
-  const microShortSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;
+  const compactSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;
+  const compactScanRecoveryStyle = compactPressurePhone
+    ? { transform: [{ translateY: -26 }] }
+    : undefined;
 
   const goOcr = () => {
     haptics.select();
@@ -135,7 +138,7 @@ export default function NoMatchScreen() {
           hideSubtitle={ultraShortPhone}
           onPress={goSearch}
         />
-        <View style={microShortSecondaryRecoveryStyle}>
+        <View style={compactSecondaryRecoveryStyle}>
           <NoMatchAction
             icon="I"
             title={compactPressurePhone ? 'Scan ingredients' : 'Scan the ingredient list'}
@@ -144,6 +147,7 @@ export default function NoMatchScreen() {
             compact={shortPhone}
             ultraCompact={shortPhone}
             hideSubtitle={compactPressurePhone}
+            style={compactScanRecoveryStyle}
             onPress={goOcr}
           />
           <View
@@ -191,6 +195,7 @@ function NoMatchAction({
   compact,
   ultraCompact,
   hideSubtitle = false,
+  style,
   onPress,
 }: {
   icon: string;
@@ -200,6 +205,7 @@ function NoMatchAction({
   compact: boolean;
   ultraCompact: boolean;
   hideSubtitle?: boolean;
+  style?: StyleProp<ViewStyle>;
   onPress: () => void;
 }) {
   return (
@@ -209,13 +215,13 @@ function NoMatchAction({
       onPress={onPress}
       className={cn(
         ultraCompact
-          ? 'min-h-[48px] gap-2.5 rounded-[15px] px-2.5 py-2'
+          ? 'min-h-[48px] gap-2.5 rounded-[15px] px-2.5 py-1.5'
           : compact
             ? 'min-h-[54px] gap-3 rounded-[16px] p-2.5'
             : 'gap-3.5 rounded-[18px] p-3',
         'flex-row items-center',
       )}
-      style={{ backgroundColor: 'rgba(244,239,231,0.08)' }}
+      style={[{ backgroundColor: 'rgba(244,239,231,0.08)' }, style]}
     >
       <View
         className={cn(

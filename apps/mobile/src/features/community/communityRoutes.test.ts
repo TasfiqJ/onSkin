@@ -63,6 +63,9 @@ describe('Community route contracts', () => {
     expect(source).toContain(
       'const keepNarrowSectionBelowFold = narrowCompactCommunity && groupIndex > 0;',
     );
+    expect(source).toContain(
+      "modernPhoneCommunity && !narrowCompactCommunity && g.topic.slug === 'sunscreen';",
+    );
     expect(source).toContain('const keepNextSectionBelowFold =');
     expect(source).toContain("narrowCompactCommunity && g.topic.slug === 'sensitive-skin';");
     expect(source).toContain('keepSectionBelowFold\n                    ? { marginTop: 112 }');
@@ -70,7 +73,10 @@ describe('Community route contracts', () => {
       'keepUltraShortNarrowSectionBelowFold\n                      ? { marginTop: 176 }',
     );
     expect(source).toContain(
-      'keepNarrowSectionBelowFold\n                      ? { marginTop: 144 }',
+      'keepNarrowSectionBelowFold\n                      ? { marginTop: 140 }',
+    );
+    expect(source).toContain(
+      'keepShortModernSectionBelowFold\n                        ? { marginTop: 48 }',
     );
     expect(source).toContain('? { marginBottom: 64 }');
     expect(source).toContain('const keepNextNoteBelowFold = splitShortCommunity && noteIndex > 0;');

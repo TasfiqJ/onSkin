@@ -107,6 +107,7 @@ export default function SkinNotesHub() {
   const splitShortCommunity = height < 410;
   const microShortCommunity = height < 380;
   const narrowCompactCommunity = compactCommunity && width < 360;
+  const modernPhoneCommunity = height < 900;
 
   useEffect(() => {
     track('skin_note_viewed', { surface: 'hub' });
@@ -182,6 +183,8 @@ export default function SkinNotesHub() {
             const keepUltraShortNarrowSectionBelowFold =
               ultraShortCommunity && narrowCompactCommunity && groupIndex > 0;
             const keepNarrowSectionBelowFold = narrowCompactCommunity && groupIndex > 0;
+            const keepShortModernSectionBelowFold =
+              modernPhoneCommunity && !narrowCompactCommunity && g.topic.slug === 'sunscreen';
             const keepNextSectionBelowFold =
               narrowCompactCommunity && g.topic.slug === 'sensitive-skin';
             return (
@@ -194,7 +197,9 @@ export default function SkinNotesHub() {
                     : keepUltraShortNarrowSectionBelowFold
                       ? { marginTop: 176 }
                     : keepNarrowSectionBelowFold
-                      ? { marginTop: 144 }
+                      ? { marginTop: 140 }
+                      : keepShortModernSectionBelowFold
+                        ? { marginTop: 48 }
                       : keepNextSectionBelowFold
                         ? { marginBottom: 64 }
                         : undefined

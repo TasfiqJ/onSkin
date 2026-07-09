@@ -35,13 +35,13 @@ describe('Settings route contracts', () => {
     expect(you).toContain('if (!privacyDirectEntry || !privacyCardReady) return;');
     expect(you).toContain('scrollRef.current?.scrollTo');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 18;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 0;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 84;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 8;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;');
     expect(you).toContain('const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 144;');
-    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;');
+    expect(you).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = -');
     expect(you).not.toContain('const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = -');
     expect(you).toContain("const privacyDirectEntry = params.section === 'privacy';");
@@ -307,6 +307,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const { height, width } = useWindowDimensions();');
     expect(source).toContain('const compactPhone = height < 640 || width < 430');
+    expect(source).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 0;');
     expect(source).toContain('const shortPhone = compactPhone && height < 600;');
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-32' : 'pb-8'}");
     expect(source).toContain("className={compactPhone ? 'mt-1' : 'mt-2'}");

@@ -42,9 +42,11 @@ describe('routine activation analytics', () => {
     });
 
     expect(mocks.track.mock.calls).toEqual([
+      ['routine_plan_viewed', { source: 'routine_plan' }],
       ['routine_created', { source: 'routine_plan' }],
       ['first_routine_created', { source: 'routine_plan' }],
       ['first_useful_insight', { count: 3, source: 'routine_plan' }],
+      ['routine_plan_viewed', { source: 'routine_plan' }],
       ['routine_created', { source: 'routine_plan' }],
     ]);
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
@@ -60,7 +62,7 @@ describe('routine activation analytics', () => {
       source: 'example',
     });
 
-    expect(mocks.track.mock.calls).toEqual([['routine_created', { source: 'example' }]]);
+    expect(mocks.track.mock.calls).toEqual([['routine_plan_viewed', { source: 'example' }]]);
     expect(mocks.storage.has(KEY)).toBe(false);
   });
 
@@ -74,6 +76,7 @@ describe('routine activation analytics', () => {
     });
 
     expect(mocks.track.mock.calls).toEqual([
+      ['routine_plan_viewed', { source: 'routine_plan' }],
       ['routine_created', { source: 'routine_plan' }],
       ['first_routine_created', { source: 'routine_plan' }],
       ['first_useful_insight', { count: 2, source: 'routine_plan' }],

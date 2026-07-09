@@ -171,6 +171,7 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('ultraDense?: boolean');
     expect(source).toContain('numberOfLines={1}');
     expect(source).toContain('const splitShortPreferenceDeferredGroupStyle = { marginTop: 176 };');
+    expect(source).toContain('const modernTextPressurePreferences = height < 900;');
     expect(source).toContain('const renderValueToggle = (v: ValuesFilter) => (');
     expect(source).toContain('VALUES_FILTERS.slice(0, 3).map(renderValueToggle)');
     expect(source).toContain('VALUES_FILTERS.slice(3).map(renderValueToggle)');
@@ -178,12 +179,14 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain(
       'paddingHorizontal: fill ? 8 : ultraDense ? 10 : dense ? 12 : undefined',
     );
+    expect(source).toContain('adjustsFontSizeToFit');
+    expect(source).toContain('minimumFontScale={0.78}');
     expect(source).toContain('fontSize: fill ? 12 : ultraDense ? 12.5 : dense ? 13 : undefined');
     expect(source).toContain('flexGrow: fill ? 1 : undefined');
     expect(source).toContain('minWidth: fill ? 0 : dense ? 48 : undefined');
-    expect(source).toContain('dense={compactPreferences}');
+    expect(source).toContain('dense={compactPreferences || modernTextPressurePreferences}');
     expect(source).toContain('ultraDense={ultraShortPreferences || shortPreferences}');
-    expect(source).toContain('fill={!compactPreferences}');
+    expect(source).toContain('fill={!compactPreferences && !modernTextPressurePreferences}');
   });
 
   it('keeps recommendation detail navigation touchable on phones', () => {

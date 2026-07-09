@@ -34,6 +34,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const ultraShortPaywall = height < 460;
   const microShortPaywall = height < 380;
   const narrowShortPaywall = shortPaywall && width < 360;
+  const supportedTextPressurePaywall = width <= 430 && height < 900;
   const storeUnavailableReason =
     ultraShortPaywall && offering.data?.reason
       ? 'Store unavailable in this preview.'
@@ -271,7 +272,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           }
           style={{ borderWidth: 1, borderColor: colors.hairline }}
         >
-          <View>
+          <View style={{ flexShrink: 1, minWidth: 0 }}>
             {narrowShortPaywall ? null : (
               <Text variant="bodySm" tone="muted">
                 {priceIntroLabel}
@@ -311,14 +312,17 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               ) : null}
             </Text>
           </View>
-          {annualDisplay.pricePerMonthLabel && !ultraShortPaywall && !narrowShortPaywall ? (
+          {annualDisplay.pricePerMonthLabel &&
+          !supportedTextPressurePaywall &&
+          !ultraShortPaywall &&
+          !narrowShortPaywall ? (
             <Text
               adjustsFontSizeToFit
               minimumFontScale={0.86}
               numberOfLines={1}
               variant="label"
               tone="muted"
-              style={{ letterSpacing: 0, textAlign: 'right' }}
+              style={{ flexShrink: 0, letterSpacing: 0, minWidth: 92, textAlign: 'right' }}
             >{`${annualDisplay.pricePerMonthLabel}/mo`}</Text>
           ) : null}
         </View>
@@ -416,6 +420,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               backgroundColor: colors.clayTint,
               borderWidth: 1,
               borderColor: 'rgba(165,105,75,0.22)',
+              marginTop: supportedTextPressurePaywall ? 56 : undefined,
             }}
           >
             <View
@@ -435,6 +440,9 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               <Text
                 variant="bodySm"
                 className="font-sans-semibold"
+                adjustsFontSizeToFit
+                minimumFontScale={0.82}
+                numberOfLines={1}
                 style={{
                   color: colors.clayDeep,
                   fontSize: compactPaywall ? 12.5 : undefined,
@@ -445,7 +453,9 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
               </Text>
               <Text
                 variant="label"
-                numberOfLines={ultraShortPaywall ? 1 : undefined}
+                adjustsFontSizeToFit
+                minimumFontScale={0.82}
+                numberOfLines={ultraShortPaywall || supportedTextPressurePaywall ? 1 : undefined}
                 ellipsizeMode="tail"
                 style={{
                   color: colors.clay,

@@ -24,7 +24,7 @@ documented or allowlisted.
 | Enrollment and install     | invited, accepted, installed, first app open by platform/build/wave                                                                             |
 | Onboarding and first value | onboarding_started, account_created, product_add_started, product_added, first-value proxy, drop-off                                            |
 | Shelf and catalog          | barcode/search/manual mix, no-match, corrections, manual fallback completion                                                                    |
-| Routine loop               | plan view, routine_created, first_useful_insight, first_checkoff_completed, routine_checkoff_completed, cycle_night_completed, streak milestone |
+| Routine loop               | routine_plan_viewed, routine_created, first_useful_insight, first_checkoff_completed, routine_checkoff_completed, cycle_night_completed, streak milestone |
 | Photo and reminder         | permission prompt, capture, trend/progress usage, reminder opt-in/denial                                                                        |
 | Paywall and entitlement    | paywall_shown, contextual_paywall_shown, trial_started, purchase_completed, restore_tapped, manage_subscription_opened                          |
 | Privacy and support        | deletion/export requests, consent withdrawal, support categories, privacy escalations                                                           |
@@ -55,6 +55,7 @@ The current app already emits the V1-loop events required for beta analysis. The
 - `catalog_lookup_no_match`
 - `catalog_correction_reported`
 - `ingredient_parse_completed`
+- `routine_plan_viewed`
 - `routine_created`
 - `first_routine_created`
 - `first_useful_insight`

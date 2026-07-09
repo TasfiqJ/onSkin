@@ -143,9 +143,6 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const splitShortPhone = height < 410;');
     expect(source).toContain('const microShortPhone = height < 380;');
     expect(source).toContain('const compactPressurePhone = shortPhone;');
-    expect(source).toContain(
-      'const microShortSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;',
-    );
     expect(source).toContain("? 'px-6 pb-2 pt-2'");
     expect(source).toContain("? 'px-6 pb-3 pt-2'");
     expect(source).toMatch(/:\s*shortPhone\s*\?\s*'px-6 pb-4 pt-2'/);
@@ -163,11 +160,18 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("? 'text-[21px] leading-[24px]'");
     expect(source).toContain("? 'mt-1 gap-1'");
     expect(source).toContain("? 'mt-2 gap-1'");
-    expect(source).toContain('<View style={microShortSecondaryRecoveryStyle}>');
+    expect(source).toContain(
+      'const compactSecondaryRecoveryStyle = microShortPhone ? { marginTop: 24 } : undefined;',
+    );
+    expect(source).toContain('const compactScanRecoveryStyle = compactPressurePhone');
+    expect(source).toContain('? { transform: [{ translateY: -26 }] }');
+    expect(source).toContain('<View style={compactSecondaryRecoveryStyle}>');
     expect(source).toContain('style={');
     expect(source).toContain('? { marginTop: 40 }');
     expect(source).toContain('compactPressurePhone');
     expect(source).toContain('? { marginTop: 32 }');
+    expect(source).toContain('style={compactScanRecoveryStyle}');
+    expect(source).toContain("style={[{ backgroundColor: 'rgba(244,239,231,0.08)' }, style]}");
     expect(source).toContain('compact={shortPhone}');
     expect(source).toContain('ultraCompact={shortPhone}');
     expect(source).toContain('hideSubtitle={compactPressurePhone}');
@@ -181,7 +185,7 @@ describe('Shelf route mobile contracts', () => {
     );
     expect(source).toContain('accessibilityLabel?: string;');
     expect(source).toContain('accessibilityLabel={accessibilityLabel ?? `${title}. ${subtitle}`}');
-    expect(source).toContain("'min-h-[48px] gap-2.5 rounded-[15px] px-2.5 py-2'");
+    expect(source).toContain("'min-h-[48px] gap-2.5 rounded-[15px] px-2.5 py-1.5'");
     expect(source).toContain('min-h-[54px]');
     expect(source).toContain('!shortPhone ? (');
   });
@@ -393,7 +397,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const compactScanSurface = height < 640');
     expect(source).toContain('const splitShortScanSurface = height < 460;');
     expect(source).toContain('const showScanPreview = !splitShortScanSurface || canShowCamera;');
-    expect(source).toContain('style={splitShortScanSurface ? { minHeight: 68 } : undefined}');
+    expect(source).toContain('splitShortScanSurface ? { minHeight: 68 } : undefined');
+    expect(source).toContain("{ position: 'relative', zIndex: 2 }");
     expect(source).toContain('{showScanPreview ? (');
     expect(source).toContain("title={compactScanSurface ? 'Scan label' : 'Scan ingredient label'}");
     expect(source).toContain('accessibilityLabel="Scan ingredient label. Review editable OCR"');
@@ -404,6 +409,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("'absolute left-8 right-8 top-[54px] h-11 rounded-[14px]'");
     expect(source).toContain('!compactScanSurface ? (');
     expect(source).toContain("'rounded-t-sheet bg-night-surface px-5 pb-4 pt-3'");
+    expect(source).toContain("style={{ position: 'relative', zIndex: 1 }}");
     expect(source).toContain("state.kind === 'idle' && compactScanSurface ? null");
     expect(source).toContain("className={compactScanSurface ? 'gap-1.5' : 'gap-2.5'}");
     expect(source).toContain('subtitle="Review editable OCR"');

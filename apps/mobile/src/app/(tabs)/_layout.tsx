@@ -192,7 +192,7 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
     FLOATING_TAB_BAR_SIDE_MARGIN,
     (viewportWidth - tabBarWidth) / 2,
   );
-  const narrowTabLabels = viewportWidth <= 340;
+  const narrowTabLabels = viewportWidth <= 390;
 
   if (keyboardVisible) {
     return null;

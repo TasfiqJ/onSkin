@@ -166,6 +166,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('const ultraShortPaywall = height < 460');
     expect(proGate).toContain('const microShortPaywall = height < 380;');
     expect(proGate).toContain('const narrowShortPaywall = shortPaywall && width < 360;');
+    expect(proGate).toContain('const supportedTextPressurePaywall = width <= 430 && height < 900;');
     expect(proGate).toContain('const microShortDeferredCtaStyle = microShortPaywall');
     expect(proGate).toContain('marginTop: splitShortProgressTabPaywall ? 0 : 88,');
     expect(proGate).toContain("position: 'relative' as const,");
@@ -232,14 +233,20 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('lineHeight: microShortPaywall ? 18 : undefined');
     expect(proGate).toContain('disabled={startTrial.isPending}');
     expect(proGate).not.toContain('disabled={!canPurchase || startTrial.isPending}');
+    expect(proGate).toContain('!supportedTextPressurePaywall');
+    expect(proGate).toContain('style={{ flexShrink: 1, minWidth: 0 }}');
     expect(proGate).toContain(
-      '{annualDisplay.pricePerMonthLabel && !ultraShortPaywall && !narrowShortPaywall ? (',
+      "style={{ flexShrink: 0, letterSpacing: 0, minWidth: 92, textAlign: 'right' }}",
     );
     expect(proGate).toContain(
       "ultraShortPaywall\n                ? 'mt-1 min-h-[48px] flex-row items-center gap-2 rounded-card px-3 py-1.5'",
     );
     expect(proGate).toContain('{storeUnavailableReason}');
     expect(proGate).toContain('{showExploreFirst && !ultraShortPaywall && !narrowShortPaywall ? (');
+    expect(proGate).toContain('marginTop: supportedTextPressurePaywall ? 56 : undefined');
+    expect(proGate).toContain(
+      'numberOfLines={ultraShortPaywall || supportedTextPressurePaywall ? 1 : undefined}',
+    );
     expect(proGate).toContain("? 'mt-2 h-[50px] items-center justify-center rounded-pill'");
     expect(proGate).not.toContain('className="pb-4"');
   });
@@ -327,7 +334,9 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('>{`${annualDisplay.pricePerMonthLabel}/mo`}</Text>');
     expect(upsell).toContain('>{`${annualDisplay.pricePerMonthLabel}/mo`}</Text>');
     expect(onboardingPaywall).toContain('>{`${monthlyEquivalent}/mo`}</Text>');
-    expect(proGate).toContain("style={{ letterSpacing: 0, textAlign: 'right' }}");
+    expect(proGate).toContain(
+      "style={{ flexShrink: 0, letterSpacing: 0, minWidth: 92, textAlign: 'right' }}",
+    );
     expect(upsell).toContain("style={{ letterSpacing: 0, textAlign: 'right' }}");
   });
 

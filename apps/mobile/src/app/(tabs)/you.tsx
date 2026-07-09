@@ -68,13 +68,14 @@ const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;
 const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 104;
 const DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE = 144;
 const PRIVACY_DIRECT_ENTRY_TOP_OFFSET = 16;
-const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 18;
+const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 0;
 const PRIVACY_DIRECT_ENTRY_NARROW_SCROLL_NUDGE = 30;
-const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 84;
+const PRIVACY_DIRECT_ENTRY_SHORT_SCROLL_NUDGE = 8;
 const PRIVACY_DIRECT_ENTRY_ULTRA_SHORT_SCROLL_NUDGE = 56;
 const PRIVACY_DIRECT_ENTRY_MICRO_SHORT_SCROLL_NUDGE = 64;
 const PRIVACY_DIRECT_ENTRY_NARROW_WITHDRAW_MARGIN = 144;
-const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 280;
+const PRIVACY_DIRECT_ENTRY_COMPACT_POLICY_MARGIN = 640;
+const PRIVACY_DIRECT_ENTRY_DATA_MARGIN = 72;
 
 type StaticRouteHref = Extract<Href, string>;
 type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'photo_cloud_backup' | 'app_lock';
@@ -780,7 +781,10 @@ export default function YouScreen() {
           </Card>
         ) : null}
 
-        <Card className="mt-4">
+        <Card
+          className={privacyDirectEntry ? undefined : 'mt-4'}
+          style={privacyDirectEntry ? { marginTop: PRIVACY_DIRECT_ENTRY_DATA_MARGIN } : undefined}
+        >
           <Text variant="label" tone="muted" className="mb-1">
             SECURITY
           </Text>
