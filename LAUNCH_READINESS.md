@@ -18,6 +18,17 @@ clearance and not a real launch catalog.
 
 Fresh verification through 2026-07-09:
 
+- Shelf catalog wrong-match recovery now has fresh headless Chrome Expo web
+  evidence before product add. With
+  `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=wrong_match`, catalog search exposes
+  distinct 48 px `Use this match` and `Not this product` actions, reports a
+  wrong match with product/source-only context, renders inline `Report not
+  sent` feedback with no dialog when catalog reporting is unavailable, and
+  preserves the search query through manual add. A 360 x 640 support-floor spot
+  check keeps Back, Search, Use this match, Not this product, and Add by hand
+  visible, 48 px+, center-hit-testable, and at zero horizontal overflow.
+  Evidence:
+  `test-results/human-e2e/2026-07-09/catalog-search-wrong-match-current/`.
 - Shelf catalog no-match recovery now has fresh Codex in-app browser Expo web
   evidence for privacy-safe missing-product reporting. At 390 x 844, catalog
   search no-match exposes a 48 px `Report missing product` action, renders

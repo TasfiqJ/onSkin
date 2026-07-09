@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Added pre-add wrong-match reporting to Shelf catalog search results. A matched
+  result now separates `Use this match` from `Not this product`, submits a
+  privacy-safe `wrong_match` catalog report with product/source context only,
+  renders configured/offline feedback inline without native or JavaScript
+  dialogs, and keeps `Add by hand` as the recovery path with the search query
+  preserved. The focused E2E harness
+  `npm run e2e:catalog-search-wrong-match` passes at 390 x 844 and includes a
+  360 x 640 support-floor spot check with zero control geometry issues.
+  Evidence:
+  `test-results/human-e2e/2026-07-09/catalog-search-wrong-match-current/`.
+
 - Promoted the maintained first-session onboarding E2E harness from a
   paywall-stop proof to a full activation-loop proof. `npm run
   e2e:onboarding-first-session` now uses the dev-only local reset, adds
