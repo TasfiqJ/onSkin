@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-09T21:57:18.384Z
-Git SHA: b3939c7eb62b0793e33da335df649fece8f38130
+Generated: 2026-07-09T22:02:47.739Z
+Git SHA: 7351497a84e02f6e08a1d870d0a72434334250d0
 Evidence date: 2026-07-09
 Status: pass
 
@@ -36,7 +36,7 @@ dependency to the repo.
 | 320 x 480 stress 170% text-pressure route sweep                  | resilience      | pass    | summary status: pass; 0 failed routes.                  | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-support-floor-480-postfix-16       |
 | 320 x 480 stress route rerun                                     | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-short-phone-480-rerun                   |
 | 320 x 430 resilience route clearance                             | resilience      | pass    | 0 failures recorded.                                    | 101   | test-results/human-e2e/2026-07-09/current-main-short-phone-430-final-clearance-sweep   |
-| 320 x 390 split-short stress clearance                           | resilience      | skipped | Optional resilience evidence not present for this date. | 0     | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix     |
+| 320 x 390 split-short stress clearance                           | resilience      | pass    | 0 failures recorded.                                    | 101   | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix     |
 | 320 x 430 first-session activation stress pass                   | resilience      | pass    | summary verdict: pass.                                  | 44    | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current                 |
 
 ## Warnings

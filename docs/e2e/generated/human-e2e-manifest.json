@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-09T21:57:18.384Z",
-  "gitSha": "b3939c7eb62b0793e33da335df649fece8f38130",
+  "generatedAt": "2026-07-09T22:02:47.739Z",
+  "gitSha": "7351497a84e02f6e08a1d870d0a72434334250d0",
   "evidenceDate": "2026-07-09",
   "status": "pass",
   "purpose": "Durable local human-simulated E2E manifest for Expo web-compatible launch gates.",
@@ -432,15 +432,15 @@
       "folder": "test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix",
       "evidence": "failures.json",
       "expected": "49 Expo web direct-entry routes have zero split-short failures.",
-      "status": "skipped",
-      "detail": "Optional resilience evidence not present for this date.",
-      "failureCount": null,
+      "status": "pass",
+      "detail": "0 failures recorded.",
+      "failureCount": 0,
       "verdict": null,
-      "folderExists": false,
-      "evidenceExists": false,
-      "fileCount": 0,
-      "bytes": 0,
-      "evidenceSha256": null
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 101,
+      "bytes": 2207505,
+      "evidenceSha256": "b147239d32c99249193939c498f7468748b51bd2a85e0f396c504d4cb8f6edbc"
     },
     {
       "id": "first-session-430-activation",
