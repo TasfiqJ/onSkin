@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-07-09T02:04:01.079Z
+Generated: 2026-07-09T09:00:35.546Z
 Status: blocked
-Git SHA: a1277f23b0456f774660a55bab5d945a72fd7509
+Git SHA: 5615ded9bc1d6a9a9fb15e60f3f243171fa897af
 Git status: clean
 Phase 9 packet status: blocked
 
@@ -68,7 +68,7 @@ Phase 9 packet status: blocked
 - `scripts/phase10/build-beta-packet.mjs`: `0b58fb95a27b57c06156dc8993a62bd387943a022a139ee239ff8f2aa7a5f896`
 - `apps/mobile/eas.json`: `1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51`
 - `apps/mobile/app.config.js`: `5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c`
-- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `ef50b0582128c6e1401214e36ca542aaef9678466019745c9b8dbc99d70ce98f`
+- `apps/mobile/src/lib/analytics/eventRegistry.ts`: `33df93ea6c9116b50df449c0d1fa67adb82d83742f47c3f5b5ee57fe63a0792b`
 - `apps/mobile/src/lib/analytics/track.ts`: `7ddefd4443143d554d72bba46abe785736c9ecf912d411c27ccf6ddb75c7ed45`
 - `apps/mobile/src/lib/observability/scrub.ts`: `222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e`
 - `docs/phase-9/generated/release-engineering-qa-packet.json`: `59e47535044f9a0408c2fdcea06615f52ad60b727bfee976ae0b0bf7d4dfe2dc`
@@ -78,7 +78,7 @@ Phase 9 packet status: blocked
 - `docs/phase-10/tester-brief.md`: `6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16`
 - `docs/phase-10/testflight-packet.md`: `ff94ad4bebe828ee607ccb0dd1b6455d2102aebf2acf0e541f435aede887225c`
 - `docs/phase-10/google-closed-testing-packet.md`: `bad9d0c5424dbba40c9d4231dc5e16cd7118200e30935d52903a7450a928a5d6`
-- `docs/phase-10/beta-event-schema.md`: `b4b7f137b45ed69c3416cdd19d9126e0d3449425b20813b7d0066991d674f91d`
+- `docs/phase-10/beta-event-schema.md`: `c7a2e32075450b7ceb2325d3cb4cc95eee62d15ae48fb60051334b8c6aac13f5`
 - `docs/phase-10/support-operations.md`: `2dedf1baab29c8e3bd0e1dcc9c248ffc1ade2e9d7cdbf05d217094208a87245d`
 - `docs/phase-10/surveys.md`: `7500508e1ddd2f449ad8ab06584e990ba936869dae70f3db519a9a1efc474276`
 - `docs/phase-10/interview-script.md`: `bd9972d0f0379ba3392b8edefe5a11f8ccbde6d601213efa0834c54da065d8ae`
