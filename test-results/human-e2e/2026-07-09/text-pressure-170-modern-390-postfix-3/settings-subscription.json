@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 44,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 20,
+        "right": 68,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 202
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "See RoutineKind Pro",
+      "label": "See RoutineKind Pro",
+      "partialClip": false,
+      "rect": {
+        "bottom": 227,
+        "height": 50,
+        "left": 41,
+        "right": 349,
+        "top": 177,
+        "visibleHeight": 50,
+        "visibleWidth": 308,
+        "width": 308
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 290.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "BUTTON",
+      "hitText": "Restore purchases ›",
+      "label": "Restore purchases ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 317,
+        "height": 53,
+        "left": 38,
+        "right": 352,
+        "top": 264,
+        "visibleHeight": 53,
+        "visibleWidth": 314,
+        "width": 314
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 343.5
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "BUTTON",
+      "hitText": "Terms ›",
+      "label": "Terms ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 370,
+        "height": 53,
+        "left": 38,
+        "right": 352,
+        "top": 317,
+        "visibleHeight": 53,
+        "visibleWidth": 314,
+        "width": 314
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 396
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "BUTTON",
+      "hitText": "Privacy ›",
+      "label": "Privacy ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 422,
+        "height": 52,
+        "left": 38,
+        "right": 352,
+        "top": 370,
+        "visibleHeight": 52,
+        "visibleWidth": 314,
+        "width": 314
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8257/settings/subscription",
+  "textOverflows": [],
+  "textStart": "< Subscription You’re on the free plan The quiz result, a shelf view, and one conflict check are always free. Upgrade to Pro anytime. See RoutineKind Pro Restore purchases › Terms › Privacy ›",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/settings/subscription",
+  "scaledCount": 10,
+  "textScale": 1.7,
+  "url": "http://localhost:8257/settings/subscription",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

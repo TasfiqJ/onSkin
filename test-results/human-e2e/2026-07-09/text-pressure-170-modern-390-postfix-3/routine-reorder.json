@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 314.875,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Maybe later",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 263.75,
+        "right": 366,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 102.25,
+        "width": 102.25
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 522
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Start free trial",
+      "label": "Start free trial",
+      "partialClip": false,
+      "rect": {
+        "bottom": 549,
+        "height": 54,
+        "left": 24,
+        "right": 366,
+        "top": 495,
+        "visibleHeight": 54,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 636
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Explore first. 7 days of Pro",
+      "label": "Explore first. 7 days of Pro No credit card. See your routine work, then decide. ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 667,
+        "height": 62,
+        "left": 24,
+        "right": 366,
+        "top": 605,
+        "visibleHeight": 62,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 120.890625,
+        "y": 691
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Terms",
+      "label": "Terms",
+      "partialClip": false,
+      "rect": {
+        "bottom": 715,
+        "height": 48,
+        "left": 96.890625,
+        "right": 144.890625,
+        "top": 667,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 194.265625,
+        "y": 691
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Privacy",
+      "label": "Privacy",
+      "partialClip": false,
+      "rect": {
+        "bottom": 715,
+        "height": 48,
+        "left": 170.25,
+        "right": 218.28125,
+        "top": 667,
+        "visibleHeight": 48,
+        "visibleWidth": 48.03125,
+        "width": 48.03125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 268.375,
+        "y": 691
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Restore",
+      "label": "Restore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 715,
+        "height": 48,
+        "left": 243.640625,
+        "right": 293.109375,
+        "top": 667,
+        "visibleHeight": 48,
+        "visibleWidth": 49.46875,
+        "width": 49.46875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8257/routine/reorder",
+  "textOverflows": [],
+  "textStart": "Maybe later Unlock your full routine. The complete builder, sequencing and ramp. Built around your skin. Part of RoutineKind Pro. Start 14 days free, then $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Terms · Privacy · Restore",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/routine/reorder",
+  "scaledCount": 3,
+  "textScale": 1.7,
+  "url": "http://localhost:8257/routine/reorder",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,95 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 268,
+        "y": 353
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "x",
+      "label": "Close",
+      "partialClip": false,
+      "rect": {
+        "bottom": 377,
+        "height": 48,
+        "left": 244,
+        "right": 292,
+        "top": 329,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 472.59375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Search catalog",
+      "label": "Search catalog. Try name or brand instead",
+      "partialClip": false,
+      "rect": {
+        "bottom": 496.59375,
+        "height": 48,
+        "left": 28,
+        "right": 292,
+        "top": 448.59375,
+        "visibleHeight": 48,
+        "visibleWidth": 264,
+        "width": 264
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 160,
+        "y": 522.59375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Scan ingredients",
+      "label": "Scan the ingredient list. We'll read the INCI text",
+      "partialClip": false,
+      "rect": {
+        "bottom": 546.59375,
+        "height": 48,
+        "left": 28,
+        "right": 292,
+        "top": 498.59375,
+        "visibleHeight": 48,
+        "visibleWidth": 264,
+        "width": 264
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8255/shelf/no-match",
+  "textOverflows": [],
+  "textStart": "x Not found yet. S Search catalog I Scan ingredients + Add it by hand",
+  "viewport": {
+    "width": 320,
+    "height": 568
+  },
+  "route": "/shelf/no-match",
+  "scaledCount": 8,
+  "textScale": 1.7,
+  "url": "http://localhost:8255/shelf/no-match",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,245 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 131.7734375,
+        "y": 356.1953125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Fragrance-free",
+      "label": "Fragrance-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 387.59375,
+        "height": 62.796875,
+        "left": 24,
+        "right": 239.546875,
+        "top": 324.796875,
+        "visibleHeight": 62.796875,
+        "visibleWidth": 215.546875,
+        "width": 215.546875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 301.7734375,
+        "y": 356.1953125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Vegan",
+      "label": "Vegan",
+      "partialClip": false,
+      "rect": {
+        "bottom": 387.59375,
+        "height": 62.796875,
+        "left": 247.546875,
+        "right": 356,
+        "top": 324.796875,
+        "visibleHeight": 62.796875,
+        "visibleWidth": 108.453125,
+        "width": 108.453125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 115.5859375,
+        "y": 426.9921875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Cruelty-free",
+      "label": "Cruelty-free",
+      "partialClip": false,
+      "rect": {
+        "bottom": 458.390625,
+        "height": 62.796875,
+        "left": 24,
+        "right": 207.171875,
+        "top": 395.59375,
+        "visibleHeight": 62.796875,
+        "visibleWidth": 183.171875,
+        "width": 183.171875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 151.3125,
+        "y": 497.7890625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Non-comedogenic",
+      "label": "Non-comedogenic",
+      "partialClip": false,
+      "rect": {
+        "bottom": 529.1875,
+        "height": 62.796875,
+        "left": 24,
+        "right": 278.625,
+        "top": 466.390625,
+        "visibleHeight": 62.796875,
+        "visibleWidth": 254.625,
+        "width": 254.625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 111.8046875,
+        "y": 568.5859375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Sustainable",
+      "label": "Sustainable",
+      "partialClip": false,
+      "rect": {
+        "bottom": 599.984375,
+        "height": 62.796875,
+        "left": 24,
+        "right": 199.609375,
+        "top": 537.1875,
+        "visibleHeight": 62.796875,
+        "visibleWidth": 175.609375,
+        "width": 175.609375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 86.3515625,
+        "y": 691.7890625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Drugstore",
+      "label": "Drugstore",
+      "partialClip": false,
+      "rect": {
+        "bottom": 716.390625,
+        "height": 49.203125,
+        "left": 24,
+        "right": 148.703125,
+        "top": 667.1875,
+        "visibleHeight": 49.203125,
+        "visibleWidth": 124.703125,
+        "width": 124.703125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 219.765625,
+        "y": 691.7890625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Mid-range",
+      "label": "Mid-range",
+      "partialClip": false,
+      "rect": {
+        "bottom": 716.390625,
+        "height": 49.203125,
+        "left": 156.703125,
+        "right": 282.828125,
+        "top": 667.1875,
+        "visibleHeight": 49.203125,
+        "visibleWidth": 126.125,
+        "width": 126.125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 80.4765625,
+        "y": 748.9921875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "Premium",
+      "label": "Premium",
+      "partialClip": false,
+      "rect": {
+        "bottom": 773.59375,
+        "height": 49.203125,
+        "left": 24,
+        "right": 136.953125,
+        "top": 724.390625,
+        "visibleHeight": 49.203125,
+        "visibleWidth": 112.953125,
+        "width": 112.953125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8257/recommendations/preferences",
+  "textOverflows": [],
+  "textStart": "< Preferences Recommendation preferences These shape what fits you. They never change what sells. VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/recommendations/preferences",
+  "scaledCount": 22,
+  "textScale": 1.7,
+  "url": "http://localhost:8257/recommendations/preferences",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

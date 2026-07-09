@@ -1,0 +1,18 @@
+
+> @onskin/mobile@0.1.0 web
+> expo start --web --port 8255 --host localhost
+
+[33m› [1m[@sentry/react-native/expo][22m Missing config for [1morganization, project[22m. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/[0m
+Starting project at C:\Users\jasim\Desktop\onSkin\apps\mobile
+› Port 8255 is being used by another process
+Input is required, but 'npx expo' is in non-interactive mode.
+Required input:
+> Use port 8256 instead?
+› Skipping dev server
+npm error Lifecycle script `web` failed with error:
+npm error code 1
+npm error path C:\Users\jasim\Desktop\onSkin\apps\mobile
+npm error workspace @onskin/mobile@0.1.0
+npm error location C:\Users\jasim\Desktop\onSkin\apps\mobile
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c expo start --web --port 8255 --host localhost

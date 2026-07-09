@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Cleared the supported-phone 170% text-pressure follow-up across compact,
+  support-floor, and modern phone viewports. The current-source sweeps first
+  reproduced `/settings/privacy` direct-entry rows peeking into the floating
+  tab-bar zone at 320 x 568 and 320 x 480, then `/today?routine=PM` placed the
+  empty-routine `Add products` CTA under the floating tab bar at 320 x 568.
+  Settings Privacy direct entries now suppress unrelated reminder rows and use
+  a support-floor withdraw spacer, while Today empty-routine cards use a
+  short-phone density tier that keeps the primary CTA complete above the bar.
+  Focused Today/Settings route contracts pass, and the 49-route 170% sweeps at
+  320 x 568, 320 x 480, and 390 x 844 report zero failed routes with evidence in
+  `test-results/human-e2e/2026-07-09/text-pressure-170-compact-568-postfix-3/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-170-support-floor-480-postfix-3/`,
+  `test-results/human-e2e/2026-07-09/text-pressure-170-modern-390-postfix-3/`,
+  and
+  `docs/e2e-bug-reports/2026-07-09-text-pressure-170-supported-phone-clearance.md`.
+
 - Tightened the Today empty-routine support-floor card so 320 x 480 no longer
   spends first-viewport height on lower helper copy. The compact card keeps
   `Build a routine from your shelf.`, renders `Add products` as a complete
