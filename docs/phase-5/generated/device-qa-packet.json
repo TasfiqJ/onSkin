@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-09T14:16:28.384Z",
+  "generatedAt": "2026-07-09T14:27:27.964Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "9d419e09e2d8edb0b438f8a768cb898327c794fc",
+  "gitSha": "b8c176cbe9c51162dc58e1f5d62e357abba26a38",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -143,8 +143,8 @@
     {
       "path": "apps/mobile/app.base.json",
       "exists": true,
-      "bytes": 2810,
-      "sha256": "1b92b9d10e576c87a2f3c07cfae77fade20423ee0e693900ef8ae2d22ff68299"
+      "bytes": 2883,
+      "sha256": "a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5"
     },
     {
       "path": "apps/mobile/app.config.js",
@@ -227,8 +227,8 @@
     {
       "path": "scripts/phase5/check-native-config.mjs",
       "exists": true,
-      "bytes": 7130,
-      "sha256": "b0a49cb618d3e57103c95bf3fc0362d25d525aeec05b7226bed83237a4f4afc0"
+      "bytes": 7413,
+      "sha256": "077c9faf6adb79bb5998142844f4568ae4c0b4c58163a457d53675fdd404659d"
     },
     {
       "path": "scripts/phase5/device-qa-packet-smoke.mjs",
@@ -251,8 +251,8 @@
     {
       "path": "docs/DEVICE_SUPPORT_POLICY.md",
       "exists": true,
-      "bytes": 4005,
-      "sha256": "ae6b01158ad64e1262e4a62ecebf3da8ba3d0cb2af7ddb8276e567813ba058e4"
+      "bytes": 4028,
+      "sha256": "48ba4111d25bf6863e6e71356a22b118ba809636ac5e203426a07cb4b0619b3e"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
@@ -269,8 +269,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 259817,
-      "sha256": "bd3d00c8f0983faed5270bc18e3de76313432b5acc63b59da221a7eac38cc821"
+      "bytes": 261419,
+      "sha256": "fd488bff8539e7bb01fdf453b2b7fd62463b5812e42872768865296ad837f827"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
@@ -287,8 +287,8 @@
     {
       "path": "docs/phase-5/native-build-runbook.md",
       "exists": true,
-      "bytes": 3645,
-      "sha256": "d120c127ce297515397d2ee4b01eca7790b1a0f386013f4cbaa462a5a8613ae8"
+      "bytes": 3854,
+      "sha256": "46a0fa3402e1d3405f366a249de6f48804e8c5eb33c3e7cff6ca7df567e265f7"
     },
     {
       "path": "docs/phase-5/device-qa-checklist.md",
@@ -299,8 +299,8 @@
     {
       "path": "docs/phase-5/phase-5-exit-review.md",
       "exists": true,
-      "bytes": 2597,
-      "sha256": "108a67f334ad7b6e2fb3d8702243fe1fb0288790d8534730758a7b34c93f1323"
+      "bytes": 2717,
+      "sha256": "cb5062cad3f623b0fb471e7b21a2d3c75646bd6bf4f1b8aed694b55797f50e20"
     }
   ],
   "blockers": [
