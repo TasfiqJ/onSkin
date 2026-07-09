@@ -123,15 +123,19 @@ export default function PreferencesScreen() {
   const preferenceDelayMs = devRecommendationPreferenceDelayMs();
   const compactPreferences = height < 640;
   const shortPreferences = height < 600;
+  const supportFloorPreferences = width <= 320 && height < 520;
   const ultraShortPreferences = height < 460;
   const microShortPreferences = height < 380;
   const splitShortPreferences = height < 600;
   const modernTextPressurePreferences = height < 900;
   const tallTextPressurePreferences = width <= 430 && height >= 900 && height < 980;
   const showPreferencesSubtitle = !compactPreferences;
+  const preferencesTitle = supportFloorPreferences ? 'Preferences' : REC_COPY.preferences.title;
   const valuesLabelClassName = ultraShortPreferences
     ? 'mb-1.5 mt-2.5'
-    : shortPreferences
+    : supportFloorPreferences
+      ? 'mb-1 mt-1.5'
+      : shortPreferences
       ? 'mb-1.5 mt-3'
       : compactPreferences
         ? 'mb-2 mt-5'
@@ -161,7 +165,9 @@ export default function PreferencesScreen() {
     : ultraShortPreferences
       ? { marginTop: 48 }
       : undefined;
-  const splitShortPreferenceDeferredGroupStyle = { marginTop: 192 };
+  const splitShortPreferenceDeferredGroupStyle = supportFloorPreferences
+    ? { marginTop: 224 }
+    : { marginTop: 192 };
   const modernTextPressureBudgetGroupStyle =
     (modernTextPressurePreferences || tallTextPressurePreferences) && !compactPreferences
       ? { marginTop: 112 }
@@ -250,7 +256,7 @@ export default function PreferencesScreen() {
             ultraShortPreferences || shortPreferences ? 'mt-1 text-[30px] leading-[32px]' : 'mt-2'
           }
         >
-          {REC_COPY.preferences.title}
+          {preferencesTitle}
         </Text>
         {showPreferencesSubtitle ? (
           <Text variant="bodySm" tone="muted" className="mt-1.5">

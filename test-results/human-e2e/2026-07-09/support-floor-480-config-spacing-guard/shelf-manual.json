@@ -129,9 +129,9 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8291/shelf/manual",
+  "location": "http://localhost:8295/shelf/manual",
   "textOverflows": [],
-  "textStart": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Continue",
+  "textStart": "x Add by hand PRODUCT NAME BRAND CATEGORY Choose ▾ INGREDIENTS · optional, we’ll find the actives Pick a category and we'll estimate the PAO. You can change it next. Continue",
   "viewport": {
     "width": 320,
     "height": 480
@@ -139,7 +139,7 @@
   "route": "/shelf/manual",
   "scaledCount": 10,
   "textScale": 1,
-  "url": "http://localhost:8291/shelf/manual",
+  "url": "http://localhost:8295/shelf/manual",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

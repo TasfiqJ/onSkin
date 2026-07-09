@@ -145,6 +145,7 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('const compactPreferences = height < 640');
     expect(source).toContain('const shortPreferences = height < 600;');
+    expect(source).toContain('const supportFloorPreferences = width <= 320 && height < 520;');
     expect(source).toContain('const ultraShortPreferences = height < 460;');
     expect(source).toContain('const microShortPreferences = height < 380;');
     expect(source).toContain('const splitShortPreferences = height < 600;');
@@ -152,9 +153,13 @@ describe('Recommendation route contracts', () => {
       'const tallTextPressurePreferences = width <= 430 && height >= 900 && height < 980;',
     );
     expect(source).toContain('const showPreferencesSubtitle = !compactPreferences;');
+    expect(source).toContain(
+      "const preferencesTitle = supportFloorPreferences ? 'Preferences' : REC_COPY.preferences.title;",
+    );
     expect(source).toContain('{showPreferencesSubtitle ? (');
     expect(source).toContain('{REC_COPY.preferences.subtitle}');
     expect(source).toContain('const valuesLabelClassName = ultraShortPreferences');
+    expect(source).toContain("? 'mb-1 mt-1.5'");
     expect(source).toContain("? 'mb-1.5 mt-3'");
     expect(source).toContain("? 'mb-1.5 mt-12'");
     expect(source).toContain("? 'mb-1.5 mt-24'");
@@ -176,7 +181,9 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain('dense?: boolean');
     expect(source).toContain('ultraDense?: boolean');
     expect(source).toContain('numberOfLines={1}');
-    expect(source).toContain('const splitShortPreferenceDeferredGroupStyle = { marginTop: 192 };');
+    expect(source).toContain('const splitShortPreferenceDeferredGroupStyle = supportFloorPreferences');
+    expect(source).toContain('? { marginTop: 224 }');
+    expect(source).toContain(': { marginTop: 192 };');
     expect(source).toContain('const modernTextPressurePreferences = height < 900;');
     expect(source).toContain('const modernTextPressureBudgetGroupStyle =');
     expect(source).toContain('modernTextPressurePreferences || tallTextPressurePreferences');

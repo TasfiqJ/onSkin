@@ -1,7 +1,7 @@
 {
-  "baseUrl": "http://localhost:8291",
+  "baseUrl": "http://localhost:8295",
   "evidenceDir": "test-results/human-e2e/2026-07-09/support-floor-480-config-spacing-guard",
-  "generatedAt": "2026-07-09T11:33:01.910Z",
+  "generatedAt": "2026-07-09T11:38:42.683Z",
   "routeCount": 49,
   "scale": 1,
   "status": "pass",
@@ -208,13 +208,13 @@
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/trend/optin",
-      "scaledCount": 5
+      "scaledCount": 6
     },
     {
       "disallowedLogCount": 0,
       "issueCount": 0,
       "route": "/trend/fairness",
-      "scaledCount": 6
+      "scaledCount": 5
     },
     {
       "disallowedLogCount": 0,

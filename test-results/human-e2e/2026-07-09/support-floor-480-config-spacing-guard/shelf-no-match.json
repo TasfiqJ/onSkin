@@ -3,7 +3,7 @@
     {
       "center": {
         "x": 268,
-        "y": 225
+        "y": 205
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -12,11 +12,11 @@
       "label": "Close",
       "partialClip": false,
       "rect": {
-        "bottom": 249,
+        "bottom": 229,
         "height": 48,
         "left": 244,
         "right": 292,
-        "top": 201,
+        "top": 181,
         "visibleHeight": 48,
         "visibleWidth": 48,
         "width": 48
@@ -28,7 +28,7 @@
     {
       "center": {
         "x": 160,
-        "y": 263
+        "y": 295
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,11 +37,11 @@
       "label": "Search catalog. Try name or brand instead",
       "partialClip": false,
       "rect": {
-        "bottom": 287,
+        "bottom": 319,
         "height": 48,
         "left": 28,
         "right": 292,
-        "top": 239,
+        "top": 271,
         "visibleHeight": 48,
         "visibleWidth": 264,
         "width": 264
@@ -53,7 +53,7 @@
     {
       "center": {
         "x": 160,
-        "y": 315
+        "y": 347
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -62,11 +62,11 @@
       "label": "Add it by hand. Always works, even offline",
       "partialClip": false,
       "rect": {
-        "bottom": 339,
+        "bottom": 371,
         "height": 48,
         "left": 28,
         "right": 292,
-        "top": 291,
+        "top": 323,
         "visibleHeight": 48,
         "visibleWidth": 264,
         "width": 264
@@ -79,9 +79,9 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8291/shelf/no-match",
+  "location": "http://localhost:8295/shelf/no-match",
   "textOverflows": [],
-  "textStart": "x Not found yet. S Search catalog + Add it by hand",
+  "textStart": "? x Not found yet. S Search catalog + Add it by hand",
   "viewport": {
     "width": 320,
     "height": 480
@@ -89,7 +89,7 @@
   "route": "/shelf/no-match",
   "scaledCount": 6,
   "textScale": 1,
-  "url": "http://localhost:8291/shelf/no-match",
+  "url": "http://localhost:8295/shelf/no-match",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

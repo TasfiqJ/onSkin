@@ -29,7 +29,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8291/recommendations/stale-local-rec",
+  "location": "http://localhost:8295/recommendations/stale-local-rec",
   "textOverflows": [],
   "textStart": "< Suggestion Looking at your routine…",
   "viewport": {
@@ -39,7 +39,7 @@
   "route": "/recommendations/stale-local-rec",
   "scaledCount": 3,
   "textScale": 1,
-  "url": "http://localhost:8291/recommendations/stale-local-rec",
+  "url": "http://localhost:8295/recommendations/stale-local-rec",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

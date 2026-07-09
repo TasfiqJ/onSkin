@@ -29,7 +29,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8291/ask/consent",
+  "location": "http://localhost:8295/ask/consent",
   "textOverflows": [],
   "textStart": "BETA Ask RoutineKind is not in this beta The launch loop focuses on shelf, conflicts, routines, photos, reminders, payments, and privacy controls. A cloud advisor needs final privacy copy, model policy review, support handling, and observability before it can ship. Back to Ask",
   "viewport": {
@@ -39,7 +39,7 @@
   "route": "/ask/consent",
   "scaledCount": 5,
   "textScale": 1,
-  "url": "http://localhost:8291/ask/consent",
+  "url": "http://localhost:8295/ask/consent",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

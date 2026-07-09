@@ -129,7 +129,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8291/settings/subscription",
+  "location": "http://localhost:8295/settings/subscription",
   "textOverflows": [],
   "textStart": "< Subscription Free plan See Pro Restore › Terms › Privacy ›",
   "viewport": {
@@ -139,7 +139,7 @@
   "route": "/settings/subscription",
   "scaledCount": 10,
   "textScale": 1,
-  "url": "http://localhost:8291/settings/subscription",
+  "url": "http://localhost:8295/settings/subscription",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

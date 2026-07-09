@@ -28,7 +28,7 @@
     {
       "center": {
         "x": 76.71875,
-        "y": 190
+        "y": 148
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -37,11 +37,11 @@
       "label": "Fragrance-free",
       "partialClip": false,
       "rect": {
-        "bottom": 214,
+        "bottom": 172,
         "height": 48,
         "left": 24,
         "right": 129.4375,
-        "top": 166,
+        "top": 124,
         "visibleHeight": 48,
         "visibleWidth": 105.4375,
         "width": 105.4375
@@ -53,7 +53,7 @@
     {
       "center": {
         "x": 161.546875,
-        "y": 190
+        "y": 148
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -62,11 +62,11 @@
       "label": "Vegan",
       "partialClip": false,
       "rect": {
-        "bottom": 214,
+        "bottom": 172,
         "height": 48,
         "left": 133.4375,
         "right": 189.65625,
-        "top": 166,
+        "top": 124,
         "visibleHeight": 48,
         "visibleWidth": 56.21875,
         "width": 56.21875
@@ -78,7 +78,7 @@
     {
       "center": {
         "x": 238.9375,
-        "y": 190
+        "y": 148
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -87,11 +87,11 @@
       "label": "Cruelty-free",
       "partialClip": false,
       "rect": {
-        "bottom": 214,
+        "bottom": 172,
         "height": 48,
         "left": 193.65625,
         "right": 284.21875,
-        "top": 166,
+        "top": 124,
         "visibleHeight": 48,
         "visibleWidth": 90.5625,
         "width": 90.5625
@@ -103,7 +103,7 @@
     {
       "center": {
         "x": 85.6953125,
-        "y": 430
+        "y": 420
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -112,11 +112,11 @@
       "label": "Non-comedogenic",
       "partialClip": false,
       "rect": {
-        "bottom": 454,
+        "bottom": 444,
         "height": 48,
         "left": 24,
         "right": 147.390625,
-        "top": 406,
+        "top": 396,
         "visibleHeight": 48,
         "visibleWidth": 123.390625,
         "width": 123.390625
@@ -128,7 +128,7 @@
     {
       "center": {
         "x": 194.9296875,
-        "y": 430
+        "y": 420
       },
       "centerBlocked": false,
       "hitInside": true,
@@ -137,11 +137,11 @@
       "label": "Sustainable",
       "partialClip": false,
       "rect": {
-        "bottom": 454,
+        "bottom": 444,
         "height": 48,
         "left": 151.390625,
         "right": 238.46875,
-        "top": 406,
+        "top": 396,
         "visibleHeight": 48,
         "visibleWidth": 87.078125,
         "width": 87.078125
@@ -154,9 +154,9 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8291/recommendations/preferences",
+  "location": "http://localhost:8295/recommendations/preferences",
   "textOverflows": [],
-  "textStart": "< Preferences Recommendation preferences VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
+  "textStart": "< Preferences Preferences VALUES Fragrance-free Vegan Cruelty-free Non-comedogenic Sustainable BUDGET Drugstore Mid-range Premium TEXTURE Gel Cream Fluid Balm Oil ✦ We prioritise options that fit these.",
   "viewport": {
     "width": 320,
     "height": 480
@@ -164,7 +164,7 @@
   "route": "/recommendations/preferences",
   "scaledCount": 21,
   "textScale": 1,
-  "url": "http://localhost:8291/recommendations/preferences",
+  "url": "http://localhost:8295/recommendations/preferences",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }

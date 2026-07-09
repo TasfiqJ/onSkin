@@ -129,7 +129,7 @@
   "horizontalOverflow": 0,
   "issueCount": 0,
   "issues": [],
-  "location": "http://localhost:8291/progress/review",
+  "location": "http://localhost:8295/progress/review",
   "textOverflows": [],
   "textStart": "Terms · Privacy · Restore x Unlock your private photo timeline. $49.99/year Store checkout is unavailable in this preview. You can keep exploring. Start free trial",
   "viewport": {
@@ -139,7 +139,7 @@
   "route": "/progress/review",
   "scaledCount": 3,
   "textScale": 1,
-  "url": "http://localhost:8291/progress/review",
+  "url": "http://localhost:8295/progress/review",
   "disallowedLogCount": 0,
   "disallowedLogs": []
 }
