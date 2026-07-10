@@ -21,18 +21,18 @@ Fresh verification through 2026-07-09:
 - Floating bottom tab-bar active-pill polish now has fresh headless Chrome Expo
   web geometry evidence across 320 x 568 stress width plus 360 x 640,
   375 x 667, 390 x 844, 412 x 915, and 430 x 932 supported-phone viewports.
-  The app renders full Today, Progress, Shelf, and You labels through
-  the supported-phone band, keeps the active capsule inset instead of
+  The app renders Today, compact visible `Prog.`, Shelf, and You labels through
+  the 430 px compact-phone band, keeps the active capsule inset instead of
   filling a whole tab slot, and preserves the full `Progress tab` accessibility
   label. The full geometry pass verifies 66 px pill height, 54 px tab targets,
   exactly one selected tab per routed tab state, direct one-line labels, center
   hit-tests, zero horizontal overflow, and only expected local placeholder
   warnings. A focused 412 x 915 / 200% pressure recheck confirms the route-wide
-  synthetic pressure audit leaves role=`tab` labels to the dedicated tab-bar harness.
+  synthetic pressure audit leaves tab labels to the dedicated tab-bar harness.
   Evidence:
-  `test-results/human-e2e/2026-07-09/navigation-tabbar-premium-full-labels-final/`
+  `test-results/human-e2e/2026-07-09/navigation-tabbar-supported-polish-postfix2/`
   and
-  `test-results/human-e2e/2026-07-09/tabbar-full-label-412-pressure-final/`.
+  `test-results/human-e2e/2026-07-09/tabbar-polish-412-pressure-postfix2/`.
 - Shelf catalog wrong-match recovery now has fresh headless Chrome Expo web
   evidence before product add. With
   `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=wrong_match`, catalog search exposes
