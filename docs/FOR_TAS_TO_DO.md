@@ -185,6 +185,15 @@ Status: needs-device-verification
   envelopes and `.onskinphoto` files remain byte-identical, new writes fail,
   account export fails before writing plaintext, and retry succeeds after key
   access returns. Confirm no new native content key appears in AsyncStorage.
+- After shared private-KV records exist, fault the shared content-key read on
+  physical iOS and Android while cold-opening and foregrounding Today, Shelf,
+  routine plan, Privacy, and Progress. Verify app lock remains first; the global
+  recovery hides navigation and route/default copy; repeated retry is
+  non-destructive; restored key access returns to the exact deep link including
+  query parameters; Offline Sync and analytics/backend traffic do not run while
+  blocked; and all private envelopes plus the key inventory retain the same
+  hashes. Repeat with VoiceOver and TalkBack and attach device/build IDs, native
+  secure-storage logs, screen recordings, hashes, and named tester signoff.
 - Exercise missing, malformed, and wrong-key staging fixtures separately. Verify
   Progress never creates replacement key material, note/photo metadata is not
   rewritten, and explicit local-data deletion remains the only destructive

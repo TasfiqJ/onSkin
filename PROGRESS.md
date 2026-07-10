@@ -13,7 +13,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   timeline lock, keeps route content and mutations unmounted until one encrypted
   read succeeds, provides real-query retry plus direct-route escape, and never
   exposes raw storage errors. Focused typecheck/lint and 129 photo/privacy tests
-  pass; the full suite passes 176 files / 1834 tests. Human-simulated Expo web
+  pass; the full suite passes 177 files / 1838 tests. Human-simulated Expo web
   covers persistent failure on all four routes at
   360 x 640 and 390 x 844 plus one-shot retry into captured-photo review, with
   zero false-state leaks, overflow, dialogs, page errors, unexpected errors,
