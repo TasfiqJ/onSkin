@@ -17,6 +17,12 @@ This log governs ingredient taxonomy, product-type definitions, compatibility ca
 - Recommendation type caveats.
 - Any product example labels before public launch.
 
+Before production clearance, every inventory row must be `Approved` or
+`Deferred`. Approved rows require the named qualified reviewer and ISO review
+date. Deferred rows require a named decision owner, ISO date, deferral reason,
+and a production gate that keeps the surface hidden. `Blocked` and
+`Not cleared` remain unresolved.
+
 ## Inventory
 
 | Area                        | Source                                                 | Current behavior                        | Reviewer | Date | Status      | Notes                                                 |

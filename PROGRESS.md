@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Hardened the Phase 3 production boundary from an environment assertion into
+  machine-verified reviewer evidence. Production Expo config and the standalone
+  release checker now reject a cleared flag unless the generated worklist is
+  clean, covers all five review domains, has no unresolved items, records a
+  named owner and valid date for every `Approved` or `Deferred` disposition,
+  and still matches every review-log and source byte count/SHA-256. `Deferred`
+  remains a hidden-production decision, not approval. The validator rejects
+  dirty artifacts, duplicate/missing domains, inconsistent summaries,
+  placeholder reviewers, invalid dates, and stale hashes; its release-ready
+  fixture is injectable only inside the test process, not through build
+  environment variables. The current real worklist remains unresolved and
+  therefore correctly blocks production.
+
 - Closed the production-build exposure gap for unresolved Phase 3 content.
   Runtime production tests already proved unreviewed conflict rules, routine
   cadence, and medical-adjacent recommendations stay hidden; Expo config now
@@ -18,7 +31,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   native-config warnings enforce the same contract. The reviewer worklist,
   operator queue, exact-source-hash packet, E2E manifest, and dependent Phase
   4-11 evidence graph were regenerated. `npm run launch:verify` passes end to
-  end, including typecheck, lint, 172 mobile test files / 1770 tests, source
+  end, including typecheck, lint, 172 mobile test files / 1778 tests, source
   packet parity, and generated hash integrity. Professional review and final
   consent/privacy copy remain correctly launch-blocked for Tas.
 

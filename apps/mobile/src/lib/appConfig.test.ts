@@ -1,8 +1,57 @@
+import { createHash } from 'node:crypto';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { tmpdir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const requireConfig = createRequire(import.meta.url);
 const APP_CONFIG_PATH = requireConfig.resolve('../../app.config.js');
+const REVIEW_EVIDENCE_PATH = requireConfig.resolve('../../phase3-review-evidence.js');
+
+type ReviewSourceRecord = {
+  path: string;
+  exists: boolean;
+  bytes?: number;
+  sha256?: string;
+};
+
+type ReviewWorklist = {
+  gitStatus: string;
+  reviewLogs: (ReviewSourceRecord & { domain: string })[];
+  summary: {
+    itemCount: number;
+    domainCounts: Record<string, number>;
+    statusCounts: Record<string, number>;
+    missingSourcePathCount: number;
+    blockerCount: number;
+  };
+  items: {
+    id: string;
+    domain: string;
+    statusBucket: string;
+    reviewer: string;
+    date: string;
+    currentBehavior?: string;
+    notes?: string;
+    sourceText?: string;
+    sourcePaths: ReviewSourceRecord[];
+  }[];
+  blockers: string[];
+  warnings: string[];
+};
+
+const reviewEvidence = requireConfig(REVIEW_EVIDENCE_PATH) as {
+  createReleaseReadyTestWorklist(): ReviewWorklist;
+  validateReviewWorklist(
+    worklist: ReviewWorklist,
+    options?: { rootDir?: string; verifyHashes?: boolean; verifyLogRows?: boolean },
+  ): string[];
+};
+
+const runtime = globalThis as typeof globalThis & {
+  __ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__?: ReviewWorklist;
+};
 
 const APP_ENV_KEYS = [
   'APP_VARIANT',
@@ -25,20 +74,35 @@ const APP_ENV_KEYS = [
   'EXPO_PUBLIC_PLAY_STORE_URL',
 ] as const;
 
-function buildExpoConfig(env: Partial<Record<(typeof APP_ENV_KEYS)[number], string>>) {
+function buildExpoConfig(
+  env: Partial<Record<(typeof APP_ENV_KEYS)[number], string>>,
+  options: { releaseReadyReviewEvidence?: boolean } = {},
+) {
   const previous = new Map<string, string | undefined>();
+  const previousTestWorklist = runtime.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__;
   for (const key of APP_ENV_KEYS) {
     previous.set(key, process.env[key]);
     delete process.env[key];
   }
 
   Object.assign(process.env, env);
+  if (options.releaseReadyReviewEvidence) {
+    runtime.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__ =
+      reviewEvidence.createReleaseReadyTestWorklist();
+  } else {
+    delete runtime.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__;
+  }
   delete requireConfig.cache[APP_CONFIG_PATH];
 
   try {
     return requireConfig(APP_CONFIG_PATH)().expo;
   } finally {
     delete requireConfig.cache[APP_CONFIG_PATH];
+    if (previousTestWorklist === undefined) {
+      delete runtime.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__;
+    } else {
+      runtime.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__ = previousTestWorklist;
+    }
     for (const [key, value] of previous) {
       if (value === undefined) {
         delete process.env[key];
@@ -96,17 +160,20 @@ describe('Expo app identity config', () => {
   });
 
   it('uses production identity only when the production variant is explicit', () => {
-    const expo = buildExpoConfig({
-      APP_VARIANT: 'production',
-      EXPO_PUBLIC_APP_ENV: 'production',
-      BRAND_LEGAL_CLEARANCE: 'cleared',
-      PHASE3_RELEASE_CLEARANCE: 'cleared',
-      APP_DISPLAY_NAME: 'RoutineKind',
-      APP_SLUG: 'routinekind',
-      APP_SCHEME: 'routinekind',
-      APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
-      APP_ANDROID_PACKAGE: 'com.routinekind.app',
-    });
+    const expo = buildExpoConfig(
+      {
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+        PHASE3_RELEASE_CLEARANCE: 'cleared',
+        APP_DISPLAY_NAME: 'RoutineKind',
+        APP_SLUG: 'routinekind',
+        APP_SCHEME: 'routinekind',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+      },
+      { releaseReadyReviewEvidence: true },
+    );
 
     expect(expo.name).toBe('RoutineKind');
     expect(expo.slug).toBe('routinekind');
@@ -118,17 +185,20 @@ describe('Expo app identity config', () => {
   });
 
   it('normalizes supported app variant and environment values before resolving identity', () => {
-    const expo = buildExpoConfig({
-      APP_VARIANT: ' Production ',
-      EXPO_PUBLIC_APP_ENV: ' PRODUCTION ',
-      BRAND_LEGAL_CLEARANCE: 'cleared',
-      PHASE3_RELEASE_CLEARANCE: 'cleared',
-      APP_DISPLAY_NAME: 'RoutineKind',
-      APP_SLUG: 'routinekind',
-      APP_SCHEME: 'routinekind',
-      APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
-      APP_ANDROID_PACKAGE: 'com.routinekind.app',
-    });
+    const expo = buildExpoConfig(
+      {
+        APP_VARIANT: ' Production ',
+        EXPO_PUBLIC_APP_ENV: ' PRODUCTION ',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+        PHASE3_RELEASE_CLEARANCE: 'cleared',
+        APP_DISPLAY_NAME: 'RoutineKind',
+        APP_SLUG: 'routinekind',
+        APP_SCHEME: 'routinekind',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+      },
+      { releaseReadyReviewEvidence: true },
+    );
 
     expect(expo.name).toBe('RoutineKind');
     expect(expo.scheme).toBe('routinekind');
@@ -222,6 +292,22 @@ describe('Expo app identity config', () => {
     ).toThrow(/requires PHASE3_RELEASE_CLEARANCE=cleared/);
   });
 
+  it('does not let the clearance flag bypass unresolved reviewer evidence', () => {
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+        PHASE3_RELEASE_CLEARANCE: 'cleared',
+        APP_DISPLAY_NAME: 'RoutineKind',
+        APP_SLUG: 'routinekind',
+        APP_SCHEME: 'routinekind',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+      }),
+    ).toThrow(/review evidence is not release-ready/);
+  });
+
   it('blocks a production runtime environment even under an internal build variant', () => {
     expect(() =>
       buildExpoConfig({
@@ -232,17 +318,20 @@ describe('Expo app identity config', () => {
   });
 
   it('allows counsel-cleared legacy identity only when explicitly supplied', () => {
-    const expo = buildExpoConfig({
-      APP_VARIANT: 'production',
-      EXPO_PUBLIC_APP_ENV: 'production',
-      BRAND_LEGAL_CLEARANCE: 'cleared',
-      PHASE3_RELEASE_CLEARANCE: 'cleared',
-      APP_DISPLAY_NAME: 'OnSkin',
-      APP_SLUG: 'onskin',
-      APP_SCHEME: 'onskin',
-      APP_IOS_BUNDLE_IDENTIFIER: 'com.onskin.app',
-      APP_ANDROID_PACKAGE: 'com.onskin.app',
-    });
+    const expo = buildExpoConfig(
+      {
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+        PHASE3_RELEASE_CLEARANCE: 'cleared',
+        APP_DISPLAY_NAME: 'OnSkin',
+        APP_SLUG: 'onskin',
+        APP_SCHEME: 'onskin',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.onskin.app',
+        APP_ANDROID_PACKAGE: 'com.onskin.app',
+      },
+      { releaseReadyReviewEvidence: true },
+    );
 
     expect(expo.name).toBe('OnSkin');
     expect(expo.slug).toBe('onskin');
@@ -334,5 +423,152 @@ describe('Expo app identity config', () => {
     expect(placeholder.android.playStoreUrl).toBeUndefined();
     expect(placeholder.extra.appStoreUrl).toBe('');
     expect(placeholder.extra.playStoreUrl).toBe('');
+  });
+});
+
+function releaseReadyWorklist(): ReviewWorklist {
+  return JSON.parse(JSON.stringify(reviewEvidence.createReleaseReadyTestWorklist()));
+}
+
+describe('Phase 3 review evidence contract', () => {
+  it('accepts complete release dispositions in the isolated test fixture', () => {
+    expect(
+      reviewEvidence.validateReviewWorklist(releaseReadyWorklist(), { verifyHashes: false }),
+    ).toEqual([]);
+  });
+
+  it('rejects unresolved review items even when every domain is represented', () => {
+    const worklist = releaseReadyWorklist();
+    worklist.items[0]!.statusBucket = 'notCleared';
+    worklist.summary.statusCounts = { approved: 4, notCleared: 1 };
+
+    expect(
+      reviewEvidence.validateReviewWorklist(worklist, { verifyHashes: false }).join(' '),
+    ).toContain('is unresolved (notCleared)');
+  });
+
+  it('rejects release dispositions without a named owner and valid date', () => {
+    const worklist = releaseReadyWorklist();
+    worklist.items[0]!.reviewer = 'TBD';
+    worklist.items[0]!.date = '2026-02-30';
+
+    const errors = reviewEvidence
+      .validateReviewWorklist(worklist, { verifyHashes: false })
+      .join(' ');
+    expect(errors).toContain('has no named reviewer or decision owner');
+    expect(errors).toContain('has no valid ISO review date');
+  });
+
+  it('rejects dirty worklists and inconsistent summary counts', () => {
+    const worklist = releaseReadyWorklist();
+    worklist.gitStatus = ' M docs/phase-3/clinical-review-log.md';
+    worklist.summary.itemCount -= 1;
+
+    const errors = reviewEvidence
+      .validateReviewWorklist(worklist, { verifyHashes: false })
+      .join(' ');
+    expect(errors).toContain('generated from a dirty worktree');
+    expect(errors).toContain('item count is inconsistent');
+  });
+
+  it('rejects deferred items without a reason and hidden-production posture', () => {
+    const worklist = releaseReadyWorklist();
+    worklist.items[0]!.statusBucket = 'deferred';
+    worklist.items[0]!.notes = 'TBD';
+    worklist.items[0]!.currentBehavior = 'Available in production';
+    worklist.summary.statusCounts = { approved: 4, deferred: 1 };
+
+    const errors = reviewEvidence
+      .validateReviewWorklist(worklist, { verifyHashes: false })
+      .join(' ');
+    expect(errors).toContain('has no deferral reason');
+    expect(errors).toContain('does not document a production exposure gate');
+  });
+
+  it('rejects source evidence whose recorded hash no longer matches', () => {
+    const rootDir = resolve(process.cwd(), '../..');
+    const bytes = readFileSync(resolve(rootDir, 'package.json'));
+    const source = {
+      path: 'package.json',
+      exists: true,
+      bytes: bytes.length,
+      sha256: createHash('sha256').update(bytes).digest('hex'),
+    };
+    const worklist = releaseReadyWorklist();
+    worklist.reviewLogs = worklist.reviewLogs.map((log) => ({
+      ...source,
+      domain: log.domain,
+    }));
+    worklist.items = worklist.items.map((item) => ({ ...item, sourcePaths: [{ ...source }] }));
+
+    expect(
+      reviewEvidence.validateReviewWorklist(worklist, { rootDir, verifyLogRows: false }),
+    ).toEqual([]);
+    worklist.items[0]!.sourcePaths[0]!.sha256 = '0'.repeat(64);
+    expect(
+      reviewEvidence.validateReviewWorklist(worklist, { rootDir, verifyLogRows: false }).join(' '),
+    ).toContain('source hash is stale');
+  });
+
+  it('reparses review logs instead of trusting a tampered JSON disposition', () => {
+    const rootDir = mkdtempSync(join(tmpdir(), 'routinekind-phase3-review-'));
+    try {
+      writeFileSync(resolve(rootDir, 'package.json'), '{}\n');
+      const packageBytes = readFileSync(resolve(rootDir, 'package.json'));
+      const packageSource = {
+        path: 'package.json',
+        exists: true,
+        bytes: packageBytes.length,
+        sha256: createHash('sha256').update(packageBytes).digest('hex'),
+      };
+      const headings: Record<string, string> = {
+        legalRegulatory: '## Inventory',
+        clinical: '## Content Inventory',
+        cosmeticChemistry: '## Inventory',
+        privacySecurity: '## Inventory',
+        ipFto: '## Inventory',
+      };
+      const worklist = releaseReadyWorklist();
+      worklist.reviewLogs = worklist.reviewLogs.map((log) => {
+        const logPath = `docs/${log.domain}.md`;
+        const absoluteLogPath = resolve(rootDir, logPath);
+        mkdirSync(dirname(absoluteLogPath), { recursive: true });
+        writeFileSync(
+          absoluteLogPath,
+          [
+            headings[log.domain],
+            '',
+            '| Area | Source | Reviewer | Date | Status |',
+            '| --- | --- | --- | --- | --- |',
+            '| Release decision | `package.json` | Dr. Avery Chen | 2026-07-09 | Approved |',
+            '',
+          ].join('\n'),
+        );
+        const logBytes = readFileSync(absoluteLogPath);
+        return {
+          domain: log.domain,
+          path: logPath,
+          exists: true,
+          bytes: logBytes.length,
+          sha256: createHash('sha256').update(logBytes).digest('hex'),
+        };
+      });
+      worklist.items = worklist.items.map((item) => ({
+        ...item,
+        id: `${item.domain}:release-decision`,
+        reviewer: 'Dr. Avery Chen',
+        sourceText: '`package.json`',
+        sourcePaths: [{ ...packageSource }],
+      }));
+
+      expect(reviewEvidence.validateReviewWorklist(worklist, { rootDir })).toEqual([]);
+      worklist.items[0]!.statusBucket = 'deferred';
+      worklist.summary.statusCounts = { approved: 4, deferred: 1 };
+      expect(reviewEvidence.validateReviewWorklist(worklist, { rootDir }).join(' ')).toContain(
+        'disposition does not match its review log',
+      );
+    } finally {
+      rmSync(rootDir, { force: true, recursive: true });
+    }
   });
 });

@@ -29,8 +29,31 @@ decisions.
 - `scripts/phase3/audit-copy.mjs`
 - `scripts/phase3/check-production-release.mjs`
 - `scripts/phase3/check-production-release-smoke.mjs`
+- `apps/mobile/phase3-review-evidence.js`
+- `apps/mobile/app.config.js`
 - `scripts/phase9/lib.mjs`
 - `docs/phase-3/review-packet-index.md`
+
+## Production Release Disposition Contract
+
+`PHASE3_RELEASE_CLEARANCE=cleared` is not sufficient by itself. Production
+Expo config and `npm run phase3:check-production-release` load the generated
+review worklist and fail unless all of these are true:
+
+- the worklist was generated from a clean worktree and has no contract blocker,
+  warning, or missing source;
+- all five legal/regulatory, clinical, cosmetic chemistry, privacy/security,
+  and IP/FTO domains are present;
+- every inventory item has an explicit `Approved` or `Deferred` status;
+- every approved or deferred item records a named reviewer or decision owner
+  and a valid `YYYY-MM-DD` date;
+- every review-log and item source still matches the recorded byte count and
+  SHA-256 hash.
+
+`Deferred` is a release disposition, not content approval. Use it only when the
+surface is excluded from production exposure and the row records the reason and
+owner. Regenerate the worklist after any source, status, reviewer, or date
+change. The current worklist remains unresolved and correctly blocks release.
 
 ## Legal/Regulatory Packet
 

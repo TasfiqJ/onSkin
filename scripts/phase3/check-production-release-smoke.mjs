@@ -1,66 +1,87 @@
 #!/usr/bin/env node
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 
-const scriptPath = resolve(dirname(fileURLToPath(import.meta.url)), 'check-production-release.mjs');
+import { checkProductionRelease } from './check-production-release.mjs';
 
-function run(env) {
-  return spawnSync(process.execPath, [scriptPath], {
-    encoding: 'utf8',
-    env,
-  });
-}
+const require = createRequire(import.meta.url);
+const { createReleaseReadyTestWorklist } = require('../../apps/mobile/phase3-review-evidence');
 
 const cases = [
   {
     name: 'development does not require external release evidence',
-    result: run({ APP_VARIANT: 'development', EXPO_PUBLIC_APP_ENV: 'development' }),
+    result: checkProductionRelease({
+      env: { APP_VARIANT: 'development', EXPO_PUBLIC_APP_ENV: 'development' },
+    }),
     pass(result) {
-      return result.status === 0 && /not required/.test(result.stdout);
+      return result.ok && /not required/.test(result.message);
     },
   },
   {
     name: 'staging remains available for reviewer QA',
-    result: run({ APP_VARIANT: 'staging', EXPO_PUBLIC_APP_ENV: 'staging' }),
+    result: checkProductionRelease({
+      env: { APP_VARIANT: 'staging', EXPO_PUBLIC_APP_ENV: 'staging' },
+    }),
     pass(result) {
-      return result.status === 0 && /not required/.test(result.stdout);
+      return result.ok && /not required/.test(result.message);
     },
   },
   {
     name: 'production variant fails closed without clearance',
-    result: run({ APP_VARIANT: 'production', EXPO_PUBLIC_APP_ENV: 'staging' }),
+    result: checkProductionRelease({
+      env: { APP_VARIANT: 'production', EXPO_PUBLIC_APP_ENV: 'staging' },
+    }),
     pass(result) {
-      return result.status === 1 && /PHASE3_RELEASE_CLEARANCE=cleared/.test(result.stderr);
+      return !result.ok && /PHASE3_RELEASE_CLEARANCE=cleared/.test(result.message);
     },
   },
   {
     name: 'production runtime environment fails closed without clearance',
-    result: run({ APP_VARIANT: 'staging', EXPO_PUBLIC_APP_ENV: 'production' }),
+    result: checkProductionRelease({
+      env: { APP_VARIANT: 'staging', EXPO_PUBLIC_APP_ENV: 'production' },
+    }),
     pass(result) {
-      return result.status === 1 && /PHASE3_RELEASE_CLEARANCE=cleared/.test(result.stderr);
+      return !result.ok && /PHASE3_RELEASE_CLEARANCE=cleared/.test(result.message);
     },
   },
   {
     name: 'production rejects pending clearance',
-    result: run({
-      APP_VARIANT: 'production',
-      EXPO_PUBLIC_APP_ENV: 'production',
-      PHASE3_RELEASE_CLEARANCE: 'pending',
+    result: checkProductionRelease({
+      env: {
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        PHASE3_RELEASE_CLEARANCE: 'pending',
+      },
     }),
     pass(result) {
-      return result.status === 1 && /PHASE3_RELEASE_CLEARANCE=cleared/.test(result.stderr);
+      return !result.ok && /PHASE3_RELEASE_CLEARANCE=cleared/.test(result.message);
     },
   },
   {
-    name: 'production accepts exact recorded clearance',
-    result: run({
-      APP_VARIANT: ' Production ',
-      EXPO_PUBLIC_APP_ENV: ' PRODUCTION ',
-      PHASE3_RELEASE_CLEARANCE: 'cleared',
+    name: 'clearance flag cannot bypass the unresolved reviewer worklist',
+    result: checkProductionRelease({
+      env: {
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        PHASE3_RELEASE_CLEARANCE: 'cleared',
+      },
     }),
     pass(result) {
-      return result.status === 0 && /clearance is recorded/.test(result.stdout);
+      return !result.ok && /review evidence is not release-ready/.test(result.message);
+    },
+  },
+  {
+    name: 'production accepts exact clearance with injected release-ready evidence',
+    result: checkProductionRelease({
+      env: {
+        APP_VARIANT: ' Production ',
+        EXPO_PUBLIC_APP_ENV: ' PRODUCTION ',
+        PHASE3_RELEASE_CLEARANCE: 'cleared',
+      },
+      worklist: createReleaseReadyTestWorklist(),
+      verifyHashes: false,
+    }),
+    pass(result) {
+      return result.ok && /reviewer evidence are recorded/.test(result.message);
     },
   },
 ];
@@ -74,8 +95,7 @@ for (const testCase of cases) {
 
   failed = true;
   console.error(`FAIL ${testCase.name}`);
-  if (testCase.result.stdout) console.error(testCase.result.stdout.trim());
-  if (testCase.result.stderr) console.error(testCase.result.stderr.trim());
+  console.error(testCase.result.message);
 }
 
 if (failed) process.exit(1);

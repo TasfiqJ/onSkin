@@ -147,6 +147,7 @@ function statusBucket(status) {
     .trim()
     .toLowerCase();
   if (normalized === 'approved') return 'approved';
+  if (normalized === 'deferred') return 'deferred';
   if (normalized === 'blocked') return 'blocked';
   if (normalized.includes('not cleared')) return 'notCleared';
   return 'needsReview';
@@ -155,6 +156,9 @@ function statusBucket(status) {
 function requiredEvidenceFor(bucket) {
   if (bucket === 'approved') {
     return 'Keep reviewer, credential, date, exact source hashes, and decision conditions attached.';
+  }
+  if (bucket === 'deferred') {
+    return 'Keep the named decision owner, date, exact source hashes, deferral reason, and production exposure gate attached.';
   }
   return 'Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.';
 }
@@ -268,8 +272,18 @@ for (const log of reviewLogs) {
     for (const source of sourcePaths.filter((source) => !source.exists)) {
       blockers.push(`${log.path} item "${row.Area}" references missing source ${source.path}.`);
     }
-    if (bucket === 'approved' && (isTbd(row.Reviewer) || isTbd(row.Date))) {
-      blockers.push(`${log.path} item "${row.Area}" is approved without reviewer/date evidence.`);
+    if (['approved', 'deferred'].includes(bucket) && (isTbd(row.Reviewer) || isTbd(row.Date))) {
+      blockers.push(
+        `${log.path} item "${row.Area}" has a release disposition without reviewer/owner and date evidence.`,
+      );
+    }
+    if (
+      ['approved', 'deferred'].includes(bucket) &&
+      !/^\d{4}-\d{2}-\d{2}$/.test(String(row.Date ?? '').trim())
+    ) {
+      blockers.push(
+        `${log.path} item "${row.Area}" has a release disposition without an ISO date.`,
+      );
     }
     items.push({
       id: `${log.domain}:${slug(row.Area)}`,

@@ -176,6 +176,8 @@ function checkReviewPacketContract() {
     'scripts/phase3/audit-copy.mjs',
     'scripts/phase3/check-production-release.mjs',
     'scripts/phase3/check-production-release-smoke.mjs',
+    'apps/mobile/phase3-review-evidence.js',
+    'apps/mobile/app.config.js',
     'scripts/phase9/lib.mjs',
     'docs/phase-3/review-packet-index.md',
     'docs/phase-3/legal-regulatory-review-log.md',

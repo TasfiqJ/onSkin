@@ -20,6 +20,12 @@ name, credential, date, exact source hash/version, decision, and conditions.
 - Placeholder URLs, placeholder consent versions, and simulated services cannot
   be submitted as final evidence.
 
+Before production clearance, every inventory row must be `Approved` or
+`Deferred`. Approved rows require the named qualified reviewer and ISO review
+date. Deferred rows require a named decision owner, ISO date, deferral reason,
+and a production gate that keeps the surface hidden. `Blocked` and
+`Not cleared` remain unresolved.
+
 ## Inventory
 
 | Area                              | Source                                                                                                                                                                            | Current production behavior                                      | Reviewer | Date | Status      | Notes                                                                 |

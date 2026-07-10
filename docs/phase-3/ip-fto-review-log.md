@@ -20,6 +20,12 @@ conditions.
 - Any final identity change reopens app config, Supabase callback, RevenueCat,
   store, policy URL, share-card, and public-copy review.
 
+Before production clearance, every inventory row must be `Approved` or
+`Deferred`. Approved rows require the named qualified reviewer and ISO review
+date. Deferred rows require a named decision owner, ISO date, deferral reason,
+and a production gate that keeps the surface hidden. `Blocked` and
+`Not cleared` remain unresolved.
+
 ## Inventory
 
 | Area                               | Source                                                                                                                                                                              | Current production behavior                              | Reviewer | Date | Status      | Notes                                                                     |

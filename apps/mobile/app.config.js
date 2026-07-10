@@ -1,4 +1,5 @@
 const base = require('./app.base.json');
+const { assertReleaseReadyReviewEvidence } = require('./phase3-review-evidence');
 
 const APP_VARIANTS = new Set(['development', 'staging', 'production']);
 
@@ -230,6 +231,12 @@ function assertProductionReviewClearance() {
       'Production release requires PHASE3_RELEASE_CLEARANCE=cleared after the Phase 3 legal, privacy, clinical, chemistry, and IP review packet is signed off. Development and staging builds remain available for review.',
     );
   }
+
+  const testWorklist =
+    process.env.NODE_ENV === 'test'
+      ? globalThis.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__
+      : undefined;
+  assertReleaseReadyReviewEvidence({ worklist: testWorklist });
 }
 
 module.exports = () => {
