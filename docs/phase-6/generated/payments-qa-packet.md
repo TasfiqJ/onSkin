@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-10T00:25:52.867Z
-Git SHA: 7d621bd6b53ead7bf7db8072ede66111002df95a
+Generated at: 2026-07-10T00:32:15.420Z
+Git SHA: 46f4badd886ca639606813dc05f9784dadaf46be
 Git status: clean
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -82,8 +82,8 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10167 | d7d616fcbe9078b55c0d4b3bf5e88ae19570fa533aee8edc599cf1956c7c9149 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
 | docs/USER_FLOW_TREE.md | present | 308996 | 5b2503af10834944f9d90090e6ac5d56c5a59612916d84f4c7d3033278f4a910 |
-| docs/e2e/generated/human-e2e-manifest.json | present | 20077 | ea19a50232c80aa3fe0eca1a5dc293fd6ec532ca94cb0e6cbda63f4484c3fedc |
-| docs/e2e/generated/human-e2e-manifest.md | present | 7085 | 77909981ad9d105b7c3cab43583563076f440db23104be9b5570cf6fded24d31 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 20077 | 56493c85c4ca9e3356faaa0b10de426a1a049a8c77197253a32f768b7d5c0066 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 7085 | 9e1944af1d1e0772915ed508756cdd8cbb4acc4e52f9fb2861edf4c88ee51d96 |
 | docs/phase-6/payments-runbook.md | present | 4053 | fdbeaa848738a3ae2b0048fa6988c10a0e0f70b0b7e0df45d81449ea4169c812 |
 | docs/phase-6/payments-qa-checklist.md | present | 3683 | 5bec4264a96766fe6861096ec709eab95088b5975c4227c6562f7454f519a291 |
 | docs/phase-6/phase-6-exit-review.md | present | 2755 | 0ce0003af4a03b66cde2bafe235bae50fbe3a9e66f6ff0b107f74e4c64cd50df |
