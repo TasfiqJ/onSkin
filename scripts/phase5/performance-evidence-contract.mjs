@@ -23,13 +23,8 @@ export const PERFORMANCE_METRICS = [
 ];
 
 const PLATFORMS = ['ios', 'android'];
-const MEASUREMENT_SOURCES = new Set([
-  'instrumented_timer',
-  'manual_stopwatch',
-  'native_profiler',
-]);
-const EAS_BUILD_ID =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const MEASUREMENT_SOURCES = new Set(['instrumented_timer', 'manual_stopwatch', 'native_profiler']);
+const EAS_BUILD_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const EAS_BUILD_URL =
   /^https:\/\/expo\.dev\/accounts\/[^/\s]+\/projects\/[^/\s]+\/builds\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?:[?#].*)?$/i;
 
@@ -134,10 +129,7 @@ export function createPerformanceEvidenceTemplate() {
       zeroOsTerminations: null,
     },
     thresholds: Object.fromEntries(
-      PERFORMANCE_METRICS.map(({ id, unit }) => [
-        id,
-        { unit, maxP95: null, rationale: null },
-      ]),
+      PERFORMANCE_METRICS.map(({ id, unit }) => [id, { unit, maxP95: null, rationale: null }]),
     ),
     measurements: PLATFORMS.flatMap((platform) =>
       PERFORMANCE_METRICS.map(({ id: metric }) => ({
@@ -182,12 +174,10 @@ export function validatePerformanceEvidence(evidence) {
   if (thresholdsDefinedAt === null) {
     errors.push('thresholdsDefinedAt must be a valid ISO timestamp.');
   }
-  if (
-    capturedAt !== null &&
-    thresholdsDefinedAt !== null &&
-    thresholdsDefinedAt > capturedAt
-  ) {
-    errors.push('thresholdsDefinedAt must be before or equal to capturedAt; post-hoc targets are rejected.');
+  if (capturedAt !== null && thresholdsDefinedAt !== null && thresholdsDefinedAt > capturedAt) {
+    errors.push(
+      'thresholdsDefinedAt must be before or equal to capturedAt; post-hoc targets are rejected.',
+    );
   }
 
   if (!/^[0-9a-f]{40}$/i.test(String(evidence.gitSha ?? '').trim())) {
@@ -212,7 +202,9 @@ export function validatePerformanceEvidence(evidence) {
       errors.push('photoDataset.encryptedPhotoCount must be at least 50.');
     }
     if (!realText(photoDataset.source, 8)) {
-      errors.push('photoDataset.source must describe the consented or synthetic non-sensitive dataset.');
+      errors.push(
+        'photoDataset.source must describe the consented or synthetic non-sensitive dataset.',
+      );
     }
     if (photoDataset.plaintextDeletedAfterImport !== true) {
       errors.push('photoDataset.plaintextDeletedAfterImport must be true.');
@@ -235,14 +227,17 @@ export function validatePerformanceEvidence(evidence) {
       errors.push(`thresholds.${metric.id}.unit must be ${metric.unit}.`);
     }
     if (!isPositiveNumber(threshold.maxP95)) {
-      errors.push(`thresholds.${metric.id}.maxP95 must be a positive number defined before testing.`);
+      errors.push(
+        `thresholds.${metric.id}.maxP95 must be a positive number defined before testing.`,
+      );
     }
     if (!realText(threshold.rationale, 20)) {
       errors.push(`thresholds.${metric.id}.rationale must explain the owner-approved target.`);
     }
   }
   for (const metricId of Object.keys(thresholds)) {
-    if (!metricById.has(metricId)) errors.push(`Unknown performance threshold metric: ${metricId}.`);
+    if (!metricById.has(metricId))
+      errors.push(`Unknown performance threshold metric: ${metricId}.`);
   }
 
   const measurements = Array.isArray(evidence.measurements) ? evidence.measurements : [];
@@ -268,12 +263,11 @@ export function validatePerformanceEvidence(evidence) {
     seen.add(key);
 
     if (!MEASUREMENT_SOURCES.has(measurement.source)) {
-      errors.push(`${prefix}.source must be instrumented_timer, manual_stopwatch, or native_profiler.`);
+      errors.push(
+        `${prefix}.source must be instrumented_timer, manual_stopwatch, or native_profiler.`,
+      );
     }
-    if (
-      metric.id === 'photo_timeline_peak_memory_mb' &&
-      measurement.source !== 'native_profiler'
-    ) {
+    if (metric.id === 'photo_timeline_peak_memory_mb' && measurement.source !== 'native_profiler') {
       errors.push(`${prefix}.source must be native_profiler for photo timeline memory.`);
     }
     if (
@@ -333,7 +327,11 @@ export function validatePerformanceEvidence(evidence) {
   if (!isObject(signoff)) {
     errors.push('signoff must be an object.');
   } else {
-    if (String(signoff.decision ?? '').trim().toLowerCase() !== 'pass') {
+    if (
+      String(signoff.decision ?? '')
+        .trim()
+        .toLowerCase() !== 'pass'
+    ) {
       errors.push('signoff.decision must be pass only after every calculated threshold passes.');
     }
     if (!normalizeNamedSignoff(signoff.signedOffBy)) {
@@ -347,7 +345,9 @@ export function validatePerformanceEvidence(evidence) {
   }
 
   if (measurements.length > PERFORMANCE_METRICS.length * PLATFORMS.length) {
-    warnings.push('Extra measurements were supplied; each platform/metric pair must remain unique.');
+    warnings.push(
+      'Extra measurements were supplied; each platform/metric pair must remain unique.',
+    );
   }
 
   return {

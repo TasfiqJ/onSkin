@@ -12,8 +12,7 @@ const strict = process.argv.includes('--strict');
 const writeTemplate = process.argv.includes('--write-template');
 const checkTemplate = process.argv.includes('--check-template');
 const templatePath =
-  process.env.PHASE5_PERFORMANCE_TEMPLATE_PATH ??
-  'docs/phase-5/performance-evidence.template.json';
+  process.env.PHASE5_PERFORMANCE_TEMPLATE_PATH ?? 'docs/phase-5/performance-evidence.template.json';
 const evidencePath = String(process.env.PHASE5_PERFORMANCE_EVIDENCE_PATH ?? '').trim();
 
 function abs(path) {
@@ -35,12 +34,16 @@ if (writeTemplate) {
 
 if (checkTemplate) {
   if (!existsSync(abs(templatePath))) {
-    console.error(`FAIL Missing ${templatePath}. Run npm run phase5:performance-evidence:template.`);
+    console.error(
+      `FAIL Missing ${templatePath}. Run npm run phase5:performance-evidence:template.`,
+    );
     process.exit(1);
   }
   const actual = readFileSync(abs(templatePath), 'utf8').replace(/\r\n/g, '\n');
   if (actual !== expectedTemplate) {
-    console.error(`FAIL ${templatePath} is stale. Run npm run phase5:performance-evidence:template.`);
+    console.error(
+      `FAIL ${templatePath} is stale. Run npm run phase5:performance-evidence:template.`,
+    );
     process.exit(1);
   }
   console.log('Phase 5 performance evidence template is current.');
@@ -70,7 +73,9 @@ let evidence;
 try {
   evidence = JSON.parse(readFileSync(abs(evidencePath), 'utf8'));
 } catch (error) {
-  console.error(`FAIL Performance evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`);
+  console.error(
+    `FAIL Performance evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
+  );
   process.exit(1);
 }
 

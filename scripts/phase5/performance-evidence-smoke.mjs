@@ -93,12 +93,14 @@ const cases = [
   {
     name: 'rejects missing evidence in strict mode',
     result: run(null, { omitPath: true }),
-    test: (result) => result.status === 1 && /Missing PHASE5_PERFORMANCE_EVIDENCE_PATH/.test(output(result)),
+    test: (result) =>
+      result.status === 1 && /Missing PHASE5_PERFORMANCE_EVIDENCE_PATH/.test(output(result)),
   },
   {
     name: 'rejects devices below the accepted layout support floor',
     result: run(unsupportedDevice),
-    test: (result) => result.status === 1 && /logicalWidth must be at least 360/.test(output(result)),
+    test: (result) =>
+      result.status === 1 && /logicalWidth must be at least 360/.test(output(result)),
   },
   {
     name: 'rejects thresholds defined after measurements',
@@ -108,7 +110,8 @@ const cases = [
   {
     name: 'rejects missing platform and metric coverage',
     result: run(missingMeasurement),
-    test: (result) => result.status === 1 && /Missing measurement for ios:app_startup_cold_ms/.test(output(result)),
+    test: (result) =>
+      result.status === 1 && /Missing measurement for ios:app_startup_cold_ms/.test(output(result)),
   },
   {
     name: 'calculates threshold failure instead of trusting the signoff field',
