@@ -1,0 +1,185 @@
+{
+  "bodyScrollWidth": 430,
+  "devicePixelRatio": 2,
+  "horizontalOverflow": 0,
+  "innerHeight": 932,
+  "innerWidth": 430,
+  "location": "http://localhost:8189/progress",
+  "selectedCount": 1,
+  "tabList": {
+    "borderRadius": 33,
+    "rect": {
+      "bottom": 918,
+      "height": 66,
+      "left": 12,
+      "right": 418,
+      "top": 852,
+      "width": 406,
+      "x": 12,
+      "y": 852
+    },
+    "role": "tablist"
+  },
+  "tabs": [
+    {
+      "ariaLabel": "Today tab",
+      "center": {
+        "x": 63.5,
+        "y": 885
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "compactLabel": null,
+      "id": "bottom-tab-today",
+      "label": "Today",
+      "labelClientWidth": 89,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 908.5,
+        "height": 19,
+        "left": 18.90625,
+        "right": 108.078125,
+        "top": 889.5,
+        "width": 89.171875,
+        "x": 18.90625,
+        "y": 889.5
+      },
+      "labelScrollWidth": 89,
+      "labelText": "Today",
+      "rect": {
+        "bottom": 912,
+        "height": 54,
+        "left": 13,
+        "right": 114,
+        "top": 858,
+        "width": 101,
+        "x": 13,
+        "y": 858
+      },
+      "route": "today",
+      "selected": false,
+      "text": "Today"
+    },
+    {
+      "ariaLabel": "Progress tab",
+      "center": {
+        "x": 164.5,
+        "y": 885
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "compactLabel": "Prog.",
+      "id": "bottom-tab-progress",
+      "label": "Progress",
+      "labelClientWidth": 89,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 908.5,
+        "height": 19,
+        "left": 119.90625,
+        "right": 209.078125,
+        "top": 889.5,
+        "width": 89.171875,
+        "x": 119.90625,
+        "y": 889.5
+      },
+      "labelScrollWidth": 89,
+      "labelText": "Prog.",
+      "rect": {
+        "bottom": 912,
+        "height": 54,
+        "left": 114,
+        "right": 215,
+        "top": 858,
+        "width": 101,
+        "x": 114,
+        "y": 858
+      },
+      "route": "progress",
+      "selected": true,
+      "text": "Prog."
+    },
+    {
+      "ariaLabel": "Shelf tab",
+      "center": {
+        "x": 265.5,
+        "y": 885
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "compactLabel": null,
+      "id": "bottom-tab-shelf",
+      "label": "Shelf",
+      "labelClientWidth": 89,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 908.5,
+        "height": 19,
+        "left": 220.90625,
+        "right": 310.078125,
+        "top": 889.5,
+        "width": 89.171875,
+        "x": 220.90625,
+        "y": 889.5
+      },
+      "labelScrollWidth": 89,
+      "labelText": "Shelf",
+      "rect": {
+        "bottom": 912,
+        "height": 54,
+        "left": 215,
+        "right": 316,
+        "top": 858,
+        "width": 101,
+        "x": 215,
+        "y": 858
+      },
+      "route": "shelf",
+      "selected": false,
+      "text": "Shelf"
+    },
+    {
+      "ariaLabel": "You tab",
+      "center": {
+        "x": 366.5,
+        "y": 885
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "compactLabel": null,
+      "id": "bottom-tab-you",
+      "label": "You",
+      "labelClientWidth": 89,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 908.5,
+        "height": 19,
+        "left": 321.90625,
+        "right": 411.078125,
+        "top": 889.5,
+        "width": 89.171875,
+        "x": 321.90625,
+        "y": 889.5
+      },
+      "labelScrollWidth": 89,
+      "labelText": "You",
+      "rect": {
+        "bottom": 912,
+        "height": 54,
+        "left": 316,
+        "right": 417,
+        "top": 858,
+        "width": 101,
+        "x": 316,
+        "y": 858
+      },
+      "route": "you",
+      "selected": false,
+      "text": "You"
+    }
+  ]
+}

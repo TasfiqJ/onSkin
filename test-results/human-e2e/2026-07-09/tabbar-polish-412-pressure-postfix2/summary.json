@@ -1,0 +1,22 @@
+{
+  "baseUrl": "http://localhost:8242",
+  "evidenceDir": "test-results/human-e2e/2026-07-09/tabbar-polish-412-pressure-postfix2",
+  "generatedAt": "2026-07-10T00:19:29.803Z",
+  "routeCount": 1,
+  "scale": 2,
+  "status": "pass",
+  "viewport": {
+    "height": 915,
+    "width": 412
+  },
+  "failedRouteCount": 0,
+  "failedRoutes": [],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/privacy",
+      "scaledCount": 57
+    }
+  ]
+}

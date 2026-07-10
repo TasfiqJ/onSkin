@@ -18,6 +18,21 @@ clearance and not a real launch catalog.
 
 Fresh verification through 2026-07-09:
 
+- Floating bottom tab-bar active-pill polish now has fresh headless Chrome Expo
+  web geometry evidence across 320 x 568 stress width plus 360 x 640,
+  375 x 667, 390 x 844, 412 x 915, and 430 x 932 supported-phone viewports.
+  The app renders Today, compact visible `Prog.`, Shelf, and You labels through
+  the 430 px compact-phone band, keeps the active capsule inset instead of
+  filling a whole tab slot, and preserves the full `Progress tab` accessibility
+  label. The full geometry pass verifies 66 px pill height, 54 px tab targets,
+  exactly one selected tab per routed tab state, direct one-line labels, center
+  hit-tests, zero horizontal overflow, and only expected local placeholder
+  warnings. A focused 412 x 915 / 200% pressure recheck confirms the route-wide
+  synthetic pressure audit leaves tab labels to the dedicated tab-bar harness.
+  Evidence:
+  `test-results/human-e2e/2026-07-09/navigation-tabbar-supported-polish-postfix2/`
+  and
+  `test-results/human-e2e/2026-07-09/tabbar-polish-412-pressure-postfix2/`.
 - Shelf catalog wrong-match recovery now has fresh headless Chrome Expo web
   evidence before product add. With
   `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=wrong_match`, catalog search exposes
@@ -121,7 +136,7 @@ Fresh verification through 2026-07-09:
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 172 mobile test files / 1765 tests.
+- `npm test` passed: 172 mobile test files / 1767 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -137,7 +152,7 @@ Fresh verification through 2026-07-09:
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 172 test files / 1765 tests.
+- `npm --workspace apps/mobile run test` passed: 172 test files / 1767 tests.
 - `npm run phase3:verify`, `npm run phase4:verify`,
   `npm run phase5:verify`, `npm run phase6:verify`,
   `npm run phase7:verify`, `npm run phase8:verify`,

@@ -29,7 +29,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('FLOATING_TAB_BAR_HORIZONTAL_PADDING');
     expect(source).toContain('MIN_TAB_TOUCH_TARGET');
     expect(source).toContain('TAB_ITEM_HEIGHT');
-    expect(source).toContain('COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH = 414');
+    expect(source).toContain('COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH = 430');
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RESET');
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RING');
     expect(source).toContain('useWindowDimensions');
@@ -61,9 +61,8 @@ describe('tab bar treatment', () => {
     expect(source).toContain('screenOptions={({ route }) => ({');
     expect(source).toContain('backgroundColor: tabSceneBackground(route.name, todayRoutineType)');
     expect(source).toContain('paddingBottom: tabSceneClearance');
-    expect(source).toContain('backgroundColor: colors.paperRaised');
-    expect(source).toContain('focused ? colors.paperRaised : colors.mutedStrong');
-    expect(source).toContain('backgroundColor: colors.paperRaised');
+    expect(source).toContain('focused ? colors.paperRaised : colors.inkSoft');
+    expect(source).toContain("backgroundColor: 'rgba(255,255,255,0.96)'");
     expect(source).toContain('borderColor: colors.hairlineStrong');
     expect(source).toContain('borderColor: colors.hairlineStrong');
     expect(source).toContain('borderRadius: 33');
@@ -75,6 +74,9 @@ describe('tab bar treatment', () => {
     expect(source).toContain('tabItemActive: {');
     expect(source).toContain('backgroundColor: colors.ink');
     expect(source).toContain('borderColor: colors.ink');
+    expect(source).toContain('<View style={[styles.tabItemFrame, focused ? styles.tabItemActive : null]}>');
+    expect(source).toContain('tabItemFrame: {');
+    expect(source).toContain("width: '94%'");
     expect(source).toContain('accessibilityRole="tablist"');
     expect(source).toContain('accessibilityRole="tab"');
     expect(source).toContain('accessibilityState={{ selected: focused }}');
@@ -119,7 +121,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('ellipsizeMode="tail"');
     expect(source).toContain('<View style={styles.tabItemContent}>');
     expect(source).toContain('maxFontSizeMultiplier={1.08}');
-    expect(source).toContain('minimumFontScale={0.86}');
+    expect(source).toContain('minimumFontScale={0.84}');
     expect(source).toContain('numberOfLines={1}');
     expect(source).toContain(
       "compactProgressTabLabel && route.name === 'progress' ? 'Prog.' : displayLabel",
@@ -137,6 +139,8 @@ describe('tab bar treatment', () => {
     expect(source).toContain("textAlign: 'center'");
     expect(source).toContain("textAlignVertical: 'center'");
     expect(source).toContain('hitSlop={{ bottom: 6, left: 2, right: 2, top: 6 }}');
+    expect(source).toContain('<View style={[styles.tabItemFrame, focused ? styles.tabItemActive : null]}>');
+    expect(source).toContain('tabItemFrame: {');
     expect(source).toContain("borderColor: 'transparent'");
     expect(source).not.toContain('function renderTabBarLabel');
     expect(source).not.toContain('tabLabelFrame');
@@ -158,13 +162,13 @@ describe('tab bar treatment', () => {
     const tabItemHeight = readNumericConstant(source, 'TAB_ITEM_HEIGHT');
     const usableWidth = 320 - sideMargin * 2 - horizontalPadding * 2;
 
-    expect(sideMargin).toBeLessThanOrEqual(8);
+    expect(sideMargin).toBeLessThanOrEqual(12);
     expect(tabBarHeight).toBeGreaterThanOrEqual(tabItemHeight + 12);
     expect(tabItemHeight).toBeGreaterThanOrEqual(minTouchTarget);
     expect(minTouchTarget).toBeGreaterThanOrEqual(52);
     expect(usableWidth / 4).toBeGreaterThanOrEqual(74);
-    expect(source).toContain('minimumFontScale={0.86}');
+    expect(source).toContain('minimumFontScale={0.84}');
     expect(source).toContain('maxFontSizeMultiplier={1.08}');
-    expect(source).toContain('COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH = 414');
+    expect(source).toContain('COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH = 430');
   });
 });

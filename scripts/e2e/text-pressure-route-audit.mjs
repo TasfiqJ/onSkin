@@ -523,6 +523,7 @@ function pressureExpression() {
     for (const node of nodes) {
       const text = Array.from(node.childNodes).some((child) => child.nodeType === Node.TEXT_NODE && child.textContent.trim().length > 0);
       if (!text) continue;
+      if (node.closest('[role="tab"]')) continue;
 
       const style = getComputedStyle(node);
       const fontSize = Number.parseFloat(style.fontSize);

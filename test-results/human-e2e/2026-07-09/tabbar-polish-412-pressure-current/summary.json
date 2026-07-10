@@ -1,0 +1,48 @@
+{
+  "baseUrl": "http://localhost:8242",
+  "evidenceDir": "test-results/human-e2e/2026-07-09/tabbar-polish-412-pressure-current",
+  "generatedAt": "2026-07-10T00:00:17.673Z",
+  "routeCount": 1,
+  "scale": 2,
+  "status": "fail",
+  "viewport": {
+    "height": 915,
+    "width": 412
+  },
+  "failedRouteCount": 1,
+  "failedRoutes": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 1,
+      "issues": [
+        {
+          "textOverflows": [
+            {
+              "clientWidth": 79,
+              "overflow": 19,
+              "rect": {
+                "height": 36,
+                "width": 79.390625
+              },
+              "text": "Progress",
+              "whiteSpace": "nowrap"
+            }
+          ],
+          "type": "textOverflow"
+        }
+      ],
+      "route": "/settings/privacy",
+      "scaledCount": 61,
+      "textStart": "You ACCOUNT Signed in Sign out SUBSCRIPTION Manage subscription Free plan > YOUR ROUTINE Your plan > MORE ROUTINE Edit the order > Retinoid ramp > Streak & adherence > Weekly check-in > Recent changes > SECURITY App lock Require your phone's unlock to open the app and your photo timeline. Encrypted cloud backup Off by default. A separate choice. Photos stay on this phone until you turn it on. PRIVACY & CONSENT Marketing emails Off by default. Opt in anytime. Withdraw health-data consent Records withdrawal and deletes collected health data. > POLICIES Privacy policy What data we collect, use, and share. > Consumer health privacy Consumer health data notice and rights. > Terms Rules for using RoutineKind and subscription terms. > Support Help with accounts, billing, deletion, or export. > Account deletion How account deletion works before and after deleting in app. > Data export How to req"
+    }
+  ],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 1,
+      "route": "/settings/privacy",
+      "scaledCount": 61
+    }
+  ],
+  "error": "1 text-pressure route(s) failed."
+}

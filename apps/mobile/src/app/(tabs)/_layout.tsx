@@ -38,12 +38,11 @@ const FLOATING_TAB_BAR_HEIGHT = 66;
 const FLOATING_TAB_BAR_BOTTOM = Platform.select({ ios: 12, android: 12, web: 14, default: 12 });
 const FLOATING_TAB_BAR_CLEARANCE = FLOATING_TAB_BAR_HEIGHT + 36;
 const FLOATING_TAB_BAR_GAP = 24;
-const FLOATING_TAB_BAR_SIDE_MARGIN = 8;
-const FLOATING_TAB_BAR_MAX_WIDTH = 430;
+const FLOATING_TAB_BAR_SIDE_MARGIN = 12;
+const FLOATING_TAB_BAR_MAX_WIDTH = 402;
 const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 0;
 const MIN_TAB_TOUCH_TARGET = 52;
 const TAB_ITEM_HEIGHT = 54;
-const COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH = 414;
 const TAB_ICON_BY_ROUTE: Record<string, TabIconName> = {
   progress: 'progress',
   shelf: 'shelf',
@@ -53,16 +52,16 @@ const TAB_ICON_BY_ROUTE: Record<string, TabIconName> = {
 
 const TAB_BAR_SHADOW = Platform.select({
   android: {
-    elevation: 10,
+    elevation: 12,
   },
   ios: {
     shadowColor: colors.ink,
-    shadowOffset: { height: 10, width: 0 },
-    shadowOpacity: 0.13,
-    shadowRadius: 22,
+    shadowOffset: { height: 12, width: 0 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
   },
   web: {
-    boxShadow: '0px 16px 32px rgba(32, 27, 21, 0.14), 0px 2px 8px rgba(32, 27, 21, 0.06)',
+    boxShadow: '0px 18px 34px rgba(32, 27, 21, 0.13), 0px 2px 10px rgba(32, 27, 21, 0.07)',
   } as ViewStyle,
   default: {},
 }) as ViewStyle;
@@ -193,8 +192,6 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
     FLOATING_TAB_BAR_SIDE_MARGIN,
     (viewportWidth - tabBarWidth) / 2,
   );
-  const compactProgressTabLabel = viewportWidth <= COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH;
-
   if (keyboardVisible) {
     return null;
   }
@@ -213,10 +210,9 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
         const { options } = descriptors[route.key];
         const label = typeof options.tabBarLabel === 'string' ? options.tabBarLabel : options.title;
         const displayLabel = label ?? route.name;
-        const visibleLabel =
-          compactProgressTabLabel && route.name === 'progress' ? 'Prog.' : displayLabel;
+        const visibleLabel = displayLabel;
         const iconName = TAB_ICON_BY_ROUTE[route.name] ?? 'today';
-        const labelColor = focused ? colors.paperRaised : colors.mutedStrong;
+        const labelColor = focused ? colors.paperRaised : colors.inkSoft;
 
         const onPress = () => {
           const event = navigation.emit({
@@ -254,28 +250,29 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
             style={({ pressed }) => [
               styles.tabItem,
               WEB_TAB_ITEM_FOCUS_RESET,
-              focused ? styles.tabItemActive : null,
               focusRingRouteKey === route.key ? WEB_TAB_ITEM_FOCUS_RING : null,
               pressed ? styles.tabItemPressed : null,
             ]}
             testID={`bottom-tab-${route.name}`}
           >
-            <View style={styles.tabItemContent}>
-              <TabBarIcon focused={focused} name={iconName} />
-              <Text
-                ellipsizeMode="tail"
-                adjustsFontSizeToFit
-                maxFontSizeMultiplier={1.08}
-                minimumFontScale={0.86}
-                numberOfLines={1}
-                style={[
-                  styles.tabLabel,
-                  focused ? styles.tabLabelActive : null,
-                  { color: labelColor },
-                ]}
-              >
-                {visibleLabel}
-              </Text>
+            <View style={[styles.tabItemFrame, focused ? styles.tabItemActive : null]}>
+              <View style={styles.tabItemContent}>
+                <TabBarIcon focused={focused} name={iconName} />
+                <Text
+                  ellipsizeMode="tail"
+                  adjustsFontSizeToFit
+                  maxFontSizeMultiplier={1.08}
+                  minimumFontScale={0.84}
+                  numberOfLines={1}
+                  style={[
+                    styles.tabLabel,
+                    focused ? styles.tabLabelActive : null,
+                    { color: labelColor },
+                  ]}
+                >
+                  {visibleLabel}
+                </Text>
+              </View>
             </View>
           </Pressable>
         );
@@ -389,7 +386,7 @@ const styles = StyleSheet.create({
   },
   floatingTabBar: {
     alignItems: 'center',
-    backgroundColor: colors.paperRaised,
+    backgroundColor: 'rgba(255,255,255,0.96)',
     borderColor: colors.hairlineStrong,
     borderRadius: 33,
     borderWidth: StyleSheet.hairlineWidth,
@@ -409,7 +406,7 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
     letterSpacing: 0,
     lineHeight: 17,
-    marginTop: 1,
+    marginTop: 0,
     minHeight: 19,
     minWidth: 0,
     overflow: 'visible',
@@ -436,6 +433,15 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     paddingHorizontal: 1,
     paddingTop: 0,
+  },
+  tabItemFrame: {
+    alignItems: 'center',
+    borderColor: 'transparent',
+    borderRadius: 25,
+    borderWidth: StyleSheet.hairlineWidth,
+    height: 50,
+    justifyContent: 'center',
+    width: '94%',
   },
   tabItemContent: {
     alignItems: 'center',

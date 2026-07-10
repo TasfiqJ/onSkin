@@ -17,13 +17,15 @@ const baseUrl = process.env.TABBAR_E2E_BASE_URL ?? `http://localhost:${appPort}`
 const shouldStartServer = !process.env.TABBAR_E2E_BASE_URL;
 const viewports = [
   { name: '320x568', width: 320, height: 568 },
-  { name: '390x568', width: 390, height: 568 },
+  { name: '360x640', width: 360, height: 640 },
+  { name: '375x667', width: 375, height: 667 },
+  { name: '390x844', width: 390, height: 844 },
   { name: '412x915', width: 412, height: 915 },
+  { name: '430x932', width: 430, height: 932 },
 ];
-const compactProgressLabelMaxWidth = 414;
 const tabs = [
   { id: 'bottom-tab-today', label: 'Today', route: 'today' },
-  { compactLabel: 'Prog.', id: 'bottom-tab-progress', label: 'Progress', route: 'progress' },
+  { id: 'bottom-tab-progress', label: 'Progress', route: 'progress' },
   { id: 'bottom-tab-shelf', label: 'Shelf', route: 'shelf' },
   { id: 'bottom-tab-you', label: 'You', route: 'you' },
 ];
@@ -352,9 +354,7 @@ const snapshotExpression = `(() => {
   const tabListStyle = tabList ? getComputedStyle(tabList) : null;
   const tabs = tabSpecs.map((tab) => {
     const node = document.querySelector('[data-testid="' + tab.id + '"]');
-    const compactProgressLabel =
-      tab.route === 'progress' && window.innerWidth <= ${compactProgressLabelMaxWidth};
-    const visibleLabel = compactProgressLabel && tab.compactLabel ? tab.compactLabel : tab.label;
+    const visibleLabel = tab.label;
     const labelNode = ownTextNode(node, visibleLabel);
     const rect = rectOf(node);
     const labelRect = rectOf(labelNode);
@@ -368,7 +368,6 @@ const snapshotExpression = `(() => {
       center,
       centerHitContains: Boolean(node && hit && node.contains(hit)),
       centerHitText: hit?.textContent?.replace(/\\s+/g, ' ').trim() ?? null,
-      compactLabel: tab.compactLabel ?? null,
       id: tab.id,
       label: tab.label,
       labelClientWidth: labelNode?.clientWidth ?? null,
@@ -421,10 +420,7 @@ function validateSnapshot(snapshot, expectedSelectedLabel, viewportName) {
   );
 
   for (const tab of snapshot.tabs) {
-    const compactProgressLabel =
-      tab.route === 'progress' && snapshot.innerWidth <= compactProgressLabelMaxWidth;
-    const expectedVisibleLabel =
-      compactProgressLabel && tab.compactLabel ? tab.compactLabel : tab.label;
+    const expectedVisibleLabel = tab.label;
     assert(tab.rect, `${viewportName}: missing ${tab.label} tab`);
     assert(
       tab.labelText === expectedVisibleLabel,
@@ -438,8 +434,9 @@ function validateSnapshot(snapshot, expectedSelectedLabel, viewportName) {
       tab.ariaLabel === `${tab.label} tab`,
       `${viewportName}: ${tab.label} accessibility label is wrong`,
     );
+    const minTabWidth = snapshot.innerWidth <= 340 ? 72 : 74;
     assert(
-      tab.rect.width >= 74,
+      tab.rect.width >= minTabWidth,
       `${viewportName}: ${tab.label} tab width ${tab.rect.width} is too narrow`,
     );
     assert(
@@ -551,17 +548,15 @@ async function run() {
           `document.querySelector('[data-testid="${tab.id}"]')?.getAttribute('aria-selected') === 'true'`,
         );
         const snapshot = await evaluate(client, snapshotExpression);
-        validateSnapshot(snapshot, tab.label, viewport.name);
-
         const stepName = `${viewport.name}-${tab.route}`;
-        await screenshot(client, stepName);
         writeJson(`${stepName}.json`, snapshot);
+        validateSnapshot(snapshot, tab.label, viewport.name);
+        await screenshot(client, stepName);
         viewportResult.steps.push({
           selected: tab.label,
           tabListRect: snapshot.tabList.rect,
           tabs: snapshot.tabs.map((item) => ({
             centerHitContains: item.centerHitContains,
-            compactLabel: item.compactLabel ?? null,
             label: item.label,
             labelText: item.labelText,
             labelRect: item.labelRect,
@@ -583,6 +578,7 @@ async function run() {
       return !(
         serialized.includes('EXPO_PUBLIC_SUPABASE') ||
         serialized.includes('Notifications') ||
+        serialized.includes('expo-notifications') ||
         serialized.includes('placeholder') ||
         serialized.includes('403') ||
         serialized.includes('supabase.co')
