@@ -15,16 +15,86 @@ export type SequencingRule = {
 
 // Mirrors supabase/migrations/...0014_sequencing_rules.sql.
 export const SEQUENCING_RULES: Record<SequencingRole, SequencingRule> = {
-  cleanser: { role: 'cleanser', basePriority: 10, amEligible: true, pmEligible: true, defaultPhase: 'either', notes: 'Start with a clean base.' },
-  toner: { role: 'toner', basePriority: 20, amEligible: true, pmEligible: true, defaultPhase: 'either', notes: 'Optional. A hydrating or balancing layer.' },
-  antioxidant: { role: 'antioxidant', basePriority: 30, amEligible: true, pmEligible: true, defaultPhase: 'am', notes: 'Vitamin C in the morning, under your SPF.' },
-  hydrating_serum: { role: 'hydrating_serum', basePriority: 35, amEligible: true, pmEligible: true, defaultPhase: 'either', notes: 'A lightweight hydrating layer.' },
-  treatment: { role: 'treatment', basePriority: 40, amEligible: false, pmEligible: true, defaultPhase: 'pm', notes: 'Apply to dry skin · pea-sized · avoid the eye area.' },
-  exfoliant: { role: 'exfoliant', basePriority: 45, amEligible: false, pmEligible: true, defaultPhase: 'pm', notes: 'On exfoliation nights only.' },
-  eye: { role: 'eye', basePriority: 50, amEligible: true, pmEligible: true, defaultPhase: 'either', notes: 'A gentle pat around the eye area.' },
-  moisturiser: { role: 'moisturiser', basePriority: 60, amEligible: true, pmEligible: true, defaultPhase: 'either', notes: 'Seal everything in.' },
-  oil: { role: 'oil', basePriority: 70, amEligible: false, pmEligible: true, defaultPhase: 'pm', notes: 'Optional. A final nourishing layer at night.' },
-  spf: { role: 'spf', basePriority: 100, amEligible: true, pmEligible: false, defaultPhase: 'am', notes: 'Always the last morning step. Reapply through the day.' },
+  cleanser: {
+    role: 'cleanser',
+    basePriority: 10,
+    amEligible: true,
+    pmEligible: true,
+    defaultPhase: 'either',
+    notes: 'Start with a clean base.',
+  },
+  toner: {
+    role: 'toner',
+    basePriority: 20,
+    amEligible: true,
+    pmEligible: true,
+    defaultPhase: 'either',
+    notes: 'Optional. A hydrating or balancing layer.',
+  },
+  antioxidant: {
+    role: 'antioxidant',
+    basePriority: 30,
+    amEligible: true,
+    pmEligible: true,
+    defaultPhase: 'am',
+    notes: 'Vitamin C in the morning, under your SPF.',
+  },
+  hydrating_serum: {
+    role: 'hydrating_serum',
+    basePriority: 35,
+    amEligible: true,
+    pmEligible: true,
+    defaultPhase: 'either',
+    notes: 'A lightweight hydrating layer.',
+  },
+  treatment: {
+    role: 'treatment',
+    basePriority: 40,
+    amEligible: false,
+    pmEligible: true,
+    defaultPhase: 'pm',
+    notes: 'Apply to dry skin · pea-sized · avoid the eye area.',
+  },
+  exfoliant: {
+    role: 'exfoliant',
+    basePriority: 45,
+    amEligible: false,
+    pmEligible: true,
+    defaultPhase: 'pm',
+    notes: 'On exfoliation nights only.',
+  },
+  eye: {
+    role: 'eye',
+    basePriority: 50,
+    amEligible: true,
+    pmEligible: true,
+    defaultPhase: 'either',
+    notes: 'A gentle pat around the eye area.',
+  },
+  moisturiser: {
+    role: 'moisturiser',
+    basePriority: 60,
+    amEligible: true,
+    pmEligible: true,
+    defaultPhase: 'either',
+    notes: 'Seal everything in.',
+  },
+  oil: {
+    role: 'oil',
+    basePriority: 70,
+    amEligible: false,
+    pmEligible: true,
+    defaultPhase: 'pm',
+    notes: 'Optional. A final nourishing layer at night.',
+  },
+  spf: {
+    role: 'spf',
+    basePriority: 100,
+    amEligible: true,
+    pmEligible: false,
+    defaultPhase: 'am',
+    notes: 'Always the last morning step. Reapply through the day.',
+  },
 };
 
 export type ClassifiableProduct = {
@@ -110,7 +180,10 @@ export function phasesFor(role: SequencingRole): RoutinePhase[] {
 }
 
 /** Order a set of products within one phase by the canonical priority. */
-export function sequencePhase(products: ClassifiableProduct[], phase: 'am' | 'pm'): SequencedStep[] {
+export function sequencePhase(
+  products: ClassifiableProduct[],
+  phase: 'am' | 'pm',
+): SequencedStep[] {
   const eligible = products
     .map((p) => ({ p, role: classifyRole(p) }))
     .filter((item): item is { p: ClassifiableProduct; role: SequencingRole } => item.role != null)

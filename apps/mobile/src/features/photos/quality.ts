@@ -6,7 +6,7 @@ import { COACHING, LIGHTING_LABEL } from './copy';
  * Pure guided-capture quality logic (docs/06 §3). The on-device face detector +
  * frame-buffer luminance feed these signals; this module turns them into the
  * coaching line, the lighting indicator, the "ready" gate (auto-capture when all
- * tolerances are met), and the calm review verdict. NO faceprint is involved , 
+ * tolerances are met), and the calm review verdict. NO faceprint is involved ,
  * these are per-frame guidance signals, discarded after the shot (docs/06 §7).
  *
  * Quality is FLAGGED, never BLOCKED (docs/06 §3, the doc's D-029): `isCaptureReady`
@@ -59,8 +59,12 @@ export function lightingState(s: Pick<CaptureSignals, 'luminance' | 'warmth' | '
 }
 
 /** Lighting is "ready" when it's good enough. Calm guidance otherwise. */
-export function lightingReady(s: Pick<CaptureSignals, 'luminance' | 'warmth' | 'evenness'>): boolean {
-  return lightingState(s).fill >= CAPTURE_TOLERANCE.lightingReady && lightingState(s).state === 'good';
+export function lightingReady(
+  s: Pick<CaptureSignals, 'luminance' | 'warmth' | 'evenness'>,
+): boolean {
+  return (
+    lightingState(s).fill >= CAPTURE_TOLERANCE.lightingReady && lightingState(s).state === 'good'
+  );
 }
 
 /** Alignment + pose + distance all within tolerance (lighting checked separately). */
@@ -95,9 +99,12 @@ export function coachingLine(s: CaptureSignals): string {
   if (s.yaw < -t.maxYawDeg) offenders.push({ key: 'turn_right', over: -s.yaw - t.maxYawDeg });
   if (s.pitch > t.maxPitchDeg) offenders.push({ key: 'chin_down', over: s.pitch - t.maxPitchDeg });
   if (s.pitch < -t.maxPitchDeg) offenders.push({ key: 'chin_up', over: -s.pitch - t.maxPitchDeg });
-  if (Math.abs(s.roll) > t.maxRollDeg) offenders.push({ key: 'level', over: Math.abs(s.roll) - t.maxRollDeg });
-  if (s.distance < -t.maxDistance) offenders.push({ key: 'closer', over: -s.distance - t.maxDistance });
-  if (s.distance > t.maxDistance) offenders.push({ key: 'farther', over: s.distance - t.maxDistance });
+  if (Math.abs(s.roll) > t.maxRollDeg)
+    offenders.push({ key: 'level', over: Math.abs(s.roll) - t.maxRollDeg });
+  if (s.distance < -t.maxDistance)
+    offenders.push({ key: 'closer', over: -s.distance - t.maxDistance });
+  if (s.distance > t.maxDistance)
+    offenders.push({ key: 'farther', over: s.distance - t.maxDistance });
   if (offenders.length) {
     offenders.sort((a, b) => b.over - a.over);
     return COACHING[offenders[0]!.key]!;

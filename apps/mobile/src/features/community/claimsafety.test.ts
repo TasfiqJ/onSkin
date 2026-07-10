@@ -17,7 +17,12 @@ const DRUG = [
   /\b(eczema|rosacea|psoriasis|dermatitis|melasma|acne)\b/i,
 ];
 const ALARM = [/\bdanger\w*/i, /\bharmful\b/i, /\btoxic\b/i, /!/];
-const URGENCY = [/\bdon['’]?t\s+miss\b/i, /\bhurry\b/i, /\blast\s+chance\b/i, /\bonly\s+\d+\s+left\b/i];
+const URGENCY = [
+  /\bdon['’]?t\s+miss\b/i,
+  /\bhurry\b/i,
+  /\blast\s+chance\b/i,
+  /\bonly\s+\d+\s+left\b/i,
+];
 
 // The one meta string that QUOTES "treats/cures" precisely to say it found none. It
 // negates the terms (the Slice-20 NO_SCORE_COPY exemption pattern). It is exempt from
@@ -34,7 +39,14 @@ function offenders(text: string, pats: RegExp[]): string[] {
   return pats.flatMap((re) => (text.match(re) ? [re.source] : []));
 }
 
-const NOTE_STRINGS = SKIN_NOTES.flatMap((n) => [n.title, n.summary, n.claim, n.why, n.verdict, n.sourceLabel]);
+const NOTE_STRINGS = SKIN_NOTES.flatMap((n) => [
+  n.title,
+  n.summary,
+  n.claim,
+  n.why,
+  n.verdict,
+  n.sourceLabel,
+]);
 const ALL = [...collect(COMMUNITY_COPY), ...NOTE_STRINGS];
 
 describe('community copy + expert notes are claim-safe (docs/11 §4/§9)', () => {

@@ -2,7 +2,7 @@ import type { ConflictSeverity, FunctionalTag, IngredientSubflag } from '@onskin
 
 import { STARTER_RULES, type ConflictRule } from './rules';
 
-// The conflict / synergy engine (docs/02 §4). Pure, deterministic, testable , 
+// The conflict / synergy engine (docs/02 §4). Pure, deterministic, testable ,
 // the doc mandates a fixture test per rule for this liability surface (§10).
 // Tag-based, both-orders matching; concentration- and sensitivity-modulated
 // severity; sub-flag exemptions; safety via a profile-derived `pregnancy`
@@ -41,10 +41,12 @@ function bump(s: ConflictSeverity, by: number): ConflictSeverity {
 }
 
 /** Find a rule for an unordered tag pair (matches either order). */
-export function findRule(rules: ConflictRule[], a: FunctionalTag, b: FunctionalTag): ConflictRule | undefined {
-  return rules.find(
-    (r) => (r.tagA === a && r.tagB === b) || (r.tagA === b && r.tagB === a),
-  );
+export function findRule(
+  rules: ConflictRule[],
+  a: FunctionalTag,
+  b: FunctionalTag,
+): ConflictRule | undefined {
+  return rules.find((r) => (r.tagA === a && r.tagB === b) || (r.tagA === b && r.tagB === a));
 }
 
 /** Computed severity after concentration + sensitivity modulation (docs/02 §4.2). */
@@ -57,7 +59,10 @@ export function modulateSeverity(
   if (rule.interactionType === 'safety') return 'high';
 
   let sev = rule.baseSeverity;
-  if ((rule.interactionType === 'irritation' || rule.interactionType === 'stability') && highConcentration) {
+  if (
+    (rule.interactionType === 'irritation' || rule.interactionType === 'stability') &&
+    highConcentration
+  ) {
     sev = bump(sev, 1);
   }
   if (rule.interactionType === 'irritation') {
@@ -96,7 +101,10 @@ export function detectConflicts(
     for (let j = i + 1; j < items.length; j++) {
       const a = items[i]!;
       const b = items[j]!;
-      const subflags = new Set<IngredientSubflag | string>([...(a.subflags ?? []), ...(b.subflags ?? [])]);
+      const subflags = new Set<IngredientSubflag | string>([
+        ...(a.subflags ?? []),
+        ...(b.subflags ?? []),
+      ]);
       const highConc = a.concentration === 'high' || b.concentration === 'high';
 
       for (const tagA of a.tags) {
@@ -108,7 +116,8 @@ export function detectConflicts(
           if (isExempt(rule, subflags)) continue;
 
           // Co-use allowance: e.g. retinoid × BHA is tolerable on resistant/oily skin.
-          if (rule.appliesWhen?.coUseIf === 'resistant' && profile.sensitivity === 'resistant') continue;
+          if (rule.appliesWhen?.coUseIf === 'resistant' && profile.sensitivity === 'resistant')
+            continue;
 
           // Dose-gated safety: high-dose salicylic × pregnancy only fires on a
           // high-concentration product (docs/02 §4.8. Low-dose BHA is fine).
@@ -135,11 +144,14 @@ export function detectConflicts(
   // Rank: safety first, then severity desc, then by evidence (established first).
   const evidenceOrder = ['established', 'plausible', 'contested', 'refuted'];
   out.sort((x, y) => {
-    const safety = Number(y.rule.interactionType === 'safety') - Number(x.rule.interactionType === 'safety');
+    const safety =
+      Number(y.rule.interactionType === 'safety') - Number(x.rule.interactionType === 'safety');
     if (safety) return safety;
     const sev = rank(y.computedSeverity) - rank(x.computedSeverity);
     if (sev) return sev;
-    return evidenceOrder.indexOf(x.rule.evidenceLabel) - evidenceOrder.indexOf(y.rule.evidenceLabel);
+    return (
+      evidenceOrder.indexOf(x.rule.evidenceLabel) - evidenceOrder.indexOf(y.rule.evidenceLabel)
+    );
   });
 
   return out;

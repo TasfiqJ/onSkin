@@ -384,17 +384,17 @@ export default function YouScreen() {
   const primaryRoutineRows = highTextPressureYou
     ? routineRows.slice(0, 1)
     : shortPhone
-    ? routineRows.slice(0, 2)
-    : compactPhone
-      ? routineRows.slice(0, 3)
-      : routineRows;
+      ? routineRows.slice(0, 2)
+      : compactPhone
+        ? routineRows.slice(0, 3)
+        : routineRows;
   const secondaryRoutineRows = highTextPressureYou
     ? routineRows.slice(1)
     : shortPhone
-    ? routineRows.slice(2)
-    : compactPhone
-      ? routineRows.slice(3)
-      : [];
+      ? routineRows.slice(2)
+      : compactPhone
+        ? routineRows.slice(3)
+        : [];
   const secondaryRoutineTopMargin = tallTextPressureYou
     ? TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN
     : supportFloorTextPressureYou

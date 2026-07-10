@@ -149,7 +149,9 @@ if (!exists(packagePath)) blockers.push(`Missing ${packagePath}.`);
 if (!exists(envExamplePath)) blockers.push(`Missing ${envExamplePath}.`);
 
 const forTasText = exists(forTasPath) ? read(forTasPath) : '';
-const deviceSupportPolicyText = exists(deviceSupportPolicyPath) ? read(deviceSupportPolicyPath) : '';
+const deviceSupportPolicyText = exists(deviceSupportPolicyPath)
+  ? read(deviceSupportPolicyPath)
+  : '';
 const humanE2eManifest = exists(humanE2eManifestPath) ? readJson(humanE2eManifestPath) : {};
 const envExampleText = exists(envExamplePath) ? read(envExamplePath) : '';
 const packageJson = exists(packagePath) ? readJson(packagePath) : { scripts: {} };
@@ -281,7 +283,9 @@ for (const needle of requiredDeviceSupportPolicyNeedles) {
   }
 }
 if (!/Stress-Only Viewports/.test(deviceSupportPolicyText)) {
-  blockers.push(`${deviceSupportPolicyPath} must distinguish launch-blocking support floors from stress-only viewports.`);
+  blockers.push(
+    `${deviceSupportPolicyPath} must distinguish launch-blocking support floors from stress-only viewports.`,
+  );
 }
 
 const groups = gateGroups.map((group) => {

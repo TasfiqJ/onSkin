@@ -80,7 +80,9 @@ describe('community note sharing', () => {
     const source = readSource('app/community/note/[id].tsx');
     const shareHelper = readSource('features/community/shareNote.ts');
 
-    expect(source).toContain('const [shareFeedback, setShareFeedback] = useState<string | null>(null);');
+    expect(source).toContain(
+      'const [shareFeedback, setShareFeedback] = useState<string | null>(null);',
+    );
     expect(source).toContain('const shared = await shareSkinNote(note);');
     expect(source).toContain('if (!shared) {');
     expect(source).toContain('setShareFeedback(SHARE_FAILURE_MESSAGE);');

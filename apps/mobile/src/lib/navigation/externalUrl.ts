@@ -8,7 +8,8 @@ const MAX_EXTERNAL_URL_LENGTH = 2048;
  */
 export function safeExternalHttpsUrl(value: string | null | undefined): string | null {
   const trimmed = value?.trim();
-  if (!trimmed || trimmed.length > MAX_EXTERNAL_URL_LENGTH || CONTROL_CHAR_RE.test(trimmed)) return null;
+  if (!trimmed || trimmed.length > MAX_EXTERNAL_URL_LENGTH || CONTROL_CHAR_RE.test(trimmed))
+    return null;
 
   let url: URL;
   try {

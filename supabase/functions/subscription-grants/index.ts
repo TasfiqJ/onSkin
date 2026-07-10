@@ -6,7 +6,8 @@ import { bearerToken } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey =
+  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const appEnvironment = Deno.env.get('APP_ENV') ?? Deno.env.get('EXPO_PUBLIC_APP_ENV') ?? 'unknown';
 const maxBodyBytes = userEdgeBodyMaxBytes();
 
@@ -27,8 +28,13 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function grantErrorCode(error: unknown): 'active_subscription_exists' | 'reverse_trial_already_used' | 'reverse_trial_grant_failed' {
-  const message = typeof (error as { message?: unknown })?.message === 'string' ? (error as { message: string }).message : '';
+function grantErrorCode(
+  error: unknown,
+): 'active_subscription_exists' | 'reverse_trial_already_used' | 'reverse_trial_grant_failed' {
+  const message =
+    typeof (error as { message?: unknown })?.message === 'string'
+      ? (error as { message: string }).message
+      : '';
   if (message.includes('ACTIVE_SUBSCRIPTION_EXISTS')) return 'active_subscription_exists';
   if (message.includes('REVERSE_TRIAL_ALREADY_USED')) return 'reverse_trial_already_used';
   return 'reverse_trial_grant_failed';
@@ -53,7 +59,11 @@ Deno.serve(async (req) => {
 
   const expiresAt = addDays(REVERSE_TRIAL_DAYS);
   const environment =
-    appEnvironment === 'production' ? 'production' : appEnvironment === 'development' ? 'development' : 'unknown';
+    appEnvironment === 'production'
+      ? 'production'
+      : appEnvironment === 'development'
+        ? 'development'
+        : 'unknown';
   const { data, error } = await supabase.rpc('grant_app_granted_reverse_trial', {
     p_user_id: userId,
     p_expires_at: expiresAt,
@@ -63,7 +73,8 @@ Deno.serve(async (req) => {
   if (error) {
     const code = grantErrorCode(error);
     console.error('[subscription-grants]', code);
-    const status = code === 'active_subscription_exists' || code === 'reverse_trial_already_used' ? 409 : 500;
+    const status =
+      code === 'active_subscription_exists' || code === 'reverse_trial_already_used' ? 409 : 500;
     return json({ error: code }, status);
   }
 

@@ -16,7 +16,8 @@ export function ProgressBar({ total, current, tone = 'light', className }: Progr
     <View
       accessibilityRole="progressbar"
       accessibilityValue={{ min: 0, max: total, now: current }}
-      className={cn('flex-row gap-1.5', className)}>
+      className={cn('flex-row gap-1.5', className)}
+    >
       {Array.from({ length: total }).map((_, i) => (
         <View
           key={i}

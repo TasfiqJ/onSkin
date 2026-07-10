@@ -9,7 +9,15 @@ import { PAYWALL_COPY, UPSELL_COPY, UPSELL_DISMISS } from './copy';
 
 // Apostrophe class is ['’] so both the straight ASCII quote and the curly U+2019
 // the copy uses are caught (the Slice-21 lesson).
-const URGENCY = [/\bdon['’]?t\s+miss\b/i, /\bhurry\b/i, /\blast\s+chance\b/i, /\bact\s+now\b/i, /\bonly\s+\d+\s+left\b/i, /\bexpires?\s+in\b/i, /\blimited\s+time\b/i];
+const URGENCY = [
+  /\bdon['’]?t\s+miss\b/i,
+  /\bhurry\b/i,
+  /\blast\s+chance\b/i,
+  /\bact\s+now\b/i,
+  /\bonly\s+\d+\s+left\b/i,
+  /\bexpires?\s+in\b/i,
+  /\blimited\s+time\b/i,
+];
 const GUILT = [/\byou['’]?ll\s+lose\b/i, /\bdon['’]?t\s+lose\b/i, /\byou\s+failed\b/i];
 const DRUG_CLAIMS = [/\btreats?\b/i, /\bcures?\b/i, /\bheals?\b/i, /\bclinically\s+proven\b/i];
 const ALARM = [/\bdanger\w*/i, /\bwarning\b/i, /!/];

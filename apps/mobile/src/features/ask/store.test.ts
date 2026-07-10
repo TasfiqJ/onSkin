@@ -1,7 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ASK_TRIAL_GROUNDED_CAP } from './gate';
-import { getAskConsentLocal, getGroundedTurns, recordGroundedTurn, setAskConsentLocal } from './store';
+import {
+  getAskConsentLocal,
+  getGroundedTurns,
+  recordGroundedTurn,
+  setAskConsentLocal,
+} from './store';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),

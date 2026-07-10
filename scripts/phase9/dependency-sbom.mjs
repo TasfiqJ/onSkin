@@ -1,5 +1,16 @@
 #!/usr/bin/env node
-import { block, command, envSnapshot, evidenceFlagEnabled, exists, markdownList, printResult, read, warn, write } from './lib.mjs';
+import {
+  block,
+  command,
+  envSnapshot,
+  evidenceFlagEnabled,
+  exists,
+  markdownList,
+  printResult,
+  read,
+  warn,
+  write,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -8,7 +19,8 @@ const env = envSnapshot();
 block(errors, exists('package-lock.json'), 'package-lock.json is missing.');
 
 const lock = exists('package-lock.json') ? JSON.parse(read('package-lock.json')) : { packages: {} };
-const packageNameFromPath = (path) => path.replace(/^node_modules\//, '').replace(/^apps\/mobile\/node_modules\//, '');
+const packageNameFromPath = (path) =>
+  path.replace(/^node_modules\//, '').replace(/^apps\/mobile\/node_modules\//, '');
 const packages = Object.entries(lock.packages ?? {})
   .filter(([name]) => name)
   .map(([name, meta]) => ({
@@ -25,7 +37,9 @@ if (env.PHASE9_RUN_NPM_AUDIT === 'true') {
   try {
     const npmExecPath = process.env.npm_execpath;
     const auditJson = npmExecPath
-      ? command(process.execPath, [npmExecPath, 'audit', '--json'], { stdio: ['ignore', 'pipe', 'pipe'] })
+      ? command(process.execPath, [npmExecPath, 'audit', '--json'], {
+          stdio: ['ignore', 'pipe', 'pipe'],
+        })
       : command('npm', ['audit', '--json'], { stdio: ['ignore', 'pipe', 'pipe'] });
     audit = JSON.parse(auditJson);
   } catch (error) {
@@ -33,7 +47,11 @@ if (env.PHASE9_RUN_NPM_AUDIT === 'true') {
     try {
       audit = JSON.parse(stdout);
     } catch {
-      block(errors, false, `npm audit failed without parseable JSON: ${error instanceof Error ? error.message : String(error)}.`);
+      block(
+        errors,
+        false,
+        `npm audit failed without parseable JSON: ${error instanceof Error ? error.message : String(error)}.`,
+      );
     }
   }
 } else {
@@ -42,14 +60,28 @@ if (env.PHASE9_RUN_NPM_AUDIT === 'true') {
 
 const vulnerabilities = audit?.metadata?.vulnerabilities ?? null;
 if (vulnerabilities) {
-  block(errors, (vulnerabilities.high ?? 0) === 0, `npm audit found ${vulnerabilities.high} high vulnerabilities.`);
-  block(errors, (vulnerabilities.critical ?? 0) === 0, `npm audit found ${vulnerabilities.critical} critical vulnerabilities.`);
+  block(
+    errors,
+    (vulnerabilities.high ?? 0) === 0,
+    `npm audit found ${vulnerabilities.high} high vulnerabilities.`,
+  );
+  block(
+    errors,
+    (vulnerabilities.critical ?? 0) === 0,
+    `npm audit found ${vulnerabilities.critical} critical vulnerabilities.`,
+  );
 }
 
 const installScriptAllowlist = new Map(
   [
-    ['@sentry/cli@2.58.4', 'Sentry native CLI binary installer used by @sentry/react-native tooling.'],
-    ['fsevents@2.3.3', 'Optional Darwin file-watcher native package; not installed on non-Darwin CI runners.'],
+    [
+      '@sentry/cli@2.58.4',
+      'Sentry native CLI binary installer used by @sentry/react-native tooling.',
+    ],
+    [
+      'fsevents@2.3.3',
+      'Optional Darwin file-watcher native package; not installed on non-Darwin CI runners.',
+    ],
     ['unrs-resolver@1.12.2', 'ESLint resolver native binding installer used by lint tooling.'],
   ].map(([key, reason]) => [key, reason]),
 );
@@ -126,7 +158,11 @@ const markdownCell = (value) => {
   return text.replace(/\|/g, '\\|') || '-';
 };
 
-warn(warnings, evidenceFlagEnabled(env.PHASE9_DEPENDENCY_AUDIT_PASS), 'Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.');
+warn(
+  warnings,
+  evidenceFlagEnabled(env.PHASE9_DEPENDENCY_AUDIT_PASS),
+  'Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.',
+);
 
 const packet = {
   generatedAt: new Date().toISOString(),
@@ -153,30 +189,32 @@ write(
     '',
     '## Vulnerabilities',
     '',
-    vulnerabilities ? `\`${JSON.stringify(vulnerabilities)}\`` : '- npm audit not run in this invocation.',
+    vulnerabilities
+      ? `\`${JSON.stringify(vulnerabilities)}\``
+      : '- npm audit not run in this invocation.',
     '',
     '## Audit Findings',
     '',
     auditFindings.length
       ? '| Package | Severity | Direct | Via | Fix available | Nodes |\n| --- | --- | --- | --- | --- | --- |\n' +
-          auditFindings
-            .map(
-              (finding) =>
-                `| \`${markdownCell(finding.name)}\` | ${markdownCell(finding.severity)} | ${finding.isDirect ? 'yes' : 'no'} | ${markdownCell(finding.via)} | ${markdownCell(finding.fixAvailable)} | ${markdownCell(finding.nodes)} |`,
-            )
-            .join('\n')
+        auditFindings
+          .map(
+            (finding) =>
+              `| \`${markdownCell(finding.name)}\` | ${markdownCell(finding.severity)} | ${finding.isDirect ? 'yes' : 'no'} | ${markdownCell(finding.via)} | ${markdownCell(finding.fixAvailable)} | ${markdownCell(finding.nodes)} |`,
+          )
+          .join('\n')
       : '- No npm audit findings recorded.',
     '',
     '## Install Scripts',
     '',
     installScriptPackages.length
       ? '| Package | Dev | Optional | Allowed | Reason | Path |\n| --- | --- | --- | --- | --- | --- |\n' +
-          installScriptPackages
-            .map(
-              (pkg) =>
-                `| \`${markdownCell(pkg.key)}\` | ${pkg.dev ? 'yes' : 'no'} | ${pkg.optional ? 'yes' : 'no'} | ${pkg.allowed ? 'yes' : 'no'} | ${markdownCell(pkg.allowlistReason)} | ${markdownCell(pkg.path)} |`,
-            )
-            .join('\n')
+        installScriptPackages
+          .map(
+            (pkg) =>
+              `| \`${markdownCell(pkg.key)}\` | ${pkg.dev ? 'yes' : 'no'} | ${pkg.optional ? 'yes' : 'no'} | ${pkg.allowed ? 'yes' : 'no'} | ${markdownCell(pkg.allowlistReason)} | ${markdownCell(pkg.path)} |`,
+          )
+          .join('\n')
       : '- No dependency install scripts recorded in the lockfile.',
     '',
     '## Blockers',

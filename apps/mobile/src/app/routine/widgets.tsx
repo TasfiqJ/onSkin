@@ -68,9 +68,7 @@ function WidgetPreviewStep({
       <View
         className="h-6 w-6 items-center justify-center rounded-full"
         style={
-          checked
-            ? { backgroundColor: colors.clay }
-            : { borderWidth: 2, borderColor: colors.clay }
+          checked ? { backgroundColor: colors.clay } : { borderWidth: 2, borderColor: colors.clay }
         }
       >
         {checked ? <Text style={{ color: colors.paper, fontSize: 11 }}>✓</Text> : null}
@@ -100,8 +98,7 @@ function WidgetsScreen() {
     spf: false,
   });
   const [previewFeedback, setPreviewFeedback] = useState('');
-  const previewDoneCount =
-    2 + Number(previewChecked.ceramide) + Number(previewChecked.spf);
+  const previewDoneCount = 2 + Number(previewChecked.ceramide) + Number(previewChecked.spf);
 
   function togglePreviewStep(step: PreviewStepKey, label: string) {
     const checked = !previewChecked[step];
@@ -285,12 +282,7 @@ function WidgetsScreen() {
           />
         </View>
         {previewFeedback ? (
-          <Text
-            accessibilityRole="alert"
-            variant="bodySm"
-            tone="muted"
-            className="ml-1 mt-2.5"
-          >
+          <Text accessibilityRole="alert" variant="bodySm" tone="muted" className="ml-1 mt-2.5">
             {previewFeedback}
           </Text>
         ) : null}

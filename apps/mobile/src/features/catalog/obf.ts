@@ -54,7 +54,13 @@ const BEAUTY_TAGS = [
   'en:toners',
 ];
 
-const REJECT_TAGS = ['en:mouthwashes', 'en:toothpastes', 'en:oral-care', 'en:shampoos', 'en:hair-care'];
+const REJECT_TAGS = [
+  'en:mouthwashes',
+  'en:toothpastes',
+  'en:oral-care',
+  'en:shampoos',
+  'en:hair-care',
+];
 
 export function buildOpenBeautyFactsUserAgent(input: OpenBeautyFactsUserAgentInput): string {
   const appName = input.appName.trim();
@@ -74,11 +80,13 @@ export function isBeautyCategoryCandidate(tags: string[] | undefined): boolean {
 
 export function categoryFromObfTags(tags: string[] | undefined): ProductCategory | null {
   const normalized = (tags ?? []).map((tag) => tag.toLowerCase());
-  if (normalized.some((tag) => tag.includes('sunscreen') || tag.includes('sun-protection'))) return 'spf';
+  if (normalized.some((tag) => tag.includes('sunscreen') || tag.includes('sun-protection')))
+    return 'spf';
   if (normalized.some((tag) => tag.includes('cleanser'))) return 'cleanser';
   if (normalized.some((tag) => tag.includes('toner') || tag.includes('essence'))) return 'toner';
   if (normalized.some((tag) => tag.includes('serum'))) return 'serum';
-  if (normalized.some((tag) => tag.includes('moisturizer') || tag.includes('moisturiser'))) return 'moisturiser_tube';
+  if (normalized.some((tag) => tag.includes('moisturizer') || tag.includes('moisturiser')))
+    return 'moisturiser_tube';
   return null;
 }
 

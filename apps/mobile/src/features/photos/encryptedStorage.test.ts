@@ -63,7 +63,9 @@ describe('encrypted photo storage', () => {
     mocks.deleteItemAsync.mockImplementation(async (key: string) => {
       mocks.secureStorage.delete(key);
     });
-    mocks.getItemAsync.mockImplementation(async (key: string) => mocks.secureStorage.get(key) ?? null);
+    mocks.getItemAsync.mockImplementation(
+      async (key: string) => mocks.secureStorage.get(key) ?? null,
+    );
     mocks.makeDirectoryAsync.mockResolvedValue(undefined);
     mocks.readAsStringAsync.mockImplementation(async (uri: string) => {
       const value = mocks.files.get(uri);
@@ -108,9 +110,9 @@ describe('encrypted photo storage', () => {
   it('rejects malformed photo envelopes with a stable storage error', async () => {
     mocks.files.set('file://document/photos/v1/bad.onskinphoto', '{not-json');
 
-    await expect(decryptPhotoToDataUri('file://document/photos/v1/bad.onskinphoto')).rejects.toThrow(
-      'PHOTO_ENCRYPTION_ENVELOPE_INVALID',
-    );
+    await expect(
+      decryptPhotoToDataUri('file://document/photos/v1/bad.onskinphoto'),
+    ).rejects.toThrow('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
 
     mocks.files.set(
       'file://document/photos/v1/gif.onskinphoto',
@@ -123,9 +125,9 @@ describe('encrypted photo storage', () => {
       }),
     );
 
-    await expect(createPhotoShareFile('file://document/photos/v1/gif.onskinphoto', 'photo-1')).rejects.toThrow(
-      'PHOTO_ENCRYPTION_ENVELOPE_INVALID',
-    );
+    await expect(
+      createPhotoShareFile('file://document/photos/v1/gif.onskinphoto', 'photo-1'),
+    ).rejects.toThrow('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
   });
 
   it('exports encrypted photos to owned cache files and only deletes those exports', async () => {

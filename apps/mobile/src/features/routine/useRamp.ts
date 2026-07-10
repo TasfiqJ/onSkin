@@ -18,7 +18,11 @@ export type RampItem = {
   offerStepUp: boolean;
 };
 
-export function useRamp(): { items: RampItem[]; isLoading: boolean; acceptStepUp: (productId: string) => Promise<void> } {
+export function useRamp(): {
+  items: RampItem[];
+  isLoading: boolean;
+  acceptStepUp: (productId: string) => Promise<void>;
+} {
   const qc = useQueryClient();
   const { data: planData, isLoading: planLoading } = usePlan();
   const planRamps = planData?.plan.ramp ?? [];

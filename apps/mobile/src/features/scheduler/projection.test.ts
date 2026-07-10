@@ -41,7 +41,8 @@ describe('projection (docs/05 §3)', () => {
     expect(week.length).toBe(7);
     expect(week[0]!.dateISO).toBe('2026-06-12');
     expect(week[6]!.dateISO).toBe('2026-06-18');
-    for (const p of week) expect(['exfoliate', 'retinoid', 'recover', 'other_active']).toContain(p.night.slot);
+    for (const p of week)
+      expect(['exfoliate', 'retinoid', 'recover', 'other_active']).toContain(p.night.slot);
   });
 
   it('nextSlotDate finds the next exfoliation (acid) night', () => {

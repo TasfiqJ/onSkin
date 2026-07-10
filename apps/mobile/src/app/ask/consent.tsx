@@ -31,9 +31,7 @@ function devAskConsentFailureModes(): AskConsentFailureModes {
     return { grantOnce: false, ledgerLocalOnly: false, revokeOnce: false };
   }
   const modes = new Set(
-    (process.env.EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE ?? '')
-      .split(',')
-      .map((mode) => mode.trim()),
+    (process.env.EXPO_PUBLIC_E2E_ASK_CONSENT_FAILURE ?? '').split(',').map((mode) => mode.trim()),
   );
   return {
     grantOnce: modes.has('grant_once') || modes.has('all_once'),

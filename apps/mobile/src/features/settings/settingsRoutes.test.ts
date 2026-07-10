@@ -185,11 +185,15 @@ describe('Settings route contracts', () => {
     expect(route).toContain("source: 'beta_feedback'");
     expect(route).toContain('category,');
     expect(route).toContain('severity,');
-    expect(route).toContain("import { Platform, Pressable, ScrollView, View, useWindowDimensions }");
+    expect(route).toContain(
+      'import { Platform, Pressable, ScrollView, View, useWindowDimensions }',
+    );
     expect(route).toContain('const { fontScale, height, width } = useWindowDimensions();');
     expect(route).toContain("const highTextPressure = fontScale >= 1.3 || Platform.OS === 'web';");
     expect(route).toContain('const denseChrome = compact || highTextPressure;');
-    expect(route).toContain("{highTextPressure ? 'Category and priority only' : 'Route the issue fast'}");
+    expect(route).toContain(
+      "{highTextPressure ? 'Category and priority only' : 'Route the issue fast'}",
+    );
     expect(route).toContain('{highTextPressure ? null : (');
     expect(route).toContain("? 'supportTextPressure'");
     expect(route).toContain("? 'tallTextPressure'");
@@ -201,7 +205,9 @@ describe('Settings route contracts', () => {
     expect(route).toContain("density === 'tallTextPressure'");
     expect(route).toContain("? 'mb-16 min-h-[56px]");
     expect(route).toContain('density={optionRowDensity}');
-    expect(route).toContain('function categoryFirstViewportBreakMargin(index: number): number | undefined');
+    expect(route).toContain(
+      'function categoryFirstViewportBreakMargin(index: number): number | undefined',
+    );
     expect(route).toContain('if (width <= 430 && height < 700 && index === 2) return 192;');
     expect(route).toContain(
       'if (width <= 430 && height >= 700 && height < 900 && index === 4) return 64;',
@@ -444,7 +450,9 @@ describe('Settings route contracts', () => {
     expect(source).toContain(
       "width <= 430 && height >= 900 && height < 980 && (fontScale >= 1.3 || Platform.OS === 'web');",
     );
-    expect(source).toContain('const highTextPressureYou = supportFloorTextPressureYou || tallTextPressureYou;');
+    expect(source).toContain(
+      'const highTextPressureYou = supportFloorTextPressureYou || tallTextPressureYou;',
+    );
     expect(source).toContain('const PRIVACY_DIRECT_ENTRY_COMPACT_SCROLL_NUDGE = 0;');
     expect(source).toContain('const shortPhone = compactPhone && height < 600;');
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-32' : 'pb-8'}");

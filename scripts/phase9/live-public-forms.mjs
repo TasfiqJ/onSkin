@@ -550,13 +550,17 @@ async function main() {
       .delete()
       .eq('email', waitlistRateLimitEmail);
     if (waitlistRateDelete.error)
-      warnings.push(`Waitlist rate-limit cleanup warning: ${redactedErrorKind(waitlistRateDelete.error)}`);
+      warnings.push(
+        `Waitlist rate-limit cleanup warning: ${redactedErrorKind(waitlistRateDelete.error)}`,
+      );
     const waitlistOversizedDelete = await admin
       .from('waitlist_signups')
       .delete()
       .eq('email', waitlistOversizedEmail);
     if (waitlistOversizedDelete.error)
-      warnings.push(`Waitlist oversized cleanup warning: ${redactedErrorKind(waitlistOversizedDelete.error)}`);
+      warnings.push(
+        `Waitlist oversized cleanup warning: ${redactedErrorKind(waitlistOversizedDelete.error)}`,
+      );
     const growthDelete = await admin.from('growth_events').delete().eq('share_id', shareId);
     if (growthDelete.error)
       warnings.push(`Growth cleanup warning: ${redactedErrorKind(growthDelete.error)}`);
@@ -565,13 +569,17 @@ async function main() {
       .delete()
       .eq('share_id', growthRateLimitShareId);
     if (growthRateDelete.error)
-      warnings.push(`Growth rate-limit cleanup warning: ${redactedErrorKind(growthRateDelete.error)}`);
+      warnings.push(
+        `Growth rate-limit cleanup warning: ${redactedErrorKind(growthRateDelete.error)}`,
+      );
     const growthOversizedDelete = await admin
       .from('growth_events')
       .delete()
       .eq('share_id', growthOversizedShareId);
     if (growthOversizedDelete.error)
-      warnings.push(`Growth oversized cleanup warning: ${redactedErrorKind(growthOversizedDelete.error)}`);
+      warnings.push(
+        `Growth oversized cleanup warning: ${redactedErrorKind(growthOversizedDelete.error)}`,
+      );
   }
 
   writeArtifacts(errors.length > 0 ? 'fail' : 'pass');

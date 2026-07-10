@@ -14,7 +14,9 @@ describe('useProgress local-first contract', () => {
     expect(source).toContain('if (isSupabaseConfigured)');
     expect(source).toContain('catch {');
     expect(source).toContain('const localDates = await getCompletedDates()');
-    expect(source).toContain('const longest = Math.max(serverLongest, bestStreak(completed), s.current)');
+    expect(source).toContain(
+      'const longest = Math.max(serverLongest, bestStreak(completed), s.current)',
+    );
     expect(source).not.toContain('const { data: completions } = await supabase');
   });
 });

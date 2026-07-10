@@ -92,20 +92,14 @@ export default function NoteDetail() {
               variant="label"
               tone="clay"
               className={
-                supportFloorMissingNote
-                  ? 'mt-1 font-mono uppercase'
-                  : 'mt-5 font-mono uppercase'
+                supportFloorMissingNote ? 'mt-1 font-mono uppercase' : 'mt-5 font-mono uppercase'
               }
             >
               Note unavailable
             </Text>
             <Text
               variant="titleSm"
-              className={
-                supportFloorMissingNote
-                  ? 'mt-0.5 text-center'
-                  : 'mt-2 text-center'
-              }
+              className={supportFloorMissingNote ? 'mt-0.5 text-center' : 'mt-2 text-center'}
               style={{
                 fontSize: splitShortMissingNote
                   ? 21

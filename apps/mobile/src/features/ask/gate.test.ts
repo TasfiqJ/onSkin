@@ -7,7 +7,12 @@ import { askGate, ASK_TRIAL_GROUNDED_CAP } from './gate';
 
 describe('free users: the grounded layer is Pro (the deterministic advisor stays free)', () => {
   it('blocks grounded turns with reason free_locked', () => {
-    const g = askGate({ isPro: false, inTrial: false, inReverseTrial: false, groundedTurnsUsed: 0 });
+    const g = askGate({
+      isPro: false,
+      inTrial: false,
+      inReverseTrial: false,
+      groundedTurnsUsed: 0,
+    });
     expect(g.groundedAllowed).toBe(false);
     expect(g.reason).toBe('free_locked');
   });
@@ -35,7 +40,12 @@ describe('trial / reverse-trial: a hard cap on the grounded taste', () => {
 
 describe('fully paid: uncapped', () => {
   it('always allows grounded turns, with null remaining', () => {
-    const g = askGate({ isPro: true, inTrial: false, inReverseTrial: false, groundedTurnsUsed: 999 });
+    const g = askGate({
+      isPro: true,
+      inTrial: false,
+      inReverseTrial: false,
+      groundedTurnsUsed: 999,
+    });
     expect(g.groundedAllowed).toBe(true);
     expect(g.reason).toBeNull();
     expect(g.remaining).toBeNull();

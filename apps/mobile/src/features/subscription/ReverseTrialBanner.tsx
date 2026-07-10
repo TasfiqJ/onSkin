@@ -36,18 +36,24 @@ export function ReverseTrialBanner({
         backgroundColor: night ? colors.nightSurface : colors.clayTint,
         borderWidth: 1,
         borderColor: night ? colors.hairlineDark : 'rgba(165,105,75,0.22)',
-      }}>
+      }}
+    >
       <View
         className={
           compact
             ? 'h-8 w-8 items-center justify-center rounded-full'
             : 'h-[38px] w-[38px] items-center justify-center rounded-full'
         }
-        style={{ backgroundColor: colors.clay }}>
+        style={{ backgroundColor: colors.clay }}
+      >
         <View className="h-3.5 w-3.5 rounded-full border-2" style={{ borderColor: colors.paper }} />
       </View>
       <View className="flex-1">
-        <Text variant="body" className="font-sans-bold" style={{ color: night ? colors.cream : colors.clayDeep }}>
+        <Text
+          variant="body"
+          className="font-sans-bold"
+          style={{ color: night ? colors.cream : colors.clayDeep }}
+        >
           {PAYWALL_COPY.reverseTrial.bannerTitle(daysLeft)}
         </Text>
         {compact ? null : (

@@ -69,4 +69,3 @@ describe('catalog quality model', () => {
     expect(quality.warnings).toContain('sunscreen_expiry_requires_label_or_manufacturer_source');
   });
 });
-

@@ -19,9 +19,7 @@ function normalizeLocalDateISO(value: unknown): string | null {
   const month = Number(m);
   const day = Number(d);
   const date = new Date(year, month - 1, day);
-  return date.getFullYear() === year &&
-    date.getMonth() === month - 1 &&
-    date.getDate() === day
+  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day
     ? text
     : null;
 }

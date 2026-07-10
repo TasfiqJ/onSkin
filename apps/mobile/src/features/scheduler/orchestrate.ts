@@ -3,7 +3,13 @@ import type { CycleVariant, FunctionalTag, GoalId } from '@onskin/types';
 import type { SensitivityLevel } from '@/features/intelligence/engine';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 
-import { classifyActiveClass, defaultPhase, isPotent, reviewedFrequencyCap, type ActiveClass } from './classes';
+import {
+  classifyActiveClass,
+  defaultPhase,
+  isPotent,
+  reviewedFrequencyCap,
+  type ActiveClass,
+} from './classes';
 
 // Multi-active orchestration (docs/05 §4). The moat. Turns a cabinet of actives
 // into one barrier-safe weekly cycle: one potent active per night, retinoid and
@@ -64,7 +70,8 @@ const RECOVERY: Record<CycleVariant, { between: number; trailing: number }> = {
 
 /** Auto-pick a variant from the profile (mirrors the docs/02 §5 personalisation). */
 export function pickVariant(profile: SchedulerProfile): CycleVariant {
-  if (profile.sensitivity === 'sensitive' || profile.goals.includes('barrier_repair')) return 'gentle';
+  if (profile.sensitivity === 'sensitive' || profile.goals.includes('barrier_repair'))
+    return 'gentle';
   if (profile.sensitivity === 'resistant') return 'advanced';
   return 'classic';
 }
@@ -117,7 +124,10 @@ function recoveryNight(index: number): NightSlot {
  * potent night-cycled actives (→ a simple daily AM/PM routine. Docs/02 §5 /
  * docs/05 caveats), but `notes` always carry any safety/phased messages.
  */
-export function orchestrate(actives: SchedulerActive[], profile: SchedulerProfile): OrchestrationResult {
+export function orchestrate(
+  actives: SchedulerActive[],
+  profile: SchedulerProfile,
+): OrchestrationResult {
   const classified: Classified[] = actives.map((a) => ({
     id: a.id,
     name: a.name,
@@ -131,7 +141,11 @@ export function orchestrate(actives: SchedulerActive[], profile: SchedulerProfil
 
   // AM / daily block (stable morning): vitamin C, BP, flexible niacinamide.
   const amDaily: AmItem[] = classified
-    .filter((c) => defaultPhase(c.cls) === 'am' || (c.cls === 'niacinamide' && defaultPhase(c.cls) === 'flexible'))
+    .filter(
+      (c) =>
+        defaultPhase(c.cls) === 'am' ||
+        (c.cls === 'niacinamide' && defaultPhase(c.cls) === 'flexible'),
+    )
     .map((c) => ({ productId: c.id, name: c.name, className: c.cls }));
 
   // Potent night-cycled actives.
@@ -141,14 +155,19 @@ export function orchestrate(actives: SchedulerActive[], profile: SchedulerProfil
   if (profile.pregnancy) {
     const hadRetinoid = potent.some((c) => c.cls === 'retinoid');
     potent = potent.filter((c) => c.cls !== 'retinoid');
-    if (hadRetinoid) notes.push('Retinoids are paused while pregnant or breastfeeding. Worth a word with your doctor.');
+    if (hadRetinoid)
+      notes.push(
+        'Retinoids are paused while pregnant or breastfeeding. Worth a word with your doctor.',
+      );
   }
 
   // Phased introduction: a brand-new active is staged in next, not switched on now.
   const staged = potent.filter((c) => c.isNew);
   if (staged.length && potent.length > staged.length) {
     potent = potent.filter((c) => !c.isNew);
-    notes.push(`We'll add your ${staged.map((s) => s.name).join(' and ')} next week, once your routine settles.`);
+    notes.push(
+      `We'll add your ${staged.map((s) => s.name).join(' and ')} next week, once your routine settles.`,
+    );
   }
 
   if (potent.length === 0) return { cycle: null, notes };

@@ -17,9 +17,17 @@ export type CycleTemplate = {
 
 export const CYCLE_TEMPLATES: Record<CycleTemplate['id'], CycleTemplate> = {
   // The classic four-night cycle (Bowe): Exfoliate → Retinoid → Recover → Recover.
-  classic_4: { id: 'classic_4', label: 'Classic', nights: ['exfoliate', 'retinoid', 'recover', 'recover'] },
+  classic_4: {
+    id: 'classic_4',
+    label: 'Classic',
+    nights: ['exfoliate', 'retinoid', 'recover', 'recover'],
+  },
   // Gentle: extra recovery nights for sensitive / barrier-repair skin.
-  gentle_5: { id: 'gentle_5', label: 'Gentle', nights: ['exfoliate', 'recover', 'retinoid', 'recover', 'recover'] },
+  gentle_5: {
+    id: 'gentle_5',
+    label: 'Gentle',
+    nights: ['exfoliate', 'recover', 'retinoid', 'recover', 'recover'],
+  },
   // Advanced: fewer recovery nights for resistant skin that tolerates more.
   advanced_3: { id: 'advanced_3', label: 'Advanced', nights: ['exfoliate', 'retinoid', 'recover'] },
 };

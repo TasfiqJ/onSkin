@@ -20,7 +20,8 @@ const publishableKey =
   Deno.env.get('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY') ??
   Deno.env.get('SUPABASE_PUBLISHABLE_KEY') ??
   Deno.env.get('SUPABASE_ANON_KEY')!;
-const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey =
+  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const maxBodyBytes = userEdgeBodyMaxBytes();
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -38,7 +39,11 @@ function json(body: unknown, status = 200): Response {
   });
 }
 
-function assertAllowedKeys(input: Record<string, unknown>, allowed: Set<string>, code: string): Response | null {
+function assertAllowedKeys(
+  input: Record<string, unknown>,
+  allowed: Set<string>,
+  code: string,
+): Response | null {
   return validateAllowedKeys(input, allowed) ? null : json({ error: code }, 400);
 }
 
@@ -69,11 +74,20 @@ Deno.serve(async (req) => {
   const body = parsed;
   const correctionType = String(body.correctionType ?? '');
   if (!correctionTypes.has(correctionType)) return json({ error: 'invalid_correction_type' }, 400);
-  const productId = typeof body.productId === 'string' && UUID_RE.test(body.productId) ? body.productId : null;
+  const productId =
+    typeof body.productId === 'string' && UUID_RE.test(body.productId) ? body.productId : null;
   const description = safeString(body.description, 500);
-  const proposedPayload = sanitizeObject(body.proposedPayload, allowedPayloadKeys, 'invalid_proposed_payload');
+  const proposedPayload = sanitizeObject(
+    body.proposedPayload,
+    allowedPayloadKeys,
+    'invalid_proposed_payload',
+  );
   if (proposedPayload.errorCode) return json({ error: proposedPayload.errorCode }, 400);
-  const clientContext = sanitizeObject(body.clientContext, allowedContextKeys, 'invalid_client_context');
+  const clientContext = sanitizeObject(
+    body.clientContext,
+    allowedContextKeys,
+    'invalid_client_context',
+  );
   if (clientContext.errorCode) return json({ error: clientContext.errorCode }, 400);
 
   const { data: correction, error } = await caller

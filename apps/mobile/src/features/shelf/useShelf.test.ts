@@ -82,10 +82,7 @@ describe('shelf paired badge resolution gate', () => {
     expect(reassurance).toBeDefined();
 
     expect(
-      pairedProductIdsForResolvedConflicts(
-        [reassurance!],
-        new Set([conflictKey(reassurance!)]),
-      ),
+      pairedProductIdsForResolvedConflicts([reassurance!], new Set([conflictKey(reassurance!)])),
     ).toEqual(new Set());
 
     const [conflict] = detectConflicts(
@@ -97,9 +94,9 @@ describe('shelf paired badge resolution gate', () => {
       STARTER_RULES,
     );
     const key = conflictKey(conflict!);
-    expect(pairedProductIdsForResolvedConflicts([conflict!], new Set([key]), new Set([key]))).toEqual(
-      new Set(),
-    );
+    expect(
+      pairedProductIdsForResolvedConflicts([conflict!], new Set([key]), new Set([key])),
+    ).toEqual(new Set());
   });
 });
 

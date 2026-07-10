@@ -14,16 +14,24 @@ export interface ScrubbedContext {
 function safeErrorName(value: unknown): string {
   if (typeof value !== 'string') return 'Error';
   const trimmed = value.trim();
-  if (!trimmed || SENSITIVE_VALUE.test(trimmed) || SENSITIVE_CONTEXT_KEY.test(trimmed)) return 'Error';
-  const normalized = trimmed.replace(/[^A-Za-z0-9_. -]/g, '').slice(0, 80).trim();
+  if (!trimmed || SENSITIVE_VALUE.test(trimmed) || SENSITIVE_CONTEXT_KEY.test(trimmed))
+    return 'Error';
+  const normalized = trimmed
+    .replace(/[^A-Za-z0-9_. -]/g, '')
+    .slice(0, 80)
+    .trim();
   return normalized || 'Error';
 }
 
-function scrubValue(value: unknown, depth: number): ScrubbedPrimitive | ScrubbedPrimitive[] | ScrubbedContext | undefined {
+function scrubValue(
+  value: unknown,
+  depth: number,
+): ScrubbedPrimitive | ScrubbedPrimitive[] | ScrubbedContext | undefined {
   if (value === undefined) return undefined;
   if (value === null || typeof value === 'boolean') return value;
   if (typeof value === 'number') {
-    if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_SAFE_CONTEXT_INTEGER) return undefined;
+    if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_SAFE_CONTEXT_INTEGER)
+      return undefined;
     return value;
   }
   if (typeof value === 'string') {
@@ -35,7 +43,10 @@ function scrubValue(value: unknown, depth: number): ScrubbedPrimitive | Scrubbed
     if (depth >= 2) return undefined;
     const scrubbed = value
       .map((item) => scrubValue(item, depth + 1))
-      .filter((item): item is ScrubbedPrimitive => item === null || ['string', 'number', 'boolean'].includes(typeof item));
+      .filter(
+        (item): item is ScrubbedPrimitive =>
+          item === null || ['string', 'number', 'boolean'].includes(typeof item),
+      );
     return scrubbed.length ? scrubbed.slice(0, 10) : undefined;
   }
   if (typeof value === 'object') {

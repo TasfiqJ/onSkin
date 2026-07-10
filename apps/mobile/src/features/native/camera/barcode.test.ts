@@ -33,7 +33,11 @@ describe('barcode normalization', () => {
   });
 
   it('suppresses duplicate reads within the scan window', () => {
-    expect(shouldSuppressDuplicate({ barcode: '4006381333931', atMs: 1000 }, '4006381333931', 2400)).toBe(true);
-    expect(shouldSuppressDuplicate({ barcode: '4006381333931', atMs: 1000 }, '4006381333931', 3000)).toBe(false);
+    expect(
+      shouldSuppressDuplicate({ barcode: '4006381333931', atMs: 1000 }, '4006381333931', 2400),
+    ).toBe(true);
+    expect(
+      shouldSuppressDuplicate({ barcode: '4006381333931', atMs: 1000 }, '4006381333931', 3000),
+    ).toBe(false);
   });
 });

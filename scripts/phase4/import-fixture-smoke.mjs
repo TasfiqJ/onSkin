@@ -70,7 +70,10 @@ function verifyStableOutput(name, args, outputPath, validate) {
     return { ok: false, message: `${name} generatedAt was not preserved across reruns.` };
   }
   if (!validate(secondManifest)) {
-    return { ok: false, message: `${name} manifest contract did not match expected fixture shape.` };
+    return {
+      ok: false,
+      message: `${name} manifest contract did not match expected fixture shape.`,
+    };
   }
   return { ok: true };
 }

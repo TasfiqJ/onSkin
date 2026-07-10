@@ -9,16 +9,34 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey =
+  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const webhookAuth = Deno.env.get('REVENUECAT_WEBHOOK_AUTH') ?? '';
 const signingSecret = Deno.env.get('REVENUECAT_WEBHOOK_SIGNING_SECRET') ?? '';
-const signatureToleranceSeconds = intEnv('REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS', 300, 1, 3600);
+const signatureToleranceSeconds = intEnv(
+  'REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS',
+  300,
+  1,
+  3600,
+);
 const maxBodyBytes = intEnv('REVENUECAT_WEBHOOK_MAX_BYTES', 65536, 1024, 262144);
 
-const GRANT_TYPES = new Set(['INITIAL_PURCHASE', 'RENEWAL', 'PRODUCT_CHANGE', 'UNCANCELLATION', 'NON_RENEWING_PURCHASE']);
+const GRANT_TYPES = new Set([
+  'INITIAL_PURCHASE',
+  'RENEWAL',
+  'PRODUCT_CHANGE',
+  'UNCANCELLATION',
+  'NON_RENEWING_PURCHASE',
+]);
 const REVOKE_TYPES = new Set(['EXPIRATION', 'REFUND', 'SUBSCRIPTION_PAUSED']);
 const STOP_RENEW_TYPES = new Set(['CANCELLATION', 'BILLING_ISSUE']);
-const RENEWING_TYPES = new Set(['INITIAL_PURCHASE', 'RENEWAL', 'PRODUCT_CHANGE', 'UNCANCELLATION', 'BILLING_ISSUE']);
+const RENEWING_TYPES = new Set([
+  'INITIAL_PURCHASE',
+  'RENEWAL',
+  'PRODUCT_CHANGE',
+  'UNCANCELLATION',
+  'BILLING_ISSUE',
+]);
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -53,7 +71,10 @@ function json(body: unknown, status = 200): Response {
   });
 }
 
-async function readLimitedText(req: Request, maxBytes: number): Promise<{ ok: true; body: string } | { ok: false }> {
+async function readLimitedText(
+  req: Request,
+  maxBytes: number,
+): Promise<{ ok: true; body: string } | { ok: false }> {
   const contentLength = Number(req.headers.get('content-length'));
   if (Number.isFinite(contentLength) && contentLength > maxBytes) return { ok: false };
   if (!req.body) return { ok: true, body: '' };
@@ -92,7 +113,8 @@ function mapStore(s: string | undefined): string | null {
   if (u.includes('PLAY')) return 'play_store';
   if (u.includes('TEST_STORE')) return 'test_store';
   if (u.includes('PROMOTIONAL')) return 'app_granted';
-  if (u.includes('STRIPE') || u.includes('PADDLE') || u.includes('WEB') || u.includes('RC_BILLING')) return 'web';
+  if (u.includes('STRIPE') || u.includes('PADDLE') || u.includes('WEB') || u.includes('RC_BILLING'))
+    return 'web';
   return null;
 }
 
@@ -118,7 +140,9 @@ function optionalBoolean(value: unknown): boolean | undefined {
 
 function optionalStringArray(value: unknown): string[] | undefined {
   if (!Array.isArray(value)) return undefined;
-  const filtered = value.filter((item): item is string => typeof item === 'string' && item.length > 0);
+  const filtered = value.filter(
+    (item): item is string => typeof item === 'string' && item.length > 0,
+  );
   return filtered.length > 0 ? filtered : undefined;
 }
 
@@ -189,7 +213,10 @@ async function hmacHex(secret: string, payload: string): Promise<string> {
   return bytesToHex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payload)));
 }
 
-async function verifySignature(req: Request, rawBody: string): Promise<{ ok: boolean; reason: string }> {
+async function verifySignature(
+  req: Request,
+  rawBody: string,
+): Promise<{ ok: boolean; reason: string }> {
   if (!signingSecret) return { ok: false, reason: 'not_configured' };
   const parsed = parseSignature(req.headers.get('X-RevenueCat-Webhook-Signature'));
   if (!parsed) return { ok: false, reason: 'missing_signature' };
@@ -197,7 +224,8 @@ async function verifySignature(req: Request, rawBody: string): Promise<{ ok: boo
   const timestamp = Number(parsed.timestamp);
   if (!Number.isFinite(timestamp)) return { ok: false, reason: 'bad_timestamp' };
   const age = Math.abs(Math.floor(Date.now() / 1000) - timestamp);
-  if (signatureToleranceSeconds > 0 && age > signatureToleranceSeconds) return { ok: false, reason: 'stale_signature' };
+  if (signatureToleranceSeconds > 0 && age > signatureToleranceSeconds)
+    return { ok: false, reason: 'stale_signature' };
 
   const expected = await hmacHex(signingSecret, `${parsed.timestamp}.${rawBody}`);
   return constantTimeEqualHex(expected, parsed.signature)
@@ -208,14 +236,19 @@ async function verifySignature(req: Request, rawBody: string): Promise<{ ok: boo
 function userCandidates(event: RevenueCatEvent): string[] {
   return [
     ...new Set(
-      [optionalString(event.app_user_id), optionalString(event.original_app_user_id), ...(optionalStringArray(event.aliases) ?? [])].filter(
-        Boolean,
-      ) as string[],
+      [
+        optionalString(event.app_user_id),
+        optionalString(event.original_app_user_id),
+        ...(optionalStringArray(event.aliases) ?? []),
+      ].filter(Boolean) as string[],
     ),
   ];
 }
 
-async function resolveUserId(supabase: EdgeSupabaseClient, event: RevenueCatEvent): Promise<string | null> {
+async function resolveUserId(
+  supabase: EdgeSupabaseClient,
+  event: RevenueCatEvent,
+): Promise<string | null> {
   for (const candidate of userCandidates(event)) {
     if (!UUID_RE.test(candidate)) continue;
     const { data } = await supabase.auth.admin.getUserById(candidate);
@@ -252,7 +285,12 @@ Deno.serve(async (req) => {
     return json('bad request', 400);
   }
   const event = body?.event as RevenueCatEvent | undefined;
-  if (typeof event?.id !== 'string' || event.id.length === 0 || typeof event.type !== 'string' || event.type.length === 0) {
+  if (
+    typeof event?.id !== 'string' ||
+    event.id.length === 0 ||
+    typeof event.type !== 'string' ||
+    event.type.length === 0
+  ) {
     return json('bad request', 400);
   }
 
@@ -293,7 +331,11 @@ Deno.serve(async (req) => {
   const revoke = REVOKE_TYPES.has(event.type);
   const stopRenew = STOP_RENEW_TYPES.has(event.type);
   const shouldMirror = Boolean(resolvedUserId && (grant || revoke || stopRenew));
-  const eventProcessingStatus = shouldMirror ? 'processing' : resolvedUserId ? 'ignored_event_type' : 'unresolved_user';
+  const eventProcessingStatus = shouldMirror
+    ? 'processing'
+    : resolvedUserId
+      ? 'ignored_event_type'
+      : 'unresolved_user';
 
   if (retryFailedEvent) {
     await supabase
@@ -328,7 +370,9 @@ Deno.serve(async (req) => {
         store,
         period_type: (event.period_type as string | undefined)?.toLowerCase() ?? null,
         will_renew: RENEWING_TYPES.has(event.type),
-        original_purchase_at: event.original_purchase_date_ms ? new Date(event.original_purchase_date_ms).toISOString() : null,
+        original_purchase_at: event.original_purchase_date_ms
+          ? new Date(event.original_purchase_date_ms).toISOString()
+          : null,
         offering_id: event.presented_offering_id ?? null,
         source: 'revenuecat',
         environment,

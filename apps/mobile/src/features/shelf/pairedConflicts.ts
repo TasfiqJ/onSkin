@@ -1,7 +1,4 @@
-import {
-  isReassuring,
-  type DetectedConflict,
-} from '@/features/intelligence/engine';
+import { isReassuring, type DetectedConflict } from '@/features/intelligence/engine';
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
 
 export function pairedProductIdsForResolvedConflicts(

@@ -74,7 +74,9 @@ describe('tab bar treatment', () => {
     expect(source).toContain('tabItemActive: {');
     expect(source).toContain('backgroundColor: colors.ink');
     expect(source).toContain('borderColor: colors.ink');
-    expect(source).toContain('<View style={[styles.tabItemFrame, focused ? styles.tabItemActive : null]}>');
+    expect(source).toContain(
+      '<View style={[styles.tabItemFrame, focused ? styles.tabItemActive : null]}>',
+    );
     expect(source).toContain('tabItemFrame: {');
     expect(source).toContain("width: '94%'");
     expect(source).toContain('accessibilityRole="tablist"');
@@ -139,7 +141,9 @@ describe('tab bar treatment', () => {
     expect(source).toContain("textAlign: 'center'");
     expect(source).toContain("textAlignVertical: 'center'");
     expect(source).toContain('hitSlop={{ bottom: 6, left: 2, right: 2, top: 6 }}');
-    expect(source).toContain('<View style={[styles.tabItemFrame, focused ? styles.tabItemActive : null]}>');
+    expect(source).toContain(
+      '<View style={[styles.tabItemFrame, focused ? styles.tabItemActive : null]}>',
+    );
     expect(source).toContain('tabItemFrame: {');
     expect(source).toContain("borderColor: 'transparent'");
     expect(source).not.toContain('function renderTabBarLabel');

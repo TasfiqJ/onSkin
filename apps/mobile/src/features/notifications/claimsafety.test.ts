@@ -26,13 +26,26 @@ const GUILT = [
   /\bstreak!/i,
   /don['’]?t\s+lose\b/i,
 ];
-const URGENCY = [/\bhurry\b/i, /\blast\s+chance\b/i, /\bact\s+now\b/i, /\bnow!/i, /don['’]?t\s+miss\s+out\b/i];
-const DRUG_CLAIMS = [/\btreats?\b/i, /\bcures?\b/i, /\bheals?\b/i, /\bdiagnos\w*/i, /\bclinically\s+proven\b/i];
+const URGENCY = [
+  /\bhurry\b/i,
+  /\blast\s+chance\b/i,
+  /\bact\s+now\b/i,
+  /\bnow!/i,
+  /don['’]?t\s+miss\s+out\b/i,
+];
+const DRUG_CLAIMS = [
+  /\btreats?\b/i,
+  /\bcures?\b/i,
+  /\bheals?\b/i,
+  /\bdiagnos\w*/i,
+  /\bclinically\s+proven\b/i,
+];
 const ALARM = [/\bdanger\w*/i, /\bharmful\b/i, /\bwarning\b/i, /!{1}/]; // any exclamation mark
 
 function collect(v: unknown, out: string[] = []): string[] {
   if (typeof v === 'string') out.push(v);
-  else if (typeof v === 'function') out.push(v(7) as string); // copy fns (e.g. safeTagTitle)
+  else if (typeof v === 'function')
+    out.push(v(7) as string); // copy fns (e.g. safeTagTitle)
   else if (Array.isArray(v)) v.forEach((x) => collect(x, out));
   else if (v && typeof v === 'object') Object.values(v).forEach((x) => collect(x, out));
   return out;

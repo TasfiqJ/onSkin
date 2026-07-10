@@ -372,13 +372,9 @@ const mdContent = [
     docResults.map((doc) => [
       doc.path,
       doc.requireCurrentEvidence ? (doc.date ?? 'missing') : 'n/a',
-      doc.requireCurrentEvidence ? (doc.expectedDate || 'missing') : 'n/a',
+      doc.requireCurrentEvidence ? doc.expectedDate || 'missing' : 'n/a',
       doc.requireCurrentEvidence ? (doc.hasExpectedTestPhrase ? 'yes' : 'no') : 'n/a',
-      doc.requireCurrentEvidence
-        ? doc.missingManifestNeedles.length === 0
-          ? 'yes'
-          : 'no'
-        : 'n/a',
+      doc.requireCurrentEvidence ? (doc.missingManifestNeedles.length === 0 ? 'yes' : 'no') : 'n/a',
       doc.requireCurrentEvidence ? doc.stalePatterns.length : 'n/a',
       doc.missingCommands.length,
     ]),

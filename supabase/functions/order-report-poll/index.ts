@@ -19,7 +19,8 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey =
+  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const shopmyBrandKey = Deno.env.get('SHOPMY_BRAND_API_KEY') ?? ''; // BLOCKED: B-SHOPMY
 const schedulerSecret =
   Deno.env.get('ORDER_REPORT_POLL_SECRET') ?? Deno.env.get('SHOPMY_ORDER_REPORT_POLL_SECRET') ?? '';
@@ -71,7 +72,10 @@ function authorizedSchedulerRequest(req: Request): boolean {
   const authHeader = req.headers.get('Authorization') ?? '';
   const bearer = authHeader.match(/^Bearer\s+(.+)$/i)?.[1] ?? '';
   const schedulerHeader = req.headers.get('x-scheduler-secret') ?? '';
-  return constantTimeEqual(bearer, schedulerSecret) || constantTimeEqual(schedulerHeader, schedulerSecret);
+  return (
+    constantTimeEqual(bearer, schedulerSecret) ||
+    constantTimeEqual(schedulerHeader, schedulerSecret)
+  );
 }
 
 Deno.serve(async (req) => {
@@ -98,10 +102,16 @@ Deno.serve(async (req) => {
     const res = await fetchWithTimeout(ORDER_REPORT_URL, {
       method: 'POST',
       headers: { 'x-api-key': shopmyBrandKey, 'content-type': 'application/json' },
-      body: JSON.stringify({ recordUpdatedStartDate: since, recordUpdatedEndDate: until, page, pageSize: PAGE_SIZE }),
+      body: JSON.stringify({
+        recordUpdatedStartDate: since,
+        recordUpdatedEndDate: until,
+        page,
+        pageSize: PAGE_SIZE,
+      }),
     }).catch(() => null);
     if (!res?.ok) break;
-    const orders = ((await readLimitedResponseJson<ShopMyOrderReport>(res))?.orders ?? []) as ShopMyOrder[];
+    const orders = ((await readLimitedResponseJson<ShopMyOrderReport>(res))?.orders ??
+      []) as ShopMyOrder[];
     if (orders.length === 0) break;
 
     // Idempotent upsert on external_order_id (the report is re-polled as statuses
@@ -110,7 +120,8 @@ Deno.serve(async (req) => {
       external_order_id: o.orderId,
       click_token: o.clickToken ?? null,
       order_amount_cents: o.orderAmountUSD != null ? Math.round(o.orderAmountUSD * 100) : null,
-      commission_cents: o.commissionAmountUSD != null ? Math.round(o.commissionAmountUSD * 100) : null,
+      commission_cents:
+        o.commissionAmountUSD != null ? Math.round(o.commissionAmountUSD * 100) : null,
       status: mapStatus(o.status),
       transaction_date: o.transactionDate ?? null,
       record_updated_at: o.recordUpdatedDate ?? null,

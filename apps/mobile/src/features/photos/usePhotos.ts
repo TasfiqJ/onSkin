@@ -11,7 +11,15 @@ import {
   referenceFor,
 } from './timeline';
 import { localDay } from './date';
-import { addPhoto, loadPhotos, removePhoto, setReference, updatePhoto, type NewPhoto, type PhotoRecord } from './store';
+import {
+  addPhoto,
+  loadPhotos,
+  removePhoto,
+  setReference,
+  updatePhoto,
+  type NewPhoto,
+  type PhotoRecord,
+} from './store';
 
 // Reads the local-first photo store (docs/06 §6) and derives the Progress-tab
 // surfaces via the pure, tested timeline helpers. Resilient before the backend

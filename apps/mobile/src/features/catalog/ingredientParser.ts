@@ -127,7 +127,8 @@ function confidenceForToken(
 ): Pick<ParsedIngredientToken, 'matchType' | 'matchConfidence' | 'isUnmatched'> {
   if (tags.length > 0) {
     return {
-      matchType: normalizedToken === normalizeWhitespace(rawToken).toLowerCase() ? 'exact' : 'synonym',
+      matchType:
+        normalizedToken === normalizeWhitespace(rawToken).toLowerCase() ? 'exact' : 'synonym',
       matchConfidence: 0.92,
       isUnmatched: false,
     };
@@ -178,7 +179,9 @@ export function parseIngredientText(rawText: string): IngredientParseResult {
         displayName: displayIngredientToken(token),
         section: section.section,
         tags: [...new Set(tagDefs.map((def) => def.tag))],
-        subflags: [...new Set(tagDefs.map((def) => def.subflag).filter(Boolean))] as IngredientSubflag[],
+        subflags: [
+          ...new Set(tagDefs.map((def) => def.subflag).filter(Boolean)),
+        ] as IngredientSubflag[],
         percent: parsePercent(token),
         ...match,
       });
@@ -189,13 +192,15 @@ export function parseIngredientText(rawText: string): IngredientParseResult {
   const unknownTokens = tokens.filter((token) => token.isUnmatched).map((token) => token.rawToken);
   const matchedTokenCount = tokens.length - unknownTokens.length;
   if (unknownTokens.length > 0) warnings.push('unknown_tokens_preserved');
-  if (tokens.some((token) => token.percent != null)) warnings.push('label_percentage_detected_review_required');
+  if (tokens.some((token) => token.percent != null))
+    warnings.push('label_percentage_detected_review_required');
 
   const average =
     tokens.length === 0
       ? 0
       : tokens.reduce((sum, token) => sum + token.matchConfidence, 0) / tokens.length;
-  const unknownPenalty = tokens.length === 0 ? 0 : Math.min(0.35, unknownTokens.length / tokens.length / 2);
+  const unknownPenalty =
+    tokens.length === 0 ? 0 : Math.min(0.35, unknownTokens.length / tokens.length / 2);
   const confidence = Math.max(0, Math.min(1, Number((average - unknownPenalty).toFixed(2))));
 
   return {

@@ -5,7 +5,10 @@ import { dirname, resolve } from 'node:path';
 
 const root = process.cwd();
 const inputPath = resolve(root, process.argv[2] ?? 'scripts/phase4/fixtures/obf-sample.jsonl');
-const outputPath = resolve(root, process.argv[3] ?? 'docs/phase-4/generated/obf-fixture-import.json');
+const outputPath = resolve(
+  root,
+  process.argv[3] ?? 'docs/phase-4/generated/obf-fixture-import.json',
+);
 
 const BEAUTY_TAGS = new Set([
   'en:beauty',
@@ -18,7 +21,13 @@ const BEAUTY_TAGS = new Set([
   'en:serums',
   'en:toners',
 ]);
-const REJECT_TAGS = new Set(['en:mouthwashes', 'en:toothpastes', 'en:oral-care', 'en:shampoos', 'en:hair-care']);
+const REJECT_TAGS = new Set([
+  'en:mouthwashes',
+  'en:toothpastes',
+  'en:oral-care',
+  'en:shampoos',
+  'en:hair-care',
+]);
 
 function normalizeBarcode(value) {
   const digits = String(value ?? '').replace(/\D/g, '');
@@ -26,17 +35,21 @@ function normalizeBarcode(value) {
 }
 
 function normalizeText(value) {
-  const text = String(value ?? '').replace(/\s+/g, ' ').trim();
+  const text = String(value ?? '')
+    .replace(/\s+/g, ' ')
+    .trim();
   return text.length > 0 ? text : null;
 }
 
 function categoryFromTags(tags) {
   const lower = tags.map((tag) => tag.toLowerCase());
-  if (lower.some((tag) => tag.includes('sunscreen') || tag.includes('sun-protection'))) return 'spf';
+  if (lower.some((tag) => tag.includes('sunscreen') || tag.includes('sun-protection')))
+    return 'spf';
   if (lower.some((tag) => tag.includes('cleanser'))) return 'cleanser';
   if (lower.some((tag) => tag.includes('toner') || tag.includes('essence'))) return 'toner';
   if (lower.some((tag) => tag.includes('serum'))) return 'serum';
-  if (lower.some((tag) => tag.includes('moisturizer') || tag.includes('moisturiser'))) return 'moisturiser_tube';
+  if (lower.some((tag) => tag.includes('moisturizer') || tag.includes('moisturiser')))
+    return 'moisturiser_tube';
   return null;
 }
 
@@ -125,7 +138,8 @@ const manifestBody = {
   inputSha256,
   source: 'open_beauty_facts',
   importMode: 'export_or_fixture',
-  warning: 'Fixture import only. Production bulk import must use approved export artifacts and legal/source review.',
+  warning:
+    'Fixture import only. Production bulk import must use approved export artifacts and legal/source review.',
   totals: {
     inputRecords: records.length,
     acceptedProducts: products.length,

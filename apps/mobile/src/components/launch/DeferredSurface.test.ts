@@ -14,9 +14,7 @@ describe('DeferredSurface mobile layout', () => {
 
     expect(source).toContain('import { ScrollView, View } from');
     expect(source).toContain('className="flex-1"');
-    expect(source).toContain(
-      'contentContainerClassName="flex-grow justify-center pb-6 pt-4"',
-    );
+    expect(source).toContain('contentContainerClassName="flex-grow justify-center pb-6 pt-4"');
     expect(source).toContain('<View className="pb-3 pt-2">');
     expect(source).toContain('className="mb-6"');
     expect(source).toContain('variant="ghost"');

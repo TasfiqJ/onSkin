@@ -35,8 +35,7 @@ export function Sheet({
   const insets = useSafeAreaInsets();
   const backdropReserve = backdropAccessible ? 48 : 12;
   const sheetMaxHeight = Math.max(280, height - backdropReserve);
-  const sheetPaddingBottom =
-    insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
+  const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
 
   return (
     <View className="flex-1" style={{ backgroundColor: 'rgba(32,27,21,0.4)' }}>
@@ -74,9 +73,7 @@ export function Sheet({
           }}
         />
         <Body
-          {...(scroll
-            ? { showsVerticalScrollIndicator: false, style: { flexShrink: 1 } }
-            : {})}
+          {...(scroll ? { showsVerticalScrollIndicator: false, style: { flexShrink: 1 } } : {})}
         >
           {children}
         </Body>

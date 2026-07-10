@@ -120,12 +120,7 @@ function runReport({ input = validInput, strict = false, missingInput = false } 
   try {
     const result = spawnSync(
       process.execPath,
-      [
-        reportPath,
-        ...(strict ? ['--strict'] : []),
-        inputPath,
-        outputPath,
-      ],
+      [reportPath, ...(strict ? ['--strict'] : []), inputPath, outputPath],
       {
         cwd: root,
         encoding: 'utf8',
@@ -202,7 +197,9 @@ const cases = [
     expect(result) {
       return (
         result.status === 0 &&
-        result.packet.evidenceBlockers.includes('Missing real production catalog/beta dashboard URL.') &&
+        result.packet.evidenceBlockers.includes(
+          'Missing real production catalog/beta dashboard URL.',
+        ) &&
         result.packet.evidenceBlockers.includes('Missing real named beta coverage signoff.')
       );
     },

@@ -51,9 +51,7 @@ describe('Community route contracts', () => {
     );
     expect(source).toContain('const modernPhoneCommunity = height < 980;');
     expect(source).toContain('const boundaryModernTextPressureCommunity =');
-    expect(source).toContain(
-      'width > 390 && width <= 414 && height >= 840 && height < 900;',
-    );
+    expect(source).toContain('width > 390 && width <= 414 && height >= 840 && height < 900;');
     expect(source).toContain("ultraShortCommunity\n              ? 'pb-20 pt-0'");
     expect(source).toContain(
       "shortCommunity ? 'mt-0 text-[26px]' : compactCommunity ? 'mt-1 text-[28px]' : 'mt-3'",

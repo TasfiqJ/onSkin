@@ -18,4 +18,3 @@ describe('catalog normalization', () => {
     expect(parsePercent('Glycerin')).toBeNull();
   });
 });
-

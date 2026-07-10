@@ -56,7 +56,9 @@ describe('settings privacy choice application', () => {
     expect(source).toContain(
       "type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'photo_cloud_backup' | 'app_lock';",
     );
-    expect(source).toContain("type PrivacyFeedbackPlacement = 'commerce' | 'privacy' | 'security';");
+    expect(source).toContain(
+      "type PrivacyFeedbackPlacement = 'commerce' | 'privacy' | 'security';",
+    );
     expect(source).toContain("const PRIVACY_CHOICE_SAVE_FAILED_TITLE = 'Choice not saved';");
     expect(source).toContain('const [privacyFeedback, setPrivacyFeedback] = useState<{');
     expect(source).toContain('const [cloudBackupNotice, setCloudBackupNotice]');
@@ -64,13 +66,17 @@ describe('settings privacy choice application', () => {
     expect(source).toContain("const CLOUD_BACKUP_TRADEOFF_TITLE = 'Encrypted cloud backup';");
     expect(source).toContain('setCloudBackupNotice({');
     expect(source).toContain('message: PHOTO_COPY.lock.cloudTradeoff');
-    expect(source).toContain('{cloudBackupNotice ? <InlineNoticeCard notice={cloudBackupNotice} /> : null}');
+    expect(source).toContain(
+      '{cloudBackupNotice ? <InlineNoticeCard notice={cloudBackupNotice} /> : null}',
+    );
     expect(source).toContain('function renderPrivacyFeedback(');
     expect(source).toContain('async function setAppLockChoice(enabled: boolean)');
     expect(source).toContain("renderPrivacyFeedback('app_lock', 'security')");
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('{PRIVACY_CHOICE_SAVE_FAILED_TITLE}');
-    expect(source).toContain('setPrivacyFeedback({ key: type, placement, message: privacyChoiceUserMessage() })');
+    expect(source).toContain(
+      'setPrivacyFeedback({ key: type, placement, message: privacyChoiceUserMessage() })',
+    );
     expect(source).toContain("placement: 'security'");
     expect(source).toContain("onChange={(v) => void setConsent('data_sharing', v, 'commerce')}");
     expect(source).toContain("onChange={(v) => void setConsent('marketing', v, 'privacy')}");

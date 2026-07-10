@@ -56,11 +56,13 @@ export const TREND_COPY = {
     rednessBody:
       'Colour signal is harder to read fairly across tones. Least reliable on a plain selfie. We follow texture and evenness instead.',
     gateLabel: 'Fairness check', // user-facing; the internal launch gate is B-AI-FAIRNESS
-    gateNote: 'No “works for everyone” claim until a tone-stratified check shows parity. A bar the whole field has failed.',
+    gateNote:
+      'No “works for everyone” claim until a tone-stratified check shows parity. A bar the whole field has failed.',
     footer: 'higher threshold for darker tones · texture not redness · no claim until parity',
   },
   // The link from the preserved no-AI-score refusal screen into the opt-in.
-  refusalLink: 'Prefer your phone to read your own progress? It’s optional, on-device, and off by default.',
+  refusalLink:
+    'Prefer your phone to read your own progress? It’s optional, on-device, and off by default.',
   // Shown instead once opted in, so the screen does not invite enabling what is on.
   manageLink: 'Your phone is reading your own progress, on-device. Manage or turn it off.',
   // The consent-ledger body (placeholder copy. B-PRIVACY-COPY).
@@ -72,7 +74,10 @@ export const TREND_COPY = {
 /** The descriptive narrative for a change-state. NO number, NO grade, NO verdict.
  *  These pass the FULL claim-safety guard. `n` = captures compared; `area` = a calm
  *  body-area phrase (e.g. "left cheek"). "Consistent" is framed as an adherence win. */
-export function trendNarrative(state: TrendChangeState, opts: { n?: number; area?: string } = {}): string {
+export function trendNarrative(
+  state: TrendChangeState,
+  opts: { n?: number; area?: string } = {},
+): string {
   const n = opts.n ?? 6;
   const area = opts.area ?? 'cheeks';
   switch (state) {

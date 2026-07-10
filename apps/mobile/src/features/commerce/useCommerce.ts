@@ -25,7 +25,9 @@ export function useWhereToBuy(productType: string | null) {
       try {
         const { data } = await supabase
           .from('affiliate_links')
-          .select('id, product_type, retailer, label, url, price_cents, currency, source, is_paid, is_active')
+          .select(
+            'id, product_type, retailer, label, url, price_cents, currency, source, is_paid, is_active',
+          )
           .eq('product_type', productType)
           .eq('is_active', true);
         rows = (data ?? []) as AffiliateLinkRow[];

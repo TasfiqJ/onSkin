@@ -17,44 +17,120 @@ if (exists(workflowPath)) {
     })
     .filter(Boolean);
   const workflowSteps = stepStarts.map((step, position) => {
-    const nextStep = stepStarts.slice(position + 1).find((candidate) => candidate.indent <= step.indent);
+    const nextStep = stepStarts
+      .slice(position + 1)
+      .find((candidate) => candidate.indent <= step.indent);
     const end = nextStep?.index ?? workflowLines.length;
     return workflowLines.slice(step.index, end).join('\n');
   });
-  const checkoutSteps = workflowSteps.filter((step) => /uses:\s*actions\/checkout@[^\s#]+/i.test(step));
-  const artifactUploadSteps = workflowSteps.filter((step) => /uses:\s*actions\/upload-artifact@[^\s#]+/i.test(step));
-  const trufflehogSteps = workflowSteps.filter((step) => /uses:\s*trufflesecurity\/trufflehog@[^\s#]+/i.test(step));
+  const checkoutSteps = workflowSteps.filter((step) =>
+    /uses:\s*actions\/checkout@[^\s#]+/i.test(step),
+  );
+  const artifactUploadSteps = workflowSteps.filter((step) =>
+    /uses:\s*actions\/upload-artifact@[^\s#]+/i.test(step),
+  );
+  const trufflehogSteps = workflowSteps.filter((step) =>
+    /uses:\s*trufflesecurity\/trufflehog@[^\s#]+/i.test(step),
+  );
   const runSteps = workflowSteps.filter((step) => /^\s*run:\s*/m.test(step));
   const actionUses = [...workflow.matchAll(/uses:\s*([^\s#]+)/g)].map((match) => match[1]);
-  const unpinnedActions = actionUses.filter((ref) => !ref.startsWith('./') && !ref.startsWith('docker://') && !/@[a-f0-9]{40}$/i.test(ref));
-  block(errors, !/pull_request_target\s*:/.test(workflow), 'Security workflow must not use pull_request_target.');
-  block(errors, !/uses:\s*[^@\s]+@(main|master)\b/.test(workflow), 'Security workflow must not use floating @main/@master action refs.');
-  block(errors, unpinnedActions.length === 0, `Security workflow actions must be pinned to immutable SHAs: ${unpinnedActions.join(', ')}.`);
-  block(errors, /permissions:\s*\n\s*contents:\s*read/.test(workflow), 'Security workflow must use read-only contents permission.');
+  const unpinnedActions = actionUses.filter(
+    (ref) => !ref.startsWith('./') && !ref.startsWith('docker://') && !/@[a-f0-9]{40}$/i.test(ref),
+  );
   block(
     errors,
-    checkoutSteps.length > 0 && checkoutSteps.every((step) => /^\s*persist-credentials:\s*false\s*$/m.test(step)),
+    !/pull_request_target\s*:/.test(workflow),
+    'Security workflow must not use pull_request_target.',
+  );
+  block(
+    errors,
+    !/uses:\s*[^@\s]+@(main|master)\b/.test(workflow),
+    'Security workflow must not use floating @main/@master action refs.',
+  );
+  block(
+    errors,
+    unpinnedActions.length === 0,
+    `Security workflow actions must be pinned to immutable SHAs: ${unpinnedActions.join(', ')}.`,
+  );
+  block(
+    errors,
+    /permissions:\s*\n\s*contents:\s*read/.test(workflow),
+    'Security workflow must use read-only contents permission.',
+  );
+  block(
+    errors,
+    checkoutSteps.length > 0 &&
+      checkoutSteps.every((step) => /^\s*persist-credentials:\s*false\s*$/m.test(step)),
     'Every Security workflow checkout step must disable persisted credentials.',
   );
-  block(errors, /denoland\/setup-deno@[a-f0-9]{40}/i.test(workflow), 'Security workflow must install Deno from an immutable action SHA.');
-  block(errors, runSteps.some((step) => /\bnpm ci\b/.test(step)), 'Security workflow must install from the lockfile with npm ci.');
-  block(errors, !runSteps.some((step) => /\bnpm install\b/.test(step)), 'Security workflow must not use npm install; use npm ci from the lockfile.');
-  block(errors, /npm run phase9:verify/.test(workflow), 'Security workflow must run phase9:verify.');
-  block(errors, /npm run phase9:edge-functions-check/.test(workflow) || /npm run phase9:verify/.test(workflow), 'Security workflow must run the Deno Edge Function check.');
-  block(errors, /PHASE9_RUN_NPM_AUDIT/.test(workflow), 'Security workflow must generate dependency audit metadata.');
-  block(errors, /npm audit --audit-level=high/.test(workflow), 'Security workflow must fail on high or critical npm advisories.');
-  block(errors, /npm-audit-high\.json/.test(workflow), 'Security workflow must archive high/critical npm audit JSON evidence.');
-  block(errors, /gitleaks\/gitleaks-action/.test(workflow), 'Security workflow must run Gitleaks.');
-  block(errors, /trufflesecurity\/trufflehog@[a-f0-9]{40}/i.test(workflow), 'Security workflow must run TruffleHog on an immutable SHA.');
   block(
     errors,
-    trufflehogSteps.length > 0 && trufflehogSteps.every((step) => !/^\s+(?:base|head):\s*/m.test(step)),
+    /denoland\/setup-deno@[a-f0-9]{40}/i.test(workflow),
+    'Security workflow must install Deno from an immutable action SHA.',
+  );
+  block(
+    errors,
+    runSteps.some((step) => /\bnpm ci\b/.test(step)),
+    'Security workflow must install from the lockfile with npm ci.',
+  );
+  block(
+    errors,
+    !runSteps.some((step) => /\bnpm install\b/.test(step)),
+    'Security workflow must not use npm install; use npm ci from the lockfile.',
+  );
+  block(
+    errors,
+    /npm run phase9:verify/.test(workflow),
+    'Security workflow must run phase9:verify.',
+  );
+  block(
+    errors,
+    /npm run phase9:edge-functions-check/.test(workflow) || /npm run phase9:verify/.test(workflow),
+    'Security workflow must run the Deno Edge Function check.',
+  );
+  block(
+    errors,
+    /PHASE9_RUN_NPM_AUDIT/.test(workflow),
+    'Security workflow must generate dependency audit metadata.',
+  );
+  block(
+    errors,
+    /npm audit --audit-level=high/.test(workflow),
+    'Security workflow must fail on high or critical npm advisories.',
+  );
+  block(
+    errors,
+    /npm-audit-high\.json/.test(workflow),
+    'Security workflow must archive high/critical npm audit JSON evidence.',
+  );
+  block(errors, /gitleaks\/gitleaks-action/.test(workflow), 'Security workflow must run Gitleaks.');
+  block(
+    errors,
+    /trufflesecurity\/trufflehog@[a-f0-9]{40}/i.test(workflow),
+    'Security workflow must run TruffleHog on an immutable SHA.',
+  );
+  block(
+    errors,
+    trufflehogSteps.length > 0 &&
+      trufflehogSteps.every((step) => !/^\s+(?:base|head):\s*/m.test(step)),
     'TruffleHog must use event-derived base/head SHAs; hard-coded base/head inputs break pushes to main.',
   );
   block(errors, /semgrep\/semgrep-action/.test(workflow), 'Security workflow must run Semgrep.');
-  block(errors, /google\/osv-scanner-action/.test(workflow), 'Security workflow must run OSV scanner.');
-  block(errors, /actions\/upload-artifact@[a-f0-9]{40}/i.test(workflow), 'Security workflow must upload scanner evidence with immutable upload-artifact.');
-  block(errors, artifactUploadSteps.length >= 3, 'Security workflow must upload code, secret, and static scanner evidence artifacts.');
+  block(
+    errors,
+    /google\/osv-scanner-action/.test(workflow),
+    'Security workflow must run OSV scanner.',
+  );
+  block(
+    errors,
+    /actions\/upload-artifact@[a-f0-9]{40}/i.test(workflow),
+    'Security workflow must upload scanner evidence with immutable upload-artifact.',
+  );
+  block(
+    errors,
+    artifactUploadSteps.length >= 3,
+    'Security workflow must upload code, secret, and static scanner evidence artifacts.',
+  );
   block(
     errors,
     artifactUploadSteps.length >= 3 &&

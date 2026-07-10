@@ -7,7 +7,12 @@ import { tagsForIngredientList } from './tags';
 // test ... non-negotiable for a liability surface." These assert (tagged products
 // + profile) -> (interaction type, computed severity, resolution).
 
-function product(id: string, name: string, ingredients: string[], concentration?: 'low' | 'high'): EngineProduct {
+function product(
+  id: string,
+  name: string,
+  ingredients: string[],
+  concentration?: 'low' | 'high',
+): EngineProduct {
   const { tags, subflags } = tagsForIngredientList(ingredients);
   return { id, name, tags: [...tags], subflags: [...subflags], concentration };
 }
@@ -55,7 +60,9 @@ describe('benzoyl peroxide × retinoid stability (§4.4 row 3 / 3b)', () => {
       product('p1', 'BP wash', ['Benzoyl Peroxide']),
       product('p2', 'Retinol', ['Retinol']),
     ];
-    const c = detectConflicts(products, neutral).find((x) => x.rule.interactionType === 'stability');
+    const c = detectConflicts(products, neutral).find(
+      (x) => x.rule.interactionType === 'stability',
+    );
     expect(c).toBeDefined();
     expect(c!.computedSeverity).toBe('moderate');
     expect(c!.rule.resolutionType).toBe('separate_am_pm');
@@ -66,7 +73,9 @@ describe('benzoyl peroxide × retinoid stability (§4.4 row 3 / 3b)', () => {
       product('p1', 'BP wash', ['Benzoyl Peroxide']),
       product('p2', 'Adapalene gel', ['Adapalene']),
     ];
-    const stability = detectConflicts(products, neutral).filter((x) => x.rule.interactionType === 'stability');
+    const stability = detectConflicts(products, neutral).filter(
+      (x) => x.rule.interactionType === 'stability',
+    );
     expect(stability).toHaveLength(0);
   });
 });
@@ -92,14 +101,17 @@ describe('safety: retinoid × pregnancy (§4.8)', () => {
 describe('safety dose-gating: BHA × pregnancy only on high-dose (§4.8)', () => {
   it('does NOT fire on low-dose BHA', () => {
     const products = [product('p1', 'Gentle BHA toner', ['Salicylic Acid'], 'low')];
-    const safety = detectConflicts(products, pregnant).filter((x) => x.rule.tagA === 'bha' || x.rule.tagB === 'bha');
+    const safety = detectConflicts(products, pregnant).filter(
+      (x) => x.rule.tagA === 'bha' || x.rule.tagB === 'bha',
+    );
     expect(safety.filter((s) => s.rule.interactionType === 'safety')).toHaveLength(0);
   });
 
   it('fires on high-dose BHA', () => {
     const products = [product('p1', 'Strong BHA peel', ['Salicylic Acid'], 'high')];
     const c = detectConflicts(products, pregnant).find(
-      (x) => x.rule.interactionType === 'safety' && (x.rule.tagA === 'bha' || x.rule.tagB === 'bha'),
+      (x) =>
+        x.rule.interactionType === 'safety' && (x.rule.tagA === 'bha' || x.rule.tagB === 'bha'),
     );
     expect(c).toBeDefined();
     expect(c!.computedSeverity).toBe('high'); // safety forced high
@@ -112,7 +124,9 @@ describe('personalization (§4.7)', () => {
       product('p1', 'Retinol', ['Retinol']),
       product('p2', 'BHA', ['Salicylic Acid']),
     ];
-    const irritation = detectConflicts(products, resistant).filter((x) => x.rule.interactionType === 'irritation');
+    const irritation = detectConflicts(products, resistant).filter(
+      (x) => x.rule.interactionType === 'irritation',
+    );
     expect(irritation).toHaveLength(0);
   });
 
@@ -121,7 +135,9 @@ describe('personalization (§4.7)', () => {
       product('p1', 'Retinol 1%', ['Retinol'], 'high'),
       product('p2', 'Glycolic 10%', ['Glycolic Acid'], 'high'),
     ];
-    const c = detectConflicts(products, sensitive).find((x) => x.rule.interactionType === 'irritation');
+    const c = detectConflicts(products, sensitive).find(
+      (x) => x.rule.interactionType === 'irritation',
+    );
     expect(c!.computedSeverity).toBe('high'); // mild +1 (conc) +1 (sensitive)
   });
 });
@@ -132,7 +148,9 @@ describe('synergy (§4.1 #9/#11)', () => {
       product('p1', 'Vitamin C', ['Ascorbic Acid']),
       product('p2', 'Mineral SPF', ['Zinc Oxide']),
     ];
-    const syn = detectConflicts(products, neutral).find((x) => x.rule.interactionType === 'synergy');
+    const syn = detectConflicts(products, neutral).find(
+      (x) => x.rule.interactionType === 'synergy',
+    );
     expect(syn).toBeDefined();
     expect(isReassuring(syn!)).toBe(true);
     expect(syn!.rule.resolutionType).toBe('no_change');

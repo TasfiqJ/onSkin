@@ -51,8 +51,9 @@ export function Text({
   className,
   ...rest
 }: TextProps) {
-  const family = italic && (variant === 'display' || variant === 'title' || variant === 'titleSm')
-    ? 'font-serif-italic'
-    : undefined;
+  const family =
+    italic && (variant === 'display' || variant === 'title' || variant === 'titleSm')
+      ? 'font-serif-italic'
+      : undefined;
   return <RNText className={cn(VARIANT[variant], TONE[tone], family, className)} {...rest} />;
 }

@@ -191,7 +191,9 @@ function ReviewScreenContent() {
               justifyContent: 'center',
             }}
           >
-            <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: '#F4EFE7' }}>
+            <Text
+              style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: '#F4EFE7' }}
+            >
               {PHOTO_COPY.review.missingBack}
             </Text>
           </Pressable>

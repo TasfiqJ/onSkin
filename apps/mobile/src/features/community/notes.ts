@@ -59,7 +59,8 @@ export const SKIN_NOTES: SkinNote[] = [
     topicSlug: 'ingredient-myths',
     kind: 'myth_vs_evidence',
     title: 'Can you use niacinamide with vitamin C?',
-    summary: 'The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine.',
+    summary:
+      'The “they cancel out” claim comes from decades-old raw-ingredient research. Safe to combine.',
     claim: '“Niacinamide and vitamin C cancel each other out.”',
     why: 'The myth traces to decades-old studies on raw, unformulated ingredients at high heat. In modern formulas the two are widely used together and can support a brighter-looking, more even complexion.',
     evidenceLabel: 'refuted',
@@ -91,7 +92,8 @@ export const SKIN_NOTES: SkinNote[] = [
     topicSlug: 'sensitive-skin',
     kind: 'myth_vs_evidence',
     title: 'Is a 10-step “glass skin” routine better?',
-    summary: 'For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.',
+    summary:
+      'For sensitive skin, fewer and smarter usually beats more. Layering raises irritation risk.',
     claim: '“A 10-step ‘glass skin’ routine is better for your skin.”',
     why: 'For sensitive or reactive skin, more steps and more actives raise the chance of irritation. A short, considered routine. Cleanse, treat, moisturise, protect. Is usually kinder and just as effective.',
     evidenceLabel: 'contested',
@@ -172,7 +174,9 @@ export function noteById(id: string, notes: SkinNote[] = SKIN_NOTES): SkinNote |
 }
 
 /** Notes grouped by topic, in topic sort order (for the hub). */
-export function notesByTopic(notes: SkinNote[] = SKIN_NOTES): { topic: SkinTopic; notes: SkinNote[] }[] {
+export function notesByTopic(
+  notes: SkinNote[] = SKIN_NOTES,
+): { topic: SkinTopic; notes: SkinNote[] }[] {
   const shippable = shippableNotes(notes);
   return SKIN_TOPICS.map((topic) => ({
     topic,
@@ -183,7 +187,11 @@ export function notesByTopic(notes: SkinNote[] = SKIN_NOTES): { topic: SkinTopic
 /** Map a docs/02 conflict rule's tag-pair to a Skin Note, so the trust layer can
  *  reinforce the recommendation/conflict "how" exactly where the doubt lands (§9.2).
  *  Order-independent. Returns a SHIPPABLE note id, or undefined. */
-export function noteForTags(tagA: string, tagB: string, notes: SkinNote[] = SKIN_NOTES): string | undefined {
+export function noteForTags(
+  tagA: string,
+  tagB: string,
+  notes: SkinNote[] = SKIN_NOTES,
+): string | undefined {
   const pair = new Set([tagA, tagB]);
   if (pair.has('niacinamide') && pair.has('vitamin_c')) {
     return shippableNotes(notes).find((n) => n.id === 'note-niacinamide-vitc')?.id;

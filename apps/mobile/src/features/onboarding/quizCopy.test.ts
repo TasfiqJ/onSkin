@@ -11,6 +11,8 @@ const visibleQuizCopy = ONBOARDING_QUIZ.flatMap((question) => [
 
 describe('visible onboarding quiz copy', () => {
   it('does not expose scaffolding markers to users', () => {
-    expect(visibleQuizCopy).not.toContainEqual(expect.stringMatching(/placeholder|pending b-quiz-copy/i));
+    expect(visibleQuizCopy).not.toContainEqual(
+      expect.stringMatching(/placeholder|pending b-quiz-copy/i),
+    );
   });
 });

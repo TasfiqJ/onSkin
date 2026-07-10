@@ -22,7 +22,9 @@ block(errors, entrypoints.length > 0, 'No Supabase Edge Function entrypoints fou
 block(errors, existsSync(join(root, lockPath)), `${lockPath} is missing.`);
 
 for (const entrypoint of publicGrowthEntrypoints) {
-  const source = existsSync(join(root, entrypoint)) ? readFileSync(join(root, entrypoint), 'utf8') : '';
+  const source = existsSync(join(root, entrypoint))
+    ? readFileSync(join(root, entrypoint), 'utf8')
+    : '';
   block(errors, Boolean(source), `${entrypoint} is missing.`);
   block(
     errors,
@@ -64,7 +66,14 @@ if (errors.length === 0) {
     const denoBin = resolveDenoBin();
     execFileSync(
       denoBin,
-      ['check', '--no-config', '--node-modules-dir=auto', `--lock=${lockPath}`, '--frozen=true', ...entrypoints],
+      [
+        'check',
+        '--no-config',
+        '--node-modules-dir=auto',
+        `--lock=${lockPath}`,
+        '--frozen=true',
+        ...entrypoints,
+      ],
       {
         cwd: root,
         encoding: 'utf8',

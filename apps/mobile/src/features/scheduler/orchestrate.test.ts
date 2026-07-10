@@ -4,7 +4,12 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ROUTINE_CADENCE_REVIEWED } from '@/features/routine/reviewGate';
 
 import { CAPS_REVIEWED, frequencyCap, reviewedFrequencyCap } from './classes';
-import { orchestrate, type Cycle, type SchedulerActive, type SchedulerProfile } from './orchestrate';
+import {
+  orchestrate,
+  type Cycle,
+  type SchedulerActive,
+  type SchedulerProfile,
+} from './orchestrate';
 
 // Multi-active orchestration fixtures (docs/05 §4). The doc mandates the rules be
 // testable on this harm-relevant surface; these assert the FIRM invariants
@@ -15,7 +20,8 @@ function active(id: string, name: string, tags: FunctionalTag[], isNew = false):
   return { id, name, tags, isNew };
 }
 const base: SchedulerProfile = { sensitivity: 'neutral', pregnancy: false, goals: [] };
-const run = (actives: SchedulerActive[], profile: SchedulerProfile = base) => orchestrate(actives, profile);
+const run = (actives: SchedulerActive[], profile: SchedulerProfile = base) =>
+  orchestrate(actives, profile);
 
 const runtime = globalThis as { __DEV__?: boolean };
 let previousDev: boolean | undefined;
@@ -76,8 +82,12 @@ describe('orchestration. FIRM invariants (docs/05 §4)', () => {
 
   it('NEVER schedules a retinoid and an exfoliant on the same night (harm-relevant)', () => {
     const { cycle } = run(cabinet);
-    const retinoidNights = new Set(cycle!.nights.filter((n) => n.slot === 'retinoid').map((n) => n.index));
-    const exfoliateNights = new Set(cycle!.nights.filter((n) => n.slot === 'exfoliate').map((n) => n.index));
+    const retinoidNights = new Set(
+      cycle!.nights.filter((n) => n.slot === 'retinoid').map((n) => n.index),
+    );
+    const exfoliateNights = new Set(
+      cycle!.nights.filter((n) => n.slot === 'exfoliate').map((n) => n.index),
+    );
     for (const i of retinoidNights) expect(exfoliateNights.has(i)).toBe(false);
   });
 
@@ -111,7 +121,9 @@ describe('orchestration. FIRM invariants (docs/05 §4)', () => {
     const amClasses = cycle!.amDaily.map((a) => a.className);
     expect(amClasses).toContain('vitamin_c');
     expect(amClasses).toContain('niacinamide');
-    expect(cycle!.nights.every((n) => n.className !== 'vitamin_c' && n.className !== 'niacinamide')).toBe(true);
+    expect(
+      cycle!.nights.every((n) => n.className !== 'vitamin_c' && n.className !== 'niacinamide'),
+    ).toBe(true);
   });
 
   it('always includes at least one recovery night for barrier rest', () => {
@@ -126,7 +138,12 @@ describe('orchestration. FIRM invariants (docs/05 §4)', () => {
       preferredVariant: 'classic',
     });
 
-    expect(cycle!.nights.slice(0, 4).map((n) => n.slot)).toEqual(['retinoid', 'recover', 'retinoid', 'recover']);
+    expect(cycle!.nights.slice(0, 4).map((n) => n.slot)).toEqual([
+      'retinoid',
+      'recover',
+      'retinoid',
+      'recover',
+    ]);
     expectNoAdjacentRepeatedPotentSlot(cycle!);
   });
 
@@ -136,7 +153,11 @@ describe('orchestration. FIRM invariants (docs/05 §4)', () => {
       { ...base, freqByProductId: { g: 1, s: 1 }, preferredVariant: 'classic' },
     );
 
-    expect(cycle!.nights.slice(0, 3).map((n) => n.slot)).toEqual(['exfoliate', 'recover', 'exfoliate']);
+    expect(cycle!.nights.slice(0, 3).map((n) => n.slot)).toEqual([
+      'exfoliate',
+      'recover',
+      'exfoliate',
+    ]);
     expectNoAdjacentRepeatedPotentSlot(cycle!);
   });
 });
@@ -163,10 +184,13 @@ describe('orchestration. Frequency caps + launch gate (docs/05 §4/§8)', () => 
   });
 
   it('caps AHA at 1×/week for sensitive skin', () => {
-    const { cycle } = run([active('g', 'Glycolic', ['aha']), active('r', 'Retinol', ['retinoid'])], {
-      ...base,
-      sensitivity: 'sensitive',
-    });
+    const { cycle } = run(
+      [active('g', 'Glycolic', ['aha']), active('r', 'Retinol', ['retinoid'])],
+      {
+        ...base,
+        sensitivity: 'sensitive',
+      },
+    );
     expect(cycle!.nights.filter((n) => n.productId === 'g').length).toBe(1);
   });
 
@@ -178,7 +202,10 @@ describe('orchestration. Frequency caps + launch gate (docs/05 §4/§8)', () => 
   });
 
   it('honours a user variant override', () => {
-    expect(run([active('r', 'Retinol', ['retinoid'])], { ...base, preferredVariant: 'classic' }).cycle!.variant).toBe('classic');
+    expect(
+      run([active('r', 'Retinol', ['retinoid'])], { ...base, preferredVariant: 'classic' }).cycle!
+        .variant,
+    ).toBe('classic');
   });
 });
 
@@ -223,7 +250,10 @@ describe('orchestration. Safety + fallback', () => {
   });
 
   it('pregnancy note survives even when the retinoid was the ONLY potent active', () => {
-    const { cycle, notes } = run([active('r', 'Retinol', ['retinoid'])], { ...base, pregnancy: true });
+    const { cycle, notes } = run([active('r', 'Retinol', ['retinoid'])], {
+      ...base,
+      pregnancy: true,
+    });
     expect(cycle).toBeNull(); // no cycle (nothing left to cycle)
     expect(notes.join(' ')).toMatch(/pregnan|doctor/i); // ...but the safety message still reaches the user
   });

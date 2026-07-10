@@ -15,9 +15,18 @@ export default function ShelfLayout() {
         <Stack.Screen name="ocr" />
         <Stack.Screen name="[id]" />
         <Stack.Screen name="archive" />
-        <Stack.Screen name="no-match" options={{ presentation: 'transparentModal', animation: 'fade' }} />
-        <Stack.Screen name="opened" options={{ presentation: 'transparentModal', animation: 'fade' }} />
-        <Stack.Screen name="replenish" options={{ presentation: 'transparentModal', animation: 'fade' }} />
+        <Stack.Screen
+          name="no-match"
+          options={{ presentation: 'transparentModal', animation: 'fade' }}
+        />
+        <Stack.Screen
+          name="opened"
+          options={{ presentation: 'transparentModal', animation: 'fade' }}
+        />
+        <Stack.Screen
+          name="replenish"
+          options={{ presentation: 'transparentModal', animation: 'fade' }}
+        />
       </Stack>
     </IntakeProvider>
   );

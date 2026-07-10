@@ -63,7 +63,8 @@ export function classifyChange(input: ClassifyInput): ClassifyResult {
   if (input.captureCount < MIN_CAPTURES) return { changeState: 'insufficient_data', mdcThreshold };
   if (!input.lightingConsistent) return { changeState: 'inconclusive_lighting', mdcThreshold };
   if (input.deltaMetric == null) return { changeState: 'insufficient_data', mdcThreshold };
-  if (Math.abs(input.deltaMetric) >= mdcThreshold) return { changeState: 'change_observed', mdcThreshold };
+  if (Math.abs(input.deltaMetric) >= mdcThreshold)
+    return { changeState: 'change_observed', mdcThreshold };
   return { changeState: 'consistent', mdcThreshold };
 }
 

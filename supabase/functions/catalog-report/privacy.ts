@@ -54,7 +54,10 @@ export function isPlainObject(value: unknown): value is Record<string, unknown> 
   return Boolean(value && typeof value === 'object' && !Array.isArray(value));
 }
 
-export function validateAllowedKeys(input: Record<string, unknown>, allowed: ReadonlySet<string>): boolean {
+export function validateAllowedKeys(
+  input: Record<string, unknown>,
+  allowed: ReadonlySet<string>,
+): boolean {
   return !Object.keys(input).some((key) => !allowed.has(key));
 }
 

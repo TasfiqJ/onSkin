@@ -38,11 +38,18 @@ export function ConflictBanner({
         backgroundColor: dark ? colors.nightSurface : colors.clayTint,
         paddingVertical: 16,
         paddingHorizontal: 18,
-      }}>
+      }}
+    >
       <View className="flex-row">
         <View
           className="rounded-full"
-          style={{ width: 8, height: 8, marginTop: 6, marginRight: 14, backgroundColor: colors.clay }}
+          style={{
+            width: 8,
+            height: 8,
+            marginTop: 6,
+            marginRight: 14,
+            backgroundColor: colors.clay,
+          }}
         />
         <View className="flex-1">
           <View className="flex-row flex-wrap items-center gap-2">
@@ -52,7 +59,8 @@ export function ConflictBanner({
             {severityPill ? (
               <View
                 className="rounded-full bg-paper-raised"
-                style={{ paddingHorizontal: 8, paddingVertical: 3 }}>
+                style={{ paddingHorizontal: 8, paddingVertical: 3 }}
+              >
                 <Text className="font-sans-bold text-[10px]" style={{ color: colors.clayDeep }}>
                   {severityPill}
                 </Text>

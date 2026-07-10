@@ -101,9 +101,7 @@ describe('Commerce route contracts', () => {
     expect(source).toContain(
       'const sheetMaxHeight = viewportHeight > 44 ? viewportHeight - 44 : 524;',
     );
-    expect(source).toContain(
-      'insets.bottom > 0 ? Math.max(32, insets.bottom + 24) : undefined',
-    );
+    expect(source).toContain('insets.bottom > 0 ? Math.max(32, insets.bottom + 24) : undefined');
     expect(source).toContain('maxHeight: sheetMaxHeight');
     expect(source).toContain('aria-modal');
     expect(source).toContain('role="dialog"');

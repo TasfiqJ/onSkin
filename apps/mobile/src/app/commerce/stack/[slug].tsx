@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
-import { CommerceLinkNotice, type CommerceLinkFeedback } from '@/features/commerce/CommerceLinkNotice';
+import {
+  CommerceLinkNotice,
+  type CommerceLinkFeedback,
+} from '@/features/commerce/CommerceLinkNotice';
 import { LockGlyph } from '@/features/commerce/LockGlyph';
 import { useCommerceConsent } from '@/features/commerce/useCommerce';
 import { COMMERCE_COPY } from '@/features/commerce/copy';

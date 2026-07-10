@@ -258,8 +258,8 @@ export default function BetaFeedbackScreen() {
             highTextPressure
               ? 'mb-2 flex-row items-center gap-3 pt-1'
               : compact
-              ? 'mb-3 flex-row items-center gap-3 pt-1'
-              : 'mb-5 flex-row items-center gap-3 pt-1'
+                ? 'mb-3 flex-row items-center gap-3 pt-1'
+                : 'mb-5 flex-row items-center gap-3 pt-1'
           }
         >
           <RouteIconButton
@@ -276,8 +276,8 @@ export default function BetaFeedbackScreen() {
             highTextPressure
               ? 'mb-2 rounded-card bg-paper-raised p-3'
               : compact
-              ? 'mb-3 rounded-card bg-paper-raised p-4'
-              : 'mb-4 rounded-card bg-paper-raised p-5'
+                ? 'mb-3 rounded-card bg-paper-raised p-4'
+                : 'mb-4 rounded-card bg-paper-raised p-5'
           }
         >
           <Text variant="titleSm" style={{ fontSize: highTextPressure ? 18 : compact ? 20 : 22 }}>

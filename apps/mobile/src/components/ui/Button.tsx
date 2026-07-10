@@ -53,7 +53,8 @@ export function Button({
         disabled && 'opacity-40',
         className,
       )}
-      {...rest}>
+      {...rest}
+    >
       <Text className={cn('font-sans-semibold text-[16px]', LABEL[variant])}>{label}</Text>
     </Pressable>
   );

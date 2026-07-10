@@ -111,7 +111,11 @@ export function bestStreak(completed: Set<string>, freezeWindow = DEFAULT_FREEZE
 }
 
 /** The Mon→Sun states for the current week (matches the Progress heat-map view). */
-export function buildWeek(completed: Set<string>, todayISO: string, frozen: Set<string> = new Set()): WeekDay[] {
+export function buildWeek(
+  completed: Set<string>,
+  todayISO: string,
+  frozen: Set<string> = new Set(),
+): WeekDay[] {
   const today = parse(todayISO);
   const dow = (today.getDay() + 6) % 7; // 0=Mon
   const monday = new Date(today);
@@ -147,7 +151,9 @@ export function monthHeat(countByDate: Map<string, number>, todayISO: string): H
       continue;
     }
     const n = countByDate.get(iso) ?? 0;
-    heat.push({ intensity: (n === 0 ? 0 : n === 1 ? 1 : n === 2 ? 2 : 3) as HeatCell['intensity'] });
+    heat.push({
+      intensity: (n === 0 ? 0 : n === 1 ? 1 : n === 2 ? 2 : 3) as HeatCell['intensity'],
+    });
   }
   return heat;
 }

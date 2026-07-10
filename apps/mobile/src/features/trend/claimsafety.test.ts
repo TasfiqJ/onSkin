@@ -31,8 +31,16 @@ const SCORE_NUMBER = [
   /\b\d+\s*stars?\b/i,
   /\b\d+\s+out\s+of\b/i,
 ];
-const DISEASE = [/\bdetect(s|ed|ing)?\b/i, /\b(acne|rosacea|psoriasis|dermatitis|melasma|hyperpigmentation)\b/i];
-const SUPERIORITY = [/\bdermatologist-grade\b/i, /\bmore\s+accurate\s+than\b/i, /\bobjective\b/i, /\bclinically\s+proven\b/i];
+const DISEASE = [
+  /\bdetect(s|ed|ing)?\b/i,
+  /\b(acne|rosacea|psoriasis|dermatitis|melasma|hyperpigmentation)\b/i,
+];
+const SUPERIORITY = [
+  /\bdermatologist-grade\b/i,
+  /\bmore\s+accurate\s+than\b/i,
+  /\bobjective\b/i,
+  /\bclinically\s+proven\b/i,
+];
 const VERDICT = [/\bimproved\b/i, /\bworse\b/i];
 const STRUCTURE = [/\breduces?\s+inflammation\b/i, /\bheals?\b/i];
 const AI_MARKETING = [/\bai\b/i];
@@ -56,14 +64,27 @@ function offenders(text: string, pats: RegExp[]): string[] {
   return pats.flatMap((re) => (text.match(re) ? [re.source] : []));
 }
 
-const STATES: TrendChangeState[] = ['consistent', 'change_observed', 'inconclusive_lighting', 'insufficient_data'];
+const STATES: TrendChangeState[] = [
+  'consistent',
+  'change_observed',
+  'inconclusive_lighting',
+  'insufficient_data',
+];
 const NARRATIVES = STATES.map((s) => trendNarrative(s, { n: 6, area: 'left cheek' }));
 const ALL = [...collect(TREND_COPY), ...NARRATIVES];
 
 describe('the OUTPUT narratives pass the FULL guard. Descriptive, no score, no detection', () => {
   for (const text of NARRATIVES) {
     it(`clean output: "${text.slice(0, 46)}…"`, () => {
-      for (const pats of [SCORE_NUMBER, DISEASE, SUPERIORITY, VERDICT, STRUCTURE, AI_MARKETING, ALARM]) {
+      for (const pats of [
+        SCORE_NUMBER,
+        DISEASE,
+        SUPERIORITY,
+        VERDICT,
+        STRUCTURE,
+        AI_MARKETING,
+        ALARM,
+      ]) {
         expect(offenders(text, pats)).toEqual([]);
       }
     });

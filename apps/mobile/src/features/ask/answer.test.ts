@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { detectConflicts, type EngineProduct, type EngineProfile } from '@/features/intelligence/engine';
+import {
+  detectConflicts,
+  type EngineProduct,
+  type EngineProfile,
+} from '@/features/intelligence/engine';
 import { bannerSubhead } from '@/features/intelligence/presentation';
 import { STARTER_RULES } from '@/features/intelligence/rules';
 
@@ -32,7 +36,11 @@ const CTX: AskContext = {
   ],
   isExamplePlan: false,
   hasReplenish: true,
-  topRec: { what: 'A vitamin C serum', example: 'e.g. a 10% L-ascorbic acid serum', evidenceLabel: 'plausible' },
+  topRec: {
+    what: 'A vitamin C serum',
+    example: 'e.g. a 10% L-ascorbic acid serum',
+    evidenceLabel: 'plausible',
+  },
   youreSet: false,
   goalConcernText: 'a more even-looking tone',
   groundedAllowed: false,
@@ -81,15 +89,32 @@ describe('the conflict answer is deterministic and template-bounded from the eng
 describe('pickFitRec keeps raw product-name DATA (a "7%") out of the scanned claim', () => {
   it('skips shelf-anchored replacement/conflict recs and picks a clean catalog type', () => {
     const picked = pickFitRec([
-      { trigger: 'replacement', what: 'Your Glycolic 7% Toner is running low', example: null, evidenceLabel: null },
-      { trigger: 'goal', what: 'A vitamin C serum', example: 'e.g. 10% L-ascorbic acid', evidenceLabel: 'plausible' },
+      {
+        trigger: 'replacement',
+        what: 'Your Glycolic 7% Toner is running low',
+        example: null,
+        evidenceLabel: null,
+      },
+      {
+        trigger: 'goal',
+        what: 'A vitamin C serum',
+        example: 'e.g. 10% L-ascorbic acid',
+        evidenceLabel: 'plausible',
+      },
     ]);
     expect(picked?.what).toBe('A vitamin C serum');
     expect(picked?.what).not.toContain('%');
   });
   it('returns null when only shelf-anchored recs exist (→ "your routine looks complete")', () => {
     expect(
-      pickFitRec([{ trigger: 'replacement', what: 'Your X is running low', example: null, evidenceLabel: null }]),
+      pickFitRec([
+        {
+          trigger: 'replacement',
+          what: 'Your X is running low',
+          example: null,
+          evidenceLabel: null,
+        },
+      ]),
     ).toBeNull();
   });
 });
@@ -142,7 +167,11 @@ describe('refuse-over-guess and escalation', () => {
     expect(a.claim).toBe(ASK_COPY.refuse.groundedLocked);
   });
   it('a grounded concern question degrades honestly when grounding is allowed but offline', () => {
-    const a = answerQuestion('what is niacinamide', { ...CTX, groundedAllowed: true, groundedReason: null });
+    const a = answerQuestion('what is niacinamide', {
+      ...CTX,
+      groundedAllowed: true,
+      groundedReason: null,
+    });
     expect(a.claim).toBe(ASK_COPY.refuse.groundedSetup);
   });
   it('off-topic input refuses honestly', () => {

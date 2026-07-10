@@ -17,11 +17,15 @@ import {
 
 describe('the outbound URL carries ONLY an opaque token. Never skin data', () => {
   it('appends exactly one param (the opaque ref) to a clean base', () => {
-    expect(buildOutboundUrl('https://example.com/p/1', 'tok123')).toBe('https://example.com/p/1?oref=tok123');
+    expect(buildOutboundUrl('https://example.com/p/1', 'tok123')).toBe(
+      'https://example.com/p/1?oref=tok123',
+    );
   });
 
   it('uses & when the base already has a query', () => {
-    expect(buildOutboundUrl('https://example.com/p?x=1', 'tok123')).toBe('https://example.com/p?x=1&oref=tok123');
+    expect(buildOutboundUrl('https://example.com/p?x=1', 'tok123')).toBe(
+      'https://example.com/p?x=1&oref=tok123',
+    );
   });
 
   it('rejects unsafe external handoff URLs before adding the token', () => {
@@ -65,19 +69,41 @@ describe('the health-leak detector catches a leaked attribute', () => {
 
 describe('the persisted click payload never carries surprise commerce data', () => {
   it('accepts the content-free click payload (token / type / source / consent)', () => {
-    const payload: ClickPayload = { clickToken: 'opaque_123', productType: 'mineral_spf', source: 'none', consented: true };
+    const payload: ClickPayload = {
+      clickToken: 'opaque_123',
+      productType: 'mineral_spf',
+      source: 'none',
+      consented: true,
+    };
     expect(isHealthSafePayload(payload as unknown as Record<string, unknown>)).toBe(true);
   });
   it('accepts a null product type for rail-level click attribution', () => {
-    const payload: ClickPayload = { clickToken: 'opaque_123', productType: null, source: 'direct', consented: true };
+    const payload: ClickPayload = {
+      clickToken: 'opaque_123',
+      productType: null,
+      source: 'direct',
+      consented: true,
+    };
     expect(isHealthSafePayload(payload as unknown as Record<string, unknown>)).toBe(true);
   });
   it('rejects any payload that smuggles a health-adjacent key', () => {
-    expect(isHealthSafePayload({ clickToken: 'x', productType: null, source: 'none', consented: true, concern: 'acne' })).toBe(
-      false,
-    );
     expect(
-      isHealthSafePayload({ clickToken: 'x', productType: null, source: 'none', consented: true, skin_profile: 'DSPT' }),
+      isHealthSafePayload({
+        clickToken: 'x',
+        productType: null,
+        source: 'none',
+        consented: true,
+        concern: 'acne',
+      }),
+    ).toBe(false);
+    expect(
+      isHealthSafePayload({
+        clickToken: 'x',
+        productType: null,
+        source: 'none',
+        consented: true,
+        skin_profile: 'DSPT',
+      }),
     ).toBe(false);
   });
   it('rejects extra partner identifiers even when the key is not health-adjacent', () => {

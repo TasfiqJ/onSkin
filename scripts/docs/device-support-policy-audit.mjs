@@ -7,11 +7,9 @@ const strict = process.argv.includes('--strict');
 const check = process.argv.includes('--check');
 
 const outJson =
-  process.env.DEVICE_SUPPORT_POLICY_AUDIT_JSON ??
-  'docs/generated/device-support-policy-audit.json';
+  process.env.DEVICE_SUPPORT_POLICY_AUDIT_JSON ?? 'docs/generated/device-support-policy-audit.json';
 const outMd =
-  process.env.DEVICE_SUPPORT_POLICY_AUDIT_MD ??
-  'docs/generated/device-support-policy-audit.md';
+  process.env.DEVICE_SUPPORT_POLICY_AUDIT_MD ?? 'docs/generated/device-support-policy-audit.md';
 
 const files = {
   appBase: 'apps/mobile/app.base.json',
@@ -232,7 +230,7 @@ const humanManifest = exists(files.humanManifest) ? readJson(files.humanManifest
 const manifestScript = exists(files.manifestScript) ? read(files.manifestScript) : '';
 
 const plugin = buildPropertiesPlugin(appBase.expo ?? {});
-const buildProperties = Array.isArray(plugin) ? plugin[1] ?? {} : {};
+const buildProperties = Array.isArray(plugin) ? (plugin[1] ?? {}) : {};
 const androidBuildProperties = buildProperties.android ?? {};
 
 const configContracts = [
@@ -307,14 +305,16 @@ const manifestGates = Array.isArray(humanManifest.gateResults)
     : [];
 
 const gateResults = manifestGates.map((gate) => ({
-      id: gate.id,
-      required: gate.required === true,
-      status: gate.status,
-      supportClass: gate.supportClass,
-      title: gate.title,
-    }));
+  id: gate.id,
+  required: gate.required === true,
+  status: gate.status,
+  supportClass: gate.supportClass,
+  title: gate.title,
+}));
 
-const launchGate = gateResults.find((gate) => gate.id === 'support-floor-360-640-200-text-pressure');
+const launchGate = gateResults.find(
+  (gate) => gate.id === 'support-floor-360-640-200-text-pressure',
+);
 if (!launchGate) {
   blockers.push(`${files.humanManifest} is missing the 360 x 640 launch-floor gate.`);
 } else {

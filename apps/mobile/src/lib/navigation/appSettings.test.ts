@@ -82,6 +82,6 @@ describe('app settings opener', () => {
 
     expect(source).toContain('EXPO_PUBLIC_E2E_APP_SETTINGS_FAILURE');
     expect(source).not.toContain('Alert.alert');
-    expect(source).not.toContain("import { Alert");
+    expect(source).not.toContain('import { Alert');
   });
 });

@@ -1,5 +1,11 @@
 import { xchacha20poly1305 } from '@noble/ciphers/chacha.js';
-import { bytesToHex, bytesToUtf8, hexToBytes, randomBytes, utf8ToBytes } from '@noble/ciphers/utils.js';
+import {
+  bytesToHex,
+  bytesToUtf8,
+  hexToBytes,
+  randomBytes,
+  utf8ToBytes,
+} from '@noble/ciphers/utils.js';
 import * as aesjs from 'aes-js';
 
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
@@ -62,7 +68,10 @@ export function encryptLargeSecureStoreValue(value: string, key: Uint8Array): st
   return JSON.stringify(envelope);
 }
 
-export function decryptLargeSecureStoreValue(value: string, key: Uint8Array): LargeSecureStoreDecryptResult {
+export function decryptLargeSecureStoreValue(
+  value: string,
+  key: Uint8Array,
+): LargeSecureStoreDecryptResult {
   const envelope = parseEnvelope(value);
   if (envelope) {
     try {

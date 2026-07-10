@@ -58,4 +58,3 @@ describe('Open Beauty Facts mapping', () => {
     });
   });
 });
-

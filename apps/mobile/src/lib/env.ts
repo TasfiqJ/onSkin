@@ -39,7 +39,10 @@ function readAppEnvironment(value: string | undefined): AppEnvironment {
 
 function readBooleanEnv(
   value: string | undefined,
-  { defaultValue = false, invalidValue = false }: { defaultValue?: boolean; invalidValue?: boolean } = {},
+  {
+    defaultValue = false,
+    invalidValue = false,
+  }: { defaultValue?: boolean; invalidValue?: boolean } = {},
 ): boolean {
   const candidate = value?.trim().toLowerCase();
   if (!candidate) return defaultValue;
@@ -104,10 +107,12 @@ export const env = {
   phase7CloudAskEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_CLOUD_ASK_ENABLED),
   phase7WidgetsEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED),
   phase7ShareCardEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED),
-  phase7ReviewedConflictSharingEnabled:
-    readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED),
-  phase7GoalActiveRecommendationsEnabled:
-    readBooleanEnv(process.env.EXPO_PUBLIC_PHASE7_GOAL_ACTIVE_RECOMMENDATIONS_ENABLED),
+  phase7ReviewedConflictSharingEnabled: readBooleanEnv(
+    process.env.EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED,
+  ),
+  phase7GoalActiveRecommendationsEnabled: readBooleanEnv(
+    process.env.EXPO_PUBLIC_PHASE7_GOAL_ACTIVE_RECOMMENDATIONS_ENABLED,
+  ),
   phase8PublicLinksEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED),
   phase8ReviewPromptEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE8_REVIEW_PROMPT_ENABLED),
   phase8CreatorLinksEnabled: readBooleanEnv(process.env.EXPO_PUBLIC_PHASE8_CREATOR_LINKS_ENABLED),

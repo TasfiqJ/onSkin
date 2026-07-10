@@ -63,4 +63,3 @@ export function parsePercent(value: string): number | null {
   const parsed = Number(match[1]);
   return Number.isFinite(parsed) ? parsed : null;
 }
-

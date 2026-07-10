@@ -11,7 +11,12 @@ import { pickCycle, type CycleTemplate } from '@/features/intelligence/scheduler
 
 import { initRamp, type RampState } from './ramp';
 import { canUseRoutineCadence } from './reviewGate';
-import { classifyRole, sequencePhase, type ClassifiableProduct, type SequencedStep } from './sequencing';
+import {
+  classifyRole,
+  sequencePhase,
+  type ClassifiableProduct,
+  type SequencedStep,
+} from './sequencing';
 
 // The deterministic generation pipeline (docs/03 §2): classify → allocate AM/PM →
 // sequence → assign frequency/cycling + init ramp → run detect_conflicts + apply
@@ -66,8 +71,13 @@ export function generatePlan(
   // applies. The retinoid × acid alternate_nights resolution is satisfied by
   // placing them on different nights.
   const allowCadence = canUseRoutineCadence();
-  const hasActives = allowCadence && pm.some((s) => s.role === 'treatment' || s.role === 'exfoliant');
-  const cycle = pickCycle({ sensitivity: profile.sensitivity, goals: profile.goals as GoalId[], hasActives });
+  const hasActives =
+    allowCadence && pm.some((s) => s.role === 'treatment' || s.role === 'exfoliant');
+  const cycle = pickCycle({
+    sensitivity: profile.sensitivity,
+    goals: profile.goals as GoalId[],
+    hasActives,
+  });
   if (cycle) {
     for (const step of pm) {
       if (step.role === 'exfoliant') step.cyclingNight = 1;

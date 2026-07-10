@@ -17,7 +17,11 @@ import { localDateString } from '@/features/today/useToday';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
-import { functionalTagsForCategory, isSafetyCriticalCategory, usesPrintedExpiry } from './categories';
+import {
+  functionalTagsForCategory,
+  isSafetyCriticalCategory,
+  usesPrintedExpiry,
+} from './categories';
 import { surfacedExpiry } from './expiry';
 import { formatShelfMetaLine } from './metadata';
 import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';

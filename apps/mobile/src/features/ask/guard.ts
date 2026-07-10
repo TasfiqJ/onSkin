@@ -12,9 +12,18 @@ import { scanClaimSafety, type ClaimSafetyResult } from '@/features/community/cl
 // "7%") is rendered in separate fields and is NOT scanned, avoiding false positives on data.
 
 const EXTRA: { reason: string; re: RegExp }[] = [
-  { reason: 'condition named as a diagnosis', re: /\b(acne|rosacea|psoriasis|dermatitis|melasma|eczema|hyperpigmentation)\b/i },
-  { reason: 'superiority / AI-washing claim', re: /\bdermatologist-grade\b|\bmore\s+accurate\s+than\b|\bobjective\b|\bclinically\s+proven\b/i },
-  { reason: 'skin score / rating', re: /\bskin\s*score\b|\bskin\s*age\b|\bskin\s*health\b|\b\d+\s?\/\s?\d+\b|\b\d+\s*stars?\b/i },
+  {
+    reason: 'condition named as a diagnosis',
+    re: /\b(acne|rosacea|psoriasis|dermatitis|melasma|eczema|hyperpigmentation)\b/i,
+  },
+  {
+    reason: 'superiority / AI-washing claim',
+    re: /\bdermatologist-grade\b|\bmore\s+accurate\s+than\b|\bobjective\b|\bclinically\s+proven\b/i,
+  },
+  {
+    reason: 'skin score / rating',
+    re: /\bskin\s*score\b|\bskin\s*age\b|\bskin\s*health\b|\b\d+\s?\/\s?\d+\b|\b\d+\s*stars?\b/i,
+  },
   { reason: 'AI marketing', re: /\bai\b/i },
 ];
 

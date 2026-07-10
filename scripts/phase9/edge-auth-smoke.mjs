@@ -30,7 +30,8 @@ function publicFormBodyLimitChecks(source, scope) {
     /413/.test(source) &&
     handlerSource.indexOf('contentLengthTooLarge(req)') !== -1 &&
     handlerSource.indexOf(`enforceRateLimit(req, '${scope}')`) !== -1 &&
-    handlerSource.indexOf('contentLengthTooLarge(req)') < handlerSource.indexOf(`enforceRateLimit(req, '${scope}')`)
+    handlerSource.indexOf('contentLengthTooLarge(req)') <
+      handlerSource.indexOf(`enforceRateLimit(req, '${scope}')`)
   );
 }
 
@@ -56,8 +57,10 @@ function userEdgeBodyLimitChecks(source, fn) {
     handlerSource.indexOf("req.method !== 'POST'") !== -1 &&
     handlerSource.indexOf('contentLengthTooLarge(req, maxBodyBytes)') !== -1 &&
     handlerSource.indexOf('auth.getUser') !== -1 &&
-    handlerSource.indexOf("req.method !== 'POST'") < handlerSource.indexOf('contentLengthTooLarge(req, maxBodyBytes)') &&
-    handlerSource.indexOf('contentLengthTooLarge(req, maxBodyBytes)') < handlerSource.indexOf('auth.getUser')
+    handlerSource.indexOf("req.method !== 'POST'") <
+      handlerSource.indexOf('contentLengthTooLarge(req, maxBodyBytes)') &&
+    handlerSource.indexOf('contentLengthTooLarge(req, maxBodyBytes)') <
+      handlerSource.indexOf('auth.getUser')
   );
 }
 
@@ -119,12 +122,36 @@ for (const fn of userJwtFunctions) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   const handlerSource = source.slice(source.indexOf('Deno.serve'));
   block(errors, /auth\.getUser/.test(source), `${fn} must validate caller JWT with auth.getUser.`);
-  block(errors, /bearer(?:Token|AuthorizationHeader)\(req\)/.test(source), `${fn} must use strict shared Bearer auth parsing.`);
-  block(errors, !/replace\(\s*\/\^?Bearer/.test(source), `${fn} must not strip Bearer auth with ad hoc string replacement.`);
-  block(errors, /401/.test(source) && /unauthorized/i.test(source), `${fn} must reject missing/wrong auth with 401.`);
-  block(errors, /req\.method === 'OPTIONS'/.test(handlerSource), `${fn} must return early for CORS preflight requests.`);
-  block(errors, /req\.method !== 'POST'/.test(handlerSource), `${fn} must reject non-POST execution methods.`);
-  block(errors, !/Access-Control-Allow-Methods': 'GET, POST, OPTIONS'/.test(source), `${fn} must not advertise GET for side-effecting user-JWT execution.`);
+  block(
+    errors,
+    /bearer(?:Token|AuthorizationHeader)\(req\)/.test(source),
+    `${fn} must use strict shared Bearer auth parsing.`,
+  );
+  block(
+    errors,
+    !/replace\(\s*\/\^?Bearer/.test(source),
+    `${fn} must not strip Bearer auth with ad hoc string replacement.`,
+  );
+  block(
+    errors,
+    /401/.test(source) && /unauthorized/i.test(source),
+    `${fn} must reject missing/wrong auth with 401.`,
+  );
+  block(
+    errors,
+    /req\.method === 'OPTIONS'/.test(handlerSource),
+    `${fn} must return early for CORS preflight requests.`,
+  );
+  block(
+    errors,
+    /req\.method !== 'POST'/.test(handlerSource),
+    `${fn} must reject non-POST execution methods.`,
+  );
+  block(
+    errors,
+    !/Access-Control-Allow-Methods': 'GET, POST, OPTIONS'/.test(source),
+    `${fn} must not advertise GET for side-effecting user-JWT execution.`,
+  );
   block(
     errors,
     handlerSource.indexOf("req.method !== 'POST'") !== -1 &&
@@ -133,71 +160,219 @@ for (const fn of userJwtFunctions) {
     `${fn} method check must run before caller auth resolution.`,
   );
   if (fn !== 'data-export') {
-    block(errors, /SUPABASE_SECRET_KEY|SUPABASE_SERVICE_ROLE_KEY/.test(source), `${fn} service-role use must be explicit and auditable.`);
+    block(
+      errors,
+      /SUPABASE_SECRET_KEY|SUPABASE_SERVICE_ROLE_KEY/.test(source),
+      `${fn} service-role use must be explicit and auditable.`,
+    );
   }
 }
 
-for (const fn of ['account-deletion', 'catalog-lookup', 'waitlist', 'growth-event', 'order-report-poll']) {
+for (const fn of [
+  'account-deletion',
+  'catalog-lookup',
+  'waitlist',
+  'growth-event',
+  'order-report-poll',
+]) {
   const source = read(`supabase/functions/${fn}/index.ts`);
-  block(errors, externalProviderFetchChecks(source), `${fn} external provider calls must use timed fetches and bounded response readers.`);
+  block(
+    errors,
+    externalProviderFetchChecks(source),
+    `${fn} external provider calls must use timed fetches and bounded response readers.`,
+  );
 }
 
 for (const fn of bodyLimitedUserJwtFunctions) {
   const source = read(`supabase/functions/${fn}/index.ts`);
-  block(errors, userEdgeBodyLimitChecks(source, fn), `${fn} must reject oversized user Edge request bodies before auth/body parsing work.`);
+  block(
+    errors,
+    userEdgeBodyLimitChecks(source, fn),
+    `${fn} must reject oversized user Edge request bodies before auth/body parsing work.`,
+  );
 }
 
 const subscriptionGrants = read('supabase/functions/subscription-grants/index.ts');
-block(errors, !/error:\s*(grantErr|error)\.message/.test(subscriptionGrants), 'subscription-grants must not return raw database errors.');
-block(errors, /reverse_trial_grant_failed/.test(subscriptionGrants), 'subscription-grants must return a stable reverse-trial grant failure code.');
-block(errors, /active_subscription_exists/.test(subscriptionGrants), 'subscription-grants must return a stable active-subscription conflict code.');
-block(errors, /reverse_trial_already_used/.test(subscriptionGrants), 'subscription-grants must return a stable already-used reverse-trial conflict code.');
+block(
+  errors,
+  !/error:\s*(grantErr|error)\.message/.test(subscriptionGrants),
+  'subscription-grants must not return raw database errors.',
+);
+block(
+  errors,
+  /reverse_trial_grant_failed/.test(subscriptionGrants),
+  'subscription-grants must return a stable reverse-trial grant failure code.',
+);
+block(
+  errors,
+  /active_subscription_exists/.test(subscriptionGrants),
+  'subscription-grants must return a stable active-subscription conflict code.',
+);
+block(
+  errors,
+  /reverse_trial_already_used/.test(subscriptionGrants),
+  'subscription-grants must return a stable already-used reverse-trial conflict code.',
+);
 
 const catalogReport = read('supabase/functions/catalog-report/index.ts');
 const catalogReportPrivacy = read('supabase/functions/catalog-report/privacy.ts');
-block(errors, /allowedTopLevelKeys/.test(catalogReport), 'catalog-report must reject unknown top-level request fields.');
-block(errors, /allowedPayloadKeys/.test(catalogReport), 'catalog-report must allowlist proposed payload keys.');
-block(errors, /allowedContextKeys/.test(catalogReport), 'catalog-report must allowlist client context keys.');
-block(errors, /sensitiveText/.test(catalogReportPrivacy), 'catalog-report must filter sensitive support payload text.');
-block(errors, /unexpected_field/.test(catalogReport), 'catalog-report must return a stable code for unexpected request fields.');
-block(errors, /invalid_proposed_payload/.test(catalogReport), 'catalog-report must reject invalid proposed payload objects.');
-block(errors, /invalid_client_context/.test(catalogReport), 'catalog-report must reject invalid client context objects.');
-block(errors, /proposed_payload:\s*proposedPayload\.value/.test(catalogReport), 'catalog-report must write sanitized proposed payloads only.');
-block(errors, /client_context:\s*clientContext\.value/.test(catalogReport), 'catalog-report must write sanitized client context only.');
-block(errors, !/proposed_payload:\s*body\.proposedPayload/.test(catalogReport), 'catalog-report must not persist raw proposedPayload.');
-block(errors, !/client_context:\s*body\.clientContext/.test(catalogReport), 'catalog-report must not persist raw clientContext.');
-block(errors, /safeUrl/.test(catalogReportPrivacy), 'catalog-report must normalize URLs and drop query strings before support storage.');
-block(errors, /Number\.isFinite/.test(catalogReportPrivacy), 'catalog-report must reject non-finite numeric payload values.');
-block(errors, Boolean(packageJson.scripts?.['phase4:catalog-report-privacy-smoke']), 'package.json is missing phase4:catalog-report-privacy-smoke.');
+block(
+  errors,
+  /allowedTopLevelKeys/.test(catalogReport),
+  'catalog-report must reject unknown top-level request fields.',
+);
+block(
+  errors,
+  /allowedPayloadKeys/.test(catalogReport),
+  'catalog-report must allowlist proposed payload keys.',
+);
+block(
+  errors,
+  /allowedContextKeys/.test(catalogReport),
+  'catalog-report must allowlist client context keys.',
+);
+block(
+  errors,
+  /sensitiveText/.test(catalogReportPrivacy),
+  'catalog-report must filter sensitive support payload text.',
+);
+block(
+  errors,
+  /unexpected_field/.test(catalogReport),
+  'catalog-report must return a stable code for unexpected request fields.',
+);
+block(
+  errors,
+  /invalid_proposed_payload/.test(catalogReport),
+  'catalog-report must reject invalid proposed payload objects.',
+);
+block(
+  errors,
+  /invalid_client_context/.test(catalogReport),
+  'catalog-report must reject invalid client context objects.',
+);
+block(
+  errors,
+  /proposed_payload:\s*proposedPayload\.value/.test(catalogReport),
+  'catalog-report must write sanitized proposed payloads only.',
+);
+block(
+  errors,
+  /client_context:\s*clientContext\.value/.test(catalogReport),
+  'catalog-report must write sanitized client context only.',
+);
+block(
+  errors,
+  !/proposed_payload:\s*body\.proposedPayload/.test(catalogReport),
+  'catalog-report must not persist raw proposedPayload.',
+);
+block(
+  errors,
+  !/client_context:\s*body\.clientContext/.test(catalogReport),
+  'catalog-report must not persist raw clientContext.',
+);
+block(
+  errors,
+  /safeUrl/.test(catalogReportPrivacy),
+  'catalog-report must normalize URLs and drop query strings before support storage.',
+);
+block(
+  errors,
+  /Number\.isFinite/.test(catalogReportPrivacy),
+  'catalog-report must reject non-finite numeric payload values.',
+);
+block(
+  errors,
+  Boolean(packageJson.scripts?.['phase4:catalog-report-privacy-smoke']),
+  'package.json is missing phase4:catalog-report-privacy-smoke.',
+);
 
 const catalogLookup = read('supabase/functions/catalog-lookup/index.ts');
-block(errors, !/req\.method === 'GET'/.test(catalogLookup), 'catalog-lookup must not support GET because lookups write caller telemetry and can call external catalog APIs.');
-block(errors, !/searchParams\.get\('barcode'\)/.test(catalogLookup), 'catalog-lookup must not accept barcodes from query strings.');
+block(
+  errors,
+  !/req\.method === 'GET'/.test(catalogLookup),
+  'catalog-lookup must not support GET because lookups write caller telemetry and can call external catalog APIs.',
+);
+block(
+  errors,
+  !/searchParams\.get\('barcode'\)/.test(catalogLookup),
+  'catalog-lookup must not accept barcodes from query strings.',
+);
 
 function orderedCatalogRateLimit(source, scope, firstBodyMarker, firstWorkMarker) {
   const handlerSource = source.slice(source.indexOf('Deno.serve'));
   return (
     handlerSource.includes(`enforceRateLimit(admin, '${scope}', userId)`) &&
-    handlerSource.indexOf(`enforceRateLimit(admin, '${scope}', userId)`) < handlerSource.indexOf(firstBodyMarker) &&
-    handlerSource.indexOf(`enforceRateLimit(admin, '${scope}', userId)`) < handlerSource.indexOf(firstWorkMarker)
+    handlerSource.indexOf(`enforceRateLimit(admin, '${scope}', userId)`) <
+      handlerSource.indexOf(firstBodyMarker) &&
+    handlerSource.indexOf(`enforceRateLimit(admin, '${scope}', userId)`) <
+      handlerSource.indexOf(firstWorkMarker)
   );
 }
 
 for (const [label, source, scope, firstBodyMarker, firstWorkMarker] of [
-  ['catalog-search', read('supabase/functions/catalog-search/index.ts'), 'catalog-search', 'readLimitedJson(req', ".from('products')"],
-  ['catalog-lookup', catalogLookup, 'catalog-lookup', 'requestBarcode(req)', 'fetchOpenBeautyFacts'],
+  [
+    'catalog-search',
+    read('supabase/functions/catalog-search/index.ts'),
+    'catalog-search',
+    'readLimitedJson(req',
+    ".from('products')",
+  ],
+  [
+    'catalog-lookup',
+    catalogLookup,
+    'catalog-lookup',
+    'requestBarcode(req)',
+    'fetchOpenBeautyFacts',
+  ],
 ]) {
-  block(errors, /CATALOG_RATE_LIMIT_MAX/.test(source), `${label} must use catalog-specific rate-limit max.`);
-  block(errors, /CATALOG_RATE_LIMIT_WINDOW_SECONDS/.test(source), `${label} must use catalog-specific rate-limit window.`);
-  block(errors, /consume_edge_rate_limit/.test(source), `${label} must use the shared Postgres rate-limit RPC.`);
-  block(errors, /hmacSha256Hex/.test(source) && /keyHash/.test(source) && /serviceKey/.test(source), `${label} must keyed-hash user identity before rate-limit storage.`);
-  block(errors, /CATALOG_RATE_LIMIT_FAILED/.test(source), `${label} must log only a stable rate-limit failure code.`);
-  block(errors, /rate_limit_unavailable/.test(source), `${label} must fail closed when the rate limiter is unavailable.`);
-  block(errors, /429/.test(source) && /rate_limited/.test(source), `${label} must return 429 when the caller is rate-limited.`);
-  block(errors, orderedCatalogRateLimit(source, scope, firstBodyMarker, firstWorkMarker), `${label} must rate-limit before request body parsing, external calls, service-role catalog reads, or telemetry writes.`);
+  block(
+    errors,
+    /CATALOG_RATE_LIMIT_MAX/.test(source),
+    `${label} must use catalog-specific rate-limit max.`,
+  );
+  block(
+    errors,
+    /CATALOG_RATE_LIMIT_WINDOW_SECONDS/.test(source),
+    `${label} must use catalog-specific rate-limit window.`,
+  );
+  block(
+    errors,
+    /consume_edge_rate_limit/.test(source),
+    `${label} must use the shared Postgres rate-limit RPC.`,
+  );
+  block(
+    errors,
+    /hmacSha256Hex/.test(source) && /keyHash/.test(source) && /serviceKey/.test(source),
+    `${label} must keyed-hash user identity before rate-limit storage.`,
+  );
+  block(
+    errors,
+    /CATALOG_RATE_LIMIT_FAILED/.test(source),
+    `${label} must log only a stable rate-limit failure code.`,
+  );
+  block(
+    errors,
+    /rate_limit_unavailable/.test(source),
+    `${label} must fail closed when the rate limiter is unavailable.`,
+  );
+  block(
+    errors,
+    /429/.test(source) && /rate_limited/.test(source),
+    `${label} must return 429 when the caller is rate-limited.`,
+  );
+  block(
+    errors,
+    orderedCatalogRateLimit(source, scope, firstBodyMarker, firstWorkMarker),
+    `${label} must rate-limit before request body parsing, external calls, service-role catalog reads, or telemetry writes.`,
+  );
 }
 
-block(errors, Boolean(packageJson.scripts?.['phase9:live-catalog-rate-limit']), 'package.json is missing phase9:live-catalog-rate-limit.');
+block(
+  errors,
+  Boolean(packageJson.scripts?.['phase9:live-catalog-rate-limit']),
+  'package.json is missing phase9:live-catalog-rate-limit.',
+);
 block(
   errors,
   /PHASE9_RUN_LIVE_CATALOG_RATE_LIMIT/.test(liveCatalogRateLimit) &&
@@ -229,8 +404,16 @@ block(
 );
 
 const shelfDetail = read('apps/mobile/src/app/shelf/[id].tsx');
-block(errors, !/shelfProductId/.test(shelfDetail), 'catalog-report client context must not send local shelf product IDs.');
-block(errors, Boolean(packageJson.scripts?.['phase9:live-edge-auth']), 'package.json is missing phase9:live-edge-auth.');
+block(
+  errors,
+  !/shelfProductId/.test(shelfDetail),
+  'catalog-report client context must not send local shelf product IDs.',
+);
+block(
+  errors,
+  Boolean(packageJson.scripts?.['phase9:live-edge-auth']),
+  'package.json is missing phase9:live-edge-auth.',
+);
 block(
   errors,
   /PHASE9_RUN_LIVE_EDGE_AUTH/.test(liveEdgeAuth) &&
@@ -240,7 +423,8 @@ block(
 );
 block(
   errors,
-  /user Edge Functions reject missing JWT/.test(liveEdgeAuth) && /user Edge Functions reject invalid JWT/.test(liveEdgeAuth),
+  /user Edge Functions reject missing JWT/.test(liveEdgeAuth) &&
+    /user Edge Functions reject invalid JWT/.test(liveEdgeAuth),
   'Live Edge auth harness must cover missing and invalid JWT rejection.',
 );
 block(
@@ -283,14 +467,22 @@ block(
 
 const revenueCat = read('supabase/functions/revenuecat-webhook/index.ts');
 const revenueCatHandler = revenueCat.slice(revenueCat.indexOf('Deno.serve'));
-block(errors, /REVENUECAT_WEBHOOK_AUTH/.test(revenueCat), 'RevenueCat webhook must verify shared auth header.');
+block(
+  errors,
+  /REVENUECAT_WEBHOOK_AUTH/.test(revenueCat),
+  'RevenueCat webhook must verify shared auth header.',
+);
 block(
   errors,
   /constantTimeEqualString/.test(revenueCat) &&
     /constantTimeEqualString\(authHeader,\s*webhookAuth\)/.test(revenueCat),
   'RevenueCat webhook shared auth must use constant-time string comparison.',
 );
-block(errors, /REVENUECAT_WEBHOOK_SIGNING_SECRET/.test(revenueCat), 'RevenueCat webhook must support HMAC signing secret.');
+block(
+  errors,
+  /REVENUECAT_WEBHOOK_SIGNING_SECRET/.test(revenueCat),
+  'RevenueCat webhook must support HMAC signing secret.',
+);
 block(
   errors,
   /intEnv\('REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS',\s*300,\s*1,\s*3600\)/.test(revenueCat),
@@ -301,25 +493,55 @@ block(
   /intEnv\('REVENUECAT_WEBHOOK_MAX_BYTES',\s*65536,\s*1024,\s*262144\)/.test(revenueCat),
   'RevenueCat webhook body limit must be bounded and fail safe.',
 );
-block(errors, /readLimitedText/.test(revenueCat), 'RevenueCat webhook must use a bounded raw-body reader.');
-block(errors, /payload too large/.test(revenueCat) && /413/.test(revenueCat), 'RevenueCat webhook must reject oversized bodies with 413.');
-block(errors, /X-RevenueCat-Webhook-Signature/.test(revenueCat), 'RevenueCat webhook must read signature header.');
-block(errors, /stale_signature/.test(revenueCat), 'RevenueCat webhook must reject stale signatures.');
-block(errors, !/bad signature:\s*\$\{signature\.reason\}/.test(revenueCat), 'RevenueCat webhook must not return raw signature failure reasons.');
-block(errors, /return json\('bad signature', 401\)/.test(revenueCat), 'RevenueCat webhook must return a stable public signature failure.');
-block(errors, /req\.method !== 'POST'/.test(revenueCat), 'RevenueCat webhook must reject non-POST methods before verification work.');
+block(
+  errors,
+  /readLimitedText/.test(revenueCat),
+  'RevenueCat webhook must use a bounded raw-body reader.',
+);
+block(
+  errors,
+  /payload too large/.test(revenueCat) && /413/.test(revenueCat),
+  'RevenueCat webhook must reject oversized bodies with 413.',
+);
+block(
+  errors,
+  /X-RevenueCat-Webhook-Signature/.test(revenueCat),
+  'RevenueCat webhook must read signature header.',
+);
+block(
+  errors,
+  /stale_signature/.test(revenueCat),
+  'RevenueCat webhook must reject stale signatures.',
+);
+block(
+  errors,
+  !/bad signature:\s*\$\{signature\.reason\}/.test(revenueCat),
+  'RevenueCat webhook must not return raw signature failure reasons.',
+);
+block(
+  errors,
+  /return json\('bad signature', 401\)/.test(revenueCat),
+  'RevenueCat webhook must return a stable public signature failure.',
+);
+block(
+  errors,
+  /req\.method !== 'POST'/.test(revenueCat),
+  'RevenueCat webhook must reject non-POST methods before verification work.',
+);
 block(
   errors,
   revenueCatHandler.indexOf("req.method !== 'POST'") !== -1 &&
     revenueCatHandler.indexOf('readLimitedText') !== -1 &&
-    revenueCatHandler.indexOf("req.method !== 'POST'") < revenueCatHandler.indexOf('readLimitedText'),
+    revenueCatHandler.indexOf("req.method !== 'POST'") <
+      revenueCatHandler.indexOf('readLimitedText'),
   'RevenueCat webhook method check must run before reading the raw body.',
 );
 block(
   errors,
   revenueCatHandler.indexOf('webhook verification not configured') !== -1 &&
     revenueCatHandler.indexOf('readLimitedText') !== -1 &&
-    revenueCatHandler.indexOf('webhook verification not configured') < revenueCatHandler.indexOf('readLimitedText'),
+    revenueCatHandler.indexOf('webhook verification not configured') <
+      revenueCatHandler.indexOf('readLimitedText'),
   'RevenueCat webhook must fail closed for missing verification before reading the raw body.',
 );
 block(
@@ -336,15 +558,51 @@ block(
     /503/.test(revenueCat),
   'RevenueCat webhook must fail closed when no auth or signing secret is configured.',
 );
-block(errors, /sanitizeRevenueCatEvent/.test(revenueCat), 'RevenueCat webhook must sanitize provider events before JSON persistence.');
-block(errors, /payload:\s*\{\s*event:\s*sanitizedEvent\s*\}/.test(revenueCat), 'RevenueCat webhook must persist only sanitized subscription event payloads.');
-block(errors, /raw_status:\s*sanitizedEvent/.test(revenueCat), 'RevenueCat webhook must persist only sanitized entitlement raw_status snapshots.');
-block(errors, /error:\s*error\s*\?\s*'ENTITLEMENT_WRITE_FAILED'\s*:\s*null/.test(revenueCat), 'RevenueCat webhook must persist only stable entitlement write failure codes.');
-block(errors, !/error:\s*error\?\.message/.test(revenueCat), 'RevenueCat webhook must not persist raw entitlement write errors.');
-block(errors, !/payload:\s*body/.test(revenueCat), 'RevenueCat webhook must not persist the raw parsed webhook body.');
-block(errors, !/raw_status:\s*event/.test(revenueCat), 'RevenueCat webhook must not persist the raw provider event.');
-block(errors, /rc_event_id/.test(revenueCat) && /maybeSingle/.test(revenueCat), 'RevenueCat webhook must be idempotent by event id.');
-block(errors, Boolean(packageJson.scripts?.['phase9:live-revenuecat-webhook']), 'package.json is missing phase9:live-revenuecat-webhook.');
+block(
+  errors,
+  /sanitizeRevenueCatEvent/.test(revenueCat),
+  'RevenueCat webhook must sanitize provider events before JSON persistence.',
+);
+block(
+  errors,
+  /payload:\s*\{\s*event:\s*sanitizedEvent\s*\}/.test(revenueCat),
+  'RevenueCat webhook must persist only sanitized subscription event payloads.',
+);
+block(
+  errors,
+  /raw_status:\s*sanitizedEvent/.test(revenueCat),
+  'RevenueCat webhook must persist only sanitized entitlement raw_status snapshots.',
+);
+block(
+  errors,
+  /error:\s*error\s*\?\s*'ENTITLEMENT_WRITE_FAILED'\s*:\s*null/.test(revenueCat),
+  'RevenueCat webhook must persist only stable entitlement write failure codes.',
+);
+block(
+  errors,
+  !/error:\s*error\?\.message/.test(revenueCat),
+  'RevenueCat webhook must not persist raw entitlement write errors.',
+);
+block(
+  errors,
+  !/payload:\s*body/.test(revenueCat),
+  'RevenueCat webhook must not persist the raw parsed webhook body.',
+);
+block(
+  errors,
+  !/raw_status:\s*event/.test(revenueCat),
+  'RevenueCat webhook must not persist the raw provider event.',
+);
+block(
+  errors,
+  /rc_event_id/.test(revenueCat) && /maybeSingle/.test(revenueCat),
+  'RevenueCat webhook must be idempotent by event id.',
+);
+block(
+  errors,
+  Boolean(packageJson.scripts?.['phase9:live-revenuecat-webhook']),
+  'package.json is missing phase9:live-revenuecat-webhook.',
+);
 block(
   errors,
   /revenuecat-webhook rejects invalid shared auth/.test(liveRevenueCatWebhook) &&
@@ -355,8 +613,12 @@ block(
     /oversizedEventBody/.test(liveRevenueCatWebhook) &&
     /revenuecat-webhook deduplicates repeated event id/.test(liveRevenueCatWebhook) &&
     /revenuecat-webhook keeps entitlement active on renewal/.test(liveRevenueCatWebhook) &&
-    /revenuecat-webhook keeps access but stops renewal on cancellation/.test(liveRevenueCatWebhook) &&
-    /revenuecat-webhook keeps billing-issue access active while renewal can recover/.test(liveRevenueCatWebhook) &&
+    /revenuecat-webhook keeps access but stops renewal on cancellation/.test(
+      liveRevenueCatWebhook,
+    ) &&
+    /revenuecat-webhook keeps billing-issue access active while renewal can recover/.test(
+      liveRevenueCatWebhook,
+    ) &&
     /revenuecat-webhook deactivates entitlement on expiration/.test(liveRevenueCatWebhook) &&
     /revenuecat-webhook revokes entitlement on refund/.test(liveRevenueCatWebhook) &&
     /revenuecat-webhook does not persist raw provider payload fields/.test(liveRevenueCatWebhook) &&
@@ -371,27 +633,61 @@ const growth = read('supabase/functions/growth-event/index.ts');
 block(errors, /allowedEvents/.test(growth), 'growth-event must allowlist event names.');
 block(errors, /allowedKeys/.test(growth), 'growth-event must allowlist payload keys.');
 block(errors, /sensitive/.test(growth), 'growth-event must drop sensitive payloads.');
-block(errors, /readEdgeAppEnvironment/.test(growth), 'growth-event must use normalized app env parsing.');
 block(
   errors,
-  /booleanEnv\('PUBLIC_FORMS_TURNSTILE_REQUIRED',\s*\{\s*invalidValue:\s*true\s*\}\)/.test(
-    growth,
-  ),
+  /readEdgeAppEnvironment/.test(growth),
+  'growth-event must use normalized app env parsing.',
+);
+block(
+  errors,
+  /booleanEnv\('PUBLIC_FORMS_TURNSTILE_REQUIRED',\s*\{\s*invalidValue:\s*true\s*\}\)/.test(growth),
   'growth-event must require Turnstile on malformed PUBLIC_FORMS_TURNSTILE_REQUIRED values.',
 );
-block(errors, /verifyTurnstile/.test(growth), 'growth-event must verify Turnstile for production abuse control.');
-block(errors, /turnstile not configured/.test(growth), 'growth-event must fail closed when production Turnstile is not configured.');
-block(errors, /consume_edge_rate_limit/.test(growth), 'growth-event must use the shared Postgres rate-limit RPC.');
-block(errors, /hmacSha256Hex/.test(growth) && /keyHash/.test(growth) && /serviceKey/.test(growth), 'growth-event must keyed-hash request identity before rate-limit storage.');
-block(errors, /429/.test(growth) && /rate limited/.test(growth), 'growth-event must return 429 when rate-limited.');
-block(errors, orderedPublicFormChecks(growth, 'growth-event'), 'growth-event must rate-limit before external Turnstile verification.');
-block(errors, publicFormBodyLimitChecks(growth, 'growth-event'), 'growth-event must reject oversized public-form bodies before rate-limit/body parsing work.');
+block(
+  errors,
+  /verifyTurnstile/.test(growth),
+  'growth-event must verify Turnstile for production abuse control.',
+);
+block(
+  errors,
+  /turnstile not configured/.test(growth),
+  'growth-event must fail closed when production Turnstile is not configured.',
+);
+block(
+  errors,
+  /consume_edge_rate_limit/.test(growth),
+  'growth-event must use the shared Postgres rate-limit RPC.',
+);
+block(
+  errors,
+  /hmacSha256Hex/.test(growth) && /keyHash/.test(growth) && /serviceKey/.test(growth),
+  'growth-event must keyed-hash request identity before rate-limit storage.',
+);
+block(
+  errors,
+  /429/.test(growth) && /rate limited/.test(growth),
+  'growth-event must return 429 when rate-limited.',
+);
+block(
+  errors,
+  orderedPublicFormChecks(growth, 'growth-event'),
+  'growth-event must rate-limit before external Turnstile verification.',
+);
+block(
+  errors,
+  publicFormBodyLimitChecks(growth, 'growth-event'),
+  'growth-event must reject oversized public-form bodies before rate-limit/body parsing work.',
+);
 
 const waitlist = read('supabase/functions/waitlist/index.ts');
 block(errors, /invalid email/.test(waitlist), 'waitlist must validate email.');
 block(errors, /allowedAttributionKeys/.test(waitlist), 'waitlist attribution must be allowlisted.');
 block(errors, /sanitizeAttribution/.test(waitlist), 'waitlist attribution must be sanitized.');
-block(errors, /readEdgeAppEnvironment/.test(waitlist), 'waitlist must use normalized app env parsing.');
+block(
+  errors,
+  /readEdgeAppEnvironment/.test(waitlist),
+  'waitlist must use normalized app env parsing.',
+);
 block(
   errors,
   /booleanEnv\('PUBLIC_FORMS_TURNSTILE_REQUIRED',\s*\{\s*invalidValue:\s*true\s*\}\)/.test(
@@ -399,14 +695,46 @@ block(
   ),
   'waitlist must require Turnstile on malformed PUBLIC_FORMS_TURNSTILE_REQUIRED values.',
 );
-block(errors, /verifyTurnstile/.test(waitlist), 'waitlist must verify Turnstile for production abuse control.');
-block(errors, /turnstile not configured/.test(waitlist), 'waitlist must fail closed when production Turnstile is not configured.');
-block(errors, /consume_edge_rate_limit/.test(waitlist), 'waitlist must use the shared Postgres rate-limit RPC.');
-block(errors, /hmacSha256Hex/.test(waitlist) && /keyHash/.test(waitlist) && /serviceKey/.test(waitlist), 'waitlist must keyed-hash request identity before rate-limit storage.');
-block(errors, /429/.test(waitlist) && /rate limited/.test(waitlist), 'waitlist must return 429 when rate-limited.');
-block(errors, orderedPublicFormChecks(waitlist, 'waitlist'), 'waitlist must rate-limit before external Turnstile verification.');
-block(errors, publicFormBodyLimitChecks(waitlist, 'waitlist'), 'waitlist must reject oversized public-form bodies before rate-limit/body parsing work.');
-block(errors, Boolean(packageJson.scripts?.['phase9:live-public-forms']), 'package.json is missing phase9:live-public-forms.');
+block(
+  errors,
+  /verifyTurnstile/.test(waitlist),
+  'waitlist must verify Turnstile for production abuse control.',
+);
+block(
+  errors,
+  /turnstile not configured/.test(waitlist),
+  'waitlist must fail closed when production Turnstile is not configured.',
+);
+block(
+  errors,
+  /consume_edge_rate_limit/.test(waitlist),
+  'waitlist must use the shared Postgres rate-limit RPC.',
+);
+block(
+  errors,
+  /hmacSha256Hex/.test(waitlist) && /keyHash/.test(waitlist) && /serviceKey/.test(waitlist),
+  'waitlist must keyed-hash request identity before rate-limit storage.',
+);
+block(
+  errors,
+  /429/.test(waitlist) && /rate limited/.test(waitlist),
+  'waitlist must return 429 when rate-limited.',
+);
+block(
+  errors,
+  orderedPublicFormChecks(waitlist, 'waitlist'),
+  'waitlist must rate-limit before external Turnstile verification.',
+);
+block(
+  errors,
+  publicFormBodyLimitChecks(waitlist, 'waitlist'),
+  'waitlist must reject oversized public-form bodies before rate-limit/body parsing work.',
+);
+block(
+  errors,
+  Boolean(packageJson.scripts?.['phase9:live-public-forms']),
+  'package.json is missing phase9:live-public-forms.',
+);
 block(
   errors,
   /waitlist rejects missing Turnstile token/.test(livePublicForms) &&
@@ -431,24 +759,86 @@ block(
 );
 
 const rateLimitMigration = read('supabase/migrations/20260705000029_phase9_edge_rate_limits.sql');
-block(errors, /create table if not exists public\.edge_rate_limits/.test(rateLimitMigration), 'edge rate-limit migration must create edge_rate_limits.');
-block(errors, /alter table public\.edge_rate_limits enable row level security/.test(rateLimitMigration), 'edge_rate_limits must have RLS enabled.');
-block(errors, /create or replace function public\.consume_edge_rate_limit/.test(rateLimitMigration), 'edge rate-limit migration must create consume_edge_rate_limit.');
-block(errors, /security definer/i.test(rateLimitMigration), 'consume_edge_rate_limit must be SECURITY DEFINER for service-role RPC writes.');
-block(errors, /set search_path = ''/.test(rateLimitMigration), 'consume_edge_rate_limit must pin an empty search_path.');
-block(errors, /revoke all on function public\.consume_edge_rate_limit/.test(rateLimitMigration), 'consume_edge_rate_limit must be revoked from public client roles.');
-block(errors, /grant execute on function public\.consume_edge_rate_limit\(text, text, integer, integer\) to service_role/.test(rateLimitMigration), 'consume_edge_rate_limit must only be executable by service_role.');
-block(errors, /Stores only keyed-hashed request keys/.test(rateLimitMigration), 'edge rate-limit migration must document that raw IPs/user agents are not persisted.');
+block(
+  errors,
+  /create table if not exists public\.edge_rate_limits/.test(rateLimitMigration),
+  'edge rate-limit migration must create edge_rate_limits.',
+);
+block(
+  errors,
+  /alter table public\.edge_rate_limits enable row level security/.test(rateLimitMigration),
+  'edge_rate_limits must have RLS enabled.',
+);
+block(
+  errors,
+  /create or replace function public\.consume_edge_rate_limit/.test(rateLimitMigration),
+  'edge rate-limit migration must create consume_edge_rate_limit.',
+);
+block(
+  errors,
+  /security definer/i.test(rateLimitMigration),
+  'consume_edge_rate_limit must be SECURITY DEFINER for service-role RPC writes.',
+);
+block(
+  errors,
+  /set search_path = ''/.test(rateLimitMigration),
+  'consume_edge_rate_limit must pin an empty search_path.',
+);
+block(
+  errors,
+  /revoke all on function public\.consume_edge_rate_limit/.test(rateLimitMigration),
+  'consume_edge_rate_limit must be revoked from public client roles.',
+);
+block(
+  errors,
+  /grant execute on function public\.consume_edge_rate_limit\(text, text, integer, integer\) to service_role/.test(
+    rateLimitMigration,
+  ),
+  'consume_edge_rate_limit must only be executable by service_role.',
+);
+block(
+  errors,
+  /Stores only keyed-hashed request keys/.test(rateLimitMigration),
+  'edge rate-limit migration must document that raw IPs/user agents are not persisted.',
+);
 
 const poll = read('supabase/functions/order-report-poll/index.ts');
-block(errors, /SHOPMY_BRAND_API_KEY/.test(poll), 'order-report-poll must require ShopMy brand API key before polling.');
+block(
+  errors,
+  /SHOPMY_BRAND_API_KEY/.test(poll),
+  'order-report-poll must require ShopMy brand API key before polling.',
+);
 block(errors, /no brand API key/.test(poll), 'order-report-poll must no-op without ShopMy key.');
-block(errors, /ORDER_REPORT_POLL_SECRET/.test(poll), 'order-report-poll must require a scheduler secret before activation.');
-block(errors, /req\.method !== 'POST'/.test(poll) && /method_not_allowed/.test(poll), 'order-report-poll must reject non-POST methods.');
-block(errors, /scheduler_secret_not_configured/.test(poll), 'order-report-poll must fail closed when ShopMy key exists but scheduler secret is missing.');
-block(errors, /authorizedSchedulerRequest/.test(poll), 'order-report-poll must validate scheduler authorization before polling.');
-block(errors, /Authorization/.test(poll) && /x-scheduler-secret/.test(poll), 'order-report-poll must support explicit scheduler secret headers.');
-block(errors, /constantTimeEqual/.test(poll), 'order-report-poll must compare scheduler secrets without direct string equality.');
+block(
+  errors,
+  /ORDER_REPORT_POLL_SECRET/.test(poll),
+  'order-report-poll must require a scheduler secret before activation.',
+);
+block(
+  errors,
+  /req\.method !== 'POST'/.test(poll) && /method_not_allowed/.test(poll),
+  'order-report-poll must reject non-POST methods.',
+);
+block(
+  errors,
+  /scheduler_secret_not_configured/.test(poll),
+  'order-report-poll must fail closed when ShopMy key exists but scheduler secret is missing.',
+);
+block(
+  errors,
+  /authorizedSchedulerRequest/.test(poll),
+  'order-report-poll must validate scheduler authorization before polling.',
+);
+block(
+  errors,
+  /Authorization/.test(poll) && /x-scheduler-secret/.test(poll),
+  'order-report-poll must support explicit scheduler secret headers.',
+);
+block(
+  errors,
+  /constantTimeEqual/.test(poll),
+  'order-report-poll must compare scheduler secrets without direct string equality.',
+);
 block(
   errors,
   poll.indexOf("req.method !== 'POST'") !== -1 &&
@@ -460,11 +850,20 @@ block(
   errors,
   poll.indexOf('authorizedSchedulerRequest(req)') !== -1 &&
     poll.indexOf('fetchWithTimeout(ORDER_REPORT_URL') !== -1 &&
-    poll.indexOf('authorizedSchedulerRequest(req)') < poll.indexOf('fetchWithTimeout(ORDER_REPORT_URL'),
+    poll.indexOf('authorizedSchedulerRequest(req)') <
+      poll.indexOf('fetchWithTimeout(ORDER_REPORT_URL'),
   'order-report-poll scheduler authorization must run before the ShopMy API call.',
 );
-warn(warnings, !/INERT STUB/i.test(poll), 'order-report-poll remains inert until ShopMy account model and API key are approved.');
-block(errors, Boolean(packageJson.scripts?.['phase9:live-order-report-poll']), 'package.json is missing phase9:live-order-report-poll.');
+warn(
+  warnings,
+  !/INERT STUB/i.test(poll),
+  'order-report-poll remains inert until ShopMy account model and API key are approved.',
+);
+block(
+  errors,
+  Boolean(packageJson.scripts?.['phase9:live-order-report-poll']),
+  'package.json is missing phase9:live-order-report-poll.',
+);
 block(
   errors,
   /PHASE9_RUN_LIVE_ORDER_REPORT_POLL/.test(liveOrderReportPoll) &&
@@ -475,8 +874,12 @@ block(
 block(
   errors,
   /order-report-poll rejects non-POST before service-role work/.test(liveOrderReportPoll) &&
-    /order-report-poll missing scheduler secret does not write attributions/.test(liveOrderReportPoll) &&
-    /order-report-poll wrong scheduler secret does not write attributions/.test(liveOrderReportPoll) &&
+    /order-report-poll missing scheduler secret does not write attributions/.test(
+      liveOrderReportPoll,
+    ) &&
+    /order-report-poll wrong scheduler secret does not write attributions/.test(
+      liveOrderReportPoll,
+    ) &&
     /order-report-poll evidence avoids authorized ShopMy polling/.test(liveOrderReportPoll),
   'Live order-report-poll harness must prove method rejection and missing/wrong scheduler secret no-write behavior.',
 );
@@ -488,6 +891,10 @@ block(
   'Live order-report-poll harness must not read/send the real scheduler secret and must support activated-env expectations.',
 );
 
-warn(warnings, evidenceFlagEnabled(process.env.PHASE9_EDGE_AUTH_PASS), 'Missing live Edge auth negative-test evidence: PHASE9_EDGE_AUTH_PASS=true.');
+warn(
+  warnings,
+  evidenceFlagEnabled(process.env.PHASE9_EDGE_AUTH_PASS),
+  'Missing live Edge auth negative-test evidence: PHASE9_EDGE_AUTH_PASS=true.',
+);
 
 printResult('Phase 9 Edge auth smoke', errors, warnings);

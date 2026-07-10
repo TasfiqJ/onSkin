@@ -54,7 +54,14 @@ describe('the soft score is weighted, explainable, and merit-only', () => {
   it('exposes exactly the SIX merit inputs. No seventh (commercial) input', () => {
     const r = fitScore(mineralSpf, ctx());
     expect(Object.keys(r.breakdown).sort()).toEqual(
-      ['catalogQuality', 'evidence', 'needPriority', 'preferenceMatch', 'profileMatch', 'simplicity'].sort(),
+      [
+        'catalogQuality',
+        'evidence',
+        'needPriority',
+        'preferenceMatch',
+        'profileMatch',
+        'simplicity',
+      ].sort(),
     );
   });
 
@@ -81,9 +88,14 @@ describe('the soft score is weighted, explainable, and merit-only', () => {
   });
 
   it('rewards a fragrance-free type when the user set a fragrance-free preference', () => {
-    const withPref = fitScore(mineralSpf, ctx({ preferences: { values: ['fragrance_free'], budget: null, formats: [] } }));
+    const withPref = fitScore(
+      mineralSpf,
+      ctx({ preferences: { values: ['fragrance_free'], budget: null, formats: [] } }),
+    );
     const without = fitScore(mineralSpf, ctx());
-    expect(withPref.breakdown.preferenceMatch).toBeGreaterThanOrEqual(without.breakdown.preferenceMatch);
+    expect(withPref.breakdown.preferenceMatch).toBeGreaterThanOrEqual(
+      without.breakdown.preferenceMatch,
+    );
   });
 });
 

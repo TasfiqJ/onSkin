@@ -16,7 +16,10 @@ export default function WelcomeBackScreen() {
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-1 justify-center">
-        <View className="mb-6 h-[60px] w-[60px] items-center justify-center rounded-full" style={{ backgroundColor: colors.sageTint }}>
+        <View
+          className="mb-6 h-[60px] w-[60px] items-center justify-center rounded-full"
+          style={{ backgroundColor: colors.sageTint }}
+        >
           <Text style={{ color: colors.sage, fontSize: 26 }}>✓</Text>
         </View>
         <Text variant="display" style={{ fontSize: 44, lineHeight: 47 }}>
@@ -27,9 +30,18 @@ export default function WelcomeBackScreen() {
         </Text>
 
         {frozen ? (
-          <View className="mt-7 flex-row items-center gap-3.5 rounded-card bg-paper-raised p-5" style={{ borderWidth: 1, borderColor: colors.hairline }}>
-            <View className="h-[38px] w-[38px] items-center justify-center rounded-full" style={{ backgroundColor: colors.sageTint }}>
-              <View className="h-4 w-3.5 rounded-[3px] border-2" style={{ borderColor: colors.sage }} />
+          <View
+            className="mt-7 flex-row items-center gap-3.5 rounded-card bg-paper-raised p-5"
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
+            <View
+              className="h-[38px] w-[38px] items-center justify-center rounded-full"
+              style={{ backgroundColor: colors.sageTint }}
+            >
+              <View
+                className="h-4 w-3.5 rounded-[3px] border-2"
+                style={{ borderColor: colors.sage }}
+              />
             </View>
             <View className="flex-1">
               <Text variant="body" className="font-sans-bold" style={{ color: colors.sageDeep }}>

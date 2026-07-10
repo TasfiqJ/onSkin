@@ -4,7 +4,10 @@ import { Pressable, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { SOFT_ASK } from '@/features/notifications/copy';
-import { acceptRoutineReminderSoftAsk, declineRoutineReminderSoftAsk } from '@/features/notifications/onboarding';
+import {
+  acceptRoutineReminderSoftAsk,
+  declineRoutineReminderSoftAsk,
+} from '@/features/notifications/onboarding';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -15,7 +18,10 @@ import { colors } from '@/theme/tokens';
 function CheckRow({ label }: { label: string }) {
   return (
     <View className="flex-row items-center gap-3 py-1">
-      <View className="h-5 w-5 items-center justify-center rounded-full" style={{ backgroundColor: colors.sageTint }}>
+      <View
+        className="h-5 w-5 items-center justify-center rounded-full"
+        style={{ backgroundColor: colors.sageTint }}
+      >
         <Text style={{ color: colors.sage, fontSize: 11 }}>✓</Text>
       </View>
       <Text variant="bodySm" style={{ color: colors.inkSoft }}>
@@ -57,7 +63,10 @@ export default function NotificationsScreen() {
   return (
     <Screen>
       <View className="flex-1 justify-center">
-        <View className="mb-6 h-14 w-14 items-center justify-center rounded-[18px]" style={{ backgroundColor: colors.clayTint }}>
+        <View
+          className="mb-6 h-14 w-14 items-center justify-center rounded-[18px]"
+          style={{ backgroundColor: colors.clayTint }}
+        >
           <View className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: colors.clay }} />
         </View>
         <Text variant="title">{SOFT_ASK.title}</Text>
@@ -77,7 +86,8 @@ export default function NotificationsScreen() {
           accessibilityState={{ disabled: busy }}
           className="mt-3 items-center py-3"
           disabled={busy}
-          onPress={skip}>
+          onPress={skip}
+        >
           <Text variant="body" tone="muted" className="font-sans-medium">
             {SOFT_ASK.no}
           </Text>

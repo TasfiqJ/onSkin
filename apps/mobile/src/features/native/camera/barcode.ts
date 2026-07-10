@@ -40,7 +40,10 @@ export function ean8ChecksumIsValid(value: string): boolean {
   return (10 - (sum % 10)) % 10 === expected;
 }
 
-export function normalizeScannedBarcode(rawData: string, rawType?: string): NormalizedBarcode | null {
+export function normalizeScannedBarcode(
+  rawData: string,
+  rawType?: string,
+): NormalizedBarcode | null {
   const type = (rawType ?? 'unknown') as NormalizedBarcode['type'];
   const numeric = digitsOnly(rawData);
   if (!numeric) return null;

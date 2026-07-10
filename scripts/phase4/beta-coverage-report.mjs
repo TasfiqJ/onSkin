@@ -14,11 +14,15 @@ const strict = process.argv.includes('--strict');
 const positional = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
 const inputPath = resolve(
   root,
-  process.env.PHASE4_BETA_COVERAGE_INPUT ?? positional[0] ?? 'docs/phase-4/beta-coverage-input.json',
+  process.env.PHASE4_BETA_COVERAGE_INPUT ??
+    positional[0] ??
+    'docs/phase-4/beta-coverage-input.json',
 );
 const jsonOutputPath = resolve(
   root,
-  process.env.PHASE4_BETA_COVERAGE_REPORT ?? positional[1] ?? 'docs/phase-4/generated/beta-coverage-report.json',
+  process.env.PHASE4_BETA_COVERAGE_REPORT ??
+    positional[1] ??
+    'docs/phase-4/generated/beta-coverage-report.json',
 );
 const mdOutputPath = jsonOutputPath.replace(/\.json$/i, '.md');
 const reportOutputPaths = [jsonOutputPath, mdOutputPath].map((path) =>
@@ -59,7 +63,8 @@ const sourceHashPaths = [
 ];
 
 const PLACEHOLDER_TEXT = /^(?:tbd|todo|pending|sample|fixture|example|test|unknown|n\/a)$/i;
-const PLACEHOLDER_FRAGMENT = /example\.com|localhost|\.local|\.test|\.invalid|fixture|sample|placeholder|replace|pending|tbd/i;
+const PLACEHOLDER_FRAGMENT =
+  /example\.com|localhost|\.local|\.test|\.invalid|fixture|sample|placeholder|replace|pending|tbd/i;
 
 function repoRelative(path) {
   const candidate = relative(root, path).replace(/\\/g, '/');
@@ -96,7 +101,9 @@ function numberValue(value) {
 
 function booleanValue(value) {
   if (typeof value === 'boolean') return value;
-  const normalized = String(value ?? '').trim().toLowerCase();
+  const normalized = String(value ?? '')
+    .trim()
+    .toLowerCase();
   if (normalized === 'true') return true;
   if (normalized === 'false') return false;
   return null;
@@ -229,24 +236,38 @@ const sourceExportHash = cleanText(evidence.sourceExportHash);
 
 if (input) {
   if (realBetaData !== true) {
-    evidenceBlockers.push('Evidence must explicitly set evidence.realBetaData=true for real beta exports.');
+    evidenceBlockers.push(
+      'Evidence must explicitly set evidence.realBetaData=true for real beta exports.',
+    );
   }
   if (!dashboardUrl) evidenceBlockers.push('Missing real production catalog/beta dashboard URL.');
   if (!supportDashboardUrl) evidenceBlockers.push('Missing real production support dashboard URL.');
-  if (!analyticsDashboardUrl) evidenceBlockers.push('Missing real production analytics dashboard URL.');
+  if (!analyticsDashboardUrl)
+    evidenceBlockers.push('Missing real production analytics dashboard URL.');
   if (!sourceExportHash) evidenceBlockers.push('Missing non-placeholder source export hash.');
   if (!signedOffBy) evidenceBlockers.push('Missing real named beta coverage signoff.');
 
   if (!Number.isFinite(completedUsers)) evidenceBlockers.push('Missing cohort.completedUsers.');
-  else if (completedUsers < 50) evidenceBlockers.push('Closed beta completed users must be at least 50.');
+  else if (completedUsers < 50)
+    evidenceBlockers.push('Closed beta completed users must be at least 50.');
   else if (completedUsers > 100) {
-    warnings.push('Closed beta completed users exceed the 50-100 target; segment the report by target cohort.');
+    warnings.push(
+      'Closed beta completed users exceed the 50-100 target; segment the report by target cohort.',
+    );
   }
 
-  if (Number.isFinite(invitedUsers) && Number.isFinite(completedUsers) && completedUsers > invitedUsers) {
+  if (
+    Number.isFinite(invitedUsers) &&
+    Number.isFinite(completedUsers) &&
+    completedUsers > invitedUsers
+  ) {
     evidenceBlockers.push('Completed beta users cannot exceed invited users.');
   }
-  if (Number.isFinite(targetUsers) && Number.isFinite(completedUsers) && completedUsers > targetUsers) {
+  if (
+    Number.isFinite(targetUsers) &&
+    Number.isFinite(completedUsers) &&
+    completedUsers > targetUsers
+  ) {
     evidenceBlockers.push('Completed beta users cannot exceed real target users.');
   }
 
@@ -258,18 +279,22 @@ if (input) {
 
   if (!Number.isFinite(productsAdded)) evidenceBlockers.push('Missing catalog.productsAdded.');
   else if (Number.isFinite(completedUsers) && productsAdded < completedUsers * 3) {
-    evidenceBlockers.push('Catalog products added must average at least 3 per completed beta user.');
+    evidenceBlockers.push(
+      'Catalog products added must average at least 3 per completed beta user.',
+    );
   }
 
   for (const [label, total, matched] of [
     ['barcode lookup', barcodeTotal, barcodeMatched],
     ['search', searchTotal, searchMatched],
   ]) {
-    if (!Number.isFinite(total) || total <= 0) evidenceBlockers.push(`Beta must exercise ${label}.`);
+    if (!Number.isFinite(total) || total <= 0)
+      evidenceBlockers.push(`Beta must exercise ${label}.`);
     if (!Number.isFinite(matched)) evidenceBlockers.push(`Missing matched count for ${label}.`);
   }
 
-  if (!Number.isFinite(ocrAttempts) || ocrAttempts <= 0) evidenceBlockers.push('Beta must exercise OCR/label parsing.');
+  if (!Number.isFinite(ocrAttempts) || ocrAttempts <= 0)
+    evidenceBlockers.push('Beta must exercise OCR/label parsing.');
   if (!Number.isFinite(ocrParsed)) evidenceBlockers.push('Missing OCR parsed count.');
   if (!Number.isFinite(manualStarted) || manualStarted <= 0) {
     evidenceBlockers.push('Beta must exercise manual fallback start.');
@@ -277,7 +302,11 @@ if (input) {
   if (!Number.isFinite(manualSaved) || manualSaved <= 0) {
     evidenceBlockers.push('Beta must exercise manual fallback save.');
   }
-  if (Number.isFinite(manualStarted) && Number.isFinite(manualSaved) && manualSaved > manualStarted) {
+  if (
+    Number.isFinite(manualStarted) &&
+    Number.isFinite(manualSaved) &&
+    manualSaved > manualStarted
+  ) {
     evidenceBlockers.push('Manual fallback saved count cannot exceed started count.');
   }
 
@@ -285,15 +314,21 @@ if (input) {
   if (wrongMatchRate !== null && wrongMatchRate > 0.02) {
     evidenceBlockers.push('Wrong-match report rate exceeds the 2% Phase 4 alert threshold.');
   }
-  if (wrongMatchOpen > 0) evidenceBlockers.push('Open wrong-match reports must be resolved before beta coverage can pass.');
+  if (wrongMatchOpen > 0)
+    evidenceBlockers.push(
+      'Open wrong-match reports must be resolved before beta coverage can pass.',
+    );
   if (wrongMatchTriaged > 0 && lowerThanUsableUsed !== 0) {
-    evidenceBlockers.push('Triaged correction reports require explicit proof that affected products are excluded from recommendations.');
+    evidenceBlockers.push(
+      'Triaged correction reports require explicit proof that affected products are excluded from recommendations.',
+    );
   }
   if (wrongMatchTotal > 0 && topWrongMatches.length === 0) {
     evidenceBlockers.push('Wrong-match reports exist but topWrongMatches is empty.');
   }
 
-  if (!Number.isFinite(unknownTokenRate)) evidenceBlockers.push('Missing parser unknown-token rate.');
+  if (!Number.isFinite(unknownTokenRate))
+    evidenceBlockers.push('Missing parser unknown-token rate.');
   else if (unknownTokenRate > 0.15) {
     evidenceBlockers.push('Parser unknown-token rate exceeds the 15% Phase 4 alert threshold.');
   }
@@ -302,12 +337,17 @@ if (input) {
   }
 
   if (!Number.isFinite(lowerThanUsableUsed)) {
-    evidenceBlockers.push('Missing recommendationEligibility.lowerThanUsableUsedInRecommendations.');
+    evidenceBlockers.push(
+      'Missing recommendationEligibility.lowerThanUsableUsedInRecommendations.',
+    );
   } else if (lowerThanUsableUsed > 0) {
-    evidenceBlockers.push('Products below usable quality must not be used in product-specific recommendations.');
+    evidenceBlockers.push(
+      'Products below usable quality must not be used in product-specific recommendations.',
+    );
   }
 
-  if (categoryCoverage.length === 0) evidenceBlockers.push('Missing catalog.categoryCoverage rows.');
+  if (categoryCoverage.length === 0)
+    evidenceBlockers.push('Missing catalog.categoryCoverage rows.');
   for (const row of categoryCoverage) {
     const category = cleanText(row?.category) ?? 'unknown';
     const added = numberValue(row?.added);
@@ -315,21 +355,26 @@ if (input) {
     if (!Number.isFinite(added) || !Number.isFinite(matched)) {
       evidenceBlockers.push(`Category ${category} is missing added/matched counts.`);
     } else if (added >= 5 && matched === 0) {
-      evidenceBlockers.push(`Category ${category} has a beta catalog dead zone: 0 matches for ${added} added products.`);
+      evidenceBlockers.push(
+        `Category ${category} has a beta catalog dead zone: 0 matches for ${added} added products.`,
+      );
     }
   }
 
-  if (topNoMatches.length === 0) evidenceBlockers.push('Missing top no-match barcode/product list.');
+  if (topNoMatches.length === 0)
+    evidenceBlockers.push('Missing top no-match barcode/product list.');
   if (expectedRecommendationProducts.length === 0) {
     evidenceBlockers.push('Missing products users expected recommendations for.');
   }
 
   if (!Number.isFinite(supportTickets)) evidenceBlockers.push('Missing support.totalTickets.');
-  if (!Number.isFinite(catalogSupportTickets)) evidenceBlockers.push('Missing support.catalogTickets.');
+  if (!Number.isFinite(catalogSupportTickets))
+    evidenceBlockers.push('Missing support.catalogTickets.');
   if (!Number.isFinite(trustAccuracyTickets)) {
     evidenceBlockers.push('Missing support trust/accuracy/source-confusion ticket count.');
   }
-  if (openP0P1SupportTickets > 0) evidenceBlockers.push('Open P0/P1 support tickets block beta coverage.');
+  if (openP0P1SupportTickets > 0)
+    evidenceBlockers.push('Open P0/P1 support tickets block beta coverage.');
 }
 
 const sourceHashes = sourceHashPaths.map(hashRepoFile);
@@ -420,17 +465,72 @@ mkdirSync(dirname(jsonOutputPath), { recursive: true });
 writeFileSync(jsonOutputPath, `${JSON.stringify(report, null, 2)}\n`);
 
 const metricRows = [
-  metricRow('Completed beta users', count(completedUsers), '50-100 real target users', completedUsers >= 50 ? 'ok' : 'blocked'),
-  metricRow('Users with 3+ products', count(usersAddedThreePlus), 'all completed users', usersAddedThreePlusRate === 1 ? 'ok' : 'blocked'),
-  metricRow('Average products per completed user', averageProductsPerCompleted === null ? 'n/a' : averageProductsPerCompleted.toFixed(2), '>= 3.00', averageProductsPerCompleted >= 3 ? 'ok' : 'blocked'),
-  metricRow('Barcode match rate', percent(barcodeMatchRate), 'exercised and trended by category', barcodeTotal > 0 ? 'tracked' : 'blocked'),
-  metricRow('Search success rate', percent(searchSuccessRate), 'no major category dead zone', searchTotal > 0 ? 'tracked' : 'blocked'),
-  metricRow('OCR parse rate', percent(ocrParseRate), 'low-confidence routed to review', ocrAttempts > 0 ? 'tracked' : 'blocked'),
-  metricRow('Manual fallback completion', percent(manualCompletionRate), 'fallback saves exercised', manualSaved > 0 ? 'tracked' : 'blocked'),
-  metricRow('Wrong-match report rate', percent(wrongMatchRate), '<= 2%', wrongMatchRate !== null && wrongMatchRate <= 0.02 ? 'ok' : 'blocked'),
-  metricRow('Parser unknown-token rate', percent(unknownTokenRate), '<= 15%', unknownTokenRate !== null && unknownTokenRate <= 0.15 ? 'ok' : 'blocked'),
-  metricRow('Below-usable products used in recs', count(lowerThanUsableUsed), '0', lowerThanUsableUsed === 0 ? 'ok' : 'blocked'),
-  metricRow('Open P0/P1 support tickets', count(openP0P1SupportTickets), '0', openP0P1SupportTickets === 0 ? 'ok' : 'blocked'),
+  metricRow(
+    'Completed beta users',
+    count(completedUsers),
+    '50-100 real target users',
+    completedUsers >= 50 ? 'ok' : 'blocked',
+  ),
+  metricRow(
+    'Users with 3+ products',
+    count(usersAddedThreePlus),
+    'all completed users',
+    usersAddedThreePlusRate === 1 ? 'ok' : 'blocked',
+  ),
+  metricRow(
+    'Average products per completed user',
+    averageProductsPerCompleted === null ? 'n/a' : averageProductsPerCompleted.toFixed(2),
+    '>= 3.00',
+    averageProductsPerCompleted >= 3 ? 'ok' : 'blocked',
+  ),
+  metricRow(
+    'Barcode match rate',
+    percent(barcodeMatchRate),
+    'exercised and trended by category',
+    barcodeTotal > 0 ? 'tracked' : 'blocked',
+  ),
+  metricRow(
+    'Search success rate',
+    percent(searchSuccessRate),
+    'no major category dead zone',
+    searchTotal > 0 ? 'tracked' : 'blocked',
+  ),
+  metricRow(
+    'OCR parse rate',
+    percent(ocrParseRate),
+    'low-confidence routed to review',
+    ocrAttempts > 0 ? 'tracked' : 'blocked',
+  ),
+  metricRow(
+    'Manual fallback completion',
+    percent(manualCompletionRate),
+    'fallback saves exercised',
+    manualSaved > 0 ? 'tracked' : 'blocked',
+  ),
+  metricRow(
+    'Wrong-match report rate',
+    percent(wrongMatchRate),
+    '<= 2%',
+    wrongMatchRate !== null && wrongMatchRate <= 0.02 ? 'ok' : 'blocked',
+  ),
+  metricRow(
+    'Parser unknown-token rate',
+    percent(unknownTokenRate),
+    '<= 15%',
+    unknownTokenRate !== null && unknownTokenRate <= 0.15 ? 'ok' : 'blocked',
+  ),
+  metricRow(
+    'Below-usable products used in recs',
+    count(lowerThanUsableUsed),
+    '0',
+    lowerThanUsableUsed === 0 ? 'ok' : 'blocked',
+  ),
+  metricRow(
+    'Open P0/P1 support tickets',
+    count(openP0P1SupportTickets),
+    '0',
+    openP0P1SupportTickets === 0 ? 'ok' : 'blocked',
+  ),
 ].join('\n');
 
 const sourceRows = sourceHashes
@@ -440,9 +540,7 @@ const sourceRows = sourceHashes
       : `| ${sourceHash.path} | missing |  |  |`,
   )
   .join('\n');
-const dirtyDetails = gitStatus.length
-  ? `\nDirty paths:\n\n\`\`\`\n${gitStatus}\n\`\`\`\n\n`
-  : '\n';
+const dirtyDetails = gitStatus.length ? `\nDirty paths:\n\n\`\`\`\n${gitStatus}\n\`\`\`\n\n` : '\n';
 
 writeFileSync(
   mdOutputPath,
@@ -509,7 +607,9 @@ writeFileSync(
 );
 
 console.log(`Wrote ${repoRelative(jsonOutputPath)}`);
-console.log(`Status ${report.status}; blockers ${codeErrors.length + evidenceBlockers.length}; warnings ${warnings.length}.`);
+console.log(
+  `Status ${report.status}; blockers ${codeErrors.length + evidenceBlockers.length}; warnings ${warnings.length}.`,
+);
 
 if (codeErrors.length > 0) {
   for (const error of codeErrors) console.error(`FAIL ${error}`);

@@ -275,9 +275,7 @@ require(/recordRoutinePlanAnalytics/.test(routinePlan) &&
   /track\('routine_plan_viewed'/.test(routineActivationAnalytics) &&
   /track\('routine_created'/.test(routineActivationAnalytics) &&
   /const hasRoutineSteps = routineStepCount > 0;/.test(routineActivationAnalytics) &&
-  /if \(hasRoutineSteps\) \{\s*track\('routine_created'/.test(
-    routineActivationAnalytics,
-  ) &&
+  /if \(hasRoutineSteps\) \{\s*track\('routine_created'/.test(routineActivationAnalytics) &&
   /if \(hasRoutineSteps && !flags\.firstRoutineCreated\)/.test(routineActivationAnalytics) &&
   /track\('first_useful_insight'/.test(routineActivationAnalytics) &&
   /track\('conflict_detected'/.test(
@@ -287,27 +285,22 @@ require(/done[\s\S]{0,160}track\('routine_checkoff_completed'/.test(todayTab) &&
   /firstEver[\s\S]{0,80}track\('first_checkoff_completed'/.test(
     todayTab,
   ), 'Today check-off flow must emit routine_checkoff_completed and first_checkoff_completed.');
-require(
-  /shippableRules\(\)/.test(routineGenerate) &&
-    /canUseRoutineCadence\(\)/.test(routineGenerate) &&
-    /does not surface unreviewed conflict guidance through the default production generator/.test(
-      routineGenerateTest,
-    ) &&
-    /surfaces reviewed conflict guidance when production rules are reviewed/.test(
-      routineGenerateTest,
-    ) &&
-    /withDevFlag\(false/.test(routineGenerateTest) &&
-    /withholds cadence outside dev until clinical review flips the gate/.test(
-      routineReviewGateTest,
-    ) &&
-    /does not let the E2E fixture open unreviewed cadence outside dev/.test(
-      routineReviewGateTest,
-    ) &&
-    /withholds unreviewed cycle cadence in production until B-DERM-REVIEW closes/.test(
-      schedulerOrchestrateTest,
-    ),
-  'Phase 7 must pin production-mode tests that withhold unreviewed conflict and routine-cadence guidance until B-DERM-REVIEW closes.',
-);
+require(/shippableRules\(\)/.test(routineGenerate) &&
+  /canUseRoutineCadence\(\)/.test(routineGenerate) &&
+  /does not surface unreviewed conflict guidance through the default production generator/.test(
+    routineGenerateTest,
+  ) &&
+  /surfaces reviewed conflict guidance when production rules are reviewed/.test(
+    routineGenerateTest,
+  ) &&
+  /withDevFlag\(false/.test(routineGenerateTest) &&
+  /withholds cadence outside dev until clinical review flips the gate/.test(
+    routineReviewGateTest,
+  ) &&
+  /does not let the E2E fixture open unreviewed cadence outside dev/.test(routineReviewGateTest) &&
+  /withholds unreviewed cycle cadence in production until B-DERM-REVIEW closes/.test(
+    schedulerOrchestrateTest,
+  ), 'Phase 7 must pin production-mode tests that withhold unreviewed conflict and routine-cadence guidance until B-DERM-REVIEW closes.');
 require(/shouldTrackCycleNightCompleted/.test(todayTab) &&
   /track\('cycle_night_completed', \{ moment: 'pm', source: 'today' \}/.test(
     todayTab,

@@ -149,7 +149,7 @@ describe('external URL opener', () => {
     expect(externalOpen).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
     expect(externalOpen).toContain("tokens.includes('all') || tokens.includes(mode)");
     expect(externalOpen).not.toContain('Alert.alert');
-    expect(externalOpen).not.toContain("import { Alert");
+    expect(externalOpen).not.toContain('import { Alert');
 
     for (const path of [
       'app/(tabs)/you.tsx',

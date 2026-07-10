@@ -6,7 +6,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bytesToHex, hexToBytes, randomBytes } from '@noble/ciphers/utils.js';
 import * as SecureStore from 'expo-secure-store';
 
-import { decryptLargeSecureStoreValue, encryptLargeSecureStoreValue } from './largeSecureStoreCrypto';
+import {
+  decryptLargeSecureStoreValue,
+  encryptLargeSecureStoreValue,
+} from './largeSecureStoreCrypto';
 
 const CONTENT_KEY_BYTES = 32;
 

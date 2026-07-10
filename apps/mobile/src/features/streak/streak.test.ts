@@ -61,14 +61,26 @@ describe('calm forgiving streak. Current (docs/07 §4.1/§4.2)', () => {
 describe('longest streak. Non-decreasing best (D-011)', () => {
   it('finds the best forgiving run across history', () => {
     const completed = set(
-      '2026-05-01', '2026-05-02', '2026-05-04', '2026-05-05', '2026-05-06', // 1 freeze (05-03) → run of 5
-      '2026-06-10', '2026-06-11', // a later, shorter run of 2
+      '2026-05-01',
+      '2026-05-02',
+      '2026-05-04',
+      '2026-05-05',
+      '2026-05-06', // 1 freeze (05-03) → run of 5
+      '2026-06-10',
+      '2026-06-11', // a later, shorter run of 2
     );
     expect(bestStreak(completed)).toBe(5);
   });
   it('resets the run when a gap exceeds the window', () => {
     // 05-01,05-02 then a 3-day gap then 05-06,05-07,05-08,05-09 → best 4
-    const completed = set('2026-05-01', '2026-05-02', '2026-05-06', '2026-05-07', '2026-05-08', '2026-05-09');
+    const completed = set(
+      '2026-05-01',
+      '2026-05-02',
+      '2026-05-06',
+      '2026-05-07',
+      '2026-05-08',
+      '2026-05-09',
+    );
     expect(bestStreak(completed)).toBe(4);
   });
 });

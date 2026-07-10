@@ -70,10 +70,7 @@ function PhotoDetailScreenContent() {
           }}
         >
           <View style={{ gap: compact ? 12 : 14, paddingVertical: compact ? 18 : 24 }}>
-            <Text
-              variant="label"
-              style={{ color: 'rgba(244,239,231,0.48)', textAlign: 'center' }}
-            >
+            <Text variant="label" style={{ color: 'rgba(244,239,231,0.48)', textAlign: 'center' }}>
               {PHOTO_COPY.detail.missingEyebrow}
             </Text>
             <Text
@@ -114,9 +111,7 @@ function PhotoDetailScreenContent() {
                 paddingVertical: 12,
               }}
             >
-              <Text
-                style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}
-              >
+              <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
                 {PHOTO_COPY.detail.missingCapture}
               </Text>
             </Pressable>
@@ -229,60 +224,41 @@ function PhotoDetailScreenContent() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 20 }}
       >
-      {/* photo */}
-      <View
-        style={{
-          height: photoHeight,
-          borderRadius: 20,
-          overflow: 'hidden',
-          backgroundColor: '#2A251E',
-          marginBottom: compact ? 10 : 14,
-        }}
-      >
-        {photo.localUri ? (
-          <PhotoImage uri={photo.localUri} style={{ flex: 1 }} />
-        ) : (
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text variant="label" style={{ color: 'rgba(244,239,231,0.3)' }}>
-              your photo
-            </Text>
-          </View>
-        )}
-      </View>
-
-      {/* quality + time chips */}
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
+        {/* photo */}
         <View
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 6,
-            backgroundColor: 'rgba(244,239,231,0.08)',
-            borderRadius: 999,
-            paddingHorizontal: 13,
-            paddingVertical: 7,
+            height: photoHeight,
+            borderRadius: 20,
+            overflow: 'hidden',
+            backgroundColor: '#2A251E',
+            marginBottom: compact ? 10 : 14,
           }}
         >
-          <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: SAGE }} />
-          <Text
-            style={{
-              fontFamily: 'HankenGrotesk_600SemiBold',
-              fontSize: 12,
-              color: 'rgba(244,239,231,0.8)',
-            }}
-          >
-            {aligned ? 'Aligned · well-lit' : 'Kept as taken'}
-          </Text>
+          {photo.localUri ? (
+            <PhotoImage uri={photo.localUri} style={{ flex: 1 }} />
+          ) : (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Text variant="label" style={{ color: 'rgba(244,239,231,0.3)' }}>
+                your photo
+              </Text>
+            </View>
+          )}
         </View>
-        {photo.timeOfDay ? (
+
+        {/* quality + time chips */}
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
           <View
             style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 6,
               backgroundColor: 'rgba(244,239,231,0.08)',
               borderRadius: 999,
               paddingHorizontal: 13,
               paddingVertical: 7,
             }}
           >
+            <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: SAGE }} />
             <Text
               style={{
                 fontFamily: 'HankenGrotesk_600SemiBold',
@@ -290,138 +266,159 @@ function PhotoDetailScreenContent() {
                 color: 'rgba(244,239,231,0.8)',
               }}
             >
-              {photo.timeOfDay}
+              {aligned ? 'Aligned · well-lit' : 'Kept as taken'}
             </Text>
           </View>
-        ) : null}
-        {photo.isReference ? (
+          {photo.timeOfDay ? (
+            <View
+              style={{
+                backgroundColor: 'rgba(244,239,231,0.08)',
+                borderRadius: 999,
+                paddingHorizontal: 13,
+                paddingVertical: 7,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontSize: 12,
+                  color: 'rgba(244,239,231,0.8)',
+                }}
+              >
+                {photo.timeOfDay}
+              </Text>
+            </View>
+          ) : null}
+          {photo.isReference ? (
+            <View
+              style={{
+                backgroundColor: 'rgba(176,122,60,0.18)',
+                borderRadius: 999,
+                paddingHorizontal: 13,
+                paddingVertical: 7,
+              }}
+            >
+              <Text
+                style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 12, color: '#D9A183' }}
+              >
+                reference
+              </Text>
+            </View>
+          ) : null}
+        </View>
+
+        {actionFeedback ? (
           <View
+            accessibilityRole="alert"
             style={{
-              backgroundColor: 'rgba(176,122,60,0.18)',
-              borderRadius: 999,
-              paddingHorizontal: 13,
-              paddingVertical: 7,
+              backgroundColor: '#211C16',
+              borderColor: 'rgba(244,239,231,0.14)',
+              borderRadius: 16,
+              borderWidth: 1,
+              marginBottom: 12,
+              paddingHorizontal: 14,
+              paddingVertical: 12,
             }}
           >
             <Text
-              style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 12, color: '#D9A183' }}
+              style={{
+                color: 'rgba(244,239,231,0.84)',
+                fontFamily: 'HankenGrotesk_400Regular',
+                fontSize: 13,
+                lineHeight: 18,
+                textAlign: 'center',
+              }}
             >
-              reference
+              {actionFeedback}
             </Text>
           </View>
         ) : null}
-      </View>
 
-      {actionFeedback ? (
+        {/* note */}
         <View
-          accessibilityRole="alert"
           style={{
-            backgroundColor: '#211C16',
-            borderColor: 'rgba(244,239,231,0.14)',
             borderRadius: 16,
-            borderWidth: 1,
-            marginBottom: 12,
-            paddingHorizontal: 14,
-            paddingVertical: 12,
+            backgroundColor: 'rgba(244,239,231,0.06)',
+            padding: 16,
+            marginBottom: 'auto',
           }}
         >
-          <Text
+          <Text variant="label" style={{ color: 'rgba(244,239,231,0.4)', marginBottom: 6 }}>
+            {PHOTO_COPY.detail.noteLabel.toUpperCase()}
+          </Text>
+          <TextInput
+            value={draft}
+            onChangeText={setDraft}
+            onBlur={() => note.mutate({ id, notes: draft })}
+            placeholder={PHOTO_COPY.detail.notePlaceholder}
+            placeholderTextColor="rgba(244,239,231,0.35)"
+            multiline
             style={{
-              color: 'rgba(244,239,231,0.84)',
               fontFamily: 'HankenGrotesk_400Regular',
-              fontSize: 13,
-              lineHeight: 18,
-              textAlign: 'center',
+              fontSize: 13.5,
+              color: 'rgba(244,239,231,0.85)',
+              lineHeight: 20,
+              minHeight: 24,
             }}
-          >
-            {actionFeedback}
-          </Text>
+          />
         </View>
-      ) : null}
 
-      {/* note */}
-      <View
-        style={{
-          borderRadius: 16,
-          backgroundColor: 'rgba(244,239,231,0.06)',
-          padding: 16,
-          marginBottom: 'auto',
-        }}
-      >
-        <Text variant="label" style={{ color: 'rgba(244,239,231,0.4)', marginBottom: 6 }}>
-          {PHOTO_COPY.detail.noteLabel.toUpperCase()}
-        </Text>
-        <TextInput
-          value={draft}
-          onChangeText={setDraft}
-          onBlur={() => note.mutate({ id, notes: draft })}
-          placeholder={PHOTO_COPY.detail.notePlaceholder}
-          placeholderTextColor="rgba(244,239,231,0.35)"
-          multiline
-          style={{
-            fontFamily: 'HankenGrotesk_400Regular',
-            fontSize: 13.5,
-            color: 'rgba(244,239,231,0.85)',
-            lineHeight: 20,
-            minHeight: 24,
-          }}
-        />
-      </View>
-
-      {!shareConfirmVisible && !deleteConfirmVisible ? (
-        <View style={{ flexDirection: 'row', gap: 8, paddingTop: 16 }}>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => {
-            haptics.select();
-            reference.mutate(id);
-            track('reference_reset');
-          }}
-          style={{
-            flex: 1,
-            height: 48,
-            borderRadius: 13,
-            backgroundColor: 'rgba(244,239,231,0.1)',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 13, color: '#F4EFE7' }}>
-            {PHOTO_COPY.detail.setReference}
-          </Text>
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={PHOTO_COPY.detail.shareLabel}
-          onPress={confirmShare}
-          style={{
-            width: 48,
-            height: 48,
-            borderRadius: 13,
-            backgroundColor: 'rgba(244,239,231,0.1)',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text style={{ color: '#F4EFE7', fontSize: 16 }}>↗</Text>
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Delete photo"
-          onPress={confirmDelete}
-          style={{
-            width: 48,
-            height: 48,
-            borderRadius: 13,
-            backgroundColor: 'rgba(176,122,60,0.18)',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text style={{ color: '#D9A183', fontSize: 16 }}>🗑</Text>
-        </Pressable>
-        </View>
-      ) : null}
+        {!shareConfirmVisible && !deleteConfirmVisible ? (
+          <View style={{ flexDirection: 'row', gap: 8, paddingTop: 16 }}>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => {
+                haptics.select();
+                reference.mutate(id);
+                track('reference_reset');
+              }}
+              style={{
+                flex: 1,
+                height: 48,
+                borderRadius: 13,
+                backgroundColor: 'rgba(244,239,231,0.1)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text
+                style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 13, color: '#F4EFE7' }}
+              >
+                {PHOTO_COPY.detail.setReference}
+              </Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={PHOTO_COPY.detail.shareLabel}
+              onPress={confirmShare}
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 13,
+                backgroundColor: 'rgba(244,239,231,0.1)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={{ color: '#F4EFE7', fontSize: 16 }}>↗</Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Delete photo"
+              onPress={confirmDelete}
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 13,
+                backgroundColor: 'rgba(176,122,60,0.18)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={{ color: '#D9A183', fontSize: 16 }}>🗑</Text>
+            </Pressable>
+          </View>
+        ) : null}
       </ScrollView>
       {shareConfirmVisible ? (
         <View

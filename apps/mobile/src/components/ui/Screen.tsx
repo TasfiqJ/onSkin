@@ -13,11 +13,17 @@ export type ScreenProps = {
   className?: string;
 };
 
-export function Screen({ children, tone = 'paper', edges = ['top', 'bottom'], className }: ScreenProps) {
+export function Screen({
+  children,
+  tone = 'paper',
+  edges = ['top', 'bottom'],
+  className,
+}: ScreenProps) {
   return (
     <SafeAreaView
       edges={edges}
-      className={cn('flex-1', tone === 'night' ? 'bg-night' : 'bg-paper')}>
+      className={cn('flex-1', tone === 'night' ? 'bg-night' : 'bg-paper')}
+    >
       <View className={cn('flex-1 px-6', className)}>{children}</View>
     </SafeAreaView>
   );

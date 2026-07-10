@@ -12,7 +12,10 @@ export type ClaimSafetyResult = { flagged: boolean; reasons: string[] };
 
 const CHECKS: { reason: string; re: RegExp }[] = [
   // catch inflected forms. Treat/treats/treated/treating, cure/cured, heal/healed, etc.
-  { reason: 'drug or disease claim', re: /\b(treat|cure|heal|prevent)(s|d|ed|ing)?\b|\bdiagnos\w*/i },
+  {
+    reason: 'drug or disease claim',
+    re: /\b(treat|cure|heal|prevent)(s|d|ed|ing)?\b|\bdiagnos\w*/i,
+  },
   { reason: 'dosage amount', re: /\b\d+\s?(mg|ml|iu)\b|\b\d+\s?%/i },
   { reason: 'dosage frequency', re: /\b\d+\s+times?\s+(a|per)\s+day\b/i },
   { reason: 'alarm language', re: /\b(danger\w*|harmful|toxic|poison\w*)\b|!/i },

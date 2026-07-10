@@ -8,7 +8,8 @@ const publishableKey =
   Deno.env.get('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY') ??
   Deno.env.get('SUPABASE_PUBLISHABLE_KEY') ??
   Deno.env.get('SUPABASE_ANON_KEY')!;
-const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey =
+  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const catalogRateLimitMax = intEnv('CATALOG_RATE_LIMIT_MAX', 120, 1, 1000);
 const catalogRateLimitWindowSeconds = intEnv('CATALOG_RATE_LIMIT_WINDOW_SECONDS', 900, 60, 86400);
 const maxBodyBytes = userEdgeBodyMaxBytes();
@@ -36,7 +37,10 @@ function intEnv(name: string, fallback: number, min: number, max: number): numbe
 }
 
 function cleanQuery(value: unknown): string {
-  return String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, 80);
+  return String(value ?? '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 80);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -53,10 +57,16 @@ async function hmacSha256Hex(value: string): Promise<string> {
     ['sign'],
   );
   const signature = await crypto.subtle.sign('HMAC', rateLimitHmacKey, encoder.encode(value));
-  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, '0')).join('');
+  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, '0')).join(
+    '',
+  );
 }
 
-async function enforceRateLimit(admin: EdgeSupabaseClient, scope: string, userId: string): Promise<Response | null> {
+async function enforceRateLimit(
+  admin: EdgeSupabaseClient,
+  scope: string,
+  userId: string,
+): Promise<Response | null> {
   const keyHash = await hmacSha256Hex(`${scope}|${userId}`);
   const { data, error } = await admin.rpc('consume_edge_rate_limit', {
     p_scope: scope,

@@ -1,0 +1,5 @@
+# Generated evidence is governed by schema, freshness, and hash audits.
+docs/**/generated/**
+
+# Regenerated from the live Supabase schema.
+packages/types/src/database.types.ts

@@ -8,11 +8,9 @@ const root = process.cwd();
 const check = process.argv.includes('--check');
 const strict = process.argv.includes('--strict');
 const outJson =
-  process.env.PHASE10_SUPPORT_HANDOFF_JSON ??
-  'docs/phase-10/generated/support-handoff-packet.json';
+  process.env.PHASE10_SUPPORT_HANDOFF_JSON ?? 'docs/phase-10/generated/support-handoff-packet.json';
 const outMd =
-  process.env.PHASE10_SUPPORT_HANDOFF_MD ??
-  'docs/phase-10/generated/support-handoff-packet.md';
+  process.env.PHASE10_SUPPORT_HANDOFF_MD ?? 'docs/phase-10/generated/support-handoff-packet.md';
 const outputPaths = [outJson, outMd].map((path) => normalizeRepoPath(path));
 
 const routePath = 'apps/mobile/src/app/settings/beta-feedback.tsx';
@@ -97,7 +95,8 @@ const severityRouting = {
   p0: {
     responseTarget: 'same day',
     escalation: 'page owner immediately',
-    definition: 'Crash, data-loss risk, unexpected charge, privacy failure, or harmful medical framing.',
+    definition:
+      'Crash, data-loss risk, unexpected charge, privacy failure, or harmful medical framing.',
   },
   p1: {
     responseTarget: '1 business day',
@@ -121,7 +120,9 @@ function abs(path) {
 }
 
 function normalizeRepoPath(path) {
-  return String(path ?? '').replaceAll('\\', '/').replace(/^\.\//, '');
+  return String(path ?? '')
+    .replaceAll('\\', '/')
+    .replace(/^\.\//, '');
 }
 
 function exists(path) {
@@ -157,8 +158,7 @@ function extractArray(source, constName, blockers) {
 
   const rows = [];
   const body = match[1] ?? '';
-  const itemPattern =
-    /{\s*key:\s*'([^']+)',\s*label:\s*'([^']+)',\s*detail:\s*'([^']+)',\s*}/g;
+  const itemPattern = /{\s*key:\s*'([^']+)',\s*label:\s*'([^']+)',\s*detail:\s*'([^']+)',\s*}/g;
   for (const itemMatch of body.matchAll(itemPattern)) {
     rows.push({
       key: itemMatch[1],
@@ -366,9 +366,7 @@ const mdContent = [
   '## Source Hashes',
   '',
   ...packet.files.map((file) =>
-    file.exists
-      ? `- \`${file.path}\`: \`${file.sha256}\``
-      : `- \`${file.path}\`: missing`,
+    file.exists ? `- \`${file.path}\`: \`${file.sha256}\`` : `- \`${file.path}\`: missing`,
   ),
   '',
 ].join('\n');

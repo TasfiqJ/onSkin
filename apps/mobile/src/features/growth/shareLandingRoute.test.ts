@@ -12,10 +12,10 @@ describe('public share landing route analytics', () => {
   it('tracks the Phase 8 dashboard landing event with sanitized attribution', () => {
     const source = readAppRoute('s/[shareId].tsx');
 
-    expect(source).toContain("import { isSafeOpaqueId, sanitizeAttribution }");
+    expect(source).toContain('import { isSafeOpaqueId, sanitizeAttribution }');
     expect(source).toContain('const attribution = useMemo(');
-    expect(source).toContain('track(\'landing_viewed\', landingProps)');
-    expect(source).toContain('track(\'share_link_opened\', landingProps)');
+    expect(source).toContain("track('landing_viewed', landingProps)");
+    expect(source).toContain("track('share_link_opened', landingProps)");
     expect(source).toContain('source: firstParam(params.source)');
     expect(source).toContain('campaign: firstParam(params.campaign)');
     expect(source).toContain('creative_variant: firstParam(params.creative_variant)');

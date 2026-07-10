@@ -55,7 +55,8 @@ const errors = [];
 const warnings = [];
 
 for (const name of required) {
-  if (!isUsable(name)) errors.push(`${name} is missing, a placeholder, or still uses an uncleared brand.`);
+  if (!isUsable(name))
+    errors.push(`${name} is missing, a placeholder, or still uses an uncleared brand.`);
 }
 
 const email = valueFor('CATALOG_CONTACT_EMAIL');
@@ -87,16 +88,22 @@ if (valueFor('OBF_API_ENABLED') === 'true' && !isUsable('OBF_USER_AGENT')) {
 }
 
 if (valueFor('OBF_CONTRIBUTION_ENABLED') === 'true') {
-  warnings.push('OBF contribution is enabled. Confirm account credentials, moderation, and ODbL review are complete.');
+  warnings.push(
+    'OBF contribution is enabled. Confirm account credentials, moderation, and ODbL review are complete.',
+  );
 }
 
-console.log(`Phase 4 catalog source env: ${required.filter(isUsable).length}/${required.length} required values usable.`);
+console.log(
+  `Phase 4 catalog source env: ${required.filter(isUsable).length}/${required.length} required values usable.`,
+);
 for (const warning of warnings) console.warn(`WARN ${warning}`);
 for (const error of errors) console.error(`FAIL ${error}`);
 
 if (errors.length > 0 && strict) process.exit(1);
 if (errors.length > 0) {
-  console.error(`\nPhase 4 source env is incomplete (${errors.length} blocker${errors.length === 1 ? '' : 's'}).`);
+  console.error(
+    `\nPhase 4 source env is incomplete (${errors.length} blocker${errors.length === 1 ? '' : 's'}).`,
+  );
 } else {
   console.log('\nPhase 4 source env contract is complete.');
 }

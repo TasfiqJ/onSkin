@@ -99,7 +99,12 @@ const ESSENTIALS: SequencingRole[] = ['spf', 'moisturiser', 'cleanser'];
 // moisturiser / cleanser are routine-completeness GAPS, not goal actives. Even
 // though SPF genuinely helps anti-aging/even-tone, the goal trigger introduces a
 // treatment, not a structural staple (docs/09 §4.5).
-const GOAL_ACTIVE_ROLES: SequencingRole[] = ['antioxidant', 'treatment', 'exfoliant', 'hydrating_serum'];
+const GOAL_ACTIVE_ROLES: SequencingRole[] = [
+  'antioxidant',
+  'treatment',
+  'exfoliant',
+  'hydrating_serum',
+];
 const PRIORITY: Record<RecommendationTrigger, number> = {
   gap: 1.0,
   routine_completion: 0.95,
@@ -132,10 +137,18 @@ function profileSummary(p: RecProfile): string {
 }
 
 /** Tags that would ADD a conflict if introduced to this shelf (docs/09 §5 exclusion). */
-function conflictTagsForShelf(ownedTags: Set<FunctionalTag>, rules: ConflictRule[]): Set<FunctionalTag> {
+function conflictTagsForShelf(
+  ownedTags: Set<FunctionalTag>,
+  rules: ConflictRule[],
+): Set<FunctionalTag> {
   const out = new Set<FunctionalTag>();
   for (const r of rules) {
-    if (r.interactionType === 'myth' || r.interactionType === 'synergy' || r.interactionType === 'safety') continue;
+    if (
+      r.interactionType === 'myth' ||
+      r.interactionType === 'synergy' ||
+      r.interactionType === 'safety'
+    )
+      continue;
     if (ownedTags.has(r.tagA)) out.add(r.tagB);
     if (ownedTags.has(r.tagB)) out.add(r.tagA);
   }
@@ -187,9 +200,13 @@ function bestTypeForGoal(
 
 function howFor(type: RecType, input: RecInput, gapLine: string): RecHow {
   const fitBits: string[] = [];
-  if (input.profile.sensitivity === 'sensitive' && type.sensitiveSafe) fitBits.push('sensitive-safe');
+  if (input.profile.sensitivity === 'sensitive' && type.sensitiveSafe)
+    fitBits.push('sensitive-safe');
   if (input.profile.pregnancy && type.pregnancySafe) fitBits.push('pregnancy-friendly');
-  if (input.preferences.values.includes('fragrance_free') && (/fragrance-free/i.test(type.what) || type.sensitiveSafe))
+  if (
+    input.preferences.values.includes('fragrance_free') &&
+    (/fragrance-free/i.test(type.what) || type.sensitiveSafe)
+  )
     fitBits.push('fragrance-free (your preference)');
   if (fitBits.length === 0) fitBits.push('Matched to your profile');
   return {
@@ -258,7 +275,11 @@ export function recommend(input: RecInput): RecResult {
           ? whyCopy.gapMoisturiser
           : whyCopy.gapCleanser;
     const gapLine =
-      role === 'spf' ? 'No SPF in your routine' : role === 'moisturiser' ? 'No moisturiser yet' : 'No cleanser yet';
+      role === 'spf'
+        ? 'No SPF in your routine'
+        : role === 'moisturiser'
+          ? 'No moisturiser yet'
+          : 'No cleanser yet';
     out.push(typeRec({ trigger: gapTrigger, type: best.type, fit: best.fit, why, gapLine, input }));
   }
 
@@ -330,13 +351,20 @@ export function recommend(input: RecInput): RecResult {
 
   // 4. Better-fit. An owned fragranced product for sensitive skin (or a fragrance-
   // free preference): a gentler alternative, as an OPTION not a mandate.
-  if (input.profile.sensitivity === 'sensitive' || input.preferences.values.includes('fragrance_free')) {
-    const fragranced = input.shelf.find((p) => p.fragranced && (p.role === 'cleanser' || p.role === 'moisturiser'));
+  if (
+    input.profile.sensitivity === 'sensitive' ||
+    input.preferences.values.includes('fragrance_free')
+  ) {
+    const fragranced = input.shelf.find(
+      (p) => p.fragranced && (p.role === 'cleanser' || p.role === 'moisturiser'),
+    );
     if (fragranced) {
       const best = bestTypeForRole(fragranced.role, input, 'better_fit', recTypes);
       // Prefer the fragrance-free variant explicitly.
       const ff = recTypes.find((t) => t.role === fragranced.role && /fragrance-free/i.test(t.what));
-      const chosen = ff ? { type: ff, fit: fitScore(ff, makeFitContext(input, 'better_fit')) } : best;
+      const chosen = ff
+        ? { type: ff, fit: fitScore(ff, makeFitContext(input, 'better_fit')) }
+        : best;
       if (chosen && chosen.fit.score != null) {
         const rec = typeRec({
           trigger: 'better_fit',
@@ -358,7 +386,9 @@ export function recommend(input: RecInput): RecResult {
     const served = GOAL_SERVED_BY[goal];
     const addressed =
       input.shelf.some((p) => p.tags.some((t) => served.tags.includes(t))) ||
-      input.shelf.some((p) => served.roles.includes(p.role) && (goal === 'hydration' || goal === 'barrier_repair'));
+      input.shelf.some(
+        (p) => served.roles.includes(p.role) && (goal === 'hydration' || goal === 'barrier_repair'),
+      );
     if (addressed) continue;
     const best = bestTypeForGoal(goal, input, recTypes);
     if (!best) continue;

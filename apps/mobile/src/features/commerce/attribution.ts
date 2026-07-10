@@ -71,29 +71,42 @@ const SAFE_PRODUCT_TYPE = /^[a-z0-9_:-]{1,80}$/;
 const AFFILIATE_SOURCE_VALUES = new Set(['shopmy', 'skimlinks', 'direct', 'none']);
 
 function isCleanCommerceValue(value: string): boolean {
-  return !value.includes('@') && !/https?:\/\//i.test(value) && !/file:\/\/|content:\/\//i.test(value);
+  return (
+    !value.includes('@') && !/https?:\/\//i.test(value) && !/file:\/\/|content:\/\//i.test(value)
+  );
 }
 
 export function isHealthSafePayload(payload: Record<string, unknown>): boolean {
   const keys = Object.keys(payload);
   if (keys.length !== CLICK_PAYLOAD_KEYS.length) return false;
-  if (!keys.every((key) => CLICK_PAYLOAD_KEY_SET.has(key) && !urlLeaksHealthData(key))) return false;
+  if (!keys.every((key) => CLICK_PAYLOAD_KEY_SET.has(key) && !urlLeaksHealthData(key)))
+    return false;
 
   const clickToken = payload.clickToken;
-  if (typeof clickToken !== 'string' || !SAFE_OPAQUE_TOKEN.test(clickToken) || !isCleanCommerceValue(clickToken)) {
+  if (
+    typeof clickToken !== 'string' ||
+    !SAFE_OPAQUE_TOKEN.test(clickToken) ||
+    !isCleanCommerceValue(clickToken)
+  ) {
     return false;
   }
 
   const productType = payload.productType;
   if (
     productType !== null &&
-    (typeof productType !== 'string' || !SAFE_PRODUCT_TYPE.test(productType) || !isCleanCommerceValue(productType))
+    (typeof productType !== 'string' ||
+      !SAFE_PRODUCT_TYPE.test(productType) ||
+      !isCleanCommerceValue(productType))
   ) {
     return false;
   }
 
   const source = payload.source;
-  if (typeof source !== 'string' || !AFFILIATE_SOURCE_VALUES.has(source) || !isCleanCommerceValue(source)) {
+  if (
+    typeof source !== 'string' ||
+    !AFFILIATE_SOURCE_VALUES.has(source) ||
+    !isCleanCommerceValue(source)
+  ) {
     return false;
   }
 

@@ -5,7 +5,8 @@ export const CAMERA_FAILURE_COPY = {
   progressCaptureTitle: "Photo wasn't captured",
   progressCaptureBody: 'Try again in a moment. Your timeline is unchanged.',
   progressSettingsTitle: 'Camera settings unavailable',
-  progressSettingsBody: 'Open Settings manually to enable camera access. Your timeline is unchanged.',
+  progressSettingsBody:
+    'Open Settings manually to enable camera access. Your timeline is unchanged.',
   shelfSettingsTitle: 'Camera settings unavailable',
   shelfSettingsBody:
     'Open Settings manually to enable camera access. Search, label scan, and manual add still work.',

@@ -28,7 +28,8 @@ export function InContextNote({ noteId }: { noteId: string }) {
         router.push({ pathname: '/community/note/[id]', params: { id: note.id } });
       }}
       className="rounded-[18px] bg-paper-raised p-4"
-      style={{ borderWidth: 1, borderColor: colors.hairline }}>
+      style={{ borderWidth: 1, borderColor: colors.hairline }}
+    >
       <Text variant="label" tone="muted" className="mb-2">
         {COMMUNITY_COPY.inContext.eyebrow}
       </Text>
@@ -38,7 +39,15 @@ export function InContextNote({ noteId }: { noteId: string }) {
       <View className="mt-2.5 flex-row items-center gap-2">
         <Text
           className="font-sans-bold text-[11px]"
-          style={{ color: pill.fg, backgroundColor: pill.bg, paddingHorizontal: 11, paddingVertical: 5, borderRadius: 999, overflow: 'hidden' }}>
+          style={{
+            color: pill.fg,
+            backgroundColor: pill.bg,
+            paddingHorizontal: 11,
+            paddingVertical: 5,
+            borderRadius: 999,
+            overflow: 'hidden',
+          }}
+        >
           {note.evidenceLabel === 'refuted' ? 'Refuted myth' : pill.text}
         </Text>
         <Text variant="bodySm" tone="muted" className="flex-1 text-[12px]">
@@ -47,7 +56,8 @@ export function InContextNote({ noteId }: { noteId: string }) {
       </View>
       <View
         className="mt-3 flex-row items-center justify-between pt-3"
-        style={{ borderTopWidth: 1, borderTopColor: colors.hairline }}>
+        style={{ borderTopWidth: 1, borderTopColor: colors.hairline }}
+      >
         <Text className="font-mono text-[10.5px]" tone="muted">
           {COMMUNITY_COPY.inContext.from}
         </Text>

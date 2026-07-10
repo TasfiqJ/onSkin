@@ -6,7 +6,9 @@ describe('Phase 8 production URL readiness', () => {
   it('accepts real HTTPS production URLs', () => {
     expect(productionUrlReady('https://routinekind.app')).toBe(true);
     expect(productionUrlReady('https://apps.apple.com/app/id123456789')).toBe(true);
-    expect(productionUrlReady('https://play.google.com/store/apps/details?id=com.routinekind.app')).toBe(true);
+    expect(
+      productionUrlReady('https://play.google.com/store/apps/details?id=com.routinekind.app'),
+    ).toBe(true);
   });
 
   it('rejects placeholders, local URLs, credentials, plaintext HTTP, and malformed values', () => {

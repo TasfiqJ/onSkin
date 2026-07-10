@@ -110,7 +110,9 @@ describe('app lock local authentication', () => {
     const youTab = readSource('app/(tabs)/you.tsx');
 
     expect(provider).toContain('authenticateAppLock(BRAND.appLockPrompt)');
-    expect(provider).toContain('const [lockFeedback, setLockFeedback] = useState<string | null>(null);');
+    expect(provider).toContain(
+      'const [lockFeedback, setLockFeedback] = useState<string | null>(null);',
+    );
     expect(provider).toContain('setLockFeedback(appLockUserMessage());');
     expect(provider).toContain('<LockOverlay feedback={lockFeedback} onUnlock={authenticate} />');
     expect(provider).toContain('accessibilityRole="alert"');

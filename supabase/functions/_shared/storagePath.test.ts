@@ -37,6 +37,9 @@ Deno.test('photo storage path contract rejects cross-user or malformed paths', (
   ];
 
   for (const path of rejected) {
-    assert(!photoPathBelongsToUser(userId, path), `expected path to be rejected: ${JSON.stringify(path)}`);
+    assert(
+      !photoPathBelongsToUser(userId, path),
+      `expected path to be rejected: ${JSON.stringify(path)}`,
+    );
   }
 });

@@ -159,9 +159,7 @@ export default function OcrScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName={
-          state === 'review' ? 'pb-28' : ultraShortPhone ? 'pb-3' : 'pb-5'
-        }
+        contentContainerClassName={state === 'review' ? 'pb-28' : ultraShortPhone ? 'pb-3' : 'pb-5'}
       >
         <View
           className={cn(
@@ -225,7 +223,9 @@ export default function OcrScreen() {
                 <Pressable
                   accessibilityRole="button"
                   onPress={
-                    canAskCameraPermission ? requestCameraAccess : () => void openShelfCameraSettings()
+                    canAskCameraPermission
+                      ? requestCameraAccess
+                      : () => void openShelfCameraSettings()
                   }
                   className="mt-5 min-h-[48px] items-center justify-center rounded-pill bg-paper px-5 py-3"
                 >
@@ -303,7 +303,9 @@ export default function OcrScreen() {
         {!splitShortPhone ? (
           <View
             className={cn(
-              ultraShortPhone ? 'mt-2 rounded-[14px] bg-greige-chip p-3' : 'mt-3 rounded-[14px] bg-greige-chip p-3.5',
+              ultraShortPhone
+                ? 'mt-2 rounded-[14px] bg-greige-chip p-3'
+                : 'mt-3 rounded-[14px] bg-greige-chip p-3.5',
             )}
           >
             <Text variant="bodySm" tone="muted" style={{ lineHeight: ultraShortPhone ? 18 : 19 }}>

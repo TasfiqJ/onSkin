@@ -29,7 +29,8 @@ export function TrendInsight() {
   return (
     <View
       className="rounded-card bg-paper-raised p-5"
-      style={{ borderWidth: 1, borderColor: celebrated ? 'rgba(79,122,74,0.25)' : colors.hairline }}>
+      style={{ borderWidth: 1, borderColor: celebrated ? 'rgba(79,122,74,0.25)' : colors.hairline }}
+    >
       <Text variant="label" tone="muted" className="mb-2.5">
         {TREND_COPY.output.computedNote}
       </Text>
@@ -37,7 +38,8 @@ export function TrendInsight() {
       {celebrated ? (
         <View
           className="mb-3 flex-row items-center gap-2 self-start rounded-pill"
-          style={{ backgroundColor: colors.sageTint, paddingHorizontal: 12, paddingVertical: 5 }}>
+          style={{ backgroundColor: colors.sageTint, paddingHorizontal: 12, paddingVertical: 5 }}
+        >
           <View className="h-[7px] w-[7px] rounded-full" style={{ backgroundColor: colors.sage }} />
           <Text className="font-sans-bold text-[11px]" style={{ color: colors.sageDeep }}>
             {TREND_COPY.output.consistentChip}
@@ -50,7 +52,12 @@ export function TrendInsight() {
       </Text>
 
       {celebrated || insight.changeState === 'change_observed' ? (
-        <Text variant="bodySm" tone="muted" className="mt-2 text-[12.5px]" style={{ lineHeight: 18 }}>
+        <Text
+          variant="bodySm"
+          tone="muted"
+          className="mt-2 text-[12.5px]"
+          style={{ lineHeight: 18 }}
+        >
           {TREND_COPY.output.yourEyes}
         </Text>
       ) : null}

@@ -80,7 +80,7 @@ describe('Recommendation route contracts', () => {
     expect(source).toContain(
       "ultraShort\n            ? 'mt-1 flex-row items-start justify-between gap-2 pt-1'",
     );
-    expect(source).toContain("short\n          ? 'mb-2 rounded-[14px] bg-paper-raised p-2.5'");
+    expect(source).toMatch(/\bshort\s*\?\s*'mb-2 rounded-\[14px\] bg-paper-raised p-2\.5'/);
     expect(source).toContain('style={{ lineHeight: short ? 14 : compact ? 16 : 18 }}');
     expect(source).toContain('lineHeight: short ? 12 : compact ? 13 : 15');
   });

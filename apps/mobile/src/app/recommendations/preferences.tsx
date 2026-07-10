@@ -173,10 +173,9 @@ export default function PreferencesScreen() {
     : ultraShortPreferences
       ? { marginTop: 48 }
       : undefined;
-  const splitShortPreferenceDeferredGroupStyle =
-    wideSupportFloorTextPressurePreferences
-      ? { marginTop: 560 }
-      : supportFloorPreferences || supportFloorTextPressurePreferences
+  const splitShortPreferenceDeferredGroupStyle = wideSupportFloorTextPressurePreferences
+    ? { marginTop: 560 }
+    : supportFloorPreferences || supportFloorTextPressurePreferences
       ? { marginTop: 400 }
       : { marginTop: 192 };
   const modernTextPressureBudgetGroupStyle =

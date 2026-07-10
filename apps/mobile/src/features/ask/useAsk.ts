@@ -10,7 +10,14 @@ import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 
-import { answerPrompt, answerQuestion, pickFitRec, safetyRefusal, type AskAnswer, type AskContext } from './answer';
+import {
+  answerPrompt,
+  answerQuestion,
+  pickFitRec,
+  safetyRefusal,
+  type AskAnswer,
+  type AskContext,
+} from './answer';
 import { askGate } from './gate';
 import { guardClaim } from './guard';
 import { getGroundedTurns, recordGroundedTurn } from './store';
@@ -35,7 +42,11 @@ export function useAsk() {
   const { data: ent } = useEntitlement();
   const qc = useQueryClient();
   const period = billingPeriod();
-  const turns = useQuery({ queryKey: ['askGroundedTurns', period], queryFn: () => getGroundedTurns(period), retry: 0 });
+  const turns = useQuery({
+    queryKey: ['askGroundedTurns', period],
+    queryFn: () => getGroundedTurns(period),
+    retry: 0,
+  });
 
   const ctx = useMemo<AskContext>(() => {
     const gate = askGate({

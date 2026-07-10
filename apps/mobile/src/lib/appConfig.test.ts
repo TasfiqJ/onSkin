@@ -52,7 +52,10 @@ function intentFilterText(expo: ReturnType<typeof buildExpoConfig>): string {
   return JSON.stringify(expo.android?.intentFilters ?? []);
 }
 
-function pluginOptions(expo: ReturnType<typeof buildExpoConfig>, name: string): Record<string, unknown> {
+function pluginOptions(
+  expo: ReturnType<typeof buildExpoConfig>,
+  name: string,
+): Record<string, unknown> {
   const plugin = (expo.plugins ?? []).find((candidate: unknown) =>
     Array.isArray(candidate) ? candidate[0] === name : candidate === name,
   );

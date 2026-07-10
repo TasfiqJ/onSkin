@@ -9,7 +9,10 @@ export default function PaywallLayout() {
       <Stack.Screen name="reoffer" />
       <Stack.Screen name="downgrade" />
       <Stack.Screen name="winback" />
-      <Stack.Screen name="upsell" options={{ presentation: 'transparentModal', animation: 'fade' }} />
+      <Stack.Screen
+        name="upsell"
+        options={{ presentation: 'transparentModal', animation: 'fade' }}
+      />
     </Stack>
   );
 }

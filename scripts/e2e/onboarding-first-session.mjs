@@ -380,7 +380,10 @@ async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } =
   }
 
   assert(rect, `Could not find visible clickable text: ${label}`);
-  assert(rect.disabled !== true && rect.ariaDisabled !== 'true', `Clickable text is disabled: ${label}`);
+  assert(
+    rect.disabled !== true && rect.ariaDisabled !== 'true',
+    `Clickable text is disabled: ${label}`,
+  );
 
   await client.send('Input.dispatchTouchEvent', {
     touchPoints: [{ force: 1, id: 1, radiusX: 2, radiusY: 2, x: rect.x, y: rect.y }],
@@ -572,7 +575,10 @@ async function captureStep(client, name, { assertClean = true } = {}) {
   await screenshot(client, name);
   if (assertClean) {
     assert(snapshot.overflowX <= 1, `${name} has horizontal overflow: ${snapshot.overflowX}px`);
-    assert(snapshot.issueCount === 0, `${name} has ${snapshot.issueCount} visible control issue(s).`);
+    assert(
+      snapshot.issueCount === 0,
+      `${name} has ${snapshot.issueCount} visible control issue(s).`,
+    );
   }
   return snapshot;
 }
@@ -772,7 +778,9 @@ async function run() {
     assert(reveal.bodyText.includes('FIRST INSIGHT'), 'Reveal did not show FIRST INSIGHT.');
     assert(reveal.bodyText.includes('Timing handled'), 'Reveal did not show Timing handled.');
     assert(
-      reveal.bodyText.includes('Products that need different timing are separated before the first check-off.'),
+      reveal.bodyText.includes(
+        'Products that need different timing are separated before the first check-off.',
+      ),
       'Reveal did not show the shelf-derived timing insight body.',
     );
     assert(!reveal.bodyText.includes('See my routine'), 'Reveal still exposes See my routine CTA.');
@@ -801,11 +809,26 @@ async function run() {
     await waitForText(client, 'Your routine, in order.', 30_000);
     await waitForText(client, 'Start today', 30_000);
     const routinePlan = await captureStep(client, '19-routine-plan-current');
-    assert(routinePlan.bodyText.includes('FIRST INSIGHT'), 'Routine plan did not show FIRST INSIGHT.');
-    assert(routinePlan.bodyText.includes('Timing handled'), 'Routine plan did not show Timing handled.');
-    assert(routinePlan.bodyText.includes('Mineral SPF 50'), 'Routine plan did not show the SPF morning step.');
-    assert(routinePlan.bodyText.includes('Glycolic 7%'), 'Routine plan did not show the glycolic night step.');
-    assert(routinePlan.bodyText.includes('Retinol 0.3%'), 'Routine plan did not show the retinol night step.');
+    assert(
+      routinePlan.bodyText.includes('FIRST INSIGHT'),
+      'Routine plan did not show FIRST INSIGHT.',
+    );
+    assert(
+      routinePlan.bodyText.includes('Timing handled'),
+      'Routine plan did not show Timing handled.',
+    );
+    assert(
+      routinePlan.bodyText.includes('Mineral SPF 50'),
+      'Routine plan did not show the SPF morning step.',
+    );
+    assert(
+      routinePlan.bodyText.includes('Glycolic 7%'),
+      'Routine plan did not show the glycolic night step.',
+    );
+    assert(
+      routinePlan.bodyText.includes('Retinol 0.3%'),
+      'Routine plan did not show the retinol night step.',
+    );
 
     await clickByText(client, 'Start today');
     await waitForPath(client, '/today', 30_000);
@@ -848,7 +871,10 @@ async function run() {
     const problemLogs = collectProblemLogs(client.events);
     const disallowedLogs = problemLogs.filter(disallowedLog);
     writeJson('browser-warn-error-logs.json', problemLogs);
-    assert(disallowedLogs.length === 0, `Unexpected browser warn/error logs: ${disallowedLogs.length}`);
+    assert(
+      disallowedLogs.length === 0,
+      `Unexpected browser warn/error logs: ${disallowedLogs.length}`,
+    );
 
     const overflowXByStep = {};
     for (const [key, snapshot] of Object.entries({

@@ -227,16 +227,24 @@ const cases = [
         Array.isArray(packet.warnings) &&
         packet.files.some((file) => file.path === 'scripts/phase5/build-device-qa-packet.mjs') &&
         packet.files.some((file) => file.path === 'scripts/phase5/check-native-config.mjs') &&
-        packet.files.some((file) => file.path === 'scripts/phase5/check-performance-evidence.mjs') &&
+        packet.files.some(
+          (file) => file.path === 'scripts/phase5/check-performance-evidence.mjs',
+        ) &&
         packet.files.some((file) => file.path === 'scripts/phase5/device-qa-packet-smoke.mjs') &&
-        packet.files.some((file) => file.path === 'scripts/phase5/performance-evidence-contract.mjs') &&
-        packet.files.some((file) => file.path === 'scripts/phase5/performance-evidence-smoke.mjs') &&
+        packet.files.some(
+          (file) => file.path === 'scripts/phase5/performance-evidence-contract.mjs',
+        ) &&
+        packet.files.some(
+          (file) => file.path === 'scripts/phase5/performance-evidence-smoke.mjs',
+        ) &&
         packet.files.some((file) => file.path === 'scripts/e2e/human-e2e-manifest.mjs') &&
         packet.files.some((file) => file.path === 'docs/HUMAN_SIMULATED_E2E_TESTING.md') &&
         packet.files.some((file) => file.path === 'docs/E2E_TESTING_CHECKLIST.md') &&
         packet.files.some((file) => file.path === 'docs/USER_FLOW_TREE.md') &&
         packet.files.some((file) => file.path === 'docs/phase-5/performance-evidence-runbook.md') &&
-        packet.files.some((file) => file.path === 'docs/phase-5/performance-evidence.template.json') &&
+        packet.files.some(
+          (file) => file.path === 'docs/phase-5/performance-evidence.template.json',
+        ) &&
         packet.files.some((file) => file.path === 'docs/e2e/generated/human-e2e-manifest.json') &&
         packet.files.some((file) => file.path === 'docs/e2e/generated/human-e2e-manifest.md')
       );

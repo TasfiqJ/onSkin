@@ -19,7 +19,11 @@ export function PhotoImage({
   fallbackTone?: string;
 }) {
   const encrypted = isEncryptedPhotoUri(uri);
-  const [resolved, setResolved] = useState<{ source: string; uri: string | null; failed: boolean } | null>(null);
+  const [resolved, setResolved] = useState<{
+    source: string;
+    uri: string | null;
+    failed: boolean;
+  } | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -37,15 +41,22 @@ export function PhotoImage({
   }, [encrypted, uri]);
 
   const resolvedForUri = resolved && resolved.source === uri ? resolved : null;
-  const displayUri = uri && !encrypted ? uri : resolvedForUri?.uri ?? null;
+  const displayUri = uri && !encrypted ? uri : (resolvedForUri?.uri ?? null);
   const failed = encrypted && Boolean(resolvedForUri?.failed);
 
   if (displayUri) {
-    return <Image source={{ uri: displayUri }} style={style} contentFit={contentFit} transition={120} />;
+    return (
+      <Image source={{ uri: displayUri }} style={style} contentFit={contentFit} transition={120} />
+    );
   }
 
   return (
-    <View style={[{ flex: 1, backgroundColor: fallbackTone, alignItems: 'center', justifyContent: 'center' }, style]}>
+    <View
+      style={[
+        { flex: 1, backgroundColor: fallbackTone, alignItems: 'center', justifyContent: 'center' },
+        style,
+      ]}
+    >
       <Text variant="label" style={{ color: 'rgba(32,27,21,0.28)' }}>
         {failed ? 'photo locked' : 'your photo'}
       </Text>

@@ -22,7 +22,10 @@ const HIGH_THRESHOLD: Partial<Record<FunctionalTag, number>> = {
 
 /** 'high' when a parsed percent meets any relevant active's threshold; 'low' when a
  *  percent is present but below all thresholds; undefined when no percent is found. */
-export function deriveConcentration(text: string, tags: FunctionalTag[]): 'low' | 'high' | undefined {
+export function deriveConcentration(
+  text: string,
+  tags: FunctionalTag[],
+): 'low' | 'high' | undefined {
   const m = PCT.exec(text);
   if (!m) return undefined;
   const pct = parseFloat(m[1]!);

@@ -12,7 +12,13 @@ const isWindows = process.platform === 'win32';
 const today = new Date().toISOString().slice(0, 10);
 const evidenceDir =
   process.env.PUBLIC_SITE_SUPPORT_EVIDENCE_DIR ??
-  path.join(repoRoot, 'test-results', 'human-e2e', today, 'phase8-public-support-device-floor-current');
+  path.join(
+    repoRoot,
+    'test-results',
+    'human-e2e',
+    today,
+    'phase8-public-support-device-floor-current',
+  );
 const appPort = Number(process.env.PUBLIC_SITE_SUPPORT_PORT ?? 8364);
 const debugPort = Number(process.env.PUBLIC_SITE_SUPPORT_DEBUG_PORT ?? 9364);
 const baseUrl = `http://127.0.0.1:${appPort}`;
@@ -376,8 +382,14 @@ async function run() {
     }
     const legacyDisplayName = ['On', 'Skin'].join('');
     assert(!snapshot.text.includes(legacyDisplayName), 'support page exposes legacy brand copy');
-    assert(!snapshot.text.includes('__SUPPORT_EMAIL__'), 'support page exposes support email token');
-    assert(snapshot.horizontalOverflow <= 1, `support page horizontal overflow ${snapshot.horizontalOverflow}`);
+    assert(
+      !snapshot.text.includes('__SUPPORT_EMAIL__'),
+      'support page exposes support email token',
+    );
+    assert(
+      snapshot.horizontalOverflow <= 1,
+      `support page horizontal overflow ${snapshot.horizontalOverflow}`,
+    );
     assert(
       snapshot.links.every((link) => !String(link.href).includes('__SUPPORT_EMAIL__')),
       'support page exposes placeholder support mailto link',

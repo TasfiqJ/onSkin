@@ -70,5 +70,9 @@ export function useTrendInsight() {
     };
   }, [consent.data, photos.data, monk.data]);
 
-  return { consented: consent.data ?? false, insight, isLoading: consent.isLoading || photos.isLoading };
+  return {
+    consented: consent.data ?? false,
+    insight,
+    isLoading: consent.isLoading || photos.isLoading,
+  };
 }

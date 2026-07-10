@@ -156,11 +156,7 @@ export default function OpenedDateScreen() {
             onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
           />
         </View>
-        <Text
-          variant="title"
-          className="text-[28px] leading-[31px]"
-          accessibilityRole="header"
-        >
+        <Text variant="title" className="text-[28px] leading-[31px]" accessibilityRole="header">
           Add product details first.
         </Text>
         <Text variant="bodySm" tone="muted" className="mt-1.5 text-[13px] leading-[18px]">

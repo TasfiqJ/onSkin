@@ -133,8 +133,12 @@ describe('progress photo sharing', () => {
   it('keeps the photo detail route on the shared failure-handled share helper', () => {
     const source = readSource('app/progress/[id].tsx');
 
-    expect(source).toContain('const [shareConfirmVisible, setShareConfirmVisible] = useState(false);');
-    expect(source).toContain('const [shareFeedback, setShareFeedback] = useState<string | null>(null);');
+    expect(source).toContain(
+      'const [shareConfirmVisible, setShareConfirmVisible] = useState(false);',
+    );
+    expect(source).toContain(
+      'const [shareFeedback, setShareFeedback] = useState<string | null>(null);',
+    );
     expect(source).toContain('setShareConfirmVisible(true);');
     expect(source).toContain('setShareConfirmVisible(false);');
     expect(source).toContain('const shared = await sharePhotoImageOnly(photo);');
@@ -153,7 +157,7 @@ describe('progress photo sharing', () => {
     const source = readSource('features/photos/sharePhoto.ts');
 
     expect(source).not.toContain('Alert.alert');
-    expect(source).not.toContain("import { Alert");
+    expect(source).not.toContain('import { Alert');
     expect(source).not.toContain('PHOTO_COPY.detail.shareUnavailable');
   });
 });

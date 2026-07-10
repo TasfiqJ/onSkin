@@ -13,8 +13,7 @@ const outJson =
   process.env.PHASE3_REVIEW_OPERATOR_QUEUE_JSON ??
   'docs/phase-3/generated/review-operator-queue.json';
 const outMd =
-  process.env.PHASE3_REVIEW_OPERATOR_QUEUE_MD ??
-  'docs/phase-3/generated/review-operator-queue.md';
+  process.env.PHASE3_REVIEW_OPERATOR_QUEUE_MD ?? 'docs/phase-3/generated/review-operator-queue.md';
 const outputPaths = [outJson, outMd].map((path) => normalizeRepoPath(path));
 
 const domainLabel = {
@@ -38,7 +37,9 @@ function abs(path) {
 }
 
 function normalizeRepoPath(path) {
-  return String(path ?? '').replaceAll('\\', '/').replace(/^\.\//, '');
+  return String(path ?? '')
+    .replaceAll('\\', '/')
+    .replace(/^\.\//, '');
 }
 
 function exists(path) {
@@ -89,7 +90,9 @@ function isPlaceholder(value) {
 function statusBucket(item) {
   const bucket = String(item?.statusBucket ?? '').trim();
   if (bucket) return bucket;
-  const status = String(item?.status ?? '').trim().toLowerCase();
+  const status = String(item?.status ?? '')
+    .trim()
+    .toLowerCase();
   if (status === 'approved') return 'approved';
   if (status === 'blocked') return 'blocked';
   if (status.includes('not cleared')) return 'notCleared';
@@ -105,7 +108,9 @@ function priorityFor(item) {
   ) {
     return 'P0';
   }
-  if (['legalRegulatory', 'clinical', 'cosmeticChemistry', 'privacySecurity'].includes(item.domain)) {
+  if (
+    ['legalRegulatory', 'clinical', 'cosmeticChemistry', 'privacySecurity'].includes(item.domain)
+  ) {
     return 'P1';
   }
   return 'P2';
@@ -138,7 +143,8 @@ function validateItem(item, blockers) {
     blockers.push(`Review worklist item ${item.id} has no source files.`);
   }
   for (const source of item.sourcePaths) {
-    if (!source?.path) blockers.push(`Review worklist item ${item.id} has a source without a path.`);
+    if (!source?.path)
+      blockers.push(`Review worklist item ${item.id} has a source without a path.`);
     if (source?.exists === false) {
       blockers.push(`Review worklist item ${item.id} references missing source ${source.path}.`);
     }
@@ -303,7 +309,9 @@ const queue = {
   gitSha,
   gitStatus,
   sourceWorklist: sourceRecord,
-  reviewReadiness: items.some((item) => item.priority === 'P0') ? 'external-blocked' : 'ready-to-send',
+  reviewReadiness: items.some((item) => item.priority === 'P0')
+    ? 'external-blocked'
+    : 'ready-to-send',
   summary: {
     itemCount: items.length,
     priorityCounts,

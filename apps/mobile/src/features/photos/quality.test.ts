@@ -89,7 +89,9 @@ describe('review verdict. Flagged, never blocked (docs/06 §3, D-029)', () => {
     expect(reviewQuality({ alignment: 0.95, lighting: 0.85 }).flag).toBe('matched');
   });
   it('darker when noticeably under the reference lighting', () => {
-    expect(reviewQuality({ alignment: 0.95, lighting: 0.74, refLighting: 0.95 }).flag).toBe('darker');
+    expect(reviewQuality({ alignment: 0.95, lighting: 0.74, refLighting: 0.95 }).flag).toBe(
+      'darker',
+    );
   });
   it('misaligned when off but well-lit', () => {
     const r = reviewQuality({ alignment: 0.5, lighting: 0.85 });

@@ -5,8 +5,14 @@ import { dirname, relative, resolve } from 'node:path';
 import { command, gitStatusExcludingGeneratedEvidence } from '../phase9/lib.mjs';
 
 const root = process.cwd();
-const inputPath = resolve(root, process.argv[2] ?? 'docs/phase-4/generated/obf-fixture-import.json');
-const jsonOutputPath = resolve(root, process.argv[3] ?? 'docs/phase-4/generated/catalog-qa-report.json');
+const inputPath = resolve(
+  root,
+  process.argv[2] ?? 'docs/phase-4/generated/obf-fixture-import.json',
+);
+const jsonOutputPath = resolve(
+  root,
+  process.argv[3] ?? 'docs/phase-4/generated/catalog-qa-report.json',
+);
 const mdOutputPath = jsonOutputPath.replace(/\.json$/i, '.md');
 const reportOutputPaths = [jsonOutputPath, mdOutputPath].map((path) =>
   relative(root, path).replace(/\\/g, '/'),
@@ -52,9 +58,12 @@ const duplicateBarcodes = products
   .map((product) => product.barcode)
   .filter((barcode, index, all) => all.indexOf(barcode) !== index);
 
-if (duplicateBarcodes.length > 0) blockers.push(`Duplicate barcodes: ${[...new Set(duplicateBarcodes)].join(', ')}`);
-if (missingCategory.length > 0) warnings.push(`${missingCategory.length} accepted products have no mapped category.`);
-if (missingIngredients.length > 0) warnings.push(`${missingIngredients.length} accepted products have no ingredient text.`);
+if (duplicateBarcodes.length > 0)
+  blockers.push(`Duplicate barcodes: ${[...new Set(duplicateBarcodes)].join(', ')}`);
+if (missingCategory.length > 0)
+  warnings.push(`${missingCategory.length} accepted products have no mapped category.`);
+if (missingIngredients.length > 0)
+  warnings.push(`${missingIngredients.length} accepted products have no ingredient text.`);
 if (products.length < 1) blockers.push('No accepted products in import output.');
 
 function repoRelative(path) {
@@ -139,9 +148,7 @@ const markdownRows = sourceHashes
       : `| ${sourceHash.path} | missing |  |  |`,
   )
   .join('\n');
-const dirtyDetails = gitStatus.length
-  ? `\nDirty paths:\n\n\`\`\`\n${gitStatus}\n\`\`\`\n\n`
-  : '\n';
+const dirtyDetails = gitStatus.length ? `\nDirty paths:\n\n\`\`\`\n${gitStatus}\n\`\`\`\n\n` : '\n';
 writeFileSync(
   mdOutputPath,
   `# Catalog QA Report\n\nGenerated: ${report.generatedAt}\n\n` +

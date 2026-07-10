@@ -22,8 +22,7 @@ const outJson =
   process.env.GENERATED_PACKET_STATUS_AUDIT_JSON ??
   'docs/generated/generated-packet-status-audit.json';
 const outMd =
-  process.env.GENERATED_PACKET_STATUS_AUDIT_MD ??
-  'docs/generated/generated-packet-status-audit.md';
+  process.env.GENERATED_PACKET_STATUS_AUDIT_MD ?? 'docs/generated/generated-packet-status-audit.md';
 
 const requiredPackageScripts = [
   'docs:generated-packet-status-audit',
@@ -31,10 +30,7 @@ const requiredPackageScripts = [
   'docs:generated-packet-status-audit:check',
 ];
 
-const dirtyTextPatterns = [
-  /dirty Git worktree/i,
-  /Git status:\s*DIRTY/i,
-];
+const dirtyTextPatterns = [/dirty Git worktree/i, /Git status:\s*DIRTY/i];
 const sha256Pattern = /^[a-f0-9]{64}$/i;
 
 function abs(path) {
@@ -121,16 +117,12 @@ function normalizeGeneratedJson(text) {
 
 function checkGeneratedFile(path, expectedContent, normalize) {
   if (!exists(path)) {
-    console.error(
-      `FAIL Missing ${path}. Run npm run docs:generated-packet-status-audit:strict.`,
-    );
+    console.error(`FAIL Missing ${path}. Run npm run docs:generated-packet-status-audit:strict.`);
     return false;
   }
   const current = read(path);
   if (normalize(current) !== normalize(expectedContent)) {
-    console.error(
-      `FAIL ${path} is stale. Run npm run docs:generated-packet-status-audit:strict.`,
-    );
+    console.error(`FAIL ${path} is stale. Run npm run docs:generated-packet-status-audit:strict.`);
     return false;
   }
   return true;
@@ -256,7 +248,9 @@ const fileResults = generatedFiles.map((path) => {
     }
   }
   for (const ref of staleHashRefs) {
-    blockers.push(`${path} has stale hash reference ${ref.jsonPath} -> ${ref.path}: ${ref.reason}.`);
+    blockers.push(
+      `${path} has stale hash reference ${ref.jsonPath} -> ${ref.path}: ${ref.reason}.`,
+    );
   }
 
   return {

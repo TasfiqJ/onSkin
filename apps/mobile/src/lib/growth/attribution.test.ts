@@ -78,24 +78,40 @@ describe('Phase 8 growth attribution stays privacy-safe', () => {
 
   it('rejects malformed public growth paths instead of composing confusing links', () => {
     expect(
-      buildPublicGrowthUrl('/s/abcDEF_123456?product_name=Retinol', { source: 'share_card' }, {
-        domain: 'routinekind.app',
-      }),
+      buildPublicGrowthUrl(
+        '/s/abcDEF_123456?product_name=Retinol',
+        { source: 'share_card' },
+        {
+          domain: 'routinekind.app',
+        },
+      ),
     ).toBeNull();
     expect(
-      buildPublicGrowthUrl('https://evil.com/s/abcDEF_123456', { source: 'share_card' }, {
-        domain: 'routinekind.app',
-      }),
+      buildPublicGrowthUrl(
+        'https://evil.com/s/abcDEF_123456',
+        { source: 'share_card' },
+        {
+          domain: 'routinekind.app',
+        },
+      ),
     ).toBeNull();
     expect(
-      buildPublicGrowthUrl('//evil.com/s/abcDEF_123456', { source: 'share_card' }, {
-        domain: 'routinekind.app',
-      }),
+      buildPublicGrowthUrl(
+        '//evil.com/s/abcDEF_123456',
+        { source: 'share_card' },
+        {
+          domain: 'routinekind.app',
+        },
+      ),
     ).toBeNull();
     expect(
-      buildPublicGrowthUrl('/s/abcDEF_123456', { source: 'share_card' }, {
-        domain: 'routinekind.local',
-      }),
+      buildPublicGrowthUrl(
+        '/s/abcDEF_123456',
+        { source: 'share_card' },
+        {
+          domain: 'routinekind.local',
+        },
+      ),
     ).toBeNull();
   });
 
@@ -109,10 +125,14 @@ describe('Phase 8 growth attribution stays privacy-safe', () => {
 
   it('ignores malformed encoded attribution instead of throwing', () => {
     expect(() =>
-      parseGrowthAttributionFromUrl('https://onskin.app/s/abcDEF_123456?source=%E0%A4%A&share_id=abcDEF_123456'),
+      parseGrowthAttributionFromUrl(
+        'https://onskin.app/s/abcDEF_123456?source=%E0%A4%A&share_id=abcDEF_123456',
+      ),
     ).not.toThrow();
     expect(
-      parseGrowthAttributionFromUrl('https://onskin.app/s/abcDEF_123456?source=%E0%A4%A&share_id=abcDEF_123456'),
+      parseGrowthAttributionFromUrl(
+        'https://onskin.app/s/abcDEF_123456?source=%E0%A4%A&share_id=abcDEF_123456',
+      ),
     ).toEqual({ share_id: 'abcDEF_123456' });
   });
 });

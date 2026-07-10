@@ -44,7 +44,8 @@ export const PHOTO_COPY = {
     lightingLabel: 'Lighting',
     skinPrep: 'Clean skin, no makeup, hair back. Same time of day as last week.',
     consentFailedTitle: 'Photo choice not saved',
-    consentFailedBody: "We couldn't save your photo choice. Please try again before opening the camera.",
+    consentFailedBody:
+      "We couldn't save your photo choice. Please try again before opening the camera.",
   },
   // Review & retake (design screen 02). Quality is FLAGGED, never blocked (D-029).
   review: {
@@ -69,7 +70,8 @@ export const PHOTO_COPY = {
     missingBack: 'Back to Progress',
     shareLabel: 'Share photo',
     shareTitle: 'Share this photo?',
-    shareBody: 'This sends the photo image you choose. It is not blurred, and your notes are not included.',
+    shareBody:
+      'This sends the photo image you choose. It is not blurred, and your notes are not included.',
     shareConfirm: 'Share photo',
     shareUnavailable:
       "Sharing isn't available on this device. Your photo stays on your phone unless you choose another way to export it.",
@@ -108,7 +110,8 @@ export const NO_SCORE_COPY = {
     'No anxiety-inducing number to watch go up or down.',
     'Honest about phone-photo limits. White light reads tone & redness poorly, especially in deeper skin.',
   ],
-  footer: 'If we ever add analysis, it’ll be separate, consented, fairness-checked, and never a hazard score.',
+  footer:
+    'If we ever add analysis, it’ll be separate, consented, fairness-checked, and never a hazard score.',
 } as const;
 
 /** Real-time capture coaching (docs/06 §3). Calm, plain, one instruction at a time. */

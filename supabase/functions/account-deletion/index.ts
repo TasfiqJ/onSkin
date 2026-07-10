@@ -7,10 +7,15 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerToken } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
-import { fetchWithTimeout, readLimitedResponseJson, readLimitedResponseText } from '../_shared/fetch.ts';
+import {
+  fetchWithTimeout,
+  readLimitedResponseJson,
+  readLimitedResponseText,
+} from '../_shared/fetch.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey =
+  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const revenueCatSecretKey =
   Deno.env.get('REVENUECAT_SECRET_API_KEY') ?? Deno.env.get('REVENUECAT_REST_API_KEY') ?? '';
 const maxBodyBytes = userEdgeBodyMaxBytes();
@@ -94,15 +99,16 @@ function assertAppleRevocationConfigured(): void {
 function posthogDeletionRequired(): boolean {
   return Boolean(
     Deno.env.get('EXPO_PUBLIC_POSTHOG_KEY') ||
-      Deno.env.get('POSTHOG_PROJECT_ID') ||
-      Deno.env.get('POSTHOG_PERSONAL_API_KEY') ||
-      Deno.env.get('POSTHOG_ENVIRONMENT_ID'),
+    Deno.env.get('POSTHOG_PROJECT_ID') ||
+    Deno.env.get('POSTHOG_PERSONAL_API_KEY') ||
+    Deno.env.get('POSTHOG_ENVIRONMENT_ID'),
   );
 }
 
 function assertPostHogDeletionConfigured(): void {
   const personalApiKey = Deno.env.get('POSTHOG_PERSONAL_API_KEY') ?? '';
-  const projectId = Deno.env.get('POSTHOG_PROJECT_ID') ?? Deno.env.get('POSTHOG_ENVIRONMENT_ID') ?? '';
+  const projectId =
+    Deno.env.get('POSTHOG_PROJECT_ID') ?? Deno.env.get('POSTHOG_ENVIRONMENT_ID') ?? '';
   const approvedAlternate = Deno.env.get('POSTHOG_DELETION_APPROVED_ALTERNATE') === 'true';
 
   if (!posthogDeletionRequired()) return;
@@ -131,7 +137,10 @@ function bytesToHex(bytes: ArrayBuffer): string {
 }
 
 async function pseudonymousUserId(userId: string): Promise<string> {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`onskin:user:${userId}`));
+  const digest = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(`onskin:user:${userId}`),
+  );
   return `u_${bytesToHex(digest).slice(0, 32)}`;
 }
 
@@ -182,7 +191,10 @@ async function createAppleClientSecret(): Promise<string> {
   return `${signingInput}.${base64UrlEncode(signature)}`;
 }
 
-async function revokeAppleTokenIfNeeded(user: AuthUser, authorizationCode?: string): Promise<'skipped' | 'revoked'> {
+async function revokeAppleTokenIfNeeded(
+  user: AuthUser,
+  authorizationCode?: string,
+): Promise<'skipped' | 'revoked'> {
   if (!userHasProvider(user, 'apple')) return 'skipped';
   if (!authorizationCode) throw new Error('APPLE_AUTHORIZATION_CODE_REQUIRED');
 
@@ -201,12 +213,14 @@ async function revokeAppleTokenIfNeeded(user: AuthUser, authorizationCode?: stri
     body: tokenParams,
   }).catch(() => null);
   if (!tokenResponse) throw new Error('APPLE_TOKEN_EXCHANGE_FAILED:FETCH_FAILED');
-  const tokenBody = (await readLimitedResponseJson<{
-    access_token?: string;
-    refresh_token?: string;
-    error?: string;
-  }>(tokenResponse)) ?? {};
-  if (!tokenResponse.ok) throw new Error(`APPLE_TOKEN_EXCHANGE_FAILED:${tokenBody.error ?? tokenResponse.status}`);
+  const tokenBody =
+    (await readLimitedResponseJson<{
+      access_token?: string;
+      refresh_token?: string;
+      error?: string;
+    }>(tokenResponse)) ?? {};
+  if (!tokenResponse.ok)
+    throw new Error(`APPLE_TOKEN_EXCHANGE_FAILED:${tokenBody.error ?? tokenResponse.status}`);
 
   const token = tokenBody.refresh_token ?? tokenBody.access_token;
   if (!token) throw new Error('APPLE_TOKEN_EXCHANGE_RETURNED_NO_TOKEN');
@@ -230,13 +244,19 @@ async function revokeAppleTokenIfNeeded(user: AuthUser, authorizationCode?: stri
   return 'revoked';
 }
 
-async function deleteRevenueCatSubscriber(userId: string, supabase: EdgeSupabaseClient): Promise<void> {
+async function deleteRevenueCatSubscriber(
+  userId: string,
+  supabase: EdgeSupabaseClient,
+): Promise<void> {
   if (!revenueCatSecretKey) throw new Error('REVENUECAT_SECRET_API_KEY_NOT_CONFIGURED');
 
-  const response = await fetchWithTimeout(`https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(userId)}`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${revenueCatSecretKey}` },
-  }).catch(() => null);
+  const response = await fetchWithTimeout(
+    `https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(userId)}`,
+    {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${revenueCatSecretKey}` },
+    },
+  ).catch(() => null);
   if (!response) throw new Error('REVENUECAT_DELETION_FAILED:FETCH_FAILED');
   const body = (await readLimitedResponseText(response)) ?? 'RESPONSE_TOO_LARGE';
   if (!response.ok && response.status !== 404) {
@@ -274,7 +294,8 @@ function posthogApiHost(): string {
 
 async function deletePostHogPerson(userId: string): Promise<'deleted' | 'skipped'> {
   const personalApiKey = Deno.env.get('POSTHOG_PERSONAL_API_KEY') ?? '';
-  const projectId = Deno.env.get('POSTHOG_PROJECT_ID') ?? Deno.env.get('POSTHOG_ENVIRONMENT_ID') ?? '';
+  const projectId =
+    Deno.env.get('POSTHOG_PROJECT_ID') ?? Deno.env.get('POSTHOG_ENVIRONMENT_ID') ?? '';
   const approvedAlternate = Deno.env.get('POSTHOG_DELETION_APPROVED_ALTERNATE') === 'true';
   const posthogEnabled =
     Boolean(Deno.env.get('EXPO_PUBLIC_POSTHOG_KEY')) || Boolean(Deno.env.get('POSTHOG_PROJECT_ID'));
@@ -324,7 +345,9 @@ async function deletePostHogPerson(userId: string): Promise<'deleted' | 'skipped
 
 async function deletePhotoStorage(userId: string, supabase: EdgeSupabaseClient): Promise<void> {
   for (let offset = 0; ; offset += 1000) {
-    const { data, error } = await supabase.storage.from('photos').list(userId, { limit: 1000, offset });
+    const { data, error } = await supabase.storage
+      .from('photos')
+      .list(userId, { limit: 1000, offset });
     if (error) throw new Error(`STORAGE_LIST_FAILED:${error.message}`);
     if (!data || data.length === 0) break;
     const paths = (data as Array<{ name: string }>).map((object) => `${userId}/${object.name}`);
@@ -334,7 +357,10 @@ async function deletePhotoStorage(userId: string, supabase: EdgeSupabaseClient):
   }
 }
 
-async function scrubServiceRoleOnlyRows(userId: string, supabase: EdgeSupabaseClient): Promise<void> {
+async function scrubServiceRoleOnlyRows(
+  userId: string,
+  supabase: EdgeSupabaseClient,
+): Promise<void> {
   const { data: clicks } = await supabase
     .from('commerce_click_events')
     .select('click_token')
@@ -343,7 +369,10 @@ async function scrubServiceRoleOnlyRows(userId: string, supabase: EdgeSupabaseCl
     .map((row: { click_token?: string | null }) => row.click_token)
     .filter((token): token is string => Boolean(token));
   if (clickTokens.length > 0) {
-    await supabase.from('order_attributions').update({ click_token: null }).in('click_token', clickTokens);
+    await supabase
+      .from('order_attributions')
+      .update({ click_token: null })
+      .in('click_token', clickTokens);
   }
 
   await supabase
@@ -356,7 +385,9 @@ async function scrubServiceRoleOnlyRows(userId: string, supabase: EdgeSupabaseCl
       aliases: null,
       payload: { erased: true, erased_at: new Date().toISOString(), reason: 'account_deletion' },
     })
-    .or(`user_id.eq.${userId},resolved_user_id.eq.${userId},app_user_id.eq.${userId},original_app_user_id.eq.${userId}`);
+    .or(
+      `user_id.eq.${userId},resolved_user_id.eq.${userId},app_user_id.eq.${userId},original_app_user_id.eq.${userId}`,
+    );
 }
 
 Deno.serve(async (req) => {
@@ -374,7 +405,8 @@ Deno.serve(async (req) => {
 
   const parsed = await readLimitedJson(req, maxBodyBytes, json, { error: 'BAD_JSON' });
   if (parsed instanceof Response) return parsed;
-  const body = parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? (parsed as DeletionBody) : {};
+  const body =
+    parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? (parsed as DeletionBody) : {};
 
   try {
     assertDeletionPreconditions(user, body);

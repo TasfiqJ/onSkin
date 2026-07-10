@@ -205,7 +205,9 @@ if (sentryDsn) {
 
 const appVariant = normalizedAppStage('APP_VARIANT');
 if (appVariant && !['development', 'staging', 'production'].includes(appVariant)) {
-  errors.push(`APP_VARIANT must be development, staging, or production; got ${valueFor('APP_VARIANT')}`);
+  errors.push(
+    `APP_VARIANT must be development, staging, or production; got ${valueFor('APP_VARIANT')}`,
+  );
 }
 
 const appEnv = normalizedAppStage('EXPO_PUBLIC_APP_ENV');

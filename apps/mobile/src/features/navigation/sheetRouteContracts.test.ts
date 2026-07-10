@@ -32,9 +32,7 @@ describe('Sheet route contracts', () => {
     expect(source).toContain('backOrReplace(router, fallbackRoute)');
     expect(source).toContain("import { useSafeAreaInsets } from 'react-native-safe-area-context';");
     expect(source).toContain('const insets = useSafeAreaInsets();');
-    expect(source).toContain(
-      'insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;',
-    );
+    expect(source).toContain('insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;');
     expect(source).toContain("'overflow-hidden rounded-t-sheet px-7 pb-10 pt-4'");
     expect(source).toContain(
       '...(sheetPaddingBottom === undefined ? {} : { paddingBottom: sheetPaddingBottom })',

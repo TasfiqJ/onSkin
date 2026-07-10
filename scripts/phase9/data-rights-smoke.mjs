@@ -7,7 +7,9 @@ const warnings = [];
 const exportSource = read('supabase/functions/data-export/index.ts');
 const deletionSource = read('supabase/functions/account-deletion/index.ts');
 const settingsActionsSource = read('apps/mobile/src/features/settings/actions.ts');
-const localPrivateDataKeysSource = read('apps/mobile/src/features/settings/localPrivateDataKeys.ts');
+const localPrivateDataKeysSource = read(
+  'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
+);
 const packageJson = JSON.parse(read('package.json'));
 const liveHarness = read('scripts/phase9/live-data-rights.mjs');
 const externalFetchHelper = read('supabase/functions/_shared/fetch.ts');
@@ -70,9 +72,19 @@ for (const pattern of [
   /DATA_EXPORT_FAILED/,
   /order_attributions.*commission_cents/s,
 ]) {
-  block(errors, pattern.test(exportSource), `data-export is missing required coverage marker ${pattern}.`);
+  block(
+    errors,
+    pattern.test(exportSource),
+    `data-export is missing required coverage marker ${pattern}.`,
+  );
 }
-block(errors, /select\('id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at'\)/.test(exportSource), 'order_attributions export must omit commission_cents.');
+block(
+  errors,
+  /select\('id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at'\)/.test(
+    exportSource,
+  ),
+  'order_attributions export must omit commission_cents.',
+);
 block(
   errors,
   exportSource.indexOf('photoPathBelongsToUser(userId, photo.storage_path as string)') !== -1 &&
@@ -110,21 +122,36 @@ for (const pattern of [
 }
 block(
   errors,
-  exportHandlerSource.indexOf('const rateLimitError = await enforceRateLimit(admin, userId);') !== -1 &&
+  exportHandlerSource.indexOf('const rateLimitError = await enforceRateLimit(admin, userId);') !==
+    -1 &&
     exportHandlerSource.indexOf('const rateLimitError = await enforceRateLimit(admin, userId);') <
       exportHandlerSource.indexOf('for (const item of CALLER_RLS_EXPORT_TABLES)') &&
     exportHandlerSource.indexOf('const rateLimitError = await enforceRateLimit(admin, userId);') <
       exportHandlerSource.indexOf('.createSignedUrl(photo.storage_path as string'),
   'data-export must enforce per-user rate limits before export table reads or signed URL generation.',
 );
-block(errors, /dataExportPhotoUrlTtlSeconds/.test(exportSource), 'data-export must use a named configurable photo signed URL TTL.');
 block(
   errors,
-  /createSignedUrl\(photo\.storage_path as string,\s*dataExportPhotoUrlTtlSeconds\)/.test(exportSource),
+  /dataExportPhotoUrlTtlSeconds/.test(exportSource),
+  'data-export must use a named configurable photo signed URL TTL.',
+);
+block(
+  errors,
+  /createSignedUrl\(photo\.storage_path as string,\s*dataExportPhotoUrlTtlSeconds\)/.test(
+    exportSource,
+  ),
   'data-export must use DATA_EXPORT_PHOTO_URL_TTL_SECONDS for photo signed URLs.',
 );
-block(errors, /function exportFileSlug\(\)/.test(exportSource), 'data-export must derive a sanitized export filename slug.');
-block(errors, /function exportFileName\(\)/.test(exportSource), 'data-export must derive its attachment filename from the sanitized slug.');
+block(
+  errors,
+  /function exportFileSlug\(\)/.test(exportSource),
+  'data-export must derive a sanitized export filename slug.',
+);
+block(
+  errors,
+  /function exportFileName\(\)/.test(exportSource),
+  'data-export must derive its attachment filename from the sanitized slug.',
+);
 block(
   errors,
   /EXPO_PUBLIC_APP_DISPLAY_NAME/.test(exportSource) &&
@@ -145,7 +172,8 @@ block(
 );
 block(
   errors,
-  !/filename="onskin-export\.json"/.test(exportSource) && !/const dataExportFileName = 'onskin-export\.json'/.test(exportSource),
+  !/filename="onskin-export\.json"/.test(exportSource) &&
+    !/const dataExportFileName = 'onskin-export\.json'/.test(exportSource),
   'data-export must not expose the legacy export filename in response headers.',
 );
 
@@ -168,7 +196,11 @@ for (const pattern of [
   /subscriptions_events.*resolved_user_id/s,
   /auth\.admin\.deleteUser/,
 ]) {
-  block(errors, pattern.test(deletionSource), `account-deletion is missing required deletion marker ${pattern}.`);
+  block(
+    errors,
+    pattern.test(deletionSource),
+    `account-deletion is missing required deletion marker ${pattern}.`,
+  );
 }
 block(
   errors,
@@ -179,11 +211,31 @@ block(
     /readLimitedResponseJson/.test(externalFetchHelper),
   'Shared external fetch helper must bound provider timeouts and response bodies.',
 );
-block(errors, /fetchWithTimeout/.test(deletionSource), 'account-deletion provider calls must use timed external fetches.');
-block(errors, /readLimitedResponseJson/.test(deletionSource), 'account-deletion provider JSON responses must be bounded.');
-block(errors, /readLimitedResponseText/.test(deletionSource), 'account-deletion provider text responses must be bounded.');
-block(errors, !/await fetch\(/.test(deletionSource), 'account-deletion must not call provider fetch directly.');
-block(errors, !/\.(?:json|text)\(\)/.test(deletionSource), 'account-deletion must not read unbounded provider response bodies.');
+block(
+  errors,
+  /fetchWithTimeout/.test(deletionSource),
+  'account-deletion provider calls must use timed external fetches.',
+);
+block(
+  errors,
+  /readLimitedResponseJson/.test(deletionSource),
+  'account-deletion provider JSON responses must be bounded.',
+);
+block(
+  errors,
+  /readLimitedResponseText/.test(deletionSource),
+  'account-deletion provider text responses must be bounded.',
+);
+block(
+  errors,
+  !/await fetch\(/.test(deletionSource),
+  'account-deletion must not call provider fetch directly.',
+);
+block(
+  errors,
+  !/\.(?:json|text)\(\)/.test(deletionSource),
+  'account-deletion must not read unbounded provider response bodies.',
+);
 
 block(
   errors,
@@ -206,13 +258,41 @@ block(
       deletionHandlerSource.indexOf('deletePhotoStorage(user.id, supabase)'),
   'account-deletion must delete the PostHog identity before local storage cleanup.',
 );
-block(errors, /const code = publicError\(error\)/.test(deletionSource), 'account-deletion must derive a stable public error code.');
-block(errors, /console\.error\('\[account-deletion\]', code\)/.test(deletionSource), 'account-deletion must not log raw provider errors.');
-block(errors, !/return message/.test(deletionSource), 'account-deletion publicError must not return raw provider messages.');
-block(errors, !/return json\(\{ deleted: false, error: publicError\(error\) \}/.test(deletionSource), 'account-deletion must not return raw publicError output inline.');
-block(errors, /console\.error\('\[data-export\]', 'DATA_EXPORT_FAILED'\)/.test(exportSource), 'data-export must log only a stable failure code.');
-block(errors, !/console\.error\('\[data-export\]', error\)/.test(exportSource), 'data-export must not log raw export errors.');
-block(errors, /DATA_EXPORT_CACHE_UNAVAILABLE/.test(settingsActionsSource), 'Mobile data export must fail closed when cacheDirectory is unavailable.');
+block(
+  errors,
+  /const code = publicError\(error\)/.test(deletionSource),
+  'account-deletion must derive a stable public error code.',
+);
+block(
+  errors,
+  /console\.error\('\[account-deletion\]', code\)/.test(deletionSource),
+  'account-deletion must not log raw provider errors.',
+);
+block(
+  errors,
+  !/return message/.test(deletionSource),
+  'account-deletion publicError must not return raw provider messages.',
+);
+block(
+  errors,
+  !/return json\(\{ deleted: false, error: publicError\(error\) \}/.test(deletionSource),
+  'account-deletion must not return raw publicError output inline.',
+);
+block(
+  errors,
+  /console\.error\('\[data-export\]', 'DATA_EXPORT_FAILED'\)/.test(exportSource),
+  'data-export must log only a stable failure code.',
+);
+block(
+  errors,
+  !/console\.error\('\[data-export\]', error\)/.test(exportSource),
+  'data-export must not log raw export errors.',
+);
+block(
+  errors,
+  /DATA_EXPORT_CACHE_UNAVAILABLE/.test(settingsActionsSource),
+  'Mobile data export must fail closed when cacheDirectory is unavailable.',
+);
 block(
   errors,
   /brandCachePrefix\('export'\)/.test(settingsActionsSource) &&
@@ -254,13 +334,34 @@ block(
   'Local private data cleanup must include current, runtime-brand, and legacy export/share cache files.',
 );
 for (const [label, source, handlerSource, firstSensitiveMarkers] of [
-  ['account-deletion', deletionSource, deletionHandlerSource, ['auth.getUser(token)', 'readLimitedJson(req']],
+  [
+    'account-deletion',
+    deletionSource,
+    deletionHandlerSource,
+    ['auth.getUser(token)', 'readLimitedJson(req'],
+  ],
   ['data-export', exportSource, exportHandlerSource, ['auth.getUser()']],
 ]) {
-  block(errors, /'Access-Control-Allow-Methods': 'POST, OPTIONS'/.test(source), `${label} must advertise POST-only execution and OPTIONS preflight.`);
-  block(errors, /req\.method === 'OPTIONS'/.test(handlerSource), `${label} must return early for CORS preflight requests.`);
-  block(errors, /req\.method !== 'POST'/.test(handlerSource), `${label} must reject non-POST execution methods.`);
-  block(errors, /METHOD_NOT_ALLOWED/.test(handlerSource), `${label} must use a stable method rejection error code.`);
+  block(
+    errors,
+    /'Access-Control-Allow-Methods': 'POST, OPTIONS'/.test(source),
+    `${label} must advertise POST-only execution and OPTIONS preflight.`,
+  );
+  block(
+    errors,
+    /req\.method === 'OPTIONS'/.test(handlerSource),
+    `${label} must return early for CORS preflight requests.`,
+  );
+  block(
+    errors,
+    /req\.method !== 'POST'/.test(handlerSource),
+    `${label} must reject non-POST execution methods.`,
+  );
+  block(
+    errors,
+    /METHOD_NOT_ALLOWED/.test(handlerSource),
+    `${label} must use a stable method rejection error code.`,
+  );
   block(
     errors,
     handlerSource.indexOf("req.method === 'OPTIONS'") !== -1 &&
@@ -275,14 +376,32 @@ for (const [label, source, handlerSource, firstSensitiveMarkers] of [
   );
 }
 
-block(errors, !/async function revokeAppleToken\(_userId/.test(deletionSource), 'Apple token revocation stub remains.');
-block(errors, !/async function deletePostHogPerson\(_userId/.test(deletionSource), 'PostHog deletion stub remains.');
-block(errors, !/BLOCKED:\s*B-APPLE|BLOCKED:\s*B-POSTHOG/.test(deletionSource), 'Provider deletion blocker comments remain in account-deletion.');
-block(errors, Boolean(packageJson.scripts?.['phase9:live-data-rights']), 'package.json is missing phase9:live-data-rights.');
+block(
+  errors,
+  !/async function revokeAppleToken\(_userId/.test(deletionSource),
+  'Apple token revocation stub remains.',
+);
+block(
+  errors,
+  !/async function deletePostHogPerson\(_userId/.test(deletionSource),
+  'PostHog deletion stub remains.',
+);
+block(
+  errors,
+  !/BLOCKED:\s*B-APPLE|BLOCKED:\s*B-POSTHOG/.test(deletionSource),
+  'Provider deletion blocker comments remain in account-deletion.',
+);
+block(
+  errors,
+  Boolean(packageJson.scripts?.['phase9:live-data-rights']),
+  'package.json is missing phase9:live-data-rights.',
+);
 block(
   errors,
   Boolean(packageJson.scripts?.['phase9:storage-path-privacy-smoke']) &&
-    /storagePath\.test\.ts/.test(packageJson.scripts?.['phase9:storage-path-privacy-smoke'] ?? '') &&
+    /storagePath\.test\.ts/.test(
+      packageJson.scripts?.['phase9:storage-path-privacy-smoke'] ?? '',
+    ) &&
     /phase9:storage-path-privacy-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
   'Storage path privacy contract must be scriptable and included in phase9:verify.',
 );
@@ -304,8 +423,16 @@ block(
 );
 
 const migrationText = read('supabase/migrations/20260614000026_phase4_catalog.sql');
-warn(warnings, /obf_contribution_queue[\s\S]*on delete set null/.test(migrationText), 'OBF contribution queue user link is not documented as set-null on account deletion.');
+warn(
+  warnings,
+  /obf_contribution_queue[\s\S]*on delete set null/.test(migrationText),
+  'OBF contribution queue user link is not documented as set-null on account deletion.',
+);
 
-warn(warnings, evidenceFlagEnabled(process.env.PHASE9_DATA_EXPORT_DELETE_PASS), 'Missing live data export/delete evidence: PHASE9_DATA_EXPORT_DELETE_PASS=true.');
+warn(
+  warnings,
+  evidenceFlagEnabled(process.env.PHASE9_DATA_EXPORT_DELETE_PASS),
+  'Missing live data export/delete evidence: PHASE9_DATA_EXPORT_DELETE_PASS=true.',
+);
 
 printResult('Phase 9 data rights smoke', errors, warnings);

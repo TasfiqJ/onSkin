@@ -50,11 +50,18 @@ export function shouldOfferStepUp(opts: {
 
 /** De-escalate on reported irritation: pause + drop a night (claim-safe, §4). */
 export function deEscalate(state: RampState): RampState {
-  return { freqPerWeek: Math.max(1, state.freqPerWeek - 1), targetPerWeek: state.targetPerWeek, toleranceState: 'paused_irritation' };
+  return {
+    freqPerWeek: Math.max(1, state.freqPerWeek - 1),
+    targetPerWeek: state.targetPerWeek,
+    toleranceState: 'paused_irritation',
+  };
 }
 
 /** Apply the optional weekly tolerance check-in answer (docs/03 §4). */
-export function applyTolerance(state: RampState, answer: 'comfortable' | 'a_bit_dry' | 'irritated'): RampState {
+export function applyTolerance(
+  state: RampState,
+  answer: 'comfortable' | 'a_bit_dry' | 'irritated',
+): RampState {
   if (answer === 'irritated') return deEscalate(state);
   if (answer === 'comfortable') return { ...state, toleranceState: 'steady' };
   return state; // "a bit dry". Hold the current cadence

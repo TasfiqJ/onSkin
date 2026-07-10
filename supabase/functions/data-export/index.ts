@@ -11,9 +11,15 @@ const publishableKey =
   Deno.env.get('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY') ??
   Deno.env.get('SUPABASE_PUBLISHABLE_KEY') ??
   Deno.env.get('SUPABASE_ANON_KEY')!;
-const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey =
+  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const dataExportRateLimitMax = intEnv('DATA_EXPORT_RATE_LIMIT_MAX', 5, 1, 100);
-const dataExportRateLimitWindowSeconds = intEnv('DATA_EXPORT_RATE_LIMIT_WINDOW_SECONDS', 3600, 60, 86400);
+const dataExportRateLimitWindowSeconds = intEnv(
+  'DATA_EXPORT_RATE_LIMIT_WINDOW_SECONDS',
+  3600,
+  60,
+  86400,
+);
 const dataExportPhotoUrlTtlSeconds = intEnv('DATA_EXPORT_PHOTO_URL_TTL_SECONDS', 3600, 60, 3600);
 const dataExportFileName = exportFileName();
 let rateLimitHmacKey: CryptoKey | null = null;
@@ -33,32 +39,97 @@ export const CALLER_RLS_EXPORT_TABLES: ExportTable[] = [
   { table: 'user_products', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
   { table: 'routines', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
   { table: 'routine_steps', filter: null, scope: 'caller_rls', note: 'Owned through routines.' },
-  { table: 'routine_completions', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'routine_conflicts', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
+  {
+    table: 'routine_completions',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
+  {
+    table: 'routine_conflicts',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
   { table: 'active_ramp', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
   { table: 'shelf_scans', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
   { table: 'cycles', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
   { table: 'cycle_nights', filter: null, scope: 'caller_rls', note: 'Owned through cycles.' },
   { table: 'streak_freezes', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'notification_preferences', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'notification_log', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
+  {
+    table: 'notification_preferences',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
+  {
+    table: 'notification_log',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
   { table: 'consents', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
   { table: 'photos', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
   { table: 'entitlements', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'reverse_trial_grants', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'recommendation_preferences', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'recommendations', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'catalog_corrections', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'catalog_lookup_events', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'commerce_click_events', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'community_blocks', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'community_questions', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'community_reactions', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'community_reports', filter: { column: 'reporter_id', value: 'USER_ID' }, scope: 'caller_rls' },
+  {
+    table: 'reverse_trial_grants',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
+  {
+    table: 'recommendation_preferences',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
+  {
+    table: 'recommendations',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
+  {
+    table: 'catalog_corrections',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
+  {
+    table: 'catalog_lookup_events',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
+  {
+    table: 'commerce_click_events',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
+  {
+    table: 'community_blocks',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
+  {
+    table: 'community_questions',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
+  {
+    table: 'community_reactions',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
+  {
+    table: 'community_reports',
+    filter: { column: 'reporter_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
   { table: 'photo_trend', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
   { table: 'ask_sessions', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
-  { table: 'ask_turn_audit', filter: null, scope: 'caller_rls', note: 'Owned through ask_sessions.' },
-  { table: 'ask_safety_audit', filter: { column: 'user_id', value: 'USER_ID' }, scope: 'caller_rls' },
+  {
+    table: 'ask_turn_audit',
+    filter: null,
+    scope: 'caller_rls',
+    note: 'Owned through ask_sessions.',
+  },
+  {
+    table: 'ask_safety_audit',
+    filter: { column: 'user_id', value: 'USER_ID' },
+    scope: 'caller_rls',
+  },
 ];
 
 export const SERVICE_ROLE_FILTERED_EXPORTS = [
@@ -92,7 +163,9 @@ function intEnv(name: string, fallback: number, min: number, max: number): numbe
 
 function exportFileSlug(): string {
   const displayName =
-    Deno.env.get('EXPO_PUBLIC_APP_DISPLAY_NAME') ?? Deno.env.get('APP_DISPLAY_NAME') ?? 'RoutineKind';
+    Deno.env.get('EXPO_PUBLIC_APP_DISPLAY_NAME') ??
+    Deno.env.get('APP_DISPLAY_NAME') ??
+    'RoutineKind';
   const slug = displayName
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -133,10 +206,15 @@ async function hmacSha256Hex(value: string): Promise<string> {
     ['sign'],
   );
   const signature = await crypto.subtle.sign('HMAC', rateLimitHmacKey, encoder.encode(value));
-  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, '0')).join('');
+  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, '0')).join(
+    '',
+  );
 }
 
-async function enforceRateLimit(admin: EdgeSupabaseClient, userId: string): Promise<Response | null> {
+async function enforceRateLimit(
+  admin: EdgeSupabaseClient,
+  userId: string,
+): Promise<Response | null> {
   const keyHash = await hmacSha256Hex(`data-export|${userId}`);
   const { data, error } = await admin.rpc('consume_edge_rate_limit', {
     p_scope: 'data-export',
@@ -193,11 +271,13 @@ Deno.serve(async (req) => {
       exclusion_register: [
         {
           data_class: 'local_device_files',
-          reason: 'The cloud backend never receives local-only progress photos, shelf thumbnails, OS share-cache files, or SecureStore keys.',
+          reason:
+            'The cloud backend never receives local-only progress photos, shelf thumbnails, OS share-cache files, or SecureStore keys.',
         },
         {
           data_class: 'internal_commission_calculation',
-          reason: 'order_attributions export includes rows linked by the user click token but omits commission_cents as internal business accounting.',
+          reason:
+            'order_attributions export includes rows linked by the user click token but omits commission_cents as internal business accounting.',
         },
       ],
     };
@@ -209,9 +289,13 @@ Deno.serve(async (req) => {
     const { data: subscriptionEvents, error: subscriptionEventsError } = await admin
       .from('subscriptions_events')
       .select('*')
-      .or(`user_id.eq.${userId},resolved_user_id.eq.${userId},app_user_id.eq.${userId},original_app_user_id.eq.${userId}`);
+      .or(
+        `user_id.eq.${userId},resolved_user_id.eq.${userId},app_user_id.eq.${userId},original_app_user_id.eq.${userId}`,
+      );
     if (subscriptionEventsError) {
-      throw new Error(`EXPORT_TABLE_FAILED:subscriptions_events:${subscriptionEventsError.message}`);
+      throw new Error(
+        `EXPORT_TABLE_FAILED:subscriptions_events:${subscriptionEventsError.message}`,
+      );
     }
     bundle.subscriptions_events = subscriptionEvents ?? [];
 
@@ -219,16 +303,21 @@ Deno.serve(async (req) => {
       .from('obf_contribution_queue')
       .select('*')
       .eq('user_id', userId);
-    if (obfQueueError) throw new Error(`EXPORT_TABLE_FAILED:obf_contribution_queue:${obfQueueError.message}`);
+    if (obfQueueError)
+      throw new Error(`EXPORT_TABLE_FAILED:obf_contribution_queue:${obfQueueError.message}`);
     bundle.obf_contribution_queue = obfQueue ?? [];
 
-    const clickTokens = ((bundle.commerce_click_events as Array<{ click_token?: string | null }> | undefined) ?? [])
+    const clickTokens = (
+      (bundle.commerce_click_events as Array<{ click_token?: string | null }> | undefined) ?? []
+    )
       .map((row) => row.click_token)
       .filter((token): token is string => Boolean(token));
     if (clickTokens.length > 0) {
       const { data: orderAttributions, error: orderAttributionsError } = await admin
         .from('order_attributions')
-        .select('id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at')
+        .select(
+          'id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at',
+        )
         .in('click_token', clickTokens);
       if (orderAttributionsError) {
         throw new Error(`EXPORT_TABLE_FAILED:order_attributions:${orderAttributionsError.message}`);
@@ -238,8 +327,11 @@ Deno.serve(async (req) => {
       bundle.order_attributions = [];
     }
 
-    const cloudPhotos = ((bundle.photos as Array<{ id?: string; storage_path?: string | null; local_only?: boolean }> | undefined) ?? [])
-      .filter((photo) => !photo.local_only && photo.storage_path);
+    const cloudPhotos = (
+      (bundle.photos as
+        | Array<{ id?: string; storage_path?: string | null; local_only?: boolean }>
+        | undefined) ?? []
+    ).filter((photo) => !photo.local_only && photo.storage_path);
     const photoUrls: { id: string | null; url: string | null }[] = [];
     const photoUrlOmissions: { id: string | null; reason: string }[] = [];
     for (const photo of cloudPhotos) {

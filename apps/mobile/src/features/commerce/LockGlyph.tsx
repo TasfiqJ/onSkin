@@ -10,7 +10,11 @@ export function LockGlyph({ size = 14, color }: { size?: number; color: string }
   const shackleH = Math.round(size * 0.5);
   const bodyH = Math.round(size * 0.62);
   return (
-    <View style={{ alignItems: 'center' }} accessibilityElementsHidden importantForAccessibility="no">
+    <View
+      style={{ alignItems: 'center' }}
+      accessibilityElementsHidden
+      importantForAccessibility="no"
+    >
       <View
         style={{
           width: shackleW,
@@ -23,7 +27,14 @@ export function LockGlyph({ size = 14, color }: { size?: number; color: string }
           marginBottom: -1,
         }}
       />
-      <View style={{ width: size, height: bodyH, borderRadius: Math.max(2, size * 0.16), backgroundColor: color }} />
+      <View
+        style={{
+          width: size,
+          height: bodyH,
+          borderRadius: Math.max(2, size * 0.16),
+          backgroundColor: color,
+        }}
+      />
     </View>
   );
 }

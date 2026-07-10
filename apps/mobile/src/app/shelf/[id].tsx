@@ -351,8 +351,7 @@ export default function ProductDetailScreen() {
         sourceName: catalogSourceLabel,
         sourceUrl: p.catalogSourceUrl,
         defaultPaoMonths:
-          p.paoMonths != null &&
-          (p.paoSource === 'catalog' || p.paoSource === 'category_default')
+          p.paoMonths != null && (p.paoSource === 'catalog' || p.paoSource === 'category_default')
             ? p.paoMonths
             : null,
         qualityIssue: correctionType,

@@ -36,7 +36,8 @@ function stableGeneratedAt(output, nextManifest) {
 if (!fixtureMode && !approved) {
   const blockedManifestBody = {
     status: 'blocked',
-    reason: 'COSING_IMPORT_APPROVED is not true. Production CosIng import requires source/legal review.',
+    reason:
+      'COSING_IMPORT_APPROVED is not true. Production CosIng import requires source/legal review.',
     inputPath,
   };
   const blockedManifest = {
@@ -45,7 +46,9 @@ if (!fixtureMode && !approved) {
   };
   mkdirSync(dirname(outputPath), { recursive: true });
   writeFileSync(outputPath, `${JSON.stringify(blockedManifest, null, 2)}\n`);
-  console.error('CosIng import blocked. Re-run with --fixture for local fixtures or COSING_IMPORT_APPROVED=true after review.');
+  console.error(
+    'CosIng import blocked. Re-run with --fixture for local fixtures or COSING_IMPORT_APPROVED=true after review.',
+  );
   process.exit(0);
 }
 
@@ -95,7 +98,12 @@ const ingredients = rows
     annexStatus: row.annex_status || null,
     source: 'cosing',
     reviewStatus: 'unreviewed',
-    synonyms: row.synonyms ? row.synonyms.split('|').map((value) => value.trim()).filter(Boolean) : [],
+    synonyms: row.synonyms
+      ? row.synonyms
+          .split('|')
+          .map((value) => value.trim())
+          .filter(Boolean)
+      : [],
   }));
 
 const manifestBody = {

@@ -10,7 +10,12 @@ describe('onboarding quiz multi-select behavior', () => {
   });
 
   it('still lets concrete sensitivities be toggled independently', () => {
-    expect(toggleExclusiveNoneSelection(['fragrance'], 'alcohol')).toEqual(['fragrance', 'alcohol']);
-    expect(toggleExclusiveNoneSelection(['fragrance', 'alcohol'], 'fragrance')).toEqual(['alcohol']);
+    expect(toggleExclusiveNoneSelection(['fragrance'], 'alcohol')).toEqual([
+      'fragrance',
+      'alcohol',
+    ]);
+    expect(toggleExclusiveNoneSelection(['fragrance', 'alcohol'], 'fragrance')).toEqual([
+      'alcohol',
+    ]);
   });
 });

@@ -57,9 +57,7 @@ export function usesPrintedExpiry(category: string | null | undefined): boolean 
   return category === 'spf';
 }
 
-export function functionalTagsForCategory(
-  category: string | null | undefined,
-): FunctionalTag[] {
+export function functionalTagsForCategory(category: string | null | undefined): FunctionalTag[] {
   switch (category) {
     case 'vitamin_c_serum':
       return ['vitamin_c'];

@@ -17,38 +17,124 @@ const edgeFunction = read('supabase/functions/consent-withdrawal/index.ts');
 const storagePathHelper = read('supabase/functions/_shared/storagePath.ts');
 const storagePathHelperTest = read('supabase/functions/_shared/storagePath.test.ts');
 const liveHarness = read('scripts/phase9/live-consent-withdrawal.mjs');
-const migrations = read('supabase/migrations/20260613000023_community.sql') + read('supabase/migrations/20260614000025_ask_onskin.sql');
-const phase9ConsentMigration = read('supabase/migrations/20260705000032_phase9_consent_withdrawal.sql');
+const migrations =
+  read('supabase/migrations/20260613000023_community.sql') +
+  read('supabase/migrations/20260614000025_ask_onskin.sql');
+const phase9ConsentMigration = read(
+  'supabase/migrations/20260705000032_phase9_consent_withdrawal.sql',
+);
 
-block(errors, /withdrawHealthDataConsent/.test(settings), 'Health-data consent withdrawal action is missing.');
-block(errors, /granted:\s*false/.test(settings) && /deleteAccount/.test(settings), 'Health-data withdrawal must record false consent and delete account data.');
-block(errors, /recordConsent/.test(you) && /granted/.test(you) && /setCommerceConsentLocal/.test(you), 'Settings consent toggles must record ledger rows and sync commerce local flag.');
+block(
+  errors,
+  /withdrawHealthDataConsent/.test(settings),
+  'Health-data consent withdrawal action is missing.',
+);
+block(
+  errors,
+  /granted:\s*false/.test(settings) && /deleteAccount/.test(settings),
+  'Health-data withdrawal must record false consent and delete account data.',
+);
+block(
+  errors,
+  /recordConsent/.test(you) && /granted/.test(you) && /setCommerceConsentLocal/.test(you),
+  'Settings consent toggles must record ledger rows and sync commerce local flag.',
+);
 
-block(errors, /revokeTrendInsightsConsent/.test(trend), 'Trend consent revocation function is missing.');
-block(errors, /deleteTrendState/.test(trend), 'Trend consent revocation must delete local trend state.');
-block(errors, /photo_trend_insights/.test(trend) && /withdrawConsent/.test(trend), 'Trend consent revocation must call the server withdrawal path.');
+block(
+  errors,
+  /revokeTrendInsightsConsent/.test(trend),
+  'Trend consent revocation function is missing.',
+);
+block(
+  errors,
+  /deleteTrendState/.test(trend),
+  'Trend consent revocation must delete local trend state.',
+);
+block(
+  errors,
+  /photo_trend_insights/.test(trend) && /withdrawConsent/.test(trend),
+  'Trend consent revocation must call the server withdrawal path.',
+);
 
-block(errors, /withdrawCommunityConsent/.test(community), 'Community consent withdrawal function is missing.');
-block(errors, /community_participation/.test(community) && /withdrawConsent/.test(community), 'Community consent withdrawal must call the server withdrawal path.');
-block(errors, /community_questions.*on delete cascade/s.test(migrations), 'Community questions must cascade on account deletion.');
-block(errors, /community_reactions.*on delete cascade/s.test(migrations), 'Community reactions must cascade on account deletion.');
+block(
+  errors,
+  /withdrawCommunityConsent/.test(community),
+  'Community consent withdrawal function is missing.',
+);
+block(
+  errors,
+  /community_participation/.test(community) && /withdrawConsent/.test(community),
+  'Community consent withdrawal must call the server withdrawal path.',
+);
+block(
+  errors,
+  /community_questions.*on delete cascade/s.test(migrations),
+  'Community questions must cascade on account deletion.',
+);
+block(
+  errors,
+  /community_reactions.*on delete cascade/s.test(migrations),
+  'Community reactions must cascade on account deletion.',
+);
 
 block(errors, /data_sharing/.test(commerce), 'Commerce must use the data_sharing consent type.');
-block(errors, /declineCommerceConsent/.test(commerce) && /setCommerceConsentLocal\(false\)/.test(commerce), 'Commerce decline must relock local paid-link affordance.');
-block(errors, /declineCommerceConsent/.test(commerce) && /withdrawConsent/.test(commerce), 'Commerce consent withdrawal must call the server withdrawal path.');
+block(
+  errors,
+  /declineCommerceConsent/.test(commerce) && /setCommerceConsentLocal\(false\)/.test(commerce),
+  'Commerce decline must relock local paid-link affordance.',
+);
+block(
+  errors,
+  /declineCommerceConsent/.test(commerce) && /withdrawConsent/.test(commerce),
+  'Commerce consent withdrawal must call the server withdrawal path.',
+);
 
 block(errors, /revokeAskConsent/.test(ask), 'Ask consent revocation function is missing.');
 block(errors, /clearAskStore/.test(ask), 'Ask consent revocation must clear local Ask state.');
-block(errors, /ask_onskin/.test(ask) && /withdrawConsent/.test(ask), 'Ask consent revocation must call the server withdrawal path.');
-block(errors, /ask_safety_audit.*on delete cascade/s.test(migrations), 'Ask safety audit must cascade on account deletion.');
-block(errors, /setCloudBackupEnabled/.test(photoConsent) && /photo_cloud_backup/.test(photoConsent) && /withdrawConsent/.test(photoConsent), 'Cloud photo backup withdrawal must call the server withdrawal path.');
+block(
+  errors,
+  /ask_onskin/.test(ask) && /withdrawConsent/.test(ask),
+  'Ask consent revocation must call the server withdrawal path.',
+);
+block(
+  errors,
+  /ask_safety_audit.*on delete cascade/s.test(migrations),
+  'Ask safety audit must cascade on account deletion.',
+);
+block(
+  errors,
+  /setCloudBackupEnabled/.test(photoConsent) &&
+    /photo_cloud_backup/.test(photoConsent) &&
+    /withdrawConsent/.test(photoConsent),
+  'Cloud photo backup withdrawal must call the server withdrawal path.',
+);
 
-block(errors, /supabase\.functions\.invoke\('consent-withdrawal'/.test(withdrawalClient), 'Mobile withdrawal helper must invoke consent-withdrawal.');
-block(errors, /CryptoDigestAlgorithm\.SHA256/.test(withdrawalClient), 'Mobile withdrawal helper must send a SHA-256 consent text hash.');
+block(
+  errors,
+  /supabase\.functions\.invoke\('consent-withdrawal'/.test(withdrawalClient),
+  'Mobile withdrawal helper must invoke consent-withdrawal.',
+);
+block(
+  errors,
+  /CryptoDigestAlgorithm\.SHA256/.test(withdrawalClient),
+  'Mobile withdrawal helper must send a SHA-256 consent text hash.',
+);
 
-block(errors, /auth\.getUser\(token\)/.test(edgeFunction), 'consent-withdrawal must validate the caller JWT.');
-block(errors, /req\.method === 'OPTIONS'/.test(edgeFunction), 'consent-withdrawal must handle CORS preflight early.');
-block(errors, /req\.method !== 'POST'/.test(edgeFunction), 'consent-withdrawal must reject non-POST methods.');
+block(
+  errors,
+  /auth\.getUser\(token\)/.test(edgeFunction),
+  'consent-withdrawal must validate the caller JWT.',
+);
+block(
+  errors,
+  /req\.method === 'OPTIONS'/.test(edgeFunction),
+  'consent-withdrawal must handle CORS preflight early.',
+);
+block(
+  errors,
+  /req\.method !== 'POST'/.test(edgeFunction),
+  'consent-withdrawal must reject non-POST methods.',
+);
 block(
   errors,
   edgeFunction.indexOf("req.method !== 'POST'") !== -1 &&
@@ -56,9 +142,23 @@ block(
     edgeFunction.indexOf("req.method !== 'POST'") < edgeFunction.indexOf('auth.getUser(token)'),
   'consent-withdrawal method check must run before caller auth resolution.',
 );
-block(errors, /allowedBodyKeys/.test(edgeFunction) && /INVALID_BODY/.test(edgeFunction), 'consent-withdrawal must reject unknown or invalid body fields.');
-block(errors, /granted:\s*false/.test(edgeFunction) && /revoked_at/.test(edgeFunction), 'consent-withdrawal must append a false consent ledger row.');
-block(errors, /withdrawPhotoCloudBackup/.test(edgeFunction) && /photoPathBelongsToUser/.test(edgeFunction) && /storage\.from\('photos'\)\.remove/.test(edgeFunction), 'Photo cloud withdrawal must remove only caller-owned storage paths.');
+block(
+  errors,
+  /allowedBodyKeys/.test(edgeFunction) && /INVALID_BODY/.test(edgeFunction),
+  'consent-withdrawal must reject unknown or invalid body fields.',
+);
+block(
+  errors,
+  /granted:\s*false/.test(edgeFunction) && /revoked_at/.test(edgeFunction),
+  'consent-withdrawal must append a false consent ledger row.',
+);
+block(
+  errors,
+  /withdrawPhotoCloudBackup/.test(edgeFunction) &&
+    /photoPathBelongsToUser/.test(edgeFunction) &&
+    /storage\.from\('photos'\)\.remove/.test(edgeFunction),
+  'Photo cloud withdrawal must remove only caller-owned storage paths.',
+);
 block(
   errors,
   /SAFE_STORAGE_PATH_SEGMENT/.test(storagePathHelper) &&
@@ -73,19 +173,55 @@ block(
     /token=secret/.test(storagePathHelperTest),
   'Shared photo storage path helper test must cover traversal and signed-token path probes.',
 );
-block(errors, /local_only:\s*true/.test(edgeFunction) && /storage_path:\s*null/.test(edgeFunction), 'Photo cloud withdrawal must relocalize photo metadata.');
-block(errors, /withdrawAskOnSkin/.test(edgeFunction) && /ask_safety_audit/.test(edgeFunction), 'Ask withdrawal must delete server-side safety audit content.');
-block(errors, /withdrawTrendInsights/.test(edgeFunction) && /photo_trend/.test(edgeFunction), 'Trend withdrawal must delete server-side trend rows.');
-block(errors, /withdrawCommunityParticipation/.test(edgeFunction) && /community_questions/.test(edgeFunction) && /community_reactions/.test(edgeFunction), 'Community withdrawal must delete user community questions and reactions.');
-block(errors, /withdrawDataSharing/.test(edgeFunction) && /order_attributions/.test(edgeFunction) && /commerce_click_events/.test(edgeFunction), 'Data-sharing withdrawal must detach order attributions and delete commerce clicks.');
-block(errors, !/error:\s*.*\.message/.test(edgeFunction), 'consent-withdrawal must not return raw error messages.');
+block(
+  errors,
+  /local_only:\s*true/.test(edgeFunction) && /storage_path:\s*null/.test(edgeFunction),
+  'Photo cloud withdrawal must relocalize photo metadata.',
+);
+block(
+  errors,
+  /withdrawAskOnSkin/.test(edgeFunction) && /ask_safety_audit/.test(edgeFunction),
+  'Ask withdrawal must delete server-side safety audit content.',
+);
+block(
+  errors,
+  /withdrawTrendInsights/.test(edgeFunction) && /photo_trend/.test(edgeFunction),
+  'Trend withdrawal must delete server-side trend rows.',
+);
+block(
+  errors,
+  /withdrawCommunityParticipation/.test(edgeFunction) &&
+    /community_questions/.test(edgeFunction) &&
+    /community_reactions/.test(edgeFunction),
+  'Community withdrawal must delete user community questions and reactions.',
+);
+block(
+  errors,
+  /withdrawDataSharing/.test(edgeFunction) &&
+    /order_attributions/.test(edgeFunction) &&
+    /commerce_click_events/.test(edgeFunction),
+  'Data-sharing withdrawal must detach order attributions and delete commerce clicks.',
+);
+block(
+  errors,
+  !/error:\s*.*\.message/.test(edgeFunction),
+  'consent-withdrawal must not return raw error messages.',
+);
 block(
   errors,
   /console\.error\('\[consent-withdrawal\]',\s*'CONSENT_WITHDRAWAL_FAILED'\)/.test(edgeFunction),
   'consent-withdrawal must log only a stable cleanup failure code.',
 );
-block(errors, !/error\s+instanceof\s+Error\s*\?\s*error\.message/.test(edgeFunction), 'consent-withdrawal must not log raw exception messages.');
-block(errors, Boolean(packageJson.scripts?.['phase9:live-consent-withdrawal']), 'package.json is missing phase9:live-consent-withdrawal.');
+block(
+  errors,
+  !/error\s+instanceof\s+Error\s*\?\s*error\.message/.test(edgeFunction),
+  'consent-withdrawal must not log raw exception messages.',
+);
+block(
+  errors,
+  Boolean(packageJson.scripts?.['phase9:live-consent-withdrawal']),
+  'package.json is missing phase9:live-consent-withdrawal.',
+);
 block(
   errors,
   /phase9:live-consent-withdrawal/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
@@ -100,7 +236,9 @@ block(
 );
 block(
   errors,
-  /photo_cloud_backup withdrawal relocalizes metadata and removes owned storage object/.test(liveHarness) &&
+  /photo_cloud_backup withdrawal relocalizes metadata and removes owned storage object/.test(
+    liveHarness,
+  ) &&
     /ask_onskin withdrawal deletes server-side safety audit content only/.test(liveHarness) &&
     /photo_trend_insights withdrawal deletes trend rows/.test(liveHarness) &&
     /community_participation withdrawal deletes user community rows/.test(liveHarness) &&
@@ -125,11 +263,16 @@ for (const [type, policy] of [
 ]) {
   block(
     errors,
-    phase9ConsentMigration.includes(`has_current_consent('${type}')`) && phase9ConsentMigration.includes(policy),
+    phase9ConsentMigration.includes(`has_current_consent('${type}')`) &&
+      phase9ConsentMigration.includes(policy),
     `RLS must enforce current ${type} consent for sensitive writes.`,
   );
 }
 
-warn(warnings, evidenceFlagEnabled(process.env.PHASE9_CONSENT_WITHDRAWAL_PASS), 'Missing live consent-withdrawal evidence: PHASE9_CONSENT_WITHDRAWAL_PASS=true.');
+warn(
+  warnings,
+  evidenceFlagEnabled(process.env.PHASE9_CONSENT_WITHDRAWAL_PASS),
+  'Missing live consent-withdrawal evidence: PHASE9_CONSENT_WITHDRAWAL_PASS=true.',
+);
 
 printResult('Phase 9 consent withdrawal smoke', errors, warnings);

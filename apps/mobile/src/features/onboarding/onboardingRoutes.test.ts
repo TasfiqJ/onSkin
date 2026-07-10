@@ -88,8 +88,12 @@ describe('onboarding route contracts', () => {
     expect(quiz).toContain('function CompactQuizOptionCard');
     expect(quiz).toContain("style={{ width: '48%' }}");
     expect(quiz).toContain('numberOfLines={3}');
-    expect(quiz).toContain("style={splitShortPhone ? { fontSize: 24, lineHeight: 27 } : undefined}");
-    expect(products).toContain('height < 640 || supportFloorTextPressurePhone || modernTextPressurePhone || splitShortPhone');
+    expect(quiz).toContain(
+      'style={splitShortPhone ? { fontSize: 24, lineHeight: 27 } : undefined}',
+    );
+    expect(products).toContain(
+      'height < 640 || supportFloorTextPressurePhone || modernTextPressurePhone || splitShortPhone',
+    );
     for (const source of [age, goals, products]) {
       expect(source).toContain('const supportFloorTextPressurePhone =');
       expect(source).toContain(
@@ -108,8 +112,12 @@ describe('onboarding route contracts', () => {
     expect(products).toContain(
       'height < 640 || supportFloorTextPressurePhone || modernTextPressurePhone || splitShortPhone',
     );
-    expect(products).toContain('const showIntroCopy = !modernTextPressurePhone && !splitShortPhone;');
-    expect(products).toContain('const showProgressBody = !modernTextPressurePhone && !splitShortPhone;');
+    expect(products).toContain(
+      'const showIntroCopy = !modernTextPressurePhone && !splitShortPhone;',
+    );
+    expect(products).toContain(
+      'const showProgressBody = !modernTextPressurePhone && !splitShortPhone;',
+    );
     expect(products).toContain('const compactFooterAdds = compactPhone && name.trim().length > 0');
     expect(products).toContain('const inputRef = useRef<TextInput>(null)');
     expect(products).toContain('placeholder="e.g. Retinol serum"');
@@ -135,14 +143,20 @@ describe('onboarding route contracts', () => {
     expect(quiz).toContain('<View className="mt-3 flex-row flex-wrap gap-2">');
     expect(quiz).toContain("className={compactPhone ? 'mt-4 gap-2' : 'mt-6 gap-3'}");
     expect(products).toContain('const splitShortPhone = height < 460;');
-    expect(products).toContain('const showIntroCopy = !modernTextPressurePhone && !splitShortPhone;');
-    expect(products).toContain('const showProgressBody = !modernTextPressurePhone && !splitShortPhone;');
-    expect(products).toContain("className={splitShortPhone ? 'mt-3' : compactPhone ? 'mt-4' : 'mt-6'}");
-    expect(products).toContain("style={splitShortPhone ? { fontSize: 27, lineHeight: 30 } : undefined}");
-    expect(products).toContain("'mt-3 rounded-2xl bg-greige-chip px-4 py-2.5'");
     expect(products).toContain(
-      "splitShortPhone\n                ? 'mt-3 p-4'",
+      'const showIntroCopy = !modernTextPressurePhone && !splitShortPhone;',
     );
+    expect(products).toContain(
+      'const showProgressBody = !modernTextPressurePhone && !splitShortPhone;',
+    );
+    expect(products).toContain(
+      "className={splitShortPhone ? 'mt-3' : compactPhone ? 'mt-4' : 'mt-6'}",
+    );
+    expect(products).toContain(
+      'style={splitShortPhone ? { fontSize: 27, lineHeight: 30 } : undefined}',
+    );
+    expect(products).toContain("'mt-3 rounded-2xl bg-greige-chip px-4 py-2.5'");
+    expect(products).toContain("splitShortPhone\n                ? 'mt-3 p-4'");
     expect(products).toContain(
       'const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);',
     );
@@ -200,9 +214,7 @@ describe('onboarding route contracts', () => {
     expect(goals).toContain('contentContainerClassName="pb-28"');
     expect(quiz).toContain('contentContainerClassName="pb-28"');
     expect(products).toContain('const productsBottomPaddingClass =');
-    expect(products).toContain(
-      'splitShortPhone && showContinueAnyway && added.length === 1',
-    );
+    expect(products).toContain('splitShortPhone && showContinueAnyway && added.length === 1');
     expect(products).toContain("? 'pb-44'");
     expect(products).toContain("? 'pb-36'");
     expect(products).toContain('contentContainerClassName={productsBottomPaddingClass}');

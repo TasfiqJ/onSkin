@@ -17,5 +17,8 @@ export function surfacedExpiry(
 export function expiryMonthLabel(iso: string | null): string | null {
   if (!iso) return null;
   const [y, m, d] = iso.split('-').map(Number);
-  return new Date(y!, (m ?? 1) - 1, d ?? 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  return new Date(y!, (m ?? 1) - 1, d ?? 1).toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  });
 }

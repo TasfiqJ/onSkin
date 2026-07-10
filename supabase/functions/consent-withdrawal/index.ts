@@ -10,7 +10,8 @@ import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '..
 import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey =
+  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const maxBodyBytes = userEdgeBodyMaxBytes();
 
 type ConsentWithdrawalType =
@@ -61,8 +62,13 @@ function validateBody(value: unknown): WithdrawalBody | null {
   const consentType = value.consentType;
   const version = value.version;
   const consentTextHash = value.consentTextHash;
-  if (typeof consentType !== 'string' || !allowedConsentTypes.has(consentType as ConsentWithdrawalType)) return null;
-  if (typeof version !== 'string' || version.trim().length === 0 || version.length > 120) return null;
+  if (
+    typeof consentType !== 'string' ||
+    !allowedConsentTypes.has(consentType as ConsentWithdrawalType)
+  )
+    return null;
+  if (typeof version !== 'string' || version.trim().length === 0 || version.length > 120)
+    return null;
   if (typeof consentTextHash !== 'string' || !/^[a-f0-9]{64}$/i.test(consentTextHash)) return null;
 
   return {
@@ -116,7 +122,10 @@ async function withdrawPhotoCloudBackup(supabase: EdgeSupabaseClient, userId: st
     ...new Set(
       rows
         .map((row) => row.storage_path)
-        .filter((path): path is string => typeof path === 'string' && photoPathBelongsToUser(userId, path)),
+        .filter(
+          (path): path is string =>
+            typeof path === 'string' && photoPathBelongsToUser(userId, path),
+        ),
     ),
   ];
 
@@ -193,11 +202,20 @@ async function withdrawDataSharing(supabase: EdgeSupabaseClient, userId: string)
 
   return {
     order_attributions_detached: orderAttributionsDetached,
-    commerce_click_events_deleted: await deleteUserRows(supabase, 'commerce_click_events', 'user_id', userId),
+    commerce_click_events_deleted: await deleteUserRows(
+      supabase,
+      'commerce_click_events',
+      'user_id',
+      userId,
+    ),
   };
 }
 
-async function runCleanup(supabase: EdgeSupabaseClient, userId: string, consentType: ConsentWithdrawalType) {
+async function runCleanup(
+  supabase: EdgeSupabaseClient,
+  userId: string,
+  consentType: ConsentWithdrawalType,
+) {
   switch (consentType) {
     case 'photo_cloud_backup':
       return withdrawPhotoCloudBackup(supabase, userId);

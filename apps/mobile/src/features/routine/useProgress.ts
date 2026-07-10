@@ -120,7 +120,8 @@ export function useProgress() {
       const week = buildWeek(completed, todayISO, frozen);
       // Heat-map only needs the current month's counts.
       const monthCounts = new Map<string, number>();
-      for (const [date, n] of countByDate) if (date >= localDateString(monthStart)) monthCounts.set(date, n);
+      for (const [date, n] of countByDate)
+        if (date >= localDateString(monthStart)) monthCounts.set(date, n);
 
       // longest is a non-decreasing personal best (D-011): greatest(server best, computed).
       const longest = Math.max(serverLongest, bestStreak(completed), s.current);

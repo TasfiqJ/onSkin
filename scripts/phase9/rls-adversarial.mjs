@@ -13,13 +13,19 @@ const packageJson = JSON.parse(read('package.json'));
 const liveHarness = read('scripts/phase9/live-supabase-adversarial.mjs');
 
 const createdTables = new Set(
-  [...migrations.matchAll(/create table(?: if not exists)? public\.([a-z_]+)/gi)].map((match) => match[1]),
+  [...migrations.matchAll(/create table(?: if not exists)? public\.([a-z_]+)/gi)].map(
+    (match) => match[1],
+  ),
 );
 const rlsTables = new Set(
-  [...migrations.matchAll(/alter table public\.([a-z_]+) enable row level security/gi)].map((match) => match[1]),
+  [...migrations.matchAll(/alter table public\.([a-z_]+) enable row level security/gi)].map(
+    (match) => match[1],
+  ),
 );
 const dynamicUserTables = new Set();
-for (const match of migrations.matchAll(/create table(?: if not exists)? public\.([a-z_]+)\s*\(([\s\S]*?)\n\);/gi)) {
+for (const match of migrations.matchAll(
+  /create table(?: if not exists)? public\.([a-z_]+)\s*\(([\s\S]*?)\n\);/gi,
+)) {
   if (/references auth\.users/i.test(match[2])) dynamicUserTables.add(match[1]);
 }
 
@@ -106,20 +112,49 @@ for (const table of dynamicUserTables) {
 }
 
 for (const table of requiredUserOrLinkedTables) {
-  block(errors, exportSource.includes(table), `User-linked table is missing from data-export coverage: ${table}.`);
+  block(
+    errors,
+    exportSource.includes(table),
+    `User-linked table is missing from data-export coverage: ${table}.`,
+  );
 }
 
 for (const table of serviceOnlyTables) {
-  if (table === 'catalog_import_batches' || table === 'catalog_quality_reports' || table === 'community_moderation_events') continue;
-  block(errors, exportSource.includes(table), `Service-only user-linked table is missing from data-export or exclusion coverage: ${table}.`);
+  if (
+    table === 'catalog_import_batches' ||
+    table === 'catalog_quality_reports' ||
+    table === 'community_moderation_events'
+  )
+    continue;
+  block(
+    errors,
+    exportSource.includes(table),
+    `Service-only user-linked table is missing from data-export or exclusion coverage: ${table}.`,
+  );
 }
 
-block(errors, /photos_objects_select_own/.test(migrations), 'Storage RLS policy missing for photos select.');
-block(errors, /photos_objects_insert_own/.test(migrations), 'Storage RLS policy missing for photos insert.');
-block(errors, /photos_objects_delete_own/.test(migrations), 'Storage RLS policy missing for photos delete.');
+block(
+  errors,
+  /photos_objects_select_own/.test(migrations),
+  'Storage RLS policy missing for photos select.',
+);
+block(
+  errors,
+  /photos_objects_insert_own/.test(migrations),
+  'Storage RLS policy missing for photos insert.',
+);
+block(
+  errors,
+  /photos_objects_delete_own/.test(migrations),
+  'Storage RLS policy missing for photos delete.',
+);
 block(errors, /owns_routine/.test(migrations), 'Child-table routine ownership helper is missing.');
 block(errors, /owns_cycle/.test(migrations), 'Child-table cycle ownership helper is missing.');
-block(errors, /ask_turn_audit_select_own/.test(migrations), 'Ask turn audit parent-owner policy is missing.');
+block(
+  errors,
+  /ask_turn_audit_select_own/.test(migrations),
+  'Ask turn audit parent-owner policy is missing.',
+);
 block(
   errors,
   /drop policy if exists "routine_steps_insert_own"[\s\S]*create policy "routine_steps_insert_own"[\s\S]*owns_user_product\(user_product_id\)/i.test(
@@ -143,7 +178,9 @@ block(
 );
 block(
   errors,
-  /drop policy if exists "community_reports_insert_own"[\s\S]*moderation_state = 'approved'/i.test(migrations),
+  /drop policy if exists "community_reports_insert_own"[\s\S]*moderation_state = 'approved'/i.test(
+    migrations,
+  ),
   'Community report RLS must block reports against private pending questions.',
 );
 block(
@@ -167,7 +204,11 @@ block(
   ),
   'Community reactions must target published claim-safe notes.',
 );
-block(errors, /create or replace function public\.has_current_consent/i.test(migrations), 'Current consent helper is missing.');
+block(
+  errors,
+  /create or replace function public\.has_current_consent/i.test(migrations),
+  'Current consent helper is missing.',
+);
 for (const [type, tablePolicy] of [
   ['photo_cloud_backup', 'photos_cloud_backup_consent_insert'],
   ['photo_cloud_backup', 'photos_objects_insert_own'],
@@ -191,7 +232,8 @@ block(
 );
 block(
   errors,
-  /storage\.from\('photos'\)/.test(liveHarness) && /PHASE9_RUN_LIVE_SUPABASE_ADVERSARIAL/.test(liveHarness),
+  /storage\.from\('photos'\)/.test(liveHarness) &&
+    /PHASE9_RUN_LIVE_SUPABASE_ADVERSARIAL/.test(liveHarness),
   'Live Supabase adversarial harness must test private photo storage and require an explicit run flag.',
 );
 
@@ -245,10 +287,22 @@ const requiredLiveHarnessChecks = [
 ];
 
 for (const check of requiredLiveHarnessChecks) {
-  block(errors, liveHarness.includes(check), `Live Supabase adversarial harness is missing: ${check}.`);
+  block(
+    errors,
+    liveHarness.includes(check),
+    `Live Supabase adversarial harness is missing: ${check}.`,
+  );
 }
 
-warn(warnings, evidenceFlagEnabled(process.env.PHASE9_RLS_STAGING_PASS), 'Missing live staging RLS adversarial evidence: PHASE9_RLS_STAGING_PASS=true.');
-warn(warnings, evidenceFlagEnabled(process.env.PHASE9_RLS_PRODUCTION_PASS), 'Missing live production RLS adversarial evidence: PHASE9_RLS_PRODUCTION_PASS=true.');
+warn(
+  warnings,
+  evidenceFlagEnabled(process.env.PHASE9_RLS_STAGING_PASS),
+  'Missing live staging RLS adversarial evidence: PHASE9_RLS_STAGING_PASS=true.',
+);
+warn(
+  warnings,
+  evidenceFlagEnabled(process.env.PHASE9_RLS_PRODUCTION_PASS),
+  'Missing live production RLS adversarial evidence: PHASE9_RLS_PRODUCTION_PASS=true.',
+);
 
 printResult('Phase 9 RLS adversarial', errors, warnings);

@@ -81,8 +81,12 @@ describe('cycle week route scheduler notes', () => {
     expect(source).toContain("'text-[25px] leading-[27px]'");
     expect(source).toContain("shortSheet ? 'mt-3' : compactSheet ? 'mt-4' : 'mt-6'");
     expect(source).toContain('short={shortSheet}');
-    expect(source).toContain("shortSheet ? 'mt-1 py-0' : compactSheet ? 'min-h-[48px] py-3' : undefined");
-    expect(source).toContain('style={shortSheet ? { height: 48, minHeight: 48, paddingVertical: 0 } : undefined}');
+    expect(source).toContain(
+      "shortSheet ? 'mt-1 py-0' : compactSheet ? 'min-h-[48px] py-3' : undefined",
+    );
+    expect(source).toContain(
+      'style={shortSheet ? { height: 48, minHeight: 48, paddingVertical: 0 } : undefined}',
+    );
     expect(source).toContain("'min-h-[48px]'");
     expect(source).not.toContain("className={compactSheet ? 'pb-6' : undefined}");
   });

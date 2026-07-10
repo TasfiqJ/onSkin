@@ -95,7 +95,10 @@ describe('LargeSecureStore session wrapper', () => {
   it('removes both stores when the encrypted session envelope is tampered', async () => {
     const store = new LargeSecureStore();
     mocks.secureStorage.set(KEY_NAME, bytesToHex(CONTENT_KEY));
-    mocks.asyncStorage.set(KEY_NAME, tamperCiphertext(encryptLargeSecureStoreValue('session', CONTENT_KEY)));
+    mocks.asyncStorage.set(
+      KEY_NAME,
+      tamperCiphertext(encryptLargeSecureStoreValue('session', CONTENT_KEY)),
+    );
 
     await expect(store.getItem(KEY_NAME)).resolves.toBeNull();
 

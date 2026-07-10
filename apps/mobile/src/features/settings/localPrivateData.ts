@@ -21,8 +21,9 @@ async function clearGeneratedCacheFiles(): Promise<void> {
   const cachePrefixes = localPrivateCachePrefixes();
   const targets = entries.filter(
     (name) =>
-      LOCAL_PRIVATE_CACHE_FILENAMES.includes(name as (typeof LOCAL_PRIVATE_CACHE_FILENAMES)[number]) ||
-      cachePrefixes.some((prefix) => name.startsWith(prefix)),
+      LOCAL_PRIVATE_CACHE_FILENAMES.includes(
+        name as (typeof LOCAL_PRIVATE_CACHE_FILENAMES)[number],
+      ) || cachePrefixes.some((prefix) => name.startsWith(prefix)),
   );
 
   await Promise.all(

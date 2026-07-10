@@ -14,7 +14,11 @@ function base64ToBytes(input: string): Uint8Array {
     const values = [...chars].map((char) => (char === '=' ? 0 : BASE64_LOOKUP.get(char)));
     if (values.some((value) => value == null)) throw new Error('Invalid base64 image data.');
 
-    const n = ((values[0] as number) << 18) | ((values[1] as number) << 12) | ((values[2] as number) << 6) | (values[3] as number);
+    const n =
+      ((values[0] as number) << 18) |
+      ((values[1] as number) << 12) |
+      ((values[2] as number) << 6) |
+      (values[3] as number);
     if (offset < out.length) out[offset++] = (n >> 16) & 0xff;
     if (offset < out.length) out[offset++] = (n >> 8) & 0xff;
     if (offset < out.length) out[offset++] = n & 0xff;
@@ -71,7 +75,8 @@ function stripJpegMetadata(bytes: Uint8Array): Uint8Array {
 
     if (index + 2 > bytes.length) return concat([...chunks, bytes.slice(markerOffset - 1)]);
     const length = (bytes[index] << 8) | bytes[index + 1];
-    if (length < 2 || index + length > bytes.length) return concat([...chunks, bytes.slice(markerOffset - 1)]);
+    if (length < 2 || index + length > bytes.length)
+      return concat([...chunks, bytes.slice(markerOffset - 1)]);
 
     const segmentStart = markerOffset - 1;
     const segmentEnd = index + length;
@@ -87,18 +92,31 @@ const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
 const PNG_METADATA_CHUNKS = new Set(['eXIf', 'iTXt', 'tEXt', 'zTXt', 'tIME']);
 
 function stripPngMetadata(bytes: Uint8Array): Uint8Array {
-  if (bytes.length < PNG_SIGNATURE.length || !PNG_SIGNATURE.every((value, index) => bytes[index] === value)) {
+  if (
+    bytes.length < PNG_SIGNATURE.length ||
+    !PNG_SIGNATURE.every((value, index) => bytes[index] === value)
+  ) {
     return bytes;
   }
 
   const chunks = [bytes.slice(0, PNG_SIGNATURE.length)];
   let index = PNG_SIGNATURE.length;
   while (index + 12 <= bytes.length) {
-    const length = ((bytes[index] << 24) | (bytes[index + 1] << 16) | (bytes[index + 2] << 8) | bytes[index + 3]) >>> 0;
+    const length =
+      ((bytes[index] << 24) |
+        (bytes[index + 1] << 16) |
+        (bytes[index + 2] << 8) |
+        bytes[index + 3]) >>>
+      0;
     const chunkEnd = index + 12 + length;
     if (chunkEnd > bytes.length) return concat([...chunks, bytes.slice(index)]);
 
-    const type = String.fromCharCode(bytes[index + 4], bytes[index + 5], bytes[index + 6], bytes[index + 7]);
+    const type = String.fromCharCode(
+      bytes[index + 4],
+      bytes[index + 5],
+      bytes[index + 6],
+      bytes[index + 7],
+    );
     if (!PNG_METADATA_CHUNKS.has(type)) chunks.push(bytes.slice(index, chunkEnd));
     index = chunkEnd;
     if (type === 'IEND') break;

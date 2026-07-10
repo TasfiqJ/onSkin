@@ -28,10 +28,7 @@ function Step({
     <View className={cn('flex-row', short ? 'gap-2.5' : 'gap-3.5')}>
       <View className="items-center">
         <View
-          className={cn(
-            'items-center justify-center rounded-full',
-            short ? 'h-5 w-5' : 'h-6 w-6',
-          )}
+          className={cn('items-center justify-center rounded-full', short ? 'h-5 w-5' : 'h-6 w-6')}
           style={
             state === 'done'
               ? { backgroundColor: '#A5694B' }

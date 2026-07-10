@@ -47,7 +47,10 @@ function toSource(s: string): AffiliateSource {
  *  set otherwise). Returns [] when none. The surface then shows the honest empty
  *  state, never a fabricated retailer. NEVER sorted by commission (church and state):
  *  there is no rate field here to sort by. */
-export function resolveWhereToBuy(productType: string, rows: AffiliateLinkRow[]): WhereToBuyOption[] {
+export function resolveWhereToBuy(
+  productType: string,
+  rows: AffiliateLinkRow[],
+): WhereToBuyOption[] {
   return rows
     .filter((r) => r.is_active && r.product_type === productType)
     .flatMap((r) => {

@@ -58,7 +58,8 @@ export const REC_COPY = {
   youreSet: {
     title: 'Your routine looks complete.',
     body: 'Cleanser, treatment, moisturiser and SPF. All covered, conflict-free, and matched to your goals. Nothing to add right now.',
-    bodyNoGoals: 'Cleanser, treatment, moisturiser and SPF. All covered and conflict-free. Nothing to add right now.',
+    bodyNoGoals:
+      'Cleanser, treatment, moisturiser and SPF. All covered and conflict-free. Nothing to add right now.',
     checks: ['Cleanser · treatment · moisturiser · SPF', 'No unresolved conflicts'],
     footnote: 'we’ll tell you the moment that changes, never before',
   },
@@ -139,7 +140,8 @@ export const whyCopy = {
     `Your morning routine has no SPF, and daily SPF is the single highest-impact step${
       goal ? ` toward ${goalConcern(goal)}` : ''
     }.`,
-  gapMoisturiser: 'Your routine has no moisturiser. It helps seal everything in and support your barrier.',
+  gapMoisturiser:
+    'Your routine has no moisturiser. It helps seal everything in and support your barrier.',
   gapCleanser: 'Your routine has no cleanser. A gentle, clean base is where every routine starts.',
   replacement: (name: string): string =>
     `Your ${name} is running low. When it’s done, there are two honest options. Repurchase, or a better-fit alternative.`,

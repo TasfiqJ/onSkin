@@ -14,7 +14,10 @@ export function readEdgeAppEnvironment(): EdgeAppEnvironment {
 
 export function booleanEnv(
   name: string,
-  { defaultValue = false, invalidValue = false }: { defaultValue?: boolean; invalidValue?: boolean } = {},
+  {
+    defaultValue = false,
+    invalidValue = false,
+  }: { defaultValue?: boolean; invalidValue?: boolean } = {},
 ): boolean {
   const raw = Deno.env.get(name);
   const candidate = raw?.trim().toLowerCase();

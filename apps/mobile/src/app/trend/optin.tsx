@@ -24,9 +24,7 @@ function devTrendConsentFailureModes(): TrendConsentFailureModes {
     return { grantOnce: false, ledgerLocalOnly: false, revokeOnce: false };
   }
   const modes = new Set(
-    (process.env.EXPO_PUBLIC_E2E_TREND_CONSENT_FAILURE ?? '')
-      .split(',')
-      .map((mode) => mode.trim()),
+    (process.env.EXPO_PUBLIC_E2E_TREND_CONSENT_FAILURE ?? '').split(',').map((mode) => mode.trim()),
   );
   return {
     grantOnce: modes.has('grant_once') || modes.has('all_once'),
@@ -227,9 +225,7 @@ export default function TrendOptInScreen() {
         {saveFailed ? (
           <View
             accessibilityRole="alert"
-            className={
-              compact ? 'mt-2 rounded-2xl px-3.5 py-2.5' : 'mt-2.5 rounded-2xl px-4 py-3'
-            }
+            className={compact ? 'mt-2 rounded-2xl px-3.5 py-2.5' : 'mt-2.5 rounded-2xl px-4 py-3'}
             style={{
               backgroundColor: 'rgba(165,105,75,0.10)',
               borderWidth: 1,
@@ -238,9 +234,7 @@ export default function TrendOptInScreen() {
           >
             <Text
               className={
-                compact
-                  ? 'font-sans-semibold text-[12.5px]'
-                  : 'font-sans-semibold text-[13px]'
+                compact ? 'font-sans-semibold text-[12.5px]' : 'font-sans-semibold text-[13px]'
               }
               style={{ color: colors.clayDeep }}
             >

@@ -110,7 +110,8 @@ export default function WelcomeScreen() {
         <Pressable
           accessibilityRole="button"
           className="mt-3 items-center py-3"
-          onPress={() => router.push('/onboarding/account')}>
+          onPress={() => router.push('/onboarding/account')}
+        >
           <Text variant="body" tone="muted" className="font-sans-medium">
             I already have an account
           </Text>

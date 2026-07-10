@@ -76,7 +76,9 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
       tags: i.engineProduct.tags,
       // Recently added → phased introduction, unless the user opted to start it
       // now ("add it now anyway", docs/05 §6.2).
-      isNew: daysSince(i.product.createdAt) <= 3 && !config.stagingOverrides.includes(i.engineProduct.id),
+      isNew:
+        daysSince(i.product.createdAt) <= 3 &&
+        !config.stagingOverrides.includes(i.engineProduct.id),
     }));
     const stagedActiveIds = actives.filter((a) => a.isNew).map((a) => a.id);
 
@@ -89,7 +91,9 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
     });
 
     const anchor = config.anchorISO;
-    const tonight = cycle ? { index: nightIndex(cycle, anchor, today), night: nightFor(cycle, anchor, today) } : null;
+    const tonight = cycle
+      ? { index: nightIndex(cycle, anchor, today), night: nightFor(cycle, anchor, today) }
+      : null;
     const week = cycle ? weekAhead(cycle, anchor, today) : [];
     const nextAcidNight = cycle ? nextSlotDate(cycle, anchor, today, 'exfoliate') : null;
     const rec = recoveryProgress(config.recovery, today);
@@ -108,7 +112,10 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
     };
   }, [shelf.data, cfg.data, profile.data, freqByProductId, today]);
 
-  return { data, isLoading: shelf.isLoading || cfg.isLoading || profile.isLoading || ramp.isLoading };
+  return {
+    data,
+    isLoading: shelf.isLoading || cfg.isLoading || profile.isLoading || ramp.isLoading,
+  };
 }
 
 export function useCycleMutations() {

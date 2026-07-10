@@ -7,11 +7,9 @@ const strict = process.argv.includes('--strict');
 const check = process.argv.includes('--check');
 
 const outJson =
-  process.env.PERFORMANCE_READINESS_AUDIT_JSON ??
-  'docs/generated/performance-readiness-audit.json';
+  process.env.PERFORMANCE_READINESS_AUDIT_JSON ?? 'docs/generated/performance-readiness-audit.json';
 const outMd =
-  process.env.PERFORMANCE_READINESS_AUDIT_MD ??
-  'docs/generated/performance-readiness-audit.md';
+  process.env.PERFORMANCE_READINESS_AUDIT_MD ?? 'docs/generated/performance-readiness-audit.md';
 
 const files = {
   architecture: 'docs/00-architecture.md',
@@ -254,7 +252,8 @@ for (const scriptPart of requiredLaunchVerifyParts) {
 const docResults = docNeedles.map(({ path, needles }) => {
   const text = exists(path) ? read(path) : '';
   const missing = needles.filter((needle) => !text.includes(needle));
-  for (const needle of missing) blockers.push(`${path} is missing performance readiness text: ${needle}.`);
+  for (const needle of missing)
+    blockers.push(`${path} is missing performance readiness text: ${needle}.`);
   return {
     path,
     checkedNeedles: needles.length,

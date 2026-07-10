@@ -47,25 +47,44 @@ export function scoreCatalogProduct(input: CatalogProductQualityInput): CatalogP
   if (!input.hasCategory) warnings.push('missing_category');
   if (!input.hasBarcode) warnings.push('missing_barcode');
   if (input.ingredientTokenCount === 0) warnings.push('missing_ingredient_list');
-  if (input.sourceAgeDays != null && input.sourceAgeDays > 365) warnings.push('source_older_than_one_year');
-  if (input.isSunscreen && !input.hasPrintedExpiry) warnings.push('sunscreen_expiry_requires_label_or_manufacturer_source');
+  if (input.sourceAgeDays != null && input.sourceAgeDays > 365)
+    warnings.push('source_older_than_one_year');
+  if (input.isSunscreen && !input.hasPrintedExpiry)
+    warnings.push('sunscreen_expiry_requires_label_or_manufacturer_source');
 
   const unknownRate =
-    input.ingredientTokenCount > 0 ? input.unmatchedIngredientCount / input.ingredientTokenCount : 1;
+    input.ingredientTokenCount > 0
+      ? input.unmatchedIngredientCount / input.ingredientTokenCount
+      : 1;
   const ingredientQualityScore = clampScore(
     input.ingredientTokenCount === 0
       ? 0
       : input.ingredientParseConfidence * 80 + (1 - Math.min(1, unknownRate)) * 20,
   );
   const barcodeQualityScore = input.hasBarcode ? 100 : 20;
-  const categoryQualityScore = input.hasCategory ? (input.isSunscreen && !input.hasPrintedExpiry ? 65 : 100) : 20;
-  const identityScore = (input.hasName ? 35 : 0) + (input.hasBrand ? 25 : 0) + (input.hasBarcode ? 25 : 0) + (input.hasCategory ? 15 : 0);
+  const categoryQualityScore = input.hasCategory
+    ? input.isSunscreen && !input.hasPrintedExpiry
+      ? 65
+      : 100
+    : 20;
+  const identityScore =
+    (input.hasName ? 35 : 0) +
+    (input.hasBrand ? 25 : 0) +
+    (input.hasBarcode ? 25 : 0) +
+    (input.hasCategory ? 15 : 0);
   const dataQualityScore = clampScore(
-    identityScore * 0.45 + ingredientQualityScore * 0.35 + barcodeQualityScore * 0.1 + categoryQualityScore * 0.1,
+    identityScore * 0.45 +
+      ingredientQualityScore * 0.35 +
+      barcodeQualityScore * 0.1 +
+      categoryQualityScore * 0.1,
   );
 
   let grade: CatalogQualityGrade;
-  if (blockers.includes('source_blocked') || blockers.includes('product_blocked') || !input.hasName) {
+  if (
+    blockers.includes('source_blocked') ||
+    blockers.includes('product_blocked') ||
+    !input.hasName
+  ) {
     grade = 'blocked';
   } else if (
     input.productReviewStatus === 'reviewed' &&
@@ -115,7 +134,10 @@ export function scoreCatalogProduct(input: CatalogProductQualityInput): CatalogP
   };
 }
 
-export function isRecommendationEligible(quality: Pick<CatalogProductQuality, 'grade' | 'recommendationEligible'>): boolean {
-  return quality.recommendationEligible && (quality.grade === 'verified' || quality.grade === 'usable');
+export function isRecommendationEligible(
+  quality: Pick<CatalogProductQuality, 'grade' | 'recommendationEligible'>,
+): boolean {
+  return (
+    quality.recommendationEligible && (quality.grade === 'verified' || quality.grade === 'usable')
+  );
 }
-

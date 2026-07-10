@@ -1,7 +1,10 @@
 import * as aesjs from 'aes-js';
 import { describe, expect, it } from 'vitest';
 
-import { decryptLargeSecureStoreValue, encryptLargeSecureStoreValue } from './largeSecureStoreCrypto';
+import {
+  decryptLargeSecureStoreValue,
+  encryptLargeSecureStoreValue,
+} from './largeSecureStoreCrypto';
 
 const KEY = Uint8Array.from(Array.from({ length: 32 }, (_, index) => index + 1));
 
@@ -19,14 +22,21 @@ function tamperCiphertext(encrypted: string): string {
 
 describe('large secure store authenticated session encryption', () => {
   it('round-trips Supabase session JSON through an authenticated envelope', () => {
-    const value = JSON.stringify({ access_token: 'at', refresh_token: 'rt', user: { id: 'user-1' } });
+    const value = JSON.stringify({
+      access_token: 'at',
+      refresh_token: 'rt',
+      user: { id: 'user-1' },
+    });
     const encrypted = encryptLargeSecureStoreValue(value, KEY);
     const parsed = JSON.parse(encrypted) as { version?: string; ciphertextHex?: string };
 
     expect(parsed.version).toBe('xchacha20poly1305:v1');
     expect(encrypted).not.toContain('access_token');
     expect(encrypted).not.toContain('refresh_token');
-    expect(decryptLargeSecureStoreValue(encrypted, KEY)).toEqual({ plaintext: value, needsMigration: false });
+    expect(decryptLargeSecureStoreValue(encrypted, KEY)).toEqual({
+      plaintext: value,
+      needsMigration: false,
+    });
   });
 
   it('rejects tampered authenticated ciphertext instead of returning corrupted session JSON', () => {

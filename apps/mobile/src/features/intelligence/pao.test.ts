@@ -17,7 +17,9 @@ describe('expiry computation (sooner of expiry vs opened+PAO)', () => {
     expect(computeExpiry({ openedAt: '2026-01-15', paoMonths: 6 })).toBe('2026-07-15');
   });
   it('picks the sooner of the two', () => {
-    expect(computeExpiry({ openedAt: '2026-01-15', paoMonths: 12, expiryDate: '2026-09-01' })).toBe('2026-09-01');
+    expect(computeExpiry({ openedAt: '2026-01-15', paoMonths: 12, expiryDate: '2026-09-01' })).toBe(
+      '2026-09-01',
+    );
   });
   it('returns null when unknowable', () => {
     expect(computeExpiry({ openedAt: '2026-01-15' })).toBeNull();

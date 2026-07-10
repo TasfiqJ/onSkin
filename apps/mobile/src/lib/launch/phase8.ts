@@ -5,7 +5,8 @@ import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 
 const PUBLIC_PRODUCTION_HOSTNAME =
   /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
-const RESERVED_PRODUCTION_HOSTNAME = /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
+const RESERVED_PRODUCTION_HOSTNAME =
+  /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
 
 export function productionUrlReady(value: string): boolean {
   const safeUrl = safeExternalHttpsUrl(value);

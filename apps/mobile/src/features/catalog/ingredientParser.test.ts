@@ -39,4 +39,3 @@ describe('ingredient parser', () => {
     expect(result.warnings).toContain('empty_ingredient_text');
   });
 });
-

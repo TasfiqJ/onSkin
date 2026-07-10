@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { COACHING, LIGHTING_LABEL, MILESTONE_COPY, NO_SCORE_COPY, PHOTO_COPY, QUALITY_NOTE } from './copy';
+import {
+  COACHING,
+  LIGHTING_LABEL,
+  MILESTONE_COPY,
+  NO_SCORE_COPY,
+  PHOTO_COPY,
+  QUALITY_NOTE,
+} from './copy';
 
 // Claim-safety + calm-copy regression guard for the photo feature (docs/06 §8/§9,
 // the Slice-11 pattern). Progress photos are the app's most sensitive surface; the

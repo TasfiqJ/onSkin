@@ -76,10 +76,10 @@ function RecCard({
         ultraShort
           ? 'mb-1.5 rounded-[12px] bg-paper-raised p-2'
           : short
-          ? 'mb-2 rounded-[14px] bg-paper-raised p-2.5'
-          : compact
-            ? 'mb-3 rounded-[16px] bg-paper-raised p-3.5'
-            : 'mb-4 rounded-[18px] bg-paper-raised p-4'
+            ? 'mb-2 rounded-[14px] bg-paper-raised p-2.5'
+            : compact
+              ? 'mb-3 rounded-[16px] bg-paper-raised p-3.5'
+              : 'mb-4 rounded-[18px] bg-paper-raised p-4'
       }
       style={{ borderWidth: 1, borderColor: colors.hairline }}
     >
@@ -97,10 +97,10 @@ function RecCard({
             ultraShort
               ? 'h-6 w-6 items-center justify-center rounded-[7px]'
               : short
-              ? 'h-7 w-7 items-center justify-center rounded-[8px]'
-              : compact
-                ? 'h-8 w-8 items-center justify-center rounded-[9px]'
-                : 'h-9 w-9 items-center justify-center rounded-[10px]'
+                ? 'h-7 w-7 items-center justify-center rounded-[8px]'
+                : compact
+                  ? 'h-8 w-8 items-center justify-center rounded-[9px]'
+                  : 'h-9 w-9 items-center justify-center rounded-[10px]'
           }
           style={{ backgroundColor: colors.clayTint }}
         >

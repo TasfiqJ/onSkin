@@ -3,7 +3,8 @@ import { booleanEnv, readEdgeAppEnvironment } from '../_shared/env.ts';
 import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey =
+  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const appEnvironment = readEdgeAppEnvironment();
 const turnstileSecret =
   Deno.env.get('TURNSTILE_SECRET_KEY') ?? Deno.env.get('CF_TURNSTILE_SECRET_KEY') ?? '';
@@ -136,7 +137,8 @@ async function body(req: Request): Promise<Record<string, unknown> | Response> {
     const parsed = JSON.parse(raw || '{}') as unknown;
     return isRecord(parsed) ? parsed : new Response('bad json', { status: 400, headers: cors });
   }
-  if (contentType.includes('application/x-www-form-urlencoded')) return Object.fromEntries(new URLSearchParams(raw).entries());
+  if (contentType.includes('application/x-www-form-urlencoded'))
+    return Object.fromEntries(new URLSearchParams(raw).entries());
   return new Response('unsupported media type', { status: 415, headers: cors });
 }
 
@@ -165,7 +167,9 @@ async function hmacSha256Hex(value: string): Promise<string> {
     ['sign'],
   );
   const signature = await crypto.subtle.sign('HMAC', rateLimitHmacKey, encoder.encode(value));
-  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, '0')).join('');
+  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, '0')).join(
+    '',
+  );
 }
 
 async function enforceRateLimit(req: Request, scope: string): Promise<Response | null> {
@@ -198,12 +202,18 @@ function turnstileToken(req: Request, input: Record<string, unknown>): string {
       : typeof input['cf-turnstile-response'] === 'string'
         ? input['cf-turnstile-response']
         : '';
-  return req.headers.get('cf-turnstile-response') ?? req.headers.get('x-turnstile-token') ?? bodyToken;
+  return (
+    req.headers.get('cf-turnstile-response') ?? req.headers.get('x-turnstile-token') ?? bodyToken
+  );
 }
 
-async function verifyTurnstile(req: Request, input: Record<string, unknown>): Promise<Response | null> {
+async function verifyTurnstile(
+  req: Request,
+  input: Record<string, unknown>,
+): Promise<Response | null> {
   if (!turnstileRequired()) return null;
-  if (!turnstileSecret) return new Response('turnstile not configured', { status: 503, headers: cors });
+  if (!turnstileSecret)
+    return new Response('turnstile not configured', { status: 503, headers: cors });
 
   const token = turnstileToken(req, input);
   if (!token) return new Response('turnstile required', { status: 403, headers: cors });
@@ -212,11 +222,14 @@ async function verifyTurnstile(req: Request, input: Record<string, unknown>): Pr
   const ip = req.headers.get('cf-connecting-ip') ?? req.headers.get('x-forwarded-for');
   if (ip) body.set('remoteip', ip.split(',')[0]!.trim());
 
-  const response = await fetchWithTimeout('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body,
-  }).catch(() => null);
+  const response = await fetchWithTimeout(
+    'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    },
+  ).catch(() => null);
   if (!response?.ok) return new Response('turnstile failed', { status: 403, headers: cors });
   const result = (await readLimitedResponseJson<{ success?: boolean }>(response)) ?? {};
   return result.success ? null : new Response('turnstile failed', { status: 403, headers: cors });
@@ -224,8 +237,10 @@ async function verifyTurnstile(req: Request, input: Record<string, unknown>): Pr
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
-  if (req.method !== 'POST') return new Response('method not allowed', { status: 405, headers: cors });
-  if (contentLengthTooLarge(req)) return new Response('payload too large', { status: 413, headers: cors });
+  if (req.method !== 'POST')
+    return new Response('method not allowed', { status: 405, headers: cors });
+  if (contentLengthTooLarge(req))
+    return new Response('payload too large', { status: 413, headers: cors });
 
   const rateLimitError = await enforceRateLimit(req, 'growth-event');
   if (rateLimitError) return rateLimitError;

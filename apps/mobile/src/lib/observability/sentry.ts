@@ -38,7 +38,9 @@ export function sanitizeSentryEvent(event: SentryErrorEvent): SentryErrorEvent {
   const rawException = new Error('redacted_exception');
   rawException.name = typeof rawType === 'string' ? rawType : 'Error';
   const safeName = sanitizeCapturedException(rawException).name;
-  const safeExtra = sanitizeObservabilityContext(event.extra as Record<string, unknown> | undefined);
+  const safeExtra = sanitizeObservabilityContext(
+    event.extra as Record<string, unknown> | undefined,
+  );
   return {
     ...event,
     debug_meta: undefined,
@@ -112,7 +114,10 @@ export function captureException(error: unknown, context?: Record<string, unknow
   }
   const safeContext = sanitizeObservabilityContext(context);
   const safeError = sanitizeCapturedException(error);
-  Sentry.captureException(safeError, Object.keys(safeContext).length ? { extra: safeContext } : undefined);
+  Sentry.captureException(
+    safeError,
+    Object.keys(safeContext).length ? { extra: safeContext } : undefined,
+  );
 }
 
 export function capturePhase2TestError(): void {

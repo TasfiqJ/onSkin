@@ -3,7 +3,7 @@
 // NEVER a fabricated date. Pure + testable.
 
 /** Conservative category defaults (mirrors ingredient_pao_defaults seed, docs/02
- *  §6 + docs/04 §3 table). Every number is a B-DERM-REVIEW starting position , 
+ *  §6 + docs/04 §3 table). Every number is a B-DERM-REVIEW starting position ,
  *  formulation/packaging shift the real value (airless pumps extend, jars
  *  shorten). 'spf' falls back here but a printed expiry should win (§3). */
 export const CATEGORY_PAO_DEFAULTS: Record<string, number> = {
@@ -120,9 +120,17 @@ export function expiryBadge(
   todayISO: string,
   opts: ExpiryBadgeOpts = {},
 ): ExpiryBadge {
-  const { thresholdDays = 30, safetyCritical = false, paired = false, synergy = false, estimate = false } = opts;
+  const {
+    thresholdDays = 30,
+    safetyCritical = false,
+    paired = false,
+    synergy = false,
+    estimate = false,
+  } = opts;
   if (!expiryISO) return { kind: 'unknown', label: 'PAO est.' };
-  const days = Math.round((parseLocal(expiryISO).getTime() - parseLocal(todayISO).getTime()) / 86_400_000);
+  const days = Math.round(
+    (parseLocal(expiryISO).getTime() - parseLocal(todayISO).getTime()) / 86_400_000,
+  );
   if (days < 0) {
     // Past best-by. Calm "Replace" by default; firmer for the eye/SPF cases.
     return safetyCritical
@@ -142,6 +150,9 @@ export function expiryBadge(
     const mon = parseLocal(expiryISO).toLocaleDateString('en-US', { month: 'short' });
     return { kind: 'unknown', label: `est.\n${mon}` };
   }
-  const label = parseLocal(expiryISO).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  const label = parseLocal(expiryISO).toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  });
   return { kind: 'date', label };
 }

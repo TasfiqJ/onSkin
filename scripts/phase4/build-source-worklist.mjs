@@ -9,8 +9,7 @@ const strict = process.argv.includes('--strict');
 const check = process.argv.includes('--check');
 const outJson =
   process.env.PHASE4_SOURCE_WORKLIST_JSON ?? 'docs/phase-4/generated/source-worklist.json';
-const outMd =
-  process.env.PHASE4_SOURCE_WORKLIST_MD ?? 'docs/phase-4/generated/source-worklist.md';
+const outMd = process.env.PHASE4_SOURCE_WORKLIST_MD ?? 'docs/phase-4/generated/source-worklist.md';
 const outputPaths = [outJson, outMd].map((path) => normalizeRepoPath(path));
 const sourceExtensions = new Set(['.ts', '.tsx', '.js', '.mjs', '.json', '.md', '.sql']);
 

@@ -2,8 +2,34 @@
 // assigned for posting. NEVER a real name, NEVER profiles.display_name, no social graph.
 // Pure + tested; the word lists are deliberately gentle/neutral (the "calm" register).
 
-const ADJECTIVES = ['quiet', 'calm', 'gentle', 'soft', 'still', 'warm', 'clear', 'kind', 'steady', 'plain', 'open', 'bright'];
-const NOUNS = ['fern', 'willow', 'river', 'meadow', 'cedar', 'dawn', 'pebble', 'heron', 'clover', 'birch', 'reed', 'moss'];
+const ADJECTIVES = [
+  'quiet',
+  'calm',
+  'gentle',
+  'soft',
+  'still',
+  'warm',
+  'clear',
+  'kind',
+  'steady',
+  'plain',
+  'open',
+  'bright',
+];
+const NOUNS = [
+  'fern',
+  'willow',
+  'river',
+  'meadow',
+  'cedar',
+  'dawn',
+  'pebble',
+  'heron',
+  'clover',
+  'birch',
+  'reed',
+  'moss',
+];
 
 /** The handle format pattern: adjective-noun-NN (two-digit). */
 export const HANDLE_RE = /^[a-z]+-[a-z]+-\d{2}$/;

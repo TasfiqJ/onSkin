@@ -198,8 +198,8 @@ export default function SubscriptionScreen() {
             supportFloorSubscription
               ? 'mb-1 flex-row items-center gap-2 pt-0'
               : ultraShortSubscription
-              ? 'mb-1 flex-row items-center gap-3 pt-1'
-              : 'mb-3 flex-row items-center gap-3 pt-1'
+                ? 'mb-1 flex-row items-center gap-3 pt-1'
+                : 'mb-3 flex-row items-center gap-3 pt-1'
           }
         >
           <RouteIconButton
@@ -309,9 +309,9 @@ export default function SubscriptionScreen() {
                   ? 'mb-1 rounded-card bg-paper-raised p-2'
                   : splitShortSubscription
                     ? 'mb-2 rounded-card bg-paper-raised p-3'
-                  : compactSubscription
-                    ? 'mb-3 rounded-card bg-paper-raised p-4'
-                    : 'mb-4 rounded-card bg-paper-raised p-5'
+                    : compactSubscription
+                      ? 'mb-3 rounded-card bg-paper-raised p-4'
+                      : 'mb-4 rounded-card bg-paper-raised p-5'
               }
               style={{ borderWidth: 1, borderColor: colors.hairline }}
             >
@@ -340,9 +340,9 @@ export default function SubscriptionScreen() {
                     ? 'mt-1.5 h-[44px] items-center justify-center rounded-pill'
                     : splitShortSubscription
                       ? 'mt-2.5 h-[48px] items-center justify-center rounded-pill'
-                    : compactSubscription
-                      ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
-                      : 'mt-4 h-[50px] items-center justify-center rounded-pill'
+                      : compactSubscription
+                        ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
+                        : 'mt-4 h-[50px] items-center justify-center rounded-pill'
                 }
                 style={{ backgroundColor: colors.clay }}
               >

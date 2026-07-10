@@ -68,7 +68,9 @@ assertEnv('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY', publishableKey);
 assertEnv('SUPABASE_SECRET_KEY', secretKey);
 
 if (appEnv === 'production' && process.env.PHASE2_ALLOW_PRODUCTION_SMOKE !== '1') {
-  throw new Error('Refusing to run RLS smoke tests against production without PHASE2_ALLOW_PRODUCTION_SMOKE=1.');
+  throw new Error(
+    'Refusing to run RLS smoke tests against production without PHASE2_ALLOW_PRODUCTION_SMOKE=1.',
+  );
 }
 
 const admin = createClient(supabaseUrl, secretKey, {
@@ -164,7 +166,11 @@ try {
   await expectNoPrivateRead(userB.client, 'profiles', 'id', profile.id, 'profile cross-user read');
   await expectNoAffectedRows(
     'profile cross-user update',
-    userB.client.from('profiles').update({ display_name: 'bad update' }).eq('id', profile.id).select('id'),
+    userB.client
+      .from('profiles')
+      .update({ display_name: 'bad update' })
+      .eq('id', profile.id)
+      .select('id'),
   );
 
   const skinProfile = await insertOne(userA.client, 'skin_profiles', {
@@ -176,7 +182,13 @@ try {
     completed_at: new Date().toISOString(),
   });
   await expectOwnRead(userA.client, 'skin_profiles', 'id', skinProfile.id, 'skin profile own read');
-  await expectNoPrivateRead(userB.client, 'skin_profiles', 'id', skinProfile.id, 'skin profile cross-user read');
+  await expectNoPrivateRead(
+    userB.client,
+    'skin_profiles',
+    'id',
+    skinProfile.id,
+    'skin profile cross-user read',
+  );
   await expectBlocked(
     'skin profile cross-user insert',
     userB.client.from('skin_profiles').insert({ user_id: userA.id, goals: ['bad'] }),
@@ -190,7 +202,13 @@ try {
     pao_months: 12,
   });
   await expectOwnRead(userA.client, 'user_products', 'id', product.id, 'shelf own read');
-  await expectNoPrivateRead(userB.client, 'user_products', 'id', product.id, 'shelf cross-user read');
+  await expectNoPrivateRead(
+    userB.client,
+    'user_products',
+    'id',
+    product.id,
+    'shelf cross-user read',
+  );
   await expectBlocked(
     'shelf cross-user insert',
     userB.client.from('user_products').insert({ user_id: userA.id, manual_name: 'bad product' }),
@@ -210,7 +228,13 @@ try {
     'id, name',
   );
   catalogProductIds.push(catalogProduct.id);
-  await expectOwnRead(userA.client, 'products', 'id', catalogProduct.id, 'catalog product auth read');
+  await expectOwnRead(
+    userA.client,
+    'products',
+    'id',
+    catalogProduct.id,
+    'catalog product auth read',
+  );
 
   const correction = await insertOne(userA.client, 'catalog_corrections', {
     user_id: userA.id,
@@ -218,8 +242,20 @@ try {
     correction_type: 'wrong_match',
     description: 'phase4 smoke correction',
   });
-  await expectOwnRead(userA.client, 'catalog_corrections', 'id', correction.id, 'catalog correction own read');
-  await expectNoPrivateRead(userB.client, 'catalog_corrections', 'id', correction.id, 'catalog correction cross-user read');
+  await expectOwnRead(
+    userA.client,
+    'catalog_corrections',
+    'id',
+    correction.id,
+    'catalog correction own read',
+  );
+  await expectNoPrivateRead(
+    userB.client,
+    'catalog_corrections',
+    'id',
+    correction.id,
+    'catalog correction cross-user read',
+  );
   await expectBlocked(
     'catalog correction cross-user insert',
     userB.client.from('catalog_corrections').insert({
@@ -237,8 +273,20 @@ try {
     matched_product_id: catalogProduct.id,
     quality_grade: 'limited',
   });
-  await expectOwnRead(userA.client, 'catalog_lookup_events', 'id', lookupEvent.id, 'catalog lookup own read');
-  await expectNoPrivateRead(userB.client, 'catalog_lookup_events', 'id', lookupEvent.id, 'catalog lookup cross-user read');
+  await expectOwnRead(
+    userA.client,
+    'catalog_lookup_events',
+    'id',
+    lookupEvent.id,
+    'catalog lookup own read',
+  );
+  await expectNoPrivateRead(
+    userB.client,
+    'catalog_lookup_events',
+    'id',
+    lookupEvent.id,
+    'catalog lookup cross-user read',
+  );
   await expectBlocked(
     'catalog lookup cross-user insert',
     userB.client.from('catalog_lookup_events').insert({
@@ -264,7 +312,13 @@ try {
   await expectOwnRead(userA.client, 'routines', 'id', routine.id, 'routine own read');
   await expectNoPrivateRead(userB.client, 'routines', 'id', routine.id, 'routine cross-user read');
   await expectOwnRead(userA.client, 'routine_steps', 'id', step.id, 'routine step own read');
-  await expectNoPrivateRead(userB.client, 'routine_steps', 'id', step.id, 'routine step cross-user read');
+  await expectNoPrivateRead(
+    userB.client,
+    'routine_steps',
+    'id',
+    step.id,
+    'routine step cross-user read',
+  );
   await expectBlocked(
     'routine step cross-user insert',
     userB.client.from('routine_steps').insert({ routine_id: routine.id, step_order: 2 }),
@@ -303,16 +357,38 @@ try {
   });
   if (entitlementWrite.error) throw entitlementWrite.error;
   await expectOwnRead(userA.client, 'entitlements', 'user_id', userA.id, 'entitlement own read');
-  await expectNoPrivateRead(userB.client, 'entitlements', 'user_id', userA.id, 'entitlement cross-user read');
+  await expectNoPrivateRead(
+    userB.client,
+    'entitlements',
+    'user_id',
+    userA.id,
+    'entitlement cross-user read',
+  );
   await expectNoAffectedRows(
     'entitlement client update',
-    userA.client.from('entitlements').update({ is_active: false }).eq('user_id', userA.id).select('user_id'),
+    userA.client
+      .from('entitlements')
+      .update({ is_active: false })
+      .eq('user_id', userA.id)
+      .select('user_id'),
   );
 
   const anon = publicClient();
   await expectNoPrivateRead(anon, 'profiles', 'id', userA.id, 'anonymous profile read');
-  await expectNoPrivateRead(anon, 'skin_profiles', 'user_id', userA.id, 'anonymous skin profile read');
-  await expectNoPrivateRead(anon, 'entitlements', 'user_id', userA.id, 'anonymous entitlement read');
+  await expectNoPrivateRead(
+    anon,
+    'skin_profiles',
+    'user_id',
+    userA.id,
+    'anonymous skin profile read',
+  );
+  await expectNoPrivateRead(
+    anon,
+    'entitlements',
+    'user_id',
+    userA.id,
+    'anonymous entitlement read',
+  );
 
   console.log('OK Supabase RLS smoke tests passed.');
 } finally {

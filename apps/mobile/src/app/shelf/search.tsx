@@ -93,27 +93,30 @@ export default function CatalogSearchScreen() {
     if (typeof next === 'string') setQuery(next);
   };
 
-  const runSearch = useCallback(async (queryOverride?: string) => {
-    const cleaned = (queryOverride ?? query).trim();
-    if (cleaned.length < 2 || searching) return;
-    setSearching(true);
-    setLastNoMatchQuery(null);
-    setMissingProductFeedback(null);
-    setWrongMatchFeedback(null);
-    const response = await searchCatalog(cleaned);
-    setResults(response.products ?? []);
-    const noProducts = !response.products?.length;
-    setMessage(
-      response.result === 'offline' || response.result === 'error'
-        ? "Couldn't reach the product catalog. Add this product by hand for now."
-        : !noProducts
-          ? null
-          : 'No catalog match yet. Add it by hand for now.',
-    );
-    if (response.result === 'no_match' && noProducts) setLastNoMatchQuery(cleaned);
-    if (noProducts) track('catalog_lookup_no_match', { lookup_type: 'search' });
-    setSearching(false);
-  }, [query, searching]);
+  const runSearch = useCallback(
+    async (queryOverride?: string) => {
+      const cleaned = (queryOverride ?? query).trim();
+      if (cleaned.length < 2 || searching) return;
+      setSearching(true);
+      setLastNoMatchQuery(null);
+      setMissingProductFeedback(null);
+      setWrongMatchFeedback(null);
+      const response = await searchCatalog(cleaned);
+      setResults(response.products ?? []);
+      const noProducts = !response.products?.length;
+      setMessage(
+        response.result === 'offline' || response.result === 'error'
+          ? "Couldn't reach the product catalog. Add this product by hand for now."
+          : !noProducts
+            ? null
+            : 'No catalog match yet. Add it by hand for now.',
+      );
+      if (response.result === 'no_match' && noProducts) setLastNoMatchQuery(cleaned);
+      if (noProducts) track('catalog_lookup_no_match', { lookup_type: 'search' });
+      setSearching(false);
+    },
+    [query, searching],
+  );
 
   useEffect(() => {
     if (!initialSearchQuery || autoSearchStarted.current) return;

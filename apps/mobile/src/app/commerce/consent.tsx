@@ -22,8 +22,7 @@ export default function CommerceConsentSheet() {
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const sheetMaxHeight = viewportHeight > 44 ? viewportHeight - 44 : 524;
-  const footerPaddingBottom =
-    insets.bottom > 0 ? Math.max(32, insets.bottom + 24) : undefined;
+  const footerPaddingBottom = insets.bottom > 0 ? Math.max(32, insets.bottom + 24) : undefined;
 
   const close = () => backOrReplace(router, APP_YOU_ROUTE);
 
@@ -134,9 +133,7 @@ export default function CommerceConsentSheet() {
         <View
           className="px-7 pb-8 pt-2"
           style={
-            footerPaddingBottom === undefined
-              ? undefined
-              : { paddingBottom: footerPaddingBottom }
+            footerPaddingBottom === undefined ? undefined : { paddingBottom: footerPaddingBottom }
           }
         >
           <Pressable

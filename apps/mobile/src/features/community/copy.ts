@@ -9,7 +9,8 @@ export const COMMUNITY_COPY = {
     title: 'Skin Notes',
     subtitle: 'Myth vs evidence. Expert-written, evidence-graded, calm.',
     // The defining footer: it states what this ISN'T (a feed).
-    libraryFooter: 'a library, not a feed. No likes, no authors to follow, no ranking by popularity',
+    libraryFooter:
+      'a library, not a feed. No likes, no authors to follow, no ranking by popularity',
     eyebrow: 'SKIN NOTES',
   },
   card: {
@@ -34,14 +35,17 @@ export const COMMUNITY_COPY = {
     postingAs: 'Posting as',
     handleNote: 'a random handle · no profile, no real name',
     claimSafePassed: 'Claim-safety check passed. No “treats/cures” or dosage language.',
-    claimSafeFlagged: 'We spotted wording we’ll look at closely. A person reviews every post before it appears.',
+    claimSafeFlagged:
+      'We spotted wording we’ll look at closely. A person reviews every post before it appears.',
     ageGate: 'Age confirmed 16+ · faceprints never stored',
     consentRow: 'consent. Separate & unbundled',
-    preModeration: 'An expert or our team will review this before it appears. If we can’t post it, you’ll get a plain reason and an appeal.',
+    preModeration:
+      'An expert or our team will review this before it appears. If we can’t post it, you’ll get a plain reason and an appeal.',
     submit: 'Submit for review',
     // Phase-2 gating notice. Peer posting is deferred behind the moderation floor.
     deferredTitle: 'Asking opens soon',
-    deferredBody: 'Anonymous questions arrive once our expert review desk is staffed to the ~24-hour standard. For now, the expert Skin Notes answer the most common questions. Calm and evidence-graded.',
+    deferredBody:
+      'Anonymous questions arrive once our expert review desk is staffed to the ~24-hour standard. For now, the expert Skin Notes answer the most common questions. Calm and evidence-graded.',
   },
   consent: {
     title: 'Join Skin Notes safely',
@@ -58,7 +62,8 @@ export const COMMUNITY_COPY = {
     title: 'For you',
     subtitle: 'An anonymised pattern, never a list of people.',
     phaseTag: 'Phase 2',
-    aggregateNote: 'Aggregated & anonymised. It improves your recommendations, never ranks you against anyone.',
+    aggregateNote:
+      'Aggregated & anonymised. It improves your recommendations, never ranks you against anyone.',
     nevers: [
       'Never a feed of strangers’ faces',
       'Never a comparison ranking or leaderboard',

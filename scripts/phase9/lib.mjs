@@ -326,7 +326,9 @@ export const generatedEvidenceOutputPaths = Object.freeze([
 ]);
 
 function normalizeRepoPath(path) {
-  return String(path ?? '').replaceAll('\\', '/').replace(/^\.\//, '');
+  return String(path ?? '')
+    .replaceAll('\\', '/')
+    .replace(/^\.\//, '');
 }
 
 function gitStatusLinePaths(line) {

@@ -42,7 +42,9 @@ describe('metadata line (docs/06 §4. "13 weeks · 26 photos · all on this phon
       // 24 filler shots strictly inside the window (Apr/May) so span stays Mar12→Jun12.
       const month = i <= 12 ? 4 : 5;
       const day = ((i - 1) % 12) * 2 + 1; // 1,3,5… within the month
-      photos.push(mk(`p${i}`, `2026-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`));
+      photos.push(
+        mk(`p${i}`, `2026-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`),
+      );
     }
     photos.push(mk('last', '2026-06-12'));
     const m = metadataLine(photos);
@@ -57,7 +59,12 @@ describe('metadata line (docs/06 §4. "13 weeks · 26 photos · all on this phon
 });
 
 describe('compare pairing (docs/06 §4)', () => {
-  const photos = [mk('a', '2026-03-12'), mk('b', '2026-03-20'), mk('c', '2026-05-01'), mk('d', '2026-06-12')];
+  const photos = [
+    mk('a', '2026-03-12'),
+    mk('b', '2026-03-20'),
+    mk('c', '2026-05-01'),
+    mk('d', '2026-06-12'),
+  ];
   it('defaults to earliest vs latest', () => {
     const pair = defaultComparePair(photos);
     expect(pair?.before.id).toBe('a');

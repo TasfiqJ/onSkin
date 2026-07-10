@@ -6,7 +6,9 @@ function readVariantEnv(name, value, defaultValue) {
   const rawValue = value === undefined ? defaultValue : value;
   const candidate = typeof rawValue === 'string' ? rawValue.trim().toLowerCase() : '';
   if (candidate && APP_VARIANTS.has(candidate)) return candidate;
-  throw new Error(`${name} must be development, staging, or production; got ${value ?? '<unset>'}.`);
+  throw new Error(
+    `${name} must be development, staging, or production; got ${value ?? '<unset>'}.`,
+  );
 }
 
 const variant = readVariantEnv('APP_VARIANT', process.env.APP_VARIANT, 'development');
@@ -22,7 +24,8 @@ const PLACEHOLDER_ENV_VALUE =
   /example\.com|your-project|replace-with|__blocked_placeholder__|x{4,}|\.{3,}|pending/i;
 const PUBLIC_PRODUCTION_HOSTNAME =
   /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
-const RESERVED_PRODUCTION_HOSTNAME = /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
+const RESERVED_PRODUCTION_HOSTNAME =
+  /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
 
 const variantSuffix =
   {
@@ -160,7 +163,9 @@ function placeholderEnvValue(value) {
 }
 
 function productionHostname(hostname) {
-  const normalized = String(hostname ?? '').trim().toLowerCase();
+  const normalized = String(hostname ?? '')
+    .trim()
+    .toLowerCase();
   return (
     PUBLIC_PRODUCTION_HOSTNAME.test(normalized) &&
     !RESERVED_PRODUCTION_HOSTNAME.test(normalized) &&

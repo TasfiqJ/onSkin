@@ -98,9 +98,7 @@ function booleanOr(value: unknown, fallback: boolean): boolean {
 
 function seriesOrFront(value: unknown): PhotoSeries {
   const text = stringOrNull(value);
-  return text && PHOTO_SERIES_SET.has(text as PhotoSeries)
-    ? (text as PhotoSeries)
-    : 'front';
+  return text && PHOTO_SERIES_SET.has(text as PhotoSeries) ? (text as PhotoSeries) : 'front';
 }
 
 function timeOfDayOrNull(value: unknown): TimeOfDay | null {

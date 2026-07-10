@@ -44,7 +44,7 @@ describe('Sentry privacy configuration', () => {
     expect(source).toContain('transaction: undefined');
     expect(source).toContain('transaction_info: undefined');
     expect(source).toContain("value: 'redacted_exception'");
-    expect(source).not.toContain('env.appEnvironment === \'production\' ? 0.05 : 0.1');
+    expect(source).not.toContain("env.appEnvironment === 'production' ? 0.05 : 0.1");
   });
 
   it('redacts automatic event payload fields before upload', () => {

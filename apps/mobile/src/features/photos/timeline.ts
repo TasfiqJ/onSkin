@@ -70,7 +70,9 @@ export function defaultComparePair(
   let best = Infinity;
   for (const p of list) {
     if (p.id === after.id) continue;
-    const offset = Math.abs(daysBetween(list[0]!.takenLocalDate, p.takenLocalDate) - Math.max(0, target));
+    const offset = Math.abs(
+      daysBetween(list[0]!.takenLocalDate, p.takenLocalDate) - Math.max(0, target),
+    );
     if (offset < best) {
       best = offset;
       before = p;
@@ -82,15 +84,29 @@ export function defaultComparePair(
 export type MonthGroup = { key: string; label: string; photos: PhotoMeta[] };
 
 const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 /**
  * Group the film strip by month, newest month first, newest photo first within a
  * month (docs/06 §4). `todayYmd` lets the current month read "This month · June".
  */
-export function groupByMonth(photos: PhotoMeta[], series: PhotoSeries = 'front', todayYmd?: string): MonthGroup[] {
+export function groupByMonth(
+  photos: PhotoMeta[],
+  series: PhotoSeries = 'front',
+  todayYmd?: string,
+): MonthGroup[] {
   const list = forSeries(photos, series);
   const byKey = new Map<string, PhotoMeta[]>();
   for (const p of list) {
@@ -132,7 +148,9 @@ export function detectMilestones(
   const list = forSeries(photos, series);
   if (list.length === 0) return [];
   const first = list[0]!;
-  const out: { milestone: PhotoMilestone; photo: PhotoMeta }[] = [{ milestone: 'first', photo: first }];
+  const out: { milestone: PhotoMilestone; photo: PhotoMeta }[] = [
+    { milestone: 'first', photo: first },
+  ];
   for (const { milestone, days } of MILESTONE_DAYS) {
     const crossing = list.find((p) => daysBetween(first.takenLocalDate, p.takenLocalDate) >= days);
     if (crossing) out.push({ milestone, photo: crossing });
@@ -142,7 +160,9 @@ export function detectMilestones(
 
 /** Weeks the timeline spans, inclusive (docs/06 §4 "13 weeks"). */
 export function weeksSpanned(photos: PhotoMeta[], series?: PhotoSeries): number {
-  const list = series ? forSeries(photos, series) : photos.slice().sort((a, b) => a.takenLocalDate.localeCompare(b.takenLocalDate));
+  const list = series
+    ? forSeries(photos, series)
+    : photos.slice().sort((a, b) => a.takenLocalDate.localeCompare(b.takenLocalDate));
   if (list.length === 0) return 0;
   const span = daysBetween(list[0]!.takenLocalDate, list[list.length - 1]!.takenLocalDate);
   return Math.max(1, Math.round(span / 7));

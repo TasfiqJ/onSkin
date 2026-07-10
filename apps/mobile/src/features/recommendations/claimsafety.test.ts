@@ -47,7 +47,12 @@ const URGENCY = [
   /\bselling\s+fast\b/i,
   /\blimited\s+time\b/i,
 ];
-const GUILT = [/\byou['’]?ll\s+lose\b/i, /\bdon['’]?t\s+lose\b/i, /\byou\s+failed\b/i, /\bbuy\s+now\b/i];
+const GUILT = [
+  /\byou['’]?ll\s+lose\b/i,
+  /\bdon['’]?t\s+lose\b/i,
+  /\byou\s+failed\b/i,
+  /\bbuy\s+now\b/i,
+];
 
 function collect(v: unknown, out: string[] = []): string[] {
   if (typeof v === 'string') out.push(v);
@@ -87,7 +92,9 @@ const builderStrings: string[] = [
 ];
 
 // The strings the engine actually emits over representative fixtures.
-function shelfItem(over: Partial<RecShelfItem> & { id: string; role: RecShelfItem['role'] }): RecShelfItem {
+function shelfItem(
+  over: Partial<RecShelfItem> & { id: string; role: RecShelfItem['role'] },
+): RecShelfItem {
   return { name: over.id, tags: [], fragranced: false, expiring: false, ...over };
 }
 function engineStrings(): string[] {
@@ -99,7 +106,11 @@ function engineStrings(): string[] {
     { id: 'Retinol', name: 'Retinol 0.5%', tags: ['retinoid'] as FunctionalTag[] },
     { id: 'Glycolic', name: 'Glycolic 7%', tags: ['aha'] as FunctionalTag[] },
   ];
-  const conflicts = detectConflicts(conflictShelf, { sensitivity: 'sensitive', pregnancy: false }, STARTER_RULES);
+  const conflicts = detectConflicts(
+    conflictShelf,
+    { sensitivity: 'sensitive', pregnancy: false },
+    STARTER_RULES,
+  );
   const fixtures: RecInput[] = [
     {
       profile: { sensitivity: 'sensitive', pregnancy: false, goals: ['anti_aging', 'even_tone'] },
@@ -137,7 +148,17 @@ function engineStrings(): string[] {
   const out: string[] = [];
   for (const f of fixtures) {
     for (const r of recommend(f).recommendations) {
-      out.push(r.what, r.why, r.group, r.footLabel, r.fitLabel, r.how.profile, r.how.gap, r.how.evidence, r.how.fit);
+      out.push(
+        r.what,
+        r.why,
+        r.group,
+        r.footLabel,
+        r.fitLabel,
+        r.how.profile,
+        r.how.gap,
+        r.how.evidence,
+        r.how.fit,
+      );
       if (r.caveat) out.push(r.caveat);
     }
   }
@@ -200,6 +221,8 @@ describe('the honest disclosures + the "you\'re set" stance are present (§3/§4
 describe('the guard catches reintroduced violations', () => {
   it('rejects a condition claim and a storefront sell', () => {
     expect(offenders('Treats acne fast', CONDITION_OR_DRUG).length).toBeGreaterThan(0);
-    expect(offenders('Buy now. Only 2 left!', [...GUILT, ...URGENCY, ...ALARM]).length).toBeGreaterThan(0);
+    expect(
+      offenders('Buy now. Only 2 left!', [...GUILT, ...URGENCY, ...ALARM]).length,
+    ).toBeGreaterThan(0);
   });
 });

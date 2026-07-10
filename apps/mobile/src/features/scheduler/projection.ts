@@ -10,7 +10,9 @@ function parseLocalDate(iso: string): Date {
   return new Date(y!, (m ?? 1) - 1, d ?? 1);
 }
 function daysBetween(fromISO: string, toISO: string): number {
-  return Math.round((parseLocalDate(toISO).getTime() - parseLocalDate(fromISO).getTime()) / 86_400_000);
+  return Math.round(
+    (parseLocalDate(toISO).getTime() - parseLocalDate(fromISO).getTime()) / 86_400_000,
+  );
 }
 export function addDays(iso: string, n: number): string {
   const d = parseLocalDate(iso);
@@ -40,11 +42,20 @@ export function nightFor(cycle: Cycle, anchorISO: string, dateISO: string): Nigh
 export type ProjectedNight = { dateISO: string; weekday: string; night: NightSlot };
 
 /** Today + the next `days` nights, each with its slot + assigned active (docs/05 §3). */
-export function weekAhead(cycle: Cycle, anchorISO: string, fromISO: string, days = 6): ProjectedNight[] {
+export function weekAhead(
+  cycle: Cycle,
+  anchorISO: string,
+  fromISO: string,
+  days = 6,
+): ProjectedNight[] {
   const out: ProjectedNight[] = [];
   for (let d = 0; d <= days; d++) {
     const dateISO = addDays(fromISO, d);
-    out.push({ dateISO, weekday: friendlyWeekday(dateISO), night: nightFor(cycle, anchorISO, dateISO) });
+    out.push({
+      dateISO,
+      weekday: friendlyWeekday(dateISO),
+      night: nightFor(cycle, anchorISO, dateISO),
+    });
   }
   return out;
 }

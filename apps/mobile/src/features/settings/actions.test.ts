@@ -337,6 +337,6 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(source).toContain('setDataRightsFeedback(null);');
     expect(source).toContain('setPrivacyActionFeedback(null);');
     expect(source).not.toContain('Alert.alert');
-    expect(source).not.toContain("import { Alert");
+    expect(source).not.toContain('import { Alert');
   });
 });

@@ -1,8 +1,19 @@
-import type { AskAnswerKind, AskIntent, ConflictSeverity, EvidenceLabel, RecommendationTrigger } from '@onskin/types';
+import type {
+  AskAnswerKind,
+  AskIntent,
+  ConflictSeverity,
+  EvidenceLabel,
+  RecommendationTrigger,
+} from '@onskin/types';
 import type { Href } from 'expo-router';
 
 import { isReassuring, type DetectedConflict } from '@/features/intelligence/engine';
-import { bannerSubhead, evidenceChip, severityLabel, tagLabel } from '@/features/intelligence/presentation';
+import {
+  bannerSubhead,
+  evidenceChip,
+  severityLabel,
+  tagLabel,
+} from '@/features/intelligence/presentation';
 
 import { ASK_COPY, RESOLUTION_LEAD } from './copy';
 import { classifyIntent } from './intent';
@@ -154,7 +165,10 @@ function conflictAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
       claim: bannerSubhead(reassurance),
       why: ASK_COPY.triad.whyShelf,
       how: ASK_COPY.triad.howConflict,
-      citation: { label: pairHeadline(reassurance), evidence: evidenceChip(reassurance.rule.evidenceLabel) },
+      citation: {
+        label: pairHeadline(reassurance),
+        evidence: evidenceChip(reassurance.rule.evidenceLabel),
+      },
     };
   }
   if (!ctx.hasShelfProducts) {
@@ -166,12 +180,24 @@ function conflictAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
       claim: ASK_COPY.emptyShelfConflict,
     };
   }
-  return { ...BLANK, intent, kind: 'deterministic', badge: ASK_COPY.badges.deterministic, claim: ASK_COPY.noConflicts };
+  return {
+    ...BLANK,
+    intent,
+    kind: 'deterministic',
+    badge: ASK_COPY.badges.deterministic,
+    claim: ASK_COPY.noConflicts,
+  };
 }
 
 function routineAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
   if (ctx.pmSteps.length === 0) {
-    return { ...BLANK, intent, kind: 'deterministic', badge: ASK_COPY.badges.deterministic, claim: ASK_COPY.tonight.empty };
+    return {
+      ...BLANK,
+      intent,
+      kind: 'deterministic',
+      badge: ASK_COPY.badges.deterministic,
+      claim: ASK_COPY.tonight.empty,
+    };
   }
   return {
     ...BLANK,
@@ -187,7 +213,13 @@ function routineAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
 
 function replenishAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
   if (!ctx.hasReplenish) {
-    return { ...BLANK, intent, kind: 'deterministic', badge: ASK_COPY.badges.deterministic, claim: ASK_COPY.replenish.none };
+    return {
+      ...BLANK,
+      intent,
+      kind: 'deterministic',
+      badge: ASK_COPY.badges.deterministic,
+      claim: ASK_COPY.replenish.none,
+    };
   }
   return {
     ...BLANK,
@@ -223,7 +255,9 @@ function fitAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
     claim,
     why: ASK_COPY.triad.whyShelf,
     how: ASK_COPY.triad.howFit,
-    citation: rec.evidenceLabel ? { label: 'Fit engine', evidence: evidenceChip(rec.evidenceLabel) } : null,
+    citation: rec.evidenceLabel
+      ? { label: 'Fit engine', evidence: evidenceChip(rec.evidenceLabel) }
+      : null,
     note: rec.example,
     claimSafeNote: true,
     footnote: ASK_COPY.fit.deeperNote,
@@ -233,7 +267,10 @@ function fitAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
 function concernAnswer(intent: AskIntent, ctx: AskContext): AskAnswer {
   // The genuinely corpus-grounded path. The cloud layer is gated (Pro) and currently
   // blocked (B-AI-ASSISTANT-VENDOR), so degrade honestly. Never free-generate.
-  const claim = ctx.groundedReason === 'free_locked' ? ASK_COPY.refuse.groundedLocked : ASK_COPY.refuse.groundedSetup;
+  const claim =
+    ctx.groundedReason === 'free_locked'
+      ? ASK_COPY.refuse.groundedLocked
+      : ASK_COPY.refuse.groundedSetup;
   return { ...BLANK, intent, kind: 'refuse', claim };
 }
 
@@ -279,12 +316,22 @@ export function safetyRefusal(intent: AskIntent): AskAnswer {
 // clean TYPE name ("A vitamin C serum"). The shelf-anchored replacement/conflict triggers
 // embed RAW product names (e.g. "Your Glycolic 7% Toner is running low"), whose "7%" would
 // false-trip the runtime dosage guard and silently refuse a valid fit answer (docs/13 §4).
-const FIT_TRIGGERS = new Set<RecommendationTrigger>(['gap', 'routine_completion', 'better_fit', 'goal']);
+const FIT_TRIGGERS = new Set<RecommendationTrigger>([
+  'gap',
+  'routine_completion',
+  'better_fit',
+  'goal',
+]);
 
 /** Pick the product-fit recommendation: the top catalog-backed, %-free option, or null
  *  ("your routine looks complete"). Keeps raw product-name DATA out of the scanned claim. */
 export function pickFitRec(
-  recs: { trigger: RecommendationTrigger; what: string; example: string | null; evidenceLabel: EvidenceLabel | null }[],
+  recs: {
+    trigger: RecommendationTrigger;
+    what: string;
+    example: string | null;
+    evidenceLabel: EvidenceLabel | null;
+  }[],
 ): AskRecSummary | null {
   const r = recs.find((x) => FIT_TRIGGERS.has(x.trigger));
   return r ? { what: r.what, example: r.example, evidenceLabel: r.evidenceLabel } : null;

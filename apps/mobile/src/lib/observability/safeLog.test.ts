@@ -26,7 +26,10 @@ describe('safe dev logging', () => {
 
     devWarn('[analytics] capture failed', new TypeError('jwt=secret@example.com'));
 
-    expect(warn).toHaveBeenCalledWith('[analytics] capture failed', { kind: 'error', name: 'TypeError' });
+    expect(warn).toHaveBeenCalledWith('[analytics] capture failed', {
+      kind: 'error',
+      name: 'TypeError',
+    });
     expect(JSON.stringify(warn.mock.calls)).not.toMatch(/jwt|secret@example\.com/i);
   });
 

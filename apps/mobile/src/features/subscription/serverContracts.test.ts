@@ -20,7 +20,7 @@ describe('subscription server contracts', () => {
     expect(edgeFunction).toContain('processed_at: null');
 
     expect(liveHarness).toContain(
-      "revenuecat-webhook retries entitlement mirroring after a failed event row",
+      'revenuecat-webhook retries entitlement mirroring after a failed event row',
     );
     expect(liveHarness).toContain("processing_status: 'error'");
     expect(liveHarness).toContain('eventIds.retryAfterError');
@@ -33,7 +33,9 @@ describe('subscription server contracts', () => {
     const edgeFunction = readRepo('supabase/functions/subscription-grants/index.ts');
     const policyLint = readRepo('scripts/phase9/supabase-policy-lint.mjs');
 
-    expect(migration).toContain('create or replace function public.grant_app_granted_reverse_trial');
+    expect(migration).toContain(
+      'create or replace function public.grant_app_granted_reverse_trial',
+    );
     expect(migration).toContain('returns setof public.entitlements');
     expect(migration).toContain('insert into public.reverse_trial_grants');
     expect(migration).toContain('on conflict (user_id) do nothing');

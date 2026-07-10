@@ -1,7 +1,10 @@
 import type { ConsentType } from '@onskin/types';
 import * as Crypto from 'expo-crypto';
 
-import { PHOTO_CAPTURE_CONSENT, PHOTO_CLOUD_BACKUP_CONSENT } from '@/features/onboarding/consentCopy';
+import {
+  PHOTO_CAPTURE_CONSENT,
+  PHOTO_CLOUD_BACKUP_CONSENT,
+} from '@/features/onboarding/consentCopy';
 import { recordConsent } from '@/lib/consent/consent';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
@@ -109,9 +112,7 @@ async function getPhotoCaptureConsentLocal(): Promise<boolean> {
         return getFlag(CAPTURE_KEY);
       }
       if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
-        await setPrivateItem(CAPTURE_RECORD_KEY, JSON.stringify(normalized)).catch(
-          () => undefined,
-        );
+        await setPrivateItem(CAPTURE_RECORD_KEY, JSON.stringify(normalized)).catch(() => undefined);
       }
       return true;
     } catch {
