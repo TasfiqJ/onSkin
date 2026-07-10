@@ -9,7 +9,9 @@ import {
 
 const mocks = vi.hoisted(() => ({
   asyncStorage: new Map<string, string>(),
+  asyncRemoveThrows: false,
   platformOS: 'ios',
+  secureDeleteThrows: false,
   secureStorage: new Map<string, string>(),
   secureAvailable: true,
   secureGetThrows: false,
@@ -31,6 +33,7 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
       mocks.asyncStorage.set(key, value);
     }),
     removeItem: vi.fn(async (key: string) => {
+      if (mocks.asyncRemoveThrows) throw new Error('async remove failed');
       mocks.asyncStorage.delete(key);
     }),
   },
@@ -47,6 +50,7 @@ vi.mock('expo-secure-store', () => ({
     mocks.secureStorage.set(key, value);
   }),
   deleteItemAsync: vi.fn(async (key: string) => {
+    if (mocks.secureDeleteThrows) throw new Error('secure delete failed');
     mocks.secureStorage.delete(key);
   }),
 }));
@@ -54,9 +58,11 @@ vi.mock('expo-secure-store', () => ({
 describe('private KV content key storage', () => {
   beforeEach(() => {
     mocks.asyncStorage.clear();
+    mocks.asyncRemoveThrows = false;
     mocks.secureStorage.clear();
     mocks.platformOS = 'ios';
     mocks.secureAvailable = true;
+    mocks.secureDeleteThrows = false;
     mocks.secureGetThrows = false;
     mocks.secureSetThrows = false;
   });
@@ -78,6 +84,10 @@ describe('private KV content key storage', () => {
     expect(await getStoredPrivateKVContentKey()).toBe('web-key');
     expect(mocks.secureStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBeUndefined();
     expect(mocks.asyncStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBe('web-key');
+
+    mocks.secureDeleteThrows = true;
+    await expect(clearStoredPrivateKVContentKey()).resolves.toBeUndefined();
+    expect(mocks.asyncStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBeUndefined();
   });
 
   it('fails closed when native SecureStore reports unavailable without a legacy fallback', async () => {
@@ -141,6 +151,19 @@ describe('private KV content key storage', () => {
     await clearStoredPrivateKVContentKey();
 
     expect(mocks.secureStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBeUndefined();
+    expect(mocks.asyncStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBeUndefined();
+  });
+
+  it('reports key cleanup failure after attempting native and fallback deletion', async () => {
+    mocks.secureStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, 'native-key');
+    mocks.asyncStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, 'fallback-key');
+    mocks.secureDeleteThrows = true;
+
+    await expect(clearStoredPrivateKVContentKey()).rejects.toThrow(
+      'PRIVATE_KV_CONTENT_KEY_CLEAR_FAILED:1',
+    );
+
+    expect(mocks.secureStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBe('native-key');
     expect(mocks.asyncStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBeUndefined();
   });
 });

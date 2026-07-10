@@ -10,6 +10,10 @@ describe('RevenueCat identity boundary', () => {
 
     expect(source).toContain('export async function resetRevenueCatIdentity');
     expect(source).toContain('await Purchases.logOut()');
+    expect(source).toContain('const isConfigured = await Purchases.isConfigured();');
+    expect(source).toContain('const isAnonymous = await Purchases.isAnonymous();');
+    expect(source).not.toContain('Purchases.isConfigured().catch');
+    expect(source).not.toContain('Purchases.isAnonymous().catch');
     expect(source).toContain('configuredForUserId = null');
     expect(source).toContain('configurePromise = null');
     expect(source).toContain('cachedOfferings = null');

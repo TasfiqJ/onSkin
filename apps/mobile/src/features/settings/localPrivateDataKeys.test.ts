@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
+  LOCAL_PRIVATE_CONTROL_KEYS,
   LOCAL_PRIVATE_DATA_KEYS,
   LOCAL_PRIVATE_METADATA_KEYS,
   LOCAL_PRIVATE_SECURE_STORE_KEYS,
@@ -23,6 +24,7 @@ function walk(dir: string): string[] {
 describe('local private data registry', () => {
   it('covers every on-device private storage key', () => {
     const registered = new Set([
+      ...LOCAL_PRIVATE_CONTROL_KEYS,
       ...LOCAL_PRIVATE_DATA_KEYS,
       ...LOCAL_PRIVATE_METADATA_KEYS,
       ...LOCAL_PRIVATE_SECURE_STORE_KEYS,
@@ -41,6 +43,7 @@ describe('local private data registry', () => {
 
   it('does not register duplicate keys', () => {
     const all = [
+      ...LOCAL_PRIVATE_CONTROL_KEYS,
       ...LOCAL_PRIVATE_DATA_KEYS,
       ...LOCAL_PRIVATE_METADATA_KEYS,
       ...LOCAL_PRIVATE_SECURE_STORE_KEYS,

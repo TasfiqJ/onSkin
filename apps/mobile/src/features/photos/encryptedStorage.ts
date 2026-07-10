@@ -11,6 +11,7 @@ import {
 } from '@noble/ciphers/utils.js';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 
 import { brandCachePrefix } from '@/lib/brand';
 
@@ -26,6 +27,7 @@ export const PHOTO_CONTENT_KEY_MISSING = 'PHOTO_CONTENT_KEY_MISSING';
 export const PHOTO_CONTENT_KEY_INVALID = 'PHOTO_CONTENT_KEY_INVALID';
 export const PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE = 'PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE';
 export const PHOTO_DECRYPTION_FAILED = 'PHOTO_DECRYPTION_FAILED';
+export const PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY = 'PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY';
 
 type EncryptedPhotoEnvelope = {
   version: typeof ENCRYPTION_VERSION;
@@ -49,6 +51,48 @@ export type EncryptedPhotoWrite = {
 };
 
 let contentKeyCreation: Promise<Uint8Array> | null = null;
+const inFlightPhotoOperations = new Set<Promise<unknown>>();
+let accountBoundaryWriteBlockDepth = 0;
+let accountBoundaryWriteGeneration = 0;
+
+function photoWritesBlocked(): boolean {
+  return accountBoundaryWriteBlockDepth > 0;
+}
+
+function assertPhotoWriteAllowed(generation: number): void {
+  if (photoWritesBlocked() || generation !== accountBoundaryWriteGeneration) {
+    throw new Error(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+  }
+}
+
+async function runAccountScopedPhotoOperation<T>(
+  operation: (generation: number) => Promise<T>,
+): Promise<T> {
+  if (photoWritesBlocked()) throw new Error(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+  const generation = accountBoundaryWriteGeneration;
+  const pending = operation(generation);
+  inFlightPhotoOperations.add(pending);
+  try {
+    return await pending;
+  } finally {
+    inFlightPhotoOperations.delete(pending);
+  }
+}
+
+export function beginEncryptedPhotoAccountBoundary(): void {
+  if (accountBoundaryWriteBlockDepth === 0) accountBoundaryWriteGeneration += 1;
+  accountBoundaryWriteBlockDepth += 1;
+}
+
+export async function waitForEncryptedPhotoWritesToSettle(): Promise<void> {
+  while (inFlightPhotoOperations.size > 0) {
+    await Promise.allSettled([...inFlightPhotoOperations]);
+  }
+}
+
+export function endEncryptedPhotoAccountBoundary(): void {
+  accountBoundaryWriteBlockDepth = Math.max(0, accountBoundaryWriteBlockDepth - 1);
+}
 
 async function ensureDir(): Promise<void> {
   await FileSystem.makeDirectoryAsync(PHOTO_DIR, { intermediates: true }).catch(() => {});
@@ -86,12 +130,13 @@ async function hasPriorEncryptedPhotoData(): Promise<boolean> {
   }
 }
 
-async function getExistingContentKey(): Promise<Uint8Array> {
+async function getExistingContentKey(generation: number): Promise<Uint8Array> {
   const existing = await readStoredContentKey();
   if (!existing) throw new Error(PHOTO_CONTENT_KEY_MISSING);
   const existingKey = contentKeyFromHex(existing);
   if (!existingKey) throw new Error(PHOTO_CONTENT_KEY_INVALID);
-  await markContentKeyCreated().catch(() => undefined);
+  assertPhotoWriteAllowed(generation);
+  await requireContentKeyMarker();
   return existingKey;
 }
 
@@ -234,41 +279,46 @@ export async function encryptCapturedPhoto(
   photoId: string,
 ): Promise<EncryptedPhotoWrite> {
   if (!sourceUri) throw new Error('Missing captured photo URI.');
-  await ensureDir();
-  const key = await getOrCreateContentKey();
-  const mimeType = mimeForUri(sourceUri);
-  const base64 = await FileSystem.readAsStringAsync(sourceUri, {
-    encoding: FileSystem.EncodingType.Base64,
+  return runAccountScopedPhotoOperation(async (generation) => {
+    await ensureDir();
+    const key = await getOrCreateContentKey();
+    const mimeType = mimeForUri(sourceUri);
+    const base64 = await FileSystem.readAsStringAsync(sourceUri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+    const strippedBase64 = stripImageMetadataFromBase64(base64, mimeType);
+    const encrypted = encryptBytesWithKey(utf8ToBytes(strippedBase64), key);
+    const envelope: EncryptedPhotoEnvelope = {
+      ...encrypted,
+      mimeType,
+    };
+    const encryptedLocalUri = `${PHOTO_DIR}${photoId}.onskinphoto`;
+    assertPhotoWriteAllowed(generation);
+    await FileSystem.writeAsStringAsync(encryptedLocalUri, JSON.stringify(envelope), {
+      encoding: FileSystem.EncodingType.UTF8,
+    });
+    await FileSystem.deleteAsync(sourceUri, { idempotent: true }).catch(() => {});
+    return {
+      encryptedLocalUri,
+      keyId: KEY_ID,
+      encryptionVersion: ENCRYPTION_VERSION,
+    };
   });
-  const strippedBase64 = stripImageMetadataFromBase64(base64, mimeType);
-  const encrypted = encryptBytesWithKey(utf8ToBytes(strippedBase64), key);
-  const envelope: EncryptedPhotoEnvelope = {
-    ...encrypted,
-    mimeType,
-  };
-  const encryptedLocalUri = `${PHOTO_DIR}${photoId}.onskinphoto`;
-  await FileSystem.writeAsStringAsync(encryptedLocalUri, JSON.stringify(envelope), {
-    encoding: FileSystem.EncodingType.UTF8,
-  });
-  await FileSystem.deleteAsync(sourceUri, { idempotent: true }).catch(() => {});
-  return {
-    encryptedLocalUri,
-    keyId: KEY_ID,
-    encryptionVersion: ENCRYPTION_VERSION,
-  };
 }
 
 export async function decryptPhotoToDataUri(encryptedLocalUri: string): Promise<string> {
   if (!isEncryptedPhotoUri(encryptedLocalUri)) return encryptedLocalUri;
-  const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
-    encoding: FileSystem.EncodingType.UTF8,
+  return runAccountScopedPhotoOperation(async (generation) => {
+    const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
+      encoding: FileSystem.EncodingType.UTF8,
+    });
+    const envelope = photoEnvelopeFromRaw(raw);
+    if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+    const key = await getExistingContentKey(generation);
+    const base64 = decryptEnvelopeToUtf8(envelope, key);
+    if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+    return `data:${envelope.mimeType};base64,${base64}`;
   });
-  const envelope = photoEnvelopeFromRaw(raw);
-  if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-  const key = await getExistingContentKey();
-  const base64 = decryptEnvelopeToUtf8(envelope, key);
-  if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-  return `data:${envelope.mimeType};base64,${base64}`;
 }
 
 export async function createPhotoShareFile(
@@ -276,24 +326,27 @@ export async function createPhotoShareFile(
   photoId: string,
 ): Promise<string> {
   if (!isEncryptedPhotoUri(encryptedLocalUri)) return encryptedLocalUri;
-  const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
-    encoding: FileSystem.EncodingType.UTF8,
+  return runAccountScopedPhotoOperation(async (generation) => {
+    const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
+      encoding: FileSystem.EncodingType.UTF8,
+    });
+    const envelope = photoEnvelopeFromRaw(raw);
+    if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+    const key = await getExistingContentKey(generation);
+    const base64 = decryptEnvelopeToUtf8(envelope, key);
+    if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+    const strippedBase64 = stripImageMetadataFromBase64(base64, envelope.mimeType);
+    const extension = envelope.mimeType === 'image/png' ? 'png' : 'jpg';
+    const cacheDirectory = FileSystem.cacheDirectory;
+    if (!cacheDirectory) throw new Error('PHOTO_SHARE_CACHE_UNAVAILABLE');
+    const shareCachePrefix = brandCachePrefix('share');
+    const exportUri = `${cacheDirectory}${shareCachePrefix}${safePhotoShareId(photoId)}-${Date.now()}.${extension}`;
+    assertPhotoWriteAllowed(generation);
+    await FileSystem.writeAsStringAsync(exportUri, strippedBase64, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+    return exportUri;
   });
-  const envelope = photoEnvelopeFromRaw(raw);
-  if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-  const key = await getExistingContentKey();
-  const base64 = decryptEnvelopeToUtf8(envelope, key);
-  if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-  const strippedBase64 = stripImageMetadataFromBase64(base64, envelope.mimeType);
-  const extension = envelope.mimeType === 'image/png' ? 'png' : 'jpg';
-  const cacheDirectory = FileSystem.cacheDirectory;
-  if (!cacheDirectory) throw new Error('PHOTO_SHARE_CACHE_UNAVAILABLE');
-  const shareCachePrefix = brandCachePrefix('share');
-  const exportUri = `${cacheDirectory}${shareCachePrefix}${safePhotoShareId(photoId)}-${Date.now()}.${extension}`;
-  await FileSystem.writeAsStringAsync(exportUri, strippedBase64, {
-    encoding: FileSystem.EncodingType.Base64,
-  });
-  return exportUri;
 }
 
 export async function deletePhotoShareFile(
@@ -312,27 +365,47 @@ export async function deleteEncryptedPhoto(uri?: string | null): Promise<void> {
 }
 
 export async function clearEncryptedPhotoStorage(): Promise<void> {
-  await FileSystem.deleteAsync(PHOTO_DIR, { idempotent: true }).catch(() => {});
-  await SecureStore.deleteItemAsync(KEY_STORE_NAME).catch(() => {});
-  await AsyncStorage.removeItem(KEY_CREATION_MARKER).catch(() => {});
+  const clearPhotoDirectory = async () => {
+    if (Platform.OS === 'web') {
+      // Expo's legacy file API has no web backend, so web cannot own photo files.
+      const info = await FileSystem.getInfoAsync(PHOTO_DIR).catch(() => null);
+      if (!info?.exists) return;
+    }
+    await FileSystem.deleteAsync(PHOTO_DIR, { idempotent: true });
+  };
+  const operations: Promise<unknown>[] = [
+    clearPhotoDirectory(),
+    AsyncStorage.removeItem(KEY_CREATION_MARKER),
+  ];
+  if (Platform.OS !== 'web') operations.push(SecureStore.deleteItemAsync(KEY_STORE_NAME));
+  const results = await Promise.allSettled(operations);
+  const failures = results.filter((result) => result.status === 'rejected');
+  if (failures.length > 0) {
+    throw new Error(`PHOTO_STORAGE_CLEAR_FAILED:${failures.length}`);
+  }
 }
 
 export async function encryptPhotoNote(note: string | null | undefined): Promise<string | null> {
   if (!note) return null;
-  const key = await getOrCreateContentKey();
-  return JSON.stringify(encryptBytesWithKey(utf8ToBytes(note), key));
+  return runAccountScopedPhotoOperation(async (generation) => {
+    const key = await getOrCreateContentKey();
+    assertPhotoWriteAllowed(generation);
+    return JSON.stringify(encryptBytesWithKey(utf8ToBytes(note), key));
+  });
 }
 
 export async function decryptPhotoNote(
   ciphertext: string | null | undefined,
 ): Promise<string | null> {
   if (!ciphertext) return null;
-  const envelope = encryptedTextEnvelopeFromRaw(ciphertext);
-  if (!envelope) return null;
-  const key = await getExistingContentKey();
-  const plaintext = decryptEnvelopeToUtf8(envelope, key);
-  if (plaintext === null) throw new Error(PHOTO_DECRYPTION_FAILED);
-  return plaintext;
+  return runAccountScopedPhotoOperation(async (generation) => {
+    const envelope = encryptedTextEnvelopeFromRaw(ciphertext);
+    if (!envelope) return null;
+    const key = await getExistingContentKey(generation);
+    const plaintext = decryptEnvelopeToUtf8(envelope, key);
+    if (plaintext === null) throw new Error(PHOTO_DECRYPTION_FAILED);
+    return plaintext;
+  });
 }
 
 export function isPhotoEncryptionReadError(error: unknown): boolean {

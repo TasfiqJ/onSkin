@@ -13,6 +13,7 @@ import { configureNotifications } from '@/features/notifications/deliver';
 import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
 import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
+import { SessionBoundaryGate } from '@/lib/auth/SessionBoundaryGate';
 import { OfflineSync } from '@/lib/offline/OfflineSync';
 import { initSentry } from '@/lib/observability/sentry';
 import { queryClient } from '@/lib/query/queryClient';
@@ -45,13 +46,15 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <AppLockProvider>
-              <PrivateDataAvailabilityGate>
-                <OfflineSync />
-                <StatusBar style="dark" />
-                <Stack screenOptions={{ headerShown: false }} />
-              </PrivateDataAvailabilityGate>
-            </AppLockProvider>
+            <SessionBoundaryGate>
+              <AppLockProvider>
+                <PrivateDataAvailabilityGate>
+                  <OfflineSync />
+                  <StatusBar style="dark" />
+                  <Stack screenOptions={{ headerShown: false }} />
+                </PrivateDataAvailabilityGate>
+              </AppLockProvider>
+            </SessionBoundaryGate>
           </AuthProvider>
         </QueryClientProvider>
       </SafeAreaProvider>

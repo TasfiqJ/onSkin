@@ -1,3 +1,7 @@
+import {
+  LOCAL_DATA_CLEANUP_REQUIRED_KEY,
+  LOCAL_DATA_OWNER_HASH_KEY,
+} from '@/lib/auth/sessionOwnerKey';
 import { brandCachePrefix } from '@/lib/brand';
 
 export const LOCAL_PRIVATE_DATA_KEYS = [
@@ -43,7 +47,13 @@ export const LOCAL_PRIVATE_SECURE_STORE_KEYS = [
   'onskin.private_kv.content_key.v1',
 ] as const;
 
-export const LOCAL_PRIVATE_METADATA_KEYS = ['onskin.photo.content_key_created.v1'] as const;
+export const LOCAL_PRIVATE_METADATA_KEYS = [
+  'onskin.photo.content_key_created.v1',
+  LOCAL_DATA_OWNER_HASH_KEY,
+] as const;
+
+// Survives partial cleanup so the next launch must retry before data can mount.
+export const LOCAL_PRIVATE_CONTROL_KEYS = [LOCAL_DATA_CLEANUP_REQUIRED_KEY] as const;
 
 export const LOCAL_PRIVATE_CACHE_FILENAMES = ['onskin-export.json'] as const;
 

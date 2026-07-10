@@ -6,6 +6,33 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Closed a Critical account-transition privacy gap. Sign-out and user-ID changes
+  previously cleared registered files/records but left account-agnostic TanStack
+  Query data mounted, so account A Shelf, profile, routine, entitlement, or photo
+  metadata could remain visible in memory. The root now unmounts every data-bearing
+  provider/route during a boundary, verifies a domain-separated hash of the local
+  data owner, cancels and clears query memory before and after persisted cleanup,
+  blocks new private-record and encrypted-photo writes, drains writes already in
+  progress, serializes rapid auth events, removes the persisted Supabase session on
+  explicit sign-out, and publishes only the latest target session after cleanup and
+  owner claim succeed. A cleanup-required marker survives partial deletion so retry
+  cannot mistake residual records for unclaimed data; private reads/removals and
+  photo marker writes now drain with writes, native key/file/notification/vendor
+  cleanup failures stay closed, and account deletion hands off once to the same root
+  boundary instead of creating a second destructive race. A signed-out restore with
+  retained owner metadata also clears stale data, while session-restore or cleanup
+  failure remains behind a 56 px retry gate. Same-user token refreshes and anonymous
+  in-place upgrades retain data. Mobile typecheck/lint and the full suite pass 183
+  files / 1881 tests. Headless Chrome at
+  the accepted 360 x 640 support floor
+  populated account A through AM/PM check-offs, forced one cleanup failure, exposed
+  no account A product names behind failure/retry, then proved signed-out Welcome
+  plus direct Shelf and Today were clean with zero horizontal overflow or disallowed
+  browser logs. Evidence is in
+  `test-results/human-e2e/2026-07-10/onboarding-account-isolation-current/`.
+  Live Supabase sign-out, token-expiry, cold-start mismatch, and A-to-B proof remain
+  Tas-owned staging/device evidence.
+
 - Closed a Critical account-upgrade data-loss path at the onboarding value
   moment. Apple/Google previously called normal ID-token sign-in and email
   always called normal OTP sign-in, either of which could switch away from the

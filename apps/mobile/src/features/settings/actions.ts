@@ -8,7 +8,6 @@ import { BRAND, brandCachePrefix } from '@/lib/brand';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
-import { clearLocalPrivateData } from './localPrivateData';
 import {
   buildMobileDataExportBundle,
   collectLocalDeviceExportData,
@@ -24,7 +23,7 @@ function assertDataRightsBackendAvailable(): void {
 // Account deletion (Apple 5.1.1(v) / docs/01 §4): calls the service-role Edge
 // Function which revokes the SIWA token, deletes the auth user (FK-cascades all
 // tables), purges Storage, and removes the RC/PostHog records, then signs out.
-export async function deleteAccount(): Promise<void> {
+export async function deleteAccount(completeLocalSignOut: () => Promise<void>): Promise<void> {
   assertDataRightsBackendAvailable();
 
   const { data } = await supabase.auth.getUser();
@@ -36,11 +35,7 @@ export async function deleteAccount(): Promise<void> {
     body: appleAuthorizationCode ? { appleAuthorizationCode } : {},
   });
   if (error) throw error;
-  try {
-    await supabase.auth.signOut();
-  } finally {
-    await clearLocalPrivateData();
-  }
+  await completeLocalSignOut();
 }
 
 // Health-data consent withdrawal (docs/01 §4: MHMDA/GDPR right to withdraw,
@@ -49,7 +44,9 @@ export async function deleteAccount(): Promise<void> {
 // an immutable granted=false ledger row (proof of the withdrawal) and then
 // deletes the account and all data via the same cascade as deleteAccount. The
 // You-tab copy that promises "your data is then deleted" is now backed by code.
-export async function withdrawHealthDataConsent(): Promise<void> {
+export async function withdrawHealthDataConsent(
+  completeLocalSignOut: () => Promise<void>,
+): Promise<void> {
   assertDataRightsBackendAvailable();
 
   try {
@@ -63,7 +60,7 @@ export async function withdrawHealthDataConsent(): Promise<void> {
     // The deletion below is the substantive guarantee and runs even if the
     // consent-ledger write is temporarily unavailable.
   }
-  await deleteAccount();
+  await deleteAccount(completeLocalSignOut);
 }
 
 // GDPR Art. 20 export (docs/01 §4): the Edge Function assembles a JSON bundle;

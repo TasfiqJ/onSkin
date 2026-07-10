@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Notifications from 'expo-notifications';
+import { Platform } from 'react-native';
 
 import { clearEncryptedPhotoStorage } from '@/features/photos/encryptedStorage';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
@@ -18,7 +19,7 @@ async function clearGeneratedCacheFiles(): Promise<void> {
   const cacheDirectory = FileSystem.cacheDirectory;
   if (!cacheDirectory) return;
 
-  const entries = await FileSystem.readDirectoryAsync(cacheDirectory).catch(() => []);
+  const entries = await FileSystem.readDirectoryAsync(cacheDirectory);
   const cachePrefixes = localPrivateCachePrefixes();
   const targets = entries.filter(
     (name) =>
@@ -27,24 +28,40 @@ async function clearGeneratedCacheFiles(): Promise<void> {
       ) || cachePrefixes.some((prefix) => name.startsWith(prefix)),
   );
 
-  await Promise.all(
-    targets.map((name) =>
-      FileSystem.deleteAsync(`${cacheDirectory}${name}`, { idempotent: true }).catch(() => {}),
-    ),
+  const results = await Promise.allSettled(
+    targets.map((name) => FileSystem.deleteAsync(`${cacheDirectory}${name}`, { idempotent: true })),
   );
+  const failures = results.filter((result) => result.status === 'rejected');
+  if (failures.length > 0) {
+    throw new Error(`LOCAL_PRIVATE_CACHE_CLEAR_FAILED:${failures.length}`);
+  }
 }
 
 export async function clearLocalPrivateData(): Promise<void> {
-  const results = await Promise.allSettled([
-    AsyncStorage.multiRemove([...LOCAL_PRIVATE_DATA_KEYS, ...LOCAL_PRIVATE_METADATA_KEYS]),
-    clearEncryptedPhotoStorage(),
-    clearPrivateKVContentKey(),
-    clearGeneratedCacheFiles(),
-    Notifications.cancelAllScheduledNotificationsAsync().catch(() => {}),
-    resetAnalyticsIdentity(),
-    resetRevenueCatIdentity(),
-  ]);
-
-  const failed = results.filter((result) => result.status === 'rejected');
-  if (failed.length > 0) throw new Error(`LOCAL_PRIVATE_DATA_CLEAR_FAILED:${failed.length}`);
+  const operations = [
+    {
+      label: 'registered_records',
+      promise: AsyncStorage.multiRemove([
+        ...LOCAL_PRIVATE_DATA_KEYS,
+        ...LOCAL_PRIVATE_METADATA_KEYS,
+      ]),
+    },
+    { label: 'encrypted_photos', promise: clearEncryptedPhotoStorage() },
+    { label: 'private_kv_key', promise: clearPrivateKVContentKey() },
+    { label: 'generated_cache', promise: clearGeneratedCacheFiles() },
+    {
+      label: 'scheduled_notifications',
+      promise:
+        Platform.OS === 'web'
+          ? Promise.resolve()
+          : Notifications.cancelAllScheduledNotificationsAsync(),
+    },
+    { label: 'analytics_identity', promise: resetAnalyticsIdentity() },
+    { label: 'revenuecat_identity', promise: resetRevenueCatIdentity() },
+  ] as const;
+  const results = await Promise.allSettled(operations.map(({ promise }) => promise));
+  const failed = results.flatMap((result, index) =>
+    result.status === 'rejected' ? [operations[index]!.label] : [],
+  );
+  if (failed.length > 0) throw new Error(`LOCAL_PRIVATE_DATA_CLEAR_FAILED:${failed.join(',')}`);
 }

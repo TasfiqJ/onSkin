@@ -76,6 +76,16 @@ export async function setStoredPrivateKVContentKey(value: string): Promise<void>
 }
 
 export async function clearStoredPrivateKVContentKey(): Promise<void> {
-  await SecureStore.deleteItemAsync(PRIVATE_KV_CONTENT_KEY_NAME).catch(() => {});
-  await AsyncStorage.removeItem(PRIVATE_KV_CONTENT_KEY_NAME).catch(() => {});
+  if (Platform.OS === 'web') {
+    await AsyncStorage.removeItem(PRIVATE_KV_CONTENT_KEY_NAME);
+    return;
+  }
+  const results = await Promise.allSettled([
+    SecureStore.deleteItemAsync(PRIVATE_KV_CONTENT_KEY_NAME),
+    AsyncStorage.removeItem(PRIVATE_KV_CONTENT_KEY_NAME),
+  ]);
+  const failures = results.filter((result) => result.status === 'rejected');
+  if (failures.length > 0) {
+    throw new Error(`PRIVATE_KV_CONTENT_KEY_CLEAR_FAILED:${failures.length}`);
+  }
 }

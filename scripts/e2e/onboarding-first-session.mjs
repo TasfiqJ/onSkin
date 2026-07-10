@@ -11,6 +11,15 @@ const today = new Date().toISOString().slice(0, 10);
 const accountUpgradeMode =
   process.argv.includes('--account-upgrade') ||
   process.env.ONBOARDING_E2E_ACCOUNT_UPGRADE?.trim().toLowerCase() === 'email_same_user';
+const accountIsolationMode =
+  process.argv.includes('--account-isolation') ||
+  process.env.ONBOARDING_E2E_ACCOUNT_ISOLATION?.trim().toLowerCase() === 'signout_clear_retry';
+assertSingleMode();
+function assertSingleMode() {
+  if (accountUpgradeMode && accountIsolationMode) {
+    throw new Error('Choose only one onboarding E2E mode.');
+  }
+}
 const evidenceDir =
   process.env.ONBOARDING_E2E_EVIDENCE_DIR ??
   path.join(
@@ -20,15 +29,23 @@ const evidenceDir =
     today,
     accountUpgradeMode
       ? 'onboarding-account-upgrade-current'
-      : 'onboarding-first-session-430-current',
+      : accountIsolationMode
+        ? 'onboarding-account-isolation-current'
+        : 'onboarding-first-session-430-current',
   );
 const appPort = Number(process.env.ONBOARDING_E2E_PORT ?? 8285);
 const debugPort = Number(process.env.ONBOARDING_E2E_DEBUG_PORT ?? 9385);
 const baseUrl = process.env.ONBOARDING_E2E_BASE_URL ?? `http://localhost:${appPort}`;
 const shouldStartServer = !process.env.ONBOARDING_E2E_BASE_URL;
 const viewport = {
-  height: Number(process.env.ONBOARDING_E2E_VIEWPORT_HEIGHT ?? (accountUpgradeMode ? 640 : 430)),
-  width: Number(process.env.ONBOARDING_E2E_VIEWPORT_WIDTH ?? (accountUpgradeMode ? 360 : 320)),
+  height: Number(
+    process.env.ONBOARDING_E2E_VIEWPORT_HEIGHT ??
+      (accountUpgradeMode || accountIsolationMode ? 640 : 430),
+  ),
+  width: Number(
+    process.env.ONBOARDING_E2E_VIEWPORT_WIDTH ??
+      (accountUpgradeMode || accountIsolationMode ? 360 : 320),
+  ),
 };
 
 mkdirSync(evidenceDir, { recursive: true });
@@ -185,6 +202,7 @@ function startExpoServer() {
       CI: '1',
       EXPO_PUBLIC_E2E_APP_LOCK_ENABLED: 'false',
       ...(accountUpgradeMode ? { EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE: 'email_same_user' } : {}),
+      ...(accountIsolationMode ? { EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION: 'signout_clear_retry' } : {}),
       EXPO_PUBLIC_E2E_LOCAL_RESET: '1',
     },
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -580,6 +598,18 @@ async function screenshot(client, name) {
   writeFileSync(path.join(evidenceDir, `${name}.png`), Buffer.from(result.data, 'base64'));
 }
 
+async function navigateClientSide(client, pathname) {
+  await client.send('Runtime.evaluate', {
+    awaitPromise: true,
+    expression: `(() => {
+      const navigate = globalThis.__ROUTINEKIND_E2E_NAVIGATE__;
+      if (typeof navigate !== 'function') throw new Error('Account-isolation E2E navigator unavailable.');
+      navigate(${JSON.stringify(pathname)});
+    })()`,
+    returnByValue: true,
+  });
+}
+
 async function captureStep(client, name, { assertClean = true } = {}) {
   await delay(250);
   const snapshot = await evaluate(client, auditExpression());
@@ -677,24 +707,39 @@ async function addProduct(client, product, evidenceName) {
 }
 
 function writeReport(summary) {
+  const taskLabel = summary.accountUpgradeMode
+    ? 'Anonymous account-upgrade recovery run'
+    : summary.accountIsolationMode
+      ? 'Account sign-out isolation and cleanup recovery run'
+      : 'First-session onboarding 320 x 430 stress run';
+  const featureLabel = summary.accountUpgradeMode
+    ? 'Identity-preserving account upgrade UI'
+    : summary.accountIsolationMode
+      ? 'Account-boundary private-data isolation'
+      : 'First-run onboarding activation path';
+  const branchLabel = summary.accountUpgradeMode
+    ? 'Invalid email code and successful recovery'
+    : summary.accountIsolationMode
+      ? 'Cleanup failure, retry, and signed-out direct routes'
+      : 'Happy path / stress viewport';
   const lines = [
     '# Human-Simulated E2E Run Report',
     '',
     '## Summary',
     '',
     `- Date: ${summary.date}`,
-    `- Codex task: ${summary.accountUpgradeMode ? 'Anonymous account-upgrade recovery run' : 'First-session onboarding 320 x 430 stress run'}`,
+    `- Codex task: ${taskLabel}`,
     `- App surface: ${summary.surface}`,
     `- Build/start command: \`${summary.startCommand}\``,
     `- Browser/device/simulator/OS: Headless Chrome or Edge, ${viewport.width} x ${viewport.height}`,
-    `- Feature or PR tested: ${summary.accountUpgradeMode ? 'Identity-preserving account upgrade UI' : 'First-run onboarding activation path'}`,
+    `- Feature or PR tested: ${featureLabel}`,
     `- Overall verdict: ${summary.verdict === 'pass' ? 'Pass' : 'Fail'}`,
     '',
     '## Flows Executed',
     '',
     '| Flow | Branch | Result | Evidence | Notes |',
     '| ---- | ------ | ------ | -------- | ----- |',
-    `| First-run onboarding | ${summary.accountUpgradeMode ? 'Invalid email code and successful recovery' : 'Happy path / stress viewport'} | ${summary.verdict} | \`${path.relative(repoRoot, evidenceDir).replace(/\\/g, '/')}\` | ${summary.flowResult ?? `Reached ${summary.endUrl}`} |`,
+    `| First-run onboarding | ${branchLabel} | ${summary.verdict} | \`${path.relative(repoRoot, evidenceDir).replace(/\\/g, '/')}\` | ${summary.flowResult ?? `Reached ${summary.endUrl}`} |`,
     '',
     '## Bugs Found',
     '',
@@ -707,14 +752,18 @@ function writeReport(summary) {
     '```bash',
     summary.accountUpgradeMode
       ? 'npm run e2e:onboarding-account-upgrade'
-      : 'npm run e2e:onboarding-first-session',
+      : summary.accountIsolationMode
+        ? 'npm run e2e:onboarding-account-isolation'
+        : 'npm run e2e:onboarding-first-session',
     '```',
     '',
     '## Remaining Risk',
     '',
     summary.accountUpgradeMode
       ? '- The development-only fixture proves route interaction and recovery, not live Supabase email delivery or identity mutation.'
-      : '- 320 x 430 is resilience evidence below the accepted launch web floor.',
+      : summary.accountIsolationMode
+        ? '- The development-only fixture proves local cache/storage isolation and recovery; live Supabase A-to-B switching remains staging QA.'
+        : '- 320 x 430 is resilience evidence below the accepted launch web floor.',
     '- Native iOS/Android onboarding still needs simulator or physical-device QA for OS prompts and platform text settings.',
     '',
   ];
@@ -917,6 +966,75 @@ async function run() {
     assertInteractiveControl(todayPmAfter, 'Glycolic 7%');
     assert(todayPmAfter.bodyText.includes('1 of 1'), 'PM check-off did not reach 1 of 1.');
 
+    let accountBeforeSignOut = null;
+    let accountBoundaryFailure = null;
+    let accountBoundaryRetry = null;
+    let signedOutWelcome = null;
+    let signedOutShelf = null;
+    let signedOutToday = null;
+    if (accountIsolationMode) {
+      const assertPrivateNamesHidden = (snapshot, label) => {
+        for (const product of productNames) {
+          assert(
+            !snapshot.bodyText.includes(product.name),
+            `${label} exposed account A product: ${product.name}.`,
+          );
+        }
+      };
+
+      await navigateClientSide(client, '/you');
+      await waitForPath(client, '/you', 30_000);
+      await waitForText(client, 'tas.account-a.e2e@example.com', 30_000);
+      await waitForText(client, 'Sign out', 30_000);
+      accountBeforeSignOut = await captureStep(client, '25-account-before-signout', {
+        assertClean: false,
+      });
+      assert(
+        accountBeforeSignOut.overflowX <= 1,
+        `Account surface has horizontal overflow: ${accountBeforeSignOut.overflowX}px.`,
+      );
+      assertInteractiveControl(accountBeforeSignOut, 'Sign out');
+
+      await clickByText(client, 'Sign out');
+      await waitForText(client, 'Account change paused', 30_000);
+      accountBoundaryFailure = await captureStep(client, '26-account-boundary-clear-failure');
+      assertPrivateNamesHidden(accountBoundaryFailure, 'Failed account boundary');
+      assertInteractiveControl(accountBoundaryFailure, 'Try again');
+      assert(
+        accountBoundaryFailure.bodyText.includes('The next account is still locked out.'),
+        'Account boundary failure did not explain that the next account remained locked out.',
+      );
+
+      await clickByText(client, 'Try again');
+      await waitForText(client, 'Securing account data...', 10_000);
+      accountBoundaryRetry = await captureStep(client, '27-account-boundary-retry');
+      assertPrivateNamesHidden(accountBoundaryRetry, 'Retrying account boundary');
+
+      await waitForPath(client, '/', 30_000);
+      await waitForText(client, 'Begin', 30_000);
+      signedOutWelcome = await captureStep(client, '28-signed-out-welcome');
+      assertPrivateNamesHidden(signedOutWelcome, 'Signed-out welcome');
+
+      await navigateClientSide(client, '/shelf');
+      await waitForPath(client, '/shelf', 30_000);
+      await waitForText(client, 'empty for now', 30_000);
+      signedOutShelf = await captureStep(client, '29-signed-out-shelf');
+      assertPrivateNamesHidden(signedOutShelf, 'Signed-out Shelf');
+
+      await navigateClientSide(client, '/today?routine=AM');
+      await waitForPath(client, '/today', 30_000);
+      await waitForText(client, 'NO ROUTINE YET', 30_000);
+      signedOutToday = await captureStep(client, '30-signed-out-today', {
+        assertClean: false,
+      });
+      assert(
+        signedOutToday.overflowX <= 1,
+        `Signed-out Today has horizontal overflow: ${signedOutToday.overflowX}px.`,
+      );
+      assertInteractiveControl(signedOutToday, 'Add products');
+      assertPrivateNamesHidden(signedOutToday, 'Signed-out Today');
+    }
+
     const problemLogs = collectProblemLogs(client.events);
     const disallowedLogs = problemLogs.filter(disallowedLog);
     writeJson('browser-warn-error-logs.json', problemLogs);
@@ -940,11 +1058,36 @@ async function run() {
       todayAmAfter,
       todayPmBefore,
       todayPmAfter,
+      ...(accountBeforeSignOut ? { accountBeforeSignOut } : {}),
+      ...(accountBoundaryFailure ? { accountBoundaryFailure } : {}),
+      ...(accountBoundaryRetry ? { accountBoundaryRetry } : {}),
+      ...(signedOutWelcome ? { signedOutWelcome } : {}),
+      ...(signedOutShelf ? { signedOutShelf } : {}),
+      ...(signedOutToday ? { signedOutToday } : {}),
     })) {
       overflowXByStep[key] = snapshot.overflowX;
     }
 
     const summary = {
+      accountIsolationMode,
+      accountIsolation: accountIsolationMode
+        ? {
+            accountAEmail: 'tas.account-a.e2e@example.com',
+            cleanupFailureStayedGated:
+              accountBoundaryFailure?.bodyText.includes('Account change paused') ?? false,
+            privateNamesHiddenAfterSignOut:
+              Boolean(signedOutShelf && signedOutToday) &&
+              productNames.every(
+                (product) =>
+                  !signedOutShelf.bodyText.includes(product.name) &&
+                  !signedOutToday.bodyText.includes(product.name),
+              ),
+            reachedEmptyShelf: signedOutShelf?.bodyText.includes('empty for now') ?? false,
+            reachedEmptyToday: signedOutToday?.bodyText.includes('NO ROUTINE YET') ?? false,
+            retryShowedTransitionGate:
+              accountBoundaryRetry?.bodyText.includes('Securing account data...') ?? false,
+          }
+        : null,
       accountUpgradeMode,
       accountUpgrade: accountUpgradeMode
         ? {
@@ -959,7 +1102,7 @@ async function run() {
         : null,
       browserProblemLogCount: problemLogs.length,
       date: today,
-      endUrl: todayPmAfter.url,
+      endUrl: signedOutToday?.url ?? todayPmAfter.url,
       evidenceFiles: [
         '01-welcome.png',
         '03-age-filled.png',
@@ -978,10 +1121,22 @@ async function run() {
         '22-today-am-after-checkoff.png',
         '23-today-pm-before-checkoff.png',
         '24-today-pm-after-checkoff.png',
+        ...(accountIsolationMode
+          ? [
+              '25-account-before-signout.png',
+              '26-account-boundary-clear-failure.png',
+              '27-account-boundary-retry.png',
+              '28-signed-out-welcome.png',
+              '29-signed-out-shelf.png',
+              '30-signed-out-today.png',
+            ]
+          : []),
       ],
       flowResult: accountUpgradeMode
         ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then finished activation through AM and PM check-offs.'
-        : 'Completed onboarding through Explore first, routine plan, Start today, AM check-off, and PM cycle check-off.',
+        : accountIsolationMode
+          ? 'Completed activation, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.'
+          : 'Completed onboarding through Explore first, routine plan, Start today, AM check-off, and PM cycle check-off.',
       overflowXByStep,
       productNames: productNames.map((product) => product.name),
       reveal: {
@@ -1014,12 +1169,16 @@ async function run() {
         exploreFirstLedToRoutinePlan: routinePlan.url.includes('/routine/plan'),
         notificationSkipLedToAccount: true,
         pmCheckoffReachedComplete: todayPmAfter.bodyText.includes('1 of 1'),
+        signedOutShelfIsEmpty:
+          !accountIsolationMode || signedOutShelf?.bodyText.includes('empty for now') === true,
+        signedOutTodayIsEmpty:
+          !accountIsolationMode || signedOutToday?.bodyText.includes('NO ROUTINE YET') === true,
         revealContinueLedToNotifications: true,
         revealRoute: reveal.url,
         startTodayLedToToday: todayAfterStart.url.includes('/today'),
       },
       startCommand: shouldStartServer
-        ? `${accountUpgradeMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user ' : ''}EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
+        ? `${accountUpgradeMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user ' : ''}${accountIsolationMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry ' : ''}EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
         : `Existing Expo web at ${baseUrl}`,
       startUrl: `${baseUrl}/?e2eReset=local`,
       steps: [
@@ -1034,6 +1193,13 @@ async function run() {
         'Used Explore first to unlock the routine plan without card entry.',
         'Verified the generated routine plan contains the first insight plus SPF, glycolic, and retinol placement.',
         'Tapped Start today, forced AM and PM dev routine states, and completed the SPF and glycolic check-offs to 1 of 1.',
+        ...(accountIsolationMode
+          ? [
+              'Opened the signed-in account surface and initiated sign-out with account A private queries already populated.',
+              'Verified a forced first cleanup failure exposed only the recovery gate, then retried through the transition state.',
+              'Verified Welcome, direct Shelf, and direct Today routes contain no account A product names after cleanup.',
+            ]
+          : []),
       ],
       surface: 'Headless Chrome Expo web',
       today: {
@@ -1056,9 +1222,10 @@ async function run() {
       verdict: 'pass',
       viewport: {
         ...viewport,
-        supportClass: accountUpgradeMode
-          ? 'accepted launch web support floor'
-          : 'resilience stress viewport below launch web support floor',
+        supportClass:
+          accountUpgradeMode || accountIsolationMode
+            ? 'accepted launch web support floor'
+            : 'resilience stress viewport below launch web support floor',
       },
     };
 

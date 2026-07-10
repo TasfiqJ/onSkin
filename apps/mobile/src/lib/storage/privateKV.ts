@@ -24,6 +24,8 @@ export const PRIVATE_KV_CONTENT_KEY_INVALID = 'PRIVATE_KV_CONTENT_KEY_INVALID';
 export const PRIVATE_KV_DECRYPTION_FAILED = 'PRIVATE_KV_DECRYPTION_FAILED';
 export const PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE =
   'PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE';
+export const PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY =
+  'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY';
 
 type PrivateEnvelope = {
   version: typeof ENCRYPTION_VERSION;
@@ -33,6 +35,32 @@ type PrivateEnvelope = {
 
 let contentKeyCreation: Promise<Uint8Array> | null = null;
 const failedReadSnapshots = new Map<string, string>();
+const inFlightOperations = new Set<Promise<unknown>>();
+let accountBoundaryWriteBlocked = false;
+let accountBoundaryWriteBlockDepth = 0;
+let accountBoundaryGeneration = 0;
+
+async function runAccountScopedPrivateOperation<T>(
+  operation: (generation: number) => Promise<T>,
+): Promise<T> {
+  if (accountBoundaryWriteBlocked) {
+    throw new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+  }
+  const generation = accountBoundaryGeneration;
+  const pending = operation(generation);
+  inFlightOperations.add(pending);
+  try {
+    return await pending;
+  } finally {
+    inFlightOperations.delete(pending);
+  }
+}
+
+function assertAccountScopedPrivateOperationAllowed(generation: number): void {
+  if (accountBoundaryWriteBlocked || generation !== accountBoundaryGeneration) {
+    throw new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+  }
+}
 
 async function getExistingContentKey(): Promise<Uint8Array | null> {
   const stored = await getStoredPrivateKVContentKey();
@@ -123,82 +151,86 @@ async function assertNoFailedReadRewrite(key: string): Promise<string | null> {
 }
 
 export async function getPrivateItem(key: string): Promise<string | null> {
-  const raw = await AsyncStorage.getItem(key);
-  if (!raw) {
-    failedReadSnapshots.delete(key);
-    return null;
-  }
+  return runAccountScopedPrivateOperation(async () => {
+    const raw = await AsyncStorage.getItem(key);
+    if (!raw) {
+      failedReadSnapshots.delete(key);
+      return null;
+    }
 
-  const envelope = parseEnvelope(raw);
-  if (!envelope) {
-    failedReadSnapshots.delete(key);
-    return raw;
-  }
+    const envelope = parseEnvelope(raw);
+    if (!envelope) {
+      failedReadSnapshots.delete(key);
+      return raw;
+    }
 
-  let contentKey: Uint8Array | null;
-  try {
-    contentKey = await getExistingContentKey();
-  } catch (error) {
-    rememberFailedRead(key, raw);
-    throw error;
-  }
-  if (!contentKey) {
-    rememberFailedRead(key, raw);
-    throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
-  }
-  try {
-    const value = decryptEnvelope(envelope, contentKey);
-    failedReadSnapshots.delete(key);
-    return value;
-  } catch {
-    rememberFailedRead(key, raw);
-    throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
-  }
+    let contentKey: Uint8Array | null;
+    try {
+      contentKey = await getExistingContentKey();
+    } catch (error) {
+      rememberFailedRead(key, raw);
+      throw error;
+    }
+    if (!contentKey) {
+      rememberFailedRead(key, raw);
+      throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+    }
+    try {
+      const value = decryptEnvelope(envelope, contentKey);
+      failedReadSnapshots.delete(key);
+      return value;
+    } catch {
+      rememberFailedRead(key, raw);
+      throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+    }
+  });
 }
 
 export async function getPrivateItems(
   keys: readonly string[],
 ): Promise<Map<string, string | null>> {
-  const entries = await AsyncStorage.multiGet([...keys]);
-  const result = new Map<string, string | null>();
-  const encryptedEntries: [string, PrivateEnvelope, string][] = [];
+  return runAccountScopedPrivateOperation(async () => {
+    const entries = await AsyncStorage.multiGet([...keys]);
+    const result = new Map<string, string | null>();
+    const encryptedEntries: [string, PrivateEnvelope, string][] = [];
 
-  for (const [key, raw] of entries) {
-    if (!raw) {
-      failedReadSnapshots.delete(key);
-      result.set(key, null);
-      continue;
+    for (const [key, raw] of entries) {
+      if (!raw) {
+        failedReadSnapshots.delete(key);
+        result.set(key, null);
+        continue;
+      }
+      const envelope = parseEnvelope(raw);
+      if (envelope) encryptedEntries.push([key, envelope, raw]);
+      else {
+        failedReadSnapshots.delete(key);
+        result.set(key, raw);
+      }
     }
-    const envelope = parseEnvelope(raw);
-    if (envelope) encryptedEntries.push([key, envelope, raw]);
-    else {
-      failedReadSnapshots.delete(key);
-      result.set(key, raw);
-    }
-  }
 
-  if (encryptedEntries.length === 0) return result;
-  let contentKey: Uint8Array | null;
-  try {
-    contentKey = await getExistingContentKey();
-  } catch (error) {
-    for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
-    throw error;
-  }
-  if (!contentKey) {
-    for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
-    throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
-  }
-  for (const [key, envelope, raw] of encryptedEntries) {
+    if (encryptedEntries.length === 0) return result;
+    let contentKey: Uint8Array | null;
     try {
-      result.set(key, decryptEnvelope(envelope, contentKey));
-      failedReadSnapshots.delete(key);
-    } catch {
-      rememberFailedRead(key, raw);
-      throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+      contentKey = await getExistingContentKey();
+    } catch (error) {
+      for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
+      throw error;
     }
-  }
-  return result;
+    if (!contentKey) {
+      for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
+      throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+    }
+    for (const [key, envelope, raw] of encryptedEntries) {
+      try {
+        result.set(key, decryptEnvelope(envelope, contentKey));
+        failedReadSnapshots.delete(key);
+      } catch {
+        rememberFailedRead(key, raw);
+        throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+      }
+    }
+    return result;
+  });
 }
 
 /** Verify every private-KV envelope without creating key material or retaining plaintext. */
@@ -211,35 +243,61 @@ export async function assertPrivateKVReadable(): Promise<void> {
 }
 
 export async function setPrivateItem(key: string, value: string): Promise<void> {
-  const existingRaw = await assertNoFailedReadRewrite(key);
-  const contentKey = await getOrCreateContentKey();
-  const existingEnvelope = existingRaw ? parseEnvelope(existingRaw) : null;
-  if (existingEnvelope && existingRaw) {
-    try {
-      decryptEnvelope(existingEnvelope, contentKey);
-    } catch {
-      rememberFailedRead(key, existingRaw);
-      throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+  return runAccountScopedPrivateOperation(async (generation) => {
+    const existingRaw = await assertNoFailedReadRewrite(key);
+    const contentKey = await getOrCreateContentKey();
+    const existingEnvelope = existingRaw ? parseEnvelope(existingRaw) : null;
+    if (existingEnvelope && existingRaw) {
+      try {
+        decryptEnvelope(existingEnvelope, contentKey);
+      } catch {
+        rememberFailedRead(key, existingRaw);
+        throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+      }
     }
+    assertAccountScopedPrivateOperationAllowed(generation);
+    const nonce = randomBytes(NONCE_BYTES);
+    const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(value));
+    const envelope: PrivateEnvelope = {
+      version: ENCRYPTION_VERSION,
+      nonceHex: bytesToHex(nonce),
+      ciphertextHex: bytesToHex(ciphertext),
+    };
+    await AsyncStorage.setItem(key, JSON.stringify(envelope));
+  });
+}
+
+export function beginPrivateKVAccountBoundary(): void {
+  if (accountBoundaryWriteBlockDepth === 0) accountBoundaryGeneration += 1;
+  accountBoundaryWriteBlockDepth += 1;
+  accountBoundaryWriteBlocked = true;
+}
+
+export async function waitForPrivateKVWritesToSettle(): Promise<void> {
+  while (inFlightOperations.size > 0) {
+    await Promise.allSettled([...inFlightOperations]);
   }
-  const nonce = randomBytes(NONCE_BYTES);
-  const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(value));
-  const envelope: PrivateEnvelope = {
-    version: ENCRYPTION_VERSION,
-    nonceHex: bytesToHex(nonce),
-    ciphertextHex: bytesToHex(ciphertext),
-  };
-  await AsyncStorage.setItem(key, JSON.stringify(envelope));
+}
+
+export function endPrivateKVAccountBoundary(): void {
+  accountBoundaryWriteBlockDepth = Math.max(0, accountBoundaryWriteBlockDepth - 1);
+  accountBoundaryWriteBlocked = accountBoundaryWriteBlockDepth > 0;
 }
 
 export async function removePrivateItem(key: string): Promise<void> {
-  await AsyncStorage.removeItem(key);
-  failedReadSnapshots.delete(key);
+  return runAccountScopedPrivateOperation(async (generation) => {
+    assertAccountScopedPrivateOperationAllowed(generation);
+    await AsyncStorage.removeItem(key);
+    failedReadSnapshots.delete(key);
+  });
 }
 
 export async function multiRemovePrivateItems(keys: readonly string[]): Promise<void> {
-  await AsyncStorage.multiRemove([...keys]);
-  for (const key of keys) failedReadSnapshots.delete(key);
+  return runAccountScopedPrivateOperation(async (generation) => {
+    assertAccountScopedPrivateOperationAllowed(generation);
+    await AsyncStorage.multiRemove([...keys]);
+    for (const key of keys) failedReadSnapshots.delete(key);
+  });
 }
 
 export async function clearPrivateKVContentKey(): Promise<void> {

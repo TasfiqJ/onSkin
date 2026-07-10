@@ -34,7 +34,7 @@ This decision is based on product fit and current repo momentum, not loyalty to 
 
 ### A-003: Local-First Sensitive Data
 
-- Decision: shelf, completion, profile, cycle/ramp, and photos work locally; photos are device-only in the current build. Native content keys stay in SecureStore, encrypted reads never rotate missing/invalid keys or delete ciphertext, and failed-read snapshots block fallback overwrites. Opt-in app lock fails closed while its encrypted preference is unreadable, and one foreground-scoped photo-timeline unlock gates the Progress tab plus direct capture, review, and detail entries. After that unlock, every data-bearing Progress route must complete a successful encrypted metadata read before route content or photo mutations mount; read failure renders shared non-destructive recovery, never an empty or missing-photo fallback. Account export composes the owner-scoped server bundle with a sanitized snapshot of every registered local private-data record.
+- Decision: shelf, completion, profile, cycle/ramp, and photos work locally; photos are device-only in the current build. Native content keys stay in SecureStore, encrypted reads never rotate missing/invalid keys or delete ciphertext, and failed-read snapshots block fallback overwrites. Opt-in app lock fails closed while its encrypted preference is unreadable, and one foreground-scoped photo-timeline unlock gates the Progress tab plus direct capture, review, and detail entries. After that unlock, every data-bearing Progress route must complete a successful encrypted metadata read before route content or photo mutations mount; read failure renders shared non-destructive recovery, never an empty or missing-photo fallback. Account changes unmount this data-bearing tree, verify a hashed local owner, persist a cleanup-required control across partial deletion, block/drain account-scoped private reads and mutations, clear query memory before and after registered cleanup, and fail closed before publishing the latest target session. Account export composes the owner-scoped server bundle with a sanitized snapshot of every registered local private-data record.
 - Criteria: privacy, trust, offline bathroom use.
 - Risk: multi-device sync and key recovery are delayed; genuine OS key loss makes local-only ciphertext unrecoverable.
 - Status: active.
@@ -131,6 +131,15 @@ Client APIs:
   user ID and trigger local-private-data cleanup.
 - Normal Apple/Google/email sign-in remains available when there is no active
   anonymous session to preserve.
+- Sign-out, a changed user ID, a signed-out restore with retained owner metadata,
+  or a cold-start owner mismatch cannot render account data until prior queries,
+  registered local records, vendor
+  identities, and in-flight private-record/photo writes are isolated and
+  cleared. Explicit sign-out also removes persisted auth; account deletion delegates
+  to this root boundary once. Rapid auth events serialize, a durable cleanup-required
+  control forces retry after partial deletion, and session-restore or cleanup failure
+  remains behind a retry gate. A domain-separated owner hash is stored locally
+  instead of the raw Supabase user ID.
 - Supabase user ID becomes stable app user identity.
 - RevenueCat `appUserID` bound to Supabase user ID.
 - Owner-scoped RLS on user tables.

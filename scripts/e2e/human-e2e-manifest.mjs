@@ -270,6 +270,13 @@ if (!accountUpgradeEvidenceDate) {
   console.error('FAIL Missing identity-preserving account-upgrade UI evidence.');
   process.exit(1);
 }
+const accountIsolationEvidenceDate = latestEvidenceDateForFolder(
+  'onboarding-account-isolation-current',
+);
+if (!accountIsolationEvidenceDate) {
+  console.error('FAIL Missing account-transition private-data isolation evidence.');
+  process.exit(1);
+}
 const latestManifestEvidenceDate = [
   evidenceDate,
   timelapseEvidenceDate,
@@ -280,6 +287,7 @@ const latestManifestEvidenceDate = [
   dataExportDisclosureEvidenceDate,
   combinedDataExportEvidenceDate,
   accountUpgradeEvidenceDate,
+  accountIsolationEvidenceDate,
 ]
   .sort()
   .at(-1);
@@ -516,6 +524,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Invalid email code recovers, valid fixture code reaches paywall, and first-session activation completes.',
+  },
+  {
+    id: 'account-isolation-supported-phone',
+    title: '360 x 640 account-transition isolation and cleanup recovery pass',
+    kind: 'summary-verdict',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${accountIsolationEvidenceDate}/onboarding-account-isolation-current`,
+    evidence: 'summary.json',
+    expected:
+      'Cleanup failure stays gated, retry succeeds, and signed-out Shelf/Today expose no account A data.',
   },
   {
     id: 'progress-timelapse-supported-phone',

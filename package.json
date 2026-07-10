@@ -162,6 +162,7 @@
     "e2e:tabbar-geometry": "node scripts/e2e/tabbar-geometry.mjs",
     "e2e:onboarding-first-session": "node scripts/e2e/onboarding-first-session.mjs",
     "e2e:onboarding-account-upgrade": "node scripts/e2e/onboarding-first-session.mjs --account-upgrade",
+    "e2e:onboarding-account-isolation": "node scripts/e2e/onboarding-first-session.mjs --account-isolation",
     "e2e:catalog-search-wrong-match": "node scripts/e2e/catalog-search-wrong-match.mjs",
     "e2e:public-site-support": "node scripts/e2e/public-site-support.mjs",
     "e2e:text-pressure": "node scripts/e2e/text-pressure-route-audit.mjs",

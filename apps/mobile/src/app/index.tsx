@@ -8,6 +8,7 @@ import { isOnboardedLocal } from '@/features/onboarding/skinProfileStore';
 import { clearLocalPrivateData } from '@/features/settings/localPrivateData';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { isSupabaseConfigured } from '@/lib/env';
 import { queryClient } from '@/lib/query/queryClient';
 import { supabase } from '@/lib/supabase/client';
 
@@ -60,6 +61,7 @@ export default function WelcomeScreen() {
     retry: 0,
     queryFn: async () => {
       if (await isOnboardedLocal()) return true;
+      if (!isSupabaseConfigured) return false;
       const { count } = await supabase
         .from('skin_profiles')
         .select('id', { count: 'exact', head: true })

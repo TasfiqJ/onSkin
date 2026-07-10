@@ -13,7 +13,6 @@ function readSource(path: string): string {
 
 const mocks = vi.hoisted(() => ({
   buildMobileDataExportBundle: vi.fn(),
-  clearLocalPrivateData: vi.fn(),
   collectLocalDeviceExportData: vi.fn(),
   deleteAsync: vi.fn(),
   getAppleAuthorizationCodeForRevocation: vi.fn(),
@@ -56,16 +55,11 @@ vi.mock('@/lib/supabase/client', () => ({
   supabase: {
     auth: {
       getUser: mocks.getUser,
-      signOut: mocks.signOut,
     },
     functions: {
       invoke: mocks.invoke,
     },
   },
-}));
-
-vi.mock('./localPrivateData', () => ({
-  clearLocalPrivateData: mocks.clearLocalPrivateData,
 }));
 
 vi.mock('./localDeviceExport', () => ({
@@ -76,7 +70,6 @@ vi.mock('./localDeviceExport', () => ({
 describe('settings data export', () => {
   beforeEach(() => {
     mocks.buildMobileDataExportBundle.mockReset();
-    mocks.clearLocalPrivateData.mockReset();
     mocks.collectLocalDeviceExportData.mockReset();
     mocks.deleteAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
@@ -88,7 +81,6 @@ describe('settings data export', () => {
     mocks.sharingAvailable.mockReset();
     mocks.signOut.mockReset();
     mocks.writeAsStringAsync.mockReset();
-    mocks.clearLocalPrivateData.mockResolvedValue(undefined);
     mocks.buildMobileDataExportBundle.mockImplementation((params) => ({
       mobile_export_schema_version: 1,
       exported_at: '2026-07-10T12:01:00.000Z',
@@ -315,7 +307,6 @@ describe('settings data export', () => {
 
 describe('settings account deletion and consent withdrawal', () => {
   beforeEach(() => {
-    mocks.clearLocalPrivateData.mockReset();
     mocks.deleteAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
     mocks.getUser.mockReset();
@@ -326,7 +317,6 @@ describe('settings account deletion and consent withdrawal', () => {
     mocks.sharingAvailable.mockReset();
     mocks.signOut.mockReset();
     mocks.writeAsStringAsync.mockReset();
-    mocks.clearLocalPrivateData.mockResolvedValue(undefined);
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
     mocks.invoke.mockResolvedValue({ data: null, error: null });
@@ -334,8 +324,8 @@ describe('settings account deletion and consent withdrawal', () => {
     mocks.signOut.mockResolvedValue(undefined);
   });
 
-  it('deletes through the backend before signing out and clearing local private data', async () => {
-    await expect(deleteAccount()).resolves.toBeUndefined();
+  it('deletes through the backend before handing off to the root account boundary', async () => {
+    await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
 
     expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledWith({ id: 'user-1' });
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
@@ -343,34 +333,29 @@ describe('settings account deletion and consent withdrawal', () => {
       body: { appleAuthorizationCode: 'apple-revocation-code' },
     });
     expect(mocks.signOut).toHaveBeenCalledTimes(1);
-    expect(mocks.clearLocalPrivateData).toHaveBeenCalledTimes(1);
     expect(mocks.invoke.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.signOut.mock.invocationCallOrder[0]!,
-    );
-    expect(mocks.signOut.mock.invocationCallOrder[0]).toBeLessThan(
-      mocks.clearLocalPrivateData.mock.invocationCallOrder[0]!,
     );
   });
 
   it('does not clear local private data when backend account deletion fails', async () => {
     mocks.invoke.mockResolvedValueOnce({ data: null, error: new Error('edge unavailable') });
 
-    await expect(deleteAccount()).rejects.toThrow('edge unavailable');
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('edge unavailable');
 
     expect(mocks.signOut).not.toHaveBeenCalled();
-    expect(mocks.clearLocalPrivateData).not.toHaveBeenCalled();
   });
 
-  it('still attempts local private data cleanup when auth sign-out fails after deletion', async () => {
+  it('surfaces a root account-boundary failure after backend deletion', async () => {
     mocks.signOut.mockRejectedValueOnce(new Error('sign out unavailable'));
 
-    await expect(deleteAccount()).rejects.toThrow('sign out unavailable');
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('sign out unavailable');
 
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
       body: { appleAuthorizationCode: 'apple-revocation-code' },
     });
-    expect(mocks.clearLocalPrivateData).toHaveBeenCalledTimes(1);
+    expect(mocks.signOut).toHaveBeenCalledTimes(1);
   });
 
   it('does not block backend deletion when Apple revocation-code refresh fails locally', async () => {
@@ -378,27 +363,27 @@ describe('settings account deletion and consent withdrawal', () => {
       new Error('native apple unavailable'),
     );
 
-    await expect(deleteAccount()).resolves.toBeUndefined();
+    await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
 
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
       body: {},
     });
-    expect(mocks.clearLocalPrivateData).toHaveBeenCalledTimes(1);
+    expect(mocks.signOut).toHaveBeenCalledTimes(1);
   });
 
   it('fails fast without local cleanup when the data-rights backend is unavailable', async () => {
     mocks.isSupabaseConfigured = false;
 
-    await expect(deleteAccount()).rejects.toThrow('DATA_RIGHTS_BACKEND_UNAVAILABLE');
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('DATA_RIGHTS_BACKEND_UNAVAILABLE');
 
     expect(mocks.getUser).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
-    expect(mocks.clearLocalPrivateData).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
   it('records health-data consent withdrawal before deleting the account', async () => {
-    await expect(withdrawHealthDataConsent()).resolves.toBeUndefined();
+    await expect(withdrawHealthDataConsent(mocks.signOut)).resolves.toBeUndefined();
 
     expect(mocks.recordConsent).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -418,23 +403,25 @@ describe('settings account deletion and consent withdrawal', () => {
   it('continues to account deletion when the withdrawal ledger write is unavailable', async () => {
     mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
 
-    await expect(withdrawHealthDataConsent()).resolves.toBeUndefined();
+    await expect(withdrawHealthDataConsent(mocks.signOut)).resolves.toBeUndefined();
 
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
       body: { appleAuthorizationCode: 'apple-revocation-code' },
     });
-    expect(mocks.clearLocalPrivateData).toHaveBeenCalledTimes(1);
+    expect(mocks.signOut).toHaveBeenCalledTimes(1);
   });
 
   it('does not write withdrawal or cleanup locally when the data-rights backend is unavailable', async () => {
     mocks.isSupabaseConfigured = false;
 
-    await expect(withdrawHealthDataConsent()).rejects.toThrow('DATA_RIGHTS_BACKEND_UNAVAILABLE');
+    await expect(withdrawHealthDataConsent(mocks.signOut)).rejects.toThrow(
+      'DATA_RIGHTS_BACKEND_UNAVAILABLE',
+    );
 
     expect(mocks.recordConsent).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
-    expect(mocks.clearLocalPrivateData).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
   it('keeps You-tab destructive data-rights actions route-owned and retryable', () => {

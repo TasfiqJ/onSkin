@@ -2,21 +2,33 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   assertPrivateKVReadable,
+  beginPrivateKVAccountBoundary,
+  endPrivateKVAccountBoundary,
   getPrivateItem,
   getPrivateItems,
   PRIVATE_KV_CONTENT_KEY_INVALID,
   PRIVATE_KV_CONTENT_KEY_MISSING,
   PRIVATE_KV_DECRYPTION_FAILED,
+  PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
   PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE,
+  removePrivateItem,
+  multiRemovePrivateItems,
   privateKVEncryptionInfo,
   setPrivateItem,
+  waitForPrivateKVWritesToSettle,
 } from './privateKV';
 
 const mocks = vi.hoisted(() => ({
   asyncStorage: new Map<string, string>(),
+  getItemGate: null as Promise<void> | null,
+  getItemStarted: null as (() => void) | null,
   platformOS: 'ios',
+  removeItemGate: null as Promise<void> | null,
+  removeItemStarted: null as (() => void) | null,
   secureGetThrows: false,
   secureStorage: new Map<string, string>(),
+  setItemGate: null as Promise<void> | null,
+  setItemStarted: null as (() => void) | null,
 }));
 
 vi.mock('react-native', () => ({
@@ -29,18 +41,28 @@ vi.mock('react-native', () => ({
 
 vi.mock('@react-native-async-storage/async-storage', () => ({
   default: {
-    getItem: vi.fn(async (key: string) => mocks.asyncStorage.get(key) ?? null),
+    getItem: vi.fn(async (key: string) => {
+      mocks.getItemStarted?.();
+      if (mocks.getItemGate) await mocks.getItemGate;
+      return mocks.asyncStorage.get(key) ?? null;
+    }),
     getAllKeys: vi.fn(async () => [...mocks.asyncStorage.keys()]),
     multiGet: vi.fn(async (keys: string[]) =>
       keys.map((key) => [key, mocks.asyncStorage.get(key) ?? null] as [string, string | null]),
     ),
     setItem: vi.fn(async (key: string, value: string) => {
+      mocks.setItemStarted?.();
+      if (mocks.setItemGate) await mocks.setItemGate;
       mocks.asyncStorage.set(key, value);
     }),
     removeItem: vi.fn(async (key: string) => {
+      mocks.removeItemStarted?.();
+      if (mocks.removeItemGate) await mocks.removeItemGate;
       mocks.asyncStorage.delete(key);
     }),
     multiRemove: vi.fn(async (keys: string[]) => {
+      mocks.removeItemStarted?.();
+      if (mocks.removeItemGate) await mocks.removeItemGate;
       for (const key of keys) mocks.asyncStorage.delete(key);
     }),
   },
@@ -65,9 +87,16 @@ vi.mock('expo-secure-store', () => ({
 describe('private KV encrypted storage', () => {
   beforeEach(() => {
     mocks.asyncStorage.clear();
+    mocks.getItemGate = null;
+    mocks.getItemStarted = null;
     mocks.platformOS = 'ios';
+    mocks.removeItemGate = null;
+    mocks.removeItemStarted = null;
     mocks.secureGetThrows = false;
     mocks.secureStorage.clear();
+    mocks.setItemGate = null;
+    mocks.setItemStarted = null;
+    endPrivateKVAccountBoundary();
   });
 
   it('keeps legacy plaintext values readable', async () => {
@@ -162,6 +191,95 @@ describe('private KV encrypted storage', () => {
         ['onskin.concurrent-b', 'value-b'],
       ]),
     );
+  });
+
+  it('blocks private writes while an account boundary is active', async () => {
+    beginPrivateKVAccountBoundary();
+
+    await expect(setPrivateItem('onskin.account-b', 'value-b')).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+    );
+    expect(mocks.asyncStorage.has('onskin.account-b')).toBe(false);
+  });
+
+  it('rejects a write that had not reached storage before the boundary began', async () => {
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.getItemGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.getItemStarted = markReadStarted;
+
+    const write = setPrivateItem('onskin.account-a', 'late-value');
+    await readStarted;
+    beginPrivateKVAccountBoundary();
+    releaseRead();
+
+    await expect(write).rejects.toThrow(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+    expect(mocks.asyncStorage.has('onskin.account-a')).toBe(false);
+  });
+
+  it('waits for a storage write already in progress before account cleanup continues', async () => {
+    let releaseWrite!: () => void;
+    let markWriteStarted!: () => void;
+    mocks.setItemGate = new Promise<void>((resolve) => {
+      releaseWrite = resolve;
+    });
+    const writeStarted = new Promise<void>((resolve) => {
+      markWriteStarted = resolve;
+    });
+    mocks.setItemStarted = markWriteStarted;
+
+    const write = setPrivateItem('onskin.account-a', 'committed-before-clear');
+    await writeStarted;
+    beginPrivateKVAccountBoundary();
+    let drainFinished = false;
+    const drain = waitForPrivateKVWritesToSettle().then(() => {
+      drainFinished = true;
+    });
+    await Promise.resolve();
+    expect(drainFinished).toBe(false);
+
+    releaseWrite();
+    await write;
+    await drain;
+    expect(drainFinished).toBe(true);
+    expect(mocks.asyncStorage.has('onskin.account-a')).toBe(true);
+  });
+
+  it('blocks new removals and drains a removal already in progress', async () => {
+    mocks.asyncStorage.set('onskin.account-a', 'account-a-value');
+    let releaseRemoval!: () => void;
+    let markRemovalStarted!: () => void;
+    mocks.removeItemGate = new Promise<void>((resolve) => {
+      releaseRemoval = resolve;
+    });
+    const removalStarted = new Promise<void>((resolve) => {
+      markRemovalStarted = resolve;
+    });
+    mocks.removeItemStarted = markRemovalStarted;
+
+    const removal = removePrivateItem('onskin.account-a');
+    await removalStarted;
+    beginPrivateKVAccountBoundary();
+    await expect(multiRemovePrivateItems(['onskin.account-b'])).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+    );
+    let drainFinished = false;
+    const drain = waitForPrivateKVWritesToSettle().then(() => {
+      drainFinished = true;
+    });
+    await Promise.resolve();
+    expect(drainFinished).toBe(false);
+
+    releaseRemoval();
+    await removal;
+    await drain;
+    expect(drainFinished).toBe(true);
+    expect(mocks.asyncStorage.has('onskin.account-a')).toBe(false);
   });
 
   it('preserves keyless ciphertext and refuses replacement key material', async () => {

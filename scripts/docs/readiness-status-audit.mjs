@@ -16,8 +16,8 @@ const outJson =
   process.env.READINESS_STATUS_AUDIT_JSON ?? 'docs/generated/readiness-status-audit.json';
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
-const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 179);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1851);
+const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 183);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1881);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
@@ -80,6 +80,8 @@ const requiredManifestNeedles = [
   'data-export-combined-device-current',
   '360 x 640 account-upgrade error and recovery pass',
   'onboarding-account-upgrade-current',
+  '360 x 640 account-transition isolation and cleanup recovery pass',
+  'onboarding-account-isolation-current',
 ];
 
 const requiredLaunchCommands = [

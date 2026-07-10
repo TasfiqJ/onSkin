@@ -127,7 +127,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 179 mobile test files / 1851 tests. The human-simulated E2E manifest now
+covers 183 mobile test files / 1881 tests. The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
@@ -145,6 +145,11 @@ and the `Combined account and current-device export` gate in
 `test-results/human-e2e/2026-07-10/data-export-combined-device-current/`.
 It also includes the `360 x 640 account-upgrade error and recovery pass` in
 `test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current/`.
+The required `360 x 640 account-transition isolation and cleanup recovery pass`
+is in
+`test-results/human-e2e/2026-07-10/onboarding-account-isolation-current/` and
+proves a forced cleanup failure stays gated before signed-out direct Shelf and
+Today expose no account A product names.
 The baseline still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also
@@ -336,8 +341,10 @@ The client now upgrades active anonymous sessions in place: Apple/Google native
 tokens use Supabase `linkIdentity`, email uses `updateUser` plus an
 `email_change` OTP, and every successful path asserts the original user ID.
 Focused local tests prove routing, same-user invariants, and no unsafe fallback,
-but Codex has no Tas-owned Supabase project, live provider identities, email
-inbox, or physical release build with which to prove the external configuration.
+plus hashed local ownership, query-cache eviction, write draining, cleanup
+failure recovery, and signed-out route isolation. Codex has no Tas-owned
+Supabase project, live provider identities, email inbox, second real account, or
+physical release build with which to prove the external configuration.
 
 Next action:
 
@@ -347,7 +354,16 @@ Next action:
 - on supported iOS and Android devices, capture the anonymous `auth.users.id`
   before and after Apple, Google, and email upgrades;
 - exercise an identity already owned by another account and confirm the app
-  stays on the anonymous user without deleting local private data.
+  stays on the anonymous user without deleting local private data;
+- populate account A with distinctive Shelf/routine/completion/Progress data,
+  then verify sign-out, a signed-out cold start with retained owner metadata,
+  cold-start owner mismatch, token expiry, and account A to account B switching on
+  supported iOS and Android builds;
+- after every destructive account boundary, open direct Shelf, Today, Progress,
+  and You routes and verify no account A query or metadata is visible to account B.
+- force a partial cleanup after the owner hash is removed and a remote sign-out
+  failure; verify the cleanup-required control survives, persisted local auth is
+  removed, and account B remains gated until every native store succeeds on retry.
 
 Exit criteria:
 
@@ -358,6 +374,9 @@ Exit criteria:
 - RevenueCat remains bound to that same user ID;
 - identity-conflict, invalid/expired code, cancellation, offline, and rate-limit
   recovery paths preserve the anonymous session and local data;
+- sign-out and A-to-B transitions never publish the next account before local
+  cleanup succeeds, and no account A profile, shelf, routine, completion,
+  entitlement, or Progress metadata is visible afterward;
 - evidence records project/build version, provider, device/OS, before/after user
   IDs (redacted consistently), screenshots/logs, and named tester signoff.
 

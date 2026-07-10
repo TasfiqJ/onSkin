@@ -71,9 +71,21 @@ Status: launch-blocked
   Progress metadata after relaunch, and keep RevenueCat on that ID. Also prove
   that an already-owned identity, invalid/expired code, cancellation, offline,
   and rate-limit failure leave the anonymous session and local data intact.
+  Populate a separate account A with distinctive profile, Shelf, routine,
+  completion, entitlement, and Progress records; then prove sign-out, a signed-out
+  cold start with retained owner metadata, token-expiry, cold-start owner mismatch,
+  and A-to-B switching never expose account A data from direct Shelf, Today,
+  Progress, or You routes. Exercise one
+  staging cleanup failure or deterministic fault-injection build after at least
+  one store and the owner hash have cleared; confirm the durable cleanup-required
+  control keeps account B locked out until every store succeeds on retry. Also
+  force remote sign-out failure and confirm encrypted local auth is still removed.
   Attach project/build version, device/OS, redacted before/after IDs,
   screenshots/logs, and named tester signoff; Codex cannot manufacture provider
-  accounts, inbox access, project settings, or physical-device proof.
+  accounts, inbox access, project settings, a second real account, or
+  physical-device proof. Local 360 x 640 failure/retry evidence is in
+  `test-results/human-e2e/2026-07-10/onboarding-account-isolation-current/` but
+  does not replace live Supabase/device evidence.
 - Supabase live Shelf scan-log evidence: attach staging/production proof that
   barcode outcomes insert owner-scoped `shelf_scans` rows for matched,
   no-match, and offline/queued outcomes under RLS. The 2026-07-08 Codex pass can

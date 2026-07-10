@@ -381,10 +381,10 @@ export async function resetRevenueCatIdentity(): Promise<void> {
     await pendingConfiguration?.catch(() => {});
 
     const Purchases = await loadPurchases();
-    const isConfigured = await Purchases.isConfigured().catch(() => false);
+    const isConfigured = await Purchases.isConfigured();
     if (!isConfigured) return;
 
-    const isAnonymous = await Purchases.isAnonymous().catch(() => false);
+    const isAnonymous = await Purchases.isAnonymous();
     if (!isAnonymous) await Purchases.logOut();
   } finally {
     configuredForUserId = null;

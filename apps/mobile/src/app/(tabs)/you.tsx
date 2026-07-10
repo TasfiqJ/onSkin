@@ -603,7 +603,7 @@ export default function YouScreen() {
     setConfirmingDataRightsAction(null);
     setPrivacyActionFeedback(null);
     try {
-      await withdrawHealthDataConsent();
+      await withdrawHealthDataConsent(signOut);
       router.replace('/');
     } catch {
       setPrivacyActionFeedback({
@@ -621,7 +621,7 @@ export default function YouScreen() {
     setDataRightsFeedback(null);
     setExportFeedback(null);
     try {
-      await deleteAccount();
+      await deleteAccount(signOut);
       router.replace('/');
     } catch {
       setDataRightsFeedback({

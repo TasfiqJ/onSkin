@@ -38,6 +38,7 @@ describe('onboarding route contracts', () => {
     expect(source).toContain('queryClient.clear()');
     expect(source).toContain("router.replace('/')");
     expect(source).toContain('enabled: !resetting && !!session && !initializing');
+    expect(source).toContain('if (!isSupabaseConfigured) return false;');
     expect(source).toContain('const deciding = resetting || initializing ||');
   });
 
