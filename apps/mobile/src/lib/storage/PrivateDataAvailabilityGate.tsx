@@ -1,3 +1,4 @@
+import { router, useUnstableGlobalHref, type Href } from 'expo-router';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { AppState, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,7 +19,7 @@ const PRIVATE_STORAGE_COPY = {
   retryFailed: 'It is still unavailable. Your encrypted data remains unchanged.',
 } as const;
 
-type Availability = 'waiting' | 'checking' | 'ready' | 'error';
+type Availability = 'waiting' | 'checking' | 'restoring' | 'ready' | 'error';
 type VerificationReason = 'initial' | 'foreground' | 'retry';
 
 let e2ePrivateStorageFailureConsumed = false;
@@ -52,10 +53,17 @@ async function verifyPrivateStorage(reason: VerificationReason): Promise<void> {
 export function PrivateDataAvailabilityGate({ children }: { children: ReactNode }) {
   const insets = useSafeAreaInsets();
   const { appUnlocked } = useAppLock();
+  const currentHref = useUnstableGlobalHref();
   const [availability, setAvailability] = useState<Availability>('waiting');
   const [retryFailed, setRetryFailed] = useState(false);
   const [retrying, setRetrying] = useState(false);
   const checkId = useRef(0);
+  const currentHrefRef = useRef(currentHref);
+  const recoveryHrefRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    currentHrefRef.current = currentHref;
+  }, [currentHref]);
 
   const check = useCallback(async (reason: VerificationReason) => {
     const fromRetry = reason === 'retry';
@@ -70,7 +78,7 @@ export function PrivateDataAvailabilityGate({ children }: { children: ReactNode 
       await verifyPrivateStorage(reason);
       if (checkId.current === id) {
         setRetrying(false);
-        setAvailability('ready');
+        setAvailability(recoveryHrefRef.current ? 'restoring' : 'ready');
       }
     } catch {
       if (checkId.current !== id) return;
@@ -91,12 +99,67 @@ export function PrivateDataAvailabilityGate({ children }: { children: ReactNode 
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
-      if (state === 'active' && appUnlocked) void check('foreground');
+      if (state !== 'active') {
+        if (appUnlocked) recoveryHrefRef.current = currentHrefRef.current;
+        return;
+      }
+      if (appUnlocked) {
+        recoveryHrefRef.current ??= currentHrefRef.current;
+        void check('foreground');
+      }
     });
     return () => subscription.remove();
   }, [appUnlocked, check]);
 
-  if (appUnlocked && availability === 'ready') return children;
+  useEffect(() => {
+    if (availability !== 'restoring') return;
+    const href = recoveryHrefRef.current;
+    if (!href) {
+      const readyTimer = setTimeout(() => setAvailability('ready'), 0);
+      return () => clearTimeout(readyTimer);
+    }
+
+    let revealTimer: ReturnType<typeof setTimeout> | undefined;
+    const restoreTimer = setTimeout(() => {
+      router.replace(href as Href);
+      revealTimer = setTimeout(() => {
+        recoveryHrefRef.current = null;
+        setAvailability('ready');
+      }, 0);
+    }, 0);
+    return () => {
+      clearTimeout(restoreTimer);
+      if (revealTimer) clearTimeout(revealTimer);
+    };
+  }, [availability]);
+
+  if (appUnlocked && (availability === 'ready' || availability === 'restoring')) {
+    const restoring = availability === 'restoring';
+    return (
+      <View className="flex-1" style={{ backgroundColor: colors.paper }}>
+        <View
+          accessibilityElementsHidden={restoring}
+          importantForAccessibility={restoring ? 'no-hide-descendants' : 'auto'}
+          className="flex-1"
+          style={{ opacity: restoring ? 0 : 1, pointerEvents: restoring ? 'none' : 'auto' }}
+        >
+          {children}
+        </View>
+        {restoring ? (
+          <View
+            accessibilityLabel={PRIVATE_STORAGE_COPY.loading}
+            accessibilityLiveRegion="polite"
+            className="absolute inset-0 items-center justify-center px-7"
+            style={{ backgroundColor: colors.paper }}
+          >
+            <Text variant="bodySm" tone="muted" className="text-center">
+              {PRIVATE_STORAGE_COPY.loading}
+            </Text>
+          </View>
+        ) : null}
+      </View>
+    );
+  }
 
   if (!appUnlocked || availability !== 'error') {
     return (

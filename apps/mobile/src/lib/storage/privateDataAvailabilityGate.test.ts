@@ -28,8 +28,13 @@ describe('global private data availability gate', () => {
     expect(gate).toContain('const { appUnlocked } = useAppLock();');
     expect(gate).toContain('await assertPrivateKVReadable();');
     expect(gate).toContain('if (!appUnlocked) return;');
-    expect(gate).toContain("state === 'active' && appUnlocked");
-    expect(gate).toContain("if (appUnlocked && availability === 'ready') return children;");
+    expect(gate).toContain("if (state !== 'active')");
+    expect(gate).toContain("void check('foreground')");
+    expect(gate).toContain("useUnstableGlobalHref");
+    expect(gate).toContain("recoveryHrefRef.current = currentHrefRef.current");
+    expect(gate).toContain("availability === 'ready' || availability === 'restoring'");
+    expect(gate).toContain('router.replace(href as Href);');
+    expect(gate).toContain("importantForAccessibility={restoring ? 'no-hide-descendants' : 'auto'}");
   });
 
   it('keeps failure recovery accessible, retryable, and development-only', () => {
