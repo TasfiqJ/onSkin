@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-10T15:37:58.449Z
+Generated: 2026-07-10T16:32:02.104Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: d40547404230d97c83b1f4f54df279225c10ff77
+Git SHA: 02477494294c65b6230375a02cf141875fdf6b57
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -309,7 +309,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `dc9d775d72899c2a131de5370a8b7b531c2b8fe7d369c9d3d3448fda9dc90809`
+- Review snapshot SHA-256: `6dc41e9dc0932bdaafa837c7a53a772e70125e7ab87e9578d3fbe761f947f579`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -320,8 +320,8 @@ Sources:
 - `apps/mobile/src/features/settings/actions.ts` - 5099 bytes - sha256 `e39806ea6cd4148df0c3a7acdaa70c219d1a0da4f57c54903018aa8990f500c2`
 - `apps/mobile/src/features/settings/localDeviceExport.ts` - 10663 bytes - sha256 `5553f474ebdff6bf5498565cecac5d6a787057e4a12b58cf4ffb8195c8560c81`
 - `apps/mobile/src/features/settings/localDeviceExport.test.ts` - 5680 bytes - sha256 `4dbbe2b3084f17923d989e80970b270f4f5846163ebd5c27e6e21b601a2ab9f7`
-- `apps/mobile/src/lib/storage/privateKV.ts` - 10102 bytes - sha256 `499ccda60a9f8c51981e51b3f6396f502ff40815c38fa7cce651933d6b807522`
-- `apps/mobile/src/lib/storage/privateKV.test.ts` - 12455 bytes - sha256 `34bf3b271a8ffb154cd6e5f04c3867058eda7bacdf455b0b0360c3636f895627`
+- `apps/mobile/src/lib/storage/privateKV.ts` - 16470 bytes - sha256 `8e739c380dc01b7851e862d86411a6c84507f4061f8aec01260271a5f8b5f3a5`
+- `apps/mobile/src/lib/storage/privateKV.test.ts` - 20833 bytes - sha256 `ca953c64f1b6efe699ddd7d036407f431abf91a2361c25118e7bfd1921f59759`
 - `apps/mobile/src/lib/legal/policyLinks.ts` - 722 bytes - sha256 `0fe9cf269e6b5e48119771f7b111d1620c095ffe35bb6ac56f63c2cd2ec1c863`
 - `supabase/functions/account-deletion/index.ts` - 15927 bytes - sha256 `5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b`
 - `supabase/functions/data-export/index.ts` - 13117 bytes - sha256 `b8e484616581a970ae19d8f86b342eaddb24fa44a9ad1367936b24f0f8d84f1f`

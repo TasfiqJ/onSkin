@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-10T15:37:58.449Z",
+  "generatedAt": "2026-07-10T16:32:02.104Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
-  "strict": false,
-  "gitSha": "d40547404230d97c83b1f4f54df279225c10ff77",
+  "strict": true,
+  "gitSha": "02477494294c65b6230375a02cf141875fdf6b57",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 92972,
-    "sha256": "df2a44cad4ee23216eefc1e9d55a6972a23cfabc15845cf8141cc4c70c4bf47f",
-    "currentSha256": "df2a44cad4ee23216eefc1e9d55a6972a23cfabc15845cf8141cc4c70c4bf47f"
+    "bytes": 92971,
+    "sha256": "94c42f745e362cdeffadcb9672091cec73ec379477b2cf4acd8ee34b2e951aac",
+    "currentSha256": "94c42f745e362cdeffadcb9672091cec73ec379477b2cf4acd8ee34b2e951aac"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -747,7 +747,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "dc9d775d72899c2a131de5370a8b7b531c2b8fe7d369c9d3d3448fda9dc90809",
+      "reviewSnapshotSha256": "6dc41e9dc0932bdaafa837c7a53a772e70125e7ab87e9578d3fbe761f947f579",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -776,14 +776,14 @@
         {
           "path": "apps/mobile/src/lib/storage/privateKV.ts",
           "exists": true,
-          "bytes": 10102,
-          "sha256": "499ccda60a9f8c51981e51b3f6396f502ff40815c38fa7cce651933d6b807522"
+          "bytes": 16470,
+          "sha256": "8e739c380dc01b7851e862d86411a6c84507f4061f8aec01260271a5f8b5f3a5"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.test.ts",
           "exists": true,
-          "bytes": 12455,
-          "sha256": "34bf3b271a8ffb154cd6e5f04c3867058eda7bacdf455b0b0360c3636f895627"
+          "bytes": 20833,
+          "sha256": "ca953c64f1b6efe699ddd7d036407f431abf91a2361c25118e7bfd1921f59759"
         },
         {
           "path": "apps/mobile/src/lib/legal/policyLinks.ts",
