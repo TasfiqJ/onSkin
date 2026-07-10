@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-07-10T04:10:03.649Z",
+  "generatedAt": "2026-07-10T04:52:50.994Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
-  "evidenceDate": "2026-07-09",
+  "evidenceDate": "2026-07-10",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 172,
-  "expectedMobileTests": 1782,
-  "actualMobileTestFiles": 172,
-  "expectedTestPhrase": "172 mobile test files / 1782 tests",
+  "expectedMobileTestFiles": 173,
+  "expectedMobileTests": 1786,
+  "actualMobileTestFiles": 173,
+  "expectedTestPhrase": "173 mobile test files / 1786 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
       "requireCurrentEvidence": true,
-      "date": "2026-07-09",
-      "expectedDate": "2026-07-09",
+      "date": "2026-07-10",
+      "expectedDate": "2026-07-10",
       "hasExpectedTestPhrase": true,
       "missingManifestNeedles": [],
       "stalePatterns": [],
@@ -23,8 +23,8 @@
     {
       "path": "BLOCKERS.md",
       "requireCurrentEvidence": true,
-      "date": "2026-07-09",
-      "expectedDate": "2026-07-09",
+      "date": "2026-07-10",
+      "expectedDate": "2026-07-10",
       "hasExpectedTestPhrase": true,
       "missingManifestNeedles": [],
       "stalePatterns": [],
@@ -34,7 +34,7 @@
       "path": "docs/TESTING_STRATEGY.md",
       "requireCurrentEvidence": false,
       "date": null,
-      "expectedDate": "2026-07-09",
+      "expectedDate": "2026-07-10",
       "hasExpectedTestPhrase": false,
       "missingManifestNeedles": [
         "360 x 640 launch-floor 200% text-pressure",
@@ -49,7 +49,9 @@
         "text-pressure-200-android-360-740-postfix",
         "text-pressure-200-iphone-375-812-postfix",
         "text-pressure-200-android-412-915-postfix2",
-        "text-pressure-200-boundary-414-896-postfix3"
+        "text-pressure-200-boundary-414-896-postfix3",
+        "390 x 844 local Progress time-lapse",
+        "progress-timelapse-current"
       ],
       "stalePatterns": [],
       "missingCommands": []

@@ -1,8 +1,9 @@
 # Human E2E Manifest
 
-Generated: 2026-07-10T04:09:56.261Z
-Git SHA: 2ff2fa1242378366ec6a3b67dbe4630d5ecd95dc
-Evidence date: 2026-07-09
+Generated: 2026-07-10T04:52:43.846Z
+Git SHA: dba5d92babc0ec58e3e6c328ace2a8089f63e2c2
+Evidence date: 2026-07-10
+Baseline suite date: 2026-07-09
 Status: pass
 
 This generated packet is created by `npm run e2e:human:manifest`. It turns
@@ -38,6 +39,7 @@ dependency to the repo.
 | 320 x 430 resilience route clearance                             | resilience      | pass   | 0 failures recorded.                   | 101   | test-results/human-e2e/2026-07-09/current-main-short-phone-430-final-clearance-sweep   |
 | 320 x 390 split-short stress clearance                           | resilience      | pass   | 0 failures recorded.                   | 101   | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix     |
 | 320 x 430 first-session activation stress pass                   | resilience      | pass   | summary verdict: pass.                 | 58    | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current                 |
+| 390 x 844 local Progress time-lapse and reduced-motion pass      | supported-phone | pass   | summary status: pass.                  | 17    | test-results/human-e2e/2026-07-10/progress-timelapse-current                           |
 
 ## Warnings
 

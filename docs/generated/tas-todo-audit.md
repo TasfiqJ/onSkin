@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-10T04:10:03.282Z
+Generated: 2026-07-10T04:52:50.640Z
 Status: pass
 Strict mode: yes
 
@@ -27,8 +27,8 @@ inventory itself is the canonical machine-readable key list.
 
 ## Handoff Freshness
 
-- FOR_TAS date: 2026-07-09
-- Expected evidence date: 2026-07-09
+- FOR_TAS date: 2026-07-10
+- Expected evidence date: 2026-07-10
 - Device support policy: `docs/DEVICE_SUPPORT_POLICY.md`
 - Required FOR_TAS support-floor details: `docs/DEVICE_SUPPORT_POLICY.md`, `iOS 17.0+`, `Android 10 / API 29+`, `360 x 640`, `API 36`
 - Required policy support-floor details: `iOS 17.0+`, `Android 10 / API 29+`, `360 x 640`, `API 36`

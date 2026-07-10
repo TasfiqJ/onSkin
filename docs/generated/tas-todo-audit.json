@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-10T04:10:03.282Z",
+  "generatedAt": "2026-07-10T04:52:50.640Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates, current device support floors, and generate an exact key inventory from phase scripts.",
@@ -11,8 +11,8 @@
     "envExamplePath": ".env.example"
   },
   "handoffFreshness": {
-    "forTasDate": "2026-07-09",
-    "expectedEvidenceDate": "2026-07-09",
+    "forTasDate": "2026-07-10",
+    "expectedEvidenceDate": "2026-07-10",
     "deviceSupportPolicyPath": "docs/DEVICE_SUPPORT_POLICY.md",
     "requiredForTasDeviceSupportNeedles": [
       "docs/DEVICE_SUPPORT_POLICY.md",

@@ -1,7 +1,8 @@
 {
-  "generatedAt": "2026-07-10T04:09:56.261Z",
-  "gitSha": "2ff2fa1242378366ec6a3b67dbe4630d5ecd95dc",
-  "evidenceDate": "2026-07-09",
+  "generatedAt": "2026-07-10T04:52:43.846Z",
+  "gitSha": "dba5d92babc0ec58e3e6c328ace2a8089f63e2c2",
+  "evidenceDate": "2026-07-10",
+  "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
   "purpose": "Durable local human-simulated E2E manifest for Expo web-compatible launch gates.",
   "gateResults": [
@@ -460,6 +461,25 @@
       "fileCount": 58,
       "bytes": 1805816,
       "evidenceSha256": "3b7f4657d92c1293a05549b284a07f7b69382c8a0afa53cac1766dd42a1233e0"
+    },
+    {
+      "id": "progress-timelapse-supported-phone",
+      "title": "390 x 844 local Progress time-lapse and reduced-motion pass",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/progress-timelapse-current",
+      "evidence": "summary.json",
+      "expected": "Real bitmap frames, finite playback, controls, close recovery, and reduced-motion manual review pass.",
+      "status": "pass",
+      "detail": "summary status: pass.",
+      "failureCount": null,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 17,
+      "bytes": 240576,
+      "evidenceSha256": "7f4c335f9aad8c9ed1172c7bffa4a4dbd160849d15af9cabbca04fde8d7a0926"
     }
   ],
   "warnings": [
