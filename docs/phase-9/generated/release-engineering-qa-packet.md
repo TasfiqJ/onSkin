@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-10T08:55:14.069Z
+Generated: 2026-07-10T09:21:37.721Z
 Status: blocked
-Git SHA: 1eadd75779d048bb300c1073ed74fce6a298a15b
+Git SHA: 0d013454e3d25f1b2cdcf4a37b88db92ffdc1c07
 Git status: clean
 
 ## Release Identity
@@ -96,6 +96,11 @@ Git status: clean
 - `apps/mobile/src/lib/observability/scrub.ts`: `ad231f592848825dbeaffcbd960a31e0ae916fe7e1916ded939e9b0f79deabed`
 - `apps/mobile/src/lib/observability/sentry.ts`: `c81f27c8ac940d81b4ddd10521d922689840d7dfc7071ade812ff4e45e51fa9e`
 - `apps/mobile/src/app/(tabs)/you.tsx`: `2c5afcc4d8b33a561dfca93ca6f577ff64f731f782f81a606fb5a73aec9102d2`
+- `apps/mobile/src/app/(tabs)/progress.tsx`: `32e479794a1e2c0ddbf5771bdebeb99740b88f158520a40a9c97beb754da5f1c`
+- `apps/mobile/src/app/progress/capture.tsx`: `aa564e09e72ffc721af18d760c73f02c1eeaf66e034832da17c6032f6edb72a1`
+- `apps/mobile/src/app/progress/review.tsx`: `d874cd205ad4b5b5e6a8edd6b181a72370375162a34bd77195bf1f072a475a08`
+- `apps/mobile/src/app/progress/[id].tsx`: `9783cebaad09c946d52d4d30c23023606c83df12620c3b7c77323e49b8e2e477`
+- `apps/mobile/src/features/photos/PhotoTimelineLockGate.tsx`: `deccd291d391bbd6654664b00920622bbad9051e1deb2c79ad2e282503846218`
 - `apps/mobile/src/features/settings/actions.ts`: `a560c90bf06696f4ab9e4ace3298ec9648651bce425e73f01b25a28b3b89c9a0`
 - `apps/mobile/src/features/settings/localDeviceExport.ts`: `5553f474ebdff6bf5498565cecac5d6a787057e4a12b58cf4ffb8195c8560c81`
 - `apps/mobile/src/features/settings/localDeviceExport.test.ts`: `4dbbe2b3084f17923d989e80970b270f4f5846163ebd5c27e6e21b601a2ab9f7`
@@ -103,6 +108,9 @@ Git status: clean
 - `apps/mobile/src/features/settings/localPrivateData.ts`: `6fbb58fd4787acd5ab79a8c544c2f07f19acb527798b8ffaa12a40df7176873a`
 - `apps/mobile/src/lib/storage/privateKV.ts`: `efe2d3a845492efa94abee9cf57c43fa9bda9f307e95a3af1910990cadfe42c6`
 - `apps/mobile/src/lib/storage/privateKV.test.ts`: `06b789ac267247e03da1c71f7441a6b5bdb88c825a33488cba20beabe39fd5d8`
+- `apps/mobile/src/lib/applock/AppLockProvider.tsx`: `254f1ab90712fa23da5fda16d4017a4d9ecc1e03431ace1ee079415029ce16b2`
+- `apps/mobile/src/lib/applock/authenticate.ts`: `fda9cd0c3818aa1c0f78edf9c499111622537c81c10f2f1761655a0cc652f0a8`
+- `apps/mobile/src/lib/applock/authenticate.test.ts`: `c18d16aab150ff1086e6d26ad8beef0d91344eb8120a124ab9cb88696a78822c`
 - `apps/mobile/src/lib/auth/apple.ts`: `2c61d825f40abde9f55e0bfb11ba32e345ee642f7d79de5002f0e1c404eb1ff8`
 - `supabase/functions/account-deletion/index.ts`: `5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b`
 - `supabase/functions/_shared/body.ts`: `03e9ddbd56df2875f78b4f582ffdae13f0deca50d75d44ed3a5df4d685b39e6a`
@@ -124,7 +132,7 @@ Git status: clean
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5`
 - `scripts/phase9/release-smoke.mjs`: `0e57ab70a4ff8f980de2fb37d9942c79ebd80851ad52fe683ed5b2443771d928`
 - `scripts/phase9/rls-adversarial.mjs`: `1fbe4e90ce280a9d4c9c8e642ea7beb718cee6d1647ea399e1fd6e9511bfcf89`
-- `scripts/phase9/build-release-qa-packet.mjs`: `66cafe6cb65891a6bd5127ea4bc31fb36e1087f71811c0b500faba7c6298bbe1`
+- `scripts/phase9/build-release-qa-packet.mjs`: `0cf8bd30d076551b43795cf54d78c00d44e212141c89dd3ab2e8825f3fabac51`
 - `scripts/phase9/live-supabase-adversarial.mjs`: `1219259653e4040ab4d31233d5a2906c44843189e30b859574a540f05be82c8d`
 - `scripts/phase9/live-edge-auth.mjs`: `ae2764d73242fe3c9b5d9497c78d9b0b62cbd2438ec3ac633496004402d37441`
 - `scripts/phase9/live-data-rights.mjs`: `fed1600ee42a0a3acd3b7010c729c2094c9b4ea26d59038fdb6cd914771f5aa4`
@@ -143,7 +151,7 @@ Git status: clean
 - `scripts/phase9/dependency-sbom.mjs`: `0b36b22f21004af4913cd1c72b0f247765b888a3461ee074a3758a8c3d8df351`
 - `scripts/phase9/store-build-inspect.mjs`: `6dbda3144157e2b8f75f92b81dc3cf52310154fbd5a8a64ccd80942745ea5366`
 - `docs/phase-9/source-of-truth.md`: `b23f022feded586dadfd8e21d7c407b8b94f9ed317ae6ddde12dac1c5933c9da`
-- `docs/phase-9/data-inventory.md`: `44a0abc8f76a4825c4131cae9e7f7583326a589c13fa1aecde966c1bf45aa6aa`
+- `docs/phase-9/data-inventory.md`: `788fab1859dc883a81875300cd603de74e71a34f6377fcb7cb7f0ee2511ed7a4`
 - `docs/phase-9/edge-function-auth-matrix.md`: `e93759bc6338c06bbfd883e0c704cba42c85eafd15369278564255b60d8e7786`
 - `docs/phase-9/observability-payload-audit.md`: `3aa9508564cef79e704b14fdd43a80063e8e040ebc7dcdfa7f68a9cd8d86ada7`
 - `docs/phase-9/security-scanner-evidence.md`: `878d37533e0f2cd94a77a774917e829f7436e854816ae9caf623e498c45f8566`

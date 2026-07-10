@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T08:55:11.495Z",
+  "generatedAt": "2026-07-10T09:21:35.065Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "1eadd75779d048bb300c1073ed74fce6a298a15b",
+  "gitSha": "0d013454e3d25f1b2cdcf4a37b88db92ffdc1c07",
   "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
@@ -111,8 +111,8 @@
     {
       "path": "docs/FOR_TAS_TO_DO.md",
       "exists": true,
-      "bytes": 50296,
-      "sha256": "156e6401fd4979a349adbe489ed28deba259c4a814beef926f65afa54dd6d300"
+      "bytes": 50848,
+      "sha256": "6d18b54106d3894535452eb1b7671c30eeb65c966d6bf31002b5ccf1b7b11633"
     },
     {
       "path": "docs/phase-4/beta-coverage-report.md",
@@ -136,13 +136,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 35122,
-      "sha256": "af66a813bf0d91a632bc221f918126930eef8297baf6aa59361a4b5762522a11"
+      "sha256": "270b1af9bb7d08220ba36a2d64880f0a0b93034706a536964e4966b4f8da4de9"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 22473,
-      "sha256": "b68c3d3aa909798fe6cf5087366b88f0bc481038a19a9130aa192d8aaf732350"
+      "sha256": "72ec38df3ea8952a2c3b30160145d34210b70047981494cd5f1a9fa290561010"
     },
     {
       "path": "docs/phase-4/odbl-compliance-memo.md",

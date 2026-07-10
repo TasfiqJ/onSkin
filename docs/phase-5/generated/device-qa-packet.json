@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T08:55:12.352Z",
+  "generatedAt": "2026-07-10T09:21:35.966Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "1eadd75779d048bb300c1073ed74fce6a298a15b",
+  "gitSha": "0d013454e3d25f1b2cdcf4a37b88db92ffdc1c07",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -109,8 +109,8 @@
       "scenario": "first capture, retake, reference ghost, measured framing/light, device-only storage/no backup control, no/multiple faces, analyzer unavailable, delete"
     },
     {
-      "surface": "Encryption",
-      "scenario": "restart, key present, key missing simulation, delete, share/export"
+      "surface": "Encryption and app lock",
+      "scenario": "restart, key present/missing simulation, direct Progress routes, prompt ordering, background relock, delete, share/export"
     },
     {
       "surface": "Reminders",
@@ -177,8 +177,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/progress.tsx",
       "exists": true,
-      "bytes": 24390,
-      "sha256": "9a10433844920d13397d28f7cc755a8c7cf94e3bc36eddbdb7e55efcf075b437"
+      "bytes": 20378,
+      "sha256": "32e479794a1e2c0ddbf5771bdebeb99740b88f158520a40a9c97beb754da5f1c"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
@@ -201,14 +201,20 @@
     {
       "path": "apps/mobile/src/app/progress/capture.tsx",
       "exists": true,
-      "bytes": 27473,
-      "sha256": "eb9101a086d8e6c90db2e2188824a94db8d0c097c5290e19095f26e54e1f52ae"
+      "bytes": 27617,
+      "sha256": "aa564e09e72ffc721af18d760c73f02c1eeaf66e034832da17c6032f6edb72a1"
     },
     {
       "path": "apps/mobile/src/app/progress/review.tsx",
       "exists": true,
-      "bytes": 15498,
-      "sha256": "dd3f8fd052788bd802a9ce441d7d90baf2868cb8dbb5a477ca691c2e547f0269"
+      "bytes": 15646,
+      "sha256": "d874cd205ad4b5b5e6a8edd6b181a72370375162a34bd77195bf1f072a475a08"
+    },
+    {
+      "path": "apps/mobile/src/app/progress/[id].tsx",
+      "exists": true,
+      "bytes": 19598,
+      "sha256": "9783cebaad09c946d52d4d30c23023606c83df12620c3b7c77323e49b8e2e477"
     },
     {
       "path": "apps/mobile/src/features/native/camera/barcode.ts",
@@ -251,6 +257,12 @@
       "exists": true,
       "bytes": 12292,
       "sha256": "9ef2a31f0b25f85a1801b69a7d22cb8e6cddddaf334e9b10625b9a79ef632001"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/PhotoTimelineLockGate.tsx",
+      "exists": true,
+      "bytes": 4454,
+      "sha256": "deccd291d391bbd6654664b00920622bbad9051e1deb2c79ad2e282503846218"
     },
     {
       "path": "apps/mobile/src/features/photos/store.ts",
@@ -301,10 +313,22 @@
       "sha256": "b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75"
     },
     {
+      "path": "apps/mobile/src/lib/applock/AppLockProvider.tsx",
+      "exists": true,
+      "bytes": 7430,
+      "sha256": "254f1ab90712fa23da5fda16d4017a4d9ecc1e03431ace1ee079415029ce16b2"
+    },
+    {
+      "path": "apps/mobile/src/lib/applock/authenticate.ts",
+      "exists": true,
+      "bytes": 2381,
+      "sha256": "fda9cd0c3818aa1c0f78edf9c499111622537c81c10f2f1761655a0cc652f0a8"
+    },
+    {
       "path": "scripts/phase5/build-device-qa-packet.mjs",
       "exists": true,
-      "bytes": 14187,
-      "sha256": "6f9a50b517fb7e4e39971aedf6d1394498bbbf2ab0507bf2d92ac3da59684662"
+      "bytes": 14476,
+      "sha256": "16bbde2c237ea3db7dfc2634255812a2c8d252e6a6c47b24e5588d01d98607f4"
     },
     {
       "path": "scripts/phase5/check-native-config.mjs",
@@ -339,8 +363,8 @@
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 29454,
-      "sha256": "14166e843aa3f8f4381accc5e5ab314af43603a912a0b866558c6d5d6097afee"
+      "bytes": 30272,
+      "sha256": "54324c27a3622b88a7bf3114b0d77b3a3ff2554c8a06e4c279a169fc012c14cd"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -381,20 +405,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 318855,
-      "sha256": "6e0bb6efd87a7034f036d9babcb3dceb4fa2b41b3f498a4689c0f7e1bcd6c15a"
+      "bytes": 321163,
+      "sha256": "022783979504ff69db97acfad51e8bdab773179bcd6ac3d05e10937f670720bb"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
-      "bytes": 24247,
-      "sha256": "dbdca165e7ee4df35aae3e29a4bded3498dbd5e381b915ccabf8d27b0a5cce09"
+      "bytes": 25100,
+      "sha256": "84f369d654070600270f1f912b88aa2d224c891fb765738d07b5bd24cbfa87c6"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
-      "bytes": 8287,
-      "sha256": "9568d64eb9e485d3d720bfd28d102ca8d1de4af1488cf38b98f9f82696459cb0"
+      "bytes": 8521,
+      "sha256": "ba08da41f8930da960a2473f65e1357a9f5cbfa0e6a899882d01f4c6bcff0b6e"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
@@ -405,8 +429,8 @@
     {
       "path": "docs/phase-5/device-qa-checklist.md",
       "exists": true,
-      "bytes": 7100,
-      "sha256": "1fd05ceb5a493bd9b5f34d0e13b5514de4d358e0400f4b897ad3479ecba8ca34"
+      "bytes": 7345,
+      "sha256": "ecb4267cec42563686db7964535345f8318f1abfdf4ed180daf19edfa7fbc0ee"
     },
     {
       "path": "docs/phase-5/performance-evidence-runbook.md",
@@ -423,8 +447,8 @@
     {
       "path": "docs/phase-5/phase-5-exit-review.md",
       "exists": true,
-      "bytes": 4527,
-      "sha256": "0eb9995de50ee5678239501084dc472704375f3203c285b66521d19bc349c962"
+      "bytes": 4960,
+      "sha256": "3d9d880f0f71978eeabd138cb14c9fda602a153395fc4de370763e5acbb37c7c"
     }
   ],
   "blockers": [

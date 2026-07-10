@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-10T08:55:10.181Z
+Generated: 2026-07-10T09:21:33.729Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 1eadd75779d048bb300c1073ed74fce6a298a15b
+Git SHA: 0d013454e3d25f1b2cdcf4a37b88db92ffdc1c07
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -355,7 +355,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `fcfe7715e37273aaeaa41a25849b81012600c60cfe1b44cb4f84df2ef85bd2a6`
+- Review snapshot SHA-256: `f4191c6805a47c5ad88efa93852b4f368e9bbd4402f705942516604a7b1e590f`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -370,7 +370,7 @@ Sources:
 - `apps/mobile/src/lib/auth/sessionBoundary.test.ts` - 890 bytes - sha256 `ee07eaa01973860fc5fc20edc9386896d90e76ffa475a5a7d68f21f6f65ed935`
 - `apps/mobile/src/lib/auth/sessionBoundary.ts` - 461 bytes - sha256 `53fb1b53dbc23b1dae48cb67b8410c2a94b35f13e665579c42e3370ef91781ba`
 - `supabase/functions/_shared/auth.ts` - 321 bytes - sha256 `cac2bbac4936c570508b764482d8c396693bda989f4f605514b8a3ca06397999`
-- `docs/phase-3/data-inventory.md` - 11896 bytes - sha256 `4f97ec111eb125e34e8ab6936286632b169a46f77989eb61b5939cdee698f4a4`
+- `docs/phase-3/data-inventory.md` - 12198 bytes - sha256 `57452c18e1f8be1167c9b4a0819fde221e42bfeed12676a449043a8f0ffc85e1`
 
 ### P0 - Privacy/security - Health-data consent and withdrawal
 
@@ -379,7 +379,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `3c09434fb32fe526ec8001ee9757ed355f0e5103a79cb47e0ec2cafa861f38eb`
+- Review snapshot SHA-256: `662639b41b051f4d63fb6138d05adb10846d125bd8fa29aa3f2063ce1ff7ea18`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -388,7 +388,7 @@ Sources:
 Sources:
 
 - `docs/phase-3/consent-matrix.md` - 4618 bytes - sha256 `25103684ffcee9a91916385af065727faa34c09d9f30927672c425c3ce4a8654`
-- `docs/store-privacy-inventory.md` - 9088 bytes - sha256 `58445538ff6942b3c932c995a464843b203e987547ef8be2beaf12ef654db77c`
+- `docs/store-privacy-inventory.md` - 9277 bytes - sha256 `5a55c07d620a9859bdf94e10eef0d3a5e14277d0bb2ac4163fb17a37f52fbc2c`
 - `apps/mobile/src/features/onboarding/consentCopy.ts` - 4250 bytes - sha256 `87167971987c2d25cfaedd66a049adf228690ff9e4823a7345f5cb7d79857873`
 - `apps/mobile/src/lib/consent/consent.test.ts` - 1437 bytes - sha256 `b8d8f247bb87f2cbf958657cca3c01dc930ceff57fd50cc9ec784e74de71e77e`
 - `apps/mobile/src/lib/consent/consent.ts` - 1863 bytes - sha256 `b7e0a3d4e38a271f742826f6a1125de05b0e34fa0f1758e614a6d27eb30eb33a`

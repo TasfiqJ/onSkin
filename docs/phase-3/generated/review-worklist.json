@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-10T08:55:09.750Z",
+  "generatedAt": "2026-07-10T09:21:33.280Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "1eadd75779d048bb300c1073ed74fce6a298a15b",
+  "gitSha": "0d013454e3d25f1b2cdcf4a37b88db92ffdc1c07",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -1366,8 +1366,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 9088,
-          "sha256": "58445538ff6942b3c932c995a464843b203e987547ef8be2beaf12ef654db77c"
+          "bytes": 9277,
+          "sha256": "5a55c07d620a9859bdf94e10eef0d3a5e14277d0bb2ac4163fb17a37f52fbc2c"
         },
         {
           "path": "apps/mobile/src/features/onboarding/consentCopy.ts",
@@ -1425,7 +1425,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "3c09434fb32fe526ec8001ee9757ed355f0e5103a79cb47e0ec2cafa861f38eb",
+      "reviewSnapshotSha256": "662639b41b051f4d63fb6138d05adb10846d125bd8fa29aa3f2063ce1ff7ea18",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1834,12 +1834,12 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 11896,
-          "sha256": "4f97ec111eb125e34e8ab6936286632b169a46f77989eb61b5939cdee698f4a4"
+          "bytes": 12198,
+          "sha256": "57452c18e1f8be1167c9b4a0819fde221e42bfeed12676a449043a8f0ffc85e1"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "fcfe7715e37273aaeaa41a25849b81012600c60cfe1b44cb4f84df2ef85bd2a6",
+      "reviewSnapshotSha256": "f4191c6805a47c5ad88efa93852b4f368e9bbd4402f705942516604a7b1e590f",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
