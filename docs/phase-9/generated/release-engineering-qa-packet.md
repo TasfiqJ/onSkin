@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-10T01:40:35.927Z
+Generated: 2026-07-10T01:51:54.917Z
 Status: blocked
-Git SHA: 4aa6af6db99b487b2367c04ab2f1f85e58c1e60b
+Git SHA: d409a96f4e6f1b709fb6f32e431366b746d269f4
 Git status: clean
 
 ## Release Identity
@@ -80,7 +80,7 @@ Git status: clean
 ## Source Hashes
 
 - `.env.example`: `09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1`
-- `package.json`: `8ba77661adadcbaa476a610d9d421d2d771aed59728f48847ddaaf5d2c2e5aed`
+- `package.json`: `aac15a6ffa821984f765ba10b935e7710a2f9ad062bbd17cb2db5e474a4eff81`
 - `package-lock.json`: `f85eb88858555c4ec6827aedf170ce7752f18e0f9c94c9a0e09a2c6a449f0d26`
 - `.github/workflows/security.yml`: `fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d`
 - `apps/mobile/app.base.json`: `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`

@@ -1,8 +1,8 @@
 # Phase 4 Beta Coverage Report
 
-Generated: 2026-07-10T01:39:06.921Z
+Generated: 2026-07-10T01:51:27.982Z
 Status: blocked
-Git SHA: 8fee6bc58d1f0adcc2c3eca1890844c0714d8137
+Git SHA: d409a96f4e6f1b709fb6f32e431366b746d269f4
 Git status: clean
 
 
@@ -57,7 +57,7 @@ Phase 4 coverage thresholds below are satisfied.
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-| package.json | present | 16560 | 8ba77661adadcbaa476a610d9d421d2d771aed59728f48847ddaaf5d2c2e5aed |
+| package.json | present | 16631 | aac15a6ffa821984f765ba10b935e7710a2f9ad062bbd17cb2db5e474a4eff81 |
 | .env.example | present | 15616 | 09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1 |
 | scripts/phase4/build-source-worklist.mjs | present | 17182 | 1ab08d0a3392148f47e43b141c1a831b420d8110e5a37e780ac41dd685cfd1d6 |
 | scripts/phase4/beta-coverage-report.mjs | present | 21522 | ed306d7329101f4369f5e7d971a8361f75e15eb3397288de990999e6c19aac69 |
@@ -76,8 +76,8 @@ Phase 4 coverage thresholds below are satisfied.
 | docs/phase-4/generated/source-worklist.md | present | 22472 | 78c9d5a54d25690ad695b913acf15fe8cf4e095b563850ff7bdb68919b3e9198 |
 | docs/phase-4/observability-dashboard.md | present | 1804 | a42191be85ab1d75e0c7d9cce2934b0e52369852da35bdd6edf2c153fc6f09af |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |
-| docs/phase-4/generated/catalog-qa-report.json | present | 5693 | cda9545e39eb6bb968fa93dc2ee199abd793ea65eb5701d616040a2d554fac69 |
-| docs/phase-4/generated/catalog-qa-report.md | present | 3816 | e0ee661cf8c03f86d1bda2e2f2be22e0bc1fcacf1ecf12dff217b28dcfe23c36 |
+| docs/phase-4/generated/catalog-qa-report.json | present | 5693 | 6a213ca3725eadfdf9314c3ebe8bef563ea58554d0f2dbaaed89fbc7c2a5b443 |
+| docs/phase-4/generated/catalog-qa-report.md | present | 3816 | 7b5a088a240229e2f1e59ea9797339c6ced3096b238422db1334aa36c9c56529 |
 | docs/phase-10/beta-event-schema.md | present | 6425 | e875b98e6130e65989eb5adad3d57b6ab438747a809cccb49d1ce15e1c6ee383 |
 | docs/phase-10/catalog-beta-report.md | present | 1291 | 2924dac7cc798a904716b0fbc7de6760046485e85db62e3357c901519081bd3c |
 | docs/phase-10/support-beta-report.md | present | 1486 | 68bcd8e27b511229e2c1e9d5bb84ba97eac658b66f5bf04b8eb550c8838c9af3 |
