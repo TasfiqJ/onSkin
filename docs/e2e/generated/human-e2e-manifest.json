@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-10T16:28:58.471Z",
-  "gitSha": "45e16dcbe66316f75e9d956c33c6721015d28265",
+  "generatedAt": "2026-07-10T16:31:33.149Z",
+  "gitSha": "0f1363df4f61dc1b11dcec68ac6a4ade170bddeb",
   "evidenceDate": "2026-07-10",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -594,6 +594,25 @@
       "fileCount": 39,
       "bytes": 353614,
       "evidenceSha256": "296a1499f5afe1f16d3090d1be9412efa41bd306de0766d56623d6ae1ad4f722"
+    },
+    {
+      "id": "private-envelope-corruption-supported-phone",
+      "title": "Private envelope corruption and app-lock recovery",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/private-envelope-corruption-current",
+      "evidence": "summary.json",
+      "expected": "Malformed private envelopes block and remain byte-identical through retry; restored data and authenticated app-lock reset recover the requested route.",
+      "status": "pass",
+      "detail": "summary status: pass.",
+      "failureCount": null,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 15,
+      "bytes": 149313,
+      "evidenceSha256": "cfa1fc568044b7d5b0596aac3708406077f19339639e6102313671741b47b403"
     },
     {
       "id": "data-export-local-photo-disclosure-supported-phone",
