@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-10T15:39:15.966Z
+Generated: 2026-07-10T16:33:22.734Z
 Status: blocked
-Git SHA: 57fdcf183e1b7a4e73833a4db978ad0a5a043c76
+Git SHA: a1656ba3455aa57260e2c994a44457a579baf28d
 Git status: clean
 
 ## Release Identity
@@ -109,11 +109,11 @@ Git status: clean
 - `apps/mobile/src/features/settings/localDeviceExport.test.ts`: `4dbbe2b3084f17923d989e80970b270f4f5846163ebd5c27e6e21b601a2ab9f7`
 - `apps/mobile/src/features/settings/localPrivateDataKeys.ts`: `c3266a915c04144da0dbfac4286da4b125d36f02015b83806a8d258c9de1f280`
 - `apps/mobile/src/features/settings/localPrivateData.ts`: `15c781cf4b5cae057d54b597587fa3ee9b6248044089c871fa917db275baaaba`
-- `apps/mobile/src/lib/storage/privateKV.ts`: `499ccda60a9f8c51981e51b3f6396f502ff40815c38fa7cce651933d6b807522`
-- `apps/mobile/src/lib/storage/privateKV.test.ts`: `34bf3b271a8ffb154cd6e5f04c3867058eda7bacdf455b0b0360c3636f895627`
-- `apps/mobile/src/lib/applock/AppLockProvider.tsx`: `254f1ab90712fa23da5fda16d4017a4d9ecc1e03431ace1ee079415029ce16b2`
+- `apps/mobile/src/lib/storage/privateKV.ts`: `8e739c380dc01b7851e862d86411a6c84507f4061f8aec01260271a5f8b5f3a5`
+- `apps/mobile/src/lib/storage/privateKV.test.ts`: `ca953c64f1b6efe699ddd7d036407f431abf91a2361c25118e7bfd1921f59759`
+- `apps/mobile/src/lib/applock/AppLockProvider.tsx`: `3fa65fa22ba7c689861afb0bc6fa1d6492cbedc80b900891e574e8929ef31a75`
 - `apps/mobile/src/lib/applock/authenticate.ts`: `fda9cd0c3818aa1c0f78edf9c499111622537c81c10f2f1761655a0cc652f0a8`
-- `apps/mobile/src/lib/applock/authenticate.test.ts`: `c18d16aab150ff1086e6d26ad8beef0d91344eb8120a124ab9cb88696a78822c`
+- `apps/mobile/src/lib/applock/authenticate.test.ts`: `947eb4b02863750bd6f2a420b28e889e31845b8a04808724ab40018114d97659`
 - `apps/mobile/src/lib/auth/apple.ts`: `650ff0310cbc12acee871fb265a32f2b05306660af92ed31b36cc268582aa4e0`
 - `supabase/functions/account-deletion/index.ts`: `5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b`
 - `supabase/functions/_shared/body.ts`: `03e9ddbd56df2875f78b4f582ffdae13f0deca50d75d44ed3a5df4d685b39e6a`
