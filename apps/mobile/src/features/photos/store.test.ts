@@ -3,9 +3,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { addPhoto, clearPhotos, loadPhotos } from './store';
 
 const mocks = vi.hoisted(() => ({
+  decryptPhotoNoteError: null as Error | null,
   storage: new Map<string, string>(),
   deleteEncryptedPhoto: vi.fn(),
   from: vi.fn(),
+  getPrivateItemError: null as Error | null,
 }));
 
 vi.mock('expo-crypto', () => ({
@@ -13,7 +15,10 @@ vi.mock('expo-crypto', () => ({
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
+  getPrivateItem: vi.fn(async (key: string) => {
+    if (mocks.getPrivateItemError) throw mocks.getPrivateItemError;
+    return mocks.storage.get(key) ?? null;
+  }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.storage.set(key, value);
   }),
@@ -29,7 +34,10 @@ vi.mock('@/lib/supabase/client', () => ({
 }));
 
 vi.mock('./encryptedStorage', () => ({
-  decryptPhotoNote: vi.fn(async (ciphertext: string) => `note:${ciphertext}`),
+  decryptPhotoNote: vi.fn(async (ciphertext: string) => {
+    if (mocks.decryptPhotoNoteError) throw mocks.decryptPhotoNoteError;
+    return `note:${ciphertext}`;
+  }),
   deleteEncryptedPhoto: mocks.deleteEncryptedPhoto,
   encryptCapturedPhoto: vi.fn(async (uri: string, id: string) => ({
     encryptedLocalUri: `${uri}.${id}.onskinphoto`,
@@ -37,6 +45,9 @@ vi.mock('./encryptedStorage', () => ({
     encryptionVersion: 'photo-v1',
   })),
   encryptPhotoNote: vi.fn(async (note: string | null) => (note ? `enc:${note}` : null)),
+  isPhotoEncryptionReadError: vi.fn(
+    (error: unknown) => error instanceof Error && error.message.startsWith('PHOTO_'),
+  ),
   isEncryptedPhotoUri: vi.fn((uri: string | null | undefined) =>
     Boolean(uri?.endsWith('.onskinphoto')),
   ),
@@ -50,9 +61,37 @@ const KEY = 'onskin.photos.v1';
 
 describe('photo local store recovery', () => {
   beforeEach(() => {
+    mocks.decryptPhotoNoteError = null;
     mocks.storage.clear();
     mocks.deleteEncryptedPhoto.mockReset();
     mocks.from.mockClear();
+    mocks.getPrivateItemError = null;
+  });
+
+  it('propagates encrypted private-store failures without replacing photo metadata', async () => {
+    const stored = JSON.stringify([{ id: 'photo-1', takenLocalDate: '2026-07-01' }]);
+    mocks.storage.set(KEY, stored);
+    mocks.getPrivateItemError = new Error('PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE');
+
+    await expect(loadPhotos()).rejects.toThrow('PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE');
+
+    expect(mocks.storage.get(KEY)).toBe(stored);
+  });
+
+  it('propagates photo-note key failures without rewriting ciphertext', async () => {
+    const stored = JSON.stringify([
+      {
+        id: 'photo-1',
+        takenLocalDate: '2026-07-01',
+        notesCiphertext: 'encrypted-note',
+      },
+    ]);
+    mocks.storage.set(KEY, stored);
+    mocks.decryptPhotoNoteError = new Error('PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE');
+
+    await expect(loadPhotos()).rejects.toThrow('PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE');
+
+    expect(mocks.storage.get(KEY)).toBe(stored);
   });
 
   it('removes malformed persisted photo JSON', async () => {

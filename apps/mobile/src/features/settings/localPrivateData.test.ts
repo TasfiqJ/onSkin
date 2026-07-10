@@ -76,7 +76,11 @@ describe('local private data cleanup', () => {
     await expect(clearLocalPrivateData()).resolves.toBeUndefined();
 
     expect(mocks.multiRemove).toHaveBeenCalledWith(
-      expect.arrayContaining(['routinekind.routineActivation.v1', 'onskin.skinprofile.v1']),
+      expect.arrayContaining([
+        'routinekind.routineActivation.v1',
+        'onskin.photo.content_key_created.v1',
+        'onskin.skinprofile.v1',
+      ]),
     );
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);

@@ -46,6 +46,7 @@ configuration before store submission.
 - Supabase RLS smoke script verifies owner-only access before release.
 - RevenueCat is bound to Supabase user IDs to preserve entitlement continuity.
 - Native photo files are encrypted locally with authenticated encryption before storage.
+- Native content keys remain in SecureStore; temporary/missing/invalid key reads preserve ciphertext and cannot silently rotate keys or rewrite the failed record with fallback state.
 - Analytics sanitization drops sensitive keys such as barcodes, OCR text, notes,
   photo paths, product IDs/names, receipts, and image/file paths.
 

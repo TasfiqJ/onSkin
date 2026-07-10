@@ -11,6 +11,7 @@ import {
   deleteEncryptedPhoto,
   encryptCapturedPhoto,
   encryptPhotoNote,
+  isPhotoEncryptionReadError,
   isEncryptedPhotoUri,
   photoEncryptionInfo,
 } from './encryptedStorage';
@@ -120,7 +121,7 @@ async function normalizeStoredRecord(value: unknown): Promise<PhotoRecord | null
     explicitEncryptedUri ?? (localUri && isEncryptedPhotoUri(localUri) ? localUri : null);
   const notesCiphertext = stringOrNull(value.notesCiphertext);
   const notes = notesCiphertext
-    ? await decryptPhotoNote(notesCiphertext).catch(() => null)
+    ? await decryptPhotoNote(notesCiphertext)
     : stringOrNull(value.notes);
   const encrypted = encryptedLocalUri != null;
   const isEncrypted = encrypted || booleanOr(value.isEncrypted, false);
@@ -174,12 +175,7 @@ async function normalizeStoredRecords(
 }
 
 export async function loadPhotos(): Promise<PhotoRecord[]> {
-  let raw: string | null = null;
-  try {
-    raw = await getPrivateItem(KEY);
-  } catch {
-    return [];
-  }
+  const raw = await getPrivateItem(KEY);
   if (!raw) return [];
   try {
     const normalized = await normalizeStoredRecords(JSON.parse(raw) as unknown);
@@ -192,7 +188,8 @@ export async function loadPhotos(): Promise<PhotoRecord[]> {
       else await removePrivateItem(KEY).catch(() => undefined);
     }
     return normalized.items;
-  } catch {
+  } catch (error) {
+    if (isPhotoEncryptionReadError(error)) throw error;
     await removePrivateItem(KEY).catch(() => undefined);
     return [];
   }

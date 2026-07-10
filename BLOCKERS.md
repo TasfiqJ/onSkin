@@ -74,8 +74,9 @@ Read this with:
    credential/role, conditions, and retained approval reference per release
    disposition, current hashes match, and the strict copy audit passes.
 7. Real catalog seed not imported and source/license review not complete.
-8. Native camera/barcode/photo capture are implemented but not physical-device
-   verified; native OCR remains intentionally gated off.
+8. Native camera/barcode/photo capture and encrypted keychain/keystore failure,
+   update, reinstall, and restore behavior are implemented or specified but not
+   physical-device verified; native OCR remains intentionally gated off.
 9. Native notification/device verification incomplete.
 10. Performance baseline and scale evidence are not measured on supported
     physical devices or beta telemetry.
@@ -103,7 +104,7 @@ mirrors are byte-identical and listed in the root source-of-truth docs.
 covers the Phase 2-11 Tas-owned launch evidence gate groups and writes the
 machine-extracted key inventory to `docs/generated/tas-todo-audit.{json,md}`.
 
-Fresh verification through 2026-07-09: `npm run typecheck`, `npm run lint`,
+Fresh verification through 2026-07-10: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,
 `npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`,
 `npm run phase5:verify`, `npm run phase7:verify`, `npm run brand:audit:strict`,
@@ -124,7 +125,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 176 mobile test files / 1804 tests. The human-simulated E2E manifest now
+covers 176 mobile test files / 1823 tests. The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the

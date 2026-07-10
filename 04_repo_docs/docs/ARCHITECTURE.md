@@ -34,9 +34,9 @@ This decision is based on product fit and current repo momentum, not loyalty to 
 
 ### A-003: Local-First Sensitive Data
 
-- Decision: shelf, completion, profile, cycle/ramp, and photos work locally; photos are device-only in the current build. Account export composes the owner-scoped server bundle with a sanitized snapshot of every registered local private-data record.
+- Decision: shelf, completion, profile, cycle/ramp, and photos work locally; photos are device-only in the current build. Native content keys stay in SecureStore, encrypted reads never rotate missing/invalid keys or delete ciphertext, and failed-read snapshots block fallback overwrites. Account export composes the owner-scoped server bundle with a sanitized snapshot of every registered local private-data record.
 - Criteria: privacy, trust, offline bathroom use.
-- Risk: multi-device sync delayed.
+- Risk: multi-device sync and key recovery are delayed; genuine OS key loss makes local-only ciphertext unrecoverable.
 - Status: active.
 
 ### A-004: Feature Flags For Risky Surfaces

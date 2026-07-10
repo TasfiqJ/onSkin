@@ -43,6 +43,8 @@ export const LOCAL_PRIVATE_SECURE_STORE_KEYS = [
   'onskin.private_kv.content_key.v1',
 ] as const;
 
+export const LOCAL_PRIVATE_METADATA_KEYS = ['onskin.photo.content_key_created.v1'] as const;
+
 export const LOCAL_PRIVATE_CACHE_FILENAMES = ['onskin-export.json'] as const;
 
 export const CURRENT_LOCAL_PRIVATE_CACHE_PREFIXES = [

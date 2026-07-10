@@ -30,6 +30,7 @@ This inventory must match Apple privacy labels, Google Data Safety, the privacy 
 - Label capture stores no label image after the user confirms editable text. Native OCR is disabled until a reviewed ML Kit/Vision module passes device QA.
 - Progress photos are encrypted into app-private `.onskinphoto` files using XChaCha20-Poly1305, with the content key in SecureStore. Renderers decrypt to memory for display.
 - Photo notes are encrypted before AsyncStorage persistence and are not mirrored to Supabase.
+- Native content-key failure is non-destructive: unreadable/missing/malformed keys and authentication failures preserve ciphertext, do not create replacement keys on reads, and block stale empty/default rewrites. Genuine OS key loss remains unrecoverable because V1 has no key escrow or cloud restore.
 - Local photo save performs no automatic Supabase image or metadata write. Startup removes stale backup-enable preferences from builds that exposed the incomplete path.
 - Camera QA signals are coarse comparability metadata only. No face template, embedding, identity vector, or tracking ID may be persisted.
 

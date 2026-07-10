@@ -1,5 +1,6 @@
 import 'react-native-get-random-values';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { xchacha20poly1305 } from '@noble/ciphers/chacha.js';
 import {
   bytesToHex,
@@ -18,8 +19,13 @@ import { stripImageMetadataFromBase64 } from './metadata';
 const PHOTO_DIR = `${FileSystem.documentDirectory ?? ''}photos/v1/`;
 const KEY_ID = 'photo-content-key-v1';
 const KEY_STORE_NAME = 'onskin.photo.content_key.v1';
+const KEY_CREATION_MARKER = 'onskin.photo.content_key_created.v1';
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
 const NONCE_BYTES = 24;
+export const PHOTO_CONTENT_KEY_MISSING = 'PHOTO_CONTENT_KEY_MISSING';
+export const PHOTO_CONTENT_KEY_INVALID = 'PHOTO_CONTENT_KEY_INVALID';
+export const PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE = 'PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE';
+export const PHOTO_DECRYPTION_FAILED = 'PHOTO_DECRYPTION_FAILED';
 
 type EncryptedPhotoEnvelope = {
   version: typeof ENCRYPTION_VERSION;
@@ -42,19 +48,90 @@ export type EncryptedPhotoWrite = {
   encryptionVersion: typeof ENCRYPTION_VERSION;
 };
 
+let contentKeyCreation: Promise<Uint8Array> | null = null;
+
 async function ensureDir(): Promise<void> {
   await FileSystem.makeDirectoryAsync(PHOTO_DIR, { intermediates: true }).catch(() => {});
 }
 
-async function getContentKey(): Promise<Uint8Array> {
-  const existing = await SecureStore.getItemAsync(KEY_STORE_NAME);
-  const existingKey = contentKeyFromHex(existing);
-  if (existingKey) return existingKey;
-  if (existing) await SecureStore.deleteItemAsync(KEY_STORE_NAME).catch(() => {});
+async function readStoredContentKey(): Promise<string | null> {
+  try {
+    return await SecureStore.getItemAsync(KEY_STORE_NAME);
+  } catch {
+    throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
+  }
+}
 
-  const key = randomBytes(32);
-  await SecureStore.setItemAsync(KEY_STORE_NAME, bytesToHex(key));
-  return key;
+async function markContentKeyCreated(): Promise<void> {
+  await AsyncStorage.setItem(KEY_CREATION_MARKER, '1');
+}
+
+async function requireContentKeyMarker(): Promise<void> {
+  try {
+    await markContentKeyCreated();
+  } catch {
+    throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
+  }
+}
+
+async function hasPriorEncryptedPhotoData(): Promise<boolean> {
+  try {
+    if ((await AsyncStorage.getItem(KEY_CREATION_MARKER)) === '1') return true;
+    const info = await FileSystem.getInfoAsync(PHOTO_DIR);
+    if (!info.exists) return false;
+    const entries = await FileSystem.readDirectoryAsync(PHOTO_DIR);
+    return entries.some((name) => name.endsWith('.onskinphoto'));
+  } catch {
+    throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
+  }
+}
+
+async function getExistingContentKey(): Promise<Uint8Array> {
+  const existing = await readStoredContentKey();
+  if (!existing) throw new Error(PHOTO_CONTENT_KEY_MISSING);
+  const existingKey = contentKeyFromHex(existing);
+  if (!existingKey) throw new Error(PHOTO_CONTENT_KEY_INVALID);
+  await markContentKeyCreated().catch(() => undefined);
+  return existingKey;
+}
+
+async function getOrCreateContentKey(): Promise<Uint8Array> {
+  const existing = await readStoredContentKey();
+  const existingKey = contentKeyFromHex(existing);
+  if (existingKey) {
+    await requireContentKeyMarker();
+    return existingKey;
+  }
+  if (existing) throw new Error(PHOTO_CONTENT_KEY_INVALID);
+
+  if (!contentKeyCreation) {
+    contentKeyCreation = (async () => {
+      const rechecked = await readStoredContentKey();
+      const recheckedKey = contentKeyFromHex(rechecked);
+      if (recheckedKey) {
+        await requireContentKeyMarker();
+        return recheckedKey;
+      }
+      if (rechecked) throw new Error(PHOTO_CONTENT_KEY_INVALID);
+      if (await hasPriorEncryptedPhotoData()) throw new Error(PHOTO_CONTENT_KEY_MISSING);
+
+      const key = randomBytes(32);
+      try {
+        await SecureStore.setItemAsync(KEY_STORE_NAME, bytesToHex(key));
+        await markContentKeyCreated();
+      } catch {
+        throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
+      }
+      return key;
+    })();
+  }
+
+  const pending = contentKeyCreation;
+  try {
+    return await pending;
+  } finally {
+    if (contentKeyCreation === pending) contentKeyCreation = null;
+  }
 }
 
 function contentKeyFromHex(value: string | null | undefined): Uint8Array | null {
@@ -158,7 +235,7 @@ export async function encryptCapturedPhoto(
 ): Promise<EncryptedPhotoWrite> {
   if (!sourceUri) throw new Error('Missing captured photo URI.');
   await ensureDir();
-  const key = await getContentKey();
+  const key = await getOrCreateContentKey();
   const mimeType = mimeForUri(sourceUri);
   const base64 = await FileSystem.readAsStringAsync(sourceUri, {
     encoding: FileSystem.EncodingType.Base64,
@@ -183,12 +260,12 @@ export async function encryptCapturedPhoto(
 
 export async function decryptPhotoToDataUri(encryptedLocalUri: string): Promise<string> {
   if (!isEncryptedPhotoUri(encryptedLocalUri)) return encryptedLocalUri;
-  const key = await getContentKey();
   const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
     encoding: FileSystem.EncodingType.UTF8,
   });
   const envelope = photoEnvelopeFromRaw(raw);
   if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+  const key = await getExistingContentKey();
   const base64 = decryptEnvelopeToUtf8(envelope, key);
   if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
   return `data:${envelope.mimeType};base64,${base64}`;
@@ -199,12 +276,12 @@ export async function createPhotoShareFile(
   photoId: string,
 ): Promise<string> {
   if (!isEncryptedPhotoUri(encryptedLocalUri)) return encryptedLocalUri;
-  const key = await getContentKey();
   const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
     encoding: FileSystem.EncodingType.UTF8,
   });
   const envelope = photoEnvelopeFromRaw(raw);
   if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+  const key = await getExistingContentKey();
   const base64 = decryptEnvelopeToUtf8(envelope, key);
   if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
   const strippedBase64 = stripImageMetadataFromBase64(base64, envelope.mimeType);
@@ -237,11 +314,12 @@ export async function deleteEncryptedPhoto(uri?: string | null): Promise<void> {
 export async function clearEncryptedPhotoStorage(): Promise<void> {
   await FileSystem.deleteAsync(PHOTO_DIR, { idempotent: true }).catch(() => {});
   await SecureStore.deleteItemAsync(KEY_STORE_NAME).catch(() => {});
+  await AsyncStorage.removeItem(KEY_CREATION_MARKER).catch(() => {});
 }
 
 export async function encryptPhotoNote(note: string | null | undefined): Promise<string | null> {
   if (!note) return null;
-  const key = await getContentKey();
+  const key = await getOrCreateContentKey();
   return JSON.stringify(encryptBytesWithKey(utf8ToBytes(note), key));
 }
 
@@ -249,13 +327,27 @@ export async function decryptPhotoNote(
   ciphertext: string | null | undefined,
 ): Promise<string | null> {
   if (!ciphertext) return null;
-  const key = await getContentKey();
   const envelope = encryptedTextEnvelopeFromRaw(ciphertext);
-  return envelope ? decryptEnvelopeToUtf8(envelope, key) : null;
+  if (!envelope) return null;
+  const key = await getExistingContentKey();
+  const plaintext = decryptEnvelopeToUtf8(envelope, key);
+  if (plaintext === null) throw new Error(PHOTO_DECRYPTION_FAILED);
+  return plaintext;
+}
+
+export function isPhotoEncryptionReadError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  return [
+    PHOTO_CONTENT_KEY_MISSING,
+    PHOTO_CONTENT_KEY_INVALID,
+    PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
+    PHOTO_DECRYPTION_FAILED,
+  ].includes(error.message);
 }
 
 export const photoEncryptionInfo = {
   version: ENCRYPTION_VERSION,
   keyId: KEY_ID,
   directory: PHOTO_DIR,
+  keyCreationMarker: KEY_CREATION_MARKER,
 } as const;

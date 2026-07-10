@@ -18,6 +18,19 @@ clearance and not a real launch catalog.
 
 Fresh verification through 2026-07-10:
 
+- Encrypted local stores now fail closed instead of deleting or replacing data
+  when native key material is temporarily unavailable, missing, malformed, or
+  unable to authenticate an envelope. Native key writes remain SecureStore-only;
+  Expo web and legacy native-key migration are explicit. Exact failed-read
+  snapshots block fallback overwrites, every existing private envelope is
+  checked before first-key creation, and concurrent first writes share one key.
+  Progress decryption is read-only with respect to key material, requires
+  durable prior-key metadata before writes, detects legacy encrypted files, and
+  propagates key failures without normalizing notes/photo metadata to empty.
+  Focused verification passes 70/70 and the full suite passes 176 files / 1823
+  tests. Genuine key loss remains unrecoverable without the intentionally
+  unavailable cloud backup/key escrow; physical iOS/Android staging evidence is
+  still required.
 - Account export now composes both data authorities instead of assuming every
   local-first write reached Supabase. A schema-versioned mobile wrapper requires
   and validates owner-scoped server data when configured, labels backend-free
@@ -222,7 +235,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 176 mobile test files / 1804 tests.
+- `npm test` passed: 176 mobile test files / 1823 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -253,7 +266,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 176 test files / 1804 tests.
+- `npm --workspace apps/mobile run test` passed: 176 test files / 1823 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain

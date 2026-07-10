@@ -85,6 +85,15 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: the same device must perform the export to include its local-first records; multi-device reconciliation remains deferred, and native share/cache behavior still requires physical-device staging evidence.
 - Status: Accepted.
 
+### 2026-07-10 - Fail Closed On Unreadable Device Encryption Keys
+
+- Decision: Native private-record keys remain SecureStore-only, except for read-only migration of an existing legacy fallback; Expo web uses its explicit AsyncStorage path. Missing, malformed, unavailable, or non-authenticating keys never delete ciphertext or create replacement key material on a read. A failed encrypted read blocks a same-snapshot fallback write until the record is read successfully or explicitly removed. Progress writes require a persisted non-sensitive key-history marker, scan legacy encrypted photo files before first-key creation, reject malformed or previously lost keys, and share one in-flight key creation across concurrent first writes.
+- Alternatives: delete unreadable envelopes and return defaults, rotate keys automatically, write new native keys into AsyncStorage when SecureStore fails, rely on every feature store to distinguish storage failures, or add cloud key recovery before launch.
+- Criteria: no silent local data loss, native key confidentiality, deterministic recovery, concurrency safety, backwards-compatible web and legacy-key behavior, explicit user deletion, and testability without claiming unavailable OS evidence.
+- Evidence: `privateKVContentKey.test.ts`, `privateKV.test.ts`, `encryptedStorage.test.ts`, and `store.test.ts` cover native/web storage boundaries, legacy migration, missing/invalid/wrong keys, transient read failure, failed-marker persistence, stale-write refusal, ciphertext preservation, Progress note propagation, and concurrent first writes.
+- Risk: ciphertext is unrecoverable after genuine OS key loss because V1 intentionally has no cloud backup or recovery escrow. Physical iOS/Android keychain/keystore, reinstall, restore, locked-device, and storage-pressure behavior still requires staging-device evidence; the app must surface retry/recovery rather than claim recovery it cannot perform.
+- Status: Accepted.
+
 ### 2026-07-06 - Keep Expo/Supabase/RevenueCat
 
 - Decision: Continue current stack unless beta/device/compliance evidence says otherwise.

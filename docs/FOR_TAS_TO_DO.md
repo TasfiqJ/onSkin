@@ -177,6 +177,23 @@ Status: needs-device-verification
   like `iPhone model / iOS version`, local build notes, pending IDs, and
   placeholder signoff names are rejected by `phase5:qa-packet:strict`.
 - Verify barcode scan, label capture/manual fallback, progress photo capture, encrypted photo save/restart/delete, notifications, share sheet, RevenueCat sandbox smoke, Sentry native smoke, and Supabase catalog calls.
+- On both supported physical platforms, create profile, shelf, routine, completion,
+  and Progress note/photo data; force-stop and restart the release candidate;
+  verify every record decrypts and no store falls back to an empty replacement.
+- In a staging-only instrumented build, force SecureStore/keychain read and write
+  failures after encrypted records exist. Verify the original AsyncStorage
+  envelopes and `.onskinphoto` files remain byte-identical, new writes fail,
+  account export fails before writing plaintext, and retry succeeds after key
+  access returns. Confirm no new native content key appears in AsyncStorage.
+- Exercise missing, malformed, and wrong-key staging fixtures separately. Verify
+  Progress never creates replacement key material, note/photo metadata is not
+  rewritten, and explicit local-data deletion remains the only destructive
+  recovery path. Never perform destructive key mutation against real user data.
+- Record iOS Keychain and Android Keystore behavior for app update, reinstall,
+  device backup/restore, locked-device launch, biometric/passcode changes where
+  applicable, and storage pressure. V1 has no key escrow or cloud restore, so
+  document any genuine key-loss outcome in support and privacy copy instead of
+  claiming recovery.
 - Verify Shelf scan/OCR camera permission recovery on physical iOS and Android:
   deny camera permission, select "Don't ask again" / OS equivalent where
   available, tap Open Settings, confirm the real Settings handoff works, and

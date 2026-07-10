@@ -10,6 +10,7 @@ import { clearPrivateKVContentKey } from '@/lib/storage/privateKV';
 import {
   LOCAL_PRIVATE_CACHE_FILENAMES,
   LOCAL_PRIVATE_DATA_KEYS,
+  LOCAL_PRIVATE_METADATA_KEYS,
   localPrivateCachePrefixes,
 } from './localPrivateDataKeys';
 
@@ -35,7 +36,7 @@ async function clearGeneratedCacheFiles(): Promise<void> {
 
 export async function clearLocalPrivateData(): Promise<void> {
   const results = await Promise.allSettled([
-    AsyncStorage.multiRemove([...LOCAL_PRIVATE_DATA_KEYS]),
+    AsyncStorage.multiRemove([...LOCAL_PRIVATE_DATA_KEYS, ...LOCAL_PRIVATE_METADATA_KEYS]),
     clearEncryptedPhotoStorage(),
     clearPrivateKVContentKey(),
     clearGeneratedCacheFiles(),

@@ -6,6 +6,18 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Hardened encrypted local storage against silent key-loss data destruction.
+  Native private-record keys no longer downgrade into AsyncStorage, while web
+  remains explicit and existing legacy native fallbacks migrate forward.
+  Missing, malformed, unavailable, and wrong keys preserve ciphertext; failed
+  reads block stale empty/default rewrites; concurrent first writes share one
+  key creation. Progress photo/note reads never create keys, key history and
+  legacy encrypted files prevent unsafe replacement, and note key failures now
+  propagate without rewriting photo metadata. The focused storage, Progress,
+  cleanup, and export matrix passes 70/70; mobile typecheck/lint and the full
+  suite pass 176 files / 1823 tests. Real iOS Keychain and Android Keystore
+  update/reinstall/restore/fault behavior remains Tas-owned device QA.
+
 - Made account-export scope explicit before action and in every JSON artifact.
   Settings now says device-only Progress photos are excluded and directs
   individual sharing; `data-export.local_only_photo_note` repeats that boundary
