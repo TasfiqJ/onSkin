@@ -19,6 +19,8 @@ const packets = {
     'scripts/phase3/build-review-worklist.mjs',
     'scripts/phase3/build-review-operator-queue.mjs',
     'scripts/phase3/audit-copy.mjs',
+    'scripts/phase3/check-production-release.mjs',
+    'scripts/phase3/check-production-release-smoke.mjs',
     'scripts/phase9/lib.mjs',
     'docs/phase-3/review-packet-index.md',
   ],

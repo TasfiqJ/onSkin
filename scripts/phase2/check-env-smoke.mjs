@@ -78,6 +78,13 @@ const completeEnv = {
   APP_ANDROID_PACKAGE: 'com.routinekind.app',
 };
 
+const completeProductionEnv = {
+  ...completeEnv,
+  APP_VARIANT: 'production',
+  EXPO_PUBLIC_APP_ENV: 'production',
+  PHASE3_RELEASE_CLEARANCE: 'cleared',
+};
+
 const finalIdentityKeys = [
   'APP_DISPLAY_NAME',
   'EXPO_PUBLIC_APP_DISPLAY_NAME',
@@ -126,6 +133,23 @@ const cases = [
     result: runCheck(completeEnv),
     expect(result) {
       return result.status === 0 && /Phase 2 env contract is complete/.test(result.stdout);
+    },
+  },
+  {
+    name: 'production strict env passes only with explicit Phase 3 release clearance',
+    result: runCheck(completeProductionEnv),
+    expect(result) {
+      return result.status === 0 && /Phase 2 env contract is complete/.test(result.stdout);
+    },
+  },
+  {
+    name: 'production strict env fails while Phase 3 release clearance is pending',
+    result: runCheck({
+      ...completeProductionEnv,
+      PHASE3_RELEASE_CLEARANCE: 'pending',
+    }),
+    expect(result) {
+      return result.status === 1 && /requires PHASE3_RELEASE_CLEARANCE=cleared/.test(result.stderr);
     },
   },
   {

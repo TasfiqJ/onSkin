@@ -116,6 +116,11 @@ warn(
 );
 
 warn(
+  productionEnv.PHASE3_RELEASE_CLEARANCE === 'cleared',
+  'Production EAS environment is missing PHASE3_RELEASE_CLEARANCE=cleared; supply it only after the signed Phase 3 review packet and strict copy audit are complete.',
+);
+
+warn(
   Boolean(rootPkg.scripts?.['phase5:qa-packet']),
   'Root package is missing phase5:qa-packet script.',
 );

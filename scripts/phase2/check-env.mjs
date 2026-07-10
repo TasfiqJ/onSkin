@@ -278,6 +278,15 @@ if (
   errors.push('Staging/production infrastructure requires BRAND_LEGAL_CLEARANCE=cleared.');
 }
 
+if (
+  [appVariant, appEnv].includes('production') &&
+  valueFor('PHASE3_RELEASE_CLEARANCE') !== 'cleared'
+) {
+  errors.push(
+    'Production infrastructure requires PHASE3_RELEASE_CLEARANCE=cleared after the signed Phase 3 review packet and strict copy audit are complete.',
+  );
+}
+
 if (valueFor('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY').startsWith('eyJ')) {
   warnings.push(
     'EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY looks like a legacy anon JWT; use Supabase publishable keys.',

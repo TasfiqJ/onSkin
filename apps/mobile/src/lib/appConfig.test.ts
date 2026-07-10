@@ -8,6 +8,7 @@ const APP_ENV_KEYS = [
   'APP_VARIANT',
   'EXPO_PUBLIC_APP_ENV',
   'BRAND_LEGAL_CLEARANCE',
+  'PHASE3_RELEASE_CLEARANCE',
   'APP_DISPLAY_NAME',
   'EXPO_PUBLIC_APP_DISPLAY_NAME',
   'APP_SLUG',
@@ -99,6 +100,7 @@ describe('Expo app identity config', () => {
       APP_VARIANT: 'production',
       EXPO_PUBLIC_APP_ENV: 'production',
       BRAND_LEGAL_CLEARANCE: 'cleared',
+      PHASE3_RELEASE_CLEARANCE: 'cleared',
       APP_DISPLAY_NAME: 'RoutineKind',
       APP_SLUG: 'routinekind',
       APP_SCHEME: 'routinekind',
@@ -120,6 +122,7 @@ describe('Expo app identity config', () => {
       APP_VARIANT: ' Production ',
       EXPO_PUBLIC_APP_ENV: ' PRODUCTION ',
       BRAND_LEGAL_CLEARANCE: 'cleared',
+      PHASE3_RELEASE_CLEARANCE: 'cleared',
       APP_DISPLAY_NAME: 'RoutineKind',
       APP_SLUG: 'routinekind',
       APP_SCHEME: 'routinekind',
@@ -188,11 +191,52 @@ describe('Expo app identity config', () => {
     ).toThrow(/APP_IOS_BUNDLE_IDENTIFIER/);
   });
 
+  it('blocks production config until the Phase 3 review packet is cleared', () => {
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+        APP_DISPLAY_NAME: 'RoutineKind',
+        APP_SLUG: 'routinekind',
+        APP_SCHEME: 'routinekind',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+      }),
+    ).toThrow(/requires PHASE3_RELEASE_CLEARANCE=cleared/);
+  });
+
+  it('does not accept an ambiguous Phase 3 production clearance value', () => {
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+        PHASE3_RELEASE_CLEARANCE: 'pending',
+        APP_DISPLAY_NAME: 'RoutineKind',
+        APP_SLUG: 'routinekind',
+        APP_SCHEME: 'routinekind',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+        APP_ANDROID_PACKAGE: 'com.routinekind.app',
+      }),
+    ).toThrow(/requires PHASE3_RELEASE_CLEARANCE=cleared/);
+  });
+
+  it('blocks a production runtime environment even under an internal build variant', () => {
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'staging',
+        EXPO_PUBLIC_APP_ENV: 'production',
+      }),
+    ).toThrow(/requires PHASE3_RELEASE_CLEARANCE=cleared/);
+  });
+
   it('allows counsel-cleared legacy identity only when explicitly supplied', () => {
     const expo = buildExpoConfig({
       APP_VARIANT: 'production',
       EXPO_PUBLIC_APP_ENV: 'production',
       BRAND_LEGAL_CLEARANCE: 'cleared',
+      PHASE3_RELEASE_CLEARANCE: 'cleared',
       APP_DISPLAY_NAME: 'OnSkin',
       APP_SLUG: 'onskin',
       APP_SCHEME: 'onskin',

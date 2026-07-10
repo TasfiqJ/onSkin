@@ -222,6 +222,16 @@ function assertProductionIdentity(expo, permissionCopy) {
   }
 }
 
+function assertProductionReviewClearance() {
+  if (!isProduction && appEnvironment !== 'production') return;
+
+  if (process.env.PHASE3_RELEASE_CLEARANCE !== 'cleared') {
+    throw new Error(
+      'Production release requires PHASE3_RELEASE_CLEARANCE=cleared after the Phase 3 legal, privacy, clinical, chemistry, and IP review packet is signed off. Development and staging builds remain available for review.',
+    );
+  }
+}
+
 module.exports = () => {
   const expo = JSON.parse(JSON.stringify(base.expo));
   const baseScheme = expo.scheme;
@@ -262,6 +272,7 @@ module.exports = () => {
     NSFaceIDUsageDescription: permissionCopy.faceIDUsageDescription,
   };
   assertProductionIdentity(expo, permissionCopy);
+  assertProductionReviewClearance();
   if (finalDomain) {
     expo.ios.associatedDomains = Array.from(
       new Set([...(expo.ios.associatedDomains ?? []), `applinks:${finalDomain}`]),
