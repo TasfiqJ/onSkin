@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-10T10:26:26.982Z
+Generated: 2026-07-10T11:15:23.344Z
 Status: pass
-Git SHA: bcda7bba39c1e7b2c9224c04ad6abb05cadcc712
+Git SHA: 1dab47bfdfe805366cb201fe7133be2cc9e07f0d
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -13,7 +13,7 @@ reviewers must inspect before launch gates can close.
 ## Summary
 
 - Review items: 35
-- Source files hashed: 241
+- Source files hashed: 245
 - Missing source files: 0
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
@@ -52,7 +52,7 @@ reviewers must inspect before launch gates can close.
 | privacySecurity   | Ask, commerce, and community consent | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
 | privacySecurity   | Account deletion and data export     | Blocked     | TBD      | TBD  | not-applicable | 10      | 0               |
 | privacySecurity   | Analytics and crash payloads         | Not cleared | TBD      | TBD  | not-applicable | 10      | 0               |
-| privacySecurity   | Auth and processor posture           | Blocked     | TBD      | TBD  | not-applicable | 8       | 0               |
+| privacySecurity   | Auth and processor posture           | Blocked     | TBD      | TBD  | not-applicable | 12      | 0               |
 | ipFto             | Brand and trademark clearance        | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
 | ipFto             | Native identifiers and callbacks     | Blocked     | TBD      | TBD  | not-applicable | 3       | 0               |
 | ipFto             | Onboarding quiz FTO                  | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
@@ -656,16 +656,20 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `8985f4f336ad756d453f6c7d79f688d44b9005a31c329b47ceef07a197c3eea1`
+- Review snapshot SHA-256: `8f8bb0394fa884a980d485a3cd40e3d3a5c8767c5629b48af1323017ee3a1aea`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Apple/Google auth, processors, breach posture, and RLS proof needed.
 
 Sources:
 
+- `apps/mobile/src/lib/auth/accountUpgrade.test.ts` - 8159 bytes - sha256 `14a44787bfb8029f9318455c0061ab8fe74ed3b41dc16708d2e1ff7f43f7daf6`
+- `apps/mobile/src/lib/auth/accountUpgrade.ts` - 5089 bytes - sha256 `3a4c9ff7d2288ae6845b562f68ed395e821bfd42e6dc9591a334b279f4319f3b`
+- `apps/mobile/src/lib/auth/accountUpgradeE2E.test.ts` - 886 bytes - sha256 `febfafcf0461723583c5caa25d00f4ecc25193bdde754d56ba3c8ff523b011d2`
+- `apps/mobile/src/lib/auth/accountUpgradeE2E.ts` - 568 bytes - sha256 `7f73680156e6ccbc060b9a69ec345ba9ab205fd6a104770e1bc4689998a14ac0`
 - `apps/mobile/src/lib/auth/apple.test.ts` - 3913 bytes - sha256 `809b460e84fff22e2f13062dc1c5a01cd69e0d376b724fb2dc43fc32ceb5fe14`
-- `apps/mobile/src/lib/auth/apple.ts` - 1946 bytes - sha256 `2c61d825f40abde9f55e0bfb11ba32e345ee642f7d79de5002f0e1c404eb1ff8`
-- `apps/mobile/src/lib/auth/AuthProvider.tsx` - 8136 bytes - sha256 `efa8f837cea689bed38ecb62dbf0f19a8d6d74e8693d9bbd5476f2e0379c0f36`
+- `apps/mobile/src/lib/auth/apple.ts` - 1969 bytes - sha256 `650ff0310cbc12acee871fb265a32f2b05306660af92ed31b36cc268582aa4e0`
+- `apps/mobile/src/lib/auth/AuthProvider.tsx` - 8438 bytes - sha256 `b2916a40ab32772331312c9f941ca9b261863b3a8e9c91c6db9b1e1f5c999fdf`
 - `apps/mobile/src/lib/auth/google.ts` - 1092 bytes - sha256 `d00aa0a7244120297ab824dce61e627090c9618a6906a0a6689b88bb47749ea7`
 - `apps/mobile/src/lib/auth/sessionBoundary.test.ts` - 890 bytes - sha256 `ee07eaa01973860fc5fc20edc9386896d90e76ffa475a5a7d68f21f6f65ed935`
 - `apps/mobile/src/lib/auth/sessionBoundary.ts` - 461 bytes - sha256 `53fb1b53dbc23b1dae48cb67b8410c2a94b35f13e665579c42e3370ef91781ba`

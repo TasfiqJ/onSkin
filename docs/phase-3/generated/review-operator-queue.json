@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-10T10:26:27.702Z",
+  "generatedAt": "2026-07-10T11:15:23.784Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "bcda7bba39c1e7b2c9224c04ad6abb05cadcc712",
+  "gitSha": "1dab47bfdfe805366cb201fe7133be2cc9e07f0d",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 89991,
-    "sha256": "391d3ad10a8f200a76d257dedf80b6e2c29c5aa29e4be88e2ca0a3ee6342b95a",
-    "currentSha256": "391d3ad10a8f200a76d257dedf80b6e2c29c5aa29e4be88e2ca0a3ee6342b95a"
+    "bytes": 90897,
+    "sha256": "b4e6811479aa101f5c0444f459280cebfdfa669282bb42e8c2cb2a162b392fd9",
+    "currentSha256": "b4e6811479aa101f5c0444f459280cebfdfa669282bb42e8c2cb2a162b392fd9"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -877,7 +877,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "8985f4f336ad756d453f6c7d79f688d44b9005a31c329b47ceef07a197c3eea1",
+      "reviewSnapshotSha256": "8f8bb0394fa884a980d485a3cd40e3d3a5c8767c5629b48af1323017ee3a1aea",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -885,6 +885,30 @@
       "notes": "Apple/Google auth, processors, breach posture, and RLS proof needed.",
       "currentBehavior": "Auth/client scaffolds exist; live providers not configured",
       "sourcePaths": [
+        {
+          "path": "apps/mobile/src/lib/auth/accountUpgrade.test.ts",
+          "exists": true,
+          "bytes": 8159,
+          "sha256": "14a44787bfb8029f9318455c0061ab8fe74ed3b41dc16708d2e1ff7f43f7daf6"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/accountUpgrade.ts",
+          "exists": true,
+          "bytes": 5089,
+          "sha256": "3a4c9ff7d2288ae6845b562f68ed395e821bfd42e6dc9591a334b279f4319f3b"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/accountUpgradeE2E.test.ts",
+          "exists": true,
+          "bytes": 886,
+          "sha256": "febfafcf0461723583c5caa25d00f4ecc25193bdde754d56ba3c8ff523b011d2"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/accountUpgradeE2E.ts",
+          "exists": true,
+          "bytes": 568,
+          "sha256": "7f73680156e6ccbc060b9a69ec345ba9ab205fd6a104770e1bc4689998a14ac0"
+        },
         {
           "path": "apps/mobile/src/lib/auth/apple.test.ts",
           "exists": true,
@@ -894,14 +918,14 @@
         {
           "path": "apps/mobile/src/lib/auth/apple.ts",
           "exists": true,
-          "bytes": 1946,
-          "sha256": "2c61d825f40abde9f55e0bfb11ba32e345ee642f7d79de5002f0e1c404eb1ff8"
+          "bytes": 1969,
+          "sha256": "650ff0310cbc12acee871fb265a32f2b05306660af92ed31b36cc268582aa4e0"
         },
         {
           "path": "apps/mobile/src/lib/auth/AuthProvider.tsx",
           "exists": true,
-          "bytes": 8136,
-          "sha256": "efa8f837cea689bed38ecb62dbf0f19a8d6d74e8693d9bbd5476f2e0379c0f36"
+          "bytes": 8438,
+          "sha256": "b2916a40ab32772331312c9f941ca9b261863b3a8e9c91c6db9b1e1f5c999fdf"
         },
         {
           "path": "apps/mobile/src/lib/auth/google.ts",
