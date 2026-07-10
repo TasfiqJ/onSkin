@@ -1,0 +1,181 @@
+{
+  "bodyScrollWidth": 412,
+  "devicePixelRatio": 2,
+  "horizontalOverflow": 0,
+  "innerHeight": 915,
+  "innerWidth": 412,
+  "location": "http://localhost:8212/progress",
+  "selectedCount": 1,
+  "tabList": {
+    "borderRadius": 33,
+    "rect": {
+      "bottom": 901,
+      "height": 66,
+      "left": 12,
+      "right": 400,
+      "top": 835,
+      "width": 388,
+      "x": 12,
+      "y": 835
+    },
+    "role": "tablist"
+  },
+  "tabs": [
+    {
+      "ariaLabel": "Today tab",
+      "center": {
+        "x": 61.25,
+        "y": 868
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "id": "bottom-tab-today",
+      "label": "Today",
+      "labelClientWidth": 85,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 891.5,
+        "height": 19,
+        "left": 18.78125,
+        "right": 103.71875,
+        "top": 872.5,
+        "width": 84.9375,
+        "x": 18.78125,
+        "y": 872.5
+      },
+      "labelScrollWidth": 85,
+      "labelText": "Today",
+      "rect": {
+        "bottom": 895,
+        "height": 54,
+        "left": 13,
+        "right": 109.5,
+        "top": 841,
+        "width": 96.5,
+        "x": 13,
+        "y": 841
+      },
+      "route": "today",
+      "selected": false,
+      "text": "Today"
+    },
+    {
+      "ariaLabel": "Progress tab",
+      "center": {
+        "x": 157.75,
+        "y": 868
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "id": "bottom-tab-progress",
+      "label": "Progress",
+      "labelClientWidth": 85,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 891.5,
+        "height": 19,
+        "left": 115.28125,
+        "right": 200.21875,
+        "top": 872.5,
+        "width": 84.9375,
+        "x": 115.28125,
+        "y": 872.5
+      },
+      "labelScrollWidth": 85,
+      "labelText": "Progress",
+      "rect": {
+        "bottom": 895,
+        "height": 54,
+        "left": 109.5,
+        "right": 206,
+        "top": 841,
+        "width": 96.5,
+        "x": 109.5,
+        "y": 841
+      },
+      "route": "progress",
+      "selected": true,
+      "text": "Progress"
+    },
+    {
+      "ariaLabel": "Shelf tab",
+      "center": {
+        "x": 254.25,
+        "y": 868
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "id": "bottom-tab-shelf",
+      "label": "Shelf",
+      "labelClientWidth": 85,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 891.5,
+        "height": 19,
+        "left": 211.78125,
+        "right": 296.71875,
+        "top": 872.5,
+        "width": 84.9375,
+        "x": 211.78125,
+        "y": 872.5
+      },
+      "labelScrollWidth": 85,
+      "labelText": "Shelf",
+      "rect": {
+        "bottom": 895,
+        "height": 54,
+        "left": 206,
+        "right": 302.5,
+        "top": 841,
+        "width": 96.5,
+        "x": 206,
+        "y": 841
+      },
+      "route": "shelf",
+      "selected": false,
+      "text": "Shelf"
+    },
+    {
+      "ariaLabel": "You tab",
+      "center": {
+        "x": 350.75,
+        "y": 868
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "id": "bottom-tab-you",
+      "label": "You",
+      "labelClientWidth": 85,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 891.5,
+        "height": 19,
+        "left": 308.28125,
+        "right": 393.21875,
+        "top": 872.5,
+        "width": 84.9375,
+        "x": 308.28125,
+        "y": 872.5
+      },
+      "labelScrollWidth": 85,
+      "labelText": "You",
+      "rect": {
+        "bottom": 895,
+        "height": 54,
+        "left": 302.5,
+        "right": 399,
+        "top": 841,
+        "width": 96.5,
+        "x": 302.5,
+        "y": 841
+      },
+      "route": "you",
+      "selected": false,
+      "text": "You"
+    }
+  ]
+}
