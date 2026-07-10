@@ -23,9 +23,10 @@ const viewports = [
   { name: '412x915', width: 412, height: 915 },
   { name: '430x932', width: 430, height: 932 },
 ];
+const compactProgressLabelMaxWidth = 430;
 const tabs = [
   { id: 'bottom-tab-today', label: 'Today', route: 'today' },
-  { id: 'bottom-tab-progress', label: 'Progress', route: 'progress' },
+  { compactLabel: 'Prog.', id: 'bottom-tab-progress', label: 'Progress', route: 'progress' },
   { id: 'bottom-tab-shelf', label: 'Shelf', route: 'shelf' },
   { id: 'bottom-tab-you', label: 'You', route: 'you' },
 ];
@@ -354,7 +355,9 @@ const snapshotExpression = `(() => {
   const tabListStyle = tabList ? getComputedStyle(tabList) : null;
   const tabs = tabSpecs.map((tab) => {
     const node = document.querySelector('[data-testid="' + tab.id + '"]');
-    const visibleLabel = tab.label;
+    const compactProgressLabel =
+      tab.route === 'progress' && window.innerWidth <= ${compactProgressLabelMaxWidth};
+    const visibleLabel = compactProgressLabel && tab.compactLabel ? tab.compactLabel : tab.label;
     const labelNode = ownTextNode(node, visibleLabel);
     const rect = rectOf(node);
     const labelRect = rectOf(labelNode);
@@ -368,6 +371,7 @@ const snapshotExpression = `(() => {
       center,
       centerHitContains: Boolean(node && hit && node.contains(hit)),
       centerHitText: hit?.textContent?.replace(/\\s+/g, ' ').trim() ?? null,
+      compactLabel: tab.compactLabel ?? null,
       id: tab.id,
       label: tab.label,
       labelClientWidth: labelNode?.clientWidth ?? null,
@@ -420,7 +424,10 @@ function validateSnapshot(snapshot, expectedSelectedLabel, viewportName) {
   );
 
   for (const tab of snapshot.tabs) {
-    const expectedVisibleLabel = tab.label;
+    const compactProgressLabel =
+      tab.route === 'progress' && snapshot.innerWidth <= compactProgressLabelMaxWidth;
+    const expectedVisibleLabel =
+      compactProgressLabel && tab.compactLabel ? tab.compactLabel : tab.label;
     assert(tab.rect, `${viewportName}: missing ${tab.label} tab`);
     assert(
       tab.labelText === expectedVisibleLabel,
@@ -557,6 +564,7 @@ async function run() {
           tabListRect: snapshot.tabList.rect,
           tabs: snapshot.tabs.map((item) => ({
             centerHitContains: item.centerHitContains,
+            compactLabel: item.compactLabel ?? null,
             label: item.label,
             labelText: item.labelText,
             labelRect: item.labelRect,
