@@ -1,0 +1,32 @@
+{
+  "name": "session-shared-unlock-detail-modern-390x844",
+  "url": "http://127.0.0.1:8156/progress/e2e-front-2026-04-01",
+  "bodyText": "<\nApril 1\nQuality not measured\nmorning\nreference\nYOUR NOTE\nSet as reference\n↗\n🗑",
+  "geometry": {
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "innerWidth": 390
+  },
+  "buttons": [
+    {
+      "name": "Back",
+      "width": 48,
+      "height": 48
+    },
+    {
+      "name": "Set as reference",
+      "width": 230,
+      "height": 48
+    },
+    {
+      "name": "Share photo",
+      "width": 48,
+      "height": 48
+    },
+    {
+      "name": "Delete photo",
+      "width": 48,
+      "height": 48
+    }
+  ]
+}

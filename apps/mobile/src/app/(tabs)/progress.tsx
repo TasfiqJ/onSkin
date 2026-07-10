@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -8,14 +8,12 @@ import { CompareSlider } from '@/features/photos/CompareSlider';
 import { MILESTONE_COPY, PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
 import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';
+import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { timelapseFrames } from '@/features/photos/timelapse';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { TrendInsight } from '@/features/trend/TrendInsight';
-import { authenticateAppLock } from '@/lib/applock/authenticate';
-import { useAppLock } from '@/lib/applock/AppLockProvider';
-import { appLockUserMessage } from '@/lib/errors/userFacing';
 import { track } from '@/lib/analytics/track';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { colors } from '@/theme/tokens';
@@ -25,7 +23,6 @@ import { colors } from '@/theme/tokens';
 // Progress tab as the photo feature; the streak moved to /routine/streak (still
 // reachable from Today + You). Local-only, no scores, app-locked, your own eyes.
 
-const BG = '#16130F';
 const SAGE = '#9DB18A';
 function short(ymd: string): string {
   return parseLocalDate(ymd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -427,117 +424,9 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
   );
 }
 
-// ── Biometric gallery lock (design screen 08) ────────────────────────────────
-function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
-  const insets = useSafeAreaInsets();
-  const [lockFeedback, setLockFeedback] = useState<string | null>(null);
-
-  const requestUnlock = useCallback(() => {
-    void authenticateAppLock('Unlock your photo timeline').then((status) => {
-      if (status === 'success') {
-        setLockFeedback(null);
-        onUnlock();
-      } else if (status === 'unavailable') {
-        setLockFeedback(appLockUserMessage());
-      }
-    });
-  }, [onUnlock]);
-
-  const authenticate = () => {
-    setLockFeedback(null);
-    requestUnlock();
-  };
-
-  useEffect(() => {
-    requestUnlock(); // auto-prompt when the gate appears
-  }, [requestUnlock]);
-  // Full-bleed #16130F incl. the safe-area bands (design screen 08). No night sliver.
-  return (
-    <View
-      className="flex-1"
-      style={{ backgroundColor: BG, paddingTop: insets.top, paddingBottom: insets.bottom }}
-    >
-      <View className="flex-1 items-center justify-center px-7">
-        <View
-          className="mb-6 h-[78px] w-[78px] items-center justify-center rounded-[24px]"
-          style={{ backgroundColor: 'rgba(244,239,231,0.1)' }}
-        >
-          <Text style={{ color: SAGE, fontSize: 30 }}>🔒</Text>
-        </View>
-        <Text
-          variant="title"
-          style={{ color: colors.cream, fontSize: 30, lineHeight: 33, textAlign: 'center' }}
-        >
-          {PHOTO_COPY.lock.title}
-        </Text>
-        <Text
-          variant="bodySm"
-          className="mt-2.5 text-center"
-          style={{ color: 'rgba(244,239,231,0.6)', maxWidth: 280, lineHeight: 21 }}
-        >
-          {PHOTO_COPY.lock.body}
-        </Text>
-        {lockFeedback ? (
-          <View
-            className="mt-4 rounded-[16px] px-4 py-3"
-            style={{
-              maxWidth: 300,
-              borderWidth: 1,
-              borderColor: 'rgba(244,239,231,0.16)',
-              backgroundColor: 'rgba(244,239,231,0.1)',
-            }}
-          >
-            <Text
-              accessibilityRole="alert"
-              variant="bodySm"
-              className="text-center"
-              style={{ color: colors.cream, lineHeight: 20 }}
-            >
-              {lockFeedback}
-            </Text>
-          </View>
-        ) : null}
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={PHOTO_COPY.lock.unlock}
-          onPress={authenticate}
-          className={`${lockFeedback ? 'mt-5' : 'mt-7'} flex-row items-center gap-2.5 rounded-pill px-8 py-4`}
-          style={{ backgroundColor: colors.cream }}
-        >
-          <Text className="font-sans-semibold" style={{ color: BG, fontSize: 16 }}>
-            {PHOTO_COPY.lock.unlock}
-          </Text>
-        </Pressable>
-      </View>
-      <View
-        className="mb-10 flex-row items-center gap-3.5 rounded-[18px] p-4"
-        style={{ backgroundColor: 'rgba(244,239,231,0.07)', marginHorizontal: 4 }}
-      >
-        <View className="flex-1">
-          <Text className="font-sans-bold" style={{ color: colors.cream, fontSize: 14 }}>
-            {PHOTO_COPY.lock.storageTitle}
-          </Text>
-          <Text
-            style={{
-              color: 'rgba(244,239,231,0.5)',
-              fontSize: 12,
-              lineHeight: 17,
-              fontFamily: 'HankenGrotesk_400Regular',
-            }}
-          >
-            {PHOTO_COPY.lock.storageBody}
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
-}
-
 function PhotoProgressTab() {
-  const { enabled: lockEnabled } = useAppLock();
   const { height } = useWindowDimensions();
   const { data } = usePhotos('front');
-  const [unlocked, setUnlocked] = useState(false);
   const [mode, setMode] = useState<'compare' | 'timeline'>('compare');
   const compactFirstRun = height < 520;
 
@@ -547,12 +436,6 @@ function PhotoProgressTab() {
   }, [mode]);
 
   const count = data?.count ?? 0;
-
-  // Gallery is gated by the opt-in biometric app-lock (docs/06 §7), but only once
-  // there are photos to protect.
-  if (lockEnabled && !unlocked && count > 0) {
-    return <GalleryLock onUnlock={() => setUnlocked(true)} />;
-  }
 
   return (
     <Screen edges={['top']}>
@@ -638,7 +521,9 @@ function PhotoProgressTab() {
 export default function ProgressScreen() {
   return (
     <ProGate feature="photo_timeline">
-      <PhotoProgressTab />
+      <PhotoTimelineLockGate>
+        <PhotoProgressTab />
+      </PhotoTimelineLockGate>
     </ProGate>
   );
 }

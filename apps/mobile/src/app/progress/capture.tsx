@@ -13,6 +13,7 @@ import { grantPhotoCaptureConsent, hasPhotoCaptureConsent } from '@/features/pho
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { localDay, timeOfDayNow } from '@/features/photos/date';
 import { PhotoImage } from '@/features/photos/PhotoImage';
+import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
@@ -924,7 +925,9 @@ function CaptureScreenContent() {
 export default function CaptureScreen() {
   return (
     <ProGate feature="photo_timeline">
-      <CaptureScreenContent />
+      <PhotoTimelineLockGate>
+        <CaptureScreenContent />
+      </PhotoTimelineLockGate>
     </ProGate>
   );
 }

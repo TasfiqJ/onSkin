@@ -235,6 +235,13 @@ if (!deviceOnlyBackupEvidenceDate) {
   console.error('FAIL Missing device-only Progress photo storage evidence.');
   process.exit(1);
 }
+const progressDirectRouteLockEvidenceDate = latestEvidenceDateForFolder(
+  'progress-direct-route-lock-current',
+);
+if (!progressDirectRouteLockEvidenceDate) {
+  console.error('FAIL Missing direct-route Progress app-lock evidence.');
+  process.exit(1);
+}
 const dataExportDisclosureEvidenceDate = latestEvidenceDateForFolder(
   'data-export-local-photo-disclosure-current',
 );
@@ -254,6 +261,7 @@ const latestManifestEvidenceDate = [
   timelapseEvidenceDate,
   captureAnalysisEvidenceDate,
   deviceOnlyBackupEvidenceDate,
+  progressDirectRouteLockEvidenceDate,
   dataExportDisclosureEvidenceDate,
   combinedDataExportEvidenceDate,
 ]
@@ -514,6 +522,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Settings and locked Progress show device-only storage with no backup switch, dialogs, backup analytics, or photo-backend traffic.',
+  },
+  {
+    id: 'progress-direct-route-lock-supported-phone',
+    title: 'Progress direct-route app-lock coverage',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${progressDirectRouteLockEvidenceDate}/progress-direct-route-lock-current`,
+    evidence: 'summary.json',
+    expected:
+      'Progress tab, capture, review, and detail direct entries stay locked at 360 x 640 and 390 x 844; one active-session unlock persists until background relock.',
   },
   {
     id: 'data-export-local-photo-disclosure-supported-phone',

@@ -1,0 +1,22 @@
+{
+  "name": "session-shared-unlock-capture-modern-390x844",
+  "url": "http://127.0.0.1:8156/progress/capture",
+  "bodyText": "Your photos stay on this phone.\nWHAT\nPhotos you choose to take with guided capture.\nWHY\nTo build your private progress timeline on this device.\nNEVER\nNever uploaded automatically, sold, or used to train AI. You can choose to share a photo. Cloud backup is not available in this build.\nNo faceprint or biometric template is stored. A lost phone can mean lost photos. You can withdraw anytime in Settings.\nClean skin, no makeup, hair back. Same time of day as last week.\nTake photos. On device only\nNot now",
+  "geometry": {
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "innerWidth": 390
+  },
+  "buttons": [
+    {
+      "name": "Take photos. On device only",
+      "width": 334,
+      "height": 56
+    },
+    {
+      "name": "Not now",
+      "width": 334,
+      "height": 48
+    }
+  ]
+}

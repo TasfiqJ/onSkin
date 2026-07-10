@@ -47,6 +47,7 @@ configuration before store submission.
 - RevenueCat is bound to Supabase user IDs to preserve entitlement continuity.
 - Native photo files are encrypted locally with authenticated encryption before storage.
 - Native content keys remain in SecureStore; temporary/missing/invalid key reads preserve ciphertext and cannot silently rotate keys or rewrite the failed record with fallback state.
+- Opt-in app lock fails closed while its encrypted preference is unreadable; every sensitive Progress direct route shares a foreground-only timeline unlock and relocks after backgrounding.
 - Analytics sanitization drops sensitive keys such as barcodes, OCR text, notes,
   photo paths, product IDs/names, receipts, and image/file paths.
 

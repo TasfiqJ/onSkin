@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Closed a Critical direct-route bypass in the opt-in photo-timeline lock. The
+  encrypted app-lock preference now resolves before the app tree mounts and
+  fails closed when unreadable; app-wide authentication completes before a
+  provider-owned timeline prompt can start. Progress tab, capture, review, and
+  photo detail all gate their sensitive bodies inside the Pro gate, share one
+  unlock only for the active foreground session, and relock on every non-active
+  AppState transition. Focused app-lock/Progress contracts pass 116 tests and
+  the full suite passes 176 files / 1825 tests. Human-simulated Expo web covers
+  eight direct route/viewport combinations at 360 x 640 and 390 x 844, plus
+  active-session navigation and background relock, with zero sensitive marker
+  leaks, overflow, dialogs, page errors, unexpected errors, analytics, or photo
+  backend requests. Evidence is in
+  `test-results/human-e2e/2026-07-10/progress-direct-route-lock-current/`.
+
 - Hardened encrypted local storage against silent key-loss data destruction.
   Native private-record keys no longer downgrade into AsyncStorage, while web
   remains explicit and existing legacy native fallbacks migrate forward.
@@ -15,7 +29,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   legacy encrypted files prevent unsafe replacement, and note key failures now
   propagate without rewriting photo metadata. The focused storage, Progress,
   cleanup, and export matrix passes 70/70; mobile typecheck/lint and the full
-  suite pass 176 files / 1823 tests. Real iOS Keychain and Android Keystore
+  suite pass 176 files / 1825 tests. Real iOS Keychain and Android Keystore
   update/reinstall/restore/fault behavior remains Tas-owned device QA.
 
 - Made account-export scope explicit before action and in every JSON artifact.

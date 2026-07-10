@@ -13,7 +13,12 @@ import { BRAND } from '@/lib/brand';
 import { appLockUserMessage } from '@/lib/errors/userFacing';
 import { colors } from '@/theme/tokens';
 
-import { authenticateAppLock, canUseAppLock } from './authenticate';
+import {
+  PHOTO_TIMELINE_PROMPT,
+  authenticateAppLock,
+  canUseAppLock,
+  type AppLockAuthStatus,
+} from './authenticate';
 import { shouldLockForAppState, shouldShowPrivacyShieldForAppState } from './privacyState';
 import { getAppLockEnabled, setAppLockEnabledStored } from './store';
 
@@ -22,8 +27,11 @@ import { getAppLockEnabled, setAppLockEnabledStored } from './store';
 // app-switch/background transitions when enabled. A generic shield also hides
 // health-adjacent UI from OS app-switcher snapshots even when app lock is off.
 type AppLockContextValue = {
+  appUnlocked: boolean;
   enabled: boolean;
+  photoTimelineUnlocked: boolean;
   setEnabled: (v: boolean) => Promise<void>;
+  unlockPhotoTimeline: () => Promise<AppLockAuthStatus>;
 };
 
 const AppLockContext = createContext<AppLockContextValue | undefined>(undefined);
@@ -130,16 +138,25 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
   const [locked, setLocked] = useState(false);
   const [lockFeedback, setLockFeedback] = useState<string | null>(null);
+  const [photoTimelineUnlocked, setPhotoTimelineUnlocked] = useState(false);
   const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
 
   useEffect(() => {
     let active = true;
     void (async () => {
-      const e = await getAppLockEnabled();
-      if (!active) return;
-      setEnabledState(e);
-      setLocked(e); // lock immediately on cold start when enabled
-      setLoaded(true);
+      try {
+        const e = await getAppLockEnabled();
+        if (!active) return;
+        setEnabledState(e);
+        setLocked(e); // lock immediately on cold start when enabled
+      } catch {
+        if (!active) return;
+        // An unreadable encrypted preference must not expose data as if lock were off.
+        setEnabledState(true);
+        setLocked(true);
+      } finally {
+        if (active) setLoaded(true);
+      }
     })();
     return () => {
       active = false;
@@ -149,7 +166,10 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const sub = AppState.addEventListener('change', (s) => {
       setAppState(s);
-      if (shouldLockForAppState(s, enabled)) setLocked(true);
+      if (shouldLockForAppState(s, enabled)) {
+        setLocked(true);
+        setPhotoTimelineUnlocked(false);
+      }
     });
     return () => sub.remove();
   }, [enabled]);
@@ -170,6 +190,12 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
     requestUnlock();
   }, [requestUnlock]);
 
+  const unlockPhotoTimeline = useCallback(async (): Promise<AppLockAuthStatus> => {
+    const status = await authenticateAppLock(PHOTO_TIMELINE_PROMPT);
+    if (status === 'success') setPhotoTimelineUnlocked(true);
+    return status;
+  }, []);
+
   // Auto-prompt whenever we are active and locked. Do not launch biometrics while
   // the OS is taking an app-switcher snapshot or the app is backgrounded.
   useEffect(() => {
@@ -187,18 +213,26 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
     await setAppLockEnabledStored(v);
     setLockFeedback(null);
     setEnabledState(v);
+    setPhotoTimelineUnlocked(false);
+    if (!v) setLocked(false);
   }, []);
 
   const value = useMemo<AppLockContextValue>(
-    () => ({ enabled, setEnabled }),
-    [enabled, setEnabled],
+    () => ({
+      appUnlocked: loaded && !locked,
+      enabled,
+      photoTimelineUnlocked,
+      setEnabled,
+      unlockPhotoTimeline,
+    }),
+    [enabled, loaded, locked, photoTimelineUnlocked, setEnabled, unlockPhotoTimeline],
   );
   const showPrivacyShield = shouldShowPrivacyShieldForAppState(appState);
 
   return (
     <AppLockContext.Provider value={value}>
-      {children}
-      {showPrivacyShield ? <PrivacyShield /> : null}
+      {loaded ? children : null}
+      {showPrivacyShield || !loaded ? <PrivacyShield /> : null}
       {!showPrivacyShield && loaded && locked ? (
         <LockOverlay feedback={lockFeedback} onUnlock={authenticate} />
       ) : null}

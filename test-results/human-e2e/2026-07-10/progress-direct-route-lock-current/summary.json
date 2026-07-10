@@ -1,0 +1,55 @@
+{
+  "status": "pass",
+  "verdict": "pass",
+  "date": "2026-07-10",
+  "surface": "Expo web development build",
+  "browser": "Google Chrome 150.0.7871.101 via bundled Playwright 1.61.1",
+  "fixtures": {
+    "lockedDirectRoutes": {
+      "origin": "http://127.0.0.1:8155",
+      "entitlement": "store_pro",
+      "appLockEnabled": true,
+      "globalAppLockAuth": "success",
+      "galleryAppLockAuth": "not_authenticated",
+      "progressPhotos": "populated"
+    },
+    "activeSession": {
+      "origin": "http://127.0.0.1:8156",
+      "entitlement": "store_pro",
+      "appLockEnabled": true,
+      "globalAppLockAuth": "success",
+      "galleryAppLockAuth": "success_once",
+      "progressPhotos": "populated"
+    }
+  },
+  "lockedDirectRouteScenarios": 8,
+  "supportedViewports": [
+    "360 x 640",
+    "390 x 844"
+  ],
+  "routes": [
+    "/progress",
+    "/progress/capture",
+    "/progress/review?capturedUri=[local-data-uri]",
+    "/progress/e2e-front-2026-04-01"
+  ],
+  "sessionScenarios": [
+    "one timeline unlock opens populated Progress",
+    "the same unlock remains valid on photo detail",
+    "the same unlock remains valid on capture",
+    "background then foreground clears the timeline unlock"
+  ],
+  "minimumUnlockTargetHeight": 52,
+  "failedRouteCount": 0,
+  "dialogCount": 0,
+  "pageErrorCount": 0,
+  "unexpectedLogCount": 0,
+  "analyticsRequestCount": 0,
+  "photoBackendRequestCount": 0,
+  "horizontalOverflowCount": 0,
+  "sensitiveMarkerLeakCount": 0,
+  "remainingRisk": [
+    "Physical iOS and Android LocalAuthentication prompt ordering and background transitions remain device QA.",
+    "VoiceOver and TalkBack focus restoration after unlock remain device QA."
+  ]
+}

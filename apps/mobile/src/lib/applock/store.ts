@@ -41,13 +41,9 @@ export async function getAppLockEnabled(): Promise<boolean> {
   const fixture = e2eAppLockEnabled();
   if (fixture !== null) return fixture;
 
-  try {
-    const value = await getPrivateItem(KEY);
-    if (value == null) return false;
-    return normalizeStoredValue(value);
-  } catch {
-    return false;
-  }
+  const value = await getPrivateItem(KEY);
+  if (value == null) return false;
+  return normalizeStoredValue(value);
 }
 
 export async function setAppLockEnabledStored(enabled: boolean): Promise<void> {

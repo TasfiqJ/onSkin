@@ -79,11 +79,11 @@ describe('app lock preference storage', () => {
     expect(mocks.privateKV.get(KEY)).toBe('enabled');
   });
 
-  it('fails open without rewriting when private storage cannot be read', async () => {
+  it('propagates private-storage read failure so the provider can fail closed', async () => {
     const privateKV = await import('@/lib/storage/privateKV');
     vi.mocked(privateKV.getPrivateItem).mockRejectedValueOnce(new Error('private kv unavailable'));
 
-    await expect(getAppLockEnabled()).resolves.toBe(false);
+    await expect(getAppLockEnabled()).rejects.toThrow('private kv unavailable');
     expect(mocks.privateKV.get(KEY)).toBeUndefined();
   });
 

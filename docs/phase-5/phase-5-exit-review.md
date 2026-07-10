@@ -30,6 +30,12 @@ Completed in repo:
   storage with no backup setter or switch. An additive
   database migration clears pre-provenance server values and rejects future
   quality/pose metadata without `post_capture_measurement` provenance.
+- Opt-in app lock now delays app-tree mount until its encrypted preference
+  resolves, fails closed when that preference is unreadable, and gives the
+  Progress tab plus direct capture, review, and detail entries one shared
+  foreground-only timeline unlock. Expo web direct-route/session evidence is
+  complete; native LocalAuthentication ordering, background relock, and
+  VoiceOver/TalkBack focus remain physical-device blockers.
 - Photo timeline/detail/compare render through encrypted-aware image loading.
 - Photo deletion removes local encrypted files.
 - Phase 5 config check and device QA packet generator added.

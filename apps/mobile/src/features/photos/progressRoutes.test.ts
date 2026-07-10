@@ -40,6 +40,7 @@ describe('Progress route mobile contracts', () => {
   it('keeps the empty Progress first-photo CTA above the floating tab bar on shortest phones', () => {
     const source = readAppRoute('(tabs)/progress.tsx');
     const copy = readSource('features/photos/copy.ts');
+    const lockGate = readSource('features/photos/PhotoTimelineLockGate.tsx');
 
     expect(source).toContain('function FirstRun({ compact = false }: { compact?: boolean })');
     expect(source).toContain('const { height } = useWindowDimensions();');
@@ -60,13 +61,39 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain("compact ? 'mb-3 p-4' : 'mb-5'");
     expect(source).not.toContain('fontSize: compact ? 24 : 26');
     expect(source).not.toContain("'mb-4 flex-row items-center gap-2.5 px-1'");
-    expect(source).toContain('PHOTO_COPY.lock.storageTitle');
-    expect(source).toContain('PHOTO_COPY.lock.storageBody');
-    expect(source).toContain('accessibilityLabel={PHOTO_COPY.lock.unlock}');
+    expect(lockGate).toContain('PHOTO_COPY.lock.storageTitle');
+    expect(lockGate).toContain('PHOTO_COPY.lock.storageBody');
+    expect(lockGate).toContain('accessibilityLabel={PHOTO_COPY.lock.unlock}');
     expect(copy).toContain("storageTitle: 'Device-only photo storage'");
     expect(copy).toContain('Cloud backup is not available in this build.');
     expect(copy).not.toContain('cloudTitle');
     expect(copy).not.toContain('cloudOff');
+  });
+
+  it('gates every sensitive Progress entry with one shared timeline unlock', () => {
+    const routes = [
+      readAppRoute('(tabs)/progress.tsx'),
+      readAppRoute('progress/capture.tsx'),
+      readAppRoute('progress/review.tsx'),
+      readAppRoute('progress/[id].tsx'),
+    ];
+    const provider = readSource('lib/applock/AppLockProvider.tsx');
+    const gate = readSource('features/photos/PhotoTimelineLockGate.tsx');
+
+    for (const source of routes) {
+      expect(source).toContain(
+        "import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';",
+      );
+      expect(source).toContain('<PhotoTimelineLockGate>');
+      expect(source).toContain('</PhotoTimelineLockGate>');
+      expect(source.indexOf('<ProGate')).toBeLessThan(source.indexOf('<PhotoTimelineLockGate>'));
+    }
+    expect(readAppRoute('progress/about.tsx')).not.toContain('PhotoTimelineLockGate');
+    expect(provider).toContain('photoTimelineUnlocked');
+    expect(provider).toContain('setPhotoTimelineUnlocked(false);');
+    expect(provider).toContain('appUnlocked: loaded && !locked');
+    expect(gate).toContain('const locked = enabled && !photoTimelineUnlocked;');
+    expect(gate).toContain('if (!locked) return children;');
   });
 
   it('keeps direct-entry progress exits touchable on phones', () => {

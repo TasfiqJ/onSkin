@@ -1,0 +1,30 @@
+{
+  "route": "capture",
+  "requestedUrl": "/progress/capture",
+  "finalUrl": "http://127.0.0.1:8155/progress/capture",
+  "viewport": {
+    "name": "supported-floor-360x640",
+    "width": 360,
+    "height": 640
+  },
+  "bodyText": "🔒\nYour timeline is locked.\nUse your phone's unlock to keep your photos for your eyes only. They live on this phone, encrypted.\nUnlock\nDevice-only photo storage\nEncrypted here. Cloud backup is not available in this build.",
+  "geometry": {
+    "clientWidth": 360,
+    "scrollWidth": 360,
+    "innerWidth": 360
+  },
+  "unlockBox": {
+    "x": 122.921875,
+    "y": 355.5,
+    "width": 114.15625,
+    "height": 52
+  },
+  "unlockCount": 1,
+  "visibleButtons": [
+    {
+      "name": "Unlock",
+      "width": 114.15625,
+      "height": 52
+    }
+  ]
+}

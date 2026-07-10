@@ -94,6 +94,15 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: ciphertext is unrecoverable after genuine OS key loss because V1 intentionally has no cloud backup or recovery escrow. Physical iOS/Android keychain/keystore, reinstall, restore, locked-device, and storage-pressure behavior still requires staging-device evidence; the app must surface retry/recovery rather than claim recovery it cannot perform.
 - Status: Accepted.
 
+### 2026-07-10 - Gate Every Sensitive Progress Entry With Shared App-Lock State
+
+- Decision: When app lock is enabled, the app tree does not mount until its encrypted preference resolves; an unreadable preference fails closed as enabled and locked. The app-wide unlock must finish before the separate photo-timeline prompt can start. Progress tab, capture, review, and single-photo detail all use one provider-owned timeline unlock inside their Pro gates; navigation reuses that unlock only while the app remains active, and every non-active AppState transition clears it. The generic no-score explainer remains outside the second lock.
+- Alternatives: keep a tab-local gallery gate, authenticate independently on every nested screen, put the timeline gate outside entitlement checks, treat unreadable lock preference as disabled, or rely only on the app-wide overlay.
+- Criteria: direct-link privacy, no pre-lock content mount/flash, prompt ordering, usable in-session navigation, background relock, free-user paywall ordering, and deterministic browser/native verification.
+- Evidence: `PhotoTimelineLockGate.tsx`, `AppLockProvider.tsx`, app-lock and Progress route contracts, plus 360 x 640 and 390 x 844 direct-route/session evidence in `test-results/human-e2e/2026-07-10/progress-direct-route-lock-current/`.
+- Risk: Expo web proves routing, mounting, geometry, and state transitions but not native biometric security. Physical iOS/Android LocalAuthentication ordering, background transitions, cancellation, and VoiceOver/TalkBack focus restoration remain release QA.
+- Status: Accepted.
+
 ### 2026-07-06 - Keep Expo/Supabase/RevenueCat
 
 - Decision: Continue current stack unless beta/device/compliance evidence says otherwise.

@@ -1,0 +1,42 @@
+{
+  "name": "session-unlocked-progress-modern-390x844",
+  "url": "http://127.0.0.1:8156/progress",
+  "bodyText": "Progress\n＋\nPhoto\n12 weeks · 3 photos · all on this phone\nSame light, same angle. Honestly comparable. No scores, no AI grades.\nCompare\nTimeline\nNo scores ⓘ\nSide-by-side\n‹\n›\nApr 1\nJun 24\ndrag to wipe · tap a date to change\nNo “improvement %.” Just your two photos and their dates. You decide.\nToday\nProg.\nShelf\nYou",
+  "geometry": {
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "innerWidth": 390
+  },
+  "buttons": [
+    {
+      "name": "Take a progress photo",
+      "width": 93,
+      "height": 48
+    },
+    {
+      "name": "Compare",
+      "width": 96,
+      "height": 48
+    },
+    {
+      "name": "Timeline",
+      "width": 96,
+      "height": 48
+    },
+    {
+      "name": "Side-by-side",
+      "width": 132.40625,
+      "height": 48
+    },
+    {
+      "name": "Change to a different date (currently Apr 1)",
+      "width": 72,
+      "height": 48
+    },
+    {
+      "name": "Change to a different date (currently Jun 24)",
+      "width": 75.40625,
+      "height": 48
+    }
+  ]
+}

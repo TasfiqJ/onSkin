@@ -1,0 +1,17 @@
+{
+  "name": "session-background-relocked-modern-390x844",
+  "url": "http://127.0.0.1:8156/progress",
+  "bodyText": "🔒\nYour timeline is locked.\nUse your phone's unlock to keep your photos for your eyes only. They live on this phone, encrypted.\nUnlock\nDevice-only photo storage\nEncrypted here. Cloud backup is not available in this build.\nToday\nProg.\nShelf\nYou",
+  "geometry": {
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "innerWidth": 390
+  },
+  "buttons": [
+    {
+      "name": "Unlock",
+      "width": 114.15625,
+      "height": 52
+    }
+  ]
+}

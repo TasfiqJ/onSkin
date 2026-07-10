@@ -210,6 +210,13 @@ Status: needs-device-verification
   date-change chips, comparison photo-picker dismiss/selection, app-lock, and
   VoiceOver/TalkBack traversal must remain readable, private, and tappable on
   short screens.
+- With app lock enabled on both physical platforms, cold-open the Progress tab,
+  capture, captured-photo review, and an existing photo-detail deep link. Verify
+  the app-wide prompt finishes before the timeline prompt, no sensitive route
+  content flashes or mounts visibly first, one timeline unlock carries through
+  in-app Progress navigation, and background/inactive return requires both
+  intended locks again. Test cancel, unavailable hardware, failed prompt, and
+  VoiceOver/TalkBack focus restoration; retain native logs and screen recording.
 - Verify the local Progress time-lapse on the same supported devices and real
   encrypted-photo set: oldest-to-newest playback, pause, manual stepping,
   final-frame stop/replay, app background pause, close recovery, Reduce Motion,

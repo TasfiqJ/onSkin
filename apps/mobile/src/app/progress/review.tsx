@@ -9,6 +9,7 @@ import { RouteIconButton, Text } from '@/components/ui';
 import { CaptureAnalysisProvider } from '@/features/photos/CaptureAnalysisProvider';
 import { PHOTO_COPY, QUALITY_NOTE } from '@/features/photos/copy';
 import { localDay } from '@/features/photos/date';
+import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import type { FramingAssessment, LightingAssessment } from '@/features/photos/captureAnalysis';
 import { reviewQuality } from '@/features/photos/quality';
 import { parseLocalDate } from '@/features/photos/timeline';
@@ -476,9 +477,11 @@ function ReviewScreenContent() {
 export default function ReviewScreen() {
   return (
     <ProGate feature="photo_timeline">
-      <CaptureAnalysisProvider>
-        <ReviewScreenContent />
-      </CaptureAnalysisProvider>
+      <PhotoTimelineLockGate>
+        <CaptureAnalysisProvider>
+          <ReviewScreenContent />
+        </CaptureAnalysisProvider>
+      </PhotoTimelineLockGate>
     </ProGate>
   );
 }

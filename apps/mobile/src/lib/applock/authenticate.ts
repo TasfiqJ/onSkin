@@ -2,7 +2,10 @@ import * as LocalAuthentication from 'expo-local-authentication';
 
 export type AppLockAuthStatus = 'success' | 'not_authenticated' | 'unavailable';
 
-const PHOTO_TIMELINE_PROMPT = 'Unlock your photo timeline';
+export const PHOTO_TIMELINE_PROMPT = 'Unlock your photo timeline';
+
+let lastGalleryFixture: string | undefined;
+let galleryFixtureCalls = 0;
 
 function e2eAppLockAuthStatus(promptMessage: string): AppLockAuthStatus | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
@@ -15,6 +18,15 @@ function e2eAppLockAuthStatus(promptMessage: string): AppLockAuthStatus | null {
   )
     ?.trim()
     .toLowerCase();
+  if (promptMessage === PHOTO_TIMELINE_PROMPT && fixture !== lastGalleryFixture) {
+    lastGalleryFixture = fixture;
+    galleryFixtureCalls = 0;
+  }
+  if (promptMessage === PHOTO_TIMELINE_PROMPT && fixture === 'success_once') {
+    const status = galleryFixtureCalls === 0 ? 'success' : 'not_authenticated';
+    galleryFixtureCalls += 1;
+    return status;
+  }
   if (fixture === 'success' || fixture === 'not_authenticated' || fixture === 'unavailable') {
     return fixture;
   }

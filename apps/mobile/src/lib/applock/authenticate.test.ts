@@ -93,6 +93,18 @@ describe('app lock local authentication', () => {
     expect(mocks.authenticateAsync).not.toHaveBeenCalled();
   });
 
+  it('supports a dev-only one-session gallery unlock followed by relock', async () => {
+    runtime.__DEV__ = true;
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_GALLERY_AUTH = 'success_once';
+
+    await expect(authenticateAppLock('Unlock your photo timeline')).resolves.toBe('success');
+    await expect(authenticateAppLock('Unlock your photo timeline')).resolves.toBe(
+      'not_authenticated',
+    );
+
+    expect(mocks.authenticateAsync).not.toHaveBeenCalled();
+  });
+
   it('ignores E2E app-lock fixtures outside dev builds', async () => {
     runtime.__DEV__ = false;
     process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH = 'unavailable';
@@ -122,7 +134,7 @@ describe('app lock local authentication', () => {
 
   it('keeps lock overlays on the failure-handled helper', () => {
     const provider = readSource('lib/applock/AppLockProvider.tsx');
-    const progress = readSource('app/(tabs)/progress.tsx');
+    const timelineGate = readSource('features/photos/PhotoTimelineLockGate.tsx');
     const youTab = readSource('app/(tabs)/you.tsx');
 
     expect(provider).toContain('authenticateAppLock(BRAND.appLockPrompt)');
@@ -131,15 +143,22 @@ describe('app lock local authentication', () => {
     );
     expect(provider).toContain('setLockFeedback(appLockUserMessage());');
     expect(provider).toContain('<LockOverlay feedback={lockFeedback} onUnlock={authenticate} />');
+    expect(provider).toContain('authenticateAppLock(PHOTO_TIMELINE_PROMPT)');
+    expect(provider).toContain('setPhotoTimelineUnlocked(false);');
+    expect(provider).toContain('setEnabledState(true);');
+    expect(provider).toContain('setLocked(true);');
+    expect(provider).toContain('{loaded ? children : null}');
+    expect(provider).toContain('showPrivacyShield || !loaded');
     expect(provider).toContain('accessibilityRole="alert"');
     expect(provider).not.toContain("Alert.alert('App lock'");
     expect(provider).not.toContain('LocalAuthentication.authenticateAsync');
 
-    expect(progress).toContain("authenticateAppLock('Unlock your photo timeline')");
-    expect(progress).toContain('setLockFeedback(appLockUserMessage());');
-    expect(progress).toContain('accessibilityRole="alert"');
-    expect(progress).not.toContain("Alert.alert('Photo timeline locked'");
-    expect(progress).not.toContain('LocalAuthentication.authenticateAsync');
+    expect(timelineGate).toContain('unlockPhotoTimeline()');
+    expect(timelineGate).toContain('locked && appUnlocked');
+    expect(timelineGate).toContain('setLockFeedback(appLockUserMessage());');
+    expect(timelineGate).toContain('accessibilityRole="alert"');
+    expect(timelineGate).not.toContain("Alert.alert('Photo timeline locked'");
+    expect(timelineGate).not.toContain('LocalAuthentication.authenticateAsync');
 
     expect(youTab).toContain('async function setAppLockChoice(enabled: boolean)');
     expect(youTab).toContain("key: 'app_lock'");

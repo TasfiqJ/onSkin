@@ -74,9 +74,10 @@ Read this with:
    credential/role, conditions, and retained approval reference per release
    disposition, current hashes match, and the strict copy audit passes.
 7. Real catalog seed not imported and source/license review not complete.
-8. Native camera/barcode/photo capture and encrypted keychain/keystore failure,
-   update, reinstall, and restore behavior are implemented or specified but not
-   physical-device verified; native OCR remains intentionally gated off.
+8. Native camera/barcode/photo capture, encrypted keychain/keystore behavior,
+   and app-wide/photo-timeline biometric prompt ordering, deep-link coverage,
+   background relock, and screen-reader focus are implemented or specified but
+   not physical-device verified; native OCR remains intentionally gated off.
 9. Native notification/device verification incomplete.
 10. Performance baseline and scale evidence are not measured on supported
     physical devices or beta telemetry.
@@ -125,7 +126,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 176 mobile test files / 1823 tests. The human-simulated E2E manifest now
+covers 176 mobile test files / 1825 tests. The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
@@ -133,6 +134,8 @@ combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `test-results/human-e2e/2026-07-10/progress-capture-analysis-current/`, and the
 `Device-only Progress photo storage` gate in
 `test-results/human-e2e/2026-07-10/progress-device-only-backup-current/`, plus
+the `Progress direct-route app-lock coverage` gate in
+`test-results/human-e2e/2026-07-10/progress-direct-route-lock-current/`, plus
 the `Account export local-photo scope disclosure` gate in
 `test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`,
 and the `Combined account and current-device export` gate in

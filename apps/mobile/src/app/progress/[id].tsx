@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RouteIconButton, Text } from '@/components/ui';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
+import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import { sharePhotoImageOnly } from '@/features/photos/sharePhoto';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotoActions, usePhotos } from '@/features/photos/usePhotos';
@@ -600,7 +601,9 @@ function PhotoDetailScreenContent() {
 export default function PhotoDetailScreen() {
   return (
     <ProGate feature="photo_timeline">
-      <PhotoDetailScreenContent />
+      <PhotoTimelineLockGate>
+        <PhotoDetailScreenContent />
+      </PhotoTimelineLockGate>
     </ProGate>
   );
 }
