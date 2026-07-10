@@ -1,0 +1,402 @@
+[
+  {
+    "scenario": "today-supported-floor-360x640",
+    "requestedUrl": "/today",
+    "finalUrl": "http://127.0.0.1:8164/today",
+    "viewport": {
+      "name": "supported-floor-360x640",
+      "width": 360,
+      "height": 640
+    },
+    "beforeText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nTry again",
+    "afterText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your encrypted data remains unchanged.\nTry again",
+    "retryBox": {
+      "x": 28,
+      "y": 393,
+      "width": 304,
+      "height": 56
+    },
+    "retryAfterBox": {
+      "x": 28,
+      "y": 419,
+      "width": 304,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "innerHeight": 640
+    },
+    "beforeHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "afterHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "ciphertextByteIdentical": true,
+    "contentKeyByteIdentical": true
+  },
+  {
+    "scenario": "shelf-supported-floor-360x640",
+    "requestedUrl": "/shelf",
+    "finalUrl": "http://127.0.0.1:8164/shelf",
+    "viewport": {
+      "name": "supported-floor-360x640",
+      "width": 360,
+      "height": 640
+    },
+    "beforeText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nTry again",
+    "afterText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your encrypted data remains unchanged.\nTry again",
+    "retryBox": {
+      "x": 28,
+      "y": 393,
+      "width": 304,
+      "height": 56
+    },
+    "retryAfterBox": {
+      "x": 28,
+      "y": 419,
+      "width": 304,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "innerHeight": 640
+    },
+    "beforeHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "afterHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "ciphertextByteIdentical": true,
+    "contentKeyByteIdentical": true
+  },
+  {
+    "scenario": "routine-plan-supported-floor-360x640",
+    "requestedUrl": "/routine/plan",
+    "finalUrl": "http://127.0.0.1:8164/routine/plan",
+    "viewport": {
+      "name": "supported-floor-360x640",
+      "width": 360,
+      "height": 640
+    },
+    "beforeText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nTry again",
+    "afterText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your encrypted data remains unchanged.\nTry again",
+    "retryBox": {
+      "x": 28,
+      "y": 393,
+      "width": 304,
+      "height": 56
+    },
+    "retryAfterBox": {
+      "x": 28,
+      "y": 419,
+      "width": 304,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "innerHeight": 640
+    },
+    "beforeHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "afterHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "ciphertextByteIdentical": true,
+    "contentKeyByteIdentical": true
+  },
+  {
+    "scenario": "settings-privacy-supported-floor-360x640",
+    "requestedUrl": "/settings/privacy",
+    "finalUrl": "http://127.0.0.1:8164/settings/privacy",
+    "viewport": {
+      "name": "supported-floor-360x640",
+      "width": 360,
+      "height": 640
+    },
+    "beforeText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nTry again",
+    "afterText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your encrypted data remains unchanged.\nTry again",
+    "retryBox": {
+      "x": 28,
+      "y": 393,
+      "width": 304,
+      "height": 56
+    },
+    "retryAfterBox": {
+      "x": 28,
+      "y": 419,
+      "width": 304,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "innerHeight": 640
+    },
+    "beforeHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "afterHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "ciphertextByteIdentical": true,
+    "contentKeyByteIdentical": true
+  },
+  {
+    "scenario": "progress-supported-floor-360x640",
+    "requestedUrl": "/progress",
+    "finalUrl": "http://127.0.0.1:8164/progress",
+    "viewport": {
+      "name": "supported-floor-360x640",
+      "width": 360,
+      "height": 640
+    },
+    "beforeText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nTry again",
+    "afterText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your encrypted data remains unchanged.\nTry again",
+    "retryBox": {
+      "x": 28,
+      "y": 393,
+      "width": 304,
+      "height": 56
+    },
+    "retryAfterBox": {
+      "x": 28,
+      "y": 419,
+      "width": 304,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "innerHeight": 640
+    },
+    "beforeHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "afterHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "ciphertextByteIdentical": true,
+    "contentKeyByteIdentical": true
+  },
+  {
+    "scenario": "today-modern-390x844",
+    "requestedUrl": "/today",
+    "finalUrl": "http://127.0.0.1:8164/today",
+    "viewport": {
+      "name": "modern-390x844",
+      "width": 390,
+      "height": 844
+    },
+    "beforeText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nTry again",
+    "afterText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your encrypted data remains unchanged.\nTry again",
+    "retryBox": {
+      "x": 28,
+      "y": 495,
+      "width": 334,
+      "height": 56
+    },
+    "retryAfterBox": {
+      "x": 28,
+      "y": 521,
+      "width": 334,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "innerHeight": 844
+    },
+    "beforeHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "afterHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "ciphertextByteIdentical": true,
+    "contentKeyByteIdentical": true
+  },
+  {
+    "scenario": "shelf-modern-390x844",
+    "requestedUrl": "/shelf",
+    "finalUrl": "http://127.0.0.1:8164/shelf",
+    "viewport": {
+      "name": "modern-390x844",
+      "width": 390,
+      "height": 844
+    },
+    "beforeText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nTry again",
+    "afterText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your encrypted data remains unchanged.\nTry again",
+    "retryBox": {
+      "x": 28,
+      "y": 495,
+      "width": 334,
+      "height": 56
+    },
+    "retryAfterBox": {
+      "x": 28,
+      "y": 521,
+      "width": 334,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "innerHeight": 844
+    },
+    "beforeHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "afterHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "ciphertextByteIdentical": true,
+    "contentKeyByteIdentical": true
+  },
+  {
+    "scenario": "routine-plan-modern-390x844",
+    "requestedUrl": "/routine/plan",
+    "finalUrl": "http://127.0.0.1:8164/routine/plan",
+    "viewport": {
+      "name": "modern-390x844",
+      "width": 390,
+      "height": 844
+    },
+    "beforeText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nTry again",
+    "afterText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your encrypted data remains unchanged.\nTry again",
+    "retryBox": {
+      "x": 28,
+      "y": 495,
+      "width": 334,
+      "height": 56
+    },
+    "retryAfterBox": {
+      "x": 28,
+      "y": 521,
+      "width": 334,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "innerHeight": 844
+    },
+    "beforeHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "afterHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "ciphertextByteIdentical": true,
+    "contentKeyByteIdentical": true
+  },
+  {
+    "scenario": "settings-privacy-modern-390x844",
+    "requestedUrl": "/settings/privacy",
+    "finalUrl": "http://127.0.0.1:8164/settings/privacy",
+    "viewport": {
+      "name": "modern-390x844",
+      "width": 390,
+      "height": 844
+    },
+    "beforeText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nTry again",
+    "afterText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your encrypted data remains unchanged.\nTry again",
+    "retryBox": {
+      "x": 28,
+      "y": 495,
+      "width": 334,
+      "height": 56
+    },
+    "retryAfterBox": {
+      "x": 28,
+      "y": 521,
+      "width": 334,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "innerHeight": 844
+    },
+    "beforeHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "afterHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "ciphertextByteIdentical": true,
+    "contentKeyByteIdentical": true
+  },
+  {
+    "scenario": "progress-modern-390x844",
+    "requestedUrl": "/progress",
+    "finalUrl": "http://127.0.0.1:8164/progress",
+    "viewport": {
+      "name": "modern-390x844",
+      "width": 390,
+      "height": 844
+    },
+    "beforeText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nTry again",
+    "afterText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your encrypted data remains unchanged.\nTry again",
+    "retryBox": {
+      "x": 28,
+      "y": 495,
+      "width": 334,
+      "height": 56
+    },
+    "retryAfterBox": {
+      "x": 28,
+      "y": 521,
+      "width": 334,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "innerHeight": 844
+    },
+    "beforeHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "afterHashes": {
+      "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+      "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+    },
+    "ciphertextByteIdentical": true,
+    "contentKeyByteIdentical": true
+  }
+]

@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-10T09:44:49.999Z
+Generated: 2026-07-10T10:26:26.982Z
 Status: pass
-Git SHA: fc54ef53c788a1db745188090cc60f184133a84e
+Git SHA: bcda7bba39c1e7b2c9224c04ad6abb05cadcc712
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -608,7 +608,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `674bd41d6a3099ee4bf4b150221ffd77e65353992c4364f5f92da12683f30c54`
+- Review snapshot SHA-256: `35a7afd15b42e2ba0d5b5bb4420f1c14158d445dda035196fdbca27c189928e3`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Must prove owner-scoped staging server data, seeded local coverage, redaction, and native cache cleanup.
@@ -618,8 +618,8 @@ Sources:
 - `apps/mobile/src/features/settings/actions.ts` - 5116 bytes - sha256 `a560c90bf06696f4ab9e4ace3298ec9648651bce425e73f01b25a28b3b89c9a0`
 - `apps/mobile/src/features/settings/localDeviceExport.ts` - 10663 bytes - sha256 `5553f474ebdff6bf5498565cecac5d6a787057e4a12b58cf4ffb8195c8560c81`
 - `apps/mobile/src/features/settings/localDeviceExport.test.ts` - 5680 bytes - sha256 `4dbbe2b3084f17923d989e80970b270f4f5846163ebd5c27e6e21b601a2ab9f7`
-- `apps/mobile/src/lib/storage/privateKV.ts` - 7520 bytes - sha256 `efe2d3a845492efa94abee9cf57c43fa9bda9f307e95a3af1910990cadfe42c6`
-- `apps/mobile/src/lib/storage/privateKV.test.ts` - 6900 bytes - sha256 `06b789ac267247e03da1c71f7441a6b5bdb88c825a33488cba20beabe39fd5d8`
+- `apps/mobile/src/lib/storage/privateKV.ts` - 7858 bytes - sha256 `bcddd13a05a9a42075efedd6aab23a559570c8ba358e521a48b182dd778c634e`
+- `apps/mobile/src/lib/storage/privateKV.test.ts` - 8293 bytes - sha256 `499c40ea88cff3ff5469fd6fd948fc8c3b07358d4926506ea6df464344abdd01`
 - `apps/mobile/src/lib/legal/policyLinks.ts` - 722 bytes - sha256 `0fe9cf269e6b5e48119771f7b111d1620c095ffe35bb6ac56f63c2cd2ec1c863`
 - `supabase/functions/account-deletion/index.ts` - 15927 bytes - sha256 `5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b`
 - `supabase/functions/data-export/index.ts` - 13117 bytes - sha256 `b8e484616581a970ae19d8f86b342eaddb24fa44a9ad1367936b24f0f8d84f1f`

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-10T09:44:49.999Z",
+  "generatedAt": "2026-07-10T10:26:26.982Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "fc54ef53c788a1db745188090cc60f184133a84e",
+  "gitSha": "bcda7bba39c1e7b2c9224c04ad6abb05cadcc712",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -1652,14 +1652,14 @@
         {
           "path": "apps/mobile/src/lib/storage/privateKV.ts",
           "exists": true,
-          "bytes": 7520,
-          "sha256": "efe2d3a845492efa94abee9cf57c43fa9bda9f307e95a3af1910990cadfe42c6"
+          "bytes": 7858,
+          "sha256": "bcddd13a05a9a42075efedd6aab23a559570c8ba358e521a48b182dd778c634e"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.test.ts",
           "exists": true,
-          "bytes": 6900,
-          "sha256": "06b789ac267247e03da1c71f7441a6b5bdb88c825a33488cba20beabe39fd5d8"
+          "bytes": 8293,
+          "sha256": "499c40ea88cff3ff5469fd6fd948fc8c3b07358d4926506ea6df464344abdd01"
         },
         {
           "path": "apps/mobile/src/lib/legal/policyLinks.ts",
@@ -1693,7 +1693,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "674bd41d6a3099ee4bf4b150221ffd77e65353992c4364f5f92da12683f30c54",
+      "reviewSnapshotSha256": "35a7afd15b42e2ba0d5b5bb4420f1c14158d445dda035196fdbca27c189928e3",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },

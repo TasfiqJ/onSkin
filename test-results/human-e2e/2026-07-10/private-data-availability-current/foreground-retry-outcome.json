@@ -1,0 +1,9 @@
+{
+  "url": "http://127.0.0.1:8166/shelf",
+  "bodyText": "Shelf\nempty for now\nLet's build your cabinet.\nAdd what you already use. Scan a barcode, or add it by hand. We'll handle freshness and clashes.\nScan a barcode\nAdd by hand\nToday\nProg.\nShelf\nYou",
+  "localStorage": {
+    "onskin.ramp.v1": "{\"version\":\"xchacha20poly1305:v1\",\"nonceHex\":\"d3931d1283ba8b611369a1b3a543f791b0578006f994ab8f\",\"ciphertextHex\":\"36202be26552b3426a126228137aea3dcdce4ad7defe5736d48b34b27d96c84710a184fa3f6de61847fc1a17102c4c215617813bb5d347dbbd04cac0872af95666bab3d7f0ff953287dbf76bd42016be8a56eca682fd6dd45169b0d26fdab993bd063c131ee7cd5d5c768b4d4846d563a2a653b2a65597a1e4014fa33e3e2eebf2f7574076803fe127bd1df621d1fa40fb324c852bb667e6b9266e1808bc99338fe564f55e4c551fe7bae9118ca7d1102a02bcc0dd8e8cf3bf35cf7a7645d14f5418e0848550dc3c80be07845e96c43043ec3cb767dc8b9f747502b3cfe01bc489c4de02d56fbbd8c2e575eac96fbf3215d02a6e2225684ec1a6d7f669f22022\"}",
+    "onskin.private_kv.content_key.v1": "1111111111111111111111111111111111111111111111111111111111111111",
+    "onskin.e2e.private_seed.v1": "{\"version\":\"xchacha20poly1305:v1\",\"nonceHex\":\"222222222222222222222222222222222222222222222222\",\"ciphertextHex\":\"f845816524cd91e6806f2ee9cd0bc89453e3a6f971ff8e854d3b048202852b533fa3df2cebd2a927890b0a4432580155542a3edfd59d52f0bac352f34ef1216b\"}"
+  }
+}

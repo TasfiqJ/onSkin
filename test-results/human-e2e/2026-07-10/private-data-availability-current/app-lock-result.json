@@ -1,0 +1,28 @@
+{
+  "requestedUrl": "/shelf",
+  "finalUrl": "http://127.0.0.1:8167/shelf",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "beforeText": "RoutineKind\nLocked. Unlock to continue\nUnlock",
+  "afterText": "RoutineKind\nLocked. Unlock to continue\nUnlock",
+  "geometry": {
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "innerHeight": 844
+  },
+  "beforeHashes": {
+    "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+    "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+  },
+  "afterHashes": {
+    "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+    "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+  },
+  "privateGateVisibleBeforeUnlock": false,
+  "privateGateVisibleAfterRejectedUnlock": false,
+  "ciphertextByteIdentical": true,
+  "contentKeyByteIdentical": true
+}

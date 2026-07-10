@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-07-10T09:44:58.993Z
+Generated: 2026-07-10T10:27:02.418Z
 Status: blocked
-Git SHA: fc54ef53c788a1db745188090cc60f184133a84e
+Git SHA: bcda7bba39c1e7b2c9224c04ad6abb05cadcc712
 Git status: clean
 Phase 9 packet status: blocked
 
@@ -74,8 +74,8 @@ Phase 9 packet status: blocked
 - `apps/mobile/src/lib/analytics/eventRegistry.ts`: `334b5b3a7a298d4820b4c888016f53a7a0610fd9c158ce6e81ebabfb3fae1ce6`
 - `apps/mobile/src/lib/analytics/track.ts`: `d613d0f4c9cb794b681b722850dc4b408d06eb8da0574f16681463d7b4c22be2`
 - `apps/mobile/src/lib/observability/scrub.ts`: `ad231f592848825dbeaffcbd960a31e0ae916fe7e1916ded939e9b0f79deabed`
-- `docs/phase-9/generated/release-engineering-qa-packet.json`: `a578ff328248ed21ee3e5b0f160895374da47a891bb3d44c121f2e74493fd080`
-- `docs/phase-9/generated/release-engineering-qa-packet.md`: `fc236ed6b2d29a8159cc4a2cd55e389a217953b5f4f8b8a8444b8b74db53c632`
+- `docs/phase-9/generated/release-engineering-qa-packet.json`: `acbef65e56b44669f30183c1712082f5f8a58876195ba780685400e2b92ccc63`
+- `docs/phase-9/generated/release-engineering-qa-packet.md`: `6d90851c4fd33b3008cfbe0d7d01e281c5567fd5193e7fa4f366cdf4ada94d83`
 - `docs/phase-10/beta-source-of-truth.md`: `88c3379dbc566fb97183916a476ebbd021fc40ffb72f6ae17f4e126deec32e35`
 - `docs/phase-10/tester-recruitment-sheet.md`: `9b5d0fe3e3f1564b01f74e5b662a61511a6d6676a1ba46b0b012531baaa654ba`
 - `docs/phase-10/tester-brief.md`: `6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16`

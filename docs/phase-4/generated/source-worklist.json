@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-10T09:44:52.287Z",
+  "generatedAt": "2026-07-10T10:26:34.524Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "fc54ef53c788a1db745188090cc60f184133a84e",
+  "gitSha": "bcda7bba39c1e7b2c9224c04ad6abb05cadcc712",
   "gitStatus": "",
   "summary": {
     "itemCount": 9,
@@ -77,8 +77,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 51540,
-          "sha256": "2b5a64e1a61a0b565cc0f02b2b6c49c699bf076acda6ede08544a701ee7cf75d"
+          "bytes": 52240,
+          "sha256": "58a542589c587e687b3eb66a25ad9c96e934064067bf0d5651c51c9fd07ebfde"
         }
       ]
     },
@@ -401,8 +401,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 51540,
-          "sha256": "2b5a64e1a61a0b565cc0f02b2b6c49c699bf076acda6ede08544a701ee7cf75d"
+          "bytes": 52240,
+          "sha256": "58a542589c587e687b3eb66a25ad9c96e934064067bf0d5651c51c9fd07ebfde"
         }
       ]
     },
@@ -831,8 +831,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 51540,
-          "sha256": "2b5a64e1a61a0b565cc0f02b2b6c49c699bf076acda6ede08544a701ee7cf75d"
+          "bytes": 52240,
+          "sha256": "58a542589c587e687b3eb66a25ad9c96e934064067bf0d5651c51c9fd07ebfde"
         }
       ]
     },
@@ -904,8 +904,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 51540,
-          "sha256": "2b5a64e1a61a0b565cc0f02b2b6c49c699bf076acda6ede08544a701ee7cf75d"
+          "bytes": 52240,
+          "sha256": "58a542589c587e687b3eb66a25ad9c96e934064067bf0d5651c51c9fd07ebfde"
         }
       ]
     }

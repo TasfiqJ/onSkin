@@ -1,0 +1,40 @@
+{
+  "scenario": "progress-modern-390x844",
+  "requestedUrl": "/progress",
+  "finalUrl": "http://127.0.0.1:8164/progress",
+  "viewport": {
+    "name": "modern-390x844",
+    "width": 390,
+    "height": 844
+  },
+  "beforeText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nTry again",
+  "afterText": "Private storage\nYour private data could not open.\nWe couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your encrypted data remains unchanged.\nTry again",
+  "retryBox": {
+    "x": 28,
+    "y": 495,
+    "width": 334,
+    "height": 56
+  },
+  "retryAfterBox": {
+    "x": 28,
+    "y": 521,
+    "width": 334,
+    "height": 56
+  },
+  "geometry": {
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "innerHeight": 844
+  },
+  "beforeHashes": {
+    "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+    "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+  },
+  "afterHashes": {
+    "contentKeySha256": "3138bb9bc78df27c473ecfd1410f7bd45ebac1f59cf3ff9cfe4db77aab7aedd3",
+    "envelopeSha256": "b047d7b332ad04f95f35ac35e529602cc6076cc3eb7073e98945d94be9d16cf1"
+  },
+  "ciphertextByteIdentical": true,
+  "contentKeyByteIdentical": true
+}

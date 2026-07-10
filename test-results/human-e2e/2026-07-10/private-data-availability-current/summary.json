@@ -1,0 +1,70 @@
+{
+  "status": "pass",
+  "verdict": "pass",
+  "date": "2026-07-10",
+  "sourceGitSha": "4ca67a8e9f4ff30043fa44ea77a3eb631fd71d14",
+  "surface": "Expo web development build",
+  "browser": "Google Chrome 150.0.7871.101 via bundled Playwright 1.61.1",
+  "fixtures": {
+    "persistentFailure": {
+      "origin": "http://127.0.0.1:8164",
+      "entitlement": "store_pro",
+      "appLockEnabled": true,
+      "appLockAuth": "success",
+      "storageFailure": "unavailable"
+    },
+    "oneShotRetry": {
+      "origin": "http://127.0.0.1:8165",
+      "appLockEnabled": false,
+      "storageFailure": "unavailable_once"
+    },
+    "foregroundRecheck": {
+      "origin": "http://127.0.0.1:8166",
+      "appLockEnabled": false,
+      "storageFailure": "foreground_once"
+    },
+    "appLockOrdering": {
+      "origin": "http://127.0.0.1:8167",
+      "appLockEnabled": true,
+      "appLockAuth": "not_authenticated",
+      "storageFailure": "unavailable"
+    }
+  },
+  "persistentFailureScenarios": 10,
+  "supportedViewports": [
+    "360 x 640",
+    "390 x 844"
+  ],
+  "routes": [
+    "/today",
+    "/shelf",
+    "/routine/plan",
+    "/settings/privacy",
+    "/progress"
+  ],
+  "oneShotRecoveryRoute": "/shelf",
+  "foregroundRecoveryRoute": "/shelf",
+  "minimumRetryTargetHeight": 56,
+  "failedScenarioCount": 0,
+  "falseEmptyOrSensitiveStateLeakCount": 0,
+  "rawErrorOrCiphertextLeakCount": 0,
+  "ciphertextMutationCount": 0,
+  "contentKeyMutationCount": 0,
+  "dialogCount": 0,
+  "pageErrorCount": 0,
+  "unexpectedErrorLogCount": 0,
+  "privacySensitiveVendorRequestCount": 0,
+  "horizontalOverflowCount": 0,
+  "bugsFoundAndFixed": [
+    {
+      "id": "private-data-foreground-route-reset",
+      "severity": "high",
+      "fixCommit": "4ca67a8e9f4ff30043fa44ea77a3eb631fd71d14"
+    }
+  ],
+  "remainingRisk": [
+    "Expo web does not prove native SecureStore, iOS Keychain, or Android Keystore fault behavior.",
+    "Physical iOS and Android staging builds must prove shared-key failures preserve every private envelope and exact route restoration.",
+    "VoiceOver and TalkBack announcement and focus behavior remain device QA."
+  ]
+}
