@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-10T04:54:57.344Z",
+  "generatedAt": "2026-07-10T06:23:46.911Z",
   "status": "pass",
   "strict": true,
   "summary": {
-    "performanceMetricCount": 6,
+    "performanceMetricCount": 7,
     "docsChecked": 12,
     "packageScriptsChecked": 9,
     "blockers": 0,
@@ -15,7 +15,8 @@
     "barcode lookup latency",
     "routine generation time",
     "local photo loading",
-    "memory use in photo timeline"
+    "memory use in photo timeline",
+    "photo_capture_analysis_ms"
   ],
   "packageScripts": [
     {
@@ -77,17 +78,17 @@
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
-      "checkedNeedles": 11,
+      "checkedNeedles": 12,
       "missing": []
     },
     {
       "path": "LAUNCH_READINESS.md",
-      "checkedNeedles": 9,
+      "checkedNeedles": 10,
       "missing": []
     },
     {
       "path": "BLOCKERS.md",
-      "checkedNeedles": 8,
+      "checkedNeedles": 9,
       "missing": []
     },
     {
@@ -107,7 +108,7 @@
     },
     {
       "path": "docs/phase-5/performance-evidence-runbook.md",
-      "checkedNeedles": 9,
+      "checkedNeedles": 10,
       "missing": []
     },
     {
@@ -117,7 +118,7 @@
     },
     {
       "path": "scripts/phase5/performance-evidence-contract.mjs",
-      "checkedNeedles": 7,
+      "checkedNeedles": 8,
       "missing": []
     },
     {
@@ -127,7 +128,7 @@
     },
     {
       "path": "docs/phase-5/performance-evidence.template.json",
-      "checkedNeedles": 4,
+      "checkedNeedles": 5,
       "missing": []
     }
   ],

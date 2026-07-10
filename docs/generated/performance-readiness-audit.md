@@ -1,6 +1,6 @@
 # Performance Readiness Audit
 
-Generated: 2026-07-10T04:54:57.344Z
+Generated: 2026-07-10T06:23:46.911Z
 Status: pass
 Strict mode: yes
 
@@ -13,7 +13,7 @@ local photo loading, and photo timeline memory evidence.
 
 ## Summary
 
-- Performance metrics: 6
+- Performance metrics: 7
 - Docs checked: 12
 - Package scripts checked: 9
 - Blockers: 0
@@ -27,6 +27,7 @@ local photo loading, and photo timeline memory evidence.
 - routine generation time
 - local photo loading
 - memory use in photo timeline
+- photo_capture_analysis_ms
 
 ## Package Scripts
 
@@ -55,17 +56,17 @@ local photo loading, and photo timeline memory evidence.
 | Doc                                              | Needles | Missing |
 | ------------------------------------------------ | ------- | ------- |
 | docs/TESTING_STRATEGY.md                         | 13      | none    |
-| docs/FOR_TAS_TO_DO.md                            | 11      | none    |
-| LAUNCH_READINESS.md                              | 9       | none    |
-| BLOCKERS.md                                      | 8       | none    |
+| docs/FOR_TAS_TO_DO.md                            | 12      | none    |
+| LAUNCH_READINESS.md                              | 10      | none    |
+| BLOCKERS.md                                      | 9       | none    |
 | docs/00-architecture.md                          | 3       | none    |
 | docs/04-smart-shelf.md                           | 2       | none    |
 | docs/06-photo-progress.md                        | 2       | none    |
-| docs/phase-5/performance-evidence-runbook.md     | 9       | none    |
+| docs/phase-5/performance-evidence-runbook.md     | 10      | none    |
 | scripts/phase5/check-performance-evidence.mjs    | 4       | none    |
-| scripts/phase5/performance-evidence-contract.mjs | 7       | none    |
+| scripts/phase5/performance-evidence-contract.mjs | 8       | none    |
 | scripts/phase5/performance-evidence-smoke.mjs    | 7       | none    |
-| docs/phase-5/performance-evidence.template.json  | 4       | none    |
+| docs/phase-5/performance-evidence.template.json  | 5       | none    |
 
 ## Blockers
 

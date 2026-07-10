@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-07-10T04:52:50.994Z",
+  "generatedAt": "2026-07-10T06:23:46.922Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-10",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 173,
-  "expectedMobileTests": 1786,
-  "actualMobileTestFiles": 173,
-  "expectedTestPhrase": "173 mobile test files / 1786 tests",
+  "expectedMobileTestFiles": 175,
+  "expectedMobileTests": 1792,
+  "actualMobileTestFiles": 175,
+  "expectedTestPhrase": "175 mobile test files / 1792 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -51,7 +51,9 @@
         "text-pressure-200-android-412-915-postfix2",
         "text-pressure-200-boundary-414-896-postfix3",
         "390 x 844 local Progress time-lapse",
-        "progress-timelapse-current"
+        "progress-timelapse-current",
+        "Progress quality states and support-floor save recovery",
+        "progress-capture-analysis-current"
       ],
       "stalePatterns": [],
       "missingCommands": []

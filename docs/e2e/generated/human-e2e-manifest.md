@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-10T04:52:43.846Z
-Git SHA: dba5d92babc0ec58e3e6c328ace2a8089f63e2c2
+Generated: 2026-07-10T06:22:52.707Z
+Git SHA: cebeb2af8f592963f5256af14ec8911633e2a122
 Evidence date: 2026-07-10
 Baseline suite date: 2026-07-09
 Status: pass
@@ -40,6 +40,7 @@ dependency to the repo.
 | 320 x 390 split-short stress clearance                           | resilience      | pass   | 0 failures recorded.                   | 101   | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix     |
 | 320 x 430 first-session activation stress pass                   | resilience      | pass   | summary verdict: pass.                 | 58    | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current                 |
 | 390 x 844 local Progress time-lapse and reduced-motion pass      | supported-phone | pass   | summary status: pass.                  | 17    | test-results/human-e2e/2026-07-10/progress-timelapse-current                           |
+| Progress quality states and support-floor save recovery          | supported-phone | pass   | summary status: pass.                  | 19    | test-results/human-e2e/2026-07-10/progress-capture-analysis-current                    |
 
 ## Warnings
 

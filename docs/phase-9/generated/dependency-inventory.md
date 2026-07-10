@@ -1,12 +1,12 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-07-09T12:13:02.783Z
-Package count: 1073
+Generated: 2026-07-10T06:22:53.659Z
+Package count: 1082
 Lockfile version: 3
 
 ## Vulnerabilities
 
-- npm audit not run in this invocation.
+`{"info":0,"low":0,"moderate":0,"high":0,"critical":0,"total":0}`
 
 ## Audit Findings
 
@@ -26,7 +26,6 @@ Lockfile version: 3
 
 ## Warnings
 
-- npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.
 - Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.
 
 ## Packages
@@ -122,14 +121,9 @@ Lockfile version: 3
 - `@expo-google-fonts/ibm-plex-mono` 0.4.1
 - `@expo-google-fonts/instrument-serif` 0.4.1
 - `@expo-google-fonts/material-symbols` 0.4.38
-- `@expo/cli` 56.1.18
-- `@expo/cli/node_modules/@expo/env` 2.3.1
-- `@expo/cli/node_modules/@expo/router-server` 56.0.15
-- `@expo/cli/node_modules/semver` 7.8.5
-- `@expo/cli/node_modules/zod` 3.25.76
 - `@expo/code-signing-certificates` 0.0.6
 - `@expo/config` 56.0.11
-- `@expo/config-plugins` 56.0.11
+- `@expo/config-plugins` 56.0.12
 - `@expo/config-plugins/node_modules/semver` 7.8.4
 - `@expo/config-types` 56.0.7
 - `@expo/config/node_modules/semver` 7.8.5
@@ -139,7 +133,7 @@ Lockfile version: 3
 - `@expo/dom-webview` 56.0.6
 - `@expo/env` 2.4.1
 - `@expo/expo-modules-macros-plugin` 0.2.2
-- `@expo/fingerprint` 0.19.6
+- `@expo/fingerprint` 0.19.7
 - `@expo/fingerprint/node_modules/balanced-match` 4.0.4
 - `@expo/fingerprint/node_modules/brace-expansion` 5.0.7
 - `@expo/fingerprint/node_modules/minimatch` 10.2.5
@@ -159,14 +153,14 @@ Lockfile version: 3
 - `@expo/package-manager` 1.13.0
 - `@expo/package-manager/node_modules/@expo/json-file` 11.0.0
 - `@expo/plist` 0.7.0
-- `@expo/prebuild-config` 56.0.18
+- `@expo/prebuild-config` 56.0.19
 - `@expo/prebuild-config/node_modules/semver` 7.8.5
 - `@expo/require-utils` 56.1.4
 - `@expo/schema-utils` 56.0.2
 - `@expo/sdk-runtime-versions` 1.0.0
 - `@expo/spawn-async` 1.8.0
 - `@expo/sudo-prompt` 9.3.2
-- `@expo/ui` 56.0.20
+- `@expo/ui` 56.0.21
 - `@expo/ws-tunnel` 2.0.0
 - `@expo/xcpretty` 4.4.4
 - `@humanfs/core` 0.19.2
@@ -174,6 +168,8 @@ Lockfile version: 3
 - `@humanfs/types` 0.15.0
 - `@humanwhocodes/module-importer` 1.0.1
 - `@humanwhocodes/retry` 0.4.3
+- `@infinitered/react-native-mlkit-face-detection` 5.0.0
+- `@infinitered/react-native-mlkit-face-detection/node_modules/@infinitered/react-native-mlkit-core` 5.0.0
 - `@isaacs/ttlcache` 1.4.1
 - `@jest/schemas` 29.6.3
 - `@jest/types` 29.6.3
@@ -198,15 +194,19 @@ Lockfile version: 3
 - `@radix-ui/react-collection` 1.1.9
 - `@radix-ui/react-compose-refs` 1.1.3
 - `@radix-ui/react-context` 1.1.4
-- `@radix-ui/react-dialog` 1.1.18
+- `@radix-ui/react-dialog` 1.1.19
+- `@radix-ui/react-dialog/node_modules/@radix-ui/primitive` 1.1.5
+- `@radix-ui/react-dialog/node_modules/@radix-ui/react-context` 1.2.0
+- `@radix-ui/react-dialog/node_modules/@radix-ui/react-presence` 1.1.7
 - `@radix-ui/react-dialog/node_modules/@radix-ui/react-primitive` 2.1.7
 - `@radix-ui/react-dialog/node_modules/@radix-ui/react-slot` 1.3.0
 - `@radix-ui/react-direction` 1.1.2
-- `@radix-ui/react-dismissable-layer` 1.1.14
+- `@radix-ui/react-dismissable-layer` 1.1.15
+- `@radix-ui/react-dismissable-layer/node_modules/@radix-ui/primitive` 1.1.5
 - `@radix-ui/react-dismissable-layer/node_modules/@radix-ui/react-primitive` 2.1.7
 - `@radix-ui/react-dismissable-layer/node_modules/@radix-ui/react-slot` 1.3.0
 - `@radix-ui/react-focus-guards` 1.1.4
-- `@radix-ui/react-focus-scope` 1.1.11
+- `@radix-ui/react-focus-scope` 1.1.12
 - `@radix-ui/react-focus-scope/node_modules/@radix-ui/react-primitive` 2.1.7
 - `@radix-ui/react-focus-scope/node_modules/@radix-ui/react-slot` 1.3.0
 - `@radix-ui/react-id` 1.1.2
@@ -406,7 +406,7 @@ Lockfile version: 3
 - `babel-plugin-react-native-web` 0.21.2
 - `babel-plugin-syntax-hermes-parser` 0.33.3
 - `babel-plugin-transform-flow-enums` 0.0.2
-- `babel-preset-expo` 56.0.16
+- `babel-preset-expo` 56.0.17
 - `badgin` 1.2.3
 - `balanced-match` 1.0.2
 - `barcode-detector` 3.2.0
@@ -535,10 +535,10 @@ Lockfile version: 3
 - `etag` 1.8.1
 - `event-target-shim` 5.0.1
 - `expect-type` 1.3.0
-- `expo` 56.0.14
+- `expo` 56.0.15
 - `expo-apple-authentication` 56.0.4
 - `expo-application` 56.0.3
-- `expo-asset` 56.0.18
+- `expo-asset` 56.0.19
 - `expo-build-properties` 56.0.22
 - `expo-build-properties/node_modules/semver` 7.8.5
 - `expo-camera` 56.0.8
@@ -555,26 +555,33 @@ Lockfile version: 3
 - `expo-glass-effect` 56.0.4
 - `expo-haptics` 56.0.3
 - `expo-image` 56.0.11
+- `expo-image-loader` 56.0.3
+- `expo-image-manipulator` 56.0.21
 - `expo-json-utils` 56.0.0
 - `expo-keep-awake` 56.0.3
 - `expo-linking` 56.0.15
 - `expo-local-authentication` 56.0.4
 - `expo-localization` 56.0.6
 - `expo-manifests` 56.0.4
-- `expo-modules-autolinking` 56.0.18
-- `expo-modules-core` 56.0.19
-- `expo-modules-jsi` 56.0.11
-- `expo-notifications` 56.0.19
-- `expo-router` 56.2.13
+- `expo-modules-autolinking` 56.0.19
+- `expo-modules-core` 56.0.20
+- `expo-modules-jsi` 56.0.12
+- `expo-notifications` 56.0.20
+- `expo-router` 56.2.14
 - `expo-secure-store` 56.0.4
 - `expo-server` 56.0.5
-- `expo-sharing` 56.0.20
+- `expo-sharing` 56.0.21
 - `expo-splash-screen` 56.0.12
 - `expo-status-bar` 56.0.4
 - `expo-symbols` 56.0.6
 - `expo-system-ui` 56.0.5
 - `expo-updates-interface` 56.0.2
 - `expo-web-browser` 56.0.5
+- `expo/node_modules/@expo/cli` 56.1.19
+- `expo/node_modules/@expo/cli/node_modules/@expo/router-server` 56.0.16
+- `expo/node_modules/@expo/env` 2.3.1
+- `expo/node_modules/semver` 7.8.5
+- `expo/node_modules/zod` 3.25.76
 - `exponential-backoff` 3.1.3
 - `fast-base64-decode` 1.0.0
 - `fast-deep-equal` 3.1.3
@@ -702,6 +709,7 @@ Lockfile version: 3
 - `jest-worker/node_modules/supports-color` 8.1.1
 - `jimp-compact` 0.16.1
 - `jiti` 1.21.7
+- `jpeg-js` 0.4.4
 - `js-tokens` 4.0.0
 - `js-yaml` 4.2.0
 - `jsc-safe-url` 0.2.4

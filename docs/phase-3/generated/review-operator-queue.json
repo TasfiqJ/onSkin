@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-10T04:52:44.769Z",
+  "generatedAt": "2026-07-10T06:23:11.006Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "dba5d92babc0ec58e3e6c328ace2a8089f63e2c2",
+  "gitSha": "cebeb2af8f592963f5256af14ec8911633e2a122",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 88680,
-    "sha256": "3656aaa2240df3b34a9896769e148c9116a427f8ab85ead293bb24934810a3e4",
-    "currentSha256": "3656aaa2240df3b34a9896769e148c9116a427f8ab85ead293bb24934810a3e4"
+    "bytes": 88682,
+    "sha256": "5a9b9137f44d8a7b46a05ce2fb535fde70be06c006ef9280b1ae582535da6c1a",
+    "currentSha256": "5a9b9137f44d8a7b46a05ce2fb535fde70be06c006ef9280b1ae582535da6c1a"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -853,7 +853,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "06d2dd8f5a55a810f4aa526c74cfaa328f359fedc5c9aebe69ac23754ba94dae",
+      "reviewSnapshotSha256": "1d62b957566c1c8f96a977415305a0c536e602da3942b4114ed0e51205683954",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -906,8 +906,8 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 9264,
-          "sha256": "5354742005c5a08c9e9816e758d853c2c99dddeab04e50110547573c5d6566c2"
+          "bytes": 10352,
+          "sha256": "d4dc562e780d6e4bc9d9c35b5b1d54baac39bed67beb7c03d4e18ec63af24bad"
         }
       ]
     },
@@ -924,7 +924,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "e427fd8224ae13b9ce59a35b21aa011751619dbd77bf2dcec8711c580ee3cd99",
+      "reviewSnapshotSha256": "5a9feadb2b02b2119cd5391d369872d7e27a3a870344c6554a024f9599df1045",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -941,8 +941,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 6084,
-          "sha256": "03762321e8e0a6c70d3960e2e58e06547a02df8611ab890b7bbe58fa2792a3e0"
+          "bytes": 10894,
+          "sha256": "d108c737166af45d9a4dbe7b44b32dc5726e3efc485a660ee70e50818ea2d797"
         },
         {
           "path": "apps/mobile/src/features/onboarding/consentCopy.ts",
@@ -1242,7 +1242,7 @@
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "a409bbb71e8b5b77d5567dd7daee6de09884daa1fbc290c5625aa56c1d5bacfb",
+      "reviewSnapshotSha256": "bbcaffd065c90497e7fde414c3336054531649b351ca8eb736a71325483abc6b",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1253,8 +1253,8 @@
         {
           "path": "apps/mobile/src/features/photos/copy.ts",
           "exists": true,
-          "bytes": 7253,
-          "sha256": "a18bd8c9354ec64db148c6eb249ea42bccecbfda6adecf5e77e718ddc78b1284"
+          "bytes": 7337,
+          "sha256": "4addec8b83d7eaaa6a3cd02e0db656016df154997274e3315d775ebc38b20152"
         }
       ]
     },
@@ -1430,7 +1430,7 @@
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "3f2644d04c844cb142e6842536142a39c73dd5935f762f0c8a49a9b54da9aba0",
+      "reviewSnapshotSha256": "4e7da28a09de281b79483a56b80887dc28c96e84afbb089a73ad19ed167c4eb8",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1441,8 +1441,8 @@
         {
           "path": "packages/types/src/index.ts",
           "exists": true,
-          "bytes": 19164,
-          "sha256": "2c767bf50e1551affbbd5e71fd0d3243b4f691b222ced986b21e1afbfc3c1b5a"
+          "bytes": 19206,
+          "sha256": "241dc550353903b7f111f13df80ee35bb5a24c8f0dd99e7c2bde7ddd89b72f1e"
         }
       ]
     },
@@ -2105,7 +2105,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "b480020b32cf17a861a3bc4d1d7b8d924f85f4a4c86dfaa808ec8bfc393824b3",
+      "reviewSnapshotSha256": "5b0a5ea40dc115b4e68d1514a2182b86a43c9fd88d257ad7f11dca592d28b2ff",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2122,14 +2122,14 @@
         {
           "path": "apps/mobile/src/lib/analytics/track.test.ts",
           "exists": true,
-          "bytes": 8374,
-          "sha256": "2c3daf2152bacd88b4ea5d38742dbf4d79de7cd1817e06038f0ab05b7c28b7ca"
+          "bytes": 8479,
+          "sha256": "3793abf29bbcb2b1aed4103dfa86436f148982dae9d0719a09c23d9485e1aff7"
         },
         {
           "path": "apps/mobile/src/lib/analytics/track.ts",
           "exists": true,
-          "bytes": 6425,
-          "sha256": "ed245b527e56cbe27b34961044d2bbe41b6621357915ac1827f2299489bab886"
+          "bytes": 6473,
+          "sha256": "d613d0f4c9cb794b681b722850dc4b408d06eb8da0574f16681463d7b4c22be2"
         },
         {
           "path": "apps/mobile/src/lib/observability/safeLog.test.ts",
@@ -2188,7 +2188,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "399529912e12153e1a68fef04d8905c824d23af2af64af3ff58b2e2c7c35d933",
+      "reviewSnapshotSha256": "b7ecfb5c07f7e54a48cba63a82f474e46d63b2d1cd2518f9a8d147d96870a69b",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2199,8 +2199,8 @@
         {
           "path": "docs/06-photo-progress.md",
           "exists": true,
-          "bytes": 46262,
-          "sha256": "7508f8cc9d6ced241d3f2005de29b5fb3bca88cddadce3dffd5ed57b58cd62dd"
+          "bytes": 46812,
+          "sha256": "a4c221cd42c35f89bf82baf31518704cfdb5b7e1512fea41750846f4891b96fd"
         },
         {
           "path": "apps/mobile/src/features/photos/consent.ts",
@@ -2217,8 +2217,8 @@
         {
           "path": "apps/mobile/src/features/photos/store.ts",
           "exists": true,
-          "bytes": 10759,
-          "sha256": "6fe72c87f652bbcc69ad6c947fb8742224647acd8c63f7f4e276044611379ec6"
+          "bytes": 11516,
+          "sha256": "afbc8e39219daf7d5b4c6521b247df7dcf4edcaf206cb787ccfe80965b2daac6"
         }
       ]
     },

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-10T04:52:43.846Z",
-  "gitSha": "dba5d92babc0ec58e3e6c328ace2a8089f63e2c2",
+  "generatedAt": "2026-07-10T06:22:52.707Z",
+  "gitSha": "cebeb2af8f592963f5256af14ec8911633e2a122",
   "evidenceDate": "2026-07-10",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -480,6 +480,25 @@
       "fileCount": 17,
       "bytes": 240576,
       "evidenceSha256": "7f4c335f9aad8c9ed1172c7bffa4a4dbd160849d15af9cabbca04fde8d7a0926"
+    },
+    {
+      "id": "progress-capture-analysis-supported-phone",
+      "title": "Progress quality states and support-floor save recovery",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/progress-capture-analysis-current",
+      "evidence": "summary.json",
+      "expected": "390 x 844 quality states stay explicit and operable; 360 x 640 save failure stays inline and recoverable.",
+      "status": "pass",
+      "detail": "summary status: pass.",
+      "failureCount": null,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 19,
+      "bytes": 333347,
+      "evidenceSha256": "b534c021fa7bb4d9a8e89320d4fe3940ff50d92b3b7ab4b66982bcadfcce6047"
     }
   ],
   "warnings": [
