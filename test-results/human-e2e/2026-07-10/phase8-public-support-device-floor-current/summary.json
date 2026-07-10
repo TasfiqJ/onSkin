@@ -1,0 +1,11 @@
+{
+  "baseUrl": "http://127.0.0.1:8364",
+  "evidenceDir": "C:\\Users\\jasim\\Desktop\\onSkin\\test-results\\human-e2e\\2026-07-10\\phase8-public-support-device-floor-current",
+  "generatedAt": "2026-07-10T01:02:36.386Z",
+  "status": "pass",
+  "viewport": {
+    "height": 700,
+    "width": 390
+  },
+  "problemLogCount": 0
+}

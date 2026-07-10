@@ -174,6 +174,28 @@ for (const file of publicSiteFiles) {
   );
 }
 
+const supportPage = read('docs/phase-8/public-site/support.html');
+for (const requiredCopy of [
+  'Supported devices',
+  'iOS 17.0+',
+  '375 pt',
+  'Android 10 / API 29+',
+  '360 dp',
+  '360 x 640',
+  'stress coverage only',
+]) {
+  fail(
+    supportPage.includes(requiredCopy),
+    `Support page must disclose V1 device support floor copy: ${requiredCopy}.`,
+  );
+}
+fail(
+  /Tablets,\s+foldables,\s+landscape,\s+split-screen,\s+and smaller phones are not part of the V1\s+support floor\./m.test(
+    supportPage,
+  ),
+  'Support page must disclose tablet/foldable/landscape/split-screen and smaller-phone support limits.',
+);
+
 fail(
   has('apps/mobile/app.config.js', /associatedDomains/),
   'app.config.js must configure iOS associated domains.',

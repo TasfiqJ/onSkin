@@ -1,0 +1,15 @@
+{
+  "bodyScrollWidth": 390,
+  "headingText": [
+    "Support",
+    "Supported devices",
+    "Short screens"
+  ],
+  "horizontalOverflow": 0,
+  "innerHeight": 700,
+  "innerWidth": 390,
+  "links": [],
+  "location": "http://127.0.0.1:8364/support.html",
+  "text": "Support For account, billing, export, deletion, or product questions, contact the monitored support address listed in the app store profile. Subscription billing is managed by Apple or Google. Deleting your account does not cancel store billing. Supported devices RoutineKind V1 supports iOS 17.0+ on iPhones 375 pt wide or wider and Android 10 / API 29+ phones with a 360 dp smallest width or wider. Tablets, foldables, landscape, split-screen, and smaller phones are not part of the V1 support floor. Short screens The app is tested against a 360 x 640 compact-phone floor. Smaller 320-wide browser checks are stress coverage only, unless the same issue appears on a supported phone or is required by app review or accessibility testing.",
+  "title": "RoutineKind Support"
+}

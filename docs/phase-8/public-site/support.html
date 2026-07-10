@@ -39,6 +39,23 @@
         color: #756b61;
         line-height: 1.55;
       }
+      .support-list {
+        display: grid;
+        gap: 14px;
+        margin-top: 28px;
+      }
+      .support-row {
+        border-top: 1px solid rgba(32, 27, 21, 0.14);
+        padding-top: 14px;
+      }
+      .support-row h2 {
+        margin: 0 0 6px;
+        font-size: 18px;
+        letter-spacing: 0;
+      }
+      .support-row p {
+        margin: 0;
+      }
       a {
         color: #201b15;
         font-weight: 700;
@@ -64,6 +81,25 @@
           Subscription billing is managed by Apple or Google. Deleting your account does not cancel
           store billing.
         </p>
+        <div class="support-list" aria-label="Support topics">
+          <article class="support-row">
+            <h2>Supported devices</h2>
+            <p>
+              RoutineKind V1 supports iOS 17.0+ on iPhones 375 pt wide or wider and
+              Android 10 / API 29+ phones with a 360 dp smallest width or wider. Tablets,
+              foldables, landscape, split-screen, and smaller phones are not part of the V1
+              support floor.
+            </p>
+          </article>
+          <article class="support-row">
+            <h2>Short screens</h2>
+            <p>
+              The app is tested against a 360 x 640 compact-phone floor. Smaller 320-wide
+              browser checks are stress coverage only, unless the same issue appears on a
+              supported phone or is required by app review or accessibility testing.
+            </p>
+          </article>
+        </div>
       </section>
     </main>
     <script>

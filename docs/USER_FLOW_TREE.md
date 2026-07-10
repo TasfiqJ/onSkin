@@ -462,8 +462,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: Serve `docs/phase-8/public-site` locally, open `index.html`, `share.html`, `support.html`, and `waitlist.html` at phone width, and inspect titles plus visible copy.
-  - Expected result: The static launch pages use `RoutineKind`, show no legacy `OnSkin`, preserve the no-score/not-medical-advice boundaries, and keep final app association IDs as placeholders until store-console identity is cleared.
+  - Expected result: The static launch pages use `RoutineKind`, show no legacy `OnSkin`, preserve the no-score/not-medical-advice boundaries, keep final app association IDs as placeholders until store-console identity is cleared, and disclose the V1 support floor on support.html: iOS 17.0+, Android 10 / API 29+, iPhone 375 pt+, Android 360 dp+, 360 x 640 compact-phone testing, no V1 tablet/foldable/landscape/split-screen support, and 320-wide browser checks as stress coverage only.
   - Evidence: Phone-width screenshots, visible-text snapshots, static-server transcript, and brand audit output.
+  - Current local evidence: 2026-07-10 headless Chrome opened `support.html` from the static Phase 8 public site at 390 x 700, verified the visible support copy includes RoutineKind's V1 device floor (iOS 17.0+, iPhone 375 pt+, Android 10 / API 29+, Android 360 dp+), the 360 x 640 compact-phone test floor, no V1 tablet/foldable/landscape/split-screen/smaller-phone support, and 320-wide browser checks as stress coverage only. The pass recorded zero horizontal overflow, no visible legacy `OnSkin`, no raw `__SUPPORT_EMAIL__` token, no placeholder mailto link, and zero browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-10/phase8-public-support-device-floor-current/`.
 - Branch: Phase 8 public-site placeholder store links
   - Priority: Critical
   - Automate later: Yes
