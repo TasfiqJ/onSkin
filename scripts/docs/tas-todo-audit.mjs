@@ -125,6 +125,7 @@ function isLocalOnlyGeneratedKey(key) {
     key === 'PHASE3_REVIEW_WORKLIST_MD' ||
     key === 'PHASE4_SOURCE_WORKLIST_JSON' ||
     key === 'PHASE4_SOURCE_WORKLIST_MD' ||
+    key === 'PHASE5_PERFORMANCE_TEMPLATE_PATH' ||
     key === 'PHASE8_STORE_METADATA_PACKET' ||
     key === 'PHASE9_RELEASE_CANDIDATE_DIR'
   );

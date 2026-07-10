@@ -1,0 +1,410 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": null,
+  "gitSha": null,
+  "thresholdsDefinedAt": null,
+  "thresholdsDefinedBy": null,
+  "devices": {
+    "ios": {
+      "physical": true,
+      "buildId": null,
+      "deviceModel": null,
+      "osVersion": "iOS 17.0 or newer",
+      "logicalWidth": 375,
+      "usableHeight": 667
+    },
+    "android": {
+      "physical": true,
+      "buildId": null,
+      "deviceModel": null,
+      "osVersion": "Android 10 or newer",
+      "logicalWidth": 360,
+      "usableHeight": 640
+    }
+  },
+  "photoDataset": {
+    "encryptedPhotoCount": 50,
+    "source": null,
+    "plaintextDeletedAfterImport": true,
+    "zeroCrashes": null,
+    "zeroOsTerminations": null
+  },
+  "thresholds": {
+    "app_startup_cold_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "product_add_manual_three_products_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "product_add_search_three_products_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "product_add_barcode_three_products_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "product_add_ocr_manual_fallback_three_products_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "barcode_camera_acquisition_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "barcode_decode_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "barcode_lookup_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "barcode_no_match_recovery_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "routine_generation_three_products_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "routine_generation_five_products_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "routine_generation_ten_products_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "photo_timeline_first_render_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "photo_timeline_restart_first_render_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "photo_timeline_compare_open_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "photo_timeline_peak_memory_mb": {
+      "unit": "mb",
+      "maxP95": null,
+      "rationale": null
+    }
+  },
+  "measurements": [
+    {
+      "platform": "ios",
+      "metric": "app_startup_cold_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "product_add_manual_three_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "product_add_search_three_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "product_add_barcode_three_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "product_add_ocr_manual_fallback_three_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "barcode_camera_acquisition_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "barcode_decode_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "barcode_lookup_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "barcode_no_match_recovery_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "routine_generation_three_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "routine_generation_five_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "routine_generation_ten_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "photo_timeline_first_render_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "photo_timeline_restart_first_render_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "photo_timeline_compare_open_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "photo_timeline_peak_memory_mb",
+      "source": "native_profiler",
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "app_startup_cold_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "product_add_manual_three_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "product_add_search_three_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "product_add_barcode_three_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "product_add_ocr_manual_fallback_three_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "barcode_camera_acquisition_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "barcode_decode_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "barcode_lookup_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "barcode_no_match_recovery_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "routine_generation_three_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "routine_generation_five_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "routine_generation_ten_products_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "photo_timeline_first_render_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "photo_timeline_restart_first_render_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "photo_timeline_compare_open_ms",
+      "source": null,
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "photo_timeline_peak_memory_mb",
+      "source": "native_profiler",
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    }
+  ],
+  "knownCaveats": [],
+  "signoff": {
+    "decision": null,
+    "signedOffBy": null,
+    "signedAt": null
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-09T20:45:32.110Z",
+  "generatedAt": "2026-07-10T02:20:12.796Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates, current device support floors, and generate an exact key inventory from phase scripts.",
@@ -31,9 +31,9 @@
   "summary": {
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
-    "extractedKeyCount": 237,
-    "localOnlyKeyCount": 14,
-    "keyMentionCount": 237,
+    "extractedKeyCount": 238,
+    "localOnlyKeyCount": 15,
+    "keyMentionCount": 238,
     "keyNotMentionedCount": 0,
     "blockerCount": 0,
     "warningCount": 0
@@ -270,6 +270,7 @@
       ],
       "forTasCovered": true,
       "localOnlyKeys": [
+        "PHASE5_PERFORMANCE_TEMPLATE_PATH",
         "PHASE5_QA_PACKET_OUT_DIR"
       ],
       "keys": [
@@ -286,6 +287,7 @@
         "PHASE5_LABEL_CAPTURE_QA_PASS",
         "PHASE5_NATIVE_OCR_QA_PASS",
         "PHASE5_NOTIFICATION_QA_PASS",
+        "PHASE5_PERFORMANCE_EVIDENCE_PATH",
         "PHASE5_PROGRESS_PHOTO_QA_PASS",
         "PHASE5_QA_SIGNOFF",
         "PHASE5_REVENUECAT_NATIVE_QA_PASS",
@@ -308,6 +310,7 @@
         "PHASE5_LABEL_CAPTURE_QA_PASS",
         "PHASE5_NATIVE_OCR_QA_PASS",
         "PHASE5_NOTIFICATION_QA_PASS",
+        "PHASE5_PERFORMANCE_EVIDENCE_PATH",
         "PHASE5_PROGRESS_PHOTO_QA_PASS",
         "PHASE5_QA_SIGNOFF",
         "PHASE5_REVENUECAT_NATIVE_QA_PASS",

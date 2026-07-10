@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-07-10T01:56:01.204Z",
+  "generatedAt": "2026-07-10T02:20:09.740Z",
   "status": "pass",
   "strict": true,
   "summary": {
     "performanceMetricCount": 6,
-    "docsChecked": 7,
-    "packageScriptsChecked": 3,
+    "docsChecked": 12,
+    "packageScriptsChecked": 8,
     "blockers": 0,
     "warnings": 0
   },
@@ -29,23 +29,51 @@
     {
       "scriptName": "docs:performance-readiness-audit:check",
       "present": true
+    },
+    {
+      "scriptName": "phase5:performance-evidence",
+      "present": true
+    },
+    {
+      "scriptName": "phase5:performance-evidence:strict",
+      "present": true
+    },
+    {
+      "scriptName": "phase5:performance-evidence:smoke",
+      "present": true
+    },
+    {
+      "scriptName": "phase5:performance-evidence:template",
+      "present": true
+    },
+    {
+      "scriptName": "phase5:performance-evidence:template:check",
+      "present": true
     }
   ],
   "launchVerify": [
     {
       "scriptPart": "docs:performance-readiness-audit:check",
       "present": true
+    },
+    {
+      "scriptPart": "phase5:performance-evidence:template:check",
+      "present": true
+    },
+    {
+      "scriptPart": "phase5:performance-evidence",
+      "present": true
     }
   ],
   "docs": [
     {
       "path": "docs/TESTING_STRATEGY.md",
-      "checkedNeedles": 8,
+      "checkedNeedles": 10,
       "missing": []
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
-      "checkedNeedles": 13,
+      "checkedNeedles": 9,
       "missing": []
     },
     {
@@ -71,6 +99,31 @@
     {
       "path": "docs/06-photo-progress.md",
       "checkedNeedles": 2,
+      "missing": []
+    },
+    {
+      "path": "docs/phase-5/performance-evidence-runbook.md",
+      "checkedNeedles": 6,
+      "missing": []
+    },
+    {
+      "path": "scripts/phase5/check-performance-evidence.mjs",
+      "checkedNeedles": 3,
+      "missing": []
+    },
+    {
+      "path": "scripts/phase5/performance-evidence-contract.mjs",
+      "checkedNeedles": 4,
+      "missing": []
+    },
+    {
+      "path": "scripts/phase5/performance-evidence-smoke.mjs",
+      "checkedNeedles": 3,
+      "missing": []
+    },
+    {
+      "path": "docs/phase-5/performance-evidence.template.json",
+      "checkedNeedles": 4,
       "missing": []
     }
   ],

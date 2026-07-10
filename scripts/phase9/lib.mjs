@@ -247,8 +247,12 @@ export function blockPublicEnvSecrets(errors, env, exampleEnv = {}) {
 }
 
 export function command(commandName, args, options = {}) {
-  return execFileSync(commandName, args, {
-    cwd: root,
+  const cwd = options.cwd ?? root;
+  const commandArgs =
+    commandName === 'git' ? ['-c', `safe.directory=${resolve(cwd)}`, ...args] : args;
+
+  return execFileSync(commandName, commandArgs, {
+    cwd,
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
     ...options,
@@ -262,6 +266,8 @@ export const generatedEvidenceOutputPaths = Object.freeze([
   'docs/generated/generated-packet-status-audit.md',
   'docs/generated/device-support-policy-audit.json',
   'docs/generated/device-support-policy-audit.md',
+  'docs/generated/performance-readiness-audit.json',
+  'docs/generated/performance-readiness-audit.md',
   'docs/generated/readiness-status-audit.json',
   'docs/generated/readiness-status-audit.md',
   'docs/generated/source-packet-audit.json',

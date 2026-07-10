@@ -143,7 +143,10 @@ for (const file of [
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'scripts/phase5/build-device-qa-packet.mjs',
   'scripts/phase5/check-native-config.mjs',
+  'scripts/phase5/check-performance-evidence.mjs',
   'scripts/phase5/device-qa-packet-smoke.mjs',
+  'scripts/phase5/performance-evidence-contract.mjs',
+  'scripts/phase5/performance-evidence-smoke.mjs',
   'scripts/e2e/human-e2e-manifest.mjs',
   'scripts/phase9/lib.mjs',
   'docs/DEVICE_SUPPORT_POLICY.md',
@@ -154,6 +157,8 @@ for (const file of [
   'docs/e2e/generated/human-e2e-manifest.md',
   'docs/phase-5/native-build-runbook.md',
   'docs/phase-5/device-qa-checklist.md',
+  'docs/phase-5/performance-evidence-runbook.md',
+  'docs/phase-5/performance-evidence.template.json',
   'docs/phase-5/phase-5-exit-review.md',
 ]) {
   require(qaPacketBuilder.includes(`'${file}'`) ||

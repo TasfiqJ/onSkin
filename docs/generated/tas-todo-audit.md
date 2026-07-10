@@ -1,6 +1,6 @@
 # Tas To Do Audit
 
-Generated: 2026-07-09T20:45:32.110Z
+Generated: 2026-07-10T02:20:12.796Z
 Status: pass
 Strict mode: yes
 
@@ -18,9 +18,9 @@ inventory itself is the canonical machine-readable key list.
 
 - Gate groups: 10
 - Covered gate groups: 10
-- Extracted keys: 237
-- Local generated-only keys excluded: 14
-- Keys named verbatim in FOR_TAS_TO_DO.md: 237
+- Extracted keys: 238
+- Local generated-only keys excluded: 15
+- Keys named verbatim in FOR_TAS_TO_DO.md: 238
 - Keys only in generated inventory: 0
 - Blockers: 0
 - Warnings: 0
@@ -40,7 +40,7 @@ inventory itself is the canonical machine-readable key list.
 | phase2  | yes              | phase2:check-env:strict, phase2:rls-smoke                  | 53   | 0                                |
 | phase3  | yes              | phase3:audit-copy:strict                                   | 2    | 0                                |
 | phase4  | yes              | phase4:check-source-env:strict                             | 11   | 0                                |
-| phase5  | yes              | phase5:check-native-config:strict, phase5:qa-packet:strict | 20   | 0                                |
+| phase5  | yes              | phase5:check-native-config:strict, phase5:qa-packet:strict | 21   | 0                                |
 | phase6  | yes              | phase6:check-payments-env:strict, phase6:qa-packet:strict  | 18   | 0                                |
 | phase7  | yes              | phase7:check-core-loop:strict, phase7:qa-packet:strict     | 29   | 0                                |
 | phase8  | yes              | phase8:check-growth-store:strict, phase8:qa-packet:strict  | 19   | 0                                |
@@ -162,6 +162,7 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 | PHASE5_LABEL_CAPTURE_QA_PASS           | yes                       |
 | PHASE5_NATIVE_OCR_QA_PASS              | yes                       |
 | PHASE5_NOTIFICATION_QA_PASS            | yes                       |
+| PHASE5_PERFORMANCE_EVIDENCE_PATH       | yes                       |
 | PHASE5_PROGRESS_PHOTO_QA_PASS          | yes                       |
 | PHASE5_QA_SIGNOFF                      | yes                       |
 | PHASE5_REVENUECAT_NATIVE_QA_PASS       | yes                       |
@@ -170,7 +171,7 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 | PHASE5_SIGNED_OFF_BY                   | yes                       |
 | PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS | yes                       |
 
-Local generated-only keys excluded from evidence warnings: PHASE5_QA_PACKET_OUT_DIR
+Local generated-only keys excluded from evidence warnings: PHASE5_PERFORMANCE_TEMPLATE_PATH, PHASE5_QA_PACKET_OUT_DIR
 
 ### Phase 6 payments and RevenueCat
 

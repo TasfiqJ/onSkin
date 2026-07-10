@@ -1,6 +1,6 @@
 # Phase 5 Native Build Runbook
 
-Phase 5 moves OnSkin from Expo preview behavior to installable native builds. The product is not beta-ready until the generated device QA packet has real iOS and Android build IDs, physical-device names, and named signoff.
+Phase 5 moves RoutineKind from Expo preview behavior to installable native builds. The product is not beta-ready until the generated device QA packet has real iOS and Android build IDs, physical-device names, and named signoff.
 
 The native support floor is defined in `docs/DEVICE_SUPPORT_POLICY.md`: iOS
 17.0+ and Android 10 / API 29+, with 360 x 640 as the launch-blocking
@@ -59,6 +59,20 @@ PHASE5_ACCESSIBILITY_QA_PASS=true \
 PHASE5_SIGNED_OFF_BY="Tas Mohammed" \
 npm run phase5:qa-packet:strict
 ```
+
+Record the supported-device performance baseline separately. Generate the
+blocked schema before testing, set owner-approved p95 thresholds before the
+first run, then validate the completed artifact:
+
+```bash
+npm run phase5:performance-evidence:template
+PHASE5_PERFORMANCE_EVIDENCE_PATH=/path/to/performance-evidence.json \
+npm run phase5:performance-evidence:strict
+```
+
+See `docs/phase-5/performance-evidence-runbook.md`. A passing device QA packet
+does not waive this baseline, and a typed performance signoff cannot override a
+calculated threshold failure.
 
 The generated packet must show the source Git SHA and `Git status: clean`.
 Treat `Git status: DIRTY` as investigation evidence only, not final native QA

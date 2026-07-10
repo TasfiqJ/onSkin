@@ -6,6 +6,17 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Replaced the documentation-only performance gate with an executable Phase 5
+  evidence contract. The blocked JSON template and strict validator require
+  owner-defined thresholds before measurement, real EAS build IDs, supported
+  physical iOS and Android devices, five or more samples for every platform and
+  metric, 50+ encrypted-photo load/memory evidence, calculated p95 passes, zero
+  crashes/OS terminations, and named signoff. Smoke coverage rejects post-hoc
+  targets, sub-floor devices, missing metric coverage, one-off samples, and
+  typed pass decisions that contradict recorded results. No benchmark numbers
+  were invented and launch readiness remains device-blocked until Tas attaches
+  a real artifact through `PHASE5_PERFORMANCE_EVIDENCE_PATH`.
+
 - Finished the floating tab-bar active-pill polish safely across the current
   support matrix. The bar is more inset, the selected capsule no longer fills
   an entire tab slot, inactive labels use stronger ink contrast, and the

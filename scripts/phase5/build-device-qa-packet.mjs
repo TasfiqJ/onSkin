@@ -36,7 +36,10 @@ const requiredFiles = [
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'scripts/phase5/build-device-qa-packet.mjs',
   'scripts/phase5/check-native-config.mjs',
+  'scripts/phase5/check-performance-evidence.mjs',
   'scripts/phase5/device-qa-packet-smoke.mjs',
+  'scripts/phase5/performance-evidence-contract.mjs',
+  'scripts/phase5/performance-evidence-smoke.mjs',
   'scripts/e2e/human-e2e-manifest.mjs',
   'scripts/phase9/lib.mjs',
   'docs/DEVICE_SUPPORT_POLICY.md',
@@ -47,6 +50,8 @@ const requiredFiles = [
   'docs/e2e/generated/human-e2e-manifest.md',
   'docs/phase-5/native-build-runbook.md',
   'docs/phase-5/device-qa-checklist.md',
+  'docs/phase-5/performance-evidence-runbook.md',
+  'docs/phase-5/performance-evidence.template.json',
   'docs/phase-5/phase-5-exit-review.md',
 ];
 
@@ -65,6 +70,10 @@ const scenarios = [
   ['RevenueCat', 'configure, fetch offerings, Test Store purchase, restore from user action'],
   ['Offline', 'manual add, timeline view, no-match fallback, queued metadata'],
   ['Observability', 'native crash captured, no sensitive event payloads'],
+  [
+    'Performance',
+    'predeclared thresholds plus supported-device startup, intake, barcode, routine, and encrypted-photo load/memory evidence',
+  ],
 ];
 
 const requiredQaEvidenceFlags = [

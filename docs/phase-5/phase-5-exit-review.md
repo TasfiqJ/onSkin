@@ -22,6 +22,10 @@ Completed in repo:
 - Photo timeline/detail/compare render through encrypted-aware image loading.
 - Photo deletion removes local encrypted files.
 - Phase 5 config check and device QA packet generator added.
+- A structured performance-evidence template, strict validator, and smoke suite
+  now require predeclared thresholds, supported physical-device/build proof,
+  repeated iOS/Android measurements, encrypted-photo load/memory evidence, and
+  calculated pass/fail instead of trust-only booleans.
 - The generated QA packet now requires granular physical-device evidence flags
   for install, camera permission recovery, barcode, label capture, progress
   photos, encrypted photo storage, notifications, share sheet, RevenueCat,
@@ -39,6 +43,8 @@ Still blocked before beta:
 - RevenueCat Test Store/sandbox native smoke.
 - Sentry native crash/source-map smoke.
 - Notification timing matrix on iOS/Android.
+- Passing `phase5:performance-evidence:strict` artifact with owner-defined
+  pre-measurement thresholds and real supported-device measurements.
 - Brand/legal clearance for production identifiers.
 
 ## Seven-Figure Product Gate

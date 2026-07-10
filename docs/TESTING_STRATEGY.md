@@ -160,14 +160,27 @@ Monitor:
 Performance readiness is not closed by local unit tests. Before closed beta,
 record baseline measurements on supported iOS and Android physical devices and
 attach the measurement artifact, device model/OS, build ID, and named owner
-signoff in `docs/FOR_TAS_TO_DO.md`. The local guard is:
+signoff in `docs/FOR_TAS_TO_DO.md`. Thresholds must be defined before
+measurement, and each required metric needs at least five samples per platform.
+Use the blocked template and strict validator documented in
+`docs/phase-5/performance-evidence-runbook.md`:
+
+```bash
+npm run phase5:performance-evidence:template:check
+PHASE5_PERFORMANCE_EVIDENCE_PATH=/path/to/performance-evidence.json \
+npm run phase5:performance-evidence:strict
+```
+
+The non-mutating documentation and contract guard is:
 
 ```bash
 npm run docs:performance-readiness-audit:check
 ```
 
-That audit verifies the performance evidence contract remains visible in the
-launch docs. It does not replace real-device or beta telemetry.
+That audit verifies the performance evidence contract, template, validator,
+smoke coverage, and launch wiring remain current. It does not replace the real
+device measurements required by `phase5:performance-evidence:strict` or later
+beta telemetry.
 
 ## Accessibility Checks
 

@@ -624,6 +624,9 @@ Next action:
 - measure local photo loading and memory use in photo timeline with realistic
   encrypted local photo volume;
 - set explicit beta pass/fail thresholds before recruiting testers;
+- generate `docs/phase-5/performance-evidence.template.json`, define thresholds
+  before the first run, collect the complete supported-device artifact, and run
+  `PHASE5_PERFORMANCE_EVIDENCE_PATH=... npm run phase5:performance-evidence:strict`;
 - keep `npm run docs:performance-readiness-audit:check` passing after any
   performance-readiness doc or launch-gate change.
 

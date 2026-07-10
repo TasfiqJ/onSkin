@@ -19,6 +19,11 @@ const files = {
   forTas: 'docs/FOR_TAS_TO_DO.md',
   launchReadiness: 'LAUNCH_READINESS.md',
   packageJson: 'package.json',
+  performanceChecker: 'scripts/phase5/check-performance-evidence.mjs',
+  performanceContract: 'scripts/phase5/performance-evidence-contract.mjs',
+  performanceRunbook: 'docs/phase-5/performance-evidence-runbook.md',
+  performanceSmoke: 'scripts/phase5/performance-evidence-smoke.mjs',
+  performanceTemplate: 'docs/phase-5/performance-evidence.template.json',
   photoProgress: 'docs/06-photo-progress.md',
   smartShelf: 'docs/04-smart-shelf.md',
   testingStrategy: 'docs/TESTING_STRATEGY.md',
@@ -40,6 +45,8 @@ const docNeedles = [
       'Performance Checks',
       ...requiredPerformanceMetrics,
       'npm run docs:performance-readiness-audit:check',
+      'npm run phase5:performance-evidence:strict',
+      'PHASE5_PERFORMANCE_EVIDENCE_PATH',
     ],
   },
   {
@@ -47,12 +54,8 @@ const docNeedles = [
     needles: [
       'P1 - Performance And Scale Evidence',
       ...requiredPerformanceMetrics,
-      'PHASE_PERFORMANCE_STARTUP_PASS',
-      'PHASE_PERFORMANCE_PRODUCT_ADD_PASS',
-      'PHASE_PERFORMANCE_BARCODE_PASS',
-      'PHASE_PERFORMANCE_ROUTINE_PASS',
-      'PHASE_PERFORMANCE_PHOTO_TIMELINE_PASS',
-      'PHASE_PERFORMANCE_SIGNED_OFF_BY',
+      'PHASE5_PERFORMANCE_EVIDENCE_PATH',
+      'phase5:performance-evidence:strict',
     ],
   },
   {
@@ -84,15 +87,69 @@ const docNeedles = [
     path: files.photoProgress,
     needles: ['frame-processor performance must be verified on real devices', 'local and fast'],
   },
+  {
+    path: files.performanceRunbook,
+    needles: [
+      'define every threshold before measurement',
+      'at least five repeated samples',
+      'both iOS and Android evidence',
+      'at least 50 encrypted local photos',
+      'PHASE5_PERFORMANCE_EVIDENCE_PATH',
+      'calculates threshold failures',
+    ],
+  },
+  {
+    path: files.performanceChecker,
+    needles: [
+      'PHASE5_PERFORMANCE_EVIDENCE_PATH',
+      'validatePerformanceEvidence',
+      '--check-template',
+    ],
+  },
+  {
+    path: files.performanceContract,
+    needles: [
+      'PERFORMANCE_MIN_SAMPLE_COUNT = 5',
+      'post-hoc targets are rejected',
+      'photo_timeline_peak_memory_mb',
+      'logicalWidth must be at least',
+    ],
+  },
+  {
+    path: files.performanceSmoke,
+    needles: [
+      'rejects thresholds defined after measurements',
+      'calculates threshold failure instead of trusting the signoff field',
+      'rejects one-off timing samples',
+    ],
+  },
+  {
+    path: files.performanceTemplate,
+    needles: [
+      '"schemaVersion": 1',
+      '"app_startup_cold_ms"',
+      '"photo_timeline_peak_memory_mb"',
+      '"measurements"',
+    ],
+  },
 ];
 
 const requiredPackageScripts = [
   'docs:performance-readiness-audit',
   'docs:performance-readiness-audit:strict',
   'docs:performance-readiness-audit:check',
+  'phase5:performance-evidence',
+  'phase5:performance-evidence:strict',
+  'phase5:performance-evidence:smoke',
+  'phase5:performance-evidence:template',
+  'phase5:performance-evidence:template:check',
 ];
 
-const requiredLaunchVerifyParts = ['docs:performance-readiness-audit:check'];
+const requiredLaunchVerifyParts = [
+  'docs:performance-readiness-audit:check',
+  'phase5:performance-evidence:template:check',
+  'phase5:performance-evidence',
+];
 
 function abs(path) {
   return resolve(root, path);
@@ -222,9 +279,10 @@ const mdContent = [
   `Strict mode: ${strict ? 'yes' : 'no'}`,
   '',
   'This generated audit keeps performance readiness explicit without faking',
-  'runtime benchmarks. It verifies that launch docs, Tas-owned evidence, and',
-  '`launch:verify` continue to cover startup, shelf intake, barcode lookup,',
-  'routine generation, local photo loading, and photo timeline memory evidence.',
+  'runtime benchmarks. It verifies that launch docs, Tas-owned evidence, the',
+  'blocked JSON template, executable validator/smoke tests, and `launch:verify`',
+  'continue to cover startup, shelf intake, barcode lookup, routine generation,',
+  'local photo loading, and photo timeline memory evidence.',
   '',
   '## Summary',
   '',

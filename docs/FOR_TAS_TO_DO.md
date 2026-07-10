@@ -259,17 +259,25 @@ Status: needs-device-verification
 - Define pass/fail thresholds before closed beta. Codex will not invent these
   numbers because they depend on the final supported device matrix, production
   catalog/backend latency, and beta-photo volume.
+- Use `docs/phase-5/performance-evidence-runbook.md` and generate the current
+  blocked schema with `npm run phase5:performance-evidence:template`. Define
+  every `maxP95` threshold and rationale before collecting measurements; the
+  validator rejects thresholds dated after the captured evidence.
+- Fill a separate JSON artifact from
+  `docs/phase-5/performance-evidence.template.json`, set
+  `PHASE5_PERFORMANCE_EVIDENCE_PATH` to that artifact, and run
+  `npm run phase5:performance-evidence:strict`. The strict check requires real
+  EAS build IDs, supported physical iOS and Android devices, at least five
+  samples per metric/platform, a 50+ encrypted-photo dataset, calculated p95
+  threshold passes, zero crashes/OS terminations, and named threshold/signoff
+  owners.
 - Run `npm run docs:performance-readiness-audit:check` after updating this
   section or the launch docs.
 
 Evidence needed:
 
-- `PHASE_PERFORMANCE_STARTUP_PASS=true`
-- `PHASE_PERFORMANCE_PRODUCT_ADD_PASS=true`
-- `PHASE_PERFORMANCE_BARCODE_PASS=true`
-- `PHASE_PERFORMANCE_ROUTINE_PASS=true`
-- `PHASE_PERFORMANCE_PHOTO_TIMELINE_PASS=true`
-- `PHASE_PERFORMANCE_SIGNED_OFF_BY=<real tester/reviewer name>`
+- `PHASE5_PERFORMANCE_EVIDENCE_PATH=<real completed JSON artifact>`
+- Passing `npm run phase5:performance-evidence:strict` output.
 - Measurement artifact with build IDs, device model/OS, sample size, p50/p95
   or equivalent timing summary, memory summary, known caveats, and decision on
   whether performance is acceptable for closed beta.

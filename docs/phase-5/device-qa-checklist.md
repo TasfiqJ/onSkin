@@ -23,6 +23,7 @@ app review/accessibility.
 | Share             | Conflict card share and photo share open OS sheet; cancel handled                                       | Blocked until physical devices           |
 | RevenueCat        | SDK configure, fetch offerings, Test Store purchase, restore user action                                | Blocked until RC keys + native build     |
 | Observability     | Sentry native crash captured, PostHog payload audit clean                                               | Blocked until native build               |
+| Performance       | Predeclared p95 thresholds; startup, intake, barcode, routine, encrypted-photo load/memory on both platforms | Blocked until physical measurements      |
 | Accessibility     | Screen reader labels for close/capture/retake/save/settings/manual fallback                             | Review needed on devices                 |
 
 ## Device Matrix
@@ -63,3 +64,6 @@ clean`, current source hashes, real EAS build evidence, physical-device
 - `PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS=true`
 - `PHASE5_ACCESSIBILITY_QA_PASS=true`
 - `PHASE5_NATIVE_OCR_QA_PASS=true` only if native OCR is enabled.
+- `PHASE5_PERFORMANCE_EVIDENCE_PATH=<completed JSON artifact>` plus a passing
+  `npm run phase5:performance-evidence:strict`; follow
+  `docs/phase-5/performance-evidence-runbook.md`.
