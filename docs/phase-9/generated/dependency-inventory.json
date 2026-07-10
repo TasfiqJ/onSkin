@@ -1,16 +1,9 @@
 {
-  "generatedAt": "2026-07-10T06:22:53.659Z",
+  "generatedAt": "2026-07-10T11:19:00.335Z",
   "packageManager": null,
   "lockfileVersion": 3,
   "packageCount": 1082,
-  "vulnerabilities": {
-    "info": 0,
-    "low": 0,
-    "moderate": 0,
-    "high": 0,
-    "critical": 0,
-    "total": 0
-  },
+  "vulnerabilities": null,
   "auditFindings": [],
   "installScriptPackages": [
     {
@@ -7625,6 +7618,7 @@
   ],
   "blockers": [],
   "warnings": [
+    "npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.",
     "Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true."
   ]
 }
