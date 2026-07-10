@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-10T10:26:35.267Z
+Generated: 2026-07-10T11:16:29.844Z
 
-Git SHA: bcda7bba39c1e7b2c9224c04ad6abb05cadcc712
+Git SHA: ff831ccaf9ceb2b07c3e73835a5c149baf3f39eb
 
 Git status: clean
 
@@ -30,7 +30,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-| package.json | present | 18099 | 5967b643a1c61a763bebcd45d215e5286c001a1fc1c663c3be17589af3dffe40 |
+| package.json | present | 18204 | 303fe5980f1837ba45e134f9c35bbd331f650f4b5146d142cb32c89eb86f71b8 |
 | scripts/phase4/catalog-qa-report.mjs | present | 6696 | f6e506aa07d8cff7715f2db8eff2cfe00784b2d5f277b3f78a1316eeaad0d4c4 |
 | scripts/phase4/build-source-worklist.mjs | present | 17180 | cbd4cb4b8c99eb1963a273c0ae0bd3cdad326a715b37664e4ad62822a21c588c |
 | scripts/phase4/beta-coverage-report.mjs | present | 21980 | 95d73e803393a93dcf0a54fa07ff3de9c3c0ee62250cfa608bd7e45883bfe0fd |
@@ -46,11 +46,11 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | supabase/functions/catalog-report/privacy.test.ts | present | 4009 | db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac |
 | supabase/functions/deno.lock | present | 2282 | 0f8de63ed60182b56865cfa47c666866b631ed4681c79345ec31a720565d1a3a |
 | scripts/phase9/lib.mjs | present | 14020 | af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083 |
-| docs/FOR_TAS_TO_DO.md | present | 52240 | 58a542589c587e687b3eb66a25ad9c96e934064067bf0d5651c51c9fd07ebfde |
+| docs/FOR_TAS_TO_DO.md | present | 53086 | 2cbf1e8f0e62be82b1449221764df533d71fc889f73262512934c997c0c318a2 |
 | docs/phase-4/beta-coverage-report.md | present | 2125 | d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2021 | 49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534 |
 | docs/phase-4/catalog-source-memo-open-beauty-facts.md | present | 2334 | 441e03ded2314f7a9efc2f11e3b7d0daa97256de17e6c654423124c1c4a4670f |
-| docs/phase-4/generated/source-worklist.json | present | 35122 | 4f0ded02c2ce126b13f5c9692025fa01caaae257b7e9dc64a63c66af6eeb7b34 |
-| docs/phase-4/generated/source-worklist.md | present | 22473 | 47031eb040fec41690e8d6a98c45b2e56c4bc185cabd75e26560331ac622a4dd |
+| docs/phase-4/generated/source-worklist.json | present | 35122 | 7d70a014cdeed3bd4be07ca54da35e0c1dbf22ac8f838f0124f22af17757a273 |
+| docs/phase-4/generated/source-worklist.md | present | 22473 | 0f56225b968af147fc7ca3aa258886a819c8e6ae1d58d083ffcba2c4676d9b97 |
 | docs/phase-4/odbl-compliance-memo.md | present | 2019 | 0fe9bc07e3c4d34129ac8f8f2ba410a64e6caa0d77a3b7994198e0b4d9e18e69 |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |
