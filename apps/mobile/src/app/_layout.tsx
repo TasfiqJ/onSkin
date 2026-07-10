@@ -16,6 +16,7 @@ import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { OfflineSync } from '@/lib/offline/OfflineSync';
 import { initSentry } from '@/lib/observability/sentry';
 import { queryClient } from '@/lib/query/queryClient';
+import { PrivateDataAvailabilityGate } from '@/lib/storage/PrivateDataAvailabilityGate';
 import { fontMap } from '@/theme/fonts';
 
 initSentry();
@@ -45,9 +46,11 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <AppLockProvider>
-              <OfflineSync />
-              <StatusBar style="dark" />
-              <Stack screenOptions={{ headerShown: false }} />
+              <PrivateDataAvailabilityGate>
+                <OfflineSync />
+                <StatusBar style="dark" />
+                <Stack screenOptions={{ headerShown: false }} />
+              </PrivateDataAvailabilityGate>
             </AppLockProvider>
           </AuthProvider>
         </QueryClientProvider>

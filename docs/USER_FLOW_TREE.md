@@ -39,6 +39,34 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Growth and sharing flows: share cards and conflict screens.
 - Trend, community, commerce, and Ask surfaces.
 
+## Flow: App Private Data Availability
+
+- Goal: A user never sees encrypted local state misrepresented as empty/default when the shared private-data key is unavailable.
+- Persona: Returning user with local profile, shelf, routine, completion, preference, entitlement, or Progress records.
+- Entry state: The app has resolved auth and the app-lock preference; encrypted private records may be readable, temporarily unavailable, missing their key, malformed, or unable to authenticate.
+- Start screen/URL/window: Cold or foreground entry to any app route.
+- Success state: App content mounts only after a read-only audit verifies every private-KV envelope; transient failure remains non-destructive and retryable.
+- Priority: Critical
+- Automate later: Yes
+- Surface: iOS and Android; Expo web for provider ordering, route blocking, retry, and responsive recovery.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/private-data-availability-current/`
+
+### Path A: Readable Private Data
+
+1. Action: Open or foreground the app after any configured app-wide authentication succeeds.
+   Expected result: The app performs a non-creating readability audit, ignores unrelated/legacy plaintext and separately keyed Supabase session envelopes, then mounts Offline Sync and the intended route. App-lock authentication remains before the audit, and Progress timeline authentication remains after the audit.
+   Evidence: Provider-order contract, private-KV unit tests, route snapshot, and native secure-storage access log.
+
+### Branches
+
+- Branch: shared encrypted private data unavailable
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: After encrypted private records exist, force the shared SecureStore/Keychain/Keystore content-key read to fail; cold-open representative `/today`, `/shelf`, `/routine/plan`, `/settings/privacy`, and `/progress` routes at supported phone sizes. Retry once while failure persists, then repeat with one-shot failure and restored key access. Repeat after app background/foreground and with app lock enabled.
+  - Expected result: App-wide recovery appears only after app unlock and before Offline Sync, navigation, tabs, route queries, local mutations, or sensitive/default route copy mounts. It exposes no raw error or ciphertext, retains a 56 pt retry after repeated failure, has no horizontal overflow, emits no analytics/backend request, and leaves every encrypted envelope byte-identical. A successful retry mounts the originally requested route. Foreground return rechecks availability before content can reappear. Missing-key/wrong-key states never create replacement key material; explicit local-data deletion remains the only destructive recovery.
+  - Evidence: Persistent failure screenshots and visible-text/role snapshots across representative routes at 360 x 640 and 390 x 844, one-shot retry screenshot, app-lock ordering sequence, foreground recheck, control geometry, dialog/page-error/browser logs, vendor request log, ciphertext hash/unit evidence, and physical iOS/Android fault-injection logs.
+  - Current code evidence: `assertPrivateKVReadable` scans all private envelopes without creating or returning key material, while `PrivateDataAvailabilityGate` sits inside `AppLockProvider` and outside Offline Sync/navigation. Focused storage/provider contracts prove missing-key failure preserves every envelope and unrelated keyed envelope formats are ignored. Supported-phone app-surface evidence is pending this flow's first dedicated run.
+
 ## Flow: Bottom Tab Navigation
 
 - Goal: A user can always read and tap the primary app destinations from the floating bottom tab bar.

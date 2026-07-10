@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  assertPrivateKVReadable,
   getPrivateItem,
   getPrivateItems,
   PRIVATE_KV_CONTENT_KEY_INVALID,
@@ -114,6 +115,39 @@ describe('private KV encrypted storage', () => {
         ['encrypted-b', JSON.stringify({ value: 'b' })],
       ]),
     );
+  });
+
+  it('audits every private envelope without treating other encrypted formats as private KV', async () => {
+    await setPrivateItem('onskin.profile', 'profile-value');
+    mocks.asyncStorage.set('legacy', 'legacy-value');
+    mocks.asyncStorage.set(
+      'supabase.auth.token',
+      JSON.stringify({
+        version: privateKVEncryptionInfo.version,
+        keyId: 'supabase-session-key-v1',
+        nonceHex: 'not-private-kv',
+        ciphertextHex: 'not-private-kv',
+      }),
+    );
+
+    await expect(assertPrivateKVReadable()).resolves.toBeUndefined();
+    await expect(getPrivateItem('onskin.profile')).resolves.toBe('profile-value');
+  });
+
+  it('preserves every private envelope when the shared content key is unavailable', async () => {
+    await setPrivateItem('onskin.profile', 'profile-value');
+    await setPrivateItem('onskin.shelf', 'shelf-value');
+    const profileCiphertext = mocks.asyncStorage.get('onskin.profile');
+    const shelfCiphertext = mocks.asyncStorage.get('onskin.shelf');
+    mocks.secureGetThrows = true;
+
+    await expect(assertPrivateKVReadable()).rejects.toThrow(
+      'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE',
+    );
+
+    expect(mocks.asyncStorage.get('onskin.profile')).toBe(profileCiphertext);
+    expect(mocks.asyncStorage.get('onskin.shelf')).toBe(shelfCiphertext);
+    expect(mocks.secureStorage.size).toBe(1);
   });
 
   it('shares one content key across concurrent first writes', async () => {

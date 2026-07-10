@@ -201,6 +201,15 @@ export async function getPrivateItems(
   return result;
 }
 
+/** Verify every private-KV envelope without creating key material or retaining plaintext. */
+export async function assertPrivateKVReadable(): Promise<void> {
+  const keys = (await AsyncStorage.getAllKeys()).filter(
+    (key) => key !== PRIVATE_KV_CONTENT_KEY_NAME,
+  );
+  if (keys.length === 0) return;
+  await getPrivateItems(keys);
+}
+
 export async function setPrivateItem(key: string, value: string): Promise<void> {
   const existingRaw = await assertNoFailedReadRewrite(key);
   const contentKey = await getOrCreateContentKey();

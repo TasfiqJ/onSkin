@@ -1,0 +1,171 @@
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { AppState, Pressable, ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { Text } from '@/components/ui';
+import { useAppLock } from '@/lib/applock/AppLockProvider';
+import { colors } from '@/theme/tokens';
+
+import { assertPrivateKVReadable } from './privateKV';
+
+const PRIVATE_STORAGE_COPY = {
+  loading: 'Opening your private data...',
+  eyebrow: 'Private storage',
+  title: 'Your private data could not open.',
+  body: "We couldn't read encrypted data on this phone. Nothing was changed. Try again when your phone's secure storage is available.",
+  retry: 'Try again',
+  retrying: 'Trying again...',
+  retryFailed: 'It is still unavailable. Your encrypted data remains unchanged.',
+} as const;
+
+type Availability = 'waiting' | 'checking' | 'ready' | 'error';
+type VerificationReason = 'initial' | 'foreground' | 'retry';
+
+let e2ePrivateStorageFailureConsumed = false;
+let e2ePrivateStorageForegroundFailureConsumed = false;
+
+function e2ePrivateStorageFailure(reason: VerificationReason): Error | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  const fixture = process.env.EXPO_PUBLIC_E2E_PRIVATE_STORAGE_FAILURE;
+  if (fixture === 'unavailable') return new Error('E2E_PRIVATE_STORAGE_UNAVAILABLE');
+  if (fixture === 'unavailable_once' && !e2ePrivateStorageFailureConsumed) {
+    e2ePrivateStorageFailureConsumed = true;
+    return new Error('E2E_PRIVATE_STORAGE_UNAVAILABLE');
+  }
+  if (
+    fixture === 'foreground_once' &&
+    reason === 'foreground' &&
+    !e2ePrivateStorageForegroundFailureConsumed
+  ) {
+    e2ePrivateStorageForegroundFailureConsumed = true;
+    return new Error('E2E_PRIVATE_STORAGE_UNAVAILABLE');
+  }
+  return null;
+}
+
+async function verifyPrivateStorage(reason: VerificationReason): Promise<void> {
+  const fixtureError = e2ePrivateStorageFailure(reason);
+  if (fixtureError) throw fixtureError;
+  await assertPrivateKVReadable();
+}
+
+export function PrivateDataAvailabilityGate({ children }: { children: ReactNode }) {
+  const insets = useSafeAreaInsets();
+  const { appUnlocked } = useAppLock();
+  const [availability, setAvailability] = useState<Availability>('waiting');
+  const [retryFailed, setRetryFailed] = useState(false);
+  const [retrying, setRetrying] = useState(false);
+  const checkId = useRef(0);
+
+  const check = useCallback(async (reason: VerificationReason) => {
+    const fromRetry = reason === 'retry';
+    const id = ++checkId.current;
+    setRetryFailed(false);
+    if (fromRetry) setRetrying(true);
+    else {
+      setRetrying(false);
+      setAvailability('checking');
+    }
+    try {
+      await verifyPrivateStorage(reason);
+      if (checkId.current === id) {
+        setRetrying(false);
+        setAvailability('ready');
+      }
+    } catch {
+      if (checkId.current !== id) return;
+      setRetrying(false);
+      setRetryFailed(fromRetry);
+      setAvailability('error');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!appUnlocked) return;
+    const timer = setTimeout(() => void check('initial'), 0);
+    return () => {
+      clearTimeout(timer);
+      checkId.current += 1;
+    };
+  }, [appUnlocked, check]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active' && appUnlocked) void check('foreground');
+    });
+    return () => subscription.remove();
+  }, [appUnlocked, check]);
+
+  if (appUnlocked && availability === 'ready') return children;
+
+  if (!appUnlocked || availability !== 'error') {
+    return (
+      <View
+        accessibilityElementsHidden={!appUnlocked}
+        accessibilityLabel={appUnlocked ? PRIVATE_STORAGE_COPY.loading : undefined}
+        accessibilityLiveRegion="polite"
+        importantForAccessibility={appUnlocked ? 'auto' : 'no-hide-descendants'}
+        className="flex-1 items-center justify-center px-7"
+        style={{ backgroundColor: colors.paper }}
+      >
+        {appUnlocked ? (
+          <Text variant="bodySm" tone="muted" className="text-center">
+            {PRIVATE_STORAGE_COPY.loading}
+          </Text>
+        ) : null}
+      </View>
+    );
+  }
+
+  return (
+    <ScrollView
+      style={{ flex: 1, backgroundColor: colors.paper }}
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 28,
+        paddingTop: insets.top + 32,
+        paddingBottom: insets.bottom + 32,
+      }}
+      showsVerticalScrollIndicator={false}
+    >
+      <View accessibilityLiveRegion="polite" accessibilityRole="alert">
+        <Text variant="label" style={{ color: colors.clayDeep, textAlign: 'center' }}>
+          {PRIVATE_STORAGE_COPY.eyebrow}
+        </Text>
+        <Text
+          variant="title"
+          className="mt-3"
+          style={{ color: colors.ink, fontSize: 30, lineHeight: 34, textAlign: 'center' }}
+        >
+          {PRIVATE_STORAGE_COPY.title}
+        </Text>
+        <Text variant="bodySm" tone="muted" className="mt-3 text-center" style={{ lineHeight: 22 }}>
+          {PRIVATE_STORAGE_COPY.body}
+        </Text>
+        {retryFailed ? (
+          <Text
+            variant="bodySm"
+            className="mt-3 text-center"
+            style={{ color: colors.ink, lineHeight: 20 }}
+          >
+            {PRIVATE_STORAGE_COPY.retryFailed}
+          </Text>
+        ) : null}
+      </View>
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ disabled: retrying }}
+        disabled={retrying}
+        onPress={() => void check('retry')}
+        className="mt-7 min-h-[56px] items-center justify-center rounded-pill px-6 py-3"
+        style={{ backgroundColor: colors.ink, opacity: retrying ? 0.68 : 1 }}
+      >
+        <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
+          {retrying ? PRIVATE_STORAGE_COPY.retrying : PRIVATE_STORAGE_COPY.retry}
+        </Text>
+      </Pressable>
+    </ScrollView>
+  );
+}
