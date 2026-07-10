@@ -66,6 +66,9 @@ Read this with:
 4. Apple/Google accounts and store records not verified.
 5. Clinical review not complete.
 6. Legal/privacy copy not final.
+   Production config now fails closed on these Phase 3 blockers unless
+   `PHASE3_RELEASE_CLEARANCE=cleared`; keep it pending until named reviewers
+   sign the clean exact-source-hash packet and the strict copy audit passes.
 7. Real catalog seed not imported and source/license review not complete.
 8. Native camera/barcode/photo capture are implemented but not physical-device
    verified; native OCR remains intentionally gated off.
@@ -117,7 +120,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 172 mobile test files / 1767 tests. The 2026-07-09 human-simulated E2E
+covers 172 mobile test files / 1770 tests. The 2026-07-09 human-simulated E2E
 manifest now anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also
@@ -166,10 +169,13 @@ Phase 3 local governance scaffolding exists, but it is not professional
 clearance. The repo now has structured Phase 3 legal/regulatory, clinical,
 cosmetic chemistry, privacy/security, and IP/FTO review logs,
 regulatory/data/consent/store metadata packets, `scripts/phase3/audit-copy.mjs`,
-`scripts/phase3/build-review-packet.mjs`, a policy-link registry, store metadata
-claim tests, and production gate tests. The strict Phase 3 audit must remain
-blocking until counsel, dermatologist, cosmetic-chemist, privacy/security, and
-IP/FTO signoffs are real.
+`scripts/phase3/build-review-packet.mjs`,
+`scripts/phase3/check-production-release.mjs`, a policy-link registry, store
+metadata claim tests, and production gate tests. Production Expo config now
+requires exact `PHASE3_RELEASE_CLEARANCE=cleared` when either build or runtime
+stage is production. The flag must remain pending, and the strict Phase 3 audit
+must remain blocking, until counsel, dermatologist, cosmetic-chemist,
+privacy/security, and IP/FTO signoffs are real.
 
 ## B-BRAND - RoutineKind candidate clearance and launch identity
 
@@ -400,6 +406,9 @@ Current implementation note:
 - The You tab exposes the required privacy, consumer health privacy, support,
   deletion, export, and terms links.
 - `.env.example` and `phase2:check-env` include the required URL contract.
+- Production Expo config rejects missing or pending
+  `PHASE3_RELEASE_CLEARANCE`; this is a release boundary, not evidence that the
+  current draft copy is approved.
 - The copy and URLs are still placeholders until counsel supplies final text and
   the final brand/domain.
 

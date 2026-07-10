@@ -18,6 +18,16 @@ clearance and not a real launch catalog.
 
 Fresh verification through 2026-07-09:
 
+- Production release config now fails closed on unresolved Phase 3 review.
+  When either `APP_VARIANT` or `EXPO_PUBLIC_APP_ENV` is `production`, Expo
+  config, `phase2:check-env`, and the dedicated Phase 3 release checker require
+  exact `PHASE3_RELEASE_CLEARANCE=cleared`. Development and staging remain
+  available for reviewer QA. This flag is separate from brand clearance and
+  must stay pending until named legal, privacy/security, clinical, cosmetic
+  chemistry, and IP/FTO reviewers sign the clean exact-source-hash packet and
+  `phase3:audit-copy:strict` passes. Runtime production tests continue to prove
+  unreviewed conflict rules, routine cadence, and medical-adjacent
+  recommendations remain hidden.
 - Floating bottom tab-bar active-pill polish now has fresh headless Chrome Expo
   web geometry evidence across 320 x 568 stress width plus 360 x 640,
   375 x 667, 390 x 844, 412 x 915, and 430 x 932 supported-phone viewports.
@@ -136,7 +146,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 172 mobile test files / 1767 tests.
+- `npm test` passed: 172 mobile test files / 1770 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -166,7 +176,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 172 test files / 1767 tests.
+- `npm --workspace apps/mobile run test` passed: 172 test files / 1770 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain

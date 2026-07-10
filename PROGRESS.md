@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Closed the production-build exposure gap for unresolved Phase 3 content.
+  Runtime production tests already proved unreviewed conflict rules, routine
+  cadence, and medical-adjacent recommendations stay hidden; Expo config now
+  additionally fails closed whenever either `APP_VARIANT` or
+  `EXPO_PUBLIC_APP_ENV` is `production` unless
+  `PHASE3_RELEASE_CLEARANCE=cleared`. Development and staging remain available
+  for implementation and reviewer QA. The independent Phase 3 CLI smoke matrix
+  covers development, staging, both production-stage selectors, pending
+  clearance, and exact recorded clearance; Phase 2 environment checks and
+  native-config warnings enforce the same contract. The reviewer worklist,
+  operator queue, exact-source-hash packet, E2E manifest, and dependent Phase
+  4-11 evidence graph were regenerated. `npm run launch:verify` passes end to
+  end, including typecheck, lint, 172 mobile test files / 1770 tests, source
+  packet parity, and generated hash integrity. Professional review and final
+  consent/privacy copy remain correctly launch-blocked for Tas.
+
 - Closed the repository-wide formatting debt. Prettier now covers maintained
   TypeScript, TSX, JavaScript, ESM/CommonJS scripts, JSON, and Markdown; only
   generated evidence packets and Supabase-generated database types are ignored
