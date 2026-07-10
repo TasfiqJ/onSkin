@@ -142,6 +142,11 @@ Evidence needed:
   date, disposition, explicit conditions and satisfaction state, a non-secret
   reference to the retained original approval, and a structured production gate
   for deferrals.
+- Use `npm run phase3:review-signoff-template -- --list` to obtain exact item
+  IDs, snapshot digests, and safe filenames. After each real decision, use item
+  mode to prepare the JSON without manually copying immutable fields. The
+  generated draft is not evidence until every placeholder is replaced and the
+  matching review-log row is updated.
 - Strict Phase 3 audit passing or explicitly accepted with recorded exceptions.
 - Generated `docs/phase-3/generated/review-packet.md` with clean Git status,
   current source hashes, and reviewer signoff tied to the exact reviewed build.

@@ -521,6 +521,9 @@ Exit criteria:
   `reviewSnapshotSha256`, with a verified attestor credential or decision-owner
   role, explicit conditions and satisfaction state, and a retained original
   approval reference; deferred items also record an enforced production gate;
+- Tas uses `npm run phase3:review-signoff-template -- --list` and item mode to
+  prepare exact-digest drafts, then replaces every rejected placeholder with
+  real externally verified evidence;
 - `npm run phase3:audit-copy:strict` passes because placeholders and blocker
   markers have been removed or formally closed;
 - generated review packet hashes and detached signoff records are archived with

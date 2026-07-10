@@ -20,6 +20,14 @@ IP/FTO handoffs. The queue records what can be sent to reviewers and what stays
 blocked in `docs/FOR_TAS_TO_DO.md`; it never supplies reviewer names or
 decisions.
 
+`npm run phase3:review-signoff-template -- --list` exposes the exact item IDs,
+snapshot digests, states, and safe output filenames. Item mode prefills only the
+immutable item ID, digest, and operator-selected draft disposition. It leaves
+attestor identity, credential or role, date, conditions, evidence reference,
+and any deferred production gate as rejected placeholders. It refuses dirty or
+stale source, duplicate evidence, overwrites, and output outside the direct
+signoff directory.
+
 Every `Approved` or `Deferred` worklist row must also have exactly one JSON
 record under `docs/phase-3/signoffs/`. The signoff references a deterministic
 `reviewSnapshotSha256` calculated from the item identity, required reviewer,
@@ -39,6 +47,8 @@ reference.
 - `scripts/phase3/build-review-packet.mjs`
 - `scripts/phase3/build-review-worklist.mjs`
 - `scripts/phase3/build-review-operator-queue.mjs`
+- `scripts/phase3/create-review-signoff-template.mjs`
+- `scripts/phase3/review-signoff-template-smoke.mjs`
 - `scripts/phase3/audit-copy.mjs`
 - `scripts/phase3/check-production-release.mjs`
 - `scripts/phase3/check-production-release-smoke.mjs`

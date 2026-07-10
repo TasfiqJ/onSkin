@@ -6,6 +6,19 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Completed the local Phase 3 signoff-preparation workflow without fabricating
+  professional evidence. `phase3:review-signoff-template` lists all exact item
+  IDs, digests, states, and safe filenames, or emits an item-specific approved
+  or deferred draft with the immutable item ID and digest prefilled. Human
+  assertions remain rejected placeholders. The command refuses dirty source, stale worklists,
+  duplicate signoffs, existing-file overwrite, traversal/nested paths, invalid
+  dispositions, and contradictions with an existing review-log decision. A
+  standalone smoke matrix covers approved/deferred shape, unresolved rows,
+  stale snapshots, duplicate evidence, CLI parsing, safe writes, and blocked
+  worklists; the smoke is now part of Phase 3 and root launch verification.
+  Format, source/Tas/readiness audits, typecheck, lint, and 172 mobile test
+  files / 1782 tests pass.
+
 - Replaced the Phase 3 review-log credential/conditions template gap with a
   machine-verified detached-signoff contract. Every `Approved` or `Deferred`
   item must now carry one source-controlled JSON decision whose attestor/date

@@ -21,7 +21,7 @@ const SHA256_RE = /^[a-f0-9]{64}$/i;
 const PLACEHOLDER_RE =
   /^(?:|tbd|n\/a|none|not cleared|.*\b(?:placeholder|example|test(?:er)?|reviewer name|decision owner)\b.*)$/i;
 const SIGNOFF_PLACEHOLDER_RE =
-  /^(?:|tbd|n\/a|none|null|unknown|pending|replace(?: me)?|.*\b(?:placeholder|example|sample|reviewer name|decision owner|credential or role|evidence reference)\b.*)$/i;
+  /^(?:|tbd|n\/a|none|null|unknown|pending|yyyy mm dd|.*\b(?:replace(?: me| with)?|placeholder|example|sample|reviewer name|decision owner|credential or role|evidence reference)\b.*)$/i;
 const DEFERRED_GATE_STATES = new Set(['hidden', 'inert', 'disabled', 'excluded', 'not_exposed']);
 const REVIEW_LOG_CONFIG = Object.freeze({
   legalRegulatory: { tableHeading: '## Inventory' },
@@ -126,7 +126,8 @@ function unexpectedKeys(value, allowedKeys) {
 }
 
 function signoffPlaceholder(value) {
-  return SIGNOFF_PLACEHOLDER_RE.test(text(value));
+  const normalized = text(value).replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
+  return SIGNOFF_PLACEHOLDER_RE.test(normalized);
 }
 
 function splitMarkdownRow(line) {

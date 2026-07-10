@@ -76,6 +76,8 @@ const requiredLaunchCommands = [
 
 const requiredPackageScripts = [
   'launch:verify',
+  'phase3:review-signoff-template',
+  'phase3:review-signoff-template:smoke',
   'brand:audit',
   'brand:audit:strict',
   'docs:readiness-status-audit',
@@ -98,6 +100,7 @@ const requiredLaunchVerifyScriptParts = [
   'docs:performance-readiness-audit:check',
   'docs:generated-packet-status-audit:check',
   'e2e:human:manifest:check',
+  'phase3:review-signoff-template:smoke',
   'phase5:check-native-config',
   'phase7:check-core-loop',
   'phase8:check-growth-store',

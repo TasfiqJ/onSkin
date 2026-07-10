@@ -109,6 +109,7 @@ npm run phase2:check-env
 npm run phase2:rls-smoke
 npm run phase3:audit-copy
 npm run phase3:review-packet
+npm run phase3:review-signoff-template -- --list
 npm run phase4:check-source-env
 npm run phase4:import-obf-fixture
 npm run phase4:qa-report

@@ -506,13 +506,15 @@ describe('Phase 3 review evidence contract', () => {
   it('rejects signoffs without credential, decision-condition, or retained evidence details', () => {
     const worklist = releaseReadyWorklist();
     const signoff = worklist.items[0]!.signoff!.record;
-    signoff.attestor.credentialOrRole = 'TBD';
-    signoff.decision.conditions = ['TBD'];
-    signoff.evidenceReference = 'pending';
+    signoff.attestor.name = 'REPLACE_WITH_REVIEWER_OR_DECISION_OWNER_NAME';
+    signoff.attestor.credentialOrRole = 'REPLACE_WITH_PROFESSIONAL_CREDENTIAL_OR_OWNER_ROLE';
+    signoff.decision.conditions = ['REPLACE_WITH_CONDITION_OR_REMOVE_THIS_ENTRY_IF_NONE'];
+    signoff.evidenceReference = 'REPLACE_WITH_RETAINED_APPROVAL_REFERENCE';
 
     const errors = reviewEvidence
       .validateReviewWorklist(worklist, { verifyHashes: false })
       .join(' ');
+    expect(errors).toContain('signoff has no named attestor');
     expect(errors).toContain('has no professional credential or decision-owner role');
     expect(errors).toContain('condition 1 is blank or a placeholder');
     expect(errors).toContain('has no retained approval evidence reference');

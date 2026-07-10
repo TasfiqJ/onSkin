@@ -9,8 +9,8 @@
   "reviewDate": "YYYY-MM-DD",
   "decision": {
     "disposition": "approved",
-    "conditions": [],
-    "conditionsSatisfied": true
+    "conditions": ["REPLACE_WITH_CONDITION_OR_REMOVE_THIS_ENTRY_IF_NONE"],
+    "conditionsSatisfied": "REPLACE_WITH_true_OR_false_AFTER_REVIEW"
   },
   "evidenceReference": "REPLACE_WITH_RETAINED_APPROVAL_REFERENCE",
   "productionGate": null
