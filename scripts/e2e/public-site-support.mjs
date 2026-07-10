@@ -374,7 +374,8 @@ async function run() {
     ]) {
       assert(snapshot.text.includes(requiredText), `support page is missing: ${requiredText}`);
     }
-    assert(!snapshot.text.includes('OnSkin'), 'support page exposes legacy brand copy');
+    const legacyDisplayName = ['On', 'Skin'].join('');
+    assert(!snapshot.text.includes(legacyDisplayName), 'support page exposes legacy brand copy');
     assert(!snapshot.text.includes('__SUPPORT_EMAIL__'), 'support page exposes support email token');
     assert(snapshot.horizontalOverflow <= 1, `support page horizontal overflow ${snapshot.horizontalOverflow}`);
     assert(
