@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T08:26:53.420Z",
+  "generatedAt": "2026-07-10T08:55:12.352Z",
   "purpose": "Phase 5 native device QA packet for installable iOS/Android builds.",
-  "gitSha": "96770f615b7d3896f18648b826eb1645c5a7162c",
+  "gitSha": "1eadd75779d048bb300c1073ed74fce6a298a15b",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -249,14 +249,14 @@
     {
       "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
       "exists": true,
-      "bytes": 9126,
-      "sha256": "ccd2f8a430788885916f37f8bf9a43d9dacab9d62e2beb10b3795af4cffb829e"
+      "bytes": 12292,
+      "sha256": "9ef2a31f0b25f85a1801b69a7d22cb8e6cddddaf334e9b10625b9a79ef632001"
     },
     {
       "path": "apps/mobile/src/features/photos/store.ts",
       "exists": true,
-      "bytes": 10081,
-      "sha256": "73e803b0c95bdaeb8b034efb8dfe91ed7507a599cd1925919315fe86b36906b9"
+      "bytes": 10089,
+      "sha256": "1557f6d511baf44fec1d52d5e585d506a5f7ad7173ef0e95d5c7984ff2f02b6b"
     },
     {
       "path": "apps/mobile/src/features/photos/useCaptureAnalysis.ts",
@@ -388,13 +388,13 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 24247,
-      "sha256": "628cd6fe49e651836ede228c4afa2c9291b65934f12080ae1f1df8883726bed2"
+      "sha256": "dbdca165e7ee4df35aae3e29a4bded3498dbd5e381b915ccabf8d27b0a5cce09"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 8287,
-      "sha256": "8e4f17faffaffcbbcff54b821ad21975f3436566885f37019f536ddc916adc2c"
+      "sha256": "9568d64eb9e485d3d720bfd28d102ca8d1de4af1488cf38b98f9f82696459cb0"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",

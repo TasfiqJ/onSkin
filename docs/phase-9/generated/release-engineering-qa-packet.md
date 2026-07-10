@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-10T08:26:55.138Z
+Generated: 2026-07-10T08:55:14.069Z
 Status: blocked
-Git SHA: 96770f615b7d3896f18648b826eb1645c5a7162c
+Git SHA: 1eadd75779d048bb300c1073ed74fce6a298a15b
 Git status: clean
 
 ## Release Identity
@@ -99,10 +99,10 @@ Git status: clean
 - `apps/mobile/src/features/settings/actions.ts`: `a560c90bf06696f4ab9e4ace3298ec9648651bce425e73f01b25a28b3b89c9a0`
 - `apps/mobile/src/features/settings/localDeviceExport.ts`: `5553f474ebdff6bf5498565cecac5d6a787057e4a12b58cf4ffb8195c8560c81`
 - `apps/mobile/src/features/settings/localDeviceExport.test.ts`: `4dbbe2b3084f17923d989e80970b270f4f5846163ebd5c27e6e21b601a2ab9f7`
-- `apps/mobile/src/features/settings/localPrivateDataKeys.ts`: `936adb5a35793ab26fb4e813d925f024032bd66d736f9c70660908e7beb44add`
-- `apps/mobile/src/features/settings/localPrivateData.ts`: `f2f0793ca0e6e5b39da63aeecefce0f11254dfaa5c08901111ca04014547db59`
-- `apps/mobile/src/lib/storage/privateKV.ts`: `9cd706f30a5e1b6a4b24c3c356a960cbe603b32185dd5e688c1facb98dd151fd`
-- `apps/mobile/src/lib/storage/privateKV.test.ts`: `5f6befa45ddb9a1d49f0de5bf1e81bc5bea0eb2bebf3ad9794c1c650e261f03e`
+- `apps/mobile/src/features/settings/localPrivateDataKeys.ts`: `8bcc18ef96e8dcbd8e8ce60b532335a3c225f7f1aa202247841c360c6d012db3`
+- `apps/mobile/src/features/settings/localPrivateData.ts`: `6fbb58fd4787acd5ab79a8c544c2f07f19acb527798b8ffaa12a40df7176873a`
+- `apps/mobile/src/lib/storage/privateKV.ts`: `efe2d3a845492efa94abee9cf57c43fa9bda9f307e95a3af1910990cadfe42c6`
+- `apps/mobile/src/lib/storage/privateKV.test.ts`: `06b789ac267247e03da1c71f7441a6b5bdb88c825a33488cba20beabe39fd5d8`
 - `apps/mobile/src/lib/auth/apple.ts`: `2c61d825f40abde9f55e0bfb11ba32e345ee642f7d79de5002f0e1c404eb1ff8`
 - `supabase/functions/account-deletion/index.ts`: `5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b`
 - `supabase/functions/_shared/body.ts`: `03e9ddbd56df2875f78b4f582ffdae13f0deca50d75d44ed3a5df4d685b39e6a`
@@ -143,7 +143,7 @@ Git status: clean
 - `scripts/phase9/dependency-sbom.mjs`: `0b36b22f21004af4913cd1c72b0f247765b888a3461ee074a3758a8c3d8df351`
 - `scripts/phase9/store-build-inspect.mjs`: `6dbda3144157e2b8f75f92b81dc3cf52310154fbd5a8a64ccd80942745ea5366`
 - `docs/phase-9/source-of-truth.md`: `b23f022feded586dadfd8e21d7c407b8b94f9ed317ae6ddde12dac1c5933c9da`
-- `docs/phase-9/data-inventory.md`: `6f0934e8ebce31cb35bd32bd412e09e5d687a60b5c81bdb66ecfd7945e73c1af`
+- `docs/phase-9/data-inventory.md`: `44a0abc8f76a4825c4131cae9e7f7583326a589c13fa1aecde966c1bf45aa6aa`
 - `docs/phase-9/edge-function-auth-matrix.md`: `e93759bc6338c06bbfd883e0c704cba42c85eafd15369278564255b60d8e7786`
 - `docs/phase-9/observability-payload-audit.md`: `3aa9508564cef79e704b14fdd43a80063e8e040ebc7dcdfa7f68a9cd8d86ada7`
 - `docs/phase-9/security-scanner-evidence.md`: `878d37533e0f2cd94a77a774917e829f7436e854816ae9caf623e498c45f8566`

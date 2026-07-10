@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-10T08:26:51.203Z",
+  "generatedAt": "2026-07-10T08:55:10.181Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "96770f615b7d3896f18648b826eb1645c5a7162c",
+  "gitSha": "1eadd75779d048bb300c1073ed74fce6a298a15b",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 89990,
-    "sha256": "8db9ded1e08c82c82f59b42a937388f919acd8a300569c2668d911c4722f15ac",
-    "currentSha256": "8db9ded1e08c82c82f59b42a937388f919acd8a300569c2668d911c4722f15ac"
+    "bytes": 89991,
+    "sha256": "0527168b388e1d2b22a5829fa04254388755042adcaf43ec9091ef82464873bd",
+    "currentSha256": "0527168b388e1d2b22a5829fa04254388755042adcaf43ec9091ef82464873bd"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -747,7 +747,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "8ad20d03603420564ae8fff8fffd0e4d79095db61c606283b621154e4216229c",
+      "reviewSnapshotSha256": "674bd41d6a3099ee4bf4b150221ffd77e65353992c4364f5f92da12683f30c54",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -776,14 +776,14 @@
         {
           "path": "apps/mobile/src/lib/storage/privateKV.ts",
           "exists": true,
-          "bytes": 4651,
-          "sha256": "9cd706f30a5e1b6a4b24c3c356a960cbe603b32185dd5e688c1facb98dd151fd"
+          "bytes": 7520,
+          "sha256": "efe2d3a845492efa94abee9cf57c43fa9bda9f307e95a3af1910990cadfe42c6"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.test.ts",
           "exists": true,
-          "bytes": 3539,
-          "sha256": "5f6befa45ddb9a1d49f0de5bf1e81bc5bea0eb2bebf3ad9794c1c650e261f03e"
+          "bytes": 6900,
+          "sha256": "06b789ac267247e03da1c71f7441a6b5bdb88c825a33488cba20beabe39fd5d8"
         },
         {
           "path": "apps/mobile/src/lib/legal/policyLinks.ts",
@@ -877,7 +877,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "ec77450b7b203287b5bb50574b11795256583893c62111fd6e860d23dac174dd",
+      "reviewSnapshotSha256": "fcfe7715e37273aaeaa41a25849b81012600c60cfe1b44cb4f84df2ef85bd2a6",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -930,8 +930,8 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 11594,
-          "sha256": "3e259208ff5123f31874d1dbdbd01fd54d7dd26db19d4041b2a63a96a8540c61"
+          "bytes": 11896,
+          "sha256": "4f97ec111eb125e34e8ab6936286632b169a46f77989eb61b5939cdee698f4a4"
         }
       ]
     },
@@ -948,7 +948,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "dbf39b3a01feca782c306819327714186afc356eaceee30578f105f1fe320410",
+      "reviewSnapshotSha256": "3c09434fb32fe526ec8001ee9757ed355f0e5103a79cb47e0ec2cafa861f38eb",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -965,8 +965,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 8905,
-          "sha256": "fabb2e26cad4a1bbf47550d1e02fa0ca14e073f90edbf976adba5397b5242bb3"
+          "bytes": 9088,
+          "sha256": "58445538ff6942b3c932c995a464843b203e987547ef8be2beaf12ef654db77c"
         },
         {
           "path": "apps/mobile/src/features/onboarding/consentCopy.ts",
@@ -2212,7 +2212,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "0cc31fe5429e7d8f5df92703a06796272f99798ad0e40f89b3e9bf5b61483ea2",
+      "reviewSnapshotSha256": "33e718379f27200aeba8ab0962fd8afc9d9e6f22d2954356aee6877165d806ce",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2235,14 +2235,14 @@
         {
           "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
           "exists": true,
-          "bytes": 9126,
-          "sha256": "ccd2f8a430788885916f37f8bf9a43d9dacab9d62e2beb10b3795af4cffb829e"
+          "bytes": 12292,
+          "sha256": "9ef2a31f0b25f85a1801b69a7d22cb8e6cddddaf334e9b10625b9a79ef632001"
         },
         {
           "path": "apps/mobile/src/features/photos/store.ts",
           "exists": true,
-          "bytes": 10081,
-          "sha256": "73e803b0c95bdaeb8b034efb8dfe91ed7507a599cd1925919315fe86b36906b9"
+          "bytes": 10089,
+          "sha256": "1557f6d511baf44fec1d52d5e585d506a5f7ad7173ef0e95d5c7984ff2f02b6b"
         }
       ]
     },
