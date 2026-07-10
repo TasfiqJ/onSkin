@@ -1,0 +1,181 @@
+{
+  "bodyScrollWidth": 320,
+  "devicePixelRatio": 2,
+  "horizontalOverflow": 0,
+  "innerHeight": 568,
+  "innerWidth": 320,
+  "location": "http://localhost:8212/today",
+  "selectedCount": 1,
+  "tabList": {
+    "borderRadius": 33,
+    "rect": {
+      "bottom": 554,
+      "height": 66,
+      "left": 12,
+      "right": 308,
+      "top": 488,
+      "width": 296,
+      "x": 12,
+      "y": 488
+    },
+    "role": "tablist"
+  },
+  "tabs": [
+    {
+      "ariaLabel": "Today tab",
+      "center": {
+        "x": 49.75,
+        "y": 521
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "id": "bottom-tab-today",
+      "label": "Today",
+      "labelClientWidth": 63,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 544.5,
+        "height": 19,
+        "left": 18.078125,
+        "right": 81.40625,
+        "top": 525.5,
+        "width": 63.328125,
+        "x": 18.078125,
+        "y": 525.5
+      },
+      "labelScrollWidth": 63,
+      "labelText": "Today",
+      "rect": {
+        "bottom": 548,
+        "height": 54,
+        "left": 13,
+        "right": 86.5,
+        "top": 494,
+        "width": 73.5,
+        "x": 13,
+        "y": 494
+      },
+      "route": "today",
+      "selected": true,
+      "text": "Today"
+    },
+    {
+      "ariaLabel": "Progress tab",
+      "center": {
+        "x": 123.25,
+        "y": 521
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "id": "bottom-tab-progress",
+      "label": "Progress",
+      "labelClientWidth": 63,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 544.5,
+        "height": 19,
+        "left": 91.578125,
+        "right": 154.90625,
+        "top": 525.5,
+        "width": 63.328125,
+        "x": 91.578125,
+        "y": 525.5
+      },
+      "labelScrollWidth": 63,
+      "labelText": "Progress",
+      "rect": {
+        "bottom": 548,
+        "height": 54,
+        "left": 86.5,
+        "right": 160,
+        "top": 494,
+        "width": 73.5,
+        "x": 86.5,
+        "y": 494
+      },
+      "route": "progress",
+      "selected": false,
+      "text": "Progress"
+    },
+    {
+      "ariaLabel": "Shelf tab",
+      "center": {
+        "x": 196.75,
+        "y": 521
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "id": "bottom-tab-shelf",
+      "label": "Shelf",
+      "labelClientWidth": 63,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 544.5,
+        "height": 19,
+        "left": 165.078125,
+        "right": 228.40625,
+        "top": 525.5,
+        "width": 63.328125,
+        "x": 165.078125,
+        "y": 525.5
+      },
+      "labelScrollWidth": 63,
+      "labelText": "Shelf",
+      "rect": {
+        "bottom": 548,
+        "height": 54,
+        "left": 160,
+        "right": 233.5,
+        "top": 494,
+        "width": 73.5,
+        "x": 160,
+        "y": 494
+      },
+      "route": "shelf",
+      "selected": false,
+      "text": "Shelf"
+    },
+    {
+      "ariaLabel": "You tab",
+      "center": {
+        "x": 270.25,
+        "y": 521
+      },
+      "centerHitContains": true,
+      "centerHitText": "",
+      "id": "bottom-tab-you",
+      "label": "You",
+      "labelClientWidth": 63,
+      "labelFontSize": "12.5px",
+      "labelLineHeight": "17px",
+      "labelRect": {
+        "bottom": 544.5,
+        "height": 19,
+        "left": 238.578125,
+        "right": 301.90625,
+        "top": 525.5,
+        "width": 63.328125,
+        "x": 238.578125,
+        "y": 525.5
+      },
+      "labelScrollWidth": 63,
+      "labelText": "You",
+      "rect": {
+        "bottom": 548,
+        "height": 54,
+        "left": 233.5,
+        "right": 307,
+        "top": 494,
+        "width": 73.5,
+        "x": 233.5,
+        "y": 494
+      },
+      "route": "you",
+      "selected": false,
+      "text": "You"
+    }
+  ]
+}

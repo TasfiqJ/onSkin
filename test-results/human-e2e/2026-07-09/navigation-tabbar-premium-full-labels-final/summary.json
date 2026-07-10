@@ -1,0 +1,2907 @@
+{
+  "baseUrl": "http://localhost:8212",
+  "evidenceDir": "test-results/human-e2e/2026-07-09/navigation-tabbar-premium-full-labels-final",
+  "generatedAt": "2026-07-10T00:57:37.695Z",
+  "status": "pass",
+  "viewports": [
+    {
+      "height": 568,
+      "name": "320x568",
+      "steps": [
+        {
+          "selected": "Today",
+          "tabListRect": {
+            "bottom": 554,
+            "height": 66,
+            "left": 12,
+            "right": 308,
+            "top": 488,
+            "width": 296,
+            "x": 12,
+            "y": 488
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 18.078125,
+                "right": 81.40625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 18.078125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 13,
+                "right": 86.5,
+                "top": 494,
+                "width": 73.5,
+                "x": 13,
+                "y": 494
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 91.578125,
+                "right": 154.90625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 91.578125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 86.5,
+                "right": 160,
+                "top": 494,
+                "width": 73.5,
+                "x": 86.5,
+                "y": 494
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 165.078125,
+                "right": 228.40625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 165.078125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 160,
+                "right": 233.5,
+                "top": 494,
+                "width": 73.5,
+                "x": 160,
+                "y": 494
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 238.578125,
+                "right": 301.90625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 238.578125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 233.5,
+                "right": 307,
+                "top": 494,
+                "width": 73.5,
+                "x": 233.5,
+                "y": 494
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Progress",
+          "tabListRect": {
+            "bottom": 554,
+            "height": 66,
+            "left": 12,
+            "right": 308,
+            "top": 488,
+            "width": 296,
+            "x": 12,
+            "y": 488
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 18.078125,
+                "right": 81.40625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 18.078125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 13,
+                "right": 86.5,
+                "top": 494,
+                "width": 73.5,
+                "x": 13,
+                "y": 494
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 91.578125,
+                "right": 154.90625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 91.578125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 86.5,
+                "right": 160,
+                "top": 494,
+                "width": 73.5,
+                "x": 86.5,
+                "y": 494
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 165.078125,
+                "right": 228.40625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 165.078125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 160,
+                "right": 233.5,
+                "top": 494,
+                "width": 73.5,
+                "x": 160,
+                "y": 494
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 238.578125,
+                "right": 301.90625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 238.578125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 233.5,
+                "right": 307,
+                "top": 494,
+                "width": 73.5,
+                "x": 233.5,
+                "y": 494
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Shelf",
+          "tabListRect": {
+            "bottom": 554,
+            "height": 66,
+            "left": 12,
+            "right": 308,
+            "top": 488,
+            "width": 296,
+            "x": 12,
+            "y": 488
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 18.078125,
+                "right": 81.40625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 18.078125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 13,
+                "right": 86.5,
+                "top": 494,
+                "width": 73.5,
+                "x": 13,
+                "y": 494
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 91.578125,
+                "right": 154.90625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 91.578125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 86.5,
+                "right": 160,
+                "top": 494,
+                "width": 73.5,
+                "x": 86.5,
+                "y": 494
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 165.078125,
+                "right": 228.40625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 165.078125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 160,
+                "right": 233.5,
+                "top": 494,
+                "width": 73.5,
+                "x": 160,
+                "y": 494
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 238.578125,
+                "right": 301.90625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 238.578125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 233.5,
+                "right": 307,
+                "top": 494,
+                "width": 73.5,
+                "x": 233.5,
+                "y": 494
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "You",
+          "tabListRect": {
+            "bottom": 554,
+            "height": 66,
+            "left": 12,
+            "right": 308,
+            "top": 488,
+            "width": 296,
+            "x": 12,
+            "y": 488
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 18.078125,
+                "right": 81.40625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 18.078125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 13,
+                "right": 86.5,
+                "top": 494,
+                "width": 73.5,
+                "x": 13,
+                "y": 494
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 91.578125,
+                "right": 154.90625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 91.578125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 86.5,
+                "right": 160,
+                "top": 494,
+                "width": 73.5,
+                "x": 86.5,
+                "y": 494
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 165.078125,
+                "right": 228.40625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 165.078125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 160,
+                "right": 233.5,
+                "top": 494,
+                "width": 73.5,
+                "x": 160,
+                "y": 494
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 544.5,
+                "height": 19,
+                "left": 238.578125,
+                "right": 301.90625,
+                "top": 525.5,
+                "width": 63.328125,
+                "x": 238.578125,
+                "y": 525.5
+              },
+              "rect": {
+                "bottom": 548,
+                "height": 54,
+                "left": 233.5,
+                "right": 307,
+                "top": 494,
+                "width": 73.5,
+                "x": 233.5,
+                "y": 494
+              },
+              "selected": true
+            }
+          ]
+        }
+      ],
+      "width": 320
+    },
+    {
+      "height": 640,
+      "name": "360x640",
+      "steps": [
+        {
+          "selected": "Today",
+          "tabListRect": {
+            "bottom": 626,
+            "height": 66,
+            "left": 12,
+            "right": 348,
+            "top": 560,
+            "width": 336,
+            "x": 12,
+            "y": 560
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 18.390625,
+                "right": 91.109375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 18.390625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 13,
+                "right": 96.5,
+                "top": 566,
+                "width": 83.5,
+                "x": 13,
+                "y": 566
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 101.890625,
+                "right": 174.609375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 101.890625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 96.5,
+                "right": 180,
+                "top": 566,
+                "width": 83.5,
+                "x": 96.5,
+                "y": 566
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 185.390625,
+                "right": 258.109375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 185.390625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 180,
+                "right": 263.5,
+                "top": 566,
+                "width": 83.5,
+                "x": 180,
+                "y": 566
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 268.890625,
+                "right": 341.609375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 268.890625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 263.5,
+                "right": 347,
+                "top": 566,
+                "width": 83.5,
+                "x": 263.5,
+                "y": 566
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Progress",
+          "tabListRect": {
+            "bottom": 626,
+            "height": 66,
+            "left": 12,
+            "right": 348,
+            "top": 560,
+            "width": 336,
+            "x": 12,
+            "y": 560
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 18.390625,
+                "right": 91.109375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 18.390625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 13,
+                "right": 96.5,
+                "top": 566,
+                "width": 83.5,
+                "x": 13,
+                "y": 566
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 101.890625,
+                "right": 174.609375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 101.890625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 96.5,
+                "right": 180,
+                "top": 566,
+                "width": 83.5,
+                "x": 96.5,
+                "y": 566
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 185.390625,
+                "right": 258.109375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 185.390625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 180,
+                "right": 263.5,
+                "top": 566,
+                "width": 83.5,
+                "x": 180,
+                "y": 566
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 268.890625,
+                "right": 341.609375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 268.890625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 263.5,
+                "right": 347,
+                "top": 566,
+                "width": 83.5,
+                "x": 263.5,
+                "y": 566
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Shelf",
+          "tabListRect": {
+            "bottom": 626,
+            "height": 66,
+            "left": 12,
+            "right": 348,
+            "top": 560,
+            "width": 336,
+            "x": 12,
+            "y": 560
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 18.390625,
+                "right": 91.109375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 18.390625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 13,
+                "right": 96.5,
+                "top": 566,
+                "width": 83.5,
+                "x": 13,
+                "y": 566
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 101.890625,
+                "right": 174.609375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 101.890625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 96.5,
+                "right": 180,
+                "top": 566,
+                "width": 83.5,
+                "x": 96.5,
+                "y": 566
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 185.390625,
+                "right": 258.109375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 185.390625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 180,
+                "right": 263.5,
+                "top": 566,
+                "width": 83.5,
+                "x": 180,
+                "y": 566
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 268.890625,
+                "right": 341.609375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 268.890625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 263.5,
+                "right": 347,
+                "top": 566,
+                "width": 83.5,
+                "x": 263.5,
+                "y": 566
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "You",
+          "tabListRect": {
+            "bottom": 626,
+            "height": 66,
+            "left": 12,
+            "right": 348,
+            "top": 560,
+            "width": 336,
+            "x": 12,
+            "y": 560
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 18.390625,
+                "right": 91.109375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 18.390625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 13,
+                "right": 96.5,
+                "top": 566,
+                "width": 83.5,
+                "x": 13,
+                "y": 566
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 101.890625,
+                "right": 174.609375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 101.890625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 96.5,
+                "right": 180,
+                "top": 566,
+                "width": 83.5,
+                "x": 96.5,
+                "y": 566
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 185.390625,
+                "right": 258.109375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 185.390625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 180,
+                "right": 263.5,
+                "top": 566,
+                "width": 83.5,
+                "x": 180,
+                "y": 566
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 616.5,
+                "height": 19,
+                "left": 268.890625,
+                "right": 341.609375,
+                "top": 597.5,
+                "width": 72.71875,
+                "x": 268.890625,
+                "y": 597.5
+              },
+              "rect": {
+                "bottom": 620,
+                "height": 54,
+                "left": 263.5,
+                "right": 347,
+                "top": 566,
+                "width": 83.5,
+                "x": 263.5,
+                "y": 566
+              },
+              "selected": true
+            }
+          ]
+        }
+      ],
+      "width": 360
+    },
+    {
+      "height": 667,
+      "name": "375x667",
+      "steps": [
+        {
+          "selected": "Today",
+          "tabListRect": {
+            "bottom": 653,
+            "height": 66,
+            "left": 12,
+            "right": 363,
+            "top": 587,
+            "width": 351,
+            "x": 12,
+            "y": 587
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 18.5,
+                "right": 94.75,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 18.5,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 13,
+                "right": 100.25,
+                "top": 593,
+                "width": 87.25,
+                "x": 13,
+                "y": 593
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 105.75,
+                "right": 182,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 105.75,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 100.25,
+                "right": 187.5,
+                "top": 593,
+                "width": 87.25,
+                "x": 100.25,
+                "y": 593
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 193,
+                "right": 269.25,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 193,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 187.5,
+                "right": 274.75,
+                "top": 593,
+                "width": 87.25,
+                "x": 187.5,
+                "y": 593
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 280.25,
+                "right": 356.5,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 280.25,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 274.75,
+                "right": 362,
+                "top": 593,
+                "width": 87.25,
+                "x": 274.75,
+                "y": 593
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Progress",
+          "tabListRect": {
+            "bottom": 653,
+            "height": 66,
+            "left": 12,
+            "right": 363,
+            "top": 587,
+            "width": 351,
+            "x": 12,
+            "y": 587
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 18.5,
+                "right": 94.75,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 18.5,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 13,
+                "right": 100.25,
+                "top": 593,
+                "width": 87.25,
+                "x": 13,
+                "y": 593
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 105.75,
+                "right": 182,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 105.75,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 100.25,
+                "right": 187.5,
+                "top": 593,
+                "width": 87.25,
+                "x": 100.25,
+                "y": 593
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 193,
+                "right": 269.25,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 193,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 187.5,
+                "right": 274.75,
+                "top": 593,
+                "width": 87.25,
+                "x": 187.5,
+                "y": 593
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 280.25,
+                "right": 356.5,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 280.25,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 274.75,
+                "right": 362,
+                "top": 593,
+                "width": 87.25,
+                "x": 274.75,
+                "y": 593
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Shelf",
+          "tabListRect": {
+            "bottom": 653,
+            "height": 66,
+            "left": 12,
+            "right": 363,
+            "top": 587,
+            "width": 351,
+            "x": 12,
+            "y": 587
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 18.5,
+                "right": 94.75,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 18.5,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 13,
+                "right": 100.25,
+                "top": 593,
+                "width": 87.25,
+                "x": 13,
+                "y": 593
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 105.75,
+                "right": 182,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 105.75,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 100.25,
+                "right": 187.5,
+                "top": 593,
+                "width": 87.25,
+                "x": 100.25,
+                "y": 593
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 193,
+                "right": 269.25,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 193,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 187.5,
+                "right": 274.75,
+                "top": 593,
+                "width": 87.25,
+                "x": 187.5,
+                "y": 593
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 280.25,
+                "right": 356.5,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 280.25,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 274.75,
+                "right": 362,
+                "top": 593,
+                "width": 87.25,
+                "x": 274.75,
+                "y": 593
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "You",
+          "tabListRect": {
+            "bottom": 653,
+            "height": 66,
+            "left": 12,
+            "right": 363,
+            "top": 587,
+            "width": 351,
+            "x": 12,
+            "y": 587
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 18.5,
+                "right": 94.75,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 18.5,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 13,
+                "right": 100.25,
+                "top": 593,
+                "width": 87.25,
+                "x": 13,
+                "y": 593
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 105.75,
+                "right": 182,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 105.75,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 100.25,
+                "right": 187.5,
+                "top": 593,
+                "width": 87.25,
+                "x": 100.25,
+                "y": 593
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 193,
+                "right": 269.25,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 193,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 187.5,
+                "right": 274.75,
+                "top": 593,
+                "width": 87.25,
+                "x": 187.5,
+                "y": 593
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 643.5,
+                "height": 19,
+                "left": 280.25,
+                "right": 356.5,
+                "top": 624.5,
+                "width": 76.25,
+                "x": 280.25,
+                "y": 624.5
+              },
+              "rect": {
+                "bottom": 647,
+                "height": 54,
+                "left": 274.75,
+                "right": 362,
+                "top": 593,
+                "width": 87.25,
+                "x": 274.75,
+                "y": 593
+              },
+              "selected": true
+            }
+          ]
+        }
+      ],
+      "width": 375
+    },
+    {
+      "height": 844,
+      "name": "390x844",
+      "steps": [
+        {
+          "selected": "Today",
+          "tabListRect": {
+            "bottom": 830,
+            "height": 66,
+            "left": 12,
+            "right": 378,
+            "top": 764,
+            "width": 366,
+            "x": 12,
+            "y": 764
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 18.609375,
+                "right": 98.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 18.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 13,
+                "right": 104,
+                "top": 770,
+                "width": 91,
+                "x": 13,
+                "y": 770
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 109.609375,
+                "right": 189.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 109.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 104,
+                "right": 195,
+                "top": 770,
+                "width": 91,
+                "x": 104,
+                "y": 770
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 200.609375,
+                "right": 280.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 200.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 195,
+                "right": 286,
+                "top": 770,
+                "width": 91,
+                "x": 195,
+                "y": 770
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 291.609375,
+                "right": 371.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 291.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 286,
+                "right": 377,
+                "top": 770,
+                "width": 91,
+                "x": 286,
+                "y": 770
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Progress",
+          "tabListRect": {
+            "bottom": 830,
+            "height": 66,
+            "left": 12,
+            "right": 378,
+            "top": 764,
+            "width": 366,
+            "x": 12,
+            "y": 764
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 18.609375,
+                "right": 98.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 18.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 13,
+                "right": 104,
+                "top": 770,
+                "width": 91,
+                "x": 13,
+                "y": 770
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 109.609375,
+                "right": 189.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 109.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 104,
+                "right": 195,
+                "top": 770,
+                "width": 91,
+                "x": 104,
+                "y": 770
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 200.609375,
+                "right": 280.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 200.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 195,
+                "right": 286,
+                "top": 770,
+                "width": 91,
+                "x": 195,
+                "y": 770
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 291.609375,
+                "right": 371.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 291.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 286,
+                "right": 377,
+                "top": 770,
+                "width": 91,
+                "x": 286,
+                "y": 770
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Shelf",
+          "tabListRect": {
+            "bottom": 830,
+            "height": 66,
+            "left": 12,
+            "right": 378,
+            "top": 764,
+            "width": 366,
+            "x": 12,
+            "y": 764
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 18.609375,
+                "right": 98.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 18.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 13,
+                "right": 104,
+                "top": 770,
+                "width": 91,
+                "x": 13,
+                "y": 770
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 109.609375,
+                "right": 189.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 109.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 104,
+                "right": 195,
+                "top": 770,
+                "width": 91,
+                "x": 104,
+                "y": 770
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 200.609375,
+                "right": 280.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 200.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 195,
+                "right": 286,
+                "top": 770,
+                "width": 91,
+                "x": 195,
+                "y": 770
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 291.609375,
+                "right": 371.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 291.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 286,
+                "right": 377,
+                "top": 770,
+                "width": 91,
+                "x": 286,
+                "y": 770
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "You",
+          "tabListRect": {
+            "bottom": 830,
+            "height": 66,
+            "left": 12,
+            "right": 378,
+            "top": 764,
+            "width": 366,
+            "x": 12,
+            "y": 764
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 18.609375,
+                "right": 98.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 18.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 13,
+                "right": 104,
+                "top": 770,
+                "width": 91,
+                "x": 13,
+                "y": 770
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 109.609375,
+                "right": 189.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 109.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 104,
+                "right": 195,
+                "top": 770,
+                "width": 91,
+                "x": 104,
+                "y": 770
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 200.609375,
+                "right": 280.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 200.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 195,
+                "right": 286,
+                "top": 770,
+                "width": 91,
+                "x": 195,
+                "y": 770
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 820.5,
+                "height": 19,
+                "left": 291.609375,
+                "right": 371.375,
+                "top": 801.5,
+                "width": 79.765625,
+                "x": 291.609375,
+                "y": 801.5
+              },
+              "rect": {
+                "bottom": 824,
+                "height": 54,
+                "left": 286,
+                "right": 377,
+                "top": 770,
+                "width": 91,
+                "x": 286,
+                "y": 770
+              },
+              "selected": true
+            }
+          ]
+        }
+      ],
+      "width": 390
+    },
+    {
+      "height": 915,
+      "name": "412x915",
+      "steps": [
+        {
+          "selected": "Today",
+          "tabListRect": {
+            "bottom": 901,
+            "height": 66,
+            "left": 12,
+            "right": 400,
+            "top": 835,
+            "width": 388,
+            "x": 12,
+            "y": 835
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 18.78125,
+                "right": 103.71875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 18.78125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 13,
+                "right": 109.5,
+                "top": 841,
+                "width": 96.5,
+                "x": 13,
+                "y": 841
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 115.28125,
+                "right": 200.21875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 115.28125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 109.5,
+                "right": 206,
+                "top": 841,
+                "width": 96.5,
+                "x": 109.5,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 211.78125,
+                "right": 296.71875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 211.78125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 206,
+                "right": 302.5,
+                "top": 841,
+                "width": 96.5,
+                "x": 206,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 308.28125,
+                "right": 393.21875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 308.28125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 302.5,
+                "right": 399,
+                "top": 841,
+                "width": 96.5,
+                "x": 302.5,
+                "y": 841
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Progress",
+          "tabListRect": {
+            "bottom": 901,
+            "height": 66,
+            "left": 12,
+            "right": 400,
+            "top": 835,
+            "width": 388,
+            "x": 12,
+            "y": 835
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 18.78125,
+                "right": 103.71875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 18.78125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 13,
+                "right": 109.5,
+                "top": 841,
+                "width": 96.5,
+                "x": 13,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 115.28125,
+                "right": 200.21875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 115.28125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 109.5,
+                "right": 206,
+                "top": 841,
+                "width": 96.5,
+                "x": 109.5,
+                "y": 841
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 211.78125,
+                "right": 296.71875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 211.78125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 206,
+                "right": 302.5,
+                "top": 841,
+                "width": 96.5,
+                "x": 206,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 308.28125,
+                "right": 393.21875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 308.28125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 302.5,
+                "right": 399,
+                "top": 841,
+                "width": 96.5,
+                "x": 302.5,
+                "y": 841
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Shelf",
+          "tabListRect": {
+            "bottom": 901,
+            "height": 66,
+            "left": 12,
+            "right": 400,
+            "top": 835,
+            "width": 388,
+            "x": 12,
+            "y": 835
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 18.78125,
+                "right": 103.71875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 18.78125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 13,
+                "right": 109.5,
+                "top": 841,
+                "width": 96.5,
+                "x": 13,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 115.28125,
+                "right": 200.21875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 115.28125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 109.5,
+                "right": 206,
+                "top": 841,
+                "width": 96.5,
+                "x": 109.5,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 211.78125,
+                "right": 296.71875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 211.78125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 206,
+                "right": 302.5,
+                "top": 841,
+                "width": 96.5,
+                "x": 206,
+                "y": 841
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 308.28125,
+                "right": 393.21875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 308.28125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 302.5,
+                "right": 399,
+                "top": 841,
+                "width": 96.5,
+                "x": 302.5,
+                "y": 841
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "You",
+          "tabListRect": {
+            "bottom": 901,
+            "height": 66,
+            "left": 12,
+            "right": 400,
+            "top": 835,
+            "width": 388,
+            "x": 12,
+            "y": 835
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 18.78125,
+                "right": 103.71875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 18.78125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 13,
+                "right": 109.5,
+                "top": 841,
+                "width": 96.5,
+                "x": 13,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 115.28125,
+                "right": 200.21875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 115.28125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 109.5,
+                "right": 206,
+                "top": 841,
+                "width": 96.5,
+                "x": 109.5,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 211.78125,
+                "right": 296.71875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 211.78125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 206,
+                "right": 302.5,
+                "top": 841,
+                "width": 96.5,
+                "x": 206,
+                "y": 841
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 891.5,
+                "height": 19,
+                "left": 308.28125,
+                "right": 393.21875,
+                "top": 872.5,
+                "width": 84.9375,
+                "x": 308.28125,
+                "y": 872.5
+              },
+              "rect": {
+                "bottom": 895,
+                "height": 54,
+                "left": 302.5,
+                "right": 399,
+                "top": 841,
+                "width": 96.5,
+                "x": 302.5,
+                "y": 841
+              },
+              "selected": true
+            }
+          ]
+        }
+      ],
+      "width": 412
+    },
+    {
+      "height": 932,
+      "name": "430x932",
+      "steps": [
+        {
+          "selected": "Today",
+          "tabListRect": {
+            "bottom": 918,
+            "height": 66,
+            "left": 12,
+            "right": 418,
+            "top": 852,
+            "width": 406,
+            "x": 12,
+            "y": 852
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 18.90625,
+                "right": 108.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 18.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 13,
+                "right": 114,
+                "top": 858,
+                "width": 101,
+                "x": 13,
+                "y": 858
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 119.90625,
+                "right": 209.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 119.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 114,
+                "right": 215,
+                "top": 858,
+                "width": 101,
+                "x": 114,
+                "y": 858
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 220.90625,
+                "right": 310.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 220.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 215,
+                "right": 316,
+                "top": 858,
+                "width": 101,
+                "x": 215,
+                "y": 858
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 321.90625,
+                "right": 411.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 321.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 316,
+                "right": 417,
+                "top": 858,
+                "width": 101,
+                "x": 316,
+                "y": 858
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Progress",
+          "tabListRect": {
+            "bottom": 918,
+            "height": 66,
+            "left": 12,
+            "right": 418,
+            "top": 852,
+            "width": 406,
+            "x": 12,
+            "y": 852
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 18.90625,
+                "right": 108.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 18.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 13,
+                "right": 114,
+                "top": 858,
+                "width": 101,
+                "x": 13,
+                "y": 858
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 119.90625,
+                "right": 209.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 119.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 114,
+                "right": 215,
+                "top": 858,
+                "width": 101,
+                "x": 114,
+                "y": 858
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 220.90625,
+                "right": 310.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 220.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 215,
+                "right": 316,
+                "top": 858,
+                "width": 101,
+                "x": 215,
+                "y": 858
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 321.90625,
+                "right": 411.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 321.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 316,
+                "right": 417,
+                "top": 858,
+                "width": 101,
+                "x": 316,
+                "y": 858
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "Shelf",
+          "tabListRect": {
+            "bottom": 918,
+            "height": 66,
+            "left": 12,
+            "right": 418,
+            "top": 852,
+            "width": 406,
+            "x": 12,
+            "y": 852
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 18.90625,
+                "right": 108.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 18.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 13,
+                "right": 114,
+                "top": 858,
+                "width": 101,
+                "x": 13,
+                "y": 858
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 119.90625,
+                "right": 209.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 119.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 114,
+                "right": 215,
+                "top": 858,
+                "width": 101,
+                "x": 114,
+                "y": 858
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 220.90625,
+                "right": 310.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 220.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 215,
+                "right": 316,
+                "top": 858,
+                "width": 101,
+                "x": 215,
+                "y": 858
+              },
+              "selected": true
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 321.90625,
+                "right": 411.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 321.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 316,
+                "right": 417,
+                "top": 858,
+                "width": 101,
+                "x": 316,
+                "y": 858
+              },
+              "selected": false
+            }
+          ]
+        },
+        {
+          "selected": "You",
+          "tabListRect": {
+            "bottom": 918,
+            "height": 66,
+            "left": 12,
+            "right": 418,
+            "top": 852,
+            "width": 406,
+            "x": 12,
+            "y": 852
+          },
+          "tabs": [
+            {
+              "centerHitContains": true,
+              "label": "Today",
+              "labelText": "Today",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 18.90625,
+                "right": 108.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 18.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 13,
+                "right": 114,
+                "top": 858,
+                "width": 101,
+                "x": 13,
+                "y": 858
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Progress",
+              "labelText": "Progress",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 119.90625,
+                "right": 209.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 119.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 114,
+                "right": 215,
+                "top": 858,
+                "width": 101,
+                "x": 114,
+                "y": 858
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "Shelf",
+              "labelText": "Shelf",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 220.90625,
+                "right": 310.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 220.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 215,
+                "right": 316,
+                "top": 858,
+                "width": 101,
+                "x": 215,
+                "y": 858
+              },
+              "selected": false
+            },
+            {
+              "centerHitContains": true,
+              "label": "You",
+              "labelText": "You",
+              "labelRect": {
+                "bottom": 908.5,
+                "height": 19,
+                "left": 321.90625,
+                "right": 411.078125,
+                "top": 889.5,
+                "width": 89.171875,
+                "x": 321.90625,
+                "y": 889.5
+              },
+              "rect": {
+                "bottom": 912,
+                "height": 54,
+                "left": 316,
+                "right": 417,
+                "top": 858,
+                "width": 101,
+                "x": 316,
+                "y": 858
+              },
+              "selected": true
+            }
+          ]
+        }
+      ],
+      "width": 430
+    }
+  ],
+  "problemLogCount": 0
+}
