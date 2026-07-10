@@ -1,8 +1,8 @@
 # Tas To Do Audit
 
-Generated: 2026-07-10T02:48:19.914Z
+Generated: 2026-07-10T03:04:11.622Z
 Status: pass
-Strict mode: yes
+Strict mode: no
 
 This generated audit checks that `docs/FOR_TAS_TO_DO.md` covers the
 Tas-owned strict launch evidence gates, current device support floors,
@@ -18,9 +18,9 @@ inventory itself is the canonical machine-readable key list.
 
 - Gate groups: 10
 - Covered gate groups: 10
-- Extracted keys: 238
+- Extracted keys: 239
 - Local generated-only keys excluded: 15
-- Keys named verbatim in FOR_TAS_TO_DO.md: 238
+- Keys named verbatim in FOR_TAS_TO_DO.md: 239
 - Keys only in generated inventory: 0
 - Blockers: 0
 - Warnings: 0
@@ -38,7 +38,7 @@ inventory itself is the canonical machine-readable key list.
 | Gate    | FOR_TAS coverage | Package script evidence                                    | Keys | Keys only in generated inventory |
 | ------- | ---------------- | ---------------------------------------------------------- | ---- | -------------------------------- |
 | phase2  | yes              | phase2:check-env:strict, phase2:rls-smoke                  | 53   | 0                                |
-| phase3  | yes              | phase3:audit-copy:strict                                   | 2    | 0                                |
+| phase3  | yes              | phase3:audit-copy:strict                                   | 3    | 0                                |
 | phase4  | yes              | phase4:check-source-env:strict                             | 11   | 0                                |
 | phase5  | yes              | phase5:check-native-config:strict, phase5:qa-packet:strict | 21   | 0                                |
 | phase6  | yes              | phase6:check-payments-env:strict, phase6:qa-packet:strict  | 18   | 0                                |
@@ -118,6 +118,7 @@ Covered by `docs/FOR_TAS_TO_DO.md`: yes
 
 | Extracted key                     | Named in FOR_TAS_TO_DO.md |
 | --------------------------------- | ------------------------- |
+| PHASE3_RELEASE_CLEARANCE          | yes                       |
 | PHASE3_REVIEW_OPERATOR_QUEUE_JSON | yes                       |
 | PHASE3_REVIEW_OPERATOR_QUEUE_MD   | yes                       |
 

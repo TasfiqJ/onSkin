@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T02:48:19.914Z",
+  "generatedAt": "2026-07-10T03:04:11.622Z",
   "status": "pass",
-  "strict": true,
+  "strict": false,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates, current device support floors, and generate an exact key inventory from phase scripts.",
   "sourceFiles": {
     "forTasPath": "docs/FOR_TAS_TO_DO.md",
@@ -31,9 +31,9 @@
   "summary": {
     "gateGroupCount": 10,
     "coveredGateGroupCount": 10,
-    "extractedKeyCount": 238,
+    "extractedKeyCount": 239,
     "localOnlyKeyCount": 15,
-    "keyMentionCount": 238,
+    "keyMentionCount": 239,
     "keyNotMentionedCount": 0,
     "blockerCount": 0,
     "warningCount": 0
@@ -193,10 +193,12 @@
         "PHASE3_REVIEW_WORKLIST_MD"
       ],
       "keys": [
+        "PHASE3_RELEASE_CLEARANCE",
         "PHASE3_REVIEW_OPERATOR_QUEUE_JSON",
         "PHASE3_REVIEW_OPERATOR_QUEUE_MD"
       ],
       "keysMentionedInForTas": [
+        "PHASE3_RELEASE_CLEARANCE",
         "PHASE3_REVIEW_OPERATOR_QUEUE_JSON",
         "PHASE3_REVIEW_OPERATOR_QUEUE_MD"
       ],

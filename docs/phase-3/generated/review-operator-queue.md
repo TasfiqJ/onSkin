@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-10T02:50:23.353Z
+Generated: 2026-07-10T03:04:10.714Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 51919d51ea9a2dc2c89938e872bfd8370fe223c6
+Git SHA: 5ef2527374b77484059dad64308d9ebe269730ca
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -108,7 +108,7 @@ Sources:
 - `docs/brand-decision-memo.md` - 5262 bytes - sha256 `c487025274d66cef019c921aaa0ec8abd1187c9039e16de70741924f567442d9`
 - `docs/brand-evidence.md` - 14591 bytes - sha256 `f532064e51df74c5aa3bce5c4867541a50cc33bfe35ec68bb9b4d741617363e4`
 - `apps/mobile/app.base.json` - 2883 bytes - sha256 `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`
-- `apps/mobile/app.config.js` - 9574 bytes - sha256 `6f6343b001a419e9dbbdbd85b05427f835ed2701179c2fc61ee79f0a48071851`
+- `apps/mobile/app.config.js` - 10037 bytes - sha256 `7c3b7d06f33bca6749aec92ae7fa49b1b7f36ae91864326207c545d5b41c0c16`
 
 ### P0 - IP/FTO - Catalog source and image rights
 
@@ -152,7 +152,7 @@ Sources:
 Sources:
 
 - `apps/mobile/app.base.json` - 2883 bytes - sha256 `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`
-- `apps/mobile/app.config.js` - 9574 bytes - sha256 `6f6343b001a419e9dbbdbd85b05427f835ed2701179c2fc61ee79f0a48071851`
+- `apps/mobile/app.config.js` - 10037 bytes - sha256 `7c3b7d06f33bca6749aec92ae7fa49b1b7f36ae91864326207c545d5b41c0c16`
 - `supabase/config.toml` - 1697 bytes - sha256 `16e76630a8c50259e499fdb6d0cf7184547395e9d148f9cfc0aa1b1cf415f461`
 
 ### P0 - IP/FTO - Onboarding quiz FTO

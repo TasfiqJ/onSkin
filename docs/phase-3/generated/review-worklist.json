@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-10T02:50:22.005Z",
+  "generatedAt": "2026-07-10T03:04:09.818Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "51919d51ea9a2dc2c89938e872bfd8370fe223c6",
+  "gitSha": "5ef2527374b77484059dad64308d9ebe269730ca",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -1763,8 +1763,8 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 9574,
-          "sha256": "6f6343b001a419e9dbbdbd85b05427f835ed2701179c2fc61ee79f0a48071851"
+          "bytes": 10037,
+          "sha256": "7c3b7d06f33bca6749aec92ae7fa49b1b7f36ae91864326207c545d5b41c0c16"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1791,8 +1791,8 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 9574,
-          "sha256": "6f6343b001a419e9dbbdbd85b05427f835ed2701179c2fc61ee79f0a48071851"
+          "bytes": 10037,
+          "sha256": "7c3b7d06f33bca6749aec92ae7fa49b1b7f36ae91864326207c545d5b41c0c16"
         },
         {
           "path": "supabase/config.toml",
