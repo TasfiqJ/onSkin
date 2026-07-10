@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T11:17:32.951Z",
+  "generatedAt": "2026-07-10T15:38:42.464Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "45927881bda3ac8411fb51ba0bb96b2f1caff8ac",
+  "gitSha": "aad83c6b85e77b519e152d0ba104adf2ddff85fd",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -82,14 +82,14 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 18204,
-      "sha256": "303fe5980f1837ba45e134f9c35bbd331f650f4b5146d142cb32c89eb86f71b8"
+      "bytes": 18313,
+      "sha256": "5714a4b7bd35cffa77b9951ebfcad3b090cc707a89bf0e0f6001ae7ad49c81b3"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
       "exists": true,
-      "bytes": 18355,
-      "sha256": "b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75"
+      "bytes": 18317,
+      "sha256": "f89981290f02bc355ca4ac279b9e660c86d480a9c6e54b041a4d600f0468b105"
     },
     {
       "path": "apps/mobile/src/features/subscription/store.ts",
@@ -220,8 +220,8 @@
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 31845,
-      "sha256": "0a0c4908421eb06193a4b706833514226ca412caa933983d4c972c6d9143859d"
+      "bytes": 32608,
+      "sha256": "39919b30de88e12a9e3c9eb56052aabea6680643807477d7282137e1e9862986"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -244,20 +244,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 330223,
-      "sha256": "3ef349d1a7fdec679379bbb1ccf6c5fab867ccffd43748bbae855d2488508f06"
+      "bytes": 333438,
+      "sha256": "66540874d34b2aee456ba8b61856679f5a8c7bf1314822d5571faf46b970e6d1"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
-      "bytes": 26755,
-      "sha256": "7223076960c363a137f2fdb81cb9fd2e31d3aaa28247919c1538b839d2d0b5ad"
+      "bytes": 27556,
+      "sha256": "b5de0fa3b84763ca33a53b579e4d9e0f23ba845bbc49cac92828f7d01ad6f3eb"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
-      "bytes": 8989,
-      "sha256": "2d93829d1d7a80694c3604bbcd2a01789eade2f256f46de2875c6542af6a9bab"
+      "bytes": 9223,
+      "sha256": "0de9004b367d579cd5cafb541f3cae18cf72687bb0c561dbc8dfafc5c57f97e9"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",
