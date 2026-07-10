@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-07-10T11:11:11.960Z",
+  "generatedAt": "2026-07-10T15:36:23.232Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-10",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 179,
-  "expectedMobileTests": 1851,
-  "actualMobileTestFiles": 179,
-  "expectedTestPhrase": "179 mobile test files / 1851 tests",
+  "expectedMobileTestFiles": 183,
+  "expectedMobileTests": 1881,
+  "actualMobileTestFiles": 183,
+  "expectedTestPhrase": "183 mobile test files / 1881 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -65,7 +65,9 @@
         "Combined account and current-device export",
         "data-export-combined-device-current",
         "360 x 640 account-upgrade error and recovery pass",
-        "onboarding-account-upgrade-current"
+        "onboarding-account-upgrade-current",
+        "360 x 640 account-transition isolation and cleanup recovery pass",
+        "onboarding-account-isolation-current"
       ],
       "stalePatterns": [],
       "missingCommands": []
