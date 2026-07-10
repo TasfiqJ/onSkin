@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T16:38:20.452Z",
+  "generatedAt": "2026-07-10T16:38:58.795Z",
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "9aa0e2a26c4d28ca08c2d83f88f625aeefe101aa",
+  "gitSha": "7c0f7c860e77f3b91bcbcf86dee310daace29f97",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -237,25 +237,25 @@
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
       "bytes": 16917,
-      "sha256": "d993df4e071e0d0c0a8310632976098bf08f132645cd7e1057149168faf05c9c"
+      "sha256": "326cbb0c216f1e63068c321a534400f0f683e58fc05c4c92ed00af65f08e15ed"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 15600,
-      "sha256": "0cecc4aa78c3214004620c278429a7475fbd2bc5bb7b9903ac420b439f4a798a"
+      "sha256": "cc940ce38eba9ef5a08886f28ccf1c5f276ddb98e1377596b0e4ec4dd8b75377"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
       "bytes": 10522,
-      "sha256": "769243bc951732cd37fdc90b9dbcffc64bb5d509ba0f77e005b9748dcc60191c"
+      "sha256": "188dbfdfab69627716b413735bb30404bcfdb0b46f524b572c96bdecd18ef8af"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
       "bytes": 7861,
-      "sha256": "eb4e1e8a51a37c8ad86f0dfb6dff2b4e6da49f2f3a17a840054a2534b732ab8e"
+      "sha256": "784a685ab89f33d1e7d7bb3dbf55065964352904623a28451926e0436a2b6b6d"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-10T16:38:20.488Z",
+  "generatedAt": "2026-07-10T16:39:05.381Z",
   "objective": "Phase 8 growth loop and store readiness",
   "status": "blocked",
-  "gitSha": "9aa0e2a26c4d28ca08c2d83f88f625aeefe101aa",
+  "gitSha": "7c0f7c860e77f3b91bcbcf86dee310daace29f97",
   "gitStatus": "",
   "publicIdentity": {
     "finalBrandDomain": null,
@@ -97,8 +97,8 @@
     "docs/phase-5/generated/device-qa-packet.md": "cc940ce38eba9ef5a08886f28ccf1c5f276ddb98e1377596b0e4ec4dd8b75377",
     "docs/phase-6/generated/payments-qa-packet.json": "188dbfdfab69627716b413735bb30404bcfdb0b46f524b572c96bdecd18ef8af",
     "docs/phase-6/generated/payments-qa-packet.md": "784a685ab89f33d1e7d7bb3dbf55065964352904623a28451926e0436a2b6b6d",
-    "docs/phase-7/generated/core-loop-qa-packet.json": "c2902f0184d43d2fb6913cd9876afff724fe845c7eaf910cab6f6be1144e5d0b",
-    "docs/phase-7/generated/core-loop-qa-packet.md": "6c9eca786dd5c9d2ee0537a34b3e188f0b8c1c28f5894b29781a4f607e7bbffe",
+    "docs/phase-7/generated/core-loop-qa-packet.json": "196750369d61ac733051a3cc72bf36cd1f1828a2bb9a056210aa5dc3651ca66d",
+    "docs/phase-7/generated/core-loop-qa-packet.md": "a79a93650b7c4a6c09b347c74a782300a9f3214df3d163071b18c09963aefd19",
     "scripts/phase8/build-growth-store-qa-packet.mjs": "6070ec2ffd588b13555481ab5173e7d7783958977662807199e3dc16bd5c1122",
     "scripts/phase8/check-growth-store-readiness.mjs": "128ef3a0c4ea35532a1d976cb0629ca4c36e643a0d5cbafa737a91cdb1505ade",
     "scripts/phase8/check-growth-store-smoke.mjs": "ad8b8a7dc8530c305cec3c5ac61efea434c1538d93020ed3d9b1acb33a0490a0",
