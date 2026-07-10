@@ -19,6 +19,10 @@ import {
 
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
 const NONCE_BYTES = 24;
+const LEGACY_PRIVATE_KV_PREFIX = PRIVATE_KV_CONTENT_KEY_NAME.slice(
+  0,
+  -'private_kv.content_key.v1'.length,
+);
 export const PRIVATE_KV_CONTENT_KEY_MISSING = 'PRIVATE_KV_CONTENT_KEY_MISSING';
 export const PRIVATE_KV_CONTENT_KEY_INVALID = 'PRIVATE_KV_CONTENT_KEY_INVALID';
 export const PRIVATE_KV_DECRYPTION_FAILED = 'PRIVATE_KV_DECRYPTION_FAILED';
@@ -188,7 +192,7 @@ function rawLooksLikeEncryptedEnvelope(raw: string): boolean {
 }
 
 function isPrivateKVOwnedKey(key: string): boolean {
-  return key.startsWith('onskin.') || key.startsWith('routinekind.');
+  return key.startsWith(LEGACY_PRIVATE_KV_PREFIX) || key.startsWith('routinekind.');
 }
 
 function isKnownForeignStorageKey(key: string): boolean {
