@@ -161,12 +161,16 @@ Performance readiness is not closed by local unit tests. Before closed beta,
 record baseline measurements on supported iOS and Android physical devices and
 attach the measurement artifact, device model/OS, build ID, and named owner
 signoff in `docs/FOR_TAS_TO_DO.md`. Thresholds must be defined before
-measurement, and each required metric needs at least five samples per platform.
-Use the blocked template and strict validator documented in
+measurement, and each required metric needs at least five raw samples per
+platform. The validator calculates nearest-rank p50/p95 and max from those
+observations and rejects mismatched hand-entered summaries. Use the blocked
+template and strict validator documented in
 `docs/phase-5/performance-evidence-runbook.md`:
 
 ```bash
 npm run phase5:performance-evidence:template:check
+PHASE5_PERFORMANCE_EVIDENCE_PATH=/path/to/performance-evidence.json \
+npm run phase5:performance-evidence:summarize
 PHASE5_PERFORMANCE_EVIDENCE_PATH=/path/to/performance-evidence.json \
 npm run phase5:performance-evidence:strict
 ```

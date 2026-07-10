@@ -46,6 +46,7 @@
     "phase5:performance-evidence": "node scripts/phase5/check-performance-evidence.mjs",
     "phase5:performance-evidence:strict": "node scripts/phase5/check-performance-evidence.mjs --strict",
     "phase5:performance-evidence:smoke": "node scripts/phase5/performance-evidence-smoke.mjs",
+    "phase5:performance-evidence:summarize": "node scripts/phase5/check-performance-evidence.mjs --write-summaries",
     "phase5:performance-evidence:template": "node scripts/phase5/check-performance-evidence.mjs --write-template",
     "phase5:performance-evidence:template:check": "node scripts/phase5/check-performance-evidence.mjs --check-template",
     "phase5:qa-packet-smoke": "node scripts/phase5/device-qa-packet-smoke.mjs",

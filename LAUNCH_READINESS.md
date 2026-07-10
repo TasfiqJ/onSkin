@@ -158,8 +158,10 @@ Fresh verification through 2026-07-09:
 - `npm run phase5:performance-evidence:template:check` pins the blocked JSON
   schema, while `PHASE5_PERFORMANCE_EVIDENCE_PATH=... npm run
   phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
-  thresholds, one-off measurements, failed p95 targets, photo-timeline crashes
-  or OS terminations, and placeholder signoffs. Real evidence is still absent.
+  thresholds, missing/invalid raw samples, hand-entered summaries that differ
+  from calculated nearest-rank p50/p95/max, failed p95 targets, photo-timeline
+  crashes or OS terminations, and placeholder signoffs. Real evidence is still
+  absent.
 - `npm run phase5:check-native-config` passed as the non-mutating native config
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.

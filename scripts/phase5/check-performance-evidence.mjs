@@ -4,6 +4,8 @@ import { dirname, resolve } from 'node:path';
 
 import {
   createPerformanceEvidenceTemplate,
+  PERFORMANCE_MIN_SAMPLE_COUNT,
+  summarizePerformanceSamples,
   validatePerformanceEvidence,
 } from './performance-evidence-contract.mjs';
 
@@ -11,6 +13,7 @@ const root = process.cwd();
 const strict = process.argv.includes('--strict');
 const writeTemplate = process.argv.includes('--write-template');
 const checkTemplate = process.argv.includes('--check-template');
+const writeSummaries = process.argv.includes('--write-summaries');
 const templatePath =
   process.env.PHASE5_PERFORMANCE_TEMPLATE_PATH ?? 'docs/phase-5/performance-evidence.template.json';
 const evidencePath = String(process.env.PHASE5_PERFORMANCE_EVIDENCE_PATH ?? '').trim();
@@ -55,7 +58,7 @@ console.log('Phase 5 performance evidence check');
 if (!evidencePath) {
   const message =
     'Missing PHASE5_PERFORMANCE_EVIDENCE_PATH; real supported-device performance evidence is not attached.';
-  if (strict) {
+  if (strict || writeSummaries) {
     console.error(`FAIL ${message}`);
     process.exit(1);
   }
@@ -77,6 +80,35 @@ try {
     `FAIL Performance evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
   );
   process.exit(1);
+}
+
+if (writeSummaries) {
+  if (!Array.isArray(evidence.measurements) || evidence.measurements.length === 0) {
+    console.error('FAIL measurements must contain raw observations before summaries are written.');
+    process.exit(1);
+  }
+
+  const summaries = [];
+  for (const [index, measurement] of evidence.measurements.entries()) {
+    const samples = measurement?.samples;
+    const summary = summarizePerformanceSamples(samples);
+    if (!summary || samples.length < PERFORMANCE_MIN_SAMPLE_COUNT) {
+      console.error(
+        `FAIL measurements[${index}].samples must contain at least ${PERFORMANCE_MIN_SAMPLE_COUNT} positive raw observations before summaries are written.`,
+      );
+      process.exit(1);
+    }
+    summaries.push(summary);
+  }
+
+  for (const [index, summary] of summaries.entries()) {
+    Object.assign(evidence.measurements[index], summary);
+  }
+  writeFileSync(abs(evidencePath), normalizedJson(evidence));
+  console.log(
+    `Wrote calculated sampleCount/p50/p95/max summaries for ${summaries.length} measurements to ${evidencePath.replaceAll('\\', '/')}.`,
+  );
+  process.exit(0);
 }
 
 const result = validatePerformanceEvidence(evidence);

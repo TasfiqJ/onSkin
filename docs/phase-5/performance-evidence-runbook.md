@@ -13,7 +13,8 @@ signoff.
   at least 375 pt and at least 640 pt usable portrait height.
 - Android evidence must use a physical phone on Android 10+ with a smallest
   logical width of at least 360 dp and at least 640 dp usable portrait height.
-- Use at least five repeated samples for every metric on both platforms.
+- Record at least five raw samples for every metric on both platforms. Do not
+  enter only a precomputed summary.
 - Use a native profiler for photo-timeline peak memory. Instrumented timers or
   a manual stopwatch are accepted for end-to-end timings when the method is
   recorded consistently.
@@ -46,18 +47,30 @@ The template requires both iOS and Android evidence for:
    and rerunning the complete baseline.
 3. Fill real build/device/source evidence and every iOS/Android measurement in
    a separate JSON artifact based on
-   `docs/phase-5/performance-evidence.template.json`.
-4. Point the validator to the artifact and run strict mode:
+   `docs/phase-5/performance-evidence.template.json`. Put every observation in
+   the measurement's `samples` array.
+4. Point the summarizer to the artifact. It atomically writes the calculated
+   `sampleCount`, `p50`, `p95`, and `max` fields only when every measurement has
+   at least five positive observations:
+
+   ```bash
+   PHASE5_PERFORMANCE_EVIDENCE_PATH=/path/to/performance-evidence.json \
+   npm run phase5:performance-evidence:summarize
+   ```
+
+5. Run strict mode against that same artifact:
 
    ```bash
    PHASE5_PERFORMANCE_EVIDENCE_PATH=/path/to/performance-evidence.json \
    npm run phase5:performance-evidence:strict
    ```
 
-5. Attach the passing artifact, raw profiler/timing exports, build IDs, and
+6. Attach the passing artifact, raw profiler/timing exports, build IDs, and
    named signoff to the beta evidence workspace. The JSON result is a summary,
    not a substitute for raw measurements.
 
-The validator calculates threshold failures from the recorded p95 values. A
-typed `pass` decision cannot override a failed metric, unsupported device,
-post-hoc threshold, missing platform, one-off sample, crash, or OS termination.
+The validator calculates nearest-rank p50 and p95 plus max from the raw samples,
+rejects any declared summary that differs, and calculates threshold failures
+from the calculated p95. A typed `pass` decision cannot override a failed
+metric, unsupported device, post-hoc threshold, missing platform, one-off
+sample, invalid observation, crash, or OS termination.

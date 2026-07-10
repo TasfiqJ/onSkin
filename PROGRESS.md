@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Hardened the Phase 5 performance evidence contract to schema version 2. Each
+  platform/metric pair now retains every raw observation; the validator
+  calculates nearest-rank p50/p95 and max, cross-checks the declared summary,
+  and applies the approved threshold to the calculated p95. Smoke coverage now
+  rejects falsified summaries and zero/invalid samples, while an atomic
+  `phase5:performance-evidence:summarize` command writes derived fields from a
+  complete raw dataset. Obsolete standalone `PHASE_PERFORMANCE_*` booleans were
+  removed from the blocker exit criteria so one strict artifact is the source
+  of truth.
+
 - Replaced the documentation-only performance gate with an executable Phase 5
   evidence contract. The blocked JSON template and strict validator require
   owner-defined thresholds before measurement, real EAS build IDs, supported

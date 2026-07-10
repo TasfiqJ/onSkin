@@ -265,12 +265,14 @@ Status: needs-device-verification
   validator rejects thresholds dated after the captured evidence.
 - Fill a separate JSON artifact from
   `docs/phase-5/performance-evidence.template.json`, set
-  `PHASE5_PERFORMANCE_EVIDENCE_PATH` to that artifact, and run
+  `PHASE5_PERFORMANCE_EVIDENCE_PATH` to that artifact, run
+  `npm run phase5:performance-evidence:summarize`, and then run
   `npm run phase5:performance-evidence:strict`. The strict check requires real
   EAS build IDs, supported physical iOS and Android devices, at least five
-  samples per metric/platform, a 50+ encrypted-photo dataset, calculated p95
+  raw samples per metric/platform, a 50+ encrypted-photo dataset, nearest-rank
+  p50/p95 and max summaries calculated from those observations, calculated p95
   threshold passes, zero crashes/OS terminations, and named threshold/signoff
-  owners.
+  owners. It rejects a hand-entered summary that differs from the raw samples.
 - Run `npm run docs:performance-readiness-audit:check` after updating this
   section or the launch docs.
 
@@ -278,9 +280,9 @@ Evidence needed:
 
 - `PHASE5_PERFORMANCE_EVIDENCE_PATH=<real completed JSON artifact>`
 - Passing `npm run phase5:performance-evidence:strict` output.
-- Measurement artifact with build IDs, device model/OS, sample size, p50/p95
-  or equivalent timing summary, memory summary, known caveats, and decision on
-  whether performance is acceptable for closed beta.
+- Measurement artifact with build IDs, device model/OS, every raw timing or
+  memory observation, calculated sample size/p50/p95/max, known caveats, and a
+  decision on whether performance is acceptable for closed beta.
 
 ## P1 - Catalog And Source Quality
 

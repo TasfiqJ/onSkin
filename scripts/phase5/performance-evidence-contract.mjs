@@ -1,6 +1,6 @@
 import { normalizeNamedSignoff, placeholderEnvValue } from '../phase9/lib.mjs';
 
-export const PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 1;
+export const PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 2;
 export const PERFORMANCE_MIN_SAMPLE_COUNT = 5;
 
 export const PERFORMANCE_METRICS = [
@@ -34,6 +34,29 @@ function isObject(value) {
 
 function isPositiveNumber(value) {
   return typeof value === 'number' && Number.isFinite(value) && value > 0;
+}
+
+export function nearestRankPercentile(samples, percentile) {
+  if (!Array.isArray(samples) || samples.length === 0) return null;
+  if (!isPositiveNumber(percentile) || percentile > 1) return null;
+  if (!samples.every(isPositiveNumber)) return null;
+
+  const sorted = [...samples].sort((left, right) => left - right);
+  const index = Math.max(0, Math.ceil(percentile * sorted.length) - 1);
+  return sorted[index];
+}
+
+export function summarizePerformanceSamples(samples) {
+  if (!Array.isArray(samples) || samples.length === 0 || !samples.every(isPositiveNumber)) {
+    return null;
+  }
+
+  return {
+    sampleCount: samples.length,
+    p50: nearestRankPercentile(samples, 0.5),
+    p95: nearestRankPercentile(samples, 0.95),
+    max: Math.max(...samples),
+  };
 }
 
 function timestamp(value) {
@@ -136,6 +159,7 @@ export function createPerformanceEvidenceTemplate() {
         platform,
         metric,
         source: metric === 'photo_timeline_peak_memory_mb' ? 'native_profiler' : null,
+        samples: [],
         sampleCount: null,
         p50: null,
         p95: null,
@@ -270,40 +294,45 @@ export function validatePerformanceEvidence(evidence) {
     if (metric.id === 'photo_timeline_peak_memory_mb' && measurement.source !== 'native_profiler') {
       errors.push(`${prefix}.source must be native_profiler for photo timeline memory.`);
     }
-    if (
-      !Number.isInteger(measurement.sampleCount) ||
-      measurement.sampleCount < PERFORMANCE_MIN_SAMPLE_COUNT
-    ) {
-      errors.push(`${prefix}.sampleCount must be at least ${PERFORMANCE_MIN_SAMPLE_COUNT}.`);
+
+    const samples = Array.isArray(measurement.samples) ? measurement.samples : [];
+    if (!Array.isArray(measurement.samples)) {
+      errors.push(`${prefix}.samples must be an array of raw observations.`);
+    }
+    for (const [sampleIndex, sample] of samples.entries()) {
+      if (!isPositiveNumber(sample)) {
+        errors.push(`${prefix}.samples[${sampleIndex}] must be a positive number.`);
+      }
+    }
+    if (samples.length < PERFORMANCE_MIN_SAMPLE_COUNT) {
+      errors.push(
+        `${prefix}.samples must contain at least ${PERFORMANCE_MIN_SAMPLE_COUNT} raw observations.`,
+      );
+    }
+
+    const calculated = summarizePerformanceSamples(samples);
+    if (!Number.isInteger(measurement.sampleCount) || measurement.sampleCount !== samples.length) {
+      errors.push(`${prefix}.sampleCount must equal samples.length (${samples.length}).`);
     }
     for (const field of ['p50', 'p95', 'max']) {
       if (!isPositiveNumber(measurement[field])) {
         errors.push(`${prefix}.${field} must be a positive number.`);
       }
-    }
-    if (
-      isPositiveNumber(measurement.p50) &&
-      isPositiveNumber(measurement.p95) &&
-      measurement.p50 > measurement.p95
-    ) {
-      errors.push(`${prefix}.p50 must be less than or equal to p95.`);
-    }
-    if (
-      isPositiveNumber(measurement.p95) &&
-      isPositiveNumber(measurement.max) &&
-      measurement.p95 > measurement.max
-    ) {
-      errors.push(`${prefix}.p95 must be less than or equal to max.`);
+      if (calculated && measurement[field] !== calculated[field]) {
+        errors.push(
+          `${prefix}.${field} must equal the calculated ${field} (${calculated[field]}).`,
+        );
+      }
     }
     const threshold = thresholds[metric.id];
     if (
       isObject(threshold) &&
       isPositiveNumber(threshold.maxP95) &&
-      isPositiveNumber(measurement.p95) &&
-      measurement.p95 > threshold.maxP95
+      calculated &&
+      calculated.p95 > threshold.maxP95
     ) {
       errors.push(
-        `${key} p95 ${measurement.p95} ${metric.unit} exceeds the approved ${threshold.maxP95} ${metric.unit} threshold.`,
+        `${key} calculated p95 ${calculated.p95} ${metric.unit} exceeds the approved ${threshold.maxP95} ${metric.unit} threshold.`,
       );
     }
   }

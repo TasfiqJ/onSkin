@@ -1,10 +1,13 @@
 #!/usr/bin/env node
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
-import { createPerformanceEvidenceTemplate } from './performance-evidence-contract.mjs';
+import {
+  createPerformanceEvidenceTemplate,
+  summarizePerformanceSamples,
+} from './performance-evidence-contract.mjs';
 
 const root = resolve(import.meta.dirname, '..', '..');
 const checker = resolve(import.meta.dirname, 'check-performance-evidence.mjs');
@@ -36,10 +39,8 @@ function validEvidence() {
       measurement.metric === 'photo_timeline_peak_memory_mb'
         ? 'native_profiler'
         : 'instrumented_timer';
-    measurement.sampleCount = 5;
-    measurement.p50 = 500;
-    measurement.p95 = 900;
-    measurement.max = 1000;
+    measurement.samples = [400, 500, 500, 900, 1000];
+    Object.assign(measurement, summarizePerformanceSamples(measurement.samples));
   }
   evidence.signoff.decision = 'pass';
   evidence.signoff.signedOffBy = 'Performance Reviewer';
@@ -47,16 +48,24 @@ function validEvidence() {
   return evidence;
 }
 
-function run(evidence, { strict = true, omitPath = false } = {}) {
+function run(evidence, { strict = true, omitPath = false, summarize = false } = {}) {
   if (evidence) writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
-  return spawnSync(process.execPath, [checker, ...(strict ? ['--strict'] : [])], {
-    cwd: root,
-    encoding: 'utf8',
-    env: {
-      ...process.env,
-      PHASE5_PERFORMANCE_EVIDENCE_PATH: omitPath ? '' : evidencePath,
+  const result = spawnSync(
+    process.execPath,
+    [checker, ...(summarize ? ['--write-summaries'] : []), ...(strict ? ['--strict'] : [])],
+    {
+      cwd: root,
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        PHASE5_PERFORMANCE_EVIDENCE_PATH: omitPath ? '' : evidencePath,
+      },
     },
-  });
+  );
+  if (summarize && result.status === 0) {
+    result.summarizedEvidence = JSON.parse(readFileSync(evidencePath, 'utf8'));
+  }
+  return result;
 }
 
 function output(result) {
@@ -73,11 +82,32 @@ const missingMeasurement = validEvidence();
 missingMeasurement.measurements = missingMeasurement.measurements.slice(1);
 
 const failedThreshold = validEvidence();
-failedThreshold.measurements[0].p95 = 2500;
-failedThreshold.measurements[0].max = 2600;
+failedThreshold.measurements[0].samples = [500, 600, 700, 2100, 2500];
+Object.assign(
+  failedThreshold.measurements[0],
+  summarizePerformanceSamples(failedThreshold.measurements[0].samples),
+);
 
 const smallSample = validEvidence();
-smallSample.measurements[0].sampleCount = 1;
+smallSample.measurements[0].samples = [500];
+Object.assign(
+  smallSample.measurements[0],
+  summarizePerformanceSamples(smallSample.measurements[0].samples),
+);
+
+const falsifiedSummary = validEvidence();
+falsifiedSummary.measurements[0].p95 = 500;
+
+const invalidRawSample = validEvidence();
+invalidRawSample.measurements[0].samples[2] = 0;
+
+const unsummarizedEvidence = validEvidence();
+for (const measurement of unsummarizedEvidence.measurements) {
+  measurement.sampleCount = null;
+  measurement.p50 = null;
+  measurement.p95 = null;
+  measurement.max = null;
+}
 
 const cases = [
   {
@@ -121,7 +151,40 @@ const cases = [
   {
     name: 'rejects one-off timing samples',
     result: run(smallSample),
-    test: (result) => result.status === 1 && /sampleCount must be at least 5/.test(output(result)),
+    test: (result) =>
+      result.status === 1 &&
+      /samples must contain at least 5 raw observations/.test(output(result)),
+  },
+  {
+    name: 'rejects declared percentiles that do not match raw samples',
+    result: run(falsifiedSummary),
+    test: (result) =>
+      result.status === 1 && /p95 must equal the calculated p95/.test(output(result)),
+  },
+  {
+    name: 'rejects zero or invalid raw observations',
+    result: run(invalidRawSample),
+    test: (result) =>
+      result.status === 1 && /samples\[2\] must be a positive number/.test(output(result)),
+  },
+  {
+    name: 'writes deterministic summaries from complete raw observations',
+    result: run(unsummarizedEvidence, { strict: false, summarize: true }),
+    test: (result) =>
+      result.status === 0 &&
+      result.summarizedEvidence?.measurements.every(
+        (measurement) =>
+          measurement.sampleCount === 5 &&
+          measurement.p50 === 500 &&
+          measurement.p95 === 1000 &&
+          measurement.max === 1000,
+      ),
+  },
+  {
+    name: 'refuses to summarize incomplete raw observations',
+    result: run(smallSample, { strict: false, summarize: true }),
+    test: (result) =>
+      result.status === 1 && /at least 5 positive raw observations/.test(output(result)),
   },
 ];
 

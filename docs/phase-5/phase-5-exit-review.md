@@ -24,8 +24,9 @@ Completed in repo:
 - Phase 5 config check and device QA packet generator added.
 - A structured performance-evidence template, strict validator, and smoke suite
   now require predeclared thresholds, supported physical-device/build proof,
-  repeated iOS/Android measurements, encrypted-photo load/memory evidence, and
-  calculated pass/fail instead of trust-only booleans.
+  repeated raw iOS/Android measurements, encrypted-photo load/memory evidence,
+  validator-calculated nearest-rank p50/p95/max, and calculated pass/fail
+  instead of trust-only booleans or hand-entered summaries.
 - The generated QA packet now requires granular physical-device evidence flags
   for install, camera permission recovery, barcode, label capture, progress
   photos, encrypted photo storage, notifications, share sheet, RevenueCat,
@@ -44,7 +45,7 @@ Still blocked before beta:
 - Sentry native crash/source-map smoke.
 - Notification timing matrix on iOS/Android.
 - Passing `phase5:performance-evidence:strict` artifact with owner-defined
-  pre-measurement thresholds and real supported-device measurements.
+  pre-measurement thresholds and real supported-device raw measurements.
 - Brand/legal clearance for production identifiers.
 
 ## Seven-Figure Product Gate

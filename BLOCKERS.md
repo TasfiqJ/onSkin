@@ -625,21 +625,20 @@ Next action:
   encrypted local photo volume;
 - set explicit beta pass/fail thresholds before recruiting testers;
 - generate `docs/phase-5/performance-evidence.template.json`, define thresholds
-  before the first run, collect the complete supported-device artifact, and run
-  `PHASE5_PERFORMANCE_EVIDENCE_PATH=... npm run phase5:performance-evidence:strict`;
+  before the first run, record every raw observation, collect the complete
+  supported-device artifact, run `phase5:performance-evidence:summarize`, and
+  then run `PHASE5_PERFORMANCE_EVIDENCE_PATH=... npm run
+  phase5:performance-evidence:strict`;
 - keep `npm run docs:performance-readiness-audit:check` passing after any
   performance-readiness doc or launch-gate change.
 
 Exit criteria:
 
-- `PHASE_PERFORMANCE_STARTUP_PASS=true`;
-- `PHASE_PERFORMANCE_PRODUCT_ADD_PASS=true`;
-- `PHASE_PERFORMANCE_BARCODE_PASS=true`;
-- `PHASE_PERFORMANCE_ROUTINE_PASS=true`;
-- `PHASE_PERFORMANCE_PHOTO_TIMELINE_PASS=true`;
-- `PHASE_PERFORMANCE_SIGNED_OFF_BY` names a real tester/reviewer;
-- the evidence artifact includes build IDs, device model/OS, sample size,
-  timing summary, memory summary, accepted thresholds, and known caveats.
+- a completed schema-v2 artifact passes
+  `npm run phase5:performance-evidence:strict`;
+- the artifact includes build IDs, device model/OS, at least five raw samples
+  for every platform/metric pair, validator-calculated p50/p95/max, accepted
+  predeclared thresholds, known caveats, and a real named signoff.
 
 ## B-CAMERA - Native camera, barcode, OCR, and guided photos
 

@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-07-10T02:27:44.428Z",
+  "generatedAt": "2026-07-10T02:38:35.568Z",
   "status": "pass",
   "strict": true,
   "summary": {
     "performanceMetricCount": 6,
     "docsChecked": 12,
-    "packageScriptsChecked": 8,
+    "packageScriptsChecked": 9,
     "blockers": 0,
     "warnings": 0
   },
@@ -43,6 +43,10 @@
       "present": true
     },
     {
+      "scriptName": "phase5:performance-evidence:summarize",
+      "present": true
+    },
+    {
       "scriptName": "phase5:performance-evidence:template",
       "present": true
     },
@@ -68,12 +72,12 @@
   "docs": [
     {
       "path": "docs/TESTING_STRATEGY.md",
-      "checkedNeedles": 10,
+      "checkedNeedles": 13,
       "missing": []
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
-      "checkedNeedles": 9,
+      "checkedNeedles": 11,
       "missing": []
     },
     {
@@ -103,22 +107,22 @@
     },
     {
       "path": "docs/phase-5/performance-evidence-runbook.md",
-      "checkedNeedles": 6,
+      "checkedNeedles": 9,
       "missing": []
     },
     {
       "path": "scripts/phase5/check-performance-evidence.mjs",
-      "checkedNeedles": 3,
-      "missing": []
-    },
-    {
-      "path": "scripts/phase5/performance-evidence-contract.mjs",
       "checkedNeedles": 4,
       "missing": []
     },
     {
+      "path": "scripts/phase5/performance-evidence-contract.mjs",
+      "checkedNeedles": 7,
+      "missing": []
+    },
+    {
       "path": "scripts/phase5/performance-evidence-smoke.mjs",
-      "checkedNeedles": 3,
+      "checkedNeedles": 7,
       "missing": []
     },
     {
