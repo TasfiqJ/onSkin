@@ -4,17 +4,17 @@ The dashboard must show whether the public growth loop creates qualified users w
 
 ## Funnel
 
-| Stage | Event | Required dimensions |
-| --- | --- | --- |
-| Share card exported | `share_card_export_succeeded` | `creative_variant`, `share_id` |
-| Share link opened | `landing_viewed` | `source`, `campaign`, `creative_variant`, `share_id`, `platform` |
-| Store click | `store_click` | `store`, `source`, `campaign`, `share_id` |
-| Install attributed | `install` | `store`, `source`, `campaign` |
-| Onboarding started | `onboarding_started` | `source`, `campaign` |
-| First product added | `first_product_added` | `source`, `campaign` |
-| First reviewed insight | `first_reviewed_insight_viewed` | `source`, `campaign` |
-| Trial started | `trial_started` | `source`, `campaign`, `store` |
-| Paid started | `paid_started` | `source`, `campaign`, `store` |
+| Stage                  | Event                           | Required dimensions                                              |
+| ---------------------- | ------------------------------- | ---------------------------------------------------------------- |
+| Share card exported    | `share_card_export_succeeded`   | `creative_variant`, `share_id`                                   |
+| Share link opened      | `landing_viewed`                | `source`, `campaign`, `creative_variant`, `share_id`, `platform` |
+| Store click            | `store_click`                   | `store`, `source`, `campaign`, `share_id`                        |
+| Install attributed     | `install`                       | `store`, `source`, `campaign`                                    |
+| Onboarding started     | `onboarding_started`            | `source`, `campaign`                                             |
+| First product added    | `first_product_added`           | `source`, `campaign`                                             |
+| First reviewed insight | `first_reviewed_insight_viewed` | `source`, `campaign`                                             |
+| Trial started          | `trial_started`                 | `source`, `campaign`, `store`                                    |
+| Paid started           | `paid_started`                  | `source`, `campaign`, `store`                                    |
 
 ## Privacy Rules
 

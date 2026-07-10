@@ -8,13 +8,13 @@ not more feature count.
 
 ## Market Signals
 
-| Signal | Implication | Source |
-| --- | --- | --- |
-| McKinsey describes the global wellness market as about $2T and increasingly daily/personalized for younger consumers | Large category and recurring behavior support a subscription wedge | [McKinsey Future of Wellness 2025](https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights/future-of-wellness-trends) |
-| AAD says acne affects up to 50M Americans annually and one-size-fits-all treatment is not ideal | Skincare confusion is common and recurring | [American Academy of Dermatology](https://www.aad.org/media/stats-numbers) |
-| YouGov found 60% of UK adults use skincare products and effectiveness is the top purchase driver | Users care about whether products work for their own needs | [YouGov 2025 skincare survey](https://yougov.com/en-gb/articles/52964-uk-skincare-trends-2025-routines-multi-use-products-and-what-drives-purchase) |
-| RevenueCat reports North America D35 download-to-paid conversion median around 2.6%, top quartile above 5.6% | Paid conversion is possible but unforgiving | [RevenueCat State of Subscription Apps 2026](https://www.revenuecat.com/state-of-subscription-apps/) |
-| Yuka, SkinSort, Skin Bliss, HadaBuddy, and the incumbent OnSkin already cover scanning/routine territory | Demand exists, but differentiation must be sharper than "scan products" | [Yuka Google Play](https://play.google.com/store/apps/details?id=io.yuka.android&hl=en_US), [SkinSort Google Play](https://play.google.com/store/apps/details?id=com.skinsort&hl=en_US), [Skin Bliss App Store](https://apps.apple.com/us/app/skin-bliss-skincare-routines/id1385561364), [HadaBuddy FAQ](https://www.hadabuddy.com/faq), [OnSkin](https://onskin.com/) |
+| Signal                                                                                                               | Implication                                                             | Source                                                                                                                                                                                                                                                                                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| McKinsey describes the global wellness market as about $2T and increasingly daily/personalized for younger consumers | Large category and recurring behavior support a subscription wedge      | [McKinsey Future of Wellness 2025](https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights/future-of-wellness-trends)                                                                                                                                                                                                                                  |
+| AAD says acne affects up to 50M Americans annually and one-size-fits-all treatment is not ideal                      | Skincare confusion is common and recurring                              | [American Academy of Dermatology](https://www.aad.org/media/stats-numbers)                                                                                                                                                                                                                                                                                              |
+| YouGov found 60% of UK adults use skincare products and effectiveness is the top purchase driver                     | Users care about whether products work for their own needs              | [YouGov 2025 skincare survey](https://yougov.com/en-gb/articles/52964-uk-skincare-trends-2025-routines-multi-use-products-and-what-drives-purchase)                                                                                                                                                                                                                     |
+| RevenueCat reports North America D35 download-to-paid conversion median around 2.6%, top quartile above 5.6%         | Paid conversion is possible but unforgiving                             | [RevenueCat State of Subscription Apps 2026](https://www.revenuecat.com/state-of-subscription-apps/)                                                                                                                                                                                                                                                                    |
+| Yuka, SkinSort, Skin Bliss, HadaBuddy, and the incumbent OnSkin already cover scanning/routine territory             | Demand exists, but differentiation must be sharper than "scan products" | [Yuka Google Play](https://play.google.com/store/apps/details?id=io.yuka.android&hl=en_US), [SkinSort Google Play](https://play.google.com/store/apps/details?id=com.skinsort&hl=en_US), [Skin Bliss App Store](https://apps.apple.com/us/app/skin-bliss-skincare-routines/id1385561364), [HadaBuddy FAQ](https://www.hadabuddy.com/faq), [OnSkin](https://onskin.com/) |
 
 ## Differentiated Wedge
 
@@ -47,14 +47,14 @@ This means the beta must prove:
 
 ## What Customers Are Most Likely To Pay For
 
-| Priority | Paid value |
-| --- | --- |
-| Shelf conflict detection | Avoids irritating combinations and product waste |
-| Routine sequencing | Reduces daily decision fatigue |
-| Calm habit loop | Keeps people consistent without shame or fear |
-| Photo baseline/timeline | Lets users see personal progress privately |
-| Independent recommendations | Valuable only if visibly independent from commerce |
-| Bounded Ask advisor | Useful if deterministic, grounded, and not an unsafe chatbot |
+| Priority                    | Paid value                                                   |
+| --------------------------- | ------------------------------------------------------------ |
+| Shelf conflict detection    | Avoids irritating combinations and product waste             |
+| Routine sequencing          | Reduces daily decision fatigue                               |
+| Calm habit loop             | Keeps people consistent without shame or fear                |
+| Photo baseline/timeline     | Lets users see personal progress privately                   |
+| Independent recommendations | Valuable only if visibly independent from commerce           |
+| Bounded Ask advisor         | Useful if deterministic, grounded, and not an unsafe chatbot |
 
 ## What Will Not Create A Seven-Figure Business By Itself
 

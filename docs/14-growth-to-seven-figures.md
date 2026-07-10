@@ -1,6 +1,6 @@
 # Document 14: Growth to Seven Figures, the Go-to-Market & Distribution Playbook
 
-*The evidence-based, organic-first plan to take OnSkin from built-but-unlaunched to ~$1M ARR. The unit economics that make paid advertising mathematically impossible and word-of-mouth mandatory. The shareable "Shelf Conflict Card" as the Yuka-style growth engine. The five channels (ASO, organic short-form, credentialed-creator seeding, the word-of-mouth artifact loop, and the quiz-to-paywall funnel), each with step-by-step how/where/why, real-company proof, tools, and in-depth solutions to the failure modes. Every number cited to a 2026 primary source and adversarially verified; the honest probability stated plainly.*
+_The evidence-based, organic-first plan to take OnSkin from built-but-unlaunched to ~$1M ARR. The unit economics that make paid advertising mathematically impossible and word-of-mouth mandatory. The shareable "Shelf Conflict Card" as the Yuka-style growth engine. The five channels (ASO, organic short-form, credentialed-creator seeding, the word-of-mouth artifact loop, and the quiz-to-paywall funnel), each with step-by-step how/where/why, real-company proof, tools, and in-depth solutions to the failure modes. Every number cited to a 2026 primary source and adversarially verified; the honest probability stated plainly._
 
 > **A note on what this document is.** docs/00's build order names feature documents only through item 12; items 13 to 15 were founder-delegated. Doc 13 ("Ask OnSkin") was the last feature. **This is doc 14: not a feature, but the distribution strategy**, because the prior turn's audit established the real gap to seven figures is go-to-market, not more product. It was researched the same way every OnSkin doc is: a deep, multi-source, web-sourced research pass (10 channel deep-dives plus a three-angle adversarial verification that re-checked every load-bearing number and corrected the inflated ones). The verdict is honest, not optimistic: at OnSkin's price, the math **forces** an organic, trust-first growth model, which is exactly the model the brand is built for; Yuka proves that model reaches seven figures; the base rate proves it is hard. Both are true. This document is written em-dash-free per the founder's stated preference.
 
@@ -8,43 +8,43 @@
 
 ## TL;DR
 
-- **The one structural truth: at ~$45/yr, paid advertising is mathematically impossible, so organic word-of-mouth is the only profitable channel, and that is the only on-brand channel anyway.** The worked math: $1M ARR needs **~22,000 to 30,000 paying annual subscribers**, which at a realistic 2.5 to 3% download-to-paid is **~700,000 to 1,100,000 lifetime installs**. A 3:1 LTV:CAC guardrail on a ~$32 Year-1 LTV caps fully-loaded cost-per-payer at **~$10.67** (a ~$0.32 cost-per-install ceiling), versus a **$3 to $6** Health & Fitness paid CPI. Paid acquisition is **~10x to 19x underwater**. (RevenueCat State of Subscription Apps 2026; Adapty 2026; Business of Apps 2025.) *(Confidence: high.)*
+- **The one structural truth: at ~$45/yr, paid advertising is mathematically impossible, so organic word-of-mouth is the only profitable channel, and that is the only on-brand channel anyway.** The worked math: $1M ARR needs **~22,000 to 30,000 paying annual subscribers**, which at a realistic 2.5 to 3% download-to-paid is **~700,000 to 1,100,000 lifetime installs**. A 3:1 LTV:CAC guardrail on a ~$32 Year-1 LTV caps fully-loaded cost-per-payer at **~$10.67** (a ~$0.32 cost-per-install ceiling), versus a **$3 to $6** Health & Fitness paid CPI. Paid acquisition is **~10x to 19x underwater**. (RevenueCat State of Subscription Apps 2026; Adapty 2026; Business of Apps 2025.) _(Confidence: high.)_
 
-- **The existence proof is Yuka, in OnSkin's exact category and with OnSkin's exact constraints.** Yuka reached **$7.3M revenue in 2024 (98.1%, $7.17M, from subscriptions), with $0 paid marketing**, ~55M users (Yuka's own 2024 Impact Report), profitable in ~5 years, on an 18-person team. Its founder: *"We've never paid for advertising."* The engine is a single viscerally shareable artifact (the red/green score) plus word-of-mouth (happy users tell 10 to 20 people). *(Confidence: high.)*
+- **The existence proof is Yuka, in OnSkin's exact category and with OnSkin's exact constraints.** Yuka reached **$7.3M revenue in 2024 (98.1%, $7.17M, from subscriptions), with $0 paid marketing**, ~55M users (Yuka's own 2024 Impact Report), profitable in ~5 years, on an 18-person team. Its founder: _"We've never paid for advertising."_ The engine is a single viscerally shareable artifact (the red/green score) plus word-of-mouth (happy users tell 10 to 20 people). _(Confidence: high.)_
 
-- **The single most important thing to build is OnSkin's version of that artifact: the "Shelf Conflict Card."** A one-glance, screenshot-worthy, claim-safe card that flags a conflict between two products the user already owns, exportable to Stories with a watermark and deep link. It is the growth engine; every other channel amplifies it. *(Confidence: high that the shareable-artifact mechanism is the lever; medium that OnSkin's specific artifact replicates Yuka's virality.)*
+- **The single most important thing to build is OnSkin's version of that artifact: the "Shelf Conflict Card."** A one-glance, screenshot-worthy, claim-safe card that flags a conflict between two products the user already owns, exportable to Stories with a watermark and deep link. It is the growth engine; every other channel amplifies it. _(Confidence: high that the shareable-artifact mechanism is the lever; medium that OnSkin's specific artifact replicates Yuka's virality.)_
 
-- **Cal AI is the anti-model, not the template.** It is cited everywhere as the organic-TikTok success, but the verification pass confirmed it ran **$1M+/month in paid ads plus affiliates** by Jan 2026 (~$30M+ trailing revenue, acquired by MyFitnessPal March 2026). Borrow its content formats and its paywall A/B discipline; never copy its paid acquisition model, which OnSkin cannot afford and cannot execute on-brand. *(Confidence: high.)*
+- **Cal AI is the anti-model, not the template.** It is cited everywhere as the organic-TikTok success, but the verification pass confirmed it ran **$1M+/month in paid ads plus affiliates** by Jan 2026 (~$30M+ trailing revenue, acquired by MyFitnessPal March 2026). Borrow its content formats and its paywall A/B discipline; never copy its paid acquisition model, which OnSkin cannot afford and cannot execute on-brand. _(Confidence: high.)_
 
-- **Honest content wins skincare, slowly. CeraVe is the proof.** ~$140M (2017) to ~$2.2B (2024), roughly 15x to 16x, on dermatologist-led education (50+ derm creators, no before/afters, no fear). The trade-off, verified: the TikTok algorithm rewards sensational content (pimple-popping, 804M views) over education (324M views), so OnSkin **structurally cedes the cheap-viral half of short-form and must win the slower credibility half.** *(Confidence: high.)*
+- **Honest content wins skincare, slowly. CeraVe is the proof.** ~$140M (2017) to ~$2.2B (2024), roughly 15x to 16x, on dermatologist-led education (50+ derm creators, no before/afters, no fear). The trade-off, verified: the TikTok algorithm rewards sensational content (pimple-popping, 804M views) over education (324M views), so OnSkin **structurally cedes the cheap-viral half of short-form and must win the slower credibility half.** _(Confidence: high.)_
 
-- **Year-1 retention is the silent killer and it got worse: defend it as hard as you chase installs.** Industry Year-1 subscriber churn hit **~72% in 2026** (up from ~56%), and **35% of annual cancellations happen in month 1**. The fix is a calm habit loop (the AM/PM check-off plus the photo-progress timeline), not engagement-farming. Finch ($30M+ ARR, bootstrapped, 4.95 rating, no-guilt design) proves the calm model retains better, not worse. *(Confidence: high.)*
+- **Year-1 retention is the silent killer and it got worse: defend it as hard as you chase installs.** Industry Year-1 subscriber churn hit **~72% in 2026** (up from ~56%), and **35% of annual cancellations happen in month 1**. The fix is a calm habit loop (the AM/PM check-off plus the photo-progress timeline), not engagement-farming. Finch ($30M+ ARR, bootstrapped, 4.95 rating, no-guilt design) proves the calm model retains better, not worse. _(Confidence: high.)_
 
-- **The honest probability is low: a solo, pre-launch app reaching $1M ARR is a top-quartile-execution, multi-year upside case.** The median subscription app earns ~$8,300 MRR (~$100K ARR) at 18 months. This is a real but minority-odds bet tilted by execution, not a base-case outcome. *(Confidence: high that the base rate is brutal; the upside is real but conditional.)*
+- **The honest probability is low: a solo, pre-launch app reaching $1M ARR is a top-quartile-execution, multi-year upside case.** The median subscription app earns ~$8,300 MRR (~$100K ARR) at 18 months. This is a real but minority-odds bet tilted by execution, not a base-case outcome. _(Confidence: high that the base rate is brutal; the upside is real but conditional.)_
 
 ---
 
 ## Key Findings
 
-1. **The unit economics forbid paid UA and mandate organic.** Max CAC ~$10.67/payer (3:1 on $32 Y1 LTV) implies a ~$0.32 CPI ceiling against a $3 to $6 H&F CPI floor. Organic is the only channel that closes the model. *(Confidence: high.)*
+1. **The unit economics forbid paid UA and mandate organic.** Max CAC ~$10.67/payer (3:1 on $32 Y1 LTV) implies a ~$0.32 CPI ceiling against a $3 to $6 H&F CPI floor. Organic is the only channel that closes the model. _(Confidence: high.)_
 
-2. **The brand constraint and the growth strategy are the same thing.** The hype tactics OnSkin refuses (fear, before/afters, "X% accurate") are exactly the tactics that only monetize through paid ad creative OnSkin cannot afford. Trust-first is not a handicap; it is the forced-and-correct strategy. *(Confidence: high.)*
+2. **The brand constraint and the growth strategy are the same thing.** The hype tactics OnSkin refuses (fear, before/afters, "X% accurate") are exactly the tactics that only monetize through paid ad creative OnSkin cannot afford. Trust-first is not a handicap; it is the forced-and-correct strategy. _(Confidence: high.)_
 
-3. **The shareable artifact is the engine; the referral program is a secondary amplifier.** Yuka, Spotify Wrapped, and Dropbox all grew on an artifact first; Dropbox added referral only after ~1/3 of signups were already word-of-mouth. Build the Conflict Card first, the referral program second. *(Confidence: high on the sequencing principle.)*
+3. **The shareable artifact is the engine; the referral program is a secondary amplifier.** Yuka, Spotify Wrapped, and Dropbox all grew on an artifact first; Dropbox added referral only after ~1/3 of signups were already word-of-mouth. Build the Conflict Card first, the referral program second. _(Confidence: high on the sequencing principle.)_
 
-4. **ASO is the near-free, highest-leverage channel and it rewards honesty.** ~65% of iOS installs start with a search; the stores reject the hype OnSkin already avoids; a 4.5-star rating is the most credible non-self-authored proof a skeptical buyer sees. *(Confidence: high.)*
+4. **ASO is the near-free, highest-leverage channel and it rewards honesty.** ~65% of iOS installs start with a search; the stores reject the hype OnSkin already avoids; a 4.5-star rating is the most credible non-self-authored proof a skeptical buyer sees. _(Confidence: high.)_
 
-5. **Organic short-form works on volume, not virality, and on education, not hype.** The winning pattern is many claim-safe videos across a small account fleet (the "is your routine conflicting?" format anchored to the 2025 Pediatrics study), not one viral hit. *(Confidence: high on the volume model; medium on whether the claim-safe register reaches enough scale.)*
+5. **Organic short-form works on volume, not virality, and on education, not hype.** The winning pattern is many claim-safe videos across a small account fleet (the "is your routine conflicting?" format anchored to the 2025 Pediatrics study), not one viral hit. _(Confidence: high on the volume model; medium on whether the claim-safe register reaches enough scale.)_
 
-6. **Credentialed-creator seeding (gift, then affiliate-on-subscription, then whitelist-winners) is the only creator model that fits the brand.** Commission tied to the subscription, never to recommended products, preserves church-and-state. FTC disclosure of gifts is mandatory and binds both sides. *(Confidence: high.)*
+6. **Credentialed-creator seeding (gift, then affiliate-on-subscription, then whitelist-winners) is the only creator model that fits the brand.** Commission tied to the subscription, never to recommended products, preserves church-and-state. FTC disclosure of gifts is mandatory and binds both sides. _(Confidence: high.)_
 
-7. **The funnel, not the paywall art, makes the money, and the high-converting funnel is fully claim-safe.** A personalized quiz ending in a real conflict finding (the aha moment) placed immediately before the paywall converts 5x to 6x better, with zero hype. Keep the reverse trial; fix its placement and follow-up. *(Confidence: high.)*
+7. **The funnel, not the paywall art, makes the money, and the high-converting funnel is fully claim-safe.** A personalized quiz ending in a real conflict finding (the aha moment) placed immediately before the paywall converts 5x to 6x better, with zero hype. Keep the reverse trial; fix its placement and follow-up. _(Confidence: high.)_
 
-8. **The retention engine is the photo timeline plus a no-guilt habit loop, aimed at the 66-day automaticity window.** Skincare's core churn driver is invisible progress; the photo timeline is the on-brand fix. AI-novelty churns ~30% faster, so OnSkin's refusal of an AI score is a retention asset. *(Confidence: high.)*
+8. **The retention engine is the photo timeline plus a no-guilt habit loop, aimed at the 66-day automaticity window.** Skincare's core churn driver is invisible progress; the photo timeline is the on-brand fix. AI-novelty churns ~30% faster, so OnSkin's refusal of an AI score is a retention asset. _(Confidence: high.)_
 
-9. **The wedge is contested and the base rate is brutal, so this is a tilt-the-odds plan, not a guarantee.** HadaBuddy undercuts at $29.99/yr; the median sub app reaches ~$100K ARR; ~<0.01% of apps are "financial successes" (a dated but directional Gartner figure). Seven figures is the upside tail, earned by execution. *(Confidence: high.)*
+9. **The wedge is contested and the base rate is brutal, so this is a tilt-the-odds plan, not a guarantee.** HadaBuddy undercuts at $29.99/yr; the median sub app reaches ~$100K ARR; ~<0.01% of apps are "financial successes" (a dated but directional Gartner figure). Seven figures is the upside tail, earned by execution. _(Confidence: high.)_
 
-10. **The critical path is still the launch-gate blockers, not growth tactics.** None of this runs while `shippableRules()` returns `[]` in production (no derm sign-off), the catalog is unseeded, there is no backend, no payments, and no native build. Growth follows launch-readiness, not the reverse. *(Confidence: high.)*
+10. **The critical path is still the launch-gate blockers, not growth tactics.** None of this runs while `shippableRules()` returns `[]` in production (no derm sign-off), the catalog is unseeded, there is no backend, no payments, and no native build. Growth follows launch-readiness, not the reverse. _(Confidence: high.)_
 
 ---
 
@@ -63,6 +63,7 @@ The entire strategy follows from one calculation. Do it once and the channel cho
 **The conclusion is not a preference, it is arithmetic:** budget paid UA at ~$0, run the engine on organic word-of-mouth, ASO, content, and earned media, the way Yuka reached $7M+ on $0 marketing. The only paid spend that is justified is a small Apple Search Ads budget used as a measurement instrument (Section 4), not a growth engine.
 
 **In-depth solution, the founder's spreadsheet.** Build one model with these formulas and steer to it weekly:
+
 - `payers_needed = ARR_target / (gross_annual_price * (1 - store_fee))`
 - `installs_needed = payers_needed / download_to_paid`
 - `max_CAC_per_payer = Y1_LTV_per_payer / 3`
@@ -72,11 +73,13 @@ The entire strategy follows from one calculation. Do it once and the channel cho
 ### 2. Is this truly the path? The validation, with the kill-case unsoftened
 
 **What is validated by the data and by real companies:**
+
 - The organic-only path is the **only** profitable path at $45/yr (Section 1), and Yuka proves it reaches seven figures in OnSkin's exact category with OnSkin's exact refusals (no ads, no brand money, no affiliate-in-recommendations).
 - Honest, educational content wins skincare: **CeraVe** grew ~15x to 16x ($140M in 2017 to $2.2B in 2024) on dermatologist-led education, no before/afters, no fear. (Dollar figures are third-party estimates; the strategy is well-documented.)
 - The calm, non-manipulative retention model retains, not loses: **Finch** reached ~$30M+ ARR, bootstrapped, with a 4.95 rating on an explicitly no-guilt design, to a 75%-women, 25-to-35 audience that overlaps OnSkin's.
 
 **The kill-case, stated honestly (this is the bear case the research's adversarial angle did not soft-pedal):**
+
 1. **The base rate is brutal.** The median subscription app reaches ~$8,300 MRR (~$100K ARR) by 18 months; the top-versus-bottom gap is widening (top performers now ~400x the bottom quartile). A solo, pre-launch app hitting $1M ARR is a **top-quartile-execution, multi-year upside case.** Honest probability: low-single-digit to low-teens percent.
 2. **You cede the cheap-viral half of short-form.** Verified: sensational skincare content (pimple-popping, 804M views) out-reaches education (324M) on the algorithm (Australasian Journal of Dermatology, 2025). OnSkin cannot do fear or before/afters, so it must win the slower credibility game, which takes longer and needs real derm creators (not zero effort).
 3. **Year-1 churn worsened to ~72%, with 35% of annual cancels in month 1.** Acquisition is half the battle; without month-1 retention you fill a leaking bucket.
@@ -92,6 +95,7 @@ Across every channel the research converged on one mechanism: **the shareable ar
 **OnSkin's equivalent is the Shelf Conflict Card.** It is more personal and more shareable than Yuka's score, because it is about products the user already owns.
 
 **Specification (in-depth solution):**
+
 - **Trigger:** after a user adds 2+ products, surface a full-screen card titled "Your shelf, checked for conflicts."
 - **Hero moment:** a single, one-glance verdict, a red conflict flag between two owned products ("Retinol + AHA, same night, higher irritation risk"), with the evidence grade the conflict engine already computes.
 - **Legibility rule:** readable in under one second (Yuka's mechanic). One glance equals "I need to show someone this." The "Maya" worked loop, below, makes this concrete.
@@ -230,6 +234,7 @@ Built on Section 3's Conflict Card. The mechanism, not a referral program, is th
 ### 10. Paid amplification, only on proven winners, and only as a measurement instrument
 
 Paid acquisition is structurally unprofitable at $45/yr (Section 1), so it is **not** a growth engine. Two narrow, justified uses:
+
 1. **Apple Search Ads as a keyword lab and brand defense** (Section 4, step 6): a few hundred dollars to surface real keyword demand post-Oct-2025 and to stop a same-named competitor parking above you. The ~20 to 30% organic halo is a bonus, not the rationale.
 2. **Spark/Partnership Ads to amplify already-proven organic videos** (Sections 5 and 6): only behind videos that organically demonstrated they convert installs, running from the creator's handle, started tiny and scaled only past the CAC target. This de-risks spend: you pay to scale winners, not to gamble on cold installs at a $3.70 to $4.70 blind CPI.
 
@@ -261,6 +266,7 @@ Anything beyond these (cold app-install campaigns on TikTok/Meta) loses money on
 **Phase 3 (amplify):** Spark Ads on proven organic winners, the non-cash referral program once word-of-mouth is visible, scale the derm roster.
 
 **First-90-days checklist:**
+
 1. Clear the launch blockers (derm review, Supabase, catalog, payments, native build).
 2. Build and ship the Shelf Conflict Card with watermarked share export.
 3. Trademark-check "OnSkin"; build the full ASO listing; wire the satisfaction-timed review prompt.
@@ -286,10 +292,10 @@ Anything beyond these (cold app-install campaigns on TikTok/Meta) loses money on
 
 The founder's question, applied to growth rather than a feature: is this the path to a seven-figure business, and is it the best one? The evidence-weighted answer: **yes, it is the right and the only economically-viable path, and Yuka proves the ceiling is real, but it is a top-quartile-execution, multi-year, minority-odds bet, not a base case.**
 
-- **It is the only economically-viable path.** At $45/yr, paid acquisition is ~10x to 19x underwater, so organic word-of-mouth, ASO, content, and earned media are not a preference but the forced strategy. The brand constraint and the strategy are identical. *(Confidence: high.)*
-- **The ceiling is proven in-category.** Yuka reached $7.3M revenue, 98.1% subscriptions, on $0 marketing, with OnSkin's exact refusals. CeraVe proves honest education wins skincare. Finch proves calm retention works. *(Confidence: high on the existence proofs; medium on transferability to OnSkin specifically.)*
-- **The engine is buildable now.** The Conflict Card, the ASO listing, the quiz-to-paywall funnel, and the calm habit loop are all things OnSkin can ship; the conflict engine, the design tokens, the reverse trial, RevenueCat, and PostHog already exist. *(Confidence: high.)*
-- **The risk is real and concentrated in three places:** the base rate (~<0.01% of apps are financial successes; median ~$100K ARR), the structural cede of cheap-viral reach, and Year-1 churn. Each has a mitigation (Section 14), none is fully solvable. *(Confidence: high that these are the binding risks.)*
+- **It is the only economically-viable path.** At $45/yr, paid acquisition is ~10x to 19x underwater, so organic word-of-mouth, ASO, content, and earned media are not a preference but the forced strategy. The brand constraint and the strategy are identical. _(Confidence: high.)_
+- **The ceiling is proven in-category.** Yuka reached $7.3M revenue, 98.1% subscriptions, on $0 marketing, with OnSkin's exact refusals. CeraVe proves honest education wins skincare. Finch proves calm retention works. _(Confidence: high on the existence proofs; medium on transferability to OnSkin specifically.)_
+- **The engine is buildable now.** The Conflict Card, the ASO listing, the quiz-to-paywall funnel, and the calm habit loop are all things OnSkin can ship; the conflict engine, the design tokens, the reverse trial, RevenueCat, and PostHog already exist. _(Confidence: high.)_
+- **The risk is real and concentrated in three places:** the base rate (~<0.01% of apps are financial successes; median ~$100K ARR), the structural cede of cheap-viral reach, and Year-1 churn. Each has a mitigation (Section 14), none is fully solvable. _(Confidence: high that these are the binding risks.)_
 
 **Verdict.** Growth, not more product, is the gap to seven figures, and the organic, trust-first, artifact-led plan in this document is the correct response, because the math forces it and the proof exists. It will not be fast and it is not likely in the statistical base-rate sense; it is a patient, multi-year, execution-heavy bet that the rare honest brand can compound word-of-mouth the way Yuka did. The single highest-leverage action is to build the Shelf Conflict Card and clear the launch blockers; everything else amplifies those.
 
@@ -332,14 +338,14 @@ The founder's question, applied to growth rather than a feature: is this the pat
 
 ## Caveats (confidence flags)
 
-- **The unit-economics conclusion (paid UA is unaffordable, organic is mandatory) is the most robust finding here.** Verified against RevenueCat 2026, Adapty 2026, and Business of Apps 2025; even the most-efficient eCPI leaves paid ~4x over the ceiling. *High confidence.*
-- **Yuka is a verified existence proof but only partially replicable.** Its score gimmick, food-first wedge, pre-seeded community, and ~5-year timeline are not all transferable; OnSkin must engineer its own claim-safe artifact. Use the corrected 2024 figures (~55M users, $7.17M subs). *High on the proof; medium on transferability.*
-- **Cal AI must not be used as an organic exemplar.** The verification pass confirmed it ran $1M+/month paid plus affiliates; the "$50M ARR" is a run-rate, trailing revenue was ~$30M+. Borrow formats and paywall discipline only. *High confidence.*
-- **The conversion, retention, and CAC numbers are category medians, not OnSkin facts.** A pre-launch app with a thin catalog and no derm sign-off may underperform the 2.5 to 3% download-to-paid and $32 LTV at first. Re-measure within 90 days. *Medium confidence on transfer to OnSkin.*
-- **Some case-study figures are vendor-reported or estimates** (goPure 204x, Glossier 600%, CeraVe's exact revenue, the Airship push multiplier from a 2016 cohort). They are directional, not gospel; do not quote them to investors as hard facts. *Low-to-medium confidence on those specific numbers; high on the underlying mechanisms.*
-- **ASO tool "search volume" is structurally unreliable post-Oct-2025** (Apple's popularity data collapsed 77.4%); validate keywords against live Apple Search Ads data, not tool volume. *High confidence on the caveat.*
-- **The honest probability of reaching $1M ARR is low** (the base rate: median ~$100K ARR, a dated but directional Gartner <0.01% success figure). This is a top-quartile-execution, multi-year upside case, tilted by execution, not a base-case outcome. *High confidence that the base rate is brutal; the upside is real but conditional.*
-- **The whole plan is downstream of launch-readiness.** None of it runs while the conflict engine shows nothing in production (no derm sign-off), the catalog is empty, and there is no backend, payments, or native build. *High confidence.*
+- **The unit-economics conclusion (paid UA is unaffordable, organic is mandatory) is the most robust finding here.** Verified against RevenueCat 2026, Adapty 2026, and Business of Apps 2025; even the most-efficient eCPI leaves paid ~4x over the ceiling. _High confidence._
+- **Yuka is a verified existence proof but only partially replicable.** Its score gimmick, food-first wedge, pre-seeded community, and ~5-year timeline are not all transferable; OnSkin must engineer its own claim-safe artifact. Use the corrected 2024 figures (~55M users, $7.17M subs). _High on the proof; medium on transferability._
+- **Cal AI must not be used as an organic exemplar.** The verification pass confirmed it ran $1M+/month paid plus affiliates; the "$50M ARR" is a run-rate, trailing revenue was ~$30M+. Borrow formats and paywall discipline only. _High confidence._
+- **The conversion, retention, and CAC numbers are category medians, not OnSkin facts.** A pre-launch app with a thin catalog and no derm sign-off may underperform the 2.5 to 3% download-to-paid and $32 LTV at first. Re-measure within 90 days. _Medium confidence on transfer to OnSkin._
+- **Some case-study figures are vendor-reported or estimates** (goPure 204x, Glossier 600%, CeraVe's exact revenue, the Airship push multiplier from a 2016 cohort). They are directional, not gospel; do not quote them to investors as hard facts. _Low-to-medium confidence on those specific numbers; high on the underlying mechanisms._
+- **ASO tool "search volume" is structurally unreliable post-Oct-2025** (Apple's popularity data collapsed 77.4%); validate keywords against live Apple Search Ads data, not tool volume. _High confidence on the caveat._
+- **The honest probability of reaching $1M ARR is low** (the base rate: median ~$100K ARR, a dated but directional Gartner <0.01% success figure). This is a top-quartile-execution, multi-year upside case, tilted by execution, not a base-case outcome. _High confidence that the base rate is brutal; the upside is real but conditional._
+- **The whole plan is downstream of launch-readiness.** None of it runs while the conflict engine shows nothing in production (no derm sign-off), the catalog is empty, and there is no backend, payments, or native build. _High confidence._
 
 ---
 

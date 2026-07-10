@@ -4,18 +4,18 @@ Status: BLOCKED until live production payment evidence exists.
 
 ## Required Verification
 
-| Item | Evidence |
-| --- | --- |
-| iOS product IDs match App Store Connect | BLOCKED |
-| Android product IDs match Play Console | BLOCKED |
-| Offering and entitlement IDs match app config | BLOCKED |
-| Annual/monthly/trial pricing reviewed | BLOCKED |
-| Purchase completes on production candidate | BLOCKED |
-| Restore works on iOS and Android | BLOCKED |
-| Webhook reaches Supabase | BLOCKED |
-| Supabase entitlement grant matches RevenueCat customer state | BLOCKED |
-| Refund/cancel/billing retry events documented | BLOCKED |
-| Customer deletion/reconciliation path documented | BLOCKED |
+| Item                                                         | Evidence |
+| ------------------------------------------------------------ | -------- |
+| iOS product IDs match App Store Connect                      | BLOCKED  |
+| Android product IDs match Play Console                       | BLOCKED  |
+| Offering and entitlement IDs match app config                | BLOCKED  |
+| Annual/monthly/trial pricing reviewed                        | BLOCKED  |
+| Purchase completes on production candidate                   | BLOCKED  |
+| Restore works on iOS and Android                             | BLOCKED  |
+| Webhook reaches Supabase                                     | BLOCKED  |
+| Supabase entitlement grant matches RevenueCat customer state | BLOCKED  |
+| Refund/cancel/billing retry events documented                | BLOCKED  |
+| Customer deletion/reconciliation path documented             | BLOCKED  |
 
 ## Anti-Inflation Rules
 
@@ -33,4 +33,3 @@ Status: BLOCKED until live production payment evidence exists.
 - unclear Pro value
 - product IDs not reviewed
 - support lacks payment escalation path
-

@@ -13,22 +13,22 @@ external accounts.
 
 ## Required Before Infrastructure Setup
 
-| Item | Decision needed | Current Phase 1 state |
-| --- | --- | --- |
-| Brand name | Keep `OnSkin` only with counsel clearance; otherwise rebrand | Default path is rebrand; `RoutineKind` is the working candidate for clearance |
-| Domain | Final policy, support, app link, and fallback domain | Target candidate `routinekind.app`; registrar and legal clearance required |
-| iOS bundle ID | Final App Store identifier | Candidate `com.routinekind.app` if rebrand clears |
-| Android package | Final Play package identifier | Candidate `com.routinekind.app` if rebrand clears |
-| URL scheme | Final deep link scheme | Candidate `routinekind` if rebrand clears |
-| Environment split | Naming for dev/staging/prod | Use `development`, `staging`, `production` |
-| Supabase projects | Project names and region | Create separate staging and production projects after brand decision |
-| RevenueCat project | App and entitlement naming | Create after final app identity; entitlement `pro` remains stable unless pricing changes |
-| Apple account owner | Human owner and billing | Founder to assign |
-| Google account owner | Human owner and billing | Founder to assign |
-| Secret storage | Where `.env` and server secrets live | Use local `.env` for dev only; production secrets in provider dashboards/CI secret store |
-| Account owner email | Durable admin email | Founder to assign before account creation |
-| Billing owner | Card/account for paid services | Founder to assign |
-| Branch/release policy | How release candidates are cut | Keep docs/code on main; create release branches only after RC checklist exists |
+| Item                  | Decision needed                                              | Current Phase 1 state                                                                    |
+| --------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| Brand name            | Keep `OnSkin` only with counsel clearance; otherwise rebrand | Default path is rebrand; `RoutineKind` is the working candidate for clearance            |
+| Domain                | Final policy, support, app link, and fallback domain         | Target candidate `routinekind.app`; registrar and legal clearance required               |
+| iOS bundle ID         | Final App Store identifier                                   | Candidate `com.routinekind.app` if rebrand clears                                        |
+| Android package       | Final Play package identifier                                | Candidate `com.routinekind.app` if rebrand clears                                        |
+| URL scheme            | Final deep link scheme                                       | Candidate `routinekind` if rebrand clears                                                |
+| Environment split     | Naming for dev/staging/prod                                  | Use `development`, `staging`, `production`                                               |
+| Supabase projects     | Project names and region                                     | Create separate staging and production projects after brand decision                     |
+| RevenueCat project    | App and entitlement naming                                   | Create after final app identity; entitlement `pro` remains stable unless pricing changes |
+| Apple account owner   | Human owner and billing                                      | Founder to assign                                                                        |
+| Google account owner  | Human owner and billing                                      | Founder to assign                                                                        |
+| Secret storage        | Where `.env` and server secrets live                         | Use local `.env` for dev only; production secrets in provider dashboards/CI secret store |
+| Account owner email   | Durable admin email                                          | Founder to assign before account creation                                                |
+| Billing owner         | Card/account for paid services                               | Founder to assign                                                                        |
+| Branch/release policy | How release candidates are cut                               | Keep docs/code on main; create release branches only after RC checklist exists           |
 
 ## Environment Naming
 

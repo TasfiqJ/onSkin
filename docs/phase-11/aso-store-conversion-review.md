@@ -12,15 +12,15 @@ Status: BLOCKED until approved store copy, screenshots, and early conversion dat
 
 ## Review Inputs
 
-| Input | Status |
-| --- | --- |
-| App Store product page metrics | BLOCKED |
-| Play Store listing metrics | BLOCKED |
-| store copy source of truth | BLOCKED |
+| Input                                 | Status  |
+| ------------------------------------- | ------- |
+| App Store product page metrics        | BLOCKED |
+| Play Store listing metrics            | BLOCKED |
+| store copy source of truth            | BLOCKED |
 | screenshot set using shipped features | BLOCKED |
-| clinical/legal claims review | BLOCKED |
-| privacy/data safety review | BLOCKED |
-| support/review theme summary | BLOCKED |
+| clinical/legal claims review          | BLOCKED |
+| privacy/data safety review            | BLOCKED |
+| support/review theme summary          | BLOCKED |
 
 ## Allowed Claim Themes
 
@@ -41,4 +41,3 @@ Status: BLOCKED until approved store copy, screenshots, and early conversion dat
 - unreviewed dermatologist or medical endorsement
 - fake social proof
 - reward or pressure for positive reviews
-

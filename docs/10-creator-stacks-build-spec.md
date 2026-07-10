@@ -11,12 +11,12 @@
 ## 0. The validated verdict (read first)
 
 **Build it — phased, narrow, rail-agnostic — but as a SIX-figure supplement, not a
-seven-figure pillar.** The seven-figure business is the *subscription* business.
+seven-figure pillar.** The seven-figure business is the _subscription_ business.
 
 - **Affiliate is optional, not load-bearing.** Yuka reached 7 figures with **zero**
   brand/affiliate revenue — **97.3% of its 2024 $7.37M from subscriptions**
   (yuka.io/en/independence). A trust-first skincare app does **not need** affiliate to
-  hit 7 figures. Doc 10 is *upside*, not necessity.
+  hit 7 figures. Doc 10 is _upside_, not necessity.
 - **The funnel does not reach $1M and its inputs are unverified.** No source validated
   the 15% CTR / 5% conversion / $70 AOV / 17% commission / 3-cycles assumptions; the
   only anchored figure is ShopMy's **beauty commission band 15–25%**. Even the spec's
@@ -28,7 +28,7 @@ seven-figure pillar.** The seven-figure business is the *subscription* business.
 - **THE BLOCKING TECHNICAL UNKNOWN (B-SHOPMY):** ShopMy's documented APIs do **not**
   confirm a brand/app can create affiliate links on its **own first-party
   recommendations under a house account.** Link creation lives only in the **OAuth
-  Developer API**, scoped *"on behalf of authenticated ShopMy users"* (individual
+  Developer API**, scoped _"on behalf of authenticated ShopMy users"_ (individual
   creators, per-user `write_links`); the **Brand Partners API is reporting-only**
   (poll-based `Fetch Order Report`, **no webhooks**, 200 req/day). The whole Doc 10
   primary-rail assumption rests on an unconfirmed capability. **Must be answered by
@@ -42,7 +42,7 @@ seven-figure pillar.** The seven-figure business is the *subscription* business.
 
 Build, design-faithfully, with the live money rail **stubbed + inert** (B-SHOPMY):
 
-1. **The "where to buy" affordance** — a quiet section *beneath* the recommendation
+1. **The "where to buy" affordance** — a quiet section _beneath_ the recommendation
    rationale on the Doc 9 card. (design surface 01)
 2. **The shoppable Stack** — an expert/derm-reviewed routine as an ordered, paid-link
    collection. (design surface 02) — Phase 2 concept, UI shipped now with in-house
@@ -58,7 +58,7 @@ Plus the **church-and-state commerce schema**, the **opaque-token attribution**,
 **NOT in this slice:** Phase 3 hosted creators (behind a future Pro+ tier; deferred
 with kill-criteria), the live ShopMy integration (B-SHOPMY), the Order-Report poll
 Edge Function beyond a stub (B-SHOPMY), the real catalog/retailer/price data
-(B-CATALOG-SEED). Pro+ ($79.99) stays *reserved*, not built.
+(B-CATALOG-SEED). Pro+ ($79.99) stays _reserved_, not built.
 
 ---
 
@@ -86,24 +86,24 @@ divider**, never competing with the why.
 **Two states, gated by the commerce consent (§6):**
 
 - **Consent NOT granted (default):** show a single quiet row — `🔒 Where to buy` (mono
-  eyebrow) + one line: *"Turn on where-to-buy links to see partner retailers — a
-  separate, private choice."* + a calm `Allow where-to-buy` text button that opens the
+  eyebrow) + one line: _"Turn on where-to-buy links to see partner retailers — a
+  separate, private choice."_ + a calm `Allow where-to-buy` text button that opens the
   **consent gate sheet** (§6 / surface 04). No retailer data, no tracking, nothing
-  shared. Below it, always: *"Already own one? Add it to your shelf instead"* (links to
+  shared. Below it, always: _"Already own one? Add it to your shelf instead"_ (links to
   `/shelf/manual`).
 - **Consent granted:** the **"Where to buy" block**:
   - Eyebrow: `WHERE TO BUY` (IBM Plex Mono, 10px, tracked, muted).
   - 1–3 **retailer option rows**, each: a striped greige product thumbnail (26×32,
     `repeating-linear-gradient` placeholder — no real imagery, B-CATALOG-SEED), the
-    product/retailer name (13px semibold), a sub line *"at a partner retailer · $34"*
+    product/retailer name (13px semibold), a sub line _"at a partner retailer · $34"_
     (11px muted; price is illustrative until B-CATALOG-SEED), then on the right a
     **`Paid link` mono chip** (greige `#F0EBE2` pill, 9px) + the `↗` external glyph.
     Row has a hairline inset border, 12px radius, 11×13 padding.
   - **The FTC disclosure line directly beneath the rows** (never collapsed, always
-    visible with the links — 16 CFR 255 "unavoidable"): *"Paid link — OnSkin may earn a
-    commission. **It never affects what we recommend.**"* (the independence clause
+    visible with the links — 16 CFR 255 "unavoidable"): _"Paid link — OnSkin may earn a
+    commission. **It never affects what we recommend.**"_ (the independence clause
     bold-inked). A small `How this works →` opens the transparency page.
-  - Footer (unchanged): *"Already own one? Add it to your shelf instead."*
+  - Footer (unchanged): _"Already own one? Add it to your shelf instead."_
   - **Tapping a retailer row:** fires the opaque-token attribution (§5), records a
     `click_event` (owner-scoped, consented), then **deep-links straight out** to the
     retailer/pin (no in-app webview). No health data leaves the device — only the
@@ -111,8 +111,8 @@ divider**, never competing with the why.
     explaining links go live with the catalog + partner approval, sharing nothing.
 
 **Empty/thin-catalog:** when no retailer options resolve (the normal v1 state, no
-catalog), show *"We'll show where to buy once our product catalog is live — it never
-changes what we recommend."* (calm, honest). The affordance never fabricates a retailer.
+catalog), show _"We'll show where to buy once our product catalog is live — it never
+changes what we recommend."_ (calm, honest). The affordance never fabricates a retailer.
 
 **Replacement/replenish reuse:** the Doc-4 `app/shelf/replenish.tsx` "see similar"
 path is upgraded to route through the **same** consent gate + disclosure (it was inert
@@ -127,21 +127,22 @@ in Doc 4 pending B-PRIVACY); now it shares the commerce module's gate + copy.
 `app/commerce/stacks.tsx` (or fold a single hero stack into the hub for v1).
 
 **Look & feel (design surface 02):**
+
 - Paper background.
 - A **sage "Dermatologist-reviewed" chip** at top-left: sage-tint `#E6ECE0` pill, a
   small sage star glyph `✦`, mono `DERMATOLOGIST-REVIEWED` (10px, sage `#3E6A39`). For
   in-house editorial stacks the chip reads `EDITOR'S ROUTINE` (clay-tint). The chip's
   label is driven by `curator_kind` (`derm` | `editorial` | `creator`).
-- Title (Instrument Serif, 29px): e.g. *"The sensitive-skin starter set."*
-- Subtitle (13px muted): *"Four products, in order. Curated on merit and evidence — not
-  by who pays."*
+- Title (Instrument Serif, 29px): e.g. _"The sensitive-skin starter set."_
+- Subtitle (13px muted): _"Four products, in order. Curated on merit and evidence — not
+  by who pays."_
 - **Ordered stack items** (numbered 1..N), each a white card (16px radius, hairline
   inset): a mono index, a striped thumbnail (32×38), the product name (13.5px bold) +
-  role/role-note (*"Cleanse · fragrance-free"*, 11px muted), then a **`Paid link` chip +
+  role/role-note (_"Cleanse · fragrance-free"_, 11px muted), then a **`Paid link` chip +
   `↗`** on the right. Tapping an item → the same attribution + deep-link-out as §3,
   consent-gated.
-- **Footer disclosure** (always visible): *"Paid links — OnSkin may earn a commission.
-  We picked these on merit; the commission never changed the list."*
+- **Footer disclosure** (always visible): _"Paid links — OnSkin may earn a commission.
+  We picked these on merit; the commission never changed the list."_
 - **Trust guarantee in copy + data:** the stack is ordered by the **routine sequence**
   (Doc 3) and curated by merit; it carries **no rate/commission field** in its ordering
   — the order is editorial/clinical, never commission-sorted (church-and-state).
@@ -149,7 +150,7 @@ in Doc 4 pending B-PRIVACY); now it shares the commerce module's gate + copy.
 **Launch gate (B-DERM-REVIEW):** stack content is medical-adjacent. Stacks carry
 `reviewed_by` (null until clinical sign-off) and a `shippableStacks()` gate mirroring
 `shippableRules()` / `shippableRecTypes()` — in production only reviewed stacks show;
-in dev the demo stack is available. The starter set's product *items* reuse the Doc-9
+in dev the demo stack is available. The starter set's product _items_ reuse the Doc-9
 type catalog (type-first; specific products arrive with B-CATALOG-SEED).
 
 ---
@@ -157,6 +158,7 @@ type catalog (type-first; specific products arrive with B-CATALOG-SEED).
 ## 5. ATTRIBUTION & the church-and-state architecture
 
 **Opaque click token (no health data — the trust guarantee, validated by MHMDA):**
+
 - `buildClickToken()` → a random, opaque id (expo-crypto `randomUUID`), tied to **no**
   profile, concern, goal, skin axis, pregnancy status, or photo. It is a bare
   correlation handle for crediting a purchase, nothing more.
@@ -167,6 +169,7 @@ type catalog (type-first; specific products arrive with B-CATALOG-SEED).
   This is Doc 10's analogue of Doc 9's "FIT score has no commercial input" guard.
 
 **Rail-agnostic resolution (the B-SHOPMY hedge):**
+
 - `resolveWhereToBuy(productType)` → `WhereToBuyOption[]`, each tagged with a
   `source: 'shopmy' | 'skimlinks' | 'direct' | 'none'`. v1 returns a **stub** (or empty
   when no catalog). The live ShopMy `Search Catalog`/`Create Link` resolution is behind
@@ -174,6 +177,7 @@ type catalog (type-first; specific products arrive with B-CATALOG-SEED).
   model is unworkable is a localised change.
 
 **Church-and-state at the schema level (commerce ≠ ranking):**
+
 - Commerce tables (`affiliate_links`, `click_events`, `order_attributions`,
   `creator_stacks`, `creator_stack_items`) live **downstream**; they join to a product
   only by `product_type`/`catalog_product_id`, **after** ranking.
@@ -182,12 +186,13 @@ type catalog (type-first; specific products arrive with B-CATALOG-SEED).
   state test + a Doc-10 test asserting the ranking modules import no commerce module.
 - The ranking code imports **nothing** from `features/commerce/`. One-way only.
 - **Note (D-0xx):** the spec's "physically separate Postgres schemas" is satisfied for
-  v1 by *module-boundary + column-separation + RLS* (one Supabase service role; all
+  v1 by _module-boundary + column-separation + RLS_ (one Supabase service role; all
   tables in `public`, consistent with the prior 21 migrations). A true separate
   `commerce` Postgres schema is a deferred infra hardening — the load-bearing guarantee
   (no commission in ranking, code can't read it on the ranking path) is delivered now.
 
 **Order ingestion (poll-only — no webhooks exist):**
+
 - The `Fetch Order Report` poll is a **Supabase pg_cron → Edge Function** keyed on
   `recordUpdatedStartDate`, daily, upserting `order_attributions`. v1 ships the schema +
   an **Edge Function stub** that documents the poll shape; the live poll needs the brand
@@ -205,23 +210,24 @@ the only third-party-sharing consent in the doc-01 enum; recorded with commerce-
 copy + version, so the ledger proves what was shown).
 
 **Look & feel (design surface 04):**
+
 - Dimmed scrim `rgba(32,27,21,0.42)`; sheet `#FAF7F2`, 32px top radius, grab handle.
 - A clay-tint `#F3E7DF` rounded icon box (52×52) with a shield-check glyph.
-- Title (Instrument Serif, 29px): *"Before we show where to buy."*
-- Body (14px muted): *"Opening a 'where to buy' link shares a single anonymous click
-  token with our affiliate partner — so a purchase can be credited. That's it."*
-- A two-row white card: ✓ (sage) *"An opaque token tied to no skin data"* · ✕ (clay)
-  ***"Never** your profile, concerns or photos."*
-- Mono note: *"a separate, revocable choice (MHMDA / GDPR) · decline and links still
-  work with zero tracking"* — wait, **correction**: per MHMDA, if consent is declined,
-  we must **not** transmit any tracking. The honest copy is: *"a separate, revocable
-  choice (MHMDA / GDPR) · decline and we simply won't show paid links."* (The design's
+- Title (Instrument Serif, 29px): _"Before we show where to buy."_
+- Body (14px muted): _"Opening a 'where to buy' link shares a single anonymous click
+  token with our affiliate partner — so a purchase can be credited. That's it."_
+- A two-row white card: ✓ (sage) _"An opaque token tied to no skin data"_ · ✕ (clay)
+  **\*"Never** your profile, concerns or photos."\*
+- Mono note: _"a separate, revocable choice (MHMDA / GDPR) · decline and links still
+  work with zero tracking"_ — wait, **correction**: per MHMDA, if consent is declined,
+  we must **not** transmit any tracking. The honest copy is: _"a separate, revocable
+  choice (MHMDA / GDPR) · decline and we simply won't show paid links."_ (The design's
   "links still work with zero tracking" implies a non-tracked outbound link is still
   shown; that is defensible ONLY if truly zero data leaves — but the safer, MHMDA-clean
   default is: **no consent → no paid links shown at all**, only the "add to your shelf"
   path. We adopt the stricter reading. This is logged as a DECISION.)
-- Primary CTA (clay pill, 54px): *"Allow where-to-buy links"* → records `data_sharing`
-  granted, dismisses, proceeds. Secondary: *"Not now"* → records nothing, dismisses,
+- Primary CTA (clay pill, 54px): _"Allow where-to-buy links"_ → records `data_sharing`
+  granted, dismisses, proceeds. Secondary: _"Not now"_ → records nothing, dismisses,
   the affordance stays in its locked state.
 - **Revocable:** the You-tab "Share data with partners" toggle already writes
   `data_sharing`; turning it off revokes (a new ledger row) and the affordance re-locks.
@@ -241,20 +247,21 @@ non-negotiable.
 gate.
 
 **Look & feel (design surface 03):**
+
 - Near-black `#1B1813`, cream `#F4EFE7` text.
 - Eyebrow (mono, clayBright `#D9A183`): `HOW WE STAY HONEST`.
-- Title (Instrument Serif, 31px): *"How recommendations and money stay separate."*
+- Title (Instrument Serif, 31px): _"How recommendations and money stay separate."_
 - **Four numbered principles** (mono index in clayBright + bold title + muted body):
-  1. *"We rank by fit and evidence."* — *"Commission, partnerships and affiliate data
-     never enter the ranking — by architecture, not promise."*
-  2. *"Links come after, never before."* — *"We decide what's best for you first; only
-     then do we attach a 'where to buy' link."*
-  3. *"We disclose every paid link."* — *"Right next to the link, in plain words — never
-     hidden in a footer."*
-  4. *"Sometimes we earn nothing."* — *"If the best place to buy has no program, we link
-     there anyway — and tell you so."* (the Wirecutter integrity standard)
-- Footer (hairline-dark divider): a lock glyph + *"We never send anything about your
-  skin to a retailer."*
+  1. _"We rank by fit and evidence."_ — _"Commission, partnerships and affiliate data
+     never enter the ranking — by architecture, not promise."_
+  2. _"Links come after, never before."_ — _"We decide what's best for you first; only
+     then do we attach a 'where to buy' link."_
+  3. _"We disclose every paid link."_ — _"Right next to the link, in plain words — never
+     hidden in a footer."_
+  4. _"Sometimes we earn nothing."_ — _"If the best place to buy has no program, we link
+     there anyway — and tell you so."_ (the Wirecutter integrity standard)
+- Footer (hairline-dark divider): a lock glyph + _"We never send anything about your
+  skin to a retailer."_
 - Copy is centralised + scanned by the claim-safety/FTC guard.
 
 ---
@@ -263,6 +270,7 @@ gate.
 
 Centralised commerce copy (`features/commerce/copy.ts`) is scanned by
 `claimsafety.test.ts` to enforce, on every edit:
+
 - **FTC wording:** the disclosure uses **"paid link"**; it must **NOT** contain
   "affiliate link" or "commissionable link" (FTC: those are inadequate). It must state
   independence ("never affects what we recommend" / "the commission never changed the
@@ -329,7 +337,7 @@ touched.
 - **B-PRIVACY / B-PRIVACY-COPY**: final MHMDA data-sharing consent copy + DPIA for the
   commerce flow + FTC disclosure final wording (counsel).
 - **B-CATALOG-SEED**: real retailers/prices/links; until then where-to-buy is type-first
-  + honest-empty.
+  - honest-empty.
 - **B-DERM-REVIEW**: the expert/derm stacks' clinical sign-off (`reviewed_by`).
 - **B-LEGAL**: Google Play 2026 physical-goods/external-link confirmation (Apple
   3.1.3(e) verified; Play not independently confirmed), Amazon Associates in-app

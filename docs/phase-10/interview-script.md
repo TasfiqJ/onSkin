@@ -61,4 +61,3 @@ Confirm:
 - retention
 - willingness to pay
 - launch risk
-

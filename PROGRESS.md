@@ -6,6 +6,14 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Closed the repository-wide formatting debt. Prettier now covers maintained
+  TypeScript, TSX, JavaScript, ESM/CommonJS scripts, JSON, and Markdown; only
+  generated evidence packets and Supabase-generated database types are ignored
+  because dedicated schema/hash or regeneration checks own them. The migration
+  normalized 302 maintained files, exposed and replaced one brittle
+  indentation-dependent recommendation route assertion, and made
+  `npm run format:check` pass without weakening any behavioral contract.
+
 - Hardened the Phase 5 performance evidence contract to schema version 2. Each
   platform/metric pair now retains every raw observation; the validator
   calculates nearest-rank p50/p95 and max, cross-checks the declared summary,
@@ -56,7 +64,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 - Promoted the maintained first-session onboarding E2E harness from a
   paywall-stop proof to a full activation-loop proof. `npm run
-  e2e:onboarding-first-session` now uses the dev-only local reset, adds
+e2e:onboarding-first-session` now uses the dev-only local reset, adds
   `Retinol 0.3% serum`, `Glycolic 7% toner`, and `Mineral SPF 50`, verifies
   the shelf-derived `FIRST INSIGHT` / `Timing handled` reveal, scrolls to and
   taps the no-card `Explore first` paywall path, opens `/routine/plan`, taps
@@ -73,7 +81,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 - Cleared the 393 x 852 / 200% text-pressure Skin Notes boundary failure on
   the supported modern Android midpoint. `/community` now defers the Retinoids
   section for the 391-414 px / 840-899 px band so `Does retinol thin your
-  skin?` no longer peeks into the bottom edge as a 26 px partial target. The
+skin?` no longer peeks into the bottom edge as a 26 px partial target. The
   focused Community route contract passes, the focused `/community` rerun and
   fresh 49-route sweep both pass at 393 x 852 / 200%, and the readiness
   baseline now records 172 mobile test files / 1767 tests. Evidence:

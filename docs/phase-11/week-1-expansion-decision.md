@@ -13,17 +13,17 @@ Status: BLOCKED until Ring 1 week-1 data exists.
 
 ## Required Inputs
 
-| Input | Status |
-| --- | --- |
-| 72-hour report | BLOCKED |
-| D7 activated retention | BLOCKED |
-| support report | BLOCKED |
-| payment reconciliation | BLOCKED |
-| catalog issue report | BLOCKED |
+| Input                          | Status  |
+| ------------------------------ | ------- |
+| 72-hour report                 | BLOCKED |
+| D7 activated retention         | BLOCKED |
+| support report                 | BLOCKED |
+| payment reconciliation         | BLOCKED |
+| catalog issue report           | BLOCKED |
 | privacy/deletion/export status | BLOCKED |
-| crash/ANR/release health | BLOCKED |
-| store conversion review | BLOCKED |
-| review/social theme review | BLOCKED |
+| crash/ANR/release health       | BLOCKED |
+| store conversion review        | BLOCKED |
+| review/social theme review     | BLOCKED |
 
 ## Expansion Guardrails
 
@@ -42,14 +42,13 @@ Do not expand if:
 
 ## Decision Record
 
-| Field | Value |
-| --- | --- |
-| Current ring | TBD |
-| Proposed next ring | TBD |
-| Decision | TBD |
-| Evidence for expansion | TBD |
-| Evidence against expansion | TBD |
-| Required fixes | TBD |
-| Owner | TBD |
-| Date | TBD |
-
+| Field                      | Value |
+| -------------------------- | ----- |
+| Current ring               | TBD   |
+| Proposed next ring         | TBD   |
+| Decision                   | TBD   |
+| Evidence for expansion     | TBD   |
+| Evidence against expansion | TBD   |
+| Required fixes             | TBD   |
+| Owner                      | TBD   |
+| Date                       | TBD   |

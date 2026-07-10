@@ -11,21 +11,21 @@ Status: BLOCKED until App Store Connect evidence is attached.
 
 ## Required App Store Connect Setup
 
-| Item | Evidence |
-| --- | --- |
-| App record exists | BLOCKED |
-| Bundle ID matches production identity | BLOCKED |
-| Build uploaded | BLOCKED |
-| Build number | BLOCKED |
-| Internal group created | BLOCKED |
-| External group created | BLOCKED |
-| Beta review status | BLOCKED |
-| Beta app description | BLOCKED |
-| Feedback email/support URL | BLOCKED |
-| Privacy policy URL | BLOCKED |
-| Terms URL | BLOCKED |
-| Test information includes no-medical-advice language | BLOCKED |
-| RevenueCat/TestFlight sandbox behavior documented | BLOCKED |
+| Item                                                 | Evidence |
+| ---------------------------------------------------- | -------- |
+| App record exists                                    | BLOCKED  |
+| Bundle ID matches production identity                | BLOCKED  |
+| Build uploaded                                       | BLOCKED  |
+| Build number                                         | BLOCKED  |
+| Internal group created                               | BLOCKED  |
+| External group created                               | BLOCKED  |
+| Beta review status                                   | BLOCKED  |
+| Beta app description                                 | BLOCKED  |
+| Feedback email/support URL                           | BLOCKED  |
+| Privacy policy URL                                   | BLOCKED  |
+| Terms URL                                            | BLOCKED  |
+| Test information includes no-medical-advice language | BLOCKED  |
+| RevenueCat/TestFlight sandbox behavior documented    | BLOCKED  |
 
 ## Internal Testing Checklist
 
@@ -62,4 +62,3 @@ Attach before Phase 10 exit:
 - iOS support-ticket summary
 - payment/restore QA summary
 - privacy/deletion/export QA summary
-

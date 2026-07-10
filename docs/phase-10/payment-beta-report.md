@@ -8,16 +8,16 @@ TestFlight purchases are sandbox behavior and do not prove real paid conversion.
 
 ## Metrics
 
-| Metric | Target/guardrail | Actual | Decision |
-| --- | --- | --- | --- |
-| Paywall comprehension | Users understand Pro value | TBD | TBD |
-| Trial start flow | No unexpected state | TBD | TBD |
-| Purchase completion | No P0/P1 failures | TBD | TBD |
-| Restore success | No unresolved failures | TBD | TBD |
-| Entitlement sync | RevenueCat, app, Supabase agree | TBD | TBD |
-| Unexpected charges | 0 | TBD | TBD |
-| Refund/cancel themes | Understood before public launch | TBD | TBD |
-| Support tickets per 100 beta users | Manageable | TBD | TBD |
+| Metric                             | Target/guardrail                | Actual | Decision |
+| ---------------------------------- | ------------------------------- | ------ | -------- |
+| Paywall comprehension              | Users understand Pro value      | TBD    | TBD      |
+| Trial start flow                   | No unexpected state             | TBD    | TBD      |
+| Purchase completion                | No P0/P1 failures               | TBD    | TBD      |
+| Restore success                    | No unresolved failures          | TBD    | TBD      |
+| Entitlement sync                   | RevenueCat, app, Supabase agree | TBD    | TBD      |
+| Unexpected charges                 | 0                               | TBD    | TBD      |
+| Refund/cancel themes               | Understood before public launch | TBD    | TBD      |
+| Support tickets per 100 beta users | Manageable                      | TBD    | TBD      |
 
 ## Required Evidence
 
@@ -33,4 +33,3 @@ TestFlight purchases are sandbox behavior and do not prove real paid conversion.
 ## Launch Decision
 
 Do not proceed to public launch if testers misunderstand the value of Pro, restore fails, entitlements diverge, or any unexpected charge occurs without complete resolution.
-

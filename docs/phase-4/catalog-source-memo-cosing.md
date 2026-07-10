@@ -44,4 +44,3 @@ The seeded `cosing` source is `production_approved=false` and `review_status=pen
 - Cosmetic-chemist reviewer signs the ingredient-tag taxonomy.
 - Import artifact hash, snapshot date, parser version, and QA report are attached to a `catalog_import_batches` record.
 - Product UI copy continues to describe CosIng as a source, not as an endorsement.
-

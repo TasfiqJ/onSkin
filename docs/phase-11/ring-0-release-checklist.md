@@ -36,4 +36,3 @@ Ring 0 exits only when:
 - purchase/restore/manage subscription passes
 - deletion/export path is visible and functional
 - command center approves Ring 1
-

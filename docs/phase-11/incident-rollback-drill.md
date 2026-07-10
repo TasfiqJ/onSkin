@@ -4,14 +4,14 @@ Status: BLOCKED until drill evidence is attached.
 
 ## Rollback Tools
 
-| Issue type | Preferred action |
-| --- | --- |
-| JS-only non-critical bug | EAS Update fix or `eas update:rollback` if update-caused |
-| Native crash or store binary issue | halt expansion, submit hotfix binary, consider store halt where available |
-| Server-side issue | feature flag, Supabase function rollback, database migration rollback plan |
-| Payment issue | disable paywall entry points, RevenueCat config rollback, support escalation |
-| Privacy/data issue | halt expansion, disable affected flow, legal/privacy owner review |
-| Harmful claim or store copy issue | remove copy, update store/support/creator materials, hold campaign |
+| Issue type                         | Preferred action                                                             |
+| ---------------------------------- | ---------------------------------------------------------------------------- |
+| JS-only non-critical bug           | EAS Update fix or `eas update:rollback` if update-caused                     |
+| Native crash or store binary issue | halt expansion, submit hotfix binary, consider store halt where available    |
+| Server-side issue                  | feature flag, Supabase function rollback, database migration rollback plan   |
+| Payment issue                      | disable paywall entry points, RevenueCat config rollback, support escalation |
+| Privacy/data issue                 | halt expansion, disable affected flow, legal/privacy owner review            |
+| Harmful claim or store copy issue  | remove copy, update store/support/creator materials, hold campaign           |
 
 ## Drill Steps
 
@@ -42,4 +42,3 @@ Status: BLOCKED until drill evidence is attached.
 - no support macro for incident
 - no monitoring signal to confirm recovery
 - no decision rule for halt vs continue
-

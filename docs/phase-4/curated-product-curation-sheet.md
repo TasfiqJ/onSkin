@@ -17,19 +17,19 @@ Build the first launch catalog from real beta shelves and common U.S. products. 
 
 ## Required Fields
 
-| Field | Required | Notes |
-| --- | --- | --- |
-| Brand | yes | Normalized in `brands`. |
-| Product name | yes | Keep variant/strength if label-visible. |
-| Barcode | preferred | Required for scan match. |
-| Category | yes | Must map to `product_categories`. |
-| Ingredient text | yes for recommendable products | Preserve raw text and parser output. |
-| Source | yes | `curated`, `open_beauty_facts`, `brand_label`, or mixed with per-field provenance. |
-| Snapshot date | yes | Required for imported data. |
-| Quality grade | yes | `verified`, `usable`, `limited`, `unverified`, or `blocked`. |
-| Review status | yes | Product recs require `reviewed`. |
-| PAO/expiry | optional | Unknown stays unknown. No fake expiry. |
-| Correction status | yes | Product recs blocked by open/triaged corrections. |
+| Field             | Required                       | Notes                                                                              |
+| ----------------- | ------------------------------ | ---------------------------------------------------------------------------------- |
+| Brand             | yes                            | Normalized in `brands`.                                                            |
+| Product name      | yes                            | Keep variant/strength if label-visible.                                            |
+| Barcode           | preferred                      | Required for scan match.                                                           |
+| Category          | yes                            | Must map to `product_categories`.                                                  |
+| Ingredient text   | yes for recommendable products | Preserve raw text and parser output.                                               |
+| Source            | yes                            | `curated`, `open_beauty_facts`, `brand_label`, or mixed with per-field provenance. |
+| Snapshot date     | yes                            | Required for imported data.                                                        |
+| Quality grade     | yes                            | `verified`, `usable`, `limited`, `unverified`, or `blocked`.                       |
+| Review status     | yes                            | Product recs require `reviewed`.                                                   |
+| PAO/expiry        | optional                       | Unknown stays unknown. No fake expiry.                                             |
+| Correction status | yes                            | Product recs blocked by open/triaged corrections.                                  |
 
 ## Product Quality Labels
 
@@ -42,4 +42,3 @@ Build the first launch catalog from real beta shelves and common U.S. products. 
 ## First Batch Policy
 
 The repository contains tooling and fixtures, not a fake 2,000-product seed. A production batch must be created from approved sources and beta shelf evidence, then attached to a QA report.
-

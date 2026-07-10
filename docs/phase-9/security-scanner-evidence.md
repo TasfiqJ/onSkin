@@ -4,11 +4,11 @@ This file defines the scanner artifacts that must be attached to every release-c
 
 ## Required Artifacts
 
-| Artifact | Producing job | Required contents | Release review |
-| --- | --- | --- | --- |
-| `code-security-evidence-<run_id>` | `code-gates` | `code-gates-outcomes.json`, `npm-audit-high.json` | Verify Phase 9 verification, dependency SBOM, and high/critical npm audit all report `success`. Review `npm-audit-high.json` for zero high or critical advisories. |
-| `secret-scanner-evidence-<run_id>` | `secret-scan` | `secret-scan-outcomes.json` | Verify Gitleaks and TruffleHog both report `success`. Review workflow logs only if either scanner fails. Do not paste secret values into tickets or reports. |
-| `static-scanner-evidence-<run_id>` | `static-analysis` | `static-analysis-outcomes.json` | Verify Semgrep and OSV both report `success`. Review linked scanner findings before accepting any warning or advisory. |
+| Artifact                           | Producing job     | Required contents                                 | Release review                                                                                                                                                     |
+| ---------------------------------- | ----------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `code-security-evidence-<run_id>`  | `code-gates`      | `code-gates-outcomes.json`, `npm-audit-high.json` | Verify Phase 9 verification, dependency SBOM, and high/critical npm audit all report `success`. Review `npm-audit-high.json` for zero high or critical advisories. |
+| `secret-scanner-evidence-<run_id>` | `secret-scan`     | `secret-scan-outcomes.json`                       | Verify Gitleaks and TruffleHog both report `success`. Review workflow logs only if either scanner fails. Do not paste secret values into tickets or reports.       |
+| `static-scanner-evidence-<run_id>` | `static-analysis` | `static-analysis-outcomes.json`                   | Verify Semgrep and OSV both report `success`. Review linked scanner findings before accepting any warning or advisory.                                             |
 
 ## Required Workflow Behavior
 

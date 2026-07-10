@@ -6,30 +6,30 @@ Phase 11 is controlled public launch, not scale. The launch is allowed to expand
 
 ## Launch Roles
 
-| Role | Owner | Backup | Status |
-| --- | --- | --- | --- |
-| Launch lead | TBD | TBD | BLOCKED |
-| Release engineer | TBD | TBD | BLOCKED |
-| Product owner | TBD | TBD | BLOCKED |
-| Support lead | TBD | TBD | BLOCKED |
-| Payments owner | TBD | TBD | BLOCKED |
-| Privacy/legal owner | TBD | TBD | BLOCKED |
-| Clinical/claims reviewer | TBD | TBD | BLOCKED |
-| Catalog owner | TBD | TBD | BLOCKED |
-| Growth/ASO owner | TBD | TBD | BLOCKED |
+| Role                     | Owner | Backup | Status  |
+| ------------------------ | ----- | ------ | ------- |
+| Launch lead              | TBD   | TBD    | BLOCKED |
+| Release engineer         | TBD   | TBD    | BLOCKED |
+| Product owner            | TBD   | TBD    | BLOCKED |
+| Support lead             | TBD   | TBD    | BLOCKED |
+| Payments owner           | TBD   | TBD    | BLOCKED |
+| Privacy/legal owner      | TBD   | TBD    | BLOCKED |
+| Clinical/claims reviewer | TBD   | TBD    | BLOCKED |
+| Catalog owner            | TBD   | TBD    | BLOCKED |
+| Growth/ASO owner         | TBD   | TBD    | BLOCKED |
 
 ## Entry Gates
 
-| Gate | Required evidence | Status |
-| --- | --- | --- |
-| Phase 10 exit | Go or limited-launch memo with beta evidence | BLOCKED |
-| Phase 9 RC | signed release candidate packet | BLOCKED |
-| Store approval | App Store and Play review state known | BLOCKED |
-| Production env | production Supabase, URLs, app links, env values checked | BLOCKED |
-| RevenueCat | production products, offerings, webhooks, restore, entitlements checked | BLOCKED |
-| Monitoring | PostHog, Sentry, RevenueCat, stores, support dashboards live | BLOCKED |
-| Support | launch categories, macros, SLA, owners live | BLOCKED |
-| Incident/rollback | rollback drill completed and owners reachable | BLOCKED |
+| Gate              | Required evidence                                                       | Status  |
+| ----------------- | ----------------------------------------------------------------------- | ------- |
+| Phase 10 exit     | Go or limited-launch memo with beta evidence                            | BLOCKED |
+| Phase 9 RC        | signed release candidate packet                                         | BLOCKED |
+| Store approval    | App Store and Play review state known                                   | BLOCKED |
+| Production env    | production Supabase, URLs, app links, env values checked                | BLOCKED |
+| RevenueCat        | production products, offerings, webhooks, restore, entitlements checked | BLOCKED |
+| Monitoring        | PostHog, Sentry, RevenueCat, stores, support dashboards live            | BLOCKED |
+| Support           | launch categories, macros, SLA, owners live                             | BLOCKED |
+| Incident/rollback | rollback drill completed and owners reachable                           | BLOCKED |
 
 The generated public-launch packet must hash the verifier scripts that decide
 launch readiness, not only the app, generated beta packet, and Phase 11 docs.
@@ -44,12 +44,12 @@ reject stale or mixed-worktree public-launch evidence.
 
 ## Launch Rings
 
-| Ring | Audience | Traffic control | Expansion rule |
-| --- | --- | --- | --- |
-| Ring 0 | approved but not promoted | manual release, selected countries, invite-only links | no promotion until smoke passes |
-| Ring 1 | invite-led soft launch | founder list, beta waitlist, narrow organic channels | 72-hour report must pass |
-| Ring 2 | narrow public discovery | store search, limited creators only if disclosure pack passes | week-1 expansion must pass |
-| Ring 3 | broader organic | more countries/channels after support and retention evidence | no paid scale without cohort economics |
+| Ring   | Audience                  | Traffic control                                               | Expansion rule                         |
+| ------ | ------------------------- | ------------------------------------------------------------- | -------------------------------------- |
+| Ring 0 | approved but not promoted | manual release, selected countries, invite-only links         | no promotion until smoke passes        |
+| Ring 1 | invite-led soft launch    | founder list, beta waitlist, narrow organic channels          | 72-hour report must pass               |
+| Ring 2 | narrow public discovery   | store search, limited creators only if disclosure pack passes | week-1 expansion must pass             |
+| Ring 3 | broader organic           | more countries/channels after support and retention evidence  | no paid scale without cohort economics |
 
 ## First 72 Hours
 

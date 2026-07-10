@@ -4,17 +4,17 @@ Status: BLOCKED until `docs/phase-10/public-launch-decision-memo.md` contains a 
 
 ## Required Phase 10 Inputs
 
-| Input | Required result | Status |
-| --- | --- | --- |
-| Public launch decision memo | go or limited launch | BLOCKED |
-| Tester count | 50-100 real target users completed loop | BLOCKED |
-| Retention report | D1/D7/D14/D30 by activated cohort | BLOCKED |
-| Catalog report | match/miss/wrong-match and fallback result | BLOCKED |
-| Payment report | purchase/restore/entitlement evidence | BLOCKED |
-| Support report | ticket volume, severity, SLA, launch risk | BLOCKED |
-| Privacy evidence | deletion/export/support payload checks | BLOCKED |
-| Store beta evidence | TestFlight and Play closed-test proof | BLOCKED |
-| Open P0/P1 list | zero unresolved | BLOCKED |
+| Input                       | Required result                            | Status  |
+| --------------------------- | ------------------------------------------ | ------- |
+| Public launch decision memo | go or limited launch                       | BLOCKED |
+| Tester count                | 50-100 real target users completed loop    | BLOCKED |
+| Retention report            | D1/D7/D14/D30 by activated cohort          | BLOCKED |
+| Catalog report              | match/miss/wrong-match and fallback result | BLOCKED |
+| Payment report              | purchase/restore/entitlement evidence      | BLOCKED |
+| Support report              | ticket volume, severity, SLA, launch risk  | BLOCKED |
+| Privacy evidence            | deletion/export/support payload checks     | BLOCKED |
+| Store beta evidence         | TestFlight and Play closed-test proof      | BLOCKED |
+| Open P0/P1 list             | zero unresolved                            | BLOCKED |
 
 ## Review Questions
 
@@ -32,4 +32,3 @@ Status: BLOCKED until `docs/phase-10/public-launch-decision-memo.md` contains a 
 ## Launch Eligibility
 
 Phase 11 can only proceed if the answer is go or limited launch. A hold decision must produce fixes and a new Phase 10 validation cycle.
-

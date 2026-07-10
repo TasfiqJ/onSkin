@@ -17,23 +17,23 @@ Report each metric by:
 
 ## Funnel
 
-| Step | Count | Rate | Notes |
-| --- | ---: | ---: | --- |
-| Invited | TBD | TBD | TBD |
-| Accepted invite | TBD | TBD | TBD |
-| Installed | TBD | TBD | TBD |
-| Opened app | TBD | TBD | TBD |
-| Completed onboarding | TBD | TBD | TBD |
-| Added product | TBD | TBD | TBD |
-| Reached first value | TBD | TBD | TBD |
-| Completed first check-off | TBD | TBD | TBD |
-| Returned D1 | TBD | TBD | TBD |
-| Returned D7 | TBD | TBD | TBD |
-| Returned D14 | TBD | TBD | TBD |
-| Returned D30 | TBD | TBD | TBD |
-| Saw paywall | TBD | TBD | TBD |
-| Started trial/purchase flow | TBD | TBD | TBD |
-| Restored/manage subscription used | TBD | TBD | TBD |
+| Step                              | Count | Rate | Notes |
+| --------------------------------- | ----: | ---: | ----- |
+| Invited                           |   TBD |  TBD | TBD   |
+| Accepted invite                   |   TBD |  TBD | TBD   |
+| Installed                         |   TBD |  TBD | TBD   |
+| Opened app                        |   TBD |  TBD | TBD   |
+| Completed onboarding              |   TBD |  TBD | TBD   |
+| Added product                     |   TBD |  TBD | TBD   |
+| Reached first value               |   TBD |  TBD | TBD   |
+| Completed first check-off         |   TBD |  TBD | TBD   |
+| Returned D1                       |   TBD |  TBD | TBD   |
+| Returned D7                       |   TBD |  TBD | TBD   |
+| Returned D14                      |   TBD |  TBD | TBD   |
+| Returned D30                      |   TBD |  TBD | TBD   |
+| Saw paywall                       |   TBD |  TBD | TBD   |
+| Started trial/purchase flow       |   TBD |  TBD | TBD   |
+| Restored/manage subscription used |   TBD |  TBD | TBD   |
 
 ## Guardrails
 
@@ -45,10 +45,9 @@ Report each metric by:
 
 ## Decision
 
-| Decision | Evidence required |
-| --- | --- |
-| Go | Activation, retention, catalog, payment, privacy, and support all pass guardrails |
-| Limited launch | Core works but traffic must remain narrow by country/channel/platform |
-| Hold | Fixable blockers remain before public exposure |
-| No-go | Demand, trust, retention, or safety evidence is too weak |
-
+| Decision       | Evidence required                                                                 |
+| -------------- | --------------------------------------------------------------------------------- |
+| Go             | Activation, retention, catalog, payment, privacy, and support all pass guardrails |
+| Limited launch | Core works but traffic must remain narrow by country/channel/platform             |
+| Hold           | Fixable blockers remain before public exposure                                    |
+| No-go          | Demand, trust, retention, or safety evidence is too weak                          |

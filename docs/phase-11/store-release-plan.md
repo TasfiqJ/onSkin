@@ -12,31 +12,31 @@ Status: BLOCKED until App Store Connect and Play Console approval evidence is at
 
 ## Apple Release Checklist
 
-| Item | Evidence |
-| --- | --- |
-| App Store version created | BLOCKED |
-| Correct build selected | BLOCKED |
-| Pricing and availability set | BLOCKED |
-| Manual release selected | BLOCKED |
-| Privacy nutrition labels reviewed | BLOCKED |
-| Account deletion available in app | BLOCKED |
-| Review notes include no-medical-advice and payment context | BLOCKED |
-| App Review approval state | BLOCKED |
-| Release owner assigned | BLOCKED |
+| Item                                                       | Evidence |
+| ---------------------------------------------------------- | -------- |
+| App Store version created                                  | BLOCKED  |
+| Correct build selected                                     | BLOCKED  |
+| Pricing and availability set                               | BLOCKED  |
+| Manual release selected                                    | BLOCKED  |
+| Privacy nutrition labels reviewed                          | BLOCKED  |
+| Account deletion available in app                          | BLOCKED  |
+| Review notes include no-medical-advice and payment context | BLOCKED  |
+| App Review approval state                                  | BLOCKED  |
+| Release owner assigned                                     | BLOCKED  |
 
 ## Google Release Checklist
 
-| Item | Evidence |
-| --- | --- |
-| Production access eligibility confirmed | BLOCKED |
-| Country selection approved | BLOCKED |
-| Data safety form matches actual behavior | BLOCKED |
-| Health content declaration reviewed | BLOCKED |
-| Account deletion disclosure reviewed | BLOCKED |
-| Pre-launch report reviewed | BLOCKED |
-| Android vitals dashboard linked | BLOCKED |
-| First release no-percentage constraint accepted | BLOCKED |
-| Release owner assigned | BLOCKED |
+| Item                                            | Evidence |
+| ----------------------------------------------- | -------- |
+| Production access eligibility confirmed         | BLOCKED  |
+| Country selection approved                      | BLOCKED  |
+| Data safety form matches actual behavior        | BLOCKED  |
+| Health content declaration reviewed             | BLOCKED  |
+| Account deletion disclosure reviewed            | BLOCKED  |
+| Pre-launch report reviewed                      | BLOCKED  |
+| Android vitals dashboard linked                 | BLOCKED  |
+| First release no-percentage constraint accepted | BLOCKED  |
+| Release owner assigned                          | BLOCKED  |
 
 ## Availability Strategy
 
@@ -54,4 +54,3 @@ Hold release if any of these are true:
 - Monitoring dashboards are missing.
 - Deletion/export/account deletion is not live.
 - Medical or cosmetic claims are not review-approved.
-

@@ -37,4 +37,3 @@ Status: BLOCKED until creator program is approved. Creator traffic is not allowe
 - support escalation path
 - takedown process
 - FTC/fake-review compliance review
-

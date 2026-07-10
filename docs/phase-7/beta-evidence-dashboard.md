@@ -4,12 +4,12 @@ Purpose: prove whether the V1 loop is valuable enough to keep funding. This is t
 
 ## Activation
 
-| Metric                   | Event(s)                                                                              | Target                                                  |
-| ------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| Product shelf activation | `product_add_started` to `product_added` by unique product count                      | 60% of users add 3+ products within 48 hours            |
+| Metric                   | Event(s)                                                                                  | Target                                                  |
+| ------------------------ | ----------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Product shelf activation | `product_add_started` to `product_added` by unique product count                          | 60% of users add 3+ products within 48 hours            |
 | First value moment       | `routine_plan_viewed`, `routine_created`, `first_useful_insight`, and `conflict_detected` | 50% reach useful guidance/no-issue within first session |
-| Routine activation       | `first_checkoff_completed`, `routine_checkoff_completed`, and `cycle_night_completed` | 45% complete at least one check-off within 48 hours     |
-| Photo activation         | `photo_baseline_added`, `first_photo_captured`, and `photo_captured`                  | 25% capture a baseline photo within 7 days              |
+| Routine activation       | `first_checkoff_completed`, `routine_checkoff_completed`, and `cycle_night_completed`     | 45% complete at least one check-off within 48 hours     |
+| Photo activation         | `photo_baseline_added`, `first_photo_captured`, and `photo_captured`                      | 25% capture a baseline photo within 7 days              |
 
 `routine_created` and `first_routine_created` are reserved for non-example
 plans with at least one placed AM or PM step. A plan that only tells the user a

@@ -4,14 +4,14 @@ The final domain must be first-party. Do not use Firebase Dynamic Links.
 
 ## Required Behavior
 
-| Scenario | Expected result |
-| --- | --- |
-| iOS app installed, tap `https://DOMAIN/s/SHARE_ID` | Opens app through Universal Links |
-| iOS app not installed | Opens `/s/SHARE_ID` landing page with App Store CTA |
-| Android app installed, tap `https://DOMAIN/s/SHARE_ID` | Opens app through Android App Links |
-| Android app not installed | Opens `/s/SHARE_ID` landing page with Play CTA |
-| Desktop browser | Opens web fallback with QR/store choices |
-| Invalid `SHARE_ID` | Shows generic landing page; never reveals product/profile context |
+| Scenario                                               | Expected result                                                   |
+| ------------------------------------------------------ | ----------------------------------------------------------------- |
+| iOS app installed, tap `https://DOMAIN/s/SHARE_ID`     | Opens app through Universal Links                                 |
+| iOS app not installed                                  | Opens `/s/SHARE_ID` landing page with App Store CTA               |
+| Android app installed, tap `https://DOMAIN/s/SHARE_ID` | Opens app through Android App Links                               |
+| Android app not installed                              | Opens `/s/SHARE_ID` landing page with Play CTA                    |
+| Desktop browser                                        | Opens web fallback with QR/store choices                          |
+| Invalid `SHARE_ID`                                     | Shows generic landing page; never reveals product/profile context |
 
 ## iOS Universal Links
 

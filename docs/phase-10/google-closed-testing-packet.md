@@ -12,23 +12,23 @@ Status: BLOCKED until Play Console evidence is attached.
 
 ## Required Play Console Setup
 
-| Item | Evidence |
-| --- | --- |
-| App record exists | BLOCKED |
-| Package name matches production identity | BLOCKED |
-| Internal testing track created | BLOCKED |
-| Closed testing track created | BLOCKED |
-| Tester email list uploaded | BLOCKED |
-| License tester list configured | BLOCKED |
-| Account type confirmed | BLOCKED |
-| 12 testers/14 days calendar created if required | BLOCKED |
-| App bundle uploaded | BLOCKED |
-| Build/version code | BLOCKED |
-| Data safety draft reviewed | BLOCKED |
-| Health content declarations reviewed | BLOCKED |
-| Account deletion disclosure reviewed | BLOCKED |
-| Pre-launch report reviewed | BLOCKED |
-| Android vitals dashboard ready | BLOCKED |
+| Item                                            | Evidence |
+| ----------------------------------------------- | -------- |
+| App record exists                               | BLOCKED  |
+| Package name matches production identity        | BLOCKED  |
+| Internal testing track created                  | BLOCKED  |
+| Closed testing track created                    | BLOCKED  |
+| Tester email list uploaded                      | BLOCKED  |
+| License tester list configured                  | BLOCKED  |
+| Account type confirmed                          | BLOCKED  |
+| 12 testers/14 days calendar created if required | BLOCKED  |
+| App bundle uploaded                             | BLOCKED  |
+| Build/version code                              | BLOCKED  |
+| Data safety draft reviewed                      | BLOCKED  |
+| Health content declarations reviewed            | BLOCKED  |
+| Account deletion disclosure reviewed            | BLOCKED  |
+| Pre-launch report reviewed                      | BLOCKED  |
+| Android vitals dashboard ready                  | BLOCKED  |
 
 ## Internal Test Checklist
 
@@ -62,4 +62,3 @@ Attach before Phase 10 exit:
 - payment/license-tester QA summary
 - support-ticket summary
 - privacy/deletion/export QA summary
-

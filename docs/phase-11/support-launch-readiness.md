@@ -4,17 +4,17 @@ Status: BLOCKED until support desk, macros, owners, and launch SLA are live.
 
 ## Required Support Setup
 
-| Item | Evidence |
-| --- | --- |
-| Public support email/desk live | BLOCKED |
-| Help center or public support page live | BLOCKED |
-| Categories match Phase 10/11 taxonomy | BLOCKED |
-| Payment escalation owner assigned | BLOCKED |
-| Privacy/deletion/export owner assigned | BLOCKED |
-| Clinical/claims escalation owner assigned | BLOCKED |
-| Incident bridge/contact path tested | BLOCKED |
-| Launch support schedule covered | BLOCKED |
-| Store review response owner assigned | BLOCKED |
+| Item                                      | Evidence |
+| ----------------------------------------- | -------- |
+| Public support email/desk live            | BLOCKED  |
+| Help center or public support page live   | BLOCKED  |
+| Categories match Phase 10/11 taxonomy     | BLOCKED  |
+| Payment escalation owner assigned         | BLOCKED  |
+| Privacy/deletion/export owner assigned    | BLOCKED  |
+| Clinical/claims escalation owner assigned | BLOCKED  |
+| Incident bridge/contact path tested       | BLOCKED  |
+| Launch support schedule covered           | BLOCKED  |
+| Store review response owner assigned      | BLOCKED  |
 
 ## Launch Categories
 
@@ -34,12 +34,12 @@ Status: BLOCKED until support desk, macros, owners, and launch SLA are live.
 
 ## Launch SLA
 
-| Severity | Response |
-| --- | --- |
-| P0 | same day, owner paged, expansion halted |
-| P1 | 1 business day, next ring held |
-| P2 | 2 business days |
-| P3 | weekly triage |
+| Severity | Response                                |
+| -------- | --------------------------------------- |
+| P0       | same day, owner paged, expansion halted |
+| P1       | 1 business day, next ring held          |
+| P2       | 2 business days                         |
+| P3       | weekly triage                           |
 
 ## Store Review Rules
 
@@ -47,4 +47,3 @@ Status: BLOCKED until support desk, macros, owners, and launch SLA are live.
 - Never incentivize positive reviews.
 - Respond with support paths and factual product boundaries.
 - Escalate medical, payment, privacy, or data-rights review themes.
-

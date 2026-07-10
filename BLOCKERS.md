@@ -628,7 +628,7 @@ Next action:
   before the first run, record every raw observation, collect the complete
   supported-device artifact, run `phase5:performance-evidence:summarize`, and
   then run `PHASE5_PERFORMANCE_EVIDENCE_PATH=... npm run
-  phase5:performance-evidence:strict`;
+phase5:performance-evidence:strict`;
 - keep `npm run docs:performance-readiness-audit:check` passing after any
   performance-readiness doc or launch-gate change.
 

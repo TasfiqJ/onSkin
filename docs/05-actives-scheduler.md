@@ -1,14 +1,14 @@
 # Document 5: The Actives & Skin-Cycling Scheduler — Build Spec
 
-*The temporal engine · the cycle data model & projection algorithm · multi-active orchestration across the week · cadence types & AM/PM allocation · the cycle / schedule-management surfaces · pause, skip, travel & procedure handling · recovery & barrier de-escalation · what-to-remind timing.*
+_The temporal engine · the cycle data model & projection algorithm · multi-active orchestration across the week · cadence types & AM/PM allocation · the cycle / schedule-management surfaces · pause, skip, travel & procedure handling · recovery & barrier de-escalation · what-to-remind timing._
 
-> This is build-order document **#5** of the 15 named in docs/00 (§"Build order", item 5: *"Actives/skin-cycling scheduler"*). It is the **temporal engine** that decides, for every active a user owns, **what to apply on which day/night, at what cadence** — and produces the per-day schedule that the Today habit loop (docs/03 §6) renders and checks off. It deliberately **does not re-derive** the things its neighbours already own: **docs/02 §5** introduced the skin-cycling *concept* (Dr. Whitney Bowe's four-night framework, the `cycling_night` mapping, the next-acid-night sketch, "calm not gamified"), and **docs/03 §4–§5** specified the *retinoid ramp-up* (`active_ramp`) and the *cycling-aware daily plan and its rendering* (the PM auto-resolution screen). **This document specifies what those two only referenced**: (a) the **cycle as a stored, versioned data object** plus the **projection algorithm**; (b) **multi-active orchestration** — how a cabinet of many actives is allocated across a week without collision (the combinatorial problem neither covered); (c) **cadence types and AM/PM allocation** beyond cycling; (d) the **cycle/schedule-management surfaces** (the week view, cycle settings, the "why tonight?" explainer, pause/skip/travel); and (e) **disruption and recovery handling**. It consumes docs/02's conflict resolutions and docs/03's ramp, it extends docs/01's schema, it feeds docs/03's daily rendering, and the *delivery* of any reminder it computes belongs to doc #7.
+> This is build-order document **#5** of the 15 named in docs/00 (§"Build order", item 5: _"Actives/skin-cycling scheduler"_). It is the **temporal engine** that decides, for every active a user owns, **what to apply on which day/night, at what cadence** — and produces the per-day schedule that the Today habit loop (docs/03 §6) renders and checks off. It deliberately **does not re-derive** the things its neighbours already own: **docs/02 §5** introduced the skin-cycling _concept_ (Dr. Whitney Bowe's four-night framework, the `cycling_night` mapping, the next-acid-night sketch, "calm not gamified"), and **docs/03 §4–§5** specified the _retinoid ramp-up_ (`active_ramp`) and the _cycling-aware daily plan and its rendering_ (the PM auto-resolution screen). **This document specifies what those two only referenced**: (a) the **cycle as a stored, versioned data object** plus the **projection algorithm**; (b) **multi-active orchestration** — how a cabinet of many actives is allocated across a week without collision (the combinatorial problem neither covered); (c) **cadence types and AM/PM allocation** beyond cycling; (d) the **cycle/schedule-management surfaces** (the week view, cycle settings, the "why tonight?" explainer, pause/skip/travel); and (e) **disruption and recovery handling**. It consumes docs/02's conflict resolutions and docs/03's ramp, it extends docs/01's schema, it feeds docs/03's daily rendering, and the _delivery_ of any reminder it computes belongs to doc #7.
 
 ---
 
 ## TL;DR
 
-- **The scheduler is the temporal engine of the whole app — the answer to "what do I actually use tonight?"** Given the user's actives (the Smart Shelf, docs/04), their skin profile, the conflict resolutions (docs/02 `detect_conflicts`), and the ramp (docs/03 `active_ramp`), it decides **what to apply on which day/night at what cadence** and emits the per-day schedule the Today loop renders and checks off (docs/03 §6/§9). docs/02 §5 introduced the cycling *concept* and docs/03 the *ramp and the daily rendering*; **this document is the engine that produces the schedule**, plus the multi-active orchestration, the management surfaces, and the disruption handling those two referenced but did not specify.
+- **The scheduler is the temporal engine of the whole app — the answer to "what do I actually use tonight?"** Given the user's actives (the Smart Shelf, docs/04), their skin profile, the conflict resolutions (docs/02 `detect_conflicts`), and the ramp (docs/03 `active_ramp`), it decides **what to apply on which day/night at what cadence** and emits the per-day schedule the Today loop renders and checks off (docs/03 §6/§9). docs/02 §5 introduced the cycling _concept_ and docs/03 the _ramp and the daily rendering_; **this document is the engine that produces the schedule**, plus the multi-active orchestration, the management surfaces, and the disruption handling those two referenced but did not specify.
 
 - **It is a deterministic, explainable, constraint-satisfaction scheduler over curated rules — not AI.** This is the same architectural conclusion docs/00 §3 and docs/02–04 reached: every "X is scheduled tonight" must be **traceable** to a named rule, the user's profile, or the user's own edit, because the output must be explainable to a user, auditable to a lawyer, and impossible to hallucinate. The rules that touch frequency, recovery, and contraindication are medical-adjacent and fall under the same **B-DERM-REVIEW** gate as the conflict matrix (docs/02 §9) and the sequencing/ramp rules (docs/03).
 
@@ -28,11 +28,11 @@
 
 ## Key Findings
 
-1. **The scheduler is the temporal engine; it produces the schedule docs/03 renders.** Its job is allocation-in-time: what active, what day/night, what cadence. docs/02 §5 owns the cycling *concept* and the `cycling_night` mapping; docs/03 §4–§5 owns the *ramp* (`active_ramp`) and the *daily rendering* (the PM auto-resolution); this document owns the **cycle data model, the projection algorithm, multi-active orchestration, cadence types, the management surfaces, and disruption/recovery** — the parts they referenced but left unspecified.
+1. **The scheduler is the temporal engine; it produces the schedule docs/03 renders.** Its job is allocation-in-time: what active, what day/night, what cadence. docs/02 §5 owns the cycling _concept_ and the `cycling_night` mapping; docs/03 §4–§5 owns the _ramp_ (`active_ramp`) and the _daily rendering_ (the PM auto-resolution); this document owns the **cycle data model, the projection algorithm, multi-active orchestration, cadence types, the management surfaces, and disruption/recovery** — the parts they referenced but left unspecified.
 
 2. **Multi-active orchestration is the hard, under-served core, and the rules are consistent dermatological consensus.** **One potent active per night + supportive ingredients only** (INKEY); **vitamin C in the morning, off the night cycle** (Doctor Rogers: "vitamin C in the morning and a retinoid in the evening"); **skip secondary actives (vitamin C, BP) on exfoliation or retinoid nights** (Dot & Key); **introduce actives one at a time** so a reaction is attributable (Doctor Rogers); **≤2 serums per night** (consensus). These are SORT grade C (expert consensus) but highly consistent.
 
-3. **Never schedule a retinoid and an exfoliant on the same night — this is harm-relevant, not cosmetic.** Same-night exfoliation with retinol or benzoyl peroxide is reported as the most common cause of severe at-home chemical burns in U.S. clinical practice. The scheduler's `alternate_nights` placement (driven by docs/02's resolution) therefore does real protective work, and the scheduler enforces the separation firmly (while staying claim-safe — it *separates*, it doesn't "warn of danger").
+3. **Never schedule a retinoid and an exfoliant on the same night — this is harm-relevant, not cosmetic.** Same-night exfoliation with retinol or benzoyl peroxide is reported as the most common cause of severe at-home chemical burns in U.S. clinical practice. The scheduler's `alternate_nights` placement (driven by docs/02's resolution) therefore does real protective work, and the scheduler enforces the separation firmly (while staying claim-safe — it _separates_, it doesn't "warn of danger").
 
 4. **Exfoliation frequency must be capped and personalised.** Consensus ranges: sensitive/beginner ~**1×/week** (start low, build), normal/combination **2–3×/week**, oily/acne-prone up to **3–4×/week with BHA** (Dr. Lipner recommends a max of once weekly for some; Paula's Choice: "no hard and fast rule," find the cadence by response). BHA can be tolerated more frequently than AHA. The scheduler treats these as conservative, adjustable defaults.
 
@@ -46,7 +46,7 @@
 
 9. **The scheduler must be resilient to real life.** Pause (vacation/illness/procedure), skip a single night, resume with re-anchoring, and auto-de-escalate on irritation. The break is **managed**, not punished — consistent with the calm, forgiving streak (docs/03 §6) and Lally's missed-day finding. This disruption layer is entirely unspecified upstream.
 
-10. **Demand is real and the scheduler is the antidote to decision fatigue — with one honest tension.** McKinsey 2025: **72% overwhelmed** by product volume; the 2026 mood is **skinimalism/longevity** — fewer, smarter, expert-guided, barrier-first ("trusted expert guidance cuts through the noise," Revieve); skin cycling has ~3.5B TikTok views (docs/02/03) and sources explicitly tell people to **"use a skincare app to track"** the cycle (Dot & Key). The honest counter-current: the same mood rejects **"aggressive cycling"** and over-complication — so the scheduler must reduce load and protect the barrier, never multiply steps. The scheduler aligns with skinimalism *if* it is calm, minimal, and barrier-first.
+10. **Demand is real and the scheduler is the antidote to decision fatigue — with one honest tension.** McKinsey 2025: **72% overwhelmed** by product volume; the 2026 mood is **skinimalism/longevity** — fewer, smarter, expert-guided, barrier-first ("trusted expert guidance cuts through the noise," Revieve); skin cycling has ~3.5B TikTok views (docs/02/03) and sources explicitly tell people to **"use a skincare app to track"** the cycle (Dot & Key). The honest counter-current: the same mood rejects **"aggressive cycling"** and over-complication — so the scheduler must reduce load and protect the barrier, never multiply steps. The scheduler aligns with skinimalism _if_ it is calm, minimal, and barrier-first.
 
 ---
 
@@ -55,39 +55,42 @@
 ### 1. What the scheduler is — and is not (scope & the boundary with docs/02 §5 and docs/03)
 
 **It is** the temporal engine. Concretely, the scheduler:
+
 - decides **what active on what day/night at what cadence**, for the actives the user owns;
 - owns the **cycle data model** and the **projection algorithm** (§3);
 - performs **multi-active orchestration** across the week (§4);
 - assigns **cadence types and AM/PM placement** (§5);
 - powers the **schedule-management surfaces** (§6);
 - handles **pause/skip/travel/procedure and recovery/de-escalation** (§7);
-- decides **what to remind about and when** (the *content* of reminders; §9), leaving delivery to doc #7.
+- decides **what to remind about and when** (the _content_ of reminders; §9), leaving delivery to doc #7.
 
 **It is not**, and these boundaries keep this document from re-treading its neighbours:
-- the **conflict/synergy rules** — docs/02 owns the matrix and `detect_conflicts`; the scheduler *consumes* the resolutions (`alternate_nights`, `separate_am_pm`, `buffer`).
-- the **retinoid ramp mechanics** — docs/03 §4 owns `active_ramp` (the step-up offers, the `tolerance_state`); the scheduler *reads* the current `freq_per_week` and schedules around it.
-- the **daily-card rendering** — docs/03 §9 owns the Today AM/PM screens; the scheduler *feeds* them and adds the *week-level* surfaces (§6).
-- the **within-routine sequencing** — docs/03 §3 owns `step_order` (thinnest-to-thickest); the scheduler decides *which night/phase*, not the order within a session.
+
+- the **conflict/synergy rules** — docs/02 owns the matrix and `detect_conflicts`; the scheduler _consumes_ the resolutions (`alternate_nights`, `separate_am_pm`, `buffer`).
+- the **retinoid ramp mechanics** — docs/03 §4 owns `active_ramp` (the step-up offers, the `tolerance_state`); the scheduler _reads_ the current `freq_per_week` and schedules around it.
+- the **daily-card rendering** — docs/03 §9 owns the Today AM/PM screens; the scheduler _feeds_ them and adds the _week-level_ surfaces (§6).
+- the **within-routine sequencing** — docs/03 §3 owns `step_order` (thinnest-to-thickest); the scheduler decides _which night/phase_, not the order within a session.
 - the **catalog/shelf** — docs/02/04 own products and the inventory; the scheduler reads `user_products`.
 
 **Boundary table (so the three documents compose cleanly):**
 
-| Concern | docs/02 §5 | docs/03 §4–§5 | doc 5 (here) |
-|---|---|---|---|
-| The Bowe cycling *concept* + `cycling_night` mapping | ✔ | reaffirms | uses |
-| Retinoid **ramp** (`active_ramp`, step-ups, tolerance) | — | ✔ | reads |
-| Daily-card **rendering** (PM auto-resolution screen) | sketch | ✔ | feeds |
-| **Cycle data model** (stored, versioned) + **projection algorithm** | referenced | referenced | **✔** |
-| **Multi-active orchestration** (a cabinet across a week) | retinoid+AHA case | retinoid case | **✔** |
-| **Cadence types** + AM/PM allocation (all classes) | — | partial | **✔** |
-| **Schedule-management surfaces** (week view, settings, pause/skip/travel) | — | — | **✔** |
-| **Disruption & recovery** (pause/skip/procedure/de-escalation) | — | irritation de-escalation seed | **✔** |
+| Concern                                                                   | docs/02 §5        | docs/03 §4–§5                 | doc 5 (here) |
+| ------------------------------------------------------------------------- | ----------------- | ----------------------------- | ------------ |
+| The Bowe cycling _concept_ + `cycling_night` mapping                      | ✔                 | reaffirms                     | uses         |
+| Retinoid **ramp** (`active_ramp`, step-ups, tolerance)                    | —                 | ✔                             | reads        |
+| Daily-card **rendering** (PM auto-resolution screen)                      | sketch            | ✔                             | feeds        |
+| **Cycle data model** (stored, versioned) + **projection algorithm**       | referenced        | referenced                    | **✔**        |
+| **Multi-active orchestration** (a cabinet across a week)                  | retinoid+AHA case | retinoid case                 | **✔**        |
+| **Cadence types** + AM/PM allocation (all classes)                        | —                 | partial                       | **✔**        |
+| **Schedule-management surfaces** (week view, settings, pause/skip/travel) | —                 | —                             | **✔**        |
+| **Disruption & recovery** (pause/skip/procedure/de-escalation)            | —                 | irritation de-escalation seed | **✔**        |
 
 **Deterministic, explainable, gated.** The scheduler is constraint satisfaction over curated rules (§2), not ML; every decision is traceable; the medical-adjacent rules (frequency, recovery, contraindication, the retinoid×exfoliant separation) are signed off under **B-DERM-REVIEW** alongside docs/02's matrix and docs/03's ramp/sequencing rules.
 
 ### 2. The scheduling model — inputs, constraints, outputs
 
 **Inputs:**
+
 - **Actives owned** — `user_products` (docs/04) joined to docs/02 `product_ingredients → ingredient_tags`, giving each owned product a functional class (`retinoid`, `aha`, `bha`, `vitamin_c`, `niacinamide`, `benzoyl_peroxide`, `azelaic`, …) and a concentration band.
 - **Profile** — `skin_profiles` (docs/01): `sensitive_resistant`, `sensitivities`, `pregnancy_status`, `goals`.
 - **Conflict resolutions** — docs/02 `detect_conflicts` → `routine_conflicts` with `resolution_type` (`alternate_nights` / `separate_am_pm` / `buffer` / `lower_frequency` / `no_change` / `reassure` / `avoid_refer`).
@@ -95,10 +98,11 @@
 - **The cycle definition** — this document, §3.
 
 **Constraints (the rules — sourced and graded; all SORT grade C consensus, several harm-relevant and firmer):**
-1. **One potent active per night** + supportive ingredients only (INKEY; Doctor Rogers). *Firm.*
-2. **Never a retinoid and an exfoliant on the same night** (harm-relevant — chemical-burn risk). *Firm.*
+
+1. **One potent active per night** + supportive ingredients only (INKEY; Doctor Rogers). _Firm._
+2. **Never a retinoid and an exfoliant on the same night** (harm-relevant — chemical-burn risk). _Firm._
 3. **AM/PM placement by class** (§5): vitamin C AM; SPF AM-last; retinoid PM; exfoliants PM (BHA AM ok for oily); niacinamide/hydrators flexible; BP AM or alternate nights.
-4. **Exfoliation frequency cap by skin type** (sensitive ~1×/wk → oily 3–4×/wk BHA). *Personalised, conservative.*
+4. **Exfoliation frequency cap by skin type** (sensitive ~1×/wk → oily 3–4×/wk BHA). _Personalised, conservative._
 5. **≤2 serums per night.**
 6. **Recovery nights** present for barrier repair; insert more on irritation.
 7. **Introduce actives one at a time** (phased onboarding/ramp).
@@ -106,6 +110,7 @@
 9. **Conservative default** when concentration/sensitivity/tolerance is unknown.
 
 **Outputs:**
+
 - a **per-day schedule** — for today and projected forward: which routine (AM/PM), which actives, which `cycling_night`, with the conflict resolutions applied;
 - the **next-of-slot** computations (next acid night, next retinoid night) for the in-context copy docs/03 renders;
 - the **week view** data (§6.1) and the **explainability** trace (§6.3).
@@ -114,7 +119,7 @@
 
 ### 3. The cycle data model & projection algorithm (the part docs/01–03 only referenced)
 
-**The cycle as a stored, versioned object.** `cycling_night` on `routine_steps` (docs/01) records *which night a step belongs to*, but the **cycle itself** — its variant, length, per-night slot, and anchor — has nowhere to live. This document adds it:
+**The cycle as a stored, versioned object.** `cycling_night` on `routine_steps` (docs/01) records _which night a step belongs to_, but the **cycle itself** — its variant, length, per-night slot, and anchor — has nowhere to live. This document adds it:
 
 ```sql
 create table public.cycles (
@@ -143,12 +148,14 @@ create table public.cycle_nights (                 -- the per-night slot assignm
 (A JSONB cycle definition on a single row is a valid alternative; the two-table form is shown for clarity and queryability. Either way the cycle is **versioned** — edits create a new active cycle and supersede the old, preserving history.)
 
 **The projection algorithm (deterministic, pure, local-day aware).** Given an active `cycle` (anchor `A`, length `L`), today's **local** date `T` (per the user's timezone; the timezone-tolerant logic of DECISIONS **D-012** applies), and the slot map:
+
 ```
 night_index(T)        = ((T - A) mod L + L) mod L          # safe modulo for dates before the anchor
 tonight_slot          = cycle_nights[night_index(T)].slot
 week_ahead            = [ (T+d, cycle_nights[night_index(T+d)]) for d in 0..6 ]
 next_slot_date(slot)  = min{ T+d : d>0, cycle_nights[night_index(T+d)].slot == slot }
 ```
+
 - **Tonight** drives the PM card and strip (docs/03 §9.3).
 - **`next_slot_date('exfoliation')`** is the "**next acid night**" the PM banner names ("Next acid night: Saturday," spec p9) — the computation docs/02 §5 sketched, here made concrete.
 - **Variable length** is handled by `L` (4 classic, 5–6 gentle, custom); recovery-heavy gentle cycles simply have more `recovery` nights.
@@ -160,11 +167,12 @@ next_slot_date(slot)  = min{ T+d : d>0, cycle_nights[night_index(T+d)].slot == s
 
 ### 4. Multi-active orchestration (the hard, under-served core)
 
-This is the part no competitor does well and neither neighbour specified: turning a *cabinet* of actives into a coherent weekly schedule.
+This is the part no competitor does well and neither neighbour specified: turning a _cabinet_ of actives into a coherent weekly schedule.
 
 **The cardinal rules (sourced).** **One potent active per night** plus supportive (hydrating/barrier) ingredients only; **vitamin C in the AM**, off the night cycle; **exfoliants and retinoids at night, cycled and alternated, never the same night**; **skip secondary actives on retinoid/exfoliation nights**; **≤2 serums per night**; **introduce one active at a time.**
 
 **The allocation algorithm (in detail):**
+
 ```
 orchestrate(user):
   actives = classify(user_products → tags)            # retinoid, aha, bha, azelaic, vitamin_c, niacinamide, bp, ...
@@ -188,14 +196,15 @@ orchestrate(user):
 
 **Frequency caps by class (conservative defaults; personalised; B-DERM-REVIEW):**
 
-| Class | Sensitive | Normal/combination | Oily/resistant |
-|---|---|---|---|
-| AHA (glycolic/lactic) | 1×/wk → build | 2–3×/wk | up to 3–4×/wk |
-| BHA (salicylic) | 1–2×/wk | 2–3×/wk | up to daily (tolerated) |
-| Retinoid | 2×/wk (ramp) | every-other → nightly (ramp) | nightly (ramp) |
-| Azelaic acid | gentle — most nights/AM ok | flexible | flexible |
+| Class                 | Sensitive                  | Normal/combination           | Oily/resistant          |
+| --------------------- | -------------------------- | ---------------------------- | ----------------------- |
+| AHA (glycolic/lactic) | 1×/wk → build              | 2–3×/wk                      | up to 3–4×/wk           |
+| BHA (salicylic)       | 1–2×/wk                    | 2–3×/wk                      | up to daily (tolerated) |
+| Retinoid              | 2×/wk (ramp)               | every-other → nightly (ramp) | nightly (ramp)          |
+| Azelaic acid          | gentle — most nights/AM ok | flexible                     | flexible                |
 
 **Worked examples:**
+
 - **Simple (Maya — retinoid + glycolic):** N0 exfoliate (glycolic) · N1 retinoid · N2–N5 recover (gentle variant). Vitamin C every AM. Exactly the spec.
 - **Complex (a fuller cabinet — retinoid + glycolic + salicylic + azelaic + vitamin C + niacinamide):** a 7-night cycle, e.g. **N0** AHA (glycolic) · **N1** retinoid · **N2** recover · **N3** BHA (salicylic) · **N4** retinoid · **N5** recover · **N6** recover; **azelaic** (gentle) on recovery nights or the AM; **vitamin C + niacinamide** every AM; SPF every AM, last. Each potent active gets its capped frequency, no two share a night, retinoid and acids never collide, and recovery nights sit between pushes. This is the orchestration value: six actives turned into a calm, barrier-safe weekly plan the user never has to reason about.
 
@@ -204,6 +213,7 @@ orchestrate(user):
 ### 5. Cadence types & AM/PM allocation
 
 **Cadence types (map onto `routine_steps.frequency`, docs/01 — no schema change there):**
+
 - **`daily`** — vitamin C and SPF (AM), moisturiser (AM/PM), often niacinamide; every day.
 - **`skin-cycling`** — the cycled PM potent actives, placed by `cycling_night` (§3).
 - **`every_n_days`** — a weekly mask, a maintenance exfoliant, or a "2×/week" item not tied to the cycle.
@@ -211,16 +221,16 @@ orchestrate(user):
 
 **AM/PM allocation by class (the rules, sourced):**
 
-| Class | Default phase | Notes |
-|---|---|---|
-| Antioxidant / vitamin C | **AM** | morning antioxidant + SPF is the classic pairing (docs/02 matrix #10) |
-| Sunscreen (SPF) | **AM, last** | always the final AM step |
-| Retinoid | **PM** | UV degrades it and raises photosensitivity |
-| Exfoliant (AHA) | **PM** | cycled, alternated with retinoid |
-| Exfoliant (BHA / salicylic) | **PM** (or AM for oily) | oil-soluble; AM acceptable for oily skin (Doctor Rogers) |
-| Benzoyl peroxide | **AM or alternate nights** | separate from simple retinol (docs/02 stability rule) |
-| Niacinamide / hydrators | **flexible** | typically AM; barrier-supportive, low-conflict |
-| Azelaic acid | **flexible** | gentle; recovery nights or AM |
+| Class                       | Default phase              | Notes                                                                 |
+| --------------------------- | -------------------------- | --------------------------------------------------------------------- |
+| Antioxidant / vitamin C     | **AM**                     | morning antioxidant + SPF is the classic pairing (docs/02 matrix #10) |
+| Sunscreen (SPF)             | **AM, last**               | always the final AM step                                              |
+| Retinoid                    | **PM**                     | UV degrades it and raises photosensitivity                            |
+| Exfoliant (AHA)             | **PM**                     | cycled, alternated with retinoid                                      |
+| Exfoliant (BHA / salicylic) | **PM** (or AM for oily)    | oil-soluble; AM acceptable for oily skin (Doctor Rogers)              |
+| Benzoyl peroxide            | **AM or alternate nights** | separate from simple retinol (docs/02 stability rule)                 |
+| Niacinamide / hydrators     | **flexible**               | typically AM; barrier-supportive, low-conflict                        |
+| Azelaic acid                | **flexible**               | gentle; recovery nights or AM                                         |
 
 **The interplay.** The **AM block is stable** (vitamin C → … → moisturiser → SPF, every day, sequenced by docs/03 §3); the **PM cycle rotates** (the potent active of the night + barrier support); the scheduler keeps the two coherent so the user sees a steady morning and a guided, varying evening.
 
@@ -230,11 +240,12 @@ Design tokens are fixed (docs/00 §8, DECISIONS D-005, docs/02 §7): **Instrumen
 
 #### 6.1 Week / cycle overview
 
-A calm calendar/strip reachable from Today, showing **tonight and the nights ahead** — each night's slot (Exfoliate · Retinoid · Recover · Recover · …) and the active assigned to it, plus the **stable AM block** noted once. Tonight is the only night tinted clay; the rest are muted (the spec's PM strip, docs/03 §9.3, is the *today slice* of this week view). Tapping a night opens **what's on and why** (§6.3). A small "next acid night / next retinoid night" line uses the projection (§3). No counts, no points, no pressure.
+A calm calendar/strip reachable from Today, showing **tonight and the nights ahead** — each night's slot (Exfoliate · Retinoid · Recover · Recover · …) and the active assigned to it, plus the **stable AM block** noted once. Tonight is the only night tinted clay; the rest are muted (the spec's PM strip, docs/03 §9.3, is the _today slice_ of this week view). Tapping a night opens **what's on and why** (§6.3). A small "next acid night / next retinoid night" line uses the projection (§3). No counts, no points, no pressure.
 
 #### 6.2 Cycle settings / customisation
 
 A calm settings surface to:
+
 - **Choose the variant** — Gentle (more recovery, for sensitive/barrier-repair), Classic (the 4-night), Advanced (fewer recovery nights), or Custom.
 - **Set the length** (`length_nights`) and **assign actives to nights** (a drag interaction over `cycle_nights`).
 - **Set per-active frequency** (within the caps, §4).
@@ -244,11 +255,12 @@ Edits that **violate a rule** (two potent actives on a night, exceeding a freque
 
 #### 6.3 "Why is this on tonight?" explainability
 
-A tap-through from any night that shows the **reasoning trace**, in calm, claim-safe language: *"Tonight is cycling night 2 — retinoid night. Your glycolic toner is on alternate nights so the two don't compound irritation. Your vitamin C is in your mornings."* It surfaces docs/02's **evidence grade** where relevant ("recommendation, not a rule"). This is the trust counterpart to the conflict-detail screen (docs/02 §7.3) — it makes the schedule legible, which is exactly what the "expert guidance that cuts through the noise" mood rewards.
+A tap-through from any night that shows the **reasoning trace**, in calm, claim-safe language: _"Tonight is cycling night 2 — retinoid night. Your glycolic toner is on alternate nights so the two don't compound irritation. Your vitamin C is in your mornings."_ It surfaces docs/02's **evidence grade** where relevant ("recommendation, not a rule"). This is the trust counterpart to the conflict-detail screen (docs/02 §7.3) — it makes the schedule legible, which is exactly what the "expert guidance that cuts through the noise" mood rewards.
 
 #### 6.4 Pause / skip / travel / post-procedure
 
 Calm controls (also reachable from Today and Settings):
+
 - **Pause my routine** — for a vacation, illness, or break; suspends the cycle (`cycles.paused_from`), optionally keeps a **minimal barrier routine** (cleanser + moisturiser + SPF), and resumes with re-anchoring (§3).
 - **Skip tonight** — a one-off; the cycle continues; nothing breaks (the calm streak, docs/03 §6).
 - **Travelling** — a "travel mode" that simplifies to essentials (skip potent actives if the user prefers) and resumes on return.
@@ -265,6 +277,7 @@ Claim-safe and calm (docs/02 §7.7): "keep it simple tonight," "recovery night �
 ### 7. Disruption & recovery handling (the resilient scheduler)
 
 The scheduler manages breaks instead of punishing them:
+
 - **Pause** (vacation/illness/break) → suspend the cycle, optionally keep a minimal barrier routine, resume + re-anchor (§3). The streak is protected (docs/03 §6).
 - **Skip a single night** → the cycle continues uninterrupted; a missed night never resets anything (Lally: a single missed day doesn't impair habit formation, docs/03 §6).
 - **Post-procedure** (facial/peel/laser) → insert a recovery window (pause actives for N days), claim-safe, then resume.
@@ -277,21 +290,21 @@ Every disruption is **guided, reversible, non-diagnostic, recovery-first**, and 
 
 Consistent with docs/02's SORT discipline, the scheduling rules are graded and mostly **grade C** (consensus/mechanistic), with the harm-relevant ones enforced more firmly:
 
-| Rule | Evidence | Firmness in the scheduler |
-|---|---|---|
-| One potent active per night + support | grade C, strong consensus | firm |
-| **Never retinoid + exfoliant same night** | grade C, but **harm-relevant** (chemical-burn risk in clinical practice) | **firm (separation enforced)** |
-| Exfoliation frequency caps (skin-type-personalised) | grade C, "no hard rule" | conservative default, adjustable |
-| Introduce actives one at a time | grade C, consensus | firm (phased) |
-| Recovery nights / barrier-repair ingredients | grade C + some clinical support | firm |
-| AM/PM allocation by class | grade C, consensus | default, adjustable |
-| Skin cycling framework | dermatologist framework, not RCT | personalised, conservative |
+| Rule                                                | Evidence                                                                 | Firmness in the scheduler        |
+| --------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------- |
+| One potent active per night + support               | grade C, strong consensus                                                | firm                             |
+| **Never retinoid + exfoliant same night**           | grade C, but **harm-relevant** (chemical-burn risk in clinical practice) | **firm (separation enforced)**   |
+| Exfoliation frequency caps (skin-type-personalised) | grade C, "no hard rule"                                                  | conservative default, adjustable |
+| Introduce actives one at a time                     | grade C, consensus                                                       | firm (phased)                    |
+| Recovery nights / barrier-repair ingredients        | grade C + some clinical support                                          | firm                             |
+| AM/PM allocation by class                           | grade C, consensus                                                       | default, adjustable              |
+| Skin cycling framework                              | dermatologist framework, not RCT                                         | personalised, conservative       |
 
 **Honest framing.** The scheduler's rules are consensus and mechanistic, not RCT-proven; they are conservative and personalised; the harm-relevant ones (retinoid×exfoliant separation, frequency caps, pregnancy suppression) are firmer; and the whole rule set — like the conflict matrix (docs/02 §9) and the sequencing/ramp rules (docs/03) — is **signed off under B-DERM-REVIEW** before launch. Crucially, the scheduler is **barrier-first and load-reducing** by design, never an engine for aggressive cycling.
 
 ### 9. Notifications & timing (what to remind, when — feeds doc #7)
 
-The scheduler decides the **content and timing** of reminders; **doc #7 owns delivery** (the channels, `notification_preferences`, the Live Activity and widget — docs/00 §6, docs/01 §3, docs/03 §9.9). The scheduler emits, for the user's chosen PM time: *tonight's active* ("Retinoid night — keep it simple"), *recovery nights* ("Recovery night — barrier support"), the *next acid/retinoid night*, the *ramp step-up offer* (as an occasional, confirmable prompt), and *de-escalation guidance* ("Your skin's felt irritated — let's take a few recovery nights"). All calm, all opt-in, none with streak pressure.
+The scheduler decides the **content and timing** of reminders; **doc #7 owns delivery** (the channels, `notification_preferences`, the Live Activity and widget — docs/00 §6, docs/01 §3, docs/03 §9.9). The scheduler emits, for the user's chosen PM time: _tonight's active_ ("Retinoid night — keep it simple"), _recovery nights_ ("Recovery night — barrier support"), the _next acid/retinoid night_, the _ramp step-up offer_ (as an occasional, confirmable prompt), and _de-escalation guidance_ ("Your skin's felt irritated — let's take a few recovery nights"). All calm, all opt-in, none with streak pressure.
 
 ### 10. Engineering / implementation notes
 
@@ -347,20 +360,20 @@ The scheduler is king-making because it solves the single biggest problem in mod
 6. **Make the scheduler resilient:** re-anchor on resume, never break the streak on a skip (D-027), and **auto-de-escalate on irritation** with the barrier-recovery protocol.
 7. **Personalise conservatively:** gentle variants and lower frequency for sensitive/barrier-repair; default to the more cautious branch when tolerance is unknown.
 8. **Keep it claim-safe and calm** (docs/02 §9/§7.7): "recommendation, not a rule," "recovery night," "give your skin a few days" — never "treats," never alarmist, never aggressive cycling.
-9. **Let the scheduler decide *what* to remind and *when*, and hand delivery to doc #7** (`notification_preferences`, Live Activity, widget) — opt-in, no streak pressure.
+9. **Let the scheduler decide _what_ to remind and _when_, and hand delivery to doc #7** (`notification_preferences`, Live Activity, widget) — opt-in, no streak pressure.
 10. **Position it as the antidote to decision fatigue** — "we decide tonight's one step so you don't have to" — explicitly aligned with skinimalism/longevity, and explicitly **not** a complexity engine.
 
 ---
 
 ## Caveats (confidence flags)
 
-- **The scheduling rules are dermatologist consensus and mechanistic (SORT grade C), not RCT-proven** — conservative and personalised, with the harm-relevant ones (the retinoid×exfoliant separation, frequency caps, pregnancy suppression) enforced more firmly; the whole rule set needs clinical sign-off under **B-DERM-REVIEW**. *Medium-high confidence on the consensus; the specific frequencies are starting positions for review.*
-- **The retinoid×exfoliant same-night prohibition is the firmest rule, and rightly so** — same-night use is reported as a leading cause of at-home chemical burns in clinical practice — but it remains expert/clinical consensus rather than trial evidence; the scheduler enforces separation while staying claim-safe (it *separates*, it doesn't diagnose danger). *High confidence on enforcing the separation.*
-- **Exfoliation-frequency caps are personalised heuristics, not hard numbers** ("no hard and fast rule," Paula's Choice); they must adjust to the user's reported tolerance and the over-exfoliation signals. *Medium confidence on the specific caps; high on personalising them down for sensitivity.*
-- **Skin cycling is a dermatologist-developed framework, not an RCT-validated protocol** (docs/02/03); frame and personalise honestly, no "clinically proven" outcome claims. *Medium-high confidence on provenance/rationale; low on outcome claims.*
-- **The honest market tension is real:** the 2026 skinimalism/longevity mood **rejects aggressive cycling and over-complication**, so the scheduler must be a **load-reducer and barrier-protector**, never a complexity/anxiety engine; over-scheduling would actively work against the trend it rides. *High confidence — this is a design constraint, not optional.*
-- **The cycle projection has edge cases** — timezones and local-day rollover (D-012), dates before the anchor (safe modulo), pause/resume re-anchoring (D-027), and concurrent multi-device edits (deferred to a sync upgrade, docs/01 §6) — that should be verified on-device. *Medium confidence pending device testing.*
-- **Multi-active orchestration must degrade gracefully** when the shelf is sparse (no actives → no cycle, a simple daily AM/PM, per docs/02 §5 / docs/03 §5) or when products lack parsed actives/concentration (conservative defaults). *High confidence on the fallback behaviour.*
-- **Auto-de-escalation depends on self-reported signals**, which are imperfect; keep the prompt optional and the response conservative (pause + recovery, never escalate), and never diagnose. *Medium confidence.*
-- **Reminder delivery is owned by doc #7 and is platform-constrained** (iOS time-sensitive notifications, Android 14 exact-alarm limits, Live Activity/widget refresh — docs/00 §6); the scheduler only decides content/timing, and feasibility should be re-verified at build. *Medium confidence.*
-- **Competitive positioning moves fast** — SkinSort logs, HadaBuddy AI-generates static plans, and others will add cycling — so the defensible wedge must remain the **living orchestration + projection + disruption/recovery + calm management surfaces** combination, revisited periodically. *Medium confidence.*
+- **The scheduling rules are dermatologist consensus and mechanistic (SORT grade C), not RCT-proven** — conservative and personalised, with the harm-relevant ones (the retinoid×exfoliant separation, frequency caps, pregnancy suppression) enforced more firmly; the whole rule set needs clinical sign-off under **B-DERM-REVIEW**. _Medium-high confidence on the consensus; the specific frequencies are starting positions for review._
+- **The retinoid×exfoliant same-night prohibition is the firmest rule, and rightly so** — same-night use is reported as a leading cause of at-home chemical burns in clinical practice — but it remains expert/clinical consensus rather than trial evidence; the scheduler enforces separation while staying claim-safe (it _separates_, it doesn't diagnose danger). _High confidence on enforcing the separation._
+- **Exfoliation-frequency caps are personalised heuristics, not hard numbers** ("no hard and fast rule," Paula's Choice); they must adjust to the user's reported tolerance and the over-exfoliation signals. _Medium confidence on the specific caps; high on personalising them down for sensitivity._
+- **Skin cycling is a dermatologist-developed framework, not an RCT-validated protocol** (docs/02/03); frame and personalise honestly, no "clinically proven" outcome claims. _Medium-high confidence on provenance/rationale; low on outcome claims._
+- **The honest market tension is real:** the 2026 skinimalism/longevity mood **rejects aggressive cycling and over-complication**, so the scheduler must be a **load-reducer and barrier-protector**, never a complexity/anxiety engine; over-scheduling would actively work against the trend it rides. _High confidence — this is a design constraint, not optional._
+- **The cycle projection has edge cases** — timezones and local-day rollover (D-012), dates before the anchor (safe modulo), pause/resume re-anchoring (D-027), and concurrent multi-device edits (deferred to a sync upgrade, docs/01 §6) — that should be verified on-device. _Medium confidence pending device testing._
+- **Multi-active orchestration must degrade gracefully** when the shelf is sparse (no actives → no cycle, a simple daily AM/PM, per docs/02 §5 / docs/03 §5) or when products lack parsed actives/concentration (conservative defaults). _High confidence on the fallback behaviour._
+- **Auto-de-escalation depends on self-reported signals**, which are imperfect; keep the prompt optional and the response conservative (pause + recovery, never escalate), and never diagnose. _Medium confidence._
+- **Reminder delivery is owned by doc #7 and is platform-constrained** (iOS time-sensitive notifications, Android 14 exact-alarm limits, Live Activity/widget refresh — docs/00 §6); the scheduler only decides content/timing, and feasibility should be re-verified at build. _Medium confidence._
+- **Competitive positioning moves fast** — SkinSort logs, HadaBuddy AI-generates static plans, and others will add cycling — so the defensible wedge must remain the **living orchestration + projection + disruption/recovery + calm management surfaces** combination, revisited periodically. _Medium confidence._

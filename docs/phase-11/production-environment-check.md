@@ -4,19 +4,19 @@ Status: BLOCKED until production environment smoke evidence is attached.
 
 ## Required Checks
 
-| Area | Evidence | Status |
-| --- | --- | --- |
-| App variant | production build uses `APP_VARIANT=production` | BLOCKED |
-| EAS channel | production build channel is `production` | BLOCKED |
-| Supabase | production URL and publishable key set | BLOCKED |
-| Auth | Apple and Google sign-in configured for production IDs | BLOCKED |
-| App links | Universal Links and Android App Links verified | BLOCKED |
-| Policy URLs | privacy, terms, support, deletion, export, consumer health privacy live | BLOCKED |
-| PostHog | production key/host configured and sensitive payload audit passed | BLOCKED |
-| Sentry | DSN, release, dist, source maps, release health configured | BLOCKED |
-| RevenueCat | production app keys, products, offerings, webhooks, entitlements configured | BLOCKED |
-| Feature flags | public Phase 7/8 surfaces intentionally enabled/disabled | BLOCKED |
-| Secrets | no secret-looking key in `EXPO_PUBLIC_*` | BLOCKED |
+| Area          | Evidence                                                                    | Status  |
+| ------------- | --------------------------------------------------------------------------- | ------- |
+| App variant   | production build uses `APP_VARIANT=production`                              | BLOCKED |
+| EAS channel   | production build channel is `production`                                    | BLOCKED |
+| Supabase      | production URL and publishable key set                                      | BLOCKED |
+| Auth          | Apple and Google sign-in configured for production IDs                      | BLOCKED |
+| App links     | Universal Links and Android App Links verified                              | BLOCKED |
+| Policy URLs   | privacy, terms, support, deletion, export, consumer health privacy live     | BLOCKED |
+| PostHog       | production key/host configured and sensitive payload audit passed           | BLOCKED |
+| Sentry        | DSN, release, dist, source maps, release health configured                  | BLOCKED |
+| RevenueCat    | production app keys, products, offerings, webhooks, entitlements configured | BLOCKED |
+| Feature flags | public Phase 7/8 surfaces intentionally enabled/disabled                    | BLOCKED |
+| Secrets       | no secret-looking key in `EXPO_PUBLIC_*`                                    | BLOCKED |
 
 ## Smoke Sequence
 
@@ -42,4 +42,3 @@ Status: BLOCKED until production environment smoke evidence is attached.
 - missing production monitoring
 - unverified deletion/export
 - unresolved P0/P1 smoke issue
-

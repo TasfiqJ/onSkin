@@ -48,4 +48,3 @@ The seeded `open_beauty_facts` source is `production_approved=false`, `requires_
 - Bulk import runs from export artifacts, never API crawling.
 - QA report proves category filtering, barcode quality, parser confidence, and unresolved-correction gates.
 - Attribution and report-issue UI are visible before product-level recommendations use OBF-derived rows.
-

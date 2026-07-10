@@ -4,12 +4,12 @@ Status: BLOCKED until support inbox, categories, SLA, macros, and escalation own
 
 ## Support Channels
 
-| Channel | Purpose | Status |
-| --- | --- | --- |
-| Beta support email or desk | All tester issues and feedback | BLOCKED |
-| Privacy request path | deletion, export, consent withdrawal | BLOCKED |
-| Payment escalation | unexpected charge, restore failure, entitlement mismatch | BLOCKED |
-| Incident escalation | crash, data leak, incorrect medical framing, P0 support theme | BLOCKED |
+| Channel                    | Purpose                                                       | Status  |
+| -------------------------- | ------------------------------------------------------------- | ------- |
+| Beta support email or desk | All tester issues and feedback                                | BLOCKED |
+| Privacy request path       | deletion, export, consent withdrawal                          | BLOCKED |
+| Payment escalation         | unexpected charge, restore failure, entitlement mismatch      | BLOCKED |
+| Incident escalation        | crash, data leak, incorrect medical framing, P0 support theme | BLOCKED |
 
 Do not accept beta bug reports through personal DMs as the source of truth. If a tester sends a DM, create a ticket with only necessary context and reply through the approved channel.
 
@@ -20,30 +20,30 @@ The in-app Beta feedback route opens `EXPO_PUBLIC_SUPPORT_URL` with
 It sends no free text and no health/photo detail. Configure the support desk to
 preserve these exact query values as ticket fields.
 
-| Query value | Desk category | Default queue |
-| --- | --- | --- |
-| `onboarding_confusion` | onboarding confusion | beta-onboarding |
-| `catalog_match` | catalog no match or wrong match | beta-catalog |
-| `guidance_trust` | guidance trust concern | beta-guidance-review |
-| `routine_checkoff` | routine/check-off issue | beta-routine |
-| `visual_progress` | photo/progress issue | beta-photos |
-| `notifications` | reminders/notifications issue | beta-reminders |
-| `paywall_comprehension` | paywall comprehension | beta-payments |
-| `privacy_rights` | privacy/deletion/export issue | beta-privacy |
-| `crash_performance` | crash/performance issue | beta-release |
-| `account_auth` | account/auth issue | beta-auth |
-| `app_install` | app review/store/install issue | beta-install |
-| `advice_boundary` | medical advice boundary concern | beta-claims |
-| `other` | other | beta-general |
+| Query value             | Desk category                   | Default queue        |
+| ----------------------- | ------------------------------- | -------------------- |
+| `onboarding_confusion`  | onboarding confusion            | beta-onboarding      |
+| `catalog_match`         | catalog no match or wrong match | beta-catalog         |
+| `guidance_trust`        | guidance trust concern          | beta-guidance-review |
+| `routine_checkoff`      | routine/check-off issue         | beta-routine         |
+| `visual_progress`       | photo/progress issue            | beta-photos          |
+| `notifications`         | reminders/notifications issue   | beta-reminders       |
+| `paywall_comprehension` | paywall comprehension           | beta-payments        |
+| `privacy_rights`        | privacy/deletion/export issue   | beta-privacy         |
+| `crash_performance`     | crash/performance issue         | beta-release         |
+| `account_auth`          | account/auth issue              | beta-auth            |
+| `app_install`           | app review/store/install issue  | beta-install         |
+| `advice_boundary`       | medical advice boundary concern | beta-claims          |
+| `other`                 | other                           | beta-general         |
 
 ## Severity
 
-| Severity | Definition | Response target |
-| --- | --- | --- |
-| `p0` | data exposure, unexpected charge, deletion/export failure, harmful medical framing, widespread crash | same day, page owner |
-| `p1` | payment restore failure, blocked activation, catalog failure affecting many testers, support queue breach | 1 business day |
-| `p2` | confusing copy, single-device issue, non-blocking catalog miss | 2 business days |
-| `p3` | suggestion, polish, non-launch request | weekly triage |
+| Severity | Definition                                                                                                | Response target      |
+| -------- | --------------------------------------------------------------------------------------------------------- | -------------------- |
+| `p0`     | data exposure, unexpected charge, deletion/export failure, harmful medical framing, widespread crash      | same day, page owner |
+| `p1`     | payment restore failure, blocked activation, catalog failure affecting many testers, support queue breach | 1 business day       |
+| `p2`     | confusing copy, single-device issue, non-blocking catalog miss                                            | 2 business days      |
+| `p3`     | suggestion, polish, non-launch request                                                                    | weekly triage        |
 
 Run `npm run phase10:support-handoff` after any Beta feedback route or support
 operations edit. The generated packet is the exact setup handoff for the
@@ -65,15 +65,15 @@ real desk, categories, macros, SLA report, and owner signoff.
 
 ## Escalation Owners
 
-| Area | Owner | Backup | Status |
-| --- | --- | --- | --- |
-| Release/build | TBD | TBD | BLOCKED |
-| Support ops | TBD | TBD | BLOCKED |
-| Privacy/legal | TBD | TBD | BLOCKED |
-| Payments | TBD | TBD | BLOCKED |
-| Catalog | TBD | TBD | BLOCKED |
-| Clinical/claims | TBD | TBD | BLOCKED |
-| Engineering | TBD | TBD | BLOCKED |
+| Area            | Owner | Backup | Status  |
+| --------------- | ----- | ------ | ------- |
+| Release/build   | TBD   | TBD    | BLOCKED |
+| Support ops     | TBD   | TBD    | BLOCKED |
+| Privacy/legal   | TBD   | TBD    | BLOCKED |
+| Payments        | TBD   | TBD    | BLOCKED |
+| Catalog         | TBD   | TBD    | BLOCKED |
+| Clinical/claims | TBD   | TBD    | BLOCKED |
+| Engineering     | TBD   | TBD    | BLOCKED |
 
 ## Daily Triage
 

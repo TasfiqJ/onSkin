@@ -12,21 +12,21 @@ Signed off by: TBD
 
 ## Required Evidence
 
-| Evidence | Attached | Notes |
-| --- | --- | --- |
-| Phase 9 beta candidate signoff | No | TBD |
-| Tester count and composition | No | TBD |
-| TestFlight evidence | No | TBD |
-| Google closed-test evidence | No | TBD |
-| Analytics dashboard links | No | TBD |
-| Privacy payload audit | No | TBD |
-| Catalog beta report | No | TBD |
-| Payment beta report | No | TBD |
-| Support beta report | No | TBD |
-| Retention/activation report | No | TBD |
-| Day 0/7/14/30 survey summaries | No | TBD |
-| Interview synthesis | No | TBD |
-| P0/P1 issue closure | No | TBD |
+| Evidence                       | Attached | Notes |
+| ------------------------------ | -------- | ----- |
+| Phase 9 beta candidate signoff | No       | TBD   |
+| Tester count and composition   | No       | TBD   |
+| TestFlight evidence            | No       | TBD   |
+| Google closed-test evidence    | No       | TBD   |
+| Analytics dashboard links      | No       | TBD   |
+| Privacy payload audit          | No       | TBD   |
+| Catalog beta report            | No       | TBD   |
+| Payment beta report            | No       | TBD   |
+| Support beta report            | No       | TBD   |
+| Retention/activation report    | No       | TBD   |
+| Day 0/7/14/30 survey summaries | No       | TBD   |
+| Interview synthesis            | No       | TBD   |
+| P0/P1 issue closure            | No       | TBD   |
 
 ## Exit Review Questions
 
@@ -52,11 +52,10 @@ Signed off by: TBD
 
 ## Required Fixes Before Phase 11
 
-| Fix | Owner | Severity | Due date | Status |
-| --- | --- | --- | --- | --- |
-| TBD | TBD | TBD | TBD | BLOCKED |
+| Fix | Owner | Severity | Due date | Status  |
+| --- | ----- | -------- | -------- | ------- |
+| TBD | TBD   | TBD      | TBD      | BLOCKED |
 
 ## Public Launch Recommendation
 
 Use this section to explain why public launch is worth the risk. If the evidence is weak, the correct answer is hold or no-go.
-

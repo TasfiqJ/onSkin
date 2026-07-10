@@ -1,6 +1,7 @@
 # Document 0 — Master Technical Architecture for a Production-Grade Skincare Routine App (iOS + Android)
 
 ## TL;DR
+
 - **Build it in React Native (Expo SDK 52+, New Architecture/Fabric) with a Supabase Postgres backend, RevenueCat for subscriptions, and a phased AI strategy that ships guided photo capture + slider comparison FIRST (no AI claims) before any cloud "skin analysis."** This stack is the best fit for a senior team optimizing for one TypeScript codebase, mature camera/widget tooling, predictable infra costs, and Postgres's relational power for the ingredient-conflict graph.
 - **The ingredient intelligence layer should be a curated rules engine, not ML.** Seed ingredients from the EU CosIng database (free; per the European Commission it "includes all data since the adoption of the Cosmetics Directive in 1976," covers ~15,000 INCI names with CAS numbers and Annex II–VI restrictions, and carries the disclaimer that the "CosIng database has informative purpose and no legal value"), and seed products from Open Beauty Facts (ODbL, barcode-linked), then hand-curate the top ~2,000 products and a conflict-rules matrix of roughly 30–60 ingredient pairs that actually matter.
 - **Treat skin photos as sensitive/health-adjacent data from day one.** You are almost certainly NOT HIPAA-covered, but Washington's My Health My Data Act (MHMDA, in force since March 31, 2024), GDPR special-category data, and CCPA/CPRA absolutely apply. An on-device-first photo pipeline with explicit consent lets you credibly say "your photos never train AI and never leave your device."
@@ -28,7 +29,9 @@
 ## Details
 
 ### 1. Cross-Platform Framework
+
 RN 0.76+ made the New Architecture (Fabric renderer, JSI, TurboModules, Hermes) the default, eliminating the legacy async bridge. Independent 2026 benchmarks show Flutter/Impeller leading on sustained complex-UI frame rates (58–60fps vs RN ~51fps) and cold start (~250ms vs ~350ms), while RN often wins on startup-to-interactive and battery in standard business UIs. For a forms/lists/camera/widgets app, the performance delta is imperceptible to users. The deciding factors are ecosystem and native-integration story:
+
 - **Camera:** `react-native-vision-camera` (v5.x, frequent updates) exposes frame processors via JSI — the docs themselves cite VisionCamera frame processing as the canonical example of throughput impractical through Flutter's serialized platform channels. This is exactly what guided-capture overlays (real-time face alignment, lighting checks) need.
 - **Widgets:** iOS WidgetKit requires Swift/SwiftUI regardless of framework. Expo solves this with `expo-apple-targets` (`@bacons/apple-targets`, requires Expo SDK 53+, Xcode 16, CocoaPods 1.16.2+) which generates and links native widget/Live Activity targets outside the regenerated `ios/` dir, and the newer `expo-widgets` module. Data sharing uses App Groups + UserDefaults; a small native module calls `WidgetCenter.shared.reloadAllTimelines()`.
 - **Talent/SDKs:** TypeScript is the standard; ~67% of developers know JS; RN has ~2× the job listings of Flutter. Every commercial SDK this app needs ships RN support first-class.
@@ -36,25 +39,31 @@ RN 0.76+ made the New Architecture (Fabric renderer, JSI, TurboModules, Hermes) 
 Flutter remains the runner-up — choose it only if the team is Dart-native or if pixel-perfect custom-canvas UI becomes the core differentiator. KMP is viable for sharing business logic but adds hiring risk.
 
 ### 2. Backend Architecture
+
 Postgres suits the ingredient graph: `ingredients`, `products`, `product_ingredients` (join with position + concentration_band), `conflict_rules` (ingredient_a, ingredient_b, severity, evidence_grade, resolution, citation). RLS policies (`auth.uid() = user_id`) enforce that users only ever read/write their own photos and routines at the database layer — defense that survives an application bug. Storage: compressed photos at ~150–400KB each × 50–200 photos/user/year is modest; Supabase Storage egress ($0.09/GB over included) is the cost to watch. Edge Functions (Deno) handle ShopMy webhooks, RevenueCat webhooks, and scheduled replenishment nudges; cold starts are acceptable for these non-interactive paths. Realtime is minimal (maybe community + sync), so it's a non-factor. Vendor lock-in is low: Supabase is open-source Postgres; your schema is portable to any Postgres host. HIPAA posture is likely unnecessary (you're not a covered entity/business associate), but Supabase offers HIPAA as a paid add-on on Team/Enterprise if a future B2B2C derm partnership demands it.
 
 ### 3. Ingredient & Product Database Pipeline
+
 - **Seed ingredients** from CosIng (free download; INCI, CAS, functions, restrictions). Carry the "no legal value" caveat internally.
 - **Seed products** from Open Beauty Facts via nightly Parquet/CSV dump (DuckDB recommended for processing) or JSON API (`world.openbeautyfacts.org/api/v2/product/[barcode].json`); honor ODbL (attribution, share-alike, contribute-back any products you add). Coverage is volunteer-driven and uneven, so **manually curate the top ~2,000 products** (best-sellers across Sephora/Ulta/derm-favorites) for guaranteed quality.
 - **Conflict rules:** hand-curate ~30–60 pairs from dermatology literature with severity + evidence grade + resolution. Build the AM/PM application-ordering logic as a separate ordered ruleset (cleanser → toner → actives by molecular weight/pH → moisturizer → SPF).
 - Do NOT scrape INCIDecoder/Skincarisma/SkinSort — no APIs, ToS/legal risk.
 
 ### 4. AI/ML Layer (phased)
+
 **Phase 1 (launch):** Guided capture using on-device face detection (Apple Vision `VNDetectFaceLandmarksRequest`: `boundingBox`, `landmarks`, `roll`/`yaw`/`pitch`, `faceCaptureQuality`; ML Kit `Face.getHeadEulerAngleX/Y/Z()`, `getBoundingBox()`) for alignment, head-tilt, and distance checks, via `react-native-vision-camera-face-detector` (v1.10.1) frame processor. Note these plugins wrap Google ML Kit on both iOS and Android; if you specifically want Apple Vision on iOS, write a custom native frame-processor plugin in Swift. Lighting consistency: compute average luminance/white-balance from the frame buffer on-device and prompt the user. Output: ghost-overlay of the previous photo + slider/side-by-side comparison. NO AI claims.
 **Phase 2 (later):** Optional cloud "trend analysis" via a multimodal vendor or general vision API — gated behind explicit, revocable consent, with a clear data-flow disclosure. Evaluate Haut.AI / Perfect Corp / Revieve (all B2B, "request pricing," no public benchmarks) vs general vision APIs. Adopt Monk Skin Tone for fairness evaluation; validate across tones before shipping any claim.
 
 ### 5. Payments & Affiliate
+
 RevenueCat abstracts StoreKit 2 + Google Play Billing; Paywalls v2 + Experiments handle pricing tests for Pro $39.99/yr and Pro+ $79.99/yr. Note RevenueCat's State of Subscription Apps 2026 data (115,000+ apps, $16B revenue, 1B+ transactions): "trials of 17–32 days convert at an incredibly high median of 42.5%" vs "<4 day trials convert at just 25.5%, meaning long trials convert ~70% better"; hard paywalls convert ~5× freemium at D35 but refund ~70% higher — both relevant to monetization design. US web-checkout via external link is commission-free today (post-Epic) but legally unsettled; implement RevenueCat Web Purchase Button as a low-risk lever, keep StoreKit IAP as the primary. ShopMy OAuth API is the affiliate backbone; use universal links for attribution first.
 
 ### 6. Notifications, Widgets, Background
+
 Local notifications for routine reminders with proper timezone handling. Android 14: default to inexact alarms / WorkManager; only request exact-alarm access if a feature truly needs minute-precision and you can justify it (`canScheduleExactAlarms()` check is mandatory or the app crashes). iOS Live Activities (`expo-widgets`, ActivityKit, iOS 16.2+) for skin-cycling night display. Widget timelines refresh on Apple's schedule (TimelineProvider) — don't over-call reload. Background photo upload: queue + retry when on Wi-Fi/charging. Push: native APNs/FCM + Supabase Edge Functions to avoid OneSignal lock-in, though OneSignal speeds time-to-market.
 
 ### 7. Security/Privacy/Compliance Checklist
+
 - Standalone Consumer Health Data Privacy Policy linked on homepage (WA MHMDA §4).
 - Separate affirmative consent for collection vs sharing; signed authorization before any sale; honor withdrawal.
 - On-device capture + on-device face detection (no faceprint template stored → mitigates BIPA) + client-side encryption; cloud upload opt-in only.
@@ -65,14 +74,17 @@ Local notifications for routine reminders with proper timezone handling. Android
 - Geofencing around healthcare facilities is outright banned under MHMDA — never do location-based health targeting.
 
 ### 8. Design System Foundations
+
 - **Display:** high-contrast editorial serif. Premium: Canela / GT Sectra (foundry licensing required — budget for app embedding). Free: Fraunces or Cormorant (OFL).
 - **Body/UI:** clean sans. Premium: Söhne. Free: Inter / SF Pro (system) / Sen / Tenor Sans.
 - 8pt grid; design tokens Figma → NativeWind; Reanimated 3 + Skia motion; Lottie for streak/celebration; WCAG 2.2 AA; Dynamic Type; restrained haptics; full dark mode.
 
 ### 9. Dev Infrastructure & Timeline
+
 Turborepo monorepo, TS end-to-end, Supabase typed client (or tRPC), EAS Build/Submit/Update, Maestro + RNTL, Sentry + PostHog, GitHub Actions. EAS Update for JS/asset hot-fixes within store rules; `runtimeVersion` gates native compatibility. Expo's own guidance: updates "need to follow the App Store and Play Store guidelines... changes to your app's behavior need to be reviewed." **MVP timeline for 4–6 senior engineers: ~5–7 months** given the feature breadth.
 
 ### 10. Recommended Stack (one choice per layer)
+
 - **Client:** React Native + Expo (New Architecture). Runner-up: Flutter (rejected for weaker SDK ecosystem + smaller talent pool for this integration-heavy app).
 - **Backend:** Supabase/Postgres. Runner-up: Firebase (rejected for relational mismatch + unpredictable per-operation pricing).
 - **Auth/Storage:** Supabase Auth + Storage with RLS.
@@ -85,6 +97,7 @@ Turborepo monorepo, TS end-to-end, Supabase typed client (or tRPC), EAS Build/Su
 **System architecture narrative:** RN/Expo client ↔ Supabase (Postgres + Auth + Storage + Edge Functions, RLS-enforced) for routines, ingredient/product catalog, conflict engine, and photo metadata; photos captured + face-detected on-device, encrypted, uploaded to Supabase Storage only on opt-in; RevenueCat SDK in-client with webhooks → Supabase Edge Function to grant entitlements; ShopMy OAuth API for creator stacks, with affiliate webhooks → Edge Function for attribution; PostHog SDK for analytics/flags; Sentry for crashes. Optional Phase-2 cloud AI sits behind a consent gate as a separate service called from an Edge Function.
 
 **Cost model (infra + services, monthly, order-of-magnitude):**
+
 - 10K MAU: Supabase ~$25–50; RevenueCat free (<$2.5K rev) or ~1% of revenue; PostHog free–$50; Sentry ~$26; total roughly $100–200.
 - 100K MAU: Supabase ~$100–200; RevenueCat ~1% of revenue; PostHog ~$200–400; Sentry ~$80–150; storage/egress ~$50–150; total roughly $600–1,200 + RevenueCat's revenue share.
 - 500K MAU: Supabase ~$1,000–2,000 (MAU overage $0.00325/MAU + compute + egress); PostHog ~$500–1,000+; Sentry ~$300+; total roughly $3,000–5,000 + RevenueCat revenue share.
@@ -92,6 +105,7 @@ Turborepo monorepo, TS end-to-end, Supabase typed client (or tRPC), EAS Build/Su
 **Build order for the 15 feature documents:** (1) Auth + data model + RLS; (2) Ingredient/product DB pipeline + conflict engine; (3) AM/PM routine builder; (4) Smart shelf (PAO/expiration); (5) Actives/skin-cycling scheduler; (6) Guided photo capture + slider comparison; (7) Reminders/streaks/widgets; (8) Subscriptions/paywall (RevenueCat); (9) Personalized recommendations; (10) Creator stacks + ShopMy; (11) Community layer; (12) AI trend analysis (last).
 
 ## Recommendations
+
 1. **Commit to React Native + Expo + Supabase + RevenueCat now.** Validate with a one-week spike building three POCs (guided camera capture, RLS-protected photo upload, RevenueCat paywall) before locking in.
 2. **Build the ingredient data pipeline and conflict rules engine early (doc #2)** — it's the moat and the longest pole. Curate top 2,000 products + 30–60 conflict pairs with evidence grades.
 3. **Ship guided capture + slider comparison with zero AI claims at launch.** Defer cloud skin analysis until you can do it with consent and fairness validation.
@@ -102,11 +116,12 @@ Turborepo monorepo, TS end-to-end, Supabase typed client (or tRPC), EAS Build/Su
 **Benchmarks that would change these recommendations:** if guided-capture frame-processing performance proves unacceptable in RN (validate in the spike), reconsider Flutter or native iOS for the camera module; if Supabase egress at scale exceeds projections, move photo storage to Cloudflare R2/S3 behind signed URLs; if the US external-link commission settles high, abandon web checkout.
 
 ## Caveats (confidence flags)
-- **Ingredient-conflict evidence is genuinely contested.** Reputable sources (Paula's Choice) argue the retinol × AHA/BHA and niacinamide × vitamin C "conflicts" are myths or overstated. Every rule must carry an evidence grade and a non-alarmist resolution. *Medium-low confidence on specific pairs; high confidence on the "curated rules engine, not ML" architecture.*
-- **Cross-platform benchmark numbers come largely from vendor/agency blogs**, not neutral labs; treat specific fps/ms figures as directional. *Medium confidence.*
-- **Commercial skin-analysis vendor pricing is not public** and none publish independent accuracy benchmarks — any cloud-AI cost line is unknown until you request quotes. *Low confidence on cost.*
-- **The US external-purchase-link commission is legally unsettled** (on remand April 2026, Apple seeking Supreme Court review) — the commission-free window could close. *Low confidence on durability.*
-- **Monk Skin Tone scale itself "requires further validation"** per npj Digital Medicine; don't over-promise fairness. *Medium confidence.*
-- **MVP timeline (5–7 months)** assumes 4–6 genuinely senior engineers and no major scope creep; the conflict-data curation and compliance work are the most common sources of slippage. *Medium confidence.*
-- **Google Play's exact OTA policy clause was not fully verified**; confirm against Google Play's Device and Network Abuse policy before relying on aggressive OTA cadence. *Low confidence.*
-- **Apple's newer Swift-async Vision API** may now be the recommended path over the `VN`-prefixed classes; verify current Apple docs at build time. *Medium confidence.*
+
+- **Ingredient-conflict evidence is genuinely contested.** Reputable sources (Paula's Choice) argue the retinol × AHA/BHA and niacinamide × vitamin C "conflicts" are myths or overstated. Every rule must carry an evidence grade and a non-alarmist resolution. _Medium-low confidence on specific pairs; high confidence on the "curated rules engine, not ML" architecture._
+- **Cross-platform benchmark numbers come largely from vendor/agency blogs**, not neutral labs; treat specific fps/ms figures as directional. _Medium confidence._
+- **Commercial skin-analysis vendor pricing is not public** and none publish independent accuracy benchmarks — any cloud-AI cost line is unknown until you request quotes. _Low confidence on cost._
+- **The US external-purchase-link commission is legally unsettled** (on remand April 2026, Apple seeking Supreme Court review) — the commission-free window could close. _Low confidence on durability._
+- **Monk Skin Tone scale itself "requires further validation"** per npj Digital Medicine; don't over-promise fairness. _Medium confidence._
+- **MVP timeline (5–7 months)** assumes 4–6 genuinely senior engineers and no major scope creep; the conflict-data curation and compliance work are the most common sources of slippage. _Medium confidence._
+- **Google Play's exact OTA policy clause was not fully verified**; confirm against Google Play's Device and Network Abuse policy before relying on aggressive OTA cadence. _Low confidence._
+- **Apple's newer Swift-async Vision API** may now be the recommended path over the `VN`-prefixed classes; verify current Apple docs at build time. _Medium confidence._
