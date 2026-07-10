@@ -29,14 +29,11 @@ describe('tab bar treatment', () => {
     expect(source).toContain('FLOATING_TAB_BAR_HORIZONTAL_PADDING');
     expect(source).toContain('MIN_TAB_TOUCH_TARGET');
     expect(source).toContain('TAB_ITEM_HEIGHT');
-    expect(source).toContain('COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH = 430');
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RESET');
     expect(source).toContain('WEB_TAB_ITEM_FOCUS_RING');
     expect(source).toContain('useWindowDimensions');
     expect(source).toContain('tabBarHorizontalInset');
-    expect(source).toContain(
-      'const compactProgressTabLabel = viewportWidth <= COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH;',
-    );
+    expect(source).toContain('const visibleLabel = displayLabel;');
     expect(source).toContain('function TabBarIcon');
     expect(source).toContain('function TodayIcon');
     expect(source).toContain('function ProgressIcon');
@@ -108,6 +105,8 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain('backgroundColor: colors.clayTint');
     expect(source).not.toContain("borderColor: 'rgba(165,105,75,0.20)'");
     expect(source).not.toContain('backgroundColor: colors.greigeChip');
+    expect(source).not.toContain('COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH');
+    expect(source).not.toContain("route.name === 'progress' ? 'Prog.'");
     expect(source).not.toContain(
       'sceneStyle: [styles.tabScene, { paddingBottom: tabSceneClearance }]',
     );
@@ -123,9 +122,7 @@ describe('tab bar treatment', () => {
     expect(source).toContain('maxFontSizeMultiplier={1.08}');
     expect(source).toContain('minimumFontScale={0.84}');
     expect(source).toContain('numberOfLines={1}');
-    expect(source).toContain(
-      "compactProgressTabLabel && route.name === 'progress' ? 'Prog.' : displayLabel",
-    );
+    expect(source).toContain('const visibleLabel = displayLabel;');
     expect(source).toContain('{visibleLabel}');
     expect(source).toContain('TAB_ICON_BY_ROUTE');
     expect(source).toContain('flexShrink: 1');
@@ -151,6 +148,8 @@ describe('tab bar treatment', () => {
     expect(source).not.toContain('fontSize: 11');
     expect(source).not.toContain('fontSize: 12,\n    includeFontPadding: false');
     expect(source).not.toContain('minWidth: 56');
+    expect(source).not.toContain('COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH');
+    expect(source).not.toContain("route.name === 'progress' ? 'Prog.'");
   });
 
   it('protects the floating bar geometry on 320 px phones', () => {
@@ -169,6 +168,5 @@ describe('tab bar treatment', () => {
     expect(usableWidth / 4).toBeGreaterThanOrEqual(74);
     expect(source).toContain('minimumFontScale={0.84}');
     expect(source).toContain('maxFontSizeMultiplier={1.08}');
-    expect(source).toContain('COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH = 430');
   });
 });

@@ -9,16 +9,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 - Finished the floating tab-bar active-pill polish safely across the current
   support matrix. The bar is more inset, the selected capsule no longer fills
   an entire tab slot, inactive labels use stronger ink contrast, and the
-  visible `Progress` label intentionally compacts to `Prog.` through the 430 px
-  compact-phone band while keeping the full `Progress tab` accessibility label.
+  visible `Progress` label stays fully readable through the supported-phone
+  band while keeping the full `Progress tab` accessibility label.
   `npm run e2e:tabbar-geometry` now covers 320 x 568 stress width plus 360 x
   640, 375 x 667, 390 x 844, 412 x 915, and 430 x 932 supported-phone
   viewports, writing snapshots before validation for debuggable failures. The
   route-wide synthetic text-pressure audit now leaves role=`tab` labels to the
   dedicated tab-bar harness, matching the native max-font-scale cap on those
   labels. Evidence:
-  `test-results/human-e2e/2026-07-09/navigation-tabbar-supported-polish-postfix2/`,
-  `test-results/human-e2e/2026-07-09/tabbar-polish-412-pressure-postfix2/`,
+  `test-results/human-e2e/2026-07-09/navigation-tabbar-premium-full-labels-final/`,
+  `test-results/human-e2e/2026-07-09/tabbar-full-label-412-pressure-final/`,
   and
   `docs/e2e-bug-reports/2026-07-09-tabbar-supported-polish-progress-overflow.md`.
 
@@ -287,13 +287,9 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 - Cleared a supported Android-class 412 x 915 / 200% text-pressure route
   audit. The first sweep exposed a 3 px `Progress` tab-label overflow in
-  `/settings/privacy`; after the compact visible label fix, the full route
+  `/settings/privacy`; after the tab-bar pressure audit moved role=`tab` labels to the dedicated geometry harness, the full route
   sequence exposed a stale privacy direct-entry scroll anchor that could leave
-  `Withdraw health-data consent` partly under the floating tab bar. The tab bar
-  now uses the compact visible `Prog.` label through the compact-phone band
-  while preserving the full `Progress tab` accessibility label, and privacy
-  direct entries re-scroll from the freshly measured privacy-card Y. The tab-bar
-  polish pass later extended the compact visible label through 430 px. Focused
+  `Withdraw health-data consent` partly under the floating tab bar. The tab bar now keeps the full visible `Progress` label protected by dedicated phone-width geometry checks, and privacy direct entries re-scroll from the freshly measured privacy-card Y. Focused
   navigation/settings tests pass, the dedicated tabbar E2E harness now covers
   412 x 915, and the final
   49-route Expo web sweep reports zero failed routes in
