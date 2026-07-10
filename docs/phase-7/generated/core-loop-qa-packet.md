@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-10T16:33:03.747Z
-Git SHA: d7b0674a28e4e2ab1fd75f3ea316eadcd031deff
+Generated at: 2026-07-10T16:38:20.452Z
+Git SHA: 9aa0e2a26c4d28ca08c2d83f88f625aeefe101aa
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -72,8 +72,8 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10167 | d7d616fcbe9078b55c0d4b3bf5e88ae19570fa533aee8edc599cf1956c7c9149 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
 | docs/USER_FLOW_TREE.md | present | 335780 | 586f545a317c4c4878f71ca323077b4b3d4e53f7f84772cca63e0d9cebcabcab |
-| docs/e2e/generated/human-e2e-manifest.json | present | 28401 | a7646fa415413858ce4a5d3dec9af538a4b45b34c4d816cf688ecbaba52a4617 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 9457 | f6c0ef596fa33a32cd7c7358cca43d60bc847ae0bc0a99e633a2cc2f416effee |
+| docs/e2e/generated/human-e2e-manifest.json | present | 28401 | 253a98d48d7fac51303b14e008682ee8dad06eb2022302b8b2ec468f589d07b0 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 9457 | 34166bbe1ce4c7cefdfb502f98346e6cfbeae0761efeb23d5faf473b9ec22df9 |
 | docs/phase-5/generated/device-qa-packet.json | present | 16917 | d993df4e071e0d0c0a8310632976098bf08f132645cd7e1057149168faf05c9c |
 | docs/phase-5/generated/device-qa-packet.md | present | 15600 | 0cecc4aa78c3214004620c278429a7475fbd2bc5bb7b9903ac420b439f4a798a |
 | docs/phase-6/generated/payments-qa-packet.json | present | 10522 | 769243bc951732cd37fdc90b9dbcffc64bb5d509ba0f77e005b9748dcc60191c |
