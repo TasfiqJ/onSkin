@@ -9,6 +9,7 @@ import { RouteIconButton, Text } from '@/components/ui';
 import { CaptureAnalysisProvider } from '@/features/photos/CaptureAnalysisProvider';
 import { PHOTO_COPY, QUALITY_NOTE } from '@/features/photos/copy';
 import { localDay } from '@/features/photos/date';
+import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import type { FramingAssessment, LightingAssessment } from '@/features/photos/captureAnalysis';
 import { reviewQuality } from '@/features/photos/quality';
@@ -478,9 +479,11 @@ export default function ReviewScreen() {
   return (
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
-        <CaptureAnalysisProvider>
-          <ReviewScreenContent />
-        </CaptureAnalysisProvider>
+        <PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
+          <CaptureAnalysisProvider>
+            <ReviewScreenContent />
+          </CaptureAnalysisProvider>
+        </PhotoStorageGate>
       </PhotoTimelineLockGate>
     </ProGate>
   );

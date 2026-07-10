@@ -18,6 +18,17 @@ clearance and not a real launch catalog.
 
 Fresh verification through 2026-07-10:
 
+- Encrypted Progress read failure is now a blocked privacy state, never a valid
+  empty or missing-photo state. After entitlement and any configured biometric
+  gates, the Progress tab, capture, review, and detail remain unmounted until
+  one encrypted metadata query succeeds. Persistent failure keeps a 56 px real
+  reread action and at least 50 px direct-route escape; retry success reveals
+  the intended route without replacing ciphertext or exposing raw errors. The
+  required `Progress encrypted-storage recovery` E2E gate passes all eight
+  route/viewport checks at 360 x 640 and 390 x 844 plus direct-review one-shot
+  recovery, with zero false-state leaks, overflow, dialogs, page errors,
+  unexpected errors, analytics, or photo-backend requests. Evidence:
+  `test-results/human-e2e/2026-07-10/progress-storage-recovery-current/`.
 - Opt-in app lock now covers every sensitive Progress entry instead of only the
   tab component. The encrypted preference resolves before app-tree mount and
   fails closed as locked; the app-wide prompt finishes before the separate
@@ -39,7 +50,7 @@ Fresh verification through 2026-07-10:
   Progress decryption is read-only with respect to key material, requires
   durable prior-key metadata before writes, detects legacy encrypted files, and
   propagates key failures without normalizing notes/photo metadata to empty.
-  Focused verification passes 70/70 and the full suite passes 176 files / 1825
+  Focused verification passes 70/70 and the full suite passes 176 files / 1834
   tests. Genuine key loss remains unrecoverable without the intentionally
   unavailable cloud backup/key escrow; physical iOS/Android staging evidence is
   still required.
@@ -247,7 +258,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 176 mobile test files / 1825 tests.
+- `npm test` passed: 176 mobile test files / 1834 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -278,7 +289,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 176 test files / 1825 tests.
+- `npm --workspace apps/mobile run test` passed: 176 test files / 1834 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain

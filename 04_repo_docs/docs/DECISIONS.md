@@ -103,6 +103,15 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: Expo web proves routing, mounting, geometry, and state transitions but not native biometric security. Physical iOS/Android LocalAuthentication ordering, background transitions, cancellation, and VoiceOver/TalkBack focus restoration remain release QA.
 - Status: Accepted.
 
+### 2026-07-10 - Treat Progress Read Failure As Blocked, Never Empty
+
+- Decision: After entitlement and any configured biometric gates pass, the Progress tab, capture, review, and single-photo detail must still complete one successful encrypted photo-metadata query before route content or photo mutations mount. Pending reads show a neutral privacy state. Failed reads show one shared, non-destructive recovery surface with a real query retry; direct routes also expose `Back to Progress`. Empty-timeline and missing-photo UI are valid only after a successful read proves those states.
+- Alternatives: let each route interpret `undefined` as empty, catch storage failure in the store and return `[]`, show route-specific errors while still mounting content, or permit capture/save against cached defaults.
+- Criteria: preserve ciphertext, avoid false deletion/loss signals, prevent stale/default overwrites, keep camera/review/detail content private, make transient SecureStore/Keychain/Keystore failure recoverable, and keep route behavior consistent.
+- Evidence: `PhotoStorageGate.tsx`, `usePhotos.ts`, photo store and route contracts, plus persistent and one-shot supported-phone evidence in `test-results/human-e2e/2026-07-10/progress-storage-recovery-current/`.
+- Risk: Expo web proves query state, content gating, retry, layout, and network absence but cannot inject real native keychain/keystore faults. Physical iOS/Android staging builds must prove ciphertext remains byte-identical and retry succeeds after key access returns.
+- Status: Accepted.
+
 ### 2026-07-06 - Keep Expo/Supabase/RevenueCat
 
 - Decision: Continue current stack unless beta/device/compliance evidence says otherwise.

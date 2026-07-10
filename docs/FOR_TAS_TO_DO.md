@@ -217,6 +217,15 @@ Status: needs-device-verification
   in-app Progress navigation, and background/inactive return requires both
   intended locks again. Test cancel, unavailable hardware, failed prompt, and
   VoiceOver/TalkBack focus restoration; retain native logs and screen recording.
+- After encrypted Progress records exist, use a staging-only fault injector to
+  make SecureStore/Keychain/Keystore reads fail on the Progress tab, capture,
+  captured-photo review, and existing detail. Verify the shared recovery appears
+  only after entitlement/app-lock ordering, no empty/missing/camera/review/note
+  content mounts, retry remains available, and no write or analytics/vendor
+  request occurs. Hash the encrypted metadata envelope and `.onskinphoto` files
+  before/after the fault to prove byte identity; restore key access and verify
+  retry opens the correct route. Repeat with VoiceOver/TalkBack and retain logs,
+  screen recording, device/build IDs, and tester signoff.
 - Verify the local Progress time-lapse on the same supported devices and real
   encrypted-photo set: oldest-to-newest playback, pause, manual stepping,
   final-frame stop/replay, app background pause, close recovery, Reduce Motion,

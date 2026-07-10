@@ -242,6 +242,13 @@ if (!progressDirectRouteLockEvidenceDate) {
   console.error('FAIL Missing direct-route Progress app-lock evidence.');
   process.exit(1);
 }
+const progressStorageRecoveryEvidenceDate = latestEvidenceDateForFolder(
+  'progress-storage-recovery-current',
+);
+if (!progressStorageRecoveryEvidenceDate) {
+  console.error('FAIL Missing encrypted Progress storage recovery evidence.');
+  process.exit(1);
+}
 const dataExportDisclosureEvidenceDate = latestEvidenceDateForFolder(
   'data-export-local-photo-disclosure-current',
 );
@@ -262,6 +269,7 @@ const latestManifestEvidenceDate = [
   captureAnalysisEvidenceDate,
   deviceOnlyBackupEvidenceDate,
   progressDirectRouteLockEvidenceDate,
+  progressStorageRecoveryEvidenceDate,
   dataExportDisclosureEvidenceDate,
   combinedDataExportEvidenceDate,
 ]
@@ -533,6 +541,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Progress tab, capture, review, and detail direct entries stay locked at 360 x 640 and 390 x 844; one active-session unlock persists until background relock.',
+  },
+  {
+    id: 'progress-storage-recovery-supported-phone',
+    title: 'Progress encrypted-storage recovery',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${progressStorageRecoveryEvidenceDate}/progress-storage-recovery-current`,
+    evidence: 'summary.json',
+    expected:
+      'Progress tab, capture, review, and detail block false empty/missing states during encrypted read failure; persistent retry and one-shot recovery pass at supported phone sizes.',
   },
   {
     id: 'data-export-local-photo-disclosure-supported-phone',

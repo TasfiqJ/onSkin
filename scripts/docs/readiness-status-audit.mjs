@@ -17,7 +17,7 @@ const outJson =
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
 const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 176);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1825);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1834);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
@@ -66,6 +66,10 @@ const requiredManifestNeedles = [
   'progress-capture-analysis-current',
   'Device-only Progress photo storage',
   'progress-device-only-backup-current',
+  'Progress direct-route app-lock coverage',
+  'progress-direct-route-lock-current',
+  'Progress encrypted-storage recovery',
+  'progress-storage-recovery-current',
   'Account export local-photo scope disclosure',
   'data-export-local-photo-disclosure-current',
   'Combined account and current-device export',

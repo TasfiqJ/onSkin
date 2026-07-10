@@ -6,6 +6,20 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Closed a Critical false-empty-state path around encrypted Progress storage.
+  `usePhotos` already propagated key/read failures, but the Progress tab,
+  capture, review, and detail consumers discarded query status and treated
+  absent data as empty or missing. A shared storage gate now runs inside the
+  timeline lock, keeps route content and mutations unmounted until one encrypted
+  read succeeds, provides real-query retry plus direct-route escape, and never
+  exposes raw storage errors. Focused typecheck/lint and 129 photo/privacy tests
+  pass; the full suite passes 176 files / 1834 tests. Human-simulated Expo web
+  covers persistent failure on all four routes at
+  360 x 640 and 390 x 844 plus one-shot retry into captured-photo review, with
+  zero false-state leaks, overflow, dialogs, page errors, unexpected errors,
+  analytics, or photo-backend requests. Evidence is in
+  `test-results/human-e2e/2026-07-10/progress-storage-recovery-current/`.
+
 - Closed a Critical direct-route bypass in the opt-in photo-timeline lock. The
   encrypted app-lock preference now resolves before the app tree mounts and
   fails closed when unreadable; app-wide authentication completes before a

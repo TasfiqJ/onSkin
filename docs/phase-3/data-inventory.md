@@ -32,6 +32,7 @@ This inventory must match Apple privacy labels, Google Data Safety, the privacy 
 - Photo notes are encrypted before AsyncStorage persistence and are not mirrored to Supabase.
 - Native content-key failure is non-destructive: unreadable/missing/malformed keys and authentication failures preserve ciphertext, do not create replacement keys on reads, and block stale empty/default rewrites. Genuine OS key loss remains unrecoverable because V1 has no key escrow or cloud restore.
 - Opt-in app lock treats an unreadable encrypted preference as locked, delays app-tree mount until the preference resolves, and requires one foreground-scoped photo-timeline unlock for the Progress tab plus direct capture, review, and detail routes. Leaving the foreground clears that timeline unlock.
+- After entitlement/app-lock checks, every data-bearing Progress route blocks its content and photo mutations until the encrypted metadata query succeeds. Read failure exposes shared retry recovery and cannot be interpreted as an empty timeline or missing photo.
 - Local photo save performs no automatic Supabase image or metadata write. Startup removes stale backup-enable preferences from builds that exposed the incomplete path.
 - Camera QA signals are coarse comparability metadata only. No face template, embedding, identity vector, or tracking ID may be persisted.
 

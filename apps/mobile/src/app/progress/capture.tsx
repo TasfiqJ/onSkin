@@ -13,6 +13,7 @@ import { grantPhotoCaptureConsent, hasPhotoCaptureConsent } from '@/features/pho
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { localDay, timeOfDayNow } from '@/features/photos/date';
 import { PhotoImage } from '@/features/photos/PhotoImage';
+import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
@@ -926,7 +927,9 @@ export default function CaptureScreen() {
   return (
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
-        <CaptureScreenContent />
+        <PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
+          <CaptureScreenContent />
+        </PhotoStorageGate>
       </PhotoTimelineLockGate>
     </ProGate>
   );

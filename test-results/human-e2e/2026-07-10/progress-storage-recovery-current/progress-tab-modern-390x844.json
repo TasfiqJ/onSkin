@@ -1,0 +1,37 @@
+{
+  "route": "progress-tab",
+  "requestedUrl": "/progress",
+  "finalUrl": "http://127.0.0.1:8162/progress",
+  "viewport": {
+    "name": "modern-390x844",
+    "width": 390,
+    "height": 844
+  },
+  "beforeRetryText": "Private storage\nYour timeline could not open.\nWe couldn't read encrypted photo storage on this phone. Your photos and notes were not changed. Try again when your phone's secure storage is available.\nTry again\nToday\nProg.\nShelf\nYou",
+  "afterRetryText": "Private storage\nYour timeline could not open.\nWe couldn't read encrypted photo storage on this phone. Your photos and notes were not changed. Try again when your phone's secure storage is available.\nIt is still unavailable. Your timeline remains unchanged.\nTry again\nToday\nProg.\nShelf\nYou",
+  "geometry": {
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "innerWidth": 390
+  },
+  "retryBox": {
+    "x": 28,
+    "y": 382,
+    "width": 334,
+    "height": 56
+  },
+  "retryAfterBox": {
+    "x": 28,
+    "y": 408,
+    "width": 334,
+    "height": 56
+  },
+  "exitBox": null,
+  "visibleButtons": [
+    {
+      "name": "Try again",
+      "width": 334,
+      "height": 56
+    }
+  ]
+}

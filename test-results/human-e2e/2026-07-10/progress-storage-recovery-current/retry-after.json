@@ -1,0 +1,15 @@
+{
+  "url": "http://127.0.0.1:8163/progress/review?capturedUri=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk%2BA8AAQUBAScY42YAAAAASUVORK5CYII%3D&takenLocalDate=2026-07-10&analysisFixture=unavailable",
+  "bodyText": "Review · July 10\nFraming not measured\nLight not measured\nWe could not confirm every capture check. Retake, or keep it if you like.\nRetake\nSave to my phone\nx",
+  "saveBox": {
+    "x": 173.5,
+    "y": 764,
+    "width": 192.5,
+    "height": 56
+  },
+  "geometry": {
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "innerWidth": 390
+  }
+}

@@ -36,6 +36,12 @@ Completed in repo:
   foreground-only timeline unlock. Expo web direct-route/session evidence is
   complete; native LocalAuthentication ordering, background relock, and
   VoiceOver/TalkBack focus remain physical-device blockers.
+- Data-bearing Progress routes now require a successful encrypted metadata read
+  after entitlement and lock checks. Persistent read failure keeps tab,
+  capture, review, and detail content plus mutations unmounted behind shared
+  retry recovery instead of rendering false empty/missing states. Supported
+  Expo web evidence is complete; native Keychain/Keystore fault injection and
+  assistive-technology recovery remain physical-device blockers.
 - Photo timeline/detail/compare render through encrypted-aware image loading.
 - Photo deletion removes local encrypted files.
 - Phase 5 config check and device QA packet generator added.

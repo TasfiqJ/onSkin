@@ -1,0 +1,51 @@
+{
+  "status": "pass",
+  "verdict": "pass",
+  "date": "2026-07-10",
+  "surface": "Expo web development build",
+  "browser": "Google Chrome 150.0.7871.101 via bundled Playwright 1.61.1",
+  "fixtures": {
+    "persistentFailure": {
+      "origin": "http://127.0.0.1:8162",
+      "entitlement": "store_pro",
+      "appLockEnabled": false,
+      "progressPhotos": "populated",
+      "storageFailure": "unavailable"
+    },
+    "oneShotRetry": {
+      "origin": "http://127.0.0.1:8163",
+      "entitlement": "store_pro",
+      "appLockEnabled": false,
+      "progressPhotos": "populated",
+      "storageFailure": "unavailable_once"
+    }
+  },
+  "persistentFailureScenarios": 8,
+  "supportedViewports": [
+    "360 x 640",
+    "390 x 844"
+  ],
+  "routes": [
+    "/progress",
+    "/progress/capture",
+    "/progress/review?capturedUri=[local-data-uri]",
+    "/progress/e2e-front-2026-04-01"
+  ],
+  "retryScenario": "one-shot encrypted read failure on direct captured-photo review",
+  "minimumRetryTargetHeight": 56,
+  "minimumDirectExitTargetHeight": 50,
+  "failedRouteCount": 0,
+  "falseEmptyOrSensitiveStateLeakCount": 0,
+  "rawErrorLeakCount": 0,
+  "dialogCount": 0,
+  "pageErrorCount": 0,
+  "unexpectedLogCount": 0,
+  "analyticsRequestCount": 0,
+  "photoBackendRequestCount": 0,
+  "horizontalOverflowCount": 0,
+  "remainingRisk": [
+    "Expo web proves route gating, retry behavior, geometry, and request absence; it does not prove native SecureStore, iOS Keychain, or Android Keystore fault behavior.",
+    "Physical iOS and Android staging builds must prove ciphertext remains byte-identical during key unavailability and that retry succeeds after native key access returns.",
+    "VoiceOver and TalkBack announcement and focus behavior on the recovery surface remain device QA."
+  ]
+}

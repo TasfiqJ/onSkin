@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RouteIconButton, Text } from '@/components/ui';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
+import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import { sharePhotoImageOnly } from '@/features/photos/sharePhoto';
 import { parseLocalDate } from '@/features/photos/timeline';
@@ -602,7 +603,9 @@ export default function PhotoDetailScreen() {
   return (
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
-        <PhotoDetailScreenContent />
+        <PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
+          <PhotoDetailScreenContent />
+        </PhotoStorageGate>
       </PhotoTimelineLockGate>
     </ProGate>
   );

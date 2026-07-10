@@ -104,6 +104,16 @@ export const PHOTO_COPY = {
     storageTitle: 'Device-only photo storage',
     storageBody: 'Encrypted here. Cloud backup is not available in this build.',
   },
+  storage: {
+    loading: 'Opening your private timeline...',
+    eyebrow: 'Private storage',
+    title: 'Your timeline could not open.',
+    body: "We couldn't read encrypted photo storage on this phone. Your photos and notes were not changed. Try again when your phone's secure storage is available.",
+    retry: 'Try again',
+    retrying: 'Trying again...',
+    retryFailed: 'It is still unavailable. Your timeline remains unchanged.',
+    exit: 'Back to Progress',
+  },
   // Calm capture reminder (design screen 09, docs/06 §5). Delivery is doc #7.
   reminder: {
     title: 'Time for a progress photo?',

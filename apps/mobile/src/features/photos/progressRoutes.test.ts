@@ -96,6 +96,57 @@ describe('Progress route mobile contracts', () => {
     expect(gate).toContain('if (!locked) return children;');
   });
 
+  it('keeps encrypted storage failures out of empty and missing-photo states', () => {
+    const routeSources = [
+      readAppRoute('(tabs)/progress.tsx'),
+      readAppRoute('progress/capture.tsx'),
+      readAppRoute('progress/review.tsx'),
+      readAppRoute('progress/[id].tsx'),
+    ];
+    const storageGate = readSource('features/photos/PhotoStorageGate.tsx');
+    const photosHook = readSource('features/photos/usePhotos.ts');
+    const copy = readSource('features/photos/copy.ts');
+
+    for (const source of routeSources) {
+      expect(source).toContain(
+        "import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';",
+      );
+      expect(source).toContain('<PhotoStorageGate');
+      expect(source).toContain('</PhotoStorageGate>');
+      expect(source.indexOf('<PhotoTimelineLockGate>')).toBeLessThan(
+        source.indexOf('<PhotoStorageGate'),
+      );
+    }
+    expect(routeSources[0]).toContain('<PhotoStorageGate tone="paper">');
+    for (const source of routeSources.slice(1)) {
+      expect(source).toContain(
+        '<PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>',
+      );
+    }
+    expect(readAppRoute('progress/about.tsx')).not.toContain('PhotoStorageGate');
+
+    expect(storageGate).toContain(
+      "const { isError, isFetching, isPending, refetch } = usePhotos('front');",
+    );
+    expect(storageGate).toContain('if (!isPending && !isError) return children;');
+    expect(storageGate).toContain('const result = await refetch();');
+    expect(storageGate).toContain('if (result.isError) setRetryFailed(true);');
+    expect(storageGate).toContain('accessibilityRole="alert"');
+    expect(storageGate).toContain('accessibilityState={{ disabled: isFetching }}');
+    expect(storageGate).toContain('className="min-h-[56px]');
+    expect(storageGate).toContain('className="min-h-[48px]');
+    expect(copy).toContain("title: 'Your timeline could not open.'");
+    expect(copy).toContain('Your photos and notes were not changed.');
+
+    expect(photosHook).toContain('EXPO_PUBLIC_E2E_PROGRESS_STORAGE_FAILURE');
+    expect(photosHook).toContain("fixture === 'unavailable'");
+    expect(photosHook).toContain("fixture !== 'unavailable_once'");
+    expect(photosHook).toContain('if (storageFailure) throw storageFailure;');
+    expect(photosHook.indexOf('if (storageFailure) throw storageFailure;')).toBeLessThan(
+      photosHook.indexOf('await loadPhotos()'),
+    );
+  });
+
   it('keeps direct-entry progress exits touchable on phones', () => {
     for (const route of [
       'progress/[id].tsx',

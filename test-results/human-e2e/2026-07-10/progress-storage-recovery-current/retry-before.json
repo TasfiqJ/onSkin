@@ -1,0 +1,10 @@
+{
+  "url": "http://127.0.0.1:8163/progress/review?capturedUri=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk%2BA8AAQUBAScY42YAAAAASUVORK5CYII%3D&takenLocalDate=2026-07-10&analysisFixture=unavailable",
+  "bodyText": "Private storage\nYour timeline could not open.\nWe couldn't read encrypted photo storage on this phone. Your photos and notes were not changed. Try again when your phone's secure storage is available.\nTry again\nBack to Progress",
+  "retryBox": {
+    "x": 28,
+    "y": 448,
+    "width": 334,
+    "height": 56
+  }
+}

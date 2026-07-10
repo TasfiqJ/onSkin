@@ -48,6 +48,7 @@ configuration before store submission.
 - Native photo files are encrypted locally with authenticated encryption before storage.
 - Native content keys remain in SecureStore; temporary/missing/invalid key reads preserve ciphertext and cannot silently rotate keys or rewrite the failed record with fallback state.
 - Opt-in app lock fails closed while its encrypted preference is unreadable; every sensitive Progress direct route shares a foreground-only timeline unlock and relocks after backgrounding.
+- Data-bearing Progress routes require a successful encrypted metadata read after entitlement/app-lock checks; read failure blocks route content and writes behind non-destructive retry instead of presenting an empty or missing-photo state.
 - Analytics sanitization drops sensitive keys such as barcodes, OCR text, notes,
   photo paths, product IDs/names, receipts, and image/file paths.
 

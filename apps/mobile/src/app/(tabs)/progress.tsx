@@ -7,6 +7,7 @@ import { Card, Screen, Text } from '@/components/ui';
 import { CompareSlider } from '@/features/photos/CompareSlider';
 import { MILESTONE_COPY, PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
+import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import { parseLocalDate } from '@/features/photos/timeline';
@@ -522,7 +523,9 @@ export default function ProgressScreen() {
   return (
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
-        <PhotoProgressTab />
+        <PhotoStorageGate tone="paper">
+          <PhotoProgressTab />
+        </PhotoStorageGate>
       </PhotoTimelineLockGate>
     </ProGate>
   );

@@ -1,0 +1,242 @@
+[
+  {
+    "route": "progress-tab",
+    "viewport": "supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "route": "progress-tab",
+    "viewport": "supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "route": "progress-tab",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "progress-tab",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "progress-tab",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "route": "capture",
+    "viewport": "supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "route": "capture",
+    "viewport": "supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "route": "capture",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "capture",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "capture",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "route": "review",
+    "viewport": "supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "route": "review",
+    "viewport": "supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "route": "review",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "review",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "review",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "route": "detail",
+    "viewport": "supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "route": "detail",
+    "viewport": "supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "route": "detail",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "detail",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "detail",
+    "viewport": "supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "route": "progress-tab",
+    "viewport": "modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "route": "progress-tab",
+    "viewport": "modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "route": "progress-tab",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "progress-tab",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "progress-tab",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "route": "capture",
+    "viewport": "modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "route": "capture",
+    "viewport": "modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "route": "capture",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "capture",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "capture",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "route": "review",
+    "viewport": "modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "route": "review",
+    "viewport": "modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "route": "review",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "review",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "review",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "route": "detail",
+    "viewport": "modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "route": "detail",
+    "viewport": "modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "route": "detail",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "detail",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "route": "detail",
+    "viewport": "modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  }
+]
