@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-10T15:38:26.762Z
+Generated: 2026-07-10T16:32:29.746Z
 
-Git SHA: b8d3c652f27d41197a942d7e3c5f4a7c45b18e1b
+Git SHA: 1718fa1704a7b00bd77fef4d19efc0830f1e23d9
 
 Git status: clean
 
@@ -46,11 +46,11 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | supabase/functions/catalog-report/privacy.test.ts | present | 4009 | db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac |
 | supabase/functions/deno.lock | present | 2282 | 0f8de63ed60182b56865cfa47c666866b631ed4681c79345ec31a720565d1a3a |
 | scripts/phase9/lib.mjs | present | 14020 | af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083 |
-| docs/FOR_TAS_TO_DO.md | present | 53968 | e355f8406d9459aab76eb7388f5d237b7926217c4afee20e984c96f7e70f9808 |
+| docs/FOR_TAS_TO_DO.md | present | 54608 | 74baef18a6165e84d775835dcd8094b02044d90902be02768ee556a112c8c103 |
 | docs/phase-4/beta-coverage-report.md | present | 2125 | d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2021 | 49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534 |
 | docs/phase-4/catalog-source-memo-open-beauty-facts.md | present | 2334 | 441e03ded2314f7a9efc2f11e3b7d0daa97256de17e6c654423124c1c4a4670f |
-| docs/phase-4/generated/source-worklist.json | present | 35122 | e93aac12c25150a79f8233a5620df209e2500f1620a3372cb83babcafed1f93c |
-| docs/phase-4/generated/source-worklist.md | present | 22473 | 84dfd3067bc43144b9b0b764e3dffbb677c7a0eae3f0bb98d773104ae6e274e8 |
+| docs/phase-4/generated/source-worklist.json | present | 35121 | e930e29275d5b0a020b4764467baf0af7ddbce6f66f90bab1906b6c163b9bf3c |
+| docs/phase-4/generated/source-worklist.md | present | 22473 | 4b8dda02b05a636de3c6d1c480a98ea184376d911da7aaae8262571ca5cab0c1 |
 | docs/phase-4/odbl-compliance-memo.md | present | 2019 | 0fe9bc07e3c4d34129ac8f8f2ba410a64e6caa0d77a3b7994198e0b4d9e18e69 |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |
