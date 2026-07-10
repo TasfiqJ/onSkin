@@ -76,6 +76,15 @@ Use this format for every significant product, architecture, pricing, privacy, o
 
 ## Architecture Decisions
 
+### 2026-07-10 - Preserve Identity During Anonymous Account Upgrades
+
+- Decision: An active anonymous Supabase user upgrades in place. Native Apple/Google tokens use `linkIdentity`; email uses `updateUser({ email })` followed by `verifyOtp(..., type: 'email_change')` when confirmation is required. If Supabase auto-confirms that same-user update, the route completes immediately instead of entering code mode. Every successful upgrade must return the original user ID and a non-anonymous identity. Linking errors fail closed without a `signInWithIdToken` fallback. Sessions that are not anonymous keep the normal provider/email sign-in path.
+- Alternatives: call `signInWithIdToken` or `signInWithOtp` for every account action, rely on automatic email matching, switch to an existing account and wipe device data, or build a server-side merge before launch.
+- Criteria: preserve the plan created before signup, avoid silent local-private-data deletion at the value moment, follow the current installed Supabase contract, make conflicts explicit, and keep returning-user sign-in available.
+- Evidence: `accountUpgrade.ts` asserts same-user and permanent-identity invariants; focused tests cover provider linking, email-change OTP, immediate auto-confirm completion, returning-user sign-in, link failure without fallback, stale sessions, user-ID mismatch, and incomplete conversion. Real Apple/Google/email staging proof remains `B-VERIFY-AUTH-LINKING`.
+- Risk: manual identity linking and email templates must be configured in each Supabase project; a provider/email already owned by another account cannot be merged automatically and remains a safe recovery path until a reviewed merge policy exists.
+- Status: Accepted.
+
 ### 2026-07-10 - Compose Account Exports From Both Data Authorities
 
 - Decision: The mobile account export wraps the required owner-scoped Supabase export and an exhaustive, path-sanitized snapshot of the current device's encrypted private records. Progress image files and thumbnails remain excluded; sanitized Progress metadata and decrypted notes are included when available. Configured server failures abort instead of returning a partial bundle, while backend-free builds identify their bundle as device-only.

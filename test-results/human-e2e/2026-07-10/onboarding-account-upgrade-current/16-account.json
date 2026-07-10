@@ -1,0 +1,54 @@
+{
+  "bodyText": "Protect your plan, keep it private. Create an account for sign-in, subscription, and privacy controls. Routine checks stay local-first on this device for this beta, and photos still stay on this device. Continue with Google OR WITH EMAIL Email me a code Not now",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue with Google",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 216
+    },
+    {
+      "disabled": false,
+      "height": 58,
+      "hitOk": true,
+      "label": "Email address",
+      "role": "input",
+      "width": 312,
+      "x": 24,
+      "y": 316
+    },
+    {
+      "disabled": true,
+      "height": 56,
+      "hitOk": true,
+      "label": "Email me a code",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 386
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not now",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 576
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/account",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  }
+}

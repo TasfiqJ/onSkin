@@ -1,0 +1,84 @@
+{
+  "bodyText": "9 / 12 SUN RESPONSE Without sunscreen, how does your skin usually respond to strong sun? Always burns Usually burns Sometimes burns Rarely burns Very rarely burns Does not burn Next",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 64,
+      "hitOk": true,
+      "label": "Always burns",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 4
+    },
+    {
+      "disabled": false,
+      "height": 64,
+      "hitOk": true,
+      "label": "Usually burns",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 80
+    },
+    {
+      "disabled": false,
+      "height": 64,
+      "hitOk": true,
+      "label": "Sometimes burns",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 156
+    },
+    {
+      "disabled": false,
+      "height": 64,
+      "hitOk": true,
+      "label": "Rarely burns",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 232
+    },
+    {
+      "disabled": false,
+      "height": 64,
+      "hitOk": true,
+      "label": "Very rarely burns",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 308
+    },
+    {
+      "disabled": false,
+      "height": 64,
+      "hitOk": true,
+      "label": "Does not burn",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 384
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Next",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 568
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/quiz",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  }
+}

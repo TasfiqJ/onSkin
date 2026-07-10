@@ -8,16 +8,27 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const isWindows = process.platform === 'win32';
 const today = new Date().toISOString().slice(0, 10);
+const accountUpgradeMode =
+  process.argv.includes('--account-upgrade') ||
+  process.env.ONBOARDING_E2E_ACCOUNT_UPGRADE?.trim().toLowerCase() === 'email_same_user';
 const evidenceDir =
   process.env.ONBOARDING_E2E_EVIDENCE_DIR ??
-  path.join(repoRoot, 'test-results', 'human-e2e', today, 'onboarding-first-session-430-current');
+  path.join(
+    repoRoot,
+    'test-results',
+    'human-e2e',
+    today,
+    accountUpgradeMode
+      ? 'onboarding-account-upgrade-current'
+      : 'onboarding-first-session-430-current',
+  );
 const appPort = Number(process.env.ONBOARDING_E2E_PORT ?? 8285);
 const debugPort = Number(process.env.ONBOARDING_E2E_DEBUG_PORT ?? 9385);
 const baseUrl = process.env.ONBOARDING_E2E_BASE_URL ?? `http://localhost:${appPort}`;
 const shouldStartServer = !process.env.ONBOARDING_E2E_BASE_URL;
 const viewport = {
-  height: Number(process.env.ONBOARDING_E2E_VIEWPORT_HEIGHT ?? 430),
-  width: Number(process.env.ONBOARDING_E2E_VIEWPORT_WIDTH ?? 320),
+  height: Number(process.env.ONBOARDING_E2E_VIEWPORT_HEIGHT ?? (accountUpgradeMode ? 640 : 430)),
+  width: Number(process.env.ONBOARDING_E2E_VIEWPORT_WIDTH ?? (accountUpgradeMode ? 360 : 320)),
 };
 
 mkdirSync(evidenceDir, { recursive: true });
@@ -173,6 +184,7 @@ function startExpoServer() {
       BROWSER: 'none',
       CI: '1',
       EXPO_PUBLIC_E2E_APP_LOCK_ENABLED: 'false',
+      ...(accountUpgradeMode ? { EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE: 'email_same_user' } : {}),
       EXPO_PUBLIC_E2E_LOCAL_RESET: '1',
     },
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -645,7 +657,10 @@ async function answerQuiz(client) {
     if (index === 0) await captureStep(client, '07-quiz-01');
     await clickByText(client, answer);
     if (index === 3) await captureStep(client, '08-quiz-after-04');
-    if (index === 8) await captureStep(client, '08-quiz-after-09');
+    if (index === 8) {
+      await scrollTextIntoView(client, 'Does not burn');
+      await captureStep(client, '08-quiz-after-09');
+    }
     if (index === 10) await captureStep(client, '08-quiz-after-11');
     await clickByText(client, index < answers.length - 1 ? 'Next' : 'See my profile');
   }
@@ -668,18 +683,18 @@ function writeReport(summary) {
     '## Summary',
     '',
     `- Date: ${summary.date}`,
-    '- Codex task: First-session onboarding 320 x 430 stress run',
+    `- Codex task: ${summary.accountUpgradeMode ? 'Anonymous account-upgrade recovery run' : 'First-session onboarding 320 x 430 stress run'}`,
     `- App surface: ${summary.surface}`,
     `- Build/start command: \`${summary.startCommand}\``,
     `- Browser/device/simulator/OS: Headless Chrome or Edge, ${viewport.width} x ${viewport.height}`,
-    '- Feature or PR tested: First-run onboarding activation path',
+    `- Feature or PR tested: ${summary.accountUpgradeMode ? 'Identity-preserving account upgrade UI' : 'First-run onboarding activation path'}`,
     `- Overall verdict: ${summary.verdict === 'pass' ? 'Pass' : 'Fail'}`,
     '',
     '## Flows Executed',
     '',
     '| Flow | Branch | Result | Evidence | Notes |',
     '| ---- | ------ | ------ | -------- | ----- |',
-    `| First-run onboarding | Happy path / stress viewport | ${summary.verdict} | \`${path.relative(repoRoot, evidenceDir).replace(/\\/g, '/')}\` | ${summary.flowResult ?? `Reached ${summary.endUrl}`} |`,
+    `| First-run onboarding | ${summary.accountUpgradeMode ? 'Invalid email code and successful recovery' : 'Happy path / stress viewport'} | ${summary.verdict} | \`${path.relative(repoRoot, evidenceDir).replace(/\\/g, '/')}\` | ${summary.flowResult ?? `Reached ${summary.endUrl}`} |`,
     '',
     '## Bugs Found',
     '',
@@ -690,12 +705,16 @@ function writeReport(summary) {
     '## Commands Run',
     '',
     '```bash',
-    'npm run e2e:onboarding-first-session',
+    summary.accountUpgradeMode
+      ? 'npm run e2e:onboarding-account-upgrade'
+      : 'npm run e2e:onboarding-first-session',
     '```',
     '',
     '## Remaining Risk',
     '',
-    '- 320 x 430 is resilience evidence below the accepted launch web floor.',
+    summary.accountUpgradeMode
+      ? '- The development-only fixture proves route interaction and recovery, not live Supabase email delivery or identity mutation.'
+      : '- 320 x 430 is resilience evidence below the accepted launch web floor.',
     '- Native iOS/Android onboarding still needs simulator or physical-device QA for OS prompts and platform text settings.',
     '',
   ];
@@ -791,8 +810,25 @@ async function run() {
     await clickByText(client, 'Not now');
 
     await waitForPath(client, '/onboarding/account');
-    await captureStep(client, '16-account');
-    await clickByText(client, 'Not now');
+    const account = await captureStep(client, '16-account');
+    let accountCodeError = null;
+    let accountCodeEntry = null;
+    if (accountUpgradeMode) {
+      await fillByLabel(client, 'Email address', 'tas.account.e2e@example.com');
+      await clickByText(client, 'Email me a code');
+      await waitForText(client, 'Enter the 6-digit code we sent');
+      accountCodeEntry = await captureStep(client, '16a-account-code-entry');
+
+      await fillByLabel(client, 'Verification code', '111111');
+      await clickByText(client, 'Verify');
+      await waitForText(client, 'That code did not work. Request a new code and try again.');
+      accountCodeError = await captureStep(client, '16b-account-code-error');
+
+      await fillByLabel(client, 'Verification code', '424242');
+      await clickByText(client, 'Verify');
+    } else {
+      await clickByText(client, 'Not now');
+    }
 
     await waitForPath(client, '/onboarding/paywall');
     await waitForText(client, 'Start free trial');
@@ -801,6 +837,19 @@ async function run() {
     await screenshot(client, '17-paywall');
     writeJson('17-paywall.json', paywall);
     assert(paywall.bodyText.includes('Explore first'), 'Paywall did not expose Explore first.');
+    if (accountUpgradeMode) {
+      assert(accountCodeEntry, 'Account upgrade did not reach code entry.');
+      assert(
+        accountCodeError?.bodyText.includes(
+          'That code did not work. Request a new code and try again.',
+        ),
+        'Account upgrade did not show the invalid-code recovery message.',
+      );
+      assert(
+        paywall.url.includes('/onboarding/paywall'),
+        'Valid account-upgrade code did not reach the onboarding paywall.',
+      );
+    }
 
     await scrollTextIntoView(client, 'Explore first', { exact: false });
     const paywallExplore = await captureStep(client, '18-paywall-explore-visible');
@@ -880,6 +929,9 @@ async function run() {
     for (const [key, snapshot] of Object.entries({
       welcome,
       reveal,
+      account,
+      ...(accountCodeEntry ? { accountCodeEntry } : {}),
+      ...(accountCodeError ? { accountCodeError } : {}),
       paywall,
       paywallExplore,
       routinePlan,
@@ -893,6 +945,18 @@ async function run() {
     }
 
     const summary = {
+      accountUpgradeMode,
+      accountUpgrade: accountUpgradeMode
+        ? {
+            email: 'tas.account.e2e@example.com',
+            invalidCodeErrorShown:
+              accountCodeError?.bodyText.includes(
+                'That code did not work. Request a new code and try again.',
+              ) ?? false,
+            reachedCodeEntry: accountCodeEntry?.url.includes('/onboarding/account') ?? false,
+            reachedPaywallAfterValidCode: paywall.url.includes('/onboarding/paywall'),
+          }
+        : null,
       browserProblemLogCount: problemLogs.length,
       date: today,
       endUrl: todayPmAfter.url,
@@ -905,6 +969,7 @@ async function run() {
         '14-reveal-insight.png',
         '15-notifications.png',
         '16-account.png',
+        ...(accountUpgradeMode ? ['16a-account-code-entry.png', '16b-account-code-error.png'] : []),
         '17-paywall-current.png',
         '18-paywall-explore-visible.png',
         '19-routine-plan-current.png',
@@ -914,8 +979,9 @@ async function run() {
         '23-today-pm-before-checkoff.png',
         '24-today-pm-after-checkoff.png',
       ],
-      flowResult:
-        'Completed onboarding through Explore first, routine plan, Start today, AM check-off, and PM cycle check-off.',
+      flowResult: accountUpgradeMode
+        ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then finished activation through AM and PM check-offs.'
+        : 'Completed onboarding through Explore first, routine plan, Start today, AM check-off, and PM cycle check-off.',
       overflowXByStep,
       productNames: productNames.map((product) => product.name),
       reveal: {
@@ -939,7 +1005,11 @@ async function run() {
         url: routinePlan.url,
       },
       routeCheck: {
-        accountSkipLedToPaywall: paywall.url.includes('/onboarding/paywall'),
+        accountLedToPaywall: paywall.url.includes('/onboarding/paywall'),
+        accountUpgradeErrorRecovered:
+          !accountUpgradeMode ||
+          (accountCodeError?.bodyText.includes('That code did not work') &&
+            paywall.url.includes('/onboarding/paywall')),
         amCheckoffReachedComplete: todayAmAfter.bodyText.includes('1 of 1'),
         exploreFirstLedToRoutinePlan: routinePlan.url.includes('/routine/plan'),
         notificationSkipLedToAccount: true,
@@ -949,7 +1019,7 @@ async function run() {
         startTodayLedToToday: todayAfterStart.url.includes('/today'),
       },
       startCommand: shouldStartServer
-        ? `EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
+        ? `${accountUpgradeMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user ' : ''}EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
         : `Existing Expo web at ${baseUrl}`,
       startUrl: `${baseUrl}/?e2eReset=local`,
       steps: [
@@ -958,7 +1028,9 @@ async function run() {
         'Granted explicit health-data collection consent.',
         'Answered 12-question quiz with visible option buttons.',
         'Added Retinol 0.3% serum, Glycolic 7% toner, and Mineral SPF 50 from product intake.',
-        'Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.',
+        accountUpgradeMode
+          ? 'Continued from reveal to notification soft ask, skipped reminders, recovered from an invalid email code, completed the deterministic account upgrade, and reached onboarding paywall.'
+          : 'Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.',
         'Used Explore first to unlock the routine plan without card entry.',
         'Verified the generated routine plan contains the first insight plus SPF, glycolic, and retinol placement.',
         'Tapped Start today, forced AM and PM dev routine states, and completed the SPF and glycolic check-offs to 1 of 1.',
@@ -984,7 +1056,9 @@ async function run() {
       verdict: 'pass',
       viewport: {
         ...viewport,
-        supportClass: 'resilience stress viewport below launch web support floor',
+        supportClass: accountUpgradeMode
+          ? 'accepted launch web support floor'
+          : 'resilience stress viewport below launch web support floor',
       },
     };
 

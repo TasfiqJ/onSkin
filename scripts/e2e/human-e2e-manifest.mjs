@@ -263,6 +263,13 @@ if (!combinedDataExportEvidenceDate) {
   console.error('FAIL Missing combined account/current-device export evidence.');
   process.exit(1);
 }
+const accountUpgradeEvidenceDate = latestEvidenceDateForFolder(
+  'onboarding-account-upgrade-current',
+);
+if (!accountUpgradeEvidenceDate) {
+  console.error('FAIL Missing identity-preserving account-upgrade UI evidence.');
+  process.exit(1);
+}
 const latestManifestEvidenceDate = [
   evidenceDate,
   timelapseEvidenceDate,
@@ -272,6 +279,7 @@ const latestManifestEvidenceDate = [
   progressStorageRecoveryEvidenceDate,
   dataExportDisclosureEvidenceDate,
   combinedDataExportEvidenceDate,
+  accountUpgradeEvidenceDate,
 ]
   .sort()
   .at(-1);
@@ -497,6 +505,17 @@ const gates = [
     folder: `test-results/human-e2e/${evidenceDate}/onboarding-first-session-430-current`,
     evidence: 'summary.json',
     expected: 'Fresh onboarding to shelf intake, routine plan, and Today check-off passes.',
+  },
+  {
+    id: 'account-upgrade-supported-phone',
+    title: '360 x 640 account-upgrade error and recovery pass',
+    kind: 'summary-verdict',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${accountUpgradeEvidenceDate}/onboarding-account-upgrade-current`,
+    evidence: 'summary.json',
+    expected:
+      'Invalid email code recovers, valid fixture code reaches paywall, and first-session activation completes.',
   },
   {
     id: 'progress-timelapse-supported-phone',

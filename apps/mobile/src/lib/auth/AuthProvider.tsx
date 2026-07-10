@@ -27,6 +27,12 @@ import { devWarn } from '@/lib/observability/safeLog';
 import { setSentryUser } from '@/lib/observability/sentry';
 
 import { supabase } from '../supabase/client';
+import {
+  authenticateWithProviderToken,
+  requestEmailAccountCode,
+  verifyEmailAccountCode,
+  type PendingEmailAccountCode,
+} from './accountUpgrade';
 import { getAppleIdToken } from './apple';
 import { getGoogleIdToken } from './google';
 import { shouldClearLocalPrivateDataForSessionChange } from './sessionBoundary';
@@ -40,7 +46,7 @@ type AuthContextValue = {
   ensureAnonymousSession: (captchaToken?: string) => Promise<void>;
   signInWithApple: () => Promise<boolean>;
   signInWithGoogle: () => Promise<boolean>;
-  sendEmailOtp: (email: string) => Promise<void>;
+  sendEmailOtp: (email: string) => Promise<'code_sent' | 'complete'>;
   verifyEmailOtp: (email: string, token: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
@@ -51,6 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [initializing, setInitializing] = useState(isSupabaseConfigured);
   const activeUserIdRef = useRef<string | null>(null);
+  const pendingEmailCodeRef = useRef<PendingEmailAccountCode | null>(null);
   const sessionChangeSeqRef = useRef(0);
 
   useEffect(() => {
@@ -71,6 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const mustClear =
         !initialRestore && shouldClearLocalPrivateDataForSessionChange(previousUserId, nextUserId);
 
+      if (previousUserId !== nextUserId) pendingEmailCodeRef.current = null;
       if (mustClear) setInitializing(true);
       try {
         if (mustClear) await clearLocalPrivateData();
@@ -171,20 +179,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         );
         if (error) throw error;
       },
-      // NOTE: anon -> social linking in RN is fragile (docs/01 §1). signInWithIdToken
-      // while anonymous may create a NEW user unless the anon user's email matches
-      // the provider's (automatic email-based linking). Verify on a real device with
-      // real provider accounts. BLOCKED: B-VERIFY-AUTH-LINKING.
       async signInWithApple() {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
         const result = await getAppleIdToken();
         if (!result) return false;
-        const { error } = await supabase.auth.signInWithIdToken({
+        await authenticateWithProviderToken(supabase.auth, {
           provider: 'apple',
           token: result.idToken,
         });
-        if (error) throw error;
+        pendingEmailCodeRef.current = null;
         return true;
       },
       async signInWithGoogle() {
@@ -192,30 +196,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const result = await getGoogleIdToken();
         if (!result) return false;
-        const { error } = await supabase.auth.signInWithIdToken({
+        await authenticateWithProviderToken(supabase.auth, {
           provider: 'google',
           token: result.idToken,
         });
-        if (error) throw error;
+        pendingEmailCodeRef.current = null;
         return true;
       },
       async sendEmailOtp(email: string) {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
         // OTP code (not magic link) for mobile reliability (docs/01 §1).
-        const { error } = await supabase.auth.signInWithOtp({
-          email,
-          options: { shouldCreateUser: true },
-        });
-        if (error) throw error;
+        pendingEmailCodeRef.current = null;
+        const request = await requestEmailAccountCode(supabase.auth, email);
+        if (request.kind === 'anonymous_upgrade_complete') return 'complete';
+        pendingEmailCodeRef.current = request;
+        return 'code_sent';
       },
       async verifyEmailOtp(email: string, token: string) {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
-        const { error } = await supabase.auth.verifyOtp({ email, token, type: 'email' });
-        if (error) throw error;
+        const pending = pendingEmailCodeRef.current;
+        if (!pending) throw new Error('Request a new email code before verifying.');
+        await verifyEmailAccountCode(supabase.auth, pending, email, token);
+        pendingEmailCodeRef.current = null;
       },
       async signOut() {
+        pendingEmailCodeRef.current = null;
         try {
           if (isSupabaseConfigured) await supabase.auth.signOut();
         } finally {

@@ -127,7 +127,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 177 mobile test files / 1838 tests. The human-simulated E2E manifest now
+covers 179 mobile test files / 1851 tests. The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
@@ -143,6 +143,8 @@ the `Account export local-photo scope disclosure` gate in
 `test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`,
 and the `Combined account and current-device export` gate in
 `test-results/human-e2e/2026-07-10/data-export-combined-device-current/`.
+It also includes the `360 x 640 account-upgrade error and recovery pass` in
+`test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current/`.
 The baseline still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also
@@ -325,6 +327,39 @@ Exit criteria:
 - internal test build installs;
 - Google sign-in works without `DEVELOPER_ERROR`;
 - account deletion/revocation behavior is verified.
+
+## B-VERIFY-AUTH-LINKING - Live Same-User Account Upgrade Proof
+
+Status: `launch-blocked`
+
+The client now upgrades active anonymous sessions in place: Apple/Google native
+tokens use Supabase `linkIdentity`, email uses `updateUser` plus an
+`email_change` OTP, and every successful path asserts the original user ID.
+Focused local tests prove routing, same-user invariants, and no unsafe fallback,
+but Codex has no Tas-owned Supabase project, live provider identities, email
+inbox, or physical release build with which to prove the external configuration.
+
+Next action:
+
+- enable anonymous sign-in and manual identity linking in staging and production;
+- configure and review email-change OTP delivery/templates, expiry, and rate limits;
+- after final brand clearance, configure Apple and Google provider credentials;
+- on supported iOS and Android devices, capture the anonymous `auth.users.id`
+  before and after Apple, Google, and email upgrades;
+- exercise an identity already owned by another account and confirm the app
+  stays on the anonymous user without deleting local private data.
+
+Exit criteria:
+
+- all three successful upgrades retain the exact same Supabase user ID and
+  return `is_anonymous=false`;
+- pre-upgrade profile, shelf, routine, completion, consent, and Progress metadata
+  remain intact and owner-readable after relaunch;
+- RevenueCat remains bound to that same user ID;
+- identity-conflict, invalid/expired code, cancellation, offline, and rate-limit
+  recovery paths preserve the anonymous session and local data;
+- evidence records project/build version, provider, device/OS, before/after user
+  IDs (redacted consistently), screenshots/logs, and named tester signoff.
 
 ## B-REVENUECAT - Live purchases and entitlements
 

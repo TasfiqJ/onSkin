@@ -1,0 +1,64 @@
+{
+  "bodyText": "Your plan for oily, sensitive skin is ready. Everything below is part of RoutineKind Pro. Terms · Privacy · Restore Routine intelligence. Order, timing, skin cycling Ingredient conflict checks, with evidence grades Private photo timeline. On-device only Reminders, streaks & home-screen widgets ANNUAL · BEST VALUE Start 14 days free, then $49.99/year $4.16/mo Monthly $8.99/month Store checkout is unavailable in this preview. You can keep exploring. Start free trial We’ll remind you 2 days before the trial ends · cancel anytime Explore first. 7 days of Pro No credit card. See your routine work, then decide. › Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings. Reviewed by dermatologists · photos stay on your device · no data sales",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Terms",
+      "role": "button",
+      "width": 48,
+      "x": 24,
+      "y": 21
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Privacy",
+      "role": "button",
+      "width": 48,
+      "x": 85.36,
+      "y": 21
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Restore",
+      "role": "button",
+      "width": 48,
+      "x": 146.72,
+      "y": 21
+    },
+    {
+      "disabled": true,
+      "height": 48,
+      "hitOk": true,
+      "label": "Start free trial",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 361
+    },
+    {
+      "disabled": false,
+      "height": 60,
+      "hitOk": true,
+      "label": "Explore first. 7 days of ProNo credit card. See your routine work, then decide.›",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 433
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/paywall",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  }
+}

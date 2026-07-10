@@ -6,6 +6,23 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Closed a Critical account-upgrade data-loss path at the onboarding value
+  moment. Apple/Google previously called normal ID-token sign-in and email
+  always called normal OTP sign-in, either of which could switch away from the
+  active anonymous user and trigger local-private-data cleanup. Active anonymous
+  sessions now use native-token `linkIdentity` or `updateUser` plus an
+  `email_change` OTP, assert the original Supabase user ID and a permanent
+  identity, handle immediate same-user auto-confirm, and never fall back to a
+  user-switching sign-in after conflict. Returning/no-session users retain the
+  normal sign-in path. Mobile typecheck/lint and the full suite pass 179 files /
+  1851 tests. Headless Chrome at the accepted 360 x 640 support floor recovers
+  from an invalid deterministic code, reaches paywall with the valid code, and
+  completes routine setup plus AM/PM check-offs; a discovered 40 px method
+  recovery target was fixed to 48 px and reverified. Evidence is in
+  `test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current/`.
+  Live Apple/Google/email same-user proof remains explicitly launch-blocked as
+  `B-VERIFY-AUTH-LINKING` for Tas-owned Supabase/provider/device configuration.
+
 - Closed a Critical false-empty-state path around encrypted Progress storage.
   `usePhotos` already propagated key/read failures, but the Progress tab,
   capture, review, and detail consumers discarded query status and treated

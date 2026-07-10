@@ -365,9 +365,13 @@ describe('onboarding route contracts', () => {
     expect(source).toContain('<ScrollView');
     expect(source).toContain('keyboardShouldPersistTaps="handled"');
     expect(source).toContain("justifyContent: compactPhone ? 'flex-start' : 'center'");
-    expect(source).toContain('{isSupabaseConfigured ? (');
+    expect(source).toContain('const authAvailable = isSupabaseConfigured ||');
+    expect(source).toContain('{authAvailable ? (');
     expect(source).toContain('className="bg-paper pb-4 pt-2"');
     expect(source).toContain('className="min-h-[48px] items-center justify-center py-2"');
+    expect(
+      source.match(/className="min-h-\[48px\] items-center justify-center py-2"/g),
+    ).toHaveLength(2);
     expect(source).not.toContain('editable={isSupabaseConfigured}');
     expect(source).not.toContain('best-effort until backend configured');
     expect(source).toContain('recordAccountConsent');
@@ -378,6 +382,10 @@ describe('onboarding route contracts', () => {
     expect(source.indexOf('await recordAccountConsent()')).toBeLessThan(
       source.indexOf("router.replace('/onboarding/paywall')"),
     );
+    expect(source).toContain('getAccountUpgradeE2EFixture');
+    expect(source).toContain("if (result === 'complete')");
+    expect(source).toContain('const result = await sendEmailOtp(email)');
+    expect(source).toContain('if (!accountUpgradeE2EFixture) await verifyEmailOtp(email, code)');
   });
 
   it('does not reveal the profile after a failed local profile save', () => {

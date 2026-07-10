@@ -63,6 +63,17 @@ Evidence needed:
 Status: launch-blocked
 
 - Supabase staging and production projects.
+- Supabase same-user account-upgrade evidence (`B-VERIFY-AUTH-LINKING`): enable
+  anonymous sign-in and manual identity linking; configure the email-change
+  six-digit OTP template; then prove on supported iOS and Android builds that
+  Apple, Google, and email upgrades keep the exact pre-upgrade Supabase user ID,
+  set `is_anonymous=false`, retain profile/shelf/routine/completion/consent/
+  Progress metadata after relaunch, and keep RevenueCat on that ID. Also prove
+  that an already-owned identity, invalid/expired code, cancellation, offline,
+  and rate-limit failure leave the anonymous session and local data intact.
+  Attach project/build version, device/OS, redacted before/after IDs,
+  screenshots/logs, and named tester signoff; Codex cannot manufacture provider
+  accounts, inbox access, project settings, or physical-device proof.
 - Supabase live Shelf scan-log evidence: attach staging/production proof that
   barcode outcomes insert owner-scoped `shelf_scans` rows for matched,
   no-match, and offline/queued outcomes under RLS. The 2026-07-08 Codex pass can

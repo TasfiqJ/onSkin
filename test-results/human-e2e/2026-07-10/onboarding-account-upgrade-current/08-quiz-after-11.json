@@ -1,0 +1,64 @@
+{
+  "bodyText": "11 / 12 SENSITIVITIES Any known sensitivities or ingredients you try to avoid? Select all that apply. Fragrance Essential oils Drying alcohols None that I know of Next",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Fragrance",
+      "role": "button",
+      "width": 97.59,
+      "x": 24,
+      "y": 212
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Essential oils",
+      "role": "button",
+      "width": 115.5,
+      "x": 129.59,
+      "y": 212
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Drying alcohols",
+      "role": "button",
+      "width": 131.34,
+      "x": 24,
+      "y": 268
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "None that I know of",
+      "role": "button",
+      "width": 156.64,
+      "x": 163.34,
+      "y": 268
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Next",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 568
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/quiz",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  }
+}

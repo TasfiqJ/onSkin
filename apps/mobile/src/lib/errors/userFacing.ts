@@ -28,6 +28,20 @@ const AUTH_PATTERNS: readonly KnownErrorPattern[] = [
     pattern: /(cancel|canceled|cancelled)/i,
     message: 'Sign-in was canceled.',
   },
+  {
+    pattern: /identity.*already.*(linked|exists)|already.*(linked|registered).*identity/i,
+    message:
+      'That sign-in is already connected to another account. Use another method or continue without an account.',
+  },
+  {
+    pattern: /email.*already.*(registered|exists)|already been registered/i,
+    message:
+      "We couldn't attach that email without changing your current plan. Use another method or continue without an account.",
+  },
+  {
+    pattern: /request a new email code|email code.*no longer valid/i,
+    message: 'Request a new code and try again.',
+  },
 ];
 
 function rawMessage(error: unknown): string {

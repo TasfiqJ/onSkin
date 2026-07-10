@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-10T10:29:01.256Z
-Git SHA: 04689ea3ffd0ccedb0f216dd28017af282d193ba
+Generated: 2026-07-10T11:01:47.968Z
+Git SHA: a55d8a59652a88e12ed434c92f6bc4cbdb0568a2
 Evidence date: 2026-07-10
 Baseline suite date: 2026-07-09
 Status: pass
@@ -39,6 +39,7 @@ dependency to the repo.
 | 320 x 430 resilience route clearance                             | resilience      | pass   | 0 failures recorded.                   | 101   | test-results/human-e2e/2026-07-09/current-main-short-phone-430-final-clearance-sweep   |
 | 320 x 390 split-short stress clearance                           | resilience      | pass   | 0 failures recorded.                   | 101   | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix     |
 | 320 x 430 first-session activation stress pass                   | resilience      | pass   | summary verdict: pass.                 | 58    | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current                 |
+| 360 x 640 account-upgrade error and recovery pass                | supported-phone | pass   | summary verdict: pass.                 | 62    | test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current                   |
 | 390 x 844 local Progress time-lapse and reduced-motion pass      | supported-phone | pass   | summary status: pass.                  | 17    | test-results/human-e2e/2026-07-10/progress-timelapse-current                           |
 | Progress quality states and support-floor save recovery          | supported-phone | pass   | summary status: pass.                  | 19    | test-results/human-e2e/2026-07-10/progress-capture-analysis-current                    |
 | Device-only Progress photo storage                               | supported-phone | pass   | summary status: pass; 0 failed routes. | 15    | test-results/human-e2e/2026-07-10/progress-device-only-backup-current                  |

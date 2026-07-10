@@ -1,0 +1,64 @@
+{
+  "bodyText": "What's on your shelf? Add the products you already use so we build around them. Even just the name helps us spot conflicts. You can add more anytime from your Shelf. 2 OF 3 PRODUCTS 1 more product gives your first insight more to work with. PRODUCT NAME 2 ON YOUR SHELF Glycolic 7% toner × Retinol 0.3% serum × Add 1 more Continue with 2 products",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 54,
+      "hitOk": true,
+      "label": "Product name",
+      "role": "input",
+      "width": 272,
+      "x": 44,
+      "y": 82
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Glycolic 7% toner",
+      "role": "button",
+      "width": 48,
+      "x": 271,
+      "y": 213
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Remove Retinol 0.3% serum",
+      "role": "button",
+      "width": 48,
+      "x": 271,
+      "y": 295
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Add 1 more",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 508
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Continue with 2 products",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 568
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/products",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  }
+}

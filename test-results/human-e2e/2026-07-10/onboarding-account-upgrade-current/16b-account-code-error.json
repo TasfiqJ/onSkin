@@ -1,0 +1,54 @@
+{
+  "bodyText": "Protect your plan, keep it private. Create an account for sign-in, subscription, and privacy controls. Routine checks stay local-first on this device for this beta, and photos still stay on this device. Enter the 6-digit code we sent to tas.account.e2e@example.com. Verify Use a different method That code did not work. Request a new code and try again. Not now",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 66,
+      "hitOk": true,
+      "label": "Verification code",
+      "role": "input",
+      "width": 312,
+      "x": 24,
+      "y": 276
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Verify",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 354
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Use a different method",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 422
+    },
+    {
+      "disabled": false,
+      "height": 48,
+      "hitOk": true,
+      "label": "Not now",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 576
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/account",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  }
+}

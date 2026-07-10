@@ -1,6 +1,6 @@
 # Readiness Status Audit
 
-Generated: 2026-07-10T10:29:01.925Z
+Generated: 2026-07-10T11:11:11.960Z
 Status: pass
 Strict mode: yes
 
@@ -13,8 +13,8 @@ store, legal, clinical, beta, or launch signoff evidence.
 ## Summary
 
 - Evidence date: 2026-07-10
-- Expected mobile test baseline: 177 mobile test files / 1838 tests
-- Actual mobile test files found: 177
+- Expected mobile test baseline: 179 mobile test files / 1851 tests
+- Actual mobile test files found: 179
 - Blockers: 0
 - Warnings: 0
 

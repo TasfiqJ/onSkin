@@ -1,0 +1,44 @@
+{
+  "bodyText": "You’re exploring Pro. 7 days left › FRIDAY, JULY 10 Good morning. Morning routine 0 of 1 Mineral SPF 50 Last step. Reapply later. NEXT ✦ A few honest suggestions 4 things we’d gently suggest › Today Prog. Shelf You",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 74,
+      "hitOk": true,
+      "label": "You're exploring Pro. Manage your plan",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 0
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Mineral SPF 50",
+      "role": "checkbox",
+      "width": 270,
+      "x": 45,
+      "y": 229
+    },
+    {
+      "disabled": false,
+      "height": 78,
+      "hitOk": true,
+      "label": "See your recommendations",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 306
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/today?routine=AM",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  }
+}

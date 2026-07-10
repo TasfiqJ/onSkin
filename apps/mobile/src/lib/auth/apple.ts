@@ -8,7 +8,8 @@ function nonEmptyString(value: unknown): string | null {
 }
 
 // Sign in with Apple. Mandatory on iOS once Google is offered (docs/01 §1,
-// Apple Guideline 4.8). Returns the identity token for supabase signInWithIdToken.
+// Apple Guideline 4.8). Returns the identity token for Supabase sign-in or
+// same-user identity linking.
 // BLOCKED: B-APPLE. Needs the registered Service ID / capability to actually run.
 export async function getAppleIdToken(): Promise<{ idToken: string; email: string | null } | null> {
   const credential = await AppleAuthentication.signInAsync({

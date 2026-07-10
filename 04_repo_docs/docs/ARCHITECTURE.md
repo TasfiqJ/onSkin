@@ -119,7 +119,18 @@ Client APIs:
 ## Auth Model
 
 - Anonymous-first onboarding.
-- Optional Apple/Google account linking.
+- Apple/Google native ID tokens link to an active anonymous session with
+  `linkIdentity`; email attaches with `updateUser` and completes with an
+  `email_change` OTP. If a development project auto-confirms that same-user
+  email update, the route completes immediately instead of asking for a code
+  that was never sent.
+- Provider and email account upgrades assert that the Supabase user ID remains
+  unchanged and that the resulting identity is permanent.
+- A linking conflict fails closed. The app never falls back to a normal sign-in
+  while preserving anonymous-session data because that fallback can switch the
+  user ID and trigger local-private-data cleanup.
+- Normal Apple/Google/email sign-in remains available when there is no active
+  anonymous session to preserve.
 - Supabase user ID becomes stable app user identity.
 - RevenueCat `appUserID` bound to Supabase user ID.
 - Owner-scoped RLS on user tables.

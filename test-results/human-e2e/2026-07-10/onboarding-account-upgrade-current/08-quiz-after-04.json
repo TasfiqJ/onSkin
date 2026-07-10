@@ -1,0 +1,54 @@
+{
+  "bodyText": "4 / 12 SENSITIVITY How often do you notice redness, flushing, or a hot-feeling face? Frequently Sometimes Rarely or never Next",
+  "controls": [
+    {
+      "disabled": false,
+      "height": 64,
+      "hitOk": true,
+      "label": "Frequently",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 212
+    },
+    {
+      "disabled": false,
+      "height": 64,
+      "hitOk": true,
+      "label": "Sometimes",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 288
+    },
+    {
+      "disabled": false,
+      "height": 64,
+      "hitOk": true,
+      "label": "Rarely or never",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 364
+    },
+    {
+      "disabled": false,
+      "height": 56,
+      "hitOk": true,
+      "label": "Next",
+      "role": "button",
+      "width": 312,
+      "x": 24,
+      "y": 568
+    }
+  ],
+  "issueCount": 0,
+  "issues": [],
+  "overflowX": 0,
+  "title": "",
+  "url": "http://localhost:8285/onboarding/quiz",
+  "viewport": {
+    "height": 640,
+    "width": 360
+  }
+}

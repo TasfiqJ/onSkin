@@ -18,6 +18,15 @@ describe('user-facing error copy', () => {
       'Too many attempts. Wait a moment, then try again.',
     );
     expect(authUserMessage(new Error(AUTH_UNAVAILABLE_MESSAGE))).toBe(AUTH_UNAVAILABLE_MESSAGE);
+    expect(authUserMessage(new Error('Identity is already linked to another user'))).toBe(
+      'That sign-in is already connected to another account. Use another method or continue without an account.',
+    );
+    expect(authUserMessage(new Error('Request a new email code before verifying.'))).toBe(
+      'Request a new code and try again.',
+    );
+    expect(authUserMessage(new Error('A user with this email has already been registered'))).toBe(
+      "We couldn't attach that email without changing your current plan. Use another method or continue without an account.",
+    );
   });
 
   it('does not reflect raw backend/provider details', () => {

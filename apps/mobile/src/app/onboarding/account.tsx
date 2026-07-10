@@ -15,14 +15,15 @@ import { recordAccountConsent } from '@/features/onboarding/accountConsent';
 import { ACCOUNT_CONSENT } from '@/features/onboarding/consentCopy';
 import { track, identify } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { getAccountUpgradeE2EFixture } from '@/lib/auth/accountUpgradeE2E';
 import { isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE, authUserMessage } from '@/lib/errors/userFacing';
 import { supabase } from '@/lib/supabase/client';
 
 // 09 · Account creation at the value moment (docs/01 §1/§2). SIWA mandatory on iOS
 // because Google is offered (Guideline 4.8). Email uses OTP codes (not magic
-// links) for mobile reliability. Anonymous data carries over by user-id.
-// BLOCKED: B-APPLE / B-GOOGLE / B-VERIFY-AUTH-LINKING.
+// links) for mobile reliability. Anonymous upgrades must preserve the current
+// user id; real-provider device proof remains BLOCKED: B-APPLE / B-GOOGLE.
 export default function AccountScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const { signInWithApple, signInWithGoogle, sendEmailOtp, verifyEmailOtp } = useAuth();
@@ -31,26 +32,30 @@ export default function AccountScreen() {
   const [stage, setStage] = useState<'menu' | 'code'>('menu');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const accountUpgradeE2EFixture = getAccountUpgradeE2EFixture();
+  const authAvailable = isSupabaseConfigured || accountUpgradeE2EFixture !== null;
   const supportFloorTextPressurePhone =
     width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPhone = height < 640 || supportFloorTextPressurePhone;
 
   async function finish() {
-    try {
-      await recordAccountConsent();
-    } catch {
-      setError(ACCOUNT_CONSENT.saveFailedBody);
-      return;
-    }
+    if (!accountUpgradeE2EFixture) {
+      try {
+        await recordAccountConsent();
+      } catch {
+        setError(ACCOUNT_CONSENT.saveFailedBody);
+        return;
+      }
 
-    const response = await supabase.auth.getUser().catch(() => null);
-    if (response?.data.user?.id) identify(response.data.user.id, { method: 'account_created' });
+      const response = await supabase.auth.getUser().catch(() => null);
+      if (response?.data.user?.id) identify(response.data.user.id, { method: 'account_created' });
+    }
     track('account_created');
     router.replace('/onboarding/paywall');
   }
 
   async function run(fn: () => Promise<void>) {
-    if (!isSupabaseConfigured) {
+    if (!authAvailable) {
       setError(AUTH_UNAVAILABLE_MESSAGE);
       return;
     }
@@ -90,13 +95,13 @@ export default function AccountScreen() {
             Create an account for sign-in, subscription, and privacy controls. Routine checks stay
             local-first on this device for this beta, and photos still stay on this device.
           </Text>
-          {!isSupabaseConfigured ? (
+          {!authAvailable ? (
             <Text variant="bodySm" tone="clay" className="mt-4">
               {AUTH_UNAVAILABLE_MESSAGE}
             </Text>
           ) : null}
 
-          {isSupabaseConfigured ? (
+          {authAvailable ? (
             stage === 'menu' ? (
               <View className="mt-8 gap-3">
                 {Platform.OS === 'ios' ? (
@@ -107,7 +112,7 @@ export default function AccountScreen() {
                     style={{ height: 56 }}
                     onPress={() =>
                       run(async () => {
-                        if (await signInWithApple()) await finish();
+                        if (accountUpgradeE2EFixture || (await signInWithApple())) await finish();
                       })
                     }
                   />
@@ -117,7 +122,7 @@ export default function AccountScreen() {
                   variant="inverse"
                   onPress={() =>
                     run(async () => {
-                      if (await signInWithGoogle()) await finish();
+                      if (accountUpgradeE2EFixture || (await signInWithGoogle())) await finish();
                     })
                   }
                   disabled={busy}
@@ -142,7 +147,13 @@ export default function AccountScreen() {
                     disabled={busy || !email.includes('@')}
                     onPress={() =>
                       run(async () => {
-                        await sendEmailOtp(email);
+                        if (!accountUpgradeE2EFixture) {
+                          const result = await sendEmailOtp(email);
+                          if (result === 'complete') {
+                            await finish();
+                            return;
+                          }
+                        }
                         setStage('code');
                       })
                     }
@@ -169,14 +180,20 @@ export default function AccountScreen() {
                   disabled={busy || code.length !== 6}
                   onPress={() =>
                     run(async () => {
-                      await verifyEmailOtp(email, code);
+                      if (
+                        accountUpgradeE2EFixture &&
+                        code.trim() !== accountUpgradeE2EFixture.emailCode
+                      ) {
+                        throw new Error('OTP code is invalid.');
+                      }
+                      if (!accountUpgradeE2EFixture) await verifyEmailOtp(email, code);
                       await finish();
                     })
                   }
                 />
                 <Pressable
                   accessibilityRole="button"
-                  className="items-center py-2"
+                  className="min-h-[48px] items-center justify-center py-2"
                   onPress={() => setStage('menu')}
                 >
                   <Text variant="body" tone="muted">
