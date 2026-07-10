@@ -1,0 +1,102 @@
+[
+  {
+    "branch": "normal",
+    "method": "GET",
+    "url": "http://localhost:8210/progress"
+  },
+  {
+    "branch": "normal",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Finstrument-serif%2F400Regular/InstrumentSerif_400Regular.ttf"
+  },
+  {
+    "branch": "normal",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Finstrument-serif%2F400Regular_Italic/InstrumentSerif_400Regular_Italic.ttf"
+  },
+  {
+    "branch": "normal",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fhanken-grotesk%2F400Regular/HankenGrotesk_400Regular.ttf"
+  },
+  {
+    "branch": "normal",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fhanken-grotesk%2F500Medium/HankenGrotesk_500Medium.ttf"
+  },
+  {
+    "branch": "normal",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fhanken-grotesk%2F600SemiBold/HankenGrotesk_600SemiBold.ttf"
+  },
+  {
+    "branch": "normal",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fhanken-grotesk%2F700Bold/HankenGrotesk_700Bold.ttf"
+  },
+  {
+    "branch": "normal",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fibm-plex-mono%2F400Regular/IBMPlexMono_400Regular.ttf"
+  },
+  {
+    "branch": "normal",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fibm-plex-mono%2F500Medium/IBMPlexMono_500Medium.ttf"
+  },
+  {
+    "branch": "normal",
+    "method": "GET",
+    "url": "http://localhost:8210/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+  },
+  {
+    "branch": "reduced-motion",
+    "method": "GET",
+    "url": "http://localhost:8210/progress"
+  },
+  {
+    "branch": "reduced-motion",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Finstrument-serif%2F400Regular/InstrumentSerif_400Regular.ttf"
+  },
+  {
+    "branch": "reduced-motion",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Finstrument-serif%2F400Regular_Italic/InstrumentSerif_400Regular_Italic.ttf"
+  },
+  {
+    "branch": "reduced-motion",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fhanken-grotesk%2F400Regular/HankenGrotesk_400Regular.ttf"
+  },
+  {
+    "branch": "reduced-motion",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fhanken-grotesk%2F500Medium/HankenGrotesk_500Medium.ttf"
+  },
+  {
+    "branch": "reduced-motion",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fhanken-grotesk%2F600SemiBold/HankenGrotesk_600SemiBold.ttf"
+  },
+  {
+    "branch": "reduced-motion",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fhanken-grotesk%2F700Bold/HankenGrotesk_700Bold.ttf"
+  },
+  {
+    "branch": "reduced-motion",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fibm-plex-mono%2F400Regular/IBMPlexMono_400Regular.ttf"
+  },
+  {
+    "branch": "reduced-motion",
+    "method": "GET",
+    "url": "http://localhost:8210/assets/?unstable_path=.%2F..%2F..%2Fnode_modules%2F%40expo-google-fonts%2Fibm-plex-mono%2F500Medium/IBMPlexMono_500Medium.ttf"
+  },
+  {
+    "branch": "reduced-motion",
+    "method": "GET",
+    "url": "http://localhost:8210/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+  }
+]

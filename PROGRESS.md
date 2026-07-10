@@ -4,6 +4,28 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
+## 2026-07-10
+
+- Replaced the Progress Timeline's obsolete time-lapse unavailable response
+  with a real local-photo player. The finite sequence filters missing image
+  records, orders usable frames oldest to newest, stops on the latest frame,
+  and provides previous, play/pause/replay, next, close, progress, date, and
+  adjustable screen-reader controls. It pauses off foreground, suppresses
+  automatic playback under reduced motion, keeps local-only/no-score copy
+  visible, and sends no photo identifiers or image metadata to analytics. The
+  populated E2E fixture now renders a real development-only bitmap and fails
+  closed outside development. Focused tests cover deterministic frames,
+  bounded stepping/progress, route wiring, fixture gating, accessibility, and
+  motion/foreground contracts. Human-simulated Expo web at the supported
+  390 x 844 viewport passed bitmap rendering, one named modal dialog, stable
+  pause, finite completion, replay, close recovery, 48 px+ controls, zero
+  horizontal overflow, and manual-only reduced-motion review. Evidence and bug
+  report are in
+  `test-results/human-e2e/2026-07-10/progress-timelapse-current/` and
+  `docs/e2e-bug-reports/2026-07-10-progress-timelapse-dialog-semantics.md`.
+  Mobile lint/typecheck and 173 test files / 1786 tests pass; native encrypted
+  photo performance and VoiceOver/TalkBack remain physical-device QA.
+
 ## 2026-07-09
 
 - Completed the local Phase 3 signoff-preparation workflow without fabricating

@@ -148,9 +148,20 @@ function latestEvidenceDate() {
       .reverse()
       .find((date) =>
         requiredGateEvidenceFiles(date).every((evidencePath) => exists(evidencePath)),
-      ) ??
-    dates.at(-1) ??
-    null
+      ) ?? null
+  );
+}
+
+function latestEvidenceDateForFolder(folder, evidence = 'summary.json') {
+  const base = abs('test-results/human-e2e');
+  if (!existsSync(base)) return null;
+  return (
+    readdirSync(base, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(entry.name))
+      .map((entry) => entry.name)
+      .sort()
+      .reverse()
+      .find((date) => exists(`test-results/human-e2e/${date}/${folder}/${evidence}`)) ?? null
   );
 }
 
@@ -201,9 +212,16 @@ function markdownTable(headers, rows) {
 const evidenceDate =
   dateArg?.slice('--date='.length) || process.env.E2E_MANIFEST_DATE || latestEvidenceDate();
 if (!evidenceDate) {
-  console.error('FAIL No test-results/human-e2e/YYYY-MM-DD evidence folders found.');
+  console.error('FAIL No complete baseline human-E2E evidence date found.');
   process.exit(1);
 }
+
+const timelapseEvidenceDate = latestEvidenceDateForFolder('progress-timelapse-current');
+if (!timelapseEvidenceDate) {
+  console.error('FAIL Missing supported-phone Progress time-lapse evidence.');
+  process.exit(1);
+}
+const latestManifestEvidenceDate = [evidenceDate, timelapseEvidenceDate].sort().at(-1);
 
 const gates = [
   supportFloorGateForDate(evidenceDate),
@@ -427,6 +445,17 @@ const gates = [
     evidence: 'summary.json',
     expected: 'Fresh onboarding to shelf intake, routine plan, and Today check-off passes.',
   },
+  {
+    id: 'progress-timelapse-supported-phone',
+    title: '390 x 844 local Progress time-lapse and reduced-motion pass',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${timelapseEvidenceDate}/progress-timelapse-current`,
+    evidence: 'summary.json',
+    expected:
+      'Real bitmap frames, finite playback, controls, close recovery, and reduced-motion manual review pass.',
+  },
 ];
 
 const warnings = [
@@ -505,7 +534,8 @@ const gateResults = gates.map((gate) => {
 const packet = {
   generatedAt: new Date().toISOString(),
   gitSha: command('git', ['rev-parse', 'HEAD']),
-  evidenceDate,
+  evidenceDate: latestManifestEvidenceDate,
+  baselineEvidenceDate: evidenceDate,
   status: blockers.length === 0 ? 'pass' : 'blocked',
   purpose: 'Durable local human-simulated E2E manifest for Expo web-compatible launch gates.',
   gateResults,
@@ -533,6 +563,7 @@ const markdown = [
   `Generated: ${packet.generatedAt}`,
   `Git SHA: ${packet.gitSha || 'unknown'}`,
   `Evidence date: ${packet.evidenceDate}`,
+  `Baseline suite date: ${packet.baselineEvidenceDate}`,
   `Status: ${packet.status}`,
   '',
   'This generated packet is created by `npm run e2e:human:manifest`. It turns',

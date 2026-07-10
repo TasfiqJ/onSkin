@@ -1,0 +1,37 @@
+[
+  {
+    "branch": "normal",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "branch": "normal",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "branch": "normal",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "branch": "reduced-motion",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "branch": "reduced-motion",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "branch": "reduced-motion",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "branch": "reduced-motion",
+    "type": "warning",
+    "text": "[Reanimated] Reduced motion setting is enabled on this device. This warning is visible only in the development mode. Some animations will be disabled by default. You can override the behavior for individual animations, see https://docs.swmansion.com/react-native-reanimated/docs/guides/troubleshooting#reduced-motion-setting-is-enabled-on-this-device."
+  }
+]

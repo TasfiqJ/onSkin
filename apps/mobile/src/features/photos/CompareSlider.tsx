@@ -12,8 +12,8 @@ import { PhotoImage } from './PhotoImage';
 // Before/after comparison (docs/06 §4, design screen 04). A draggable vertical
 // divider wipes between the two photos; the side-by-side mode (the accessible
 // default, docs/06 §4) places them adjacent. NO numbers, no "improvement %". Just
-// the two photos and their dates. Photos are striped/flat placeholders until real
-// capture lands (B-CAMERA); expo-image renders the on-device file once it exists.
+// the two photos and their dates. expo-image renders each encrypted on-device file;
+// the flat fallback appears only when a legacy or damaged record has no usable bytes.
 
 export type ComparePhoto = { uri: string | null; date: string; tone: string };
 const HANDLE_SHADOW =

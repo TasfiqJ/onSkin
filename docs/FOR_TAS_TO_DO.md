@@ -1,6 +1,6 @@
 # For Tas To Do
 
-Date: 2026-07-09
+Date: 2026-07-10
 
 Purpose: track work Codex must not guess or fake. These items require a founder decision, account owner, credential, payment method, counsel/reviewer signoff, physical device, or real beta users. Codex can keep building around them, but launch readiness cannot close until evidence is attached.
 
@@ -190,6 +190,13 @@ Status: needs-device-verification
   date-change chips, comparison photo-picker dismiss/selection, app-lock, and
   VoiceOver/TalkBack traversal must remain readable, private, and tappable on
   short screens.
+- Verify the local Progress time-lapse on the same supported devices and real
+  encrypted-photo set: oldest-to-newest playback, pause, manual stepping,
+  final-frame stop/replay, app background pause, close recovery, Reduce Motion,
+  and VoiceOver/TalkBack adjustable actions. Confirm no decrypted frame is
+  written to a share/cache file and no image, local path, date, or photo ID is
+  sent to analytics. The 2026-07-10 Expo web pass proves bitmap/UI behavior but
+  not native decryption performance or assistive-technology traversal.
 - Verify first-use Progress photo consent failure/retry sequencing on native:
   failed local save does not open a native/system alert, camera, or permission
   prompt; retry saves consent before permission; and the app remains past the
@@ -263,7 +270,7 @@ Status: needs-device-verification
   live Supabase catalog data, or beta catalog seed data.
 - Measure local photo loading for the Progress timeline with a realistic beta
   set of encrypted local photos. Include first render, timeline scroll, compare
-  selection, and app restart behavior.
+  selection, time-lapse playback/replay, and app restart behavior.
 - Measure memory use in photo timeline on supported iOS and Android physical
   devices with the same realistic encrypted-photo set. Record whether memory
   pressure causes thumbnail eviction, route reload, crash, or OS termination.

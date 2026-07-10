@@ -1,0 +1,132 @@
+{
+  "bodyText": "Progress ＋ Photo 12 weeks · 3 photos · all on this phone Same light, same angle. Honestly comparable. No scores, no AI grades. Compare Timeline No scores ⓘ ▶ Time-lapse JUNE 2026 Jun 24 One cycle complete. 12 weeks of photos. Look how far you’ve come. MAY 2026 May 12 Four weeks in. Change starts to show around now. APRIL 2026 Apr 1 Today Prog. Shelf You × Quiet time-lapse Your photos, oldest to newest Apr 1, 2026 1 of 3 ‹ ▶ › On this phone only. No scores or automatic judgments.",
+  "controls": [
+    {
+      "label": "Take a progress photo",
+      "role": "button",
+      "disabled": false,
+      "x": 273,
+      "y": 12,
+      "width": 93,
+      "height": 48,
+      "hitOk": false
+    },
+    {
+      "label": "Compare",
+      "role": "button",
+      "disabled": false,
+      "x": 24,
+      "y": 146,
+      "width": 96.48,
+      "height": 48,
+      "hitOk": false
+    },
+    {
+      "label": "Timeline",
+      "role": "button",
+      "disabled": false,
+      "x": 130.48,
+      "y": 146,
+      "width": 96,
+      "height": 48,
+      "hitOk": false
+    },
+    {
+      "label": "Play a quiet time-lapse of your local photo series",
+      "role": "button",
+      "disabled": false,
+      "x": 234.52,
+      "y": 260,
+      "width": 131.48,
+      "height": 48,
+      "hitOk": false
+    },
+    {
+      "label": "Photo Jun 24",
+      "role": "button",
+      "disabled": false,
+      "x": 24,
+      "y": 346,
+      "width": 108.06,
+      "height": 144.08,
+      "hitOk": false
+    },
+    {
+      "label": "Photo May 12",
+      "role": "button",
+      "disabled": false,
+      "x": 24,
+      "y": 620.08,
+      "width": 108.06,
+      "height": 144.08,
+      "hitOk": false
+    },
+    {
+      "label": "Close time-lapse",
+      "role": "button",
+      "disabled": false,
+      "x": 16,
+      "y": 8,
+      "width": 48,
+      "height": 48,
+      "hitOk": true
+    },
+    {
+      "label": "Previous photo",
+      "role": "button",
+      "disabled": true,
+      "x": 95,
+      "y": 744,
+      "width": 48,
+      "height": 48,
+      "hitOk": true
+    },
+    {
+      "label": "Play time-lapse",
+      "role": "button",
+      "disabled": false,
+      "x": 167,
+      "y": 740,
+      "width": 56,
+      "height": 56,
+      "hitOk": true
+    },
+    {
+      "label": "Next photo",
+      "role": "button",
+      "disabled": false,
+      "x": 247,
+      "y": 744,
+      "width": 48,
+      "height": 48,
+      "hitOk": true
+    }
+  ],
+  "dialogLabels": [
+    "Quiet photo time-lapse"
+  ],
+  "dialogs": 1,
+  "images": [
+    {
+      "naturalHeight": 64,
+      "naturalWidth": 48,
+      "srcPrefix": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD"
+    },
+    {
+      "naturalHeight": 64,
+      "naturalWidth": 48,
+      "srcPrefix": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD"
+    },
+    {
+      "naturalHeight": 64,
+      "naturalWidth": 48,
+      "srcPrefix": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD"
+    }
+  ],
+  "overflowX": 0,
+  "url": "http://localhost:8210/progress",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  }
+}

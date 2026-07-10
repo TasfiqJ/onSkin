@@ -1,6 +1,6 @@
 # Launch Readiness
 
-Date: 2026-07-09
+Date: 2026-07-10
 
 This is the fast source of truth for what exists, what is simulated, and what
 still blocks a paid public launch.
@@ -41,6 +41,21 @@ Fresh verification through 2026-07-09:
   rejects contradictory decisions, and permits non-overwriting direct JSON
   output only under `docs/phase-3/signoffs/`. This reduces handoff error without
   claiming any professional decision exists.
+- Photo Progress Timeline now has a real local-only quiet time-lapse instead of
+  the obsolete `coming with capture` response. It filters out records without
+  usable local bytes, plays oldest to newest, stops on the latest frame, and
+  provides 48 px+ close, previous, play/pause/replay, and next controls plus an
+  adjustable screen-reader frame. It pauses when the app leaves the foreground
+  and suppresses automatic playback when the OS requests reduced motion. A
+  production guard keeps the bitmap fixture development-only, and the player
+  emits no image, path, date, or photo-ID analytics. The
+  `390 x 844 local Progress time-lapse` and reduced-motion pass verifies real bitmap rendering,
+  one named modal dialog, stable pause, finite completion, replay, close
+  recovery, zero horizontal overflow, and no unexpected browser logs or
+  analytics requests. Evidence:
+  `test-results/human-e2e/2026-07-10/progress-timelapse-current/`. Physical
+  iOS/Android encrypted-photo performance, background transitions, and
+  VoiceOver/TalkBack remain device QA.
 - Floating bottom tab-bar active-pill polish now has fresh headless Chrome Expo
   web geometry evidence across 320 x 568 stress width plus 360 x 640,
   375 x 667, 390 x 844, 412 x 915, and 430 x 932 supported-phone viewports.
@@ -159,7 +174,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 172 mobile test files / 1782 tests.
+- `npm test` passed: 173 mobile test files / 1786 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -189,7 +204,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 172 test files / 1782 tests.
+- `npm --workspace apps/mobile run test` passed: 173 test files / 1786 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain

@@ -16,12 +16,13 @@ const outJson =
   process.env.READINESS_STATUS_AUDIT_JSON ?? 'docs/generated/readiness-status-audit.json';
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
-const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 172);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1782);
+const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 173);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1786);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
   /\b171\s+(?:mobile\s+)?test files?\b/i,
+  /\b172\s+(?:mobile\s+)?test files?\b/i,
   /\b1743\s+tests?\b/i,
   /\b1744\s+tests?\b/i,
   /\b1748\s+tests?\b/i,
@@ -34,6 +35,7 @@ const staleTestPatterns = [
   /\b1770\s+tests?\b/i,
   /\b1777\s+tests?\b/i,
   /\b1778\s+tests?\b/i,
+  /\b1782\s+tests?\b/i,
   /320 x 480 support-floor 200%\s+text-pressure/i,
   /support-floor\s+170%\s+text-pressure/i,
 ];
@@ -52,6 +54,8 @@ const requiredManifestNeedles = [
   'text-pressure-200-iphone-375-812-postfix',
   'text-pressure-200-android-412-915-postfix2',
   'text-pressure-200-boundary-414-896-postfix3',
+  '390 x 844 local Progress time-lapse',
+  'progress-timelapse-current',
 ];
 
 const requiredLaunchCommands = [

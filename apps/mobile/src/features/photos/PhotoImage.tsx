@@ -12,11 +12,15 @@ export function PhotoImage({
   style,
   contentFit = 'cover',
   fallbackTone = colors.greigeDeep,
+  accessible,
+  accessibilityLabel,
 }: {
   uri: string | null | undefined;
   style?: StyleProp<ImageStyle>;
   contentFit?: 'cover' | 'contain';
   fallbackTone?: string;
+  accessible?: boolean;
+  accessibilityLabel?: string;
 }) {
   const encrypted = isEncryptedPhotoUri(uri);
   const [resolved, setResolved] = useState<{
@@ -46,12 +50,21 @@ export function PhotoImage({
 
   if (displayUri) {
     return (
-      <Image source={{ uri: displayUri }} style={style} contentFit={contentFit} transition={120} />
+      <Image
+        source={{ uri: displayUri }}
+        style={style}
+        contentFit={contentFit}
+        transition={120}
+        accessible={accessible}
+        accessibilityLabel={accessibilityLabel}
+      />
     );
   }
 
   return (
     <View
+      accessible={accessible}
+      accessibilityLabel={accessibilityLabel}
       style={[
         { flex: 1, backgroundColor: fallbackTone, alignItems: 'center', justifyContent: 'center' },
         style,

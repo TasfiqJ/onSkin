@@ -7,7 +7,9 @@ import { Card, Screen, Text } from '@/components/ui';
 import { CompareSlider } from '@/features/photos/CompareSlider';
 import { MILESTONE_COPY, PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
+import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';
 import { parseLocalDate } from '@/features/photos/timeline';
+import { timelapseFrames } from '@/features/photos/timelapse';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { TrendInsight } from '@/features/trend/TrendInsight';
@@ -25,9 +27,6 @@ import { colors } from '@/theme/tokens';
 
 const BG = '#16130F';
 const SAGE = '#9DB18A';
-const TIMELAPSE_UNAVAILABLE_TITLE = 'Time-lapse is coming with capture';
-const TIMELAPSE_UNAVAILABLE_BODY =
-  'Your timeline is ready to browse by date now. The gentle flip-through arrives with on-device capture, without autoplay or AI scores.';
 function short(ymd: string): string {
   return parseLocalDate(ymd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
@@ -328,49 +327,29 @@ function CompareView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>[
 
 // ── Timeline (design screen 05) ──────────────────────────────────────────────
 function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>['data']> }) {
-  const [timelapseFeedbackVisible, setTimelapseFeedbackVisible] = useState(false);
+  const [timelapseVisible, setTimelapseVisible] = useState(false);
+  const frames = timelapseFrames(data.series);
 
   return (
     <View className="mt-2">
-      {/* quiet time-lapse affordance (design screen 05; the frames come with B-CAMERA) */}
-      <View className="mb-3 flex-row justify-end">
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Play a quiet time-lapse of your series"
-          onPress={() => setTimelapseFeedbackVisible(true)}
-          className="min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill px-4 py-2"
-          style={{
-            backgroundColor: colors.paperRaised,
-            borderWidth: 1,
-            borderColor: colors.hairlineStrong,
-          }}
-        >
-          <Text style={{ color: colors.clay, fontSize: 11 }}>▶</Text>
-          <Text variant="label" tone="muted">
-            Play
-          </Text>
-        </Pressable>
-      </View>
-      {timelapseFeedbackVisible ? (
-        <View
-          className="mb-4 rounded-card p-3.5"
-          style={{
-            backgroundColor: colors.clayTint,
-            borderWidth: 1,
-            borderColor: colors.hairlineStrong,
-          }}
-        >
-          <Text variant="label" style={{ color: colors.clayDeep }}>
-            {TIMELAPSE_UNAVAILABLE_TITLE}
-          </Text>
-          <Text
-            accessibilityRole="alert"
-            variant="bodySm"
-            className="mt-1"
-            style={{ color: colors.clayDeep, lineHeight: 19 }}
+      {frames.length > 1 ? (
+        <View className="mb-3 flex-row justify-end">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Play a quiet time-lapse of your local photo series"
+            onPress={() => setTimelapseVisible(true)}
+            className="min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-pill px-4 py-2"
+            style={{
+              backgroundColor: colors.paperRaised,
+              borderWidth: 1,
+              borderColor: colors.hairlineStrong,
+            }}
           >
-            {TIMELAPSE_UNAVAILABLE_BODY}
-          </Text>
+            <Text style={{ color: colors.clay, fontSize: 11 }}>▶</Text>
+            <Text variant="label" tone="muted">
+              Time-lapse
+            </Text>
+          </Pressable>
         </View>
       ) : null}
       {data.monthGroups.map((group) => {
@@ -441,6 +420,9 @@ function TimelineView({ data }: { data: NonNullable<ReturnType<typeof usePhotos>
           </View>
         );
       })}
+      {timelapseVisible ? (
+        <PhotoTimelapse frames={frames} onClose={() => setTimelapseVisible(false)} />
+      ) : null}
     </View>
   );
 }

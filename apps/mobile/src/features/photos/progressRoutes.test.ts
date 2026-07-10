@@ -274,7 +274,10 @@ describe('Progress route mobile contracts', () => {
     const source = readSource('features/photos/usePhotos.ts');
     const entitlement = readSource('features/subscription/useEntitlement.ts');
 
+    expect(source).toContain("if (typeof __DEV__ === 'undefined' || !__DEV__) return null;");
     expect(source).toContain("process.env.EXPO_PUBLIC_E2E_PROGRESS_PHOTOS !== 'populated'");
+    expect(source).toContain("'data:image/png;base64,");
+    expect(source).toContain('localUri: E2E_PROGRESS_PHOTO_URI');
     expect(source).toContain('e2e-front-2026-04-01');
     expect(source).toContain('e2e-front-2026-05-12');
     expect(source).toContain('e2e-front-2026-06-24');
@@ -321,18 +324,39 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain('onPress={() => {}}');
   });
 
-  it('keeps the timeline time-lapse preview route-owned instead of using native alerts', () => {
+  it('plays real local time-lapse frames with finite and reduced-motion-safe controls', () => {
     const source = readAppRoute('(tabs)/progress.tsx');
+    const player = readSource('features/photos/PhotoTimelapse.tsx');
 
-    expect(source).toContain('const TIMELAPSE_UNAVAILABLE_TITLE');
-    expect(source).toContain('const TIMELAPSE_UNAVAILABLE_BODY');
+    expect(source).toContain("import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';");
+    expect(source).toContain("import { timelapseFrames } from '@/features/photos/timelapse';");
+    expect(source).toContain('const frames = timelapseFrames(data.series);');
+    expect(source).toContain('{frames.length > 1 ? (');
     expect(source).toContain(
-      'const [timelapseFeedbackVisible, setTimelapseFeedbackVisible] = useState(false);',
+      'accessibilityLabel="Play a quiet time-lapse of your local photo series"',
     );
-    expect(source).toContain('accessibilityLabel="Play a quiet time-lapse of your series"');
-    expect(source).toContain('onPress={() => setTimelapseFeedbackVisible(true)}');
-    expect(source).toContain('{timelapseFeedbackVisible ? (');
-    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('onPress={() => setTimelapseVisible(true)}');
+    expect(source).toContain('<PhotoTimelapse');
+    expect(source).not.toContain('TIMELAPSE_UNAVAILABLE');
+
+    expect(player).toContain('AccessibilityInfo.isReduceMotionEnabled()');
+    expect(player).toContain("AccessibilityInfo.addEventListener('reduceMotionChanged'");
+    expect(player).toContain("AppState.addEventListener('change'");
+    expect(player).toContain("if (state !== 'active') setPlaying(false);");
+    expect(player).toContain('reduceMotion !== false');
+    expect(player).toContain('if (reduceMotion !== false || frameCount < 2) return;');
+    expect(player).toContain('{reduceMotion === false ? (');
+    expect(player).toContain('if (next >= frameCount - 1) setPlaying(false);');
+    expect(player).toContain('accessibilityRole="adjustable"');
+    expect(player).toContain('animationType="none"');
+    expect(player).toContain('accessibilityLabel="Quiet photo time-lapse"');
+    expect(player).toContain('accessibilityViewIsModal');
+    expect(player).not.toContain('role="dialog"');
+    expect(player).not.toContain('aria-modal');
+    expect(player).toContain("{ name: 'decrement', label: 'Previous photo' }");
+    expect(player).toContain("{ name: 'increment', label: 'Next photo' }");
+    expect(player).toContain('On this phone only. No scores or automatic judgments.');
+    expect(player).not.toContain("track('");
     expect(source).not.toContain("Alert.alert('Quiet time-lapse'");
   });
 
