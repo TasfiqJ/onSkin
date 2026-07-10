@@ -141,9 +141,10 @@ Fresh verification through 2026-07-09:
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
   generated-packet, and human-E2E manifest checks; the Phase 5 native config
-  guard; Phase 9 release smoke, Phase 10 beta readiness, the Phase 10 beta
-  analytics audit, Phase 11 launch readiness, and launch ring gates; then
-  typecheck, lint, and tests.
+  guard; the Phase 7 core-loop and Phase 8 growth/store code gates; Phase 9
+  release smoke, Phase 10 beta readiness, the Phase 10 beta analytics audit,
+  Phase 11 launch readiness, and launch ring gates; then typecheck, lint, and
+  tests.
 - `npm run docs:device-support-policy-audit:check` passed as the
   non-mutating guard that keeps the V1 cutoff explicit: iOS 17.0+, Android 10 /
   API 29+, Android compile/target API 36, 360 x 640 as the launch-blocking Expo
@@ -192,6 +193,12 @@ Fresh verification through 2026-07-09:
   `npm run launch:verify`, so the root readiness sweep fails if the beta event
   schema, analytics allowlist, runtime `track(...)` calls, or privacy-safe
   property registry drift away from the closed-beta metrics contract.
+- `npm run phase7:check-core-loop` and
+  `npm run phase8:check-growth-store` are now part of
+  `npm run launch:verify`, so the root readiness sweep fails if core-loop
+  analytics, deferred surface gates, public link handling, review prompts,
+  share-card telemetry, store-support copy, or growth/store guard rails drift
+  away from the launch contracts.
 - `npm run docs:generated-packet-status-audit:check` passed as the
   non-mutating guard that committed generated phase packets do not record a
   dirty Git worktree, dirty-packet warning text, or stale recorded source/file
