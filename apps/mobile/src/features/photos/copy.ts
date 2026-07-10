@@ -101,10 +101,8 @@ export const PHOTO_COPY = {
     title: 'Your timeline is locked.',
     body: "Use your phone's unlock to keep your photos for your eyes only. They live on this phone, encrypted.",
     unlock: 'Unlock',
-    cloudTitle: 'Encrypted cloud backup',
-    cloudOff: 'Off. A separate choice. Photos stay on-device until you turn it on.',
-    cloudTradeoff:
-      'The most private option also means a lost phone can mean lost photos. Backup is encrypted and you can turn it off anytime.',
+    storageTitle: 'Device-only photo storage',
+    storageBody: 'Encrypted here. Cloud backup is not available in this build.',
   },
   // Calm capture reminder (design screen 09, docs/06 §5). Delivery is doc #7.
   reminder: {

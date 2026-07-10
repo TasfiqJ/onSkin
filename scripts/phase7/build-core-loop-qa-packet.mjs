@@ -86,7 +86,7 @@ const scenarios = [
   {
     surface: 'Photos',
     scenario:
-      'baseline capture renders locally; app lock gates timeline; cloud backup remains off by default',
+      'baseline capture renders locally; app lock gates timeline; settings and Progress show device-only storage with no backup control or automatic upload',
     evidenceKey: 'photosPrivacyQaPass',
     envKey: 'PHASE7_PHOTOS_PRIVACY_QA_PASS',
   },

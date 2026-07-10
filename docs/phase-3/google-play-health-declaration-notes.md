@@ -33,7 +33,8 @@ Potential sensitive/health data:
 
 - Skin goals/preferences.
 - Product shelf and routine data.
-- Photos, only if cloud backup is separately enabled.
+- Progress photos are not collected by a cloud backup service in current V1;
+  an explicit user-initiated single-photo share is the only off-device path.
 
 Potential sharing:
 

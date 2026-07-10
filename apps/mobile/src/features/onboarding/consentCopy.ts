@@ -56,19 +56,19 @@ export const PHOTO_CAPTURE_CONSENT = {
   what: 'Photos you choose to take with guided capture.',
   why: 'To build your private progress timeline on this device.',
   never:
-    'Uploaded, shared, sold, or used to train AI by default. Cloud backup is a separate choice.',
+    'Never uploaded automatically, sold, or used to train AI. You can choose to share a photo. Cloud backup is not available in this build.',
   footnote:
-    'No faceprint or biometric template is stored. With backup off, a lost phone can mean lost photos. You can withdraw anytime in Settings.',
+    'No faceprint or biometric template is stored. A lost phone can mean lost photos. You can withdraw anytime in Settings.',
   fullText:
     '[DRAFT. Pending legal review B-PRIVACY-COPY] Photo CAPTURE consent. Covers ' +
-    'on-device capture and on-device storage only; cloud backup is requested separately. ' +
-    'No biometric faceprint/template is computed or stored. With cloud backup off, device loss can mean photo loss.',
+    'on-device capture and on-device storage only; this build does not offer cloud backup. ' +
+    'No biometric faceprint/template is computed or stored. Device loss can mean photo loss.',
 } as const;
 
 /**
- * Photo CLOUD-BACKUP consent. A distinct, off-by-default opt-in (docs/01,
- * docs/06): uploading special-category images off-device is higher-risk, so it
- * is never bundled with capture. B-PRIVACY / B-PRIVACY-COPY own final wording.
+ * Reserved future CLOUD-BACKUP consent draft. It is intentionally not wired to
+ * runtime UI or persistence until encrypted upload/restore/deletion exists.
+ * B-PRIVACY / B-PRIVACY-COPY own final wording before any future exposure.
  */
 export const PHOTO_CLOUD_BACKUP_CONSENT = {
   version: CONSENT_COPY_VERSION,

@@ -105,6 +105,34 @@ require(existsSync(
 require(existsSync(
   resolve(root, 'apps/mobile/src/features/photos/useDetectedFaces.ts'),
 ), 'Web-safe face detection adapter fallback is missing.');
+const photoConsentSource = readFileSync(
+  resolve(root, 'apps/mobile/src/features/photos/consent.ts'),
+  'utf8',
+);
+const photoStoreSource = readFileSync(
+  resolve(root, 'apps/mobile/src/features/photos/store.ts'),
+  'utf8',
+);
+const rootLayoutSource = readFileSync(resolve(root, 'apps/mobile/src/app/_layout.tsx'), 'utf8');
+const settingsSource = readFileSync(resolve(root, 'apps/mobile/src/app/(tabs)/you.tsx'), 'utf8');
+require(/PHOTO_CLOUD_BACKUP_AVAILABLE\s*=\s*false/.test(photoConsentSource) &&
+  /clearUnavailableCloudBackupPreference/.test(photoConsentSource) &&
+  !/setCloudBackupEnabled/.test(
+    photoConsentSource,
+  ), 'Unavailable photo backup must have no runtime setter and must clear stale enablement.');
+require(/clearUnavailableCloudBackupPreference/.test(
+  rootLayoutSource,
+), 'Root startup must clear stale photo-backup enablement.');
+require(!/supabase\.from\(['"]photos['"]\)\.insert/.test(photoStoreSource) &&
+  !/getCloudBackupEnabled/.test(
+    photoStoreSource,
+  ), 'Local photo save must not mirror images or metadata to Supabase.');
+require(/Progress photo storage/.test(settingsSource) &&
+  /Cloud backup is not available in this build/.test(settingsSource) &&
+  !/accessibilityLabel=['"]Encrypted cloud backup['"]/.test(settingsSource) &&
+  !/cloud_backup_opted_in/.test(
+    settingsSource,
+  ), 'Settings must expose device-only photo storage without a backup toggle or opt-in event.');
 require(!existsSync(
   resolve(root, 'apps/mobile/src/features/native/camera/guidedSignals.ts'),
 ), 'Synthetic timer-driven camera quality signals must not be restored.');
@@ -176,10 +204,14 @@ for (const file of [
   'apps/mobile/app.base.json',
   'apps/mobile/app.config.js',
   'apps/mobile/eas.json',
+  'apps/mobile/src/app/_layout.tsx',
+  'apps/mobile/src/app/(tabs)/progress.tsx',
+  'apps/mobile/src/app/(tabs)/you.tsx',
   'apps/mobile/src/features/photos/analyzePhotoLighting.ts',
   'apps/mobile/src/features/photos/CaptureAnalysisProvider.native.tsx',
   'apps/mobile/src/features/photos/CaptureAnalysisProvider.tsx',
   'apps/mobile/src/features/photos/captureAnalysis.ts',
+  'apps/mobile/src/features/photos/consent.ts',
   'apps/mobile/src/features/photos/useCaptureAnalysis.ts',
   'apps/mobile/src/features/photos/useDetectedFaces.native.ts',
   'apps/mobile/src/features/photos/useDetectedFaces.ts',

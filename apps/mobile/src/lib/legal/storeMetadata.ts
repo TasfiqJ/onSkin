@@ -91,7 +91,7 @@ export const PHASE8_STORE_METADATA_PACKET = {
       '',
       'Use it to organize your product shelf, build AM and PM routines, check reviewed product-order conflicts, and compare your own progress photos under similar conditions.',
       '',
-      'No cosmetic scores. No age estimate. No medical condition screening. Photos stay on device by default, with separate controls for backup, export, and deletion.',
+      'No cosmetic scores. No age estimate. No medical condition screening. Photos stay encrypted on this device unless the user chooses to share one; cloud backup is not available in this build.',
       '',
       'Recommendations are separated from commerce, and paid links are disclosed when enabled.',
       '',

@@ -499,25 +499,23 @@ function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
         ) : null}
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel={PHOTO_COPY.lock.unlock}
           onPress={authenticate}
           className={`${lockFeedback ? 'mt-5' : 'mt-7'} flex-row items-center gap-2.5 rounded-pill px-8 py-4`}
           style={{ backgroundColor: colors.cream }}
         >
-          <Text style={{ color: BG, fontSize: 15 }}>⊡</Text>
           <Text className="font-sans-semibold" style={{ color: BG, fontSize: 16 }}>
             {PHOTO_COPY.lock.unlock}
           </Text>
         </Pressable>
       </View>
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => router.push('/(tabs)/you')}
+      <View
         className="mb-10 flex-row items-center gap-3.5 rounded-[18px] p-4"
         style={{ backgroundColor: 'rgba(244,239,231,0.07)', marginHorizontal: 4 }}
       >
         <View className="flex-1">
           <Text className="font-sans-bold" style={{ color: colors.cream, fontSize: 14 }}>
-            {PHOTO_COPY.lock.cloudTitle}
+            {PHOTO_COPY.lock.storageTitle}
           </Text>
           <Text
             style={{
@@ -527,11 +525,10 @@ function GalleryLock({ onUnlock }: { onUnlock: () => void }) {
               fontFamily: 'HankenGrotesk_400Regular',
             }}
           >
-            {PHOTO_COPY.lock.cloudOff}
+            {PHOTO_COPY.lock.storageBody}
           </Text>
         </View>
-        <Text style={{ color: 'rgba(244,239,231,0.5)', fontSize: 18 }}>›</Text>
-      </Pressable>
+      </View>
     </View>
   );
 }

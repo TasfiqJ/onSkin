@@ -7,7 +7,7 @@ These notes are for App Store Connect review information after legal/privacy rev
 
 ## Reviewer Summary Draft
 
-OnSkin is a skincare routine organization app. Users can save products to a private shelf, build AM/PM routines, receive conservative routine-order conflict flags, and compare their own progress photos. The app does not diagnose, treat, cure, prevent, or detect medical conditions. Photo progress has no score, skin age, grade, or disease detection. Photos stay on device by default unless the user separately enables encrypted cloud backup.
+OnSkin is a skincare routine organization app. Users can save products to a private shelf, build AM/PM routines, receive conservative routine-order conflict flags, and compare their own progress photos. The app does not diagnose, treat, cure, prevent, or detect medical conditions. Photo progress has no score, skin age, grade, or disease detection. Photos stay encrypted on the device unless the user explicitly shares one; cloud backup is not available in this build.
 
 ## Health/Medical Boundary
 
@@ -21,8 +21,8 @@ OnSkin is a skincare routine organization app. Users can save products to a priv
 ## Privacy Boundary
 
 - Health-adjacent profile/routine data is collected only after consent.
-- Photos remain on device by default.
-- Cloud backup is separate and off by default.
+- Photos remain encrypted on device unless the user explicitly shares one.
+- Cloud backup and automatic photo-metadata sync are unavailable in current V1.
 - Paid-link partner sharing is separate and off by default.
 - Ask cloud mode is separate, off by default, and deferred until vendor/legal review.
 - Account deletion is available in app.

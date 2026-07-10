@@ -83,13 +83,16 @@ Status: launch-blocked
   withdrawal rows; Codex can verify the Trend UI recovery branch locally with
   `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only`, but cannot prove the live
   ledger without Tas-owned Supabase/auth credentials.
-- Supabase consent-ledger and native QA for `photo_cloud_backup`: attach
-  staging/production proof that turning encrypted cloud backup on persists the
-  `photo_cloud_backup` consent row under RLS before the app shows the inline
-  device-loss tradeoff, and that failure leaves the switch off with route-owned
-  recovery. Codex verified the local Expo web fail-closed branch on 2026-07-08,
-  but cannot prove the live ledger or native encrypted-photo backup behavior
-  without Tas-owned Supabase/auth credentials and physical builds.
+- Do not configure or approve `photo_cloud_backup` for the current V1. The app
+  intentionally exposes no backup switch or setter because encrypted image
+  upload, restore, and remote deletion do not exist end to end. If backup is
+  funded later, Tas must first approve a reviewed implementation packet covering
+  client-side encrypted upload, offline/retry and Wi-Fi/charging policy,
+  cross-device restore, object plus metadata deletion, key recovery/loss
+  behavior, unbundled counsel-reviewed consent, privacy labels/DPIA, breach
+  response, network inspection, supported-device performance, and failure UI.
+  Only then should staging test `photo_cloud_backup` ledger/RLS behavior; never
+  flip a flag to expose the old partial path.
 - Apple Developer and App Store Connect app under cleared bundle ID.
 - Google Play Console app and OAuth clients under cleared package ID.
 - RevenueCat project, products, offerings, entitlements, and webhook secret.
@@ -233,24 +236,25 @@ Status: needs-device-verification
   the dataset/protocol rather than tuning only to the best examples.
 - Upgrade a device containing photos saved before this change. Confirm legacy
   timer-generated scores normalize without measured provenance, never drive a
-  reference comparison or `Aligned` detail claim, and are never included in the
-  consented metadata mirror. New records with a real measurement must retain
+  reference comparison or `Aligned` detail claim, and never leave the device.
+  New records with a real measurement must retain
   `qualitySource: post_capture_measurement` across restart.
-- Deploy `20260710000036_photo_quality_provenance.sql` to staging before testing
-  cloud-consented metadata. Confirm it nulls every pre-provenance quality/pose
-  field, accepts measured partial/null fields only with
+- Keep `20260710000036_photo_quality_provenance.sql` in the reviewed staging
+  migration sequence as future-schema hardening; deploying it does not enable
+  backup. Only after every D-086 prerequisite is approved may Tas test future
+  cloud-consented metadata. Confirm the migration nulls every pre-provenance
+  quality/pose field, accepts measured partial/null fields only with
   `quality_source = post_capture_measurement`, and rejects any non-null quality
   or pose value without that source. Archive the migration and negative insert
   evidence; repeat on production only through the reviewed release process.
-- Inspect the native capture-analysis run with network and observability logs:
+- Inspect the native capture-analysis and save run with network and observability logs:
   the captured file, face bounds, landmarks, local path, and luminance sample
   must not reach PostHog, Sentry, Supabase, or another vendor; no face
-  template/embedding may be computed or retained. With cloud backup off, no
-  photo or quality metadata may make a Supabase network attempt. With explicit
-  backup consent on, verify the metadata-only mirror contains only the documented
-  coarse score/head-angle fields and never image bytes, local paths, notes, face
-  bounds, or luminance samples. Confirm the temporary 64 px lighting sample is
-  deleted.
+  template/embedding may be computed or retained. Local photo save must make no
+  photo or quality-metadata Supabase request under any current UI state. Confirm
+  Settings and locked Progress show device-only storage with no actionable
+  backup switch, a stale pre-update `onskin.photos.cloudBackup=1` preference is
+  removed at startup, and the temporary 64 px lighting sample is deleted.
 - Force encrypted photo persistence to fail from the review screen. Verify the
   route keeps the captured image, shows inline `Photo not saved` recovery,
   permits retry/retake, and fires none of `photo_captured`,

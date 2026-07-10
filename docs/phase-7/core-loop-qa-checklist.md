@@ -48,7 +48,8 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 
 - Camera capture stores local file and timeline renders after restart.
 - App lock gates existing photo timeline.
-- Cloud backup is off by default and separate from capture consent.
+- Settings and locked Progress label photo storage as device-only; no cloud-backup control is exposed.
+- Saving a photo emits no automatic image or metadata request to Supabase under any current UI state.
 - Trend opt-in is hidden unless `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`.
 - No AI score/grade/age/percent wording appears.
 

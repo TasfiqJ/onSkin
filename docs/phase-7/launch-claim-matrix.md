@@ -8,8 +8,8 @@ Purpose: every public or in-app launch claim must map to product evidence. Claim
 | Owned-product shelf            | "Build a shelf from products you own."                             | Manual/search/scan/OCR intake, source/confidence metadata                    | Code present, catalog beta import still required     |
 | Ingredient conflict guidance   | "Reviewed shelf checks can spot pairings to separate."             | `reviewedBy` on every surfaced rule, source citation, legal review           | Blocked: starter rules are not reviewed              |
 | No AI skin score               | "No scores, grades, or age guesses."                               | Progress photo copy and claim-safety tests                                   | Code present                                         |
-| Photos local by default        | "Photos stay on device by default."                                | Local file store, cloud-backup default off, app-lock flow                    | Code present, native QA still required               |
-| Encrypted cloud backup         | "Optional encrypted backup."                                       | Separate opt-in, export/delete behavior, privacy policy                      | Blocked until policy/device QA                       |
+| Device-only photo storage      | "Photos stay encrypted on this device unless you share one."       | Local file store, no automatic upload path or backup control, app-lock flow  | Code present, native QA still required               |
+| Encrypted cloud backup         | No launch wording allowed                                          | Encrypted upload/retry, restore, remote deletion, consent, policy, device QA | Future only; unavailable in current V1               |
 | Payments                       | "Pro unlocks protected photo timeline and advanced routine tools." | RevenueCat offerings, restore, webhook, entitlement lifecycle                | Code present, strict store QA still required         |
 | Privacy controls               | "Export, delete, or withdraw consent from settings."               | Settings actions, Edge Functions, support URLs                               | Code present, external QA still required             |
 | Commerce independence          | "Recommendations are not ranked by commission."                    | No commerce fields in recommendation engine, visible disclosure when enabled | Code present, commerce hidden                        |
@@ -20,7 +20,7 @@ Purpose: every public or in-app launch claim must map to product evidence. Claim
 
 - Do not claim diagnosis, treatment, cure, prevention, clinical outcome, age estimate, percent improvement, severity score, or disease detection.
 - Do not claim "AI dermatologist", "medical advice", "doctor-reviewed" without named review evidence.
-- Do not claim photos are never uploaded if cloud backup or support upload can be enabled.
+- Do not imply cloud backup exists in current V1. Explicit user-initiated photo sharing is the only current off-device photo path.
 - Do not imply commerce is live while shoppable routes are gated.
 - Do not imply community posting or peer matching is live while moderation/legal gates are open.
 - Do not imply widgets/live activities are available until native builds pass device QA.

@@ -7,8 +7,6 @@ import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { isCommerceConsented } from '@/features/commerce/consent';
 import { setCommerceConsentLocal } from '@/features/commerce/store';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
-import { getCloudBackupEnabled, setCloudBackupEnabled } from '@/features/photos/consent';
-import { PHOTO_COPY } from '@/features/photos/copy';
 import { requestReviewAfterValue } from '@/features/review/prompt';
 import { applySettingsPrivacyChoice } from '@/features/settings/applyPrivacyChoice';
 import { deleteAccount, exportData, withdrawHealthDataConsent } from '@/features/settings/actions';
@@ -50,7 +48,6 @@ const POLICY_HINTS: Record<PolicyLinkKey, string> = {
 const POLICY_LINK_UNAVAILABLE_MESSAGE =
   'Link unavailable. We could not open this policy link. Please try again.';
 const PRIVACY_CHOICE_SAVE_FAILED_TITLE = 'Choice not saved';
-const CLOUD_BACKUP_TRADEOFF_TITLE = 'Encrypted cloud backup';
 const EXPORT_UNAVAILABLE_TITLE = 'Export unavailable';
 const EXPORT_UNAVAILABLE_MESSAGE =
   "We couldn't open the export sheet on this device. The temporary export file was removed.";
@@ -88,7 +85,7 @@ const PRIVACY_DIRECT_ENTRY_POLICY_TERMS_MARGIN = 48;
 const PRIVACY_DIRECT_ENTRY_POLICY_DATA_EXPORT_MARGIN = 144;
 
 type StaticRouteHref = Extract<Href, string>;
-type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'photo_cloud_backup' | 'app_lock';
+type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'app_lock';
 type PrivacyFeedbackPlacement = 'commerce' | 'privacy' | 'security';
 type InlineNotice = {
   title: string;
@@ -280,16 +277,13 @@ export default function YouScreen() {
   const { enabled: lockEnabled, setEnabled: setLockEnabled } = useAppLock();
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
-  const [savingPrivacy, setSavingPrivacy] = useState<
-    'marketing' | 'data_sharing' | 'photo_cloud_backup' | null
-  >(null);
+  const [savingPrivacy, setSavingPrivacy] = useState<'marketing' | 'data_sharing' | null>(null);
   const [privacyFeedback, setPrivacyFeedback] = useState<{
     key: PrivacyFeedbackKey;
     placement: PrivacyFeedbackPlacement;
     message: string;
   } | null>(null);
   const [savingAppLock, setSavingAppLock] = useState(false);
-  const [cloudBackupNotice, setCloudBackupNotice] = useState<InlineNotice | null>(null);
   const [privacyActionFeedback, setPrivacyActionFeedback] = useState<InlineNotice | null>(null);
   const [exportFeedback, setExportFeedback] = useState<InlineNotice | null>(null);
   const [dataRightsFeedback, setDataRightsFeedback] = useState<InlineNotice | null>(null);
@@ -314,11 +308,6 @@ export default function YouScreen() {
   const commerceConsent = useQuery({
     queryKey: ['commerceConsent'],
     queryFn: isCommerceConsented,
-    retry: 0,
-  });
-  const cloudBackup = useQuery({
-    queryKey: ['photo_cloud_backup'],
-    queryFn: getCloudBackupEnabled,
     retry: 0,
   });
   const { data: ent } = useEntitlement();
@@ -467,7 +456,6 @@ export default function YouScreen() {
     savingPrivacyRef.current = true;
     setSavingPrivacy(type);
     setPrivacyFeedback(null);
-    setCloudBackupNotice(null);
     try {
       await applySettingsPrivacyChoice({
         save: async () => {
@@ -506,43 +494,6 @@ export default function YouScreen() {
             await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
           }
         },
-      });
-    } finally {
-      savingPrivacyRef.current = false;
-      setSavingPrivacy(null);
-    }
-  }
-
-  async function setCloud(enabled: boolean) {
-    if (savingPrivacyRef.current) return;
-    savingPrivacyRef.current = true;
-    setSavingPrivacy('photo_cloud_backup');
-    setPrivacyFeedback(null);
-    setCloudBackupNotice(null);
-    try {
-      await applySettingsPrivacyChoice({
-        save: async () => {
-          await setCloudBackupEnabled(enabled);
-        },
-        onSaved: () => {
-          qc.setQueryData(['photo_cloud_backup'], enabled);
-          if (enabled) {
-            track('cloud_backup_opted_in');
-            // Surface the device-loss tradeoff honestly when turning backup ON (docs/06 §6).
-            setCloudBackupNotice({
-              title: CLOUD_BACKUP_TRADEOFF_TITLE,
-              message: PHOTO_COPY.lock.cloudTradeoff,
-            });
-          }
-          setPrivacyFeedback(null);
-        },
-        onFailure: () =>
-          setPrivacyFeedback({
-            key: 'photo_cloud_backup',
-            placement: 'security',
-            message: privacyChoiceUserMessage(),
-          }),
-        onSettled: () => qc.invalidateQueries({ queryKey: ['photo_cloud_backup'] }),
       });
     } finally {
       savingPrivacyRef.current = false;
@@ -848,18 +799,13 @@ export default function YouScreen() {
           </Row>
           {renderPrivacyFeedback('app_lock', 'security')}
           <Row
-            label="Encrypted cloud backup"
-            hint="Off by default. A separate choice. Photos stay on this phone until you turn it on."
+            label="Progress photo storage"
+            hint="Encrypted on this device. Cloud backup is not available in this build."
           >
-            <Toggle
-              accessibilityLabel="Encrypted cloud backup"
-              value={cloudBackup.data ?? false}
-              disabled={savingPrivacy === 'photo_cloud_backup'}
-              onChange={(v) => void setCloud(v)}
-            />
+            <Text variant="bodySm" tone="muted" className="text-right">
+              Device only
+            </Text>
           </Row>
-          {cloudBackupNotice ? <InlineNoticeCard notice={cloudBackupNotice} /> : null}
-          {renderPrivacyFeedback('photo_cloud_backup', 'security')}
         </Card>
 
         {privacyDirectEntry ? null : (

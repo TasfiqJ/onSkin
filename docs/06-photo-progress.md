@@ -66,7 +66,7 @@ _The on-device, privacy-first photo-progress feature · guided capture with face
 **It is** the guided, standardised, on-device photo-progress feature. Concretely, it:
 
 - captures **standardised** facial photos with real-time **guidance** (alignment, distance, head-tilt, lighting) so successive photos are comparable;
-- stores them **on-device by default** (privacy-first), encrypted, with cloud backup only on explicit opt-in;
+- stores them **on-device** (privacy-first) and encrypted; cloud backup is a future target, not a current V1 capability;
 - presents an **on-device timeline** and a **before/after slider + side-by-side comparison** (the Progress tab);
 - is the **emotional payoff** of the app and a primary retention surface;
 - ships **Phase 1 with no AI claims** (docs/00).
@@ -75,10 +75,19 @@ _The on-device, privacy-first photo-progress feature · guided capture with face
 
 - **not an AI skin-score / analyzer** — explicitly, at launch (docs/00); it gives no number, grade, or "skin age."
 - **not a diagnostic or medical-device tool** — it never diagnoses or claims to detect conditions; it is a personal record (claim-safe, docs/02 §9).
-- **not a cloud face-upload service** — on-device is the default; cloud is opt-in only.
+- **not a cloud face-upload service** — current V1 storage is device-only unless the user explicitly shares one photo.
 - **not a faceprint/biometric-identification system** — on-device face detection is for _framing only_; no template is ever stored (BIPA avoidance, docs/00/01).
 
 **Philosophy: honest, calm, your-own-eyes, private.** The feature's credibility comes from _not_ overclaiming: it shows you genuinely-comparable photos and lets you judge, it acknowledges phone-photo limits, it never scores you, and it never moves your face off your device without explicit permission. This is the brand's anti-hazard-score, privacy-as-trust thesis applied to the most sensitive data the app touches.
+
+> **Current implementation boundary (D-086):** encrypted cloud backup is not
+> shipped. Current builds expose no backup setter or actionable switch, remove
+> stale local enablement at startup, and perform no automatic Supabase image or
+> photo-metadata insert from local save. Settings and locked Progress show
+> device-only storage. The cloud consent type, private bucket, and schema below
+> are reserved target-state scaffolding only; they must not be described as a
+> working feature until encrypted upload, retry, restore, deletion, reviewed
+> consent, and physical-device QA ship together.
 
 ### 2. The science of valid progress photography (the guided-capture rationale)
 
@@ -176,7 +185,7 @@ create index on public.photos (user_id, series, taken_local_date);
 -- Owner-only RLS unchanged (docs/01 §3). head_* are coarse pose angles for alignment QA — NOT a biometric template.
 ```
 
-**On-device storage & encryption.** Image bytes are written to the **app's private sandbox**, **client-side encrypted** (docs/00 §7), referenced by `local_uri`; they are **never uploaded** while `local_only = true`. The **gallery is gated by an opt-in biometric app-lock** (`expo-local-authentication`, docs/01) — Face ID/Touch ID to open the Progress tab. **Cloud backup** (optional) sets `storage_path`, uploads the encrypted image to the private bucket on a **queued, Wi-Fi/charging** job (docs/00 §6), and requires the **separate `photo_cloud_backup` consent** (docs/01 §4). Only metadata (scores, dates, pose) may sync even when images don't — _or nothing_, if the user opts out entirely.
+**On-device storage & encryption.** Image bytes are written to the **app's private sandbox**, **client-side encrypted** (docs/00 §7), referenced by `local_uri`, and current local saves do not upload image bytes or metadata. The **gallery is gated by an opt-in biometric app-lock** (`expo-local-authentication`, docs/01) — Face ID/Touch ID to open the Progress tab. **Future target only:** a complete cloud-backup implementation would set `storage_path`, upload the client-side encrypted image to the private bucket on a queued Wi-Fi/charging job (docs/00 §6), require separate `photo_cloud_backup` consent, restore across devices, and delete remote objects and metadata. None of that path is exposed in current V1.
 
 > **Decision-log notes (DECISIONS.md):** **D-028** — photos are **`local_only` by default**, **client-side encrypted**, and **no faceprint is ever computed/stored** (on-device face detection for framing only); **D-029** — guided-capture **quality is scored (`alignment_score`/`lighting_score`) and surfaced, but low quality is flagged, never blocked** — the user always controls capture; **D-030** — **no AI scoring/grading at launch**; any Phase-2 cloud analysis (doc #12) is a separate, consented, fairness-validated service and is **off** until then. Anything touching the facial-image DPIA, the consent copy, and the "never leaves your device" marketing claim belongs in **BLOCKERS.md** under **B-PRIVACY**.
 
@@ -186,7 +195,7 @@ Facial images are the most sensitive data the app handles, and this feature's de
 
 - **The legal landscape.** Facial images are sensitive under **BIPA, CCPA/CPRA, GDPR Art. 9, and Washington MHMDA**, and become **biometric identifiers** specifically when a **faceprint/template is extracted for identification** (Finnegan, on cosmetics AI facial-skin-analysis: facial images processed for analysis/identification "may be treated as biometric data… requiring more onerous legal obligations"; BIPA requires written informed consent, retention schedules, no sale, and carries a **private right of action**).
 - **OnSkin's posture avoids the worst trigger.** On-device face detection is **for framing only**; **no faceprint/template is ever computed or stored** → this avoids BIPA's biometric-identifier trigger (docs/00 §7, docs/01 §3). The coarse `head_*` pose angles are alignment QA, not an identification template.
-- **But skin photos are still health-inference data**, so they are treated as **Art. 9 / MHMDA** data requiring **explicit, unbundled consent**: a dedicated **`photo_capture` consent at first camera use**, and a **separate `photo_cloud_backup` consent** (default off) because uploading special-category images off-device is higher-risk (docs/01 §4 — both already in the `consents` enum).
+- **But skin photos are still health-inference data**, so current capture requires dedicated **`photo_capture` consent at first camera use**. The reserved **`photo_cloud_backup` consent** remains unwired until a future complete backup path is reviewed because uploading special-category images off-device is higher-risk (docs/01 §4).
 - **`local_only` eliminates the breach target.** Because image bytes never leave the device by default, **there is no server-side face-photo trove to breach** — the strongest possible posture for face data, and a direct contrast with the AI-score apps that upload faces to servers (vendor face/biometric breaches are a live 2026 risk). _You cannot leak what you never collect._
 - **Defense in depth:** client-side **encryption**; **owner-only RLS** + private bucket (folder = uid) for any cloud-opted photos with **signed URLs**; the optional **biometric app-lock** on the gallery; **export** includes photo metadata + signed URLs for cloud photos (GDPR Art. 20, docs/01 §4); **deletion** cascades and removes any cloud objects (Apple/Google in-app deletion requirements, docs/01 §4); an optional **`face_region_redacted`** crop/blur for sharing a photo without the full face.
 - **The earned claim.** This architecture is what lets the brand honestly say _"your photos never leave your device and never train AI"_ (docs/00) — the privacy-as-trust promise on the welcome and paywall screens, made real rather than asserted.
@@ -216,10 +225,10 @@ Design tokens (docs/00 §8, D-005, docs/02 §7): Instrument Serif (the "Progress
 
 - **Capture pipeline:** `react-native-vision-camera` + a **face-detection frame processor** (`react-native-vision-camera-face-detector`, ML Kit; or a custom Swift Vision plugin on iOS) for alignment/pose/quality; **on-device luminance/white-balance** from the frame buffer for the lighting check; **auto-capture** when all tolerances are met; the **ghost overlay** composited over the preview (docs/00 §4).
 - **Comparison UI:** the **slider** as a Reanimated gesture with a Skia/clip-path reveal; the **film strip** as a virtualised list; the optional time-lapse as a frame sequence.
-- **Storage:** **on-device encrypted files** in the app sandbox (`local_uri`); compressed ~150–400KB each, ~50–200/user/year (docs/00); **cloud opt-in** uploads to the private Supabase bucket on a Wi-Fi/charging queue, with **Cloudflare R2/S3 behind signed URLs** as the scale fallback if Supabase egress grows (docs/00).
+- **Storage:** **on-device encrypted files** in the app sandbox (`local_uri`); compressed ~150–400KB each, ~50–200/user/year (docs/00). A future cloud implementation may use the private Supabase bucket on a Wi-Fi/charging queue, with Cloudflare R2/S3 behind signed URLs as a scale fallback, but current V1 exposes no backup path.
 - **Security:** client-side encryption; biometric app-lock (`expo-local-authentication`) on the gallery; owner-only RLS; signed URLs for any cloud photo.
 - **Schema & decisions:** the `photos` extensions above; **D-028/029/030**; **B-PRIVACY** (DPIA, consent copy, legal sign-off of the "never leaves your device" claim).
-- **PostHog instrumentation — metadata only, never image data:** `photo_captured` (with on-device flag, `alignment_score`/`lighting_score`), `first_photo_captured`, `photo_baseline_added`, `comparison_viewed`, `timeline_viewed`, `capture_reminder_tapped`, `cloud_backup_opted_in`, `reference_reset`. Wire `first_photo_captured` and `photo_baseline_added` as key activation-depth signals (they correlate with the retention moat).
+- **PostHog instrumentation — metadata only, never image data:** current `photo_captured` sends only the on-device flag; quality scores/verdicts are excluded. `first_photo_captured`, `photo_baseline_added`, `comparison_viewed`, `timeline_viewed`, `capture_reminder_tapped`, and `reference_reset` remain content-free activation signals. `cloud_backup_opted_in` is reserved and must not be emitted while backup is unavailable.
 - **Performance:** the frame processor must sustain a smooth preview (the docs/00 spike validates `vision-camera` frame-processing on-device; if it underperforms, isolate the camera module — docs/00's fallback note); comparisons and the timeline are local and fast.
 
 ---
@@ -263,7 +272,7 @@ The photo feature sits at the intersection of emotion, trust, and retention — 
 1. **Ship guided capture + the slider/timeline with zero AI claims, on-device-first** — exactly the sequencing docs/00 prescribes; it is complete and compelling without AI.
 2. **Make guided capture genuinely standardising** — the ghost overlay, alignment/distance/head-pose guide, real-time coaching, and the on-device lighting check — because comparability is the entire value (and validate frame-processor performance early, per docs/00's spike).
 3. **Auto-capture when aligned, flag (never block) low quality** (D-029), and keep the user in control.
-4. **Default to `local_only` + client-side encryption + no faceprint** (D-028); gate the gallery with an opt-in biometric app-lock; cloud backup is a separate, off-by-default consent.
+4. **Default to `local_only` + client-side encryption + no faceprint** (D-028); gate the gallery with an opt-in biometric app-lock; keep cloud backup unavailable until a complete separately consented implementation passes D-086.
 5. **Set honest expectations and compare over a cycle+** — capture ~weekly, frame change as gradual (8–12 weeks), and use the photo as the antidote to quitting too soon.
 6. **Keep it calm and score-free** (D-030): no numbers, no "skin age," celebrate consistency, your own eyes — and decouple photos from the daily streak.
 7. **Be honest about phone-photo limits** — white-light only, tone/erythema harder to judge especially in darker skin — and adopt the Monk scale for any tone reference (fairness).
@@ -281,7 +290,7 @@ The photo feature sits at the intersection of emotion, trust, and retention — 
 - **Progress tracking can create pressure or shame** when it tracks an output the user doesn't fully control; the calm, no-scores, consistency-celebrating framing (and decoupling from the daily streak) is a design requirement, not a nicety. _High confidence — this is load-bearing._
 - **The no-AI-score stance is a deliberate choice competitors will pressure** (they tout scores as "objective"); hold the line — the scores are unvalidated, lighting-confounded, and fairness-fraught, and the honest position is the more durable trust asset. _Medium-high confidence; revisit only if a credible, consented, fairness-validated analysis becomes possible (doc #12)._
 - **Facial images are legally sensitive**, and although the no-faceprint + on-device design avoids BIPA's worst trigger, the DPIA, the unbundled consents, and the "never leaves your device" marketing claim require legal sign-off (B-PRIVACY); the claim must be literally true in implementation. _High confidence that this review is required._
-- **On-device-only storage carries a device-loss / no-backup tradeoff** — the most private option also means a lost phone can mean lost photos; the opt-in encrypted cloud backup mitigates this but re-introduces a (consented, encrypted, breach-surface) server copy. Surface this tradeoff honestly to the user. _High confidence on the tradeoff being real._
+- **On-device-only storage carries a device-loss / no-backup tradeoff** — the most private option also means a lost phone can mean lost photos. Current V1 surfaces that limitation instead of claiming an incomplete backup. A future complete opt-in backup could mitigate loss but would re-introduce a consented, encrypted breach surface. _High confidence on the tradeoff being real._
 - **On-device face-detection/frame-processor performance must be verified on real devices** (docs/00 flags isolating the camera module if RN underperforms); auto-capture tolerances need device tuning. _Medium confidence pending device testing._
 - **A visual progress feature is inherently less useful to blind/low-vision users**; the honest goal is fully operable capture/navigation (audio + haptic cues, accessible timeline), not pretending the comparison itself is non-visual. _High confidence; an honest accessibility limit._
 - **The AI-skin-score competitive race continues** (TroveSkin, SKOR, Skin Genius, Perfect Corp, and new entrants); the defensible wedge is the **honest, standardised, on-device, your-own-eyes** combination plus the privacy posture, revisited periodically. _Medium confidence._

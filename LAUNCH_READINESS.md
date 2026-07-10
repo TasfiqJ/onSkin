@@ -18,6 +18,16 @@ clearance and not a real launch catalog.
 
 Fresh verification through 2026-07-10:
 
+- Progress photo backup now fails closed at the capability boundary. The prior
+  toggle could save consent and mirror coarse metadata but did not upload,
+  restore, or remotely delete encrypted photo bytes. Current local photo saves
+  perform no automatic Supabase insert, startup removes stale local backup
+  enablement, no runtime setter or opt-in analytics emitter remains, and
+  Settings plus locked Progress show device-only storage without an actionable
+  backup control. `photo_cloud_backup` remains reserved future scaffolding, not
+  a shipped feature. Manifest gate: `Device-only Progress photo storage`.
+  Evidence:
+  `test-results/human-e2e/2026-07-10/progress-device-only-backup-current/`.
 - Production release config now fails closed on unresolved Phase 3 review.
   When either `APP_VARIANT` or `EXPO_PUBLIC_APP_ENV` is `production`, Expo
   config, `phase2:check-env`, and the dedicated Phase 3 release checker require

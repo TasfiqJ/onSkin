@@ -129,8 +129,10 @@ combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
 `Progress quality states and support-floor save recovery` gate in
-`test-results/human-e2e/2026-07-10/progress-capture-analysis-current/`. The baseline
-still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
+`test-results/human-e2e/2026-07-10/progress-capture-analysis-current/`, and the
+`Device-only Progress photo storage` gate in
+`test-results/human-e2e/2026-07-10/progress-device-only-backup-current/`. The
+baseline still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also
 passed 49 / 49 routes with zero failures. Evidence includes
@@ -700,7 +702,10 @@ Exit criteria:
   or auto-capture;
 - photo files are encrypted/local by default;
 - no faceprint/template is stored;
-- optional cloud backup is behind explicit consent if included.
+- V1 exposes no cloud-backup control or automatic photo-metadata/image upload;
+- optional cloud backup remains excluded unless encrypted upload, retry,
+  cross-device restore, object/metadata deletion, unbundled reviewed consent,
+  network inspection, and physical-device QA ship together.
 
 ## B-NOTIF-VERIFY - Physical notification verification
 

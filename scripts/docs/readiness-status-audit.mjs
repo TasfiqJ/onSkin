@@ -60,6 +60,8 @@ const requiredManifestNeedles = [
   'progress-timelapse-current',
   'Progress quality states and support-floor save recovery',
   'progress-capture-analysis-current',
+  'Device-only Progress photo storage',
+  'progress-device-only-backup-current',
 ];
 
 const requiredLaunchCommands = [

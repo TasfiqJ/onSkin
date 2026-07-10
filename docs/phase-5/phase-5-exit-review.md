@@ -24,8 +24,10 @@ Completed in repo:
   64 px local luminance/balance sample. Timer-generated readiness and quality
   scores were removed; no-face, multiple-face, timeout, and unavailable states
   fail closed, and low/unavailable quality never blocks Save. Measured records
-  carry local provenance; legacy timer scores are excluded from reference
-  comparison, detail labels, and cloud-consented metadata mirroring. An additive
+  carry local provenance; legacy timer scores are excluded from reference and
+  detail labels. Local photo save performs no automatic Supabase image or
+  metadata insert, and current Settings/locked Progress expose device-only
+  storage with no backup setter or switch. An additive
   database migration clears pre-provenance server values and rejects future
   quality/pose metadata without `post_capture_measurement` provenance.
 - Photo timeline/detail/compare render through encrypted-aware image loading.

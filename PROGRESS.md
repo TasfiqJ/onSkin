@@ -6,6 +6,23 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Removed the misleading encrypted-cloud-backup exposure from Progress. The
+  prior Settings toggle could persist consent and mirror coarse metadata but
+  did not upload encrypted photo bytes, restore a timeline, or prove remote
+  deletion. The current build now has no backup setter or opt-in analytics
+  emitter, clears stale local enablement at startup, performs no automatic
+  Supabase insert from local photo save, and shows a non-interactive
+  `Device only` storage state in Settings plus the locked Progress surface.
+  Future `photo_cloud_backup` consent/schema scaffolding remains inert under
+  D-086 until encrypted upload, retry, restore, deletion, privacy review, and
+  physical-device QA ship together. Eight focused photo, consent, app-lock,
+  settings, route, and store-metadata files pass 63 tests with mobile typecheck
+  and lint. Human-simulated Expo web verifies the visible Settings and locked
+  Progress states at 360 x 640 and 390 x 844 with no backup control, dialog,
+  navigation handoff, backup event, analytics/photo-backend request, unexpected
+  log, or horizontal overflow; the stale preference is removed at startup and
+  app-lock controls remain 48-56 px.
+
 - Replaced fabricated Progress camera readiness and quality values with real
   local post-capture analysis. A fresh native build now uses ML Kit static-photo
   face detection for framing/pose and a temporary 64 px luminance sample for

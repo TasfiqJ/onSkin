@@ -6,7 +6,6 @@ import { PHOTO_SERIES } from '@onskin/types';
 import { supabase } from '@/lib/supabase/client';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
-import { getCloudBackupEnabled } from './consent';
 import {
   decryptPhotoNote,
   deleteEncryptedPhoto,
@@ -20,8 +19,8 @@ import type { PhotoMeta, PhotoQualitySource } from './timeline';
 /**
  * Local-first photo store. Metadata is encrypted before it enters AsyncStorage;
  * image bytes are encrypted into app-private `.onskinphoto` envelopes and never
- * mirrored to Supabase while `localOnly` is true. Notes are encrypted separately
- * inside the encrypted metadata envelope for legacy migration safety.
+ * uploaded or mirrored by local save. Notes are encrypted separately inside the
+ * encrypted metadata envelope for legacy migration safety.
  */
 const KEY = 'onskin.photos.v1';
 const PHOTO_SERIES_SET = new Set<PhotoSeries>(PHOTO_SERIES);
@@ -210,40 +209,6 @@ async function persist(items: PhotoRecord[]): Promise<void> {
   await setPrivateItem(KEY, JSON.stringify(stored));
 }
 
-/**
- * Best-effort metadata-only mirror after explicit cloud-backup opt-in. Image
- * paths, notes, and bytes are never sent by this path.
- */
-async function mirror(rec: PhotoRecord): Promise<void> {
-  try {
-    if (!(await getCloudBackupEnabled())) return;
-    const { data: u } = await supabase.auth.getUser();
-    if (!u.user?.id) return;
-    await supabase.from('photos').insert({
-      id: rec.id,
-      user_id: u.user.id,
-      local_only: true,
-      storage_path: null,
-      series: rec.series,
-      reference_photo_id: rec.referencePhotoId,
-      capture_session_id: rec.captureSessionId,
-      taken_at: rec.takenAt,
-      taken_local_date: rec.takenLocalDate,
-      time_of_day: rec.timeOfDay,
-      alignment_score: rec.qualitySource === 'post_capture_measurement' ? rec.alignmentScore : null,
-      lighting_score: rec.qualitySource === 'post_capture_measurement' ? rec.lightingScore : null,
-      head_roll: rec.qualitySource === 'post_capture_measurement' ? rec.headRoll : null,
-      head_yaw: rec.qualitySource === 'post_capture_measurement' ? rec.headYaw : null,
-      head_pitch: rec.qualitySource === 'post_capture_measurement' ? rec.headPitch : null,
-      quality_source: rec.qualitySource,
-      notes: null,
-      is_encrypted: rec.isEncrypted,
-    });
-  } catch {
-    /* best-effort until the backend is configured */
-  }
-}
-
 export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
   const items = await loadPhotos();
   const series = input.series ?? 'front';
@@ -287,7 +252,6 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
     keyId: encrypted?.keyId ?? null,
   };
   await persist([rec, ...items]);
-  void mirror(rec);
   return rec;
 }
 

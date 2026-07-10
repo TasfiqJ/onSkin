@@ -855,3 +855,17 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   mirroring. Real-time guidance and auto-capture remain unimplemented and must
   not appear in launch copy unless a separately reviewed, calibrated, and
   device-tested frame pipeline ships.
+
+- **D-086 - 2026-07-10 - Progress photo cloud backup stays unavailable until it
+  works end to end.** This supersedes the metadata-mirror allowance in D-039 and
+  D-085. A local consent flag and coarse Supabase metadata insert did not back up
+  encrypted photo bytes, restore a timeline, or prove remote deletion, so the
+  live-looking backup toggle and `cloud_backup_opted_in` emitter were misleading.
+  The current app has no backup setter, clears stale local enablement at startup,
+  performs no automatic Supabase write from local photo save, and labels storage
+  as device-only in Settings and locked Progress. The reserved
+  `photo_cloud_backup` consent type and private-bucket schema remain future
+  scaffolding only. Backup may return only with client-side encrypted upload,
+  retry/queue semantics, cross-device restore, object/metadata deletion,
+  unbundled reviewed consent, no-plaintext network inspection, supported-device
+  performance evidence, and honest recovery UI in the same reviewed release.

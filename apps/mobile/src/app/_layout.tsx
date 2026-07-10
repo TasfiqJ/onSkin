@@ -10,6 +10,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { configureNotifications } from '@/features/notifications/deliver';
+import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
 import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { OfflineSync } from '@/lib/offline/OfflineSync';
@@ -30,6 +31,10 @@ export default function RootLayout() {
   // Set the local-notification handler + Android channel once at startup (docs/07 §9).
   useEffect(() => {
     void configureNotifications();
+  }, []);
+
+  useEffect(() => {
+    void clearUnavailableCloudBackupPreference();
   }, []);
 
   if (!fontsLoaded) return null;

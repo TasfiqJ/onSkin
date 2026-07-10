@@ -356,13 +356,15 @@ describe('Settings route contracts', () => {
     expect(source).not.toContain('onPress={() => {}}');
   });
 
-  it('keeps You tab privacy and security switches on the 44px shared control', () => {
+  it('keeps active privacy/security choices on shared controls and backup device-only', () => {
     const source = readAppRoute('(tabs)/you.tsx');
 
     expect(source).toContain('ToggleSwitch');
     expect(source).toContain('accessibilityLabel="App lock"');
-    expect(source).toContain('accessibilityLabel="Encrypted cloud backup"');
     expect(source).toContain('accessibilityLabel="Marketing emails"');
+    expect(source).toContain('label="Progress photo storage"');
+    expect(source).toContain('Device only');
+    expect(source).not.toContain('accessibilityLabel="Encrypted cloud backup"');
     expect(source).not.toContain('<Switch');
     expect(source).not.toContain('onValueChange');
   });

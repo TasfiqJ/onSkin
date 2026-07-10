@@ -46,29 +46,19 @@ describe('settings privacy choice application', () => {
     expect(deps.onSettled).toHaveBeenCalledTimes(1);
   });
 
-  it('keeps You-tab privacy toggles on the persistence-first helper with local-first commerce', () => {
+  it('keeps active privacy toggles persistence-first and unavailable backup non-interactive', () => {
     const source = readSource('app/(tabs)/you.tsx');
-    const saveCloudIndex = source.indexOf('await setCloudBackupEnabled(enabled);');
-    const cloudQueryIndex = source.indexOf("qc.setQueryData(['photo_cloud_backup'], enabled);");
-    const cloudAnalyticsIndex = source.indexOf("track('cloud_backup_opted_in');");
 
     expect(source).toContain('applySettingsPrivacyChoice');
     expect(source).toContain(
-      "type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'photo_cloud_backup' | 'app_lock';",
+      "type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'app_lock';",
     );
     expect(source).toContain(
       "type PrivacyFeedbackPlacement = 'commerce' | 'privacy' | 'security';",
     );
     expect(source).toContain("const PRIVACY_CHOICE_SAVE_FAILED_TITLE = 'Choice not saved';");
     expect(source).toContain('const [privacyFeedback, setPrivacyFeedback] = useState<{');
-    expect(source).toContain('const [cloudBackupNotice, setCloudBackupNotice]');
     expect(source).toContain('const [savingAppLock, setSavingAppLock] = useState(false);');
-    expect(source).toContain("const CLOUD_BACKUP_TRADEOFF_TITLE = 'Encrypted cloud backup';");
-    expect(source).toContain('setCloudBackupNotice({');
-    expect(source).toContain('message: PHOTO_COPY.lock.cloudTradeoff');
-    expect(source).toContain(
-      '{cloudBackupNotice ? <InlineNoticeCard notice={cloudBackupNotice} /> : null}',
-    );
     expect(source).toContain('function renderPrivacyFeedback(');
     expect(source).toContain('async function setAppLockChoice(enabled: boolean)');
     expect(source).toContain("renderPrivacyFeedback('app_lock', 'security')");
@@ -85,15 +75,15 @@ describe('settings privacy choice application', () => {
     expect(source).not.toContain("Alert.alert('Encrypted cloud backup'");
     expect(source).toContain("disabled={savingPrivacy === 'marketing'}");
     expect(source).toContain("disabled={savingPrivacy === 'data_sharing'}");
-    expect(source).toContain("disabled={savingPrivacy === 'photo_cloud_backup'}");
     expect(source).toContain("if (type !== 'data_sharing') throw error;");
     expect(source).not.toContain("if (type === 'data_sharing' && granted)");
     expect(source).not.toContain('await setCommerceConsentLocal(false).catch(() => undefined);');
-    expect(saveCloudIndex).toBeGreaterThanOrEqual(0);
-    expect(cloudQueryIndex).toBeGreaterThan(saveCloudIndex);
-    expect(cloudAnalyticsIndex).toBeGreaterThan(saveCloudIndex);
-    expect(source).not.toContain(
-      "qc.setQueryData(['photo_cloud_backup'], enabled);\n    if (enabled) {",
-    );
+    expect(source).toContain('label="Progress photo storage"');
+    expect(source).toContain('Cloud backup is not available in this build.');
+    expect(source).toContain('Device only');
+    expect(source).not.toContain('setCloudBackupEnabled');
+    expect(source).not.toContain('getCloudBackupEnabled');
+    expect(source).not.toContain("track('cloud_backup_opted_in')");
+    expect(source).not.toContain('accessibilityLabel="Encrypted cloud backup"');
   });
 });

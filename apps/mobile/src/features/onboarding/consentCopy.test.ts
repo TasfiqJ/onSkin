@@ -22,10 +22,6 @@ const visibleConsentCopy = [
   PHOTO_CAPTURE_CONSENT.why,
   PHOTO_CAPTURE_CONSENT.never,
   PHOTO_CAPTURE_CONSENT.footnote,
-  PHOTO_CLOUD_BACKUP_CONSENT.what,
-  PHOTO_CLOUD_BACKUP_CONSENT.why,
-  PHOTO_CLOUD_BACKUP_CONSENT.never,
-  PHOTO_CLOUD_BACKUP_CONSENT.footnote,
 ];
 
 describe('visible consent copy', () => {
@@ -43,9 +39,9 @@ describe('visible consent copy', () => {
       .join(' ')
       .toLowerCase();
 
-    expect(visibleCaptureCopy).toContain('cloud backup is a separate choice');
-    expect(visibleCaptureCopy).toContain('backup off');
+    expect(visibleCaptureCopy).toContain('cloud backup is not available in this build');
     expect(visibleCaptureCopy).toContain('lost phone');
     expect(PHOTO_CAPTURE_CONSENT.fullText.toLowerCase()).toContain('device loss');
+    expect(PHOTO_CLOUD_BACKUP_CONSENT.fullText.toLowerCase()).toContain('off until');
   });
 });

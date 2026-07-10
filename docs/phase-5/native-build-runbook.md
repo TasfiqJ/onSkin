@@ -17,10 +17,12 @@ not valid capture-analysis evidence. Create a fresh binary; do not deliver the
 change as an OTA-only update. The repo-owned platform adapter intentionally
 keeps Expo web from loading ML Kit, while native autolinking must resolve
 `RNMLKitFaceDetection` and `expo-image-manipulator` on both platforms.
-Deploy the additive photo-quality provenance migration to staging before
-testing the consented metadata mirror. The database must clear old synthetic
+Deploy the additive photo-quality provenance migration to staging before any
+future server-side photo metadata work. The database must clear old synthetic
 quality fields and reject quality/pose values without
-`post_capture_measurement` provenance.
+`post_capture_measurement` provenance. Current V1 must show device-only photo
+storage, expose no backup switch, clear stale enablement, and make no automatic
+photo image or metadata request during local save.
 
 ## Build Profiles
 

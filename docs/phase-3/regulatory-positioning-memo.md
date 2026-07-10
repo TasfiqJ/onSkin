@@ -30,8 +30,8 @@ Planned public V1 classification:
 - Cosmetic routine and personal organization.
 - User-entered shelf/routine tracking.
 - Ingredient/routine sequencing support using conservative rules.
-- Photo progress capture and comparison without scores, diagnosis, disease detection, or cloud analysis by default.
-- Optional, separate, revocable consents for health-data collection, photo cloud backup, Ask OnSkin cloud mode, trend analysis, commerce partner sharing, and marketing.
+- Photo progress capture and comparison without scores, diagnosis, disease detection, cloud analysis, or cloud backup in current V1.
+- Optional, separate, revocable consents for health-data collection, Ask OnSkin cloud mode, trend analysis, commerce partner sharing, and marketing. Photo cloud-backup consent remains reserved and unwired unless a future complete implementation is reviewed.
 
 Not launch classification:
 

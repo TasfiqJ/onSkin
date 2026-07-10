@@ -6,6 +6,12 @@ Date: 2026-07-05
 
 This pass reviewed the Expo mobile app, Supabase migrations, Edge Functions, phase 9 release gates, local storage, analytics redaction, subscription flows, photo handling, and launch evidence docs. The codebase already had meaningful RLS, storage, observability, payment, and claims-safety scaffolding. I fixed or hardened one hundred twenty-six implementation gaps found during the pass:
 
+Current-state correction (2026-07-10): D-086 supersedes the cloud-backup part
+of SEC-P2-069. The persistence-first toggle was still misleading because no
+encrypted image upload/restore/deletion path existed. Current V1 has no backup
+setter, switch, automatic photo-metadata insert, or opt-in emitter; startup
+removes stale enablement and the UI labels photo storage as device-only.
+
 - RevenueCat webhook could fail open if both webhook verification secrets were missing.
 - Account deletion and sign-out did not clear all local health-adjacent stores/caches.
 - Most local-first health/payment/routine state used plaintext AsyncStorage.

@@ -2,10 +2,19 @@ import * as LocalAuthentication from 'expo-local-authentication';
 
 export type AppLockAuthStatus = 'success' | 'not_authenticated' | 'unavailable';
 
-function e2eAppLockAuthStatus(): AppLockAuthStatus | null {
+const PHOTO_TIMELINE_PROMPT = 'Unlock your photo timeline';
+
+function e2eAppLockAuthStatus(promptMessage: string): AppLockAuthStatus | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
 
-  const fixture = process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH?.trim().toLowerCase();
+  const fixture = (
+    promptMessage === PHOTO_TIMELINE_PROMPT
+      ? process.env.EXPO_PUBLIC_E2E_APP_LOCK_GALLERY_AUTH ||
+        process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH
+      : process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH
+  )
+    ?.trim()
+    .toLowerCase();
   if (fixture === 'success' || fixture === 'not_authenticated' || fixture === 'unavailable') {
     return fixture;
   }
@@ -28,7 +37,7 @@ function e2eAppLockReady(): boolean | null {
 }
 
 export async function authenticateAppLock(promptMessage: string): Promise<AppLockAuthStatus> {
-  const fixture = e2eAppLockAuthStatus();
+  const fixture = e2eAppLockAuthStatus(promptMessage);
   if (fixture) return fixture;
 
   try {

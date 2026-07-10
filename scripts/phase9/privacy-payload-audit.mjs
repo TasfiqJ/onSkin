@@ -16,8 +16,12 @@ const shareCardSource = read('apps/mobile/src/features/growth/shareCard.ts');
 const encryptedPhotoSource = read('apps/mobile/src/features/photos/encryptedStorage.ts');
 const sharePhotoSource = read('apps/mobile/src/features/photos/sharePhoto.ts');
 const photoMetadataSource = read('apps/mobile/src/features/photos/metadata.ts');
+const photoConsentSource = read('apps/mobile/src/features/photos/consent.ts');
+const photoStoreSource = read('apps/mobile/src/features/photos/store.ts');
 const photoDetailSource = read('apps/mobile/src/app/progress/[id].tsx');
 const photoCopySource = read('apps/mobile/src/features/photos/copy.ts');
+const photoSettingsSource = read('apps/mobile/src/app/(tabs)/you.tsx');
+const rootLayoutSource = read('apps/mobile/src/app/_layout.tsx');
 const notificationCopySource = read('apps/mobile/src/features/notifications/copy.ts');
 const notificationDeliverSource = read('apps/mobile/src/features/notifications/deliver.ts');
 const notificationStoreSource = read('apps/mobile/src/features/notifications/store.ts');
@@ -301,6 +305,28 @@ block(
     shareCardSource,
   ),
   'Share-card export must delete its generated tmpfile after the share attempt.',
+);
+block(
+  errors,
+  /PHOTO_CLOUD_BACKUP_AVAILABLE\s*=\s*false/.test(photoConsentSource) &&
+    /clearUnavailableCloudBackupPreference/.test(photoConsentSource) &&
+    !/setCloudBackupEnabled/.test(photoConsentSource) &&
+    /clearUnavailableCloudBackupPreference/.test(rootLayoutSource),
+  'Unavailable photo cloud backup must have no setter and must clear stale enablement at startup.',
+);
+block(
+  errors,
+  !/supabase\.from\(['"]photos['"]\)\.insert/.test(photoStoreSource) &&
+    !/getCloudBackupEnabled/.test(photoStoreSource),
+  'Local photo save must not automatically upload or mirror photo metadata.',
+);
+block(
+  errors,
+  /Progress photo storage/.test(photoSettingsSource) &&
+    /Cloud backup is not available in this build/.test(photoSettingsSource) &&
+    !/accessibilityLabel=['"]Encrypted cloud backup['"]/.test(photoSettingsSource) &&
+    !/cloud_backup_opted_in/.test(photoSettingsSource),
+  'Settings must show device-only photo storage without an actionable backup switch or event.',
 );
 block(
   errors,

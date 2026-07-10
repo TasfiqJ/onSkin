@@ -35,6 +35,7 @@ describe('app lock local authentication', () => {
     if (originalDev === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = originalDev;
     delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH;
+    delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_GALLERY_AUTH;
     delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_READY;
   });
 
@@ -42,6 +43,7 @@ describe('app lock local authentication', () => {
     if (originalDev === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = originalDev;
     delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH;
+    delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_GALLERY_AUTH;
     delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_READY;
   });
 
@@ -78,9 +80,23 @@ describe('app lock local authentication', () => {
     expect(mocks.isEnrolledAsync).not.toHaveBeenCalled();
   });
 
+  it('can keep the gallery locked after the dev-only global lock succeeds', async () => {
+    runtime.__DEV__ = true;
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH = 'success';
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_GALLERY_AUTH = 'not_authenticated';
+
+    await expect(authenticateAppLock(BRAND.appLockPrompt)).resolves.toBe('success');
+    await expect(authenticateAppLock('Unlock your photo timeline')).resolves.toBe(
+      'not_authenticated',
+    );
+
+    expect(mocks.authenticateAsync).not.toHaveBeenCalled();
+  });
+
   it('ignores E2E app-lock fixtures outside dev builds', async () => {
     runtime.__DEV__ = false;
     process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH = 'unavailable';
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_GALLERY_AUTH = 'unavailable';
     process.env.EXPO_PUBLIC_E2E_APP_LOCK_READY = 'unavailable';
     mocks.authenticateAsync.mockResolvedValueOnce({ success: true });
     mocks.hasHardwareAsync.mockResolvedValueOnce(true);

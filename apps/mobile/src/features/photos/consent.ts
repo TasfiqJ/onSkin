@@ -1,25 +1,22 @@
 import type { ConsentType } from '@onskin/types';
 import * as Crypto from 'expo-crypto';
 
-import {
-  PHOTO_CAPTURE_CONSENT,
-  PHOTO_CLOUD_BACKUP_CONSENT,
-} from '@/features/onboarding/consentCopy';
+import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
 import { recordConsent } from '@/lib/consent/consent';
-import { withdrawConsent } from '@/lib/consent/withdrawal';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 /**
  * Photo consents (docs/01 §4, docs/06 §7). Unbundled and local-first. Capture
- * consent is requested at FIRST camera use; cloud backup is a SEPARATE, off-by-
- * default opt-in. Capture stores a local proof first so the camera gate works
- * offline / pre-account; the ledger sync is best-effort. Cloud backup remains
- * fail-closed because it moves images off device. These records gate behaviour,
- * not storage location for v1 (the cloud upload job itself is B-CAMERA).
+ * consent is requested at FIRST camera use. Capture stores a local proof first
+ * so the camera gate works offline / pre-account; the ledger sync is best-effort.
+ * Cloud backup is unavailable until encrypted upload, restore, and deletion are
+ * implemented end to end, so no runtime setter exists in this build.
  */
 const CAPTURE_KEY = 'onskin.photos.captureConsent';
 const CAPTURE_RECORD_KEY = 'onskin.photos.captureConsent.v1';
 const CLOUD_KEY = 'onskin.photos.cloudBackup';
+
+export const PHOTO_CLOUD_BACKUP_AVAILABLE = false as const;
 
 type LocalPhotoCaptureConsent = {
   type: ConsentType;
@@ -158,29 +155,14 @@ export async function grantPhotoCaptureConsent(): Promise<void> {
   }
 }
 
-export async function getCloudBackupEnabled(): Promise<boolean> {
-  return getFlag(CLOUD_KEY);
-}
-
-export async function setCloudBackupEnabled(enabled: boolean): Promise<void> {
-  await setPrivateItem(CLOUD_KEY, enabled ? '1' : '0');
-  if (!enabled) {
-    await withdrawConsent({
-      type: 'photo_cloud_backup',
-      version: PHOTO_CLOUD_BACKUP_CONSENT.version,
-      consentText: PHOTO_CLOUD_BACKUP_CONSENT.fullText,
-    });
-    return;
-  }
+/** Removes flags written by builds that exposed backup before it existed. */
+export async function clearUnavailableCloudBackupPreference(): Promise<void> {
+  if (PHOTO_CLOUD_BACKUP_AVAILABLE) return;
   try {
-    await recordConsent({
-      type: 'photo_cloud_backup',
-      granted: true,
-      version: PHOTO_CLOUD_BACKUP_CONSENT.version,
-      consentText: PHOTO_CLOUD_BACKUP_CONSENT.fullText,
-    });
-  } catch (error) {
-    await setPrivateItem(CLOUD_KEY, '0').catch(() => undefined);
-    throw error;
+    if ((await getPrivateItem(CLOUD_KEY)) != null) {
+      await removePrivateItem(CLOUD_KEY);
+    }
+  } catch {
+    // The capability remains disabled even if encrypted preference cleanup fails.
   }
 }
