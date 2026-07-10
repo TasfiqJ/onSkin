@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-10T10:26:48.335Z
+Generated: 2026-07-10T11:19:16.129Z
 Status: blocked
-Git SHA: bcda7bba39c1e7b2c9224c04ad6abb05cadcc712
+Git SHA: 791194fac7d7a111d9834b2041ea09c55ba8b7f9
 Git status: clean
 
 ## Release Identity
@@ -80,7 +80,7 @@ Git status: clean
 ## Source Hashes
 
 - `.env.example`: `2e389243c757aee40769b8a15718d601160687cfdbd84517aecb34c8834255ba`
-- `package.json`: `5967b643a1c61a763bebcd45d215e5286c001a1fc1c663c3be17589af3dffe40`
+- `package.json`: `303fe5980f1837ba45e134f9c35bbd331f650f4b5146d142cb32c89eb86f71b8`
 - `package-lock.json`: `76b937f730e84620ffb5ec1082e40f841890324ff09b2222d5e99e9ac917f6bd`
 - `.github/workflows/security.yml`: `fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d`
 - `apps/mobile/app.base.json`: `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`
@@ -114,7 +114,7 @@ Git status: clean
 - `apps/mobile/src/lib/applock/AppLockProvider.tsx`: `254f1ab90712fa23da5fda16d4017a4d9ecc1e03431ace1ee079415029ce16b2`
 - `apps/mobile/src/lib/applock/authenticate.ts`: `fda9cd0c3818aa1c0f78edf9c499111622537c81c10f2f1761655a0cc652f0a8`
 - `apps/mobile/src/lib/applock/authenticate.test.ts`: `c18d16aab150ff1086e6d26ad8beef0d91344eb8120a124ab9cb88696a78822c`
-- `apps/mobile/src/lib/auth/apple.ts`: `2c61d825f40abde9f55e0bfb11ba32e345ee642f7d79de5002f0e1c404eb1ff8`
+- `apps/mobile/src/lib/auth/apple.ts`: `650ff0310cbc12acee871fb265a32f2b05306660af92ed31b36cc268582aa4e0`
 - `supabase/functions/account-deletion/index.ts`: `5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b`
 - `supabase/functions/_shared/body.ts`: `03e9ddbd56df2875f78b4f582ffdae13f0deca50d75d44ed3a5df4d685b39e6a`
 - `supabase/functions/_shared/fetch.ts`: `d8ff37a96a965d3826d3d7df14a69eb00f35dddbc119d3a2f4cc92d778226a25`
@@ -144,10 +144,10 @@ Git status: clean
 - `scripts/phase9/live-catalog-rate-limit.mjs`: `9325b416192733bd81da59811b9b08f2e1c58dcfa7c2aa43dd08ca9038046da6`
 - `scripts/phase9/live-order-report-poll.mjs`: `1e5176ff563695bed27f63fcc8a51a7fdc77c05b523b9dfd4616070ad89c3206`
 - `scripts/phase9/live-revenuecat-webhook.mjs`: `98f2d8496eb4f5c19706c3ce7d17d82c84223ba776bae6084e9706ebf3e6e718`
-- `scripts/phase9/edge-auth-smoke.mjs`: `a0c4f442dc905c740d707774af262bead3abf6fa66f9c28c01708bf5d6681c2d`
+- `scripts/phase9/edge-auth-smoke.mjs`: `f83551bb457e0a53dad7132350d56f363525ac70088517bfa4bc7ac852c72095`
 - `scripts/phase9/edge-functions-check.mjs`: `23de6b1e91a031036ec5369839fa31a48c97d6295c050de16bab6670550cd590`
 - `scripts/phase9/data-rights-smoke.mjs`: `3295e5438139c48ece91dbf5800a2b3a090ca15718e8796c9303442e7b6f0605`
-- `scripts/phase9/consent-withdrawal-smoke.mjs`: `5b5e0469fc3823f2eb272227db962a5ded6d1ef8a4da2a963f4a1b9f452b4de3`
+- `scripts/phase9/consent-withdrawal-smoke.mjs`: `7c0451f33fd799ac29a2bb162ae54d86dbd4cee5f81b17b223f84c15564d178e`
 - `scripts/phase9/supabase-policy-lint.mjs`: `bc34caeea0df827ec02e9e952606aac19106560a88279ed40bca45466908470e`
 - `scripts/phase9/security-ci-smoke.mjs`: `ab3d8be0b2ada7da1a9b7890f4043768cfada3888e524e2964e251d3759566a7`
 - `scripts/phase9/privacy-payload-audit.mjs`: `623a43e5794cebd23863114d21fb80cd34aa8785db1fe056b64cef7b6e3052d7`
