@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-10T02:50:06.795Z
+Generated: 2026-07-10T03:07:39.022Z
 Status: blocked
-Git SHA: 51919d51ea9a2dc2c89938e872bfd8370fe223c6
+Git SHA: 9b0b18538c5856ae4f8fe8ef791b51360a5e11df
 Git status: clean
 
 ## Release Identity
@@ -79,12 +79,12 @@ Git status: clean
 
 ## Source Hashes
 
-- `.env.example`: `09fde04cf7c14297e488d608a3f3e2067d3ac357543212debe3c7758ed98f6e1`
-- `package.json`: `6cb7875cff20eab4331858f9f7e7c27c5081ebdbf60a2b3f1560aac4c394ae22`
+- `.env.example`: `f33a9dddffd602ecf4d5ab447222c691366985587f948590e9df5258e6e8c769`
+- `package.json`: `1c6fc4f6dca8fbaaf783034068f46c3b705cb7055d7b8b74873d85f49e4daf01`
 - `package-lock.json`: `f85eb88858555c4ec6827aedf170ce7752f18e0f9c94c9a0e09a2c6a449f0d26`
 - `.github/workflows/security.yml`: `fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d`
 - `apps/mobile/app.base.json`: `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`
-- `apps/mobile/app.config.js`: `6f6343b001a419e9dbbdbd85b05427f835ed2701179c2fc61ee79f0a48071851`
+- `apps/mobile/app.config.js`: `7c3b7d06f33bca6749aec92ae7fa49b1b7f36ae91864326207c545d5b41c0c16`
 - `apps/mobile/eas.json`: `1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51`
 - `apps/mobile/src/lib/env.ts`: `268bf5903053c48b3663f61139452deebe10da046e779eef000c1dfeb385d7a4`
 - `apps/mobile/src/lib/env.test.ts`: `aa44ad9dd368cc132601c375e295067e23ec28e432b032ef05e3da76988c41fa`
