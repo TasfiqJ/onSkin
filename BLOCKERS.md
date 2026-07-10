@@ -124,7 +124,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 175 mobile test files / 1792 tests. The human-simulated E2E manifest now
+covers 176 mobile test files / 1804 tests. The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
@@ -133,7 +133,9 @@ combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `Device-only Progress photo storage` gate in
 `test-results/human-e2e/2026-07-10/progress-device-only-backup-current/`, plus
 the `Account export local-photo scope disclosure` gate in
-`test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`.
+`test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`,
+and the `Combined account and current-device export` gate in
+`test-results/human-e2e/2026-07-10/data-export-combined-device-current/`.
 The baseline still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also

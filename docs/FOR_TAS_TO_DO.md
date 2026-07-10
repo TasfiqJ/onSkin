@@ -602,11 +602,21 @@ Tas must provide real values/evidence for these exact keys before this gate can 
 Tas must provide real values/evidence for these exact keys before this gate can close:
 
 For `PHASE9_DATA_EXPORT_DELETE_PASS`, inspect a real staging export before
-signoff. Confirm the Settings scope disclosure is visible before export, the
-JSON `local_only_photo_note` says device-only Progress photo files/thumbnails
-are excluded, any server-side photo metadata appears only in the `photos`
-collection, temporary plaintext export files are removed after sharing, and
-account deletion still clears both server and local private data.
+signoff. Seed distinct server and on-device records, including a local shelf
+edit, cycle/ramp choice, completion, and Progress note. Confirm the Settings
+scope disclosure is visible before export; `mobile_export_schema_version` is
+`1`; `server_account_data_status` is `included`; the server bundle remains
+owner-scoped; and the local sections contain the seeded profile, shelf,
+routine/completion, preference, and sanitized Progress note records. Confirm
+that neither JSON scope contains device file paths, note ciphertext, image or
+thumbnail bytes, encryption keys, or auth credentials. The server
+`local_only_photo_note` and mobile `local_media_note` must both state the image
+file/thumbnail exclusion, any server-side photo metadata must remain in the
+server `photos` collection, temporary plaintext export files must be removed
+after sharing, and account deletion must still clear both server and local
+private data. Repeat once offline after a prior successful sign-in: configured
+server failure must show retryable failure and must not produce a partial
+local-only artifact.
 
 - `PHASE9_ALLOW_PRODUCTION_LIVE_CATALOG_RATE_LIMIT`
 - `PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL`

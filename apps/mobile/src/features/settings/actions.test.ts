@@ -12,7 +12,9 @@ function readSource(path: string): string {
 }
 
 const mocks = vi.hoisted(() => ({
+  buildMobileDataExportBundle: vi.fn(),
   clearLocalPrivateData: vi.fn(),
+  collectLocalDeviceExportData: vi.fn(),
   deleteAsync: vi.fn(),
   getAppleAuthorizationCodeForRevocation: vi.fn(),
   getUser: vi.fn(),
@@ -66,9 +68,16 @@ vi.mock('./localPrivateData', () => ({
   clearLocalPrivateData: mocks.clearLocalPrivateData,
 }));
 
+vi.mock('./localDeviceExport', () => ({
+  buildMobileDataExportBundle: mocks.buildMobileDataExportBundle,
+  collectLocalDeviceExportData: mocks.collectLocalDeviceExportData,
+}));
+
 describe('settings data export', () => {
   beforeEach(() => {
+    mocks.buildMobileDataExportBundle.mockReset();
     mocks.clearLocalPrivateData.mockReset();
+    mocks.collectLocalDeviceExportData.mockReset();
     mocks.deleteAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
     mocks.getUser.mockReset();
@@ -80,10 +89,35 @@ describe('settings data export', () => {
     mocks.signOut.mockReset();
     mocks.writeAsStringAsync.mockReset();
     mocks.clearLocalPrivateData.mockResolvedValue(undefined);
+    mocks.buildMobileDataExportBundle.mockImplementation((params) => ({
+      mobile_export_schema_version: 1,
+      exported_at: '2026-07-10T12:01:00.000Z',
+      server_account_data_status: params.serverAccountDataStatus,
+      server_account_data: params.serverAccountData,
+      local_device_data: params.localDeviceData,
+      local_media_note: 'Progress photo files and thumbnails are not included.',
+    }));
+    mocks.collectLocalDeviceExportData.mockResolvedValue({
+      schema_version: 1,
+      collected_at: '2026-07-10T12:00:00.000Z',
+      storage_scope: 'encrypted_private_storage_on_this_device',
+      sections: {
+        account_and_privacy: {},
+        profile_and_preferences: {},
+        shelf_and_routine: { shelf_products: [{ id: 'local-1' }] },
+        activity_and_app_state: {},
+        subscription: {},
+        progress: {},
+      },
+      exclusions: [],
+    });
     mocks.deleteAsync.mockResolvedValue(undefined);
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
-    mocks.invoke.mockResolvedValue({ data: { account: { id: 'user-1' } }, error: null });
+    mocks.invoke.mockResolvedValue({
+      data: { export_schema_version: 2, user_id: 'user-1', account: { id: 'user-1' } },
+      error: null,
+    });
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.signOut.mockResolvedValue(undefined);
     mocks.writeAsStringAsync.mockResolvedValue(undefined);
@@ -97,7 +131,27 @@ describe('settings data export', () => {
 
     expect(mocks.writeAsStringAsync).toHaveBeenCalledWith(
       expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
-      JSON.stringify({ account: { id: 'user-1' } }, null, 2),
+      expect.any(String),
+    );
+    const written = JSON.parse(mocks.writeAsStringAsync.mock.calls[0]![1] as string) as Record<
+      string,
+      unknown
+    >;
+    expect(written).toEqual(
+      expect.objectContaining({
+        mobile_export_schema_version: 1,
+        server_account_data_status: 'included',
+        server_account_data: {
+          export_schema_version: 2,
+          user_id: 'user-1',
+          account: { id: 'user-1' },
+        },
+        local_device_data: expect.objectContaining({
+          sections: expect.objectContaining({
+            shelf_and_routine: { shelf_products: [{ id: 'local-1' }] },
+          }),
+        }),
+      }),
     );
     expect(mocks.shareAsync).toHaveBeenCalledWith(
       expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
@@ -163,12 +217,79 @@ describe('settings data export', () => {
     );
   });
 
+  it('shares a clearly scoped device-only bundle when the backend is not configured', async () => {
+    mocks.isSupabaseConfigured = false;
+    mocks.sharingAvailable.mockResolvedValueOnce(true);
+    mocks.shareAsync.mockResolvedValueOnce(undefined);
+
+    await expect(exportData()).resolves.toBe(true);
+
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    const written = JSON.parse(mocks.writeAsStringAsync.mock.calls[0]![1] as string) as Record<
+      string,
+      unknown
+    >;
+    expect(written).toEqual(
+      expect.objectContaining({
+        server_account_data_status: 'backend_not_configured',
+        server_account_data: null,
+        local_device_data: expect.objectContaining({ schema_version: 1 }),
+      }),
+    );
+  });
+
+  it('fails closed when configured server account data cannot be exported', async () => {
+    mocks.invoke.mockResolvedValueOnce({ data: null, error: new Error('edge unavailable') });
+
+    await expect(exportData()).rejects.toThrow('edge unavailable');
+
+    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+  });
+
+  it('fails closed when the configured server returns a malformed export bundle', async () => {
+    mocks.invoke.mockResolvedValueOnce({ data: '<html>proxy error</html>', error: null });
+
+    await expect(exportData()).rejects.toThrow('DATA_EXPORT_RESPONSE_INVALID');
+
+    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+  });
+
+  it('accepts a valid JSON-string server bundle without double encoding it', async () => {
+    mocks.sharingAvailable.mockResolvedValueOnce(true);
+    mocks.shareAsync.mockResolvedValueOnce(undefined);
+    mocks.invoke.mockResolvedValueOnce({
+      data: JSON.stringify({ export_schema_version: 2, user_id: 'user-1' }),
+      error: null,
+    });
+
+    await expect(exportData()).resolves.toBe(true);
+
+    expect(mocks.buildMobileDataExportBundle).toHaveBeenCalledWith(
+      expect.objectContaining({
+        serverAccountData: { export_schema_version: 2, user_id: 'user-1' },
+        serverAccountDataStatus: 'included',
+      }),
+    );
+  });
+
+  it('does not request server data when the local encrypted snapshot cannot be read', async () => {
+    mocks.collectLocalDeviceExportData.mockRejectedValueOnce(new Error('local export unavailable'));
+
+    await expect(exportData()).rejects.toThrow('local export unavailable');
+
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+  });
+
   it('keeps the You tab from treating unavailable sharing as a successful export', () => {
     const source = readSource('app/(tabs)/you.tsx');
     const actions = readSource('features/settings/actions.ts');
 
-    expect(actions).toContain('if (!isSupabaseConfigured)');
-    expect(actions).toContain('DATA_EXPORT_BACKEND_UNAVAILABLE');
+    expect(actions).toContain('if (isSupabaseConfigured)');
+    expect(actions).toContain('collectLocalDeviceExportData()');
+    expect(actions).toContain("serverAccountDataStatus = 'included'");
     expect(source).toContain('onSuccess: (shared)');
     expect(source).toContain('if (!shared)');
     expect(source).toContain('title: EXPORT_UNAVAILABLE_TITLE');
@@ -178,8 +299,10 @@ describe('settings data export', () => {
     expect(source).toContain('function InlineNoticeCard(');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('Export unavailable');
-    expect(source).toContain('Progress photos are not included in account export.');
-    expect(source).toContain('share them individually from Progress.');
+    expect(source).toContain('Includes data saved to your account and on this device:');
+    expect(source).toContain('completion history, preferences, and Progress notes.');
+    expect(source).toContain('Photo files and thumbnails stay encrypted here;');
+    expect(source).toContain('share images individually from Progress.');
     expect(source).toContain(
       'Progress photos stay encrypted here unless you share one. No ads. No data sales.',
     );

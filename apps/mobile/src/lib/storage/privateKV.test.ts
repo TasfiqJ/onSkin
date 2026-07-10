@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getPrivateItem, privateKVEncryptionInfo, setPrivateItem } from './privateKV';
+import {
+  getPrivateItem,
+  getPrivateItems,
+  privateKVEncryptionInfo,
+  setPrivateItem,
+} from './privateKV';
 
 const mocks = vi.hoisted(() => ({
   asyncStorage: new Map<string, string>(),
@@ -10,6 +15,9 @@ const mocks = vi.hoisted(() => ({
 vi.mock('@react-native-async-storage/async-storage', () => ({
   default: {
     getItem: vi.fn(async (key: string) => mocks.asyncStorage.get(key) ?? null),
+    multiGet: vi.fn(async (keys: string[]) =>
+      keys.map((key) => [key, mocks.asyncStorage.get(key) ?? null] as [string, string | null]),
+    ),
     setItem: vi.fn(async (key: string, value: string) => {
       mocks.asyncStorage.set(key, value);
     }),
@@ -68,5 +76,34 @@ describe('private KV encrypted storage', () => {
 
     await expect(getPrivateItem('corrupt-key')).resolves.toBeNull();
     expect(mocks.asyncStorage.get('corrupt-key')).toBeUndefined();
+  });
+
+  it('batch-reads encrypted and legacy values with one complete result map', async () => {
+    await setPrivateItem('encrypted-a', 'value-a');
+    await setPrivateItem('encrypted-b', JSON.stringify({ value: 'b' }));
+    mocks.asyncStorage.set('legacy', 'legacy-value');
+
+    await expect(
+      getPrivateItems(['encrypted-a', 'encrypted-b', 'legacy', 'missing']),
+    ).resolves.toEqual(
+      new Map([
+        ['legacy', 'legacy-value'],
+        ['missing', null],
+        ['encrypted-a', 'value-a'],
+        ['encrypted-b', JSON.stringify({ value: 'b' })],
+      ]),
+    );
+  });
+
+  it('does not create replacement key material while batch-reading keyless ciphertext', async () => {
+    await setPrivateItem('encrypted-a', 'value-a');
+    mocks.secureStorage.clear();
+
+    await expect(getPrivateItems(['encrypted-a'])).resolves.toEqual(
+      new Map([['encrypted-a', null]]),
+    );
+
+    expect(mocks.secureStorage.size).toBe(0);
+    expect(mocks.asyncStorage.has('encrypted-a')).toBe(false);
   });
 });

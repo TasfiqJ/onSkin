@@ -51,7 +51,7 @@ This inventory must match Apple privacy labels, Google Data Safety, the privacy 
 
 - Account deletion deletes account data and storage through the Supabase Edge Function.
 - Health-data consent withdrawal records withdrawal then deletes collected health data/account.
-- Account export returns server-held user data through `data-export`; Settings and the artifact disclose that device-only Progress photo files/thumbnails are excluded and shared individually.
+- Account export wraps server-held user data from `data-export` with every registered encrypted private-data record on the current device. The mobile collector removes shelf/photo file paths, image bytes, thumbnails, note ciphertext, encryption keys, auth credentials, and transient cache files; sanitized Progress metadata and decrypted notes are included when available. Configured backend failure aborts rather than silently omitting account data, while backend-free builds mark the server scope `backend_not_configured`.
 - Photos remain encrypted on the current device unless the user explicitly shares one.
 - Cloud backup is unavailable in current V1; reserved consent and backend schema do not make it a shipped capability.
 - Commerce partner sharing is separate and off by default.

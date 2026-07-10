@@ -18,16 +18,21 @@ clearance and not a real launch catalog.
 
 Fresh verification through 2026-07-10:
 
-- Account export now states its local-photo boundary before the user acts and
-  inside the JSON artifact. The visible `YOUR DATA` card says device-only
-  Progress photos are excluded, directs explicit per-photo sharing, and no
-  longer uses the stale `by default` phrase. `data-export` repeats the exclusion
-  in `local_only_photo_note` and distinguishes any server-side `photos` metadata
-  rows. Supported 360 x 640 and 390 x 844 Expo web passes keep the disclosure
-  through inline backend-unavailable recovery with 56 px actions, zero dialogs,
-  overflow, unexpected logs, analytics, or export network requests. Manifest
-  gate: `Account export local-photo scope disclosure`. Evidence:
-  `test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`.
+- Account export now composes both data authorities instead of assuming every
+  local-first write reached Supabase. A schema-versioned mobile wrapper requires
+  and validates owner-scoped server data when configured, labels backend-free
+  device-only output explicitly, and batch-reads every registered encrypted
+  local private record. It includes device-authoritative profile, shelf,
+  cycle/ramp, completion, preference, and sanitized Progress metadata/note
+  records while removing image/thumbnail bytes, device paths, note ciphertext,
+  keys, credentials, and temporary cache material. Configured server failures
+  abort before a partial file is written. The 360 x 640 and 390 x 844 Expo web
+  pass shows the full combined disclosure, 56 px actions, inline raw-error-free
+  recovery, and zero dialogs, overflow, unexpected logs, analytics, or Edge
+  requests. Manifest gates: `Account export local-photo scope disclosure` and
+  `Combined account and current-device export`. Evidence:
+  `test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`
+  and `test-results/human-e2e/2026-07-10/data-export-combined-device-current/`.
 - Progress photo backup now fails closed at the capability boundary. The prior
   toggle could save consent and mirror coarse metadata but did not upload,
   restore, or remotely delete encrypted photo bytes. Current local photo saves
@@ -217,7 +222,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 175 mobile test files / 1792 tests.
+- `npm test` passed: 176 mobile test files / 1804 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -248,7 +253,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 175 test files / 1792 tests.
+- `npm --workspace apps/mobile run test` passed: 176 test files / 1804 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain

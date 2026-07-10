@@ -8,6 +8,10 @@ const exportSource = read('supabase/functions/data-export/index.ts');
 const deletionSource = read('supabase/functions/account-deletion/index.ts');
 const settingsActionsSource = read('apps/mobile/src/features/settings/actions.ts');
 const settingsRouteSource = read('apps/mobile/src/app/(tabs)/you.tsx');
+const localDeviceExportSource = read('apps/mobile/src/features/settings/localDeviceExport.ts');
+const localDeviceExportTestSource = read(
+  'apps/mobile/src/features/settings/localDeviceExport.test.ts',
+);
 const localPrivateDataKeysSource = read(
   'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
 );
@@ -81,11 +85,45 @@ for (const pattern of [
 }
 block(
   errors,
-  /Progress photos are not included in account export\./.test(settingsRouteSource) &&
-    /share them individually from Progress\./.test(settingsRouteSource) &&
+  /Includes data saved to your account and on this device:/.test(settingsRouteSource) &&
+    /completion history, preferences, and Progress notes\./.test(settingsRouteSource) &&
+    /Photo files and thumbnails stay encrypted here;/.test(settingsRouteSource) &&
+    /share images individually from Progress\./.test(settingsRouteSource) &&
     /Progress photos stay encrypted here unless you share one\./.test(settingsRouteSource) &&
     !/Photos stay on your device by default\./.test(settingsRouteSource),
-  'Settings must disclose that account export excludes device-only Progress photos.',
+  'Settings must disclose local-first export coverage and the Progress media-file exclusion.',
+);
+block(
+  errors,
+  /collectLocalDeviceExportData\(\)/.test(settingsActionsSource) &&
+    /if \(isSupabaseConfigured\)/.test(settingsActionsSource) &&
+    /serverAccountDataStatus = 'included'/.test(settingsActionsSource) &&
+    /DATA_EXPORT_RESPONSE_INVALID/.test(settingsActionsSource) &&
+    /parsed\.export_schema_version/.test(settingsActionsSource) &&
+    /parsed\.user_id/.test(settingsActionsSource) &&
+    /buildMobileDataExportBundle/.test(settingsActionsSource),
+  'Mobile export must combine local device data with a validated configured server account bundle.',
+);
+block(
+  errors,
+  /LOCAL_PRIVATE_DATA_KEYS/.test(localDeviceExportSource) &&
+    /LOCAL_DEVICE_EXPORT_STORAGE_KEYS/.test(localDeviceExportSource) &&
+    /getPrivateItems\(LOCAL_DEVICE_EXPORT_STORAGE_KEYS\)/.test(localDeviceExportSource) &&
+    /REDACTED_LOCAL_FIELD_NAMES/.test(localDeviceExportSource) &&
+    /progress_photo_files_and_thumbnails/.test(localDeviceExportSource) &&
+    /encryption_keys_and_auth_credentials/.test(localDeviceExportSource) &&
+    /server_account_data_status/.test(localDeviceExportSource) &&
+    /backend_not_configured/.test(localDeviceExportSource),
+  'Mobile export must use an explicit local-private-data registry and versioned scope wrapper.',
+);
+block(
+  errors,
+  /LOCAL_DEVICE_EXPORT_STORAGE_KEYS/.test(localDeviceExportTestSource) &&
+    /LOCAL_PRIVATE_DATA_KEYS/.test(localDeviceExportTestSource) &&
+    /not\.toContain\('file:\/\/\/'\)/.test(localDeviceExportTestSource) &&
+    /not\.toContain\('notesCiphertext'\)/.test(localDeviceExportTestSource) &&
+    /notesExportStatus: 'unavailable'/.test(localDeviceExportTestSource),
+  'Mobile export tests must enforce exhaustive local-key coverage and local media redaction.',
 );
 block(
   errors,

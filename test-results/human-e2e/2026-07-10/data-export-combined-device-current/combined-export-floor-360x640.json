@@ -1,0 +1,57 @@
+{
+  "scenario": "combined-export-floor-360x640",
+  "route": "/you?section=privacy",
+  "viewport": {
+    "width": 360,
+    "height": 640
+  },
+  "dataHeading": {
+    "x": 44,
+    "y": 16,
+    "width": 272,
+    "height": 16
+  },
+  "exportButton": {
+    "x": 44,
+    "y": 44,
+    "width": 272,
+    "height": 56
+  },
+  "deleteButton": {
+    "x": 44,
+    "y": 236,
+    "width": 272,
+    "height": 56
+  },
+  "disclosure": {
+    "x": 44,
+    "y": 108,
+    "width": 272,
+    "height": 120
+  },
+  "footer": {
+    "x": 44,
+    "y": 304,
+    "width": 272,
+    "height": 60
+  },
+  "feedback": {
+    "text": "Export failed We could not complete that privacy request. Please try again.",
+    "box": {
+      "x": 60,
+      "y": 320,
+      "width": 240,
+      "height": 60
+    }
+  },
+  "beforeOverflow": {
+    "innerWidth": 360,
+    "bodyScrollWidth": 360,
+    "documentScrollWidth": 360
+  },
+  "afterOverflow": {
+    "innerWidth": 360,
+    "bodyScrollWidth": 360,
+    "documentScrollWidth": 360
+  }
+}

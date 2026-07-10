@@ -42,7 +42,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   temporary lighting samples are deleted, and only measured coarse metadata is
   eligible for encrypted persistence. Development-only deterministic fixtures
   are guarded by `__DEV__` plus an explicit E2E flag. Focused typecheck, lint,
-  and 133 tests pass; the full mobile suite passes 175 files / 1792 tests, Expo
+  and 133 tests pass; the full mobile suite passes 176 files / 1804 tests, Expo
   Doctor passes 21/21, and iOS/Android autolinking checks pass.
   Human-simulated Expo web at 390 x 844 passed matched, adjust, no-face, and
   unavailable review states plus Retake/Close recovery, enabled 48 px+ actions,
@@ -82,7 +82,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   report are in
   `test-results/human-e2e/2026-07-10/progress-timelapse-current/` and
   `docs/e2e-bug-reports/2026-07-10-progress-timelapse-dialog-semantics.md`.
-  Mobile lint/typecheck and 175 test files / 1792 tests pass; native encrypted
+  Mobile lint/typecheck and 176 test files / 1804 tests pass; native encrypted
   photo performance and VoiceOver/TalkBack remain physical-device QA.
 
 ## 2026-07-09

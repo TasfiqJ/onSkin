@@ -242,12 +242,20 @@ if (!dataExportDisclosureEvidenceDate) {
   console.error('FAIL Missing account-export local-photo disclosure evidence.');
   process.exit(1);
 }
+const combinedDataExportEvidenceDate = latestEvidenceDateForFolder(
+  'data-export-combined-device-current',
+);
+if (!combinedDataExportEvidenceDate) {
+  console.error('FAIL Missing combined account/current-device export evidence.');
+  process.exit(1);
+}
 const latestManifestEvidenceDate = [
   evidenceDate,
   timelapseEvidenceDate,
   captureAnalysisEvidenceDate,
   deviceOnlyBackupEvidenceDate,
   dataExportDisclosureEvidenceDate,
+  combinedDataExportEvidenceDate,
 ]
   .sort()
   .at(-1);
@@ -517,6 +525,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Settings discloses the device-only Progress-photo exclusion before export and preserves it through inline failure recovery.',
+  },
+  {
+    id: 'data-export-combined-device-supported-phone',
+    title: 'Combined account and current-device export',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${combinedDataExportEvidenceDate}/data-export-combined-device-current`,
+    evidence: 'summary.json',
+    expected:
+      'Settings names the account/current-device scope and Progress media exclusion; backend-free recovery keeps zero dialogs, overflow, unexpected logs, analytics, or Edge requests.',
   },
 ];
 

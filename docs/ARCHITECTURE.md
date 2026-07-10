@@ -34,7 +34,7 @@ This decision is based on product fit and current repo momentum, not loyalty to 
 
 ### A-003: Local-First Sensitive Data
 
-- Decision: shelf, completion, and photos work locally; photos local-only by default.
+- Decision: shelf, completion, profile, cycle/ramp, and photos work locally; photos are device-only in the current build. Account export composes the owner-scoped server bundle with a sanitized snapshot of every registered local private-data record.
 - Criteria: privacy, trust, offline bathroom use.
 - Risk: multi-device sync delayed.
 - Status: active.

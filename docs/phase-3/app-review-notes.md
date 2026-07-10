@@ -26,7 +26,7 @@ OnSkin is a skincare routine organization app. Users can save products to a priv
 - Paid-link partner sharing is separate and off by default.
 - Ask cloud mode is separate, off by default, and deferred until vendor/legal review.
 - Account deletion is available in app.
-- Account-data export is available in app. The action and JSON artifact disclose that device-only Progress photo files/thumbnails are excluded and can be shared individually from Progress.
+- Account-data export is available in app. Its versioned JSON wrapper includes owner-scoped server data plus registered encrypted records from the current device, including local-first shelf/routine state and sanitized Progress metadata/notes. Progress image files, thumbnails, device paths, ciphertext, keys, credentials, and transient cache files are excluded; images can be shared individually from Progress.
 
 ## Subscription Notes
 

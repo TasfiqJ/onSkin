@@ -52,7 +52,7 @@ const EXPORT_UNAVAILABLE_TITLE = 'Export unavailable';
 const EXPORT_UNAVAILABLE_MESSAGE =
   "We couldn't open the export sheet on this device. The temporary export file was removed.";
 const DATA_EXPORT_SCOPE_HINT =
-  'Progress photos are not included in account export. They stay encrypted on this device; share them individually from Progress.';
+  'Includes data saved to your account and on this device: profile, shelf, routine settings, completion history, preferences, and Progress notes. Photo files and thumbnails stay encrypted here; share images individually from Progress.';
 const EXPORT_FAILED_TITLE = 'Export failed';
 const WITHDRAW_HEALTH_DATA_CONFIRM_TITLE = 'Withdraw health-data consent?';
 const WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE =

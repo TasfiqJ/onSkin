@@ -146,6 +146,11 @@ unresolved, has zero professional signoffs, and correctly blocks release.
 - `docs/store-privacy-inventory.md`
 - `docs/phase-3/data-inventory.md`
 - `docs/phase-3/consent-matrix.md`
+- `apps/mobile/src/features/settings/actions.ts`
+- `apps/mobile/src/features/settings/localDeviceExport.ts`
+- `apps/mobile/src/features/settings/localDeviceExport.test.ts`
+- `apps/mobile/src/lib/storage/privateKV.ts`
+- `apps/mobile/src/lib/storage/privateKV.test.ts`
 - `supabase/functions/account-deletion/index.ts`
 - `supabase/functions/_shared/storagePath.ts`
 - `supabase/functions/_shared/storagePath.test.ts`

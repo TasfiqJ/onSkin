@@ -76,6 +76,15 @@ Use this format for every significant product, architecture, pricing, privacy, o
 
 ## Architecture Decisions
 
+### 2026-07-10 - Compose Account Exports From Both Data Authorities
+
+- Decision: The mobile account export wraps the required owner-scoped Supabase export and an exhaustive, path-sanitized snapshot of the current device's encrypted private records. Progress image files and thumbnails remain excluded; sanitized Progress metadata and decrypted notes are included when available. Configured server failures abort instead of returning a partial bundle, while backend-free builds identify their bundle as device-only.
+- Alternatives: export only Supabase, silently fall back to local-only data on a configured server failure, mirror every local store before launch, or export raw encrypted storage envelopes.
+- Criteria: literal data-portability claims, offline-first architecture, no silent omissions, readable output, credential/key isolation, and current launch scope.
+- Evidence: local shelf/profile/cycle/ramp/completion stores are V1 authorities and their server mirrors are best effort or deferred; `localDeviceExport.ts` has a registry-coverage test against `LOCAL_PRIVATE_DATA_KEYS` plus media-path/ciphertext redaction tests.
+- Risk: the same device must perform the export to include its local-first records; multi-device reconciliation remains deferred, and native share/cache behavior still requires physical-device staging evidence.
+- Status: Accepted.
+
 ### 2026-07-06 - Keep Expo/Supabase/RevenueCat
 
 - Decision: Continue current stack unless beta/device/compliance evidence says otherwise.
