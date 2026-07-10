@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T02:39:23.729Z",
+  "generatedAt": "2026-07-10T02:50:02.735Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "9b558ca1fb8f09d8725d5ade308699587ee2ba8d",
+  "gitSha": "51919d51ea9a2dc2c89938e872bfd8370fe223c6",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -82,8 +82,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 17504,
-      "sha256": "fec6081e5f4a2c743ce40c22c96e41b98d6f2bcc0fdb4b2914f8e2af8f3e6720"
+      "bytes": 17520,
+      "sha256": "6cb7875cff20eab4331858f9f7e7c27c5081ebdbf60a2b3f1560aac4c394ae22"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
@@ -142,26 +142,26 @@
     {
       "path": "apps/mobile/src/app/settings/subscription.tsx",
       "exists": true,
-      "bytes": 15574,
-      "sha256": "6f9024c3f2b40b59f17755a328814cbfe1823a031db4795c4565a87ab5c7372f"
+      "bytes": 15590,
+      "sha256": "f3259cbed4d0b74ba9825b104ae6d30164d208c1db73a1994a1a9a9ee63ef8d1"
     },
     {
       "path": "supabase/functions/revenuecat-webhook/index.ts",
       "exists": true,
-      "bytes": 13292,
-      "sha256": "210324cc1b57e321885d2fb523cf62a0b2adcfca3cee9fc2df9164ffde9147c4"
+      "bytes": 13445,
+      "sha256": "d240f129c8052426ae8adaea8e4accc17a9c8daf14104899bdc8a0ae7663bf6a"
     },
     {
       "path": "supabase/functions/subscription-grants/index.ts",
       "exists": true,
-      "bytes": 3457,
-      "sha256": "2922047f3ca942aa406785a00ee8175ac3f1899f6b97502f49393a6b204baa02"
+      "bytes": 3514,
+      "sha256": "706cf81639c3ee765820c482ec0d2a21e8ae63d4711a73b529036b6f153ae4a5"
     },
     {
       "path": "supabase/functions/account-deletion/index.ts",
       "exists": true,
-      "bytes": 15795,
-      "sha256": "d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73"
+      "bytes": 15927,
+      "sha256": "5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b"
     },
     {
       "path": "supabase/migrations/20260615000027_phase6_payments.sql",
@@ -196,8 +196,8 @@
     {
       "path": "apps/mobile/src/features/subscription/serverContracts.test.ts",
       "exists": true,
-      "bytes": 3019,
-      "sha256": "d956f0f80adc8c7fa64ab50322b665606449c89f98d2209704c73a674df4cc97"
+      "bytes": 3032,
+      "sha256": "f67ac9c4c1c207a37d674ac1b05cb0b795b36ecd59255ec08404429c191052a2"
     },
     {
       "path": "scripts/phase6/build-payments-qa-packet.mjs",
@@ -226,8 +226,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 14010,
-      "sha256": "6b6f2219ef006e5b1a45cc5ad552830e0d01964e0d4750f5e34623103f07f6ee"
+      "bytes": 14020,
+      "sha256": "af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
@@ -251,13 +251,13 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 20077,
-      "sha256": "f89d0c70d173c5439a85c0002b91072c8b8faeecc0a03c6c3b9957337bfb4fa5"
+      "sha256": "0302c69cb09006db23c009d6e02f3428a57eb0bb656bf5008d82b54b31d1a290"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 7085,
-      "sha256": "c325a519712f76090aa18080e855c994b44bcb0653d7b9f9abc7c26806b4e2de"
+      "sha256": "5ca7a6006fe55a109d248dde5700569e2cfbe053e25a5bea650f73404bdf0782"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",

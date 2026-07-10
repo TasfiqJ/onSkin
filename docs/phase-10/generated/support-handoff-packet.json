@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-10T02:39:29.165Z",
+  "generatedAt": "2026-07-10T02:50:08.138Z",
   "status": "pass",
   "strict": false,
-  "gitSha": "9b558ca1fb8f09d8725d5ade308699587ee2ba8d",
+  "gitSha": "51919d51ea9a2dc2c89938e872bfd8370fe223c6",
   "gitStatus": "",
   "purpose": "Support-desk setup packet for in-app beta feedback query parameters, category routing, severity SLA, and escalation owners.",
   "handoffContract": {
@@ -178,14 +178,14 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 17504,
-      "sha256": "fec6081e5f4a2c743ce40c22c96e41b98d6f2bcc0fdb4b2914f8e2af8f3e6720"
+      "bytes": 17520,
+      "sha256": "6cb7875cff20eab4331858f9f7e7c27c5081ebdbf60a2b3f1560aac4c394ae22"
     },
     {
       "path": "scripts/phase10/build-support-handoff-packet.mjs",
       "exists": true,
-      "bytes": 12540,
-      "sha256": "bdc16041ab8e7bcd1f5f524b4ffcec18c3721df2090fcd287d9717317dcc749d"
+      "bytes": 12536,
+      "sha256": "ea5ded8fefa3a0258b71c7cf26f16365cab41add4882a90bc12b8601805cc20a"
     },
     {
       "path": "scripts/phase10/lib.mjs",
@@ -196,14 +196,14 @@
     {
       "path": "apps/mobile/src/app/settings/beta-feedback.tsx",
       "exists": true,
-      "bytes": 11070,
-      "sha256": "c308e90f8217f36e03a55df0afa490ea2c8030f0fa98923ca28b7cfe72ce0272"
+      "bytes": 11078,
+      "sha256": "0fa17f838f101c1340c11afe026c8efa4fa11534fd12a2d18eb89e0c944954ea"
     },
     {
       "path": "docs/phase-10/support-operations.md",
       "exists": true,
-      "bytes": 3784,
-      "sha256": "66af3dc3110f55906996505088ac853d3af730f3700966b2199b01fef2c8cb9f"
+      "bytes": 4878,
+      "sha256": "bed258fc581aa469539542cbad95184e5314adb4a3b3ac11983b677cd4a00c7e"
     }
   ],
   "blockers": [],

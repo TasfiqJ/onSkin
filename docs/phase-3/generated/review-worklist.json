@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-09T23:50:08.561Z",
+  "generatedAt": "2026-07-10T02:50:22.005Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "d9ae09c5aa82932c5f6106079591e5bbd8ed9ba8",
+  "gitSha": "51919d51ea9a2dc2c89938e872bfd8370fe223c6",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -34,8 +34,8 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "path": "docs/phase-3/privacy-security-review-log.md",
       "exists": true,
-      "bytes": 6169,
-      "sha256": "0a21c5bca27559af25271141ab2a613864e980d8836d1b0c258b665585f2bfd3"
+      "bytes": 6834,
+      "sha256": "94acf53793ecfbdb949e9fabfa24912c4ba1808be9dc4204c29623ecb044f092"
     },
     {
       "domain": "ipFto",
@@ -87,8 +87,8 @@
         {
           "path": "docs/legal-readiness.md",
           "exists": true,
-          "bytes": 10081,
-          "sha256": "f56db6fa565f2c1767a807695bc02f1584b1cf397f689f94087cf314b43d1f39"
+          "bytes": 12565,
+          "sha256": "cdc11bbac918d457353b42ff3cb8658c9ac6cf8585f8d9454b46685aed98ff5e"
         },
         {
           "path": "apps/mobile/src/lib/legal/disclaimer.ts",
@@ -195,8 +195,8 @@
         {
           "path": "apps/mobile/src/features/subscription/claimsafety.test.ts",
           "exists": true,
-          "bytes": 3438,
-          "sha256": "6f672543ce9a227749593076f48ba8bbff1294a39676c598d08576e7e3fcf46c"
+          "bytes": 3455,
+          "sha256": "ada28dacdc9700b7b387e4a89980fe84c70423f07d1021172cf5230ad9680b45"
         },
         {
           "path": "apps/mobile/src/features/subscription/ComplianceRow.tsx",
@@ -315,14 +315,14 @@
         {
           "path": "apps/mobile/src/features/subscription/ReverseTrialBanner.tsx",
           "exists": true,
-          "bytes": 2275,
-          "sha256": "0e9a237d2c9cdd08ca583033830304eba3ccf8ef09b721b352d4074d6d9fbc96"
+          "bytes": 2326,
+          "sha256": "b3453ed2c4b8efa0529d97decf7c352c03cae0411bc6bfbfba231212a5ec335f"
         },
         {
           "path": "apps/mobile/src/features/subscription/serverContracts.test.ts",
           "exists": true,
-          "bytes": 3019,
-          "sha256": "d956f0f80adc8c7fa64ab50322b665606449c89f98d2209704c73a674df4cc97"
+          "bytes": 3032,
+          "sha256": "f67ac9c4c1c207a37d674ac1b05cb0b795b36ecd59255ec08404429c191052a2"
         },
         {
           "path": "apps/mobile/src/features/subscription/store.test.ts",
@@ -373,20 +373,20 @@
         {
           "path": "docs/phase-4/odbl-compliance-memo.md",
           "exists": true,
-          "bytes": 2020,
-          "sha256": "6316be05d79992a32321bd291e7b9eb965da14c12c9c0a3feb7e9ce0dfd69a79"
+          "bytes": 2019,
+          "sha256": "0fe9bc07e3c4d34129ac8f8f2ba410a64e6caa0d77a3b7994198e0b4d9e18e69"
         },
         {
           "path": "apps/mobile/src/features/commerce/attribution.test.ts",
           "exists": true,
-          "bytes": 5076,
-          "sha256": "601065b655f9e4b2c751493ed5d5f4172a36481b9139b53f765ace92e3f06c42"
+          "bytes": 5254,
+          "sha256": "8d759dcc16a3324d872895664b9dfc23b35224190d2441588782a2cdaa257d43"
         },
         {
           "path": "apps/mobile/src/features/commerce/attribution.ts",
           "exists": true,
-          "bytes": 4004,
-          "sha256": "693fe3e650763b9bed33ff3bb146418ef32c7b7d7f16e51d24b21ca1f7a9b38d"
+          "bytes": 4062,
+          "sha256": "1c69b53246f2396a00620ef2b032e18c481aff3682fd1b44b29d75e7fd44ac51"
         },
         {
           "path": "apps/mobile/src/features/commerce/claimsafety.test.ts",
@@ -397,8 +397,8 @@
         {
           "path": "apps/mobile/src/features/commerce/commerce.test.ts",
           "exists": true,
-          "bytes": 5317,
-          "sha256": "6e92ef60a390381f7696efeda8aea06831d88958836278d35480bb458c7a37b7"
+          "bytes": 5532,
+          "sha256": "3f428852d874bfb49fc9bb970bffd51916e3d7c389cf9adb6f30659018b9fe5f"
         },
         {
           "path": "apps/mobile/src/features/commerce/CommerceLinkNotice.tsx",
@@ -409,8 +409,8 @@
         {
           "path": "apps/mobile/src/features/commerce/commerceRoutes.test.ts",
           "exists": true,
-          "bytes": 7987,
-          "sha256": "92eca777469d4a2046f6b7ef07ddb9ab8407125969a48c6ba849d36f110aed47"
+          "bytes": 7974,
+          "sha256": "81e737f3f9405d604fff015768213cbff8b3ff954fd1c97fa94572599133cd77"
         },
         {
           "path": "apps/mobile/src/features/commerce/consent.test.ts",
@@ -439,14 +439,14 @@
         {
           "path": "apps/mobile/src/features/commerce/links.ts",
           "exists": true,
-          "bytes": 4051,
-          "sha256": "cc50af00d8cb0968698d2c601e651708355211ce2c751917429108758bba70ef"
+          "bytes": 4058,
+          "sha256": "b64f6505d6cf060e4c0e7d86f2da33503ae84b09e2c6919824c72a74ca37d5d8"
         },
         {
           "path": "apps/mobile/src/features/commerce/LockGlyph.tsx",
           "exists": true,
-          "bytes": 1198,
-          "sha256": "2d0fbf4e5b3e2a1493523f558f1ab25ef14d16b7c25a7479870e58aa1a454ea0"
+          "bytes": 1284,
+          "sha256": "a6a4bc8696bc94c4fd5acc0a39226a258607b3778dd21f90bb23bd22fe0c9ca8"
         },
         {
           "path": "apps/mobile/src/features/commerce/stacks.ts",
@@ -469,8 +469,8 @@
         {
           "path": "apps/mobile/src/features/commerce/useCommerce.ts",
           "exists": true,
-          "bytes": 1584,
-          "sha256": "b9c6023aa02b93591a9b37815d0a389c0dc134cfeba2ced38a5536a350654192"
+          "bytes": 1609,
+          "sha256": "a542c1503fe78f280f0d98e369e49a4d35209a1f261ef138b95526225072135c"
         },
         {
           "path": "apps/mobile/src/features/commerce/WhereToBuy.tsx",
@@ -481,8 +481,8 @@
         {
           "path": "supabase/functions/order-report-poll/index.ts",
           "exists": true,
-          "bytes": 6128,
-          "sha256": "9fe7a81e3443bd7439450556421dc90b57326b23da6586a883dce99687f360be"
+          "bytes": 6197,
+          "sha256": "3b463b2ab82b36f2cb5db77afe7b24c0620394afca1ab4bc7326e3a02e71071e"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -503,20 +503,20 @@
         {
           "path": "docs/13-ask-onskin-assistant.md",
           "exists": true,
-          "bytes": 115378,
-          "sha256": "a4f34954854ffd2ce128d11fac09b732ece2486cbdf26bd9d4da89a1472e199f"
+          "bytes": 115785,
+          "sha256": "d656114cbfed6c3380ba35663c9b36db9c199ec7f36c1991e06b423a4b2af6a1"
         },
         {
           "path": "apps/mobile/src/features/ask/answer.test.ts",
           "exists": true,
-          "bytes": 6938,
-          "sha256": "6b8301e522dd433506de4f50f3e2f91173c2edaf5d3a93f5e1197643315f0a40"
+          "bytes": 7127,
+          "sha256": "1b969b79bd4854b9447048ec2f441e8cbcb7b28f81dbbe4da6cebbbf4742bdb6"
         },
         {
           "path": "apps/mobile/src/features/ask/answer.ts",
           "exists": true,
-          "bytes": 11097,
-          "sha256": "24a03ef3f5123881be026ee11c28ec64b7d4d7a37f02a0c91f6b9fd538843839"
+          "bytes": 11291,
+          "sha256": "62da00f6894f203cfe5150892dbcfd388cac1eeb4f02f917f33791c90cb95103"
         },
         {
           "path": "apps/mobile/src/features/ask/applyConsentChoice.test.ts",
@@ -563,8 +563,8 @@
         {
           "path": "apps/mobile/src/features/ask/gate.test.ts",
           "exists": true,
-          "bytes": 1719,
-          "sha256": "e695297da149c48b6be2fbaea422dafd849ddc79662e148935eb5dc8d6836ca0"
+          "bytes": 1777,
+          "sha256": "cb2c0af6d08be18530a703dc12ff36bb727dbe33f54085e3b4fc9742f8f33c1a"
         },
         {
           "path": "apps/mobile/src/features/ask/gate.ts",
@@ -575,8 +575,8 @@
         {
           "path": "apps/mobile/src/features/ask/guard.ts",
           "exists": true,
-          "bytes": 1982,
-          "sha256": "105ac32cf2d156f91db684ced42121eaf3abcd36dec6134e5b1c6e4db9e91ca2"
+          "bytes": 2015,
+          "sha256": "bd0e051294a02a78bab242b4fdfbad5f7e08258467232009f027536258a433ee"
         },
         {
           "path": "apps/mobile/src/features/ask/intent.test.ts",
@@ -593,14 +593,14 @@
         {
           "path": "apps/mobile/src/features/ask/routeContract.test.ts",
           "exists": true,
-          "bytes": 11055,
-          "sha256": "3e9f91ab7f26691506f511cf0c0239e7370c90e06d40a9f71f3fd6bfb499b121"
+          "bytes": 11081,
+          "sha256": "1ac6b4444dc21466cb12aab9298333d4f9fd8e7b14328dd16a194854406a8386"
         },
         {
           "path": "apps/mobile/src/features/ask/store.test.ts",
           "exists": true,
-          "bytes": 3127,
-          "sha256": "2c134a1eb5039d66714396e6c779a1f80a864e8c0f82bea8fbc3abc348fd9d57"
+          "bytes": 3136,
+          "sha256": "dd95b1076caa353f9d03d16b4c5b5e25783f5808a2793631d49a435449baef82"
         },
         {
           "path": "apps/mobile/src/features/ask/store.ts",
@@ -611,8 +611,8 @@
         {
           "path": "apps/mobile/src/features/ask/useAsk.ts",
           "exists": true,
-          "bytes": 5264,
-          "sha256": "0688a523a5f0336800e4138ca943ac45497c995b65aee580c81440869d149357"
+          "bytes": 5292,
+          "sha256": "72dd4448e92ef456113d64d86f62e09f95fbdcce5a664eeefb5ff540dedee978"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -633,8 +633,8 @@
         {
           "path": "apps/mobile/src/features/intelligence/rules.ts",
           "exists": true,
-          "bytes": 9929,
-          "sha256": "ce013235898077a3b477280c99f81431c801bac8544ed34c5c90a9410c23eeea"
+          "bytes": 10189,
+          "sha256": "00a368beef8a4b59edbf5b5847868093bf402de4c65eabaa79ec7d0517116aa4"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -655,8 +655,8 @@
         {
           "path": "apps/mobile/src/features/intelligence/pao.ts",
           "exists": true,
-          "bytes": 6949,
-          "sha256": "62112d95a6c1b26531cbf06a8bf46a0eef9f9cddb635c5c9ec502a1e6b47e8a5"
+          "bytes": 6991,
+          "sha256": "b311f7b3b815b025b55a650dd66ec5af8aab4470464ff3bd82c497ca4edd4e38"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -721,8 +721,8 @@
         {
           "path": "apps/mobile/src/features/community/notes.ts",
           "exists": true,
-          "bytes": 9168,
-          "sha256": "e312393884b343b49308ecc37d95fceb9a35266160bd94489b51ffa0172a75db"
+          "bytes": 9194,
+          "sha256": "bb478f3088b63cfc2b15f348a1aa72d0bd6397759ad7704ca9ecb4457a02a38c"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -743,8 +743,8 @@
         {
           "path": "apps/mobile/src/features/ask/answer.ts",
           "exists": true,
-          "bytes": 11097,
-          "sha256": "24a03ef3f5123881be026ee11c28ec64b7d4d7a37f02a0c91f6b9fd538843839"
+          "bytes": 11291,
+          "sha256": "62da00f6894f203cfe5150892dbcfd388cac1eeb4f02f917f33791c90cb95103"
         },
         {
           "path": "apps/mobile/src/features/ask/copy.ts",
@@ -783,8 +783,8 @@
         {
           "path": "apps/mobile/src/features/trend/claimsafety.test.ts",
           "exists": true,
-          "bytes": 5791,
-          "sha256": "c3c24bb9d6cea7388ffe2c1e3acb53c2ecc103a4d619b2e96b43c3e504a69d96"
+          "bytes": 5885,
+          "sha256": "15e1553b3f22d7585e7c2b507e745a2e3eb9b66566a781927f8b06900e86398d"
         },
         {
           "path": "apps/mobile/src/features/trend/consent.test.ts",
@@ -801,8 +801,8 @@
         {
           "path": "apps/mobile/src/features/trend/copy.ts",
           "exists": true,
-          "bytes": 5364,
-          "sha256": "d1c326bea20ee3ad38845f04369bb94cc49a3df133a3cdd4a928f2cb3fa1fb5d"
+          "bytes": 5381,
+          "sha256": "804c809a7f3acdebf3293fdb738d18524e6e3aa8095e78c0f00de0cf8cfc9318"
         },
         {
           "path": "apps/mobile/src/features/trend/store.test.ts",
@@ -819,32 +819,32 @@
         {
           "path": "apps/mobile/src/features/trend/trend.test.ts",
           "exists": true,
-          "bytes": 3141,
-          "sha256": "2e3f28c77f85a04818be73f4b3f296b4d1132b398affaab0d80b42db2d5f8a94"
+          "bytes": 3224,
+          "sha256": "797f4e43ac5724fce8c6df388bdd6c84514ff8a10626f6c7866b8fb47bf3733b"
         },
         {
           "path": "apps/mobile/src/features/trend/trend.ts",
           "exists": true,
-          "bytes": 3594,
-          "sha256": "aab647a597772d0e9c9647d1495b283112e6f0fcbbf239ded35239e384e56c27"
+          "bytes": 3598,
+          "sha256": "3a7c314b74b0ff8e166f1aa55f710745ad6d743793bc5f65441c1675d7aeb24d"
         },
         {
           "path": "apps/mobile/src/features/trend/TrendInsight.tsx",
           "exists": true,
-          "bytes": 2259,
-          "sha256": "3f04bde01d2948d3c89c663540e09fed350d45209038649a6f536c4d2f38ba16"
+          "bytes": 2322,
+          "sha256": "d033b5f0572da342702b29f72ee2864808757525f2804a688789c79661029c1b"
         },
         {
           "path": "apps/mobile/src/features/trend/trendRoutes.test.ts",
           "exists": true,
-          "bytes": 4740,
-          "sha256": "3dd3e51a5e7413c598e14d0d6bb82a4240f1700aae3ceee07963d114f53db3cc"
+          "bytes": 4766,
+          "sha256": "50606d468a34196786fb557f08cd006191d04bbf817970f512dd6bbf1ba47766"
         },
         {
           "path": "apps/mobile/src/features/trend/useTrend.ts",
           "exists": true,
-          "bytes": 2997,
-          "sha256": "5cd3ed398b775be6faf1937803628b974988b9819bb80e1bf09c507befa886ea"
+          "bytes": 3012,
+          "sha256": "c3c33e17b6fe1043b94478776f8f45220e56bf5f3611703d26bcda2a7f0541c9"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -865,8 +865,8 @@
         {
           "path": "apps/mobile/src/features/photos/copy.ts",
           "exists": true,
-          "bytes": 7237,
-          "sha256": "893461e3aac30d7d671141a69adf9c3ed2ed458e7a2b2fb621cbd730546aae57"
+          "bytes": 7253,
+          "sha256": "a18bd8c9354ec64db148c6eb249ea42bccecbfda6adecf5e77e718ddc78b1284"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -909,8 +909,8 @@
         {
           "path": "apps/mobile/src/features/onboarding/consentCopy.ts",
           "exists": true,
-          "bytes": 4250,
-          "sha256": "9c35f1c098072115108f2b599d6bc32ee3e3b85f2a270d9ea0d1347c413f1f62"
+          "bytes": 4246,
+          "sha256": "b76847c7761f7cd5073f6d78b47e576ce68d8c47459c71ef3543990aaa2dcecd"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -953,8 +953,8 @@
         {
           "path": "apps/mobile/src/features/intelligence/pao.ts",
           "exists": true,
-          "bytes": 6949,
-          "sha256": "62112d95a6c1b26531cbf06a8bf46a0eef9f9cddb635c5c9ec502a1e6b47e8a5"
+          "bytes": 6991,
+          "sha256": "b311f7b3b815b025b55a650dd66ec5af8aab4470464ff3bd82c497ca4edd4e38"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1037,8 +1037,8 @@
         {
           "path": "apps/mobile/src/features/routine/cycleAnchor.ts",
           "exists": true,
-          "bytes": 1840,
-          "sha256": "7897000957b694cda01edf5d6e72bd7eece3e41db1246ef3ebcfb2105e0a8bf4"
+          "bytes": 1832,
+          "sha256": "6b74832bb0e410e9abe708efd56f4be0560f26e0087020b586f395d7203d44c2"
         },
         {
           "path": "apps/mobile/src/features/routine/firstInsight.test.ts",
@@ -1061,8 +1061,8 @@
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 4235,
-          "sha256": "4561ba92352b4a5c5e211a98c0a7ac9edad597367efef7732fb21054425d04bf"
+          "bytes": 4263,
+          "sha256": "984ba73310d4fa0c4fcb3ceedb0236db567438e018c2fbd494504d9b892bbb03"
         },
         {
           "path": "apps/mobile/src/features/routine/progressSanitizers.test.ts",
@@ -1073,14 +1073,14 @@
         {
           "path": "apps/mobile/src/features/routine/progressSanitizers.ts",
           "exists": true,
-          "bytes": 851,
-          "sha256": "0e7a86551b7fdbc02f1c65f96794f916863f57bdeb36743c9d5d1eb78d8fe406"
+          "bytes": 843,
+          "sha256": "92aa1357f496178730496bd5b79a490a5c36e308503edadf3abfaf00756af1ef"
         },
         {
           "path": "apps/mobile/src/features/routine/ramp.ts",
           "exists": true,
-          "bytes": 2597,
-          "sha256": "fe93b0f7e6726d3c006c9e6f7a5a53d37da8de52cf5bb4b46177186538806e51"
+          "bytes": 2619,
+          "sha256": "2b58d16a9c595e83b1198e16345d85044e74de381aa5a1ee5a1d824fed9b86ee"
         },
         {
           "path": "apps/mobile/src/features/routine/rampStore.test.ts",
@@ -1109,8 +1109,8 @@
         {
           "path": "apps/mobile/src/features/routine/sequencing.ts",
           "exists": true,
-          "bytes": 5855,
-          "sha256": "45e761fec1095e10921312f5e24d97c25df7fb33fc3738fa149690c228553662"
+          "bytes": 6132,
+          "sha256": "0e29b8c135c23b0aa7f5c22f129fcfe4152298b3ab5f24f113bd60b7d3cc19c6"
         },
         {
           "path": "apps/mobile/src/features/routine/usePlan.test.ts",
@@ -1127,20 +1127,20 @@
         {
           "path": "apps/mobile/src/features/routine/useProgress.test.ts",
           "exists": true,
-          "bytes": 993,
-          "sha256": "fa66fb1d9a3b4e9d29e8edd7354c11e99098adeb594f381f58d4f30317d2a308"
+          "bytes": 1006,
+          "sha256": "b22359e2401f3bae300c28f709d782a615be97cc872fb3c9e746f6aa3ec9cba9"
         },
         {
           "path": "apps/mobile/src/features/routine/useProgress.ts",
           "exists": true,
-          "bytes": 5619,
-          "sha256": "62d8984b7a33cd9df65323dfbf9ee2d58c2cc1e1dfb374c72e119f535bfd765c"
+          "bytes": 5627,
+          "sha256": "5bbd820ef1675a3f1df5b9ee88f728ea176851d7581d4618e9acd8c9773ae743"
         },
         {
           "path": "apps/mobile/src/features/routine/useRamp.ts",
           "exists": true,
-          "bytes": 2300,
-          "sha256": "9b3d32161925cbdcf88c563474fcd4404e9835a9467e2c917cf016360ed8a849"
+          "bytes": 2307,
+          "sha256": "f60b72320bbb3ae0968cab87bce18bba4edbf3e4408a737f35056ed668a27434"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1179,14 +1179,14 @@
         {
           "path": "apps/mobile/src/features/shelf/categories.ts",
           "exists": true,
-          "bytes": 2696,
-          "sha256": "aebb87c48e67cf211f4f878d47ff22eca0705133940b9202addda56cbde035c6"
+          "bytes": 2691,
+          "sha256": "4a08833bd1d80b64748e2b8b635c2e39dce596d2eef4d52ea36f39912bac29d0"
         },
         {
           "path": "apps/mobile/src/features/shelf/expiry.ts",
           "exists": true,
-          "bytes": 993,
-          "sha256": "a9442bc51ab8761763f774e4e48c04e5d0bad11640486e2a983e61876b05a0d5"
+          "bytes": 1004,
+          "sha256": "d756a48315ecf8e5c0074019ea5238bbeb411afdee9ac1def3181398d20b0bd3"
         },
         {
           "path": "apps/mobile/src/features/shelf/IntakeContext.tsx",
@@ -1197,8 +1197,8 @@
         {
           "path": "apps/mobile/src/features/shelf/labels.ts",
           "exists": true,
-          "bytes": 612,
-          "sha256": "1a5fbe77abdf30f9b8286625effa24e240444bcbf3be8f5a8663693a17a855eb"
+          "bytes": 611,
+          "sha256": "dcb01b52fc70c1b2f2b465091b3ce36e45ac9bfdfbf99c9b883a70023605ad9c"
         },
         {
           "path": "apps/mobile/src/features/shelf/metadata.ts",
@@ -1215,8 +1215,8 @@
         {
           "path": "apps/mobile/src/features/shelf/pairedConflicts.ts",
           "exists": true,
-          "bytes": 771,
-          "sha256": "7b87abe51db6e2af8a5b213b52b1a32f4a1af87bfaf372db323d5cfc7dce3678"
+          "bytes": 766,
+          "sha256": "eb4cc3b857828ae8d123890b0771a44fe57e73e29da3e6207604fd3ed640a918"
         },
         {
           "path": "apps/mobile/src/features/shelf/paoProvenance.test.ts",
@@ -1263,14 +1263,14 @@
         {
           "path": "apps/mobile/src/features/shelf/useShelf.test.ts",
           "exists": true,
-          "bytes": 3709,
-          "sha256": "4c0e9666689722778f642729ab0e12091ffa92e1e5184cff8a908a745182da37"
+          "bytes": 3684,
+          "sha256": "089d526dd0a4fc3f9ff34097d44567b2597e1b31c6669503663145b714428762"
         },
         {
           "path": "apps/mobile/src/features/shelf/useShelf.ts",
           "exists": true,
-          "bytes": 8783,
-          "sha256": "0fb8fe03586758ea85aabc8d825cd42d4aeb007c5eb62b45a6d9ee2eb6980261"
+          "bytes": 8790,
+          "sha256": "cd0e52b454102f4f2074df9018e6a517abc57023e7b5340a5ff626a1f94134fd"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1297,14 +1297,14 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 4156,
-          "sha256": "c0c50f0f280642e2822d835d4ba7ddeb2fb7c9f229b911ab4d7d4a12976d4286"
+          "bytes": 6084,
+          "sha256": "03762321e8e0a6c70d3960e2e58e06547a02df8611ab890b7bbe58fa2792a3e0"
         },
         {
           "path": "apps/mobile/src/features/onboarding/consentCopy.ts",
           "exists": true,
-          "bytes": 4250,
-          "sha256": "9c35f1c098072115108f2b599d6bc32ee3e3b85f2a270d9ea0d1347c413f1f62"
+          "bytes": 4246,
+          "sha256": "b76847c7761f7cd5073f6d78b47e576ce68d8c47459c71ef3543990aaa2dcecd"
         },
         {
           "path": "apps/mobile/src/lib/consent/consent.test.ts",
@@ -1339,8 +1339,8 @@
         {
           "path": "supabase/functions/consent-withdrawal/index.ts",
           "exists": true,
-          "bytes": 9021,
-          "sha256": "60c95bdc1eb58d117a334b0b786ec6c394e7145f1cdc6680ed86184cd01189e9"
+          "bytes": 9116,
+          "sha256": "9da0e6b2b2b41057f1aa0e7f84620f7caa4b6dad3932b9959b0171efbc674b25"
         },
         {
           "path": "supabase/functions/_shared/storagePath.ts",
@@ -1351,8 +1351,8 @@
         {
           "path": "supabase/functions/_shared/storagePath.test.ts",
           "exists": true,
-          "bytes": 1336,
-          "sha256": "b87f295f444c3f241379cd93a7eb8573bedbfe6830528bd521f0dac30348e5d2"
+          "bytes": 1355,
+          "sha256": "3caf9cbb38b676c4a96dd9ae3f19479c205a90d31bb83fee7c7474bc76a2a2e9"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1373,14 +1373,14 @@
         {
           "path": "docs/06-photo-progress.md",
           "exists": true,
-          "bytes": 46255,
-          "sha256": "8a1b05ad7537a3bf5afd851efe669432dc32f591d76d91b78fac573ad9748f76"
+          "bytes": 46262,
+          "sha256": "7508f8cc9d6ced241d3f2005de29b5fb3bca88cddadce3dffd5ed57b58cd62dd"
         },
         {
           "path": "apps/mobile/src/features/photos/consent.ts",
           "exists": true,
-          "bytes": 5617,
-          "sha256": "62b001c4cb887c490dc5322f22be98576a8317405ad62668abeb54a9971f520d"
+          "bytes": 5601,
+          "sha256": "ad52af8afdeefe2844f3eec0df51a6541d5b8217f183edcfd0656c3785cf4ed5"
         },
         {
           "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
@@ -1391,8 +1391,8 @@
         {
           "path": "apps/mobile/src/features/photos/store.ts",
           "exists": true,
-          "bytes": 10767,
-          "sha256": "978c25ca6600392973ef0a8c734d7525a8b954bd260a38c068eefe9928695f37"
+          "bytes": 10759,
+          "sha256": "6fe72c87f652bbcc69ad6c947fb8742224647acd8c63f7f4e276044611379ec6"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1425,8 +1425,8 @@
         {
           "path": "apps/mobile/src/features/trend/claimsafety.test.ts",
           "exists": true,
-          "bytes": 5791,
-          "sha256": "c3c24bb9d6cea7388ffe2c1e3acb53c2ecc103a4d619b2e96b43c3e504a69d96"
+          "bytes": 5885,
+          "sha256": "15e1553b3f22d7585e7c2b507e745a2e3eb9b66566a781927f8b06900e86398d"
         },
         {
           "path": "apps/mobile/src/features/trend/consent.test.ts",
@@ -1443,8 +1443,8 @@
         {
           "path": "apps/mobile/src/features/trend/copy.ts",
           "exists": true,
-          "bytes": 5364,
-          "sha256": "d1c326bea20ee3ad38845f04369bb94cc49a3df133a3cdd4a928f2cb3fa1fb5d"
+          "bytes": 5381,
+          "sha256": "804c809a7f3acdebf3293fdb738d18524e6e3aa8095e78c0f00de0cf8cfc9318"
         },
         {
           "path": "apps/mobile/src/features/trend/store.test.ts",
@@ -1461,38 +1461,38 @@
         {
           "path": "apps/mobile/src/features/trend/trend.test.ts",
           "exists": true,
-          "bytes": 3141,
-          "sha256": "2e3f28c77f85a04818be73f4b3f296b4d1132b398affaab0d80b42db2d5f8a94"
+          "bytes": 3224,
+          "sha256": "797f4e43ac5724fce8c6df388bdd6c84514ff8a10626f6c7866b8fb47bf3733b"
         },
         {
           "path": "apps/mobile/src/features/trend/trend.ts",
           "exists": true,
-          "bytes": 3594,
-          "sha256": "aab647a597772d0e9c9647d1495b283112e6f0fcbbf239ded35239e384e56c27"
+          "bytes": 3598,
+          "sha256": "3a7c314b74b0ff8e166f1aa55f710745ad6d743793bc5f65441c1675d7aeb24d"
         },
         {
           "path": "apps/mobile/src/features/trend/TrendInsight.tsx",
           "exists": true,
-          "bytes": 2259,
-          "sha256": "3f04bde01d2948d3c89c663540e09fed350d45209038649a6f536c4d2f38ba16"
+          "bytes": 2322,
+          "sha256": "d033b5f0572da342702b29f72ee2864808757525f2804a688789c79661029c1b"
         },
         {
           "path": "apps/mobile/src/features/trend/trendRoutes.test.ts",
           "exists": true,
-          "bytes": 4740,
-          "sha256": "3dd3e51a5e7413c598e14d0d6bb82a4240f1700aae3ceee07963d114f53db3cc"
+          "bytes": 4766,
+          "sha256": "50606d468a34196786fb557f08cd006191d04bbf817970f512dd6bbf1ba47766"
         },
         {
           "path": "apps/mobile/src/features/trend/useTrend.ts",
           "exists": true,
-          "bytes": 2997,
-          "sha256": "5cd3ed398b775be6faf1937803628b974988b9819bb80e1bf09c507befa886ea"
+          "bytes": 3012,
+          "sha256": "c3c33e17b6fe1043b94478776f8f45220e56bf5f3611703d26bcda2a7f0541c9"
         },
         {
           "path": "apps/mobile/src/features/photos/consent.ts",
           "exists": true,
-          "bytes": 5617,
-          "sha256": "62b001c4cb887c490dc5322f22be98576a8317405ad62668abeb54a9971f520d"
+          "bytes": 5601,
+          "sha256": "ad52af8afdeefe2844f3eec0df51a6541d5b8217f183edcfd0656c3785cf4ed5"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1565,14 +1565,14 @@
         {
           "path": "supabase/functions/account-deletion/index.ts",
           "exists": true,
-          "bytes": 15795,
-          "sha256": "d7c16fe965a32ecb8b7d7d1781fac87a409a1035123c47224573f83ecdc8cc73"
+          "bytes": 15927,
+          "sha256": "5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b"
         },
         {
           "path": "supabase/functions/data-export/index.ts",
           "exists": true,
-          "bytes": 12570,
-          "sha256": "76310cf108a0c3bbb9cd24e76bac0aa5671d0085ea39b00e605e9d8fbc155f96"
+          "bytes": 12971,
+          "sha256": "a8f8ddd127447af1bab3ed67adb974f3990fb7d5afe038dd68be3647d8d3b557"
         },
         {
           "path": "supabase/functions/_shared/storagePath.ts",
@@ -1583,8 +1583,8 @@
         {
           "path": "supabase/functions/_shared/storagePath.test.ts",
           "exists": true,
-          "bytes": 1336,
-          "sha256": "b87f295f444c3f241379cd93a7eb8573bedbfe6830528bd521f0dac30348e5d2"
+          "bytes": 1355,
+          "sha256": "3caf9cbb38b676c4a96dd9ae3f19479c205a90d31bb83fee7c7474bc76a2a2e9"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1617,14 +1617,14 @@
         {
           "path": "apps/mobile/src/lib/analytics/track.ts",
           "exists": true,
-          "bytes": 6400,
-          "sha256": "ba85d7ef840dbd322970efdd3f040997b07b881fa461050c1bb50142220051a4"
+          "bytes": 6425,
+          "sha256": "ed245b527e56cbe27b34961044d2bbe41b6621357915ac1827f2299489bab886"
         },
         {
           "path": "apps/mobile/src/lib/observability/safeLog.test.ts",
           "exists": true,
-          "bytes": 1536,
-          "sha256": "2c01477feb279bbdc2e6906fda4b989186b64fe92dc6f98e2dbb4b81d9ba607f"
+          "bytes": 1553,
+          "sha256": "aeb56fc596436406245dd5abc2479c62ece48475201a972f1c83d505be245a21"
         },
         {
           "path": "apps/mobile/src/lib/observability/safeLog.ts",
@@ -1641,26 +1641,26 @@
         {
           "path": "apps/mobile/src/lib/observability/scrub.ts",
           "exists": true,
-          "bytes": 3132,
-          "sha256": "222a302206c4bbeb9102dc1ffed86a7404a08390a4ed341cc4fcb25f876d803e"
+          "bytes": 3191,
+          "sha256": "ad231f592848825dbeaffcbd960a31e0ae916fe7e1916ded939e9b0f79deabed"
         },
         {
           "path": "apps/mobile/src/lib/observability/sentry.test.ts",
           "exists": true,
-          "bytes": 4818,
-          "sha256": "1264166e44a7c63bda48666e181882b6d6548fb0bd1b3cdf4217223a78b5f5f6"
+          "bytes": 4816,
+          "sha256": "243ef97ced8e19077d2fb3156f55ddde86d78710afc592162cfb02a7ac0a062b"
         },
         {
           "path": "apps/mobile/src/lib/observability/sentry.ts",
           "exists": true,
-          "bytes": 4089,
-          "sha256": "d228827c369b9119584b2b75bab2b067debca9b5bc5510f58c8233da931c3230"
+          "bytes": 4111,
+          "sha256": "c81f27c8ac940d81b4ddd10521d922689840d7dfc7071ade812ff4e45e51fa9e"
         },
         {
           "path": "supabase/functions/growth-event/index.ts",
           "exists": true,
-          "bytes": 9671,
-          "sha256": "fbcbc8abdd0165bfa1ac693994bec7f6019e63ce6901a156e744394c9161c8fd"
+          "bytes": 9736,
+          "sha256": "40ad701dd6e5e204a6d37d337b6bd9e5cfb5b203503cb7169116bada8ea72dc0"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1723,8 +1723,8 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 8725,
-          "sha256": "f94244b5fc3b3d868296be7ab62d14910a036df220caddabddab028cc00ef1f1"
+          "bytes": 9264,
+          "sha256": "5354742005c5a08c9e9816e758d853c2c99dddeab04e50110547573c5d6566c2"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1751,8 +1751,8 @@
         {
           "path": "docs/brand-evidence.md",
           "exists": true,
-          "bytes": 13523,
-          "sha256": "8eaa08a1b3347ccdea168e733a0575edfa73a7d9319c4798c59df95e9effd189"
+          "bytes": 14591,
+          "sha256": "f532064e51df74c5aa3bce5c4867541a50cc33bfe35ec68bb9b4d741617363e4"
         },
         {
           "path": "apps/mobile/app.base.json",
@@ -1763,8 +1763,8 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 9553,
-          "sha256": "5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c"
+          "bytes": 9574,
+          "sha256": "6f6343b001a419e9dbbdbd85b05427f835ed2701179c2fc61ee79f0a48071851"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1791,8 +1791,8 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 9553,
-          "sha256": "5b383ac2e7cf52bc80e75c680c9321282734cc94c1ca5f3ebd4df249c429a08c"
+          "bytes": 9574,
+          "sha256": "6f6343b001a419e9dbbdbd85b05427f835ed2701179c2fc61ee79f0a48071851"
         },
         {
           "path": "supabase/config.toml",
@@ -1871,8 +1871,8 @@
         {
           "path": "docs/14-growth-to-seven-figures.md",
           "exists": true,
-          "bytes": 57849,
-          "sha256": "045a6a9864ffa4c04df4d64bf5e53f98ca936835ba8d68e372f2cba4bcf416e7"
+          "bytes": 57855,
+          "sha256": "a88aa20f72a65f653000e1c445878403e6effb983cc40181168e7de804a1dfd0"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1893,20 +1893,20 @@
         {
           "path": "docs/phase-4/catalog-source-memo-cosing.md",
           "exists": true,
-          "bytes": 2022,
-          "sha256": "313a2e63ddaeae7d9621bb04fede565d7a6b2c65086b2a171af6467b5f976b78"
+          "bytes": 2021,
+          "sha256": "49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534"
         },
         {
           "path": "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
           "exists": true,
-          "bytes": 2335,
-          "sha256": "a44a08bcdff16133b3dd39a153252d10275774f1977aaf4bcd3add7df616dfa8"
+          "bytes": 2334,
+          "sha256": "441e03ded2314f7a9efc2f11e3b7d0daa97256de17e6c654423124c1c4a4670f"
         },
         {
           "path": "docs/phase-4/odbl-compliance-memo.md",
           "exists": true,
-          "bytes": 2020,
-          "sha256": "6316be05d79992a32321bd291e7b9eb965da14c12c9c0a3feb7e9ce0dfd69a79"
+          "bytes": 2019,
+          "sha256": "0fe9bc07e3c4d34129ac8f8f2ba410a64e6caa0d77a3b7994198e0b4d9e18e69"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.test.ts",
@@ -1929,50 +1929,50 @@
         {
           "path": "apps/mobile/src/features/catalog/ingredientParser.test.ts",
           "exists": true,
-          "bytes": 1498,
-          "sha256": "3d4cbbfb6a0137835695c8b17c701729192cc2040dcd9d5b2e4a2c60eec34814"
+          "bytes": 1497,
+          "sha256": "fc196a7b95de58ed71a6deff1d9df7afb4ea394b00ca482e8b1eae27204baf25"
         },
         {
           "path": "apps/mobile/src/features/catalog/ingredientParser.ts",
           "exists": true,
-          "bytes": 6876,
-          "sha256": "17f8524a0c96086b13807f9ecdd8d49cec6a8c945b7538ebc091e5c3917ab846"
+          "bytes": 6913,
+          "sha256": "1030094651254b5e6a934ae515bd42bf2f10ba10229b1164a12d3fd2ca99eee4"
         },
         {
           "path": "apps/mobile/src/features/catalog/normalization.test.ts",
           "exists": true,
-          "bytes": 751,
-          "sha256": "5464268a0599fdcb3abfc5f4f451476f83ebf2f1c2ca3681514453f1a35790d1"
+          "bytes": 750,
+          "sha256": "255e781eb918fc8581ff91fa9048309b1e2560b204c9b66216ccc5bb0e9de759"
         },
         {
           "path": "apps/mobile/src/features/catalog/normalization.ts",
           "exists": true,
-          "bytes": 2204,
-          "sha256": "7d3f9a945d1f7e17aaae4285f96b8fa0f680c527a507bec22d636c3f1efc5083"
+          "bytes": 2203,
+          "sha256": "9d4f8294db57ab98b4fa6a2997e29512a11ccf91a18e3273c7312c7117393ac7"
         },
         {
           "path": "apps/mobile/src/features/catalog/obf.test.ts",
           "exists": true,
-          "bytes": 1863,
-          "sha256": "a07b1dd6b7c2c9e33a3060950a3f86e1174ccf27a41c2001350a69dfa8d5241d"
+          "bytes": 1862,
+          "sha256": "730dbc1d7f7d7610b0a4d73ca45efadb375768af806c634763c000fb81206e2f"
         },
         {
           "path": "apps/mobile/src/features/catalog/obf.ts",
           "exists": true,
-          "bytes": 4341,
-          "sha256": "1a2f75c6572b48ac7626d4514520a1c7dd173219fd901efb4df985d92b2fe157"
+          "bytes": 4362,
+          "sha256": "acd11cfdb4af1dbb06ca3a24f5461ff1b030042b77416c769476386f4a45f310"
         },
         {
           "path": "apps/mobile/src/features/catalog/quality.test.ts",
           "exists": true,
-          "bytes": 2259,
-          "sha256": "05f97b04206ec104128c5f1f75940bb6768d6c7156e9e4dc1532975a1565b840"
+          "bytes": 2258,
+          "sha256": "b5187f33001f741cdb8636ad61343f072502b60ffe2fba70b5e831fce570e599"
         },
         {
           "path": "apps/mobile/src/features/catalog/quality.ts",
           "exists": true,
-          "bytes": 4561,
-          "sha256": "99874e1beff9f2d87aad5254c6983b2b4fca2b0f6af9b74eedd616ee430ec7f9"
+          "bytes": 4663,
+          "sha256": "7156ff221071cf6ab90c3558c20d084c53e1f48d0025843ebea5275929103e53"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -2005,8 +2005,8 @@
         {
           "path": "apps/mobile/src/features/growth/ConflictCard.tsx",
           "exists": true,
-          "bytes": 4425,
-          "sha256": "dc0e46aae4853f7ee10fead5163f9e3e4a0969de43f58ac69977ef7486ff1361"
+          "bytes": 4802,
+          "sha256": "bc5ea65e6768caf5e29ac114d10d2983f64c62f8c7bb85d8437707812de5ea3d"
         },
         {
           "path": "apps/mobile/src/features/growth/shareCard.test.ts",
@@ -2023,8 +2023,8 @@
         {
           "path": "apps/mobile/src/features/growth/shareLandingRoute.test.ts",
           "exists": true,
-          "bytes": 1535,
-          "sha256": "ce523179c8ed97432d19e6c3bcd3f492e8bd846b5f7b604600199de1d9a270c9"
+          "bytes": 1531,
+          "sha256": "a2359a07e6efe0b61846a85c42757284975ebedd05e2085dc6e8a9589da546ae"
         },
         {
           "path": "apps/mobile/src/features/growth/shareLinks.ts",
@@ -2035,8 +2035,8 @@
         {
           "path": "docs/14-growth-to-seven-figures.md",
           "exists": true,
-          "bytes": 57849,
-          "sha256": "045a6a9864ffa4c04df4d64bf5e53f98ca936835ba8d68e372f2cba4bcf416e7"
+          "bytes": 57855,
+          "sha256": "a88aa20f72a65f653000e1c445878403e6effb983cc40181168e7de804a1dfd0"
         },
         {
           "path": "docs/brand-decision-memo.md",
