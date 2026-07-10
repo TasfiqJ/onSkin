@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-10T03:32:54.343Z
+Generated: 2026-07-10T03:54:55.635Z
 Status: pass
-Git SHA: 4044ef0675582a7907b9f0ca92317e1e4ebc3387
+Git SHA: 1cc505bbf185fd017ec8abbca79718d4d5a04797
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -15,48 +15,50 @@ reviewers must inspect before launch gates can close.
 - Review items: 35
 - Source files hashed: 237
 - Missing source files: 0
+- Current detached signoffs: 0
+- Release dispositions missing signoff: 0
 - Blockers: 0
 - Warnings: 0
 
 ## Items
 
-| Domain            | Area                                 | Status      | Reviewer | Date | Sources | Missing sources |
-| ----------------- | ------------------------------------ | ----------- | -------- | ---- | ------- | --------------- |
-| legalRegulatory   | Regulatory launch classification     | Not cleared | TBD      | TBD  | 3       | 0               |
-| legalRegulatory   | Launch claims vocabulary             | Not cleared | TBD      | TBD  | 2       | 0               |
-| legalRegulatory   | Store metadata and review notes      | Blocked     | TBD      | TBD  | 4       | 0               |
-| legalRegulatory   | Subscription and cancellation        | Not cleared | TBD      | TBD  | 29      | 0               |
-| legalRegulatory   | Commerce and paid-link disclosure    | Blocked     | TBD      | TBD  | 19      | 0               |
-| legalRegulatory   | Ask and AI disclosures               | Blocked     | TBD      | TBD  | 19      | 0               |
-| clinical          | Ingredient interaction rules         | Not cleared | TBD      | TBD  | 1       | 0               |
-| clinical          | PAO defaults                         | Not cleared | TBD      | TBD  | 1       | 0               |
-| clinical          | Recommendation types                 | Not cleared | TBD      | TBD  | 1       | 0               |
-| clinical          | Shoppable stacks                     | Not cleared | TBD      | TBD  | 1       | 0               |
-| clinical          | Community notes                      | Not cleared | TBD      | TBD  | 1       | 0               |
-| clinical          | Ask OnSkin deterministic answers     | Not cleared | TBD      | TBD  | 2       | 0               |
-| clinical          | Trend analysis                       | Not cleared | TBD      | TBD  | 13      | 0               |
-| clinical          | Photo progress copy                  | Not cleared | TBD      | TBD  | 1       | 0               |
-| clinical          | Onboarding quiz                      | Blocked     | TBD      | TBD  | 1       | 0               |
-| clinical          | Consent copy                         | Blocked     | TBD      | TBD  | 1       | 0               |
-| cosmeticChemistry | Functional tags                      | Not cleared | TBD      | TBD  | 1       | 0               |
-| cosmeticChemistry | PAO defaults                         | Not cleared | TBD      | TBD  | 1       | 0               |
-| cosmeticChemistry | Recommendation catalog               | Not cleared | TBD      | TBD  | 1       | 0               |
-| cosmeticChemistry | Shoppable stack item labels          | Not cleared | TBD      | TBD  | 1       | 0               |
-| cosmeticChemistry | Routine sequencing                   | Not cleared | TBD      | TBD  | 21      | 0               |
-| cosmeticChemistry | Smart shelf labels                   | Not cleared | TBD      | TBD  | 19      | 0               |
-| privacySecurity   | Health-data consent and withdrawal   | Blocked     | TBD      | TBD  | 11      | 0               |
-| privacySecurity   | Photo privacy and local storage      | Not cleared | TBD      | TBD  | 4       | 0               |
-| privacySecurity   | Trend and cloud-backup consent       | Blocked     | TBD      | TBD  | 14      | 0               |
-| privacySecurity   | Ask, commerce, and community consent | Blocked     | TBD      | TBD  | 4       | 0               |
-| privacySecurity   | Account deletion and data export     | Blocked     | TBD      | TBD  | 6       | 0               |
-| privacySecurity   | Analytics and crash payloads         | Not cleared | TBD      | TBD  | 10      | 0               |
-| privacySecurity   | Auth and processor posture           | Blocked     | TBD      | TBD  | 8       | 0               |
-| ipFto             | Brand and trademark clearance        | Blocked     | TBD      | TBD  | 4       | 0               |
-| ipFto             | Native identifiers and callbacks     | Blocked     | TBD      | TBD  | 3       | 0               |
-| ipFto             | Onboarding quiz FTO                  | Blocked     | TBD      | TBD  | 4       | 0               |
-| ipFto             | Public positioning differentiation   | Not cleared | TBD      | TBD  | 3       | 0               |
-| ipFto             | Catalog source and image rights      | Blocked     | TBD      | TBD  | 14      | 0               |
-| ipFto             | Share-card marks and deep links      | Blocked     | TBD      | TBD  | 9       | 0               |
+| Domain            | Area                                 | Status      | Reviewer | Date | Signoff        | Sources | Missing sources |
+| ----------------- | ------------------------------------ | ----------- | -------- | ---- | -------------- | ------- | --------------- |
+| legalRegulatory   | Regulatory launch classification     | Not cleared | TBD      | TBD  | not-applicable | 3       | 0               |
+| legalRegulatory   | Launch claims vocabulary             | Not cleared | TBD      | TBD  | not-applicable | 2       | 0               |
+| legalRegulatory   | Store metadata and review notes      | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
+| legalRegulatory   | Subscription and cancellation        | Not cleared | TBD      | TBD  | not-applicable | 29      | 0               |
+| legalRegulatory   | Commerce and paid-link disclosure    | Blocked     | TBD      | TBD  | not-applicable | 19      | 0               |
+| legalRegulatory   | Ask and AI disclosures               | Blocked     | TBD      | TBD  | not-applicable | 19      | 0               |
+| clinical          | Ingredient interaction rules         | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | PAO defaults                         | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Recommendation types                 | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Shoppable stacks                     | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Community notes                      | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Ask OnSkin deterministic answers     | Not cleared | TBD      | TBD  | not-applicable | 2       | 0               |
+| clinical          | Trend analysis                       | Not cleared | TBD      | TBD  | not-applicable | 13      | 0               |
+| clinical          | Photo progress copy                  | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Onboarding quiz                      | Blocked     | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Consent copy                         | Blocked     | TBD      | TBD  | not-applicable | 1       | 0               |
+| cosmeticChemistry | Functional tags                      | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| cosmeticChemistry | PAO defaults                         | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| cosmeticChemistry | Recommendation catalog               | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| cosmeticChemistry | Shoppable stack item labels          | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| cosmeticChemistry | Routine sequencing                   | Not cleared | TBD      | TBD  | not-applicable | 21      | 0               |
+| cosmeticChemistry | Smart shelf labels                   | Not cleared | TBD      | TBD  | not-applicable | 19      | 0               |
+| privacySecurity   | Health-data consent and withdrawal   | Blocked     | TBD      | TBD  | not-applicable | 11      | 0               |
+| privacySecurity   | Photo privacy and local storage      | Not cleared | TBD      | TBD  | not-applicable | 4       | 0               |
+| privacySecurity   | Trend and cloud-backup consent       | Blocked     | TBD      | TBD  | not-applicable | 14      | 0               |
+| privacySecurity   | Ask, commerce, and community consent | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
+| privacySecurity   | Account deletion and data export     | Blocked     | TBD      | TBD  | not-applicable | 6       | 0               |
+| privacySecurity   | Analytics and crash payloads         | Not cleared | TBD      | TBD  | not-applicable | 10      | 0               |
+| privacySecurity   | Auth and processor posture           | Blocked     | TBD      | TBD  | not-applicable | 8       | 0               |
+| ipFto             | Brand and trademark clearance        | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
+| ipFto             | Native identifiers and callbacks     | Blocked     | TBD      | TBD  | not-applicable | 3       | 0               |
+| ipFto             | Onboarding quiz FTO                  | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
+| ipFto             | Public positioning differentiation   | Not cleared | TBD      | TBD  | not-applicable | 3       | 0               |
+| ipFto             | Catalog source and image rights      | Blocked     | TBD      | TBD  | not-applicable | 14      | 0               |
+| ipFto             | Share-card marks and deep links      | Blocked     | TBD      | TBD  | not-applicable | 9       | 0               |
 
 ## Item Details
 
@@ -66,6 +68,8 @@ reviewers must inspect before launch gates can close.
 - Status: Not cleared
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `c2564b590451eddceeb4b64db758bc35b1dc9a54fbcb2f30f7424b421140af95`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Counsel must approve launch classification and forbidden-claim floor.
 
@@ -81,6 +85,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `205a2859dae3e917586daa0cc61ae379ec155bf4499de34d3c946dd01396bf62`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Store, ads, screenshots, pushes, paywalls, and review replies.
 
@@ -95,6 +101,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `0a56668532d9f5dcd06dc6f892d03b58b576f11a9d6440a5f9836dc92eecc6df`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Requires final brand, support/policy URLs, privacy labels.
 
@@ -111,6 +119,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `fe0bfef5f8b3b43a1e8c36d71412d615f0ce73f8bad2dd32af9460a746341baa`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Auto-renew, restore, cancellation, trial, and win-back copy.
 
@@ -152,6 +162,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `09d6ea8f40f013a4fddcd39a7077f9a992299c69f3fc2ff9a5cc9e194effa3d3`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: FTC disclosure, partner data sharing, source rights, order reports.
 
@@ -183,6 +195,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `f5bfa4b1953b95a1e9804d3fecbeffa4e2b3c525f5fff68d47038963845dcaf2`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Vendor, AI disclosure, safety, privacy, and state-law review needed.
 
@@ -214,6 +228,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `58d958b2f4ae182a5d9575e571d3f6dcdb2e64bad5ac0fbf5dfe3e3f1cacce32`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: All launch rules currently have `reviewedBy: null`.
 
@@ -227,6 +243,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `11b945faae2fe8d080c40ccd0934909d02fe2876de7eeca6193a43d2a847cf33`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Keep conservative until chemist/derm signoff.
 
@@ -240,6 +258,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `fab15cff8ce3028f7d70e6c54f72555c8bcbeb51b1ee9d4cd63d6611802379ef`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Structural routine types may remain; medical-adjacent needs signoff.
 
@@ -253,6 +273,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `ea4989bbf191f63c77cd615cddd82515b853d3dafef32a71b53604ffe7329370`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Paid link disclosure does not replace clinical review.
 
@@ -266,6 +288,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `ad14f9b827e2fe3203bed486b26adb22f99d7fdc3d0e60f0c7ec3fefbc682f85`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Peer/community posting remains deferred.
 
@@ -279,6 +303,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `83e3adee280c99cede557303f0ba65622501ef66f73d781ce0b32455f394f879`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Deterministic answers are still regulated user-facing copy.
 
@@ -293,6 +319,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `af261ef45a5a95dbcee8b4fe53d6c6b5fb8e1d0d7825524e8831e752481718a7`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Requires fairness and legal review before public V1.
 
@@ -318,6 +346,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `a409bbb71e8b5b77d5567dd7daee6de09884daa1fbc290c5625aa56c1d5bacfb`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Lower risk but privacy-sensitive.
 
@@ -331,6 +361,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `e958de30ee62070c1ed0be3d660532eb4ceab71d2f888a7dab7a0cab688a9c49`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Needs IP/legal plus clinical review.
 
@@ -344,6 +376,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `7846ff18d74eb8402793ed6959c80aac07ff3bede20835e167e337cf8988ecbd`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Legal-owned copy.
 
@@ -357,6 +391,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `3f2644d04c844cb142e6842536142a39c73dd5935f762f0c8a49a9b54da9aba0`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Verify naming and category boundaries.
 
@@ -370,6 +406,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `260342dd1aedf9025c378eb9a41af777eff8e1ccf04347afcc6fd11e8d048d5c`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review by category and preservative risk assumptions.
 
@@ -383,6 +421,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `d571fe46121ed6f882835c3cbf7c444964b737cb2219b95cb50a8a2a7a64ecff`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Confirm evidence notes and caveats.
 
@@ -396,6 +436,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `57b346d30eab10589faadd7f05d6311913d9b4c3977a1dc4be54b4ae5d10a409`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Product examples illustrative only.
 
@@ -409,6 +451,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `2e2b47428ca52e9754f90d74becc3ceac86ec6b5678990dd95ef7ceb9e1590b3`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Confirm order labels and conflicts.
 
@@ -442,6 +486,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `392703534dfae6fe74b99a767da14b5cabeb1f98f525c14278b2456ce74784d9`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Confirm terms are cosmetic, not medical.
 
@@ -473,6 +519,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `e427fd8224ae13b9ce59a35b21aa011751619dbd77bf2dcec8711c580ee3cd99`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Must prove live ledger/RLS and final consumer-health notice.
 
@@ -496,6 +544,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `399529912e12153e1a68fef04d8905c824d23af2af64af3ff58b2e2c7c35d933`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Physical-device encryption/restart/delete and backup-off posture.
 
@@ -512,6 +562,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `0dd2fe055f454423d40391c1d20cf6776cd87df8aec474260ea1f118b9622511`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Fairness/legal review and live consent ledger evidence are required.
 
@@ -538,6 +590,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `7cdfd190aa0e648c0b4384e5b8f540cd37ff771f57c02744be1bd8b83fcf7772`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Vendor/partner sharing and withdrawal copy must be reviewed.
 
@@ -554,6 +608,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `90f2a88565af22a9dc204d3b6c509ff34cd60089be6501da36c4bb89fa16978c`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Must work against live Supabase with owner-scoped RLS evidence.
 
@@ -572,6 +628,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `b480020b32cf17a861a3bc4d1d7b8d924f85f4a4c86dfaa808ec8bfc393824b3`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: PostHog/Sentry setup, deletion process, source maps, and payload approval.
 
@@ -594,6 +652,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `06d2dd8f5a55a810f4aa526c74cfaa328f359fedc5c9aebe69ac23754ba94dae`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Apple/Google auth, processors, breach posture, and RLS proof needed.
 
@@ -614,6 +674,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `c3c42af57b15237a026129f53fe692319d27b94d33a804f5684c23c133700b15`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Counsel, domain/store/package/social reservation evidence required.
 
@@ -622,7 +684,7 @@ Sources:
 - `docs/brand-decision-memo.md` - 5262 bytes - sha256 `c487025274d66cef019c921aaa0ec8abd1187c9039e16de70741924f567442d9`
 - `docs/brand-evidence.md` - 14591 bytes - sha256 `f532064e51df74c5aa3bce5c4867541a50cc33bfe35ec68bb9b4d741617363e4`
 - `apps/mobile/app.base.json` - 2883 bytes - sha256 `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`
-- `apps/mobile/app.config.js` - 10325 bytes - sha256 `6e595bc794edb2f08faf96b10d780482d3725bdc1fc3c2b0d5459b73ed943ef8`
+- `apps/mobile/app.config.js` - 10351 bytes - sha256 `1e991391ddb1a45682ce202fb95e4450bb799518c33eb78640af1949180b0fec`
 
 ### ipFto - Native identifiers and callbacks
 
@@ -630,13 +692,15 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `46865b83c01820ecb25fb1b2855d0140c73d0571b4e816872a0252b863537769`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Final bundle ID, package ID, URL scheme, and auth callback allow-lists.
 
 Sources:
 
 - `apps/mobile/app.base.json` - 2883 bytes - sha256 `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`
-- `apps/mobile/app.config.js` - 10325 bytes - sha256 `6e595bc794edb2f08faf96b10d780482d3725bdc1fc3c2b0d5459b73ed943ef8`
+- `apps/mobile/app.config.js` - 10351 bytes - sha256 `1e991391ddb1a45682ce202fb95e4450bb799518c33eb78640af1949180b0fec`
 - `supabase/config.toml` - 1697 bytes - sha256 `16e76630a8c50259e499fdb6d0cf7184547395e9d148f9cfc0aa1b1cf415f461`
 
 ### ipFto - Onboarding quiz FTO
@@ -645,6 +709,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `70e85554728d76a459d23715b4f2f702dd736db2d5864e4caac49fc7ee39f23b`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Compare against SkinSort and competitor onboarding/typing flows.
 
@@ -661,6 +727,8 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `476bb0a2235ab640c8bbfc772e74b08fae710c12e3d908dd3618af55ccc093d0`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Confirm copy avoids competitor confusion and unsupported superiority.
 
@@ -676,6 +744,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `79597d9baa4f94d8593d80a11d293130af4493bcae92c2ad88f8ad54506b5635`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: ODbL/source/image-rights posture and attribution obligations.
 
@@ -702,6 +772,8 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `29ffbca4b7681b1b19d4325b6172b2bc4d88a3f54181a831782619d1ea402c78`
+- Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Final watermark, domain, Universal Links/App Links, and attribution copy.
 

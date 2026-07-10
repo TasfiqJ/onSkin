@@ -1,8 +1,9 @@
 {
-  "generatedAt": "2026-07-10T03:32:54.343Z",
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-10T03:54:55.635Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "4044ef0675582a7907b9f0ca92317e1e4ebc3387",
+  "gitSha": "1cc505bbf185fd017ec8abbca79718d4d5a04797",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -10,40 +11,40 @@
       "requiredReviewer": "qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience",
       "path": "docs/phase-3/legal-regulatory-review-log.md",
       "exists": true,
-      "bytes": 5187,
-      "sha256": "1f3b32719d8e170b95dcb3808adbeacaee3a20e3c9705c10dda3d0c136d5d395"
+      "bytes": 5505,
+      "sha256": "5c179e5a31c394da8671abea1db07d1abae08f103474e0c841c0a20f32e7739a"
     },
     {
       "domain": "clinical",
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "path": "docs/phase-3/clinical-review-log.md",
       "exists": true,
-      "bytes": 5033,
-      "sha256": "1902808851cf31f294ce6d40ad8573d5e3eff0ef04174583c0e423ee83faeadc"
+      "bytes": 5329,
+      "sha256": "3613723946b772bfa3f75ae4108e29f20715d46f38fb1ae4532706c871b20bfc"
     },
     {
       "domain": "cosmeticChemistry",
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "path": "docs/phase-3/cosmetic-chemistry-review-log.md",
       "exists": true,
-      "bytes": 3324,
-      "sha256": "0c11aa9906ec92e445cc400f899d92ea9ea58052c0c96bbc2765ca4195715125"
+      "bytes": 3627,
+      "sha256": "377001efa99347f40ed5f541623289d5f6ca16f6a5166532bea7f4387f4be1e7"
     },
     {
       "domain": "privacySecurity",
       "requiredReviewer": "privacy counsel plus technical security owner",
       "path": "docs/phase-3/privacy-security-review-log.md",
       "exists": true,
-      "bytes": 7163,
-      "sha256": "77f9287563637fc4cb4b4d245d343ad44db0b8d57aa29ff17227955e1763dc54"
+      "bytes": 7464,
+      "sha256": "191b54038ca1a1c5f4b89f3a7b7d645076c9efdc115455b28eebc6f4810a2ca4"
     },
     {
       "domain": "ipFto",
       "requiredReviewer": "qualified trademark, copyright, and product/FTO counsel",
       "path": "docs/phase-3/ip-fto-review-log.md",
       "exists": true,
-      "bytes": 5085,
-      "sha256": "55d74e8e039102c6b9b6edc01a680fe12e5a1107ac05b074c2e31bfcf8574cfd"
+      "bytes": 5378,
+      "sha256": "86a8a2ce8a7172b87e04769a7f605f3b714f154de88b4e20952e5f83ee27cac5"
     }
   ],
   "summary": {
@@ -61,6 +62,8 @@
     },
     "sourcePathCount": 237,
     "missingSourcePathCount": 0,
+    "signedItemCount": 0,
+    "unsignedReleaseDispositionCount": 0,
     "blockerCount": 0,
     "warningCount": 0
   },
@@ -97,7 +100,10 @@
           "sha256": "b9cc550cb5802a61fbc0c782585b4fcc388719d2475e5f7d476005da4f26e174"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "c2564b590451eddceeb4b64db758bc35b1dc9a54fbcb2f30f7424b421140af95",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "legalRegulatory:launch-claims-vocabulary",
@@ -125,7 +131,10 @@
           "sha256": "1708605207ee343e401eb71ed07c38af193232841ac35f1fbf7c0459aa5ffa68"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "205a2859dae3e917586daa0cc61ae379ec155bf4499de34d3c946dd01396bf62",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "legalRegulatory:store-metadata-and-review-notes",
@@ -165,7 +174,10 @@
           "sha256": "1708605207ee343e401eb71ed07c38af193232841ac35f1fbf7c0459aa5ffa68"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "0a56668532d9f5dcd06dc6f892d03b58b576f11a9d6440a5f9836dc92eecc6df",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "legalRegulatory:subscription-and-cancellation",
@@ -355,7 +367,10 @@
           "sha256": "b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "fe0bfef5f8b3b43a1e8c36d71412d615f0ce73f8bad2dd32af9460a746341baa",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "legalRegulatory:commerce-and-paid-link-disclosure",
@@ -485,7 +500,10 @@
           "sha256": "3b463b2ab82b36f2cb5db77afe7b24c0620394afca1ab4bc7326e3a02e71071e"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "09d6ea8f40f013a4fddcd39a7077f9a992299c69f3fc2ff9a5cc9e194effa3d3",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "legalRegulatory:ask-and-ai-disclosures",
@@ -615,7 +633,10 @@
           "sha256": "72dd4448e92ef456113d64d86f62e09f95fbdcce5a664eeefb5ff540dedee978"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "f5bfa4b1953b95a1e9804d3fecbeffa4e2b3c525f5fff68d47038963845dcaf2",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "clinical:ingredient-interaction-rules",
@@ -637,7 +658,10 @@
           "sha256": "00a368beef8a4b59edbf5b5847868093bf402de4c65eabaa79ec7d0517116aa4"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "58d958b2f4ae182a5d9575e571d3f6dcdb2e64bad5ac0fbf5dfe3e3f1cacce32",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "clinical:pao-defaults",
@@ -659,7 +683,10 @@
           "sha256": "b311f7b3b815b025b55a650dd66ec5af8aab4470464ff3bd82c497ca4edd4e38"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "11b945faae2fe8d080c40ccd0934909d02fe2876de7eeca6193a43d2a847cf33",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "clinical:recommendation-types",
@@ -681,7 +708,10 @@
           "sha256": "e5d35422d6e33398d362b5c2e4483da8808bf2654d83d470013f537aa09e59c4"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "fab15cff8ce3028f7d70e6c54f72555c8bcbeb51b1ee9d4cd63d6611802379ef",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "clinical:shoppable-stacks",
@@ -703,7 +733,10 @@
           "sha256": "eeb8e490a598f45660b936bcc874c49fba5b2b0fc3b03b0d7a0dcb254c0dee0f"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "ea4989bbf191f63c77cd615cddd82515b853d3dafef32a71b53604ffe7329370",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "clinical:community-notes",
@@ -725,7 +758,10 @@
           "sha256": "bb478f3088b63cfc2b15f348a1aa72d0bd6397759ad7704ca9ecb4457a02a38c"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "ad14f9b827e2fe3203bed486b26adb22f99d7fdc3d0e60f0c7ec3fefbc682f85",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "clinical:ask-onskin-deterministic-answers",
@@ -753,7 +789,10 @@
           "sha256": "06cc6c48b71dcad944ea8e218810466aec3764e06df78c8552edf3bc998a034b"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "83e3adee280c99cede557303f0ba65622501ef66f73d781ce0b32455f394f879",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "clinical:trend-analysis",
@@ -847,7 +886,10 @@
           "sha256": "c3c33e17b6fe1043b94478776f8f45220e56bf5f3611703d26bcda2a7f0541c9"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "af261ef45a5a95dbcee8b4fe53d6c6b5fb8e1d0d7825524e8831e752481718a7",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "clinical:photo-progress-copy",
@@ -869,7 +911,10 @@
           "sha256": "a18bd8c9354ec64db148c6eb249ea42bccecbfda6adecf5e77e718ddc78b1284"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "a409bbb71e8b5b77d5567dd7daee6de09884daa1fbc290c5625aa56c1d5bacfb",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "clinical:onboarding-quiz",
@@ -891,7 +936,10 @@
           "sha256": "e467bfb1e6605e41cb2e62e764ff33cefbed98a936c94150de1a704654d23527"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "e958de30ee62070c1ed0be3d660532eb4ceab71d2f888a7dab7a0cab688a9c49",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "clinical:consent-copy",
@@ -913,7 +961,10 @@
           "sha256": "b76847c7761f7cd5073f6d78b47e576ce68d8c47459c71ef3543990aaa2dcecd"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "7846ff18d74eb8402793ed6959c80aac07ff3bede20835e167e337cf8988ecbd",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "cosmeticChemistry:functional-tags",
@@ -935,7 +986,10 @@
           "sha256": "2c767bf50e1551affbbd5e71fd0d3243b4f691b222ced986b21e1afbfc3c1b5a"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "3f2644d04c844cb142e6842536142a39c73dd5935f762f0c8a49a9b54da9aba0",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "cosmeticChemistry:pao-defaults",
@@ -957,7 +1011,10 @@
           "sha256": "b311f7b3b815b025b55a650dd66ec5af8aab4470464ff3bd82c497ca4edd4e38"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "260342dd1aedf9025c378eb9a41af777eff8e1ccf04347afcc6fd11e8d048d5c",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "cosmeticChemistry:recommendation-catalog",
@@ -979,7 +1036,10 @@
           "sha256": "e5d35422d6e33398d362b5c2e4483da8808bf2654d83d470013f537aa09e59c4"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "d571fe46121ed6f882835c3cbf7c444964b737cb2219b95cb50a8a2a7a64ecff",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "cosmeticChemistry:shoppable-stack-item-labels",
@@ -1001,7 +1061,10 @@
           "sha256": "eeb8e490a598f45660b936bcc874c49fba5b2b0fc3b03b0d7a0dcb254c0dee0f"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "57b346d30eab10589faadd7f05d6311913d9b4c3977a1dc4be54b4ae5d10a409",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "cosmeticChemistry:routine-sequencing",
@@ -1143,7 +1206,10 @@
           "sha256": "f60b72320bbb3ae0968cab87bce18bba4edbf3e4408a737f35056ed668a27434"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "2e2b47428ca52e9754f90d74becc3ceac86ec6b5678990dd95ef7ceb9e1590b3",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "cosmeticChemistry:smart-shelf-labels",
@@ -1273,7 +1339,10 @@
           "sha256": "cd0e52b454102f4f2074df9018e6a517abc57023e7b5340a5ff626a1f94134fd"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "392703534dfae6fe74b99a767da14b5cabeb1f98f525c14278b2456ce74784d9",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "privacySecurity:health-data-consent-and-withdrawal",
@@ -1355,7 +1424,10 @@
           "sha256": "3caf9cbb38b676c4a96dd9ae3f19479c205a90d31bb83fee7c7474bc76a2a2e9"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "e427fd8224ae13b9ce59a35b21aa011751619dbd77bf2dcec8711c580ee3cd99",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "privacySecurity:photo-privacy-and-local-storage",
@@ -1395,7 +1467,10 @@
           "sha256": "6fe72c87f652bbcc69ad6c947fb8742224647acd8c63f7f4e276044611379ec6"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "399529912e12153e1a68fef04d8905c824d23af2af64af3ff58b2e2c7c35d933",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "privacySecurity:trend-and-cloud-backup-consent",
@@ -1495,7 +1570,10 @@
           "sha256": "ad52af8afdeefe2844f3eec0df51a6541d5b8217f183edcfd0656c3785cf4ed5"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "0dd2fe055f454423d40391c1d20cf6776cd87df8aec474260ea1f118b9622511",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "privacySecurity:ask-commerce-and-community-consent",
@@ -1535,7 +1613,10 @@
           "sha256": "d17518906c0e94ee64a163fedac5b88f0a42e895f73366b621240b1d9a5a12ff"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "7cdfd190aa0e648c0b4384e5b8f540cd37ff771f57c02744be1bd8b83fcf7772",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "privacySecurity:account-deletion-and-data-export",
@@ -1587,7 +1668,10 @@
           "sha256": "3caf9cbb38b676c4a96dd9ae3f19479c205a90d31bb83fee7c7474bc76a2a2e9"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "90f2a88565af22a9dc204d3b6c509ff34cd60089be6501da36c4bb89fa16978c",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "privacySecurity:analytics-and-crash-payloads",
@@ -1663,7 +1747,10 @@
           "sha256": "40ad701dd6e5e204a6d37d337b6bd9e5cfb5b203503cb7169116bada8ea72dc0"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "b480020b32cf17a861a3bc4d1d7b8d924f85f4a4c86dfaa808ec8bfc393824b3",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "privacySecurity:auth-and-processor-posture",
@@ -1727,7 +1814,10 @@
           "sha256": "5354742005c5a08c9e9816e758d853c2c99dddeab04e50110547573c5d6566c2"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "06d2dd8f5a55a810f4aa526c74cfaa328f359fedc5c9aebe69ac23754ba94dae",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "ipFto:brand-and-trademark-clearance",
@@ -1763,11 +1853,14 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 10325,
-          "sha256": "6e595bc794edb2f08faf96b10d780482d3725bdc1fc3c2b0d5459b73ed943ef8"
+          "bytes": 10351,
+          "sha256": "1e991391ddb1a45682ce202fb95e4450bb799518c33eb78640af1949180b0fec"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "c3c42af57b15237a026129f53fe692319d27b94d33a804f5684c23c133700b15",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "ipFto:native-identifiers-and-callbacks",
@@ -1791,8 +1884,8 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 10325,
-          "sha256": "6e595bc794edb2f08faf96b10d780482d3725bdc1fc3c2b0d5459b73ed943ef8"
+          "bytes": 10351,
+          "sha256": "1e991391ddb1a45682ce202fb95e4450bb799518c33eb78640af1949180b0fec"
         },
         {
           "path": "supabase/config.toml",
@@ -1801,7 +1894,10 @@
           "sha256": "16e76630a8c50259e499fdb6d0cf7184547395e9d148f9cfc0aa1b1cf415f461"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "46865b83c01820ecb25fb1b2855d0140c73d0571b4e816872a0252b863537769",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "ipFto:onboarding-quiz-fto",
@@ -1841,7 +1937,10 @@
           "sha256": "f38ab745a996a1cdc4aef4fabb6d8119fe51c3e59dcff47d177e40fc41cda31d"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "70e85554728d76a459d23715b4f2f702dd736db2d5864e4caac49fc7ee39f23b",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "ipFto:public-positioning-differentiation",
@@ -1875,7 +1974,10 @@
           "sha256": "a88aa20f72a65f653000e1c445878403e6effb983cc40181168e7de804a1dfd0"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "476bb0a2235ab640c8bbfc772e74b08fae710c12e3d908dd3618af55ccc093d0",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "ipFto:catalog-source-and-image-rights",
@@ -1975,7 +2077,10 @@
           "sha256": "7156ff221071cf6ab90c3558c20d084c53e1f48d0025843ebea5275929103e53"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "79597d9baa4f94d8593d80a11d293130af4493bcae92c2ad88f8ad54506b5635",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     },
     {
       "id": "ipFto:share-card-marks-and-deep-links",
@@ -2045,7 +2150,10 @@
           "sha256": "c487025274d66cef019c921aaa0ec8abd1187c9039e16de70741924f567442d9"
         }
       ],
-      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
+      "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
+      "reviewSnapshotSha256": "29ffbca4b7681b1b19d4325b6172b2bc4d88a3f54181a831782619d1ea402c78",
+      "signoff": null,
+      "signoffStatus": "not-applicable"
     }
   ],
   "blockers": [],

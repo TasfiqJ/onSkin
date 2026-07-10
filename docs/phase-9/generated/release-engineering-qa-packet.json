@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T03:32:58.926Z",
+  "generatedAt": "2026-07-10T03:55:00.565Z",
   "status": "blocked",
-  "gitSha": "4044ef0675582a7907b9f0ca92317e1e4ebc3387",
+  "gitSha": "1cc505bbf185fd017ec8abbca79718d4d5a04797",
   "gitStatus": "",
   "releaseIdentity": {
     "appEnvironment": "development",
@@ -44,12 +44,12 @@
   },
   "signedOffBy": "",
   "sourceHashes": {
-    ".env.example": "ac8c000dd02595b52af4efe2a255b22ad098448a7f3bfecea6f1c3c9dfb8b4bc",
+    ".env.example": "2e389243c757aee40769b8a15718d601160687cfdbd84517aecb34c8834255ba",
     "package.json": "1c6fc4f6dca8fbaaf783034068f46c3b705cb7055d7b8b74873d85f49e4daf01",
     "package-lock.json": "f85eb88858555c4ec6827aedf170ce7752f18e0f9c94c9a0e09a2c6a449f0d26",
     ".github/workflows/security.yml": "fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d",
     "apps/mobile/app.base.json": "a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5",
-    "apps/mobile/app.config.js": "6e595bc794edb2f08faf96b10d780482d3725bdc1fc3c2b0d5459b73ed943ef8",
+    "apps/mobile/app.config.js": "1e991391ddb1a45682ce202fb95e4450bb799518c33eb78640af1949180b0fec",
     "apps/mobile/eas.json": "1187d67c82776366a401a818708e33d186f9ffbdb7be196058a561e423d60f51",
     "apps/mobile/src/lib/env.ts": "268bf5903053c48b3663f61139452deebe10da046e779eef000c1dfeb385d7a4",
     "apps/mobile/src/lib/env.test.ts": "aa44ad9dd368cc132601c375e295067e23ec28e432b032ef05e3da76988c41fa",

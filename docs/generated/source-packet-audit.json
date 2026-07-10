@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-10T03:33:00.791Z",
+  "generatedAt": "2026-07-10T03:55:02.495Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
@@ -52,13 +52,13 @@
     },
     {
       "path": "04_repo_docs/docs/DECISIONS.md",
-      "bytes": 6654,
-      "sha256": "f7090e58e54d211089ab7bb9660079fd8f328cfaa1bd9601999ed1a0f61aab64"
+      "bytes": 7731,
+      "sha256": "41fb9aecf8a40a375c3aa700afcb4d0b8f64dd24ed2d20375e25c660bca2a0fd"
     },
     {
       "path": "04_repo_docs/docs/FEATURE_INDEX.md",
       "bytes": 4833,
-      "sha256": "e52cc343626e2896ce07bde2a61652503dfde2b2dfaad2f7244fa3ade2b67ba1"
+      "sha256": "19842ad461c6932a4cedb4a2d2338e1ce866674b0bd57f4a85e6bf4f59760c90"
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN.md",
@@ -131,10 +131,10 @@
       "title": "Decisions",
       "sourcePath": "04_repo_docs/docs/DECISIONS.md",
       "activePath": "docs/DECISIONS.md",
-      "sourceBytes": 6654,
-      "activeBytes": 6654,
-      "sourceSha256": "f7090e58e54d211089ab7bb9660079fd8f328cfaa1bd9601999ed1a0f61aab64",
-      "activeSha256": "f7090e58e54d211089ab7bb9660079fd8f328cfaa1bd9601999ed1a0f61aab64",
+      "sourceBytes": 7731,
+      "activeBytes": 7731,
+      "sourceSha256": "41fb9aecf8a40a375c3aa700afcb4d0b8f64dd24ed2d20375e25c660bca2a0fd",
+      "activeSha256": "41fb9aecf8a40a375c3aa700afcb4d0b8f64dd24ed2d20375e25c660bca2a0fd",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -146,8 +146,8 @@
       "activePath": "docs/FEATURE_INDEX.md",
       "sourceBytes": 4833,
       "activeBytes": 4833,
-      "sourceSha256": "e52cc343626e2896ce07bde2a61652503dfde2b2dfaad2f7244fa3ade2b67ba1",
-      "activeSha256": "e52cc343626e2896ce07bde2a61652503dfde2b2dfaad2f7244fa3ade2b67ba1",
+      "sourceSha256": "19842ad461c6932a4cedb4a2d2338e1ce866674b0bd57f4a85e6bf4f59760c90",
+      "activeSha256": "19842ad461c6932a4cedb4a2d2338e1ce866674b0bd57f4a85e6bf4f59760c90",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true

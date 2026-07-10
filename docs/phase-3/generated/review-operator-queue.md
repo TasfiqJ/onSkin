@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-10T03:32:54.792Z
+Generated: 2026-07-10T03:54:56.112Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 4044ef0675582a7907b9f0ca92317e1e4ebc3387
+Git SHA: 1cc505bbf185fd017ec8abbca79718d4d5a04797
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -17,48 +17,50 @@ names, credentials, dates, or legal/clinical decisions.
 - P0 launch blockers: 15
 - P1 reviewer handoffs: 19
 - P2 follow-ups: 1
+- Current detached signoffs: 0
+- Release dispositions missing signoff: 0
 - Blockers: 0
 - Warnings: 0
 
 ## Next Operator Actions
 
-| Rank | Priority | Domain             | Area                                 | Status      | Owner                                                | Action                                                                                                                       | Sources |
-| ---- | -------- | ------------------ | ------------------------------------ | ----------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------- |
-| 1    | P0       | Clinical           | Consent copy                         | Blocked     | Founder + board-certified dermatologist              | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 1       |
-| 2    | P0       | Clinical           | Onboarding quiz                      | Blocked     | Founder + board-certified dermatologist              | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 1       |
-| 3    | P0       | IP/FTO             | Brand and trademark clearance        | Blocked     | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
-| 4    | P0       | IP/FTO             | Catalog source and image rights      | Blocked     | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 14      |
-| 5    | P0       | IP/FTO             | Native identifiers and callbacks     | Blocked     | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 3       |
-| 6    | P0       | IP/FTO             | Onboarding quiz FTO                  | Blocked     | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
-| 7    | P0       | IP/FTO             | Share-card marks and deep links      | Blocked     | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 9       |
-| 8    | P0       | Legal/regulatory   | Ask and AI disclosures               | Blocked     | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 19      |
-| 9    | P0       | Legal/regulatory   | Commerce and paid-link disclosure    | Blocked     | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 19      |
-| 10   | P0       | Legal/regulatory   | Store metadata and review notes      | Blocked     | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
-| 11   | P0       | Privacy/security   | Account deletion and data export     | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 6       |
-| 12   | P0       | Privacy/security   | Ask, commerce, and community consent | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
-| 13   | P0       | Privacy/security   | Auth and processor posture           | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 8       |
-| 14   | P0       | Privacy/security   | Health-data consent and withdrawal   | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 11      |
-| 15   | P0       | Privacy/security   | Trend and cloud-backup consent       | Blocked     | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 14      |
-| 16   | P1       | Clinical           | Ask OnSkin deterministic answers     | Not cleared | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 2       |
-| 17   | P1       | Clinical           | Community notes                      | Not cleared | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
-| 18   | P1       | Clinical           | Ingredient interaction rules         | Not cleared | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
-| 19   | P1       | Clinical           | PAO defaults                         | Not cleared | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
-| 20   | P1       | Clinical           | Photo progress copy                  | Not cleared | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
-| 21   | P1       | Clinical           | Recommendation types                 | Not cleared | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
-| 22   | P1       | Clinical           | Shoppable stacks                     | Not cleared | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
-| 23   | P1       | Clinical           | Trend analysis                       | Not cleared | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 13      |
-| 24   | P1       | Cosmetic chemistry | Functional tags                      | Not cleared | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
-| 25   | P1       | Cosmetic chemistry | PAO defaults                         | Not cleared | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
-| 26   | P1       | Cosmetic chemistry | Recommendation catalog               | Not cleared | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
-| 27   | P1       | Cosmetic chemistry | Routine sequencing                   | Not cleared | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 21      |
-| 28   | P1       | Cosmetic chemistry | Shoppable stack item labels          | Not cleared | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
-| 29   | P1       | Cosmetic chemistry | Smart shelf labels                   | Not cleared | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 19      |
-| 30   | P1       | Legal/regulatory   | Launch claims vocabulary             | Not cleared | Founder + qualified legal counsel                    | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 2       |
-| 31   | P1       | Legal/regulatory   | Regulatory launch classification     | Not cleared | Founder + qualified legal counsel                    | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 3       |
-| 32   | P1       | Legal/regulatory   | Subscription and cancellation        | Not cleared | Founder + qualified legal counsel                    | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 29      |
-| 33   | P1       | Privacy/security   | Analytics and crash payloads         | Not cleared | Founder + privacy counsel + technical security owner | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 10      |
-| 34   | P1       | Privacy/security   | Photo privacy and local storage      | Not cleared | Founder + privacy counsel + technical security owner | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 4       |
-| 35   | P2       | IP/FTO             | Public positioning differentiation   | Not cleared | Founder + trademark/IP/FTO counsel                   | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 3       |
+| Rank | Priority | Domain             | Area                                 | Status      | Signoff        | Owner                                                | Action                                                                                                                       | Sources |
+| ---- | -------- | ------------------ | ------------------------------------ | ----------- | -------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------- |
+| 1    | P0       | Clinical           | Consent copy                         | Blocked     | not-applicable | Founder + board-certified dermatologist              | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 1       |
+| 2    | P0       | Clinical           | Onboarding quiz                      | Blocked     | not-applicable | Founder + board-certified dermatologist              | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 1       |
+| 3    | P0       | IP/FTO             | Brand and trademark clearance        | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
+| 4    | P0       | IP/FTO             | Catalog source and image rights      | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 14      |
+| 5    | P0       | IP/FTO             | Native identifiers and callbacks     | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 3       |
+| 6    | P0       | IP/FTO             | Onboarding quiz FTO                  | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
+| 7    | P0       | IP/FTO             | Share-card marks and deep links      | Blocked     | not-applicable | Founder + trademark/IP/FTO counsel                   | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 9       |
+| 8    | P0       | Legal/regulatory   | Ask and AI disclosures               | Blocked     | not-applicable | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 19      |
+| 9    | P0       | Legal/regulatory   | Commerce and paid-link disclosure    | Blocked     | not-applicable | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 19      |
+| 10   | P0       | Legal/regulatory   | Store metadata and review notes      | Blocked     | not-applicable | Founder + qualified legal counsel                    | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
+| 11   | P0       | Privacy/security   | Account deletion and data export     | Blocked     | not-applicable | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 6       |
+| 12   | P0       | Privacy/security   | Ask, commerce, and community consent | Blocked     | not-applicable | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 4       |
+| 13   | P0       | Privacy/security   | Auth and processor posture           | Blocked     | not-applicable | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 8       |
+| 14   | P0       | Privacy/security   | Health-data consent and withdrawal   | Blocked     | not-applicable | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 11      |
+| 15   | P0       | Privacy/security   | Trend and cloud-backup consent       | Blocked     | not-applicable | Founder + privacy counsel + technical security owner | Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.                     | 14      |
+| 16   | P1       | Clinical           | Ask OnSkin deterministic answers     | Not cleared | not-applicable | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 2       |
+| 17   | P1       | Clinical           | Community notes                      | Not cleared | not-applicable | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
+| 18   | P1       | Clinical           | Ingredient interaction rules         | Not cleared | not-applicable | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
+| 19   | P1       | Clinical           | PAO defaults                         | Not cleared | not-applicable | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
+| 20   | P1       | Clinical           | Photo progress copy                  | Not cleared | not-applicable | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
+| 21   | P1       | Clinical           | Recommendation types                 | Not cleared | not-applicable | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
+| 22   | P1       | Clinical           | Shoppable stacks                     | Not cleared | not-applicable | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
+| 23   | P1       | Clinical           | Trend analysis                       | Not cleared | not-applicable | Founder + board-certified dermatologist              | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 13      |
+| 24   | P1       | Cosmetic chemistry | Functional tags                      | Not cleared | not-applicable | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
+| 25   | P1       | Cosmetic chemistry | PAO defaults                         | Not cleared | not-applicable | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
+| 26   | P1       | Cosmetic chemistry | Recommendation catalog               | Not cleared | not-applicable | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
+| 27   | P1       | Cosmetic chemistry | Routine sequencing                   | Not cleared | not-applicable | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 21      |
+| 28   | P1       | Cosmetic chemistry | Shoppable stack item labels          | Not cleared | not-applicable | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 1       |
+| 29   | P1       | Cosmetic chemistry | Smart shelf labels                   | Not cleared | not-applicable | Founder + qualified cosmetic chemist                 | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 19      |
+| 30   | P1       | Legal/regulatory   | Launch claims vocabulary             | Not cleared | not-applicable | Founder + qualified legal counsel                    | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 2       |
+| 31   | P1       | Legal/regulatory   | Regulatory launch classification     | Not cleared | not-applicable | Founder + qualified legal counsel                    | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 3       |
+| 32   | P1       | Legal/regulatory   | Subscription and cancellation        | Not cleared | not-applicable | Founder + qualified legal counsel                    | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 29      |
+| 33   | P1       | Privacy/security   | Analytics and crash payloads         | Not cleared | not-applicable | Founder + privacy counsel + technical security owner | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 10      |
+| 34   | P1       | Privacy/security   | Photo privacy and local storage      | Not cleared | not-applicable | Founder + privacy counsel + technical security owner | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 4       |
+| 35   | P2       | IP/FTO             | Public positioning differentiation   | Not cleared | not-applicable | Founder + trademark/IP/FTO counsel                   | Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes. | 3       |
 
 ## Item Details
 
@@ -69,6 +71,8 @@ names, credentials, dates, or legal/clinical decisions.
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `7846ff18d74eb8402793ed6959c80aac07ff3bede20835e167e337cf8988ecbd`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Legal-owned copy.
@@ -84,6 +88,8 @@ Sources:
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `e958de30ee62070c1ed0be3d660532eb4ceab71d2f888a7dab7a0cab688a9c49`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Needs IP/legal plus clinical review.
@@ -99,6 +105,8 @@ Sources:
 - External owner: Founder + trademark/IP/FTO counsel
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `c3c42af57b15237a026129f53fe692319d27b94d33a804f5684c23c133700b15`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Counsel, domain/store/package/social reservation evidence required.
@@ -108,7 +116,7 @@ Sources:
 - `docs/brand-decision-memo.md` - 5262 bytes - sha256 `c487025274d66cef019c921aaa0ec8abd1187c9039e16de70741924f567442d9`
 - `docs/brand-evidence.md` - 14591 bytes - sha256 `f532064e51df74c5aa3bce5c4867541a50cc33bfe35ec68bb9b4d741617363e4`
 - `apps/mobile/app.base.json` - 2883 bytes - sha256 `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`
-- `apps/mobile/app.config.js` - 10325 bytes - sha256 `6e595bc794edb2f08faf96b10d780482d3725bdc1fc3c2b0d5459b73ed943ef8`
+- `apps/mobile/app.config.js` - 10351 bytes - sha256 `1e991391ddb1a45682ce202fb95e4450bb799518c33eb78640af1949180b0fec`
 
 ### P0 - IP/FTO - Catalog source and image rights
 
@@ -117,6 +125,8 @@ Sources:
 - External owner: Founder + trademark/IP/FTO counsel
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `79597d9baa4f94d8593d80a11d293130af4493bcae92c2ad88f8ad54506b5635`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: ODbL/source/image-rights posture and attribution obligations.
@@ -145,6 +155,8 @@ Sources:
 - External owner: Founder + trademark/IP/FTO counsel
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `46865b83c01820ecb25fb1b2855d0140c73d0571b4e816872a0252b863537769`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Final bundle ID, package ID, URL scheme, and auth callback allow-lists.
@@ -152,7 +164,7 @@ Sources:
 Sources:
 
 - `apps/mobile/app.base.json` - 2883 bytes - sha256 `a94796ab8d3d7f5765ccaf9e8137d55519b983b32175b76b2e26bc7e019869c5`
-- `apps/mobile/app.config.js` - 10325 bytes - sha256 `6e595bc794edb2f08faf96b10d780482d3725bdc1fc3c2b0d5459b73ed943ef8`
+- `apps/mobile/app.config.js` - 10351 bytes - sha256 `1e991391ddb1a45682ce202fb95e4450bb799518c33eb78640af1949180b0fec`
 - `supabase/config.toml` - 1697 bytes - sha256 `16e76630a8c50259e499fdb6d0cf7184547395e9d148f9cfc0aa1b1cf415f461`
 
 ### P0 - IP/FTO - Onboarding quiz FTO
@@ -162,6 +174,8 @@ Sources:
 - External owner: Founder + trademark/IP/FTO counsel
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `70e85554728d76a459d23715b4f2f702dd736db2d5864e4caac49fc7ee39f23b`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Compare against SkinSort and competitor onboarding/typing flows.
@@ -180,6 +194,8 @@ Sources:
 - External owner: Founder + trademark/IP/FTO counsel
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `29ffbca4b7681b1b19d4325b6172b2bc4d88a3f54181a831782619d1ea402c78`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Final watermark, domain, Universal Links/App Links, and attribution copy.
@@ -203,6 +219,8 @@ Sources:
 - External owner: Founder + qualified legal counsel
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `f5bfa4b1953b95a1e9804d3fecbeffa4e2b3c525f5fff68d47038963845dcaf2`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Vendor, AI disclosure, safety, privacy, and state-law review needed.
@@ -236,6 +254,8 @@ Sources:
 - External owner: Founder + qualified legal counsel
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `09d6ea8f40f013a4fddcd39a7077f9a992299c69f3fc2ff9a5cc9e194effa3d3`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: FTC disclosure, partner data sharing, source rights, order reports.
@@ -269,6 +289,8 @@ Sources:
 - External owner: Founder + qualified legal counsel
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `0a56668532d9f5dcd06dc6f892d03b58b576f11a9d6440a5f9836dc92eecc6df`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Requires final brand, support/policy URLs, privacy labels.
@@ -287,6 +309,8 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `90f2a88565af22a9dc204d3b6c509ff34cd60089be6501da36c4bb89fa16978c`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Must work against live Supabase with owner-scoped RLS evidence.
@@ -307,6 +331,8 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `7cdfd190aa0e648c0b4384e5b8f540cd37ff771f57c02744be1bd8b83fcf7772`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Vendor/partner sharing and withdrawal copy must be reviewed.
@@ -325,6 +351,8 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `06d2dd8f5a55a810f4aa526c74cfaa328f359fedc5c9aebe69ac23754ba94dae`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Apple/Google auth, processors, breach posture, and RLS proof needed.
@@ -347,6 +375,8 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `e427fd8224ae13b9ce59a35b21aa011751619dbd77bf2dcec8711c580ee3cd99`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Must prove live ledger/RLS and final consumer-health notice.
@@ -372,6 +402,8 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `0dd2fe055f454423d40391c1d20cf6776cd87df8aec474260ea1f118b9622511`
+- Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Fairness/legal review and live consent ledger evidence are required.
@@ -400,6 +432,8 @@ Sources:
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `83e3adee280c99cede557303f0ba65622501ef66f73d781ce0b32455f394f879`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Deterministic answers are still regulated user-facing copy.
@@ -416,6 +450,8 @@ Sources:
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `ad14f9b827e2fe3203bed486b26adb22f99d7fdc3d0e60f0c7ec3fefbc682f85`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Peer/community posting remains deferred.
@@ -431,6 +467,8 @@ Sources:
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `58d958b2f4ae182a5d9575e571d3f6dcdb2e64bad5ac0fbf5dfe3e3f1cacce32`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: All launch rules currently have `reviewedBy: null`.
@@ -446,6 +484,8 @@ Sources:
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `11b945faae2fe8d080c40ccd0934909d02fe2876de7eeca6193a43d2a847cf33`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Keep conservative until chemist/derm signoff.
@@ -461,6 +501,8 @@ Sources:
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `a409bbb71e8b5b77d5567dd7daee6de09884daa1fbc290c5625aa56c1d5bacfb`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Lower risk but privacy-sensitive.
@@ -476,6 +518,8 @@ Sources:
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `fab15cff8ce3028f7d70e6c54f72555c8bcbeb51b1ee9d4cd63d6611802379ef`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Structural routine types may remain; medical-adjacent needs signoff.
@@ -491,6 +535,8 @@ Sources:
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `ea4989bbf191f63c77cd615cddd82515b853d3dafef32a71b53604ffe7329370`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Paid link disclosure does not replace clinical review.
@@ -506,6 +552,8 @@ Sources:
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `af261ef45a5a95dbcee8b4fe53d6c6b5fb8e1d0d7825524e8831e752481718a7`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Requires fairness and legal review before public V1.
@@ -533,6 +581,8 @@ Sources:
 - External owner: Founder + qualified cosmetic chemist
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `3f2644d04c844cb142e6842536142a39c73dd5935f762f0c8a49a9b54da9aba0`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Verify naming and category boundaries.
@@ -548,6 +598,8 @@ Sources:
 - External owner: Founder + qualified cosmetic chemist
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `260342dd1aedf9025c378eb9a41af777eff8e1ccf04347afcc6fd11e8d048d5c`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Review by category and preservative risk assumptions.
@@ -563,6 +615,8 @@ Sources:
 - External owner: Founder + qualified cosmetic chemist
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `d571fe46121ed6f882835c3cbf7c444964b737cb2219b95cb50a8a2a7a64ecff`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Confirm evidence notes and caveats.
@@ -578,6 +632,8 @@ Sources:
 - External owner: Founder + qualified cosmetic chemist
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `2e2b47428ca52e9754f90d74becc3ceac86ec6b5678990dd95ef7ceb9e1590b3`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Confirm order labels and conflicts.
@@ -613,6 +669,8 @@ Sources:
 - External owner: Founder + qualified cosmetic chemist
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `57b346d30eab10589faadd7f05d6311913d9b4c3977a1dc4be54b4ae5d10a409`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Product examples illustrative only.
@@ -628,6 +686,8 @@ Sources:
 - External owner: Founder + qualified cosmetic chemist
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `392703534dfae6fe74b99a767da14b5cabeb1f98f525c14278b2456ce74784d9`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Confirm terms are cosmetic, not medical.
@@ -661,6 +721,8 @@ Sources:
 - External owner: Founder + qualified legal counsel
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `205a2859dae3e917586daa0cc61ae379ec155bf4499de34d3c946dd01396bf62`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Store, ads, screenshots, pushes, paywalls, and review replies.
@@ -677,6 +739,8 @@ Sources:
 - External owner: Founder + qualified legal counsel
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `c2564b590451eddceeb4b64db758bc35b1dc9a54fbcb2f30f7424b421140af95`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Counsel must approve launch classification and forbidden-claim floor.
@@ -694,6 +758,8 @@ Sources:
 - External owner: Founder + qualified legal counsel
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `fe0bfef5f8b3b43a1e8c36d71412d615f0ce73f8bad2dd32af9460a746341baa`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Auto-renew, restore, cancellation, trial, and win-back copy.
@@ -737,6 +803,8 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `b480020b32cf17a861a3bc4d1d7b8d924f85f4a4c86dfaa808ec8bfc393824b3`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: PostHog/Sentry setup, deletion process, source maps, and payload approval.
@@ -761,6 +829,8 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `399529912e12153e1a68fef04d8905c824d23af2af64af3ff58b2e2c7c35d933`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Physical-device encryption/restart/delete and backup-off posture.
@@ -779,6 +849,8 @@ Sources:
 - External owner: Founder + trademark/IP/FTO counsel
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `476bb0a2235ab640c8bbfc772e74b08fae710c12e3d908dd3618af55ccc093d0`
+- Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Notes: Confirm copy avoids competitor confusion and unsupported superiority.

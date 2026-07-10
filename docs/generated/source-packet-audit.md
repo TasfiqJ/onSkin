@@ -1,6 +1,6 @@
 # Source Packet Audit
 
-Generated: 2026-07-10T03:33:00.791Z
+Generated: 2026-07-10T03:55:02.495Z
 Status: pass
 Strict mode: yes
 
@@ -28,8 +28,8 @@ the top-level packet markdown shape changes without updating the audit.
 | ARCHITECTURE.md                | identical          | yes       | yes       | dbcd9f7a2a71   |
 | CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | 237c46f8ab33   |
 | CODE_REVIEW.md                 | identical          | yes       | yes       | 83db5ca6e5ad   |
-| DECISIONS.md                   | identical          | yes       | yes       | f7090e58e54d   |
-| FEATURE_INDEX.md               | identical          | yes       | yes       | e52cc343626e   |
+| DECISIONS.md                   | identical          | yes       | yes       | 41fb9aecf8a4   |
+| FEATURE_INDEX.md               | identical          | yes       | yes       | 19842ad461c6   |
 | MASTER_PLAN.md                 | identical          | yes       | yes       | 30bcdf57b71e   |
 | MASTER_PLAN_UPDATE_PATCH.md    | identical          | yes       | yes       | 634edff435fa   |
 | PRODUCT_REQUIREMENTS.md        | identical          | yes       | yes       | fabb281ce1fa   |
@@ -52,8 +52,8 @@ the top-level packet markdown shape changes without updating the audit.
 | 04_repo_docs/docs/ARCHITECTURE.md                | 4924  | dbcd9f7a2a71 |
 | 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md | 7739  | 237c46f8ab33 |
 | 04_repo_docs/docs/CODE_REVIEW.md                 | 1985  | 83db5ca6e5ad |
-| 04_repo_docs/docs/DECISIONS.md                   | 6654  | f7090e58e54d |
-| 04_repo_docs/docs/FEATURE_INDEX.md               | 4833  | e52cc343626e |
+| 04_repo_docs/docs/DECISIONS.md                   | 7731  | 41fb9aecf8a4 |
+| 04_repo_docs/docs/FEATURE_INDEX.md               | 4833  | 19842ad461c6 |
 | 04_repo_docs/docs/MASTER_PLAN.md                 | 53863 | 30bcdf57b71e |
 | 04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md    | 1473  | 634edff435fa |
 | 04_repo_docs/docs/PRODUCT_REQUIREMENTS.md        | 5347  | fabb281ce1fa |
