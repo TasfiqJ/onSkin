@@ -94,6 +94,7 @@ function statusBucket(item) {
     .trim()
     .toLowerCase();
   if (status === 'approved') return 'approved';
+  if (status === 'deferred') return 'deferred';
   if (status === 'blocked') return 'blocked';
   if (status.includes('not cleared')) return 'notCleared';
   return 'needsReview';
@@ -125,6 +126,9 @@ function operatorActionFor(item) {
   if (bucket === 'approved') {
     return 'Confirm the current source hashes still match the approved row and preserve any conditions.';
   }
+  if (bucket === 'deferred') {
+    return 'Confirm the source snapshot, decision owner, deferral reason, and production gate remain current.';
+  }
   if (bucket === 'blocked') {
     return 'Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.';
   }
@@ -141,6 +145,12 @@ function validateItem(item, blockers) {
   }
   if (item.sourcePaths.length === 0) {
     blockers.push(`Review worklist item ${item.id} has no source files.`);
+  }
+  if (!/^[a-f0-9]{64}$/i.test(String(item?.reviewSnapshotSha256 ?? ''))) {
+    blockers.push(`Review worklist item ${item.id} has no valid review snapshot SHA-256.`);
+  }
+  if (['approved', 'deferred'].includes(statusBucket(item)) && item?.signoffStatus !== 'current') {
+    blockers.push(`Review worklist item ${item.id} has no current detached signoff.`);
   }
   for (const source of item.sourcePaths) {
     if (!source?.path)
@@ -207,6 +217,10 @@ function itemDetailMarkdown(item) {
     `- External owner: ${item.externalOwner}`,
     `- Required reviewer: ${item.requiredReviewer}`,
     `- Current reviewer/date: ${item.reviewer} / ${item.date}`,
+    `- Review snapshot SHA-256: \`${item.reviewSnapshotSha256}\``,
+    `- Detached signoff: ${item.signoffStatus}${
+      item.signoffPath ? ` (\`${item.signoffPath}\`)` : ''
+    }`,
     `- Operator action: ${item.operatorAction}`,
     `- Required evidence: ${item.requiredEvidence}`,
     `- Notes: ${item.notes || 'None.'}`,
@@ -242,6 +256,12 @@ if (sourceWorklist?.gitStatus) {
     'Source Phase 3 review worklist records a dirty Git worktree; regenerate from a clean tree before final reviewer handoff.',
   );
 }
+if (Number(sourceWorklist?.summary?.blockerCount) > 0) {
+  blockers.push(`${sourceWorklistPath} reports contract blockers.`);
+}
+if (Array.isArray(sourceWorklist?.blockers) && sourceWorklist.blockers.length > 0) {
+  blockers.push(`${sourceWorklistPath} contains blocker details.`);
+}
 
 const rawItems = Array.isArray(sourceWorklist?.items) ? sourceWorklist.items : [];
 if (sourceWorklist && rawItems.length === 0) {
@@ -266,6 +286,9 @@ const items = rawItems
       requiredReviewer: item.requiredReviewer,
       reviewer: isPlaceholder(item.reviewer) ? 'TBD' : item.reviewer,
       date: isPlaceholder(item.date) ? 'TBD' : item.date,
+      reviewSnapshotSha256: item.reviewSnapshotSha256,
+      signoffStatus: item.signoffStatus ?? 'not-applicable',
+      signoffPath: item.signoff?.file?.path ?? null,
       operatorAction: operatorActionFor(item),
       requiredEvidence: item.requiredEvidence,
       notes: item.notes,
@@ -294,6 +317,11 @@ const statusCounts = items.reduce((acc, item) => {
   acc[item.statusBucket] = (acc[item.statusBucket] ?? 0) + 1;
   return acc;
 }, {});
+const signedItemCount = items.filter((item) => item.signoffStatus === 'current').length;
+const unsignedReleaseDispositionCount = items.filter(
+  (item) =>
+    ['approved', 'deferred'].includes(item.statusBucket) && item.signoffStatus !== 'current',
+).length;
 const sourceRecord = exists(sourceWorklistPath)
   ? {
       ...fileRecord(sourceWorklistPath),
@@ -309,14 +337,21 @@ const queue = {
   gitSha,
   gitStatus,
   sourceWorklist: sourceRecord,
-  reviewReadiness: items.some((item) => item.priority === 'P0')
-    ? 'external-blocked'
-    : 'ready-to-send',
+  reviewReadiness:
+    items.length > 0 &&
+    items.every(
+      (item) =>
+        ['approved', 'deferred'].includes(item.statusBucket) && item.signoffStatus === 'current',
+    )
+      ? 'release-dispositions-recorded'
+      : 'external-blocked',
   summary: {
     itemCount: items.length,
     priorityCounts,
     domainCounts,
     statusCounts,
+    signedItemCount,
+    unsignedReleaseDispositionCount,
     blockerCount: blockers.length,
     warningCount: warnings.length,
   },
@@ -346,19 +381,22 @@ const mdContent = [
   `- P0 launch blockers: ${queue.summary.priorityCounts.P0 ?? 0}`,
   `- P1 reviewer handoffs: ${queue.summary.priorityCounts.P1 ?? 0}`,
   `- P2 follow-ups: ${queue.summary.priorityCounts.P2 ?? 0}`,
+  `- Current detached signoffs: ${queue.summary.signedItemCount}`,
+  `- Release dispositions missing signoff: ${queue.summary.unsignedReleaseDispositionCount}`,
   `- Blockers: ${queue.summary.blockerCount}`,
   `- Warnings: ${queue.summary.warningCount}`,
   '',
   '## Next Operator Actions',
   '',
   markdownTable(
-    ['Rank', 'Priority', 'Domain', 'Area', 'Status', 'Owner', 'Action', 'Sources'],
+    ['Rank', 'Priority', 'Domain', 'Area', 'Status', 'Signoff', 'Owner', 'Action', 'Sources'],
     items.map((item) => [
       item.rank,
       item.priority,
       item.domainLabel,
       item.area,
       item.status,
+      item.signoffStatus,
       item.externalOwner,
       item.operatorAction,
       item.sourcePaths.length,

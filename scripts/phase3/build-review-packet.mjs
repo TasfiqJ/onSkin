@@ -1,12 +1,19 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { command, gitStatusExcludingGeneratedEvidence } from '../phase9/lib.mjs';
 
 const root = process.cwd();
 const packetOutDir = process.env.PHASE3_REVIEW_PACKET_OUT_DIR ?? 'docs/phase-3/generated';
 const generatedDir = resolve(root, packetOutDir);
+const signoffDir = 'docs/phase-3/signoffs';
+const signoffPaths = existsSync(resolve(root, signoffDir))
+  ? readdirSync(resolve(root, signoffDir), { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.json'))
+      .map((entry) => `${signoffDir}/${entry.name}`)
+      .sort((a, b) => a.localeCompare(b))
+  : [];
 const packetOutputPaths = [
   `${packetOutDir}/review-packet-manifest.json`,
   `${packetOutDir}/review-packet.md`,
@@ -22,10 +29,15 @@ const packets = {
     'scripts/phase3/check-production-release.mjs',
     'scripts/phase3/check-production-release-smoke.mjs',
     'apps/mobile/phase3-review-evidence.js',
+    'apps/mobile/src/lib/appConfig.test.ts',
     'apps/mobile/app.config.js',
     'scripts/phase9/lib.mjs',
     'docs/phase-3/review-packet-index.md',
+    'docs/phase-3/review-signoff.schema.json',
+    'docs/phase-3/review-signoff.template.json',
+    'docs/phase-3/signoffs/README.md',
   ],
+  reviewSignoffs: signoffPaths,
   legalRegulatory: [
     'docs/phase-3/legal-regulatory-review-log.md',
     'docs/phase-3/regulatory-positioning-memo.md',

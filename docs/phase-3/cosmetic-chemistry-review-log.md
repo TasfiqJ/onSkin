@@ -36,10 +36,17 @@ and a production gate that keeps the surface hidden. `Blocked` and
 
 ## Chemistry Approval Template
 
-| Area | Source | Reviewer | Credential | Review date | Approved version/hash | Decision                               | Conditions |
-| ---- | ------ | -------- | ---------- | ----------- | --------------------- | -------------------------------------- | ---------- |
-| TBD  | TBD    | TBD      | TBD        | TBD         | TBD                   | Approved / changes required / rejected | TBD        |
+When a reviewer reaches a release decision, update the matching Inventory row
+and add one JSON record under `docs/phase-3/signoffs/` using
+`docs/phase-3/review-signoff.template.json`. The JSON record is the
+machine-readable credential and conditions evidence.
+
+| Area | Source | Reviewer | Credential | Review date | Review snapshot SHA-256 | Decision            | Conditions |
+| ---- | ------ | -------- | ---------- | ----------- | ----------------------- | ------------------- | ---------- |
+| TBD  | TBD    | TBD      | TBD        | TBD         | TBD                     | Approved / Deferred | TBD        |
 
 ## Launch Rule
 
-No product-specific claim, stack, PAO default, or ingredient caveat may be marked reviewed in code without a completed row here.
+No product-specific claim, stack, PAO default, or ingredient caveat may be
+marked reviewed in code without an `Approved` Inventory row and a current
+detached signoff. A `Deferred` row must remain excluded from production.

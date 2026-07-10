@@ -57,6 +57,10 @@ authoritative for product behavior, schema, privacy posture, and launch scope:
 - `docs/phase-3/cosmetic-chemistry-review-log.md`
 - `docs/phase-3/privacy-security-review-log.md`
 - `docs/phase-3/ip-fto-review-log.md`
+- `docs/phase-3/review-packet-index.md`
+- `docs/phase-3/review-signoff.schema.json`
+- `docs/phase-3/review-signoff.template.json`
+- `docs/phase-3/signoffs/README.md`
 - `docs/phase-3/quiz-fto-summary.md`
 - `docs/phase-3/data-inventory.md`
 - `docs/phase-3/consent-matrix.md`

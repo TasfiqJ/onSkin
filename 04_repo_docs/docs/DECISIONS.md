@@ -65,6 +65,15 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: production builds remain blocked until Tas obtains real named signoff against a clean exact-source-hash packet and the strict copy audit passes.
 - Status: Accepted.
 
+### 2026-07-09 - Bind Phase 3 Decisions To Detached Item Snapshots
+
+- Decision: Require one source-controlled JSON signoff for every `Approved` or `Deferred` Phase 3 item, bound to a deterministic digest of its review context and exact source hashes.
+- Alternatives: trust only the Markdown row, reference the self-changing overall packet manifest, accept one global clearance boolean, or store reviewer assertions only in environment variables.
+- Criteria: explicit credentials and conditions, stale-evidence invalidation, no circular packet hash, independent production verification, and a workable external-review handoff.
+- Evidence: the prior worklist verified names, dates, dispositions, and source hashes but did not represent the approval template's credential or conditions fields and could not re-read a detached decision artifact.
+- Risk: machine validation cannot authenticate reviewer identity, credential, authority, or judgment; Tas must verify those externally and retain the original signed artifact under a non-secret evidence reference.
+- Status: Accepted.
+
 ## Architecture Decisions
 
 ### 2026-07-06 - Keep Expo/Supabase/RevenueCat

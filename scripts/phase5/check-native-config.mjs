@@ -117,7 +117,7 @@ warn(
 
 warn(
   productionEnv.PHASE3_RELEASE_CLEARANCE === 'cleared',
-  'Production EAS environment is missing PHASE3_RELEASE_CLEARANCE=cleared; supply it only after the signed Phase 3 review packet, release-disposition worklist, current source hashes, and strict copy audit are complete.',
+  'Production EAS environment is missing PHASE3_RELEASE_CLEARANCE=cleared; supply it only after the signed Phase 3 review packet, release-disposition worklist, detached item signoffs, current source/signoff hashes, and strict copy audit are complete.',
 );
 
 warn(

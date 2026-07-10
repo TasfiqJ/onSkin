@@ -41,14 +41,19 @@ and a production gate that keeps the surface hidden. `Blocked` and
 
 ## Approval Template
 
-When privacy/security review clears an item, add a row:
+When privacy/security review reaches a release decision, update the matching
+Inventory row and add one JSON record under `docs/phase-3/signoffs/` using
+`docs/phase-3/review-signoff.template.json`. The JSON record is the
+machine-readable credential or role and conditions evidence.
 
-| Area | Source | Reviewer | Credential/role | Review date | Approved version/hash | Decision                               | Conditions |
-| ---- | ------ | -------- | --------------- | ----------- | --------------------- | -------------------------------------- | ---------- |
-| TBD  | TBD    | TBD      | TBD             | TBD         | TBD                   | Approved / changes required / rejected | TBD        |
+| Area | Source | Reviewer | Credential/role | Review date | Review snapshot SHA-256 | Decision            | Conditions |
+| ---- | ------ | -------- | --------------- | ----------- | ----------------------- | ------------------- | ---------- |
+| TBD  | TBD    | TBD      | TBD             | TBD         | TBD                     | Approved / Deferred | TBD        |
 
 ## Launch Rule
 
-Any item with status other than approved remains blocked, hidden, placeholder
-gated, or local-only. Privacy/security clearance must be tied to the generated
-Phase 3 review packet for the exact build under review.
+Any item not approved remains blocked, hidden, placeholder-gated, or local-only.
+`Deferred` may coexist with release only when its production surface is
+excluded and the detached signoff records the reason and owner.
+Privacy/security clearance must be tied to the generated Phase 3 review
+snapshot for the exact source hashes under review.

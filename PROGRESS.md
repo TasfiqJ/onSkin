@@ -6,6 +6,22 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-09
 
+- Replaced the Phase 3 review-log credential/conditions template gap with a
+  machine-verified detached-signoff contract. Every `Approved` or `Deferred`
+  item must now carry one source-controlled JSON decision whose attestor/date
+  matches the review log, credential or owner role and retained evidence
+  reference are non-placeholder, conditions are explicit, and snapshot digest
+  matches the current item context plus exact source hashes. Approved items
+  cannot carry open conditions; deferred items require a structured hidden,
+  inert, disabled, excluded, or not-exposed production gate. The validator
+  re-reads each signoff file and reparses review-log area, behavior, notes,
+  source inventory, reviewer, date, and disposition, so editing generated JSON
+  cannot forge readiness. A JSON Schema, safe operator workflow, ranked-queue
+  status, packet inclusion, and focused stale/tamper regression tests are in
+  place. The real worklist still has 35 unresolved items and zero professional
+  signoffs, so production remains correctly blocked for Tas. Repository
+  typecheck, lint, and 172 mobile test files / 1782 tests pass.
+
 - Hardened the Phase 3 production boundary from an environment assertion into
   machine-verified reviewer evidence. Production Expo config and the standalone
   release checker now reject a cleared flag unless the generated worklist is
@@ -31,7 +47,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   native-config warnings enforce the same contract. The reviewer worklist,
   operator queue, exact-source-hash packet, E2E manifest, and dependent Phase
   4-11 evidence graph were regenerated. `npm run launch:verify` passes end to
-  end, including typecheck, lint, 172 mobile test files / 1778 tests, source
+  end, including typecheck, lint, 172 mobile test files / 1782 tests, source
   packet parity, and generated hash integrity. Professional review and final
   consent/privacy copy remain correctly launch-blocked for Tas.
 

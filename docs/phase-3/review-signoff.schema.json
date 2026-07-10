@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Phase 3 detached review signoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "itemId",
+    "reviewSnapshotSha256",
+    "attestor",
+    "reviewDate",
+    "decision",
+    "evidenceReference",
+    "productionGate"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "itemId": { "type": "string", "minLength": 3 },
+    "reviewSnapshotSha256": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    },
+    "attestor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "credentialOrRole"],
+      "properties": {
+        "name": { "type": "string", "minLength": 2 },
+        "credentialOrRole": { "type": "string", "minLength": 2 }
+      }
+    },
+    "reviewDate": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disposition", "conditions", "conditionsSatisfied"],
+      "properties": {
+        "disposition": { "enum": ["approved", "deferred"] },
+        "conditions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "conditionsSatisfied": { "type": "boolean" }
+      }
+    },
+    "evidenceReference": { "type": "string", "minLength": 3 },
+    "productionGate": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/productionGate" }]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": { "disposition": { "const": "approved" } },
+            "required": ["disposition"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": { "conditionsSatisfied": { "const": true } }
+          },
+          "productionGate": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": { "disposition": { "const": "deferred" } },
+            "required": ["disposition"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "productionGate": { "$ref": "#/$defs/productionGate" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "productionGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "reason", "owner"],
+      "properties": {
+        "state": {
+          "enum": ["hidden", "inert", "disabled", "excluded", "not_exposed"]
+        },
+        "reason": { "type": "string", "minLength": 3 },
+        "owner": { "type": "string", "minLength": 2 }
+      }
+    }
+  }
+}

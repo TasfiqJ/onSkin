@@ -25,12 +25,16 @@ Fresh verification through 2026-07-09:
   available for reviewer QA. The flag cannot bypass the reviewer artifact:
   production config also requires a clean worklist covering all five review
   domains, zero unresolved items, explicit `Approved` or `Deferred`
-  dispositions with named owners and valid dates, and byte/SHA-256 matches for
-  every current review-log and item source. This clearance stays separate from
-  brand clearance and pending until the named reviewers finish the packet and
-  `phase3:audit-copy:strict` passes. Runtime production tests continue to prove
-  unreviewed conflict rules, routine cadence, and medical-adjacent
-  recommendations remain hidden.
+  dispositions with named owners and valid dates, one current detached JSON
+  signoff per release disposition, and byte/SHA-256 matches for every current
+  review-log, item source, and signoff file. Each signoff must match the
+  recomputed item snapshot, carry a non-placeholder credential/role, decision
+  conditions and satisfaction state, and retained approval reference; deferred
+  items also require a structured production gate. This clearance stays
+  separate from brand clearance and pending until the named reviewers finish
+  the packet and `phase3:audit-copy:strict` passes. Runtime production tests
+  continue to prove unreviewed conflict rules, routine cadence, and
+  medical-adjacent recommendations remain hidden.
 - Floating bottom tab-bar active-pill polish now has fresh headless Chrome Expo
   web geometry evidence across 320 x 568 stress width plus 360 x 640,
   375 x 667, 390 x 844, 412 x 915, and 430 x 932 supported-phone viewports.
@@ -149,7 +153,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 172 mobile test files / 1778 tests.
+- `npm test` passed: 172 mobile test files / 1782 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -179,7 +183,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 172 test files / 1778 tests.
+- `npm --workspace apps/mobile run test` passed: 172 test files / 1782 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain
@@ -414,7 +418,7 @@ Re-run the relevant checks after any production-readiness change.
 | Growth share card              | needs-device-verification | Card and export path exist; final domain/store fallback/attribution blocked by final identity and device QA                                                                                                     | Engineering + founder                           | Final identity/domain and universal link                                                                                                           | Shared card opens app or web fallback and tracks attribution                                                                               |
 | Analytics/crash reporting      | stubbed                   | PostHog/Sentry runtime wiring exists; projects, source maps, dashboards, deletion, and privacy review not live                                                                                                  | Engineering + founder                           | Configure after brand/account setup                                                                                                                | Production dashboards, deletion, source maps, and crash privacy review pass                                                                |
 | Policies/support/deletion      | launch-blocked            | Copy and functions are not final/live                                                                                                                                                                           | Counsel + engineering                           | Finalize policy URLs and deploy account deletion/export                                                                                            | Store listing URLs work; deletion/export verified against live backend                                                                     |
-| Phase 3 signoff packet         | launch-blocked            | Review packets and gates exist, but professional signoffs are absent                                                                                                                                            | Founder + counsel + clinical reviewers          | Run review packet, retain reviewers, close signoff logs                                                                                            | Counsel, dermatologist, cosmetic chemist, privacy, and IP signoffs attached to exact file hashes                                           |
+| Phase 3 signoff packet         | launch-blocked            | Exact-source packets, item snapshot digests, detached-signoff schema, and production gates exist; professional signoffs are absent                                                                              | Founder + counsel + clinical reviewers          | Run review packet, verify reviewer credentials, retain original approvals, and add one current detached signoff per released item                  | Counsel, dermatologist, cosmetic chemist, privacy, and IP decisions pass the machine gate against exact reviewed source hashes             |
 | Closed beta                    | launch-blocked            | No real cohort metrics yet                                                                                                                                                                                      | Founder + engineering                           | Recruit 50-100 users for V1 loop                                                                                                                   | Activation, D7/D14/D30 retention, trial starts, and willingness-to-pay measured                                                            |
 
 ## Practical V1

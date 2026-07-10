@@ -29,7 +29,7 @@ export function checkProductionRelease(options = {}) {
     return {
       ok: false,
       message:
-        'Production release requires PHASE3_RELEASE_CLEARANCE=cleared after the signed Phase 3 review packet and strict copy audit are complete.',
+        'Production release requires PHASE3_RELEASE_CLEARANCE=cleared after the signed Phase 3 review packet, detached item signoffs, and strict copy audit are complete.',
     };
   }
 
@@ -45,7 +45,8 @@ export function checkProductionRelease(options = {}) {
 
   return {
     ok: true,
-    message: 'Phase 3 production release clearance and reviewer evidence are recorded.',
+    message:
+      'Phase 3 production release clearance, reviewer dispositions, and detached signoff evidence are recorded.',
   };
 }
 

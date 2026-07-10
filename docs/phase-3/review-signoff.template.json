@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "itemId": "REPLACE_WITH_WORKLIST_ITEM_ID",
+  "reviewSnapshotSha256": "REPLACE_WITH_64_CHARACTER_REVIEW_SNAPSHOT_SHA256",
+  "attestor": {
+    "name": "REPLACE_WITH_REVIEWER_OR_DECISION_OWNER_NAME",
+    "credentialOrRole": "REPLACE_WITH_PROFESSIONAL_CREDENTIAL_OR_OWNER_ROLE"
+  },
+  "reviewDate": "YYYY-MM-DD",
+  "decision": {
+    "disposition": "approved",
+    "conditions": [],
+    "conditionsSatisfied": true
+  },
+  "evidenceReference": "REPLACE_WITH_RETAINED_APPROVAL_REFERENCE",
+  "productionGate": null
+}

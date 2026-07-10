@@ -228,7 +228,7 @@ function assertProductionReviewClearance() {
 
   if (process.env.PHASE3_RELEASE_CLEARANCE !== 'cleared') {
     throw new Error(
-      'Production release requires PHASE3_RELEASE_CLEARANCE=cleared after the Phase 3 legal, privacy, clinical, chemistry, and IP review packet is signed off. Development and staging builds remain available for review.',
+      'Production release requires PHASE3_RELEASE_CLEARANCE=cleared after the Phase 3 legal, privacy, clinical, chemistry, and IP review packet and detached item signoffs are complete. Development and staging builds remain available for review.',
     );
   }
 

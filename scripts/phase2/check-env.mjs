@@ -283,7 +283,7 @@ if (
   valueFor('PHASE3_RELEASE_CLEARANCE') !== 'cleared'
 ) {
   errors.push(
-    'Production infrastructure requires PHASE3_RELEASE_CLEARANCE=cleared after the signed Phase 3 review packet and strict copy audit are complete.',
+    'Production infrastructure requires PHASE3_RELEASE_CLEARANCE=cleared after the signed Phase 3 review packet, detached item signoffs, and strict copy audit are complete.',
   );
 }
 

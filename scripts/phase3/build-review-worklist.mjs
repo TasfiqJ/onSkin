@@ -1,15 +1,23 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { dirname, extname, relative, resolve } from 'node:path';
 import { command, gitStatusExcludingGeneratedEvidence } from '../phase9/lib.mjs';
 
+const require = createRequire(import.meta.url);
+const {
+  REVIEW_WORKLIST_SCHEMA_VERSION,
+  computeReviewSnapshotSha256,
+  validateReviewSignoff,
+} = require('../../apps/mobile/phase3-review-evidence');
 const root = process.cwd();
 const check = process.argv.includes('--check');
 const strict = process.argv.includes('--strict');
 const outJson =
   process.env.PHASE3_REVIEW_WORKLIST_JSON ?? 'docs/phase-3/generated/review-worklist.json';
 const outMd = process.env.PHASE3_REVIEW_WORKLIST_MD ?? 'docs/phase-3/generated/review-worklist.md';
+const signoffDir = 'docs/phase-3/signoffs';
 const reviewLogs = [
   {
     domain: 'legalRegulatory',
@@ -74,6 +82,45 @@ function hashFile(path) {
 
 function fileRecord(path) {
   return exists(path) ? hashFile(path) : { path: normalizeRepoPath(path), exists: false };
+}
+
+function loadSignoffs(blockers) {
+  const signoffs = new Map();
+  if (!exists(signoffDir)) {
+    blockers.push(`Missing Phase 3 signoff directory ${signoffDir}.`);
+    return signoffs;
+  }
+
+  const paths = readdirSync(abs(signoffDir), { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.json'))
+    .map((entry) => normalizeRepoPath(`${signoffDir}/${entry.name}`))
+    .sort((a, b) => a.localeCompare(b));
+
+  for (const path of paths) {
+    let record;
+    try {
+      record = JSON.parse(read(path));
+    } catch (error) {
+      blockers.push(
+        `${path} cannot be parsed as JSON: ${error instanceof Error ? error.message : String(error)}.`,
+      );
+      continue;
+    }
+    const itemId = typeof record?.itemId === 'string' ? record.itemId.trim() : '';
+    if (!itemId) {
+      blockers.push(`${path} has no itemId.`);
+      continue;
+    }
+    if (signoffs.has(itemId)) {
+      blockers.push(
+        `${path} duplicates Phase 3 signoff itemId ${itemId}; keep exactly one signoff per item.`,
+      );
+      continue;
+    }
+    signoffs.set(itemId, { file: fileRecord(path), record });
+  }
+
+  return signoffs;
 }
 
 function walk(dir, files = []) {
@@ -231,6 +278,10 @@ function itemDetailMarkdown(item) {
     `- Status: ${displayValue(item.status, 'Unspecified')}`,
     `- Required reviewer: ${item.requiredReviewer}`,
     `- Current reviewer/date: ${displayValue(item.reviewer)} / ${displayValue(item.date)}`,
+    `- Review snapshot SHA-256: \`${item.reviewSnapshotSha256}\``,
+    `- Detached signoff: ${item.signoffStatus}${
+      item.signoff?.file?.path ? ` (\`${item.signoff.file.path}\`)` : ''
+    }`,
     `- Required evidence: ${item.requiredEvidence}`,
     `- Review-log notes: ${displayValue(item.notes, 'None.')}`,
     '',
@@ -243,6 +294,7 @@ function itemDetailMarkdown(item) {
 
 const blockers = [];
 const warnings = [];
+const signoffs = loadSignoffs(blockers);
 let gitSha = 'unknown';
 let gitStatus = 'unknown';
 try {
@@ -285,7 +337,7 @@ for (const log of reviewLogs) {
         `${log.path} item "${row.Area}" has a release disposition without an ISO date.`,
       );
     }
-    items.push({
+    const item = {
       id: `${log.domain}:${slug(row.Area)}`,
       domain: log.domain,
       requiredReviewer: log.requiredReviewer,
@@ -299,7 +351,37 @@ for (const log of reviewLogs) {
       notes: row.Notes ?? '',
       sourcePaths,
       requiredEvidence: requiredEvidenceFor(bucket),
-    });
+    };
+    item.reviewSnapshotSha256 = computeReviewSnapshotSha256(item);
+    item.signoff = signoffs.get(item.id) ?? null;
+    item.signoffStatus = item.signoff ? 'current' : 'not-applicable';
+
+    if (['approved', 'deferred'].includes(bucket) && !item.signoff) {
+      item.signoffStatus = 'missing';
+      blockers.push(
+        `${log.path} item "${row.Area}" has a release disposition without a detached JSON signoff.`,
+      );
+    } else if (!['approved', 'deferred'].includes(bucket) && item.signoff) {
+      item.signoffStatus = 'invalid';
+      blockers.push(
+        `${item.signoff.file.path} is attached to unresolved item ${item.id}; update the review log disposition atomically.`,
+      );
+    } else if (item.signoff) {
+      const signoffErrors = validateReviewSignoff(item, { rootDir: root, verifyHashes: true });
+      if (signoffErrors.length > 0) {
+        item.signoffStatus = 'invalid';
+        blockers.push(...signoffErrors);
+      }
+    }
+
+    items.push(item);
+  }
+}
+
+const itemIds = new Set(items.map((item) => item.id));
+for (const [itemId, signoff] of signoffs) {
+  if (!itemIds.has(itemId)) {
+    blockers.push(`${signoff.file.path} references unknown or stale review item ${itemId}.`);
   }
 }
 
@@ -316,8 +398,13 @@ const missingSourcePathCount = items.reduce(
   (total, item) => total + item.sourcePaths.filter((source) => !source.exists).length,
   0,
 );
+const signedItemCount = items.filter((item) => item.signoffStatus === 'current').length;
+const unsignedReleaseDispositionCount = items.filter(
+  (item) => ['approved', 'deferred'].includes(item.statusBucket) && !item.signoff,
+).length;
 
 const worklist = {
+  schemaVersion: REVIEW_WORKLIST_SCHEMA_VERSION,
   generatedAt: new Date().toISOString(),
   purpose:
     'Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.',
@@ -335,6 +422,8 @@ const worklist = {
     statusCounts,
     sourcePathCount,
     missingSourcePathCount,
+    signedItemCount,
+    unsignedReleaseDispositionCount,
     blockerCount: blockers.length,
     warningCount: warnings.length,
   },
@@ -362,19 +451,22 @@ const mdContent = [
   `- Review items: ${worklist.summary.itemCount}`,
   `- Source files hashed: ${worklist.summary.sourcePathCount}`,
   `- Missing source files: ${worklist.summary.missingSourcePathCount}`,
+  `- Current detached signoffs: ${worklist.summary.signedItemCount}`,
+  `- Release dispositions missing signoff: ${worklist.summary.unsignedReleaseDispositionCount}`,
   `- Blockers: ${worklist.summary.blockerCount}`,
   `- Warnings: ${worklist.summary.warningCount}`,
   '',
   '## Items',
   '',
   markdownTable(
-    ['Domain', 'Area', 'Status', 'Reviewer', 'Date', 'Sources', 'Missing sources'],
+    ['Domain', 'Area', 'Status', 'Reviewer', 'Date', 'Signoff', 'Sources', 'Missing sources'],
     items.map((item) => [
       item.domain,
       item.area,
       item.status,
       item.reviewer,
       item.date,
+      item.signoffStatus,
       item.sourcePaths.filter((source) => source.exists).length,
       item.sourcePaths.filter((source) => !source.exists).length,
     ]),

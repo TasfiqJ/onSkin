@@ -16,19 +16,40 @@ type ReviewSourceRecord = {
   sha256?: string;
 };
 
+type ReviewSignoffRecord = {
+  schemaVersion: number;
+  itemId: string;
+  reviewSnapshotSha256: string;
+  attestor: { name: string; credentialOrRole: string };
+  reviewDate: string;
+  decision: {
+    disposition: string;
+    conditions: string[];
+    conditionsSatisfied: boolean;
+  };
+  evidenceReference: string;
+  productionGate: null | { state: string; reason: string; owner: string };
+};
+
 type ReviewWorklist = {
+  schemaVersion: number;
   gitStatus: string;
   reviewLogs: (ReviewSourceRecord & { domain: string })[];
   summary: {
     itemCount: number;
     domainCounts: Record<string, number>;
     statusCounts: Record<string, number>;
+    signedItemCount: number;
+    unsignedReleaseDispositionCount: number;
     missingSourcePathCount: number;
     blockerCount: number;
+    warningCount?: number;
   };
   items: {
     id: string;
     domain: string;
+    area?: string;
+    requiredReviewer?: string;
     statusBucket: string;
     reviewer: string;
     date: string;
@@ -36,16 +57,27 @@ type ReviewWorklist = {
     notes?: string;
     sourceText?: string;
     sourcePaths: ReviewSourceRecord[];
+    reviewSnapshotSha256: string;
+    signoff: {
+      file: ReviewSourceRecord;
+      record: ReviewSignoffRecord;
+    } | null;
   }[];
   blockers: string[];
   warnings: string[];
 };
 
 const reviewEvidence = requireConfig(REVIEW_EVIDENCE_PATH) as {
+  computeReviewSnapshotSha256(item: ReviewWorklist['items'][number]): string;
   createReleaseReadyTestWorklist(): ReviewWorklist;
   validateReviewWorklist(
     worklist: ReviewWorklist,
-    options?: { rootDir?: string; verifyHashes?: boolean; verifyLogRows?: boolean },
+    options?: {
+      rootDir?: string;
+      verifyHashes?: boolean;
+      verifyLogRows?: boolean;
+      verifySignoffFiles?: boolean;
+    },
   ): string[];
 };
 
@@ -430,6 +462,18 @@ function releaseReadyWorklist(): ReviewWorklist {
   return JSON.parse(JSON.stringify(reviewEvidence.createReleaseReadyTestWorklist()));
 }
 
+function refreshReviewSnapshots(worklist: ReviewWorklist): void {
+  for (const item of worklist.items) {
+    const reviewSnapshotSha256 = reviewEvidence.computeReviewSnapshotSha256(item);
+    item.reviewSnapshotSha256 = reviewSnapshotSha256;
+    if (!item.signoff) continue;
+    item.signoff.record.itemId = item.id;
+    item.signoff.record.reviewSnapshotSha256 = reviewSnapshotSha256;
+    item.signoff.record.attestor.name = item.reviewer;
+    item.signoff.record.reviewDate = item.date;
+  }
+}
+
 describe('Phase 3 review evidence contract', () => {
   it('accepts complete release dispositions in the isolated test fixture', () => {
     expect(
@@ -457,6 +501,52 @@ describe('Phase 3 review evidence contract', () => {
       .join(' ');
     expect(errors).toContain('has no named reviewer or decision owner');
     expect(errors).toContain('has no valid ISO review date');
+  });
+
+  it('rejects signoffs without credential, decision-condition, or retained evidence details', () => {
+    const worklist = releaseReadyWorklist();
+    const signoff = worklist.items[0]!.signoff!.record;
+    signoff.attestor.credentialOrRole = 'TBD';
+    signoff.decision.conditions = ['TBD'];
+    signoff.evidenceReference = 'pending';
+
+    const errors = reviewEvidence
+      .validateReviewWorklist(worklist, { verifyHashes: false })
+      .join(' ');
+    expect(errors).toContain('has no professional credential or decision-owner role');
+    expect(errors).toContain('condition 1 is blank or a placeholder');
+    expect(errors).toContain('has no retained approval evidence reference');
+  });
+
+  it('rejects stale snapshot digests and approvals with open conditions', () => {
+    const worklist = releaseReadyWorklist();
+    const signoff = worklist.items[0]!.signoff!.record;
+    signoff.reviewSnapshotSha256 = '0'.repeat(64);
+    signoff.decision.conditions = ['Publish only after final copy is accepted.'];
+    signoff.decision.conditionsSatisfied = false;
+
+    const errors = reviewEvidence
+      .validateReviewWorklist(worklist, { verifyHashes: false })
+      .join(' ');
+    expect(errors).toContain('signoff is stale for the current review snapshot');
+    expect(errors).toContain('cannot be approved with unsatisfied decision conditions');
+  });
+
+  it('requires a structured production gate for deferred release dispositions', () => {
+    const worklist = releaseReadyWorklist();
+    const item = worklist.items[0]!;
+    item.statusBucket = 'deferred';
+    item.notes = 'Deferred until the post-launch review is complete.';
+    item.currentBehavior = 'Hidden and not exposed in production.';
+    item.signoff!.record.decision.disposition = 'deferred';
+    item.signoff!.record.decision.conditionsSatisfied = false;
+    item.signoff!.record.productionGate = null;
+    worklist.summary.statusCounts = { approved: 4, deferred: 1 };
+    refreshReviewSnapshots(worklist);
+
+    expect(
+      reviewEvidence.validateReviewWorklist(worklist, { verifyHashes: false }).join(' '),
+    ).toContain('deferred signoff has no production gate record');
   });
 
   it('rejects dirty worklists and inconsistent summary counts', () => {
@@ -500,13 +590,24 @@ describe('Phase 3 review evidence contract', () => {
       domain: log.domain,
     }));
     worklist.items = worklist.items.map((item) => ({ ...item, sourcePaths: [{ ...source }] }));
+    refreshReviewSnapshots(worklist);
 
     expect(
-      reviewEvidence.validateReviewWorklist(worklist, { rootDir, verifyLogRows: false }),
+      reviewEvidence.validateReviewWorklist(worklist, {
+        rootDir,
+        verifyLogRows: false,
+        verifySignoffFiles: false,
+      }),
     ).toEqual([]);
     worklist.items[0]!.sourcePaths[0]!.sha256 = '0'.repeat(64);
     expect(
-      reviewEvidence.validateReviewWorklist(worklist, { rootDir, verifyLogRows: false }).join(' '),
+      reviewEvidence
+        .validateReviewWorklist(worklist, {
+          rootDir,
+          verifyLogRows: false,
+          verifySignoffFiles: false,
+        })
+        .join(' '),
     ).toContain('source hash is stale');
   });
 
@@ -538,9 +639,9 @@ describe('Phase 3 review evidence contract', () => {
           [
             headings[log.domain],
             '',
-            '| Area | Source | Reviewer | Date | Status |',
-            '| --- | --- | --- | --- | --- |',
-            '| Release decision | `package.json` | Dr. Avery Chen | 2026-07-09 | Approved |',
+            '| Area | Source | Current behavior | Reviewer | Date | Status | Notes |',
+            '| --- | --- | --- | --- | --- | --- | --- |',
+            '| Release decision | `package.json` | Approved for production. | Dr. Avery Chen | 2020-01-01 | Approved | Complete isolated review decision fixture. |',
             '',
           ].join('\n'),
         );
@@ -560,13 +661,73 @@ describe('Phase 3 review evidence contract', () => {
         sourceText: '`package.json`',
         sourcePaths: [{ ...packageSource }],
       }));
+      refreshReviewSnapshots(worklist);
 
-      expect(reviewEvidence.validateReviewWorklist(worklist, { rootDir })).toEqual([]);
+      expect(
+        reviewEvidence.validateReviewWorklist(worklist, {
+          rootDir,
+          verifySignoffFiles: false,
+        }),
+      ).toEqual([]);
       worklist.items[0]!.statusBucket = 'deferred';
       worklist.summary.statusCounts = { approved: 4, deferred: 1 };
-      expect(reviewEvidence.validateReviewWorklist(worklist, { rootDir }).join(' ')).toContain(
-        'disposition does not match its review log',
-      );
+      expect(
+        reviewEvidence
+          .validateReviewWorklist(worklist, { rootDir, verifySignoffFiles: false })
+          .join(' '),
+      ).toContain('disposition does not match its review log');
+
+      worklist.items[0]!.statusBucket = 'approved';
+      worklist.items[0]!.currentBehavior = 'Tampered generated behavior.';
+      worklist.summary.statusCounts = { approved: 5 };
+      refreshReviewSnapshots(worklist);
+      expect(
+        reviewEvidence
+          .validateReviewWorklist(worklist, { rootDir, verifySignoffFiles: false })
+          .join(' '),
+      ).toContain('current behavior does not match its review log');
+    } finally {
+      rmSync(rootDir, { force: true, recursive: true });
+    }
+  });
+
+  it('re-reads detached signoff files instead of trusting embedded JSON', () => {
+    const rootDir = mkdtempSync(join(tmpdir(), 'routinekind-phase3-signoff-'));
+    try {
+      const worklist = releaseReadyWorklist();
+      for (const item of worklist.items) {
+        const path = `docs/phase-3/signoffs/${item.domain}--release-decision.json`;
+        const absolutePath = resolve(rootDir, path);
+        mkdirSync(dirname(absolutePath), { recursive: true });
+        writeFileSync(absolutePath, `${JSON.stringify(item.signoff!.record, null, 2)}\n`);
+        const bytes = readFileSync(absolutePath);
+        item.signoff!.file = {
+          path,
+          exists: true,
+          bytes: bytes.length,
+          sha256: createHash('sha256').update(bytes).digest('hex'),
+        };
+      }
+
+      expect(
+        reviewEvidence.validateReviewWorklist(worklist, {
+          rootDir,
+          verifyHashes: false,
+          verifySignoffFiles: true,
+        }),
+      ).toEqual([]);
+
+      const firstSignoffPath = resolve(rootDir, worklist.items[0]!.signoff!.file.path);
+      writeFileSync(firstSignoffPath, '{}\n');
+      const errors = reviewEvidence
+        .validateReviewWorklist(worklist, {
+          rootDir,
+          verifyHashes: false,
+          verifySignoffFiles: true,
+        })
+        .join(' ');
+      expect(errors).toContain('signoff source hash is stale');
+      expect(errors).toContain('embedded signoff record does not match its current JSON file');
     } finally {
       rmSync(rootDir, { force: true, recursive: true });
     }

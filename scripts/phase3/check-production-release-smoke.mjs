@@ -81,7 +81,7 @@ const cases = [
       verifyHashes: false,
     }),
     pass(result) {
-      return result.ok && /reviewer evidence are recorded/.test(result.message);
+      return result.ok && /detached signoff evidence/.test(result.message);
     },
   },
 ];

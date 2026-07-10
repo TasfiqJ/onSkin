@@ -70,8 +70,9 @@ Read this with:
    `PHASE3_RELEASE_CLEARANCE=cleared`; the flag still cannot bypass an
    unresolved, dirty, incomplete, or source-stale reviewer worklist. Keep it
    pending until every item is `Approved` or explicitly `Deferred`, named
-   owners and dates are recorded, current hashes match, and the strict copy
-   audit passes.
+   owners and dates are recorded, one current detached signoff records the
+   credential/role, conditions, and retained approval reference per release
+   disposition, current hashes match, and the strict copy audit passes.
 7. Real catalog seed not imported and source/license review not complete.
 8. Native camera/barcode/photo capture are implemented but not physical-device
    verified; native OCR remains intentionally gated off.
@@ -123,7 +124,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 172 mobile test files / 1778 tests. The 2026-07-09 human-simulated E2E
+covers 172 mobile test files / 1782 tests. The 2026-07-09 human-simulated E2E
 manifest now anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also
@@ -178,9 +179,11 @@ metadata claim tests, and production gate tests. Production Expo config now
 requires exact `PHASE3_RELEASE_CLEARANCE=cleared` when either build or runtime
 stage is production, then independently validates the generated worklist's five
 domains, release dispositions, named owners/dates, clean generation status, and
-current byte/SHA-256 records. The flag must remain pending, and the strict Phase
-3 audit must remain blocking, until counsel, dermatologist, cosmetic-chemist,
-privacy/security, and IP/FTO signoffs are real.
+current byte/SHA-256 records. It also recomputes each item snapshot and re-reads
+the current detached signoff JSON, including credential/role, condition state,
+and retained evidence reference. The flag must remain pending, and the strict
+Phase 3 audit must remain blocking, until counsel, dermatologist,
+cosmetic-chemist, privacy/security, and IP/FTO signoffs are real.
 
 ## B-BRAND - RoutineKind candidate clearance and launch identity
 
@@ -413,8 +416,9 @@ Current implementation note:
 - `.env.example` and `phase2:check-env` include the required URL contract.
 - Production Expo config rejects missing or pending
   `PHASE3_RELEASE_CLEARANCE`, and rejects a cleared flag while the reviewer
-  worklist is unresolved or source-stale. This is a release boundary, not
-  evidence that the current draft copy is approved.
+  worklist is unresolved, source-stale, or missing a valid detached signoff.
+  This is a release boundary, not evidence that the current draft copy is
+  approved or that a claimed credential is authentic.
 - The copy and URLs are still placeholders until counsel supplies final text and
   the final brand/domain.
 
@@ -510,10 +514,17 @@ Exit criteria:
   required changes;
 - cosmetic chemist signs PAO defaults, ingredient taxonomy, product type
   caveats, and routine compatibility assumptions;
+- privacy counsel and the technical security owner sign the data inventory,
+  consent, processor, auth, deletion/export, analytics, and breach posture;
 - IP counsel signs the onboarding quiz/FTO review;
+- every released worklist item has one detached JSON signoff tied to its exact
+  `reviewSnapshotSha256`, with a verified attestor credential or decision-owner
+  role, explicit conditions and satisfaction state, and a retained original
+  approval reference; deferred items also record an enforced production gate;
 - `npm run phase3:audit-copy:strict` passes because placeholders and blocker
   markers have been removed or formally closed;
-- generated review packet hashes are archived with the signoff record.
+- generated review packet hashes and detached signoff records are archived with
+  the original professional evidence.
 
 ## B-CATALOG-SEED - Product and ingredient catalog
 

@@ -1,7 +1,7 @@
 # Phase 3 Review Packet Index
 
-Status: packet scaffold implemented; reviewer signoff missing  
-Last updated: 2026-07-04
+Status: packet and detached-signoff gate implemented; professional signoff missing
+Last updated: 2026-07-09
 
 This index tells reviewers what to inspect. The generated manifest from
 `npm run phase3:review-packet` records hashes, file sizes, source Git SHA, and
@@ -20,6 +20,19 @@ IP/FTO handoffs. The queue records what can be sent to reviewers and what stays
 blocked in `docs/FOR_TAS_TO_DO.md`; it never supplies reviewer names or
 decisions.
 
+Every `Approved` or `Deferred` worklist row must also have exactly one JSON
+record under `docs/phase-3/signoffs/`. The signoff references a deterministic
+`reviewSnapshotSha256` calculated from the item identity, required reviewer,
+review context, and exact source path/byte/SHA-256 records. This avoids a
+circular packet-signing contract while invalidating the signoff whenever its
+reviewed context or source changes.
+
+The machine gate checks completeness, consistency, freshness, and file
+integrity. It cannot authenticate a person or establish professional
+qualification. Tas must verify the reviewer or decision owner and retain the
+original signed evidence outside git; the JSON stores only a non-secret
+reference.
+
 ## Packet Contract
 
 - `package.json`
@@ -30,9 +43,13 @@ decisions.
 - `scripts/phase3/check-production-release.mjs`
 - `scripts/phase3/check-production-release-smoke.mjs`
 - `apps/mobile/phase3-review-evidence.js`
+- `apps/mobile/src/lib/appConfig.test.ts`
 - `apps/mobile/app.config.js`
 - `scripts/phase9/lib.mjs`
 - `docs/phase-3/review-packet-index.md`
+- `docs/phase-3/review-signoff.schema.json`
+- `docs/phase-3/review-signoff.template.json`
+- `docs/phase-3/signoffs/README.md`
 
 ## Production Release Disposition Contract
 
@@ -47,13 +64,21 @@ review worklist and fail unless all of these are true:
 - every inventory item has an explicit `Approved` or `Deferred` status;
 - every approved or deferred item records a named reviewer or decision owner
   and a valid `YYYY-MM-DD` date;
+- every approved or deferred item has one detached signoff whose attestor and
+  date match the review log, whose credential or role and retained evidence
+  reference are non-placeholder, and whose disposition and explicit condition
+  state are release-compatible;
+- every detached signoff references the current deterministic item snapshot,
+  and its embedded record exactly matches the current source-controlled JSON;
 - every review-log and item source still matches the recorded byte count and
   SHA-256 hash.
 
 `Deferred` is a release disposition, not content approval. Use it only when the
 surface is excluded from production exposure and the row records the reason and
-owner. Regenerate the worklist after any source, status, reviewer, or date
-change. The current worklist remains unresolved and correctly blocks release.
+owner. Its detached signoff must also record the concrete production-gate state,
+reason, and owner. Regenerate the worklist after any source, review context,
+status, reviewer, date, or signoff change. The current worklist remains
+unresolved, has zero professional signoffs, and correctly blocks release.
 
 ## Legal/Regulatory Packet
 

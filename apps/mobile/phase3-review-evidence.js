@@ -5,6 +5,9 @@ const { dirname, extname, resolve, relative } = require('node:path');
 const MOBILE_ROOT = dirname(require.resolve('./app.base.json'));
 const REPO_ROOT = resolve(MOBILE_ROOT, '../..');
 const DEFAULT_WORKLIST_PATH = resolve(REPO_ROOT, 'docs/phase-3/generated/review-worklist.json');
+const REVIEW_WORKLIST_SCHEMA_VERSION = 2;
+const REVIEW_SNAPSHOT_SCHEMA_VERSION = 1;
+const REVIEW_SIGNOFF_SCHEMA_VERSION = 1;
 const REQUIRED_DOMAINS = Object.freeze([
   'legalRegulatory',
   'clinical',
@@ -17,6 +20,9 @@ const SOURCE_EXTENSIONS = new Set(['.ts', '.tsx', '.js', '.mjs', '.json', '.md',
 const SHA256_RE = /^[a-f0-9]{64}$/i;
 const PLACEHOLDER_RE =
   /^(?:|tbd|n\/a|none|not cleared|.*\b(?:placeholder|example|test(?:er)?|reviewer name|decision owner)\b.*)$/i;
+const SIGNOFF_PLACEHOLDER_RE =
+  /^(?:|tbd|n\/a|none|null|unknown|pending|replace(?: me)?|.*\b(?:placeholder|example|sample|reviewer name|decision owner|credential or role|evidence reference)\b.*)$/i;
+const DEFERRED_GATE_STATES = new Set(['hidden', 'inert', 'disabled', 'excluded', 'not_exposed']);
 const REVIEW_LOG_CONFIG = Object.freeze({
   legalRegulatory: { tableHeading: '## Inventory' },
   clinical: { tableHeading: '## Content Inventory' },
@@ -65,6 +71,62 @@ function hashFile(path) {
 
 function normalizeRepoPath(value) {
   return text(value).replaceAll('\\', '/').replace(/^\.\//, '');
+}
+
+function stableValue(value) {
+  if (Array.isArray(value)) return value.map(stableValue);
+  if (!value || typeof value !== 'object') return value;
+  return Object.fromEntries(
+    Object.keys(value)
+      .sort((a, b) => a.localeCompare(b))
+      .map((key) => [key, stableValue(value[key])]),
+  );
+}
+
+function stableJson(value) {
+  return JSON.stringify(stableValue(value));
+}
+
+function reviewSnapshot(item) {
+  const sources = (Array.isArray(item?.sourcePaths) ? item.sourcePaths : [])
+    .map((source) => {
+      const sourceBytes = Number(source?.bytes);
+      return {
+        path: normalizeRepoPath(source?.path),
+        exists: source?.exists === true,
+        bytes: Number.isSafeInteger(sourceBytes) && sourceBytes >= 0 ? sourceBytes : null,
+        sha256: text(source?.sha256).toLowerCase(),
+      };
+    })
+    .sort((a, b) => a.path.localeCompare(b.path));
+
+  return {
+    schemaVersion: REVIEW_SNAPSHOT_SCHEMA_VERSION,
+    itemId: text(item?.id),
+    domain: text(item?.domain),
+    area: text(item?.area),
+    requiredReviewer: text(item?.requiredReviewer),
+    sourceDeclaration: text(item?.sourceText),
+    currentProductionBehavior: text(item?.currentBehavior),
+    reviewNotes: text(item?.notes),
+    sources,
+  };
+}
+
+function computeReviewSnapshotSha256(item) {
+  return createHash('sha256')
+    .update(stableJson(reviewSnapshot(item)))
+    .digest('hex');
+}
+
+function unexpectedKeys(value, allowedKeys) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return [];
+  const allowed = new Set(allowedKeys);
+  return Object.keys(value).filter((key) => !allowed.has(key));
+}
+
+function signoffPlaceholder(value) {
+  return SIGNOFF_PLACEHOLDER_RE.test(text(value));
 }
 
 function splitMarkdownRow(line) {
@@ -184,14 +246,204 @@ function validateFileRecord(record, label, rootDir, verifyHashes, errors) {
   }
 }
 
+function validateReviewSignoff(item, options = {}) {
+  const errors = [];
+  const rootDir = resolve(options.rootDir ?? REPO_ROOT);
+  const verifyHashes = options.verifyHashes !== false;
+  const id = text(item?.id) || 'Phase 3 review item';
+  const signoff = item?.signoff;
+
+  if (!signoff || typeof signoff !== 'object' || Array.isArray(signoff)) {
+    return [`${id} has no detached review signoff.`];
+  }
+
+  const file = signoff.file;
+  const record = signoff.record;
+  validateFileRecord(file, `${id} signoff`, rootDir, verifyHashes, errors);
+
+  const signoffPath = normalizeRepoPath(file?.path);
+  const absoluteSignoffPath = resolve(rootDir, signoffPath);
+  const signoffRoot = resolve(rootDir, 'docs/phase-3/signoffs');
+  if (
+    !/^docs\/phase-3\/signoffs\/.+\.json$/i.test(signoffPath) ||
+    !withinRoot(signoffRoot, absoluteSignoffPath)
+  ) {
+    errors.push(`${id} signoff is not stored under docs/phase-3/signoffs as JSON.`);
+  }
+
+  if (!record || typeof record !== 'object' || Array.isArray(record)) {
+    errors.push(`${id} signoff record is missing or invalid.`);
+    return errors;
+  }
+
+  const topLevelExtras = unexpectedKeys(record, [
+    'schemaVersion',
+    'itemId',
+    'reviewSnapshotSha256',
+    'attestor',
+    'reviewDate',
+    'decision',
+    'evidenceReference',
+    'productionGate',
+  ]);
+  if (topLevelExtras.length > 0) {
+    errors.push(`${id} signoff has unsupported fields: ${topLevelExtras.join(', ')}.`);
+  }
+  if (record.schemaVersion !== REVIEW_SIGNOFF_SCHEMA_VERSION) {
+    errors.push(`${id} signoff schemaVersion must be ${REVIEW_SIGNOFF_SCHEMA_VERSION}.`);
+  }
+  if (text(record.itemId) !== id) {
+    errors.push(`${id} signoff itemId does not match its worklist item.`);
+  }
+
+  const computedSnapshotSha256 = computeReviewSnapshotSha256(item);
+  if (!SHA256_RE.test(text(item?.reviewSnapshotSha256))) {
+    errors.push(`${id} has no valid review snapshot SHA-256.`);
+  } else if (text(item.reviewSnapshotSha256).toLowerCase() !== computedSnapshotSha256) {
+    errors.push(`${id} review snapshot SHA-256 does not match its current review context.`);
+  }
+  if (!SHA256_RE.test(text(record.reviewSnapshotSha256))) {
+    errors.push(`${id} signoff has no valid review snapshot SHA-256.`);
+  } else if (text(record.reviewSnapshotSha256).toLowerCase() !== computedSnapshotSha256) {
+    errors.push(`${id} signoff is stale for the current review snapshot.`);
+  }
+
+  const attestor = record.attestor;
+  if (!attestor || typeof attestor !== 'object' || Array.isArray(attestor)) {
+    errors.push(`${id} signoff has no attestor record.`);
+  } else {
+    const attestorExtras = unexpectedKeys(attestor, ['name', 'credentialOrRole']);
+    if (attestorExtras.length > 0) {
+      errors.push(`${id} signoff attestor has unsupported fields: ${attestorExtras.join(', ')}.`);
+    }
+    if (
+      text(attestor.name).length < 2 ||
+      PLACEHOLDER_RE.test(text(attestor.name)) ||
+      signoffPlaceholder(attestor.name)
+    ) {
+      errors.push(`${id} signoff has no named attestor.`);
+    }
+    if (
+      text(attestor.credentialOrRole).length < 2 ||
+      signoffPlaceholder(attestor.credentialOrRole)
+    ) {
+      errors.push(`${id} signoff has no professional credential or decision-owner role.`);
+    }
+    if (text(attestor.name) !== text(item?.reviewer)) {
+      errors.push(`${id} signoff attestor does not match the review log reviewer/owner.`);
+    }
+  }
+
+  if (!validIsoDate(record.reviewDate)) {
+    errors.push(`${id} signoff has no valid ISO review date.`);
+  } else if (futureIsoDate(record.reviewDate)) {
+    errors.push(`${id} signoff has a future review date.`);
+  }
+  if (text(record.reviewDate) !== text(item?.date)) {
+    errors.push(`${id} signoff date does not match the review log date.`);
+  }
+
+  const decision = record.decision;
+  if (!decision || typeof decision !== 'object' || Array.isArray(decision)) {
+    errors.push(`${id} signoff has no decision record.`);
+  } else {
+    const decisionExtras = unexpectedKeys(decision, [
+      'disposition',
+      'conditions',
+      'conditionsSatisfied',
+    ]);
+    if (decisionExtras.length > 0) {
+      errors.push(`${id} signoff decision has unsupported fields: ${decisionExtras.join(', ')}.`);
+    }
+    const disposition = text(decision.disposition);
+    if (!RELEASE_DISPOSITIONS.has(disposition)) {
+      errors.push(`${id} signoff decision must be approved or deferred.`);
+    }
+    if (disposition !== text(item?.statusBucket)) {
+      errors.push(`${id} signoff disposition does not match the review log disposition.`);
+    }
+    if (!Array.isArray(decision.conditions)) {
+      errors.push(`${id} signoff decision must include a conditions array.`);
+    } else {
+      const seenConditions = new Set();
+      for (const [index, condition] of decision.conditions.entries()) {
+        if (signoffPlaceholder(condition)) {
+          errors.push(`${id} signoff condition ${index + 1} is blank or a placeholder.`);
+        }
+        const normalizedCondition = text(condition);
+        if (normalizedCondition && seenConditions.has(normalizedCondition)) {
+          errors.push(`${id} signoff decision contains a duplicate condition.`);
+        }
+        seenConditions.add(normalizedCondition);
+      }
+    }
+    if (typeof decision.conditionsSatisfied !== 'boolean') {
+      errors.push(`${id} signoff decision must state whether conditions are satisfied.`);
+    }
+    if (disposition === 'approved' && decision.conditionsSatisfied !== true) {
+      errors.push(`${id} cannot be approved with unsatisfied decision conditions.`);
+    }
+  }
+
+  if (text(record.evidenceReference).length < 3 || signoffPlaceholder(record.evidenceReference)) {
+    errors.push(`${id} signoff has no retained approval evidence reference.`);
+  }
+
+  const disposition = text(decision?.disposition);
+  if (disposition === 'deferred') {
+    const productionGate = record.productionGate;
+    if (!productionGate || typeof productionGate !== 'object' || Array.isArray(productionGate)) {
+      errors.push(`${id} deferred signoff has no production gate record.`);
+    } else {
+      const gateExtras = unexpectedKeys(productionGate, ['state', 'reason', 'owner']);
+      if (gateExtras.length > 0) {
+        errors.push(
+          `${id} deferred signoff production gate has unsupported fields: ${gateExtras.join(', ')}.`,
+        );
+      }
+      if (!DEFERRED_GATE_STATES.has(text(productionGate.state))) {
+        errors.push(`${id} deferred signoff has an unsupported production gate state.`);
+      }
+      if (text(productionGate.reason).length < 3 || signoffPlaceholder(productionGate.reason)) {
+        errors.push(`${id} deferred signoff has no production gate reason.`);
+      }
+      if (text(productionGate.owner).length < 2 || signoffPlaceholder(productionGate.owner)) {
+        errors.push(`${id} deferred signoff has no production gate owner.`);
+      }
+    }
+  } else if (disposition === 'approved' && record.productionGate !== null) {
+    errors.push(`${id} approved signoff productionGate must be null.`);
+  }
+
+  if (verifyHashes && signoffPath) {
+    const absolutePath = resolve(rootDir, signoffPath);
+    if (withinRoot(rootDir, absolutePath) && existsSync(absolutePath)) {
+      try {
+        const currentRecord = JSON.parse(readFileSync(absolutePath, 'utf8'));
+        if (stableJson(currentRecord) !== stableJson(record)) {
+          errors.push(`${id} embedded signoff record does not match its current JSON file.`);
+        }
+      } catch (error) {
+        errors.push(`${id} signoff JSON cannot be parsed: ${error.message}.`);
+      }
+    }
+  }
+
+  return errors;
+}
+
 function validateReviewWorklist(worklist, options = {}) {
   const errors = [];
   const rootDir = resolve(options.rootDir ?? REPO_ROOT);
   const verifyHashes = options.verifyHashes !== false;
   const verifyLogRows = options.verifyLogRows ?? verifyHashes;
+  const verifySignoffFiles = options.verifySignoffFiles ?? verifyHashes;
 
   if (!worklist || typeof worklist !== 'object' || Array.isArray(worklist)) {
     return ['Phase 3 review worklist is not a JSON object.'];
+  }
+  if (worklist.schemaVersion !== REVIEW_WORKLIST_SCHEMA_VERSION) {
+    errors.push(`Phase 3 review worklist schemaVersion must be ${REVIEW_WORKLIST_SCHEMA_VERSION}.`);
   }
   if (text(worklist.gitStatus)) {
     errors.push('Phase 3 review worklist was generated from a dirty worktree.');
@@ -269,6 +521,34 @@ function validateReviewWorklist(worklist, options = {}) {
         errors,
       );
     }
+    if (RELEASE_DISPOSITIONS.has(disposition)) {
+      errors.push(...validateReviewSignoff(item, { rootDir, verifyHashes: verifySignoffFiles }));
+    } else {
+      const computedSnapshotSha256 = computeReviewSnapshotSha256(item);
+      if (!SHA256_RE.test(text(item?.reviewSnapshotSha256))) {
+        errors.push(`${id || label} has no valid review snapshot SHA-256.`);
+      } else if (text(item.reviewSnapshotSha256).toLowerCase() !== computedSnapshotSha256) {
+        errors.push(
+          `${id || label} review snapshot SHA-256 does not match its current review context.`,
+        );
+      }
+      if (item?.signoff !== null && item?.signoff !== undefined) {
+        errors.push(`${id || label} has a signoff attached before a release disposition.`);
+      }
+    }
+  }
+
+  const signedItemCount = items.filter((item) => item?.signoff).length;
+  const unsignedReleaseDispositionCount = items.filter(
+    (item) => RELEASE_DISPOSITIONS.has(text(item?.statusBucket)) && !item?.signoff,
+  ).length;
+  if (Number(worklist.summary?.signedItemCount) !== signedItemCount) {
+    errors.push('Phase 3 signed-item count does not match the worklist items.');
+  }
+  if (
+    Number(worklist.summary?.unsignedReleaseDispositionCount) !== unsignedReleaseDispositionCount
+  ) {
+    errors.push('Phase 3 unsigned release-disposition count does not match the worklist items.');
   }
 
   const domains = new Set(items.map((item) => text(item?.domain)));
@@ -329,6 +609,9 @@ function validateReviewWorklist(worklist, options = {}) {
         errors.push(`Phase 3 ${domain} review row is missing from the worklist: ${row.Area}.`);
         continue;
       }
+      if (text(item.area) !== text(row.Area)) {
+        errors.push(`${id} area does not match its review log.`);
+      }
       if (text(item.statusBucket) !== dispositionForStatus(row.Status)) {
         errors.push(`${id} disposition does not match its review log.`);
       }
@@ -337,6 +620,13 @@ function validateReviewWorklist(worklist, options = {}) {
       }
       if (text(item.sourceText) !== text(row.Source)) {
         errors.push(`${id} source declaration does not match its review log.`);
+      }
+      const rowBehavior = row['Current production behavior'] ?? row['Current behavior'] ?? '';
+      if (text(item.currentBehavior) !== text(rowBehavior)) {
+        errors.push(`${id} current behavior does not match its review log.`);
+      }
+      if (text(item.notes) !== text(row.Notes)) {
+        errors.push(`${id} notes do not match its review log.`);
       }
       const declaredPaths = (Array.isArray(item.sourcePaths) ? item.sourcePaths : [])
         .map((source) => normalizeRepoPath(source?.path))
@@ -363,17 +653,57 @@ function loadReviewWorklist(path = DEFAULT_WORKLIST_PATH) {
 }
 
 function createReleaseReadyTestWorklist() {
-  const items = REQUIRED_DOMAINS.map((domain) => ({
-    id: `${domain}:test-release-decision`,
-    domain,
-    statusBucket: 'approved',
-    reviewer: `Qualified ${domain} reviewer`,
-    date: '2026-07-09',
-    currentBehavior: 'Approved for production.',
-    notes: 'Test-only complete review decision.',
-    sourcePaths: [],
-  }));
+  const attestors = {
+    legalRegulatory: ['Avery Chen', 'JD, consumer-health counsel'],
+    clinical: ['Morgan Patel', 'MD, board-certified dermatologist'],
+    cosmeticChemistry: ['Jordan Rivera', 'MSc, cosmetic chemist'],
+    privacySecurity: ['Casey Williams', 'CIPP/US, privacy counsel'],
+    ipFto: ['Taylor Morgan', 'JD, trademark and product counsel'],
+  };
+  const items = REQUIRED_DOMAINS.map((domain) => {
+    const id = `${domain}:test-release-decision`;
+    const [name, credentialOrRole] = attestors[domain];
+    const item = {
+      id,
+      domain,
+      area: 'Release decision',
+      requiredReviewer: `Qualified ${domain} reviewer`,
+      sourceText: '',
+      statusBucket: 'approved',
+      reviewer: name,
+      date: '2020-01-01',
+      currentBehavior: 'Approved for production.',
+      notes: 'Complete isolated review decision fixture.',
+      sourcePaths: [],
+    };
+    const reviewSnapshotSha256 = computeReviewSnapshotSha256(item);
+    return {
+      ...item,
+      reviewSnapshotSha256,
+      signoff: {
+        file: {
+          path: `docs/phase-3/signoffs/${domain}--release-decision.json`,
+          exists: true,
+        },
+        record: {
+          schemaVersion: REVIEW_SIGNOFF_SCHEMA_VERSION,
+          itemId: id,
+          reviewSnapshotSha256,
+          attestor: { name, credentialOrRole },
+          reviewDate: '2020-01-01',
+          decision: {
+            disposition: 'approved',
+            conditions: [],
+            conditionsSatisfied: true,
+          },
+          evidenceReference: `isolated-fixture-attestation-${domain}`,
+          productionGate: null,
+        },
+      },
+    };
+  });
   return {
+    schemaVersion: REVIEW_WORKLIST_SCHEMA_VERSION,
     gitStatus: '',
     reviewLogs: REQUIRED_DOMAINS.map((domain) => ({
       domain,
@@ -384,6 +714,8 @@ function createReleaseReadyTestWorklist() {
       itemCount: items.length,
       domainCounts: Object.fromEntries(REQUIRED_DOMAINS.map((domain) => [domain, 1])),
       statusCounts: { approved: items.length },
+      signedItemCount: items.length,
+      unsignedReleaseDispositionCount: 0,
       missingSourcePathCount: 0,
       blockerCount: 0,
       warningCount: 0,
@@ -411,8 +743,14 @@ function assertReleaseReadyReviewEvidence(options = {}) {
 module.exports = {
   DEFAULT_WORKLIST_PATH,
   REQUIRED_DOMAINS,
+  REVIEW_SIGNOFF_SCHEMA_VERSION,
+  REVIEW_SNAPSHOT_SCHEMA_VERSION,
+  REVIEW_WORKLIST_SCHEMA_VERSION,
   assertReleaseReadyReviewEvidence,
+  computeReviewSnapshotSha256,
   createReleaseReadyTestWorklist,
   loadReviewWorklist,
+  reviewSnapshot,
+  validateReviewSignoff,
   validateReviewWorklist,
 };

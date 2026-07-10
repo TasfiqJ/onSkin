@@ -37,12 +37,18 @@ and a production gate that keeps the surface hidden. `Blocked` and
 
 ## Approval Template
 
-When a reviewer clears an item, add a row:
+When a reviewer reaches a release decision, update the matching Content
+Inventory row and add one JSON record under `docs/phase-3/signoffs/` using
+`docs/phase-3/review-signoff.template.json`. The JSON record is the
+machine-readable credential and conditions evidence.
 
-| Area | Source | Reviewer | Credential | Review date | Approved version/hash | Decision                               | Conditions |
-| ---- | ------ | -------- | ---------- | ----------- | --------------------- | -------------------------------------- | ---------- |
-| TBD  | TBD    | TBD      | TBD        | TBD         | TBD                   | Approved / changes required / rejected | TBD        |
+| Area | Source | Reviewer | Credential | Review date | Review snapshot SHA-256 | Decision            | Conditions |
+| ---- | ------ | -------- | ---------- | ----------- | ----------------------- | ------------------- | ---------- |
+| TBD  | TBD    | TBD      | TBD        | TBD         | TBD                     | Approved / Deferred | TBD        |
 
 ## Launch Rule
 
-Any item with status other than approved remains hidden, blocked, or placeholder-gated. Seven-figure readiness depends on trust; do not trade review evidence for speed.
+Any item not approved remains hidden, blocked, or placeholder-gated. `Deferred`
+may coexist with release only when the surface is excluded from production and
+the detached signoff records the reason and owner. Seven-figure readiness
+depends on trust; do not trade review evidence for speed.
