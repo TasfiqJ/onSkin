@@ -9,6 +9,7 @@ const check = process.argv.includes('--check');
 const launchReadinessPath = 'LAUNCH_READINESS.md';
 const blockersPath = 'BLOCKERS.md';
 const progressPath = 'PROGRESS.md';
+const testingStrategyPath = 'docs/TESTING_STRATEGY.md';
 const packagePath = 'package.json';
 const humanE2eManifestPath = 'docs/e2e/generated/human-e2e-manifest.json';
 const outJson =
@@ -189,7 +190,13 @@ function matchingStalePatterns(text) {
 const blockers = [];
 const warnings = [];
 
-for (const path of [launchReadinessPath, blockersPath, progressPath, packagePath]) {
+for (const path of [
+  launchReadinessPath,
+  blockersPath,
+  progressPath,
+  testingStrategyPath,
+  packagePath,
+]) {
   if (!exists(path)) blockers.push(`Missing ${path}.`);
 }
 if (!exists(humanE2eManifestPath)) blockers.push(`Missing ${humanE2eManifestPath}.`);
@@ -197,6 +204,7 @@ if (!exists(humanE2eManifestPath)) blockers.push(`Missing ${humanE2eManifestPath
 const launchText = exists(launchReadinessPath) ? read(launchReadinessPath) : '';
 const blockersText = exists(blockersPath) ? read(blockersPath) : '';
 const progressText = exists(progressPath) ? read(progressPath) : '';
+const testingStrategyText = exists(testingStrategyPath) ? read(testingStrategyPath) : '';
 const packageJson = exists(packagePath) ? readJson(packagePath) : { scripts: {} };
 const humanManifest = exists(humanE2eManifestPath) ? readJson(humanE2eManifestPath) : {};
 
@@ -222,8 +230,24 @@ const expectedTestPhrase = `${expectedMobileTestFiles} mobile test files / ${exp
 const expectedWorkspaceTestPhrase = `${expectedMobileTestFiles} test files / ${expectedMobileTests} tests`;
 
 const docs = [
-  { path: launchReadinessPath, text: launchText, requireCommands: true },
-  { path: blockersPath, text: blockersText, requireCommands: false },
+  {
+    path: launchReadinessPath,
+    text: launchText,
+    requireCommands: true,
+    requireCurrentEvidence: true,
+  },
+  {
+    path: blockersPath,
+    text: blockersText,
+    requireCommands: false,
+    requireCurrentEvidence: true,
+  },
+  {
+    path: testingStrategyPath,
+    text: testingStrategyText,
+    requireCommands: true,
+    requireCurrentEvidence: false,
+  },
 ];
 
 const docResults = docs.map((doc) => {
@@ -238,24 +262,27 @@ const docResults = docs.map((doc) => {
     ? requiredLaunchCommands.filter((command) => !doc.text.includes(command))
     : [];
 
-  if (evidenceDate && date !== evidenceDate) {
+  if (doc.requireCurrentEvidence && evidenceDate && date !== evidenceDate) {
     blockers.push(`${doc.path} Date is ${date ?? 'missing'}, expected ${evidenceDate}.`);
   }
-  if (stalePatterns.length > 0) {
+  if (doc.requireCurrentEvidence && stalePatterns.length > 0) {
     blockers.push(`${doc.path} contains stale test-count pattern(s): ${stalePatterns.join(', ')}.`);
   }
-  if (!hasExpectedTestPhrase) {
+  if (doc.requireCurrentEvidence && !hasExpectedTestPhrase) {
     blockers.push(`${doc.path} does not mention current test baseline ${expectedTestPhrase}.`);
   }
   for (const command of missingCommands) {
     blockers.push(`${doc.path} does not mention ${command}.`);
   }
-  for (const needle of missingManifestNeedles) {
-    blockers.push(`${doc.path} does not mention current human-E2E manifest evidence: ${needle}.`);
+  if (doc.requireCurrentEvidence) {
+    for (const needle of missingManifestNeedles) {
+      blockers.push(`${doc.path} does not mention current human-E2E manifest evidence: ${needle}.`);
+    }
   }
 
   return {
     path: doc.path,
+    requireCurrentEvidence: doc.requireCurrentEvidence,
     date,
     expectedDate: evidenceDate,
     hasExpectedTestPhrase,
@@ -344,11 +371,15 @@ const mdContent = [
     ],
     docResults.map((doc) => [
       doc.path,
-      doc.date ?? 'missing',
-      doc.expectedDate || 'missing',
-      doc.hasExpectedTestPhrase ? 'yes' : 'no',
-      doc.missingManifestNeedles.length === 0 ? 'yes' : 'no',
-      doc.stalePatterns.length,
+      doc.requireCurrentEvidence ? (doc.date ?? 'missing') : 'n/a',
+      doc.requireCurrentEvidence ? (doc.expectedDate || 'missing') : 'n/a',
+      doc.requireCurrentEvidence ? (doc.hasExpectedTestPhrase ? 'yes' : 'no') : 'n/a',
+      doc.requireCurrentEvidence
+        ? doc.missingManifestNeedles.length === 0
+          ? 'yes'
+          : 'no'
+        : 'n/a',
+      doc.requireCurrentEvidence ? doc.stalePatterns.length : 'n/a',
       doc.missingCommands.length,
     ]),
   ),

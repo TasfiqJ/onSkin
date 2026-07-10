@@ -1,6 +1,6 @@
 # Readiness Status Audit
 
-Generated: 2026-07-10T01:49:56.675Z
+Generated: 2026-07-10T01:57:22.681Z
 Status: pass
 Strict mode: yes
 
@@ -20,10 +20,11 @@ store, legal, clinical, beta, or launch signoff evidence.
 
 ## Docs
 
-| Doc                 | Date       | Expected date | Current test phrase | Manifest evidence | Stale patterns | Missing commands |
-| ------------------- | ---------- | ------------- | ------------------- | ----------------- | -------------- | ---------------- |
-| LAUNCH_READINESS.md | 2026-07-09 | 2026-07-09    | yes                 | yes               | 0              | 0                |
-| BLOCKERS.md         | 2026-07-09 | 2026-07-09    | yes                 | yes               | 0              | 0                |
+| Doc                      | Date       | Expected date | Current test phrase | Manifest evidence | Stale patterns | Missing commands |
+| ------------------------ | ---------- | ------------- | ------------------- | ----------------- | -------------- | ---------------- |
+| LAUNCH_READINESS.md      | 2026-07-09 | 2026-07-09    | yes                 | yes               | 0              | 0                |
+| BLOCKERS.md              | 2026-07-09 | 2026-07-09    | yes                 | yes               | 0              | 0                |
+| docs/TESTING_STRATEGY.md | n/a        | n/a           | n/a                 | n/a               | n/a            | 0                |
 
 ## Required Launch Commands
 

@@ -59,6 +59,7 @@ const docNeedles = [
     path: files.launchReadiness,
     needles: [
       'Performance readiness',
+      'Performance baseline and scale evidence',
       'docs:performance-readiness-audit:check',
       ...requiredPerformanceMetrics,
     ],

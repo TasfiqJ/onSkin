@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-10T01:49:56.675Z",
+  "generatedAt": "2026-07-10T01:57:22.681Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
@@ -12,6 +12,7 @@
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
+      "requireCurrentEvidence": true,
       "date": "2026-07-09",
       "expectedDate": "2026-07-09",
       "hasExpectedTestPhrase": true,
@@ -21,10 +22,35 @@
     },
     {
       "path": "BLOCKERS.md",
+      "requireCurrentEvidence": true,
       "date": "2026-07-09",
       "expectedDate": "2026-07-09",
       "hasExpectedTestPhrase": true,
       "missingManifestNeedles": [],
+      "stalePatterns": [],
+      "missingCommands": []
+    },
+    {
+      "path": "docs/TESTING_STRATEGY.md",
+      "requireCurrentEvidence": false,
+      "date": null,
+      "expectedDate": "2026-07-09",
+      "hasExpectedTestPhrase": false,
+      "missingManifestNeedles": [
+        "360 x 640 launch-floor 200% text-pressure",
+        "360 x 740",
+        "375 x 812",
+        "390 x 844",
+        "412 x 915",
+        "414 x 896",
+        "430 x 932",
+        "API 36",
+        "text-pressure-200-supported-360-640-postfix",
+        "text-pressure-200-android-360-740-postfix",
+        "text-pressure-200-iphone-375-812-postfix",
+        "text-pressure-200-android-412-915-postfix2",
+        "text-pressure-200-boundary-414-896-postfix3"
+      ],
       "stalePatterns": [],
       "missingCommands": []
     }
@@ -86,7 +112,7 @@
   "summary": {
     "blockerCount": 0,
     "warningCount": 0,
-    "checkedDocCount": 2
+    "checkedDocCount": 3
   },
   "blockers": [],
   "warnings": []

@@ -358,7 +358,9 @@ Re-run the relevant checks after any production-readiness change.
    native OCR remains gated off.
 9. Native notification delivery and Android 14+ behavior are not verified on
    physical devices.
-10. Closed beta has not proven activation, retention, catalog usefulness, and
+10. Performance baseline and scale evidence are not measured on supported
+    physical devices or beta telemetry.
+11. Closed beta has not proven activation, retention, catalog usefulness, and
     willingness to pay.
 
 ## Readiness Table
