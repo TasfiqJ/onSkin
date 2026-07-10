@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-10T03:13:11.705Z",
+  "generatedAt": "2026-07-10T03:32:54.792Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "35d7d2a0ead56342f5742a3ec595f60be1ddced1",
+  "gitSha": "4044ef0675582a7907b9f0ca92317e1e4ebc3387",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
     "bytes": 82920,
-    "sha256": "102a539865f9ed08bedcda53bb34cb95b10868955cfca65f636c0a0170d4d66d",
-    "currentSha256": "102a539865f9ed08bedcda53bb34cb95b10868955cfca65f636c0a0170d4d66d"
+    "sha256": "b231d11f1947510049305d5eed7474e61ab73750dd9b54ad1e703c3346269697",
+    "currentSha256": "b231d11f1947510049305d5eed7474e61ab73750dd9b54ad1e703c3346269697"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -125,8 +125,8 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 10037,
-          "sha256": "7c3b7d06f33bca6749aec92ae7fa49b1b7f36ae91864326207c545d5b41c0c16"
+          "bytes": 10325,
+          "sha256": "6e595bc794edb2f08faf96b10d780482d3725bdc1fc3c2b0d5459b73ed943ef8"
         }
       ]
     },
@@ -261,8 +261,8 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 10037,
-          "sha256": "7c3b7d06f33bca6749aec92ae7fa49b1b7f36ae91864326207c545d5b41c0c16"
+          "bytes": 10325,
+          "sha256": "6e595bc794edb2f08faf96b10d780482d3725bdc1fc3c2b0d5459b73ed943ef8"
         },
         {
           "path": "supabase/config.toml",

@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-10T03:13:13.576Z",
+  "generatedAt": "2026-07-10T03:32:55.759Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "35d7d2a0ead56342f5742a3ec595f60be1ddced1",
+  "gitSha": "4044ef0675582a7907b9f0ca92317e1e4ebc3387",
   "gitStatus": "",
   "summary": {
     "itemCount": 9,
@@ -47,8 +47,8 @@
         {
           "path": ".env.example",
           "exists": true,
-          "bytes": 16021,
-          "sha256": "f33a9dddffd602ecf4d5ab447222c691366985587f948590e9df5258e6e8c769"
+          "bytes": 16214,
+          "sha256": "ac8c000dd02595b52af4efe2a255b22ad098448a7f3bfecea6f1c3c9dfb8b4bc"
         },
         {
           "path": "scripts/phase4/check-source-env.mjs",
@@ -77,8 +77,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 42018,
-          "sha256": "4d912e3994a539b7fb5962946da7bb5e1520a33a8a54df7b16013dfc638d7188"
+          "bytes": 42341,
+          "sha256": "1ce5d51c7ced8a1d04d826a3ee5beb98b5ae841e7990555179f2e256e31e32d2"
         }
       ]
     },
@@ -401,8 +401,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 42018,
-          "sha256": "4d912e3994a539b7fb5962946da7bb5e1520a33a8a54df7b16013dfc638d7188"
+          "bytes": 42341,
+          "sha256": "1ce5d51c7ced8a1d04d826a3ee5beb98b5ae841e7990555179f2e256e31e32d2"
         }
       ]
     },
@@ -831,8 +831,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 42018,
-          "sha256": "4d912e3994a539b7fb5962946da7bb5e1520a33a8a54df7b16013dfc638d7188"
+          "bytes": 42341,
+          "sha256": "1ce5d51c7ced8a1d04d826a3ee5beb98b5ae841e7990555179f2e256e31e32d2"
         }
       ]
     },
@@ -904,8 +904,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 42018,
-          "sha256": "4d912e3994a539b7fb5962946da7bb5e1520a33a8a54df7b16013dfc638d7188"
+          "bytes": 42341,
+          "sha256": "1ce5d51c7ced8a1d04d826a3ee5beb98b5ae841e7990555179f2e256e31e32d2"
         }
       ]
     }

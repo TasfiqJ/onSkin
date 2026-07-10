@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T03:13:15.483Z",
+  "generatedAt": "2026-07-10T03:32:56.655Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "35d7d2a0ead56342f5742a3ec595f60be1ddced1",
+  "gitSha": "4044ef0675582a7907b9f0ca92317e1e4ebc3387",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -17,8 +17,8 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 16021,
-      "sha256": "f33a9dddffd602ecf4d5ab447222c691366985587f948590e9df5258e6e8c769"
+      "bytes": 16214,
+      "sha256": "ac8c000dd02595b52af4efe2a255b22ad098448a7f3bfecea6f1c3c9dfb8b4bc"
     },
     {
       "path": "scripts/phase4/build-source-worklist.mjs",
@@ -83,8 +83,8 @@
     {
       "path": "docs/FOR_TAS_TO_DO.md",
       "exists": true,
-      "bytes": 42018,
-      "sha256": "4d912e3994a539b7fb5962946da7bb5e1520a33a8a54df7b16013dfc638d7188"
+      "bytes": 42341,
+      "sha256": "1ce5d51c7ced8a1d04d826a3ee5beb98b5ae841e7990555179f2e256e31e32d2"
     },
     {
       "path": "docs/phase-4/beta-coverage-input.template.json",
@@ -102,13 +102,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 35122,
-      "sha256": "db50c6b56d55f17e925ac537f344c77109713c9baa11cad55936bbbb4d477d9b"
+      "sha256": "5cfe9819e0df0625767f816bdb501bd2ce28416de0e39872526e6b4556164385"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 22473,
-      "sha256": "7c822e0d7dc801de411d708cd7e586c8f9469b744f7cc5f2233420823dd47022"
+      "sha256": "1aba4aeeae5b33c9d9022367b1def35f5610fd03c75338d0a06bb631a638fb33"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -126,13 +126,13 @@
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
       "bytes": 5693,
-      "sha256": "4877d1a52412993c90abbb6f1d250d0bc094dd85cd0435651e63ca0ecf551bcd"
+      "sha256": "1ff83e7da62f684e2577b40fb6498e2a624d8529a068ab32dc8543a45106c3fa"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 3816,
-      "sha256": "8d57f1fb050558df3f1ab333ba72b32ab5b74cbefc6ffdea9bfe8f5b7f9ed130"
+      "sha256": "9fdcef75146be234f0ddc41d1c2b058eb04d48186f31fb35579321e7bc87946d"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",

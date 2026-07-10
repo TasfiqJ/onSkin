@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-10T03:13:10.732Z",
+  "generatedAt": "2026-07-10T03:32:54.343Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "35d7d2a0ead56342f5742a3ec595f60be1ddced1",
+  "gitSha": "4044ef0675582a7907b9f0ca92317e1e4ebc3387",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -10,40 +10,40 @@
       "requiredReviewer": "qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience",
       "path": "docs/phase-3/legal-regulatory-review-log.md",
       "exists": true,
-      "bytes": 4858,
-      "sha256": "866e4a6bc17d3ae4cae4e70125cdb15f3c0c41af2ceeb70e1a143dcac75efc75"
+      "bytes": 5187,
+      "sha256": "1f3b32719d8e170b95dcb3808adbeacaee3a20e3c9705c10dda3d0c136d5d395"
     },
     {
       "domain": "clinical",
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "path": "docs/phase-3/clinical-review-log.md",
       "exists": true,
-      "bytes": 4704,
-      "sha256": "ed2942bdd382da460648a0c50bced443b991e6ce286340fc42ea155c2f945f18"
+      "bytes": 5033,
+      "sha256": "1902808851cf31f294ce6d40ad8573d5e3eff0ef04174583c0e423ee83faeadc"
     },
     {
       "domain": "cosmeticChemistry",
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "path": "docs/phase-3/cosmetic-chemistry-review-log.md",
       "exists": true,
-      "bytes": 2995,
-      "sha256": "6704e036e1805b154a1ec71092a6096acbb457ab9f25136f62f22c280315c3a5"
+      "bytes": 3324,
+      "sha256": "0c11aa9906ec92e445cc400f899d92ea9ea58052c0c96bbc2765ca4195715125"
     },
     {
       "domain": "privacySecurity",
       "requiredReviewer": "privacy counsel plus technical security owner",
       "path": "docs/phase-3/privacy-security-review-log.md",
       "exists": true,
-      "bytes": 6834,
-      "sha256": "94acf53793ecfbdb949e9fabfa24912c4ba1808be9dc4204c29623ecb044f092"
+      "bytes": 7163,
+      "sha256": "77f9287563637fc4cb4b4d245d343ad44db0b8d57aa29ff17227955e1763dc54"
     },
     {
       "domain": "ipFto",
       "requiredReviewer": "qualified trademark, copyright, and product/FTO counsel",
       "path": "docs/phase-3/ip-fto-review-log.md",
       "exists": true,
-      "bytes": 4756,
-      "sha256": "e233ee6160acab31fec3461cc14b9bdc2f9a3213f286bd3f56fe3a2c46d9d2ce"
+      "bytes": 5085,
+      "sha256": "55d74e8e039102c6b9b6edc01a680fe12e5a1107ac05b074c2e31bfcf8574cfd"
     }
   ],
   "summary": {
@@ -1763,8 +1763,8 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 10037,
-          "sha256": "7c3b7d06f33bca6749aec92ae7fa49b1b7f36ae91864326207c545d5b41c0c16"
+          "bytes": 10325,
+          "sha256": "6e595bc794edb2f08faf96b10d780482d3725bdc1fc3c2b0d5459b73ed943ef8"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes."
@@ -1791,8 +1791,8 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 10037,
-          "sha256": "7c3b7d06f33bca6749aec92ae7fa49b1b7f36ae91864326207c545d5b41c0c16"
+          "bytes": 10325,
+          "sha256": "6e595bc794edb2f08faf96b10d780482d3725bdc1fc3c2b0d5459b73ed943ef8"
         },
         {
           "path": "supabase/config.toml",

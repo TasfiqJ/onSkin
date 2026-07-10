@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-10T03:13:26.788Z
+Generated: 2026-07-10T03:33:02.178Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 49
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 999
+- Hash references checked: 1001
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -31,7 +31,7 @@ being treated as trustworthy launch evidence.
 | docs/phase-11/generated/public-launch-packet.md           | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 238       | 0               |
 | docs/phase-3/generated/review-operator-queue.md           | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-packet-manifest.json        | json | 0                  | 0                          | 58        | 0               |
+| docs/phase-3/generated/review-packet-manifest.json        | json | 0                  | 0                          | 60        | 0               |
 | docs/phase-3/generated/review-packet.md                   | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 242       | 0               |
 | docs/phase-3/generated/review-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
