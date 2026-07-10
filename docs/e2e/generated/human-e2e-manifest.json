@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-10T06:22:52.707Z",
-  "gitSha": "cebeb2af8f592963f5256af14ec8911633e2a122",
+  "generatedAt": "2026-07-10T07:07:54.746Z",
+  "gitSha": "fab01582e2c6b838d84b35cbf42d102cf4257eb5",
   "evidenceDate": "2026-07-10",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -499,6 +499,25 @@
       "fileCount": 19,
       "bytes": 333347,
       "evidenceSha256": "b534c021fa7bb4d9a8e89320d4fe3940ff50d92b3b7ab4b66982bcadfcce6047"
+    },
+    {
+      "id": "progress-device-only-backup-supported-phone",
+      "title": "Device-only Progress photo storage",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/progress-device-only-backup-current",
+      "evidence": "summary.json",
+      "expected": "Settings and locked Progress show device-only storage with no backup switch, dialogs, backup analytics, or photo-backend traffic.",
+      "status": "pass",
+      "detail": "summary status: pass; 0 failed routes.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 15,
+      "bytes": 167412,
+      "evidenceSha256": "119ed3e08b63ea5e212736a807af4bbfb9849c86cb8ee6be7fe503b5efc26dc7"
     }
   ],
   "warnings": [

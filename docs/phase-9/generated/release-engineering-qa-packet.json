@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T06:23:11.060Z",
+  "generatedAt": "2026-07-10T07:08:52.499Z",
   "status": "blocked",
-  "gitSha": "cebeb2af8f592963f5256af14ec8911633e2a122",
+  "gitSha": "fab01582e2c6b838d84b35cbf42d102cf4257eb5",
   "gitStatus": "",
   "releaseIdentity": {
     "appEnvironment": "development",
@@ -98,11 +98,11 @@
     "scripts/phase9/consent-withdrawal-smoke.mjs": "5b5e0469fc3823f2eb272227db962a5ded6d1ef8a4da2a963f4a1b9f452b4de3",
     "scripts/phase9/supabase-policy-lint.mjs": "bc34caeea0df827ec02e9e952606aac19106560a88279ed40bca45466908470e",
     "scripts/phase9/security-ci-smoke.mjs": "ab3d8be0b2ada7da1a9b7890f4043768cfada3888e524e2964e251d3759566a7",
-    "scripts/phase9/privacy-payload-audit.mjs": "4e662826a00d001cfcc7b5f87230210132cfb5e1fcc518ba6c5403faeeec1ede",
+    "scripts/phase9/privacy-payload-audit.mjs": "623a43e5794cebd23863114d21fb80cd34aa8785db1fe056b64cef7b6e3052d7",
     "scripts/phase9/dependency-sbom.mjs": "0b36b22f21004af4913cd1c72b0f247765b888a3461ee074a3758a8c3d8df351",
     "scripts/phase9/store-build-inspect.mjs": "6dbda3144157e2b8f75f92b81dc3cf52310154fbd5a8a64ccd80942745ea5366",
     "docs/phase-9/source-of-truth.md": "b23f022feded586dadfd8e21d7c407b8b94f9ed317ae6ddde12dac1c5933c9da",
-    "docs/phase-9/data-inventory.md": "cc2120ad02de7e8bb2d57747a556f113beb011cb46eb05d9147c09c3148eb947",
+    "docs/phase-9/data-inventory.md": "a4c8d8a75322a4485a6df54cbe98b2d5918ff742ef7b53d4662ea3f1fc96e25f",
     "docs/phase-9/edge-function-auth-matrix.md": "e93759bc6338c06bbfd883e0c704cba42c85eafd15369278564255b60d8e7786",
     "docs/phase-9/observability-payload-audit.md": "3aa9508564cef79e704b14fdd43a80063e8e040ebc7dcdfa7f68a9cd8d86ada7",
     "docs/phase-9/security-scanner-evidence.md": "878d37533e0f2cd94a77a774917e829f7436e854816ae9caf623e498c45f8566",

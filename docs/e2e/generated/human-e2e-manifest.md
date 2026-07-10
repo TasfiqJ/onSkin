@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-10T06:22:52.707Z
-Git SHA: cebeb2af8f592963f5256af14ec8911633e2a122
+Generated: 2026-07-10T07:07:54.746Z
+Git SHA: fab01582e2c6b838d84b35cbf42d102cf4257eb5
 Evidence date: 2026-07-10
 Baseline suite date: 2026-07-09
 Status: pass
@@ -41,6 +41,7 @@ dependency to the repo.
 | 320 x 430 first-session activation stress pass                   | resilience      | pass   | summary verdict: pass.                 | 58    | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current                 |
 | 390 x 844 local Progress time-lapse and reduced-motion pass      | supported-phone | pass   | summary status: pass.                  | 17    | test-results/human-e2e/2026-07-10/progress-timelapse-current                           |
 | Progress quality states and support-floor save recovery          | supported-phone | pass   | summary status: pass.                  | 19    | test-results/human-e2e/2026-07-10/progress-capture-analysis-current                    |
+| Device-only Progress photo storage                               | supported-phone | pass   | summary status: pass; 0 failed routes. | 15    | test-results/human-e2e/2026-07-10/progress-device-only-backup-current                  |
 
 ## Warnings
 

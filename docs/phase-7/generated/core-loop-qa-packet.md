@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-10T06:24:00.516Z
-Git SHA: cebeb2af8f592963f5256af14ec8911633e2a122
+Generated at: 2026-07-10T07:08:43.430Z
+Git SHA: fab01582e2c6b838d84b35cbf42d102cf4257eb5
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -42,7 +42,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | Reviewed guidance | reviewed conflict shows evidence and sequence guidance; unreviewed conflict stays hidden | `PHASE7_REVIEWED_GUIDANCE_QA_PASS` | BLOCKED |
 | Routine builder | AM/PM routine persists across restart, offline, timezone rollover | `PHASE7_ROUTINE_BUILDER_QA_PASS` | BLOCKED |
 | Today check-off | offline/online check-off is idempotent and append-only | `PHASE7_TODAY_CHECKOFF_QA_PASS` | BLOCKED |
-| Photos | baseline capture renders locally; app lock gates timeline; cloud backup remains off by default | `PHASE7_PHOTOS_PRIVACY_QA_PASS` | BLOCKED |
+| Photos | baseline capture renders locally; app lock gates timeline; settings and Progress show device-only storage with no backup control or automatic upload | `PHASE7_PHOTOS_PRIVACY_QA_PASS` | BLOCKED |
 | Reminders | permission, quiet hours, Android 13+ permission, timezone/DST behavior verified | `PHASE7_REMINDERS_QA_PASS` | BLOCKED |
 | Payments | RevenueCat purchase, restore, cancellation, expiration, refund, and webhook lifecycle verified | `PHASE7_PAYMENTS_LIFECYCLE_QA_PASS` | BLOCKED |
 | Privacy controls | export, account deletion, health-data withdrawal, app lock, support links verified | `PHASE7_PRIVACY_CONTROLS_QA_PASS` | BLOCKED |
@@ -59,29 +59,29 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/lib/launch/phase7.test.ts | present | 7951 | d8f1f40b721e0424f4781b7f5769d6610648c3b1dfac45a9ee0bf42e273f1815 |
 | apps/mobile/src/components/launch/DeferredSurface.tsx | present | 2028 | 235a3fcdab2164c06c8677417a2ab5756779e0a53d1dd8b0d7485e6eba619f87 |
 | apps/mobile/src/app/(tabs)/today.tsx | present | 27951 | b10bdc8f6f1111f338204360a5922f7631e0cfa58a237a464163b3f42dffd765 |
-| apps/mobile/src/app/(tabs)/progress.tsx | present | 24572 | fea615fa143b58e5c3c6d8025531d163a5b974320ecd8e019dbd477e1d66f6fd |
-| apps/mobile/src/app/(tabs)/you.tsx | present | 38577 | b5b9b714820cb0784540bfbd41bb0a7acdfee9b16544f927e7eb7ad1e2c66505 |
+| apps/mobile/src/app/(tabs)/progress.tsx | present | 24390 | 9a10433844920d13397d28f7cc755a8c7cf94e3bc36eddbdb7e55efcf075b437 |
+| apps/mobile/src/app/(tabs)/you.tsx | present | 36550 | 9633839daf40237c793cb5ac2adb37d775b53dbcef6c4e24311d3678149be77b |
 | apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 5773 | 2d3372b7a4d726109665bbe067ac38bf4866f5a4daf3a539c52a322e860dd240 |
 | apps/mobile/src/app/conflict/[ruleId].tsx | present | 24992 | a579f53bfb9147654d214090dff5705c6102f16d57d145b4220a08e9910b5c17 |
 | apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 8380 | 236b8c3c89b38d689ee02f83f18b90638a0ada5b4659edc8235df803d6b30293 |
-| scripts/phase7/build-core-loop-qa-packet.mjs | present | 10052 | 1dae83cb3b21bda64a75e3a90f64b13253072d256b521f885516bbb02b906407 |
+| scripts/phase7/build-core-loop-qa-packet.mjs | present | 10106 | da822eed555597b12a87b79610d43ef16ad6eeb2907922b320977ceaeb6024f0 |
 | scripts/phase7/check-core-loop.mjs | present | 16219 | 4b9e0fd84780938106dbc1e639787d5e82b584bb40a8042eac57c18effa789d5 |
 | scripts/phase7/check-core-loop-smoke.mjs | present | 10280 | da234b040e9f1405bfeb54760846066dbdcd99754a7106be94e1a90b95d969bb |
-| scripts/e2e/human-e2e-manifest.mjs | present | 27050 | 074c1ce4d12608636a33b99006484b0764ffff87e9884f23edb28b4e65494147 |
+| scripts/e2e/human-e2e-manifest.mjs | present | 27815 | 90a99e52fc5f216bbca6740bb6974726fa7ee9f18481bdbee4d4b747b8f9403e |
 | scripts/phase9/lib.mjs | present | 14020 | af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10167 | d7d616fcbe9078b55c0d4b3bf5e88ae19570fa533aee8edc599cf1956c7c9149 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
-| docs/USER_FLOW_TREE.md | present | 314641 | 3af173985ebe970b4b7fbf7e0ac3ea814639c0895a9b8a31d9509bb54f760d1c |
-| docs/e2e/generated/human-e2e-manifest.json | present | 21707 | a0db6b6082f1b08cab4d55e62967c2cbf0f1f7085a6210f318aa9c15e47474a8 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 7585 | 9df453fda3a4c127d6abb35641170151f16082fbafcf7154bf7356aa478c0d29 |
-| docs/phase-5/generated/device-qa-packet.json | present | 14810 | 24cac14b32c18000f078f718450a03390ea523058e22d5f461632b08b3f9104c |
-| docs/phase-5/generated/device-qa-packet.md | present | 13470 | 7c49e21c9c5689ce2feb2bed1058684a7c76da4030419dc244918c74e2c10c41 |
-| docs/phase-6/generated/payments-qa-packet.json | present | 10522 | 3e49456b6554845da0accade87703467dfeec5ce598df24ef5dcd84a1eb8f335 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 7861 | 494da778407be5d64bc17a2e6f2f38dc11424e86b6bfa23a7669b61c8c7be9d6 |
-| docs/phase-7/surface-inventory.md | present | 7793 | a4b7493dc8ae05e53a214867993ddfd57ce5a3cada59157f253762cb6714e593 |
-| docs/phase-7/launch-claim-matrix.md | present | 4282 | c9e79636f0da8a3138eb438f09a172cd873fb7465ad5f6a17030941fe63e8174 |
+| docs/USER_FLOW_TREE.md | present | 316326 | 7f78a009634fef2461d072778e037fc5e6057cd6978b72c93aaa3f6a68455483 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 22530 | 5001830c7995a4fa8b5dd4a44e16104f1b7c50b278e38470a10abf4c2b4e0138 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 7819 | d4b036efd568e40a818edb68c05d72c0ea85543fd19171393750015212c3c4f9 |
+| docs/phase-5/generated/device-qa-packet.json | present | 15625 | 0f1ff56ecf3e3e0c9f63086a9335e945b9720aef1201db2c9075f1150aa83c41 |
+| docs/phase-5/generated/device-qa-packet.md | present | 14518 | 876902783567a8b3226c9b51a6b6bfaf31995048fc80d512147e4b3d45d9a3e8 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 10522 | 413df7ca8c35a180f5cf7fa42af2326e983f8a379bddd6af2b3e6f1488256019 |
+| docs/phase-6/generated/payments-qa-packet.md | present | 7861 | 245926c2390067f41dffe269173f00a65ac06edee162f203b94631bc8091e00c |
+| docs/phase-7/surface-inventory.md | present | 7793 | 50c0f72fb317e36588a30559cd254dcb3b7ebaa7c73b8b4ba4dfb9ea35350fd6 |
+| docs/phase-7/launch-claim-matrix.md | present | 4322 | 7027d6d21f2cc7c3bb6944f003f9aeac6a09efea8dc2785280f6a3da44bb6b6b |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4725 | f57bd8b15489b66c4dbee486f3e15190eb2e4752420308dfb71883372348cdd1 |
-| docs/phase-7/core-loop-qa-checklist.md | present | 60287 | 43800c02917db3a42017375c4ec026a868fee17f988478c3f2e5f2da25d14dca |
+| docs/phase-7/core-loop-qa-checklist.md | present | 60424 | 95fb90e8616b9ae4fe53f2706e85004b643461562a8a796f3e34bc16756d7570 |
 | docs/phase-7/phase-7-exit-review.md | present | 3509 | 033edec9712f3e4bb2529ca8f6b27b91953503664d326774113fdec9ec7748d4 |
 
 ## Blockers
