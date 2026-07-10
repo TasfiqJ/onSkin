@@ -43,6 +43,7 @@ const FLOATING_TAB_BAR_MAX_WIDTH = 402;
 const FLOATING_TAB_BAR_HORIZONTAL_PADDING = 0;
 const MIN_TAB_TOUCH_TARGET = 52;
 const TAB_ITEM_HEIGHT = 54;
+const COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH = 430;
 const TAB_ICON_BY_ROUTE: Record<string, TabIconName> = {
   progress: 'progress',
   shelf: 'shelf',
@@ -192,6 +193,7 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
     FLOATING_TAB_BAR_SIDE_MARGIN,
     (viewportWidth - tabBarWidth) / 2,
   );
+  const compactProgressTabLabel = viewportWidth <= COMPACT_PROGRESS_TAB_LABEL_MAX_WIDTH;
   if (keyboardVisible) {
     return null;
   }
@@ -210,7 +212,8 @@ function FloatingTabBar({ descriptors, insets, navigation, state }: BottomTabBar
         const { options } = descriptors[route.key];
         const label = typeof options.tabBarLabel === 'string' ? options.tabBarLabel : options.title;
         const displayLabel = label ?? route.name;
-        const visibleLabel = displayLabel;
+        const visibleLabel =
+          compactProgressTabLabel && route.name === 'progress' ? 'Prog.' : displayLabel;
         const iconName = TAB_ICON_BY_ROUTE[route.name] ?? 'today';
         const labelColor = focused ? colors.paperRaised : colors.inkSoft;
 

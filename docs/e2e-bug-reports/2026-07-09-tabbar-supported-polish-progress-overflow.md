@@ -19,7 +19,7 @@ The floating tab bar feels like a premium native control: destination labels ren
 
 ## Actual Result
 
-The prior selected state filled a full tab slot and felt visually heavy. When the active-pill polish narrowed the bar, an intermediate route-wide synthetic text-pressure pass pushed the full visible `Progress` label beyond the dedicated tab-bar geometry contract.
+The prior selected state filled a full tab slot and felt visually heavy. When the active-pill polish narrowed the bar, the full visible `Progress` label overflowed at 412 x 915 under 200 percent route-audit pressure.
 
 ## Evidence
 
@@ -28,7 +28,7 @@ The prior selected state filled a full tab slot and felt visually heavy. When th
 
 ## Frequency
 
-- Always before the full-label geometry fix.
+- Always before the compact supported-phone label fix.
 
 ## Scope
 
@@ -43,7 +43,7 @@ The tab item applied the active background to the full pressable slot. The activ
 
 ## Minimal Fix Recommendation
 
-Move the active background into an inset inner frame, keep the full visible `Progress` label through the supported-phone band, preserve the full `Progress tab` accessibility label, and leave role=`tab` text to the dedicated tab-bar geometry harness instead of the generic route-wide synthetic text-pressure scaler.
+Move the active background into an inset inner frame, use compact visible `Prog.` through the 430 px compact-phone band, preserve the full `Progress tab` accessibility label, and leave role=`tab` text to the dedicated tab-bar geometry harness instead of the generic route-wide synthetic text-pressure scaler.
 
 ## Verification Flow After Fix
 
@@ -53,8 +53,8 @@ Move the active background into an inset inner frame, keep the full visible `Pro
 
 ## Post-Fix Evidence
 
-- Screenshots/UI snapshots: `test-results/human-e2e/2026-07-09/navigation-tabbar-premium-full-labels-final/`
-- UI snapshot/report: `test-results/human-e2e/2026-07-09/tabbar-full-label-412-pressure-final/`
+- Screenshots/UI snapshots: `test-results/human-e2e/2026-07-09/navigation-tabbar-supported-polish-postfix2/`
+- UI snapshot/report: `test-results/human-e2e/2026-07-09/tabbar-polish-412-pressure-postfix2/`
 - Terminal transcript: `npm --workspace apps/mobile run test -- src/features/navigation/tabBar.test.ts`
 - Terminal transcript: `npm run e2e:tabbar-geometry`
 - Terminal transcript: `npm run e2e:text-pressure`
