@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-10T09:21:33.729Z
+Generated: 2026-07-10T09:44:50.766Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 0d013454e3d25f1b2cdcf4a37b88db92ffdc1c07
+Git SHA: fc54ef53c788a1db745188090cc60f184133a84e
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -355,7 +355,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `f4191c6805a47c5ad88efa93852b4f368e9bbd4402f705942516604a7b1e590f`
+- Review snapshot SHA-256: `8985f4f336ad756d453f6c7d79f688d44b9005a31c329b47ceef07a197c3eea1`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -370,7 +370,7 @@ Sources:
 - `apps/mobile/src/lib/auth/sessionBoundary.test.ts` - 890 bytes - sha256 `ee07eaa01973860fc5fc20edc9386896d90e76ffa475a5a7d68f21f6f65ed935`
 - `apps/mobile/src/lib/auth/sessionBoundary.ts` - 461 bytes - sha256 `53fb1b53dbc23b1dae48cb67b8410c2a94b35f13e665579c42e3370ef91781ba`
 - `supabase/functions/_shared/auth.ts` - 321 bytes - sha256 `cac2bbac4936c570508b764482d8c396693bda989f4f605514b8a3ca06397999`
-- `docs/phase-3/data-inventory.md` - 12198 bytes - sha256 `57452c18e1f8be1167c9b4a0819fde221e42bfeed12676a449043a8f0ffc85e1`
+- `docs/phase-3/data-inventory.md` - 12461 bytes - sha256 `73591c69d140fcbb0e420ebd43c6b7d155da3425cf63adf14a7890d307be8937`
 
 ### P0 - Privacy/security - Health-data consent and withdrawal
 
@@ -379,7 +379,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `662639b41b051f4d63fb6138d05adb10846d125bd8fa29aa3f2063ce1ff7ea18`
+- Review snapshot SHA-256: `b3c3c3e54362f1e915107561bb7cfdc3700c9bf8c81c5c4487a5e643f8ce8d28`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -388,7 +388,7 @@ Sources:
 Sources:
 
 - `docs/phase-3/consent-matrix.md` - 4618 bytes - sha256 `25103684ffcee9a91916385af065727faa34c09d9f30927672c425c3ce4a8654`
-- `docs/store-privacy-inventory.md` - 9277 bytes - sha256 `5a55c07d620a9859bdf94e10eef0d3a5e14277d0bb2ac4163fb17a37f52fbc2c`
+- `docs/store-privacy-inventory.md` - 9517 bytes - sha256 `34dededcfedb419479bc0c145728036b2b4695b061dede4dc46094890825cb0b`
 - `apps/mobile/src/features/onboarding/consentCopy.ts` - 4250 bytes - sha256 `87167971987c2d25cfaedd66a049adf228690ff9e4823a7345f5cb7d79857873`
 - `apps/mobile/src/lib/consent/consent.test.ts` - 1437 bytes - sha256 `b8d8f247bb87f2cbf958657cca3c01dc930ceff57fd50cc9ec784e74de71e77e`
 - `apps/mobile/src/lib/consent/consent.ts` - 1863 bytes - sha256 `b7e0a3d4e38a271f742826f6a1125de05b0e34fa0f1758e614a6d27eb30eb33a`
@@ -505,7 +505,7 @@ Sources:
 - External owner: Founder + board-certified dermatologist
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `30b2450204511f5969461952d4e506353cefcdb3a44150146e4e46dcdfd7222e`
+- Review snapshot SHA-256: `d136c70e4b399f8f5e409a184a587ed1421026b485b8a6c53093df312581ff06`
 - Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -513,7 +513,7 @@ Sources:
 
 Sources:
 
-- `apps/mobile/src/features/photos/copy.ts` - 7187 bytes - sha256 `2b270765f72028796bd313fab008758f3288bd51c660419f06f253940f22b94c`
+- `apps/mobile/src/features/photos/copy.ts` - 7661 bytes - sha256 `3921a01492072726177d549ec5353bf64768c20a400f0f4305b18d6b89dbaa13`
 
 ### P1 - Clinical - Recommendation types
 

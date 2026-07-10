@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-07-10T09:21:40.213Z",
+  "generatedAt": "2026-07-10T09:45:01.777Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-10",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
   "expectedMobileTestFiles": 176,
-  "expectedMobileTests": 1825,
+  "expectedMobileTests": 1834,
   "actualMobileTestFiles": 176,
-  "expectedTestPhrase": "176 mobile test files / 1825 tests",
+  "expectedTestPhrase": "176 mobile test files / 1834 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -56,6 +56,10 @@
         "progress-capture-analysis-current",
         "Device-only Progress photo storage",
         "progress-device-only-backup-current",
+        "Progress direct-route app-lock coverage",
+        "progress-direct-route-lock-current",
+        "Progress encrypted-storage recovery",
+        "progress-storage-recovery-current",
         "Account export local-photo scope disclosure",
         "data-export-local-photo-disclosure-current",
         "Combined account and current-device export",

@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-10T09:21:32.746Z
-Git SHA: 0d013454e3d25f1b2cdcf4a37b88db92ffdc1c07
+Generated: 2026-07-10T09:44:49.170Z
+Git SHA: fc54ef53c788a1db745188090cc60f184133a84e
 Evidence date: 2026-07-10
 Baseline suite date: 2026-07-09
 Status: pass
@@ -43,6 +43,7 @@ dependency to the repo.
 | Progress quality states and support-floor save recovery          | supported-phone | pass   | summary status: pass.                  | 19    | test-results/human-e2e/2026-07-10/progress-capture-analysis-current                    |
 | Device-only Progress photo storage                               | supported-phone | pass   | summary status: pass; 0 failed routes. | 15    | test-results/human-e2e/2026-07-10/progress-device-only-backup-current                  |
 | Progress direct-route app-lock coverage                          | supported-phone | pass   | summary status: pass; 0 failed routes. | 39    | test-results/human-e2e/2026-07-10/progress-direct-route-lock-current                   |
+| Progress encrypted-storage recovery                              | supported-phone | pass   | summary status: pass; 0 failed routes. | 39    | test-results/human-e2e/2026-07-10/progress-storage-recovery-current                    |
 | Account export local-photo scope disclosure                      | supported-phone | pass   | summary status: pass; 0 failed routes. | 14    | test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current           |
 | Combined account and current-device export                       | supported-phone | pass   | summary status: pass; 0 failed routes. | 13    | test-results/human-e2e/2026-07-10/data-export-combined-device-current                  |
 

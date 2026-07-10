@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-10T09:21:37.721Z
+Generated: 2026-07-10T09:44:57.454Z
 Status: blocked
-Git SHA: 0d013454e3d25f1b2cdcf4a37b88db92ffdc1c07
+Git SHA: fc54ef53c788a1db745188090cc60f184133a84e
 Git status: clean
 
 ## Release Identity
@@ -96,11 +96,14 @@ Git status: clean
 - `apps/mobile/src/lib/observability/scrub.ts`: `ad231f592848825dbeaffcbd960a31e0ae916fe7e1916ded939e9b0f79deabed`
 - `apps/mobile/src/lib/observability/sentry.ts`: `c81f27c8ac940d81b4ddd10521d922689840d7dfc7071ade812ff4e45e51fa9e`
 - `apps/mobile/src/app/(tabs)/you.tsx`: `2c5afcc4d8b33a561dfca93ca6f577ff64f731f782f81a606fb5a73aec9102d2`
-- `apps/mobile/src/app/(tabs)/progress.tsx`: `32e479794a1e2c0ddbf5771bdebeb99740b88f158520a40a9c97beb754da5f1c`
-- `apps/mobile/src/app/progress/capture.tsx`: `aa564e09e72ffc721af18d760c73f02c1eeaf66e034832da17c6032f6edb72a1`
-- `apps/mobile/src/app/progress/review.tsx`: `d874cd205ad4b5b5e6a8edd6b181a72370375162a34bd77195bf1f072a475a08`
-- `apps/mobile/src/app/progress/[id].tsx`: `9783cebaad09c946d52d4d30c23023606c83df12620c3b7c77323e49b8e2e477`
+- `apps/mobile/src/app/(tabs)/progress.tsx`: `d009aa555a3230ad67a41dfdc2cbeb184b9684757b97085346fe5362e57c7125`
+- `apps/mobile/src/app/progress/capture.tsx`: `843e4347b948b4720a4415e499e0f14a4bd3c020adb6d9814ffe1dddea1cb7dc`
+- `apps/mobile/src/app/progress/review.tsx`: `04cb2815f6498d8b67a30ac817191092ebad3b895546fca890f824ced89689ad`
+- `apps/mobile/src/app/progress/[id].tsx`: `4543b6d031a2b869fd61ebc0a3832eaa5deab7ebc220e7074b9ea4dc8e475d64`
 - `apps/mobile/src/features/photos/PhotoTimelineLockGate.tsx`: `deccd291d391bbd6654664b00920622bbad9051e1deb2c79ad2e282503846218`
+- `apps/mobile/src/features/photos/PhotoStorageGate.tsx`: `acda1b19266b960c94f493e80bab98f23002b0ff3bcfb93a4601f774e23d6888`
+- `apps/mobile/src/features/photos/store.ts`: `1557f6d511baf44fec1d52d5e585d506a5f7ad7173ef0e95d5c7984ff2f02b6b`
+- `apps/mobile/src/features/photos/usePhotos.ts`: `7bfcfda545ab719de32f460c859d6aa66075e97a84d200194360c114f2fb16a5`
 - `apps/mobile/src/features/settings/actions.ts`: `a560c90bf06696f4ab9e4ace3298ec9648651bce425e73f01b25a28b3b89c9a0`
 - `apps/mobile/src/features/settings/localDeviceExport.ts`: `5553f474ebdff6bf5498565cecac5d6a787057e4a12b58cf4ffb8195c8560c81`
 - `apps/mobile/src/features/settings/localDeviceExport.test.ts`: `4dbbe2b3084f17923d989e80970b270f4f5846163ebd5c27e6e21b601a2ab9f7`
@@ -132,7 +135,7 @@ Git status: clean
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5`
 - `scripts/phase9/release-smoke.mjs`: `0e57ab70a4ff8f980de2fb37d9942c79ebd80851ad52fe683ed5b2443771d928`
 - `scripts/phase9/rls-adversarial.mjs`: `1fbe4e90ce280a9d4c9c8e642ea7beb718cee6d1647ea399e1fd6e9511bfcf89`
-- `scripts/phase9/build-release-qa-packet.mjs`: `0cf8bd30d076551b43795cf54d78c00d44e212141c89dd3ab2e8825f3fabac51`
+- `scripts/phase9/build-release-qa-packet.mjs`: `ee9ec22f568c695641102e9348ceea6fb053f62f7170545140940a0e4841dec9`
 - `scripts/phase9/live-supabase-adversarial.mjs`: `1219259653e4040ab4d31233d5a2906c44843189e30b859574a540f05be82c8d`
 - `scripts/phase9/live-edge-auth.mjs`: `ae2764d73242fe3c9b5d9497c78d9b0b62cbd2438ec3ac633496004402d37441`
 - `scripts/phase9/live-data-rights.mjs`: `fed1600ee42a0a3acd3b7010c729c2094c9b4ea26d59038fdb6cd914771f5aa4`
@@ -151,7 +154,7 @@ Git status: clean
 - `scripts/phase9/dependency-sbom.mjs`: `0b36b22f21004af4913cd1c72b0f247765b888a3461ee074a3758a8c3d8df351`
 - `scripts/phase9/store-build-inspect.mjs`: `6dbda3144157e2b8f75f92b81dc3cf52310154fbd5a8a64ccd80942745ea5366`
 - `docs/phase-9/source-of-truth.md`: `b23f022feded586dadfd8e21d7c407b8b94f9ed317ae6ddde12dac1c5933c9da`
-- `docs/phase-9/data-inventory.md`: `788fab1859dc883a81875300cd603de74e71a34f6377fcb7cb7f0ee2511ed7a4`
+- `docs/phase-9/data-inventory.md`: `645117fe958ee4f064559aeea9feffd81af29421221c4131f90cebc11d9c00dd`
 - `docs/phase-9/edge-function-auth-matrix.md`: `e93759bc6338c06bbfd883e0c704cba42c85eafd15369278564255b60d8e7786`
 - `docs/phase-9/observability-payload-audit.md`: `3aa9508564cef79e704b14fdd43a80063e8e040ebc7dcdfa7f68a9cd8d86ada7`
 - `docs/phase-9/security-scanner-evidence.md`: `878d37533e0f2cd94a77a774917e829f7436e854816ae9caf623e498c45f8566`

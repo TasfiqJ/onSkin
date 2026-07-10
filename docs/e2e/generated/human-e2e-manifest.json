@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-10T09:21:32.746Z",
-  "gitSha": "0d013454e3d25f1b2cdcf4a37b88db92ffdc1c07",
+  "generatedAt": "2026-07-10T09:44:49.170Z",
+  "gitSha": "fc54ef53c788a1db745188090cc60f184133a84e",
   "evidenceDate": "2026-07-10",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -537,6 +537,25 @@
       "fileCount": 39,
       "bytes": 394975,
       "evidenceSha256": "45b30f5006babbc9918f380dbcfec5572f132dc83b0130cf1038a50995213f14"
+    },
+    {
+      "id": "progress-storage-recovery-supported-phone",
+      "title": "Progress encrypted-storage recovery",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/progress-storage-recovery-current",
+      "evidence": "summary.json",
+      "expected": "Progress tab, capture, review, and detail block false empty/missing states during encrypted read failure; persistent retry and one-shot recovery pass at supported phone sizes.",
+      "status": "pass",
+      "detail": "summary status: pass; 0 failed routes.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 39,
+      "bytes": 353614,
+      "evidenceSha256": "296a1499f5afe1f16d3090d1be9412efa41bd306de0766d56623d6ae1ad4f722"
     },
     {
       "id": "data-export-local-photo-disclosure-supported-phone",
