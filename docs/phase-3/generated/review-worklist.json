@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-10T07:07:59.008Z",
+  "generatedAt": "2026-07-10T07:40:57.179Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "fab01582e2c6b838d84b35cbf42d102cf4257eb5",
+  "gitSha": "5ae8e98c78b0090a4c654561e3cf2aac60c5fcf7",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -35,8 +35,8 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "path": "docs/phase-3/privacy-security-review-log.md",
       "exists": true,
-      "bytes": 7464,
-      "sha256": "191b54038ca1a1c5f4b89f3a7b7d645076c9efdc115455b28eebc6f4810a2ca4"
+      "bytes": 7788,
+      "sha256": "2903210569eaceddeda9394edf57a2afecacfad6d83d178061b126feeda79c21"
     },
     {
       "domain": "ipFto",
@@ -84,8 +84,8 @@
         {
           "path": "docs/phase-3/regulatory-positioning-memo.md",
           "exists": true,
-          "bytes": 8306,
-          "sha256": "92893fdda6a43b565ee4cb4b4da87f051b5eaa5b0c7754bc3fd81267f64ae950"
+          "bytes": 8356,
+          "sha256": "216d0c5e9cd820c5f99ad8900371ce759a64a648021570e0c4f80a9455a5d7d1"
         },
         {
           "path": "docs/legal-readiness.md",
@@ -101,7 +101,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "f5cda550f1da02be88dc47aeec744b71401087ceb948ae8d8fdfbd12ba182c6b",
+      "reviewSnapshotSha256": "a86b457e258bcd05313580fdda83b33117cbadfc3a1b6fa7ca202242a72c877c",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -158,8 +158,8 @@
         {
           "path": "docs/phase-3/app-review-notes.md",
           "exists": true,
-          "bytes": 2438,
-          "sha256": "edfde8d6e52eaaebff9f3da83aef34b5d1cee3ae2294e57a04a5e3dcc14b8b27"
+          "bytes": 2592,
+          "sha256": "11bbebcde461121520c77c4b39b145dcb6e9c2f4505b6c3bf9c8706ee85dad80"
         },
         {
           "path": "docs/phase-3/google-play-health-declaration-notes.md",
@@ -175,7 +175,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "ccc172da35637c98eef2bf84f78e98d4591441952f8b49ce5a99841f38e1dd10",
+      "reviewSnapshotSha256": "ffc576204492cfec4de6e85a81ec95a6dfea37d8a404c6b708e23fd9586551f4",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1366,8 +1366,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 8433,
-          "sha256": "c5ddbecf1016ab849e4505c1cbf82c6c06efeb22107751a57e476f8dc82a58e6"
+          "bytes": 8644,
+          "sha256": "f13ff6234d72b21147217fa3e9990314722dcf1e00bb432b01193790e4234bcd"
         },
         {
           "path": "apps/mobile/src/features/onboarding/consentCopy.ts",
@@ -1425,7 +1425,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "6f8aa8310a1b3ddd722213f623deadf8c0f30f9d00b60b7e24f6c66cb053125d",
+      "reviewSnapshotSha256": "6de34e8982e67637e5294decb02d58e59d23a77655e19e729d56b45f030ffa2b",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1435,12 +1435,12 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "area": "Photo privacy and local storage",
       "sourceText": "`docs/06-photo-progress.md`, `apps/mobile/src/features/photos/consent.ts`, `apps/mobile/src/features/photos/encryptedStorage.ts`, `apps/mobile/src/features/photos/store.ts`",
-      "currentBehavior": "Photos stay local by default; native device QA still needed",
+      "currentBehavior": "Current V1 is device-only with no automatic photo/metadata upload; native device QA still needed",
       "reviewer": "TBD",
       "date": "TBD",
       "status": "Not cleared",
       "statusBucket": "notCleared",
-      "notes": "Physical-device encryption/restart/delete and backup-off posture.",
+      "notes": "Physical-device encryption/restart/delete and explicit-share-only posture.",
       "sourcePaths": [
         {
           "path": "docs/06-photo-progress.md",
@@ -1468,7 +1468,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "3d0f7926ebcffb156b6b99c75a243c0da1cc919e15500800cdd270c6895765a7",
+      "reviewSnapshotSha256": "52797388d1f5f332a999a7933e64125cb8d9ba49c78106dd8240b691f55509b2",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1652,8 +1652,8 @@
         {
           "path": "supabase/functions/data-export/index.ts",
           "exists": true,
-          "bytes": 12971,
-          "sha256": "a8f8ddd127447af1bab3ed67adb974f3990fb7d5afe038dd68be3647d8d3b557"
+          "bytes": 13117,
+          "sha256": "b8e484616581a970ae19d8f86b342eaddb24fa44a9ad1367936b24f0f8d84f1f"
         },
         {
           "path": "supabase/functions/_shared/storagePath.ts",
@@ -1669,7 +1669,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "90f2a88565af22a9dc204d3b6c509ff34cd60089be6501da36c4bb89fa16978c",
+      "reviewSnapshotSha256": "1b6add03fefbf97612c32ada821b9204218123254c6db21809aa5836f98e235f",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1810,12 +1810,12 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 11137,
-          "sha256": "9af63a8886ea987ab73a1aac08a448018537091868d2fa11ea0250361f39dee1"
+          "bytes": 11261,
+          "sha256": "aca7d3b8aa32ef6fea6a48feea9131ac10d0bf4e07505647a4f1ba4642997f24"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "fbc53c04d3e39789cf1efeeb5cfaee96969dc6707aadfd1ad1dddf33ba19191a",
+      "reviewSnapshotSha256": "9c31fa9427a1d44f05354110a0fed3e294c92c73da80f9ec68813ad226bfe4a5",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1958,8 +1958,8 @@
         {
           "path": "docs/phase-3/regulatory-positioning-memo.md",
           "exists": true,
-          "bytes": 8306,
-          "sha256": "92893fdda6a43b565ee4cb4b4da87f051b5eaa5b0c7754bc3fd81267f64ae950"
+          "bytes": 8356,
+          "sha256": "216d0c5e9cd820c5f99ad8900371ce759a64a648021570e0c4f80a9455a5d7d1"
         },
         {
           "path": "docs/phase-3/store-metadata-review.md",
@@ -1975,7 +1975,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "189d95037dbf4fa6486ea5a91570c990627a5f25acecf4c0c0af3172ee371562",
+      "reviewSnapshotSha256": "f7af3c0ef2b24d37b3a4f8638d0368a5971c2ae2dac5f973499478141fab75a8",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },

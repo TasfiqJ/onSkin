@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-10T07:07:54.746Z
-Git SHA: fab01582e2c6b838d84b35cbf42d102cf4257eb5
+Generated: 2026-07-10T07:40:45.931Z
+Git SHA: 5ae8e98c78b0090a4c654561e3cf2aac60c5fcf7
 Evidence date: 2026-07-10
 Baseline suite date: 2026-07-09
 Status: pass
@@ -42,6 +42,7 @@ dependency to the repo.
 | 390 x 844 local Progress time-lapse and reduced-motion pass      | supported-phone | pass   | summary status: pass.                  | 17    | test-results/human-e2e/2026-07-10/progress-timelapse-current                           |
 | Progress quality states and support-floor save recovery          | supported-phone | pass   | summary status: pass.                  | 19    | test-results/human-e2e/2026-07-10/progress-capture-analysis-current                    |
 | Device-only Progress photo storage                               | supported-phone | pass   | summary status: pass; 0 failed routes. | 15    | test-results/human-e2e/2026-07-10/progress-device-only-backup-current                  |
+| Account export local-photo scope disclosure                      | supported-phone | pass   | summary status: pass; 0 failed routes. | 14    | test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current           |
 
 ## Warnings
 

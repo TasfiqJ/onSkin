@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-10T07:10:37.943Z",
+  "generatedAt": "2026-07-10T07:43:16.760Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
@@ -55,7 +55,9 @@
         "Progress quality states and support-floor save recovery",
         "progress-capture-analysis-current",
         "Device-only Progress photo storage",
-        "progress-device-only-backup-current"
+        "progress-device-only-backup-current",
+        "Account export local-photo scope disclosure",
+        "data-export-local-photo-disclosure-current"
       ],
       "stalePatterns": [],
       "missingCommands": []
