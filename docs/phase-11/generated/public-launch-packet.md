@@ -1,8 +1,8 @@
 # Phase 11 Public Launch Packet
 
-Generated: 2026-07-10T10:27:03.181Z
+Generated: 2026-07-10T11:20:42.242Z
 Status: blocked
-Git SHA: bcda7bba39c1e7b2c9224c04ad6abb05cadcc712
+Git SHA: 7a9e9408d49066b2b1ab566ad846a88d5ca52766
 Git status: clean
 Phase 9 packet status: blocked
 Phase 10 packet status: blocked
@@ -62,7 +62,7 @@ Phase 10 decision: BLOCKED
 
 ## Source Hashes
 
-- `package.json`: `5967b643a1c61a763bebcd45d215e5286c001a1fc1c663c3be17589af3dffe40`
+- `package.json`: `303fe5980f1837ba45e134f9c35bbd331f650f4b5146d142cb32c89eb86f71b8`
 - `turbo.json`: `66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57`
 - `.env.example`: `2e389243c757aee40769b8a15718d601160687cfdbd84517aecb34c8834255ba`
 - `scripts/phase9/lib.mjs`: `af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083`
@@ -81,12 +81,12 @@ Phase 10 decision: BLOCKED
 - `apps/mobile/app.config.js`: `1e991391ddb1a45682ce202fb95e4450bb799518c33eb78640af1949180b0fec`
 - `apps/mobile/src/lib/env.ts`: `268bf5903053c48b3663f61139452deebe10da046e779eef000c1dfeb385d7a4`
 - `apps/mobile/src/lib/iap/revenuecat.ts`: `b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75`
-- `docs/phase-9/generated/release-engineering-qa-packet.json`: `acbef65e56b44669f30183c1712082f5f8a58876195ba780685400e2b92ccc63`
-- `docs/phase-9/generated/release-engineering-qa-packet.md`: `6d90851c4fd33b3008cfbe0d7d01e281c5567fd5193e7fa4f366cdf4ada94d83`
-- `docs/phase-10/generated/support-handoff-packet.json`: `bb2bccfd252d9c675e21208f20b7dd149ed41f65bd84efdae8b5c90861f69d64`
-- `docs/phase-10/generated/support-handoff-packet.md`: `7dada12a34fa630ad1a3b2ca8f48fffec61f1c6198d2c4f056c9ad6f82047498`
-- `docs/phase-10/generated/closed-beta-packet.json`: `55fba918d6fc652a39ed42d28ac4ec5ca90a03b018b9389edee3d9d4f9cf83cb`
-- `docs/phase-10/generated/closed-beta-packet.md`: `3c5b86ddd929e12c50127fa770888bf35b38a7574c3430c8a6548b39d0797ba5`
+- `docs/phase-9/generated/release-engineering-qa-packet.json`: `2dd8a364983b50503fbb40b417bd2e456693f48b111f38b93e839a2d7650c6e7`
+- `docs/phase-9/generated/release-engineering-qa-packet.md`: `5fe4da6c8f56185d59a2f0684dbd67bd0c041d29820bdb58ada40db8396b183e`
+- `docs/phase-10/generated/support-handoff-packet.json`: `a035f5767d1de454346cf51555039efd61f3b13e52395fea94a48f4ef35d1c6b`
+- `docs/phase-10/generated/support-handoff-packet.md`: `6fcabae1009af56b0bed12b1ec33f6db846b9107eb599a961db85b5571d2bf65`
+- `docs/phase-10/generated/closed-beta-packet.json`: `f2482bb9f0b1c9538a70def7737e8baae2110211a9b2177965edd8bf4a12f49a`
+- `docs/phase-10/generated/closed-beta-packet.md`: `34d68a0baf9fcee3d62ab4ab825129aae5f16959375798d27fdaea1173698b16`
 - `docs/phase-11/launch-command-center.md`: `a79b3668683345d5846aace9d8c33a1debcd3a1057520f57ecc5e431201b394d`
 - `docs/phase-11/phase-10-exit-review.md`: `a345491b5f604ac835cc60827ff33a7b10a34ca95d3b9f8774d5b63114ea7c69`
 - `docs/phase-11/store-release-plan.md`: `3ef1ecef69af5f4d82405a96a3670ccf1c58801e802192c8c6e5e942f292997c`
