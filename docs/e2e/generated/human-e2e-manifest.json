@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-10T11:14:18.067Z",
-  "gitSha": "b5c1f66632ab69715fdd82abfc2a1f54bd1d0360",
+  "generatedAt": "2026-07-10T15:35:19.461Z",
+  "gitSha": "8847a7b11a78a5bf100e99a1f4b8e55f8bcaf850",
   "evidenceDate": "2026-07-10",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -480,6 +480,25 @@
       "fileCount": 62,
       "bytes": 2648386,
       "evidenceSha256": "89384a4a3365bf491289f73854c0addd2625671c8a792ea091a3d742c5139dad"
+    },
+    {
+      "id": "account-isolation-supported-phone",
+      "title": "360 x 640 account-transition isolation and cleanup recovery pass",
+      "kind": "summary-verdict",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/onboarding-account-isolation-current",
+      "evidence": "summary.json",
+      "expected": "Cleanup failure stays gated, retry succeeds, and signed-out Shelf/Today expose no account A data.",
+      "status": "pass",
+      "detail": "summary verdict: pass.",
+      "failureCount": null,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 70,
+      "bytes": 2801641,
+      "evidenceSha256": "e172b003532d8fdea9c69315e4e6b51811ab338c26cd6eecaf1a40463a003ce9"
     },
     {
       "id": "progress-timelapse-supported-phone",
