@@ -103,10 +103,11 @@ block(
 );
 block(
   errors,
-  /setCloudBackupEnabled/.test(photoConsent) &&
-    /photo_cloud_backup/.test(photoConsent) &&
-    /withdrawConsent/.test(photoConsent),
-  'Cloud photo backup withdrawal must call the server withdrawal path.',
+  /PHOTO_CLOUD_BACKUP_AVAILABLE\s*=\s*false/.test(photoConsent) &&
+    /clearUnavailableCloudBackupPreference/.test(photoConsent) &&
+    !/setCloudBackupEnabled/.test(photoConsent) &&
+    /case 'photo_cloud_backup':\s*return withdrawPhotoCloudBackup/.test(edgeFunction),
+  'Unavailable cloud backup must expose no grant setter, clear stale local preference, and retain server-side legacy cleanup.',
 );
 
 block(

@@ -485,7 +485,9 @@ block(
 );
 block(
   errors,
-  /intEnv\('REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS',\s*300,\s*1,\s*3600\)/.test(revenueCat),
+  /intEnv\(\s*'REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS'\s*,\s*300\s*,\s*1\s*,\s*3600\s*,?\s*\)/.test(
+    revenueCat,
+  ),
   'RevenueCat webhook signature tolerance must be bounded and fail safe.',
 );
 block(
