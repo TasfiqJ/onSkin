@@ -56,6 +56,15 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: Android 9-or-older and iOS 16 users cannot install; users on sub-360 width or sub-640 height browser/device states may still hit polish bugs that are recorded but not launch-blocking unless real device/app-review evidence elevates them.
 - Status: Accepted.
 
+### 2026-07-09 - Fail Closed Before Unreviewed Production Builds
+
+- Decision: Production Expo config requires `PHASE3_RELEASE_CLEARANCE=cleared`; development and staging remain available for implementation and reviewer QA.
+- Alternatives: rely only on runtime content filters, reuse brand clearance, or allow production builds while Phase 3 copy/review findings remain open.
+- Criteria: prevent placeholder consent copy from reaching a store artifact, preserve a practical reviewer workflow, separate brand identity approval from health/privacy/content approval, and keep the release condition auditable.
+- Evidence: Phase 3 currently reports unresolved legal, privacy, clinical, chemistry, and IP findings; runtime filters already withhold unreviewed conflict, cadence, and medical-adjacent recommendation content but do not block core draft consent copy.
+- Risk: production builds remain blocked until Tas obtains real named signoff against a clean exact-source-hash packet and the strict copy audit passes.
+- Status: Accepted.
+
 ## Architecture Decisions
 
 ### 2026-07-06 - Keep Expo/Supabase/RevenueCat
