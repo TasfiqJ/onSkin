@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-10T01:21:46.939Z",
+  "generatedAt": "2026-07-10T01:40:54.579Z",
   "status": "pass",
   "strict": false,
-  "gitSha": "d1a444603a3bb5361ef91c2f41cfbdb82cb42a0f",
+  "gitSha": "bcc218d13d331e87ce6f1f4bfffd02eef763a8b6",
   "gitStatus": "",
   "purpose": "Support-desk setup packet for in-app beta feedback query parameters, category routing, severity SLA, and escalation owners.",
   "handoffContract": {
@@ -178,8 +178,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 16192,
-      "sha256": "12b897e6b660515287481ffce6d834c53fa7f3169eec4a2fdae307e5ddadbd18"
+      "bytes": 16560,
+      "sha256": "8ba77661adadcbaa476a610d9d421d2d771aed59728f48847ddaaf5d2c2e5aed"
     },
     {
       "path": "scripts/phase10/build-support-handoff-packet.mjs",
