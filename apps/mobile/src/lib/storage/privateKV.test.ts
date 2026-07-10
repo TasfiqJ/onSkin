@@ -9,8 +9,13 @@ import {
   PRIVATE_KV_CONTENT_KEY_INVALID,
   PRIVATE_KV_CONTENT_KEY_MISSING,
   PRIVATE_KV_DECRYPTION_FAILED,
+  PRIVATE_KV_ENVELOPE_FOREIGN,
+  PRIVATE_KV_ENVELOPE_INVALID,
+  PRIVATE_KV_ENVELOPE_UNSUPPORTED,
+  PRIVATE_KV_RESERVED_KEY,
   PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
   PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE,
+  PRIVATE_KV_WRITE_CONFLICT,
   removePrivateItem,
   multiRemovePrivateItems,
   privateKVEncryptionInfo,
@@ -26,6 +31,8 @@ const mocks = vi.hoisted(() => ({
   removeItemGate: null as Promise<void> | null,
   removeItemStarted: null as (() => void) | null,
   secureGetThrows: false,
+  secureGetGate: null as Promise<void> | null,
+  secureGetStarted: null as (() => void) | null,
   secureStorage: new Map<string, string>(),
   setItemGate: null as Promise<void> | null,
   setItemStarted: null as (() => void) | null,
@@ -73,6 +80,8 @@ vi.mock('react-native-get-random-values', () => ({}));
 vi.mock('expo-secure-store', () => ({
   isAvailableAsync: vi.fn(async () => true),
   getItemAsync: vi.fn(async (key: string) => {
+    mocks.secureGetStarted?.();
+    if (mocks.secureGetGate) await mocks.secureGetGate;
     if (mocks.secureGetThrows) throw new Error('secure read failed');
     return mocks.secureStorage.get(key) ?? null;
   }),
@@ -93,6 +102,8 @@ describe('private KV encrypted storage', () => {
     mocks.removeItemGate = null;
     mocks.removeItemStarted = null;
     mocks.secureGetThrows = false;
+    mocks.secureGetGate = null;
+    mocks.secureGetStarted = null;
     mocks.secureStorage.clear();
     mocks.setItemGate = null;
     mocks.setItemStarted = null;
@@ -114,19 +125,81 @@ describe('private KV encrypted storage', () => {
     await expect(getPrivateItem('routine-key')).resolves.toBe('routine-value');
   });
 
-  it('preserves corrupt encrypted envelopes and reports decryption failure', async () => {
+  it('preserves structurally invalid encrypted envelopes and blocks replacement', async () => {
     await setPrivateItem('onskin.seed', 'seed');
-    mocks.asyncStorage.set(
-      'corrupt-key',
+    const raw = JSON.stringify({
+      version: privateKVEncryptionInfo.version,
+      nonceHex: 'not-hex',
+      ciphertextHex: 'also-not-hex',
+    });
+    const key = 'onskin.corrupt-key';
+    mocks.asyncStorage.set(key, raw);
+
+    await expect(getPrivateItem(key)).rejects.toThrow(PRIVATE_KV_ENVELOPE_INVALID);
+    await expect(setPrivateItem(key, 'replacement')).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE,
+    );
+    expect(mocks.asyncStorage.get(key)).toBe(raw);
+  });
+
+  it.each([
+    ['truncated JSON', `{"version":"${privateKVEncryptionInfo.version}","nonceHex":"00"`],
+    [
+      'missing ciphertext',
+      JSON.stringify({ version: privateKVEncryptionInfo.version, nonceHex: '00'.repeat(24) }),
+    ],
+    [
+      'wrong field type',
       JSON.stringify({
         version: privateKVEncryptionInfo.version,
-        nonceHex: 'not-hex',
-        ciphertextHex: 'also-not-hex',
+        nonceHex: ['00'],
+        ciphertextHex: '00'.repeat(16),
       }),
-    );
+    ],
+  ])('fails the full audit without changing a %s envelope', async (_label, raw) => {
+    mocks.asyncStorage.set('onskin.corrupt', raw);
 
-    await expect(getPrivateItem('corrupt-key')).rejects.toThrow(PRIVATE_KV_DECRYPTION_FAILED);
-    expect(mocks.asyncStorage.get('corrupt-key')).toBeDefined();
+    await expect(assertPrivateKVReadable()).rejects.toThrow(PRIVATE_KV_ENVELOPE_INVALID);
+    expect(mocks.asyncStorage.get('onskin.corrupt')).toBe(raw);
+  });
+
+  it('preserves unsupported private envelope versions', async () => {
+    const raw = JSON.stringify({
+      version: 'xchacha20poly1305:v2',
+      nonceHex: '00'.repeat(24),
+      ciphertextHex: '00'.repeat(16),
+    });
+    mocks.asyncStorage.set('onskin.future', raw);
+
+    await expect(assertPrivateKVReadable()).rejects.toThrow(PRIVATE_KV_ENVELOPE_UNSUPPORTED);
+    expect(mocks.asyncStorage.get('onskin.future')).toBe(raw);
+  });
+
+  it('rejects a direct overwrite of malformed ciphertext before creating a key', async () => {
+    const raw = JSON.stringify({
+      version: privateKVEncryptionInfo.version,
+      nonceHex: '00'.repeat(24),
+      ciphertextHex: '00',
+    });
+    mocks.asyncStorage.set('onskin.corrupt', raw);
+
+    await expect(setPrivateItem('onskin.corrupt', 'replacement')).rejects.toThrow(
+      PRIVATE_KV_ENVELOPE_INVALID,
+    );
+    expect(mocks.asyncStorage.get('onskin.corrupt')).toBe(raw);
+    expect(mocks.secureStorage.size).toBe(0);
+  });
+
+  it('treats malformed private envelopes as orphaned ciphertext before key creation', async () => {
+    const raw = `{"version":"${privateKVEncryptionInfo.version}","nonceHex":"00"`;
+    mocks.asyncStorage.set('onskin.orphaned', raw);
+
+    await expect(setPrivateItem('onskin.new-record', 'new-value')).rejects.toThrow(
+      PRIVATE_KV_CONTENT_KEY_MISSING,
+    );
+    expect(mocks.asyncStorage.get('onskin.orphaned')).toBe(raw);
+    expect(mocks.asyncStorage.has('onskin.new-record')).toBe(false);
+    expect(mocks.secureStorage.size).toBe(0);
   });
 
   it('batch-reads encrypted and legacy values with one complete result map', async () => {
@@ -149,18 +222,68 @@ describe('private KV encrypted storage', () => {
   it('audits every private envelope without treating other encrypted formats as private KV', async () => {
     await setPrivateItem('onskin.profile', 'profile-value');
     mocks.asyncStorage.set('legacy', 'legacy-value');
-    mocks.asyncStorage.set(
-      'supabase.auth.token',
-      JSON.stringify({
-        version: privateKVEncryptionInfo.version,
-        keyId: 'supabase-session-key-v1',
-        nonceHex: 'not-private-kv',
-        ciphertextHex: 'not-private-kv',
-      }),
-    );
+    const foreignRaw = JSON.stringify({
+      version: privateKVEncryptionInfo.version,
+      keyId: 'supabase-session-key-v1',
+      nonceHex: 'not-private-kv',
+      ciphertextHex: 'not-private-kv',
+    });
+    const foreignKey = 'sb-placeholder-auth-token';
+    mocks.asyncStorage.set(foreignKey, foreignRaw);
 
     await expect(assertPrivateKVReadable()).resolves.toBeUndefined();
     await expect(getPrivateItem('onskin.profile')).resolves.toBe('profile-value');
+    await expect(getPrivateItem(foreignKey)).rejects.toThrow(PRIVATE_KV_ENVELOPE_FOREIGN);
+    await expect(getPrivateItems([foreignKey])).rejects.toThrow(PRIVATE_KV_ENVELOPE_FOREIGN);
+    await expect(setPrivateItem(foreignKey, 'replacement')).rejects.toThrow(
+      PRIVATE_KV_ENVELOPE_FOREIGN,
+    );
+    expect(mocks.asyncStorage.get(foreignKey)).toBe(foreignRaw);
+  });
+
+  it('rejects reads, writes, and removals against reserved storage authorities', async () => {
+    const foreignKey = 'sb-placeholder-auth-token';
+    const contentKey = privateKVEncryptionInfo.secureStoreKey;
+    mocks.asyncStorage.set(foreignKey, 'foreign-session');
+    mocks.asyncStorage.set(contentKey, 'legacy-content-key');
+
+    await expect(removePrivateItem(foreignKey)).rejects.toThrow(PRIVATE_KV_ENVELOPE_FOREIGN);
+    await expect(multiRemovePrivateItems(['onskin.profile', foreignKey])).rejects.toThrow(
+      PRIVATE_KV_ENVELOPE_FOREIGN,
+    );
+    await expect(getPrivateItem(contentKey)).rejects.toThrow(PRIVATE_KV_RESERVED_KEY);
+    await expect(getPrivateItems([contentKey])).rejects.toThrow(PRIVATE_KV_RESERVED_KEY);
+    await expect(setPrivateItem(contentKey, 'replacement')).rejects.toThrow(
+      PRIVATE_KV_RESERVED_KEY,
+    );
+    await expect(removePrivateItem(contentKey)).rejects.toThrow(PRIVATE_KV_RESERVED_KEY);
+    await expect(multiRemovePrivateItems(['onskin.profile', contentKey])).rejects.toThrow(
+      PRIVATE_KV_RESERVED_KEY,
+    );
+
+    expect(mocks.asyncStorage.get(foreignKey)).toBe('foreign-session');
+    expect(mocks.asyncStorage.get(contentKey)).toBe('legacy-content-key');
+  });
+
+  it('rejects an arbitrary keyId on an app-owned private envelope', async () => {
+    const raw = JSON.stringify({
+      version: privateKVEncryptionInfo.version,
+      keyId: 'not-a-known-authority',
+      nonceHex: '00'.repeat(24),
+      ciphertextHex: '00'.repeat(16),
+    });
+    mocks.asyncStorage.set('onskin.profile', raw);
+
+    await expect(assertPrivateKVReadable()).rejects.toThrow(PRIVATE_KV_ENVELOPE_INVALID);
+    expect(mocks.asyncStorage.get('onskin.profile')).toBe(raw);
+  });
+
+  it('keeps unrelated legacy nonce/ciphertext payloads outside private-KV ownership', async () => {
+    const raw = JSON.stringify({ nonceHex: 'aa', ciphertextHex: 'bb' });
+    mocks.asyncStorage.set('third-party-cache', raw);
+
+    await expect(assertPrivateKVReadable()).resolves.toBeUndefined();
+    await expect(getPrivateItem('third-party-cache')).resolves.toBe(raw);
   });
 
   it('preserves every private envelope when the shared content key is unavailable', async () => {
@@ -191,6 +314,62 @@ describe('private KV encrypted storage', () => {
         ['onskin.concurrent-b', 'value-b'],
       ]),
     );
+  });
+
+  it('serializes concurrent writes to the same private key', async () => {
+    let releaseFirstWrite!: () => void;
+    let markFirstWriteStarted!: () => void;
+    let writeStarts = 0;
+    mocks.setItemGate = new Promise<void>((resolve) => {
+      releaseFirstWrite = resolve;
+    });
+    const firstWriteStarted = new Promise<void>((resolve) => {
+      markFirstWriteStarted = resolve;
+    });
+    mocks.setItemStarted = () => {
+      writeStarts += 1;
+      if (writeStarts === 1) markFirstWriteStarted();
+    };
+
+    const first = setPrivateItem('onskin.serialized', 'first');
+    await firstWriteStarted;
+    const second = setPrivateItem('onskin.serialized', 'second');
+    await Promise.resolve();
+    expect(writeStarts).toBe(1);
+
+    releaseFirstWrite();
+    await first;
+    await second;
+
+    expect(writeStarts).toBe(2);
+    await expect(getPrivateItem('onskin.serialized')).resolves.toBe('second');
+  });
+
+  it('preserves a concurrent replacement detected before the final write', async () => {
+    await setPrivateItem('onskin.race', 'original');
+    const replacement = JSON.stringify({
+      version: privateKVEncryptionInfo.version,
+      keyId: 'unexpected-authority',
+      nonceHex: '00'.repeat(24),
+      ciphertextHex: '00'.repeat(16),
+    });
+    let releaseSecureRead!: () => void;
+    let markSecureReadStarted!: () => void;
+    mocks.secureGetGate = new Promise<void>((resolve) => {
+      releaseSecureRead = resolve;
+    });
+    const secureReadStarted = new Promise<void>((resolve) => {
+      markSecureReadStarted = resolve;
+    });
+    mocks.secureGetStarted = markSecureReadStarted;
+
+    const write = setPrivateItem('onskin.race', 'updated');
+    await secureReadStarted;
+    mocks.asyncStorage.set('onskin.race', replacement);
+    releaseSecureRead();
+
+    await expect(write).rejects.toThrow(PRIVATE_KV_WRITE_CONFLICT);
+    expect(mocks.asyncStorage.get('onskin.race')).toBe(replacement);
   });
 
   it('blocks private writes while an account boundary is active', async () => {
@@ -248,6 +427,40 @@ describe('private KV encrypted storage', () => {
     await drain;
     expect(drainFinished).toBe(true);
     expect(mocks.asyncStorage.has('onskin.account-a')).toBe(true);
+  });
+
+  it('tracks a queued same-key mutation until the account boundary rejects it', async () => {
+    let releaseWrite!: () => void;
+    let markWriteStarted!: () => void;
+    mocks.setItemGate = new Promise<void>((resolve) => {
+      releaseWrite = resolve;
+    });
+    const writeStarted = new Promise<void>((resolve) => {
+      markWriteStarted = resolve;
+    });
+    mocks.setItemStarted = markWriteStarted;
+
+    const first = setPrivateItem('onskin.account-a', 'first');
+    await writeStarted;
+    const queued = setPrivateItem('onskin.account-a', 'second');
+    beginPrivateKVAccountBoundary();
+    const queuedRejection = expect(queued).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+    );
+    let drainFinished = false;
+    const drain = waitForPrivateKVWritesToSettle().then(() => {
+      drainFinished = true;
+    });
+    await Promise.resolve();
+    expect(drainFinished).toBe(false);
+
+    releaseWrite();
+    await first;
+    await queuedRejection;
+    await drain;
+    expect(drainFinished).toBe(true);
+    endPrivateKVAccountBoundary();
+    await expect(getPrivateItem('onskin.account-a')).resolves.toBe('first');
   });
 
   it('blocks new removals and drains a removal already in progress', async () => {

@@ -22,6 +22,11 @@ const NONCE_BYTES = 24;
 export const PRIVATE_KV_CONTENT_KEY_MISSING = 'PRIVATE_KV_CONTENT_KEY_MISSING';
 export const PRIVATE_KV_CONTENT_KEY_INVALID = 'PRIVATE_KV_CONTENT_KEY_INVALID';
 export const PRIVATE_KV_DECRYPTION_FAILED = 'PRIVATE_KV_DECRYPTION_FAILED';
+export const PRIVATE_KV_ENVELOPE_INVALID = 'PRIVATE_KV_ENVELOPE_INVALID';
+export const PRIVATE_KV_ENVELOPE_UNSUPPORTED = 'PRIVATE_KV_ENVELOPE_UNSUPPORTED';
+export const PRIVATE_KV_ENVELOPE_FOREIGN = 'PRIVATE_KV_ENVELOPE_FOREIGN';
+export const PRIVATE_KV_RESERVED_KEY = 'PRIVATE_KV_RESERVED_KEY';
+export const PRIVATE_KV_WRITE_CONFLICT = 'PRIVATE_KV_WRITE_CONFLICT';
 export const PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE =
   'PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE';
 export const PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY =
@@ -33,9 +38,16 @@ type PrivateEnvelope = {
   ciphertextHex: string;
 };
 
+type EnvelopeClassification =
+  | { kind: 'legacy' }
+  | { kind: 'current'; envelope: PrivateEnvelope }
+  | { kind: 'malformed' }
+  | { kind: 'unsupported' };
+
 let contentKeyCreation: Promise<Uint8Array> | null = null;
 const failedReadSnapshots = new Map<string, string>();
 const inFlightOperations = new Set<Promise<unknown>>();
+const privateMutationTails = new Map<string, Promise<void>>();
 let accountBoundaryWriteBlocked = false;
 let accountBoundaryWriteBlockDepth = 0;
 let accountBoundaryGeneration = 0;
@@ -54,6 +66,40 @@ async function runAccountScopedPrivateOperation<T>(
   } finally {
     inFlightOperations.delete(pending);
   }
+}
+
+async function runSerializedPrivateMutation<T>(
+  key: string,
+  operation: () => Promise<T>,
+): Promise<T> {
+  const previous = privateMutationTails.get(key) ?? Promise.resolve();
+  const ready = previous.catch(() => undefined);
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const tail = ready.then(() => gate);
+  privateMutationTails.set(key, tail);
+
+  await ready;
+  try {
+    return await operation();
+  } finally {
+    release();
+    if (privateMutationTails.get(key) === tail) privateMutationTails.delete(key);
+  }
+}
+
+async function runSerializedPrivateMutations<T>(
+  keys: readonly string[],
+  operation: () => Promise<T>,
+): Promise<T> {
+  const orderedKeys = [...new Set(keys)].sort();
+  const acquire = (index: number): Promise<T> =>
+    index >= orderedKeys.length
+      ? operation()
+      : runSerializedPrivateMutation(orderedKeys[index]!, () => acquire(index + 1));
+  return acquire(0);
 }
 
 function assertAccountScopedPrivateOperationAllowed(generation: number): void {
@@ -79,11 +125,19 @@ async function getExistingContentKey(): Promise<Uint8Array | null> {
 
 async function hasOrphanedPrivateCiphertext(): Promise<boolean> {
   const candidateKeys = (await AsyncStorage.getAllKeys()).filter(
-    (key) => key !== PRIVATE_KV_CONTENT_KEY_NAME,
+    (key) => key !== PRIVATE_KV_CONTENT_KEY_NAME && !isKnownForeignStorageKey(key),
   );
   if (candidateKeys.length === 0) return false;
   const entries = await AsyncStorage.multiGet(candidateKeys);
-  return entries.some(([, raw]) => raw !== null && parseEnvelope(raw) !== null);
+  return entries.some(([key, raw]) => {
+    if (raw === null) return false;
+    const classification = classifyEnvelope(key, raw);
+    return (
+      classification.kind === 'current' ||
+      classification.kind === 'malformed' ||
+      classification.kind === 'unsupported'
+    );
+  });
 }
 
 async function getOrCreateContentKey(): Promise<Uint8Array> {
@@ -112,21 +166,96 @@ async function getOrCreateContentKey(): Promise<Uint8Array> {
   }
 }
 
-function parseEnvelope(raw: string): PrivateEnvelope | null {
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function isHex(value: unknown, expectedBytes?: number): value is string {
+  if (typeof value !== 'string' || value.length === 0 || value.length % 2 !== 0) return false;
+  if (expectedBytes !== undefined && value.length !== expectedBytes * 2) return false;
+  return /^[0-9a-f]+$/i.test(value);
+}
+
+function rawLooksLikeEncryptedEnvelope(raw: string): boolean {
+  return (
+    /["']version["']\s*:\s*["']xchacha/i.test(raw) ||
+    (/["']nonceHex["']\s*:/i.test(raw) && /["']ciphertextHex["']\s*:/i.test(raw))
+  );
+}
+
+function isPrivateKVOwnedKey(key: string): boolean {
+  return key.startsWith('onskin.') || key.startsWith('routinekind.');
+}
+
+function isKnownForeignStorageKey(key: string): boolean {
+  return /^sb-[a-z0-9][a-z0-9-]*-auth-token(?:-code-verifier)?$/i.test(key);
+}
+
+function assertPrivateDataKey(key: string): void {
+  if (key === PRIVATE_KV_CONTENT_KEY_NAME) throw new Error(PRIVATE_KV_RESERVED_KEY);
+  if (isKnownForeignStorageKey(key)) throw new Error(PRIVATE_KV_ENVELOPE_FOREIGN);
+}
+
+function classifyEnvelope(key: string, raw: string): EnvelopeClassification {
+  const appOwned = isPrivateKVOwnedKey(key);
+  let parsed: unknown;
   try {
-    const parsed = JSON.parse(raw) as Partial<PrivateEnvelope> & { keyId?: unknown };
-    if (
-      parsed.version === ENCRYPTION_VERSION &&
-      parsed.keyId === undefined &&
-      typeof parsed.nonceHex === 'string' &&
-      typeof parsed.ciphertextHex === 'string'
-    ) {
-      return parsed as PrivateEnvelope;
-    }
+    parsed = JSON.parse(raw) as unknown;
   } catch {
-    /* Legacy plaintext JSON/string. */
+    return appOwned && rawLooksLikeEncryptedEnvelope(raw)
+      ? { kind: 'malformed' }
+      : { kind: 'legacy' };
   }
-  return null;
+
+  if (!isRecord(parsed)) return { kind: 'legacy' };
+
+  const versionLooksEncrypted =
+    typeof parsed.version === 'string' && parsed.version.startsWith('xchacha20poly1305:');
+  const hasCipherFields = hasOwn(parsed, 'nonceHex') && hasOwn(parsed, 'ciphertextHex');
+  if (!versionLooksEncrypted && !hasCipherFields) return { kind: 'legacy' };
+
+  // Unmarked legacy or third-party payloads remain outside this authority. A
+  // complete current private-KV envelope is still recognized at an older or
+  // custom key, but only app-owned keys can claim malformed/future envelopes.
+  if (!appOwned) {
+    if (
+      parsed.version !== ENCRYPTION_VERSION ||
+      (hasOwn(parsed, 'keyId') && parsed.keyId !== undefined) ||
+      !isHex(parsed.nonceHex, NONCE_BYTES) ||
+      !isHex(parsed.ciphertextHex) ||
+      parsed.ciphertextHex.length < 32
+    ) {
+      return { kind: 'legacy' };
+    }
+  }
+
+  if (hasOwn(parsed, 'keyId') && parsed.keyId !== undefined) return { kind: 'malformed' };
+  if (parsed.version !== ENCRYPTION_VERSION) {
+    return versionLooksEncrypted ? { kind: 'unsupported' } : { kind: 'malformed' };
+  }
+  if (!isHex(parsed.nonceHex, NONCE_BYTES) || !isHex(parsed.ciphertextHex)) {
+    return { kind: 'malformed' };
+  }
+  // XChaCha20-Poly1305 always carries a 16-byte authentication tag.
+  if (parsed.ciphertextHex.length < 32) return { kind: 'malformed' };
+
+  return {
+    kind: 'current',
+    envelope: {
+      version: ENCRYPTION_VERSION,
+      nonceHex: parsed.nonceHex,
+      ciphertextHex: parsed.ciphertextHex,
+    },
+  };
+}
+
+function envelopeClassificationError(kind: 'malformed' | 'unsupported'): Error {
+  if (kind === 'unsupported') return new Error(PRIVATE_KV_ENVELOPE_UNSUPPORTED);
+  return new Error(PRIVATE_KV_ENVELOPE_INVALID);
 }
 
 function decryptEnvelope(envelope: PrivateEnvelope, contentKey: Uint8Array): string {
@@ -152,16 +281,21 @@ async function assertNoFailedReadRewrite(key: string): Promise<string | null> {
 
 export async function getPrivateItem(key: string): Promise<string | null> {
   return runAccountScopedPrivateOperation(async () => {
+    assertPrivateDataKey(key);
     const raw = await AsyncStorage.getItem(key);
     if (!raw) {
       failedReadSnapshots.delete(key);
       return null;
     }
 
-    const envelope = parseEnvelope(raw);
-    if (!envelope) {
+    const classification = classifyEnvelope(key, raw);
+    if (classification.kind === 'legacy') {
       failedReadSnapshots.delete(key);
       return raw;
+    }
+    if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
+      rememberFailedRead(key, raw);
+      throw envelopeClassificationError(classification.kind);
     }
 
     let contentKey: Uint8Array | null;
@@ -176,7 +310,7 @@ export async function getPrivateItem(key: string): Promise<string | null> {
       throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
     }
     try {
-      const value = decryptEnvelope(envelope, contentKey);
+      const value = decryptEnvelope(classification.envelope, contentKey);
       failedReadSnapshots.delete(key);
       return value;
     } catch {
@@ -190,6 +324,7 @@ export async function getPrivateItems(
   keys: readonly string[],
 ): Promise<Map<string, string | null>> {
   return runAccountScopedPrivateOperation(async () => {
+    for (const key of keys) assertPrivateDataKey(key);
     const entries = await AsyncStorage.multiGet([...keys]);
     const result = new Map<string, string | null>();
     const encryptedEntries: [string, PrivateEnvelope, string][] = [];
@@ -200,9 +335,13 @@ export async function getPrivateItems(
         result.set(key, null);
         continue;
       }
-      const envelope = parseEnvelope(raw);
-      if (envelope) encryptedEntries.push([key, envelope, raw]);
-      else {
+      const classification = classifyEnvelope(key, raw);
+      if (classification.kind === 'current') {
+        encryptedEntries.push([key, classification.envelope, raw]);
+      } else if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
+        rememberFailedRead(key, raw);
+        throw envelopeClassificationError(classification.kind);
+      } else {
         failedReadSnapshots.delete(key);
         result.set(key, raw);
       }
@@ -236,35 +375,54 @@ export async function getPrivateItems(
 /** Verify every private-KV envelope without creating key material or retaining plaintext. */
 export async function assertPrivateKVReadable(): Promise<void> {
   const keys = (await AsyncStorage.getAllKeys()).filter(
-    (key) => key !== PRIVATE_KV_CONTENT_KEY_NAME,
+    (key) => key !== PRIVATE_KV_CONTENT_KEY_NAME && !isKnownForeignStorageKey(key),
   );
   if (keys.length === 0) return;
   await getPrivateItems(keys);
 }
 
 export async function setPrivateItem(key: string, value: string): Promise<void> {
-  return runAccountScopedPrivateOperation(async (generation) => {
-    const existingRaw = await assertNoFailedReadRewrite(key);
-    const contentKey = await getOrCreateContentKey();
-    const existingEnvelope = existingRaw ? parseEnvelope(existingRaw) : null;
-    if (existingEnvelope && existingRaw) {
-      try {
-        decryptEnvelope(existingEnvelope, contentKey);
-      } catch {
+  return runAccountScopedPrivateOperation((generation) =>
+    runSerializedPrivateMutations([key], async () => {
+      assertPrivateDataKey(key);
+      assertAccountScopedPrivateOperationAllowed(generation);
+      const existingRaw = await assertNoFailedReadRewrite(key);
+      const existingClassification = existingRaw ? classifyEnvelope(key, existingRaw) : null;
+      if (
+        existingRaw &&
+        existingClassification &&
+        (existingClassification.kind === 'malformed' ||
+          existingClassification.kind === 'unsupported')
+      ) {
         rememberFailedRead(key, existingRaw);
-        throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+        throw envelopeClassificationError(existingClassification.kind);
       }
-    }
-    assertAccountScopedPrivateOperationAllowed(generation);
-    const nonce = randomBytes(NONCE_BYTES);
-    const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(value));
-    const envelope: PrivateEnvelope = {
-      version: ENCRYPTION_VERSION,
-      nonceHex: bytesToHex(nonce),
-      ciphertextHex: bytesToHex(ciphertext),
-    };
-    await AsyncStorage.setItem(key, JSON.stringify(envelope));
-  });
+      const contentKey = await getOrCreateContentKey();
+      if (existingClassification?.kind === 'current' && existingRaw) {
+        try {
+          decryptEnvelope(existingClassification.envelope, contentKey);
+        } catch {
+          rememberFailedRead(key, existingRaw);
+          throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+        }
+      }
+      const latestRaw = await AsyncStorage.getItem(key);
+      if (latestRaw !== existingRaw) {
+        if (latestRaw !== null) rememberFailedRead(key, latestRaw);
+        throw new Error(PRIVATE_KV_WRITE_CONFLICT);
+      }
+      assertAccountScopedPrivateOperationAllowed(generation);
+      const nonce = randomBytes(NONCE_BYTES);
+      const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(value));
+      const envelope: PrivateEnvelope = {
+        version: ENCRYPTION_VERSION,
+        nonceHex: bytesToHex(nonce),
+        ciphertextHex: bytesToHex(ciphertext),
+      };
+      await AsyncStorage.setItem(key, JSON.stringify(envelope));
+      failedReadSnapshots.delete(key);
+    }),
+  );
 }
 
 export function beginPrivateKVAccountBoundary(): void {
@@ -285,19 +443,25 @@ export function endPrivateKVAccountBoundary(): void {
 }
 
 export async function removePrivateItem(key: string): Promise<void> {
-  return runAccountScopedPrivateOperation(async (generation) => {
-    assertAccountScopedPrivateOperationAllowed(generation);
-    await AsyncStorage.removeItem(key);
-    failedReadSnapshots.delete(key);
-  });
+  return runAccountScopedPrivateOperation((generation) =>
+    runSerializedPrivateMutations([key], async () => {
+      assertPrivateDataKey(key);
+      assertAccountScopedPrivateOperationAllowed(generation);
+      await AsyncStorage.removeItem(key);
+      failedReadSnapshots.delete(key);
+    }),
+  );
 }
 
 export async function multiRemovePrivateItems(keys: readonly string[]): Promise<void> {
-  return runAccountScopedPrivateOperation(async (generation) => {
-    assertAccountScopedPrivateOperationAllowed(generation);
-    await AsyncStorage.multiRemove([...keys]);
-    for (const key of keys) failedReadSnapshots.delete(key);
-  });
+  return runAccountScopedPrivateOperation((generation) =>
+    runSerializedPrivateMutations(keys, async () => {
+      for (const key of keys) assertPrivateDataKey(key);
+      assertAccountScopedPrivateOperationAllowed(generation);
+      await AsyncStorage.multiRemove([...keys]);
+      for (const key of keys) failedReadSnapshots.delete(key);
+    }),
+  );
 }
 
 export async function clearPrivateKVContentKey(): Promise<void> {

@@ -221,6 +221,14 @@ Status: needs-device-verification
   Progress never creates replacement key material, note/photo metadata is not
   rewritten, and explicit local-data deletion remains the only destructive
   recovery path. Never perform destructive key mutation against real user data.
+- On physical iOS and Android, inject a malformed app-owned private envelope and
+  a malformed app-lock preference separately. Verify the global gate preserves
+  the envelope byte-for-byte, Supabase auth storage remains isolated, app lock
+  shows `Unlock and reset app lock` without auto-prompting, cancel/failure leaves
+  the preference unchanged, and successful device authentication removes only
+  that preference before the requested route mounts. Repeat with VoiceOver and
+  TalkBack; retain device/build IDs, before/after hashes, screen recordings, and
+  named tester signoff. Never use a real user's records for corruption fixtures.
 - Record iOS Keychain and Android Keystore behavior for app update, reinstall,
   device backup/restore, locked-device launch, biometric/passcode changes where
   applicable, and storage pressure. V1 has no key escrow or cloud restore, so

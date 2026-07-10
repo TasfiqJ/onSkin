@@ -20,7 +20,12 @@ import {
   type AppLockAuthStatus,
 } from './authenticate';
 import { shouldLockForAppState, shouldShowPrivacyShieldForAppState } from './privacyState';
-import { getAppLockEnabled, setAppLockEnabledStored } from './store';
+import {
+  clearMalformedAppLockPreference,
+  getAppLockEnabled,
+  isRepairableAppLockPreferenceError,
+  setAppLockEnabledStored,
+} from './store';
 
 // Biometric app-lock (docs/01 §5): opt-in device authentication to open the app,
 // a trust signal for an app holding progress photos. Locks on cold start and on
@@ -36,7 +41,15 @@ type AppLockContextValue = {
 
 const AppLockContext = createContext<AppLockContextValue | undefined>(undefined);
 
-function LockOverlay({ onUnlock, feedback }: { onUnlock: () => void; feedback: string | null }) {
+function LockOverlay({
+  onUnlock,
+  feedback,
+  repairRequired,
+}: {
+  onUnlock: () => void;
+  feedback: string | null;
+  repairRequired: boolean;
+}) {
   return (
     <View
       style={{
@@ -58,7 +71,9 @@ function LockOverlay({ onUnlock, feedback }: { onUnlock: () => void; feedback: s
         {BRAND.appName}
       </Text>
       <Text style={{ fontFamily: 'HankenGrotesk_400Regular', fontSize: 15, color: colors.muted }}>
-        Locked. Unlock to continue
+        {repairRequired
+          ? "The app-lock setting couldn't be read. Unlock this phone to reset only that setting."
+          : 'Locked. Unlock to continue'}
       </Text>
       {feedback ? (
         <View
@@ -100,7 +115,7 @@ function LockOverlay({ onUnlock, feedback }: { onUnlock: () => void; feedback: s
         <Text
           style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: colors.paper }}
         >
-          Unlock
+          {repairRequired ? 'Unlock and reset app lock' : 'Unlock'}
         </Text>
       </Pressable>
     </View>
@@ -138,6 +153,7 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
   const [locked, setLocked] = useState(false);
   const [lockFeedback, setLockFeedback] = useState<string | null>(null);
+  const [preferenceRepairRequired, setPreferenceRepairRequired] = useState(false);
   const [photoTimelineUnlocked, setPhotoTimelineUnlocked] = useState(false);
   const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
 
@@ -149,9 +165,10 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
         if (!active) return;
         setEnabledState(e);
         setLocked(e); // lock immediately on cold start when enabled
-      } catch {
+      } catch (error) {
         if (!active) return;
         // An unreadable encrypted preference must not expose data as if lock were off.
+        setPreferenceRepairRequired(isRepairableAppLockPreferenceError(error));
         setEnabledState(true);
         setLocked(true);
       } finally {
@@ -175,15 +192,26 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
   }, [enabled]);
 
   const requestUnlock = useCallback(() => {
-    void authenticateAppLock(BRAND.appLockPrompt).then((status) => {
+    void (async () => {
+      const status = await authenticateAppLock(BRAND.appLockPrompt);
       if (status === 'success') {
+        if (preferenceRepairRequired) {
+          try {
+            await clearMalformedAppLockPreference();
+          } catch {
+            setLockFeedback('App lock could not be reset. Try again.');
+            return;
+          }
+          setPreferenceRepairRequired(false);
+          setEnabledState(false);
+        }
         setLockFeedback(null);
         setLocked(false);
       } else if (status === 'unavailable') {
         setLockFeedback(appLockUserMessage());
       }
-    });
-  }, []);
+    })();
+  }, [preferenceRepairRequired]);
 
   const authenticate = useCallback(() => {
     setLockFeedback(null);
@@ -199,8 +227,8 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
   // Auto-prompt whenever we are active and locked. Do not launch biometrics while
   // the OS is taking an app-switcher snapshot or the app is backgrounded.
   useEffect(() => {
-    if (locked && appState === 'active') requestUnlock();
-  }, [locked, appState, requestUnlock]);
+    if (locked && appState === 'active' && !preferenceRepairRequired) requestUnlock();
+  }, [locked, appState, preferenceRepairRequired, requestUnlock]);
 
   const setEnabled = useCallback(async (v: boolean) => {
     if (v) {
@@ -212,6 +240,7 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
     }
     await setAppLockEnabledStored(v);
     setLockFeedback(null);
+    setPreferenceRepairRequired(false);
     setEnabledState(v);
     setPhotoTimelineUnlocked(false);
     if (!v) setLocked(false);
@@ -234,7 +263,11 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
       {loaded ? children : null}
       {showPrivacyShield || !loaded ? <PrivacyShield /> : null}
       {!showPrivacyShield && loaded && locked ? (
-        <LockOverlay feedback={lockFeedback} onUnlock={authenticate} />
+        <LockOverlay
+          feedback={lockFeedback}
+          onUnlock={authenticate}
+          repairRequired={preferenceRepairRequired}
+        />
       ) : null}
     </AppLockContext.Provider>
   );

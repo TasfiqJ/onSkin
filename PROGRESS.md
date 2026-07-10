@@ -6,6 +6,28 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Closed a Critical private-storage corruption and app-lock fail-open path.
+  Private-KV reads now distinguish current, malformed, unsupported, legacy, and
+  separately owned Supabase auth storage by both structure and key authority.
+  Truncated, bad-hex, wrong-shaped, future-version, and arbitrary-`keyId`
+  app-owned envelopes remain byte-identical, block the pre-mount audit, count as
+  orphaned ciphertext, and cannot be replaced after a failed read or concurrent
+  snapshot change. Same-key mutations serialize, queued mutations drain or reject
+  across account boundaries, and private APIs reject Supabase/content-key
+  namespaces; unrelated legacy values remain readable. Malformed app-lock
+  values no longer rewrite to disabled. They lock without auto-prompting and
+  expose one explicit `Unlock and reset app lock` action that removes only that
+  preference after successful device authentication; generic key/decryption
+  failures remain non-destructive. Mobile/root typecheck, lint, formatting, and
+  the full suite pass 183 files / 1895 tests. Real Expo web AsyncStorage at
+  360 x 640 and 390 x 844 proves truncated-envelope blocking, byte-identical
+  repeated retry, exact Shelf recovery after fixture restoration, and explicit
+  authenticated malformed app-lock reset with zero overflow, dialogs, page
+  errors, disallowed logs, or vendor requests. Evidence is in
+  `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/`.
+  Physical iOS Keychain/Android Keystore and LocalAuthentication fault injection
+  remains Tas-owned device QA.
+
 - Closed a Critical account-transition privacy gap. Sign-out and user-ID changes
   previously cleared registered files/records but left account-agnostic TanStack
   Query data mounted, so account A Shelf, profile, routine, entitlement, or photo

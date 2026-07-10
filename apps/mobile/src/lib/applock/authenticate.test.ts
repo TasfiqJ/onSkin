@@ -142,7 +142,10 @@ describe('app lock local authentication', () => {
       'const [lockFeedback, setLockFeedback] = useState<string | null>(null);',
     );
     expect(provider).toContain('setLockFeedback(appLockUserMessage());');
-    expect(provider).toContain('<LockOverlay feedback={lockFeedback} onUnlock={authenticate} />');
+    expect(provider).toContain('repairRequired={preferenceRepairRequired}');
+    expect(provider).toContain("'Unlock and reset app lock'");
+    expect(provider).toContain('await clearMalformedAppLockPreference();');
+    expect(provider).toContain('!preferenceRepairRequired) requestUnlock();');
     expect(provider).toContain('authenticateAppLock(PHOTO_TIMELINE_PROMPT)');
     expect(provider).toContain('setPhotoTimelineUnlocked(false);');
     expect(provider).toContain('setEnabledState(true);');

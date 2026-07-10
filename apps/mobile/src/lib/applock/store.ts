@@ -1,8 +1,24 @@
-import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import {
+  getPrivateItem,
+  PRIVATE_KV_ENVELOPE_INVALID,
+  PRIVATE_KV_ENVELOPE_UNSUPPORTED,
+  removePrivateItem,
+  setPrivateItem,
+} from '@/lib/storage/privateKV';
 
 // Whether the biometric app-lock is enabled (opt-in, docs/01 §5). Stored locally;
 // the lock state itself is in-memory in AppLockProvider.
 const KEY = 'onskin.appLock.enabled';
+export const APP_LOCK_PREFERENCE_INVALID = 'APP_LOCK_PREFERENCE_INVALID';
+
+export function isRepairableAppLockPreferenceError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : '';
+  return (
+    message === APP_LOCK_PREFERENCE_INVALID ||
+    message === PRIVATE_KV_ENVELOPE_INVALID ||
+    message === PRIVATE_KV_ENVELOPE_UNSUPPORTED
+  );
+}
 
 function e2eAppLockEnabled(): boolean | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
@@ -33,8 +49,7 @@ async function normalizeStoredValue(value: string): Promise<boolean> {
     return false;
   }
 
-  await repairStoredValue('0');
-  return false;
+  throw new Error(APP_LOCK_PREFERENCE_INVALID);
 }
 
 export async function getAppLockEnabled(): Promise<boolean> {
@@ -48,4 +63,8 @@ export async function getAppLockEnabled(): Promise<boolean> {
 
 export async function setAppLockEnabledStored(enabled: boolean): Promise<void> {
   await setPrivateItem(KEY, enabled ? '1' : '0');
+}
+
+export async function clearMalformedAppLockPreference(): Promise<void> {
+  await removePrivateItem(KEY);
 }

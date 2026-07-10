@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getAppLockEnabled, setAppLockEnabledStored } from './store';
+import {
+  APP_LOCK_PREFERENCE_INVALID,
+  clearMalformedAppLockPreference,
+  getAppLockEnabled,
+  isRepairableAppLockPreferenceError,
+  setAppLockEnabledStored,
+} from './store';
 
 const mocks = vi.hoisted(() => ({
   privateKV: new Map<string, string>(),
@@ -11,6 +17,11 @@ vi.mock('@/lib/storage/privateKV', () => ({
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.privateKV.set(key, value);
   }),
+  removePrivateItem: vi.fn(async (key: string) => {
+    mocks.privateKV.delete(key);
+  }),
+  PRIVATE_KV_ENVELOPE_INVALID: 'PRIVATE_KV_ENVELOPE_INVALID',
+  PRIVATE_KV_ENVELOPE_UNSUPPORTED: 'PRIVATE_KV_ENVELOPE_UNSUPPORTED',
 }));
 
 const KEY = 'onskin.appLock.enabled';
@@ -50,11 +61,11 @@ describe('app lock preference storage', () => {
     expect(mocks.privateKV.get(KEY)).toBe('0');
   });
 
-  it('clears malformed stored values to the disabled state', async () => {
+  it('fails closed without changing malformed stored values', async () => {
     mocks.privateKV.set(KEY, 'enabled');
 
-    await expect(getAppLockEnabled()).resolves.toBe(false);
-    expect(mocks.privateKV.get(KEY)).toBe('0');
+    await expect(getAppLockEnabled()).rejects.toThrow(APP_LOCK_PREFERENCE_INVALID);
+    expect(mocks.privateKV.get(KEY)).toBe('enabled');
   });
 
   it('keeps a legacy enabled value active if canonical repair fails', async () => {
@@ -68,14 +79,12 @@ describe('app lock preference storage', () => {
     expect(mocks.privateKV.get(KEY)).toBe('true');
   });
 
-  it('still returns disabled for malformed values if cleanup repair fails', async () => {
+  it('does not attempt a cleanup write for malformed values', async () => {
     const privateKV = await import('@/lib/storage/privateKV');
     mocks.privateKV.set(KEY, 'enabled');
-    vi.mocked(privateKV.setPrivateItem).mockRejectedValueOnce(
-      new Error('encrypted preference write unavailable'),
-    );
 
-    await expect(getAppLockEnabled()).resolves.toBe(false);
+    await expect(getAppLockEnabled()).rejects.toThrow(APP_LOCK_PREFERENCE_INVALID);
+    expect(privateKV.setPrivateItem).not.toHaveBeenCalled();
     expect(mocks.privateKV.get(KEY)).toBe('enabled');
   });
 
@@ -85,6 +94,30 @@ describe('app lock preference storage', () => {
 
     await expect(getAppLockEnabled()).rejects.toThrow('private kv unavailable');
     expect(mocks.privateKV.get(KEY)).toBeUndefined();
+  });
+
+  it('identifies only locally repairable malformed preference failures', () => {
+    expect(isRepairableAppLockPreferenceError(new Error(APP_LOCK_PREFERENCE_INVALID))).toBe(true);
+    expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_ENVELOPE_INVALID'))).toBe(true);
+    expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_ENVELOPE_UNSUPPORTED'))).toBe(
+      true,
+    );
+    expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_DECRYPTION_FAILED'))).toBe(
+      false,
+    );
+    expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_CONTENT_KEY_MISSING'))).toBe(
+      false,
+    );
+  });
+
+  it('removes only the malformed app-lock preference during explicit recovery', async () => {
+    mocks.privateKV.set(KEY, 'enabled');
+    mocks.privateKV.set('onskin.shelf.v1', 'shelf-ciphertext');
+
+    await clearMalformedAppLockPreference();
+
+    expect(mocks.privateKV.has(KEY)).toBe(false);
+    expect(mocks.privateKV.get('onskin.shelf.v1')).toBe('shelf-ciphertext');
   });
 
   it('uses the dev-only E2E fixture before private storage', async () => {
