@@ -1,0 +1,77 @@
+[
+  {
+    "scenario": "malformed-envelope-supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "malformed-envelope-supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "malformed-envelope-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "malformed-envelope-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "malformed-envelope-supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "malformed-envelope-modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "malformed-envelope-modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "malformed-envelope-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "malformed-envelope-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "malformed-envelope-modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "malformed-app-lock-modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "malformed-app-lock-modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "malformed-app-lock-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "malformed-app-lock-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "malformed-app-lock-modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  }
+]

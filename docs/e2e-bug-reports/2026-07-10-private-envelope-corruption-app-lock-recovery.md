@@ -26,7 +26,7 @@ Before the fix, malformed private envelopes could be treated as legacy plaintext
 - Screenshot: `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/`
 - Video: Not captured
 - Trace: Not captured
-- Logs: `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/browser-browser-logs.json`
+- Logs: `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/corruption-browser-logs.json`
 - UI snapshot: `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/results.json`
 - Terminal transcript: Focused Vitest and E2E command output in the active Codex task
 
@@ -60,7 +60,7 @@ Classify envelopes by structure and storage authority, preserve failed snapshots
 - Screenshot: `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/`
 - Video: Not captured
 - Trace: Not captured
-- Logs: `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/browser-browser-logs.json`
+- Logs: `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/corruption-browser-logs.json`
 - UI snapshot: `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/summary.json`
 - Terminal transcript: E2E reports `Private envelope corruption E2E passed 3/3.`
 

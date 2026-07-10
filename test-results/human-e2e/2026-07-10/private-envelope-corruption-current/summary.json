@@ -1,0 +1,14 @@
+{
+  "status": "pass",
+  "date": "2026-07-10",
+  "scenarios": 3,
+  "malformedEnvelopeScenarios": 2,
+  "appLockScenarios": 1,
+  "byteIdenticalRetries": true,
+  "recoveryPassed": true,
+  "malformedAppLockRecoveryPassed": true,
+  "disallowedBrowserLogs": 0,
+  "vendorRequests": 0,
+  "dialogs": 0,
+  "pageErrors": 0
+}

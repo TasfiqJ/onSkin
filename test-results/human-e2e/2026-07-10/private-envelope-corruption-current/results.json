@@ -1,0 +1,81 @@
+[
+  {
+    "scenario": "malformed-envelope-supported-floor-360x640",
+    "viewport": {
+      "name": "supported-floor-360x640",
+      "width": 360,
+      "height": 640
+    },
+    "requestedUrl": "/shelf",
+    "finalUrl": "http://localhost:8297/shelf",
+    "malformedEnvelopeSha256": "bb5497f3eaf2274483c11cb5a5c170cb9f8706911f797514852ac5318c00b323",
+    "beforeRawSha256": "bb5497f3eaf2274483c11cb5a5c170cb9f8706911f797514852ac5318c00b323",
+    "afterRetryRawSha256": "bb5497f3eaf2274483c11cb5a5c170cb9f8706911f797514852ac5318c00b323",
+    "byteIdenticalThroughRetry": true,
+    "recovered": false,
+    "retryBox": {
+      "x": 28,
+      "y": 393,
+      "width": 304,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "innerHeight": 640
+    }
+  },
+  {
+    "scenario": "malformed-envelope-modern-390x844",
+    "viewport": {
+      "name": "modern-390x844",
+      "width": 390,
+      "height": 844
+    },
+    "requestedUrl": "/shelf",
+    "finalUrl": "http://localhost:8297/shelf",
+    "malformedEnvelopeSha256": "bb5497f3eaf2274483c11cb5a5c170cb9f8706911f797514852ac5318c00b323",
+    "beforeRawSha256": "bb5497f3eaf2274483c11cb5a5c170cb9f8706911f797514852ac5318c00b323",
+    "afterRetryRawSha256": "bb5497f3eaf2274483c11cb5a5c170cb9f8706911f797514852ac5318c00b323",
+    "byteIdenticalThroughRetry": true,
+    "recovered": true,
+    "retryBox": {
+      "x": 28,
+      "y": 495,
+      "width": 334,
+      "height": 56
+    },
+    "geometry": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "innerHeight": 844
+    }
+  },
+  {
+    "scenario": "malformed-app-lock-modern-390x844",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "requestedUrl": "/shelf",
+    "finalUrl": "http://localhost:8297/shelf",
+    "storedValueBeforeRecovery": "enabled",
+    "storedValueAfterRecovery": null,
+    "preferencePreservedBeforeExplicitRecovery": true,
+    "recoveredAfterAuthenticatedReset": true,
+    "resetBox": {
+      "x": 72.765625,
+      "y": 463.5,
+      "width": 244.46875,
+      "height": 49
+    },
+    "geometry": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "innerHeight": 844
+    }
+  }
+]

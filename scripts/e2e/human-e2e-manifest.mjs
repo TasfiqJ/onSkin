@@ -249,6 +249,13 @@ if (!progressStorageRecoveryEvidenceDate) {
   console.error('FAIL Missing encrypted Progress storage recovery evidence.');
   process.exit(1);
 }
+const privateEnvelopeCorruptionEvidenceDate = latestEvidenceDateForFolder(
+  'private-envelope-corruption-current',
+);
+if (!privateEnvelopeCorruptionEvidenceDate) {
+  console.error('FAIL Missing private-envelope corruption and app-lock recovery evidence.');
+  process.exit(1);
+}
 const dataExportDisclosureEvidenceDate = latestEvidenceDateForFolder(
   'data-export-local-photo-disclosure-current',
 );
@@ -284,6 +291,7 @@ const latestManifestEvidenceDate = [
   deviceOnlyBackupEvidenceDate,
   progressDirectRouteLockEvidenceDate,
   progressStorageRecoveryEvidenceDate,
+  privateEnvelopeCorruptionEvidenceDate,
   dataExportDisclosureEvidenceDate,
   combinedDataExportEvidenceDate,
   accountUpgradeEvidenceDate,
@@ -590,6 +598,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Progress tab, capture, review, and detail block false empty/missing states during encrypted read failure; persistent retry and one-shot recovery pass at supported phone sizes.',
+  },
+  {
+    id: 'private-envelope-corruption-supported-phone',
+    title: 'Private envelope corruption and app-lock recovery',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${privateEnvelopeCorruptionEvidenceDate}/private-envelope-corruption-current`,
+    evidence: 'summary.json',
+    expected:
+      'Malformed private envelopes block and remain byte-identical through retry; restored data and authenticated app-lock reset recover the requested route.',
   },
   {
     id: 'data-export-local-photo-disclosure-supported-phone',
