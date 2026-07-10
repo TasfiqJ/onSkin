@@ -58,6 +58,7 @@ const requiredLaunchCommands = [
   'npm run docs:tas-todo-audit:check',
   'npm run brand:audit:strict',
   'npm run docs:device-support-policy-audit:check',
+  'npm run docs:performance-readiness-audit:check',
   'npm run e2e:human:manifest:check',
   'npm run docs:generated-packet-status-audit:check',
   'npm run phase5:check-native-config',
@@ -76,6 +77,9 @@ const requiredPackageScripts = [
   'docs:device-support-policy-audit',
   'docs:device-support-policy-audit:strict',
   'docs:device-support-policy-audit:check',
+  'docs:performance-readiness-audit',
+  'docs:performance-readiness-audit:strict',
+  'docs:performance-readiness-audit:check',
 ];
 
 const requiredLaunchVerifyScriptParts = [
@@ -84,6 +88,7 @@ const requiredLaunchVerifyScriptParts = [
   'docs:readiness-status-audit:check',
   'brand:audit:strict',
   'docs:device-support-policy-audit:check',
+  'docs:performance-readiness-audit:check',
   'docs:generated-packet-status-audit:check',
   'e2e:human:manifest:check',
   'phase5:check-native-config',

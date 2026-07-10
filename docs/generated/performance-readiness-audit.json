@@ -1,0 +1,79 @@
+{
+  "generatedAt": "2026-07-10T01:35:11.639Z",
+  "status": "pass",
+  "strict": true,
+  "summary": {
+    "performanceMetricCount": 6,
+    "docsChecked": 7,
+    "packageScriptsChecked": 3,
+    "blockers": 0,
+    "warnings": 0
+  },
+  "metrics": [
+    "app startup time",
+    "product add time",
+    "barcode lookup latency",
+    "routine generation time",
+    "local photo loading",
+    "memory use in photo timeline"
+  ],
+  "packageScripts": [
+    {
+      "scriptName": "docs:performance-readiness-audit",
+      "present": true
+    },
+    {
+      "scriptName": "docs:performance-readiness-audit:strict",
+      "present": true
+    },
+    {
+      "scriptName": "docs:performance-readiness-audit:check",
+      "present": true
+    }
+  ],
+  "launchVerify": [
+    {
+      "scriptPart": "docs:performance-readiness-audit:check",
+      "present": true
+    }
+  ],
+  "docs": [
+    {
+      "path": "docs/TESTING_STRATEGY.md",
+      "checkedNeedles": 8,
+      "missing": []
+    },
+    {
+      "path": "docs/FOR_TAS_TO_DO.md",
+      "checkedNeedles": 13,
+      "missing": []
+    },
+    {
+      "path": "LAUNCH_READINESS.md",
+      "checkedNeedles": 8,
+      "missing": []
+    },
+    {
+      "path": "BLOCKERS.md",
+      "checkedNeedles": 8,
+      "missing": []
+    },
+    {
+      "path": "docs/00-architecture.md",
+      "checkedNeedles": 3,
+      "missing": []
+    },
+    {
+      "path": "docs/04-smart-shelf.md",
+      "checkedNeedles": 2,
+      "missing": []
+    },
+    {
+      "path": "docs/06-photo-progress.md",
+      "checkedNeedles": 2,
+      "missing": []
+    }
+  ],
+  "blockers": [],
+  "warnings": []
+}

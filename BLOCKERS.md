@@ -70,7 +70,9 @@ Read this with:
 8. Native camera/barcode/photo capture are implemented but not physical-device
    verified; native OCR remains intentionally gated off.
 9. Native notification/device verification incomplete.
-10. Closed beta not run.
+10. Performance baseline and scale evidence are not measured on supported
+    physical devices or beta telemetry.
+11. Closed beta not run.
 
 ## Source-Of-Truth Status
 
@@ -590,6 +592,51 @@ Exit criteria:
 - unmatched product workflow is legally and operationally defined;
 - user-facing copy does not promise contribution unless the pipeline exists;
 - OBF obligations are satisfied if using OBF-derived data.
+
+## B-PERFORMANCE - Performance baseline and scale evidence
+
+Status: `needs-device-verification`
+
+Local code gates and route E2E checks prove that supported layouts render and
+that core flows are functionally reachable. They do not prove launch-grade
+performance on real devices, live catalog/backend latency, or realistic local
+photo volume.
+
+Risk:
+
+- slow app startup weakens first-session activation;
+- slow product add time makes the shelf loop feel like work;
+- high barcode lookup latency or unreliable camera acquisition weakens the scan
+  magic moment;
+- slow routine generation makes the first useful insight feel generic or
+  broken;
+- slow local photo loading or high memory use in photo timeline weakens the
+  progress moat and can cause native crashes under real photo volume.
+
+Next action:
+
+- measure app startup time on supported iOS and Android physical devices;
+- measure product add time for manual, search, barcode, and OCR/manual fallback
+  paths;
+- measure barcode lookup latency separately from camera acquisition and
+  no-match recovery;
+- measure routine generation time with 3, 5, and 10 product shelves;
+- measure local photo loading and memory use in photo timeline with realistic
+  encrypted local photo volume;
+- set explicit beta pass/fail thresholds before recruiting testers;
+- keep `npm run docs:performance-readiness-audit:check` passing after any
+  performance-readiness doc or launch-gate change.
+
+Exit criteria:
+
+- `PHASE_PERFORMANCE_STARTUP_PASS=true`;
+- `PHASE_PERFORMANCE_PRODUCT_ADD_PASS=true`;
+- `PHASE_PERFORMANCE_BARCODE_PASS=true`;
+- `PHASE_PERFORMANCE_ROUTINE_PASS=true`;
+- `PHASE_PERFORMANCE_PHOTO_TIMELINE_PASS=true`;
+- `PHASE_PERFORMANCE_SIGNED_OFF_BY` names a real tester/reviewer;
+- the evidence artifact includes build IDs, device model/OS, sample size,
+  timing summary, memory summary, accepted thresholds, and known caveats.
 
 ## B-CAMERA - Native camera, barcode, OCR, and guided photos
 

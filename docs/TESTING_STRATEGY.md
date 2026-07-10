@@ -140,6 +140,18 @@ Monitor:
 - local photo loading
 - memory use in photo timeline
 
+Performance readiness is not closed by local unit tests. Before closed beta,
+record baseline measurements on supported iOS and Android physical devices and
+attach the measurement artifact, device model/OS, build ID, and named owner
+signoff in `docs/FOR_TAS_TO_DO.md`. The local guard is:
+
+```bash
+npm run docs:performance-readiness-audit:check
+```
+
+That audit verifies the performance evidence contract remains visible in the
+launch docs. It does not replace real-device or beta telemetry.
+
 ## Accessibility Checks
 
 Required:

@@ -232,6 +232,48 @@ Evidence needed:
   Android.
 - Updated `docs/phase-5/generated/device-qa-packet.md`.
 
+## P1 - Performance And Scale Evidence
+
+Status: needs-device-verification
+
+- Measure app startup time on supported iOS and Android physical devices from
+  cold launch to the first usable route, including the tested build ID, device
+  model, OS version, and whether the run used a fresh install or returning
+  local data.
+- Measure product add time for the full first-session path: manual add, catalog
+  search, barcode scan, and OCR/manual fallback where available. The evidence
+  should include time to add 3 products, any catalog/backend latency, and a
+  note if the path used local fixture data instead of live catalog data.
+- Measure barcode lookup latency separately from camera acquisition: barcode
+  decode time, product lookup time, no-match fallback time, and the retry path
+  on at least one supported iPhone and one supported Android device.
+- Measure routine generation time for the shelf-to-first-insight path with 3,
+  5, and 10 product shelves. Include whether the run used local-only rules,
+  live Supabase catalog data, or beta catalog seed data.
+- Measure local photo loading for the Progress timeline with a realistic beta
+  set of encrypted local photos. Include first render, timeline scroll, compare
+  selection, and app restart behavior.
+- Measure memory use in photo timeline on supported iOS and Android physical
+  devices with the same realistic encrypted-photo set. Record whether memory
+  pressure causes thumbnail eviction, route reload, crash, or OS termination.
+- Define pass/fail thresholds before closed beta. Codex will not invent these
+  numbers because they depend on the final supported device matrix, production
+  catalog/backend latency, and beta-photo volume.
+- Run `npm run docs:performance-readiness-audit:check` after updating this
+  section or the launch docs.
+
+Evidence needed:
+
+- `PHASE_PERFORMANCE_STARTUP_PASS=true`
+- `PHASE_PERFORMANCE_PRODUCT_ADD_PASS=true`
+- `PHASE_PERFORMANCE_BARCODE_PASS=true`
+- `PHASE_PERFORMANCE_ROUTINE_PASS=true`
+- `PHASE_PERFORMANCE_PHOTO_TIMELINE_PASS=true`
+- `PHASE_PERFORMANCE_SIGNED_OFF_BY=<real tester/reviewer name>`
+- Measurement artifact with build IDs, device model/OS, sample size, p50/p95
+  or equivalent timing summary, memory summary, known caveats, and decision on
+  whether performance is acceptable for closed beta.
+
 ## P1 - Catalog And Source Quality
 
 Status: launch-blocked

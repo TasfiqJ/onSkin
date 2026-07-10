@@ -1,6 +1,6 @@
 # Readiness Status Audit
 
-Generated: 2026-07-10T01:25:42.211Z
+Generated: 2026-07-10T01:35:17.672Z
 Status: pass
 Strict mode: yes
 
@@ -35,6 +35,7 @@ store, legal, clinical, beta, or launch signoff evidence.
 - `npm run docs:tas-todo-audit:check`
 - `npm run brand:audit:strict`
 - `npm run docs:device-support-policy-audit:check`
+- `npm run docs:performance-readiness-audit:check`
 - `npm run e2e:human:manifest:check`
 - `npm run docs:generated-packet-status-audit:check`
 - `npm run phase5:check-native-config`
