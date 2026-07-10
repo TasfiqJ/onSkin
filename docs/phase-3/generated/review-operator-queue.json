@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-10T16:32:02.104Z",
+  "generatedAt": "2026-07-10T16:37:33.729Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": true,
-  "gitSha": "02477494294c65b6230375a02cf141875fdf6b57",
+  "gitSha": "09e7333ef4e2237296ca965e4d950d959101458e",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
     "bytes": 92971,
-    "sha256": "94c42f745e362cdeffadcb9672091cec73ec379477b2cf4acd8ee34b2e951aac",
-    "currentSha256": "94c42f745e362cdeffadcb9672091cec73ec379477b2cf4acd8ee34b2e951aac"
+    "sha256": "bcce4ff1c86c74cb0cb21f849bd34230fad72ca479e5d44cd7e2975453e53207",
+    "currentSha256": "bcce4ff1c86c74cb0cb21f849bd34230fad72ca479e5d44cd7e2975453e53207"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -747,7 +747,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "6dc41e9dc0932bdaafa837c7a53a772e70125e7ab87e9578d3fbe761f947f579",
+      "reviewSnapshotSha256": "5be0b9d0b340e7740cc6bf42a1c60f188bceeeaa77b2bee12d9c920dc5723846",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -776,8 +776,8 @@
         {
           "path": "apps/mobile/src/lib/storage/privateKV.ts",
           "exists": true,
-          "bytes": 16470,
-          "sha256": "8e739c380dc01b7851e862d86411a6c84507f4061f8aec01260271a5f8b5f3a5"
+          "bytes": 16600,
+          "sha256": "cbcbfedb618ae5b82b0755635753fde168d5429c02b163d3be6cb26c6268c90e"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.test.ts",

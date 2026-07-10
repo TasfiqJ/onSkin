@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-10T16:32:01.669Z
+Generated: 2026-07-10T16:37:33.287Z
 Status: pass
-Git SHA: 02477494294c65b6230375a02cf141875fdf6b57
+Git SHA: 09e7333ef4e2237296ca965e4d950d959101458e
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -608,7 +608,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `6dc41e9dc0932bdaafa837c7a53a772e70125e7ab87e9578d3fbe761f947f579`
+- Review snapshot SHA-256: `5be0b9d0b340e7740cc6bf42a1c60f188bceeeaa77b2bee12d9c920dc5723846`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Must prove owner-scoped staging server data, seeded local coverage, redaction, and native cache cleanup.
@@ -618,7 +618,7 @@ Sources:
 - `apps/mobile/src/features/settings/actions.ts` - 5099 bytes - sha256 `e39806ea6cd4148df0c3a7acdaa70c219d1a0da4f57c54903018aa8990f500c2`
 - `apps/mobile/src/features/settings/localDeviceExport.ts` - 10663 bytes - sha256 `5553f474ebdff6bf5498565cecac5d6a787057e4a12b58cf4ffb8195c8560c81`
 - `apps/mobile/src/features/settings/localDeviceExport.test.ts` - 5680 bytes - sha256 `4dbbe2b3084f17923d989e80970b270f4f5846163ebd5c27e6e21b601a2ab9f7`
-- `apps/mobile/src/lib/storage/privateKV.ts` - 16470 bytes - sha256 `8e739c380dc01b7851e862d86411a6c84507f4061f8aec01260271a5f8b5f3a5`
+- `apps/mobile/src/lib/storage/privateKV.ts` - 16600 bytes - sha256 `cbcbfedb618ae5b82b0755635753fde168d5429c02b163d3be6cb26c6268c90e`
 - `apps/mobile/src/lib/storage/privateKV.test.ts` - 20833 bytes - sha256 `ca953c64f1b6efe699ddd7d036407f431abf91a2361c25118e7bfd1921f59759`
 - `apps/mobile/src/lib/legal/policyLinks.ts` - 722 bytes - sha256 `0fe9cf269e6b5e48119771f7b111d1620c095ffe35bb6ac56f63c2cd2ec1c863`
 - `supabase/functions/account-deletion/index.ts` - 15927 bytes - sha256 `5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b`
