@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-10T07:40:57.179Z
+Generated: 2026-07-10T08:26:50.768Z
 Status: pass
-Git SHA: 5ae8e98c78b0090a4c654561e3cf2aac60c5fcf7
+Git SHA: 96770f615b7d3896f18648b826eb1645c5a7162c
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -13,7 +13,7 @@ reviewers must inspect before launch gates can close.
 ## Summary
 
 - Review items: 35
-- Source files hashed: 237
+- Source files hashed: 241
 - Missing source files: 0
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
@@ -50,7 +50,7 @@ reviewers must inspect before launch gates can close.
 | privacySecurity   | Photo privacy and local storage      | Not cleared | TBD      | TBD  | not-applicable | 4       | 0               |
 | privacySecurity   | Trend and cloud-backup consent       | Blocked     | TBD      | TBD  | not-applicable | 14      | 0               |
 | privacySecurity   | Ask, commerce, and community consent | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
-| privacySecurity   | Account deletion and data export     | Blocked     | TBD      | TBD  | not-applicable | 6       | 0               |
+| privacySecurity   | Account deletion and data export     | Blocked     | TBD      | TBD  | not-applicable | 10      | 0               |
 | privacySecurity   | Analytics and crash payloads         | Not cleared | TBD      | TBD  | not-applicable | 10      | 0               |
 | privacySecurity   | Auth and processor posture           | Blocked     | TBD      | TBD  | not-applicable | 8       | 0               |
 | ipFto             | Brand and trademark clearance        | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
@@ -101,7 +101,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `ffc576204492cfec4de6e85a81ec95a6dfea37d8a404c6b708e23fd9586551f4`
+- Review snapshot SHA-256: `189c1de512b6c7c4f18fcbd15f01866e9083afade5d6cc6faac51b7e6f64d315`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Requires final brand, support/policy URLs, privacy labels.
@@ -109,7 +109,7 @@ Sources:
 Sources:
 
 - `docs/phase-3/store-metadata-review.md` - 2533 bytes - sha256 `eaaefbb8f09bf99b12888fa847a13b2c93bbc585c61c1f07d48759858d8dd8b1`
-- `docs/phase-3/app-review-notes.md` - 2592 bytes - sha256 `11bbebcde461121520c77c4b39b145dcb6e9c2f4505b6c3bf9c8706ee85dad80`
+- `docs/phase-3/app-review-notes.md` - 2815 bytes - sha256 `53ed3ab93d291b2dcce2faa07cd80c684d419edaf7e8aec54dcc8ea5ba301455`
 - `docs/phase-3/google-play-health-declaration-notes.md` - 1901 bytes - sha256 `12329457687f1d91a80099badea762832c3e123cfcf8dc82ce739c8ed1fb5658`
 - `apps/mobile/src/lib/legal/storeMetadata.ts` - 7852 bytes - sha256 `eb209dc51a5639c1eaae942a9c5426a3044b15a49e0db8e636d3775f55acbb7c`
 
@@ -519,7 +519,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `6de34e8982e67637e5294decb02d58e59d23a77655e19e729d56b45f030ffa2b`
+- Review snapshot SHA-256: `dbf39b3a01feca782c306819327714186afc356eaceee30578f105f1fe320410`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Must prove live ledger/RLS and final consumer-health notice.
@@ -527,13 +527,13 @@ Sources:
 Sources:
 
 - `docs/phase-3/consent-matrix.md` - 4618 bytes - sha256 `25103684ffcee9a91916385af065727faa34c09d9f30927672c425c3ce4a8654`
-- `docs/store-privacy-inventory.md` - 8644 bytes - sha256 `f13ff6234d72b21147217fa3e9990314722dcf1e00bb432b01193790e4234bcd`
+- `docs/store-privacy-inventory.md` - 8905 bytes - sha256 `fabb2e26cad4a1bbf47550d1e02fa0ca14e073f90edbf976adba5397b5242bb3`
 - `apps/mobile/src/features/onboarding/consentCopy.ts` - 4250 bytes - sha256 `87167971987c2d25cfaedd66a049adf228690ff9e4823a7345f5cb7d79857873`
 - `apps/mobile/src/lib/consent/consent.test.ts` - 1437 bytes - sha256 `b8d8f247bb87f2cbf958657cca3c01dc930ceff57fd50cc9ec784e74de71e77e`
 - `apps/mobile/src/lib/consent/consent.ts` - 1863 bytes - sha256 `b7e0a3d4e38a271f742826f6a1125de05b0e34fa0f1758e614a6d27eb30eb33a`
 - `apps/mobile/src/lib/consent/withdrawal.test.ts` - 1033 bytes - sha256 `7a4b15f07b67f884fce6540ff51309d01feffd7c387e359de7793bbfc903c6c3`
 - `apps/mobile/src/lib/consent/withdrawal.ts` - 961 bytes - sha256 `53073b8e3f422ff127594b6157821180864cfd7261c0e69cfc5df33da14bc316`
-- `apps/mobile/src/features/settings/actions.ts` - 3754 bytes - sha256 `28c211982c43826005b3de809a6d7a1a1b6e572fec33b9948bf1a1d56943882c`
+- `apps/mobile/src/features/settings/actions.ts` - 5116 bytes - sha256 `a560c90bf06696f4ab9e4ace3298ec9648651bce425e73f01b25a28b3b89c9a0`
 - `supabase/functions/consent-withdrawal/index.ts` - 9116 bytes - sha256 `9da0e6b2b2b41057f1aa0e7f84620f7caa4b6dad3932b9959b0171efbc674b25`
 - `supabase/functions/_shared/storagePath.ts` - 591 bytes - sha256 `9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594`
 - `supabase/functions/_shared/storagePath.test.ts` - 1355 bytes - sha256 `3caf9cbb38b676c4a96dd9ae3f19479c205a90d31bb83fee7c7474bc76a2a2e9`
@@ -544,14 +544,14 @@ Sources:
 - Status: Not cleared
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `52797388d1f5f332a999a7933e64125cb8d9ba49c78106dd8240b691f55509b2`
+- Review snapshot SHA-256: `0cc31fe5429e7d8f5df92703a06796272f99798ad0e40f89b3e9bf5b61483ea2`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Physical-device encryption/restart/delete and explicit-share-only posture.
 
 Sources:
 
-- `docs/06-photo-progress.md` - 47488 bytes - sha256 `c42df75068067e3078b3980e6617363a35304587aab323d63870e44660d624ce`
+- `docs/06-photo-progress.md` - 47692 bytes - sha256 `36073a018dbaaee73df42eb50d21c3d54501412a3a46ee78988ec25971b1e58d`
 - `apps/mobile/src/features/photos/consent.ts` - 5144 bytes - sha256 `d3a68a10c0db38348b7b17e18622016f917fc1c2e100a08d5698afcd2e0385b9`
 - `apps/mobile/src/features/photos/encryptedStorage.ts` - 9126 bytes - sha256 `ccd2f8a430788885916f37f8bf9a43d9dacab9d62e2beb10b3795af4cffb829e`
 - `apps/mobile/src/features/photos/store.ts` - 10081 bytes - sha256 `73e803b0c95bdaeb8b034efb8dfe91ed7507a599cd1925919315fe86b36906b9`
@@ -608,14 +608,18 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `1b6add03fefbf97612c32ada821b9204218123254c6db21809aa5836f98e235f`
+- Review snapshot SHA-256: `8ad20d03603420564ae8fff8fffd0e4d79095db61c606283b621154e4216229c`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
-- Review-log notes: Must work against live Supabase with owner-scoped RLS evidence.
+- Review-log notes: Must prove owner-scoped staging server data, seeded local coverage, redaction, and native cache cleanup.
 
 Sources:
 
-- `apps/mobile/src/features/settings/actions.ts` - 3754 bytes - sha256 `28c211982c43826005b3de809a6d7a1a1b6e572fec33b9948bf1a1d56943882c`
+- `apps/mobile/src/features/settings/actions.ts` - 5116 bytes - sha256 `a560c90bf06696f4ab9e4ace3298ec9648651bce425e73f01b25a28b3b89c9a0`
+- `apps/mobile/src/features/settings/localDeviceExport.ts` - 10663 bytes - sha256 `5553f474ebdff6bf5498565cecac5d6a787057e4a12b58cf4ffb8195c8560c81`
+- `apps/mobile/src/features/settings/localDeviceExport.test.ts` - 5680 bytes - sha256 `4dbbe2b3084f17923d989e80970b270f4f5846163ebd5c27e6e21b601a2ab9f7`
+- `apps/mobile/src/lib/storage/privateKV.ts` - 4651 bytes - sha256 `9cd706f30a5e1b6a4b24c3c356a960cbe603b32185dd5e688c1facb98dd151fd`
+- `apps/mobile/src/lib/storage/privateKV.test.ts` - 3539 bytes - sha256 `5f6befa45ddb9a1d49f0de5bf1e81bc5bea0eb2bebf3ad9794c1c650e261f03e`
 - `apps/mobile/src/lib/legal/policyLinks.ts` - 722 bytes - sha256 `0fe9cf269e6b5e48119771f7b111d1620c095ffe35bb6ac56f63c2cd2ec1c863`
 - `supabase/functions/account-deletion/index.ts` - 15927 bytes - sha256 `5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b`
 - `supabase/functions/data-export/index.ts` - 13117 bytes - sha256 `b8e484616581a970ae19d8f86b342eaddb24fa44a9ad1367936b24f0f8d84f1f`
@@ -652,7 +656,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `9c31fa9427a1d44f05354110a0fed3e294c92c73da80f9ec68813ad226bfe4a5`
+- Review snapshot SHA-256: `ec77450b7b203287b5bb50574b11795256583893c62111fd6e860d23dac174dd`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Apple/Google auth, processors, breach posture, and RLS proof needed.
@@ -666,7 +670,7 @@ Sources:
 - `apps/mobile/src/lib/auth/sessionBoundary.test.ts` - 890 bytes - sha256 `ee07eaa01973860fc5fc20edc9386896d90e76ffa475a5a7d68f21f6f65ed935`
 - `apps/mobile/src/lib/auth/sessionBoundary.ts` - 461 bytes - sha256 `53fb1b53dbc23b1dae48cb67b8410c2a94b35f13e665579c42e3370ef91781ba`
 - `supabase/functions/_shared/auth.ts` - 321 bytes - sha256 `cac2bbac4936c570508b764482d8c396693bda989f4f605514b8a3ca06397999`
-- `docs/phase-3/data-inventory.md` - 11261 bytes - sha256 `aca7d3b8aa32ef6fea6a48feea9131ac10d0bf4e07505647a4f1ba4642997f24`
+- `docs/phase-3/data-inventory.md` - 11594 bytes - sha256 `3e259208ff5123f31874d1dbdbd01fd54d7dd26db19d4041b2a63a96a8540c61`
 
 ### ipFto - Brand and trademark clearance
 
