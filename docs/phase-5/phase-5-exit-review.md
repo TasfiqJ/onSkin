@@ -18,15 +18,25 @@ Completed in repo:
 - Exact-alarm permissions intentionally absent.
 - Shelf barcode scanner uses live camera, local checksum validation, duplicate suppression, and Phase 4 catalog lookup.
 - Ingredient label path captures a real label image and requires editable user-confirmed text.
-- Progress capture uses the front camera, sends the real still to review, and saves encrypted local photo files.
+- Progress capture uses the front camera, sends the real still and dimensions
+  to review, and saves encrypted local photo files. Review now performs
+  on-device post-capture ML Kit face framing/pose analysis plus a temporary
+  64 px local luminance/balance sample. Timer-generated readiness and quality
+  scores were removed; no-face, multiple-face, timeout, and unavailable states
+  fail closed, and low/unavailable quality never blocks Save. Measured records
+  carry local provenance; legacy timer scores are excluded from reference
+  comparison, detail labels, and cloud-consented metadata mirroring. An additive
+  database migration clears pre-provenance server values and rejects future
+  quality/pose metadata without `post_capture_measurement` provenance.
 - Photo timeline/detail/compare render through encrypted-aware image loading.
 - Photo deletion removes local encrypted files.
 - Phase 5 config check and device QA packet generator added.
 - A structured performance-evidence template, strict validator, and smoke suite
   now require predeclared thresholds, supported physical-device/build proof,
-  repeated raw iOS/Android measurements, encrypted-photo load/memory evidence,
-  validator-calculated nearest-rank p50/p95/max, and calculated pass/fail
-  instead of trust-only booleans or hand-entered summaries.
+  repeated raw iOS/Android measurements including post-capture analysis,
+  encrypted-photo load/memory evidence, validator-calculated nearest-rank
+  p50/p95/max, and calculated pass/fail instead of trust-only booleans or
+  hand-entered summaries.
 - The generated QA packet now requires granular physical-device evidence flags
   for install, camera permission recovery, barcode, label capture, progress
   photos, encrypted photo storage, notifications, share sheet, RevenueCat,
@@ -40,7 +50,12 @@ Still blocked before beta:
 - EAS iOS and Android builds with real build IDs.
 - Physical-device installs and matrix results.
 - On-device OCR module selection and QA if OCR is a launch claim.
-- Real face/pose detector for progress-photo signals if precise framing claims are used.
+- Physical-device validation and calibration of the post-capture face/pose and
+  lighting heuristics, including diverse presentation/lighting conditions,
+  analyzer failure, no network/template retention, and encrypted-save failure.
+- Real-time preview face/lighting guidance remains unimplemented; launch copy
+  must describe the implemented post-capture check unless a separately tested
+  frame-processing pipeline replaces it.
 - RevenueCat Test Store/sandbox native smoke.
 - Sentry native crash/source-map smoke.
 - Notification timing matrix on iOS/Android.

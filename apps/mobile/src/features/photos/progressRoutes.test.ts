@@ -159,13 +159,86 @@ describe('Progress route mobile contracts', () => {
     );
   });
 
-  it('keeps review actions above the short-phone fold', () => {
+  it('uses measured post-capture quality and never timer-generated scores', () => {
+    const capture = readAppRoute('progress/capture.tsx');
+    const review = readAppRoute('progress/review.tsx');
+    const detail = readAppRoute('progress/[id].tsx');
+    const analysis = readSource('features/photos/useCaptureAnalysis.ts');
+    const nativeProvider = readSource('features/photos/CaptureAnalysisProvider.native.tsx');
+    const fallbackProvider = readSource('features/photos/CaptureAnalysisProvider.tsx');
+    const nativeDetector = readSource('features/photos/useDetectedFaces.native.ts');
+    const lighting = readSource('features/photos/analyzePhotoLighting.ts');
+
+    expect(capture).toContain("signal_source: 'post_capture_measurement'");
+    expect(capture).toContain('photoWidth: String(shot.width)');
+    expect(capture).toContain('photoHeight: String(shot.height)');
+    expect(capture).toContain('PHOTO_COPY.capture.qualityCheck');
+    expect(capture).not.toContain('useGuidedCaptureSignals');
+    expect(capture).not.toContain('camera_preview_estimate');
+    expect(capture).not.toContain('setInterval');
+    expect(capture).not.toContain('alignment: String(');
+    expect(capture).not.toContain('lighting: String(');
+
+    expect(review).toContain('CaptureAnalysisProvider');
+    expect(review).toContain('useCaptureAnalysis');
+    expect(review).toContain('alignmentScore: analysis.framing.score');
+    expect(review).toContain('lightingScore: analysis.lighting.score');
+    expect(review).toContain("? ('post_capture_measurement' as const)");
+    expect(review).toContain('qualitySource,');
+    expect(review).toContain("data?.reference?.qualitySource === 'post_capture_measurement'");
+    expect(review).toContain('onSuccess: () => {');
+    expect(review).toContain('const saveInFlightRef = useRef(false);');
+    expect(review).toContain('saveInFlightRef.current = true;');
+    expect(review).toContain('saveInFlightRef.current = false;');
+    expect(review).toContain('if (saveInFlightRef.current) return;');
+    expect(review).toContain('disabled={add.isPending}');
+    expect(review).toContain('onError: () => {');
+    expect(review).toContain('setSaveFailed(true);');
+    expect(review).toContain('const discardCapturedPhoto = () => {');
+    expect(review).toContain('.catch(() => undefined)');
+    expect(review).not.toContain('onSettled: () => {');
+    expect(review).not.toContain('Number(params.alignment');
+    expect(review).not.toContain('Number(params.lighting');
+
+    expect(analysis).toContain("Platform.OS !== 'web'");
+    expect(analysis).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(analysis).toContain('EXPO_PUBLIC_E2E_PROGRESS_CAPTURE_ANALYSIS');
+    expect(analysis).toContain('ANALYSIS_TIMEOUT_MS');
+    expect(analysis).toContain('const analysisTerminal =');
+    expect(analysis).toContain('if (!analysisUri || analysisTerminal) return;');
+    expect(analysis).toContain('}, [analysisTerminal, analysisUri]);');
+    expect(analysis.indexOf('if (timedOutUri === analysisUri)')).toBeLessThan(
+      analysis.indexOf("} else if (faceResult.status === 'done')"),
+    );
+    expect(analysis).toContain(
+      'const lighting = timedOutUri === analysisUri ? unavailableLighting() : currentLighting;',
+    );
+    expect(nativeProvider).toContain('FaceDetectionProvider');
+    expect(nativeProvider).toContain('deferInitialization');
+    expect(nativeProvider).toContain("performanceMode: 'accurate'");
+    expect(fallbackProvider).not.toContain('@infinitered/react-native-mlkit-face-detection');
+    expect(nativeDetector).toContain('useFaceDetection');
+    expect(nativeDetector).toContain('await detector.initialize()');
+    expect(nativeDetector).toContain('validatedFaceObservations(await detector.detectFaces(uri))');
+    expect(nativeDetector).toContain('if (!faces)');
+    expect(lighting).toContain('SAMPLE_WIDTH = 64');
+    expect(lighting).toContain('sampleFile.delete()');
+    expect(detail).toContain("photo.qualitySource === 'post_capture_measurement'");
+    expect(detail).toContain("? 'Capture checks recorded'");
+    expect(detail).toContain(": 'Quality not measured'");
+    expect(detail).not.toContain("'Aligned · well-lit'");
+  });
+
+  it('keeps review actions compact and reachable on short phones', () => {
     const source = readAppRoute('progress/review.tsx');
 
     expect(source).toContain('useWindowDimensions');
-    expect(source).toContain('const compact = height < 640');
+    expect(source).toContain('const compact = height < 700');
     expect(source).toContain('Math.round(height * 0.54)');
     expect(source).toContain('height: photoHeight');
+    expect(source).toContain('<ScrollView');
+    expect(source).toContain('flexGrow: 1');
+    expect(source).toContain('showsVerticalScrollIndicator={false}');
     expect(source).toContain('marginBottom: compact ? 12 : 18');
     expect(source).toContain('marginVertical: compact ? 12 : 18');
     expect(source).toContain('paddingVertical: compact ? 12 : 14');
@@ -252,7 +325,9 @@ describe('Progress route mobile contracts', () => {
     expect(copy).toContain("missingTitle: 'No photo to review yet.'");
     expect(source).toContain('function isNonBlank(value: string | null): value is string');
     expect(source).toContain('const hasCapturedPhoto = isNonBlank(capturedUri);');
-    expect(source).toContain('if (!hasCapturedPhoto || add.isPending) return;');
+    expect(source).toContain(
+      'if (!hasCapturedPhoto || add.isPending || saveInFlightRef.current) return;',
+    );
     expect(source).toContain('if (!hasCapturedPhoto) {');
     expect(source).toContain('PHOTO_COPY.review.missingEyebrow');
     expect(source).toContain('PHOTO_COPY.review.missingCapture');
@@ -265,7 +340,8 @@ describe('Progress route mobile contracts', () => {
     const source = readAppRoute('progress/review.tsx');
 
     expect(source).toContain('const wasEmpty = (data?.count ?? 0) === 0;');
-    expect(source).toContain("track('photo_captured', { on_device: true, result: verdict.flag })");
+    expect(source).toContain("track('photo_captured', { on_device: true })");
+    expect(source).not.toContain('result: verdict.flag');
     expect(source).toContain("track('first_photo_captured')");
     expect(source).toContain("track('photo_baseline_added', { on_device: true })");
   });

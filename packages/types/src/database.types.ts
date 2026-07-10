@@ -516,6 +516,7 @@ export type Database = {
           head_roll: number | null;
           head_yaw: number | null;
           head_pitch: number | null;
+          quality_source: string | null;
           taken_local_date: string;
           time_of_day: string | null;
           notes: string | null;
@@ -538,6 +539,7 @@ export type Database = {
           head_roll?: number | null;
           head_yaw?: number | null;
           head_pitch?: number | null;
+          quality_source?: string | null;
           taken_local_date?: string;
           time_of_day?: string | null;
           notes?: string | null;

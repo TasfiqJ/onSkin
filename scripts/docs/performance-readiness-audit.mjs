@@ -35,6 +35,7 @@ const requiredPerformanceMetrics = [
   'local photo loading',
   'memory use in photo timeline',
 ];
+const requiredPerformanceMetricIds = ['photo_capture_analysis_ms'];
 
 const docNeedles = [
   {
@@ -58,6 +59,7 @@ const docNeedles = [
       'PHASE5_PERFORMANCE_EVIDENCE_PATH',
       'phase5:performance-evidence:strict',
       'phase5:performance-evidence:summarize',
+      'photo_capture_analysis_ms',
       'raw samples',
     ],
   },
@@ -68,6 +70,7 @@ const docNeedles = [
       'Performance baseline and scale evidence',
       'docs:performance-readiness-audit:check',
       ...requiredPerformanceMetrics,
+      'photo_capture_analysis_ms',
     ],
   },
   {
@@ -76,6 +79,7 @@ const docNeedles = [
       'B-PERFORMANCE',
       'Performance baseline and scale evidence',
       ...requiredPerformanceMetrics,
+      'photo_capture_analysis_ms',
     ],
   },
   {
@@ -97,6 +101,7 @@ const docNeedles = [
       'at least five raw samples',
       'both iOS and Android evidence',
       'at least 50 encrypted local photos',
+      'photo_capture_analysis_ms',
       'PHASE5_PERFORMANCE_EVIDENCE_PATH',
       'phase5:performance-evidence:summarize',
       'nearest-rank p50 and p95',
@@ -117,10 +122,11 @@ const docNeedles = [
     path: files.performanceContract,
     needles: [
       'PERFORMANCE_MIN_SAMPLE_COUNT = 5',
-      'PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 2',
+      'PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 3',
       'nearestRankPercentile',
       'sampleCount must equal samples.length',
       'post-hoc targets are rejected',
+      'photo_capture_analysis_ms',
       'photo_timeline_peak_memory_mb',
       'logicalWidth must be at least',
     ],
@@ -140,8 +146,9 @@ const docNeedles = [
   {
     path: files.performanceTemplate,
     needles: [
-      '"schemaVersion": 2',
+      '"schemaVersion": 3',
       '"app_startup_cold_ms"',
+      '"photo_capture_analysis_ms"',
       '"photo_timeline_peak_memory_mb"',
       '"measurements"',
     ],
@@ -266,13 +273,13 @@ const audit = {
   status: blockers.length === 0 ? 'pass' : 'fail',
   strict,
   summary: {
-    performanceMetricCount: requiredPerformanceMetrics.length,
+    performanceMetricCount: requiredPerformanceMetrics.length + requiredPerformanceMetricIds.length,
     docsChecked: docResults.length,
     packageScriptsChecked: requiredPackageScripts.length,
     blockers: blockers.length,
     warnings: warnings.length,
   },
-  metrics: requiredPerformanceMetrics,
+  metrics: [...requiredPerformanceMetrics, ...requiredPerformanceMetricIds],
   packageScripts: requiredPackageScripts.map((scriptName) => ({
     scriptName,
     present: Object.hasOwn(packageScripts, scriptName),

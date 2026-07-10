@@ -1,0 +1,22 @@
+{
+  "url": "http://localhost:8161/progress",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "bodyText": "Progress\nSkin changes slowly. That’s normal.\nMost actives take 8-12 weeks to show. The mirror hides that. A weekly photo doesn’t. It’s how you’ll see the change, and the reason not to quit early.\nweek 1\nweek 6\nweek 12\nGuided, on your phone, and never scored.\nTake my first photo\nToday\nProg.\nShelf\nYou",
+  "controls": [
+    {
+      "name": "Take my first photo",
+      "disabled": false,
+      "x": 24,
+      "y": 358,
+      "width": 342,
+      "height": 56,
+      "centerHit": true
+    }
+  ],
+  "images": [],
+  "dialogs": 0,
+  "horizontalOverflow": 0
+}

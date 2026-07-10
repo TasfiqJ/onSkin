@@ -42,6 +42,13 @@ function warn(condition, message) {
 
 require(Boolean(pkg.dependencies?.['expo-camera']), 'expo-camera dependency is missing.');
 require(Boolean(
+  pkg.dependencies?.['@infinitered/react-native-mlkit-face-detection'],
+), 'on-device post-capture face detection dependency is missing.');
+require(Boolean(
+  pkg.dependencies?.['expo-image-manipulator'],
+), 'on-device post-capture image sampling dependency is missing.');
+require(Boolean(pkg.dependencies?.['jpeg-js']), 'post-capture luminance decoder is missing.');
+require(Boolean(
   pkg.dependencies?.['expo-build-properties'],
 ), 'expo-build-properties dependency is missing; Android minSdk support floor is not enforceable.');
 require(plugins.has('expo-camera'), 'expo-camera config plugin is missing.');
@@ -80,6 +87,30 @@ require(Boolean(
 require(existsSync(
   resolve(root, 'apps/mobile/src/features/photos/encryptedStorage.ts'),
 ), 'Encrypted photo storage module is missing.');
+require(existsSync(
+  resolve(root, 'apps/mobile/src/features/photos/captureAnalysis.ts'),
+), 'Measured post-capture quality analysis module is missing.');
+require(existsSync(
+  resolve(root, 'apps/mobile/src/features/photos/useCaptureAnalysis.ts'),
+), 'Post-capture quality analysis orchestration is missing.');
+require(existsSync(
+  resolve(root, 'apps/mobile/src/features/photos/CaptureAnalysisProvider.native.tsx'),
+), 'Native post-capture analysis provider is missing.');
+require(existsSync(
+  resolve(root, 'apps/mobile/src/features/photos/CaptureAnalysisProvider.tsx'),
+), 'Web-safe post-capture analysis provider fallback is missing.');
+require(existsSync(
+  resolve(root, 'apps/mobile/src/features/photos/useDetectedFaces.native.ts'),
+), 'Native on-device face detection adapter is missing.');
+require(existsSync(
+  resolve(root, 'apps/mobile/src/features/photos/useDetectedFaces.ts'),
+), 'Web-safe face detection adapter fallback is missing.');
+require(!existsSync(
+  resolve(root, 'apps/mobile/src/features/native/camera/guidedSignals.ts'),
+), 'Synthetic timer-driven camera quality signals must not be restored.');
+require(!existsSync(
+  resolve(root, 'apps/mobile/src/features/photos/mockSignals.ts'),
+), 'Synthetic captured-photo quality scores must not be restored.');
 require(existsSync(
   resolve(root, 'apps/mobile/src/features/native/camera/barcode.ts'),
 ), 'Barcode normalization module is missing.');
@@ -145,6 +176,15 @@ for (const file of [
   'apps/mobile/app.base.json',
   'apps/mobile/app.config.js',
   'apps/mobile/eas.json',
+  'apps/mobile/src/features/photos/analyzePhotoLighting.ts',
+  'apps/mobile/src/features/photos/CaptureAnalysisProvider.native.tsx',
+  'apps/mobile/src/features/photos/CaptureAnalysisProvider.tsx',
+  'apps/mobile/src/features/photos/captureAnalysis.ts',
+  'apps/mobile/src/features/photos/useCaptureAnalysis.ts',
+  'apps/mobile/src/features/photos/useDetectedFaces.native.ts',
+  'apps/mobile/src/features/photos/useDetectedFaces.ts',
+  'packages/types/src/database.types.ts',
+  'supabase/migrations/20260710000036_photo_quality_provenance.sql',
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'scripts/phase5/build-device-qa-packet.mjs',
   'scripts/phase5/check-native-config.mjs',
@@ -154,6 +194,8 @@ for (const file of [
   'scripts/phase5/performance-evidence-smoke.mjs',
   'scripts/e2e/human-e2e-manifest.mjs',
   'scripts/phase9/lib.mjs',
+  'scripts/phase9/live-supabase-adversarial.mjs',
+  'scripts/phase9/rls-adversarial.mjs',
   'docs/DEVICE_SUPPORT_POLICY.md',
   'docs/HUMAN_SIMULATED_E2E_TESTING.md',
   'docs/E2E_TESTING_CHECKLIST.md',

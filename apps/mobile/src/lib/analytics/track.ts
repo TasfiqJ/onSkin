@@ -28,7 +28,14 @@ const APPROVED_BUCKET_KEYS = new Set([
   'share_id',
 ]);
 const GROWTH_BUCKET_KEYS = new Set<string>(GROWTH_ATTRIBUTION_KEYS);
-const PHOTO_QUALITY_RESULT_VALUES = new Set(['matched', 'misaligned', 'darker', 'low']);
+const PHOTO_QUALITY_RESULT_VALUES = new Set([
+  'matched',
+  'lighting_varies',
+  'misaligned',
+  'low',
+  'unmeasured',
+  'darker',
+]);
 const MAX_SAFE_ANALYTICS_INTEGER = 10_000;
 const SAFE_ANALYTICS_STRING_VALUE = /^[A-Za-z0-9_-]{1,80}$/;
 

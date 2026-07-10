@@ -124,10 +124,12 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 173 mobile test files / 1786 tests. The human-simulated E2E manifest now
+covers 175 mobile test files / 1792 tests. The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
-`test-results/human-e2e/2026-07-10/progress-timelapse-current/`. The baseline
+`test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
+`Progress quality states and support-floor save recovery` gate in
+`test-results/human-e2e/2026-07-10/progress-capture-analysis-current/`. The baseline
 still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also
@@ -642,6 +644,8 @@ Risk:
   magic moment;
 - slow routine generation makes the first useful insight feel generic or
   broken;
+- slow post-capture analysis makes a private progress-photo habit feel stalled,
+  while analyzer timeouts can hide device-specific incompatibility;
 - slow local photo loading or high memory use in photo timeline weakens the
   progress moat and can cause native crashes under real photo volume.
 
@@ -653,6 +657,9 @@ Next action:
 - measure barcode lookup latency separately from camera acquisition and
   no-match recovery;
 - measure routine generation time with 3, 5, and 10 product shelves;
+- measure Progress photo capture-analysis latency
+  (`photo_capture_analysis_ms`) from shutter confirmation until both review
+  quality labels reach terminal measured or unavailable states;
 - measure local photo loading and memory use in photo timeline with realistic
   encrypted local photo volume;
 - set explicit beta pass/fail thresholds before recruiting testers;
@@ -666,7 +673,7 @@ phase5:performance-evidence:strict`;
 
 Exit criteria:
 
-- a completed schema-v2 artifact passes
+- a completed schema-v3 artifact passes
   `npm run phase5:performance-evidence:strict`;
 - the artifact includes build IDs, device model/OS, at least five raw samples
   for every platform/metric pair, validator-calculated p50/p95/max, accepted
@@ -674,17 +681,23 @@ Exit criteria:
 
 ## B-CAMERA - Native camera, barcode, OCR, and guided photos
 
-Status: `simulated`
+Status: `needs-device-verification`
 
-Guided photo UI and quality logic exist over mock signals. Barcode/OCR/native
-capture are not production-real.
+Barcode and still-photo capture use native camera paths. Progress review now
+uses on-device post-capture ML Kit face framing/pose analysis plus a temporary
+local luminance/balance sample; synthetic readiness and quality scores have
+been removed. Native OCR remains disabled, real-time preview analysis is not
+implemented, and none of these paths is device-certified yet.
 
 Exit criteria:
 
 - custom dev build exists;
 - camera permission, barcode, OCR, and progress photo capture work on real iOS
   and Android devices;
-- pose/alignment/luminance/white-balance checks drive real auto-capture;
+- post-capture one/no/multiple-face, pose/alignment, luminance, uneven-light,
+  timeout, and unavailable states pass a calibrated physical-device matrix;
+- launch copy describes the current post-capture check, not real-time guidance
+  or auto-capture;
 - photo files are encrypted/local by default;
 - no faceprint/template is stored;
 - optional cloud backup is behind explicit consent if included.
@@ -898,17 +911,25 @@ Exit criteria:
 
 Status: `needs-device-verification`
 
-Progress photo capture uses real front-camera stills and encrypted storage, but
-the current guidance signal is a coarse preview estimate. Do not market precise
-face/pose/framing detection until a reviewed detector passes privacy and device
-QA.
+Progress photo capture uses real front-camera stills and encrypted storage.
+Review performs transient on-device static-photo face framing/pose detection
+and local luminance/balance analysis, while the camera preview overlay remains
+static. Thresholds are provisional, so do not market calibrated precision,
+real-time guidance, or auto-capture until privacy, performance, and device QA
+pass for the implemented behavior.
 
 Exit criteria:
 
 - selected detector processes transient face bbox/pose/lighting only;
 - no faceprint, embedding, identity vector, tracking ID, or raw frame stream is
   persisted;
-- device matrix confirms no route crashes or repeatable false-ready behavior;
+- one/no/multiple-face, pose, dark/bright/uneven-light, timeout, and unavailable
+  states pass the diverse-condition physical-device matrix without route
+  crashes or repeatable false-positive quality labels;
+- temporary lighting samples are deleted and network/observability inspection
+  confirms image and analyzer data remain local;
+- staging has deployed the photo-quality provenance migration and rejects
+  quality/pose metadata without `post_capture_measurement` source;
 - legal/privacy review approves any persisted coarse quality metadata.
 
 ## Practical V1 Rule

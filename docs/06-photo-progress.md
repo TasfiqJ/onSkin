@@ -4,6 +4,15 @@ _The on-device, privacy-first photo-progress feature · guided capture with face
 
 > This is build-order document **#6** of the 15 named in docs/00 (§"Build order", item 6: _"Guided photo capture + slider comparison"_). It is the **Progress** tab (Today · Progress · Shelf · You) and the feature docs/00 mandates shipping **FIRST, with zero AI claims**, before any cloud "skin analysis." It _extends_ the `photos` table defined in docs/01 §3, and it _implements_ the on-device capture pipeline docs/00 §4 specifies (`react-native-vision-camera` + on-device face detection via Apple Vision / ML Kit in a frame processor). It renders the spec's **guided-capture screen** (live feed + alignment overlay + lighting check + the coaching line "Turn slightly left — almost there," spec p10) and the **Progress screen** (Compare / Timeline modes, the dated slider, the weekly film strip, "13 weeks · 26 photos · all on this phone," and the honest tagline _"Same light, same angle — guided capture keeps photos honestly comparable. No scores, no AI grades,"_ spec p11). It is the **privacy-as-trust thesis made tangible** ("photos that never leave your phone," spec welcome/paywall). Capture reminders feed doc #7; the deferred Phase-2 cloud analysis is doc #12. The longitudinal photo timeline is, per docs/01 §7, the **single highest-switching-cost dataset a user can accumulate** — the compounding retention moat.
 
+> **Current implementation boundary (2026-07-10):** the real-time and
+> auto-capture language below remains target specification, not a current launch
+> claim. The repo currently uses Expo Camera for a manual still, then runs
+> transient on-device static-photo ML Kit face framing/pose analysis and a
+> temporary downsampled luminance/balance check in review. The preview overlay
+> is static, analyzer failure stays explicitly unavailable, and thresholds are
+> provisional until physical-device calibration. See D-085 and the Phase 5 exit
+> review.
+
 ---
 
 ## TL;DR

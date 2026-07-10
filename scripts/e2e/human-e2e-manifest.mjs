@@ -221,7 +221,20 @@ if (!timelapseEvidenceDate) {
   console.error('FAIL Missing supported-phone Progress time-lapse evidence.');
   process.exit(1);
 }
-const latestManifestEvidenceDate = [evidenceDate, timelapseEvidenceDate].sort().at(-1);
+const captureAnalysisEvidenceDate = latestEvidenceDateForFolder(
+  'progress-capture-analysis-current',
+);
+if (!captureAnalysisEvidenceDate) {
+  console.error('FAIL Missing supported-phone Progress capture-analysis evidence.');
+  process.exit(1);
+}
+const latestManifestEvidenceDate = [
+  evidenceDate,
+  timelapseEvidenceDate,
+  captureAnalysisEvidenceDate,
+]
+  .sort()
+  .at(-1);
 
 const gates = [
   supportFloorGateForDate(evidenceDate),
@@ -455,6 +468,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Real bitmap frames, finite playback, controls, close recovery, and reduced-motion manual review pass.',
+  },
+  {
+    id: 'progress-capture-analysis-supported-phone',
+    title: 'Progress quality states and support-floor save recovery',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${captureAnalysisEvidenceDate}/progress-capture-analysis-current`,
+    evidence: 'summary.json',
+    expected:
+      '390 x 844 quality states stay explicit and operable; 360 x 640 save failure stays inline and recoverable.',
   },
 ];
 

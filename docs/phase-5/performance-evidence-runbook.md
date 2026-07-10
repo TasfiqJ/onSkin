@@ -30,8 +30,18 @@ The template requires both iOS and Android evidence for:
   fallback paths;
 - barcode camera acquisition, decode, lookup, and no-match recovery;
 - routine generation with 3, 5, and 10 products;
+- Progress photo capture analysis from shutter confirmation until both framing
+  and lighting labels reach terminal measured or unavailable states; and
 - photo timeline first render, restart first render, compare open, and peak
   memory.
+
+For `photo_capture_analysis_ms`, use the same ordinary single-face, even-light
+capture protocol for every sample and record the terminal result in the raw
+evidence. Start at the shutter confirmation and stop only when both review
+quality labels have left `Checking`. A timeout or analyzer failure is a failed
+functional observation, not a successful seven-second timing sample. Keep the
+separate diverse-condition matrix in the device QA checklist for accuracy and
+failure-state coverage.
 
 ## Workflow
 

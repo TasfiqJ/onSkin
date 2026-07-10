@@ -1,6 +1,6 @@
 import { normalizeNamedSignoff, placeholderEnvValue } from '../phase9/lib.mjs';
 
-export const PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 2;
+export const PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 3;
 export const PERFORMANCE_MIN_SAMPLE_COUNT = 5;
 
 export const PERFORMANCE_METRICS = [
@@ -16,6 +16,7 @@ export const PERFORMANCE_METRICS = [
   { id: 'routine_generation_three_products_ms', unit: 'ms' },
   { id: 'routine_generation_five_products_ms', unit: 'ms' },
   { id: 'routine_generation_ten_products_ms', unit: 'ms' },
+  { id: 'photo_capture_analysis_ms', unit: 'ms' },
   { id: 'photo_timeline_first_render_ms', unit: 'ms' },
   { id: 'photo_timeline_restart_first_render_ms', unit: 'ms' },
   { id: 'photo_timeline_compare_open_ms', unit: 'ms' },

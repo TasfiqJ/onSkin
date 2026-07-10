@@ -1,0 +1,46 @@
+{
+  "url": "http://localhost:8161/progress/review?capturedUri=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAADAAAABACAYAAABcIPRGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIiSURBVGhD7ZhRZxxRFMf3w4VS%2BhCthIq0osqWREMisaxGVldXVsNKdFlZViKJRMpqlRJC6UvpQ5V%2BnYl%2F2Brn7M7cc%2B4Z13Iefi9r5v7Pb2bunDNb%2B%2Ff1LJtnavSHecMFUuMCqXGB1LhAalwgNZUJ%2FL4eZHeD7n9%2BXfTZMRaYCvz5PMzG3WbWefk0aywuMNqri9nV%2B50HOXquFjOBH8PDrPX8CSt6Gu%2BWH2dfPu6xNTSYCKAYWmQIJzt1tpaUaAFt8RMuW1tsTQlRAnhsaEEavvX22dqhqAX%2BjkczN6sU7B3txlYL3HxosEJiOG1usIwQVAK4%2BqFvnFCazx6p7oJKAM8sLcAC9AiaVYZK4NPbNRZuwcGrJZZVhkoAjYiGW4FuTvOKEAv8HPVYqCW3%2FQ7LLEIsgMGMhloiHTHEArGdtwzpRhYLYNqkoZZIRwuxQNV3oHIBbDIaaknle8BqgJvF9%2BM2yyxCLIAxAm2fBlsh%2FfQUC4DemxUWbAE%2BOWlWGSoBbDQaboHmC00lgKmxiscIXZ5mlaESAJjfaQExYECkGSGoBazvgubqA7UAsOrK53ubbO1QogTA0foLVpAEfAPg1UzXDSVaAOFaCRQvnf8p0QITMEXSAovAKzO2eGAmAIa7dVboNAbbr9m5WkwFQhucdOIswgXyuIACF8jjAgpcII8LKHCBPC6gwAXy4K93FFcGjqPnajEVSIELpMYFUuMCqbkHf2oGzqtPmcgAAAAASUVORK5CYII%3D&photoWidth=48&photoHeight=64&takenLocalDate=2026-07-10&timeOfDay=morning&captureSessionId=e2e-no_face&analysisFixture=no_face",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "bodyText": "Review · July 10\nFace not verified\nLight looks even\nWe could not confirm every capture check. Retake, or keep it if you like.\nRetake\nSave to my phone\nx",
+  "controls": [
+    {
+      "name": "Retake",
+      "disabled": false,
+      "x": 24,
+      "y": 764,
+      "width": 137.5,
+      "height": 56,
+      "centerHit": true
+    },
+    {
+      "name": "Save to my phone",
+      "disabled": false,
+      "x": 173.5,
+      "y": 764,
+      "width": 192.5,
+      "height": 56,
+      "centerHit": true
+    },
+    {
+      "name": "Close",
+      "disabled": false,
+      "x": 24,
+      "y": 8,
+      "width": 48,
+      "height": 48,
+      "centerHit": true
+    }
+  ],
+  "images": [
+    {
+      "srcPrefix": "data:image/png;base64,iVBORw0KGg",
+      "naturalWidth": 48,
+      "naturalHeight": 64
+    }
+  ],
+  "dialogs": 0,
+  "horizontalOverflow": 0
+}

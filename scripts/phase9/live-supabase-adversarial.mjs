@@ -1341,6 +1341,12 @@ async function main() {
         storage_path: ownerPath,
         local_only: false,
         face_region_redacted: true,
+        alignment_score: 0.91,
+        lighting_score: 0.88,
+        head_roll: 1,
+        head_yaw: 2,
+        head_pitch: -1,
+        quality_source: 'post_capture_measurement',
       });
       await expectVisible(userA.client, 'photos', 'id', photo.id, 'photo metadata owner read');
       await expectNotVisible(
@@ -1354,6 +1360,23 @@ async function main() {
       await expectBlockedInsert(
         'photo metadata cross-user insert',
         userB.client.from('photos').insert({ user_id: userA.id, local_only: true }),
+      );
+      await expectBlockedInsert(
+        'photo quality metadata without provenance',
+        userA.client.from('photos').insert({
+          user_id: userA.id,
+          local_only: true,
+          alignment_score: 0.99,
+        }),
+      );
+      await expectBlockedInsert(
+        'photo quality metadata with invalid provenance',
+        userA.client.from('photos').insert({
+          user_id: userA.id,
+          local_only: true,
+          alignment_score: 0.99,
+          quality_source: 'camera_preview_estimate',
+        }),
       );
       await expectBlockedInsert(
         'photo metadata cross-user storage path insert',

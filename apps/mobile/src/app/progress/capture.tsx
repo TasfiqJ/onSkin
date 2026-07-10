@@ -7,14 +7,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
 import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
-import { useGuidedCaptureSignals } from '@/features/native/camera/guidedSignals';
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
 import { applyPhotoCaptureConsent } from '@/features/photos/applyCaptureConsent';
 import { grantPhotoCaptureConsent, hasPhotoCaptureConsent } from '@/features/photos/consent';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { localDay, timeOfDayNow } from '@/features/photos/date';
 import { PhotoImage } from '@/features/photos/PhotoImage';
-import { coachingLine, lightingState } from '@/features/photos/quality';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
@@ -540,9 +538,6 @@ function CaptureScreenContent() {
     progressCameraPermissionMode === 'denied_no_retry' ? false : (permission?.canAskAgain ?? true);
   const captureReady =
     (canShowCamera && cameraReady && !photoCaptureFailed) || simulateProgressCaptureFailureOnce;
-  const { signals, ready } = useGuidedCaptureSignals(cameraReady && canShowCamera);
-  const coaching = coachingLine(signals);
-  const light = lightingState(signals);
   const referenceUri = data?.reference?.localUri ?? null;
   const closeToProgress = () => backOrReplace(router, APP_PROGRESS_ROUTE);
 
@@ -570,17 +565,14 @@ function CaptureScreenContent() {
       });
       haptics.success();
       const captureSessionId = randomUUID();
-      track('photo_capture_still_taken', { signal_source: 'camera_preview_estimate' });
+      track('photo_capture_still_taken', { signal_source: 'post_capture_measurement' });
       router.replace({
         pathname: '/progress/review',
         params: {
-          alignment: String(signals.alignment),
-          lighting: String(light.fill),
-          headRoll: String(signals.roll),
-          headYaw: String(signals.yaw),
-          headPitch: String(signals.pitch),
           captureSessionId,
           capturedUri: shot.uri,
+          photoWidth: String(shot.width),
+          photoHeight: String(shot.height),
           timeOfDay: timeOfDayNow(),
           takenLocalDate: localDay(),
         },
@@ -735,7 +727,7 @@ function CaptureScreenContent() {
             height: 282,
             borderRadius: 130,
             borderWidth: 2,
-            borderColor: ready ? 'rgba(157,177,138,0.9)' : 'rgba(244,239,231,0.55)',
+            borderColor: 'rgba(244,239,231,0.62)',
             borderStyle: 'dashed',
             alignItems: 'center',
             justifyContent: 'center',
@@ -760,7 +752,7 @@ function CaptureScreenContent() {
               lineHeight: 16,
             }}
           >
-            {PHOTO_COPY.capture.ghostHint}
+            {referenceUri ? PHOTO_COPY.capture.ghostHint : PHOTO_COPY.capture.guideHint}
           </Text>
           <Text
             style={{
@@ -771,7 +763,7 @@ function CaptureScreenContent() {
               marginTop: 8,
             }}
           >
-            preview quality estimate
+            framing guide
           </Text>
         </View>
         <View
@@ -792,13 +784,13 @@ function CaptureScreenContent() {
               width: 7,
               height: 7,
               borderRadius: 4,
-              backgroundColor: ready ? READY : '#D9A183',
+              backgroundColor: '#D9A183',
             }}
           />
           <Text
             style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14.5, color: '#F4EFE7' }}
           >
-            {coaching}
+            {PHOTO_COPY.capture.guideHint}
           </Text>
         </View>
       </View>
@@ -814,38 +806,25 @@ function CaptureScreenContent() {
             paddingBottom: insets.bottom + 24,
           }}
         >
-          <View className="mb-5 flex-row items-center" style={{ gap: 14 }}>
+          <View className="mb-5 flex-row items-center" style={{ gap: 12 }}>
             <Text
               style={{
-                width: 58,
+                flex: 1,
                 fontFamily: 'HankenGrotesk_600SemiBold',
                 fontSize: 12.5,
-                color: 'rgba(244,239,231,0.6)',
+                color: 'rgba(244,239,231,0.76)',
               }}
             >
-              {PHOTO_COPY.capture.lightingLabel}
+              {PHOTO_COPY.capture.qualityCheck}
             </Text>
             <View
               style={{
-                flex: 1,
-                height: 5,
-                borderRadius: 3,
-                backgroundColor: 'rgba(244,239,231,0.14)',
-                overflow: 'hidden',
+                width: 8,
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: READY,
               }}
-            >
-              <View
-                style={{
-                  width: `${Math.round(light.fill * 100)}%`,
-                  height: '100%',
-                  backgroundColor: READY,
-                  borderRadius: 3,
-                }}
-              />
-            </View>
-            <Text style={{ fontFamily: 'HankenGrotesk_700Bold', fontSize: 13, color: READY }}>
-              {light.label}
-            </Text>
+            />
           </View>
           <View className="flex-row items-center justify-between">
             <View
@@ -891,7 +870,7 @@ function CaptureScreenContent() {
                     lineHeight: 13,
                   }}
                 >
-                  {capturing ? 'Saving' : PHOTO_COPY.capture.autoReady}
+                  {capturing ? 'Saving' : PHOTO_COPY.capture.shutter}
                 </Text>
               </View>
             </Pressable>

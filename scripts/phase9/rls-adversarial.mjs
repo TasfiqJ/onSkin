@@ -148,6 +148,14 @@ block(
   /photos_objects_delete_own/.test(migrations),
   'Storage RLS policy missing for photos delete.',
 );
+block(
+  errors,
+  /add column quality_source text/i.test(migrations) &&
+    /photos_quality_source_allowed/i.test(migrations) &&
+    /photos_quality_metadata_requires_source/i.test(migrations) &&
+    /quality_source = 'post_capture_measurement'/i.test(migrations),
+  'Photo quality metadata must require measured provenance.',
+);
 block(errors, /owns_routine/.test(migrations), 'Child-table routine ownership helper is missing.');
 block(errors, /owns_cycle/.test(migrations), 'Child-table cycle ownership helper is missing.');
 block(
@@ -271,6 +279,8 @@ for (const table of requiredLiveHarnessTables) {
 }
 
 const requiredLiveHarnessChecks = [
+  'photo quality metadata without provenance',
+  'photo quality metadata with invalid provenance',
   'photo metadata cross-user storage path insert',
   'photo metadata local-only storage path insert',
   'photo metadata cross-user storage path update',

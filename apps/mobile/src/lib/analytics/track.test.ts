@@ -91,12 +91,16 @@ describe('analytics sanitizer', () => {
   });
 
   it('drops photo quality result buckets while preserving generic result buckets', () => {
-    expect(
-      sanitizeAnalyticsProps({
-        on_device: true,
-        result: 'misaligned',
-      }),
-    ).toEqual({ on_device: true });
+    for (const result of [
+      'matched',
+      'lighting_varies',
+      'misaligned',
+      'low',
+      'unmeasured',
+      'darker',
+    ]) {
+      expect(sanitizeAnalyticsProps({ on_device: true, result })).toEqual({ on_device: true });
+    }
 
     expect(sanitizeAnalyticsProps({ result: 'error' })).toEqual({ result: 'error' });
   });

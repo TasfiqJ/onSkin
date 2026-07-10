@@ -1,13 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  COACHING,
-  LIGHTING_LABEL,
-  MILESTONE_COPY,
-  NO_SCORE_COPY,
-  PHOTO_COPY,
-  QUALITY_NOTE,
-} from './copy';
+import { MILESTONE_COPY, NO_SCORE_COPY, PHOTO_COPY, QUALITY_NOTE } from './copy';
 
 // Claim-safety + calm-copy regression guard for the photo feature (docs/06 §8/§9,
 // the Slice-11 pattern). Progress photos are the app's most sensitive surface; the
@@ -56,13 +49,7 @@ function offenders(text: string, patterns: RegExp[]): string[] {
 }
 
 // Everyday instructional/marketing/reassurance copy. Must be clean of ALL three.
-const EVERYDAY = [
-  ...collect(PHOTO_COPY),
-  ...collect(COACHING),
-  ...collect(LIGHTING_LABEL),
-  ...collect(QUALITY_NOTE),
-  ...collect(MILESTONE_COPY),
-];
+const EVERYDAY = [...collect(PHOTO_COPY), ...collect(QUALITY_NOTE), ...collect(MILESTONE_COPY)];
 
 describe('photo copy is claim-safe and calm (docs/06 §8/§9)', () => {
   for (const text of EVERYDAY) {

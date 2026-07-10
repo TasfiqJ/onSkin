@@ -41,6 +41,7 @@ function e2eProgressPhotoFixture(): PhotoRecord[] | null {
     headRoll: null,
     headYaw: null,
     headPitch: null,
+    qualitySource: null,
     localOnly: true,
     storagePath: null,
     faceRegionRedacted: false,

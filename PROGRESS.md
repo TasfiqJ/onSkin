@@ -6,6 +6,38 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Replaced fabricated Progress camera readiness and quality values with real
+  local post-capture analysis. A fresh native build now uses ML Kit static-photo
+  face detection for framing/pose and a temporary 64 px luminance sample for
+  dark, bright, and uneven-light checks; no-face, multiple-face, timeout, and
+  unavailable paths fail closed without blocking Save. Platform-owned adapters
+  keep the native module out of Expo web, both analyzers can fail independently,
+  temporary lighting samples are deleted, and only measured coarse metadata is
+  eligible for encrypted persistence. Development-only deterministic fixtures
+  are guarded by `__DEV__` plus an explicit E2E flag. Focused typecheck, lint,
+  and 133 tests pass; the full mobile suite passes 175 files / 1792 tests, Expo
+  Doctor passes 21/21, and iOS/Android autolinking checks pass.
+  Human-simulated Expo web at 390 x 844 passed matched, adjust, no-face, and
+  unavailable review states plus Retake/Close recovery, enabled 48 px+ actions,
+  zero overflow, zero dialogs, no disallowed logs, and no analytics traffic. A
+  360 x 640 support-floor pass also forced a real web persistence rejection,
+  stayed on review with inline `Photo not saved`, and kept Retake/Save reachable
+  after user-like scroll. Photo-quality result buckets are omitted from capture
+  analytics, and the local photo store now makes no Supabase metadata attempt
+  unless cloud backup has been explicitly enabled. New measured values carry
+  local `qualitySource` provenance; pre-migration timer scores normalize to no
+  source and are ignored for reference comparison, detail labels, and metadata
+  mirroring. Additive migration `20260710000036_photo_quality_provenance.sql`
+  clears any pre-provenance server values and adds database constraints that
+  reject unproven quality/pose metadata.
+  Evidence and the web/native-boundary bug report are in
+  `test-results/human-e2e/2026-07-10/progress-capture-analysis-current/` and
+  `docs/e2e-bug-reports/2026-07-10-progress-capture-analysis-web-native-boundary.md`.
+  The Phase 5 performance contract is now schema v3 and requires repeated
+  `photo_capture_analysis_ms` measurements on both platforms. Physical-device
+  accuracy/latency calibration, privacy inspection, and VoiceOver/TalkBack
+  remain blocked for Tas.
+
 - Replaced the Progress Timeline's obsolete time-lapse unavailable response
   with a real local-photo player. The finite sequence filters missing image
   records, orders usable frames oldest to newest, stops on the latest frame,
@@ -23,7 +55,7 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
   report are in
   `test-results/human-e2e/2026-07-10/progress-timelapse-current/` and
   `docs/e2e-bug-reports/2026-07-10-progress-timelapse-dialog-semantics.md`.
-  Mobile lint/typecheck and 173 test files / 1786 tests pass; native encrypted
+  Mobile lint/typecheck and 175 test files / 1792 tests pass; native encrypted
   photo performance and VoiceOver/TalkBack remain physical-device QA.
 
 ## 2026-07-09

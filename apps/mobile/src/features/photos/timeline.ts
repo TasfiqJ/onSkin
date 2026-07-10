@@ -1,5 +1,7 @@
 import type { PhotoMilestone, PhotoSeries, TimeOfDay } from '@onskin/types';
 
+export type PhotoQualitySource = 'post_capture_measurement';
+
 /**
  * Pure photo-timeline logic (docs/06 §4): which two photos to compare by default,
  * how to group the film strip by month, the calm milestone markers, the metadata
@@ -16,6 +18,8 @@ export type PhotoMeta = {
   timeOfDay: TimeOfDay | null;
   alignmentScore: number | null;
   lightingScore: number | null;
+  /** Absent/null on legacy rows whose quality values were not measured. */
+  qualitySource?: PhotoQualitySource | null;
   /** Explicitly chosen baseline for its series (else the earliest is implied). */
   isReference: boolean;
   referencePhotoId: string | null;

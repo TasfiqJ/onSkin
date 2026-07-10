@@ -213,6 +213,50 @@ Status: needs-device-verification
   Android: `takePictureAsync` failure must show inline `Photo wasn't captured`
   recovery, leave the timeline unchanged, keep retry/exit actions tappable, and
   avoid duplicate native/system alerts.
+- Create a fresh native development/staging binary after commit because the
+  post-capture quality pass adds ML Kit face detection and Expo image
+  manipulation; an OTA update cannot add these native modules. The ML Kit iOS
+  dependency must be tested on a physical iPhone, not treated as simulator
+  evidence.
+- Verify measured Progress review on supported physical iOS and Android
+  devices using real captured files: one centered face, off-center/too
+  close/too far, roll/yaw/pitch variation, no face, multiple faces, dark,
+  over-bright, left/right uneven light, analyzer error, and timeout. Confirm
+  the app never restores timer-generated `Good`/ready values, never turns a
+  no-face or unavailable result into a positive score, and always leaves Save
+  available under D-029.
+- Calibrate the provisional geometry and luminance thresholds before beta on
+  the oldest-supported and current test devices. Include varied skin tones,
+  hair/background contrast, glasses, and ordinary indoor/daylight conditions;
+  record false accept/reject observations without making any skin-quality or
+  clinical judgment. Keep the thresholds fixed for the signed build and attach
+  the dataset/protocol rather than tuning only to the best examples.
+- Upgrade a device containing photos saved before this change. Confirm legacy
+  timer-generated scores normalize without measured provenance, never drive a
+  reference comparison or `Aligned` detail claim, and are never included in the
+  consented metadata mirror. New records with a real measurement must retain
+  `qualitySource: post_capture_measurement` across restart.
+- Deploy `20260710000036_photo_quality_provenance.sql` to staging before testing
+  cloud-consented metadata. Confirm it nulls every pre-provenance quality/pose
+  field, accepts measured partial/null fields only with
+  `quality_source = post_capture_measurement`, and rejects any non-null quality
+  or pose value without that source. Archive the migration and negative insert
+  evidence; repeat on production only through the reviewed release process.
+- Inspect the native capture-analysis run with network and observability logs:
+  the captured file, face bounds, landmarks, local path, and luminance sample
+  must not reach PostHog, Sentry, Supabase, or another vendor; no face
+  template/embedding may be computed or retained. With cloud backup off, no
+  photo or quality metadata may make a Supabase network attempt. With explicit
+  backup consent on, verify the metadata-only mirror contains only the documented
+  coarse score/head-angle fields and never image bytes, local paths, notes, face
+  bounds, or luminance samples. Confirm the temporary 64 px lighting sample is
+  deleted.
+- Force encrypted photo persistence to fail from the review screen. Verify the
+  route keeps the captured image, shows inline `Photo not saved` recovery,
+  permits retry/retake, and fires none of `photo_captured`,
+  `first_photo_captured`, or `photo_baseline_added` until a real save succeeds.
+  Repeat the review state with VoiceOver and TalkBack so framing/light labels,
+  Retake, Save, and Close are announced and operable.
 - Verify shared bottom sheets on physical iOS and Android devices with real
   safe-area insets and screen readers: no-match, opened-date, replenish,
   cycle/disruption, cycle/phased-intro, routine/tolerance, and upsell sheets
@@ -268,6 +312,12 @@ Status: needs-device-verification
 - Measure routine generation time for the shelf-to-first-insight path with 3,
   5, and 10 product shelves. Include whether the run used local-only rules,
   live Supabase catalog data, or beta catalog seed data.
+- Measure Progress photo capture-analysis latency (`photo_capture_analysis_ms`)
+  from shutter confirmation until both framing and lighting labels leave
+  `Checking`. Use the same ordinary single-face, even-light protocol for at
+  least five raw samples per platform, record the terminal labels, and treat
+  timeout/analyzer failure as a failed functional observation rather than a
+  successful timing sample.
 - Measure local photo loading for the Progress timeline with a realistic beta
   set of encrypted local photos. Include first render, timeline scroll, compare
   selection, time-lapse playback/replay, and app restart behavior.

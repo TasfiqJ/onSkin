@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "capturedAt": null,
   "gitSha": null,
   "thresholdsDefinedAt": null,
@@ -86,6 +86,11 @@
       "rationale": null
     },
     "routine_generation_ten_products_ms": {
+      "unit": "ms",
+      "maxP95": null,
+      "rationale": null
+    },
+    "photo_capture_analysis_ms": {
       "unit": "ms",
       "maxP95": null,
       "rationale": null
@@ -225,6 +230,16 @@
     {
       "platform": "ios",
       "metric": "routine_generation_ten_products_ms",
+      "source": null,
+      "samples": [],
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "ios",
+      "metric": "photo_capture_analysis_ms",
       "source": null,
       "samples": [],
       "sampleCount": null,
@@ -385,6 +400,16 @@
     {
       "platform": "android",
       "metric": "routine_generation_ten_products_ms",
+      "source": null,
+      "samples": [],
+      "sampleCount": null,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    {
+      "platform": "android",
+      "metric": "photo_capture_analysis_ms",
       "source": null,
       "samples": [],
       "sampleCount": null,

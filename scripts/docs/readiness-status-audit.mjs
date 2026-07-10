@@ -16,13 +16,14 @@ const outJson =
   process.env.READINESS_STATUS_AUDIT_JSON ?? 'docs/generated/readiness-status-audit.json';
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
-const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 173);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1786);
+const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 175);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1792);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
   /\b171\s+(?:mobile\s+)?test files?\b/i,
   /\b172\s+(?:mobile\s+)?test files?\b/i,
+  /\b173\s+(?:mobile\s+)?test files?\b/i,
   /\b1743\s+tests?\b/i,
   /\b1744\s+tests?\b/i,
   /\b1748\s+tests?\b/i,
@@ -36,6 +37,7 @@ const staleTestPatterns = [
   /\b1777\s+tests?\b/i,
   /\b1778\s+tests?\b/i,
   /\b1782\s+tests?\b/i,
+  /\b1786\s+tests?\b/i,
   /320 x 480 support-floor 200%\s+text-pressure/i,
   /support-floor\s+170%\s+text-pressure/i,
 ];
@@ -56,6 +58,8 @@ const requiredManifestNeedles = [
   'text-pressure-200-boundary-414-896-postfix3',
   '390 x 844 local Progress time-lapse',
   'progress-timelapse-current',
+  'Progress quality states and support-floor save recovery',
+  'progress-capture-analysis-current',
 ];
 
 const requiredLaunchCommands = [

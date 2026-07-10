@@ -11,6 +11,17 @@ Current Android native builds intentionally pin compile/target SDK to API 36
 while keeping min SDK at API 29, so store submission posture can advance without
 re-expanding the supported customer device matrix.
 
+The Progress review pipeline includes native ML Kit face detection and Expo
+image manipulation. Any build created before those dependencies were added is
+not valid capture-analysis evidence. Create a fresh binary; do not deliver the
+change as an OTA-only update. The repo-owned platform adapter intentionally
+keeps Expo web from loading ML Kit, while native autolinking must resolve
+`RNMLKitFaceDetection` and `expo-image-manipulator` on both platforms.
+Deploy the additive photo-quality provenance migration to staging before
+testing the consented metadata mirror. The database must clear old synthetic
+quality fields and reject quality/pose values without
+`post_capture_measurement` provenance.
+
 ## Build Profiles
 
 - `development`: internal dev client, `APP_VARIANT=development`, native camera enabled, native OCR disabled.
@@ -98,5 +109,10 @@ is enabled in the build; otherwise OCR remains hidden from launch claims.
 - Barcode scan cannot be marketed until physical iOS and Android scans pass.
 - OCR cannot be marketed while `EXPO_PUBLIC_NATIVE_OCR_ENABLED=false`.
 - Guided photo capture can be marketed as camera capture only after encrypted save/restart/delete passes on devices.
+- Post-capture framing/light guidance cannot be described as calibrated until
+  real captured-file analysis passes the one/no/multiple-face, pose, lighting,
+  timeout, privacy, performance, and diverse-condition physical-device matrix.
+  Do not describe the current camera overlay as real-time face or lighting
+  guidance; measurement occurs after capture.
 - Reminders remain "gentle" and inexact; no exact-alarm permission is requested.
 - Widgets and Live Activities remain post-launch scope.

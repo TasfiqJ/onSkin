@@ -1,4 +1,4 @@
-import type { LightingState, PhotoMilestone, PhotoQualityFlag } from '@onskin/types';
+import type { PhotoMilestone, PhotoQualityFlag } from '@onskin/types';
 
 /**
  * Centralised, claim-safe copy for the photo-progress feature (docs/06 §9).
@@ -40,8 +40,9 @@ export const PHOTO_COPY = {
   capture: {
     onDevice: 'on device · never uploaded · no faceprint',
     ghostHint: 'align to the ghost of last week',
-    autoReady: 'auto ready',
-    lightingLabel: 'Lighting',
+    guideHint: 'Center one face inside the guide',
+    qualityCheck: 'Framing and light checked after capture',
+    shutter: 'Capture',
     skinPrep: 'Clean skin, no makeup, hair back. Same time of day as last week.',
     consentFailedTitle: 'Photo choice not saved',
     consentFailedBody:
@@ -57,6 +58,19 @@ export const PHOTO_COPY = {
     missingBody: 'Take a new progress photo to open review. Nothing was saved.',
     missingCapture: 'Take photo',
     missingBack: 'Back to Progress',
+    checking: 'Checking framing and light on this device.',
+    framingMatched: 'Framing matched',
+    framingAdjust: 'Adjust framing',
+    framingNoFace: 'Face not verified',
+    framingMultipleFaces: 'One face at a time',
+    framingUnavailable: 'Framing not measured',
+    lightingGood: 'Light looks even',
+    lightingDark: 'More light',
+    lightingBright: 'Less direct light',
+    lightingUneven: 'Even out light',
+    lightingUnavailable: 'Light not measured',
+    saveFailedTitle: 'Photo not saved',
+    saveFailedBody: 'Your photo is still on this review screen. Try saving again or retake it.',
   },
   // Single-photo detail (design screen 06).
   detail: {
@@ -114,33 +128,13 @@ export const NO_SCORE_COPY = {
     'If we ever add analysis, it’ll be separate, consented, fairness-checked, and never a hazard score.',
 } as const;
 
-/** Real-time capture coaching (docs/06 §3). Calm, plain, one instruction at a time. */
-export const COACHING: Record<string, string> = {
-  ready: 'Hold still. Looking good',
-  turn_left: 'Turn slightly left. Almost there',
-  turn_right: 'Turn slightly right. Almost there',
-  closer: 'Move a little closer',
-  farther: 'Move back a little',
-  chin_down: 'Lower your chin',
-  chin_up: 'Lift your chin a touch',
-  level: 'Level your phone',
-  no_face: 'Center your face in the guide',
-};
-
-/** On-device lighting states → calm label + bar fill (docs/06 §3). */
-export const LIGHTING_LABEL: Record<LightingState, string> = {
-  good: 'Good',
-  too_dark: 'Too dark',
-  too_warm: 'Too warm',
-  uneven: 'Uneven',
-};
-
 /** Calm review notes. Flagged, never blocked (docs/06 §3, D-029). */
 export const QUALITY_NOTE: Record<PhotoQualityFlag, string> = {
-  matched: 'Nicely matched to last time. A clean comparison.',
-  darker: 'A little darker than usual. Retake, or keep it?',
+  matched: 'Framing and light are close to the guide. A cleaner comparison.',
+  lighting_varies: 'The light differs from the guide or reference. Retake, or keep it?',
   misaligned: 'A bit off from last time. Retake, or keep it?',
-  low: 'This one’s a little different from usual. Keep it if you like.',
+  low: 'Framing and light both differ. Retake, or keep it if you like.',
+  unmeasured: 'We could not confirm every capture check. Retake, or keep it if you like.',
 };
 
 /** Calm, non-gamified milestone markers (docs/06 §4). */

@@ -6,6 +6,7 @@ import { PHOTO_SERIES } from '@onskin/types';
 import { supabase } from '@/lib/supabase/client';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
+import { getCloudBackupEnabled } from './consent';
 import {
   decryptPhotoNote,
   deleteEncryptedPhoto,
@@ -14,7 +15,7 @@ import {
   isEncryptedPhotoUri,
   photoEncryptionInfo,
 } from './encryptedStorage';
-import type { PhotoMeta } from './timeline';
+import type { PhotoMeta, PhotoQualitySource } from './timeline';
 
 /**
  * Local-first photo store. Metadata is encrypted before it enters AsyncStorage;
@@ -32,6 +33,7 @@ export type PhotoRecord = PhotoMeta & {
   headRoll: number | null;
   headYaw: number | null;
   headPitch: number | null;
+  qualitySource: PhotoQualitySource | null;
   localOnly: boolean;
   storagePath: string | null;
   faceRegionRedacted: boolean;
@@ -56,6 +58,7 @@ export type NewPhoto = {
   headRoll?: number | null;
   headYaw?: number | null;
   headPitch?: number | null;
+  qualitySource?: PhotoQualitySource | null;
   referencePhotoId?: string | null;
   captureSessionId?: string | null;
   localUri?: string | null;
@@ -139,6 +142,8 @@ async function normalizeStoredRecord(value: unknown): Promise<PhotoRecord | null
     headRoll: finiteNumberOrNull(value.headRoll),
     headYaw: finiteNumberOrNull(value.headYaw),
     headPitch: finiteNumberOrNull(value.headPitch),
+    qualitySource:
+      value.qualitySource === 'post_capture_measurement' ? 'post_capture_measurement' : null,
     localOnly: booleanOr(value.localOnly, true),
     storagePath: stringOrNull(value.storagePath),
     faceRegionRedacted: booleanOr(value.faceRegionRedacted, false),
@@ -205,9 +210,13 @@ async function persist(items: PhotoRecord[]): Promise<void> {
   await setPrivateItem(KEY, JSON.stringify(stored));
 }
 
-/** Best-effort metadata-only mirror. Image paths, notes, and bytes are never sent. */
+/**
+ * Best-effort metadata-only mirror after explicit cloud-backup opt-in. Image
+ * paths, notes, and bytes are never sent by this path.
+ */
 async function mirror(rec: PhotoRecord): Promise<void> {
   try {
+    if (!(await getCloudBackupEnabled())) return;
     const { data: u } = await supabase.auth.getUser();
     if (!u.user?.id) return;
     await supabase.from('photos').insert({
@@ -221,11 +230,12 @@ async function mirror(rec: PhotoRecord): Promise<void> {
       taken_at: rec.takenAt,
       taken_local_date: rec.takenLocalDate,
       time_of_day: rec.timeOfDay,
-      alignment_score: rec.alignmentScore,
-      lighting_score: rec.lightingScore,
-      head_roll: rec.headRoll,
-      head_yaw: rec.headYaw,
-      head_pitch: rec.headPitch,
+      alignment_score: rec.qualitySource === 'post_capture_measurement' ? rec.alignmentScore : null,
+      lighting_score: rec.qualitySource === 'post_capture_measurement' ? rec.lightingScore : null,
+      head_roll: rec.qualitySource === 'post_capture_measurement' ? rec.headRoll : null,
+      head_yaw: rec.qualitySource === 'post_capture_measurement' ? rec.headYaw : null,
+      head_pitch: rec.qualitySource === 'post_capture_measurement' ? rec.headPitch : null,
+      quality_source: rec.qualitySource,
       notes: null,
       is_encrypted: rec.isEncrypted,
     });
@@ -261,6 +271,7 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
     headRoll: input.headRoll ?? null,
     headYaw: input.headYaw ?? null,
     headPitch: input.headPitch ?? null,
+    qualitySource: input.qualitySource ?? null,
     isReference: !hasReference,
     referencePhotoId: input.referencePhotoId ?? null,
     captureSessionId: input.captureSessionId ?? null,

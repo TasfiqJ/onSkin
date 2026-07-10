@@ -148,7 +148,10 @@ function PhotoDetailScreenContent() {
     month: 'long',
     day: 'numeric',
   });
-  const aligned = (photo.alignmentScore ?? 0) >= 0.85 && (photo.lightingScore ?? 0) >= 0.7;
+  const captureQualityLabel =
+    photo.qualitySource === 'post_capture_measurement'
+      ? 'Capture checks recorded'
+      : 'Quality not measured';
   const photoHeight = compact ? Math.min(240, Math.round(height * 0.38)) : 330;
   const actionFeedback = deleteFeedback ?? shareFeedback;
 
@@ -266,7 +269,7 @@ function PhotoDetailScreenContent() {
                 color: 'rgba(244,239,231,0.8)',
               }}
             >
-              {aligned ? 'Aligned · well-lit' : 'Kept as taken'}
+              {captureQualityLabel}
             </Text>
           </View>
           {photo.timeOfDay ? (

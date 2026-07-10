@@ -115,10 +115,10 @@ export type PhotoSeries = (typeof PHOTO_SERIES)[number];
  *  (docs/06 §3 skin-prep variables). */
 export type TimeOfDay = 'morning' | 'evening';
 /** On-device lighting check states (docs/06 §3). Calm guidance, never alarm. */
-export type LightingState = 'good' | 'too_dark' | 'too_warm' | 'uneven';
+export type LightingState = 'good' | 'too_dark' | 'too_bright' | 'uneven' | 'unavailable';
 /** A per-shot quality verdict surfaced at review. Flagged, NEVER blocked
  *  (docs/06 §3, the doc's D-029). The user always controls capture. */
-export type PhotoQualityFlag = 'matched' | 'darker' | 'misaligned' | 'low';
+export type PhotoQualityFlag = 'matched' | 'lighting_varies' | 'misaligned' | 'low' | 'unmeasured';
 /** Calm timeline milestones. Gentle markers, NOT gamified points (docs/06 §4).
  *  `one_cycle` (~12 weeks / 84 days) is the full-results-window marker; a distinct
  *  per-user cycle-length milestone is a future refinement once cycle length is

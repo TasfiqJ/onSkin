@@ -5,7 +5,10 @@ import { addPhoto, clearPhotos, loadPhotos } from './store';
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
   deleteEncryptedPhoto: vi.fn(),
+  getCloudBackupEnabled: vi.fn(),
+  getUser: vi.fn(),
   insert: vi.fn(),
+  from: vi.fn(),
 }));
 
 vi.mock('expo-crypto', () => ({
@@ -25,12 +28,18 @@ vi.mock('@/lib/storage/privateKV', () => ({
 vi.mock('@/lib/supabase/client', () => ({
   supabase: {
     auth: {
-      getUser: vi.fn(async () => ({ data: { user: null } })),
+      getUser: mocks.getUser,
     },
-    from: vi.fn(() => ({
-      insert: mocks.insert,
-    })),
+    from: mocks.from,
   },
+}));
+
+vi.mock('./consent', () => ({
+  getCloudBackupEnabled: mocks.getCloudBackupEnabled,
+}));
+
+mocks.from.mockImplementation(() => ({
+  insert: mocks.insert,
 }));
 
 vi.mock('./encryptedStorage', () => ({
@@ -57,7 +66,13 @@ describe('photo local store recovery', () => {
   beforeEach(() => {
     mocks.storage.clear();
     mocks.deleteEncryptedPhoto.mockReset();
+    mocks.getCloudBackupEnabled.mockReset();
+    mocks.getCloudBackupEnabled.mockResolvedValue(false);
+    mocks.getUser.mockReset();
+    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-id' } } });
     mocks.insert.mockReset();
+    mocks.insert.mockResolvedValue({ error: null });
+    mocks.from.mockClear();
   });
 
   it('removes malformed persisted photo JSON', async () => {
@@ -113,6 +128,7 @@ describe('photo local store recovery', () => {
       keyId: 'photo-key',
       alignmentScore: null,
       lightingScore: 0.75,
+      qualitySource: null,
       isReference: false,
       localOnly: true,
       faceRegionRedacted: false,
@@ -132,6 +148,99 @@ describe('photo local store recovery', () => {
     const stored = JSON.parse(mocks.storage.get(KEY) ?? '[]') as { id: string }[];
     expect(stored).toHaveLength(1);
     expect(stored[0]?.id).toBe('photo-id');
+    await vi.waitFor(() => expect(mocks.getCloudBackupEnabled).toHaveBeenCalledTimes(1));
+  });
+
+  it('keeps local-only photo metadata off the network while cloud backup is off', async () => {
+    await addPhoto({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///captured.jpg',
+      alignmentScore: 0.91,
+      lightingScore: 0.88,
+      qualitySource: 'post_capture_measurement',
+    });
+
+    await vi.waitFor(() => expect(mocks.getCloudBackupEnabled).toHaveBeenCalledTimes(1));
+    expect(mocks.getUser).not.toHaveBeenCalled();
+    expect(mocks.from).not.toHaveBeenCalled();
+    expect(mocks.insert).not.toHaveBeenCalled();
+  });
+
+  it('mirrors coarse metadata only after explicit cloud-backup opt-in', async () => {
+    mocks.getCloudBackupEnabled.mockResolvedValue(true);
+
+    await addPhoto({
+      takenLocalDate: '2026-07-03',
+      localUri: 'file:///captured.jpg',
+      alignmentScore: 0.91,
+      lightingScore: 0.88,
+      headRoll: 1,
+      headYaw: 2,
+      headPitch: -1,
+      qualitySource: 'post_capture_measurement',
+    });
+
+    await vi.waitFor(() => expect(mocks.insert).toHaveBeenCalledTimes(1));
+    expect(mocks.from).toHaveBeenCalledWith('photos');
+    expect(mocks.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user_id: 'user-id',
+        alignment_score: 0.91,
+        lighting_score: 0.88,
+        head_roll: 1,
+        head_yaw: 2,
+        head_pitch: -1,
+        quality_source: 'post_capture_measurement',
+        local_only: true,
+        storage_path: null,
+        notes: null,
+      }),
+    );
+    const mirrored = mocks.insert.mock.calls[0]?.[0] as Record<string, unknown>;
+    expect(mirrored).not.toHaveProperty('localUri');
+    expect(mirrored).not.toHaveProperty('encryptedLocalUri');
+  });
+
+  it('never mirrors unproven legacy-style quality values', async () => {
+    mocks.getCloudBackupEnabled.mockResolvedValue(true);
+
+    await addPhoto({
+      takenLocalDate: '2026-07-03',
+      localUri: null,
+      alignmentScore: 0.99,
+      lightingScore: 0.99,
+      headRoll: 1,
+      headYaw: 2,
+      headPitch: 3,
+    });
+
+    await vi.waitFor(() => expect(mocks.insert).toHaveBeenCalledTimes(1));
+    expect(mocks.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        alignment_score: null,
+        lighting_score: null,
+        head_roll: null,
+        head_yaw: null,
+        head_pitch: null,
+        quality_source: null,
+      }),
+    );
+  });
+
+  it('persists measured provenance without trusting legacy quality scores', async () => {
+    await addPhoto({
+      takenLocalDate: '2026-07-03',
+      localUri: null,
+      alignmentScore: 0.91,
+      lightingScore: 0.88,
+      qualitySource: 'post_capture_measurement',
+    });
+
+    const [stored] = JSON.parse(mocks.storage.get(KEY) ?? '[]') as {
+      qualitySource?: string;
+    }[];
+    expect(stored?.qualitySource).toBe('post_capture_measurement');
+    await vi.waitFor(() => expect(mocks.getCloudBackupEnabled).toHaveBeenCalledTimes(1));
   });
 
   it('clears encrypted photo and thumbnail envelopes', async () => {

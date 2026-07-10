@@ -838,3 +838,20 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   stay gentle/inexact and the app does not request Android exact-alarm
   permissions. Strict Phase 5 completion requires the generated device QA packet
   to contain real EAS build IDs, physical device names, and named signoff.
+
+- **D-085 - 2026-07-10 - Progress quality guidance uses measured static-photo
+  analysis and explicit unavailable states; it never fabricates live camera
+  confidence.** This supersedes only the Progress-signal boundary in D-083.
+  After capture, a fresh native binary runs transient local ML Kit face
+  detection for one-face framing/pose and a downsampled local luminance/balance
+  check. The preview overlay remains static, Save remains available for low or
+  unavailable quality under D-029, and only actually measured coarse metadata
+  may be persisted. No face template, identity vector, raw frame stream, local
+  path, image, analyzer sample, or quality verdict enters analytics. Photo
+  metadata makes no Supabase network attempt while cloud backup is off; an
+  explicit backup opt-in permits only documented coarse metadata carrying
+  measured provenance. Legacy rows have no provenance and their former timer
+  scores are never reused for reference comparison, detail claims, or server
+  mirroring. Real-time guidance and auto-capture remain unimplemented and must
+  not appear in launch copy unless a separately reviewed, calibrated, and
+  device-tested frame pipeline ships.
