@@ -869,3 +869,11 @@ camera` + the ML-Kit face-detection frame processor (alignment/pose/quality),
   retry/queue semantics, cross-device restore, object/metadata deletion,
   unbundled reviewed consent, no-plaintext network inspection, supported-device
   performance evidence, and honest recovery UI in the same reviewed release.
+
+- **D-087 - 2026-07-10 - Account export discloses device-only exclusions before
+  action and inside the artifact.** `Export my data` must not imply that local
+  Progress photo files are in the JSON bundle. Settings names the exclusion and
+  points to explicit per-photo sharing; `data-export` repeats the current-build
+  boundary in `local_only_photo_note` and distinguishes server-side photo
+  metadata rows from device-only files. This preserves an honest portability
+  contract without uploading photos merely to make export appear complete.

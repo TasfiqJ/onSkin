@@ -51,6 +51,8 @@ const PRIVACY_CHOICE_SAVE_FAILED_TITLE = 'Choice not saved';
 const EXPORT_UNAVAILABLE_TITLE = 'Export unavailable';
 const EXPORT_UNAVAILABLE_MESSAGE =
   "We couldn't open the export sheet on this device. The temporary export file was removed.";
+const DATA_EXPORT_SCOPE_HINT =
+  'Progress photos are not included in account export. They stay encrypted on this device; share them individually from Progress.';
 const EXPORT_FAILED_TITLE = 'Export failed';
 const WITHDRAW_HEALTH_DATA_CONFIRM_TITLE = 'Withdraw health-data consent?';
 const WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE =
@@ -1004,6 +1006,9 @@ export default function YouScreen() {
             disabled={exportMut.isPending}
             onPress={() => exportMut.mutate()}
           />
+          <Text variant="bodySm" tone="muted" className="mt-2 px-1">
+            {DATA_EXPORT_SCOPE_HINT}
+          </Text>
           <Button
             className="mt-2"
             label="Delete account"
@@ -1026,7 +1031,7 @@ export default function YouScreen() {
           ) : null}
           {exportFeedback ? <InlineNoticeCard notice={exportFeedback} className="mt-3" /> : null}
           <Text variant="bodySm" tone="muted" className="mt-3 text-center">
-            Photos stay on your device by default. No ads, no data sales.
+            Progress photos stay encrypted here unless you share one. No ads. No data sales.
           </Text>
         </Card>
 

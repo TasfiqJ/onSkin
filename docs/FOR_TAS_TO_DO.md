@@ -601,6 +601,13 @@ Tas must provide real values/evidence for these exact keys before this gate can 
 
 Tas must provide real values/evidence for these exact keys before this gate can close:
 
+For `PHASE9_DATA_EXPORT_DELETE_PASS`, inspect a real staging export before
+signoff. Confirm the Settings scope disclosure is visible before export, the
+JSON `local_only_photo_note` says device-only Progress photo files/thumbnails
+are excluded, any server-side photo metadata appears only in the `photos`
+collection, temporary plaintext export files are removed after sharing, and
+account deletion still clears both server and local private data.
+
 - `PHASE9_ALLOW_PRODUCTION_LIVE_CATALOG_RATE_LIMIT`
 - `PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL`
 - `PHASE9_ALLOW_PRODUCTION_LIVE_DATA_RIGHTS`

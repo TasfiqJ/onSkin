@@ -235,11 +235,19 @@ if (!deviceOnlyBackupEvidenceDate) {
   console.error('FAIL Missing device-only Progress photo storage evidence.');
   process.exit(1);
 }
+const dataExportDisclosureEvidenceDate = latestEvidenceDateForFolder(
+  'data-export-local-photo-disclosure-current',
+);
+if (!dataExportDisclosureEvidenceDate) {
+  console.error('FAIL Missing account-export local-photo disclosure evidence.');
+  process.exit(1);
+}
 const latestManifestEvidenceDate = [
   evidenceDate,
   timelapseEvidenceDate,
   captureAnalysisEvidenceDate,
   deviceOnlyBackupEvidenceDate,
+  dataExportDisclosureEvidenceDate,
 ]
   .sort()
   .at(-1);
@@ -498,6 +506,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Settings and locked Progress show device-only storage with no backup switch, dialogs, backup analytics, or photo-backend traffic.',
+  },
+  {
+    id: 'data-export-local-photo-disclosure-supported-phone',
+    title: 'Account export local-photo scope disclosure',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${dataExportDisclosureEvidenceDate}/data-export-local-photo-disclosure-current`,
+    evidence: 'summary.json',
+    expected:
+      'Settings discloses the device-only Progress-photo exclusion before export and preserves it through inline failure recovery.',
   },
 ];
 

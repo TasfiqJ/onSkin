@@ -62,6 +62,8 @@ const requiredManifestNeedles = [
   'progress-capture-analysis-current',
   'Device-only Progress photo storage',
   'progress-device-only-backup-current',
+  'Account export local-photo scope disclosure',
+  'data-export-local-photo-disclosure-current',
 ];
 
 const requiredLaunchCommands = [

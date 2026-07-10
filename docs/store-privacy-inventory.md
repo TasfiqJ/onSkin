@@ -30,6 +30,7 @@ configuration before store submission.
 - Support URL.
 - Account deletion instructions URL.
 - Data export instructions URL.
+- In-app account export scope copy and JSON `local_only_photo_note` both disclose that device-only Progress photo files/thumbnails are excluded; any server-side `photos` metadata rows remain separately covered.
 - Plain-English data retention/deletion policy.
 - Confirmation that analytics/crash tools do not collect sensitive content.
 - Confirmation that current V1 photos are device-only unless the user explicitly

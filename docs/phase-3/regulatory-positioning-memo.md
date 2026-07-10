@@ -50,7 +50,7 @@ Allowed claims must be about organization, appearance, privacy, and user control
 - Helps sequence products in your routine.
 - Flags possible routine conflicts using conservative, evidence-graded rules.
 - Helps compare your own progress photos under similar conditions.
-- Photos stay on device by default.
+- Progress photos stay encrypted on the device unless the user explicitly shares one.
 - Paid links are disclosed and do not affect recommendations.
 - Ask OnSkin answers bounded questions from the user's shelf/routine, and refuses or escalates out-of-scope questions.
 

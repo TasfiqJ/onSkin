@@ -131,8 +131,10 @@ combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `Progress quality states and support-floor save recovery` gate in
 `test-results/human-e2e/2026-07-10/progress-capture-analysis-current/`, and the
 `Device-only Progress photo storage` gate in
-`test-results/human-e2e/2026-07-10/progress-device-only-backup-current/`. The
-baseline still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
+`test-results/human-e2e/2026-07-10/progress-device-only-backup-current/`, plus
+the `Account export local-photo scope disclosure` gate in
+`test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`.
+The baseline still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also
 passed 49 / 49 routes with zero failures. Evidence includes

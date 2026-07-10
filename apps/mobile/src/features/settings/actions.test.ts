@@ -178,6 +178,12 @@ describe('settings data export', () => {
     expect(source).toContain('function InlineNoticeCard(');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('Export unavailable');
+    expect(source).toContain('Progress photos are not included in account export.');
+    expect(source).toContain('share them individually from Progress.');
+    expect(source).toContain(
+      'Progress photos stay encrypted here unless you share one. No ads. No data sales.',
+    );
+    expect(source).not.toContain('Photos stay on your device by default.');
     expect(source).toContain('data_export_success');
     expect(source).not.toContain("Alert.alert('Export unavailable'");
     expect(source).not.toContain("Alert.alert('Export failed'");

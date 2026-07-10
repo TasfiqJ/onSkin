@@ -258,6 +258,27 @@ function parseJson(text) {
   }
 }
 
+function assertLocalPhotoExportDisclosure(bundle) {
+  assert(
+    typeof bundle?.local_only_photo_note === 'string' &&
+      bundle.local_only_photo_note.includes(
+        'Progress photo files and thumbnails are not included in this account export.',
+      ) &&
+      bundle.local_only_photo_note.includes('cloud backup is unavailable.'),
+    'data-export is missing the current device-only Progress-photo exclusion note.',
+  );
+  const localDeviceExclusion = rows(bundle, 'exclusion_register').find(
+    (entry) => entry?.data_class === 'local_device_files',
+  );
+  assert(
+    typeof localDeviceExclusion?.reason === 'string' &&
+      localDeviceExclusion.reason.includes(
+        'Any server-side photo metadata rows are exported separately in photos.',
+      ),
+    'data-export does not distinguish device-only photo files from server-side photo metadata.',
+  );
+}
+
 function assertDataExportRateLimited(response) {
   const body = parseJson(response.text);
   assert(
@@ -320,6 +341,7 @@ async function exhaustDataExportRateLimit(user) {
       body?.export_schema_version === 2,
       'data-export before limit returned the wrong export schema version.',
     );
+    assertLocalPhotoExportDisclosure(body);
   }
   throw new Error(
     `data-export did not return 429 within ${dataExportProbeBudget} attempts; check deployed DATA_EXPORT_RATE_LIMIT_MAX.`,
@@ -583,6 +605,7 @@ async function main() {
       assert(data && typeof data === 'object', 'data-export did not return a JSON bundle.');
       assert(data.user_id === userA.id, 'data-export returned the wrong user_id.');
       assert(data.export_schema_version === 2, 'data-export schema version mismatch.');
+      assertLocalPhotoExportDisclosure(data);
 
       expectBundleHasOnlyUser(data, 'skin_profiles', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'user_products', 'user_id', userA.id, userB.id);

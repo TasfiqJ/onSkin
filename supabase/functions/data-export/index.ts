@@ -263,7 +263,7 @@ Deno.serve(async (req) => {
       exported_at: new Date().toISOString(),
       user_id: userId,
       local_only_photo_note:
-        'Photos marked local_only=true and photo thumbnails stored only on this device are not present in Supabase and cannot be downloaded from the cloud export.',
+        'Progress photo files and thumbnails are not included in this account export. In the current build they stay encrypted on the device unless the user explicitly shares one from Progress; cloud backup is unavailable.',
       export_coverage: {
         caller_rls_tables: CALLER_RLS_EXPORT_TABLES.map((item) => item.table),
         service_role_filtered_exports: SERVICE_ROLE_FILTERED_EXPORTS,
@@ -272,7 +272,7 @@ Deno.serve(async (req) => {
         {
           data_class: 'local_device_files',
           reason:
-            'The cloud backend never receives local-only progress photos, shelf thumbnails, OS share-cache files, or SecureStore keys.',
+            'Progress photo files and thumbnails, shelf thumbnails, OS share-cache files, and SecureStore keys remain on the device and are excluded. Any server-side photo metadata rows are exported separately in photos.',
         },
         {
           data_class: 'internal_commission_calculation',

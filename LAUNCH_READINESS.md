@@ -18,6 +18,16 @@ clearance and not a real launch catalog.
 
 Fresh verification through 2026-07-10:
 
+- Account export now states its local-photo boundary before the user acts and
+  inside the JSON artifact. The visible `YOUR DATA` card says device-only
+  Progress photos are excluded, directs explicit per-photo sharing, and no
+  longer uses the stale `by default` phrase. `data-export` repeats the exclusion
+  in `local_only_photo_note` and distinguishes any server-side `photos` metadata
+  rows. Supported 360 x 640 and 390 x 844 Expo web passes keep the disclosure
+  through inline backend-unavailable recovery with 56 px actions, zero dialogs,
+  overflow, unexpected logs, analytics, or export network requests. Manifest
+  gate: `Account export local-photo scope disclosure`. Evidence:
+  `test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`.
 - Progress photo backup now fails closed at the capability boundary. The prior
   toggle could save consent and mirror coarse metadata but did not upload,
   restore, or remotely delete encrypted photo bytes. Current local photo saves
@@ -62,7 +72,7 @@ Fresh verification through 2026-07-10:
   no-face, unavailable, Retake, and Close states with complete 48 px+ controls,
   zero overflow/dialogs/disallowed logs, and no analytics traffic. At 360 x 640,
   web persistence rejection stays on review with inline recovery and reachable
-  Retake/Save actions. Capture analytics omit quality verdicts, and backup-off
+  Retake/Save actions. Capture analytics omit quality verdicts, and current
   local saves make no Supabase photo-metadata attempt. Measured records now
   carry local provenance, so legacy timer scores are not reused as reference
   measurements, detail claims, or mirrored quality metadata. The additive

@@ -51,6 +51,7 @@ const sourceFiles = [
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'apps/mobile/src/lib/observability/scrub.ts',
   'apps/mobile/src/lib/observability/sentry.ts',
+  'apps/mobile/src/app/(tabs)/you.tsx',
   'apps/mobile/src/features/settings/actions.ts',
   'apps/mobile/src/features/settings/localPrivateData.ts',
   'apps/mobile/src/lib/auth/apple.ts',

@@ -114,7 +114,7 @@ All tables in `public`, RLS enabled, every policy uses `(select auth.uid())` and
 
 **`photos` metadata.**
 
-- `id`, `user_id`, `storage_path text NULL` (NULL when local-only), `taken_at`, `lighting_score numeric`, `alignment_score numeric`, `local_only bool DEFAULT true`, `face_region_redacted bool`. **No faceprint/biometric template is ever stored (BIPA avoidance).** When `local_only = true`, the image bytes never leave the device; only metadata may sync (or nothing, if the user opts out entirely).
+- `id`, `user_id`, `storage_path text NULL` (NULL when local-only), `taken_at`, `lighting_score numeric`, `alignment_score numeric`, `local_only bool DEFAULT true`, `face_region_redacted bool`. **No faceprint/biometric template is ever stored (BIPA avoidance).** In current V1, local photo save automatically syncs neither image bytes nor metadata; these columns remain future server scaffolding under D-086.
 - RLS owner-only; Storage bucket **private** with a `storage.objects` policy scoping by `(storage.foldername(name))[1] = (select auth.uid())::text`. (Public buckets bypass RLS on read — never use one for photos.)
 
 **`streaks`** — **recommendation: computed (authoritative), with a denormalized `current_streak`/`longest_streak` cached on `profiles` via trigger for read performance.** Stored-only drifts on backfill/timezone edge cases; computed-only is correct but expensive. Hybrid is best.
@@ -142,7 +142,7 @@ All tables in `public`, RLS enabled, every policy uses `(select auth.uid())` and
 - **Account-creation consent** (ToS + privacy policy acceptance): at the account creation screen (step 9). Standard.
 - **Health-data collection consent** (MHMDA "collection" + GDPR Art. 9 explicit): **a dedicated, unbundled screen _before_ the skin quiz** (step 3), because the quiz infers health status. Must name the categories collected and the purpose. Cannot be a pre-checked box or bundled into ToS.
 - **Photo capture consent:** at first camera use, separate.
-- **Cloud-backup-of-photos consent:** separate again — distinct from capture, because uploading special-category images off-device is a higher-risk processing operation. Default to local-only; require affirmative opt-in to back up.
+- **Cloud-backup-of-photos consent:** reserved and unavailable in current V1. Any future implementation must remain distinct from capture because uploading special-category images off-device is higher-risk, and may be exposed only after encrypted upload, restore, deletion, reviewed consent, and device QA ship together (D-086).
 - **Marketing consent:** separate, opt-in, never bundled.
 - **Data-sharing consent (MHMDA "separate and distinct" from collection):** required before any sharing with third parties/affiliates (ShopMy affiliate later, or any analytics that count as sharing). MHMDA mandates this be a distinct consent from collection consent. _Selling_ health data requires a signed authorization retained for six years — avoid entirely.
 
@@ -157,7 +157,7 @@ MHMDA specifics (RCW 19.373): consent = "a clear affirmative act that signifies 
 - Architecture: in-app button → Edge Function (service-role) → revoke SIWA token → delete `auth.users` row (cascades to all `public` tables via FK `ON DELETE CASCADE`) → **explicitly delete Storage objects** (Storage cascade is not automatic — remove the user's bucket folder) → call **RevenueCat subscriber-deletion API** → call **PostHog person-deletion API** → confirm to user. Notify the user that App Store billing continues until they cancel.
 - **Soft-delete grace period:** mark `deleted_at` and disable access immediately, hard-purge after 14–30 days (recommendation: 30 days) — **but MHMDA's deletion right has no retention exception**, so for Washington users honor deletion promptly within the 45-day statutory window and don't over-retain. Google Play has an equivalent data-deletion requirement (in-app + web deletion route).
 
-**Data export (GDPR Art. 20 portability):** an Edge Function that assembles the user's profile, skin_profile, products, routines, completions, consents, and photo metadata into a **JSON export** (with signed URLs for any cloud photos), emailed or downloaded in-app.
+**Data export (GDPR Art. 20 portability):** an Edge Function that assembles the user's profile, skin_profile, products, routines, completions, consents, and any server-side photo metadata into a **JSON export** (with signed URLs only for valid owned cloud-photo paths). The Settings action and JSON artifact both disclose that current device-only Progress photo files/thumbnails are excluded and must be shared individually from Progress.
 
 ### 5. Session / Security Engineering
 

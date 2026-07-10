@@ -7,6 +7,7 @@ const warnings = [];
 const exportSource = read('supabase/functions/data-export/index.ts');
 const deletionSource = read('supabase/functions/account-deletion/index.ts');
 const settingsActionsSource = read('apps/mobile/src/features/settings/actions.ts');
+const settingsRouteSource = read('apps/mobile/src/app/(tabs)/you.tsx');
 const localPrivateDataKeysSource = read(
   'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
 );
@@ -80,7 +81,22 @@ for (const pattern of [
 }
 block(
   errors,
-  /select\('id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at'\)/.test(
+  /Progress photos are not included in account export\./.test(settingsRouteSource) &&
+    /share them individually from Progress\./.test(settingsRouteSource) &&
+    /Progress photos stay encrypted here unless you share one\./.test(settingsRouteSource) &&
+    !/Photos stay on your device by default\./.test(settingsRouteSource),
+  'Settings must disclose that account export excludes device-only Progress photos.',
+);
+block(
+  errors,
+  /local_only_photo_note:\s*\n?\s*'Progress photo files and thumbnails are not included in this account export\.[^']*cloud backup is unavailable\.'/s.test(
+    exportSource,
+  ) && /Any server-side photo metadata rows are exported separately in photos\./.test(exportSource),
+  'The export artifact must explain the device-only photo exclusion and separate metadata coverage.',
+);
+block(
+  errors,
+  /\.select\(\s*'id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at'\s*,?\s*\)/s.test(
     exportSource,
   ),
   'order_attributions export must omit commission_cents.',
@@ -420,6 +436,14 @@ block(
     /edge_rate_limits stores keyed hashes only for data-export scope/.test(liveHarness) &&
     /RATE_LIMITED/.test(liveHarness),
   'Live data-rights harness must invoke data-export/account-deletion and prove data-export 429/keyed-hash rate-limit behavior behind an explicit run flag.',
+);
+block(
+  errors,
+  /function assertLocalPhotoExportDisclosure\(bundle\)/.test(liveHarness) &&
+    /local_only_photo_note/.test(liveHarness) &&
+    /Any server-side photo metadata rows are exported separately in photos\./.test(liveHarness) &&
+    (liveHarness.match(/assertLocalPhotoExportDisclosure\(/g)?.length ?? 0) >= 3,
+  'Live data-rights harness must verify the local-photo exclusion in normal and rate-limit export responses.',
 );
 
 const migrationText = read('supabase/migrations/20260614000026_phase4_catalog.sql');

@@ -6,6 +6,16 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Made account-export scope explicit before action and in every JSON artifact.
+  Settings now says device-only Progress photos are excluded and directs
+  individual sharing; `data-export.local_only_photo_note` repeats that boundary
+  while distinguishing server-side photo metadata. Visual QA also removed the
+  stale `Photos stay on your device by default` claim in favor of an
+  explicit-share-only footer. Phase 9 data-rights and Deno checks pass, and
+  human-simulated Expo web at 360 x 640 and 390 x 844 verifies 56 px actions,
+  preserved disclosure through inline failure, zero dialogs/overflow/unexpected
+  logs, and no analytics or export request while the backend is unavailable.
+
 - Removed the misleading encrypted-cloud-backup exposure from Progress. The
   prior Settings toggle could persist consent and mirror coarse metadata but
   did not upload encrypted photo bytes, restore a timeline, or prove remote
