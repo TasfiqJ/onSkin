@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-10T11:15:23.784Z",
+  "generatedAt": "2026-07-10T15:37:58.449Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "1dab47bfdfe805366cb201fe7133be2cc9e07f0d",
+  "gitSha": "d40547404230d97c83b1f4f54df279225c10ff77",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 90897,
-    "sha256": "b4e6811479aa101f5c0444f459280cebfdfa669282bb42e8c2cb2a162b392fd9",
-    "currentSha256": "b4e6811479aa101f5c0444f459280cebfdfa669282bb42e8c2cb2a162b392fd9"
+    "bytes": 92972,
+    "sha256": "df2a44cad4ee23216eefc1e9d55a6972a23cfabc15845cf8141cc4c70c4bf47f",
+    "currentSha256": "df2a44cad4ee23216eefc1e9d55a6972a23cfabc15845cf8141cc4c70c4bf47f"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -747,7 +747,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "35a7afd15b42e2ba0d5b5bb4420f1c14158d445dda035196fdbca27c189928e3",
+      "reviewSnapshotSha256": "dc9d775d72899c2a131de5370a8b7b531c2b8fe7d369c9d3d3448fda9dc90809",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -758,8 +758,8 @@
         {
           "path": "apps/mobile/src/features/settings/actions.ts",
           "exists": true,
-          "bytes": 5116,
-          "sha256": "a560c90bf06696f4ab9e4ace3298ec9648651bce425e73f01b25a28b3b89c9a0"
+          "bytes": 5099,
+          "sha256": "e39806ea6cd4148df0c3a7acdaa70c219d1a0da4f57c54903018aa8990f500c2"
         },
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.ts",
@@ -776,14 +776,14 @@
         {
           "path": "apps/mobile/src/lib/storage/privateKV.ts",
           "exists": true,
-          "bytes": 7858,
-          "sha256": "bcddd13a05a9a42075efedd6aab23a559570c8ba358e521a48b182dd778c634e"
+          "bytes": 10102,
+          "sha256": "499ccda60a9f8c51981e51b3f6396f502ff40815c38fa7cce651933d6b807522"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.test.ts",
           "exists": true,
-          "bytes": 8293,
-          "sha256": "499c40ea88cff3ff5469fd6fd948fc8c3b07358d4926506ea6df464344abdd01"
+          "bytes": 12455,
+          "sha256": "34bf3b271a8ffb154cd6e5f04c3867058eda7bacdf455b0b0360c3636f895627"
         },
         {
           "path": "apps/mobile/src/lib/legal/policyLinks.ts",
@@ -877,7 +877,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "8f8bb0394fa884a980d485a3cd40e3d3a5c8767c5629b48af1323017ee3a1aea",
+      "reviewSnapshotSha256": "ad094805f7ae0daf8c749f2e88816ae20ec6e4320b74473435b3a0183c1d401d",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -885,6 +885,24 @@
       "notes": "Apple/Google auth, processors, breach posture, and RLS proof needed.",
       "currentBehavior": "Auth/client scaffolds exist; live providers not configured",
       "sourcePaths": [
+        {
+          "path": "apps/mobile/src/lib/auth/accountIsolationE2E.test.ts",
+          "exists": true,
+          "bytes": 1129,
+          "sha256": "797ceccaa982f888ce3c03b7fb36599a314b1614b1f910077b0906bfdc3671a9"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/accountIsolationE2E.ts",
+          "exists": true,
+          "bytes": 1358,
+          "sha256": "6a89dc564d1e760034b85f0a805a1f86f35607ae84f99c4ecb31acd681be4103"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/accountSessionIsolationContracts.test.ts",
+          "exists": true,
+          "bytes": 3442,
+          "sha256": "b7246804f773c93754562de608962cd458994b2ef3ff8caac9aa2e7fa0e6b780"
+        },
         {
           "path": "apps/mobile/src/lib/auth/accountUpgrade.test.ts",
           "exists": true,
@@ -924,8 +942,8 @@
         {
           "path": "apps/mobile/src/lib/auth/AuthProvider.tsx",
           "exists": true,
-          "bytes": 8438,
-          "sha256": "b2916a40ab32772331312c9f941ca9b261863b3a8e9c91c6db9b1e1f5c999fdf"
+          "bytes": 16636,
+          "sha256": "2f573a2d04e59be75a0f45fdf9a4fff1c601b5c074e6153efa69109fbdf9a08e"
         },
         {
           "path": "apps/mobile/src/lib/auth/google.ts",
@@ -934,16 +952,52 @@
           "sha256": "d00aa0a7244120297ab824dce61e627090c9618a6906a0a6689b88bb47749ea7"
         },
         {
+          "path": "apps/mobile/src/lib/auth/localAccountIsolation.test.ts",
+          "exists": true,
+          "bytes": 6318,
+          "sha256": "7f2e399886a131707594e0d9a09819644716bd52274158e188a9dbc977e13910"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/localAccountIsolation.ts",
+          "exists": true,
+          "bytes": 3648,
+          "sha256": "0e6159e747fce2055b597f1f57149404cbe4603692c66e6266b4cda9539bd5d8"
+        },
+        {
           "path": "apps/mobile/src/lib/auth/sessionBoundary.test.ts",
           "exists": true,
-          "bytes": 890,
-          "sha256": "ee07eaa01973860fc5fc20edc9386896d90e76ffa475a5a7d68f21f6f65ed935"
+          "bytes": 2070,
+          "sha256": "1e430d8c9710876a91cc61d88687596939c7e536c610ec51cf7fdfe64e98ad16"
         },
         {
           "path": "apps/mobile/src/lib/auth/sessionBoundary.ts",
           "exists": true,
-          "bytes": 461,
-          "sha256": "53fb1b53dbc23b1dae48cb67b8410c2a94b35f13e665579c42e3370ef91781ba"
+          "bytes": 888,
+          "sha256": "b5d39bd93ef3f46b37dafead25f839edcf6499201521a0d8f131ad059d56ef17"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/SessionBoundaryGate.tsx",
+          "exists": true,
+          "bytes": 2568,
+          "sha256": "a9482478b418d5b2cbd7fcf0fc529b5e380d1bf6114388a6404e5c0a53572b06"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/sessionOwner.test.ts",
+          "exists": true,
+          "bytes": 2586,
+          "sha256": "80ecbfd6a3112d50255ebc12ef1be8053af8db3c59872cb124bc8129ee0a162b"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/sessionOwner.ts",
+          "exists": true,
+          "bytes": 1664,
+          "sha256": "5c5635c4238c94dfc708f849e052f017e857d00173862df0a3826f4ac3d9354d"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/sessionOwnerKey.ts",
+          "exists": true,
+          "bytes": 168,
+          "sha256": "959114b5a251604058380d558e30daeb0c880671ff50e9b26413b4f46ceae5ad"
         },
         {
           "path": "supabase/functions/_shared/auth.ts",
@@ -972,7 +1026,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "b3c3c3e54362f1e915107561bb7cfdc3700c9bf8c81c5c4487a5e643f8ce8d28",
+      "reviewSnapshotSha256": "804d1ad26f943ef13180f21030f21ac37bf3f54ebee1805977b1bf8deb323e48",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1025,8 +1079,8 @@
         {
           "path": "apps/mobile/src/features/settings/actions.ts",
           "exists": true,
-          "bytes": 5116,
-          "sha256": "a560c90bf06696f4ab9e4ace3298ec9648651bce425e73f01b25a28b3b89c9a0"
+          "bytes": 5099,
+          "sha256": "e39806ea6cd4148df0c3a7acdaa70c219d1a0da4f57c54903018aa8990f500c2"
         },
         {
           "path": "supabase/functions/consent-withdrawal/index.ts",
@@ -1956,7 +2010,7 @@
       "requiredReviewer": "qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "fe0bfef5f8b3b43a1e8c36d71412d615f0ce73f8bad2dd32af9460a746341baa",
+      "reviewSnapshotSha256": "4695eb092b3c98ddaebc8e17a462eff31a97f6b530d90672b0ebd6b2ce35d931",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2135,8 +2189,8 @@
         {
           "path": "apps/mobile/src/lib/iap/revenuecat.ts",
           "exists": true,
-          "bytes": 18355,
-          "sha256": "b95779de93cd11304b541cd6c44c01e2b86eaa56c3a408a1569f52b47bde0a75"
+          "bytes": 18317,
+          "sha256": "f89981290f02bc355ca4ac279b9e660c86d480a9c6e54b041a4d600f0468b105"
         }
       ]
     },
@@ -2236,7 +2290,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "33e718379f27200aeba8ab0962fd8afc9d9e6f22d2954356aee6877165d806ce",
+      "reviewSnapshotSha256": "4bc33a5f2fbce098a9a92226612e54b6e675140422e389b41d2b67561684cfe1",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2259,8 +2313,8 @@
         {
           "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
           "exists": true,
-          "bytes": 12292,
-          "sha256": "9ef2a31f0b25f85a1801b69a7d22cb8e6cddddaf334e9b10625b9a79ef632001"
+          "bytes": 15047,
+          "sha256": "4eb6cdfb74b5527392cd8da48397458fe119922ac330605988c6669050a470d2"
         },
         {
           "path": "apps/mobile/src/features/photos/store.ts",
