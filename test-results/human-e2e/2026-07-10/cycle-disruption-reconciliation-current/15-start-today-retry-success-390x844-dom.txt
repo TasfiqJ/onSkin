@@ -1,0 +1,28 @@
+- generic: SATURDAY, JULY 11
+- button "View your streak and adherence":
+  - generic: 1 day
+- generic: Good morning.
+- generic: Morning routine
+- generic: 0 of 1
+- checkbox "Mineral SPF 50":
+  - generic: Mineral SPF 50
+  - generic: Always the last morning step. Reapply through the day.
+  - generic: NEXT
+- button "See your recommendations":
+  - generic: ✦
+  - generic: A few honest suggestions
+  - generic: 2 things we’d gently suggest
+  - generic: ›
+- button "See your cycle week ahead":
+  - generic: Tonight · Cycling night 1
+  - generic: Exfoliation night
+  - generic: ›
+- tablist:
+  - tab "Today tab" [selected]:
+    - generic: Today
+  - tab "Progress tab":
+    - generic: Prog.
+  - tab "Shelf tab":
+    - generic: Shelf
+  - tab "You tab":
+    - generic: You

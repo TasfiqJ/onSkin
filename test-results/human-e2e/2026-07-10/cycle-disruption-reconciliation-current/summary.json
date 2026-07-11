@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "status": "pass",
+  "failedRouteCount": 0,
+  "localTestDate": "2026-07-10",
+  "surface": "Expo web development build in the Codex in-app browser",
+  "viewports": [
+    "360 x 640",
+    "390 x 844"
+  ],
+  "verified": [
+    "atomic cycle mutations and one-shot encrypted write failure recovery",
+    "pause persistence, reachable resume, and immediate Today cache reconciliation",
+    "procedure and irritation recovery start, retry, and early completion",
+    "variant failure recovery and persistence after reload",
+    "Start Today failure recovery and immediate night-one re-anchoring",
+    "pending action and sheet-dismiss controls expose disabled state",
+    "support-floor scroll reachability with 48 px or larger controls",
+    "zero horizontal overflow, zero unexpected browser warnings or errors, and no dialogs"
+  ],
+  "bugsFixed": [
+    "AM Today cycle preview contradicted paused state",
+    "legacy reverse-order pause and recovery overlap lost the newer pause",
+    "irritation retry could partially commit and de-escalate cadence repeatedly",
+    "Start Today bypassed the cycle query cache",
+    "in-flight cycle queries could overwrite committed mutations",
+    "long-lived app sessions did not refresh cycle state on local-day rollover",
+    "pending cycle writes could be dismissed through the backdrop or active recovery Back control"
+  ],
+  "externalGates": [
+    "native encrypted-storage relaunch and timezone-transition proof",
+    "VoiceOver, TalkBack, Dynamic Type, and native safe-area QA",
+    "named clinical and cosmetic-chemistry review before production cadence opens"
+  ]
+}

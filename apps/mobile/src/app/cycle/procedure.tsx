@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
+import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { backOrReplace } from '@/lib/navigation/safeBack';
@@ -17,12 +18,32 @@ const BARRIER_BASICS = ['Gentle cleanser', 'Barrier moisturizer. Ceramides', 'SP
 export default function ProcedureScreen() {
   const m = useCycleMutations();
   const [days, setDays] = useState(5);
+  const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
+
+  async function beginRecovery() {
+    if (saving) return;
+    setSaving(true);
+    setSaveFailed(false);
+    try {
+      await m.beginRecovery(days, 'procedure');
+      router.replace('/cycle/recovery');
+    } catch {
+      setSaveFailed(true);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <Screen edges={['top', 'bottom']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10">
         <View className="mt-2">
-          <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
+          <RouteIconButton
+            accessibilityLabel="Back"
+            disabled={saving}
+            onPress={() => backOrReplace(router)}
+          />
         </View>
 
         <View className="mt-2 h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
@@ -37,7 +58,7 @@ export default function ProcedureScreen() {
         </Text>
         <Text variant="body" tone="muted" className="mt-2">
           After a peel or facial, actives can be too much. We&apos;ll pause them and keep things
-          simple . Then ease back in.
+          simple. Then ease back in.
         </Text>
 
         <Text variant="eyebrow" tone="clay" className="mb-2.5 mt-6">
@@ -50,15 +71,18 @@ export default function ProcedureScreen() {
               <Pressable
                 key={d}
                 accessibilityRole="button"
-                accessibilityState={{ selected: sel }}
+                accessibilityState={{ disabled: saving, selected: sel }}
+                disabled={saving}
                 onPress={() => {
                   haptics.select();
                   setDays(d);
+                  setSaveFailed(false);
                 }}
                 className={cn(
                   'min-h-[58px] flex-1 items-center justify-center rounded-[14px] bg-paper-raised py-3.5',
                   sel ? 'border-2 border-clay' : 'border border-hairline-strong',
                 )}
+                style={{ opacity: saving ? 0.55 : 1 }}
               >
                 <Text className="font-sans-bold text-[18px]" tone={sel ? 'clay' : 'ink'}>
                   {d}
@@ -93,15 +117,14 @@ export default function ProcedureScreen() {
             ))}
           </View>
         </View>
+        {saveFailed ? <CycleMutationError /> : null}
       </ScrollView>
 
       <View className="bg-paper pb-4 pt-3">
         <Button
-          label="Start recovery"
-          onPress={async () => {
-            await m.beginRecovery(days, 'procedure');
-            router.replace('/cycle/recovery');
-          }}
+          disabled={saving}
+          label={saving ? 'Starting recovery...' : saveFailed ? 'Try again' : 'Start recovery'}
+          onPress={() => void beginRecovery()}
         />
       </View>
     </Screen>

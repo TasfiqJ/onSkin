@@ -527,12 +527,24 @@ export default function TodayScreen() {
           {showTonightTeaser ? (
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="See your cycle week ahead"
+              accessibilityLabel={
+                recoveryActive
+                  ? 'View recovery mode'
+                  : paused
+                    ? 'Manage paused cycle'
+                    : 'See your cycle week ahead'
+              }
               className="mt-4 flex-row items-center gap-4 rounded-card p-5"
               style={{ backgroundColor: colors.night }}
               onPress={() => {
                 haptics.select();
-                router.push('/cycle/week');
+                router.push(
+                  recoveryActive
+                    ? '/cycle/recovery'
+                    : paused
+                      ? '/cycle/disruption'
+                      : '/cycle/week',
+                );
               }}
             >
               <View
@@ -548,24 +560,28 @@ export default function TodayScreen() {
                 <Text className="font-sans-semibold text-[15px]" style={{ color: colors.cream }}>
                   {recoveryActive
                     ? 'Tonight · Recovery'
-                    : skippedTonight
-                      ? 'Tonight · Skipped'
-                      : cTonight
-                        ? `Tonight · Cycling night ${cTonight.index + 1}`
-                        : 'Tonight'}
+                    : paused
+                      ? 'Tonight · Paused'
+                      : skippedTonight
+                        ? 'Tonight · Skipped'
+                        : cTonight
+                          ? `Tonight · Cycling night ${cTonight.index + 1}`
+                          : 'Tonight'}
                 </Text>
                 <Text className="text-[13px]" style={{ color: 'rgba(244,239,231,0.55)' }}>
                   {recoveryActive
                     ? 'Barrier support. Actives paused'
-                    : skippedTonight
-                      ? 'Your cycle picks up tomorrow'
-                      : tonightSlot === 'retinoid'
-                        ? 'Retinoid night. Keep it simple'
-                        : tonightSlot === 'exfoliate'
-                          ? 'Exfoliation night'
-                          : tonightSlot === 'recover'
-                            ? 'Recovery night. Barrier support'
-                            : 'Your evening routine'}
+                    : paused
+                      ? 'Your cycle resumes when you are ready'
+                      : skippedTonight
+                        ? 'Your cycle picks up tomorrow'
+                        : tonightSlot === 'retinoid'
+                          ? 'Retinoid night. Keep it simple'
+                          : tonightSlot === 'exfoliate'
+                            ? 'Exfoliation night'
+                            : tonightSlot === 'recover'
+                              ? 'Recovery night. Barrier support'
+                              : 'Your evening routine'}
                 </Text>
               </View>
               <Text style={{ color: 'rgba(244,239,231,0.4)', fontSize: 20 }}>›</Text>

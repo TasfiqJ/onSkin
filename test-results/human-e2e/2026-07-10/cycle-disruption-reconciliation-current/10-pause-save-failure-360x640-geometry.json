@@ -1,0 +1,45 @@
+{
+  "beforeScroll": {
+    "alert": {
+      "bottom": 676.33,
+      "height": 95.95,
+      "top": 580.39,
+      "visible": true,
+      "width": 304.22
+    },
+    "documentWidth": 360,
+    "horizontalOverflow": false,
+    "viewport": {
+      "height": 641,
+      "width": 360
+    }
+  },
+  "afterScroll": {
+    "bottom": 600.61,
+    "fullyVisible": true,
+    "height": 95.95,
+    "top": 504.66
+  },
+  "scrollContainers": [
+    {
+      "bottom": 601,
+      "className": "css-view-g5y9jx r-WebkitOverflowScrolling-150rngu r-flexDirection-eqz5dr r-flexGrow-16y2uox r-overflowX-11yh6sk r-overflowY-1rnoaur r-transform-agouwx r-scrollbarWidth-2eszeu",
+      "clientHeight": 512,
+      "role": null,
+      "scrollHeight": 588,
+      "scrollTop": 0,
+      "tag": "DIV",
+      "top": 89
+    },
+    {
+      "bottom": 123,
+      "className": "css-text-146c3p1 font-serif text-[30px] leading-[34px] text-ink text-[30px] leading-[34px]",
+      "clientHeight": 34,
+      "role": "heading",
+      "scrollHeight": 37,
+      "scrollTop": 0,
+      "tag": "H1",
+      "top": 89
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+- button "Back":
+  - generic: <
+- generic: ◇
+- heading "Let's give your skin a few days." [level=1]
+- generic: After a peel or facial, actives can be too much. We'll pause them and keep things simple . Then ease back in.
+- generic: How long to rest?
+- button "3 days":
+  - generic: "3"
+  - generic: days
+- button "5 days":
+  - generic: "5"
+  - generic: days
+- button "7 days":
+  - generic: "7"
+  - generic: days
+- generic: While you recover
+- generic: ✓
+- generic: Gentle cleanser
+- generic: ✓
+- generic: Barrier moisturizer. Ceramides
+- generic: ✓
+- generic: SPF every morning
+- alert:
+  - generic: Change not saved
+  - generic: Your previous cycle is still in place. Try again when private storage is available.
+- button "Try again":
+  - generic: Try again

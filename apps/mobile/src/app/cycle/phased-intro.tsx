@@ -1,7 +1,9 @@
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, View, useWindowDimensions } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
+import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -83,6 +85,8 @@ export default function PhasedIntroScreen() {
   const { height } = useWindowDimensions();
   const { data } = useCycle();
   const { overrideStaging } = useCycleMutations();
+  const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
   const compactSheet = height < 640;
   const shortSheet = height < 520;
   const note = data?.notes.find((n) => /add your/i.test(n));
@@ -90,8 +94,21 @@ export default function PhasedIntroScreen() {
   const stagedIds = data?.stagedActiveIds ?? [];
 
   async function addNow() {
-    await Promise.all(stagedIds.map((id) => overrideStaging(id)));
-    backOrReplace(router);
+    if (saving) return;
+    if (stagedIds.length === 0) {
+      backOrReplace(router);
+      return;
+    }
+    setSaving(true);
+    setSaveFailed(false);
+    try {
+      await overrideStaging(stagedIds);
+      backOrReplace(router);
+    } catch {
+      setSaveFailed(true);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -99,6 +116,7 @@ export default function PhasedIntroScreen() {
       fallbackRoute={APP_HOME_ROUTE}
       scroll
       backdropAccessible={!compactSheet}
+      dismissDisabled={saving}
       className={shortSheet ? 'px-5 pb-3 pt-3' : compactSheet ? 'pb-6' : undefined}
     >
       <Text variant="label" tone="clay" className={shortSheet ? 'mb-1.5' : 'mb-2.5'}>
@@ -154,23 +172,29 @@ export default function PhasedIntroScreen() {
         />
       </View>
 
+      {saveFailed ? <CycleMutationError className={shortSheet ? 'mt-2' : undefined} /> : null}
+
       <Button
         className={shortSheet ? 'mt-1 py-0' : compactSheet ? 'min-h-[48px] py-3' : undefined}
         label="Sounds good"
+        disabled={saving}
         onPress={() => backOrReplace(router)}
         style={shortSheet ? { height: 48, minHeight: 48, paddingVertical: 0 } : undefined}
       />
       <Pressable
         accessibilityRole="button"
+        accessibilityState={{ disabled: saving }}
+        disabled={saving}
         className={cn(
           'items-center justify-center',
           'min-h-[48px]',
           compactSheet && !shortSheet ? 'pt-1' : null,
         )}
         onPress={() => void addNow()}
+        style={{ opacity: saving ? 0.55 : 1 }}
       >
         <Text variant="bodySm" tone="muted" className="font-sans-semibold">
-          Add it now anyway
+          {saving ? 'Saving change...' : saveFailed ? 'Try adding it now again' : 'Add it now anyway'}
         </Text>
       </Pressable>
     </Sheet>

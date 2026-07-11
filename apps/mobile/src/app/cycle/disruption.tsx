@@ -1,9 +1,11 @@
 import type { DisruptionReason } from '@onskin/types';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, View, useWindowDimensions } from 'react-native';
 
 import { Sheet, Text } from '@/components/ui';
-import { useCycleMutations } from '@/features/scheduler/useCycle';
+import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
+import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -18,6 +20,7 @@ function Option({
   firm,
   compact,
   short,
+  disabled,
   onPress,
 }: {
   glyph: string;
@@ -26,11 +29,14 @@ function Option({
   firm?: boolean;
   compact?: boolean;
   short?: boolean;
+  disabled?: boolean;
   onPress: () => void;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityState={{ disabled: !!disabled }}
+      disabled={disabled}
       onPress={() => {
         haptics.select();
         onPress();
@@ -45,6 +51,7 @@ function Option({
             : 'gap-3.5 p-4',
         firm ? 'border border-amber/40' : 'border border-hairline',
       )}
+      style={{ opacity: disabled ? 0.55 : 1 }}
     >
       <View
         className={cn(
@@ -82,22 +89,36 @@ function Option({
 
 export default function DisruptionScreen() {
   const { height } = useWindowDimensions();
+  const { data } = useCycle();
   const m = useCycleMutations();
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
+  const [saveFailed, setSaveFailed] = useState(false);
   const compactSheet = height < 640;
   const shortSheet = height < 520;
+  const controlsDisabled = pendingAction != null;
 
-  const act = async (fn: () => Promise<void>) => {
-    await fn();
-    backOrReplace(router);
+  const act = async (action: string, fn: () => Promise<void>) => {
+    if (pendingAction) return;
+    setPendingAction(action);
+    setSaveFailed(false);
+    try {
+      await fn();
+      backOrReplace(router);
+    } catch {
+      setSaveFailed(true);
+    } finally {
+      setPendingAction(null);
+    }
   };
 
-  const pause = (reason: DisruptionReason) => act(() => m.pause(reason));
+  const pause = (reason: DisruptionReason) => void act(reason, () => m.pause(reason));
 
   return (
     <Sheet
       fallbackRoute={APP_HOME_ROUTE}
       scroll
       backdropAccessible={!compactSheet}
+      dismissDisabled={controlsDisabled}
       className={shortSheet ? 'px-5 pb-3 pt-3' : compactSheet ? 'pb-6' : undefined}
     >
       <Text
@@ -125,43 +146,62 @@ export default function DisruptionScreen() {
       </Text>
 
       <View className={shortSheet ? 'mt-3 gap-1.5' : compactSheet ? 'mt-4 gap-2' : 'mt-6 gap-2.5'}>
-        <Option
-          glyph="‖"
-          compact={compactSheet}
-          short={shortSheet}
-          title="Skip tonight"
-          sub="Just this once. The cycle continues"
-          onPress={() => act(m.skip)}
-        />
-        <Option
-          glyph="◴"
-          compact={compactSheet}
-          short={shortSheet}
-          title="Pause my routine"
-          sub="Vacation, illness, a break"
-          onPress={() => pause('break')}
-        />
-        <Option
-          glyph="→"
-          compact={compactSheet}
-          short={shortSheet}
-          title="Travel mode"
-          sub="Trim to essentials while away"
-          onPress={() => pause('travel')}
-        />
+        {data?.paused ? (
+          <Option
+            glyph="→"
+            compact={compactSheet}
+            short={shortSheet}
+            disabled={controlsDisabled}
+            title={pendingAction === 'resume' ? 'Resuming routine...' : 'Resume my routine'}
+            sub="Continue from the night where you paused"
+            onPress={() => void act('resume', m.resume)}
+          />
+        ) : (
+          <>
+            <Option
+              glyph="‖"
+              compact={compactSheet}
+              short={shortSheet}
+              disabled={controlsDisabled}
+              title="Skip tonight"
+              sub="Just this once. The cycle continues"
+              onPress={() => void act('skip', m.skip)}
+            />
+            <Option
+              glyph="◴"
+              compact={compactSheet}
+              short={shortSheet}
+              disabled={controlsDisabled}
+              title="Pause my routine"
+              sub="Vacation, illness, a break"
+              onPress={() => pause('break')}
+            />
+            <Option
+              glyph="→"
+              compact={compactSheet}
+              short={shortSheet}
+              disabled={controlsDisabled}
+              title="Travel mode"
+              sub="Trim to essentials while away"
+              onPress={() => pause('travel')}
+            />
+          </>
+        )}
         <Option
           glyph="◇"
           compact={compactSheet}
           short={shortSheet}
+          disabled={controlsDisabled}
           title="I had a facial or peel"
           sub="Pause actives, let skin recover"
           firm
           onPress={() => {
-            haptics.select();
+            setSaveFailed(false);
             router.replace('/cycle/procedure');
           }}
         />
       </View>
+      {saveFailed ? <CycleMutationError /> : null}
     </Sheet>
   );
 }

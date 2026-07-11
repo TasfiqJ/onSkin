@@ -50,6 +50,7 @@ export function shouldOfferStepUp(opts: {
 
 /** De-escalate on reported irritation: pause + drop a night (claim-safe, §4). */
 export function deEscalate(state: RampState): RampState {
+  if (state.toleranceState === 'paused_irritation') return state;
   return {
     freqPerWeek: Math.max(1, state.freqPerWeek - 1),
     targetPerWeek: state.targetPerWeek,

@@ -1,0 +1,46 @@
+{
+  "alerts": 1,
+  "controls": [
+    {
+      "disabled": false,
+      "height": 48,
+      "name": "Back",
+      "visible": true,
+      "width": 48
+    },
+    {
+      "disabled": false,
+      "height": 75.85,
+      "name": "3days",
+      "visible": true,
+      "width": 108.12
+    },
+    {
+      "disabled": false,
+      "height": 75.85,
+      "name": "5days",
+      "visible": true,
+      "width": 108.13
+    },
+    {
+      "disabled": false,
+      "height": 75.85,
+      "name": "7days",
+      "visible": true,
+      "width": 110.06
+    },
+    {
+      "disabled": false,
+      "height": 55.99,
+      "name": "Try again",
+      "visible": true,
+      "width": 342.29
+    }
+  ],
+  "documentWidth": 390,
+  "horizontalOverflow": false,
+  "viewport": {
+    "height": 845,
+    "width": 390
+  }
+}

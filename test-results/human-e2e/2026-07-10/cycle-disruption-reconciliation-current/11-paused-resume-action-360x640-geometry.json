@@ -1,0 +1,34 @@
+{
+  "controls": [
+    {
+      "bottom": 236.01,
+      "fullyVisible": true,
+      "height": 236.01,
+      "name": "Dismiss",
+      "top": 0,
+      "width": 360.19
+    },
+    {
+      "bottom": 512.88,
+      "fullyVisible": true,
+      "height": 97.91,
+      "name": "Resume my routine. Continue from the night where you paused",
+      "top": 414.97,
+      "width": 304.22
+    },
+    {
+      "bottom": 600.79,
+      "fullyVisible": true,
+      "height": 77.91,
+      "name": "I had a facial or peel. Pause actives, let skin recover",
+      "top": 522.88,
+      "width": 304.22
+    }
+  ],
+  "documentWidth": 360,
+  "horizontalOverflow": false,
+  "viewport": {
+    "height": 641,
+    "width": 360
+  }
+}

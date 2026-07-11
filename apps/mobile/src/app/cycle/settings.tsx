@@ -1,9 +1,11 @@
 import type { CycleVariant } from '@onskin/types';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
+import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { slotLabel } from '@/features/scheduler/projection';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
@@ -23,6 +25,8 @@ const VARIANTS: { id: CycleVariant; label: string; sub: string }[] = [
 export default function CycleSettingsScreen() {
   const { data } = useCycle();
   const m = useCycleMutations();
+  const [savingVariant, setSavingVariant] = useState<CycleVariant | null>(null);
+  const [saveFailed, setSaveFailed] = useState(false);
   const cadenceReady = canUseRoutineCadence();
   const cycle = data?.cycle;
   const selected: CycleVariant | null =
@@ -34,12 +38,26 @@ export default function CycleSettingsScreen() {
     (n) => n.slot === 'exfoliate' || n.slot === 'retinoid',
   );
 
+  async function chooseVariant(variant: CycleVariant) {
+    if (savingVariant) return;
+    setSavingVariant(variant);
+    setSaveFailed(false);
+    try {
+      await m.setVariant(variant);
+    } catch {
+      setSaveFailed(true);
+    } finally {
+      setSavingVariant(null);
+    }
+  }
+
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="mt-2 flex-row items-center justify-between">
         <RouteIconButton
           accessibilityLabel="Done"
           glyph="x"
+          disabled={savingVariant != null}
           onPress={() => backOrReplace(router)}
         />
         <Text variant="body" className="font-sans-semibold">
@@ -73,15 +91,17 @@ export default function CycleSettingsScreen() {
                     key={v.id}
                     accessibilityRole="button"
                     accessibilityLabel={`${v.label}. ${sub}`}
-                    accessibilityState={{ selected: isSel }}
+                    accessibilityState={{ disabled: savingVariant != null, selected: isSel }}
+                    disabled={savingVariant != null}
                     onPress={() => {
                       haptics.select();
-                      void m.setVariant(v.id);
+                      void chooseVariant(v.id);
                     }}
                     className={cn(
                       'flex-1 items-center rounded-[14px] bg-paper-raised px-2 py-3',
                       isSel ? 'border-2 border-clay' : 'border border-hairline-strong',
                     )}
+                    style={{ opacity: savingVariant != null ? 0.55 : 1 }}
                   >
                     <Text className="font-sans-bold text-[13.5px]" tone={isSel ? 'ink' : 'muted'}>
                       {v.label}
@@ -93,6 +113,8 @@ export default function CycleSettingsScreen() {
                 );
               })}
             </View>
+
+            {saveFailed ? <CycleMutationError /> : null}
 
             {cycle ? (
               <>

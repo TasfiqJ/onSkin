@@ -1,7 +1,9 @@
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
+import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 
@@ -12,14 +14,34 @@ export default function RecoveryScreen() {
   const { height } = useWindowDimensions();
   const { data } = useCycle();
   const m = useCycleMutations();
+  const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
   const rec = data?.recovery;
   const compactScreen = height < 640;
+
+  async function finishRecovery() {
+    if (saving) return;
+    setSaving(true);
+    setSaveFailed(false);
+    try {
+      await m.finishRecovery();
+      backOrReplace(router);
+    } catch {
+      setSaveFailed(true);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   if (!rec?.active) {
     return (
       <Screen edges={['top', 'bottom']}>
         <View className="mt-2">
-          <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
+          <RouteIconButton
+            accessibilityLabel="Back"
+            disabled={saving}
+            onPress={() => backOrReplace(router)}
+          />
         </View>
         <View className="flex-1 items-center justify-center">
           <Text variant="body" tone="muted">
@@ -45,7 +67,11 @@ export default function RecoveryScreen() {
         contentContainerClassName={compactScreen ? 'pb-5' : 'pb-6'}
       >
         <View className={compactScreen ? 'mt-0' : 'mt-2'}>
-          <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
+          <RouteIconButton
+            accessibilityLabel="Back"
+            disabled={saving}
+            onPress={() => backOrReplace(router)}
+          />
         </View>
 
         <View
@@ -161,13 +187,13 @@ export default function RecoveryScreen() {
           </Text>
         </View>
 
+        {saveFailed ? <CycleMutationError /> : null}
+
         <Button
           className={compactScreen ? 'mt-4' : 'mt-6'}
-          label="Ease back in"
-          onPress={async () => {
-            await m.finishRecovery();
-            backOrReplace(router);
-          }}
+          disabled={saving}
+          label={saving ? 'Resuming cycle...' : saveFailed ? 'Try again' : 'Ease back in'}
+          onPress={() => void finishRecovery()}
         />
       </ScrollView>
     </Screen>

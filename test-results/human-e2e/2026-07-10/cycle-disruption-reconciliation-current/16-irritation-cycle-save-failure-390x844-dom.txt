@@ -1,0 +1,21 @@
+- button "Dismiss"
+- dialog:
+  - button "Skip tolerance check-in":
+    - generic: Skip
+  - generic: ONE QUICK CHECK-IN
+  - generic: How did your skin feel this week?
+  - generic: It only tunes your pace. Nothing here is a diagnosis. Optional, always.
+  - button "Comfortable. We may offer a small step-up":
+    - generic: Comfortable
+    - generic: We may offer a small step-up
+  - button "A bit dry. We'll hold your pace steady":
+    - generic: A bit dry
+    - generic: We'll hold your pace steady
+  - button "Irritated. We'll add recovery nights & ease off":
+    - generic: Irritated
+    - generic: We'll add recovery nights & ease off
+  - alert:
+    - generic: Check-in not saved
+    - generic: Your previous pace and cycle are still in place. Try again when private storage is available.
+  - button "Try again":
+    - generic: Try again

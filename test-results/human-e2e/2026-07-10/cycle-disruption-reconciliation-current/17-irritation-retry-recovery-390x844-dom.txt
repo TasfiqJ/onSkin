@@ -1,0 +1,14 @@
+- button "Back":
+  - generic: <
+- generic: Recovery mode · day 1 of 7
+- heading "We've eased off for now." [level=1]
+- generic: You told us your skin felt irritated, so we paused your actives and switched to barrier repair. This isn’t a setback. It’s how skin gets stronger.
+- generic: Resting your barrier
+- generic: 1 / 7
+- generic: Paused actives
+- generic: Reintroduce gradually →
+- generic: Paused until you're comfortable
+- generic: Glycolic 7% Toner
+- generic: Feeling better already? You can ease back in early. We'll start with one active.
+- button "Ease back in":
+  - generic: Ease back in

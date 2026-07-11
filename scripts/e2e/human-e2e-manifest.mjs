@@ -284,6 +284,13 @@ if (!conflictChoiceScheduleEvidenceDate) {
   console.error('FAIL Missing exact-pair conflict-choice schedule evidence.');
   process.exit(1);
 }
+const cycleDisruptionReconciliationEvidenceDate = latestEvidenceDateForFolder(
+  'cycle-disruption-reconciliation-current',
+);
+if (!cycleDisruptionReconciliationEvidenceDate) {
+  console.error('FAIL Missing cycle disruption and reconciliation evidence.');
+  process.exit(1);
+}
 const dataExportDisclosureEvidenceDate = latestEvidenceDateForFolder(
   'data-export-local-photo-disclosure-current',
 );
@@ -685,6 +692,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Two same-rule pairs keep independent current-version choices, suppress only resolved prompts, preserve one-active schedule authority, recover from one failed encrypted write, and pass supported-phone geometry/keyboard checks.',
+  },
+  {
+    id: 'cycle-disruption-reconciliation-supported-phone',
+    title: 'Cycle disruption persistence and deterministic reconciliation',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${cycleDisruptionReconciliationEvidenceDate}/cycle-disruption-reconciliation-current`,
+    evidence: 'summary.json',
+    expected:
+      'Pause, resume, recovery, variant, Start Today, and irritation flows persist before success, recover from failed private writes, reconcile one canonical projection, and remain reachable at 360 x 640 and 390 x 844.',
   },
   {
     id: 'data-export-local-photo-disclosure-supported-phone',

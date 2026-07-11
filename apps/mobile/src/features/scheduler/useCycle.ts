@@ -1,6 +1,7 @@
 import type { DisruptionReason } from '@onskin/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AppState, type AppStateStatus } from 'react-native';
 
 import { useRamp } from '@/features/routine/useRamp';
 import { useShelf } from '@/features/shelf/useShelf';
@@ -10,7 +11,7 @@ import { track } from '@/lib/analytics/track';
 import {
   endRecovery,
   loadCycleConfig,
-  overrideStaging,
+  overrideStagingProducts,
   pauseCycle,
   recoveryProgress,
   resumeCycle,
@@ -19,6 +20,7 @@ import {
   startRecovery,
   updateCycleConfig,
   type CycleConfig,
+  type RecoveryReason,
 } from './cycleStore';
 import {
   orchestrate,
@@ -66,20 +68,63 @@ export function hasUseTogetherChoiceBetween(
   );
 }
 
+function millisecondsUntilNextLocalDay(now = new Date()): number {
+  const next = new Date(now);
+  next.setHours(24, 0, 1, 0);
+  return Math.max(1_000, next.getTime() - now.getTime());
+}
+
+function useCycleLocalDate(): string {
+  const [today, setToday] = useState(() => localDateString());
+  const todayRef = useRef(today);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const refresh = () => {
+      const next = localDateString();
+      if (next !== todayRef.current) {
+        todayRef.current = next;
+        setToday(next);
+      }
+    };
+    const schedule = () => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        refresh();
+        schedule();
+      }, millisecondsUntilNextLocalDay());
+    };
+    const handleAppState = (state: AppStateStatus) => {
+      if (state !== 'active') return;
+      refresh();
+      schedule();
+    };
+
+    schedule();
+    const subscription = AppState.addEventListener('change', handleAppState);
+    return () => {
+      if (timer) clearTimeout(timer);
+      subscription.remove();
+    };
+  }, []);
+
+  return today;
+}
+
 function daysSince(iso: string): number {
   return Math.round((Date.now() - new Date(iso).getTime()) / 86_400_000);
 }
 
 export function useCycle(): { data: CycleData | undefined; isLoading: boolean } {
   const shelf = useShelf();
-  const cfg = useQuery({ queryKey: ['cycleConfig'], queryFn: loadCycleConfig });
+  const today = useCycleLocalDate();
+  const cfg = useQuery({ queryKey: ['cycleConfig', today], queryFn: loadCycleConfig });
   const profile = useProfileBits();
   // Live ramp state (the same source tolerance.tsx writes), so the user's actual
   // ramped frequency reaches the scheduler instead of every active defaulting to
   // the class cap (docs/05 §4: freq = min(ramp.freq_per_week, frequency_cap)).
   const ramp = useRamp();
-  const today = localDateString();
-
   // Per-product ramp frequency keyed by engineProduct.id (== user_product id ==
   // rampStore key), built from the merged plan-initial + persisted-override ramp.
   const freqByProductId = useMemo<Record<string, number>>(() => {
@@ -149,46 +194,43 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
 
 export function useCycleMutations() {
   const qc = useQueryClient();
-  const invalidate = () => qc.invalidateQueries({ queryKey: ['cycleConfig'] });
+  const commit = async (operation: () => Promise<CycleConfig>): Promise<CycleConfig> => {
+    await qc.cancelQueries({ queryKey: ['cycleConfig'] });
+    const next = await operation();
+    qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next);
+    return next;
+  };
   return {
     async setVariant(variant: CycleConfig['variant']) {
-      await updateCycleConfig({ variant });
+      await commit(() => updateCycleConfig({ variant }));
       track('cycle_variant_changed', { variant });
-      await invalidate();
     },
     async start() {
-      await startCycleToday();
+      await commit(startCycleToday);
       track('cycle_started');
-      await invalidate();
     },
     async pause(reason: DisruptionReason) {
-      await pauseCycle(reason);
+      await commit(() => pauseCycle(reason));
       track('cycle_paused');
-      await invalidate();
     },
     async resume() {
-      await resumeCycle();
+      await commit(resumeCycle);
       track('cycle_resumed');
-      await invalidate();
     },
     async skip() {
-      await skipTonight();
+      await commit(skipTonight);
       track('night_skipped');
-      await invalidate();
     },
-    async overrideStaging(productId: string) {
-      await overrideStaging(productId);
+    async overrideStaging(productIds: readonly string[]) {
+      await commit(() => overrideStagingProducts(productIds));
       track('phased_intro_overridden');
-      await invalidate();
     },
-    async beginRecovery(days: number, reason: DisruptionReason) {
-      await startRecovery(days, reason);
+    async beginRecovery(days: number, reason: RecoveryReason) {
+      await commit(() => startRecovery(days, reason));
       track('cycle_recovery_started');
-      await invalidate();
     },
     async finishRecovery() {
-      await endRecovery();
-      await invalidate();
+      await commit(endRecovery);
     },
   };
 }

@@ -1,0 +1,25 @@
+- button "Done":
+  - generic: x
+- generic: Cycle settings
+- generic: Variant
+- button "Gentle. more recovery":
+  - generic: Gentle
+  - generic: more recovery
+- button "Classic. 5 nights generated":
+  - generic: Classic
+  - generic: 5 nights generated
+- button "Advanced. fewer rest":
+  - generic: Advanced
+  - generic: fewer rest
+- alert:
+  - generic: Change not saved
+  - generic: Your previous cycle is still in place. Try again when private storage is available.
+- generic: Actives on your nights
+- generic: Night 1
+- generic: Glycolic 7% Toner exfoliate
+- generic: Scheduled
+- generic: Night 3
+- generic: Glycolic 7% Toner exfoliate
+- generic: Scheduled
+- generic: We keep acids and retinol on separate nights to protect your barrier. The one rule we hold firm. Everything else is a recommendation you can change.
+- generic: Variant changes recalculate your active nights from the products on your shelf. We keep the barrier-safety rule firm in every version.

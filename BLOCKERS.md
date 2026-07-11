@@ -127,7 +127,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 190 mobile test files / 1997 tests. The human-simulated E2E manifest now
+covers 190 mobile test files / 2010 tests. The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
@@ -166,9 +166,14 @@ withholding, one-active PM projection, reload persistence, and supported-phone
   `test-results/human-e2e/2026-07-10/conflict-choice-schedule-current/` and
   proves independent same-rule pairs, both persisted choices, exact downstream
   suppression/explanations, one-shot write recovery, one-active schedule
-  authority, and supported-phone keyboard/geometry. None of these local gates
-  replaces named clinical/cosmetic review, live Supabase proof, or native
-  device accessibility evidence.
+  authority, and supported-phone keyboard/geometry. The required `Cycle
+  disruption persistence and deterministic reconciliation` gate is in
+  `test-results/human-e2e/2026-07-10/cycle-disruption-reconciliation-current/`
+  and proves failed-write recovery, pause/reload/resume, procedure and
+  irritation recovery, variant persistence, Start Today, pending-interaction
+  blocking, and supported-phone geometry. None of these local gates replaces
+  named clinical/cosmetic review, live Supabase proof, native process-death or
+  timezone/DST proof, or native device accessibility evidence.
 The baseline still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also
@@ -841,6 +846,10 @@ Current implementation note:
   owner-RLS `routine_conflicts` row is a checked best-effort mirror, not a retry
   queue or cross-device authority. Live migration, RLS, failure recovery, and
   reconciliation proof remain open before any sync claim.
+- Cycle disruption configuration is encrypted local authority. Same-key
+  mutations commit atomically and reconcile pause, recovery, skip, and local-day
+  rollover before projection. Cross-device history, server reconciliation, and
+  any continuity claim across devices remain deferred.
 
 Exit criteria:
 

@@ -6,6 +6,28 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Closed cycle disruption and recovery persistence as one deterministic,
+  encrypted local state machine. Pause, resume, Start Today, skip, procedure
+  recovery, irritation recovery, phased introduction, and cycle-variant saves
+  now commit atomically before UI/cache success; failed writes preserve the
+  previous state and expose an inline retry. Resume and expired recovery
+  re-anchor once, same-day skip remains non-reanchoring, stale skips prune, and
+  legacy pause/recovery overlap reconciles by the later disruption without
+  discarding elapsed suspension. Query cancellation and local-midnight or
+  foreground rollover prevent stale projections from replacing committed or
+  newly expired state. Pending sheets cannot dismiss mid-write. Plan Start
+  Today and irritation de-escalation now respect the same persistence boundary.
+  Codex in-app browser E2E at 360 x 640 and 390 x 844 verified one-shot
+  write-failure recovery, pause/reload/resume, procedure and irritation
+  recovery, early finish, variant persistence, Start Today, pending-state
+  blocking, and supported-phone geometry. It found and fixed a contradictory
+  paused-cycle Today preview; independent review then found and closed six
+  state, cache, rollover, and pending-interaction defects. Evidence is in
+  `test-results/human-e2e/2026-07-10/cycle-disruption-reconciliation-current/`.
+  Focused regressions pass 76/76; root typecheck/lint and the full suite pass
+  190 mobile test files / 2010 tests. Physical iOS/Android process-death,
+  timezone/DST, secure-storage, and accessibility proof remains Tas-owned.
+
 - Closed exact-pair conflict-choice persistence without weakening the reviewed
   schedule. Keep and Use together now use versioned encrypted records keyed by
   canonical shelf-product pair, rule, and rule version; legacy choices migrate,

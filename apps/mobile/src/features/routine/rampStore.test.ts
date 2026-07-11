@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { localDateString } from '@/features/today/useToday';
 
-import { ensureRamp, getStoredRamps } from './rampStore';
+import { applyToleranceToRamps, ensureRamp, getStoredRamps } from './rampStore';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
@@ -72,19 +72,38 @@ describe('routine ramp persistence', () => {
     });
   });
 
-  it('seeds a clean ramp after malformed local state', async () => {
-    mocks.storage.set(KEY, JSON.stringify(['bad']));
+  it('preserves malformed prior state instead of overwriting it on a write path', async () => {
+    const malformed = JSON.stringify(['bad']);
+    mocks.storage.set(KEY, malformed);
 
     await expect(
       ensureRamp('retinol', { freqPerWeek: 2, targetPerWeek: 3, toleranceState: 'building' }),
-    ).resolves.toMatchObject({
-      freqPerWeek: 2,
-      targetPerWeek: 3,
-      toleranceState: 'building',
-      startedAt: localDateString(),
-      lastStepUp: null,
-    });
+    ).rejects.toThrow('RAMP_STATE_INVALID');
 
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toHaveProperty('retinol');
+    expect(mocks.storage.get(KEY)).toBe(malformed);
+  });
+
+  it('does not lower an irritation-paused ramp again when a retry repeats the answer', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        retinol: {
+          freqPerWeek: 3,
+          targetPerWeek: 4,
+          toleranceState: 'building',
+          startedAt: localDateString(),
+          lastStepUp: null,
+        },
+      }),
+    );
+
+    await applyToleranceToRamps('irritated');
+    await applyToleranceToRamps('irritated');
+
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}').retinol).toMatchObject({
+      freqPerWeek: 2,
+      targetPerWeek: 4,
+      toleranceState: 'paused_irritation',
+    });
   });
 });

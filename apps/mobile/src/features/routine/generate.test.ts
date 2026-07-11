@@ -508,6 +508,7 @@ describe('retinoid ramp (docs/03 §4)', () => {
     );
     expect(s.freqPerWeek).toBe(2);
     expect(s.toleranceState).toBe('paused_irritation');
+    expect(applyTolerance(s, 'irritated')).toEqual(s);
   });
   it('comfortable → steady; a bit dry → hold', () => {
     expect(applyTolerance(initRamp('retinoid', 'sensitive'), 'comfortable').toleranceState).toBe(

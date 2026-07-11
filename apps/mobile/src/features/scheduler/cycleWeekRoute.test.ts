@@ -124,8 +124,74 @@ describe('cycle week route scheduler notes', () => {
     expect(source).toContain('<View className="bg-paper pb-4 pt-3">');
     expect(source).toContain('<Button');
     expect(source.indexOf('<View className="bg-paper pb-4 pt-3">')).toBeLessThan(
-      source.indexOf('label="Start recovery"'),
+      source.indexOf("'Start recovery'"),
     );
+  });
+
+  it('persists cycle mutations before cache, analytics, navigation, or success copy', () => {
+    const store = readFileSync(`${APP_DIR}/../features/scheduler/cycleStore.ts`, 'utf8');
+    const useCycle = readFileSync(`${APP_DIR}/../features/scheduler/useCycle.ts`, 'utf8');
+    const disruption = readAppRoute('cycle/disruption.tsx');
+    const procedure = readAppRoute('cycle/procedure.tsx');
+    const recovery = readAppRoute('cycle/recovery.tsx');
+    const phasedIntro = readAppRoute('cycle/phased-intro.tsx');
+    const settings = readAppRoute('cycle/settings.tsx');
+    const today = readAppRoute('(tabs)/today.tsx');
+    const plan = readAppRoute('routine/plan.tsx');
+    const tolerance = readAppRoute('routine/tolerance.tsx');
+    const sheet = readFileSync(`${APP_DIR}/../components/ui/Sheet.tsx`, 'utf8');
+
+    expect(store).toContain('await updatePrivateItem(KEY, (raw) => {');
+    expect(store).toContain('EXPO_PUBLIC_E2E_CYCLE_CONFIG_SAVE_FAILURE');
+    expect(store).toContain("throw new Error('E2E_CYCLE_CONFIG_PRIVATE_WRITE_FAILURE')");
+    expect(store).toContain('finishRecoveryAt(finishPauseAt(current, today), today)');
+    expect(store).toContain('currentAndFutureSkips');
+    expect(store).not.toContain('/* best-effort */');
+
+    const commitIndex = useCycle.indexOf('await commit(() => updateCycleConfig({ variant }))');
+    expect(commitIndex).toBeGreaterThan(-1);
+    expect(useCycle.indexOf("track('cycle_variant_changed'", commitIndex)).toBeGreaterThan(
+      commitIndex,
+    );
+    expect(useCycle).toContain("await qc.cancelQueries({ queryKey: ['cycleConfig'] })");
+    expect(useCycle).toContain(
+      "qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next)",
+    );
+    expect(useCycle).toContain("queryKey: ['cycleConfig', today]");
+    expect(useCycle).toContain("AppState.addEventListener('change', handleAppState)");
+    expect(useCycle).toContain('millisecondsUntilNextLocalDay()');
+
+    expect(disruption).toContain('data?.paused ? (');
+    expect(disruption).toContain('Resume my routine');
+    expect(disruption).toContain("void act('resume', m.resume)");
+    expect(disruption).toContain('<CycleMutationError />');
+    expect(procedure).toContain("saveFailed ? 'Try again'");
+    expect(recovery).toContain("saveFailed ? 'Try again'");
+    expect(settings).toContain('<CycleMutationError />');
+    expect(today).toContain("? 'Tonight · Paused'");
+    expect(today).toContain("? 'Manage paused cycle'");
+    expect(today).toContain("? '/cycle/disruption'");
+    expect(today).toContain('Your cycle resumes when you are ready');
+
+    expect(plan).toContain('const cycleMutations = useCycleMutations();');
+    expect(plan).toContain('await cycleMutations.start();');
+    expect(plan).toContain('<CycleMutationError className="mb-2 mt-0" />');
+
+    const recoveryWriteIndex = tolerance.indexOf("await m.beginRecovery(7, 'irritation');");
+    const rampWriteIndex = tolerance.indexOf('await applyToleranceToRamps(selected);');
+    expect(recoveryWriteIndex).toBeGreaterThan(-1);
+    expect(rampWriteIndex).toBeGreaterThan(recoveryWriteIndex);
+    expect(tolerance).toContain("setSaveFailure(recoveryIsActive ? 'recovery_only' : 'unchanged')");
+    expect(tolerance).toContain('dismissDisabled={saving}');
+
+    expect(sheet).toContain('dismissDisabled?: boolean;');
+    expect(sheet).toContain('disabled={dismissDisabled}');
+    expect(disruption).toContain('dismissDisabled={controlsDisabled}');
+    expect(phasedIntro).toContain('dismissDisabled={saving}');
+
+    expect(phasedIntro).toContain('await overrideStaging(stagedIds);');
+    expect(phasedIntro).not.toContain('Promise.all(stagedIds.map');
+    expect(phasedIntro).toContain('accessibilityState={{ disabled: saving }}');
   });
 
   it('keeps scheduler safety notes visible when no cycle is formed', () => {

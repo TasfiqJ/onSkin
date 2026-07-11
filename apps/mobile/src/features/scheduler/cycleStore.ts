@@ -2,35 +2,32 @@ import type { CycleVariant, DisruptionReason } from '@onskin/types';
 
 import { getCycleAnchor } from '@/features/routine/cycleAnchor';
 import { localDateString } from '@/features/today/useToday';
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import { addDays } from './projection';
 
-// Local-first cycle config (docs/05 §3/§7). Variant override, anchor, pause, the
-// recovery window, and one-off skips. AsyncStorage is the v1 source of truth
-// (offline-first, D-029/D-034); the `cycles`/`cycle_nights` schema is the
-// forward-compatible server target (B-SUPABASE). The per-night SLOTS are derived
-// by orchestration (orchestrate.ts) over the shelf. This store holds only the
-// user's persistent choices on top.
+// Local-first cycle configuration (docs/05 sections 3 and 7). The generated
+// per-night schedule remains derived from the shelf; this store holds only the
+// user's persistent choices and disruption state on top of that schedule.
 const KEY = 'onskin.cycle.v1';
+
+export type RecoveryReason = Extract<DisruptionReason, 'procedure' | 'irritation'>;
 
 export type RecoveryState = {
   startISO: string;
-  days: number; // recovery window length
-  reason: DisruptionReason; // 'procedure' | 'irritation'
+  days: number;
+  reason: RecoveryReason;
 };
 
 export type CycleConfig = {
-  /** 'auto' = pick the variant from the profile; otherwise the user's choice. */
+  /** 'auto' picks the variant from the profile; otherwise this is the user's choice. */
   variant: CycleVariant | 'auto';
   anchorISO: string;
   pausedFrom: string | null;
   pauseReason: DisruptionReason | null;
   recovery: RecoveryState | null;
   skips: string[];
-  /** Product ids the user chose to start NOW, opting out of phased staging
-   *  (docs/05 §6.2: "the user may proceed anyway"). orchestrate stops treating
-   *  these as new so they enter the cycle immediately. */
+  /** Product ids the user chose to introduce now instead of staging. */
   stagingOverrides: string[];
 };
 
@@ -59,6 +56,7 @@ const DISRUPTION_REASONS = new Set<DisruptionReason>([
   'travel',
   'break',
 ]);
+const RECOVERY_REASONS = new Set<RecoveryReason>(['procedure', 'irritation']);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && !Array.isArray(value) && typeof value === 'object';
@@ -79,10 +77,6 @@ function normalizeLocalDateISO(value: unknown): string | null {
     : null;
 }
 
-function isStringArray(value: unknown): value is string[] {
-  return Array.isArray(value) && value.every((item) => typeof item === 'string');
-}
-
 function normalizeDateArray(value: unknown): string[] | null {
   if (!Array.isArray(value)) return null;
   const dates: string[] = [];
@@ -94,8 +88,23 @@ function normalizeDateArray(value: unknown): string[] | null {
   return [...new Set(dates)];
 }
 
+function normalizeIdArray(value: unknown): string[] | null {
+  if (!Array.isArray(value) || value.some((item) => typeof item !== 'string')) return null;
+  return [
+    ...new Set(
+      value
+        .map((item) => (item as string).trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
 function isDisruptionReason(value: unknown): value is DisruptionReason {
   return typeof value === 'string' && DISRUPTION_REASONS.has(value as DisruptionReason);
+}
+
+function isRecoveryReason(value: unknown): value is RecoveryReason {
+  return typeof value === 'string' && RECOVERY_REASONS.has(value as RecoveryReason);
 }
 
 function normalizeRecovery(value: unknown): RecoveryState | null | undefined {
@@ -108,7 +117,7 @@ function normalizeRecovery(value: unknown): RecoveryState | null | undefined {
     typeof days !== 'number' ||
     !Number.isInteger(days) ||
     days <= 0 ||
-    !isDisruptionReason(value.reason)
+    !isRecoveryReason(value.reason)
   ) {
     return undefined;
   }
@@ -119,27 +128,30 @@ function normalizeStoredConfig(value: unknown, fallbackAnchorISO: string): Cycle
   if (!isRecord(value)) return null;
   const base = defaults(fallbackAnchorISO);
   const variant = value.variant ?? base.variant;
-  const anchorISO = value.anchorISO ?? base.anchorISO;
-  const pausedFrom = value.pausedFrom ?? base.pausedFrom;
-  const pauseReason = value.pauseReason ?? base.pauseReason;
+  const anchorISO = normalizeLocalDateISO(value.anchorISO ?? base.anchorISO);
+  const pausedFromValue = value.pausedFrom ?? base.pausedFrom;
+  const pausedFrom = pausedFromValue === null ? null : normalizeLocalDateISO(pausedFromValue);
+  const pauseReasonValue = value.pauseReason ?? base.pauseReason;
   const recovery = normalizeRecovery(value.recovery);
   const skips = normalizeDateArray(value.skips ?? base.skips);
-  const stagingOverrides = value.stagingOverrides ?? base.stagingOverrides;
-  const normalizedAnchorISO = normalizeLocalDateISO(anchorISO);
-  const normalizedPausedFrom = pausedFrom === null ? null : normalizeLocalDateISO(pausedFrom);
+  const stagingOverrides = normalizeIdArray(value.stagingOverrides ?? base.stagingOverrides);
 
   if (!CYCLE_VARIANTS.has(variant as CycleConfig['variant'])) return null;
-  if (!normalizedAnchorISO) return null;
-  if (normalizedPausedFrom === null && pausedFrom !== null) return null;
-  if (!(pauseReason === null || isDisruptionReason(pauseReason))) return null;
-  if (recovery === undefined) return null;
-  if (!skips) return null;
-  if (!isStringArray(stagingOverrides)) return null;
+  if (!anchorISO) return null;
+  if (pausedFrom === null && pausedFromValue !== null) return null;
+  if (!(pauseReasonValue === null || isDisruptionReason(pauseReasonValue))) return null;
+  if (recovery === undefined || !skips || !stagingOverrides) return null;
+
+  const pauseReason = pausedFrom
+    ? isDisruptionReason(pauseReasonValue)
+      ? pauseReasonValue
+      : 'break'
+    : null;
 
   return {
     variant: variant as CycleConfig['variant'],
-    anchorISO: normalizedAnchorISO,
-    pausedFrom: normalizedPausedFrom,
+    anchorISO,
+    pausedFrom,
     pauseReason,
     recovery,
     skips,
@@ -147,113 +159,245 @@ function normalizeStoredConfig(value: unknown, fallbackAnchorISO: string): Cycle
   };
 }
 
-export async function loadCycleConfig(): Promise<CycleConfig> {
-  let raw: string | null = null;
-  try {
-    raw = await getPrivateItem(KEY);
-  } catch {
-    raw = null;
-  }
-
-  if (raw) {
-    try {
-      const parsed: unknown = JSON.parse(raw);
-      const normalized = normalizeStoredConfig(parsed, localDateString());
-      if (normalized) {
-        if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
-          await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
-        }
-        return normalized;
-      }
-    } catch {
-      /* malformed legacy/local state */
-    }
-    await removePrivateItem(KEY).catch(() => undefined);
-  }
-
-  // Continuity with the legacy "Start today" anchor (cycleAnchor.ts).
-  const anchor = await getCycleAnchor();
-  return defaults(anchor);
-}
-
-async function persist(config: CycleConfig): Promise<void> {
-  try {
-    await setPrivateItem(KEY, JSON.stringify(config));
-  } catch {
-    /* best-effort */
-  }
-}
-
-export async function updateCycleConfig(patch: Partial<CycleConfig>): Promise<CycleConfig> {
-  const current = await loadCycleConfig();
-  const normalized = normalizeStoredConfig({ ...current, ...patch }, current.anchorISO);
-  const next = normalized ?? current;
-  await persist(next);
-  return next;
-}
-
-/** Pause the cycle (vacation/illness/break/travel). Suspends without breaking. */
-export async function pauseCycle(reason: DisruptionReason): Promise<void> {
-  await updateCycleConfig({ pausedFrom: localDateString(), pauseReason: reason });
-}
-
-/** Resume, re-anchoring so the cycle continues where it left off (docs/05 §3, D-036). */
-export async function resumeCycle(): Promise<void> {
-  const c = await loadCycleConfig();
-  if (!c.pausedFrom) return;
-  const pausedDays = Math.max(0, daysBetween(c.pausedFrom, localDateString()));
-  await updateCycleConfig({
-    anchorISO: addDays(c.anchorISO, pausedDays),
-    pausedFrom: null,
-    pauseReason: null,
-  });
-}
-
-/** Start (or restart) the cycle today. Re-anchors to night 0 today. */
-export async function startCycleToday(): Promise<void> {
-  const today = localDateString();
-  const current = await loadCycleConfig();
-  await updateCycleConfig({
-    anchorISO: today,
-    pausedFrom: null,
-    pauseReason: null,
-    skips: current.skips.filter((date) => date !== today),
-  });
-}
-
-/** Skip a single night. The cycle continues, nothing resets (docs/05 §7). */
-export async function skipTonight(): Promise<void> {
-  const c = await loadCycleConfig();
-  const today = localDateString();
-  if (c.skips.includes(today)) return;
-  await updateCycleConfig({ skips: [...c.skips, today] });
-}
-
-/** Opt a product out of phased staging so it enters the cycle now (docs/05 §6.2). */
-export async function overrideStaging(productId: string): Promise<void> {
-  const c = await loadCycleConfig();
-  if (c.stagingOverrides.includes(productId)) return;
-  await updateCycleConfig({ stagingOverrides: [...c.stagingOverrides, productId] });
-}
-
-/** Begin a recovery window (post-procedure or auto-de-escalation, docs/05 §7). */
-export async function startRecovery(days: number, reason: DisruptionReason): Promise<void> {
-  await updateCycleConfig({ recovery: { startISO: localDateString(), days, reason } });
-}
-
-export async function endRecovery(): Promise<void> {
-  await updateCycleConfig({ recovery: null });
-}
-
 function parseLocal(iso: string): Date {
   const [y, m, d] = iso.split('-').map(Number);
   return new Date(y!, (m ?? 1) - 1, d ?? 1);
 }
+
 function daysBetween(fromISO: string, toISO: string): number {
   return Math.round((parseLocal(toISO).getTime() - parseLocal(fromISO).getTime()) / 86_400_000);
 }
 
-/** Recovery is active while today is within [start, start+days). Returns day N of total. */
+function shiftAnchor(config: CycleConfig, days: number): CycleConfig {
+  return days > 0 ? { ...config, anchorISO: addDays(config.anchorISO, days) } : config;
+}
+
+function finishPauseAt(config: CycleConfig, todayISO: string): CycleConfig {
+  if (!config.pausedFrom) return config;
+  const pausedDays = Math.max(0, daysBetween(config.pausedFrom, todayISO));
+  return {
+    ...shiftAnchor(config, pausedDays),
+    pausedFrom: null,
+    pauseReason: null,
+  };
+}
+
+function finishRecoveryAt(config: CycleConfig, todayISO: string): CycleConfig {
+  if (!config.recovery) return config;
+  const elapsedDays = Math.max(0, daysBetween(config.recovery.startISO, todayISO));
+  const recoveryDays = Math.min(config.recovery.days, elapsedDays);
+  return { ...shiftAnchor(config, recoveryDays), recovery: null };
+}
+
+function reconcileStoredConfig(config: CycleConfig, todayISO: string): CycleConfig {
+  let next = config;
+
+  // Legacy builds could store pause and recovery together. Recovery takes over
+  // when it started later; a newer open-ended pause takes over from recovery.
+  // This preserves the last dated transition without counting overlap twice.
+  if (next.pausedFrom && next.recovery) {
+    if (next.pausedFrom < next.recovery.startISO) {
+      const pauseEnd = next.recovery.startISO < todayISO ? next.recovery.startISO : todayISO;
+      const pausedDays = Math.max(0, daysBetween(next.pausedFrom, pauseEnd));
+      next = {
+        ...shiftAnchor(next, pausedDays),
+        pausedFrom: null,
+        pauseReason: null,
+      };
+    } else {
+      next = finishRecoveryAt(next, next.pausedFrom);
+    }
+  }
+
+  if (next.recovery && daysBetween(next.recovery.startISO, todayISO) >= next.recovery.days) {
+    next = {
+      ...shiftAnchor(next, next.recovery.days),
+      recovery: null,
+    };
+  }
+
+  const currentAndFutureSkips = next.skips.filter((date) => date >= todayISO);
+  if (currentAndFutureSkips.length !== next.skips.length) {
+    next = { ...next, skips: currentAndFutureSkips };
+  }
+  return next;
+}
+
+async function normalizeLatestStoredConfig(
+  fallbackAnchorISO: string,
+  todayISO: string,
+): Promise<CycleConfig | null> {
+  let latest: CycleConfig | null = null;
+  await updatePrivateItem(KEY, (currentRaw) => {
+    if (!currentRaw) return null;
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(currentRaw) as unknown;
+    } catch {
+      return currentRaw;
+    }
+    const current = normalizeStoredConfig(parsed, fallbackAnchorISO);
+    if (!current) return currentRaw;
+    latest = reconcileStoredConfig(current, todayISO);
+    return JSON.stringify(latest);
+  });
+  return latest;
+}
+
+export async function loadCycleConfig(): Promise<CycleConfig> {
+  const fallbackAnchor = await getCycleAnchor();
+  let raw: string | null;
+  try {
+    raw = await getPrivateItem(KEY);
+  } catch {
+    return defaults(fallbackAnchor);
+  }
+
+  if (!raw) return defaults(fallbackAnchor);
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    await removePrivateItem(KEY).catch(() => undefined);
+    return defaults(fallbackAnchor);
+  }
+
+  const normalized = normalizeStoredConfig(parsed, fallbackAnchor);
+  if (!normalized) {
+    await removePrivateItem(KEY).catch(() => undefined);
+    return defaults(fallbackAnchor);
+  }
+
+  const today = localDateString();
+  const reconciled = reconcileStoredConfig(normalized, today);
+  if (JSON.stringify(parsed) === JSON.stringify(reconciled)) return reconciled;
+
+  const latest = await normalizeLatestStoredConfig(fallbackAnchor, today).catch(() => null);
+  return latest ?? reconciled;
+}
+
+function configForMutation(
+  raw: string | null,
+  fallbackAnchorISO: string,
+  todayISO: string,
+): CycleConfig {
+  if (!raw) return defaults(fallbackAnchorISO);
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    throw new Error('CYCLE_CONFIG_INVALID');
+  }
+  const normalized = normalizeStoredConfig(parsed, fallbackAnchorISO);
+  if (!normalized) throw new Error('CYCLE_CONFIG_INVALID');
+  return reconcileStoredConfig(normalized, todayISO);
+}
+
+let devCycleConfigWriteFailureUsed = false;
+
+async function maybeRejectDevCycleConfigWrite(): Promise<void> {
+  const enabled =
+    typeof __DEV__ !== 'undefined' &&
+    __DEV__ &&
+    process.env.EXPO_PUBLIC_E2E_CYCLE_CONFIG_SAVE_FAILURE === 'once';
+  if (!enabled || devCycleConfigWriteFailureUsed) return;
+  devCycleConfigWriteFailureUsed = true;
+  await new Promise((resolve) => setTimeout(resolve, 600));
+  throw new Error('E2E_CYCLE_CONFIG_PRIVATE_WRITE_FAILURE');
+}
+
+async function mutateCycleConfig(
+  transform: (current: CycleConfig, todayISO: string) => CycleConfig,
+): Promise<CycleConfig> {
+  const today = localDateString();
+  const fallbackAnchor = await getCycleAnchor();
+  let next: CycleConfig | null = null;
+
+  await maybeRejectDevCycleConfigWrite();
+  await updatePrivateItem(KEY, (raw) => {
+    const current = configForMutation(raw, fallbackAnchor, today);
+    const candidate = normalizeStoredConfig(transform(current, today), current.anchorISO);
+    if (!candidate) throw new Error('CYCLE_CONFIG_INVALID');
+    next = reconcileStoredConfig(candidate, today);
+    return JSON.stringify(next);
+  });
+
+  if (!next) throw new Error('CYCLE_CONFIG_WRITE_FAILED');
+  return next;
+}
+
+export async function updateCycleConfig(patch: Partial<CycleConfig>): Promise<CycleConfig> {
+  return mutateCycleConfig((current) => ({ ...current, ...patch }));
+}
+
+/** Pause the cycle. If recovery was active, preserve its elapsed rest first. */
+export async function pauseCycle(reason: DisruptionReason): Promise<CycleConfig> {
+  if (!isDisruptionReason(reason)) throw new Error('CYCLE_PAUSE_REASON_INVALID');
+  return mutateCycleConfig((current, today) => {
+    if (current.pausedFrom) return { ...current, pauseReason: reason };
+    const settled = finishRecoveryAt(current, today);
+    return { ...settled, pausedFrom: today, pauseReason: reason };
+  });
+}
+
+/** Resume where the cycle paused by shifting the anchor by elapsed pause days. */
+export async function resumeCycle(): Promise<CycleConfig> {
+  return mutateCycleConfig((current, today) => finishPauseAt(current, today));
+}
+
+/** Start or restart at night zero today and clear disruption state. */
+export async function startCycleToday(): Promise<CycleConfig> {
+  return mutateCycleConfig((current, today) => ({
+    ...current,
+    anchorISO: today,
+    pausedFrom: null,
+    pauseReason: null,
+    recovery: null,
+    skips: current.skips.filter((date) => date !== today),
+  }));
+}
+
+/** Skip one night without moving the cycle anchor. */
+export async function skipTonight(): Promise<CycleConfig> {
+  return mutateCycleConfig((current, today) =>
+    current.skips.includes(today) ? current : { ...current, skips: [...current.skips, today] },
+  );
+}
+
+/** Introduce all selected staged products in one atomic cycle-config write. */
+export async function overrideStagingProducts(
+  productIds: readonly string[],
+): Promise<CycleConfig> {
+  const normalizedIds = [...new Set(productIds.map((id) => id.trim()).filter(Boolean))];
+  if (normalizedIds.length === 0) throw new Error('CYCLE_STAGING_PRODUCTS_INVALID');
+  return mutateCycleConfig((current) => ({
+    ...current,
+    stagingOverrides: [...new Set([...current.stagingOverrides, ...normalizedIds])],
+  }));
+}
+
+/** Begin a recovery window after settling any existing suspension through today. */
+export async function startRecovery(
+  days: number,
+  reason: RecoveryReason,
+): Promise<CycleConfig> {
+  if (!Number.isInteger(days) || days <= 0 || !isRecoveryReason(reason)) {
+    throw new Error('CYCLE_RECOVERY_INPUT_INVALID');
+  }
+  return mutateCycleConfig((current, today) => {
+    const settled = finishRecoveryAt(finishPauseAt(current, today), today);
+    return { ...settled, recovery: { startISO: today, days, reason } };
+  });
+}
+
+/** Finish recovery early and resume at the night where recovery began. */
+export async function endRecovery(): Promise<CycleConfig> {
+  return mutateCycleConfig((current, today) => finishRecoveryAt(current, today));
+}
+
+/** Recovery is active while today is within [start, start + days). */
 export function recoveryProgress(
   recovery: RecoveryState | null,
   todayISO: string,
@@ -261,5 +405,9 @@ export function recoveryProgress(
   if (!recovery) return { active: false, day: 0, days: 0 };
   const elapsed = daysBetween(recovery.startISO, todayISO);
   const active = elapsed >= 0 && elapsed < recovery.days;
-  return { active, day: Math.min(recovery.days, elapsed + 1), days: recovery.days };
+  return {
+    active,
+    day: Math.max(0, Math.min(recovery.days, elapsed + 1)),
+    days: recovery.days,
+  };
 }

@@ -1,0 +1,26 @@
+- button "Back":
+  - generic: <
+- generic: BUILT FOR SAFETY-FIRST SKIN
+- generic: Your routine, in order.
+- generic: Safety setting applied
+- generic: Caution products paused
+- generic: Retinol 0.3% Night Serum is staying off this routine based on your pregnancy and breastfeeding setting.
+- button "Review pregnancy and breastfeeding setting":
+  - generic: Review setting
+  - generic: ›
+- generic: Morning
+- generic: "1"
+- generic: Mineral SPF 50
+- generic: Evening skin cycling
+- generic: Night 1
+- generic: Glycolic 7% Toner
+- generic: AHA · also nights 3
+- generic: Night 2
+- generic: Recover
+- generic: keep it simple · also nights 4
+- generic: A gentle cleanser would give your routine a clean base.
+- alert:
+  - generic: Change not saved
+  - generic: Your previous cycle is still in place. Try again when private storage is available.
+- button "Try again":
+  - generic: Try again

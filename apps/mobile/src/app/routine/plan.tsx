@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { router } from 'expo-router';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
@@ -12,9 +12,9 @@ import {
 } from '@/features/routine/firstInsight';
 import { usePlan } from '@/features/routine/usePlan';
 import { classLabel } from '@/features/scheduler/classes';
-import { startCycleToday } from '@/features/scheduler/cycleStore';
+import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { cycleActiveSummaries, cycleRecoveryNightNumbers } from '@/features/scheduler/projection';
-import { useCycle } from '@/features/scheduler/useCycle';
+import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
 import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -178,14 +178,26 @@ export default function PlanScreen() {
   const { height } = useWindowDimensions();
   const { data } = usePlan();
   const { data: cycleData } = useCycle();
+  const cycleMutations = useCycleMutations();
+  const [starting, setStarting] = useState(false);
+  const [startFailed, setStartFailed] = useState(false);
   const plan = data?.plan;
   const trackedPlanView = useRef(false);
   const compactPlan = height <= 640;
   const planScrollBottomPadding = compactPlan ? 144 : 112;
 
   async function startToday() {
-    await startCycleToday();
-    router.replace('/today');
+    if (starting) return;
+    setStarting(true);
+    setStartFailed(false);
+    try {
+      await cycleMutations.start();
+      router.replace('/today');
+    } catch {
+      setStartFailed(true);
+    } finally {
+      setStarting(false);
+    }
   }
 
   const exampleExfoliant = data?.isExample
@@ -248,6 +260,7 @@ export default function PlanScreen() {
           <View className={compactPlan ? 'flex-row items-center' : 'flex-row items-center pt-1'}>
             <RouteIconButton
               accessibilityLabel="Back"
+              disabled={starting}
               onPress={() => backOrReplace(router, APP_YOU_ROUTE)}
             />
             {compactPlan ? (
@@ -520,7 +533,13 @@ export default function PlanScreen() {
           zIndex: 10,
         }}
       >
-        <Button label="Start today" variant="accent" onPress={() => void startToday()} />
+        {startFailed ? <CycleMutationError className="mb-2 mt-0" /> : null}
+        <Button
+          disabled={starting}
+          label={starting ? 'Starting...' : startFailed ? 'Try again' : 'Start today'}
+          variant="accent"
+          onPress={() => void startToday()}
+        />
       </View>
     </Screen>
   );

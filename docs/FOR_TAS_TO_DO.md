@@ -403,6 +403,17 @@ Status: needs-device-verification
   cycle/disruption, cycle/phased-intro, routine/tolerance, and upsell sheets
   must keep visible exits/choices tappable and must not expose tiny hidden
   backdrop strips to VoiceOver/TalkBack or keyboard focus.
+- Verify cycle disruption and recovery persistence on supported physical iOS
+  and Android devices. Pause for at least two local days, force-close/relaunch,
+  resume, and confirm the same cycle night returns; repeat across local midnight,
+  foregrounding, daylight-saving and timezone changes. Start procedure and
+  irritation recovery while already paused, end recovery early, and let another
+  window expire while the app is backgrounded. Confirm pause/recovery never
+  overlap, Today/Week/Why Tonight/settings agree immediately, encrypted write
+  failure leaves prior cadence intact with inline retry, pending modal/backdrop
+  dismissal is blocked, and no success analytics fires before persistence.
+  Retain build/device/OS IDs, before/after cycle dates, sanitized logs, screen
+  recordings, VoiceOver/TalkBack output, and named tester signoff.
 - Build a real multi-step Shelf on each supported physical platform, save
   different Morning and Evening application orders, force-close/relaunch, add
   and remove a product, and verify Plan plus Today retain the surviving order.

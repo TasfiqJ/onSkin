@@ -1,0 +1,12 @@
+- button "Dismiss"
+- dialog:
+  - heading "Life happens." [level=1]
+  - generic: Take a break whenever you need. Nothing breaks, and we'll pick up right where you left off.
+  - button "Resume my routine. Continue from the night where you paused":
+    - generic: →
+    - generic: Resume my routine
+    - generic: Continue from the night where you paused
+  - button "I had a facial or peel. Pause actives, let skin recover":
+    - generic: ◇
+    - generic: I had a facial or peel
+    - generic: Pause actives, let skin recover

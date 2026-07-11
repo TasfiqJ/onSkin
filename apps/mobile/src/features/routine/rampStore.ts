@@ -90,24 +90,33 @@ function normalizeLog(
   return { log, changed };
 }
 
-async function load(): Promise<Log> {
+async function load(strict = false): Promise<Log> {
   let raw: string | null = null;
   try {
     raw = await getPrivateItem(KEY);
-  } catch {
+  } catch (error) {
+    if (strict) throw error;
     return {};
   }
   if (!raw) return {};
+  let parsed: unknown;
   try {
-    const parsed: unknown = JSON.parse(raw);
-    const normalized = normalizeLog(parsed, localDateString());
-    if (normalized) {
-      if (normalized.changed) await persistNormalized(normalized.log);
-      return normalized.log;
-    }
+    parsed = JSON.parse(raw) as unknown;
   } catch {
-    /* malformed legacy/local state */
+    if (strict) throw new Error('RAMP_STATE_INVALID');
+    await removePrivateItem(KEY).catch(() => undefined);
+    return {};
   }
+
+  const normalized = normalizeLog(parsed, localDateString());
+  if (normalized) {
+    if (normalized.changed) {
+      if (strict) await save(normalized.log);
+      else await persistNormalized(normalized.log);
+    }
+    return normalized.log;
+  }
+  if (strict) throw new Error('RAMP_STATE_INVALID');
   await removePrivateItem(KEY).catch(() => undefined);
   return {};
 }
@@ -130,7 +139,7 @@ export async function getStoredRamps(): Promise<Log> {
 
 /** Seed a product's ramp from the generated initial the first time it is seen. */
 export async function ensureRamp(productId: string, initial: RampState): Promise<StoredRamp> {
-  const log = await load();
+  const log = await load(true);
   const existing = log[productId];
   if (existing) return existing;
   const seeded: StoredRamp = { ...initial, startedAt: localDateString(), lastStepUp: null };
@@ -141,7 +150,7 @@ export async function ensureRamp(productId: string, initial: RampState): Promise
 
 /** Accept a step-up offer: +1 night toward target, mark steady, stamp lastStepUp. */
 export async function stepUpRamp(productId: string): Promise<void> {
-  const log = await load();
+  const log = await load(true);
   const r = log[productId];
   if (!r) return;
   log[productId] = {
@@ -158,7 +167,7 @@ export async function stepUpRamp(productId: string): Promise<void> {
 export async function applyToleranceToRamps(
   answer: 'comfortable' | 'a_bit_dry' | 'irritated',
 ): Promise<void> {
-  const log = await load();
+  const log = await load(true);
   let changed = false;
   for (const [id, r] of Object.entries(log)) {
     const next = applyTolerance(r, answer);

@@ -1,0 +1,22 @@
+{
+  "controls": [
+    {
+      "height": 48,
+      "name": "Back",
+      "visible": true,
+      "width": 48
+    },
+    {
+      "height": 55.99,
+      "name": "Ease back in",
+      "visible": true,
+      "width": 342.29
+    }
+  ],
+  "documentWidth": 390,
+  "horizontalOverflow": false,
+  "viewport": {
+    "height": 845,
+    "width": 390
+  }
+}

@@ -17,6 +17,7 @@ export type SheetProps = {
   fallbackRoute?: AppFallbackRoute;
   scroll?: boolean;
   backdropAccessible?: boolean;
+  dismissDisabled?: boolean;
   className?: string;
 };
 
@@ -27,6 +28,7 @@ export function Sheet({
   fallbackRoute = APP_HOME_ROUTE,
   scroll = false,
   backdropAccessible = true,
+  dismissDisabled = false,
   className,
 }: SheetProps) {
   const close = onClose ?? (() => backOrReplace(router, fallbackRoute));
@@ -44,13 +46,15 @@ export function Sheet({
         aria-hidden={!backdropAccessible}
         accessible={backdropAccessible}
         accessibilityElementsHidden={!backdropAccessible}
+        accessibilityState={backdropAccessible ? { disabled: dismissDisabled } : undefined}
+        disabled={dismissDisabled}
         focusable={backdropAccessible}
         importantForAccessibility={backdropAccessible ? 'auto' : 'no'}
         tabIndex={backdropAccessible ? 0 : -1}
         {...(backdropAccessible
           ? { accessibilityRole: 'button' as const, accessibilityLabel: 'Dismiss' }
           : {})}
-        onPress={close}
+        onPress={dismissDisabled ? undefined : close}
       />
       <View
         aria-modal

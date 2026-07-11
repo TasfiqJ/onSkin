@@ -134,9 +134,12 @@ describe('Pro-gated route contracts', () => {
     const plan = readAppRoute('routine/plan.tsx');
     expect(plan).toContain('APP_YOU_ROUTE');
     expect(plan).toContain('backOrReplace(router, APP_YOU_ROUTE)');
-    expect(plan).toContain("import { startCycleToday } from '@/features/scheduler/cycleStore';");
+    expect(plan).toContain(
+      "import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';",
+    );
     expect(plan).toContain('async function startToday()');
-    expect(plan).toContain('await startCycleToday();');
+    expect(plan).toContain('await cycleMutations.start();');
+    expect(plan).toContain('startFailed ? <CycleMutationError');
     expect(plan).not.toContain("import { setCycleAnchor } from '@/features/routine/cycleAnchor';");
     expect(plan).not.toContain('void setCycleAnchor();');
     expect(plan).toContain('RouteIconButton');
@@ -153,7 +156,6 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('onReviewSafety={');
     expect(plan).toContain("? () => router.push('/settings/skin-profile?returnTo=plan')");
     expect(plan).toContain('Review pregnancy and breastfeeding setting');
-    expect(plan).toContain("import { useCycle } from '@/features/scheduler/useCycle';");
     expect(plan).toContain('const { data: cycleData } = useCycle();');
     expect(plan).toContain(
       'const canonicalCycle = data && !data.isExample ? (cycleData?.cycle ?? null) : null;',

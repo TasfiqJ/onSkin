@@ -1,0 +1,20 @@
+- button "Dismiss"
+- dialog:
+  - heading "Life happens." [level=1]
+  - generic: Take a break whenever you need. Nothing breaks, and we'll pick up right where you left off.
+  - button "Skip tonight. Just this once. The cycle continues":
+    - generic: ‖
+    - generic: Skip tonight
+    - generic: Just this once. The cycle continues
+  - button "Pause my routine. Vacation, illness, a break":
+    - generic: ◴
+    - generic: Pause my routine
+    - generic: Vacation, illness, a break
+  - button "Travel mode. Trim to essentials while away":
+    - generic: →
+    - generic: Travel mode
+    - generic: Trim to essentials while away
+  - button "I had a facial or peel. Pause actives, let skin recover":
+    - generic: ◇
+    - generic: I had a facial or peel
+    - generic: Pause actives, let skin recover

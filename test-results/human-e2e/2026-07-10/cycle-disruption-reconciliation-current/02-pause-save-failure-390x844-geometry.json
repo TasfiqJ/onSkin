@@ -1,0 +1,45 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "height": 176.12,
+      "name": "Dismiss",
+      "visible": true,
+      "width": 390.29
+    },
+    {
+      "disabled": false,
+      "height": 77.91,
+      "name": "Skip tonight. Just this once. The cycle continues",
+      "visible": true,
+      "width": 334.31
+    },
+    {
+      "disabled": false,
+      "height": 77.91,
+      "name": "Pause my routine. Vacation, illness, a break",
+      "visible": true,
+      "width": 334.31
+    },
+    {
+      "disabled": false,
+      "height": 77.91,
+      "name": "Travel mode. Trim to essentials while away",
+      "visible": true,
+      "width": 334.31
+    },
+    {
+      "disabled": false,
+      "height": 77.91,
+      "name": "I had a facial or peel. Pause actives, let skin recover",
+      "visible": true,
+      "width": 334.31
+    }
+  ],
+  "documentWidth": 390,
+  "horizontalOverflow": false,
+  "viewport": {
+    "height": 845,
+    "width": 390
+  }
+}
