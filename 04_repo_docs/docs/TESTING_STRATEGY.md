@@ -39,7 +39,8 @@ Required for:
 - routine check-off -> progress/adherence
 - RevenueCat webhook -> entitlements
 - Supabase RLS owner isolation
-- account deletion/export
+- account deletion/export, including delayed export versus sign-out/A-to-B,
+  exact server owner, post-write invalidation, and same-user refresh
 - catalog lookup/search/report
 
 ## E2E Tests
