@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "status": "pass",
+  "failedRouteCount": 0,
+  "localTestDate": "2026-07-10",
+  "surface": "Expo web development build in the Codex in-app browser",
+  "viewports": [
+    "360 x 640",
+    "390 x 844"
+  ],
+  "verified": [
+    "two independent exact pairs governed by one rule",
+    "accept suggested timing and use together persistence after reload",
+    "exact downstream prompt suppression and schedule explanations",
+    "one potent active per night after either choice",
+    "ambiguous and incomplete pair routes fail closed",
+    "one-shot encrypted choice-write failure and successful retry",
+    "48 px or larger complete actions with clean center hit-tests",
+    "initial dialog focus, Tab and Shift+Tab containment, and Escape to Shelf"
+  ],
+  "externalGates": [
+    "live staging migration, RLS, mirror, retry, and reconciliation proof",
+    "native encrypted storage, Dynamic Type, VoiceOver, TalkBack, and safe-area QA",
+    "named clinical and cosmetic-chemistry review before any same-session potent-active rule"
+  ]
+}

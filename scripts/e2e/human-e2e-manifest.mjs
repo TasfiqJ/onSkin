@@ -277,6 +277,13 @@ if (!routineOrderPersistenceEvidenceDate) {
   console.error('FAIL Missing persistent AM/PM routine-order evidence.');
   process.exit(1);
 }
+const conflictChoiceScheduleEvidenceDate = latestEvidenceDateForFolder(
+  'conflict-choice-schedule-current',
+);
+if (!conflictChoiceScheduleEvidenceDate) {
+  console.error('FAIL Missing exact-pair conflict-choice schedule evidence.');
+  process.exit(1);
+}
 const dataExportDisclosureEvidenceDate = latestEvidenceDateForFolder(
   'data-export-local-photo-disclosure-current',
 );
@@ -316,6 +323,7 @@ const latestManifestEvidenceDate = [
   pregnancySafetyStatusEvidenceDate,
   multiActivePlanTodayEvidenceDate,
   routineOrderPersistenceEvidenceDate,
+  conflictChoiceScheduleEvidenceDate,
   dataExportDisclosureEvidenceDate,
   combinedDataExportEvidenceDate,
   accountUpgradeEvidenceDate,
@@ -666,6 +674,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Stable product-ID AM/PM edits survive reopen, reload, Cancel, recompute, Today projection, one failed save, and retry without changing safety/cycle authority.',
+  },
+  {
+    id: 'conflict-choice-schedule-supported-phone',
+    title: 'Exact-pair conflict choice and reviewed-schedule consistency',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${conflictChoiceScheduleEvidenceDate}/conflict-choice-schedule-current`,
+    evidence: 'summary.json',
+    expected:
+      'Two same-rule pairs keep independent current-version choices, suppress only resolved prompts, preserve one-active schedule authority, recover from one failed encrypted write, and pass supported-phone geometry/keyboard checks.',
   },
   {
     id: 'data-export-local-photo-disclosure-supported-phone',
