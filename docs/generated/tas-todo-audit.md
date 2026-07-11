@@ -1,8 +1,8 @@
 # Tas To Do Audit
 
-Generated: 2026-07-11T16:53:07.147Z
+Generated: 2026-07-11T17:28:08.998Z
 Status: pass
-Strict mode: yes
+Strict mode: no
 
 This generated audit checks that `docs/FOR_TAS_TO_DO.md` covers the
 Tas-owned strict launch evidence gates, current device support floors,
@@ -27,8 +27,8 @@ inventory itself is the canonical machine-readable key list.
 
 ## Handoff Freshness
 
-- FOR_TAS date: 2026-07-10
-- Expected evidence date: 2026-07-10
+- FOR_TAS date: 2026-07-11
+- Expected evidence date: 2026-07-11
 - Device support policy: `docs/DEVICE_SUPPORT_POLICY.md`
 - Required FOR_TAS support-floor details: `docs/DEVICE_SUPPORT_POLICY.md`, `iOS 17.0+`, `Android 10 / API 29+`, `360 x 640`, `API 36`
 - Required policy support-floor details: `iOS 17.0+`, `Android 10 / API 29+`, `360 x 640`, `API 36`

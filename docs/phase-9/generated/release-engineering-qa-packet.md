@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-11T16:54:09.724Z
+Generated: 2026-07-11T17:28:06.173Z
 Status: blocked
-Git SHA: 78ad510e1327d946593c6e806313b48591aa72f2
+Git SHA: 7f26594f5895d8da1b8f594ec16cba8e748b959d
 Git status: clean
 
 ## Release Identity
@@ -104,7 +104,7 @@ Git status: clean
 - `apps/mobile/src/features/photos/PhotoStorageGate.tsx`: `acda1b19266b960c94f493e80bab98f23002b0ff3bcfb93a4601f774e23d6888`
 - `apps/mobile/src/features/photos/store.ts`: `1557f6d511baf44fec1d52d5e585d506a5f7ad7173ef0e95d5c7984ff2f02b6b`
 - `apps/mobile/src/features/photos/usePhotos.ts`: `7bfcfda545ab719de32f460c859d6aa66075e97a84d200194360c114f2fb16a5`
-- `apps/mobile/src/features/settings/actions.ts`: `e39806ea6cd4148df0c3a7acdaa70c219d1a0da4f57c54903018aa8990f500c2`
+- `apps/mobile/src/features/settings/actions.ts`: `93dbb3136e5a4888d667fb1f368e71bab259a7e51330f753a2777068315182b6`
 - `apps/mobile/src/features/settings/localDeviceExport.ts`: `16dd55731879bace8db794440b2a369d40ea53cf092a7029d6ead480a8a12064`
 - `apps/mobile/src/features/settings/localDeviceExport.test.ts`: `a9694e2201bcd58b8479bf40011b152a5192e2700451e37c7a630daffc448dd5`
 - `apps/mobile/src/features/settings/localPrivateDataKeys.ts`: `c1f0d62052b3dbb47dfb763e1458c3732074a1c1296982f3ecb83e7560968943`

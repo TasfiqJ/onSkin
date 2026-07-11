@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-11T16:54:04.226Z
+Generated: 2026-07-11T17:28:39.874Z
 Status: pass
-Git SHA: 78ad510e1327d946593c6e806313b48591aa72f2
+Git SHA: 7f26594f5895d8da1b8f594ec16cba8e748b959d
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -54,7 +54,7 @@ Sources:
 - `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 2334 bytes - sha256 `441e03ded2314f7a9efc2f11e3b7d0daa97256de17e6c654423124c1c4a4670f`
 - `docs/phase-4/catalog-source-memo-cosing.md` - 2021 bytes - sha256 `49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534`
 - `docs/phase-4/phase-4-exit-review.md` - 2235 bytes - sha256 `1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3`
-- `docs/FOR_TAS_TO_DO.md` - 62075 bytes - sha256 `67484ff890e3257b6a9a96a1ad8eb8d93bf1b07eecffad7d959c97e1264d5f83`
+- `docs/FOR_TAS_TO_DO.md` - 63276 bytes - sha256 `e230ea7c0eda8e42d20a96a08b36f0cef272482b47e79f674aed48c58bf72369`
 
 ### obf-odbl-posture - Open Beauty Facts and ODbL launch posture
 
@@ -169,7 +169,7 @@ Sources:
 - `docs/phase-10/catalog-beta-report.md` - 1680 bytes - sha256 `28729b9ed344c13414cb6426f0c5360ac21034641b5cd94298d8dbb391165d28`
 - `docs/phase-10/support-beta-report.md` - 2149 bytes - sha256 `f25c3841a8bc5649dbd1f38632c756898da46a5d7f4d59ff7c328726dc9d26ac`
 - `docs/phase-10/retention-activation-report.md` - 2343 bytes - sha256 `e7c5ebd8d49c5bc527e4ea926743a2ede4eb33522e6fda28ec1deae00953f8ab`
-- `docs/FOR_TAS_TO_DO.md` - 62075 bytes - sha256 `67484ff890e3257b6a9a96a1ad8eb8d93bf1b07eecffad7d959c97e1264d5f83`
+- `docs/FOR_TAS_TO_DO.md` - 63276 bytes - sha256 `e230ea7c0eda8e42d20a96a08b36f0cef272482b47e79f674aed48c58bf72369`
 
 ### mobile-catalog-disclosure - Mobile catalog source, quality, and report-issue disclosure
 
@@ -264,7 +264,7 @@ Sources:
 - `supabase/functions/catalog-report/privacy.test.ts` - 4009 bytes - sha256 `db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac`
 - `apps/mobile/src/features/catalog/client.ts` - 4815 bytes - sha256 `e7921c914cec2b477e352592e8ba10cabe781b5ac58ba05b8fedabb22ae66e22`
 - `apps/mobile/src/features/catalog/client.test.ts` - 6158 bytes - sha256 `dd3d1319105637aa8cc5d73f619adcb6b0cba643ede4c72d581bda08ac4200df`
-- `docs/FOR_TAS_TO_DO.md` - 62075 bytes - sha256 `67484ff890e3257b6a9a96a1ad8eb8d93bf1b07eecffad7d959c97e1264d5f83`
+- `docs/FOR_TAS_TO_DO.md` - 63276 bytes - sha256 `e230ea7c0eda8e42d20a96a08b36f0cef272482b47e79f674aed48c58bf72369`
 
 ### observability-support - Catalog dashboards, alerts, and support feedback loop
 
@@ -288,7 +288,7 @@ Sources:
 - `scripts/phase4/beta-coverage-report.mjs` - 21980 bytes - sha256 `95d73e803393a93dcf0a54fa07ff3de9c3c0ee62250cfa608bd7e45883bfe0fd`
 - `supabase/functions/catalog-report/privacy.ts` - 3504 bytes - sha256 `9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e`
 - `supabase/functions/catalog-report/privacy.test.ts` - 4009 bytes - sha256 `db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac`
-- `docs/FOR_TAS_TO_DO.md` - 62075 bytes - sha256 `67484ff890e3257b6a9a96a1ad8eb8d93bf1b07eecffad7d959c97e1264d5f83`
+- `docs/FOR_TAS_TO_DO.md` - 63276 bytes - sha256 `e230ea7c0eda8e42d20a96a08b36f0cef272482b47e79f674aed48c58bf72369`
 
 ## Blockers
 

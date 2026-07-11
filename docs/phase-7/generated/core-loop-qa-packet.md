@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-11T16:54:08.141Z
-Git SHA: 78ad510e1327d946593c6e806313b48591aa72f2
+Generated at: 2026-07-11T17:28:04.688Z
+Git SHA: 7f26594f5895d8da1b8f594ec16cba8e748b959d
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -82,22 +82,22 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | scripts/phase7/build-core-loop-qa-packet.mjs | present | 10903 | da6aaa4c5aeda636a3e822ba7afdcd0db4771d2f37f044ba5a4547e341c49f48 |
 | scripts/phase7/check-core-loop.mjs | present | 17337 | d49a76cb07a11d2d158d893e302bc538ac269acbf3687672f905d88d838db51d |
 | scripts/phase7/check-core-loop-smoke.mjs | present | 10994 | 3a9f398c342a03addc9e1dace1bd005cc911f7f5c18dae7b741b5f58408a4d71 |
-| scripts/e2e/human-e2e-manifest.mjs | present | 40630 | dfd9bf719fa3206e60fe056b726575cb799bcbe35c5d07f57c51a0d14ed16642 |
+| scripts/e2e/human-e2e-manifest.mjs | present | 41906 | 5028a1552134333ece0ced9314f40ccc34ab3b45a67d25af9bc04894d76bddb0 |
 | scripts/phase9/lib.mjs | present | 14020 | af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10167 | d7d616fcbe9078b55c0d4b3bf5e88ae19570fa533aee8edc599cf1956c7c9149 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
-| docs/USER_FLOW_TREE.md | present | 354167 | 0d62f1c5e06593f9ce362d5e58348f40dd275c796fc3f492d96a78abe0234105 |
-| docs/e2e/generated/human-e2e-manifest.json | present | 34397 | aadfb5f3b358d06abfa59ee2104ed6972ea694b3cbf99d6cfc1dc3a2861b1ef9 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 10861 | c306d1ea77c8c4b9a939b3bd73739a30a934af563f42bfd326b77ffbc188d698 |
-| docs/phase-5/generated/device-qa-packet.json | present | 16918 | 47c2e08482eb35f8101a303463497cd251bad8667f5ff5f4e3f64ed450d62d56 |
-| docs/phase-5/generated/device-qa-packet.md | present | 15600 | 076165081dd312ac739a3e9af3c3277960ee6d94e1d6d8a44e431e8dafd5716a |
-| docs/phase-6/generated/payments-qa-packet.json | present | 10523 | 66083e64ac5506467628127de5f8a4a20aaf308e5d9dd460af29ee8598ad4d6a |
-| docs/phase-6/generated/payments-qa-packet.md | present | 7862 | 20077af20c60a3245eadb808d5960db446eeb293a2fed919e7779c64e5da568d |
+| docs/USER_FLOW_TREE.md | present | 355650 | ef2dd4927ee2d66d93dc8e32d17dd1bebef7ee53c79bda7a974952139a383670 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 35785 | 0c8459a6798616cc7cdce2a2c63c8c8fae9c7ecae7dbd5d931d7026f4d93e36d |
+| docs/e2e/generated/human-e2e-manifest.md | present | 11095 | 45c551041f14ec379f12a9fbec281722e2a000c2be00796319fea954c995491e |
+| docs/phase-5/generated/device-qa-packet.json | present | 16918 | 091f7184ff3aac1550c5b2a32b8982c8b484f54cf9052fe1a93039b70085a41a |
+| docs/phase-5/generated/device-qa-packet.md | present | 15600 | 21cde40d49ebf214d955faf3122120c010a12cc8d7e1c49e3189ba9288671564 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 10523 | a359fe31d3b537add7a64696537e2176587564d6822778c0ea4cd5f857f668bd |
+| docs/phase-6/generated/payments-qa-packet.md | present | 7862 | 82fd18f22c2c2b4adafdc6144019ca0d7647bfe6e2b31d0091bf61824752dad6 |
 | docs/phase-7/surface-inventory.md | present | 7793 | 50c0f72fb317e36588a30559cd254dcb3b7ebaa7c73b8b4ba4dfb9ea35350fd6 |
 | docs/phase-7/launch-claim-matrix.md | present | 4322 | 7027d6d21f2cc7c3bb6944f003f9aeac6a09efea8dc2785280f6a3da44bb6b6b |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4725 | f57bd8b15489b66c4dbee486f3e15190eb2e4752420308dfb71883372348cdd1 |
-| docs/phase-7/core-loop-qa-checklist.md | present | 61665 | 13fd33bdd3074098cbf8cb7c29e04b8961d8e39c7126f06b07116e2e94f04a8b |
-| docs/phase-7/phase-7-exit-review.md | present | 3908 | 7dfe10c8e1f8da610069bde617debfca54d3824cbe789a0cb7f6feed114c55b4 |
+| docs/phase-7/core-loop-qa-checklist.md | present | 62571 | 4bcb13d247ba00a741d943cc606554d2f588338cac428932ed5fba6b2f1805f1 |
+| docs/phase-7/phase-7-exit-review.md | present | 4261 | af747174347a16ab1bcfcaba8a35b26c95b26708912f4cb56e0bf5c3862ce7cb |
 
 ## Blockers
 

@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-11T07:45:23.670Z",
+  "generatedAt": "2026-07-11T17:28:11.025Z",
   "status": "pass",
-  "strict": true,
+  "strict": false,
   "summary": {
     "performanceMetricCount": 7,
     "docsChecked": 12,

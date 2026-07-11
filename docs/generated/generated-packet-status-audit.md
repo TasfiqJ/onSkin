@@ -1,8 +1,8 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-11T16:54:21.654Z
+Generated: 2026-07-11T17:28:42.219Z
 Status: pass
-Strict mode: yes
+Strict mode: no
 
 This generated audit scans committed phase packet outputs for dirty-worktree
 status and stale recorded file hashes. It does not prove external launch
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 49
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 1170
+- Hash references checked: 1174
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -29,11 +29,11 @@ being treated as trustworthy launch evidence.
 | docs/phase-10/generated/support-handoff-packet.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-11/generated/public-launch-packet.json         | json | 0                  | 0                          | 40        | 0               |
 | docs/phase-11/generated/public-launch-packet.md           | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 286       | 0               |
+| docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 288       | 0               |
 | docs/phase-3/generated/review-operator-queue.md           | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-3/generated/review-packet-manifest.json        | json | 0                  | 0                          | 80        | 0               |
 | docs/phase-3/generated/review-packet.md                   | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 290       | 0               |
+| docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 292       | 0               |
 | docs/phase-3/generated/review-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/beta-coverage-report.json          | json | 0                  | 0                          | 25        | 0               |
 | docs/phase-4/generated/beta-coverage-report.md            | md   | 0                  | 0                          | 0         | 0               |

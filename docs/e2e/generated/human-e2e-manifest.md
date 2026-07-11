@@ -1,8 +1,8 @@
 # Human E2E Manifest
 
-Generated: 2026-07-11T16:53:01.484Z
-Git SHA: 498163992da6dfd232ecfc508060742893de1e98
-Evidence date: 2026-07-10
+Generated: 2026-07-11T17:28:01.709Z
+Git SHA: 7f26594f5895d8da1b8f594ec16cba8e748b959d
+Evidence date: 2026-07-11
 Baseline suite date: 2026-07-09
 Status: pass
 
@@ -55,6 +55,7 @@ dependency to the repo.
 | Authored cycle customization and deterministic reconciliation    | supported-phone | pass   | summary status: pass; 0 failed routes. | 19    | test-results/human-e2e/2026-07-10/cycle-customization-current                          |
 | Account export local-photo scope disclosure                      | supported-phone | pass   | summary status: pass; 0 failed routes. | 14    | test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current           |
 | Combined account and current-device export                       | supported-phone | pass   | summary status: pass; 0 failed routes. | 13    | test-results/human-e2e/2026-07-10/data-export-combined-device-current                  |
+| Account-generation-bound combined export                         | supported-phone | pass   | summary status: pass; 0 failed routes. | 16    | test-results/human-e2e/2026-07-11/data-export-account-generation-current               |
 
 ## Warnings
 

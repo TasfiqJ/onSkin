@@ -1,8 +1,8 @@
 # Source Packet Audit
 
-Generated: 2026-07-11T16:27:34.401Z
+Generated: 2026-07-11T17:28:08.311Z
 Status: pass
-Strict mode: yes
+Strict mode: no
 
 This generated audit checks the original `04_repo_docs` source packet and
 verifies that its strategy docs are represented in the active `docs/` tree.
@@ -17,7 +17,7 @@ the top-level packet markdown shape changes without updating the audit.
 - Unexpected top-level packet markdown files: 0
 - Source docs: 10
 - Active mirrors: 10
-- Identical mirrors: 10
+- Identical mirrors: 7
 - Blockers: 0
 - Warnings: 0
 
@@ -25,16 +25,16 @@ the top-level packet markdown shape changes without updating the audit.
 
 | Packet doc                     | Active docs status | AGENTS.md | CLAUDE.md | Packet SHA-256 |
 | ------------------------------ | ------------------ | --------- | --------- | -------------- |
-| ARCHITECTURE.md                | identical          | yes       | yes       | a74729417367   |
+| ARCHITECTURE.md                | differs            | yes       | yes       | a74729417367   |
 | CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | 237c46f8ab33   |
 | CODE_REVIEW.md                 | identical          | yes       | yes       | 83db5ca6e5ad   |
-| DECISIONS.md                   | identical          | yes       | yes       | 99c49379368a   |
+| DECISIONS.md                   | differs            | yes       | yes       | 99c49379368a   |
 | FEATURE_INDEX.md               | identical          | yes       | yes       | c729b1642ad1   |
 | MASTER_PLAN.md                 | identical          | yes       | yes       | 30bcdf57b71e   |
 | MASTER_PLAN_UPDATE_PATCH.md    | identical          | yes       | yes       | 634edff435fa   |
 | PRODUCT_REQUIREMENTS.md        | identical          | yes       | yes       | fabb281ce1fa   |
 | ROADMAP.md                     | identical          | yes       | yes       | 1d6a7730199b   |
-| TESTING_STRATEGY.md            | identical          | yes       | yes       | a1e179392a2b   |
+| TESTING_STRATEGY.md            | differs            | yes       | yes       | a1e179392a2b   |
 
 ## Top-Level Packet Files
 

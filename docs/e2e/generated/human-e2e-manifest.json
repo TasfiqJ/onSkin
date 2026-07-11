@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-11T16:53:01.484Z",
-  "gitSha": "498163992da6dfd232ecfc508060742893de1e98",
-  "evidenceDate": "2026-07-10",
+  "generatedAt": "2026-07-11T17:28:01.709Z",
+  "gitSha": "7f26594f5895d8da1b8f594ec16cba8e748b959d",
+  "evidenceDate": "2026-07-11",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
   "purpose": "Durable local human-simulated E2E manifest for Expo web-compatible launch gates.",
@@ -781,6 +781,41 @@
       "fileCount": 13,
       "bytes": 216633,
       "evidenceSha256": "e37b3234e1441ff3c23df2e0f850701589bda9d3bde8956124382ed1d0d268c0"
+    },
+    {
+      "id": "data-export-account-generation-supported-phone",
+      "title": "Account-generation-bound combined export",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-11/data-export-account-generation-current",
+      "evidence": "summary.json",
+      "requiredSchemaVersion": 1,
+      "requiredViewports": [
+        "360 x 640",
+        "390 x 844"
+      ],
+      "requiredVerified": [
+        "one cancellable account-generation lease",
+        "sign-out during a delayed export",
+        "configured server user_id",
+        "account boundary aborts the Edge request",
+        "post-write invalidation deletes",
+        "nested boundaries",
+        "360 x 640",
+        "390 x 844"
+      ],
+      "expected": "One account generation owns authenticated capture, local snapshot, Edge response, plaintext cache, share, and deletion; sign-out/A-to-B aborts and drains stale work before the next account can publish.",
+      "status": "pass",
+      "detail": "summary status: pass; 0 failed routes.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "requirementFailures": [],
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 16,
+      "bytes": 151301,
+      "evidenceSha256": "dcf290dc3078c6420e09c53dc5440ec236407bad371e624a5ede25d045951ff0"
     }
   ],
   "warnings": [

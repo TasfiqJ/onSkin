@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-11T16:54:01.780Z",
+  "generatedAt": "2026-07-11T17:28:37.594Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "78ad510e1327d946593c6e806313b48591aa72f2",
+  "gitSha": "7f26594f5895d8da1b8f594ec16cba8e748b959d",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -60,7 +60,7 @@
       "notCleared": 22,
       "blocked": 15
     },
-    "sourcePathCount": 285,
+    "sourcePathCount": 287,
     "missingSourcePathCount": 0,
     "signedItemCount": 0,
     "unsignedReleaseDispositionCount": 0,
@@ -1626,8 +1626,8 @@
         {
           "path": "apps/mobile/src/features/settings/actions.ts",
           "exists": true,
-          "bytes": 5099,
-          "sha256": "e39806ea6cd4148df0c3a7acdaa70c219d1a0da4f57c54903018aa8990f500c2"
+          "bytes": 7188,
+          "sha256": "93dbb3136e5a4888d667fb1f368e71bab259a7e51330f753a2777068315182b6"
         },
         {
           "path": "supabase/functions/consent-withdrawal/index.ts",
@@ -1649,7 +1649,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "441e44f16032162d7e6fd317a273b39e0563e8cf616cddd74ab130568187eea0",
+      "reviewSnapshotSha256": "61373d2323614807eb69be82df9c619c291916bc6e848448386d3592db2649b8",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1858,8 +1858,8 @@
         {
           "path": "apps/mobile/src/features/settings/actions.ts",
           "exists": true,
-          "bytes": 5099,
-          "sha256": "e39806ea6cd4148df0c3a7acdaa70c219d1a0da4f57c54903018aa8990f500c2"
+          "bytes": 7188,
+          "sha256": "93dbb3136e5a4888d667fb1f368e71bab259a7e51330f753a2777068315182b6"
         },
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.ts",
@@ -1917,7 +1917,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "1f0c03dcb8408fabeec7167d66f43107a7eaa4ebca3ed538966986ab96206b9c",
+      "reviewSnapshotSha256": "408ebe0a60984396b3095fb188828e6500504e6ebac8990247708cd20ab52e8d",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2014,6 +2014,18 @@
       "notes": "Apple/Google auth, processors, breach posture, and RLS proof needed.",
       "sourcePaths": [
         {
+          "path": "apps/mobile/src/lib/auth/accountGeneration.test.ts",
+          "exists": true,
+          "bytes": 4807,
+          "sha256": "23aea54f09eb9791c97f48cc4ebc7554b43fb1aa19cddae8d3dcb06950a8274a"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/accountGeneration.ts",
+          "exists": true,
+          "bytes": 2873,
+          "sha256": "0d167622d6002e9e699deb831f6cce55ec406cdc4d16af3313c27b57ab9917ec"
+        },
+        {
           "path": "apps/mobile/src/lib/auth/accountIsolationE2E.test.ts",
           "exists": true,
           "bytes": 1129,
@@ -2028,8 +2040,8 @@
         {
           "path": "apps/mobile/src/lib/auth/accountSessionIsolationContracts.test.ts",
           "exists": true,
-          "bytes": 3442,
-          "sha256": "b7246804f773c93754562de608962cd458994b2ef3ff8caac9aa2e7fa0e6b780"
+          "bytes": 3964,
+          "sha256": "0365c9295ac39e44d916e4afd5ca5a25a10d887657bef7528f621e68a6bbb66c"
         },
         {
           "path": "apps/mobile/src/lib/auth/accountUpgrade.test.ts",
@@ -2070,8 +2082,8 @@
         {
           "path": "apps/mobile/src/lib/auth/AuthProvider.tsx",
           "exists": true,
-          "bytes": 16636,
-          "sha256": "2f573a2d04e59be75a0f45fdf9a4fff1c601b5c074e6153efa69109fbdf9a08e"
+          "bytes": 16931,
+          "sha256": "9fd40013f711ce7219ae185ba5e14f84af3f251c568c6810e4c88a5382325e35"
         },
         {
           "path": "apps/mobile/src/lib/auth/google.ts",
@@ -2082,14 +2094,14 @@
         {
           "path": "apps/mobile/src/lib/auth/localAccountIsolation.test.ts",
           "exists": true,
-          "bytes": 6318,
-          "sha256": "7f2e399886a131707594e0d9a09819644716bd52274158e188a9dbc977e13910"
+          "bytes": 7693,
+          "sha256": "2ec967507b09445393c5000839de6423ee233893b8ef9840e486c50878dda0e7"
         },
         {
           "path": "apps/mobile/src/lib/auth/localAccountIsolation.ts",
           "exists": true,
-          "bytes": 3648,
-          "sha256": "0e6159e747fce2055b597f1f57149404cbe4603692c66e6266b4cda9539bd5d8"
+          "bytes": 3942,
+          "sha256": "f48b6a04a31da794ce8d29cfbee3a379e4876f6e767de7e8bc88c41d6b9efc9e"
         },
         {
           "path": "apps/mobile/src/lib/auth/sessionBoundary.test.ts",
@@ -2141,7 +2153,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "f5cc69aec31dc754aae267d023e2b60f9a46dd5a791f1f4e14abe5c1efa0cc49",
+      "reviewSnapshotSha256": "0e84359d19ebfca54c820dcc4795b870cf6fc6e502e6243d9e682474f466268d",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },

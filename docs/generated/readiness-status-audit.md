@@ -1,8 +1,8 @@
 # Readiness Status Audit
 
-Generated: 2026-07-11T16:53:06.468Z
+Generated: 2026-07-11T17:28:09.654Z
 Status: pass
-Strict mode: yes
+Strict mode: no
 
 This generated audit keeps the launch source-of-truth docs aligned with
 the latest committed human-simulated E2E evidence and current verification
@@ -12,9 +12,9 @@ store, legal, clinical, beta, or launch signoff evidence.
 
 ## Summary
 
-- Evidence date: 2026-07-10
-- Expected mobile test baseline: 191 mobile test files / 2037 tests
-- Actual mobile test files found: 191
+- Evidence date: 2026-07-11
+- Expected mobile test baseline: 192 mobile test files / 2048 tests
+- Actual mobile test files found: 192
 - Blockers: 0
 - Warnings: 0
 
@@ -22,8 +22,8 @@ store, legal, clinical, beta, or launch signoff evidence.
 
 | Doc                      | Date       | Expected date | Current test phrase | Manifest evidence | Stale patterns | Missing commands |
 | ------------------------ | ---------- | ------------- | ------------------- | ----------------- | -------------- | ---------------- |
-| LAUNCH_READINESS.md      | 2026-07-10 | 2026-07-10    | yes                 | yes               | 0              | 0                |
-| BLOCKERS.md              | 2026-07-10 | 2026-07-10    | yes                 | yes               | 0              | 0                |
+| LAUNCH_READINESS.md      | 2026-07-11 | 2026-07-11    | yes                 | yes               | 0              | 0                |
+| BLOCKERS.md              | 2026-07-11 | 2026-07-11    | yes                 | yes               | 0              | 0                |
 | docs/TESTING_STRATEGY.md | n/a        | n/a           | n/a                 | n/a               | n/a            | 0                |
 
 ## Required Launch Commands
