@@ -1,0 +1,29 @@
+- generic: SATURDAY, JULY 11
+- generic: Good morning.
+- generic: Morning routine
+- generic: 0 of 3
+- checkbox "Gentle Cleanser":
+  - generic: Gentle Cleanser
+  - generic: Start with a clean base.
+  - generic: NEXT
+- checkbox "Barrier Moisturizer":
+  - generic: Barrier Moisturizer
+  - generic: Seal everything in.
+- checkbox "Hydrating Toner":
+  - generic: Hydrating Toner
+  - generic: Optional. A hydrating or balancing layer.
+- button "See why":
+  - generic: SPF
+  - generic: No SPF this morning
+  - generic: See why
+- button "Not now":
+  - generic: Not now
+- tablist:
+  - tab "Today tab" [selected]:
+    - generic: Today
+  - tab "Progress tab":
+    - generic: Prog.
+  - tab "Shelf tab":
+    - generic: Shelf
+  - tab "You tab":
+    - generic: You

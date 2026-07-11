@@ -6,6 +6,24 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Closed persistent morning and evening routine application ordering. The
+  editor now saves independent AM/PM product-ID sequences in encrypted local
+  storage, reconciles new or removed shelf products without erasing deliberate
+  order, and applies the result centrally to Plan and Today while preserving
+  safety exclusions and scheduled treatment nights. Cancel is non-mutating;
+  failed writes keep the previous routine and expose an inline retry state;
+  analytics and navigation occur only after a confirmed write. Current-device
+  export and private-data deletion include the new state. Codex in-app browser
+  E2E at 360 x 640 and 390 x 844 verified save, reload, cancel, product-add
+  reconciliation, one-shot write failure/retry, independent phase tabs, and
+  matching Plan/Today order. That pass found and fixed a fractional sub-44 Plan
+  control, a false retinoid cleanser hint under a safety exclusion, and missing
+  selected-state semantics on the phase tabs. Focused regressions pass 66/66;
+  root typecheck/lint and the full suite pass 188 mobile test files / 1968
+  tests. Evidence is in
+  `test-results/human-e2e/2026-07-10/routine-order-persistence-current/`.
+  Native iOS/Android screen-reader and Dynamic Type proof remains Tas-owned.
+
 - Closed the clear-mode multi-treatment schedule split. Real Plan, Today,
   cycle, and product detail now share the canonical per-product scheduler;
   same-class ties are stable by product ID. Every AHA/BHA/retinoid appears with

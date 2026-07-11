@@ -46,9 +46,14 @@ function slotInstruction(slot: SchedulerSlot): string {
 
 // PM display sub overrides for the known retinoid-night roles (design 05). Display
 // only, the toggle key (stepKey) is unchanged. Falls back to the step's instruction.
-function pmDisplaySub(step: { role?: string; instruction?: string }): string | undefined {
-  if (step.role === 'cleanser') return 'Dry skin fully before the retinoid';
-  if (step.role === 'treatment') return 'Pea-sized · avoid eye area';
+function pmDisplaySub(
+  step: { role?: string; instruction?: string },
+  hasScheduledRetinoid: boolean,
+): string | undefined {
+  if (step.role === 'cleanser' && hasScheduledRetinoid) {
+    return 'Dry skin fully before the retinoid';
+  }
+  if (step.role === 'treatment' && hasScheduledRetinoid) return 'Pea-sized · avoid eye area';
   if (step.role === 'moisturiser') return 'Generous layer tonight';
   return step.instruction;
 }
@@ -578,6 +583,9 @@ export default function TodayScreen() {
   // pregnancy etc.). Not from a hardcoded literal. Skipped, recovery, AND
   // paused/travel nights all drop the potent active so the evening trims to the
   // stable barrier basics the pause/travel banners promise (docs/05 §6.4).
+  const scheduledCyclePlanStep = cTonight?.night.productId
+    ? plan?.pm.find((step) => step.productId === cTonight.night.productId)
+    : undefined;
   const cycledStep =
     !skippedTonight &&
     !recoveryActive &&
@@ -588,8 +596,10 @@ export default function TodayScreen() {
           productId: cTonight.night.productId,
           name: cTonight.night.productName ?? 'Tonight’s active',
           instruction: slotInstruction(cTonight.night.slot),
-          order: 40,
-          role: cTonight.night.slot === 'retinoid' ? ('treatment' as const) : undefined,
+          order: scheduledCyclePlanStep?.order ?? 40,
+          role:
+            scheduledCyclePlanStep?.role ??
+            (cTonight.night.slot === 'retinoid' ? ('treatment' as const) : undefined),
         }
       : null;
   const dailyPm = (plan?.pm ?? []).filter(
@@ -598,6 +608,7 @@ export default function TodayScreen() {
   const pmSteps = [...dailyPm, ...(cycledStep ? [cycledStep] : [])].sort(
     (a, b) => a.order - b.order,
   );
+  const hasScheduledRetinoid = cycledStep?.role === 'treatment';
   const pmStepKeys = pmSteps.map((s) => stepKey('PM', s.productId));
   const firstUndonePm = pmStepKeys.find((k) => !done.has(k)) ?? null;
   const donePm = pmSteps.filter((s) => done.has(stepKey('PM', s.productId))).length;
@@ -786,7 +797,7 @@ export default function TodayScreen() {
                   <CheckRow
                     key={k}
                     name={s.name}
-                    sub={pmDisplaySub(s)}
+                    sub={pmDisplaySub(s, hasScheduledRetinoid)}
                     state={rowState(k, firstUndonePm)}
                     dark
                     compact={compactPhone}

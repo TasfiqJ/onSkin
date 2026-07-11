@@ -1,3 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
+
 import { shippableRules } from '@/features/intelligence/rules';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
@@ -9,6 +11,12 @@ import {
   type RoutineGenerationProfile,
   type RoutineProduct,
 } from './generate';
+import {
+  applyRoutineOrderOverrides,
+  loadRoutineOrderOverrides,
+  ROUTINE_ORDER_QUERY_KEY,
+  type RoutineOrderOverrides,
+} from './orderStore';
 
 // The user's generated plan. Live from the shelf via the (tested) generatePlan
 // pipeline; when the shelf is empty, falls back to the design's Maya example so
@@ -28,12 +36,30 @@ const MAYA_PROFILE: RoutineGenerationProfile = {
   goals: ['barrier_repair'],
 };
 
-export type PlanResult = { plan: GeneratedPlan; isExample: boolean; profileLabel: string };
+export type PlanResult = {
+  plan: GeneratedPlan;
+  canonicalPlan: GeneratedPlan;
+  isExample: boolean;
+  profileLabel: string;
+  orderOverrides: RoutineOrderOverrides;
+  orderPersistenceUnavailable: boolean;
+  activeProductIds: string[];
+};
 
 export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } {
   const shelf = useShelf();
   const profile = useProfileBits();
-  if (shelf.isLoading || profile.isLoading) return { data: undefined, isLoading: true };
+  const routineOrder = useQuery({
+    queryKey: ROUTINE_ORDER_QUERY_KEY,
+    queryFn: loadRoutineOrderOverrides,
+    retry: 1,
+    staleTime: Infinity,
+  });
+  if (shelf.isLoading || profile.isLoading || routineOrder.isLoading) {
+    return { data: undefined, isLoading: true };
+  }
+
+  const orderOverrides = routineOrder.data ?? { schemaVersion: 1, am: [], pm: [] };
 
   const items = shelf.data?.items ?? [];
   if (items.length > 0) {
@@ -58,20 +84,30 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
     // Use the launch-gated rule set (docs/02 §9 B-DERM-REVIEW), consistent with
     // useShelf/recommendations. In production the conflict layer stays inert until
     // clinical sign-off; in dev the full starter matrix drives the plan.
+    const canonicalPlan = generatePlan(products, real, shippableRules());
     return {
       data: {
-        plan: generatePlan(products, real, shippableRules()),
+        plan: applyRoutineOrderOverrides(canonicalPlan, orderOverrides),
+        canonicalPlan,
         isExample: false,
         profileLabel: routinePlanProfileLabel(profile.data ?? null, false),
+        orderOverrides,
+        orderPersistenceUnavailable: routineOrder.isError,
+        activeProductIds: items.map((item) => item.id),
       },
       isLoading: false,
     };
   }
+  const canonicalPlan = generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, shippableRules());
   return {
     data: {
-      plan: generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, shippableRules()),
+      plan: canonicalPlan,
+      canonicalPlan,
       isExample: true,
       profileLabel: routinePlanProfileLabel(null, true),
+      orderOverrides,
+      orderPersistenceUnavailable: routineOrder.isError,
+      activeProductIds: [],
     },
     isLoading: false,
   };

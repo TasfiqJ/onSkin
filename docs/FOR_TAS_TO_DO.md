@@ -384,6 +384,14 @@ Status: needs-device-verification
   cycle/disruption, cycle/phased-intro, routine/tolerance, and upsell sheets
   must keep visible exits/choices tappable and must not expose tiny hidden
   backdrop strips to VoiceOver/TalkBack or keyboard focus.
+- Build a real multi-step Shelf on each supported physical platform, save
+  different Morning and Evening application orders, force-close/relaunch, add
+  and remove a product, and verify Plan plus Today retain the surviving order.
+  Repeat with VoiceOver/TalkBack: the phase control must announce one selected
+  tab, each row must announce its product and position, Earlier/Later must remain
+  operable, and a failed encrypted write must keep the prior routine with inline
+  recovery. Include the routine-order record in account export inspection and
+  prove sign-out/account deletion removes it before another owner can mount.
 - Verify paywall and subscription-settings policy, Restore, and OS billing
   management handoff branches on physical iOS and Android builds with real
   RevenueCat sandbox configuration: Terms/Privacy failures, Restore empty/active

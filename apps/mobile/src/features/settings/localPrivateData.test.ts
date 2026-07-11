@@ -88,6 +88,7 @@ describe('local private data cleanup', () => {
     expect(mocks.multiRemove).toHaveBeenCalledWith(
       expect.arrayContaining([
         'routinekind.routineActivation.v1',
+        'routinekind.routineOrder.v1',
         'routinekind.localDataOwnerHash.v1',
         'onskin.photo.content_key_created.v1',
         'onskin.skinprofile.v1',

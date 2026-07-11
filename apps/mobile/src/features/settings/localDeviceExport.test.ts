@@ -56,6 +56,10 @@ describe('local device data export', () => {
       ],
       ['onskin.completions.v1', JSON.stringify({ '2026-07-09': ['PM:shelf-1'] })],
       [
+        'routinekind.routineOrder.v1',
+        JSON.stringify({ schemaVersion: 1, am: ['shelf-1'], pm: ['shelf-1'] }),
+      ],
+      [
         'onskin.photos.v1',
         JSON.stringify([
           {
@@ -86,6 +90,11 @@ describe('local device data export', () => {
     );
     expect(result.sections.shelf_and_routine.completion_history).toEqual({
       '2026-07-09': ['PM:shelf-1'],
+    });
+    expect(result.sections.shelf_and_routine.routine_order_overrides).toEqual({
+      schemaVersion: 1,
+      am: ['shelf-1'],
+      pm: ['shelf-1'],
     });
     expect(result.sections.shelf_and_routine.shelf_products).toEqual([
       {

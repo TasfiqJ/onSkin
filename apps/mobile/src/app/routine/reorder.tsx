@@ -1,12 +1,22 @@
-import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useMemo, useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, View } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
+import type { PlanStep } from '@/features/routine/generate';
+import {
+  ROUTINE_ORDER_QUERY_KEY,
+  routineOrderOverrideForPhase,
+  saveRoutineOrderOverrides,
+  type RoutineOrderPhase,
+  type RoutineOrderOverrides,
+} from '@/features/routine/orderStore';
 import { usePlan } from '@/features/routine/usePlan';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { backOrReplace } from '@/lib/navigation/safeBack';
+import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 // Sequencing controls + non-blocking nudge (docs/03 section 7).
@@ -23,66 +33,200 @@ const MOVING_SHADOW =
         shadowOffset: { width: 0, height: 12 },
       };
 
+type PhaseSteps = Record<RoutineOrderPhase, PlanStep[]>;
+
 function Handle({ active }: { active: boolean }) {
-  const c = active ? colors.clay : colors.mutedFaint;
+  const color = active ? colors.clay : colors.mutedFaint;
   return (
     <View className="gap-1">
-      {[0, 1, 2].map((i) => (
-        <View key={i} style={{ width: 16, height: 1.5, backgroundColor: c }} />
+      {[0, 1, 2].map((index) => (
+        <View key={index} style={{ width: 16, height: 1.5, backgroundColor: color }} />
       ))}
     </View>
   );
 }
 
+function phaseName(phase: RoutineOrderPhase): string {
+  return phase === 'am' ? 'Morning' : 'Evening';
+}
+
+function phaseOrderKey(steps: readonly PlanStep[]): string {
+  return steps.map((step) => step.productId).join('\u0000');
+}
+
+function devRoutineOrderSaveFailure(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+  return process.env.EXPO_PUBLIC_E2E_ROUTINE_ORDER_SAVE_FAILURE === 'once';
+}
+
 export default function ReorderScreen() {
+  const params = useLocalSearchParams<{ phase?: string | string[] }>();
+  const requestedPhase = Array.isArray(params.phase) ? params.phase[0] : params.phase;
+  const initialPhase: RoutineOrderPhase = requestedPhase === 'pm' ? 'pm' : 'am';
   const { data, isLoading } = usePlan();
-  const canonical = useMemo(() => data?.plan.am.map((step) => step.name) ?? [], [data?.plan.am]);
-  const canonicalKey = canonical.join('\u0000');
+  const canonical = useMemo<PhaseSteps>(
+    () => ({
+      am: data?.canonicalPlan.am ?? [],
+      pm: data?.canonicalPlan.pm ?? [],
+    }),
+    [data?.canonicalPlan.am, data?.canonicalPlan.pm],
+  );
+  const initial = useMemo<PhaseSteps>(
+    () => ({
+      am: data?.plan.am ?? [],
+      pm: data?.plan.pm ?? [],
+    }),
+    [data?.plan.am, data?.plan.pm],
+  );
+  const editorKey = `${phaseOrderKey(canonical.am)}|${phaseOrderKey(canonical.pm)}|${phaseOrderKey(
+    initial.am,
+  )}|${phaseOrderKey(initial.pm)}|${initialPhase}`;
 
   return (
     <ReorderEditor
-      key={canonicalKey}
+      key={editorKey}
       canonical={canonical}
+      initial={initial}
+      initialPhase={initialPhase}
+      activeProductIds={data?.activeProductIds ?? []}
       isExample={Boolean(data?.isExample)}
       isLoading={isLoading}
+      persistenceUnavailable={Boolean(data?.orderPersistenceUnavailable)}
+      previousOverrides={data?.orderOverrides ?? { schemaVersion: 1, am: [], pm: [] }}
     />
   );
 }
 
 function ReorderEditor({
   canonical,
+  initial,
+  initialPhase,
+  activeProductIds,
   isExample,
   isLoading,
+  persistenceUnavailable,
+  previousOverrides,
 }: {
-  canonical: string[];
+  canonical: PhaseSteps;
+  initial: PhaseSteps;
+  initialPhase: RoutineOrderPhase;
+  activeProductIds: string[];
   isExample: boolean;
   isLoading: boolean;
+  persistenceUnavailable: boolean;
+  previousOverrides: RoutineOrderOverrides;
 }) {
-  const canonicalKey = canonical.join('\u0000');
-  const [order, setOrder] = useState<string[]>(canonical);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const violatesOrder = canonical.length > 0 && order.join('\u0000') !== canonicalKey;
+  const queryClient = useQueryClient();
+  const simulatedSaveFailureUsed = useRef(false);
+  const saveInFlight = useRef(false);
+  const [orders, setOrders] = useState<PhaseSteps>(initial);
+  const [phase, setPhase] = useState<RoutineOrderPhase>(initialPhase);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [nudgeDismissed, setNudgeDismissed] = useState(false);
-  const movingIndex = order.findIndex((name, index) => name !== canonical[index]);
-  const selectedName = selectedIndex == null ? null : order[selectedIndex];
+  const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
+
+  const order = orders[phase];
+  const canonicalOrder = canonical[phase];
+  const canonicalKey = phaseOrderKey(canonicalOrder);
+  const orderKey = phaseOrderKey(order);
+  const violatesOrder = canonicalOrder.length > 0 && orderKey !== canonicalKey;
+  const movingIndex = order.findIndex(
+    (step, index) => step.productId !== canonicalOrder[index]?.productId,
+  );
+  const selectedIndex = selectedId ? order.findIndex((step) => step.productId === selectedId) : -1;
+  const selectedStep = selectedIndex >= 0 ? order[selectedIndex] : null;
+  const amChanged = phaseOrderKey(orders.am) !== phaseOrderKey(initial.am);
+  const pmChanged = phaseOrderKey(orders.pm) !== phaseOrderKey(initial.pm);
+  const hasChanges = amChanged || pmChanged;
+
+  function choosePhase(next: RoutineOrderPhase) {
+    if (next === phase || saving) return;
+    haptics.select();
+    setPhase(next);
+    setSelectedId(null);
+    setNudgeDismissed(false);
+  }
 
   function moveSelected(direction: -1 | 1) {
-    if (selectedIndex == null) return;
+    if (selectedIndex < 0) return;
     const nextIndex = selectedIndex + direction;
     if (nextIndex < 0 || nextIndex >= order.length) return;
-    const source = isExample ? 'example' : 'routine_reorder';
 
-    setOrder((current) => {
-      const next = [...current];
-      const [item] = next.splice(selectedIndex, 1);
+    setOrders((current) => {
+      const nextPhase = [...current[phase]];
+      const [item] = nextPhase.splice(selectedIndex, 1);
       if (!item) return current;
-      next.splice(nextIndex, 0, item);
-      return next;
+      nextPhase.splice(nextIndex, 0, item);
+      return { ...current, [phase]: nextPhase };
     });
-    setSelectedIndex(nextIndex);
+    haptics.select();
     setNudgeDismissed(false);
-    track('step_reordered', { action: direction < 0 ? 'earlier' : 'later', source });
-    track('routine_edited', { action: 'reordered', source });
+    setSaveFailed(false);
+  }
+
+  async function saveOrder() {
+    if (saveInFlight.current || persistenceUnavailable) return;
+    saveInFlight.current = true;
+    if (isExample) {
+      backOrReplace(router);
+      return;
+    }
+
+    setSaving(true);
+    setSaveFailed(false);
+    try {
+      if (devRoutineOrderSaveFailure() && !simulatedSaveFailureUsed.current) {
+        simulatedSaveFailureUsed.current = true;
+        throw new Error('E2E_ROUTINE_ORDER_SAVE_FAILURE');
+      }
+
+      const saved = await saveRoutineOrderOverrides({
+        schemaVersion: 1,
+        am: routineOrderOverrideForPhase(
+          canonical.am,
+          orders.am,
+          previousOverrides.am,
+          activeProductIds,
+        ),
+        pm: routineOrderOverrideForPhase(
+          canonical.pm,
+          orders.pm,
+          previousOverrides.pm,
+          activeProductIds,
+        ),
+      });
+      queryClient.setQueryData(ROUTINE_ORDER_QUERY_KEY, saved);
+
+      if (hasChanges) {
+        const changedPhase = amChanged && pmChanged ? 'both' : amChanged ? 'am' : 'pm';
+        track('step_reordered', {
+          action: 'saved',
+          phase: changedPhase,
+          source: 'routine_reorder',
+        });
+        track('routine_edited', {
+          action: 'reordered',
+          phase: changedPhase,
+          source: 'routine_reorder',
+        });
+      }
+      haptics.success();
+      backOrReplace(router);
+    } catch {
+      setSaveFailed(true);
+    } finally {
+      saveInFlight.current = false;
+      setSaving(false);
+    }
+  }
+
+  function resetPhaseOrder() {
+    setOrders((current) => ({ ...current, [phase]: canonicalOrder }));
+    setSelectedId(null);
+    setNudgeDismissed(true);
+    setSaveFailed(false);
+    haptics.select();
   }
 
   return (
@@ -96,22 +240,26 @@ function ReorderEditor({
           <Pressable
             accessibilityRole="button"
             className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
+            disabled={saving}
             onPress={() => backOrReplace(router)}
           >
             <Text variant="body" tone="muted" className="font-sans-semibold text-[15px]">
-              Done
+              Cancel
             </Text>
           </Pressable>
           <Text variant="body" className="font-sans-bold text-[15px]">
-            {isExample ? 'Example morning' : 'Edit morning'}
+            {isExample ? 'Example order' : 'Routine order'}
           </Text>
           <Pressable
             accessibilityRole="button"
+            accessibilityState={{ disabled: saving || persistenceUnavailable }}
             className="min-h-[48px] min-w-[48px] items-center justify-center px-2"
-            onPress={() => backOrReplace(router)}
+            disabled={saving || persistenceUnavailable}
+            onPress={() => void saveOrder()}
+            style={{ opacity: saving || persistenceUnavailable ? 0.55 : 1 }}
           >
             <Text variant="body" tone="clay" className="font-sans-semibold text-[15px]">
-              Save
+              {isExample ? 'Done' : saving ? 'Saving' : 'Save'}
             </Text>
           </Pressable>
         </View>
@@ -119,39 +267,104 @@ function ReorderEditor({
         <Text variant="bodySm" tone="muted" className="mt-4 text-[13px]">
           {isExample
             ? 'This example shows how ordering guidance works. Add products to your shelf for your routine.'
-            : 'Tap a step, then move it earlier or later. We sort thinnest-to-thickest, but it is your routine.'}
+            : 'Tap a step, then move it earlier or later. Your saved order applies every time that product is scheduled.'}
         </Text>
 
-        <View className="mt-4 gap-2">
+        <View
+          accessibilityLabel="Routine phase"
+          accessibilityRole="tablist"
+          className="mt-4 flex-row rounded-[8px] bg-greige-chip p-1"
+        >
+          {(['am', 'pm'] as const).map((option) => {
+            const selected = phase === option;
+            return (
+              <Pressable
+                key={option}
+                aria-selected={selected}
+                accessibilityRole="tab"
+                accessibilityState={{ disabled: saving, selected }}
+                className="h-[48px] flex-1 items-center justify-center rounded-[6px]"
+                disabled={saving}
+                onPress={() => choosePhase(option)}
+                style={{ backgroundColor: selected ? colors.paper : 'transparent' }}
+              >
+                <Text
+                  className="font-sans-semibold text-[13.5px]"
+                  style={{ color: selected ? colors.ink : colors.muted }}
+                >
+                  {phaseName(option)}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+
+        <Text className="mt-3 font-mono text-[11px] uppercase" style={{ color: colors.clayDeep }}>
+          {phaseName(phase)} application order
+        </Text>
+        {phase === 'pm' ? (
+          <Text variant="bodySm" tone="muted" className="mt-1 text-[12.5px]">
+            Cycling products appear once here. This order is used on each product&apos;s scheduled
+            night.
+          </Text>
+        ) : null}
+
+        {persistenceUnavailable ? (
+          <View accessibilityRole="alert" className="mt-3 rounded-[8px] bg-clay-tint p-3.5">
+            <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.ink }}>
+              Routine order unavailable
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1 text-[12.5px]">
+              Private storage could not be read. Nothing was changed.
+            </Text>
+          </View>
+        ) : null}
+
+        {saveFailed ? (
+          <View accessibilityRole="alert" className="mt-3 rounded-[8px] bg-clay-tint p-3.5">
+            <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.ink }}>
+              Order not saved
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1 text-[12.5px]">
+              Your previous routine is still in place. Try Save again.
+            </Text>
+          </View>
+        ) : null}
+
+        <View className="mt-3 gap-2">
           {isLoading ? (
-            <View className="rounded-2xl bg-paper-raised p-4">
+            <View className="rounded-[8px] bg-paper-raised p-4">
               <Text variant="bodySm" tone="muted">
                 Loading your generated routine.
               </Text>
             </View>
           ) : null}
           {!isLoading && order.length === 0 ? (
-            <View className="rounded-2xl bg-paper-raised p-4">
+            <View className="rounded-[8px] bg-paper-raised p-4">
               <Text variant="bodySm" tone="muted">
-                Add products to your shelf and we will build an editable morning order here.
+                {`No ${phaseName(phase).toLowerCase()} steps yet. Add products to your shelf to build this out.`}
               </Text>
             </View>
           ) : null}
-          {order.map((name, i) => {
-            const moving = violatesOrder && i === movingIndex;
-            const selected = selectedIndex === i;
+          {order.map((step, index) => {
+            const moving = violatesOrder && index === movingIndex;
+            const selected = selectedId === step.productId;
             return (
               <Pressable
-                key={name}
+                key={step.productId}
+                accessibilityHint="Select to reveal Earlier and Later controls"
+                accessibilityLabel={`${step.name}. Step ${index + 1} of ${order.length}`}
                 accessibilityRole="button"
                 accessibilityState={{ selected }}
                 className={cn(
-                  'flex-row items-center gap-3 rounded-2xl bg-paper-raised p-3.5',
+                  'min-h-[56px] flex-row items-center gap-3 rounded-[8px] bg-paper-raised p-3.5',
                   moving || selected ? 'border-clay' : 'border-hairline',
                 )}
-                onPress={() => setSelectedIndex(selected ? null : i)}
+                disabled={saving || persistenceUnavailable}
+                onPress={() => setSelectedId(selected ? null : step.productId)}
                 style={{
                   borderWidth: moving || selected ? 1.5 : 1,
+                  opacity: saving || persistenceUnavailable ? 0.62 : 1,
                   ...(moving ? { ...MOVING_SHADOW, transform: [{ translateY: -2 }] } : {}),
                 }}
               >
@@ -159,11 +372,11 @@ function ReorderEditor({
                 <Text
                   variant="body"
                   className={cn(
-                    'flex-1 text-[14.5px]',
+                    'min-w-0 flex-1 text-[14.5px]',
                     moving || selected ? 'font-sans-bold' : 'font-sans-medium',
                   )}
                 >
-                  {name}
+                  {step.name}
                 </Text>
                 {moving ? (
                   <Text className="font-mono text-[10.5px]" style={{ color: colors.clay }}>
@@ -175,21 +388,22 @@ function ReorderEditor({
           })}
         </View>
 
-        {selectedName ? (
-          <View className="mt-3 rounded-card bg-paper-raised p-3">
+        {selectedStep ? (
+          <View className="mt-3 rounded-[8px] bg-paper-raised p-3">
             <Text variant="bodySm" tone="muted" className="text-[13px]">
-              Move {selectedName}
+              Move {selectedStep.name}
             </Text>
             <View className="mt-2 flex-row gap-2">
               <Pressable
+                accessibilityLabel={`Move ${selectedStep.name} earlier`}
                 accessibilityRole="button"
-                disabled={selectedIndex === 0}
-                className="h-[48px] flex-1 items-center justify-center rounded-[10px]"
+                disabled={selectedIndex === 0 || saving}
+                className="h-[48px] flex-1 items-center justify-center rounded-[8px]"
                 style={{
                   backgroundColor: selectedIndex === 0 ? colors.greige : colors.paper,
                   borderColor: colors.hairline,
                   borderWidth: 1,
-                  opacity: selectedIndex === 0 ? 0.55 : 1,
+                  opacity: selectedIndex === 0 || saving ? 0.55 : 1,
                 }}
                 onPress={() => moveSelected(-1)}
               >
@@ -198,15 +412,16 @@ function ReorderEditor({
                 </Text>
               </Pressable>
               <Pressable
+                accessibilityLabel={`Move ${selectedStep.name} later`}
                 accessibilityRole="button"
-                disabled={selectedIndex === order.length - 1}
-                className="h-[48px] flex-1 items-center justify-center rounded-[10px]"
+                disabled={selectedIndex === order.length - 1 || saving}
+                className="h-[48px] flex-1 items-center justify-center rounded-[8px]"
                 style={{
                   backgroundColor:
                     selectedIndex === order.length - 1 ? colors.greige : colors.paper,
                   borderColor: colors.hairline,
                   borderWidth: 1,
-                  opacity: selectedIndex === order.length - 1 ? 0.55 : 1,
+                  opacity: selectedIndex === order.length - 1 || saving ? 0.55 : 1,
                 }}
                 onPress={() => moveSelected(1)}
               >
@@ -219,27 +434,31 @@ function ReorderEditor({
         ) : null}
 
         {violatesOrder && !nudgeDismissed ? (
-          <View className="mt-4 rounded-card bg-clay-tint p-4">
+          <View className="mt-4 rounded-[8px] bg-clay-tint p-4">
             <View className="flex-row gap-2.5">
               <View className="mt-1.5 h-1.5 w-1.5 rounded-full bg-clay" />
               <Text variant="bodySm" tone="muted" className="flex-1 text-[13.5px]">
-                Most people apply lighter serums before moisturizer so they absorb. Want me to put
-                it back?
+                This differs from the recommended application sequence. You can keep it; sequencing
+                is guidance, not a rule.
               </Text>
             </View>
             <View className="mt-3 flex-row gap-2">
               <Pressable
                 accessibilityRole="button"
-                className="h-[48px] flex-1 items-center justify-center rounded-[10px]"
-                style={{ backgroundColor: colors.ink }}
-                onPress={() => setOrder(canonical)}
+                accessibilityState={{ disabled: saving }}
+                className="h-[48px] flex-1 items-center justify-center rounded-[8px]"
+                disabled={saving}
+                style={{ backgroundColor: colors.ink, opacity: saving ? 0.55 : 1 }}
+                onPress={resetPhaseOrder}
               >
                 <Text className="font-sans-semibold text-[13px] text-paper">Fix the order</Text>
               </Pressable>
               <Pressable
                 accessibilityRole="button"
-                className="h-[48px] flex-1 items-center justify-center rounded-[10px]"
-                style={{ backgroundColor: 'rgba(255,255,255,0.6)' }}
+                accessibilityState={{ disabled: saving }}
+                className="h-[48px] flex-1 items-center justify-center rounded-[8px]"
+                disabled={saving}
+                style={{ backgroundColor: 'rgba(255,255,255,0.6)', opacity: saving ? 0.55 : 1 }}
                 onPress={() => setNudgeDismissed(true)}
               >
                 <Text className="font-sans-semibold text-[13px]" style={{ color: colors.muted }}>

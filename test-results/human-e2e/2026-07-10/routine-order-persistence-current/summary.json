@@ -1,0 +1,61 @@
+{
+  "date": "2026-07-10",
+  "status": "pass",
+  "surface": "Expo web in Codex in-app browser",
+  "startCommands": [
+    "EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro npm --workspace @onskin/mobile run web -- --port 8161",
+    "EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro EXPO_PUBLIC_E2E_ROUTINE_ORDER_SAVE_FAILURE=once npm --workspace @onskin/mobile run web -- --port 8161"
+  ],
+  "viewports": [
+    "360x640",
+    "390x844"
+  ],
+  "fixture": {
+    "products": [
+      "Gentle Cleanser",
+      "Hydrating Toner",
+      "Barrier Moisturizer",
+      "Retinol 0.3% Night Serum",
+      "Calm Face Oil"
+    ],
+    "safetyState": "profile unavailable; retinol remained cautiously excluded"
+  },
+  "assertions": {
+    "savedMorningOrder": [
+      "Gentle Cleanser",
+      "Barrier Moisturizer",
+      "Hydrating Toner"
+    ],
+    "savedEveningOrderAfterRetry": [
+      "Hydrating Toner",
+      "Gentle Cleanser",
+      "Calm Face Oil",
+      "Barrier Moisturizer"
+    ],
+    "reopenPersistence": true,
+    "reloadPersistence": true,
+    "cancelDoesNotPersist": true,
+    "newProductRecomputePreservesExistingOrder": true,
+    "todayMatchesSavedOrder": true,
+    "failedSaveStaysOnEditor": true,
+    "failedSaveKeepsPreviousRoutine": true,
+    "retryPersists": true,
+    "safetyExcludedRetinolNotReintroduced": true,
+    "retinoidSpecificHintRequiresScheduledRetinoid": true,
+    "phaseTabsExposeAriaSelected": true,
+    "horizontalOverflowCount": 0,
+    "sub44VisibleControlCount": 0,
+    "clippedVisibleControlCount": 0,
+    "javascriptDialogCount": 0,
+    "unexpectedBrowserErrorCount": 0
+  },
+  "bugsFoundAndFixed": [
+    "Plan edit and safety-review controls rendered at 43.99 px from a nominal 44 px floor.",
+    "Today PM gave retinoid-specific cleanser copy while the retinoid was safety-excluded.",
+    "Morning and Evening tab roles did not expose aria-selected on Expo web."
+  ],
+  "remainingRisk": [
+    "Physical iOS and Android encrypted-storage relaunch, VoiceOver, and TalkBack proof remains release-device work.",
+    "Cross-device routine identity and sync remain explicitly deferred under B-ROUTINE-PERSIST."
+  ]
+}

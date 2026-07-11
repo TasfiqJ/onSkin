@@ -270,6 +270,13 @@ if (!multiActivePlanTodayEvidenceDate) {
   console.error('FAIL Missing canonical multi-active Plan/Today evidence.');
   process.exit(1);
 }
+const routineOrderPersistenceEvidenceDate = latestEvidenceDateForFolder(
+  'routine-order-persistence-current',
+);
+if (!routineOrderPersistenceEvidenceDate) {
+  console.error('FAIL Missing persistent AM/PM routine-order evidence.');
+  process.exit(1);
+}
 const dataExportDisclosureEvidenceDate = latestEvidenceDateForFolder(
   'data-export-local-photo-disclosure-current',
 );
@@ -307,6 +314,8 @@ const latestManifestEvidenceDate = [
   progressStorageRecoveryEvidenceDate,
   privateEnvelopeCorruptionEvidenceDate,
   pregnancySafetyStatusEvidenceDate,
+  multiActivePlanTodayEvidenceDate,
+  routineOrderPersistenceEvidenceDate,
   dataExportDisclosureEvidenceDate,
   combinedDataExportEvidenceDate,
   accountUpgradeEvidenceDate,
@@ -646,6 +655,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Every supported cycle product, BP AM placement, explicit undefined-cadence withholding, one-active PM projection, completion reload, and supported-phone geometry pass from one canonical schedule.',
+  },
+  {
+    id: 'routine-order-persistence-supported-phone',
+    title: 'Persistent Morning and Evening routine order',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${routineOrderPersistenceEvidenceDate}/routine-order-persistence-current`,
+    evidence: 'summary.json',
+    expected:
+      'Stable product-ID AM/PM edits survive reopen, reload, Cancel, recompute, Today projection, one failed save, and retry without changing safety/cycle authority.',
   },
   {
     id: 'data-export-local-photo-disclosure-supported-phone',

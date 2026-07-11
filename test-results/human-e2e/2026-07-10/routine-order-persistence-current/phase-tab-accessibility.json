@@ -1,0 +1,10 @@
+[
+  {
+    "ariaSelected": "false",
+    "label": "Morning"
+  },
+  {
+    "ariaSelected": "true",
+    "label": "Evening"
+  }
+]

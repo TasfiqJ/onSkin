@@ -116,6 +116,11 @@ const LOCAL_EXPORT_SPECS = [
     section: 'shelf_and_routine',
     field: 'legacy_cycle_anchor',
   },
+  {
+    key: 'routinekind.routineOrder.v1',
+    section: 'shelf_and_routine',
+    field: 'routine_order_overrides',
+  },
   { key: 'onskin.ramp.v1', section: 'shelf_and_routine', field: 'active_ramps' },
   { key: 'onskin.shelf.v1', section: 'shelf_and_routine', field: 'shelf_products' },
   {

@@ -1,0 +1,29 @@
+- generic: SATURDAY, JULY 11 · 12:54 AM
+- generic: Good evening.
+- button "Review pregnancy and breastfeeding setting":
+  - generic: 1 caution product paused by your pregnancy & breastfeeding setting.
+  - generic: ›
+- generic: Evening routine
+- generic: 0 of 4
+- checkbox "Hydrating Toner":
+  - generic: Hydrating Toner
+  - generic: Optional. A hydrating or balancing layer.
+  - generic: NEXT
+- checkbox "Gentle Cleanser":
+  - generic: Gentle Cleanser
+  - generic: Clean base first.
+- checkbox "Calm Face Oil":
+  - generic: Calm Face Oil
+  - generic: Optional. A final nourishing layer at night.
+- checkbox "Barrier Moisturizer":
+  - generic: Barrier Moisturizer
+  - generic: Generous layer tonight
+- tablist:
+  - tab "Today tab" [selected]:
+    - generic: Today
+  - tab "Progress tab":
+    - generic: Prog.
+  - tab "Shelf tab":
+    - generic: Shelf
+  - tab "You tab":
+    - generic: You

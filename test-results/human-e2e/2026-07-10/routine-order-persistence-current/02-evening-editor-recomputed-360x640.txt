@@ -1,0 +1,27 @@
+- button "Cancel":
+  - generic: Cancel
+- generic: Routine order
+- button "Save":
+  - generic: Save
+- generic: Tap a step, then move it earlier or later. Your saved order applies every time that product is scheduled.
+- generic "Routine phase":
+  - tab "Morning":
+    - generic: Morning
+  - tab "Evening":
+    - generic: Evening
+- generic: Evening application order
+- generic: Cycling products appear once here. This order is used on each product's scheduled night.
+- button "Hydrating Toner. Step 1 of 4":
+  - generic: Hydrating Toner
+  - generic: MOVING
+- button "Gentle Cleanser. Step 2 of 4":
+  - generic: Gentle Cleanser
+- button "Barrier Moisturizer. Step 3 of 4":
+  - generic: Barrier Moisturizer
+- button "Calm Face Oil. Step 4 of 4":
+  - generic: Calm Face Oil
+- generic: This differs from the recommended application sequence. You can keep it; sequencing is guidance, not a rule.
+- button "Fix the order":
+  - generic: Fix the order
+- button "Keep mine":
+  - generic: Keep mine

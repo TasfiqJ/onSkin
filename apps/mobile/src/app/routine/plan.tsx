@@ -160,7 +160,7 @@ function FirstInsightCard({
           accessibilityRole="button"
           accessibilityLabel="Review pregnancy and breastfeeding setting"
           onPress={onReviewSafety}
-          className="mt-2 min-h-[44px] flex-row items-center justify-between border-t border-hairline pt-2"
+          className="mt-2 min-h-[48px] flex-row items-center justify-between border-t border-hairline pt-2"
         >
           <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayDeep }}>
             Review setting
@@ -308,19 +308,36 @@ export default function PlanScreen() {
               <View
                 className={
                   compactPlan
-                    ? 'mb-2 flex-row items-center gap-2.5'
-                    : 'mb-3 flex-row items-center gap-2.5'
+                    ? 'mb-2 flex-row items-center justify-between'
+                    : 'mb-3 flex-row items-center justify-between'
                 }
               >
-                <View className="h-[18px] w-[18px] items-center justify-center rounded-full bg-clay-tint">
-                  <View className="h-1.5 w-1.5 rounded-full bg-clay" />
+                <View className="flex-row items-center gap-2.5">
+                  <View className="h-[18px] w-[18px] items-center justify-center rounded-full bg-clay-tint">
+                    <View className="h-1.5 w-1.5 rounded-full bg-clay" />
+                  </View>
+                  <Text
+                    className="font-mono text-[13px] uppercase tracking-[1px]"
+                    style={{ color: colors.clayDeep }}
+                  >
+                    Morning
+                  </Text>
                 </View>
-                <Text
-                  className="font-mono text-[13px] uppercase tracking-[1px]"
-                  style={{ color: colors.clayDeep }}
-                >
-                  Morning
-                </Text>
+                {data?.isExample === false && (plan?.am.length ?? 0) > 1 ? (
+                  <Pressable
+                    accessibilityLabel="Edit morning application order"
+                    accessibilityRole="button"
+                    className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
+                    onPress={() => router.push('/routine/reorder?phase=am')}
+                  >
+                    <Text
+                      className="font-sans-semibold text-[12.5px]"
+                      style={{ color: colors.clayDeep }}
+                    >
+                      Edit
+                    </Text>
+                  </Pressable>
+                ) : null}
               </View>
               {plan?.am.map((s, i) => (
                 <MorningRow
@@ -346,25 +363,42 @@ export default function PlanScreen() {
               <View
                 className={
                   compactPlan
-                    ? 'mb-2 flex-row items-center gap-2.5'
-                    : 'mb-3 flex-row items-center gap-2.5'
+                    ? 'mb-2 flex-row items-center justify-between'
+                    : 'mb-3 flex-row items-center justify-between'
                 }
               >
-                <View
-                  className="h-[18px] w-[18px] items-center justify-center rounded-full"
-                  style={{ backgroundColor: colors.nightSurface }}
-                >
+                <View className="flex-row items-center gap-2.5">
                   <View
-                    className="h-2 w-2 rounded-full"
-                    style={{ backgroundColor: colors.clayBright }}
-                  />
+                    className="h-[18px] w-[18px] items-center justify-center rounded-full"
+                    style={{ backgroundColor: colors.nightSurface }}
+                  >
+                    <View
+                      className="h-2 w-2 rounded-full"
+                      style={{ backgroundColor: colors.clayBright }}
+                    />
+                  </View>
+                  <Text
+                    className="font-mono text-[13px] uppercase tracking-[1px]"
+                    style={{ color: colors.clayBright }}
+                  >
+                    {hasCycle ? 'Evening skin cycling' : 'Evening'}
+                  </Text>
                 </View>
-                <Text
-                  className="font-mono text-[13px] uppercase tracking-[1px]"
-                  style={{ color: colors.clayBright }}
-                >
-                  {hasCycle ? 'Evening skin cycling' : 'Evening'}
-                </Text>
+                {data?.isExample === false && (plan?.pm.length ?? 0) > 1 ? (
+                  <Pressable
+                    accessibilityLabel="Edit evening application order"
+                    accessibilityRole="button"
+                    className="min-h-[48px] min-w-[48px] items-center justify-center px-1"
+                    onPress={() => router.push('/routine/reorder?phase=pm')}
+                  >
+                    <Text
+                      className="font-sans-semibold text-[12.5px]"
+                      style={{ color: colors.clayBright }}
+                    >
+                      Edit
+                    </Text>
+                  </Pressable>
+                ) : null}
               </View>
               {hasCycle ? (
                 data?.isExample ? (

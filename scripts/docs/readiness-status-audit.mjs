@@ -16,8 +16,8 @@ const outJson =
   process.env.READINESS_STATUS_AUDIT_JSON ?? 'docs/generated/readiness-status-audit.json';
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
-const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 186);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1951);
+const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 188);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 1968);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
@@ -29,6 +29,7 @@ const staleTestPatterns = [
   /\b177\s+(?:mobile\s+)?test files?\b/i,
   /\b183\s+(?:mobile\s+)?test files?\b/i,
   /\b185\s+(?:mobile\s+)?test files?\b/i,
+  /\b186\s+(?:mobile\s+)?test files?\b/i,
   /\b1743\s+tests?\b/i,
   /\b1744\s+tests?\b/i,
   /\b1748\s+tests?\b/i,
@@ -52,6 +53,7 @@ const staleTestPatterns = [
   /\b1937\s+tests?\b/i,
   /\b1939\s+tests?\b/i,
   /\b1940\s+tests?\b/i,
+  /\b1951\s+tests?\b/i,
   /320 x 480 support-floor 200%\s+text-pressure/i,
   /support-floor\s+170%\s+text-pressure/i,
 ];
@@ -92,6 +94,8 @@ const requiredManifestNeedles = [
   'pregnancy-safety-status-current',
   'Canonical multi-active Plan and Today consistency',
   'multi-active-plan-today-current',
+  'Persistent Morning and Evening routine order',
+  'routine-order-persistence-current',
 ];
 
 const requiredLaunchCommands = [

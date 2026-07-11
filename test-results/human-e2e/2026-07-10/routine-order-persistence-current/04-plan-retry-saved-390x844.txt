@@ -1,0 +1,37 @@
+- button "Back":
+  - generic: <
+- generic: BUILT FOR SAFETY-FIRST SKIN
+- generic: Your routine, in order.
+- generic: Safety setting applied
+- generic: Caution products paused
+- generic: Retinol 0.3% Night Serum is staying off this routine based on your pregnancy and breastfeeding setting.
+- button "Review pregnancy and breastfeeding setting":
+  - generic: Review setting
+  - generic: ›
+- generic: Morning
+- button "Edit morning application order":
+  - generic: Edit
+- generic: "1"
+- generic: Gentle Cleanser
+- generic: "2"
+- generic: Barrier Moisturizer
+- generic: "3"
+- generic: Hydrating Toner
+- generic: Evening
+- button "Edit evening application order":
+  - generic: Edit
+- generic: "1"
+- generic: Hydrating Toner
+- generic: Optional. A hydrating or balancing layer.
+- generic: "2"
+- generic: Gentle Cleanser
+- generic: Start with a clean base.
+- generic: "3"
+- generic: Calm Face Oil
+- generic: Optional. A final nourishing layer at night.
+- generic: "4"
+- generic: Barrier Moisturizer
+- generic: Seal everything in.
+- generic: A daily SPF would round this out. It’s the highest-impact morning step.
+- button "Start today":
+  - generic: Start today

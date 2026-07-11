@@ -34,6 +34,7 @@ export const LOCAL_PRIVATE_DATA_KEYS = [
   'onskin.recPrefs.v1',
   'onskin.reviewPrompt.v1',
   'routinekind.routineActivation.v1',
+  'routinekind.routineOrder.v1',
   'onskin.shelf.v1',
   'onskin.skinprofile.v1',
   'onskin.subscription.freeConflictCheckRuleIds.v1',
