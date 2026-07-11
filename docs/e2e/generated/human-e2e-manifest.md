@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-11T01:26:21.448Z
-Git SHA: f7672a9ad32bc4b1e966aaa0e505caefe8d1e870
+Generated: 2026-07-11T02:47:58.448Z
+Git SHA: b8a43f213fcf624907130576a29dc29ad55fb1b0
 Evidence date: 2026-07-10
 Baseline suite date: 2026-07-09
 Status: pass
@@ -48,6 +48,7 @@ dependency to the repo.
 | Progress encrypted-storage recovery                              | supported-phone | pass   | summary status: pass; 0 failed routes. | 39    | test-results/human-e2e/2026-07-10/progress-storage-recovery-current                    |
 | Private envelope corruption and app-lock recovery                | supported-phone | pass   | summary status: pass.                  | 15    | test-results/human-e2e/2026-07-10/private-envelope-corruption-current                  |
 | Pregnancy-safety status and routine exclusion consistency        | supported-phone | pass   | summary status: pass.                  | 28    | test-results/human-e2e/2026-07-10/pregnancy-safety-status-current                      |
+| Canonical multi-active Plan and Today consistency                | supported-phone | pass   | summary status: pass.                  | 54    | test-results/human-e2e/2026-07-10/multi-active-plan-today-current                      |
 | Account export local-photo scope disclosure                      | supported-phone | pass   | summary status: pass; 0 failed routes. | 14    | test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current           |
 | Combined account and current-device export                       | supported-phone | pass   | summary status: pass; 0 failed routes. | 13    | test-results/human-e2e/2026-07-10/data-export-combined-device-current                  |
 

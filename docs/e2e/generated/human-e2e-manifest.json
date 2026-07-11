@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-11T01:26:21.448Z",
-  "gitSha": "f7672a9ad32bc4b1e966aaa0e505caefe8d1e870",
+  "generatedAt": "2026-07-11T02:47:58.448Z",
+  "gitSha": "b8a43f213fcf624907130576a29dc29ad55fb1b0",
   "evidenceDate": "2026-07-10",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -632,6 +632,25 @@
       "fileCount": 28,
       "bytes": 846246,
       "evidenceSha256": "25897dbde665931adabc541d42bc68b34f00d46d9c7010dc67fb27af318e0eeb"
+    },
+    {
+      "id": "multi-active-plan-today-supported-phone",
+      "title": "Canonical multi-active Plan and Today consistency",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/multi-active-plan-today-current",
+      "evidence": "summary.json",
+      "expected": "Every supported cycle product, BP AM placement, explicit undefined-cadence withholding, one-active PM projection, completion reload, and supported-phone geometry pass from one canonical schedule.",
+      "status": "pass",
+      "detail": "summary status: pass.",
+      "failureCount": null,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 54,
+      "bytes": 526213,
+      "evidenceSha256": "c10ecef6623c3cf73cd5bb5eecd215720c8c68434f66515751576c39f6a67ac7"
     },
     {
       "id": "data-export-local-photo-disclosure-supported-phone",

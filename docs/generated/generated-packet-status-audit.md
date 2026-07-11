@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-11T01:26:59.799Z
+Generated: 2026-07-11T02:53:33.498Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 49
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 1139
+- Hash references checked: 1141
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -29,11 +29,11 @@ being treated as trustworthy launch evidence.
 | docs/phase-10/generated/support-handoff-packet.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-11/generated/public-launch-packet.json         | json | 0                  | 0                          | 40        | 0               |
 | docs/phase-11/generated/public-launch-packet.md           | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 278       | 0               |
+| docs/phase-3/generated/review-operator-queue.json         | json | 0                  | 0                          | 279       | 0               |
 | docs/phase-3/generated/review-operator-queue.md           | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-3/generated/review-packet-manifest.json        | json | 0                  | 0                          | 80        | 0               |
 | docs/phase-3/generated/review-packet.md                   | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 282       | 0               |
+| docs/phase-3/generated/review-worklist.json               | json | 0                  | 0                          | 283       | 0               |
 | docs/phase-3/generated/review-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/beta-coverage-report.json          | json | 0                  | 0                          | 25        | 0               |
 | docs/phase-4/generated/beta-coverage-report.md            | md   | 0                  | 0                          | 0         | 0               |

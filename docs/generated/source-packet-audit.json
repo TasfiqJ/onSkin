@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-11T01:26:22.954Z",
+  "generatedAt": "2026-07-11T02:48:37.725Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
@@ -52,8 +52,8 @@
     },
     {
       "path": "04_repo_docs/docs/DECISIONS.md",
-      "bytes": 22746,
-      "sha256": "16d39dc9dad77de6c51152c4931d25cb64696a3b1354256b30ff7769a958162f"
+      "bytes": 24821,
+      "sha256": "a43e6e2f315269592d4b6e4ada2a780e639c9881bc750a5f7c97aa0be4536f71"
     },
     {
       "path": "04_repo_docs/docs/FEATURE_INDEX.md",
@@ -131,10 +131,10 @@
       "title": "Decisions",
       "sourcePath": "04_repo_docs/docs/DECISIONS.md",
       "activePath": "docs/DECISIONS.md",
-      "sourceBytes": 22746,
-      "activeBytes": 22746,
-      "sourceSha256": "16d39dc9dad77de6c51152c4931d25cb64696a3b1354256b30ff7769a958162f",
-      "activeSha256": "16d39dc9dad77de6c51152c4931d25cb64696a3b1354256b30ff7769a958162f",
+      "sourceBytes": 24821,
+      "activeBytes": 24821,
+      "sourceSha256": "a43e6e2f315269592d4b6e4ada2a780e639c9881bc750a5f7c97aa0be4536f71",
+      "activeSha256": "a43e6e2f315269592d4b6e4ada2a780e639c9881bc750a5f7c97aa0be4536f71",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true

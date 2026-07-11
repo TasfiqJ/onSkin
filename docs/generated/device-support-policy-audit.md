@@ -1,6 +1,6 @@
 # Device Support Policy Audit
 
-Generated: 2026-07-11T01:26:25.736Z
+Generated: 2026-07-11T02:49:30.575Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ them.
 
 - Config contracts: 5
 - Docs checked: 8
-- Human-E2E manifest gates: 35
+- Human-E2E manifest gates: 36
 - Blockers: 0
 - Warnings: 0
 

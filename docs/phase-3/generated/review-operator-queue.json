@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-11T01:26:35.202Z",
+  "generatedAt": "2026-07-11T02:50:08.873Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
-  "strict": false,
-  "gitSha": "f7672a9ad32bc4b1e966aaa0e505caefe8d1e870",
+  "strict": true,
+  "gitSha": "b8a43f213fcf624907130576a29dc29ad55fb1b0",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 101266,
-    "sha256": "2410f3501d1eca2a07e7bf23e6e5080f52af2b3b2582d0a000e1c32d3c9adecf",
-    "currentSha256": "2410f3501d1eca2a07e7bf23e6e5080f52af2b3b2582d0a000e1c32d3c9adecf"
+    "bytes": 101503,
+    "sha256": "b6c8d2c99be9f621e4c1ff0534ebf9adaceb1cfb56fb2221df121958ce49de39",
+    "currentSha256": "b6c8d2c99be9f621e4c1ff0534ebf9adaceb1cfb56fb2221df121958ce49de39"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -1385,7 +1385,7 @@
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "b58dade64ba574c67e377fbc4f95c3cb9a72750f3457fdc095a37b54df752ab3",
+      "reviewSnapshotSha256": "b1b8be11a09802273b37f05c7e757e6a805f672ab4793c6773cabbe4e9998c20",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1408,14 +1408,14 @@
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 6053,
-          "sha256": "347813314794b42a057efec468e1eec40b2bf01d016e36dad72cacee1dfd6c3d"
+          "bytes": 6395,
+          "sha256": "932e06be8ebcd2d5bfb3fa9220a8a3ede418413209d7921dab01328bd27916c3"
         },
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.ts",
           "exists": true,
-          "bytes": 8505,
-          "sha256": "2f9d8a736a51ac5314161a826d501b42027c5fea32c8941d596f62baa1e2b871"
+          "bytes": 8616,
+          "sha256": "f210c82c2053d74e0d59cef1789cb4158ddebd1746e35827993e3220db2b5316"
         },
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
@@ -1597,7 +1597,7 @@
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "94a335ae3d4a710e2bc89de1402518314b7b7e253d34a9df937bb0e71ac406ed",
+      "reviewSnapshotSha256": "a4a3c223875fda6a58f7a1b92dc1acf1906c6f03a2194866821a2194d89c7e68",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1620,8 +1620,8 @@
         {
           "path": "apps/mobile/src/features/scheduler/classes.ts",
           "exists": true,
-          "bytes": 4191,
-          "sha256": "1841ea37d2c06e03f046a792d3d8cc3fb4edc575531e4f8fa50c72a7d93471f2"
+          "bytes": 4339,
+          "sha256": "e90dedddd1881ee44433e22a2237387ef7daffa29595a67dea6dd6a774010045"
         },
         {
           "path": "apps/mobile/src/features/scheduler/cycleStore.test.ts",
@@ -1644,14 +1644,14 @@
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.test.ts",
           "exists": true,
-          "bytes": 12463,
-          "sha256": "ff961ef6f217c92c8a8f9c43e8ecd6d1b3ca8ced4d39e663b91308bf444d3a1d"
+          "bytes": 13865,
+          "sha256": "7fcc7cb547eb671ce5e20b743f692f39053c3eae5fce39da2b58dcbcf00d5231"
         },
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.ts",
           "exists": true,
-          "bytes": 8505,
-          "sha256": "2f9d8a736a51ac5314161a826d501b42027c5fea32c8941d596f62baa1e2b871"
+          "bytes": 8616,
+          "sha256": "f210c82c2053d74e0d59cef1789cb4158ddebd1746e35827993e3220db2b5316"
         },
         {
           "path": "apps/mobile/src/features/scheduler/profile.test.ts",
@@ -1674,20 +1674,20 @@
         {
           "path": "apps/mobile/src/features/scheduler/projection.test.ts",
           "exists": true,
-          "bytes": 2167,
-          "sha256": "579efbc821b1d4bfc48bd355c84c338d1e54c602ef004ad45cbc01c7c2905f07"
+          "bytes": 3041,
+          "sha256": "a4cd2533262ca8fc73aa5403bff6f43be21fab7fa96b03fec19b9a4ba2687a59"
         },
         {
           "path": "apps/mobile/src/features/scheduler/projection.ts",
           "exists": true,
-          "bytes": 2862,
-          "sha256": "8c4f98b9c40fe3969a2682444cbf9080ddacffb6a8ec7153e13fec3cc80fa322"
+          "bytes": 3918,
+          "sha256": "8d5e9983dd125f4f1438534f6aec7f855f2d9f8ccb0189b56ac6dd6e31443782"
         },
         {
           "path": "apps/mobile/src/features/scheduler/useCycle.ts",
           "exists": true,
-          "bytes": 5968,
-          "sha256": "8205ee4b2fe4a64372c8062046cb19188d48ca70e2838cee9bc3e7b32b44d3fe"
+          "bytes": 5996,
+          "sha256": "6a2142b83ca521a207a5c1d7c0d539f7033f94d39ddc4ba81579c4fb4ead501d"
         },
         {
           "path": "apps/mobile/src/features/scheduler/useCycleAnalytics.test.ts",
@@ -1803,7 +1803,7 @@
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "1718337cdaa645477d07420a32d6c7aa565e40dbcf7ea2bd36384b694435bc43",
+      "reviewSnapshotSha256": "fba6ce1b9327527d0af8c1f8558c72f7a75ffb75fc1f1b6850341fa082fa62a5",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1838,26 +1838,26 @@
         {
           "path": "apps/mobile/src/features/routine/firstInsight.test.ts",
           "exists": true,
-          "bytes": 5560,
-          "sha256": "eaacafe7ca609490a779ef5611157956aed5ec081403dd3856c5f8d86b733f4c"
+          "bytes": 5571,
+          "sha256": "39c0394d4e474a8b8419cc0751a3402657f1850a46e15dd755323cff7fb1d92a"
         },
         {
           "path": "apps/mobile/src/features/routine/firstInsight.ts",
           "exists": true,
-          "bytes": 3615,
-          "sha256": "0e4593978d4a97b0c1244664a8a1adfcb24957c366785a38c2490141c59b5ce6"
+          "bytes": 3670,
+          "sha256": "76bb211ba389eb77c425c8524637b3e1c738af4413be90d107fd30d87cb8f5b1"
         },
         {
           "path": "apps/mobile/src/features/routine/generate.test.ts",
           "exists": true,
-          "bytes": 14039,
-          "sha256": "c55b661e6edcd022ba66da746f895e812b3d224f04467a3b0b74a23ad18bf450"
+          "bytes": 17546,
+          "sha256": "86c58746c44ee184b0e939a598feebcd27ab29d3061eca63112c96406a842ea2"
         },
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 6053,
-          "sha256": "347813314794b42a057efec468e1eec40b2bf01d016e36dad72cacee1dfd6c3d"
+          "bytes": 6395,
+          "sha256": "932e06be8ebcd2d5bfb3fa9220a8a3ede418413209d7921dab01328bd27916c3"
         },
         {
           "path": "apps/mobile/src/features/routine/progressSanitizers.test.ts",
@@ -1902,10 +1902,16 @@
           "sha256": "ab56e4d57c55e76af25ce35fe9a9d00d9b653f810cfab50b0caf126e1ec42acd"
         },
         {
+          "path": "apps/mobile/src/features/routine/scheduleContract.test.ts",
+          "exists": true,
+          "bytes": 2486,
+          "sha256": "0495aab2fc8563e3a1fe1dffb757c836b44b2fc4983d38f8d53dab4bc58b8007"
+        },
+        {
           "path": "apps/mobile/src/features/routine/sequencing.ts",
           "exists": true,
-          "bytes": 6132,
-          "sha256": "0e29b8c135c23b0aa7f5c22f129fcfe4152298b3ab5f24f113bd60b7d3cc19c6"
+          "bytes": 7732,
+          "sha256": "a4e8abd61e4cda24726699a24ecfe1ae1720b9012b6d98d52be4bffb6ac4a51e"
         },
         {
           "path": "apps/mobile/src/features/routine/usePlan.test.ts",
@@ -1981,7 +1987,7 @@
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "f30101fb9c124f25feeba5426816d212443601ae4957439e65923619f9ac8496",
+      "reviewSnapshotSha256": "e8106d6cbae138d185d1e94e9b7364f2b9ef1ba1b4529b2f4153df0d70cdc29a",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2076,8 +2082,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 45384,
-          "sha256": "84b6f763cdf84a3e7fd10fe5a12aa7c2461b3e96b131be28f6d8c47131d78289"
+          "bytes": 45749,
+          "sha256": "4be308c91d6c00058b7a4a741007aaf6cebce08def92eb918e8e477565b8becb"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
@@ -2194,7 +2200,7 @@
       "requiredReviewer": "qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "705efa717bc41874ea6d8b6e97438deca45ba51b1c14ebaef22f1209f1e9d87f",
+      "reviewSnapshotSha256": "98d0f550f9bf959e87af7b6c159c0fc331c691ca62cbaf2b64a8add30108933c",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2331,8 +2337,8 @@
         {
           "path": "apps/mobile/src/features/subscription/proGatedRoutes.test.ts",
           "exists": true,
-          "bytes": 14764,
-          "sha256": "f0c33a6444c9b16c0db1f0e114cf2b71076be483cb29965b1f808fb3dcc8500c"
+          "bytes": 15977,
+          "sha256": "4359e0b1f078aecc4e17ec895a313bb2512080aaab0ec6acbfcb6b045dc8588d"
         },
         {
           "path": "apps/mobile/src/features/subscription/ReverseTrialBanner.tsx",
