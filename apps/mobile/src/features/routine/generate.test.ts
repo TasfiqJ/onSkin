@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import type { EngineProfile } from '@/features/intelligence/engine';
+import type { DetectedConflict, EngineProfile } from '@/features/intelligence/engine';
+import type { ConflictChoices } from '@/features/intelligence/conflictChoices';
+import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import { STARTER_RULES, shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
 
@@ -38,6 +40,21 @@ function withDevFlag<T>(value: boolean, run: () => T): T {
     if (previous === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = previous;
   }
+}
+
+function choicesForConflict(
+  conflict: DetectedConflict,
+  choice: 'accept_suggested_timing' | 'use_together',
+): ConflictChoices {
+  const productIds = [conflict.productAId!, conflict.productBId!].sort() as [string, string];
+  return {
+    [conflictKey(conflict)]: {
+      choice,
+      ruleId: conflict.rule.id,
+      ruleVersion: conflict.rule.ruleVersion,
+      productIds,
+    },
+  };
 }
 
 // Maya's shelf (docs/03 §2 worked example) + a cleanser (spec AM shows one).
@@ -147,6 +164,27 @@ describe('Maya plan generation (docs/03 §2 worked example)', () => {
     );
     expect(c?.rule.resolutionType).toBe('alternate_nights');
     expect(c?.computedSeverity).toBe('moderate'); // sensitive bumps mild→moderate
+  });
+
+  it('removes a decided ordinary conflict from repeated Plan prompts without changing phases', () => {
+    const conflict = plan.conflicts.find(
+      (item) => item.rule.resolutionType === 'alternate_nights',
+    )!;
+
+    for (const choice of ['accept_suggested_timing', 'use_together'] as const) {
+      const decided = withDevFlag(true, () =>
+        generatePlan(maya, mayaProfile, STARTER_RULES, choicesForConflict(conflict, choice)),
+      );
+      expect(decided.conflicts.some((item) => conflictKey(item) === conflictKey(conflict))).toBe(
+        false,
+      );
+      expect(decided.am.map((step) => step.productId)).toEqual(
+        plan.am.map((step) => step.productId),
+      );
+      expect(decided.pm.map((step) => step.productId)).toEqual(
+        plan.pm.map((step) => step.productId),
+      );
+    }
   });
 
   it('shows no gap notes (Maya owns cleanser, moisturiser, SPF)', () => {

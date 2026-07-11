@@ -385,7 +385,31 @@ export async function assertPrivateKVReadable(): Promise<void> {
   await getPrivateItems(keys);
 }
 
+const CONFLICT_CHOICE_STORAGE_KEY = 'onskin.conflict.overrides';
+let devConflictChoiceWriteFailureUsed = false;
+
+async function maybeRejectConflictChoiceWrite(key: string): Promise<void> {
+  const enabled =
+    typeof __DEV__ !== 'undefined' &&
+    __DEV__ &&
+    process.env.EXPO_PUBLIC_E2E_CONFLICT_CHOICE_SAVE_FAILURE === 'once';
+  if (!enabled || key !== CONFLICT_CHOICE_STORAGE_KEY || devConflictChoiceWriteFailureUsed) return;
+  devConflictChoiceWriteFailureUsed = true;
+  await new Promise((resolve) => setTimeout(resolve, 600));
+  throw new Error('E2E_CONFLICT_CHOICE_PRIVATE_WRITE_FAILURE');
+}
+
 export async function setPrivateItem(key: string, value: string): Promise<void> {
+  return updatePrivateItem(key, () => value);
+}
+
+/** Atomically read, transform, and persist one private value under the same
+ * account-generation guard and per-key mutation lock. The updater is
+ * synchronous so no untracked work can cross an account boundary. */
+export async function updatePrivateItem(
+  key: string,
+  updater: (current: string | null) => string | null,
+): Promise<void> {
   return runAccountScopedPrivateOperation((generation) =>
     runSerializedPrivateMutations([key], async () => {
       assertPrivateDataKey(key);
@@ -401,28 +425,59 @@ export async function setPrivateItem(key: string, value: string): Promise<void> 
         rememberFailedRead(key, existingRaw);
         throw envelopeClassificationError(existingClassification.kind);
       }
-      const contentKey = await getOrCreateContentKey();
+      let contentKey: Uint8Array | null = null;
+      let currentValue: string | null = null;
       if (existingClassification?.kind === 'current' && existingRaw) {
         try {
-          decryptEnvelope(existingClassification.envelope, contentKey);
+          contentKey = await getExistingContentKey();
+        } catch (error) {
+          rememberFailedRead(key, existingRaw);
+          throw error;
+        }
+        if (!contentKey) {
+          rememberFailedRead(key, existingRaw);
+          throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+        }
+        try {
+          currentValue = decryptEnvelope(existingClassification.envelope, contentKey);
         } catch {
           rememberFailedRead(key, existingRaw);
           throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
         }
+      } else if (existingClassification?.kind === 'legacy' && existingRaw) {
+        currentValue = existingRaw;
       }
+
+      const nextValue = updater(currentValue);
+      if (
+        nextValue === currentValue &&
+        (nextValue === null || existingClassification?.kind === 'current')
+      ) {
+        return;
+      }
+
       const latestRaw = await AsyncStorage.getItem(key);
       if (latestRaw !== existingRaw) {
         if (latestRaw !== null) rememberFailedRead(key, latestRaw);
         throw new Error(PRIVATE_KV_WRITE_CONFLICT);
       }
       assertAccountScopedPrivateOperationAllowed(generation);
+
+      if (nextValue === null) {
+        await AsyncStorage.removeItem(key);
+        failedReadSnapshots.delete(key);
+        return;
+      }
+
+      contentKey ??= await getOrCreateContentKey();
       const nonce = randomBytes(NONCE_BYTES);
-      const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(value));
+      const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(nextValue));
       const envelope: PrivateEnvelope = {
         version: ENCRYPTION_VERSION,
         nonceHex: bytesToHex(nonce),
         ciphertextHex: bytesToHex(ciphertext),
       };
+      await maybeRejectConflictChoiceWrite(key);
       await AsyncStorage.setItem(key, JSON.stringify(envelope));
       failedReadSnapshots.delete(key);
     }),

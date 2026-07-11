@@ -84,23 +84,109 @@ describe('Conflict route contracts', () => {
   it('keeps direct conflict details behind the launch-gated shelf conflict source', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
 
-    expect(source).toContain("import { useShelf } from '@/features/shelf/useShelf';");
+    expect(source).toContain("from '@/features/shelf/useShelf';");
     expect(source).toContain('const { data } = useShelf();');
-    expect(source).toContain('data?.conflicts.find((c) => c.rule.id === ruleId)');
+    expect(source).toContain('const requestedPair =');
+    expect(source).toContain('const ruleMatches = data?.conflicts.filter');
+    expect(source).toContain('ruleMatches.length === 1');
+    expect(source).toContain("sort().join('+')");
+    expect(source).toContain('requestedPair,');
     expect(source).not.toContain('STARTER_RULES');
     expect(source).not.toContain('detectConflicts(');
     expect(source).not.toContain('shippableRules(');
   });
 
+  it('routes shelf conflicts by rule and exact unordered product pair', () => {
+    const shelf = readAppRoute('(tabs)/shelf.tsx');
+    const product = readAppRoute('shelf/[id].tsx');
+    const detail = readAppRoute('conflict/[ruleId].tsx');
+    const identity = readFileSync(
+      `${APP_DIR}/../features/intelligence/conflictIdentity.ts`,
+      'utf8',
+    );
+
+    expect(identity).toContain('export function conflictDetailRoute');
+    expect(identity).toContain('productAId: c.productAId');
+    expect(identity).toContain('productBId: c.productBId');
+    expect(identity).toContain('const subjectProductId = c.productAId ?? c.productBId');
+    expect(detail).toContain('subjectProductId?: string | string[];');
+    expect(detail).toContain('candidate.productAId === subjectProductId');
+    expect(shelf).toContain('router.push(conflictDetailRoute(data.banner!))');
+    expect(product).toContain('router.push(conflictDetailRoute(c))');
+  });
+
+  it('preserves exact pair identity when opening a share card', () => {
+    const detail = readAppRoute('conflict/[ruleId].tsx');
+    const share = readAppRoute('share/conflict/[ruleId].tsx');
+
+    expect(detail).toContain('router.push(conflictShareRoute(conflict))');
+    expect(share).toContain('const requestedPair =');
+    expect(share).toContain('const ruleMatches = data?.conflicts.filter');
+    expect(share).toContain('ruleMatches.length === 1');
+    expect(share).toContain("sort().join('+')");
+    expect(share).toContain('requestedPair,');
+  });
+
+  it('keeps recommendation conflict routes tied to the detected product pair', () => {
+    const route = readAppRoute('recommendations/[id].tsx');
+    const engine = readFileSync(
+      `${APP_DIR}/../features/recommendations/engine.ts`,
+      'utf8',
+    );
+
+    expect(engine).toContain('relatedConflictProductIds: [string, string] | null;');
+    expect(engine).toContain('const id = `conflict:${conflictKey(topConflict)}`;');
+    expect(engine).toContain('relatedConflictProductIds: productIds');
+    expect(route).toContain('const [productAId, productBId] = rec.relatedConflictProductIds ?? [];');
+    expect(route).toContain('...(productAId && productBId ? { productAId, productBId } : {})');
+  });
+
   it('tracks conflict choices without sending rule or product identifiers', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
 
-    expect(source).toContain("track('conflict_resolution_chosen', { action, source: 'detail' })");
+    expect(source).toContain("track('conflict_resolution_chosen', {");
+    expect(source).toContain("action: choice === 'use_together' ? 'use_together' : 'keep'");
     expect(source).toContain("track('conflict_overridden', { source: 'detail' })");
     expect(source).not.toContain("track('conflict_resolution_chosen', { rule");
     expect(source).not.toContain("track('conflict_overridden', { rule");
     expect(source).not.toContain("track('conflict_resolution_chosen', { product");
     expect(source).not.toContain("track('conflict_overridden', { product");
+  });
+
+  it('persists before analytics/navigation and recovers failed encrypted writes inline', () => {
+    const source = readAppRoute('conflict/[ruleId].tsx');
+    const privateKV = readFileSync(`${APP_DIR}/../lib/storage/privateKV.ts`, 'utf8');
+    const writeIndex = source.indexOf('await setConflictChoice(c, userChoice);');
+    const analyticsIndex = source.indexOf("track('conflict_resolution_chosen'", writeIndex);
+    const cacheIndex = source.indexOf('qc.setQueryData<ShelfData>', analyticsIndex);
+    const dismissIndex = source.indexOf('onDismiss();', analyticsIndex);
+
+    expect(writeIndex).toBeGreaterThan(-1);
+    expect(analyticsIndex).toBeGreaterThan(writeIndex);
+    expect(cacheIndex).toBeGreaterThan(analyticsIndex);
+    expect(dismissIndex).toBeGreaterThan(analyticsIndex);
+    expect(source).toContain('if (saveInFlight.current) return;');
+    expect(source).toContain('applyConflictChoicesToShelfData(current, conflictChoices)');
+    expect(source).not.toContain("invalidateQueries({ queryKey: ['shelf'] })");
+    expect(privateKV).toContain('EXPO_PUBLIC_E2E_CONFLICT_CHOICE_SAVE_FAILURE');
+    expect(privateKV).toContain('await new Promise((resolve) => setTimeout(resolve, 600));');
+    expect(privateKV).toContain("key !== CONFLICT_CHOICE_STORAGE_KEY");
+    expect(source).toContain('Choice not saved');
+    expect(source).toContain('Your previous schedule is unchanged. Try again.');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('.upsert(');
+    expect(source).toContain("onConflict: 'user_id,rule_id,product_a_id,product_b_id'");
+  });
+
+  it('names the exact shelf products before a timing choice is made', () => {
+    const source = readAppRoute('conflict/[ruleId].tsx');
+
+    expect(source).toContain('function conflictProductPairLabel');
+    expect(source).toContain('Your products');
+    expect(source).toContain('{productPairLabel}');
+    expect(source).toContain('function conflictSuggestion');
+    expect(source).toContain('conflict.productAName} and ${conflict.productBName}');
+    expect(source).toContain("[familyTitle(conflict), productPairLabel].filter(Boolean).join('. ')");
   });
 
   it('keeps dense conflict sheets scrollable and actions touchable on short phones', () => {
@@ -113,9 +199,7 @@ describe('Conflict route contracts', () => {
     expect(source).toContain(
       'const sheetMaxHeight = viewportHeight > 44 ? viewportHeight - 44 : 524;',
     );
-    expect(source).toContain(
-      "const dialogLabel = conflict ? familyTitle(conflict) : 'Timing note unavailable';",
-    );
+    expect(source).toContain('const dialogLabel = conflict');
     expect(source).toContain('const compactMissingConflict = !conflict && viewportHeight < 520;');
     expect(source).toContain('const missingConflictActions = (');
     expect(source).toContain('const missingConflictAdviceCard = (');
@@ -130,6 +214,14 @@ describe('Conflict route contracts', () => {
     expect(source).toContain('role="dialog"');
     expect(source).toContain('accessibilityLabel={dialogLabel}');
     expect(source).toContain('accessibilityViewIsModal');
+    expect(source).toContain('onAccessibilityEscape={onDismiss}');
+    expect(source).toContain("nativeID=\"conflict-choice-dialog\"");
+    expect(source).toContain("dialog?.addEventListener('keydown', trapFocus)");
+    expect(source).toContain("if (event.key === 'Escape')");
+    expect(source).toContain('event.stopPropagation();');
+    expect(source).toContain('if (active === dialog || !dialog.contains(active))');
+    expect(source).toContain('(event.shiftKey ? last : first).focus();');
+    expect(source).toContain('AccessibilityInfo.setAccessibilityFocus(handle)');
     expect(source).toContain('aria-hidden');
     expect(source).toContain('accessibilityElementsHidden');
     expect(source).toContain('tabIndex={-1}');

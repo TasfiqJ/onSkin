@@ -6,7 +6,11 @@ import { RouteIconButton, Text } from '@/components/ui';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { withProGate } from '@/features/subscription/ProGate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
-import { useCycle, type CycleData } from '@/features/scheduler/useCycle';
+import {
+  hasUseTogetherChoiceBetween,
+  useCycle,
+  type CycleData,
+} from '@/features/scheduler/useCycle';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
@@ -345,7 +349,15 @@ function formatCycleNightLabel(cycleNightNumber: number): string {
 function resolutionNote(data: CycleData): { lead: string; tail: string } | null {
   const cycle = data.cycle;
   if (!cycle || data.tonight?.night.slot !== 'retinoid') return null;
-  const acid = cycle.nights.find((n) => n.slot === 'exfoliate')?.productName;
+  const acid = cycle.nights.find(
+    (night) =>
+      night.slot === 'exfoliate' &&
+      !hasUseTogetherChoiceBetween(
+        data.conflictChoices,
+        data.tonight?.night.productId,
+        night.productId,
+      ),
+  )?.productName;
   if (!acid || !data.nextAcidNight) return null;
   return {
     lead: `Because tonight is retinoid night, your ${acid.toLowerCase()} is held back. They're better apart. `,

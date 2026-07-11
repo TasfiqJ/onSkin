@@ -4,7 +4,7 @@ import { View } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
-import { useCycle } from '@/features/scheduler/useCycle';
+import { hasUseTogetherChoiceBetween, useCycle } from '@/features/scheduler/useCycle';
 import { track } from '@/lib/analytics/track';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -91,11 +91,43 @@ export default function WhyTonightScreen() {
   const selectedSlot = selectedNight.night.slot;
   const selectedSlotLabel = selectedSlot === 'recover' ? 'recovery' : selectedSlot;
   const selectedNightPrefix = isTonight ? "You're on" : `${selectedNight.weekday} is`;
-  const retinoidName = cycle.nights.find((n) => n.slot === 'retinoid')?.productName ?? null;
-  const acidName = cycle.nights.find((n) => n.slot === 'exfoliate')?.productName ?? null;
+  const retinoidNight = cycle.nights.find((night) => night.slot === 'retinoid') ?? null;
+  const acidNight =
+    cycle.nights.find(
+      (night) =>
+        night.slot === 'exfoliate' &&
+        !hasUseTogetherChoiceBetween(
+          data?.conflictChoices ?? [],
+          retinoidNight?.productId,
+          night.productId,
+        ),
+    ) ?? null;
+  const retinoidName = retinoidNight?.productName ?? null;
+  const acidName = acidNight?.productName ?? null;
   const hasVitC = cycle.amDaily.some((a) => a.className === 'vitamin_c');
   const retinoidNightsPerCycle = cycle.nights.filter((n) => n.slot === 'retinoid').length;
   const hasBothPotent = !!retinoidName && !!acidName;
+  const scheduledNames = new Map([
+    ...cycle.amDaily.map((item) => [item.productId, item.name] as const),
+    ...cycle.nights.flatMap((night) =>
+      night.productId && night.productName ? ([[night.productId, night.productName]] as const) : [],
+    ),
+  ]);
+  const nightProductIds = new Set(
+    cycle.nights.flatMap((night) => (night.productId ? [night.productId] : [])),
+  );
+  const relevantManualChoices = (data?.conflictChoices ?? []).filter(
+    (choice) =>
+      choice.choice === 'use_together' &&
+      choice.productIds.every((productId) => nightProductIds.has(productId)),
+  );
+  const selectedProductId = selectedNight.night.productId;
+  const manualChoice = selectedProductId
+    ? relevantManualChoices.find((choice) => choice.productIds.includes(selectedProductId))
+    : undefined;
+  const manualPairNames = manualChoice?.productIds
+    .map((productId) => scheduledNames.get(productId))
+    .filter((name): name is string => Boolean(name));
 
   return (
     <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE} scroll>
@@ -115,6 +147,11 @@ export default function WhyTonightScreen() {
         <TraceRow tag="CYCLE">
           {`${selectedNightPrefix} night ${selectedNight.index + 1} of your ${cycle.variant} cycle. The ${selectedSlotLabel} slot.`}
         </TraceRow>
+        {manualPairNames?.length === 2 ? (
+          <TraceRow tag="CHOICE">
+            {`You saved your own timing choice for ${manualPairNames.join(' + ')}. Guided check-offs keep one potent active per night until co-use timing is reviewed.`}
+          </TraceRow>
+        ) : null}
         {hasBothPotent ? (
           <TraceRow tag="APART">
             {`Your ${acidName} is on alternate nights so it and your retinoid don't compound irritation. Recommendation, not a rule.`}

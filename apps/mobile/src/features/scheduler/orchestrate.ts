@@ -1,6 +1,12 @@
-import type { CycleVariant, FunctionalTag, GoalId } from '@onskin/types';
+import type { CycleVariant, FunctionalTag, GoalId, IngredientSubflag } from '@onskin/types';
 
-import type { SensitivityLevel } from '@/features/intelligence/engine';
+import { detectConflicts, type SensitivityLevel } from '@/features/intelligence/engine';
+import { conflictKey } from '@/features/intelligence/conflictIdentity';
+import {
+  choiceForConflict,
+  type ConflictChoices,
+  type ConflictUserChoice,
+} from '@/features/intelligence/conflictChoices';
 import {
   pregnancySafetyReasonForProduct,
   type PregnancySafetyMode,
@@ -46,12 +52,24 @@ export type Cycle = {
 /** Orchestration result. `notes` travel even when no cycle forms, so a safety
  *  message (e.g. pregnancy retinoid suppression) always reaches the user even if
  *  the suppressed retinoid was the only potent active (review finding). */
-export type OrchestrationResult = { cycle: Cycle | null; notes: string[] };
+export type ScheduledConflictChoice = {
+  key: string;
+  choice: ConflictUserChoice;
+  productIds: [string, string];
+  resolutionType: ConflictRule['resolutionType'];
+};
+
+export type OrchestrationResult = {
+  cycle: Cycle | null;
+  notes: string[];
+  conflictChoices: ScheduledConflictChoice[];
+};
 
 export type SchedulerActive = {
   id: string;
   name: string;
   tags: FunctionalTag[];
+  subflags?: IngredientSubflag[];
   category?: string | null;
   concentration?: 'low' | 'high';
   /** Recently added → staged for phased introduction (docs/05 §4). */
@@ -68,6 +86,9 @@ export type SchedulerProfile = {
   preferredVariant?: CycleVariant | null;
   /** Per-product ramp frequency (docs/03 active_ramp) keyed by product id. */
   freqByProductId?: Record<string, number>;
+  /** Version-matched local choices. They suppress repeat prompts and flow into
+   * schedule explanations, but cannot bypass safety or unreviewed cadence. */
+  conflictChoices?: ConflictChoices;
 };
 
 // Recovery density per variant: nights inserted between pushes + trailing.
@@ -133,6 +154,47 @@ function recoveryNight(index: number): NightSlot {
   return { index, slot: 'recover', productId: null, productName: null, className: null };
 }
 
+function scheduledConflictChoices(
+  actives: readonly SchedulerActive[],
+  profile: SchedulerProfile,
+  rules: ConflictRule[],
+): ScheduledConflictChoice[] {
+  const choices = profile.conflictChoices ?? {};
+  if (Object.keys(choices).length === 0) return [];
+
+  const detected = detectConflicts(
+    actives.map((active) => ({
+      id: active.id,
+      name: active.name,
+      tags: active.tags,
+      subflags: active.subflags,
+      concentration: active.concentration,
+    })),
+    { sensitivity: profile.sensitivity, pregnancy: profile.pregnancy },
+    rules,
+  );
+
+  return detected.flatMap((conflict) => {
+    const choice = choiceForConflict(choices, conflict);
+    if (
+      !choice ||
+      conflict.rule.interactionType === 'safety' ||
+      !conflict.productAId ||
+      !conflict.productBId
+    ) {
+      return [];
+    }
+    return [
+      {
+        key: conflictKey(conflict),
+        choice,
+        productIds: [conflict.productAId, conflict.productBId].sort() as [string, string],
+        resolutionType: conflict.rule.resolutionType,
+      },
+    ];
+  });
+}
+
 /**
  * Orchestrate the user's actives into a cycle. `cycle` is null when there are no
  * potent night-cycled actives (→ a simple daily AM/PM routine. Docs/02 §5 /
@@ -149,6 +211,8 @@ export function orchestrate(
     return reason ? [{ active, reason }] : [];
   });
   const excludedIds = new Set(safetyExclusions.map(({ active }) => active.id));
+  const eligibleActives = actives.filter((active) => !excludedIds.has(active.id));
+  const conflictChoices = scheduledConflictChoices(eligibleActives, profile, rules);
   const classified: Classified[] = actives
     .filter((active) => !excludedIds.has(active.id))
     .map((a) => ({
@@ -170,7 +234,7 @@ export function orchestrate(
     );
   }
 
-  if (!canUseRoutineCadence()) return { cycle: null, notes };
+  if (!canUseRoutineCadence()) return { cycle: null, notes, conflictChoices };
 
   // AM / daily block (stable morning): vitamin C, BP, flexible niacinamide.
   const amDaily: AmItem[] = classified
@@ -193,7 +257,7 @@ export function orchestrate(
     );
   }
 
-  if (potent.length === 0) return { cycle: null, notes };
+  if (potent.length === 0) return { cycle: null, notes, conflictChoices };
 
   const variant = profile.preferredVariant ?? pickVariant(profile);
 
@@ -227,5 +291,9 @@ export function orchestrate(
   // Guarantee at least one recovery night so the barrier always gets rest.
   if (!nights.some((n) => n.slot === 'recover')) nights.push(recoveryNight(nights.length));
 
-  return { cycle: { variant, lengthNights: nights.length, nights, amDaily, notes }, notes };
+  return {
+    cycle: { variant, lengthNights: nights.length, nights, amDaily, notes },
+    notes,
+    conflictChoices,
+  };
 }

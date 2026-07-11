@@ -20,7 +20,13 @@ import {
   updateCycleConfig,
   type CycleConfig,
 } from './cycleStore';
-import { orchestrate, type Cycle, type NightSlot, type SchedulerActive } from './orchestrate';
+import {
+  orchestrate,
+  type Cycle,
+  type NightSlot,
+  type ScheduledConflictChoice,
+  type SchedulerActive,
+} from './orchestrate';
 import { useProfileBits } from './profile';
 import { nextSlotDate, nightFor, nightIndex, weekAhead, type ProjectedNight } from './projection';
 
@@ -42,7 +48,23 @@ export type CycleData = {
    *  so a surface can offer "add it now anyway" against the real product. */
   stagedActiveIds: string[];
   notes: string[];
+  conflictChoices: ScheduledConflictChoice[];
 };
+
+export function hasUseTogetherChoiceBetween(
+  choices: readonly ScheduledConflictChoice[],
+  productAId: string | null | undefined,
+  productBId: string | null | undefined,
+): boolean {
+  if (!productAId || !productBId || productAId === productBId) return false;
+  return choices.some(
+    (record) =>
+      record.choice === 'use_together' &&
+      record.resolutionType === 'alternate_nights' &&
+      record.productIds.includes(productAId) &&
+      record.productIds.includes(productBId),
+  );
+}
 
 function daysSince(iso: string): number {
   return Math.round((Date.now() - new Date(iso).getTime()) / 86_400_000);
@@ -74,6 +96,7 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
       id: i.engineProduct.id,
       name: i.engineProduct.name,
       tags: i.engineProduct.tags,
+      subflags: i.engineProduct.subflags,
       category: i.category,
       concentration: i.engineProduct.concentration,
       // Recently added → phased introduction, unless the user opted to start it
@@ -84,7 +107,7 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
     }));
     const stagedActiveIds = actives.filter((a) => a.isNew).map((a) => a.id);
 
-    const { cycle, notes } = orchestrate(actives, {
+    const { cycle, notes, conflictChoices } = orchestrate(actives, {
       sensitivity: profile.data.sensitivity,
       pregnancy: profile.data.pregnancy,
       pregnancySafety: profile.data.pregnancySafety,
@@ -92,6 +115,7 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
       goals: profile.data.goals,
       preferredVariant: config.variant === 'auto' ? null : config.variant,
       freqByProductId,
+      conflictChoices: shelf.data.conflictChoices,
     });
 
     const anchor = config.anchorISO;
@@ -113,6 +137,7 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
       skippedTonight: config.skips.includes(today),
       stagedActiveIds,
       notes,
+      conflictChoices,
     };
   }, [shelf.data, cfg.data, profile.data, freqByProductId, today]);
 

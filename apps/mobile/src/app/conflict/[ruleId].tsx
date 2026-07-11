@@ -1,14 +1,27 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import {
+  AccessibilityInfo,
+  findNodeHandle,
+  Platform,
+  Pressable,
+  ScrollView,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Text } from '@/components/ui';
 import { InContextNote } from '@/features/community/InContextNote';
 import { noteForTags } from '@/features/community/notes';
 import type { DetectedConflict } from '@/features/intelligence/engine';
-import { conflictKey, setConflictOverride } from '@/features/intelligence/overrides';
+import type {
+  ConflictChoices,
+  ConflictUserChoice,
+} from '@/features/intelligence/conflictChoices';
+import { conflictShareRoute } from '@/features/intelligence/conflictIdentity';
+import { setConflictChoice } from '@/features/intelligence/overrides';
 import {
   evidenceChip,
   familyTitle,
@@ -16,7 +29,11 @@ import {
   severityLabel,
   tagLabel,
 } from '@/features/intelligence/presentation';
-import { useShelf } from '@/features/shelf/useShelf';
+import {
+  applyConflictChoicesToShelfData,
+  useShelf,
+  type ShelfData,
+} from '@/features/shelf/useShelf';
 import {
   conflictCheckAccess,
   loadFreeConflictCheckRuleIds,
@@ -29,6 +46,7 @@ import { BRAND } from '@/lib/brand';
 import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { devWarn } from '@/lib/observability/safeLog';
 import { supabase } from '@/lib/supabase/client';
 import { colors } from '@/theme/tokens';
 
@@ -132,37 +150,110 @@ function CheckGlyph({ color, size = 22 }: { color: string; size?: number }) {
   );
 }
 
-async function recordChoice(c: DetectedConflict, choice: 'keep' | 'use_together') {
-  // Local-first so the choice sticks offline and the app stops re-nagging
-  // immediately (docs/03 §7); the server mirror below is best-effort.
-  const action = choice === 'use_together' ? 'use_together' : 'keep_alternate_nights';
-  track('conflict_resolution_chosen', { action, source: 'detail' });
-  if (choice === 'use_together') track('conflict_overridden', { source: 'detail' });
-  await setConflictOverride(conflictKey(c), choice === 'use_together');
+function persistedChoice(choice: 'keep' | 'use_together'): ConflictUserChoice {
+  return choice === 'use_together' ? 'use_together' : 'accept_suggested_timing';
+}
+
+async function mirrorChoice(c: DetectedConflict, userChoice: ConflictUserChoice): Promise<void> {
   try {
     const { data } = await supabase.auth.getUser();
-    if (!data.user?.id) return;
-    await supabase.from('routine_conflicts').insert({
-      user_id: data.user.id,
-      rule_id: c.rule.id,
-      product_a_id: c.productAId,
-      product_b_id: c.productBId,
-      computed_severity: c.computedSeverity,
-      status: choice === 'use_together' ? 'overridden' : 'accepted',
-      user_choice: choice === 'use_together' ? 'use_together' : 'keep_alternate_nights',
-      rule_version: c.rule.ruleVersion,
-    });
-  } catch {
+    if (!data.user?.id || !c.productAId || !c.productBId) return;
+    const [productAId, productBId] = [c.productAId, c.productBId].sort();
+    const { error } = await supabase.from('routine_conflicts').upsert(
+      {
+        user_id: data.user.id,
+        rule_id: c.rule.id,
+        product_a_id: productAId,
+        product_b_id: productBId,
+        computed_severity: c.computedSeverity,
+        status: userChoice === 'use_together' ? 'overridden' : 'accepted',
+        user_choice: userChoice,
+        rule_version: c.rule.ruleVersion,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'user_id,rule_id,product_a_id,product_b_id' },
+    );
+    if (error) throw new Error('SUPABASE_ROUTINE_CONFLICT_UPSERT_FAILED');
+  } catch (error) {
+    devWarn('routine_conflict_mirror_upsert_failed', error);
     /* best-effort until backend configured (B-SUPABASE) */
   }
 }
 
+async function recordChoice(
+  c: DetectedConflict,
+  choice: 'keep' | 'use_together',
+): Promise<ConflictChoices> {
+  // Local-first so the choice sticks offline and the app stops re-nagging
+  // immediately (docs/03 §7); the server mirror below is best-effort.
+  const userChoice = persistedChoice(choice);
+  const conflictChoices = await setConflictChoice(c, userChoice);
+  track('conflict_resolution_chosen', {
+    action: choice === 'use_together' ? 'use_together' : 'keep',
+    source: 'detail',
+  });
+  if (choice === 'use_together') track('conflict_overridden', { source: 'detail' });
+  void mirrorChoice(c, userChoice);
+  return conflictChoices;
+}
+
+function firstSearchParam(value: string | string[] | undefined): string | null {
+  const first = Array.isArray(value) ? value[0] : value;
+  return first?.trim() || null;
+}
+
+function conflictProductPairLabel(conflict: DetectedConflict): string | null {
+  const names = [conflict.productAName, conflict.productBName].filter(
+    (name): name is string => Boolean(name?.trim()),
+  );
+  return names.length > 0 ? names.join(' + ') : null;
+}
+
+function conflictSuggestion(conflict: DetectedConflict, copy: CopyOverride): string {
+  if (
+    conflict.rule.resolutionType === 'alternate_nights' &&
+    conflict.productAName &&
+    conflict.productBName
+  ) {
+    return `Alternate nights. Keep ${conflict.productAName} and ${conflict.productBName} on different evenings.`;
+  }
+  return copy.suggestion ?? conflict.rule.resolutionCopy;
+}
+
 export default function ConflictSheet() {
-  const { ruleId } = useLocalSearchParams<{ ruleId: string }>();
+  const params = useLocalSearchParams<{
+    ruleId?: string | string[];
+    productAId?: string | string[];
+    productBId?: string | string[];
+    subjectProductId?: string | string[];
+  }>();
+  const ruleId = firstSearchParam(params.ruleId);
+  const productAId = firstSearchParam(params.productAId);
+  const productBId = firstSearchParam(params.productBId);
+  const subjectProductId = firstSearchParam(params.subjectProductId);
+  const requestedPair = productAId && productBId ? [productAId, productBId].sort().join('+') : null;
+  const incompletePair = Boolean(productAId || productBId) && requestedPair == null;
+  const invalidIdentity = incompletePair || Boolean(subjectProductId && requestedPair);
   const { data } = useShelf();
   const entitlement = useEntitlement();
   const [seenRuleIds, setSeenRuleIds] = useState<string[] | null>(null);
-  const conflict = data?.conflicts.find((c) => c.rule.id === ruleId);
+  const ruleMatches = data?.conflicts.filter((candidate) => candidate.rule.id === ruleId) ?? [];
+  const conflict = invalidIdentity
+    ? undefined
+    : requestedPair
+      ? ruleMatches.find(
+          (candidate) =>
+            [candidate.productAId ?? '', candidate.productBId ?? ''].sort().join('+') ===
+            requestedPair,
+        )
+      : subjectProductId
+        ? ruleMatches.find(
+            (candidate) =>
+              candidate.productAId === subjectProductId || candidate.productBId === subjectProductId,
+          )
+        : ruleMatches.length === 1
+          ? ruleMatches[0]
+          : undefined;
   const conflictRuleId = conflict?.rule.id;
 
   const dismiss = () => backOrReplace(router, APP_SHELF_ROUTE);
@@ -260,10 +351,14 @@ function ConflictFrame({
   conflict: DetectedConflict | undefined;
   onDismiss: () => void;
 }) {
+  const dialogRef = useRef<View>(null);
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const sheetMaxHeight = viewportHeight > 44 ? viewportHeight - 44 : 524;
-  const dialogLabel = conflict ? familyTitle(conflict) : 'Timing note unavailable';
+  const productPairLabel = conflict ? conflictProductPairLabel(conflict) : null;
+  const dialogLabel = conflict
+    ? [familyTitle(conflict), productPairLabel].filter(Boolean).join('. ')
+    : 'Timing note unavailable';
   const compactMissingConflict = !conflict && viewportHeight < 520;
   const contentPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
   const missingConflictAdvice = compactMissingConflict
@@ -303,6 +398,57 @@ function ConflictFrame({
     </View>
   );
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (Platform.OS === 'web') {
+        document.getElementById('conflict-choice-dialog')?.focus();
+        return;
+      }
+      const handle = findNodeHandle(dialogRef.current);
+      if (handle != null) AccessibilityInfo.setAccessibilityFocus(handle);
+    }, 100);
+
+    const dialog =
+      Platform.OS === 'web' ? document.getElementById('conflict-choice-dialog') : null;
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        onDismiss();
+        return;
+      }
+      if (event.key !== 'Tab' || !dialog) return;
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => !element.hasAttribute('disabled'));
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+      const first = focusable[0]!;
+      const last = focusable[focusable.length - 1]!;
+      const active = document.activeElement;
+      if (active === dialog || !dialog.contains(active)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    dialog?.addEventListener('keydown', trapFocus);
+    return () => {
+      clearTimeout(timeout);
+      dialog?.removeEventListener('keydown', trapFocus);
+    };
+  }, [dialogLabel, onDismiss]);
+
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: backdrop }}>
       <Pressable
@@ -316,10 +462,14 @@ function ConflictFrame({
         onPress={onDismiss}
       />
       <View
+        ref={dialogRef}
         aria-modal
         role="dialog"
+        nativeID="conflict-choice-dialog"
+        tabIndex={-1}
         accessibilityLabel={dialogLabel}
         accessibilityViewIsModal
+        onAccessibilityEscape={onDismiss}
         className="rounded-t-sheet px-7 pt-4"
         style={{ backgroundColor: sheetBg, maxHeight: sheetMaxHeight }}
       >
@@ -416,13 +566,38 @@ function StandardBody({
   qc: ReturnType<typeof useQueryClient>;
   onDismiss: () => void;
 }) {
+  const saveInFlight = useRef(false);
+  const [savingChoice, setSavingChoice] = useState<'keep' | 'use_together' | null>(null);
+  const [saveFailed, setSaveFailed] = useState(false);
   const r = conflict.rule;
+  const productPairLabel = conflictProductPairLabel(conflict);
   const honest =
     r.evidenceGrade == null || r.evidenceLabel === 'contested' || r.evidenceLabel === 'plausible';
   const sourceBody =
     copy.source ??
     `${r.sourceCitation}${honest ? '. Based largely on lab and mechanistic evidence; high-quality human-outcome studies are limited.' : '.'}`;
-  const suggestion = copy.suggestion ?? r.resolutionCopy;
+  const suggestion = conflictSuggestion(conflict, copy);
+  const keepLabel =
+    r.resolutionType === 'alternate_nights' ? 'Keep alternate nights' : 'Keep suggested timing';
+
+  async function choose(choice: 'keep' | 'use_together') {
+    if (saveInFlight.current) return;
+    saveInFlight.current = true;
+    setSavingChoice(choice);
+    setSaveFailed(false);
+    try {
+      const conflictChoices = await recordChoice(conflict, choice);
+      qc.setQueryData<ShelfData>(['shelf'], (current) =>
+        current ? applyConflictChoicesToShelfData(current, conflictChoices) : current,
+      );
+      onDismiss();
+    } catch {
+      setSaveFailed(true);
+    } finally {
+      saveInFlight.current = false;
+      setSavingChoice(null);
+    }
+  }
 
   return (
     <>
@@ -444,6 +619,17 @@ function StandardBody({
       <Text variant="title" className="text-[33px] leading-[37px]" accessibilityRole="header">
         {familyTitle(conflict)}
       </Text>
+
+      {productPairLabel ? (
+        <View className="mt-3 rounded-[8px] bg-greige px-3.5 py-3">
+          <Text variant="label" tone="muted" className="font-mono uppercase">
+            Your products
+          </Text>
+          <Text variant="bodySm" className="mt-1 font-sans-semibold leading-5">
+            {productPairLabel}
+          </Text>
+        </View>
+      ) : null}
 
       <Text
         variant="body"
@@ -492,32 +678,42 @@ function StandardBody({
         </View>
       ) : null}
 
-      <View className="mt-6 gap-2">
+      <View className="mt-[18px] gap-2">
         <Button
-          label="Keep alternate nights"
-          onPress={async () => {
-            await recordChoice(conflict, 'keep');
-            await qc.invalidateQueries({ queryKey: ['shelf'] });
-            onDismiss();
-          }}
+          disabled={savingChoice != null}
+          label={savingChoice === 'keep' ? 'Saving choice' : keepLabel}
+          onPress={() => void choose('keep')}
         />
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ disabled: savingChoice != null }}
           className="min-h-[48px] items-center justify-center py-2"
-          onPress={async () => {
-            await recordChoice(conflict, 'use_together');
-            await qc.invalidateQueries({ queryKey: ['shelf'] });
-            onDismiss();
-          }}
+          disabled={savingChoice != null}
+          onPress={() => void choose('use_together')}
+          style={{ opacity: savingChoice != null ? 0.5 : 1 }}
         >
           <Text variant="body" tone="muted" className="font-sans-semibold">
-            Use together anyway
+            {savingChoice === 'use_together' ? 'Saving choice' : 'Use together anyway'}
           </Text>
         </Pressable>
+        {saveFailed ? (
+          <View accessibilityRole="alert" className="rounded-[8px] bg-clay-tint px-4 py-3">
+            <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.ink }}>
+              Choice not saved
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1 text-[12.5px]">
+              Your previous schedule is unchanged. Try again.
+            </Text>
+          </View>
+        ) : null}
+        <Text className="text-center text-[11.5px] leading-[17px]" style={{ color: colors.muted }}>
+          Your guided checklist keeps one potent active per night until co-use timing has named
+          clinical and cosmetic-chemistry review.
+        </Text>
         <View className="mt-1 flex-row items-center justify-center gap-2">
           <View className="h-1 w-1 rounded-full" style={{ backgroundColor: colors.mutedFaint }} />
           <Text className="font-mono text-[10.5px]" style={{ color: colors.mutedLight }}>
-            saved · we won&apos;t ask again
+            saves your choice · no repeat prompts
           </Text>
         </View>
       </View>
@@ -527,7 +723,7 @@ function StandardBody({
         <Pressable
           accessibilityRole="button"
           className="mt-4 min-h-[48px] items-center justify-center"
-          onPress={() => router.push(`/share/conflict/${r.id}`)}
+          onPress={() => router.push(conflictShareRoute(conflict))}
         >
           <Text variant="bodySm" tone="muted" className="font-sans-semibold">
             Share this card
@@ -623,7 +819,7 @@ function ReassureBody({
         <Pressable
           accessibilityRole="button"
           className="mt-4 min-h-[48px] items-center justify-center"
-          onPress={() => router.push(`/share/conflict/${r.id}`)}
+          onPress={() => router.push(conflictShareRoute(conflict))}
         >
           <Text variant="bodySm" tone="muted" className="font-sans-semibold">
             Share this card
@@ -646,6 +842,7 @@ function SafetyBody({
   // The non-pregnancy tag names the suppressed active for the family-aware title.
   const activeTag = r.tagA === 'pregnancy' ? r.tagB : r.tagA;
   const activeLabel = tagLabel(activeTag).toLowerCase();
+  const subjectProductLabel = conflictProductPairLabel(conflict);
 
   return (
     <>
@@ -671,6 +868,17 @@ function SafetyBody({
       >
         Pause your {activeLabel} until you can ask your doctor.
       </Text>
+
+      {subjectProductLabel ? (
+        <View className="mt-3 rounded-[8px] px-3.5 py-3" style={{ backgroundColor: SAFETY_ICON_BG }}>
+          <Text className="font-mono text-[10.5px] uppercase" style={{ color: NIGHT_FAINT }}>
+            Shelf product
+          </Text>
+          <Text className="mt-1 font-sans-semibold text-[13.5px]" style={{ color: colors.cream }}>
+            {subjectProductLabel}
+          </Text>
+        </View>
+      ) : null}
 
       <Text className="mt-3.5 text-[14.5px] leading-6" style={{ color: NIGHT_BODY }}>
         Your pregnancy and breastfeeding setting puts this {activeLabel} on pause. Review the

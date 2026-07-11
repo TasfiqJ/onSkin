@@ -6,6 +6,27 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Closed exact-pair conflict-choice persistence without weakening the reviewed
+  schedule. Keep and Use together now use versioned encrypted records keyed by
+  canonical shelf-product pair, rule, and rule version; legacy choices migrate,
+  future schemas fail closed, concurrent writes serialize, and current-device
+  export is route-history independent. Shelf, product detail, Plan, Today,
+  Week, Why Tonight, Recommendations, Ask, and share routes consume the same
+  pair identity. Safety and reassurance cannot be overridden, while Use
+  together suppresses repeat advice without placing two potent actives on one
+  night. The best-effort Supabase mirror now preserves local product UUIDs,
+  checks errors, mirrors product lifecycle changes, and has a canonical,
+  rerunnable migration source contract; live deployment remains blocked.
+  Codex in-app browser E2E at 360 x 640 and 390 x 844 verified independent
+  same-rule pairs, both choices, reload, stale-link rejection, downstream
+  explanations, one-shot encrypted-write failure/retry, 48 px+ actions, focus
+  containment, and Escape recovery. It found and fixed a 4 px partial action
+  and missing web keyboard exits. Evidence is in
+  `test-results/human-e2e/2026-07-10/conflict-choice-schedule-current/`.
+  Focused regressions pass 182/182; root typecheck/lint and the full suite pass
+  190 mobile test files / 1997 tests. Native storage/accessibility and live
+  migration/RLS/mirror proof remain Tas-owned.
+
 - Closed persistent morning and evening routine application ordering. The
   editor now saves independent AM/PM product-ID sequences in encrypted local
   storage, reconciles new or removed shelf products without erasing deliberate

@@ -69,7 +69,7 @@ It reads from: `user_products` (the shelf, docs/01 §3), `routines` + `routine_s
 
 **Design philosophy (committed):**
 
-- **Resolution-first, never binary.** The default unit of output is "here is what to do" (alternate nights / separate AM-PM / buffer / no change needed), with the warning subordinate to the fix. The spec's conflict-detail screen ends on **"Keep alternate nights" / "Use together anyway"** — the user is never blocked; they are informed and kept in control.
+- **Resolution-first, never binary.** The default unit of output is "here is what to do" (alternate nights / separate AM-PM / buffer / no change needed), with the warning subordinate to the fix. For cosmetic timing rows, the conflict-detail screen ends on **"Keep alternate nights" / "Use together anyway"** so the user can record a preference. Safety-class exclusions are the explicit exception: they stay firm and clinician-deferred.
 - **Evidence-graded and honest.** Every rule shows its grade. We say "contested" when it is contested and "myth" when it is refuted. This is the explicit anti-pattern to hazard-score apps (EWG) and to checkers that only ever warn.
 - **Concentration- and context-aware.** A 0.3% retinol on resistant skin is not a 1.0% retinol on reactive skin. Where concentration/sensitivity are known, they modulate severity. This is the explicit anti-pattern to EWG's concentration-blind hazard model.
 - **Calm, not gamified; private by default.** Per the spec cover's design decisions: "Streaks and cycling are calm, not gamified," and "Privacy copy is treated as brand voice." The shelf and conflict surfaces inherit this.
@@ -194,7 +194,7 @@ create table public.routine_conflicts (
   product_b_id    uuid references public.user_products(id) on delete cascade,
   computed_severity text not null,                 -- after concentration/sensitivity modulation
   status          text not null default 'suggested', -- 'suggested'|'accepted'|'overridden'|'dismissed'
-  user_choice     text,                            -- e.g. 'keep_alternate_nights'|'use_together'
+  user_choice     text,                            -- 'accept_suggested_timing'|'use_together'
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
 );
@@ -328,12 +328,13 @@ Key behaviours:
 
 - **Tag-based, both-orders matching.** `(retinoid, aha)` and `(aha, retinoid)` resolve to one rule.
 - **Resolution-aware:** if two clashing actives are _already_ on different cycling nights or different AM/PM slots, the routine view shows them as **resolved/"paired"** (the spec's "paired" badge on the Glycolic 7% card, p12), not as an active warning.
-- **Idempotent upsert** preserves the user's earlier choices (`status`, `user_choice`) so "Use together anyway" sticks.
+- **Idempotent, canonical upsert** identifies a choice by `(user_id, rule_id, unordered product pair)`, preserves the user's earlier `status`/`user_choice`, and records the rule version that was actually reviewed. Reversed product order cannot create a second decision.
+- **V1 choice contract:** the encrypted local record is the immediate authority and stores the exact product pair, choice, and rule version. Both `accept_suggested_timing` and `use_together` remove that exact current-version row from repeated Shelf, Plan, Recommendations, and Ask prompts. The generic acceptance value is truthful for `alternate_nights`, `separate_am_pm`, and `lower_frequency`; legacy `keep_alternate_nights` records migrate to it. A changed rule version becomes unresolved again. `use_together` records the user's preference but does not auto-co-locate potent actives: the guided checklist keeps the reviewed one-potent-active/night and retinoid-exfoliant separation constraints until named clinical and cosmetic-chemistry review approves a pair-specific co-use rule. Safety, pregnancy, cadence, and concentration gates are never bypassed. The owner-RLS `routine_conflicts` row is a best-effort mirror until `B-SUPABASE`/`B-ROUTINE-PERSIST` close.
 - **Where it runs:** as a Postgres function (`detect_conflicts(uid)`, `SECURITY DEFINER`, hardened with `REVOKE … FROM public, anon, authenticated` per DECISIONS.md D-013 pattern) for authoritative server computation, **and** mirrored as a pure client-side function over the **cached rule set** so the shelf works offline (docs/01 §6: TanStack Query + persisted cache). The rule set is small (~40 rules) and ships to the client.
 
 #### 4.7 Personalization
 
-- **Sensitivity** raises `irritation` severities and biases toward `lower_frequency`/`alternate_nights`; **resistant/oily** may unlock co-use of retinoid + BHA.
+- **Sensitivity** raises `irritation` severities and biases toward `lower_frequency`/`alternate_nights`; a future resistant/oily co-use path may ship only as an explicit, pair-specific, reviewer-approved rule. V1 does not infer it.
 - **Goals** (`skin_profiles.goals`) tune tone, not safety (a "barrier repair" user sees more conservative cadence and more recovery nights).
 - **Pregnancy/breastfeeding** triggers the safety class (§4.8) regardless of everything else.
 - **Conservative default:** when concentration or sensitivity is unknown, assume the **more cautious** branch.
@@ -346,7 +347,7 @@ Engine behaviour for `safety` rules:
 
 - **Detect early.** `skin_profiles.pregnancy_status` is captured in onboarding (docs/01 §2 step 5; flagged there as "liability-reducing"). The moment a flagged product meets a flagged state, raise it.
 - **Calm, non-diagnostic, defer to a clinician.** Copy pattern: _"Many dermatologists suggest pausing retinoids while pregnant or breastfeeding. This is a conversation for you and your doctor — consider setting this aside for now; we can suggest a gentler alternative."_ No diagnosis, no alarm, no "dangerous."
-- **Suppress, don't block.** Remove the retinoid from suggested routines/cycling and offer an alternative; the user can still override, but the default is the cautious one.
+- **Suppress and defer.** Remove the retinoid from suggested routines/cycling and offer a clinician conversation or reviewed alternative. A cosmetic timing choice cannot restore a safety-excluded product.
 - **Disclaimer-linked.** Always paired with the global not-medical-advice line (§9).
 
 ### 5. The skin-cycling scheduler
@@ -433,7 +434,7 @@ The most important screen for credibility. Anatomy:
 - **"OUR SUGGESTION":** the resolution, stated calmly — "Alternate nights — keep retinol and glycolic on different evenings." If a cycle exists, the routine view may add exact nights and confirm the plan reflects them; shelf-only conflict detail must not assert placement.
 - **Affected products:** "Retinol 0.3% · Glycolic 7%" (the user's actual shelf items, with concentrations).
 - **Source:** "Derm. literature review, 2025" — the citation line. **Generalise:** this line must also carry the honesty note that the evidence is largely lab/mechanistic where that's true.
-- **Two actions, user in control:** "**Keep alternate nights**" (primary, accept) and "**Use together anyway**" (secondary, override → sets `routine_conflicts.user_choice='use_together'` and the engine respects it thereafter). **The user is never blocked.**
+- **Two actions, user in control:** "**Keep alternate nights**" (primary, accept) and "**Use together anyway**" (secondary, records `routine_conflicts.user_choice='use_together'`). Either choice is saved only after the encrypted write succeeds and stops repeat advisory prompts for that exact pair/rule version. The sheet states that guided check-offs remain on the reviewed one-potent-active schedule until named co-use review; safety rows never render these override actions.
 
 Accessibility: severity/evidence chips have text labels (not colour-only); VoiceOver focus lands on the title on entry; the two actions are ≥44pt.
 

@@ -127,7 +127,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 188 mobile test files / 1968 tests. The human-simulated E2E manifest now
+covers 190 mobile test files / 1997 tests. The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
@@ -157,12 +157,18 @@ required `Canonical multi-active Plan and Today consistency` gate is in
 `test-results/human-e2e/2026-07-10/multi-active-plan-today-current/` and proves
 BP AM placement, every supported cycle family, explicit undefined-cadence
 withholding, one-active PM projection, reload persistence, and supported-phone
-geometry. The required `Persistent Morning and Evening routine order` gate is
-in `test-results/human-e2e/2026-07-10/routine-order-persistence-current/` and
-proves independent stable-ID phase edits, reload, Cancel, shelf recompute,
-Today projection, failed-write recovery, and safety/cycle authority. None of
-these local gates replaces named clinical/cosmetic review or native device
-accessibility evidence.
+  geometry. The required `Persistent Morning and Evening routine order` gate is
+  in `test-results/human-e2e/2026-07-10/routine-order-persistence-current/` and
+  proves independent stable-ID phase edits, reload, Cancel, shelf recompute,
+  Today projection, failed-write recovery, and safety/cycle authority. The
+  required `Exact-pair conflict choice and reviewed-schedule consistency` gate
+  is in
+  `test-results/human-e2e/2026-07-10/conflict-choice-schedule-current/` and
+  proves independent same-rule pairs, both persisted choices, exact downstream
+  suppression/explanations, one-shot write recovery, one-active schedule
+  authority, and supported-phone keyboard/geometry. None of these local gates
+  replaces named clinical/cosmetic review, live Supabase proof, or native
+  device accessibility evidence.
 The baseline still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also
@@ -292,6 +298,9 @@ Next action:
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY`;
 - run `npm run phase2:check-env:strict`;
 - apply all migrations with `scripts/phase2/deploy-supabase-staging.ps1`;
+- execute `20260710000037_routine_conflict_choice_identity.sql` against staging
+  twice with reversed/duplicate fixtures, explicit-choice retention, owner-RLS,
+  and canonical-upsert evidence before production promotion;
 - regenerate `packages/types/src/database.types.ts`;
 - deploy `revenuecat-webhook`, `account-deletion`, `data-export`, and
   `order-report-poll`;
@@ -828,6 +837,10 @@ Current implementation note:
   launch copy must keep that posture and must not promise cross-device routine
   sync until Supabase routine authority and cross-device product identity are
   implemented and tested.
+- Exact-pair conflict choices are also encrypted and local-authoritative. Their
+  owner-RLS `routine_conflicts` row is a checked best-effort mirror, not a retry
+  queue or cross-device authority. Live migration, RLS, failure recovery, and
+  reconciliation proof remain open before any sync claim.
 
 Exit criteria:
 

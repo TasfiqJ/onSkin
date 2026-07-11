@@ -844,9 +844,10 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('shelf/[id].tsx');
 
     expect(source).toContain(
-      "import { conflictKey } from '@/features/intelligence/conflictIdentity';",
+      "import { conflictDetailRoute, conflictKey } from '@/features/intelligence/conflictIdentity';",
     );
     expect(source).toContain('key={conflictKey(c)}');
+    expect(source).toContain('router.push(conflictDetailRoute(c))');
     expect(source).not.toContain('key={c.rule.id}');
   });
 });

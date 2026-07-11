@@ -7,6 +7,10 @@ import {
   type EngineProfile,
 } from '@/features/intelligence/engine';
 import { shippableRules, type ConflictRule } from '@/features/intelligence/rules';
+import {
+  unresolvedConflicts,
+  type ConflictChoices,
+} from '@/features/intelligence/conflictChoices';
 import { pickCycle, type CycleTemplate } from '@/features/intelligence/scheduler';
 import {
   pregnancySafetyReasonForProduct,
@@ -72,6 +76,7 @@ export function generatePlan(
   products: RoutineProduct[],
   profile: RoutineGenerationProfile,
   rules: ConflictRule[] = shippableRules(),
+  conflictChoices: ConflictChoices = {},
 ): GeneratedPlan {
   const pregnancySafety = profile.pregnancySafety ?? (profile.pregnancy ? 'caution' : 'clear');
   const safetyExclusions = products.flatMap((product) => {
@@ -154,11 +159,12 @@ export function generatePlan(
     tags: p.tags,
     concentration: p.concentration,
   }));
-  const conflicts = detectConflicts(
+  const detectedConflicts = detectConflicts(
     engineProducts,
     { ...profile, pregnancy: profile.pregnancy },
     rules,
   );
+  const conflicts = unresolvedConflicts(detectedConflicts, conflictChoices);
 
   return {
     am,

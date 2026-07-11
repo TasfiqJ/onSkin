@@ -76,7 +76,14 @@ function Body({ rec }: { rec: Recommendation }) {
     haptics.success();
     track('recommendation_accepted');
     if (isConflict && rec.relatedRuleId) {
-      router.push({ pathname: '/conflict/[ruleId]', params: { ruleId: rec.relatedRuleId } });
+      const [productAId, productBId] = rec.relatedConflictProductIds ?? [];
+      router.push({
+        pathname: '/conflict/[ruleId]',
+        params: {
+          ruleId: rec.relatedRuleId,
+          ...(productAId && productBId ? { productAId, productBId } : {}),
+        },
+      });
       return;
     }
     // No catalog yet (B-CATALOG-SEED) → the honest path is the manual-add flow, so

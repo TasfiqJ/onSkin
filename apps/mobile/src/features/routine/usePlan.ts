@@ -84,7 +84,12 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
     // Use the launch-gated rule set (docs/02 §9 B-DERM-REVIEW), consistent with
     // useShelf/recommendations. In production the conflict layer stays inert until
     // clinical sign-off; in dev the full starter matrix drives the plan.
-    const canonicalPlan = generatePlan(products, real, shippableRules());
+    const canonicalPlan = generatePlan(
+      products,
+      real,
+      shippableRules(),
+      shelf.data?.conflictChoices,
+    );
     return {
       data: {
         plan: applyRoutineOrderOverrides(canonicalPlan, orderOverrides),

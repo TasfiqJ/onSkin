@@ -34,13 +34,45 @@ function nextFrame(): Promise<void> {
 // two-product conflicts can reach this screen. The exported image is content-safe,
 // watermarked, and carries only an opaque first-party share URL.
 export default function ShareConflictScreen() {
-  const { ruleId } = useLocalSearchParams<{ ruleId: string }>();
+  const params = useLocalSearchParams<{
+    ruleId?: string | string[];
+    productAId?: string | string[];
+    productBId?: string | string[];
+    subjectProductId?: string | string[];
+  }>();
+  const firstParam = (value: string | string[] | undefined) => {
+    const first = Array.isArray(value) ? value[0] : value;
+    return first?.trim() || null;
+  };
+  const ruleId = firstParam(params.ruleId);
+  const productAId = firstParam(params.productAId);
+  const productBId = firstParam(params.productBId);
+  const subjectProductId = firstParam(params.subjectProductId);
+  const requestedPair = productAId && productBId ? [productAId, productBId].sort().join('+') : null;
+  const incompletePair = Boolean(productAId || productBId) && requestedPair == null;
+  const invalidIdentity = incompletePair || Boolean(subjectProductId && requestedPair);
   const { data } = useShelf();
   const cardRef = useRef<View>(null);
   const [busy, setBusy] = useState(false);
   const [shareLink, setShareLink] = useState<ConflictShareLink | null>(null);
   const [shareFeedback, setShareFeedback] = useState<ShareFeedback | null>(null);
-  const conflict = data?.conflicts.find((c) => c.rule.id === ruleId) ?? null;
+  const ruleMatches = data?.conflicts.filter((candidate) => candidate.rule.id === ruleId) ?? [];
+  const conflict = invalidIdentity
+    ? null
+    : requestedPair
+      ? (ruleMatches.find(
+          (candidate) =>
+            [candidate.productAId ?? '', candidate.productBId ?? ''].sort().join('+') ===
+            requestedPair,
+        ) ?? null)
+      : subjectProductId
+        ? (ruleMatches.find(
+            (candidate) =>
+              candidate.productAId === subjectProductId || candidate.productBId === subjectProductId,
+          ) ?? null)
+        : ruleMatches.length === 1
+          ? ruleMatches[0]!
+          : null;
 
   if (!phase7Flags.shareCard) {
     return (

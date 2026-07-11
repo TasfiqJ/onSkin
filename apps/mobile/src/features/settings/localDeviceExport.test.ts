@@ -55,6 +55,7 @@ describe('local device data export', () => {
         ]),
       ],
       ['onskin.completions.v1', JSON.stringify({ '2026-07-09': ['PM:shelf-1'] })],
+      ['onskin.conflict.overrides', JSON.stringify(['rule-1:acid+retinoid'])],
       [
         'routinekind.routineOrder.v1',
         JSON.stringify({ schemaVersion: 1, am: ['shelf-1'], pm: ['shelf-1'] }),
@@ -95,6 +96,17 @@ describe('local device data export', () => {
       schemaVersion: 1,
       am: ['shelf-1'],
       pm: ['shelf-1'],
+    });
+    expect(result.sections.shelf_and_routine.conflict_overrides).toEqual({
+      schemaVersion: 1,
+      choices: {
+        'rule-1:acid+retinoid': {
+          choice: 'use_together',
+          ruleId: 'rule-1',
+          ruleVersion: 1,
+          productIds: ['acid', 'retinoid'],
+        },
+      },
     });
     expect(result.sections.shelf_and_routine.shelf_products).toEqual([
       {
@@ -147,6 +159,25 @@ describe('local device data export', () => {
       notesExportStatus: 'unavailable',
     });
     expect(JSON.stringify(result)).not.toContain('invalid-envelope');
+  });
+
+  it('preserves an unsupported future conflict-choice schema with an explicit export status', async () => {
+    const future = { schemaVersion: 2, choices: { future: true } };
+    mocks.getPrivateItems.mockImplementation(
+      async (keys: readonly string[]) =>
+        new Map(
+          keys.map((key) => [
+            key,
+            key === 'onskin.conflict.overrides' ? JSON.stringify(future) : null,
+          ]),
+        ),
+    );
+
+    const result = await collectLocalDeviceExportData('2026-07-10T12:00:00.000Z');
+    expect(result.sections.shelf_and_routine.conflict_overrides).toEqual({
+      export_status: 'unrecognized_conflict_choice_schema',
+      stored_value: future,
+    });
   });
 
   it('fails rather than silently omitting an unreadable private record', async () => {

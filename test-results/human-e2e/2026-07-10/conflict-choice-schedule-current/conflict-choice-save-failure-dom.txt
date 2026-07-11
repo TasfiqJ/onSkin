@@ -1,0 +1,22 @@
+- dialog "Retinoid × aha. Lactic Acid 5% + Retinol 0.3%":
+  - generic: Moderate
+  - generic: "Evidence: contested"
+  - generic: Irritation
+  - heading "Retinoid × aha" [level=1]
+  - generic: Your products
+  - generic: Lactic Acid 5% + Retinol 0.3%
+  - generic: Used the same evening, these can compound irritation, especially on sensitive skin like yours. The popular "they cancel each other out" idea isn’t supported, so this is about comfort, not effectiveness.
+  - generic: Our suggestion
+  - generic: Alternate nights. Keep Lactic Acid 5% and Retinol 0.3% on different evenings.
+  - generic: Why it's only "contested"
+  - generic: "Based largely on lab and mechanistic evidence; high-quality human-outcome studies are limited. Source: dermatology literature review, 2025."
+  - button "Keep alternate nights":
+    - generic: Keep alternate nights
+  - button "Use together anyway":
+    - generic: Use together anyway
+  - alert:
+    - generic: Choice not saved
+    - generic: Your previous schedule is unchanged. Try again.
+  - generic: Your guided checklist keeps one potent active per night until co-use timing has named clinical and cosmetic-chemistry review.
+  - generic: saves your choice · no repeat prompts
+  - generic: General cosmetic information, not medical advice.

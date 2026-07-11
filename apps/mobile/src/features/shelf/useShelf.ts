@@ -9,7 +9,13 @@ import {
   type EngineProfile,
 } from '@/features/intelligence/engine';
 import { deriveConcentration } from '@/features/intelligence/concentration';
-import { conflictKey, getOverriddenKeys } from '@/features/intelligence/overrides';
+import {
+  choiceForConflict,
+  unresolvedConflicts as filterUnresolvedConflicts,
+  type ConflictChoices,
+} from '@/features/intelligence/conflictChoices';
+import { conflictKey } from '@/features/intelligence/conflictIdentity';
+import { getConflictChoices } from '@/features/intelligence/overrides';
 import { expiryBadge, type ExpiryBadge } from '@/features/intelligence/pao';
 import { shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
@@ -51,6 +57,8 @@ export type ShelfData = {
   /** Finished/discarded products (the archive, docs/04 §5.7). */
   archive: ShelfItem[];
   conflicts: DetectedConflict[];
+  unresolvedConflicts: DetectedConflict[];
+  conflictChoices: ConflictChoices;
   reassurances: DetectedConflict[];
   /** The top noteworthy (non-reassuring) interaction for the calm shelf banner. */
   banner: DetectedConflict | null;
@@ -66,6 +74,65 @@ function isEstimatedExpiry(p: ShelfProduct): boolean {
   return p.paoSource !== 'label' && p.paoSource !== 'catalog';
 }
 
+/** Apply a just-persisted choice to the shared Shelf cache without a second
+ * private read. This prevents a transient post-write read failure from
+ * resurrecting the advisory the user just resolved. */
+export function applyConflictChoicesToShelfData(
+  data: ShelfData,
+  conflictChoices: ConflictChoices,
+  today = localDateString(),
+): ShelfData {
+  const unresolvedConflicts = filterUnresolvedConflicts(data.conflicts, conflictChoices);
+  const overridden = new Set(
+    data.conflicts.flatMap((conflict) =>
+      choiceForConflict(conflictChoices, conflict) === 'use_together'
+        ? [conflictKey(conflict)]
+        : [],
+    ),
+  );
+  const pairedIds = pairedProductIdsForResolvedConflicts(
+    data.conflicts,
+    new Set<string>(),
+    overridden,
+  );
+  const synergyIds = new Set<string>();
+  for (const conflict of data.reassurances) {
+    if (conflict.productAId && !pairedIds.has(conflict.productAId)) {
+      synergyIds.add(conflict.productAId);
+    }
+    if (conflict.productBId && !pairedIds.has(conflict.productBId)) {
+      synergyIds.add(conflict.productBId);
+    }
+  }
+
+  const updateItem = (item: ShelfItem): ShelfItem => {
+    const paired = pairedIds.has(item.id);
+    return {
+      ...item,
+      paired,
+      badge: expiryBadge(surfacedExpiry(item.product), today, {
+        safetyCritical: isSafetyCriticalCategory(item.category),
+        paired,
+        synergy: synergyIds.has(item.id),
+        estimate: isEstimatedExpiry(item.product),
+      }),
+    };
+  };
+
+  return {
+    ...data,
+    items: data.items.map(updateItem),
+    archive: data.archive.map(updateItem),
+    unresolvedConflicts,
+    conflictChoices,
+    banner:
+      unresolvedConflicts.find(
+        (conflict) =>
+          !isReassuring(conflict) && conflict.computedSeverity !== 'none',
+      ) ?? null,
+  };
+}
+
 export function useShelf() {
   const today = localDateString();
 
@@ -73,7 +140,11 @@ export function useShelf() {
     queryKey: ['shelf'],
     retry: 1,
     queryFn: async () => {
-      const [products, profileBits] = await Promise.all([loadShelf(), readProfileBits()]);
+      const [products, profileBits, conflictChoices] = await Promise.all([
+        loadShelf(),
+        readProfileBits(),
+        getConflictChoices(),
+      ]);
       const profile: EngineProfile = {
         sensitivity: profileBits.sensitivity,
         // Conflict copy may assert pregnancy only after an affirmative answer.
@@ -99,15 +170,18 @@ export function useShelf() {
 
       const conflicts = detectConflicts(engineProducts, profile, shippableRules());
       const reassurances = conflicts.filter(isReassuring);
-      // Respect "use together anyway" overrides (docs/03 §7): a conflict the user
-      // already resolved that way is not re-surfaced in the calm banner ("we won't
-      // re-nag"). Server mirror is routine_conflicts (B-SUPABASE).
-      const overridden = await getOverriddenKeys();
+      // Either explicit timing choice resolves repeat prompts for the exact pair
+      // and current rule version. Safety and stale-version rows remain unresolved.
+      const unresolvedConflicts = filterUnresolvedConflicts(conflicts, conflictChoices);
+      const overridden = new Set(
+        conflicts.flatMap((conflict) =>
+          choiceForConflict(conflictChoices, conflict) === 'use_together'
+            ? [conflictKey(conflict)]
+            : [],
+        ),
+      );
       const banner =
-        conflicts.find(
-          (c) =>
-            !isReassuring(c) && c.computedSeverity !== 'none' && !overridden.has(conflictKey(c)),
-        ) ?? null;
+        unresolvedConflicts.find((c) => !isReassuring(c) && c.computedSeverity !== 'none') ?? null;
 
       // "paired" means the active scheduler/real routine placement has actually
       // separated the products. Shelf-level detection only sees ownership, so it
@@ -166,7 +240,15 @@ export function useShelf() {
       // chronologically rather than in insertion order (review fix).
       items.sort((a, b) => sortWeight(a) - sortWeight(b) || cmpExpiry(a, b));
 
-      return { items, archive, conflicts, reassurances, banner };
+      return {
+        items,
+        archive,
+        conflicts,
+        unresolvedConflicts,
+        conflictChoices,
+        reassurances,
+        banner,
+      };
     },
   });
 }

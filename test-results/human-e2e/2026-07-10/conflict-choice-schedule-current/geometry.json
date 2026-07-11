@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "localTestDate": "2026-07-10",
+  "supportFloor": {
+    "initial": {
+      "buttons": [
+        {
+          "bottom": 833.51,
+          "enabled": true,
+          "fullyInViewport": false,
+          "height": 55.99,
+          "label": "Keep alternate nights",
+          "visible": false,
+          "width": 304.22,
+          "x": 27.99,
+          "y": 777.52
+        },
+        {
+          "bottom": 889.5,
+          "enabled": true,
+          "fullyInViewport": false,
+          "height": 48,
+          "label": "Use together anyway",
+          "visible": false,
+          "width": 304.22,
+          "x": 27.99,
+          "y": 841.5
+        }
+      ],
+      "scroller": {
+        "clientHeight": 556,
+        "scrollHeight": 1017,
+        "scrollTop": 0
+      },
+      "textOverflow": 0,
+      "viewport": {
+        "height": 641,
+        "width": 360
+      }
+    },
+    "afterUserScroll": {
+      "buttons": [
+        {
+          "bottom": 373.32,
+          "centerHit": true,
+          "enabled": true,
+          "fullyInViewport": true,
+          "height": 55.99,
+          "label": "Keep alternate nights",
+          "width": 304.22,
+          "x": 27.99,
+          "y": 317.32
+        },
+        {
+          "bottom": 429.31,
+          "centerHit": true,
+          "enabled": true,
+          "fullyInViewport": true,
+          "height": 48,
+          "label": "Use together anyway",
+          "width": 304.22,
+          "x": 27.99,
+          "y": 381.31
+        }
+      ],
+      "scroller": {
+        "clientHeight": 556,
+        "scrollHeight": 1017,
+        "scrollTop": 460.1941833496094
+      },
+      "textOverflow": 0,
+      "viewport": {
+        "height": 641,
+        "width": 360
+      }
+    }
+  },
+  "modernPhone": {
+    "initial": {
+      "buttons": [
+        {
+          "bottom": 787.41,
+          "centerHit": true,
+          "enabled": true,
+          "fullyInViewport": true,
+          "height": 55.99,
+          "label": "Keep alternate nights",
+          "width": 334.31,
+          "x": 27.99,
+          "y": 731.42
+        },
+        {
+          "bottom": 843.4,
+          "centerHit": true,
+          "enabled": true,
+          "fullyInViewport": true,
+          "height": 48,
+          "label": "Use together anyway",
+          "width": 334.31,
+          "x": 27.99,
+          "y": 795.4
+        }
+      ],
+      "scroller": {
+        "clientHeight": 760,
+        "scrollHeight": 934,
+        "scrollTop": 0
+      },
+      "textOverflow": 0,
+      "viewport": {
+        "height": 845,
+        "width": 390
+      }
+    },
+    "saveFailureAfterScroll": {
+      "alerts": [
+        {
+          "bottom": 669.98,
+          "fullyInViewport": true,
+          "text": "Choice not savedYour previous schedule is unchanged. Try again.",
+          "y": 598
+        }
+      ],
+      "buttons": [
+        {
+          "bottom": 534.01,
+          "centerHit": true,
+          "fullyInViewport": true,
+          "height": 55.99,
+          "label": "Keep alternate nights",
+          "y": 478.02
+        },
+        {
+          "bottom": 590,
+          "centerHit": true,
+          "fullyInViewport": true,
+          "height": 48,
+          "label": "Use together anyway",
+          "y": 542.01
+        }
+      ],
+      "horizontalOverflow": 0
+    }
+  },
+  "saveFailure": {
+    "alerts": [
+      "Choice not savedYour previous schedule is unchanged. Try again."
+    ],
+    "buttons": [
+      {
+        "disabled": false,
+        "fullyInViewport": true,
+        "height": 55.99,
+        "label": "Keep alternate nights"
+      },
+      {
+        "disabled": false,
+        "fullyInViewport": true,
+        "height": 48,
+        "label": "Use together anyway"
+      }
+    ],
+    "horizontalOverflow": 0,
+    "url": "http://localhost:8162/conflict/00000000-0000-4000-8000-000000000001?productAId=8f4f7a7b-0702-4949-ab34-0444248935b5&productBId=7f63bb1b-641c-45b0-98da-e9cc2ad47346"
+  },
+  "keyboard": {
+    "initialFocus": {
+      "activeId": "conflict-choice-dialog",
+      "activeRole": "dialog"
+    },
+    "forwardTab": {
+      "activeLabel": "Keep alternate nights",
+      "activeRole": "button",
+      "dialogContains": true
+    },
+    "backwardWrap": {
+      "activeLabel": "Use together anyway",
+      "activeRole": "button",
+      "dialogContains": true
+    },
+    "escapeDestination": "http://localhost:8162/shelf"
+  }
+}

@@ -63,6 +63,16 @@ Evidence needed:
 Status: launch-blocked
 
 - Supabase staging and production projects.
+- Apply `20260710000037_routine_conflict_choice_identity.sql` through the reviewed
+  staging-to-production migration path. In staging, seed reversed and duplicate
+  `routine_conflicts` pairs, confirm the migration retains an explicit accepted/
+  overridden decision at the highest rule version while carrying forward the
+  freshest computed severity for that version,
+  canonicalizes product order, rejects same/reversed future writes, and lets an
+  authenticated owner upsert the same exact pair without creating a duplicate.
+  Prove another user cannot read or mutate it under RLS. Archive migration IDs,
+  SQL results, and named reviewer signoff; Codex cannot manufacture live project
+  credentials or production migration evidence.
 - Supabase same-user account-upgrade evidence (`B-VERIFY-AUTH-LINKING`): enable
   anonymous sign-in and manual identity linking; configure the email-change
   six-digit OTP template; then prove on supported iOS and Android builds that
@@ -175,6 +185,15 @@ Status: launch-blocked
   separation, duration, contraindication, and stop/refer rules plus sources and
   reviewer identity. Do not replace the current withholding behavior with an
   inferred retinoid or daily cadence.
+- Have those reviewers explicitly disposition the `Use together anyway` contract.
+  V1 records the exact pair/current rule-version preference, stops repeat advisory
+  prompts, and explains the decision, but keeps one potent active per night and
+  never puts a retinoid with an exfoliant. Any future same-session behavior needs
+  a named, versioned pair-specific rule covering eligible ingredient forms and
+  concentration bands, skin/tolerance exclusions, phase/order/buffer, frequency,
+  stop/refer conditions, source citations, reviewer identities, and revised copy.
+  A generic approval to "let users override" is insufficient, and safety or
+  pregnancy exclusions must remain ineligible.
 - Have the same reviewers define a status-refresh interval and expired-status
   behavior. Also decide the future multi-device conflict rule before enabling a
   transactional server mirror. Until those decisions are recorded, V1 keeps the

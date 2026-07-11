@@ -306,25 +306,34 @@ export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> 
 export async function updateProduct(
   id: string,
   patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>,
-): Promise<void> {
+): Promise<ShelfProduct | null> {
   const items = await loadShelf();
   const ts = nowISO();
-  await persist(
-    items.map((p) =>
-      p.id === id
-        ? normalizeProductForWrite(
-            { ...p, ...patch, id: p.id, createdAt: p.createdAt, updatedAt: ts },
-            ts,
-            p,
-          )
-        : p,
-    ),
-  );
+  let updated: ShelfProduct | null = null;
+  const next = items.map((product) => {
+    if (product.id !== id) return product;
+    updated = normalizeProductForWrite(
+      {
+        ...product,
+        ...patch,
+        id: product.id,
+        createdAt: product.createdAt,
+        updatedAt: ts,
+      },
+      ts,
+      product,
+    );
+    return updated;
+  });
+  await persist(next);
+  return updated;
 }
 
-export async function removeProduct(id: string): Promise<void> {
+export async function removeProduct(id: string): Promise<ShelfProduct | null> {
   const items = await loadShelf();
+  const removed = items.find((product) => product.id === id) ?? null;
   await persist(items.filter((p) => p.id !== id));
+  return removed;
 }
 
 /**

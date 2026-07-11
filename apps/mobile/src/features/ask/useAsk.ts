@@ -57,7 +57,7 @@ export function useAsk() {
     });
     const goal = profile.data?.goals[0] ?? null;
     return {
-      conflicts: shelf.data?.conflicts ?? [],
+      conflicts: shelf.data?.unresolvedConflicts ?? [],
       hasShelfProducts: (shelf.data?.items.length ?? 0) > 0,
       pmSteps: (plan.data?.plan.pm ?? []).map((s) => ({ name: s.name, role: String(s.role) })),
       isExamplePlan: plan.data?.isExample ?? false,

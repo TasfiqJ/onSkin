@@ -51,7 +51,7 @@ export function useRecommendations() {
     return recommend({
       profile: profile.data,
       shelf: items,
-      conflicts: shelf.data.conflicts,
+      conflicts: shelf.data.unresolvedConflicts,
       preferences: prefsQ.data?.prefs ?? DEFAULT_PREFERENCES,
       dismissed: new Set(prefsQ.data?.dismissed ?? []),
     });

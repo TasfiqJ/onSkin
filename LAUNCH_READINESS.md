@@ -33,6 +33,18 @@ Fresh verification through 2026-07-10:
   deterministic shelf recompute, Today projection, one failed write, and retry
   without changing safety exclusions or cycle-night authority. Evidence:
   `test-results/human-e2e/2026-07-10/routine-order-persistence-current/`.
+- The required `Exact-pair conflict choice and reviewed-schedule consistency`
+  gate proves Keep and Use together persist independently for two pairs under
+  one rule, survive reload, suppress only current-version repeat advice, and
+  update downstream explanations without weakening one-potent-active,
+  pregnancy, cadence, or safety authority. One-shot encrypted-write failure
+  stays on the exact route with inline recovery and succeeds on retry. The
+  360 x 640 and 390 x 844 pass also proves 48 px+ complete actions, clean center
+  hit-tests, focus containment, and Escape recovery. Evidence:
+  `test-results/human-e2e/2026-07-10/conflict-choice-schedule-current/`.
+  The server mirror remains best effort; deployed migration/RLS/reconciliation,
+  native encrypted storage, Dynamic Type, VoiceOver, and TalkBack remain
+  release gates.
 - The required `Pregnancy-safety status and routine exclusion consistency`
   gate proves all encrypted status choices, consent/profile retry, legacy
   consent regrant, missing-profile caution, prefer-not reload, and explicit
@@ -312,7 +324,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 188 mobile test files / 1968 tests.
+- `npm test` passed: 190 mobile test files / 1997 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -343,7 +355,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 188 test files / 1968 tests.
+- `npm --workspace apps/mobile run test` passed: 190 test files / 1997 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain

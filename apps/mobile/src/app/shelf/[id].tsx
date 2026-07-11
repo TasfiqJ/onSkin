@@ -6,7 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
 import { reportCatalogIssue, type CatalogCorrectionType } from '@/features/catalog/client';
-import { conflictKey } from '@/features/intelligence/conflictIdentity';
+import { conflictDetailRoute, conflictKey } from '@/features/intelligence/conflictIdentity';
+import { choiceForConflict } from '@/features/intelligence/conflictChoices';
 import {
   catalogQualityCopy,
   catalogQualityLabel,
@@ -663,23 +664,49 @@ export default function ProductDetailScreen() {
           {conflicts.map((c) => {
             const reassure =
               c.rule.interactionType === 'myth' || c.rule.interactionType === 'synergy';
+            const savedChoice = data ? choiceForConflict(data.conflictChoices, c) : null;
+            const resolved = savedChoice != null;
+            const lead = reassure
+              ? 'Pairs well with '
+              : savedChoice === 'use_together'
+                ? 'Your timing choice is saved with '
+                : savedChoice === 'accept_suggested_timing'
+                  ? 'Kept on separate timing with '
+                  : 'Timing note with ';
+            const detail =
+              savedChoice === 'use_together'
+                ? 'Guided check-offs stay on the reviewed one-active schedule.'
+                : savedChoice === 'accept_suggested_timing'
+                  ? 'Your guided schedule keeps this pairing apart.'
+                  : bannerSubhead(c);
             return (
               <Pressable
                 key={conflictKey(c)}
                 accessibilityRole="button"
-                onPress={() => router.push(`/conflict/${c.rule.id}`)}
-                className="mt-3 flex-row gap-3 rounded-[16px] bg-clay-tint px-4 py-3.5"
+                onPress={() => router.push(conflictDetailRoute(c))}
+                className={cn(
+                  'mt-3 flex-row gap-3 rounded-[16px] px-4 py-3.5',
+                  resolved ? 'bg-sage-tint' : 'bg-clay-tint',
+                )}
               >
-                <View className="mt-1.5 h-[7px] w-[7px] rounded-full bg-clay" />
+                <View
+                  className={cn(
+                    'mt-1.5 h-[7px] w-[7px] rounded-full',
+                    resolved ? 'bg-sage' : 'bg-clay',
+                  )}
+                />
                 <Text variant="bodySm" tone="muted" className="flex-1">
-                  {reassure ? 'Pairs well with ' : 'Timing note with '}
+                  {lead}
                   <Text variant="bodySm" className="font-sans-semibold">
                     {otherName(c)}
                   </Text>
                   {'. '}
-                  {bannerSubhead(c)}{' '}
-                  <Text variant="bodySm" className="font-sans-bold text-clay-deep">
-                    Review →
+                  {detail}{' '}
+                  <Text
+                    variant="bodySm"
+                    className={cn('font-sans-bold', resolved ? 'text-sage' : 'text-clay-deep')}
+                  >
+                    {resolved ? 'Change →' : 'Review →'}
                   </Text>
                 </Text>
               </Pressable>

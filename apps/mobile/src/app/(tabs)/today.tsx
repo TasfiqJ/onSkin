@@ -6,7 +6,7 @@ import { Button, Screen, Text } from '@/components/ui';
 import { AskTeaser } from '@/features/ask/AskTeaser';
 import type { SchedulerSlot } from '@/features/scheduler/orchestrate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
-import { useCycle } from '@/features/scheduler/useCycle';
+import { hasUseTogetherChoiceBetween, useCycle } from '@/features/scheduler/useCycle';
 import { usePlan } from '@/features/routine/usePlan';
 import { useProgress } from '@/features/routine/useProgress';
 import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
@@ -614,7 +614,15 @@ export default function TodayScreen() {
   const donePm = pmSteps.filter((s) => done.has(stepKey('PM', s.productId))).length;
   const suppressedAcidName =
     tonightSlot === 'retinoid' && cycle
-      ? (cycle.nights.find((n) => n.slot === 'exfoliate')?.productName ?? null)
+      ? (cycle.nights.find(
+          (night) =>
+            night.slot === 'exfoliate' &&
+            !hasUseTogetherChoiceBetween(
+              cycleData?.conflictChoices ?? [],
+              cTonight?.night.productId,
+              night.productId,
+            ),
+        )?.productName ?? null)
       : null;
   const nextAcidISO = cycleData?.nextAcidNight ?? null;
 

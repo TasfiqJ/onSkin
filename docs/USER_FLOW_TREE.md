@@ -1326,7 +1326,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Persona: User checking whether two shelf products can be used together, or sharing a reviewed shelf check.
 - Entry state: User has completed onboarding or has seeded local shelf state.
 - Start screen/URL/window: Shelf tab or direct conflict/share routes.
-- Success state: Conflict guidance remains claim-safe, choices are saved when available, and direct-entry exits recover to the Shelf tab.
+- Success state: Conflict guidance remains claim-safe, exact-pair/current-rule choices persist only after a successful encrypted write, downstream surfaces stop repeating the resolved advisory, the guided schedule never weakens a safety invariant, and direct-entry exits recover to the Shelf tab.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native share sheet behavior.
@@ -1335,11 +1335,37 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Path A: Conflict Detail
 
-1. Action: Open a real `/conflict/[ruleId]` route from a shelf conflict, review evidence/severity copy, choose Keep alternate nights or Use together anyway, and return to Shelf.
-   Expected result: The conflict copy is calm and claim-safe, shelf-only copy gives timing advice without claiming the products were already placed by a cycle, the user choice persists, and the app does not re-nag immediately.
-   Evidence: 2026-07-07 fresh Chrome context at 320 x 568 seeded a real retinol/glycolic Shelf conflict, opened the detail via the Shelf `Review conflict` banner, verified calm evidence/severity/resolution copy, scrolled to the action area, tapped `Use together anyway`, returned to Shelf, and verified the conflict banner was suppressed while the products remained visible. The run decrypted local override storage and confirmed `00000000-0000-4000-8000-000000000001:e2e-glycolic+e2e-retinol` persisted. Evidence is in `test-results/human-e2e/2026-07-07/conflict-detail-choice-current/`.
+1. Action: Add a real retinoid and AHA, open the conflict from Shelf, and verify the detail URL carries the rule plus both product IDs regardless of detection order.
+   Expected result: The conflict sheet names the exact pair, stays calm and claim-safe, gives timing advice without claiming shelf-only placement, and never substitutes another pair that happens to use the same rule.
+2. Action: Choose Keep alternate nights, return to Shelf, reload, then inspect both product detail and the generated Plan/Today/cycle surfaces.
+   Expected result: The exact pair remains accepted after reload, the Shelf banner and downstream conflict recommendation/Ask prompt do not repeat it, product detail says the schedule keeps the pair apart, and the guided checklist still contains at most one potent active per night.
+3. Action: Reopen the exact pair from product detail, change to Use together anyway, reload, and inspect Shelf, Recommendations, Ask, Today, Week, and Why Tonight.
+   Expected result: The changed choice persists without a duplicate record or repeat advisory; Today/Week do not keep presenting the rejected separation rationale; Why Tonight/product detail explain that guided check-offs still use the reviewed one-potent-active schedule; retinoid and exfoliant never share a night.
+   Current local evidence: 2026-07-10 Codex in-app browser Expo web added Lactic Acid 5%, Glycolic 7%, and Retinol 0.3% through the real onboarding/Shelf UI, exercised two independent exact pairs under the same rule, persisted Keep and Use together through reload, suppressed only resolved prompts across Shelf/Recommendations/Ask, retained one potent active per night across Plan/Today/Week, and showed exact-pair APART/CHOICE explanations in Why Tonight and product detail. Evidence is in `test-results/human-e2e/2026-07-10/conflict-choice-schedule-current/`.
 
 ### Branches
+
+- Branch: encrypted choice write fails
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With the one-shot conflict-choice failure fixture enabled, choose either action, inspect the inline state, then retry.
+  - Expected result: The sheet stays open, exposes an accessibility alert that the choice was not saved, emits no success navigation/analytics, leaves the previous schedule and prompt state unchanged, prevents duplicate submits while pending, and succeeds on retry.
+  - Evidence: Screenshot, encrypted-storage snapshot, route state, and analytics/network log.
+  - Current local evidence: The one-shot private-KV fixture retained the exact route, exposed `Choice not saved`, kept both retry controls complete, preserved the prior accepted choice, and persisted Use together on retry. Pending-state disabling was observed before the delayed rejection. The local run does not replace native encrypted-storage or live analytics/network QA.
+- Branch: stale version, safety row, or mismatched pair identity
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Exercise a newer rule version, a safety-class row, an incomplete/mismatched product-pair URL, and two pairs governed by the same rule.
+  - Expected result: An old choice does not suppress new guidance; safety has no timing-override actions; a mismatched pair fails to the non-stale recovery state; each real pair has an independent choice and route identity.
+  - Evidence: Unit/integration fixtures plus direct-route screenshots.
+  - Current local evidence: Focused tests cover stale versions, safety/reassurance exclusion, two same-rule pairs, and one-sided safety identity. Live rule-only and incomplete-pair URLs with two matching pairs failed closed to `Timing note unavailable`; exact-pair routes remained independent.
+- Branch: supported-phone geometry and text pressure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Run the unresolved, saving, failed, accepted, and use-together states at 360 x 640 and 390 x 844, including 200% text pressure where supported.
+  - Expected result: No horizontal/text overflow, clipped actions, blocked hit targets, sub-44 px controls, dialog escape, or incoherent overlap; the exact-pair and safety-boundary copy remains readable.
+  - Evidence: Geometry JSON, screenshots, browser logs, and interaction transcript.
+  - Current local evidence: Post-fix 360 x 640 and 390 x 844 Expo web evidence reports zero horizontal/text overflow, 55.99 px and 48 px actions, successful center hit-tests, initial dialog focus, Tab/Shift+Tab containment, and Escape to Shelf. The run found and fixed a 4 px partial action plus missing web Escape/initial-focus traversal. Exact populated-pair native Dynamic Type remains release-device QA.
 
 - Branch: direct-entry conflict and share exits
   - Priority: Important

@@ -196,7 +196,38 @@ describe('conflict resolution. A non-conflicting alternative (§4.3)', () => {
     const conflictRec = res.recommendations.find((r) => r.trigger === 'conflict');
     expect(conflictRec).toBeTruthy();
     expect(conflictRec?.relatedRuleId).toBeTruthy();
+    expect(conflictRec?.relatedConflictProductIds).toEqual(['p_aha', 'p_ret']);
+    expect(conflictRec?.id).toContain(':p_aha+p_ret');
     expect(conflictRec?.why).toMatch(/Retinol 0\.5%|Glycolic 7%/);
+  });
+
+  it('honours a legacy rule-only dismissal after conflict IDs become pair-aware', () => {
+    const conflicts = detectConflicts(
+      [
+        { id: 'p_ret', name: 'Retinol 0.5%', tags: ['retinoid'] },
+        { id: 'p_aha', name: 'Glycolic 7%', tags: ['aha'] },
+      ],
+      { sensitivity: 'sensitive', pregnancy: false },
+      STARTER_RULES,
+    );
+    const result = recommend(
+      input({
+        profile: { sensitivity: 'sensitive', pregnancy: false, goals: [] },
+        shelf: [
+          cleanser,
+          moisturiser,
+          spf,
+          item({ id: 'p_ret', name: 'Retinol 0.5%', role: 'treatment', tags: ['retinoid'] }),
+          item({ id: 'p_aha', name: 'Glycolic 7%', role: 'exfoliant', tags: ['aha'] }),
+        ],
+        conflicts,
+        dismissed: new Set([`conflict:${conflicts[0]!.rule.id}`]),
+      }),
+    );
+
+    expect(result.recommendations.some((recommendation) => recommendation.trigger === 'conflict')).toBe(
+      false,
+    );
   });
 
   it('does not derive a conflict recommendation from a safety-excluded product', () => {

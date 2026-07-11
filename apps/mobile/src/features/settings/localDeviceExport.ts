@@ -1,4 +1,5 @@
 import { decryptPhotoNote } from '@/features/photos/encryptedStorage';
+import { normalizeConflictChoicesForExport } from '@/features/intelligence/overrides';
 import { getPrivateItems } from '@/lib/storage/privateKV';
 
 import { LOCAL_PRIVATE_DATA_KEYS } from './localPrivateDataKeys';
@@ -334,7 +335,14 @@ export async function collectLocalDeviceExportData(
 
   for (const spec of LOCAL_EXPORT_SPECS) {
     const raw = stored.get(spec.key) ?? null;
-    if (raw !== null) sections[spec.section][spec.field] = redactLocalFields(parseStoredValue(raw));
+    if (raw !== null) {
+      const parsed = parseStoredValue(raw);
+      const exportValue =
+        spec.key === 'onskin.conflict.overrides'
+          ? normalizeConflictChoicesForExport(parsed)
+          : parsed;
+      sections[spec.section][spec.field] = redactLocalFields(exportValue);
+    }
   }
 
   const photoRaw = stored.get(PHOTO_RECORDS_KEY) ?? null;

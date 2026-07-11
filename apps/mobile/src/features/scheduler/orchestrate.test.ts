@@ -1,6 +1,9 @@
 import type { FunctionalTag } from '@onskin/types';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { detectConflicts } from '@/features/intelligence/engine';
+import type { ConflictChoices } from '@/features/intelligence/conflictChoices';
+import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import { STARTER_RULES, shippableRules } from '@/features/intelligence/rules';
 import { ROUTINE_CADENCE_REVIEWED } from '@/features/routine/reviewGate';
 
@@ -23,6 +26,27 @@ function active(id: string, name: string, tags: FunctionalTag[], isNew = false):
 const base: SchedulerProfile = { sensitivity: 'neutral', pregnancy: false, goals: [] };
 const run = (actives: SchedulerActive[], profile: SchedulerProfile = base) =>
   orchestrate(actives, profile);
+
+function choicesFor(
+  actives: SchedulerActive[],
+  choice: 'accept_suggested_timing' | 'use_together',
+  ruleVersionOffset = 0,
+): ConflictChoices {
+  const [conflict] = detectConflicts(
+    actives,
+    { sensitivity: base.sensitivity, pregnancy: false },
+    STARTER_RULES,
+  );
+  const productIds = [conflict!.productAId!, conflict!.productBId!].sort() as [string, string];
+  return {
+    [conflictKey(conflict!)]: {
+      choice,
+      ruleId: conflict!.rule.id,
+      ruleVersion: conflict!.rule.ruleVersion + ruleVersionOffset,
+      productIds,
+    },
+  };
+}
 
 const runtime = globalThis as { __DEV__?: boolean };
 let previousDev: boolean | undefined;
@@ -362,5 +386,68 @@ describe('orchestration. Safety + fallback', () => {
   it('no potent actives → no cycle (a simple daily routine)', () => {
     expect(run([active('n', 'Niacinamide', ['niacinamide'])]).cycle).toBeNull();
     expect(run([]).cycle).toBeNull();
+  });
+});
+
+describe('orchestration. persisted conflict choices', () => {
+  const pair = [active('r', 'Retinol 0.3%', ['retinoid']), active('g', 'Glycolic 7%', ['aha'])];
+
+  it('records an accepted choice while retaining separate potent nights', () => {
+    const result = run(pair, {
+      ...base,
+      conflictChoices: choicesFor(pair, 'accept_suggested_timing'),
+    });
+
+    expect(result.conflictChoices).toEqual([
+      expect.objectContaining({
+        choice: 'accept_suggested_timing',
+        productIds: ['g', 'r'],
+        resolutionType: 'alternate_nights',
+      }),
+    ]);
+    const retinoidNights = new Set(
+      result.cycle!.nights.filter((night) => night.productId === 'r').map((night) => night.index),
+    );
+    expect(
+      result
+        .cycle!.nights.filter((night) => night.productId === 'g')
+        .every((night) => !retinoidNights.has(night.index)),
+    ).toBe(true);
+  });
+
+  it('acknowledges use-together without bypassing the one-potent-active invariant', () => {
+    const result = run(pair, {
+      ...base,
+      conflictChoices: choicesFor(pair, 'use_together'),
+    });
+
+    expect(result.conflictChoices).toEqual([
+      expect.objectContaining({ choice: 'use_together', productIds: ['g', 'r'] }),
+    ]);
+    expect(result.cycle!.nights.some((night) => night.productId === 'g')).toBe(true);
+    expect(result.cycle!.nights.some((night) => night.productId === 'r')).toBe(true);
+    expect(
+      result.cycle!.nights.every((night) => night.productId !== null || night.slot === 'recover'),
+    ).toBe(true);
+  });
+
+  it('ignores a choice recorded against a different rule version', () => {
+    const result = run(pair, {
+      ...base,
+      conflictChoices: choicesFor(pair, 'use_together', 1),
+    });
+
+    expect(result.conflictChoices).toEqual([]);
+  });
+
+  it('never lets a saved choice restore a pregnancy-suppressed product', () => {
+    const result = run(pair, {
+      ...base,
+      pregnancy: true,
+      conflictChoices: choicesFor(pair, 'use_together'),
+    });
+
+    expect(result.cycle?.nights.some((night) => night.productId === 'r')).toBe(false);
+    expect(result.conflictChoices).toEqual([]);
   });
 });

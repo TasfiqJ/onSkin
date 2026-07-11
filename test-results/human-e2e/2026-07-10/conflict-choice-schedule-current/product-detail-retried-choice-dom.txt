@@ -1,0 +1,34 @@
+- button "Back":
+  - generic: <
+- button "More options"
+- generic: Lactic Acid 5%
+- generic: added during setup
+- generic: Catalog
+- generic: Unknown source
+- generic: Unverified
+- generic: Not reviewed yet. Add by hand or report an issue if it looks wrong.
+- button "Report an issue":
+  - generic: Report an issue
+- button "Edit opened date":
+  - generic: Opened
+  - generic: date not set · edit
+- generic: PAO
+- generic: unknown
+- button "Set printed best-before date":
+  - generic: Best used by
+  - text: estimated
+  - generic: · set
+- generic: What it contributes
+- generic: AHA
+- button "Your timing choice is saved with Retinol 0.3%. Guided check-offs stay on the reviewed one-active schedule. Change →":
+  - generic: Your timing choice is saved with Retinol 0.3%. Guided check-offs stay on the reviewed one-active schedule. Change →
+- button "Review routine placement":
+  - generic: Routine role
+  - generic: Used in your Evening routine. Cycling night 1.
+  - generic: Review the AM/PM plan before you check it off.
+- button "Replace":
+  - generic: Replace
+- button "Mark finished":
+  - generic: Mark finished
+- button "Remove or discard":
+  - generic: 🗑︎

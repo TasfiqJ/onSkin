@@ -20,6 +20,7 @@ import {
   multiRemovePrivateItems,
   privateKVEncryptionInfo,
   setPrivateItem,
+  updatePrivateItem,
   waitForPrivateKVWritesToSettle,
 } from './privateKV';
 
@@ -556,5 +557,21 @@ describe('private KV encrypted storage', () => {
     await expect(getPrivateItem('onskin.profile')).resolves.toBe('original-value');
     await expect(setPrivateItem('onskin.profile', 'updated-value')).resolves.toBeUndefined();
     await expect(getPrivateItem('onskin.profile')).resolves.toBe('updated-value');
+  });
+
+  it('serializes complete read-modify-write transforms for one private key', async () => {
+    await setPrivateItem('onskin.conflict.overrides', JSON.stringify({ first: true }));
+
+    await Promise.all([
+      updatePrivateItem('onskin.conflict.overrides', (raw) =>
+        JSON.stringify({ ...(JSON.parse(raw ?? '{}') as object), second: true }),
+      ),
+      updatePrivateItem('onskin.conflict.overrides', (raw) =>
+        JSON.stringify({ ...(JSON.parse(raw ?? '{}') as object), third: true }),
+      ),
+    ]);
+
+    const stored = await getPrivateItem('onskin.conflict.overrides');
+    expect(JSON.parse(stored ?? '{}')).toEqual({ first: true, second: true, third: true });
   });
 });

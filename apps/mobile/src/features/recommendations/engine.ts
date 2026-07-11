@@ -8,6 +8,7 @@ import type {
 
 import type { DetectedConflict, SensitivityLevel } from '@/features/intelligence/engine';
 import { isReassuring } from '@/features/intelligence/engine';
+import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import {
   pregnancySafetyReasonForProduct,
   type PregnancySafetyMode,
@@ -92,6 +93,8 @@ export type Recommendation = {
   relatedProductId: string | null;
   /** The conflict rule id, when trigger==='conflict' (links to the conflict sheet). */
   relatedRuleId: string | null;
+  /** Exact unordered product pair for a conflict detail route. */
+  relatedConflictProductIds: [string, string] | null;
 };
 
 export type RecResult = {
@@ -254,6 +257,7 @@ function typeRec(args: {
     priority: PRIORITY[trigger],
     relatedProductId: relatedProductId ?? null,
     relatedRuleId: null,
+    relatedConflictProductIds: null,
   };
 }
 
@@ -347,6 +351,7 @@ export function recommend(input: RecInput): RecResult {
       priority: PRIORITY.replacement,
       relatedProductId: item.id,
       relatedRuleId: null,
+      relatedConflictProductIds: null,
     });
   }
 
@@ -355,8 +360,14 @@ export function recommend(input: RecInput): RecResult {
   const topConflict = eligibleConflicts.find(
     (c) => !isReassuring(c) && c.rule.interactionType !== 'safety' && c.computedSeverity !== 'none',
   );
-  if (topConflict && topConflict.productAName && topConflict.productBName) {
-    const id = `conflict:${topConflict.rule.id}`;
+  if (
+    topConflict?.productAId &&
+    topConflict.productBId &&
+    topConflict.productAName &&
+    topConflict.productBName
+  ) {
+    const productIds = [topConflict.productAId, topConflict.productBId].sort() as [string, string];
+    const id = `conflict:${conflictKey(topConflict)}`;
     out.push({
       id,
       trigger: 'conflict',
@@ -381,6 +392,7 @@ export function recommend(input: RecInput): RecResult {
       priority: PRIORITY.conflict,
       relatedProductId: topConflict.productBId,
       relatedRuleId: topConflict.rule.id,
+      relatedConflictProductIds: productIds,
     });
   }
 
@@ -443,7 +455,17 @@ export function recommend(input: RecInput): RecResult {
   // Drop dismissed, de-dup by id, rank by the §5 priority ladder then FIT.
   const seen = new Set<string>();
   const ranked = out
-    .filter((r) => !dismissed.has(r.id) && !seen.has(r.id) && (seen.add(r.id), true))
+    .filter((recommendation) => {
+      const legacyConflictId = recommendation.relatedRuleId
+        ? `conflict:${recommendation.relatedRuleId}`
+        : null;
+      const isDismissed =
+        dismissed.has(recommendation.id) ||
+        (recommendation.trigger === 'conflict' &&
+          legacyConflictId != null &&
+          dismissed.has(legacyConflictId));
+      return !isDismissed && !seen.has(recommendation.id) && (seen.add(recommendation.id), true);
+    })
     .sort((a, b) => {
       if (b.priority !== a.priority) return b.priority - a.priority;
       return (b.fit?.score ?? b.priority) - (a.fit?.score ?? a.priority);

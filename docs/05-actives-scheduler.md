@@ -93,7 +93,7 @@ _The temporal engine · the cycle data model & projection algorithm · multi-act
 
 - **Actives owned** — `user_products` (docs/04) joined to docs/02 `product_ingredients → ingredient_tags`, giving each owned product a functional class (`retinoid`, `aha`, `bha`, `vitamin_c`, `niacinamide`, `benzoyl_peroxide`, `azelaic`, …) and a concentration band.
 - **Profile** — `skin_profiles` (docs/01): `sensitive_resistant`, `sensitivities`, `pregnancy_status`, `goals`.
-- **Conflict resolutions** — docs/02 `detect_conflicts` → `routine_conflicts` with `resolution_type` (`alternate_nights` / `separate_am_pm` / `buffer` / `lower_frequency` / `no_change` / `reassure` / `avoid_refer`).
+- **Conflict resolutions and choices** — docs/02 `detect_conflicts` plus the exact-pair, rule-version-aware `routine_conflicts` choice (`accept_suggested_timing` / `use_together`). Choices affect repeat prompting and explanation, never safety eligibility by themselves.
 - **Ramp state** — docs/03 `active_ramp` (`freq_per_week`, `tolerance_state`).
 - **The cycle definition** — this document, §3.
 
@@ -108,6 +108,8 @@ _The temporal engine · the cycle data model & projection algorithm · multi-act
 7. **Introduce actives one at a time** (phased onboarding/ramp).
 8. **Pregnancy/breastfeeding → suppress retinoid** and route to docs/02's `safety` path (§4.8 there).
 9. **Conservative default** when concentration/sensitivity/tolerance is unknown.
+
+**V1 choice reconciliation (accepted 2026-07-10).** The scheduler consumes both saved cosmetic timing choices after pregnancy/safety eligibility filtering. `accept_suggested_timing` confirms the generated rule-specific resolution; legacy `keep_alternate_nights` values migrate to it. `use_together` is retained in the explainability trace and suppresses repeated "held back because they clash" copy, but it does not weaken constraints 1–2, frequency caps, phased introduction, or the cadence-review gate. Same-session co-location requires a new versioned rule with named clinical and cosmetic-chemistry approval; until then the checklist remains one potent active per night. A stale rule-version choice is ignored and re-presented for review.
 
 **Outputs:**
 

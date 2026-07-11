@@ -11,6 +11,7 @@ import {
   StripedThumb,
   Text,
 } from '@/components/ui';
+import { conflictDetailRoute } from '@/features/intelligence/conflictIdentity';
 import { bannerSubhead, bannerTitle, severityLabel } from '@/features/intelligence/presentation';
 import { trackProductAddStarted, type ProductAddStartSource } from '@/features/shelf/analytics';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
@@ -442,7 +443,7 @@ export default function ShelfScreen() {
               severityPill={severityLabel(data.banner.computedSeverity)}
               onReview={() => {
                 haptics.select();
-                router.push(`/conflict/${data.banner!.rule.id}`);
+                router.push(conflictDetailRoute(data.banner!));
               }}
             />
           ) : null}
