@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-11T17:28:08.311Z",
+  "generatedAt": "2026-07-11T17:30:18.731Z",
   "status": "pass",
-  "strict": false,
+  "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
   "sourceRoot": "04_repo_docs",
   "activeDocsDir": "docs",
@@ -37,8 +37,8 @@
     },
     {
       "path": "04_repo_docs/docs/ARCHITECTURE.md",
-      "bytes": 10119,
-      "sha256": "a747294173678a08b193f77734666b66c68d3b7cd0cd0125fab6458017826f21"
+      "bytes": 10390,
+      "sha256": "8b0288d80fb46d9e976ae590ecd0b6098b01eebd7513873b73709b84467ad2fd"
     },
     {
       "path": "04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md",
@@ -52,8 +52,8 @@
     },
     {
       "path": "04_repo_docs/docs/DECISIONS.md",
-      "bytes": 36441,
-      "sha256": "99c49379368ab8e987839ff33d024c265c8a42ea4619dabd605f754c1b1ad7f6"
+      "bytes": 38606,
+      "sha256": "5c9ef6d7067c19dc0790621927d4e1638be6ff770b02483fd20f62336f9aa5cc"
     },
     {
       "path": "04_repo_docs/docs/FEATURE_INDEX.md",
@@ -82,8 +82,8 @@
     },
     {
       "path": "04_repo_docs/docs/TESTING_STRATEGY.md",
-      "bytes": 6703,
-      "sha256": "a1e179392a2bf4bc60aaa6234cbb5523650e49dab361e2a7b8f0110de394c89b"
+      "bytes": 6822,
+      "sha256": "97a1af9f7388e8c219a874e33da005970db8f8b61a83d45b884eb4ce30661fa4"
     }
   ],
   "docs": [
@@ -92,11 +92,11 @@
       "title": "Architecture",
       "sourcePath": "04_repo_docs/docs/ARCHITECTURE.md",
       "activePath": "docs/ARCHITECTURE.md",
-      "sourceBytes": 10119,
+      "sourceBytes": 10390,
       "activeBytes": 10390,
-      "sourceSha256": "a747294173678a08b193f77734666b66c68d3b7cd0cd0125fab6458017826f21",
+      "sourceSha256": "8b0288d80fb46d9e976ae590ecd0b6098b01eebd7513873b73709b84467ad2fd",
       "activeSha256": "8b0288d80fb46d9e976ae590ecd0b6098b01eebd7513873b73709b84467ad2fd",
-      "identical": false,
+      "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
     },
@@ -131,11 +131,11 @@
       "title": "Decisions",
       "sourcePath": "04_repo_docs/docs/DECISIONS.md",
       "activePath": "docs/DECISIONS.md",
-      "sourceBytes": 36441,
+      "sourceBytes": 38606,
       "activeBytes": 38606,
-      "sourceSha256": "99c49379368ab8e987839ff33d024c265c8a42ea4619dabd605f754c1b1ad7f6",
+      "sourceSha256": "5c9ef6d7067c19dc0790621927d4e1638be6ff770b02483fd20f62336f9aa5cc",
       "activeSha256": "5c9ef6d7067c19dc0790621927d4e1638be6ff770b02483fd20f62336f9aa5cc",
-      "identical": false,
+      "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
     },
@@ -209,11 +209,11 @@
       "title": "Testing Strategy",
       "sourcePath": "04_repo_docs/docs/TESTING_STRATEGY.md",
       "activePath": "docs/TESTING_STRATEGY.md",
-      "sourceBytes": 6703,
+      "sourceBytes": 6822,
       "activeBytes": 6822,
-      "sourceSha256": "a1e179392a2bf4bc60aaa6234cbb5523650e49dab361e2a7b8f0110de394c89b",
+      "sourceSha256": "97a1af9f7388e8c219a874e33da005970db8f8b61a83d45b884eb4ce30661fa4",
       "activeSha256": "97a1af9f7388e8c219a874e33da005970db8f8b61a83d45b884eb4ce30661fa4",
-      "identical": false,
+      "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
     }
@@ -225,7 +225,7 @@
     "unexpectedTopLevelMarkdownCount": 0,
     "sourceDocCount": 10,
     "activeMirrorCount": 10,
-    "identicalMirrorCount": 7,
+    "identicalMirrorCount": 10,
     "blockerCount": 0,
     "warningCount": 0
   },
