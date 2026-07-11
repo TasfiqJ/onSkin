@@ -1,24 +1,45 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { StoredSkinProfile } from '@/features/onboarding/skinProfileStore';
+import type {
+  StoredSkinProfile,
+  StoredSkinProfileRead,
+} from '@/features/onboarding/skinProfileStore';
 
-import { readProfileBits } from './profile';
+import { readProfileBits, savePregnancyStatus } from './profile';
 import { moistureFromAxis, sensitivityFromAxis } from './profileMapping';
 
 const mocks = vi.hoisted(() => ({
   storedProfile: null as StoredSkinProfile | null,
+  localStatus: 'missing' as StoredSkinProfileRead['status'],
+  consentCurrent: true,
+  supabaseConfigured: false,
+  serverData: null as Record<string, unknown> | null,
+  from: vi.fn(),
+  updateStoredPregnancyStatus: vi.fn(),
 }));
 
 vi.mock('@/features/onboarding/skinProfileStore', () => ({
-  getStoredSkinProfile: vi.fn(async () => mocks.storedProfile),
+  readStoredSkinProfile: vi.fn(
+    async (): Promise<StoredSkinProfileRead> =>
+      mocks.storedProfile
+        ? { status: 'available', profile: mocks.storedProfile }
+        : { status: mocks.localStatus as 'missing' | 'unavailable' | 'invalid', profile: null },
+  ),
+  updateStoredPregnancyStatus: mocks.updateStoredPregnancyStatus,
+}));
+
+vi.mock('@/features/onboarding/healthConsentStore', () => ({
+  hasCurrentHealthDataCollectionConsent: vi.fn(async () => mocks.consentCurrent),
 }));
 
 vi.mock('@/lib/env', () => ({
-  isSupabaseConfigured: false,
+  get isSupabaseConfigured() {
+    return mocks.supabaseConfigured;
+  },
 }));
 
 vi.mock('@/lib/supabase/client', () => ({
-  supabase: {},
+  supabase: { from: mocks.from },
 }));
 
 const storedProfile = (input: {
@@ -52,6 +73,21 @@ const storedProfile = (input: {
 
 beforeEach(() => {
   mocks.storedProfile = null;
+  mocks.localStatus = 'missing';
+  mocks.consentCurrent = true;
+  mocks.supabaseConfigured = false;
+  mocks.serverData = null;
+  mocks.from.mockReset();
+  mocks.from.mockImplementation(() => {
+    const query = {
+      select: vi.fn(() => query),
+      order: vi.fn(() => query),
+      limit: vi.fn(() => query),
+      maybeSingle: vi.fn(async () => ({ data: mocks.serverData })),
+    };
+    return query;
+  });
+  mocks.updateStoredPregnancyStatus.mockReset();
 });
 
 describe('skin profile axis mapping', () => {
@@ -78,19 +114,106 @@ describe('skin profile axis mapping', () => {
     });
 
     await expect(readProfileBits()).resolves.toEqual({
+      source: 'local',
       sensitivity: 'resistant',
       moisture: 'oily',
+      pregnancyStatus: 'breastfeeding',
+      pregnancySafety: 'caution',
       pregnancy: true,
+      consentCurrent: true,
       goals: ['barrier_repair'],
     });
   });
 
-  it('keeps the neutral fallback when no local or server profile is available', async () => {
+  it('keeps unavailable status distinct and takes the cautious safety branch', async () => {
     await expect(readProfileBits()).resolves.toEqual({
+      source: 'unavailable',
       sensitivity: 'neutral',
       moisture: 'balanced',
+      pregnancyStatus: 'unknown',
+      pregnancySafety: 'caution',
       pregnancy: false,
+      consentCurrent: true,
       goals: [],
     });
+  });
+
+  it('does not infer pregnancy from prefer-not while keeping safety cautious', async () => {
+    mocks.storedProfile = storedProfile({
+      oilyDry: 0,
+      sensitiveResistant: 0,
+      pregnancyStatus: 'prefer_not',
+    });
+
+    await expect(readProfileBits()).resolves.toMatchObject({
+      pregnancyStatus: 'prefer_not',
+      pregnancySafety: 'caution',
+      pregnancy: false,
+    });
+  });
+
+  it('does not consult a stale server mirror after an unreadable local profile', async () => {
+    mocks.localStatus = 'unavailable';
+    mocks.supabaseConfigured = true;
+    mocks.serverData = {
+      oily_dry: 2,
+      sensitive_resistant: -2,
+      pregnancy_status: 'none',
+      goals: ['anti_aging'],
+    };
+
+    await expect(readProfileBits()).resolves.toMatchObject({
+      source: 'unavailable',
+      pregnancyStatus: 'unknown',
+      pregnancySafety: 'caution',
+      consentCurrent: true,
+    });
+    expect(mocks.from).not.toHaveBeenCalled();
+  });
+
+  it('treats a server-only status as unknown so a stale none cannot clear caution', async () => {
+    mocks.supabaseConfigured = true;
+    mocks.serverData = {
+      oily_dry: 2,
+      sensitive_resistant: -2,
+      pregnancy_status: 'none',
+      goals: ['anti_aging'],
+    };
+
+    await expect(readProfileBits()).resolves.toEqual({
+      source: 'server',
+      sensitivity: 'resistant',
+      moisture: 'oily',
+      pregnancyStatus: 'unknown',
+      pregnancySafety: 'caution',
+      pregnancy: false,
+      consentCurrent: true,
+      goals: ['anti_aging'],
+    });
+  });
+
+  it('withholds personal profile bits until the current consent text is granted', async () => {
+    mocks.consentCurrent = false;
+    mocks.storedProfile = storedProfile({
+      oilyDry: 0,
+      sensitiveResistant: 0,
+      pregnancyStatus: 'none',
+    });
+
+    await expect(readProfileBits()).resolves.toMatchObject({
+      source: 'unavailable',
+      pregnancyStatus: 'unknown',
+      pregnancySafety: 'caution',
+      consentCurrent: false,
+    });
+  });
+
+  it('rejects a sensitive status write without current consent', async () => {
+    mocks.consentCurrent = false;
+
+    await expect(savePregnancyStatus('pregnant')).rejects.toThrow(
+      'CURRENT_HEALTH_CONSENT_REQUIRED',
+    );
+    expect(mocks.updateStoredPregnancyStatus).not.toHaveBeenCalled();
   });
 });

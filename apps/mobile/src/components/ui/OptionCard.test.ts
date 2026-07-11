@@ -9,6 +9,8 @@ describe('OptionCard controls', () => {
     const source = readFileSync(`${UI_DIR}/OptionCard.tsx`, 'utf8');
 
     expect(source).toContain('accessibilityRole="button"');
+    expect(source).toContain('accessibilityState={{ selected, disabled }}');
+    expect(source).toContain('disabled={disabled}');
     expect(source).toContain('accessibilityLabel={subtitle ? `${title}. ${subtitle}` : title}');
     expect(source).toContain('compact?: boolean;');
     expect(source).toContain('tight?: boolean;');

@@ -9,7 +9,14 @@ export type RoutineFirstInsightCopy = {
 };
 
 export function routineInsightCount(plan: GeneratedPlan): number {
-  return plan.conflicts.length + plan.gaps.length + plan.unplacedProducts.length + 1;
+  return (
+    plan.conflicts.length +
+    plan.gaps.length +
+    plan.unplacedProducts.length +
+    plan.safetyExclusions.length +
+    plan.cadenceWithheld.length +
+    1
+  );
 }
 
 export function routineFirstInsightCopy(
@@ -21,6 +28,32 @@ export function routineFirstInsightCopy(
       eyebrow: 'First insight',
       title: 'Example only',
       body: 'Add products to see an insight from your own shelf.',
+    };
+  }
+
+  if (plan.safetyExclusions.length > 0) {
+    const firstName = plan.safetyExclusions[0]?.name ?? 'One product';
+    const remaining = plan.safetyExclusions.length - 1;
+    return {
+      eyebrow: 'Safety setting applied',
+      title: 'Caution products paused',
+      body:
+        remaining === 0
+          ? `${firstName} is staying off this routine based on your pregnancy and breastfeeding setting.`
+          : `${firstName} and ${remaining} more product${remaining === 1 ? '' : 's'} are staying off this routine based on your pregnancy and breastfeeding setting.`,
+    };
+  }
+
+  if (plan.cadenceWithheld.length > 0) {
+    const firstName = plan.cadenceWithheld[0]?.name ?? 'One active';
+    const remaining = plan.cadenceWithheld.length - 1;
+    return {
+      eyebrow: 'Clinical review gate',
+      title: 'Active timing withheld',
+      body:
+        remaining === 0
+          ? `${firstName} stays off Today until its cadence guidance is reviewed.`
+          : `${firstName} and ${remaining} more active${remaining === 1 ? '' : 's'} stay off Today until their cadence guidance is reviewed.`,
     };
   }
 

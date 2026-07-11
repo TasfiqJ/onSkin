@@ -353,8 +353,8 @@ function ConflictFrame({
                   className="mt-2.5 text-[14px] leading-[22px]"
                   style={{ color: colors.inkSoft }}
                 >
-                  Your shelf no longer has the product pair that created this note. Review your
-                  current shelf, or add the product again if it still belongs in your routine.
+                  Your shelf or safety setting has changed since this note was created. Review your
+                  current shelf to see what applies now.
                 </Text>
               </View>
 
@@ -673,27 +673,10 @@ function SafetyBody({
       </Text>
 
       <Text className="mt-3.5 text-[14.5px] leading-6" style={{ color: NIGHT_BODY }}>
-        You told us you&apos;re pregnant. Many dermatologists suggest pausing retinoids while
-        pregnant or breastfeeding, out of caution, not because harm is proven. This is a
-        conversation for you and your doctor.
+        Your pregnancy and breastfeeding setting puts this {activeLabel} on pause. Review the
+        setting if your status changed. Otherwise, ask your clinician before adding it to your
+        routine.
       </Text>
-
-      {/* "A gentler swap" card on the deeper night surface (design frame 06). */}
-      <View
-        className="mt-5 rounded-[20px]"
-        style={{ backgroundColor: colors.night, paddingHorizontal: 20, paddingVertical: 18 }}
-      >
-        <Text variant="label" className="font-mono uppercase" style={{ color: colors.clayBright }}>
-          A gentler swap
-        </Text>
-        <Text
-          className="mt-2 font-sans-medium text-[15px] leading-[22px]"
-          style={{ color: colors.cream }}
-        >
-          We can rebuild your evenings around bakuchiol, often suggested as a pregnancy-friendly
-          alternative.
-        </Text>
-      </View>
 
       <Text className="mt-3.5 text-[12px] leading-[19px]" style={{ color: NIGHT_FAINT }}>
         {BRAND.appName} isn&apos;t medical advice. We err conservative and always defer to your
@@ -701,7 +684,11 @@ function SafetyBody({
       </Text>
 
       <View className="mt-6 gap-2">
-        <Button label="Suggest a gentler routine" variant="inverse" onPress={onDismiss} />
+        <Button
+          label="Review safety setting"
+          variant="inverse"
+          onPress={() => router.push('/settings/skin-profile?returnTo=shelf')}
+        />
         <Pressable
           accessibilityRole="button"
           className="min-h-[48px] items-center justify-center py-3"

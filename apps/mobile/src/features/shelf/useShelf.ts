@@ -13,9 +13,8 @@ import { conflictKey, getOverriddenKeys } from '@/features/intelligence/override
 import { expiryBadge, type ExpiryBadge } from '@/features/intelligence/pao';
 import { shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
+import { readProfileBits } from '@/features/scheduler/profile';
 import { localDateString } from '@/features/today/useToday';
-import { isSupabaseConfigured } from '@/lib/env';
-import { supabase } from '@/lib/supabase/client';
 
 import {
   functionalTagsForCategory,
@@ -57,11 +56,6 @@ export type ShelfData = {
   banner: DetectedConflict | null;
 };
 
-function sensitivityFromAxis(score: number | null): EngineProfile['sensitivity'] {
-  if (score == null || score === 0) return 'neutral';
-  return score > 0 ? 'sensitive' : 'resistant'; // positive axis = Sensitive pole
-}
-
 /** True when the product's surfaced expiry is only an estimate (a category PAO
  *  default, not a label/catalog value or a printed expiry). Drives the honest
  *  two-line "est.\n{Mon}" badge (design frame 03, Vitamin C). Mirrors the "est."
@@ -79,31 +73,14 @@ export function useShelf() {
     queryKey: ['shelf'],
     retry: 1,
     queryFn: async () => {
-      const products = await loadShelf();
-
-      // Skin profile drives sensitivity/pregnancy modulation; guarded so the
-      // shelf renders before the backend is configured (B-SUPABASE).
-      let profile: EngineProfile = { sensitivity: 'neutral', pregnancy: false };
-      if (isSupabaseConfigured) {
-        try {
-          const { data: profileRow } = await supabase
-            .from('skin_profiles')
-            .select('sensitive_resistant, pregnancy_status')
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .maybeSingle();
-          if (profileRow) {
-            profile = {
-              sensitivity: sensitivityFromAxis(profileRow.sensitive_resistant ?? null),
-              pregnancy:
-                profileRow.pregnancy_status === 'pregnant' ||
-                profileRow.pregnancy_status === 'breastfeeding',
-            };
-          }
-        } catch {
-          /* offline / no DB. Neutral profile */
-        }
-      }
+      const [products, profileBits] = await Promise.all([loadShelf(), readProfileBits()]);
+      const profile: EngineProfile = {
+        sensitivity: profileBits.sensitivity,
+        // Conflict copy may assert pregnancy only after an affirmative answer.
+        // Unknown/prefer-not still filter routine products through the separate
+        // pregnancySafety mode, without creating a literal Pregnancy pseudo-item.
+        pregnancy: profileBits.pregnancy,
+      };
 
       const active = products.filter((p) => p.status === 'active');
 
@@ -113,7 +90,10 @@ export function useShelf() {
         // Coarse concentration band from the name/INCI percent (docs/02 §4.2) so the
         // engine escalates high-dose severity and the high-dose pregnancy safety rule
         // can fire. Was never populated before (review fix); B-CATALOG-SEED upgrades it.
-        const concentration = deriveConcentration([p.name, ...p.ingredients].join(' '), tagArr);
+        // Preserve catalog field boundaries. Without a delimiter, an unrelated
+        // ingredient percentage can attach to the next ingredient name and falsely
+        // clear a cautious unknown-strength active.
+        const concentration = deriveConcentration([p.name, ...p.ingredients].join('; '), tagArr);
         return { id: p.id, name: p.name, tags: tagArr, subflags: [...subflags], concentration };
       });
 

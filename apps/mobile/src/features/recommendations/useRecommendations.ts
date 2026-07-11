@@ -42,6 +42,7 @@ export function useRecommendations() {
           name: i.name,
           role,
           tags: i.engineProduct.tags,
+          concentration: i.engineProduct.concentration,
           fragranced: isFragranced(i.product),
           expiring: i.badge.kind === 'countdown' || i.badge.kind === 'expired',
         },

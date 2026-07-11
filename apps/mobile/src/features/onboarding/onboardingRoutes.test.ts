@@ -291,17 +291,44 @@ describe('onboarding route contracts', () => {
     expect(source.indexOf('declineHealthDataCollectionConsent()')).toBeLessThan(
       source.indexOf("track('health_consent_declined')"),
     );
-    expect(quiz).toContain('getHealthDataCollectionConsentLocal');
-    expect(quiz).toContain('consent?.granted === true');
+    expect(source).toContain("const isSettingsReconsent = requestedReturn === 'skin-profile';");
+    expect(source).toContain('Return without changing');
+    expect(source).toContain('if (router.canGoBack())');
+    expect(source).toContain("pathname: '/settings/skin-profile'");
+    expect(source).toContain("queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] })");
+    expect(source).toContain('resetHealthProfileConsumers(queryClient)');
+    expect(source.indexOf('resetHealthProfileConsumers(queryClient)')).toBeLessThan(
+      source.indexOf("track('health_consent_declined')"),
+    );
+    expect(quiz).toContain('hasCurrentHealthDataCollectionConsent');
+    expect(quiz).toContain('if (hasCurrentConsent)');
+    expect(quiz).not.toContain('getHealthDataCollectionConsentLocal');
+    expect(quiz).not.toContain('consent?.granted === true');
     expect(quiz).toContain("router.replace('/onboarding/consent')");
     expect(quiz).toContain('if (!consentChecked)');
     expect(quiz).toContain('Privacy check');
     expect(quiz).toContain('Checking your privacy choice');
     expect(quiz).toContain('One moment while we confirm the quiz can start.');
     expect(quiz).not.toContain('<View className="flex-1" />');
-    expect(quiz.indexOf('getHealthDataCollectionConsentLocal()')).toBeLessThan(
+    expect(quiz.indexOf('hasCurrentHealthDataCollectionConsent()')).toBeLessThan(
       quiz.indexOf('const total = ONBOARDING_QUIZ.length'),
     );
+  });
+
+  it('rechecks current consent and invalidates every profile consumer after rebuilding', () => {
+    const context = readFileSync(
+      fileURLToPath(new URL('./OnboardingContext.tsx', import.meta.url)),
+      'utf8',
+    );
+
+    expect(context).toContain('hasCurrentHealthDataCollectionConsent()');
+    expect(context).toContain("throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED')");
+    expect(context.indexOf('hasCurrentHealthDataCollectionConsent()')).toBeLessThan(
+      context.indexOf('setStoredSkinProfile({ result, goals, completedAt })'),
+    );
+    expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] })");
+    expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['shelf'] })");
+    expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['ramp'] })");
   });
 
   it('recovers direct quiz completion without inventing missing goals', () => {

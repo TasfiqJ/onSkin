@@ -3,6 +3,8 @@ import * as Crypto from 'expo-crypto';
 
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
+import { HEALTH_DATA_CONSENT } from './consentCopy';
+
 const HEALTH_DATA_CONSENT_KEY = 'onskin.healthDataCollectionConsent.v1';
 
 export type LocalHealthDataConsent = {
@@ -85,10 +87,7 @@ export async function getHealthDataCollectionConsentLocal(): Promise<LocalHealth
   try {
     const parsed: unknown = JSON.parse(raw);
     const normalized = normalizeConsent(parsed);
-    if (!normalized) {
-      await removePrivateItem(HEALTH_DATA_CONSENT_KEY).catch(() => undefined);
-      return null;
-    }
+    if (!normalized) return null;
     if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
       await setPrivateItem(HEALTH_DATA_CONSENT_KEY, JSON.stringify(normalized)).catch(
         () => undefined,
@@ -96,9 +95,21 @@ export async function getHealthDataCollectionConsentLocal(): Promise<LocalHealth
     }
     return normalized;
   } catch {
-    await removePrivateItem(HEALTH_DATA_CONSENT_KEY).catch(() => undefined);
     return null;
   }
+}
+
+export async function hasCurrentHealthDataCollectionConsent(): Promise<boolean> {
+  const consent = await getHealthDataCollectionConsentLocal();
+  if (consent?.granted !== true || consent.version !== HEALTH_DATA_CONSENT.version) {
+    return false;
+  }
+
+  const currentConsentTextHash = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    HEALTH_DATA_CONSENT.fullText,
+  );
+  return consent.consentTextHash === currentConsentTextHash;
 }
 
 /** Test/seed reset. */

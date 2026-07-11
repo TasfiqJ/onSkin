@@ -8,6 +8,12 @@ import {
 } from '@/features/intelligence/engine';
 import { shippableRules, type ConflictRule } from '@/features/intelligence/rules';
 import { pickCycle, type CycleTemplate } from '@/features/intelligence/scheduler';
+import {
+  pregnancySafetyReasonForProduct,
+  type PregnancySafetyMode,
+  type PregnancySafetyReason,
+  type PregnancySafetyStatus,
+} from '@/features/intelligence/pregnancySafety';
 
 import { initRamp, type RampState } from './ramp';
 import { canUseRoutineCadence } from './reviewGate';
@@ -32,6 +38,12 @@ export type GeneratedPlan = {
   pm: PlanStep[];
   cycle: CycleTemplate | null;
   ramp: { productId: string; name: string; state: RampState }[];
+  safetyExclusions: {
+    productId: string;
+    name: string;
+    reason: PregnancySafetyReason;
+  }[];
+  cadenceWithheld: { productId: string; name: string }[];
   unplacedProducts: { productId: string; name: string }[];
   gaps: string[];
   conflicts: DetectedConflict[];
@@ -52,25 +64,51 @@ export type RoutineProduct = ClassifiableProduct & {
   concentration?: 'low' | 'high';
 };
 
+export type RoutineGenerationProfile = EngineProfile & {
+  goals: string[];
+  pregnancySafety?: PregnancySafetyMode;
+  pregnancyStatus?: PregnancySafetyStatus;
+};
+
 export function generatePlan(
   products: RoutineProduct[],
-  profile: EngineProfile & { goals: string[] },
+  profile: RoutineGenerationProfile,
   rules: ConflictRule[] = shippableRules(),
 ): GeneratedPlan {
-  const classifiedProducts = products.map((product) => ({
+  const pregnancySafety = profile.pregnancySafety ?? (profile.pregnancy ? 'caution' : 'clear');
+  const safetyExclusions = products.flatMap((product) => {
+    const reason = pregnancySafetyReasonForProduct(product, pregnancySafety, rules);
+    return reason ? [{ productId: product.id, name: product.name, reason }] : [];
+  });
+  const excludedIds = new Set(safetyExclusions.map((item) => item.productId));
+  const routineProducts = products.filter((product) => !excludedIds.has(product.id));
+  const classifiedProducts = routineProducts.map((product) => ({
     product,
     role: classifyRole(product),
   }));
   const unplacedProducts = classifiedProducts
     .filter(({ role }) => role == null)
     .map(({ product }) => ({ productId: product.id, name: product.name }));
-  const am = sequencePhase(products, 'am');
-  const pm = sequencePhase(products, 'pm') as PlanStep[];
+
+  // Treatment/exfoliant placement implies a cadence. Until the clinical cadence
+  // review gate opens, withhold those products instead of turning an unassigned
+  // PM active into a daily Today step.
+  const allowCadence = canUseRoutineCadence();
+  const cadenceWithheld = allowCadence
+    ? []
+    : classifiedProducts
+        .filter(({ role }) => role === 'treatment' || role === 'exfoliant')
+        .map(({ product }) => ({ productId: product.id, name: product.name }));
+  const cadenceWithheldIds = new Set(cadenceWithheld.map((item) => item.productId));
+  const cadenceEligibleProducts = routineProducts.filter(
+    (product) => !cadenceWithheldIds.has(product.id),
+  );
+  const am = sequencePhase(cadenceEligibleProducts, 'am');
+  const pm = sequencePhase(cadenceEligibleProducts, 'pm') as PlanStep[];
 
   // Cycling: assign nights to PM actives (exfoliant=1, retinoid=2) when a cycle
   // applies. The retinoid × acid alternate_nights resolution is satisfied by
   // placing them on different nights.
-  const allowCadence = canUseRoutineCadence();
   const hasActives =
     allowCadence && pm.some((s) => s.role === 'treatment' || s.role === 'exfoliant');
   const cycle = pickCycle({
@@ -111,7 +149,21 @@ export function generatePlan(
     tags: p.tags,
     concentration: p.concentration,
   }));
-  const conflicts = detectConflicts(engineProducts, profile, rules);
+  const conflicts = detectConflicts(
+    engineProducts,
+    { ...profile, pregnancy: profile.pregnancy },
+    rules,
+  );
 
-  return { am, pm, cycle, ramp, unplacedProducts, gaps, conflicts };
+  return {
+    am,
+    pm,
+    cycle,
+    ramp,
+    safetyExclusions,
+    cadenceWithheld,
+    unplacedProducts,
+    gaps,
+    conflicts,
+  };
 }

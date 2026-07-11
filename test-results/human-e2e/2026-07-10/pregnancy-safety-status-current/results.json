@@ -1,0 +1,341 @@
+{
+  "supportedPhone": [
+    {
+      "scenario": "pregnancy-safety-supported-floor-360x640",
+      "viewport": {
+        "name": "supported-floor-360x640",
+        "width": 360,
+        "height": 640
+      },
+      "transitionSequence": [
+        "none",
+        "pregnant",
+        "breastfeeding",
+        "prefer_not",
+        "none"
+      ],
+      "excludedProductIds": [
+        "retinoid",
+        "bha"
+      ],
+      "encryptedPersistenceReloadPassed": true,
+      "cautiousPlanPassed": true,
+      "cautiousTodayPassed": true,
+      "writeFailureRetryPassed": true,
+      "clearRestorationPassed": true,
+      "geometry": {
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "innerHeight": 640
+      },
+      "controls": {
+        "controls": [
+          {
+            "label": "Back",
+            "width": 48,
+            "height": 48,
+            "visible": true
+          },
+          {
+            "label": "No",
+            "width": 312,
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "Pregnant or trying",
+            "width": 312,
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "Breastfeeding",
+            "width": 312,
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "Prefer not to say",
+            "width": 312,
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "Save setting",
+            "width": 312,
+            "height": 56,
+            "visible": true
+          }
+        ],
+        "below44": []
+      },
+      "textPressure": {
+        "scale": 2,
+        "scaledCount": 21,
+        "geometry": {
+          "clientWidth": 360,
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 640
+        },
+        "controls": {
+          "controls": [
+            {
+              "label": "Back",
+              "width": 48,
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "No",
+              "width": 312,
+              "height": 58,
+              "visible": true
+            },
+            {
+              "label": "Pregnant or trying",
+              "width": 312,
+              "height": 98,
+              "visible": true
+            },
+            {
+              "label": "Breastfeeding",
+              "width": 312,
+              "height": 58,
+              "visible": true
+            },
+            {
+              "label": "Prefer not to say",
+              "width": 312,
+              "height": 58,
+              "visible": true
+            },
+            {
+              "label": "Save setting",
+              "width": 312,
+              "height": 74,
+              "visible": true
+            }
+          ],
+          "below44": []
+        }
+      }
+    },
+    {
+      "scenario": "pregnancy-safety-modern-390x844",
+      "viewport": {
+        "name": "modern-390x844",
+        "width": 390,
+        "height": 844
+      },
+      "transitionSequence": [
+        "none",
+        "pregnant",
+        "breastfeeding",
+        "prefer_not",
+        "none"
+      ],
+      "excludedProductIds": [
+        "retinoid",
+        "bha"
+      ],
+      "encryptedPersistenceReloadPassed": true,
+      "cautiousPlanPassed": true,
+      "cautiousTodayPassed": true,
+      "writeFailureRetryPassed": true,
+      "clearRestorationPassed": true,
+      "geometry": {
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "innerHeight": 844
+      },
+      "controls": {
+        "controls": [
+          {
+            "label": "Back",
+            "width": 48,
+            "height": 48,
+            "visible": true
+          },
+          {
+            "label": "No",
+            "width": 342,
+            "height": 60,
+            "visible": true
+          },
+          {
+            "label": "Pregnant or trying",
+            "width": 342,
+            "height": 60,
+            "visible": true
+          },
+          {
+            "label": "Breastfeeding",
+            "width": 342,
+            "height": 60,
+            "visible": true
+          },
+          {
+            "label": "Prefer not to say",
+            "width": 342,
+            "height": 60,
+            "visible": true
+          },
+          {
+            "label": "Save setting",
+            "width": 342,
+            "height": 56,
+            "visible": true
+          }
+        ],
+        "below44": []
+      },
+      "textPressure": {
+        "scale": 2,
+        "scaledCount": 21,
+        "geometry": {
+          "clientWidth": 390,
+          "scrollWidth": 390,
+          "innerWidth": 390,
+          "innerHeight": 844
+        },
+        "controls": {
+          "controls": [
+            {
+              "label": "Back",
+              "width": 48,
+              "height": 48,
+              "visible": true
+            },
+            {
+              "label": "No",
+              "width": 342,
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "Pregnant or trying",
+              "width": 342,
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "Breastfeeding",
+              "width": 342,
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "Prefer not to say",
+              "width": 342,
+              "height": 66,
+              "visible": true
+            },
+            {
+              "label": "Save setting",
+              "width": 342,
+              "height": 74,
+              "visible": true
+            }
+          ],
+          "below44": []
+        }
+      }
+    }
+  ],
+  "auxiliary": [
+    {
+      "scenario": "pregnancy-safety-legacy-consent-regrant",
+      "viewport": {
+        "name": "supported-floor-360x640",
+        "width": 360,
+        "height": 640
+      },
+      "legacyConsentStayedCautious": true,
+      "consentWriteFailureRetryPassed": true,
+      "returnedToSetting": true,
+      "geometry": {
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "innerHeight": 640
+      },
+      "controls": {
+        "controls": [
+          {
+            "label": "Back",
+            "width": 48,
+            "height": 48,
+            "visible": true
+          },
+          {
+            "label": "No",
+            "width": 312,
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "Pregnant or trying",
+            "width": 312,
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "Breastfeeding",
+            "width": 312,
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "Prefer not to say",
+            "width": 312,
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "Save setting",
+            "width": 312,
+            "height": 56,
+            "visible": true
+          }
+        ],
+        "below44": []
+      }
+    },
+    {
+      "scenario": "pregnancy-safety-missing-profile",
+      "viewport": {
+        "name": "modern-390x844",
+        "width": 390,
+        "height": 844
+      },
+      "missingProfileStayedCautious": true,
+      "recoveryActionPassed": true,
+      "geometry": {
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "innerWidth": 390,
+        "innerHeight": 844
+      },
+      "controls": {
+        "controls": [
+          {
+            "label": "Back",
+            "width": 48,
+            "height": 48,
+            "visible": true
+          },
+          {
+            "label": "Rebuild skin profile",
+            "width": 310,
+            "height": 56,
+            "visible": true
+          }
+        ],
+        "below44": []
+      }
+    }
+  ]
+}

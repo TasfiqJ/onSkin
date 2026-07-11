@@ -8,6 +8,7 @@ export default function SettingsLayout() {
       <Stack.Screen name="notifications" />
       <Stack.Screen name="timing" />
       <Stack.Screen name="subscription" />
+      <Stack.Screen name="skin-profile" />
     </Stack>
   );
 }

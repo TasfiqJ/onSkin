@@ -10,6 +10,7 @@ export type OptionCardProps = {
   title: string;
   subtitle?: string;
   selected?: boolean;
+  disabled?: boolean;
   onPress?: () => void;
   className?: string;
   compact?: boolean;
@@ -20,6 +21,7 @@ export function OptionCard({
   title,
   subtitle,
   selected = false,
+  disabled = false,
   onPress,
   className,
   compact = false,
@@ -28,9 +30,10 @@ export function OptionCard({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityState={{ selected }}
+      accessibilityState={{ selected, disabled }}
       accessibilityLabel={subtitle ? `${title}. ${subtitle}` : title}
       aria-pressed={selected}
+      disabled={disabled}
       onPress={() => {
         haptics.select();
         onPress?.();
@@ -43,6 +46,7 @@ export function OptionCard({
             ? 'min-h-[60px] px-5 py-3'
             : 'min-h-[64px] px-5 py-4',
         selected ? 'border-clay bg-clay/5' : 'border-hairline bg-paper-raised',
+        disabled && 'opacity-60',
         className,
       )}
     >

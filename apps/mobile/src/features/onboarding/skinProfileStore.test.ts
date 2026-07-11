@@ -1,14 +1,24 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getStoredSkinProfile, isOnboardedLocal, setStoredSkinProfile } from './skinProfileStore';
+import {
+  getStoredSkinProfile,
+  isOnboardedLocal,
+  readStoredSkinProfile,
+  setStoredSkinProfile,
+  updateStoredPregnancyStatus,
+} from './skinProfileStore';
 import type { SkinProfileResult } from './quiz';
 
-const mocks = vi.hoisted(() => ({
-  storage: new Map<string, string>(),
-}));
+const mocks = vi.hoisted(() => {
+  const storage = new Map<string, string>();
+  return {
+    storage,
+    getPrivateItem: vi.fn(async (key: string) => storage.get(key) ?? null),
+  };
+});
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
+  getPrivateItem: mocks.getPrivateItem,
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.storage.set(key, value);
   }),
@@ -41,21 +51,24 @@ const RESULT: SkinProfileResult = {
 describe('skin profile local onboarding gate store', () => {
   beforeEach(() => {
     mocks.storage.clear();
+    mocks.getPrivateItem.mockReset();
+    mocks.getPrivateItem.mockImplementation(async (key: string) => mocks.storage.get(key) ?? null);
   });
 
-  it('removes malformed skin profile JSON', async () => {
+  it('preserves malformed skin profile JSON for explicit recovery', async () => {
     mocks.storage.set(KEY, '{not-json');
 
     await expect(getStoredSkinProfile()).resolves.toBeNull();
     await expect(isOnboardedLocal()).resolves.toBe(false);
-    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.storage.get(KEY)).toBe('{not-json');
+    await expect(readStoredSkinProfile()).resolves.toEqual({ status: 'invalid', profile: null });
   });
 
-  it('removes wrong-shaped skin profile records', async () => {
+  it('preserves wrong-shaped skin profile records for explicit recovery', async () => {
     mocks.storage.set(KEY, JSON.stringify({ goals: ['clear_skin'], completedAt: '2026-07-07' }));
 
     await expect(getStoredSkinProfile()).resolves.toBeNull();
-    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.storage.has(KEY)).toBe(true);
   });
 
   it('normalizes goals and sensitivities before marking onboarding complete', async () => {
@@ -97,7 +110,7 @@ describe('skin profile local onboarding gate store', () => {
 
     await expect(getStoredSkinProfile()).resolves.toBeNull();
     await expect(isOnboardedLocal()).resolves.toBe(false);
-    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.storage.has(KEY)).toBe(true);
   });
 
   it('rejects records with no approved onboarding goals', async () => {
@@ -112,7 +125,17 @@ describe('skin profile local onboarding gate store', () => {
 
     await expect(getStoredSkinProfile()).resolves.toBeNull();
     await expect(isOnboardedLocal()).resolves.toBe(false);
-    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.storage.has(KEY)).toBe(true);
+  });
+
+  it('distinguishes a private-storage read failure from an absent profile', async () => {
+    mocks.getPrivateItem.mockRejectedValueOnce(new Error('secure storage unavailable'));
+
+    await expect(readStoredSkinProfile()).resolves.toEqual({
+      status: 'unavailable',
+      profile: null,
+    });
+    await expect(readStoredSkinProfile()).resolves.toEqual({ status: 'missing', profile: null });
   });
 
   it('saves only valid skin profile records', async () => {
@@ -126,5 +149,28 @@ describe('skin profile local onboarding gate store', () => {
       result: RESULT,
       goals: ['clear_skin'],
     });
+  });
+
+  it('updates pregnancy status without changing the rest of the local profile', async () => {
+    await setStoredSkinProfile({
+      result: RESULT,
+      goals: ['clear_skin'],
+      completedAt: '2026-07-07T00:00:00.000Z',
+    });
+
+    await expect(updateStoredPregnancyStatus('breastfeeding')).resolves.toMatchObject({
+      result: { ...RESULT, pregnancyStatus: 'breastfeeding' },
+      goals: ['clear_skin'],
+      completedAt: '2026-07-07T00:00:00.000Z',
+    });
+    await expect(getStoredSkinProfile()).resolves.toMatchObject({
+      result: { pregnancyStatus: 'breastfeeding' },
+    });
+  });
+
+  it('refuses a status update when the authoritative local profile is unavailable', async () => {
+    await expect(updateStoredPregnancyStatus('pregnant')).rejects.toThrow(
+      'SKIN_PROFILE_UNAVAILABLE',
+    );
   });
 });

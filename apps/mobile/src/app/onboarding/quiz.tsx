@@ -4,7 +4,7 @@ import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Chip, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
-import { getHealthDataCollectionConsentLocal } from '@/features/onboarding/healthConsentStore';
+import { hasCurrentHealthDataCollectionConsent } from '@/features/onboarding/healthConsentStore';
 import { ONBOARDING_QUIZ, toggleExclusiveNoneSelection } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
@@ -70,10 +70,10 @@ export default function QuizScreen() {
 
   useEffect(() => {
     let active = true;
-    void getHealthDataCollectionConsentLocal()
-      .then((consent) => {
+    void hasCurrentHealthDataCollectionConsent()
+      .then((hasCurrentConsent) => {
         if (!active) return;
-        if (consent?.granted === true) {
+        if (hasCurrentConsent) {
           setConsentChecked(true);
           return;
         }

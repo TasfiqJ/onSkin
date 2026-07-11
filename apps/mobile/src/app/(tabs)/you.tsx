@@ -418,6 +418,11 @@ export default function YouScreen() {
   }, [privacyDirectEntry, privacyCardReady, privacyDirectEntryScrollNudge]);
 
   const forYouRows: { label: string; href: StaticRouteHref; hint?: string }[] = [
+    {
+      label: 'Pregnancy & breastfeeding',
+      href: '/settings/skin-profile',
+      hint: 'Review your routine safety setting.',
+    },
     { label: 'Recommendations', href: '/recommendations' },
     { label: 'Recommendation preferences', href: '/recommendations/preferences' },
     {

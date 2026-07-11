@@ -306,6 +306,10 @@ export default function TodayScreen() {
   const hasExamplePlan = planData?.isExample === true;
   const hasRealRoutine = Boolean(planData && !planData.isExample);
   const plan = hasRealRoutine ? planData?.plan : undefined;
+  const safetyExclusionCount = plan?.safetyExclusions.length ?? 0;
+  const safetyExcludedIds = new Set(
+    plan?.safetyExclusions.map((exclusion) => exclusion.productId) ?? [],
+  );
 
   // The orchestrated, profile-aware cycle drives tonight everywhere (so pregnancy
   // suppression etc. is never contradicted by a hardcoded surface. Review fix).
@@ -511,7 +515,11 @@ export default function TodayScreen() {
   // paused/travel nights all drop the potent active so the evening trims to the
   // stable barrier basics the pause/travel banners promise (docs/05 §6.4).
   const cycledStep =
-    !skippedTonight && !recoveryActive && !paused && cTonight?.night.productId
+    !skippedTonight &&
+    !recoveryActive &&
+    !paused &&
+    cTonight?.night.productId &&
+    !safetyExcludedIds.has(cTonight.night.productId)
       ? {
           productId: cTonight.night.productId,
           name: cTonight.night.productName ?? 'Tonight’s active',
@@ -520,7 +528,9 @@ export default function TodayScreen() {
           role: cTonight.night.slot === 'retinoid' ? ('treatment' as const) : undefined,
         }
       : null;
-  const dailyPm = (plan?.pm ?? []).filter((s) => !s.cyclingNight);
+  const dailyPm = (plan?.pm ?? []).filter(
+    (step) => !step.cyclingNight && !safetyExcludedIds.has(step.productId),
+  );
   const pmSteps = [...dailyPm, ...(cycledStep ? [cycledStep] : [])].sort(
     (a, b) => a.order - b.order,
   );
@@ -597,6 +607,35 @@ export default function TodayScreen() {
               You skipped tonight. Nothing breaks, your cycle picks up tomorrow.
             </Text>
           </View>
+        ) : null}
+
+        {safetyExclusionCount > 0 ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Review pregnancy and breastfeeding setting"
+            className="mt-4 min-h-[48px] flex-row items-center gap-3 rounded-card px-5 py-3"
+            style={{ backgroundColor: 'rgba(217,161,131,0.10)' }}
+            onPress={() => {
+              haptics.select();
+              router.push('/settings/skin-profile?returnTo=today');
+            }}
+          >
+            <View
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: colors.clayBright }}
+            />
+            <Text
+              className="flex-1 text-[13.5px]"
+              style={{ color: 'rgba(244,239,231,0.8)', lineHeight: 19 }}
+            >
+              {`${safetyExclusionCount} caution product${
+                safetyExclusionCount === 1 ? '' : 's'
+              } paused by your pregnancy & breastfeeding setting.`}
+            </Text>
+            <Text aria-hidden style={{ color: colors.clayBright }}>
+              ›
+            </Text>
+          </Pressable>
         ) : null}
 
         {/* Skin-cycling strip. Taps through to the week overview (docs/05 §6.1) */}

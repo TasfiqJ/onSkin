@@ -1,10 +1,14 @@
-import type { EngineProfile } from '@/features/intelligence/engine';
 import { shippableRules } from '@/features/intelligence/rules';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
 import { useShelf } from '@/features/shelf/useShelf';
 
-import { generatePlan, type GeneratedPlan, type RoutineProduct } from './generate';
+import {
+  generatePlan,
+  type GeneratedPlan,
+  type RoutineGenerationProfile,
+  type RoutineProduct,
+} from './generate';
 
 // The user's generated plan. Live from the shelf via the (tested) generatePlan
 // pipeline; when the shelf is empty, falls back to the design's Maya example so
@@ -18,7 +22,7 @@ const MAYA_PRODUCTS: RoutineProduct[] = [
   { id: 'm-glycolic', name: 'Glycolic 7% Toner', tags: ['aha'] },
   { id: 'm-cera', name: 'Ceramide moisturizer', tags: ['ceramide', 'barrier'] },
 ];
-const MAYA_PROFILE: EngineProfile & { goals: string[] } = {
+const MAYA_PROFILE: RoutineGenerationProfile = {
   sensitivity: 'sensitive',
   pregnancy: false,
   goals: ['barrier_repair'],
@@ -42,10 +46,12 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
     }));
     // Use the REAL profile (sensitivity + pregnancy + goals) so the plan honours
     // pregnancy retinoid suppression etc. everywhere, not just the cycle engine.
-    const real: EngineProfile & { goals: string[] } = profile.data
+    const real: RoutineGenerationProfile = profile.data
       ? {
           sensitivity: profile.data.sensitivity,
           pregnancy: profile.data.pregnancy,
+          pregnancySafety: profile.data.pregnancySafety,
+          pregnancyStatus: profile.data.pregnancyStatus,
           goals: profile.data.goals,
         }
       : MAYA_PROFILE;

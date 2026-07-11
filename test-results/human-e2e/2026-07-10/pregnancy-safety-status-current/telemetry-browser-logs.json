@@ -1,0 +1,602 @@
+[
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640-restored",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640-restored",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640-restored",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640-restored",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-supported-floor-360x640-restored",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844-restored",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844-restored",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844-restored",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844-restored",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-modern-390x844-restored",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-legacy-consent-regrant",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-legacy-consent-regrant",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-legacy-consent-regrant",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-legacy-consent-regrant",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-legacy-consent-regrant",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-legacy-consent-regrant",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-legacy-consent-regrant",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-legacy-consent-regrant",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-legacy-consent-regrant",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-legacy-consent-regrant",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-missing-profile",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-missing-profile",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-missing-profile",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-missing-profile",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-missing-profile",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  },
+  {
+    "scenario": "pregnancy-safety-missing-profile",
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+  },
+  {
+    "scenario": "pregnancy-safety-missing-profile",
+    "type": "log",
+    "text": "Running application \"main\" with appParams:\n {rootTag: #root, hydrate: undefined} \nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."
+  },
+  {
+    "scenario": "pregnancy-safety-missing-profile",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-missing-profile",
+    "type": "warning",
+    "text": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE"
+  },
+  {
+    "scenario": "pregnancy-safety-missing-profile",
+    "type": "warning",
+    "text": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  }
+]

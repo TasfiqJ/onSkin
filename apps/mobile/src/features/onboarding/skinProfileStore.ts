@@ -27,6 +27,10 @@ export type StoredSkinProfile = {
   completedAt: string; // ISO
 };
 
+export type StoredSkinProfileRead =
+  | { status: 'available'; profile: StoredSkinProfile }
+  | { status: 'missing' | 'unavailable' | 'invalid'; profile: null };
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -135,35 +139,55 @@ function normalizeStoredSkinProfile(value: unknown): StoredSkinProfile | null {
   return { result, goals, completedAt };
 }
 
-export async function getStoredSkinProfile(): Promise<StoredSkinProfile | null> {
+export async function readStoredSkinProfile(): Promise<StoredSkinProfileRead> {
   let raw: string | null = null;
   try {
     raw = await getPrivateItem(KEY);
   } catch {
-    return null;
+    return { status: 'unavailable', profile: null };
   }
-  if (!raw) return null;
+  if (!raw) return { status: 'missing', profile: null };
   try {
     const parsed: unknown = JSON.parse(raw);
     const normalized = normalizeStoredSkinProfile(parsed);
     if (!normalized) {
-      await removePrivateItem(KEY).catch(() => undefined);
-      return null;
+      return { status: 'invalid', profile: null };
     }
     if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
       await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
     }
-    return normalized;
+    return { status: 'available', profile: normalized };
   } catch {
-    await removePrivateItem(KEY).catch(() => undefined);
-    return null;
+    return { status: 'invalid', profile: null };
   }
+}
+
+export async function getStoredSkinProfile(): Promise<StoredSkinProfile | null> {
+  const result = await readStoredSkinProfile();
+  return result.status === 'available' ? result.profile : null;
 }
 
 export async function setStoredSkinProfile(rec: StoredSkinProfile): Promise<void> {
   const normalized = normalizeStoredSkinProfile(rec);
   if (!normalized) throw new Error('INVALID_SKIN_PROFILE_RECORD');
   await setPrivateItem(KEY, JSON.stringify(normalized));
+}
+
+export async function updateStoredPregnancyStatus(
+  pregnancyStatus: PregnancyStatus,
+): Promise<StoredSkinProfile> {
+  if (!PREGNANCY_STATUSES.has(pregnancyStatus)) {
+    throw new Error('INVALID_PREGNANCY_STATUS');
+  }
+  const current = await getStoredSkinProfile();
+  if (!current) throw new Error('SKIN_PROFILE_UNAVAILABLE');
+
+  const next: StoredSkinProfile = {
+    ...current,
+    result: { ...current.result, pregnancyStatus },
+  };
+  await setStoredSkinProfile(next);
+  return next;
 }
 
 /** Has the user completed onboarding on this device? (the entry-gate signal). */

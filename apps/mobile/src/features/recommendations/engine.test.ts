@@ -103,6 +103,47 @@ describe('goal-driven. Pregnancy swaps the active for a safe alternative (§8 ha
     expect(res.recommendations.some((r) => r.productType === 'retinoid_serum')).toBe(false);
   });
 
+  it('uses cautious exclusions for an unconfirmed status without labeling the user pregnant', () => {
+    const res = recommend(
+      input({
+        profile: {
+          sensitivity: 'neutral',
+          pregnancy: false,
+          pregnancySafety: 'caution',
+          goals: ['anti_aging'],
+        },
+        shelf: [cleanser, moisturiser, spf],
+      }),
+    );
+
+    expect(res.recommendations.some((r) => r.productType === 'retinoid_serum')).toBe(false);
+    expect(JSON.stringify(res.recommendations)).not.toMatch(/pregnan/i);
+  });
+
+  it('does not let a paused retinoid count as goal coverage', () => {
+    const pausedRetinoid = item({
+      id: 'paused-retinoid',
+      name: 'Retinol serum',
+      role: 'treatment',
+      tags: ['retinoid'],
+    });
+    const res = recommend(
+      input({
+        profile: {
+          sensitivity: 'neutral',
+          pregnancy: false,
+          pregnancySafety: 'caution',
+          goals: ['anti_aging'],
+        },
+        shelf: [cleanser, moisturiser, spf, pausedRetinoid],
+      }),
+    );
+
+    expect(res.recommendations.find((rec) => rec.trigger === 'goal')?.productType).toBe(
+      'vitamin_c_serum',
+    );
+  });
+
   it('introduces only ONE goal active at a time (restraint, §4.5)', () => {
     const res = recommend(
       input({
@@ -156,6 +197,37 @@ describe('conflict resolution. A non-conflicting alternative (§4.3)', () => {
     expect(conflictRec).toBeTruthy();
     expect(conflictRec?.relatedRuleId).toBeTruthy();
     expect(conflictRec?.why).toMatch(/Retinol 0\.5%|Glycolic 7%/);
+  });
+
+  it('does not derive a conflict recommendation from a safety-excluded product', () => {
+    const conflicts = detectConflicts(
+      [
+        { id: 'p_ret', name: 'Retinol 0.5%', tags: ['retinoid'] },
+        { id: 'p_aha', name: 'Glycolic 7%', tags: ['aha'] },
+      ],
+      { sensitivity: 'sensitive', pregnancy: false },
+      STARTER_RULES,
+    );
+    const res = recommend(
+      input({
+        profile: {
+          sensitivity: 'sensitive',
+          pregnancy: false,
+          pregnancySafety: 'caution',
+          goals: [],
+        },
+        shelf: [
+          cleanser,
+          moisturiser,
+          spf,
+          item({ id: 'p_ret', name: 'Retinol 0.5%', role: 'treatment', tags: ['retinoid'] }),
+          item({ id: 'p_aha', name: 'Glycolic 7%', role: 'exfoliant', tags: ['aha'] }),
+        ],
+        conflicts,
+      }),
+    );
+
+    expect(res.recommendations.some((rec) => rec.trigger === 'conflict')).toBe(false);
   });
 });
 
@@ -213,6 +285,69 @@ describe('replacement. Only when genuinely depleted (§4.2)', () => {
     expect(rep?.relatedProductId).toBe('p_vc');
     expect(rep?.what.toLowerCase()).toContain('running low');
     expect(rep?.footIsEvidence).toBe(false); // "From your shelf", not an evidence grade
+  });
+
+  it('never recommends repurchasing a product excluded by the current safety setting', () => {
+    const cautiousProfile: RecProfile = {
+      sensitivity: 'neutral',
+      pregnancy: false,
+      pregnancySafety: 'caution',
+      goals: [],
+    };
+    const excluded = [
+      item({ id: 'r', name: 'Retinol', role: 'treatment', tags: ['retinoid'], expiring: true }),
+      item({
+        id: 'h',
+        name: 'Hydroquinone',
+        role: 'treatment',
+        tags: ['hydroquinone'],
+        expiring: true,
+      }),
+      item({
+        id: 'b',
+        name: 'Salicylic serum',
+        role: 'exfoliant',
+        tags: ['bha'],
+        expiring: true,
+      }),
+    ];
+
+    const result = recommend(
+      input({
+        profile: cautiousProfile,
+        shelf: [cleanser, moisturiser, spf, ...excluded],
+      }),
+    );
+
+    expect(result.recommendations.filter((rec) => rec.trigger === 'replacement')).toEqual([]);
+  });
+
+  it('keeps a confirmed-low BHA replacement eligible on the cautious branch', () => {
+    const lowBha = item({
+      id: 'low-bha',
+      name: 'Salicylic 0.5%',
+      role: 'exfoliant',
+      tags: ['bha'],
+      concentration: 'low',
+      expiring: true,
+    });
+    const result = recommend(
+      input({
+        profile: {
+          sensitivity: 'neutral',
+          pregnancy: false,
+          pregnancySafety: 'caution',
+          goals: [],
+        },
+        shelf: [cleanser, moisturiser, spf, lowBha],
+      }),
+    );
+
+    expect(
+      result.recommendations.some(
+        (rec) => rec.trigger === 'replacement' && rec.relatedProductId === lowBha.id,
+      ),
+    ).toBe(true);
   });
 });
 

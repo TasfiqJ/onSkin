@@ -1,4 +1,5 @@
 import type { GoalId } from '@onskin/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
 import { supabase } from '@/lib/supabase/client';
@@ -11,6 +12,7 @@ import {
   type SkinProfileResult,
 } from './quiz';
 import { setStoredSkinProfile } from './skinProfileStore';
+import { hasCurrentHealthDataCollectionConsent } from './healthConsentStore';
 
 // In-progress onboarding answers, accumulated client-side and persisted at the
 // reveal step. Goals are capped at 2 (design spec: "choose up to two").
@@ -29,6 +31,7 @@ const MAX_GOALS = 2;
 const OnboardingContext = createContext<OnboardingContextValue | undefined>(undefined);
 
 export function OnboardingProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
   const [goals, setGoals] = useState<GoalId[]>([]);
   const [quizAnswers, setQuizAnswers] = useState<QuizAnswers>({});
 
@@ -50,6 +53,9 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         return scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
       },
       async persistSkinProfile() {
+        if (!(await hasCurrentHealthDataCollectionConsent())) {
+          throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');
+        }
         const completion = getQuizCompletionState(quizAnswers, ONBOARDING_QUIZ);
         if (!completion.complete) {
           throw new Error(
@@ -64,6 +70,11 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         // truth; the Supabase insert below is a best-effort mirror that must not
         // throw past this point (a returning user must never be re-onboarded).
         await setStoredSkinProfile({ result, goals, completedAt });
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] }),
+          queryClient.invalidateQueries({ queryKey: ['shelf'] }),
+          queryClient.invalidateQueries({ queryKey: ['ramp'] }),
+        ]);
         try {
           const { data: userData } = await supabase.auth.getUser();
           const userId = userData.user?.id;
@@ -96,7 +107,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         setQuizAnswers({});
       },
     }),
-    [goals, quizAnswers],
+    [goals, queryClient, quizAnswers],
   );
 
   return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;

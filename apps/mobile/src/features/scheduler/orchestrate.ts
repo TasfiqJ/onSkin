@@ -1,6 +1,12 @@
 import type { CycleVariant, FunctionalTag, GoalId } from '@onskin/types';
 
 import type { SensitivityLevel } from '@/features/intelligence/engine';
+import {
+  pregnancySafetyReasonForProduct,
+  type PregnancySafetyMode,
+  type PregnancySafetyStatus,
+} from '@/features/intelligence/pregnancySafety';
+import { shippableRules, type ConflictRule } from '@/features/intelligence/rules';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 
 import {
@@ -46,6 +52,7 @@ export type SchedulerActive = {
   id: string;
   name: string;
   tags: FunctionalTag[];
+  concentration?: 'low' | 'high';
   /** Recently added → staged for phased introduction (docs/05 §4). */
   isNew?: boolean;
 };
@@ -53,6 +60,8 @@ export type SchedulerActive = {
 export type SchedulerProfile = {
   sensitivity: SensitivityLevel;
   pregnancy: boolean;
+  pregnancySafety?: PregnancySafetyMode;
+  pregnancyStatus?: PregnancySafetyStatus;
   goals: GoalId[];
   /** User-chosen variant override; null = auto-pick by profile. */
   preferredVariant?: CycleVariant | null;
@@ -127,15 +136,34 @@ function recoveryNight(index: number): NightSlot {
 export function orchestrate(
   actives: SchedulerActive[],
   profile: SchedulerProfile,
+  rules: ConflictRule[] = shippableRules(),
 ): OrchestrationResult {
-  const classified: Classified[] = actives.map((a) => ({
-    id: a.id,
-    name: a.name,
-    cls: classifyActiveClass(a.tags),
-    isNew: !!a.isNew,
-  }));
+  const pregnancySafety = profile.pregnancySafety ?? (profile.pregnancy ? 'caution' : 'clear');
+  const safetyExclusions = actives.flatMap((active) => {
+    const reason = pregnancySafetyReasonForProduct(active, pregnancySafety, rules);
+    return reason ? [{ active, reason }] : [];
+  });
+  const excludedIds = new Set(safetyExclusions.map(({ active }) => active.id));
+  const classified: Classified[] = actives
+    .filter((active) => !excludedIds.has(active.id))
+    .map((a) => ({
+      id: a.id,
+      name: a.name,
+      cls: classifyActiveClass(a.tags),
+      isNew: !!a.isNew,
+    }));
 
   const notes: string[] = [];
+
+  if (safetyExclusions.length > 0) {
+    const knownStatus =
+      profile.pregnancyStatus === 'pregnant' || profile.pregnancyStatus === 'breastfeeding';
+    notes.push(
+      knownStatus || (profile.pregnancy && profile.pregnancyStatus == null)
+        ? 'Products with pregnancy cautions are paused. Worth a word with your doctor.'
+        : 'Products with pregnancy cautions stay paused until you confirm this safety setting.',
+    );
+  }
 
   if (!canUseRoutineCadence()) return { cycle: null, notes };
 
@@ -150,16 +178,6 @@ export function orchestrate(
 
   // Potent night-cycled actives.
   let potent = classified.filter((c) => isPotent(c.cls));
-
-  // FIRM: pregnancy suppresses retinoids → routed to the docs/02 safety path.
-  if (profile.pregnancy) {
-    const hadRetinoid = potent.some((c) => c.cls === 'retinoid');
-    potent = potent.filter((c) => c.cls !== 'retinoid');
-    if (hadRetinoid)
-      notes.push(
-        'Retinoids are paused while pregnant or breastfeeding. Worth a word with your doctor.',
-      );
-  }
 
   // Phased introduction: a brand-new active is staged in next, not switched on now.
   const staged = potent.filter((c) => c.isNew);

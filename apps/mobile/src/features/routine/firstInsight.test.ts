@@ -10,6 +10,8 @@ const basePlan: GeneratedPlan = {
   pm: [],
   cycle: null,
   ramp: [],
+  safetyExclusions: [],
+  cadenceWithheld: [],
   unplacedProducts: [],
   gaps: [],
   conflicts: [],
@@ -90,6 +92,38 @@ describe('routine first insight copy', () => {
     ).toMatchObject({
       title: 'Product needs details',
       body: 'Mystery drops needs a category or ingredient clue before it can be placed.',
+    });
+  });
+
+  it('prioritizes applied safety exclusions over ordinary conflicts and gaps', () => {
+    expect(
+      routineFirstInsightCopy(
+        plan({
+          safetyExclusions: [{ productId: 'retinoid', name: 'Retinol 0.3%', reason: 'retinoid' }],
+          gaps: ['A gentle cleanser would give your routine a clean base.'],
+          conflicts: [conflict(ruleFor('irritation'))],
+        }),
+        false,
+      ),
+    ).toEqual({
+      eyebrow: 'Safety setting applied',
+      title: 'Caution products paused',
+      body: 'Retinol 0.3% is staying off this routine based on your pregnancy and breastfeeding setting.',
+    });
+  });
+
+  it('explains when an active is withheld by the clinical cadence gate', () => {
+    expect(
+      routineFirstInsightCopy(
+        plan({
+          cadenceWithheld: [{ productId: 'retinoid', name: 'Retinol 0.3%' }],
+        }),
+        false,
+      ),
+    ).toEqual({
+      eyebrow: 'Clinical review gate',
+      title: 'Active timing withheld',
+      body: 'Retinol 0.3% stays off Today until its cadence guidance is reviewed.',
     });
   });
 

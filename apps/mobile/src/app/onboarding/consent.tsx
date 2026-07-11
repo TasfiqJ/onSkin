@@ -1,4 +1,5 @@
-import { router } from 'expo-router';
+import { useQueryClient } from '@tanstack/react-query';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
@@ -7,6 +8,7 @@ import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
 import {
   declineHealthDataCollectionConsent,
   grantHealthDataCollectionConsent,
+  resetHealthProfileConsumers,
 } from '@/features/onboarding/healthConsent';
 import { openPolicy } from '@/features/subscription/ComplianceRow';
 import { track } from '@/lib/analytics/track';
@@ -43,10 +45,36 @@ export default function HealthConsentScreen() {
   const { height } = useWindowDimensions();
   const compactPhone = height < 640;
   const scrollRef = useRef<ScrollView>(null);
+  const queryClient = useQueryClient();
+  const params = useLocalSearchParams<{
+    returnTo?: string | string[];
+    profileReturnTo?: string | string[];
+  }>();
   const [busy, setBusy] = useState(false);
   const [declined, setDeclined] = useState(false);
   const [consentSaveError, setConsentSaveError] = useState(false);
   const [policyLinkMissing, setPolicyLinkMissing] = useState(false);
+  const requestedReturn = Array.isArray(params.returnTo) ? params.returnTo[0] : params.returnTo;
+  const isSettingsReconsent = requestedReturn === 'skin-profile';
+  const profileReturn = Array.isArray(params.profileReturnTo)
+    ? params.profileReturnTo[0]
+    : params.profileReturnTo;
+
+  function returnToSkinProfile() {
+    if (router.canGoBack()) {
+      router.back();
+      return;
+    }
+    router.replace({
+      pathname: '/settings/skin-profile',
+      params: {
+        returnTo:
+          profileReturn === 'plan' || profileReturn === 'shelf' || profileReturn === 'today'
+            ? profileReturn
+            : 'you',
+      },
+    });
+  }
 
   function scrollToStatus() {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
@@ -67,6 +95,15 @@ export default function HealthConsentScreen() {
       return;
     }
     setBusy(false);
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] }),
+      queryClient.invalidateQueries({ queryKey: ['shelf'] }),
+      queryClient.invalidateQueries({ queryKey: ['ramp'] }),
+    ]);
+    if (isSettingsReconsent) {
+      returnToSkinProfile();
+      return;
+    }
     router.push('/onboarding/quiz');
   }
 
@@ -76,6 +113,9 @@ export default function HealthConsentScreen() {
     setConsentSaveError(false);
     try {
       await declineHealthDataCollectionConsent();
+      // Reset synchronously before refetching so a previously cached explicit
+      // `none` cannot keep driving Plan or Today after consent is withdrawn.
+      await resetHealthProfileConsumers(queryClient);
       track('health_consent_declined');
       setDeclined(true);
       scrollToStatus();
@@ -166,6 +206,19 @@ export default function HealthConsentScreen() {
             {HEALTH_DATA_CONSENT.declineCta}
           </Text>
         </Pressable>
+        {isSettingsReconsent ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ disabled: busy }}
+            className="min-h-[48px] items-center justify-center py-2"
+            disabled={busy}
+            onPress={returnToSkinProfile}
+          >
+            <Text variant="body" tone="muted" className="font-sans-medium">
+              Return without changing
+            </Text>
+          </Pressable>
+        ) : null}
         <Pressable
           accessibilityRole="button"
           className="mt-1 min-h-[48px] items-center justify-center py-2"

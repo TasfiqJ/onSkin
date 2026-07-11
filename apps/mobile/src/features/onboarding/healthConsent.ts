@@ -1,3 +1,5 @@
+import type { QueryClient } from '@tanstack/react-query';
+
 import { recordConsent } from '@/lib/consent/consent';
 
 import { HEALTH_DATA_CONSENT } from './consentCopy';
@@ -10,6 +12,14 @@ type HealthConsentDeps = {
 };
 
 const defaultDeps: HealthConsentDeps = { recordConsent };
+
+export async function resetHealthProfileConsumers(queryClient: QueryClient): Promise<void> {
+  await Promise.all([
+    queryClient.resetQueries({ queryKey: ['skinProfileBits'] }),
+    queryClient.resetQueries({ queryKey: ['shelf'] }),
+    queryClient.resetQueries({ queryKey: ['ramp'] }),
+  ]);
+}
 
 export async function grantHealthDataCollectionConsent(
   deps: HealthConsentDeps = defaultDeps,

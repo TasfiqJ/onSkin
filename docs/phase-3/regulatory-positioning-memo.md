@@ -2,7 +2,7 @@
 
 Status: not cleared for production launch  
 Owner: founder until counsel/clinical reviewers are retained  
-Last updated: 2026-07-04
+Last updated: 2026-07-10
 
 ## Executive Position
 
@@ -31,7 +31,7 @@ Planned public V1 classification:
 - User-entered shelf/routine tracking.
 - Ingredient/routine sequencing support using conservative rules.
 - Photo progress capture and comparison without scores, diagnosis, disease detection, cloud analysis, or cloud backup in current V1.
-- Optional, separate, revocable consents for health-data collection, Ask OnSkin cloud mode, trend analysis, commerce partner sharing, and marketing. Photo cloud-backup consent remains reserved and unwired unless a future complete implementation is reviewed.
+- Explicit, separate, revocable health-data collection consent before personalized quiz/profile use, validated against the exact current version and text hash; Ask cloud mode, trend analysis, commerce partner sharing, and marketing remain separate optional grants. Photo cloud-backup consent remains reserved and unwired unless a future complete implementation is reviewed.
 
 Not launch classification:
 

@@ -49,13 +49,27 @@ describe('Conflict route contracts', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
 
     expect(source).toContain('This timing note is no longer active.');
+    expect(source).toContain(
+      'Your shelf or safety setting has changed since this note was created.',
+    );
     expect(source).toContain('old links');
     expect(source).toContain('Back to Shelf');
     expect(source).toContain('Add a product');
     expect(source).toContain('router.replace(APP_SHELF_ROUTE)');
     expect(source).toContain("router.replace('/shelf/manual')");
     expect(source).not.toContain('This conflict is no longer on your shelf.');
+    expect(source).not.toContain(
+      'Your shelf no longer has the product pair that created this note.',
+    );
     expect(source).not.toContain('<Button label="Close" variant="ghost" onPress={onDismiss} />');
+  });
+
+  it('keeps safety-setting recovery status-aware and avoids dead replacement promises', () => {
+    const source = readAppRoute('conflict/[ruleId].tsx');
+
+    expect(source).toContain('setting if your status changed.');
+    expect(source).toContain("router.push('/settings/skin-profile?returnTo=shelf')");
+    expect(source).not.toContain("{' '}\n        {r.resolutionCopy}");
   });
 
   it('does not claim conflict-detail placement without scheduler output', () => {

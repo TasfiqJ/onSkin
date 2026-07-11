@@ -1,6 +1,7 @@
 import type { FunctionalTag } from '@onskin/types';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { STARTER_RULES, shippableRules } from '@/features/intelligence/rules';
 import { ROUTINE_CADENCE_REVIEWED } from '@/features/routine/reviewGate';
 
 import { CAPS_REVIEWED, frequencyCap, reviewedFrequencyCap } from './classes';
@@ -239,6 +240,10 @@ describe('orchestration. Maya (the spec example) + the complex cabinet', () => {
 });
 
 describe('orchestration. Safety + fallback', () => {
+  const reviewedSafetyRules = STARTER_RULES.filter((rule) => rule.interactionType === 'safety').map(
+    (rule) => ({ ...rule, reviewedBy: 'B-DERM-REVIEW' }),
+  );
+
   it('pregnancy suppresses the retinoid and routes to the safety note', () => {
     const { cycle, notes } = run(
       [active('r', 'Retinol', ['retinoid']), active('g', 'Glycolic', ['aha'])],
@@ -256,6 +261,68 @@ describe('orchestration. Safety + fallback', () => {
     });
     expect(cycle).toBeNull(); // no cycle (nothing left to cycle)
     expect(notes.join(' ')).toMatch(/pregnan|doctor/i); // ...but the safety message still reaches the user
+  });
+
+  it('applies safety exclusions before the closed production cadence gate', () => {
+    withDevFlag(false, () => {
+      const { cycle, notes } = orchestrate(
+        [active('r', 'Retinol', ['retinoid'])],
+        {
+          ...base,
+          pregnancy: true,
+          pregnancySafety: 'caution',
+          pregnancyStatus: 'pregnant',
+        },
+        shippableRules(reviewedSafetyRules),
+      );
+
+      expect(cycle).toBeNull();
+      expect(notes.join(' ')).toMatch(/pregnan|doctor/i);
+    });
+  });
+
+  it('does not surface unreviewed safety guidance in production', () => {
+    withDevFlag(false, () => {
+      const { cycle, notes } = run([active('r', 'Retinol', ['retinoid'])], {
+        ...base,
+        pregnancy: true,
+        pregnancySafety: 'caution',
+        pregnancyStatus: 'pregnant',
+      });
+
+      expect(cycle).toBeNull();
+      expect(notes).toEqual([]);
+    });
+  });
+
+  it('keeps unknown and prefer-not status cautious without asserting pregnancy', () => {
+    for (const pregnancyStatus of ['unknown', 'prefer_not'] as const) {
+      const { cycle, notes } = run(
+        [
+          active('r', 'Retinol', ['retinoid']),
+          { ...active('s', 'Salicylic serum', ['bha']), concentration: undefined },
+        ],
+        {
+          ...base,
+          pregnancySafety: 'caution',
+          pregnancyStatus,
+        },
+      );
+
+      expect(cycle).toBeNull();
+      expect(notes.join(' ')).toMatch(/confirm this safety setting/i);
+      expect(notes.join(' ')).not.toMatch(/you(?:'re| are) pregnant/i);
+    }
+  });
+
+  it('keeps confirmed-low BHA eligible on the cautious branch', () => {
+    const { cycle } = run([{ ...active('s', 'Salicylic 0.5%', ['bha']), concentration: 'low' }], {
+      ...base,
+      pregnancySafety: 'caution',
+      pregnancyStatus: 'prefer_not',
+    });
+
+    expect(cycle?.nights.some((night) => night.productId === 's')).toBe(true);
   });
 
   it('no potent actives → no cycle (a simple daily routine)', () => {

@@ -153,6 +153,24 @@ Status: launch-blocked
 - ODbL/Open Beauty Facts and CosIng source posture.
 - Onboarding quiz FTO review.
 - Clinical review for conflict rules, routine sequencing, pregnancy cautions, PAO defaults, recommendations, Skin Notes, and Ask corpus.
+- Obtain named clinical, cosmetic-chemistry, and legal/privacy review of the exact
+  pregnancy-safety contract before release: whether `Pregnant or trying` may
+  remain one answer; whether breastfeeding and `Prefer not to say` should use
+  the same cautious product filter; whether unreadable/missing status must stay
+  cautious; the full retinoid, hydroquinone, and confirmed-low/high/unknown BHA
+  matrix; tag-associated concentration evidence and the proposed BHA threshold;
+  the separate treatment/exfoliant cadence gate; replacement recommendations;
+  the setting, Plan, Today, conflict, and recommendation copy; and
+  health-data consent draft `draft-v1-2026-07-10`, which now explicitly names
+  pregnancy, trying to become pregnant, and breastfeeding status. Record each
+  approved safety/cadence rule with version, provenance, and `reviewedBy` through
+  the detached Phase 3 signoff workflow. Record each decision and source against
+  the exact build instead of treating the current conservative implementation
+  as clinical approval.
+- Have the same reviewers define a status-refresh interval and expired-status
+  behavior. Also decide the future multi-device conflict rule before enabling a
+  transactional server mirror. Until those decisions are recorded, V1 keeps the
+  encrypted local profile authoritative and does not guess a freshness window.
 - Cosmetic chemistry review for ingredient taxonomy, PAO defaults, routine compatibility assumptions, and product caveats.
 
 Evidence needed:
@@ -195,6 +213,25 @@ Status: needs-device-verification
   API 29 floor only if paid-user reach or issue-risk evidence justifies it.
 - Create EAS development or staging builds for iOS and Android.
 - Test on at least one physical iPhone and one physical Android device.
+- On supported iOS and Android builds, seed a shelf with retinoid,
+  hydroquinone, BHA at confirmed-low/high/unknown concentrations, and a neutral
+  moisturiser. Drive `No`, `Pregnant or trying`, `Breastfeeding`, and
+  `Prefer not to say` from the post-onboarding setting; inspect Plan and Today
+  after each save, force-stop/relaunch on prefer-not, restore `No`, and repeat
+  once offline plus once each with staging-only profile-read, profile-write, and
+  consent-write faults. Exercise current, legacy-version, wrong-hash, declined,
+  missing, and malformed local consent plus a server-only stale `none`. Verify
+  only a current version/hash grant plus explicit successful local `No` clears
+  caution; unreadable records remain byte-identical; Plan and Today never
+  disagree; excluded products never return as daily/cycle/ramp or repurchase
+  suggestions; a closed cadence-review gate never makes an active daily; no copy
+  infers pregnancy from prefer-not/unavailable; and regrant/rebuild/write failure
+  exposes non-destructive recovery with a usable exit. Repeat with Dynamic Type,
+  VoiceOver/TalkBack, and the oldest supported physical devices. Attach build,
+  device/OS, screenshots/video, sanitized logs, and named tester signoff. Local
+  supported-phone browser evidence is in
+  `test-results/human-e2e/2026-07-10/pregnancy-safety-status-current/` but does
+  not replace native or clinical evidence.
 - Provide real EAS build UUIDs or `expo.dev` build URLs, physical device model
   names with OS versions, and a named tester/reviewer signoff. Generic labels
   like `iPhone model / iOS version`, local build notes, pending IDs, and

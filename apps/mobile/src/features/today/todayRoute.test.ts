@@ -57,6 +57,11 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('const hasRealRoutine = Boolean(planData && !planData.isExample);');
     expect(source).toContain('const plan = hasRealRoutine ? planData?.plan : undefined;');
     expect(source).toContain('const cycle = hasRealRoutine ? (cycleData?.cycle ?? null) : null;');
+    expect(source).toContain('const safetyExcludedIds = new Set(');
+    expect(source).toContain('!safetyExcludedIds.has(cTonight.night.productId)');
+    expect(source).toContain('!step.cyclingNight && !safetyExcludedIds.has(step.productId)');
+    expect(source).toContain('Review pregnancy and breastfeeding setting');
+    expect(source).toContain("router.push('/settings/skin-profile?returnTo=today')");
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}");
     expect(source).toContain('<ReverseTrialBanner compact={compactPhone} />');
     expect(source).toContain('<ReverseTrialBanner compact={compactPhone} tone="night" />');

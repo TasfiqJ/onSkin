@@ -137,6 +137,7 @@ describe('Settings route contracts', () => {
       'settings/notifications.tsx',
       'settings/timing.tsx',
       'settings/beta-feedback.tsx',
+      'settings/skin-profile.tsx',
     ]) {
       const source = readAppRoute(route);
 
@@ -158,9 +159,35 @@ describe('Settings route contracts', () => {
       'settings/notifications.tsx',
       'settings/timing.tsx',
       'settings/beta-feedback.tsx',
+      'settings/skin-profile.tsx',
     ]) {
       expectTouchableRouteIcon(route);
     }
+  });
+
+  it('keeps the pregnancy and breastfeeding setting local-first and recoverable', () => {
+    const you = readAppRoute('(tabs)/you.tsx');
+    const route = readAppRoute('settings/skin-profile.tsx');
+
+    expect(you).toContain("label: 'Pregnancy & breastfeeding'");
+    expect(you).toContain("href: '/settings/skin-profile'");
+    expect(route).toContain('savePregnancyStatus(selected)');
+    expect(route).toContain("qc.setQueryData(['skinProfileBits'], next)");
+    expect(route).toContain("qc.invalidateQueries({ queryKey: ['shelf'] })");
+    expect(route).toContain('Choice not saved');
+    expect(route).toContain('Your previous setting is unchanged.');
+    expect(route).toContain('Skin profile unavailable');
+    expect(route).toContain('Privacy choice needs review');
+    expect(route).toContain('Review privacy choice');
+    expect(route).toContain('disabled={saving}');
+    expect(route).toContain("pathname: '/onboarding/consent'");
+    expect(route).toContain('label="Rebuild skin profile"');
+    expect(route).toContain("router.push('/onboarding/goals')");
+    expect(route).toContain("router.replace('/routine/plan')");
+    expect(route).toContain("router.replace('/(tabs)/shelf')");
+    expect(route).toContain("router.replace('/(tabs)/today')");
+    expect(route).toContain('min-h-[48px]');
+    expect(route).not.toContain('router.back()');
   });
 
   it('keeps beta feedback routed through categorized support handoff', () => {

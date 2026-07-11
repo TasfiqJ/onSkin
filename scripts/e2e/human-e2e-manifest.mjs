@@ -256,6 +256,13 @@ if (!privateEnvelopeCorruptionEvidenceDate) {
   console.error('FAIL Missing private-envelope corruption and app-lock recovery evidence.');
   process.exit(1);
 }
+const pregnancySafetyStatusEvidenceDate = latestEvidenceDateForFolder(
+  'pregnancy-safety-status-current',
+);
+if (!pregnancySafetyStatusEvidenceDate) {
+  console.error('FAIL Missing pregnancy-safety status consistency evidence.');
+  process.exit(1);
+}
 const dataExportDisclosureEvidenceDate = latestEvidenceDateForFolder(
   'data-export-local-photo-disclosure-current',
 );
@@ -292,6 +299,7 @@ const latestManifestEvidenceDate = [
   progressDirectRouteLockEvidenceDate,
   progressStorageRecoveryEvidenceDate,
   privateEnvelopeCorruptionEvidenceDate,
+  pregnancySafetyStatusEvidenceDate,
   dataExportDisclosureEvidenceDate,
   combinedDataExportEvidenceDate,
   accountUpgradeEvidenceDate,
@@ -609,6 +617,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Malformed private envelopes block and remain byte-identical through retry; restored data and authenticated app-lock reset recover the requested route.',
+  },
+  {
+    id: 'pregnancy-safety-status-supported-phone',
+    title: 'Pregnancy-safety status and routine exclusion consistency',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${pregnancySafetyStatusEvidenceDate}/pregnancy-safety-status-current`,
+    evidence: 'summary.json',
+    expected:
+      'All four encrypted status choices keep Plan and Today consistent; profile/consent write retries, legacy-consent regrant, missing-profile caution, prefer-not reload, and explicit-none restoration pass at 360 x 640 and 390 x 844.',
   },
   {
     id: 'data-export-local-photo-disclosure-supported-phone',

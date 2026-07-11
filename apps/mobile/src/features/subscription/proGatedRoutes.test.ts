@@ -142,7 +142,7 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('RouteIconButton');
     expect(plan).toContain('ScrollView');
     expect(plan).toContain('useWindowDimensions');
-    expect(plan).toContain('const compactPlan = height < 640');
+    expect(plan).toContain('const compactPlan = height <= 640');
     expect(plan).toContain('const planScrollBottomPadding = compactPlan ? 144 : 112');
     expect(plan).toContain('routineFirstInsightCopy,');
     expect(plan).toContain('routineInsightCount,');
@@ -150,9 +150,9 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain(
       'const firstInsight = plan ? routineFirstInsightCopy(plan, data?.isExample ?? true) : null;',
     );
-    expect(plan).toContain(
-      '{firstInsight ? <FirstInsightCard copy={firstInsight} compact={compactPlan} /> : null}',
-    );
+    expect(plan).toContain('onReviewSafety={');
+    expect(plan).toContain("? () => router.push('/settings/skin-profile?returnTo=plan')");
+    expect(plan).toContain('Review pregnancy and breastfeeding setting');
     expect(plan).toContain('const hasCycle = plan?.cycle != null');
     expect(plan).toContain("const hasBarrierStep = plan?.pm.some((s) => s.role === 'moisturiser')");
     expect(plan).toContain("{hasCycle ? 'Evening skin cycling' : 'Evening'}");

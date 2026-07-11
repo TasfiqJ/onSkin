@@ -8,6 +8,10 @@ import type {
 
 import type { DetectedConflict, SensitivityLevel } from '@/features/intelligence/engine';
 import { isReassuring } from '@/features/intelligence/engine';
+import {
+  pregnancySafetyReasonForProduct,
+  type PregnancySafetyMode,
+} from '@/features/intelligence/pregnancySafety';
 import { shippableRules, type ConflictRule } from '@/features/intelligence/rules';
 
 import { recTypeByKey, shippableRecTypes, type RecType } from './catalog';
@@ -27,6 +31,7 @@ export type RecShelfItem = {
   name: string;
   role: SequencingRole;
   tags: FunctionalTag[];
+  concentration?: 'low' | 'high';
   fragranced: boolean;
   /** Genuinely depleted/expiring (countdown or expired badge). The only replacement
    *  trigger sourced from the active shelf. (A separate "finished product" channel
@@ -38,6 +43,7 @@ export type RecShelfItem = {
 export type RecProfile = {
   sensitivity: SensitivityLevel;
   pregnancy: boolean;
+  pregnancySafety?: PregnancySafetyMode;
   goals: GoalId[];
 };
 
@@ -159,7 +165,7 @@ function makeFitContext(input: RecInput, trigger: RecommendationTrigger): FitCon
   const ownedTags = new Set<FunctionalTag>(input.shelf.flatMap((p) => p.tags));
   return {
     sensitivity: input.profile.sensitivity,
-    pregnancy: input.profile.pregnancy,
+    pregnancy: input.profile.pregnancySafety === 'caution' || input.profile.pregnancy,
     preferences: input.preferences,
     ownedTags,
     conflictTags: conflictTagsForShelf(ownedTags, input.rules ?? shippableRules()),
@@ -252,25 +258,45 @@ function typeRec(args: {
 }
 
 export function recommend(input: RecInput): RecResult {
-  const recTypes = shippableRecTypes(input.recTypes);
+  const rules = input.rules ?? shippableRules();
+  const pregnancySafety =
+    input.profile.pregnancySafety ?? (input.profile.pregnancy ? 'caution' : 'clear');
+  const safetyExcludedIds = new Set(
+    input.shelf
+      .filter((item) => pregnancySafetyReasonForProduct(item, pregnancySafety, rules) != null)
+      .map((item) => item.id),
+  );
+  const eligibleShelf = input.shelf.filter((item) => !safetyExcludedIds.has(item.id));
+  const eligibleConflicts = input.conflicts.filter(
+    (conflict) =>
+      (conflict.productAId == null || !safetyExcludedIds.has(conflict.productAId)) &&
+      (conflict.productBId == null || !safetyExcludedIds.has(conflict.productBId)),
+  );
+  const eligibleInput: RecInput = {
+    ...input,
+    shelf: eligibleShelf,
+    conflicts: eligibleConflicts,
+    rules,
+  };
+  const recTypes = shippableRecTypes(eligibleInput.recTypes);
   const dismissed = input.dismissed ?? new Set<string>();
   const out: Recommendation[] = [];
 
-  const ownedRoles = new Set(input.shelf.map((p) => p.role));
+  const ownedRoles = new Set(eligibleShelf.map((p) => p.role));
   const missingEssentials = ESSENTIALS.filter((r) => !ownedRoles.has(r));
   const hasNoEssentials = ESSENTIALS.every((r) => !ownedRoles.has(r));
-  const isBeginner = hasNoEssentials && input.shelf.length <= 1;
+  const isBeginner = hasNoEssentials && eligibleShelf.length <= 1;
 
   // 1 + 6. Gap / routine-completion. The missing essentials (SPF prioritised).
   // A true beginner gets a calm "start simple" starter routine; an established
   // routine gets individual gap prompts.
   const gapTrigger: RecommendationTrigger = isBeginner ? 'routine_completion' : 'gap';
   for (const role of missingEssentials) {
-    const best = bestTypeForRole(role, input, gapTrigger, recTypes);
+    const best = bestTypeForRole(role, eligibleInput, gapTrigger, recTypes);
     if (!best) continue;
     const why =
       role === 'spf'
-        ? whyCopy.gapSpf(input.profile.goals[0] ?? null)
+        ? whyCopy.gapSpf(eligibleInput.profile.goals[0] ?? null)
         : role === 'moisturiser'
           ? whyCopy.gapMoisturiser
           : whyCopy.gapCleanser;
@@ -280,12 +306,21 @@ export function recommend(input: RecInput): RecResult {
         : role === 'moisturiser'
           ? 'No moisturiser yet'
           : 'No cleanser yet';
-    out.push(typeRec({ trigger: gapTrigger, type: best.type, fit: best.fit, why, gapLine, input }));
+    out.push(
+      typeRec({
+        trigger: gapTrigger,
+        type: best.type,
+        fit: best.fit,
+        why,
+        gapLine,
+        input: eligibleInput,
+      }),
+    );
   }
 
   // 2. Replacement. A genuinely depleted/expiring product (docs/04). Shelf-anchored;
   // the existing replenishment sheet handles repurchase-or-better-fit (reuse).
-  for (const item of input.shelf) {
+  for (const item of eligibleShelf) {
     if (!item.expiring) continue;
     const id = `replacement:${item.id}`;
     out.push({
@@ -297,7 +332,7 @@ export function recommend(input: RecInput): RecResult {
       example: null,
       why: whyCopy.replacement(item.name),
       how: {
-        profile: profileSummary(input.profile),
+        profile: profileSummary(eligibleInput.profile),
         gap: `${item.name} is genuinely running out`,
         evidence: 'From your shelf. Opened a while ago',
         fit: 'Repurchase, or a better-fit alternative',
@@ -317,7 +352,7 @@ export function recommend(input: RecInput): RecResult {
 
   // 3. Conflict resolution. A non-conflicting alternative to a clashing product
   // (docs/02). Surfaced as an OPTION; the conflict sheet holds the full detail.
-  const topConflict = input.conflicts.find(
+  const topConflict = eligibleConflicts.find(
     (c) => !isReassuring(c) && c.rule.interactionType !== 'safety' && c.computedSeverity !== 'none',
   );
   if (topConflict && topConflict.productAName && topConflict.productBName) {
@@ -331,7 +366,7 @@ export function recommend(input: RecInput): RecResult {
       example: null,
       why: whyCopy.conflict(topConflict.productAName, topConflict.productBName),
       how: {
-        profile: profileSummary(input.profile),
+        profile: profileSummary(eligibleInput.profile),
         gap: `${topConflict.productAName} × ${topConflict.productBName} on your shelf`,
         evidence: topConflict.rule.resolutionCopy,
         fit: 'Would let you simplify your routine',
@@ -352,18 +387,18 @@ export function recommend(input: RecInput): RecResult {
   // 4. Better-fit. An owned fragranced product for sensitive skin (or a fragrance-
   // free preference): a gentler alternative, as an OPTION not a mandate.
   if (
-    input.profile.sensitivity === 'sensitive' ||
-    input.preferences.values.includes('fragrance_free')
+    eligibleInput.profile.sensitivity === 'sensitive' ||
+    eligibleInput.preferences.values.includes('fragrance_free')
   ) {
-    const fragranced = input.shelf.find(
+    const fragranced = eligibleShelf.find(
       (p) => p.fragranced && (p.role === 'cleanser' || p.role === 'moisturiser'),
     );
     if (fragranced) {
-      const best = bestTypeForRole(fragranced.role, input, 'better_fit', recTypes);
+      const best = bestTypeForRole(fragranced.role, eligibleInput, 'better_fit', recTypes);
       // Prefer the fragrance-free variant explicitly.
       const ff = recTypes.find((t) => t.role === fragranced.role && /fragrance-free/i.test(t.what));
       const chosen = ff
-        ? { type: ff, fit: fitScore(ff, makeFitContext(input, 'better_fit')) }
+        ? { type: ff, fit: fitScore(ff, makeFitContext(eligibleInput, 'better_fit')) }
         : best;
       if (chosen && chosen.fit.score != null) {
         const rec = typeRec({
@@ -372,7 +407,7 @@ export function recommend(input: RecInput): RecResult {
           fit: chosen.fit,
           why: whyCopy.betterFit(fragranced.name),
           gapLine: `${fragranced.name} is fragranced`,
-          input,
+          input: eligibleInput,
           relatedProductId: fragranced.id,
         });
         out.push({ ...rec, footLabel: 'Better fit', footIsEvidence: false });
@@ -382,15 +417,15 @@ export function recommend(input: RecInput): RecResult {
 
   // 5. Goal-driven. The first set goal nothing addresses yet, one active at a time
   // (docs/09 §4). Pregnancy-unsafe actives are excluded by FIT (→ a safe alternative).
-  for (const goal of input.profile.goals) {
+  for (const goal of eligibleInput.profile.goals) {
     const served = GOAL_SERVED_BY[goal];
     const addressed =
-      input.shelf.some((p) => p.tags.some((t) => served.tags.includes(t))) ||
-      input.shelf.some(
+      eligibleShelf.some((p) => p.tags.some((t) => served.tags.includes(t))) ||
+      eligibleShelf.some(
         (p) => served.roles.includes(p.role) && (goal === 'hydration' || goal === 'barrier_repair'),
       );
     if (addressed) continue;
-    const best = bestTypeForGoal(goal, input, recTypes);
+    const best = bestTypeForGoal(goal, eligibleInput, recTypes);
     if (!best) continue;
     out.push(
       typeRec({
@@ -399,7 +434,7 @@ export function recommend(input: RecInput): RecResult {
         fit: best.fit,
         why: whyCopy.goal(goal),
         gapLine: `Nothing addresses your ${goalShort(goal)} goal yet`,
-        input,
+        input: eligibleInput,
       }),
     );
     break; // one goal active at a time (restraint)

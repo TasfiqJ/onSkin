@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 import { router } from 'expo-router';
-import { ScrollView, View, useWindowDimensions } from 'react-native';
+import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { startCycleToday } from '@/features/scheduler/cycleStore';
@@ -112,7 +112,15 @@ function EveningRow({
   );
 }
 
-function FirstInsightCard({ compact, copy }: { compact: boolean; copy: RoutineFirstInsightCopy }) {
+function FirstInsightCard({
+  compact,
+  copy,
+  onReviewSafety,
+}: {
+  compact: boolean;
+  copy: RoutineFirstInsightCopy;
+  onReviewSafety?: () => void;
+}) {
   return (
     <View
       className={
@@ -140,6 +148,21 @@ function FirstInsightCard({ compact, copy }: { compact: boolean; copy: RoutineFi
       >
         {copy.body}
       </Text>
+      {onReviewSafety ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Review pregnancy and breastfeeding setting"
+          onPress={onReviewSafety}
+          className="mt-2 min-h-[44px] flex-row items-center justify-between border-t border-hairline pt-2"
+        >
+          <Text className="font-sans-semibold text-[13px]" style={{ color: colors.clayDeep }}>
+            Review setting
+          </Text>
+          <Text aria-hidden style={{ color: colors.clayDeep }}>
+            ›
+          </Text>
+        </Pressable>
+      ) : null}
     </View>
   );
 }
@@ -149,7 +172,7 @@ export default function PlanScreen() {
   const { data } = usePlan();
   const plan = data?.plan;
   const trackedPlanView = useRef(false);
-  const compactPlan = height < 640;
+  const compactPlan = height <= 640;
   const planScrollBottomPadding = compactPlan ? 144 : 112;
 
   async function startToday() {
@@ -161,6 +184,7 @@ export default function PlanScreen() {
   const retinoid = plan?.pm.find((s) => s.role === 'treatment');
   const retRamp = plan?.ramp.find((r) => r.name === retinoid?.name);
   const hasCycle = plan?.cycle != null;
+  const hasSafetyExclusions = Boolean(plan?.safetyExclusions.length);
   const hasBarrierStep = plan?.pm.some((s) => s.role === 'moisturiser') ?? false;
   const hasVitCSynergy = plan?.conflicts.some(
     (c) =>
@@ -236,7 +260,17 @@ export default function PlanScreen() {
               Your routine, in order.
             </Text>
 
-            {firstInsight ? <FirstInsightCard copy={firstInsight} compact={compactPlan} /> : null}
+            {firstInsight ? (
+              <FirstInsightCard
+                copy={firstInsight}
+                compact={compactPlan}
+                onReviewSafety={
+                  hasSafetyExclusions
+                    ? () => router.push('/settings/skin-profile?returnTo=plan')
+                    : undefined
+                }
+              />
+            ) : null}
 
             {/* Morning card */}
             <View
@@ -281,6 +315,7 @@ export default function PlanScreen() {
             </View>
 
             {/* Evening card (skin cycling). Dark */}
+            {compactPlan && hasSafetyExclusions ? <View style={{ height: 34 }} /> : null}
             <View
               className={compactPlan ? 'mt-2.5 rounded-[22px]' : 'mt-3 rounded-[22px]'}
               style={{

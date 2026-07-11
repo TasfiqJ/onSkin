@@ -1,9 +1,11 @@
+import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { HEALTH_DATA_CONSENT } from './consentCopy';
 import {
   declineHealthDataCollectionConsent,
   grantHealthDataCollectionConsent,
+  resetHealthProfileConsumers,
 } from './healthConsent';
 
 const mocks = vi.hoisted(() => ({
@@ -63,6 +65,19 @@ describe('health-data onboarding consent', () => {
     expect(mocks.setHealthDataCollectionConsentLocal.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.recordConsent.mock.invocationCallOrder[0],
     );
+  });
+
+  it('clears cached profile consumers immediately after consent is declined', async () => {
+    const queryClient = new QueryClient();
+    queryClient.setQueryData(['skinProfileBits'], { pregnancySafety: 'clear' });
+    queryClient.setQueryData(['shelf'], { items: ['retinoid'] });
+    queryClient.setQueryData(['ramp'], { items: ['retinoid'] });
+
+    await resetHealthProfileConsumers(queryClient);
+
+    expect(queryClient.getQueryData(['skinProfileBits'])).toBeUndefined();
+    expect(queryClient.getQueryData(['shelf'])).toBeUndefined();
+    expect(queryClient.getQueryData(['ramp'])).toBeUndefined();
   });
 
   it('keeps pre-account quiz entry local-first when the ledger is unavailable', async () => {

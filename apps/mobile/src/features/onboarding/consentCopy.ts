@@ -4,11 +4,11 @@
  * WHAT / WHY / NEVER strings are plain-language draft copy grounded in the source
  * docs; the ledger text remains clearly marked as pending legal review.
  */
-export const CONSENT_COPY_VERSION = 'draft-v0-2026-07-05';
+export const CONSENT_COPY_VERSION = 'draft-v1-2026-07-10';
 
 export const HEALTH_DATA_CONSENT = {
   version: CONSENT_COPY_VERSION,
-  what: 'Your quiz answers, skin goals, sensitivities, and products you add.',
+  what: 'Your quiz answers, skin goals, sensitivities, whether you are pregnant, breastfeeding, or trying to become pregnant, and products you add.',
   why: 'To build your routine, check product conflicts, and adjust timing around your shelf.',
   never: 'Sold, shared for ads, or used to train AI.',
   footnote:
@@ -23,6 +23,7 @@ export const HEALTH_DATA_CONSENT = {
   // Exact text recorded + hashed into the immutable consents ledger.
   fullText:
     '[DRAFT. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent. ' +
+    'Covers quiz answers, skin goals, sensitivities, whether you are pregnant, breastfeeding, or trying to become pregnant, and added products. ' +
     'This consent covers collection only; sharing is requested separately.',
   declineText:
     '[DRAFT. Pending legal review B-PRIVACY-COPY] Health-data COLLECTION consent declined before quiz access.',

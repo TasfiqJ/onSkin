@@ -33,4 +33,20 @@ describe('routine plan profile label', () => {
       ),
     ).toBe('BUILT FOR DRY, SENSITIVE, PREGNANCY-AWARE SKIN');
   });
+
+  it('labels an unconfirmed cautious profile without inferring pregnancy', () => {
+    expect(
+      routinePlanProfileLabel(
+        {
+          sensitivity: 'neutral',
+          moisture: 'balanced',
+          pregnancy: false,
+          pregnancySafety: 'caution',
+          pregnancyStatus: 'prefer_not',
+          goals: [],
+        },
+        false,
+      ),
+    ).toBe('BUILT FOR SAFETY-FIRST SKIN');
+  });
 });

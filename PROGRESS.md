@@ -6,6 +6,42 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Closed a Critical pregnancy-safety split-brain and fail-open path, then
+  resolved ten independent adversarial review findings before commit. Shelf,
+  Plan, scheduler, Today, recommendations, and conflict explanations now consume
+  one consent-bound local-first profile contract. Malformed/unreadable profile
+  or consent data is preserved and cannot fall through to a stale server
+  `none`; a genuinely server-only profile contributes non-safety axes/goals but
+  remains unknown/cautious. Only a current version/hash-matched consent grant and
+  an explicit local `none` clear caution. Prefer-not and unavailable states do
+  not create a literal Pregnancy conflict or affirmative copy. Exclusions are
+  derived from launch-gated rule records rather than a parallel unreviewed table.
+  Reviewed/dev rules remove retinoids, hydroquinone, and BHA not unambiguously
+  confirmed low before sequence/cycle/ramp/replacement recommendations/Today.
+  Tag-associated parsing prevents an unrelated percentage from clearing BHA.
+  Catalog ingredient boundaries remain explicit, consent decline immediately
+  resets cached profile consumers, and safety-excluded products no longer count
+  as recommendation ownership, conflict context, or goal coverage.
+  When cadence review is closed, treatment/exfoliant products are withheld
+  instead of becoming daily PM steps. The post-onboarding editor disables
+  competing choices during writes, supports current-consent regrant, preserves
+  return destinations, and invalidates Shelf/profile/ramp after edits or a full
+  rebuild; conflict recovery no longer promises an unavailable substitute or
+  falsely blames a removed product pair. Focused consent, profile, storage,
+  concentration, generation, scheduler, recommendation, conflict, Plan, Today,
+  and source contracts pass. Headless Chrome at 360 x 640 and 390 x 844 drives
+  `none -> pregnant/trying -> breastfeeding -> prefer_not -> none`, retries
+  one-shot profile and consent write failures, reloads encrypted prefer-not,
+  regrants legacy consent, recovers a missing profile, verifies matching
+  Plan/Today exclusions plus explicit-clear restoration and 200% text pressure,
+  and records zero sub-44 controls, overflow, vendor requests, dialogs, page
+  errors, or disallowed browser logs. Evidence is in
+  `test-results/human-e2e/2026-07-10/pregnancy-safety-status-current/`.
+  Production remains blocked from unreviewed safety/cadence claims; native
+  device/accessibility proof and named clinical, chemistry, and legal/privacy
+  review remain Tas-owned launch gates. Status freshness and transactional
+  multi-device reconciliation remain explicit open questions.
+
 - Closed a Critical private-storage corruption and app-lock fail-open path.
   Private-KV reads now distinguish current, malformed, unsupported, legacy, and
   separately owned Supabase auth storage by both structure and key authority.

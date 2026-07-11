@@ -61,6 +61,7 @@ const defaultRoutes = [
   '/settings/subscription',
   '/settings/notifications',
   '/settings/timing',
+  '/settings/skin-profile',
   '/settings/privacy',
   '/trend/optin',
   '/trend/fairness',
