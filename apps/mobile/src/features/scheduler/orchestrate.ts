@@ -52,6 +52,7 @@ export type SchedulerActive = {
   id: string;
   name: string;
   tags: FunctionalTag[];
+  category?: string | null;
   concentration?: 'low' | 'high';
   /** Recently added → staged for phased introduction (docs/05 §4). */
   isNew?: boolean;
@@ -108,7 +109,11 @@ function buildPushes(potent: { active: Classified; freq: number }[]): Push[] {
   const order: ActiveClass[] = ['aha', 'bha', 'retinoid'];
   const queues = potent
     .map((p) => ({ active: p.active, remaining: p.freq }))
-    .sort((a, b) => order.indexOf(a.active.cls) - order.indexOf(b.active.cls));
+    .sort(
+      (a, b) =>
+        order.indexOf(a.active.cls) - order.indexOf(b.active.cls) ||
+        a.active.id.localeCompare(b.active.id),
+    );
   const out: Push[] = [];
   let any = true;
   while (any) {
@@ -149,7 +154,7 @@ export function orchestrate(
     .map((a) => ({
       id: a.id,
       name: a.name,
-      cls: classifyActiveClass(a.tags),
+      cls: classifyActiveClass(a.tags, a.category),
       isNew: !!a.isNew,
     }));
 

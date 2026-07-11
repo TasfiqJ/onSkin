@@ -66,4 +66,4 @@ Introduce one consent-bound local-first `ProfileBits` reader. Preserve malformed
 
 - Untested branches: Physical iOS/Android persistence, secure-storage fault injection, Dynamic Type, VoiceOver, and TalkBack.
 - Missing fixtures: The browser UI fixture uses retinoid and BHA; hydroquinone, reviewed/unreviewed rule states, server-only stale `none`, and confirmed-low/high/ambiguous BHA are covered by focused tests.
-- Follow-up needed: Named clinical, cosmetic-chemistry, and legal/privacy review; a reviewed status-refresh interval; future multi-device reconciliation; and a separate implementation slice for displaying multiple simultaneous non-cycle treatment families in clear-mode Plan/Today UI.
+- Follow-up needed: Named clinical, cosmetic-chemistry, and legal/privacy review; a reviewed status-refresh interval; and future multi-device reconciliation. The separate clear-mode multi-treatment Plan/Today slice is now covered by `2026-07-10-multi-active-plan-today-responsive.md`.

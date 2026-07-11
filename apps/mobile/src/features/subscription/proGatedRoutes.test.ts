@@ -153,13 +153,33 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('onReviewSafety={');
     expect(plan).toContain("? () => router.push('/settings/skin-profile?returnTo=plan')");
     expect(plan).toContain('Review pregnancy and breastfeeding setting');
-    expect(plan).toContain('const hasCycle = plan?.cycle != null');
+    expect(plan).toContain("import { useCycle } from '@/features/scheduler/useCycle';");
+    expect(plan).toContain('const { data: cycleData } = useCycle();');
+    expect(plan).toContain(
+      'const canonicalCycle = data && !data.isExample ? (cycleData?.cycle ?? null) : null;',
+    );
+    expect(plan).toContain('cycleActiveSummaries(canonicalCycle)');
+    expect(plan).toContain('cycleRecoveryNightNumbers(canonicalCycle)');
+    expect(plan).toContain(
+      'const hasCycle = data?.isExample ? plan?.cycle != null : canonicalCycle != null;',
+    );
     expect(plan).toContain("const hasBarrierStep = plan?.pm.some((s) => s.role === 'moisturiser')");
     expect(plan).toContain("{hasCycle ? 'Evening skin cycling' : 'Evening'}");
     expect(plan).toContain('{hasCycle ? (');
+    expect(plan).toContain('data?.isExample ? (');
+    expect(plan).toContain('cycleSummaries.map((summary) =>');
+    expect(plan).toContain('key={summary.productId}');
+    expect(plan).toContain('nightLabel={`Night ${summary.nightNumbers[0]}`}');
+    expect(plan).toContain('name={summary.name}');
+    expect(plan).toContain('classLabel(summary.className)');
+    expect(plan).toContain('additionalNightSuffix(');
+    expect(plan).toContain('summary.nightNumbers,');
+    expect(plan).toContain('Preparing your cycle.');
+    expect(plan).not.toContain("const exfoliant = plan?.pm.find((s) => s.role === 'exfoliant')");
+    expect(plan).not.toContain("const retinoid = plan?.pm.find((s) => s.role === 'treatment')");
     expect(plan).toContain('nightLabel="Night 1"');
     expect(plan).toContain('nightLabel="Night 2"');
-    expect(plan).toContain('`${retRamp.state.freqPerWeek} times/week to start`');
+    expect(plan).toContain('`${exampleRetinoidRamp.state.freqPerWeek} times/week to start`');
     expect(plan).toContain('nightLabel="Nights 3-4"');
     expect(plan).toContain('const compactNumberLabel = compact && /^\\d+$/.test(nightLabel);');
     expect(plan).toContain(

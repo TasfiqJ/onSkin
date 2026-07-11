@@ -161,13 +161,51 @@ export function classifyRole(product: ClassifiableProduct): SequencingRole | nul
   return null;
 }
 
+export type RoutineCadenceDisposition = 'stable' | 'daily_am' | 'cycle' | 'withheld';
+
+/**
+ * The cadence families currently defined by docs/05. A treatment role alone is
+ * not enough evidence to invent timing: known cycle classes rotate at night,
+ * benzoyl peroxide uses the documented AM default, and unsupported treatment
+ * families remain withheld until an explicit reviewed cadence exists.
+ */
+export function routineCadenceDisposition(product: ClassifiableProduct): RoutineCadenceDisposition {
+  const tags = new Set(product.tags);
+  if (
+    tags.has('retinoid') ||
+    tags.has('aha') ||
+    tags.has('bha') ||
+    product.category === 'retinoid_serum'
+  ) {
+    return 'cycle';
+  }
+  if (tags.has('benzoyl_peroxide') || product.category === 'benzoyl_peroxide') {
+    return 'daily_am';
+  }
+
+  const role = classifyRole(product);
+  if (role === 'treatment' || role === 'exfoliant') return 'withheld';
+  return 'stable';
+}
+
 export type SequencedStep = {
   productId: string;
   name: string;
   role: SequencingRole;
+  cadence: Exclude<RoutineCadenceDisposition, 'withheld'>;
   order: number;
   instruction: string;
 };
+
+function instructionFor(
+  role: SequencingRole,
+  cadence: Exclude<RoutineCadenceDisposition, 'withheld'>,
+): string {
+  if (cadence === 'daily_am') {
+    return 'Use in the morning. Follow the product label directions.';
+  }
+  return SEQUENCING_RULES[role].notes;
+}
 
 /** Which phase(s) a role belongs to. `either` => appears in BOTH AM and PM
  *  (cleanser, moisturiser, toner). Resolution overrides (separate_am_pm) handled
@@ -185,21 +223,35 @@ export function sequencePhase(
   phase: 'am' | 'pm',
 ): SequencedStep[] {
   const eligible = products
-    .map((p) => ({ p, role: classifyRole(p) }))
-    .filter((item): item is { p: ClassifiableProduct; role: SequencingRole } => item.role != null)
-    .filter(({ role }) => {
+    .map((p) => ({ p, role: classifyRole(p), cadence: routineCadenceDisposition(p) }))
+    .filter(
+      (
+        item,
+      ): item is {
+        p: ClassifiableProduct;
+        role: SequencingRole;
+        cadence: Exclude<RoutineCadenceDisposition, 'withheld'>;
+      } => item.role != null && item.cadence !== 'withheld',
+    )
+    .filter(({ role, cadence }) => {
+      if (cadence === 'daily_am') return phase === 'am';
       const rule = SEQUENCING_RULES[role];
       const inPhase = phasesFor(role).includes(phase);
       const phaseEligible = phase === 'am' ? rule.amEligible : rule.pmEligible;
       return inPhase && phaseEligible;
     })
-    .sort((a, b) => SEQUENCING_RULES[a.role].basePriority - SEQUENCING_RULES[b.role].basePriority);
+    .sort(
+      (a, b) =>
+        SEQUENCING_RULES[a.role].basePriority - SEQUENCING_RULES[b.role].basePriority ||
+        a.p.id.localeCompare(b.p.id),
+    );
 
-  return eligible.map(({ p, role }, i) => ({
+  return eligible.map(({ p, role, cadence }, i) => ({
     productId: p.id,
     name: p.name,
     role,
+    cadence,
     order: (i + 1) * 10,
-    instruction: SEQUENCING_RULES[role].notes,
+    instruction: instructionFor(role, cadence),
   }));
 }

@@ -121,9 +121,9 @@ describe('routine first insight copy', () => {
         false,
       ),
     ).toEqual({
-      eyebrow: 'Clinical review gate',
-      title: 'Active timing withheld',
-      body: 'Retinol 0.3% stays off Today until its cadence guidance is reviewed.',
+      eyebrow: 'Routine timing',
+      title: 'Active timing not set',
+      body: 'Retinol 0.3% does not have reviewed routine timing yet, so it stays off Today for now.',
     });
   });
 

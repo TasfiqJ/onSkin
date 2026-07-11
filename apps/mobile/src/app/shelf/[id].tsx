@@ -19,6 +19,7 @@ import { paoSourceLabel } from '@/features/shelf/labels';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { useShelf } from '@/features/shelf/useShelf';
 import { usePlan } from '@/features/routine/usePlan';
+import { useCycle } from '@/features/scheduler/useCycle';
 import { localDateString } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -54,7 +55,7 @@ const BEST_BEFORE: { label: string; monthsAhead: number }[] = [
   { label: 'in 2 yr', monthsAhead: 24 },
 ];
 
-type RoutineUsage = { phase: string; night?: number };
+type RoutineUsage = { phase: string; cycleNightNumbers?: number[] };
 type ProductDetailSheet = 'manage' | 'report' | null;
 type CatalogReportFeedback = { title: string; message: string };
 
@@ -114,7 +115,11 @@ function RoutineUsageCard({ usage }: { usage: RoutineUsage | null }) {
               <Text variant="bodySm" className="font-sans-semibold">
                 {usage.phase}
               </Text>
-              {usage.night ? `. Cycling night ${usage.night}.` : '.'}
+              {usage.cycleNightNumbers?.length
+                ? `. Cycling night${
+                    usage.cycleNightNumbers.length === 1 ? '' : 's'
+                  } ${usage.cycleNightNumbers.join(', ')}.`
+                : '.'}
             </>
           ) : (
             'Not placed in a routine yet.'
@@ -238,6 +243,7 @@ export default function ProductDetailScreen() {
   const insets = useSafeAreaInsets();
   const { data } = useShelf();
   const plan = usePlan();
+  const { data: cycleData } = useCycle();
   const m = useShelfMutations();
   const [editOpen, setEditOpen] = useState(false);
   const [bestOpen, setBestOpen] = useState(false);
@@ -319,8 +325,15 @@ export default function ProductDetailScreen() {
   let usage: RoutineUsage | null = null;
   if (plan.data && !plan.data.isExample) {
     const pm = plan.data.plan.pm.find((s) => s.productId === id);
-    if (pm) usage = { phase: 'Evening routine', night: pm.cyclingNight };
-    else if (plan.data.plan.am.find((s) => s.productId === id))
+    if (pm) {
+      const cycleNightNumbers = cycleData?.cycle?.nights
+        .filter((night) => night.productId === id)
+        .map((night) => night.index + 1);
+      usage = {
+        phase: 'Evening routine',
+        cycleNightNumbers: cycleNightNumbers?.length ? cycleNightNumbers : undefined,
+      };
+    } else if (plan.data.plan.am.find((s) => s.productId === id))
       usage = { phase: 'Morning routine' };
   }
 

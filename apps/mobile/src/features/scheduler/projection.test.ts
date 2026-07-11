@@ -1,7 +1,15 @@
 import { afterAll, describe, expect, it } from 'vitest';
 
 import { orchestrate, type SchedulerProfile } from './orchestrate';
-import { addDays, nextSlotDate, nightFor, nightIndex, weekAhead } from './projection';
+import {
+  addDays,
+  cycleActiveSummaries,
+  cycleRecoveryNightNumbers,
+  nextSlotDate,
+  nightFor,
+  nightIndex,
+  weekAhead,
+} from './projection';
 
 // The projection algorithm (docs/05 §3): pure, local-day aware, safe modulo.
 // The cycle fixture uses unreviewed cadence rules, which are dev-only until B-DERM-REVIEW.
@@ -52,5 +60,24 @@ describe('projection (docs/05 §3)', () => {
       expect(next).not.toBeNull();
       expect(nightFor(cycle, anchor, next!).slot).toBe('exfoliate');
     }
+  });
+
+  it('summarises every scheduled product and all of its cycle nights', () => {
+    const summaries = cycleActiveSummaries(cycle);
+
+    expect(summaries.map((summary) => summary.productId)).toEqual(['g', 'r']);
+    expect(summaries.every((summary) => summary.nightNumbers.length > 0)).toBe(true);
+    expect(summaries.flatMap((summary) => summary.nightNumbers)).toHaveLength(
+      cycle.nights.filter((night) => night.productId != null).length,
+    );
+  });
+
+  it('returns every recovery night as a one-based display number', () => {
+    const recoveryNights = cycleRecoveryNightNumbers(cycle);
+
+    expect(recoveryNights).toEqual(
+      cycle.nights.filter((night) => night.slot === 'recover').map((night) => night.index + 1),
+    );
+    expect(recoveryNights.every((night) => night >= 1)).toBe(true);
   });
 });

@@ -18,7 +18,7 @@ export type ActiveClass =
   | 'other';
 
 /** A product's scheduler class. The most potent tag wins (docs/05 §4). */
-export function classifyActiveClass(tags: FunctionalTag[]): ActiveClass {
+export function classifyActiveClass(tags: FunctionalTag[], category?: string | null): ActiveClass {
   const t = new Set(tags);
   if (t.has('retinoid')) return 'retinoid';
   if (t.has('aha')) return 'aha';
@@ -26,6 +26,8 @@ export function classifyActiveClass(tags: FunctionalTag[]): ActiveClass {
   if (t.has('benzoyl_peroxide')) return 'benzoyl_peroxide';
   if (t.has('vitamin_c')) return 'vitamin_c';
   if (t.has('niacinamide')) return 'niacinamide';
+  if (category === 'retinoid_serum') return 'retinoid';
+  if (category === 'benzoyl_peroxide') return 'benzoyl_peroxide';
   return 'other';
 }
 

@@ -74,6 +74,7 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
       id: i.engineProduct.id,
       name: i.engineProduct.name,
       tags: i.engineProduct.tags,
+      category: i.category,
       concentration: i.engineProduct.concentration,
       // Recently added → phased introduction, unless the user opted to start it
       // now ("add it now anyway", docs/05 §6.2).

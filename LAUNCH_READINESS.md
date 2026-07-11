@@ -18,6 +18,21 @@ clearance and not a real launch catalog.
 
 Fresh verification through 2026-07-10:
 
+- The required `Canonical multi-active Plan and Today consistency` gate now
+  proves one product-level scheduler drives Plan, Today, cycle, and product
+  detail. Supported-phone evidence at 360 x 640 and 390 x 844 covers two
+  retinoids, AHA, BHA, BP in AM, two explicitly withheld undefined cadences,
+  exactly one PM active, reload persistence, and responsive fixes for long
+  cycles with zero final overflow, sub-44 controls, tab intersections, or
+  browser errors. Evidence:
+  `test-results/human-e2e/2026-07-10/multi-active-plan-today-current/`.
+  Hydroquinone/copper timing and physical-device accessibility remain blocked
+  on named review and native QA.
+- The required `Pregnancy-safety status and routine exclusion consistency`
+  gate proves all encrypted status choices, consent/profile retry, legacy
+  consent regrant, missing-profile caution, prefer-not reload, and explicit
+  clear restoration keep Plan and Today aligned. Evidence:
+  `test-results/human-e2e/2026-07-10/pregnancy-safety-status-current/`.
 - Account transitions now isolate memory and persisted private data before the
   next identity can render. The root unmounts Offline Sync, app lock, private
   storage, and every route during cleanup; a domain-separated hash detects a
@@ -292,7 +307,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 185 mobile test files / 1940 tests.
+- `npm test` passed: 186 mobile test files / 1951 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -323,7 +338,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 185 test files / 1940 tests.
+- `npm --workspace apps/mobile run test` passed: 186 test files / 1951 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain

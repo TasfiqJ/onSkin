@@ -6,6 +6,26 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Closed the clear-mode multi-treatment schedule split. Real Plan, Today,
+  cycle, and product detail now share the canonical per-product scheduler;
+  same-class ties are stable by product ID. Every AHA/BHA/retinoid appears with
+  its actual cycle nights, benzoyl peroxide uses the documented AM default, and
+  hydroquinone/copper peptide stay explicitly off Today until named reviewers
+  approve exact cadence rather than inheriting false retinoid instructions.
+  Product detail shows the same assigned nights and Today PM combines stable
+  basics with exactly tonight's active. The first browser pass caught all 17
+  cycle slots compressed into the phone strip, 390 px label ellipses, and an AM
+  teaser intersecting the floating tab zone; the final UI uses the seven-night
+  projection, two-line labels below 430 px, and a height-aware secondary teaser.
+  Focused regression tests pass 88/88; root typecheck/lint and the full suite
+  pass 186 mobile test files / 1951 tests. Codex in-app browser evidence at
+  360 x 640 and 390 x 844 verifies the ten-product explicit-clear fixture,
+  BP completion persistence, exact Plan/Today/product-detail agreement, zero
+  horizontal overflow, sub-44 controls, tab intersections, or browser errors.
+  Evidence is in
+  `test-results/human-e2e/2026-07-10/multi-active-plan-today-current/`.
+  Physical iOS/Android Dynamic Type and named cadence review remain Tas-owned.
+
 - Closed a Critical pregnancy-safety split-brain and fail-open path, then
   resolved ten independent adversarial review findings before commit. Shelf,
   Plan, scheduler, Today, recommendations, and conflict explanations now consume

@@ -1,0 +1,26 @@
+{
+  "clientWidth": 390,
+  "controls": [
+    {
+      "bottom": 51.987258434295654,
+      "height": 47.99757385253906,
+      "label": "Back",
+      "top": 3.989684581756592,
+      "visible": true,
+      "width": 47.99757385253906
+    },
+    {
+      "bottom": 828.6711311340332,
+      "height": 55.99211502075195,
+      "label": "Start today",
+      "top": 772.6790161132812,
+      "visible": true,
+      "width": 342.293701171875
+    }
+  ],
+  "horizontalOverflow": false,
+  "innerHeight": 845,
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "sub44": []
+}

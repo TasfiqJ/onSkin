@@ -127,7 +127,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 185 mobile test files / 1940 tests. The human-simulated E2E manifest now
+covers 186 mobile test files / 1951 tests. The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
@@ -150,6 +150,15 @@ is in
 `test-results/human-e2e/2026-07-10/onboarding-account-isolation-current/` and
 proves a forced cleanup failure stays gated before signed-out direct Shelf and
 Today expose no account A product names.
+The required `Pregnancy-safety status and routine exclusion consistency` gate
+is in
+`test-results/human-e2e/2026-07-10/pregnancy-safety-status-current/`. The
+required `Canonical multi-active Plan and Today consistency` gate is in
+`test-results/human-e2e/2026-07-10/multi-active-plan-today-current/` and proves
+BP AM placement, every supported cycle family, explicit undefined-cadence
+withholding, one-active PM projection, reload persistence, and supported-phone
+geometry. Neither local gate replaces named clinical/cosmetic review or native
+device accessibility evidence.
 The baseline still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also

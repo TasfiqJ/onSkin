@@ -33,6 +33,8 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('const compactRecommendationPrompt = height < 860');
     expect(source).toContain('const shortEmptyRoutine = compactPhone && height < 600;');
     expect(source).toContain('const showRecommendations = hasRealRoutine && height >= 500;');
+    expect(source).toContain('const showTonightTeaser =');
+    expect(source).toContain('(cadenceWithheldCount === 0 || height >= 932);');
     expect(source).toContain('function EmptyRoutineCard');
     expect(source).toContain('short = false');
     expect(source).toContain('const tight = compact && short;');
@@ -59,7 +61,13 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('const cycle = hasRealRoutine ? (cycleData?.cycle ?? null) : null;');
     expect(source).toContain('const safetyExcludedIds = new Set(');
     expect(source).toContain('!safetyExcludedIds.has(cTonight.night.productId)');
-    expect(source).toContain('!step.cyclingNight && !safetyExcludedIds.has(step.productId)');
+    expect(source).toContain("step.cadence !== 'cycle' && !safetyExcludedIds.has(step.productId)");
+    expect(source).not.toContain('step.cyclingNight');
+    expect(source).toContain('function CadenceWithheldNotice');
+    expect(source).toContain('const cadenceWithheldCount = plan?.cadenceWithheld.length ?? 0;');
+    expect(source).toContain('Timing is not set for ${count} ${productLabel}.');
+    expect(source).toContain("router.push('/routine/plan')");
+    expect(source.match(/<CadenceWithheldNotice/g)).toHaveLength(2);
     expect(source).toContain('Review pregnancy and breastfeeding setting');
     expect(source).toContain("router.push('/settings/skin-profile?returnTo=today')");
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}");
@@ -75,6 +83,8 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain("return 'Under your SPF.';");
     expect(source).toContain("case 'Always the last morning step. Reapply through the day.':");
     expect(source).toContain("return 'Last step. Reapply later.';");
+    expect(source).toContain("case 'Use in the morning. Follow the product label directions.':");
+    expect(source).toContain("return 'Morning. Follow the label.';");
     expect(source).toContain(
       'const displaySub = sub && compact ? compactRoutineInstruction(sub) : sub;',
     );
@@ -97,7 +107,7 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('{showRecommendations ? (');
     expect(source).not.toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
     expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');
-    expect(source).toContain('{hasRealRoutine && !compactPhone && cycle ? (');
+    expect(source).toContain('{showTonightTeaser ? (');
   });
 
   it('keeps PM cycle strip labels legible only when a real cycle exists', () => {
@@ -111,14 +121,18 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain("if (slot === 'retinoid') return 'Retin\\noid';");
     expect(source).toContain("if (slot === 'recover') return 'Reco\\nver';");
     expect(source).toContain('const { height, width } = useWindowDimensions();');
-    expect(source).toContain('const compactCycleStrip = compactPhone || width < 360;');
+    expect(source).toContain('const compactCycleStrip = compactPhone || width < 430;');
     expect(source).toContain('const nightNumber = cTonight ? cTonight.index + 1 : 0');
     expect(source).toContain('const nightTotal = cycle?.lengthNights ?? 0');
     expect(source).toContain('const label = cycleStripLabel(n.slot, compactCycleStrip);');
     expect(source).toContain('const accessibilityLabel = slotLabel(n.slot);');
     expect(source).toContain('{cycle ? (');
-    expect(source).toContain('cycle.nights.map((n, i) =>');
-    expect(source).toContain('const active = cTonight ? i === cTonight.index : false;');
+    expect(source).toContain(
+      'const cycleStripNights = cycleData?.weekAhead.map((projected) => projected.night) ?? [];',
+    );
+    expect(source).toContain('cycleStripNights.map((n, i) =>');
+    expect(source).toContain('const active = i === 0;');
+    expect(source).not.toContain('cycle.nights.map((n, i) =>');
     expect(source).toContain('No evening steps yet.');
     expect(source).toContain('Add a cleanser, moisturiser, or night product to build this out.');
     expect(source).toContain('maxFontSizeMultiplier={1.08}');

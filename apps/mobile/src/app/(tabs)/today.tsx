@@ -61,6 +61,8 @@ function compactRoutineInstruction(instruction: string): string {
       return 'Under your SPF.';
     case 'Always the last morning step. Reapply through the day.':
       return 'Last step. Reapply later.';
+    case 'Use in the morning. Follow the product label directions.':
+      return 'Morning. Follow the label.';
     case 'Seal everything in.':
       return 'Seal it in.';
     case 'Apply to dry skin · pea-sized · avoid the eye area.':
@@ -156,6 +158,53 @@ function EmptyRoutineCard({
         onPress={() => router.push('/shelf/manual')}
       />
     </View>
+  );
+}
+
+function CadenceWithheldNotice({
+  compact,
+  count,
+  dark,
+}: {
+  compact: boolean;
+  count: number;
+  dark: boolean;
+}) {
+  const productLabel = count === 1 ? 'active product' : 'active products';
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Review ${count} ${productLabel} without routine timing`}
+      className={cn(
+        'min-h-[48px] flex-row items-center gap-3 rounded-card px-5',
+        compact ? 'mt-3 py-3' : 'mt-4 py-3.5',
+      )}
+      style={{ backgroundColor: dark ? colors.nightSurface : colors.greigeChip }}
+      onPress={() => {
+        haptics.select();
+        router.push('/routine/plan');
+      }}
+    >
+      <View
+        className="h-1.5 w-1.5 rounded-full"
+        style={{ backgroundColor: dark ? colors.clayBright : colors.clayDeep }}
+      />
+      <Text
+        className="flex-1 text-[13.5px]"
+        style={{
+          color: dark ? 'rgba(244,239,231,0.8)' : colors.muted,
+          lineHeight: 19,
+        }}
+      >
+        {`Timing is not set for ${count} ${productLabel}. ${
+          count === 1 ? 'It stays' : 'They stay'
+        } off Today for now.`}
+      </Text>
+      <Text aria-hidden style={{ color: dark ? colors.clayBright : colors.clayDeep }}>
+        ›
+      </Text>
+    </Pressable>
   );
 }
 
@@ -307,6 +356,7 @@ export default function TodayScreen() {
   const hasRealRoutine = Boolean(planData && !planData.isExample);
   const plan = hasRealRoutine ? planData?.plan : undefined;
   const safetyExclusionCount = plan?.safetyExclusions.length ?? 0;
+  const cadenceWithheldCount = plan?.cadenceWithheld.length ?? 0;
   const safetyExcludedIds = new Set(
     plan?.safetyExclusions.map((exclusion) => exclusion.productId) ?? [],
   );
@@ -319,6 +369,7 @@ export default function TodayScreen() {
   const recoveryActive = cycleData?.recovery.active ?? false;
   const paused = cycleData?.paused ?? false;
   const tonightSlot = cTonight?.night.slot ?? null;
+  const cycleStripNights = cycleData?.weekAhead.map((projected) => projected.night) ?? [];
 
   // Persist the check-off to the local-first store, fire the activation metric on the
   // first-ever completion, and refresh Today + the streak/heat-map (docs/03 §6).
@@ -361,10 +412,15 @@ export default function TodayScreen() {
   });
   const clockLabel = localClockLabel();
   const compactPhone = height < 700;
-  const compactCycleStrip = compactPhone || width < 360;
+  const compactCycleStrip = compactPhone || width < 430;
   const compactRecommendationPrompt = height < 860;
   const shortEmptyRoutine = compactPhone && height < 600;
   const showRecommendations = hasRealRoutine && height >= 500;
+  const showTonightTeaser =
+    hasRealRoutine &&
+    !compactPhone &&
+    cycle != null &&
+    (cadenceWithheldCount === 0 || height >= 932);
 
   // ---- AM ----
   if (!dark) {
@@ -401,6 +457,14 @@ export default function TodayScreen() {
           <Text variant="titleLg" className={compactPhone ? 'mt-3' : 'mt-4'}>
             Good morning.
           </Text>
+
+          {cadenceWithheldCount > 0 ? (
+            <CadenceWithheldNotice
+              compact={compactPhone}
+              count={cadenceWithheldCount}
+              dark={false}
+            />
+          ) : null}
 
           {hasExamplePlan ? (
             <EmptyRoutineCard compact={compactPhone} dark={false} short={shortEmptyRoutine} />
@@ -455,7 +519,7 @@ export default function TodayScreen() {
           {phase7Flags.cloudAsk && !compactPhone ? <AskTeaser /> : null}
 
           {/* Tonight teaser */}
-          {hasRealRoutine && !compactPhone && cycle ? (
+          {showTonightTeaser ? (
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="See your cycle week ahead"
@@ -529,7 +593,7 @@ export default function TodayScreen() {
         }
       : null;
   const dailyPm = (plan?.pm ?? []).filter(
-    (step) => !step.cyclingNight && !safetyExcludedIds.has(step.productId),
+    (step) => step.cadence !== 'cycle' && !safetyExcludedIds.has(step.productId),
   );
   const pmSteps = [...dailyPm, ...(cycledStep ? [cycledStep] : [])].sort(
     (a, b) => a.order - b.order,
@@ -638,6 +702,10 @@ export default function TodayScreen() {
           </Pressable>
         ) : null}
 
+        {cadenceWithheldCount > 0 ? (
+          <CadenceWithheldNotice compact={compactPhone} count={cadenceWithheldCount} dark />
+        ) : null}
+
         {/* Skin-cycling strip. Taps through to the week overview (docs/05 §6.1) */}
         {cycle ? (
           <Pressable
@@ -662,12 +730,12 @@ export default function TodayScreen() {
               </Text>
             </View>
             <View className="flex-row gap-1">
-              {cycle.nights.map((n, i) => {
+              {cycleStripNights.map((n, i) => {
                 const label = cycleStripLabel(n.slot, compactCycleStrip);
                 const accessibilityLabel = slotLabel(n.slot);
-                const active = cTonight ? i === cTonight.index : false;
+                const active = i === 0;
                 return (
-                  <View key={i} className="flex-1">
+                  <View key={`${n.index}-${i}`} className="flex-1">
                     <View
                       className="h-1.5 rounded-pill"
                       style={{

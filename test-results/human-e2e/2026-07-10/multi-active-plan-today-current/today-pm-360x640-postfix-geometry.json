@@ -1,0 +1,114 @@
+{
+  "checkboxes": [
+    "Gentle Cleanser",
+    "Glycolic Acid",
+    "Barrier Moisturizer"
+  ],
+  "clientWidth": 360,
+  "controls": [
+    {
+      "bottom": 160.96784210205078,
+      "height": 80.97694396972656,
+      "label": "Review 2 active products without routine timing",
+      "left": 23.99878692626953,
+      "right": 336.1954116821289,
+      "role": "button",
+      "top": 79.99089813232422,
+      "visible": true,
+      "width": 312.1966247558594
+    },
+    {
+      "bottom": 315.9132385253906,
+      "height": 138.95631408691406,
+      "label": "See your cycle week ahead",
+      "left": 23.99878692626953,
+      "right": 336.1954116821289,
+      "role": "button",
+      "top": 176.95692443847656,
+      "visible": true,
+      "width": 312.1966247558594
+    },
+    {
+      "bottom": 439.8817024230957,
+      "height": 55.99211502075195,
+      "label": "Gentle Cleanser",
+      "left": 43.99272155761719,
+      "right": 316.2014617919922,
+      "role": "checkbox",
+      "top": 383.88958740234375,
+      "visible": true,
+      "width": 272.208740234375
+    },
+    {
+      "bottom": 496.8446731567383,
+      "height": 56.962989807128906,
+      "label": "Glycolic Acid",
+      "left": 43.99272155761719,
+      "right": 316.2014617919922,
+      "role": "checkbox",
+      "top": 439.8816833496094,
+      "visible": true,
+      "width": 272.208740234375
+    },
+    {
+      "bottom": 553.8076858520508,
+      "height": 56.962989807128906,
+      "label": "Barrier Moisturizer",
+      "left": 43.99272155761719,
+      "right": 316.2014617919922,
+      "role": "checkbox",
+      "top": 496.8446960449219,
+      "visible": true,
+      "width": 272.208740234375
+    },
+    {
+      "bottom": 620.7979774475098,
+      "height": 53.989688873291016,
+      "label": "Today tab",
+      "left": 12.970267295837402,
+      "right": 96.52609920501709,
+      "role": "tab",
+      "top": 566.8082885742188,
+      "visible": true,
+      "width": 83.55583190917969
+    },
+    {
+      "bottom": 620.7979774475098,
+      "height": 53.989688873291016,
+      "label": "Progress tab",
+      "left": 96.5261001586914,
+      "right": 180.09709930419922,
+      "role": "tab",
+      "top": 566.8082885742188,
+      "visible": true,
+      "width": 83.57099914550781
+    },
+    {
+      "bottom": 620.7979774475098,
+      "height": 53.989688873291016,
+      "label": "Shelf tab",
+      "left": 180.0970916748047,
+      "right": 263.6529235839844,
+      "role": "tab",
+      "top": 566.8082885742188,
+      "visible": true,
+      "width": 83.55583190917969
+    },
+    {
+      "bottom": 620.7979774475098,
+      "height": 53.989688873291016,
+      "label": "You tab",
+      "left": 263.6529235839844,
+      "right": 347.2239227294922,
+      "role": "tab",
+      "top": 566.8082885742188,
+      "visible": true,
+      "width": 83.57099914550781
+    }
+  ],
+  "horizontalOverflow": false,
+  "innerHeight": 641,
+  "innerWidth": 360,
+  "scrollWidth": 360,
+  "sub44": []
+}

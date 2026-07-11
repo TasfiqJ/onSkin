@@ -48,12 +48,14 @@ export function routineFirstInsightCopy(
     const firstName = plan.cadenceWithheld[0]?.name ?? 'One active';
     const remaining = plan.cadenceWithheld.length - 1;
     return {
-      eyebrow: 'Clinical review gate',
-      title: 'Active timing withheld',
+      eyebrow: 'Routine timing',
+      title: 'Active timing not set',
       body:
         remaining === 0
-          ? `${firstName} stays off Today until its cadence guidance is reviewed.`
-          : `${firstName} and ${remaining} more active${remaining === 1 ? '' : 's'} stay off Today until their cadence guidance is reviewed.`,
+          ? `${firstName} does not have reviewed routine timing yet, so it stays off Today for now.`
+          : `${firstName} and ${remaining} more active${
+              remaining === 1 ? '' : 's'
+            } do not have reviewed routine timing yet, so they stay off Today for now.`,
     };
   }
 

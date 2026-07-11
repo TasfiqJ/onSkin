@@ -6,7 +6,7 @@ import { tagsForIngredientList } from '@/features/intelligence/tags';
 
 import { generatePlan, type RoutineProduct } from './generate';
 import { applyTolerance, deEscalate, initRamp, shouldOfferStepUp } from './ramp';
-import { classifyRole } from './sequencing';
+import { classifyRole, routineCadenceDisposition, sequencePhase } from './sequencing';
 
 function product(
   id: string,
@@ -74,6 +74,36 @@ describe('role classification (docs/03 §3). Tags win over name keywords', () =>
     expect(classifyRole(product('i', 'Mystery drops'))).toBeNull();
     expect(classifyRole(product('j', 'Mystery drops', [], 'other'))).toBeNull();
   });
+
+  it('assigns cadence only to product families with a documented placement', () => {
+    expect(routineCadenceDisposition({ id: 'r', name: 'Retinol', tags: ['retinoid'] })).toBe(
+      'cycle',
+    );
+    expect(routineCadenceDisposition({ id: 'a', name: 'AHA', tags: ['aha'] })).toBe('cycle');
+    expect(routineCadenceDisposition({ id: 'bp', name: 'BP', tags: ['benzoyl_peroxide'] })).toBe(
+      'daily_am',
+    );
+    expect(
+      routineCadenceDisposition({ id: 'h', name: 'Hydroquinone', tags: ['hydroquinone'] }),
+    ).toBe('withheld');
+    expect(
+      routineCadenceDisposition({ id: 'c', name: 'Copper peptide', tags: ['copper_peptide'] }),
+    ).toBe('withheld');
+  });
+
+  it('places benzoyl peroxide in AM with product-label guidance', () => {
+    const bp = { id: 'bp', name: 'Benzoyl peroxide', tags: ['benzoyl_peroxide'] as const };
+    const input = [{ ...bp, tags: [...bp.tags] }];
+
+    expect(sequencePhase(input, 'am')).toMatchObject([
+      {
+        productId: 'bp',
+        cadence: 'daily_am',
+        instruction: 'Use in the morning. Follow the product label directions.',
+      },
+    ]);
+    expect(sequencePhase(input, 'pm')).toEqual([]);
+  });
 });
 
 describe('Maya plan generation (docs/03 §2 worked example)', () => {
@@ -94,9 +124,9 @@ describe('Maya plan generation (docs/03 §2 worked example)', () => {
     expect(plan.pm.find((s) => s.role === 'spf')).toBeUndefined(); // SPF not in PM
   });
 
-  it('assigns cycling nights: exfoliant=1, retinoid=2', () => {
-    expect(plan.pm.find((s) => s.role === 'exfoliant')?.cyclingNight).toBe(1);
-    expect(plan.pm.find((s) => s.role === 'treatment')?.cyclingNight).toBe(2);
+  it('marks exfoliants and retinoids for the canonical cycle projection', () => {
+    expect(plan.pm.find((s) => s.role === 'exfoliant')?.cadence).toBe('cycle');
+    expect(plan.pm.find((s) => s.role === 'treatment')?.cadence).toBe('cycle');
   });
 
   it('picks the gentle cycle for sensitive skin', () => {
@@ -213,9 +243,9 @@ describe('pregnancy safety exclusions', () => {
       expect(plan.safetyExclusions).toEqual([]);
       expect(plan.pm.map((step) => step.productId)).toEqual(['moisturiser']);
       expect(plan.cadenceWithheld.map((item) => item.productId)).toEqual([
-        'retinoid',
         'bha',
         'hydroquinone',
+        'retinoid',
       ]);
     });
   });
@@ -302,13 +332,68 @@ describe('pregnancy safety exclusions', () => {
 
     expect(cautious.pm.map((step) => step.productId)).toEqual(['bha']);
     expect(cautious.safetyExclusions).toEqual([]);
-    expect(clear.pm.map((step) => step.productId)).toEqual([
-      'retinoid',
-      'hydroquinone',
-      'bha',
-      'moisturiser',
-    ]);
+    expect(clear.pm.map((step) => step.productId)).toEqual(['retinoid', 'bha', 'moisturiser']);
+    expect(clear.cadenceWithheld.map((item) => item.productId)).toEqual(['hydroquinone']);
     expect(clear.safetyExclusions).toEqual([]);
+  });
+});
+
+describe('clear-mode multi-treatment placement', () => {
+  const profile = { sensitivity: 'neutral' as const, pregnancy: false, goals: [] };
+
+  it('cycles only AHA/BHA/retinoids, puts BP in AM, and withholds undefined cadences', () => {
+    const plan = withDevFlag(true, () =>
+      generatePlan(
+        [
+          { id: 'retinoid', name: 'Retinol', tags: ['retinoid'] },
+          { id: 'aha', name: 'Glycolic acid', tags: ['aha'] },
+          { id: 'bha', name: 'Salicylic acid', tags: ['bha'] },
+          { id: 'bp', name: 'Benzoyl peroxide', tags: ['benzoyl_peroxide'] },
+          { id: 'hydro', name: 'Hydroquinone', tags: ['hydroquinone'] },
+          { id: 'copper', name: 'Copper peptide', tags: ['copper_peptide'] },
+        ],
+        profile,
+        STARTER_RULES,
+      ),
+    );
+
+    expect(plan.am.map((step) => step.productId)).toEqual(['bp']);
+    expect(plan.pm.map((step) => step.productId)).toEqual(['retinoid', 'aha', 'bha']);
+    expect(plan.pm.every((step) => step.cadence === 'cycle')).toBe(true);
+    expect(plan.cadenceWithheld.map((item) => item.productId)).toEqual(['copper', 'hydro']);
+    expect(plan.ramp.map((item) => item.productId)).toEqual(['retinoid', 'aha', 'bha']);
+    expect(plan.cycle).not.toBeNull();
+  });
+
+  it.each([
+    ['hydroquinone', 'Hydroquinone', 'hydroquinone'],
+    ['copper', 'Copper peptide', 'copper_peptide'],
+  ] as const)('withholds %s instead of inventing a retinoid ramp', (id, name, tag) => {
+    const plan = withDevFlag(true, () =>
+      generatePlan([{ id, name, tags: [tag] }], profile, STARTER_RULES),
+    );
+
+    expect(plan.am).toEqual([]);
+    expect(plan.pm).toEqual([]);
+    expect(plan.cadenceWithheld).toEqual([{ productId: id, name }]);
+    expect(plan.ramp).toEqual([]);
+    expect(plan.cycle).toBeNull();
+  });
+
+  it('keeps a BP-only shelf in AM without creating a cycle or ramp', () => {
+    const plan = withDevFlag(true, () =>
+      generatePlan(
+        [{ id: 'bp', name: 'Benzoyl peroxide', tags: ['benzoyl_peroxide'] }],
+        profile,
+        STARTER_RULES,
+      ),
+    );
+
+    expect(plan.am.map((step) => step.productId)).toEqual(['bp']);
+    expect(plan.pm).toEqual([]);
+    expect(plan.cadenceWithheld).toEqual([]);
+    expect(plan.ramp).toEqual([]);
+    expect(plan.cycle).toBeNull();
   });
 });
 
@@ -330,12 +415,11 @@ describe('B-DERM-REVIEW routine launch gate', () => {
 
       expect(plan.pm).toEqual([]);
       expect(plan.cadenceWithheld.map((item) => item.name)).toEqual([
-        'Retinol 0.3% Night Serum',
         'Glycolic 7% Toner',
+        'Retinol 0.3% Night Serum',
       ]);
       expect(plan.cycle).toBeNull();
       expect(plan.ramp).toEqual([]);
-      expect(plan.pm.every((s) => s.cyclingNight == null)).toBe(true);
       expect(plan.conflicts).toEqual([]);
     });
   });

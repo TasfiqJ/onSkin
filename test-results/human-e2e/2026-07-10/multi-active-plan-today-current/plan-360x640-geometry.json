@@ -1,0 +1,29 @@
+{
+  "controls": [
+    {
+      "bottom": 51.987258434295654,
+      "height": 47.99757385253906,
+      "label": "Back",
+      "left": 23.99878692626953,
+      "right": 71.9963607788086,
+      "top": 3.989684581756592,
+      "visible": true,
+      "width": 47.99757385253906
+    },
+    {
+      "bottom": 624.7876472473145,
+      "height": 55.99211502075195,
+      "label": "Start today",
+      "left": 23.99878692626953,
+      "right": 336.1954116821289,
+      "top": 568.7955322265625,
+      "visible": true,
+      "width": 312.1966247558594
+    }
+  ],
+  "documentClientWidth": 360,
+  "documentScrollWidth": 360,
+  "horizontalOverflow": false,
+  "innerHeight": 641,
+  "innerWidth": 360
+}

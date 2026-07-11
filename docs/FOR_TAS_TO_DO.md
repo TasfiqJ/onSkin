@@ -167,6 +167,14 @@ Status: launch-blocked
   the detached Phase 3 signoff workflow. Record each decision and source against
   the exact build instead of treating the current conservative implementation
   as clinical approval.
+- Have the clinical and cosmetic-chemistry reviewers explicitly approve or reject
+  the current clear-mode cadence boundary: AHA/BHA/retinoids use the canonical PM
+  cycle, benzoyl peroxide defaults to AM, and hydroquinone/copper peptide remain
+  off Today because no reviewed cadence or co-use rule is encoded. If either
+  withheld family should ship with timing, provide exact phase, frequency,
+  separation, duration, contraindication, and stop/refer rules plus sources and
+  reviewer identity. Do not replace the current withholding behavior with an
+  inferred retinoid or daily cadence.
 - Have the same reviewers define a status-refresh interval and expired-status
   behavior. Also decide the future multi-device conflict rule before enabling a
   transactional server mirror. Until those decisions are recorded, V1 keeps the

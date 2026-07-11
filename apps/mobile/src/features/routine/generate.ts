@@ -19,6 +19,7 @@ import { initRamp, type RampState } from './ramp';
 import { canUseRoutineCadence } from './reviewGate';
 import {
   classifyRole,
+  routineCadenceDisposition,
   sequencePhase,
   type ClassifiableProduct,
   type SequencedStep,
@@ -28,10 +29,7 @@ import {
 // sequence → assign frequency/cycling + init ramp → run detect_conflicts + apply
 // resolutions → plan. Pure + explainable. Every step traces to a rule/profile.
 
-export type PlanStep = SequencedStep & {
-  /** Exfoliant→night 1, retinoid→night 2 when the cycle is active (docs/02 §5). */
-  cyclingNight?: number;
-};
+export type PlanStep = SequencedStep;
 
 export type GeneratedPlan = {
   am: PlanStep[];
@@ -85,52 +83,59 @@ export function generatePlan(
   const classifiedProducts = routineProducts.map((product) => ({
     product,
     role: classifyRole(product),
+    cadence: routineCadenceDisposition(product),
   }));
   const unplacedProducts = classifiedProducts
     .filter(({ role }) => role == null)
-    .map(({ product }) => ({ productId: product.id, name: product.name }));
+    .map(({ product }) => ({ productId: product.id, name: product.name }))
+    .sort((a, b) => a.productId.localeCompare(b.productId));
 
   // Treatment/exfoliant placement implies a cadence. Until the clinical cadence
   // review gate opens, withhold those products instead of turning an unassigned
   // PM active into a daily Today step.
   const allowCadence = canUseRoutineCadence();
-  const cadenceWithheld = allowCadence
-    ? []
-    : classifiedProducts
-        .filter(({ role }) => role === 'treatment' || role === 'exfoliant')
-        .map(({ product }) => ({ productId: product.id, name: product.name }));
+  const cadenceWithheld = classifiedProducts
+    .filter(
+      ({ role, cadence }) =>
+        (role === 'treatment' || role === 'exfoliant') && (!allowCadence || cadence === 'withheld'),
+    )
+    .map(({ product }) => ({ productId: product.id, name: product.name }))
+    .sort((a, b) => a.productId.localeCompare(b.productId));
   const cadenceWithheldIds = new Set(cadenceWithheld.map((item) => item.productId));
   const cadenceEligibleProducts = routineProducts.filter(
     (product) => !cadenceWithheldIds.has(product.id),
   );
   const am = sequencePhase(cadenceEligibleProducts, 'am');
   const pm = sequencePhase(cadenceEligibleProducts, 'pm') as PlanStep[];
+  const cycleProductIds = new Set(
+    classifiedProducts
+      .filter(({ product, cadence }) => cadence === 'cycle' && !cadenceWithheldIds.has(product.id))
+      .map(({ product }) => product.id),
+  );
+  const productById = new Map(routineProducts.map((product) => [product.id, product] as const));
 
-  // Cycling: assign nights to PM actives (exfoliant=1, retinoid=2) when a cycle
-  // applies. The retinoid × acid alternate_nights resolution is satisfied by
-  // placing them on different nights.
-  const hasActives =
-    allowCadence && pm.some((s) => s.role === 'treatment' || s.role === 'exfoliant');
+  // The legacy template remains an insight/example signal only. Actual product
+  // nights come exclusively from scheduler/orchestrate via useCycle.
+  const hasActives = allowCadence && pm.some((step) => cycleProductIds.has(step.productId));
   const cycle = pickCycle({
     sensitivity: profile.sensitivity,
     goals: profile.goals as GoalId[],
     hasActives,
   });
-  if (cycle) {
-    for (const step of pm) {
-      if (step.role === 'exfoliant') step.cyclingNight = 1;
-      else if (step.role === 'treatment') step.cyclingNight = 2;
-    }
-  }
-
   // Ramp: initialise for each exfoliating/retinoid active.
   const ramp = allowCadence
     ? pm
-        .filter((s) => s.role === 'treatment' || s.role === 'exfoliant')
+        .filter((step) => cycleProductIds.has(step.productId))
         .map((s) => ({
           productId: s.productId,
           name: s.name,
-          state: initRamp(s.role === 'treatment' ? 'retinoid' : 'aha', profile.sensitivity),
+          state: initRamp(
+            productById.get(s.productId)?.tags.includes('retinoid') ||
+              productById.get(s.productId)?.category === 'retinoid_serum'
+              ? 'retinoid'
+              : 'aha',
+            profile.sensitivity,
+          ),
         }))
     : [];
 

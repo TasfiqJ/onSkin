@@ -1,3 +1,4 @@
+import type { ActiveClass } from './classes';
 import type { Cycle, NightSlot, SchedulerSlot } from './orchestrate';
 
 // The projection algorithm (docs/05 §3): deterministic, pure, local-day aware.
@@ -40,6 +41,37 @@ export function nightFor(cycle: Cycle, anchorISO: string, dateISO: string): Nigh
 }
 
 export type ProjectedNight = { dateISO: string; weekday: string; night: NightSlot };
+
+export type CycleActiveSummary = {
+  productId: string;
+  name: string;
+  className: ActiveClass;
+  nightNumbers: number[];
+};
+
+/** One row per scheduled product, ordered by its first appearance in the cycle. */
+export function cycleActiveSummaries(cycle: Cycle): CycleActiveSummary[] {
+  const byProductId = new Map<string, CycleActiveSummary>();
+  for (const night of cycle.nights) {
+    if (!night.productId || !night.productName || !night.className) continue;
+    const existing = byProductId.get(night.productId);
+    if (existing) {
+      existing.nightNumbers.push(night.index + 1);
+      continue;
+    }
+    byProductId.set(night.productId, {
+      productId: night.productId,
+      name: night.productName,
+      className: night.className,
+      nightNumbers: [night.index + 1],
+    });
+  }
+  return [...byProductId.values()];
+}
+
+export function cycleRecoveryNightNumbers(cycle: Cycle): number[] {
+  return cycle.nights.filter((night) => night.slot === 'recover').map((night) => night.index + 1);
+}
 
 /** Today + the next `days` nights, each with its slot + assigned active (docs/05 §3). */
 export function weekAhead(

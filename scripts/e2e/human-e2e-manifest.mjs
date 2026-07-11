@@ -263,6 +263,13 @@ if (!pregnancySafetyStatusEvidenceDate) {
   console.error('FAIL Missing pregnancy-safety status consistency evidence.');
   process.exit(1);
 }
+const multiActivePlanTodayEvidenceDate = latestEvidenceDateForFolder(
+  'multi-active-plan-today-current',
+);
+if (!multiActivePlanTodayEvidenceDate) {
+  console.error('FAIL Missing canonical multi-active Plan/Today evidence.');
+  process.exit(1);
+}
 const dataExportDisclosureEvidenceDate = latestEvidenceDateForFolder(
   'data-export-local-photo-disclosure-current',
 );
@@ -628,6 +635,17 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'All four encrypted status choices keep Plan and Today consistent; profile/consent write retries, legacy-consent regrant, missing-profile caution, prefer-not reload, and explicit-none restoration pass at 360 x 640 and 390 x 844.',
+  },
+  {
+    id: 'multi-active-plan-today-supported-phone',
+    title: 'Canonical multi-active Plan and Today consistency',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${multiActivePlanTodayEvidenceDate}/multi-active-plan-today-current`,
+    evidence: 'summary.json',
+    expected:
+      'Every supported cycle product, BP AM placement, explicit undefined-cadence withholding, one-active PM projection, completion reload, and supported-phone geometry pass from one canonical schedule.',
   },
   {
     id: 'data-export-local-photo-disclosure-supported-phone',

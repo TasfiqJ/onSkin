@@ -4,7 +4,6 @@ import { router } from 'expo-router';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
-import { startCycleToday } from '@/features/scheduler/cycleStore';
 import { recordRoutinePlanAnalytics } from '@/features/routine/activationAnalytics';
 import {
   routineInsightCount,
@@ -12,6 +11,10 @@ import {
   type RoutineFirstInsightCopy,
 } from '@/features/routine/firstInsight';
 import { usePlan } from '@/features/routine/usePlan';
+import { classLabel } from '@/features/scheduler/classes';
+import { startCycleToday } from '@/features/scheduler/cycleStore';
+import { cycleActiveSummaries, cycleRecoveryNightNumbers } from '@/features/scheduler/projection';
+import { useCycle } from '@/features/scheduler/useCycle';
 import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -101,7 +104,7 @@ function EveningRow({
           {name}
         </Text>
         <Text
-          numberOfLines={compact ? 1 : 2}
+          numberOfLines={2}
           className="mt-0.5 font-sans text-[11px]"
           style={{ color: 'rgba(244,239,231,0.5)' }}
         >
@@ -110,6 +113,10 @@ function EveningRow({
       </View>
     </View>
   );
+}
+
+function additionalNightSuffix(nightNumbers: number[]): string {
+  return nightNumbers.length > 1 ? ` · also nights ${nightNumbers.slice(1).join(', ')}` : '';
 }
 
 function FirstInsightCard({
@@ -170,6 +177,7 @@ function FirstInsightCard({
 export default function PlanScreen() {
   const { height } = useWindowDimensions();
   const { data } = usePlan();
+  const { data: cycleData } = useCycle();
   const plan = data?.plan;
   const trackedPlanView = useRef(false);
   const compactPlan = height <= 640;
@@ -180,10 +188,21 @@ export default function PlanScreen() {
     router.replace('/today');
   }
 
-  const exfoliant = plan?.pm.find((s) => s.role === 'exfoliant');
-  const retinoid = plan?.pm.find((s) => s.role === 'treatment');
-  const retRamp = plan?.ramp.find((r) => r.name === retinoid?.name);
-  const hasCycle = plan?.cycle != null;
+  const exampleExfoliant = data?.isExample
+    ? plan?.pm.find((step) => step.role === 'exfoliant')
+    : undefined;
+  const exampleRetinoid = data?.isExample
+    ? plan?.pm.find((step) => step.role === 'treatment')
+    : undefined;
+  const exampleRetinoidRamp = plan?.ramp.find(
+    (item) => item.productId === exampleRetinoid?.productId,
+  );
+  const canonicalCycle = data && !data.isExample ? (cycleData?.cycle ?? null) : null;
+  const cycleSummaries = canonicalCycle ? cycleActiveSummaries(canonicalCycle) : [];
+  const recoveryNightNumbers = canonicalCycle ? cycleRecoveryNightNumbers(canonicalCycle) : [];
+  const hasCycle = data?.isExample ? plan?.cycle != null : canonicalCycle != null;
+  const awaitingCanonicalCycle =
+    data?.isExample === false && plan?.cycle != null && cycleData === undefined;
   const hasSafetyExclusions = Boolean(plan?.safetyExclusions.length);
   const hasBarrierStep = plan?.pm.some((s) => s.role === 'moisturiser') ?? false;
   const hasVitCSynergy = plan?.conflicts.some(
@@ -348,35 +367,71 @@ export default function PlanScreen() {
                 </Text>
               </View>
               {hasCycle ? (
-                <>
-                  {exfoliant ? (
+                data?.isExample ? (
+                  <>
+                    {exampleExfoliant ? (
+                      <EveningRow
+                        compact={compactPlan}
+                        nightLabel="Night 1"
+                        name={exampleExfoliant.name.replace(/\s*Toner$/i, '')}
+                        suffix="exfoliate"
+                        accent={false}
+                      />
+                    ) : null}
+                    {exampleRetinoid ? (
+                      <EveningRow
+                        compact={compactPlan}
+                        nightLabel="Night 2"
+                        name={exampleRetinoid.name}
+                        suffix={
+                          exampleRetinoidRamp
+                            ? `${exampleRetinoidRamp.state.freqPerWeek} times/week to start`
+                            : 'tonight'
+                        }
+                        accent
+                      />
+                    ) : null}
                     <EveningRow
                       compact={compactPlan}
-                      nightLabel="Night 1"
-                      name={exfoliant.name.replace(/\s*Toner$/i, '')}
-                      suffix="exfoliate"
+                      nightLabel="Nights 3-4"
+                      name="Recover"
+                      suffix={hasBarrierStep ? 'moisturiser only' : 'keep it simple'}
                       accent={false}
                     />
-                  ) : null}
-                  {retinoid ? (
-                    <EveningRow
-                      compact={compactPlan}
-                      nightLabel="Night 2"
-                      name={retinoid.name}
-                      suffix={
-                        retRamp ? `${retRamp.state.freqPerWeek} times/week to start` : 'tonight'
-                      }
-                      accent
-                    />
-                  ) : null}
-                  <EveningRow
-                    compact={compactPlan}
-                    nightLabel="Nights 3-4"
-                    name="Recover"
-                    suffix={hasBarrierStep ? 'moisturiser only' : 'keep it simple'}
-                    accent={false}
-                  />
-                </>
+                  </>
+                ) : (
+                  <>
+                    {cycleSummaries.map((summary) => (
+                      <EveningRow
+                        key={summary.productId}
+                        compact={compactPlan}
+                        nightLabel={`Night ${summary.nightNumbers[0]}`}
+                        name={summary.name}
+                        suffix={`${classLabel(summary.className)}${additionalNightSuffix(
+                          summary.nightNumbers,
+                        )}`}
+                        accent={summary.className === 'retinoid'}
+                      />
+                    ))}
+                    {recoveryNightNumbers.length > 0 ? (
+                      <EveningRow
+                        compact={compactPlan}
+                        nightLabel={`Night ${recoveryNightNumbers[0]}`}
+                        name="Recover"
+                        suffix={`${
+                          hasBarrierStep ? 'moisturiser only' : 'keep it simple'
+                        }${additionalNightSuffix(recoveryNightNumbers)}`}
+                        accent={false}
+                      />
+                    ) : null}
+                  </>
+                )
+              ) : awaitingCanonicalCycle ? (
+                <View className={compactPlan ? 'py-1' : 'py-1.5'}>
+                  <Text className="font-sans-medium text-[14px]" style={{ color: colors.cream }}>
+                    Preparing your cycle.
+                  </Text>
+                </View>
               ) : plan?.pm.length ? (
                 plan.pm.map((s, i) => (
                   <EveningRow

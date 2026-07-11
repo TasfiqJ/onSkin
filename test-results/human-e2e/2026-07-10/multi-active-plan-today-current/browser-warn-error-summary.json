@@ -1,0 +1,8 @@
+{
+  "errorCount": 0,
+  "uniqueWarnings": [
+    "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+    "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+    "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect."
+  ]
+}

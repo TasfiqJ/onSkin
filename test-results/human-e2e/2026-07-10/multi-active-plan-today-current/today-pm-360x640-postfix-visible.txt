@@ -1,0 +1,36 @@
+- generic: FRIDAY, JULY 10 · 10:19 PM
+- generic: Good evening.
+- button "Review 2 active products without routine timing":
+  - generic: Timing is not set for 2 active products. They stay off Today for now.
+  - generic: ›
+- button "See your cycle week ahead":
+  - generic: Skin cycling · night 1 of 17
+  - generic: Week ahead ›
+  - generic "Exfoliate": Exfol iate
+  - generic "Recover": Reco ver
+  - generic "Exfoliate": Exfol iate
+  - generic "Retinoid": Retin oid
+  - generic "Recover": Reco ver
+  - generic "Retinoid": Retin oid
+  - generic "Exfoliate": Exfol iate
+- generic: Evening routine
+- generic: 0 of 3
+- checkbox "Gentle Cleanser":
+  - generic: Gentle Cleanser
+  - generic: Dry skin first.
+  - generic: NEXT
+- checkbox "Glycolic Acid":
+  - generic: Glycolic Acid
+  - generic: Thin layer tonight.
+- checkbox "Barrier Moisturizer":
+  - generic: Barrier Moisturizer
+  - generic: Generous layer tonight
+- tablist:
+  - tab "Today tab" [selected]:
+    - generic: Today
+  - tab "Progress tab":
+    - generic: Prog.
+  - tab "Shelf tab":
+    - generic: Shelf
+  - tab "You tab":
+    - generic: You

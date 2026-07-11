@@ -1,0 +1,34 @@
+- generic: FRIDAY, JULY 10
+- generic: Good morning.
+- button "Review 2 active products without routine timing":
+  - generic: Timing is not set for 2 active products. They stay off Today for now.
+  - generic: ›
+- generic: Morning routine
+- generic: 0 of 4
+- checkbox "Gentle Cleanser":
+  - generic: Gentle Cleanser
+  - generic: Clean base first.
+  - generic: NEXT
+- checkbox "Benzoyl Peroxide":
+  - generic: Benzoyl Peroxide
+  - generic: Morning. Follow the label.
+- checkbox "Barrier Moisturizer":
+  - generic: Barrier Moisturizer
+  - generic: Seal it in.
+- checkbox "Mineral SPF 50":
+  - generic: Mineral SPF 50
+  - generic: Last step. Reapply later.
+- button "See your recommendations":
+  - generic: ✦
+  - generic: A few honest suggestions
+  - generic: 1 thing we’d gently suggest
+  - generic: ›
+- tablist:
+  - tab "Today tab" [selected]:
+    - generic: Today
+  - tab "Progress tab":
+    - generic: Prog.
+  - tab "Shelf tab":
+    - generic: Shelf
+  - tab "You tab":
+    - generic: You

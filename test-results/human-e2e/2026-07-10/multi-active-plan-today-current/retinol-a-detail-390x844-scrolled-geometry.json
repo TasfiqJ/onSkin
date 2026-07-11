@@ -1,0 +1,96 @@
+{
+  "controls": [
+    {
+      "bottom": 55.99211311340332,
+      "height": 47.99757385253906,
+      "label": "Back",
+      "top": 7.994539260864258,
+      "visible": true,
+      "width": 47.99757385253906
+    },
+    {
+      "bottom": 55.99211311340332,
+      "height": 47.99757385253906,
+      "label": "More options",
+      "top": 7.994539260864258,
+      "visible": true,
+      "width": 47.99757385253906
+    },
+    {
+      "bottom": 176.51699829101562,
+      "height": 47.99757385253906,
+      "label": "Report an issue",
+      "top": 128.51942443847656,
+      "visible": true,
+      "width": 105.4763412475586
+    },
+    {
+      "bottom": 264.4265937805176,
+      "height": 55.99211502075195,
+      "label": "Edit opened date",
+      "top": 208.43447875976562,
+      "visible": true,
+      "width": 304.36895751953125
+    },
+    {
+      "bottom": 377.3817024230957,
+      "height": 55.99211502075195,
+      "label": "Set printed best-before date",
+      "top": 321.38958740234375,
+      "visible": true,
+      "width": 304.36895751953125
+    },
+    {
+      "bottom": 546.7840118408203,
+      "height": 67.96116638183594,
+      "label": "Timing note with Benzoyl Peroxide. Use one in the morning, the other at night. Review →",
+      "top": 478.8228454589844,
+      "visible": true,
+      "width": 342.293701171875
+    },
+    {
+      "bottom": 626.7445526123047,
+      "height": 67.96116638183594,
+      "label": "Timing note with Glycolic Acid. Use them on alternate nights. Review →",
+      "top": 558.7833862304688,
+      "visible": true,
+      "width": 342.293701171875
+    },
+    {
+      "bottom": 770.6159210205078,
+      "height": 133.87440490722656,
+      "label": "Review routine placement",
+      "top": 636.7415161132812,
+      "visible": true,
+      "width": 342.293701171875
+    },
+    {
+      "bottom": 844.6602210998535,
+      "height": 50.000003814697266,
+      "label": "Replace",
+      "top": 794.6602172851562,
+      "visible": true,
+      "width": 135.17901611328125
+    },
+    {
+      "bottom": 844.6602210998535,
+      "height": 50.000003814697266,
+      "label": "Mark finished",
+      "top": 794.6602172851562,
+      "visible": true,
+      "width": 137.12075805664062
+    },
+    {
+      "bottom": 844.6602210998535,
+      "height": 50.000003814697266,
+      "label": "Remove or discard",
+      "top": 794.6602172851562,
+      "visible": true,
+      "width": 50.000003814697266
+    }
+  ],
+  "horizontalOverflow": false,
+  "innerHeight": 845,
+  "innerWidth": 390,
+  "sub44": []
+}

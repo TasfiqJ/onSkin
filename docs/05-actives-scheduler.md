@@ -232,6 +232,17 @@ orchestrate(user):
 | Niacinamide / hydrators     | **flexible**               | typically AM; barrier-supportive, low-conflict                        |
 | Azelaic acid                | **flexible**               | gentle; recovery nights or AM                                         |
 
+**Current launch implementation boundary (2026-07-10).** The encoded product
+schedule currently grants cadence only to AHA, BHA, and retinoids in the PM
+cycle, with benzoyl peroxide using the AM branch of its documented choice.
+Hydroquinone and copper peptide are recognized for intelligence/safety but do
+not yet have a reviewed phase, frequency, or co-use schedule, so they must be
+shown as timing not set and stay off Today. A generic `treatment` or
+`exfoliant` role is never enough to infer retinoid timing. Flexible classes in
+this product specification that are not yet represented in the functional-tag
+taxonomy, including azelaic acid, remain future reviewed implementation work
+rather than implicit launch behavior.
+
 **The interplay.** The **AM block is stable** (vitamin C → … → moisturiser → SPF, every day, sequenced by docs/03 §3); the **PM cycle rotates** (the potent active of the night + barrier support); the scheduler keeps the two coherent so the user sees a steady morning and a guided, varying evening.
 
 ### 6. The cycle & schedule-management surfaces (look, feel, behaviour)

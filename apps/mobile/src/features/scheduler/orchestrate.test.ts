@@ -161,6 +161,40 @@ describe('orchestration. FIRM invariants (docs/05 §4)', () => {
     ]);
     expectNoAdjacentRepeatedPotentSlot(cycle!);
   });
+
+  it('keeps every same-class product and is stable when shelf input order changes', () => {
+    const products = [
+      active('ret-b', 'Retinol B', ['retinoid']),
+      active('aha-b', 'Glycolic B', ['aha']),
+      active('ret-a', 'Retinol A', ['retinoid']),
+      active('aha-a', 'Glycolic A', ['aha']),
+    ];
+    const profile = {
+      ...base,
+      preferredVariant: 'classic' as const,
+      freqByProductId: { 'ret-a': 1, 'ret-b': 1, 'aha-a': 1, 'aha-b': 1 },
+    };
+
+    const forward = orchestrate(products, profile).cycle!;
+    const reversed = orchestrate([...products].reverse(), profile).cycle!;
+    const scheduledIds = (cycle: Cycle) =>
+      cycle.nights.flatMap((night) => (night.productId ? [night.productId] : []));
+
+    expect(new Set(scheduledIds(forward))).toEqual(new Set(['ret-a', 'ret-b', 'aha-a', 'aha-b']));
+    expect(forward.nights).toEqual(reversed.nights);
+  });
+
+  it('uses explicit intake categories when ingredient tags are unavailable', () => {
+    const { cycle } = run([
+      { id: 'r', name: 'Retinoid serum', tags: [], category: 'retinoid_serum' },
+      { id: 'bp', name: 'Benzoyl peroxide', tags: [], category: 'benzoyl_peroxide' },
+    ]);
+
+    expect(cycle?.nights.some((night) => night.productId === 'r')).toBe(true);
+    expect(cycle?.amDaily).toEqual([
+      { productId: 'bp', name: 'Benzoyl peroxide', className: 'benzoyl_peroxide' },
+    ]);
+  });
 });
 
 describe('orchestration. Frequency caps + launch gate (docs/05 §4/§8)', () => {

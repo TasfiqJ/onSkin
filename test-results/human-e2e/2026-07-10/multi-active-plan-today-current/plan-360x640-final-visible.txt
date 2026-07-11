@@ -1,0 +1,34 @@
+- button "Back":
+  - generic: <
+- generic: BUILT FOR RESISTANT SKIN
+- generic: Your routine, in order.
+- generic: Routine timing
+- generic: Active timing not set
+- generic: Copper Peptide and 1 more active do not have reviewed routine timing yet, so they stay off Today for now.
+- generic: Morning
+- generic: "1"
+- generic: Gentle Cleanser
+- generic: "2"
+- generic: Benzoyl Peroxide
+- generic: "3"
+- generic: Barrier Moisturizer
+- generic: "4"
+- generic: Mineral SPF 50
+- generic: Evening skin cycling
+- generic: Night 1
+- generic: Glycolic Acid
+- generic: AHA · also nights 7
+- generic: Night 3
+- generic: Salicylic Acid
+- generic: BHA · also nights 9, 13
+- generic: Night 4
+- generic: Retinol A
+- generic: Retinoid · also nights 10, 14
+- generic: Night 6
+- generic: Retinol B
+- generic: Retinoid · also nights 12, 16
+- generic: Night 2
+- generic: Recover
+- generic: moisturiser only · also nights 5, 8, 11, 15, 17
+- button "Start today":
+  - generic: Start today

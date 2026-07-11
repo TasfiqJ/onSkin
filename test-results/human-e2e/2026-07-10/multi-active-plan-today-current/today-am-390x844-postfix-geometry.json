@@ -1,0 +1,111 @@
+{
+  "clientWidth": 390,
+  "controls": [
+    {
+      "bottom": 51.987258434295654,
+      "height": 47.99757385253906,
+      "label": "View your streak and adherence",
+      "role": "button",
+      "top": 3.989684581756592,
+      "visible": true,
+      "width": 83.34345245361328
+    },
+    {
+      "bottom": 208.91991424560547,
+      "height": 84.95146179199219,
+      "label": "Review 2 active products without routine timing",
+      "role": "button",
+      "top": 123.96845245361328,
+      "visible": true,
+      "width": 342.293701171875
+    },
+    {
+      "bottom": 361.8628921508789,
+      "height": 73.9836196899414,
+      "label": "Gentle Cleanser",
+      "role": "checkbox",
+      "top": 287.8792724609375,
+      "visible": true,
+      "width": 296.3592224121094
+    },
+    {
+      "bottom": 460.81616973876953,
+      "height": 98.95328521728516,
+      "label": "Benzoyl Peroxide",
+      "role": "checkbox",
+      "top": 361.8628845214844,
+      "visible": true,
+      "width": 296.3592224121094
+    },
+    {
+      "bottom": 535.7706527709961,
+      "height": 74.9544906616211,
+      "label": "Barrier Moisturizer",
+      "role": "checkbox",
+      "top": 460.816162109375,
+      "visible": true,
+      "width": 296.3592224121094
+    },
+    {
+      "bottom": 634.7239151000977,
+      "height": 98.95328521728516,
+      "label": "Mineral SPF 50",
+      "role": "checkbox",
+      "top": 535.7706298828125,
+      "visible": true,
+      "width": 296.3592224121094
+    },
+    {
+      "bottom": 737.6062316894531,
+      "height": 77.91262817382812,
+      "label": "See your recommendations",
+      "role": "button",
+      "top": 659.693603515625,
+      "visible": true,
+      "width": 342.293701171875
+    },
+    {
+      "bottom": 824.6814613342285,
+      "height": 53.989688873291016,
+      "label": "Today tab",
+      "role": "tab",
+      "top": 770.6917724609375,
+      "visible": true,
+      "width": 91.0801010131836
+    },
+    {
+      "bottom": 824.6814613342285,
+      "height": 53.989688873291016,
+      "label": "Progress tab",
+      "role": "tab",
+      "top": 770.6917724609375,
+      "visible": true,
+      "width": 91.09526824951172
+    },
+    {
+      "bottom": 824.6814613342285,
+      "height": 53.989688873291016,
+      "label": "Shelf tab",
+      "role": "tab",
+      "top": 770.6917724609375,
+      "visible": true,
+      "width": 91.0801010131836
+    },
+    {
+      "bottom": 824.6814613342285,
+      "height": 53.989688873291016,
+      "label": "You tab",
+      "role": "tab",
+      "top": 770.6917724609375,
+      "visible": true,
+      "width": 91.09526824951172
+    }
+  ],
+  "horizontalOverflow": false,
+  "innerHeight": 845,
+  "innerWidth": 390,
+  "scrollWidth": 390,
+  "sub44": [],
+  "tabIntersections": [],
+  "tabTop": 770.6917724609375
+}

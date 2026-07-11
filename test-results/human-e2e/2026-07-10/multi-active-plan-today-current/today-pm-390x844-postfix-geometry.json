@@ -1,0 +1,154 @@
+{
+  "checkboxes": [
+    "Gentle Cleanser",
+    "Glycolic Acid",
+    "Barrier Moisturizer"
+  ],
+  "clientWidth": 390,
+  "controls": [
+    {
+      "bottom": 168.93204498291016,
+      "height": 84.95146179199219,
+      "label": "Review 2 active products without routine timing",
+      "role": "button",
+      "top": 83.98058319091797,
+      "visible": true,
+      "width": 342.293701171875
+    },
+    {
+      "bottom": 323.87744140625,
+      "height": 138.95631408691406,
+      "label": "See your cycle week ahead",
+      "role": "button",
+      "top": 184.92112731933594,
+      "visible": true,
+      "width": 342.293701171875
+    },
+    {
+      "bottom": 489.83619689941406,
+      "height": 97.98240661621094,
+      "label": "Gentle Cleanser",
+      "role": "checkbox",
+      "top": 391.8537902832031,
+      "visible": true,
+      "width": 302.30584716796875
+    },
+    {
+      "bottom": 564.7906723022461,
+      "height": 74.9544906616211,
+      "label": "Glycolic Acid",
+      "role": "checkbox",
+      "top": 489.836181640625,
+      "visible": true,
+      "width": 302.30584716796875
+    },
+    {
+      "bottom": 639.7452011108398,
+      "height": 74.9544906616211,
+      "label": "Barrier Moisturizer",
+      "role": "checkbox",
+      "top": 564.7907104492188,
+      "visible": true,
+      "width": 302.30584716796875
+    },
+    {
+      "bottom": 824.6814613342285,
+      "height": 53.989688873291016,
+      "label": "Today tab",
+      "role": "tab",
+      "top": 770.6917724609375,
+      "visible": true,
+      "width": 91.0801010131836
+    },
+    {
+      "bottom": 824.6814613342285,
+      "height": 53.989688873291016,
+      "label": "Progress tab",
+      "role": "tab",
+      "top": 770.6917724609375,
+      "visible": true,
+      "width": 91.09526824951172
+    },
+    {
+      "bottom": 824.6814613342285,
+      "height": 53.989688873291016,
+      "label": "Shelf tab",
+      "role": "tab",
+      "top": 770.6917724609375,
+      "visible": true,
+      "width": 91.0801010131836
+    },
+    {
+      "bottom": 824.6814613342285,
+      "height": 53.989688873291016,
+      "label": "You tab",
+      "role": "tab",
+      "top": 770.6917724609375,
+      "visible": true,
+      "width": 91.09526824951172
+    }
+  ],
+  "horizontalOverflow": false,
+  "innerHeight": 845,
+  "innerWidth": 390,
+  "labels": [
+    {
+      "clientHeight": 22,
+      "clientWidth": 40,
+      "label": "Exfoliate",
+      "scrollHeight": 23,
+      "scrollWidth": 40,
+      "text": "Exfol\niate"
+    },
+    {
+      "clientHeight": 22,
+      "clientWidth": 40,
+      "label": "Recover",
+      "scrollHeight": 23,
+      "scrollWidth": 40,
+      "text": "Reco\nver"
+    },
+    {
+      "clientHeight": 22,
+      "clientWidth": 40,
+      "label": "Exfoliate",
+      "scrollHeight": 23,
+      "scrollWidth": 40,
+      "text": "Exfol\niate"
+    },
+    {
+      "clientHeight": 22,
+      "clientWidth": 40,
+      "label": "Retinoid",
+      "scrollHeight": 23,
+      "scrollWidth": 40,
+      "text": "Retin\noid"
+    },
+    {
+      "clientHeight": 22,
+      "clientWidth": 40,
+      "label": "Recover",
+      "scrollHeight": 23,
+      "scrollWidth": 40,
+      "text": "Reco\nver"
+    },
+    {
+      "clientHeight": 22,
+      "clientWidth": 40,
+      "label": "Retinoid",
+      "scrollHeight": 23,
+      "scrollWidth": 40,
+      "text": "Retin\noid"
+    },
+    {
+      "clientHeight": 22,
+      "clientWidth": 40,
+      "label": "Exfoliate",
+      "scrollHeight": 23,
+      "scrollWidth": 40,
+      "text": "Exfol\niate"
+    }
+  ],
+  "scrollWidth": 390,
+  "sub44": []
+}

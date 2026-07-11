@@ -1,0 +1,36 @@
+- button "Back":
+  - generic: <
+- button "More options"
+- generic: Retinol A
+- generic: data / Added by you
+- generic: Catalog
+- generic: Added by you
+- generic: Manual
+- generic: Added by hand. It can support your shelf and routine, but not high-confidence product recommendations.
+- button "Report an issue":
+  - generic: Report an issue
+- button "Edit opened date":
+  - generic: Opened
+  - generic: July 2026 · edit
+- generic: PAO
+- generic: unknown
+- button "Set printed best-before date":
+  - generic: Best used by
+  - text: estimated
+  - generic: · set
+- generic: What it contributes
+- generic: Retinoid
+- button "Timing note with Benzoyl Peroxide. Use one in the morning, the other at night. Review →":
+  - generic: Timing note with Benzoyl Peroxide. Use one in the morning, the other at night. Review →
+- button "Timing note with Glycolic Acid. Use them on alternate nights. Review →":
+  - generic: Timing note with Glycolic Acid. Use them on alternate nights. Review →
+- button "Review routine placement":
+  - generic: Routine role
+  - generic: Used in your Evening routine. Cycling nights 4, 10, 14.
+  - generic: Review the AM/PM plan before you check it off.
+- button "Replace":
+  - generic: Replace
+- button "Mark finished":
+  - generic: Mark finished
+- button "Remove or discard":
+  - generic: 🗑︎
