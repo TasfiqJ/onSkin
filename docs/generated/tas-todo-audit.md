@@ -1,8 +1,8 @@
 # Tas To Do Audit
 
-Generated: 2026-07-11T17:30:19.390Z
+Generated: 2026-07-11T17:31:13.689Z
 Status: pass
-Strict mode: no
+Strict mode: yes
 
 This generated audit checks that `docs/FOR_TAS_TO_DO.md` covers the
 Tas-owned strict launch evidence gates, current device support floors,
