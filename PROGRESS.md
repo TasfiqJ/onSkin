@@ -6,6 +6,28 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-10
 
+- Completed full user-authored cycle settings and bound the supported-phone
+  evidence into the required launch manifest. Pro users can edit a 1-14-night
+  Custom cycle with explicit Save/Cancel, stable shelf-product IDs, recovery
+  nights, assignment and frequency controls, retained over-cap intent, and
+  requested/applied cadence disclosure. Safety, phased introduction, reviewed
+  cadence, and one-active-per-night authority reconcile the applied projection
+  without erasing authored intent; Week, Why Tonight, Plan, and Today consume
+  that same result with exact applied/recovery provenance. Versioned v2 local
+  storage migrates the isolated legacy key, preserves malformed/future state,
+  composes concurrent disruptions atomically, and exports current versus legacy
+  configuration honestly. Expo web at 360 x 640 and 390 x 844 verified
+  Save/Cancel/reload, assignment, length/cadence edits, preset round trip,
+  retained intent, one-shot write failure and retry, browser Back blocking while
+  pending, closed review-gate behavior, cross-surface agreement, 48 px minimum
+  controls, zero overflow, and zero unexpected browser errors. The required
+  `Authored cycle customization and deterministic reconciliation` gate now reads
+  `test-results/human-e2e/2026-07-10/cycle-customization-current/`; Phase 7
+  packets hash the editor, projections, persistence, completion logic, and
+  evidence manifest. Root launch verification passes 191 mobile test files /
+  2037 tests. Native process-death, secure storage, timezone/DST, gestures,
+  accessibility, and named cadence review remain Tas-owned.
+
 - Closed cycle disruption and recovery persistence as one deterministic,
   encrypted local state machine. Pause, resume, Start Today, skip, procedure
   recovery, irritation recovery, phased introduction, and cycle-variant saves

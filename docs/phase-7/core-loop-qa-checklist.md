@@ -451,6 +451,22 @@ again`, and tapping `Use together anyway` returns to Shelf with the conflict
   `test-results/human-e2e/2026-07-08/cycle-cadence-review-gate-current/`; this
   does not replace native iOS/Android bottom-sheet, safe-area, screen-reader,
   or reviewer-signoff QA.
+- 2026-07-10 to 2026-07-11: Codex in-app browser Expo web at 360 x 640 and
+  390 x 844 covers the full authored Custom-cycle transaction. Auto initializes
+  Custom once; length, assignment, recovery, and frequency edits retain stable
+  shelf-product IDs; Cancel is non-mutating; Save commits before cache,
+  analytics, or navigation; preset round trip preserves the Custom definition;
+  and retained cadence-excess intent shows requested versus applied cadence.
+  A one-shot encrypted write failure keeps the full draft, blocks browser Back
+  while pending, and succeeds on retry. A closed cadence-review gate withholds
+  the stored Custom cycle without calling known products missing. Settings,
+  Week, Why Tonight, Plan, and Today agree on applied, authored-recovery, and
+  cadence-cap states. The support-floor pass reports zero overflow, controls at
+  least 48 px, zero dialogs, and zero unexpected browser errors. The required
+  `Authored cycle customization and deterministic reconciliation` manifest gate
+  reads `test-results/human-e2e/2026-07-10/cycle-customization-current/`; it does
+  not replace native secure-storage/process-death, timezone/DST, Back/swipe,
+  Dynamic Type, VoiceOver/TalkBack, or named cadence-review evidence.
 - 2026-07-08: Codex in-app browser Expo web at 320 x 568 covers the full nested
   scheduler route group. Fresh free direct `/cycle/settings`,
   `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`,

@@ -19,6 +19,11 @@
   the generated Phase 5 native-device packet, and the generated Phase 6
   payments packet, so Phase 7 core-loop signoff cannot drift from the local UI,
   native-device, or payments evidence packets it depends on.
+- The human-E2E manifest now requires the authored-cycle customization summary,
+  and the Phase 7 packet hashes Custom-cycle Settings, Week, Why Tonight, Plan,
+  Today, deterministic projection, persistence, and completion sources. Removing
+  the evidence or changing those sources therefore invalidates the local gate
+  and downstream packet hashes instead of leaving a stale passing launch check.
 - Strict QA packets now require granular scenario evidence for onboarding,
   shelf intake, reviewed guidance, routine builder, Today check-off, photos,
   reminders, payments, privacy controls, share cards, deferred surfaces, and

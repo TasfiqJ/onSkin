@@ -215,6 +215,20 @@ const cases = [
           (file) => file.path === 'scripts/phase7/check-core-loop-smoke.mjs',
         ) &&
         result.packet.files.some((file) => file.path === 'scripts/e2e/human-e2e-manifest.mjs') &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/app/cycle/settings.tsx',
+        ) &&
+        result.packet.files.some((file) => file.path === 'apps/mobile/src/app/cycle/week.tsx') &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/app/cycle/why-tonight.tsx',
+        ) &&
+        result.packet.files.some((file) => file.path === 'apps/mobile/src/app/routine/plan.tsx') &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/scheduler/customCycle.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/scheduler/cycleStore.ts',
+        ) &&
         result.packet.files.some((file) => file.path === 'docs/HUMAN_SIMULATED_E2E_TESTING.md') &&
         result.packet.files.some((file) => file.path === 'docs/E2E_TESTING_CHECKLIST.md') &&
         result.packet.files.some((file) => file.path === 'docs/USER_FLOW_TREE.md') &&

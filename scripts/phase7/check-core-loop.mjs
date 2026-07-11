@@ -109,6 +109,7 @@ require(has(
   /productionSurfaceReady/,
 ), 'phase7.ts must fail closed for production deferred surfaces.');
 const qaPacketBuilder = read('scripts/phase7/build-core-loop-qa-packet.mjs');
+const humanE2eManifestBuilder = read('scripts/e2e/human-e2e-manifest.mjs');
 require(/function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
   /core-loop-qa-packet\.json/.test(qaPacketBuilder) &&
   /core-loop-qa-packet\.md/.test(qaPacketBuilder) &&
@@ -121,6 +122,21 @@ require(/Phase 7 core-loop QA packet generated with a dirty Git worktree/.test(q
   ), 'Phase 7 core-loop QA packet must warn on dirty worktrees and expose Git status in Markdown.');
 for (const file of [
   'package.json',
+  'apps/mobile/src/app/cycle/settings.tsx',
+  'apps/mobile/src/app/cycle/week.tsx',
+  'apps/mobile/src/app/cycle/why-tonight.tsx',
+  'apps/mobile/src/app/routine/plan.tsx',
+  'apps/mobile/src/features/scheduler/cadence.ts',
+  'apps/mobile/src/features/scheduler/customCycle.ts',
+  'apps/mobile/src/features/scheduler/customCycle.test.ts',
+  'apps/mobile/src/features/scheduler/cycleStore.ts',
+  'apps/mobile/src/features/scheduler/cycleStore.test.ts',
+  'apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts',
+  'apps/mobile/src/features/scheduler/orchestrate.ts',
+  'apps/mobile/src/features/scheduler/orchestrate.test.ts',
+  'apps/mobile/src/features/scheduler/useCycle.ts',
+  'apps/mobile/src/features/today/cycleCompletion.ts',
+  'apps/mobile/src/features/today/cycleCompletion.test.ts',
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
   'scripts/phase7/build-core-loop-qa-packet.mjs',
@@ -143,6 +159,10 @@ for (const file of [
   require(qaPacketBuilder.includes(`'${file}'`) ||
     qaPacketBuilder.includes(`"${file}"`), `Phase 7 core-loop QA packet must hash ${file}.`);
 }
+require(/id: 'authored-cycle-customization-supported-phone'/.test(humanE2eManifestBuilder) &&
+  /cycle-customization-current/.test(
+    humanE2eManifestBuilder,
+  ), 'The human E2E manifest must require authored-cycle customization evidence.');
 require(has(
   'apps/mobile/src/lib/launch/phase7.test.ts',
   /keeps production Phase 7 surfaces disabled without a final brand domain/,

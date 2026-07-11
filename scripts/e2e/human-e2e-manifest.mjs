@@ -291,6 +291,11 @@ if (!cycleDisruptionReconciliationEvidenceDate) {
   console.error('FAIL Missing cycle disruption and reconciliation evidence.');
   process.exit(1);
 }
+const cycleCustomizationEvidenceDate = latestEvidenceDateForFolder('cycle-customization-current');
+if (!cycleCustomizationEvidenceDate) {
+  console.error('FAIL Missing authored-cycle customization and reconciliation evidence.');
+  process.exit(1);
+}
 const dataExportDisclosureEvidenceDate = latestEvidenceDateForFolder(
   'data-export-local-photo-disclosure-current',
 );
@@ -331,6 +336,8 @@ const latestManifestEvidenceDate = [
   multiActivePlanTodayEvidenceDate,
   routineOrderPersistenceEvidenceDate,
   conflictChoiceScheduleEvidenceDate,
+  cycleDisruptionReconciliationEvidenceDate,
+  cycleCustomizationEvidenceDate,
   dataExportDisclosureEvidenceDate,
   combinedDataExportEvidenceDate,
   accountUpgradeEvidenceDate,
@@ -705,6 +712,29 @@ const gates = [
       'Pause, resume, recovery, variant, Start Today, and irritation flows persist before success, recover from failed private writes, reconcile one canonical projection, and remain reachable at 360 x 640 and 390 x 844.',
   },
   {
+    id: 'authored-cycle-customization-supported-phone',
+    title: 'Authored cycle customization and deterministic reconciliation',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${cycleCustomizationEvidenceDate}/cycle-customization-current`,
+    evidence: 'summary.json',
+    requiredSchemaVersion: 1,
+    requiredViewports: ['360 x 640', '390 x 844'],
+    requiredVerified: [
+      'Auto-to-Custom initialization',
+      'non-mutating Cancel',
+      'browser Back prevention',
+      'stable product identity',
+      'retained cadence-excess intent',
+      'closed cadence-review gate',
+      'Settings, Week, Why Tonight, Plan, and Today agreement',
+      'zero horizontal overflow',
+    ],
+    expected:
+      'Custom Save/Cancel, stable authored identity, retained intent, failed-write and pending-Back recovery, closed review-gate behavior, exact reconciliation provenance, and Settings/Week/Why Tonight/Plan/Today agreement pass at 360 x 640 and 390 x 844.',
+  },
+  {
     id: 'data-export-local-photo-disclosure-supported-phone',
     title: 'Account export local-photo scope disclosure',
     kind: 'summary-status',
@@ -743,6 +773,7 @@ const gateResults = gates.map((gate) => {
   let detail = 'Missing evidence folder or file.';
   let failureCount = null;
   let verdict = null;
+  const requirementFailures = [];
 
   if (!gate.required && (!folderExists || !evidenceExists)) {
     status = 'skipped';
@@ -770,14 +801,45 @@ const gateResults = gates.map((gate) => {
         } else if (Array.isArray(summary?.failedRoutes)) {
           failureCount = summary.failedRoutes.length;
         }
+        if (
+          typeof gate.requiredSchemaVersion === 'number' &&
+          summary?.schemaVersion !== gate.requiredSchemaVersion
+        ) {
+          requirementFailures.push(
+            `schemaVersion must be ${gate.requiredSchemaVersion}, received ${String(summary?.schemaVersion ?? 'missing')}`,
+          );
+        }
+        const summaryViewports = Array.isArray(summary?.viewports)
+          ? summary.viewports.map((value) => String(value))
+          : [];
+        for (const viewport of gate.requiredViewports ?? []) {
+          if (!summaryViewports.includes(viewport)) {
+            requirementFailures.push(`missing required viewport ${viewport}`);
+          }
+        }
+        const verified = Array.isArray(summary?.verified)
+          ? summary.verified.map((value) => String(value))
+          : [];
+        for (const needle of gate.requiredVerified ?? []) {
+          if (!verified.some((value) => value.includes(needle))) {
+            requirementFailures.push(`missing verified coverage: ${needle}`);
+          }
+        }
         status =
-          verdict === 'pass' && (failureCount == null || failureCount === 0) ? 'pass' : 'fail';
+          verdict === 'pass' &&
+          (failureCount == null || failureCount === 0) &&
+          requirementFailures.length === 0
+            ? 'pass'
+            : 'fail';
         detail =
           failureCount == null
             ? `summary status: ${verdict || 'missing'}.`
             : `summary status: ${verdict || 'missing'}; ${failureCount} failed route${
                 failureCount === 1 ? '' : 's'
               }.`;
+        if (requirementFailures.length > 0) {
+          detail = `${detail} ${requirementFailures.join('; ')}.`;
+        }
       }
     } catch (error) {
       status = 'fail';
@@ -793,6 +855,9 @@ const gateResults = gates.map((gate) => {
     detail,
     failureCount,
     verdict,
+    ...(gate.requiredSchemaVersion != null || gate.requiredViewports || gate.requiredVerified
+      ? { requirementFailures }
+      : {}),
     folderExists,
     evidenceExists,
     fileCount: footprint.files,

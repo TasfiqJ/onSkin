@@ -99,6 +99,12 @@ const requiredManifestNeedles = [
   'multi-active-plan-today-current',
   'Persistent Morning and Evening routine order',
   'routine-order-persistence-current',
+  'Exact-pair conflict choice and reviewed-schedule consistency',
+  'conflict-choice-schedule-current',
+  'Cycle disruption persistence and deterministic reconciliation',
+  'cycle-disruption-reconciliation-current',
+  'Authored cycle customization and deterministic reconciliation',
+  'cycle-customization-current',
 ];
 
 const requiredLaunchCommands = [

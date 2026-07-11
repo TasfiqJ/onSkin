@@ -157,23 +157,34 @@ required `Canonical multi-active Plan and Today consistency` gate is in
 `test-results/human-e2e/2026-07-10/multi-active-plan-today-current/` and proves
 BP AM placement, every supported cycle family, explicit undefined-cadence
 withholding, one-active PM projection, reload persistence, and supported-phone
-  geometry. The required `Persistent Morning and Evening routine order` gate is
-  in `test-results/human-e2e/2026-07-10/routine-order-persistence-current/` and
-  proves independent stable-ID phase edits, reload, Cancel, shelf recompute,
-  Today projection, failed-write recovery, and safety/cycle authority. The
-  required `Exact-pair conflict choice and reviewed-schedule consistency` gate
-  is in
-  `test-results/human-e2e/2026-07-10/conflict-choice-schedule-current/` and
-  proves independent same-rule pairs, both persisted choices, exact downstream
-  suppression/explanations, one-shot write recovery, one-active schedule
-  authority, and supported-phone keyboard/geometry. The required `Cycle
-  disruption persistence and deterministic reconciliation` gate is in
-  `test-results/human-e2e/2026-07-10/cycle-disruption-reconciliation-current/`
-  and proves failed-write recovery, pause/reload/resume, procedure and
-  irritation recovery, variant persistence, Start Today, pending-interaction
-  blocking, and supported-phone geometry. None of these local gates replaces
-  named clinical/cosmetic review, live Supabase proof, native process-death or
-  timezone/DST proof, or native device accessibility evidence.
+geometry. The required `Persistent Morning and Evening routine order` gate is
+in `test-results/human-e2e/2026-07-10/routine-order-persistence-current/` and
+proves independent stable-ID phase edits, reload, Cancel, shelf recompute,
+Today projection, failed-write recovery, and safety/cycle authority. The
+required `Exact-pair conflict choice and reviewed-schedule consistency` gate
+is in
+`test-results/human-e2e/2026-07-10/conflict-choice-schedule-current/` and
+proves independent same-rule pairs, both persisted choices, exact downstream
+suppression/explanations, one-shot write recovery, one-active schedule
+authority, and supported-phone keyboard/geometry. The required disruption gate
+has manifest title:
+`Cycle disruption persistence and deterministic reconciliation`.
+Its evidence is in
+`test-results/human-e2e/2026-07-10/cycle-disruption-reconciliation-current/`
+and proves failed-write recovery, pause/reload/resume, procedure and
+irritation recovery, variant persistence, Start Today, pending-interaction
+blocking, and supported-phone geometry. The required authored-cycle gate has
+manifest title:
+`Authored cycle customization and deterministic reconciliation`.
+Its evidence is in
+`test-results/human-e2e/2026-07-10/cycle-customization-current/` and proves
+Custom Save/Cancel, stable product-ID intent, retained cadence excess,
+requested/applied cadence disclosure, preset round trip, failed-write retry,
+pending browser-Back blocking, closed review-gate behavior, exact recovery
+provenance, and Settings/Week/Why Tonight/Plan/Today agreement. None of these
+local gates replaces named clinical/cosmetic review, live Supabase proof,
+native process-death or timezone/DST proof, or native device accessibility
+evidence.
 The baseline still anchors to the 360 x 640 launch-floor 200% text-pressure sweep,
 which passed 49 direct-entry routes with zero failed routes; the supported-phone
 360 x 740, 375 x 812, 390 x 844, 412 x 915, and 430 x 932 200% sweeps also

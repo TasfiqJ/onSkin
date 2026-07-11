@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "status": "pass",
+  "failedRouteCount": 0,
+  "localTestDate": "2026-07-10",
+  "surface": "Expo web development build in the Codex in-app browser",
+  "viewports": [
+    "360 x 640",
+    "390 x 844"
+  ],
+  "verified": [
+    "Auto-to-Custom initialization, explicit assignment, length, and cadence edits",
+    "non-mutating Cancel plus atomic Save before cache publication, analytics, or navigation",
+    "one-shot encrypted write failure, browser Back prevention while pending, full draft retention, and successful retry",
+    "stable product identity and authored intent after reload and preset round trip",
+    "retained cadence-excess intent with requested versus applied cadence disclosure",
+    "closed cadence-review gate withholding without false missing-product classification",
+    "Settings, Week, Why Tonight, Plan, and Today agreement for applied, authored-recovery, and cadence-cap states",
+    "360 x 640 zero horizontal overflow, 48 px minimum interactive geometry, zero dialogs, and zero unexpected browser errors"
+  ],
+  "bugsFixed": [
+    "Metro runtime cadence module cycle",
+    "wrapped CUSTOM provenance label",
+    "browser Back escape during a pending Custom-cycle write"
+  ],
+  "externalGates": [
+    "native encrypted-storage relaunch, process-death, Back, and swipe-removal proof",
+    "timezone and daylight-saving transition proof on supported physical devices",
+    "VoiceOver, TalkBack, Dynamic Type, and native safe-area QA",
+    "named clinical and cosmetic-chemistry review before production cadence opens"
+  ]
+}

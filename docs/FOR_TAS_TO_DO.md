@@ -414,6 +414,22 @@ Status: needs-device-verification
   dismissal is blocked, and no success analytics fires before persistence.
   Retain build/device/OS IDs, before/after cycle dates, sanitized logs, screen
   recordings, VoiceOver/TalkBack output, and named tester signoff.
+- Verify authored Custom-cycle persistence on supported physical iOS and
+  Android devices. Start from Auto, enter Custom, change the 1-14-night length,
+  move an eligible active, add/remove an occurrence, save, force-stop/relaunch,
+  switch to a preset, and return to Custom. Confirm stable product identity,
+  anchor preservation, at least one recovery night, retained cadence-excess or
+  temporarily safety-ineligible intent, requested versus applied cadence, and
+  exact Settings/Week/Why Tonight/Plan/Today agreement. Inject a private-write
+  failure and attempt Android hardware Back, iOS swipe-back, sheet dismissal,
+  and competing edits while persistence is pending; the prior projection and
+  full draft must remain until retry succeeds, with no success analytics before
+  commit. Repeat across local midnight, timezone/DST changes, Dynamic Type,
+  VoiceOver, and TalkBack. Attach build/device/OS IDs, before/after encrypted
+  record hashes, screenshots/video, sanitized logs, and named tester signoff.
+  Local supported-phone evidence is in
+  `test-results/human-e2e/2026-07-10/cycle-customization-current/` but does not
+  replace physical-device or clinical/cosmetic-chemistry review.
 - Build a real multi-step Shelf on each supported physical platform, save
   different Morning and Evening application orders, force-close/relaunch, add
   and remove a product, and verify Plan plus Today retain the surviving order.

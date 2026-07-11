@@ -45,6 +45,22 @@ Fresh verification through 2026-07-10:
   The server mirror remains best effort; deployed migration/RLS/reconciliation,
   native encrypted storage, Dynamic Type, VoiceOver, and TalkBack remain
   release gates.
+- The required `Cycle disruption persistence and deterministic reconciliation`
+  gate proves pause, resume, procedure/irritation recovery, variant, and Start
+  Today mutations commit before success, survive reload, recover from a failed
+  private write, and keep one projection across Settings, Week, Why Tonight,
+  Plan, and Today. Required manifest title:
+  `Authored cycle customization and deterministic reconciliation`.
+  That gate additionally proves Custom Save/Cancel, stable shelf product
+  identity, retained cadence-excess intent, requested/applied cadence, preset
+  round trip, pending browser-Back blocking, failed-write retry, exact recovery
+  provenance, and closed review-gate behavior at 360 x 640 and 390 x 844.
+  Evidence:
+  `test-results/human-e2e/2026-07-10/cycle-disruption-reconciliation-current/`
+  and `test-results/human-e2e/2026-07-10/cycle-customization-current/`.
+  Native process-death, secure-storage, timezone/DST, Back/swipe gestures,
+  Dynamic Type, VoiceOver/TalkBack, and named cadence review remain release
+  gates.
 - The required `Pregnancy-safety status and routine exclusion consistency`
   gate proves all encrypted status choices, consent/profile retry, legacy
   consent regrant, missing-profile caution, prefer-not reload, and explicit
