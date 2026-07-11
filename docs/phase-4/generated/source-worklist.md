@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-11T17:30:11.341Z
+Generated: 2026-07-11T18:48:29.502Z
 Status: pass
-Git SHA: 2e59932f348ae3ad9e826932c240ab6325f31c82
+Git SHA: de9bee6b829c97a89c2f0e08a83e59c788baffa9
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -12,25 +12,26 @@ must attach before Phase 4 can stop blocking launch.
 
 ## Summary
 
-- Work items: 9
-- Source files hashed: 111
+- Work items: 10
+- Source files hashed: 149
 - Missing source files: 0
 - Blockers: 0
 - Warnings: 0
 
 ## Items
 
-| ID                        | Domain         | Area                                                        | Status         | Launch gate             | Sources | Missing sources |
-| ------------------------- | -------------- | ----------------------------------------------------------- | -------------- | ----------------------- | ------- | --------------- |
-| source-identity           | sourceReview   | Final catalog API identity and attribution surface          | blocked        | B-CATALOG-SOURCE-REVIEW | 6       | 0               |
-| obf-odbl-posture          | sourceReview   | Open Beauty Facts and ODbL launch posture                   | blocked        | B-ODBL-REVIEW           | 8       | 0               |
-| cosing-reuse-taxonomy     | sourceReview   | CosIng reuse and ingredient-tag taxonomy                    | blocked        | B-CATALOG-SOURCE-REVIEW | 7       | 0               |
-| curated-first-batch       | curation       | First curated launch product batch                          | blocked        | B-CURATED-CATALOG       | 7       | 0               |
-| import-qa                 | curation       | Import QA and generated catalog evidence                    | local-scaffold | B-CATALOG-SEED          | 5       | 0               |
-| beta-coverage             | betaEvidence   | Closed-beta catalog coverage and correction loop            | blocked        | B-CATALOG-COVERAGE      | 7       | 0               |
-| mobile-catalog-disclosure | productSurface | Mobile catalog source, quality, and report-issue disclosure | local-scaffold | B-CATALOG-SEED          | 54      | 0               |
-| obf-contribution-back     | operations     | Unmatched-product contribution-back operation               | blocked        | B-SHELF-CONTRIB         | 9       | 0               |
-| observability-support     | operations     | Catalog dashboards, alerts, and support feedback loop       | blocked        | B-CATALOG-COVERAGE      | 8       | 0               |
+| ID                           | Domain         | Area                                                        | Status         | Launch gate             | Sources | Missing sources |
+| ---------------------------- | -------------- | ----------------------------------------------------------- | -------------- | ----------------------- | ------- | --------------- |
+| source-identity              | sourceReview   | Final catalog API identity and attribution surface          | blocked        | B-CATALOG-SOURCE-REVIEW | 6       | 0               |
+| obf-odbl-posture             | sourceReview   | Open Beauty Facts and ODbL launch posture                   | blocked        | B-ODBL-REVIEW           | 8       | 0               |
+| cosing-reuse-taxonomy        | sourceReview   | CosIng reuse and ingredient-tag taxonomy                    | blocked        | B-CATALOG-SOURCE-REVIEW | 7       | 0               |
+| curated-first-batch          | curation       | First curated launch product batch                          | blocked        | B-CURATED-CATALOG       | 7       | 0               |
+| import-qa                    | curation       | Import QA and generated catalog evidence                    | local-scaffold | B-CATALOG-SEED          | 5       | 0               |
+| beta-coverage                | betaEvidence   | Closed-beta catalog coverage and correction loop            | blocked        | B-CATALOG-COVERAGE      | 7       | 0               |
+| mobile-catalog-disclosure    | productSurface | Mobile catalog source, quality, and report-issue disclosure | local-scaffold | B-CATALOG-SEED          | 60      | 0               |
+| catalog-freshness-provenance | productSurface | Catalog-backed Shelf freshness and provenance contract      | local-scaffold | B-CATALOG-SEED          | 32      | 0               |
+| obf-contribution-back        | operations     | Unmatched-product contribution-back operation               | blocked        | B-SHELF-CONTRIB         | 9       | 0               |
+| observability-support        | operations     | Catalog dashboards, alerts, and support feedback loop       | blocked        | B-CATALOG-COVERAGE      | 8       | 0               |
 
 ## Item Details
 
@@ -54,7 +55,7 @@ Sources:
 - `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 2334 bytes - sha256 `441e03ded2314f7a9efc2f11e3b7d0daa97256de17e6c654423124c1c4a4670f`
 - `docs/phase-4/catalog-source-memo-cosing.md` - 2021 bytes - sha256 `49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534`
 - `docs/phase-4/phase-4-exit-review.md` - 2235 bytes - sha256 `1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3`
-- `docs/FOR_TAS_TO_DO.md` - 63276 bytes - sha256 `e230ea7c0eda8e42d20a96a08b36f0cef272482b47e79f674aed48c58bf72369`
+- `docs/FOR_TAS_TO_DO.md` - 65647 bytes - sha256 `8a1aa18747a7056505ea791b5e175768c1f8cea5d25eaf0297c5a04408d81be9`
 
 ### obf-odbl-posture - Open Beauty Facts and ODbL launch posture
 
@@ -76,8 +77,8 @@ Sources:
 - `scripts/phase4/import-obf-snapshot.mjs` - 4856 bytes - sha256 `bf5721fac6d5b11e0ca0c99b2b883330af6eb22c66763ed316ebe98b229597bf`
 - `scripts/phase4/catalog-qa-report.mjs` - 6696 bytes - sha256 `f6e506aa07d8cff7715f2db8eff2cfe00784b2d5f277b3f78a1316eeaad0d4c4`
 - `supabase/migrations/20260614000026_phase4_catalog.sql` - 35102 bytes - sha256 `dc1a7f150bd5b285cf2d05f2583126ebeb97e67b5363666e670518896b93c311`
-- `supabase/functions/catalog-lookup/index.ts` - 8352 bytes - sha256 `1261ec0afe96489908a64b896221fadbc35ddcd02289f54e65a8dfe3baf9285b`
-- `supabase/functions/catalog-search/index.ts` - 5386 bytes - sha256 `cc791a9805eeb57ed0d89fa8bc3e69c5f47ee77cd5c1399ecd49485a7d357d9c`
+- `supabase/functions/catalog-lookup/index.ts` - 8203 bytes - sha256 `1d5f69b7ee82f45e7f2e4ed221783a28e67e275d6df3f69688b4562a26ed0134`
+- `supabase/functions/catalog-search/index.ts` - 5389 bytes - sha256 `6a2548c2709d0c61dc3710ab130037f6a6a1ab294d58c73335bb8300ce7f2aea`
 - `supabase/functions/catalog-report/index.ts` - 4653 bytes - sha256 `bff289eeca7657c0fa0e65ec686c07903dfa08a36c7a7691150cd28417d4aa36`
 
 ### cosing-reuse-taxonomy - CosIng reuse and ingredient-tag taxonomy
@@ -124,7 +125,7 @@ Sources:
 - `apps/mobile/src/features/catalog/quality.ts` - 4663 bytes - sha256 `7156ff221071cf6ab90c3558c20d084c53e1f48d0025843ebea5275929103e53`
 - `apps/mobile/src/features/catalog/quality.test.ts` - 2258 bytes - sha256 `b5187f33001f741cdb8636ad61343f072502b60ffe2fba70b5e831fce570e599`
 - `apps/mobile/src/features/recommendations/catalog.ts` - 9381 bytes - sha256 `e5d35422d6e33398d362b5c2e4483da8808bf2654d83d470013f537aa09e59c4`
-- `apps/mobile/src/features/recommendations/claimsafety.test.ts` - 8639 bytes - sha256 `40563364c272e12a35552e3c9fe1a8d24ab760dcaa46431ccda3f2fdf9fc4676`
+- `apps/mobile/src/features/recommendations/claimsafety.test.ts` - 9030 bytes - sha256 `7ad766f22ba19b9a6f9ca80bb1320ebae3c5bf970c3e850c485407db22b03068`
 
 ### import-qa - Import QA and generated catalog evidence
 
@@ -169,7 +170,7 @@ Sources:
 - `docs/phase-10/catalog-beta-report.md` - 1680 bytes - sha256 `28729b9ed344c13414cb6426f0c5360ac21034641b5cd94298d8dbb391165d28`
 - `docs/phase-10/support-beta-report.md` - 2149 bytes - sha256 `f25c3841a8bc5649dbd1f38632c756898da46a5d7f4d59ff7c328726dc9d26ac`
 - `docs/phase-10/retention-activation-report.md` - 2343 bytes - sha256 `e7c5ebd8d49c5bc527e4ea926743a2ede4eb33522e6fda28ec1deae00953f8ab`
-- `docs/FOR_TAS_TO_DO.md` - 63276 bytes - sha256 `e230ea7c0eda8e42d20a96a08b36f0cef272482b47e79f674aed48c58bf72369`
+- `docs/FOR_TAS_TO_DO.md` - 65647 bytes - sha256 `8a1aa18747a7056505ea791b5e175768c1f8cea5d25eaf0297c5a04408d81be9`
 
 ### mobile-catalog-disclosure - Mobile catalog source, quality, and report-issue disclosure
 
@@ -186,8 +187,8 @@ Required evidence:
 
 Sources:
 
-- `apps/mobile/src/features/catalog/client.test.ts` - 6158 bytes - sha256 `dd3d1319105637aa8cc5d73f619adcb6b0cba643ede4c72d581bda08ac4200df`
-- `apps/mobile/src/features/catalog/client.ts` - 4815 bytes - sha256 `e7921c914cec2b477e352592e8ba10cabe781b5ac58ba05b8fedabb22ae66e22`
+- `apps/mobile/src/features/catalog/client.test.ts` - 11141 bytes - sha256 `f37eac5b03f95b060b2b5f7b1c92983a5906135541ba0422b6fa01e9752a5f4c`
+- `apps/mobile/src/features/catalog/client.ts` - 9984 bytes - sha256 `2700b12181daaf103dd4768c646b40a18d921c8bc0d5877f399e6ce55375078c`
 - `apps/mobile/src/features/catalog/copy.ts` - 1913 bytes - sha256 `b182cec74cb72f850e83dcca14a5548c6277d73a9eaac229f6062e665090f958`
 - `apps/mobile/src/features/catalog/ingredientParser.test.ts` - 1497 bytes - sha256 `fc196a7b95de58ed71a6deff1d9df7afb4ea394b00ca482e8b1eae27204baf25`
 - `apps/mobile/src/features/catalog/ingredientParser.ts` - 6913 bytes - sha256 `1030094651254b5e6a934ae515bd42bf2f10ba10229b1164a12d3fd2ca99eee4`
@@ -201,31 +202,35 @@ Sources:
 - `apps/mobile/src/features/shelf/analytics.ts` - 599 bytes - sha256 `1e514f5fc1a96111a8b792dc8841ad41a11130dd6de7031eb08a353f85ef1050`
 - `apps/mobile/src/features/shelf/categories.test.ts` - 2124 bytes - sha256 `4aae0710713ddf321c7cb078b8434b4c77931270f68591802be2d2366cbdf4a9`
 - `apps/mobile/src/features/shelf/categories.ts` - 2691 bytes - sha256 `4a08833bd1d80b64748e2b8b635c2e39dce596d2eef4d52ea36f39912bac29d0`
-- `apps/mobile/src/features/shelf/expiry.ts` - 1004 bytes - sha256 `d756a48315ecf8e5c0074019ea5238bbeb411afdee9ac1def3181398d20b0bd3`
+- `apps/mobile/src/features/shelf/expiry.ts` - 1306 bytes - sha256 `0846816c55e3ccab674ba04ab9b9332eef7e7301436620fbaaf9fea2fa9cb734`
+- `apps/mobile/src/features/shelf/freshness.test.ts` - 2976 bytes - sha256 `3ab2cc0066fb2c9880b8a294424fcf15b21b749e39106b95fda14153bab5b962`
+- `apps/mobile/src/features/shelf/freshness.ts` - 3758 bytes - sha256 `db7f03175302ca10c75668056d8ca1ce0ff3f41de06b36e8428e09437ddc1ee2`
+- `apps/mobile/src/features/shelf/freshnessMigration.test.ts` - 1325 bytes - sha256 `39696409e00d951d5a8d57b065b35f051bdc12a791471d8564c146446dc1dd73`
 - `apps/mobile/src/features/shelf/IntakeContext.tsx` - 2833 bytes - sha256 `afc1156ac26b2a759511c95e8acc7f84ab8b6487d46f72c359c3dc4fee6c3252`
-- `apps/mobile/src/features/shelf/labels.ts` - 611 bytes - sha256 `dcb01b52fc70c1b2f2b465091b3ce36e45ac9bfdfbf99c9b883a70023605ad9c`
-- `apps/mobile/src/features/shelf/metadata.ts` - 1372 bytes - sha256 `87178aae2ac9df43a91f5815a54d3f91c71a3da5c7e1777a545122d23a1628be`
+- `apps/mobile/src/features/shelf/labels.ts` - 947 bytes - sha256 `b39bac34c85280eda82ce9b8a5e3d8ea31d90dcd3e53f6daeb636cd0df0a8552`
+- `apps/mobile/src/features/shelf/LocalDateField.tsx` - 1765 bytes - sha256 `e0b6cc071362f286582498c4333650d0ead57b58dbc6cc9f270e53c70e1e87a4`
+- `apps/mobile/src/features/shelf/metadata.ts` - 1352 bytes - sha256 `3d5ea0795d0b2460a4d14b070496a41c84fc5cbaac0431e05f0c48d2ca29194e`
 - `apps/mobile/src/features/shelf/mutations.ts` - 4996 bytes - sha256 `f589aa77cb90e541e0e0c7db52406825f9b535bd1f0c64af7dbf37acebe33e65`
 - `apps/mobile/src/features/shelf/pairedConflicts.ts` - 766 bytes - sha256 `eb4cc3b857828ae8d123890b0771a44fe57e73e29da3e6207604fd3ed640a918`
-- `apps/mobile/src/features/shelf/paoProvenance.test.ts` - 909 bytes - sha256 `e9b4d0c1dd6c19d3a833a18c6b2c2aecb79c1872d6bfff9d71585cb0b06d4855`
-- `apps/mobile/src/features/shelf/paoProvenance.ts` - 429 bytes - sha256 `004ec2dc224ec22076481a3b84242573a5f08f6bf87ccdc90c3d003de97c4aec`
+- `apps/mobile/src/features/shelf/paoProvenance.test.ts` - 1305 bytes - sha256 `036d37d4a9e008be0b89e5c63d9091704f439d23111ca377513a5f4a6bebc555`
+- `apps/mobile/src/features/shelf/paoProvenance.ts` - 508 bytes - sha256 `dd71e9b3f563903e532cd76f5643ce04cc280f6cbe79cc7837ad2861fdacb7b3`
 - `apps/mobile/src/features/shelf/scanLog.test.ts` - 4472 bytes - sha256 `8510e109ebd01569344f623ff002576a588d39a6bc04592685c242852551ce0f`
 - `apps/mobile/src/features/shelf/scanLog.ts` - 1867 bytes - sha256 `0a00c94a4de9c3dedc2815b64340e9195c4f26971910f58fd8ca8066315bc28d`
-- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 45837 bytes - sha256 `504bfb9dded497b016d2ff3464fcc1d13c21ec7d571bcaf8f90e120902755deb`
-- `apps/mobile/src/features/shelf/store.test.ts` - 4504 bytes - sha256 `6877eeedecd0b6680a764c61fba2dbcb012680e8e6c5d3230573105dd2548cda`
-- `apps/mobile/src/features/shelf/store.ts` - 13172 bytes - sha256 `63973c8778d227cf444a97e12a34a9c1ad8b11a385a0adcd81a8299a692f8615`
-- `apps/mobile/src/features/shelf/useShelf.test.ts` - 3684 bytes - sha256 `089d526dd0a4fc3f9ff34097d44567b2597e1b31c6669503663145b714428762`
-- `apps/mobile/src/features/shelf/useShelf.ts` - 10647 bytes - sha256 `e328a494127f8cd61be00c2d62ebb15e71dbee897cacc3c691af012864242c32`
-- `apps/mobile/src/app/shelf/[id].tsx` - 31291 bytes - sha256 `314716f436f510597f1c6fbaa43132714f5ff8dc0e497423d14bc19c0f4c468b`
-- `apps/mobile/src/app/shelf/search.tsx` - 15317 bytes - sha256 `6045224805f4ae258a384d405b2dca5b863459399e351d8557bb76a1fb305377`
+- `apps/mobile/src/features/shelf/shelfRoutes.test.ts` - 46618 bytes - sha256 `0d4af97d8fc892571f9eeb045e7c2c1d7c48d59f54143db3ff1634309ff1c9dc`
+- `apps/mobile/src/features/shelf/store.test.ts` - 7202 bytes - sha256 `a2b05b14d6c45725f50768611345f98f4d7f90733840eac2d1a56fc9dff2f81d`
+- `apps/mobile/src/features/shelf/store.ts` - 12717 bytes - sha256 `a5cc27b4d691a9e37f38ad49a58a6c5bed5d6c4d9c7d166ba5509ac94057dc16`
+- `apps/mobile/src/features/shelf/useShelf.test.ts` - 4753 bytes - sha256 `63d228877532e01ded924cfc5693c6789ee2a311207ebc840e8bc88a1b6b69ac`
+- `apps/mobile/src/features/shelf/useShelf.ts` - 10380 bytes - sha256 `950087e8f98dbc6a89d81a512bb5aaf37b5927415220c236dbc742f4cf4f718c`
+- `apps/mobile/src/app/shelf/[id].tsx` - 37135 bytes - sha256 `dfae778efed66e57e151c5bfc14e00c7ce473fd2b4ec02002d90ff27e18770fd`
+- `apps/mobile/src/app/shelf/search.tsx` - 15482 bytes - sha256 `01ae00b96fa0a378ae140b8f54c342a268e5b34c0e32e0a76349e4b9493176d6`
 - `apps/mobile/src/app/shelf/manual.tsx` - 13837 bytes - sha256 `52ca7524948f5ad3a7485ce7be8be97d14d25ae55119f010ff1513baef291227`
 - `apps/mobile/src/features/recommendations/applyPreferences.test.ts` - 1319 bytes - sha256 `751559e6d23b979ffe0cd2924d42f30eb41b591f6427bf13d27c175cffdb75a3`
 - `apps/mobile/src/features/recommendations/applyPreferences.ts` - 493 bytes - sha256 `50dabada0ac3066adf7bd455e93c95ee89b5838079a2f737ff7d36b57d02b0f3`
 - `apps/mobile/src/features/recommendations/catalog.ts` - 9381 bytes - sha256 `e5d35422d6e33398d362b5c2e4483da8808bf2654d83d470013f537aa09e59c4`
-- `apps/mobile/src/features/recommendations/claimsafety.test.ts` - 8639 bytes - sha256 `40563364c272e12a35552e3c9fe1a8d24ab760dcaa46431ccda3f2fdf9fc4676`
-- `apps/mobile/src/features/recommendations/copy.ts` - 6707 bytes - sha256 `4ae1a6cda7b8b336c11a2c89724760379ad4ab896e128b848b665b7830cb6d8c`
-- `apps/mobile/src/features/recommendations/engine.test.ts` - 15404 bytes - sha256 `290cd303ba8f2cf403009c905afc7cd302cf35add3deb62fbd1968b351a8cbe8`
-- `apps/mobile/src/features/recommendations/engine.ts` - 17623 bytes - sha256 `a0d8e95df85b1a53d3def11766cf34a1b708797d552d4aad1652cb206978ef2b`
+- `apps/mobile/src/features/recommendations/claimsafety.test.ts` - 9030 bytes - sha256 `7ad766f22ba19b9a6f9ca80bb1320ebae3c5bf970c3e850c485407db22b03068`
+- `apps/mobile/src/features/recommendations/copy.ts` - 7852 bytes - sha256 `d770279401f291b2ee903c275a1202c535f717272bc37bf7d5ef3fe1036778cb`
+- `apps/mobile/src/features/recommendations/engine.test.ts` - 16643 bytes - sha256 `8aaf0076f3f5df6f4c982d0ac1a62ce6835c1b6efcd6fc3f8f23ffa436126b1c`
+- `apps/mobile/src/features/recommendations/engine.ts` - 17809 bytes - sha256 `ccd83caffac064fa690bb5acbf67ec350a86398ce64f22e5f3ecc06ca691693d`
 - `apps/mobile/src/features/recommendations/fit.test.ts` - 4508 bytes - sha256 `37e6a7e1c6bf31bf7ad7f5b4511fa41c9e1a345f9890eaadce3152ef09cc6dd7`
 - `apps/mobile/src/features/recommendations/fit.ts` - 5650 bytes - sha256 `53030a7d1537eaf7567b861bd72368f829b82d79a4323285d570a6a6da823745`
 - `apps/mobile/src/features/recommendations/loading.ts` - 251 bytes - sha256 `9c611cd49e793cc1161ecd665ee790bb056014b28a8d2f928a20bf59c0d7294d`
@@ -233,13 +238,63 @@ Sources:
 - `apps/mobile/src/features/recommendations/recommendationRoutes.test.ts` - 14651 bytes - sha256 `e09257f75e5dabd44ce73b475e00f9e31bb60c619f948ebe3c6b96ff6f0abeb2`
 - `apps/mobile/src/features/recommendations/RecommendationsTeaser.test.ts` - 3590 bytes - sha256 `6f0d92c8fb2f1165be38c25b7bc2b6aa6ba582bfda66e86b7099e7ed78bb4340`
 - `apps/mobile/src/features/recommendations/RecommendationsTeaser.tsx` - 8154 bytes - sha256 `e7f0a45a96459b892d81a36c3a5f196864b7f9bec210f4be880dee58706e75f0`
+- `apps/mobile/src/features/recommendations/replenishment.test.ts` - 3505 bytes - sha256 `9594da62265838c9628bc8dbfcc9eb81c24709a2510cb69fe1a88cde68b2f4cc`
+- `apps/mobile/src/features/recommendations/replenishment.ts` - 2237 bytes - sha256 `c1283d8602f70730433bc4009a6049ffe21c369682bf2bdf3832b64766a09420`
 - `apps/mobile/src/features/recommendations/store.test.ts` - 3232 bytes - sha256 `ef032d38c8d630abaee8072724276b590e0223dae3e8995522e8a9771e579a0d`
 - `apps/mobile/src/features/recommendations/store.ts` - 5632 bytes - sha256 `bf8890e423058ebe067aa925d1ec76b5b7cd168560558cd8a49ee8701da5d7ef`
 - `apps/mobile/src/features/recommendations/useRecommendations.test.ts` - 1006 bytes - sha256 `9c1908c337df4cc3abd8a4fb12fcf12bca2d82b985b4043189a4347ab65fe44a`
-- `apps/mobile/src/features/recommendations/useRecommendations.ts` - 2557 bytes - sha256 `ad18a5e178449e1f4ac2f2a25f5062077410f2a66a02a818fcf542610256ef0a`
+- `apps/mobile/src/features/recommendations/useRecommendations.ts` - 2895 bytes - sha256 `efa71f91341a44cf26d64e3342ff3e70794988f92aa9eb95580fefa7ca59d1bc`
 - `supabase/functions/catalog-report/index.ts` - 4653 bytes - sha256 `bff289eeca7657c0fa0e65ec686c07903dfa08a36c7a7691150cd28417d4aa36`
 - `supabase/functions/catalog-report/privacy.ts` - 3504 bytes - sha256 `9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e`
 - `supabase/functions/catalog-report/privacy.test.ts` - 4009 bytes - sha256 `db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac`
+
+### catalog-freshness-provenance - Catalog-backed Shelf freshness and provenance contract
+
+- Domain: productSurface
+- Status: local-scaffold
+- Launch gate: B-CATALOG-SEED
+- Owner: Engineering + catalog operator + device QA
+
+Required evidence:
+
+- Catalog lookup/search expose the source UUID separately and admit only reviewed, region-compatible PAO and printed-expiry evidence; external candidates do not fabricate provenance.
+- Shelf intake requires a coherent opened state and exact non-future local date, records `label` PAO provenance only after explicit open-jar confirmation, and surfaces the source of the winning expiry date.
+- Re-add archives the prior unit and creates a fresh unit without inheriting its printed expiry; automatic replenishment uses only supported signals and alerts remain explicit opt-in.
+
+Sources:
+
+- `docs/04-smart-shelf.md` - 55627 bytes - sha256 `96a33fafa232716b20562d6bf5664ce018284bc4fc59c9003a1437ab37065dce`
+- `docs/USER_FLOW_TREE.md` - 358477 bytes - sha256 `7fc8375b5a219f6cf1d8e335d353d66999fdd68d8ec57aeea1cac49ed1136ab3`
+- `apps/mobile/src/app/onboarding/products.tsx` - 15266 bytes - sha256 `2ffd9ecd06b6480c94a8b91d1545a638cf0bd7295cfa55359467be33d905b0d9`
+- `apps/mobile/src/app/shelf/[id].tsx` - 37135 bytes - sha256 `dfae778efed66e57e151c5bfc14e00c7ce473fd2b4ec02002d90ff27e18770fd`
+- `apps/mobile/src/app/shelf/opened.tsx` - 11777 bytes - sha256 `444f54a85bb001ec16759d304fbb754305aa590ec5018eefbfcf1c3bbfdb80ec`
+- `apps/mobile/src/app/shelf/replenish.tsx` - 7631 bytes - sha256 `5addfea202ebc15850feacc3a18c79d6216310c61a341a101c300a497cd94644`
+- `apps/mobile/src/app/shelf/scan.tsx` - 23220 bytes - sha256 `81712f3391afccaadd7f86d1f3ccd546d696e842654fbd01fb3cc9cf9df0eb6c`
+- `apps/mobile/src/app/shelf/search.tsx` - 15482 bytes - sha256 `01ae00b96fa0a378ae140b8f54c342a268e5b34c0e32e0a76349e4b9493176d6`
+- `apps/mobile/src/features/catalog/client.ts` - 9984 bytes - sha256 `2700b12181daaf103dd4768c646b40a18d921c8bc0d5877f399e6ce55375078c`
+- `apps/mobile/src/features/catalog/client.test.ts` - 11141 bytes - sha256 `f37eac5b03f95b060b2b5f7b1c92983a5906135541ba0422b6fa01e9752a5f4c`
+- `apps/mobile/src/features/intelligence/pao.ts` - 8291 bytes - sha256 `fcf9d36c694715069f527a60586ca9c0d075a00d9162263cd4b7d71f1d4baa27`
+- `apps/mobile/src/features/intelligence/pao.test.ts` - 5134 bytes - sha256 `1304cbbd30e91abd5ec841c4f71598fe0dcb6ce5437eec6d78849e169c1742b2`
+- `apps/mobile/src/features/notifications/store.ts` - 7206 bytes - sha256 `5428036c530d7d50627328f91e4f8ab9c1813f123e5e09a5ccb4d4799311bb97`
+- `apps/mobile/src/features/notifications/store.test.ts` - 5085 bytes - sha256 `a9276a89222c09c14fcf7856ea1b9e9462058ebc1d1510c5abad8e1e18d7a637`
+- `apps/mobile/src/features/notifications/replenishmentOptInMigration.test.ts` - 718 bytes - sha256 `2b34153c9a4a85b29bbf8483217a65e4ee99b15837a50128bc7cf572c09fb4a0`
+- `apps/mobile/src/features/recommendations/replenishment.ts` - 2237 bytes - sha256 `c1283d8602f70730433bc4009a6049ffe21c369682bf2bdf3832b64766a09420`
+- `apps/mobile/src/features/recommendations/replenishment.test.ts` - 3505 bytes - sha256 `9594da62265838c9628bc8dbfcc9eb81c24709a2510cb69fe1a88cde68b2f4cc`
+- `apps/mobile/src/features/shelf/freshness.ts` - 3758 bytes - sha256 `db7f03175302ca10c75668056d8ca1ce0ff3f41de06b36e8428e09437ddc1ee2`
+- `apps/mobile/src/features/shelf/freshness.test.ts` - 2976 bytes - sha256 `3ab2cc0066fb2c9880b8a294424fcf15b21b749e39106b95fda14153bab5b962`
+- `apps/mobile/src/features/shelf/freshnessMigration.test.ts` - 1325 bytes - sha256 `39696409e00d951d5a8d57b065b35f051bdc12a791471d8564c146446dc1dd73`
+- `apps/mobile/src/features/shelf/paoProvenance.ts` - 508 bytes - sha256 `dd71e9b3f563903e532cd76f5643ce04cc280f6cbe79cc7837ad2861fdacb7b3`
+- `apps/mobile/src/features/shelf/paoProvenance.test.ts` - 1305 bytes - sha256 `036d37d4a9e008be0b89e5c63d9091704f439d23111ca377513a5f4a6bebc555`
+- `apps/mobile/src/features/shelf/store.ts` - 12717 bytes - sha256 `a5cc27b4d691a9e37f38ad49a58a6c5bed5d6c4d9c7d166ba5509ac94057dc16`
+- `apps/mobile/src/features/shelf/store.test.ts` - 7202 bytes - sha256 `a2b05b14d6c45725f50768611345f98f4d7f90733840eac2d1a56fc9dff2f81d`
+- `supabase/functions/catalog-lookup/index.ts` - 8203 bytes - sha256 `1d5f69b7ee82f45e7f2e4ed221783a28e67e275d6df3f69688b4562a26ed0134`
+- `supabase/functions/catalog-lookup/catalogContract.ts` - 1061 bytes - sha256 `60733dac6228405052bac40f9336581042f24a3503b75be43ad238cb78fcb91d`
+- `supabase/functions/catalog-lookup/catalogContract.test.ts` - 1797 bytes - sha256 `c91e14a46870197c03171f83ce64cc69ad4e5c649294fc7675e3149a9cb938f1`
+- `supabase/functions/catalog-search/index.ts` - 5389 bytes - sha256 `6a2548c2709d0c61dc3710ab130037f6a6a1ab294d58c73335bb8300ce7f2aea`
+- `supabase/functions/catalog-search/catalogContract.ts` - 650 bytes - sha256 `cbefae5cb524a20ec66aea62cc092d02d7e6d68d70080cec02a33342f2d91df0`
+- `supabase/functions/catalog-search/catalogContract.test.ts` - 1069 bytes - sha256 `ed8d55597732e97a3a76bf27e7e64456660b7882a5bb9687d2f295da5fdfb589`
+- `supabase/migrations/20260711000038_shelf_freshness_invariants.sql` - 1973 bytes - sha256 `672df1e56fac4cdfc6bf641c3249221aaacf630439d28898a79ace2d25181bcd`
+- `supabase/migrations/20260711000039_replenishment_alert_opt_in.sql` - 372 bytes - sha256 `eac60d4bf92f465ad2264c509f8e0a2f412b5780f862cf602b8ff16e1e2e1299`
 
 ### obf-contribution-back - Unmatched-product contribution-back operation
 
@@ -257,14 +312,14 @@ Required evidence:
 Sources:
 
 - `docs/phase-4/odbl-compliance-memo.md` - 2019 bytes - sha256 `0fe9bc07e3c4d34129ac8f8f2ba410a64e6caa0d77a3b7994198e0b4d9e18e69`
-- `docs/04-smart-shelf.md` - 55608 bytes - sha256 `fec113c1ff7e0dd25592c08897f70d15b170ccc6fa4ae203fcb1f5dac309d42a`
+- `docs/04-smart-shelf.md` - 55627 bytes - sha256 `96a33fafa232716b20562d6bf5664ce018284bc4fc59c9003a1437ab37065dce`
 - `supabase/migrations/20260614000026_phase4_catalog.sql` - 35102 bytes - sha256 `dc1a7f150bd5b285cf2d05f2583126ebeb97e67b5363666e670518896b93c311`
 - `supabase/functions/catalog-report/index.ts` - 4653 bytes - sha256 `bff289eeca7657c0fa0e65ec686c07903dfa08a36c7a7691150cd28417d4aa36`
 - `supabase/functions/catalog-report/privacy.ts` - 3504 bytes - sha256 `9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e`
 - `supabase/functions/catalog-report/privacy.test.ts` - 4009 bytes - sha256 `db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac`
-- `apps/mobile/src/features/catalog/client.ts` - 4815 bytes - sha256 `e7921c914cec2b477e352592e8ba10cabe781b5ac58ba05b8fedabb22ae66e22`
-- `apps/mobile/src/features/catalog/client.test.ts` - 6158 bytes - sha256 `dd3d1319105637aa8cc5d73f619adcb6b0cba643ede4c72d581bda08ac4200df`
-- `docs/FOR_TAS_TO_DO.md` - 63276 bytes - sha256 `e230ea7c0eda8e42d20a96a08b36f0cef272482b47e79f674aed48c58bf72369`
+- `apps/mobile/src/features/catalog/client.ts` - 9984 bytes - sha256 `2700b12181daaf103dd4768c646b40a18d921c8bc0d5877f399e6ce55375078c`
+- `apps/mobile/src/features/catalog/client.test.ts` - 11141 bytes - sha256 `f37eac5b03f95b060b2b5f7b1c92983a5906135541ba0422b6fa01e9752a5f4c`
+- `docs/FOR_TAS_TO_DO.md` - 65647 bytes - sha256 `8a1aa18747a7056505ea791b5e175768c1f8cea5d25eaf0297c5a04408d81be9`
 
 ### observability-support - Catalog dashboards, alerts, and support feedback loop
 
@@ -288,7 +343,7 @@ Sources:
 - `scripts/phase4/beta-coverage-report.mjs` - 21980 bytes - sha256 `95d73e803393a93dcf0a54fa07ff3de9c3c0ee62250cfa608bd7e45883bfe0fd`
 - `supabase/functions/catalog-report/privacy.ts` - 3504 bytes - sha256 `9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e`
 - `supabase/functions/catalog-report/privacy.test.ts` - 4009 bytes - sha256 `db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac`
-- `docs/FOR_TAS_TO_DO.md` - 63276 bytes - sha256 `e230ea7c0eda8e42d20a96a08b36f0cef272482b47e79f674aed48c58bf72369`
+- `docs/FOR_TAS_TO_DO.md` - 65647 bytes - sha256 `8a1aa18747a7056505ea791b5e175768c1f8cea5d25eaf0297c5a04408d81be9`
 
 ## Blockers
 

@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-11T17:30:09.873Z",
+  "generatedAt": "2026-07-11T18:48:20.610Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "2e59932f348ae3ad9e826932c240ab6325f31c82",
+  "gitSha": "de9bee6b829c97a89c2f0e08a83e59c788baffa9",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 103589,
-    "sha256": "411d7c6da5bfab2fadc02bdd76227b1aaef830e102467a4fba1d973f8e831393",
-    "currentSha256": "411d7c6da5bfab2fadc02bdd76227b1aaef830e102467a4fba1d973f8e831393"
+    "bytes": 104512,
+    "sha256": "45f872ebde1e68e9349a0ae743a86e30aadeda3e89ab4112c2b0ed38905c840b",
+    "currentSha256": "45f872ebde1e68e9349a0ae743a86e30aadeda3e89ab4112c2b0ed38905c840b"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -154,7 +154,7 @@
       "requiredReviewer": "qualified trademark, copyright, and product/FTO counsel",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "79597d9baa4f94d8593d80a11d293130af4493bcae92c2ad88f8ad54506b5635",
+      "reviewSnapshotSha256": "757ccc1be587b8c034e5925848e3f27f2de39854362c88200382c700fbbcc271",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -183,14 +183,14 @@
         {
           "path": "apps/mobile/src/features/catalog/client.test.ts",
           "exists": true,
-          "bytes": 6158,
-          "sha256": "dd3d1319105637aa8cc5d73f619adcb6b0cba643ede4c72d581bda08ac4200df"
+          "bytes": 11141,
+          "sha256": "f37eac5b03f95b060b2b5f7b1c92983a5906135541ba0422b6fa01e9752a5f4c"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.ts",
           "exists": true,
-          "bytes": 4815,
-          "sha256": "e7921c914cec2b477e352592e8ba10cabe781b5ac58ba05b8fedabb22ae66e22"
+          "bytes": 9984,
+          "sha256": "2700b12181daaf103dd4768c646b40a18d921c8bc0d5877f399e6ce55375078c"
         },
         {
           "path": "apps/mobile/src/features/catalog/copy.ts",
@@ -426,7 +426,7 @@
       "requiredReviewer": "qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "297b29b496959f2fadfff8972019da024c1201100e08774338c2d95d1cae36ed",
+      "reviewSnapshotSha256": "8398ec3e70c66095e98636b6110209106e347cc98901d17ecb5a5ab18e054836",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -443,14 +443,14 @@
         {
           "path": "apps/mobile/src/features/ask/answer.test.ts",
           "exists": true,
-          "bytes": 7127,
-          "sha256": "1b969b79bd4854b9447048ec2f441e8cbcb7b28f81dbbe4da6cebbbf4742bdb6"
+          "bytes": 7151,
+          "sha256": "5cc0f7342b5839a880ee6839283a62ec2362463f65ad879c4675366436684788"
         },
         {
           "path": "apps/mobile/src/features/ask/answer.ts",
           "exists": true,
-          "bytes": 11291,
-          "sha256": "62da00f6894f203cfe5150892dbcfd388cac1eeb4f02f917f33791c90cb95103"
+          "bytes": 11305,
+          "sha256": "62e8f3bca768b462c74117b3215dfe32fdc23488a9c9219eb3a37f8394ae1971"
         },
         {
           "path": "apps/mobile/src/features/ask/applyConsentChoice.test.ts",
@@ -473,8 +473,8 @@
         {
           "path": "apps/mobile/src/features/ask/claimsafety.test.ts",
           "exists": true,
-          "bytes": 7416,
-          "sha256": "8c9ccb3c3648b5420df905bd6a0521fd8a0b67c0f8e72997f6dd45b0ed502941"
+          "bytes": 7602,
+          "sha256": "2af74cb07a39bb25b0b4204c845539cb2f5d4c2835bb63a056a1cf6565063cc3"
         },
         {
           "path": "apps/mobile/src/features/ask/consent.test.ts",
@@ -491,8 +491,8 @@
         {
           "path": "apps/mobile/src/features/ask/copy.ts",
           "exists": true,
-          "bytes": 8488,
-          "sha256": "06cc6c48b71dcad944ea8e218810466aec3764e06df78c8552edf3bc998a034b"
+          "bytes": 8534,
+          "sha256": "3417a7d79f70df50d1a25d00aac004e7e06ca4be28313432d9c19409d31d6ca3"
         },
         {
           "path": "apps/mobile/src/features/ask/gate.test.ts",
@@ -545,8 +545,8 @@
         {
           "path": "apps/mobile/src/features/ask/useAsk.ts",
           "exists": true,
-          "bytes": 5302,
-          "sha256": "b257d068a40c547c2be8de114afedf26f735bf956135e5618afc5ac503cdd7b0"
+          "bytes": 5305,
+          "sha256": "43f52fa66c6ef5b79ba18fad4cf6134dd37cd3941d6a94cc7d1d44100c261ba8"
         }
       ]
     },
@@ -1246,7 +1246,7 @@
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "83e3adee280c99cede557303f0ba65622501ef66f73d781ce0b32455f394f879",
+      "reviewSnapshotSha256": "cd5e83fe0016a8c09751f3a3f130efb58d186fee2f56e972149d20af6ec7a477",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1257,14 +1257,14 @@
         {
           "path": "apps/mobile/src/features/ask/answer.ts",
           "exists": true,
-          "bytes": 11291,
-          "sha256": "62da00f6894f203cfe5150892dbcfd388cac1eeb4f02f917f33791c90cb95103"
+          "bytes": 11305,
+          "sha256": "62e8f3bca768b462c74117b3215dfe32fdc23488a9c9219eb3a37f8394ae1971"
         },
         {
           "path": "apps/mobile/src/features/ask/copy.ts",
           "exists": true,
-          "bytes": 8488,
-          "sha256": "06cc6c48b71dcad944ea8e218810466aec3764e06df78c8552edf3bc998a034b"
+          "bytes": 8534,
+          "sha256": "3417a7d79f70df50d1a25d00aac004e7e06ca4be28313432d9c19409d31d6ca3"
         }
       ]
     },
@@ -1339,7 +1339,7 @@
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "11b945faae2fe8d080c40ccd0934909d02fe2876de7eeca6193a43d2a847cf33",
+      "reviewSnapshotSha256": "73d0d7f05e4186588b5b0e4c8a84fb897a16f779bfc10e34f366bb28c1c024c1",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1350,8 +1350,8 @@
         {
           "path": "apps/mobile/src/features/intelligence/pao.ts",
           "exists": true,
-          "bytes": 6991,
-          "sha256": "b311f7b3b815b025b55a650dd66ec5af8aab4470464ff3bd82c497ca4edd4e38"
+          "bytes": 8291,
+          "sha256": "fcf9d36c694715069f527a60586ca9c0d075a00d9162263cd4b7d71f1d4baa27"
         }
       ]
     },
@@ -1397,7 +1397,7 @@
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "1c868d607456f5f530cf20c95854178b4966c9c98ad2dd98d0ef662d951e1938",
+      "reviewSnapshotSha256": "728a8a589f36de6d7aa30e9429dfd79201823509568c79eb837ccccdc60c1191",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1432,8 +1432,8 @@
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
           "exists": true,
-          "bytes": 17623,
-          "sha256": "a0d8e95df85b1a53d3def11766cf34a1b708797d552d4aad1652cb206978ef2b"
+          "bytes": 17809,
+          "sha256": "ccd83caffac064fa690bb5acbf67ec350a86398ce64f22e5f3ecc06ca691693d"
         }
       ]
     },
@@ -1609,7 +1609,7 @@
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "ad0e873a10f00dbbe6f9ae4c74c41d63c1fd8cd34c70c6eadaf4e457bd355f2f",
+      "reviewSnapshotSha256": "7487f6f22bebdc0ea44a0621216757750d42fd0821cd4f639ddc27dc8ea80217",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1734,8 +1734,8 @@
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
           "exists": true,
-          "bytes": 17623,
-          "sha256": "a0d8e95df85b1a53d3def11766cf34a1b708797d552d4aad1652cb206978ef2b"
+          "bytes": 17809,
+          "sha256": "ccd83caffac064fa690bb5acbf67ec350a86398ce64f22e5f3ecc06ca691693d"
         }
       ]
     },
@@ -1781,7 +1781,7 @@
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "260342dd1aedf9025c378eb9a41af777eff8e1ccf04347afcc6fd11e8d048d5c",
+      "reviewSnapshotSha256": "7eec280e52e2a820c3c0debe29ff1e628cf91260bbc7005a59e190d3b684ba69",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1792,8 +1792,8 @@
         {
           "path": "apps/mobile/src/features/intelligence/pao.ts",
           "exists": true,
-          "bytes": 6991,
-          "sha256": "b311f7b3b815b025b55a650dd66ec5af8aab4470464ff3bd82c497ca4edd4e38"
+          "bytes": 8291,
+          "sha256": "fcf9d36c694715069f527a60586ca9c0d075a00d9162263cd4b7d71f1d4baa27"
         }
       ]
     },
@@ -2041,7 +2041,7 @@
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "a35177e195f6e60412da69089c6c3e1ec0ee984053fe3f5198d670ea25a5c89b",
+      "reviewSnapshotSha256": "47b945877cdfc17be0247500520f80484a7b983921d26522241ed3aafeea40e3",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -2076,8 +2076,26 @@
         {
           "path": "apps/mobile/src/features/shelf/expiry.ts",
           "exists": true,
-          "bytes": 1004,
-          "sha256": "d756a48315ecf8e5c0074019ea5238bbeb411afdee9ac1def3181398d20b0bd3"
+          "bytes": 1306,
+          "sha256": "0846816c55e3ccab674ba04ab9b9332eef7e7301436620fbaaf9fea2fa9cb734"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/freshness.test.ts",
+          "exists": true,
+          "bytes": 2976,
+          "sha256": "3ab2cc0066fb2c9880b8a294424fcf15b21b749e39106b95fda14153bab5b962"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/freshness.ts",
+          "exists": true,
+          "bytes": 3758,
+          "sha256": "db7f03175302ca10c75668056d8ca1ce0ff3f41de06b36e8428e09437ddc1ee2"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/freshnessMigration.test.ts",
+          "exists": true,
+          "bytes": 1325,
+          "sha256": "39696409e00d951d5a8d57b065b35f051bdc12a791471d8564c146446dc1dd73"
         },
         {
           "path": "apps/mobile/src/features/shelf/IntakeContext.tsx",
@@ -2088,14 +2106,20 @@
         {
           "path": "apps/mobile/src/features/shelf/labels.ts",
           "exists": true,
-          "bytes": 611,
-          "sha256": "dcb01b52fc70c1b2f2b465091b3ce36e45ac9bfdfbf99c9b883a70023605ad9c"
+          "bytes": 947,
+          "sha256": "b39bac34c85280eda82ce9b8a5e3d8ea31d90dcd3e53f6daeb636cd0df0a8552"
+        },
+        {
+          "path": "apps/mobile/src/features/shelf/LocalDateField.tsx",
+          "exists": true,
+          "bytes": 1765,
+          "sha256": "e0b6cc071362f286582498c4333650d0ead57b58dbc6cc9f270e53c70e1e87a4"
         },
         {
           "path": "apps/mobile/src/features/shelf/metadata.ts",
           "exists": true,
-          "bytes": 1372,
-          "sha256": "87178aae2ac9df43a91f5815a54d3f91c71a3da5c7e1777a545122d23a1628be"
+          "bytes": 1352,
+          "sha256": "3d5ea0795d0b2460a4d14b070496a41c84fc5cbaac0431e05f0c48d2ca29194e"
         },
         {
           "path": "apps/mobile/src/features/shelf/mutations.ts",
@@ -2112,14 +2136,14 @@
         {
           "path": "apps/mobile/src/features/shelf/paoProvenance.test.ts",
           "exists": true,
-          "bytes": 909,
-          "sha256": "e9b4d0c1dd6c19d3a833a18c6b2c2aecb79c1872d6bfff9d71585cb0b06d4855"
+          "bytes": 1305,
+          "sha256": "036d37d4a9e008be0b89e5c63d9091704f439d23111ca377513a5f4a6bebc555"
         },
         {
           "path": "apps/mobile/src/features/shelf/paoProvenance.ts",
           "exists": true,
-          "bytes": 429,
-          "sha256": "004ec2dc224ec22076481a3b84242573a5f08f6bf87ccdc90c3d003de97c4aec"
+          "bytes": 508,
+          "sha256": "dd71e9b3f563903e532cd76f5643ce04cc280f6cbe79cc7837ad2861fdacb7b3"
         },
         {
           "path": "apps/mobile/src/features/shelf/scanLog.test.ts",
@@ -2136,32 +2160,32 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 45837,
-          "sha256": "504bfb9dded497b016d2ff3464fcc1d13c21ec7d571bcaf8f90e120902755deb"
+          "bytes": 46618,
+          "sha256": "0d4af97d8fc892571f9eeb045e7c2c1d7c48d59f54143db3ff1634309ff1c9dc"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
           "exists": true,
-          "bytes": 4504,
-          "sha256": "6877eeedecd0b6680a764c61fba2dbcb012680e8e6c5d3230573105dd2548cda"
+          "bytes": 7202,
+          "sha256": "a2b05b14d6c45725f50768611345f98f4d7f90733840eac2d1a56fc9dff2f81d"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.ts",
           "exists": true,
-          "bytes": 13172,
-          "sha256": "63973c8778d227cf444a97e12a34a9c1ad8b11a385a0adcd81a8299a692f8615"
+          "bytes": 12717,
+          "sha256": "a5cc27b4d691a9e37f38ad49a58a6c5bed5d6c4d9c7d166ba5509ac94057dc16"
         },
         {
           "path": "apps/mobile/src/features/shelf/useShelf.test.ts",
           "exists": true,
-          "bytes": 3684,
-          "sha256": "089d526dd0a4fc3f9ff34097d44567b2597e1b31c6669503663145b714428762"
+          "bytes": 4753,
+          "sha256": "63d228877532e01ded924cfc5693c6789ee2a311207ebc840e8bc88a1b6b69ac"
         },
         {
           "path": "apps/mobile/src/features/shelf/useShelf.ts",
           "exists": true,
-          "bytes": 10647,
-          "sha256": "e328a494127f8cd61be00c2d62ebb15e71dbee897cacc3c691af012864242c32"
+          "bytes": 10380,
+          "sha256": "950087e8f98dbc6a89d81a512bb5aaf37b5927415220c236dbc742f4cf4f718c"
         }
       ]
     },

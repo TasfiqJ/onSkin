@@ -1,6 +1,6 @@
 # Source Packet Audit
 
-Generated: 2026-07-11T17:30:18.731Z
+Generated: 2026-07-11T18:49:18.765Z
 Status: pass
 Strict mode: yes
 
@@ -28,7 +28,7 @@ the top-level packet markdown shape changes without updating the audit.
 | ARCHITECTURE.md                | identical          | yes       | yes       | 8b0288d80fb4   |
 | CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | 237c46f8ab33   |
 | CODE_REVIEW.md                 | identical          | yes       | yes       | 83db5ca6e5ad   |
-| DECISIONS.md                   | identical          | yes       | yes       | 5c9ef6d7067c   |
+| DECISIONS.md                   | identical          | yes       | yes       | a81e102958fd   |
 | FEATURE_INDEX.md               | identical          | yes       | yes       | c729b1642ad1   |
 | MASTER_PLAN.md                 | identical          | yes       | yes       | 30bcdf57b71e   |
 | MASTER_PLAN_UPDATE_PATCH.md    | identical          | yes       | yes       | 634edff435fa   |
@@ -52,7 +52,7 @@ the top-level packet markdown shape changes without updating the audit.
 | 04_repo_docs/docs/ARCHITECTURE.md                | 10390 | 8b0288d80fb4 |
 | 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md | 7739  | 237c46f8ab33 |
 | 04_repo_docs/docs/CODE_REVIEW.md                 | 1985  | 83db5ca6e5ad |
-| 04_repo_docs/docs/DECISIONS.md                   | 38606 | 5c9ef6d7067c |
+| 04_repo_docs/docs/DECISIONS.md                   | 40770 | a81e102958fd |
 | 04_repo_docs/docs/FEATURE_INDEX.md               | 4833  | c729b1642ad1 |
 | 04_repo_docs/docs/MASTER_PLAN.md                 | 53863 | 30bcdf57b71e |
 | 04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md    | 1473  | 634edff435fa |

@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-11T17:30:12.054Z
+Generated: 2026-07-11T18:49:45.367Z
 
-Git SHA: 2e59932f348ae3ad9e826932c240ab6325f31c82
+Git SHA: de9bee6b829c97a89c2f0e08a83e59c788baffa9
 
 Git status: clean
 
@@ -32,7 +32,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | --- | --- | ---: | --- |
 | package.json | present | 18313 | 5714a4b7bd35cffa77b9951ebfcad3b090cc707a89bf0e0f6001ae7ad49c81b3 |
 | scripts/phase4/catalog-qa-report.mjs | present | 6696 | f6e506aa07d8cff7715f2db8eff2cfe00784b2d5f277b3f78a1316eeaad0d4c4 |
-| scripts/phase4/build-source-worklist.mjs | present | 17180 | cbd4cb4b8c99eb1963a273c0ae0bd3cdad326a715b37664e4ad62822a21c588c |
+| scripts/phase4/build-source-worklist.mjs | present | 19918 | ac896b3cbeeaeb36781c5fc7d6e20c87223e30961f52900e9bbb2e2c6fa7d086 |
 | scripts/phase4/beta-coverage-report.mjs | present | 21980 | 95d73e803393a93dcf0a54fa07ff3de9c3c0ee62250cfa608bd7e45883bfe0fd |
 | scripts/phase4/beta-coverage-report-smoke.mjs | present | 8339 | 74be5ca44d86da117f80a514ad283212d05a08549cdafb3e2ed6824e6a118105 |
 | scripts/phase4/import-obf-snapshot.mjs | present | 4856 | bf5721fac6d5b11e0ca0c99b2b883330af6eb22c66763ed316ebe98b229597bf |
@@ -46,11 +46,11 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | supabase/functions/catalog-report/privacy.test.ts | present | 4009 | db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac |
 | supabase/functions/deno.lock | present | 2282 | 0f8de63ed60182b56865cfa47c666866b631ed4681c79345ec31a720565d1a3a |
 | scripts/phase9/lib.mjs | present | 14020 | af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083 |
-| docs/FOR_TAS_TO_DO.md | present | 63276 | e230ea7c0eda8e42d20a96a08b36f0cef272482b47e79f674aed48c58bf72369 |
+| docs/FOR_TAS_TO_DO.md | present | 65647 | 8a1aa18747a7056505ea791b5e175768c1f8cea5d25eaf0297c5a04408d81be9 |
 | docs/phase-4/beta-coverage-report.md | present | 2125 | d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2021 | 49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534 |
 | docs/phase-4/catalog-source-memo-open-beauty-facts.md | present | 2334 | 441e03ded2314f7a9efc2f11e3b7d0daa97256de17e6c654423124c1c4a4670f |
-| docs/phase-4/generated/source-worklist.json | present | 35123 | c7b7f3c92051babedd92e41fbf6684dd01e426f18f511b1f8ab3cc2c380cbd05 |
-| docs/phase-4/generated/source-worklist.md | present | 22474 | f457f942bbd286c243bf4be4684e3c9505c625017909b1231d7a01eb47672d7f |
+| docs/phase-4/generated/source-worklist.json | present | 46705 | 2587170250eb116de8ce0f647d7f41c7a7709b99550bab6be073b049513dbdc3 |
+| docs/phase-4/generated/source-worklist.md | present | 28920 | 3e6173cdff93f56865b244459ac697ea227b1fc9e40f86c91a4f768dfc03d623 |
 | docs/phase-4/odbl-compliance-memo.md | present | 2019 | 0fe9bc07e3c4d34129ac8f8f2ba410a64e6caa0d77a3b7994198e0b4d9e18e69 |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-11T17:30:08.289Z",
-  "gitSha": "2e59932f348ae3ad9e826932c240ab6325f31c82",
+  "generatedAt": "2026-07-11T18:48:09.631Z",
+  "gitSha": "de9bee6b829c97a89c2f0e08a83e59c788baffa9",
   "evidenceDate": "2026-07-11",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -21,6 +21,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 101,
       "bytes": 3449400,
       "evidenceSha256": "dab8829e67bf7e675ea2751d21f00c69b65f5f1ae2a42f5e5ed5c6298c17c7da"
@@ -40,8 +41,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 101,
-      "bytes": 4460707,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 6591,
       "evidenceSha256": "be5a3612b1cabe5dfa39ac2b7a710aaa5e7c4a42d784a8a49afeba6a392f9b4d"
     },
     {
@@ -59,8 +61,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 101,
-      "bytes": 4388863,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 6564,
       "evidenceSha256": "34202b66bc53f140de57faca0efb65c40a517894967a4890e38c4f1934570878"
     },
     {
@@ -78,8 +81,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 101,
-      "bytes": 4238917,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 6537,
       "evidenceSha256": "eed51aeee29d23d41d70c43f2102fdfd86b52b0a19e30e30e2db7e3876ca4241"
     },
     {
@@ -97,8 +101,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 101,
-      "bytes": 4374011,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 6534,
       "evidenceSha256": "cca9cbbea7ac6cc753c3b5b5c9af86fd7379723fed745c5bc472b3c73b09345a"
     },
     {
@@ -116,6 +121,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 101,
       "bytes": 4469613,
       "evidenceSha256": "e5bb27de0e6ccc22091dbec79c0421ed719d1253e73aa680e71b03a7dc416af8"
@@ -135,8 +141,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 101,
-      "bytes": 4002622,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 6538,
       "evidenceSha256": "584f506283fd7c3d3a899685cb191ae4274592747cddccb69f883639cf9f3fb3"
     },
     {
@@ -154,8 +161,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 101,
-      "bytes": 4912673,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 6556,
       "evidenceSha256": "7c1351ec4bfaa1aca926737cc8e444d917c9699bed8226a3dd40d0b88058971d"
     },
     {
@@ -173,8 +181,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 101,
-      "bytes": 4529633,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 6595,
       "evidenceSha256": "0a72aedf95aaf6a0aa117ef9d5de16a7a42c433d34baf16bf39cb4fc373a99e6"
     },
     {
@@ -192,8 +201,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 101,
-      "bytes": 3867204,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 6535,
       "evidenceSha256": "04bcb055e18ccb356fb00ac59ea9682784bc10ffe64c3cdb1f878b61fbbb404e"
     },
     {
@@ -211,6 +221,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 45,
       "bytes": 2026512,
       "evidenceSha256": "4cff3bea9ce05150c592f6a5fb16bfbab947d5a22560812d541f302b4786cca1"
@@ -230,6 +241,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 45,
       "bytes": 1961962,
       "evidenceSha256": "d87f3befea3dd6dc64541502485d6568af70ac35ca8c9b426add03a66141c05f"
@@ -249,6 +261,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 45,
       "bytes": 2202316,
       "evidenceSha256": "d55b34f52f17870ba9857e00f23776ab7f3ec784592eb1cfc144eb13a94afde8"
@@ -268,6 +281,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 45,
       "bytes": 2069549,
       "evidenceSha256": "b40f89b5a818c71b6c511039a5fff48f37bba35c213ce29a4279562e5a44db23"
@@ -287,6 +301,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 45,
       "bytes": 2130687,
       "evidenceSha256": "a3711d00aa5a133149192c317e9d6fce68fd6cf765f6446869460279b4ffb33c"
@@ -306,8 +321,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 45,
-      "bytes": 2368586,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 3163,
       "evidenceSha256": "8af65ffbee3375ff3df954cc9e02cde5a078af5b0801125addd1cb1197e6fa49"
     },
     {
@@ -325,6 +341,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 101,
       "bytes": 4270815,
       "evidenceSha256": "c20b24a55213b19c4e6c2e0516d2cab67a93cb48323bd4095de2f517a77d9fdf"
@@ -344,6 +361,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 101,
       "bytes": 4100497,
       "evidenceSha256": "4ef9418d78b838e42ad524b5b45adaa711d866a6a512209da307b2106f231dff"
@@ -363,6 +381,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 101,
       "bytes": 2773449,
       "evidenceSha256": "b85eee08a9931d9af8b11edc1cc116ea8a2d0b2249b4af500c81244e8544ab15"
@@ -382,6 +401,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 101,
       "bytes": 2702204,
       "evidenceSha256": "8cabe2c7c70a9f9c08ad7f731232ad35136c3d8de284e2ed31c76fb4dede5e5d"
@@ -401,6 +421,7 @@
       "verdict": null,
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 101,
       "bytes": 2646807,
       "evidenceSha256": "b147239d32c99249193939c498f7468748b51bd2a85e0f396c504d4cb8f6edbc"
@@ -420,6 +441,7 @@
       "verdict": null,
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 101,
       "bytes": 2457242,
       "evidenceSha256": "b147239d32c99249193939c498f7468748b51bd2a85e0f396c504d4cb8f6edbc"
@@ -439,6 +461,7 @@
       "verdict": null,
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 101,
       "bytes": 2207505,
       "evidenceSha256": "b147239d32c99249193939c498f7468748b51bd2a85e0f396c504d4cb8f6edbc"
@@ -458,6 +481,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 58,
       "bytes": 1805816,
       "evidenceSha256": "3b7f4657d92c1293a05549b284a07f7b69382c8a0afa53cac1766dd42a1233e0"
@@ -477,6 +501,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 62,
       "bytes": 2648386,
       "evidenceSha256": "89384a4a3365bf491289f73854c0addd2625671c8a792ea091a3d742c5139dad"
@@ -496,8 +521,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 70,
-      "bytes": 2801641,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 6489,
       "evidenceSha256": "e172b003532d8fdea9c69315e4e6b51811ab338c26cd6eecaf1a40463a003ce9"
     },
     {
@@ -515,6 +541,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 17,
       "bytes": 240576,
       "evidenceSha256": "7f4c335f9aad8c9ed1172c7bffa4a4dbd160849d15af9cabbca04fde8d7a0926"
@@ -534,6 +561,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 19,
       "bytes": 333347,
       "evidenceSha256": "b534c021fa7bb4d9a8e89320d4fe3940ff50d92b3b7ab4b66982bcadfcce6047"
@@ -553,8 +581,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 15,
-      "bytes": 167412,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 4013,
       "evidenceSha256": "119ed3e08b63ea5e212736a807af4bbfb9849c86cb8ee6be7fe503b5efc26dc7"
     },
     {
@@ -572,6 +601,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 39,
       "bytes": 394975,
       "evidenceSha256": "45b30f5006babbc9918f380dbcfec5572f132dc83b0130cf1038a50995213f14"
@@ -591,6 +621,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 39,
       "bytes": 353614,
       "evidenceSha256": "296a1499f5afe1f16d3090d1be9412efa41bd306de0766d56623d6ae1ad4f722"
@@ -610,6 +641,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 15,
       "bytes": 149313,
       "evidenceSha256": "cfa1fc568044b7d5b0596aac3708406077f19339639e6102313671741b47b403"
@@ -629,6 +661,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 28,
       "bytes": 846246,
       "evidenceSha256": "25897dbde665931adabc541d42bc68b34f00d46d9c7010dc67fb27af318e0eeb"
@@ -648,6 +681,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 54,
       "bytes": 526213,
       "evidenceSha256": "c10ecef6623c3cf73cd5bb5eecd215720c8c68434f66515751576c39f6a67ac7"
@@ -667,6 +701,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 29,
       "bytes": 205292,
       "evidenceSha256": "e860934d4b4772124f9a51f5b51fcff6dda7f9fc949b1055e48ef8baa5b46f2b"
@@ -686,6 +721,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 13,
       "bytes": 192529,
       "evidenceSha256": "6a5b7f56d6f0e26a1d9c83df64caa737762a88039947ee047853b66fd4da1071"
@@ -705,6 +741,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 39,
       "bytes": 247549,
       "evidenceSha256": "6ee59d0fa6ed5c471a4c0594fb332a0901fedaaf438dbf09af084a37d99968b4"
@@ -740,9 +777,49 @@
       "requirementFailures": [],
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 19,
       "bytes": 293003,
       "evidenceSha256": "231ec5d51bfc75f252d65089b7250161139c35a3357dc352592dbb397a106159"
+    },
+    {
+      "id": "shelf-freshness-provenance-supported-phone",
+      "title": "Shelf freshness and replacement provenance lifecycle",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current",
+      "evidence": "summary.json",
+      "requiredSchemaVersion": 1,
+      "requiredStatus": "pass",
+      "requiredFailedRouteCount": 0,
+      "requiredViewports": [
+        "360 x 640",
+        "390 x 844"
+      ],
+      "requiredVerified": [
+        "Onboarding freshness capture",
+        "unopened units keep openedAt null",
+        "impossible and future dates",
+        "explicit open-jar label confirmation",
+        "winning expiry source",
+        "reload preserves",
+        "new UUID without inheriting printed expiry",
+        "replenishment alerts remain off until explicit Settings opt-in",
+        "zero horizontal overflow"
+      ],
+      "expected": "Onboarding freshness intake, honest opened/PAO/expiry provenance, reload, replacement identity/history, explicit replenishment opt-in, and supported-phone geometry pass.",
+      "status": "pass",
+      "detail": "summary status: pass; 0 failed routes.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "requirementFailures": [],
+      "folderExists": true,
+      "evidenceExists": true,
+      "evidenceTracked": true,
+      "fileCount": 23,
+      "bytes": 383420,
+      "evidenceSha256": "92c1487e86957d46845dd4b351d39abaf33f4cfc8f943ad7a143f5a5e9285c28"
     },
     {
       "id": "data-export-local-photo-disclosure-supported-phone",
@@ -759,8 +836,9 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
-      "fileCount": 14,
-      "bytes": 246642,
+      "evidenceTracked": true,
+      "fileCount": 1,
+      "bytes": 2975,
       "evidenceSha256": "349851b94a9d9f5c2a8cd6600ba02ec92ee0d39d6b990e80f2be4bfaedb35efb"
     },
     {
@@ -778,6 +856,7 @@
       "verdict": "pass",
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 13,
       "bytes": 216633,
       "evidenceSha256": "e37b3234e1441ff3c23df2e0f850701589bda9d3bde8956124382ed1d0d268c0"
@@ -813,6 +892,7 @@
       "requirementFailures": [],
       "folderExists": true,
       "evidenceExists": true,
+      "evidenceTracked": true,
       "fileCount": 16,
       "bytes": 151301,
       "evidenceSha256": "dcf290dc3078c6420e09c53dc5440ec236407bad371e624a5ede25d045951ff0"

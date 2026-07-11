@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-11T17:30:08.289Z
-Git SHA: 2e59932f348ae3ad9e826932c240ab6325f31c82
+Generated: 2026-07-11T18:48:09.631Z
+Git SHA: de9bee6b829c97a89c2f0e08a83e59c788baffa9
 Evidence date: 2026-07-11
 Baseline suite date: 2026-07-09
 Status: pass
@@ -16,21 +16,21 @@ dependency to the repo.
 | Gate                                                             | Class           | Status | Detail                                 | Files | Folder                                                                                 |
 | ---------------------------------------------------------------- | --------------- | ------ | -------------------------------------- | ----- | -------------------------------------------------------------------------------------- |
 | 360 x 640 launch-floor 200% text-pressure route sweep            | launch-blocking | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-supported-360-640-postfix          |
-| 360 x 740 supported Android-class 200% text-pressure route sweep | supported-phone | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-postfix            |
-| 375 x 667 compact iPhone-class 200% text-pressure route sweep    | supported-phone | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-667-full-postfix3-clear |
-| 375 x 812 supported iPhone-class 200% text-pressure route sweep  | supported-phone | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix             |
-| 390 x 844 supported-phone 200% text-pressure route sweep         | supported-phone | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-7               |
+| 360 x 740 supported Android-class 200% text-pressure route sweep | supported-phone | pass   | summary status: pass; 0 failed routes. | 1     | test-results/human-e2e/2026-07-09/text-pressure-200-android-360-740-postfix            |
+| 375 x 667 compact iPhone-class 200% text-pressure route sweep    | supported-phone | pass   | summary status: pass; 0 failed routes. | 1     | test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-667-full-postfix3-clear |
+| 375 x 812 supported iPhone-class 200% text-pressure route sweep  | supported-phone | pass   | summary status: pass; 0 failed routes. | 1     | test-results/human-e2e/2026-07-09/text-pressure-200-iphone-375-812-postfix             |
+| 390 x 844 supported-phone 200% text-pressure route sweep         | supported-phone | pass   | summary status: pass; 0 failed routes. | 1     | test-results/human-e2e/2026-07-09/text-pressure-200-modern-390-postfix-7               |
 | 412 x 640 supported Android-class 200% text-pressure route sweep | supported-phone | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-android-412-640-current            |
-| 412 x 915 supported Android-class 200% text-pressure route sweep | supported-phone | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-android-412-915-postfix2           |
-| 414 x 896 boundary-phone 200% text-pressure route sweep          | supported-phone | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-boundary-414-896-postfix3          |
-| 430 x 640 supported Android-class 200% text-pressure route sweep | supported-phone | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-android-430-640-postfix3           |
-| 430 x 932 supported-phone 200% text-pressure route sweep         | supported-phone | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-modern-430-postfix-5               |
+| 412 x 915 supported Android-class 200% text-pressure route sweep | supported-phone | pass   | summary status: pass; 0 failed routes. | 1     | test-results/human-e2e/2026-07-09/text-pressure-200-android-412-915-postfix2           |
+| 414 x 896 boundary-phone 200% text-pressure route sweep          | supported-phone | pass   | summary status: pass; 0 failed routes. | 1     | test-results/human-e2e/2026-07-09/text-pressure-200-boundary-414-896-postfix3          |
+| 430 x 640 supported Android-class 200% text-pressure route sweep | supported-phone | pass   | summary status: pass; 0 failed routes. | 1     | test-results/human-e2e/2026-07-09/text-pressure-200-android-430-640-postfix3           |
+| 430 x 932 supported-phone 200% text-pressure route sweep         | supported-phone | pass   | summary status: pass; 0 failed routes. | 1     | test-results/human-e2e/2026-07-09/text-pressure-200-modern-430-postfix-5               |
 | 360 x 640 skipped/direct-entry 200% text-pressure route sweep    | supported-phone | pass   | summary status: pass; 0 failed routes. | 45    | test-results/human-e2e/2026-07-09/text-pressure-200-skipped-routes-360-640-current     |
 | 375 x 667 skipped/direct-entry 200% text-pressure route sweep    | supported-phone | pass   | summary status: pass; 0 failed routes. | 45    | test-results/human-e2e/2026-07-09/text-pressure-200-skipped-routes-375-667-postfix3    |
 | 390 x 844 skipped/direct-entry 200% text-pressure route sweep    | supported-phone | pass   | summary status: pass; 0 failed routes. | 45    | test-results/human-e2e/2026-07-09/text-pressure-200-skipped-routes-390-844-postfix     |
 | 412 x 640 skipped/direct-entry 200% text-pressure route sweep    | supported-phone | pass   | summary status: pass; 0 failed routes. | 45    | test-results/human-e2e/2026-07-09/text-pressure-200-skipped-routes-412-640-postfix     |
 | 430 x 640 skipped/direct-entry 200% text-pressure route sweep    | supported-phone | pass   | summary status: pass; 0 failed routes. | 45    | test-results/human-e2e/2026-07-09/text-pressure-200-skipped-routes-430-640-current     |
-| 430 x 932 skipped/direct-entry 200% text-pressure route sweep    | supported-phone | pass   | summary status: pass; 0 failed routes. | 45    | test-results/human-e2e/2026-07-09/text-pressure-200-skipped-routes-430-932-postfix     |
+| 430 x 932 skipped/direct-entry 200% text-pressure route sweep    | supported-phone | pass   | summary status: pass; 0 failed routes. | 1     | test-results/human-e2e/2026-07-09/text-pressure-200-skipped-routes-430-932-postfix     |
 | 390 x 844 supported-phone 170% text-pressure route sweep         | supported-phone | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-modern-390-postfix-6               |
 | 430 x 932 supported-phone 170% text-pressure route sweep         | supported-phone | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-170-modern-430-postfix-3               |
 | 320 x 480 stress 200% text-pressure route sweep                  | resilience      | pass   | summary status: pass; 0 failed routes. | 101   | test-results/human-e2e/2026-07-09/text-pressure-200-support-floor-480-postfix-12       |
@@ -40,10 +40,10 @@ dependency to the repo.
 | 320 x 390 split-short stress clearance                           | resilience      | pass   | 0 failures recorded.                   | 101   | test-results/human-e2e/2026-07-09/current-main-split-short-phone-390-sweep-postfix     |
 | 320 x 430 first-session activation stress pass                   | resilience      | pass   | summary verdict: pass.                 | 58    | test-results/human-e2e/2026-07-09/onboarding-first-session-430-current                 |
 | 360 x 640 account-upgrade error and recovery pass                | supported-phone | pass   | summary verdict: pass.                 | 62    | test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current                   |
-| 360 x 640 account-transition isolation and cleanup recovery pass | supported-phone | pass   | summary verdict: pass.                 | 70    | test-results/human-e2e/2026-07-10/onboarding-account-isolation-current                 |
+| 360 x 640 account-transition isolation and cleanup recovery pass | supported-phone | pass   | summary verdict: pass.                 | 1     | test-results/human-e2e/2026-07-10/onboarding-account-isolation-current                 |
 | 390 x 844 local Progress time-lapse and reduced-motion pass      | supported-phone | pass   | summary status: pass.                  | 17    | test-results/human-e2e/2026-07-10/progress-timelapse-current                           |
 | Progress quality states and support-floor save recovery          | supported-phone | pass   | summary status: pass.                  | 19    | test-results/human-e2e/2026-07-10/progress-capture-analysis-current                    |
-| Device-only Progress photo storage                               | supported-phone | pass   | summary status: pass; 0 failed routes. | 15    | test-results/human-e2e/2026-07-10/progress-device-only-backup-current                  |
+| Device-only Progress photo storage                               | supported-phone | pass   | summary status: pass; 0 failed routes. | 1     | test-results/human-e2e/2026-07-10/progress-device-only-backup-current                  |
 | Progress direct-route app-lock coverage                          | supported-phone | pass   | summary status: pass; 0 failed routes. | 39    | test-results/human-e2e/2026-07-10/progress-direct-route-lock-current                   |
 | Progress encrypted-storage recovery                              | supported-phone | pass   | summary status: pass; 0 failed routes. | 39    | test-results/human-e2e/2026-07-10/progress-storage-recovery-current                    |
 | Private envelope corruption and app-lock recovery                | supported-phone | pass   | summary status: pass.                  | 15    | test-results/human-e2e/2026-07-10/private-envelope-corruption-current                  |
@@ -53,7 +53,8 @@ dependency to the repo.
 | Exact-pair conflict choice and reviewed-schedule consistency     | supported-phone | pass   | summary status: pass; 0 failed routes. | 13    | test-results/human-e2e/2026-07-10/conflict-choice-schedule-current                     |
 | Cycle disruption persistence and deterministic reconciliation    | supported-phone | pass   | summary status: pass; 0 failed routes. | 39    | test-results/human-e2e/2026-07-10/cycle-disruption-reconciliation-current              |
 | Authored cycle customization and deterministic reconciliation    | supported-phone | pass   | summary status: pass; 0 failed routes. | 19    | test-results/human-e2e/2026-07-10/cycle-customization-current                          |
-| Account export local-photo scope disclosure                      | supported-phone | pass   | summary status: pass; 0 failed routes. | 14    | test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current           |
+| Shelf freshness and replacement provenance lifecycle             | supported-phone | pass   | summary status: pass; 0 failed routes. | 23    | test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current                   |
+| Account export local-photo scope disclosure                      | supported-phone | pass   | summary status: pass; 0 failed routes. | 1     | test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current           |
 | Combined account and current-device export                       | supported-phone | pass   | summary status: pass; 0 failed routes. | 13    | test-results/human-e2e/2026-07-10/data-export-combined-device-current                  |
 | Account-generation-bound combined export                         | supported-phone | pass   | summary status: pass; 0 failed routes. | 16    | test-results/human-e2e/2026-07-11/data-export-account-generation-current               |
 

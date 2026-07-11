@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-07-11T17:31:14.406Z",
+  "generatedAt": "2026-07-11T18:49:34.276Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-11",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 192,
-  "expectedMobileTests": 2048,
-  "actualMobileTestFiles": 192,
-  "expectedTestPhrase": "192 mobile test files / 2048 tests",
+  "expectedMobileTestFiles": 196,
+  "expectedMobileTests": 2094,
+  "actualMobileTestFiles": 196,
+  "expectedTestPhrase": "196 mobile test files / 2094 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -81,7 +81,9 @@
         "Cycle disruption persistence and deterministic reconciliation",
         "cycle-disruption-reconciliation-current",
         "Authored cycle customization and deterministic reconciliation",
-        "cycle-customization-current"
+        "cycle-customization-current",
+        "Shelf freshness and replacement provenance lifecycle",
+        "shelf-freshness-provenance-current"
       ],
       "stalePatterns": [],
       "missingCommands": []
