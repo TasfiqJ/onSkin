@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-11T16:32:05.202Z
+Generated: 2026-07-11T16:54:21.654Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 49
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 1155
+- Hash references checked: 1170
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -47,7 +47,7 @@ being treated as trustworthy launch evidence.
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-6/generated/payments-qa-packet.json            | json | 0                  | 0                          | 33        | 0               |
 | docs/phase-6/generated/payments-qa-packet.md              | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 29        | 0               |
+| docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 44        | 0               |
 | docs/phase-7/generated/core-loop-qa-packet.md             | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-8/generated/growth-store-qa-packet.json        | json | 0                  | 0                          | 47        | 0               |
 | docs/phase-8/generated/growth-store-qa-packet.md          | md   | 0                  | 0                          | 0         | 0               |

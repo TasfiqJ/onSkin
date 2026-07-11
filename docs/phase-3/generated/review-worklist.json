@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-11T16:30:26.060Z",
+  "generatedAt": "2026-07-11T16:54:01.780Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "937f4f2fe3c909444dad13858c1a3aab1955895c",
+  "gitSha": "78ad510e1327d946593c6e806313b48591aa72f2",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -691,8 +691,8 @@
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 6627,
-          "sha256": "f2a2f37431b099401b39219b29321f8f0d3609fb3d2e27f9b134d3e95a9fbc83"
+          "bytes": 6622,
+          "sha256": "49df92d077bec632077c967fe0bb5626acc5fa7d4acb435a09a4abd671b0b403"
         },
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.ts",
@@ -708,7 +708,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "117d40449c8c49f0fe2b620a3e8491d4c921c3f4130d90effbd9808c4e90236c",
+      "reviewSnapshotSha256": "1c868d607456f5f530cf20c95854178b4966c9c98ad2dd98d0ef662d951e1938",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1173,8 +1173,8 @@
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 6627,
-          "sha256": "f2a2f37431b099401b39219b29321f8f0d3609fb3d2e27f9b134d3e95a9fbc83"
+          "bytes": 6622,
+          "sha256": "49df92d077bec632077c967fe0bb5626acc5fa7d4acb435a09a4abd671b0b403"
         },
         {
           "path": "apps/mobile/src/features/routine/orderRoutes.test.ts",
@@ -1280,7 +1280,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "dde836aa38d08e5ede0cbab19a6838d0e7c9fe2b19f8065642b1c2172401cd2c",
+      "reviewSnapshotSha256": "4334174fb9ae551f64a705d288bac1709500fe514346eeb61474ff7137b90086",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1523,8 +1523,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 45839,
-          "sha256": "d3f7920e9edf5ce65bcaacc1b548266fc325b56e248c10accb826f19f11a9011"
+          "bytes": 45837,
+          "sha256": "504bfb9dded497b016d2ff3464fcc1d13c21ec7d571bcaf8f90e120902755deb"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
@@ -1547,12 +1547,12 @@
         {
           "path": "apps/mobile/src/features/shelf/useShelf.ts",
           "exists": true,
-          "bytes": 10657,
-          "sha256": "376bfb191493510d1de31b8b2beaeecc6c2c3c7dc87b2a8adf0ae83c4d895d91"
+          "bytes": 10647,
+          "sha256": "e328a494127f8cd61be00c2d62ebb15e71dbee897cacc3c691af012864242c32"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "3d29514251aa5e6dc76d53186da236b424acd68cf72dfa17f5fd4077aa837666",
+      "reviewSnapshotSha256": "a35177e195f6e60412da69089c6c3e1ec0ee984053fe3f5198d670ea25a5c89b",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1578,8 +1578,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 10418,
-          "sha256": "5db068d99c969353ec67c329af9b78bac9b61e0f366ee672ba5d89224a521737"
+          "bytes": 10419,
+          "sha256": "9f2926c7b9d514261e2441481cbb4a5716dd3c577844be5754b24d689d2ac864"
         },
         {
           "path": "apps/mobile/src/features/onboarding/consentCopy.ts",
@@ -1649,7 +1649,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "6640b8951d8513ea9669cf8634d5e5047826dbd71394e4a8863bdc6bf40c4671",
+      "reviewSnapshotSha256": "441e44f16032162d7e6fd317a273b39e0563e8cf616cddd74ab130568187eea0",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },

@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-11T16:32:00.626Z
-Git SHA: cfea281ed2034edd47415fb5037e070fac94f06f
+Generated at: 2026-07-11T16:54:08.141Z
+Git SHA: 78ad510e1327d946593c6e806313b48591aa72f2
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -61,28 +61,43 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/app/(tabs)/today.tsx | present | 32816 | c1f1d270ed129521e39147d536b2d98da36945bab0a1f6d169473bd78884c501 |
 | apps/mobile/src/app/(tabs)/progress.tsx | present | 20519 | d009aa555a3230ad67a41dfdc2cbeb184b9684757b97085346fe5362e57c7125 |
 | apps/mobile/src/app/(tabs)/you.tsx | present | 37119 | b13fdc0f555048e214cda72affba45497b2d340b0e60a0ab4ae020a2ccc54c24 |
-| apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 7109 | aed44f72580bc57b155e47884b45b5b4b0b13e1857b5b3790cf63c551c141bca |
-| apps/mobile/src/app/conflict/[ruleId].tsx | present | 32099 | 78935418c38160af5eef9b06d8afa19f8fc5e56306a18e059056b510f9f9f542 |
+| apps/mobile/src/app/cycle/settings.tsx | present | 27252 | 0ecdd558bf0120bd4a3906899313ae9aefe7ad3452c761c742b428099fea4c4f |
+| apps/mobile/src/app/cycle/week.tsx | present | 13901 | 264a6d9fa2ce28abbb132d61b80739da5eb196990ef47867e1e6c3444e93b868 |
+| apps/mobile/src/app/cycle/why-tonight.tsx | present | 8646 | 758245963dc29153bcb362353c3f375249b4fb0cde6ff60f5df2826875d444f2 |
+| apps/mobile/src/app/routine/plan.tsx | present | 19392 | e0aa50b301550896c7fd6c963ccd0fa23aa9282927d00e5ed2e917a3ace8c006 |
+| apps/mobile/src/app/share/conflict/[ruleId].tsx | present | 7123 | 0bd46e014ebcb0e3f2affaacfda83b2685137028564bca5a717fa7ac81f038db |
+| apps/mobile/src/app/conflict/[ruleId].tsx | present | 32130 | f7dcd9e72e5d7209686a12708eea38498ce4d4d39b57f497bc37b127c834f6b8 |
 | apps/mobile/src/features/commerce/WhereToBuy.tsx | present | 8380 | 236b8c3c89b38d689ee02f83f18b90638a0ada5b4659edc8235df803d6b30293 |
-| scripts/phase7/build-core-loop-qa-packet.mjs | present | 10106 | da822eed555597b12a87b79610d43ef16ad6eeb2907922b320977ceaeb6024f0 |
-| scripts/phase7/check-core-loop.mjs | present | 16219 | 4b9e0fd84780938106dbc1e639787d5e82b584bb40a8042eac57c18effa789d5 |
-| scripts/phase7/check-core-loop-smoke.mjs | present | 10280 | da234b040e9f1405bfeb54760846066dbdcd99754a7106be94e1a90b95d969bb |
-| scripts/e2e/human-e2e-manifest.mjs | present | 37824 | 54ee792f158a7521ac0fe5ce7bfb029477e6c6a305f117ec18016e2d944cf53f |
+| apps/mobile/src/features/scheduler/cadence.ts | present | 1364 | f7164eef26e124c398c3f79e3088c7500c2e35adc41f02ac47abdf675bab3b21 |
+| apps/mobile/src/features/scheduler/customCycle.ts | present | 13146 | 3e6fc08ddf8813933f5e07216fc04c411d7683a44f3761b33b82132f95ee9cda |
+| apps/mobile/src/features/scheduler/customCycle.test.ts | present | 9291 | 9cec61bc36016b5c2acc6afeaff48b37cae861271141203520574ea3399f8e14 |
+| apps/mobile/src/features/scheduler/cycleStore.ts | present | 16143 | 79bbc5f714baac7229a381aa4dd99eff542b4d357eba10ec6dc2a515f31e56bc |
+| apps/mobile/src/features/scheduler/cycleStore.test.ts | present | 14902 | 77a6eebec64f7afbefa60f6ad04878b075c7f74e105ce409a8b1d52b7713fa06 |
+| apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts | present | 15514 | f9842811b150aa91c76201cedac3dd7ec6a31e52f04ae80540e1fdc42904cb46 |
+| apps/mobile/src/features/scheduler/orchestrate.ts | present | 12566 | cc78a6d95295d2dd3cf2db03e00401fcd01bf3142ca0a329e25d5e2e2e884a37 |
+| apps/mobile/src/features/scheduler/orchestrate.test.ts | present | 19231 | da53077967a8907cc35ac85b032fc1dba1537cc9b92d99b180b3ffb7a4e388b2 |
+| apps/mobile/src/features/scheduler/useCycle.ts | present | 9317 | 4e69bfb5c48f94701e888144161597b2f27ff7880d19426e8b418e896df32a23 |
+| apps/mobile/src/features/today/cycleCompletion.ts | present | 606 | 98332563cb28e0978440e3ef1c800eb67421adec0d29b8f164efa69d3c43c271 |
+| apps/mobile/src/features/today/cycleCompletion.test.ts | present | 2082 | 455515f4c61045684d8e7a89501db67b90463eac203743659517940c2ea7788a |
+| scripts/phase7/build-core-loop-qa-packet.mjs | present | 10903 | da6aaa4c5aeda636a3e822ba7afdcd0db4771d2f37f044ba5a4547e341c49f48 |
+| scripts/phase7/check-core-loop.mjs | present | 17337 | d49a76cb07a11d2d158d893e302bc538ac269acbf3687672f905d88d838db51d |
+| scripts/phase7/check-core-loop-smoke.mjs | present | 10994 | 3a9f398c342a03addc9e1dace1bd005cc911f7f5c18dae7b741b5f58408a4d71 |
+| scripts/e2e/human-e2e-manifest.mjs | present | 40630 | dfd9bf719fa3206e60fe056b726575cb799bcbe35c5d07f57c51a0d14ed16642 |
 | scripts/phase9/lib.mjs | present | 14020 | af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10167 | d7d616fcbe9078b55c0d4b3bf5e88ae19570fa533aee8edc599cf1956c7c9149 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
 | docs/USER_FLOW_TREE.md | present | 354167 | 0d62f1c5e06593f9ce362d5e58348f40dd275c796fc3f492d96a78abe0234105 |
-| docs/e2e/generated/human-e2e-manifest.json | present | 32929 | c081899b64c93ac01413c55f42169ca2a62871c872b417f54ccd19d9827bbe70 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 10627 | 36bbab4615fe159c96507cc3249f38e631a4d22e582d00ee97ae68ec858b2bf9 |
-| docs/phase-5/generated/device-qa-packet.json | present | 16918 | d357794dda616c24e92bad990bf677291dfc706b5d9b911888d80b1d1966de1f |
-| docs/phase-5/generated/device-qa-packet.md | present | 15600 | 84cd7ae94756908e0d256cd1ce2b5da4c2451af5fc78d36fedfe79fcc9e61456 |
-| docs/phase-6/generated/payments-qa-packet.json | present | 10523 | 6a1aee03e5bb7bd62df890aeb287ef320a326dbf71e31680bef5d1524a04859c |
-| docs/phase-6/generated/payments-qa-packet.md | present | 7862 | 3015385a0cadba8174dfc5bd69cd0182a8b66574f4a7195aff3464c035a89ea6 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 34397 | aadfb5f3b358d06abfa59ee2104ed6972ea694b3cbf99d6cfc1dc3a2861b1ef9 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 10861 | c306d1ea77c8c4b9a939b3bd73739a30a934af563f42bfd326b77ffbc188d698 |
+| docs/phase-5/generated/device-qa-packet.json | present | 16918 | 47c2e08482eb35f8101a303463497cd251bad8667f5ff5f4e3f64ed450d62d56 |
+| docs/phase-5/generated/device-qa-packet.md | present | 15600 | 076165081dd312ac739a3e9af3c3277960ee6d94e1d6d8a44e431e8dafd5716a |
+| docs/phase-6/generated/payments-qa-packet.json | present | 10523 | 66083e64ac5506467628127de5f8a4a20aaf308e5d9dd460af29ee8598ad4d6a |
+| docs/phase-6/generated/payments-qa-packet.md | present | 7862 | 20077af20c60a3245eadb808d5960db446eeb293a2fed919e7779c64e5da568d |
 | docs/phase-7/surface-inventory.md | present | 7793 | 50c0f72fb317e36588a30559cd254dcb3b7ebaa7c73b8b4ba4dfb9ea35350fd6 |
 | docs/phase-7/launch-claim-matrix.md | present | 4322 | 7027d6d21f2cc7c3bb6944f003f9aeac6a09efea8dc2785280f6a3da44bb6b6b |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4725 | f57bd8b15489b66c4dbee486f3e15190eb2e4752420308dfb71883372348cdd1 |
-| docs/phase-7/core-loop-qa-checklist.md | present | 60424 | 95fb90e8616b9ae4fe53f2706e85004b643461562a8a796f3e34bc16756d7570 |
-| docs/phase-7/phase-7-exit-review.md | present | 3509 | 033edec9712f3e4bb2529ca8f6b27b91953503664d326774113fdec9ec7748d4 |
+| docs/phase-7/core-loop-qa-checklist.md | present | 61665 | 13fd33bdd3074098cbf8cb7c29e04b8961d8e39c7126f06b07116e2e94f04a8b |
+| docs/phase-7/phase-7-exit-review.md | present | 3908 | 7dfe10c8e1f8da610069bde617debfca54d3824cbe789a0cb7f6feed114c55b4 |
 
 ## Blockers
 
