@@ -16,8 +16,8 @@ const outJson =
   process.env.READINESS_STATUS_AUDIT_JSON ?? 'docs/generated/readiness-status-audit.json';
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
-const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 191);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 2037);
+const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 192);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 2048);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
@@ -31,6 +31,7 @@ const staleTestPatterns = [
   /\b185\s+(?:mobile\s+)?test files?\b/i,
   /\b186\s+(?:mobile\s+)?test files?\b/i,
   /\b190\s+(?:mobile\s+)?test files?\b/i,
+  /\b191\s+(?:mobile\s+)?test files?\b/i,
   /\b1743\s+tests?\b/i,
   /\b1744\s+tests?\b/i,
   /\b1748\s+tests?\b/i,
@@ -57,6 +58,7 @@ const staleTestPatterns = [
   /\b1951\s+tests?\b/i,
   /\b1997\s+tests?\b/i,
   /\b2010\s+tests?\b/i,
+  /\b2037\s+tests?\b/i,
   /320 x 480 support-floor 200%\s+text-pressure/i,
   /support-floor\s+170%\s+text-pressure/i,
 ];
@@ -89,6 +91,8 @@ const requiredManifestNeedles = [
   'data-export-local-photo-disclosure-current',
   'Combined account and current-device export',
   'data-export-combined-device-current',
+  'Account-generation-bound combined export',
+  'data-export-account-generation-current',
   '360 x 640 account-upgrade error and recovery pass',
   'onboarding-account-upgrade-current',
   '360 x 640 account-transition isolation and cleanup recovery pass',
