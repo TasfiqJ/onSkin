@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-07-10T15:36:23.232Z",
+  "generatedAt": "2026-07-11T01:26:24.320Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-10",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 183,
-  "expectedMobileTests": 1881,
-  "actualMobileTestFiles": 183,
-  "expectedTestPhrase": "183 mobile test files / 1881 tests",
+  "expectedMobileTestFiles": 185,
+  "expectedMobileTests": 1940,
+  "actualMobileTestFiles": 185,
+  "expectedTestPhrase": "185 mobile test files / 1940 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",

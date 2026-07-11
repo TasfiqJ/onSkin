@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-10T16:32:29.326Z",
+  "generatedAt": "2026-07-11T01:26:38.181Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
-  "strict": true,
-  "gitSha": "1718fa1704a7b00bd77fef4d19efc0830f1e23d9",
+  "strict": false,
+  "gitSha": "f7672a9ad32bc4b1e966aaa0e505caefe8d1e870",
   "gitStatus": "",
   "summary": {
     "itemCount": 9,
@@ -77,8 +77,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 54608,
-          "sha256": "74baef18a6165e84d775835dcd8094b02044d90902be02768ee556a112c8c103"
+          "bytes": 57381,
+          "sha256": "7f89f7936850c1b18f9c950ec5114415e4ad6b9c57d0b0ba6f83aaa020df7b7c"
         }
       ]
     },
@@ -401,8 +401,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 54608,
-          "sha256": "74baef18a6165e84d775835dcd8094b02044d90902be02768ee556a112c8c103"
+          "bytes": 57381,
+          "sha256": "7f89f7936850c1b18f9c950ec5114415e4ad6b9c57d0b0ba6f83aaa020df7b7c"
         }
       ]
     },
@@ -607,8 +607,8 @@
         {
           "path": "apps/mobile/src/features/shelf/useShelf.ts",
           "exists": true,
-          "bytes": 8790,
-          "sha256": "cd0e52b454102f4f2074df9018e6a517abc57023e7b5340a5ff626a1f94134fd"
+          "bytes": 8242,
+          "sha256": "82fe9b38cdb19afda1f62617d6c12498c72f6fd11803cdb7150e79b3bbb3bbb1"
         },
         {
           "path": "apps/mobile/src/app/shelf/[id].tsx",
@@ -661,14 +661,14 @@
         {
           "path": "apps/mobile/src/features/recommendations/engine.test.ts",
           "exists": true,
-          "bytes": 10534,
-          "sha256": "1445210b33eadb3eb3bbc48b9d907f784ce7b59fde1dbc51de4673112d469899"
+          "bytes": 14289,
+          "sha256": "2af0db2b222d9e3402bdd12fb69ed2aa579ab77a0a3f3c9e520bee5777460170"
         },
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
           "exists": true,
-          "bytes": 15500,
-          "sha256": "08cb427866f0bcb278f9b8bde4c0e1754f0d407515d0d3f9c10512cee861e434"
+          "bytes": 16762,
+          "sha256": "73705b070c4a5a33b8fb063ba99f9aa2699d1492aaf20541f4bf07d158e7f136"
         },
         {
           "path": "apps/mobile/src/features/recommendations/fit.test.ts",
@@ -733,8 +733,8 @@
         {
           "path": "apps/mobile/src/features/recommendations/useRecommendations.ts",
           "exists": true,
-          "bytes": 2491,
-          "sha256": "f279c9c9ba518afe6392b1717c604ded0786dd18bddd4d69ea3fb912107050a2"
+          "bytes": 2547,
+          "sha256": "ac9852179683d5a536f4f604373978ed61e9084ac9ee4a13f7d13ad3e1869c10"
         },
         {
           "path": "supabase/functions/catalog-report/index.ts",
@@ -831,8 +831,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 54608,
-          "sha256": "74baef18a6165e84d775835dcd8094b02044d90902be02768ee556a112c8c103"
+          "bytes": 57381,
+          "sha256": "7f89f7936850c1b18f9c950ec5114415e4ad6b9c57d0b0ba6f83aaa020df7b7c"
         }
       ]
     },
@@ -904,8 +904,8 @@
         {
           "path": "docs/FOR_TAS_TO_DO.md",
           "exists": true,
-          "bytes": 54608,
-          "sha256": "74baef18a6165e84d775835dcd8094b02044d90902be02768ee556a112c8c103"
+          "bytes": 57381,
+          "sha256": "7f89f7936850c1b18f9c950ec5114415e4ad6b9c57d0b0ba6f83aaa020df7b7c"
         }
       ]
     }

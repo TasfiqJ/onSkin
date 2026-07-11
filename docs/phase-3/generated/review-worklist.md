@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-10T16:37:33.287Z
+Generated: 2026-07-11T01:26:33.722Z
 Status: pass
-Git SHA: 09e7333ef4e2237296ca965e4d950d959101458e
+Git SHA: f7672a9ad32bc4b1e966aaa0e505caefe8d1e870
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -12,8 +12,8 @@ reviewers must inspect before launch gates can close.
 
 ## Summary
 
-- Review items: 35
-- Source files hashed: 254
+- Review items: 37
+- Source files hashed: 277
 - Missing source files: 0
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
@@ -22,43 +22,45 @@ reviewers must inspect before launch gates can close.
 
 ## Items
 
-| Domain            | Area                                 | Status      | Reviewer | Date | Signoff        | Sources | Missing sources |
-| ----------------- | ------------------------------------ | ----------- | -------- | ---- | -------------- | ------- | --------------- |
-| legalRegulatory   | Regulatory launch classification     | Not cleared | TBD      | TBD  | not-applicable | 3       | 0               |
-| legalRegulatory   | Launch claims vocabulary             | Not cleared | TBD      | TBD  | not-applicable | 2       | 0               |
-| legalRegulatory   | Store metadata and review notes      | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
-| legalRegulatory   | Subscription and cancellation        | Not cleared | TBD      | TBD  | not-applicable | 29      | 0               |
-| legalRegulatory   | Commerce and paid-link disclosure    | Blocked     | TBD      | TBD  | not-applicable | 19      | 0               |
-| legalRegulatory   | Ask and AI disclosures               | Blocked     | TBD      | TBD  | not-applicable | 19      | 0               |
-| clinical          | Ingredient interaction rules         | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| clinical          | PAO defaults                         | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| clinical          | Recommendation types                 | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| clinical          | Shoppable stacks                     | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| clinical          | Community notes                      | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| clinical          | Ask OnSkin deterministic answers     | Not cleared | TBD      | TBD  | not-applicable | 2       | 0               |
-| clinical          | Trend analysis                       | Not cleared | TBD      | TBD  | not-applicable | 13      | 0               |
-| clinical          | Photo progress copy                  | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| clinical          | Onboarding quiz                      | Blocked     | TBD      | TBD  | not-applicable | 1       | 0               |
-| clinical          | Consent copy                         | Blocked     | TBD      | TBD  | not-applicable | 1       | 0               |
-| cosmeticChemistry | Functional tags                      | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| cosmeticChemistry | PAO defaults                         | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| cosmeticChemistry | Recommendation catalog               | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| cosmeticChemistry | Shoppable stack item labels          | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| cosmeticChemistry | Routine sequencing                   | Not cleared | TBD      | TBD  | not-applicable | 21      | 0               |
-| cosmeticChemistry | Smart shelf labels                   | Not cleared | TBD      | TBD  | not-applicable | 19      | 0               |
-| privacySecurity   | Health-data consent and withdrawal   | Blocked     | TBD      | TBD  | not-applicable | 11      | 0               |
-| privacySecurity   | Photo privacy and local storage      | Not cleared | TBD      | TBD  | not-applicable | 4       | 0               |
-| privacySecurity   | Trend and cloud-backup consent       | Blocked     | TBD      | TBD  | not-applicable | 14      | 0               |
-| privacySecurity   | Ask, commerce, and community consent | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
-| privacySecurity   | Account deletion and data export     | Blocked     | TBD      | TBD  | not-applicable | 10      | 0               |
-| privacySecurity   | Analytics and crash payloads         | Not cleared | TBD      | TBD  | not-applicable | 10      | 0               |
-| privacySecurity   | Auth and processor posture           | Blocked     | TBD      | TBD  | not-applicable | 21      | 0               |
-| ipFto             | Brand and trademark clearance        | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
-| ipFto             | Native identifiers and callbacks     | Blocked     | TBD      | TBD  | not-applicable | 3       | 0               |
-| ipFto             | Onboarding quiz FTO                  | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
-| ipFto             | Public positioning differentiation   | Not cleared | TBD      | TBD  | not-applicable | 3       | 0               |
-| ipFto             | Catalog source and image rights      | Blocked     | TBD      | TBD  | not-applicable | 14      | 0               |
-| ipFto             | Share-card marks and deep links      | Blocked     | TBD      | TBD  | not-applicable | 9       | 0               |
+| Domain            | Area                                              | Status      | Reviewer | Date | Signoff        | Sources | Missing sources |
+| ----------------- | ------------------------------------------------- | ----------- | -------- | ---- | -------------- | ------- | --------------- |
+| legalRegulatory   | Regulatory launch classification                  | Not cleared | TBD      | TBD  | not-applicable | 3       | 0               |
+| legalRegulatory   | Launch claims vocabulary                          | Not cleared | TBD      | TBD  | not-applicable | 2       | 0               |
+| legalRegulatory   | Store metadata and review notes                   | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
+| legalRegulatory   | Subscription and cancellation                     | Not cleared | TBD      | TBD  | not-applicable | 29      | 0               |
+| legalRegulatory   | Commerce and paid-link disclosure                 | Blocked     | TBD      | TBD  | not-applicable | 19      | 0               |
+| legalRegulatory   | Ask and AI disclosures                            | Blocked     | TBD      | TBD  | not-applicable | 19      | 0               |
+| clinical          | Ingredient interaction rules                      | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Pregnancy safety and active cadence               | Not cleared | TBD      | TBD  | not-applicable | 5       | 0               |
+| clinical          | PAO defaults                                      | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Recommendation types                              | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Shoppable stacks                                  | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Community notes                                   | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Ask OnSkin deterministic answers                  | Not cleared | TBD      | TBD  | not-applicable | 2       | 0               |
+| clinical          | Trend analysis                                    | Not cleared | TBD      | TBD  | not-applicable | 13      | 0               |
+| clinical          | Photo progress copy                               | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Onboarding quiz                                   | Blocked     | TBD      | TBD  | not-applicable | 1       | 0               |
+| clinical          | Consent copy                                      | Blocked     | TBD      | TBD  | not-applicable | 1       | 0               |
+| cosmeticChemistry | Functional tags                                   | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| cosmeticChemistry | PAO defaults                                      | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| cosmeticChemistry | Recommendation catalog                            | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| cosmeticChemistry | Shoppable stack item labels                       | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
+| cosmeticChemistry | Routine sequencing                                | Not cleared | TBD      | TBD  | not-applicable | 21      | 0               |
+| cosmeticChemistry | Active concentration and pregnancy-caution matrix | Not cleared | TBD      | TBD  | not-applicable | 16      | 0               |
+| cosmeticChemistry | Smart shelf labels                                | Not cleared | TBD      | TBD  | not-applicable | 19      | 0               |
+| privacySecurity   | Health-data consent and withdrawal                | Blocked     | TBD      | TBD  | not-applicable | 13      | 0               |
+| privacySecurity   | Photo privacy and local storage                   | Not cleared | TBD      | TBD  | not-applicable | 4       | 0               |
+| privacySecurity   | Trend and cloud-backup consent                    | Blocked     | TBD      | TBD  | not-applicable | 14      | 0               |
+| privacySecurity   | Ask, commerce, and community consent              | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
+| privacySecurity   | Account deletion and data export                  | Blocked     | TBD      | TBD  | not-applicable | 10      | 0               |
+| privacySecurity   | Analytics and crash payloads                      | Not cleared | TBD      | TBD  | not-applicable | 10      | 0               |
+| privacySecurity   | Auth and processor posture                        | Blocked     | TBD      | TBD  | not-applicable | 21      | 0               |
+| ipFto             | Brand and trademark clearance                     | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
+| ipFto             | Native identifiers and callbacks                  | Blocked     | TBD      | TBD  | not-applicable | 3       | 0               |
+| ipFto             | Onboarding quiz FTO                               | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
+| ipFto             | Public positioning differentiation                | Not cleared | TBD      | TBD  | not-applicable | 3       | 0               |
+| ipFto             | Catalog source and image rights                   | Blocked     | TBD      | TBD  | not-applicable | 14      | 0               |
+| ipFto             | Share-card marks and deep links                   | Blocked     | TBD      | TBD  | not-applicable | 9       | 0               |
 
 ## Item Details
 
@@ -68,14 +70,14 @@ reviewers must inspect before launch gates can close.
 - Status: Not cleared
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `a86b457e258bcd05313580fdda83b33117cbadfc3a1b6fa7ca202242a72c877c`
+- Review snapshot SHA-256: `647cb5867bee0ec2eb790884b751cf1c9793201d2737fb75bdf1aadd59ef39dc`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Counsel must approve launch classification and forbidden-claim floor.
 
 Sources:
 
-- `docs/phase-3/regulatory-positioning-memo.md` - 8356 bytes - sha256 `216d0c5e9cd820c5f99ad8900371ce759a64a648021570e0c4f80a9455a5d7d1`
+- `docs/phase-3/regulatory-positioning-memo.md` - 8472 bytes - sha256 `e0118d857672f79febfbc4c19491f967e1624db92a89698db66d479d334d4c9a`
 - `docs/legal-readiness.md` - 12565 bytes - sha256 `cdc11bbac918d457353b42ff3cb8658c9ac6cf8585f8d9454b46685aed98ff5e`
 - `apps/mobile/src/lib/legal/disclaimer.ts` - 926 bytes - sha256 `b9cc550cb5802a61fbc0c782585b4fcc388719d2475e5f7d476005da4f26e174`
 
@@ -119,7 +121,7 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `4695eb092b3c98ddaebc8e17a462eff31a97f6b530d90672b0ebd6b2ce35d931`
+- Review snapshot SHA-256: `705efa717bc41874ea6d8b6e97438deca45ba51b1c14ebaef22f1209f1e9d87f`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Auto-renew, restore, cancellation, trial, and win-back copy.
@@ -147,7 +149,7 @@ Sources:
 - `apps/mobile/src/features/subscription/priceDisplay.test.ts` - 3483 bytes - sha256 `420ec71fc37fed57e2ecc31fc5ccd19098289051b29bb18e9b79f13c2b7c180f`
 - `apps/mobile/src/features/subscription/priceDisplay.ts` - 1789 bytes - sha256 `2fe6c0d3c47f9eecdef15e31b4720c47afa00c74c97b14c738583648043ea296`
 - `apps/mobile/src/features/subscription/ProGate.tsx` - 21478 bytes - sha256 `9f49de71cdd7e4ac90f34e6d9d376886a4da5a19f83e8f415187a995b4823e70`
-- `apps/mobile/src/features/subscription/proGatedRoutes.test.ts` - 14681 bytes - sha256 `820d54a125ec5819d135200c01f2a58420b958376473f66f15f6f5bb7111711a`
+- `apps/mobile/src/features/subscription/proGatedRoutes.test.ts` - 14764 bytes - sha256 `f0c33a6444c9b16c0db1f0e114cf2b71076be483cb29965b1f808fb3dcc8500c`
 - `apps/mobile/src/features/subscription/ReverseTrialBanner.tsx` - 2326 bytes - sha256 `b3453ed2c4b8efa0529d97decf7c352c03cae0411bc6bfbfba231212a5ec335f`
 - `apps/mobile/src/features/subscription/serverContracts.test.ts` - 3032 bytes - sha256 `f67ac9c4c1c207a37d674ac1b05cb0b795b36ecd59255ec08404429c191052a2`
 - `apps/mobile/src/features/subscription/store.test.ts` - 9423 bytes - sha256 `0bd51518170c0b8650fd2da273d8e41e67fc79e67d61d931d26bb60b3bda024a`
@@ -236,6 +238,25 @@ Sources:
 Sources:
 
 - `apps/mobile/src/features/intelligence/rules.ts` - 10189 bytes - sha256 `00a368beef8a4b59edbf5b5847868093bf402de4c65eabaa79ec7d0517116aa4`
+
+### clinical - Pregnancy safety and active cadence
+
+- Worklist ID: `clinical:pregnancy-safety-and-active-cadence`
+- Status: Not cleared
+- Required reviewer: board-certified dermatologist or equivalent qualified clinician
+- Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `b58dade64ba574c67e377fbc4f95c3cb9a72750f3457fdc095a37b54df752ab3`
+- Detached signoff: not-applicable
+- Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
+- Review-log notes: Review statuses, retinoid/hydroquinone/BHA matrix and threshold, unknown-strength handling, cadence, replacement suppression, and every visible explanation together.
+
+Sources:
+
+- `apps/mobile/src/features/intelligence/pregnancySafety.ts` - 1703 bytes - sha256 `ac39dca4dcc9f9cf19cdb695a42c8cc4c92df8abe2ea8838773d749b10de5c71`
+- `apps/mobile/src/features/intelligence/concentration.ts` - 7024 bytes - sha256 `a44ab1e6e6020e7e01a432d82c5aa8e8f941db4b4a870f8e0fa55e94bd8a6230`
+- `apps/mobile/src/features/routine/generate.ts` - 6053 bytes - sha256 `347813314794b42a057efec468e1eec40b2bf01d016e36dad72cacee1dfd6c3d`
+- `apps/mobile/src/features/scheduler/orchestrate.ts` - 8505 bytes - sha256 `2f9d8a736a51ac5314161a826d501b42027c5fea32c8941d596f62baa1e2b871`
+- `apps/mobile/src/features/recommendations/engine.ts` - 16762 bytes - sha256 `73705b070c4a5a33b8fb063ba99f9aa2699d1492aaf20541f4bf07d158e7f136`
 
 ### clinical - PAO defaults
 
@@ -376,14 +397,14 @@ Sources:
 - Status: Blocked
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `13a19a7c3c1cae6099cc4f0ec1a0570d74943854a680060e1a73824cc5a885ef`
+- Review snapshot SHA-256: `8e67111e18610f8cc10500369d7fb10199b7423f0e7d6c7527a569a03805ff9f`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
-- Review-log notes: Legal-owned copy.
+- Review-log notes: Legal-owned copy explicitly names pregnancy, trying to become pregnant, and breastfeeding status; review exact version/hash behavior.
 
 Sources:
 
-- `apps/mobile/src/features/onboarding/consentCopy.ts` - 4250 bytes - sha256 `87167971987c2d25cfaedd66a049adf228690ff9e4823a7345f5cb7d79857873`
+- `apps/mobile/src/features/onboarding/consentCopy.ts` - 4469 bytes - sha256 `473be59b257e3829080231cf3bbc18f0321ee78a2d1d7e7ff1030fb3ca5728f1`
 
 ### cosmeticChemistry - Functional tags
 
@@ -451,7 +472,7 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `2e2b47428ca52e9754f90d74becc3ceac86ec6b5678990dd95ef7ceb9e1590b3`
+- Review snapshot SHA-256: `1718337cdaa645477d07420a32d6c7aa565e40dbcf7ea2bd36384b694435bc43`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Confirm order labels and conflicts.
@@ -462,10 +483,10 @@ Sources:
 - `apps/mobile/src/features/routine/activationAnalytics.ts` - 2886 bytes - sha256 `7d020210d9c10b56dc99fcd518fa169fd6e71f3ab3d5342dd1d22944651dd488`
 - `apps/mobile/src/features/routine/cycleAnchor.test.ts` - 1643 bytes - sha256 `6805908ad6fe8d24af819a133461bb3d619b74055ba6922f9f2d46852e3e6231`
 - `apps/mobile/src/features/routine/cycleAnchor.ts` - 1832 bytes - sha256 `6b74832bb0e410e9abe708efd56f4be0560f26e0087020b586f395d7203d44c2`
-- `apps/mobile/src/features/routine/firstInsight.test.ts` - 4435 bytes - sha256 `cb297fe597aa582716fb7569637aaf2a0d6a2e2c201dbb3465d5d9d14221fc09`
-- `apps/mobile/src/features/routine/firstInsight.ts` - 2410 bytes - sha256 `b6cf43fc7b4aba8e3d9ed12c7ab7bbdeaddc76594c2301f500d5cc60f30cae9b`
-- `apps/mobile/src/features/routine/generate.test.ts` - 10088 bytes - sha256 `e47767f84648366e8646b4a382cafd97aaad87c91ca53695ac93bb9f27c06963`
-- `apps/mobile/src/features/routine/generate.ts` - 4263 bytes - sha256 `984ba73310d4fa0c4fcb3ceedb0236db567438e018c2fbd494504d9b892bbb03`
+- `apps/mobile/src/features/routine/firstInsight.test.ts` - 5560 bytes - sha256 `eaacafe7ca609490a779ef5611157956aed5ec081403dd3856c5f8d86b733f4c`
+- `apps/mobile/src/features/routine/firstInsight.ts` - 3615 bytes - sha256 `0e4593978d4a97b0c1244664a8a1adfcb24957c366785a38c2490141c59b5ce6`
+- `apps/mobile/src/features/routine/generate.test.ts` - 14039 bytes - sha256 `c55b661e6edcd022ba66da746f895e812b3d224f04467a3b0b74a23ad18bf450`
+- `apps/mobile/src/features/routine/generate.ts` - 6053 bytes - sha256 `347813314794b42a057efec468e1eec40b2bf01d016e36dad72cacee1dfd6c3d`
 - `apps/mobile/src/features/routine/progressSanitizers.test.ts` - 1120 bytes - sha256 `bac657c445e5ac8a357299c341a20f45d24e53a21da1061b6eba021d61bfcf31`
 - `apps/mobile/src/features/routine/progressSanitizers.ts` - 843 bytes - sha256 `92aa1357f496178730496bd5b79a490a5c36e308503edadf3abfaf00756af1ef`
 - `apps/mobile/src/features/routine/ramp.ts` - 2619 bytes - sha256 `2b58d16a9c595e83b1198e16345d85044e74de381aa5a1ee5a1d824fed9b86ee`
@@ -474,11 +495,41 @@ Sources:
 - `apps/mobile/src/features/routine/reviewGate.test.ts` - 1458 bytes - sha256 `9134ef0d3dee8aab7efab7e1de07bd1e041a82d42f57ff7b72435abac3fe589b`
 - `apps/mobile/src/features/routine/reviewGate.ts` - 586 bytes - sha256 `ab56e4d57c55e76af25ce35fe9a9d00d9b653f810cfab50b0caf126e1ec42acd`
 - `apps/mobile/src/features/routine/sequencing.ts` - 6132 bytes - sha256 `0e29b8c135c23b0aa7f5c22f129fcfe4152298b3ab5f24f113bd60b7d3cc19c6`
-- `apps/mobile/src/features/routine/usePlan.test.ts` - 1158 bytes - sha256 `7ae09b126b6bf84d97ae605861bfbeb9678e426859c0fca37ff9b5d2a7875d48`
-- `apps/mobile/src/features/routine/usePlan.ts` - 2987 bytes - sha256 `9b35741ce608db59ee43846faf99efc1d2f547baf5e97cff799990d5ab836fbe`
+- `apps/mobile/src/features/routine/usePlan.test.ts` - 1573 bytes - sha256 `6c7cbeb54eb3172dc688f31927f80a0b19d2ff06b003bc42780e2ae0f6eaf980`
+- `apps/mobile/src/features/routine/usePlan.ts` - 3050 bytes - sha256 `f3867e38aa12004628c4babe923e866fda520a72a12b89ddc30f509cc8b38f77`
 - `apps/mobile/src/features/routine/useProgress.test.ts` - 1006 bytes - sha256 `b22359e2401f3bae300c28f709d782a615be97cc872fb3c9e746f6aa3ec9cba9`
 - `apps/mobile/src/features/routine/useProgress.ts` - 5627 bytes - sha256 `5bbd820ef1675a3f1df5b9ee88f728ea176851d7581d4618e9acd8c9773ae743`
 - `apps/mobile/src/features/routine/useRamp.ts` - 2307 bytes - sha256 `f60b72320bbb3ae0968cab87bce18bba4edbf3e4408a737f35056ed668a27434`
+
+### cosmeticChemistry - Active concentration and pregnancy-caution matrix
+
+- Worklist ID: `cosmeticChemistry:active-concentration-and-pregnancy-caution-matrix`
+- Status: Not cleared
+- Required reviewer: qualified cosmetic chemist/formulator
+- Current reviewer/date: TBD / TBD
+- Review snapshot SHA-256: `94a335ae3d4a710e2bc89de1402518314b7b7e253d34a9df937bb0e71ac406ed`
+- Detached signoff: not-applicable
+- Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
+- Review-log notes: Validate aliases, thresholds, multi-active ambiguity, low/high/unknown BHA, hydroquinone, and replacement behavior.
+
+Sources:
+
+- `apps/mobile/src/features/intelligence/concentration.ts` - 7024 bytes - sha256 `a44ab1e6e6020e7e01a432d82c5aa8e8f941db4b4a870f8e0fa55e94bd8a6230`
+- `apps/mobile/src/features/intelligence/pregnancySafety.ts` - 1703 bytes - sha256 `ac39dca4dcc9f9cf19cdb695a42c8cc4c92df8abe2ea8838773d749b10de5c71`
+- `apps/mobile/src/features/scheduler/classes.ts` - 4191 bytes - sha256 `1841ea37d2c06e03f046a792d3d8cc3fb4edc575531e4f8fa50c72a7d93471f2`
+- `apps/mobile/src/features/scheduler/cycleStore.test.ts` - 5359 bytes - sha256 `0ebb7b07fb765b8d18dbf86e88d5f1557babeed669e8eddda03e25619060fa99`
+- `apps/mobile/src/features/scheduler/cycleStore.ts` - 9185 bytes - sha256 `948c27ed68ec21212028405f6e78efe326790c2dba9db466a57fb0e39729872b`
+- `apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts` - 9500 bytes - sha256 `1f49519bf4346a46fa51a90b19d48c414433c725f7a677b278660cf0e2c7c489`
+- `apps/mobile/src/features/scheduler/orchestrate.test.ts` - 12463 bytes - sha256 `ff961ef6f217c92c8a8f9c43e8ecd6d1b3ca8ced4d39e663b91308bf444d3a1d`
+- `apps/mobile/src/features/scheduler/orchestrate.ts` - 8505 bytes - sha256 `2f9d8a736a51ac5314161a826d501b42027c5fea32c8941d596f62baa1e2b871`
+- `apps/mobile/src/features/scheduler/profile.test.ts` - 6509 bytes - sha256 `5c0299708eb069cf4123e321a3e50f20d1439ff23c1b0111b300ce0bd599d86f`
+- `apps/mobile/src/features/scheduler/profile.ts` - 4503 bytes - sha256 `e5c20935ac3c6c17bd048bca1d8db393fb3f8aa155415726ec59c80bef9c6913`
+- `apps/mobile/src/features/scheduler/profileMapping.ts` - 1507 bytes - sha256 `577df4e8f085fd7944388bbd0dd9609e35007f24a8320d2362020e73d3a27f84`
+- `apps/mobile/src/features/scheduler/projection.test.ts` - 2167 bytes - sha256 `579efbc821b1d4bfc48bd355c84c338d1e54c602ef004ad45cbc01c7c2905f07`
+- `apps/mobile/src/features/scheduler/projection.ts` - 2862 bytes - sha256 `8c4f98b9c40fe3969a2682444cbf9080ddacffb6a8ec7153e13fec3cc80fa322`
+- `apps/mobile/src/features/scheduler/useCycle.ts` - 5968 bytes - sha256 `8205ee4b2fe4a64372c8062046cb19188d48ca70e2838cee9bc3e7b32b44d3fe`
+- `apps/mobile/src/features/scheduler/useCycleAnalytics.test.ts` - 805 bytes - sha256 `ac98d3eb19e85d67dfd368b06189c7e6b76ac23557de92918db68b4d40c56fed`
+- `apps/mobile/src/features/recommendations/engine.ts` - 16762 bytes - sha256 `73705b070c4a5a33b8fb063ba99f9aa2699d1492aaf20541f4bf07d158e7f136`
 
 ### cosmeticChemistry - Smart shelf labels
 
@@ -486,7 +537,7 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `392703534dfae6fe74b99a767da14b5cabeb1f98f525c14278b2456ce74784d9`
+- Review snapshot SHA-256: `f30101fb9c124f25feeba5426816d212443601ae4957439e65923619f9ac8496`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Confirm terms are cosmetic, not medical.
@@ -511,7 +562,7 @@ Sources:
 - `apps/mobile/src/features/shelf/store.test.ts` - 4504 bytes - sha256 `6877eeedecd0b6680a764c61fba2dbcb012680e8e6c5d3230573105dd2548cda`
 - `apps/mobile/src/features/shelf/store.ts` - 12890 bytes - sha256 `416a05c75ac9c6c5e86cfd12e7bef9d30f3992ad0d963f4e874fecdda20ac705`
 - `apps/mobile/src/features/shelf/useShelf.test.ts` - 3684 bytes - sha256 `089d526dd0a4fc3f9ff34097d44567b2597e1b31c6669503663145b714428762`
-- `apps/mobile/src/features/shelf/useShelf.ts` - 8790 bytes - sha256 `cd0e52b454102f4f2074df9018e6a517abc57023e7b5340a5ff626a1f94134fd`
+- `apps/mobile/src/features/shelf/useShelf.ts` - 8242 bytes - sha256 `82fe9b38cdb19afda1f62617d6c12498c72f6fd11803cdb7150e79b3bbb3bbb1`
 
 ### privacySecurity - Health-data consent and withdrawal
 
@@ -519,16 +570,18 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `804d1ad26f943ef13180f21030f21ac37bf3f54ebee1805977b1bf8deb323e48`
+- Review snapshot SHA-256: `8320295b9f5c703969de1140cbd9fa4306d59cc17a456f32c85a8306a1d06e4d`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
-- Review-log notes: Must prove live ledger/RLS and final consumer-health notice.
+- Review-log notes: Review installed-base reconsent, local-first processing, trying/pregnancy/breastfeeding disclosure, preserved malformed records, server-only status handling, live ledger/RLS, and final consumer-health notice.
 
 Sources:
 
-- `docs/phase-3/consent-matrix.md` - 4618 bytes - sha256 `25103684ffcee9a91916385af065727faa34c09d9f30927672c425c3ce4a8654`
-- `docs/store-privacy-inventory.md` - 9517 bytes - sha256 `34dededcfedb419479bc0c145728036b2b4695b061dede4dc46094890825cb0b`
-- `apps/mobile/src/features/onboarding/consentCopy.ts` - 4250 bytes - sha256 `87167971987c2d25cfaedd66a049adf228690ff9e4823a7345f5cb7d79857873`
+- `docs/phase-3/consent-matrix.md` - 6754 bytes - sha256 `3141b9fa40a9aee0b816f79ef40793c49eec0c99ff4800a97841815e0fc925e6`
+- `docs/store-privacy-inventory.md` - 9894 bytes - sha256 `db1e91244395f5322bbce84282357aaa98c9878f0903a09a87d635e3c2e567b6`
+- `apps/mobile/src/features/onboarding/consentCopy.ts` - 4469 bytes - sha256 `473be59b257e3829080231cf3bbc18f0321ee78a2d1d7e7ff1030fb3ca5728f1`
+- `apps/mobile/src/features/onboarding/healthConsentStore.ts` - 3407 bytes - sha256 `045af829ce740d46bfbbd05358413feecd316cf30366bf89094fc8ed1bd11fe2`
+- `apps/mobile/src/features/scheduler/profile.ts` - 4503 bytes - sha256 `e5c20935ac3c6c17bd048bca1d8db393fb3f8aa155415726ec59c80bef9c6913`
 - `apps/mobile/src/lib/consent/consent.test.ts` - 1437 bytes - sha256 `b8d8f247bb87f2cbf958657cca3c01dc930ceff57fd50cc9ec784e74de71e77e`
 - `apps/mobile/src/lib/consent/consent.ts` - 1863 bytes - sha256 `b7e0a3d4e38a271f742826f6a1125de05b0e34fa0f1758e614a6d27eb30eb33a`
 - `apps/mobile/src/lib/consent/withdrawal.test.ts` - 1033 bytes - sha256 `7a4b15f07b67f884fce6540ff51309d01feffd7c387e359de7793bbfc903c6c3`
@@ -590,7 +643,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `8ff249020a082b818d64c38e80c99d6229b24b68a9318853b06a79c94bea7ef8`
+- Review snapshot SHA-256: `b9aaa1b50eb2b18d7ca8ca39390ff3a6625f2fe996d93af9f5d42f6a5ca94bca`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Vendor/partner sharing and withdrawal copy must be reviewed.
@@ -600,7 +653,7 @@ Sources:
 - `apps/mobile/src/features/ask/consent.ts` - 2213 bytes - sha256 `857fd7b06872eb8f9185590e03d70118fcd8cded5127025e60033e002a3f6b62`
 - `apps/mobile/src/features/commerce/consent.ts` - 2924 bytes - sha256 `b4c949420a3b9089e6732c351c5fa29bef852b84ff3b3dbb6ae90faa94d37501`
 - `apps/mobile/src/features/community/consent.ts` - 2603 bytes - sha256 `b6478f17cddd16382e6f895ebba7d4eedc477d8accfd62b215f0dea343bb7797`
-- `docs/phase-3/consent-matrix.md` - 4618 bytes - sha256 `25103684ffcee9a91916385af065727faa34c09d9f30927672c425c3ce4a8654`
+- `docs/phase-3/consent-matrix.md` - 6754 bytes - sha256 `3141b9fa40a9aee0b816f79ef40793c49eec0c99ff4800a97841815e0fc925e6`
 
 ### privacySecurity - Account deletion and data export
 
@@ -656,7 +709,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `ad094805f7ae0daf8c749f2e88816ae20ec6e4320b74473435b3a0183c1d401d`
+- Review snapshot SHA-256: `f5cc69aec31dc754aae267d023e2b60f9a46dd5a791f1f4e14abe5c1efa0cc49`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Apple/Google auth, processors, breach posture, and RLS proof needed.
@@ -683,7 +736,7 @@ Sources:
 - `apps/mobile/src/lib/auth/sessionOwner.ts` - 1664 bytes - sha256 `5c5635c4238c94dfc708f849e052f017e857d00173862df0a3826f4ac3d9354d`
 - `apps/mobile/src/lib/auth/sessionOwnerKey.ts` - 168 bytes - sha256 `959114b5a251604058380d558e30daeb0c880671ff50e9b26413b4f46ceae5ad`
 - `supabase/functions/_shared/auth.ts` - 321 bytes - sha256 `cac2bbac4936c570508b764482d8c396693bda989f4f605514b8a3ca06397999`
-- `docs/phase-3/data-inventory.md` - 12461 bytes - sha256 `73591c69d140fcbb0e420ebd43c6b7d155da3425cf63adf14a7890d307be8937`
+- `docs/phase-3/data-inventory.md` - 13437 bytes - sha256 `1185e7bf6d7599da2c3e496650786981e8ba3124042f9e68ef29f5bc5e6c3b65`
 
 ### ipFto - Brand and trademark clearance
 
@@ -726,7 +779,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `70e85554728d76a459d23715b4f2f702dd736db2d5864e4caac49fc7ee39f23b`
+- Review snapshot SHA-256: `96703b4bd2969d7b5920bd97fd42ad28b302517d8514cdd470173929cf38415e`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Compare against SkinSort and competitor onboarding/typing flows.
@@ -735,7 +788,7 @@ Sources:
 
 - `docs/phase-3/quiz-fto-summary.md` - 2050 bytes - sha256 `ac8ad15f610d262d05c9196ad952a276e3b1f2cfafcdf4e7d4c09fda635e1ba6`
 - `apps/mobile/src/features/onboarding/quiz.ts` - 11021 bytes - sha256 `e467bfb1e6605e41cb2e62e764ff33cefbed98a936c94150de1a704654d23527`
-- `apps/mobile/src/app/onboarding/quiz.tsx` - 6960 bytes - sha256 `941bc4c27bbf1fc4f504f65e02c8bee761632536c0116097016a046af5834c87`
+- `apps/mobile/src/app/onboarding/quiz.tsx` - 6966 bytes - sha256 `f1c41f3ab0f5c2c5db45d78582dc9ea269d70b6cdf1512958b686c447b60d9aa`
 - `apps/mobile/src/app/onboarding/reveal.tsx` - 5488 bytes - sha256 `f38ab745a996a1cdc4aef4fabb6d8119fe51c3e59dcff47d177e40fc41cda31d`
 
 ### ipFto - Public positioning differentiation
@@ -744,14 +797,14 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `f7af3c0ef2b24d37b3a4f8638d0368a5971c2ae2dac5f973499478141fab75a8`
+- Review snapshot SHA-256: `245c39dc1ed92bfb8018d8d620dd09461b74e3ed3e84aa8fdc5846f4ac9cb832`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Confirm copy avoids competitor confusion and unsupported superiority.
 
 Sources:
 
-- `docs/phase-3/regulatory-positioning-memo.md` - 8356 bytes - sha256 `216d0c5e9cd820c5f99ad8900371ce759a64a648021570e0c4f80a9455a5d7d1`
+- `docs/phase-3/regulatory-positioning-memo.md` - 8472 bytes - sha256 `e0118d857672f79febfbc4c19491f967e1624db92a89698db66d479d334d4c9a`
 - `docs/phase-3/store-metadata-review.md` - 2533 bytes - sha256 `eaaefbb8f09bf99b12888fa847a13b2c93bbc585c61c1f07d48759858d8dd8b1`
 - `docs/14-growth-to-seven-figures.md` - 57855 bytes - sha256 `a88aa20f72a65f653000e1c445878403e6effb983cc40181168e7de804a1dfd0`
 

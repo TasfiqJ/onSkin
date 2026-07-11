@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-10T16:37:40.986Z
+Generated: 2026-07-11T01:26:55.020Z
 Status: blocked
-Git SHA: 09e7333ef4e2237296ca965e4d950d959101458e
+Git SHA: f7672a9ad32bc4b1e966aaa0e505caefe8d1e870
 Git status: clean
 
 ## Release Identity
@@ -95,7 +95,7 @@ Git status: clean
 - `apps/mobile/src/lib/iap/revenuecat.ts`: `f89981290f02bc355ca4ac279b9e660c86d480a9c6e54b041a4d600f0468b105`
 - `apps/mobile/src/lib/observability/scrub.ts`: `ad231f592848825dbeaffcbd960a31e0ae916fe7e1916ded939e9b0f79deabed`
 - `apps/mobile/src/lib/observability/sentry.ts`: `c81f27c8ac940d81b4ddd10521d922689840d7dfc7071ade812ff4e45e51fa9e`
-- `apps/mobile/src/app/(tabs)/you.tsx`: `d59130baea3a6c320527ea61c2af079e493a53d2de129d368303a0ac10a35243`
+- `apps/mobile/src/app/(tabs)/you.tsx`: `b13fdc0f555048e214cda72affba45497b2d340b0e60a0ab4ae020a2ccc54c24`
 - `apps/mobile/src/app/(tabs)/progress.tsx`: `d009aa555a3230ad67a41dfdc2cbeb184b9684757b97085346fe5362e57c7125`
 - `apps/mobile/src/app/progress/capture.tsx`: `843e4347b948b4720a4415e499e0f14a4bd3c020adb6d9814ffe1dddea1cb7dc`
 - `apps/mobile/src/app/progress/review.tsx`: `04cb2815f6498d8b67a30ac817191092ebad3b895546fca890f824ced89689ad`

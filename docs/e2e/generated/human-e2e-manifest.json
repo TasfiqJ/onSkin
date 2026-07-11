@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-10T16:37:05.481Z",
-  "gitSha": "7e91a406e483bf9b381ae2cfbdb3a84ef0acc4c8",
+  "generatedAt": "2026-07-11T01:26:21.448Z",
+  "gitSha": "f7672a9ad32bc4b1e966aaa0e505caefe8d1e870",
   "evidenceDate": "2026-07-10",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -613,6 +613,25 @@
       "fileCount": 15,
       "bytes": 149313,
       "evidenceSha256": "cfa1fc568044b7d5b0596aac3708406077f19339639e6102313671741b47b403"
+    },
+    {
+      "id": "pregnancy-safety-status-supported-phone",
+      "title": "Pregnancy-safety status and routine exclusion consistency",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/pregnancy-safety-status-current",
+      "evidence": "summary.json",
+      "expected": "All four encrypted status choices keep Plan and Today consistent; profile/consent write retries, legacy-consent regrant, missing-profile caution, prefer-not reload, and explicit-none restoration pass at 360 x 640 and 390 x 844.",
+      "status": "pass",
+      "detail": "summary status: pass.",
+      "failureCount": null,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 28,
+      "bytes": 846246,
+      "evidenceSha256": "25897dbde665931adabc541d42bc68b34f00d46d9c7010dc67fb27af318e0eeb"
     },
     {
       "id": "data-export-local-photo-disclosure-supported-phone",

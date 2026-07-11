@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-10T16:38:20.465Z
-Git SHA: 9aa0e2a26c4d28ca08c2d83f88f625aeefe101aa
+Generated at: 2026-07-11T01:26:50.566Z
+Git SHA: f7672a9ad32bc4b1e966aaa0e505caefe8d1e870
 Git status: clean
 
 Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -77,13 +77,13 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 | scripts/phase6/build-payments-qa-packet.mjs | present | 14162 | fe95b745b23f41cfc89beea08815ddf494357cdcaca5c5de2d32d3d22aa0f5b2 |
 | scripts/phase6/check-payments-env.mjs | present | 10597 | e6ae3b4acdcda9c085aac4680669adb017a7e1de4d397d69735664aa2e45be67 |
 | scripts/phase6/check-payments-env-smoke.mjs | present | 10114 | df4ee4543c815fe726c52ef092caac9e2e56638ac7b1c94b38971f43cee7fe7a |
-| scripts/e2e/human-e2e-manifest.mjs | present | 33460 | 8ad340313b9f66ddca094dad8f899e8355b4006100eead44a2b0ffa6cc0c3af2 |
+| scripts/e2e/human-e2e-manifest.mjs | present | 34355 | 7e1febe434db85be8b9e1cd3c5093e7de25bed5fe90827f093070c54d9b8a1b8 |
 | scripts/phase9/lib.mjs | present | 14020 | af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10167 | d7d616fcbe9078b55c0d4b3bf5e88ae19570fa533aee8edc599cf1956c7c9149 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
-| docs/USER_FLOW_TREE.md | present | 335780 | 586f545a317c4c4878f71ca323077b4b3d4e53f7f84772cca63e0d9cebcabcab |
-| docs/e2e/generated/human-e2e-manifest.json | present | 28401 | 253a98d48d7fac51303b14e008682ee8dad06eb2022302b8b2ec468f589d07b0 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 9457 | 34166bbe1ce4c7cefdfb502f98346e6cfbeae0761efeb23d5faf473b9ec22df9 |
+| docs/USER_FLOW_TREE.md | present | 338986 | 3bcac3d4ccb032ab86e77e15d5196c91389da700cd0a3b0916c3b07276cb67c2 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 29323 | 2fbb3c3b90dd923d11477235ca8cef4519ccba93fe9e0c1ff9eecb2546205841 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 9691 | 06aa1e8ac40a7d17a3c21ff510573232c46c2e4753419f94722ebaedaa39c9a6 |
 | docs/phase-6/payments-runbook.md | present | 4053 | fdbeaa848738a3ae2b0048fa6988c10a0e0f70b0b7e0df45d81449ea4169c812 |
 | docs/phase-6/payments-qa-checklist.md | present | 3683 | 5bec4264a96766fe6861096ec709eab95088b5975c4227c6562f7454f519a291 |
 | docs/phase-6/phase-6-exit-review.md | present | 2755 | 0ce0003af4a03b66cde2bafe235bae50fbe3a9e66f6ff0b107f74e4c64cd50df |
