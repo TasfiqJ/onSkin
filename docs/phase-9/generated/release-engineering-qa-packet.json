@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-11T07:38:51.428Z",
+  "generatedAt": "2026-07-11T16:30:31.381Z",
   "status": "blocked",
-  "gitSha": "2fc6ea2efe7fac9fdea84e87c82467d03d435e41",
+  "gitSha": "937f4f2fe3c909444dad13858c1a3aab1955895c",
   "gitStatus": "",
   "releaseIdentity": {
     "appEnvironment": "development",
@@ -70,9 +70,9 @@
     "apps/mobile/src/features/photos/store.ts": "1557f6d511baf44fec1d52d5e585d506a5f7ad7173ef0e95d5c7984ff2f02b6b",
     "apps/mobile/src/features/photos/usePhotos.ts": "7bfcfda545ab719de32f460c859d6aa66075e97a84d200194360c114f2fb16a5",
     "apps/mobile/src/features/settings/actions.ts": "e39806ea6cd4148df0c3a7acdaa70c219d1a0da4f57c54903018aa8990f500c2",
-    "apps/mobile/src/features/settings/localDeviceExport.ts": "f8e9e7f506f655722c6be338538b9219704965efb841a3d630ee3fe245bead05",
-    "apps/mobile/src/features/settings/localDeviceExport.test.ts": "5a2269df2b534a12ce9bb4afbcc85042c430d99e473044aad56ab19e9d6a0853",
-    "apps/mobile/src/features/settings/localPrivateDataKeys.ts": "bdfdb53338e67f7e27c7f45f5c7ad533826b449ea7f0137133e397c1d212cf1b",
+    "apps/mobile/src/features/settings/localDeviceExport.ts": "16dd55731879bace8db794440b2a369d40ea53cf092a7029d6ead480a8a12064",
+    "apps/mobile/src/features/settings/localDeviceExport.test.ts": "a9694e2201bcd58b8479bf40011b152a5192e2700451e37c7a630daffc448dd5",
+    "apps/mobile/src/features/settings/localPrivateDataKeys.ts": "c1f0d62052b3dbb47dfb763e1458c3732074a1c1296982f3ecb83e7560968943",
     "apps/mobile/src/features/settings/localPrivateData.ts": "15c781cf4b5cae057d54b597587fa3ee9b6248044089c871fa917db275baaaba",
     "apps/mobile/src/lib/storage/privateKV.ts": "bff21c993302bbdcb2a084e9be58a37aaf8f804c9b51813fd9da3e278eb2ee82",
     "apps/mobile/src/lib/storage/privateKV.test.ts": "f40598f25641df646c012689736eb110d8686c82247447a62581f56b5bce1daf",

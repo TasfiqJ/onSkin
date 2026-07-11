@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-11T05:19:23.641Z",
+  "generatedAt": "2026-07-11T16:30:32.182Z",
   "status": "pass",
   "strict": false,
-  "gitSha": "97a6da736454da38d3354073ae1b8ed23bbf5d11",
+  "gitSha": "937f4f2fe3c909444dad13858c1a3aab1955895c",
   "gitStatus": "",
   "purpose": "Support-desk setup packet for in-app beta feedback query parameters, category routing, severity SLA, and escalation owners.",
   "handoffContract": {

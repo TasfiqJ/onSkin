@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-11T08:58:42.172Z",
+  "generatedAt": "2026-07-11T16:30:26.812Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "a9601f4444da34c7b54a8473107a17230a7c663c",
+  "gitSha": "937f4f2fe3c909444dad13858c1a3aab1955895c",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 102439,
-    "sha256": "f1d00f5cb8f7da985d29d3bbf3a012fb94ebf224e1ca61d6282554eab2548621",
-    "currentSha256": "f1d00f5cb8f7da985d29d3bbf3a012fb94ebf224e1ca61d6282554eab2548621"
+    "bytes": 103132,
+    "sha256": "3f09ba035025ca74ee58a7bfb536eb9bc6b189b1094f5f75b7aaff55c0db118e",
+    "currentSha256": "3f09ba035025ca74ee58a7bfb536eb9bc6b189b1094f5f75b7aaff55c0db118e"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -747,7 +747,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "acb430633a06c6abd8880fc35143fbdac899ce9cd593f8a46c010f2b01e2f03e",
+      "reviewSnapshotSha256": "1f0c03dcb8408fabeec7167d66f43107a7eaa4ebca3ed538966986ab96206b9c",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -764,14 +764,14 @@
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.ts",
           "exists": true,
-          "bytes": 11068,
-          "sha256": "f8e9e7f506f655722c6be338538b9219704965efb841a3d630ee3fe245bead05"
+          "bytes": 11185,
+          "sha256": "16dd55731879bace8db794440b2a369d40ea53cf092a7029d6ead480a8a12064"
         },
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.test.ts",
           "exists": true,
-          "bytes": 7065,
-          "sha256": "5a2269df2b534a12ce9bb4afbcc85042c430d99e473044aad56ab19e9d6a0853"
+          "bytes": 7844,
+          "sha256": "a9694e2201bcd58b8479bf40011b152a5192e2700451e37c7a630daffc448dd5"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.ts",
@@ -1385,7 +1385,7 @@
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "40f3fcc9ac77a06f79f13d16ab66f01a20e3f40e1480465c207ca0e10a720b2a",
+      "reviewSnapshotSha256": "117d40449c8c49f0fe2b620a3e8491d4c921c3f4130d90effbd9808c4e90236c",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1414,8 +1414,8 @@
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.ts",
           "exists": true,
-          "bytes": 10622,
-          "sha256": "ed1a6b2b27ac989ff73883e3eda3014949bd1ac06e19f35ddb3d85f2db7745f9"
+          "bytes": 12566,
+          "sha256": "cc78a6d95295d2dd3cf2db03e00401fcd01bf3142ca0a329e25d5e2e2e884a37"
         },
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
@@ -1597,7 +1597,7 @@
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "587ec4393c84b530decc9b8a8db2b106ba057b1e5a8b371558ca40e5bcdb4b38",
+      "reviewSnapshotSha256": "ad0e873a10f00dbbe6f9ae4c74c41d63c1fd8cd34c70c6eadaf4e457bd355f2f",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1618,10 +1618,28 @@
           "sha256": "ac39dca4dcc9f9cf19cdb695a42c8cc4c92df8abe2ea8838773d749b10de5c71"
         },
         {
+          "path": "apps/mobile/src/features/scheduler/cadence.ts",
+          "exists": true,
+          "bytes": 1364,
+          "sha256": "f7164eef26e124c398c3f79e3088c7500c2e35adc41f02ac47abdf675bab3b21"
+        },
+        {
           "path": "apps/mobile/src/features/scheduler/classes.ts",
           "exists": true,
           "bytes": 4339,
           "sha256": "e90dedddd1881ee44433e22a2237387ef7daffa29595a67dea6dd6a774010045"
+        },
+        {
+          "path": "apps/mobile/src/features/scheduler/customCycle.test.ts",
+          "exists": true,
+          "bytes": 9291,
+          "sha256": "9cec61bc36016b5c2acc6afeaff48b37cae861271141203520574ea3399f8e14"
+        },
+        {
+          "path": "apps/mobile/src/features/scheduler/customCycle.ts",
+          "exists": true,
+          "bytes": 13146,
+          "sha256": "3e6fc08ddf8813933f5e07216fc04c411d7683a44f3761b33b82132f95ee9cda"
         },
         {
           "path": "apps/mobile/src/features/scheduler/CycleMutationError.tsx",
@@ -1632,32 +1650,32 @@
         {
           "path": "apps/mobile/src/features/scheduler/cycleStore.test.ts",
           "exists": true,
-          "bytes": 9691,
-          "sha256": "b35e7cc058ed7e8a1c343a4a9aacd957e75620e6deacb97392d7bc6558a45819"
+          "bytes": 14902,
+          "sha256": "77a6eebec64f7afbefa60f6ad04878b075c7f74e105ce409a8b1d52b7713fa06"
         },
         {
           "path": "apps/mobile/src/features/scheduler/cycleStore.ts",
           "exists": true,
-          "bytes": 13976,
-          "sha256": "4f9f94270718597328ee9d726ac550e42ff17e11b2c42053f83bfaca4ca0b811"
+          "bytes": 16143,
+          "sha256": "79bbc5f714baac7229a381aa4dd99eff542b4d357eba10ec6dc2a515f31e56bc"
         },
         {
           "path": "apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts",
           "exists": true,
-          "bytes": 13238,
-          "sha256": "670bac02b7542828f4dc81030d096004100a244966757bfd082f72b548189e93"
+          "bytes": 15514,
+          "sha256": "f9842811b150aa91c76201cedac3dd7ec6a31e52f04ae80540e1fdc42904cb46"
         },
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.test.ts",
           "exists": true,
-          "bytes": 16805,
-          "sha256": "f0962c9ffd45488616fa178e842777f0e0be92b7dc2de3e4de30c5ddd169de8a"
+          "bytes": 19231,
+          "sha256": "da53077967a8907cc35ac85b032fc1dba1537cc9b92d99b180b3ffb7a4e388b2"
         },
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.ts",
           "exists": true,
-          "bytes": 10622,
-          "sha256": "ed1a6b2b27ac989ff73883e3eda3014949bd1ac06e19f35ddb3d85f2db7745f9"
+          "bytes": 12566,
+          "sha256": "cc78a6d95295d2dd3cf2db03e00401fcd01bf3142ca0a329e25d5e2e2e884a37"
         },
         {
           "path": "apps/mobile/src/features/scheduler/profile.test.ts",
@@ -1692,8 +1710,8 @@
         {
           "path": "apps/mobile/src/features/scheduler/useCycle.ts",
           "exists": true,
-          "bytes": 8067,
-          "sha256": "1145e4e9020e647ccf4647c5a081cc01a3185ac6745797f16aa26b345f3bd66f"
+          "bytes": 9317,
+          "sha256": "4e69bfb5c48f94701e888144161597b2f27ff7880d19426e8b418e896df32a23"
         },
         {
           "path": "apps/mobile/src/features/scheduler/useCycleAnalytics.test.ts",
