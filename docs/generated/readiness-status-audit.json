@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-11T16:29:10.848Z",
+  "generatedAt": "2026-07-11T16:53:06.468Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
@@ -73,7 +73,13 @@
         "Canonical multi-active Plan and Today consistency",
         "multi-active-plan-today-current",
         "Persistent Morning and Evening routine order",
-        "routine-order-persistence-current"
+        "routine-order-persistence-current",
+        "Exact-pair conflict choice and reviewed-schedule consistency",
+        "conflict-choice-schedule-current",
+        "Cycle disruption persistence and deterministic reconciliation",
+        "cycle-disruption-reconciliation-current",
+        "Authored cycle customization and deterministic reconciliation",
+        "cycle-customization-current"
       ],
       "stalePatterns": [],
       "missingCommands": []

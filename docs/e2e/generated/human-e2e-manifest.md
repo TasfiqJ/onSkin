@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-11T16:31:31.368Z
-Git SHA: 726fa85cf5a0d7a93fa15ed37299dfcc6fc623ad
+Generated: 2026-07-11T16:53:01.484Z
+Git SHA: 498163992da6dfd232ecfc508060742893de1e98
 Evidence date: 2026-07-10
 Baseline suite date: 2026-07-09
 Status: pass
@@ -52,6 +52,7 @@ dependency to the repo.
 | Persistent Morning and Evening routine order                     | supported-phone | pass   | summary status: pass.                  | 29    | test-results/human-e2e/2026-07-10/routine-order-persistence-current                    |
 | Exact-pair conflict choice and reviewed-schedule consistency     | supported-phone | pass   | summary status: pass; 0 failed routes. | 13    | test-results/human-e2e/2026-07-10/conflict-choice-schedule-current                     |
 | Cycle disruption persistence and deterministic reconciliation    | supported-phone | pass   | summary status: pass; 0 failed routes. | 39    | test-results/human-e2e/2026-07-10/cycle-disruption-reconciliation-current              |
+| Authored cycle customization and deterministic reconciliation    | supported-phone | pass   | summary status: pass; 0 failed routes. | 19    | test-results/human-e2e/2026-07-10/cycle-customization-current                          |
 | Account export local-photo scope disclosure                      | supported-phone | pass   | summary status: pass; 0 failed routes. | 14    | test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current           |
 | Combined account and current-device export                       | supported-phone | pass   | summary status: pass; 0 failed routes. | 13    | test-results/human-e2e/2026-07-10/data-export-combined-device-current                  |
 

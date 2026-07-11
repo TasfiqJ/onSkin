@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-11T16:31:31.368Z",
-  "gitSha": "726fa85cf5a0d7a93fa15ed37299dfcc6fc623ad",
+  "generatedAt": "2026-07-11T16:53:01.484Z",
+  "gitSha": "498163992da6dfd232ecfc508060742893de1e98",
   "evidenceDate": "2026-07-10",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -708,6 +708,41 @@
       "fileCount": 39,
       "bytes": 247549,
       "evidenceSha256": "6ee59d0fa6ed5c471a4c0594fb332a0901fedaaf438dbf09af084a37d99968b4"
+    },
+    {
+      "id": "authored-cycle-customization-supported-phone",
+      "title": "Authored cycle customization and deterministic reconciliation",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/cycle-customization-current",
+      "evidence": "summary.json",
+      "requiredSchemaVersion": 1,
+      "requiredViewports": [
+        "360 x 640",
+        "390 x 844"
+      ],
+      "requiredVerified": [
+        "Auto-to-Custom initialization",
+        "non-mutating Cancel",
+        "browser Back prevention",
+        "stable product identity",
+        "retained cadence-excess intent",
+        "closed cadence-review gate",
+        "Settings, Week, Why Tonight, Plan, and Today agreement",
+        "zero horizontal overflow"
+      ],
+      "expected": "Custom Save/Cancel, stable authored identity, retained intent, failed-write and pending-Back recovery, closed review-gate behavior, exact reconciliation provenance, and Settings/Week/Why Tonight/Plan/Today agreement pass at 360 x 640 and 390 x 844.",
+      "status": "pass",
+      "detail": "summary status: pass; 0 failed routes.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "requirementFailures": [],
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 19,
+      "bytes": 293003,
+      "evidenceSha256": "231ec5d51bfc75f252d65089b7250161139c35a3357dc352592dbb397a106159"
     },
     {
       "id": "data-export-local-photo-disclosure-supported-phone",

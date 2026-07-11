@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-11T08:58:11.645Z",
+  "generatedAt": "2026-07-11T16:53:07.805Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the accepted device support policy so install floors, viewport launch gates, and 320-wide stress-only evidence cannot drift silently.",
@@ -122,7 +122,7 @@
       "skipped-routes-430-932-200-text-pressure"
     ],
     "legacyGateProblems": [],
-    "gateCount": 39
+    "gateCount": 40
   },
   "requiredPackageScripts": [
     "docs:device-support-policy-audit",

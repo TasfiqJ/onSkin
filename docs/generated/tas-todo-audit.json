@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-11T07:45:00.664Z",
+  "generatedAt": "2026-07-11T16:53:07.147Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates, current device support floors, and generate an exact key inventory from phase scripts.",
