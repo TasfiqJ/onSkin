@@ -2,6 +2,10 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
+import {
+  CATALOG_SEARCH_PRODUCT_SELECT,
+  REVIEWED_CATALOG_FRESHNESS_FILTER,
+} from './catalogContract.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const publishableKey =
@@ -119,11 +123,10 @@ Deno.serve(async (req) => {
 
   const { data, error } = await admin
     .from('products')
-    .select(
-      'id, barcode, name, brand, category, default_pao_months, source, source_ref, source_url, source_snapshot_date, quality_grade, review_status, data_quality_score, ingredient_parse_status, ingredient_parse_confidence',
-    )
+    .select(CATALOG_SEARCH_PRODUCT_SELECT)
     .or(`name.ilike.%${escaped}%,brand.ilike.%${escaped}%`)
     .neq('status', 'blocked')
+    .eq(REVIEWED_CATALOG_FRESHNESS_FILTER.column, REVIEWED_CATALOG_FRESHNESS_FILTER.value)
     .order('data_quality_score', { ascending: false })
     .limit(limit);
   if (error) return json({ error: 'search_failed' }, 500);

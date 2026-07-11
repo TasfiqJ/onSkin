@@ -1,17 +1,23 @@
 import type { PaoSource } from '@onskin/types';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, RouteIconButton, Sheet, Text } from '@/components/ui';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
+import { PAO_MONTH_OPTIONS, shiftLocalDateMonths } from '@/features/shelf/freshness';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { paoSourceLabel } from '@/features/shelf/labels';
+import { LocalDateField } from '@/features/shelf/LocalDateField';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { editedPaoSource } from '@/features/shelf/paoProvenance';
 import { localDateString } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
-import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import {
+  APP_ONBOARDING_PRODUCTS_ROUTE,
+  APP_SHELF_ROUTE,
+  backOrReplace,
+} from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
 // The opened-date linchpin (design screen 04, docs/04 §4.5). Every intake path
@@ -19,12 +25,9 @@ import { haptics } from '@/theme/haptics';
 // with an explicit "not opened yet" state and an editable, source-labelled PAO.
 type Mode = 'just' | 'pick' | 'unopened';
 
-const PAO_OPTIONS = [3, 6, 9, 12, 18, 24];
-
 function monthsAgoISO(months: number): string {
-  const d = new Date();
-  d.setMonth(d.getMonth() - months);
-  return localDateString(d);
+  const today = localDateString();
+  return shiftLocalDateMonths(today, -months) ?? today;
 }
 
 const PICK_OPTIONS: { label: string; iso: string }[] = [
@@ -86,6 +89,7 @@ function OptionRow({
 }
 
 export default function OpenedDateScreen() {
+  const { origin } = useLocalSearchParams<{ origin?: string }>();
   const { draft, reset } = useIntake();
   const m = useShelfMutations();
   const [mode, setMode] = useState<Mode>('just');
@@ -94,6 +98,8 @@ export default function OpenedDateScreen() {
   const [paoSource, setPaoSource] = useState<PaoSource>(draft.paoSource);
   const [paoEditOpen, setPaoEditOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const fallbackRoute = origin === 'onboarding' ? APP_ONBOARDING_PRODUCTS_ROUTE : APP_SHELF_ROUTE;
+  const today = localDateString();
 
   const hasProductDraft =
     draft.name.trim().length > 0 || draft.catalogProductId != null || draft.barcode != null;
@@ -103,7 +109,6 @@ export default function OpenedDateScreen() {
     const productName = draft.name.trim();
     if (!hasProductDraft || !productName || !canSave || saving) return;
     setSaving(true);
-    const today = localDateString();
     const openedAt = mode === 'just' ? today : mode === 'pick' ? pickIso : null;
     const isOpened = mode !== 'unopened';
     await m.add({
@@ -130,22 +135,15 @@ export default function OpenedDateScreen() {
       paoMonths: pao,
       paoSource,
       expiryDate: draft.expiryDate,
-      expirySource: draft.expiryDate
-        ? 'printed'
-        : isOpened && pao != null
-          ? 'pao_computed'
-          : isOpened
-            ? 'unknown'
-            : 'estimated',
       addedVia: draft.addedVia,
     });
     reset();
-    router.replace('/shelf');
+    router.replace(fallbackRoute);
   };
 
   if (!hasProductDraft) {
     return (
-      <Sheet fallbackRoute={APP_SHELF_ROUTE} backdropAccessible={false}>
+      <Sheet fallbackRoute={fallbackRoute} backdropAccessible={false}>
         <View className="mb-3 flex-row items-start justify-between">
           <View className="h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
             <Text className="text-[18px] text-clay">+</Text>
@@ -153,7 +151,7 @@ export default function OpenedDateScreen() {
           <RouteIconButton
             accessibilityLabel="Close"
             glyph="x"
-            onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+            onPress={() => backOrReplace(router, fallbackRoute)}
           />
         </View>
         <Text variant="title" className="text-[28px] leading-[31px]" accessibilityRole="header">
@@ -182,7 +180,7 @@ export default function OpenedDateScreen() {
   }
 
   return (
-    <Sheet fallbackRoute={APP_SHELF_ROUTE} scroll backdropAccessible={false}>
+    <Sheet fallbackRoute={fallbackRoute} scroll backdropAccessible={false}>
       <View className="mb-4 flex-row items-start justify-between">
         <View className="h-12 w-12 items-center justify-center rounded-full bg-clay-tint">
           <Text className="text-[18px] text-clay">◴</Text>
@@ -190,7 +188,7 @@ export default function OpenedDateScreen() {
         <RouteIconButton
           accessibilityLabel="Close"
           glyph="x"
-          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+          onPress={() => backOrReplace(router, fallbackRoute)}
         />
       </View>
       <Text variant="title" className="text-[33px] leading-[34px]" accessibilityRole="header">
@@ -211,7 +209,7 @@ export default function OpenedDateScreen() {
           title="Pick a date"
           subtitle={
             pickIso
-              ? (PICK_OPTIONS.find((o) => o.iso === pickIso)?.label ?? 'Earlier')
+              ? (PICK_OPTIONS.find((o) => o.iso === pickIso)?.label ?? pickIso)
               : 'I opened it earlier'
           }
           selected={mode === 'pick'}
@@ -219,6 +217,12 @@ export default function OpenedDateScreen() {
         />
         {mode === 'pick' ? (
           <View className="flex-row flex-wrap gap-2 px-1">
+            <LocalDateField
+              label="Exact opened date"
+              value={pickIso}
+              maxDate={today}
+              onChangeDate={setPickIso}
+            />
             {PICK_OPTIONS.map((o) => (
               <Pressable
                 key={o.iso}
@@ -273,7 +277,10 @@ export default function OpenedDateScreen() {
 
       {paoEditOpen ? (
         <View className="mt-2.5 flex-row flex-wrap gap-2">
-          {PAO_OPTIONS.map((n) => (
+          <Text variant="label" tone="muted" className="w-full">
+            Choose the months printed beside the open-jar symbol.
+          </Text>
+          {PAO_MONTH_OPTIONS.map((n) => (
             <Pressable
               key={n}
               accessibilityRole="button"
@@ -285,6 +292,7 @@ export default function OpenedDateScreen() {
                     currentMonths: draft.paoMonths,
                     currentSource: draft.paoSource,
                     nextMonths: n,
+                    confirmedFromLabel: true,
                   }),
                 );
                 setPaoEditOpen(false);
@@ -299,6 +307,20 @@ export default function OpenedDateScreen() {
               </Text>
             </Pressable>
           ))}
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => {
+              haptics.select();
+              setPao(null);
+              setPaoSource('unknown');
+              setPaoEditOpen(false);
+            }}
+            className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"
+          >
+            <Text className="font-sans-medium text-[13px]" tone="muted">
+              Not on label
+            </Text>
+          </Pressable>
         </View>
       ) : null}
 

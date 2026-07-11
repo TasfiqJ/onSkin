@@ -48,9 +48,14 @@ describe('Sheet route contracts', () => {
 
       expect(source, `${route} should declare a Shelf fallback`).toContain('APP_SHELF_ROUTE');
       expect(source, `${route} should pass the fallback to Sheet`).toContain(
-        'fallbackRoute={APP_SHELF_ROUTE}',
+        route === 'shelf/opened.tsx'
+          ? 'fallbackRoute={fallbackRoute}'
+          : 'fallbackRoute={APP_SHELF_ROUTE}',
       );
     }
+    const opened = readAppRoute('shelf/opened.tsx');
+    expect(opened).toContain("origin === 'onboarding'");
+    expect(opened).toContain('APP_ONBOARDING_PRODUCTS_ROUTE');
   });
 
   it('returns scheduler and paywall sheet backdrops through safe exits', () => {

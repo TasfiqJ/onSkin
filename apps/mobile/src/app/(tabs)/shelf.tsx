@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 
 import {
   Button,
@@ -24,30 +24,13 @@ import { colors } from '@/theme/tokens';
 // claim-safe. The cabinet that knows when to replace, never when to alarm.
 type Filter = 'all' | 'actives' | 'expiring';
 const ACTIVE_TAGS = new Set(['retinoid', 'aha', 'bha', 'benzoyl_peroxide', 'vitamin_c']);
-const SCAN_FAB_SHADOW =
-  Platform.OS === 'web'
-    ? { boxShadow: '0 8px 12px rgba(32, 27, 21, 0.25)' }
-    : {
-        shadowColor: '#201B15',
-        shadowOpacity: 0.25,
-        shadowRadius: 12,
-        shadowOffset: { width: 0, height: 8 },
-        elevation: 6,
-      };
-
 const SUBHEAD: Record<Filter, string> = {
   all: 'Everything on your shelf, soonest to replace first.',
   actives: 'The potent ingredients in your routine.',
   expiring: 'Soonest first. The honest reasons to replace something.',
 };
 
-function ScanShelfButton({
-  floating,
-  source,
-}: {
-  floating: boolean;
-  source: ProductAddStartSource;
-}) {
+function ScanShelfButton({ source }: { source: ProductAddStartSource }) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -56,10 +39,7 @@ function ScanShelfButton({
         trackProductAddStarted(source);
         router.push('/shelf/scan');
       }}
-      style={({ pressed }) => [
-        floating ? SCAN_FAB_SHADOW : null,
-        pressed ? { opacity: floating ? 0.9 : 0.86 } : null,
-      ]}
+      style={({ pressed }) => [pressed ? { opacity: 0.86 } : null]}
       className="rounded-pill bg-ink px-7 py-3.5"
     >
       <Text className="font-sans-semibold text-[15px] text-paper">Scan a barcode</Text>
@@ -481,19 +461,11 @@ export default function ShelfScreen() {
             </Pressable>
           ) : null}
 
-          {compactShelf ? (
-            <View className="mt-6 items-center pb-2">
-              <ScanShelfButton floating={false} source="scan_inline" />
-            </View>
-          ) : null}
+          <View className="mt-6 items-center pb-2">
+            <ScanShelfButton source="scan_inline" />
+          </View>
         </ScrollView>
       )}
-
-      {!isEmpty && !showLoading && !compactShelf ? (
-        <View className="absolute inset-x-0 bottom-4 items-center">
-          <ScanShelfButton floating source="scan_fab" />
-        </View>
-      ) : null}
     </Screen>
   );
 }

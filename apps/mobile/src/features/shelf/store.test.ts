@@ -1,13 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { addProduct, loadShelf, updateProduct } from './store';
+import { addProduct, loadShelf, reAddProduct, updateProduct } from './store';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
+  nextId: 0,
 }));
 
 vi.mock('expo-crypto', () => ({
-  randomUUID: vi.fn(() => 'shelf-product-id'),
+  randomUUID: vi.fn(() => `shelf-product-${++mocks.nextId}`),
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -25,6 +26,7 @@ const KEY = 'onskin.shelf.v1';
 describe('shelf local store recovery', () => {
   beforeEach(() => {
     mocks.storage.clear();
+    mocks.nextId = 0;
   });
 
   it('removes malformed persisted shelf JSON', async () => {
@@ -67,10 +69,11 @@ describe('shelf local store recovery', () => {
       catalogSource: 'user_local',
       catalogMatchQuality: 'manual',
       ingredients: ['retinol'],
-      isOpened: true,
+      isOpened: false,
+      openedAt: null,
       paoMonths: null,
       paoSource: 'unknown',
-      expirySource: 'unknown',
+      expirySource: 'estimated',
       status: 'active',
       repurchaseCount: 1,
     });
@@ -89,6 +92,7 @@ describe('shelf local store recovery', () => {
     const shelf = JSON.parse(mocks.storage.get(KEY) ?? '[]') as { name: string }[];
     expect(shelf).toHaveLength(1);
     expect(shelf[0]?.name).toBe('Mineral SPF 50');
+    expect(shelf[0]).toMatchObject({ isOpened: false, openedAt: null, expirySource: 'estimated' });
   });
 
   it('normalizes direct updates before persistence', async () => {
@@ -149,7 +153,90 @@ describe('shelf local store recovery', () => {
       isOpened: false,
       openedAt: null,
       paoMonths: 12,
+      expirySource: 'estimated',
     });
+  });
+
+  it('recomputes winning expiry provenance after direct freshness edits', async () => {
+    const product = await addProduct({
+      name: 'Vitamin C Serum',
+      category: 'serum',
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-01-31',
+      paoMonths: 3,
+      paoSource: 'catalog',
+      expiryDate: '2026-06-01',
+      expirySource: 'printed',
+    });
+
+    expect(product.expirySource).toBe('pao_computed');
+
+    await updateProduct(product.id, { paoMonths: 12, paoSource: 'label' });
+
+    expect((await loadShelf())[0]).toMatchObject({
+      paoMonths: 12,
+      paoSource: 'label',
+      expiryDate: '2026-06-01',
+      expirySource: 'printed',
+    });
+  });
+
+  it('archives replacement history while clearing the old package printed expiry', async () => {
+    const previous = await addProduct({
+      name: 'Mineral SPF 50',
+      brand: 'Test Brand',
+      category: 'spf',
+      catalogProductId: 'catalog-product-id',
+      addedVia: 'search',
+      isOpened: true,
+      openedAt: '2026-01-01',
+      paoMonths: 12,
+      paoSource: 'catalog',
+      expiryDate: '2026-07-01',
+      expirySource: 'printed',
+    });
+
+    const fresh = await reAddProduct(previous.id);
+    const shelf = await loadShelf();
+    const archived = shelf.find((product) => product.id === previous.id);
+
+    expect(fresh).toMatchObject({
+      id: 'shelf-product-2',
+      name: 'Mineral SPF 50',
+      brand: 'Test Brand',
+      catalogProductId: 'catalog-product-id',
+      status: 'active',
+      isOpened: true,
+      paoMonths: 12,
+      paoSource: 'catalog',
+      expiryDate: null,
+      expirySource: 'pao_computed',
+      repurchaseCount: 2,
+    });
+    expect(fresh?.openedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(archived).toMatchObject({
+      status: 'finished',
+      openedAt: '2026-01-01',
+      expiryDate: '2026-07-01',
+      expirySource: 'printed',
+      repurchaseCount: 1,
+    });
+  });
+
+  it('does not rewrite a discarded unit as finished when it is re-added', async () => {
+    const previous = await addProduct({
+      name: 'Eye Cream',
+      addedVia: 'manual',
+      isOpened: true,
+      openedAt: '2026-01-01',
+    });
+    await updateProduct(previous.id, { status: 'discarded', finishedAt: '2026-06-30' });
+
+    await reAddProduct(previous.id);
+
+    const archived = (await loadShelf()).find((product) => product.id === previous.id);
+    expect(archived).toMatchObject({ status: 'discarded', finishedAt: '2026-06-30' });
   });
 
   it('preserves the current row when a direct update blanks product identity', async () => {

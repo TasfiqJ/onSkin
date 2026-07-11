@@ -62,10 +62,10 @@ export const ASK_COPY = {
     empty: 'I don’t see an evening routine yet. Add a product or two and I’ll sequence it for you.',
   },
   replenish: {
-    lead: 'Here’s what your shelf says about what’s running low.',
-    cta: 'Open replenishments',
-    route: '/shelf/replenish',
-    none: 'Nothing on your shelf is running low right now. You’re set.',
+    lead: 'Here’s what your shelf says needs a freshness or finished-product review.',
+    cta: 'Review shelf suggestions',
+    route: '/recommendations',
+    none: 'No tracked freshness dates or finished products need review right now. You’re set.',
   },
   fit: {
     leadGoal: (concern: string, what: string): string =>

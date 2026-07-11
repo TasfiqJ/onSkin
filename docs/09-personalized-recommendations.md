@@ -93,7 +93,7 @@ This is the single most important section, because it is what lets the feature e
 The engine recommends only when there is a genuine, profile-grounded reason:
 
 1. **Gap-filling** — the user's routine/profile has a missing essential. The core complete routine is _cleanser → (treat) → moisturiser → SPF_ (docs/03); a missing **SPF** (the highest-value gap), **moisturiser**, or **barrier support for a sensitive/compromised barrier** triggers a gap recommendation _by type_.
-2. **Replacement** — a product is **expiring or finished** (docs/04 PAO/expiry + replenishment); recommend a **repurchase** or a **better-fitting alternative** (never just "buy more" — only when the item is genuinely depleted).
+2. **Replacement** — a product has a tracked PAO/printed expiry state or an unsuperseded unit the user marked **finished** (docs/04 PAO/expiry + replenishment); recommend a **repurchase** or a **better-fitting alternative** without claiming remaining quantity.
 3. **Conflict resolution** — the shelf holds a **conflict** (docs/02); recommend a **swap** that de-conflicts (e.g., a non-conflicting alternative to one of two clashing actives), framed as "this would simplify your routine."
 4. **Better-fit** — an owned product **doesn't suit the profile** (e.g., a fragranced or high-strength product for sensitive skin); recommend a **gentler/more-suitable alternative**, claim-safe, as an option not a mandate.
 5. **Goal-driven** — the user set a **goal** (docs/01: brightening, anti-aging, etc.) **not yet addressed** by their routine; recommend an **evidence-backed active/type** for it (with the docs/02 evidence grade), introduced conservatively (one at a time, docs/05).
@@ -161,7 +161,7 @@ Recommendations surface **contextually, where the need arises**, and in one calm
 
 - **7.1 The "For you" hub** (within the You tab, or a calm card on Today): the user's current recommendations grouped by trigger ("Fill a gap," "Time to replace," "A gentler option"), each a **recommendation card** (§11) with the what/why/how. When there's nothing to recommend, it shows the **"you're set"** state proudly. Deliberately _not_ a storefront grid.
 - **7.2 In-routine gap prompts** (docs/03): when the routine builder shows a missing essential (no SPF), an inline, dismissible "Add SPF?" prompt links to the gap recommendation — calm, contextual, skippable.
-- **7.3 Replenishment** (docs/04 §6): an expiring/finished product's "running low" surface offers **repurchase or a better-fit alternative** (the replacement trigger), claim-safe.
+- **7.3 Replenishment** (docs/04 §6): a tracked PAO/printed-expiry or user-marked-finished surface offers **repurchase or a better-fit alternative** (the replacement trigger), claim-safe and without depletion inference.
 - **7.4 Conflict-resolution swap** (docs/02 §7): the conflict-detail screen can offer a **de-conflicting alternative** ("this would let you keep both nights simple"), as an option.
 - **7.5 Goal surfaces** (docs/01 goals): when a goal is unaddressed, a gentle "to support [brightening], you might consider…" appears in the For-you hub.
 

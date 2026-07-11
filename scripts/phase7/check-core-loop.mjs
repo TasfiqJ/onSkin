@@ -163,6 +163,10 @@ require(/id: 'authored-cycle-customization-supported-phone'/.test(humanE2eManife
   /cycle-customization-current/.test(
     humanE2eManifestBuilder,
   ), 'The human E2E manifest must require authored-cycle customization evidence.');
+require(/id: 'shelf-freshness-provenance-supported-phone'/.test(humanE2eManifestBuilder) &&
+  /shelf-freshness-provenance-current/.test(
+    humanE2eManifestBuilder,
+  ), 'The human E2E manifest must require Shelf freshness and replacement provenance evidence.');
 require(has(
   'apps/mobile/src/lib/launch/phase7.test.ts',
   /keeps production Phase 7 surfaces disabled without a final brand domain/,

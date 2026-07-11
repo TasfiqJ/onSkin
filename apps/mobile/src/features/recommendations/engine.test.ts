@@ -5,7 +5,13 @@ import { detectConflicts, type EngineProduct } from '@/features/intelligence/eng
 import { STARTER_RULES } from '@/features/intelligence/rules';
 
 import { RECS_REVIEWED, shippableRecTypes } from './catalog';
-import { recommend, type RecInput, type RecProfile, type RecShelfItem } from './engine';
+import {
+  recommend,
+  type RecInput,
+  type RecProfile,
+  type RecReplenishmentItem,
+  type RecShelfItem,
+} from './engine';
 import { DEFAULT_PREFERENCES } from './preferences';
 
 // Engine fixtures (docs/09 §4/§5). The six triggers + the honest "you're set",
@@ -27,8 +33,20 @@ function item(over: Partial<RecShelfItem> & { id: string; role: SequencingRole }
     name: over.name ?? over.id,
     tags: [],
     fragranced: false,
-    expiring: false,
     ...over,
+  };
+}
+
+function replenishment(
+  product: RecShelfItem,
+  reason: RecReplenishmentItem['reason'] = 'countdown',
+): RecReplenishmentItem {
+  return {
+    id: product.id,
+    name: product.name,
+    tags: product.tags,
+    concentration: product.concentration,
+    reason,
   };
 }
 
@@ -297,25 +315,46 @@ describe('routine completion. A beginner gets a minimal starter routine (§4.6)'
   });
 });
 
-describe('replacement. Only when genuinely depleted (§4.2)', () => {
+describe('replacement. Only from tracked freshness or user-finished history (§4.2)', () => {
   it('surfaces an expiring product, anchored to the shelf item', () => {
     const expiring = item({
       id: 'p_vc',
       name: 'Vitamin C serum',
       role: 'antioxidant',
       tags: ['vitamin_c'],
-      expiring: true,
     });
     const res = recommend(
       input({
         profile: { sensitivity: 'neutral', pregnancy: false, goals: [] },
         shelf: [cleanser, moisturiser, spf, expiring],
+        replenishment: [replenishment(expiring)],
       }),
     );
     const rep = res.recommendations.find((r) => r.trigger === 'replacement');
     expect(rep?.relatedProductId).toBe('p_vc');
-    expect(rep?.what.toLowerCase()).toContain('running low');
+    expect(rep?.what.toLowerCase()).toContain('freshness date');
+    expect([rep?.what, rep?.why, rep?.how.gap].join(' ').toLowerCase()).not.toMatch(
+      /running low|running out|nearly finished/,
+    );
     expect(rep?.footIsEvidence).toBe(false); // "From your shelf", not an evidence grade
+  });
+
+  it('surfaces an unsuperseded finished product without counting it as active inventory', () => {
+    const finished = item({ id: 'finished-serum', name: 'Vitamin C serum', role: 'antioxidant' });
+    const res = recommend(
+      input({
+        profile: { sensitivity: 'neutral', pregnancy: false, goals: [] },
+        shelf: [cleanser, moisturiser, spf],
+        replenishment: [replenishment(finished, 'finished')],
+      }),
+    );
+
+    const rep = res.recommendations.find((r) => r.trigger === 'replacement');
+    expect(rep).toMatchObject({
+      relatedProductId: 'finished-serum',
+      what: 'You marked Vitamin C serum as finished',
+    });
+    expect(rep?.how.evidence).toContain('Marked finished');
   });
 
   it('never recommends repurchasing a product excluded by the current safety setting', () => {
@@ -326,20 +365,18 @@ describe('replacement. Only when genuinely depleted (§4.2)', () => {
       goals: [],
     };
     const excluded = [
-      item({ id: 'r', name: 'Retinol', role: 'treatment', tags: ['retinoid'], expiring: true }),
+      item({ id: 'r', name: 'Retinol', role: 'treatment', tags: ['retinoid'] }),
       item({
         id: 'h',
         name: 'Hydroquinone',
         role: 'treatment',
         tags: ['hydroquinone'],
-        expiring: true,
       }),
       item({
         id: 'b',
         name: 'Salicylic serum',
         role: 'exfoliant',
         tags: ['bha'],
-        expiring: true,
       }),
     ];
 
@@ -347,6 +384,7 @@ describe('replacement. Only when genuinely depleted (§4.2)', () => {
       input({
         profile: cautiousProfile,
         shelf: [cleanser, moisturiser, spf, ...excluded],
+        replenishment: excluded.map((product) => replenishment(product)),
       }),
     );
 
@@ -360,7 +398,6 @@ describe('replacement. Only when genuinely depleted (§4.2)', () => {
       role: 'exfoliant',
       tags: ['bha'],
       concentration: 'low',
-      expiring: true,
     });
     const result = recommend(
       input({
@@ -371,6 +408,7 @@ describe('replacement. Only when genuinely depleted (§4.2)', () => {
           goals: [],
         },
         shelf: [cleanser, moisturiser, spf, lowBha],
+        replenishment: [replenishment(lowBha)],
       }),
     );
 

@@ -62,7 +62,7 @@ export type AskContext = {
   /** Tonight's PM steps in order, from the generated plan (usePlan). */
   pmSteps: { name: string; role: string }[];
   isExamplePlan: boolean;
-  /** Whether anything on the shelf is genuinely running low (a replacement trigger). */
+  /** Whether the shelf has a tracked freshness or finished-product replacement signal. */
   hasReplenish: boolean;
   /** The top genuine recommendation, for the deterministic product-fit answer. */
   topRec: AskRecSummary | null;
@@ -314,7 +314,7 @@ export function safetyRefusal(intent: AskIntent): AskAnswer {
 
 // FIT-appropriate triggers: catalog-backed, type-first recommendations whose `what` is a
 // clean TYPE name ("A vitamin C serum"). The shelf-anchored replacement/conflict triggers
-// embed RAW product names (e.g. "Your Glycolic 7% Toner is running low"), whose "7%" would
+// embed RAW product names (e.g. "Your Glycolic 7% Toner reached its freshness date"), whose "7%" would
 // false-trip the runtime dosage guard and silently refuse a valid fit answer (docs/13 §4).
 const FIT_TRIGGERS = new Set<RecommendationTrigger>([
   'gap',

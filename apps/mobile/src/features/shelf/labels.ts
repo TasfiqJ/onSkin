@@ -1,4 +1,4 @@
-import type { PaoSource } from '@onskin/types';
+import type { ExpirySource, PaoSource } from '@onskin/types';
 
 // One consistent provenance label across every shelf surface (docs/04 §3/§5.6) ,
 // the opened-date sheet, the product-detail freshness block, etc.. So the same
@@ -15,5 +15,19 @@ export function paoSourceLabel(source: PaoSource): string {
     case 'unknown':
     default:
       return 'estimate';
+  }
+}
+
+export function expirySourceLabel(source: ExpirySource): string {
+  switch (source) {
+    case 'printed':
+      return 'printed date';
+    case 'pao_computed':
+      return 'opened date + PAO';
+    case 'estimated':
+      return 'estimated shelf life';
+    case 'unknown':
+    default:
+      return 'date unknown';
   }
 }

@@ -11,6 +11,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 
 import { configureNotifications } from '@/features/notifications/deliver';
 import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
+import { IntakeProvider } from '@/features/shelf/IntakeContext';
 import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { SessionBoundaryGate } from '@/lib/auth/SessionBoundaryGate';
@@ -49,9 +50,11 @@ export default function RootLayout() {
             <SessionBoundaryGate>
               <AppLockProvider>
                 <PrivateDataAvailabilityGate>
-                  <OfflineSync />
-                  <StatusBar style="dark" />
-                  <Stack screenOptions={{ headerShown: false }} />
+                  <IntakeProvider>
+                    <OfflineSync />
+                    <StatusBar style="dark" />
+                    <Stack screenOptions={{ headerShown: false }} />
+                  </IntakeProvider>
                 </PrivateDataAvailabilityGate>
               </AppLockProvider>
             </SessionBoundaryGate>

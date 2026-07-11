@@ -9,6 +9,7 @@ describe('PAO provenance editing', () => {
         currentMonths: 6,
         currentSource: 'category_default',
         nextMonths: 6,
+        confirmedFromLabel: false,
       }),
     ).toBe('category_default');
   });
@@ -19,16 +20,29 @@ describe('PAO provenance editing', () => {
         currentMonths: 12,
         currentSource: 'catalog',
         nextMonths: 12,
+        confirmedFromLabel: false,
       }),
     ).toBe('catalog');
   });
 
-  it('marks changed PAO values as user-read from the label', () => {
+  it('does not invent label evidence for an unconfirmed changed value', () => {
     expect(
       editedPaoSource({
         currentMonths: 6,
         currentSource: 'category_default',
         nextMonths: 12,
+        confirmedFromLabel: false,
+      }),
+    ).toBe('unknown');
+  });
+
+  it('uses label provenance only after explicit label confirmation', () => {
+    expect(
+      editedPaoSource({
+        currentMonths: 6,
+        currentSource: 'category_default',
+        nextMonths: 12,
+        confirmedFromLabel: true,
       }),
     ).toBe('label');
   });

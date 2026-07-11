@@ -100,7 +100,7 @@ Onboarding step 8 (docs/01 §2) shows a **soft pre-permission screen** at the va
 - **AM routine reminder** — "Good morning — your routine's ready" at the AM time; deep-links to Today.
 - **PM routine / "tonight's step"** — the scheduler's content (docs/05 §9): "Retinoid night — keep it simple," "Recovery night — barrier support," with the next-acid-night line where relevant; deep-links to the PM routine (and may launch the Live Activity, §6).
 - **Capture nudge** (docs/06 §5) — "Time for a progress photo?" at a consistent time, weekly cadence, opt-in, never pressuring.
-- **Replenishment alert** (docs/04 §6) — "Your SPF is nearly finished" (PAO/expiry-honest, claim-safe); routes to the shelf/replenish flow.
+- **Replenishment alert** (docs/04 §6) — "A shelf update is ready" when a tracked PAO/printed expiry needs review or the user marked a unit finished; defaults off, requires explicit Settings opt-in, and routes to the shelf/replenish flow.
 - **Ramp step-up offer** (docs/05 §4) — occasional, confirmable ("Ready to try a third retinoid night?").
 - **De-escalation** (docs/05 §7) — "Your skin's felt irritated — let's take a few recovery nights."
 - **Win-back** (sparse) — value-restatement at ~Day 7 ("Here's what your timeline could show in a month"), a gentle Day-14 touch, then move to monthly to avoid accelerating uninstall.

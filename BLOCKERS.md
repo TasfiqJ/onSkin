@@ -106,7 +106,7 @@ mirrors are byte-identical and listed in the root source-of-truth docs.
 covers the Phase 2-11 Tas-owned launch evidence gate groups and writes the
 machine-extracted key inventory to `docs/generated/tas-todo-audit.{json,md}`.
 
-Fresh verification through 2026-07-10: `npm run typecheck`, `npm run lint`,
+Fresh verification through 2026-07-11: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,
 `npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`,
 `npm run phase5:verify`, `npm run phase7:verify`, `npm run brand:audit:strict`,
@@ -127,7 +127,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 192 mobile test files / 2048 tests. The human-simulated E2E manifest now
+covers 196 mobile test files / 2094 tests. The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
@@ -148,6 +148,14 @@ The `Account-generation-bound combined export` gate in
 also proves delayed-export sign-out, cleanup-failure gating, and recovery at
 360 x 640 and 390 x 844; focused tests prove exact owner matching, Edge abort,
 operation drainage, post-write deletion, and same-generation stability.
+The required `Shelf freshness and replacement provenance lifecycle` gate in
+`test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`
+proves exact-date and unopened intake, explicit PAO provenance, winning expiry
+source, reload, new-UUID replacement history, opt-in replenishment posture, and
+the fixed supported-floor scan layout. It does not clear staging deployment of
+the two Shelf migrations, owner/second-user RLS, reviewed region-matched catalog
+responses, native notification delivery, physical-device relaunch/accessibility,
+or named cosmetic-chemistry review; those remain in `docs/FOR_TAS_TO_DO.md`.
 It also includes the `360 x 640 account-upgrade error and recovery pass` in
 `test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current/`.
 The required `360 x 640 account-transition isolation and cleanup recovery pass`

@@ -1,0 +1,21 @@
+{
+  "viewport": {
+    "requested": "360 x 640",
+    "clientWidth": 360,
+    "clientHeight": 641,
+    "scrollWidth": 360
+  },
+  "visibleInteractiveCount": 10,
+  "minimumVisibleWidth": 55.17,
+  "minimumVisibleHeight": 47.99,
+  "visibleControlsUnder44": 0,
+  "scanAction": {
+    "initialTop": 719.61,
+    "initialBottom": 771.59,
+    "scrolledTop": 348.74,
+    "scrolledBottom": 400.71,
+    "bottomTabsTop": 560.8
+  },
+  "horizontalOverflow": 0,
+  "result": "pass"
+}

@@ -7,6 +7,7 @@ export const APP_COMMERCE_STACKS_ROUTE = '/commerce/stacks' as const;
 export const APP_TREND_OPTIN_ROUTE = '/trend/optin' as const;
 export const APP_COMMUNITY_ROUTE = '/community' as const;
 export const APP_ASK_ROUTE = '/ask' as const;
+export const APP_ONBOARDING_PRODUCTS_ROUTE = '/onboarding/products' as const;
 
 export type AppFallbackRoute =
   | typeof APP_HOME_ROUTE
@@ -17,7 +18,8 @@ export type AppFallbackRoute =
   | typeof APP_COMMERCE_STACKS_ROUTE
   | typeof APP_TREND_OPTIN_ROUTE
   | typeof APP_COMMUNITY_ROUTE
-  | typeof APP_ASK_ROUTE;
+  | typeof APP_ASK_ROUTE
+  | typeof APP_ONBOARDING_PRODUCTS_ROUTE;
 
 export type BackOrReplaceRouter = {
   canGoBack: () => boolean;

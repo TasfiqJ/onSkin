@@ -25,7 +25,11 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 - Add 3 real owned products using manual, search, and scan/OCR fallback paths.
 - Wrong match and no match are understandable.
 - Source and confidence labels are visible where data is not first-party.
-- PAO/expiry labels distinguish label/catalog/default estimates.
+- Impossible/future opened dates cannot save; unopened units retain no opened date.
+- PAO/expiry labels distinguish explicitly confirmed label, reviewed catalog, printed date, and unknown/estimate sources.
+- Printed expiry versus opened-date-plus-PAO uses the actual winning date source.
+- Re-add creates a new unit UUID, archives the old package, and does not inherit its printed expiry.
+- Replenishment uses tracked freshness or user-marked-finished history; alerts stay off until explicit Settings opt-in.
 - Offline add/edit/delete does not corrupt local shelf.
 
 ## Intelligence and recommendations
@@ -94,6 +98,16 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
   6 payments packet, Phase 9 shared evidence helpers, and the Phase 7
   checklist/exit-review docs so reviewers can tie the packet to the exact local
   gates and upstream evidence packets that produced it.
+
+- 2026-07-11: Codex in-app browser Expo web at 360 x 640 and 390 x 844
+  completes the Shelf freshness and replacement provenance lifecycle. It covers
+  onboarding handoff, invalid/future dates, unopened state, explicit open-jar
+  PAO, winning expiry-source precedence, reload, new-UUID replacement, archived
+  package history, opt-in notification posture, and supported-floor geometry.
+  Two discovered UI defects were fixed and rerun. Evidence is in
+  `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`;
+  native encrypted storage/relaunch, notifications, accessibility, live
+  migration/RLS, reviewed catalog rows, and named chemistry review remain open.
 
 - 2026-07-06: Vitest covers `shippableRules()` production withholding/reviewed
   pass-through and `generatePlan()` default production behavior for an unreviewed

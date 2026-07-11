@@ -66,6 +66,19 @@ function commandRequired(name, commandArgs) {
   }).trim();
 }
 
+function listGitTrackedRepoFiles() {
+  return new Set(
+    execFileSync('git', ['ls-files', '-z'], {
+      cwd: root,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    })
+      .split('\0')
+      .filter(Boolean)
+      .map(normalizeRepoPath),
+  );
+}
+
 function gateEvidencePath(gate) {
   return `${gate.folder}/${gate.evidence}`;
 }
@@ -165,7 +178,7 @@ function latestEvidenceDateForFolder(folder, evidence = 'summary.json') {
   );
 }
 
-function walkEvidence(path) {
+function walkEvidence(path, trackedRepoFiles) {
   const target = abs(path);
   const result = { files: 0, bytes: 0 };
   if (!existsSync(target)) return result;
@@ -177,6 +190,8 @@ function walkEvidence(path) {
       if (entry.isDirectory()) {
         stack.push(next);
       } else if (entry.name === 'expo-web.log') {
+        continue;
+      } else if (!trackedRepoFiles.has(rel(next))) {
         continue;
       } else {
         result.files += 1;
@@ -331,6 +346,13 @@ if (!accountIsolationEvidenceDate) {
   console.error('FAIL Missing account-transition private-data isolation evidence.');
   process.exit(1);
 }
+const shelfFreshnessProvenanceEvidenceDate = latestEvidenceDateForFolder(
+  'shelf-freshness-provenance-current',
+);
+if (!shelfFreshnessProvenanceEvidenceDate) {
+  console.error('FAIL Missing Shelf freshness and replacement provenance evidence.');
+  process.exit(1);
+}
 const latestManifestEvidenceDate = [
   evidenceDate,
   timelapseEvidenceDate,
@@ -350,6 +372,7 @@ const latestManifestEvidenceDate = [
   accountGenerationExportEvidenceDate,
   accountUpgradeEvidenceDate,
   accountIsolationEvidenceDate,
+  shelfFreshnessProvenanceEvidenceDate,
 ]
   .sort()
   .at(-1);
@@ -743,6 +766,32 @@ const gates = [
       'Custom Save/Cancel, stable authored identity, retained intent, failed-write and pending-Back recovery, closed review-gate behavior, exact reconciliation provenance, and Settings/Week/Why Tonight/Plan/Today agreement pass at 360 x 640 and 390 x 844.',
   },
   {
+    id: 'shelf-freshness-provenance-supported-phone',
+    title: 'Shelf freshness and replacement provenance lifecycle',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${shelfFreshnessProvenanceEvidenceDate}/shelf-freshness-provenance-current`,
+    evidence: 'summary.json',
+    requiredSchemaVersion: 1,
+    requiredStatus: 'pass',
+    requiredFailedRouteCount: 0,
+    requiredViewports: ['360 x 640', '390 x 844'],
+    requiredVerified: [
+      'Onboarding freshness capture',
+      'unopened units keep openedAt null',
+      'impossible and future dates',
+      'explicit open-jar label confirmation',
+      'winning expiry source',
+      'reload preserves',
+      'new UUID without inheriting printed expiry',
+      'replenishment alerts remain off until explicit Settings opt-in',
+      'zero horizontal overflow',
+    ],
+    expected:
+      'Onboarding freshness intake, honest opened/PAO/expiry provenance, reload, replacement identity/history, explicit replenishment opt-in, and supported-phone geometry pass.',
+  },
+  {
     id: 'data-export-local-photo-disclosure-supported-phone',
     title: 'Account export local-photo scope disclosure',
     kind: 'summary-status',
@@ -795,11 +844,23 @@ const warnings = [
   'Native keyboard events, Dynamic Type, VoiceOver/TalkBack, camera hardware, notification delivery, StoreKit/Play Billing, RevenueCat, and live Supabase remain separate release gates.',
 ];
 const blockers = [];
+let trackedRepoFiles;
+try {
+  trackedRepoFiles = listGitTrackedRepoFiles();
+} catch (error) {
+  console.error(
+    `FAIL Could not enumerate Git-tracked evidence files: ${
+      error instanceof Error ? error.message : String(error)
+    }`,
+  );
+  process.exit(1);
+}
 const gateResults = gates.map((gate) => {
   const evidencePath = `${gate.folder}/${gate.evidence}`;
   const folderExists = exists(gate.folder);
   const evidenceExists = exists(evidencePath);
-  const footprint = walkEvidence(gate.folder);
+  const evidenceTracked = trackedRepoFiles.has(normalizeRepoPath(evidencePath));
+  const footprint = walkEvidence(gate.folder, trackedRepoFiles);
   let status = 'blocked';
   let detail = 'Missing evidence folder or file.';
   let failureCount = null;
@@ -809,6 +870,8 @@ const gateResults = gates.map((gate) => {
   if (!gate.required && (!folderExists || !evidenceExists)) {
     status = 'skipped';
     detail = `Optional ${gate.supportClass} evidence not present for this date.`;
+  } else if (gate.required && evidenceExists && !evidenceTracked) {
+    detail = 'Required evidence file is not Git-tracked.';
   } else if (folderExists && evidenceExists) {
     try {
       if (gate.kind === 'failures') {
@@ -838,6 +901,24 @@ const gateResults = gates.map((gate) => {
         ) {
           requirementFailures.push(
             `schemaVersion must be ${gate.requiredSchemaVersion}, received ${String(summary?.schemaVersion ?? 'missing')}`,
+          );
+        }
+        if (
+          typeof gate.requiredStatus === 'string' &&
+          String(summary?.status ?? '')
+            .trim()
+            .toLowerCase() !== gate.requiredStatus
+        ) {
+          requirementFailures.push(
+            `status must be ${gate.requiredStatus}, received ${String(summary?.status ?? 'missing')}`,
+          );
+        }
+        if (
+          typeof gate.requiredFailedRouteCount === 'number' &&
+          summary?.failedRouteCount !== gate.requiredFailedRouteCount
+        ) {
+          requirementFailures.push(
+            `failedRouteCount must be ${gate.requiredFailedRouteCount}, received ${String(summary?.failedRouteCount ?? 'missing')}`,
           );
         }
         const summaryViewports = Array.isArray(summary?.viewports)
@@ -886,14 +967,19 @@ const gateResults = gates.map((gate) => {
     detail,
     failureCount,
     verdict,
-    ...(gate.requiredSchemaVersion != null || gate.requiredViewports || gate.requiredVerified
+    ...(gate.requiredSchemaVersion != null ||
+    gate.requiredStatus != null ||
+    gate.requiredFailedRouteCount != null ||
+    gate.requiredViewports ||
+    gate.requiredVerified
       ? { requirementFailures }
       : {}),
     folderExists,
     evidenceExists,
+    evidenceTracked,
     fileCount: footprint.files,
     bytes: footprint.bytes,
-    evidenceSha256: evidenceExists ? hashFile(evidencePath) : null,
+    evidenceSha256: evidenceExists && evidenceTracked ? hashFile(evidencePath) : null,
   };
 });
 

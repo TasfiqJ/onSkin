@@ -15,6 +15,8 @@ import { reviewedCategoryPao } from '@/features/intelligence/pao';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { ONBOARDING_PRODUCT_CATEGORIES } from '@/features/onboarding/productCategories';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
+import type { ProductCategory } from '@/features/shelf/categories';
+import { useIntake } from '@/features/shelf/IntakeContext';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
@@ -29,8 +31,8 @@ function CategoryPickerSheet({
   onClose,
 }: {
   visible: boolean;
-  selectedCategory: string | null;
-  onSelect: (category: string | null) => void;
+  selectedCategory: ProductCategory | null;
+  onSelect: (category: ProductCategory | null) => void;
   onClose: () => void;
 }) {
   const { height: viewportHeight } = useWindowDimensions();
@@ -121,10 +123,11 @@ export default function ProductsScreen() {
   const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
   const { goals } = useOnboarding();
+  const { reset: resetIntake } = useIntake();
   const { data } = useShelf();
   const m = useShelfMutations();
   const [name, setName] = useState('');
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<ProductCategory | null>(null);
   const [categoryPickerOpen, setCategoryPickerOpen] = useState(false);
   const added = data?.items ?? [];
   const supportFloorTextPressurePhone =
@@ -170,39 +173,31 @@ export default function ProductsScreen() {
     trackProductAddStarted('onboarding');
   }, []);
 
-  function scrollToShelfList() {
-    const scroll = () => scrollRef.current?.scrollToEnd({ animated: true });
-    requestAnimationFrame(() => {
-      scroll();
-      setTimeout(scroll, 120);
-    });
-  }
-
   function focusNextProduct() {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
     requestAnimationFrame(() => inputRef.current?.focus());
   }
 
-  function selectCategory(nextCategory: string | null) {
+  function selectCategory(nextCategory: ProductCategory | null) {
     setCategory(nextCategory);
     setCategoryPickerOpen(false);
   }
 
-  async function add() {
+  function add() {
     const trimmed = name.trim();
     if (!trimmed) return;
     const pao = category ? reviewedCategoryPao(category) : null;
-    await m.add({
+    resetIntake({
       name: trimmed,
       category,
       addedVia: 'onboarding',
+      catalogSource: 'user_local',
+      catalogMatchQuality: 'manual',
       paoMonths: pao,
       paoSource: pao != null ? 'category_default' : 'unknown',
     });
-    setName('');
-    setCategory(null);
     setCategoryPickerOpen(false);
-    if (compactPhone) scrollToShelfList();
+    router.push({ pathname: '/shelf/opened', params: { origin: 'onboarding' } });
   }
 
   function go() {
@@ -216,7 +211,7 @@ export default function ProductsScreen() {
 
   function footerAction() {
     if (compactFooterAdds) {
-      void add();
+      add();
       return;
     }
     if (added.length === 0 || hasTargetProducts) {
@@ -298,7 +293,7 @@ export default function ProductsScreen() {
               placeholderTextColor={colors.mutedLight}
               className="rounded-card border border-hairline bg-paper px-4 py-3.5 font-sans text-base text-ink"
               returnKeyType="done"
-              onSubmitEditing={() => void add()}
+              onSubmitEditing={add}
             />
             {!compactPhone ? (
               <>
@@ -323,7 +318,7 @@ export default function ProductsScreen() {
                 label="Add to shelf"
                 variant="inverse"
                 disabled={!name.trim()}
-                onPress={() => void add()}
+                onPress={add}
               />
             ) : null}
           </Card>

@@ -5,7 +5,12 @@ import { ActivityIndicator, Platform, Pressable, View, useWindowDimensions } fro
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
-import { lookupBarcode, type CatalogProductSummary } from '@/features/catalog/client';
+import {
+  catalogIntakeProvenance,
+  lookupBarcode,
+  type CatalogProductSummary,
+} from '@/features/catalog/client';
+import { sourceDisplayName } from '@/features/catalog/copy';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import {
   normalizeScannedBarcode,
@@ -51,8 +56,11 @@ function devShelfScanFixtureState(): ScanState | null {
           name: 'Mineral SPF 50',
           brand: 'RoutineKind Fixture',
           category: 'sunscreen',
+          region: 'US',
           default_pao_months: 12,
           source: fixture === 'external_candidate' ? 'open_beauty_facts' : 'routinekind_fixture',
+          catalog_source_id:
+            fixture === 'external_candidate' ? null : '00000000-0000-4000-8000-000000000043',
           source_ref: fixture,
           source_url: null,
           source_snapshot_date: null,
@@ -61,6 +69,21 @@ function devShelfScanFixtureState(): ScanState | null {
           data_quality_score: fixture === 'external_candidate' ? 45 : 82,
           ingredient_parse_status: 'empty',
           ingredient_parse_confidence: null,
+          product_pao_expiry:
+            fixture === 'external_candidate'
+              ? []
+              : [
+                  {
+                    pao_months: 12,
+                    pao_source: 'catalog',
+                    expiry_date: null,
+                    expiry_source: 'unknown',
+                    region: 'US',
+                    source_id: '00000000-0000-4000-8000-000000000043',
+                    review_status: 'reviewed',
+                    created_at: '2026-07-09T00:00:00.000Z',
+                  },
+                ],
           rawIngredientsText: null,
           external: fixture === 'external_candidate',
         },
@@ -159,15 +182,16 @@ export default function ScanScreen() {
 
   const applyProduct = (product: CatalogProductSummary, barcode: string) => {
     const parsed = activeIngredients(product);
+    const provenance = catalogIntakeProvenance(product);
     reset({
       name: product.name,
       brand: product.brand,
       category: (product.category as ProductCategory | null) ?? null,
       barcode,
       catalogProductId: product.id,
-      catalogSourceId: product.source_ref ?? null,
+      catalogSourceId: provenance.catalogSourceId,
       catalogSource: product.source,
-      catalogSourceName: product.source,
+      catalogSourceName: product.catalog_sources?.display_name ?? sourceDisplayName(product.source),
       catalogSourceRef: product.source_ref ?? null,
       catalogSourceUrl: product.source_url ?? null,
       catalogSourceSnapshotDate: product.source_snapshot_date ?? null,
@@ -177,8 +201,9 @@ export default function ScanScreen() {
       ingredientParseConfidence: parsed.confidence ?? product.ingredient_parse_confidence ?? null,
       parserVersion: parsed.parserVersion,
       ingredients: parsed.ingredients,
-      paoMonths: product.default_pao_months ?? null,
-      paoSource: product.default_pao_months ? 'catalog' : 'unknown',
+      paoMonths: provenance.paoMonths,
+      paoSource: provenance.paoSource,
+      expiryDate: provenance.expiryDate,
       sourceDisclosureAckAt: new Date().toISOString(),
       addedVia: 'barcode',
     });

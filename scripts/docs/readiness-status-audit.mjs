@@ -16,8 +16,8 @@ const outJson =
   process.env.READINESS_STATUS_AUDIT_JSON ?? 'docs/generated/readiness-status-audit.json';
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
-const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 192);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 2048);
+const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 196);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 2094);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
@@ -32,6 +32,7 @@ const staleTestPatterns = [
   /\b186\s+(?:mobile\s+)?test files?\b/i,
   /\b190\s+(?:mobile\s+)?test files?\b/i,
   /\b191\s+(?:mobile\s+)?test files?\b/i,
+  /\b192\s+(?:mobile\s+)?test files?\b/i,
   /\b1743\s+tests?\b/i,
   /\b1744\s+tests?\b/i,
   /\b1748\s+tests?\b/i,
@@ -59,6 +60,7 @@ const staleTestPatterns = [
   /\b1997\s+tests?\b/i,
   /\b2010\s+tests?\b/i,
   /\b2037\s+tests?\b/i,
+  /\b2048\s+tests?\b/i,
   /320 x 480 support-floor 200%\s+text-pressure/i,
   /support-floor\s+170%\s+text-pressure/i,
 ];
@@ -109,6 +111,8 @@ const requiredManifestNeedles = [
   'cycle-disruption-reconciliation-current',
   'Authored cycle customization and deterministic reconciliation',
   'cycle-customization-current',
+  'Shelf freshness and replacement provenance lifecycle',
+  'shelf-freshness-provenance-current',
 ];
 
 const requiredLaunchCommands = [

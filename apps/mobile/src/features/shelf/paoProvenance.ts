@@ -1,11 +1,13 @@
 import type { PaoSource } from '@onskin/types';
 
-// Editing a PAO value should not make an estimate look label-backed unless the
-// user actually changes the value from the prefilled source (docs/04 §3).
+// A changed number is not evidence by itself. Only an explicit confirmation that
+// the user read the open-jar symbol may promote the source to `label`.
 export function editedPaoSource(input: {
   currentMonths: number | null;
   currentSource: PaoSource;
   nextMonths: number;
+  confirmedFromLabel: boolean;
 }): PaoSource {
-  return input.currentMonths === input.nextMonths ? input.currentSource : 'label';
+  if (input.confirmedFromLabel) return 'label';
+  return input.currentMonths === input.nextMonths ? input.currentSource : 'unknown';
 }

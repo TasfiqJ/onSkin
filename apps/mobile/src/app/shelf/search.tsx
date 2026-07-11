@@ -13,6 +13,7 @@ import {
 import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import {
+  catalogIntakeProvenance,
   reportCatalogIssue,
   searchCatalog,
   type CatalogProductSummary,
@@ -187,6 +188,7 @@ export default function CatalogSearchScreen() {
 
   const chooseProduct = (product: CatalogProductSummary) => {
     haptics.select();
+    const provenance = catalogIntakeProvenance(product);
     const parsed = product.rawIngredientsText
       ? parseIngredientText(product.rawIngredientsText)
       : null;
@@ -196,8 +198,9 @@ export default function CatalogSearchScreen() {
       category: normalizeCategory(product.category),
       barcode: product.barcode,
       catalogProductId: product.id,
+      catalogSourceId: provenance.catalogSourceId,
       catalogSource: product.source,
-      catalogSourceName: sourceDisplayName(product.source),
+      catalogSourceName: product.catalog_sources?.display_name ?? sourceDisplayName(product.source),
       catalogSourceRef: product.source_ref ?? null,
       catalogSourceUrl: product.source_url ?? null,
       catalogSourceSnapshotDate: product.source_snapshot_date ?? null,
@@ -208,8 +211,9 @@ export default function CatalogSearchScreen() {
       parserVersion: parsed?.parserVersion ?? null,
       sourceDisclosureAckAt: new Date().toISOString(),
       ingredients: parsed?.tokens.map((token) => token.displayName) ?? [],
-      paoMonths: product.default_pao_months ?? null,
-      paoSource: product.default_pao_months != null ? 'catalog' : 'unknown',
+      paoMonths: provenance.paoMonths,
+      paoSource: provenance.paoSource,
+      expiryDate: provenance.expiryDate,
       addedVia: 'search',
     });
     router.push('/shelf/opened');

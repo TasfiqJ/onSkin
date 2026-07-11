@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 
 import { goalConcern } from '@/features/recommendations/copy';
+import { hasReplenishmentSignal } from '@/features/recommendations/replenishment';
 import { useRecommendations } from '@/features/recommendations/useRecommendations';
 import { usePlan } from '@/features/routine/usePlan';
 import { useProfileBits } from '@/features/scheduler/profile';
@@ -61,9 +62,7 @@ export function useAsk() {
       hasShelfProducts: (shelf.data?.items.length ?? 0) > 0,
       pmSteps: (plan.data?.plan.pm ?? []).map((s) => ({ name: s.name, role: String(s.role) })),
       isExamplePlan: plan.data?.isExample ?? false,
-      hasReplenish: (shelf.data?.items ?? []).some(
-        (i) => i.badge.kind === 'countdown' || i.badge.kind === 'expired',
-      ),
+      hasReplenish: hasReplenishmentSignal(shelf.data),
       topRec: pickFitRec(recs.result.recommendations),
       youreSet: recs.result.youreSet,
       goalConcernText: goal ? goalConcern(goal) : null,

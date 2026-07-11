@@ -44,6 +44,41 @@ describe('notification lock-screen privacy preference', () => {
     await expect(loadNotifPrefs()).resolves.toMatchObject({ lockscreenDiscreet: true });
   });
 
+  it('keeps replenishment alerts off until the user explicitly opts in', async () => {
+    expect(DEFAULT_PREFS.replenishmentAlerts).toBe(false);
+    await expect(loadNotifPrefs()).resolves.toMatchObject({ replenishmentAlerts: false });
+  });
+
+  it('fails closed for legacy true values with no explicit opt-in marker', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ ...DEFAULT_PREFS, replenishmentAlerts: true }));
+
+    await expect(loadNotifPrefs()).resolves.toMatchObject({ replenishmentAlerts: false });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      replenishmentAlerts: false,
+      replenishmentAlertsOptInConfirmed: false,
+    });
+  });
+
+  it('persists and mirrors an explicit replenishment opt-in across unrelated edits', async () => {
+    await expect(saveNotifPrefs({ replenishmentAlerts: true })).resolves.toMatchObject({
+      replenishmentAlerts: true,
+    });
+    await expect(saveNotifPrefs({ pmEnabled: false })).resolves.toMatchObject({
+      pmEnabled: false,
+      replenishmentAlerts: true,
+    });
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      replenishmentAlerts: true,
+      replenishmentAlertsOptInConfirmed: true,
+    });
+    expect(mocks.upsert).toHaveBeenLastCalledWith(
+      expect.objectContaining({ replenishment_alerts: true }),
+    );
+  });
+
   it('removes unreadable local prefs and falls back to defaults', async () => {
     mocks.storage.set(KEY, '{not-json');
 

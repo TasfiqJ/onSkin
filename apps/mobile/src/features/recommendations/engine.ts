@@ -16,9 +16,10 @@ import {
 import { shippableRules, type ConflictRule } from '@/features/intelligence/rules';
 
 import { recTypeByKey, shippableRecTypes, type RecType } from './catalog';
-import { GROUP_LABEL, goalShort, whyCopy } from './copy';
+import { GROUP_LABEL, goalShort, replacementCopy, whyCopy } from './copy';
 import { fitLabel, fitScore, type FitContext, type FitResult } from './fit';
 import { DEFAULT_PREFERENCES, type RecPreferences } from './preferences';
+import type { ReplenishmentReason } from './replenishment';
 
 // The recommendation engine (docs/09 §5). A deterministic, explainable rules +
 // evidence + FIT-scoring function over the profile/shelf/conflicts/preferences +
@@ -34,11 +35,10 @@ export type RecShelfItem = {
   tags: FunctionalTag[];
   concentration?: 'low' | 'high';
   fragranced: boolean;
-  /** Genuinely depleted/expiring (countdown or expired badge). The only replacement
-   *  trigger sourced from the active shelf. (A separate "finished product" channel
-   *  sourced from the archive is a future enhancement: gap-detection vs replacement
-   *  for an already-archived role needs product sign-off, so it is not wired yet.) */
-  expiring: boolean;
+};
+
+export type RecReplenishmentItem = Pick<RecShelfItem, 'id' | 'name' | 'tags' | 'concentration'> & {
+  reason: ReplenishmentReason;
 };
 
 export type RecProfile = {
@@ -50,7 +50,10 @@ export type RecProfile = {
 
 export type RecInput = {
   profile: RecProfile;
+  /** Active products only. These determine routine coverage, fit, and conflicts. */
   shelf: RecShelfItem[];
+  /** Honest replacement signals, including finished archive rows. */
+  replenishment?: RecReplenishmentItem[];
   /** Unresolved interactions from the docs/02 engine (already launch-gated). */
   conflicts: DetectedConflict[];
   preferences: RecPreferences;
@@ -265,12 +268,14 @@ export function recommend(input: RecInput): RecResult {
   const rules = input.rules ?? shippableRules();
   const pregnancySafety =
     input.profile.pregnancySafety ?? (input.profile.pregnancy ? 'caution' : 'clear');
+  const replenishment = input.replenishment ?? [];
   const safetyExcludedIds = new Set(
-    input.shelf
+    [...input.shelf, ...replenishment]
       .filter((item) => pregnancySafetyReasonForProduct(item, pregnancySafety, rules) != null)
       .map((item) => item.id),
   );
   const eligibleShelf = input.shelf.filter((item) => !safetyExcludedIds.has(item.id));
+  const eligibleReplenishment = replenishment.filter((item) => !safetyExcludedIds.has(item.id));
   const eligibleConflicts = input.conflicts.filter(
     (conflict) =>
       (conflict.productAId == null || !safetyExcludedIds.has(conflict.productAId)) &&
@@ -279,6 +284,7 @@ export function recommend(input: RecInput): RecResult {
   const eligibleInput: RecInput = {
     ...input,
     shelf: eligibleShelf,
+    replenishment: eligibleReplenishment,
     conflicts: eligibleConflicts,
     rules,
   };
@@ -322,23 +328,23 @@ export function recommend(input: RecInput): RecResult {
     );
   }
 
-  // 2. Replacement. A genuinely depleted/expiring product (docs/04). Shelf-anchored;
-  // the existing replenishment sheet handles repurchase-or-better-fit (reuse).
-  for (const item of eligibleShelf) {
-    if (!item.expiring) continue;
+  // 2. Replacement. A tracked freshness signal or an unsuperseded finished unit
+  // (docs/04 section 6). Archive rows do not count as active routine inventory.
+  for (const item of eligibleReplenishment) {
     const id = `replacement:${item.id}`;
+    const copy = replacementCopy(item.name, item.reason);
     out.push({
       id,
       trigger: 'replacement',
       group: GROUP_LABEL.replacement,
       productType: 'replacement',
-      what: `Your ${item.name} is running low`,
+      what: copy.what,
       example: null,
-      why: whyCopy.replacement(item.name),
+      why: copy.why,
       how: {
         profile: profileSummary(eligibleInput.profile),
-        gap: `${item.name} is genuinely running out`,
-        evidence: 'From your shelf. Opened a while ago',
+        gap: copy.gap,
+        evidence: copy.evidence,
         fit: 'Repurchase, or a better-fit alternative',
         caveat: null,
       },

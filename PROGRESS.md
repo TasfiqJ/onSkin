@@ -6,6 +6,24 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-11
 
+- Closed Shelf freshness and replacement provenance as one normalized lifecycle.
+  Onboarding now crosses into required freshness capture; impossible/future dates
+  cannot save; unopened units retain no opened date; open-jar PAO becomes label
+  evidence only after explicit confirmation; printed expiry wins only when it is
+  earlier than opened date plus PAO; and reload preserves the result. Re-add now
+  archives the prior package, creates a new UUID opened today, retains product/PAO
+  provenance, and clears package-specific printed expiry. Catalog intake accepts
+  only reviewed, region-matched source evidence, while recommendations, Ask, and
+  notifications use tracked freshness or unsuperseded finished history without
+  scarcity inference; replenishment alerts default off. Human-simulated Expo web
+  at 360 x 640 and 390 x 844 found and fixed root intake-provider scope and a
+  compact Shelf scan overlap. The required `Shelf freshness and replacement
+provenance lifecycle` gate reads
+  `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`.
+  Mobile verification passes 196 test files / 2094 tests. Live migrations/RLS,
+  reviewed catalog rows, native notifications/relaunch/accessibility, and named
+  cosmetic-chemistry review remain Tas-owned.
+
 - Closed the P0 combined-export account-transition race. One cancellable
   account-generation lease now covers authenticated owner capture, encrypted
   local collection, the owner-scoped Edge request, exact `user_id` validation,

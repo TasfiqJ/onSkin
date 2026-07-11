@@ -13,6 +13,12 @@ export function surfacedExpiry(
   return computeExpiry({ openedAt: p.openedAt, paoMonths: p.paoMonths, expiryDate: p.expiryDate });
 }
 
+export function isEstimatedExpiry(p: Pick<ShelfProduct, 'expirySource' | 'paoSource'>): boolean {
+  if (p.expirySource === 'printed') return false;
+  if (p.expirySource === 'estimated') return true;
+  return p.expirySource === 'pao_computed' && p.paoSource !== 'label' && p.paoSource !== 'catalog';
+}
+
 /** "Sep 2026" month/year label for a surfaced expiry (docs/04 §5.6). */
 export function expiryMonthLabel(iso: string | null): string | null {
   if (!iso) return null;

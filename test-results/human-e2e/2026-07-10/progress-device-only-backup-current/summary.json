@@ -1,0 +1,186 @@
+{
+  "status": "pass",
+  "verdict": "pass",
+  "date": "2026-07-10",
+  "surface": "Expo web development build",
+  "fixtures": {
+    "settings": {
+      "origin": "http://localhost:8163",
+      "entitlement": "store_pro",
+      "appLockEnabled": false
+    },
+    "progress": {
+      "origin": "http://localhost:8162",
+      "entitlement": "store_pro",
+      "appLockEnabled": true,
+      "globalAppLockAuth": "success",
+      "galleryAppLockAuth": "not_authenticated",
+      "progressPhotos": "populated"
+    },
+    "staleBackupPreferenceSeeded": true
+  },
+  "scenarios": [
+    {
+      "scenario": "settings-modern-390x844",
+      "route": "/you?section=privacy",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "storageTitle": {
+        "x": 44,
+        "y": 358,
+        "width": 217.4,
+        "height": 24
+      },
+      "storageBody": {
+        "x": 44,
+        "y": 384,
+        "width": 217.4,
+        "height": 60
+      },
+      "storageStatus": {
+        "x": 273.4,
+        "y": 391,
+        "width": 72.6,
+        "height": 20
+      },
+      "appLock": {
+        "x": 294,
+        "y": 285,
+        "width": 52,
+        "height": 48
+      },
+      "stalePreferenceRemoved": true,
+      "horizontalOverflow": {
+        "innerWidth": 390,
+        "bodyScrollWidth": 390,
+        "documentScrollWidth": 390
+      }
+    },
+    {
+      "scenario": "settings-supported-floor-360x640",
+      "route": "/you?section=privacy",
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "storageTitle": {
+        "x": 44,
+        "y": 256,
+        "width": 187.4,
+        "height": 24
+      },
+      "storageBody": {
+        "x": 44,
+        "y": 282,
+        "width": 187.4,
+        "height": 60
+      },
+      "storageStatus": {
+        "x": 243.4,
+        "y": 289,
+        "width": 72.6,
+        "height": 20
+      },
+      "appLock": {
+        "x": 264,
+        "y": 173,
+        "width": 52,
+        "height": 48
+      },
+      "stalePreferenceRemoved": true,
+      "horizontalOverflow": {
+        "innerWidth": 360,
+        "bodyScrollWidth": 360,
+        "documentScrollWidth": 360
+      }
+    },
+    {
+      "scenario": "progress-locked-modern-390x844",
+      "route": "/progress",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "lockTitle": {
+        "x": 77.4,
+        "y": 269.5,
+        "width": 235.2,
+        "height": 33
+      },
+      "storageTitle": {
+        "x": 20,
+        "y": 643,
+        "width": 350,
+        "height": 24
+      },
+      "storageBody": {
+        "x": 20,
+        "y": 667,
+        "width": 350,
+        "height": 17
+      },
+      "unlock": {
+        "x": 137.9,
+        "y": 403.5,
+        "width": 114.2,
+        "height": 56
+      },
+      "horizontalOverflow": {
+        "innerWidth": 390,
+        "bodyScrollWidth": 390,
+        "documentScrollWidth": 390
+      }
+    },
+    {
+      "scenario": "progress-locked-supported-floor-360x640",
+      "route": "/progress",
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "lockTitle": {
+        "x": 62.4,
+        "y": 167.5,
+        "width": 235.2,
+        "height": 33
+      },
+      "storageTitle": {
+        "x": 20,
+        "y": 439,
+        "width": 320,
+        "height": 24
+      },
+      "storageBody": {
+        "x": 20,
+        "y": 463,
+        "width": 320,
+        "height": 17
+      },
+      "unlock": {
+        "x": 122.9,
+        "y": 301.5,
+        "width": 114.2,
+        "height": 56
+      },
+      "horizontalOverflow": {
+        "innerWidth": 360,
+        "bodyScrollWidth": 360,
+        "documentScrollWidth": 360
+      }
+    }
+  ],
+  "failedRouteCount": 0,
+  "dialogCount": 0,
+  "pageErrorCount": 0,
+  "unexpectedLogCount": 0,
+  "analyticsRequestCount": 0,
+  "photoBackendRequestCount": 0,
+  "backupEventRequestCount": 0,
+  "nativeEvidenceRemaining": [
+    "Physical iOS and Android encryption/restart checks",
+    "VoiceOver and TalkBack output",
+    "OS app-lock prompt behavior"
+  ]
+}

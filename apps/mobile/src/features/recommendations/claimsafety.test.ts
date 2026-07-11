@@ -13,6 +13,7 @@ import {
   VALUES_LABEL,
   goalConcern,
   goalShort,
+  replacementCopy,
   whyCopy,
 } from './copy';
 import { recommend, type RecInput, type RecShelfItem } from './engine';
@@ -53,6 +54,12 @@ const GUILT = [
   /\byou\s+failed\b/i,
   /\bbuy\s+now\b/i,
 ];
+const UNSUPPORTED_DEPLETION = [
+  /\brunning\s+low\b/i,
+  /\brunning\s+out\b/i,
+  /\bnearly\s+finished\b/i,
+  /\bopened\s+a\s+while\s+ago\b/i,
+];
 
 function collect(v: unknown, out: string[] = []): string[] {
   if (typeof v === 'string') out.push(v);
@@ -84,7 +91,9 @@ const builderStrings: string[] = [
   whyCopy.gapMoisturiser,
   whyCopy.gapCleanser,
   whyCopy.routineCompletion,
-  whyCopy.replacement('your vitamin C'),
+  ...(['countdown', 'expired', 'finished'] as const).flatMap((reason) =>
+    Object.values(replacementCopy('Vitamin C serum', reason)),
+  ),
   whyCopy.betterFit('your cleanser'),
   whyCopy.conflict('your retinol', 'your glycolic'),
   ...goalIds.map(whyCopy.goal),
@@ -95,7 +104,7 @@ const builderStrings: string[] = [
 function shelfItem(
   over: Partial<RecShelfItem> & { id: string; role: RecShelfItem['role'] },
 ): RecShelfItem {
-  return { name: over.id, tags: [], fragranced: false, expiring: false, ...over };
+  return { name: over.id, tags: [], fragranced: false, ...over };
 }
 function engineStrings(): string[] {
   (globalThis as { __DEV__?: boolean }).__DEV__ = true;
@@ -124,8 +133,9 @@ function engineStrings(): string[] {
       shelf: [
         shelfItem({ id: 'Cleanser', role: 'cleanser' }),
         shelfItem({ id: 'Cream', role: 'moisturiser', tags: ['ceramide'] }),
-        shelfItem({ id: 'SPF', role: 'spf', tags: ['sunscreen'], expiring: true }),
+        shelfItem({ id: 'SPF', role: 'spf', tags: ['sunscreen'] }),
       ],
+      replenishment: [{ id: 'SPF', name: 'SPF', tags: ['sunscreen'], reason: 'countdown' }],
       conflicts: [],
       preferences: DEFAULT_PREFERENCES,
       rules: STARTER_RULES,
@@ -194,6 +204,7 @@ describe('recommendation copy is claim-safe (docs/09 §10). Concerns not conditi
       expect(offenders(text, ALARM)).toEqual([]);
       expect(offenders(text, URGENCY)).toEqual([]);
       expect(offenders(text, GUILT)).toEqual([]);
+      expect(offenders(text, UNSUPPORTED_DEPLETION)).toEqual([]);
     });
   }
 });

@@ -1,0 +1,136 @@
+{
+  "accountIsolationMode": true,
+  "accountIsolation": {
+    "accountAEmail": "tas.account-a.e2e@example.com",
+    "cleanupFailureStayedGated": true,
+    "privateNamesHiddenAfterSignOut": true,
+    "reachedEmptyShelf": true,
+    "reachedEmptyToday": true,
+    "retryShowedTransitionGate": true
+  },
+  "accountUpgradeMode": false,
+  "accountUpgrade": null,
+  "browserProblemLogCount": 9,
+  "date": "2026-07-10",
+  "endUrl": "http://localhost:8285/today?routine=AM",
+  "evidenceFiles": [
+    "01-welcome.png",
+    "03-age-filled.png",
+    "05-goals-selected.png",
+    "09-products-empty.png",
+    "12-products-after-3.png",
+    "14-reveal-insight.png",
+    "15-notifications.png",
+    "16-account.png",
+    "17-paywall-current.png",
+    "18-paywall-explore-visible.png",
+    "19-routine-plan-current.png",
+    "20-today-after-start-current.png",
+    "21-today-am-before-checkoff.png",
+    "22-today-am-after-checkoff.png",
+    "23-today-pm-before-checkoff.png",
+    "24-today-pm-after-checkoff.png",
+    "25-account-before-signout.png",
+    "26-account-boundary-clear-failure.png",
+    "27-account-boundary-retry.png",
+    "28-signed-out-welcome.png",
+    "29-signed-out-shelf.png",
+    "30-signed-out-today.png"
+  ],
+  "flowResult": "Completed activation, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.",
+  "overflowXByStep": {
+    "welcome": 0,
+    "reveal": 0,
+    "account": 0,
+    "paywall": 0,
+    "paywallExplore": 0,
+    "routinePlan": 0,
+    "todayAfterStart": 0,
+    "todayAmBefore": 0,
+    "todayAmAfter": 0,
+    "todayPmBefore": 0,
+    "todayPmAfter": 0,
+    "accountBeforeSignOut": 0,
+    "accountBoundaryFailure": 0,
+    "accountBoundaryRetry": 0,
+    "signedOutWelcome": 0,
+    "signedOutShelf": 0,
+    "signedOutToday": 0
+  },
+  "productNames": [
+    "Retinol 0.3% serum",
+    "Glycolic 7% toner",
+    "Mineral SPF 50"
+  ],
+  "reveal": {
+    "hasContinue": true,
+    "hasDerivedInsightBody": true,
+    "hasFirstInsightLabel": true,
+    "hasRoutinePreviewFallback": false,
+    "hasSeeMyRoutine": false,
+    "hasTimingHandled": true,
+    "text": "YOUR SKIN PROFILE Oily · Sensitive · Uneven tone · Lined. Type OSPW Dry Oily Resistant Sensitive Even Uneven tone Firm Lined FIRST INSIGHT Timing handled Products that need different timing are separated before the first check-off. Continue"
+  },
+  "routinePlan": {
+    "hasFirstInsight": true,
+    "hasGlycolicNight": true,
+    "hasRetinolNight": true,
+    "hasSpfMorning": true,
+    "hasStartToday": true,
+    "text": "< BUILT FOR OILY, SENSITIVE SKIN Your routine, in order. FIRST INSIGHT Timing handled Products that need different timing are separated before the first check-off. MORNING 1 Mineral SPF 50 EVENING SKIN CYCLING Night 1 Glycolic 7% exfoliate Night 2 Retinol 0.3% serum 2 times/week to start Nights 3-4 Recover keep it simple A gentle cleanser would give your routine a clean base. Start today",
+    "url": "http://localhost:8285/routine/plan"
+  },
+  "routeCheck": {
+    "accountLedToPaywall": true,
+    "accountUpgradeErrorRecovered": true,
+    "amCheckoffReachedComplete": true,
+    "exploreFirstLedToRoutinePlan": true,
+    "notificationSkipLedToAccount": true,
+    "pmCheckoffReachedComplete": true,
+    "signedOutShelfIsEmpty": true,
+    "signedOutTodayIsEmpty": true,
+    "revealContinueLedToNotifications": true,
+    "revealRoute": "http://localhost:8285/onboarding/reveal",
+    "startTodayLedToToday": true
+  },
+  "startCommand": "EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port 8285 --host localhost",
+  "startUrl": "http://localhost:8285/?e2eReset=local",
+  "steps": [
+    "Reset local private state with dev-only fixture.",
+    "Began onboarding, entered valid adult DOB, selected Clear skin and Barrier repair.",
+    "Granted explicit health-data collection consent.",
+    "Answered 12-question quiz with visible option buttons.",
+    "Added Retinol 0.3% serum, Glycolic 7% toner, and Mineral SPF 50 from product intake.",
+    "Continued from reveal to notification soft ask, skipped reminders, skipped account, and reached onboarding paywall.",
+    "Used Explore first to unlock the routine plan without card entry.",
+    "Verified the generated routine plan contains the first insight plus SPF, glycolic, and retinol placement.",
+    "Tapped Start today, forced AM and PM dev routine states, and completed the SPF and glycolic check-offs to 1 of 1.",
+    "Opened the signed-in account surface and initiated sign-out with account A private queries already populated.",
+    "Verified a forced first cleanup failure exposed only the recovery gate, then retried through the transition state.",
+    "Verified Welcome, direct Shelf, and direct Today routes contain no account A product names after cleanup."
+  ],
+  "surface": "Headless Chrome Expo web",
+  "today": {
+    "am": {
+      "afterText": "You’re exploring Pro. 7 days left › FRIDAY, JULY 10 1 day Good morning. Morning routine 1 of 1 Mineral SPF 50 Last step. Reapply later. ✦ A few honest suggestions 4 things we’d gently suggest › Today Prog. Shelf You",
+      "beforeText": "You’re exploring Pro. 7 days left › FRIDAY, JULY 10 Good morning. Morning routine 0 of 1 Mineral SPF 50 Last step. Reapply later. NEXT ✦ A few honest suggestions 4 things we’d gently suggest › Today Prog. Shelf You",
+      "completed": true,
+      "product": "Mineral SPF 50",
+      "url": "http://localhost:8285/today?routine=AM"
+    },
+    "afterStartUrl": "http://localhost:8285/today",
+    "pm": {
+      "afterText": "You’re exploring Pro. 7 days left › FRIDAY, JULY 10 · 11:32 AM Good evening. SKIN CYCLING · NIGHT 1 OF 6 Week ahead › Exfol iate Reco ver Retin oid Reco ver Retin oid Reco ver Evening routine 1 of 1 Glycolic 7% toner Thin layer tonight. Today Prog. Shelf You",
+      "beforeText": "You’re exploring Pro. 7 days left › FRIDAY, JULY 10 · 11:32 AM Good evening. SKIN CYCLING · NIGHT 1 OF 6 Week ahead › Exfol iate Reco ver Retin oid Reco ver Retin oid Reco ver Evening routine 0 of 1 Glycolic 7% toner Thin layer tonight. NEXT Today Prog. Shelf You",
+      "completed": true,
+      "product": "Glycolic 7% toner",
+      "url": "http://localhost:8285/today?routine=PM"
+    }
+  },
+  "verdict": "pass",
+  "viewport": {
+    "height": 640,
+    "width": 360,
+    "supportClass": "accepted launch web support floor"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "status": "pass",
+  "verdict": "pass",
+  "date": "2026-07-10",
+  "surface": "Expo web development build",
+  "fixtures": {
+    "origin": "http://localhost:8164",
+    "entitlement": "store_pro",
+    "appLockEnabled": false,
+    "supabaseConfigured": false
+  },
+  "disclosureCopy": "Progress photos are not included in account export. They stay encrypted on this device; share them individually from Progress.",
+  "footerCopy": "Progress photos stay encrypted here unless you share one. No ads. No data sales.",
+  "artifactContract": {
+    "field": "local_only_photo_note",
+    "deviceOnlyFilesExcluded": true,
+    "serverPhotoMetadataSeparated": true
+  },
+  "scenarios": [
+    {
+      "scenario": "export-disclosure-modern-390x844",
+      "route": "/you?section=privacy",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "exportButton": {
+        "x": 44,
+        "y": 232,
+        "width": 302,
+        "height": 56
+      },
+      "deleteButton": {
+        "x": 44,
+        "y": 364,
+        "width": 302,
+        "height": 56
+      },
+      "disclosure": {
+        "x": 44,
+        "y": 296,
+        "width": 302,
+        "height": 60
+      },
+      "footer": {
+        "x": 44,
+        "y": 432,
+        "width": 302,
+        "height": 40
+      },
+      "feedback": {
+        "x": 60,
+        "y": 444,
+        "width": 270,
+        "height": 60
+      },
+      "beforeOverflow": {
+        "innerWidth": 390,
+        "bodyScrollWidth": 390,
+        "documentScrollWidth": 390
+      },
+      "afterOverflow": {
+        "innerWidth": 390,
+        "bodyScrollWidth": 390,
+        "documentScrollWidth": 390
+      }
+    },
+    {
+      "scenario": "export-disclosure-floor-360x640",
+      "route": "/you?section=privacy",
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "exportButton": {
+        "x": 44,
+        "y": 58,
+        "width": 272,
+        "height": 56
+      },
+      "deleteButton": {
+        "x": 44,
+        "y": 210,
+        "width": 272,
+        "height": 56
+      },
+      "disclosure": {
+        "x": 44,
+        "y": 122,
+        "width": 272,
+        "height": 80
+      },
+      "footer": {
+        "x": 44,
+        "y": 278,
+        "width": 272,
+        "height": 60
+      },
+      "feedback": {
+        "x": 60,
+        "y": 290,
+        "width": 240,
+        "height": 60
+      },
+      "beforeOverflow": {
+        "innerWidth": 360,
+        "bodyScrollWidth": 360,
+        "documentScrollWidth": 360
+      },
+      "afterOverflow": {
+        "innerWidth": 360,
+        "bodyScrollWidth": 360,
+        "documentScrollWidth": 360
+      }
+    }
+  ],
+  "failedRouteCount": 0,
+  "dialogCount": 0,
+  "pageErrorCount": 0,
+  "unexpectedLogCount": 0,
+  "analyticsRequestCount": 0,
+  "dataExportRequestCount": 0,
+  "nativeEvidenceRemaining": [
+    "Live staging JSON artifact inspection",
+    "Native iOS and Android share-sheet lifecycle",
+    "Physical-device temporary export-file cleanup"
+  ]
+}

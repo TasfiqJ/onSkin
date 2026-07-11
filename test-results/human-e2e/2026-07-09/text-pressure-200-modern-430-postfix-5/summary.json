@@ -1,0 +1,310 @@
+{
+  "baseUrl": "http://localhost:8273",
+  "evidenceDir": "test-results/human-e2e/2026-07-09/text-pressure-200-modern-430-postfix-5",
+  "generatedAt": "2026-07-09T10:12:42.280Z",
+  "routeCount": 49,
+  "scale": 2,
+  "status": "pass",
+  "viewport": {
+    "height": 932,
+    "width": 430
+  },
+  "failedRouteCount": 0,
+  "failedRoutes": [],
+  "results": [
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/today",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/today?routine=PM",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress",
+      "scaledCount": 7
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/capture",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/progress/review",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/plan",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/ramp",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/tolerance",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/reorder",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/adaptation",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/settings",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/disruption",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/procedure",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/phased-intro",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/recovery",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/why-tonight",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations/preferences",
+      "scaledCount": 22
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/recommendations/stale-local-rec",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community",
+      "scaledCount": 26
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/note/missing-note-e2e",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/ask",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/community/people-like-you",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/consent",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stacks",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stack/barrier-basics",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/stack/missing-stack-e2e",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/commerce/transparency",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/subscription",
+      "scaledCount": 10
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/notifications",
+      "scaledCount": 15
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/timing",
+      "scaledCount": 19
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/settings/privacy",
+      "scaledCount": 70
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/trend/optin",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/trend/fairness",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/ask",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/ask/consent",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/search",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/no-match",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/scan",
+      "scaledCount": 8
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/ocr",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/manual",
+      "scaledCount": 10
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/archive",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/shelf/opened",
+      "scaledCount": 5
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/upsell?feature=full_routine",
+      "scaledCount": 9
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/paywall/success",
+      "scaledCount": 6
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/streak",
+      "scaledCount": 16
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/routine/widgets",
+      "scaledCount": 3
+    },
+    {
+      "disallowedLogCount": 0,
+      "issueCount": 0,
+      "route": "/cycle/week",
+      "scaledCount": 3
+    }
+  ]
+}

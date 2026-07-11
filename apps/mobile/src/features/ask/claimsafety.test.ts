@@ -41,8 +41,22 @@ const SKIN_SCORE = [
 ];
 const AI_MARKETING = [/\bai\b/i];
 const ALARM = [/\b(danger\w*|harmful|toxic|poison\w*)\b/i, /!/];
+const UNSUPPORTED_DEPLETION = [
+  /\brunning\s+low\b/i,
+  /\brunning\s+out\b/i,
+  /\bnearly\s+finished\b/i,
+  /\bopened\s+a\s+while\s+ago\b/i,
+];
 
-const ALWAYS = [DRUG_DISEASE, DISEASE_NOUN, SUPERIORITY, DOSAGE, SKIN_SCORE, ALARM];
+const ALWAYS = [
+  DRUG_DISEASE,
+  DISEASE_NOUN,
+  SUPERIORITY,
+  DOSAGE,
+  SKIN_SCORE,
+  ALARM,
+  UNSUPPORTED_DEPLETION,
+];
 
 // The Art. 50 / SB 243 disclosure strings legitimately name the AI. Exempt from the
 // AI-marketing term-scan ONLY (the Slice-24 NO_SCORE_COPY exemption pattern).

@@ -4,6 +4,7 @@ import { detectConflicts, isReassuring } from '@/features/intelligence/engine';
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import { STARTER_RULES } from '@/features/intelligence/rules';
 
+import { isEstimatedExpiry } from './expiry';
 import { formatShelfMetaLine, SHELF_META_SEPARATOR } from './metadata';
 import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';
 import type { ShelfProduct } from './store';
@@ -111,5 +112,43 @@ describe('shelf metadata formatting', () => {
     );
     expect(meta).not.toContain('opened Jul');
     expect(meta).not.toContain(' · ');
+  });
+
+  it('describes the winning PAO estimate when a later printed date does not win', () => {
+    const meta = formatShelfMetaLine(
+      shelfProduct({
+        category: 'spf',
+        expiryDate: '2027-01-01',
+        expirySource: 'pao_computed',
+        paoSource: 'category_default',
+      }),
+    );
+
+    expect(meta).toContain('est.\u00A06\u00A0mo');
+    expect(meta).not.toContain('printed\u00A0expiry');
+  });
+});
+
+describe('surfaced expiry estimate provenance', () => {
+  it('follows the winning expiry source when printed and PAO dates coexist', () => {
+    expect(
+      isEstimatedExpiry(
+        shelfProduct({
+          category: 'spf',
+          expiryDate: '2026-12-01',
+          expirySource: 'pao_computed',
+          paoSource: 'category_default',
+        }),
+      ),
+    ).toBe(true);
+    expect(
+      isEstimatedExpiry(
+        shelfProduct({
+          expiryDate: '2026-08-01',
+          expirySource: 'printed',
+          paoSource: 'category_default',
+        }),
+      ),
+    ).toBe(false);
   });
 });

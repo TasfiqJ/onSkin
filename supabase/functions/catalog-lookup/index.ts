@@ -4,6 +4,11 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
+import {
+  CATALOG_LOOKUP_PRODUCT_SELECT,
+  REVIEWED_CATALOG_FRESHNESS_FILTER,
+  externalCatalogProvenance,
+} from './catalogContract.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const publishableKey =
@@ -126,24 +131,21 @@ async function fetchOpenBeautyFacts(barcode: string) {
   if (!body) return null;
   if (body.status !== 1 || !body.product) return null;
   const product = body.product;
+  const snapshotDate =
+    typeof product.last_modified_t === 'number'
+      ? new Date(product.last_modified_t * 1000).toISOString().slice(0, 10)
+      : null;
   return {
     id: null,
     barcode,
     name: externalText(product.product_name, 180) ?? 'Unknown product',
     brand: externalText(product.brands, 180),
     category: null,
-    source: 'open_beauty_facts',
-    sourceRef: barcode,
-    sourceUrl: `https://world.openbeautyfacts.org/product/${barcode}`,
-    sourceSnapshotDate:
-      typeof product.last_modified_t === 'number'
-        ? new Date(product.last_modified_t * 1000).toISOString().slice(0, 10)
-        : null,
-    qualityGrade: 'unverified',
-    reviewStatus: 'unreviewed',
-    ingredientParseStatus: product.ingredients_text ? 'not_parsed' : 'failed',
-    ingredientParseConfidence: 0,
-    defaultPaoMonths: null,
+    ...externalCatalogProvenance(barcode, snapshotDate),
+    quality_grade: 'unverified',
+    review_status: 'unreviewed',
+    ingredient_parse_status: product.ingredients_text ? 'not_parsed' : 'failed',
+    ingredient_parse_confidence: 0,
     rawIngredientsText: externalText(product.ingredients_text, 4000),
     external: true,
   };
@@ -184,10 +186,9 @@ Deno.serve(async (req) => {
   if (barcodeRow?.product_id) {
     const { data: product, error: productError } = await admin
       .from('products')
-      .select(
-        'id, name, brand, category, default_pao_months, source, source_ref, source_url, source_snapshot_date, quality_grade, review_status, data_quality_score, ingredient_parse_status, ingredient_parse_confidence, catalog_sources:source_id(display_name, source_key, attribution_text, attribution_url)',
-      )
+      .select(CATALOG_LOOKUP_PRODUCT_SELECT)
       .eq('id', barcodeRow.product_id)
+      .eq(REVIEWED_CATALOG_FRESHNESS_FILTER.column, REVIEWED_CATALOG_FRESHNESS_FILTER.value)
       .maybeSingle();
     if (productError) return json({ error: 'lookup_failed' }, 500);
     if (product) {

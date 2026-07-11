@@ -76,6 +76,18 @@ Use this format for every significant product, architecture, pricing, privacy, o
 
 ## Architecture Decisions
 
+### 2026-07-11 - Make Shelf Freshness Provenance-Derived And Replenishment Opt-In
+
+- Decision: Normalize every Shelf lifecycle write through one freshness contract. A PAO clock exists only when `opened_at` is a valid, non-future local date; unopened units keep `opened_at=null`. `expirySource` follows the actual winning date candidate, with the earlier of printed expiry and opened date plus PAO controlling the surfaced state. PAO provenance becomes `label` only after the user explicitly confirms months printed beside the open-jar symbol. Ambiguous, unreviewed, stale, or region-mismatched catalog freshness evidence degrades to unknown instead of becoming a default. Re-add archives the prior package, creates a new UUID opened today, preserves product-level PAO provenance, and clears package-specific printed expiry. Replenishment uses only tracked PAO/printed-expiry state or an unsuperseded user-marked-finished unit; notification preferences default off and require explicit Settings opt-in.
+- Type: Architecture
+- Alternatives: infer an opened date from add time, treat category defaults as label evidence, preserve any stored `expirySource`, accept unreviewed catalog PAO/expiry rows, reuse a Shelf row on repurchase, infer depletion from elapsed time, or default replenishment notifications on.
+- Criteria: truthful provenance, deterministic calendar behavior, no fabricated scarcity, local/server consistency, reversible package history, reviewed catalog boundaries, privacy-respecting notification consent, and testable migration invariants.
+- Evidence: central freshness/store/PAO/catalog/replenishment tests; migrations `20260711000038_shelf_freshness_invariants.sql` and `20260711000039_replenishment_alert_opt_in.sql`; reviewed Edge response contracts; and supported-phone human evidence in `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`.
+- Risk: live migration/RLS, reviewed region-matched catalog data, notification delivery, native encrypted-storage relaunch, accessibility, and cosmetic-chemistry approval remain external release gates.
+- Status: Accepted
+- Owner: Product and engineering
+- Review date: 2026-08-11
+
 ### 2026-07-10 - Use One Canonical Product Schedule And Withhold Undefined Cadence
 
 - Decision: `scheduler/orchestrate` is the only product-night authority for real Plan, Today, cycle, and product-detail surfaces. AHA, BHA, and retinoids enter that cycle; benzoyl peroxide uses the current documented AM default; treatment/exfoliant role labels alone never create cadence. Hydroquinone, copper peptide, and any other classified active without an explicit reviewed placement stay out of AM/PM check-offs and are surfaced as timing not set. Plan groups every canonical product with all assigned night numbers, Today combines stable basics with exactly tonight's canonical active, and the compact strip shows the canonical seven-night projection rather than compressing the full cycle. Same-class ties use product ID so shelf ordering cannot change the schedule.

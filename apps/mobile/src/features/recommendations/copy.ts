@@ -1,5 +1,7 @@
 import type { GoalId, RecommendationTrigger } from '@onskin/types';
 
+import type { ReplenishmentReason } from './replenishment';
+
 /**
  * Centralised, claim-safe recommendation copy (docs/09 §6/§10, the Slice-11/20/21/22
  * guard pattern). Every user-facing string the engine surfaces lives here (or in a
@@ -33,6 +35,35 @@ const GOAL_CONCERN: Record<GoalId, string> = {
   barrier_repair: 'a stronger-feeling barrier',
 };
 export const goalConcern = (g: GoalId): string => GOAL_CONCERN[g];
+
+export function replacementCopy(
+  name: string,
+  reason: ReplenishmentReason,
+): { what: string; why: string; gap: string; evidence: string } {
+  switch (reason) {
+    case 'countdown':
+      return {
+        what: `Your ${name} is nearing its freshness date`,
+        why: `Your shelf shows ${name} is within 30 days of its tracked PAO or printed expiry date. You can repurchase it or consider a better-fit alternative.`,
+        gap: `${name} is within 30 days of its tracked freshness date`,
+        evidence: 'From your shelf. PAO or printed expiry',
+      };
+    case 'expired':
+      return {
+        what: `Your ${name} has reached its freshness date`,
+        why: `Your shelf shows ${name} has passed its tracked PAO or printed expiry date. You can repurchase it or consider a better-fit alternative.`,
+        gap: `${name} has passed its tracked freshness date`,
+        evidence: 'From your shelf. PAO or printed expiry',
+      };
+    case 'finished':
+      return {
+        what: `You marked ${name} as finished`,
+        why: `You marked ${name} as finished. You can repurchase it or consider a better-fit alternative.`,
+        gap: `${name} is marked finished`,
+        evidence: 'From your shelf. Marked finished',
+      };
+  }
+}
 
 /** Short goal tag for the profile/how line (e.g. "fine-lines goal"). */
 const GOAL_SHORT: Record<GoalId, string> = {
@@ -143,8 +174,6 @@ export const whyCopy = {
   gapMoisturiser:
     'Your routine has no moisturiser. It helps seal everything in and support your barrier.',
   gapCleanser: 'Your routine has no cleanser. A gentle, clean base is where every routine starts.',
-  replacement: (name: string): string =>
-    `Your ${name} is running low. When it’s done, there are two honest options. Repurchase, or a better-fit alternative.`,
   betterFit: (name: string): string =>
     `Your ${name} is fragranced, which can suit sensitive skin less well. A fragrance-free option is worth considering. Optional, not a must.`,
   conflict: (a: string, b: string): string =>

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 
+import { hasReplenishmentSignal } from '@/features/recommendations/replenishment';
 import { useProgress } from '@/features/routine/useProgress';
 import { useRamp } from '@/features/routine/useRamp';
 import { useShelf } from '@/features/shelf/useShelf';
@@ -24,9 +25,7 @@ export function BehaviouralTriggers() {
   const ramp = useRamp();
   const progress = useProgress();
 
-  const needsReplenish = (shelf.data?.items ?? []).some(
-    (i) => i.badge.kind === 'expired' || i.badge.kind === 'countdown',
-  );
+  const needsReplenish = hasReplenishmentSignal(shelf.data);
   const offerStepUp = ramp.items.some((r) => r.offerStepUp);
   const lapsed = progress.data?.lapsed ?? false;
 

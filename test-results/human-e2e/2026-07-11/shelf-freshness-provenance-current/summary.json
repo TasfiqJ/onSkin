@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "status": "pass",
+  "failedRouteCount": 0,
+  "localTestDate": "2026-07-11",
+  "surface": "Expo web development build in the Codex in-app browser",
+  "viewports": [
+    "360 x 640",
+    "390 x 844"
+  ],
+  "verified": [
+    "Onboarding freshness capture carries a manual product draft across the root and Shelf stacks and returns the saved product to onboarding",
+    "unopened units keep openedAt null and show no active PAO clock",
+    "impossible and future dates are rejected with disabled save actions",
+    "explicit open-jar label confirmation is required before PAO provenance becomes label",
+    "winning expiry source changes from opened date + PAO to printed date only when the printed date is earlier",
+    "reload preserves the exact opened date, PAO provenance, printed date, and expiry source",
+    "replacement creates a new UUID without inheriting printed expiry while the archived unit retains package history",
+    "replenishment alerts remain off until explicit Settings opt-in and copy uses tracked freshness or finished history instead of depletion inference",
+    "360 x 640 and 390 x 844 have zero horizontal overflow, no visible sub-44 controls, no dialogs, and no unexpected browser errors"
+  ],
+  "bugsFixed": [
+    "onboarding product intake crashed because IntakeProvider existed only inside the Shelf stack",
+    "the floating Shelf scan action covered product content at the supported 360 x 640 floor"
+  ],
+  "externalGates": [
+    "apply migrations 20260711000038 and 20260711000039 in configured staging and prove owner plus second-user RLS isolation",
+    "prove reviewed and region-matched product_pao_expiry responses plus explicit notification opt-in on configured services",
+    "run supported physical iOS and Android relaunch, accessibility, safe-area, keyboard, and notification-delivery QA",
+    "obtain named cosmetic-chemistry review of PAO and printed-expiry presentation before production release"
+  ]
+}

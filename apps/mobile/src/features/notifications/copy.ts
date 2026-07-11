@@ -40,8 +40,8 @@ export const REMINDER_COPY: Record<NotificationKind, ReminderCopy> = {
     discreet: 'A gentle check-in is ready.',
   },
   replenishment: {
-    title: 'A product’s running low',
-    body: 'One of your products is nearly finished. Worth a look when you have a moment.',
+    title: 'A shelf update is ready',
+    body: 'A tracked freshness date or finished product may be worth a look when you have a moment.',
     discreet: 'A shelf update is ready.',
   },
   rampup: {

@@ -16,7 +16,22 @@ quality logic, OBF fixture import/QA tooling, catalog lookup/search/report Edge
 Functions, and mobile source/quality disclosure. This is not source/legal
 clearance and not a real launch catalog.
 
-Fresh verification through 2026-07-10:
+Fresh verification through 2026-07-11:
+
+- The required `Shelf freshness and replacement provenance lifecycle` gate now
+  proves onboarding freshness capture, exact real-date validation, unopened
+  `opened_at=null`, explicit open-jar PAO confirmation, winning expiry-source
+  precedence, reload persistence, and replacement history with a new UUID and
+  no inherited package expiry. Replenishment signals use only tracked freshness
+  or unsuperseded finished history, and alerts remain off until explicit
+  Settings opt-in. Supported-phone evidence at 360 x 640 and 390 x 844 includes
+  two fixed E2E defects, zero horizontal overflow, no sub-44 visible controls,
+  no dialogs, and no unexpected browser errors. Evidence:
+  `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`.
+  The current baseline is 196 mobile test files / 2094 tests. Staging deployment
+  of both migrations, owner/second-user RLS, reviewed region-matched catalog
+  responses, native notification delivery, physical-device relaunch and
+  accessibility, and named cosmetic-chemistry review remain external gates.
 
 - The required `Canonical multi-active Plan and Today consistency` gate now
   proves one product-level scheduler drives Plan, Today, cycle, and product
@@ -351,7 +366,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 192 mobile test files / 2048 tests.
+- `npm test` passed: 196 mobile test files / 2094 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -382,7 +397,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 192 test files / 2048 tests.
+- `npm --workspace apps/mobile run test` passed: 196 test files / 2094 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain

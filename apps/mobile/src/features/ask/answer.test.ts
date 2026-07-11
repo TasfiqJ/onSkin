@@ -91,7 +91,7 @@ describe('pickFitRec keeps raw product-name DATA (a "7%") out of the scanned cla
     const picked = pickFitRec([
       {
         trigger: 'replacement',
-        what: 'Your Glycolic 7% Toner is running low',
+        what: 'Your Glycolic 7% Toner reached its freshness date',
         example: null,
         evidenceLabel: null,
       },
@@ -110,7 +110,7 @@ describe('pickFitRec keeps raw product-name DATA (a "7%") out of the scanned cla
       pickFitRec([
         {
           trigger: 'replacement',
-          what: 'Your X is running low',
+          what: 'Your X reached its freshness date',
           example: null,
           evidenceLabel: null,
         },

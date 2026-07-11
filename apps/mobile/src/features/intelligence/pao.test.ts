@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { computeExpiry, expiryBadge, PAO_DEFAULTS_REVIEWED, resolvePaoMonths } from './pao';
+import {
+  computeExpiry,
+  computeExpiryWithSource,
+  expiryBadge,
+  PAO_DEFAULTS_REVIEWED,
+  resolvePaoMonths,
+} from './pao';
 
 describe('PAO resolution (docs/02 §6)', () => {
   it('prefers explicit pao, then catalog default, then category default, then null', () => {
@@ -24,6 +30,31 @@ describe('expiry computation (sooner of expiry vs opened+PAO)', () => {
   it('returns null when unknowable', () => {
     expect(computeExpiry({ openedAt: '2026-01-15' })).toBeNull();
     expect(computeExpiry({})).toBeNull();
+  });
+  it('clamps calendar month ends like PostgreSQL intervals', () => {
+    expect(computeExpiry({ openedAt: '2026-01-31', paoMonths: 1 })).toBe('2026-02-28');
+    expect(computeExpiry({ openedAt: '2024-01-31', paoMonths: 1 })).toBe('2024-02-29');
+    expect(computeExpiry({ openedAt: '2026-08-31', paoMonths: 1 })).toBe('2026-09-30');
+  });
+  it('reports the source of the winning candidate and gives printed dates equal-date priority', () => {
+    expect(
+      computeExpiryWithSource({
+        openedAt: '2026-01-31',
+        paoMonths: 3,
+        expiryDate: '2026-06-01',
+      }),
+    ).toEqual({ date: '2026-04-30', source: 'pao_computed' });
+    expect(
+      computeExpiryWithSource({
+        openedAt: '2026-01-31',
+        paoMonths: 3,
+        expiryDate: '2026-04-30',
+      }),
+    ).toEqual({ date: '2026-04-30', source: 'printed' });
+  });
+  it('rejects invalid calendar inputs instead of overflowing them', () => {
+    expect(computeExpiry({ openedAt: '2026-02-30', paoMonths: 1 })).toBeNull();
+    expect(computeExpiry({ expiryDate: '2026-13-01' })).toBeNull();
   });
 });
 

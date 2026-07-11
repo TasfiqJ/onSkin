@@ -4,6 +4,8 @@ import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@onskin/t
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
+import { normalizeShelfFreshness, validLocalDate } from './freshness';
+
 // Local-first shelf store (docs/04 §8: the shelf must work in a bathroom with no
 // signal. View, manual-add, and queued lookups all offline). AsyncStorage is the
 // source of truth for v1 (single-user, last-write-wins is safe, DECISIONS D-029);
@@ -12,8 +14,6 @@ import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage
 const KEY = 'onskin.shelf.v1';
 
 const PRODUCT_STATUSES = new Set<ProductStatus>(['active', 'finished', 'discarded']);
-const PAO_SOURCES = new Set<PaoSource>(['label', 'catalog', 'category_default', 'unknown']);
-const EXPIRY_SOURCES = new Set<ExpirySource>(['printed', 'pao_computed', 'estimated', 'unknown']);
 const ADDED_VIA = new Set<AddedVia>(['barcode', 'search', 'ocr', 'manual', 'onboarding']);
 const CATALOG_QUALITY_GRADES = new Set<CatalogQualityGrade | 'manual'>([
   'verified',
@@ -113,8 +113,7 @@ function stringArray(value: unknown): string[] {
 }
 
 function localDateOrNull(value: unknown): string | null {
-  const text = nonEmptyString(value);
-  return text && /^\d{4}-\d{2}-\d{2}$/.test(text) ? text : null;
+  return validLocalDate(value);
 }
 
 function isoStringOrFallback(value: unknown, fallback: string): string {
@@ -125,10 +124,6 @@ function isoStringOrFallback(value: unknown, fallback: string): string {
 function isoStringOrNull(value: unknown): string | null {
   const text = nonEmptyString(value);
   return text && !Number.isNaN(Date.parse(text)) ? text : null;
-}
-
-function positiveIntegerOrNull(value: unknown): number | null {
-  return typeof value === 'number' && Number.isInteger(value) && value > 0 ? value : null;
 }
 
 function zeroToOneOrNull(value: unknown): number | null {
@@ -167,7 +162,7 @@ function normalizeShelfProduct(value: unknown, fallbackISO: string): ShelfProduc
     catalogQualityOrNull(value.catalogMatchQuality) ?? (addedVia === 'manual' ? 'manual' : null);
   const status = enumValue(value.status, PRODUCT_STATUSES, 'active');
   const createdAt = isoStringOrFallback(value.createdAt, fallbackISO);
-  const isOpened = typeof value.isOpened === 'boolean' ? value.isOpened : true;
+  const freshness = normalizeShelfFreshness(value, fallbackISO.slice(0, 10));
 
   return {
     id,
@@ -189,16 +184,16 @@ function normalizeShelfProduct(value: unknown, fallbackISO: string): ShelfProduc
     parserVersion: stringOrNull(value.parserVersion),
     sourceDisclosureAckAt: isoStringOrNull(value.sourceDisclosureAckAt),
     ingredients: stringArray(value.ingredients),
-    openedAt: isOpened ? localDateOrNull(value.openedAt) : null,
-    isOpened,
-    paoMonths: positiveIntegerOrNull(value.paoMonths),
-    paoSource: enumValue(value.paoSource, PAO_SOURCES, 'unknown'),
-    expiryDate: localDateOrNull(value.expiryDate),
-    expirySource: enumValue(value.expirySource, EXPIRY_SOURCES, 'unknown'),
+    ...freshness,
     status,
     finishedAt: status === 'active' ? null : localDateOrNull(value.finishedAt),
     addedVia,
-    repurchaseCount: positiveIntegerOrNull(value.repurchaseCount) ?? 1,
+    repurchaseCount:
+      typeof value.repurchaseCount === 'number' &&
+      Number.isInteger(value.repurchaseCount) &&
+      value.repurchaseCount > 0
+        ? value.repurchaseCount
+        : 1,
     thumbnailPath: stringOrNull(value.thumbnailPath),
     createdAt,
     updatedAt: isoStringOrFallback(value.updatedAt, createdAt),
@@ -264,6 +259,7 @@ function normalizeProductForWrite(
 export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
   const items = await loadShelf();
   const ts = nowISO();
+  const freshness = normalizeShelfFreshness(input, ts.slice(0, 10));
   const product: ShelfProduct = {
     id: randomUUID(),
     name: input.name,
@@ -285,12 +281,7 @@ export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> 
     parserVersion: input.parserVersion ?? null,
     sourceDisclosureAckAt: input.sourceDisclosureAckAt ?? null,
     ingredients: input.ingredients ?? [],
-    openedAt: input.openedAt ?? null,
-    isOpened: input.isOpened ?? true,
-    paoMonths: input.paoMonths ?? null,
-    paoSource: input.paoSource ?? 'unknown',
-    expiryDate: input.expiryDate ?? null,
-    expirySource: input.expirySource ?? 'unknown',
+    ...freshness,
     status: 'active',
     finishedAt: null,
     addedVia: input.addedVia,
@@ -346,17 +337,28 @@ export async function reAddProduct(id: string): Promise<ShelfProduct | null> {
   const prev = items.find((p) => p.id === id);
   if (!prev) return null;
   const ts = nowISO();
-  const archived: ShelfProduct = {
-    ...prev,
-    status: 'finished',
-    finishedAt: ts.slice(0, 10),
-    updatedAt: ts,
-  };
+  const archived: ShelfProduct =
+    prev.status === 'active'
+      ? {
+          ...prev,
+          status: 'finished',
+          finishedAt: ts.slice(0, 10),
+          updatedAt: ts,
+        }
+      : { ...prev, updatedAt: ts };
+  const freshness = normalizeShelfFreshness(
+    {
+      ...prev,
+      openedAt: ts.slice(0, 10),
+      isOpened: true,
+      expiryDate: null,
+    },
+    ts.slice(0, 10),
+  );
   const fresh: ShelfProduct = {
     ...prev,
     id: randomUUID(),
-    openedAt: ts.slice(0, 10),
-    isOpened: true,
+    ...freshness,
     status: 'active',
     finishedAt: null,
     repurchaseCount: prev.repurchaseCount + 1,

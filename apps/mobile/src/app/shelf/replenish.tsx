@@ -29,7 +29,7 @@ export default function ReplenishScreen() {
     feedback: CommerceLinkFeedback;
   } | null>(null);
 
-  const item = data?.items.find((i) => i.id === id);
+  const item = [...(data?.items ?? []), ...(data?.archive ?? [])].find((i) => i.id === id);
 
   // Surface the nudge once (analytics). The in-app prompt, not a notification (§6).
   useEffect(() => {

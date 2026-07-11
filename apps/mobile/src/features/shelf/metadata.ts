@@ -1,4 +1,4 @@
-import { categoryLabel, usesPrintedExpiry } from './categories';
+import { categoryLabel } from './categories';
 import type { ShelfProduct } from './store';
 
 export const SHELF_META_SEPARATOR = '\u00A0\u00B7 ';
@@ -23,7 +23,7 @@ export function formatShelfMetaLine(p: ShelfProduct): string {
   if (!p.isOpened) parts.push('unopened');
   else if (p.openedAt) parts.push(keepTogether(`opened ${monthLabel(p.openedAt)}`));
   else parts.push(keepTogether('no date set'));
-  if (usesPrintedExpiry(p.category) && p.expiryDate) {
+  if (p.expirySource === 'printed' && p.expiryDate) {
     parts.push(keepTogether('printed expiry'));
   } else if (p.paoMonths != null) {
     const fromLabel = p.paoSource === 'label' || p.paoSource === 'catalog';

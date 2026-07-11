@@ -1,0 +1,14 @@
+{
+  "viewport": {
+    "requested": "390 x 844",
+    "clientWidth": 390,
+    "clientHeight": 845,
+    "scrollWidth": 390
+  },
+  "visibleInteractiveCount": 11,
+  "minimumVisibleWidth": 47.99,
+  "minimumVisibleHeight": 47.99,
+  "visibleControlsUnder44": 0,
+  "horizontalOverflow": 0,
+  "result": "pass"
+}

@@ -96,7 +96,9 @@ describe('Shelf route mobile contracts', () => {
 
       expect(source, `${route} should opt into capped-sheet scrolling`).toContain('scroll');
       expect(source, `${route} should declare a Shelf fallback`).toContain(
-        'fallbackRoute={APP_SHELF_ROUTE}',
+        route === 'shelf/opened.tsx'
+          ? 'fallbackRoute={fallbackRoute}'
+          : 'fallbackRoute={APP_SHELF_ROUTE}',
       );
     }
   });
@@ -112,7 +114,9 @@ describe('Shelf route mobile contracts', () => {
         'accessibilityLabel="Close"',
       );
       expect(source, `${route} should return direct entries to Shelf`).toContain(
-        'backOrReplace(router, APP_SHELF_ROUTE)',
+        route === 'shelf/opened.tsx'
+          ? 'backOrReplace(router, fallbackRoute)'
+          : 'backOrReplace(router, APP_SHELF_ROUTE)',
       );
     }
 
@@ -271,17 +275,16 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 
     expect(source).toContain('useWindowDimensions');
-    expect(source).toContain('const compactShelf = height < 640');
-    expect(source).toContain('<ScanShelfButton floating={false} source="scan_inline" />');
-    expect(source).toContain('!isEmpty && !showLoading && !compactShelf');
-    expect(source).toContain('<ScanShelfButton floating source="scan_fab" />');
-    expect(source).not.toContain('!isEmpty && !showLoading ? (');
+    expect(source).toContain('const compactShelf = height < 640;');
+    expect(source).toContain('<ScanShelfButton source="scan_inline" />');
+    expect(source).not.toContain('source="scan_fab"');
+    expect(source).not.toContain('className="absolute inset-x-0 bottom-4 items-center"');
   });
 
   it('keeps the compact no-archive empty Shelf usable in the first viewport', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 
-    expect(source).toContain('const compactShelf = height < 640');
+    expect(source).toContain('const compactShelf = height < 640;');
     expect(source).toContain('const shortShelf = height < 520');
     expect(source).toContain('const splitShortShelf = height < 410;');
     expect(source).toContain('const compactFilterLabels = compactShelf;');
@@ -316,7 +319,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("router.push('/shelf/manual');");
     expect(source).toContain("? 'h-[48px] items-center justify-center'");
     expect(source).toContain(": 'h-[50px] items-center justify-center'");
-    expect(source).toContain('!isEmpty && !showLoading && !compactShelf');
+    expect(source).toContain('<ScanShelfButton source="scan_inline" />');
     expect(source).not.toContain('!isEmpty && !showLoading ? (');
   });
 
@@ -725,10 +728,16 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('if (!hasProductDraft || !productName || !canSave || saving) return;');
     expect(source).toContain('name: productName');
     expect(source).not.toContain("name: draft.name || 'Product'");
-    expect(source).toContain('<Sheet fallbackRoute={APP_SHELF_ROUTE} backdropAccessible={false}>');
+    expect(source).toContain('<Sheet fallbackRoute={fallbackRoute} backdropAccessible={false}>');
     expect(source).toContain(
-      '<Sheet fallbackRoute={APP_SHELF_ROUTE} scroll backdropAccessible={false}>',
+      '<Sheet fallbackRoute={fallbackRoute} scroll backdropAccessible={false}>',
     );
+    expect(source).toContain('APP_ONBOARDING_PRODUCTS_ROUTE');
+    expect(source).toContain('LocalDateField');
+    expect(source).toContain('label="Exact opened date"');
+    expect(source).toContain('confirmedFromLabel: true');
+    expect(source).toContain('Choose the months printed beside the open-jar symbol.');
+    expect(source).toContain('Not on label');
     expect(source).toContain('className="mb-3 flex-row items-start justify-between"');
     expect(source).toContain('className="text-[28px] leading-[31px]"');
     expect(source).toContain(
@@ -742,7 +751,7 @@ describe('Shelf route mobile contracts', () => {
     );
     expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-3.5 py-2'");
     expect(source).toContain("'min-h-[48px] items-center justify-center rounded-pill px-4 py-2'");
-    expect(source).not.toContain('<Sheet fallbackRoute={APP_SHELF_ROUTE} scroll>');
+    expect(source).not.toContain('<Sheet fallbackRoute={fallbackRoute} scroll>');
     expect(source).not.toContain(
       "'min-h-[44px] items-center justify-center rounded-pill px-3.5 py-2'",
     );
@@ -813,6 +822,14 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain('import { Alert');
+  });
+
+  it('allows an unsuperseded finished unit to reach the replacement action', () => {
+    const source = readAppRoute('shelf/replenish.tsx');
+
+    expect(source).toContain('...(data?.archive ?? [])');
+    expect(source).toContain('await m.replace(item.id)');
+    expect(source).not.toMatch(/running low|running out|nearly finished/i);
   });
 
   it('does not describe unresolved product-detail conflicts as already paired', () => {

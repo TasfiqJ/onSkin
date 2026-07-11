@@ -4,6 +4,43 @@ Date: 2026-07-11
 
 Purpose: track work Codex must not guess or fake. These items require a founder decision, account owner, credential, payment method, counsel/reviewer signoff, physical device, or real beta users. Codex can keep building around them, but launch readiness cannot close until evidence is attached.
 
+## P0 - Shelf Freshness Provenance Release Evidence
+
+Status: launch-blocked
+
+- Apply `20260711000038_shelf_freshness_invariants.sql` and
+  `20260711000039_replenishment_alert_opt_in.sql` through the reviewed staging
+  migration path. Preserve before/after row counts and prove the freshness
+  backfill, constraints, unopened `opened_at=null`, PAO/source coherence,
+  winning `expiry_source`, and replenishment-alert default-off behavior.
+- With an owner and a second authenticated user, prove RLS prevents cross-user
+  reads or mutation of Shelf lifecycle/history and notification preferences.
+  Archive redacted SQL, JWT/user identifiers, migration IDs, and named signoff.
+- Deploy the current catalog lookup/search functions and seed reviewed test
+  records. Prove `product_pao_expiry` evidence is returned only when reviewed,
+  current, and region-matched; prove ambiguous, conflicting, unreviewed, stale,
+  or region-mismatched evidence reaches the client as unknown and never as
+  label proof. Retain response samples with source IDs and review dates.
+- On supported iOS and Android builds, prove a fresh and legacy-upgraded account
+  receives no replenishment notification before explicit Settings opt-in. Then
+  opt in, verify a tracked PAO/printed-expiry or user-finished trigger delivers
+  the claim-safe notification and deep link, opt out, and verify pending/future
+  replenishment delivery is cancelled without changing routine reminders.
+- On the oldest-supported iPhone and Android 10/API 29-class device, exercise
+  exact date keyboard entry, impossible/future dates, unopened state, label PAO,
+  printed expiry precedence, force-stop/relaunch, re-add/archive, offline mode,
+  safe areas, Dynamic Type, VoiceOver, and TalkBack. Attach build IDs, device/OS,
+  video/screenshots, redacted storage/network logs, and named tester signoff.
+- Obtain named cosmetic-chemistry review of PAO defaults, open-jar interpretation,
+  printed-expiry precedence, month-end calendar behavior, catalog evidence
+  requirements, replacement copy, and unknown-state presentation. Bind approval
+  or required changes to the exact source hashes through the Phase 3 signoff flow.
+
+Local evidence in
+`test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/` and
+196 mobile test files / 2094 tests do not clear these live-service, reviewer, or
+physical-device gates.
+
 ## P0 - Brand And Identity
 
 Status: launch-blocked

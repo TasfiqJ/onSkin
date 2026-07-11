@@ -12,6 +12,7 @@ import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage
  * supersedes the Slice-20 local photo-reminder flag (now `captureReminders`).
  */
 const KEY = 'onskin.notifPrefs.v1';
+const REPLENISHMENT_OPT_IN_MARKER = 'replenishmentAlertsOptInConfirmed';
 const HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;
 const TIMEZONE_TEXT = /^[A-Za-z0-9_+\-/.]+$/;
 
@@ -37,7 +38,7 @@ export const DEFAULT_PREFS: NotifPrefs = {
   amTime: '07:30',
   pmTime: '21:30',
   streakNudges: true,
-  replenishmentAlerts: true,
+  replenishmentAlerts: false,
   captureReminders: false,
   quietStart: '22:00',
   quietEnd: '07:00',
@@ -92,16 +93,17 @@ export function normalizeNotifPatch(patch: Partial<NotifPrefs>): Partial<NotifPr
   return patch.lockscreenDiscreet === false ? { ...patch, lockscreenDiscreet: true } : patch;
 }
 
-export function normalizeNotifPrefs(prefs: Partial<NotifPrefs> = {}): NotifPrefs {
+export function normalizeNotifPrefs(prefs: unknown = {}): NotifPrefs {
   const source = isRecord(prefs) ? prefs : {};
   const timezone = currentDeviceTimezone();
+  const replenishmentOptInConfirmed = source[REPLENISHMENT_OPT_IN_MARKER] === true;
   return {
     amEnabled: booleanOr(source.amEnabled, DEFAULT_PREFS.amEnabled),
     pmEnabled: booleanOr(source.pmEnabled, DEFAULT_PREFS.pmEnabled),
     amTime: timeOr(source.amTime, DEFAULT_PREFS.amTime),
     pmTime: timeOr(source.pmTime, DEFAULT_PREFS.pmTime),
     streakNudges: booleanOr(source.streakNudges, DEFAULT_PREFS.streakNudges),
-    replenishmentAlerts: booleanOr(source.replenishmentAlerts, DEFAULT_PREFS.replenishmentAlerts),
+    replenishmentAlerts: replenishmentOptInConfirmed && source.replenishmentAlerts === true,
     captureReminders: booleanOr(source.captureReminders, DEFAULT_PREFS.captureReminders),
     quietStart: optionalTimeOr(source, 'quietStart', DEFAULT_PREFS.quietStart),
     quietEnd: optionalTimeOr(source, 'quietEnd', DEFAULT_PREFS.quietEnd),
@@ -109,6 +111,13 @@ export function normalizeNotifPrefs(prefs: Partial<NotifPrefs> = {}): NotifPrefs
     liveActivityEnabled: booleanOr(source.liveActivityEnabled, DEFAULT_PREFS.liveActivityEnabled),
     promotionalOptIn: booleanOr(source.promotionalOptIn, DEFAULT_PREFS.promotionalOptIn),
     lockscreenDiscreet: true,
+  };
+}
+
+function prefsForStorage(prefs: NotifPrefs): Record<string, unknown> {
+  return {
+    ...prefs,
+    [REPLENISHMENT_OPT_IN_MARKER]: prefs.replenishmentAlerts,
   };
 }
 
@@ -127,8 +136,9 @@ export async function loadNotifPrefs(): Promise<NotifPrefs> {
       return DEFAULT_PREFS;
     }
     const normalized = normalizeNotifPrefs(parsed);
-    if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
-      await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
+    const stored = prefsForStorage(normalized);
+    if (JSON.stringify(parsed) !== JSON.stringify(stored)) {
+      await setPrivateItem(KEY, JSON.stringify(stored)).catch(() => undefined);
     }
     return normalized;
   } catch {
@@ -168,8 +178,18 @@ async function mirror(p: NotifPrefs): Promise<void> {
 }
 
 export async function saveNotifPrefs(patch: Partial<NotifPrefs>): Promise<NotifPrefs> {
-  const next = normalizeNotifPrefs({ ...(await loadNotifPrefs()), ...normalizeNotifPatch(patch) });
-  await setPrivateItem(KEY, JSON.stringify(next));
+  const current = await loadNotifPrefs();
+  const normalizedPatch = normalizeNotifPatch(patch);
+  const replenishmentOptInConfirmed =
+    'replenishmentAlerts' in normalizedPatch
+      ? normalizedPatch.replenishmentAlerts === true
+      : current.replenishmentAlerts;
+  const next = normalizeNotifPrefs({
+    ...current,
+    ...normalizedPatch,
+    [REPLENISHMENT_OPT_IN_MARKER]: replenishmentOptInConfirmed,
+  });
+  await setPrivateItem(KEY, JSON.stringify(prefsForStorage(next)));
   void mirror(next);
   return next;
 }

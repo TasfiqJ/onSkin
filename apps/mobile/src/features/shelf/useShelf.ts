@@ -22,12 +22,8 @@ import { tagsForIngredientList } from '@/features/intelligence/tags';
 import { readProfileBits } from '@/features/scheduler/profile';
 import { localDateString } from '@/features/today/useToday';
 
-import {
-  functionalTagsForCategory,
-  isSafetyCriticalCategory,
-  usesPrintedExpiry,
-} from './categories';
-import { surfacedExpiry } from './expiry';
+import { functionalTagsForCategory, isSafetyCriticalCategory } from './categories';
+import { isEstimatedExpiry, surfacedExpiry } from './expiry';
 import { formatShelfMetaLine } from './metadata';
 import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';
 import { loadShelf, type ShelfProduct } from './store';
@@ -68,12 +64,6 @@ export type ShelfData = {
  *  default, not a label/catalog value or a printed expiry). Drives the honest
  *  two-line "est.\n{Mon}" badge (design frame 03, Vitamin C). Mirrors the "est."
  *  branch of formatShelfMetaLine so the badge and the meta line never disagree. */
-function isEstimatedExpiry(p: ShelfProduct): boolean {
-  if (!p.isOpened || p.paoMonths == null) return false;
-  if (usesPrintedExpiry(p.category) && p.expiryDate) return false; // printed wins
-  return p.paoSource !== 'label' && p.paoSource !== 'catalog';
-}
-
 /** Apply a just-persisted choice to the shared Shelf cache without a second
  * private read. This prevents a transient post-write read failure from
  * resurrecting the advisory the user just resolved. */

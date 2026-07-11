@@ -702,6 +702,10 @@ async function addProduct(client, product, evidenceName) {
   await waitForText(client, 'Product category');
   await clickByText(client, product.category);
   await clickByText(client, 'Add to shelf');
+  await waitForText(client, 'When did you open it?');
+  await clickByText(client, 'Just opened it');
+  await scrollTextIntoView(client, 'Add to shelf');
+  await clickByText(client, 'Add to shelf');
   await waitForText(client, product.name);
   return await captureStep(client, evidenceName);
 }

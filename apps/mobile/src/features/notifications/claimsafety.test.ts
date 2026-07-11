@@ -41,6 +41,12 @@ const DRUG_CLAIMS = [
   /\bclinically\s+proven\b/i,
 ];
 const ALARM = [/\bdanger\w*/i, /\bharmful\b/i, /\bwarning\b/i, /!{1}/]; // any exclamation mark
+const UNSUPPORTED_DEPLETION = [
+  /\brunning\s+low\b/i,
+  /\brunning\s+out\b/i,
+  /\bnearly\s+finished\b/i,
+  /\bopened\s+a\s+while\s+ago\b/i,
+];
 
 function collect(v: unknown, out: string[] = []): string[] {
   if (typeof v === 'string') out.push(v);
@@ -72,6 +78,7 @@ describe('engagement copy is calm + claim-safe (docs/07 §2/§3.3)', () => {
       expect(offenders(text, URGENCY)).toEqual([]);
       expect(offenders(text, DRUG_CLAIMS)).toEqual([]);
       expect(offenders(text, ALARM)).toEqual([]);
+      expect(offenders(text, UNSUPPORTED_DEPLETION)).toEqual([]);
     });
   }
 });

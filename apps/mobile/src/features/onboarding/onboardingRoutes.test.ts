@@ -124,9 +124,8 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('placeholder="e.g. Retinol serum"');
     expect(products).not.toContain('placeholder="e.g. Retinol 0.3% Night Serum"');
     expect(products).toContain('const scrollRef = useRef<ScrollView>(null)');
-    expect(products).toContain('scrollRef.current?.scrollToEnd({ animated: true })');
-    expect(products).toContain('setTimeout(scroll, 120)');
-    expect(products).toContain('if (compactPhone) scrollToShelfList()');
+    expect(products).not.toContain('scrollRef.current?.scrollToEnd({ animated: true })');
+    expect(products).not.toContain('scrollToShelfList');
     expect(products).toContain('scrollRef.current?.scrollTo({ y: 0, animated: true })');
     expect(products).toContain('inputRef.current?.focus()');
     expect(goals).toContain("splitShortPhone ? 'mt-3' : compactPhone ? 'mt-5' : 'mt-8'");
@@ -261,6 +260,25 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('function footerAction()');
     expect(products).toContain('focusNextProduct();');
     expect(products).toContain('label={continueAnywayLabel}');
+  });
+
+  it('routes every onboarding product through explicit freshness capture', () => {
+    const root = readAppRoute('_layout.tsx');
+    const products = readAppRoute('onboarding/products.tsx');
+    const opened = readAppRoute('shelf/opened.tsx');
+    const shelfLayout = readAppRoute('shelf/_layout.tsx');
+
+    expect(root).toContain("import { IntakeProvider } from '@/features/shelf/IntakeContext';");
+    expect(root).toContain('<IntakeProvider>');
+    expect(shelfLayout).not.toContain('<IntakeProvider>');
+    expect(products).toContain('const { reset: resetIntake } = useIntake();');
+    expect(products).toContain('resetIntake({');
+    expect(products).toContain("addedVia: 'onboarding'");
+    expect(products).toContain("pathname: '/shelf/opened'");
+    expect(products).toContain("params: { origin: 'onboarding' }");
+    expect(products).not.toContain('await m.add({');
+    expect(opened).toContain('APP_ONBOARDING_PRODUCTS_ROUTE');
+    expect(opened).toContain('router.replace(fallbackRoute)');
   });
 
   it('shows the shelf-derived first insight on reveal before reminder setup', () => {

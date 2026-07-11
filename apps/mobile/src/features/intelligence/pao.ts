@@ -56,9 +56,56 @@ export function reviewedCategoryPao(category: string | null | undefined): number
   return resolvePaoMonths({ category });
 }
 
-function parseLocal(iso: string): Date {
-  const [y, m, d] = iso.split('-').map(Number);
-  return new Date(y!, (m ?? 1) - 1, d ?? 1);
+function parseLocal(iso: string): Date | null {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const date = new Date(year, month - 1, day);
+  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day
+    ? date
+    : null;
+}
+
+function formatLocal(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function addCalendarMonths(iso: string, months: number): string | null {
+  const date = parseLocal(iso);
+  if (!date || !Number.isInteger(months) || months <= 0) return null;
+  const absoluteMonth = date.getFullYear() * 12 + date.getMonth() + months;
+  const year = Math.floor(absoluteMonth / 12);
+  const month = absoluteMonth - year * 12;
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  return formatLocal(new Date(year, month, Math.min(date.getDate(), lastDay)));
+}
+
+export type ComputedExpiry = {
+  date: string | null;
+  source: 'printed' | 'pao_computed' | 'unknown';
+};
+
+export function computeExpiryWithSource(opts: {
+  openedAt?: string | null;
+  paoMonths?: number | null;
+  expiryDate?: string | null;
+}): ComputedExpiry {
+  const printedDate = opts.expiryDate && parseLocal(opts.expiryDate) ? opts.expiryDate : null;
+  const paoDate =
+    opts.openedAt && opts.paoMonths != null
+      ? addCalendarMonths(opts.openedAt, opts.paoMonths)
+      : null;
+
+  if (printedDate && (!paoDate || printedDate <= paoDate)) {
+    return { date: printedDate, source: 'printed' };
+  }
+  if (paoDate) return { date: paoDate, source: 'pao_computed' };
+  return { date: null, source: 'unknown' };
 }
 
 /** Whichever is sooner of an explicit expiry and the PAO-derived date (§6, mirrors
@@ -68,19 +115,7 @@ export function computeExpiry(opts: {
   paoMonths?: number | null;
   expiryDate?: string | null;
 }): string | null {
-  const candidates: Date[] = [];
-  if (opts.expiryDate) candidates.push(parseLocal(opts.expiryDate));
-  if (opts.openedAt && opts.paoMonths != null) {
-    const d = parseLocal(opts.openedAt);
-    d.setMonth(d.getMonth() + opts.paoMonths);
-    candidates.push(d);
-  }
-  if (candidates.length === 0) return null;
-  const soonest = candidates.reduce((a, b) => (a < b ? a : b));
-  const y = soonest.getFullYear();
-  const mm = String(soonest.getMonth() + 1).padStart(2, '0');
-  const dd = String(soonest.getDate()).padStart(2, '0');
-  return `${y}-${mm}-${dd}`;
+  return computeExpiryWithSource(opts).date;
 }
 
 /** The badge states (docs/04 §5.3). `safety` carries the firmer eye/SPF
@@ -128,9 +163,10 @@ export function expiryBadge(
     estimate = false,
   } = opts;
   if (!expiryISO) return { kind: 'unknown', label: 'PAO est.' };
-  const days = Math.round(
-    (parseLocal(expiryISO).getTime() - parseLocal(todayISO).getTime()) / 86_400_000,
-  );
+  const expiryDate = parseLocal(expiryISO);
+  const todayDate = parseLocal(todayISO);
+  if (!expiryDate || !todayDate) return { kind: 'unknown', label: 'PAO est.' };
+  const days = Math.round((expiryDate.getTime() - todayDate.getTime()) / 86_400_000);
   if (days < 0) {
     // Past best-by. Calm "Replace" by default; firmer for the eye/SPF cases.
     return safetyCritical
@@ -147,10 +183,10 @@ export function expiryBadge(
   if (paired) return { kind: 'paired', label: 'paired' };
   if (synergy) return { kind: 'synergy', label: 'synergy' };
   if (estimate) {
-    const mon = parseLocal(expiryISO).toLocaleDateString('en-US', { month: 'short' });
+    const mon = expiryDate.toLocaleDateString('en-US', { month: 'short' });
     return { kind: 'unknown', label: `est.\n${mon}` };
   }
-  const label = parseLocal(expiryISO).toLocaleDateString('en-US', {
+  const label = expiryDate.toLocaleDateString('en-US', {
     month: 'short',
     year: 'numeric',
   });

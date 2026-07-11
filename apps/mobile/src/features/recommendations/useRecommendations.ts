@@ -6,9 +6,10 @@ import { useProfileBits } from '@/features/scheduler/profile';
 import type { ShelfProduct } from '@/features/shelf/store';
 import { useShelf } from '@/features/shelf/useShelf';
 
-import { recommend, type RecResult, type RecShelfItem } from './engine';
+import { recommend, type RecReplenishmentItem, type RecResult, type RecShelfItem } from './engine';
 import { isRecommendationDataLoading } from './loading';
 import { DEFAULT_PREFERENCES } from './preferences';
+import { collectReplenishmentCandidates } from './replenishment';
 import { loadDismissed, loadPreferences } from './store';
 
 // The recommendation data layer (docs/09 §5/§12). Assembles the engine's inputs
@@ -44,13 +45,22 @@ export function useRecommendations() {
           tags: i.engineProduct.tags,
           concentration: i.engineProduct.concentration,
           fragranced: isFragranced(i.product),
-          expiring: i.badge.kind === 'countdown' || i.badge.kind === 'expired',
         },
       ];
     });
+    const replenishment: RecReplenishmentItem[] = collectReplenishmentCandidates(shelf.data).map(
+      ({ item, reason }) => ({
+        id: item.id,
+        name: item.name,
+        tags: item.engineProduct.tags,
+        concentration: item.engineProduct.concentration,
+        reason,
+      }),
+    );
     return recommend({
       profile: profile.data,
       shelf: items,
+      replenishment,
       conflicts: shelf.data.unresolvedConflicts,
       preferences: prefsQ.data?.prefs ?? DEFAULT_PREFERENCES,
       dismissed: new Set(prefsQ.data?.dismissed ?? []),
