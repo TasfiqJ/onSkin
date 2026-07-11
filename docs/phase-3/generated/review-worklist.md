@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-11T02:49:55.628Z
+Generated: 2026-07-11T05:19:00.977Z
 Status: pass
-Git SHA: b8a43f213fcf624907130576a29dc29ad55fb1b0
+Git SHA: 97a6da736454da38d3354073ae1b8ed23bbf5d11
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -13,7 +13,7 @@ reviewers must inspect before launch gates can close.
 ## Summary
 
 - Review items: 37
-- Source files hashed: 278
+- Source files hashed: 281
 - Missing source files: 0
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
@@ -45,7 +45,7 @@ reviewers must inspect before launch gates can close.
 | cosmeticChemistry | PAO defaults                                      | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
 | cosmeticChemistry | Recommendation catalog                            | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
 | cosmeticChemistry | Shoppable stack item labels                       | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
-| cosmeticChemistry | Routine sequencing                                | Not cleared | TBD      | TBD  | not-applicable | 22      | 0               |
+| cosmeticChemistry | Routine sequencing                                | Not cleared | TBD      | TBD  | not-applicable | 25      | 0               |
 | cosmeticChemistry | Active concentration and pregnancy-caution matrix | Not cleared | TBD      | TBD  | not-applicable | 16      | 0               |
 | cosmeticChemistry | Smart shelf labels                                | Not cleared | TBD      | TBD  | not-applicable | 19      | 0               |
 | privacySecurity   | Health-data consent and withdrawal                | Blocked     | TBD      | TBD  | not-applicable | 13      | 0               |
@@ -472,7 +472,7 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `fba6ce1b9327527d0af8c1f8558c72f7a75ffb75fc1f1b6850341fa082fa62a5`
+- Review snapshot SHA-256: `bf2e507c45faeba2107cc904958b888227a1242a32a651344f37ae73858fb521`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Confirm order labels and conflicts.
@@ -487,6 +487,9 @@ Sources:
 - `apps/mobile/src/features/routine/firstInsight.ts` - 3670 bytes - sha256 `76bb211ba389eb77c425c8524637b3e1c738af4413be90d107fd30d87cb8f5b1`
 - `apps/mobile/src/features/routine/generate.test.ts` - 17546 bytes - sha256 `86c58746c44ee184b0e939a598feebcd27ab29d3061eca63112c96406a842ea2`
 - `apps/mobile/src/features/routine/generate.ts` - 6395 bytes - sha256 `932e06be8ebcd2d5bfb3fa9220a8a3ede418413209d7921dab01328bd27916c3`
+- `apps/mobile/src/features/routine/orderRoutes.test.ts` - 3423 bytes - sha256 `666b23afefe371c7351eb18a8c4d1ad83374388a0f2c92d1f1a8024799496d88`
+- `apps/mobile/src/features/routine/orderStore.test.ts` - 7094 bytes - sha256 `f331b030561729d32bed300fc8da74eafd3b1b8581b0dacae895d0b9c7282eb9`
+- `apps/mobile/src/features/routine/orderStore.ts` - 6726 bytes - sha256 `2118bfb01b5f9f1d801774161c511fac8a1e0c7197977faa02f9f2de78da7ea9`
 - `apps/mobile/src/features/routine/progressSanitizers.test.ts` - 1120 bytes - sha256 `bac657c445e5ac8a357299c341a20f45d24e53a21da1061b6eba021d61bfcf31`
 - `apps/mobile/src/features/routine/progressSanitizers.ts` - 843 bytes - sha256 `92aa1357f496178730496bd5b79a490a5c36e308503edadf3abfaf00756af1ef`
 - `apps/mobile/src/features/routine/ramp.ts` - 2619 bytes - sha256 `2b58d16a9c595e83b1198e16345d85044e74de381aa5a1ee5a1d824fed9b86ee`
@@ -497,7 +500,7 @@ Sources:
 - `apps/mobile/src/features/routine/scheduleContract.test.ts` - 2486 bytes - sha256 `0495aab2fc8563e3a1fe1dffb757c836b44b2fc4983d38f8d53dab4bc58b8007`
 - `apps/mobile/src/features/routine/sequencing.ts` - 7732 bytes - sha256 `a4e8abd61e4cda24726699a24ecfe1ae1720b9012b6d98d52be4bffb6ac4a51e`
 - `apps/mobile/src/features/routine/usePlan.test.ts` - 1573 bytes - sha256 `6c7cbeb54eb3172dc688f31927f80a0b19d2ff06b003bc42780e2ae0f6eaf980`
-- `apps/mobile/src/features/routine/usePlan.ts` - 3050 bytes - sha256 `f3867e38aa12004628c4babe923e866fda520a72a12b89ddc30f509cc8b38f77`
+- `apps/mobile/src/features/routine/usePlan.ts` - 4092 bytes - sha256 `e12848e9c0cfff83f530e084c01b533107989b896cd11b27f2dfa0ffd8747bfc`
 - `apps/mobile/src/features/routine/useProgress.test.ts` - 1006 bytes - sha256 `b22359e2401f3bae300c28f709d782a615be97cc872fb3c9e746f6aa3ec9cba9`
 - `apps/mobile/src/features/routine/useProgress.ts` - 5627 bytes - sha256 `5bbd820ef1675a3f1df5b9ee88f728ea176851d7581d4618e9acd8c9773ae743`
 - `apps/mobile/src/features/routine/useRamp.ts` - 2307 bytes - sha256 `f60b72320bbb3ae0968cab87bce18bba4edbf3e4408a737f35056ed668a27434`
@@ -571,7 +574,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `8320295b9f5c703969de1140cbd9fa4306d59cc17a456f32c85a8306a1d06e4d`
+- Review snapshot SHA-256: `6640b8951d8513ea9669cf8634d5e5047826dbd71394e4a8863bdc6bf40c4671`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review installed-base reconsent, local-first processing, trying/pregnancy/breastfeeding disclosure, preserved malformed records, server-only status handling, live ledger/RLS, and final consumer-health notice.
@@ -579,7 +582,7 @@ Sources:
 Sources:
 
 - `docs/phase-3/consent-matrix.md` - 6754 bytes - sha256 `3141b9fa40a9aee0b816f79ef40793c49eec0c99ff4800a97841815e0fc925e6`
-- `docs/store-privacy-inventory.md` - 9894 bytes - sha256 `db1e91244395f5322bbce84282357aaa98c9878f0903a09a87d635e3c2e567b6`
+- `docs/store-privacy-inventory.md` - 10418 bytes - sha256 `5db068d99c969353ec67c329af9b78bac9b61e0f366ee672ba5d89224a521737`
 - `apps/mobile/src/features/onboarding/consentCopy.ts` - 4469 bytes - sha256 `473be59b257e3829080231cf3bbc18f0321ee78a2d1d7e7ff1030fb3ca5728f1`
 - `apps/mobile/src/features/onboarding/healthConsentStore.ts` - 3407 bytes - sha256 `045af829ce740d46bfbbd05358413feecd316cf30366bf89094fc8ed1bd11fe2`
 - `apps/mobile/src/features/scheduler/profile.ts` - 4503 bytes - sha256 `e5c20935ac3c6c17bd048bca1d8db393fb3f8aa155415726ec59c80bef9c6913`
@@ -662,7 +665,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `5be0b9d0b340e7740cc6bf42a1c60f188bceeeaa77b2bee12d9c920dc5723846`
+- Review snapshot SHA-256: `d186f65fd4e967600f2788162e8141409b5324e5b6fee2174dcf7bad093a7a3f`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Must prove owner-scoped staging server data, seeded local coverage, redaction, and native cache cleanup.
@@ -670,8 +673,8 @@ Sources:
 Sources:
 
 - `apps/mobile/src/features/settings/actions.ts` - 5099 bytes - sha256 `e39806ea6cd4148df0c3a7acdaa70c219d1a0da4f57c54903018aa8990f500c2`
-- `apps/mobile/src/features/settings/localDeviceExport.ts` - 10663 bytes - sha256 `5553f474ebdff6bf5498565cecac5d6a787057e4a12b58cf4ffb8195c8560c81`
-- `apps/mobile/src/features/settings/localDeviceExport.test.ts` - 5680 bytes - sha256 `4dbbe2b3084f17923d989e80970b270f4f5846163ebd5c27e6e21b601a2ab9f7`
+- `apps/mobile/src/features/settings/localDeviceExport.ts` - 10784 bytes - sha256 `25eea3aa6293032f9d6fba1d3b694cd7cb386b241d9b724f32d8b048d5d0e330`
+- `apps/mobile/src/features/settings/localDeviceExport.test.ts` - 5974 bytes - sha256 `6563b0d39836dd9fe32ec1a4057f5e5ed05800edfcaabaa1b290a721e9567ba0`
 - `apps/mobile/src/lib/storage/privateKV.ts` - 16600 bytes - sha256 `cbcbfedb618ae5b82b0755635753fde168d5429c02b163d3be6cb26c6268c90e`
 - `apps/mobile/src/lib/storage/privateKV.test.ts` - 20833 bytes - sha256 `ca953c64f1b6efe699ddd7d036407f431abf91a2361c25118e7bfd1921f59759`
 - `apps/mobile/src/lib/legal/policyLinks.ts` - 722 bytes - sha256 `0fe9cf269e6b5e48119771f7b111d1620c095ffe35bb6ac56f63c2cd2ec1c863`

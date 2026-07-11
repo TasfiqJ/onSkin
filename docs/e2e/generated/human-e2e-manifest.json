@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-11T02:47:58.448Z",
-  "gitSha": "b8a43f213fcf624907130576a29dc29ad55fb1b0",
+  "generatedAt": "2026-07-11T05:18:52.755Z",
+  "gitSha": "97a6da736454da38d3354073ae1b8ed23bbf5d11",
   "evidenceDate": "2026-07-10",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -651,6 +651,25 @@
       "fileCount": 54,
       "bytes": 526213,
       "evidenceSha256": "c10ecef6623c3cf73cd5bb5eecd215720c8c68434f66515751576c39f6a67ac7"
+    },
+    {
+      "id": "routine-order-persistence-supported-phone",
+      "title": "Persistent Morning and Evening routine order",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/routine-order-persistence-current",
+      "evidence": "summary.json",
+      "expected": "Stable product-ID AM/PM edits survive reopen, reload, Cancel, recompute, Today projection, one failed save, and retry without changing safety/cycle authority.",
+      "status": "pass",
+      "detail": "summary status: pass.",
+      "failureCount": null,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 29,
+      "bytes": 205292,
+      "evidenceSha256": "e860934d4b4772124f9a51f5b51fcff6dda7f9fc949b1055e48ef8baa5b46f2b"
     },
     {
       "id": "data-export-local-photo-disclosure-supported-phone",

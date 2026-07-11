@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-11T02:51:03.060Z",
+  "generatedAt": "2026-07-11T05:19:08.194Z",
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "b8a43f213fcf624907130576a29dc29ad55fb1b0",
+  "gitSha": "97a6da736454da38d3354073ae1b8ed23bbf5d11",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -83,8 +83,8 @@
     {
       "path": "docs/FOR_TAS_TO_DO.md",
       "exists": true,
-      "bytes": 57973,
-      "sha256": "3c7709d62b1a1dfd275910a3bc48ddfe3b5fd810422a77a2a48b4d42719974b6"
+      "bytes": 58601,
+      "sha256": "f6bf1f73d41c6976402f998cca9a768d69cc741d547dc21e6ca1b6e067d15c07"
     },
     {
       "path": "docs/phase-4/beta-coverage-input.template.json",
@@ -102,13 +102,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 35121,
-      "sha256": "a4c0fb8a51c921075d77c0f2ecc335cc9a5a3766bcaabc86ec176552aea084ca"
+      "sha256": "6f3c8fedebf91ac69dbceac9cfebc8034571dd6b92140bb78a7d55c25d805545"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 22473,
-      "sha256": "db4413bf63ee7823aa6489daa633ef461fd0fd84595c191482ff25f842ff7ebe"
+      "sha256": "ce45869cca1a11c1e344c778bb0609e09b4f6b9d68d5aa8e4a6b53e7c014cd60"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -126,13 +126,13 @@
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
       "bytes": 5693,
-      "sha256": "8589b84ad6edd893c66fa2e9bd08e9c516a48e04c5aa17f737cefd0ae04c9900"
+      "sha256": "3599ff5196b63e711efd2b9557687c8f19726f7dd27de31125fff25d5266c40b"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 3816,
-      "sha256": "4b2d1848553de1f98972cd3a719e7936fccc46cecc95d8c33fc2237a933e0ecd"
+      "sha256": "9b86a11c9082a9890ceeca02968c3a38117b9066f3d563ced6f8b1ef49730d49"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",

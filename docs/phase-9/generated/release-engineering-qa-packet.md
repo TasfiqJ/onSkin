@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-11T02:52:21.120Z
+Generated: 2026-07-11T05:19:22.149Z
 Status: blocked
-Git SHA: b8a43f213fcf624907130576a29dc29ad55fb1b0
+Git SHA: 97a6da736454da38d3354073ae1b8ed23bbf5d11
 Git status: clean
 
 ## Release Identity
@@ -105,9 +105,9 @@ Git status: clean
 - `apps/mobile/src/features/photos/store.ts`: `1557f6d511baf44fec1d52d5e585d506a5f7ad7173ef0e95d5c7984ff2f02b6b`
 - `apps/mobile/src/features/photos/usePhotos.ts`: `7bfcfda545ab719de32f460c859d6aa66075e97a84d200194360c114f2fb16a5`
 - `apps/mobile/src/features/settings/actions.ts`: `e39806ea6cd4148df0c3a7acdaa70c219d1a0da4f57c54903018aa8990f500c2`
-- `apps/mobile/src/features/settings/localDeviceExport.ts`: `5553f474ebdff6bf5498565cecac5d6a787057e4a12b58cf4ffb8195c8560c81`
-- `apps/mobile/src/features/settings/localDeviceExport.test.ts`: `4dbbe2b3084f17923d989e80970b270f4f5846163ebd5c27e6e21b601a2ab9f7`
-- `apps/mobile/src/features/settings/localPrivateDataKeys.ts`: `c3266a915c04144da0dbfac4286da4b125d36f02015b83806a8d258c9de1f280`
+- `apps/mobile/src/features/settings/localDeviceExport.ts`: `25eea3aa6293032f9d6fba1d3b694cd7cb386b241d9b724f32d8b048d5d0e330`
+- `apps/mobile/src/features/settings/localDeviceExport.test.ts`: `6563b0d39836dd9fe32ec1a4057f5e5ed05800edfcaabaa1b290a721e9567ba0`
+- `apps/mobile/src/features/settings/localPrivateDataKeys.ts`: `bdfdb53338e67f7e27c7f45f5c7ad533826b449ea7f0137133e397c1d212cf1b`
 - `apps/mobile/src/features/settings/localPrivateData.ts`: `15c781cf4b5cae057d54b597587fa3ee9b6248044089c871fa917db275baaaba`
 - `apps/mobile/src/lib/storage/privateKV.ts`: `cbcbfedb618ae5b82b0755635753fde168d5429c02b163d3be6cb26c6268c90e`
 - `apps/mobile/src/lib/storage/privateKV.test.ts`: `ca953c64f1b6efe699ddd7d036407f431abf91a2361c25118e7bfd1921f59759`
@@ -154,7 +154,7 @@ Git status: clean
 - `scripts/phase9/dependency-sbom.mjs`: `0b36b22f21004af4913cd1c72b0f247765b888a3461ee074a3758a8c3d8df351`
 - `scripts/phase9/store-build-inspect.mjs`: `6dbda3144157e2b8f75f92b81dc3cf52310154fbd5a8a64ccd80942745ea5366`
 - `docs/phase-9/source-of-truth.md`: `b23f022feded586dadfd8e21d7c407b8b94f9ed317ae6ddde12dac1c5933c9da`
-- `docs/phase-9/data-inventory.md`: `645117fe958ee4f064559aeea9feffd81af29421221c4131f90cebc11d9c00dd`
+- `docs/phase-9/data-inventory.md`: `3ad70e4796d7fe8bc026b1e8b364daac4b0a59e98457890784d2973ed994d6a6`
 - `docs/phase-9/edge-function-auth-matrix.md`: `e93759bc6338c06bbfd883e0c704cba42c85eafd15369278564255b60d8e7786`
 - `docs/phase-9/observability-payload-audit.md`: `3aa9508564cef79e704b14fdd43a80063e8e040ebc7dcdfa7f68a9cd8d86ada7`
 - `docs/phase-9/security-scanner-evidence.md`: `878d37533e0f2cd94a77a774917e829f7436e854816ae9caf623e498c45f8566`

@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-07-11T02:49:14.113Z",
+  "generatedAt": "2026-07-11T05:18:56.791Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-10",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 186,
-  "expectedMobileTests": 1951,
-  "actualMobileTestFiles": 186,
-  "expectedTestPhrase": "186 mobile test files / 1951 tests",
+  "expectedMobileTestFiles": 188,
+  "expectedMobileTests": 1968,
+  "actualMobileTestFiles": 188,
+  "expectedTestPhrase": "188 mobile test files / 1968 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -71,7 +71,9 @@
         "Pregnancy-safety status and routine exclusion consistency",
         "pregnancy-safety-status-current",
         "Canonical multi-active Plan and Today consistency",
-        "multi-active-plan-today-current"
+        "multi-active-plan-today-current",
+        "Persistent Morning and Evening routine order",
+        "routine-order-persistence-current"
       ],
       "stalePatterns": [],
       "missingCommands": []

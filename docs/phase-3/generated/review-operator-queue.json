@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-11T02:50:08.873Z",
+  "generatedAt": "2026-07-11T05:19:02.422Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": true,
-  "gitSha": "b8a43f213fcf624907130576a29dc29ad55fb1b0",
+  "gitSha": "97a6da736454da38d3354073ae1b8ed23bbf5d11",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 101503,
-    "sha256": "b6c8d2c99be9f621e4c1ff0534ebf9adaceb1cfb56fb2221df121958ce49de39",
-    "currentSha256": "b6c8d2c99be9f621e4c1ff0534ebf9adaceb1cfb56fb2221df121958ce49de39"
+    "bytes": 102196,
+    "sha256": "b344dd1b705c3cda373189aa00c8683eddf81d7dd1023de5967710def6c5079d",
+    "currentSha256": "b344dd1b705c3cda373189aa00c8683eddf81d7dd1023de5967710def6c5079d"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -747,7 +747,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "5be0b9d0b340e7740cc6bf42a1c60f188bceeeaa77b2bee12d9c920dc5723846",
+      "reviewSnapshotSha256": "d186f65fd4e967600f2788162e8141409b5324e5b6fee2174dcf7bad093a7a3f",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -764,14 +764,14 @@
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.ts",
           "exists": true,
-          "bytes": 10663,
-          "sha256": "5553f474ebdff6bf5498565cecac5d6a787057e4a12b58cf4ffb8195c8560c81"
+          "bytes": 10784,
+          "sha256": "25eea3aa6293032f9d6fba1d3b694cd7cb386b241d9b724f32d8b048d5d0e330"
         },
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.test.ts",
           "exists": true,
-          "bytes": 5680,
-          "sha256": "4dbbe2b3084f17923d989e80970b270f4f5846163ebd5c27e6e21b601a2ab9f7"
+          "bytes": 5974,
+          "sha256": "6563b0d39836dd9fe32ec1a4057f5e5ed05800edfcaabaa1b290a721e9567ba0"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.ts",
@@ -1026,7 +1026,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "8320295b9f5c703969de1140cbd9fa4306d59cc17a456f32c85a8306a1d06e4d",
+      "reviewSnapshotSha256": "6640b8951d8513ea9669cf8634d5e5047826dbd71394e4a8863bdc6bf40c4671",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1043,8 +1043,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 9894,
-          "sha256": "db1e91244395f5322bbce84282357aaa98c9878f0903a09a87d635e3c2e567b6"
+          "bytes": 10418,
+          "sha256": "5db068d99c969353ec67c329af9b78bac9b61e0f366ee672ba5d89224a521737"
         },
         {
           "path": "apps/mobile/src/features/onboarding/consentCopy.ts",
@@ -1803,7 +1803,7 @@
       "requiredReviewer": "qualified cosmetic chemist/formulator",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "fba6ce1b9327527d0af8c1f8558c72f7a75ffb75fc1f1b6850341fa082fa62a5",
+      "reviewSnapshotSha256": "bf2e507c45faeba2107cc904958b888227a1242a32a651344f37ae73858fb521",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1858,6 +1858,24 @@
           "exists": true,
           "bytes": 6395,
           "sha256": "932e06be8ebcd2d5bfb3fa9220a8a3ede418413209d7921dab01328bd27916c3"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/orderRoutes.test.ts",
+          "exists": true,
+          "bytes": 3423,
+          "sha256": "666b23afefe371c7351eb18a8c4d1ad83374388a0f2c92d1f1a8024799496d88"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/orderStore.test.ts",
+          "exists": true,
+          "bytes": 7094,
+          "sha256": "f331b030561729d32bed300fc8da74eafd3b1b8581b0dacae895d0b9c7282eb9"
+        },
+        {
+          "path": "apps/mobile/src/features/routine/orderStore.ts",
+          "exists": true,
+          "bytes": 6726,
+          "sha256": "2118bfb01b5f9f1d801774161c511fac8a1e0c7197977faa02f9f2de78da7ea9"
         },
         {
           "path": "apps/mobile/src/features/routine/progressSanitizers.test.ts",
@@ -1922,8 +1940,8 @@
         {
           "path": "apps/mobile/src/features/routine/usePlan.ts",
           "exists": true,
-          "bytes": 3050,
-          "sha256": "f3867e38aa12004628c4babe923e866fda520a72a12b89ddc30f509cc8b38f77"
+          "bytes": 4092,
+          "sha256": "e12848e9c0cfff83f530e084c01b533107989b896cd11b27f2dfa0ffd8747bfc"
         },
         {
           "path": "apps/mobile/src/features/routine/useProgress.test.ts",
