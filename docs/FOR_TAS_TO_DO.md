@@ -1,6 +1,6 @@
 # For Tas To Do
 
-Date: 2026-07-10
+Date: 2026-07-11
 
 Purpose: track work Codex must not guess or fake. These items require a founder decision, account owner, credential, payment method, counsel/reviewer signoff, physical device, or real beta users. Codex can keep building around them, but launch readiness cannot close until evidence is attached.
 
