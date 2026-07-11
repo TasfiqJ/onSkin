@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-11T05:18:52.755Z",
-  "gitSha": "97a6da736454da38d3354073ae1b8ed23bbf5d11",
+  "generatedAt": "2026-07-11T07:44:12.994Z",
+  "gitSha": "b12934f450399435b1b03db8c545aa5f0afe171a",
   "evidenceDate": "2026-07-10",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -670,6 +670,25 @@
       "fileCount": 29,
       "bytes": 205292,
       "evidenceSha256": "e860934d4b4772124f9a51f5b51fcff6dda7f9fc949b1055e48ef8baa5b46f2b"
+    },
+    {
+      "id": "conflict-choice-schedule-supported-phone",
+      "title": "Exact-pair conflict choice and reviewed-schedule consistency",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/conflict-choice-schedule-current",
+      "evidence": "summary.json",
+      "expected": "Two same-rule pairs keep independent current-version choices, suppress only resolved prompts, preserve one-active schedule authority, recover from one failed encrypted write, and pass supported-phone geometry/keyboard checks.",
+      "status": "pass",
+      "detail": "summary status: pass; 0 failed routes.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 13,
+      "bytes": 192529,
+      "evidenceSha256": "6a5b7f56d6f0e26a1d9c83df64caa737762a88039947ee047853b66fd4da1071"
     },
     {
       "id": "data-export-local-photo-disclosure-supported-phone",

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-11T05:19:00.977Z",
+  "generatedAt": "2026-07-11T07:37:40.563Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
-  "strict": true,
-  "gitSha": "97a6da736454da38d3354073ae1b8ed23bbf5d11",
+  "strict": false,
+  "gitSha": "2fc6ea2efe7fac9fdea84e87c82467d03d435e41",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -629,12 +629,12 @@
         {
           "path": "apps/mobile/src/features/ask/useAsk.ts",
           "exists": true,
-          "bytes": 5292,
-          "sha256": "72dd4448e92ef456113d64d86f62e09f95fbdcce5a664eeefb5ff540dedee978"
+          "bytes": 5302,
+          "sha256": "b257d068a40c547c2be8de114afedf26f735bf956135e5618afc5ac503cdd7b0"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "f5bfa4b1953b95a1e9804d3fecbeffa4e2b3c525f5fff68d47038963845dcaf2",
+      "reviewSnapshotSha256": "297b29b496959f2fadfff8972019da024c1201100e08774338c2d95d1cae36ed",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -691,24 +691,24 @@
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 6395,
-          "sha256": "932e06be8ebcd2d5bfb3fa9220a8a3ede418413209d7921dab01328bd27916c3"
+          "bytes": 6627,
+          "sha256": "f2a2f37431b099401b39219b29321f8f0d3609fb3d2e27f9b134d3e95a9fbc83"
         },
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.ts",
           "exists": true,
-          "bytes": 8616,
-          "sha256": "f210c82c2053d74e0d59cef1789cb4158ddebd1746e35827993e3220db2b5316"
+          "bytes": 10622,
+          "sha256": "ed1a6b2b27ac989ff73883e3eda3014949bd1ac06e19f35ddb3d85f2db7745f9"
         },
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
           "exists": true,
-          "bytes": 16762,
-          "sha256": "73705b070c4a5a33b8fb063ba99f9aa2699d1492aaf20541f4bf07d158e7f136"
+          "bytes": 17623,
+          "sha256": "a0d8e95df85b1a53d3def11766cf34a1b708797d552d4aad1652cb206978ef2b"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "b1b8be11a09802273b37f05c7e757e6a805f672ab4793c6773cabbe4e9998c20",
+      "reviewSnapshotSha256": "40f3fcc9ac77a06f79f13d16ab66f01a20e3f40e1480465c207ca0e10a720b2a",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1167,14 +1167,14 @@
         {
           "path": "apps/mobile/src/features/routine/generate.test.ts",
           "exists": true,
-          "bytes": 17546,
-          "sha256": "86c58746c44ee184b0e939a598feebcd27ab29d3061eca63112c96406a842ea2"
+          "bytes": 18935,
+          "sha256": "63b14677b9d54c8de0db08108dcf7b1a8650808ec20ab17603fae057d775fa28"
         },
         {
           "path": "apps/mobile/src/features/routine/generate.ts",
           "exists": true,
-          "bytes": 6395,
-          "sha256": "932e06be8ebcd2d5bfb3fa9220a8a3ede418413209d7921dab01328bd27916c3"
+          "bytes": 6627,
+          "sha256": "f2a2f37431b099401b39219b29321f8f0d3609fb3d2e27f9b134d3e95a9fbc83"
         },
         {
           "path": "apps/mobile/src/features/routine/orderRoutes.test.ts",
@@ -1257,8 +1257,8 @@
         {
           "path": "apps/mobile/src/features/routine/usePlan.ts",
           "exists": true,
-          "bytes": 4092,
-          "sha256": "e12848e9c0cfff83f530e084c01b533107989b896cd11b27f2dfa0ffd8747bfc"
+          "bytes": 4152,
+          "sha256": "ba7a5e8bb192bed5ae27b2c56f7590196531983a6df53af4c2890bd9fab0c5b3"
         },
         {
           "path": "apps/mobile/src/features/routine/useProgress.test.ts",
@@ -1280,7 +1280,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "bf2e507c45faeba2107cc904958b888227a1242a32a651344f37ae73858fb521",
+      "reviewSnapshotSha256": "3ddba2315ee3936a08876a50d54883d6ff7190284fa9000e7d1c943af5a12f80",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1336,14 +1336,14 @@
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.test.ts",
           "exists": true,
-          "bytes": 13865,
-          "sha256": "7fcc7cb547eb671ce5e20b743f692f39053c3eae5fce39da2b58dcbcf00d5231"
+          "bytes": 16805,
+          "sha256": "f0962c9ffd45488616fa178e842777f0e0be92b7dc2de3e4de30c5ddd169de8a"
         },
         {
           "path": "apps/mobile/src/features/scheduler/orchestrate.ts",
           "exists": true,
-          "bytes": 8616,
-          "sha256": "f210c82c2053d74e0d59cef1789cb4158ddebd1746e35827993e3220db2b5316"
+          "bytes": 10622,
+          "sha256": "ed1a6b2b27ac989ff73883e3eda3014949bd1ac06e19f35ddb3d85f2db7745f9"
         },
         {
           "path": "apps/mobile/src/features/scheduler/profile.test.ts",
@@ -1378,8 +1378,8 @@
         {
           "path": "apps/mobile/src/features/scheduler/useCycle.ts",
           "exists": true,
-          "bytes": 5996,
-          "sha256": "6a2142b83ca521a207a5c1d7c0d539f7033f94d39ddc4ba81579c4fb4ead501d"
+          "bytes": 6717,
+          "sha256": "18887fb4658f69e913961dec0649404f90b59464678f687583f4573d9db101f8"
         },
         {
           "path": "apps/mobile/src/features/scheduler/useCycleAnalytics.test.ts",
@@ -1390,12 +1390,12 @@
         {
           "path": "apps/mobile/src/features/recommendations/engine.ts",
           "exists": true,
-          "bytes": 16762,
-          "sha256": "73705b070c4a5a33b8fb063ba99f9aa2699d1492aaf20541f4bf07d158e7f136"
+          "bytes": 17623,
+          "sha256": "a0d8e95df85b1a53d3def11766cf34a1b708797d552d4aad1652cb206978ef2b"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "a4a3c223875fda6a58f7a1b92dc1acf1906c6f03a2194866821a2194d89c7e68",
+      "reviewSnapshotSha256": "33c005a6d6a8abd9a50be14c248e072e4f15cadd8ce2234332270fd011486708",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1463,8 +1463,8 @@
         {
           "path": "apps/mobile/src/features/shelf/mutations.ts",
           "exists": true,
-          "bytes": 3567,
-          "sha256": "2f297f5dc58b6820309f207d07d6bf8ab403cfa30e5f62b6611e44564546806c"
+          "bytes": 4996,
+          "sha256": "f589aa77cb90e541e0e0c7db52406825f9b535bd1f0c64af7dbf37acebe33e65"
         },
         {
           "path": "apps/mobile/src/features/shelf/pairedConflicts.ts",
@@ -1499,8 +1499,8 @@
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
           "exists": true,
-          "bytes": 45749,
-          "sha256": "4be308c91d6c00058b7a4a741007aaf6cebce08def92eb918e8e477565b8becb"
+          "bytes": 45839,
+          "sha256": "d3f7920e9edf5ce65bcaacc1b548266fc325b56e248c10accb826f19f11a9011"
         },
         {
           "path": "apps/mobile/src/features/shelf/store.test.ts",
@@ -1511,8 +1511,8 @@
         {
           "path": "apps/mobile/src/features/shelf/store.ts",
           "exists": true,
-          "bytes": 12890,
-          "sha256": "416a05c75ac9c6c5e86cfd12e7bef9d30f3992ad0d963f4e874fecdda20ac705"
+          "bytes": 13172,
+          "sha256": "63973c8778d227cf444a97e12a34a9c1ad8b11a385a0adcd81a8299a692f8615"
         },
         {
           "path": "apps/mobile/src/features/shelf/useShelf.test.ts",
@@ -1523,12 +1523,12 @@
         {
           "path": "apps/mobile/src/features/shelf/useShelf.ts",
           "exists": true,
-          "bytes": 8242,
-          "sha256": "82fe9b38cdb19afda1f62617d6c12498c72f6fd11803cdb7150e79b3bbb3bbb1"
+          "bytes": 10657,
+          "sha256": "376bfb191493510d1de31b8b2beaeecc6c2c3c7dc87b2a8adf0ae83c4d895d91"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "e8106d6cbae138d185d1e94e9b7364f2b9ef1ba1b4529b2f4153df0d70cdc29a",
+      "reviewSnapshotSha256": "3d29514251aa5e6dc76d53186da236b424acd68cf72dfa17f5fd4077aa837666",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1840,26 +1840,26 @@
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.ts",
           "exists": true,
-          "bytes": 10784,
-          "sha256": "25eea3aa6293032f9d6fba1d3b694cd7cb386b241d9b724f32d8b048d5d0e330"
+          "bytes": 11068,
+          "sha256": "f8e9e7f506f655722c6be338538b9219704965efb841a3d630ee3fe245bead05"
         },
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.test.ts",
           "exists": true,
-          "bytes": 5974,
-          "sha256": "6563b0d39836dd9fe32ec1a4057f5e5ed05800edfcaabaa1b290a721e9567ba0"
+          "bytes": 7065,
+          "sha256": "5a2269df2b534a12ce9bb4afbcc85042c430d99e473044aad56ab19e9d6a0853"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.ts",
           "exists": true,
-          "bytes": 16600,
-          "sha256": "cbcbfedb618ae5b82b0755635753fde168d5429c02b163d3be6cb26c6268c90e"
+          "bytes": 18539,
+          "sha256": "bff21c993302bbdcb2a084e9be58a37aaf8f804c9b51813fd9da3e278eb2ee82"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.test.ts",
           "exists": true,
-          "bytes": 20833,
-          "sha256": "ca953c64f1b6efe699ddd7d036407f431abf91a2361c25118e7bfd1921f59759"
+          "bytes": 21541,
+          "sha256": "f40598f25641df646c012689736eb110d8686c82247447a62581f56b5bce1daf"
         },
         {
           "path": "apps/mobile/src/lib/legal/policyLinks.ts",
@@ -1893,7 +1893,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "d186f65fd4e967600f2788162e8141409b5324e5b6fee2174dcf7bad093a7a3f",
+      "reviewSnapshotSha256": "acb430633a06c6abd8880fc35143fbdac899ce9cd593f8a46c010f2b01e2f03e",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },

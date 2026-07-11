@@ -1,7 +1,7 @@
 # Human E2E Manifest
 
-Generated: 2026-07-11T05:18:52.755Z
-Git SHA: 97a6da736454da38d3354073ae1b8ed23bbf5d11
+Generated: 2026-07-11T07:44:12.994Z
+Git SHA: b12934f450399435b1b03db8c545aa5f0afe171a
 Evidence date: 2026-07-10
 Baseline suite date: 2026-07-09
 Status: pass
@@ -50,6 +50,7 @@ dependency to the repo.
 | Pregnancy-safety status and routine exclusion consistency        | supported-phone | pass   | summary status: pass.                  | 28    | test-results/human-e2e/2026-07-10/pregnancy-safety-status-current                      |
 | Canonical multi-active Plan and Today consistency                | supported-phone | pass   | summary status: pass.                  | 54    | test-results/human-e2e/2026-07-10/multi-active-plan-today-current                      |
 | Persistent Morning and Evening routine order                     | supported-phone | pass   | summary status: pass.                  | 29    | test-results/human-e2e/2026-07-10/routine-order-persistence-current                    |
+| Exact-pair conflict choice and reviewed-schedule consistency     | supported-phone | pass   | summary status: pass; 0 failed routes. | 13    | test-results/human-e2e/2026-07-10/conflict-choice-schedule-current                     |
 | Account export local-photo scope disclosure                      | supported-phone | pass   | summary status: pass; 0 failed routes. | 14    | test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current           |
 | Combined account and current-device export                       | supported-phone | pass   | summary status: pass; 0 failed routes. | 13    | test-results/human-e2e/2026-07-10/data-export-combined-device-current                  |
 

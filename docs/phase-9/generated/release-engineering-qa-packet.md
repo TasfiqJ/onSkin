@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-11T05:19:22.149Z
+Generated: 2026-07-11T07:38:51.428Z
 Status: blocked
-Git SHA: 97a6da736454da38d3354073ae1b8ed23bbf5d11
+Git SHA: 2fc6ea2efe7fac9fdea84e87c82467d03d435e41
 Git status: clean
 
 ## Release Identity
@@ -105,12 +105,12 @@ Git status: clean
 - `apps/mobile/src/features/photos/store.ts`: `1557f6d511baf44fec1d52d5e585d506a5f7ad7173ef0e95d5c7984ff2f02b6b`
 - `apps/mobile/src/features/photos/usePhotos.ts`: `7bfcfda545ab719de32f460c859d6aa66075e97a84d200194360c114f2fb16a5`
 - `apps/mobile/src/features/settings/actions.ts`: `e39806ea6cd4148df0c3a7acdaa70c219d1a0da4f57c54903018aa8990f500c2`
-- `apps/mobile/src/features/settings/localDeviceExport.ts`: `25eea3aa6293032f9d6fba1d3b694cd7cb386b241d9b724f32d8b048d5d0e330`
-- `apps/mobile/src/features/settings/localDeviceExport.test.ts`: `6563b0d39836dd9fe32ec1a4057f5e5ed05800edfcaabaa1b290a721e9567ba0`
+- `apps/mobile/src/features/settings/localDeviceExport.ts`: `f8e9e7f506f655722c6be338538b9219704965efb841a3d630ee3fe245bead05`
+- `apps/mobile/src/features/settings/localDeviceExport.test.ts`: `5a2269df2b534a12ce9bb4afbcc85042c430d99e473044aad56ab19e9d6a0853`
 - `apps/mobile/src/features/settings/localPrivateDataKeys.ts`: `bdfdb53338e67f7e27c7f45f5c7ad533826b449ea7f0137133e397c1d212cf1b`
 - `apps/mobile/src/features/settings/localPrivateData.ts`: `15c781cf4b5cae057d54b597587fa3ee9b6248044089c871fa917db275baaaba`
-- `apps/mobile/src/lib/storage/privateKV.ts`: `cbcbfedb618ae5b82b0755635753fde168d5429c02b163d3be6cb26c6268c90e`
-- `apps/mobile/src/lib/storage/privateKV.test.ts`: `ca953c64f1b6efe699ddd7d036407f431abf91a2361c25118e7bfd1921f59759`
+- `apps/mobile/src/lib/storage/privateKV.ts`: `bff21c993302bbdcb2a084e9be58a37aaf8f804c9b51813fd9da3e278eb2ee82`
+- `apps/mobile/src/lib/storage/privateKV.test.ts`: `f40598f25641df646c012689736eb110d8686c82247447a62581f56b5bce1daf`
 - `apps/mobile/src/lib/applock/AppLockProvider.tsx`: `3fa65fa22ba7c689861afb0bc6fa1d6492cbedc80b900891e574e8929ef31a75`
 - `apps/mobile/src/lib/applock/authenticate.ts`: `fda9cd0c3818aa1c0f78edf9c499111622537c81c10f2f1761655a0cc652f0a8`
 - `apps/mobile/src/lib/applock/authenticate.test.ts`: `947eb4b02863750bd6f2a420b28e889e31845b8a04808724ab40018114d97659`
@@ -154,7 +154,7 @@ Git status: clean
 - `scripts/phase9/dependency-sbom.mjs`: `0b36b22f21004af4913cd1c72b0f247765b888a3461ee074a3758a8c3d8df351`
 - `scripts/phase9/store-build-inspect.mjs`: `6dbda3144157e2b8f75f92b81dc3cf52310154fbd5a8a64ccd80942745ea5366`
 - `docs/phase-9/source-of-truth.md`: `b23f022feded586dadfd8e21d7c407b8b94f9ed317ae6ddde12dac1c5933c9da`
-- `docs/phase-9/data-inventory.md`: `3ad70e4796d7fe8bc026b1e8b364daac4b0a59e98457890784d2973ed994d6a6`
+- `docs/phase-9/data-inventory.md`: `e65cb0862d1ba602ecdc5b1ded39d7bb79271273866e3343b90c5ebf1f1f2da8`
 - `docs/phase-9/edge-function-auth-matrix.md`: `e93759bc6338c06bbfd883e0c704cba42c85eafd15369278564255b60d8e7786`
 - `docs/phase-9/observability-payload-audit.md`: `3aa9508564cef79e704b14fdd43a80063e8e040ebc7dcdfa7f68a9cd8d86ada7`
 - `docs/phase-9/security-scanner-evidence.md`: `878d37533e0f2cd94a77a774917e829f7436e854816ae9caf623e498c45f8566`

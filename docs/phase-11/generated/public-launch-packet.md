@@ -1,8 +1,8 @@
 # Phase 11 Public Launch Packet
 
-Generated: 2026-07-11T05:19:26.532Z
+Generated: 2026-07-11T07:39:03.401Z
 Status: blocked
-Git SHA: 97a6da736454da38d3354073ae1b8ed23bbf5d11
+Git SHA: 2fc6ea2efe7fac9fdea84e87c82467d03d435e41
 Git status: clean
 Phase 9 packet status: blocked
 Phase 10 packet status: blocked
@@ -81,12 +81,12 @@ Phase 10 decision: BLOCKED
 - `apps/mobile/app.config.js`: `1e991391ddb1a45682ce202fb95e4450bb799518c33eb78640af1949180b0fec`
 - `apps/mobile/src/lib/env.ts`: `268bf5903053c48b3663f61139452deebe10da046e779eef000c1dfeb385d7a4`
 - `apps/mobile/src/lib/iap/revenuecat.ts`: `f89981290f02bc355ca4ac279b9e660c86d480a9c6e54b041a4d600f0468b105`
-- `docs/phase-9/generated/release-engineering-qa-packet.json`: `72963f02cf11d0ed40470a8abb9ce5c4a3d877cd040b01bb18bd526a8846a69b`
-- `docs/phase-9/generated/release-engineering-qa-packet.md`: `c1a4f15b641d6b3f53d81dd83fea0c4f688354b32e601fe45c9ffe2843c49c65`
+- `docs/phase-9/generated/release-engineering-qa-packet.json`: `aca61db47c337440d1452c130999f2d2eca972a35c52df5668e41c3178059cf5`
+- `docs/phase-9/generated/release-engineering-qa-packet.md`: `cd0e071077489bb5ba3c8d33b130f605ec72f3d4b1c86719c0a300b8ebb7fcb1`
 - `docs/phase-10/generated/support-handoff-packet.json`: `7fc4096c072056d72c992b98ccc167a311d469f5f012a659ae04b379e7df392f`
 - `docs/phase-10/generated/support-handoff-packet.md`: `ae93c9743fe1500136cd33f6c7f3f6633dfad018a211c53e63fd4312c6eabb25`
-- `docs/phase-10/generated/closed-beta-packet.json`: `5bd5fcd4bea60478e7d0953a46a9f84b6fe931bcf2d474a8d9b3349d0085eae8`
-- `docs/phase-10/generated/closed-beta-packet.md`: `0722f3d5742d29245d89fcd2592e45cf6748bd8b875349a58eb4dbf1fbe12905`
+- `docs/phase-10/generated/closed-beta-packet.json`: `b2491490d5531e66945d269641f94083eab853bd514a8662050c283d3087752b`
+- `docs/phase-10/generated/closed-beta-packet.md`: `ff96d4985e54bbd04a70951dd3b1b50a09271f250417a2a5f6836c34ac27e4d8`
 - `docs/phase-11/launch-command-center.md`: `a79b3668683345d5846aace9d8c33a1debcd3a1057520f57ecc5e431201b394d`
 - `docs/phase-11/phase-10-exit-review.md`: `a345491b5f604ac835cc60827ff33a7b10a34ca95d3b9f8774d5b63114ea7c69`
 - `docs/phase-11/store-release-plan.md`: `3ef1ecef69af5f4d82405a96a3670ccf1c58801e802192c8c6e5e942f292997c`
