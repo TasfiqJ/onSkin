@@ -37,6 +37,11 @@ import {
 } from '@/lib/storage/privateKV';
 
 import { clearPersistedSupabaseSession, supabase } from '../supabase/client';
+import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
+} from './accountGeneration';
 import { getAccountIsolationE2EFixture } from './accountIsolationE2E';
 import {
   authenticateWithProviderToken,
@@ -102,6 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     function holdSessionBoundaryWriteLock(): void {
       if (sessionBoundaryWriteLockHeldRef.current) return;
+      beginAccountGenerationBoundary();
       beginPrivateKVAccountBoundary();
       beginEncryptedPhotoAccountBoundary();
       sessionBoundaryWriteLockHeldRef.current = true;
@@ -111,6 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!sessionBoundaryWriteLockHeldRef.current) return;
       endEncryptedPhotoAccountBoundary();
       endPrivateKVAccountBoundary();
+      endAccountGenerationBoundary();
       sessionBoundaryWriteLockHeldRef.current = false;
     }
 
@@ -162,6 +169,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             async () => {
               if (!mounted || seq !== sessionChangeSeqRef.current) return;
               showSessionBoundary(nextSession);
+              await waitForAccountGenerationOperationsToSettle();
               await waitForPrivateKVWritesToSettle();
               await waitForEncryptedPhotoWritesToSettle();
               if (accountIsolationE2EFixture) {

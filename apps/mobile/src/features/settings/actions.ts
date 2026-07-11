@@ -2,9 +2,10 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 
 import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
-import { recordConsent } from '@/lib/consent/consent';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { getAppleAuthorizationCodeForRevocation } from '@/lib/auth/apple';
 import { BRAND, brandCachePrefix } from '@/lib/brand';
+import { recordConsent } from '@/lib/consent/consent';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
@@ -15,6 +16,8 @@ import {
 } from './localDeviceExport';
 
 const DATA_RIGHTS_BACKEND_UNAVAILABLE = 'DATA_RIGHTS_BACKEND_UNAVAILABLE';
+const DATA_EXPORT_USER_UNAVAILABLE = 'DATA_EXPORT_USER_UNAVAILABLE';
+const DATA_EXPORT_RESPONSE_OWNER_MISMATCH = 'DATA_EXPORT_RESPONSE_OWNER_MISMATCH';
 
 function assertDataRightsBackendAvailable(): void {
   if (!isSupabaseConfigured) throw new Error(DATA_RIGHTS_BACKEND_UNAVAILABLE);
@@ -71,7 +74,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function parseServerExport(data: unknown): Record<string, unknown> {
+function parseServerExport(data: unknown, expectedUserId: string): Record<string, unknown> {
   let parsed = data;
   if (typeof data === 'string') {
     try {
@@ -91,48 +94,103 @@ function parseServerExport(data: unknown): Record<string, unknown> {
   ) {
     throw new Error('DATA_EXPORT_RESPONSE_INVALID');
   }
+  if (parsed.user_id !== expectedUserId) {
+    throw new Error(DATA_EXPORT_RESPONSE_OWNER_MISMATCH);
+  }
   return parsed;
 }
 
+async function waitForExportE2EDelay(signal: AbortSignal): Promise<void> {
+  const rawDelay =
+    typeof __DEV__ !== 'undefined' && __DEV__
+      ? process.env.EXPO_PUBLIC_E2E_DATA_EXPORT_DELAY_MS
+      : undefined;
+  const delayMs = Number(rawDelay);
+  if (!Number.isFinite(delayMs) || delayMs <= 0) return;
+
+  await new Promise<void>((resolve) => {
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const finish = () => {
+      if (timeout) clearTimeout(timeout);
+      signal.removeEventListener('abort', finish);
+      resolve();
+    };
+    timeout = setTimeout(finish, Math.min(delayMs, 10_000));
+    if (signal.aborted) finish();
+    else signal.addEventListener('abort', finish, { once: true });
+  });
+}
+
 export async function exportData(): Promise<boolean> {
-  const localDeviceData = await collectLocalDeviceExportData();
-  let serverAccountData: unknown | null = null;
-  let serverAccountDataStatus: MobileDataExportBundle['server_account_data_status'] =
-    'backend_not_configured';
-
-  if (isSupabaseConfigured) {
-    const { data, error } = await supabase.functions.invoke('data-export', { method: 'POST' });
-    if (error) throw error;
-    serverAccountData = parseServerExport(data);
-    serverAccountDataStatus = 'included';
-  }
-
-  const json = JSON.stringify(
-    buildMobileDataExportBundle({
-      localDeviceData,
-      serverAccountData,
-      serverAccountDataStatus,
-    }),
-    null,
-    2,
-  );
-  const cacheDirectory = FileSystem.cacheDirectory;
-  if (!cacheDirectory) throw new Error('DATA_EXPORT_CACHE_UNAVAILABLE');
-  const exportCachePrefix = brandCachePrefix('export');
-  const uri = `${cacheDirectory}${exportCachePrefix}${Date.now()}.json`;
-  try {
-    await FileSystem.writeAsStringAsync(uri, json);
-    if (!(await Sharing.isAvailableAsync().catch(() => false))) return false;
-    try {
-      await Sharing.shareAsync(uri, {
-        mimeType: 'application/json',
-        dialogTitle: `Export your ${BRAND.appName} data`,
-      });
-      return true;
-    } catch {
-      return false;
+  return runAccountGenerationOperation(async (lease) => {
+    let expectedUserId: string | null = null;
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase.auth.getUser();
+      lease.assertCurrent();
+      if (error) throw error;
+      const userId = data.user?.id.trim();
+      if (!userId) throw new Error(DATA_EXPORT_USER_UNAVAILABLE);
+      expectedUserId = userId;
     }
-  } finally {
-    await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
-  }
+
+    const localDeviceData = await collectLocalDeviceExportData();
+    lease.assertCurrent();
+    await waitForExportE2EDelay(lease.signal);
+    lease.assertCurrent();
+    let serverAccountData: unknown | null = null;
+    let serverAccountDataStatus: MobileDataExportBundle['server_account_data_status'] =
+      'backend_not_configured';
+
+    if (expectedUserId) {
+      let response;
+      try {
+        response = await supabase.functions.invoke('data-export', {
+          method: 'POST',
+          signal: lease.signal,
+        });
+      } catch (error) {
+        lease.assertCurrent();
+        throw error;
+      }
+      lease.assertCurrent();
+      if (response.error) throw response.error;
+      serverAccountData = parseServerExport(response.data, expectedUserId);
+      serverAccountDataStatus = 'included';
+    }
+
+    const json = JSON.stringify(
+      buildMobileDataExportBundle({
+        localDeviceData,
+        serverAccountData,
+        serverAccountDataStatus,
+      }),
+      null,
+      2,
+    );
+    const cacheDirectory = FileSystem.cacheDirectory;
+    if (!cacheDirectory) throw new Error('DATA_EXPORT_CACHE_UNAVAILABLE');
+    const exportCachePrefix = brandCachePrefix('export');
+    const uri = `${cacheDirectory}${exportCachePrefix}${Date.now()}.json`;
+    try {
+      lease.assertCurrent();
+      await FileSystem.writeAsStringAsync(uri, json);
+      lease.assertCurrent();
+      const sharingAvailable = await Sharing.isAvailableAsync().catch(() => false);
+      lease.assertCurrent();
+      if (!sharingAvailable) return false;
+      try {
+        await Sharing.shareAsync(uri, {
+          mimeType: 'application/json',
+          dialogTitle: `Export your ${BRAND.appName} data`,
+        });
+        lease.assertCurrent();
+        return true;
+      } catch {
+        lease.assertCurrent();
+        return false;
+      }
+    } finally {
+      await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
+    }
+  });
 }

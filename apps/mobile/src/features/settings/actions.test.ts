@@ -2,8 +2,15 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { deleteAccount, exportData, withdrawHealthDataConsent } from './actions';
+import {
+  ACCOUNT_GENERATION_CHANGED,
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
+} from '@/lib/auth/accountGeneration';
 import { BRAND } from '@/lib/brand';
+
+import { deleteAccount, exportData, withdrawHealthDataConsent } from './actions';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
 
@@ -69,6 +76,7 @@ vi.mock('./localDeviceExport', () => ({
 
 describe('settings data export', () => {
   beforeEach(() => {
+    delete process.env.EXPO_PUBLIC_E2E_DATA_EXPORT_DELAY_MS;
     mocks.buildMobileDataExportBundle.mockReset();
     mocks.collectLocalDeviceExportData.mockReset();
     mocks.deleteAsync.mockReset();
@@ -105,7 +113,7 @@ describe('settings data export', () => {
     });
     mocks.deleteAsync.mockResolvedValue(undefined);
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
+    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
     mocks.invoke.mockResolvedValue({
       data: { export_schema_version: 2, user_id: 'user-1', account: { id: 'user-1' } },
       error: null,
@@ -121,6 +129,13 @@ describe('settings data export', () => {
 
     await expect(exportData()).resolves.toBe(true);
 
+    expect(mocks.getUser.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.collectLocalDeviceExportData.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.invoke).toHaveBeenCalledWith('data-export', {
+      method: 'POST',
+      signal: expect.any(AbortSignal),
+    });
     expect(mocks.writeAsStringAsync).toHaveBeenCalledWith(
       expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
       expect.any(String),
@@ -217,6 +232,7 @@ describe('settings data export', () => {
     await expect(exportData()).resolves.toBe(true);
 
     expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.getUser).not.toHaveBeenCalled();
     const written = JSON.parse(mocks.writeAsStringAsync.mock.calls[0]![1] as string) as Record<
       string,
       unknown
@@ -246,6 +262,72 @@ describe('settings data export', () => {
 
     expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
+  });
+
+  it('fails closed before reading local data when no authenticated export owner is available', async () => {
+    mocks.getUser.mockResolvedValueOnce({ data: { user: null }, error: null });
+
+    await expect(exportData()).rejects.toThrow('DATA_EXPORT_USER_UNAVAILABLE');
+
+    expect(mocks.collectLocalDeviceExportData).not.toHaveBeenCalled();
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+  });
+
+  it('rejects a valid server bundle owned by a different account', async () => {
+    mocks.invoke.mockResolvedValueOnce({
+      data: { export_schema_version: 2, user_id: 'user-2' },
+      error: null,
+    });
+
+    await expect(exportData()).rejects.toThrow('DATA_EXPORT_RESPONSE_OWNER_MISMATCH');
+
+    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+  });
+
+  it('aborts a delayed server export and settles it before an account boundary continues', async () => {
+    mocks.invoke.mockImplementationOnce(
+      (_name: string, options: { signal?: AbortSignal }) =>
+        new Promise((_resolve, reject) => {
+          options.signal?.addEventListener('abort', () => reject(new Error('request aborted')), {
+            once: true,
+          });
+        }),
+    );
+
+    const pendingExport = exportData();
+    await vi.waitFor(() => expect(mocks.invoke).toHaveBeenCalledOnce());
+    beginAccountGenerationBoundary();
+    try {
+      await expect(pendingExport).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+  });
+
+  it('deletes a written cache file without sharing when the account changes after the write', async () => {
+    mocks.sharingAvailable.mockResolvedValueOnce(true);
+    mocks.writeAsStringAsync.mockImplementationOnce(async () => {
+      beginAccountGenerationBoundary();
+    });
+
+    try {
+      await expect(exportData()).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(mocks.sharingAvailable).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+    expect(mocks.deleteAsync).toHaveBeenCalledWith(
+      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
+      { idempotent: true },
+    );
   });
 
   it('accepts a valid JSON-string server bundle without double encoding it', async () => {
@@ -318,7 +400,7 @@ describe('settings account deletion and consent withdrawal', () => {
     mocks.signOut.mockReset();
     mocks.writeAsStringAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
+    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
     mocks.invoke.mockResolvedValue({ data: null, error: null });
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.signOut.mockResolvedValue(undefined);

@@ -30,12 +30,15 @@ describe('account session isolation integration', () => {
   it('drains private writes, clears query memory, and keeps failed cleanup gated', () => {
     const provider = readSource('lib/auth/AuthProvider.tsx');
     const isolation = readSource('lib/auth/localAccountIsolation.ts');
+    const accountGeneration = readSource('lib/auth/accountGeneration.ts');
     const privateKV = readSource('lib/storage/privateKV.ts');
     const actions = readSource('features/settings/actions.ts');
     const supabaseClient = readSource('lib/supabase/client.ts');
 
     expect(provider).toContain('await prepareLocalDataForSession(');
     expect(provider).toContain('beginPrivateKVAccountBoundary();');
+    expect(provider).toContain('beginAccountGenerationBoundary();');
+    expect(provider).toContain('await waitForAccountGenerationOperationsToSettle();');
     expect(provider).toContain('await waitForPrivateKVWritesToSettle();');
     expect(provider).toContain('if (previousTransition) await previousTransition;');
     expect(provider).toContain('retrySessionRestoreRef.current = restoreSession;');
@@ -49,6 +52,10 @@ describe('account session isolation integration', () => {
     expect(isolation).toContain('dependencies.markCleanupRequired()');
     expect(isolation).toContain('dependencies.clearCleanupRequired()');
     expect(isolation).toContain('dependencies.clearPersistedPrivateData()');
+    expect(isolation).toContain('beginAccountGenerationBoundary();');
+    expect(isolation).toContain('waitForAccountGenerationOperationsToSettle()');
+    expect(accountGeneration).toContain('controller.abort()');
+    expect(accountGeneration).toContain('generation !== accountGeneration');
     expect(privateKV).toContain('PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY');
     expect(privateKV).toContain('generation !== accountBoundaryGeneration');
     expect(privateKV).toContain('return runAccountScopedPrivateOperation');

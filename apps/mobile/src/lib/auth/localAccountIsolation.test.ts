@@ -1,10 +1,18 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   clearAccountIsolatedState,
   prepareLocalDataForSession,
   type LocalAccountIsolationDependencies,
 } from './localAccountIsolation';
+
+const accountGenerationMocks = vi.hoisted(() => ({
+  beginAccountGenerationBoundary: vi.fn(),
+  endAccountGenerationBoundary: vi.fn(),
+  waitForAccountGenerationOperationsToSettle: vi.fn(async () => {}),
+}));
+
+vi.mock('./accountGeneration', () => accountGenerationMocks);
 
 vi.mock('@/features/photos/encryptedStorage', () => ({
   beginEncryptedPhotoAccountBoundary: vi.fn(),
@@ -67,6 +75,12 @@ function dependencies(
 }
 
 describe('local account isolation', () => {
+  beforeEach(() => {
+    accountGenerationMocks.beginAccountGenerationBoundary.mockClear();
+    accountGenerationMocks.endAccountGenerationBoundary.mockClear();
+    accountGenerationMocks.waitForAccountGenerationOperationsToSettle.mockClear();
+  });
+
   it('keeps same-user refreshes and claims an unclaimed legacy owner', async () => {
     const deps = dependencies('unclaimed');
 
@@ -169,6 +183,23 @@ describe('local account isolation', () => {
       'cancel:queries',
       'clear:queries',
     ]);
+    expect(accountGenerationMocks.beginAccountGenerationBoundary).toHaveBeenCalledOnce();
+    expect(
+      accountGenerationMocks.waitForAccountGenerationOperationsToSettle,
+    ).toHaveBeenCalledOnce();
+    expect(accountGenerationMocks.endAccountGenerationBoundary).toHaveBeenCalledOnce();
+  });
+
+  it('still clears persisted state and releases the boundary when an account operation fails', async () => {
+    const deps = dependencies();
+    accountGenerationMocks.waitForAccountGenerationOperationsToSettle.mockRejectedValueOnce(
+      new Error('account operation failed'),
+    );
+
+    await expect(clearAccountIsolatedState(deps)).rejects.toThrow('account operation failed');
+
+    expect(deps.clearPersistedPrivateData).toHaveBeenCalledOnce();
+    expect(accountGenerationMocks.endAccountGenerationBoundary).toHaveBeenCalledOnce();
   });
 
   it('keeps cleanup required after a partial failure so retry clears again before claim', async () => {

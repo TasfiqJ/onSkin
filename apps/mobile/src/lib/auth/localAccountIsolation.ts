@@ -18,6 +18,11 @@ import {
   type LocalDataOwnership,
 } from './sessionBoundary';
 import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
+} from './accountGeneration';
+import {
   claimLocalDataOwnership,
   clearLocalDataCleanupRequired,
   markLocalDataCleanupRequired,
@@ -60,9 +65,11 @@ export async function clearAccountIsolatedState(
   };
 
   await dependencies.markCleanupRequired();
+  beginAccountGenerationBoundary();
   beginPrivateKVAccountBoundary();
   beginEncryptedPhotoAccountBoundary();
   try {
+    await attempt(() => waitForAccountGenerationOperationsToSettle());
     await attempt(() => waitForPrivateKVWritesToSettle());
     await attempt(() => waitForEncryptedPhotoWritesToSettle());
     await attempt(() => dependencies.queryCache.cancelQueries());
@@ -77,6 +84,7 @@ export async function clearAccountIsolatedState(
   } finally {
     endEncryptedPhotoAccountBoundary();
     endPrivateKVAccountBoundary();
+    endAccountGenerationBoundary();
   }
 
   if (firstFailure) throw firstFailure;
