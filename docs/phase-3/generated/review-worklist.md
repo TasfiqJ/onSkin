@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-11T07:37:40.563Z
+Generated: 2026-07-11T08:58:38.041Z
 Status: pass
-Git SHA: 2fc6ea2efe7fac9fdea84e87c82467d03d435e41
+Git SHA: a9601f4444da34c7b54a8473107a17230a7c663c
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -13,7 +13,7 @@ reviewers must inspect before launch gates can close.
 ## Summary
 
 - Review items: 37
-- Source files hashed: 281
+- Source files hashed: 282
 - Missing source files: 0
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
@@ -46,7 +46,7 @@ reviewers must inspect before launch gates can close.
 | cosmeticChemistry | Recommendation catalog                            | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
 | cosmeticChemistry | Shoppable stack item labels                       | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
 | cosmeticChemistry | Routine sequencing                                | Not cleared | TBD      | TBD  | not-applicable | 25      | 0               |
-| cosmeticChemistry | Active concentration and pregnancy-caution matrix | Not cleared | TBD      | TBD  | not-applicable | 16      | 0               |
+| cosmeticChemistry | Active concentration and pregnancy-caution matrix | Not cleared | TBD      | TBD  | not-applicable | 17      | 0               |
 | cosmeticChemistry | Smart shelf labels                                | Not cleared | TBD      | TBD  | not-applicable | 19      | 0               |
 | privacySecurity   | Health-data consent and withdrawal                | Blocked     | TBD      | TBD  | not-applicable | 13      | 0               |
 | privacySecurity   | Photo privacy and local storage                   | Not cleared | TBD      | TBD  | not-applicable | 4       | 0               |
@@ -121,7 +121,7 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `98d0f550f9bf959e87af7b6c159c0fc331c691ca62cbaf2b64a8add30108933c`
+- Review snapshot SHA-256: `d2339b047a91fa01a4600cc07637e328fc4de50071c471ceeab864965e1626af`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Auto-renew, restore, cancellation, trial, and win-back copy.
@@ -149,7 +149,7 @@ Sources:
 - `apps/mobile/src/features/subscription/priceDisplay.test.ts` - 3483 bytes - sha256 `420ec71fc37fed57e2ecc31fc5ccd19098289051b29bb18e9b79f13c2b7c180f`
 - `apps/mobile/src/features/subscription/priceDisplay.ts` - 1789 bytes - sha256 `2fe6c0d3c47f9eecdef15e31b4720c47afa00c74c97b14c738583648043ea296`
 - `apps/mobile/src/features/subscription/ProGate.tsx` - 21478 bytes - sha256 `9f49de71cdd7e4ac90f34e6d9d376886a4da5a19f83e8f415187a995b4823e70`
-- `apps/mobile/src/features/subscription/proGatedRoutes.test.ts` - 15977 bytes - sha256 `4359e0b1f078aecc4e17ec895a313bb2512080aaab0ec6acbfcb6b045dc8588d`
+- `apps/mobile/src/features/subscription/proGatedRoutes.test.ts` - 15981 bytes - sha256 `2a235c59cc4576c150c8f89dbfb9618d392c00b4b3c6d87d010e7c5463ceb721`
 - `apps/mobile/src/features/subscription/ReverseTrialBanner.tsx` - 2326 bytes - sha256 `b3453ed2c4b8efa0529d97decf7c352c03cae0411bc6bfbfba231212a5ec335f`
 - `apps/mobile/src/features/subscription/serverContracts.test.ts` - 3032 bytes - sha256 `f67ac9c4c1c207a37d674ac1b05cb0b795b36ecd59255ec08404429c191052a2`
 - `apps/mobile/src/features/subscription/store.test.ts` - 9423 bytes - sha256 `0bd51518170c0b8650fd2da273d8e41e67fc79e67d61d931d26bb60b3bda024a`
@@ -472,7 +472,7 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `3ddba2315ee3936a08876a50d54883d6ff7190284fa9000e7d1c943af5a12f80`
+- Review snapshot SHA-256: `dde836aa38d08e5ede0cbab19a6838d0e7c9fe2b19f8065642b1c2172401cd2c`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Confirm order labels and conflicts.
@@ -485,16 +485,16 @@ Sources:
 - `apps/mobile/src/features/routine/cycleAnchor.ts` - 1832 bytes - sha256 `6b74832bb0e410e9abe708efd56f4be0560f26e0087020b586f395d7203d44c2`
 - `apps/mobile/src/features/routine/firstInsight.test.ts` - 5571 bytes - sha256 `39c0394d4e474a8b8419cc0751a3402657f1850a46e15dd755323cff7fb1d92a`
 - `apps/mobile/src/features/routine/firstInsight.ts` - 3670 bytes - sha256 `76bb211ba389eb77c425c8524637b3e1c738af4413be90d107fd30d87cb8f5b1`
-- `apps/mobile/src/features/routine/generate.test.ts` - 18935 bytes - sha256 `63b14677b9d54c8de0db08108dcf7b1a8650808ec20ab17603fae057d775fa28`
+- `apps/mobile/src/features/routine/generate.test.ts` - 18990 bytes - sha256 `b8c491dcd1f80d78bca23ad66144602e5b5e4a0bd5c74606a2447730b08b5ed0`
 - `apps/mobile/src/features/routine/generate.ts` - 6627 bytes - sha256 `f2a2f37431b099401b39219b29321f8f0d3609fb3d2e27f9b134d3e95a9fbc83`
 - `apps/mobile/src/features/routine/orderRoutes.test.ts` - 3423 bytes - sha256 `666b23afefe371c7351eb18a8c4d1ad83374388a0f2c92d1f1a8024799496d88`
 - `apps/mobile/src/features/routine/orderStore.test.ts` - 7094 bytes - sha256 `f331b030561729d32bed300fc8da74eafd3b1b8581b0dacae895d0b9c7282eb9`
 - `apps/mobile/src/features/routine/orderStore.ts` - 6726 bytes - sha256 `2118bfb01b5f9f1d801774161c511fac8a1e0c7197977faa02f9f2de78da7ea9`
 - `apps/mobile/src/features/routine/progressSanitizers.test.ts` - 1120 bytes - sha256 `bac657c445e5ac8a357299c341a20f45d24e53a21da1061b6eba021d61bfcf31`
 - `apps/mobile/src/features/routine/progressSanitizers.ts` - 843 bytes - sha256 `92aa1357f496178730496bd5b79a490a5c36e308503edadf3abfaf00756af1ef`
-- `apps/mobile/src/features/routine/ramp.ts` - 2619 bytes - sha256 `2b58d16a9c595e83b1198e16345d85044e74de381aa5a1ee5a1d824fed9b86ee`
-- `apps/mobile/src/features/routine/rampStore.test.ts` - 2433 bytes - sha256 `aac54bd9c387c5b87b7e907ed70a7128a5f193bb4e03e9d5a091c6d177b46f00`
-- `apps/mobile/src/features/routine/rampStore.ts` - 5626 bytes - sha256 `793cc86e0c047b467f7e8599dd31808d78d000b2bb48d3c6ddb1101c89e1dfed`
+- `apps/mobile/src/features/routine/ramp.ts` - 2685 bytes - sha256 `dca75dec56c3023227f121a35acbcbbedf1adf5e6dc972eeef5f791ac20909c4`
+- `apps/mobile/src/features/routine/rampStore.test.ts` - 2994 bytes - sha256 `f75438e423057f7f88f4f179459396878a84f9d1bce20d87d88f56052e964498`
+- `apps/mobile/src/features/routine/rampStore.ts` - 5905 bytes - sha256 `731cfafb707df1174f22df055a6dbcff1945f3000f2991b8d0b16cad48672702`
 - `apps/mobile/src/features/routine/reviewGate.test.ts` - 1458 bytes - sha256 `9134ef0d3dee8aab7efab7e1de07bd1e041a82d42f57ff7b72435abac3fe589b`
 - `apps/mobile/src/features/routine/reviewGate.ts` - 586 bytes - sha256 `ab56e4d57c55e76af25ce35fe9a9d00d9b653f810cfab50b0caf126e1ec42acd`
 - `apps/mobile/src/features/routine/scheduleContract.test.ts` - 2486 bytes - sha256 `0495aab2fc8563e3a1fe1dffb757c836b44b2fc4983d38f8d53dab4bc58b8007`
@@ -511,7 +511,7 @@ Sources:
 - Status: Not cleared
 - Required reviewer: qualified cosmetic chemist/formulator
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `33c005a6d6a8abd9a50be14c248e072e4f15cadd8ce2234332270fd011486708`
+- Review snapshot SHA-256: `587ec4393c84b530decc9b8a8db2b106ba057b1e5a8b371558ca40e5bcdb4b38`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Validate aliases, thresholds, multi-active ambiguity, low/high/unknown BHA, hydroquinone, and replacement behavior.
@@ -521,9 +521,10 @@ Sources:
 - `apps/mobile/src/features/intelligence/concentration.ts` - 7024 bytes - sha256 `a44ab1e6e6020e7e01a432d82c5aa8e8f941db4b4a870f8e0fa55e94bd8a6230`
 - `apps/mobile/src/features/intelligence/pregnancySafety.ts` - 1703 bytes - sha256 `ac39dca4dcc9f9cf19cdb695a42c8cc4c92df8abe2ea8838773d749b10de5c71`
 - `apps/mobile/src/features/scheduler/classes.ts` - 4339 bytes - sha256 `e90dedddd1881ee44433e22a2237387ef7daffa29595a67dea6dd6a774010045`
-- `apps/mobile/src/features/scheduler/cycleStore.test.ts` - 5359 bytes - sha256 `0ebb7b07fb765b8d18dbf86e88d5f1557babeed669e8eddda03e25619060fa99`
-- `apps/mobile/src/features/scheduler/cycleStore.ts` - 9185 bytes - sha256 `948c27ed68ec21212028405f6e78efe326790c2dba9db466a57fb0e39729872b`
-- `apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts` - 9500 bytes - sha256 `1f49519bf4346a46fa51a90b19d48c414433c725f7a677b278660cf0e2c7c489`
+- `apps/mobile/src/features/scheduler/CycleMutationError.tsx` - 685 bytes - sha256 `e8b9e8ed76aa9397a387cdfa718edf9d78569522166a5b5aeb267afff69aee81`
+- `apps/mobile/src/features/scheduler/cycleStore.test.ts` - 9691 bytes - sha256 `b35e7cc058ed7e8a1c343a4a9aacd957e75620e6deacb97392d7bc6558a45819`
+- `apps/mobile/src/features/scheduler/cycleStore.ts` - 13976 bytes - sha256 `4f9f94270718597328ee9d726ac550e42ff17e11b2c42053f83bfaca4ca0b811`
+- `apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts` - 13238 bytes - sha256 `670bac02b7542828f4dc81030d096004100a244966757bfd082f72b548189e93`
 - `apps/mobile/src/features/scheduler/orchestrate.test.ts` - 16805 bytes - sha256 `f0962c9ffd45488616fa178e842777f0e0be92b7dc2de3e4de30c5ddd169de8a`
 - `apps/mobile/src/features/scheduler/orchestrate.ts` - 10622 bytes - sha256 `ed1a6b2b27ac989ff73883e3eda3014949bd1ac06e19f35ddb3d85f2db7745f9`
 - `apps/mobile/src/features/scheduler/profile.test.ts` - 6509 bytes - sha256 `5c0299708eb069cf4123e321a3e50f20d1439ff23c1b0111b300ce0bd599d86f`
@@ -531,7 +532,7 @@ Sources:
 - `apps/mobile/src/features/scheduler/profileMapping.ts` - 1507 bytes - sha256 `577df4e8f085fd7944388bbd0dd9609e35007f24a8320d2362020e73d3a27f84`
 - `apps/mobile/src/features/scheduler/projection.test.ts` - 3041 bytes - sha256 `a4cd2533262ca8fc73aa5403bff6f43be21fab7fa96b03fec19b9a4ba2687a59`
 - `apps/mobile/src/features/scheduler/projection.ts` - 3918 bytes - sha256 `8d5e9983dd125f4f1438534f6aec7f855f2d9f8ccb0189b56ac6dd6e31443782`
-- `apps/mobile/src/features/scheduler/useCycle.ts` - 6717 bytes - sha256 `18887fb4658f69e913961dec0649404f90b59464678f687583f4573d9db101f8`
+- `apps/mobile/src/features/scheduler/useCycle.ts` - 8067 bytes - sha256 `1145e4e9020e647ccf4647c5a081cc01a3185ac6745797f16aa26b345f3bd66f`
 - `apps/mobile/src/features/scheduler/useCycleAnalytics.test.ts` - 805 bytes - sha256 `ac98d3eb19e85d67dfd368b06189c7e6b76ac23557de92918db68b4d40c56fed`
 - `apps/mobile/src/features/recommendations/engine.ts` - 17623 bytes - sha256 `a0d8e95df85b1a53d3def11766cf34a1b708797d552d4aad1652cb206978ef2b`
 

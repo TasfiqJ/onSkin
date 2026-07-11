@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-11T07:44:12.994Z",
-  "gitSha": "b12934f450399435b1b03db8c545aa5f0afe171a",
+  "generatedAt": "2026-07-11T08:58:00.722Z",
+  "gitSha": "a9601f4444da34c7b54a8473107a17230a7c663c",
   "evidenceDate": "2026-07-10",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -689,6 +689,25 @@
       "fileCount": 13,
       "bytes": 192529,
       "evidenceSha256": "6a5b7f56d6f0e26a1d9c83df64caa737762a88039947ee047853b66fd4da1071"
+    },
+    {
+      "id": "cycle-disruption-reconciliation-supported-phone",
+      "title": "Cycle disruption persistence and deterministic reconciliation",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-10/cycle-disruption-reconciliation-current",
+      "evidence": "summary.json",
+      "expected": "Pause, resume, recovery, variant, Start Today, and irritation flows persist before success, recover from failed private writes, reconcile one canonical projection, and remain reachable at 360 x 640 and 390 x 844.",
+      "status": "pass",
+      "detail": "summary status: pass; 0 failed routes.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "folderExists": true,
+      "evidenceExists": true,
+      "fileCount": 39,
+      "bytes": 247549,
+      "evidenceSha256": "6ee59d0fa6ed5c471a4c0594fb332a0901fedaaf438dbf09af084a37d99968b4"
     },
     {
       "id": "data-export-local-photo-disclosure-supported-phone",
