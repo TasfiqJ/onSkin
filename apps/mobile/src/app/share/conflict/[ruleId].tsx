@@ -68,7 +68,8 @@ export default function ShareConflictScreen() {
       : subjectProductId
         ? (ruleMatches.find(
             (candidate) =>
-              candidate.productAId === subjectProductId || candidate.productBId === subjectProductId,
+              candidate.productAId === subjectProductId ||
+              candidate.productBId === subjectProductId,
           ) ?? null)
         : ruleMatches.length === 1
           ? ruleMatches[0]!

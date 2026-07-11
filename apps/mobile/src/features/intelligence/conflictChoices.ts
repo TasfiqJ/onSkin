@@ -15,10 +15,10 @@ export type ConflictChoices = Record<string, ConflictChoiceRecord>;
 export function isConflictChoiceEligible(conflict: DetectedConflict): boolean {
   return Boolean(
     conflict.productAId &&
-      conflict.productBId &&
-      conflict.rule.interactionType !== 'safety' &&
-      conflict.rule.interactionType !== 'myth' &&
-      conflict.rule.interactionType !== 'synergy',
+    conflict.productBId &&
+    conflict.rule.interactionType !== 'safety' &&
+    conflict.rule.interactionType !== 'myth' &&
+    conflict.rule.interactionType !== 'synergy',
   );
 }
 

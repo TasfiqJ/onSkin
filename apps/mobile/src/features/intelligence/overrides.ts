@@ -156,11 +156,7 @@ function choicesForMutation(raw: string | null): ConflictChoices {
   } catch {
     return {};
   }
-  if (
-    isRecord(parsed) &&
-    typeof parsed.schemaVersion === 'number' &&
-    parsed.schemaVersion > 1
-  ) {
+  if (isRecord(parsed) && typeof parsed.schemaVersion === 'number' && parsed.schemaVersion > 1) {
     throw new Error('CONFLICT_CHOICES_SCHEMA_UNSUPPORTED');
   }
   return normalizeChoices(parsed)?.value.choices ?? {};
@@ -180,11 +176,7 @@ export async function loadConflictChoices(): Promise<ConflictChoices> {
     return {};
   }
 
-  if (
-    isRecord(parsed) &&
-    typeof parsed.schemaVersion === 'number' &&
-    parsed.schemaVersion > 1
-  ) {
+  if (isRecord(parsed) && typeof parsed.schemaVersion === 'number' && parsed.schemaVersion > 1) {
     throw new Error('CONFLICT_CHOICES_SCHEMA_UNSUPPORTED');
   }
 

@@ -16,10 +16,7 @@ import { Button, Card, Text } from '@/components/ui';
 import { InContextNote } from '@/features/community/InContextNote';
 import { noteForTags } from '@/features/community/notes';
 import type { DetectedConflict } from '@/features/intelligence/engine';
-import type {
-  ConflictChoices,
-  ConflictUserChoice,
-} from '@/features/intelligence/conflictChoices';
+import type { ConflictChoices, ConflictUserChoice } from '@/features/intelligence/conflictChoices';
 import { conflictShareRoute } from '@/features/intelligence/conflictIdentity';
 import { setConflictChoice } from '@/features/intelligence/overrides';
 import {
@@ -203,8 +200,8 @@ function firstSearchParam(value: string | string[] | undefined): string | null {
 }
 
 function conflictProductPairLabel(conflict: DetectedConflict): string | null {
-  const names = [conflict.productAName, conflict.productBName].filter(
-    (name): name is string => Boolean(name?.trim()),
+  const names = [conflict.productAName, conflict.productBName].filter((name): name is string =>
+    Boolean(name?.trim()),
   );
   return names.length > 0 ? names.join(' + ') : null;
 }
@@ -249,7 +246,8 @@ export default function ConflictSheet() {
       : subjectProductId
         ? ruleMatches.find(
             (candidate) =>
-              candidate.productAId === subjectProductId || candidate.productBId === subjectProductId,
+              candidate.productAId === subjectProductId ||
+              candidate.productBId === subjectProductId,
           )
         : ruleMatches.length === 1
           ? ruleMatches[0]
@@ -408,8 +406,7 @@ function ConflictFrame({
       if (handle != null) AccessibilityInfo.setAccessibilityFocus(handle);
     }, 100);
 
-    const dialog =
-      Platform.OS === 'web' ? document.getElementById('conflict-choice-dialog') : null;
+    const dialog = Platform.OS === 'web' ? document.getElementById('conflict-choice-dialog') : null;
     const trapFocus = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
@@ -870,7 +867,10 @@ function SafetyBody({
       </Text>
 
       {subjectProductLabel ? (
-        <View className="mt-3 rounded-[8px] px-3.5 py-3" style={{ backgroundColor: SAFETY_ICON_BG }}>
+        <View
+          className="mt-3 rounded-[8px] px-3.5 py-3"
+          style={{ backgroundColor: SAFETY_ICON_BG }}
+        >
           <Text className="font-mono text-[10.5px] uppercase" style={{ color: NIGHT_FAINT }}>
             Shelf product
           </Text>

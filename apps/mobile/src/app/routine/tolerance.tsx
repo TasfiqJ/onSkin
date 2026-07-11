@@ -132,7 +132,10 @@ export default function ToleranceScreen() {
             key={o.id}
             accessibilityRole="button"
             accessibilityLabel={`${o.title}. ${o.sub}`}
-            accessibilityState={{ disabled: saving || recoveryStarted, selected: selected === o.id }}
+            accessibilityState={{
+              disabled: saving || recoveryStarted,
+              selected: selected === o.id,
+            }}
             disabled={saving || recoveryStarted}
             className={cn(
               'flex-row items-center rounded-[18px] bg-paper-raised',

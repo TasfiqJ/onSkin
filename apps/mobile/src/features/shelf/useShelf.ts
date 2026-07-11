@@ -127,8 +127,7 @@ export function applyConflictChoicesToShelfData(
     conflictChoices,
     banner:
       unresolvedConflicts.find(
-        (conflict) =>
-          !isReassuring(conflict) && conflict.computedSeverity !== 'none',
+        (conflict) => !isReassuring(conflict) && conflict.computedSeverity !== 'none',
       ) ?? null,
   };
 }

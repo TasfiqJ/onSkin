@@ -7,10 +7,7 @@ import {
   type EngineProfile,
 } from '@/features/intelligence/engine';
 import { shippableRules, type ConflictRule } from '@/features/intelligence/rules';
-import {
-  unresolvedConflicts,
-  type ConflictChoices,
-} from '@/features/intelligence/conflictChoices';
+import { unresolvedConflicts, type ConflictChoices } from '@/features/intelligence/conflictChoices';
 import { pickCycle, type CycleTemplate } from '@/features/intelligence/scheduler';
 import {
   pregnancySafetyReasonForProduct,

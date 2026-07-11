@@ -225,9 +225,9 @@ describe('conflict resolution. A non-conflicting alternative (§4.3)', () => {
       }),
     );
 
-    expect(result.recommendations.some((recommendation) => recommendation.trigger === 'conflict')).toBe(
-      false,
-    );
+    expect(
+      result.recommendations.some((recommendation) => recommendation.trigger === 'conflict'),
+    ).toBe(false);
   });
 
   it('does not derive a conflict recommendation from a safety-excluded product', () => {

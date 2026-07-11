@@ -194,7 +194,11 @@ export default function PhasedIntroScreen() {
         style={{ opacity: saving ? 0.55 : 1 }}
       >
         <Text variant="bodySm" tone="muted" className="font-sans-semibold">
-          {saving ? 'Saving change...' : saveFailed ? 'Try adding it now again' : 'Add it now anyway'}
+          {saving
+            ? 'Saving change...'
+            : saveFailed
+              ? 'Try adding it now again'
+              : 'Add it now anyway'}
         </Text>
       </Pressable>
     </Sheet>

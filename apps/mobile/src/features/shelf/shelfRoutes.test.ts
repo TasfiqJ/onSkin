@@ -835,7 +835,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain("import { useCycle } from '@/features/scheduler/useCycle';");
     expect(source).toContain('const { data: cycleData } = useCycle();');
     expect(source).toContain('cycleNightNumbers: cycleNightNumbers?.length');
-    expect(source).toContain('usage.cycleNightNumbers.join(\', \')');
+    expect(source).toContain("usage.cycleNightNumbers.join(', ')");
     expect(source).not.toContain('pm.cyclingNight');
     expect(source).toContain('{!archived ? <RoutineUsageCard usage={usage} /> : null}');
   });

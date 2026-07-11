@@ -129,15 +129,14 @@ describe('Conflict route contracts', () => {
 
   it('keeps recommendation conflict routes tied to the detected product pair', () => {
     const route = readAppRoute('recommendations/[id].tsx');
-    const engine = readFileSync(
-      `${APP_DIR}/../features/recommendations/engine.ts`,
-      'utf8',
-    );
+    const engine = readFileSync(`${APP_DIR}/../features/recommendations/engine.ts`, 'utf8');
 
     expect(engine).toContain('relatedConflictProductIds: [string, string] | null;');
     expect(engine).toContain('const id = `conflict:${conflictKey(topConflict)}`;');
     expect(engine).toContain('relatedConflictProductIds: productIds');
-    expect(route).toContain('const [productAId, productBId] = rec.relatedConflictProductIds ?? [];');
+    expect(route).toContain(
+      'const [productAId, productBId] = rec.relatedConflictProductIds ?? [];',
+    );
     expect(route).toContain('...(productAId && productBId ? { productAId, productBId } : {})');
   });
 
@@ -170,7 +169,7 @@ describe('Conflict route contracts', () => {
     expect(source).not.toContain("invalidateQueries({ queryKey: ['shelf'] })");
     expect(privateKV).toContain('EXPO_PUBLIC_E2E_CONFLICT_CHOICE_SAVE_FAILURE');
     expect(privateKV).toContain('await new Promise((resolve) => setTimeout(resolve, 600));');
-    expect(privateKV).toContain("key !== CONFLICT_CHOICE_STORAGE_KEY");
+    expect(privateKV).toContain('key !== CONFLICT_CHOICE_STORAGE_KEY');
     expect(source).toContain('Choice not saved');
     expect(source).toContain('Your previous schedule is unchanged. Try again.');
     expect(source).toContain('accessibilityRole="alert"');
@@ -186,7 +185,9 @@ describe('Conflict route contracts', () => {
     expect(source).toContain('{productPairLabel}');
     expect(source).toContain('function conflictSuggestion');
     expect(source).toContain('conflict.productAName} and ${conflict.productBName}');
-    expect(source).toContain("[familyTitle(conflict), productPairLabel].filter(Boolean).join('. ')");
+    expect(source).toContain(
+      "[familyTitle(conflict), productPairLabel].filter(Boolean).join('. ')",
+    );
   });
 
   it('keeps dense conflict sheets scrollable and actions touchable on short phones', () => {
@@ -215,7 +216,7 @@ describe('Conflict route contracts', () => {
     expect(source).toContain('accessibilityLabel={dialogLabel}');
     expect(source).toContain('accessibilityViewIsModal');
     expect(source).toContain('onAccessibilityEscape={onDismiss}');
-    expect(source).toContain("nativeID=\"conflict-choice-dialog\"");
+    expect(source).toContain('nativeID="conflict-choice-dialog"');
     expect(source).toContain("dialog?.addEventListener('keydown', trapFocus)");
     expect(source).toContain("if (event.key === 'Escape')");
     expect(source).toContain('event.stopPropagation();');

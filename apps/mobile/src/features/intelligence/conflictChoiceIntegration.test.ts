@@ -69,7 +69,7 @@ describe('conflict choice integration contracts', () => {
     expect(migration).toContain("status in ('accepted', 'overridden')");
     expect(migration).toContain("'accept_suggested_timing'");
     expect(migration).toContain('first_value(id) over');
-    expect(migration).toContain("from pg_constraint");
+    expect(migration).toContain('from pg_constraint');
     expect(migration).toContain('product_a_id::text < product_b_id::text');
     expect(migration).toContain('create unique index if not exists');
     expect(migration).toContain('(user_id, rule_id, product_a_id, product_b_id)');
@@ -80,7 +80,7 @@ describe('conflict choice integration contracts', () => {
     const mutations = readSource('features/shelf/mutations.ts');
 
     expect(mutations).toContain('id: p.id,');
-    expect(mutations).toContain(".upsert(");
+    expect(mutations).toContain('.upsert(');
     expect(mutations).toContain("{ onConflict: 'id' }");
     expect(mutations).toContain('status: p.status');
     expect(mutations).toContain('finished_at: p.finishedAt');
