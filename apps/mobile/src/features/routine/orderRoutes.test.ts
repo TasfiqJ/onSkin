@@ -34,6 +34,8 @@ describe('persistent routine order route contracts', () => {
     expect(source).toContain('if (saveInFlight.current || persistenceUnavailable) return;');
     expect(source).toContain('saveInFlight.current = true;');
     expect(source).toContain('saveInFlight.current = false;');
+    expect(source).toContain('mode: changedPhase');
+    expect(source).not.toContain('phase: changedPhase');
     expect(cacheIndex).toBeGreaterThan(saveIndex);
     expect(trackIndex).toBeGreaterThan(cacheIndex);
     expect(exitIndex).toBeGreaterThan(trackIndex);

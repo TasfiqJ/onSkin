@@ -202,12 +202,12 @@ function ReorderEditor({
         const changedPhase = amChanged && pmChanged ? 'both' : amChanged ? 'am' : 'pm';
         track('step_reordered', {
           action: 'saved',
-          phase: changedPhase,
+          mode: changedPhase,
           source: 'routine_reorder',
         });
         track('routine_edited', {
           action: 'reordered',
-          phase: changedPhase,
+          mode: changedPhase,
           source: 'routine_reorder',
         });
       }
