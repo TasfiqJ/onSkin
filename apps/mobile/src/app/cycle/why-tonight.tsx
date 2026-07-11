@@ -4,6 +4,7 @@ import { View } from 'react-native';
 
 import { Button, Sheet, Text } from '@/components/ui';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
+import type { NightReconciliationReason } from '@/features/scheduler/orchestrate';
 import { hasUseTogetherChoiceBetween, useCycle } from '@/features/scheduler/useCycle';
 import { track } from '@/lib/analytics/track';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -23,6 +24,25 @@ function slotTitle(slot: string, isTonight: boolean, weekday: string): string {
   return `${when} is an active night.`;
 }
 
+function customRecoveryExplanation(
+  reason: NightReconciliationReason | null | undefined,
+): string | null {
+  switch (reason) {
+    case 'authored_recovery':
+      return 'You chose recovery for this night in your Custom cycle.';
+    case 'missing':
+      return 'The active saved here is no longer on your shelf, so this night stays recovery until you save your cycle.';
+    case 'safety':
+      return 'The active you chose is paused by your current safety setting, so this night stays recovery.';
+    case 'staged':
+      return 'The active you chose is still being introduced gradually, so this night stays recovery for now.';
+    case 'cadence_cap':
+      return 'This saved occurrence is above the active’s current cadence, so it stays recovery until your allowed pace changes.';
+    default:
+      return null;
+  }
+}
+
 function TraceRow({ tag, children, last }: { tag: string; children: string; last?: boolean }) {
   return (
     <View
@@ -31,7 +51,7 @@ function TraceRow({ tag, children, last }: { tag: string; children: string; last
         last ? undefined : { borderBottomWidth: 1, borderBottomColor: 'rgba(244,239,231,0.08)' }
       }
     >
-      <Text className="w-14 font-mono text-[11px]" style={{ color: colors.clayBright }}>
+      <Text className="w-[68px] font-mono text-[11px]" style={{ color: colors.clayBright }}>
         {tag}
       </Text>
       <Text
@@ -128,6 +148,9 @@ export default function WhyTonightScreen() {
   const manualPairNames = manualChoice?.productIds
     .map((productId) => scheduledNames.get(productId))
     .filter((name): name is string => Boolean(name));
+  const reconciliationExplanation = customRecoveryExplanation(
+    selectedNight.night.reconciliationReason,
+  );
 
   return (
     <Sheet tone="night" fallbackRoute={APP_HOME_ROUTE} scroll>
@@ -147,6 +170,9 @@ export default function WhyTonightScreen() {
         <TraceRow tag="CYCLE">
           {`${selectedNightPrefix} night ${selectedNight.index + 1} of your ${cycle.variant} cycle. The ${selectedSlotLabel} slot.`}
         </TraceRow>
+        {reconciliationExplanation ? (
+          <TraceRow tag="CUSTOM">{reconciliationExplanation}</TraceRow>
+        ) : null}
         {manualPairNames?.length === 2 ? (
           <TraceRow tag="CHOICE">
             {`You saved your own timing choice for ${manualPairNames.join(' + ')}. Guided check-offs keep one potent active per night until co-use timing is reviewed.`}

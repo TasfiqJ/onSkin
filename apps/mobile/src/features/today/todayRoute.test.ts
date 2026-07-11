@@ -160,7 +160,10 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('completedBefore: done');
     expect(source).toContain('completedKey: key');
     expect(source).toContain("phase: 'PM'");
-    expect(source).toContain('cycleActive: Boolean(cycle && cTonight)');
+    expect(source).toContain('cTonight?.night.productId &&');
+    expect(source).toContain('!paused &&');
+    expect(source).toContain('!skippedTonight &&');
+    expect(source).toContain('!recoveryActive,');
     expect(source).toContain('stepKeys: pmStepKeys');
     expect(source).toContain("track('cycle_night_completed', { moment: 'pm', source: 'today' })");
     const eventIndex = source.indexOf("track('cycle_night_completed'");

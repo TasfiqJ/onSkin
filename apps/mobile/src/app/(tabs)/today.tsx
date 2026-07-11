@@ -539,11 +539,7 @@ export default function TodayScreen() {
               onPress={() => {
                 haptics.select();
                 router.push(
-                  recoveryActive
-                    ? '/cycle/recovery'
-                    : paused
-                      ? '/cycle/disruption'
-                      : '/cycle/week',
+                  recoveryActive ? '/cycle/recovery' : paused ? '/cycle/disruption' : '/cycle/week',
                 );
               }}
             >
@@ -829,7 +825,13 @@ export default function TodayScreen() {
                     onPress={() =>
                       void toggle(k, {
                         phase: 'PM',
-                        cycleActive: Boolean(cycle && cTonight),
+                        cycleActive: Boolean(
+                          cycle &&
+                          cTonight?.night.productId &&
+                          !paused &&
+                          !skippedTonight &&
+                          !recoveryActive,
+                        ),
                         stepKeys: pmStepKeys,
                       })
                     }

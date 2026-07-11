@@ -1,0 +1,28 @@
+{
+  "capturedAt": "2026-07-11T16:19:28.281Z",
+  "unexpectedErrorCount": 0,
+  "expectedWarnings": [
+    "Supabase placeholder URL/key",
+    "expo-notifications web limitation"
+  ],
+  "entries": [
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_URL is not a valid Supabase URL. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-11T16:18:14.316Z",
+      "url": "http://localhost:8154/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[env] EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY is not set. Using placeholder. BLOCKED: B-SUPABASE",
+      "timestamp": "2026-07-11T16:18:14.317Z",
+      "url": "http://localhost:8154/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    },
+    {
+      "level": "warn",
+      "message": "[expo-notifications] Listening to push token changes is not yet fully supported on web. Adding a listener will have no effect.",
+      "timestamp": "2026-07-11T16:18:14.328Z",
+      "url": "http://localhost:8154/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.routerRoot=src%2Fapp&transform.reactCompiler=true"
+    }
+  ]
+}

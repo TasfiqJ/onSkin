@@ -8,6 +8,7 @@ import { STARTER_RULES, shippableRules } from '@/features/intelligence/rules';
 import { ROUTINE_CADENCE_REVIEWED } from '@/features/routine/reviewGate';
 
 import { CAPS_REVIEWED, frequencyCap, reviewedFrequencyCap } from './classes';
+import { allowedCustomCycleOccurrences, approximateWeeklyFrequency } from './customCycle';
 import {
   orchestrate,
   type Cycle,
@@ -141,6 +142,48 @@ describe('orchestration. FIRM invariants (docs/05 §4)', () => {
     expect(cycle!.nights.filter((n) => n.slot === 'retinoid').length).toBe(cap);
   });
 
+  it('uses the authored-cycle weekly budget for every generated cycle length', () => {
+    const cases = [
+      orchestrate([active('g', 'Glycolic', ['aha'])], {
+        ...base,
+        sensitivity: 'sensitive',
+        freqByProductId: { g: 1 },
+      }),
+      orchestrate([active('r', 'Retinol', ['retinoid'])], {
+        ...base,
+        freqByProductId: { r: 2 },
+      }),
+      orchestrate([active('r', 'Retinol', ['retinoid'])], {
+        ...base,
+        sensitivity: 'resistant',
+        freqByProductId: { r: 7 },
+      }),
+    ];
+
+    for (const result of cases) {
+      const cycle = result.cycle!;
+      for (const active of result.cycleActives.filter((item) => !item.staged && item.eligible)) {
+        const occurrences = cycle.nights.filter((night) => night.productId === active.id).length;
+        expect(occurrences).toBeLessThanOrEqual(
+          allowedCustomCycleOccurrences(active.maxFrequencyPerWeek, cycle.lengthNights),
+        );
+        expect(approximateWeeklyFrequency(occurrences, cycle.lengthNights)).toBeLessThanOrEqual(
+          active.maxFrequencyPerWeek,
+        );
+      }
+    }
+  });
+
+  it('normalizes an unexpected fractional ramp once for generation and editing', () => {
+    const result = orchestrate([active('r', 'Retinol', ['retinoid'])], {
+      ...base,
+      freqByProductId: { r: 2.8 },
+    });
+
+    expect(result.cycleActives[0]?.maxFrequencyPerWeek).toBe(2);
+    expect(result.cycle?.nights.filter((night) => night.productId === 'r')).toHaveLength(2);
+  });
+
   it('keeps vitamin C + niacinamide in the AM, off the night cycle', () => {
     const { cycle } = run(cabinet);
     const amClasses = cycle!.amDaily.map((a) => a.className);
@@ -217,6 +260,33 @@ describe('orchestration. FIRM invariants (docs/05 §4)', () => {
     expect(cycle?.nights.some((night) => night.productId === 'r')).toBe(true);
     expect(cycle?.amDaily).toEqual([
       { productId: 'bp', name: 'Benzoyl peroxide', className: 'benzoyl_peroxide' },
+    ]);
+  });
+
+  it('exposes a stable editor-active contract after safety and phased-introduction checks', () => {
+    const products = [active('r', 'Retinol', ['retinoid']), active('g', 'Glycolic', ['aha'], true)];
+    const result = orchestrate([...products].reverse(), {
+      ...base,
+      freqByProductId: { r: 2, g: 1 },
+    });
+
+    expect(result.cycleActives).toEqual([
+      {
+        id: 'g',
+        name: 'Glycolic',
+        className: 'aha',
+        eligible: true,
+        staged: true,
+        maxFrequencyPerWeek: 1,
+      },
+      {
+        id: 'r',
+        name: 'Retinol',
+        className: 'retinoid',
+        eligible: true,
+        staged: false,
+        maxFrequencyPerWeek: 2,
+      },
     ]);
   });
 });
@@ -303,11 +373,12 @@ describe('orchestration. Safety + fallback', () => {
   );
 
   it('pregnancy suppresses the retinoid and routes to the safety note', () => {
-    const { cycle, notes } = run(
+    const { cycle, cycleActives, notes } = run(
       [active('r', 'Retinol', ['retinoid']), active('g', 'Glycolic', ['aha'])],
       { ...base, pregnancy: true },
     );
     expect(cycle!.nights.some((n) => n.slot === 'retinoid')).toBe(false);
+    expect(cycleActives.find((active) => active.id === 'r')).toMatchObject({ eligible: false });
     expect(notes.join(' ')).toMatch(/pregnan|doctor/i);
     expect(notes.join(' ')).not.toMatch(/danger|warning|!/i);
   });

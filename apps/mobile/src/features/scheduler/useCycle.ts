@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
+import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { useRamp } from '@/features/routine/useRamp';
 import { useShelf } from '@/features/shelf/useShelf';
 import { localDateString } from '@/features/today/useToday';
@@ -15,6 +16,7 @@ import {
   pauseCycle,
   recoveryProgress,
   resumeCycle,
+  saveCustomCycleDefinition,
   skipTonight,
   startCycleToday,
   startRecovery,
@@ -22,6 +24,11 @@ import {
   type CycleConfig,
   type RecoveryReason,
 } from './cycleStore';
+import {
+  applyCustomCycleDefinition,
+  type CustomCycleDefinition,
+  type CycleEditorActive,
+} from './customCycle';
 import {
   orchestrate,
   type Cycle,
@@ -38,6 +45,7 @@ import { nextSlotDate, nightFor, nightIndex, weekAhead, type ProjectedNight } fr
 
 export type CycleData = {
   cycle: Cycle | null;
+  recommendedCycle: Cycle | null;
   config: CycleConfig;
   tonight: { index: number; night: NightSlot } | null;
   weekAhead: ProjectedNight[];
@@ -49,6 +57,8 @@ export type CycleData = {
   /** Ids of actives currently staged out by phased introduction (docs/05 §6.2),
    *  so a surface can offer "add it now anyway" against the real product. */
   stagedActiveIds: string[];
+  cycleActives: CycleEditorActive[];
+  knownProductIds: string[];
   notes: string[];
   conflictChoices: ScheduledConflictChoice[];
 };
@@ -125,6 +135,7 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
   // ramped frequency reaches the scheduler instead of every active defaulting to
   // the class cap (docs/05 §4: freq = min(ramp.freq_per_week, frequency_cap)).
   const ramp = useRamp();
+  const cadenceReady = canUseRoutineCadence();
   // Per-product ramp frequency keyed by engineProduct.id (== user_product id ==
   // rampStore key), built from the merged plan-initial + persisted-override ramp.
   const freqByProductId = useMemo<Record<string, number>>(() => {
@@ -150,18 +161,35 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
         daysSince(i.product.createdAt) <= 3 &&
         !config.stagingOverrides.includes(i.engineProduct.id),
     }));
-    const stagedActiveIds = actives.filter((a) => a.isNew).map((a) => a.id);
-
-    const { cycle, notes, conflictChoices } = orchestrate(actives, {
+    const {
+      cycle: recommendedCycle,
+      amDaily,
+      cycleActives,
+      notes,
+      conflictChoices,
+    } = orchestrate(actives, {
       sensitivity: profile.data.sensitivity,
       pregnancy: profile.data.pregnancy,
       pregnancySafety: profile.data.pregnancySafety,
       pregnancyStatus: profile.data.pregnancyStatus,
       goals: profile.data.goals,
-      preferredVariant: config.variant === 'auto' ? null : config.variant,
+      preferredVariant:
+        config.variant === 'auto' || config.variant === 'custom' ? null : config.variant,
       freqByProductId,
       conflictChoices: shelf.data.conflictChoices,
     });
+    const cycle =
+      cadenceReady && config.variant === 'custom' && config.customCycle
+        ? applyCustomCycleDefinition({
+            definition: config.customCycle,
+            actives: cycleActives,
+            amDaily,
+            notes,
+          })
+        : recommendedCycle;
+    const stagedActiveIds = cycleActives
+      .filter((active) => active.staged)
+      .map((active) => active.id);
 
     const anchor = config.anchorISO;
     const tonight = cycle
@@ -173,6 +201,7 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
 
     return {
       cycle,
+      recommendedCycle,
       config,
       tonight,
       weekAhead: week,
@@ -181,10 +210,12 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
       paused: config.pausedFrom != null,
       skippedTonight: config.skips.includes(today),
       stagedActiveIds,
+      cycleActives,
+      knownProductIds: actives.map((active) => active.id),
       notes,
       conflictChoices,
     };
-  }, [shelf.data, cfg.data, profile.data, freqByProductId, today]);
+  }, [shelf.data, cfg.data, profile.data, freqByProductId, today, cadenceReady]);
 
   return {
     data,
@@ -204,6 +235,11 @@ export function useCycleMutations() {
     async setVariant(variant: CycleConfig['variant']) {
       await commit(() => updateCycleConfig({ variant }));
       track('cycle_variant_changed', { variant });
+    },
+    async saveCustom(definition: CustomCycleDefinition, variantChanged: boolean) {
+      await commit(() => saveCustomCycleDefinition(definition));
+      if (variantChanged) track('cycle_variant_changed', { variant: 'custom' });
+      track('routine_edited', { action: 'cycle_customized', source: 'cycle_settings' });
     },
     async start() {
       await commit(startCycleToday);

@@ -266,7 +266,45 @@ A calm settings surface to:
 - **Set per-active frequency** (within the caps, §4).
 - **Add/remove an active** from the cycle (re-runs orchestration, §4).
 
-Edits that **violate a rule** (two potent actives on a night, exceeding a frequency cap, putting an exfoliant on a retinoid night) produce a **gentle, non-blocking nudge** ("Most people keep acids and retinol on separate nights to protect the barrier — want me to space them out?") and the user may proceed anyway, except where docs/02's **`safety`** path applies (pregnancy × retinoid), which defers to the clinician copy (docs/02 §4.8). This mirrors docs/03 §7's reorder behaviour: guidance, not gates — firmest only where harm is real.
+Advisory edits such as placing repeated same-class actives on adjacent nights
+produce a **gentle, non-blocking nudge** ("Most people keep a recovery night
+between repeated actives — want me to space them out?") and the user may proceed.
+One product per night, the current ramp/reviewed frequency cap, and docs/02's
+**`safety`** path remain authoritative; pregnancy × retinoid defers to the
+clinician copy (docs/02 §4.8). This mirrors docs/03 §7's distinction between
+guidance and gates — firmest only where harm or silent escalation is real.
+
+**V1 authored-cycle reconciliation (accepted 2026-07-10).** Custom is an
+explicit Save/Cancel transaction over one schema-versioned encrypted cycle
+record. Its length follows the existing server-target constraint of 1-14
+nights; each night stores either one stable shelf-product ID or recovery, and
+at least one recovery night remains required. Assignment count is the user's
+requested frequency and is shown as an approximate weekly cadence, but the
+editor does not mutate the separate ramp. Generated and Custom cycles use the
+same length-aware occurrence budget: `floor(min(ramp, reviewed_cap) * length /
+7)`, with one recovery slot retained. Safety/cadence filtering runs first;
+closing the global cadence-review gate withholds both generated and Custom
+projection rather than treating known authored products as missing.
+temporarily ineligible authored IDs and cadence-excess occurrences are retained
+but project as recovery. This retained intent does not block Save or a structural
+length edit. Missing shelf IDs project as recovery and prune on the next explicit
+save. Each projected Custom night carries its authored product ID and one exact
+reconciliation reason (`null` for applied, `authored_recovery`, `missing`,
+`safety`, `staged`, or `cadence_cap`) so Why Tonight can explain the result. New products
+are never silently inserted into a Custom cycle; selecting a staged product
+explicitly introduces it in the same atomic save, and the preview models that
+post-save state. Preset variants regenerate without deleting Custom; returning
+to Custom restores it, while the recommendation used to initialize/reset Custom
+remains Auto-derived. Structural edits keep the existing anchor rather than
+silently restarting at Night 1. One product per night, applied safety/cadence
+bounds, and one recovery slot are firm; repeated same-class adjacency remains a
+non-blocking spacing nudge with a recommended reset action. The current record
+uses isolated encrypted key `routinekind.cycle.v2`; valid legacy
+`onskin.cycle.v1` state migrates one way, and unreadable or future-schema data is
+preserved and fails closed. Current v2 requires an explicit schema. Device export
+uses v2 as `cycle_configuration` and labels the retained old value as legacy.
+Persistence, cache publication, route-level pending exits, and failure/retry
+follow the atomic disruption contract in §3.
 
 #### 6.3 "Why is this on tonight?" explainability
 

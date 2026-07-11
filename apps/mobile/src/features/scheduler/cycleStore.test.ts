@@ -7,6 +7,7 @@ import {
   pauseCycle,
   recoveryProgress,
   resumeCycle,
+  saveCustomCycleDefinition,
   startCycleToday,
   startRecovery,
   updateCycleConfig,
@@ -26,12 +27,14 @@ vi.mock('@/lib/storage/privateKV', () => ({
   updatePrivateItem: mocks.updatePrivateItem,
 }));
 
-const CYCLE_KEY = 'onskin.cycle.v1';
+const CYCLE_KEY = 'routinekind.cycle.v2';
+const LEGACY_CYCLE_KEY = 'onskin.cycle.v1';
 const LEGACY_ANCHOR_KEY = 'onskin.cycleAnchor';
 const TODAY = '2026-07-10';
 
 function config(overrides: Partial<CycleConfig> = {}): CycleConfig {
   return {
+    schemaVersion: 1,
     variant: 'classic',
     anchorISO: '2026-07-01',
     pausedFrom: null,
@@ -39,6 +42,7 @@ function config(overrides: Partial<CycleConfig> = {}): CycleConfig {
     recovery: null,
     skips: [],
     stagingOverrides: [],
+    customCycle: null,
     ...overrides,
   };
 }
@@ -46,6 +50,12 @@ function config(overrides: Partial<CycleConfig> = {}): CycleConfig {
 function storeCycle(value: CycleConfig | Record<string, unknown>): string {
   const raw = JSON.stringify(value);
   mocks.storage.set(CYCLE_KEY, raw);
+  return raw;
+}
+
+function storeLegacyCycle(value: CycleConfig | Record<string, unknown>): string {
+  const raw = JSON.stringify(value);
+  mocks.storage.set(LEGACY_CYCLE_KEY, raw);
   return raw;
 }
 
@@ -97,38 +107,32 @@ describe('cycle configuration persistence and reconciliation', () => {
     });
   });
 
-  it('clears malformed cycle state and falls back to the legacy anchor', async () => {
-    mocks.storage.set(CYCLE_KEY, JSON.stringify({ variant: 'fast', anchorISO: 'tomorrow' }));
+  it('fails closed and preserves malformed current cycle state', async () => {
+    const before = storeCycle({ variant: 'fast', anchorISO: 'tomorrow' });
     mocks.storage.set(LEGACY_ANCHOR_KEY, '2026-01-10');
 
-    await expect(loadCycleConfig()).resolves.toMatchObject({
-      variant: 'auto',
-      anchorISO: '2026-01-10',
-      pausedFrom: null,
-      recovery: null,
-    });
-    expect(mocks.storage.has(CYCLE_KEY)).toBe(false);
+    await expect(loadCycleConfig()).rejects.toThrow('CYCLE_CONFIG_INVALID');
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+    expect(mocks.removePrivateItem).not.toHaveBeenCalledWith(CYCLE_KEY);
   });
 
-  it('rejects impossible calendar dates before projection reads the cycle', async () => {
-    storeCycle(config({ anchorISO: '2026-02-31' }));
+  it('rejects impossible calendar dates without deleting the record', async () => {
+    const before = storeCycle(config({ anchorISO: '2026-02-31' }));
     mocks.storage.set(LEGACY_ANCHOR_KEY, '2026-01-10');
 
-    await expect(loadCycleConfig()).resolves.toMatchObject({
-      variant: 'auto',
-      anchorISO: '2026-01-10',
-    });
-    expect(mocks.storage.has(CYCLE_KEY)).toBe(false);
+    await expect(loadCycleConfig()).rejects.toThrow('CYCLE_CONFIG_INVALID');
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
   });
 
-  it('normalizes a valid legacy partial config and writes the stable shape', async () => {
-    storeCycle({
+  it('migrates a valid legacy partial config into the isolated current key', async () => {
+    const legacyRaw = storeLegacyCycle({
       variant: 'gentle',
       anchorISO: '2026-07-01',
       skips: ['2026-07-11'],
     });
 
     await expect(loadCycleConfig()).resolves.toEqual({
+      schemaVersion: 1,
       variant: 'gentle',
       anchorISO: '2026-07-01',
       pausedFrom: null,
@@ -136,12 +140,75 @@ describe('cycle configuration persistence and reconciliation', () => {
       recovery: null,
       skips: ['2026-07-11'],
       stagingOverrides: [],
+      customCycle: null,
     });
     expect(JSON.parse(mocks.storage.get(CYCLE_KEY) ?? '{}')).toMatchObject({
       pauseReason: null,
       recovery: null,
       stagingOverrides: [],
+      customCycle: null,
     });
+    expect(mocks.storage.get(LEGACY_CYCLE_KEY)).toBe(legacyRaw);
+  });
+
+  it('ignores later downgrade writes to the isolated legacy key', async () => {
+    storeLegacyCycle(config({ variant: 'gentle' }));
+    await expect(loadCycleConfig()).resolves.toMatchObject({ variant: 'gentle' });
+
+    storeLegacyCycle(config({ variant: 'advanced' }));
+    await expect(loadCycleConfig()).resolves.toMatchObject({ variant: 'gentle' });
+  });
+
+  it('preserves invalid legacy state and does not create a current record', async () => {
+    const legacyRaw = storeLegacyCycle({ ...config(), schemaVersion: 2 });
+
+    await expect(loadCycleConfig()).rejects.toThrow('CYCLE_CONFIG_INVALID');
+    expect(mocks.storage.get(LEGACY_CYCLE_KEY)).toBe(legacyRaw);
+    expect(mocks.storage.has(CYCLE_KEY)).toBe(false);
+  });
+
+  it('preserves unknown custom-cycle schemas instead of projecting or deleting them', async () => {
+    const before = storeCycle({
+      ...config(),
+      variant: 'custom',
+      customCycle: {
+        schemaVersion: 2,
+        lengthNights: 2,
+        nights: [{ productId: 'retinol' }, { productId: null }],
+      },
+    });
+    mocks.storage.set(LEGACY_ANCHOR_KEY, '2026-01-10');
+
+    await expect(loadCycleConfig()).rejects.toThrow('CYCLE_CONFIG_INVALID');
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+  });
+
+  it('preserves a future top-level schema for a newer app build', async () => {
+    const before = storeCycle({ ...config(), schemaVersion: 2 });
+
+    await expect(loadCycleConfig()).rejects.toThrow('CYCLE_CONFIG_INVALID');
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+  });
+
+  it('requires an explicit schema on the current key while legacy migration stays compatible', async () => {
+    const missingSchema: Record<string, unknown> = { ...config() };
+    delete missingSchema.schemaVersion;
+    const before = storeCycle(missingSchema);
+
+    await expect(loadCycleConfig()).rejects.toThrow('CYCLE_CONFIG_INVALID');
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+  });
+
+  it('propagates private read failures without creating fallback state', async () => {
+    const before = storeCycle(config());
+    mocks.getPrivateItem.mockImplementation(async (key: string) => {
+      if (key === CYCLE_KEY) throw new Error('private read failed');
+      return mocks.storage.get(key) ?? null;
+    });
+
+    await expect(loadCycleConfig()).rejects.toThrow('private read failed');
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
   });
 
   it('trims and deduplicates stored dates and product ids', async () => {
@@ -171,9 +238,7 @@ describe('cycle configuration persistence and reconciliation', () => {
   it('rejects an invalid recovery duration before touching private storage', async () => {
     const before = storeCycle(config());
 
-    await expect(startRecovery(0, 'irritation')).rejects.toThrow(
-      'CYCLE_RECOVERY_INPUT_INVALID',
-    );
+    await expect(startRecovery(0, 'irritation')).rejects.toThrow('CYCLE_RECOVERY_INPUT_INVALID');
     expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
     expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
   });
@@ -302,16 +367,93 @@ describe('cycle configuration persistence and reconciliation', () => {
     expect(mocks.updatePrivateItem).toHaveBeenCalledTimes(1);
   });
 
+  it('saves the complete custom definition and phased choices in one atomic update', async () => {
+    storeCycle(
+      config({
+        pausedFrom: '2026-07-09',
+        pauseReason: 'break',
+        stagingOverrides: ['existing'],
+      }),
+    );
+    const customCycle = {
+      schemaVersion: 1 as const,
+      lengthNights: 7,
+      nights: [
+        { productId: 'aha' },
+        { productId: null },
+        { productId: 'retinoid' },
+        { productId: null },
+        { productId: null },
+        { productId: null },
+        { productId: null },
+      ],
+    };
+
+    await expect(saveCustomCycleDefinition(customCycle)).resolves.toMatchObject({
+      schemaVersion: 1,
+      variant: 'custom',
+      anchorISO: '2026-07-01',
+      pausedFrom: '2026-07-09',
+      customCycle,
+      stagingOverrides: ['existing', 'aha', 'retinoid'],
+    });
+    expect(mocks.updatePrivateItem).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects invalid custom definitions before touching private storage', async () => {
+    const before = storeCycle(config());
+
+    await expect(
+      saveCustomCycleDefinition({
+        schemaVersion: 1,
+        lengthNights: 1,
+        nights: [{ productId: 'retinoid' }],
+      }),
+    ).rejects.toThrow('CUSTOM_CYCLE_INVALID');
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
+  });
+
+  it('keeps a saved custom definition when a preset is selected', async () => {
+    const customCycle = {
+      schemaVersion: 1 as const,
+      lengthNights: 2,
+      nights: [{ productId: 'retinoid' }, { productId: null }],
+    };
+    storeCycle(config({ variant: 'custom', customCycle }));
+
+    await expect(updateCycleConfig({ variant: 'gentle' })).resolves.toMatchObject({
+      variant: 'gentle',
+      customCycle,
+    });
+  });
+
   it('serializes independent staging updates without dropping either product', async () => {
     storeCycle(config());
 
-    await Promise.all([
-      overrideStagingProducts(['retinol']),
-      overrideStagingProducts(['azelaic']),
-    ]);
+    await Promise.all([overrideStagingProducts(['retinol']), overrideStagingProducts(['azelaic'])]);
 
     await expect(loadCycleConfig()).resolves.toMatchObject({
       stagingOverrides: ['retinol', 'azelaic'],
+    });
+  });
+
+  it('preserves a concurrent disruption while saving a complete Custom definition', async () => {
+    storeCycle(config());
+    const customCycle = {
+      schemaVersion: 1 as const,
+      lengthNights: 2,
+      nights: [{ productId: 'retinol' }, { productId: null }],
+    };
+
+    await Promise.all([pauseCycle('travel'), saveCustomCycleDefinition(customCycle)]);
+
+    await expect(loadCycleConfig()).resolves.toMatchObject({
+      variant: 'custom',
+      pausedFrom: TODAY,
+      pauseReason: 'travel',
+      customCycle,
+      stagingOverrides: ['retinol'],
     });
   });
 

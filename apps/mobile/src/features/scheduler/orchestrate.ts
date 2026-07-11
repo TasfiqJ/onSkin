@@ -22,6 +22,8 @@ import {
   reviewedFrequencyCap,
   type ActiveClass,
 } from './classes';
+import { minimumCycleLengthForOccurrences } from './cadence';
+import type { CycleEditorActive } from './customCycle';
 
 // Multi-active orchestration (docs/05 §4). The moat. Turns a cabinet of actives
 // into one barrier-safe weekly cycle: one potent active per night, retinoid and
@@ -31,12 +33,22 @@ import {
 
 export type SchedulerSlot = 'exfoliate' | 'retinoid' | 'recover' | 'other_active';
 
+export type NightReconciliationReason =
+  | 'authored_recovery'
+  | 'missing'
+  | 'safety'
+  | 'staged'
+  | 'cadence_cap';
+
 export type NightSlot = {
   index: number; // 0-based
   slot: SchedulerSlot;
   productId: string | null;
   productName: string | null;
   className: ActiveClass | null;
+  /** Present for Custom cycles so every applied or withheld night is explainable. */
+  authoredProductId?: string | null;
+  reconciliationReason?: NightReconciliationReason | null;
 };
 
 export type AmItem = { productId: string; name: string; className: ActiveClass };
@@ -61,6 +73,8 @@ export type ScheduledConflictChoice = {
 
 export type OrchestrationResult = {
   cycle: Cycle | null;
+  amDaily: AmItem[];
+  cycleActives: CycleEditorActive[];
   notes: string[];
   conflictChoices: ScheduledConflictChoice[];
 };
@@ -119,6 +133,14 @@ function slotForClass(cls: ActiveClass): SchedulerSlot {
 
 function needsRecoveryBetween(a: Classified, b: Classified): boolean {
   return a.id === b.id || slotForClass(a.cls) === slotForClass(b.cls);
+}
+
+function weeklyFrequencyFor(active: Classified, profile: SchedulerProfile): number {
+  const cap = reviewedFrequencyCap(active.cls, profile.sensitivity);
+  const storedRamp = profile.freqByProductId?.[active.id];
+  const requested =
+    typeof storedRamp === 'number' && Number.isFinite(storedRamp) ? Math.floor(storedRamp) : cap;
+  return Math.max(1, Math.min(requested, cap));
 }
 
 type Classified = { id: string; name: string; cls: ActiveClass; isNew: boolean };
@@ -213,14 +235,13 @@ export function orchestrate(
   const excludedIds = new Set(safetyExclusions.map(({ active }) => active.id));
   const eligibleActives = actives.filter((active) => !excludedIds.has(active.id));
   const conflictChoices = scheduledConflictChoices(eligibleActives, profile, rules);
-  const classified: Classified[] = actives
-    .filter((active) => !excludedIds.has(active.id))
-    .map((a) => ({
-      id: a.id,
-      name: a.name,
-      cls: classifyActiveClass(a.tags, a.category),
-      isNew: !!a.isNew,
-    }));
+  const allClassified: Classified[] = actives.map((a) => ({
+    id: a.id,
+    name: a.name,
+    cls: classifyActiveClass(a.tags, a.category),
+    isNew: !!a.isNew,
+  }));
+  const classified = allClassified.filter((active) => !excludedIds.has(active.id));
 
   const notes: string[] = [];
 
@@ -234,7 +255,9 @@ export function orchestrate(
     );
   }
 
-  if (!canUseRoutineCadence()) return { cycle: null, notes, conflictChoices };
+  if (!canUseRoutineCadence()) {
+    return { cycle: null, amDaily: [], cycleActives: [], notes, conflictChoices };
+  }
 
   // AM / daily block (stable morning): vitamin C, BP, flexible niacinamide.
   const amDaily: AmItem[] = classified
@@ -250,25 +273,38 @@ export function orchestrate(
 
   // Phased introduction: a brand-new active is staged in next, not switched on now.
   const staged = potent.filter((c) => c.isNew);
+  const stagedIds = new Set<string>();
   if (staged.length && potent.length > staged.length) {
+    for (const active of staged) stagedIds.add(active.id);
     potent = potent.filter((c) => !c.isNew);
     notes.push(
       `We'll add your ${staged.map((s) => s.name).join(' and ')} next week, once your routine settles.`,
     );
   }
 
-  if (potent.length === 0) return { cycle: null, notes, conflictChoices };
+  const cycleActives: CycleEditorActive[] = allClassified
+    .filter((active) => isPotent(active.cls))
+    .map((active) => {
+      return {
+        id: active.id,
+        name: active.name,
+        className: active.cls as CycleEditorActive['className'],
+        eligible: !excludedIds.has(active.id),
+        staged: stagedIds.has(active.id),
+        maxFrequencyPerWeek: weeklyFrequencyFor(active, profile),
+      };
+    })
+    .sort((left, right) => left.id.localeCompare(right.id));
+
+  if (potent.length === 0) {
+    return { cycle: null, amDaily, cycleActives, notes, conflictChoices };
+  }
 
   const variant = profile.preferredVariant ?? pickVariant(profile);
 
   // Each potent active gets min(ramp frequency, class cap) nights. The cap is
   // launch-gated (B-DERM-REVIEW): conservative in production until sign-off.
-  const withFreq = potent.map((active) => {
-    const cap = reviewedFrequencyCap(active.cls, profile.sensitivity);
-    const ramp = profile.freqByProductId?.[active.id];
-    const freq = Math.max(1, Math.min(ramp ?? cap, cap));
-    return { active, freq };
-  });
+  const withFreq = potent.map((active) => ({ active, freq: weeklyFrequencyFor(active, profile) }));
 
   const pushes = buildPushes(withFreq);
   const rec = RECOVERY[variant];
@@ -291,8 +327,22 @@ export function orchestrate(
   // Guarantee at least one recovery night so the barrier always gets rest.
   if (!nights.some((n) => n.slot === 'recover')) nights.push(recoveryNight(nights.length));
 
+  // `freq` is a weekly ceiling, not a raw per-cycle count. Short generated
+  // cycles are padded until their repeated projection obeys the same
+  // length-aware budget as authored Custom cycles.
+  const cadenceLength = withFreq.reduce((required, item) => {
+    const minimum = minimumCycleLengthForOccurrences(item.freq, item.freq, {
+      minLength: 1,
+      maxLength: 14,
+    });
+    return Math.max(required, minimum ?? required);
+  }, 1);
+  while (nights.length < cadenceLength) nights.push(recoveryNight(nights.length));
+
   return {
     cycle: { variant, lengthNights: nights.length, nights, amDaily, notes },
+    amDaily,
+    cycleActives,
     notes,
     conflictChoices,
   };

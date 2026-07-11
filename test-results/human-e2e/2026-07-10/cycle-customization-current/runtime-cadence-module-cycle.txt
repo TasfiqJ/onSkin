@@ -1,0 +1,17 @@
+Expo web runtime error captured during the first post-change route pass:
+
+TypeError: minimumCycleLengthForOccurrences is not a function
+
+Code: orchestrate.ts
+  334 | const cadenceLength = withFreq.reduce((required, item) => {
+> 335 |   const minimum = minimumCycleLengthForOccurrences(item.freq, item.freq);
+      |                   ^
+  336 |   return Math.max(required, minimum ?? required);
+
+Call stack:
+- withFreq.reduce argument (apps/mobile/src/features/scheduler/orchestrate.ts)
+- orchestrate (apps/mobile/src/features/scheduler/orchestrate.ts)
+- useCycle memo (apps/mobile/src/features/scheduler/useCycle.ts)
+- CycleSettingsScreen (apps/mobile/src/app/cycle/settings.tsx)
+
+Resolution: cadence math moved to independent `features/scheduler/cadence.ts` and the exact route flow passed after reload.

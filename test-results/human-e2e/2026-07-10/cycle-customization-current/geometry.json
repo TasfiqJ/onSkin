@@ -1,0 +1,20 @@
+{
+  "viewports": [
+    {
+      "width": 360,
+      "height": 640,
+      "supportStatus": "launch-supported",
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "minInteractiveWidth": 48,
+      "minInteractiveHeight": 48,
+      "horizontalOverflow": 0
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "supportStatus": "launch-supported"
+    }
+  ],
+  "jsDialogCount": 0
+}

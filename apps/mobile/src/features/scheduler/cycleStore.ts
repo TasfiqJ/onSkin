@@ -2,14 +2,21 @@ import type { CycleVariant, DisruptionReason } from '@onskin/types';
 
 import { getCycleAnchor } from '@/features/routine/cycleAnchor';
 import { localDateString } from '@/features/today/useToday';
-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import { addDays } from './projection';
+import {
+  customCycleProductIds,
+  normalizeCustomCycleDefinition,
+  type CustomCycleDefinition,
+} from './customCycle';
 
 // Local-first cycle configuration (docs/05 sections 3 and 7). The generated
 // per-night schedule remains derived from the shelf; this store holds only the
 // user's persistent choices and disruption state on top of that schedule.
-const KEY = 'onskin.cycle.v1';
+const KEY = 'routinekind.cycle.v2';
+const LEGACY_KEY = 'onskin.cycle.v1';
+const CYCLE_CONFIG_SCHEMA_VERSION = 1 as const;
 
 export type RecoveryReason = Extract<DisruptionReason, 'procedure' | 'irritation'>;
 
@@ -20,6 +27,7 @@ export type RecoveryState = {
 };
 
 export type CycleConfig = {
+  schemaVersion: typeof CYCLE_CONFIG_SCHEMA_VERSION;
   /** 'auto' picks the variant from the profile; otherwise this is the user's choice. */
   variant: CycleVariant | 'auto';
   anchorISO: string;
@@ -29,10 +37,13 @@ export type CycleConfig = {
   skips: string[];
   /** Product ids the user chose to introduce now instead of staging. */
   stagingOverrides: string[];
+  /** Stable product-id intent for the user's authored Custom cycle. */
+  customCycle: CustomCycleDefinition | null;
 };
 
 function defaults(anchorISO: string): CycleConfig {
   return {
+    schemaVersion: CYCLE_CONFIG_SCHEMA_VERSION,
     variant: 'auto',
     anchorISO,
     pausedFrom: null,
@@ -40,6 +51,7 @@ function defaults(anchorISO: string): CycleConfig {
     recovery: null,
     skips: [],
     stagingOverrides: [],
+    customCycle: null,
   };
 }
 
@@ -90,13 +102,7 @@ function normalizeDateArray(value: unknown): string[] | null {
 
 function normalizeIdArray(value: unknown): string[] | null {
   if (!Array.isArray(value) || value.some((item) => typeof item !== 'string')) return null;
-  return [
-    ...new Set(
-      value
-        .map((item) => (item as string).trim())
-        .filter(Boolean),
-    ),
-  ];
+  return [...new Set(value.map((item) => (item as string).trim()).filter(Boolean))];
 }
 
 function isDisruptionReason(value: unknown): value is DisruptionReason {
@@ -124,9 +130,15 @@ function normalizeRecovery(value: unknown): RecoveryState | null | undefined {
   return { startISO, days, reason: value.reason };
 }
 
-function normalizeStoredConfig(value: unknown, fallbackAnchorISO: string): CycleConfig | null {
+function normalizeStoredConfig(
+  value: unknown,
+  fallbackAnchorISO: string,
+  allowMissingSchemaVersion = false,
+): CycleConfig | null {
   if (!isRecord(value)) return null;
   const base = defaults(fallbackAnchorISO);
+  const schemaVersion =
+    value.schemaVersion ?? (allowMissingSchemaVersion ? CYCLE_CONFIG_SCHEMA_VERSION : undefined);
   const variant = value.variant ?? base.variant;
   const anchorISO = normalizeLocalDateISO(value.anchorISO ?? base.anchorISO);
   const pausedFromValue = value.pausedFrom ?? base.pausedFrom;
@@ -135,12 +147,23 @@ function normalizeStoredConfig(value: unknown, fallbackAnchorISO: string): Cycle
   const recovery = normalizeRecovery(value.recovery);
   const skips = normalizeDateArray(value.skips ?? base.skips);
   const stagingOverrides = normalizeIdArray(value.stagingOverrides ?? base.stagingOverrides);
+  const customCycleValue = value.customCycle ?? base.customCycle;
+  const customCycle =
+    customCycleValue === null ? null : normalizeCustomCycleDefinition(customCycleValue);
 
+  if (schemaVersion !== CYCLE_CONFIG_SCHEMA_VERSION) return null;
   if (!CYCLE_VARIANTS.has(variant as CycleConfig['variant'])) return null;
   if (!anchorISO) return null;
   if (pausedFrom === null && pausedFromValue !== null) return null;
   if (!(pauseReasonValue === null || isDisruptionReason(pauseReasonValue))) return null;
-  if (recovery === undefined || !skips || !stagingOverrides) return null;
+  if (
+    recovery === undefined ||
+    !skips ||
+    !stagingOverrides ||
+    (customCycleValue !== null && !customCycle)
+  ) {
+    return null;
+  }
 
   const pauseReason = pausedFrom
     ? isDisruptionReason(pauseReasonValue)
@@ -149,6 +172,7 @@ function normalizeStoredConfig(value: unknown, fallbackAnchorISO: string): Cycle
     : null;
 
   return {
+    schemaVersion: CYCLE_CONFIG_SCHEMA_VERSION,
     variant: variant as CycleConfig['variant'],
     anchorISO,
     pausedFrom,
@@ -156,7 +180,27 @@ function normalizeStoredConfig(value: unknown, fallbackAnchorISO: string): Cycle
     recovery,
     skips,
     stagingOverrides,
+    customCycle,
   };
+}
+
+function parseStoredConfig(
+  raw: string,
+  fallbackAnchorISO: string,
+  allowMissingSchemaVersion = false,
+): {
+  parsed: unknown;
+  config: CycleConfig;
+} {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    throw new Error('CYCLE_CONFIG_INVALID');
+  }
+  const config = normalizeStoredConfig(parsed, fallbackAnchorISO, allowMissingSchemaVersion);
+  if (!config) throw new Error('CYCLE_CONFIG_INVALID');
+  return { parsed, config };
 }
 
 function parseLocal(iso: string): Date {
@@ -230,51 +274,48 @@ async function normalizeLatestStoredConfig(
   let latest: CycleConfig | null = null;
   await updatePrivateItem(KEY, (currentRaw) => {
     if (!currentRaw) return null;
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(currentRaw) as unknown;
-    } catch {
-      return currentRaw;
-    }
-    const current = normalizeStoredConfig(parsed, fallbackAnchorISO);
-    if (!current) return currentRaw;
+    const { config: current } = parseStoredConfig(currentRaw, fallbackAnchorISO);
     latest = reconcileStoredConfig(current, todayISO);
     return JSON.stringify(latest);
   });
   return latest;
 }
 
+async function migrateLegacyConfig(
+  fallbackAnchorISO: string,
+  todayISO: string,
+): Promise<CycleConfig | null> {
+  const legacyRaw = await getPrivateItem(LEGACY_KEY);
+  if (!legacyRaw) return null;
+  const legacy = reconcileStoredConfig(
+    parseStoredConfig(legacyRaw, fallbackAnchorISO, true).config,
+    todayISO,
+  );
+  let migrated: CycleConfig | null = null;
+
+  // The old key is intentionally retained for account cleanup and downgrade
+  // isolation. Once v2 exists, older builds can no longer overwrite this state.
+  await updatePrivateItem(KEY, (currentRaw) => {
+    migrated = currentRaw
+      ? reconcileStoredConfig(parseStoredConfig(currentRaw, fallbackAnchorISO).config, todayISO)
+      : legacy;
+    return JSON.stringify(migrated);
+  });
+  if (!migrated) throw new Error('CYCLE_CONFIG_WRITE_FAILED');
+  return migrated;
+}
+
 export async function loadCycleConfig(): Promise<CycleConfig> {
   const fallbackAnchor = await getCycleAnchor();
-  let raw: string | null;
-  try {
-    raw = await getPrivateItem(KEY);
-  } catch {
-    return defaults(fallbackAnchor);
-  }
-
-  if (!raw) return defaults(fallbackAnchor);
-
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw) as unknown;
-  } catch {
-    await removePrivateItem(KEY).catch(() => undefined);
-    return defaults(fallbackAnchor);
-  }
-
-  const normalized = normalizeStoredConfig(parsed, fallbackAnchor);
-  if (!normalized) {
-    await removePrivateItem(KEY).catch(() => undefined);
-    return defaults(fallbackAnchor);
-  }
-
   const today = localDateString();
+  const raw = await getPrivateItem(KEY);
+  if (!raw) return (await migrateLegacyConfig(fallbackAnchor, today)) ?? defaults(fallbackAnchor);
+
+  const { parsed, config: normalized } = parseStoredConfig(raw, fallbackAnchor);
   const reconciled = reconcileStoredConfig(normalized, today);
   if (JSON.stringify(parsed) === JSON.stringify(reconciled)) return reconciled;
 
-  const latest = await normalizeLatestStoredConfig(fallbackAnchor, today).catch(() => null);
-  return latest ?? reconciled;
+  return (await normalizeLatestStoredConfig(fallbackAnchor, today)) ?? defaults(fallbackAnchor);
 }
 
 function configForMutation(
@@ -283,16 +324,7 @@ function configForMutation(
   todayISO: string,
 ): CycleConfig {
   if (!raw) return defaults(fallbackAnchorISO);
-
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw) as unknown;
-  } catch {
-    throw new Error('CYCLE_CONFIG_INVALID');
-  }
-  const normalized = normalizeStoredConfig(parsed, fallbackAnchorISO);
-  if (!normalized) throw new Error('CYCLE_CONFIG_INVALID');
-  return reconcileStoredConfig(normalized, todayISO);
+  return reconcileStoredConfig(parseStoredConfig(raw, fallbackAnchorISO).config, todayISO);
 }
 
 let devCycleConfigWriteFailureUsed = false;
@@ -312,7 +344,7 @@ async function mutateCycleConfig(
   transform: (current: CycleConfig, todayISO: string) => CycleConfig,
 ): Promise<CycleConfig> {
   const today = localDateString();
-  const fallbackAnchor = await getCycleAnchor();
+  const fallbackAnchor = (await loadCycleConfig()).anchorISO;
   let next: CycleConfig | null = null;
 
   await maybeRejectDevCycleConfigWrite();
@@ -328,8 +360,25 @@ async function mutateCycleConfig(
   return next;
 }
 
-export async function updateCycleConfig(patch: Partial<CycleConfig>): Promise<CycleConfig> {
+export async function updateCycleConfig(
+  patch: Partial<Omit<CycleConfig, 'schemaVersion'>>,
+): Promise<CycleConfig> {
   return mutateCycleConfig((current) => ({ ...current, ...patch }));
+}
+
+/** Save the complete authored cycle and any explicit phased-introduction choices atomically. */
+export async function saveCustomCycleDefinition(
+  definition: CustomCycleDefinition,
+): Promise<CycleConfig> {
+  const customCycle = normalizeCustomCycleDefinition(definition);
+  if (!customCycle) throw new Error('CUSTOM_CYCLE_INVALID');
+  const selectedProductIds = customCycleProductIds(customCycle);
+  return mutateCycleConfig((current) => ({
+    ...current,
+    variant: 'custom',
+    customCycle,
+    stagingOverrides: [...new Set([...current.stagingOverrides, ...selectedProductIds])],
+  }));
 }
 
 /** Pause the cycle. If recovery was active, preserve its elapsed rest first. */
@@ -367,9 +416,7 @@ export async function skipTonight(): Promise<CycleConfig> {
 }
 
 /** Introduce all selected staged products in one atomic cycle-config write. */
-export async function overrideStagingProducts(
-  productIds: readonly string[],
-): Promise<CycleConfig> {
+export async function overrideStagingProducts(productIds: readonly string[]): Promise<CycleConfig> {
   const normalizedIds = [...new Set(productIds.map((id) => id.trim()).filter(Boolean))];
   if (normalizedIds.length === 0) throw new Error('CYCLE_STAGING_PRODUCTS_INVALID');
   return mutateCycleConfig((current) => ({
@@ -379,10 +426,7 @@ export async function overrideStagingProducts(
 }
 
 /** Begin a recovery window after settling any existing suspension through today. */
-export async function startRecovery(
-  days: number,
-  reason: RecoveryReason,
-): Promise<CycleConfig> {
+export async function startRecovery(days: number, reason: RecoveryReason): Promise<CycleConfig> {
   if (!Number.isInteger(days) || days <= 0 || !isRecoveryReason(reason)) {
     throw new Error('CYCLE_RECOVERY_INPUT_INVALID');
   }

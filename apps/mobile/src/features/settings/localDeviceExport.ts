@@ -110,6 +110,11 @@ const LOCAL_EXPORT_SPECS = [
   {
     key: 'onskin.cycle.v1',
     section: 'shelf_and_routine',
+    field: 'legacy_cycle_configuration',
+  },
+  {
+    key: 'routinekind.cycle.v2',
+    section: 'shelf_and_routine',
     field: 'cycle_configuration',
   },
   {

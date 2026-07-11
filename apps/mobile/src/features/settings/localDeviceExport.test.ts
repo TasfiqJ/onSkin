@@ -57,6 +57,22 @@ describe('local device data export', () => {
       ['onskin.completions.v1', JSON.stringify({ '2026-07-09': ['PM:shelf-1'] })],
       ['onskin.conflict.overrides', JSON.stringify(['rule-1:acid+retinoid'])],
       [
+        'onskin.cycle.v1',
+        JSON.stringify({ schemaVersion: 1, variant: 'gentle', customCycle: null }),
+      ],
+      [
+        'routinekind.cycle.v2',
+        JSON.stringify({
+          schemaVersion: 1,
+          variant: 'custom',
+          customCycle: {
+            schemaVersion: 1,
+            lengthNights: 2,
+            nights: [{ productId: 'shelf-1' }, { productId: null }],
+          },
+        }),
+      ],
+      [
         'routinekind.routineOrder.v1',
         JSON.stringify({ schemaVersion: 1, am: ['shelf-1'], pm: ['shelf-1'] }),
       ],
@@ -96,6 +112,17 @@ describe('local device data export', () => {
       schemaVersion: 1,
       am: ['shelf-1'],
       pm: ['shelf-1'],
+    });
+    expect(result.sections.shelf_and_routine.cycle_configuration).toMatchObject({
+      schemaVersion: 1,
+      variant: 'custom',
+      customCycle: {
+        schemaVersion: 1,
+        lengthNights: 2,
+      },
+    });
+    expect(result.sections.shelf_and_routine.legacy_cycle_configuration).toMatchObject({
+      variant: 'gentle',
     });
     expect(result.sections.shelf_and_routine.conflict_overrides).toEqual({
       schemaVersion: 1,

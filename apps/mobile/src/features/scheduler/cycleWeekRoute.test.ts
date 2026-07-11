@@ -91,14 +91,35 @@ describe('cycle week route scheduler notes', () => {
     expect(source).not.toContain("className={compactSheet ? 'pb-6' : undefined}");
   });
 
-  it('keeps cycle settings free of deferred drag affordances', () => {
+  it('uses the complete tap-based authored-cycle transaction instead of deferred drag copy', () => {
     const source = readAppRoute('cycle/settings.tsx');
 
     expect(source).toContain('Scheduled');
-    expect(source).toContain('Variant changes recalculate your active nights');
-    expect(source).toContain('balanced rest');
-    expect(source).toContain('`${cycle.lengthNights} nights generated`');
-    expect(source).toContain('accessibilityLabel={`${v.label}. ${sub}`}');
+    expect(source).toContain("{ id: 'custom', label: 'Custom', sub: 'Your night plan' }");
+    expect(source).toContain('Cycle length');
+    expect(source).toContain('Active frequency');
+    expect(source).toContain('Night assignments');
+    expect(source).toContain("label={saving ? 'Saving cycle...' : 'Save cycle'}");
+    expect(source).toContain(
+      "await mutations.saveCustom(customCycle, baselineVariant !== 'custom');",
+    );
+    expect(source).toContain('pruneMissingCustomCycleProducts');
+    expect(source).toContain('accessibilityLabel={`${variant.label}. ${sub}`}');
+    expect(source).toContain('<SettingsHeader disabled={saving} />');
+    expect(source).toContain('usePreventRemove(saving, () => undefined);');
+    expect(source).toContain('const guardArmed = new Promise<void>');
+    expect(source).toContain('await guardArmed;');
+    expect(source).toContain('window.history.pushState(');
+    expect(source).toContain("window.addEventListener('popstate', onPopState, { capture: true });");
+    expect(source).toContain('event.stopImmediatePropagation();');
+    expect(source).toContain('window.history.forward();');
+    expect(source).toContain("browserNavigation?.addEventListener('navigate', onNavigate);");
+    expect(source).toContain('await disarmPendingExit.current();');
+    expect(source).toContain('if (exitAfterCommit) backOrReplace(router);');
+    expect(source).toContain('const saveDisabled = saving || !hasChanges;');
+    expect(source).toContain('active.staged && selectedDraftIds.has(active.id)');
+    expect(source).toContain('Your saved nights stay intact.');
+    expect(source).toContain('dismissDisabled={disabled}');
     expect(source).not.toContain("{ id: 'classic', label: 'Classic', sub: '4 nights' }");
     expect(source).not.toContain('Drag-to-reassign');
     expect(source).not.toContain('arrives with the reorder gesture');
@@ -109,12 +130,11 @@ describe('cycle week route scheduler notes', () => {
   it('keeps cycle settings night labels one-based like the week overview', () => {
     const source = readAppRoute('cycle/settings.tsx');
 
-    expect(source).toContain('const cycleNightNumber = n.index + 1;');
-    expect(source).toContain('const cycleNightLabel = formatCycleNightLabel(cycleNightNumber);');
-    expect(source).toContain('{cycleNightLabel}');
-    expect(source).toContain('return `Night ${cycleNightNumber}`;');
-    expect(source).not.toContain('N{cycleNightNumber}');
-    expect(source).not.toContain('N{n.index}');
+    expect(source).toContain('Night ${index + 1}');
+    expect(source).toContain('Night ${index + 1}. ${assignment}. Change assignment');
+    expect(source).toContain('<Text variant="titleSm">Night {index + 1}</Text>');
+    expect(source).not.toMatch(/>N\{index/);
+    expect(source).not.toContain('N{night.index}');
   });
 
   it('keeps the procedure recovery CTA buffered on compact phones', () => {
@@ -153,6 +173,18 @@ describe('cycle week route scheduler notes', () => {
     expect(useCycle.indexOf("track('cycle_variant_changed'", commitIndex)).toBeGreaterThan(
       commitIndex,
     );
+    const customCommitIndex = useCycle.indexOf(
+      'await commit(() => saveCustomCycleDefinition(definition))',
+    );
+    expect(customCommitIndex).toBeGreaterThan(-1);
+    expect(useCycle.indexOf("track('routine_edited'", customCommitIndex)).toBeGreaterThan(
+      customCommitIndex,
+    );
+    expect(useCycle).toContain("if (variantChanged) track('cycle_variant_changed'");
+    expect(useCycle).toContain(
+      "config.variant === 'auto' || config.variant === 'custom' ? null : config.variant",
+    );
+    expect(useCycle).toContain("cadenceReady && config.variant === 'custom' && config.customCycle");
     expect(useCycle).toContain("await qc.cancelQueries({ queryKey: ['cycleConfig'] })");
     expect(useCycle).toContain(
       "qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next)",
@@ -234,15 +266,19 @@ describe('cycle week route scheduler notes', () => {
       "import { canUseRoutineCadence } from '@/features/routine/reviewGate';",
     );
     expect(settings).toContain('const cadenceReady = canUseRoutineCadence();');
-    expect(settings).toContain('{!cadenceReady ? (');
+    expect(settings).toContain('if (!cadenceReady) return <CadenceReviewGate />;');
     expect(settings).toContain('Cycle settings open after review.');
-    expect(settings).toContain(
-      'hidden in production until clinical and cosmetic-chemistry review closes.',
-    );
+    expect(settings).toContain('settings stay hidden');
+    expect(settings).toContain('until clinical and cosmetic-chemistry review closes.');
 
     expect(whyTonight).toContain(
       "import { canUseRoutineCadence } from '@/features/routine/reviewGate';",
     );
+    expect(whyTonight).toContain("case 'authored_recovery':");
+    expect(whyTonight).toContain("case 'missing':");
+    expect(whyTonight).toContain("case 'safety':");
+    expect(whyTonight).toContain("case 'staged':");
+    expect(whyTonight).toContain("case 'cadence_cap':");
     expect(whyTonight).toContain('const cadenceReady = canUseRoutineCadence();');
     expect(whyTonight).toContain('const cycle = cadenceReady ? (data?.cycle ?? null) : null;');
     expect(whyTonight).toContain('const tonight = cadenceReady ? (data?.tonight ?? null) : null;');
