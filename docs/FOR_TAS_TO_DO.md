@@ -96,6 +96,17 @@ Status: launch-blocked
   physical-device proof. Local 360 x 640 failure/retry evidence is in
   `test-results/human-e2e/2026-07-10/onboarding-account-isolation-current/` but
   does not replace live Supabase/device evidence.
+  During the same matrix, start account A's combined export and delay the
+  `data-export` Edge response. Sign out, then repeat with an A-to-B switch and a
+  boundary immediately after the temporary cache write. Confirm the Edge
+  request aborts or its stale result is rejected, the server `user_id` exactly
+  matches account A, no account A plaintext is written or shared after the
+  boundary, the temporary file is removed, and account B cannot mount until the
+  export operation settles. Finally trigger a same-user token refresh and prove
+  it does not cancel a current export. Attach redacted IDs, native cache/share
+  logs, screenshots/video, build IDs, devices/OS versions, and tester signoff.
+  Local deterministic evidence is in
+  `test-results/human-e2e/2026-07-11/data-export-account-generation-current/`.
 - Supabase live Shelf scan-log evidence: attach staging/production proof that
   barcode outcomes insert owner-scoped `shelf_scans` rows for matched,
   no-match, and offline/queued outcomes under RLS. The 2026-07-08 Codex pass can
@@ -789,6 +800,11 @@ after sharing, and account deletion must still clear both server and local
 private data. Repeat once offline after a prior successful sign-in: configured
 server failure must show retryable failure and must not produce a partial
 local-only artifact.
+Also delay the staging `data-export` response and repeat export versus sign-out,
+A-to-B switch, and an immediately post-write boundary on supported iOS and
+Android devices. Confirm exact response-owner matching, Edge cancellation or
+stale-result rejection, no prior-owner share after the boundary, temporary-file
+deletion, and next-account publication only after the operation drains.
 
 - `PHASE9_ALLOW_PRODUCTION_LIVE_CATALOG_RATE_LIMIT`
 - `PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL`

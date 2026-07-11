@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "status": "pass",
+  "failedRouteCount": 0,
+  "localTestDate": "2026-07-11",
+  "surface": "Expo web development build in the Codex in-app browser",
+  "viewports": [
+    "360 x 640",
+    "390 x 844"
+  ],
+  "verified": [
+    "one cancellable account-generation lease covers authenticated-owner capture, local snapshot, Edge request, plaintext cache write, sharing, and deletion",
+    "sign-out during a delayed export immediately replaces account A Settings with the neutral account-boundary gate",
+    "forced cleanup failure keeps the next account locked out and retry reaches signed-out Welcome",
+    "configured server user_id must exactly match the initiating authenticated owner",
+    "account boundary aborts the Edge request and drains the complete export operation before cleanup continues",
+    "post-write invalidation deletes the temporary cache file before any share attempt",
+    "nested boundaries block new exports while same-generation and same-user refresh behavior remains valid",
+    "360 x 640 pending-export geometry has zero horizontal overflow, zero visible sub-44 controls, zero dialogs, and only documented placeholder/web warnings",
+    "390 x 844 pending, recovery, and signed-out states remain complete and visually clear"
+  ],
+  "bugsFixed": [
+    "account A export could outlive sign-out or an A-to-B transition",
+    "server export accepted any non-empty user_id instead of the initiating owner",
+    "a delayed export could create or share plaintext after generated-cache cleanup"
+  ],
+  "externalGates": [
+    "configured Supabase A-to-B interruption with redacted account identifiers",
+    "native iOS and Android share-sheet interruption and cache deletion",
+    "VoiceOver, TalkBack, Dynamic Type, and physical-device safe-area QA"
+  ]
+}

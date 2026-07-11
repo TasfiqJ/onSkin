@@ -24,6 +24,11 @@
   Today, deterministic projection, persistence, and completion sources. Removing
   the evidence or changing those sources therefore invalidates the local gate
   and downstream packet hashes instead of leaving a stale passing launch check.
+- The human-E2E manifest also requires account-generation-bound combined-export
+  evidence. One cancellable lease now covers owner capture, local snapshot,
+  Edge request, plaintext cache, share, and deletion; sign-out/A-to-B aborts and
+  drains stale work before the next session can publish, while exact-owner and
+  post-write race tests fail closed.
 - Strict QA packets now require granular scenario evidence for onboarding,
   shelf intake, reviewed guidance, routine builder, Today check-off, photos,
   reminders, payments, privacy controls, share cards, deferred surfaces, and

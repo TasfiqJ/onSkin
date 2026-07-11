@@ -151,6 +151,17 @@ Fresh verification through 2026-07-10:
   `Combined account and current-device export`. Evidence:
   `test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`
   and `test-results/human-e2e/2026-07-10/data-export-combined-device-current/`.
+- Combined export is now bound to one cancellable account generation from
+  authenticated-owner capture through temporary plaintext deletion. A real
+  account boundary aborts the Edge request, blocks new exports, drains active
+  cleanup before local deletion/session publication, rejects a mismatched
+  server `user_id`, and prevents stale cache writes or shares. Nested boundaries
+  remain blocked while same-user refresh stays valid. The required
+  `Account-generation-bound combined export` manifest gate passes at 360 x 640
+  and 390 x 844 with delayed-export sign-out, forced cleanup failure, retry, and
+  signed-out recovery evidence in
+  `test-results/human-e2e/2026-07-11/data-export-account-generation-current/`.
+  Live Supabase A-to-B and native share/cache interruption remain external QA.
 - Progress photo backup now fails closed at the capability boundary. The prior
   toggle could save consent and mirror coarse metadata but did not upload,
   restore, or remotely delete encrypted photo bytes. Current local photo saves

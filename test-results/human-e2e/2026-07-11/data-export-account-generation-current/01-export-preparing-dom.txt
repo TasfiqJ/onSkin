@@ -1,0 +1,115 @@
+- generic: You
+- generic: ACCOUNT
+- generic: tas.account-a.e2e@example.com
+- button "Sign out":
+  - generic: Sign out
+- generic: SUBSCRIPTION
+- button "Manage subscription. Free plan":
+  - generic: Manage subscription
+  - generic: Free plan
+  - generic: ">"
+- generic: YOUR ROUTINE
+- button "Your plan":
+  - generic: Your plan
+  - generic: ">"
+- generic: MORE ROUTINE
+- button "Edit the order":
+  - generic: Edit the order
+  - generic: ">"
+- button "Retinoid ramp":
+  - generic: Retinoid ramp
+  - generic: ">"
+- button "Streak & adherence":
+  - generic: Streak & adherence
+  - generic: ">"
+- button "Weekly check-in":
+  - generic: Weekly check-in
+  - generic: ">"
+- button "Recent changes":
+  - generic: Recent changes
+  - generic: ">"
+- generic: FOR YOU
+- button "Pregnancy & breastfeeding. Review your routine safety setting.":
+  - generic: Pregnancy & breastfeeding
+  - generic: Review your routine safety setting.
+  - generic: ">"
+- button "Recommendations":
+  - generic: Recommendations
+  - generic: ">"
+- button "Recommendation preferences":
+  - generic: Recommendation preferences
+  - generic: ">"
+- button "Skin Notes. Myth vs evidence, reviewed and claim-safe.":
+  - generic: Skin Notes
+  - generic: Myth vs evidence, reviewed and claim-safe.
+  - generic: ">"
+- generic: SECURITY
+- generic: App lock
+- generic: Require your phone's unlock to open the app and your photo timeline.
+- switch "App lock"
+- generic: Progress photo storage
+- generic: Encrypted on this device. Cloud backup is not available in this build.
+- generic: Device only
+- generic: REMINDERS
+- button "Reminders & notifications. Tiered, capped, at times you choose. Quiet hours & lock-screen discretion.":
+  - generic: Reminders & notifications
+  - generic: Tiered, capped, at times you choose. Quiet hours & lock-screen discretion.
+  - generic: ">"
+- generic: HELP
+- button "Beta feedback. Send a categorized issue through support.":
+  - generic: Beta feedback
+  - generic: Send a categorized issue through support.
+  - generic: ">"
+- generic: PRIVACY & CONSENT
+- generic: Marketing emails
+- generic: Off by default. Opt in anytime.
+- switch "Marketing emails"
+- button "Photos & the no-AI-score promise":
+  - generic: Photos & the no-AI-score promise
+  - generic: ">"
+- button "Withdraw health-data consent. Records withdrawal and deletes collected health data.":
+  - generic: Withdraw health-data consent
+  - generic: Records withdrawal and deletes collected health data.
+  - generic: ">"
+- generic: POLICIES
+- button "Privacy policy. What data we collect, use, and share.":
+  - generic: Privacy policy
+  - generic: What data we collect, use, and share.
+  - generic: ">"
+- button "Consumer health privacy. Consumer health data notice and rights.":
+  - generic: Consumer health privacy
+  - generic: Consumer health data notice and rights.
+  - generic: ">"
+- button "Terms. Rules for using RoutineKind and subscription terms.":
+  - generic: Terms
+  - generic: Rules for using RoutineKind and subscription terms.
+  - generic: ">"
+- button "Support. Help with accounts, billing, deletion, or export.":
+  - generic: Support
+  - generic: Help with accounts, billing, deletion, or export.
+  - generic: ">"
+- button "Account deletion. How account deletion works before and after deleting in app.":
+  - generic: Account deletion
+  - generic: How account deletion works before and after deleting in app.
+  - generic: ">"
+- button "Data export. How to request and read your export.":
+  - generic: Data export
+  - generic: How to request and read your export.
+  - generic: ">"
+- generic: YOUR DATA
+- button "Preparing..." [disabled]:
+  - generic: Preparing...
+- generic: "Includes data saved to your account and on this device: profile, shelf, routine settings, completion history, preferences, and Progress notes. Photo files and thumbnails stay encrypted here; share images individually from Progress."
+- button "Delete account":
+  - generic: Delete account
+- generic: Progress photos stay encrypted here unless you share one. No ads. No data sales.
+- generic: RoutineKind gives general information about cosmetic products and routines. It is not medical advice and is not intended to diagnose, treat, or cure any condition. For medical concerns, see a dermatologist.
+- tablist:
+  - tab "Today tab":
+    - generic: Today
+  - tab "Progress tab":
+    - generic: Prog.
+  - tab "Shelf tab":
+    - generic: Shelf
+  - tab "You tab" [selected]:
+    - generic: You

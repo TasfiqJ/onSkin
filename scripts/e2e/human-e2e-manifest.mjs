@@ -310,6 +310,13 @@ if (!combinedDataExportEvidenceDate) {
   console.error('FAIL Missing combined account/current-device export evidence.');
   process.exit(1);
 }
+const accountGenerationExportEvidenceDate = latestEvidenceDateForFolder(
+  'data-export-account-generation-current',
+);
+if (!accountGenerationExportEvidenceDate) {
+  console.error('FAIL Missing account-generation export-isolation evidence.');
+  process.exit(1);
+}
 const accountUpgradeEvidenceDate = latestEvidenceDateForFolder(
   'onboarding-account-upgrade-current',
 );
@@ -340,6 +347,7 @@ const latestManifestEvidenceDate = [
   cycleCustomizationEvidenceDate,
   dataExportDisclosureEvidenceDate,
   combinedDataExportEvidenceDate,
+  accountGenerationExportEvidenceDate,
   accountUpgradeEvidenceDate,
   accountIsolationEvidenceDate,
 ]
@@ -755,6 +763,29 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Settings names the account/current-device scope and Progress media exclusion; backend-free recovery keeps zero dialogs, overflow, unexpected logs, analytics, or Edge requests.',
+  },
+  {
+    id: 'data-export-account-generation-supported-phone',
+    title: 'Account-generation-bound combined export',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${accountGenerationExportEvidenceDate}/data-export-account-generation-current`,
+    evidence: 'summary.json',
+    requiredSchemaVersion: 1,
+    requiredViewports: ['360 x 640', '390 x 844'],
+    requiredVerified: [
+      'one cancellable account-generation lease',
+      'sign-out during a delayed export',
+      'configured server user_id',
+      'account boundary aborts the Edge request',
+      'post-write invalidation deletes',
+      'nested boundaries',
+      '360 x 640',
+      '390 x 844',
+    ],
+    expected:
+      'One account generation owns authenticated capture, local snapshot, Edge response, plaintext cache, share, and deletion; sign-out/A-to-B aborts and drains stale work before the next account can publish.',
   },
 ];
 

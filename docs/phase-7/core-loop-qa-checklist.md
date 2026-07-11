@@ -854,6 +854,18 @@ FOR OILY, RESISTANT SKIN`, `Gel cleanser`, and `Mineral SPF 50` with no
   `test-results/human-e2e/2026-07-07/settings-privacy-data-rights-current/`; it
   does not replace live Supabase export/delete/withdrawal QA or native share
   sheet QA.
+- 2026-07-11: Codex in-app browser E2E at 360 x 640 and 390 x 844 starts a
+  development-only delayed combined export for synthetic account A, verifies
+  the Settings action becomes disabled `Preparing...`, signs out before the
+  delay completes, and confirms only the neutral account-boundary gate renders.
+  A forced first cleanup failure keeps the next account locked out; retry reaches
+  signed-out Welcome. The support-floor pending state has zero horizontal
+  overflow, zero visible sub-44 controls, and no dialog or unexpected browser
+  messages. Focused tests cover exact server-owner matching, Edge abort and
+  complete-operation drainage, nested/same-generation behavior, stale cache
+  prevention, and post-write deletion. Evidence is in
+  `test-results/human-e2e/2026-07-11/data-export-account-generation-current/`;
+  live Supabase A-to-B and native share/cache interruption remain external QA.
 - 2026-07-07: In-app browser E2E at 320 x 568 plus focused notification tests
   cover local reminder settings and timing: open `/settings/notifications`, verify
   tier switches, row labels, zero horizontal overflow, and 48 px visible controls,

@@ -4,6 +4,25 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
+## 2026-07-11
+
+- Closed the P0 combined-export account-transition race. One cancellable
+  account-generation lease now covers authenticated owner capture, encrypted
+  local collection, the owner-scoped Edge request, exact `user_id` validation,
+  JSON construction, temporary plaintext write, native share, and unconditional
+  deletion. Sign-out and A-to-B boundaries abort the Edge request, block new
+  exports, drain active cleanup before local deletion or next-session publish,
+  and reject stale writes/shares; nested boundaries remain blocked while
+  same-user refresh stays valid. Focused verification passes 4 files / 40 tests,
+  mobile typecheck and lint pass, and human-simulated Expo web at 360 x 640 and
+  390 x 844 verifies delayed-export sign-out, neutral cleanup-failure gating,
+  retry to signed-out Welcome, zero support-floor overflow/sub-44 controls, no
+  dialogs, and only documented placeholder/web warnings. The required
+  `Account-generation-bound combined export` manifest gate reads
+  `test-results/human-e2e/2026-07-11/data-export-account-generation-current/`.
+  Live Supabase A-to-B plus native iOS/Android share/cache interruption remains
+  Tas-owned.
+
 ## 2026-07-10
 
 - Completed full user-authored cycle settings and bound the supported-phone

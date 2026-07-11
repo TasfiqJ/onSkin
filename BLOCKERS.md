@@ -143,6 +143,11 @@ the `Account export local-photo scope disclosure` gate in
 `test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current/`,
 and the `Combined account and current-device export` gate in
 `test-results/human-e2e/2026-07-10/data-export-combined-device-current/`.
+The `Account-generation-bound combined export` gate in
+`test-results/human-e2e/2026-07-11/data-export-account-generation-current/`
+also proves delayed-export sign-out, cleanup-failure gating, and recovery at
+360 x 640 and 390 x 844; focused tests prove exact owner matching, Edge abort,
+operation drainage, post-write deletion, and same-generation stability.
 It also includes the `360 x 640 account-upgrade error and recovery pass` in
 `test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current/`.
 The required `360 x 640 account-transition isolation and cleanup recovery pass`
@@ -399,6 +404,12 @@ Next action:
   supported iOS and Android builds;
 - after every destructive account boundary, open direct Shelf, Today, Progress,
   and You routes and verify no account A query or metadata is visible to account B.
+- start a combined export for account A, delay the `data-export` response, then
+  sign out and repeat an A-to-B switch; verify the request is aborted or its
+  result is rejected, no account A plaintext is written/shared after the
+  boundary, and account B cannot publish until export cleanup settles. Repeat
+  once with the boundary immediately after cache write and once with a
+  same-user token refresh that must not cancel the current export.
 - force a partial cleanup after the owner hash is removed and a remote sign-out
   failure; verify the cleanup-required control survives, persisted local auth is
   removed, and account B remains gated until every native store succeeds on retry.

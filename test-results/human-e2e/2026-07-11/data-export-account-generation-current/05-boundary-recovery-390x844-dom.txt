@@ -1,0 +1,6 @@
+- alert:
+  - generic: Account change paused
+  - generic: Your private data could not be cleared.
+  - generic: The next account is still locked out. Try again to finish clearing private data from the previous account.
+- button "Try again":
+  - generic: Try again

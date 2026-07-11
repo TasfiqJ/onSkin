@@ -1,0 +1,7 @@
+- generic: Healthier skin in eight weeks, built around your skin.
+- generic: A routine that fits what's already on your shelf. And photos that never leave your phone.
+- button "Begin":
+  - generic: Begin
+- button "I already have an account":
+  - generic: I already have an account
+- generic: No ads · no data sales · photos stay on device
