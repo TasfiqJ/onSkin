@@ -1,7 +1,17 @@
 import type { ConsentType } from '@onskin/types';
 import * as Crypto from 'expo-crypto';
 
-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+} from '@/lib/auth/accountGeneration';
+import {
+  readPrivateItem,
+  removePrivateItem,
+  type PrivateKVReadFailureReason,
+  type PrivateKVReadResult,
+  updatePrivateItem,
+} from '@/lib/storage/privateKV';
 
 import { HEALTH_DATA_CONSENT } from './consentCopy';
 
@@ -10,6 +20,7 @@ const SCHEMA_VERSION = 1 as const;
 
 export const HEALTH_CONSENT_INVALID = 'HEALTH_CONSENT_INVALID';
 export const HEALTH_CONSENT_UNSUPPORTED_VERSION = 'HEALTH_CONSENT_UNSUPPORTED_VERSION';
+export const HEALTH_CONSENT_UNAVAILABLE = 'HEALTH_CONSENT_UNAVAILABLE';
 
 export type LocalHealthDataConsent = {
   type: ConsentType;
@@ -18,6 +29,22 @@ export type LocalHealthDataConsent = {
   consentTextHash: string;
   recordedAt: string;
 };
+
+type PrivateKVCorruptReason = Extract<
+  PrivateKVReadResult,
+  { status: 'corrupt' }
+>['reason'];
+
+export type HealthConsentReadResult =
+  | { status: 'absent'; consent: null }
+  | { status: 'available'; consent: LocalHealthDataConsent }
+  | { status: 'unavailable'; consent: null; reason: PrivateKVReadFailureReason }
+  | {
+      status: 'corrupt';
+      consent: null;
+      reason: PrivateKVCorruptReason | 'invalid_record';
+    }
+  | { status: 'unsupported_version'; consent: null };
 
 type HealthConsentEnvelope = {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -129,35 +156,67 @@ export async function setHealthDataCollectionConsentLocal(params: {
   version: string;
   consentText: string;
 }): Promise<void> {
-  const consentTextHash = await Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.SHA256,
-    params.consentText,
-  );
+  await runAccountGenerationOperation(async (lease) => {
+    const consentTextHash = await awaitAccountGenerationLease(lease, () =>
+      Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, params.consentText),
+    );
+    lease.assertCurrent();
 
-  const consent: LocalHealthDataConsent = {
+    const consent: LocalHealthDataConsent = {
       type: 'health_data_collection',
       granted: params.granted,
       version: params.version,
       consentTextHash,
       recordedAt: new Date().toISOString(),
-  };
-  await updatePrivateItem(HEALTH_DATA_CONSENT_KEY, (current) => {
-    if (current !== null) decodeConsent(current);
-    return encodeConsent(consent);
+    };
+    await updatePrivateItem(HEALTH_DATA_CONSENT_KEY, (current) => {
+      if (current !== null) decodeConsent(current);
+      return encodeConsent(consent);
+    });
+    lease.assertCurrent();
   });
 }
 
-export async function getHealthDataCollectionConsentLocal(): Promise<LocalHealthDataConsent | null> {
+/** Read and classify the local proof without repairing, deleting, or migrating bytes. */
+export async function readHealthDataCollectionConsentLocal(): Promise<HealthConsentReadResult> {
+  const stored = await readPrivateItem(HEALTH_DATA_CONSENT_KEY);
+  if (stored.status === 'absent') return { status: 'absent', consent: null };
+  if (stored.status === 'unavailable') {
+    return { status: 'unavailable', consent: null, reason: stored.reason };
+  }
+  if (stored.status === 'corrupt') {
+    return { status: 'corrupt', consent: null, reason: stored.reason };
+  }
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', consent: null };
+  }
+
   try {
-    const raw = await getPrivateItem(HEALTH_DATA_CONSENT_KEY);
-    return raw === null ? null : decodeConsent(raw);
-  } catch {
-    return null;
+    return { status: 'available', consent: decodeConsent(stored.value) };
+  } catch (error) {
+    if (error instanceof Error && error.message === HEALTH_CONSENT_UNSUPPORTED_VERSION) {
+      return { status: 'unsupported_version', consent: null };
+    }
+    return { status: 'corrupt', consent: null, reason: 'invalid_record' };
   }
 }
 
+/** Compatibility API: only genuine absence maps to null; unreadable state remains explicit. */
+export async function getHealthDataCollectionConsentLocal(): Promise<LocalHealthDataConsent | null> {
+  const result = await readHealthDataCollectionConsentLocal();
+  if (result.status === 'available') return result.consent;
+  if (result.status === 'absent') return null;
+  if (result.status === 'unsupported_version') {
+    throw new Error(HEALTH_CONSENT_UNSUPPORTED_VERSION);
+  }
+  if (result.status === 'corrupt') throw new Error(HEALTH_CONSENT_INVALID);
+  throw new Error(HEALTH_CONSENT_UNAVAILABLE);
+}
+
 export async function hasCurrentHealthDataCollectionConsent(): Promise<boolean> {
-  const consent = await getHealthDataCollectionConsentLocal();
+  const result = await readHealthDataCollectionConsentLocal();
+  if (result.status !== 'available') return false;
+  const consent = result.consent;
   if (consent?.granted !== true || consent.version !== HEALTH_DATA_CONSENT.version) {
     return false;
   }

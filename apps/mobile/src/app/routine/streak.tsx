@@ -7,6 +7,7 @@ import { useProgress, type DayState, type HeatCell } from '@/features/routine/us
 import { useCycle } from '@/features/scheduler/useCycle';
 import { currentMilestone } from '@/features/streak/milestones';
 import { markMilestoneSeen } from '@/features/streak/milestoneStore';
+import { CompletionHistoryState } from '@/features/today/CompletionHistoryState';
 import { track } from '@/lib/analytics/track';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -42,7 +43,8 @@ function weekDaySquare(state: DayState): {
 }
 
 export default function StreakScreen() {
-  const { data } = useProgress();
+  const progressQuery = useProgress();
+  const { data } = progressQuery;
   const { data: cycleData } = useCycle();
   const week = data?.week ?? [];
   const heat = data?.heat ?? [];
@@ -60,6 +62,25 @@ export default function StreakScreen() {
         track('streak_milestone_reached', { milestone: milestone.key, streak: data?.streak });
     });
   }, [milestone?.key]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (progressQuery.isPending || progressQuery.isError) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <View className="flex-row items-center justify-between pt-1">
+          <RouteIconButton accessibilityLabel="Back" onPress={() => backOrReplace(router)} />
+          <Text variant="label" tone="muted">
+            STREAK & ADHERENCE
+          </Text>
+          <View style={{ width: 44 }} />
+        </View>
+        <CompletionHistoryState
+          failed={progressQuery.isError}
+          retrying={progressQuery.isFetching}
+          onRetry={() => void progressQuery.refetch()}
+        />
+      </Screen>
+    );
+  }
 
   return (
     <Screen edges={['top']}>

@@ -1,9 +1,9 @@
 import {
-  getPrivateItem,
-  removePrivateItem,
-  setPrivateItem,
-  updatePrivateItem,
-} from '@/lib/storage/privateKV';
+  AccountGenerationLeaseError,
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+} from '@/lib/auth/accountGeneration';
+import { readPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 import { localDateString } from './useToday';
 
 // Local-first daily check-off log (docs/03 §6: the activation + streak loop, and
@@ -17,16 +17,42 @@ import { localDateString } from './useToday';
 // in today.tsx that never persisted (it broke activation + every streak surface).
 const KEY = 'onskin.completions.v1';
 const FIRST_COMPLETION_KEY = 'onskin.completions.firstCompletion.v1';
-const SCHEMA_VERSION = 1 as const;
+const SCHEMA_VERSION = 2 as const;
+const LEGACY_SCHEMA_VERSION = 1 as const;
+let e2eCompletionReadFailureCount = 0;
 
 export const COMPLETION_LOG_INVALID = 'COMPLETION_LOG_INVALID';
 export const COMPLETION_LOG_UNSUPPORTED_VERSION = 'COMPLETION_LOG_UNSUPPORTED_VERSION';
+export const COMPLETION_LOG_UNAVAILABLE = 'COMPLETION_LOG_UNAVAILABLE';
+export const COMPLETION_FIRST_MARKER_INVALID = 'COMPLETION_FIRST_MARKER_INVALID';
+export const COMPLETION_FIRST_MARKER_UNAVAILABLE = 'COMPLETION_FIRST_MARKER_UNAVAILABLE';
 
 type Log = Record<string, string[]>; // localDate -> stepKeys done that day
 type CompletionLogEnvelope = {
   version: typeof SCHEMA_VERSION;
   days: Log;
+  firstCompletionRecorded: boolean;
 };
+
+type CompletionLogFormat = 'absent' | 'bare' | 'v1' | 'v2';
+
+type DecodedCompletionLog = {
+  days: Log;
+  firstCompletionRecorded: boolean | null;
+  format: CompletionLogFormat;
+};
+
+export type CompletionLogRead =
+  | { status: 'absent'; days: Log }
+  | { status: 'available'; days: Log }
+  | {
+      status: 'unavailable' | 'corrupt' | 'unsupported_version';
+      days: null;
+    };
+
+type LegacyFirstCompletionRead =
+  | { status: 'available'; recorded: boolean }
+  | { status: 'unavailable' | 'corrupt' | 'unsupported_version'; recorded: null };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -36,8 +62,23 @@ function hasOwn(value: Record<string, unknown>, key: string): boolean {
   return Object.prototype.hasOwnProperty.call(value, key);
 }
 
+function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  const keys = Object.keys(value);
+  return keys.length === expected.length && expected.every((key) => hasOwn(value, key));
+}
+
 function completionLogError(code: string): Error {
   return new Error(code);
+}
+
+function consumeE2ECompletionReadFailure(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+  const fixture = process.env.EXPO_PUBLIC_E2E_COMPLETION_STORAGE_FAILURE?.trim().toLowerCase();
+  if (fixture === 'always') return true;
+  const failureLimit = fixture === 'twice' ? 2 : fixture === 'once' ? 1 : 0;
+  if (failureLimit === 0 || e2eCompletionReadFailureCount >= failureLimit) return false;
+  e2eCompletionReadFailureCount += 1;
+  return true;
 }
 
 function normalizeLocalDateISO(value: unknown): string | null {
@@ -87,8 +128,14 @@ function normalizeCompletionLog(value: unknown): Log {
   return out;
 }
 
-function decodeCompletionLog(raw: string | null): Log {
-  if (raw === null) return {};
+function hasAnyCompletion(log: Log): boolean {
+  return Object.values(log).some((steps) => steps.length > 0);
+}
+
+function decodeCompletionLog(raw: string | null): DecodedCompletionLog {
+  if (raw === null) {
+    return { days: {}, firstCompletionRecorded: null, format: 'absent' };
+  }
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
@@ -97,22 +144,56 @@ function decodeCompletionLog(raw: string | null): Log {
   }
   if (!isRecord(parsed)) throw completionLogError(COMPLETION_LOG_INVALID);
 
-  if (!hasOwn(parsed, 'version')) return normalizeCompletionLog(parsed);
-  if (parsed.version !== SCHEMA_VERSION) {
-    if (
-      typeof parsed.version === 'number' &&
-      Number.isSafeInteger(parsed.version) &&
-      parsed.version > SCHEMA_VERSION
-    ) {
-      throw completionLogError(COMPLETION_LOG_UNSUPPORTED_VERSION);
-    }
-    throw completionLogError(COMPLETION_LOG_INVALID);
+  if (!hasOwn(parsed, 'version')) {
+    return {
+      days: normalizeCompletionLog(parsed),
+      firstCompletionRecorded: null,
+      format: 'bare',
+    };
   }
-  return normalizeCompletionLog(parsed.days);
+  if (parsed.version === LEGACY_SCHEMA_VERSION) {
+    return {
+      days: normalizeCompletionLog(parsed.days),
+      firstCompletionRecorded: null,
+      format: 'v1',
+    };
+  }
+  if (parsed.version === SCHEMA_VERSION) {
+    if (
+      !hasExactKeys(parsed, ['version', 'days', 'firstCompletionRecorded']) ||
+      typeof parsed.firstCompletionRecorded !== 'boolean'
+    ) {
+      throw completionLogError(COMPLETION_LOG_INVALID);
+    }
+    const days = normalizeCompletionLog(parsed.days);
+    if (
+      JSON.stringify(days) !== JSON.stringify(parsed.days) ||
+      (!parsed.firstCompletionRecorded && hasAnyCompletion(days))
+    ) {
+      throw completionLogError(COMPLETION_LOG_INVALID);
+    }
+    return {
+      days,
+      firstCompletionRecorded: parsed.firstCompletionRecorded,
+      format: 'v2',
+    };
+  }
+  if (
+    typeof parsed.version === 'number' &&
+    Number.isSafeInteger(parsed.version) &&
+    parsed.version > SCHEMA_VERSION
+  ) {
+    throw completionLogError(COMPLETION_LOG_UNSUPPORTED_VERSION);
+  }
+  throw completionLogError(COMPLETION_LOG_INVALID);
 }
 
-function encodeCompletionLog(log: Log): string {
-  return JSON.stringify({ version: SCHEMA_VERSION, days: log } satisfies CompletionLogEnvelope);
+function encodeCompletionLog(log: Log, firstCompletionRecorded: boolean): string {
+  return JSON.stringify({
+    version: SCHEMA_VERSION,
+    days: log,
+    firstCompletionRecorded,
+  } satisfies CompletionLogEnvelope);
 }
 
 /** Stable per-step key. Phase-scoped so an AM and a PM step for the same product
@@ -121,21 +202,74 @@ export function stepKey(phase: 'AM' | 'PM', productId: string): string {
   return `${phase}:${productId}`;
 }
 
-async function load(): Promise<Log> {
+/** Read and classify the completion log without migrating, repairing, or writing. */
+export async function readCompletionLog(): Promise<CompletionLogRead> {
+  if (consumeE2ECompletionReadFailure()) {
+    return { status: 'unavailable', days: null };
+  }
+  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
   try {
-    return decodeCompletionLog(await getPrivateItem(KEY));
+    stored = await readPrivateItem(KEY);
   } catch {
-    // Reads stay fail-soft for existing UI callers, but never repair/delete bytes.
-    return {};
+    return { status: 'unavailable', days: null };
+  }
+  if (stored.status === 'absent') return { status: 'absent', days: {} };
+  if (stored.status === 'unavailable') return { status: 'unavailable', days: null };
+  if (stored.status === 'corrupt') return { status: 'corrupt', days: null };
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', days: null };
+  }
+
+  try {
+    return { status: 'available', days: decodeCompletionLog(stored.value).days };
+  } catch (error) {
+    if (error instanceof Error && error.message === COMPLETION_LOG_UNSUPPORTED_VERSION) {
+      return { status: 'unsupported_version', days: null };
+    }
+    return { status: 'corrupt', days: null };
   }
 }
 
-async function hasFirstCompletionMarker(): Promise<boolean> {
-  return (await getPrivateItem(FIRST_COMPLETION_KEY).catch(() => null)) === 'true';
+async function load(): Promise<Log> {
+  const result = await readCompletionLog();
+  if (result.status === 'available' || result.status === 'absent') return result.days;
+  if (result.status === 'unavailable') {
+    throw completionLogError(COMPLETION_LOG_UNAVAILABLE);
+  }
+  if (result.status === 'unsupported_version') {
+    throw completionLogError(COMPLETION_LOG_UNSUPPORTED_VERSION);
+  }
+  throw completionLogError(COMPLETION_LOG_INVALID);
 }
 
-async function markFirstCompletion(): Promise<void> {
-  await setPrivateItem(FIRST_COMPLETION_KEY, 'true').catch(() => undefined);
+async function readLegacyFirstCompletionMarker(): Promise<LegacyFirstCompletionRead> {
+  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
+  try {
+    stored = await readPrivateItem(FIRST_COMPLETION_KEY);
+  } catch {
+    return { status: 'unavailable', recorded: null };
+  }
+  if (stored.status === 'absent') return { status: 'available', recorded: false };
+  if (stored.status === 'unavailable') return { status: 'unavailable', recorded: null };
+  if (stored.status === 'corrupt') return { status: 'corrupt', recorded: null };
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', recorded: null };
+  }
+  if (stored.value === 'true') return { status: 'available', recorded: true };
+  if (stored.value === 'false') return { status: 'available', recorded: false };
+  return { status: 'corrupt', recorded: null };
+}
+
+function firstCompletionFromLegacyMigration(
+  marker: LegacyFirstCompletionRead,
+  hadAny: boolean,
+): boolean {
+  if (hadAny) return true;
+  if (marker.status === 'available') return marker.recorded;
+  if (marker.status === 'unavailable') {
+    throw completionLogError(COMPLETION_FIRST_MARKER_UNAVAILABLE);
+  }
+  throw completionLogError(COMPLETION_FIRST_MARKER_INVALID);
 }
 
 /** The step keys checked off on `date`. */
@@ -173,28 +307,55 @@ export async function toggleCompletion(
     const existing = await getCompletedSteps(normalizedDate ?? date);
     return { done: normalizedKey ? existing.has(normalizedKey) : false, firstEver: false };
   }
-  const firstCompletionAlreadyMarked = await hasFirstCompletionMarker();
-  let result = { done: false, firstEver: false };
-  let shouldMarkFirstCompletion = false;
-  await updatePrivateItem(KEY, (current) => {
-    const log = decodeCompletionLog(current);
-    const hadAny = Object.values(log).some((steps) => steps.length > 0);
-    const day = new Set(log[normalizedDate] ?? []);
-    const alreadyCompleted = day.has(normalizedKey);
-    if (!alreadyCompleted) day.add(normalizedKey);
-    log[normalizedDate] = [...day];
+  try {
+    return await runAccountGenerationOperation(async (lease) => {
+      const legacyMarker = await awaitAccountGenerationLease(
+        lease,
+        readLegacyFirstCompletionMarker,
+      );
+      lease.assertCurrent();
 
-    result = {
-      done: true,
-      firstEver: !alreadyCompleted && !hadAny && !firstCompletionAlreadyMarked,
-    };
-    shouldMarkFirstCompletion = hadAny || result.firstEver;
-    return encodeCompletionLog(log);
-  });
-  if (shouldMarkFirstCompletion && !firstCompletionAlreadyMarked) {
-    await markFirstCompletion();
+      let result = { done: false, firstEver: false };
+      lease.assertCurrent();
+      await updatePrivateItem(KEY, (current) => {
+        const decoded = decodeCompletionLog(current);
+        const log = decoded.days;
+        const hadAny = hasAnyCompletion(log);
+        const firstCompletionRecorded =
+          decoded.format === 'v2'
+            ? decoded.firstCompletionRecorded!
+            : firstCompletionFromLegacyMigration(legacyMarker, hadAny);
+        const day = new Set(log[normalizedDate] ?? []);
+        const alreadyCompleted = day.has(normalizedKey);
+        if (!alreadyCompleted) day.add(normalizedKey);
+        log[normalizedDate] = [...day];
+
+        result = {
+          done: true,
+          firstEver: !alreadyCompleted && !hadAny && !firstCompletionRecorded,
+        };
+        const nextFirstCompletionRecorded = firstCompletionRecorded || hadAny || !alreadyCompleted;
+        if (
+          decoded.format === 'v2' &&
+          alreadyCompleted &&
+          decoded.firstCompletionRecorded === nextFirstCompletionRecorded
+        ) {
+          return current;
+        }
+        return encodeCompletionLog(log, nextFirstCompletionRecorded);
+      });
+      lease.assertCurrent();
+      return result;
+    });
+  } catch (error) {
+    // Today invokes this mutation from a fire-and-forget press handler. An
+    // account replacement cancels the old owner's interaction without routing
+    // an unhandled rejection into the new session.
+    if (error instanceof AccountGenerationLeaseError) {
+      return { done: false, firstEver: false };
+    }
+    throw error;
   }
-  return result;
 }
 
 /** Dates with at least one completion (the streak's "completion days"). */
@@ -231,6 +392,11 @@ export async function getCompletionSummary(): Promise<CompletionSummary> {
 
 /** Test/seed reset. */
 export async function clearCompletions(): Promise<void> {
-  await removePrivateItem(KEY);
-  await removePrivateItem(FIRST_COMPLETION_KEY);
+  await runAccountGenerationOperation(async (lease) => {
+    lease.assertCurrent();
+    await removePrivateItem(KEY);
+    lease.assertCurrent();
+    await removePrivateItem(FIRST_COMPLETION_KEY);
+    lease.assertCurrent();
+  });
 }

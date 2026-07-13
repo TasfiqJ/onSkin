@@ -2,10 +2,14 @@ import type { ConsentType } from '@onskin/types';
 import * as Crypto from 'expo-crypto';
 
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
 import { recordConsent } from '@/lib/consent/consent';
 import { getPrivateBoolean } from '@/lib/storage/privateBoolean';
-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 /**
  * Photo consents (docs/01 §4, docs/06 §7). Unbundled and local-first. Capture
@@ -16,7 +20,6 @@ import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/stor
  */
 const CAPTURE_KEY = 'onskin.photos.captureConsent';
 const CAPTURE_RECORD_KEY = 'onskin.photos.captureConsent.v1';
-const CLOUD_KEY = 'onskin.photos.cloudBackup';
 const CAPTURE_SCHEMA_VERSION = 1 as const;
 
 export const PHOTO_CAPTURE_CONSENT_INVALID = 'PHOTO_CAPTURE_CONSENT_INVALID';
@@ -151,11 +154,11 @@ async function getPhotoCaptureConsentLocal(): Promise<boolean> {
   }
 }
 
-async function setPhotoCaptureConsentLocal(): Promise<void> {
-  const consentTextHash = await Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.SHA256,
-    PHOTO_CAPTURE_CONSENT.fullText,
+async function setPhotoCaptureConsentLocal(lease: AccountGenerationLease): Promise<void> {
+  const consentTextHash = await awaitAccountGenerationLease(lease, () =>
+    Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, PHOTO_CAPTURE_CONSENT.fullText),
   );
+  lease.assertCurrent();
   const consent: LocalPhotoCaptureConsent = {
     type: 'photo_capture',
     granted: true,
@@ -167,6 +170,7 @@ async function setPhotoCaptureConsentLocal(): Promise<void> {
     if (current !== null) decodePhotoCaptureConsent(current);
     return encodePhotoCaptureConsent(consent);
   });
+  lease.assertCurrent();
 }
 
 export async function hasPhotoCaptureConsent(): Promise<boolean> {
@@ -175,8 +179,7 @@ export async function hasPhotoCaptureConsent(): Promise<boolean> {
 
 export async function grantPhotoCaptureConsent(): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await setPhotoCaptureConsentLocal();
-    lease.assertCurrent();
+    await setPhotoCaptureConsentLocal(lease);
     try {
       await recordConsent({
         type: 'photo_capture',
@@ -190,16 +193,4 @@ export async function grantPhotoCaptureConsent(): Promise<void> {
       /* offline / no anonymous session. Keep the local-only proof; production ledger QA is a launch gate. */
     }
   });
-}
-
-/** Removes flags written by builds that exposed backup before it existed. */
-export async function clearUnavailableCloudBackupPreference(): Promise<void> {
-  if (PHOTO_CLOUD_BACKUP_AVAILABLE) return;
-  try {
-    if ((await getPrivateItem(CLOUD_KEY)) != null) {
-      await removePrivateItem(CLOUD_KEY);
-    }
-  } catch {
-    // The capability remains disabled even if encrypted preference cleanup fails.
-  }
 }

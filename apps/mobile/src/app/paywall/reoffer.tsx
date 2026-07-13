@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
@@ -6,6 +6,7 @@ import { Screen, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { dismissPaywall } from '@/features/subscription/dismissPaywall';
+import { acknowledgeLifecyclePromptPresented } from '@/features/subscription/lifecycle';
 import {
   PAYWALL_FEEDBACK,
   PaywallFeedback,
@@ -22,6 +23,10 @@ import { colors } from '@/theme/tokens';
 // Active trials can choose a plan without store-management confusion; expired
 // trials get the honest loss-aversion re-offer. Never a data-deleting lock.
 export default function ReofferScreen() {
+  const params = useLocalSearchParams<{ lifecyclePromptId?: string | string[] }>();
+  const lifecyclePromptId = Array.isArray(params.lifecyclePromptId)
+    ? params.lifecyclePromptId[0]
+    : params.lifecyclePromptId;
   const { height } = useWindowDimensions();
   const { data, isLoading } = useEntitlement();
   const { startTrial, downgrade } = useEntitlementActions();
@@ -80,6 +85,17 @@ export default function ReofferScreen() {
       context: activeReverseTrial ? 'reverse_trial_keep_options' : 'reverse_trial_reoffer',
     });
   }, [activeReverseTrial, isLoading]);
+
+  useEffect(() => {
+    // This effect runs only after the non-loading target surface has committed.
+    // Direct settings navigation has no lifecyclePromptId and acknowledges
+    // nothing; only the durable startup delivery can settle its journal.
+    if (isLoading || !lifecyclePromptId) return;
+    void acknowledgeLifecyclePromptPresented({
+      promptId: lifecyclePromptId,
+      route: '/paywall/reoffer',
+    });
+  }, [isLoading, lifecyclePromptId]);
 
   if (isLoading) {
     return (

@@ -1,4 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  AccountGenerationLeaseError,
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
 
 const mocks = vi.hoisted(() => ({
   recordConsent: vi.fn(),
@@ -28,9 +34,10 @@ vi.mock('@/lib/storage/privateKV', () => ({
 
 const CAPTURE_KEY = 'onskin.photos.captureConsent';
 const CAPTURE_RECORD_KEY = 'onskin.photos.captureConsent.v1';
-const CLOUD_KEY = 'onskin.photos.cloudBackup';
 
 describe('photo consent persistence', () => {
+  let boundaryActive = false;
+
   beforeEach(() => {
     mocks.recordConsent.mockReset();
     mocks.digestStringAsync.mockClear();
@@ -54,6 +61,12 @@ describe('photo consent persistence', () => {
         else mocks.storage.set(key, next);
       },
     );
+  });
+
+  afterEach(() => {
+    if (!boundaryActive) return;
+    endAccountGenerationBoundary();
+    boundaryActive = false;
   });
 
   it('keeps photo capture enabled after the local proof saves and records the ledger', async () => {
@@ -103,39 +116,28 @@ describe('photo consent persistence', () => {
     expect(mocks.recordConsent).not.toHaveBeenCalled();
   });
 
-  it('hard-disables cloud backup and clears stale enabled preferences', async () => {
-    const { clearUnavailableCloudBackupPreference, PHOTO_CLOUD_BACKUP_AVAILABLE } =
-      await import('./consent');
-    mocks.storage.set(CLOUD_KEY, '1');
+  it('rejects a delayed owner-A consent hash before it can write owner B', async () => {
+    const { grantPhotoCaptureConsent } = await import('./consent');
+    let releaseDigest!: () => void;
+    mocks.digestStringAsync.mockImplementationOnce(
+      () =>
+        new Promise<string>((resolve) => {
+          releaseDigest = () => resolve('owner-a-hash');
+        }),
+    );
 
-    expect(PHOTO_CLOUD_BACKUP_AVAILABLE).toBe(false);
-    await expect(clearUnavailableCloudBackupPreference()).resolves.toBeUndefined();
+    const grant = grantPhotoCaptureConsent();
+    await vi.waitFor(() => expect(mocks.digestStringAsync).toHaveBeenCalledOnce());
 
-    expect(mocks.removePrivateItem).toHaveBeenCalledWith(CLOUD_KEY);
-    expect(mocks.storage.has(CLOUD_KEY)).toBe(false);
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+
+    await expect(grant).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
     expect(mocks.recordConsent).not.toHaveBeenCalled();
-  });
 
-  it('does not create a backup preference when no legacy value exists', async () => {
-    const { clearUnavailableCloudBackupPreference } = await import('./consent');
-
-    await expect(clearUnavailableCloudBackupPreference()).resolves.toBeUndefined();
-
-    expect(mocks.getPrivateItem).toHaveBeenCalledWith(CLOUD_KEY);
-    expect(mocks.removePrivateItem).not.toHaveBeenCalled();
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
-  });
-
-  it('stays disabled when stale preference cleanup is unavailable', async () => {
-    const { clearUnavailableCloudBackupPreference, PHOTO_CLOUD_BACKUP_AVAILABLE } =
-      await import('./consent');
-    mocks.storage.set(CLOUD_KEY, '1');
-    mocks.removePrivateItem.mockRejectedValueOnce(new Error('private storage unavailable'));
-
-    await expect(clearUnavailableCloudBackupPreference()).resolves.toBeUndefined();
-
-    expect(PHOTO_CLOUD_BACKUP_AVAILABLE).toBe(false);
-    expect(mocks.recordConsent).not.toHaveBeenCalled();
+    releaseDigest();
+    await Promise.resolve();
   });
 
   it('reads padded legacy flags without repairing them', async () => {

@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
+import { useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
@@ -12,6 +13,7 @@ import { useProgress } from '@/features/routine/useProgress';
 import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
 import { requestReviewAfterValue } from '@/features/review/prompt';
 import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
+import { CompletionHistoryState } from '@/features/today/CompletionHistoryState';
 import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
 import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';
 import { currentRoutineType, localClockLabel } from '@/features/today/useToday';
@@ -362,12 +364,26 @@ export default function TodayScreen() {
   const ownerScope = useOwnerQueryScope();
   const boundary = useLocalDateBoundary();
   const { localDate: today } = boundary;
-  const { data: doneData } = useQuery({
+  const completionReadFixturePending = useRef(
+    typeof __DEV__ !== 'undefined' &&
+      __DEV__ &&
+      process.env.EXPO_PUBLIC_E2E_COMPLETION_STORAGE_FAILURE === 'today_once',
+  );
+  const completionQuery = useQuery({
     queryKey: queryKeys.completions(ownerScope, boundary),
+    retry: false,
     refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
     refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
-    queryFn: () => getCompletedSteps(today),
+    queryFn: async () => {
+      if (completionReadFixturePending.current) {
+        completionReadFixturePending.current = false;
+        throw new Error('E2E_COMPLETION_STORAGE_UNAVAILABLE');
+      }
+      return getCompletedSteps(today);
+    },
   });
+  const [completionMutationFailed, setCompletionMutationFailed] = useState(false);
+  const { data: doneData } = completionQuery;
   const done = doneData ?? new Set<string>();
   const hasExamplePlan = planData?.isExample === true;
   const hasRealRoutine = Boolean(planData && !planData.isExample);
@@ -394,31 +410,40 @@ export default function TodayScreen() {
     key: string,
     context?: { phase: 'AM' | 'PM'; cycleActive: boolean; stepKeys: readonly string[] },
   ) {
-    const result = await toggleCompletion(key, today);
-    if (result.done) {
-      const moment = type.toLowerCase();
-      track('routine_checkoff_completed', { moment });
-      if (result.firstEver) track('first_checkoff_completed', { moment });
-      const checkoffPhase = context?.phase ?? (type === 'PM' ? 'PM' : 'AM');
-      if (
-        shouldTrackCycleNightCompleted({
-          completedBefore: done,
-          completedKey: key,
-          cycleActive: context?.cycleActive === true,
-          phase: checkoffPhase,
-          stepKeys: context?.stepKeys ?? [],
-          completionDone: result.done,
-        })
-      ) {
-        track('cycle_night_completed', { moment: 'pm', source: 'today' });
+    try {
+      const result = await toggleCompletion(key, today);
+      if (result.done) {
+        const moment = type.toLowerCase();
+        track('routine_checkoff_completed', { moment });
+        if (result.firstEver) track('first_checkoff_completed', { moment });
+        const checkoffPhase = context?.phase ?? (type === 'PM' ? 'PM' : 'AM');
+        if (
+          shouldTrackCycleNightCompleted({
+            completedBefore: done,
+            completedKey: key,
+            cycleActive: context?.cycleActive === true,
+            phase: checkoffPhase,
+            stepKeys: context?.stepKeys ?? [],
+            completionDone: result.done,
+          })
+        ) {
+          track('cycle_night_completed', { moment: 'pm', source: 'today' });
+        }
       }
+      if (result.done && (progress?.streak ?? 0) >= 6)
+        void requestReviewAfterValue('seven_checkoff_days');
+      if (isOwnerQueryScopeCurrent(ownerScope)) {
+        await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.completions(ownerScope) });
+        await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.progress(ownerScope) });
+      }
+    } catch {
+      setCompletionMutationFailed(true);
     }
-    if (result.done && (progress?.streak ?? 0) >= 6)
-      void requestReviewAfterValue('seven_checkoff_days');
-    if (isOwnerQueryScopeCurrent(ownerScope)) {
-      await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.completions(ownerScope) });
-      await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.progress(ownerScope) });
-    }
+  }
+
+  async function retryCompletionHistory() {
+    const result = await completionQuery.refetch();
+    if (result.isSuccess) setCompletionMutationFailed(false);
   }
 
   const rowState = (key: string, firstUndoneKey: string | null): 'done' | 'next' | 'pending' =>
@@ -440,6 +465,18 @@ export default function TodayScreen() {
     !compactPhone &&
     cycle != null &&
     (cadenceWithheldCount === 0 || height >= 932);
+
+  if (completionQuery.isPending || completionQuery.isError || completionMutationFailed) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <CompletionHistoryState
+          failed={completionQuery.isError || completionMutationFailed}
+          retrying={completionQuery.isFetching}
+          onRetry={() => void retryCompletionHistory()}
+        />
+      </Screen>
+    );
+  }
 
   // ---- AM ----
   if (!dark) {

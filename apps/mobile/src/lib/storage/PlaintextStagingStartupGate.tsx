@@ -2,42 +2,57 @@ import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
-import { scavengePlaintextStaging } from './plaintextStaging';
+import { useAuth } from '@/lib/auth/AuthProvider';
+
+import { preparePrivateStorageForSession } from './privateStorageStartup';
 
 type StartupScavengeResult = 'ready' | 'failed';
 
-function settledScavenge(pending: Promise<number>): Promise<StartupScavengeResult> {
+function settledStartup(pending: Promise<void>): Promise<StartupScavengeResult> {
   return pending.then(
     () => 'ready',
     () => 'failed',
   );
 }
 
-// Module evaluation starts the first serialized coordinator operation. Children
-// that can reserve plaintext do not mount until it succeeds, so a producer can
-// never enqueue ahead of startup scavenging.
-const startupScavengeResult = settledScavenge(scavengePlaintextStaging());
-
 export function PlaintextStagingStartupGate({ children }: { children: ReactNode }) {
-  const [attempt, setAttempt] = useState(startupScavengeResult);
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
+  const [attempt, setAttempt] = useState(0);
+
+  return (
+    <PrivateStorageStartupAttempt
+      key={JSON.stringify([userId, attempt])}
+      userId={userId}
+      onRetry={() => setAttempt((value) => value + 1)}
+    >
+      {children}
+    </PrivateStorageStartupAttempt>
+  );
+}
+
+function PrivateStorageStartupAttempt({
+  children,
+  onRetry,
+  userId,
+}: {
+  children: ReactNode;
+  onRetry: () => void;
+  userId: string | null;
+}) {
   const [status, setStatus] = useState<'pending' | StartupScavengeResult>('pending');
 
   useEffect(() => {
     let active = true;
-    void attempt.then((result) => {
+    void settledStartup(preparePrivateStorageForSession(userId)).then((result) => {
       if (active) setStatus(result);
     });
     return () => {
       active = false;
     };
-  }, [attempt]);
+  }, [userId]);
 
   if (status === 'ready') return children;
-
-  const retry = () => {
-    setStatus('pending');
-    setAttempt(settledScavenge(scavengePlaintextStaging()));
-  };
 
   return (
     <View
@@ -65,13 +80,13 @@ export function PlaintextStagingStartupGate({ children }: { children: ReactNode 
               Private storage needs attention
             </Text>
             <Text style={{ color: '#625B52', lineHeight: 21, marginTop: 8, textAlign: 'center' }}>
-              OnSkin stayed closed because temporary private files could not be cleared. Try again
+              OnSkin stayed closed because private storage could not be prepared safely. Try again
               before continuing.
             </Text>
           </View>
           <Pressable
             accessibilityRole="button"
-            onPress={retry}
+            onPress={onRetry}
             style={{
               minHeight: 52,
               minWidth: 160,

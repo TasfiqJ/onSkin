@@ -332,6 +332,35 @@ export function createPlaintextStagingCoordinator(deps: PlaintextStagingDependen
       });
     },
 
+    cleanupOperation(
+      operationId: string,
+      purpose: PlaintextStagingPurpose,
+    ): Promise<void> {
+      return serialize(async () => {
+        if (!OPAQUE_OPERATION_ID.test(operationId) || !isPurpose(purpose)) {
+          throw new Error(PLAINTEXT_STAGING_ENTRY_UNOWNED);
+        }
+        const journal = await readJournal();
+        await assertDirectoryOwned(journal);
+        const index = journal.entries.findIndex(
+          (entry) => entry.operationId === operationId && entry.purpose === purpose,
+        );
+        if (index >= 0) {
+          await cleanupJournalEntry(journal, index);
+          return;
+        }
+
+        // An absent exact entry is successful only when its deterministic owned
+        // path is absent too. This lets a photo transaction prove plaintext
+        // cleanup after a prior scavenger, while a lost/forged journal never
+        // converts an existing plaintext file into an untracked success.
+        const uri = uriForEntry({ operationId, purpose });
+        if ((await deps.fileSystem.getInfoAsync(uri)).exists) {
+          throw new Error(PLAINTEXT_STAGING_ENTRY_UNOWNED);
+        }
+      });
+    },
+
     cleanupUri(uri: string): Promise<void> {
       return serialize(async () => {
         const journal = await readJournal();

@@ -34,9 +34,10 @@ describe('Progress quality provenance contract', () => {
     expect(store).not.toContain("supabase.from('photos').insert");
     expect(store).not.toContain('getCloudBackupEnabled');
     expect(consent).toContain('PHOTO_CLOUD_BACKUP_AVAILABLE = false');
-    expect(consent).toContain('clearUnavailableCloudBackupPreference');
+    expect(consent).not.toContain('clearUnavailableCloudBackupPreference');
     expect(consent).not.toContain('setCloudBackupEnabled');
-    expect(rootLayout).toContain('void clearUnavailableCloudBackupPreference();');
+    expect(rootLayout).not.toContain('clearUnavailableCloudBackupPreference');
+    expect(rootLayout).not.toContain('onskin.photos.cloudBackup');
     expect(settings).toContain('Cloud backup is not available in this build.');
     expect(settings).not.toContain('cloud_backup_opted_in');
     expect(settings).not.toContain('accessibilityLabel="Encrypted cloud backup"');

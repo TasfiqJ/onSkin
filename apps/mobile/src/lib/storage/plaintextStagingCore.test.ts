@@ -196,6 +196,37 @@ describe('plaintext staging journal', () => {
     expect(readJournal(harness.storage)).toBeNull();
   });
 
+  it('cleans a capture by opaque operation even from cleanup-pending recovery', async () => {
+    const harness = createHarness();
+    const handle = await harness.coordinator.reserve('photo_capture_jpeg');
+    harness.files.add(handle.uri);
+    await harness.coordinator.markState(handle, 'plaintext_written');
+    harness.deleteAsync.mockRejectedValueOnce(new Error('process interrupted cleanup'));
+
+    await expect(harness.coordinator.cleanup(handle)).rejects.toThrow(
+      'process interrupted cleanup',
+    );
+    await expect(
+      harness.coordinator.cleanupOperation(handle.operationId, 'photo_capture_jpeg'),
+    ).resolves.toBeUndefined();
+
+    expect(harness.files.has(handle.uri)).toBe(false);
+    expect(readJournal(harness.storage)).toBeNull();
+  });
+
+  it('proves an already-scavenged capture absent but rejects unowned plaintext', async () => {
+    const harness = createHarness();
+
+    await expect(
+      harness.coordinator.cleanupOperation(FIRST_ID, 'photo_capture_jpeg'),
+    ).resolves.toBeUndefined();
+
+    harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.jpg`);
+    await expect(
+      harness.coordinator.cleanupOperation(FIRST_ID, 'photo_capture_jpeg'),
+    ).rejects.toThrow(PLAINTEXT_STAGING_ENTRY_UNOWNED);
+  });
+
   it('simulates crash/relaunch by scavenging an orphan from a fresh coordinator', async () => {
     const harness = createHarness();
     const handle = await harness.coordinator.reserve('data_export_json');
@@ -368,24 +399,29 @@ describe('plaintext staging journal', () => {
 });
 
 describe('plaintext staging startup contract', () => {
-  it('starts one content-free scavenger before private root content can mount', () => {
+  it('runs owner-bound photo recovery and scavenging after session isolation but before app lock', () => {
     const rootLayout = readFileSync(`${SRC_DIR}/app/_layout.tsx`, 'utf8');
     const startupGate = readFileSync(
       `${SRC_DIR}/lib/storage/PlaintextStagingStartupGate.tsx`,
       'utf8',
     );
-    const functionOffset = startupGate.indexOf('export function PlaintextStagingStartupGate');
-    const scavengeOffset = startupGate.indexOf(
-      'const startupScavengeResult = settledScavenge(scavengePlaintextStaging());',
+    const startupCoordinator = readFileSync(
+      `${SRC_DIR}/lib/storage/privateStorageStartup.ts`,
+      'utf8',
     );
 
     expect(rootLayout).toContain('<PlaintextStagingStartupGate>');
-    expect(rootLayout.indexOf('<PlaintextStagingStartupGate>')).toBeLessThan(
-      rootLayout.indexOf('<RootContent />'),
+    expect(rootLayout.indexOf('<SessionBoundaryGate>')).toBeLessThan(
+      rootLayout.indexOf('<PlaintextStagingStartupGate>'),
     );
-    expect(startupGate).toContain("import { scavengePlaintextStaging } from './plaintextStaging';");
-    expect(scavengeOffset).toBeGreaterThan(-1);
-    expect(scavengeOffset).toBeLessThan(functionOffset);
+    expect(rootLayout.indexOf('<PlaintextStagingStartupGate>')).toBeLessThan(
+      rootLayout.indexOf('<AppLockProvider>'),
+    );
+    expect(startupGate).toContain('preparePrivateStorageForSession(userId)');
+    expect(startupGate).not.toContain('const startupScavengeResult');
+    expect(startupCoordinator.indexOf('await dependencies.recoverPhotos();')).toBeLessThan(
+      startupCoordinator.indexOf('await dependencies.scavengePlaintext();'),
+    );
     expect(startupGate).toContain("if (status === 'ready') return children;");
     expect(startupGate).not.toContain('.catch(() => undefined)');
     expect(rootLayout).not.toContain('void scavengePlaintextStaging().catch');

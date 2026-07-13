@@ -16,11 +16,16 @@ import {
   decryptPhotoNote,
   decryptPhotoToDataUri,
   deleteCapturedPhotoSource,
+  deleteEncryptedPhoto,
   deleteQuarantinedPhoto,
   deletePhotoShareFile,
+  discardPendingEncryptedPhotoForRetry,
+  encryptedPhotoUriForId,
   encryptCapturedPhoto,
   encryptPhotoNote,
   endEncryptedPhotoAccountBoundary,
+  finalizeEncryptedPhotoDeletions,
+  isOwnedEncryptedPhotoUri,
   PHOTO_CONTENT_KEY_INVALID,
   PHOTO_CONTENT_KEY_MISSING,
   PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
@@ -33,7 +38,10 @@ import {
   PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
   quarantineEncryptedPhoto,
   reconcileEncryptedPhotoStorage,
+  recoverPreparedEncryptedPhoto,
   restoreQuarantinedPhoto,
+  stageEncryptedPhotoDeletions,
+  verifyEncryptedPhotoDeletionSources,
   waitForEncryptedPhotoWritesToSettle,
 } from './encryptedStorage';
 
@@ -357,7 +365,7 @@ describe('encrypted photo storage', () => {
 
     expect(result.encryptedLocalUri).toBe(finalUri);
     expect(mocks.moveAsync).toHaveBeenCalledWith({
-      from: expect.stringMatching(/atomic-photo\.onskinphoto\.tmp-/),
+      from: `${finalUri}.pending-add-atomic-photo`,
       to: finalUri,
     });
     expect(mocks.files.has(finalUri)).toBe(true);
@@ -378,6 +386,136 @@ describe('encrypted photo storage', () => {
     expect(
       [...mocks.files.keys()].some((uri) => uri.includes('interrupted-photo.onskinphoto.tmp-')),
     ).toBe(false);
+  });
+
+  it('recovers the exact deterministic pending add and keeps a valid final authoritative', async () => {
+    const photoId = 'prepared-photo';
+    const prepared = await createAuthenticatedPhotoEnvelope(photoId, 'prepared bytes');
+    const pendingUri = `${prepared.uri}.pending-add-${photoId}`;
+    mocks.files.delete(prepared.uri);
+    mocks.files.set(pendingUri, prepared.raw);
+    configureDirectoryBackedFileMocks();
+
+    await expect(recoverPreparedEncryptedPhoto(prepared.uri, photoId)).resolves.toBe(true);
+    expect(mocks.files.get(prepared.uri)).toBe(prepared.raw);
+    expect(mocks.files.has(pendingUri)).toBe(false);
+
+    mocks.files.set(pendingUri, '{"version":"interrupted"');
+    await expect(recoverPreparedEncryptedPhoto(prepared.uri, photoId)).resolves.toBe(true);
+
+    expect(mocks.files.get(prepared.uri)).toBe(prepared.raw);
+    expect(mocks.files.has(pendingUri)).toBe(false);
+  });
+
+  it('preserves a partial pending add until an exact staged source authorizes retry discard', async () => {
+    await createAuthenticatedPhotoEnvelope('partial-key-seed');
+    const photoId = 'partial-pending';
+    const finalUri = encryptedPhotoUriForId(photoId);
+    const pendingUri = `${finalUri}.pending-add-${photoId}`;
+    const partialBytes = '{"version":"xchacha20poly1305:v1","ciphertextHex":"00"';
+    mocks.files.set(pendingUri, partialBytes);
+    configureDirectoryBackedFileMocks();
+
+    await expect(recoverPreparedEncryptedPhoto(finalUri, photoId)).rejects.toThrow(
+      PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED,
+    );
+    expect(mocks.files.get(pendingUri)).toBe(partialBytes);
+
+    await expect(discardPendingEncryptedPhotoForRetry(finalUri, photoId)).resolves.toBe(true);
+    expect(mocks.files.has(pendingUri)).toBe(false);
+    expect(mocks.files.has(finalUri)).toBe(false);
+  });
+
+  it('stages and finalizes only exact authenticated canonical deletion targets', async () => {
+    const first = await createAuthenticatedPhotoEnvelope('delete-first', 'first bytes');
+    const second = await createAuthenticatedPhotoEnvelope('delete-second', 'second bytes');
+    const unknown = await createAuthenticatedPhotoEnvelope('leave-unknown', 'unknown bytes');
+    const operationId = 'exact-delete';
+    const firstQuarantine = `${first.uri}.pending-delete-${operationId}`;
+    const secondQuarantine = `${second.uri}.pending-delete-${operationId}`;
+    configureDirectoryBackedFileMocks();
+
+    await expect(
+      verifyEncryptedPhotoDeletionSources([first.uri, second.uri]),
+    ).resolves.toBeUndefined();
+    await stageEncryptedPhotoDeletions([first.uri, second.uri], operationId);
+
+    expect(mocks.files.has(first.uri)).toBe(false);
+    expect(mocks.files.has(second.uri)).toBe(false);
+    expect(mocks.files.get(firstQuarantine)).toBe(first.raw);
+    expect(mocks.files.get(secondQuarantine)).toBe(second.raw);
+    expect(mocks.files.get(unknown.uri)).toBe(unknown.raw);
+
+    await finalizeEncryptedPhotoDeletions([first.uri, second.uri], operationId);
+
+    expect(mocks.files.has(firstQuarantine)).toBe(false);
+    expect(mocks.files.has(secondQuarantine)).toBe(false);
+    expect(mocks.files.get(unknown.uri)).toBe(unknown.raw);
+  });
+
+  it('rejects unsafe or nonowned encrypted paths without moving or deleting them', async () => {
+    const unsafePaths = [
+      'file://outside/private.onskinphoto',
+      `${PHOTO_DIR}../outside.onskinphoto`,
+      `${PHOTO_DIR}nested/photo.onskinphoto`,
+      `${PHOTO_DIR}%2e%2e.onskinphoto`,
+      `${PHOTO_DIR}back\\slash.onskinphoto`,
+    ];
+    for (const uri of unsafePaths) mocks.files.set(uri, 'must remain exact');
+    configureDirectoryBackedFileMocks();
+    mocks.moveAsync.mockClear();
+    mocks.deleteAsync.mockClear();
+
+    expect(isOwnedEncryptedPhotoUri(`${PHOTO_DIR}safe-photo_1.onskinphoto`)).toBe(true);
+    for (const uri of unsafePaths) {
+      expect(isOwnedEncryptedPhotoUri(uri)).toBe(false);
+      await expect(verifyEncryptedPhotoDeletionSources([uri])).rejects.toThrow(
+        PHOTO_RECOVERY_CONFLICT,
+      );
+      await expect(stageEncryptedPhotoDeletions([uri], 'unsafe-delete')).rejects.toThrow(
+        PHOTO_RECOVERY_CONFLICT,
+      );
+      await expect(deleteEncryptedPhoto(uri)).rejects.toThrow(PHOTO_RECOVERY_CONFLICT);
+    }
+
+    expect(mocks.moveAsync).not.toHaveBeenCalled();
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
+    for (const uri of unsafePaths) expect(mocks.files.get(uri)).toBe('must remain exact');
+  });
+
+  it('replays file moves and deletes that committed before their promise rejected', async () => {
+    const target = await createAuthenticatedPhotoEnvelope('commit-then-reject');
+    const operationId = 'replay-delete';
+    const quarantineUri = `${target.uri}.pending-delete-${operationId}`;
+    configureDirectoryBackedFileMocks();
+    mocks.moveAsync.mockImplementationOnce(async ({ from, to }: { from: string; to: string }) => {
+      const raw = mocks.files.get(from);
+      if (raw == null) throw new Error(`missing file: ${from}`);
+      mocks.files.set(to, raw);
+      mocks.files.delete(from);
+      throw new Error('move reported failure after commit');
+    });
+
+    await expect(stageEncryptedPhotoDeletions([target.uri], operationId)).rejects.toThrow(
+      'move reported failure after commit',
+    );
+    expect(mocks.files.get(quarantineUri)).toBe(target.raw);
+    await expect(
+      stageEncryptedPhotoDeletions([target.uri], operationId),
+    ).resolves.toBeUndefined();
+
+    mocks.deleteAsync.mockImplementationOnce(async (uri: string) => {
+      mocks.files.delete(uri);
+      throw new Error('delete reported failure after commit');
+    });
+    await expect(finalizeEncryptedPhotoDeletions([target.uri], operationId)).rejects.toThrow(
+      'delete reported failure after commit',
+    );
+    await expect(
+      finalizeEncryptedPhotoDeletions([target.uri], operationId),
+    ).resolves.toBeUndefined();
+    expect(mocks.files.has(target.uri)).toBe(false);
+    expect(mocks.files.has(quarantineUri)).toBe(false);
   });
 
   it('restores or removes quarantined files according to committed metadata', async () => {

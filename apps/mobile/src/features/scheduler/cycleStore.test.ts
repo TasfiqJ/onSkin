@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  AccountGenerationLeaseError,
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
+
+import {
   CYCLE_CONFIG_INVALID,
   CYCLE_CONFIG_UNAVAILABLE,
   CYCLE_CONFIG_UNSUPPORTED_VERSION,
@@ -66,6 +72,8 @@ function storeLegacyCycle(value: CycleConfig | Record<string, unknown>): string 
 }
 
 describe('cycle configuration persistence and reconciliation', () => {
+  let boundaryActive = false;
+
   beforeEach(() => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 6, 10, 12, 0, 0));
@@ -93,6 +101,9 @@ describe('cycle configuration persistence and reconciliation', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    if (!boundaryActive) return;
+    endAccountGenerationBoundary();
+    boundaryActive = false;
   });
 
   it('restarts today and clears every active disruption without retaining stale skips', async () => {
@@ -540,6 +551,30 @@ describe('cycle configuration persistence and reconciliation', () => {
     expect(new Set(loaded.stagingOverrides)).toEqual(
       new Set(Array.from({ length: 100 }, (_, index) => `product-${index}`)),
     );
+  });
+
+  it('rejects a delayed owner-A legacy migration after an account boundary with zero writes', async () => {
+    let releaseLegacyRead!: () => void;
+    mocks.getPrivateItem.mockImplementation(async (key: string) => {
+      if (key === CYCLE_KEY) return null;
+      if (key === LEGACY_CYCLE_KEY) {
+        return new Promise<string>((resolve) => {
+          releaseLegacyRead = () => resolve(JSON.stringify(config({ variant: 'gentle' })));
+        });
+      }
+      return mocks.storage.get(key) ?? null;
+    });
+
+    const mutation = updateCycleConfig({ variant: 'advanced' });
+    await vi.waitFor(() => expect(mocks.getPrivateItem).toHaveBeenCalledWith(LEGACY_CYCLE_KEY));
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    releaseLegacyRead();
+
+    await expect(mutation).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.has(CYCLE_KEY)).toBe(false);
   });
 
   it('does zero writes for a canonical explicit no-op', async () => {

@@ -40,7 +40,9 @@ function EnabledBehaviouralTriggers({ enabled }: { enabled: BehaviouralTriggerEn
 
   const needsReplenish = hasReplenishmentSignal(shelf.data);
   const offerStepUp = ramp.items.some((r) => r.offerStepUp);
-  const lapsed = progress.data?.lapsed ?? false;
+  // A retained query value is not authoritative after private completion
+  // storage becomes unreadable. Never schedule a win-back from stale history.
+  const lapsed = progress.isSuccess && progress.data?.lapsed === true;
 
   // Mirror the latest derived state into a ref (in an effect, never during render)
   // so the long-lived AppState listener always reads current values without

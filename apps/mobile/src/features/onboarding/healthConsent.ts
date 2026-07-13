@@ -19,6 +19,17 @@ type HealthConsentDeps = {
 
 const defaultDeps: HealthConsentDeps = { recordConsent };
 
+let healthConsentMutationTail: Promise<void> = Promise.resolve();
+
+function runHealthConsentMutation<T>(operation: () => Promise<T>): Promise<T> {
+  const result = healthConsentMutationTail.then(operation, operation);
+  healthConsentMutationTail = result.then(
+    () => undefined,
+    () => undefined,
+  );
+  return result;
+}
+
 export async function resetHealthProfileConsumers(
   queryClient: QueryClient,
   ownerScope: OwnerQueryScope,
@@ -35,24 +46,27 @@ export async function grantHealthDataCollectionConsent(
   deps: HealthConsentDeps = defaultDeps,
 ): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await setHealthDataCollectionConsentLocal({
-      granted: true,
-      version: HEALTH_DATA_CONSENT.version,
-      consentText: HEALTH_DATA_CONSENT.fullText,
-    });
-    lease.assertCurrent();
-    try {
-      await deps.recordConsent({
-        type: 'health_data_collection',
+    await runHealthConsentMutation(async () => {
+      lease.assertCurrent();
+      await setHealthDataCollectionConsentLocal({
         granted: true,
         version: HEALTH_DATA_CONSENT.version,
         consentText: HEALTH_DATA_CONSENT.fullText,
       });
       lease.assertCurrent();
-    } catch {
-      lease.assertCurrent();
-      /* offline / no anonymous session. Keep the local-first consent proof. */
-    }
+      try {
+        await deps.recordConsent({
+          type: 'health_data_collection',
+          granted: true,
+          version: HEALTH_DATA_CONSENT.version,
+          consentText: HEALTH_DATA_CONSENT.fullText,
+        });
+        lease.assertCurrent();
+      } catch {
+        lease.assertCurrent();
+        /* offline / no anonymous session. Keep the local-first consent proof. */
+      }
+    });
   });
 }
 
@@ -60,23 +74,26 @@ export async function declineHealthDataCollectionConsent(
   deps: HealthConsentDeps = defaultDeps,
 ): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
-    await setHealthDataCollectionConsentLocal({
-      granted: false,
-      version: HEALTH_DATA_CONSENT.version,
-      consentText: HEALTH_DATA_CONSENT.declineText,
-    });
-    lease.assertCurrent();
-    try {
-      await deps.recordConsent({
-        type: 'health_data_collection',
+    await runHealthConsentMutation(async () => {
+      lease.assertCurrent();
+      await setHealthDataCollectionConsentLocal({
         granted: false,
         version: HEALTH_DATA_CONSENT.version,
         consentText: HEALTH_DATA_CONSENT.declineText,
       });
       lease.assertCurrent();
-    } catch {
-      lease.assertCurrent();
-      /* Declines are recorded locally first; ledger decline is best-effort pre-account. */
-    }
+      try {
+        await deps.recordConsent({
+          type: 'health_data_collection',
+          granted: false,
+          version: HEALTH_DATA_CONSENT.version,
+          consentText: HEALTH_DATA_CONSENT.declineText,
+        });
+        lease.assertCurrent();
+      } catch {
+        lease.assertCurrent();
+        /* Declines are recorded locally first; ledger decline is best-effort pre-account. */
+      }
+    });
   });
 }

@@ -84,19 +84,20 @@ type AccountIsolationE2EGlobal = typeof globalThis & {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const accountIsolationE2EFixture = useMemo(() => getAccountIsolationE2EFixture(), []);
-  const initialSession = accountIsolationE2EFixture?.session ?? null;
-  const [session, setSession] = useState<Session | null>(initialSession);
+  const [session, setSession] = useState<Session | null>(null);
   const [initializing, setInitializing] = useState(
-    isSupabaseConfigured && accountIsolationE2EFixture === null,
+    isSupabaseConfigured || accountIsolationE2EFixture !== null,
   );
   const [sessionBoundaryError, setSessionBoundaryError] = useState(false);
-  const activeUserIdRef = useRef<string | null>(initialSession?.user.id ?? null);
+  const activeUserIdRef = useRef<string | null>(null);
   const pendingEmailCodeRef = useRef<PendingEmailAccountCode | null>(null);
   const sessionChangeSeqRef = useRef(0);
   const sessionBoundaryActiveRef = useRef(false);
   const sessionBoundaryWriteLockHeldRef = useRef(false);
   const pendingBoundarySessionRef = useRef<{ session: Session | null } | null>(null);
+  const authEffectEpochRef = useRef(0);
   const boundaryInFlightRef = useRef<{
+    effectEpoch: number;
     promise: Promise<void>;
     targetUserId: string | null;
   } | null>(null);
@@ -110,6 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let mounted = true;
+    const effectEpoch = ++authEffectEpochRef.current;
 
     function holdSessionBoundaryWriteLock(): void {
       if (sessionBoundaryWriteLockHeldRef.current) return;
@@ -148,7 +150,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (explicitSignOutPendingRef.current && targetUserId) return Promise.resolve();
       pendingBoundarySessionRef.current = { session: nextSession };
       const existing = boundaryInFlightRef.current;
-      if (existing?.targetUserId === targetUserId) return existing.promise;
+      if (existing?.targetUserId === targetUserId) {
+        if (existing.effectEpoch === effectEpoch) return existing.promise;
+        // React development effect replay can inherit an operation whose
+        // closure has already been unmounted. Let that serialized boundary
+        // settle, then let the current effect own session publication.
+        return existing.promise.then(() => {
+          if (!mounted) return;
+          const inheritedSuccessor = boundaryInFlightRef.current;
+          if (inheritedSuccessor) return inheritedSuccessor.promise;
+          return applySessionBoundary(nextSession, initialRestore);
+        });
+      }
 
       const previousTransition = existing?.promise;
       const seq = ++sessionChangeSeqRef.current;
@@ -256,7 +269,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       })();
 
-      boundaryInFlightRef.current = { promise, targetUserId };
+      boundaryInFlightRef.current = { effectEpoch, promise, targetUserId };
       void promise.finally(() => {
         if (boundaryInFlightRef.current?.promise === promise) {
           boundaryInFlightRef.current = null;
@@ -290,6 +303,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (accountIsolationE2EFixture) {
       const globalLike = globalThis as AccountIsolationE2EGlobal;
       globalLike.__ROUTINEKIND_E2E_NAVIGATE__ = (href) => router.replace(href as Href);
+      // The fixture follows the real cold-start isolation path. Publishing its
+      // synthetic owner eagerly would bypass the durable owner claim and make
+      // the private-storage startup gate correctly reject a clean namespace.
+      void applySessionBoundary(accountIsolationE2EFixture.session, true);
       return () => {
         mounted = false;
         delete globalLike.__ROUTINEKIND_E2E_NAVIGATE__;

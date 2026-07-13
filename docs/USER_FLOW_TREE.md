@@ -43,9 +43,9 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 - Goal: A user never sees encrypted local state misrepresented as empty/default when the shared private-data key is unavailable.
 - Persona: Returning user with local profile, shelf, routine, completion, preference, entitlement, or Progress records.
-- Entry state: The app has resolved auth and the app-lock preference; encrypted private records may be readable, temporarily unavailable, missing their key, malformed, or unable to authenticate.
+- Entry state: The app has resolved and isolated the authenticated local owner; encrypted private records may be readable, temporarily unavailable, missing their key, malformed, unable to authenticate, or contain an interrupted photo mutation.
 - Start screen/URL/window: Cold or foreground entry to any app route.
-- Success state: App content mounts only after a read-only audit verifies every private-KV envelope; transient failure remains non-destructive and retryable.
+- Success state: Owner-bound photo recovery and plaintext cleanup finish before app lock, then app content mounts only after the post-unlock read-only audit verifies every private-KV envelope; transient failure remains non-destructive and retryable.
 - Priority: Critical
 - Automate later: Yes
 - Surface: iOS and Android; Expo web for provider ordering, route blocking, retry, and responsive recovery.
@@ -54,10 +54,17 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 ### Path A: Readable Private Data
 
 1. Action: Open or foreground the app after any configured app-wide authentication succeeds.
-   Expected result: The app performs a non-creating readability audit, ignores unrelated/legacy plaintext and separately keyed Supabase session envelopes, then mounts Offline Sync and the intended route. App-lock authentication remains before the audit, and Progress timeline authentication remains after the audit.
+   Expected result: After account isolation, the app verifies the persisted owner, replays any photo mutation journal, and scavenges temporary plaintext before the app-lock prompt can delay cleanup. After app unlock it performs a non-creating readability audit, ignores unrelated/legacy plaintext and separately keyed Supabase session envelopes, then mounts Offline Sync and the intended route. Progress timeline authentication remains after the audit.
    Evidence: Provider-order contract, private-KV unit tests, route snapshot, and native secure-storage access log.
 
 ### Branches
+
+- Branch: interrupted photo mutation during cold-start recovery
+  - Priority: Critical
+  - Automate later: Yes, with native process-kill and filesystem fault injection.
+  - Action: Kill the process after each durable add, delete, and clear phase, including after an encrypted final is written but before metadata commit and after metadata commit but before plaintext or encrypted-file cleanup. Relaunch as the same owner, retry once with a transient key/filesystem failure, then repeat while an A-to-B account boundary begins during recovery.
+  - Expected result: No photo route, app-lock prompt, Offline Sync task, or next-owner content mounts until owner verification, journal replay, and plaintext scavenging complete. A failed recovery leaves its journal-owned source/file bytes intact and exposes the generic retry surface; scavenging never runs ahead of recovery. Successful retry converges without duplicate metadata, ownerless encrypted finals, metadata pointing at missing files, or plaintext residue. A mismatched owner performs account isolation instead of replaying the previous owner's journal.
+  - Evidence: Fresh-coordinator phase fault-injection tests, provider-order contract, retry screenshots, process-kill/relaunch video, account-boundary transcript, and native filesystem inventory.
 
 - Branch: shared encrypted private data unavailable
   - Priority: Critical
@@ -66,6 +73,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: App-wide recovery appears only after app unlock and before Offline Sync, navigation, tabs, route queries, local mutations, or sensitive/default route copy mounts. It exposes no raw error or ciphertext, retains a 56 pt retry after repeated failure, has no horizontal overflow, emits no analytics/backend request, and leaves every encrypted envelope byte-identical. A successful retry mounts the originally requested route. Foreground return rechecks availability before content can reappear. Missing-key/wrong-key states never create replacement key material; explicit local-data deletion remains the only destructive recovery.
   - Evidence: Persistent failure screenshots and visible-text/role snapshots across representative routes at 360 x 640 and 390 x 844, one-shot retry screenshot, app-lock ordering sequence, foreground recheck, control geometry, dialog/page-error/browser logs, vendor request log, ciphertext hash/unit evidence, and physical iOS/Android fault-injection logs.
   - Current evidence: `assertPrivateKVReadable` scans all private envelopes without creating or returning key material, while `PrivateDataAvailabilityGate` sits inside `AppLockProvider` and outside Offline Sync/navigation. Focused storage/provider contracts prove missing-key failure preserves every envelope and unrelated keyed envelope formats are ignored. The 2026-07-10 Expo web run passed persistent failure on five representative routes at 360 x 640 and 390 x 844, one-shot recovery, foreground recheck with exact-route restoration, and rejected app-lock ordering. Every seeded ciphertext/key hash remained byte-identical and no sensitive vendor request occurred. Physical iOS Keychain and Android Keystore fault injection remains Tas QA.
+- Branch: Today completion history becomes unreadable after route mount
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Seed at least one checked routine step, force the completion-history read to return unavailable, open `/today?routine=AM`, then retry after restoring read access.
+  - Expected result: Today explains that history was not reset, exposes no routine checkboxes or mutation controls while unreadable, and offers one retry action. A successful retry restores the prior checked steps and count without replacing encrypted bytes.
+  - Evidence: Store and route contracts plus the 2026-07-12 390 x 844 Expo web run at `test-results/human-e2e/2026-07-12/optimization-private-state-current/`; native secure-storage interruption remains Tas QA.
 - Branch: malformed or unsupported private envelope
   - Priority: Critical
   - Automate later: Yes

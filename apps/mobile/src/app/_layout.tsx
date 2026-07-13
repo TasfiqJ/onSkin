@@ -10,7 +10,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 
 import { configureNotifications } from '@/features/notifications/startup';
 import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
-import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
 import { IntakeProvider } from '@/features/shelf/IntakeContext';
 import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
@@ -34,26 +33,24 @@ function RootContent() {
     void configureNotifications();
   }, []);
 
-  useEffect(() => {
-    void clearUnavailableCloudBackupPreference();
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <QueryDateBoundaryObserver />
       <AuthProvider>
         <SessionBoundaryGate>
-          <AppLockProvider>
-            <PrivateDataAvailabilityGate>
-              <OnboardingProvider>
-                <IntakeProvider>
-                  <OfflineSync />
-                  <StatusBar style="dark" />
-                  <Stack screenOptions={{ headerShown: false }} />
-                </IntakeProvider>
-              </OnboardingProvider>
-            </PrivateDataAvailabilityGate>
-          </AppLockProvider>
+          <PlaintextStagingStartupGate>
+            <AppLockProvider>
+              <PrivateDataAvailabilityGate>
+                <OnboardingProvider>
+                  <IntakeProvider>
+                    <OfflineSync />
+                    <StatusBar style="dark" />
+                    <Stack screenOptions={{ headerShown: false }} />
+                  </IntakeProvider>
+                </OnboardingProvider>
+              </PrivateDataAvailabilityGate>
+            </AppLockProvider>
+          </PlaintextStagingStartupGate>
         </SessionBoundaryGate>
       </AuthProvider>
     </QueryClientProvider>
@@ -77,9 +74,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <PlaintextStagingStartupGate>
-          <RootContent />
-        </PlaintextStagingStartupGate>
+        <RootContent />
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

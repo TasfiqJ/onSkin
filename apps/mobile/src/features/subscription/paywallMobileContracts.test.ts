@@ -15,6 +15,27 @@ function readAppRoute(path: string): string {
 }
 
 describe('paywall mobile contracts', () => {
+  it('acknowledges durable lifecycle prompts only from their mounted target surfaces', () => {
+    const tabs = readAppRoute('(tabs)/_layout.tsx');
+    const reoffer = readAppRoute('paywall/reoffer.tsx');
+    const downgrade = readAppRoute('paywall/downgrade.tsx');
+
+    expect(tabs).toContain('pathname: prompt.route');
+    expect(tabs).toContain('params: { lifecyclePromptId: prompt.promptId }');
+    expect(tabs).toContain('!isOwnerQueryScopeCurrent(ownerScope)');
+    expect(tabs).toContain('mounted = false');
+
+    for (const route of [reoffer, downgrade]) {
+      expect(route).toContain('useLocalSearchParams<{ lifecyclePromptId?: string | string[] }>()');
+      expect(route).toContain('acknowledgeLifecyclePromptPresented({');
+      expect(route).toContain('promptId: lifecyclePromptId');
+    }
+    expect(reoffer).toContain('if (isLoading || !lifecyclePromptId) return;');
+    expect(reoffer).toContain("route: '/paywall/reoffer'");
+    expect(downgrade).toContain('if (!lifecyclePromptId) return;');
+    expect(downgrade).toContain("route: '/paywall/downgrade'");
+  });
+
   it('keeps lifecycle paywall bodies scrollable above fixed actions on short phones', () => {
     for (const route of ['paywall/reoffer.tsx', 'paywall/downgrade.tsx', 'paywall/winback.tsx']) {
       const source = readAppRoute(route);

@@ -188,6 +188,46 @@ describe('local device data export', () => {
     expect(JSON.stringify(result)).not.toContain('invalid-envelope');
   });
 
+  it('exports settled V2 photo items and refuses pending journal state', async () => {
+    const settled = JSON.stringify({
+      version: 2,
+      items: [{ id: 'photo-v2', takenLocalDate: '2026-07-09', notes: null }],
+      mutation: null,
+      retainedItems: [],
+    });
+    mocks.getPrivateItems.mockImplementation(
+      async (keys: readonly string[]) =>
+        new Map(keys.map((key) => [key, key === 'onskin.photos.v1' ? settled : null])),
+    );
+
+    await expect(collectLocalDeviceExportData()).resolves.toMatchObject({
+      sections: {
+        progress: {
+          photo_records: { records: [{ id: 'photo-v2' }] },
+        },
+      },
+    });
+
+    const pending = JSON.stringify({
+      version: 2,
+      items: [{ id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa' }],
+      mutation: {
+        kind: 'add',
+        operationId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+        phase: 'prepared',
+      },
+      retainedItems: [],
+    });
+    mocks.getPrivateItems.mockImplementation(
+      async (keys: readonly string[]) =>
+        new Map(keys.map((key) => [key, key === 'onskin.photos.v1' ? pending : null])),
+    );
+
+    await expect(collectLocalDeviceExportData()).rejects.toThrow(
+      'PHOTO_MUTATION_RECOVERY_REQUIRED',
+    );
+  });
+
   it('preserves an unsupported future conflict-choice schema with an explicit export status', async () => {
     const future = { schemaVersion: 2, choices: { future: true } };
     mocks.getPrivateItems.mockImplementation(

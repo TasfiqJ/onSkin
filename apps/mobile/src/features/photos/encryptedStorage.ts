@@ -185,6 +185,7 @@ async function hasPriorEncryptedPhotoData(): Promise<boolean> {
       (name) =>
         name.endsWith('.onskinphoto') ||
         name.includes('.onskinphoto.pending-delete-') ||
+        name.includes('.onskinphoto.pending-add-') ||
         name.includes('.onskinphoto.tmp-'),
     );
   } catch {
@@ -286,6 +287,28 @@ function safePhotoShareId(photoId: string): string {
   return photoId.replace(/[^A-Za-z0-9_-]/g, '') || 'photo';
 }
 
+export function encryptedPhotoUriForId(photoId: string): string {
+  return `${PHOTO_DIR}${safePhotoShareId(photoId)}.onskinphoto`;
+}
+
+export function encryptedPhotoThumbnailUriForId(photoId: string): string {
+  return `${PHOTO_DIR}${safePhotoShareId(photoId)}-thumbnail.onskinphoto`;
+}
+
+export function isOwnedEncryptedPhotoUri(uri?: string | null): uri is string {
+  if (!uri || !uri.startsWith(PHOTO_DIR) || !uri.endsWith('.onskinphoto')) return false;
+  const fileName = uri.slice(PHOTO_DIR.length);
+  return /^[A-Za-z0-9_-]+\.onskinphoto$/.test(fileName);
+}
+
+function pendingAddPhotoUri(encryptedLocalUri: string, operationId: string): string {
+  return `${encryptedLocalUri}.pending-add-${safePhotoShareId(operationId)}`;
+}
+
+function quarantinedPhotoUri(encryptedLocalUri: string, operationId: string): string {
+  return `${encryptedLocalUri}.pending-delete-${safePhotoShareId(operationId)}`;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -346,6 +369,7 @@ export function isEncryptedPhotoUri(uri?: string | null): boolean {
 export async function encryptCapturedPhoto(
   sourceUri: string,
   photoId: string,
+  operationId = photoId,
 ): Promise<EncryptedPhotoWrite> {
   if (!sourceUri) throw new Error('Missing captured photo URI.');
   return runAccountScopedPhotoOperation(async (generation) => {
@@ -361,10 +385,16 @@ export async function encryptCapturedPhoto(
       ...encrypted,
       mimeType,
     };
-    const encryptedLocalUri = `${PHOTO_DIR}${photoId}.onskinphoto`;
-    const temporaryUri = `${encryptedLocalUri}.tmp-${Date.now()}`;
+    const encryptedLocalUri = encryptedPhotoUriForId(photoId);
+    const temporaryUri = pendingAddPhotoUri(encryptedLocalUri, operationId);
     assertPhotoWriteAllowed(generation);
     try {
+      if (
+        (await recoveryPathExists(encryptedLocalUri)) ||
+        (await recoveryPathExists(temporaryUri))
+      ) {
+        throw new Error(PHOTO_RECOVERY_CONFLICT);
+      }
       await FileSystem.writeAsStringAsync(temporaryUri, JSON.stringify(envelope), {
         encoding: FileSystem.EncodingType.UTF8,
       });
@@ -437,6 +467,7 @@ export async function deletePhotoShareFile(
 
 export async function deleteEncryptedPhoto(uri?: string | null): Promise<void> {
   if (!uri || !isEncryptedPhotoUri(uri)) return;
+  if (!isOwnedEncryptedPhotoUri(uri)) throw new Error(PHOTO_RECOVERY_CONFLICT);
   await FileSystem.deleteAsync(uri, { idempotent: true });
 }
 
@@ -458,7 +489,8 @@ export async function quarantineEncryptedPhoto(
   operationId: string,
 ): Promise<QuarantinedPhotoFile | null> {
   if (!uri || !isEncryptedPhotoUri(uri)) return null;
-  const quarantinedUri = `${uri}.pending-delete-${safePhotoShareId(operationId)}`;
+  if (!isOwnedEncryptedPhotoUri(uri)) throw new Error(PHOTO_RECOVERY_CONFLICT);
+  const quarantinedUri = quarantinedPhotoUri(uri, operationId);
   return runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
     assertCurrent();
     if (await recoveryPathExists(quarantinedUri)) {
@@ -470,7 +502,20 @@ export async function quarantineEncryptedPhoto(
   });
 }
 
+function assertOwnedQuarantinedPhotoFile(file: QuarantinedPhotoFile): void {
+  if (
+    !isOwnedEncryptedPhotoUri(file.originalUri) ||
+    !file.quarantinedUri.startsWith(`${file.originalUri}.pending-delete-`) ||
+    !/^[A-Za-z0-9_-]+$/.test(
+      file.quarantinedUri.slice(`${file.originalUri}.pending-delete-`.length),
+    )
+  ) {
+    throw new Error(PHOTO_RECOVERY_CONFLICT);
+  }
+}
+
 export async function restoreQuarantinedPhoto(file: QuarantinedPhotoFile): Promise<void> {
+  assertOwnedQuarantinedPhotoFile(file);
   await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
     assertCurrent();
     await FileSystem.moveAsync({ from: file.quarantinedUri, to: file.originalUri });
@@ -478,6 +523,7 @@ export async function restoreQuarantinedPhoto(file: QuarantinedPhotoFile): Promi
 }
 
 export async function deleteQuarantinedPhoto(file: QuarantinedPhotoFile): Promise<void> {
+  assertOwnedQuarantinedPhotoFile(file);
   await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
     assertCurrent();
     await FileSystem.deleteAsync(file.quarantinedUri, { idempotent: true });
@@ -509,6 +555,246 @@ async function recoveryPathExists(uri: string): Promise<boolean> {
   } catch {
     throw new Error(PHOTO_RECOVERY_CANDIDATE_READ_FAILED);
   }
+}
+
+type AuthenticatedRecoverySnapshots = {
+  key: ContentKeySnapshot;
+  paths: Map<string, string>;
+};
+
+async function authenticateRecoveryPaths(
+  uris: readonly string[],
+): Promise<AuthenticatedRecoverySnapshots | null> {
+  const uniqueUris = [...new Set(uris)];
+  if (uniqueUris.length === 0) return null;
+  const key = await getExistingContentKeySnapshot();
+  const paths = new Map<string, string>();
+  for (const uri of uniqueUris) {
+    const raw = await readRecoveryCandidate(uri);
+    assertRecoveryCandidateAuthenticates(raw, key.key);
+    paths.set(uri, raw);
+  }
+  return { key, paths };
+}
+
+async function assertRecoverySnapshotsCurrent(
+  snapshots: AuthenticatedRecoverySnapshots,
+  absentPaths: ReadonlySet<string> = new Set(),
+): Promise<void> {
+  const recheckedKey = await getExistingContentKeySnapshot();
+  if (recheckedKey.stored !== snapshots.key.stored) {
+    throw new Error(PHOTO_RECOVERY_KEY_CHANGED);
+  }
+  for (const [uri, expectedRaw] of snapshots.paths) {
+    if ((await readRecoveryCandidate(uri)) !== expectedRaw) {
+      throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
+    }
+  }
+  for (const uri of absentPaths) {
+    if (await recoveryPathExists(uri)) throw new Error(PHOTO_RECOVERY_CONFLICT);
+  }
+}
+
+/**
+ * Authenticates and publishes only the deterministic add artifact named by the
+ * co-persisted mutation journal. Unknown files are never scanned or removed.
+ */
+export async function recoverPreparedEncryptedPhoto(
+  encryptedLocalUri: string,
+  operationId: string,
+): Promise<boolean> {
+  if (!isOwnedEncryptedPhotoUri(encryptedLocalUri)) {
+    throw new Error(PHOTO_RECOVERY_CONFLICT);
+  }
+  const pendingUri = pendingAddPhotoUri(encryptedLocalUri, operationId);
+  return runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
+    const finalExists = await recoveryPathExists(encryptedLocalUri);
+    assertCurrent();
+    const pendingExists = await recoveryPathExists(pendingUri);
+    assertCurrent();
+    if (!finalExists && !pendingExists) return false;
+
+    if (finalExists) {
+      const snapshots = await authenticateRecoveryPaths([encryptedLocalUri]);
+      if (!snapshots) return false;
+      assertCurrent();
+      if (pendingExists) {
+        const pendingRaw = await readRecoveryCandidate(pendingUri);
+        assertCurrent();
+        let pendingAuthenticates = false;
+        if (photoEnvelopeFromRaw(pendingRaw)) {
+          try {
+            assertRecoveryCandidateAuthenticates(pendingRaw, snapshots.key.key);
+            pendingAuthenticates = true;
+          } catch {
+            // The authenticated final is authoritative. An interrupted sibling
+            // remains exact-journal-owned and cannot be the only photo copy.
+          }
+        }
+        if (
+          pendingAuthenticates &&
+          snapshots.paths.get(encryptedLocalUri) !== pendingRaw
+        ) {
+          throw new Error(PHOTO_RECOVERY_CONFLICT);
+        }
+        snapshots.paths.set(pendingUri, pendingRaw);
+        await assertRecoverySnapshotsCurrent(snapshots);
+        assertCurrent();
+        await FileSystem.deleteAsync(pendingUri, { idempotent: true });
+      } else {
+        await assertRecoverySnapshotsCurrent(snapshots);
+        assertCurrent();
+      }
+      return true;
+    }
+
+    const snapshots = await authenticateRecoveryPaths([pendingUri]);
+    if (!snapshots) return false;
+    assertCurrent();
+    await assertRecoverySnapshotsCurrent(snapshots, new Set([encryptedLocalUri]));
+    assertCurrent();
+    await FileSystem.moveAsync({ from: pendingUri, to: encryptedLocalUri });
+    return true;
+  });
+}
+
+/**
+ * A process may die halfway through writing the exact pending-add file. When
+ * the matching protected plaintext source still exists, callers may discard
+ * the exact journal-owned pending artifact and retry encryption. Callers MUST
+ * prove that exact source handle before invoking this function.
+ */
+export async function discardPendingEncryptedPhotoForRetry(
+  encryptedLocalUri: string,
+  operationId: string,
+): Promise<boolean> {
+  if (!isOwnedEncryptedPhotoUri(encryptedLocalUri)) {
+    throw new Error(PHOTO_RECOVERY_CONFLICT);
+  }
+  const pendingUri = pendingAddPhotoUri(encryptedLocalUri, operationId);
+  return runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
+    if (await recoveryPathExists(encryptedLocalUri)) throw new Error(PHOTO_RECOVERY_CONFLICT);
+    assertCurrent();
+    if (!(await recoveryPathExists(pendingUri))) return false;
+    assertCurrent();
+    const raw = await readRecoveryCandidate(pendingUri);
+    assertCurrent();
+    if ((await readRecoveryCandidate(pendingUri)) !== raw) {
+      throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
+    }
+    assertCurrent();
+    await FileSystem.deleteAsync(pendingUri, { idempotent: true });
+    return true;
+  });
+}
+
+function exactDeletionTargets(uris: readonly string[], operationId: string) {
+  const originals = [...new Set(uris)];
+  if (originals.some((uri) => !isOwnedEncryptedPhotoUri(uri))) {
+    throw new Error(PHOTO_RECOVERY_CONFLICT);
+  }
+  return originals.map((originalUri) => ({
+    originalUri,
+    quarantinedUri: quarantinedPhotoUri(originalUri, operationId),
+  }));
+}
+
+/** Preflight before the atomic prepared journal is written. */
+export async function verifyEncryptedPhotoDeletionSources(uris: readonly string[]): Promise<void> {
+  const targets = exactDeletionTargets(uris, 'preflight');
+  await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
+    if (targets.length === 0) return;
+    const key = await getExistingContentKeySnapshot();
+    assertCurrent();
+    for (const target of targets) {
+      if (!(await recoveryPathExists(target.originalUri))) {
+        throw new Error(PHOTO_RECOVERY_CONFLICT);
+      }
+      assertCurrent();
+      const raw = await readRecoveryCandidate(target.originalUri);
+      assertRecoveryCandidateAuthenticates(raw, key.key);
+      assertCurrent();
+      const recheckedKey = await getExistingContentKeySnapshot();
+      if (recheckedKey.stored !== key.stored) throw new Error(PHOTO_RECOVERY_KEY_CHANGED);
+      if ((await readRecoveryCandidate(target.originalUri)) !== raw) {
+        throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
+      }
+      assertCurrent();
+    }
+  });
+}
+
+/** Moves only journal-authorized, authenticated files out of their live paths. */
+export async function stageEncryptedPhotoDeletions(
+  uris: readonly string[],
+  operationId: string,
+): Promise<void> {
+  const targets = exactDeletionTargets(uris, operationId);
+  await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
+    if (targets.length === 0) return;
+    const key = await getExistingContentKeySnapshot();
+    assertCurrent();
+    for (const target of targets) {
+      const originalExists = await recoveryPathExists(target.originalUri);
+      assertCurrent();
+      const quarantinedExists = await recoveryPathExists(target.quarantinedUri);
+      assertCurrent();
+      if (originalExists && quarantinedExists) throw new Error(PHOTO_RECOVERY_CONFLICT);
+      if (!originalExists && !quarantinedExists) throw new Error(PHOTO_RECOVERY_CONFLICT);
+      const candidateUri = originalExists ? target.originalUri : target.quarantinedUri;
+      const raw = await readRecoveryCandidate(candidateUri);
+      assertRecoveryCandidateAuthenticates(raw, key.key);
+      assertCurrent();
+      const recheckedKey = await getExistingContentKeySnapshot();
+      if (recheckedKey.stored !== key.stored) throw new Error(PHOTO_RECOVERY_KEY_CHANGED);
+      if ((await readRecoveryCandidate(candidateUri)) !== raw) {
+        throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
+      }
+      if (originalExists) {
+        if (await recoveryPathExists(target.quarantinedUri)) {
+          throw new Error(PHOTO_RECOVERY_CONFLICT);
+        }
+        assertCurrent();
+        await FileSystem.moveAsync({ from: target.originalUri, to: target.quarantinedUri });
+      } else if (await recoveryPathExists(target.originalUri)) {
+        throw new Error(PHOTO_RECOVERY_CONFLICT);
+      }
+      assertCurrent();
+    }
+  });
+}
+
+/** Deletes only exact, authenticated quarantines after metadata reached commit. */
+export async function finalizeEncryptedPhotoDeletions(
+  uris: readonly string[],
+  operationId: string,
+): Promise<void> {
+  const targets = exactDeletionTargets(uris, operationId);
+  await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
+    let key: ContentKeySnapshot | null = null;
+    for (const target of targets) {
+      if (await recoveryPathExists(target.originalUri)) {
+        throw new Error(PHOTO_RECOVERY_CONFLICT);
+      }
+      assertCurrent();
+      if (!(await recoveryPathExists(target.quarantinedUri))) continue;
+      assertCurrent();
+      key ??= await getExistingContentKeySnapshot();
+      assertCurrent();
+      const raw = await readRecoveryCandidate(target.quarantinedUri);
+      assertRecoveryCandidateAuthenticates(raw, key.key);
+      const recheckedKey = await getExistingContentKeySnapshot();
+      if (recheckedKey.stored !== key.stored) throw new Error(PHOTO_RECOVERY_KEY_CHANGED);
+      if ((await readRecoveryCandidate(target.quarantinedUri)) !== raw) {
+        throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
+      }
+      if (await recoveryPathExists(target.originalUri)) {
+        throw new Error(PHOTO_RECOVERY_CONFLICT);
+      }
+      assertCurrent();
+      await FileSystem.deleteAsync(target.quarantinedUri, { idempotent: true });
+    }
+  });
 }
 
 /**

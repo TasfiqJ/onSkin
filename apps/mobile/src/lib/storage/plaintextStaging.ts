@@ -42,6 +42,13 @@ export function cleanupPlaintextStaging(handle: PlaintextStagingHandle): Promise
   return coordinator.cleanup(handle);
 }
 
+export function cleanupPlaintextStagingOperation(
+  operationId: string,
+  purpose: PlaintextStagingPurpose,
+): Promise<void> {
+  return coordinator.cleanupOperation(operationId, purpose);
+}
+
 export function cleanupPlaintextStagingUri(uri: string): Promise<void> {
   return coordinator.cleanupUri(uri);
 }

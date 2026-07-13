@@ -1,4 +1,5 @@
 import { decryptPhotoNote } from '@/features/photos/encryptedStorage';
+import { decodePhotoStoreItemsForExport } from '@/features/photos/photoStoreEnvelope';
 import { normalizeConflictChoicesForExport } from '@/features/intelligence/overrides';
 import { getPrivateItems } from '@/lib/storage/privateKV';
 
@@ -282,8 +283,7 @@ async function exportPhotoRecords(raw: string): Promise<{
   photo_files_included: false;
   thumbnails_included: false;
 }> {
-  const parsed = parseStoredValue(raw);
-  if (!Array.isArray(parsed)) throw new Error('LOCAL_DEVICE_EXPORT_INVALID:progress_photo_records');
+  const parsed = decodePhotoStoreItemsForExport(raw);
 
   const records: Record<string, unknown>[] = [];
   let omittedInvalidRecordCount = 0;

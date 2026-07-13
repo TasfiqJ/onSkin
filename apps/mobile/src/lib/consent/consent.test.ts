@@ -1,4 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  AccountGenerationLeaseError,
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
 
 import { getLatestConsents, recordConsent } from './consent';
 
@@ -44,6 +50,8 @@ vi.mock('../supabase/client', () => ({
 }));
 
 describe('consent backend guards', () => {
+  let boundaryActive = false;
+
   beforeEach(() => {
     state.isSupabaseConfigured = false;
     mocks.digest.mockClear();
@@ -54,6 +62,12 @@ describe('consent backend guards', () => {
     mocks.latestAbortSignal.mockClear();
     mocks.order.mockClear();
     mocks.select.mockClear();
+  });
+
+  afterEach(() => {
+    if (!boundaryActive) return;
+    endAccountGenerationBoundary();
+    boundaryActive = false;
   });
 
   it('returns an empty consent ledger without touching placeholder Supabase', async () => {
@@ -91,5 +105,33 @@ describe('consent backend guards', () => {
 
     expect(mocks.insertAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
     expect(mocks.latestAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+  });
+
+  it('detaches a stalled consent hash when the owner generation changes', async () => {
+    state.isSupabaseConfigured = true;
+    let releaseDigest!: () => void;
+    mocks.digest.mockImplementationOnce(
+      () =>
+        new Promise<string>((resolve) => {
+          releaseDigest = () => resolve('owner-a-hash');
+        }),
+    );
+
+    const record = recordConsent({
+      type: 'marketing',
+      granted: true,
+      version: 'test',
+      consentText: 'copy',
+    });
+    await vi.waitFor(() => expect(mocks.digest).toHaveBeenCalledOnce());
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+
+    await expect(record).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    expect(mocks.insert).not.toHaveBeenCalled();
+
+    releaseDigest();
+    await Promise.resolve();
   });
 });

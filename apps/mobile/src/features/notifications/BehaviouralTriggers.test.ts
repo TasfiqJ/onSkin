@@ -75,6 +75,7 @@ describe('behavioural trigger preference gate', () => {
     expect(inner).toContain('useShelf()');
     expect(inner).toContain('useRamp()');
     expect(inner).toContain('useProgress()');
+    expect(inner).toContain('progress.isSuccess && progress.data?.lapsed === true');
     expect(inner).toContain("AppState.addEventListener('change'");
     expect(outer).toContain('useNotifPrefs().data');
     expect(outer).toContain('<EnabledBehaviouralTriggers enabled={enabled} />');

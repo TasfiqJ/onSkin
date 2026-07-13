@@ -2,6 +2,10 @@ import type { CycleVariant, DisruptionReason } from '@onskin/types';
 
 import { getCycleAnchor } from '@/features/routine/cycleAnchor';
 import { localDateString } from '@/features/today/useToday';
+import {
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import {
@@ -448,17 +452,24 @@ export async function loadCycleConfig(): Promise<CycleConfig> {
   throw cycleConfigError(CYCLE_CONFIG_UNAVAILABLE);
 }
 
-async function prepareMissingCurrentConfig(): Promise<CycleConfig | null> {
+async function prepareMissingCurrentConfig(
+  lease: AccountGenerationLease,
+): Promise<CycleConfig | null> {
   const observedCurrent = await getPrivateItem(KEY);
+  lease.assertCurrent();
   if (observedCurrent !== null) return null;
 
   const legacyRaw = await getPrivateItem(LEGACY_KEY);
+  lease.assertCurrent();
   if (legacyRaw !== null) {
     const parsed = parseStoredJson(legacyRaw);
     const fallbackAnchor = embeddedLegacyAnchor(parsed) ?? (await getCycleAnchor());
+    lease.assertCurrent();
     return decodeLegacyConfig(parsed, fallbackAnchor);
   }
-  return defaults(await getCycleAnchor());
+  const fallbackAnchor = await getCycleAnchor();
+  lease.assertCurrent();
+  return defaults(fallbackAnchor);
 }
 
 let devCycleConfigWriteFailureUsed = false;
@@ -477,23 +488,27 @@ async function maybeRejectDevCycleConfigWrite(): Promise<void> {
 async function mutateCycleConfig(
   transform: (current: CycleConfig, todayISO: string) => CycleConfig,
 ): Promise<CycleConfig> {
-  const today = localDateString();
-  const missingCurrent = await prepareMissingCurrentConfig();
-  let next: CycleConfig | null = null;
+  return runAccountGenerationOperation(async (lease) => {
+    const today = localDateString();
+    const missingCurrent = await prepareMissingCurrentConfig(lease);
+    let next: CycleConfig | null = null;
 
-  await maybeRejectDevCycleConfigWrite();
-  await updatePrivateItem(KEY, (raw) => {
-    const stored = raw === null ? missingCurrent : decodeCurrentConfig(raw);
-    if (!stored) throw cycleConfigError(CYCLE_CONFIG_UNAVAILABLE);
-    const current = reconcileStoredConfig(stored, today);
-    const candidate = normalizeMutationConfig(transform(current, today));
-    next = reconcileStoredConfig(candidate, today);
-    const encoded = encodeCycleConfig(next);
-    return raw !== null && canonicalJson(stored) === canonicalJson(next) ? raw : encoded;
+    await maybeRejectDevCycleConfigWrite();
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (raw) => {
+      const stored = raw === null ? missingCurrent : decodeCurrentConfig(raw);
+      if (!stored) throw cycleConfigError(CYCLE_CONFIG_UNAVAILABLE);
+      const current = reconcileStoredConfig(stored, today);
+      const candidate = normalizeMutationConfig(transform(current, today));
+      next = reconcileStoredConfig(candidate, today);
+      const encoded = encodeCycleConfig(next);
+      return raw !== null && canonicalJson(stored) === canonicalJson(next) ? raw : encoded;
+    });
+    lease.assertCurrent();
+
+    if (!next) throw cycleConfigError(CYCLE_CONFIG_UNAVAILABLE);
+    return next;
   });
-
-  if (!next) throw cycleConfigError(CYCLE_CONFIG_UNAVAILABLE);
-  return next;
 }
 
 export async function updateCycleConfig(

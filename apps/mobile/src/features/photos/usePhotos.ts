@@ -23,6 +23,7 @@ import {
 import {
   addPhoto,
   loadPhotos,
+  recoverPhotoStoreMutations,
   removePhoto,
   setReference,
   updatePhoto,
@@ -120,7 +121,9 @@ export function usePhotos(series: PhotoSeries = 'front') {
       runOwnerQueryOperation(ownerScope, async () => {
         const storageFailure = e2eProgressStorageFailure();
         if (storageFailure) throw storageFailure;
-        const photos = e2eProgressPhotoFixture() ?? (await loadPhotos());
+        const fixture = e2eProgressPhotoFixture();
+        if (!fixture) await recoverPhotoStoreMutations();
+        const photos = fixture ?? (await loadPhotos());
         const inSeries = forSeries(photos, series);
         return {
           all: photos,

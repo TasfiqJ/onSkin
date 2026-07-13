@@ -13,6 +13,10 @@ import {
   type StoredSkinProfile,
 } from '@/features/onboarding/skinProfileStore';
 import { hasCurrentHealthDataCollectionConsent } from '@/features/onboarding/healthConsentStore';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+} from '@/lib/auth/accountGeneration';
 import { isSupabaseConfigured } from '@/lib/env';
 import { queryKeys } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
@@ -46,6 +50,17 @@ const UNKNOWN_PROFILE: ProfileBits = {
   consentCurrent: false,
   goals: [],
 };
+
+let pregnancyStatusMutationTail: Promise<void> = Promise.resolve();
+
+function runPregnancyStatusMutation<T>(operation: () => Promise<T>): Promise<T> {
+  const result = pregnancyStatusMutationTail.then(operation, operation);
+  pregnancyStatusMutationTail = result.then(
+    () => undefined,
+    () => undefined,
+  );
+  return result;
+}
 
 function normalizePregnancyStatus(value: unknown): PregnancySafetyStatus {
   return value === 'none' ||
@@ -115,11 +130,20 @@ export async function readProfileBits(): Promise<ProfileBits> {
 
 /** V1 profile updates are local-first; the server profile remains a fallback mirror. */
 export async function savePregnancyStatus(status: PregnancyStatus): Promise<ProfileBits> {
-  if (!(await hasCurrentHealthDataCollectionConsent())) {
-    throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');
-  }
-  const stored = await updateStoredPregnancyStatus(status);
-  return profileBitsFromStoredProfile(stored);
+  return runAccountGenerationOperation(async (lease) => {
+    return runPregnancyStatusMutation(async () => {
+      lease.assertCurrent();
+      const consentCurrent = await awaitAccountGenerationLease(lease, () =>
+        hasCurrentHealthDataCollectionConsent(),
+      );
+      lease.assertCurrent();
+      if (!consentCurrent) throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');
+
+      const stored = await updateStoredPregnancyStatus(status);
+      lease.assertCurrent();
+      return profileBitsFromStoredProfile(stored);
+    });
+  });
 }
 
 export function useProfileBits() {

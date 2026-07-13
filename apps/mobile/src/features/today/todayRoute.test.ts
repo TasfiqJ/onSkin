@@ -9,6 +9,31 @@ function readAppRoute(path: string): string {
 }
 
 describe('Today route mobile contracts', () => {
+  it('keeps check-offs closed until private completion history is readable', () => {
+    const today = readAppRoute('(tabs)/today.tsx');
+    const streak = readAppRoute('routine/streak.tsx');
+    const welcomeBack = readAppRoute('routine/welcome-back.tsx');
+
+    expect(today).toContain(
+      'completionQuery.isPending || completionQuery.isError || completionMutationFailed',
+    );
+    expect(today).toContain('retry: false');
+    const store = readFileSync(`${APP_DIR}/../features/today/completionsStore.ts`, 'utf8');
+    expect(store).toContain('EXPO_PUBLIC_E2E_COMPLETION_STORAGE_FAILURE');
+    expect(store).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(today).toContain("typeof __DEV__ !== 'undefined'");
+    expect(today).toContain("EXPO_PUBLIC_E2E_COMPLETION_STORAGE_FAILURE === 'today_once'");
+    expect(today).toContain('<CompletionHistoryState');
+    expect(today).toContain('catch {\n      setCompletionMutationFailed(true);');
+    expect(today).toContain('if (result.isSuccess) setCompletionMutationFailed(false);');
+    expect(today).toContain('onRetry={() => void retryCompletionHistory()}');
+    for (const source of [streak, welcomeBack]) {
+      expect(source).toContain('progressQuery.isPending || progressQuery.isError');
+      expect(source).toContain('<CompletionHistoryState');
+      expect(source).toContain('onRetry={() => void progressQuery.refetch()}');
+    }
+  });
+
   it('keeps the streak and adherence pill comfortably tappable on phones', () => {
     const source = readAppRoute('(tabs)/today.tsx');
 

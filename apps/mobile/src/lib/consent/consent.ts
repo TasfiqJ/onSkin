@@ -1,7 +1,10 @@
 import type { ConsentType } from '@onskin/types';
 import * as Crypto from 'expo-crypto';
 
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+} from '@/lib/auth/accountGeneration';
 import { requireAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { isSupabaseConfigured } from '@/lib/env';
 
@@ -21,9 +24,8 @@ export async function recordConsent(params: {
 
   await runAccountGenerationOperation(async (lease) => {
     const { userId } = await requireAuthenticatedAccountOwner(lease);
-    const consentTextHash = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
-      params.consentText,
+    const consentTextHash = await awaitAccountGenerationLease(lease, () =>
+      Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, params.consentText),
     );
     lease.assertCurrent();
 

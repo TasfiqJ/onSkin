@@ -1,10 +1,11 @@
-import { router } from 'expo-router';
-import { useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Screen, Text } from '@/components/ui';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
+import { acknowledgeLifecyclePromptPresented } from '@/features/subscription/lifecycle';
 import {
   PAYWALL_FEEDBACK,
   PaywallFeedback,
@@ -17,6 +18,10 @@ import { colors } from '@/theme/tokens';
 // Graceful downgrade after a PAID expiry (design 08, docs/08 §6). Never a
 // data-deleting hard lock; data preserved, Pro re-offered calmly.
 export default function DowngradeScreen() {
+  const params = useLocalSearchParams<{ lifecyclePromptId?: string | string[] }>();
+  const lifecyclePromptId = Array.isArray(params.lifecyclePromptId)
+    ? params.lifecyclePromptId[0]
+    : params.lifecyclePromptId;
   const { fontScale = 1, height, width } = useWindowDimensions();
   const { startTrial } = useEntitlementActions();
   const offering = useSubscriptionOffering();
@@ -26,6 +31,16 @@ export default function DowngradeScreen() {
   const supportFloorTextPressurePaywall =
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPaywall = height < 640 || supportFloorTextPressurePaywall;
+
+  useEffect(() => {
+    // The downgrade copy is the mounted target surface; settle only a delivery
+    // carrying the exact opaque prompt ID routed by the startup coordinator.
+    if (!lifecyclePromptId) return;
+    void acknowledgeLifecyclePromptPresented({
+      promptId: lifecyclePromptId,
+      route: '/paywall/downgrade',
+    });
+  }, [lifecyclePromptId]);
 
   function onRenew() {
     setActionFeedback(null);

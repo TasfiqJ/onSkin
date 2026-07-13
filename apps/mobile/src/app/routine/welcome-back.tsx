@@ -4,14 +4,28 @@ import { View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { WELCOME_BACK } from '@/features/notifications/copy';
 import { useProgress } from '@/features/routine/useProgress';
+import { CompletionHistoryState } from '@/features/today/CompletionHistoryState';
 import { colors } from '@/theme/tokens';
 
 // Calm earn-back after a lapse (design screen 04, docs/07 §4.2). No shame screen:
 // if grace days absorbed the gap, the streak is shown safe; if it lapsed, a gentle
 // invite back. Either way the next action is simply tonight's step.
 export default function WelcomeBackScreen() {
-  const { data } = useProgress();
+  const progressQuery = useProgress();
+  const { data } = progressQuery;
   const frozen = data?.graceUsed ?? false;
+
+  if (progressQuery.isPending || progressQuery.isError) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <CompletionHistoryState
+          failed={progressQuery.isError}
+          retrying={progressQuery.isFetching}
+          onRetry={() => void progressQuery.refetch()}
+        />
+      </Screen>
+    );
+  }
 
   return (
     <Screen edges={['top', 'bottom']}>

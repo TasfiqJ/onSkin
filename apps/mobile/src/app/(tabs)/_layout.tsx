@@ -18,17 +18,28 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BehaviouralTriggers } from '@/features/notifications/BehaviouralTriggers';
 import { pendingLifecycleRoute } from '@/features/subscription/lifecycle';
 import { currentRoutineType } from '@/features/today/useToday';
+import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
 // On app entry, present the honest reverse-trial re-offer / graceful-downgrade once
 // when Pro has lapsed (docs/08 §6/§13). Pure local check, offline-safe, fires once
 // per expiry; gated taps surface the contextual upsell thereafter.
 function useExpiryReoffer() {
+  const ownerScope = useOwnerQueryScope();
   useEffect(() => {
-    void pendingLifecycleRoute(new Date().toISOString()).then((route) => {
-      if (route) router.push(route);
+    let mounted = true;
+    void pendingLifecycleRoute(new Date().toISOString()).then((prompt) => {
+      if (!mounted || !prompt || !isOwnerQueryScopeCurrent(ownerScope)) return;
+      router.push({
+        pathname: prompt.route,
+        params: { lifecyclePromptId: prompt.promptId },
+      });
     });
-  }, []);
+    return () => {
+      mounted = false;
+    };
+  }, [ownerScope]);
 }
 
 type TabIconName = 'today' | 'progress' | 'shelf' | 'you';

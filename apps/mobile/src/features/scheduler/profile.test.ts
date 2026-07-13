@@ -1,4 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  AccountGenerationLeaseError,
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
 
 import type {
   StoredSkinProfile,
@@ -15,6 +21,7 @@ const mocks = vi.hoisted(() => ({
   supabaseConfigured: false,
   serverData: null as Record<string, unknown> | null,
   from: vi.fn(),
+  hasCurrentHealthDataCollectionConsent: vi.fn(),
   updateStoredPregnancyStatus: vi.fn(),
 }));
 
@@ -29,7 +36,7 @@ vi.mock('@/features/onboarding/skinProfileStore', () => ({
 }));
 
 vi.mock('@/features/onboarding/healthConsentStore', () => ({
-  hasCurrentHealthDataCollectionConsent: vi.fn(async () => mocks.consentCurrent),
+  hasCurrentHealthDataCollectionConsent: mocks.hasCurrentHealthDataCollectionConsent,
 }));
 
 vi.mock('@/lib/env', () => ({
@@ -71,6 +78,8 @@ const storedProfile = (input: {
   completedAt: '2026-07-08T00:00:00.000Z',
 });
 
+let boundaryActive = false;
+
 beforeEach(() => {
   mocks.storedProfile = null;
   mocks.localStatus = 'missing';
@@ -87,7 +96,23 @@ beforeEach(() => {
     };
     return query;
   });
+  mocks.hasCurrentHealthDataCollectionConsent
+    .mockReset()
+    .mockImplementation(async () => mocks.consentCurrent);
   mocks.updateStoredPregnancyStatus.mockReset();
+  mocks.updateStoredPregnancyStatus.mockImplementation(async (status) =>
+    storedProfile({
+      oilyDry: 0,
+      sensitiveResistant: 0,
+      pregnancyStatus: status,
+    }),
+  );
+});
+
+afterEach(() => {
+  if (!boundaryActive) return;
+  endAccountGenerationBoundary();
+  boundaryActive = false;
 });
 
 describe('skin profile axis mapping', () => {
@@ -215,5 +240,57 @@ describe('skin profile axis mapping', () => {
       'CURRENT_HEALTH_CONSENT_REQUIRED',
     );
     expect(mocks.updateStoredPregnancyStatus).not.toHaveBeenCalled();
+  });
+
+  it('commits same-owner pregnancy choices in invocation order', async () => {
+    let releaseFirstConsentCheck!: () => void;
+    mocks.hasCurrentHealthDataCollectionConsent.mockImplementationOnce(
+      () =>
+        new Promise<boolean>((resolve) => {
+          releaseFirstConsentCheck = () => resolve(true);
+        }),
+    );
+
+    const earlierNone = savePregnancyStatus('none');
+    await vi.waitFor(() =>
+      expect(mocks.hasCurrentHealthDataCollectionConsent).toHaveBeenCalledOnce(),
+    );
+    const laterPregnant = savePregnancyStatus('pregnant');
+
+    await Promise.resolve();
+    expect(mocks.hasCurrentHealthDataCollectionConsent).toHaveBeenCalledTimes(1);
+    expect(mocks.updateStoredPregnancyStatus).not.toHaveBeenCalled();
+
+    releaseFirstConsentCheck();
+    await expect(earlierNone).resolves.toMatchObject({ pregnancyStatus: 'none' });
+    await expect(laterPregnant).resolves.toMatchObject({ pregnancyStatus: 'pregnant' });
+    expect(mocks.updateStoredPregnancyStatus.mock.calls.map(([status]) => status)).toEqual([
+      'none',
+      'pregnant',
+    ]);
+  });
+
+  it('rejects owner-A status after a boundary interrupts its consent check', async () => {
+    let releaseConsentCheck!: () => void;
+    mocks.hasCurrentHealthDataCollectionConsent.mockImplementationOnce(
+      () =>
+        new Promise<boolean>((resolve) => {
+          releaseConsentCheck = () => resolve(true);
+        }),
+    );
+
+    const save = savePregnancyStatus('pregnant');
+    await vi.waitFor(() =>
+      expect(mocks.hasCurrentHealthDataCollectionConsent).toHaveBeenCalledOnce(),
+    );
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+
+    await expect(save).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    expect(mocks.updateStoredPregnancyStatus).not.toHaveBeenCalled();
+
+    releaseConsentCheck();
+    await Promise.resolve();
   });
 });

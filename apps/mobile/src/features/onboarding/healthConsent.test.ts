@@ -69,6 +69,46 @@ describe('health-data onboarding consent', () => {
     );
   });
 
+  it('orders a later decline after an earlier delayed grant for local and ledger state', async () => {
+    let releaseGrant!: () => void;
+    mocks.setHealthDataCollectionConsentLocal.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          releaseGrant = resolve;
+        }),
+    );
+
+    const grant = grantHealthDataCollectionConsent();
+    await vi.waitFor(() =>
+      expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledOnce(),
+    );
+    const decline = declineHealthDataCollectionConsent();
+
+    await Promise.resolve();
+    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenCalledTimes(1);
+    expect(mocks.recordConsent).not.toHaveBeenCalled();
+
+    releaseGrant();
+    await expect(Promise.all([grant, decline])).resolves.toEqual([undefined, undefined]);
+
+    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ granted: true }),
+    );
+    expect(mocks.setHealthDataCollectionConsentLocal).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ granted: false }),
+    );
+    expect(mocks.recordConsent).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ granted: true }),
+    );
+    expect(mocks.recordConsent).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ granted: false }),
+    );
+  });
+
   it('clears cached profile consumers immediately after consent is declined', async () => {
     const queryClient = new QueryClient();
     const ownerScope = createOwnerQueryScope();

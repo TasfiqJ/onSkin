@@ -41,11 +41,16 @@ describe('account session isolation integration', () => {
     expect(provider).toContain('await waitForAccountGenerationOperationsToSettle();');
     expect(provider).toContain('await waitForPrivateKVWritesToSettle();');
     expect(provider).toContain('if (previousTransition) await previousTransition;');
+    expect(provider).toContain('existing.effectEpoch === effectEpoch');
+    expect(provider).toContain('return applySessionBoundary(nextSession, initialRestore);');
     expect(provider).toContain('retrySessionRestoreRef.current = restoreSession;');
     expect(provider).toContain('if (sessionError) throw sessionError;');
     expect(provider).toContain('invalidateLocalSupabaseSession()');
     expect(provider).not.toContain('clearPersistedSupabaseSession()');
     expect(provider).toContain('latestSessionForCompletedBoundary(');
+    expect(provider).toContain(
+      'void applySessionBoundary(accountIsolationE2EFixture.session, true);',
+    );
     expect(provider).toContain('setSessionBoundaryError(true);');
     expect(provider).toContain("router.replace('/');");
     expect(provider).toContain('activeUserIdRef.current === userId');
