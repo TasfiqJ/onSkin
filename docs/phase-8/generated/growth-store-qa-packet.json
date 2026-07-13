@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T20:00:53.022Z",
+  "generatedAt": "2026-07-13T20:04:51.520Z",
   "objective": "Phase 8 growth loop and store readiness",
   "launchContract": {
     "schemaVersion": 1,
@@ -78,7 +78,7 @@
     "android": "not_applicable"
   },
   "status": "blocked",
-  "gitSha": "7aa0e3b022fca46253f660dbbba9a140c97b8f69",
+  "gitSha": "c4ae68491d05110434fa106c4d5a12a51fa6156f",
   "gitStatus": "",
   "publicIdentity": {
     "finalBrandDomain": null,
@@ -171,10 +171,10 @@
     "docs/e2e/generated/human-e2e-manifest.md": "ef53f31c1c8ea20ca83e40b2797a718e9c8a7caacfb3e320a6da9c2d241ae2d9",
     "docs/phase-5/generated/device-qa-packet.json": "8d45f60740be012a4739bd2ea99df1afd75cef306896ac12688ebbf3131853e6",
     "docs/phase-5/generated/device-qa-packet.md": "cfd6d342eb78eb932555f206899483abffb72d717f364268a65d3d926f9eaaf8",
-    "docs/phase-6/generated/payments-qa-packet.json": "56dca850760ffcaa80c9545dd5b942be25fa24c643ffb793193a041360194294",
-    "docs/phase-6/generated/payments-qa-packet.md": "a37dded45fa63be5523ec2b8c201eae46559450be2f6f66df55a57de42c52b69",
-    "docs/phase-7/generated/core-loop-qa-packet.json": "7a3e728af181c2c6b8423b34cee837d8c9ac784136b8e6614f68902af8c61934",
-    "docs/phase-7/generated/core-loop-qa-packet.md": "cab77e4c3b685f1628ab8675c056ab3c94e22be832c5f656dd67329b0785dbd4",
+    "docs/phase-6/generated/payments-qa-packet.json": "5c64d5a4582ee3eeaa0624e8441ee924ed077b07a59b9da21e70c483762a0a9f",
+    "docs/phase-6/generated/payments-qa-packet.md": "81673b5aa23c97ad1c8334e5f9bf28d53f02709198fae4cc2bf7e53882dedf6b",
+    "docs/phase-7/generated/core-loop-qa-packet.json": "a0de17196f6c5e8694d9ef54c248684a5a0e96335267a51082ffc8a2543328ef",
+    "docs/phase-7/generated/core-loop-qa-packet.md": "3e9a79128197a2704b79d54bbf6055bf6694dcdc50b614ac5866f84bee5880a9",
     "scripts/phase8/build-growth-store-qa-packet.mjs": "417068519980f0e79e36d565a3deac14de38804daa59d0b5773d88fc89768461",
     "scripts/phase8/check-growth-store-readiness.mjs": "014ac3f8dfd4baae43b57c494c778688c180ae996f8cb8b29f0a2660211902a7",
     "scripts/phase8/check-growth-store-smoke.mjs": "89cc87c5da60b6eb86ae112c93eb1995309c82dc2336995113dd5a37b8c37a98",
