@@ -9,7 +9,7 @@ import {
   type HeatCell,
   type WeekDay,
 } from '@/features/streak/streak';
-import { getCompletedDates, getCountByDate } from '@/features/today/completionsStore';
+import { getCompletionSummary } from '@/features/today/completionsStore';
 import { localDateString } from '@/features/today/useToday';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
@@ -45,6 +45,36 @@ export type ProgressData = {
 
 type ServerCompletion = { completed_date: string };
 
+async function loadServerCompletions(lookbackISO: string): Promise<ServerCompletion[]> {
+  if (!isSupabaseConfigured) return [];
+  try {
+    const { data } = await supabase
+      .from('routine_completions')
+      .select('completed_date')
+      .gte('completed_date', lookbackISO);
+    return (data ?? [])
+      .map((completion) => normalizeProgressCompletionDate(completion.completed_date))
+      .filter((completedDate): completedDate is string => Boolean(completedDate))
+      .map((completedDate) => ({ completed_date: completedDate }));
+  } catch {
+    return [];
+  }
+}
+
+async function loadServerLongestStreak(): Promise<number> {
+  if (!isSupabaseConfigured) return 0;
+  try {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('longest_streak')
+      .limit(1)
+      .maybeSingle();
+    return normalizeProgressLongestStreak(profile?.longest_streak);
+  } catch {
+    return 0;
+  }
+}
+
 export function useProgress() {
   const todayISO = localDateString();
 
@@ -57,33 +87,11 @@ export function useProgress() {
       // Look back far enough for the streak run (beyond the current month).
       const lookback = new Date(today.getTime() - 120 * 86_400_000);
 
-      let completions: ServerCompletion[] = [];
-      let serverLongest = 0;
-      if (isSupabaseConfigured) {
-        try {
-          const { data } = await supabase
-            .from('routine_completions')
-            .select('completed_date')
-            .gte('completed_date', localDateString(lookback));
-          completions = (data ?? [])
-            .map((completion) => normalizeProgressCompletionDate(completion.completed_date))
-            .filter((completedDate): completedDate is string => Boolean(completedDate))
-            .map((completedDate) => ({ completed_date: completedDate }));
-        } catch {
-          completions = [];
-        }
-
-        try {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('longest_streak')
-            .limit(1)
-            .maybeSingle();
-          serverLongest = normalizeProgressLongestStreak(profile?.longest_streak);
-        } catch {
-          serverLongest = 0;
-        }
-      }
+      const [localSummary, completions, serverLongest] = await Promise.all([
+        getCompletionSummary(),
+        loadServerCompletions(localDateString(lookback)),
+        loadServerLongestStreak(),
+      ]);
 
       const countByDate = new Map<string, number>();
       const completed = new Set<string>();
@@ -96,13 +104,11 @@ export function useProgress() {
       // Union the local-first store (the v1 source of truth) so on-device check-offs
       // drive the streak/heat-map even before the backend exists. Same date in both
       // sources represents the same completions, so take the max (never double-count).
-      const localDates = await getCompletedDates();
-      const localCounts = await getCountByDate();
-      for (const d of localDates) {
+      for (const d of localSummary.completedDates) {
         const completedDate = normalizeProgressCompletionDate(d);
         if (completedDate) completed.add(completedDate);
       }
-      for (const [d, n] of localCounts) {
+      for (const [d, n] of localSummary.countByDate) {
         const completedDate = normalizeProgressCompletionDate(d);
         const count = normalizeProgressCount(n);
         if (completedDate && count > 0) {

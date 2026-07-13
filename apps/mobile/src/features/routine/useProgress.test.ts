@@ -9,11 +9,15 @@ describe('useProgress local-first contract', () => {
     const source = readFileSync(`${ROUTINE_DIR}/useProgress.ts`, 'utf8');
 
     expect(source).toContain("import { isSupabaseConfigured } from '@/lib/env'");
-    expect(source).toContain('let completions: ServerCompletion[] = []');
-    expect(source).toContain('let serverLongest = 0');
-    expect(source).toContain('if (isSupabaseConfigured)');
+    expect(source).toContain('if (!isSupabaseConfigured) return []');
+    expect(source).toContain('if (!isSupabaseConfigured) return 0');
     expect(source).toContain('catch {');
-    expect(source).toContain('const localDates = await getCompletedDates()');
+    expect(source).toContain('const [localSummary, completions, serverLongest] = await Promise.all([');
+    expect(source).toContain('getCompletionSummary()');
+    expect(source).toContain('for (const d of localSummary.completedDates)');
+    expect(source).toContain('for (const [d, n] of localSummary.countByDate)');
+    expect(source).not.toContain('getCompletedDates()');
+    expect(source).not.toContain('getCountByDate()');
     expect(source).toContain(
       'const longest = Math.max(serverLongest, bestStreak(completed), s.current)',
     );

@@ -199,16 +199,34 @@ export async function toggleCompletion(
 
 /** Dates with at least one completion (the streak's "completion days"). */
 export async function getCompletedDates(): Promise<Set<string>> {
-  const log = await load();
-  return new Set(Object.keys(log).filter((d) => (log[d]?.length ?? 0) > 0));
+  return (await getCompletionSummary()).completedDates;
 }
 
 /** Per-day completion counts (heat-map intensity). */
 export async function getCountByDate(): Promise<Map<string, number>> {
+  return (await getCompletionSummary()).countByDate;
+}
+
+export type CompletionSummary = {
+  completedDates: Set<string>;
+  countByDate: Map<string, number>;
+};
+
+/**
+ * One storage snapshot for consumers that need both streak dates and heat-map
+ * counts. Deriving both views together prevents duplicate private-store reads and
+ * guarantees they describe the same atomic completion-log version.
+ */
+export async function getCompletionSummary(): Promise<CompletionSummary> {
   const log = await load();
-  const m = new Map<string, number>();
-  for (const [d, keys] of Object.entries(log)) if (keys.length > 0) m.set(d, keys.length);
-  return m;
+  const completedDates = new Set<string>();
+  const countByDate = new Map<string, number>();
+  for (const [date, keys] of Object.entries(log)) {
+    if (keys.length === 0) continue;
+    completedDates.add(date);
+    countByDate.set(date, keys.length);
+  }
+  return { completedDates, countByDate };
 }
 
 /** Test/seed reset. */

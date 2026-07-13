@@ -4,6 +4,7 @@ import {
   COMPLETION_LOG_INVALID,
   COMPLETION_LOG_UNSUPPORTED_VERSION,
   getCompletedSteps,
+  getCompletionSummary,
   getCountByDate,
   isBeyondBackfillCap,
   toggleCompletion,
@@ -14,11 +15,13 @@ const mocks = vi.hoisted(() => ({
   tails: new Map<string, Promise<void>>(),
   readFailures: new Map<string, Error>(),
   updateFailures: new Map<string, Error>(),
+  reads: 0,
   writes: 0,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => {
+    mocks.reads += 1;
     const failure = mocks.readFailures.get(key);
     if (failure) throw failure;
     return mocks.storage.get(key) ?? null;
@@ -79,6 +82,7 @@ describe('today completion persistence', () => {
     mocks.tails.clear();
     mocks.readFailures.clear();
     mocks.updateFailures.clear();
+    mocks.reads = 0;
     mocks.writes = 0;
     vi.clearAllMocks();
   });
@@ -265,5 +269,29 @@ describe('today completion persistence', () => {
 
     expect(counts.get(DAY)).toBe(2);
     expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('derives streak dates and heat-map counts from one atomic storage read', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({
+        version: 1,
+        days: {
+          [DAY]: ['AM:cleanser', 'PM:retinol'],
+          '2026-07-06': ['PM:cleanser'],
+        },
+      }),
+    );
+
+    const summary = await getCompletionSummary();
+
+    expect(summary.completedDates).toEqual(new Set([DAY, '2026-07-06']));
+    expect(summary.countByDate).toEqual(
+      new Map([
+        [DAY, 2],
+        ['2026-07-06', 1],
+      ]),
+    );
+    expect(mocks.reads).toBe(1);
   });
 });
