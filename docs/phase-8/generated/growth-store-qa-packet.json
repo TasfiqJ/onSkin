@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T18:55:58.084Z",
+  "generatedAt": "2026-07-13T20:00:53.022Z",
   "objective": "Phase 8 growth loop and store readiness",
   "launchContract": {
     "schemaVersion": 1,
@@ -78,7 +78,7 @@
     "android": "not_applicable"
   },
   "status": "blocked",
-  "gitSha": "7bfbe2bfb4ac15d979bee1fe11591c243621311f",
+  "gitSha": "7aa0e3b022fca46253f660dbbba9a140c97b8f69",
   "gitStatus": "",
   "publicIdentity": {
     "finalBrandDomain": null,
@@ -133,8 +133,8 @@
     ]
   },
   "sourceHashes": {
-    ".env.example": "970a51b212bea8ebe9024f315ed051d9a9a131adb10a6fcf2f8085e632e0210c",
-    "package.json": "8151c6a42a79225e676a2bb20e1bcc21775162305ef13a75c7fe4e35a56fbb9b",
+    ".env.example": "c48da3e0c5eb2b900c9a721c35428f2b402b3577e1692b9fae0ad157c64ef091",
+    "package.json": "9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0",
     "docs/hugeToDo/launch-contract.json": "43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b",
     "scripts/launch/contract.mjs": "6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d",
     "apps/mobile/app.config.js": "3c8de04b4d7452e7c41922d4202e934f8f201769be01095503b3969ad3fde0a5",
@@ -169,16 +169,16 @@
     "docs/USER_FLOW_TREE.md": "1eeb5ae98ce1c98f9f479c9fe720a6ad0eb52a6959fec5f3dc3c54c5696ca461",
     "docs/e2e/generated/human-e2e-manifest.json": "b07ddbf4728f8216f9e2a623bdb6dec03ddba4b5b3aedfcd11d1eb354af1b61c",
     "docs/e2e/generated/human-e2e-manifest.md": "ef53f31c1c8ea20ca83e40b2797a718e9c8a7caacfb3e320a6da9c2d241ae2d9",
-    "docs/phase-5/generated/device-qa-packet.json": "98480c1abc85d077baca1081c3fb417f19104f2e5edf419f53290dd45c973c3d",
-    "docs/phase-5/generated/device-qa-packet.md": "19ded503934a89332a48e3d35fb3b8c837ae28c737a70253f5780edc878f06f4",
+    "docs/phase-5/generated/device-qa-packet.json": "8d45f60740be012a4739bd2ea99df1afd75cef306896ac12688ebbf3131853e6",
+    "docs/phase-5/generated/device-qa-packet.md": "cfd6d342eb78eb932555f206899483abffb72d717f364268a65d3d926f9eaaf8",
     "docs/phase-6/generated/payments-qa-packet.json": "56dca850760ffcaa80c9545dd5b942be25fa24c643ffb793193a041360194294",
     "docs/phase-6/generated/payments-qa-packet.md": "a37dded45fa63be5523ec2b8c201eae46559450be2f6f66df55a57de42c52b69",
-    "docs/phase-7/generated/core-loop-qa-packet.json": "70addb3c6ee6d08f2a14a06eae5eb1b84b8ed24a6afe60ad8c6b9d95c020beeb",
-    "docs/phase-7/generated/core-loop-qa-packet.md": "addd3f46c716f73bdd97c56ae64b9aba990a9265cf751c94f7a8d7fdd005bd58",
+    "docs/phase-7/generated/core-loop-qa-packet.json": "7a3e728af181c2c6b8423b34cee837d8c9ac784136b8e6614f68902af8c61934",
+    "docs/phase-7/generated/core-loop-qa-packet.md": "cab77e4c3b685f1628ab8675c056ab3c94e22be832c5f656dd67329b0785dbd4",
     "scripts/phase8/build-growth-store-qa-packet.mjs": "417068519980f0e79e36d565a3deac14de38804daa59d0b5773d88fc89768461",
     "scripts/phase8/check-growth-store-readiness.mjs": "014ac3f8dfd4baae43b57c494c778688c180ae996f8cb8b29f0a2660211902a7",
     "scripts/phase8/check-growth-store-smoke.mjs": "89cc87c5da60b6eb86ae112c93eb1995309c82dc2336995113dd5a37b8c37a98",
-    "scripts/phase9/lib.mjs": "0dd6fa1c3cf1e68e26adb577e8d9711e9eacf60e3b2f01a0da3e9ab5268744db",
+    "scripts/phase9/lib.mjs": "01fd4497bb9bb34e80f51a8daa76513edb383c6cb68686b22e72b8e4d8cf5665",
     "supabase/migrations/20260616000028_phase8_growth.sql": "629bcda19f7f227679b8202a6d0234392dba62d4cf602023d0c2b976c576f14e",
     "supabase/functions/growth-event/index.ts": "3cba0b97b40c090b061d24009a297c846489891a37b256b1bf47bdfeb95412d1",
     "supabase/functions/waitlist/index.ts": "63094a4fe2d065bc33c03af69b80cf55308c00192cc50eb51da6e65ae18d8782"
