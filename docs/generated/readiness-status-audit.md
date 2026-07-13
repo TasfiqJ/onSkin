@@ -1,6 +1,6 @@
 # Readiness Status Audit
 
-Generated: 2026-07-13T15:16:32.155Z
+Generated: 2026-07-13T15:32:20.445Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ Required release platforms: ios. Android release evidence: not_applicable.
 ## Summary
 
 - Evidence date: 2026-07-12
-- Expected mobile test baseline: 209 mobile test files / 2244 tests
+- Expected mobile test baseline: 209 mobile test files / 2248 tests
 - Actual mobile test files found: 209
 - Blockers: 0
 - Warnings: 0

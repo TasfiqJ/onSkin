@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T15:16:32.155Z",
+  "generatedAt": "2026-07-13T15:32:20.445Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -82,9 +82,9 @@
   "evidenceDate": "2026-07-12",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
   "expectedMobileTestFiles": 209,
-  "expectedMobileTests": 2244,
+  "expectedMobileTests": 2248,
   "actualMobileTestFiles": 209,
-  "expectedTestPhrase": "209 mobile test files / 2244 tests",
+  "expectedTestPhrase": "209 mobile test files / 2248 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -95,18 +95,18 @@
       "testBaselines": [
         {
           "testFiles": 209,
-          "tests": 2244,
-          "source": "209 mobile test files / 2244 tests"
+          "tests": 2248,
+          "source": "209 mobile test files / 2248 tests"
         },
         {
           "testFiles": 209,
-          "tests": 2244,
-          "source": "209 mobile test files / 2244 tests"
+          "tests": 2248,
+          "source": "209 mobile test files / 2248 tests"
         },
         {
           "testFiles": 209,
-          "tests": 2244,
-          "source": "209 test files / 2244 tests"
+          "tests": 2248,
+          "source": "209 test files / 2248 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -123,8 +123,8 @@
       "testBaselines": [
         {
           "testFiles": 209,
-          "tests": 2244,
-          "source": "209 mobile test files / 2244 tests"
+          "tests": 2248,
+          "source": "209 mobile test files / 2248 tests"
         }
       ],
       "unexpectedTestBaselines": [],
