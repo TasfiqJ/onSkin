@@ -30,34 +30,34 @@ describe('community consent store', () => {
     mocks.storage.clear();
   });
 
-  it('normalizes legacy consent and age grants without merging the two gates', async () => {
+  it('reads legacy consent and age grants without merging or repairing the gates', async () => {
     mocks.storage.set(CONSENT_KEY, 'true');
     mocks.storage.set(AGE_KEY, ' 1 ');
 
     await expect(getCommunityConsentLocal()).resolves.toBe(true);
     await expect(getAgeConfirmedLocal()).resolves.toBe(true);
 
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('1');
-    expect(mocks.storage.get(AGE_KEY)).toBe('1');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('true');
+    expect(mocks.storage.get(AGE_KEY)).toBe(' 1 ');
   });
 
   it('writes compact canonical flags for consent and age confirmation', async () => {
     await setCommunityConsentLocal(false);
     await setAgeConfirmedLocal(true);
 
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('0');
-    expect(mocks.storage.get(AGE_KEY)).toBe('1');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
+    expect(mocks.storage.get(AGE_KEY)).toBe('v1:1');
   });
 
-  it('fails closed and repairs malformed community gate values', async () => {
+  it('fails closed and preserves malformed community gate values', async () => {
     mocks.storage.set(CONSENT_KEY, 'granted');
     mocks.storage.set(AGE_KEY, 'old-enough');
 
     await expect(getCommunityConsentLocal()).resolves.toBe(false);
     await expect(getAgeConfirmedLocal()).resolves.toBe(false);
 
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('0');
-    expect(mocks.storage.get(AGE_KEY)).toBe('0');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('granted');
+    expect(mocks.storage.get(AGE_KEY)).toBe('old-enough');
   });
 
   it('clears both local community gates', async () => {

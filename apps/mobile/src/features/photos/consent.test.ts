@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
   getPrivateItem: vi.fn(),
   removePrivateItem: vi.fn(),
   setPrivateItem: vi.fn(),
+  updatePrivateItem: vi.fn(),
   storage: new Map<string, string>(),
 }));
 
@@ -22,6 +23,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: mocks.getPrivateItem,
   removePrivateItem: mocks.removePrivateItem,
   setPrivateItem: mocks.setPrivateItem,
+  updatePrivateItem: mocks.updatePrivateItem,
 }));
 
 const CAPTURE_KEY = 'onskin.photos.captureConsent';
@@ -35,6 +37,7 @@ describe('photo consent persistence', () => {
     mocks.getPrivateItem.mockReset();
     mocks.removePrivateItem.mockReset();
     mocks.setPrivateItem.mockReset();
+    mocks.updatePrivateItem.mockReset();
     mocks.storage.clear();
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.getPrivateItem.mockImplementation(async (key: string) => mocks.storage.get(key) ?? null);
@@ -44,6 +47,13 @@ describe('photo consent persistence', () => {
     mocks.setPrivateItem.mockImplementation(async (key: string, value: string) => {
       mocks.storage.set(key, value);
     });
+    mocks.updatePrivateItem.mockImplementation(
+      async (key: string, updater: (current: string | null) => string | null) => {
+        const next = updater(mocks.storage.get(key) ?? null);
+        if (next === null) mocks.storage.delete(key);
+        else mocks.storage.set(key, next);
+      },
+    );
   });
 
   it('keeps photo capture enabled after the local proof saves and records the ledger', async () => {
@@ -53,15 +63,18 @@ describe('photo consent persistence', () => {
 
     await expect(hasPhotoCaptureConsent()).resolves.toBe(true);
     expect(JSON.parse(mocks.storage.get(CAPTURE_RECORD_KEY) ?? '{}')).toMatchObject({
-      type: 'photo_capture',
-      granted: true,
-      consentTextHash: expect.stringMatching(/^sha256:/),
-      recordedAt: expect.any(String),
+      schemaVersion: 1,
+      consent: {
+        type: 'photo_capture',
+        granted: true,
+        consentTextHash: expect.stringMatching(/^sha256:/),
+        recordedAt: expect.any(String),
+      },
     });
     expect(mocks.recordConsent).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'photo_capture', granted: true }),
     );
-    expect(mocks.setPrivateItem.mock.invocationCallOrder[0]).toBeLessThan(
+    expect(mocks.updatePrivateItem.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.recordConsent.mock.invocationCallOrder[0],
     );
   });
@@ -76,13 +89,13 @@ describe('photo consent persistence', () => {
     expect(mocks.recordConsent).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'photo_capture', granted: true }),
     );
-    expect(mocks.setPrivateItem).toHaveBeenCalledTimes(1);
-    expect(mocks.setPrivateItem).toHaveBeenCalledWith(CAPTURE_RECORD_KEY, expect.any(String));
+    expect(mocks.updatePrivateItem).toHaveBeenCalledTimes(1);
+    expect(mocks.updatePrivateItem).toHaveBeenCalledWith(CAPTURE_RECORD_KEY, expect.any(Function));
   });
 
   it('fails closed before camera access when the local photo consent proof cannot save', async () => {
     const { grantPhotoCaptureConsent, hasPhotoCaptureConsent } = await import('./consent');
-    mocks.setPrivateItem.mockRejectedValueOnce(new Error('encrypted proof unavailable'));
+    mocks.updatePrivateItem.mockRejectedValueOnce(new Error('encrypted proof unavailable'));
 
     await expect(grantPhotoCaptureConsent()).rejects.toThrow('encrypted proof unavailable');
 
@@ -125,32 +138,39 @@ describe('photo consent persistence', () => {
     expect(mocks.recordConsent).not.toHaveBeenCalled();
   });
 
-  it('normalizes padded canonical flags and fails closed for noncanonical consent values', async () => {
+  it('reads padded legacy flags without repairing them', async () => {
     const { hasPhotoCaptureConsent } = await import('./consent');
     mocks.storage.set(CAPTURE_KEY, ' 1 ');
 
     await expect(hasPhotoCaptureConsent()).resolves.toBe(true);
 
-    expect(mocks.setPrivateItem).toHaveBeenCalledWith(CAPTURE_KEY, '1');
+    expect(mocks.storage.get(CAPTURE_KEY)).toBe(' 1 ');
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
   });
 
-  it('removes malformed local photo proof before falling back to the legacy flag', async () => {
+  it('preserves malformed primary proof and does not revive a stale legacy grant', async () => {
     const { hasPhotoCaptureConsent } = await import('./consent');
     mocks.storage.set(CAPTURE_RECORD_KEY, '{not-json');
     mocks.storage.set(CAPTURE_KEY, ' 1 ');
 
-    await expect(hasPhotoCaptureConsent()).resolves.toBe(true);
+    await expect(hasPhotoCaptureConsent()).resolves.toBe(false);
 
-    expect(mocks.removePrivateItem).toHaveBeenCalledWith(CAPTURE_RECORD_KEY);
-    expect(mocks.setPrivateItem).toHaveBeenCalledWith(CAPTURE_KEY, '1');
+    expect(mocks.storage.get(CAPTURE_RECORD_KEY)).toBe('{not-json');
+    expect(mocks.storage.get(CAPTURE_KEY)).toBe(' 1 ');
+    expect(mocks.removePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
   });
 
-  it('keeps canonical granted consent active if repair fails', async () => {
-    const { hasPhotoCaptureConsent } = await import('./consent');
-    mocks.storage.set(CAPTURE_KEY, ' 1 ');
-    mocks.setPrivateItem.mockRejectedValueOnce(new Error('encrypted flag repair unavailable'));
+  it('preserves a future primary proof and refuses to overwrite it', async () => {
+    const { grantPhotoCaptureConsent, hasPhotoCaptureConsent } = await import('./consent');
+    const original = JSON.stringify({ schemaVersion: 2, consent: {} });
+    mocks.storage.set(CAPTURE_RECORD_KEY, original);
 
-    await expect(hasPhotoCaptureConsent()).resolves.toBe(true);
-    expect(mocks.storage.get(CAPTURE_KEY)).toBe(' 1 ');
+    await expect(hasPhotoCaptureConsent()).resolves.toBe(false);
+    await expect(grantPhotoCaptureConsent()).rejects.toThrow(
+      'PHOTO_CAPTURE_CONSENT_UNSUPPORTED_VERSION',
+    );
+    expect(mocks.storage.get(CAPTURE_RECORD_KEY)).toBe(original);
+    expect(mocks.recordConsent).not.toHaveBeenCalled();
   });
 });
