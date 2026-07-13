@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T18:54:22.318Z",
+  "generatedAt": "2026-07-13T20:00:08.539Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,7 +73,7 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "43467f0135b715bac01b697feba5515f77b74715",
+  "gitSha": "ba188b7b149e1bac1985a900c012b8649c8f9872",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -221,8 +221,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 20824,
-      "sha256": "8151c6a42a79225e676a2bb20e1bcc21775162305ef13a75c7fe4e35a56fbb9b"
+      "bytes": 21062,
+      "sha256": "9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -609,6 +609,12 @@
       "sha256": "eac60d4bf92f465ad2264c509f8e0a2f412b5780f862cf602b8ff16e1e2e1299"
     },
     {
+      "path": "supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql",
+      "exists": true,
+      "bytes": 1185,
+      "sha256": "18b423bcae63f63c6f533efd1fab3ea9e6918fcebaa6480a35d396b214f89040"
+    },
+    {
       "path": "apps/mobile/src/features/notifications/deliver.ts",
       "exists": true,
       "bytes": 9520,
@@ -635,14 +641,14 @@
     {
       "path": "scripts/phase5/build-device-qa-packet.mjs",
       "exists": true,
-      "bytes": 17810,
-      "sha256": "88dc309373575a848f4c3c72277d820d44d709b2a517356727d0ee0fea8ae9c6"
+      "bytes": 17973,
+      "sha256": "d8fe316bd9f68e54cf229a8661f0917392349e2046bc027e953b5491cae98304"
     },
     {
       "path": "scripts/phase5/check-native-config.mjs",
       "exists": true,
-      "bytes": 13786,
-      "sha256": "b0368c9a7b70db597f57226581cfed77242d72e2108c96535315d268b8b6a925"
+      "bytes": 13949,
+      "sha256": "a01cde9f75f1581bb81f6b1e10c1b6515614d206e126013d83027457ac4d7543"
     },
     {
       "path": "scripts/phase5/check-performance-evidence.mjs",
@@ -653,8 +659,8 @@
     {
       "path": "scripts/phase5/device-qa-packet-smoke.mjs",
       "exists": true,
-      "bytes": 10738,
-      "sha256": "fc9ed4b76c987d196f048796310cce0b139da8f5f61995d68f523d6e851d8b8f"
+      "bytes": 11087,
+      "sha256": "23eb183c424391c61ea78d72e5139a2577344c59c5f7b19ccc01bad174661dc6"
     },
     {
       "path": "scripts/phase5/performance-evidence-contract.mjs",
@@ -675,22 +681,34 @@
       "sha256": "38e229c125f6c077d68722ff792825f750610f1e8610008c61834e9f43e6cfe9"
     },
     {
+      "path": "scripts/phase2/supabase-rls-smoke.mjs",
+      "exists": true,
+      "bytes": 14007,
+      "sha256": "9ed9d074bed5179bc8dc03310f95441dab8a943a16b52866587517e3610e4d8a"
+    },
+    {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 14794,
-      "sha256": "0dd6fa1c3cf1e68e26adb577e8d9711e9eacf60e3b2f01a0da3e9ab5268744db"
+      "bytes": 20344,
+      "sha256": "01fd4497bb9bb34e80f51a8daa76513edb383c6cb68686b22e72b8e4d8cf5665"
     },
     {
       "path": "scripts/phase9/live-supabase-adversarial.mjs",
       "exists": true,
-      "bytes": 47774,
-      "sha256": "1219259653e4040ab4d31233d5a2906c44843189e30b859574a540f05be82c8d"
+      "bytes": 83599,
+      "sha256": "bb8656691c4d6ff7d2e7320e71d62453bb73025b058698f97ba9da0b31d39825"
+    },
+    {
+      "path": "scripts/phase9/rls-adversarial-smoke.mjs",
+      "exists": true,
+      "bytes": 10182,
+      "sha256": "4963345f6cb78d6c370d50e8e0595e71dd656f74d7a924ad9faef5475c557e3b"
     },
     {
       "path": "scripts/phase9/rls-adversarial.mjs",
       "exists": true,
-      "bytes": 9642,
-      "sha256": "1fbe4e90ce280a9d4c9c8e642ea7beb718cee6d1647ea399e1fd6e9511bfcf89"
+      "bytes": 18562,
+      "sha256": "2878cb139c1ee1c8cbd511eecc577d6ab79496761fbe7104697e666acb7e8e3a"
     },
     {
       "path": "docs/DEVICE_SUPPORT_POLICY.md",
