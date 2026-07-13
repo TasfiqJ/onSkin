@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-13T18:55:58.568Z
+Generated: 2026-07-13T20:01:11.023Z
 Status: blocked
-Git SHA: 7bfbe2bfb4ac15d979bee1fe11591c243621311f
+Git SHA: e51f78b505e7463d09abdd41f013c8ece613e0c9
 Git status: clean
 
 ## Release Identity
@@ -75,10 +75,10 @@ Git status: clean
 
 ## Source Hashes
 
-- `.env.example`: `970a51b212bea8ebe9024f315ed051d9a9a131adb10a6fcf2f8085e632e0210c`
+- `.env.example`: `c48da3e0c5eb2b900c9a721c35428f2b402b3577e1692b9fae0ad157c64ef091`
 - `docs/hugeToDo/launch-contract.json`: `43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b`
 - `scripts/launch/contract.mjs`: `6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d`
-- `package.json`: `8151c6a42a79225e676a2bb20e1bcc21775162305ef13a75c7fe4e35a56fbb9b`
+- `package.json`: `9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0`
 - `package-lock.json`: `dc44f44dd678c99e3bc422fa303dc5d9852da471eb27e3bccc222d78f66149c7`
 - `.github/workflows/security.yml`: `fdb06576390f13621c3ce0887c4cc208f73d049c59a42d72c6cd04f9d9f6658d`
 - `apps/mobile/app.base.json`: `24e1d20a0c61544d2ecb71e39dacafcb17d03a3f20fc7f8e80bf449d900d005c`
@@ -154,13 +154,16 @@ Git status: clean
 - `supabase/migrations/20260705000034_phase9_security_definer_hardening.sql`: `28e6e359282469c72a5a4669f308cae905141b7a311e4a99aa53834462bbc567`
 - `supabase/migrations/20260711000038_shelf_freshness_invariants.sql`: `672df1e56fac4cdfc6bf641c3249221aaacf630439d28898a79ace2d25181bcd`
 - `supabase/migrations/20260711000039_replenishment_alert_opt_in.sql`: `eac60d4bf92f465ad2264c509f8e0a2f412b5780f862cf602b8ff16e1e2e1299`
-- `scripts/phase9/lib.mjs`: `0dd6fa1c3cf1e68e26adb577e8d9711e9eacf60e3b2f01a0da3e9ab5268744db`
+- `supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql`: `18b423bcae63f63c6f533efd1fab3ea9e6918fcebaa6480a35d396b214f89040`
+- `scripts/phase9/lib.mjs`: `01fd4497bb9bb34e80f51a8daa76513edb383c6cb68686b22e72b8e4d8cf5665`
+- `scripts/phase2/supabase-rls-smoke.mjs`: `9ed9d074bed5179bc8dc03310f95441dab8a943a16b52866587517e3610e4d8a`
 - `scripts/phase9/release-contact-smoke.mjs`: `da12a4b38f9dddd85a6501454c16b92b5cb07f290d9f86f180fcfbe7b26bd0bd`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5`
-- `scripts/phase9/release-smoke.mjs`: `9ba60c729718e063e73915576ee452f81da0da36f68eff1fb25b39661054a3fa`
-- `scripts/phase9/rls-adversarial.mjs`: `1fbe4e90ce280a9d4c9c8e642ea7beb718cee6d1647ea399e1fd6e9511bfcf89`
-- `scripts/phase9/build-release-qa-packet.mjs`: `21d5bc2cb93d3b8a9bcfcb43c9214388e65469296ca7a13debe345447b71f0f3`
-- `scripts/phase9/live-supabase-adversarial.mjs`: `1219259653e4040ab4d31233d5a2906c44843189e30b859574a540f05be82c8d`
+- `scripts/phase9/release-smoke.mjs`: `d5f8bfaa1bfb9dd5c6bcae8a75e3f81ca87695a0e100d8341099b2ff0b88bd2c`
+- `scripts/phase9/rls-adversarial-smoke.mjs`: `4963345f6cb78d6c370d50e8e0595e71dd656f74d7a924ad9faef5475c557e3b`
+- `scripts/phase9/rls-adversarial.mjs`: `2878cb139c1ee1c8cbd511eecc577d6ab79496761fbe7104697e666acb7e8e3a`
+- `scripts/phase9/build-release-qa-packet.mjs`: `1cbf7daebd1343eabb8b52e756c8e8de60734f618de1b985fae850d40200dca5`
+- `scripts/phase9/live-supabase-adversarial.mjs`: `bb8656691c4d6ff7d2e7320e71d62453bb73025b058698f97ba9da0b31d39825`
 - `scripts/phase9/live-edge-auth.mjs`: `ae2764d73242fe3c9b5d9497c78d9b0b62cbd2438ec3ac633496004402d37441`
 - `scripts/phase9/live-data-rights.mjs`: `fed1600ee42a0a3acd3b7010c729c2094c9b4ea26d59038fdb6cd914771f5aa4`
 - `scripts/phase9/live-consent-withdrawal.mjs`: `baf9d94d3034bdf53c7bc7c2960eb7342aacf3c09b9b65f1c35bcb99806fe97b`
@@ -177,8 +180,8 @@ Git status: clean
 - `scripts/phase9/privacy-payload-audit.mjs`: `4f8c1bba9c1b9f8dbb29b8f7dee5b8688a16e609a4b455797ed6472ec5db5fc7`
 - `scripts/phase9/dependency-sbom.mjs`: `0b36b22f21004af4913cd1c72b0f247765b888a3461ee074a3758a8c3d8df351`
 - `scripts/phase9/store-build-inspect.mjs`: `01a6f0f239edcb670b244202fc2b930f94eb46762e556a7021f190752cdcc8db`
-- `docs/phase-9/source-of-truth.md`: `b23f022feded586dadfd8e21d7c407b8b94f9ed317ae6ddde12dac1c5933c9da`
-- `docs/phase-9/data-inventory.md`: `e65cb0862d1ba602ecdc5b1ded39d7bb79271273866e3343b90c5ebf1f1f2da8`
+- `docs/phase-9/source-of-truth.md`: `414e838b25569886adc5ab40cf7d5c3ba0feb78acd90052339d0d731ec861bc5`
+- `docs/phase-9/data-inventory.md`: `fa975855a78d156936cf7dadde146d95cbbb29f7c98b86438a44987fe9603dca`
 - `docs/phase-9/edge-function-auth-matrix.md`: `e93759bc6338c06bbfd883e0c704cba42c85eafd15369278564255b60d8e7786`
 - `docs/phase-9/observability-payload-audit.md`: `3aa9508564cef79e704b14fdd43a80063e8e040ebc7dcdfa7f68a9cd8d86ada7`
 - `docs/phase-9/security-scanner-evidence.md`: `878d37533e0f2cd94a77a774917e829f7436e854816ae9caf623e498c45f8566`
@@ -188,8 +191,8 @@ Git status: clean
 - `docs/phase-9/dependency-sbom.md`: `0296a48f97d54e286dce62f28eb54cc5ef0ebbcd29138fcdb20d0cb54d6e391a`
 - `docs/phase-9/release-candidates/README.md`: `b32454b29c61424170b8ad2cabefc82a602366bfbb2f0f0ea86685fa1139d353`
 - `docs/phase-9/release-candidates/_template/manifest.md`: `508a06e4058d45cee3ff22982c8e0d9f64e776cac176e246c99ae78a9d6865bb`
-- `docs/phase-9/release-candidates/_template/commands.md`: `6df31562625d184bfe80a25191cbf34893ed3ed4bb7bce5d042ba37934ba609b`
-- `docs/phase-9/release-candidates/_template/automated-verification.md`: `52e47fafb26188cda1a1492dadd0856b7e24cb4919e844fdeef09040bcef102f`
+- `docs/phase-9/release-candidates/_template/commands.md`: `1cc145a864b3b6a50e5d3fb8e759e7803dd5a568a111486da7e4dd1b50a23491`
+- `docs/phase-9/release-candidates/_template/automated-verification.md`: `4e3934ad4d037cf4a780f90532587760888c1dae1c413861545b81fe2254474d`
 - `docs/phase-9/release-candidates/_template/manual-qa-matrix.md`: `8c1d69e7586dbbba577b3248e6b084fb621474a804b4d73d743d3a0b338348a2`
 - `docs/phase-9/release-candidates/_template/security-review.md`: `f8e52e1e5f0aae45b69de9d7f7102b93478e332ab14e53c87511cf4a48a73405`
 - `docs/phase-9/release-candidates/_template/privacy-review.md`: `73d1f5f35a317a2cc6e5b5e5df4b8ff6c4eaaf338b6be15c47ae9a2b09f69793`
