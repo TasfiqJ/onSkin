@@ -8,7 +8,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
 
-import { configureNotifications } from '@/features/notifications/deliver';
+import { configureNotifications } from '@/features/notifications/startup';
 import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
 import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
 import { IntakeProvider } from '@/features/shelf/IntakeContext';

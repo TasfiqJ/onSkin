@@ -13,6 +13,8 @@ import { canSend, reminderTimeOutsideQuietHours, tierEnabled, tierOf, toMinutes 
 import { recordSentLocal, sentThisWeekForTierLocal } from './sentStore';
 import { loadNotifPrefs, type NotifPrefs } from './store';
 
+export { configureNotifications } from './startup';
+
 /** The current local wall-clock time as "HH:MM" (for quiet-hours / cap checks). */
 export function nowHHMM(d = new Date()): string {
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
@@ -28,32 +30,6 @@ export function nowHHMM(d = new Date()): string {
  * B-NOTIF-VERIFY). NO health-revealing content is placed in any push payload; these
  * are LOCAL notifications (§8).
  */
-
-let configured = false;
-
-/** Call once at app start: handler + Android channel. */
-export async function configureNotifications(): Promise<void> {
-  if (configured) return;
-  configured = true;
-  try {
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowBanner: true,
-        shouldShowList: true,
-        shouldPlaySound: false, // calm by default (docs/07 §2)
-        shouldSetBadge: false,
-      }),
-    });
-    if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('routine', {
-        name: 'Routine reminders',
-        importance: Notifications.AndroidImportance.DEFAULT, // not high. Calm, no exact alarm
-      });
-    }
-  } catch {
-    /* unsupported environment. No-op */
-  }
-}
 
 export async function getPermissionStatus(): Promise<'granted' | 'denied' | 'undetermined'> {
   try {
