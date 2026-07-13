@@ -78,11 +78,7 @@ describe('routine order persistence', () => {
   it('preserves malformed or future-version state instead of applying it', async () => {
     const malformed = '{bad json';
     mocks.storage.set(KEY, malformed);
-    await expect(loadRoutineOrderOverrides()).resolves.toEqual({
-      schemaVersion: 1,
-      am: [],
-      pm: [],
-    });
+    await expect(loadRoutineOrderOverrides()).rejects.toThrow(ROUTINE_ORDER_INVALID);
     await expect(
       saveRoutineOrderOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] }),
     ).rejects.toThrow(ROUTINE_ORDER_INVALID);
@@ -90,11 +86,7 @@ describe('routine order persistence', () => {
 
     const future = JSON.stringify({ schemaVersion: 2, am: ['cleanser'], pm: [] });
     mocks.storage.set(KEY, future);
-    await expect(loadRoutineOrderOverrides()).resolves.toEqual({
-      schemaVersion: 1,
-      am: [],
-      pm: [],
-    });
+    await expect(loadRoutineOrderOverrides()).rejects.toThrow(ROUTINE_ORDER_UNSUPPORTED_VERSION);
     await expect(
       saveRoutineOrderOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] }),
     ).rejects.toThrow(ROUTINE_ORDER_UNSUPPORTED_VERSION);
@@ -131,6 +123,12 @@ describe('routine order persistence', () => {
     await expect(
       saveRoutineOrderOverrides({ schemaVersion: 1, am: ['b', 'a'], pm: [] }),
     ).rejects.toThrow('storage unavailable');
+  });
+
+  it('propagates private-storage read failures so the plan exposes its unavailable state', async () => {
+    mocks.getPrivateItem.mockRejectedValueOnce(new Error('storage unavailable'));
+
+    await expect(loadRoutineOrderOverrides()).rejects.toThrow('storage unavailable');
   });
 });
 

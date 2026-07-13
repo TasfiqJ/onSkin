@@ -33,11 +33,18 @@ type StoredConflictChoices = {
 
 type NormalizedChoices = {
   value: StoredConflictChoices;
-  changed: boolean;
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  const keys = Object.keys(value);
+  return (
+    keys.length === expected.length &&
+    expected.every((key) => Object.prototype.hasOwnProperty.call(value, key))
+  );
 }
 
 function normalizeChoice(value: unknown): ConflictUserChoice | null {
@@ -105,7 +112,7 @@ function normalizeChoices(value: unknown): NormalizedChoices | null {
         productIds: identity.productIds,
       };
     }
-    return { value: { schemaVersion: 1, choices }, changed: true };
+    return { value: { schemaVersion: 1, choices } };
   }
 
   if (!isRecord(value) || value.schemaVersion !== 1 || !isRecord(value.choices)) return null;
@@ -118,11 +125,48 @@ function normalizeChoices(value: unknown): NormalizedChoices | null {
     choices[identity.key] = record;
   }
 
-  const normalized: StoredConflictChoices = { schemaVersion: 1, choices };
-  return {
-    value: normalized,
-    changed: JSON.stringify(value) !== JSON.stringify(normalized),
-  };
+  return { value: { schemaVersion: 1, choices } };
+}
+
+function isRecognizedCurrentState(
+  value: Record<string, unknown>,
+  normalized: StoredConflictChoices,
+): boolean {
+  if (
+    value.schemaVersion !== 1 ||
+    !hasExactKeys(value, ['schemaVersion', 'choices']) ||
+    !isRecord(value.choices)
+  ) {
+    return false;
+  }
+
+  const storedEntries = Object.entries(value.choices);
+  if (storedEntries.length !== Object.keys(normalized.choices).length) return false;
+
+  return storedEntries.every(([key, storedValue]) => {
+    if (
+      !isRecord(storedValue) ||
+      !hasExactKeys(storedValue, ['choice', 'ruleId', 'ruleVersion', 'productIds'])
+    ) {
+      return false;
+    }
+    const normalizedRecord = normalized.choices[key];
+    if (!normalizedRecord) return false;
+    const recognizedChoice =
+      storedValue.choice === normalizedRecord.choice ||
+      (storedValue.choice === 'keep_alternate_nights' &&
+        normalizedRecord.choice === 'accept_suggested_timing');
+    return (
+      recognizedChoice &&
+      storedValue.ruleId === normalizedRecord.ruleId &&
+      storedValue.ruleVersion === normalizedRecord.ruleVersion &&
+      Array.isArray(storedValue.productIds) &&
+      storedValue.productIds.length === normalizedRecord.productIds.length &&
+      storedValue.productIds.every(
+        (productId, index) => productId === normalizedRecord.productIds[index],
+      )
+    );
+  });
 }
 
 /** Normalize legacy/current choice storage for a stable account-export shape.
@@ -132,7 +176,11 @@ export function normalizeConflictChoicesForExport(value: unknown): unknown {
   const normalized = normalizeChoices(value);
   if (
     normalized &&
-    !(isRecord(value) && value.schemaVersion === 1 && normalized.changed)
+    !(
+      isRecord(value) &&
+      value.schemaVersion === 1 &&
+      !isRecognizedCurrentState(value, normalized.value)
+    )
   ) {
     return normalized.value;
   }
@@ -154,7 +202,11 @@ function decodeChoices(raw: string): ConflictChoices {
   }
   const normalized = normalizeChoices(parsed);
   if (!normalized) throw new Error(CONFLICT_CHOICES_INVALID);
-  if (isRecord(parsed) && parsed.schemaVersion === 1 && normalized.changed) {
+  if (
+    isRecord(parsed) &&
+    parsed.schemaVersion === 1 &&
+    !isRecognizedCurrentState(parsed, normalized.value)
+  ) {
     throw new Error(CONFLICT_CHOICES_INVALID);
   }
   return normalized.value.choices;

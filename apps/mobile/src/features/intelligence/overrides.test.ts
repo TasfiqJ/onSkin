@@ -108,10 +108,10 @@ describe('conflict choice persistence', () => {
     expect(await getOverriddenKeys()).toEqual(new Set([`${current.rule.id}:glycolic+retinol`]));
   });
 
-  it('refuses to partially apply or overwrite a non-canonical current record', async () => {
+  it('normalizes the known legacy timing choice without rewriting it during a read', async () => {
     const current = conflict();
     const key = `${current.rule.id}:glycolic+retinol`;
-    const nonCanonical = JSON.stringify({
+    const legacy = JSON.stringify({
       schemaVersion: 1,
       choices: {
         [key]: {
@@ -122,17 +122,59 @@ describe('conflict choice persistence', () => {
         },
       },
     });
-    mocks.storage.set(KEY, nonCanonical);
+    mocks.storage.set(KEY, legacy);
+
+    const expected = {
+      [key]: {
+        choice: 'accept_suggested_timing',
+        ruleId: current.rule.id,
+        ruleVersion: 1,
+        productIds: ['glycolic', 'retinol'],
+      },
+    };
+    await expect(loadConflictChoices()).resolves.toEqual(expected);
+    await expect(getConflictChoices()).resolves.toEqual(expected);
+    expect(mocks.storage.get(KEY)).toBe(legacy);
+    expect(normalizeConflictChoicesForExport(JSON.parse(legacy))).toEqual({
+      schemaVersion: 1,
+      choices: expected,
+    });
+
+    await expect(setConflictChoice(current, 'use_together')).resolves.toMatchObject({
+      [key]: { choice: 'use_together' },
+    });
+    expect(JSON.parse(mocks.storage.get(KEY)!)).toMatchObject({
+      schemaVersion: 1,
+      choices: { [key]: { choice: 'use_together' } },
+    });
+  });
+
+  it('refuses to partially apply or overwrite an unknown current record', async () => {
+    const current = conflict();
+    const key = `${current.rule.id}:glycolic+retinol`;
+    const unknown = JSON.stringify({
+      schemaVersion: 1,
+      choices: {
+        [key]: {
+          choice: 'use_together',
+          ruleId: current.rule.id,
+          ruleVersion: 1,
+          productIds: ['glycolic', 'retinol'],
+          futureField: true,
+        },
+      },
+    });
+    mocks.storage.set(KEY, unknown);
 
     await expect(loadConflictChoices()).rejects.toThrow(CONFLICT_CHOICES_INVALID);
     await expect(getConflictChoices()).resolves.toEqual({});
     await expect(setConflictChoice(current, 'use_together')).rejects.toThrow(
       CONFLICT_CHOICES_INVALID,
     );
-    expect(mocks.storage.get(KEY)).toBe(nonCanonical);
-    expect(normalizeConflictChoicesForExport(JSON.parse(nonCanonical))).toEqual({
+    expect(mocks.storage.get(KEY)).toBe(unknown);
+    expect(normalizeConflictChoicesForExport(JSON.parse(unknown))).toEqual({
       export_status: 'unrecognized_conflict_choice_schema',
-      stored_value: JSON.parse(nonCanonical),
+      stored_value: JSON.parse(unknown),
     });
   });
 

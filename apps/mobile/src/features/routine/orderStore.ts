@@ -92,11 +92,7 @@ function decodeOverrides(raw: string): RoutineOrderOverrides {
   } catch {
     throw new Error(ROUTINE_ORDER_INVALID);
   }
-  if (
-    isRecord(parsed) &&
-    typeof parsed.schemaVersion === 'number' &&
-    parsed.schemaVersion > 1
-  ) {
+  if (isRecord(parsed) && typeof parsed.schemaVersion === 'number' && parsed.schemaVersion > 1) {
     throw new Error(ROUTINE_ORDER_UNSUPPORTED_VERSION);
   }
   const normalized = normalizeOverrides(parsed);
@@ -108,12 +104,8 @@ function decodeOverrides(raw: string): RoutineOrderOverrides {
 }
 
 export async function loadRoutineOrderOverrides(): Promise<RoutineOrderOverrides> {
-  try {
-    const raw = await getPrivateItem(STORAGE_KEY);
-    return raw === null ? emptyOverrides() : decodeOverrides(raw);
-  } catch {
-    return emptyOverrides();
-  }
+  const raw = await getPrivateItem(STORAGE_KEY);
+  return raw === null ? emptyOverrides() : decodeOverrides(raw);
 }
 
 export async function saveRoutineOrderOverrides(
