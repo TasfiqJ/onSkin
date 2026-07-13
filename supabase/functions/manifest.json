@@ -13,9 +13,12 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"]],
-      "requiredSecrets": [["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]],
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
+      ],
       "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
         "EXPO_PUBLIC_POSTHOG_KEY",
         "POSTHOG_PROJECT_ID",
         "POSTHOG_ENVIRONMENT_ID",
@@ -74,10 +77,19 @@
       },
       "requiredEnvironment": [
         ["SUPABASE_URL"],
-        ["EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_ANON_KEY"]
+        ["APP_ENV"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ]
       ],
-      "requiredSecrets": [["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
+      ],
       "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
         "CATALOG_RATE_LIMIT_MAX",
         "CATALOG_RATE_LIMIT_WINDOW_SECONDS",
         "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
@@ -106,10 +118,22 @@
       },
       "requiredEnvironment": [
         ["SUPABASE_URL"],
-        ["EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_ANON_KEY"]
+        ["APP_ENV"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ]
       ],
-      "requiredSecrets": [["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]],
-      "optionalEnvironment": ["OBF_CONTRIBUTION_ENABLED", "USER_EDGE_BODY_MAX_BYTES"],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "OBF_CONTRIBUTION_ENABLED",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
       "conditionalEnvironment": [],
       "conditionalSecrets": []
     },
@@ -126,10 +150,19 @@
       },
       "requiredEnvironment": [
         ["SUPABASE_URL"],
-        ["EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_ANON_KEY"]
+        ["APP_ENV"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ]
       ],
-      "requiredSecrets": [["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
+      ],
       "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
         "CATALOG_RATE_LIMIT_MAX",
         "CATALOG_RATE_LIMIT_WINDOW_SECONDS",
         "USER_EDGE_BODY_MAX_BYTES"
@@ -148,9 +181,11 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"]],
-      "requiredSecrets": [["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]],
-      "optionalEnvironment": ["USER_EDGE_BODY_MAX_BYTES"],
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
+      ],
+      "optionalEnvironment": ["EXPO_PUBLIC_APP_ENV", "USER_EDGE_BODY_MAX_BYTES"],
       "conditionalEnvironment": [],
       "conditionalSecrets": []
     },
@@ -167,10 +202,19 @@
       },
       "requiredEnvironment": [
         ["SUPABASE_URL"],
-        ["EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_ANON_KEY"]
+        ["APP_ENV"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ]
       ],
-      "requiredSecrets": [["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
+      ],
       "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
         "DATA_EXPORT_RATE_LIMIT_MAX",
         "DATA_EXPORT_RATE_LIMIT_WINDOW_SECONDS",
         "DATA_EXPORT_PHOTO_URL_TTL_SECONDS",
@@ -197,13 +241,12 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"]],
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
       "requiredSecrets": [
-        ["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
         ["TURNSTILE_SECRET_KEY", "CF_TURNSTILE_SECRET_KEY"]
       ],
       "optionalEnvironment": [
-        "APP_ENV",
         "EXPO_PUBLIC_APP_ENV",
         "PUBLIC_FORMS_RATE_LIMIT_MAX",
         "PUBLIC_FORMS_RATE_LIMIT_WINDOW_SECONDS",
@@ -227,13 +270,14 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"]],
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
       "requiredSecrets": [
-        ["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
         ["SHOPMY_BRAND_API_KEY"],
         ["ORDER_REPORT_POLL_SECRET", "SHOPMY_ORDER_REPORT_POLL_SECRET"]
       ],
       "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
         "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
         "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
         "USER_EDGE_BODY_MAX_BYTES"
@@ -252,12 +296,13 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"]],
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
       "requiredSecrets": [
-        ["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
         ["REVENUECAT_WEBHOOK_AUTH", "REVENUECAT_WEBHOOK_SIGNING_SECRET"]
       ],
       "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
         "REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS",
         "REVENUECAT_WEBHOOK_MAX_BYTES"
       ],
@@ -275,9 +320,11 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"]],
-      "requiredSecrets": [["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]],
-      "optionalEnvironment": ["APP_ENV", "EXPO_PUBLIC_APP_ENV", "USER_EDGE_BODY_MAX_BYTES"],
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
+      ],
+      "optionalEnvironment": ["EXPO_PUBLIC_APP_ENV", "USER_EDGE_BODY_MAX_BYTES"],
       "conditionalEnvironment": [],
       "conditionalSecrets": []
     },
@@ -292,13 +339,12 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"]],
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
       "requiredSecrets": [
-        ["SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
         ["TURNSTILE_SECRET_KEY", "CF_TURNSTILE_SECRET_KEY"]
       ],
       "optionalEnvironment": [
-        "APP_ENV",
         "EXPO_PUBLIC_APP_ENV",
         "PUBLIC_FORMS_RATE_LIMIT_MAX",
         "PUBLIC_FORMS_RATE_LIMIT_WINDOW_SECONDS",

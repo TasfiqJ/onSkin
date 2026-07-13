@@ -60,6 +60,7 @@ const serviceCallableDefiners = new Set([
   'consume_edge_rate_limit(text, text, integer, integer)',
   'expire_app_granted_reverse_trials()',
   'grant_app_granted_reverse_trial(uuid, timestamptz, text, text)',
+  'process_revenuecat_webhook_event(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)',
 ]);
 
 const revokePattern = (name) =>
@@ -227,5 +228,44 @@ block(
   ),
   'expire_app_granted_reverse_trials() must be executable only by service_role.',
 );
+
+const revenueCatAtomicKey =
+  'process_revenuecat_webhook_event(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)';
+const revenueCatAtomicFunction = latestFunctions.get(revenueCatAtomicKey);
+block(
+  errors,
+  Boolean(revenueCatAtomicFunction),
+  `${revenueCatAtomicKey} must exist with the reviewed signature.`,
+);
+if (revenueCatAtomicFunction) {
+  const afterDefinition = combined.slice(
+    revenueCatAtomicFunction.index + revenueCatAtomicFunction.source.length,
+  );
+  const matchingRevokes = [
+    ...afterDefinition.matchAll(revokePattern(revenueCatAtomicFunction.name)),
+  ].filter((match) => normalizeArgs(match[1]) === revenueCatAtomicFunction.normalizedArgs);
+  block(
+    errors,
+    matchingRevokes.some((match) => {
+      const roles = new Set(
+        match[2]
+          .split(',')
+          .map((role) => role.trim().toLowerCase())
+          .filter(Boolean),
+      );
+      return roles.has('public') && roles.has('anon') && roles.has('authenticated');
+    }),
+    `${revenueCatAtomicKey} must revoke execute from public, anon, and authenticated.`,
+  );
+
+  const matchingGrants = [
+    ...afterDefinition.matchAll(grantPattern(revenueCatAtomicFunction.name)),
+  ].filter((match) => normalizeArgs(match[1]) === revenueCatAtomicFunction.normalizedArgs);
+  block(
+    errors,
+    matchingGrants.length === 1 && matchingGrants[0][2].trim().toLowerCase() === 'service_role',
+    `${revenueCatAtomicKey} must grant execute to service_role only.`,
+  );
+}
 
 printResult('Phase 9 Supabase policy lint', errors, warnings);

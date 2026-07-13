@@ -12,11 +12,11 @@ import {
   readLimitedResponseJson,
   readLimitedResponseText,
 } from '../_shared/fetch.ts';
+import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import { deletePhotoStorage } from './photoStorageCleanup.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey =
-  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey = readSupabaseSecretKey();
 const revenueCatSecretKey =
   Deno.env.get('REVENUECAT_SECRET_API_KEY') ?? Deno.env.get('REVENUECAT_REST_API_KEY') ?? '';
 const maxBodyBytes = userEdgeBodyMaxBytes();

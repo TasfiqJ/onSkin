@@ -7,6 +7,7 @@
 //   * Idempotency key = event.id; RevenueCat delivery is at-least-once.
 //   * Cancellation stops renewal but keeps access until expiration.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import {
   buildRevenueCatAtomicArgs,
   persistRevenueCatEvent,
@@ -15,8 +16,7 @@ import {
 } from './webhookCore.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const serviceKey =
-  Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const serviceKey = readSupabaseSecretKey();
 const webhookAuth = Deno.env.get('REVENUECAT_WEBHOOK_AUTH') ?? '';
 const signingSecret = Deno.env.get('REVENUECAT_WEBHOOK_SIGNING_SECRET') ?? '';
 const signatureToleranceSeconds = intEnv(
