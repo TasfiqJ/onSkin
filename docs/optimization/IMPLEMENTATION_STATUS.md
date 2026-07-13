@@ -1,10 +1,10 @@
 # Maximum Optimization Implementation Status
 
 Audit date: 2026-07-12 (America/Toronto; execution time not recorded)
-Last updated: 2026-07-12 (America/Toronto; execution time not recorded)
+Last updated: 2026-07-12 (America/Toronto; deletion/storage checkpoint)
 Branch: `optimization`
 Baseline SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
-Current SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
+Current SHA: `c218a5c293ec7cbb2f33a5cc83a34351c3f1f9bb`
 Baseline: [BASELINE.md](./BASELINE.md)
 Decision index: [DECISIONS.md](./DECISIONS.md)
 Evidence rules: [evidence/README.md](./evidence/README.md)
