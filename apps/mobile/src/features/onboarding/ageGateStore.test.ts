@@ -25,46 +25,38 @@ describe('age-gate local pass flag', () => {
     await setAgeVerified();
 
     await expect(getAgeVerified()).resolves.toBe(true);
-    expect(mocks.privateKV.get(KEY)).toBe('1');
+    expect(mocks.privateKV.get(KEY)).toBe('v1:1');
   });
 
-  it('migrates known legacy boolean strings to canonical values', async () => {
+  it('reads known legacy boolean strings without repairing bytes', async () => {
     mocks.privateKV.set(KEY, 'true');
     await expect(getAgeVerified()).resolves.toBe(true);
-    expect(mocks.privateKV.get(KEY)).toBe('1');
+    expect(mocks.privateKV.get(KEY)).toBe('true');
 
     mocks.privateKV.set(KEY, 'FALSE');
     await expect(getAgeVerified()).resolves.toBe(false);
-    expect(mocks.privateKV.get(KEY)).toBe('0');
+    expect(mocks.privateKV.get(KEY)).toBe('FALSE');
   });
 
-  it('rewrites malformed stored values to a failed age gate', async () => {
+  it('preserves malformed stored values while failing the age gate closed', async () => {
     mocks.privateKV.set(KEY, 'verified');
 
     await expect(getAgeVerified()).resolves.toBe(false);
-    expect(mocks.privateKV.get(KEY)).toBe('0');
+    expect(mocks.privateKV.get(KEY)).toBe('verified');
   });
 
-  it('keeps a legacy passed gate active if canonical repair fails', async () => {
-    const privateKV = await import('@/lib/storage/privateKV');
+  it('keeps a legacy passed gate active without a repair write', async () => {
     mocks.privateKV.set(KEY, 'true');
-    vi.mocked(privateKV.setPrivateItem).mockRejectedValueOnce(
-      new Error('encrypted preference write unavailable'),
-    );
 
     await expect(getAgeVerified()).resolves.toBe(true);
     expect(mocks.privateKV.get(KEY)).toBe('true');
   });
 
-  it('still fails closed for malformed values if cleanup repair fails', async () => {
-    const privateKV = await import('@/lib/storage/privateKV');
-    mocks.privateKV.set(KEY, 'verified');
-    vi.mocked(privateKV.setPrivateItem).mockRejectedValueOnce(
-      new Error('encrypted preference write unavailable'),
-    );
+  it('fails closed for future application versions without overwriting them', async () => {
+    mocks.privateKV.set(KEY, 'v2:1');
 
     await expect(getAgeVerified()).resolves.toBe(false);
-    expect(mocks.privateKV.get(KEY)).toBe('verified');
+    expect(mocks.privateKV.get(KEY)).toBe('v2:1');
   });
 
   it('fails closed without rewriting when private storage cannot be read', async () => {
