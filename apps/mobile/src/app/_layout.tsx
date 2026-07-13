@@ -20,11 +20,13 @@ import { initSentry } from '@/lib/observability/sentry';
 import { markStartupPhase } from '@/lib/observability/operationTiming';
 import { queryClient } from '@/lib/query/queryClient';
 import { PrivateDataAvailabilityGate } from '@/lib/storage/PrivateDataAvailabilityGate';
+import { scavengePlaintextStaging } from '@/lib/storage/plaintextStaging';
 import { useFontDecision } from '@/theme/fontLoader';
 
 initSentry();
 markStartupPhase('javascript_started');
 void SplashScreen.preventAutoHideAsync();
+void scavengePlaintextStaging().catch(() => undefined);
 
 export default function RootLayout() {
   const fontDecisionComplete = useFontDecision();

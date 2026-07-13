@@ -4,9 +4,14 @@ import * as Sharing from 'expo-sharing';
 import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { getAppleAuthorizationCodeForRevocation } from '@/lib/auth/apple';
-import { BRAND, brandCachePrefix } from '@/lib/brand';
+import { BRAND } from '@/lib/brand';
 import { recordConsent } from '@/lib/consent/consent';
 import { isSupabaseConfigured } from '@/lib/env';
+import {
+  cleanupPlaintextStaging,
+  markPlaintextStagingState,
+  reservePlaintextStaging,
+} from '@/lib/storage/plaintextStaging';
 import { supabase } from '@/lib/supabase/client';
 
 import {
@@ -158,28 +163,29 @@ export async function exportData(): Promise<boolean> {
       serverAccountDataStatus = 'included';
     }
 
-    const json = JSON.stringify(
-      buildMobileDataExportBundle({
-        localDeviceData,
-        serverAccountData,
-        serverAccountDataStatus,
-      }),
-      null,
-      2,
-    );
-    const cacheDirectory = FileSystem.cacheDirectory;
-    if (!cacheDirectory) throw new Error('DATA_EXPORT_CACHE_UNAVAILABLE');
-    const exportCachePrefix = brandCachePrefix('export');
-    const uri = `${cacheDirectory}${exportCachePrefix}${Date.now()}.json`;
+    const staging = await reservePlaintextStaging('data_export_json');
     try {
+      const json = JSON.stringify(
+        buildMobileDataExportBundle({
+          localDeviceData,
+          serverAccountData,
+          serverAccountDataStatus,
+        }),
+        null,
+        2,
+      );
       lease.assertCurrent();
-      await FileSystem.writeAsStringAsync(uri, json);
+      await FileSystem.writeAsStringAsync(staging.uri, json);
+      lease.assertCurrent();
+      await markPlaintextStagingState(staging, 'plaintext_written');
       lease.assertCurrent();
       const sharingAvailable = await Sharing.isAvailableAsync().catch(() => false);
       lease.assertCurrent();
       if (!sharingAvailable) return false;
       try {
-        await Sharing.shareAsync(uri, {
+        await markPlaintextStagingState(staging, 'sharing');
+        lease.assertCurrent();
+        await Sharing.shareAsync(staging.uri, {
           mimeType: 'application/json',
           dialogTitle: `Export your ${BRAND.appName} data`,
         });
@@ -190,7 +196,7 @@ export async function exportData(): Promise<boolean> {
         return false;
       }
     } finally {
-      await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
+      await cleanupPlaintextStaging(staging).catch(() => undefined);
     }
   });
 }

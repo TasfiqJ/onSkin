@@ -56,6 +56,9 @@ function dependencies(
     clearPersistedPrivateData: vi.fn(async () => {
       calls.push('clear:persisted');
     }),
+    clearPlaintextStaging: vi.fn(async () => {
+      calls.push('clear:plaintext-staging');
+    }),
     clearSensitiveImageMemory: vi.fn(async () => {
       calls.push('clear:sensitive-image-memory');
     }),
@@ -107,6 +110,7 @@ describe('local account isolation', () => {
       'read-owner:user-b',
       'before-clear',
       'mark:cleanup-required',
+      'clear:plaintext-staging',
       'clear:sensitive-image-memory',
       'cancel:queries',
       'clear:queries',
@@ -148,6 +152,7 @@ describe('local account isolation', () => {
     expect(deps.calls).toEqual([
       'read-owner:signed-out',
       'mark:cleanup-required',
+      'clear:plaintext-staging',
       'clear:sensitive-image-memory',
       'cancel:queries',
       'clear:queries',
@@ -168,6 +173,7 @@ describe('local account isolation', () => {
     expect(deps.calls).toEqual([
       'read-owner:user-b',
       'mark:cleanup-required',
+      'clear:plaintext-staging',
       'clear:sensitive-image-memory',
       'cancel:queries',
       'clear:queries',
@@ -184,6 +190,7 @@ describe('local account isolation', () => {
     await expect(clearAccountIsolatedState(deps)).rejects.toThrow('cancel failed');
     expect(deps.calls).toEqual([
       'mark:cleanup-required',
+      'clear:plaintext-staging',
       'clear:sensitive-image-memory',
       'clear:queries',
       'clear:persisted',
@@ -206,6 +213,20 @@ describe('local account isolation', () => {
     await expect(clearAccountIsolatedState(deps)).rejects.toThrow('account operation failed');
 
     expect(deps.clearPersistedPrivateData).toHaveBeenCalledOnce();
+    expect(accountGenerationMocks.endAccountGenerationBoundary).toHaveBeenCalledOnce();
+  });
+
+  it('keeps cleanup required while still clearing other stores when plaintext scavenging fails', async () => {
+    const deps = dependencies();
+    vi.mocked(deps.clearPlaintextStaging!).mockRejectedValueOnce(
+      new Error('plaintext cleanup unavailable'),
+    );
+
+    await expect(clearAccountIsolatedState(deps)).rejects.toThrow('plaintext cleanup unavailable');
+
+    expect(deps.clearPersistedPrivateData).toHaveBeenCalledOnce();
+    expect(deps.clearSensitiveImageMemory).toHaveBeenCalledOnce();
+    expect(deps.clearCleanupRequired).not.toHaveBeenCalled();
     expect(accountGenerationMocks.endAccountGenerationBoundary).toHaveBeenCalledOnce();
   });
 

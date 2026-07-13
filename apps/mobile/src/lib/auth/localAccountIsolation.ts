@@ -35,6 +35,7 @@ export type LocalAccountIsolationDependencies = {
   claimOwnership: (userId: string) => Promise<void>;
   clearCleanupRequired: () => Promise<void>;
   clearPersistedPrivateData: () => Promise<void>;
+  clearPlaintextStaging?: () => Promise<unknown>;
   clearSensitiveImageMemory?: () => Promise<unknown>;
   markCleanupRequired: () => Promise<void>;
   queryCache: QueryCacheController;
@@ -45,6 +46,10 @@ const defaultDependencies: LocalAccountIsolationDependencies = {
   claimOwnership: claimLocalDataOwnership,
   clearCleanupRequired: clearLocalDataCleanupRequired,
   clearPersistedPrivateData: clearLocalPrivateData,
+  clearPlaintextStaging: async () => {
+    const { scavengePlaintextStaging } = await import('@/lib/storage/plaintextStaging');
+    return scavengePlaintextStaging();
+  },
   clearSensitiveImageMemory: async () => {
     const { purgeSensitiveImageMemory } = await import('@/features/photos/sensitiveImageMemory');
     return purgeSensitiveImageMemory();
@@ -59,6 +64,7 @@ export async function clearAccountIsolatedState(
     LocalAccountIsolationDependencies,
     | 'clearCleanupRequired'
     | 'clearPersistedPrivateData'
+    | 'clearPlaintextStaging'
     | 'markCleanupRequired'
     | 'queryCache'
     | 'clearSensitiveImageMemory'
@@ -81,6 +87,9 @@ export async function clearAccountIsolatedState(
     await attempt(() => waitForAccountGenerationOperationsToSettle());
     await attempt(() => waitForPrivateKVWritesToSettle());
     await attempt(() => waitForEncryptedPhotoWritesToSettle());
+    if (dependencies.clearPlaintextStaging) {
+      await attempt(() => dependencies.clearPlaintextStaging?.());
+    }
     if (dependencies.clearSensitiveImageMemory) {
       await attempt(() => dependencies.clearSensitiveImageMemory?.());
     }

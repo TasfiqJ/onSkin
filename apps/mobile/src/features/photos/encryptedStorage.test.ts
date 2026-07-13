@@ -6,6 +6,7 @@ import {
   endAccountGenerationBoundary,
   waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
+import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCore';
 
 import {
   beginEncryptedPhotoAccountBoundary,
@@ -35,7 +36,7 @@ const CONTENT_KEY_MARKER = 'onskin.photo.content_key_created.v1';
 const mocks = vi.hoisted(() => ({
   asyncSetThrows: false,
   asyncWriteGate: null as Promise<void> | null,
-  asyncWriteStarted: null as (() => void) | null,
+  asyncWriteStarted: null as ((key: string) => void) | null,
   asyncStorage: new Map<string, string>(),
   files: new Map<string, string>(),
   secureStorage: new Map<string, string>(),
@@ -58,6 +59,10 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('react-native-get-random-values', () => ({}));
 
+vi.mock('expo-crypto', () => ({
+  randomUUID: vi.fn(() => 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'),
+}));
+
 vi.mock('react-native', () => ({
   Platform: {
     get OS() {
@@ -74,7 +79,7 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
     }),
     setItem: vi.fn(async (key: string, value: string) => {
       if (mocks.asyncSetThrows) throw new Error('async write failed');
-      mocks.asyncWriteStarted?.();
+      mocks.asyncWriteStarted?.(key);
       if (mocks.asyncWriteGate) await mocks.asyncWriteGate;
       mocks.asyncStorage.set(key, value);
     }),
@@ -523,20 +528,27 @@ describe('encrypted photo storage', () => {
       }),
     );
 
-    await expect(
-      createPhotoShareFile('file://document/photos/v1/gif.onskinphoto', 'photo-1'),
-    ).rejects.toThrow('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+    await expect(createPhotoShareFile('file://document/photos/v1/gif.onskinphoto')).rejects.toThrow(
+      'PHOTO_ENCRYPTION_ENVELOPE_INVALID',
+    );
   });
 
   it('exports encrypted photos to owned cache files and only deletes those exports', async () => {
-    const dateNow = vi.spyOn(Date, 'now').mockReturnValue(1234);
     mocks.files.set('file://capture/photo.png', Buffer.from('png bytes').toString('base64'));
 
     const encrypted = await encryptCapturedPhoto('file://capture/photo.png', 'photo-1');
-    const shareUri = await createPhotoShareFile(encrypted.encryptedLocalUri, 'photo:1/../');
+    const operationOrder: string[] = [];
+    mocks.asyncWriteStarted = (key) => {
+      if (key === PLAINTEXT_STAGING_JOURNAL_KEY) operationOrder.push('journal');
+    };
+    mocks.writeStarted = () => operationOrder.push('plaintext');
+    const shareUri = await createPhotoShareFile(encrypted.encryptedLocalUri);
 
-    expect(shareUri).toBe('file://cache/routinekind-share-photo1-1234.png');
+    expect(shareUri).toBe(
+      'file://cache/private-plaintext-staging-v1/aaaaaaaaaaaa4aaa8aaaaaaaaaaaaaaa.png',
+    );
     expect(mocks.files.get(shareUri)).toBe(Buffer.from('png bytes').toString('base64'));
+    expect(operationOrder.slice(0, 2)).toEqual(['journal', 'plaintext']);
 
     mocks.files.set('file://cache/not-owned.png', 'external');
     await deletePhotoShareFile('file://cache/not-owned.png', encrypted.encryptedLocalUri);
@@ -544,8 +556,6 @@ describe('encrypted photo storage', () => {
 
     await deletePhotoShareFile(shareUri, encrypted.encryptedLocalUri);
     expect(mocks.files.has(shareUri)).toBe(false);
-
-    dateNow.mockRestore();
   });
 
   it('clears the encrypted photo directory and content key together', async () => {

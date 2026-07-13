@@ -1,5 +1,7 @@
 import * as Sharing from 'expo-sharing';
 
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+
 import { createPhotoShareFile, deletePhotoShareFile } from './encryptedStorage';
 
 type ShareablePhoto = {
@@ -13,7 +15,8 @@ function shouldForcePhotoShareFailure(): boolean {
 }
 
 export async function sharePhotoImageOnly(photo?: ShareablePhoto | null): Promise<boolean> {
-  if (!photo?.localUri) {
+  const localUri = photo?.localUri;
+  if (!localUri) {
     return false;
   }
 
@@ -21,25 +24,24 @@ export async function sharePhotoImageOnly(photo?: ShareablePhoto | null): Promis
     return false;
   }
 
-  let sharingAvailable = false;
   try {
-    sharingAvailable = await Sharing.isAvailableAsync();
+    return await runAccountGenerationOperation(async (lease) => {
+      const sharingAvailable = await Sharing.isAvailableAsync();
+      lease.assertCurrent();
+      if (!sharingAvailable) return false;
+
+      let shareUri: string | null = null;
+      try {
+        shareUri = await createPhotoShareFile(localUri);
+        lease.assertCurrent();
+        await Sharing.shareAsync(shareUri);
+        lease.assertCurrent();
+        return true;
+      } finally {
+        await deletePhotoShareFile(shareUri, localUri);
+      }
+    });
   } catch {
     return false;
-  }
-
-  if (!sharingAvailable) {
-    return false;
-  }
-
-  let shareUri: string | null = null;
-  try {
-    shareUri = await createPhotoShareFile(photo.localUri, photo.id);
-    await Sharing.shareAsync(shareUri);
-    return true;
-  } catch {
-    return false;
-  } finally {
-    await deletePhotoShareFile(shareUri, photo.localUri);
   }
 }

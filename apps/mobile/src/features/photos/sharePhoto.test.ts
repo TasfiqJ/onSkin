@@ -2,6 +2,12 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
+} from '@/lib/auth/accountGeneration';
+
 import { sharePhotoImageOnly } from './sharePhoto';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
@@ -46,10 +52,7 @@ describe('progress photo sharing', () => {
       sharePhotoImageOnly({ id: 'photo-1', localUri: 'file://photos/photo-1.onskinphoto' }),
     ).resolves.toBe(true);
 
-    expect(mocks.createPhotoShareFile).toHaveBeenCalledWith(
-      'file://photos/photo-1.onskinphoto',
-      'photo-1',
-    );
+    expect(mocks.createPhotoShareFile).toHaveBeenCalledWith('file://photos/photo-1.onskinphoto');
     expect(mocks.shareAsync).toHaveBeenCalledWith('file://cache/onskin-share-photo-1.jpg');
     expect(mocks.deletePhotoShareFile).toHaveBeenCalledWith(
       'file://cache/onskin-share-photo-1.jpg',
@@ -128,6 +131,41 @@ describe('progress photo sharing', () => {
       null,
       'file://photos/photo-1.onskinphoto',
     );
+  });
+
+  it('keeps an account boundary closed until the native share sheet and cleanup settle', async () => {
+    let releaseShare!: () => void;
+    const shareGate = new Promise<void>((resolve) => {
+      releaseShare = resolve;
+    });
+    mocks.isAvailableAsync.mockResolvedValueOnce(true);
+    mocks.createPhotoShareFile.mockResolvedValueOnce('file://cache/private/photo.jpg');
+    mocks.shareAsync.mockReturnValueOnce(shareGate);
+
+    const pendingShare = sharePhotoImageOnly({
+      id: 'photo-1',
+      localUri: 'file://photos/photo-1.onskinphoto',
+    });
+    await vi.waitFor(() => expect(mocks.shareAsync).toHaveBeenCalledOnce());
+    beginAccountGenerationBoundary();
+    try {
+      let drained = false;
+      const drain = waitForAccountGenerationOperationsToSettle().then(() => {
+        drained = true;
+      });
+      await Promise.resolve();
+      expect(drained).toBe(false);
+
+      releaseShare();
+      await expect(pendingShare).resolves.toBe(false);
+      await drain;
+      expect(mocks.deletePhotoShareFile).toHaveBeenCalledWith(
+        'file://cache/private/photo.jpg',
+        'file://photos/photo-1.onskinphoto',
+      );
+    } finally {
+      endAccountGenerationBoundary();
+    }
   });
 
   it('keeps the photo detail route on the shared failure-handled share helper', () => {

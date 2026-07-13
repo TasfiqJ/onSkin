@@ -17,6 +17,9 @@ const localDeviceExportTestSource = read(
 const localPrivateDataKeysSource = read(
   'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
 );
+const localAccountIsolationSource = read('apps/mobile/src/lib/auth/localAccountIsolation.ts');
+const plaintextStagingSource = read('apps/mobile/src/lib/storage/plaintextStagingCore.ts');
+const plaintextStagingAdapterSource = read('apps/mobile/src/lib/storage/plaintextStaging.ts');
 const packageJson = JSON.parse(read('package.json'));
 const liveHarness = read('scripts/phase9/live-data-rights.mjs');
 const externalFetchHelper = read('supabase/functions/_shared/fetch.ts');
@@ -362,14 +365,18 @@ block(
 );
 block(
   errors,
-  /DATA_EXPORT_CACHE_UNAVAILABLE/.test(settingsActionsSource),
-  'Mobile data export must fail closed when cacheDirectory is unavailable.',
+  /reservePlaintextStaging\('data_export_json'\)/.test(settingsActionsSource) &&
+    /PLAINTEXT_STAGING_CACHE_UNAVAILABLE/.test(plaintextStagingSource),
+  'Mobile data export must reserve an owned plaintext operation and fail closed when cache storage is unavailable.',
 );
 block(
   errors,
-  /brandCachePrefix\('export'\)/.test(settingsActionsSource) &&
-    /\$\{exportCachePrefix\}\$\{Date\.now\(\)\}\.json/.test(settingsActionsSource),
-  'Mobile data export must use a runtime-brand, unique one-time export cache filename.',
+  /createOperationId:\s*randomUUID/.test(plaintextStagingAdapterSource) &&
+    /return `\$\{entry\.operationId\}\.\$\{extensionForPurpose\(entry\.purpose\)\}`/.test(
+      plaintextStagingSource,
+    ) &&
+    !/Date\.now\(\)[^\n]*\.json/.test(settingsActionsSource),
+  'Mobile data export must use a random opaque operation ID for its one-time cache filename.',
 );
 block(
   errors,
@@ -379,31 +386,28 @@ block(
 );
 block(
   errors,
-  settingsActionsSource.indexOf('try {') !== -1 &&
-    settingsActionsSource.indexOf('await FileSystem.writeAsStringAsync(uri, json);') >
-      settingsActionsSource.indexOf('try {') &&
-    settingsActionsSource.indexOf('await FileSystem.writeAsStringAsync(uri, json);') <
-      settingsActionsSource.indexOf('await Sharing.isAvailableAsync()'),
-  'Mobile data export must write the plaintext cache file inside the cleanup try/finally block.',
+  settingsActionsSource.indexOf("reservePlaintextStaging('data_export_json')") !== -1 &&
+    settingsActionsSource.indexOf("reservePlaintextStaging('data_export_json')") <
+      settingsActionsSource.indexOf('const json = JSON.stringify') &&
+    settingsActionsSource.indexOf('const json = JSON.stringify') <
+      settingsActionsSource.indexOf('await FileSystem.writeAsStringAsync(staging.uri, json);'),
+  'Mobile data export must persist its content-free journal reservation before JSON plaintext is created or written.',
 );
 block(
   errors,
-  /try\s*\{[\s\S]*Sharing\.isAvailableAsync\(\)[\s\S]*Sharing\.shareAsync\(uri[\s\S]*\}\s*finally\s*\{[\s\S]*FileSystem\.deleteAsync\(uri,\s*\{\s*idempotent:\s*true\s*\}\)\.catch\(\(\)\s*=>\s*\{\}\)/.test(
+  /try\s*\{[\s\S]*markPlaintextStagingState\(staging, 'plaintext_written'\)[\s\S]*markPlaintextStagingState\(staging, 'sharing'\)[\s\S]*Sharing\.shareAsync\(staging\.uri[\s\S]*\}\s*finally\s*\{[\s\S]*cleanupPlaintextStaging\(staging\)/.test(
     settingsActionsSource,
   ),
-  'Mobile data export must delete the plaintext export cache file in a finally block after the share attempt.',
+  'Mobile data export must journal plaintext/share state and request owned cleanup in a finally block.',
 );
 block(
   errors,
-  /CURRENT_LOCAL_PRIVATE_CACHE_PREFIXES\s*=\s*\[[^\]]*'routinekind-export-'[^\]]*'routinekind-share-'[^\]]*\]/.test(
+  /LOCAL_PRIVATE_CONTROL_KEYS\s*=\s*\[[\s\S]*PLAINTEXT_STAGING_JOURNAL_KEY[\s\S]*\]\s*as const/.test(
     localPrivateDataKeysSource,
   ) &&
-    /LEGACY_LOCAL_PRIVATE_CACHE_PREFIXES\s*=\s*\[[^\]]*'onskin-export-'[^\]]*'onskin-share-'[^\]]*\]/.test(
-      localPrivateDataKeysSource,
-    ) &&
-    /brandCachePrefix\('export'\)/.test(localPrivateDataKeysSource) &&
-    /brandCachePrefix\('share'\)/.test(localPrivateDataKeysSource),
-  'Local private data cleanup must include current, runtime-brand, and legacy export/share cache files.',
+    /clearPlaintextStaging/.test(localAccountIsolationSource) &&
+    /scavengePlaintextStaging/.test(localAccountIsolationSource),
+  'The plaintext journal must be a private control key and account-boundary cleanup must scavenge owned staging files.',
 );
 for (const [label, source, handlerSource, firstSensitiveMarkers] of [
   [

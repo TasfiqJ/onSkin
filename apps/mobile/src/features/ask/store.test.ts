@@ -10,65 +10,170 @@ import {
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
+  tails: new Map<string, Promise<void>>(),
+  readFailures: new Map<string, Error>(),
+  updateFailures: new Map<string, Error>(),
+  writes: 0,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
+  getPrivateItem: vi.fn(async (key: string) => {
+    const failure = mocks.readFailures.get(key);
+    if (failure) throw failure;
+    return mocks.storage.get(key) ?? null;
+  }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.storage.set(key, value);
-  }),
-  removePrivateItem: vi.fn(async (key: string) => {
-    mocks.storage.delete(key);
+    mocks.writes += 1;
   }),
   multiRemovePrivateItems: vi.fn(async (keys: readonly string[]) => {
     for (const key of keys) mocks.storage.delete(key);
+    mocks.writes += 1;
   }),
+  updatePrivateItem: vi.fn(
+    async (key: string, updater: (current: string | null) => string | null) => {
+      const previous = mocks.tails.get(key) ?? Promise.resolve();
+      let release!: () => void;
+      const ownTail = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      mocks.tails.set(key, ownTail);
+      await previous;
+      try {
+        const failure = mocks.updateFailures.get(key);
+        if (failure) throw failure;
+        const current = mocks.storage.get(key) ?? null;
+        const next = updater(current);
+        if (next === current) return;
+        if (next === null) mocks.storage.delete(key);
+        else mocks.storage.set(key, next);
+        mocks.writes += 1;
+      } finally {
+        release();
+        if (mocks.tails.get(key) === ownTail) mocks.tails.delete(key);
+      }
+    },
+  ),
 }));
 
 const TURNS_KEY = 'onskin.ask.groundedTurns.v1';
 const CONSENT_KEY = 'onskin.ask.consent.v1';
 
+function storedTurns(): { version: number; period: string; count: number } {
+  return JSON.parse(mocks.storage.get(TURNS_KEY) ?? '{}') as {
+    version: number;
+    period: string;
+    count: number;
+  };
+}
+
 describe('Ask grounded-turn store', () => {
   beforeEach(() => {
     mocks.storage.clear();
+    mocks.tails.clear();
+    mocks.readFailures.clear();
+    mocks.updateFailures.clear();
+    mocks.writes = 0;
+    vi.clearAllMocks();
   });
 
-  it('removes unreadable grounded-turn JSON and treats the period as unused', async () => {
-    mocks.storage.set(TURNS_KEY, '{not-json');
+  it('treats unreadable JSON as unused without deleting the original bytes', async () => {
+    const original = '{not-json';
+    mocks.storage.set(TURNS_KEY, original);
 
     await expect(getGroundedTurns('2026-07')).resolves.toBe(0);
 
-    expect(mocks.storage.has(TURNS_KEY)).toBe(false);
+    expect(mocks.storage.get(TURNS_KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
   });
 
-  it('removes malformed grounded-turn records before the gate reads them', async () => {
-    mocks.storage.set(TURNS_KEY, JSON.stringify({ period: '2026-13', count: -1 }));
+  it('preserves malformed records and refuses to overwrite them on mutation', async () => {
+    const original = JSON.stringify({ period: '2026-13', count: -1 });
+    mocks.storage.set(TURNS_KEY, original);
 
     await expect(getGroundedTurns('2026-07')).resolves.toBe(0);
+    await expect(recordGroundedTurn('2026-07')).resolves.toBeUndefined();
 
-    expect(mocks.storage.has(TURNS_KEY)).toBe(false);
+    expect(mocks.storage.get(TURNS_KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
   });
 
-  it('normalizes period whitespace and caps oversized local counts to the trial limit', async () => {
-    mocks.storage.set(TURNS_KEY, JSON.stringify({ period: ' 2026-07 ', count: 99 }));
+  it('normalizes legacy whitespace and caps counts in memory without rewriting a read', async () => {
+    const original = JSON.stringify({ period: ' 2026-07 ', count: 99 });
+    mocks.storage.set(TURNS_KEY, original);
 
     await expect(getGroundedTurns('2026-07')).resolves.toBe(ASK_TRIAL_GROUNDED_CAP);
 
-    expect(JSON.parse(mocks.storage.get(TURNS_KEY) ?? '{}')).toEqual({
-      period: '2026-07',
-      count: ASK_TRIAL_GROUNDED_CAP,
-    });
+    expect(mocks.storage.get(TURNS_KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
   });
 
-  it('resets the counter when a new billing period is recorded', async () => {
+  it('resets a legacy counter into the versioned envelope for a new billing period', async () => {
     mocks.storage.set(TURNS_KEY, JSON.stringify({ period: '2026-06', count: 3 }));
 
     await recordGroundedTurn('2026-07');
 
-    expect(JSON.parse(mocks.storage.get(TURNS_KEY) ?? '{}')).toEqual({
+    expect(storedTurns()).toEqual({
+      version: 1,
       period: '2026-07',
       count: 1,
     });
+  });
+
+  it('serializes simultaneous grounded turns without losing an increment', async () => {
+    await Promise.all(Array.from({ length: 4 }, () => recordGroundedTurn('2026-07')));
+
+    expect(storedTurns()).toEqual({
+      version: 1,
+      period: '2026-07',
+      count: 4,
+    });
+  });
+
+  it('keeps the atomic counter capped at the trial limit', async () => {
+    await Promise.all(
+      Array.from({ length: ASK_TRIAL_GROUNDED_CAP + 3 }, () => recordGroundedTurn('2026-07')),
+    );
+
+    expect(storedTurns().count).toBe(ASK_TRIAL_GROUNDED_CAP);
+  });
+
+  it('preserves future-version bytes and refuses to downgrade them', async () => {
+    const original = JSON.stringify({ version: 2, period: '2026-07', count: 2 });
+    mocks.storage.set(TURNS_KEY, original);
+
+    await expect(getGroundedTurns('2026-07')).resolves.toBe(0);
+    await expect(recordGroundedTurn('2026-07')).resolves.toBeUndefined();
+
+    expect(mocks.storage.get(TURNS_KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
+  });
+
+  it('does not overwrite state when the private key is unavailable', async () => {
+    const original = JSON.stringify({ version: 1, period: '2026-07', count: 2 });
+    mocks.storage.set(TURNS_KEY, original);
+    mocks.readFailures.set(TURNS_KEY, new Error('PRIVATE_KEY_UNAVAILABLE'));
+
+    await expect(getGroundedTurns('2026-07')).resolves.toBe(0);
+    expect(mocks.storage.get(TURNS_KEY)).toBe(original);
+
+    mocks.readFailures.delete(TURNS_KEY);
+    mocks.updateFailures.set(TURNS_KEY, new Error('PRIVATE_KEY_UNAVAILABLE'));
+    await expect(recordGroundedTurn('2026-07')).resolves.toBeUndefined();
+
+    expect(mocks.storage.get(TURNS_KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
+  });
+
+  it('leaves the prior counter intact when the atomic write fails', async () => {
+    const original = JSON.stringify({ version: 1, period: '2026-07', count: 2 });
+    mocks.storage.set(TURNS_KEY, original);
+    mocks.updateFailures.set(TURNS_KEY, new Error('PRIVATE_WRITE_FAILED'));
+
+    await expect(recordGroundedTurn('2026-07')).resolves.toBeUndefined();
+
+    expect(mocks.storage.get(TURNS_KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
   });
 
   it('does not persist an invalid requested period', async () => {
@@ -81,6 +186,11 @@ describe('Ask grounded-turn store', () => {
 describe('Ask consent store', () => {
   beforeEach(() => {
     mocks.storage.clear();
+    mocks.tails.clear();
+    mocks.readFailures.clear();
+    mocks.updateFailures.clear();
+    mocks.writes = 0;
+    vi.clearAllMocks();
   });
 
   it('normalizes legacy consent grants and writes compact canonical flags', async () => {

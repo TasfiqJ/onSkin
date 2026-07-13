@@ -13,8 +13,13 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
-import { brandCachePrefix } from '@/lib/brand';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  cleanupPlaintextStaging,
+  cleanupPlaintextStagingUri,
+  markPlaintextStagingState,
+  reservePlaintextStaging,
+} from '@/lib/storage/plaintextStaging';
 
 import { stripImageMetadataFromBase64 } from './metadata';
 
@@ -362,10 +367,7 @@ export async function decryptPhotoToDataUri(encryptedLocalUri: string): Promise<
   });
 }
 
-export async function createPhotoShareFile(
-  encryptedLocalUri: string,
-  photoId: string,
-): Promise<string> {
+export async function createPhotoShareFile(encryptedLocalUri: string): Promise<string> {
   if (!isEncryptedPhotoUri(encryptedLocalUri)) return encryptedLocalUri;
   return runAccountScopedPhotoOperation(async (generation) => {
     const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
@@ -374,19 +376,25 @@ export async function createPhotoShareFile(
     const envelope = photoEnvelopeFromRaw(raw);
     if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
     const key = await getExistingContentKey(generation);
-    const base64 = decryptEnvelopeToUtf8(envelope, key);
-    if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-    const strippedBase64 = stripImageMetadataFromBase64(base64, envelope.mimeType);
-    const extension = envelope.mimeType === 'image/png' ? 'png' : 'jpg';
-    const cacheDirectory = FileSystem.cacheDirectory;
-    if (!cacheDirectory) throw new Error('PHOTO_SHARE_CACHE_UNAVAILABLE');
-    const shareCachePrefix = brandCachePrefix('share');
-    const exportUri = `${cacheDirectory}${shareCachePrefix}${safePhotoShareId(photoId)}-${Date.now()}.${extension}`;
     assertPhotoWriteAllowed(generation);
-    await FileSystem.writeAsStringAsync(exportUri, strippedBase64, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-    return exportUri;
+    const staging = await reservePlaintextStaging(
+      envelope.mimeType === 'image/png' ? 'photo_share_png' : 'photo_share_jpeg',
+    );
+    try {
+      const base64 = decryptEnvelopeToUtf8(envelope, key);
+      if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
+      const strippedBase64 = stripImageMetadataFromBase64(base64, envelope.mimeType);
+      assertPhotoWriteAllowed(generation);
+      await FileSystem.writeAsStringAsync(staging.uri, strippedBase64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      assertPhotoWriteAllowed(generation);
+      await markPlaintextStagingState(staging, 'plaintext_written');
+      return staging.uri;
+    } catch (error) {
+      await cleanupPlaintextStaging(staging).catch(() => undefined);
+      throw error;
+    }
   });
 }
 
@@ -395,9 +403,7 @@ export async function deletePhotoShareFile(
   sourceUri?: string | null,
 ): Promise<void> {
   if (!uri || uri === sourceUri) return;
-  const cacheDirectory = FileSystem.cacheDirectory;
-  if (!cacheDirectory || !uri.startsWith(`${cacheDirectory}${brandCachePrefix('share')}`)) return;
-  await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
+  await cleanupPlaintextStagingUri(uri).catch(() => undefined);
 }
 
 export async function deleteEncryptedPhoto(uri?: string | null): Promise<void> {

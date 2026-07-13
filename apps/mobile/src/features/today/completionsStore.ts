@@ -1,4 +1,9 @@
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import {
+  getPrivateItem,
+  removePrivateItem,
+  setPrivateItem,
+  updatePrivateItem,
+} from '@/lib/storage/privateKV';
 import { localDateString } from './useToday';
 
 // Local-first daily check-off log (docs/03 §6: the activation + streak loop, and
@@ -12,8 +17,28 @@ import { localDateString } from './useToday';
 // in today.tsx that never persisted (it broke activation + every streak surface).
 const KEY = 'onskin.completions.v1';
 const FIRST_COMPLETION_KEY = 'onskin.completions.firstCompletion.v1';
+const SCHEMA_VERSION = 1 as const;
+
+export const COMPLETION_LOG_INVALID = 'COMPLETION_LOG_INVALID';
+export const COMPLETION_LOG_UNSUPPORTED_VERSION = 'COMPLETION_LOG_UNSUPPORTED_VERSION';
 
 type Log = Record<string, string[]>; // localDate -> stepKeys done that day
+type CompletionLogEnvelope = {
+  version: typeof SCHEMA_VERSION;
+  days: Log;
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function completionLogError(code: string): Error {
+  return new Error(code);
+}
 
 function normalizeLocalDateISO(value: unknown): string | null {
   if (typeof value !== 'string') return null;
@@ -41,20 +66,53 @@ function shiftLocalDateISO(date: string, days: number): string {
   return localDateString(new Date(year, month - 1, day + days));
 }
 
-function normalizeCompletionLog(value: unknown): Log | null {
-  if (!value || Array.isArray(value) || typeof value !== 'object') return null;
+function normalizeCompletionLog(value: unknown): Log {
+  if (!isRecord(value)) throw completionLogError(COMPLETION_LOG_INVALID);
   const out: Log = {};
   for (const [date, keys] of Object.entries(value)) {
     const normalizedDate = normalizeLocalDateISO(date);
-    if (!normalizedDate || !Array.isArray(keys)) continue;
-    const normalizedKeys = [
-      ...new Set(keys.map(normalizeStepKey).filter((key): key is string => Boolean(key))),
-    ];
+    if (!normalizedDate || !Array.isArray(keys)) {
+      throw completionLogError(COMPLETION_LOG_INVALID);
+    }
+    const normalizedKeys: string[] = [];
+    for (const key of keys) {
+      const normalizedKey = normalizeStepKey(key);
+      if (!normalizedKey) throw completionLogError(COMPLETION_LOG_INVALID);
+      if (!normalizedKeys.includes(normalizedKey)) normalizedKeys.push(normalizedKey);
+    }
     if (normalizedKeys.length > 0) {
       out[normalizedDate] = [...new Set([...(out[normalizedDate] ?? []), ...normalizedKeys])];
     }
   }
   return out;
+}
+
+function decodeCompletionLog(raw: string | null): Log {
+  if (raw === null) return {};
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    throw completionLogError(COMPLETION_LOG_INVALID);
+  }
+  if (!isRecord(parsed)) throw completionLogError(COMPLETION_LOG_INVALID);
+
+  if (!hasOwn(parsed, 'version')) return normalizeCompletionLog(parsed);
+  if (parsed.version !== SCHEMA_VERSION) {
+    if (
+      typeof parsed.version === 'number' &&
+      Number.isSafeInteger(parsed.version) &&
+      parsed.version > SCHEMA_VERSION
+    ) {
+      throw completionLogError(COMPLETION_LOG_UNSUPPORTED_VERSION);
+    }
+    throw completionLogError(COMPLETION_LOG_INVALID);
+  }
+  return normalizeCompletionLog(parsed.days);
+}
+
+function encodeCompletionLog(log: Log): string {
+  return JSON.stringify({ version: SCHEMA_VERSION, days: log } satisfies CompletionLogEnvelope);
 }
 
 /** Stable per-step key. Phase-scoped so an AM and a PM step for the same product
@@ -64,33 +122,12 @@ export function stepKey(phase: 'AM' | 'PM', productId: string): string {
 }
 
 async function load(): Promise<Log> {
-  let raw: string | null;
   try {
-    raw = await getPrivateItem(KEY);
+    return decodeCompletionLog(await getPrivateItem(KEY));
   } catch {
+    // Reads stay fail-soft for existing UI callers, but never repair/delete bytes.
     return {};
   }
-  if (!raw) return {};
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    const normalized = normalizeCompletionLog(parsed);
-    if (normalized) {
-      if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
-        if (Object.keys(normalized).length > 0)
-          await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
-        else await removePrivateItem(KEY).catch(() => undefined);
-      }
-      return normalized;
-    }
-  } catch {
-    /* malformed legacy/local state */
-  }
-  await removePrivateItem(KEY).catch(() => undefined);
-  return {};
-}
-
-async function save(log: Log): Promise<void> {
-  await setPrivateItem(KEY, JSON.stringify(log));
 }
 
 async function hasFirstCompletionMarker(): Promise<boolean> {
@@ -136,23 +173,28 @@ export async function toggleCompletion(
     const existing = await getCompletedSteps(normalizedDate ?? date);
     return { done: normalizedKey ? existing.has(normalizedKey) : false, firstEver: false };
   }
-  const log = await load();
-  const hadAny = Object.values(log).some((a) => a.length > 0);
   const firstCompletionAlreadyMarked = await hasFirstCompletionMarker();
-  if (hadAny && !firstCompletionAlreadyMarked) await markFirstCompletion();
-  const day = new Set(log[normalizedDate] ?? []);
-  if (day.has(normalizedKey)) {
+  let result = { done: false, firstEver: false };
+  let shouldMarkFirstCompletion = false;
+  await updatePrivateItem(KEY, (current) => {
+    const log = decodeCompletionLog(current);
+    const hadAny = Object.values(log).some((steps) => steps.length > 0);
+    const day = new Set(log[normalizedDate] ?? []);
+    const alreadyCompleted = day.has(normalizedKey);
+    if (!alreadyCompleted) day.add(normalizedKey);
     log[normalizedDate] = [...day];
-    await save(log);
-    return { done: true, firstEver: false };
-  }
 
-  day.add(normalizedKey);
-  log[normalizedDate] = [...day];
-  await save(log);
-  const firstEver = !hadAny && !firstCompletionAlreadyMarked;
-  if (firstEver) await markFirstCompletion();
-  return { done: true, firstEver };
+    result = {
+      done: true,
+      firstEver: !alreadyCompleted && !hadAny && !firstCompletionAlreadyMarked,
+    };
+    shouldMarkFirstCompletion = hadAny || result.firstEver;
+    return encodeCompletionLog(log);
+  });
+  if (shouldMarkFirstCompletion && !firstCompletionAlreadyMarked) {
+    await markFirstCompletion();
+  }
+  return result;
 }
 
 /** Dates with at least one completion (the streak's "completion days"). */

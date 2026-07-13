@@ -66,6 +66,7 @@ jobs:
           npm run phase9:edge-functions-check
           npm run phase9:data-rights-smoke
           deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/data-export/exportCore.test.ts
+          deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/revenuecat-webhook/webhookCore.test.ts
           npm run phase9:revenuecat-webhook-atomic-smoke
 
       - name: Typecheck

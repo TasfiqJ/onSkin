@@ -59,7 +59,11 @@ The Progress sensitive-image boundary was exercised in Expo web at a 390-by-844 
 4. Controls observed in the flow met the 48-point minimum target.
 5. No flow-specific browser errors were observed.
 
+The minimal-font change received a second compact-phone pass on 2026-07-13. The populated Progress comparison rendered two images; the browser reported the intended Instrument Serif, Hanken Grotesk, and IBM Plex Mono families as loaded; Timeline navigation rendered three images; and the exercised primary controls measured at least 48 CSS pixels high. Browser warning/error capture was empty for that run.
+
 Local evidence lives under `test-results/human-e2e/2026-07-12/optimization-sensitive-image-cache/`. That test-results directory is intentionally not treated as committed native evidence.
+
+Font-flow evidence lives under `test-results/human-e2e/2026-07-13/optimization-font-assets/` and has the same local/web-only boundary.
 
 ## Verification Boundary
 

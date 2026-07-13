@@ -13,6 +13,11 @@ import { BRAND } from '@/lib/brand';
 import { deleteAccount, exportData, withdrawHealthDataConsent } from './actions';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
+const STAGED_EXPORT = {
+  operationId: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+  purpose: 'data_export_json' as const,
+  uri: 'file://cache/private-plaintext-staging-v1/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.json',
+};
 
 function readSource(path: string): string {
   return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
@@ -20,13 +25,16 @@ function readSource(path: string): string {
 
 const mocks = vi.hoisted(() => ({
   buildMobileDataExportBundle: vi.fn(),
+  cleanupPlaintextStaging: vi.fn(),
   collectLocalDeviceExportData: vi.fn(),
   deleteAsync: vi.fn(),
   getAppleAuthorizationCodeForRevocation: vi.fn(),
   getUser: vi.fn(),
   invoke: vi.fn(),
   isSupabaseConfigured: true,
+  markPlaintextStagingState: vi.fn(),
   recordConsent: vi.fn(),
+  reservePlaintextStaging: vi.fn(),
   shareAsync: vi.fn(),
   sharingAvailable: vi.fn(),
   signOut: vi.fn(),
@@ -42,6 +50,12 @@ vi.mock('expo-file-system/legacy', () => ({
 vi.mock('expo-sharing', () => ({
   isAvailableAsync: mocks.sharingAvailable,
   shareAsync: mocks.shareAsync,
+}));
+
+vi.mock('@/lib/storage/plaintextStaging', () => ({
+  cleanupPlaintextStaging: mocks.cleanupPlaintextStaging,
+  markPlaintextStagingState: mocks.markPlaintextStagingState,
+  reservePlaintextStaging: mocks.reservePlaintextStaging,
 }));
 
 vi.mock('@/lib/auth/apple', () => ({
@@ -78,13 +92,16 @@ describe('settings data export', () => {
   beforeEach(() => {
     delete process.env.EXPO_PUBLIC_E2E_DATA_EXPORT_DELAY_MS;
     mocks.buildMobileDataExportBundle.mockReset();
+    mocks.cleanupPlaintextStaging.mockReset();
     mocks.collectLocalDeviceExportData.mockReset();
     mocks.deleteAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
     mocks.getUser.mockReset();
     mocks.invoke.mockReset();
     mocks.isSupabaseConfigured = true;
+    mocks.markPlaintextStagingState.mockReset();
     mocks.recordConsent.mockReset();
+    mocks.reservePlaintextStaging.mockReset();
     mocks.shareAsync.mockReset();
     mocks.sharingAvailable.mockReset();
     mocks.signOut.mockReset();
@@ -111,6 +128,7 @@ describe('settings data export', () => {
       },
       exclusions: [],
     });
+    mocks.cleanupPlaintextStaging.mockResolvedValue(undefined);
     mocks.deleteAsync.mockResolvedValue(undefined);
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
@@ -119,6 +137,8 @@ describe('settings data export', () => {
       error: null,
     });
     mocks.recordConsent.mockResolvedValue(undefined);
+    mocks.reservePlaintextStaging.mockResolvedValue(STAGED_EXPORT);
+    mocks.markPlaintextStagingState.mockResolvedValue(undefined);
     mocks.signOut.mockResolvedValue(undefined);
     mocks.writeAsStringAsync.mockResolvedValue(undefined);
   });
@@ -136,10 +156,14 @@ describe('settings data export', () => {
       method: 'POST',
       signal: expect.any(AbortSignal),
     });
-    expect(mocks.writeAsStringAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
-      expect.any(String),
+    expect(mocks.reservePlaintextStaging).toHaveBeenCalledWith('data_export_json');
+    expect(mocks.reservePlaintextStaging.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.writeAsStringAsync.mock.invocationCallOrder[0]!,
     );
+    expect(mocks.reservePlaintextStaging.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.buildMobileDataExportBundle.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.writeAsStringAsync).toHaveBeenCalledWith(STAGED_EXPORT.uri, expect.any(String));
     const written = JSON.parse(mocks.writeAsStringAsync.mock.calls[0]![1] as string) as Record<
       string,
       unknown
@@ -160,19 +184,17 @@ describe('settings data export', () => {
         }),
       }),
     );
-    expect(mocks.shareAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
-      {
-        mimeType: 'application/json',
-        dialogTitle: `Export your ${BRAND.appName} data`,
-      },
+    expect(mocks.shareAsync).toHaveBeenCalledWith(STAGED_EXPORT.uri, {
+      mimeType: 'application/json',
+      dialogTitle: `Export your ${BRAND.appName} data`,
+    });
+    expect(mocks.markPlaintextStagingState).toHaveBeenNthCalledWith(
+      1,
+      STAGED_EXPORT,
+      'plaintext_written',
     );
-    expect(mocks.deleteAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
-      {
-        idempotent: true,
-      },
-    );
+    expect(mocks.markPlaintextStagingState).toHaveBeenNthCalledWith(2, STAGED_EXPORT, 'sharing');
+    expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
   });
 
   it('returns false and deletes the export file when native sharing is unavailable', async () => {
@@ -181,12 +203,7 @@ describe('settings data export', () => {
     await expect(exportData()).resolves.toBe(false);
 
     expect(mocks.shareAsync).not.toHaveBeenCalled();
-    expect(mocks.deleteAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
-      {
-        idempotent: true,
-      },
-    );
+    expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
   });
 
   it('returns false and deletes the export file when availability probing fails', async () => {
@@ -195,12 +212,7 @@ describe('settings data export', () => {
     await expect(exportData()).resolves.toBe(false);
 
     expect(mocks.shareAsync).not.toHaveBeenCalled();
-    expect(mocks.deleteAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
-      {
-        idempotent: true,
-      },
-    );
+    expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
   });
 
   it('returns false and deletes the export file when the native share sheet rejects', async () => {
@@ -209,19 +221,41 @@ describe('settings data export', () => {
 
     await expect(exportData()).resolves.toBe(false);
 
-    expect(mocks.shareAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
-      {
-        mimeType: 'application/json',
-        dialogTitle: `Export your ${BRAND.appName} data`,
-      },
-    );
-    expect(mocks.deleteAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
-      {
-        idempotent: true,
-      },
-    );
+    expect(mocks.shareAsync).toHaveBeenCalledWith(STAGED_EXPORT.uri, {
+      mimeType: 'application/json',
+      dialogTitle: `Export your ${BRAND.appName} data`,
+    });
+    expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
+  });
+
+  it('fails before constructing or writing plaintext when journal reservation fails', async () => {
+    mocks.reservePlaintextStaging.mockRejectedValueOnce(new Error('journal unavailable'));
+
+    await expect(exportData()).rejects.toThrow('journal unavailable');
+
+    expect(mocks.buildMobileDataExportBundle).not.toHaveBeenCalled();
+    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+  });
+
+  it('cleans the reserved entry when plaintext writing fails', async () => {
+    mocks.writeAsStringAsync.mockRejectedValueOnce(new Error('cache full'));
+
+    await expect(exportData()).rejects.toThrow('cache full');
+
+    expect(mocks.markPlaintextStagingState).not.toHaveBeenCalled();
+    expect(mocks.shareAsync).not.toHaveBeenCalled();
+    expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
+  });
+
+  it('preserves a successful share result when immediate cleanup must retry later', async () => {
+    mocks.sharingAvailable.mockResolvedValueOnce(true);
+    mocks.shareAsync.mockResolvedValueOnce(undefined);
+    mocks.cleanupPlaintextStaging.mockRejectedValueOnce(new Error('cache busy'));
+
+    await expect(exportData()).resolves.toBe(true);
+
+    expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
   });
 
   it('shares a clearly scoped device-only bundle when the backend is not configured', async () => {
@@ -324,10 +358,7 @@ describe('settings data export', () => {
 
     expect(mocks.sharingAvailable).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
-    expect(mocks.deleteAsync).toHaveBeenCalledWith(
-      expect.stringMatching(/^file:\/\/cache\/routinekind-export-\d+\.json$/),
-      { idempotent: true },
-    );
+    expect(mocks.cleanupPlaintextStaging).toHaveBeenCalledWith(STAGED_EXPORT);
   });
 
   it('accepts a valid JSON-string server bundle without double encoding it', async () => {

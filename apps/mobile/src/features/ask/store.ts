@@ -1,8 +1,7 @@
 import {
   getPrivateItem,
   multiRemovePrivateItems,
-  removePrivateItem,
-  setPrivateItem,
+  updatePrivateItem,
 } from '@/lib/storage/privateKV';
 import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
 
@@ -18,6 +17,10 @@ import { ASK_TRIAL_GROUNDED_CAP } from './gate';
 const CONSENT_KEY = 'onskin.ask.consent.v1'; // default-OFF
 const TURNS_KEY = 'onskin.ask.groundedTurns.v1'; // { period: 'YYYY-MM', count: number }
 const PERIOD = /^\d{4}-(0[1-9]|1[0-2])$/;
+const TURNS_SCHEMA_VERSION = 1 as const;
+
+export const ASK_TURN_RECORD_INVALID = 'ASK_TURN_RECORD_INVALID';
+export const ASK_TURN_RECORD_UNSUPPORTED_VERSION = 'ASK_TURN_RECORD_UNSUPPORTED_VERSION';
 
 export async function getAskConsentLocal(): Promise<boolean> {
   return getPrivateBoolean(CONSENT_KEY);
@@ -28,6 +31,15 @@ export async function setAskConsentLocal(enabled: boolean): Promise<void> {
 }
 
 type TurnRecord = { period: string; count: number };
+type TurnRecordEnvelope = TurnRecord & { version: typeof TURNS_SCHEMA_VERSION };
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
 
 function normalizePeriod(value: unknown): string | null {
   if (typeof value !== 'string') return null;
@@ -36,8 +48,8 @@ function normalizePeriod(value: unknown): string | null {
 }
 
 function normalizeTurnRecord(value: unknown): TurnRecord | null {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) return null;
-  const source = value as Record<string, unknown>;
+  if (!isRecord(value)) return null;
+  const source = value;
   const period = normalizePeriod(source.period);
   if (!period) return null;
   const count = source.count;
@@ -45,22 +57,34 @@ function normalizeTurnRecord(value: unknown): TurnRecord | null {
   return { period, count: Math.min(count, ASK_TRIAL_GROUNDED_CAP) };
 }
 
-async function parseTurns(raw: string | null): Promise<TurnRecord | null> {
-  if (!raw) return null;
+function decodeTurns(raw: string | null): TurnRecord | null {
+  if (raw === null) return null;
+  let parsed: unknown;
   try {
-    const normalized = normalizeTurnRecord(JSON.parse(raw) as unknown);
-    if (!normalized) {
-      await removePrivateItem(TURNS_KEY).catch(() => undefined);
-      return null;
-    }
-    if (JSON.stringify(normalized) !== raw) {
-      await setPrivateItem(TURNS_KEY, JSON.stringify(normalized)).catch(() => undefined);
-    }
-    return normalized;
+    parsed = JSON.parse(raw) as unknown;
   } catch {
-    await removePrivateItem(TURNS_KEY).catch(() => undefined);
+    throw new Error(ASK_TURN_RECORD_INVALID);
   }
-  return null;
+  if (!isRecord(parsed)) throw new Error(ASK_TURN_RECORD_INVALID);
+  if (hasOwn(parsed, 'version')) {
+    if (parsed.version !== TURNS_SCHEMA_VERSION) {
+      if (
+        typeof parsed.version === 'number' &&
+        Number.isSafeInteger(parsed.version) &&
+        parsed.version > TURNS_SCHEMA_VERSION
+      ) {
+        throw new Error(ASK_TURN_RECORD_UNSUPPORTED_VERSION);
+      }
+      throw new Error(ASK_TURN_RECORD_INVALID);
+    }
+  }
+  const normalized = normalizeTurnRecord(parsed);
+  if (!normalized) throw new Error(ASK_TURN_RECORD_INVALID);
+  return normalized;
+}
+
+function encodeTurns(record: TurnRecord): string {
+  return JSON.stringify({ version: TURNS_SCHEMA_VERSION, ...record } satisfies TurnRecordEnvelope);
 }
 
 /** Grounded (cloud) turns used in `period` (a 'YYYY-MM' string); resets per period. */
@@ -68,7 +92,7 @@ export async function getGroundedTurns(period: string): Promise<number> {
   try {
     const currentPeriod = normalizePeriod(period);
     if (!currentPeriod) return 0;
-    const rec = await parseTurns(await getPrivateItem(TURNS_KEY));
+    const rec = decodeTurns(await getPrivateItem(TURNS_KEY));
     return rec && rec.period === currentPeriod ? rec.count : 0;
   } catch {
     return 0;
@@ -80,15 +104,14 @@ export async function recordGroundedTurn(period: string): Promise<void> {
   try {
     const currentPeriod = normalizePeriod(period);
     if (!currentPeriod) return;
-    const rec = await parseTurns(await getPrivateItem(TURNS_KEY));
-    const count = rec && rec.period === currentPeriod ? rec.count + 1 : 1;
-    await setPrivateItem(
-      TURNS_KEY,
-      JSON.stringify({
+    await updatePrivateItem(TURNS_KEY, (current) => {
+      const rec = decodeTurns(current);
+      const count = rec && rec.period === currentPeriod ? rec.count + 1 : 1;
+      return encodeTurns({
         period: currentPeriod,
         count: Math.min(count, ASK_TRIAL_GROUNDED_CAP),
-      } satisfies TurnRecord),
-    );
+      });
+    });
   } catch {
     /* best-effort. The cap is a cost guardrail, not a hard wall */
   }

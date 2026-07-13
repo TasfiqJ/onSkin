@@ -1,7 +1,8 @@
 import { supabase } from '@/lib/supabase/client';
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import {
+  completionKey,
   isStale,
   normalizeLocalDay,
   normalizePendingCompletion,
@@ -25,41 +26,81 @@ export type { PendingCompletion } from './completionQueue.pure';
 // local log to server ids lands with B-ROUTINE-PERSIST. The pure dedup/staleness
 // logic (completionQueue.pure.ts) is unit-tested and ready.
 const KEY = 'onskin.completions.pending';
+const SCHEMA_VERSION = 1 as const;
 
-export async function getPendingCompletions(): Promise<PendingCompletion[]> {
-  let raw: string | null;
-  try {
-    raw = await getPrivateItem(KEY);
-  } catch {
-    return [];
-  }
-  if (!raw) return [];
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      const normalized = parsed
-        .map(normalizePendingCompletion)
-        .filter((row): row is PendingCompletion => Boolean(row));
-      if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
-        if (normalized.length > 0)
-          await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
-        else await removePrivateItem(KEY).catch(() => undefined);
-      }
-      return normalized;
-    }
-  } catch {
-    /* malformed legacy/local state */
-  }
-  await removePrivateItem(KEY).catch(() => undefined);
-  return [];
+export const COMPLETION_QUEUE_INVALID = 'COMPLETION_QUEUE_INVALID';
+export const COMPLETION_QUEUE_UNSUPPORTED_VERSION = 'COMPLETION_QUEUE_UNSUPPORTED_VERSION';
+
+type CompletionQueueEnvelope = {
+  version: typeof SCHEMA_VERSION;
+  items: PendingCompletion[];
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-async function savePending(list: PendingCompletion[]): Promise<void> {
-  await setPrivateItem(KEY, JSON.stringify(list));
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function queueError(code: string): Error {
+  return new Error(code);
+}
+
+function normalizePendingList(value: unknown): PendingCompletion[] {
+  if (!Array.isArray(value)) throw queueError(COMPLETION_QUEUE_INVALID);
+  const out: PendingCompletion[] = [];
+  for (const row of value) {
+    const normalized = normalizePendingCompletion(row);
+    if (!normalized) throw queueError(COMPLETION_QUEUE_INVALID);
+    if (!out.some((existing) => completionKey(existing) === completionKey(normalized))) {
+      out.push(normalized);
+    }
+  }
+  return out;
+}
+
+function decodePending(raw: string | null): PendingCompletion[] {
+  if (raw === null) return [];
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    throw queueError(COMPLETION_QUEUE_INVALID);
+  }
+
+  if (Array.isArray(parsed)) return normalizePendingList(parsed);
+  if (!isRecord(parsed)) throw queueError(COMPLETION_QUEUE_INVALID);
+  if (!hasOwn(parsed, 'version')) throw queueError(COMPLETION_QUEUE_INVALID);
+  if (parsed.version !== SCHEMA_VERSION) {
+    if (
+      typeof parsed.version === 'number' &&
+      Number.isSafeInteger(parsed.version) &&
+      parsed.version > SCHEMA_VERSION
+    ) {
+      throw queueError(COMPLETION_QUEUE_UNSUPPORTED_VERSION);
+    }
+    throw queueError(COMPLETION_QUEUE_INVALID);
+  }
+  return normalizePendingList(parsed.items);
+}
+
+function encodePending(items: PendingCompletion[]): string {
+  return JSON.stringify({ version: SCHEMA_VERSION, items } satisfies CompletionQueueEnvelope);
+}
+
+export async function getPendingCompletions(): Promise<PendingCompletion[]> {
+  try {
+    return decodePending(await getPrivateItem(KEY));
+  } catch {
+    // Keep the public read fail-soft without repairing/deleting unreadable bytes.
+    return [];
+  }
 }
 
 export async function enqueueCompletion(rec: PendingCompletion): Promise<void> {
-  await savePending(withQueued(await getPendingCompletions(), rec));
+  await updatePrivateItem(KEY, (current) => encodePending(withQueued(decodePending(current), rec)));
 }
 
 /** Step ids checked off but not yet synced, for a given local day (read merge). */
@@ -90,11 +131,17 @@ export async function flushCompletions(
   const userId = data.user?.id;
   if (!userId) return { flushed: 0, remaining: pending.length }; // no session yet; retry later
 
-  const remaining: PendingCompletion[] = [];
+  const removeKeys = new Set<string>();
   let flushed = 0;
   for (const rec of pending) {
-    if (rec.userId !== userId) continue; // a prior account's row; drop
-    if (isStale(rec.completedDate, now)) continue; // outside the server window; drop
+    if (rec.userId !== userId) {
+      removeKeys.add(completionKey(rec)); // a prior account's row; drop
+      continue;
+    }
+    if (isStale(rec.completedDate, now)) {
+      removeKeys.add(completionKey(rec)); // outside the server window; drop
+      continue;
+    }
     try {
       const { error } = await supabase.from('routine_completions').insert({
         user_id: userId,
@@ -102,13 +149,21 @@ export async function flushCompletions(
         step_id: rec.stepId,
         completed_date: rec.completedDate,
       });
-      if (!error || error.code === '23505')
+      if (!error || error.code === '23505') {
+        removeKeys.add(completionKey(rec));
         flushed += 1; // landed, or already recorded (dedup)
-      else remaining.push(rec); // transient backend error; keep for the next flush
+      }
     } catch {
-      remaining.push(rec); // network failure; keep for the next flush
+      // Network failure: leave the row in the latest queue for the next flush.
     }
   }
-  await savePending(remaining);
-  return { flushed, remaining: remaining.length };
+
+  let remaining = pending.length;
+  await updatePrivateItem(KEY, (current) => {
+    const latest = decodePending(current);
+    const next = latest.filter((rec) => !removeKeys.has(completionKey(rec)));
+    remaining = next.length;
+    return encodePending(next);
+  });
+  return { flushed, remaining };
 }

@@ -16,6 +16,8 @@ const shareCardSource = read('apps/mobile/src/features/growth/shareCard.ts');
 const encryptedPhotoSource = read('apps/mobile/src/features/photos/encryptedStorage.ts');
 const sharePhotoSource = read('apps/mobile/src/features/photos/sharePhoto.ts');
 const photoMetadataSource = read('apps/mobile/src/features/photos/metadata.ts');
+const plaintextStagingSource = read('apps/mobile/src/lib/storage/plaintextStagingCore.ts');
+const plaintextStagingAdapterSource = read('apps/mobile/src/lib/storage/plaintextStaging.ts');
 const photoConsentSource = read('apps/mobile/src/features/photos/consent.ts');
 const photoStoreSource = read('apps/mobile/src/features/photos/store.ts');
 const photoDetailSource = read('apps/mobile/src/app/progress/[id].tsx');
@@ -28,6 +30,10 @@ const notificationStoreSource = read('apps/mobile/src/features/notifications/sto
 const notificationTimingSource = read('apps/mobile/src/app/settings/timing.tsx');
 const notificationLockscreenMigrationSource = read(
   'supabase/migrations/20260705000033_phase9_notification_lock_screen_privacy.sql',
+);
+const photoShareFileSource = encryptedPhotoSource.slice(
+  encryptedPhotoSource.indexOf('export async function createPhotoShareFile'),
+  encryptedPhotoSource.indexOf('export async function deletePhotoShareFile'),
 );
 
 const eventRegistryBody =
@@ -330,21 +336,21 @@ block(
 );
 block(
   errors,
-  /PHOTO_SHARE_CACHE_UNAVAILABLE/.test(encryptedPhotoSource),
-  'Photo share export must fail closed when cacheDirectory is unavailable.',
+  /reservePlaintextStaging\([\s\S]*'photo_share_png'[\s\S]*'photo_share_jpeg'/.test(
+    encryptedPhotoSource,
+  ) && /PLAINTEXT_STAGING_CACHE_UNAVAILABLE/.test(plaintextStagingSource),
+  'Photo share export must reserve an owned plaintext operation and fail closed when cache storage is unavailable.',
 );
 block(
   errors,
-  /safePhotoShareId/.test(encryptedPhotoSource),
-  'Photo share export filenames must sanitize local photo IDs.',
-);
-block(
-  errors,
-  /brandCachePrefix\('share'\)/.test(encryptedPhotoSource) &&
-    /\$\{shareCachePrefix\}\$\{safePhotoShareId\(photoId\)\}-\$\{Date\.now\(\)\}/.test(
-      encryptedPhotoSource,
-    ),
-  'Photo share export must use a runtime-brand, unique generated cache filename.',
+  /createOperationId:\s*randomUUID/.test(plaintextStagingAdapterSource) &&
+    /return `\$\{entry\.operationId\}\.\$\{extensionForPurpose\(entry\.purpose\)\}`/.test(
+      plaintextStagingSource,
+    ) &&
+    photoShareFileSource.indexOf('await reservePlaintextStaging(') <
+      photoShareFileSource.indexOf('const base64 = decryptEnvelopeToUtf8(envelope, key);') &&
+    photoShareFileSource.indexOf('await reservePlaintextStaging(') !== -1,
+  'Photo sharing must reserve a random opaque filename before decrypted image plaintext is created.',
 );
 block(
   errors,
@@ -369,21 +375,27 @@ block(
 block(
   errors,
   /export async function deletePhotoShareFile/.test(encryptedPhotoSource) &&
-    /uri\.startsWith\(`\$\{cacheDirectory\}\$\{brandCachePrefix\('share'\)\}`\)/.test(
-      encryptedPhotoSource,
-    ) &&
-    /FileSystem\.deleteAsync\(uri,\s*\{\s*idempotent:\s*true\s*\}\)\.catch\(\(\)\s*=>\s*\{\}\)/.test(
-      encryptedPhotoSource,
+    /cleanupPlaintextStagingUri\(uri\)/.test(encryptedPhotoSource) &&
+    /journal\.entries\.findIndex\(\(entry\) => uriForEntry\(entry\) === uri\)/.test(
+      plaintextStagingSource,
     ),
-  'Photo share export must expose a scoped cache cleanup helper.',
+  'Photo share cleanup must delete only a URI derived from an owned journal entry.',
 );
 block(
   errors,
   /sharePhotoImageOnly/.test(photoDetailSource) &&
-    /try\s*\{[\s\S]*createPhotoShareFile\(photo\.localUri,\s*photo\.id\)[\s\S]*Sharing\.shareAsync\(shareUri\)[\s\S]*\}\s*finally\s*\{[\s\S]*deletePhotoShareFile\(shareUri,\s*photo\.localUri\)/.test(
+    /runAccountGenerationOperation/.test(sharePhotoSource) &&
+    /try\s*\{[\s\S]*createPhotoShareFile\(localUri\)[\s\S]*Sharing\.shareAsync\(shareUri\)[\s\S]*\}\s*finally\s*\{[\s\S]*deletePhotoShareFile\(shareUri,\s*localUri\)/.test(
       sharePhotoSource,
     ),
-  'Photo detail share must delete generated decrypted share files without deleting the source photo URI.',
+  'Photo detail share must hold the account boundary through share-sheet completion and clean the generated plaintext without deleting the source photo.',
+);
+block(
+  errors,
+  rootLayoutSource.indexOf('void scavengePlaintextStaging().catch(() => undefined);') !== -1 &&
+    rootLayoutSource.indexOf('void scavengePlaintextStaging().catch(() => undefined);') <
+      rootLayoutSource.indexOf('export default function RootLayout()'),
+  'Plaintext staging recovery must start before the root component can mount after relaunch.',
 );
 block(
   errors,
