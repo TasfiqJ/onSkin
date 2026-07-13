@@ -2,11 +2,13 @@
 
 Record device model, OS version, build profile, build ID, tester, date, pass/fail, and notes for every row.
 
-Use `docs/DEVICE_SUPPORT_POLICY.md` as the support floor. V1 native QA starts
-at iOS 17.0+ and Android 10 / API 29+ with 360 x 640 as the launch-blocking
-Expo web-compatible layout floor; 320-wide browser stress viewports are not
-launch blockers unless reproduced on a supported physical device or required by
-app review/accessibility.
+Use `docs/DEVICE_SUPPORT_POLICY.md` and the active launch contract as the
+support floor. V1 release QA is iPhone-only on iOS 17.0+, with 375 x 667 as the
+launch-blocking Expo web-compatible compact-iPhone floor. iPad and Android are
+outside the release contract. Their source configuration may stay healthy, but
+their results cannot replace required physical-iPhone evidence. Smaller browser
+stress viewports are not launch blockers unless reproduced on a supported
+iPhone or required by App Review or accessibility.
 
 | Surface           | Required Checks                                                                                                                                                                                                           | Status                                                    |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
@@ -24,11 +26,11 @@ app review/accessibility.
 | Capture quality   | Real one/no/multiple-face results; analyzer error/timeout; framing/pose; dark/bright/uneven light; threshold/provenance migration; no network/template retention                                                          | Blocked until fresh native builds + physical devices      |
 | Encryption        | Plaintext temp deleted, encrypted file survives restart, key missing handled, delete removes ciphertext                                                                                                                   | Blocked until physical devices                            |
 | Notifications     | Soft ask, OS prompt, AM/PM, capture nudge, quiet hours, denied recovery                                                                                                                                                   | Blocked until physical devices                            |
-| Exact alarm       | Play Console has no exact-alarm warning                                                                                                                                                                                   | Blocked until Android build                               |
+| Exact alarm       | Not applicable to the iOS-only release; keep Android exact-alarm permissions absent in source                                                                                                                             | Not applicable                                            |
 | Share             | Conflict card share and photo share open OS sheet; cancel handled                                                                                                                                                         | Blocked until physical devices                            |
 | RevenueCat        | SDK configure, fetch offerings, Test Store purchase, restore user action                                                                                                                                                  | Blocked until RC keys + native build                      |
 | Observability     | Sentry native crash captured, PostHog payload audit clean                                                                                                                                                                 | Blocked until native build                                |
-| Performance       | Predeclared p95 thresholds; raw startup, intake, barcode, routine, capture-analysis, encrypted-photo load/memory samples on both platforms                                                                                | Blocked until physical measurements                       |
+| Performance       | Predeclared p95 thresholds; repeated raw startup, intake, barcode, routine, capture-analysis, encrypted-photo load/memory samples on supported iPhones                                                                    | Blocked until physical measurements                       |
 | Accessibility     | Screen reader labels for close/capture/retake/save/settings/manual fallback                                                                                                                                               | Review needed on devices                                  |
 
 ## Device Matrix
@@ -37,12 +39,13 @@ Minimum before beta:
 
 - Current iPhone on current public iOS.
 - Oldest-supported iOS 17-class iPhone available to the team.
-- Current Pixel or equivalent Android on current public Android.
-- Current or midrange Samsung Android on Android 10 / API 29 or newer.
-- 360 dp / compact Android-class physical phone if available, or Play Console
-  Reach evidence proving that no meaningful target devices sit at that floor.
-- Android 13+ notification permission behavior.
-- Android 14+ exact-alarm/background behavior.
+- A supported compact iPhone at or near the 375 pt width floor.
+- A current flagship-class iPhone for camera, progress-photo, notification,
+  subscription, WidgetKit, ActivityKit, deep-link, and share-sheet behavior.
+
+iPad and Android testing is optional resilience work until the founder changes
+the launch contract. It must be stored separately and cannot block or satisfy
+this iOS release gate.
 
 ## Evidence Required For Strict Exit
 
@@ -50,9 +53,7 @@ Minimum before beta:
 clean`, current source hashes, real EAS build evidence, physical-device
   labels, current human-E2E manifest hashes, and named signoff.
 - `PHASE5_IOS_BUILD_ID=<real EAS UUID or expo.dev build URL>`
-- `PHASE5_ANDROID_BUILD_ID=<real EAS UUID or expo.dev build URL>`
-- `PHASE5_IOS_DEVICE=<physical iPhone/iPad model and iOS/iPadOS version>`
-- `PHASE5_ANDROID_DEVICE=<physical Android model and Android OS version>`
+- `PHASE5_IOS_DEVICE=<physical iPhone model and iOS version>`
 - `PHASE5_QA_SIGNOFF=true`
 - `PHASE5_SIGNED_OFF_BY=<real tester/reviewer name>`
 - `PHASE5_DEVICE_QA_PASS=true`

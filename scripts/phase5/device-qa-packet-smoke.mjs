@@ -140,9 +140,7 @@ const cases = [
     expect(result) {
       return (
         result.status === 1 &&
-        /PHASE5_IOS_DEVICE must name a physical iPhone\/iPad model and iOS\/iPadOS version/.test(
-          output(result),
-        )
+        /PHASE5_IOS_DEVICE must name a physical iPhone model and iOS version/.test(output(result))
       );
     },
   },
@@ -152,9 +150,16 @@ const cases = [
     expect(result) {
       return (
         result.status === 1 &&
-        /PHASE5_IOS_DEVICE must name a physical iPhone\/iPad model and iOS\/iPadOS version/.test(
-          output(result),
-        )
+        /PHASE5_IOS_DEVICE must name a physical iPhone model and iOS version/.test(output(result))
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects iPad evidence outside the iPhone-only contract',
+    result: run({ PHASE5_IOS_DEVICE: 'iPad Pro / iPadOS 26.0' }),
+    expect(result) {
+      return (
+        result.status === 1 && /iPad is outside the active release contract/.test(output(result))
       );
     },
   },

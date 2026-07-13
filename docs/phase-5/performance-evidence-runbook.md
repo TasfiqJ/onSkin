@@ -11,9 +11,10 @@ signoff.
 
 - iOS evidence must use a physical iPhone on iOS 17+ with a logical width of
   at least 375 pt and at least 640 pt usable portrait height.
-- Android evidence must use a physical phone on Android 10+ with a smallest
-  logical width of at least 360 dp and at least 640 dp usable portrait height.
-- Record at least five raw samples for every metric on both platforms. Do not
+- Android and iPad measurements are not release evidence under the active
+  iPhone-only contract. Keep optional resilience measurements separate.
+- Record at least five raw samples for every metric on each required iPhone
+  device. Do not
   enter only a precomputed summary.
 - Use a native profiler for photo-timeline peak memory. Instrumented timers or
   a manual stopwatch are accepted for end-to-end timings when the method is
@@ -23,7 +24,7 @@ signoff.
 
 ## Required Metrics
 
-The template requires both iOS and Android evidence for:
+The template requires iOS evidence for:
 
 - cold app startup to the first usable route;
 - adding three products through manual, search, barcode, and OCR/manual
@@ -55,7 +56,7 @@ failure-state coverage.
    `thresholdsDefinedAt`, and `thresholdsDefinedBy` field. Do not revise a
    failed threshold after measurement without recording a new review decision
    and rerunning the complete baseline.
-3. Fill real build/device/source evidence and every iOS/Android measurement in
+3. Fill real build/device/source evidence and every required iOS measurement in
    a separate JSON artifact based on
    `docs/phase-5/performance-evidence.template.json`. Put every observation in
    the measurement's `samples` array.
@@ -82,5 +83,5 @@ failure-state coverage.
 The validator calculates nearest-rank p50 and p95 plus max from the raw samples,
 rejects any declared summary that differs, and calculates threshold failures
 from the calculated p95. A typed `pass` decision cannot override a failed
-metric, unsupported device, post-hoc threshold, missing platform, one-off
+metric, unsupported device, post-hoc threshold, missing required iOS evidence, one-off
 sample, invalid observation, crash, or OS termination.

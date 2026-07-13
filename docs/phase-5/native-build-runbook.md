@@ -6,11 +6,11 @@ until the generated device QA packet has a real iOS build ID, physical-iPhone
 details, and named signoff. Android source health remains useful but is neither
 required launch evidence nor a public release claim.
 
-The native support floor is defined in `docs/DEVICE_SUPPORT_POLICY.md`: iOS
-17.0+ and Android 10 / API 29+, with 360 x 640 as the launch-blocking
-Expo web-compatible compact-phone layout floor. Builds may target newer SDKs as
-required by Apple, Google, and Expo, but the minimum install floor must not be
-lowered without updating the policy, config guard, and QA matrix together.
+The native support floor is defined in `docs/DEVICE_SUPPORT_POLICY.md`: iPhone
+on iOS 17.0+, with 375 x 667 as the launch-blocking Expo web-compatible
+compact-iPhone layout floor. Builds may target newer SDKs as required by Apple
+and Expo, but the minimum install floor must not be lowered without updating
+the policy, config guard, and QA matrix together.
 Current Android source configuration intentionally pins compile/target SDK to
 API 36 while keeping min SDK at API 29. This is maintenance posture only; it
 does not add Android to the release contract.
@@ -126,7 +126,7 @@ is enabled in the build; otherwise OCR remains hidden from launch claims.
 
 ## Launch Gates
 
-- Barcode scan cannot be marketed until physical iOS and Android scans pass.
+- Barcode scan cannot be marketed until the physical-iPhone scan matrix passes.
 - OCR cannot be marketed while `EXPO_PUBLIC_NATIVE_OCR_ENABLED=false`.
 - Guided photo capture can be marketed as camera capture only after encrypted save/restart/delete passes on devices.
 - Post-capture framing/light guidance cannot be described as calibrated until

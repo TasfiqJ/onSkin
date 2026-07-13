@@ -238,10 +238,13 @@ function looksLikePhysicalIosDevice(value) {
   ) {
     return false;
   }
-  return (
-    /\biP(?:hone|ad|od)\s+(?!\/|(?:iOS|iPadOS)\b)\S+/i.test(trimmed) &&
-    /\b(?:iOS|iPadOS)\s+\d{1,2}(?:\.\d+){0,2}\b/i.test(trimmed)
-  );
+  const supportedDevice = launchContract.release.supportsIpad
+    ? /\b(?:iPhone|iPad)\s+(?!\/|(?:iOS|iPadOS)\b)\S+/i
+    : /\biPhone\s+(?!\/|iOS\b)\S+/i;
+  const supportedOs = launchContract.release.supportsIpad
+    ? /\b(?:iOS|iPadOS)\s+\d{1,2}(?:\.\d+){0,2}\b/i
+    : /\biOS\s+\d{1,2}(?:\.\d+){0,2}\b/i;
+  return supportedDevice.test(trimmed) && supportedOs.test(trimmed);
 }
 
 function looksLikePhysicalAndroidDevice(value) {
@@ -321,7 +324,11 @@ if (androidReleaseRequired) {
 }
 if (!buildEvidence.iosDevice) blockers.push('Missing PHASE5_IOS_DEVICE.');
 else if (!looksLikePhysicalIosDevice(buildEvidence.iosDevice)) {
-  blockers.push('PHASE5_IOS_DEVICE must name a physical iPhone/iPad model and iOS/iPadOS version.');
+  blockers.push(
+    launchContract.release.supportsIpad
+      ? 'PHASE5_IOS_DEVICE must name a physical iPhone/iPad model and iOS/iPadOS version.'
+      : 'PHASE5_IOS_DEVICE must name a physical iPhone model and iOS version; iPad is outside the active release contract.',
+  );
 }
 if (androidReleaseRequired) {
   if (!buildEvidence.androidDevice) blockers.push('Missing PHASE5_ANDROID_DEVICE.');

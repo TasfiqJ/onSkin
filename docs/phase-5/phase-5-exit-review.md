@@ -7,14 +7,16 @@ Implementation baseline is in progress-ready state, not device-certified state.
 Completed in repo:
 
 - Native camera dependency and config plugin added.
-- Native support floor accepted and guarded: iOS 17.0+ plus Android 10 / API
-  29+ via `docs/DEVICE_SUPPORT_POLICY.md`, `app.base.json`, and
-  `phase5:check-native-config`; Android compile/target SDK are explicitly
-  pinned to API 36 so Play target posture is separate from the install floor.
+- Native support floor accepted and guarded: iPhone on iOS 17.0+ via
+  `docs/DEVICE_SUPPORT_POLICY.md`, `app.base.json`, and
+  `phase5:check-native-config`. iPad and Android are outside the active release
+  contract. Android compile/target SDK remain pinned to API 36 as source-health
+  posture only.
   The launch-blocking web-compatible layout floor is now 360 x 640; 320-wide
   browser evidence is retained as stress/resilience coverage.
 - Runtime version policy added.
-- Android camera and notification permissions declared.
+- Android camera and notification permissions remain narrowly declared for
+  source health, without creating an Android release claim.
 - Exact-alarm permissions intentionally absent.
 - Shelf barcode scanner uses live camera, local checksum validation, duplicate suppression, and Phase 4 catalog lookup.
 - Ingredient label path captures a real label image and requires editable user-confirmed text.
@@ -47,7 +49,7 @@ Completed in repo:
 - Phase 5 config check and device QA packet generator added.
 - A structured performance-evidence template, strict validator, and smoke suite
   now require predeclared thresholds, supported physical-device/build proof,
-  repeated raw iOS/Android measurements including post-capture analysis,
+  repeated raw supported-iPhone measurements including post-capture analysis,
   encrypted-photo load/memory evidence, validator-calculated nearest-rank
   p50/p95/max, and calculated pass/fail instead of trust-only booleans or
   hand-entered summaries.
@@ -61,7 +63,7 @@ Completed in repo:
 
 Still blocked before beta:
 
-- EAS iOS and Android builds with real build IDs.
+- EAS iOS builds with real build IDs and retained resolved-image/Xcode/SDK logs.
 - Physical-device installs and matrix results.
 - On-device OCR module selection and QA if OCR is a launch claim.
 - Physical-device validation and calibration of the post-capture face/pose and
@@ -72,7 +74,7 @@ Still blocked before beta:
   frame-processing pipeline replaces it.
 - RevenueCat Test Store/sandbox native smoke.
 - Sentry native crash/source-map smoke.
-- Notification timing matrix on iOS/Android.
+- Notification timing matrix on supported iPhones and iOS versions.
 - Passing `phase5:performance-evidence:strict` artifact with owner-defined
   pre-measurement thresholds and real supported-device raw measurements.
 - Brand/legal clearance for production identifiers.
