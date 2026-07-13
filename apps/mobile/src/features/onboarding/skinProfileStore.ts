@@ -1,7 +1,7 @@
 import type { GoalId, PregnancyStatus, SkinAxis } from '@onskin/types';
 import { GOALS, SKIN_AXES } from '@onskin/types';
 
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import type { SkinProfileResult } from './quiz';
 
@@ -13,6 +13,7 @@ import type { SkinProfileResult } from './quiz';
 // (the entry gate in app/index.tsx previously read only the never-populated
 // server table). It also preserves the computed reveal data across a cold start.
 const KEY = 'onskin.skinprofile.v1';
+const SCHEMA_VERSION = 1 as const;
 const GOAL_IDS = new Set<GoalId>(GOALS.map((goal) => goal.id));
 const PREGNANCY_STATUSES = new Set<PregnancyStatus>([
   'none',
@@ -29,7 +30,15 @@ export type StoredSkinProfile = {
 
 export type StoredSkinProfileRead =
   | { status: 'available'; profile: StoredSkinProfile }
-  | { status: 'missing' | 'unavailable' | 'invalid'; profile: null };
+  | { status: 'missing' | 'unavailable' | 'invalid' | 'unsupported_version'; profile: null };
+
+type StoredSkinProfileEnvelope = {
+  version: typeof SCHEMA_VERSION;
+  profile: StoredSkinProfile;
+};
+
+export const SKIN_PROFILE_INVALID = 'SKIN_PROFILE_INVALID';
+export const SKIN_PROFILE_UNSUPPORTED_VERSION = 'SKIN_PROFILE_UNSUPPORTED_VERSION';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -139,25 +148,109 @@ function normalizeStoredSkinProfile(value: unknown): StoredSkinProfile | null {
   return { result, goals, completedAt };
 }
 
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  const keys = Object.keys(value);
+  return keys.length === expected.length && expected.every((key) => hasOwn(value, key));
+}
+
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`;
+  if (isRecord(value)) {
+    return `{${Object.keys(value)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
+      .join(',')}}`;
+  }
+  return JSON.stringify(value) ?? 'undefined';
+}
+
+function isStrictCurrentProfile(value: unknown): value is StoredSkinProfile {
+  if (!isRecord(value) || !hasExactKeys(value, ['result', 'goals', 'completedAt'])) return false;
+  if (!isRecord(value.result)) return false;
+  if (
+    !hasExactKeys(value.result, [
+      'axes',
+      'axisScores',
+      'dspt',
+      'fitzpatrick',
+      'monkTone',
+      'sensitivities',
+      'pregnancyStatus',
+    ])
+  ) {
+    return false;
+  }
+  if (
+    !isRecord(value.result.axes) ||
+    !hasExactKeys(value.result.axes, SKIN_AXES) ||
+    !isRecord(value.result.axisScores) ||
+    !hasExactKeys(value.result.axisScores, SKIN_AXES)
+  ) {
+    return false;
+  }
+  const normalized = normalizeStoredSkinProfile(value);
+  return normalized !== null && canonicalJson(normalized) === canonicalJson(value);
+}
+
+function decodeStoredSkinProfile(raw: string): StoredSkinProfile {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    throw new Error(SKIN_PROFILE_INVALID);
+  }
+  if (!isRecord(parsed)) throw new Error(SKIN_PROFILE_INVALID);
+
+  if (hasOwn(parsed, 'version')) {
+    if (parsed.version !== SCHEMA_VERSION) {
+      if (
+        typeof parsed.version === 'number' &&
+        Number.isSafeInteger(parsed.version) &&
+        parsed.version > SCHEMA_VERSION
+      ) {
+        throw new Error(SKIN_PROFILE_UNSUPPORTED_VERSION);
+      }
+      throw new Error(SKIN_PROFILE_INVALID);
+    }
+    if (
+      !hasExactKeys(parsed, ['version', 'profile']) ||
+      !isStrictCurrentProfile(parsed.profile)
+    ) {
+      throw new Error(SKIN_PROFILE_INVALID);
+    }
+    return parsed.profile;
+  }
+
+  const normalized = normalizeStoredSkinProfile(parsed);
+  if (!normalized) throw new Error(SKIN_PROFILE_INVALID);
+  return normalized;
+}
+
+function encodeStoredSkinProfile(profile: StoredSkinProfile): string {
+  return JSON.stringify({
+    version: SCHEMA_VERSION,
+    profile,
+  } satisfies StoredSkinProfileEnvelope);
+}
+
 export async function readStoredSkinProfile(): Promise<StoredSkinProfileRead> {
-  let raw: string | null = null;
+  let raw: string | null;
   try {
     raw = await getPrivateItem(KEY);
   } catch {
     return { status: 'unavailable', profile: null };
   }
-  if (!raw) return { status: 'missing', profile: null };
+  if (raw === null) return { status: 'missing', profile: null };
   try {
-    const parsed: unknown = JSON.parse(raw);
-    const normalized = normalizeStoredSkinProfile(parsed);
-    if (!normalized) {
-      return { status: 'invalid', profile: null };
+    return { status: 'available', profile: decodeStoredSkinProfile(raw) };
+  } catch (error) {
+    if (error instanceof Error && error.message === SKIN_PROFILE_UNSUPPORTED_VERSION) {
+      return { status: 'unsupported_version', profile: null };
     }
-    if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
-      await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
-    }
-    return { status: 'available', profile: normalized };
-  } catch {
     return { status: 'invalid', profile: null };
   }
 }
@@ -170,7 +263,10 @@ export async function getStoredSkinProfile(): Promise<StoredSkinProfile | null> 
 export async function setStoredSkinProfile(rec: StoredSkinProfile): Promise<void> {
   const normalized = normalizeStoredSkinProfile(rec);
   if (!normalized) throw new Error('INVALID_SKIN_PROFILE_RECORD');
-  await setPrivateItem(KEY, JSON.stringify(normalized));
+  await updatePrivateItem(KEY, (current) => {
+    if (current !== null) decodeStoredSkinProfile(current);
+    return encodeStoredSkinProfile(normalized);
+  });
 }
 
 export async function updateStoredPregnancyStatus(
@@ -179,14 +275,17 @@ export async function updateStoredPregnancyStatus(
   if (!PREGNANCY_STATUSES.has(pregnancyStatus)) {
     throw new Error('INVALID_PREGNANCY_STATUS');
   }
-  const current = await getStoredSkinProfile();
-  if (!current) throw new Error('SKIN_PROFILE_UNAVAILABLE');
-
-  const next: StoredSkinProfile = {
-    ...current,
-    result: { ...current.result, pregnancyStatus },
-  };
-  await setStoredSkinProfile(next);
+  let next: StoredSkinProfile | null = null;
+  await updatePrivateItem(KEY, (currentRaw) => {
+    if (currentRaw === null) throw new Error('SKIN_PROFILE_UNAVAILABLE');
+    const current = decodeStoredSkinProfile(currentRaw);
+    next = {
+      ...current,
+      result: { ...current.result, pregnancyStatus },
+    };
+    return encodeStoredSkinProfile(next);
+  });
+  if (!next) throw new Error('SKIN_PROFILE_UNAVAILABLE');
   return next;
 }
 
