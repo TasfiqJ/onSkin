@@ -3,9 +3,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { detectConflicts, type DetectedConflict } from './engine';
 import {
   choiceForConflict,
+  CONFLICT_CHOICES_INVALID,
+  CONFLICT_CHOICES_SCHEMA_UNSUPPORTED,
   getConflictChoices,
   getOverriddenKeys,
   loadConflictChoices,
+  normalizeConflictChoicesForExport,
   setConflictChoice,
   setConflictOverride,
   unresolvedConflicts,
@@ -15,15 +18,11 @@ import { STARTER_RULES } from './rules';
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
   getPrivateItem: vi.fn(),
-  removePrivateItem: vi.fn(),
-  setPrivateItem: vi.fn(),
   updatePrivateItem: vi.fn(),
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: mocks.getPrivateItem,
-  setPrivateItem: mocks.setPrivateItem,
-  removePrivateItem: mocks.removePrivateItem,
   updatePrivateItem: mocks.updatePrivateItem,
 }));
 
@@ -45,16 +44,8 @@ describe('conflict choice persistence', () => {
   beforeEach(() => {
     mocks.storage.clear();
     mocks.getPrivateItem.mockReset();
-    mocks.removePrivateItem.mockReset();
-    mocks.setPrivateItem.mockReset();
     mocks.updatePrivateItem.mockReset();
     mocks.getPrivateItem.mockImplementation(async (key: string) => mocks.storage.get(key) ?? null);
-    mocks.setPrivateItem.mockImplementation(async (key: string, value: string) => {
-      mocks.storage.set(key, value);
-    });
-    mocks.removePrivateItem.mockImplementation(async (key: string) => {
-      mocks.storage.delete(key);
-    });
     mocks.updatePrivateItem.mockImplementation(
       async (key: string, updater: (current: string | null) => string | null) => {
         const next = updater(mocks.storage.get(key) ?? null);
@@ -68,10 +59,11 @@ describe('conflict choice persistence', () => {
     await expect(loadConflictChoices()).resolves.toEqual({});
   });
 
-  it('migrates the legacy override array into a versioned pair-aware record', async () => {
+  it('normalizes a legacy override array in memory without rewriting storage', async () => {
     const current = conflict();
     const key = `${current.rule.id}:glycolic+retinol`;
-    mocks.storage.set(KEY, JSON.stringify([key, key, '', false]));
+    const legacy = JSON.stringify([key, key, '', false]);
+    mocks.storage.set(KEY, legacy);
 
     await expect(loadConflictChoices()).resolves.toEqual({
       [key]: {
@@ -81,30 +73,25 @@ describe('conflict choice persistence', () => {
         productIds: ['glycolic', 'retinol'],
       },
     });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      schemaVersion: 1,
-      choices: {
-        [key]: {
-          choice: 'use_together',
-          ruleId: current.rule.id,
-          ruleVersion: 1,
-          productIds: ['glycolic', 'retinol'],
-        },
-      },
-    });
+    expect(mocks.storage.get(KEY)).toBe(legacy);
   });
 
-  it('removes malformed state but preserves a newer schema it cannot safely write', async () => {
-    mocks.storage.set(KEY, '{not-json');
-    await expect(loadConflictChoices()).resolves.toEqual({});
-    expect(mocks.storage.has(KEY)).toBe(false);
+  it('fails closed and preserves malformed or future-version state', async () => {
+    const malformed = '{not-json';
+    mocks.storage.set(KEY, malformed);
+    await expect(loadConflictChoices()).rejects.toThrow(CONFLICT_CHOICES_INVALID);
+    await expect(getConflictChoices()).resolves.toEqual({});
+    await expect(setConflictChoice(conflict(), 'use_together')).rejects.toThrow(
+      CONFLICT_CHOICES_INVALID,
+    );
+    expect(mocks.storage.get(KEY)).toBe(malformed);
 
     const futureState = JSON.stringify({ schemaVersion: 2, choices: { future: true } });
     mocks.storage.set(KEY, futureState);
-    await expect(loadConflictChoices()).rejects.toThrow('CONFLICT_CHOICES_SCHEMA_UNSUPPORTED');
+    await expect(loadConflictChoices()).rejects.toThrow(CONFLICT_CHOICES_SCHEMA_UNSUPPORTED);
     await expect(getConflictChoices()).resolves.toEqual({});
     await expect(setConflictChoice(conflict(), 'use_together')).rejects.toThrow(
-      'CONFLICT_CHOICES_SCHEMA_UNSUPPORTED',
+      CONFLICT_CHOICES_SCHEMA_UNSUPPORTED,
     );
     expect(mocks.storage.get(KEY)).toBe(futureState);
   });
@@ -121,26 +108,32 @@ describe('conflict choice persistence', () => {
     expect(await getOverriddenKeys()).toEqual(new Set([`${current.rule.id}:glycolic+retinol`]));
   });
 
-  it('normalizes the legacy keep-only value to a resolution-accurate accepted choice', async () => {
+  it('refuses to partially apply or overwrite a non-canonical current record', async () => {
     const current = conflict();
     const key = `${current.rule.id}:glycolic+retinol`;
-    mocks.storage.set(
-      KEY,
-      JSON.stringify({
-        schemaVersion: 1,
-        choices: {
-          [key]: {
-            choice: 'keep_alternate_nights',
-            ruleId: current.rule.id,
-            ruleVersion: 1,
-            productIds: ['glycolic', 'retinol'],
-          },
+    const nonCanonical = JSON.stringify({
+      schemaVersion: 1,
+      choices: {
+        [key]: {
+          choice: 'keep_alternate_nights',
+          ruleId: current.rule.id,
+          ruleVersion: 1,
+          productIds: ['glycolic', 'retinol'],
         },
-      }),
-    );
+      },
+    });
+    mocks.storage.set(KEY, nonCanonical);
 
-    const choices = await loadConflictChoices();
-    expect(choiceForConflict(choices, current)).toBe('accept_suggested_timing');
+    await expect(loadConflictChoices()).rejects.toThrow(CONFLICT_CHOICES_INVALID);
+    await expect(getConflictChoices()).resolves.toEqual({});
+    await expect(setConflictChoice(current, 'use_together')).rejects.toThrow(
+      CONFLICT_CHOICES_INVALID,
+    );
+    expect(mocks.storage.get(KEY)).toBe(nonCanonical);
+    expect(normalizeConflictChoicesForExport(JSON.parse(nonCanonical))).toEqual({
+      export_status: 'unrecognized_conflict_choice_schema',
+      stored_value: JSON.parse(nonCanonical),
+    });
   });
 
   it('does not apply an old choice after the reviewed rule version changes', async () => {

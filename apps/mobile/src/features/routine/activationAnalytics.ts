@@ -1,11 +1,21 @@
 import { track } from '@/lib/analytics/track';
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 const KEY = 'routinekind.routineActivation.v1';
+const SCHEMA_VERSION = 1 as const;
+
+export const ROUTINE_ACTIVATION_INVALID = 'ROUTINE_ACTIVATION_INVALID';
+export const ROUTINE_ACTIVATION_UNSUPPORTED_VERSION =
+  'ROUTINE_ACTIVATION_UNSUPPORTED_VERSION';
 
 type ActivationFlags = {
   firstRoutineCreated: boolean;
   firstUsefulInsight: boolean;
+};
+
+type StoredActivationFlags = {
+  version: typeof SCHEMA_VERSION;
+  flags: ActivationFlags;
 };
 
 type FirstInsightSource = 'routine_plan' | 'reveal';
@@ -15,37 +25,93 @@ const EMPTY_FLAGS: ActivationFlags = {
   firstUsefulInsight: false,
 };
 
-function normalizeFlags(value: unknown): ActivationFlags | null {
-  if (!value || Array.isArray(value) || typeof value !== 'object') return null;
-  const input = value as Partial<Record<keyof ActivationFlags, unknown>>;
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function hasExactKeys(value: Record<string, unknown>, keys: readonly string[]): boolean {
+  const actual = Object.keys(value).sort();
+  const expected = [...keys].sort();
+  return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
+}
+
+function decodeFlagsObject(value: unknown): ActivationFlags {
+  if (!isRecord(value) || !hasExactKeys(value, ['firstRoutineCreated', 'firstUsefulInsight'])) {
+    throw new Error(ROUTINE_ACTIVATION_INVALID);
+  }
+  if (
+    typeof value.firstRoutineCreated !== 'boolean' ||
+    typeof value.firstUsefulInsight !== 'boolean'
+  ) {
+    throw new Error(ROUTINE_ACTIVATION_INVALID);
+  }
   return {
-    firstRoutineCreated: input.firstRoutineCreated === true,
-    firstUsefulInsight: input.firstUsefulInsight === true,
+    firstRoutineCreated: value.firstRoutineCreated,
+    firstUsefulInsight: value.firstUsefulInsight,
   };
 }
 
-async function loadFlags(): Promise<ActivationFlags> {
-  let raw: string | null;
-  try {
-    raw = await getPrivateItem(KEY);
-  } catch {
-    return { ...EMPTY_FLAGS };
-  }
-  if (!raw) return { ...EMPTY_FLAGS };
+function decodeFlags(raw: string | null): ActivationFlags {
+  if (raw === null) return { ...EMPTY_FLAGS };
 
+  let parsed: unknown;
   try {
-    const normalized = normalizeFlags(JSON.parse(raw) as unknown);
-    if (normalized) return normalized;
+    parsed = JSON.parse(raw) as unknown;
   } catch {
-    /* malformed local analytics marker */
+    throw new Error(ROUTINE_ACTIVATION_INVALID);
+  }
+  if (!isRecord(parsed)) throw new Error(ROUTINE_ACTIVATION_INVALID);
+
+  if ('version' in parsed) {
+    if (
+      typeof parsed.version === 'number' &&
+      Number.isSafeInteger(parsed.version) &&
+      parsed.version > SCHEMA_VERSION
+    ) {
+      throw new Error(ROUTINE_ACTIVATION_UNSUPPORTED_VERSION);
+    }
+    if (
+      parsed.version !== SCHEMA_VERSION ||
+      !hasExactKeys(parsed, ['version', 'flags'])
+    ) {
+      throw new Error(ROUTINE_ACTIVATION_INVALID);
+    }
+    return decodeFlagsObject(parsed.flags);
   }
 
-  await removePrivateItem(KEY).catch(() => undefined);
-  return { ...EMPTY_FLAGS };
+  // Pre-envelope v1 payload. It is decoded without a read-time rewrite and is
+  // upgraded only when an explicit event reservation changes the value.
+  return decodeFlagsObject(parsed);
 }
 
-async function saveFlags(flags: ActivationFlags): Promise<void> {
-  await setPrivateItem(KEY, JSON.stringify(flags));
+function encodeFlags(flags: ActivationFlags): string {
+  return JSON.stringify({
+    version: SCHEMA_VERSION,
+    flags,
+  } satisfies StoredActivationFlags);
+}
+
+async function reserveFirstEvents(input: {
+  routineCreated: boolean;
+  usefulInsight: boolean;
+}): Promise<ActivationFlags> {
+  const reserved = { ...EMPTY_FLAGS };
+  await updatePrivateItem(KEY, (raw) => {
+    const current = decodeFlags(raw);
+    const next = { ...current };
+
+    if (input.routineCreated && !current.firstRoutineCreated) {
+      next.firstRoutineCreated = true;
+      reserved.firstRoutineCreated = true;
+    }
+    if (input.usefulInsight && !current.firstUsefulInsight) {
+      next.firstUsefulInsight = true;
+      reserved.firstUsefulInsight = true;
+    }
+
+    return reserved.firstRoutineCreated || reserved.firstUsefulInsight ? encodeFlags(next) : raw;
+  });
+  return reserved;
 }
 
 export async function recordFirstUsefulInsightAnalytics({
@@ -59,12 +125,15 @@ export async function recordFirstUsefulInsightAnalytics({
 }): Promise<void> {
   if (isExample || insightCount <= 0) return;
 
-  const flags = await loadFlags();
-  if (flags.firstUsefulInsight) return;
-
-  track('first_useful_insight', { count: insightCount, source });
-  flags.firstUsefulInsight = true;
-  await saveFlags(flags).catch(() => undefined);
+  let reserved: ActivationFlags;
+  try {
+    reserved = await reserveFirstEvents({ routineCreated: false, usefulInsight: true });
+  } catch {
+    return;
+  }
+  if (reserved.firstUsefulInsight) {
+    track('first_useful_insight', { count: insightCount, source });
+  }
 }
 
 export async function recordRoutinePlanAnalytics({
@@ -87,22 +156,22 @@ export async function recordRoutinePlanAnalytics({
     track('routine_created', { source });
   }
 
-  const flags = await loadFlags();
-  let changed = false;
+  let reserved: ActivationFlags;
+  try {
+    reserved = await reserveFirstEvents({
+      routineCreated: hasRoutineSteps,
+      usefulInsight: insightCount > 0,
+    });
+  } catch {
+    return;
+  }
 
-  if (hasRoutineSteps && !flags.firstRoutineCreated) {
+  if (reserved.firstRoutineCreated) {
     track('first_routine_created', { source });
-    flags.firstRoutineCreated = true;
-    changed = true;
   }
-
-  if (insightCount > 0 && !flags.firstUsefulInsight) {
+  if (reserved.firstUsefulInsight) {
     track('first_useful_insight', { count: insightCount, source });
-    flags.firstUsefulInsight = true;
-    changed = true;
   }
-
-  if (changed) await saveFlags(flags).catch(() => undefined);
 }
 
 export async function clearRoutineActivationAnalytics(): Promise<void> {
