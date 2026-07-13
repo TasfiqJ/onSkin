@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-13T15:32:47.672Z
+Generated: 2026-07-13T18:54:03.726Z
 Status: pass
-Git SHA: 4bb0f418697f3714da2611cb8dfd318ce612656c
+Git SHA: 43467f0135b715bac01b697feba5515f77b74715
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -13,7 +13,7 @@ reviewers must inspect before launch gates can close.
 ## Summary
 
 - Review items: 37
-- Source files hashed: 311
+- Source files hashed: 313
 - Missing source files: 0
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
@@ -37,7 +37,7 @@ reviewers must inspect before launch gates can close.
 | clinical          | Shoppable stacks                                  | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
 | clinical          | Community notes and posts                         | Not cleared | TBD      | TBD  | not-applicable | 17      | 0               |
 | clinical          | Ask OnSkin deterministic answers                  | Not cleared | TBD      | TBD  | not-applicable | 2       | 0               |
-| clinical          | Trend analysis                                    | Not cleared | TBD      | TBD  | not-applicable | 13      | 0               |
+| clinical          | Trend analysis                                    | Not cleared | TBD      | TBD  | not-applicable | 14      | 0               |
 | clinical          | Photo progress copy                               | Not cleared | TBD      | TBD  | not-applicable | 1       | 0               |
 | clinical          | Onboarding quiz                                   | Blocked     | TBD      | TBD  | not-applicable | 1       | 0               |
 | clinical          | Consent copy                                      | Blocked     | TBD      | TBD  | not-applicable | 1       | 0               |
@@ -50,7 +50,7 @@ reviewers must inspect before launch gates can close.
 | cosmeticChemistry | Smart shelf labels                                | Not cleared | TBD      | TBD  | not-applicable | 23      | 0               |
 | privacySecurity   | Health-data consent and withdrawal                | Blocked     | TBD      | TBD  | not-applicable | 13      | 0               |
 | privacySecurity   | Photo privacy and local storage                   | Not cleared | TBD      | TBD  | not-applicable | 4       | 0               |
-| privacySecurity   | Trend and cloud-backup consent                    | Blocked     | TBD      | TBD  | not-applicable | 14      | 0               |
+| privacySecurity   | Trend and cloud-backup consent                    | Blocked     | TBD      | TBD  | not-applicable | 15      | 0               |
 | privacySecurity   | Ask, commerce, and community consent              | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
 | privacySecurity   | Account deletion and data export                  | Blocked     | TBD      | TBD  | not-applicable | 10      | 0               |
 | privacySecurity   | Analytics and crash payloads                      | Not cleared | TBD      | TBD  | not-applicable | 13      | 0               |
@@ -357,7 +357,7 @@ Sources:
 - Status: Not cleared
 - Required reviewer: board-certified dermatologist or equivalent qualified clinician
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `2b8b8ca40ca13491943fab2411811c16df48b79c8335942f5ac85fc25fedb20c`
+- Review snapshot SHA-256: `ef51a8cdaa6e9166780069e15792596263d6d4c5b3534f6eeb34b0da059048ce`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Requires real engine, calibration, fairness, privacy, clinical, legal, and device review before launch.
@@ -370,12 +370,13 @@ Sources:
 - `apps/mobile/src/features/trend/consent.test.ts` - 5437 bytes - sha256 `8bf2da0499d74c4d4be27a3a7755a561c805293d0d89a17f14d368e28d256b89`
 - `apps/mobile/src/features/trend/consent.ts` - 2280 bytes - sha256 `61bfca2aaa7f10951b7d316280fe370cf25a5704f4da5c0011652ff9102f5bbd`
 - `apps/mobile/src/features/trend/copy.ts` - 5381 bytes - sha256 `804c809a7f3acdebf3293fdb738d18524e6e3aa8095e78c0f00de0cf8cfc9318`
+- `apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts` - 3425 bytes - sha256 `d4b9128f7a7309f2117d3df3ef5016950bf4cd9a58ce2a253dc3517288fda6e1`
 - `apps/mobile/src/features/trend/store.test.ts` - 2172 bytes - sha256 `7cde37d9431eb3c458d7bda62d8f10eb6d442e6ee25f95cbb1cffb2cce3dc932`
 - `apps/mobile/src/features/trend/store.ts` - 1446 bytes - sha256 `ccf25c4dc64b977468c6018aee896f736bf64db535f7443e5e2593b807b45989`
 - `apps/mobile/src/features/trend/trend.test.ts` - 3224 bytes - sha256 `797f4e43ac5724fce8c6df388bdd6c84514ff8a10626f6c7866b8fb47bf3733b`
 - `apps/mobile/src/features/trend/trend.ts` - 3598 bytes - sha256 `3a7c314b74b0ff8e166f1aa55f710745ad6d743793bc5f65441c1675d7aeb24d`
 - `apps/mobile/src/features/trend/TrendInsight.tsx` - 2322 bytes - sha256 `d033b5f0572da342702b29f72ee2864808757525f2804a688789c79661029c1b`
-- `apps/mobile/src/features/trend/trendRoutes.test.ts` - 2815 bytes - sha256 `13209351106694ed10f439174a43d6e9430a4b4b9cd3e6cd4b15ec0b6c668a76`
+- `apps/mobile/src/features/trend/trendRoutes.test.ts` - 3695 bytes - sha256 `3f4c93276730c9725fe274b70587c539316f924f03ef6b328aaa7dff2739bab7`
 - `apps/mobile/src/features/trend/useTrend.ts` - 3012 bytes - sha256 `c3c33e17b6fe1043b94478776f8f45220e56bf5f3611703d26bcda2a7f0541c9`
 
 ### clinical - Photo progress copy
@@ -644,7 +645,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `223d588b295e01143ccc6975490f83698546d9df2b344daad35a6df94d4c3a8e`
+- Review snapshot SHA-256: `b6ddaf142a66c5b1577aa8b4a9a6f34fd10fefa2eaec389a9d49c8aba3f00859`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Fairness/legal review and live consent ledger evidence are required.
@@ -657,12 +658,13 @@ Sources:
 - `apps/mobile/src/features/trend/consent.test.ts` - 5437 bytes - sha256 `8bf2da0499d74c4d4be27a3a7755a561c805293d0d89a17f14d368e28d256b89`
 - `apps/mobile/src/features/trend/consent.ts` - 2280 bytes - sha256 `61bfca2aaa7f10951b7d316280fe370cf25a5704f4da5c0011652ff9102f5bbd`
 - `apps/mobile/src/features/trend/copy.ts` - 5381 bytes - sha256 `804c809a7f3acdebf3293fdb738d18524e6e3aa8095e78c0f00de0cf8cfc9318`
+- `apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts` - 3425 bytes - sha256 `d4b9128f7a7309f2117d3df3ef5016950bf4cd9a58ce2a253dc3517288fda6e1`
 - `apps/mobile/src/features/trend/store.test.ts` - 2172 bytes - sha256 `7cde37d9431eb3c458d7bda62d8f10eb6d442e6ee25f95cbb1cffb2cce3dc932`
 - `apps/mobile/src/features/trend/store.ts` - 1446 bytes - sha256 `ccf25c4dc64b977468c6018aee896f736bf64db535f7443e5e2593b807b45989`
 - `apps/mobile/src/features/trend/trend.test.ts` - 3224 bytes - sha256 `797f4e43ac5724fce8c6df388bdd6c84514ff8a10626f6c7866b8fb47bf3733b`
 - `apps/mobile/src/features/trend/trend.ts` - 3598 bytes - sha256 `3a7c314b74b0ff8e166f1aa55f710745ad6d743793bc5f65441c1675d7aeb24d`
 - `apps/mobile/src/features/trend/TrendInsight.tsx` - 2322 bytes - sha256 `d033b5f0572da342702b29f72ee2864808757525f2804a688789c79661029c1b`
-- `apps/mobile/src/features/trend/trendRoutes.test.ts` - 2815 bytes - sha256 `13209351106694ed10f439174a43d6e9430a4b4b9cd3e6cd4b15ec0b6c668a76`
+- `apps/mobile/src/features/trend/trendRoutes.test.ts` - 3695 bytes - sha256 `3f4c93276730c9725fe274b70587c539316f924f03ef6b328aaa7dff2739bab7`
 - `apps/mobile/src/features/trend/useTrend.ts` - 3012 bytes - sha256 `c3c33e17b6fe1043b94478776f8f45220e56bf5f3611703d26bcda2a7f0541c9`
 - `apps/mobile/src/features/photos/consent.ts` - 6516 bytes - sha256 `b068aac3b61faac18e758bffc43ea433e1b3bc1f513c65fbd63f72aaaedb09e8`
 

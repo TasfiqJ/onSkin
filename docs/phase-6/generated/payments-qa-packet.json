@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T15:32:51.602Z",
+  "generatedAt": "2026-07-13T18:54:22.945Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -81,7 +81,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "4bb0f418697f3714da2611cb8dfd318ce612656c",
+  "gitSha": "43467f0135b715bac01b697feba5515f77b74715",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -347,14 +347,14 @@
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 51717,
-      "sha256": "a64921f648365daaee7fa72c46010a9662deb11efb62e93c0807ecd2d87c15eb"
+      "bytes": 59344,
+      "sha256": "38e229c125f6c077d68722ff792825f750610f1e8610008c61834e9f43e6cfe9"
     },
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 14689,
-      "sha256": "6248cbe57cb3a77b3ba8fc36c3a78d4ab18ca363b275c4dbf7735dc3e3f91675"
+      "bytes": 14794,
+      "sha256": "0dd6fa1c3cf1e68e26adb577e8d9711e9eacf60e3b2f01a0da3e9ab5268744db"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
@@ -371,20 +371,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 357258,
-      "sha256": "a8ee0435bc31e8d32580544586bd1bd36932aa75b8c5cd3dba06c06bb6eabc8d"
+      "bytes": 358190,
+      "sha256": "1eeb5ae98ce1c98f9f479c9fe720a6ad0eb52a6959fec5f3dc3c54c5696ca461"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
-      "bytes": 39942,
-      "sha256": "8ef1a16368fe98e181fbf4889cdf10d85086bcc41c77db2c8c830482282767a6"
+      "bytes": 41722,
+      "sha256": "b07ddbf4728f8216f9e2a623bdb6dec03ddba4b5b3aedfcd11d1eb354af1b61c"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
-      "bytes": 16173,
-      "sha256": "8c29c22b205fc030217813dc0f82a1f9bbb70508fb0da1867d8aa1736942055e"
+      "bytes": 16508,
+      "sha256": "ef53f31c1c8ea20ca83e40b2797a718e9c8a7caacfb3e320a6da9c2d241ae2d9"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",

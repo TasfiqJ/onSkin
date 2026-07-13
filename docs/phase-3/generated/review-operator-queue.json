@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-13T15:32:48.148Z",
+  "generatedAt": "2026-07-13T18:54:04.231Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "4bb0f418697f3714da2611cb8dfd318ce612656c",
+  "gitSha": "43467f0135b715bac01b697feba5515f77b74715",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 109335,
-    "sha256": "cd7f8d205da388551e910e385579f6b9acad004142fb385b6ee44049dfb32dfa",
-    "currentSha256": "cd7f8d205da388551e910e385579f6b9acad004142fb385b6ee44049dfb32dfa"
+    "bytes": 109813,
+    "sha256": "c80093766388a571ce0ee2131f3b139806f7cd87c40aad639bfcdfaeb88bfba1",
+    "currentSha256": "c80093766388a571ce0ee2131f3b139806f7cd87c40aad639bfcdfaeb88bfba1"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -1139,7 +1139,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "223d588b295e01143ccc6975490f83698546d9df2b344daad35a6df94d4c3a8e",
+      "reviewSnapshotSha256": "b6ddaf142a66c5b1577aa8b4a9a6f34fd10fefa2eaec389a9d49c8aba3f00859",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1184,6 +1184,12 @@
           "sha256": "804c809a7f3acdebf3293fdb738d18524e6e3aa8095e78c0f00de0cf8cfc9318"
         },
         {
+          "path": "apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts",
+          "exists": true,
+          "bytes": 3425,
+          "sha256": "d4b9128f7a7309f2117d3df3ef5016950bf4cd9a58ce2a253dc3517288fda6e1"
+        },
+        {
           "path": "apps/mobile/src/features/trend/store.test.ts",
           "exists": true,
           "bytes": 2172,
@@ -1216,8 +1222,8 @@
         {
           "path": "apps/mobile/src/features/trend/trendRoutes.test.ts",
           "exists": true,
-          "bytes": 2815,
-          "sha256": "13209351106694ed10f439174a43d6e9430a4b4b9cd3e6cd4b15ec0b6c668a76"
+          "bytes": 3695,
+          "sha256": "3f4c93276730c9725fe274b70587c539316f924f03ef6b328aaa7dff2739bab7"
         },
         {
           "path": "apps/mobile/src/features/trend/useTrend.ts",
@@ -1604,7 +1610,7 @@
       "requiredReviewer": "board-certified dermatologist or equivalent qualified clinician",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "2b8b8ca40ca13491943fab2411811c16df48b79c8335942f5ac85fc25fedb20c",
+      "reviewSnapshotSha256": "ef51a8cdaa6e9166780069e15792596263d6d4c5b3534f6eeb34b0da059048ce",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -1649,6 +1655,12 @@
           "sha256": "804c809a7f3acdebf3293fdb738d18524e6e3aa8095e78c0f00de0cf8cfc9318"
         },
         {
+          "path": "apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts",
+          "exists": true,
+          "bytes": 3425,
+          "sha256": "d4b9128f7a7309f2117d3df3ef5016950bf4cd9a58ce2a253dc3517288fda6e1"
+        },
+        {
           "path": "apps/mobile/src/features/trend/store.test.ts",
           "exists": true,
           "bytes": 2172,
@@ -1681,8 +1693,8 @@
         {
           "path": "apps/mobile/src/features/trend/trendRoutes.test.ts",
           "exists": true,
-          "bytes": 2815,
-          "sha256": "13209351106694ed10f439174a43d6e9430a4b4b9cd3e6cd4b15ec0b6c668a76"
+          "bytes": 3695,
+          "sha256": "3f4c93276730c9725fe274b70587c539316f924f03ef6b328aaa7dff2739bab7"
         },
         {
           "path": "apps/mobile/src/features/trend/useTrend.ts",
