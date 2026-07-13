@@ -191,6 +191,16 @@ describe('Expo app identity config', () => {
     expect(buildProperties.android?.targetSdkVersion).toBe(36);
   });
 
+  it('declares the native Sign in with Apple capability used by the account flow', () => {
+    const expo = buildExpoConfig({});
+    const pluginNames = (expo.plugins ?? []).map((plugin: unknown) =>
+      Array.isArray(plugin) ? plugin[0] : plugin,
+    );
+
+    expect(expo.ios.usesAppleSignIn).toBe(true);
+    expect(pluginNames).toContain('expo-apple-authentication');
+  });
+
   it('uses production identity only when the production variant is explicit', () => {
     const expo = buildExpoConfig(
       {

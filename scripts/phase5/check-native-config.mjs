@@ -45,6 +45,9 @@ function warn(condition, message) {
 
 require(Boolean(pkg.dependencies?.['expo-camera']), 'expo-camera dependency is missing.');
 require(Boolean(
+  pkg.dependencies?.['expo-apple-authentication'],
+), 'expo-apple-authentication dependency is missing.');
+require(Boolean(
   pkg.dependencies?.['@infinitered/react-native-mlkit-face-detection'],
 ), 'on-device post-capture face detection dependency is missing.');
 require(Boolean(
@@ -55,6 +58,11 @@ require(Boolean(
   pkg.dependencies?.['expo-build-properties'],
 ), 'expo-build-properties dependency is missing; Android minSdk support floor is not enforceable.');
 require(plugins.has('expo-camera'), 'expo-camera config plugin is missing.');
+require(plugins.has(
+  'expo-apple-authentication',
+), 'expo-apple-authentication config plugin is missing; standalone iOS builds would lack the native Sign in with Apple setup.');
+require(app.ios?.usesAppleSignIn ===
+  true, 'ios.usesAppleSignIn must be true so signed iOS builds declare the Sign in with Apple capability.');
 require(plugins.has(
   'expo-build-properties',
 ), 'expo-build-properties config plugin is missing; Android minSdk support floor is not enforceable.');
