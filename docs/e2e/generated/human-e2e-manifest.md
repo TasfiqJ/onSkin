@@ -1,8 +1,8 @@
 # Human E2E Manifest
 
-Generated: 2026-07-13T15:32:19.429Z
-Git SHA: 990d2cb2d74798f1b074036f559f196ca4ccc10c
-Evidence date: 2026-07-12
+Generated: 2026-07-13T18:52:19.601Z
+Git SHA: deec382005c47f9c00fe71a842d3c2a3f8f17270
+Evidence date: 2026-07-13
 Baseline suite date: 2026-07-09
 Status: pass
 
@@ -55,6 +55,7 @@ dependency to the repo.
 | Authored cycle customization and deterministic reconciliation               | supported-phone | pass   | summary status: pass; 0 failed routes.                                                                                           | 19    | test-results/human-e2e/2026-07-10/cycle-customization-current                          |
 | Shelf freshness and replacement provenance lifecycle                        | supported-phone | pass   | summary status: pass; 0 failed routes.                                                                                           | 23    | test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current                   |
 | Required-surface honest direct-entry and recovery pass                      | supported-phone | pass   | 5 exact direct-entry routes and 3 recovery actions passed without fake inputs, overflow, undersized controls, or browser errors. | 7     | test-results/human-e2e/2026-07-12/required-surface-honesty-rerun                       |
+| Trend navigator privacy and exact-route recovery                            | supported-phone | pass   | summary status: pass; 0 failed routes.                                                                                           | 7     | test-results/human-e2e/2026-07-13/trend-route-group-gate-current                       |
 | Account export local-photo scope disclosure                                 | supported-phone | pass   | summary status: pass; 0 failed routes.                                                                                           | 1     | test-results/human-e2e/2026-07-10/data-export-local-photo-disclosure-current           |
 | Combined account and current-device export                                  | supported-phone | pass   | summary status: pass; 0 failed routes.                                                                                           | 13    | test-results/human-e2e/2026-07-10/data-export-combined-device-current                  |
 | Account-generation-bound combined export                                    | supported-phone | pass   | summary status: pass; 0 failed routes.                                                                                           | 16    | test-results/human-e2e/2026-07-11/data-export-account-generation-current               |

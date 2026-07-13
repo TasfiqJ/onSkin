@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-13T15:32:19.429Z",
-  "gitSha": "990d2cb2d74798f1b074036f559f196ca4ccc10c",
-  "evidenceDate": "2026-07-12",
+  "generatedAt": "2026-07-13T18:52:19.601Z",
+  "gitSha": "deec382005c47f9c00fe71a842d3c2a3f8f17270",
+  "evidenceDate": "2026-07-13",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
   "purpose": "Durable local human-simulated E2E manifest for Expo web-compatible launch gates.",
@@ -848,6 +848,51 @@
       "fileCount": 7,
       "bytes": 38262,
       "evidenceSha256": "cf1b8682b5eba0e84b3db6d8b7159f45be7ef53479710dc4caac527202b383ff"
+    },
+    {
+      "id": "trend-route-group-gate-supported-phone",
+      "title": "Trend navigator privacy and exact-route recovery",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "supported-phone",
+      "folder": "test-results/human-e2e/2026-07-13/trend-route-group-gate-current",
+      "evidence": "summary.json",
+      "requiredFiles": [
+        "summary.json",
+        "report.md",
+        "pre-fix-route-evidence.json",
+        "pre-fix-optin-canonicalized-to-fairness.png",
+        "post-fix-route-evidence.json",
+        "post-fix-trend-optin.png",
+        "post-fix-trend-fairness.png"
+      ],
+      "validateSummaryArtifacts": true,
+      "requiredSchemaVersion": 1,
+      "requiredStatus": "pass",
+      "requiredFailedRouteCount": 0,
+      "requiredViewports": [
+        "375 x 667"
+      ],
+      "requiredVerified": [
+        "exact /trend/optin direct-entry and refresh identity",
+        "exact /trend/fairness direct-entry and refresh identity",
+        "disabled child scene withheld",
+        "Monk-band hook withheld",
+        "Back to Progress recovery",
+        "zero unexpected browser warn or error logs"
+      ],
+      "expected": "The hard-disabled Trend navigator preserves both direct URLs through refresh, withholds child data access, exposes no consent control, and returns safely to Progress at the compact iPhone viewport.",
+      "status": "pass",
+      "detail": "summary status: pass; 0 failed routes.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "requirementFailures": [],
+      "folderExists": true,
+      "evidenceExists": true,
+      "evidenceTracked": true,
+      "fileCount": 7,
+      "bytes": 345669,
+      "evidenceSha256": "b68fd95d4172892643b423647e67cb0cf2f4c1255ccdb2f2d6eb3bbc707da9cf"
     },
     {
       "id": "data-export-local-photo-disclosure-supported-phone",
