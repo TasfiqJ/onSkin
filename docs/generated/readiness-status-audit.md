@@ -1,6 +1,6 @@
 # Readiness Status Audit
 
-Generated: 2026-07-11T18:49:34.276Z
+Generated: 2026-07-13T15:16:32.155Z
 Status: pass
 Strict mode: yes
 
@@ -9,12 +9,13 @@ the latest committed human-simulated E2E evidence and current verification
 baseline. It intentionally checks documentation freshness only; it does not
 replace the launch gates, physical-device QA, live Supabase, RevenueCat,
 store, legal, clinical, beta, or launch signoff evidence.
+Required release platforms: ios. Android release evidence: not_applicable.
 
 ## Summary
 
-- Evidence date: 2026-07-11
-- Expected mobile test baseline: 196 mobile test files / 2094 tests
-- Actual mobile test files found: 196
+- Evidence date: 2026-07-12
+- Expected mobile test baseline: 209 mobile test files / 2244 tests
+- Actual mobile test files found: 209
 - Blockers: 0
 - Warnings: 0
 
@@ -22,8 +23,8 @@ store, legal, clinical, beta, or launch signoff evidence.
 
 | Doc                      | Date       | Expected date | Current test phrase | Manifest evidence | Stale patterns | Missing commands |
 | ------------------------ | ---------- | ------------- | ------------------- | ----------------- | -------------- | ---------------- |
-| LAUNCH_READINESS.md      | 2026-07-11 | 2026-07-11    | yes                 | yes               | 0              | 0                |
-| BLOCKERS.md              | 2026-07-11 | 2026-07-11    | yes                 | yes               | 0              | 0                |
+| LAUNCH_READINESS.md      | 2026-07-12 | 2026-07-12    | yes                 | yes               | 0              | 0                |
+| BLOCKERS.md              | 2026-07-12 | 2026-07-12    | yes                 | yes               | 0              | 0                |
 | docs/TESTING_STRATEGY.md | n/a        | n/a           | n/a                 | n/a               | n/a            | 0                |
 
 ## Required Launch Commands
