@@ -2,7 +2,7 @@ import { randomUUID } from 'expo-crypto';
 
 import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@onskin/types';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import { normalizeShelfFreshness, validLocalDate } from './freshness';
 
@@ -12,6 +12,10 @@ import { normalizeShelfFreshness, validLocalDate } from './freshness';
 // intake also fires a best-effort Supabase mirror (B-SUPABASE) so it's ready to
 // reconcile via the persisted mutation queue (D-007) once the project exists.
 const KEY = 'onskin.shelf.v1';
+const SCHEMA_VERSION = 1 as const;
+
+export const SHELF_STATE_INVALID = 'SHELF_STATE_INVALID';
+export const SHELF_STATE_UNSUPPORTED_VERSION = 'SHELF_STATE_UNSUPPORTED_VERSION';
 
 const PRODUCT_STATUSES = new Set<ProductStatus>(['active', 'finished', 'discarded']);
 const ADDED_VIA = new Set<AddedVia>(['barcode', 'search', 'ocr', 'manual', 'onboarding']);
@@ -89,12 +93,37 @@ export type NewShelfProduct = {
   addedVia: AddedVia;
 };
 
+type ShelfEnvelope = {
+  version: typeof SCHEMA_VERSION;
+  products: ShelfProduct[];
+};
+
 function nowISO(): string {
   return new Date().toISOString();
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  const keys = Object.keys(value);
+  return keys.length === expected.length && expected.every((key) => hasOwn(value, key));
+}
+
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`;
+  if (isRecord(value)) {
+    return `{${Object.keys(value)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
+      .join(',')}}`;
+  }
+  return JSON.stringify(value) ?? 'undefined';
 }
 
 function nonEmptyString(value: unknown): string | null {
@@ -203,49 +232,63 @@ function normalizeShelfProduct(value: unknown, fallbackISO: string): ShelfProduc
 function normalizeShelfProducts(
   value: unknown,
   fallbackISO: string,
-): { items: ShelfProduct[]; changed: boolean } | null {
+): ShelfProduct[] | null {
   if (!Array.isArray(value)) return null;
   const items: ShelfProduct[] = [];
-  let changed = false;
+  const ids = new Set<string>();
   for (const row of value) {
     const product = normalizeShelfProduct(row, fallbackISO);
-    if (!product) {
-      changed = true;
-      continue;
-    }
+    if (!product || ids.has(product.id)) return null;
+    ids.add(product.id);
     items.push(product);
-    changed ||= JSON.stringify(product) !== JSON.stringify(row);
   }
-  return { items, changed };
+  return items;
+}
+
+function decodeShelfState(raw: string | null, fallbackISO = nowISO()): ShelfProduct[] {
+  if (raw === null) return [];
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    throw new Error(SHELF_STATE_INVALID);
+  }
+
+  if (Array.isArray(parsed)) {
+    const legacy = normalizeShelfProducts(parsed, fallbackISO);
+    if (!legacy) throw new Error(SHELF_STATE_INVALID);
+    return legacy;
+  }
+  if (!isRecord(parsed)) throw new Error(SHELF_STATE_INVALID);
+  if (parsed.version !== SCHEMA_VERSION) {
+    if (
+      typeof parsed.version === 'number' &&
+      Number.isSafeInteger(parsed.version) &&
+      parsed.version > SCHEMA_VERSION
+    ) {
+      throw new Error(SHELF_STATE_UNSUPPORTED_VERSION);
+    }
+    throw new Error(SHELF_STATE_INVALID);
+  }
+  if (!hasExactKeys(parsed, ['version', 'products'])) throw new Error(SHELF_STATE_INVALID);
+  const products = normalizeShelfProducts(parsed.products, fallbackISO);
+  if (!products || canonicalJson(products) !== canonicalJson(parsed.products)) {
+    throw new Error(SHELF_STATE_INVALID);
+  }
+  return products;
+}
+
+function encodeShelfState(products: ShelfProduct[]): string {
+  return JSON.stringify({ version: SCHEMA_VERSION, products } satisfies ShelfEnvelope);
 }
 
 export async function loadShelf(): Promise<ShelfProduct[]> {
-  let raw: string | null = null;
   try {
-    raw = await getPrivateItem(KEY);
+    return decodeShelfState(await getPrivateItem(KEY));
   } catch {
+    // Ordinary reads never repair, delete, or replace private shelf bytes.
     return [];
   }
-  if (!raw) return [];
-  try {
-    const normalized = normalizeShelfProducts(JSON.parse(raw) as unknown, nowISO());
-    if (!normalized) {
-      await removePrivateItem(KEY).catch(() => undefined);
-      return [];
-    }
-    if (normalized.changed) {
-      if (normalized.items.length > 0) await persist(normalized.items).catch(() => undefined);
-      else await removePrivateItem(KEY).catch(() => undefined);
-    }
-    return normalized.items;
-  } catch {
-    await removePrivateItem(KEY).catch(() => undefined);
-    return [];
-  }
-}
-
-async function persist(items: ShelfProduct[]): Promise<void> {
-  await setPrivateItem(KEY, JSON.stringify(items));
 }
 
 function normalizeProductForWrite(
@@ -257,10 +300,9 @@ function normalizeProductForWrite(
 }
 
 export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
-  const items = await loadShelf();
   const ts = nowISO();
   const freshness = normalizeShelfFreshness(input, ts.slice(0, 10));
-  const product: ShelfProduct = {
+  const candidate: ShelfProduct = {
     id: randomUUID(),
     name: input.name,
     brand: input.brand ?? null,
@@ -290,7 +332,13 @@ export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> 
     createdAt: ts,
     updatedAt: ts,
   };
-  await persist([product, ...items]);
+  const product = normalizeShelfProduct(candidate, ts);
+  if (!product) throw new Error(SHELF_STATE_INVALID);
+  await updatePrivateItem(KEY, (current) => {
+    const items = decodeShelfState(current, ts);
+    if (items.some((item) => item.id === product.id)) throw new Error(SHELF_STATE_INVALID);
+    return encodeShelfState([product, ...items]);
+  });
   return product;
 }
 
@@ -298,32 +346,37 @@ export async function updateProduct(
   id: string,
   patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>,
 ): Promise<ShelfProduct | null> {
-  const items = await loadShelf();
   const ts = nowISO();
   let updated: ShelfProduct | null = null;
-  const next = items.map((product) => {
-    if (product.id !== id) return product;
-    updated = normalizeProductForWrite(
-      {
-        ...product,
-        ...patch,
-        id: product.id,
-        createdAt: product.createdAt,
-        updatedAt: ts,
-      },
-      ts,
-      product,
-    );
-    return updated;
+  await updatePrivateItem(KEY, (current) => {
+    const items = decodeShelfState(current, ts);
+    const next = items.map((product) => {
+      if (product.id !== id) return product;
+      updated = normalizeProductForWrite(
+        {
+          ...product,
+          ...patch,
+          id: product.id,
+          createdAt: product.createdAt,
+          updatedAt: ts,
+        },
+        ts,
+        product,
+      );
+      return updated;
+    });
+    return updated ? encodeShelfState(next) : current;
   });
-  await persist(next);
   return updated;
 }
 
 export async function removeProduct(id: string): Promise<ShelfProduct | null> {
-  const items = await loadShelf();
-  const removed = items.find((product) => product.id === id) ?? null;
-  await persist(items.filter((p) => p.id !== id));
+  let removed: ShelfProduct | null = null;
+  await updatePrivateItem(KEY, (current) => {
+    const items = decodeShelfState(current);
+    removed = items.find((product) => product.id === id) ?? null;
+    return removed ? encodeShelfState(items.filter((product) => product.id !== id)) : current;
+  });
   return removed;
 }
 
@@ -333,39 +386,49 @@ export async function removeProduct(id: string): Promise<ShelfProduct | null> {
  * (docs/04 §6 "re-add the same one").
  */
 export async function reAddProduct(id: string): Promise<ShelfProduct | null> {
-  const items = await loadShelf();
-  const prev = items.find((p) => p.id === id);
-  if (!prev) return null;
   const ts = nowISO();
-  const archived: ShelfProduct =
-    prev.status === 'active'
-      ? {
-          ...prev,
-          status: 'finished',
-          finishedAt: ts.slice(0, 10),
-          updatedAt: ts,
-        }
-      : { ...prev, updatedAt: ts };
-  const freshness = normalizeShelfFreshness(
-    {
+  const replacementId = randomUUID();
+  let fresh: ShelfProduct | null = null;
+  await updatePrivateItem(KEY, (current) => {
+    const items = decodeShelfState(current, ts);
+    const prev = items.find((product) => product.id === id);
+    if (!prev) return current;
+    if (items.some((product) => product.id === replacementId)) {
+      throw new Error(SHELF_STATE_INVALID);
+    }
+    const archived: ShelfProduct =
+      prev.status === 'active'
+        ? {
+            ...prev,
+            status: 'finished',
+            finishedAt: ts.slice(0, 10),
+            updatedAt: ts,
+          }
+        : { ...prev, updatedAt: ts };
+    const freshness = normalizeShelfFreshness(
+      {
+        ...prev,
+        openedAt: ts.slice(0, 10),
+        isOpened: true,
+        expiryDate: null,
+      },
+      ts.slice(0, 10),
+    );
+    fresh = {
       ...prev,
-      openedAt: ts.slice(0, 10),
-      isOpened: true,
-      expiryDate: null,
-    },
-    ts.slice(0, 10),
-  );
-  const fresh: ShelfProduct = {
-    ...prev,
-    id: randomUUID(),
-    ...freshness,
-    status: 'active',
-    finishedAt: null,
-    repurchaseCount: prev.repurchaseCount + 1,
-    createdAt: ts,
-    updatedAt: ts,
-  };
-  await persist([fresh, ...items.map((p) => (p.id === id ? archived : p))]);
+      id: replacementId,
+      ...freshness,
+      status: 'active',
+      finishedAt: null,
+      repurchaseCount: prev.repurchaseCount + 1,
+      createdAt: ts,
+      updatedAt: ts,
+    };
+    return encodeShelfState([
+      fresh,
+      ...items.map((product) => (product.id === id ? archived : product)),
+    ]);
+  });
   return fresh;
 }
 
