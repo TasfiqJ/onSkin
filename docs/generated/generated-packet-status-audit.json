@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-11T18:49:56.953Z",
+  "generatedAt": "2026-07-13T15:20:08.320Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
@@ -20,7 +20,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 34,
+      "hashReferenceCount": 35,
       "staleHashReferenceCount": 0
     },
     {
@@ -52,7 +52,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 40,
+      "hashReferenceCount": 42,
       "staleHashReferenceCount": 0
     },
     {
@@ -68,7 +68,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 292,
+      "hashReferenceCount": 312,
       "staleHashReferenceCount": 0
     },
     {
@@ -84,7 +84,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 80,
+      "hashReferenceCount": 93,
       "staleHashReferenceCount": 0
     },
     {
@@ -100,7 +100,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 296,
+      "hashReferenceCount": 316,
       "staleHashReferenceCount": 0
     },
     {
@@ -116,7 +116,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 25,
+      "hashReferenceCount": 27,
       "staleHashReferenceCount": 0
     },
     {
@@ -132,7 +132,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 25,
+      "hashReferenceCount": 27,
       "staleHashReferenceCount": 0
     },
     {
@@ -180,7 +180,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 88,
+      "hashReferenceCount": 90,
       "staleHashReferenceCount": 0
     },
     {
@@ -196,7 +196,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 33,
+      "hashReferenceCount": 41,
       "staleHashReferenceCount": 0
     },
     {
@@ -212,7 +212,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 96,
+      "hashReferenceCount": 98,
       "staleHashReferenceCount": 0
     },
     {
@@ -228,7 +228,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 47,
+      "hashReferenceCount": 49,
       "staleHashReferenceCount": 0
     },
     {
@@ -388,7 +388,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 102,
+      "hashReferenceCount": 124,
       "staleHashReferenceCount": 0
     },
     {
@@ -417,7 +417,7 @@
     "generatedFileCount": 49,
     "dirtyTextFileCount": 0,
     "nonEmptyGitStatusFileCount": 0,
-    "hashReferenceCount": 1312,
+    "hashReferenceCount": 1408,
     "staleHashReferenceCount": 0,
     "blockerCount": 0,
     "warningCount": 0
