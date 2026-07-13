@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-13T18:55:08.841Z
-Git SHA: 88a881fe0aa926de616f43d07c12a8e41f0f006b
+Generated at: 2026-07-13T20:00:36.217Z
+Git SHA: 5157335355c7b4c60d95e2a145378999476c9737
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -54,7 +54,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 20824 | 8151c6a42a79225e676a2bb20e1bcc21775162305ef13a75c7fe4e35a56fbb9b |
+| package.json | present | 21062 | 9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0 |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
 | apps/mobile/src/lib/launch/phase7.ts | present | 6185 | 875babca48f518e13c897550ae2b0feb66346ba700f8ffba8aad9560f07b1d46 |
@@ -149,14 +149,14 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | scripts/phase7/check-core-loop.mjs | present | 22088 | 8df23d34ca7998dc25c04e6fc9ea8e816fbc5cc6cbebed7bbcd16acf0e0653ca |
 | scripts/phase7/check-core-loop-smoke.mjs | present | 13728 | 73b7341ddc39904dda7ca1fa689dee67d69009c3ccb67f142937219eac7f18e0 |
 | scripts/e2e/human-e2e-manifest.mjs | present | 59344 | 38e229c125f6c077d68722ff792825f750610f1e8610008c61834e9f43e6cfe9 |
-| scripts/phase9/lib.mjs | present | 14794 | 0dd6fa1c3cf1e68e26adb577e8d9711e9eacf60e3b2f01a0da3e9ab5268744db |
+| scripts/phase9/lib.mjs | present | 20344 | 01fd4497bb9bb34e80f51a8daa76513edb383c6cb68686b22e72b8e4d8cf5665 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
 | docs/USER_FLOW_TREE.md | present | 358190 | 1eeb5ae98ce1c98f9f479c9fe720a6ad0eb52a6959fec5f3dc3c54c5696ca461 |
 | docs/e2e/generated/human-e2e-manifest.json | present | 41722 | b07ddbf4728f8216f9e2a623bdb6dec03ddba4b5b3aedfcd11d1eb354af1b61c |
 | docs/e2e/generated/human-e2e-manifest.md | present | 16508 | ef53f31c1c8ea20ca83e40b2797a718e9c8a7caacfb3e320a6da9c2d241ae2d9 |
-| docs/phase-5/generated/device-qa-packet.json | present | 25907 | 98480c1abc85d077baca1081c3fb417f19104f2e5edf419f53290dd45c973c3d |
-| docs/phase-5/generated/device-qa-packet.md | present | 22544 | 19ded503934a89332a48e3d35fb3b8c837ae28c737a70253f5780edc878f06f4 |
+| docs/phase-5/generated/device-qa-packet.json | present | 26526 | 8d45f60740be012a4739bd2ea99df1afd75cef306896ac12688ebbf3131853e6 |
+| docs/phase-5/generated/device-qa-packet.md | present | 23039 | cfd6d342eb78eb932555f206899483abffb72d717f364268a65d3d926f9eaaf8 |
 | docs/phase-6/generated/payments-qa-packet.json | present | 13569 | 56dca850760ffcaa80c9545dd5b942be25fa24c643ffb793193a041360194294 |
 | docs/phase-6/generated/payments-qa-packet.md | present | 8815 | a37dded45fa63be5523ec2b8c201eae46559450be2f6f66df55a57de42c52b69 |
 | docs/phase-7/surface-inventory.md | present | 7793 | 50c0f72fb317e36588a30559cd254dcb3b7ebaa7c73b8b4ba4dfb9ea35350fd6 |
