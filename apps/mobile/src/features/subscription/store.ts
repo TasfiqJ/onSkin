@@ -2,10 +2,12 @@ import { env, isSupabaseConfigured } from '@/lib/env';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { supabase } from '@/lib/supabase/client';
 import {
+  PRIVATE_KV_DECRYPTION_FAILED,
+  PRIVATE_KV_ENVELOPE_INVALID,
+  PRIVATE_KV_ENVELOPE_UNSUPPORTED,
   getPrivateItem,
   multiRemovePrivateItems,
-  removePrivateItem,
-  setPrivateItem,
+  updatePrivateItem,
 } from '@/lib/storage/privateKV';
 
 import type { StoredEntitlement } from './entitlement';
@@ -19,6 +21,43 @@ import type { StoredEntitlement } from './entitlement';
 const KEY = 'onskin.entitlement.v2';
 const LEGACY_KEY = 'onskin.entitlement.v1';
 const LOCAL_REVERSE_TRIAL_DAYS = 7;
+const SCHEMA_VERSION = 1 as const;
+
+export const ENTITLEMENT_CACHE_INVALID = 'ENTITLEMENT_CACHE_INVALID';
+export const ENTITLEMENT_CACHE_UNSUPPORTED_VERSION =
+  'ENTITLEMENT_CACHE_UNSUPPORTED_VERSION';
+
+type EntitlementCacheEnvelope = {
+  version: typeof SCHEMA_VERSION;
+  entitlement: StoredEntitlement;
+};
+
+const ENTITLEMENT_CACHE_ENVELOPE_KEYS = ['version', 'entitlement'] as const;
+const ENTITLEMENT_CACHE_RECORD_KEYS = [
+  'tier',
+  'isActive',
+  'periodType',
+  'store',
+  'productId',
+  'expiresAt',
+  'willRenew',
+  'grantedAt',
+  'source',
+  'environment',
+  'managementUrl',
+  'verifiedAt',
+  'offeringId',
+  'packageId',
+  'storeUserId',
+  'priceLabel',
+] as const satisfies readonly (keyof StoredEntitlement)[];
+
+export type EntitlementCacheRead =
+  | { status: 'available'; entitlement: StoredEntitlement }
+  | {
+      status: 'absent' | 'unavailable' | 'corrupt' | 'unsupported_version';
+      entitlement: null;
+    };
 
 type EntitlementRow = {
   entitlement: string | null;
@@ -107,6 +146,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function hasExactKeys(value: Record<string, unknown>, keys: readonly string[]): boolean {
+  const actual = Object.keys(value);
+  return actual.length === keys.length && keys.every((key) => hasOwn(value, key));
+}
+
 function stringOrNull(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const text = value.trim();
@@ -122,6 +170,61 @@ function isoOrNull(value: unknown): string | null {
   if (!text) return null;
   const time = Date.parse(text);
   return Number.isFinite(time) ? new Date(time).toISOString() : null;
+}
+
+function isCanonicalNullableText(value: unknown): value is string | null {
+  return value === null || (typeof value === 'string' && stringOrNull(value) === value);
+}
+
+function isCanonicalNullableISO(value: unknown): value is string | null {
+  return value === null || (typeof value === 'string' && isoOrNull(value) === value);
+}
+
+function isCanonicalNullableBoolean(value: unknown): value is boolean | null {
+  return value === null || typeof value === 'boolean';
+}
+
+function isStrictCurrentEntitlement(value: unknown): value is Record<string, unknown> {
+  if (!isRecord(value) || !hasExactKeys(value, ENTITLEMENT_CACHE_RECORD_KEYS)) return false;
+
+  const tier = typeof value.tier === 'string' ? asTier(value.tier) : null;
+  const periodType =
+    value.periodType === null ||
+    (typeof value.periodType === 'string' && asPeriod(value.periodType) === value.periodType);
+  const store =
+    value.store === null ||
+    (typeof value.store === 'string' && asStore(value.store) === value.store);
+  const source =
+    value.source === null ||
+    (typeof value.source === 'string' && asSource(value.source) === value.source);
+  const environment =
+    value.environment === null ||
+    (typeof value.environment === 'string' &&
+      asEnvironment(value.environment) === value.environment);
+  const managementUrl =
+    value.managementUrl === null ||
+    (typeof value.managementUrl === 'string' &&
+      safeExternalHttpsUrl(value.managementUrl) === value.managementUrl);
+
+  return (
+    tier !== null &&
+    tier === value.tier &&
+    typeof value.isActive === 'boolean' &&
+    periodType &&
+    store &&
+    isCanonicalNullableText(value.productId) &&
+    isCanonicalNullableISO(value.expiresAt) &&
+    isCanonicalNullableBoolean(value.willRenew) &&
+    isCanonicalNullableISO(value.grantedAt) &&
+    source &&
+    environment &&
+    managementUrl &&
+    isCanonicalNullableISO(value.verifiedAt) &&
+    isCanonicalNullableText(value.offeringId) &&
+    isCanonicalNullableText(value.packageId) &&
+    isCanonicalNullableText(value.storeUserId) &&
+    isCanonicalNullableText(value.priceLabel)
+  );
 }
 
 function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
@@ -179,32 +282,95 @@ function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
   };
 }
 
-type EntitlementRead =
-  | { status: 'missing' | 'invalid'; entitlement: null }
-  | { status: 'valid'; entitlement: StoredEntitlement };
+function entitlementCacheError(code: string): Error {
+  return new Error(code);
+}
 
-async function readEntitlementKey(key: string): Promise<EntitlementRead> {
-  let raw: string | null = null;
+function decodeEntitlementCache(raw: string): StoredEntitlement {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
+  }
+
+  if (!isRecord(parsed)) throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
+
+  let value: unknown = parsed;
+  if (hasOwn(parsed, 'version')) {
+    if (parsed.version !== SCHEMA_VERSION) {
+      if (
+        typeof parsed.version === 'number' &&
+        Number.isSafeInteger(parsed.version) &&
+        parsed.version > SCHEMA_VERSION
+      ) {
+        throw entitlementCacheError(ENTITLEMENT_CACHE_UNSUPPORTED_VERSION);
+      }
+      throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
+    }
+    if (
+      !hasExactKeys(parsed, ENTITLEMENT_CACHE_ENVELOPE_KEYS) ||
+      !isStrictCurrentEntitlement(parsed.entitlement)
+    ) {
+      throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
+    }
+    value = parsed.entitlement;
+  }
+
+  const normalized = normalizeStoredEntitlement(value);
+  if (!normalized) throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
+  return normalized;
+}
+
+function encodeEntitlementCache(entitlement: StoredEntitlement): string {
+  return JSON.stringify({
+    version: SCHEMA_VERSION,
+    entitlement,
+  } satisfies EntitlementCacheEnvelope);
+}
+
+function errorMessage(error: unknown): string | null {
+  return error instanceof Error ? error.message : null;
+}
+
+function isEntitlementCodecError(error: unknown): boolean {
+  const message = errorMessage(error);
+  return (
+    message === ENTITLEMENT_CACHE_INVALID ||
+    message === ENTITLEMENT_CACHE_UNSUPPORTED_VERSION
+  );
+}
+
+function classifyPrivateReadError(error: unknown): EntitlementCacheRead {
+  const message = errorMessage(error);
+  if (
+    message === ENTITLEMENT_CACHE_UNSUPPORTED_VERSION ||
+    message === PRIVATE_KV_ENVELOPE_UNSUPPORTED
+  ) {
+    return { status: 'unsupported_version', entitlement: null };
+  }
+  if (
+    message === ENTITLEMENT_CACHE_INVALID ||
+    message === PRIVATE_KV_ENVELOPE_INVALID ||
+    message === PRIVATE_KV_DECRYPTION_FAILED
+  ) {
+    return { status: 'corrupt', entitlement: null };
+  }
+  return { status: 'unavailable', entitlement: null };
+}
+
+async function readEntitlementKey(key: string): Promise<EntitlementCacheRead> {
+  let raw: string | null;
   try {
     raw = await getPrivateItem(key);
-  } catch {
-    return { status: 'missing', entitlement: null };
+  } catch (error) {
+    return classifyPrivateReadError(error);
   }
-  if (!raw) return { status: 'missing', entitlement: null };
+  if (raw === null) return { status: 'absent', entitlement: null };
   try {
-    const parsed: unknown = JSON.parse(raw);
-    const normalized = normalizeStoredEntitlement(parsed);
-    if (!normalized) {
-      await removePrivateItem(key).catch(() => undefined);
-      return { status: 'invalid', entitlement: null };
-    }
-    if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
-      await setPrivateItem(key, JSON.stringify(normalized)).catch(() => undefined);
-    }
-    return { status: 'valid', entitlement: normalized };
-  } catch {
-    await removePrivateItem(key).catch(() => undefined);
-    return { status: 'invalid', entitlement: null };
+    return { status: 'available', entitlement: decodeEntitlementCache(raw) };
+  } catch (error) {
+    return classifyPrivateReadError(error);
   }
 }
 
@@ -228,24 +394,51 @@ export function rowToStoredEntitlement(row: EntitlementRow): StoredEntitlement {
   };
 }
 
-export async function loadEntitlement(): Promise<StoredEntitlement | null> {
+/**
+ * Read the effective local proof without repairing, deleting, or migrating bytes.
+ * A non-absent primary record is authoritative: unreadable/future primary bytes
+ * must not revive potentially stale access from the older key.
+ */
+export async function readEntitlementCache(): Promise<EntitlementCacheRead> {
   const current = await readEntitlementKey(KEY);
-  if (current.status === 'valid') return current.entitlement;
+  if (current.status !== 'absent') return current;
 
-  const legacy = await readEntitlementKey(LEGACY_KEY);
-  if (legacy.status === 'valid') {
-    await persist(legacy.entitlement).catch(() => undefined);
-    return legacy.entitlement;
-  }
-  return null;
+  return readEntitlementKey(LEGACY_KEY);
 }
 
-async function persist(e: StoredEntitlement | null): Promise<void> {
-  if (e === null) {
-    await multiRemovePrivateItems([KEY, LEGACY_KEY]);
-  } else {
-    await setPrivateItem(KEY, JSON.stringify(e));
+export async function loadEntitlement(): Promise<StoredEntitlement | null> {
+  const result = await readEntitlementCache();
+  return result.status === 'available' ? result.entitlement : null;
+}
+
+type EntitlementMutationOutcome = 'present' | 'absent' | 'blocked';
+
+async function mutateEntitlementKey(
+  key: string,
+  transform: (current: StoredEntitlement) => StoredEntitlement | null,
+): Promise<EntitlementMutationOutcome> {
+  let updaterRan = false;
+  let present = false;
+  try {
+    await updatePrivateItem(key, (raw) => {
+      updaterRan = true;
+      if (raw === null) return null;
+      present = true;
+      const current = decodeEntitlementCache(raw);
+      const next = transform(current);
+      if (next === current) return raw;
+      if (next === null) return null;
+      const normalized = normalizeStoredEntitlement(next);
+      if (!normalized) throw entitlementCacheError(ENTITLEMENT_CACHE_INVALID);
+      return encodeEntitlementCache(normalized);
+    });
+  } catch (error) {
+    // Fail-soft only when the current bytes could not be read/decoded. Failures
+    // after a successful transform (for example, disk write failure) still reject.
+    if (!updaterRan || isEntitlementCodecError(error)) return 'blocked';
+    throw error;
   }
+  return present ? 'present' : 'absent';
 }
 
 export async function saveVerifiedEntitlement(e: StoredEntitlement): Promise<StoredEntitlement> {
@@ -254,7 +447,11 @@ export async function saveVerifiedEntitlement(e: StoredEntitlement): Promise<Sto
     verifiedAt: e.verifiedAt ?? nowISO(),
   });
   if (!verified) throw new Error('INVALID_ENTITLEMENT_CACHE_RECORD');
-  await persist(verified);
+  const encoded = encodeEntitlementCache(verified);
+  await updatePrivateItem(KEY, (current) => {
+    if (current !== null) decodeEntitlementCache(current);
+    return current === encoded ? current : encoded;
+  });
   return verified;
 }
 
@@ -275,18 +472,25 @@ function isStoreBackedEntitlement(e: StoredEntitlement | null): boolean {
  * store purchases and must survive a user tapping Restore.
  */
 export async function clearStoreEntitlementIfRevenueCatVerifiedEmpty(): Promise<void> {
-  const cur = await loadEntitlement();
-  if (isStoreBackedEntitlement(cur)) await persist(null);
+  const clearStoreBacked = (current: StoredEntitlement): StoredEntitlement | null =>
+    isStoreBackedEntitlement(current) ? null : current;
+  const primary = await mutateEntitlementKey(KEY, clearStoreBacked);
+  if (primary === 'blocked') return;
+  await mutateEntitlementKey(LEGACY_KEY, clearStoreBacked);
 }
 
 /** Graceful local dismissal for expired/app-granted records only. Never cancels a store subscription. */
 export async function downgradeToFree(): Promise<void> {
-  const cur = await loadEntitlement();
-  if (!cur) return;
-  const expired = Boolean(cur.expiresAt && new Date(cur.expiresAt).getTime() <= Date.now());
-  if (cur.periodType === 'reverse_trial' || expired) {
-    await persist({ ...cur, isActive: false, willRenew: false });
-  }
+  const downgrade = (current: StoredEntitlement): StoredEntitlement => {
+    const expired = Boolean(
+      current.expiresAt && new Date(current.expiresAt).getTime() <= Date.now(),
+    );
+    return current.periodType === 'reverse_trial' || expired
+      ? { ...current, isActive: false, willRenew: false }
+      : current;
+  };
+  const primary = await mutateEntitlementKey(KEY, downgrade);
+  if (primary === 'absent') await mutateEntitlementKey(LEGACY_KEY, downgrade);
 }
 
 /** Read the server entitlement mirror and refresh the local cache when available. */
@@ -342,5 +546,5 @@ export async function startReverseTrialOnServer(): Promise<StoredEntitlement> {
 
 /** Test/seed reset. */
 export async function clearEntitlement(): Promise<void> {
-  await persist(null);
+  await multiRemovePrivateItems([KEY, LEGACY_KEY]);
 }
