@@ -1,4 +1,5 @@
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { decodePrivateStringSet, encodePrivateStringSet } from '@/lib/storage/privateStringSet';
 
 // Local-first record of the structured "This helped" reactions (docs/11 §6/§10,
 // the docs/09 flywheel signal). The server `community_reactions` table is the
@@ -7,41 +8,11 @@ import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage
 // only in component state. Stores note ids only, no content.
 const KEY = 'onskin.community.reactions.v1';
 
-function uniqueIds(value: unknown): string[] | null {
-  if (!Array.isArray(value)) return null;
-  return [
-    ...new Set(
-      value
-        .filter((item): item is string => typeof item === 'string')
-        .map((item) => item.trim())
-        .filter((item) => item.length > 0),
-    ),
-  ];
-}
-
 async function load(): Promise<string[]> {
-  let raw: string | null = null;
   try {
-    raw = await getPrivateItem(KEY);
+    return decodePrivateStringSet(await getPrivateItem(KEY));
   } catch {
-    return [];
-  }
-  if (!raw) return [];
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    const normalized = uniqueIds(parsed);
-    if (!normalized) {
-      await removePrivateItem(KEY).catch(() => undefined);
-      return [];
-    }
-    if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
-      if (normalized.length > 0)
-        await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
-      else await removePrivateItem(KEY).catch(() => undefined);
-    }
-    return normalized;
-  } catch {
-    await removePrivateItem(KEY).catch(() => undefined);
+    // Reads never repair, delete, or replace unreadable/future private bytes.
     return [];
   }
 }
@@ -54,15 +25,21 @@ export async function isNoteHelpful(id: string): Promise<boolean> {
 export async function toggleNoteHelpful(id: string): Promise<boolean> {
   const normalizedId = id.trim();
   if (normalizedId.length === 0) return false;
-  const list = await load();
-  const has = list.includes(normalizedId);
-  const next = has ? list.filter((x) => x !== normalizedId) : [...list, normalizedId];
+  let nextState = false;
   try {
-    await setPrivateItem(KEY, JSON.stringify(next));
+    await updatePrivateItem(KEY, (current) => {
+      const list = decodePrivateStringSet(current);
+      const has = list.includes(normalizedId);
+      nextState = !has;
+      return encodePrivateStringSet(
+        has ? list.filter((item) => item !== normalizedId) : [...list, normalizedId],
+      );
+    });
+    return nextState;
   } catch {
-    /* best-effort */
+    // Report the last durable state instead of claiming an unpersisted toggle.
+    return isNoteHelpful(normalizedId);
   }
-  return !has;
 }
 
 /** Test/seed reset. */
