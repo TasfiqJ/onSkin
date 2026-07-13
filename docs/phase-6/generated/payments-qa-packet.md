@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-13T18:54:22.945Z
-Git SHA: 43467f0135b715bac01b697feba5515f77b74715
+Generated at: 2026-07-13T20:04:16.300Z
+Git SHA: fbe09296a0749bb13adbc86d926d33d59deac0c1
 Git status: clean
 
 Strict completion requires real RevenueCat offering review and store restore evidence for every contract-required platform, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -53,8 +53,8 @@ Strict completion requires real RevenueCat offering review and store restore evi
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| .env.example | present | 16193 | 970a51b212bea8ebe9024f315ed051d9a9a131adb10a6fcf2f8085e632e0210c |
-| package.json | present | 20824 | 8151c6a42a79225e676a2bb20e1bcc21775162305ef13a75c7fe4e35a56fbb9b |
+| .env.example | present | 16422 | c48da3e0c5eb2b900c9a721c35428f2b402b3577e1692b9fae0ad157c64ef091 |
+| package.json | present | 21062 | 9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0 |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
 | apps/mobile/src/lib/iap/revenuecat.ts | present | 18317 | f89981290f02bc355ca4ac279b9e660c86d480a9c6e54b041a4d600f0468b105 |
@@ -85,7 +85,7 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | scripts/phase2/check-env-smoke.mjs | present | 11419 | 9da4e944217b3e440122690644f4e410ab1017393b04bfcc8f2bd0768421bb66 |
 | scripts/phase9/supabase-policy-lint.mjs | present | 9417 | 937e2ffda3ba57f7cb0f4b82892529695815b15c2e42da8e3c0f952cd4a77c89 |
 | scripts/e2e/human-e2e-manifest.mjs | present | 59344 | 38e229c125f6c077d68722ff792825f750610f1e8610008c61834e9f43e6cfe9 |
-| scripts/phase9/lib.mjs | present | 14794 | 0dd6fa1c3cf1e68e26adb577e8d9711e9eacf60e3b2f01a0da3e9ab5268744db |
+| scripts/phase9/lib.mjs | present | 20344 | 01fd4497bb9bb34e80f51a8daa76513edb383c6cb68686b22e72b8e4d8cf5665 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
 | docs/USER_FLOW_TREE.md | present | 358190 | 1eeb5ae98ce1c98f9f479c9fe720a6ad0eb52a6959fec5f3dc3c54c5696ca461 |

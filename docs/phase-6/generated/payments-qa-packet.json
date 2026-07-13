@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T18:54:22.945Z",
+  "generatedAt": "2026-07-13T20:04:16.300Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -81,7 +81,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "43467f0135b715bac01b697feba5515f77b74715",
+  "gitSha": "fbe09296a0749bb13adbc86d926d33d59deac0c1",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -161,14 +161,14 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 16193,
-      "sha256": "970a51b212bea8ebe9024f315ed051d9a9a131adb10a6fcf2f8085e632e0210c"
+      "bytes": 16422,
+      "sha256": "c48da3e0c5eb2b900c9a721c35428f2b402b3577e1692b9fae0ad157c64ef091"
     },
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 20824,
-      "sha256": "8151c6a42a79225e676a2bb20e1bcc21775162305ef13a75c7fe4e35a56fbb9b"
+      "bytes": 21062,
+      "sha256": "9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -353,8 +353,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 14794,
-      "sha256": "0dd6fa1c3cf1e68e26adb577e8d9711e9eacf60e3b2f01a0da3e9ab5268744db"
+      "bytes": 20344,
+      "sha256": "01fd4497bb9bb34e80f51a8daa76513edb383c6cb68686b22e72b8e4d8cf5665"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
