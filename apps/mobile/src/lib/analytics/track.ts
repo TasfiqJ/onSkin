@@ -7,11 +7,20 @@ import {
   isAllowedAnalyticsPropKey,
 } from '@/lib/analytics/eventRegistry';
 import {
+  discardPostHogTelemetryForAccountDeletion,
+  withPostHogDeletionFreezeTimeout,
+} from '@/lib/analytics/posthogDeletionFreeze';
+import {
+  createDeletionAwarePostHogStorage,
+  type DeletionAwarePostHogStorage,
+} from '@/lib/analytics/posthogDurableStorage';
+import {
   AccountGenerationLeaseError,
   awaitAccountGenerationLease,
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
+import { accountDeletionVendorWritesBlocked } from '@/lib/auth/accountDeletionVendorFreezeRuntime';
 import { env } from '@/lib/env';
 import {
   GROWTH_ATTRIBUTION_KEYS,
@@ -20,8 +29,18 @@ import {
 } from '@/lib/growth/attribution';
 import { devWarn } from '@/lib/observability/safeLog';
 
-let posthogPromise: Promise<PostHog | null> | null = null;
-let accountDeletionWritesFrozen = false;
+interface PostHogHandle {
+  disabledForLocalCleanup: boolean;
+  persistedProperties: typeof import('posthog-react-native').PostHogPersistedProperty;
+  posthog: PostHog;
+  storage: DeletionAwarePostHogStorage;
+}
+
+const ACCOUNT_DELETION_ANALYTICS_FREEZE_WAIT_MS = 1_500;
+const LOCAL_DELETION_CLEANUP_API_KEY = 'onskin-local-deletion-cleanup';
+
+let posthogPromise: Promise<PostHogHandle | null> | null = null;
+let accountDeletionFreezeTail: Promise<void> = Promise.resolve();
 type AnalyticsProps = Parameters<PostHog['capture']>[1];
 
 export const SENSITIVE_ANALYTICS_KEY =
@@ -73,17 +92,66 @@ function sanitizeAnalyticsNumber(value: number): number | undefined {
   return value;
 }
 
-async function getPostHog(): Promise<PostHog | null> {
-  if (!canUsePostHog()) return null;
+async function getPostHogHandle(forAccountDeletion = false): Promise<PostHogHandle | null> {
+  const configured = canUsePostHog();
+  if (!configured && !forAccountDeletion) return null;
+  let resumeAfterCompletedDeletion = false;
 
-  posthogPromise ??= import('posthog-react-native')
-    .then(({ default: PostHogClient }) => {
-      return new PostHogClient(env.posthogKey, {
-        host: env.posthogHost,
-        captureAppLifecycleEvents: false,
-        enableSessionReplay: false,
-        persistence: 'file',
-      });
+  if (posthogPromise) {
+    const observedPromise = posthogPromise;
+    const existing = await observedPromise;
+    if (posthogPromise !== observedPromise) return posthogPromise;
+    if (
+      existing &&
+      !forAccountDeletion &&
+      !accountDeletionVendorWritesBlocked() &&
+      (existing.disabledForLocalCleanup || existing.storage.isSealed())
+    ) {
+      // A successfully deleted owner leaves its client sealed. Once the durable
+      // receipt is gone, a later owner gets a fresh client backed by the now-
+      // clean persistence files instead of inheriting a permanently inert SDK.
+      posthogPromise = null;
+      resumeAfterCompletedDeletion = true;
+    } else {
+      return existing;
+    }
+  }
+
+  posthogPromise = import('posthog-react-native')
+    .then(({ default: PostHogClient, PostHogPersistedProperty }) => {
+      const disabledForLocalCleanup = !configured;
+      const storage = createDeletionAwarePostHogStorage();
+      if (accountDeletionVendorWritesBlocked()) storage.beginDeletionFreeze();
+
+      const posthog = new PostHogClient(
+        configured ? env.posthogKey : LOCAL_DELETION_CLEANUP_API_KEY,
+        {
+          host: env.posthogHost,
+          captureAppLifecycleEvents: false,
+          customStorage: storage,
+          disableRemoteFeatureFlags: true,
+          disableSurveys: true,
+          disabled: disabledForLocalCleanup,
+          enableSessionReplay: false,
+          persistence: 'file',
+        },
+      );
+
+      if (resumeAfterCompletedDeletion) {
+        // The persisted opt-out belongs to the deleted owner. Register these
+        // callbacks before returning the new client so a later owner's first
+        // capture is ordered after identity reset and opt-in. The deletion
+        // barrier already verified both persisted queues are empty.
+        posthog.reset();
+        void posthog.optIn();
+      }
+
+      return {
+        disabledForLocalCleanup,
+        persistedProperties: PostHogPersistedProperty,
+        posthog,
+        storage,
+      };
     })
     .catch((error: unknown) => {
       devWarn('[analytics] PostHog initialization failed', error);
@@ -91,6 +159,10 @@ async function getPostHog(): Promise<PostHog | null> {
     });
 
   return posthogPromise;
+}
+
+async function getPostHog(): Promise<PostHog | null> {
+  return (await getPostHogHandle())?.posthog ?? null;
 }
 
 export function sanitizeAnalyticsProps(props?: Record<string, unknown>): AnalyticsProps {
@@ -132,7 +204,7 @@ export function sanitizeAnalyticsEventName(
 }
 
 export function track(event: OnboardingEvent | string, props?: Record<string, unknown>): void {
-  if (accountDeletionWritesFrozen) return;
+  if (accountDeletionVendorWritesBlocked()) return;
   const safeEvent = sanitizeAnalyticsEventName(event);
   if (!safeEvent) return;
 
@@ -141,7 +213,7 @@ export function track(event: OnboardingEvent | string, props?: Record<string, un
   void runAccountGenerationOperation(async (lease) => {
     const posthog = await awaitAccountGenerationLease(lease, getPostHog);
     lease.assertCurrent();
-    if (accountDeletionWritesFrozen) return;
+    if (accountDeletionVendorWritesBlocked()) return;
     posthog?.capture(safeEvent, safeProps);
   }).catch((error: unknown) => {
     devWarn('[analytics] capture failed', error);
@@ -154,7 +226,7 @@ export async function identify(
   userId: string,
   props?: Record<string, unknown>,
 ): Promise<void> {
-  if (accountDeletionWritesFrozen) return;
+  if (accountDeletionVendorWritesBlocked()) return;
   const safeProps = sanitizeAnalyticsProps(props);
 
   try {
@@ -163,7 +235,7 @@ export async function identify(
       Promise.all([getPostHog(), pseudonymousUserId(userId)]),
     );
     lease.assertCurrent();
-    if (accountDeletionWritesFrozen) return;
+    if (accountDeletionVendorWritesBlocked()) return;
     posthog?.identify(pseudonymousId, safeProps);
     lease.assertCurrent();
   } catch (error) {
@@ -174,22 +246,46 @@ export async function identify(
 
 async function resetPostHogIdentity(): Promise<void> {
   const posthog = await getPostHog();
-  await posthog?.reset();
+  posthog?.reset();
 }
 
 export async function freezeAnalyticsIdentityForAccountDeletion(): Promise<void> {
-  accountDeletionWritesFrozen = true;
-  await resetPostHogIdentity();
+  // Serializing the underlying operations (not their timeout races) prevents a
+  // quick retry from overtaking a slow first drain and letting an older disk
+  // write land after a newer clear.
+  const operation = accountDeletionFreezeTail
+    .catch(() => undefined)
+    .then(async () => {
+      const handle = await getPostHogHandle(true);
+      if (!handle) throw new Error('ACCOUNT_DELETION_ANALYTICS_FREEZE_UNAVAILABLE');
+
+      const { persistedProperties: properties } = handle;
+      await discardPostHogTelemetryForAccountDeletion(
+        handle.posthog,
+        handle.storage,
+        {
+          all: Object.values(properties),
+          anonymousId: properties.AnonymousId,
+          distinctId: properties.DistinctId,
+          logsQueue: properties.LogsQueue,
+          optedOut: properties.OptedOut,
+          queue: properties.Queue,
+        },
+        ACCOUNT_DELETION_ANALYTICS_FREEZE_WAIT_MS,
+      );
+    });
+  accountDeletionFreezeTail = operation;
+
+  await withPostHogDeletionFreezeTimeout(operation, ACCOUNT_DELETION_ANALYTICS_FREEZE_WAIT_MS);
 }
 
 export async function resetAnalyticsIdentity(): Promise<void> {
   await resetPostHogIdentity();
-  accountDeletionWritesFrozen = false;
 }
 
 export async function flushAnalytics(): Promise<void> {
-  if (accountDeletionWritesFrozen) return;
+  if (accountDeletionVendorWritesBlocked()) return;
   const posthog = await getPostHog();
-  if (accountDeletionWritesFrozen) return;
+  if (accountDeletionVendorWritesBlocked()) return;
   await posthog?.flush();
 }

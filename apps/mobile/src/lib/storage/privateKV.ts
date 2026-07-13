@@ -13,8 +13,10 @@ import {
 import {
   PRIVATE_KV_CONTENT_KEY_CONFLICT,
   PRIVATE_KV_CONTENT_KEY_NAME,
+  PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE,
   clearStoredPrivateKVContentKey,
   getStoredPrivateKVContentKey,
+  migrateStoredPrivateKVContentKey,
   setStoredPrivateKVContentKey,
 } from './privateKVContentKey';
 import { withOperationTiming } from '@/lib/observability/operationTiming';
@@ -39,7 +41,24 @@ export const PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY =
   'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY';
 export const PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID =
   'PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID';
-export { PRIVATE_KV_CONTENT_KEY_CONFLICT };
+export { PRIVATE_KV_CONTENT_KEY_CONFLICT, PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE };
+
+export type PrivateKVReadFailureReason =
+  | 'content_key_missing'
+  | 'content_key_invalid'
+  | 'content_key_conflict'
+  | 'content_key_storage_unavailable'
+  | 'envelope_invalid'
+  | 'decryption_failed'
+  | 'account_boundary'
+  | 'storage_unavailable';
+
+export type PrivateKVReadResult =
+  | { status: 'absent' }
+  | { status: 'available'; value: string }
+  | { status: 'unavailable'; reason: PrivateKVReadFailureReason }
+  | { status: 'corrupt'; reason: 'content_key_invalid' | 'envelope_invalid' | 'decryption_failed' }
+  | { status: 'unsupported_version' };
 
 export type PrivateKVAuthorizedResetReason =
   | 'account_isolation'
@@ -121,8 +140,10 @@ function assertAccountScopedPrivateOperationAllowed(generation: number): void {
   }
 }
 
-async function getExistingContentKey(): Promise<Uint8Array | null> {
-  const stored = await getStoredPrivateKVContentKey();
+async function getExistingContentKey(migrate = false): Promise<Uint8Array | null> {
+  const stored = migrate
+    ? await migrateStoredPrivateKVContentKey()
+    : await getStoredPrivateKVContentKey();
   if (!stored) return null;
   if (!/^[0-9a-f]{64}$/i.test(stored)) {
     throw new Error(PRIVATE_KV_CONTENT_KEY_INVALID);
@@ -154,12 +175,12 @@ async function hasOrphanedPrivateCiphertext(): Promise<boolean> {
 }
 
 async function getOrCreateContentKey(): Promise<Uint8Array> {
-  const existing = await getExistingContentKey();
+  const existing = await getExistingContentKey(true);
   if (existing) return existing;
 
   if (!contentKeyCreation) {
     contentKeyCreation = (async () => {
-      const rechecked = await getExistingContentKey();
+      const rechecked = await getExistingContentKey(true);
       if (rechecked) return rechecked;
       if (await hasOrphanedPrivateCiphertext()) {
         throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
@@ -326,7 +347,7 @@ export async function getPrivateItem(key: string): Promise<string | null> {
     runAccountScopedPrivateOperation(async () => {
       assertPrivateDataKey(key);
       const raw = await AsyncStorage.getItem(key);
-      if (!raw) {
+      if (raw === null) {
         failedReadSnapshots.delete(key);
         return null;
       }
@@ -364,6 +385,50 @@ export async function getPrivateItem(key: string): Promise<string | null> {
   );
 }
 
+function classifyPrivateKVReadFailure(error: unknown): Exclude<
+  PrivateKVReadResult,
+  { status: 'absent' } | { status: 'available'; value: string }
+> {
+  const message = error instanceof Error ? error.message : '';
+  if (message === PRIVATE_KV_ENVELOPE_UNSUPPORTED) return { status: 'unsupported_version' };
+  if (message === PRIVATE_KV_CONTENT_KEY_INVALID) {
+    return { status: 'corrupt', reason: 'content_key_invalid' };
+  }
+  if (message === PRIVATE_KV_ENVELOPE_INVALID) {
+    return { status: 'corrupt', reason: 'envelope_invalid' };
+  }
+  if (message === PRIVATE_KV_DECRYPTION_FAILED) {
+    return { status: 'corrupt', reason: 'decryption_failed' };
+  }
+  if (message === PRIVATE_KV_CONTENT_KEY_MISSING) {
+    return { status: 'unavailable', reason: 'content_key_missing' };
+  }
+  if (message === PRIVATE_KV_CONTENT_KEY_CONFLICT) {
+    return { status: 'unavailable', reason: 'content_key_conflict' };
+  }
+  if (message === PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE) {
+    return { status: 'unavailable', reason: 'content_key_storage_unavailable' };
+  }
+  if (message === PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY) {
+    return { status: 'unavailable', reason: 'account_boundary' };
+  }
+  return { status: 'unavailable', reason: 'storage_unavailable' };
+}
+
+/**
+ * Typed read boundary for domain stores. Unlike boolean/default convenience
+ * APIs, this never turns unavailable, corrupt, or future private state into an
+ * ordinary absence or valid empty value.
+ */
+export async function readPrivateItem(key: string): Promise<PrivateKVReadResult> {
+  try {
+    const value = await getPrivateItem(key);
+    return value === null ? { status: 'absent' } : { status: 'available', value };
+  } catch (error) {
+    return classifyPrivateKVReadFailure(error);
+  }
+}
+
 export async function getPrivateItems(
   keys: readonly string[],
 ): Promise<Map<string, string | null>> {
@@ -375,7 +440,7 @@ export async function getPrivateItems(
       const encryptedEntries: [string, PrivateEnvelope, string][] = [];
 
       for (const [key, raw] of entries) {
-        if (!raw) {
+        if (raw === null) {
           failedReadSnapshots.delete(key);
           result.set(key, null);
           continue;

@@ -8,9 +8,20 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.privateKV.get(key) ?? null),
+  readPrivateItem: vi.fn(async (key: string) => {
+    const value = mocks.privateKV.get(key);
+    return value === undefined ? { status: 'absent' } : { status: 'available', value };
+  }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.privateKV.set(key, value);
   }),
+  updatePrivateItem: vi.fn(
+    async (key: string, updater: (current: string | null) => string | null) => {
+      const next = updater(mocks.privateKV.get(key) ?? null);
+      if (next === null) mocks.privateKV.delete(key);
+      else mocks.privateKV.set(key, next);
+    },
+  ),
 }));
 
 const KEY = 'onskin.ageVerified';
@@ -61,7 +72,10 @@ describe('age-gate local pass flag', () => {
 
   it('fails closed without rewriting when private storage cannot be read', async () => {
     const privateKV = await import('@/lib/storage/privateKV');
-    vi.mocked(privateKV.getPrivateItem).mockRejectedValueOnce(new Error('private kv unavailable'));
+    vi.mocked(privateKV.readPrivateItem).mockResolvedValueOnce({
+      status: 'unavailable',
+      reason: 'storage_unavailable',
+    });
 
     await expect(getAgeVerified()).resolves.toBe(false);
     expect(mocks.privateKV.get(KEY)).toBeUndefined();

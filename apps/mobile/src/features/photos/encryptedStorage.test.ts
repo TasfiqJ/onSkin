@@ -25,6 +25,11 @@ import {
   PHOTO_CONTENT_KEY_MISSING,
   PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
   PHOTO_DECRYPTION_FAILED,
+  PHOTO_RECOVERY_CANDIDATE_CHANGED,
+  PHOTO_RECOVERY_CANDIDATE_READ_FAILED,
+  PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED,
+  PHOTO_RECOVERY_CONFLICT,
+  PHOTO_RECOVERY_KEY_CHANGED,
   PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
   quarantineEncryptedPhoto,
   reconcileEncryptedPhotoStorage,
@@ -34,9 +39,13 @@ import {
 
 const CONTENT_KEY_NAME = 'onskin.photo.content_key.v1';
 const CONTENT_KEY_MARKER = 'onskin.photo.content_key_created.v1';
+const PHOTO_DIR = 'file://document/photos/v1/';
 
 const mocks = vi.hoisted(() => ({
   asyncSetThrows: false,
+  asyncGetItem: vi.fn(),
+  asyncRemoveItem: vi.fn(),
+  asyncSetItem: vi.fn(),
   asyncWriteGate: null as Promise<void> | null,
   asyncWriteStarted: null as ((key: string) => void) | null,
   asyncStorage: new Map<string, string>(),
@@ -75,16 +84,9 @@ vi.mock('react-native', () => ({
 
 vi.mock('@react-native-async-storage/async-storage', () => ({
   default: {
-    getItem: vi.fn(async (key: string) => mocks.asyncStorage.get(key) ?? null),
-    removeItem: vi.fn(async (key: string) => {
-      mocks.asyncStorage.delete(key);
-    }),
-    setItem: vi.fn(async (key: string, value: string) => {
-      if (mocks.asyncSetThrows) throw new Error('async write failed');
-      mocks.asyncWriteStarted?.(key);
-      if (mocks.asyncWriteGate) await mocks.asyncWriteGate;
-      mocks.asyncStorage.set(key, value);
-    }),
+    getItem: mocks.asyncGetItem,
+    removeItem: mocks.asyncRemoveItem,
+    setItem: mocks.asyncSetItem,
   },
 }));
 
@@ -105,14 +107,51 @@ vi.mock('expo-file-system/legacy', () => ({
 }));
 
 vi.mock('expo-secure-store', () => ({
+  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 7,
   deleteItemAsync: mocks.deleteItemAsync,
   getItemAsync: mocks.getItemAsync,
   setItemAsync: mocks.setItemAsync,
 }));
 
+function configureDirectoryBackedFileMocks(): void {
+  mocks.getInfoAsync.mockImplementation(async (uri: string) => ({
+    exists: uri === PHOTO_DIR || mocks.files.has(uri),
+  }));
+  mocks.readDirectoryAsync.mockImplementation(async () =>
+    [...mocks.files.keys()]
+      .filter((uri) => uri.startsWith(PHOTO_DIR))
+      .map((uri) => uri.slice(PHOTO_DIR.length)),
+  );
+}
+
+async function createAuthenticatedPhotoEnvelope(
+  photoId: string,
+  plaintext = `image-bytes-${photoId}`,
+): Promise<{ uri: string; raw: string }> {
+  const sourceUri = `file://capture/${photoId}.jpg`;
+  mocks.files.set(sourceUri, Buffer.from(plaintext).toString('base64'));
+  const encrypted = await encryptCapturedPhoto(sourceUri, photoId);
+  const raw = mocks.files.get(encrypted.encryptedLocalUri);
+  if (raw == null) throw new Error('test envelope was not persisted');
+  return { uri: encrypted.encryptedLocalUri, raw };
+}
+
+function encryptedAuthoritySnapshot() {
+  const sortedEntries = (entries: Iterable<[string, string]>) =>
+    [...entries].sort(([left], [right]) => left.localeCompare(right));
+  return {
+    files: sortedEntries(mocks.files.entries()),
+    secureStorage: sortedEntries(mocks.secureStorage.entries()),
+    asyncStorage: sortedEntries(mocks.asyncStorage.entries()),
+  };
+}
+
 describe('encrypted photo storage', () => {
   beforeEach(() => {
     mocks.asyncSetThrows = false;
+    mocks.asyncGetItem.mockReset();
+    mocks.asyncRemoveItem.mockReset();
+    mocks.asyncSetItem.mockReset();
     mocks.asyncWriteGate = null;
     mocks.asyncWriteStarted = null;
     mocks.asyncStorage.clear();
@@ -135,6 +174,18 @@ describe('encrypted photo storage', () => {
     mocks.writeAsStringAsync.mockReset();
     endEncryptedPhotoAccountBoundary();
 
+    mocks.asyncGetItem.mockImplementation(async (key: string) => {
+      return mocks.asyncStorage.get(key) ?? null;
+    });
+    mocks.asyncRemoveItem.mockImplementation(async (key: string) => {
+      mocks.asyncStorage.delete(key);
+    });
+    mocks.asyncSetItem.mockImplementation(async (key: string, value: string) => {
+      if (mocks.asyncSetThrows) throw new Error('async write failed');
+      mocks.asyncWriteStarted?.(key);
+      if (mocks.asyncWriteGate) await mocks.asyncWriteGate;
+      mocks.asyncStorage.set(key, value);
+    });
     mocks.deleteAsync.mockImplementation(async (uri: string) => {
       mocks.files.delete(uri);
     });
@@ -205,40 +256,82 @@ describe('encrypted photo storage', () => {
     expect(drainFinished).toBe(false);
 
     releaseWrite();
-    await write;
+    await expect(write).rejects.toThrow(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
     await drain;
     expect(drainFinished).toBe(true);
     expect(mocks.files.has('file://document/photos/v1/account-a-photo.onskinphoto')).toBe(true);
+    endEncryptedPhotoAccountBoundary();
   });
 
-  it('drains a decrypt marker write before account cleanup', async () => {
+  it('decrypts notes without writing the key-creation marker', async () => {
     const ciphertext = await encryptPhotoNote('account A note');
     mocks.asyncStorage.delete(CONTENT_KEY_MARKER);
-    let releaseMarker!: () => void;
-    let markWriteStarted!: () => void;
-    mocks.asyncWriteGate = new Promise<void>((resolve) => {
-      releaseMarker = resolve;
-    });
-    const writeStarted = new Promise<void>((resolve) => {
-      markWriteStarted = resolve;
-    });
-    mocks.asyncWriteStarted = markWriteStarted;
+    mocks.asyncSetItem.mockClear();
 
-    const decrypt = decryptPhotoNote(ciphertext);
-    await writeStarted;
+    await expect(decryptPhotoNote(ciphertext)).resolves.toBe('account A note');
+
+    expect(mocks.asyncSetItem).not.toHaveBeenCalled();
+    expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
+  });
+
+  it('decrypts photo envelopes without writing files, keys, or marker bytes', async () => {
+    const encrypted = await createAuthenticatedPhotoEnvelope('read-only-photo');
+    mocks.asyncStorage.delete(CONTENT_KEY_MARKER);
+    mocks.asyncSetItem.mockClear();
+    mocks.setItemAsync.mockClear();
+    mocks.writeAsStringAsync.mockClear();
+    mocks.moveAsync.mockClear();
+    mocks.deleteAsync.mockClear();
+    const before = encryptedAuthoritySnapshot();
+
+    await expect(decryptPhotoToDataUri(encrypted.uri)).resolves.toMatch(
+      /^data:image\/jpeg;base64,/,
+    );
+
+    expect(encryptedAuthoritySnapshot()).toEqual(before);
+    expect(mocks.asyncSetItem).not.toHaveBeenCalled();
+    expect(mocks.setItemAsync).not.toHaveBeenCalled();
+    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    expect(mocks.moveAsync).not.toHaveBeenCalled();
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
+  });
+
+  it('drains but does not publish a decrypt result after an account boundary begins', async () => {
+    const encrypted = await createAuthenticatedPhotoEnvelope('delayed-owner-a-decrypt');
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    const readGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.readAsStringAsync.mockImplementationOnce(async (uri: string) => {
+      markReadStarted();
+      await readGate;
+      const raw = mocks.files.get(uri);
+      if (raw == null) throw new Error(`missing file: ${uri}`);
+      return raw;
+    });
+
+    const decrypt = decryptPhotoToDataUri(encrypted.uri);
+    await readStarted;
     beginEncryptedPhotoAccountBoundary();
-    let drainFinished = false;
-    const drain = waitForEncryptedPhotoWritesToSettle().then(() => {
-      drainFinished = true;
-    });
-    await Promise.resolve();
-    expect(drainFinished).toBe(false);
+    try {
+      let drainFinished = false;
+      const drain = waitForEncryptedPhotoWritesToSettle().then(() => {
+        drainFinished = true;
+      });
+      await Promise.resolve();
+      expect(drainFinished).toBe(false);
 
-    releaseMarker();
-    await expect(decrypt).resolves.toBe('account A note');
-    await drain;
-    expect(drainFinished).toBe(true);
-    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe('1');
+      releaseRead();
+      await expect(decrypt).rejects.toThrow(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+      await drain;
+      expect(drainFinished).toBe(true);
+    } finally {
+      endEncryptedPhotoAccountBoundary();
+    }
   });
 
   it('round-trips encrypted notes and fails closed for malformed note envelopes', async () => {
@@ -288,22 +381,13 @@ describe('encrypted photo storage', () => {
   });
 
   it('restores or removes quarantined files according to committed metadata', async () => {
-    const directory = 'file://document/photos/v1/';
-    const originalUri = `${directory}photo-1.onskinphoto`;
-    mocks.files.set(originalUri, 'encrypted');
-    mocks.getInfoAsync.mockImplementation(async (uri: string) => ({
-      exists: uri === directory || mocks.files.has(uri),
-    }));
-    mocks.readDirectoryAsync.mockImplementation(async () =>
-      [...mocks.files.keys()]
-        .filter((uri) => uri.startsWith(directory))
-        .map((uri) => uri.slice(directory.length)),
-    );
+    const { uri: originalUri, raw } = await createAuthenticatedPhotoEnvelope('photo-1');
+    configureDirectoryBackedFileMocks();
 
     const first = await quarantineEncryptedPhoto(originalUri, 'delete-1');
     expect(first).not.toBeNull();
     await reconcileEncryptedPhotoStorage([originalUri]);
-    expect(mocks.files.has(originalUri)).toBe(true);
+    expect(mocks.files.get(originalUri)).toBe(raw);
 
     const second = await quarantineEncryptedPhoto(originalUri, 'delete-2');
     expect(second).not.toBeNull();
@@ -311,7 +395,7 @@ describe('encrypted photo storage', () => {
     expect(mocks.files.has(originalUri)).toBe(false);
     expect(mocks.files.has(second!.quarantinedUri)).toBe(false);
 
-    mocks.files.set(originalUri, 'encrypted-again');
+    mocks.files.set(originalUri, raw);
     const third = await quarantineEncryptedPhoto(originalUri, 'delete-3');
     await restoreQuarantinedPhoto(third!);
     expect(mocks.files.has(originalUri)).toBe(true);
@@ -319,23 +403,276 @@ describe('encrypted photo storage', () => {
     await deleteQuarantinedPhoto(fourth!);
     expect(mocks.files.has(fourth!.quarantinedUri)).toBe(false);
 
-    const orphanUri = `${directory}orphan.onskinphoto`;
-    const staleQuarantineUri = `${directory}stale.onskinphoto.pending-delete-delete-5`;
-    const incompleteUri = `${directory}unfinished.onskinphoto.tmp-1234`;
-    mocks.files.set(orphanUri, 'unreferenced-but-unproven');
-    mocks.files.set(staleQuarantineUri, 'committed-delete');
-    mocks.files.set(incompleteUri, 'partial-write');
+    const orphanUri = `${PHOTO_DIR}orphan.onskinphoto`;
+    const staleQuarantineUri = `${PHOTO_DIR}stale.onskinphoto.pending-delete-delete-5`;
+    const incompleteUri = `${PHOTO_DIR}unfinished.onskinphoto.tmp-1234`;
+    mocks.files.set(orphanUri, raw);
+    mocks.files.set(staleQuarantineUri, raw);
+    mocks.files.set(incompleteUri, raw);
     await reconcileEncryptedPhotoStorage([], { removeUnreferencedFinals: false });
-    expect(mocks.files.has(orphanUri)).toBe(true);
+    expect(mocks.files.get(orphanUri)).toBe(raw);
     expect(mocks.files.has(staleQuarantineUri)).toBe(false);
     expect(mocks.files.has(incompleteUri)).toBe(false);
   });
 
+  it('preserves both files when a quarantine destination already exists', async () => {
+    const original = await createAuthenticatedPhotoEnvelope('quarantine-source', 'source bytes');
+    const previous = await createAuthenticatedPhotoEnvelope('quarantine-previous', 'prior bytes');
+    mocks.files.delete(previous.uri);
+    const quarantinedUri = `${original.uri}.pending-delete-duplicate-operation`;
+    mocks.files.set(quarantinedUri, previous.raw);
+    configureDirectoryBackedFileMocks();
+    mocks.moveAsync.mockClear();
+    const before = encryptedAuthoritySnapshot();
+
+    await expect(quarantineEncryptedPhoto(original.uri, 'duplicate-operation')).rejects.toThrow(
+      PHOTO_RECOVERY_CONFLICT,
+    );
+
+    expect(encryptedAuthoritySnapshot()).toEqual(before);
+    expect(mocks.moveAsync).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['missing', () => mocks.secureStorage.delete(CONTENT_KEY_NAME), PHOTO_CONTENT_KEY_MISSING],
+    [
+      'malformed',
+      () => mocks.secureStorage.set(CONTENT_KEY_NAME, 'malformed-key-bytes'),
+      PHOTO_CONTENT_KEY_INVALID,
+    ],
+    [
+      'temporarily unavailable',
+      () => {
+        mocks.secureGetThrows = true;
+      },
+      PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
+    ],
+    [
+      'valid but wrong',
+      () => mocks.secureStorage.set(CONTENT_KEY_NAME, 'a'.repeat(64)),
+      PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED,
+    ],
+  ])(
+    'preserves every candidate and authority byte when the recovery key is %s',
+    async (_label, configureKey, expectedError) => {
+      const seed = await createAuthenticatedPhotoEnvelope('recovery-key-seed');
+      mocks.files.delete(seed.uri);
+      const candidateUri = `${PHOTO_DIR}orphan.onskinphoto`;
+      mocks.files.set(candidateUri, seed.raw);
+      configureDirectoryBackedFileMocks();
+      configureKey();
+      mocks.deleteAsync.mockClear();
+      mocks.moveAsync.mockClear();
+      mocks.setItemAsync.mockClear();
+      mocks.deleteItemAsync.mockClear();
+      mocks.asyncSetItem.mockClear();
+      const before = encryptedAuthoritySnapshot();
+
+      await expect(reconcileEncryptedPhotoStorage([])).rejects.toThrow(expectedError);
+
+      expect(encryptedAuthoritySnapshot()).toEqual(before);
+      expect(mocks.deleteAsync).not.toHaveBeenCalled();
+      expect(mocks.moveAsync).not.toHaveBeenCalled();
+      expect(mocks.setItemAsync).not.toHaveBeenCalled();
+      expect(mocks.deleteItemAsync).not.toHaveBeenCalled();
+      expect(mocks.asyncSetItem).not.toHaveBeenCalled();
+    },
+  );
+
+  it('preserves all candidates when envelopes require conflicting keys', async () => {
+    const first = await createAuthenticatedPhotoEnvelope('first-key-photo', 'first bytes');
+    const firstKey = mocks.secureStorage.get(CONTENT_KEY_NAME)!;
+    mocks.secureStorage.set(CONTENT_KEY_NAME, 'b'.repeat(64));
+    const second = await createAuthenticatedPhotoEnvelope('second-key-photo', 'second bytes');
+    mocks.secureStorage.set(CONTENT_KEY_NAME, firstKey);
+    const malformedUri = `${PHOTO_DIR}malformed.onskinphoto.tmp-1`;
+    mocks.files.set(malformedUri, '{not-json');
+    configureDirectoryBackedFileMocks();
+    mocks.deleteAsync.mockClear();
+    mocks.moveAsync.mockClear();
+    const before = encryptedAuthoritySnapshot();
+
+    await expect(reconcileEncryptedPhotoStorage([])).rejects.toThrow(
+      PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED,
+    );
+
+    expect(mocks.files.get(first.uri)).toBe(first.raw);
+    expect(mocks.files.get(second.uri)).toBe(second.raw);
+    expect(mocks.files.get(malformedUri)).toBe('{not-json');
+    expect(encryptedAuthoritySnapshot()).toEqual(before);
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
+    expect(mocks.moveAsync).not.toHaveBeenCalled();
+  });
+
+  it('preserves a malformed recovery envelope without any destructive attempt', async () => {
+    await encryptPhotoNote('establish a valid content key');
+    const malformedUri = `${PHOTO_DIR}malformed-only.onskinphoto.tmp-1`;
+    mocks.files.set(malformedUri, '{"ciphertextHex":"truncated"');
+    configureDirectoryBackedFileMocks();
+    mocks.deleteAsync.mockClear();
+    mocks.moveAsync.mockClear();
+    const before = encryptedAuthoritySnapshot();
+
+    await expect(reconcileEncryptedPhotoStorage([])).rejects.toThrow(
+      PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED,
+    );
+
+    expect(encryptedAuthoritySnapshot()).toEqual(before);
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
+    expect(mocks.moveAsync).not.toHaveBeenCalled();
+  });
+
+  it('preserves candidates when the readable key changes between authentication and mutation', async () => {
+    await createAuthenticatedPhotoEnvelope('key-change-photo');
+    const originalKey = mocks.secureStorage.get(CONTENT_KEY_NAME)!;
+    const conflictingKey = 'c'.repeat(64);
+    configureDirectoryBackedFileMocks();
+    let keyReadCount = 0;
+    mocks.getItemAsync.mockImplementation(async () => {
+      keyReadCount += 1;
+      return keyReadCount === 1 ? originalKey : conflictingKey;
+    });
+    mocks.deleteAsync.mockClear();
+    mocks.moveAsync.mockClear();
+    const before = encryptedAuthoritySnapshot();
+
+    await expect(reconcileEncryptedPhotoStorage([])).rejects.toThrow(PHOTO_RECOVERY_KEY_CHANGED);
+
+    expect(encryptedAuthoritySnapshot()).toEqual(before);
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
+    expect(mocks.moveAsync).not.toHaveBeenCalled();
+  });
+
+  it('preserves a candidate that changes after authentication instead of deleting uncertain bytes', async () => {
+    const candidate = await createAuthenticatedPhotoEnvelope('candidate-change-photo');
+    configureDirectoryBackedFileMocks();
+    let candidateReadCount = 0;
+    const changedRaw = `${candidate.raw} `;
+    mocks.readAsStringAsync.mockImplementation(async (uri: string) => {
+      const value = mocks.files.get(uri);
+      if (value == null) throw new Error(`missing file: ${uri}`);
+      if (uri === candidate.uri) {
+        candidateReadCount += 1;
+        if (candidateReadCount === 2) {
+          mocks.files.set(uri, changedRaw);
+          return changedRaw;
+        }
+      }
+      return value;
+    });
+    mocks.deleteAsync.mockClear();
+    mocks.moveAsync.mockClear();
+
+    await expect(reconcileEncryptedPhotoStorage([])).rejects.toThrow(
+      PHOTO_RECOVERY_CANDIDATE_CHANGED,
+    );
+
+    expect(mocks.files.get(candidate.uri)).toBe(changedRaw);
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
+    expect(mocks.moveAsync).not.toHaveBeenCalled();
+  });
+
+  it('rechecks later candidates after each awaited destructive action', async () => {
+    const first = await createAuthenticatedPhotoEnvelope('action-window-first', 'first bytes');
+    const second = await createAuthenticatedPhotoEnvelope('action-window-second', 'second bytes');
+    const replacement = await createAuthenticatedPhotoEnvelope(
+      'action-window-replacement',
+      'replacement bytes',
+    );
+    mocks.files.delete(replacement.uri);
+    configureDirectoryBackedFileMocks();
+    let releaseFirstDelete!: () => void;
+    let markFirstDeleteStarted!: () => void;
+    const firstDeleteGate = new Promise<void>((resolve) => {
+      releaseFirstDelete = resolve;
+    });
+    const firstDeleteStarted = new Promise<void>((resolve) => {
+      markFirstDeleteStarted = resolve;
+    });
+    let deleteCount = 0;
+    mocks.deleteAsync.mockImplementation(async (uri: string) => {
+      deleteCount += 1;
+      if (deleteCount === 1) {
+        markFirstDeleteStarted();
+        await firstDeleteGate;
+      }
+      mocks.files.delete(uri);
+    });
+
+    const recovery = reconcileEncryptedPhotoStorage([]);
+    await firstDeleteStarted;
+    mocks.files.set(second.uri, replacement.raw);
+    releaseFirstDelete();
+
+    await expect(recovery).rejects.toThrow(PHOTO_RECOVERY_CANDIDATE_CHANGED);
+    expect(mocks.files.has(first.uri)).toBe(false);
+    expect(mocks.files.get(second.uri)).toBe(replacement.raw);
+    expect(mocks.deleteAsync).toHaveBeenCalledTimes(1);
+  });
+
+  it('preserves authenticated and conflicting live/quarantine envelopes byte-for-byte', async () => {
+    const original = await createAuthenticatedPhotoEnvelope('conflict-live', 'live bytes');
+    const other = await createAuthenticatedPhotoEnvelope('conflict-other', 'other bytes');
+    const quarantinedUri = `${original.uri}.pending-delete-delete-conflict`;
+    mocks.files.set(quarantinedUri, other.raw);
+    configureDirectoryBackedFileMocks();
+    mocks.deleteAsync.mockClear();
+    mocks.moveAsync.mockClear();
+    const before = encryptedAuthoritySnapshot();
+
+    await expect(reconcileEncryptedPhotoStorage([original.uri])).rejects.toThrow(
+      PHOTO_RECOVERY_CONFLICT,
+    );
+
+    expect(encryptedAuthoritySnapshot()).toEqual(before);
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
+    expect(mocks.moveAsync).not.toHaveBeenCalled();
+  });
+
+  it('preserves duplicate quarantines instead of partially restoring one missing live path', async () => {
+    const original = await createAuthenticatedPhotoEnvelope('duplicate-quarantine');
+    mocks.files.delete(original.uri);
+    const firstQuarantine = `${original.uri}.pending-delete-first`;
+    const secondQuarantine = `${original.uri}.pending-delete-second`;
+    mocks.files.set(firstQuarantine, original.raw);
+    mocks.files.set(secondQuarantine, original.raw);
+    configureDirectoryBackedFileMocks();
+    mocks.deleteAsync.mockClear();
+    mocks.moveAsync.mockClear();
+    const before = encryptedAuthoritySnapshot();
+
+    await expect(reconcileEncryptedPhotoStorage([original.uri])).rejects.toThrow(
+      PHOTO_RECOVERY_CONFLICT,
+    );
+
+    expect(encryptedAuthoritySnapshot()).toEqual(before);
+    expect(mocks.deleteAsync).not.toHaveBeenCalled();
+    expect(mocks.moveAsync).not.toHaveBeenCalled();
+  });
+
+  it('preserves candidates when a recovery read or destructive delete fails', async () => {
+    await createAuthenticatedPhotoEnvelope('recovery-read-photo');
+    configureDirectoryBackedFileMocks();
+    const beforeReadFailure = encryptedAuthoritySnapshot();
+    mocks.readAsStringAsync.mockRejectedValueOnce(new Error('filesystem unavailable'));
+
+    await expect(reconcileEncryptedPhotoStorage([])).rejects.toThrow(
+      PHOTO_RECOVERY_CANDIDATE_READ_FAILED,
+    );
+    expect(encryptedAuthoritySnapshot()).toEqual(beforeReadFailure);
+
+    mocks.deleteAsync.mockRejectedValueOnce(new Error('delete unavailable'));
+    const beforeDeleteFailure = encryptedAuthoritySnapshot();
+    await expect(reconcileEncryptedPhotoStorage([])).rejects.toThrow('delete unavailable');
+    expect(encryptedAuthoritySnapshot()).toEqual(beforeDeleteFailure);
+  });
+
   it('aborts and drains stale reconciliation before an account switch can publish', async () => {
-    const directory = 'file://document/photos/v1/';
-    const staleUri = `${directory}account-a.onskinphoto.pending-delete-delete-1`;
-    mocks.files.set(staleUri, 'account-a-encrypted');
-    mocks.getInfoAsync.mockResolvedValue({ exists: true });
+    const seed = await createAuthenticatedPhotoEnvelope('account-a-seed');
+    mocks.files.delete(seed.uri);
+    const staleUri = `${PHOTO_DIR}account-a.onskinphoto.pending-delete-delete-1`;
+    mocks.files.set(staleUri, seed.raw);
+    configureDirectoryBackedFileMocks();
 
     let releaseDirectoryRead!: () => void;
     let markDirectoryReadStarted!: () => void;
@@ -372,7 +709,7 @@ describe('encrypted photo storage', () => {
       await drain;
 
       expect(drainFinished).toBe(true);
-      expect(mocks.files.get(staleUri)).toBe('account-a-encrypted');
+      expect(mocks.files.get(staleUri)).toBe(seed.raw);
     } finally {
       endEncryptedPhotoAccountBoundary();
       endAccountGenerationBoundary();
@@ -492,13 +829,16 @@ describe('encrypted photo storage', () => {
     expect(mocks.secureStorage.get(CONTENT_KEY_NAME)).toBe('b'.repeat(64));
   });
 
-  it('does not complete decryption when key-history persistence fails', async () => {
+  it('keeps decryption independent from key-history marker availability', async () => {
     const ciphertext = await encryptPhotoNote('baseline note');
+    mocks.asyncStorage.delete(CONTENT_KEY_MARKER);
     mocks.asyncSetThrows = true;
+    mocks.asyncSetItem.mockClear();
 
-    await expect(decryptPhotoNote(ciphertext)).rejects.toThrow(
-      PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
-    );
+    await expect(decryptPhotoNote(ciphertext)).resolves.toBe('baseline note');
+
+    expect(mocks.asyncSetItem).not.toHaveBeenCalled();
+    expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
   });
 
   it('reports authentication failure without replacing a valid but wrong key', async () => {
@@ -579,7 +919,10 @@ describe('encrypted photo storage', () => {
     expect(mocks.deleteAsync).toHaveBeenCalledWith('file://document/photos/v1/', {
       idempotent: true,
     });
-    expect(mocks.deleteItemAsync).toHaveBeenCalledWith(CONTENT_KEY_NAME);
+    expect(mocks.deleteItemAsync).toHaveBeenCalledWith(
+      CONTENT_KEY_NAME,
+      expect.objectContaining({ keychainAccessible: 7 }),
+    );
     expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
   });
 
@@ -590,7 +933,10 @@ describe('encrypted photo storage', () => {
 
     await expect(clearEncryptedPhotoStorage()).rejects.toThrow('PHOTO_STORAGE_CLEAR_FAILED:1');
 
-    expect(mocks.deleteItemAsync).toHaveBeenCalledWith(CONTENT_KEY_NAME);
+    expect(mocks.deleteItemAsync).toHaveBeenCalledWith(
+      CONTENT_KEY_NAME,
+      expect.objectContaining({ keychainAccessible: 7 }),
+    );
     expect(mocks.secureStorage.has(CONTENT_KEY_NAME)).toBe(false);
     expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
   });

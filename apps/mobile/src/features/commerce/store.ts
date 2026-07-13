@@ -7,7 +7,11 @@ import {
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
 import { supabase } from '@/lib/supabase/client';
-import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
+import {
+  readPrivateBoolean,
+  setPrivateBoolean,
+  type PrivateBooleanReadResult,
+} from '@/lib/storage/privateBoolean';
 import { removePrivateItem } from '@/lib/storage/privateKV';
 
 import { isHealthSafePayload, type ClickPayload } from './attribution';
@@ -21,8 +25,8 @@ import { isHealthSafePayload, type ClickPayload } from './attribution';
 
 const CONSENT_KEY = 'onskin.commerceConsent.v1';
 
-export async function getCommerceConsentLocal(): Promise<boolean> {
-  return getPrivateBoolean(CONSENT_KEY);
+export async function readCommerceConsentLocal(): Promise<PrivateBooleanReadResult> {
+  return readPrivateBoolean(CONSENT_KEY);
 }
 
 export async function setCommerceConsentLocal(granted: boolean): Promise<void> {

@@ -19,28 +19,48 @@ const STAGED_EXPORT = {
   purpose: 'data_export_json' as const,
   uri: 'file://cache/private-plaintext-staging-v1/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.json',
 };
+const VALID_ACCOUNT_DELETION_RESPONSE = {
+  deleted: true,
+  request_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+  apple: 'revoked',
+  posthog: 'deleted',
+};
+const ACCOUNT_DELETION_COMPLETION_TOKEN = 'c'.repeat(64);
+const VALID_ACCOUNT_DELETION_COMPLETION = {
+  requestId: VALID_ACCOUNT_DELETION_RESPONSE.request_id,
+  apple: VALID_ACCOUNT_DELETION_RESPONSE.apple,
+  posthog: VALID_ACCOUNT_DELETION_RESPONSE.posthog,
+};
 
 function readSource(path: string): string {
   return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
 }
 
 const mocks = vi.hoisted(() => ({
+  armAccountDeletionVendorFreeze: vi.fn(),
   buildMobileDataExportBundle: vi.fn(),
   cleanupPlaintextStaging: vi.fn(),
   collectLocalDeviceExportData: vi.fn(),
   deleteAsync: vi.fn(),
+  freezeAnalyticsIdentityForAccountDeletion: vi.fn(),
+  freezeRevenueCatIdentityForAccountDeletion: vi.fn(),
   getAppleAuthorizationCodeForRevocation: vi.fn(),
   getSession: vi.fn(),
   getUser: vi.fn(),
   invoke: vi.fn(),
   isSupabaseConfigured: true,
+  lookupAccountDeletionCompletion: vi.fn(),
+  markAccountDeletionBackendDeleted: vi.fn(),
+  markAccountDeletionBackendDeletedFromCompletion: vi.fn(),
   markPlaintextStagingState: vi.fn(),
   recordConsent: vi.fn(),
   reservePlaintextStaging: vi.fn(),
+  readAccountDeletionRecoveryCapability: vi.fn(),
   shareAsync: vi.fn(),
   sharingAvailable: vi.fn(),
   signOut: vi.fn(),
   userHasAppleIdentity: vi.fn(),
+  waitForRevenueCatOperationsToSettle: vi.fn(),
   writeAsStringAsync: vi.fn(),
 }));
 
@@ -64,6 +84,27 @@ vi.mock('@/lib/storage/plaintextStaging', () => ({
 vi.mock('@/lib/auth/apple', () => ({
   getAppleAuthorizationCodeForRevocation: mocks.getAppleAuthorizationCodeForRevocation,
   userHasAppleIdentity: mocks.userHasAppleIdentity,
+}));
+
+vi.mock('@/lib/auth/accountDeletionVendorFreeze', () => ({
+  armAccountDeletionVendorFreeze: mocks.armAccountDeletionVendorFreeze,
+  markAccountDeletionBackendDeleted: mocks.markAccountDeletionBackendDeleted,
+  markAccountDeletionBackendDeletedFromCompletion:
+    mocks.markAccountDeletionBackendDeletedFromCompletion,
+  readAccountDeletionRecoveryCapability: mocks.readAccountDeletionRecoveryCapability,
+}));
+
+vi.mock('@/lib/auth/accountDeletionCompletion', () => ({
+  lookupAccountDeletionCompletion: mocks.lookupAccountDeletionCompletion,
+}));
+
+vi.mock('@/lib/analytics/track', () => ({
+  freezeAnalyticsIdentityForAccountDeletion: mocks.freezeAnalyticsIdentityForAccountDeletion,
+}));
+
+vi.mock('@/lib/iap/revenuecat', () => ({
+  freezeRevenueCatIdentityForAccountDeletion: mocks.freezeRevenueCatIdentityForAccountDeletion,
+  waitForRevenueCatOperationsToSettle: mocks.waitForRevenueCatOperationsToSettle,
 }));
 
 vi.mock('@/lib/consent/consent', () => ({
@@ -97,21 +138,26 @@ describe('settings data export', () => {
   beforeEach(() => {
     delete process.env.EXPO_PUBLIC_E2E_DATA_EXPORT_DELAY_MS;
     mocks.buildMobileDataExportBundle.mockReset();
+    mocks.armAccountDeletionVendorFreeze.mockReset();
     mocks.cleanupPlaintextStaging.mockReset();
     mocks.collectLocalDeviceExportData.mockReset();
     mocks.deleteAsync.mockReset();
+    mocks.freezeAnalyticsIdentityForAccountDeletion.mockReset();
+    mocks.freezeRevenueCatIdentityForAccountDeletion.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
     mocks.getSession.mockReset();
     mocks.getUser.mockReset();
     mocks.invoke.mockReset();
     mocks.isSupabaseConfigured = true;
     mocks.markPlaintextStagingState.mockReset();
+    mocks.markAccountDeletionBackendDeleted.mockReset();
     mocks.recordConsent.mockReset();
     mocks.reservePlaintextStaging.mockReset();
     mocks.shareAsync.mockReset();
     mocks.sharingAvailable.mockReset();
     mocks.signOut.mockReset();
     mocks.userHasAppleIdentity.mockReset();
+    mocks.waitForRevenueCatOperationsToSettle.mockReset();
     mocks.writeAsStringAsync.mockReset();
     mocks.buildMobileDataExportBundle.mockImplementation((params) => ({
       mobile_export_schema_version: 1,
@@ -121,6 +167,7 @@ describe('settings data export', () => {
       local_device_data: params.localDeviceData,
       local_media_note: 'Progress photo files and thumbnails are not included.',
     }));
+    mocks.armAccountDeletionVendorFreeze.mockResolvedValue(undefined);
     mocks.collectLocalDeviceExportData.mockResolvedValue({
       schema_version: 1,
       collected_at: '2026-07-10T12:00:00.000Z',
@@ -137,6 +184,8 @@ describe('settings data export', () => {
     });
     mocks.cleanupPlaintextStaging.mockResolvedValue(undefined);
     mocks.deleteAsync.mockResolvedValue(undefined);
+    mocks.freezeAnalyticsIdentityForAccountDeletion.mockResolvedValue(undefined);
+    mocks.freezeRevenueCatIdentityForAccountDeletion.mockResolvedValue(undefined);
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
     mocks.getSession.mockResolvedValue({
@@ -150,7 +199,9 @@ describe('settings data export', () => {
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.reservePlaintextStaging.mockResolvedValue(STAGED_EXPORT);
     mocks.markPlaintextStagingState.mockResolvedValue(undefined);
+    mocks.markAccountDeletionBackendDeleted.mockResolvedValue(undefined);
     mocks.signOut.mockResolvedValue(undefined);
+    mocks.waitForRevenueCatOperationsToSettle.mockResolvedValue(undefined);
     mocks.userHasAppleIdentity.mockReturnValue(true);
     mocks.writeAsStringAsync.mockResolvedValue(undefined);
   });
@@ -433,25 +484,41 @@ describe('settings data export', () => {
 
 describe('settings account deletion and consent withdrawal', () => {
   beforeEach(() => {
+    mocks.armAccountDeletionVendorFreeze.mockReset();
     mocks.deleteAsync.mockReset();
+    mocks.freezeAnalyticsIdentityForAccountDeletion.mockReset();
+    mocks.freezeRevenueCatIdentityForAccountDeletion.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
     mocks.getSession.mockReset();
     mocks.getUser.mockReset();
     mocks.invoke.mockReset();
     mocks.isSupabaseConfigured = true;
+    mocks.lookupAccountDeletionCompletion.mockReset();
     mocks.recordConsent.mockReset();
+    mocks.markAccountDeletionBackendDeleted.mockReset();
+    mocks.markAccountDeletionBackendDeletedFromCompletion.mockReset();
+    mocks.readAccountDeletionRecoveryCapability.mockReset();
     mocks.shareAsync.mockReset();
     mocks.sharingAvailable.mockReset();
     mocks.signOut.mockReset();
     mocks.userHasAppleIdentity.mockReset();
+    mocks.waitForRevenueCatOperationsToSettle.mockReset();
     mocks.writeAsStringAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
+    mocks.armAccountDeletionVendorFreeze.mockResolvedValue(ACCOUNT_DELETION_COMPLETION_TOKEN);
+    mocks.freezeAnalyticsIdentityForAccountDeletion.mockResolvedValue(undefined);
+    mocks.freezeRevenueCatIdentityForAccountDeletion.mockResolvedValue(undefined);
+    mocks.markAccountDeletionBackendDeleted.mockResolvedValue(undefined);
+    mocks.markAccountDeletionBackendDeletedFromCompletion.mockResolvedValue(undefined);
+    mocks.lookupAccountDeletionCompletion.mockResolvedValue(null);
+    mocks.readAccountDeletionRecoveryCapability.mockResolvedValue(null);
+    mocks.waitForRevenueCatOperationsToSettle.mockResolvedValue(undefined);
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
     mocks.getSession.mockResolvedValue({
       data: { session: { access_token: 'token-1', user: { id: 'user-1' } } },
       error: null,
     });
-    mocks.invoke.mockResolvedValue({ data: null, error: null });
+    mocks.invoke.mockResolvedValue({ data: VALID_ACCOUNT_DELETION_RESPONSE, error: null });
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.signOut.mockResolvedValue(undefined);
     mocks.userHasAppleIdentity.mockReturnValue(true);
@@ -461,16 +528,159 @@ describe('settings account deletion and consent withdrawal', () => {
     await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
 
     expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledWith({ id: 'user-1' });
+    expect(mocks.armAccountDeletionVendorFreeze).toHaveBeenCalledWith('user-1');
+    expect(mocks.waitForRevenueCatOperationsToSettle).toHaveBeenCalledTimes(1);
+    expect(mocks.freezeAnalyticsIdentityForAccountDeletion).toHaveBeenCalledTimes(1);
+    expect(mocks.freezeRevenueCatIdentityForAccountDeletion).toHaveBeenCalledTimes(1);
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
-      body: { appleAuthorizationCode: 'apple-revocation-code' },
+      body: {
+        appleAuthorizationCode: 'apple-revocation-code',
+        completionToken: ACCOUNT_DELETION_COMPLETION_TOKEN,
+      },
       headers: { Authorization: 'Bearer token-1' },
       signal: expect.any(AbortSignal),
     });
+    expect(mocks.markAccountDeletionBackendDeleted).toHaveBeenCalledWith('user-1');
     expect(mocks.signOut).toHaveBeenCalledTimes(1);
     expect(mocks.invoke.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.markAccountDeletionBackendDeleted.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.markAccountDeletionBackendDeleted.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.signOut.mock.invocationCallOrder[0]!,
     );
+    expect(mocks.armAccountDeletionVendorFreeze.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.freezeAnalyticsIdentityForAccountDeletion.mock.invocationCallOrder[0]!,
+    );
+    expect(
+      mocks.freezeAnalyticsIdentityForAccountDeletion.mock.invocationCallOrder[0],
+    ).toBeLessThan(mocks.invoke.mock.invocationCallOrder[0]!);
+    expect(
+      mocks.freezeRevenueCatIdentityForAccountDeletion.mock.invocationCallOrder[0],
+    ).toBeLessThan(mocks.invoke.mock.invocationCallOrder[0]!);
+  });
+
+  it('fails before Edge when the RevenueCat native identity fence rejects', async () => {
+    mocks.freezeRevenueCatIdentityForAccountDeletion.mockRejectedValueOnce(
+      new Error('revenuecat reset unavailable'),
+    );
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('revenuecat reset unavailable');
+
+    expect(mocks.freezeAnalyticsIdentityForAccountDeletion).toHaveBeenCalledTimes(1);
+    expect(mocks.freezeRevenueCatIdentityForAccountDeletion).toHaveBeenCalledTimes(1);
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
+  });
+
+  it('fails before Edge when the PostHog deletion freeze cannot be verified', async () => {
+    mocks.freezeAnalyticsIdentityForAccountDeletion.mockRejectedValueOnce(
+      new Error('ACCOUNT_DELETION_ANALYTICS_FREEZE_TIMEOUT'),
+    );
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+      'ACCOUNT_DELETION_ANALYTICS_FREEZE_TIMEOUT',
+    );
+
+    expect(mocks.armAccountDeletionVendorFreeze).toHaveBeenCalledTimes(1);
+    expect(mocks.freezeRevenueCatIdentityForAccountDeletion).toHaveBeenCalledTimes(1);
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionBackendDeleted).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
+  });
+
+  it('fails before provider resets or Edge when the durable freeze cannot persist', async () => {
+    mocks.armAccountDeletionVendorFreeze.mockRejectedValueOnce(
+      new Error('ACCOUNT_DELETION_VENDOR_FREEZE_WRITE_FAILED'),
+    );
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+      'ACCOUNT_DELETION_VENDOR_FREEZE_WRITE_FAILED',
+    );
+
+    expect(mocks.freezeAnalyticsIdentityForAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.freezeRevenueCatIdentityForAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
+  });
+
+  it('bounds a wedged provider reset and fails closed before Edge', async () => {
+    vi.useFakeTimers();
+    try {
+      mocks.freezeRevenueCatIdentityForAccountDeletion.mockReturnValueOnce(
+        new Promise<void>(() => undefined),
+      );
+
+      const deletion = expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+        'ACCOUNT_DELETION_VENDOR_RESET_TIMEOUT',
+      );
+      await vi.waitFor(() =>
+        expect(mocks.freezeRevenueCatIdentityForAccountDeletion).toHaveBeenCalledOnce(),
+      );
+      await vi.advanceTimersByTimeAsync(8_001);
+      await deletion;
+
+      expect(mocks.invoke).not.toHaveBeenCalled();
+      expect(mocks.signOut).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('refuses backend deletion while a subscriber-touching RevenueCat operation is unsettled', async () => {
+    vi.useFakeTimers();
+    try {
+      mocks.waitForRevenueCatOperationsToSettle.mockReturnValueOnce(
+        new Promise<void>(() => undefined),
+      );
+
+      const deletion = expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+        'ACCOUNT_DELETION_VENDOR_ACTIVITY_IN_FLIGHT',
+      );
+      await vi.waitFor(() =>
+        expect(mocks.waitForRevenueCatOperationsToSettle).toHaveBeenCalledOnce(),
+      );
+      await vi.advanceTimersByTimeAsync(1_501);
+
+      await deletion;
+      expect(mocks.armAccountDeletionVendorFreeze).toHaveBeenCalledTimes(1);
+      expect(mocks.freezeAnalyticsIdentityForAccountDeletion).not.toHaveBeenCalled();
+      expect(mocks.freezeRevenueCatIdentityForAccountDeletion).not.toHaveBeenCalled();
+      expect(mocks.invoke).not.toHaveBeenCalled();
+      expect(mocks.markAccountDeletionBackendDeleted).not.toHaveBeenCalled();
+      expect(mocks.signOut).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('does not sign out until backend completion is durably authorized for local cleanup', async () => {
+    mocks.markAccountDeletionBackendDeleted.mockRejectedValueOnce(
+      new Error('ACCOUNT_DELETION_VENDOR_FREEZE_COMPLETION_UNVERIFIED'),
+    );
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+      'ACCOUNT_DELETION_VENDOR_FREEZE_COMPLETION_UNVERIFIED',
+    );
+
+    expect(mocks.invoke).toHaveBeenCalledTimes(1);
+    expect(mocks.markAccountDeletionBackendDeleted).toHaveBeenCalledWith('user-1');
+    expect(mocks.signOut).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    null,
+    { ...VALID_ACCOUNT_DELETION_RESPONSE, deleted: false },
+    { ...VALID_ACCOUNT_DELETION_RESPONSE, request_id: 'not-a-uuid' },
+    { ...VALID_ACCOUNT_DELETION_RESPONSE, apple: 'unknown' },
+    { ...VALID_ACCOUNT_DELETION_RESPONSE, posthog: 'unknown' },
+  ])('fails closed without signing out for a malformed 2xx response: %j', async (response) => {
+    mocks.invoke.mockResolvedValueOnce({ data: response, error: null });
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('ACCOUNT_DELETION_RESPONSE_INVALID');
+
+    expect(mocks.armAccountDeletionVendorFreeze).toHaveBeenCalledTimes(1);
+    expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
   it('holds the account boundary during local sign-out without drain deadlock', async () => {
@@ -495,7 +705,53 @@ describe('settings account deletion and consent withdrawal', () => {
 
     await expect(deleteAccount(mocks.signOut)).rejects.toThrow('NETWORK_REQUEST_UNKNOWN');
 
+    expect(mocks.lookupAccountDeletionCompletion).toHaveBeenCalledWith(
+      ACCOUNT_DELETION_COMPLETION_TOKEN,
+      expect.any(AbortSignal),
+    );
     expect(mocks.signOut).not.toHaveBeenCalled();
+  });
+
+  it('converges after a lost final response without replaying deletion or the Apple code', async () => {
+    mocks.invoke.mockResolvedValueOnce({ data: null, error: new Error('response lost') });
+    mocks.lookupAccountDeletionCompletion.mockResolvedValueOnce(
+      VALID_ACCOUNT_DELETION_COMPLETION,
+    );
+
+    await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
+
+    expect(mocks.invoke).toHaveBeenCalledTimes(1);
+    expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledTimes(1);
+    expect(mocks.lookupAccountDeletionCompletion).toHaveBeenCalledWith(
+      ACCOUNT_DELETION_COMPLETION_TOKEN,
+      expect.any(AbortSignal),
+    );
+    expect(mocks.markAccountDeletionBackendDeleted).toHaveBeenCalledWith('user-1');
+    expect(mocks.signOut).toHaveBeenCalledTimes(1);
+  });
+
+  it('finishes a prior committed deletion after auth is already absent', async () => {
+    mocks.getUser.mockResolvedValueOnce({
+      data: { user: null },
+      error: new Error('user not found'),
+    });
+    mocks.readAccountDeletionRecoveryCapability.mockResolvedValueOnce({
+      state: 'pending',
+      ownerHash: 'a'.repeat(64),
+      completionToken: ACCOUNT_DELETION_COMPLETION_TOKEN,
+    });
+    mocks.lookupAccountDeletionCompletion.mockResolvedValueOnce(
+      VALID_ACCOUNT_DELETION_COMPLETION,
+    );
+
+    await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
+
+    expect(mocks.getAppleAuthorizationCodeForRevocation).not.toHaveBeenCalled();
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionBackendDeletedFromCompletion).toHaveBeenCalledWith(
+      ACCOUNT_DELETION_COMPLETION_TOKEN,
+    );
+    expect(mocks.signOut).toHaveBeenCalledTimes(1);
   });
 
   it('surfaces a root account-boundary failure after backend deletion', async () => {
@@ -505,7 +761,10 @@ describe('settings account deletion and consent withdrawal', () => {
 
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
-      body: { appleAuthorizationCode: 'apple-revocation-code' },
+      body: {
+        appleAuthorizationCode: 'apple-revocation-code',
+        completionToken: ACCOUNT_DELETION_COMPLETION_TOKEN,
+      },
       headers: { Authorization: 'Bearer token-1' },
       signal: expect.any(AbortSignal),
     });
@@ -521,6 +780,8 @@ describe('settings account deletion and consent withdrawal', () => {
 
     expect(mocks.invoke).not.toHaveBeenCalled();
     expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(mocks.freezeAnalyticsIdentityForAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.freezeRevenueCatIdentityForAccountDeletion).not.toHaveBeenCalled();
 
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValueOnce(null);
     await expect(deleteAccount(mocks.signOut)).rejects.toThrow('APPLE_REAUTHORIZATION_REQUIRED');
@@ -552,6 +813,37 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
+  it('drains an in-flight owner-A freeze write before account-boundary cleanup', async () => {
+    let releaseFreeze!: () => void;
+    mocks.armAccountDeletionVendorFreeze.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          releaseFreeze = resolve;
+        }),
+    );
+
+    const deletion = deleteAccount(mocks.signOut);
+    await vi.waitFor(() => expect(mocks.armAccountDeletionVendorFreeze).toHaveBeenCalledOnce());
+    beginAccountGenerationBoundary();
+    let drained = false;
+    const drain = waitForAccountGenerationOperationsToSettle().then(() => {
+      drained = true;
+    });
+    try {
+      await Promise.resolve();
+      expect(drained).toBe(false);
+      releaseFreeze();
+      await expect(deletion).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+      await drain;
+      expect(drained).toBe(true);
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
+  });
+
   it('does not request Apple reauthentication for a non-Apple account', async () => {
     mocks.userHasAppleIdentity.mockReturnValueOnce(false);
 
@@ -560,7 +852,7 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(mocks.getAppleAuthorizationCodeForRevocation).not.toHaveBeenCalled();
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
-      body: {},
+      body: { completionToken: ACCOUNT_DELETION_COMPLETION_TOKEN },
       headers: { Authorization: 'Bearer token-1' },
       signal: expect.any(AbortSignal),
     });
@@ -572,21 +864,29 @@ describe('settings account deletion and consent withdrawal', () => {
       .mockResolvedValueOnce('apple-code-2');
     mocks.invoke
       .mockResolvedValueOnce({ data: null, error: new Error('retryable pre-Apple failure') })
-      .mockResolvedValueOnce({ data: null, error: null });
+      .mockResolvedValueOnce({ data: VALID_ACCOUNT_DELETION_RESPONSE, error: null });
 
     await expect(deleteAccount(mocks.signOut)).rejects.toThrow('NETWORK_REQUEST_UNKNOWN');
     await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
 
     expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledTimes(2);
+    expect(mocks.freezeAnalyticsIdentityForAccountDeletion).toHaveBeenCalledTimes(2);
+    expect(mocks.freezeRevenueCatIdentityForAccountDeletion).toHaveBeenCalledTimes(2);
     expect(mocks.invoke).toHaveBeenNthCalledWith(1, 'account-deletion', {
       method: 'POST',
-      body: { appleAuthorizationCode: 'apple-code-1' },
+      body: {
+        appleAuthorizationCode: 'apple-code-1',
+        completionToken: ACCOUNT_DELETION_COMPLETION_TOKEN,
+      },
       headers: { Authorization: 'Bearer token-1' },
       signal: expect.any(AbortSignal),
     });
     expect(mocks.invoke).toHaveBeenNthCalledWith(2, 'account-deletion', {
       method: 'POST',
-      body: { appleAuthorizationCode: 'apple-code-2' },
+      body: {
+        appleAuthorizationCode: 'apple-code-2',
+        completionToken: ACCOUNT_DELETION_COMPLETION_TOKEN,
+      },
       headers: { Authorization: 'Bearer token-1' },
       signal: expect.any(AbortSignal),
     });
@@ -613,7 +913,10 @@ describe('settings account deletion and consent withdrawal', () => {
     );
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
-      body: { appleAuthorizationCode: 'apple-revocation-code' },
+      body: {
+        appleAuthorizationCode: 'apple-revocation-code',
+        completionToken: ACCOUNT_DELETION_COMPLETION_TOKEN,
+      },
       headers: { Authorization: 'Bearer token-1' },
       signal: expect.any(AbortSignal),
     });
@@ -629,7 +932,10 @@ describe('settings account deletion and consent withdrawal', () => {
 
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
-      body: { appleAuthorizationCode: 'apple-revocation-code' },
+      body: {
+        appleAuthorizationCode: 'apple-revocation-code',
+        completionToken: ACCOUNT_DELETION_COMPLETION_TOKEN,
+      },
       headers: { Authorization: 'Bearer token-1' },
       signal: expect.any(AbortSignal),
     });

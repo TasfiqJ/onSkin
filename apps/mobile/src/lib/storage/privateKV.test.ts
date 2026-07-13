@@ -22,6 +22,7 @@ import {
   removePrivateItemsForAuthorizedReset,
   multiRemovePrivateItems,
   privateKVEncryptionInfo,
+  readPrivateItem,
   setPrivateItem,
   updatePrivateItem,
   waitForPrivateKVWritesToSettle,
@@ -82,6 +83,7 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
 vi.mock('react-native-get-random-values', () => ({}));
 
 vi.mock('expo-secure-store', () => ({
+  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 7,
   isAvailableAsync: vi.fn(async () => true),
   getItemAsync: vi.fn(async (key: string) => {
     mocks.secureGetStarted?.();
@@ -118,6 +120,55 @@ describe('private KV encrypted storage', () => {
     mocks.asyncStorage.set('legacy-key', 'legacy-value');
 
     await expect(getPrivateItem('legacy-key')).resolves.toBe('legacy-value');
+  });
+
+  it('keeps absent and valid empty private values distinct in typed reads', async () => {
+    mocks.asyncStorage.set('routinekind.empty', '');
+
+    await expect(readPrivateItem('routinekind.absent')).resolves.toEqual({ status: 'absent' });
+    await expect(readPrivateItem('routinekind.empty')).resolves.toEqual({
+      status: 'available',
+      value: '',
+    });
+    await expect(getPrivateItem('routinekind.empty')).resolves.toBe('');
+  });
+
+  it('classifies corrupt and unsupported private envelopes without changing bytes', async () => {
+    const corrupt = JSON.stringify({
+      version: privateKVEncryptionInfo.version,
+      nonceHex: 'not-hex',
+      ciphertextHex: 'not-hex',
+    });
+    const future = JSON.stringify({
+      version: 'xchacha20poly1305:v2',
+      nonceHex: '00'.repeat(24),
+      ciphertextHex: '00'.repeat(16),
+    });
+    mocks.asyncStorage.set('routinekind.corrupt', corrupt);
+    mocks.asyncStorage.set('routinekind.future', future);
+
+    await expect(readPrivateItem('routinekind.corrupt')).resolves.toEqual({
+      status: 'corrupt',
+      reason: 'envelope_invalid',
+    });
+    await expect(readPrivateItem('routinekind.future')).resolves.toEqual({
+      status: 'unsupported_version',
+    });
+    expect(mocks.asyncStorage.get('routinekind.corrupt')).toBe(corrupt);
+    expect(mocks.asyncStorage.get('routinekind.future')).toBe(future);
+  });
+
+  it('classifies an unreadable content key as unavailable and preserves ciphertext', async () => {
+    await setPrivateItem('routinekind.authoritative', 'value');
+    const raw = mocks.asyncStorage.get('routinekind.authoritative');
+    mocks.secureGetThrows = true;
+
+    await expect(readPrivateItem('routinekind.authoritative')).resolves.toEqual({
+      status: 'unavailable',
+      reason: 'content_key_storage_unavailable',
+    });
+
+    expect(mocks.asyncStorage.get('routinekind.authoritative')).toBe(raw);
   });
 
   it('roundtrips encrypted values through AsyncStorage', async () => {

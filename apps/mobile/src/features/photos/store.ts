@@ -193,12 +193,14 @@ async function normalizeStoredRecords(value: unknown): Promise<PhotoRecord[] | n
   return items;
 }
 
-async function loadPhotosUnlocked(): Promise<PhotoRecord[]> {
+type PhotoStoreSnapshot = {
+  items: PhotoRecord[];
+  metadataPresent: boolean;
+};
+
+async function readPhotosUnlocked(): Promise<PhotoStoreSnapshot> {
   const raw = await getPrivateItem(KEY);
-  if (raw === null) {
-    await reconcileEncryptedPhotoStorage([], { removeUnreferencedFinals: false });
-    return [];
-  }
+  if (raw === null) return { items: [], metadataPresent: false };
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
@@ -207,18 +209,29 @@ async function loadPhotosUnlocked(): Promise<PhotoRecord[]> {
   }
   const normalized = await normalizeStoredRecords(parsed);
   if (!normalized) throw new Error(PHOTO_METADATA_INVALID);
-  await reconcileEncryptedPhotoStorage(
-    normalized.flatMap((photo) =>
-      [photo.encryptedLocalUri ?? photo.localUri, photo.thumbnailLocalUri].filter(
-        (uri): uri is string => Boolean(uri && isEncryptedPhotoUri(uri)),
-      ),
+  return { items: normalized, metadataPresent: true };
+}
+
+function referencedEncryptedUris(items: readonly PhotoRecord[]): string[] {
+  return items.flatMap((photo) =>
+    [photo.encryptedLocalUri ?? photo.localUri, photo.thumbnailLocalUri].filter(
+      (uri): uri is string => Boolean(uri && isEncryptedPhotoUri(uri)),
     ),
   );
-  return normalized;
+}
+
+async function loadPhotosForMutationUnlocked(): Promise<PhotoRecord[]> {
+  const snapshot = await readPhotosUnlocked();
+  const referencedUris = referencedEncryptedUris(snapshot.items);
+  if (snapshot.metadataPresent) await reconcileEncryptedPhotoStorage(referencedUris);
+  else await reconcileEncryptedPhotoStorage(referencedUris, { removeUnreferencedFinals: false });
+  return snapshot.items;
 }
 
 export async function loadPhotos(): Promise<PhotoRecord[]> {
-  return runPhotoStoreMutation(loadPhotosUnlocked);
+  // Join the mutation queue so a read cannot observe metadata while its file is
+  // quarantined, but do not run recovery or persist normalized metadata here.
+  return runPhotoStoreMutation(async () => (await readPhotosUnlocked()).items);
 }
 
 async function persist(items: PhotoRecord[]): Promise<void> {
@@ -274,12 +287,12 @@ async function restoreQuarantinedFiles(files: QuarantinedPhotoFile[]): Promise<v
 }
 
 async function finishQuarantinedFiles(files: QuarantinedPhotoFile[]): Promise<void> {
-  await Promise.allSettled(files.map((file) => deleteQuarantinedPhoto(file)));
+  for (const file of files) await deleteQuarantinedPhoto(file);
 }
 
 export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
   return runPhotoStoreMutation(async () => {
-    const items = await loadPhotosUnlocked();
+    const items = await loadPhotosForMutationUnlocked();
     const committedCapture = input.captureSessionId
       ? items.find((photo) => photo.captureSessionId === input.captureSessionId)
       : undefined;
@@ -337,9 +350,7 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
       await persist([rec, ...items]);
     } catch (error) {
       if (encrypted && sourceNeedsCleanup) {
-        await quarantineUncommittedEncryptedPhoto(encrypted.encryptedLocalUri, `add-${id}`).catch(
-          () => undefined,
-        );
+        await quarantineUncommittedEncryptedPhoto(encrypted.encryptedLocalUri, `add-${id}`);
       }
       throw error;
     }
@@ -357,7 +368,7 @@ export async function updatePhoto(
   patch: Partial<Pick<PhotoRecord, 'notes' | 'timeOfDay' | 'faceRegionRedacted'>>,
 ): Promise<void> {
   await runPhotoStoreMutation(async () => {
-    const items = await loadPhotosUnlocked();
+    const items = await loadPhotosForMutationUnlocked();
     await persist(items.map((p) => (p.id === id ? { ...p, ...patch } : p)));
   });
 }
@@ -365,7 +376,7 @@ export async function updatePhoto(
 export async function removePhoto(id: string): Promise<void> {
   await runAccountGenerationOperation(async (lease) => {
     const removed = await runPhotoStoreMutation(async () => {
-      const items = await loadPhotosUnlocked();
+      const items = await loadPhotosForMutationUnlocked();
       const target = items.find((p) => p.id === id);
       if (!target) return false;
       const quarantined = await quarantinePhotoFiles(
@@ -404,7 +415,7 @@ export async function removePhoto(id: string): Promise<void> {
 /** Make `id` the reference for its series. */
 export async function setReference(id: string): Promise<void> {
   await runPhotoStoreMutation(async () => {
-    const items = await loadPhotosUnlocked();
+    const items = await loadPhotosForMutationUnlocked();
     const target = items.find((p) => p.id === id);
     if (!target) return;
     await persist(
@@ -416,7 +427,7 @@ export async function setReference(id: string): Promise<void> {
 /** Test/seed reset. */
 export async function clearPhotos(): Promise<void> {
   await runPhotoStoreMutation(async () => {
-    const items = await loadPhotosUnlocked();
+    const items = await loadPhotosForMutationUnlocked();
     const quarantined = await quarantinePhotoFiles(
       items.flatMap((photo) => [
         photo.encryptedLocalUri ?? photo.localUri,

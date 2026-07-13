@@ -8,7 +8,19 @@ const exportSource = read('supabase/functions/data-export/index.ts');
 const exportCoreSource = read('supabase/functions/data-export/exportCore.ts');
 const completeExportSource = `${exportSource}\n${exportCoreSource}`;
 const deletionSource = read('supabase/functions/account-deletion/index.ts');
+const deletionCoreSource = read('supabase/functions/account-deletion/deletionCore.ts');
+const deletionStateSource = read('supabase/functions/account-deletion/supabaseDeletionState.ts');
+const deletionRecoverySource = read('supabase/functions/account-deletion/RECOVERY.md');
+const deletionMigrationSource = read(
+  'supabase/migrations/20260713000043_account_deletion_resumable.sql',
+);
 const settingsActionsSource = read('apps/mobile/src/features/settings/actions.ts');
+const deletionVendorFreezeSource = read('apps/mobile/src/lib/auth/accountDeletionVendorFreeze.ts');
+const deletionVendorFreezeRuntimeSource = read(
+  'apps/mobile/src/lib/auth/accountDeletionVendorFreezeRuntime.ts',
+);
+const authProviderSource = read('apps/mobile/src/lib/auth/AuthProvider.tsx');
+const localPrivateDataSource = read('apps/mobile/src/features/settings/localPrivateData.ts');
 const settingsRouteSource = read('apps/mobile/src/app/(tabs)/you.tsx');
 const localDeviceExportSource = read('apps/mobile/src/features/settings/localDeviceExport.ts');
 const localDeviceExportTestSource = read(
@@ -21,12 +33,54 @@ const localAccountIsolationSource = read('apps/mobile/src/lib/auth/localAccountI
 const plaintextStagingSource = read('apps/mobile/src/lib/storage/plaintextStagingCore.ts');
 const plaintextStagingAdapterSource = read('apps/mobile/src/lib/storage/plaintextStaging.ts');
 const packageJson = JSON.parse(read('package.json'));
+const edgeFunctionManifest = JSON.parse(read('supabase/functions/manifest.json'));
 const liveHarness = read('scripts/phase9/live-data-rights.mjs');
+const liveAccountCleanupSource = read('scripts/phase9/live-account-cleanup.mjs');
+const guardedCleanupHarnessPaths = [
+  'scripts/phase2/supabase-rls-smoke.mjs',
+  'scripts/phase9/live-consent-withdrawal.mjs',
+  'scripts/phase9/live-catalog-rate-limit.mjs',
+  'scripts/phase9/live-supabase-adversarial.mjs',
+  'scripts/phase9/live-revenuecat-webhook.mjs',
+  'scripts/phase9/live-edge-auth.mjs',
+  'scripts/phase9/live-data-rights.mjs',
+];
+const guardedCleanupHarnesses = guardedCleanupHarnessPaths.map((path) => ({
+  path,
+  source: read(path),
+}));
+const guardedCleanupHarnessSource = guardedCleanupHarnesses.map(({ source }) => source).join('\n');
+const guardedCleanupCallerContractsHold = guardedCleanupHarnesses.every(({ path, source }) => {
+  const cleanupIndex = source.lastIndexOf('await cleanupLiveTestAccounts');
+  const cleanupCallEnd = source.indexOf('});', cleanupIndex);
+  const cleanupCallSource = source.slice(cleanupIndex, cleanupCallEnd + 3);
+  const successIndex = path.endsWith('supabase-rls-smoke.mjs')
+    ? source.lastIndexOf('OK Supabase RLS smoke tests passed.')
+    : source.lastIndexOf("writeArtifacts(errors.length > 0 ? 'fail' : 'pass')");
+  const expectedErrorSink = path.endsWith('supabase-rls-smoke.mjs')
+    ? /\berrors:\s*cleanupErrors,/.test(cleanupCallSource)
+    : /\berrors,/.test(cleanupCallSource);
+  return (
+    /cleanupLiveTestAccounts/.test(source) &&
+    !/deleteLiveTestAccount/.test(source) &&
+    !/auth\.admin\.deleteUser/.test(source) &&
+    cleanupIndex !== -1 &&
+    cleanupCallEnd !== -1 &&
+    expectedErrorSink &&
+    successIndex !== -1 &&
+    cleanupIndex < successIndex
+  );
+});
 const externalFetchHelper = read('supabase/functions/_shared/fetch.ts');
 const storagePathHelper = read('supabase/functions/_shared/storagePath.ts');
 const storagePathHelperTest = read('supabase/functions/_shared/storagePath.test.ts');
 const deletionHandlerSource = deletionSource.slice(deletionSource.indexOf('Deno.serve'));
 const exportHandlerSource = exportSource.slice(exportSource.indexOf('Deno.serve'));
+const deletionStepList =
+  deletionCoreSource
+    .match(/export const ACCOUNT_DELETION_STEPS = \[([\s\S]*?)\] as const;/)?.[1]
+    ?.match(/'[^']+'/g)
+    ?.map((step) => step.slice(1, -1)) ?? [];
 
 const requiredExportTables = [
   'profiles',
@@ -254,8 +308,6 @@ block(
 
 for (const pattern of [
   /revokeAppleTokenIfNeeded/,
-  /assertDeletionPreconditions/,
-  /assertAppleRevocationConfigured/,
   /assertPostHogDeletionConfigured/,
   /https:\/\/appleid\.apple\.com\/auth\/token/,
   /https:\/\/appleid\.apple\.com\/auth\/revoke/,
@@ -266,9 +318,8 @@ for (const pattern of [
   /deleteRevenueCatSubscriber/,
   /api\.revenuecat\.com\/v1\/subscribers/,
   /deletePhotoStorage/,
-  /scrubServiceRoleOnlyRows/,
-  /order_attributions.*click_token/s,
-  /subscriptions_events.*resolved_user_id/s,
+  /runAccountDeletionStateMachine/,
+  /createSupabaseAccountDeletionStateStore/,
   /auth\.admin\.deleteUser/,
 ]) {
   block(
@@ -277,6 +328,116 @@ for (const pattern of [
     `account-deletion is missing required deletion marker ${pattern}.`,
   );
 }
+for (const pattern of [
+  /runAccountDeletionStateMachine/,
+  /input\.store\.claim/,
+  /input\.store\.checkpoint/,
+  /input\.store\.beginAppleAttempt/,
+  /input\.store[\s\S]*\.recordFailure/,
+  /deleteRevenueCatSubscriber/,
+  /deletePostHogPerson/,
+  /deletePhotoStorage/,
+  /eraseDatabaseState/,
+  /revokeOtherAuthSessions/,
+  /revokeAppleToken/,
+  /reconcileProviders/,
+  /deleteAuthIdentity/,
+  /APPLE_AUTHORIZATION_CODE_REQUIRED/,
+  /APPLE_REVOCATION_STATUS_UNKNOWN/,
+]) {
+  block(
+    errors,
+    pattern.test(deletionCoreSource),
+    `account-deletion state machine is missing required marker ${pattern}.`,
+  );
+}
+block(
+  errors,
+  JSON.stringify(deletionStepList) ===
+    JSON.stringify([
+      'revenuecat',
+      'posthog',
+      'storage',
+      'database',
+      'sessions',
+      'apple',
+      'providers_final',
+      'auth',
+    ]),
+  'account-deletion must checkpoint early providers, storage/database, session revocation, Apple, final providers, then auth.',
+);
+block(
+  errors,
+  /const appleAuthorizationCode = input\.appleAuthorizationCode\?\.trim\(\)/.test(
+    deletionCoreSource,
+  ) &&
+    deletionCoreSource.indexOf("throw new Error('APPLE_AUTHORIZATION_CODE_REQUIRED')") <
+      deletionCoreSource.indexOf('input.store.claim') &&
+    /state = await input\.store\.beginAppleAttempt/.test(deletionCoreSource) &&
+    /await input\.actions\.revokeAppleToken\(appleAuthorizationCode\)/.test(deletionCoreSource) &&
+    /state\.nextStep === 'apple_in_progress'/.test(deletionCoreSource),
+  'account-deletion must preflight Apple authorization before claim and durably prevent reuse before provider I/O.',
+);
+block(
+  errors,
+  !/authorization[_ ]code/i.test(deletionMigrationSource) &&
+    !/p_apple_authorization_code/i.test(deletionStateSource),
+  'account-deletion durable state must never persist the single-use Apple authorization code.',
+);
+for (const pattern of [
+  /create table public\.account_deletion_requests/,
+  /next_step[\s\S]*'revenuecat'[\s\S]*'posthog'[\s\S]*'storage'[\s\S]*'database'[\s\S]*'apple'[\s\S]*'auth'[\s\S]*'complete'/,
+  /alter table public\.account_deletion_requests enable row level security/,
+  /pg_advisory_xact_lock/,
+  /reject_owned_write_during_account_deletion/,
+  /account_deletion_write_allowed/,
+  /as restrictive for insert to authenticated/,
+  /create or replace function public\.account_deletion_claim/,
+  /create or replace function public\.account_deletion_preflight/,
+  /create or replace function public\.account_deletion_begin_apple_attempt/,
+  /create or replace function public\.account_deletion_checkpoint/,
+  /create or replace function public\.account_deletion_record_failure/,
+  /create or replace function public\.account_deletion_completion_status/,
+  /completion_token_hash\s+text not null unique/,
+  /grant execute on function public\.account_deletion_completion_status\(text\)[\s\S]*to anon, authenticated, service_role/,
+  /where deletion\.user_lookup_hash = public\.account_deletion_lookup_hash\(v_user_id\)/,
+  /deletion\.next_step in \('apple_in_progress', 'providers_final', 'auth'\)/,
+  /v_request\.lease_expires_at > clock_timestamp\(\)[\s\S]*v_request\.next_step = 'apple_in_progress'/,
+  /create or replace function public\.erase_account_database_state/,
+  /delete from public\.profiles where id = p_user_id/,
+  /update public\.subscriptions_events[\s\S]*resolved_user_id = null/,
+  /update public\.order_attributions[\s\S]*click_token = null/,
+  /delete from public\.obf_contribution_queue/,
+  /grant execute on function public\.account_deletion_claim\(uuid, text, boolean, uuid, uuid, text\)[\s\S]*to service_role/,
+  /grant execute on function public\.account_deletion_begin_apple_attempt\(uuid, uuid, uuid\)[\s\S]*to service_role/,
+  /grant execute on function public\.erase_account_database_state\(uuid, uuid, uuid\)[\s\S]*to service_role/,
+  /after delete on auth\.users/,
+  /before delete on auth\.users/,
+  /guard_account_deletion_before_auth_delete/,
+  /reject_auth_write_during_account_deletion/,
+  /reject_auth_session_write_during_account_deletion/,
+  /reject_auth_refresh_token_write_during_account_deletion/,
+  /before insert or update or delete on auth\.identities/,
+  /before insert or update on auth\.sessions/,
+  /before insert or update on auth\.refresh_tokens/,
+  /v_new - 'revoked' - 'updated_at'/,
+  /finalize_account_deletion_after_auth_delete/,
+  /suppress_deleted_revenuecat_identity/,
+  /suppress_deleted_order_click_token/,
+]) {
+  block(
+    errors,
+    pattern.test(deletionMigrationSource),
+    `account-deletion migration is missing durable-state/erasure marker ${pattern}.`,
+  );
+}
+block(
+  errors,
+  /next_step = 'complete'[\s\S]*user_id is null[\s\S]*initiating_session_id is null[\s\S]*completed_at is not null/.test(
+    deletionMigrationSource,
+  ) && /user_hash\s+text not null unique/.test(deletionMigrationSource),
+  'account-deletion must retain only a pseudonymous, content-free receipt after completion.',
+);
 block(
   errors,
   /EDGE_EXTERNAL_FETCH_TIMEOUT_MS/.test(externalFetchHelper) &&
@@ -314,24 +475,117 @@ block(
 
 block(
   errors,
-  deletionHandlerSource.indexOf('assertDeletionPreconditions(user, body)') !== -1 &&
-    deletionHandlerSource.indexOf('assertDeletionPreconditions(user, body)') <
-      deletionHandlerSource.indexOf('deletePhotoStorage(user.id, supabase)'),
-  'account-deletion must preflight provider configuration before deleting storage.',
+  /eraseDatabaseState\(\{ requestId: state\.requestId \}\)/.test(deletionCoreSource) &&
+    deletionStepList.indexOf('database') < deletionStepList.indexOf('apple') &&
+    deletionStepList.indexOf('database') < deletionStepList.indexOf('sessions') &&
+    deletionStepList.indexOf('sessions') < deletionStepList.indexOf('apple') &&
+    deletionStepList.indexOf('apple') < deletionStepList.indexOf('providers_final') &&
+    deletionStepList.indexOf('providers_final') < deletionStepList.indexOf('auth'),
+  'account-deletion must freeze data, revoke other sessions, revoke Apple, reconcile providers, and delete auth last.',
 );
 block(
   errors,
-  deletionHandlerSource.indexOf('deleteRevenueCatSubscriber(user.id, supabase)') !== -1 &&
-    deletionHandlerSource.indexOf('deleteRevenueCatSubscriber(user.id, supabase)') <
-      deletionHandlerSource.indexOf('deletePhotoStorage(user.id, supabase)'),
-  'account-deletion must delete the RevenueCat identity before local storage cleanup.',
+  deletionHandlerSource.indexOf('const durablePreflight = await stateStore.preflight') !== -1 &&
+    deletionHandlerSource.indexOf('const durablePreflight = await stateStore.preflight') <
+      deletionHandlerSource.indexOf('runAccountDeletionStateMachine({') &&
+    /userHasProvider\(user, 'apple'\) \|\| durablePreflight\.appleRequired/.test(
+      deletionHandlerSource,
+    ),
+  'account-deletion must read a durable Apple requirement before claim/freeze.',
 );
 block(
   errors,
-  deletionHandlerSource.indexOf('deletePostHogPerson(user.id)') !== -1 &&
-    deletionHandlerSource.indexOf('deletePostHogPerson(user.id)') <
-      deletionHandlerSource.indexOf('deletePhotoStorage(user.id, supabase)'),
-  'account-deletion must delete the PostHog identity before local storage cleanup.',
+  /auth\.admin\.signOut\(token, 'others'\)/.test(deletionSource) &&
+    /async reconcileProviders\(\)[\s\S]*deleteRevenueCatSubscriber[\s\S]*deletePostHogPerson/.test(
+      deletionSource,
+    ),
+  'account-deletion must revoke other sessions and retry final RevenueCat/PostHog deletion.',
+);
+block(
+  errors,
+  /verifiedSessionId\(token, user\.id\)/.test(deletionSource) &&
+    /sessionId,\s*leaseToken/s.test(deletionSource) &&
+    /initiating_session_id/.test(deletionMigrationSource) &&
+    /v_request\.initiating_session_id is distinct from p_session_id/.test(
+      deletionMigrationSource,
+    ) &&
+    /v_new ->> 'session_id' = v_initiating_session_id::text/.test(deletionMigrationSource),
+  'account-deletion must bind retryable auth maintenance to the verified initiating session.',
+);
+block(
+  errors,
+  /Hosted Supabase compatibility gate/.test(deletionRecoverySource) &&
+    /explicitly unsupported residual/.test(deletionRecoverySource) &&
+    /RevenueCat and PostHog do not expose an account-scoped write lock/.test(
+      deletionRecoverySource,
+    ),
+  'account-deletion must document managed-Auth and external-provider residual gates.',
+);
+block(
+  errors,
+  settingsActionsSource.indexOf('armAccountDeletionVendorFreeze(data.user.id)') !== -1 &&
+    settingsActionsSource.indexOf('armAccountDeletionVendorFreeze(data.user.id)') <
+      settingsActionsSource.indexOf(
+        'await awaitAccountGenerationLease(lease, settleVendorIdentityResetsWithinBound)',
+      ) &&
+    settingsActionsSource.indexOf(
+      'await awaitAccountGenerationLease(lease, settleVendorIdentityResetsWithinBound)',
+    ) < settingsActionsSource.indexOf("invokeEdgeFunction<unknown>('account-deletion'") &&
+    /freezeAnalyticsIdentityForAccountDeletion\(\)/.test(settingsActionsSource) &&
+    /freezeRevenueCatIdentityForAccountDeletion\(\)/.test(settingsActionsSource) &&
+    /Promise\.all\(\[/.test(settingsActionsSource) &&
+    /ACCOUNT_DELETION_VENDOR_RESET_TIMEOUT/.test(settingsActionsSource) &&
+    /Promise\.race/.test(settingsActionsSource) &&
+    /assertAccountDeletionResponse\(response\)/.test(settingsActionsSource),
+  'Mobile deletion must durably freeze writes, hard-bound vendor fences, and validate Edge success before sign-out.',
+);
+block(
+  errors,
+  /version: 2/.test(deletionVendorFreezeSource) &&
+    /state: 'pending'/.test(deletionVendorFreezeSource) &&
+    /owner_hash/.test(deletionVendorFreezeSource) &&
+    /completion_token/.test(deletionVendorFreezeSource) &&
+    /Crypto\.getRandomBytes\(32\)/.test(deletionVendorFreezeSource) &&
+    /AsyncStorage\.setItem/.test(deletionVendorFreezeSource) &&
+    /ACCOUNT_DELETION_VENDOR_FREEZE_OWNER_MISMATCH/.test(deletionVendorFreezeSource) &&
+    /let writesBlocked = true/.test(deletionVendorFreezeRuntimeSource) &&
+    authProviderSource.indexOf(
+      'await hydrateAccountDeletionVendorFreeze(resolvedTargetUserId)',
+    ) !== -1 &&
+    authProviderSource.indexOf(
+      'await hydrateAccountDeletionVendorFreeze(resolvedTargetUserId)',
+    ) <
+      authProviderSource.indexOf('setSession(latestPendingSession)') &&
+    authProviderSource.indexOf('await reconcileAccountDeletionCompletionReceipt()') <
+      authProviderSource.indexOf('await invalidateLocalSupabaseSession()') &&
+    localPrivateDataSource.indexOf('clearAccountDeletionVendorFreezeAfterCleanup()') >
+      localPrivateDataSource.indexOf('if (failed.length > 0) throw new Error'),
+  'Mobile deletion freeze must survive relaunch and clear only after the final private cleanup.',
+);
+block(
+  errors,
+  /client\.functions\.invoke\('account-deletion'/.test(liveAccountCleanupSource) &&
+    /data\.deleted !== true/.test(liveAccountCleanupSource) &&
+    /data\.request_id/.test(liveAccountCleanupSource) &&
+    /admin\.auth\.admin\.getUserById/.test(liveAccountCleanupSource) &&
+    /error\?\.code === 'user_not_found'/.test(liveAccountCleanupSource) &&
+    /auth absence verification failed/.test(liveAccountCleanupSource) &&
+    !/auth\.admin\.deleteUser/.test(guardedCleanupHarnessSource) &&
+    guardedCleanupCallerContractsHold,
+  'Disposable live users must use guarded deletion, prove Auth absence, and finish cleanup before PASS.',
+);
+block(
+  errors,
+  deletionHandlerSource.indexOf('appleClientSecret = await createAppleClientSecret()') !== -1 &&
+    deletionHandlerSource.indexOf('appleClientSecret = await createAppleClientSecret()') <
+      deletionHandlerSource.indexOf('runAccountDeletionStateMachine({'),
+  'account-deletion must validate Apple configuration and private-key parsing before claim/freeze.',
+);
+block(
+  errors,
+  /if \(response\.ok\) return 'deleted'/.test(deletionSource) &&
+    !/lastStatus === 404[^\n]*return 'already_absent'/.test(deletionSource),
+  'PostHog deletion must accept only a 2xx response; 404 is a provider failure.',
 );
 block(
   errors,
@@ -352,6 +606,16 @@ block(
   errors,
   !/return json\(\{ deleted: false, error: publicError\(error\) \}/.test(deletionSource),
   'account-deletion must not return raw publicError output inline.',
+);
+block(
+  errors,
+  JSON.stringify(
+    edgeFunctionManifest.functions?.['account-deletion']?.requiredSecrets ?? [],
+  ).includes('REVENUECAT_SECRET_API_KEY') &&
+    !JSON.stringify(
+      edgeFunctionManifest.functions?.['account-deletion']?.conditionalSecrets ?? [],
+    ).includes('REVENUECAT_SECRET_API_KEY'),
+  'Account deletion always calls RevenueCat, so its deletion API key must be mandatory in the manifest.',
 );
 block(
   errors,
@@ -494,8 +758,10 @@ block(
     /data-export photo signed URLs expire after configured TTL/.test(liveHarness) &&
     /data-export returns 429 after configured data-rights rate limit/.test(liveHarness) &&
     /edge_rate_limits stores keyed hashes only for data-export scope/.test(liveHarness) &&
+    /randomBytes\(32\)\.toString\('hex'\)/.test(liveHarness) &&
+    /a still-valid deleted-owner JWT recreated photo storage after deletion/.test(liveHarness) &&
     /RATE_LIMITED/.test(liveHarness),
-  'Live data-rights harness must invoke data-export/account-deletion and prove data-export 429/keyed-hash rate-limit behavior behind an explicit run flag.',
+  'Live data-rights harness must invoke data-export/account-deletion and prove rate limits plus stale-JWT storage denial behind an explicit run flag.',
 );
 block(
   errors,

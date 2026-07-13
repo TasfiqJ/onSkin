@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ASK_TRIAL_GROUNDED_CAP } from './gate';
 import {
-  getAskConsentLocal,
   getGroundedTurns,
+  readAskConsentLocal,
   recordGroundedTurn,
   setAskConsentLocal,
 } from './store';
@@ -21,6 +21,12 @@ vi.mock('@/lib/storage/privateKV', () => ({
     const failure = mocks.readFailures.get(key);
     if (failure) throw failure;
     return mocks.storage.get(key) ?? null;
+  }),
+  readPrivateItem: vi.fn(async (key: string) => {
+    const failure = mocks.readFailures.get(key);
+    if (failure) return { status: 'unavailable', reason: 'storage_unavailable' };
+    const value = mocks.storage.get(key);
+    return value === undefined ? { status: 'absent' } : { status: 'available', value };
   }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.storage.set(key, value);
@@ -196,18 +202,34 @@ describe('Ask consent store', () => {
   it('reads legacy consent grants without repair and writes versioned flags', async () => {
     mocks.storage.set(CONSENT_KEY, 'true');
 
-    await expect(getAskConsentLocal()).resolves.toBe(true);
+    await expect(readAskConsentLocal()).resolves.toEqual({
+      status: 'available',
+      value: true,
+      format: 'legacy',
+    });
     expect(mocks.storage.get(CONSENT_KEY)).toBe('true');
 
     await setAskConsentLocal(false);
     expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
   });
 
-  it('fails closed and preserves malformed ask consent values', async () => {
+  it('classifies and preserves malformed ask consent values', async () => {
     mocks.storage.set(CONSENT_KEY, 'yes');
 
-    await expect(getAskConsentLocal()).resolves.toBe(false);
+    await expect(readAskConsentLocal()).resolves.toEqual({
+      status: 'corrupt',
+      reason: 'invalid_value',
+    });
 
     expect(mocks.storage.get(CONSENT_KEY)).toBe('yes');
+  });
+
+  it('does not turn private storage unavailability into an ordinary Ask decline', async () => {
+    mocks.readFailures.set(CONSENT_KEY, new Error('PRIVATE_KEY_UNAVAILABLE'));
+
+    await expect(readAskConsentLocal()).resolves.toEqual({
+      status: 'unavailable',
+      reason: 'storage_unavailable',
+    });
   });
 });

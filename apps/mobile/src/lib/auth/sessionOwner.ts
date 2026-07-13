@@ -6,6 +6,7 @@ import { LOCAL_DATA_CLEANUP_REQUIRED_KEY, LOCAL_DATA_OWNER_HASH_KEY } from './se
 
 export { LOCAL_DATA_CLEANUP_REQUIRED_KEY, LOCAL_DATA_OWNER_HASH_KEY } from './sessionOwnerKey';
 const OWNER_HASH_DOMAIN = 'routinekind:local-data-owner:v1:';
+const CLEANUP_REQUIRED_VALUE = 'v1:required';
 let cleanupRequiredInMemory = false;
 
 async function ownerHash(userId: string): Promise<string> {
@@ -16,15 +17,16 @@ async function ownerHash(userId: string): Promise<string> {
 }
 
 export async function readLocalDataOwnership(userId: string | null): Promise<LocalDataOwnership> {
-  if (
-    cleanupRequiredInMemory ||
-    (await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY)) === '1'
-  ) {
+  const cleanupMarker = await AsyncStorage.getItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY);
+  // Any persisted marker means a destructive boundary did not prove complete.
+  // Legacy `1`, corrupt bytes, empty strings, and future versions all remain
+  // fail-closed until the authorized cleanup path removes the key entirely.
+  if (cleanupRequiredInMemory || cleanupMarker !== null) {
     cleanupRequiredInMemory = true;
     return 'mismatch';
   }
   const storedHash = await AsyncStorage.getItem(LOCAL_DATA_OWNER_HASH_KEY);
-  if (!storedHash) return 'unclaimed';
+  if (storedHash === null) return 'unclaimed';
   if (!userId) return 'mismatch';
   return storedHash === (await ownerHash(userId)) ? 'match' : 'mismatch';
 }
@@ -35,7 +37,7 @@ export async function claimLocalDataOwnership(userId: string): Promise<void> {
 
 export async function markLocalDataCleanupRequired(): Promise<void> {
   cleanupRequiredInMemory = true;
-  await AsyncStorage.setItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY, '1');
+  await AsyncStorage.setItem(LOCAL_DATA_CLEANUP_REQUIRED_KEY, CLEANUP_REQUIRED_VALUE);
 }
 
 export async function clearLocalDataCleanupRequired(): Promise<void> {

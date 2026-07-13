@@ -1,4 +1,8 @@
-import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
+import {
+  readPrivateBoolean,
+  setPrivateBoolean,
+  type PrivateBooleanReadResult,
+} from '@/lib/storage/privateBoolean';
 import { multiRemovePrivateItems } from '@/lib/storage/privateKV';
 
 // Local-first community state (docs/11 §6/§8, the D-029 pattern). The
@@ -9,15 +13,15 @@ import { multiRemovePrivateItems } from '@/lib/storage/privateKV';
 const CONSENT_KEY = 'onskin.communityConsent.v1';
 const AGE_KEY = 'onskin.communityAge16.v1';
 
-export async function getCommunityConsentLocal(): Promise<boolean> {
-  return getPrivateBoolean(CONSENT_KEY);
+export async function readCommunityConsentLocal(): Promise<PrivateBooleanReadResult> {
+  return readPrivateBoolean(CONSENT_KEY);
 }
 export async function setCommunityConsentLocal(granted: boolean): Promise<void> {
   await setPrivateBoolean(CONSENT_KEY, granted);
 }
 
-export async function getAgeConfirmedLocal(): Promise<boolean> {
-  return getPrivateBoolean(AGE_KEY);
+export async function readAgeConfirmedLocal(): Promise<PrivateBooleanReadResult> {
+  return readPrivateBoolean(AGE_KEY);
 }
 export async function setAgeConfirmedLocal(confirmed: boolean): Promise<void> {
   await setPrivateBoolean(AGE_KEY, confirmed);

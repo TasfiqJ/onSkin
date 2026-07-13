@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { createHmac, randomUUID } from 'node:crypto';
+import { createHmac, randomBytes, randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
 import {
@@ -11,6 +11,7 @@ import {
   redactedErrorKind,
   write,
 } from './lib.mjs';
+import { cleanupLiveTestAccounts } from './live-account-cleanup.mjs';
 
 const errors = [];
 const warnings = [];
@@ -156,6 +157,13 @@ async function runCheck(name, fn) {
 function publicClient() {
   return createClient(supabaseUrl, publishableKey, {
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
+  });
+}
+
+function staleJwtClient(accessToken) {
+  return createClient(supabaseUrl, publishableKey, {
+    auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
+    global: { headers: { Authorization: `Bearer ${accessToken}` } },
   });
 }
 
@@ -694,9 +702,10 @@ async function main() {
     await runCheck(
       'account-deletion deletes caller account/data without touching another user',
       async () => {
+        const completionToken = randomBytes(32).toString('hex');
         const { data, error } = await userA.client.functions.invoke('account-deletion', {
           method: 'POST',
-          body: {},
+          body: { completionToken },
         });
         if (error) throw error;
         assert(
@@ -762,6 +771,22 @@ async function main() {
         if (otherPhoto.error)
           throw new Error('account-deletion removed another user photo object.');
 
+        // Access JWTs remain cryptographically valid until exp even after the
+        // auth row is gone. Exercise Storage with that exact stale bearer and
+        // prove the retained lookup tombstone still rejects durable writes.
+        const stalePath = `${userA.id}/post-delete-stale-${randomUUID()}.bin`;
+        storagePaths.push(stalePath);
+        const staleUpload = await staleJwtClient(userA.token)
+          .storage.from('photos')
+          .upload(stalePath, new Blob(['stale deleted-owner write']), {
+            contentType: 'application/octet-stream',
+            upsert: false,
+          });
+        assert(
+          Boolean(staleUpload.error),
+          'a still-valid deleted-owner JWT recreated photo storage after deletion.',
+        );
+
         const { data: ownerOrder, error: ownerOrderError } = await admin
           .from('order_attributions')
           .select('click_token')
@@ -799,12 +824,13 @@ async function main() {
         .eq('external_order_id', externalOrderId);
       if (error) warnings.push(`Order cleanup warning: ${redactedErrorKind(error)}`);
     }
-    for (const user of users) {
-      if (!user?.id) continue;
-      if (!(await userExists(admin, user.id))) continue;
-      const { error } = await admin.auth.admin.deleteUser(user.id);
-      if (error) warnings.push(`User cleanup warning: ${redactedErrorKind(error)}`);
-    }
+    await cleanupLiveTestAccounts({
+      admin,
+      users,
+      errors,
+      label: 'Data-rights user cleanup',
+      errorKind: redactedErrorKind,
+    });
   }
 
   writeArtifacts(errors.length > 0 ? 'fail' : 'pass');

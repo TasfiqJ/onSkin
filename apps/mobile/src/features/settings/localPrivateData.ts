@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 
 import { clearEncryptedPhotoStorage } from '@/features/photos/encryptedStorage';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
+import { clearAccountDeletionVendorFreezeAfterCleanup } from '@/lib/auth/accountDeletionVendorFreeze';
 import { resetRevenueCatIdentity } from '@/lib/iap/revenuecat';
 import {
   clearPrivateKVContentKey,
@@ -16,6 +17,25 @@ import {
   LOCAL_PRIVATE_METADATA_KEYS,
   localPrivateCachePrefixes,
 } from './localPrivateDataKeys';
+
+const LOCAL_PRIVATE_VENDOR_RESET_TIMEOUT_MS = 2_000;
+
+async function resetVendorIdentityWithinBound(operation: () => Promise<void>): Promise<void> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  const reset = Promise.resolve().then(operation);
+  const deadline = new Promise<void>((_resolve, reject) => {
+    timeout = setTimeout(
+      () => reject(new Error('LOCAL_PRIVATE_VENDOR_RESET_TIMEOUT')),
+      LOCAL_PRIVATE_VENDOR_RESET_TIMEOUT_MS,
+    );
+  });
+
+  try {
+    await Promise.race([reset, deadline]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+}
 
 async function clearGeneratedCacheFiles(): Promise<void> {
   const cacheDirectory = FileSystem.cacheDirectory;
@@ -58,12 +78,23 @@ export async function clearLocalPrivateData(): Promise<void> {
           ? Promise.resolve()
           : Notifications.cancelAllScheduledNotificationsAsync(),
     },
-    { label: 'analytics_identity', promise: resetAnalyticsIdentity() },
-    { label: 'revenuecat_identity', promise: resetRevenueCatIdentity() },
+    {
+      label: 'analytics_identity',
+      promise: resetVendorIdentityWithinBound(resetAnalyticsIdentity),
+    },
+    {
+      label: 'revenuecat_identity',
+      promise: resetVendorIdentityWithinBound(resetRevenueCatIdentity),
+    },
   ] as const;
   const results = await Promise.allSettled(operations.map(({ promise }) => promise));
   const failed = results.flatMap((result, index) =>
     result.status === 'rejected' ? [operations[index]!.label] : [],
   );
   if (failed.length > 0) throw new Error(`LOCAL_PRIVATE_DATA_CLEAR_FAILED:${failed.join(',')}`);
+
+  // This is intentionally last. A persisted deletion freeze is the recovery
+  // receipt for an interrupted account boundary and may only be removed after
+  // every account-bound private store and vendor identity proved clean.
+  await clearAccountDeletionVendorFreezeAfterCleanup();
 }

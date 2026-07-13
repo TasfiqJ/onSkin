@@ -4,6 +4,7 @@ import { clearLocalPrivateData } from './localPrivateData';
 
 const mocks = vi.hoisted(() => ({
   cancelAllScheduledNotificationsAsync: vi.fn(),
+  clearAccountDeletionVendorFreezeAfterCleanup: vi.fn(),
   clearEncryptedPhotoStorage: vi.fn(),
   clearPrivateKVContentKey: vi.fn(),
   deleteAsync: vi.fn(),
@@ -36,6 +37,10 @@ vi.mock('@/features/photos/encryptedStorage', () => ({
   clearEncryptedPhotoStorage: mocks.clearEncryptedPhotoStorage,
 }));
 
+vi.mock('@/lib/auth/accountDeletionVendorFreeze', () => ({
+  clearAccountDeletionVendorFreezeAfterCleanup: mocks.clearAccountDeletionVendorFreezeAfterCleanup,
+}));
+
 vi.mock('@/lib/analytics/track', () => ({
   resetAnalyticsIdentity: mocks.resetAnalyticsIdentity,
 }));
@@ -52,6 +57,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
 describe('local private data cleanup', () => {
   beforeEach(() => {
     mocks.cancelAllScheduledNotificationsAsync.mockReset();
+    mocks.clearAccountDeletionVendorFreezeAfterCleanup.mockReset();
     mocks.clearEncryptedPhotoStorage.mockReset();
     mocks.clearPrivateKVContentKey.mockReset();
     mocks.deleteAsync.mockReset();
@@ -62,6 +68,7 @@ describe('local private data cleanup', () => {
     mocks.resetRevenueCatIdentity.mockReset();
 
     mocks.cancelAllScheduledNotificationsAsync.mockResolvedValue(undefined);
+    mocks.clearAccountDeletionVendorFreezeAfterCleanup.mockResolvedValue(undefined);
     mocks.clearEncryptedPhotoStorage.mockResolvedValue(undefined);
     mocks.clearPrivateKVContentKey.mockResolvedValue(undefined);
     mocks.deleteAsync.mockResolvedValue(undefined);
@@ -113,6 +120,13 @@ describe('local private data cleanup', () => {
     });
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledTimes(1);
     expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledTimes(1);
+    expect(mocks.clearAccountDeletionVendorFreezeAfterCleanup).toHaveBeenCalledTimes(1);
+    expect(mocks.resetAnalyticsIdentity.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.clearAccountDeletionVendorFreezeAfterCleanup.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.resetRevenueCatIdentity.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.clearAccountDeletionVendorFreezeAfterCleanup.mock.invocationCallOrder[0]!,
+    );
   });
 
   it('fails the account-boundary cleanup when a client identity reset fails', async () => {
@@ -120,6 +134,38 @@ describe('local private data cleanup', () => {
 
     await expect(clearLocalPrivateData()).rejects.toThrow(
       'LOCAL_PRIVATE_DATA_CLEAR_FAILED:revenuecat_identity',
+    );
+
+    expect(mocks.removePrivateItemsForAuthorizedReset).toHaveBeenCalledTimes(1);
+    expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledTimes(1);
+    expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledTimes(1);
+    expect(mocks.clearAccountDeletionVendorFreezeAfterCleanup).not.toHaveBeenCalled();
+  });
+
+  it('bounds a wedged client identity reset and preserves the deletion receipt', async () => {
+    vi.useFakeTimers();
+    try {
+      mocks.resetRevenueCatIdentity.mockReturnValueOnce(new Promise<void>(() => undefined));
+
+      const clearing = expect(clearLocalPrivateData()).rejects.toThrow(
+        'LOCAL_PRIVATE_DATA_CLEAR_FAILED:revenuecat_identity',
+      );
+      await vi.advanceTimersByTimeAsync(2_001);
+      await clearing;
+
+      expect(mocks.clearAccountDeletionVendorFreezeAfterCleanup).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('fails the boundary and stays fail-closed when receipt removal is unavailable', async () => {
+    mocks.clearAccountDeletionVendorFreezeAfterCleanup.mockRejectedValueOnce(
+      new Error('ACCOUNT_DELETION_VENDOR_FREEZE_CLEAR_FAILED'),
+    );
+
+    await expect(clearLocalPrivateData()).rejects.toThrow(
+      'ACCOUNT_DELETION_VENDOR_FREEZE_CLEAR_FAILED',
     );
 
     expect(mocks.removePrivateItemsForAuthorizedReset).toHaveBeenCalledTimes(1);
@@ -142,6 +188,7 @@ describe('local private data cleanup', () => {
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledTimes(1);
     expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledTimes(1);
+    expect(mocks.clearAccountDeletionVendorFreezeAfterCleanup).not.toHaveBeenCalled();
   });
 
   it('does not call the unavailable scheduled-notification backend on web', async () => {

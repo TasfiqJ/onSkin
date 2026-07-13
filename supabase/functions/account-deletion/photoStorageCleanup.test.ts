@@ -113,6 +113,36 @@ Deno.test('account deletion removes every owned object after the first 1,000', a
   );
 });
 
+Deno.test('account deletion resumes a failed removal beyond object 1,000', async () => {
+  const paths = Array.from(
+    { length: 1_205 },
+    (_, index) => `${USER_ID}/photo-${String(index).padStart(4, '0')}.enc`,
+  );
+  const bucket = new FakePhotoBucket(paths);
+  bucket.failRemoveAtCall = 11;
+
+  await assertRejectsCode(
+    () => deletePhotoStorage(USER_ID, clientFor(bucket)),
+    'STORAGE_REMOVE_FAILED',
+  );
+  assert(
+    bucket.objects.size === 205,
+    'expected the failed chunk and later objects to remain after object 1,000.',
+  );
+
+  bucket.failRemoveAtCall = null;
+  await deletePhotoStorage(USER_ID, clientFor(bucket));
+
+  assert(
+    Number(bucket.objects.size) === 0,
+    'expected the multi-page retry to remove every object.',
+  );
+  assert(
+    new Set(bucket.removeCalls.flat()).size === paths.length,
+    'expected each of the 1,205 object paths to be removed without a skipped page.',
+  );
+});
+
 Deno.test('account deletion recursively removes exact nested owned paths', async () => {
   const otherUserPath = '00000000-0000-4000-8000-000000000002/2026/07/keep.enc';
   const paths = [

@@ -2,10 +2,11 @@ import { track } from '@/lib/analytics/track';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
+import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 
 import { resolveCommerceConsent } from './consentLogic';
 import { COMMERCE_COPY } from './copy';
-import { getCommerceConsentLocal, setCommerceConsentLocal } from './store';
+import { readCommerceConsentLocal, setCommerceConsentLocal } from './store';
 
 // The MHMDA "sharing" consent gate for commerce (docs/10 §6). The deep-research pass
 // confirmed: inferred skincare-concern data is regulated consumer health data, and
@@ -36,9 +37,11 @@ export async function isCommerceConsented(): Promise<boolean> {
       lease.assertCurrent();
       /* offline / no DB. Fall back to the local-first flag */
     }
-    const local = await getCommerceConsentLocal();
+    if (ledger !== undefined) return resolveCommerceConsent(ledger, false);
+
+    const local = await readCommerceConsentLocal();
     lease.assertCurrent();
-    return resolveCommerceConsent(ledger, local);
+    return resolveCommerceConsent(ledger, requirePrivateBoolean(local));
   });
 }
 

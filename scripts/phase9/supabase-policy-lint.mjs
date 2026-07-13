@@ -48,6 +48,7 @@ for (const match of combined.matchAll(
 }
 
 const clientCallableDefiners = new Set([
+  'account_deletion_write_allowed()',
   'has_current_consent(text)',
   'owns_ask_turn_audit(uuid)',
   'owns_consent(uuid)',
@@ -57,10 +58,18 @@ const clientCallableDefiners = new Set([
   'owns_user_product(uuid)',
 ]);
 const serviceCallableDefiners = new Set([
+  'account_deletion_begin_apple_attempt(uuid, uuid, uuid)',
+  'account_deletion_claim(uuid, text, boolean, uuid, uuid, text)',
+  'account_deletion_checkpoint(uuid, uuid, uuid, text, text)',
+  'account_deletion_preflight(uuid, text)',
+  'account_deletion_record_failure(uuid, uuid, uuid, text, text)',
   'consume_edge_rate_limit(text, text, integer, integer)',
+  'erase_account_database_state(uuid, uuid, uuid)',
   'expire_app_granted_reverse_trials()',
   'grant_app_granted_reverse_trial(uuid, timestamptz, text, text)',
+  'process_revenuecat_webhook_event(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)',
 ]);
+const capabilityCallableDefiners = new Set(['account_deletion_completion_status(text)']);
 
 const revokePattern = (name) =>
   new RegExp(
@@ -100,23 +109,24 @@ for (const fn of latestFunctions.values()) {
       .split(',')
       .map((role) => role.trim().toLowerCase())
       .filter(Boolean);
+    block(errors, !roles.includes('public'), `${key} must not grant execute to public.`);
     block(
       errors,
-      !roles.includes('public') && !roles.includes('anon'),
-      `${key} must not grant execute to public or anon.`,
+      !roles.includes('anon') || capabilityCallableDefiners.has(key),
+      `${key} must not grant execute to anon unless it is an approved capability RPC.`,
     );
     if (roles.includes('authenticated')) {
       block(
         errors,
-        clientCallableDefiners.has(key),
-        `${key} grants execute to authenticated but is not an approved RLS helper.`,
+        clientCallableDefiners.has(key) || capabilityCallableDefiners.has(key),
+        `${key} grants execute to authenticated but is not an approved RLS helper or capability RPC.`,
       );
     }
     if (roles.includes('service_role')) {
       block(
         errors,
-        serviceCallableDefiners.has(key),
-        `${key} grants execute to service_role but is not an approved service RPC.`,
+        serviceCallableDefiners.has(key) || capabilityCallableDefiners.has(key),
+        `${key} grants execute to service_role but is not an approved service or capability RPC.`,
       );
     }
   }
@@ -140,6 +150,68 @@ for (const fn of latestFunctions.values()) {
       `${key} service RPC must not grant execute to authenticated.`,
     );
   }
+}
+
+const accountDeletionCompletionKey = 'account_deletion_completion_status(text)';
+const accountDeletionCompletionFunction = latestFunctions.get(accountDeletionCompletionKey);
+block(
+  errors,
+  Boolean(accountDeletionCompletionFunction),
+  `${accountDeletionCompletionKey} must exist with the reviewed capability signature.`,
+);
+if (accountDeletionCompletionFunction) {
+  const afterDefinition = combined.slice(
+    accountDeletionCompletionFunction.index + accountDeletionCompletionFunction.source.length,
+  );
+  const matchingRevokes = [
+    ...afterDefinition.matchAll(revokePattern(accountDeletionCompletionFunction.name)),
+  ].filter((match) => normalizeArgs(match[1]) === accountDeletionCompletionFunction.normalizedArgs);
+  block(
+    errors,
+    matchingRevokes.some((match) => {
+      const roles = new Set(
+        match[2]
+          .split(',')
+          .map((role) => role.trim().toLowerCase())
+          .filter(Boolean),
+      );
+      return roles.has('public') && roles.has('anon') && roles.has('authenticated');
+    }),
+    `${accountDeletionCompletionKey} must revoke execute from public, anon, and authenticated.`,
+  );
+
+  const matchingGrants = [
+    ...afterDefinition.matchAll(grantPattern(accountDeletionCompletionFunction.name)),
+  ].filter((match) => normalizeArgs(match[1]) === accountDeletionCompletionFunction.normalizedArgs);
+  block(
+    errors,
+    matchingGrants.length === 1 &&
+      (() => {
+        const roles = new Set(
+          matchingGrants[0][2]
+            .split(',')
+            .map((role) => role.trim().toLowerCase())
+            .filter(Boolean),
+        );
+        return (
+          roles.size === 3 &&
+          roles.has('anon') &&
+          roles.has('authenticated') &&
+          roles.has('service_role')
+        );
+      })(),
+    `${accountDeletionCompletionKey} must grant execute exactly to anon, authenticated, and service_role.`,
+  );
+
+  const normalizedDefinition = normalizeSql(accountDeletionCompletionFunction.definition);
+  block(
+    errors,
+    normalizedDefinition.includes("p_completion_token_hash !~ '^t_[0-9a-f]{64}$'") &&
+      normalizedDefinition.includes(
+        "where deletion.completion_token_hash = p_completion_token_hash and deletion.next_step = 'complete'",
+      ),
+    `${accountDeletionCompletionKey} must validate a high-entropy capability and reveal complete receipts only.`,
+  );
 }
 
 const publicCatalogTables = new Set([
@@ -227,5 +299,44 @@ block(
   ),
   'expire_app_granted_reverse_trials() must be executable only by service_role.',
 );
+
+const revenueCatAtomicKey =
+  'process_revenuecat_webhook_event(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)';
+const revenueCatAtomicFunction = latestFunctions.get(revenueCatAtomicKey);
+block(
+  errors,
+  Boolean(revenueCatAtomicFunction),
+  `${revenueCatAtomicKey} must exist with the reviewed signature.`,
+);
+if (revenueCatAtomicFunction) {
+  const afterDefinition = combined.slice(
+    revenueCatAtomicFunction.index + revenueCatAtomicFunction.source.length,
+  );
+  const matchingRevokes = [
+    ...afterDefinition.matchAll(revokePattern(revenueCatAtomicFunction.name)),
+  ].filter((match) => normalizeArgs(match[1]) === revenueCatAtomicFunction.normalizedArgs);
+  block(
+    errors,
+    matchingRevokes.some((match) => {
+      const roles = new Set(
+        match[2]
+          .split(',')
+          .map((role) => role.trim().toLowerCase())
+          .filter(Boolean),
+      );
+      return roles.has('public') && roles.has('anon') && roles.has('authenticated');
+    }),
+    `${revenueCatAtomicKey} must revoke execute from public, anon, and authenticated.`,
+  );
+
+  const matchingGrants = [
+    ...afterDefinition.matchAll(grantPattern(revenueCatAtomicFunction.name)),
+  ].filter((match) => normalizeArgs(match[1]) === revenueCatAtomicFunction.normalizedArgs);
+  block(
+    errors,
+    matchingGrants.length === 1 && matchingGrants[0][2].trim().toLowerCase() === 'service_role',
+    `${revenueCatAtomicKey} must grant execute to service_role only.`,
+  );
+}
 
 printResult('Phase 9 Supabase policy lint', errors, warnings);

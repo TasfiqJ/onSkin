@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
   track: vi.fn(),
   withdrawConsent: vi.fn(),
   deleteTrendState: vi.fn(),
-  getTrendInsightsLocal: vi.fn(),
+  readTrendInsightsLocal: vi.fn(),
   setTrendInsightsLocal: vi.fn(),
 }));
 
@@ -32,8 +32,20 @@ vi.mock('@/lib/env', () => ({
 
 vi.mock('./store', () => ({
   deleteTrendState: mocks.deleteTrendState,
-  getTrendInsightsLocal: mocks.getTrendInsightsLocal,
+  readTrendInsightsLocal: mocks.readTrendInsightsLocal,
   setTrendInsightsLocal: mocks.setTrendInsightsLocal,
+}));
+
+vi.mock('@/lib/storage/privateBoolean', () => ({
+  requirePrivateBoolean: (result: { status: string; value?: boolean }) => {
+    if (result.status === 'available') return result.value === true;
+    if (result.status === 'absent') return false;
+    if (result.status === 'corrupt') throw new Error('PRIVATE_BOOLEAN_INVALID');
+    if (result.status === 'unsupported_version') {
+      throw new Error('PRIVATE_BOOLEAN_UNSUPPORTED_VERSION');
+    }
+    throw new Error('PRIVATE_BOOLEAN_UNAVAILABLE');
+  },
 }));
 
 describe('trend insight consent persistence', () => {
@@ -45,12 +57,12 @@ describe('trend insight consent persistence', () => {
     mocks.track.mockReset();
     mocks.withdrawConsent.mockReset();
     mocks.deleteTrendState.mockReset();
-    mocks.getTrendInsightsLocal.mockReset();
+    mocks.readTrendInsightsLocal.mockReset();
     mocks.setTrendInsightsLocal.mockReset();
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.withdrawConsent.mockResolvedValue(undefined);
     mocks.deleteTrendState.mockResolvedValue(undefined);
-    mocks.getTrendInsightsLocal.mockResolvedValue(false);
+    mocks.readTrendInsightsLocal.mockResolvedValue({ status: 'absent' });
     mocks.setTrendInsightsLocal.mockResolvedValue(undefined);
   });
 
@@ -58,11 +70,15 @@ describe('trend insight consent persistence', () => {
     mocks.isSupabaseConfigured = true;
     const { isTrendInsightsConsented } = await import('./consent');
     mocks.getLatestConsents.mockResolvedValueOnce({ photo_capture: true });
-    mocks.getTrendInsightsLocal.mockResolvedValueOnce(true);
+    mocks.readTrendInsightsLocal.mockResolvedValueOnce({
+      status: 'available',
+      value: true,
+      format: 'current',
+    });
 
     await expect(isTrendInsightsConsented()).resolves.toBe(false);
 
-    expect(mocks.getTrendInsightsLocal).not.toHaveBeenCalled();
+    expect(mocks.readTrendInsightsLocal).not.toHaveBeenCalled();
   });
 
   it('requires the explicit trend consent row when the ledger is reachable', async () => {
@@ -75,15 +91,30 @@ describe('trend insight consent persistence', () => {
 
     await expect(isTrendInsightsConsented()).resolves.toBe(true);
 
-    expect(mocks.getTrendInsightsLocal).not.toHaveBeenCalled();
+    expect(mocks.readTrendInsightsLocal).not.toHaveBeenCalled();
   });
 
   it('keeps local-first trend consent available when the backend is not configured', async () => {
     const { isTrendInsightsConsented } = await import('./consent');
     mocks.getLatestConsents.mockResolvedValueOnce({});
-    mocks.getTrendInsightsLocal.mockResolvedValueOnce(true);
+    mocks.readTrendInsightsLocal.mockResolvedValueOnce({
+      status: 'available',
+      value: true,
+      format: 'legacy',
+    });
 
     await expect(isTrendInsightsConsented()).resolves.toBe(true);
+  });
+
+  it('does not disguise corrupt local trend consent as an ordinary decline', async () => {
+    const { isTrendInsightsConsented } = await import('./consent');
+    mocks.getLatestConsents.mockRejectedValueOnce(new Error('ledger unavailable'));
+    mocks.readTrendInsightsLocal.mockResolvedValueOnce({
+      status: 'corrupt',
+      reason: 'invalid_value',
+    });
+
+    await expect(isTrendInsightsConsented()).rejects.toThrow('PRIVATE_BOOLEAN_INVALID');
   });
 
   it('records trend opt-in analytics only after the consent ledger saves', async () => {

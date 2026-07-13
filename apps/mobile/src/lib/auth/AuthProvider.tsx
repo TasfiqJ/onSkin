@@ -36,13 +36,18 @@ import {
   waitForPrivateKVWritesToSettle,
 } from '@/lib/storage/privateKV';
 
-import { clearPersistedSupabaseSession, supabase } from '../supabase/client';
+import { invalidateLocalSupabaseSession, supabase } from '../supabase/client';
 import {
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
   runAccountGenerationOperation,
   waitForAccountGenerationOperationsToSettle,
 } from './accountGeneration';
+import {
+  blockAccountDeletionVendorWritesUntilHydrated,
+  hydrateAccountDeletionVendorFreeze,
+} from './accountDeletionVendorFreeze';
+import { reconcileAccountDeletionCompletionReceipt } from './accountDeletionCompletion';
 import { getAccountIsolationE2EFixture } from './accountIsolationE2E';
 import {
   authenticateWithProviderToken,
@@ -52,7 +57,7 @@ import {
 } from './accountUpgrade';
 import { getAppleIdToken } from './apple';
 import { getGoogleIdToken } from './google';
-import { prepareLocalDataForSession } from './localAccountIsolation';
+import { clearAccountIsolatedState, prepareLocalDataForSession } from './localAccountIsolation';
 import { latestSessionForCompletedBoundary } from './sessionBoundary';
 
 type AuthContextValue = {
@@ -123,6 +128,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     function showSessionBoundary(nextSession: Session | null): void {
+      blockAccountDeletionVendorWritesUntilHydrated();
       pendingBoundarySessionRef.current = { session: nextSession };
       sessionBoundaryActiveRef.current = true;
       holdSessionBoundaryWriteLock();
@@ -155,21 +161,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       const promise = (async () => {
+        let resolvedSession = nextSession;
+        let resolvedTargetUserId = targetUserId;
         if (previousTransition) await previousTransition;
         if (!mounted || seq !== sessionChangeSeqRef.current) return;
         const previousUserId = activeUserIdRef.current;
 
         try {
-          if (!targetUserId && explicitSignOutPendingRef.current && !accountIsolationE2EFixture) {
-            await clearPersistedSupabaseSession();
+          const deletionCompleted = accountIsolationE2EFixture
+            ? false
+            : await reconcileAccountDeletionCompletionReceipt();
+          if (deletionCompleted) {
+            resolvedSession = null;
+            resolvedTargetUserId = null;
+            pendingBoundarySessionRef.current = { session: null };
+            showSessionBoundary(null);
+            await invalidateLocalSupabaseSession();
           }
-          const result = await prepareLocalDataForSession(
+          if (
+            !resolvedTargetUserId &&
+            explicitSignOutPendingRef.current &&
+            !accountIsolationE2EFixture &&
+            !deletionCompleted
+          ) {
+            await invalidateLocalSupabaseSession();
+          }
+          let result = await prepareLocalDataForSession(
             previousUserId,
-            targetUserId,
+            resolvedTargetUserId,
             undefined,
             async () => {
               if (!mounted || seq !== sessionChangeSeqRef.current) return;
-              showSessionBoundary(nextSession);
+              showSessionBoundary(resolvedSession);
               await waitForAccountGenerationOperationsToSettle();
               await waitForPrivateKVWritesToSettle();
               await waitForEncryptedPhotoWritesToSettle();
@@ -187,14 +210,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               }
             },
           );
+          if (deletionCompleted && !result.cleared) {
+            await clearAccountIsolatedState();
+            result = { cleared: true, resetRoute: true };
+          }
+          // Hydrate the durable deletion receipt before publishing the session.
+          // The RevenueCat effect below can therefore never reconfigure an
+          // owner whose deletion survived a force-quit/relaunch.
+          await hydrateAccountDeletionVendorFreeze(resolvedTargetUserId);
 
           if (!mounted || seq !== sessionChangeSeqRef.current) return;
-          activeUserIdRef.current = targetUserId;
-          if (!targetUserId) explicitSignOutPendingRef.current = false;
+          activeUserIdRef.current = resolvedTargetUserId;
+          if (!resolvedTargetUserId) explicitSignOutPendingRef.current = false;
           const latestPendingSession = latestSessionForCompletedBoundary(
             pendingBoundarySessionRef.current?.session,
-            nextSession,
-            targetUserId,
+            resolvedSession,
+            resolvedTargetUserId,
           );
           pendingBoundarySessionRef.current = null;
           sessionBoundaryActiveRef.current = false;
@@ -219,7 +250,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             );
           }
           if (!mounted || seq !== sessionChangeSeqRef.current) return;
-          showSessionBoundary(nextSession);
+          showSessionBoundary(resolvedSession);
           setInitializing(false);
           setSessionBoundaryError(true);
         }
@@ -271,6 +302,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (!isSupabaseConfigured) {
       activeUserIdRef.current = null;
+      void hydrateAccountDeletionVendorFreeze(null).catch((error: unknown) => {
+        devWarn('[auth] account-deletion vendor freeze hydration failed', error);
+      });
       return () => {
         mounted = false;
         applySessionBoundaryRef.current = async () => {};

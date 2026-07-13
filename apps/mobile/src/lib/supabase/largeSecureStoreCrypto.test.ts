@@ -34,8 +34,8 @@ describe('large secure store authenticated session encryption', () => {
     expect(encrypted).not.toContain('access_token');
     expect(encrypted).not.toContain('refresh_token');
     expect(decryptLargeSecureStoreValue(encrypted, KEY)).toEqual({
+      kind: 'current',
       plaintext: value,
-      needsMigration: false,
     });
   });
 
@@ -43,19 +43,59 @@ describe('large secure store authenticated session encryption', () => {
     const encrypted = encryptLargeSecureStoreValue('{"access_token":"at"}', KEY);
 
     expect(decryptLargeSecureStoreValue(tamperCiphertext(encrypted), KEY)).toEqual({
-      plaintext: null,
-      needsMigration: false,
+      kind: 'corrupt',
     });
   });
 
   it('rejects unexpected plaintext or malformed stored values', () => {
     expect(decryptLargeSecureStoreValue('{"access_token":"plaintext"}', KEY)).toEqual({
-      plaintext: null,
-      needsMigration: false,
+      kind: 'corrupt',
     });
     expect(decryptLargeSecureStoreValue('not hex and not json', KEY)).toEqual({
-      plaintext: null,
-      needsMigration: false,
+      kind: 'corrupt',
+    });
+  });
+
+  it('classifies future authenticated-envelope versions without treating them as corrupt', () => {
+    const future = JSON.parse(encryptLargeSecureStoreValue('future session', KEY)) as Record<
+      string,
+      unknown
+    >;
+    future.version = 'xchacha20poly1305:v2';
+
+    expect(decryptLargeSecureStoreValue(JSON.stringify(future), KEY)).toEqual({
+      kind: 'unsupported_version',
+    });
+  });
+
+  it('requires the exact canonical v1 envelope shape', () => {
+    const withExtraField = JSON.parse(encryptLargeSecureStoreValue('session', KEY)) as Record<
+      string,
+      unknown
+    >;
+    withExtraField.extra = true;
+    const uppercaseHex = JSON.parse(encryptLargeSecureStoreValue('session', KEY)) as Record<
+      string,
+      unknown
+    >;
+    uppercaseHex.nonceHex = 'AA'.repeat(24);
+    const nonCanonicalJson = ` ${encryptLargeSecureStoreValue('session', KEY)}`;
+
+    expect(decryptLargeSecureStoreValue(JSON.stringify(withExtraField), KEY)).toEqual({
+      kind: 'corrupt',
+    });
+    expect(decryptLargeSecureStoreValue(JSON.stringify(uppercaseHex), KEY)).toEqual({
+      kind: 'corrupt',
+    });
+    expect(decryptLargeSecureStoreValue(nonCanonicalJson, KEY)).toEqual({ kind: 'corrupt' });
+  });
+
+  it('preserves a valid encrypted empty string as data rather than absence', () => {
+    const encrypted = encryptLargeSecureStoreValue('', KEY);
+
+    expect(decryptLargeSecureStoreValue(encrypted, KEY)).toEqual({
+      kind: 'current',
+      plaintext: '',
     });
   });
 
@@ -63,8 +103,8 @@ describe('large secure store authenticated session encryption', () => {
     const value = JSON.stringify({ access_token: 'legacy-at', refresh_token: 'legacy-rt' });
 
     expect(decryptLargeSecureStoreValue(legacyAesCtrCiphertext(value), KEY)).toEqual({
+      kind: 'legacy',
       plaintext: value,
-      needsMigration: true,
     });
   });
 });

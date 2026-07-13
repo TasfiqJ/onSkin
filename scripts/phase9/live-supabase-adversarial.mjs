@@ -11,6 +11,7 @@ import {
   redactedErrorKind,
   write,
 } from './lib.mjs';
+import { cleanupLiveTestAccounts } from './live-account-cleanup.mjs';
 
 const errors = [];
 const warnings = [];
@@ -1455,8 +1456,6 @@ async function main() {
         'storage upload after photo_cloud_backup revocation unexpectedly succeeded.',
       );
     });
-
-    writeArtifacts(errors.length > 0 ? 'fail' : 'pass');
   } finally {
     if (storagePaths.length > 0) {
       await admin.storage
@@ -1464,10 +1463,13 @@ async function main() {
         .remove(storagePaths)
         .catch((error) => warnings.push(`Storage cleanup warning: ${redactedErrorKind(error)}`));
     }
-    for (const user of users) {
-      const { error } = await admin.auth.admin.deleteUser(user.id);
-      if (error) warnings.push(`User cleanup warning: ${redactedErrorKind(error)}`);
-    }
+    await cleanupLiveTestAccounts({
+      admin,
+      users,
+      errors,
+      label: 'Supabase adversarial user cleanup',
+      errorKind: redactedErrorKind,
+    });
     await deleteByIds(admin, 'community_notes', globalCleanup.communityNoteIds).catch((error) =>
       warnings.push(`Community note cleanup warning: ${redactedErrorKind(error)}`),
     );
@@ -1479,6 +1481,7 @@ async function main() {
     );
   }
 
+  writeArtifacts(errors.length > 0 ? 'fail' : 'pass');
   printResult('Phase 9 live Supabase adversarial', errors, warnings);
 }
 

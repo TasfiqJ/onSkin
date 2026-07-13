@@ -43,7 +43,8 @@ describe('account session isolation integration', () => {
     expect(provider).toContain('if (previousTransition) await previousTransition;');
     expect(provider).toContain('retrySessionRestoreRef.current = restoreSession;');
     expect(provider).toContain('if (sessionError) throw sessionError;');
-    expect(provider).toContain('clearPersistedSupabaseSession()');
+    expect(provider).toContain('invalidateLocalSupabaseSession()');
+    expect(provider).not.toContain('clearPersistedSupabaseSession()');
     expect(provider).toContain('latestSessionForCompletedBoundary(');
     expect(provider).toContain('setSessionBoundaryError(true);');
     expect(provider).toContain("router.replace('/');");
@@ -62,6 +63,11 @@ describe('account session isolation integration', () => {
     expect(actions).toContain('await completeLocalSignOut();');
     expect(actions).not.toContain('clearAccountIsolatedState');
     expect(supabaseClient).toContain('export async function clearPersistedSupabaseSession');
+    expect(supabaseClient).toContain('export async function invalidateLocalSupabaseSession');
+    expect(supabaseClient).toContain("supabase.auth.signOut({ scope: 'local' })");
+    expect(supabaseClient.indexOf("supabase.auth.signOut({ scope: 'local' })")).toBeLessThan(
+      supabaseClient.lastIndexOf('await clearPersistedSupabaseSession();'),
+    );
     expect(supabaseClient).toContain('storageKey: authStorageKey');
   });
 });

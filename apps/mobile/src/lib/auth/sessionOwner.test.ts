@@ -11,12 +11,16 @@ import {
 
 const mocks = vi.hoisted(() => ({
   digest: vi.fn(async (_algorithm: string, value: string) => `sha256:${value}`),
+  getThrows: false,
   storage: new Map<string, string>(),
 }));
 
 vi.mock('@react-native-async-storage/async-storage', () => ({
   default: {
-    getItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
+    getItem: vi.fn(async (key: string) => {
+      if (mocks.getThrows) throw new Error('owner marker unavailable');
+      return mocks.storage.get(key) ?? null;
+    }),
     removeItem: vi.fn(async (key: string) => {
       mocks.storage.delete(key);
     }),
@@ -34,6 +38,7 @@ vi.mock('expo-crypto', () => ({
 describe('local account data ownership marker', () => {
   beforeEach(() => {
     mocks.digest.mockClear();
+    mocks.getThrows = false;
     mocks.storage.clear();
   });
 
@@ -62,11 +67,40 @@ describe('local account data ownership marker', () => {
     await markLocalDataCleanupRequired();
     mocks.storage.delete(LOCAL_DATA_OWNER_HASH_KEY);
 
-    expect(mocks.storage.get(LOCAL_DATA_CLEANUP_REQUIRED_KEY)).toBe('1');
+    expect(mocks.storage.get(LOCAL_DATA_CLEANUP_REQUIRED_KEY)).toBe('v1:required');
     await expect(readLocalDataOwnership('user-b')).resolves.toBe('mismatch');
     await expect(readLocalDataOwnership(null)).resolves.toBe('mismatch');
 
     await clearLocalDataCleanupRequired();
     await expect(readLocalDataOwnership('user-b')).resolves.toBe('unclaimed');
+  });
+
+  it.each(['1', '', '0', 'corrupt', 'v2:required'])(
+    'treats every non-null cleanup marker (%s) as cleanup-required',
+    async (marker) => {
+      await claimLocalDataOwnership('user-a');
+      mocks.storage.set(LOCAL_DATA_CLEANUP_REQUIRED_KEY, marker);
+
+      await expect(readLocalDataOwnership('user-a')).resolves.toBe('mismatch');
+
+      await clearLocalDataCleanupRequired();
+      await expect(readLocalDataOwnership('user-a')).resolves.toBe('match');
+    },
+  );
+
+  it.each(['', 'not-a-hash', 'future:owner-hash'])(
+    'treats a non-null nonmatching owner marker (%s) as claimed by another owner',
+    async (marker) => {
+      mocks.storage.set(LOCAL_DATA_OWNER_HASH_KEY, marker);
+
+      await expect(readLocalDataOwnership('user-a')).resolves.toBe('mismatch');
+      await expect(readLocalDataOwnership(null)).resolves.toBe('mismatch');
+    },
+  );
+
+  it('propagates marker storage unavailability so the session boundary stays closed', async () => {
+    mocks.getThrows = true;
+
+    await expect(readLocalDataOwnership('user-a')).rejects.toThrow('owner marker unavailable');
   });
 });

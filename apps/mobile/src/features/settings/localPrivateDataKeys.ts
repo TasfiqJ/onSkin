@@ -2,6 +2,7 @@ import {
   LOCAL_DATA_CLEANUP_REQUIRED_KEY,
   LOCAL_DATA_OWNER_HASH_KEY,
 } from '@/lib/auth/sessionOwnerKey';
+import { ACCOUNT_DELETION_VENDOR_FREEZE_KEY } from '@/lib/auth/accountDeletionVendorFreezeKey';
 import { brandCachePrefix } from '@/lib/brand';
 import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCore';
 
@@ -58,6 +59,7 @@ export const LOCAL_PRIVATE_METADATA_KEYS = [
 // Survive partial cleanup so the next launch must retry before data can mount.
 export const LOCAL_PRIVATE_CONTROL_KEYS = [
   LOCAL_DATA_CLEANUP_REQUIRED_KEY,
+  ACCOUNT_DELETION_VENDOR_FREEZE_KEY,
   PLAINTEXT_STAGING_JOURNAL_KEY,
 ] as const;
 

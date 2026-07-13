@@ -20,6 +20,7 @@ const mocks = vi.hoisted(() => ({
   eqPhotoId: vi.fn(),
   eqPhotoOwner: vi.fn(),
   from: vi.fn(),
+  getPrivateItem: vi.fn(),
   getUser: vi.fn(),
   getPrivateItemError: null as Error | null,
   quarantineEncryptedPhoto: vi.fn(),
@@ -29,6 +30,7 @@ const mocks = vi.hoisted(() => ({
   removePrivateItem: vi.fn(),
   restoreQuarantinedPhoto: vi.fn(),
   setPrivateItemError: null as Error | null,
+  setPrivateItem: vi.fn(),
   setPrivateItemGate: null as Promise<void> | null,
   setPrivateItemStarted: null as (() => void) | null,
 }));
@@ -38,16 +40,8 @@ vi.mock('expo-crypto', () => ({
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItem: vi.fn(async (key: string) => {
-    if (mocks.getPrivateItemError) throw mocks.getPrivateItemError;
-    return mocks.storage.get(key) ?? null;
-  }),
-  setPrivateItem: vi.fn(async (key: string, value: string) => {
-    if (mocks.setPrivateItemError) throw mocks.setPrivateItemError;
-    mocks.setPrivateItemStarted?.();
-    if (mocks.setPrivateItemGate) await mocks.setPrivateItemGate;
-    mocks.storage.set(key, value);
-  }),
+  getPrivateItem: mocks.getPrivateItem,
+  setPrivateItem: mocks.setPrivateItem,
   removePrivateItem: mocks.removePrivateItem,
 }));
 
@@ -96,6 +90,7 @@ describe('photo local store recovery', () => {
     mocks.eqPhotoId.mockReset();
     mocks.eqPhotoOwner.mockReset();
     mocks.from.mockClear();
+    mocks.getPrivateItem.mockReset();
     mocks.getUser.mockReset();
     mocks.getPrivateItemError = null;
     mocks.quarantineEncryptedPhoto.mockReset();
@@ -105,6 +100,7 @@ describe('photo local store recovery', () => {
     mocks.removePrivateItem.mockReset();
     mocks.restoreQuarantinedPhoto.mockReset();
     mocks.setPrivateItemError = null;
+    mocks.setPrivateItem.mockReset();
     mocks.setPrivateItemGate = null;
     mocks.setPrivateItemStarted = null;
 
@@ -117,6 +113,10 @@ describe('photo local store recovery', () => {
     mocks.getUser.mockResolvedValue({
       data: { user: { id: 'owner-a' } },
       error: null,
+    });
+    mocks.getPrivateItem.mockImplementation(async (key: string) => {
+      if (mocks.getPrivateItemError) throw mocks.getPrivateItemError;
+      return mocks.storage.get(key) ?? null;
     });
     mocks.deleteQuarantinedPhoto.mockResolvedValue(undefined);
     mocks.encryptCapturedPhoto.mockImplementation(async (uri: string, id: string) => ({
@@ -136,6 +136,12 @@ describe('photo local store recovery', () => {
       mocks.storage.delete(key);
     });
     mocks.restoreQuarantinedPhoto.mockResolvedValue(undefined);
+    mocks.setPrivateItem.mockImplementation(async (key: string, value: string) => {
+      if (mocks.setPrivateItemError) throw mocks.setPrivateItemError;
+      mocks.setPrivateItemStarted?.();
+      if (mocks.setPrivateItemGate) await mocks.setPrivateItemGate;
+      mocks.storage.set(key, value);
+    });
   });
 
   it('propagates encrypted private-store failures without replacing photo metadata', async () => {
@@ -146,6 +152,41 @@ describe('photo local store recovery', () => {
     await expect(loadPhotos()).rejects.toThrow('PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE');
 
     expect(mocks.storage.get(KEY)).toBe(stored);
+  });
+
+  it('loads persisted photos with zero writes, moves, deletes, or recovery calls', async () => {
+    const stored = JSON.stringify([
+      {
+        id: 'photo-1',
+        takenLocalDate: '2026-07-01',
+        localUri: 'file:///photo-1.onskinphoto',
+        notesCiphertext: ' exact-ciphertext-bytes ',
+      },
+    ]);
+    mocks.storage.set(KEY, stored);
+
+    await expect(loadPhotos()).resolves.toMatchObject([
+      { id: 'photo-1', notes: 'note:exact-ciphertext-bytes' },
+    ]);
+
+    expect(mocks.storage.get(KEY)).toBe(stored);
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.removePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.reconcileEncryptedPhotoStorage).not.toHaveBeenCalled();
+    expect(mocks.quarantineEncryptedPhoto).not.toHaveBeenCalled();
+    expect(mocks.restoreQuarantinedPhoto).not.toHaveBeenCalled();
+    expect(mocks.deleteQuarantinedPhoto).not.toHaveBeenCalled();
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
+    expect(mocks.encryptCapturedPhoto).not.toHaveBeenCalled();
+    expect(mocks.from).not.toHaveBeenCalled();
+  });
+
+  it('loads an absent photo store without invoking filesystem recovery', async () => {
+    await expect(loadPhotos()).resolves.toEqual([]);
+
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.removePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.reconcileEncryptedPhotoStorage).not.toHaveBeenCalled();
   });
 
   it('propagates photo-note key failures without rewriting ciphertext', async () => {
@@ -226,6 +267,40 @@ describe('photo local store recovery', () => {
     expect(mocks.from).not.toHaveBeenCalled();
   });
 
+  it('invokes filesystem recovery only from an explicit mutation path', async () => {
+    await addPhoto({ takenLocalDate: '2026-07-03', localUri: null });
+
+    expect(mocks.reconcileEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
+    expect(mocks.reconcileEncryptedPhotoStorage).toHaveBeenCalledWith([], {
+      removeUnreferencedFinals: false,
+    });
+    expect(mocks.setPrivateItem).toHaveBeenCalledTimes(1);
+  });
+
+  it('preserves exact metadata and avoids new encryption when mutation recovery is uncertain', async () => {
+    const stored = JSON.stringify([
+      {
+        id: 'photo-1',
+        takenLocalDate: '2026-07-01',
+        notesCiphertext: 'ciphertext-must-remain-exact',
+      },
+    ]);
+    mocks.storage.set(KEY, stored);
+    mocks.reconcileEncryptedPhotoStorage.mockRejectedValueOnce(
+      new Error('PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED'),
+    );
+
+    await expect(
+      addPhoto({ takenLocalDate: '2026-07-03', localUri: 'file:///new-capture.jpg' }),
+    ).rejects.toThrow('PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED');
+
+    expect(mocks.storage.get(KEY)).toBe(stored);
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.encryptCapturedPhoto).not.toHaveBeenCalled();
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
+    expect(mocks.quarantineEncryptedPhoto).not.toHaveBeenCalled();
+  });
+
   it('keeps measured photo metadata off the network during local save', async () => {
     await addPhoto({
       takenLocalDate: '2026-07-03',
@@ -252,6 +327,25 @@ describe('photo local store recovery', () => {
     const encryptedUri = 'file:///captured.jpg.photo-id.onskinphoto';
     expect(mocks.quarantineEncryptedPhoto).toHaveBeenCalledWith(encryptedUri, 'add-photo-id');
     expect(mocks.deleteQuarantinedPhoto).not.toHaveBeenCalled();
+    expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
+    expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('surfaces failed compensation when metadata and encrypted-file quarantine both fail', async () => {
+    mocks.setPrivateItemError = new Error('metadata unavailable');
+    mocks.quarantineError = new Error('encrypted quarantine unavailable');
+
+    await expect(
+      addPhoto({
+        takenLocalDate: '2026-07-03',
+        localUri: 'file:///captured.jpg',
+      }),
+    ).rejects.toThrow('encrypted quarantine unavailable');
+
+    expect(mocks.quarantineEncryptedPhoto).toHaveBeenCalledWith(
+      'file:///captured.jpg.photo-id.onskinphoto',
+      'add-photo-id',
+    );
     expect(mocks.deleteCapturedPhotoSource).not.toHaveBeenCalled();
     expect(mocks.storage.has(KEY)).toBe(false);
   });
@@ -392,6 +486,27 @@ describe('photo local store recovery', () => {
     });
     expect(mocks.storage.get(KEY)).toBe(stored);
     expect(mocks.deleteQuarantinedPhoto).not.toHaveBeenCalled();
+  });
+
+  it('reports post-commit quarantine deletion failure instead of claiming success', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify([
+        {
+          id: 'photo-1',
+          series: 'front',
+          takenLocalDate: '2026-07-01',
+          localUri: 'file:///photo-1.onskinphoto',
+        },
+      ]),
+    );
+    mocks.deleteQuarantinedPhoto.mockRejectedValueOnce(new Error('quarantine delete unavailable'));
+
+    await expect(removePhoto('photo-1')).rejects.toThrow('quarantine delete unavailable');
+
+    expect(mocks.storage.get(KEY)).toBe('[]');
+    expect(mocks.deleteQuarantinedPhoto).toHaveBeenCalledTimes(1);
+    expect(mocks.from).not.toHaveBeenCalled();
   });
 
   it('does not issue a remote delete when the local record does not exist', async () => {

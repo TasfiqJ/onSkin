@@ -3,7 +3,11 @@ import {
   multiRemovePrivateItems,
   updatePrivateItem,
 } from '@/lib/storage/privateKV';
-import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
+import {
+  readPrivateBoolean,
+  setPrivateBoolean,
+  type PrivateBooleanReadResult,
+} from '@/lib/storage/privateBoolean';
 
 import { ASK_TRIAL_GROUNDED_CAP } from './gate';
 
@@ -22,8 +26,8 @@ const TURNS_SCHEMA_VERSION = 1 as const;
 export const ASK_TURN_RECORD_INVALID = 'ASK_TURN_RECORD_INVALID';
 export const ASK_TURN_RECORD_UNSUPPORTED_VERSION = 'ASK_TURN_RECORD_UNSUPPORTED_VERSION';
 
-export async function getAskConsentLocal(): Promise<boolean> {
-  return getPrivateBoolean(CONSENT_KEY);
+export async function readAskConsentLocal(): Promise<PrivateBooleanReadResult> {
+  return readPrivateBoolean(CONSENT_KEY);
 }
 
 export async function setAskConsentLocal(enabled: boolean): Promise<void> {

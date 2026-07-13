@@ -2,9 +2,14 @@ import { track } from '@/lib/analytics/track';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
+import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 
 import { COMMUNITY_COPY } from './copy';
-import { getCommunityConsentLocal, setAgeConfirmedLocal, setCommunityConsentLocal } from './store';
+import {
+  readCommunityConsentLocal,
+  setAgeConfirmedLocal,
+  setCommunityConsentLocal,
+} from './store';
 
 // The community_participation consent (docs/11 §8, D-066). A NEW, separate, unbundled
 // MHMDA/GDPR-Art.9 consent for posting health-adjacent info to others, NEVER reused from
@@ -25,9 +30,9 @@ export async function isCommunityConsented(): Promise<boolean> {
       lease.assertCurrent();
       /* offline / no DB. Fall back to the local-first flag */
     }
-    const local = await getCommunityConsentLocal();
+    const local = await readCommunityConsentLocal();
     lease.assertCurrent();
-    return local;
+    return requirePrivateBoolean(local);
   });
 }
 

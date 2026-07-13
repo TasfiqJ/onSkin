@@ -1,6 +1,4 @@
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   AccountGenerationLeaseError,
@@ -14,7 +12,9 @@ import {
   sanitizeAnalyticsProps,
 } from './track';
 
-const TRACK_SOURCE = fileURLToPath(new URL('./track.ts', import.meta.url));
+vi.mock('@/lib/auth/accountDeletionVendorFreezeRuntime', () => ({
+  accountDeletionVendorWritesBlocked: () => false,
+}));
 
 describe('analytics sanitizer', () => {
   it('drops sensitive keys and complex payloads', () => {
@@ -251,21 +251,5 @@ describe('analytics sanitizer', () => {
         method: 'account_created',
       }),
     ).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-  });
-
-  it('freezes PostHog writes before deletion and only thaws at the final account boundary', () => {
-    const source = readFileSync(TRACK_SOURCE, 'utf8');
-
-    expect(source).toContain('sanitizeAnalyticsEventName(event)');
-    expect(source).toContain('posthog?.capture(safeEvent, safeProps)');
-    expect(source).toContain('captureAppLifecycleEvents: false');
-    expect(source).toContain('enableSessionReplay: false');
-    expect(source).toContain('let accountDeletionWritesFrozen = false');
-    expect(source).toContain('if (accountDeletionWritesFrozen) return;');
-    expect(source).toContain('export async function freezeAnalyticsIdentityForAccountDeletion');
-    expect(source).toContain('accountDeletionWritesFrozen = true;');
-    expect(source).toContain('export async function resetAnalyticsIdentity');
-    expect(source).toContain('accountDeletionWritesFrozen = false;');
-    expect(source).toContain('posthog?.reset()');
   });
 });

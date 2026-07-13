@@ -93,8 +93,14 @@ const requiredFiles = [
   'docs/phase-9/release-candidates/_template/incident-plan.md',
   'docs/phase-9/release-candidates/_template/signoff.md',
   'supabase/functions/account-deletion/index.ts',
+  'supabase/functions/account-deletion/deletionCore.ts',
+  'supabase/functions/account-deletion/deletionCore.test.ts',
+  'supabase/functions/account-deletion/supabaseDeletionState.ts',
+  'supabase/functions/account-deletion/supabaseDeletionState.test.ts',
+  'supabase/functions/account-deletion/deletionMigrationContract.test.ts',
   'supabase/functions/account-deletion/photoStorageCleanup.ts',
   'supabase/functions/account-deletion/photoStorageCleanup.test.ts',
+  'supabase/migrations/20260713000043_account_deletion_resumable.sql',
   'supabase/functions/_shared/storagePath.ts',
   'supabase/functions/_shared/storagePath.test.ts',
   'supabase/functions/data-export/index.ts',
@@ -218,6 +224,7 @@ for (const script of [
   'phase9:data-rights-smoke',
   'phase9:storage-path-privacy-smoke',
   'phase9:account-deletion-photo-storage-smoke',
+  'phase9:account-deletion-state-smoke',
   'phase9:revenuecat-webhook-atomic-smoke',
   'phase9:live-data-rights',
   'phase9:consent-withdrawal',
@@ -240,6 +247,11 @@ block(
   errors,
   /phase9:account-deletion-photo-storage-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
   'phase9:verify must run the account-deletion photo-storage contract.',
+);
+block(
+  errors,
+  /phase9:account-deletion-state-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
+  'phase9:verify must run the complete account-deletion state-machine contract.',
 );
 block(
   errors,

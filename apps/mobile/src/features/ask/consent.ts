@@ -2,9 +2,10 @@ import { track } from '@/lib/analytics/track';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
+import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 
 import { ASK_COPY } from './copy';
-import { clearAskStore, getAskConsentLocal, setAskConsentLocal } from './store';
+import { clearAskStore, readAskConsentLocal, setAskConsentLocal } from './store';
 
 // The ask_onskin consent (docs/13 §7, D-053). A NEW, separate, explicit, revocable,
 // DEFAULT-OFF consent for the CLOUD-grounded language layer. The user's question is a
@@ -24,9 +25,9 @@ export async function isAskConsented(): Promise<boolean> {
       lease.assertCurrent();
       /* offline / no DB. Fall back to the local-first flag */
     }
-    const local = await getAskConsentLocal();
+    const local = await readAskConsentLocal();
     lease.assertCurrent();
-    return local;
+    return requirePrivateBoolean(local);
   });
 }
 

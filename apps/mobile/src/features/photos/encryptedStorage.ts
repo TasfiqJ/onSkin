@@ -10,7 +10,6 @@ import {
   utf8ToBytes,
 } from '@noble/ciphers/utils.js';
 import * as FileSystem from 'expo-file-system/legacy';
-import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
@@ -20,6 +19,11 @@ import {
   markPlaintextStagingState,
   reservePlaintextStaging,
 } from '@/lib/storage/plaintextStaging';
+import {
+  deletePrivateSecureStoreItemAsync,
+  getPrivateSecureStoreItemAsync,
+  setPrivateSecureStoreItemAsync,
+} from '@/lib/storage/privateSecureStore';
 
 import { stripImageMetadataFromBase64 } from './metadata';
 
@@ -34,6 +38,11 @@ export const PHOTO_CONTENT_KEY_INVALID = 'PHOTO_CONTENT_KEY_INVALID';
 export const PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE = 'PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE';
 export const PHOTO_DECRYPTION_FAILED = 'PHOTO_DECRYPTION_FAILED';
 export const PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY = 'PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY';
+export const PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED = 'PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED';
+export const PHOTO_RECOVERY_CANDIDATE_READ_FAILED = 'PHOTO_RECOVERY_CANDIDATE_READ_FAILED';
+export const PHOTO_RECOVERY_CANDIDATE_CHANGED = 'PHOTO_RECOVERY_CANDIDATE_CHANGED';
+export const PHOTO_RECOVERY_CONFLICT = 'PHOTO_RECOVERY_CONFLICT';
+export const PHOTO_RECOVERY_KEY_CHANGED = 'PHOTO_RECOVERY_KEY_CHANGED';
 
 type EncryptedPhotoEnvelope = {
   version: typeof ENCRYPTION_VERSION;
@@ -63,6 +72,7 @@ export type QuarantinedPhotoFile = {
 
 let contentKeyCreation: Promise<Uint8Array> | null = null;
 const inFlightPhotoOperations = new Set<Promise<unknown>>();
+let destructivePhotoOperationTail: Promise<void> = Promise.resolve();
 let accountBoundaryWriteBlockDepth = 0;
 let accountBoundaryWriteGeneration = 0;
 
@@ -84,7 +94,12 @@ async function runAccountScopedPhotoOperation<T>(
   const pending = operation(generation);
   inFlightPhotoOperations.add(pending);
   try {
-    return await pending;
+    const result = await pending;
+    // Reads are owner-sensitive too. A boundary that begins while FileSystem or
+    // SecureStore is awaited must not let owner A's plaintext resolve into an
+    // owner B render, even though the operation performs no write.
+    assertPhotoWriteAllowed(generation);
+    return result;
   } finally {
     inFlightPhotoOperations.delete(pending);
   }
@@ -105,11 +120,18 @@ function runDestructiveAccountScopedPhotoOperation<T>(
         lease.assertCurrent();
         assertPhotoWriteAllowed(generation);
       };
-
-      assertCurrent();
-      const result = await operation(assertCurrent);
-      assertCurrent();
-      return result;
+      const guardedOperation = async () => {
+        assertCurrent();
+        const result = await operation(assertCurrent);
+        assertCurrent();
+        return result;
+      };
+      const pending = destructivePhotoOperationTail.then(guardedOperation, guardedOperation);
+      destructivePhotoOperationTail = pending.then(
+        () => undefined,
+        () => undefined,
+      );
+      return pending;
     }),
   );
 }
@@ -135,7 +157,7 @@ async function ensureDir(): Promise<void> {
 
 async function readStoredContentKey(): Promise<string | null> {
   try {
-    return await SecureStore.getItemAsync(KEY_STORE_NAME);
+    return await getPrivateSecureStoreItemAsync(KEY_STORE_NAME);
   } catch {
     throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
   }
@@ -170,14 +192,21 @@ async function hasPriorEncryptedPhotoData(): Promise<boolean> {
   }
 }
 
-async function getExistingContentKey(generation: number): Promise<Uint8Array> {
+type ContentKeySnapshot = {
+  stored: string;
+  key: Uint8Array;
+};
+
+async function getExistingContentKeySnapshot(): Promise<ContentKeySnapshot> {
   const existing = await readStoredContentKey();
   if (!existing) throw new Error(PHOTO_CONTENT_KEY_MISSING);
   const existingKey = contentKeyFromHex(existing);
   if (!existingKey) throw new Error(PHOTO_CONTENT_KEY_INVALID);
-  assertPhotoWriteAllowed(generation);
-  await requireContentKeyMarker();
-  return existingKey;
+  return { stored: existing, key: existingKey };
+}
+
+async function getExistingContentKey(): Promise<Uint8Array> {
+  return (await getExistingContentKeySnapshot()).key;
 }
 
 async function getOrCreateContentKey(): Promise<Uint8Array> {
@@ -202,7 +231,7 @@ async function getOrCreateContentKey(): Promise<Uint8Array> {
 
       const key = randomBytes(32);
       try {
-        await SecureStore.setItemAsync(KEY_STORE_NAME, bytesToHex(key));
+        await setPrivateSecureStoreItemAsync(KEY_STORE_NAME, bytesToHex(key));
         await markContentKeyCreated();
       } catch {
         throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
@@ -354,13 +383,13 @@ export async function encryptCapturedPhoto(
 
 export async function decryptPhotoToDataUri(encryptedLocalUri: string): Promise<string> {
   if (!isEncryptedPhotoUri(encryptedLocalUri)) return encryptedLocalUri;
-  return runAccountScopedPhotoOperation(async (generation) => {
+  return runAccountScopedPhotoOperation(async () => {
     const raw = await FileSystem.readAsStringAsync(encryptedLocalUri, {
       encoding: FileSystem.EncodingType.UTF8,
     });
     const envelope = photoEnvelopeFromRaw(raw);
     if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-    const key = await getExistingContentKey(generation);
+    const key = await getExistingContentKey();
     const base64 = decryptEnvelopeToUtf8(envelope, key);
     if (!base64) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
     return `data:${envelope.mimeType};base64,${base64}`;
@@ -375,7 +404,7 @@ export async function createPhotoShareFile(encryptedLocalUri: string): Promise<s
     });
     const envelope = photoEnvelopeFromRaw(raw);
     if (!envelope) throw new Error('PHOTO_ENCRYPTION_ENVELOPE_INVALID');
-    const key = await getExistingContentKey(generation);
+    const key = await getExistingContentKey();
     assertPhotoWriteAllowed(generation);
     const staging = await reservePlaintextStaging(
       envelope.mimeType === 'image/png' ? 'photo_share_png' : 'photo_share_jpeg',
@@ -422,7 +451,7 @@ export async function deleteCapturedPhotoSource(uri?: string | null): Promise<vo
  * Moves an encrypted photo out of its live path before metadata is changed. If
  * the move fails, callers know the live file is untouched and must keep the
  * metadata row. The quarantine suffix is reconciled against metadata on the
- * next successful store read after a crash or interrupted delete.
+ * next explicit mutation recovery after a crash or interrupted delete.
  */
 export async function quarantineEncryptedPhoto(
   uri: string | null | undefined,
@@ -431,6 +460,10 @@ export async function quarantineEncryptedPhoto(
   if (!uri || !isEncryptedPhotoUri(uri)) return null;
   const quarantinedUri = `${uri}.pending-delete-${safePhotoShareId(operationId)}`;
   return runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
+    assertCurrent();
+    if (await recoveryPathExists(quarantinedUri)) {
+      throw new Error(PHOTO_RECOVERY_CONFLICT);
+    }
     assertCurrent();
     await FileSystem.moveAsync({ from: uri, to: quarantinedUri });
     return { originalUri: uri, quarantinedUri };
@@ -451,11 +484,39 @@ export async function deleteQuarantinedPhoto(file: QuarantinedPhotoFile): Promis
   });
 }
 
+type RecoveryAction = { type: 'delete'; uri: string } | { type: 'move'; from: string; to: string };
+
+async function readRecoveryCandidate(uri: string): Promise<string> {
+  try {
+    return await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.UTF8,
+    });
+  } catch {
+    throw new Error(PHOTO_RECOVERY_CANDIDATE_READ_FAILED);
+  }
+}
+
+function assertRecoveryCandidateAuthenticates(raw: string, key: Uint8Array): void {
+  const envelope = photoEnvelopeFromRaw(raw);
+  if (!envelope || decryptEnvelopeToUtf8(envelope, key) === null) {
+    throw new Error(PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED);
+  }
+}
+
+async function recoveryPathExists(uri: string): Promise<boolean> {
+  try {
+    return (await FileSystem.getInfoAsync(uri)).exists;
+  } catch {
+    throw new Error(PHOTO_RECOVERY_CANDIDATE_READ_FAILED);
+  }
+}
+
 /**
  * Reconciles files left by process death. A quarantined file whose metadata row
  * still exists is restored; one whose row committed as deleted is removed.
  * Incomplete temp writes and unreferenced final envelopes are safe to remove
- * only after metadata parsed successfully.
+ * only after metadata parsed successfully and every candidate authenticates
+ * under one stable, definitively readable content key.
  */
 export async function reconcileEncryptedPhotoStorage(
   referencedUris: readonly string[],
@@ -469,37 +530,97 @@ export async function reconcileEncryptedPhotoStorage(
     const entries = await FileSystem.readDirectoryAsync(PHOTO_DIR);
     assertCurrent();
 
-    for (const entry of entries) {
+    const candidates = entries.filter((entry) => {
+      if (/^(.+\.onskinphoto)\.pending-delete-.+$/.test(entry)) return true;
+      if (/\.onskinphoto\.tmp-.+$/.test(entry)) return true;
+      return (
+        options.removeUnreferencedFinals !== false &&
+        entry.endsWith('.onskinphoto') &&
+        !referenced.has(`${PHOTO_DIR}${entry}`)
+      );
+    });
+    if (candidates.length === 0) return;
+
+    // Recovery is deliberately two-phase. Authenticate and snapshot every path
+    // before the first destructive operation so one malformed/wrong-key/read-
+    // uncertain candidate preserves the complete directory byte-for-byte.
+    const keySnapshot = await getExistingContentKeySnapshot();
+    assertCurrent();
+    const pathSnapshots = new Map<string, string>();
+    const absentMoveTargets = new Set<string>();
+    const actions: RecoveryAction[] = [];
+
+    for (const entry of candidates) {
       assertCurrent();
       const uri = `${PHOTO_DIR}${entry}`;
+      const raw = await readRecoveryCandidate(uri);
+      assertCurrent();
+      assertRecoveryCandidateAuthenticates(raw, keySnapshot.key);
+      pathSnapshots.set(uri, raw);
       const quarantined = /^(.+\.onskinphoto)\.pending-delete-.+$/.exec(entry);
       if (quarantined) {
         const originalUri = `${PHOTO_DIR}${quarantined[1]}`;
         if (referenced.has(originalUri)) {
-          const originalInfo = await FileSystem.getInfoAsync(originalUri);
+          const originalExists = await recoveryPathExists(originalUri);
           assertCurrent();
-          if (originalInfo.exists) {
-            await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+          if (originalExists) {
+            const originalRaw = await readRecoveryCandidate(originalUri);
+            assertCurrent();
+            if (originalRaw !== raw) throw new Error(PHOTO_RECOVERY_CONFLICT);
+            pathSnapshots.set(originalUri, originalRaw);
+            actions.push({ type: 'delete', uri });
           } else {
-            await FileSystem.moveAsync({ from: uri, to: originalUri });
+            if (absentMoveTargets.has(originalUri)) throw new Error(PHOTO_RECOVERY_CONFLICT);
+            absentMoveTargets.add(originalUri);
+            actions.push({ type: 'move', from: uri, to: originalUri });
           }
         } else {
-          await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+          actions.push({ type: 'delete', uri });
         }
         continue;
       }
 
       if (/\.onskinphoto\.tmp-.+$/.test(entry)) {
-        await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+        actions.push({ type: 'delete', uri });
         continue;
       }
 
-      if (
-        options.removeUnreferencedFinals !== false &&
-        entry.endsWith('.onskinphoto') &&
-        !referenced.has(uri)
-      ) {
-        await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+      actions.push({ type: 'delete', uri });
+    }
+
+    const assertSnapshotsCurrent = async () => {
+      const recheckedKey = await getExistingContentKeySnapshot();
+      assertCurrent();
+      if (recheckedKey.stored !== keySnapshot.stored) {
+        throw new Error(PHOTO_RECOVERY_KEY_CHANGED);
+      }
+      for (const [uri, expectedRaw] of pathSnapshots) {
+        const currentRaw = await readRecoveryCandidate(uri);
+        assertCurrent();
+        if (currentRaw !== expectedRaw) throw new Error(PHOTO_RECOVERY_CANDIDATE_CHANGED);
+      }
+      for (const target of absentMoveTargets) {
+        if (await recoveryPathExists(target)) throw new Error(PHOTO_RECOVERY_CONFLICT);
+        assertCurrent();
+      }
+    };
+
+    for (const action of actions) {
+      // A preceding awaited filesystem action gives later candidates time to
+      // change. Recheck the stable key and every still-authoritative path
+      // immediately before each action; remove only snapshots this action has
+      // successfully consumed.
+      await assertSnapshotsCurrent();
+      assertCurrent();
+      if (action.type === 'move') {
+        const expectedRaw = pathSnapshots.get(action.from)!;
+        await FileSystem.moveAsync({ from: action.from, to: action.to });
+        pathSnapshots.delete(action.from);
+        absentMoveTargets.delete(action.to);
+        pathSnapshots.set(action.to, expectedRaw);
+      } else {
+        await FileSystem.deleteAsync(action.uri, { idempotent: true });
+        pathSnapshots.delete(action.uri);
       }
     }
   });
@@ -518,7 +639,7 @@ export async function clearEncryptedPhotoStorage(): Promise<void> {
     clearPhotoDirectory(),
     AsyncStorage.removeItem(KEY_CREATION_MARKER),
   ];
-  if (Platform.OS !== 'web') operations.push(SecureStore.deleteItemAsync(KEY_STORE_NAME));
+  if (Platform.OS !== 'web') operations.push(deletePrivateSecureStoreItemAsync(KEY_STORE_NAME));
   const results = await Promise.allSettled(operations);
   const failures = results.filter((result) => result.status === 'rejected');
   if (failures.length > 0) {
@@ -539,10 +660,10 @@ export async function decryptPhotoNote(
   ciphertext: string | null | undefined,
 ): Promise<string | null> {
   if (!ciphertext) return null;
-  return runAccountScopedPhotoOperation(async (generation) => {
+  return runAccountScopedPhotoOperation(async () => {
     const envelope = encryptedTextEnvelopeFromRaw(ciphertext);
     if (!envelope) throw new Error(PHOTO_DECRYPTION_FAILED);
-    const key = await getExistingContentKey(generation);
+    const key = await getExistingContentKey();
     const plaintext = decryptEnvelopeToUtf8(envelope, key);
     if (plaintext === null) throw new Error(PHOTO_DECRYPTION_FAILED);
     return plaintext;

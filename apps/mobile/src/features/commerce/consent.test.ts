@@ -5,7 +5,7 @@ const mocks = vi.hoisted(() => ({
   recordConsent: vi.fn(),
   track: vi.fn(),
   withdrawConsent: vi.fn(),
-  getCommerceConsentLocal: vi.fn(),
+  readCommerceConsentLocal: vi.fn(),
   setCommerceConsentLocal: vi.fn(),
 }));
 
@@ -23,8 +23,20 @@ vi.mock('@/lib/consent/withdrawal', () => ({
 }));
 
 vi.mock('./store', () => ({
-  getCommerceConsentLocal: mocks.getCommerceConsentLocal,
+  readCommerceConsentLocal: mocks.readCommerceConsentLocal,
   setCommerceConsentLocal: mocks.setCommerceConsentLocal,
+}));
+
+vi.mock('@/lib/storage/privateBoolean', () => ({
+  requirePrivateBoolean: (result: { status: string; value?: boolean }) => {
+    if (result.status === 'available') return result.value === true;
+    if (result.status === 'absent') return false;
+    if (result.status === 'corrupt') throw new Error('PRIVATE_BOOLEAN_INVALID');
+    if (result.status === 'unsupported_version') {
+      throw new Error('PRIVATE_BOOLEAN_UNSUPPORTED_VERSION');
+    }
+    throw new Error('PRIVATE_BOOLEAN_UNAVAILABLE');
+  },
 }));
 
 describe('commerce consent persistence', () => {
@@ -33,12 +45,44 @@ describe('commerce consent persistence', () => {
     mocks.recordConsent.mockReset();
     mocks.track.mockReset();
     mocks.withdrawConsent.mockReset();
-    mocks.getCommerceConsentLocal.mockReset();
+    mocks.readCommerceConsentLocal.mockReset();
     mocks.setCommerceConsentLocal.mockReset();
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.withdrawConsent.mockResolvedValue(undefined);
-    mocks.getCommerceConsentLocal.mockResolvedValue(false);
+    mocks.readCommerceConsentLocal.mockResolvedValue({ status: 'absent' });
     mocks.setCommerceConsentLocal.mockResolvedValue(undefined);
+  });
+
+  it('does not consult local storage when the consent ledger is authoritative', async () => {
+    const { isCommerceConsented } = await import('./consent');
+    mocks.getLatestConsents.mockResolvedValueOnce({ data_sharing: false });
+
+    await expect(isCommerceConsented()).resolves.toBe(false);
+
+    expect(mocks.readCommerceConsentLocal).not.toHaveBeenCalled();
+  });
+
+  it('uses a valid local decision only when the ledger has no decision', async () => {
+    const { isCommerceConsented } = await import('./consent');
+    mocks.getLatestConsents.mockResolvedValueOnce({});
+    mocks.readCommerceConsentLocal.mockResolvedValueOnce({
+      status: 'available',
+      value: true,
+      format: 'legacy',
+    });
+
+    await expect(isCommerceConsented()).resolves.toBe(true);
+  });
+
+  it('does not disguise unavailable local commerce consent as a decline', async () => {
+    const { isCommerceConsented } = await import('./consent');
+    mocks.getLatestConsents.mockRejectedValueOnce(new Error('ledger unavailable'));
+    mocks.readCommerceConsentLocal.mockResolvedValueOnce({
+      status: 'unavailable',
+      reason: 'content_key_storage_unavailable',
+    });
+
+    await expect(isCommerceConsented()).rejects.toThrow('PRIVATE_BOOLEAN_UNAVAILABLE');
   });
 
   it('records commerce grant analytics after the local-first consent flag saves', async () => {

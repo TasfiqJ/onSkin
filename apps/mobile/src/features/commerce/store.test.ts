@@ -9,7 +9,7 @@ import { createOwnerQueryScope } from '@/lib/query/queryKeys';
 
 import {
   clearCommerceState,
-  getCommerceConsentLocal,
+  readCommerceConsentLocal,
   recordClick,
   runCommerceClickOperation,
   setCommerceConsentLocal,
@@ -36,9 +36,20 @@ vi.mock('@/lib/supabase/client', () => ({
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
+  readPrivateItem: vi.fn(async (key: string) => {
+    const value = mocks.storage.get(key);
+    return value === undefined ? { status: 'absent' } : { status: 'available', value };
+  }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.storage.set(key, value);
   }),
+  updatePrivateItem: vi.fn(
+    async (key: string, updater: (current: string | null) => string | null) => {
+      const next = updater(mocks.storage.get(key) ?? null);
+      if (next === null) mocks.storage.delete(key);
+      else mocks.storage.set(key, next);
+    },
+  ),
   removePrivateItem: vi.fn(async (key: string) => {
     mocks.storage.delete(key);
   }),
@@ -79,17 +90,24 @@ describe('commerce consent store', () => {
   it('reads legacy commerce consent grants without repair and writes versioned flags', async () => {
     mocks.storage.set(CONSENT_KEY, ' true ');
 
-    await expect(getCommerceConsentLocal()).resolves.toBe(true);
+    await expect(readCommerceConsentLocal()).resolves.toEqual({
+      status: 'available',
+      value: true,
+      format: 'legacy',
+    });
     expect(mocks.storage.get(CONSENT_KEY)).toBe(' true ');
 
     await setCommerceConsentLocal(false);
     expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
   });
 
-  it('fails closed and preserves malformed commerce consent values', async () => {
+  it('classifies and preserves malformed commerce consent values', async () => {
     mocks.storage.set(CONSENT_KEY, 'allowed');
 
-    await expect(getCommerceConsentLocal()).resolves.toBe(false);
+    await expect(readCommerceConsentLocal()).resolves.toEqual({
+      status: 'corrupt',
+      reason: 'invalid_value',
+    });
 
     expect(mocks.storage.get(CONSENT_KEY)).toBe('allowed');
   });

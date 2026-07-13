@@ -1,4 +1,8 @@
-import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
+import {
+  readPrivateBoolean,
+  setPrivateBoolean,
+  type PrivateBooleanReadResult,
+} from '@/lib/storage/privateBoolean';
 import { multiRemovePrivateItems, removePrivateItem } from '@/lib/storage/privateKV';
 
 // Local-first trend state (docs/12 §8/§10, the D-029 pattern). The
@@ -11,8 +15,8 @@ import { multiRemovePrivateItems, removePrivateItem } from '@/lib/storage/privat
 const CONSENT_KEY = 'onskin.trendInsights.v1';
 const STATE_KEY = 'onskin.trendState.v1'; // the derived narrative state (no image, no score)
 
-export async function getTrendInsightsLocal(): Promise<boolean> {
-  return getPrivateBoolean(CONSENT_KEY);
+export async function readTrendInsightsLocal(): Promise<PrivateBooleanReadResult> {
+  return readPrivateBoolean(CONSENT_KEY);
 }
 export async function setTrendInsightsLocal(enabled: boolean): Promise<void> {
   await setPrivateBoolean(CONSENT_KEY, enabled);

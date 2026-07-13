@@ -38,3 +38,17 @@ export const supabase = createClient<Database>(env.supabaseUrl, env.supabasePubl
     detectSessionInUrl: false,
   },
 });
+
+/**
+ * Invalidate auth-js state through its public local-sign-out path before any
+ * direct storage verification. `_removeSession` advances auth-js's internal
+ * removal epoch synchronously, so a refresh already between its final storage
+ * read and token save must discard the rotated session instead of resurrecting
+ * it after account deletion.
+ */
+export async function invalidateLocalSupabaseSession(): Promise<void> {
+  supabase.auth.stopAutoRefresh();
+  const { error } = await supabase.auth.signOut({ scope: 'local' });
+  if (error) throw new Error('SUPABASE_LOCAL_SESSION_INVALIDATION_FAILED');
+  await clearPersistedSupabaseSession();
+}

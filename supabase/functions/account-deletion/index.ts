@@ -12,7 +12,9 @@ import {
   readLimitedResponseJson,
   readLimitedResponseText,
 } from '../_shared/fetch.ts';
+import { runAccountDeletionStateMachine } from './deletionCore.ts';
 import { deletePhotoStorage } from './photoStorageCleanup.ts';
+import { createSupabaseAccountDeletionStateStore } from './supabaseDeletionState.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey =
@@ -29,9 +31,9 @@ type AuthUser = {
 
 type DeletionBody = {
   appleAuthorizationCode?: string;
+  completionToken?: string;
+  statusOnly?: boolean;
 };
-
-type EdgeSupabaseClient = any;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -58,13 +60,27 @@ function publicError(error: unknown): string {
     'APPLE_TOKEN_EXCHANGE_FAILED',
     'APPLE_TOKEN_EXCHANGE_RETURNED_NO_TOKEN',
     'APPLE_TOKEN_REVOKE_FAILED',
+    'APPLE_REVOCATION_STATUS_UNKNOWN',
     'REVENUECAT_SECRET_API_KEY_NOT_CONFIGURED',
     'REVENUECAT_DELETION_FAILED',
     'POSTHOG_DELETION_NOT_CONFIGURED',
     'POSTHOG_DELETION_FAILED',
     'STORAGE_LIST_FAILED',
     'STORAGE_REMOVE_FAILED',
+    'DATABASE_ERASURE_FAILED',
     'AUTH_USER_DELETE_FAILED',
+    'AUTH_SESSION_REVOCATION_FAILED',
+    'AUTH_DELETE_NOT_CONFIRMED',
+    'ACCOUNT_DELETION_AUTH_NOT_READY',
+    'ACCOUNT_DELETION_AUTH_FROZEN',
+    'ACCOUNT_DELETION_SESSION_UNAVAILABLE',
+    'ACCOUNT_DELETION_SESSION_MISMATCH',
+    'ACCOUNT_DELETION_IN_PROGRESS',
+    'ACCOUNT_DELETION_APPLE_REAUTHORIZATION_REQUIRED',
+    'ACCOUNT_DELETION_STATE_INVALID',
+    'ACCOUNT_DELETION_STATE_NOT_FOUND',
+    'ACCOUNT_DELETION_STATE_CONFLICT',
+    'ACCOUNT_DELETION_STATE_UNAVAILABLE',
   ]);
   return publicCodes.has(code) ? code : 'ACCOUNT_DELETION_FAILED';
 }
@@ -78,6 +94,31 @@ function userHasProvider(user: AuthUser, provider: string): boolean {
   );
 }
 
+const UUID_PATTERN = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
+const COMPLETION_TOKEN_PATTERN = /^[0-9a-f]{64}$/i;
+
+function verifiedSessionId(token: string, expectedUserId: string): string {
+  try {
+    const encodedPayload = token.split('.')[1];
+    if (!encodedPayload) throw new Error('missing payload');
+    const normalized = encodedPayload.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, '=');
+    const binary = atob(padded);
+    const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+    const payload = JSON.parse(new TextDecoder().decode(bytes)) as Record<string, unknown>;
+    const sessionId = typeof payload.session_id === 'string' ? payload.session_id : '';
+    if (payload.sub !== expectedUserId || !UUID_PATTERN.test(sessionId)) {
+      throw new Error('owner or session mismatch');
+    }
+    return sessionId;
+  } catch {
+    // The token has already been verified by auth.getUser(token). Requiring its
+    // bound session_id lets the durable freeze preserve exactly this session's
+    // refresh path while rejecting every other session or provider re-login.
+    throw new Error('ACCOUNT_DELETION_SESSION_UNAVAILABLE');
+  }
+}
+
 function appleClientId(): string {
   return (
     Deno.env.get('APPLE_SIWA_CLIENT_ID') ??
@@ -86,15 +127,6 @@ function appleClientId(): string {
     Deno.env.get('APP_IOS_BUNDLE_IDENTIFIER') ??
     ''
   );
-}
-
-function assertAppleRevocationConfigured(): void {
-  const teamId = Deno.env.get('APPLE_TEAM_ID') ?? '';
-  const keyId = Deno.env.get('APPLE_SIWA_KEY_ID') ?? '';
-  const privateKey = Deno.env.get('APPLE_SIWA_PRIVATE_KEY') ?? '';
-  if (!teamId || !keyId || !appleClientId() || !privateKey) {
-    throw new Error('APPLE_REVOCATION_NOT_CONFIGURED');
-  }
 }
 
 function posthogDeletionRequired(): boolean {
@@ -117,15 +149,6 @@ function assertPostHogDeletionConfigured(): void {
   if (!personalApiKey || !projectId) throw new Error('POSTHOG_DELETION_NOT_CONFIGURED');
 }
 
-function assertDeletionPreconditions(user: AuthUser, body: DeletionBody): void {
-  if (userHasProvider(user, 'apple')) {
-    if (!body.appleAuthorizationCode) throw new Error('APPLE_AUTHORIZATION_CODE_REQUIRED');
-    assertAppleRevocationConfigured();
-  }
-  if (!revenueCatSecretKey) throw new Error('REVENUECAT_SECRET_API_KEY_NOT_CONFIGURED');
-  assertPostHogDeletionConfigured();
-}
-
 function base64UrlEncode(input: string | ArrayBuffer): string {
   const bytes = typeof input === 'string' ? new TextEncoder().encode(input) : new Uint8Array(input);
   let binary = '';
@@ -143,6 +166,30 @@ async function pseudonymousUserId(userId: string): Promise<string> {
     new TextEncoder().encode(`onskin:user:${userId}`),
   );
   return `u_${bytesToHex(digest).slice(0, 32)}`;
+}
+
+async function completionTokenHash(token: string): Promise<string> {
+  const digest = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(`onskin:account-deletion-completion:${token}`),
+  );
+  return `t_${bytesToHex(digest)}`;
+}
+
+function completedResponse(state: {
+  requestId: string;
+  appleResult: 'revoked' | 'skipped' | null;
+  posthogResult: 'deleted' | 'already_absent' | 'skipped' | null;
+}): Response {
+  if (!state.appleResult || !state.posthogResult) {
+    throw new Error('ACCOUNT_DELETION_STATE_INVALID');
+  }
+  return json({
+    deleted: true,
+    request_id: state.requestId,
+    apple: state.appleResult,
+    posthog: state.posthogResult,
+  });
 }
 
 function pemToPkcs8(privateKey: string): ArrayBuffer {
@@ -193,14 +240,13 @@ async function createAppleClientSecret(): Promise<string> {
 }
 
 async function revokeAppleTokenIfNeeded(
-  user: AuthUser,
   authorizationCode?: string,
-): Promise<'skipped' | 'revoked'> {
-  if (!userHasProvider(user, 'apple')) return 'skipped';
+  clientSecret?: string,
+): Promise<'revoked'> {
   if (!authorizationCode) throw new Error('APPLE_AUTHORIZATION_CODE_REQUIRED');
+  if (!clientSecret) throw new Error('APPLE_REVOCATION_NOT_CONFIGURED');
 
   const clientId = appleClientId();
-  const clientSecret = await createAppleClientSecret();
   const tokenParams = new URLSearchParams({
     client_id: clientId,
     client_secret: clientSecret,
@@ -245,10 +291,7 @@ async function revokeAppleTokenIfNeeded(
   return 'revoked';
 }
 
-async function deleteRevenueCatSubscriber(
-  userId: string,
-  supabase: EdgeSupabaseClient,
-): Promise<void> {
+async function deleteRevenueCatSubscriber(userId: string): Promise<'deleted' | 'already_absent'> {
   if (!revenueCatSecretKey) throw new Error('REVENUECAT_SECRET_API_KEY_NOT_CONFIGURED');
 
   const response = await fetchWithTimeout(
@@ -263,22 +306,7 @@ async function deleteRevenueCatSubscriber(
   if (!response.ok && response.status !== 404) {
     throw new Error(`REVENUECAT_DELETION_FAILED:${response.status}:${body.slice(0, 80)}`);
   }
-
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(userId));
-  const userHash = base64UrlEncode(digest).slice(0, 20);
-  await supabase.from('subscriptions_events').insert({
-    rc_event_id: `account_deletion_${userHash}_${Date.now()}`,
-    user_id: null,
-    event_type: 'CUSTOMER_DELETION_REQUESTED',
-    payload: {
-      provider: 'revenuecat',
-      status: response.status,
-      note: 'RevenueCat customer data deletion does not cancel Apple or Google subscriptions.',
-    },
-    resolved_user_id: null,
-    processing_status: 'processed',
-    processed_at: new Date().toISOString(),
-  });
+  return response.status === 404 ? 'already_absent' : 'deleted';
 }
 
 function posthogApiHost(): string {
@@ -294,6 +322,7 @@ function posthogApiHost(): string {
 }
 
 async function deletePostHogPerson(userId: string): Promise<'deleted' | 'skipped'> {
+  assertPostHogDeletionConfigured();
   const personalApiKey = Deno.env.get('POSTHOG_PERSONAL_API_KEY') ?? '';
   const projectId =
     Deno.env.get('POSTHOG_PROJECT_ID') ?? Deno.env.get('POSTHOG_ENVIRONMENT_ID') ?? '';
@@ -316,7 +345,7 @@ async function deletePostHogPerson(userId: string): Promise<'deleted' | 'skipped
     `${host}/api/environments/${encodeURIComponent(projectId)}/persons/bulk_delete/`,
   ];
 
-  let lastStatus = 0;
+  let lastStatus = 404;
   let lastBody = '';
   for (const endpoint of endpoints) {
     const response = await fetchWithTimeout(endpoint, {
@@ -344,37 +373,15 @@ async function deletePostHogPerson(userId: string): Promise<'deleted' | 'skipped
   throw new Error(`POSTHOG_DELETION_FAILED:${lastStatus}:${lastBody.slice(0, 80)}`);
 }
 
-async function scrubServiceRoleOnlyRows(
-  userId: string,
-  supabase: EdgeSupabaseClient,
-): Promise<void> {
-  const { data: clicks } = await supabase
-    .from('commerce_click_events')
-    .select('click_token')
-    .eq('user_id', userId);
-  const clickTokens = ((clicks ?? []) as Array<{ click_token?: string | null }>)
-    .map((row: { click_token?: string | null }) => row.click_token)
-    .filter((token): token is string => Boolean(token));
-  if (clickTokens.length > 0) {
-    await supabase
-      .from('order_attributions')
-      .update({ click_token: null })
-      .in('click_token', clickTokens);
-  }
-
-  await supabase
-    .from('subscriptions_events')
-    .update({
-      user_id: null,
-      resolved_user_id: null,
-      app_user_id: null,
-      original_app_user_id: null,
-      aliases: null,
-      payload: { erased: true, erased_at: new Date().toISOString(), reason: 'account_deletion' },
-    })
-    .or(
-      `user_id.eq.${userId},resolved_user_id.eq.${userId},app_user_id.eq.${userId},original_app_user_id.eq.${userId}`,
-    );
+function authUserAlreadyAbsent(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const candidate = error as { status?: unknown; code?: unknown; message?: unknown };
+  const message = typeof candidate.message === 'string' ? candidate.message.toLowerCase() : '';
+  return (
+    candidate.status === 404 ||
+    candidate.code === 'user_not_found' ||
+    message.includes('user not found')
+  );
 }
 
 Deno.serve(async (req) => {
@@ -382,31 +389,119 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'METHOD_NOT_ALLOWED' }, 405);
   if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);
 
-  const token = bearerToken(req);
-  if (!token) return json({ error: 'UNAUTHORIZED' }, 401);
-  const supabase = createClient(supabaseUrl, serviceKey);
-
-  const { data: userData, error: userErr } = await supabase.auth.getUser(token);
-  const user = userData.user as AuthUser | null;
-  if (userErr || !user?.id) return json({ error: 'UNAUTHORIZED' }, 401);
-
   const parsed = await readLimitedJson(req, maxBodyBytes, json, { error: 'BAD_JSON' });
   if (parsed instanceof Response) return parsed;
   const body =
     parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? (parsed as DeletionBody) : {};
+  const completionToken =
+    typeof body.completionToken === 'string' ? body.completionToken.trim().toLowerCase() : '';
+  if (!COMPLETION_TOKEN_PATTERN.test(completionToken)) {
+    return json({ deleted: false, error: 'ACCOUNT_DELETION_COMPLETION_TOKEN_INVALID' }, 400);
+  }
+
+  const token = bearerToken(req);
+  if (!token) return json({ error: 'UNAUTHORIZED' }, 401);
+  const supabase = createClient(supabaseUrl, serviceKey);
+  const stateStore = createSupabaseAccountDeletionStateStore(supabase);
+  const tokenHash = await completionTokenHash(completionToken);
+
+  if (body.statusOnly === true) {
+    try {
+      const completed = await stateStore.lookupCompleted({ completionTokenHash: tokenHash });
+      if (!completed) {
+        return json({ deleted: false, error: 'ACCOUNT_DELETION_NOT_COMPLETE' }, 409);
+      }
+      return completedResponse(completed);
+    } catch (error) {
+      const code = publicError(error);
+      console.error('[account-deletion-status]', code);
+      return json({ deleted: false, error: code }, 409);
+    }
+  }
+
+  const { data: userData, error: userErr } = await supabase.auth.getUser(token);
+  const user = userData.user as AuthUser | null;
+  if (userErr || !user?.id) {
+    try {
+      const completed = await stateStore.lookupCompleted({ completionTokenHash: tokenHash });
+      return completed ? completedResponse(completed) : json({ error: 'UNAUTHORIZED' }, 401);
+    } catch {
+      return json({ error: 'UNAUTHORIZED' }, 401);
+    }
+  }
 
   try {
-    assertDeletionPreconditions(user, body);
-    const apple = await revokeAppleTokenIfNeeded(user, body.appleAuthorizationCode);
-    await deleteRevenueCatSubscriber(user.id, supabase);
-    const posthog = await deletePostHogPerson(user.id);
-    await deletePhotoStorage(user.id, supabase);
-    await scrubServiceRoleOnlyRows(user.id, supabase);
+    const sessionId = verifiedSessionId(token, user.id);
+    const userHash = await pseudonymousUserId(user.id);
+    const durablePreflight = await stateStore.preflight({ userId: user.id, userHash });
+    const appleRequired = userHasProvider(user, 'apple') || durablePreflight.appleRequired;
+    const appleAuthorizationCode =
+      typeof body.appleAuthorizationCode === 'string'
+        ? body.appleAuthorizationCode.trim()
+        : undefined;
+    let appleClientSecret: string | undefined;
+    if (appleRequired) {
+      if (!appleAuthorizationCode) throw new Error('APPLE_AUTHORIZATION_CODE_REQUIRED');
+      // Validate every required Apple setting and the private key before the
+      // durable claim freezes the account. Reuse this short-lived secret for
+      // the later Apple step so no local configuration error can strand it.
+      appleClientSecret = await createAppleClientSecret();
+    }
 
-    const { error: delErr } = await supabase.auth.admin.deleteUser(user.id);
-    if (delErr) throw new Error(`AUTH_USER_DELETE_FAILED:${delErr.message}`);
+    const leaseToken = crypto.randomUUID();
+    const result = await runAccountDeletionStateMachine({
+      userId: user.id,
+      userHash,
+      appleRequired,
+      appleAuthorizationCode,
+      sessionId,
+      leaseToken,
+      completionTokenHash: tokenHash,
+      store: stateStore,
+      actions: {
+        deleteRevenueCatSubscriber: () => deleteRevenueCatSubscriber(user.id),
+        deletePostHogPerson: () => deletePostHogPerson(user.id),
+        async deletePhotoStorage() {
+          await deletePhotoStorage(user.id, supabase);
+          return 'deleted';
+        },
+        async eraseDatabaseState({ requestId }) {
+          await stateStore.eraseDatabaseState({
+            requestId,
+            userId: user.id,
+            leaseToken,
+          });
+          return 'deleted';
+        },
+        async revokeOtherAuthSessions() {
+          const { error } = await supabase.auth.admin.signOut(token, 'others');
+          if (error) throw new Error(`AUTH_SESSION_REVOCATION_FAILED:${error.message}`);
+          return 'revoked';
+        },
+        async revokeAppleToken(authorizationCode) {
+          return await revokeAppleTokenIfNeeded(authorizationCode, appleClientSecret);
+        },
+        async reconcileProviders() {
+          await deleteRevenueCatSubscriber(user.id);
+          await deletePostHogPerson(user.id);
+          return 'reconciled';
+        },
+        async deleteAuthIdentity() {
+          const { error } = await supabase.auth.admin.deleteUser(user.id);
+          if (!error) return 'deleted';
+          if (authUserAlreadyAbsent(error)) return 'already_absent';
+          throw new Error(`AUTH_USER_DELETE_FAILED:${error.message}`);
+        },
+      },
+      errorCode: publicError,
+    });
 
-    return json({ deleted: true, apple, posthog }, 200);
+    return json({
+      deleted: true,
+      request_id: result.requestId,
+      apple: result.apple,
+      posthog: result.posthog,
+    });
   } catch (error) {
     const code = publicError(error);
     console.error('[account-deletion]', code);

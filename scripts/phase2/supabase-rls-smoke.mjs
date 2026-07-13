@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
 import { placeholderEnvValue } from '../phase9/lib.mjs';
+import { cleanupLiveTestAccounts } from '../phase9/live-account-cleanup.mjs';
 
 const root = process.cwd();
 
@@ -102,16 +103,18 @@ async function createSmokeUser(label) {
   return { id: data.user.id, email, client };
 }
 
-async function cleanup(users, catalogProductIds = []) {
+async function cleanup(users, catalogProductIds = [], cleanupErrors = []) {
   for (const productId of catalogProductIds) {
     const { error } = await admin.from('products').delete().eq('id', productId);
     if (error) console.warn(`WARN catalog product cleanup failed: ${redactedErrorKind(error)}`);
   }
-  for (const user of users) {
-    if (!user?.id) continue;
-    const { error } = await admin.auth.admin.deleteUser(user.id);
-    if (error) console.warn(`WARN smoke user cleanup failed: ${redactedErrorKind(error)}`);
-  }
+  await cleanupLiveTestAccounts({
+    admin,
+    users,
+    errors: cleanupErrors,
+    label: 'RLS smoke user cleanup',
+    errorKind: redactedErrorKind,
+  });
 }
 
 async function insertOne(client, table, payload, select = '*') {
@@ -389,8 +392,15 @@ try {
     userA.id,
     'anonymous entitlement read',
   );
-
-  console.log('OK Supabase RLS smoke tests passed.');
 } finally {
-  await cleanup(users, catalogProductIds);
+  const cleanupErrors = [];
+  await cleanup(users, catalogProductIds, cleanupErrors);
+  if (cleanupErrors.length > 0) {
+    throw new AggregateError(
+      cleanupErrors.map((message) => new Error(message)),
+      'Supabase RLS smoke account cleanup failed.',
+    );
+  }
 }
+
+console.log('OK Supabase RLS smoke tests passed.');

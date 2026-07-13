@@ -3,9 +3,10 @@ import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
 import { isSupabaseConfigured } from '@/lib/env';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
+import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 
 import { TREND_COPY } from './copy';
-import { deleteTrendState, getTrendInsightsLocal, setTrendInsightsLocal } from './store';
+import { deleteTrendState, readTrendInsightsLocal, setTrendInsightsLocal } from './store';
 
 // The photo_trend_insights consent (docs/12 §8, D-072). A NEW, separate, explicit,
 // revocable, DEFAULT-OFF consent for the on-device within-person trend insight. The
@@ -26,9 +27,9 @@ export async function isTrendInsightsConsented(): Promise<boolean> {
       lease.assertCurrent();
       /* offline / no DB. Fall back to the local-first flag */
     }
-    const local = await getTrendInsightsLocal();
+    const local = await readTrendInsightsLocal();
     lease.assertCurrent();
-    return local;
+    return requirePrivateBoolean(local);
   });
 }
 

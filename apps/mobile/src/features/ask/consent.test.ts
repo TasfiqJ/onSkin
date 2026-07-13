@@ -11,7 +11,7 @@ const mocks = vi.hoisted(() => ({
   track: vi.fn(),
   withdrawConsent: vi.fn(),
   clearAskStore: vi.fn(),
-  getAskConsentLocal: vi.fn(),
+  readAskConsentLocal: vi.fn(),
   setAskConsentLocal: vi.fn(),
 }));
 
@@ -30,8 +30,20 @@ vi.mock('@/lib/consent/withdrawal', () => ({
 
 vi.mock('./store', () => ({
   clearAskStore: mocks.clearAskStore,
-  getAskConsentLocal: mocks.getAskConsentLocal,
+  readAskConsentLocal: mocks.readAskConsentLocal,
   setAskConsentLocal: mocks.setAskConsentLocal,
+}));
+
+vi.mock('@/lib/storage/privateBoolean', () => ({
+  requirePrivateBoolean: (result: { status: string; value?: boolean }) => {
+    if (result.status === 'available') return result.value === true;
+    if (result.status === 'absent') return false;
+    if (result.status === 'corrupt') throw new Error('PRIVATE_BOOLEAN_INVALID');
+    if (result.status === 'unsupported_version') {
+      throw new Error('PRIVATE_BOOLEAN_UNSUPPORTED_VERSION');
+    }
+    throw new Error('PRIVATE_BOOLEAN_UNAVAILABLE');
+  },
 }));
 
 let boundaryActive = false;
@@ -50,13 +62,45 @@ describe('Ask consent persistence', () => {
     mocks.track.mockReset();
     mocks.withdrawConsent.mockReset();
     mocks.clearAskStore.mockReset();
-    mocks.getAskConsentLocal.mockReset();
+    mocks.readAskConsentLocal.mockReset();
     mocks.setAskConsentLocal.mockReset();
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.withdrawConsent.mockResolvedValue(undefined);
     mocks.clearAskStore.mockResolvedValue(undefined);
-    mocks.getAskConsentLocal.mockResolvedValue(false);
+    mocks.readAskConsentLocal.mockResolvedValue({ status: 'absent' });
     mocks.setAskConsentLocal.mockResolvedValue(undefined);
+  });
+
+  it('uses a definitive consent ledger decision without consulting local storage', async () => {
+    const { isAskConsented } = await import('./consent');
+    mocks.getLatestConsents.mockResolvedValueOnce({ ask_onskin: true });
+
+    await expect(isAskConsented()).resolves.toBe(true);
+
+    expect(mocks.readAskConsentLocal).not.toHaveBeenCalled();
+  });
+
+  it('uses a valid local consent value when the ledger is unavailable', async () => {
+    const { isAskConsented } = await import('./consent');
+    mocks.getLatestConsents.mockRejectedValueOnce(new Error('ledger unavailable'));
+    mocks.readAskConsentLocal.mockResolvedValueOnce({
+      status: 'available',
+      value: true,
+      format: 'legacy',
+    });
+
+    await expect(isAskConsented()).resolves.toBe(true);
+  });
+
+  it('does not disguise unavailable local consent storage as a decline', async () => {
+    const { isAskConsented } = await import('./consent');
+    mocks.getLatestConsents.mockRejectedValueOnce(new Error('ledger unavailable'));
+    mocks.readAskConsentLocal.mockResolvedValueOnce({
+      status: 'unavailable',
+      reason: 'storage_unavailable',
+    });
+
+    await expect(isAskConsented()).rejects.toThrow('PRIVATE_BOOLEAN_UNAVAILABLE');
   });
 
   it('records Ask grant analytics only after the consent ledger saves', async () => {

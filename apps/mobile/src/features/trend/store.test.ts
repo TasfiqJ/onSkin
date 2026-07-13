@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   clearTrendStore,
   deleteTrendState,
-  getTrendInsightsLocal,
+  readTrendInsightsLocal,
   setTrendInsightsLocal,
 } from './store';
 
@@ -13,9 +13,20 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
+  readPrivateItem: vi.fn(async (key: string) => {
+    const value = mocks.storage.get(key);
+    return value === undefined ? { status: 'absent' } : { status: 'available', value };
+  }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.storage.set(key, value);
   }),
+  updatePrivateItem: vi.fn(
+    async (key: string, updater: (current: string | null) => string | null) => {
+      const next = updater(mocks.storage.get(key) ?? null);
+      if (next === null) mocks.storage.delete(key);
+      else mocks.storage.set(key, next);
+    },
+  ),
   removePrivateItem: vi.fn(async (key: string) => {
     mocks.storage.delete(key);
   }),
@@ -35,17 +46,24 @@ describe('trend insight store', () => {
   it('reads legacy trend grants without repair and writes versioned flags', async () => {
     mocks.storage.set(CONSENT_KEY, 'TRUE');
 
-    await expect(getTrendInsightsLocal()).resolves.toBe(true);
+    await expect(readTrendInsightsLocal()).resolves.toEqual({
+      status: 'available',
+      value: true,
+      format: 'legacy',
+    });
     expect(mocks.storage.get(CONSENT_KEY)).toBe('TRUE');
 
     await setTrendInsightsLocal(false);
     expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
   });
 
-  it('fails closed and preserves malformed trend consent values', async () => {
+  it('classifies and preserves malformed trend consent values', async () => {
     mocks.storage.set(CONSENT_KEY, 'enabled');
 
-    await expect(getTrendInsightsLocal()).resolves.toBe(false);
+    await expect(readTrendInsightsLocal()).resolves.toEqual({
+      status: 'corrupt',
+      reason: 'invalid_value',
+    });
 
     expect(mocks.storage.get(CONSENT_KEY)).toBe('enabled');
   });

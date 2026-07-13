@@ -11,6 +11,7 @@ import {
   redactedErrorKind,
   write,
 } from './lib.mjs';
+import { cleanupLiveTestAccounts } from './live-account-cleanup.mjs';
 
 const errors = [];
 const warnings = [];
@@ -539,8 +540,13 @@ async function main() {
       if (error) warnings.push(`Community topic cleanup warning: ${redactedErrorKind(error)}`);
     }
     if (user?.id) {
-      const { error } = await admin.auth.admin.deleteUser(user.id);
-      if (error) warnings.push(`Consent harness user cleanup warning: ${redactedErrorKind(error)}`);
+      await cleanupLiveTestAccounts({
+        admin,
+        users: [user],
+        errors,
+        label: 'Consent harness user cleanup',
+        errorKind: redactedErrorKind,
+      });
     }
   }
 

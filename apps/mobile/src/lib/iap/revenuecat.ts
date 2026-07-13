@@ -11,12 +11,14 @@ import type {
 
 import type { StoredEntitlement } from '@/features/subscription/entitlement';
 import { PLANS } from '@/features/subscription/plans';
+import { accountDeletionVendorWritesBlocked } from '@/lib/auth/accountDeletionVendorFreezeRuntime';
 import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
 import {
   createRevenueCatIdentityCoordinator,
   type RevenueCatIdentityAdapter,
 } from '@/lib/iap/revenuecatIdentity';
+import { createRevenueCatOperationBarrier } from '@/lib/iap/revenuecatOperationBarrier';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 
 export type SubscriptionPackageView = {
@@ -86,6 +88,9 @@ type PurchaseResult = {
 let configurePromise: Promise<void> | null = null;
 let cachedOfferings: PurchasesOfferings | null = null;
 const identityCoordinator = createRevenueCatIdentityCoordinator();
+const deletionOperationBarrier = createRevenueCatOperationBarrier(
+  accountDeletionVendorWritesBlocked,
+);
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const STORE_CHECKOUT_UNAVAILABLE_REASON =
@@ -296,11 +301,13 @@ function findPackage(offerings: PurchasesOfferings, plan: PlanId): PurchasesPack
 }
 
 async function requireConfigured(action: string) {
+  if (accountDeletionVendorWritesBlocked()) return null;
   if (!canUseRevenueCat()) {
     productionRequiresRevenueCat(action);
     return null;
   }
   if (configurePromise) await configurePromise;
+  if (accountDeletionVendorWritesBlocked()) return null;
   if (!identityCoordinator.currentUserId()) {
     productionRequiresRevenueCat(action);
     return null;
@@ -315,14 +322,21 @@ async function loadRevenueCatIdentityAdapter(): Promise<RevenueCatIdentityAdapte
   await Purchases.setLogLevel(__DEV__ ? Purchases.LOG_LEVEL.DEBUG : Purchases.LOG_LEVEL.WARN);
   return {
     configure: (appUserId) =>
-      Purchases.configure({
-        apiKey,
-        appUserID: appUserId,
-        automaticDeviceIdentifierCollectionEnabled: false,
-      }),
+      deletionOperationBarrier.run(() =>
+        Purchases.configure({
+          apiKey,
+          appUserID: appUserId,
+          automaticDeviceIdentifierCollectionEnabled: false,
+        }),
+      ) ?? Promise.resolve(),
+    // This call intentionally bypasses the deletion write barrier: it is the
+    // supported native completion fence for configure(), whose JS API returns
+    // void, and performs no identity write of its own.
+    fenceIdentity: () => Purchases.getCustomerInfo(),
     isAnonymous: () => Purchases.isAnonymous(),
     isConfigured: () => Purchases.isConfigured(),
-    logIn: (appUserId) => Purchases.logIn(appUserId),
+    logIn: (appUserId) =>
+      deletionOperationBarrier.run(() => Purchases.logIn(appUserId)) ?? Promise.resolve(),
     logOut: () => Purchases.logOut(),
   };
 }
@@ -330,7 +344,9 @@ async function loadRevenueCatIdentityAdapter(): Promise<RevenueCatIdentityAdapte
 async function fetchOfferings(): Promise<PurchasesOfferings | null> {
   const Purchases = await requireConfigured('offerings');
   if (!Purchases) return null;
-  cachedOfferings = await Purchases.getOfferings();
+  const operation = deletionOperationBarrier.run(() => Purchases.getOfferings());
+  if (!operation) return null;
+  cachedOfferings = await operation;
   return cachedOfferings;
 }
 
@@ -339,7 +355,10 @@ async function winBackViewForPackage(pack: PurchasesPackage): Promise<WinBackOff
   const Purchases = await requireConfigured('win-back offers');
   if (!Purchases) return null;
 
-  const offers = await Purchases.getEligibleWinBackOffersForPackage(pack).catch(() => undefined);
+  const operation = deletionOperationBarrier.run(() =>
+    Purchases.getEligibleWinBackOffersForPackage(pack),
+  );
+  const offers = operation ? await operation.catch(() => undefined) : undefined;
   const offer: PurchasesWinBackOffer | undefined = offers?.[0];
   if (!offer) return null;
 
@@ -367,6 +386,7 @@ async function winBackViewForPackage(pack: PurchasesPackage): Promise<WinBackOff
 /** Bind RevenueCat to the stable Supabase user id. Never configure with email or a device id. */
 export async function configureRevenueCat(appUserId: string): Promise<void> {
   if (!appUserId) return;
+  if (accountDeletionVendorWritesBlocked()) return;
   assertAppUserId(appUserId);
   if (!canUseRevenueCat()) {
     productionRequiresRevenueCat('configuration');
@@ -375,13 +395,17 @@ export async function configureRevenueCat(appUserId: string): Promise<void> {
   if (identityCoordinator.currentUserId() === appUserId) return;
   // Offering/package objects belong to the configured store identity.
   cachedOfferings = null;
-  const operation = identityCoordinator.configureFor(appUserId, loadRevenueCatIdentityAdapter);
+  const operation = identityCoordinator.configureFor(
+    appUserId,
+    loadRevenueCatIdentityAdapter,
+    () => !accountDeletionVendorWritesBlocked(),
+  );
 
   configurePromise = operation;
   await operation;
 }
 
-export async function resetRevenueCatIdentity(): Promise<void> {
+async function resetRevenueCatSdkIdentity(): Promise<void> {
   try {
     if (!canUseRevenueCat()) return;
     const operation = identityCoordinator.reset(loadRevenueCatIdentityAdapter);
@@ -391,6 +415,24 @@ export async function resetRevenueCatIdentity(): Promise<void> {
     configurePromise = null;
     cachedOfferings = null;
   }
+}
+
+export async function freezeRevenueCatIdentityForAccountDeletion(): Promise<void> {
+  await resetRevenueCatSdkIdentity();
+}
+
+export async function resetRevenueCatIdentity(): Promise<void> {
+  await resetRevenueCatSdkIdentity();
+}
+
+/**
+ * Called only after the durable deletion gate is armed. No new asynchronous
+ * subscriber operation can register. The deletion-specific reset then performs
+ * an ordered native customer-info read to fence configure(), whose JS API is
+ * synchronous even though its native initialization can continue.
+ */
+export async function waitForRevenueCatOperationsToSettle(): Promise<void> {
+  await deletionOperationBarrier.waitForSettled();
 }
 
 export async function getSubscriptionOffering(): Promise<SubscriptionOfferingView> {
@@ -476,9 +518,14 @@ export async function purchasePackage(plan: PlanId): Promise<PurchaseResult> {
       `RevenueCat offering is missing the ${plan} package (${PLANS[plan].productId}).`,
     );
   }
+  if (accountDeletionVendorWritesBlocked()) return { purchased: false };
 
   try {
-    const result = await Purchases.purchasePackage(selectedPackage);
+    const operation = deletionOperationBarrier.run(() =>
+      Purchases.purchasePackage(selectedPackage),
+    );
+    if (!operation) return { purchased: false };
+    const result = await operation;
     return {
       purchased: hasActiveEntitlement(result.customerInfo),
       productId: result.productIdentifier,
@@ -509,14 +556,20 @@ export async function purchaseWinBackPackage(): Promise<PurchaseResult> {
   const annualPackage = offerings ? findPackage(offerings, 'annual') : null;
   if (!annualPackage || Platform.OS !== 'ios') return { purchased: false, offerUnavailable: true };
 
-  const offers = await Purchases.getEligibleWinBackOffersForPackage(annualPackage).catch(
-    () => undefined,
+  const offerOperation = deletionOperationBarrier.run(() =>
+    Purchases.getEligibleWinBackOffersForPackage(annualPackage),
   );
+  const offers = offerOperation ? await offerOperation.catch(() => undefined) : undefined;
   const winBackOffer = offers?.[0];
   if (!winBackOffer) return { purchased: false, offerUnavailable: true };
+  if (accountDeletionVendorWritesBlocked()) return { purchased: false };
 
   try {
-    const result = await Purchases.purchasePackageWithWinBackOffer(annualPackage, winBackOffer);
+    const operation = deletionOperationBarrier.run(() =>
+      Purchases.purchasePackageWithWinBackOffer(annualPackage, winBackOffer),
+    );
+    if (!operation) return { purchased: false };
+    const result = await operation;
     return {
       purchased: hasActiveEntitlement(result.customerInfo),
       productId: result.productIdentifier,
@@ -546,22 +599,27 @@ export async function restorePurchases(): Promise<{
 }> {
   const Purchases = await requireConfigured('restore');
   if (!Purchases) return { restored: false };
+  if (accountDeletionVendorWritesBlocked()) return { restored: false };
 
-  const customerInfo = await Purchases.restorePurchases();
+  const operation = deletionOperationBarrier.run(() => Purchases.restorePurchases());
+  if (!operation) return { restored: false };
+  const customerInfo = await operation;
   return { restored: hasActiveEntitlement(customerInfo), customerInfo };
 }
 
 export async function getCustomerInfo(): Promise<CustomerInfo | null> {
   const Purchases = await requireConfigured('customer info');
   if (!Purchases) return null;
-  return Purchases.getCustomerInfo();
+  const operation = deletionOperationBarrier.run(() => Purchases.getCustomerInfo());
+  return operation ? await operation : null;
 }
 
 export async function subscribeToCustomerInfoUpdates(
   listener: CustomerInfoUpdateListener,
 ): Promise<() => void> {
-  if (!canUseRevenueCat()) return () => {};
+  if (accountDeletionVendorWritesBlocked() || !canUseRevenueCat()) return () => {};
   const Purchases = await loadPurchases();
+  if (accountDeletionVendorWritesBlocked()) return () => {};
   Purchases.addCustomerInfoUpdateListener(listener);
   return () => {
     Purchases.removeCustomerInfoUpdateListener(listener);

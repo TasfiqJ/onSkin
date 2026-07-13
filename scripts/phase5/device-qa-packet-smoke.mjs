@@ -235,6 +235,21 @@ const cases = [
         packet.files.some((file) => file.path === 'docs/hugeToDo/launch-contract.json') &&
         packet.files.some((file) => file.path === 'scripts/launch/contract.mjs') &&
         packet.files.some((file) => file.path === 'scripts/e2e/human-e2e-manifest.mjs') &&
+        packet.files.some(
+          (file) => file.path === 'apps/mobile/plugins/withPrivateStorageProtection.js',
+        ) &&
+        packet.files.some(
+          (file) => file.path === 'apps/mobile/plugins/android/private_data_backup_rules.xml',
+        ) &&
+        packet.files.some(
+          (file) => file.path === 'apps/mobile/plugins/android/private_data_extraction_rules.xml',
+        ) &&
+        packet.files.some(
+          (file) => file.path === 'apps/mobile/src/lib/nativeDataProtectionIntrospection.test.ts',
+        ) &&
+        packet.files.some(
+          (file) => file.path === 'apps/mobile/src/lib/storage/privateSecureStore.ts',
+        ) &&
         packet.files.some((file) => file.path === 'apps/mobile/src/app/_layout.tsx') &&
         packet.files.some((file) => file.path === 'apps/mobile/src/app/(tabs)/progress.tsx') &&
         packet.files.some((file) => file.path === 'apps/mobile/src/app/(tabs)/shelf.tsx') &&

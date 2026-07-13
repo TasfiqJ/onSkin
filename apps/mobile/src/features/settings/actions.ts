@@ -3,13 +3,26 @@ import * as Sharing from 'expo-sharing';
 
 import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
 import {
+  awaitAccountGenerationLease,
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
+import { freezeAnalyticsIdentityForAccountDeletion } from '@/lib/analytics/track';
+import {
+  armAccountDeletionVendorFreeze,
+  markAccountDeletionBackendDeleted,
+  markAccountDeletionBackendDeletedFromCompletion,
+  readAccountDeletionRecoveryCapability,
+} from '@/lib/auth/accountDeletionVendorFreeze';
+import { lookupAccountDeletionCompletion } from '@/lib/auth/accountDeletionCompletion';
 import { getAppleAuthorizationCodeForRevocation, userHasAppleIdentity } from '@/lib/auth/apple';
 import { BRAND } from '@/lib/brand';
 import { recordConsent } from '@/lib/consent/consent';
 import { isSupabaseConfigured } from '@/lib/env';
+import {
+  freezeRevenueCatIdentityForAccountDeletion,
+  waitForRevenueCatOperationsToSettle,
+} from '@/lib/iap/revenuecat';
 import { invokeEdgeFunction } from '@/lib/network/edgeFunctions';
 import {
   cleanupPlaintextStaging,
@@ -29,18 +42,91 @@ const DATA_EXPORT_USER_UNAVAILABLE = 'DATA_EXPORT_USER_UNAVAILABLE';
 const DATA_EXPORT_RESPONSE_OWNER_MISMATCH = 'DATA_EXPORT_RESPONSE_OWNER_MISMATCH';
 const ACCOUNT_DELETION_USER_UNAVAILABLE = 'ACCOUNT_DELETION_USER_UNAVAILABLE';
 const APPLE_REAUTHORIZATION_REQUIRED = 'APPLE_REAUTHORIZATION_REQUIRED';
+const ACCOUNT_DELETION_RESPONSE_INVALID = 'ACCOUNT_DELETION_RESPONSE_INVALID';
+const ACCOUNT_DELETION_VENDOR_RESET_WAIT_MS = 8_000;
+const ACCOUNT_DELETION_VENDOR_OPERATION_WAIT_MS = 1_500;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function assertDataRightsBackendAvailable(): void {
   if (!isSupabaseConfigured) throw new Error(DATA_RIGHTS_BACKEND_UNAVAILABLE);
+}
+
+function assertAccountDeletionResponse(data: unknown): void {
+  if (
+    !isRecord(data) ||
+    data.deleted !== true ||
+    typeof data.request_id !== 'string' ||
+    !UUID_PATTERN.test(data.request_id) ||
+    (data.apple !== 'revoked' && data.apple !== 'skipped') ||
+    (data.posthog !== 'deleted' && data.posthog !== 'already_absent' && data.posthog !== 'skipped')
+  ) {
+    throw new Error(ACCOUNT_DELETION_RESPONSE_INVALID);
+  }
+}
+
+async function settleVendorIdentityResetsWithinBound(): Promise<void> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  // Both SDKs are hard preconditions. RevenueCat's configure API returns void,
+  // so its reset performs a supported async native read before logout; PostHog
+  // seals and drains its persisted queues. Proceeding after either fails could
+  // recreate vendor identity after the backend provider deletion.
+  const resets = Promise.all([
+    freezeAnalyticsIdentityForAccountDeletion(),
+    freezeRevenueCatIdentityForAccountDeletion(),
+  ]).then(() => undefined);
+  const deadline = new Promise<never>((_resolve, reject) => {
+    timeout = setTimeout(
+      () => reject(new Error('ACCOUNT_DELETION_VENDOR_RESET_TIMEOUT')),
+      ACCOUNT_DELETION_VENDOR_RESET_WAIT_MS,
+    );
+  });
+
+  try {
+    await Promise.race([resets, deadline]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+}
+
+async function requireRevenueCatOperationsSettledWithinBound(): Promise<void> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<never>((_resolve, reject) => {
+    timeout = setTimeout(
+      () => reject(new Error('ACCOUNT_DELETION_VENDOR_ACTIVITY_IN_FLIGHT')),
+      ACCOUNT_DELETION_VENDOR_OPERATION_WAIT_MS,
+    );
+  });
+
+  try {
+    await Promise.race([waitForRevenueCatOperationsToSettle(), deadline]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
 }
 
 // Account deletion (Apple 5.1.1(v) / docs/01 §4): calls the service-role Edge
 // Function which revokes the SIWA token, deletes the auth user (FK-cascades all
 // tables), purges Storage, and removes the RC/PostHog records, then signs out.
 async function requestAccountDeletion(lease: AccountGenerationLease): Promise<void> {
-  const { data, error: userError } = await supabase.auth.getUser();
+  const { data, error: userError } = await awaitAccountGenerationLease(lease, () =>
+    supabase.auth.getUser(),
+  );
   lease.assertCurrent();
-  if (userError || !data.user) throw new Error(ACCOUNT_DELETION_USER_UNAVAILABLE);
+  if (userError || !data.user) {
+    // A guarded auth.users delete can commit while its final Edge response is
+    // lost. The owner-independent capability reveals only a terminal receipt;
+    // it cannot start or advance deletion and remains usable after relaunch.
+    const capability = await readAccountDeletionRecoveryCapability();
+    lease.assertCurrent();
+    const completion = capability
+      ? await lookupAccountDeletionCompletion(capability.completionToken, lease.signal)
+      : null;
+    lease.assertCurrent();
+    if (!capability || !completion) throw new Error(ACCOUNT_DELETION_USER_UNAVAILABLE);
+    await markAccountDeletionBackendDeletedFromCompletion(capability.completionToken);
+    lease.assertCurrent();
+    return;
+  }
 
   let appleAuthorizationCode: string | null = null;
   if (userHasAppleIdentity(data.user)) {
@@ -51,12 +137,53 @@ async function requestAccountDeletion(lease: AccountGenerationLease): Promise<vo
     lease.assertCurrent();
     if (!appleAuthorizationCode) throw new Error(APPLE_REAUTHORIZATION_REQUIRED);
   }
+  // Unlike detached provider reads, this durable local write must remain part
+  // of the tracked owner operation so an account boundary drains it before
+  // cleanup can remove the receipt.
+  const completionToken = await armAccountDeletionVendorFreeze(data.user.id);
   lease.assertCurrent();
-  await invokeEdgeFunction('account-deletion', {
-    method: 'POST',
-    body: appleAuthorizationCode ? { appleAuthorizationCode } : {},
-    signal: lease.signal,
-  });
+  // Refuse backend deletion while a locally-started purchase, restore, fetch,
+  // configure, or login can still recreate the provider subscriber afterward.
+  // A force-quit drops the native promise while the durable gate remains armed,
+  // so a later retry can safely continue instead of waiting forever.
+  await awaitAccountGenerationLease(lease, requireRevenueCatOperationsSettledWithinBound);
+  lease.assertCurrent();
+  // Both vendor freezes are hard preconditions: queued telemetry or an
+  // already-started native subscriber initialization could otherwise recreate
+  // provider state after Edge deletes it.
+  await awaitAccountGenerationLease(lease, settleVendorIdentityResetsWithinBound);
+  lease.assertCurrent();
+  const requestBody = {
+    ...(appleAuthorizationCode ? { appleAuthorizationCode } : {}),
+    completionToken,
+  };
+  let primaryError: unknown = null;
+  try {
+    const response = await invokeEdgeFunction<unknown>('account-deletion', {
+      method: 'POST',
+      body: requestBody,
+      signal: lease.signal,
+    });
+    lease.assertCurrent();
+    assertAccountDeletionResponse(response);
+  } catch (error) {
+    lease.assertCurrent();
+    primaryError = error;
+    try {
+      // This never replays the single-use Apple code or deletion actions. It
+      // only proves that the guarded auth-delete transaction already committed
+      // when the worker/process/network lost the final response.
+      const completion = await lookupAccountDeletionCompletion(completionToken, lease.signal);
+      lease.assertCurrent();
+      if (!completion) throw new Error('ACCOUNT_DELETION_NOT_COMPLETE');
+    } catch {
+      lease.assertCurrent();
+      throw primaryError;
+    }
+  }
+  // This durable state is the only authority allowed to remove the receipt
+  // during the subsequent local cleanup, including after a force-quit/relaunch.
+  await markAccountDeletionBackendDeleted(data.user.id);
   lease.assertCurrent();
 }
 
@@ -170,7 +297,9 @@ export async function exportData(): Promise<boolean> {
   return runAccountGenerationOperation(async (lease) => {
     let expectedUserId: string | null = null;
     if (isSupabaseConfigured) {
-      const { data, error } = await supabase.auth.getUser();
+      const { data, error } = await awaitAccountGenerationLease(lease, () =>
+        supabase.auth.getUser(),
+      );
       lease.assertCurrent();
       if (error) throw error;
       const userId = data.user?.id.trim();

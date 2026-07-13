@@ -11,6 +11,7 @@ import {
   redactedErrorKind,
   write,
 } from './lib.mjs';
+import { cleanupLiveTestAccounts } from './live-account-cleanup.mjs';
 
 const errors = [];
 const warnings = [];
@@ -149,7 +150,7 @@ async function createLiveUser(admin) {
   if (signedIn.error) throw signedIn.error;
   const token = signedIn.data.session?.access_token;
   assert(token, 'Supabase did not return a session access token.');
-  return { id: data.user.id, email, token };
+  return { id: data.user.id, client, email, token };
 }
 
 function defaultBody(functionName) {
@@ -594,8 +595,13 @@ async function main() {
         const { error } = await admin.from(table).delete().eq('user_id', user.id);
         if (error) warnings.push(`${table} cleanup warning: ${redactedErrorKind(error)}`);
       }
-      const { error } = await admin.auth.admin.deleteUser(user.id);
-      if (error) warnings.push(`Edge auth user cleanup warning: ${redactedErrorKind(error)}`);
+      await cleanupLiveTestAccounts({
+        admin,
+        users: [user],
+        errors,
+        label: 'Edge auth user cleanup',
+        errorKind: redactedErrorKind,
+      });
     }
   }
 
