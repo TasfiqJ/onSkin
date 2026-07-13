@@ -56,6 +56,10 @@ describe('Pro-gated route contracts', () => {
 
     expect(route).toContain('conflictCheckAccess');
     expect(route).toContain('recordFreeConflictCheckRuleId');
+    expect(route).toContain("setConflictQuota({ status: 'unavailable', ruleIds: null })");
+    expect(route).toContain('const quotaClaimPending =');
+    expect(route).toContain('access?.shouldRecord === true');
+    expect(route).not.toContain('queueMicrotask');
     expect(route).toContain('<ProGate feature="conflict_checks">');
   });
 

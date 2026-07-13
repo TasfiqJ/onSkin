@@ -35,16 +35,23 @@ import {
   conflictCheckAccess,
   loadFreeConflictCheckRuleIds,
   recordFreeConflictCheckRuleId,
+  type ConflictQuotaRead,
 } from '@/features/subscription/conflictQuota';
 import { ProGate } from '@/features/subscription/ProGate';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
+import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { BRAND } from '@/lib/brand';
 import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { devWarn } from '@/lib/observability/safeLog';
-import { isOwnerQueryScopeCurrent, queryKeys } from '@/lib/query/queryKeys';
+import {
+  isOwnerQueryScopeCurrent,
+  queryKeys,
+  runOwnerQueryOperation,
+  type OwnerQueryScope,
+} from '@/lib/query/queryKeys';
 import { readLocalDateBoundarySnapshot } from '@/lib/query/queryDateBoundaryCore';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
@@ -154,26 +161,34 @@ function persistedChoice(choice: 'keep' | 'use_together'): ConflictUserChoice {
   return choice === 'use_together' ? 'use_together' : 'accept_suggested_timing';
 }
 
-async function mirrorChoice(c: DetectedConflict, userChoice: ConflictUserChoice): Promise<void> {
+async function mirrorChoice(
+  ownerScope: OwnerQueryScope,
+  c: DetectedConflict,
+  userChoice: ConflictUserChoice,
+): Promise<void> {
   try {
-    const { data } = await supabase.auth.getUser();
-    if (!data.user?.id || !c.productAId || !c.productBId) return;
-    const [productAId, productBId] = [c.productAId, c.productBId].sort();
-    const { error } = await supabase.from('routine_conflicts').upsert(
-      {
-        user_id: data.user.id,
-        rule_id: c.rule.id,
-        product_a_id: productAId,
-        product_b_id: productBId,
-        computed_severity: c.computedSeverity,
-        status: userChoice === 'use_together' ? 'overridden' : 'accepted',
-        user_choice: userChoice,
-        rule_version: c.rule.ruleVersion,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'user_id,rule_id,product_a_id,product_b_id' },
-    );
-    if (error) throw new Error('SUPABASE_ROUTINE_CONFLICT_UPSERT_FAILED');
+    await runOwnerQueryOperation(ownerScope, async (lease) => {
+      const owner = await captureAuthenticatedAccountOwner(lease);
+      if (!owner || !c.productAId || !c.productBId) return;
+      const [productAId, productBId] = [c.productAId, c.productBId].sort();
+      lease.assertCurrent();
+      const { error } = await supabase.from('routine_conflicts').upsert(
+        {
+          user_id: owner.userId,
+          rule_id: c.rule.id,
+          product_a_id: productAId,
+          product_b_id: productBId,
+          computed_severity: c.computedSeverity,
+          status: userChoice === 'use_together' ? 'overridden' : 'accepted',
+          user_choice: userChoice,
+          rule_version: c.rule.ruleVersion,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id,rule_id,product_a_id,product_b_id' },
+      );
+      lease.assertCurrent();
+      if (error) throw new Error('SUPABASE_ROUTINE_CONFLICT_UPSERT_FAILED');
+    });
   } catch (error) {
     devWarn('routine_conflict_mirror_upsert_failed', error);
     /* best-effort until backend configured (B-SUPABASE) */
@@ -181,20 +196,24 @@ async function mirrorChoice(c: DetectedConflict, userChoice: ConflictUserChoice)
 }
 
 async function recordChoice(
+  ownerScope: OwnerQueryScope,
   c: DetectedConflict,
   choice: 'keep' | 'use_together',
 ): Promise<ConflictChoices> {
   // Local-first so the choice sticks offline and the app stops re-nagging
   // immediately (docs/03 §7); the server mirror below is best-effort.
-  const userChoice = persistedChoice(choice);
-  const conflictChoices = await setConflictChoice(c, userChoice);
-  track('conflict_resolution_chosen', {
-    action: choice === 'use_together' ? 'use_together' : 'keep',
-    source: 'detail',
+  return runOwnerQueryOperation(ownerScope, async (lease) => {
+    const userChoice = persistedChoice(choice);
+    const conflictChoices = await setConflictChoice(c, userChoice);
+    lease.assertCurrent();
+    track('conflict_resolution_chosen', {
+      action: choice === 'use_together' ? 'use_together' : 'keep',
+      source: 'detail',
+    });
+    if (choice === 'use_together') track('conflict_overridden', { source: 'detail' });
+    void mirrorChoice(ownerScope, c, userChoice);
+    return conflictChoices;
   });
-  if (choice === 'use_together') track('conflict_overridden', { source: 'detail' });
-  void mirrorChoice(c, userChoice);
-  return conflictChoices;
 }
 
 function firstSearchParam(value: string | string[] | undefined): string | null {
@@ -236,7 +255,7 @@ export default function ConflictSheet() {
   const invalidIdentity = incompletePair || Boolean(subjectProductId && requestedPair);
   const { data } = useShelf();
   const entitlement = useEntitlement();
-  const [seenRuleIds, setSeenRuleIds] = useState<string[] | null>(null);
+  const [conflictQuota, setConflictQuota] = useState<ConflictQuotaRead | null>(null);
   const ruleMatches = data?.conflicts.filter((candidate) => candidate.rule.id === ruleId) ?? [];
   const conflict = invalidIdentity
     ? undefined
@@ -265,21 +284,30 @@ export default function ConflictSheet() {
   const backdrop = isSafety ? colors.night : 'rgba(32,27,21,0.45)';
   const sheetBg = isSafety ? colors.nightSurface : colors.paper;
   const grabber = isSafety ? NIGHT_GRABBER : 'rgba(32,27,21,0.15)';
+  const quotaAvailable =
+    conflictQuota?.status === 'missing' || conflictQuota?.status === 'available';
+  const quotaRuleIds = conflictQuota?.ruleIds ?? [];
   const access =
-    conflict && entitlement.data && seenRuleIds
+    conflict && entitlement.data && (entitlement.data.isPro || conflictQuota)
       ? conflictCheckAccess({
           isPro: entitlement.data.isPro,
           ruleId: conflict.rule.id,
-          seenRuleIds,
+          seenRuleIds: quotaRuleIds,
+          quotaAvailable,
         })
       : null;
 
   useEffect(() => {
     let alive = true;
-    void loadFreeConflictCheckRuleIds().then((ids) => {
-      if (!alive) return;
-      setSeenRuleIds(ids);
-    });
+    void loadFreeConflictCheckRuleIds()
+      .then((result) => {
+        if (!alive) return;
+        setConflictQuota(result);
+      })
+      .catch(() => {
+        if (!alive) return;
+        setConflictQuota({ status: 'unavailable', ruleIds: null });
+      });
     return () => {
       alive = false;
     };
@@ -289,28 +317,29 @@ export default function ConflictSheet() {
     if (!conflictRuleId || !access?.shouldRecord) return;
 
     let alive = true;
-    const current = seenRuleIds ?? [];
-    const optimistic = current.includes(conflictRuleId) ? current : [...current, conflictRuleId];
-    queueMicrotask(() => {
-      if (alive) setSeenRuleIds(optimistic);
-    });
-
     void recordFreeConflictCheckRuleId(conflictRuleId)
-      .then((ids) => {
+      .then((result) => {
         if (!alive) return;
-        setSeenRuleIds(ids);
+        setConflictQuota(result);
       })
       .catch(() => {
         if (!alive) return;
-        setSeenRuleIds(optimistic);
+        setConflictQuota({ status: 'unavailable', ruleIds: null });
       });
 
     return () => {
       alive = false;
     };
-  }, [access?.shouldRecord, conflictRuleId, seenRuleIds]);
+  }, [access?.shouldRecord, conflictRuleId]);
 
-  if (conflict && (entitlement.isLoading || !entitlement.data || !seenRuleIds)) {
+  const quotaClaimPending = !entitlement.data?.isPro && access?.shouldRecord === true;
+  if (
+    conflict &&
+    (entitlement.isLoading ||
+      !entitlement.data ||
+      (!entitlement.data.isPro && !conflictQuota) ||
+      quotaClaimPending)
+  ) {
     return <View className="flex-1" style={{ backgroundColor: backdrop }} />;
   }
 
@@ -587,7 +616,7 @@ function StandardBody({
     setSavingChoice(choice);
     setSaveFailed(false);
     try {
-      const conflictChoices = await recordChoice(conflict, choice);
+      const conflictChoices = await recordChoice(ownerScope, conflict, choice);
       const boundary = readLocalDateBoundarySnapshot();
       if (isOwnerQueryScopeCurrent(ownerScope)) {
         const shelfQueryKey = queryKeys.shelf(ownerScope, boundary);
