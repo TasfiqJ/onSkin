@@ -16,7 +16,15 @@ Before any `PHASE9_*_PASS=true` flag or `PHASE9_SIGNED_OFF_BY` value is accepted
 
 Generated QA packets are supporting artifacts, not launch signoff by themselves. The packet must hash the packet builder, every Phase 9 verifier script, `.env.example`, the RC template/source docs required by the smoke gate, and any selected RC folder, and its Markdown summary must show whether it was generated from a clean or dirty Git worktree so reviewers can reject stale or mixed-worktree evidence.
 
-Generated live evidence must also be minimized. Cleanup warnings may record only redacted error kinds or stable codes; they must not include raw provider/database messages, temporary test emails, synthetic order IDs, tokens, URLs, or other diagnostic payloads.
+Generated live evidence must also be minimized. Cleanup failures are blocking errors, not warnings. Evidence may record only authored assertion text, redacted error kinds, or stable codes; it must not include raw provider/database messages, temporary test emails, synthetic order IDs, tokens, URLs, or other diagnostic payloads.
+
+## RLS Evidence Contract
+
+The migration-derived public-schema inventory is 63 tables: 30 owner-client private tables, 10 service-only private tables, and 23 authenticated catalog/editorial tables. Every table must be classified exactly once and have RLS enabled. Every one of the 40 private tables must be probed for cross-user access, a real signed-anonymous session, and a publishable-key client with no session; these identities are not interchangeable.
+
+Negative database assertions accept only the exact expected PostgreSQL/PostgREST code, or exact empty rows for operations whose RLS semantics permit that result. Negative Storage assertions accept only typed authorization outcomes, with operation-specific not-found or empty-result allowances plus state-preserving owner/admin reads. Network failures, invalid requests or JWTs, missing buckets, and server failures must fail the harness. Cleanup must verify that synthetic database rows, Auth users, and Storage objects are gone.
+
+The credential-free behavioral smoke and static contract prove the harness/source shape only. DB-09 remains live-blocked until all migrations, including `20260713000045_anonymous_photo_storage_guard.sql`, pass a reviewed reset and the full matrix produces redacted, clean-revision staging and production evidence. Evidence flags cannot substitute for those runs.
 
 ## Current Non-Code Blockers
 

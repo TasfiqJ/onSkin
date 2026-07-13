@@ -3,7 +3,14 @@ import { randomUUID } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
-import { placeholderEnvValue } from '../phase9/lib.mjs';
+import {
+  HarnessAssertionError,
+  deniedInsertResult,
+  deniedReadOrMutationResult,
+  harnessErrorDetail,
+  placeholderEnvValue,
+  redactedErrorKind,
+} from '../phase9/lib.mjs';
 
 const root = process.cwd();
 
@@ -46,17 +53,7 @@ function readScriptAppEnvironment() {
 }
 
 function assert(condition, message) {
-  if (!condition) throw new Error(message);
-}
-
-function redactedErrorKind(error) {
-  if (error instanceof Error) return error.name || 'Error';
-  if (error && typeof error === 'object') {
-    const code = 'code' in error ? String(error.code ?? '') : '';
-    if (/^[A-Za-z0-9_-]{1,40}$/.test(code)) return `code:${code}`;
-    return 'object';
-  }
-  return typeof error;
+  if (!condition) throw new HarnessAssertionError(message);
 }
 
 function assertEnv(name, value) {
@@ -83,7 +80,7 @@ function publicClient() {
   });
 }
 
-async function createSmokeUser(label) {
+async function createSmokeUser(label, cleanupUsers) {
   const suffix = `${Date.now()}-${randomUUID().slice(0, 8)}`;
   const email = `phase2-${label}-${suffix}@example.invalid`;
   const password = `Phase2-${suffix}-Password!`;
@@ -94,24 +91,32 @@ async function createSmokeUser(label) {
     user_metadata: { phase2_rls_smoke: true },
   });
   if (error) throw error;
-  if (!data.user) throw new Error(`Supabase did not return a user for ${label}`);
+  assert(Boolean(data.user), `Supabase did not return a user for ${label}`);
+  const createdUser = data.user;
+  cleanupUsers.push({ id: createdUser.id });
 
   const client = publicClient();
   const signIn = await client.auth.signInWithPassword({ email, password });
   if (signIn.error) throw signIn.error;
-  return { id: data.user.id, email, client };
+  assert(
+    signIn.data.user?.id === createdUser.id,
+    `Signed-in identity did not match the created ${label} smoke user.`,
+  );
+  return { id: createdUser.id, client };
 }
 
 async function cleanup(users, catalogProductIds = []) {
-  for (const productId of catalogProductIds) {
-    const { error } = await admin.from('products').delete().eq('id', productId);
-    if (error) console.warn(`WARN catalog product cleanup failed: ${redactedErrorKind(error)}`);
-  }
+  const failures = [];
   for (const user of users) {
     if (!user?.id) continue;
     const { error } = await admin.auth.admin.deleteUser(user.id);
-    if (error) console.warn(`WARN smoke user cleanup failed: ${redactedErrorKind(error)}`);
+    if (error) failures.push(`user:${redactedErrorKind(error)}`);
   }
+  for (const productId of catalogProductIds) {
+    const { error } = await admin.from('products').delete().eq('id', productId);
+    if (error) failures.push(`catalog-product:${redactedErrorKind(error)}`);
+  }
+  assert(failures.length === 0, `Smoke cleanup failed (${failures.join(', ')}).`);
 }
 
 async function insertOne(client, table, payload, select = '*') {
@@ -127,270 +132,331 @@ async function upsertOne(client, table, payload, select = '*') {
 }
 
 async function expectOwnRead(client, table, column, value, label) {
-  const { data, error } = await client.from(table).select('*').eq(column, value);
+  const { data, error } = await client.from(table).select(column).eq(column, value);
   if (error) throw error;
   assert(data.length >= 1, `${label}: expected at least one visible row`);
 }
 
 async function expectNoPrivateRead(client, table, column, value, label) {
-  const { data, error } = await client.from(table).select('*').eq(column, value);
-  if (error) return;
-  assert(data.length === 0, `${label}: private rows were visible`);
+  const result = await client.from(table).select(column).eq(column, value);
+  assert(
+    deniedReadOrMutationResult(result),
+    result.error
+      ? `${label}: expected PostgreSQL 42501 or an exact empty row set; received ${redactedErrorKind(result.error)}`
+      : `${label}: private rows were visible or result was not an exact empty row set`,
+  );
 }
 
 async function expectBlocked(label, promise) {
-  const { error } = await promise;
-  assert(error, `${label}: expected RLS or permission error`);
+  const result = await promise;
+  assert(
+    deniedInsertResult(result),
+    result.error
+      ? `${label}: expected PostgreSQL 42501; received ${redactedErrorKind(result.error)}`
+      : `${label}: insert unexpectedly succeeded`,
+  );
 }
 
 async function expectNoAffectedRows(label, promise) {
-  const { data, error } = await promise;
-  if (error) return;
-  assert(Array.isArray(data) && data.length === 0, `${label}: cross-user write affected rows`);
+  const result = await promise;
+  assert(
+    deniedReadOrMutationResult(result),
+    result.error
+      ? `${label}: expected PostgreSQL 42501 or zero affected rows; received ${redactedErrorKind(result.error)}`
+      : `${label}: cross-user write affected rows or result was not an exact empty row set`,
+  );
 }
 
 const users = [];
 const catalogProductIds = [];
 
-try {
-  const userA = await createSmokeUser('a');
-  const userB = await createSmokeUser('b');
-  users.push(userA, userB);
+async function main() {
+  try {
+    const userA = await createSmokeUser('a', users);
+    const userB = await createSmokeUser('b', users);
 
-  const profile = await upsertOne(userA.client, 'profiles', {
-    id: userA.id,
-    display_name: 'Phase 2 Smoke A',
-    units: 'metric',
-  });
-  await expectOwnRead(userA.client, 'profiles', 'id', profile.id, 'profile own read');
-  await expectNoPrivateRead(userB.client, 'profiles', 'id', profile.id, 'profile cross-user read');
-  await expectNoAffectedRows(
-    'profile cross-user update',
-    userB.client
-      .from('profiles')
-      .update({ display_name: 'bad update' })
-      .eq('id', profile.id)
-      .select('id'),
-  );
+    const profile = await upsertOne(userA.client, 'profiles', {
+      id: userA.id,
+      display_name: 'Phase 2 Smoke A',
+      units: 'metric',
+    });
+    await expectOwnRead(userA.client, 'profiles', 'id', profile.id, 'profile own read');
+    await expectNoPrivateRead(
+      userB.client,
+      'profiles',
+      'id',
+      profile.id,
+      'profile cross-user read',
+    );
+    await expectNoAffectedRows(
+      'profile cross-user update',
+      userB.client
+        .from('profiles')
+        .update({ display_name: 'bad update' })
+        .eq('id', profile.id)
+        .select('id'),
+    );
 
-  const skinProfile = await insertOne(userA.client, 'skin_profiles', {
-    user_id: userA.id,
-    oily_dry: 1,
-    sensitive_resistant: 2,
-    fitzpatrick: 3,
-    goals: ['acne'],
-    completed_at: new Date().toISOString(),
-  });
-  await expectOwnRead(userA.client, 'skin_profiles', 'id', skinProfile.id, 'skin profile own read');
-  await expectNoPrivateRead(
-    userB.client,
-    'skin_profiles',
-    'id',
-    skinProfile.id,
-    'skin profile cross-user read',
-  );
-  await expectBlocked(
-    'skin profile cross-user insert',
-    userB.client.from('skin_profiles').insert({ user_id: userA.id, goals: ['bad'] }),
-  );
+    const skinProfile = await insertOne(userA.client, 'skin_profiles', {
+      user_id: userA.id,
+      oily_dry: 1,
+      sensitive_resistant: 2,
+      fitzpatrick: 3,
+      goals: ['acne'],
+      completed_at: new Date().toISOString(),
+    });
+    await expectOwnRead(
+      userA.client,
+      'skin_profiles',
+      'id',
+      skinProfile.id,
+      'skin profile own read',
+    );
+    await expectNoPrivateRead(
+      userB.client,
+      'skin_profiles',
+      'id',
+      skinProfile.id,
+      'skin profile cross-user read',
+    );
+    await expectBlocked(
+      'skin profile cross-user insert',
+      userB.client.from('skin_profiles').insert({ user_id: userA.id, goals: ['bad'] }),
+    );
 
-  const product = await insertOne(userA.client, 'user_products', {
-    user_id: userA.id,
-    manual_name: 'Phase 2 Cleanser',
-    manual_brand: 'Smoke Test',
-    opened_at: '2026-07-04',
-    pao_months: 12,
-  });
-  await expectOwnRead(userA.client, 'user_products', 'id', product.id, 'shelf own read');
-  await expectNoPrivateRead(
-    userB.client,
-    'user_products',
-    'id',
-    product.id,
-    'shelf cross-user read',
-  );
-  await expectBlocked(
-    'shelf cross-user insert',
-    userB.client.from('user_products').insert({ user_id: userA.id, manual_name: 'bad product' }),
-  );
+    const product = await insertOne(userA.client, 'user_products', {
+      user_id: userA.id,
+      manual_name: 'Phase 2 Cleanser',
+      manual_brand: 'Smoke Test',
+      is_opened: false,
+      opened_at: null,
+      pao_months: null,
+      pao_source: 'unknown',
+      expiry_source: 'estimated',
+    });
+    await expectOwnRead(userA.client, 'user_products', 'id', product.id, 'shelf own read');
+    await expectNoPrivateRead(
+      userB.client,
+      'user_products',
+      'id',
+      product.id,
+      'shelf cross-user read',
+    );
+    await expectBlocked(
+      'shelf cross-user insert',
+      userB.client.from('user_products').insert({
+        user_id: userA.id,
+        manual_name: 'bad product',
+        is_opened: false,
+        opened_at: null,
+        pao_months: null,
+        pao_source: 'unknown',
+        expiry_source: 'estimated',
+      }),
+    );
 
-  const catalogProduct = await insertOne(
-    admin,
-    'products',
-    {
-      name: `Phase 4 Catalog Product ${randomUUID().slice(0, 8)}`,
-      brand: 'Smoke Test',
-      category: 'cleanser',
-      source: 'curated',
-      quality_grade: 'limited',
-      review_status: 'unreviewed',
-    },
-    'id, name',
-  );
-  catalogProductIds.push(catalogProduct.id);
-  await expectOwnRead(
-    userA.client,
-    'products',
-    'id',
-    catalogProduct.id,
-    'catalog product auth read',
-  );
+    const catalogProduct = await insertOne(
+      admin,
+      'products',
+      {
+        name: `Phase 4 Catalog Product ${randomUUID().slice(0, 8)}`,
+        brand: 'Smoke Test',
+        category: 'cleanser',
+        source: 'curated',
+        quality_grade: 'limited',
+        review_status: 'unreviewed',
+      },
+      'id, name',
+    );
+    catalogProductIds.push(catalogProduct.id);
+    await expectOwnRead(
+      userA.client,
+      'products',
+      'id',
+      catalogProduct.id,
+      'catalog product auth read',
+    );
 
-  const correction = await insertOne(userA.client, 'catalog_corrections', {
-    user_id: userA.id,
-    product_id: catalogProduct.id,
-    correction_type: 'wrong_match',
-    description: 'phase4 smoke correction',
-  });
-  await expectOwnRead(
-    userA.client,
-    'catalog_corrections',
-    'id',
-    correction.id,
-    'catalog correction own read',
-  );
-  await expectNoPrivateRead(
-    userB.client,
-    'catalog_corrections',
-    'id',
-    correction.id,
-    'catalog correction cross-user read',
-  );
-  await expectBlocked(
-    'catalog correction cross-user insert',
-    userB.client.from('catalog_corrections').insert({
+    const correction = await insertOne(userA.client, 'catalog_corrections', {
       user_id: userA.id,
       product_id: catalogProduct.id,
       correction_type: 'wrong_match',
-    }),
-  );
+      description: 'phase4 smoke correction',
+    });
+    await expectOwnRead(
+      userA.client,
+      'catalog_corrections',
+      'id',
+      correction.id,
+      'catalog correction own read',
+    );
+    await expectNoPrivateRead(
+      userB.client,
+      'catalog_corrections',
+      'id',
+      correction.id,
+      'catalog correction cross-user read',
+    );
+    await expectBlocked(
+      'catalog correction cross-user insert',
+      userB.client.from('catalog_corrections').insert({
+        user_id: userA.id,
+        product_id: catalogProduct.id,
+        correction_type: 'wrong_match',
+      }),
+    );
 
-  const lookupEvent = await insertOne(userA.client, 'catalog_lookup_events', {
-    user_id: userA.id,
-    lookup_type: 'search',
-    query: 'phase4 smoke',
-    result: 'matched',
-    matched_product_id: catalogProduct.id,
-    quality_grade: 'limited',
-  });
-  await expectOwnRead(
-    userA.client,
-    'catalog_lookup_events',
-    'id',
-    lookupEvent.id,
-    'catalog lookup own read',
-  );
-  await expectNoPrivateRead(
-    userB.client,
-    'catalog_lookup_events',
-    'id',
-    lookupEvent.id,
-    'catalog lookup cross-user read',
-  );
-  await expectBlocked(
-    'catalog lookup cross-user insert',
-    userB.client.from('catalog_lookup_events').insert({
+    const lookupEvent = await insertOne(userA.client, 'catalog_lookup_events', {
       user_id: userA.id,
       lookup_type: 'search',
-      query: 'bad',
+      query: 'phase4 smoke',
       result: 'matched',
-    }),
-  );
+      matched_product_id: catalogProduct.id,
+      quality_grade: 'limited',
+    });
+    await expectOwnRead(
+      userA.client,
+      'catalog_lookup_events',
+      'id',
+      lookupEvent.id,
+      'catalog lookup own read',
+    );
+    await expectNoPrivateRead(
+      userB.client,
+      'catalog_lookup_events',
+      'id',
+      lookupEvent.id,
+      'catalog lookup cross-user read',
+    );
+    await expectBlocked(
+      'catalog lookup cross-user insert',
+      userB.client.from('catalog_lookup_events').insert({
+        user_id: userA.id,
+        lookup_type: 'search',
+        query: 'bad',
+        result: 'no_match',
+      }),
+    );
 
-  const routine = await insertOne(userA.client, 'routines', {
-    user_id: userA.id,
-    type: 'AM',
-    name: 'Phase 2 AM',
-  });
-  const step = await insertOne(userA.client, 'routine_steps', {
-    routine_id: routine.id,
-    user_product_id: product.id,
-    step_order: 1,
-    frequency: 'daily',
-    instructions: 'Smoke test step',
-  });
-  await expectOwnRead(userA.client, 'routines', 'id', routine.id, 'routine own read');
-  await expectNoPrivateRead(userB.client, 'routines', 'id', routine.id, 'routine cross-user read');
-  await expectOwnRead(userA.client, 'routine_steps', 'id', step.id, 'routine step own read');
-  await expectNoPrivateRead(
-    userB.client,
-    'routine_steps',
-    'id',
-    step.id,
-    'routine step cross-user read',
-  );
-  await expectBlocked(
-    'routine step cross-user insert',
-    userB.client.from('routine_steps').insert({ routine_id: routine.id, step_order: 2 }),
-  );
+    const routine = await insertOne(userA.client, 'routines', {
+      user_id: userA.id,
+      type: 'AM',
+      name: 'Phase 2 AM',
+    });
+    const step = await insertOne(userA.client, 'routine_steps', {
+      routine_id: routine.id,
+      user_product_id: product.id,
+      step_order: 1,
+      frequency: 'daily',
+      instructions: 'Smoke test step',
+    });
+    await expectOwnRead(userA.client, 'routines', 'id', routine.id, 'routine own read');
+    await expectNoPrivateRead(
+      userB.client,
+      'routines',
+      'id',
+      routine.id,
+      'routine cross-user read',
+    );
+    await expectOwnRead(userA.client, 'routine_steps', 'id', step.id, 'routine step own read');
+    await expectNoPrivateRead(
+      userB.client,
+      'routine_steps',
+      'id',
+      step.id,
+      'routine step cross-user read',
+    );
+    await expectBlocked(
+      'routine step cross-user insert',
+      userB.client.from('routine_steps').insert({ routine_id: routine.id, step_order: 2 }),
+    );
 
-  const consent = await insertOne(userA.client, 'consents', {
-    user_id: userA.id,
-    consent_type: 'health_data_collection',
-    granted: true,
-    version: 'phase2-smoke',
-    consent_text_hash: 'phase2-smoke',
-  });
-  await expectOwnRead(userA.client, 'consents', 'id', consent.id, 'consent own read');
-  await expectNoPrivateRead(userB.client, 'consents', 'id', consent.id, 'consent cross-user read');
-  await expectBlocked(
-    'consent cross-user insert',
-    userB.client.from('consents').insert({
+    const consent = await insertOne(userA.client, 'consents', {
       user_id: userA.id,
       consent_type: 'health_data_collection',
       granted: true,
-      version: 'bad',
-    }),
-  );
+      version: 'phase2-smoke',
+      consent_text_hash: 'phase2-smoke',
+    });
+    await expectOwnRead(userA.client, 'consents', 'id', consent.id, 'consent own read');
+    await expectNoPrivateRead(
+      userB.client,
+      'consents',
+      'id',
+      consent.id,
+      'consent cross-user read',
+    );
+    await expectBlocked(
+      'consent cross-user insert',
+      userB.client.from('consents').insert({
+        user_id: userA.id,
+        consent_type: 'health_data_collection',
+        granted: true,
+        version: 'bad',
+        consent_text_hash: 'bad',
+      }),
+    );
 
-  const entitlementExpiresAt = new Date(Date.now() + 7 * 86_400_000).toISOString();
-  const entitlementWrite = await admin.from('entitlements').upsert({
-    user_id: userA.id,
-    entitlement: 'pro',
-    is_active: true,
-    product_id: 'phase2_smoke',
-    expires_at: entitlementExpiresAt,
-    store: 'app_granted',
-    period_type: 'reverse_trial',
-    will_renew: false,
-    original_purchase_at: new Date().toISOString(),
-  });
-  if (entitlementWrite.error) throw entitlementWrite.error;
-  await expectOwnRead(userA.client, 'entitlements', 'user_id', userA.id, 'entitlement own read');
-  await expectNoPrivateRead(
-    userB.client,
-    'entitlements',
-    'user_id',
-    userA.id,
-    'entitlement cross-user read',
-  );
-  await expectNoAffectedRows(
-    'entitlement client update',
-    userA.client
-      .from('entitlements')
-      .update({ is_active: false })
-      .eq('user_id', userA.id)
-      .select('user_id'),
-  );
+    const entitlementExpiresAt = new Date(Date.now() + 7 * 86_400_000).toISOString();
+    const entitlementWrite = await admin.from('entitlements').upsert({
+      user_id: userA.id,
+      entitlement: 'pro',
+      is_active: true,
+      product_id: 'phase2_smoke',
+      expires_at: entitlementExpiresAt,
+      store: 'app_granted',
+      period_type: 'reverse_trial',
+      will_renew: false,
+      original_purchase_at: new Date().toISOString(),
+    });
+    if (entitlementWrite.error) throw entitlementWrite.error;
+    await expectOwnRead(userA.client, 'entitlements', 'user_id', userA.id, 'entitlement own read');
+    await expectNoPrivateRead(
+      userB.client,
+      'entitlements',
+      'user_id',
+      userA.id,
+      'entitlement cross-user read',
+    );
+    await expectNoAffectedRows(
+      'entitlement client update',
+      userA.client
+        .from('entitlements')
+        .update({ is_active: false })
+        .eq('user_id', userA.id)
+        .select('user_id'),
+    );
 
-  const anon = publicClient();
-  await expectNoPrivateRead(anon, 'profiles', 'id', userA.id, 'anonymous profile read');
-  await expectNoPrivateRead(
-    anon,
-    'skin_profiles',
-    'user_id',
-    userA.id,
-    'anonymous skin profile read',
-  );
-  await expectNoPrivateRead(
-    anon,
-    'entitlements',
-    'user_id',
-    userA.id,
-    'anonymous entitlement read',
-  );
+    const unauthenticated = publicClient();
+    await expectNoPrivateRead(
+      unauthenticated,
+      'profiles',
+      'id',
+      userA.id,
+      'unauthenticated profile read',
+    );
+    await expectNoPrivateRead(
+      unauthenticated,
+      'skin_profiles',
+      'user_id',
+      userA.id,
+      'unauthenticated skin profile read',
+    );
+    await expectNoPrivateRead(
+      unauthenticated,
+      'entitlements',
+      'user_id',
+      userA.id,
+      'unauthenticated entitlement read',
+    );
 
-  console.log('OK Supabase RLS smoke tests passed.');
-} finally {
-  await cleanup(users, catalogProductIds);
+    console.log('OK Supabase RLS smoke tests passed.');
+  } finally {
+    await cleanup(users, catalogProductIds);
+  }
 }
+
+main().catch((error) => {
+  console.error(`FAIL Supabase RLS smoke tests: ${harnessErrorDetail(error)}`);
+  process.exitCode = 1;
+});

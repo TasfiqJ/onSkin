@@ -6827,7 +6827,7 @@ fail-closed resolvers. The staging wrapper validates the project reference,
 checks every CLI exit, sets the hosted staging environment before deploy, and
 replaces generated database types only after shape validation. Credential-free
 Edge, manifest, policy, and deployment-contract checks pass. No live Supabase
-project, deployment, clean 43-migration reset, advisor/restore/load result, or
+project, deployment, clean 44-migration reset, advisor/restore/load result, or
 two-user RLS proof is claimed; the dated DB gap matrix keeps those gates open.
 
 Private-state follow-ups atomized review/expiry/activation markers and routine,
@@ -6857,6 +6857,32 @@ The independently source-audited US Wave 1 privacy and consumer-health packet
 remains launch-blocked. It cannot substitute for current, version-specific US
 privacy/consumer-protection, biometric, security, subscription, UGC, and product
 counsel decisions tied to the actual release data flows.
+
+### DB-09 exhaustive RLS source contract (2026-07-13)
+
+Hardened the credential-free and live Supabase adversarial boundary across all
+63 migrated public tables: 30 owner-client private, 10 service-only private, and
+23 authenticated catalog/editorial. All 40 private tables must now have exactly
+one positive-control probe plus permanent cross-user, real signed-anonymous, and
+no-session isolation checks. The harness uses exact PostgreSQL/PostgREST and
+typed Storage outcomes, verifies allowed owner and consent-free anonymous-local
+photo branches, rejects network/configuration false positives, and blocks on
+residual database rows, Auth users, or Storage objects. Policy extraction is
+statement-bounded so one policy cannot satisfy another policy's static guard.
+
+Audit found that a signed-anonymous account with a self-written cloud-photo
+consent could still upload or replace bytes in the private `photos` bucket.
+Forward-only migration `20260713000045_anonymous_photo_storage_guard.sql`
+closes that gap while retaining owner-prefixed select/delete for legacy access
+and cleanup. The 10-check adversarial contract smoke, static adversarial gate,
+and Supabase policy lint pass; the static gate retains the expected missing-live
+staging/production warnings. No local PostgreSQL reset, hosted Supabase run,
+Turnstile result, raw provider artifact, or UI/device evidence is claimed.
+
+The same audit exposed the next DB-10 source gap: `reverse_trial_grants` is
+service-only to clients but is still queried through the caller-RLS export
+registry, so a user export can silently omit it. That path remains explicitly
+open for the next checkpoint before live data-rights evidence.
 
 ## Open questions for the founder
 

@@ -55,6 +55,7 @@ const localVerifierFiles = [
   'scripts/phase9/release-contact-smoke.mjs',
   'scripts/phase9/evidence-normalization-smoke.mjs',
   'scripts/phase9/release-smoke.mjs',
+  'scripts/phase9/rls-adversarial-smoke.mjs',
   'scripts/phase9/rls-adversarial.mjs',
   'scripts/phase9/edge-auth-smoke.mjs',
   'scripts/phase9/edge-functions-check.mjs',
@@ -106,7 +107,9 @@ const requiredFiles = [
   'supabase/migrations/20260705000034_phase9_security_definer_hardening.sql',
   'supabase/migrations/20260711000038_shelf_freshness_invariants.sql',
   'supabase/migrations/20260711000039_replenishment_alert_opt_in.sql',
+  'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
   'scripts/phase9/lib.mjs',
+  'scripts/phase2/supabase-rls-smoke.mjs',
   'scripts/phase9/build-release-qa-packet.mjs',
   ...localVerifierFiles,
   ...liveHarnessFiles,
@@ -168,6 +171,7 @@ for (const key of [
   'ORDER_REPORT_POLL_SECRET',
   'REVENUECAT_WEBHOOK_MAX_BYTES',
   'PHASE9_RUN_LIVE_SUPABASE_ADVERSARIAL',
+  'PHASE9_ANONYMOUS_CAPTCHA_TOKEN',
   'PHASE9_ALLOW_PRODUCTION_LIVE_SUPABASE_ADVERSARIAL',
   'PHASE9_RUN_LIVE_EDGE_AUTH',
   'PHASE9_ALLOW_PRODUCTION_LIVE_EDGE_AUTH',
@@ -204,6 +208,7 @@ const integerInRange = (value, min, max) => {
 
 for (const script of [
   'phase9:release-smoke',
+  'phase9:rls-adversarial-smoke',
   'phase9:rls-adversarial',
   'phase9:supabase-policy-lint',
   'phase9:live-supabase-adversarial',
@@ -231,6 +236,19 @@ for (const script of [
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
+block(
+  errors,
+  /phase9:rls-adversarial-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? '') &&
+    /phase9:rls-adversarial/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
+  'phase9:verify must run the credential-free RLS contract and static adversarial gates.',
+);
+block(
+  errors,
+  /phase9:rls-adversarial-smoke/.test(packageJson.scripts?.['launch:verify'] ?? '') &&
+    /phase9:rls-adversarial/.test(packageJson.scripts?.['launch:verify'] ?? '') &&
+    /phase9:supabase-policy-lint/.test(packageJson.scripts?.['launch:verify'] ?? ''),
+  'launch:verify must run the RLS contract, static adversarial, and Supabase policy gates.',
+);
 block(
   errors,
   /phase9:storage-path-privacy-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
@@ -340,7 +358,7 @@ for (const file of liveHarnessFiles) {
     !/function\s+placeholder\s*\(/.test(source),
     `${file} must not carry a local placeholder regex.`,
   );
-  if (/cleanup warning/i.test(source)) {
+  if (/cleanup (?:warning|failed)/i.test(source)) {
     block(
       errors,
       /redactedErrorKind/.test(source),
@@ -348,7 +366,7 @@ for (const file of liveHarnessFiles) {
     );
     block(
       errors,
-      !/cleanup warning[^\n]*(?:\.message|resultError\(error\)|user\.email|externalOrderId)/i.test(
+      !/cleanup (?:warning|failed)[^\n]*(?:\.message|resultError\(error\)|user\.email|externalOrderId)/i.test(
         source,
       ),
       `${file} cleanup warnings must not include raw messages, user emails, or synthetic identifiers.`,

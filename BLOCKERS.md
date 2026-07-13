@@ -354,11 +354,16 @@ attached.
 
 ## B-SUPABASE - Live backend
 
-Status: `stubbed`
+Status: `source-hardened / live-blocked`
 
-The repo contains migrations, Supabase client code, generated types, Edge
-Functions, a staging deploy wrapper, and a live-project RLS smoke script. There
-is no live staging/production Supabase project verified for release.
+The repo contains 44 migrations, Supabase client code, hand-authored stale
+types, Edge Functions, a staging deploy wrapper, and an exhaustive live-project
+RLS harness. The credential-free DB-09 contract classifies all 63 public tables,
+probes all 40 private tables across permanent, signed-anonymous, and
+unauthenticated identities, rejects non-authorization false positives, blocks
+on cleanup residue, and passes its 10-check behavioral smoke. Migration `0045`
+closes signed-anonymous cloud-photo insert/update access. There is no reviewed
+local reset or live staging/production Supabase project verified for release.
 
 Next action:
 
@@ -366,23 +371,27 @@ Next action:
 - fill `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY`;
 - run `npm run phase2:check-env:strict`;
-- apply all migrations with `scripts/phase2/deploy-supabase-staging.ps1`;
-- execute `20260710000037_routine_conflict_choice_identity.sql` against staging
-  twice with reversed/duplicate fixtures, explicit-choice retention, owner-RLS,
-  and canonical-upsert evidence before production promotion;
+- reset a clean local stack through all 44 migrations, then apply them with
+  `scripts/phase2/deploy-supabase-staging.ps1`;
 - regenerate `packages/types/src/database.types.ts`;
 - deploy `revenuecat-webhook`, `account-deletion`, `data-export`, and
   `order-report-poll`;
 - run Security Advisor and Performance Advisor;
-- run `npm run phase2:rls-smoke` with at least two users plus anonymous account
-  flows.
+- configure anonymous Auth and Turnstile, then run
+  `npm run phase9:live-supabase-adversarial:strict` in staging and production;
+- retain clean-revision, redacted artifacts covering both permanent users, the
+  signed-anonymous user, the no-session client, all 40 private tables, exact
+  database/Storage outcomes, and zero cleanup residue.
 
 Exit criteria:
 
-- current user can only read/write their own data;
+- current user can only read/write their own data and signed-anonymous accounts
+  cannot upload or replace cloud photo bytes;
 - account deletion and data export work against live backend;
 - Edge Functions return correct status and logs;
-- generated DB types match live schema.
+- generated DB types match live schema;
+- staging and production adversarial artifacts contain no synthetic residue or
+  raw provider/database/user identifiers.
 
 ## B-APPLE - Apple Developer and App Store Connect
 

@@ -6,6 +6,7 @@
 | Lint                  | TBD        | TBD    | TBD      |
 | Unit tests            | TBD        | TBD    | TBD      |
 | Phase 9 release smoke | TBD        | TBD    | TBD      |
+| RLS contract smoke    | TBD        | TBD    | TBD      |
 | RLS adversarial       | TBD        | TBD    | TBD      |
 | Edge auth             | TBD        | TBD    | TBD      |
 | Data rights           | TBD        | TBD    | TBD      |

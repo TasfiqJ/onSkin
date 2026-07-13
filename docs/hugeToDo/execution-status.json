@@ -726,12 +726,14 @@
     {
       "id": "DB-09",
       "status": "in_progress",
-      "blockedBy": ["DB-08", "ACCT-03"],
-      "nextAction": "Add explicit adversarial cases for swapped canonical conflict pairs, Shelf provenance invariants, community_moderation_events client denial, and every anonymous private-table denial; then run the full two-user matrix on staging with redacted evidence.",
+      "blockedBy": ["DB-05", "DB-06", "DB-07", "DB-08", "ACCT-03"],
+      "nextAction": "Reset and apply all 44 migrations in a reviewed local stack, then run the exhaustive 40-private-table permanent-user, signed-anonymous, and unauthenticated matrix against staging and production with real anonymous Auth and Turnstile behavior where configured; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, or objects.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",
+        "scripts/phase9/rls-adversarial-smoke.mjs",
         "scripts/phase9/supabase-policy-lint.mjs",
+        "supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql",
         "docs/phase-9/generated/live-supabase-adversarial.json"
       ]
     },
@@ -739,7 +741,7 @@
       "id": "DB-10",
       "status": "in_progress",
       "blockedBy": ["DB-09", "ACCT-03"],
-      "nextAction": "Run the staging privacy-rights matrix with owner A and B data, covering complete export, deletion, every consent withdrawal, vendor deletion, account-boundary cancellation, signed URLs, storage and backups, temporary files, interrupted cleanup, and post-delete denial.",
+      "nextAction": "Move reverse_trial_grants from the caller-RLS export registry to a service-role query filtered by the verified user ID and add a registry contract preventing service-only export omissions; then run the staging privacy-rights matrix with owner A and B data, covering complete export, deletion, every consent withdrawal, vendor deletion, account-boundary cancellation, signed URLs, storage and backups, interrupted cleanup, and post-delete denial.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "supabase/functions/account-deletion",

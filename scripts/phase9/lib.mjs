@@ -7,6 +7,125 @@ import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contrac
 export const root = process.cwd();
 export const strict = process.argv.includes('--strict');
 
+export const OWNER_LINKED_PRIVATE_TABLES = Object.freeze([
+  'profiles',
+  'skin_profiles',
+  'user_products',
+  'routines',
+  'routine_steps',
+  'routine_completions',
+  'routine_conflicts',
+  'active_ramp',
+  'shelf_scans',
+  'cycles',
+  'cycle_nights',
+  'streak_freezes',
+  'notification_preferences',
+  'notification_log',
+  'consents',
+  'photos',
+  'entitlements',
+  'recommendation_preferences',
+  'recommendations',
+  'catalog_corrections',
+  'catalog_lookup_events',
+  'commerce_click_events',
+  'community_blocks',
+  'community_questions',
+  'community_reactions',
+  'community_reports',
+  'photo_trend',
+  'ask_sessions',
+  'ask_turn_audit',
+  'ask_safety_audit',
+]);
+
+export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
+  'reverse_trial_grants',
+  'subscriptions_events',
+  'order_attributions',
+  'obf_contribution_queue',
+  'catalog_import_batches',
+  'catalog_quality_reports',
+  'community_moderation_events',
+  'waitlist_signups',
+  'growth_events',
+  'edge_rate_limits',
+]);
+
+export const AUTHENTICATED_CATALOG_TABLES = Object.freeze([
+  'ingredients',
+  'ingredient_synonyms',
+  'ingredient_tags',
+  'products',
+  'product_ingredients',
+  'conflict_rules',
+  'ingredient_pao_defaults',
+  'sequencing_rules',
+  'affiliate_links',
+  'creator_stacks',
+  'creator_stack_items',
+  'community_topics',
+  'community_notes',
+  'catalog_sources',
+  'brands',
+  'product_categories',
+  'product_barcodes',
+  'ingredient_tag_definitions',
+  'ingredient_tag_assignments',
+  'product_ingredient_lists',
+  'product_ingredient_tokens',
+  'product_active_bands',
+  'product_pao_expiry',
+]);
+
+export const PRIVATE_PUBLIC_TABLES = Object.freeze([
+  ...OWNER_LINKED_PRIVATE_TABLES,
+  ...SERVICE_ONLY_PRIVATE_TABLES,
+]);
+
+export function tableClassificationIssues({ createdTables, rlsTables, classifications }) {
+  const created = new Set(createdTables);
+  const rls = new Set(rlsTables);
+  const classificationsByTable = new Map();
+
+  for (const [classification, tables] of classifications) {
+    for (const table of tables) {
+      const existing = classificationsByTable.get(table) ?? [];
+      existing.push(classification);
+      classificationsByTable.set(table, existing);
+    }
+  }
+
+  const issues = [];
+  for (const table of created) {
+    const matches = classificationsByTable.get(table) ?? [];
+    if (matches.length === 0) {
+      issues.push({ kind: 'unclassified', table, classifications: [] });
+    } else if (matches.length > 1) {
+      issues.push({ kind: 'duplicate', table, classifications: matches });
+    }
+  }
+
+  for (const [table, matches] of classificationsByTable) {
+    if (!created.has(table)) {
+      issues.push({ kind: 'stale', table, classifications: matches });
+    } else if (!rls.has(table)) {
+      issues.push({ kind: 'rls-disabled', table, classifications: matches });
+    }
+  }
+
+  return issues;
+}
+
+export function sqlPolicyStatement(source, policyName) {
+  const escapedName = String(policyName).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const match = String(source).match(
+    new RegExp(`create\\s+policy\\s+(?:"${escapedName}"|${escapedName})\\s+on\\s+[\\s\\S]*?;`, 'i'),
+  );
+  return match?.[0] ?? null;
+}
+
 export function abs(path) {
   return resolve(root, path);
 }
@@ -219,14 +338,88 @@ export function productionSupportEmail(value) {
   return Boolean(normalizeProductionSupportEmail(value));
 }
 
+export function stableErrorCode(error) {
+  if (!error || typeof error !== 'object' || !('code' in error)) return null;
+  const code = String(error.code ?? '');
+  return /^(?:[0-9A-Z]{5}|PGRST[0-9]{3})$/.test(code) ? code : null;
+}
+
+export function exactEmptyRows(data) {
+  return Array.isArray(data) && data.length === 0;
+}
+
+export function deniedReadOrMutationResult({ data, error }) {
+  if (error) return stableErrorCode(error) === '42501';
+  return exactEmptyRows(data);
+}
+
+export function deniedInsertResult({ error }) {
+  return stableErrorCode(error) === '42501';
+}
+
+export function exactPostgresErrorResult({ error }, expectedCode) {
+  return stableErrorCode(error) === expectedCode;
+}
+
+export function authUserMissing({ data, error }) {
+  return (
+    !data?.user &&
+    error?.name === 'AuthApiError' &&
+    error.status === 404 &&
+    error.code === 'user_not_found'
+  );
+}
+
+export function storageAccessDenied(error, { allowNotFound = false } = {}) {
+  if (!error || typeof error !== 'object') return false;
+  if (error.name !== 'StorageApiError' || !Number.isInteger(error.status)) return false;
+  const statusCode = String(error.statusCode ?? '');
+  if (
+    error.status === 403 &&
+    (statusCode === 'AccessDenied' || /^unauthorized$/i.test(statusCode) || statusCode === '403')
+  ) {
+    return true;
+  }
+  return allowNotFound && storageObjectMissing(error);
+}
+
+export function storageObjectMissing(error) {
+  if (!error || typeof error !== 'object') return false;
+  if (error.name !== 'StorageApiError' || error.status !== 404) return false;
+  const statusCode = String(error.statusCode ?? '');
+  return statusCode === 'NoSuchKey' || statusCode === 'not_found' || statusCode === '404';
+}
+
+export function storageDeniedResult(
+  { data, error },
+  { allowNotFound = false, allowEmpty = false } = {},
+) {
+  if (error) return storageAccessDenied(error, { allowNotFound });
+  return allowEmpty && exactEmptyRows(data);
+}
+
+export class HarnessAssertionError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'HarnessAssertionError';
+  }
+}
+
 export function redactedErrorKind(error) {
-  if (error instanceof Error) return error.name || 'Error';
+  const code = stableErrorCode(error);
+  if (code) return `code:${code}`;
   if (error && typeof error === 'object') {
-    const code = 'code' in error ? String(error.code ?? '') : '';
-    if (/^[A-Za-z0-9_-]{1,40}$/.test(code)) return `code:${code}`;
+    const status = 'status' in error ? Number(error.status) : NaN;
+    if (Number.isInteger(status) && status >= 100 && status <= 599) return `http:${status}`;
+    const name = 'name' in error ? String(error.name ?? '') : '';
+    if (/^[A-Za-z][A-Za-z0-9_-]{0,39}$/.test(name)) return name;
     return 'object';
   }
   return typeof error;
+}
+
+export function harnessErrorDetail(error) {
+  return error instanceof HarnessAssertionError ? error.message : redactedErrorKind(error);
 }
 
 const PUBLIC_SECRET_NAME = /(SECRET|PRIVATE|SERVICE_ROLE|WEBHOOK|PERSONAL|AUTH_TOKEN)/i;

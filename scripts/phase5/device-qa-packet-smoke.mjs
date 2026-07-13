@@ -248,6 +248,12 @@ const cases = [
           (file) =>
             file.path === 'supabase/migrations/20260711000039_replenishment_alert_opt_in.sql',
         ) &&
+        packet.files.some(
+          (file) =>
+            file.path === 'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
+        ) &&
+        packet.files.some((file) => file.path === 'scripts/phase9/rls-adversarial-smoke.mjs') &&
+        packet.files.some((file) => file.path === 'scripts/phase2/supabase-rls-smoke.mjs') &&
         packet.files.some((file) => file.path === 'apps/mobile/src/features/photos/consent.ts') &&
         packet.files.some((file) => file.path === 'docs/HUMAN_SIMULATED_E2E_TESTING.md') &&
         packet.files.some((file) => file.path === 'docs/E2E_TESTING_CHECKLIST.md') &&
