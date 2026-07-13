@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  PRIVATE_KV_CONTENT_KEY_CONFLICT,
   PRIVATE_KV_CONTENT_KEY_NAME,
   clearStoredPrivateKVContentKey,
   getStoredPrivateKVContentKey,
@@ -14,6 +15,7 @@ const mocks = vi.hoisted(() => ({
   secureDeleteThrows: false,
   secureStorage: new Map<string, string>(),
   secureAvailable: true,
+  secureAvailableThrows: false,
   secureGetThrows: false,
   secureSetThrows: false,
 }));
@@ -40,7 +42,10 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
 }));
 
 vi.mock('expo-secure-store', () => ({
-  isAvailableAsync: vi.fn(async () => mocks.secureAvailable),
+  isAvailableAsync: vi.fn(async () => {
+    if (mocks.secureAvailableThrows) throw new Error('secure availability unavailable');
+    return mocks.secureAvailable;
+  }),
   getItemAsync: vi.fn(async (key: string) => {
     if (mocks.secureGetThrows) throw new Error('secure store unavailable');
     return mocks.secureStorage.get(key) ?? null;
@@ -62,6 +67,7 @@ describe('private KV content key storage', () => {
     mocks.secureStorage.clear();
     mocks.platformOS = 'ios';
     mocks.secureAvailable = true;
+    mocks.secureAvailableThrows = false;
     mocks.secureDeleteThrows = false;
     mocks.secureGetThrows = false;
     mocks.secureSetThrows = false;
@@ -102,12 +108,29 @@ describe('private KV content key storage', () => {
     expect(mocks.asyncStorage.size).toBe(0);
   });
 
-  it('uses an existing legacy fallback when native SecureStore read throws', async () => {
+  it('preserves but does not trust a legacy fallback when native SecureStore read throws', async () => {
     mocks.asyncStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, 'fallback-key');
     mocks.secureGetThrows = true;
 
-    expect(await getStoredPrivateKVContentKey()).toBe('fallback-key');
+    await expect(getStoredPrivateKVContentKey()).rejects.toThrow(
+      'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE',
+    );
+    expect(mocks.asyncStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBe('fallback-key');
   });
+
+  it.each(['unavailable', 'availability-error'] as const)(
+    'preserves but does not trust a fallback when native SecureStore is %s',
+    async (mode) => {
+      mocks.asyncStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, 'fallback-key');
+      mocks.secureAvailable = mode !== 'unavailable';
+      mocks.secureAvailableThrows = mode === 'availability-error';
+
+      await expect(getStoredPrivateKVContentKey()).rejects.toThrow(
+        'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE',
+      );
+      expect(mocks.asyncStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBe('fallback-key');
+    },
+  );
 
   it('migrates an existing native fallback into SecureStore after a definitive miss', async () => {
     mocks.asyncStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, 'fallback-key');
@@ -117,12 +140,52 @@ describe('private KV content key storage', () => {
     expect(mocks.asyncStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBeUndefined();
   });
 
-  it('removes a stale native fallback when SecureStore already has the key', async () => {
-    mocks.secureStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, 'secure-key');
-    mocks.asyncStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, 'stale-fallback');
+  it('removes only an identical native fallback when SecureStore already has the key', async () => {
+    const key = 'a'.repeat(64);
+    mocks.secureStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, key);
+    mocks.asyncStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, key);
 
-    expect(await getStoredPrivateKVContentKey()).toBe('secure-key');
+    expect(await getStoredPrivateKVContentKey()).toBe(key);
     expect(mocks.asyncStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBeUndefined();
+  });
+
+  it('preserves a valid fallback when the SecureStore candidate is malformed', async () => {
+    const fallback = 'b'.repeat(64);
+    mocks.secureStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, 'malformed-secure-key');
+    mocks.asyncStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, fallback);
+
+    await expect(getStoredPrivateKVContentKey()).rejects.toThrow(
+      PRIVATE_KV_CONTENT_KEY_CONFLICT,
+    );
+
+    expect(mocks.secureStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBe('malformed-secure-key');
+    expect(mocks.asyncStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(fallback);
+  });
+
+  it('preserves both well-formed candidates when only ciphertext can prove which is correct', async () => {
+    const secureCandidate = 'a'.repeat(64);
+    const fallback = 'b'.repeat(64);
+    mocks.secureStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, secureCandidate);
+    mocks.asyncStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, fallback);
+
+    await expect(getStoredPrivateKVContentKey()).rejects.toThrow(
+      PRIVATE_KV_CONTENT_KEY_CONFLICT,
+    );
+
+    expect(mocks.secureStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(secureCandidate);
+    expect(mocks.asyncStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(fallback);
+  });
+
+  it('refuses to overwrite or delete a conflicting fallback during key creation', async () => {
+    const fallback = 'b'.repeat(64);
+    mocks.asyncStorage.set(PRIVATE_KV_CONTENT_KEY_NAME, fallback);
+
+    await expect(setStoredPrivateKVContentKey('a'.repeat(64))).rejects.toThrow(
+      PRIVATE_KV_CONTENT_KEY_CONFLICT,
+    );
+
+    expect(mocks.secureStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBeUndefined();
+    expect(mocks.asyncStorage.get(PRIVATE_KV_CONTENT_KEY_NAME)).toBe(fallback);
   });
 
   it('fails closed when native SecureStore cannot be read and no fallback exists', async () => {

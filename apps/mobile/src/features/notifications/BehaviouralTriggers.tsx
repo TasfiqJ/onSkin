@@ -56,10 +56,14 @@ function EnabledBehaviouralTriggers({ enabled }: { enabled: BehaviouralTriggerEn
       const now = nowHHMM();
       const latest = stateRef.current;
       if (latest.enabled.replenishment && latest.needsReplenish) {
-        void notifyBehavioural('replenishment', now);
+        void notifyBehavioural('replenishment', now).catch(() => undefined);
       }
-      if (latest.enabled.ramp && latest.offerStepUp) void notifyBehavioural('rampup', now);
-      if (latest.enabled.promotional && latest.lapsed) void notifyBehavioural('winback', now);
+      if (latest.enabled.ramp && latest.offerStepUp) {
+        void notifyBehavioural('rampup', now).catch(() => undefined);
+      }
+      if (latest.enabled.promotional && latest.lapsed) {
+        void notifyBehavioural('winback', now).catch(() => undefined);
+      }
     });
     return () => sub.remove();
   }, []);

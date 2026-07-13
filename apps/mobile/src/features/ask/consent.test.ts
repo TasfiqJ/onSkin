@@ -1,4 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
 
 const mocks = vi.hoisted(() => ({
   getLatestConsents: vi.fn(),
@@ -28,6 +33,15 @@ vi.mock('./store', () => ({
   getAskConsentLocal: mocks.getAskConsentLocal,
   setAskConsentLocal: mocks.setAskConsentLocal,
 }));
+
+let boundaryActive = false;
+
+afterEach(() => {
+  if (boundaryActive) {
+    endAccountGenerationBoundary();
+    boundaryActive = false;
+  }
+});
 
 describe('Ask consent persistence', () => {
   beforeEach(() => {
@@ -93,6 +107,49 @@ describe('Ask consent persistence', () => {
     await expect(revokeAskConsent()).rejects.toThrow('withdrawal unavailable');
 
     expect(mocks.clearAskStore).toHaveBeenCalledTimes(1);
+    expect(mocks.track).not.toHaveBeenCalledWith('ask_consent_revoked');
+  });
+
+  it('does not let a delayed owner-A grant roll back or publish after owner B starts', async () => {
+    const { grantAskConsent } = await import('./consent');
+    let releaseLedger!: () => void;
+    mocks.recordConsent.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          releaseLedger = resolve;
+        }),
+    );
+
+    const grant = grantAskConsent();
+    await vi.waitFor(() => expect(mocks.recordConsent).toHaveBeenCalledOnce());
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    releaseLedger();
+
+    await expect(grant).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    expect(mocks.setAskConsentLocal).toHaveBeenCalledTimes(1);
+    expect(mocks.setAskConsentLocal).toHaveBeenCalledWith(true);
+    expect(mocks.track).not.toHaveBeenCalledWith('ask_consent_granted');
+  });
+
+  it('does not publish delayed owner-A revocation analytics after owner B starts', async () => {
+    const { revokeAskConsent } = await import('./consent');
+    let releaseWithdrawal!: () => void;
+    mocks.withdrawConsent.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          releaseWithdrawal = resolve;
+        }),
+    );
+
+    const revoke = revokeAskConsent();
+    await vi.waitFor(() => expect(mocks.withdrawConsent).toHaveBeenCalledOnce());
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    releaseWithdrawal();
+
+    await expect(revoke).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    expect(mocks.clearAskStore).toHaveBeenCalledOnce();
     expect(mocks.track).not.toHaveBeenCalledWith('ask_consent_revoked');
   });
 });

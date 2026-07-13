@@ -32,21 +32,21 @@ export default function CommerceConsentSheet() {
   const allow = async () => {
     haptics.success();
     await grantCommerceConsent();
-    if (isOwnerQueryScopeCurrent(ownerScope)) {
-      await qc.invalidateQueries({
-        queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
-      });
-    }
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+    await qc.invalidateQueries({
+      queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
+    });
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
     close();
   };
   const decline = async () => {
     haptics.select();
     await declineCommerceConsent();
-    if (isOwnerQueryScopeCurrent(ownerScope)) {
-      await qc.invalidateQueries({
-        queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
-      });
-    }
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+    await qc.invalidateQueries({
+      queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
+    });
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
     close();
   };
 
@@ -149,7 +149,7 @@ export default function CommerceConsentSheet() {
         >
           <Pressable
             accessibilityRole="button"
-            onPress={() => void allow()}
+            onPress={() => void allow().catch(() => undefined)}
             className="h-[54px] items-center justify-center rounded-pill"
             style={{ backgroundColor: colors.clay }}
           >
@@ -159,7 +159,7 @@ export default function CommerceConsentSheet() {
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            onPress={() => void decline()}
+            onPress={() => void decline().catch(() => undefined)}
             className="h-[48px] items-center justify-center"
           >
             <Text className="font-sans-semibold text-[15px]" tone="muted">

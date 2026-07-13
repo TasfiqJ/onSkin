@@ -66,10 +66,14 @@ function Body({ rec }: { rec: Recommendation }) {
   const dismiss = async () => {
     haptics.select();
     track('recommendation_dismissed');
-    await dismissRecommendation(rec.id);
-    if (isOwnerQueryScopeCurrent(ownerScope)) {
-      await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.recommendations(ownerScope) });
+    try {
+      await dismissRecommendation(ownerScope, rec.id);
+    } catch {
+      return;
     }
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+    await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.recommendations(ownerScope) });
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
     backOrReplace(router, APP_RECOMMENDATIONS_ROUTE);
   };
 

@@ -13,9 +13,14 @@ const mocks = vi.hoisted(() => ({
   decryptPhotoNoteError: null as Error | null,
   storage: new Map<string, string>(),
   deleteCapturedPhotoSource: vi.fn(),
+  deletePhoto: vi.fn(),
+  deletePhotoAbortSignal: vi.fn(),
   deleteQuarantinedPhoto: vi.fn(),
   encryptCapturedPhoto: vi.fn(),
+  eqPhotoId: vi.fn(),
+  eqPhotoOwner: vi.fn(),
   from: vi.fn(),
+  getUser: vi.fn(),
   getPrivateItemError: null as Error | null,
   quarantineEncryptedPhoto: vi.fn(),
   quarantineError: null as Error | null,
@@ -48,6 +53,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
 
 vi.mock('@/lib/supabase/client', () => ({
   supabase: {
+    auth: { getUser: mocks.getUser },
     from: mocks.from,
   },
 }));
@@ -83,9 +89,14 @@ describe('photo local store recovery', () => {
     mocks.decryptPhotoNoteError = null;
     mocks.storage.clear();
     mocks.deleteCapturedPhotoSource.mockReset();
+    mocks.deletePhoto.mockReset();
+    mocks.deletePhotoAbortSignal.mockReset();
     mocks.deleteQuarantinedPhoto.mockReset();
     mocks.encryptCapturedPhoto.mockReset();
+    mocks.eqPhotoId.mockReset();
+    mocks.eqPhotoOwner.mockReset();
     mocks.from.mockClear();
+    mocks.getUser.mockReset();
     mocks.getPrivateItemError = null;
     mocks.quarantineEncryptedPhoto.mockReset();
     mocks.quarantineError = null;
@@ -98,6 +109,15 @@ describe('photo local store recovery', () => {
     mocks.setPrivateItemStarted = null;
 
     mocks.deleteCapturedPhotoSource.mockResolvedValue(undefined);
+    mocks.deletePhotoAbortSignal.mockResolvedValue({ error: null });
+    mocks.eqPhotoOwner.mockReturnValue({ abortSignal: mocks.deletePhotoAbortSignal });
+    mocks.eqPhotoId.mockReturnValue({ eq: mocks.eqPhotoOwner });
+    mocks.deletePhoto.mockReturnValue({ eq: mocks.eqPhotoId });
+    mocks.from.mockReturnValue({ delete: mocks.deletePhoto });
+    mocks.getUser.mockResolvedValue({
+      data: { user: { id: 'owner-a' } },
+      error: null,
+    });
     mocks.deleteQuarantinedPhoto.mockResolvedValue(undefined);
     mocks.encryptCapturedPhoto.mockImplementation(async (uri: string, id: string) => ({
       encryptedLocalUri: `${uri}.${id}.onskinphoto`,
@@ -236,6 +256,29 @@ describe('photo local store recovery', () => {
     expect(mocks.storage.has(KEY)).toBe(false);
   });
 
+  it('fails closed after a committed save until capture plaintext cleanup succeeds', async () => {
+    const cleanupFailure = new Error('capture plaintext cleanup unavailable');
+    mocks.deleteCapturedPhotoSource.mockRejectedValueOnce(cleanupFailure);
+
+    const input = {
+      takenLocalDate: '2026-07-03',
+      captureSessionId: 'capture-session-1',
+      localUri: 'file:///captured.jpg',
+    };
+    await expect(addPhoto(input)).rejects.toThrow(cleanupFailure);
+
+    const committed = JSON.parse(mocks.storage.get(KEY) ?? '[]') as { id: string }[];
+    expect(committed).toHaveLength(1);
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledTimes(1);
+
+    await expect(addPhoto(input)).resolves.toMatchObject({ id: committed[0]!.id });
+
+    const afterRetry = JSON.parse(mocks.storage.get(KEY) ?? '[]') as { id: string }[];
+    expect(afterRetry).toEqual(committed);
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledTimes(1);
+    expect(mocks.deleteCapturedPhotoSource).toHaveBeenCalledTimes(2);
+  });
+
   it('serializes concurrent photo additions so neither metadata update is lost', async () => {
     mocks.randomIds = ['photo-a', 'photo-b'];
     let releaseFirstWrite!: () => void;
@@ -358,6 +401,63 @@ describe('photo local store recovery', () => {
     expect(mocks.reconcileEncryptedPhotoStorage).toHaveBeenCalledWith([], {
       removeUnreferencedFinals: false,
     });
+  });
+
+  it('scopes a photo mirror deletion to the captured authenticated owner', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify([
+        {
+          id: 'photo-1',
+          series: 'front',
+          takenLocalDate: '2026-07-01',
+          localUri: 'file:///photo-1.onskinphoto',
+        },
+      ]),
+    );
+
+    await removePhoto('photo-1');
+
+    expect(mocks.eqPhotoId).toHaveBeenCalledWith('id', 'photo-1');
+    expect(mocks.eqPhotoOwner).toHaveBeenCalledWith('user_id', 'owner-a');
+    expect(mocks.deletePhotoAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+  });
+
+  it('does not start an owner-B photo delete after a delayed owner-A lookup', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify([
+        {
+          id: 'photo-1',
+          series: 'front',
+          takenLocalDate: '2026-07-01',
+          localUri: 'file:///photo-1.onskinphoto',
+        },
+      ]),
+    );
+    let releaseOwner!: (value: { data: { user: { id: string } }; error: null }) => void;
+    let markOwnerLookupStarted!: () => void;
+    const ownerLookupStarted = new Promise<void>((resolve) => {
+      markOwnerLookupStarted = resolve;
+    });
+    mocks.getUser.mockImplementationOnce(() => {
+      markOwnerLookupStarted();
+      return new Promise((resolve) => {
+        releaseOwner = resolve;
+      });
+    });
+
+    const removing = removePhoto('photo-1');
+    await ownerLookupStarted;
+    beginAccountGenerationBoundary();
+    try {
+      releaseOwner({ data: { user: { id: 'owner-a' } }, error: null });
+
+      await expect(removing).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+      expect(mocks.deletePhoto).not.toHaveBeenCalled();
+    } finally {
+      endAccountGenerationBoundary();
+    }
   });
 
   it('keeps measured pose and provenance inside the encrypted local record', async () => {

@@ -1,4 +1,9 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
 
 import { DEFAULT_PREFS, type NotifPrefs } from './store';
 import { acceptRoutineReminderSoftAsk, declineRoutineReminderSoftAsk } from './onboarding';
@@ -47,6 +52,15 @@ function deps(requestGranted: boolean) {
   };
 }
 
+let boundaryActive = false;
+
+afterEach(() => {
+  if (boundaryActive) {
+    endAccountGenerationBoundary();
+    boundaryActive = false;
+  }
+});
+
 describe('notification onboarding choice', () => {
   it('enables and schedules routine reminders only when permission is granted', async () => {
     const d = deps(true);
@@ -81,5 +95,30 @@ describe('notification onboarding choice', () => {
     expect(d.rescheduleReminders).toHaveBeenCalledWith(
       expect.objectContaining({ amEnabled: false, pmEnabled: false }),
     );
+  });
+
+  it('does not apply owner-A permission results after an account boundary starts', async () => {
+    const d = deps(true);
+    let releasePermission!: (granted: boolean) => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    d.requestPermission.mockImplementationOnce(() => {
+      markStarted();
+      return new Promise<boolean>((resolve) => {
+        releasePermission = resolve;
+      });
+    });
+
+    const accepting = acceptRoutineReminderSoftAsk(d);
+    await started;
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    releasePermission(true);
+
+    await expect(accepting).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    expect(d.saveNotifPrefs).not.toHaveBeenCalled();
+    expect(d.rescheduleReminders).not.toHaveBeenCalled();
   });
 });

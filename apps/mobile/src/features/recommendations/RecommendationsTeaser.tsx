@@ -78,10 +78,13 @@ function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
   // the engine drops the rec, so a dismissed SPF nudge stays dismissed across
   // sessions, matching the hub. (Was local useState that reappeared on remount.)
   const dismiss = async () => {
-    await dismissRecommendation(recId);
-    if (isOwnerQueryScopeCurrent(ownerScope)) {
-      await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.recommendations(ownerScope) });
+    try {
+      await dismissRecommendation(ownerScope, recId);
+    } catch {
+      return;
     }
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+    await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.recommendations(ownerScope) });
   };
 
   const openRecommendation = () => {

@@ -6,6 +6,8 @@ Baseline/current SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
 
 This file records optimization-specific decision needs and links to authoritative decision updates. It does not approve product, privacy, architecture, device-support, release, or operational changes by itself. No decision below is approved at this baseline.
 
+Consolidated decision input: [OPEN_DECISION_PACKET.md](./OPEN_DECISION_PACKET.md).
+
 | ID          | Decision required                                                                                                  | Status        | Authoritative update/evidence required                                                                                                      | Safe work that may continue                                                        |
 | ----------- | ------------------------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | OPT-DEC-000 | Reconcile the newer iOS-only/all-features launch contract with older dual-platform source and generated documents. | `not-started` | `docs/DEVICE_SUPPORT_POLICY.md`, product/architecture/roadmap/decision sources, generated policy artifacts, and launch-contract governance. | Platform-neutral correctness, tests, measurement tooling, and evidence structure.  |

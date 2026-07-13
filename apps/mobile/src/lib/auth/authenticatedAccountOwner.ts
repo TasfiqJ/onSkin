@@ -1,4 +1,7 @@
-import type { AccountGenerationLease } from './accountGeneration';
+import {
+  awaitAccountGenerationLease,
+  type AccountGenerationLease,
+} from './accountGeneration';
 
 import { supabase } from '../supabase/client';
 
@@ -24,7 +27,7 @@ export async function captureAuthenticatedAccountOwner(
   lease: AccountGenerationLease,
 ): Promise<AuthenticatedAccountOwner | null> {
   lease.assertCurrent();
-  const { data, error } = await supabase.auth.getUser();
+  const { data, error } = await awaitAccountGenerationLease(lease, () => supabase.auth.getUser());
   lease.assertCurrent();
   if (error) throw error;
   const userId = data.user?.id.trim();
@@ -48,7 +51,9 @@ export async function requireAuthenticatedAccountSession(
   lease: AccountGenerationLease,
 ): Promise<AuthenticatedAccountSession> {
   const owner = await requireAuthenticatedAccountOwner(lease);
-  const { data, error } = await supabase.auth.getSession();
+  const { data, error } = await awaitAccountGenerationLease(lease, () =>
+    supabase.auth.getSession(),
+  );
   lease.assertCurrent();
   if (error) throw error;
   const session = data.session;

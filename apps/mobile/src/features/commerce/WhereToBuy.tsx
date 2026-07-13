@@ -7,6 +7,8 @@ import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { track } from '@/lib/analytics/track';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
+import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -14,7 +16,7 @@ import { COMMERCE_COPY } from './copy';
 import { CommerceLinkNotice, type CommerceLinkFeedback } from './CommerceLinkNotice';
 import { LockGlyph } from './LockGlyph';
 import { formatPrice, outboundFor, type WhereToBuyOption } from './links';
-import { buildClickToken, recordClick } from './store';
+import { buildClickToken, runCommerceClickOperation } from './store';
 import { useCommerceConsent, useWhereToBuy } from './useCommerce';
 
 // Surface 01 (docs/10 §3). The quiet "where to buy" affordance, rendered BENEATH the
@@ -74,6 +76,7 @@ function OptionRow({ option, onPress }: { option: WhereToBuyOption; onPress: () 
 }
 
 function EnabledWhereToBuy({ productType }: { productType: string }) {
+  const ownerScope = useOwnerQueryScope();
   const { data: consented } = useCommerceConsent();
   const { data: options } = useWhereToBuy(consented ? productType : null);
   const [linkFeedback, setLinkFeedback] = useState<CommerceLinkFeedback | null>(null);
@@ -85,41 +88,62 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
   };
 
   const tapOption = async (option: WhereToBuyOption) => {
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
     haptics.select();
     setLinkFeedback(null);
     const token = buildClickToken();
     const outboundUrl = outboundFor(option, token);
     if (!outboundUrl) {
-      setLinkFeedback({
-        title: 'Link unavailable',
-        body: 'This retailer link is not available right now.',
-      });
-      return;
-    }
-    track('where_to_buy_clicked', { source: option.source });
-    await recordClick({ clickToken: token, productType, source: option.source, consented: true });
-    // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Dev demo links stay inert; real approved
-    // retailer links open only after the HTTPS URL guard appends the opaque token.
-    const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
-    if (isDev && option.url.startsWith('https://example.com')) {
-      setLinkFeedback({
-        title: COMMERCE_COPY.whereToBuy.stubTitle,
-        body: COMMERCE_COPY.whereToBuy.stubBody,
-      });
-    } else {
-      const opened = await openExternalHttpsUrl(outboundUrl, {
-        mode: 'linking',
-        failureTitle: 'Link unavailable',
-        failureMessage: 'We could not open this retailer link. Please try again.',
-        alertOnFailure: false,
-      });
-      if (!opened) {
-        track('where_to_buy_link_failed', { source: option.source });
+      if (isOwnerQueryScopeCurrent(ownerScope)) {
         setLinkFeedback({
           title: 'Link unavailable',
-          body: 'We could not open this retailer link. Please try again.',
+          body: 'This retailer link is not available right now.',
         });
       }
+      return;
+    }
+
+    try {
+      const feedback = await runCommerceClickOperation(
+        ownerScope,
+        {
+          clickToken: token,
+          productType,
+          source: option.source,
+          consented: true,
+        },
+        async () => {
+          track('where_to_buy_clicked', { source: option.source });
+          // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Dev demo links stay inert; real approved
+          // retailer links open only after the HTTPS URL guard appends the opaque token.
+          const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
+          if (isDev && option.url.startsWith('https://example.com')) {
+            return {
+              title: COMMERCE_COPY.whereToBuy.stubTitle,
+              body: COMMERCE_COPY.whereToBuy.stubBody,
+            } satisfies CommerceLinkFeedback;
+          }
+
+          const opened = await openExternalHttpsUrl(outboundUrl, {
+            mode: 'linking',
+            failureTitle: 'Link unavailable',
+            failureMessage: 'We could not open this retailer link. Please try again.',
+            alertOnFailure: false,
+          });
+          if (opened) return null;
+
+          track('where_to_buy_link_failed', { source: option.source });
+          return {
+            title: 'Link unavailable',
+            body: 'We could not open this retailer link. Please try again.',
+          } satisfies CommerceLinkFeedback;
+        },
+      );
+
+      if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+      if (feedback) setLinkFeedback(feedback);
+    } catch {
+      return;
     }
   };
 

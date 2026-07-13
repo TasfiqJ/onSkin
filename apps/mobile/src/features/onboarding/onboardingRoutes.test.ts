@@ -338,6 +338,17 @@ describe('onboarding route contracts', () => {
     expect(reveal).not.toContain('label="See my routine"');
   });
 
+  it('suppresses notification-onboarding publication after an account boundary', () => {
+    const notifications = readAppRoute('onboarding/notifications.tsx');
+
+    expect(notifications).toContain('const ownerScope = useOwnerQueryScope();');
+    expect(notifications).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
+    expect(notifications.indexOf('await action();')).toBeLessThan(
+      notifications.indexOf("router.push('/onboarding/account')"),
+    );
+    expect(notifications).not.toMatch(/finally\s*{[\s\S]*router\.push\('\/onboarding\/account'\)/);
+  });
+
   it('keeps health-data consent fail-closed before quiz access', () => {
     const source = readAppRoute('onboarding/consent.tsx');
     const quiz = readAppRoute('onboarding/quiz.tsx');
@@ -390,6 +401,7 @@ describe('onboarding route contracts', () => {
     expect(context).toContain('ownerQueryPrefixes.skinProfile(ownerScope)');
     expect(context).toContain('ownerQueryPrefixes.shelf(ownerScope)');
     expect(context).toContain('ownerQueryPrefixes.ramp(ownerScope)');
+    expect(context).toContain('.abortSignal(ownerLease.signal)');
   });
 
   it('recovers direct quiz completion without inventing missing goals', () => {
@@ -465,6 +477,12 @@ describe('onboarding route contracts', () => {
     expect(source).not.toContain('best-effort until backend configured');
     expect(source).toContain('recordAccountConsent');
     expect(source).toContain('setError(ACCOUNT_CONSENT.saveFailedBody)');
+    expect(source).toContain('const ownerScope = useOwnerQueryScope();');
+    expect(source).toContain('await runOwnerQueryOperation(ownerScope, async (lease) => {');
+    expect(source).toContain('const owner = await captureAuthenticatedAccountOwner(lease);');
+    expect(source).toContain("await identify(lease, owner.userId, { method: 'account_created' })");
+    expect(source).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
+    expect(source).not.toContain('supabase.auth.getUser()');
     expect(source.indexOf('await recordAccountConsent()')).toBeLessThan(
       source.indexOf("track('account_created')"),
     );

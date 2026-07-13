@@ -128,6 +128,15 @@ describe('Recommendation route contracts', () => {
     expect(source.indexOf('save: savePreferenceWithFixture')).toBeLessThan(
       source.indexOf("track('preference_set')"),
     );
+    expect(source).toContain('await savePreferences(ownerScope, next);');
+    expect(source).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
+  });
+
+  it('passes the mounted owner scope into every recommendation dismissal', () => {
+    const detail = readAppRoute('recommendations/[id].tsx');
+
+    expect(detail).toContain('await dismissRecommendation(ownerScope, rec.id);');
+    expect(detail).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
   });
 
   it('keeps recommendation preferences navigation touchable on phones', () => {

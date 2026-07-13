@@ -1,8 +1,7 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Image } from 'expo-image';
 import { router, useIsFocused } from 'expo-router';
-import * as FileSystem from 'expo-file-system/legacy';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Platform,
@@ -20,12 +19,20 @@ import {
 } from '@/features/catalog/ingredientParser';
 import { tagLabel } from '@/features/intelligence/presentation';
 import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
+import {
+  captureLabelForReview,
+  CaptureStagingCleanupError,
+  cleanupStagedCapture,
+} from '@/features/photos/captureStaging';
 import { useIntake } from '@/features/shelf/IntakeContext';
 import { cn } from '@/lib/cn';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
 import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import type { PlaintextStagingHandle } from '@/lib/storage/plaintextStaging';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -48,14 +55,19 @@ function primaryTag(token: ParsedIngredientToken): string {
 }
 
 export default function OcrScreen() {
+  const ownerScope = useOwnerQueryScope();
+  const mountedRef = useRef(true);
   const isFocused = useIsFocused();
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const [state, setState] = useState<CaptureState>('camera');
   const [cameraUnavailable, setCameraUnavailable] = useState(false);
   const [labelCaptureFailed, setLabelCaptureFailed] = useState(false);
+  const [captureCleanupFailed, setCaptureCleanupFailed] = useState(false);
   const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
-  const [capturedUri, setCapturedUri] = useState<string | null>(null);
+  const [capturedHandle, setCapturedHandle] = useState<PlaintextStagingHandle | null>(null);
+  const cleanupInFlightRef = useRef(false);
+  const captureCleanupRetryRef = useRef<(() => Promise<void>) | null>(null);
   const [rawText, setRawText] = useState('');
   const [simulateCaptureFailureOnce, setSimulateCaptureFailureOnce] = useState(
     () => devShelfOcrCaptureFailureMode() === 'once',
@@ -77,54 +89,130 @@ export default function OcrScreen() {
   const activeTokens = parsed.tokens.filter((token) => token.tags.length > 0);
   const lowConfidence = parsed.tokens.find((token) => token.isUnmatched);
   const canContinue = rawText.trim().length > 0;
+  const capturedUri = capturedHandle?.uri ?? null;
   const { height: viewportHeight } = useWindowDimensions();
   const ultraShortPhone = viewportHeight < 460;
   const splitShortPhone = viewportHeight < 410;
+  const canPublish = () => mountedRef.current && isOwnerQueryScopeCurrent(ownerScope);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(
+    () => () => {
+      const retryCleanup = captureCleanupRetryRef.current;
+      if (retryCleanup || capturedHandle) {
+        void runOwnerQueryOperation(ownerScope, async () => {
+          if (retryCleanup) {
+            await retryCleanup();
+            captureCleanupRetryRef.current = null;
+          }
+          if (capturedHandle) await cleanupStagedCapture(capturedHandle);
+        }).catch(() => undefined);
+      }
+    },
+    [capturedHandle, ownerScope],
+  );
 
   const capture = async () => {
     if ((!cameraRef.current && !simulateCaptureFailureOnce) || state === 'capturing') return;
     haptics.select();
     setState('capturing');
     setLabelCaptureFailed(false);
+    setCaptureCleanupFailed(false);
+    let stagedHandle: PlaintextStagingHandle | null = null;
     try {
-      if (simulateCaptureFailureOnce) {
-        setSimulateCaptureFailureOnce(false);
-        throw new Error('E2E_SHELF_OCR_CAPTURE_FAILURE');
+      const staged = await runOwnerQueryOperation(ownerScope, (lease) =>
+        captureLabelForReview(lease, async () => {
+          if (simulateCaptureFailureOnce) {
+            setSimulateCaptureFailureOnce(false);
+            throw new Error('E2E_SHELF_OCR_CAPTURE_FAILURE');
+          }
+          return cameraRef.current!.takePictureAsync({
+            quality: 0.72,
+            base64: false,
+            exif: false,
+            shutterSound: false,
+          });
+        }),
+      );
+      stagedHandle = staged.handle;
+      if (!canPublish()) {
+        await cleanupStagedCapture(staged.handle);
+        stagedHandle = null;
+        return;
       }
-      const photo = await cameraRef.current!.takePictureAsync({
-        quality: 0.72,
-        base64: false,
-        exif: false,
-        shutterSound: false,
-      });
-      setCapturedUri(photo.uri);
+      setCapturedHandle(staged.handle);
       setState('review');
       track('label_capture_photo_taken', { native_ocr_enabled: env.nativeOcrEnabled });
-    } catch {
-      setCapturedUri(null);
-      setLabelCaptureFailed(true);
-      setState('review');
+    } catch (error) {
+      if (stagedHandle) await cleanupStagedCapture(stagedHandle).catch(() => undefined);
+      if (canPublish()) {
+        if (error instanceof CaptureStagingCleanupError) {
+          captureCleanupRetryRef.current = error.retryCleanup;
+          setCaptureCleanupFailed(true);
+        }
+        setCapturedHandle(null);
+        setLabelCaptureFailed(true);
+        setState('review');
+      }
     }
+  };
+
+  const cleanupAndNavigate = (publish: () => void) => {
+    if (cleanupInFlightRef.current) return;
+    cleanupInFlightRef.current = true;
+    setCaptureCleanupFailed(false);
+    void runOwnerQueryOperation(ownerScope, async (lease) => {
+      const retryCleanup = captureCleanupRetryRef.current;
+      if (retryCleanup) {
+        await retryCleanup();
+        captureCleanupRetryRef.current = null;
+      }
+      if (capturedHandle) await cleanupStagedCapture(capturedHandle);
+      lease.assertCurrent();
+    })
+      .then(() => {
+        if (!canPublish()) return;
+        setCapturedHandle(null);
+        publish();
+      })
+      .catch((error: unknown) => {
+        if (canPublish()) {
+          if (error instanceof CaptureStagingCleanupError) {
+            captureCleanupRetryRef.current = error.retryCleanup;
+          }
+          setCaptureCleanupFailed(true);
+        }
+      })
+      .finally(() => {
+        if (canPublish()) cleanupInFlightRef.current = false;
+      });
   };
 
   const onContinue = () => {
     if (!canContinue) return;
     haptics.select();
-    track('ingredient_parse_completed', {
-      source: 'ocr_label_capture',
-      native_ocr_enabled: env.nativeOcrEnabled,
-      result: parsed.status,
-      count: parsed.tokens.length,
+    cleanupAndNavigate(() => {
+      track('ingredient_parse_completed', {
+        source: 'ocr_label_capture',
+        native_ocr_enabled: env.nativeOcrEnabled,
+        result: parsed.status,
+        count: parsed.tokens.length,
+      });
+      update({
+        ingredients: parsed.tokens.map((token) => token.displayName),
+        addedVia: 'ocr',
+        ingredientParseStatus: parsed.status,
+        ingredientParseConfidence: parsed.confidence,
+        parserVersion: parsed.parserVersion,
+      });
+      router.replace('/shelf/manual');
     });
-    update({
-      ingredients: parsed.tokens.map((token) => token.displayName),
-      addedVia: 'ocr',
-      ingredientParseStatus: parsed.status,
-      ingredientParseConfidence: parsed.confidence,
-      parserVersion: parsed.parserVersion,
-    });
-    if (capturedUri) void FileSystem.deleteAsync(capturedUri, { idempotent: true });
-    router.replace('/shelf/manual');
   };
 
   const requestCameraAccess = () => {
@@ -149,7 +237,8 @@ export default function OcrScreen() {
       <View className="mt-2 flex-row items-center justify-between">
         <RouteIconButton
           accessibilityLabel="Back"
-          onPress={() => backOrReplace(router, APP_SHELF_ROUTE)}
+          disabled={state === 'capturing'}
+          onPress={() => cleanupAndNavigate(() => backOrReplace(router, APP_SHELF_ROUTE))}
         />
         <Text variant="body" className="font-sans-semibold">
           Read the label
@@ -173,7 +262,13 @@ export default function OcrScreen() {
         >
           {state === 'review' ? (
             capturedUri ? (
-              <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
+              <Image
+                source={{ uri: capturedUri }}
+                style={{ flex: 1 }}
+                contentFit="cover"
+                cachePolicy="none"
+                transition={0}
+              />
             ) : (
               <View className="flex-1 items-center justify-center px-6">
                 <Text variant="body" tone="inverse" className="text-center font-sans-semibold">
@@ -201,7 +296,7 @@ export default function OcrScreen() {
               mode="picture"
               onMountError={() => {
                 setCameraUnavailable(true);
-                setCapturedUri(null);
+                setCapturedHandle(null);
                 setLabelCaptureFailed(false);
                 setState('review');
               }}
@@ -269,6 +364,21 @@ export default function OcrScreen() {
           ) : null}
         </View>
 
+        {captureCleanupFailed ? (
+          <View
+            accessibilityRole="alert"
+            className="mt-4 rounded-[14px] border border-clay/30 bg-clay-tint p-3.5"
+          >
+            <Text variant="bodySm" className="font-sans-semibold">
+              Temporary photo cleanup needs another try
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              OnSkin kept this screen open so the label photo is not left behind. Try your action
+              again.
+            </Text>
+          </View>
+        ) : null}
+
         {state === 'review' && (labelCaptureFailed || cameraUnavailable) ? (
           <View
             accessibilityRole="alert"
@@ -290,8 +400,10 @@ export default function OcrScreen() {
                 className="mt-3 min-h-[48px] items-center justify-center rounded-pill bg-paper-raised px-4 py-2"
                 onPress={() => {
                   haptics.select();
-                  setState('camera');
-                  setLabelCaptureFailed(false);
+                  cleanupAndNavigate(() => {
+                    setState('camera');
+                    setLabelCaptureFailed(false);
+                  });
                 }}
               >
                 <Text className="font-sans-semibold text-ink">Try label photo again</Text>

@@ -1,7 +1,6 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
-import { randomUUID } from 'expo-crypto';
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -9,6 +8,12 @@ import { RouteIconButton, Text } from '@/components/ui';
 import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
 import { applyPhotoCaptureConsent } from '@/features/photos/applyCaptureConsent';
+import {
+  capturePhotoForReview,
+  CaptureStagingCleanupError,
+  cleanupCapturedPhoto,
+  type StagedPhotoCapture,
+} from '@/features/photos/captureStaging';
 import { grantPhotoCaptureConsent, hasPhotoCaptureConsent } from '@/features/photos/consent';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { localDay, timeOfDayNow } from '@/features/photos/date';
@@ -21,6 +26,8 @@ import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
 import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 
 const BG = '#16130F';
@@ -320,9 +327,11 @@ function CameraUnavailableGate({
 function PhotoCaptureFailureGate({
   onRetry,
   onCancel,
+  cleanupFailed = false,
 }: {
   onRetry: () => void;
   onCancel: () => void;
+  cleanupFailed?: boolean;
 }) {
   return (
     <CaptureOverlay>
@@ -336,7 +345,9 @@ function PhotoCaptureFailureGate({
             marginBottom: 12,
           }}
         >
-          {CAMERA_FAILURE_COPY.progressCaptureTitle}
+          {cleanupFailed
+            ? 'Photo cleanup needs another try'
+            : CAMERA_FAILURE_COPY.progressCaptureTitle}
         </Text>
         <Text
           style={{
@@ -347,7 +358,9 @@ function PhotoCaptureFailureGate({
             marginBottom: 22,
           }}
         >
-          {CAMERA_FAILURE_COPY.progressCaptureBody}
+          {cleanupFailed
+            ? 'OnSkin kept this screen open so the temporary photo is not left behind.'
+            : CAMERA_FAILURE_COPY.progressCaptureBody}
         </Text>
       </View>
       <Pressable
@@ -362,7 +375,7 @@ function PhotoCaptureFailureGate({
         }}
       >
         <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
-          Try photo again
+          {cleanupFailed ? 'Try cleanup again' : 'Try photo again'}
         </Text>
       </Pressable>
       <Pressable
@@ -507,14 +520,19 @@ function PermissionGate({
 function CaptureScreenContent() {
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
+  const ownerScope = useOwnerQueryScope();
+  const mountedRef = useRef(true);
   const cameraRef = useRef<CameraView | null>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [consented, setConsented] = useState<boolean | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
   const [cameraUnavailable, setCameraUnavailable] = useState(false);
   const [photoCaptureFailed, setPhotoCaptureFailed] = useState(false);
+  const [captureCleanupFailed, setCaptureCleanupFailed] = useState(false);
   const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
   const [capturing, setCapturing] = useState(false);
+  const cleanupInFlightRef = useRef(false);
+  const captureCleanupRetryRef = useRef<(() => Promise<void>) | null>(null);
   const [grantingConsent, setGrantingConsent] = useState(false);
   const [consentSaveFailed, setConsentSaveFailed] = useState(false);
   const simulatedPhotoConsentFailureUsed = useRef(false);
@@ -525,9 +543,33 @@ function CaptureScreenContent() {
   const progressCameraPermissionMode = devProgressCameraPermissionMode();
   const { data } = usePhotos('front');
 
+  const canPublish = useCallback(
+    () => mountedRef.current && isOwnerQueryScopeCurrent(ownerScope),
+    [ownerScope],
+  );
+
   useEffect(() => {
-    void hasPhotoCaptureConsent().then(setConsented);
-  }, []);
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      const retryCleanup = captureCleanupRetryRef.current;
+      if (retryCleanup) {
+        void runOwnerQueryOperation(ownerScope, retryCleanup).catch(() => undefined);
+      }
+    };
+  }, [ownerScope]);
+
+  useEffect(() => {
+    let active = true;
+    void runOwnerQueryOperation(ownerScope, () => hasPhotoCaptureConsent())
+      .then((value) => {
+        if (active && canPublish()) setConsented(value);
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [canPublish, ownerScope]);
 
   const canShowCamera =
     consented === true &&
@@ -541,7 +583,37 @@ function CaptureScreenContent() {
   const captureReady =
     (canShowCamera && cameraReady && !photoCaptureFailed) || simulateProgressCaptureFailureOnce;
   const referenceUri = data?.reference?.localUri ?? null;
-  const closeToProgress = () => backOrReplace(router, APP_PROGRESS_ROUTE);
+  const retryCaptureCleanup = (onSuccess: () => void) => {
+    if (cleanupInFlightRef.current) return;
+    const retryCleanup = captureCleanupRetryRef.current;
+    if (!retryCleanup) {
+      onSuccess();
+      return;
+    }
+    cleanupInFlightRef.current = true;
+    void runOwnerQueryOperation(ownerScope, retryCleanup)
+      .then(() => {
+        if (!canPublish()) return;
+        captureCleanupRetryRef.current = null;
+        setCaptureCleanupFailed(false);
+        onSuccess();
+      })
+      .catch((error: unknown) => {
+        if (!canPublish()) return;
+        if (error instanceof CaptureStagingCleanupError) {
+          captureCleanupRetryRef.current = error.retryCleanup;
+        }
+        setCaptureCleanupFailed(true);
+        setPhotoCaptureFailed(true);
+      })
+      .finally(() => {
+        cleanupInFlightRef.current = false;
+      });
+  };
+  const closeToProgress = () => {
+    if (capturing) return;
+    retryCaptureCleanup(() => backOrReplace(router, APP_PROGRESS_ROUTE));
+  };
 
   async function capture() {
     if (
@@ -554,34 +626,62 @@ function CaptureScreenContent() {
     }
     setCapturing(true);
     setPhotoCaptureFailed(false);
+    const stagedCaptureRef: { current: StagedPhotoCapture | null } = { current: null };
     try {
-      if (simulateProgressCaptureFailureOnce) {
-        setSimulateProgressCaptureFailureOnce(false);
-        throw new Error('E2E_PROGRESS_CAPTURE_FAILURE');
+      await runOwnerQueryOperation(ownerScope, async (lease) => {
+        if (simulateProgressCaptureFailureOnce) {
+          setSimulateProgressCaptureFailureOnce(false);
+          throw new Error('E2E_PROGRESS_CAPTURE_FAILURE');
+        }
+        const stagedCapture = await capturePhotoForReview(lease, () =>
+          cameraRef.current!.takePictureAsync({
+            quality: 0.76,
+            base64: false,
+            exif: false,
+            shutterSound: true,
+          }),
+        );
+        stagedCaptureRef.current = stagedCapture;
+        lease.assertCurrent();
+        if (!canPublish()) {
+          await cleanupCapturedPhoto(stagedCapture.handle);
+          stagedCaptureRef.current = null;
+          return;
+        }
+        haptics.success();
+        track('photo_capture_still_taken', { signal_source: 'post_capture_measurement' });
+        lease.assertCurrent();
+        router.replace({
+          pathname: '/progress/review',
+          params: {
+            captureSessionId: stagedCapture.handle.operationId,
+            photoWidth: String(stagedCapture.width),
+            photoHeight: String(stagedCapture.height),
+            timeOfDay: timeOfDayNow(),
+            takenLocalDate: localDay(),
+          },
+        });
+      });
+    } catch (error) {
+      if (stagedCaptureRef.current) {
+        const handle = stagedCaptureRef.current.handle;
+        try {
+          await cleanupCapturedPhoto(handle);
+        } catch {
+          if (canPublish()) {
+            captureCleanupRetryRef.current = () => cleanupCapturedPhoto(handle);
+            setCaptureCleanupFailed(true);
+          }
+        }
       }
-      const shot = await cameraRef.current!.takePictureAsync({
-        quality: 0.76,
-        base64: false,
-        exif: false,
-        shutterSound: true,
-      });
-      haptics.success();
-      const captureSessionId = randomUUID();
-      track('photo_capture_still_taken', { signal_source: 'post_capture_measurement' });
-      router.replace({
-        pathname: '/progress/review',
-        params: {
-          captureSessionId,
-          capturedUri: shot.uri,
-          photoWidth: String(shot.width),
-          photoHeight: String(shot.height),
-          timeOfDay: timeOfDayNow(),
-          takenLocalDate: localDay(),
-        },
-      });
-    } catch {
-      setCapturing(false);
-      setPhotoCaptureFailed(true);
+      if (canPublish()) {
+        if (error instanceof CaptureStagingCleanupError) {
+          captureCleanupRetryRef.current = error.retryCleanup;
+          setCaptureCleanupFailed(true);
+        }
+        setCapturing(false);
+        setPhotoCaptureFailed(true);
+      }
     }
   }
 
@@ -607,19 +707,23 @@ function CaptureScreenContent() {
           }
         : grantPhotoCaptureConsent;
     try {
-      await applyPhotoCaptureConsent({
-        grant,
-        requestPermission: requestPermission as () => Promise<unknown>,
-        onSaved: () => {
-          setConsentSaveFailed(false);
-          setConsented(true);
-        },
-        onFailure: () => {
-          setConsentSaveFailed(true);
-        },
-      });
+      await runOwnerQueryOperation(ownerScope, () =>
+        applyPhotoCaptureConsent({
+          grant,
+          requestPermission: requestPermission as () => Promise<unknown>,
+          onSaved: () => {
+            if (!canPublish()) return;
+            setConsentSaveFailed(false);
+            setConsented(true);
+          },
+          onFailure: () => {
+            if (!canPublish()) return;
+            setConsentSaveFailed(true);
+          },
+        }),
+      );
     } finally {
-      setGrantingConsent(false);
+      if (canPublish()) setGrantingConsent(false);
     }
   }
 
@@ -635,7 +739,7 @@ function CaptureScreenContent() {
           <ConsentGate
             granting={grantingConsent}
             saveFailed={consentSaveFailed}
-            onGrant={() => void grantCaptureConsent()}
+            onGrant={() => void grantCaptureConsent().catch(() => undefined)}
             onCancel={closeToProgress}
           />
         ) : (
@@ -659,6 +763,7 @@ function CaptureScreenContent() {
       <View className="flex-row items-center justify-between px-6">
         <RouteIconButton
           accessibilityLabel="Close"
+          disabled={capturing}
           glyph="x"
           onPress={closeToProgress}
           tone="night"
@@ -892,8 +997,12 @@ function CaptureScreenContent() {
 
       {photoCaptureFailed ? (
         <PhotoCaptureFailureGate
+          cleanupFailed={captureCleanupFailed}
           onRetry={() => {
-            setPhotoCaptureFailed(false);
+            retryCaptureCleanup(() => {
+              setPhotoCaptureFailed(false);
+              setCaptureCleanupFailed(false);
+            });
           }}
           onCancel={closeToProgress}
         />

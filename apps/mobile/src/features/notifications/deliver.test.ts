@@ -1,4 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
 
 import type { NotifPrefs } from './store';
 
@@ -6,10 +11,12 @@ const mocks = vi.hoisted(() => ({
   cancelAllScheduledNotificationsAsync: vi.fn(async () => {}),
   cancelScheduledNotificationAsync: vi.fn(async () => {}),
   getUser: vi.fn(async () => ({ data: { user: null as { id: string } | null } })),
-  insertNotificationLog: vi.fn(async () => ({ error: null })),
+  insertNotificationLog: vi.fn(),
+  insertNotificationLogAbortSignal: vi.fn(async () => ({ error: null })),
   loadNotifPrefs: vi.fn(),
   loadEntitlement: vi.fn(async (): Promise<unknown> => null),
-  notificationLogGte: vi.fn(async () => ({ count: 0 })),
+  notificationLogAbortSignal: vi.fn(async () => ({ count: 0 })),
+  notificationLogGte: vi.fn(),
   recordSentLocal: vi.fn(async () => {}),
   scheduleNotificationAsync: vi.fn(async () => 'notification-id'),
   selectNotificationLog: vi.fn(),
@@ -22,6 +29,7 @@ mocks.selectNotificationLog.mockReturnValue({
   eq: vi.fn().mockReturnThis(),
   gte: mocks.notificationLogGte,
 });
+mocks.notificationLogGte.mockReturnValue({ abortSignal: mocks.notificationLogAbortSignal });
 
 vi.mock('expo-notifications', () => ({
   AndroidImportance: { DEFAULT: 3 },
@@ -106,6 +114,15 @@ const prefs: NotifPrefs = {
   lockscreenDiscreet: true,
 };
 
+let boundaryActive = false;
+
+afterEach(() => {
+  if (boundaryActive) {
+    endAccountGenerationBoundary();
+    boundaryActive = false;
+  }
+});
+
 describe('rescheduleReminders', () => {
   beforeEach(() => {
     mocks.cancelAllScheduledNotificationsAsync.mockClear();
@@ -115,11 +132,17 @@ describe('rescheduleReminders', () => {
     mocks.getUser.mockClear();
     mocks.getUser.mockResolvedValue({ data: { user: null } });
     mocks.insertNotificationLog.mockClear();
-    mocks.insertNotificationLog.mockResolvedValue({ error: null });
+    mocks.insertNotificationLog.mockReturnValue({
+      abortSignal: mocks.insertNotificationLogAbortSignal,
+    });
+    mocks.insertNotificationLogAbortSignal.mockClear();
+    mocks.insertNotificationLogAbortSignal.mockResolvedValue({ error: null });
     mocks.loadNotifPrefs.mockClear();
     mocks.loadNotifPrefs.mockResolvedValue(prefs);
     mocks.notificationLogGte.mockClear();
-    mocks.notificationLogGte.mockResolvedValue({ count: 0 });
+    mocks.notificationLogGte.mockReturnValue({ abortSignal: mocks.notificationLogAbortSignal });
+    mocks.notificationLogAbortSignal.mockClear();
+    mocks.notificationLogAbortSignal.mockResolvedValue({ count: 0 });
     mocks.recordSentLocal.mockClear();
     mocks.recordSentLocal.mockResolvedValue(undefined);
     mocks.scheduleNotificationAsync.mockClear();
@@ -216,12 +239,18 @@ describe('notifyBehavioural', () => {
     mocks.getUser.mockClear();
     mocks.getUser.mockResolvedValue({ data: { user: null } });
     mocks.insertNotificationLog.mockClear();
-    mocks.insertNotificationLog.mockResolvedValue({ error: null });
+    mocks.insertNotificationLog.mockReturnValue({
+      abortSignal: mocks.insertNotificationLogAbortSignal,
+    });
+    mocks.insertNotificationLogAbortSignal.mockClear();
+    mocks.insertNotificationLogAbortSignal.mockResolvedValue({ error: null });
     mocks.loadEntitlement.mockClear();
     mocks.loadNotifPrefs.mockClear();
     mocks.loadNotifPrefs.mockResolvedValue(prefs);
     mocks.notificationLogGte.mockClear();
-    mocks.notificationLogGte.mockResolvedValue({ count: 0 });
+    mocks.notificationLogGte.mockReturnValue({ abortSignal: mocks.notificationLogAbortSignal });
+    mocks.notificationLogAbortSignal.mockClear();
+    mocks.notificationLogAbortSignal.mockResolvedValue({ count: 0 });
     mocks.recordSentLocal.mockClear();
     mocks.recordSentLocal.mockResolvedValue(undefined);
     mocks.scheduleNotificationAsync.mockClear();
@@ -278,7 +307,7 @@ describe('notifyBehavioural', () => {
   it('unions the server cap count when a signed-in user exists', async () => {
     const { notifyBehavioural } = await import('./deliver');
     mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'user-1' } } });
-    mocks.notificationLogGte.mockResolvedValueOnce({ count: 3 });
+    mocks.notificationLogAbortSignal.mockResolvedValueOnce({ count: 3 });
 
     await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
 
@@ -289,7 +318,7 @@ describe('notifyBehavioural', () => {
   it('still reports sent when the best-effort server log write fails after local delivery', async () => {
     const { notifyBehavioural } = await import('./deliver');
     mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'user-1' } } });
-    mocks.insertNotificationLog.mockRejectedValueOnce(new Error('offline'));
+    mocks.insertNotificationLogAbortSignal.mockRejectedValueOnce(new Error('offline'));
 
     await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(true);
 
@@ -297,6 +326,60 @@ describe('notifyBehavioural', () => {
     expect(mocks.recordSentLocal).toHaveBeenCalledWith('replenishment', expect.any(Number));
     expect(mocks.insertNotificationLog).toHaveBeenCalledWith({
       user_id: 'user-1',
+      tier: 'behavioural',
+      kind: 'replenishment',
+    });
+  });
+
+  it('cancels a delayed owner-A notification when an account boundary starts', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    let releaseSchedule!: (id: string) => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    mocks.scheduleNotificationAsync.mockImplementationOnce(() => {
+      markStarted();
+      return new Promise<string>((resolve) => {
+        releaseSchedule = resolve;
+      });
+    });
+
+    const notification = notifyBehavioural('replenishment', '12:00');
+    await started;
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    releaseSchedule('owner-a-notification');
+
+    await expect(notification).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith('owner-a-notification');
+    expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+  });
+
+  it('keeps a delayed notification-log mirror scoped to owner A across an A-to-B boundary', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'owner-a' } } });
+    let releaseInsert!: (value: { error: null }) => void;
+    let markInsertStarted!: () => void;
+    const insertStarted = new Promise<void>((resolve) => {
+      markInsertStarted = resolve;
+    });
+    mocks.insertNotificationLogAbortSignal.mockImplementationOnce(() => {
+      markInsertStarted();
+      return new Promise((resolve) => {
+        releaseInsert = resolve;
+      });
+    });
+
+    const notification = notifyBehavioural('replenishment', '12:00');
+    await insertStarted;
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    releaseInsert({ error: null });
+
+    await expect(notification).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    expect(mocks.insertNotificationLog).toHaveBeenCalledWith({
+      user_id: 'owner-a',
       tier: 'behavioural',
       kind: 'replenishment',
     });

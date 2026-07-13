@@ -256,8 +256,16 @@ describe('Progress route mobile contracts', () => {
     const lighting = readSource('features/photos/analyzePhotoLighting.ts');
 
     expect(capture).toContain("signal_source: 'post_capture_measurement'");
-    expect(capture).toContain('photoWidth: String(shot.width)');
-    expect(capture).toContain('photoHeight: String(shot.height)');
+    expect(capture).toContain('photoWidth: String(stagedCapture.width)');
+    expect(capture).toContain('photoHeight: String(stagedCapture.height)');
+    expect(capture).toContain('captureSessionId: stagedCapture.handle.operationId');
+    expect(capture).toContain('CaptureStagingCleanupError');
+    expect(capture).toContain('captureCleanupRetryRef');
+    expect(capture).toContain('retryCaptureCleanup');
+    expect(capture).toContain('disabled={capturing}');
+    expect(capture).not.toContain('capturedUri:');
+    expect(review).not.toContain('capturedUri?: string;');
+    expect(review).toContain('resolveCapturedPhoto(captureSessionId)');
     expect(capture).toContain('PHOTO_COPY.capture.qualityCheck');
     expect(capture).not.toContain('useGuidedCaptureSignals');
     expect(capture).not.toContain('camera_preview_estimate');
@@ -272,16 +280,25 @@ describe('Progress route mobile contracts', () => {
     expect(review).toContain("? ('post_capture_measurement' as const)");
     expect(review).toContain('qualitySource,');
     expect(review).toContain("data?.reference?.qualitySource === 'post_capture_measurement'");
-    expect(review).toContain('onSuccess: () => {');
+    expect(review).toContain('.mutateAsync({');
+    expect(review).toContain('.then(() => {');
     expect(review).toContain('const saveInFlightRef = useRef(false);');
     expect(review).toContain('saveInFlightRef.current = true;');
     expect(review).toContain('saveInFlightRef.current = false;');
     expect(review).toContain('if (saveInFlightRef.current) return;');
-    expect(review).toContain('disabled={add.isPending}');
-    expect(review).toContain('onError: () => {');
+    expect(review).toContain('disabled={add.isPending || cleanupInFlight}');
+    expect(review).toContain('.catch(() => {');
     expect(review).toContain('setSaveFailed(true);');
-    expect(review).toContain('const discardCapturedPhoto = () => {');
-    expect(review).toContain('.catch(() => undefined)');
+    expect(review).toContain('const discardAndNavigate = (navigate: () => void) => {');
+    expect(review).toContain('usePreventRemove(Boolean(captureSessionId)');
+    expect(review).toContain('await resolveCapturedPhoto(captureSessionId)');
+    expect(review).toContain('if (handle) await cleanupCapturedPhoto(handle);');
+    expect(review).toContain('navigation.dispatch(action);');
+    expect(review).not.toContain('cleanupCapturedPhoto(handle).catch(() => undefined)');
+    expect(review).toContain('setCleanupFailed(true)');
+    expect(review).toContain('outside every conditional storage, lock,');
+    expect(review).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
+    expect(review).not.toContain('cleanupCapturedPhoto(handle).catch(() => undefined)');
     expect(review).not.toContain('onSettled: () => {');
     expect(review).not.toContain('Number(params.alignment');
     expect(review).not.toContain('Number(params.lighting');
@@ -292,7 +309,8 @@ describe('Progress route mobile contracts', () => {
     expect(analysis).toContain('ANALYSIS_TIMEOUT_MS');
     expect(analysis).toContain('const analysisTerminal =');
     expect(analysis).toContain('if (!analysisUri || analysisTerminal) return;');
-    expect(analysis).toContain('}, [analysisTerminal, analysisUri]);');
+    expect(analysis).toContain('}, [analysisTerminal, analysisUri, ownerScope]);');
+    expect(analysis).toContain('isOwnerQueryScopeCurrent(ownerScope)');
     expect(analysis.indexOf('if (timedOutUri === analysisUri)')).toBeLessThan(
       analysis.indexOf("} else if (faceResult.status === 'done')"),
     );
@@ -305,10 +323,13 @@ describe('Progress route mobile contracts', () => {
     expect(fallbackProvider).not.toContain('@infinitered/react-native-mlkit-face-detection');
     expect(nativeDetector).toContain('useFaceDetection');
     expect(nativeDetector).toContain('await detector.initialize()');
-    expect(nativeDetector).toContain('validatedFaceObservations(await detector.detectFaces(uri))');
+    expect(nativeDetector).toContain('runOwnerQueryOperation(ownerScope');
+    expect(nativeDetector).toContain('detector.detectFaces(uri)');
+    expect(nativeDetector).toContain('lease.assertCurrent()');
+    expect(nativeDetector).toContain('isOwnerQueryScopeCurrent(ownerScope)');
     expect(nativeDetector).toContain('if (!faces)');
     expect(lighting).toContain('SAMPLE_WIDTH = 64');
-    expect(lighting).toContain('sampleFile.delete()');
+    expect(lighting).toContain('withStagedPhotoAnalysisJpeg');
     expect(detail).toContain("photo.qualitySource === 'post_capture_measurement'");
     expect(detail).toContain("? 'Capture checks recorded'");
     expect(detail).toContain(": 'Quality not measured'");
@@ -410,7 +431,10 @@ describe('Progress route mobile contracts', () => {
     expect(copy).toContain("missingEyebrow: 'Photo not captured'");
     expect(copy).toContain("missingTitle: 'No photo to review yet.'");
     expect(source).toContain('function isNonBlank(value: string | null): value is string');
-    expect(source).toContain('const hasCapturedPhoto = isNonBlank(capturedUri);');
+    expect(source).toContain("const hasCapturedPhoto = captureSource.status === 'ready';");
+    expect(source).toContain('await resolveCapturedPhoto(captureSessionId)');
+    expect(source).toContain('if (handle) await cleanupCapturedPhoto(handle);');
+    expect(source).toContain('<PhotoImage uri={capturedUri}');
     expect(source).toContain(
       'if (!hasCapturedPhoto || add.isPending || saveInFlightRef.current) return;',
     );

@@ -18,9 +18,11 @@ vi.mock('@/lib/storage/privateKV', () => ({
   setPrivateItem: vi.fn(async (key: string, value: string) => {
     mocks.privateKV.set(key, value);
   }),
-  removePrivateItem: vi.fn(async (key: string) => {
-    mocks.privateKV.delete(key);
-  }),
+  removePrivateItemsForAuthorizedReset: vi.fn(
+    async (keys: readonly string[], _reason: string) => {
+      for (const key of keys) mocks.privateKV.delete(key);
+    },
+  ),
   PRIVATE_KV_ENVELOPE_INVALID: 'PRIVATE_KV_ENVELOPE_INVALID',
   PRIVATE_KV_ENVELOPE_UNSUPPORTED: 'PRIVATE_KV_ENVELOPE_UNSUPPORTED',
 }));
@@ -115,6 +117,7 @@ describe('app lock preference storage', () => {
   });
 
   it('removes only the malformed app-lock preference during explicit recovery', async () => {
+    const privateKV = await import('@/lib/storage/privateKV');
     mocks.privateKV.set(KEY, 'enabled');
     mocks.privateKV.set('onskin.shelf.v1', 'shelf-ciphertext');
 
@@ -122,6 +125,10 @@ describe('app lock preference storage', () => {
 
     expect(mocks.privateKV.has(KEY)).toBe(false);
     expect(mocks.privateKV.get('onskin.shelf.v1')).toBe('shelf-ciphertext');
+    expect(privateKV.removePrivateItemsForAuthorizedReset).toHaveBeenCalledWith(
+      [KEY],
+      'device_authenticated_app_lock_repair',
+    );
   });
 
   it('uses the dev-only E2E fixture before private storage', async () => {

@@ -16,9 +16,11 @@ import { ACCOUNT_CONSENT } from '@/features/onboarding/consentCopy';
 import { track, identify } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { getAccountUpgradeE2EFixture } from '@/lib/auth/accountUpgradeE2E';
+import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE, authUserMessage } from '@/lib/errors/userFacing';
-import { supabase } from '@/lib/supabase/client';
+import { isOwnerQueryScopeCurrent, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 // 09 · Account creation at the value moment (docs/01 §1/§2). SIWA mandatory on iOS
 // because Google is offered (Guideline 4.8). Email uses OTP codes (not magic
@@ -27,6 +29,7 @@ import { supabase } from '@/lib/supabase/client';
 export default function AccountScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const { signInWithApple, signInWithGoogle, sendEmailOtp, verifyEmailOtp } = useAuth();
+  const ownerScope = useOwnerQueryScope();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [stage, setStage] = useState<'menu' | 'code'>('menu');
@@ -39,19 +42,26 @@ export default function AccountScreen() {
   const compactPhone = height < 640 || supportFloorTextPressurePhone;
 
   async function finish() {
-    if (!accountUpgradeE2EFixture) {
-      try {
-        await recordAccountConsent();
-      } catch {
-        setError(ACCOUNT_CONSENT.saveFailedBody);
-        return;
+    await runOwnerQueryOperation(ownerScope, async (lease) => {
+      if (!accountUpgradeE2EFixture) {
+        try {
+          await recordAccountConsent();
+          lease.assertCurrent();
+        } catch {
+          lease.assertCurrent();
+          setError(ACCOUNT_CONSENT.saveFailedBody);
+          return;
+        }
+
+        const owner = await captureAuthenticatedAccountOwner(lease);
+        if (owner) await identify(lease, owner.userId, { method: 'account_created' });
       }
 
-      const response = await supabase.auth.getUser().catch(() => null);
-      if (response?.data.user?.id) identify(response.data.user.id, { method: 'account_created' });
-    }
-    track('account_created');
-    router.replace('/onboarding/paywall');
+      lease.assertCurrent();
+      track('account_created');
+      lease.assertCurrent();
+      router.replace('/onboarding/paywall');
+    });
   }
 
   async function run(fn: () => Promise<void>) {
@@ -65,9 +75,10 @@ export default function AccountScreen() {
     try {
       await fn();
     } catch (e) {
+      if (!isOwnerQueryScopeCurrent(ownerScope)) return;
       setError(authUserMessage(e));
     } finally {
-      setBusy(false);
+      if (isOwnerQueryScopeCurrent(ownerScope)) setBusy(false);
     }
   }
 

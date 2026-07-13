@@ -1,7 +1,8 @@
 import type { BudgetBand, ValuesFilter } from '@onskin/types';
 import { VALUES_FILTERS } from '@onskin/types';
 
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
+import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
 import { supabase } from '@/lib/supabase/client';
 import {
   getPrivateItem,
@@ -138,26 +139,35 @@ export async function loadPreferences(): Promise<RecPreferences> {
   }
 }
 
-export async function savePreferences(prefs: RecPreferences): Promise<void> {
-  const normalized = normalizePreferences(prefs) ?? DEFAULT_PREFERENCES;
-  await updatePrivateItem(PREF_KEY, (current) => {
-    if (current !== null) decodePreferences(current);
-    return encodePreferences(normalized);
-  });
-  // Best-effort mirror (B-SUPABASE). Owner-RLS table; clients can only write their
-  // own row. Guarded so the store works fully before the backend is configured.
-  void runAccountGenerationOperation(async (lease) => {
-    const { data } = await supabase.auth.getUser();
-    lease.assertCurrent();
-    if (!data.user?.id) return;
-    await supabase.from('recommendation_preferences').upsert({
-      user_id: data.user.id,
-      values_filters: normalized.values,
-      budget_band: normalized.budget,
-      format_prefs: normalized.formats,
+export async function savePreferences(
+  ownerScope: OwnerQueryScope,
+  prefs: RecPreferences,
+): Promise<void> {
+  await runOwnerQueryOperation(ownerScope, async (lease) => {
+    const normalized = normalizePreferences(prefs) ?? DEFAULT_PREFERENCES;
+    await updatePrivateItem(PREF_KEY, (current) => {
+      if (current !== null) decodePreferences(current);
+      return encodePreferences(normalized);
     });
     lease.assertCurrent();
-  }).catch(() => undefined);
+    // Best-effort mirror (B-SUPABASE). Owner-RLS table; clients can only write their
+    // own row. Guarded so the store works fully before the backend is configured.
+    void runOwnerQueryOperation(ownerScope, async (mirrorLease) => {
+      const owner = await captureAuthenticatedAccountOwner(mirrorLease);
+      if (!owner) return;
+      mirrorLease.assertCurrent();
+      await supabase
+        .from('recommendation_preferences')
+        .upsert({
+          user_id: owner.userId,
+          values_filters: normalized.values,
+          budget_band: normalized.budget,
+          format_prefs: normalized.formats,
+        })
+        .abortSignal(mirrorLease.signal);
+      mirrorLease.assertCurrent();
+    }).catch(() => undefined);
+  });
 }
 
 // --- dismissed suggestions ("not for me") -------------------------------------
@@ -169,14 +179,20 @@ export async function loadDismissed(): Promise<string[]> {
   }
 }
 
-export async function dismissRecommendation(id: string): Promise<void> {
+export async function dismissRecommendation(
+  ownerScope: OwnerQueryScope,
+  id: string,
+): Promise<void> {
   const normalizedId = id.trim();
   if (normalizedId.length === 0) return;
-  await updatePrivateItem(DISMISSED_KEY, (current) => {
-    const dismissed = decodePrivateStringSet(current);
-    return encodePrivateStringSet(
-      dismissed.includes(normalizedId) ? dismissed : [...dismissed, normalizedId],
-    );
+  await runOwnerQueryOperation(ownerScope, async (lease) => {
+    await updatePrivateItem(DISMISSED_KEY, (current) => {
+      const dismissed = decodePrivateStringSet(current);
+      return encodePrivateStringSet(
+        dismissed.includes(normalizedId) ? dismissed : [...dismissed, normalizedId],
+      );
+    });
+    lease.assertCurrent();
   });
 }
 

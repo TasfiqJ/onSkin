@@ -11,6 +11,7 @@ import {
 } from '@noble/ciphers/utils.js';
 
 import {
+  PRIVATE_KV_CONTENT_KEY_CONFLICT,
   PRIVATE_KV_CONTENT_KEY_NAME,
   clearStoredPrivateKVContentKey,
   getStoredPrivateKVContentKey,
@@ -36,6 +37,13 @@ export const PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE =
   'PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE';
 export const PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY =
   'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY';
+export const PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID =
+  'PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID';
+export { PRIVATE_KV_CONTENT_KEY_CONFLICT };
+
+export type PrivateKVAuthorizedResetReason =
+  | 'account_isolation'
+  | 'device_authenticated_app_lock_repair';
 
 type PrivateEnvelope = {
   version: typeof ENCRYPTION_VERSION;
@@ -284,6 +292,35 @@ async function assertNoFailedReadRewrite(key: string): Promise<string | null> {
   return current;
 }
 
+async function assertRoutineRemovalReadable(key: string, raw: string | null): Promise<void> {
+  if (raw === null) return;
+
+  const classification = classifyEnvelope(key, raw);
+  if (classification.kind === 'legacy') return;
+  if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
+    rememberFailedRead(key, raw);
+    throw envelopeClassificationError(classification.kind);
+  }
+
+  let contentKey: Uint8Array | null;
+  try {
+    contentKey = await getExistingContentKey();
+  } catch (error) {
+    rememberFailedRead(key, raw);
+    throw error;
+  }
+  if (!contentKey) {
+    rememberFailedRead(key, raw);
+    throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+  }
+  try {
+    decryptEnvelope(classification.envelope, contentKey);
+  } catch {
+    rememberFailedRead(key, raw);
+    throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+  }
+}
+
 export async function getPrivateItem(key: string): Promise<string | null> {
   return withOperationTiming('private_kv_read', () =>
     runAccountScopedPrivateOperation(async () => {
@@ -514,6 +551,13 @@ export async function removePrivateItem(key: string): Promise<void> {
       runSerializedPrivateMutations([key], async () => {
         assertPrivateDataKey(key);
         assertAccountScopedPrivateOperationAllowed(generation);
+        const snapshot = await assertNoFailedReadRewrite(key);
+        await assertRoutineRemovalReadable(key, snapshot);
+        assertAccountScopedPrivateOperationAllowed(generation);
+        const current = await AsyncStorage.getItem(key);
+        if (current !== snapshot) throw new Error(PRIVATE_KV_WRITE_CONFLICT);
+        if (snapshot === null) return;
+        assertAccountScopedPrivateOperationAllowed(generation);
         await AsyncStorage.removeItem(key);
         failedReadSnapshots.delete(key);
       }),
@@ -524,12 +568,62 @@ export async function removePrivateItem(key: string): Promise<void> {
 export async function multiRemovePrivateItems(keys: readonly string[]): Promise<void> {
   return runAccountScopedPrivateOperation((generation) =>
     runSerializedPrivateMutations(keys, async () => {
-      for (const key of keys) assertPrivateDataKey(key);
+      const uniqueKeys = [...new Set(keys)];
+      for (const key of uniqueKeys) assertPrivateDataKey(key);
       assertAccountScopedPrivateOperationAllowed(generation);
-      await AsyncStorage.multiRemove([...keys]);
-      for (const key of keys) failedReadSnapshots.delete(key);
+      const snapshots = new Map<string, string | null>();
+      for (const key of uniqueKeys) {
+        const snapshot = await assertNoFailedReadRewrite(key);
+        await assertRoutineRemovalReadable(key, snapshot);
+        snapshots.set(key, snapshot);
+      }
+      assertAccountScopedPrivateOperationAllowed(generation);
+      const currentEntries = await AsyncStorage.multiGet(uniqueKeys);
+      if (currentEntries.some(([key, current]) => current !== snapshots.get(key))) {
+        throw new Error(PRIVATE_KV_WRITE_CONFLICT);
+      }
+      const presentKeys = uniqueKeys.filter((key) => snapshots.get(key) !== null);
+      if (presentKeys.length === 0) return;
+      assertAccountScopedPrivateOperationAllowed(generation);
+      await AsyncStorage.multiRemove(presentKeys);
+      for (const key of presentKeys) failedReadSnapshots.delete(key);
     }),
   );
+}
+
+/**
+ * Bypasses ciphertext authentication only for a caller that has already
+ * established destructive authority, such as drained account isolation or a
+ * device-authenticated, user-approved recovery. Routine feature deletion must
+ * use removePrivateItem/multiRemovePrivateItems instead.
+ */
+export async function removePrivateItemsForAuthorizedReset(
+  keys: readonly string[],
+  reason: PrivateKVAuthorizedResetReason,
+): Promise<void> {
+  return withOperationTiming('private_kv_remove', async () => {
+    if (reason !== 'account_isolation' && reason !== 'device_authenticated_app_lock_repair') {
+      throw new Error(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
+    }
+    if (
+      (reason === 'account_isolation' && !accountBoundaryWriteBlocked) ||
+      (reason === 'device_authenticated_app_lock_repair' && accountBoundaryWriteBlocked)
+    ) {
+      throw new Error(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
+    }
+    const uniqueKeys = [...new Set(keys)];
+    const pending = runSerializedPrivateMutations(uniqueKeys, async () => {
+      for (const key of uniqueKeys) assertPrivateDataKey(key);
+      await AsyncStorage.multiRemove(uniqueKeys);
+      for (const key of uniqueKeys) failedReadSnapshots.delete(key);
+    });
+    inFlightOperations.add(pending);
+    try {
+      await pending;
+    } finally {
+      inFlightOperations.delete(pending);
+    }
+  });
 }
 
 export async function clearPrivateKVContentKey(): Promise<void> {

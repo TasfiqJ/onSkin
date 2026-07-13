@@ -2,6 +2,7 @@ import type { ConsentType } from '@onskin/types';
 import * as Crypto from 'expo-crypto';
 
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { recordConsent } from '@/lib/consent/consent';
 import { getPrivateBoolean } from '@/lib/storage/privateBoolean';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
@@ -156,11 +157,11 @@ async function setPhotoCaptureConsentLocal(): Promise<void> {
     PHOTO_CAPTURE_CONSENT.fullText,
   );
   const consent: LocalPhotoCaptureConsent = {
-      type: 'photo_capture',
-      granted: true,
-      version: PHOTO_CAPTURE_CONSENT.version,
-      consentTextHash,
-      recordedAt: new Date().toISOString(),
+    type: 'photo_capture',
+    granted: true,
+    version: PHOTO_CAPTURE_CONSENT.version,
+    consentTextHash,
+    recordedAt: new Date().toISOString(),
   };
   await updatePrivateItem(CAPTURE_RECORD_KEY, (current) => {
     if (current !== null) decodePhotoCaptureConsent(current);
@@ -173,17 +174,22 @@ export async function hasPhotoCaptureConsent(): Promise<boolean> {
 }
 
 export async function grantPhotoCaptureConsent(): Promise<void> {
-  await setPhotoCaptureConsentLocal();
-  try {
-    await recordConsent({
-      type: 'photo_capture',
-      granted: true,
-      version: PHOTO_CAPTURE_CONSENT.version,
-      consentText: PHOTO_CAPTURE_CONSENT.fullText,
-    });
-  } catch {
-    /* offline / no anonymous session. Keep the local-only proof; production ledger QA is a launch gate. */
-  }
+  await runAccountGenerationOperation(async (lease) => {
+    await setPhotoCaptureConsentLocal();
+    lease.assertCurrent();
+    try {
+      await recordConsent({
+        type: 'photo_capture',
+        granted: true,
+        version: PHOTO_CAPTURE_CONSENT.version,
+        consentText: PHOTO_CAPTURE_CONSENT.fullText,
+      });
+      lease.assertCurrent();
+    } catch {
+      lease.assertCurrent();
+      /* offline / no anonymous session. Keep the local-only proof; production ledger QA is a launch gate. */
+    }
+  });
 }
 
 /** Removes flags written by builds that exposed backup before it existed. */

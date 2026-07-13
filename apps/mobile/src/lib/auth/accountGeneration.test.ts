@@ -5,6 +5,7 @@ import {
   ACCOUNT_GENERATION_LEASE_INVALID_MESSAGE,
   AccountGenerationLeaseError,
   assertAccountGenerationLease,
+  awaitAccountGenerationLease,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
   runAccountGenerationOperation,
@@ -67,6 +68,26 @@ describe('account generation operations', () => {
     await expect(operation).rejects.toBeInstanceOf(AccountGenerationLeaseError);
     await drain;
     expect(drainFinished).toBe(true);
+  });
+
+  it('drains a never-resolving API that cannot receive an abort signal', async () => {
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    const never = new Promise<never>(() => undefined);
+
+    const operation = runAccountGenerationOperation((lease) =>
+      awaitAccountGenerationLease(lease, () => {
+        markStarted();
+        return never;
+      }),
+    );
+    await started;
+
+    beginBoundary();
+    await expect(operation).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
   });
 
   it('rejects a stale lease both during and after an account boundary', async () => {

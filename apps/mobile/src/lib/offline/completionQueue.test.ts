@@ -1,4 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
 
 import {
   COMPLETION_QUEUE_INVALID,
@@ -18,6 +23,7 @@ const mocks = vi.hoisted(() => ({
   writes: 0,
   currentUserId: null as string | null,
   insertCalls: [] as Record<string, unknown>[],
+  insertSignals: [] as AbortSignal[],
   insertGate: null as Promise<void> | null,
   onInsert: null as (() => void) | null,
   insertError: null as { code: string } | null,
@@ -63,12 +69,27 @@ vi.mock('@/lib/supabase/client', () => ({
       })),
     },
     from: vi.fn(() => ({
-      insert: vi.fn(async (payload: Record<string, unknown>) => {
-        mocks.insertCalls.push(payload);
-        mocks.onInsert?.();
-        if (mocks.insertGate) await mocks.insertGate;
-        return { error: mocks.insertError };
-      }),
+      insert: vi.fn((payload: Record<string, unknown>) => ({
+        abortSignal: vi.fn(async (signal: AbortSignal) => {
+          mocks.insertCalls.push(payload);
+          mocks.insertSignals.push(signal);
+          mocks.onInsert?.();
+          if (mocks.insertGate) {
+            await new Promise<void>((resolve, reject) => {
+              const onAbort = () => reject(new Error('POSTGREST_ABORTED'));
+              signal.addEventListener('abort', onAbort, { once: true });
+              void mocks.insertGate?.then(
+                () => {
+                  signal.removeEventListener('abort', onAbort);
+                  resolve();
+                },
+                reject,
+              );
+            });
+          }
+          return { error: mocks.insertError };
+        }),
+      })),
     })),
   },
 }));
@@ -82,6 +103,15 @@ const base: PendingCompletion = {
   completedDate: '2026-06-25',
   enqueuedAt: '2026-06-25T08:00:00.000Z',
 };
+
+let boundaryActive = false;
+
+afterEach(() => {
+  if (boundaryActive) {
+    endAccountGenerationBoundary();
+    boundaryActive = false;
+  }
+});
 
 function storedItems(): PendingCompletion[] {
   const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
@@ -101,6 +131,7 @@ describe('offline completion queue (docs/01 §6)', () => {
     mocks.writes = 0;
     mocks.currentUserId = null;
     mocks.insertCalls = [];
+    mocks.insertSignals = [];
     mocks.insertGate = null;
     mocks.onInsert = null;
     mocks.insertError = null;
@@ -236,6 +267,29 @@ describe('offline completion queue (docs/01 §6)', () => {
 
     await expect(flushing).resolves.toEqual({ flushed: 1, remaining: 1 });
     await expect(getPendingCompletions()).resolves.toEqual([concurrent]);
+  });
+
+  it('keeps owner-A queue bytes when a delayed flush crosses into owner B', async () => {
+    const original = JSON.stringify({ version: 1, items: [base] });
+    mocks.storage.set(KEY, original);
+    mocks.currentUserId = 'u1';
+    mocks.insertGate = new Promise<void>(() => undefined);
+    let signalInsertStarted!: () => void;
+    const insertStarted = new Promise<void>((resolve) => {
+      signalInsertStarted = resolve;
+    });
+    mocks.onInsert = signalInsertStarted;
+
+    const flushing = flushCompletions(new Date(2026, 5, 25, 9));
+    await insertStarted;
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+
+    await expect(flushing).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    expect(mocks.insertSignals).toHaveLength(1);
+    expect(mocks.insertSignals[0]?.aborted).toBe(true);
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
   });
 
   it('preserves future-version bytes and refuses to downgrade them', async () => {

@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 
+import { isOwnerQueryScopeCurrent, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+
 import { analyzePhotoLighting } from './analyzePhotoLighting';
 import {
   assessFraming,
@@ -113,6 +116,7 @@ export function useCaptureAnalysis({
   height: number | null;
   fixtureName?: string;
 }): CaptureAnalysis {
+  const ownerScope = useOwnerQueryScope();
   const fixture = useMemo(() => devCaptureAnalysisFixture(fixtureName), [fixtureName]);
   const analysisUri = Platform.OS !== 'web' && fixture == null && uri ? uri : undefined;
   const faceResult = useDetectedFaces(analysisUri);
@@ -130,25 +134,29 @@ export function useCaptureAnalysis({
   useEffect(() => {
     if (!analysisUri) return;
     let cancelled = false;
-    void analyzePhotoLighting(analysisUri)
+    void runOwnerQueryOperation(ownerScope, () => analyzePhotoLighting(analysisUri))
       .then((assessment) => {
-        if (!cancelled) setLightingRun({ uri: analysisUri, assessment });
+        if (!cancelled && isOwnerQueryScopeCurrent(ownerScope)) {
+          setLightingRun({ uri: analysisUri, assessment });
+        }
       })
       .catch(() => {
-        if (!cancelled) {
+        if (!cancelled && isOwnerQueryScopeCurrent(ownerScope)) {
           setLightingRun({ uri: analysisUri, assessment: unavailableLighting() });
         }
       });
     return () => {
       cancelled = true;
     };
-  }, [analysisUri]);
+  }, [analysisUri, ownerScope]);
 
   useEffect(() => {
     if (!analysisUri || analysisTerminal) return;
-    const timer = setTimeout(() => setTimedOutUri(analysisUri), ANALYSIS_TIMEOUT_MS);
+    const timer = setTimeout(() => {
+      if (isOwnerQueryScopeCurrent(ownerScope)) setTimedOutUri(analysisUri);
+    }, ANALYSIS_TIMEOUT_MS);
     return () => clearTimeout(timer);
-  }, [analysisTerminal, analysisUri]);
+  }, [analysisTerminal, analysisUri, ownerScope]);
 
   if (fixture) return fixtureAnalysis(fixture);
   if (!analysisUri || width == null || height == null) {

@@ -684,6 +684,19 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('CAMERA_FAILURE_COPY.shelfSettingsTitle');
     expect(source).toContain('CAMERA_FAILURE_COPY.shelfSettingsBody');
     expect(source).toContain('Try label photo again');
+    expect(source).toContain('captureLabelForReview(lease');
+    expect(source).toContain('cleanupStagedCapture(capturedHandle)');
+    expect(source).toContain('CaptureStagingCleanupError');
+    expect(source).toContain('captureCleanupRetryRef');
+    expect(source).toContain('runOwnerQueryOperation(ownerScope');
+    expect(source).toContain('isOwnerQueryScopeCurrent(ownerScope)');
+    expect(source).toContain('source={{ uri: capturedUri }}');
+    expect(source).toContain('cachePolicy="none"');
+    expect(source).toContain('transition={0}');
+    expect(source).toContain('Temporary photo cleanup needs another try');
+    expect(source).toContain('const [capturedHandle, setCapturedHandle]');
+    expect(source).not.toContain('const [capturedUri, setCapturedUri]');
+    expect(source).not.toContain('FileSystem.deleteAsync(capturedUri');
     expect(source).toContain('alertOnFailure: false');
     expect(source).toContain('canShowPermissionRecovery');
     expect(source).toContain('canAskCameraPermission');
@@ -713,7 +726,10 @@ describe('Shelf route mobile contracts', () => {
       "import { recordShelfScan, shelfScanResultFromLookup } from '@/features/shelf/scanLog';",
     );
     expect(source).toContain('const scanResult = shelfScanResultFromLookup(response.result)');
-    expect(source).toContain('void recordShelfScan({');
+    expect(source).toContain('void recordShelfScan(ownerScope, {');
+    expect(source).toContain(
+      'if (controller.signal.aborted || !isOwnerQueryScopeCurrent(ownerScope))',
+    );
     expect(source).toContain("result: shelfScanResultFromLookup('lookup_error')");
   });
 

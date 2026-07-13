@@ -12,7 +12,7 @@ import { LockGlyph } from '@/features/commerce/LockGlyph';
 import { useCommerceConsent } from '@/features/commerce/useCommerce';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { stackBySlug, type StackItem } from '@/features/commerce/stacks';
-import { buildClickToken, recordClick } from '@/features/commerce/store';
+import { buildClickToken, runCommerceClickOperation } from '@/features/commerce/store';
 import { track } from '@/lib/analytics/track';
 import { APP_COMMERCE_STACKS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
@@ -39,6 +39,7 @@ export default function StackDetailScreen() {
   }, [stack]);
 
   const tapItem = async (item: StackItem) => {
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
     haptics.select();
     setLinkFeedback(null);
     if (!consented) {
@@ -50,20 +51,31 @@ export default function StackDetailScreen() {
       }
       return;
     }
-    track('where_to_buy_clicked', { source: 'stack' });
     const token = buildClickToken();
-    await recordClick({
-      clickToken: token,
-      productType: item.productType,
-      source: 'none',
-      consented: true,
-    });
-    // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Resolve + open the real retailer link here
-    // (opaque token only). Until then, the honest stub.
-    setLinkFeedback({
-      title: COMMERCE_COPY.whereToBuy.stubTitle,
-      body: COMMERCE_COPY.whereToBuy.stubBody,
-    });
+    try {
+      const feedback = await runCommerceClickOperation(
+        ownerScope,
+        {
+          clickToken: token,
+          productType: item.productType,
+          source: 'none',
+          consented: true,
+        },
+        () => {
+          track('where_to_buy_clicked', { source: 'stack' });
+          // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Resolve + open the real retailer link
+          // here (opaque token only). Until then, the honest stub.
+          return {
+            title: COMMERCE_COPY.whereToBuy.stubTitle,
+            body: COMMERCE_COPY.whereToBuy.stubBody,
+          } satisfies CommerceLinkFeedback;
+        },
+      );
+      if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+      if (feedback) setLinkFeedback(feedback);
+    } catch {
+      return;
+    }
   };
 
   return (

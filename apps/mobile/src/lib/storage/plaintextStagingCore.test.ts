@@ -5,9 +5,11 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   createPlaintextStagingCoordinator,
   PLAINTEXT_STAGING_CACHE_UNAVAILABLE,
+  PLAINTEXT_STAGING_ENTRY_MISSING,
   PLAINTEXT_STAGING_ENTRY_UNOWNED,
   PLAINTEXT_STAGING_JOURNAL_INVALID,
   PLAINTEXT_STAGING_JOURNAL_KEY,
+  PLAINTEXT_STAGING_SCAVENGE_FAILED,
   PLAINTEXT_STAGING_STATE_INVALID,
 } from './plaintextStagingCore';
 
@@ -23,6 +25,10 @@ function createHarness(options: { cacheDirectory?: string | null; ids?: string[]
   const ids = [...(options.ids ?? [FIRST_ID, SECOND_ID])];
   const deleteAsync = vi.fn(async (uri: string) => {
     files.delete(uri);
+    for (const file of [...files]) {
+      if (file.startsWith(uri)) files.delete(file);
+    }
+    directories.delete(uri);
   });
   const getItem = vi.fn(async (key: string) => storage.get(key) ?? null);
   const removeItem = vi.fn(async (key: string) => {
@@ -141,6 +147,37 @@ describe('plaintext staging journal', () => {
     });
   });
 
+  it('resolves only an exact opaque, written capture entry with a present file', async () => {
+    const harness = createHarness();
+    const handle = await harness.coordinator.reserve('photo_capture_jpeg');
+
+    await expect(
+      harness.coordinator.lookup(handle.operationId, 'photo_capture_jpeg'),
+    ).resolves.toBeNull();
+    harness.files.add(handle.uri);
+    await harness.coordinator.markState(handle, 'plaintext_written');
+
+    await expect(
+      harness.coordinator.lookup(handle.operationId, 'photo_capture_jpeg'),
+    ).resolves.toEqual(handle);
+    await expect(
+      harness.coordinator.lookup(handle.operationId, 'photo_analysis_jpeg'),
+    ).resolves.toBeNull();
+    await expect(
+      harness.coordinator.lookup('../not-opaque', 'photo_capture_jpeg'),
+    ).resolves.toBeNull();
+  });
+
+  it('fails closed when a written capture journal entry has no file', async () => {
+    const harness = createHarness();
+    const handle = await harness.coordinator.reserve('photo_capture_jpeg');
+    await harness.coordinator.markState(handle, 'plaintext_written');
+
+    await expect(
+      harness.coordinator.lookup(handle.operationId, 'photo_capture_jpeg'),
+    ).rejects.toThrow(PLAINTEXT_STAGING_ENTRY_MISSING);
+  });
+
   it('retains cleanup-pending ownership when deletion fails and succeeds on retry', async () => {
     const harness = createHarness();
     const handle = await harness.coordinator.reserve('photo_share_png');
@@ -170,7 +207,7 @@ describe('plaintext staging journal', () => {
 
     expect(harness.files.has(handle.uri)).toBe(false);
     expect(readJournal(harness.storage)).toBeNull();
-    expect(harness.deleteAsync).toHaveBeenCalledWith(handle.uri, { idempotent: true });
+    expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, { idempotent: true });
   });
 
   it('keeps the journal intact when scavenger deletion fails so relaunch can retry', async () => {
@@ -179,7 +216,7 @@ describe('plaintext staging journal', () => {
     harness.files.add(handle.uri);
     harness.deleteAsync.mockRejectedValueOnce(new Error('filesystem unavailable'));
 
-    await expect(harness.coordinator.scavenge()).rejects.toThrow('filesystem unavailable');
+    await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_SCAVENGE_FAILED);
     expect(readJournal(harness.storage)).not.toBeNull();
     expect(harness.files.has(handle.uri)).toBe(true);
 
@@ -188,14 +225,16 @@ describe('plaintext staging journal', () => {
     expect(readJournal(harness.storage)).toBeNull();
   });
 
-  it('fails closed on a malformed journal before touching the filesystem', async () => {
+  it('deletes the dedicated plaintext directories before surfacing a malformed journal', async () => {
     const harness = createHarness();
     harness.storage.set(PLAINTEXT_STAGING_JOURNAL_KEY, '{not-json');
     harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.jpg`);
 
     await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_JOURNAL_INVALID);
-    expect(harness.deleteAsync).not.toHaveBeenCalled();
-    expect(harness.files).toContain(`${STAGING_DIRECTORY}${FIRST_ID}.jpg`);
+    expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, { idempotent: true });
+    expect(harness.files).not.toContain(`${STAGING_DIRECTORY}${FIRST_ID}.jpg`);
+    expect(readJournal(harness.storage)).toBeNull();
+    await expect(harness.coordinator.scavenge()).resolves.toBe(0);
   });
 
   it('rejects journal entries that contain a path or any non-schema field', async () => {
@@ -217,10 +256,10 @@ describe('plaintext staging journal', () => {
     );
 
     await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_JOURNAL_INVALID);
-    expect(harness.deleteAsync).not.toHaveBeenCalled();
+    expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, { idempotent: true });
   });
 
-  it('deletes journal-owned plaintext but fails closed without touching a coexisting foreign file', async () => {
+  it('deletes the entire app-owned staging directory before surfacing an unowned entry', async () => {
     const harness = createHarness();
     const handle = await harness.coordinator.reserve('photo_share_jpeg');
     const foreign = `${STAGING_DIRECTORY}foreign.txt`;
@@ -228,11 +267,12 @@ describe('plaintext staging journal', () => {
     harness.files.add(foreign);
 
     await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_ENTRY_UNOWNED);
-    expect(harness.deleteAsync).toHaveBeenCalledExactlyOnceWith(handle.uri, {
+    expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, {
       idempotent: true,
     });
-    expect(harness.files).toEqual(new Set([foreign]));
+    expect(harness.files).toEqual(new Set());
     expect(readJournal(harness.storage)).toBeNull();
+    await expect(harness.coordinator.scavenge()).resolves.toBe(0);
   });
 
   it('blocks a new reservation while an unowned cache entry exists', async () => {
@@ -266,24 +306,95 @@ describe('plaintext staging journal', () => {
     await expect(harness.coordinator.reserve('data_export_json')).rejects.toThrow(
       PLAINTEXT_STAGING_CACHE_UNAVAILABLE,
     );
-    await expect(harness.coordinator.scavenge()).resolves.toBe(0);
+    await expect(harness.coordinator.scavenge()).rejects.toThrow(
+      PLAINTEXT_STAGING_CACHE_UNAVAILABLE,
+    );
     expect(harness.deps.storage.setItem).not.toHaveBeenCalled();
+  });
+
+  it('runs a queued startup scavenger before a later reservation', async () => {
+    const harness = createHarness();
+    let releaseScavenge!: () => void;
+    const scavengeGate = new Promise<void>((resolve) => {
+      releaseScavenge = resolve;
+    });
+    harness.deleteAsync.mockImplementationOnce(async (uri: string) => {
+      expect(uri).toBe(STAGING_DIRECTORY);
+      await scavengeGate;
+    });
+
+    const scavenging = harness.coordinator.scavenge();
+    const reserving = harness.coordinator.reserve('photo_capture_jpeg');
+    await vi.waitFor(() =>
+      expect(harness.deleteAsync).toHaveBeenCalledWith(STAGING_DIRECTORY, {
+        idempotent: true,
+      }),
+    );
+    expect(harness.deps.fileSystem.makeDirectoryAsync).not.toHaveBeenCalled();
+
+    releaseScavenge();
+    await expect(scavenging).resolves.toBe(0);
+    await expect(reserving).resolves.toMatchObject({ purpose: 'photo_capture_jpeg' });
+  });
+
+  it('scavenges the app-owned Camera and ImageManipulator ingress directories', async () => {
+    const harness = createHarness();
+    const cameraFile = 'file://cache/Camera/camera-output.jpg';
+    const analysisFile = 'file://cache/ImageManipulator/analysis-output.jpg';
+    harness.files.add(cameraFile);
+    harness.files.add(analysisFile);
+
+    await expect(harness.coordinator.scavenge()).resolves.toBe(0);
+
+    expect(harness.files.has(cameraFile)).toBe(false);
+    expect(harness.files.has(analysisFile)).toBe(false);
+    expect(harness.deleteAsync).toHaveBeenCalledWith('file://cache/Camera/', {
+      idempotent: true,
+    });
+    expect(harness.deleteAsync).toHaveBeenCalledWith('file://cache/ImageManipulator/', {
+      idempotent: true,
+    });
+  });
+
+  it('propagates ingress cleanup failure so an account boundary can stay closed', async () => {
+    const harness = createHarness();
+    harness.deleteAsync.mockRejectedValueOnce(new Error('camera cache unavailable'));
+
+    await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_SCAVENGE_FAILED);
+    expect(harness.deleteAsync).toHaveBeenCalledWith('file://cache/ImageManipulator/', {
+      idempotent: true,
+    });
   });
 });
 
 describe('plaintext staging startup contract', () => {
-  it('starts one content-free scavenger before the root component can mount', () => {
+  it('starts one content-free scavenger before private root content can mount', () => {
     const rootLayout = readFileSync(`${SRC_DIR}/app/_layout.tsx`, 'utf8');
-    const functionOffset = rootLayout.indexOf('export default function RootLayout()');
-    const scavengeOffset = rootLayout.indexOf(
-      'void scavengePlaintextStaging().catch(() => undefined);',
+    const startupGate = readFileSync(
+      `${SRC_DIR}/lib/storage/PlaintextStagingStartupGate.tsx`,
+      'utf8',
+    );
+    const functionOffset = startupGate.indexOf('export function PlaintextStagingStartupGate');
+    const scavengeOffset = startupGate.indexOf(
+      'const startupScavengeResult = settledScavenge(scavengePlaintextStaging());',
     );
 
-    expect(rootLayout).toContain(
-      "import { scavengePlaintextStaging } from '@/lib/storage/plaintextStaging';",
+    expect(rootLayout).toContain('<PlaintextStagingStartupGate>');
+    expect(rootLayout.indexOf('<PlaintextStagingStartupGate>')).toBeLessThan(
+      rootLayout.indexOf('<RootContent />'),
     );
+    expect(startupGate).toContain("import { scavengePlaintextStaging } from './plaintextStaging';");
     expect(scavengeOffset).toBeGreaterThan(-1);
     expect(scavengeOffset).toBeLessThan(functionOffset);
-    expect(rootLayout).not.toContain('console.log(scavengePlaintextStaging');
+    expect(startupGate).toContain("if (status === 'ready') return children;");
+    expect(startupGate).not.toContain('.catch(() => undefined)');
+    expect(rootLayout).not.toContain('void scavengePlaintextStaging().catch');
+  });
+
+  it('bypasses a missing native cache only on the filesystem-free web adapter', () => {
+    const adapter = readFileSync(`${SRC_DIR}/lib/storage/plaintextStaging.ts`, 'utf8');
+
+    expect(adapter).toContain("if (Platform.OS === 'web') return Promise.resolve(0);");
+    expect(adapter).toContain('return coordinator.scavenge();');
   });
 });

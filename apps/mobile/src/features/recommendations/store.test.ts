@@ -1,6 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
+} from '@/lib/auth/accountGeneration';
+import { createOwnerQueryScope } from '@/lib/query/queryKeys';
+
+import {
   dismissRecommendation,
   loadDismissed,
   loadPreferences,
@@ -10,11 +17,12 @@ import {
 } from './store';
 
 const mocks = vi.hoisted(() => ({
+  abortSignal: vi.fn(async () => ({ error: null })),
   storage: new Map<string, string>(),
   tails: new Map<string, Promise<void>>(),
   updateFailure: null as Error | null,
   getUser: vi.fn(async () => ({ data: { user: null as { id: string } | null } })),
-  upsert: vi.fn(async () => ({ error: null })),
+  upsert: vi.fn(),
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -56,6 +64,10 @@ vi.mock('@/lib/supabase/client', () => ({
 const PREF_KEY = 'onskin.recPrefs.v1';
 const DISMISSED_KEY = 'onskin.recDismissed.v1';
 
+function ownerScope() {
+  return createOwnerQueryScope();
+}
+
 describe('recommendation local store recovery', () => {
   beforeEach(() => {
     mocks.storage.clear();
@@ -63,6 +75,8 @@ describe('recommendation local store recovery', () => {
     mocks.updateFailure = null;
     mocks.getUser.mockClear();
     mocks.upsert.mockClear();
+    mocks.abortSignal.mockClear();
+    mocks.upsert.mockReturnValue({ abortSignal: mocks.abortSignal });
   });
 
   it('preserves malformed preference JSON and returns defaults', async () => {
@@ -96,7 +110,7 @@ describe('recommendation local store recovery', () => {
   });
 
   it('saves only normalized preferences', async () => {
-    await savePreferences({
+    await savePreferences(ownerScope(), {
       values: ['fragrance_free', 'fragrance_free'],
       budget: 'mid',
       formats: ['cream', 'cream', ''],
@@ -110,6 +124,25 @@ describe('recommendation local store recovery', () => {
         formats: ['cream'],
       },
     });
+  });
+
+  it('pins the best-effort preference mirror to its owner lease signal', async () => {
+    mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'owner-a' } } });
+
+    await savePreferences(ownerScope(), {
+      values: ['vegan'],
+      budget: 'mid',
+      formats: ['gel'],
+    });
+    await waitForAccountGenerationOperationsToSettle();
+
+    expect(mocks.upsert).toHaveBeenCalledWith({
+      user_id: 'owner-a',
+      values_filters: ['vegan'],
+      budget_band: 'mid',
+      format_prefs: ['gel'],
+    });
+    expect(mocks.abortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
   });
 
   it('preserves malformed dismissed recommendation JSON', async () => {
@@ -136,7 +169,9 @@ describe('recommendation local store recovery', () => {
     const original = JSON.stringify({ id: 'gap:spf' });
     mocks.storage.set(DISMISSED_KEY, original);
 
-    await expect(dismissRecommendation(' gap:spf ')).rejects.toThrow('PRIVATE_STRING_SET_INVALID');
+    await expect(dismissRecommendation(ownerScope(), ' gap:spf ')).rejects.toThrow(
+      'PRIVATE_STRING_SET_INVALID',
+    );
 
     expect(mocks.storage.get(DISMISSED_KEY)).toBe(original);
   });
@@ -147,7 +182,7 @@ describe('recommendation local store recovery', () => {
 
     await expect(loadPreferences()).resolves.toEqual({ values: [], budget: null, formats: [] });
     await expect(
-      savePreferences({ values: [], budget: null, formats: [] }),
+      savePreferences(ownerScope(), { values: [], budget: null, formats: [] }),
     ).rejects.toThrow(REC_PREFERENCES_UNSUPPORTED_VERSION);
 
     expect(mocks.storage.get(PREF_KEY)).toBe(original);
@@ -161,7 +196,7 @@ describe('recommendation local store recovery', () => {
     mocks.storage.set(PREF_KEY, original);
 
     await expect(
-      savePreferences({ values: [], budget: 'mid', formats: [] }),
+      savePreferences(ownerScope(), { values: [], budget: 'mid', formats: [] }),
     ).rejects.toThrow(REC_PREFERENCES_INVALID);
     expect(mocks.storage.get(PREF_KEY)).toBe(original);
   });
@@ -169,25 +204,46 @@ describe('recommendation local store recovery', () => {
   it('serializes simultaneous dismissals without losing a writer', async () => {
     const ids = Array.from({ length: 30 }, (_, index) => `gap:${index}`);
 
-    await Promise.all(ids.map((id) => dismissRecommendation(id)));
+    const scope = ownerScope();
+    await Promise.all(ids.map((id) => dismissRecommendation(scope, id)));
 
     expect(new Set(await loadDismissed())).toEqual(new Set(ids));
     expect(JSON.parse(mocks.storage.get(DISMISSED_KEY) ?? '{}')).toMatchObject({ version: 1 });
   });
 
   it('keeps prior recommendation state intact on atomic write failure', async () => {
-    await savePreferences({ values: ['vegan'], budget: 'mid', formats: ['gel'] });
-    await dismissRecommendation('gap:spf');
+    await savePreferences(ownerScope(), { values: ['vegan'], budget: 'mid', formats: ['gel'] });
+    await dismissRecommendation(ownerScope(), 'gap:spf');
     const prefs = mocks.storage.get(PREF_KEY);
     const dismissed = mocks.storage.get(DISMISSED_KEY);
     mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
 
     await expect(
-      savePreferences({ values: [], budget: null, formats: [] }),
+      savePreferences(ownerScope(), { values: [], budget: null, formats: [] }),
     ).rejects.toThrow('PRIVATE_WRITE_FAILED');
-    await expect(dismissRecommendation('gap:cleanser')).rejects.toThrow('PRIVATE_WRITE_FAILED');
+    await expect(dismissRecommendation(ownerScope(), 'gap:cleanser')).rejects.toThrow(
+      'PRIVATE_WRITE_FAILED',
+    );
 
     expect(mocks.storage.get(PREF_KEY)).toBe(prefs);
     expect(mocks.storage.get(DISMISSED_KEY)).toBe(dismissed);
+  });
+
+  it('rejects delayed owner-A preference and dismissal payloads after an A-to-B boundary', async () => {
+    const staleScope = ownerScope();
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+
+    await expect(
+      savePreferences(staleScope, { values: ['vegan'], budget: 'mid', formats: ['gel'] }),
+    ).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    await expect(dismissRecommendation(staleScope, 'gap:spf')).rejects.toMatchObject({
+      code: 'ACCOUNT_GENERATION_CHANGED',
+    });
+
+    expect(mocks.storage.has(PREF_KEY)).toBe(false);
+    expect(mocks.storage.has(DISMISSED_KEY)).toBe(false);
+    expect(mocks.getUser).not.toHaveBeenCalled();
+    expect(mocks.upsert).not.toHaveBeenCalled();
   });
 });

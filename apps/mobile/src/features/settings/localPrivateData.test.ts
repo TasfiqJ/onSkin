@@ -7,17 +7,11 @@ const mocks = vi.hoisted(() => ({
   clearEncryptedPhotoStorage: vi.fn(),
   clearPrivateKVContentKey: vi.fn(),
   deleteAsync: vi.fn(),
-  multiRemove: vi.fn(),
   platformOS: 'ios',
   readDirectoryAsync: vi.fn(),
+  removePrivateItemsForAuthorizedReset: vi.fn(),
   resetAnalyticsIdentity: vi.fn(),
   resetRevenueCatIdentity: vi.fn(),
-}));
-
-vi.mock('@react-native-async-storage/async-storage', () => ({
-  default: {
-    multiRemove: mocks.multiRemove,
-  },
 }));
 
 vi.mock('expo-file-system/legacy', () => ({
@@ -52,6 +46,7 @@ vi.mock('@/lib/iap/revenuecat', () => ({
 
 vi.mock('@/lib/storage/privateKV', () => ({
   clearPrivateKVContentKey: mocks.clearPrivateKVContentKey,
+  removePrivateItemsForAuthorizedReset: mocks.removePrivateItemsForAuthorizedReset,
 }));
 
 describe('local private data cleanup', () => {
@@ -60,9 +55,9 @@ describe('local private data cleanup', () => {
     mocks.clearEncryptedPhotoStorage.mockReset();
     mocks.clearPrivateKVContentKey.mockReset();
     mocks.deleteAsync.mockReset();
-    mocks.multiRemove.mockReset();
     mocks.platformOS = 'ios';
     mocks.readDirectoryAsync.mockReset();
+    mocks.removePrivateItemsForAuthorizedReset.mockReset();
     mocks.resetAnalyticsIdentity.mockReset();
     mocks.resetRevenueCatIdentity.mockReset();
 
@@ -70,7 +65,7 @@ describe('local private data cleanup', () => {
     mocks.clearEncryptedPhotoStorage.mockResolvedValue(undefined);
     mocks.clearPrivateKVContentKey.mockResolvedValue(undefined);
     mocks.deleteAsync.mockResolvedValue(undefined);
-    mocks.multiRemove.mockResolvedValue(undefined);
+    mocks.removePrivateItemsForAuthorizedReset.mockResolvedValue(undefined);
     mocks.readDirectoryAsync.mockResolvedValue([
       'routinekind-export-456.json',
       'routinekind-share-card.png',
@@ -85,7 +80,7 @@ describe('local private data cleanup', () => {
   it('clears local stores, cache files, notifications, and client vendor identities', async () => {
     await expect(clearLocalPrivateData()).resolves.toBeUndefined();
 
-    expect(mocks.multiRemove).toHaveBeenCalledWith(
+    expect(mocks.removePrivateItemsForAuthorizedReset).toHaveBeenCalledWith(
       expect.arrayContaining([
         'routinekind.routineActivation.v1',
         'routinekind.routineOrder.v1',
@@ -93,8 +88,9 @@ describe('local private data cleanup', () => {
         'onskin.photo.content_key_created.v1',
         'onskin.skinprofile.v1',
       ]),
+      'account_isolation',
     );
-    expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain(
+    expect(mocks.removePrivateItemsForAuthorizedReset.mock.calls[0]?.[0]).not.toContain(
       'routinekind.localDataCleanupRequired.v1',
     );
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
@@ -126,7 +122,7 @@ describe('local private data cleanup', () => {
       'LOCAL_PRIVATE_DATA_CLEAR_FAILED:revenuecat_identity',
     );
 
-    expect(mocks.multiRemove).toHaveBeenCalledTimes(1);
+    expect(mocks.removePrivateItemsForAuthorizedReset).toHaveBeenCalledTimes(1);
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledTimes(1);
     expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledTimes(1);
   });
@@ -141,7 +137,7 @@ describe('local private data cleanup', () => {
       'LOCAL_PRIVATE_DATA_CLEAR_FAILED:generated_cache,scheduled_notifications',
     );
 
-    expect(mocks.multiRemove).toHaveBeenCalledTimes(1);
+    expect(mocks.removePrivateItemsForAuthorizedReset).toHaveBeenCalledTimes(1);
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledTimes(1);

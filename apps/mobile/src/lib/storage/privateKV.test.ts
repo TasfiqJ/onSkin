@@ -6,6 +6,8 @@ import {
   endPrivateKVAccountBoundary,
   getPrivateItem,
   getPrivateItems,
+  PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID,
+  PRIVATE_KV_CONTENT_KEY_CONFLICT,
   PRIVATE_KV_CONTENT_KEY_INVALID,
   PRIVATE_KV_CONTENT_KEY_MISSING,
   PRIVATE_KV_DECRYPTION_FAILED,
@@ -17,6 +19,7 @@ import {
   PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE,
   PRIVATE_KV_WRITE_CONFLICT,
   removePrivateItem,
+  removePrivateItemsForAuthorizedReset,
   multiRemovePrivateItems,
   privateKVEncryptionInfo,
   setPrivateItem,
@@ -261,6 +264,18 @@ describe('private KV encrypted storage', () => {
     await expect(multiRemovePrivateItems(['onskin.profile', contentKey])).rejects.toThrow(
       PRIVATE_KV_RESERVED_KEY,
     );
+    await expect(
+      removePrivateItemsForAuthorizedReset(
+        ['onskin.profile', foreignKey],
+        'device_authenticated_app_lock_repair',
+      ),
+    ).rejects.toThrow(PRIVATE_KV_ENVELOPE_FOREIGN);
+    await expect(
+      removePrivateItemsForAuthorizedReset(
+        ['onskin.profile', contentKey],
+        'device_authenticated_app_lock_repair',
+      ),
+    ).rejects.toThrow(PRIVATE_KV_RESERVED_KEY);
 
     expect(mocks.asyncStorage.get(foreignKey)).toBe('foreign-session');
     expect(mocks.asyncStorage.get(contentKey)).toBe('legacy-content-key');
@@ -494,6 +509,148 @@ describe('private KV encrypted storage', () => {
     await drain;
     expect(drainFinished).toBe(true);
     expect(mocks.asyncStorage.has('onskin.account-a')).toBe(false);
+  });
+
+  it('authenticates healthy ciphertext before routine deletion', async () => {
+    await setPrivateItem('onskin.removable', 'private-value');
+
+    await expect(removePrivateItem('onskin.removable')).resolves.toBeUndefined();
+
+    expect(mocks.asyncStorage.has('onskin.removable')).toBe(false);
+  });
+
+  it('preserves keyless ciphertext until an explicitly authorized reset', async () => {
+    await setPrivateItem('onskin.keyless-delete', 'private-value');
+    const ciphertext = mocks.asyncStorage.get('onskin.keyless-delete');
+    mocks.secureStorage.delete(privateKVEncryptionInfo.secureStoreKey);
+
+    await expect(removePrivateItem('onskin.keyless-delete')).rejects.toThrow(
+      PRIVATE_KV_CONTENT_KEY_MISSING,
+    );
+    expect(mocks.asyncStorage.get('onskin.keyless-delete')).toBe(ciphertext);
+
+    beginPrivateKVAccountBoundary();
+    await expect(
+      removePrivateItemsForAuthorizedReset(['onskin.keyless-delete'], 'account_isolation'),
+    ).resolves.toBeUndefined();
+    expect(mocks.asyncStorage.has('onskin.keyless-delete')).toBe(false);
+  });
+
+  it('preserves every ciphertext when a malformed key blocks a batch deletion', async () => {
+    await setPrivateItem('onskin.malformed-delete-a', 'value-a');
+    await setPrivateItem('onskin.malformed-delete-b', 'value-b');
+    const ciphertextA = mocks.asyncStorage.get('onskin.malformed-delete-a');
+    const ciphertextB = mocks.asyncStorage.get('onskin.malformed-delete-b');
+    mocks.secureStorage.set(privateKVEncryptionInfo.secureStoreKey, 'malformed-key');
+
+    await expect(
+      multiRemovePrivateItems(['onskin.malformed-delete-a', 'onskin.malformed-delete-b']),
+    ).rejects.toThrow(PRIVATE_KV_CONTENT_KEY_INVALID);
+
+    expect(mocks.asyncStorage.get('onskin.malformed-delete-a')).toBe(ciphertextA);
+    expect(mocks.asyncStorage.get('onskin.malformed-delete-b')).toBe(ciphertextB);
+  });
+
+  it('preserves every ciphertext when a wrong valid key blocks a batch deletion', async () => {
+    await setPrivateItem('onskin.wrong-key-delete-a', 'value-a');
+    await setPrivateItem('onskin.wrong-key-delete-b', 'value-b');
+    const ciphertextA = mocks.asyncStorage.get('onskin.wrong-key-delete-a');
+    const ciphertextB = mocks.asyncStorage.get('onskin.wrong-key-delete-b');
+    const originalKey = mocks.secureStorage.get(privateKVEncryptionInfo.secureStoreKey);
+    const wrongKey = originalKey === 'a'.repeat(64) ? 'b'.repeat(64) : 'a'.repeat(64);
+    mocks.secureStorage.set(privateKVEncryptionInfo.secureStoreKey, wrongKey);
+
+    await expect(
+      multiRemovePrivateItems(['onskin.wrong-key-delete-a', 'onskin.wrong-key-delete-b']),
+    ).rejects.toThrow(PRIVATE_KV_DECRYPTION_FAILED);
+
+    expect(mocks.asyncStorage.get('onskin.wrong-key-delete-a')).toBe(ciphertextA);
+    expect(mocks.asyncStorage.get('onskin.wrong-key-delete-b')).toBe(ciphertextB);
+  });
+
+  it('preserves ciphertext when key storage is unavailable during routine deletion', async () => {
+    await setPrivateItem('onskin.unavailable-delete', 'private-value');
+    const ciphertext = mocks.asyncStorage.get('onskin.unavailable-delete');
+    mocks.secureGetThrows = true;
+
+    await expect(removePrivateItem('onskin.unavailable-delete')).rejects.toThrow(
+      'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE',
+    );
+
+    expect(mocks.asyncStorage.get('onskin.unavailable-delete')).toBe(ciphertext);
+  });
+
+  it('requires a successful authenticated read before deleting a failed-read snapshot', async () => {
+    await setPrivateItem('onskin.failed-read-delete', 'private-value');
+    const contentKey = mocks.secureStorage.get(privateKVEncryptionInfo.secureStoreKey)!;
+    const ciphertext = mocks.asyncStorage.get('onskin.failed-read-delete');
+    mocks.secureStorage.delete(privateKVEncryptionInfo.secureStoreKey);
+
+    await expect(getPrivateItem('onskin.failed-read-delete')).rejects.toThrow(
+      PRIVATE_KV_CONTENT_KEY_MISSING,
+    );
+    mocks.secureStorage.set(privateKVEncryptionInfo.secureStoreKey, contentKey);
+
+    await expect(removePrivateItem('onskin.failed-read-delete')).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE,
+    );
+    expect(mocks.asyncStorage.get('onskin.failed-read-delete')).toBe(ciphertext);
+
+    await expect(getPrivateItem('onskin.failed-read-delete')).resolves.toBe('private-value');
+    await expect(removePrivateItem('onskin.failed-read-delete')).resolves.toBeUndefined();
+    expect(mocks.asyncStorage.has('onskin.failed-read-delete')).toBe(false);
+  });
+
+  it('preserves conflicting native and fallback keys during routine deletion', async () => {
+    await setPrivateItem('onskin.conflicting-key-delete', 'private-value');
+    const ciphertext = mocks.asyncStorage.get('onskin.conflicting-key-delete');
+    const validFallback = mocks.secureStorage.get(privateKVEncryptionInfo.secureStoreKey)!;
+    const wrongSecureKey = validFallback === 'a'.repeat(64) ? 'b'.repeat(64) : 'a'.repeat(64);
+    mocks.asyncStorage.set(privateKVEncryptionInfo.secureStoreKey, validFallback);
+    mocks.secureStorage.set(privateKVEncryptionInfo.secureStoreKey, wrongSecureKey);
+
+    await expect(removePrivateItem('onskin.conflicting-key-delete')).rejects.toThrow(
+      PRIVATE_KV_CONTENT_KEY_CONFLICT,
+    );
+
+    expect(mocks.asyncStorage.get('onskin.conflicting-key-delete')).toBe(ciphertext);
+    expect(mocks.asyncStorage.get(privateKVEncryptionInfo.secureStoreKey)).toBe(validFallback);
+    expect(mocks.secureStorage.get(privateKVEncryptionInfo.secureStoreKey)).toBe(wrongSecureKey);
+  });
+
+  it('allows authorized account isolation to remove unreadable registered bytes during a boundary', async () => {
+    const malformed = '{"version":"xchacha20poly1305:v1","nonceHex":"invalid"';
+    mocks.asyncStorage.set('onskin.account-a', malformed);
+    beginPrivateKVAccountBoundary();
+
+    await expect(
+      removePrivateItemsForAuthorizedReset(['onskin.account-a'], 'account_isolation'),
+    ).resolves.toBeUndefined();
+
+    expect(mocks.asyncStorage.has('onskin.account-a')).toBe(false);
+  });
+
+  it('rejects an unreviewed destructive-reset reason at runtime', async () => {
+    mocks.asyncStorage.set('onskin.protected-reset', 'private-bytes');
+
+    await expect(
+      removePrivateItemsForAuthorizedReset(
+        ['onskin.protected-reset'],
+        'routine_feature_clear' as never,
+      ),
+    ).rejects.toThrow(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
+
+    expect(mocks.asyncStorage.get('onskin.protected-reset')).toBe('private-bytes');
+  });
+
+  it('rejects account-isolation reset authority outside the active boundary', async () => {
+    mocks.asyncStorage.set('onskin.protected-reset', 'private-bytes');
+
+    await expect(
+      removePrivateItemsForAuthorizedReset(['onskin.protected-reset'], 'account_isolation'),
+    ).rejects.toThrow(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
+
+    expect(mocks.asyncStorage.get('onskin.protected-reset')).toBe('private-bytes');
   });
 
   it('preserves keyless ciphertext and refuses replacement key material', async () => {

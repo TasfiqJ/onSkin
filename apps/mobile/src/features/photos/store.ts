@@ -5,6 +5,7 @@ import { PHOTO_SERIES } from '@onskin/types';
 
 import { supabase } from '@/lib/supabase/client';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 import {
@@ -279,6 +280,18 @@ async function finishQuarantinedFiles(files: QuarantinedPhotoFile[]): Promise<vo
 export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
   return runPhotoStoreMutation(async () => {
     const items = await loadPhotosUnlocked();
+    const committedCapture = input.captureSessionId
+      ? items.find((photo) => photo.captureSessionId === input.captureSessionId)
+      : undefined;
+    if (committedCapture) {
+      // A prior attempt may have committed encrypted metadata before plaintext
+      // cleanup failed. Retrying the same opaque capture session must finish
+      // cleanup without creating a duplicate photo record.
+      if (input.localUri && !isEncryptedPhotoUri(input.localUri)) {
+        await deleteCapturedPhotoSource(input.localUri);
+      }
+      return committedCapture;
+    }
     const series = input.series ?? 'front';
     const hasReference = items.some((p) => p.series === series);
     const id = randomUUID();
@@ -331,7 +344,9 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
       throw error;
     }
     if (sourceNeedsCleanup) {
-      await deleteCapturedPhotoSource(input.localUri).catch(() => undefined);
+      // Do not report save success while journaled plaintext remains. The
+      // captureSessionId branch above makes this post-commit cleanup retryable.
+      await deleteCapturedPhotoSource(input.localUri);
     }
     return rec;
   });
@@ -348,29 +363,42 @@ export async function updatePhoto(
 }
 
 export async function removePhoto(id: string): Promise<void> {
-  const removed = await runPhotoStoreMutation(async () => {
-    const items = await loadPhotosUnlocked();
-    const target = items.find((p) => p.id === id);
-    if (!target) return false;
-    const quarantined = await quarantinePhotoFiles(
-      [target.encryptedLocalUri ?? target.localUri, target.thumbnailLocalUri],
-      `delete-${id}-${randomUUID()}`,
-    );
+  await runAccountGenerationOperation(async (lease) => {
+    const removed = await runPhotoStoreMutation(async () => {
+      const items = await loadPhotosUnlocked();
+      const target = items.find((p) => p.id === id);
+      if (!target) return false;
+      const quarantined = await quarantinePhotoFiles(
+        [target.encryptedLocalUri ?? target.localUri, target.thumbnailLocalUri],
+        `delete-${id}-${randomUUID()}`,
+      );
+      try {
+        await persist(items.filter((p) => p.id !== id));
+      } catch (error) {
+        await restoreQuarantinedFiles(quarantined);
+        throw error;
+      }
+      await finishQuarantinedFiles(quarantined);
+      return true;
+    });
+    lease.assertCurrent();
+    if (!removed) return;
     try {
-      await persist(items.filter((p) => p.id !== id));
-    } catch (error) {
-      await restoreQuarantinedFiles(quarantined);
-      throw error;
+      const owner = await captureAuthenticatedAccountOwner(lease);
+      if (!owner) return;
+      lease.assertCurrent();
+      await supabase
+        .from('photos')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', owner.userId)
+        .abortSignal(lease.signal);
+      lease.assertCurrent();
+    } catch {
+      lease.assertCurrent();
+      /* best-effort */
     }
-    await finishQuarantinedFiles(quarantined);
-    return true;
   });
-  if (!removed) return;
-  try {
-    await supabase.from('photos').delete().eq('id', id);
-  } catch {
-    /* best-effort */
-  }
 }
 
 /** Make `id` the reference for its series. */

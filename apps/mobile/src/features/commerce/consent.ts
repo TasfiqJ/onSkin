@@ -1,4 +1,5 @@
 import { track } from '@/lib/analytics/track';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 
@@ -25,41 +26,57 @@ export async function isCommerceConsented(): Promise<boolean> {
   // tested). A revocation re-locks even against a stale local flag (review fix, D-061);
   // the You-tab toggle ALSO mirrors the local flag (you.tsx) so v1 (no backend)
   // revocation re-locks too.
-  let ledger: boolean | undefined;
-  try {
-    const consents = await getLatestConsents();
-    if ('data_sharing' in consents) ledger = consents['data_sharing'];
-  } catch {
-    /* offline / no DB. Fall back to the local-first flag */
-  }
-  return resolveCommerceConsent(ledger, await getCommerceConsentLocal());
+  return runAccountGenerationOperation(async (lease) => {
+    let ledger: boolean | undefined;
+    try {
+      const consents = await getLatestConsents();
+      lease.assertCurrent();
+      if ('data_sharing' in consents) ledger = consents['data_sharing'];
+    } catch {
+      lease.assertCurrent();
+      /* offline / no DB. Fall back to the local-first flag */
+    }
+    const local = await getCommerceConsentLocal();
+    lease.assertCurrent();
+    return resolveCommerceConsent(ledger, local);
+  });
 }
 
 export async function grantCommerceConsent(): Promise<void> {
-  await setCommerceConsentLocal(true);
-  try {
-    await recordConsent({
-      type: 'data_sharing',
-      granted: true,
-      version: COMMERCE_COPY.consentVersion,
-      consentText: `[PLACEHOLDER commerce data-sharing consent. B-PRIVACY-COPY] ${COMMERCE_COPY.consent.body}`,
-    });
-  } catch {
-    /* offline / no DB. Keep the local-first flag; ledger reconciles later. */
-  }
-  track('commerce_consent_granted');
+  await runAccountGenerationOperation(async (lease) => {
+    await setCommerceConsentLocal(true);
+    lease.assertCurrent();
+    try {
+      await recordConsent({
+        type: 'data_sharing',
+        granted: true,
+        version: COMMERCE_COPY.consentVersion,
+        consentText: `[PLACEHOLDER commerce data-sharing consent. B-PRIVACY-COPY] ${COMMERCE_COPY.consent.body}`,
+      });
+      lease.assertCurrent();
+    } catch {
+      lease.assertCurrent();
+      /* offline / no DB. Keep the local-first flag; ledger reconciles later. */
+    }
+    track('commerce_consent_granted');
+  });
 }
 
 export async function declineCommerceConsent(): Promise<void> {
-  await setCommerceConsentLocal(false);
-  try {
-    await withdrawConsent({
-      type: 'data_sharing',
-      version: COMMERCE_COPY.consentVersion,
-      consentText: `[PLACEHOLDER commerce data-sharing withdrawal. B-PRIVACY-COPY]`,
-    });
-  } catch {
-    /* offline / no DB. Keep the local revocation authoritative. */
-  }
-  track('commerce_consent_declined');
+  await runAccountGenerationOperation(async (lease) => {
+    await setCommerceConsentLocal(false);
+    lease.assertCurrent();
+    try {
+      await withdrawConsent({
+        type: 'data_sharing',
+        version: COMMERCE_COPY.consentVersion,
+        consentText: `[PLACEHOLDER commerce data-sharing withdrawal. B-PRIVACY-COPY]`,
+      });
+      lease.assertCurrent();
+    } catch {
+      lease.assertCurrent();
+      /* offline / no DB. Keep the local revocation authoritative. */
+    }
+    track('commerce_consent_declined');
+  });
 }

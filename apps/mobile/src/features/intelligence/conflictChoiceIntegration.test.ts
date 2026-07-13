@@ -84,8 +84,8 @@ describe('conflict choice integration contracts', () => {
     expect(mutations).toContain("{ onConflict: 'id' }");
     expect(mutations).toContain('status: p.status');
     expect(mutations).toContain('finished_at: p.finishedAt');
-    expect(mutations).toContain('void mirrorUpsert(product)');
-    expect(mutations).toContain('void mirrorDelete(id)');
+    expect(mutations).toContain('void mirrorShelfUpsertForOwner(ownerScope, product)');
+    expect(mutations).toContain('void mirrorShelfDeleteForOwner(ownerScope, id)');
     expect(mutations).toContain('if (error) throw new Error');
   });
 });

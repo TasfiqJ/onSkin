@@ -7,6 +7,7 @@ import {
   waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCore';
+import { markPlaintextStagingState, reservePlaintextStaging } from '@/lib/storage/plaintextStaging';
 
 import {
   beginEncryptedPhotoAccountBoundary,
@@ -14,6 +15,7 @@ import {
   createPhotoShareFile,
   decryptPhotoNote,
   decryptPhotoToDataUri,
+  deleteCapturedPhotoSource,
   deleteQuarantinedPhoto,
   deletePhotoShareFile,
   encryptCapturedPhoto,
@@ -556,6 +558,17 @@ describe('encrypted photo storage', () => {
 
     await deletePhotoShareFile(shareUri, encrypted.encryptedLocalUri);
     expect(mocks.files.has(shareUri)).toBe(false);
+  });
+
+  it('removes a committed capture source through its durable staging journal', async () => {
+    const handle = await reservePlaintextStaging('photo_capture_jpeg');
+    mocks.files.set(handle.uri, 'camera plaintext');
+    await markPlaintextStagingState(handle, 'plaintext_written');
+
+    await deleteCapturedPhotoSource(handle.uri);
+
+    expect(mocks.files.has(handle.uri)).toBe(false);
+    expect(mocks.asyncStorage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
   });
 
   it('clears the encrypted photo directory and content key together', async () => {

@@ -21,14 +21,20 @@ export function OfflineSync() {
   const ownerScope = useOwnerQueryScope();
   useEffect(() => {
     const run = () => {
-      void flushCompletions().then(({ flushed }) => {
-        if (flushed > 0 && isOwnerQueryScopeCurrent(ownerScope)) {
-          void qc.invalidateQueries({
-            queryKey: ownerQueryPrefixes.completions(ownerScope),
-          });
-          void qc.invalidateQueries({ queryKey: ownerQueryPrefixes.progress(ownerScope) });
-        }
-      });
+      void flushCompletions()
+        .then(({ flushed }) => {
+          if (flushed > 0 && isOwnerQueryScopeCurrent(ownerScope)) {
+            void qc
+              .invalidateQueries({
+                queryKey: ownerQueryPrefixes.completions(ownerScope),
+              })
+              .catch(() => undefined);
+            void qc
+              .invalidateQueries({ queryKey: ownerQueryPrefixes.progress(ownerScope) })
+              .catch(() => undefined);
+          }
+        })
+        .catch(() => undefined);
     };
     run();
     const sub = AppState.addEventListener('change', (s) => {

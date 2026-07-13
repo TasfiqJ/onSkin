@@ -121,6 +121,9 @@ describe('local account isolation', () => {
       'claim:user-b',
     ]);
     expect(beforeClear).toHaveBeenCalledOnce();
+    expect(
+      accountGenerationMocks.waitForAccountGenerationOperationsToSettle.mock.invocationCallOrder[0],
+    ).toBeLessThan(vi.mocked(deps.clearPlaintextStaging!).mock.invocationCallOrder[0]!);
   });
 
   it('detects a cold-start owner mismatch even without an in-memory previous user', async () => {

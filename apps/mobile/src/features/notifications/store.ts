@@ -1,6 +1,7 @@
-import { supabase } from '@/lib/supabase/client';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { supabase } from '@/lib/supabase/client';
 
 /**
  * Local-first notification preferences (docs/07 §7, the D-029 shelf/photos pattern).
@@ -164,7 +165,10 @@ function isCurrentStoredPrefs(value: unknown): value is Record<string, unknown> 
     'timezone',
   ].sort();
   const keys = Object.keys(value).sort();
-  if (keys.length !== expectedKeys.length || keys.some((key, index) => key !== expectedKeys[index])) {
+  if (
+    keys.length !== expectedKeys.length ||
+    keys.some((key, index) => key !== expectedKeys[index])
+  ) {
     return false;
   }
   for (const key of [
@@ -238,7 +242,9 @@ function encodeNotifPrefs(prefs: NotifPrefs): string {
 export async function loadNotifPrefs(): Promise<NotifPrefs> {
   try {
     const raw = await getPrivateItem(KEY);
-    return raw === null ? { ...DEFAULT_PREFS, timezone: currentDeviceTimezone() } : decodeNotifPrefs(raw);
+    return raw === null
+      ? { ...DEFAULT_PREFS, timezone: currentDeviceTimezone() }
+      : decodeNotifPrefs(raw);
   } catch {
     // Corrupt, unsupported, or unavailable private state disables every optional
     // notification instead of silently treating it as fresh opt-in state.
@@ -254,25 +260,28 @@ function toDbTime(hm: string | null): string | null {
 async function mirror(p: NotifPrefs): Promise<void> {
   try {
     await runAccountGenerationOperation(async (lease) => {
-      const { data: u } = await supabase.auth.getUser();
+      const owner = await captureAuthenticatedAccountOwner(lease);
+      if (!owner) return;
       lease.assertCurrent();
-      if (!u.user?.id) return;
-      await supabase.from('notification_preferences').upsert({
-        user_id: u.user.id,
-        am_reminder_time: toDbTime(p.amTime),
-        pm_reminder_time: toDbTime(p.pmTime),
-        am_reminder_enabled: p.amEnabled,
-        pm_reminder_enabled: p.pmEnabled,
-        streak_nudges: p.streakNudges,
-        replenishment_alerts: p.replenishmentAlerts,
-        capture_reminders: p.captureReminders,
-        quiet_hours_start: toDbTime(p.quietStart),
-        quiet_hours_end: toDbTime(p.quietEnd),
-        timezone: p.timezone,
-        live_activity_enabled: p.liveActivityEnabled,
-        promotional_opt_in: p.promotionalOptIn,
-        lockscreen_discreet: p.lockscreenDiscreet,
-      });
+      await supabase
+        .from('notification_preferences')
+        .upsert({
+          user_id: owner.userId,
+          am_reminder_time: toDbTime(p.amTime),
+          pm_reminder_time: toDbTime(p.pmTime),
+          am_reminder_enabled: p.amEnabled,
+          pm_reminder_enabled: p.pmEnabled,
+          streak_nudges: p.streakNudges,
+          replenishment_alerts: p.replenishmentAlerts,
+          capture_reminders: p.captureReminders,
+          quiet_hours_start: toDbTime(p.quietStart),
+          quiet_hours_end: toDbTime(p.quietEnd),
+          timezone: p.timezone,
+          live_activity_enabled: p.liveActivityEnabled,
+          promotional_opt_in: p.promotionalOptIn,
+          lockscreen_discreet: p.lockscreenDiscreet,
+        })
+        .abortSignal(lease.signal);
       lease.assertCurrent();
     });
   } catch {
@@ -281,24 +290,27 @@ async function mirror(p: NotifPrefs): Promise<void> {
 }
 
 export async function saveNotifPrefs(patch: Partial<NotifPrefs>): Promise<NotifPrefs> {
-  const normalizedPatch = normalizeNotifPatch(patch);
-  let next: NotifPrefs | null = null;
-  await updatePrivateItem(KEY, (currentRaw) => {
-    const current = currentRaw === null ? normalizeNotifPrefs() : decodeNotifPrefs(currentRaw);
-    const replenishmentOptInConfirmed =
-      'replenishmentAlerts' in normalizedPatch
-        ? normalizedPatch.replenishmentAlerts === true
-        : current.replenishmentAlerts;
-    next = normalizeNotifPrefs({
-      ...current,
-      ...normalizedPatch,
-      [REPLENISHMENT_OPT_IN_MARKER]: replenishmentOptInConfirmed,
+  return runAccountGenerationOperation(async (lease) => {
+    const normalizedPatch = normalizeNotifPatch(patch);
+    let next: NotifPrefs | null = null;
+    await updatePrivateItem(KEY, (currentRaw) => {
+      const current = currentRaw === null ? normalizeNotifPrefs() : decodeNotifPrefs(currentRaw);
+      const replenishmentOptInConfirmed =
+        'replenishmentAlerts' in normalizedPatch
+          ? normalizedPatch.replenishmentAlerts === true
+          : current.replenishmentAlerts;
+      next = normalizeNotifPrefs({
+        ...current,
+        ...normalizedPatch,
+        [REPLENISHMENT_OPT_IN_MARKER]: replenishmentOptInConfirmed,
+      });
+      return encodeNotifPrefs(next);
     });
-    return encodeNotifPrefs(next);
+    lease.assertCurrent();
+    if (!next) throw new Error('NOTIF_PREFS_WRITE_FAILED');
+    void mirror(next);
+    return next;
   });
-  if (!next) throw new Error('NOTIF_PREFS_WRITE_FAILED');
-  void mirror(next);
-  return next;
 }
 
 /** Test/seed reset. */

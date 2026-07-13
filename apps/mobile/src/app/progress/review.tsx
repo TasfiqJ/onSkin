@@ -1,14 +1,15 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import { Image } from 'expo-image';
-import * as FileSystem from 'expo-file-system/legacy';
-import { useRef, useState } from 'react';
-import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { usePreventRemove } from 'expo-router/react-navigation';
+import { useEffect, useRef, useState } from 'react';
+import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
 import { CaptureAnalysisProvider } from '@/features/photos/CaptureAnalysisProvider';
+import { cleanupCapturedPhoto, resolveCapturedPhoto } from '@/features/photos/captureStaging';
 import { PHOTO_COPY, QUALITY_NOTE } from '@/features/photos/copy';
 import { localDay } from '@/features/photos/date';
+import { PhotoImage } from '@/features/photos/PhotoImage';
 import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import type { FramingAssessment, LightingAssessment } from '@/features/photos/captureAnalysis';
@@ -19,6 +20,9 @@ import { usePhotoActions, usePhotos } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
 import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import type { PlaintextStagingHandle } from '@/lib/storage/plaintextStaging';
 import type { TimeOfDay } from '@onskin/types';
 
 // Review & retake (docs/06 §2, design screen 02). Quality is FLAGGED, never blocked
@@ -101,22 +105,52 @@ function positiveNumber(value: string | undefined): number | null {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
 }
 
-function ReviewScreenContent() {
+type CaptureSourceState =
+  | { status: 'resolving' }
+  | { status: 'ready'; handle: PlaintextStagingHandle }
+  | { status: 'missing' }
+  | { status: 'unavailable' };
+
+type ReviewScreenContentProps = {
+  cleanupInFlight: boolean;
+  setCriticalOperationInFlight: (inFlight: boolean) => void;
+};
+
+function ReviewScreenContent({
+  cleanupInFlight,
+  setCriticalOperationInFlight,
+}: ReviewScreenContentProps) {
   const insets = useSafeAreaInsets();
+  const ownerScope = useOwnerQueryScope();
   const { height } = useWindowDimensions();
   const compact = height < 700;
   const photoHeight = compact ? Math.max(286, Math.min(330, Math.round(height * 0.54))) : 380;
   const params = useLocalSearchParams<{
     analysisFixture?: string;
     captureSessionId?: string;
-    capturedUri?: string;
     photoWidth?: string;
     photoHeight?: string;
     timeOfDay?: string;
     takenLocalDate?: string;
   }>();
-  const capturedUri = params.capturedUri ?? null;
-  const hasCapturedPhoto = isNonBlank(capturedUri);
+  const captureSessionId = isNonBlank(params.captureSessionId ?? null)
+    ? params.captureSessionId!
+    : null;
+  const [captureLookup, setCaptureLookup] = useState<{
+    captureSessionId: string | null;
+    source: CaptureSourceState;
+  }>({
+    captureSessionId: null,
+    source: { status: 'resolving' },
+  });
+  const [captureLookupRevision, setCaptureLookupRevision] = useState(0);
+  const captureSource: CaptureSourceState = !captureSessionId
+    ? { status: 'missing' }
+    : captureLookup.captureSessionId === captureSessionId
+      ? captureLookup.source
+      : { status: 'resolving' };
+  const capturedUri = captureSource.status === 'ready' ? captureSource.handle.uri : null;
+  const hasCapturedPhoto = captureSource.status === 'ready';
   const timeOfDay = (params.timeOfDay as TimeOfDay) ?? null;
   const takenLocalDate = params.takenLocalDate ?? localDay();
   const analysis = useCaptureAnalysis({
@@ -130,6 +164,34 @@ function ReviewScreenContent() {
   const { add } = usePhotoActions();
   const [saveFailed, setSaveFailed] = useState(false);
   const saveInFlightRef = useRef(false);
+
+  useEffect(() => {
+    let active = true;
+    if (!captureSessionId) {
+      return () => {
+        active = false;
+      };
+    }
+
+    void runOwnerQueryOperation(ownerScope, () => resolveCapturedPhoto(captureSessionId))
+      .then((handle) => {
+        if (!active) return;
+        setCaptureLookup({
+          captureSessionId,
+          source: handle ? { status: 'ready', handle } : { status: 'missing' },
+        });
+      })
+      .catch(() => {
+        if (active && isOwnerQueryScopeCurrent(ownerScope)) {
+          setCaptureLookup({ captureSessionId, source: { status: 'unavailable' } });
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [captureLookupRevision, captureSessionId, ownerScope]);
+
   const refLighting =
     data?.reference?.qualitySource === 'post_capture_measurement'
       ? data.reference.lightingScore
@@ -155,25 +217,23 @@ function ReviewScreenContent() {
     analysis.framing.score != null || analysis.lighting.score != null
       ? ('post_capture_measurement' as const)
       : null;
-  const discardCapturedPhoto = () => {
-    if (capturedUri) {
-      void FileSystem.deleteAsync(capturedUri, { idempotent: true }).catch(() => undefined);
-    }
+  const discardAndNavigate = (navigate: () => void) => {
+    if (saveInFlightRef.current || cleanupInFlight) return;
+    navigate();
   };
   const closeToProgress = () => {
-    if (saveInFlightRef.current) return;
-    discardCapturedPhoto();
-    backOrReplace(router, APP_PROGRESS_ROUTE);
+    discardAndNavigate(() => backOrReplace(router, APP_PROGRESS_ROUTE));
   };
 
   function save() {
     if (!hasCapturedPhoto || add.isPending || saveInFlightRef.current) return;
 
     saveInFlightRef.current = true;
+    setCriticalOperationInFlight(true);
     setSaveFailed(false);
     const wasEmpty = (data?.count ?? 0) === 0;
-    add.mutate(
-      {
+    void add
+      .mutateAsync({
         takenLocalDate,
         timeOfDay,
         alignmentScore: analysis.framing.score,
@@ -184,21 +244,91 @@ function ReviewScreenContent() {
         qualitySource,
         captureSessionId: params.captureSessionId ?? null,
         localUri: capturedUri,
-      },
-      {
-        onSuccess: () => {
-          track('photo_captured', { on_device: true });
-          if (wasEmpty) {
-            track('first_photo_captured');
-            track('photo_baseline_added', { on_device: true });
-          }
-          router.replace(APP_PROGRESS_ROUTE);
-        },
-        onError: () => {
-          saveInFlightRef.current = false;
-          setSaveFailed(true);
-        },
-      },
+      })
+      .then(() => {
+        setCriticalOperationInFlight(false);
+        if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+        saveInFlightRef.current = false;
+        track('photo_captured', { on_device: true });
+        if (wasEmpty) {
+          track('first_photo_captured');
+          track('photo_baseline_added', { on_device: true });
+        }
+        router.replace(APP_PROGRESS_ROUTE);
+      })
+      .catch(() => {
+        setCriticalOperationInFlight(false);
+        if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+        saveInFlightRef.current = false;
+        setSaveFailed(true);
+      })
+      .finally(() => {
+        // Per-call mutation callbacks may be dropped when a gate unmounts this
+        // child. A direct promise continuation always releases the outer guard.
+        setCriticalOperationInFlight(false);
+      });
+  }
+
+  if (captureSource.status === 'resolving') {
+    return (
+      <View
+        accessibilityLabel={PHOTO_COPY.storage.loading}
+        accessibilityLiveRegion="polite"
+        style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: BG }}
+      >
+        <Text variant="bodySm" style={{ color: 'rgba(244,239,231,0.68)', textAlign: 'center' }}>
+          {PHOTO_COPY.storage.loading}
+        </Text>
+      </View>
+    );
+  }
+
+  if (captureSource.status === 'unavailable') {
+    return (
+      <View
+        accessibilityLiveRegion="polite"
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          gap: 16,
+          paddingHorizontal: 28,
+          backgroundColor: BG,
+        }}
+      >
+        <Text variant="title" style={{ color: '#F4EFE7', textAlign: 'center' }}>
+          {PHOTO_COPY.storage.title}
+        </Text>
+        <Text variant="bodySm" style={{ color: 'rgba(244,239,231,0.68)', textAlign: 'center' }}>
+          {PHOTO_COPY.storage.body}
+        </Text>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            setCaptureLookup({ captureSessionId, source: { status: 'resolving' } });
+            setCaptureLookupRevision((revision) => revision + 1);
+          }}
+          style={{
+            minHeight: 56,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 999,
+            backgroundColor: '#F4EFE7',
+          }}
+        >
+          <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
+            {PHOTO_COPY.storage.retry}
+          </Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => backOrReplace(router, APP_PROGRESS_ROUTE)}
+          style={{ minHeight: 48, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 15, color: '#F4EFE7' }}>
+            {PHOTO_COPY.storage.exit}
+          </Text>
+        </Pressable>
+      </View>
     );
   }
 
@@ -316,7 +446,7 @@ function ReviewScreenContent() {
             backgroundColor: '#2A251E',
           }}
         >
-          <Image source={{ uri: capturedUri }} style={{ flex: 1 }} contentFit="cover" />
+          <PhotoImage uri={capturedUri} style={{ flex: 1 }} contentFit="cover" />
           <View
             style={{
               position: 'absolute',
@@ -412,11 +542,10 @@ function ReviewScreenContent() {
         >
           <Pressable
             accessibilityRole="button"
-            disabled={add.isPending}
+            disabled={add.isPending || cleanupInFlight}
             onPress={() => {
               if (saveInFlightRef.current) return;
-              discardCapturedPhoto();
-              router.replace('/progress/capture');
+              discardAndNavigate(() => router.replace('/progress/capture'));
             }}
             style={{
               flex: 1,
@@ -434,7 +563,7 @@ function ReviewScreenContent() {
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            disabled={add.isPending}
+            disabled={add.isPending || cleanupInFlight}
             onPress={save}
             style={{
               flex: 1.4,
@@ -454,7 +583,7 @@ function ReviewScreenContent() {
       </ScrollView>
       <RouteIconButton
         accessibilityLabel="Close"
-        disabled={add.isPending}
+        disabled={add.isPending || cleanupInFlight}
         glyph="x"
         onPress={closeToProgress}
         tone="night"
@@ -472,15 +601,123 @@ function ReviewScreenContent() {
 }
 
 export default function ReviewScreen() {
+  const navigation = useNavigation();
+  const ownerScope = useOwnerQueryScope();
+  const params = useLocalSearchParams<{ captureSessionId?: string }>();
+  const captureSessionId = isNonBlank(params.captureSessionId ?? null)
+    ? params.captureSessionId!
+    : null;
+  const [cleanupFailed, setCleanupFailed] = useState(false);
+  const [cleanupInFlight, setCleanupInFlight] = useState(false);
+  const cleanupInFlightRef = useRef(false);
+  const criticalOperationInFlightRef = useRef(false);
+  const pendingActionRef = useRef<Parameters<typeof navigation.dispatch>[0] | null>(null);
+
+  const attemptRemoval = (action: Parameters<typeof navigation.dispatch>[0]) => {
+    pendingActionRef.current = action;
+    if (criticalOperationInFlightRef.current || cleanupInFlightRef.current) return;
+    cleanupInFlightRef.current = true;
+    setCleanupFailed(false);
+    setCleanupInFlight(true);
+    void runOwnerQueryOperation(ownerScope, async (lease) => {
+      const handle = captureSessionId ? await resolveCapturedPhoto(captureSessionId) : null;
+      if (handle) await cleanupCapturedPhoto(handle);
+      lease.assertCurrent();
+    })
+      .then(() => {
+        if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+        setCleanupFailed(false);
+        navigation.dispatch(action);
+      })
+      .catch(() => {
+        if (isOwnerQueryScopeCurrent(ownerScope)) setCleanupFailed(true);
+      })
+      .finally(() => {
+        cleanupInFlightRef.current = false;
+        if (isOwnerQueryScopeCurrent(ownerScope)) setCleanupInFlight(false);
+      });
+  };
+
+  // This guard deliberately lives outside every conditional storage, lock,
+  // subscription, and analysis gate so those gates cannot unmount the cleanup
+  // owner while the review route (and its journaled plaintext) still exists.
+  usePreventRemove(Boolean(captureSessionId), ({ data: { action } }) => {
+    attemptRemoval(action);
+  });
+
+  const retryCleanup = () => {
+    const pendingAction = pendingActionRef.current;
+    if (pendingAction) attemptRemoval(pendingAction);
+  };
+
   return (
-    <ProGate feature="photo_timeline">
-      <PhotoTimelineLockGate>
-        <PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
-          <CaptureAnalysisProvider>
-            <ReviewScreenContent />
-          </CaptureAnalysisProvider>
-        </PhotoStorageGate>
-      </PhotoTimelineLockGate>
-    </ProGate>
+    <>
+      <ProGate feature="photo_timeline">
+        <PhotoTimelineLockGate>
+          <PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
+            <CaptureAnalysisProvider>
+              <ReviewScreenContent
+                cleanupInFlight={cleanupInFlight}
+                setCriticalOperationInFlight={(inFlight) => {
+                  criticalOperationInFlightRef.current = inFlight;
+                }}
+              />
+            </CaptureAnalysisProvider>
+          </PhotoStorageGate>
+        </PhotoTimelineLockGate>
+      </ProGate>
+      <Modal
+        animationType="fade"
+        onRequestClose={retryCleanup}
+        transparent
+        visible={cleanupFailed}
+      >
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(22,19,15,0.82)',
+            paddingHorizontal: 28,
+          }}
+        >
+          <View
+            accessibilityRole="alert"
+            style={{
+              width: '100%',
+              maxWidth: 420,
+              gap: 12,
+              borderRadius: 20,
+              backgroundColor: '#F4EFE7',
+              padding: 22,
+            }}
+          >
+            <Text variant="title" style={{ color: BG, textAlign: 'center' }}>
+              Photo cleanup needs another try
+            </Text>
+            <Text variant="bodySm" style={{ color: '#625B52', textAlign: 'center' }}>
+              OnSkin kept this screen open so the temporary photo is not left behind.
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              disabled={cleanupInFlight}
+              onPress={retryCleanup}
+              style={{
+                minHeight: 52,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 999,
+                backgroundColor: BG,
+                opacity: cleanupInFlight ? 0.6 : 1,
+              }}
+            >
+              <Text style={{ color: '#F4EFE7', fontFamily: 'HankenGrotesk-SemiBold' }}>
+                {cleanupInFlight ? 'Clearing photo…' : 'Try again'}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 }

@@ -20,14 +20,45 @@ import { initSentry } from '@/lib/observability/sentry';
 import { markStartupPhase } from '@/lib/observability/operationTiming';
 import { QueryDateBoundaryObserver } from '@/lib/query/QueryDateBoundaryObserver';
 import { queryClient } from '@/lib/query/queryClient';
+import { PlaintextStagingStartupGate } from '@/lib/storage/PlaintextStagingStartupGate';
 import { PrivateDataAvailabilityGate } from '@/lib/storage/PrivateDataAvailabilityGate';
-import { scavengePlaintextStaging } from '@/lib/storage/plaintextStaging';
 import { useFontDecision } from '@/theme/fontLoader';
 
 initSentry();
 markStartupPhase('javascript_started');
 void SplashScreen.preventAutoHideAsync();
-void scavengePlaintextStaging().catch(() => undefined);
+
+function RootContent() {
+  // Set the local-notification handler + Android channel once at startup (docs/07 §9).
+  useEffect(() => {
+    void configureNotifications();
+  }, []);
+
+  useEffect(() => {
+    void clearUnavailableCloudBackupPreference();
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <QueryDateBoundaryObserver />
+      <AuthProvider>
+        <SessionBoundaryGate>
+          <AppLockProvider>
+            <PrivateDataAvailabilityGate>
+              <OnboardingProvider>
+                <IntakeProvider>
+                  <OfflineSync />
+                  <StatusBar style="dark" />
+                  <Stack screenOptions={{ headerShown: false }} />
+                </IntakeProvider>
+              </OnboardingProvider>
+            </PrivateDataAvailabilityGate>
+          </AppLockProvider>
+        </SessionBoundaryGate>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default function RootLayout() {
   const fontDecisionComplete = useFontDecision();
@@ -43,36 +74,12 @@ export default function RootLayout() {
     }
   }, [fontDecisionComplete]);
 
-  // Set the local-notification handler + Android channel once at startup (docs/07 §9).
-  useEffect(() => {
-    void configureNotifications();
-  }, []);
-
-  useEffect(() => {
-    void clearUnavailableCloudBackupPreference();
-  }, []);
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <QueryClientProvider client={queryClient}>
-          <QueryDateBoundaryObserver />
-          <AuthProvider>
-            <SessionBoundaryGate>
-              <AppLockProvider>
-                <PrivateDataAvailabilityGate>
-                  <OnboardingProvider>
-                    <IntakeProvider>
-                      <OfflineSync />
-                      <StatusBar style="dark" />
-                      <Stack screenOptions={{ headerShown: false }} />
-                    </IntakeProvider>
-                  </OnboardingProvider>
-                </PrivateDataAvailabilityGate>
-              </AppLockProvider>
-            </SessionBoundaryGate>
-          </AuthProvider>
-        </QueryClientProvider>
+        <PlaintextStagingStartupGate>
+          <RootContent />
+        </PlaintextStagingStartupGate>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

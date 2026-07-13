@@ -84,6 +84,9 @@ export async function clearAccountIsolatedState(
   beginPrivateKVAccountBoundary();
   beginEncryptedPhotoAccountBoundary();
   try {
+    // Plaintext scavenging deletes the dedicated staging/ingress directories.
+    // Drain every owner-scoped producer first so it cannot race a late camera or
+    // image-manipulator write into those directories.
     await attempt(() => waitForAccountGenerationOperationsToSettle());
     await attempt(() => waitForPrivateKVWritesToSettle());
     await attempt(() => waitForEncryptedPhotoWritesToSettle());

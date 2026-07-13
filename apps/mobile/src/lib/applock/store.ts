@@ -2,7 +2,7 @@ import {
   getPrivateItem,
   PRIVATE_KV_ENVELOPE_INVALID,
   PRIVATE_KV_ENVELOPE_UNSUPPORTED,
-  removePrivateItem,
+  removePrivateItemsForAuthorizedReset,
   setPrivateItem,
 } from '@/lib/storage/privateKV';
 
@@ -62,5 +62,5 @@ export async function setAppLockEnabledStored(enabled: boolean): Promise<void> {
 }
 
 export async function clearMalformedAppLockPreference(): Promise<void> {
-  await removePrivateItem(KEY);
+  await removePrivateItemsForAuthorizedReset([KEY], 'device_authenticated_app_lock_repair');
 }

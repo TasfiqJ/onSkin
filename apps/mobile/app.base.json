@@ -16,6 +16,9 @@
       "usesAppleSignIn": true,
       "deploymentTarget": "17.0",
       "icon": "./assets/expo.icon",
+      "entitlements": {
+        "com.apple.developer.default-data-protection": "NSFileProtectionComplete"
+      },
       "infoPlist": {
         "NSCameraUsageDescription": "RoutineKind uses the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Camera processing happens on your device; no faceprint is stored.",
         "NSFaceIDUsageDescription": "RoutineKind uses Face ID to keep your private photo timeline for your eyes only."
@@ -23,7 +26,6 @@
     },
     "android": {
       "package": "com.routinekind.app",
-      "allowBackup": false,
       "permissions": ["android.permission.CAMERA", "android.permission.POST_NOTIFICATIONS"],
       "adaptiveIcon": {
         "backgroundColor": "#F5F1EA",
@@ -39,6 +41,7 @@
     },
     "plugins": [
       "expo-router",
+      "./plugins/withPrivateStorageProtection",
       "expo-apple-authentication",
       [
         "expo-build-properties",
@@ -70,7 +73,7 @@
           "barcodeScannerEnabled": true
         }
       ],
-      "expo-secure-store",
+      ["expo-secure-store", { "configureAndroidBackup": false }],
       [
         "expo-notifications",
         {

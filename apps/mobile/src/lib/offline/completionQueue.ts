@@ -1,4 +1,6 @@
 import { supabase } from '@/lib/supabase/client';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import {
@@ -124,46 +126,55 @@ export async function pendingStepIdsForDate(date: string): Promise<Set<string>> 
 export async function flushCompletions(
   now: Date = new Date(),
 ): Promise<{ flushed: number; remaining: number }> {
-  const pending = await getPendingCompletions();
-  if (pending.length === 0) return { flushed: 0, remaining: 0 };
+  return runAccountGenerationOperation(async (lease) => {
+    const pending = await getPendingCompletions();
+    lease.assertCurrent();
+    if (pending.length === 0) return { flushed: 0, remaining: 0 };
 
-  const { data } = await supabase.auth.getUser();
-  const userId = data.user?.id;
-  if (!userId) return { flushed: 0, remaining: pending.length }; // no session yet; retry later
+    const userId = (await captureAuthenticatedAccountOwner(lease))?.userId;
+    if (!userId) return { flushed: 0, remaining: pending.length }; // no session yet; retry later
 
-  const removeKeys = new Set<string>();
-  let flushed = 0;
-  for (const rec of pending) {
-    if (rec.userId !== userId) {
-      removeKeys.add(completionKey(rec)); // a prior account's row; drop
-      continue;
-    }
-    if (isStale(rec.completedDate, now)) {
-      removeKeys.add(completionKey(rec)); // outside the server window; drop
-      continue;
-    }
-    try {
-      const { error } = await supabase.from('routine_completions').insert({
-        user_id: userId,
-        routine_id: rec.routineId,
-        step_id: rec.stepId,
-        completed_date: rec.completedDate,
-      });
-      if (!error || error.code === '23505') {
-        removeKeys.add(completionKey(rec));
-        flushed += 1; // landed, or already recorded (dedup)
+    const removeKeys = new Set<string>();
+    let flushed = 0;
+    for (const rec of pending) {
+      if (rec.userId !== userId) {
+        removeKeys.add(completionKey(rec)); // a prior account's row; drop
+        continue;
       }
-    } catch {
-      // Network failure: leave the row in the latest queue for the next flush.
+      if (isStale(rec.completedDate, now)) {
+        removeKeys.add(completionKey(rec)); // outside the server window; drop
+        continue;
+      }
+      try {
+        lease.assertCurrent();
+        const { error } = await supabase
+          .from('routine_completions')
+          .insert({
+            user_id: userId,
+            routine_id: rec.routineId,
+            step_id: rec.stepId,
+            completed_date: rec.completedDate,
+          })
+          .abortSignal(lease.signal);
+        lease.assertCurrent();
+        if (!error || error.code === '23505') {
+          removeKeys.add(completionKey(rec));
+          flushed += 1; // landed, or already recorded (dedup)
+        }
+      } catch {
+        lease.assertCurrent();
+        // Network failure: leave the row in the latest queue for the next flush.
+      }
     }
-  }
 
-  let remaining = pending.length;
-  await updatePrivateItem(KEY, (current) => {
-    const latest = decodePending(current);
-    const next = latest.filter((rec) => !removeKeys.has(completionKey(rec)));
-    remaining = next.length;
-    return encodePending(next);
+    let remaining = pending.length;
+    await updatePrivateItem(KEY, (current) => {
+      const latest = decodePending(current);
+      const next = latest.filter((rec) => !removeKeys.has(completionKey(rec)));
+      remaining = next.length;
+      return encodePending(next);
+    });
+    lease.assertCurrent();
+    return { flushed, remaining };
   });
-  return { flushed, remaining };
 }

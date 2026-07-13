@@ -201,7 +201,7 @@ export default function PreferencesScreen() {
       simulatedPreferenceFailureUsed.current = true;
       throw new Error('E2E_RECOMMENDATION_PREFERENCES_FAILURE');
     }
-    await savePreferences(next);
+    await savePreferences(ownerScope, next);
   };
 
   const commit = async (next: RecPreferences) => {
@@ -223,11 +223,12 @@ export default function PreferencesScreen() {
           });
         },
         onFailure: () => {
+          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
           setSaveFailed(true);
         },
       });
     } finally {
-      setSaving(false);
+      if (isOwnerQueryScopeCurrent(ownerScope)) setSaving(false);
     }
   };
 

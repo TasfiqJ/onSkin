@@ -1,3 +1,5 @@
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+
 import { rescheduleReminders, requestPermission } from './deliver';
 import { saveNotifPrefs, type NotifPrefs } from './store';
 
@@ -19,15 +21,24 @@ const defaultDeps: NotificationOnboardingDeps = {
 export async function acceptRoutineReminderSoftAsk(
   deps: NotificationOnboardingDeps = defaultDeps,
 ): Promise<boolean> {
-  const granted = await deps.requestPermission();
-  const prefs = await deps.saveNotifPrefs(granted ? ROUTINE_REMINDERS_ON : ROUTINE_REMINDERS_OFF);
-  await deps.rescheduleReminders(prefs);
-  return granted;
+  return runAccountGenerationOperation(async (lease) => {
+    const granted = await deps.requestPermission();
+    lease.assertCurrent();
+    const prefs = await deps.saveNotifPrefs(granted ? ROUTINE_REMINDERS_ON : ROUTINE_REMINDERS_OFF);
+    lease.assertCurrent();
+    await deps.rescheduleReminders(prefs);
+    lease.assertCurrent();
+    return granted;
+  });
 }
 
 export async function declineRoutineReminderSoftAsk(
   deps: Pick<NotificationOnboardingDeps, 'saveNotifPrefs' | 'rescheduleReminders'> = defaultDeps,
 ): Promise<void> {
-  const prefs = await deps.saveNotifPrefs(ROUTINE_REMINDERS_OFF);
-  await deps.rescheduleReminders(prefs);
+  await runAccountGenerationOperation(async (lease) => {
+    const prefs = await deps.saveNotifPrefs(ROUTINE_REMINDERS_OFF);
+    lease.assertCurrent();
+    await deps.rescheduleReminders(prefs);
+    lease.assertCurrent();
+  });
 }

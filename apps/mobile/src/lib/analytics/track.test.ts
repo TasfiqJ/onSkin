@@ -2,7 +2,17 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-import { pseudonymousUserId, sanitizeAnalyticsEventName, sanitizeAnalyticsProps } from './track';
+import {
+  AccountGenerationLeaseError,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
+
+import {
+  identify,
+  pseudonymousUserId,
+  sanitizeAnalyticsEventName,
+  sanitizeAnalyticsProps,
+} from './track';
 
 const TRACK_SOURCE = fileURLToPath(new URL('./track.ts', import.meta.url));
 
@@ -223,14 +233,39 @@ describe('analytics sanitizer', () => {
     expect(first).not.toContain(raw);
   });
 
-  it('keeps an explicit account-boundary reset for PostHog identity', () => {
+  it('refuses to identify after the initiating owner lease becomes stale', async () => {
+    const controller = new AbortController();
+    let assertionCount = 0;
+    const lease: AccountGenerationLease = {
+      generation: 1,
+      signal: controller.signal,
+      assertCurrent: () => {
+        assertionCount += 1;
+        if (assertionCount > 1) throw new AccountGenerationLeaseError();
+      },
+      beginBoundaryHandoff: () => () => undefined,
+    };
+
+    await expect(
+      identify(lease, '00000000-0000-4000-8000-000000000001', {
+        method: 'account_created',
+      }),
+    ).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+  });
+
+  it('freezes PostHog writes before deletion and only thaws at the final account boundary', () => {
     const source = readFileSync(TRACK_SOURCE, 'utf8');
 
     expect(source).toContain('sanitizeAnalyticsEventName(event)');
     expect(source).toContain('posthog?.capture(safeEvent, safeProps)');
     expect(source).toContain('captureAppLifecycleEvents: false');
     expect(source).toContain('enableSessionReplay: false');
+    expect(source).toContain('let accountDeletionWritesFrozen = false');
+    expect(source).toContain('if (accountDeletionWritesFrozen) return;');
+    expect(source).toContain('export async function freezeAnalyticsIdentityForAccountDeletion');
+    expect(source).toContain('accountDeletionWritesFrozen = true;');
     expect(source).toContain('export async function resetAnalyticsIdentity');
+    expect(source).toContain('accountDeletionWritesFrozen = false;');
     expect(source).toContain('posthog?.reset()');
   });
 });

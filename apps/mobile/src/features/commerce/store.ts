@@ -1,5 +1,11 @@
 import { randomUUID } from 'expo-crypto';
 
+import {
+  AccountGenerationLeaseError,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
+import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
+import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
 import { supabase } from '@/lib/supabase/client';
 import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
 import { removePrivateItem } from '@/lib/storage/privateKV';
@@ -28,23 +34,52 @@ export function buildClickToken(): string {
   return randomUUID().replace(/-/g, '');
 }
 
+/** Keep owner attribution and the eventual external handoff in one mounted-owner
+ * lease. Account isolation can abort and drain the whole tap before owner B mounts. */
+export async function runCommerceClickOperation<T>(
+  ownerScope: OwnerQueryScope,
+  payload: ClickPayload,
+  operation: (lease: AccountGenerationLease) => T | Promise<T>,
+): Promise<T | undefined> {
+  if (!isHealthSafePayload(payload as unknown as Record<string, unknown>)) return undefined;
+
+  return runOwnerQueryOperation(ownerScope, async (lease) => {
+    try {
+      const owner = await captureAuthenticatedAccountOwner(lease);
+      if (owner) {
+        lease.assertCurrent();
+        await supabase
+          .from('commerce_click_events')
+          .insert({
+            user_id: owner.userId,
+            click_token: payload.clickToken,
+            product_type: payload.productType,
+            source: payload.source,
+            consented: payload.consented,
+          })
+          .abortSignal(lease.signal);
+        lease.assertCurrent();
+      }
+    } catch (error) {
+      if (error instanceof AccountGenerationLeaseError) throw error;
+      lease.assertCurrent();
+      /* offline / no DB */
+    }
+
+    lease.assertCurrent();
+    const result = await operation(lease);
+    lease.assertCurrent();
+    return result;
+  });
+}
+
 /** Mirror a content-free click event (owner-RLS). Never persists a health-adjacent
  *  key (guarded). Guarded for offline / no backend (B-SUPABASE). */
-export async function recordClick(payload: ClickPayload): Promise<void> {
-  if (!isHealthSafePayload(payload as unknown as Record<string, unknown>)) return;
-  try {
-    const { data } = await supabase.auth.getUser();
-    if (!data.user?.id) return;
-    await supabase.from('commerce_click_events').insert({
-      user_id: data.user.id,
-      click_token: payload.clickToken,
-      product_type: payload.productType,
-      source: payload.source,
-      consented: payload.consented,
-    });
-  } catch {
-    /* offline / no DB */
-  }
+export async function recordClick(
+  ownerScope: OwnerQueryScope,
+  payload: ClickPayload,
+): Promise<void> {
+  await runCommerceClickOperation(ownerScope, payload, () => undefined);
 }
 
 /** Test/seed reset. */

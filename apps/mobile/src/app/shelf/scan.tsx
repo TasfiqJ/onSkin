@@ -28,6 +28,8 @@ import { env } from '@/lib/env';
 import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
 import { isRequestCancellation } from '@/lib/network/requestPolicy';
+import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 
 type ScanState =
@@ -135,6 +137,7 @@ function noMatchRoute(barcode: string) {
 }
 
 export default function ScanScreen() {
+  const ownerScope = useOwnerQueryScope();
   const isFocused = useIsFocused();
   const { height, width } = useWindowDimensions();
   const [permission, requestPermission] = useCameraPermissions();
@@ -237,9 +240,9 @@ export default function ScanScreen() {
     activeLookup.current = controller;
     void lookupBarcode(normalized.lookupValue, { signal: controller.signal })
       .then((response) => {
-        if (controller.signal.aborted) return;
+        if (controller.signal.aborted || !isOwnerQueryScopeCurrent(ownerScope)) return;
         const scanResult = shelfScanResultFromLookup(response.result);
-        void recordShelfScan({
+        void recordShelfScan(ownerScope, {
           barcode: normalized.lookupValue,
           result: scanResult,
           matchedProductId: 'product' in response ? response.product.id : null,
@@ -269,11 +272,12 @@ export default function ScanScreen() {
         });
       })
       .catch((error: unknown) => {
+        if (!isOwnerQueryScopeCurrent(ownerScope)) return;
         if (controller.signal.aborted || isRequestCancellation(error)) {
           if (mounted.current) setState({ kind: 'idle' });
           return;
         }
-        void recordShelfScan({
+        void recordShelfScan(ownerScope, {
           barcode: normalized.lookupValue,
           result: shelfScanResultFromLookup('lookup_error'),
         }).catch(() => undefined);
@@ -286,7 +290,11 @@ export default function ScanScreen() {
       .finally(() => {
         if (activeLookup.current === controller) {
           activeLookup.current = null;
-          if (controller.signal.aborted && mounted.current) {
+          if (
+            controller.signal.aborted &&
+            mounted.current &&
+            isOwnerQueryScopeCurrent(ownerScope)
+          ) {
             setState((current) => (current.kind === 'looking_up' ? { kind: 'idle' } : current));
           }
         }

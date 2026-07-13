@@ -9,6 +9,8 @@ import {
   declineRoutineReminderSoftAsk,
 } from '@/features/notifications/onboarding';
 import { track } from '@/lib/analytics/track';
+import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
 // 08 · Notification soft-ask (docs/07 §3.2, design screen 01). A value-moment
@@ -32,19 +34,20 @@ function CheckRow({ label }: { label: string }) {
 }
 
 export default function NotificationsScreen() {
+  const ownerScope = useOwnerQueryScope();
   const [busy, setBusy] = useState(false);
 
   async function finish(action: () => Promise<void>) {
-    if (busy) return;
+    if (busy || !isOwnerQueryScopeCurrent(ownerScope)) return;
     setBusy(true);
     try {
       await action();
     } catch {
       /* Unsupported local notification/storage environments should not trap onboarding. */
-    } finally {
-      setBusy(false);
-      router.push('/onboarding/account');
     }
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+    setBusy(false);
+    router.push('/onboarding/account');
   }
 
   function enable() {
@@ -53,11 +56,11 @@ export default function NotificationsScreen() {
       const granted = await acceptRoutineReminderSoftAsk();
       if (granted) track('notification_prompt_granted');
       else track('notification_prompt_denied');
-    });
+    }).catch(() => undefined);
   }
 
   function skip() {
-    void finish(declineRoutineReminderSoftAsk);
+    void finish(declineRoutineReminderSoftAsk).catch(() => undefined);
   }
 
   return (

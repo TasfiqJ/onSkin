@@ -18,7 +18,8 @@ import {
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
   getUser: vi.fn(async () => ({ data: { user: { id: 'user-1' } } })),
-  upsert: vi.fn(async () => ({ error: null })),
+  upsert: vi.fn(),
+  upsertAbortSignal: vi.fn(async () => ({ error: null })),
   tails: new Map<string, Promise<void>>(),
   updateFailure: null as Error | null,
 }));
@@ -68,6 +69,9 @@ describe('notification lock-screen privacy preference', () => {
     mocks.storage.clear();
     mocks.getUser.mockClear();
     mocks.upsert.mockClear();
+    mocks.upsert.mockReturnValue({ abortSignal: mocks.upsertAbortSignal });
+    mocks.upsertAbortSignal.mockClear();
+    mocks.upsertAbortSignal.mockResolvedValue({ error: null });
     mocks.tails.clear();
     mocks.updateFailure = null;
   });
@@ -113,6 +117,7 @@ describe('notification lock-screen privacy preference', () => {
     expect(mocks.upsert).toHaveBeenLastCalledWith(
       expect.objectContaining({ replenishment_alerts: true }),
     );
+    expect(mocks.upsertAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
   });
 
   it('preserves unreadable local prefs and fails every optional notification closed', async () => {

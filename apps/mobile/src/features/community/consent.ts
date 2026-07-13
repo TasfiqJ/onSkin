@@ -1,4 +1,5 @@
 import { track } from '@/lib/analytics/track';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 
@@ -13,32 +14,45 @@ import { getCommunityConsentLocal, setAgeConfirmedLocal, setCommunityConsentLoca
 // Withdrawal deletes the user's questions (Edge Function, deferred B-COMMUNITY-MOD).
 
 export async function isCommunityConsented(): Promise<boolean> {
-  try {
-    const consents = await getLatestConsents();
-    if ('community_participation' in consents) return consents['community_participation'] === true;
-  } catch {
-    /* offline / no DB. Fall back to the local-first flag */
-  }
-  return getCommunityConsentLocal();
+  return runAccountGenerationOperation(async (lease) => {
+    try {
+      const consents = await getLatestConsents();
+      lease.assertCurrent();
+      if ('community_participation' in consents) {
+        return consents['community_participation'] === true;
+      }
+    } catch {
+      lease.assertCurrent();
+      /* offline / no DB. Fall back to the local-first flag */
+    }
+    const local = await getCommunityConsentLocal();
+    lease.assertCurrent();
+    return local;
+  });
 }
 
 /** Grant the community_participation consent. The 16+ age gate is a SEPARATE
  *  affirmative action (confirmCommunityAge), never auto-set here, so the composer
  *  can require both (docs/11 §8: the hard age gate is a real control, not copy). */
 export async function grantCommunityConsent(): Promise<void> {
-  await setCommunityConsentLocal(true);
-  try {
-    await recordConsent({
-      type: 'community_participation',
-      granted: true,
-      version: COMMUNITY_COPY.consentVersion,
-      consentText: `[PLACEHOLDER community_participation consent. B-PRIVACY-COPY] ${COMMUNITY_COPY.consent.body}`,
-    });
-    track('community_consent_granted');
-  } catch {
-    // Local-first/offline-safe: keep the local gate usable when the immutable
-    // ledger mirror is unavailable. Ledger state still wins on future reads when present.
-  }
+  await runAccountGenerationOperation(async (lease) => {
+    await setCommunityConsentLocal(true);
+    lease.assertCurrent();
+    try {
+      await recordConsent({
+        type: 'community_participation',
+        granted: true,
+        version: COMMUNITY_COPY.consentVersion,
+        consentText: `[PLACEHOLDER community_participation consent. B-PRIVACY-COPY] ${COMMUNITY_COPY.consent.body}`,
+      });
+      lease.assertCurrent();
+      track('community_consent_granted');
+    } catch {
+      lease.assertCurrent();
+      // Local-first/offline-safe: keep the local gate usable when the immutable
+      // ledger mirror is unavailable. Ledger state still wins on future reads when present.
+    }
+  });
 }
 
 /** Record the explicit 16+ affirmation (COPPA + the Apple/store age floor). Must
@@ -48,10 +62,14 @@ export async function confirmCommunityAge(): Promise<void> {
 }
 
 export async function withdrawCommunityConsent(): Promise<void> {
-  await setCommunityConsentLocal(false);
-  await withdrawConsent({
-    type: 'community_participation',
-    version: COMMUNITY_COPY.consentVersion,
-    consentText: `[PLACEHOLDER community_participation withdrawal. B-PRIVACY-COPY]`,
+  await runAccountGenerationOperation(async (lease) => {
+    await setCommunityConsentLocal(false);
+    lease.assertCurrent();
+    await withdrawConsent({
+      type: 'community_participation',
+      version: COMMUNITY_COPY.consentVersion,
+      consentText: `[PLACEHOLDER community_participation withdrawal. B-PRIVACY-COPY]`,
+    });
+    lease.assertCurrent();
   });
 }

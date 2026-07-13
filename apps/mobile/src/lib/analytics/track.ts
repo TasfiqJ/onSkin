@@ -6,6 +6,12 @@ import {
   isAllowedAnalyticsEventName,
   isAllowedAnalyticsPropKey,
 } from '@/lib/analytics/eventRegistry';
+import {
+  AccountGenerationLeaseError,
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
 import { env } from '@/lib/env';
 import {
   GROWTH_ATTRIBUTION_KEYS,
@@ -15,6 +21,7 @@ import {
 import { devWarn } from '@/lib/observability/safeLog';
 
 let posthogPromise: Promise<PostHog | null> | null = null;
+let accountDeletionWritesFrozen = false;
 type AnalyticsProps = Parameters<PostHog['capture']>[1];
 
 export const SENSITIVE_ANALYTICS_KEY =
@@ -125,39 +132,64 @@ export function sanitizeAnalyticsEventName(
 }
 
 export function track(event: OnboardingEvent | string, props?: Record<string, unknown>): void {
+  if (accountDeletionWritesFrozen) return;
   const safeEvent = sanitizeAnalyticsEventName(event);
   if (!safeEvent) return;
 
   const safeProps = sanitizeAnalyticsProps(props);
 
-  void getPostHog()
-    .then((posthog) => {
-      posthog?.capture(safeEvent, safeProps);
-    })
-    .catch((error: unknown) => {
-      devWarn('[analytics] capture failed', error);
-    });
+  void runAccountGenerationOperation(async (lease) => {
+    const posthog = await awaitAccountGenerationLease(lease, getPostHog);
+    lease.assertCurrent();
+    if (accountDeletionWritesFrozen) return;
+    posthog?.capture(safeEvent, safeProps);
+  }).catch((error: unknown) => {
+    devWarn('[analytics] capture failed', error);
+  });
 }
 
 // Call at the anonymous-to-permanent conversion (account creation) per docs/01 section 7.
-export function identify(userId: string, props?: Record<string, unknown>): void {
+export async function identify(
+  lease: AccountGenerationLease,
+  userId: string,
+  props?: Record<string, unknown>,
+): Promise<void> {
+  if (accountDeletionWritesFrozen) return;
   const safeProps = sanitizeAnalyticsProps(props);
 
-  void Promise.all([getPostHog(), pseudonymousUserId(userId)])
-    .then(([posthog, pseudonymousId]) => {
-      posthog?.identify(pseudonymousId, safeProps);
-    })
-    .catch((error: unknown) => {
-      devWarn('[analytics] identify failed', error);
-    });
+  try {
+    lease.assertCurrent();
+    const [posthog, pseudonymousId] = await awaitAccountGenerationLease(lease, () =>
+      Promise.all([getPostHog(), pseudonymousUserId(userId)]),
+    );
+    lease.assertCurrent();
+    if (accountDeletionWritesFrozen) return;
+    posthog?.identify(pseudonymousId, safeProps);
+    lease.assertCurrent();
+  } catch (error) {
+    if (error instanceof AccountGenerationLeaseError) throw error;
+    devWarn('[analytics] identify failed', error);
+  }
 }
 
-export async function resetAnalyticsIdentity(): Promise<void> {
+async function resetPostHogIdentity(): Promise<void> {
   const posthog = await getPostHog();
   await posthog?.reset();
 }
 
+export async function freezeAnalyticsIdentityForAccountDeletion(): Promise<void> {
+  accountDeletionWritesFrozen = true;
+  await resetPostHogIdentity();
+}
+
+export async function resetAnalyticsIdentity(): Promise<void> {
+  await resetPostHogIdentity();
+  accountDeletionWritesFrozen = false;
+}
+
 export async function flushAnalytics(): Promise<void> {
+  if (accountDeletionWritesFrozen) return;
   const posthog = await getPostHog();
+  if (accountDeletionWritesFrozen) return;
   await posthog?.flush();
 }

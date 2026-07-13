@@ -45,6 +45,60 @@ export function assertAccountGenerationLease(lease: AccountGenerationLease): voi
   }
 }
 
+/**
+ * Await an API that cannot accept AbortSignal directly without allowing it to
+ * pin the account boundary forever. The underlying read may still finish later,
+ * but its result is detached and can never publish after this lease is aborted.
+ */
+export function awaitAccountGenerationLease<T>(
+  lease: AccountGenerationLease,
+  operation: () => PromiseLike<T>,
+): Promise<T> {
+  try {
+    lease.assertCurrent();
+  } catch (error) {
+    return Promise.reject(error);
+  }
+
+  return new Promise<T>((resolve, reject) => {
+    let settled = false;
+
+    const finish = (callback: () => void) => {
+      if (settled) return;
+      settled = true;
+      lease.signal.removeEventListener('abort', onAbort);
+      callback();
+    };
+    const onAbort = () => finish(() => reject(invalidLeaseError()));
+
+    lease.signal.addEventListener('abort', onAbort, { once: true });
+    if (lease.signal.aborted) {
+      onAbort();
+      return;
+    }
+
+    let pending: PromiseLike<T>;
+    try {
+      pending = operation();
+    } catch (error) {
+      finish(() => reject(error));
+      return;
+    }
+
+    void Promise.resolve(pending).then(
+      (value) => {
+        try {
+          lease.assertCurrent();
+          finish(() => resolve(value));
+        } catch (error) {
+          finish(() => reject(error));
+        }
+      },
+      (error: unknown) => finish(() => reject(error)),
+    );
+  });
+}
+
 export function runAccountGenerationOperation<T>(
   operation: (lease: AccountGenerationLease) => T | Promise<T>,
 ): Promise<T> {

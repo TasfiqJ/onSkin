@@ -414,6 +414,7 @@ export async function deleteEncryptedPhoto(uri?: string | null): Promise<void> {
 /** Removes the camera cache source only after both encrypted file and metadata commit. */
 export async function deleteCapturedPhotoSource(uri?: string | null): Promise<void> {
   if (!uri || isEncryptedPhotoUri(uri)) return;
+  await cleanupPlaintextStagingUri(uri);
   await FileSystem.deleteAsync(uri, { idempotent: true });
 }
 

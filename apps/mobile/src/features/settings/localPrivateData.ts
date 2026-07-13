@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
@@ -6,7 +5,10 @@ import { Platform } from 'react-native';
 import { clearEncryptedPhotoStorage } from '@/features/photos/encryptedStorage';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
 import { resetRevenueCatIdentity } from '@/lib/iap/revenuecat';
-import { clearPrivateKVContentKey } from '@/lib/storage/privateKV';
+import {
+  clearPrivateKVContentKey,
+  removePrivateItemsForAuthorizedReset,
+} from '@/lib/storage/privateKV';
 
 import {
   LOCAL_PRIVATE_CACHE_FILENAMES,
@@ -41,10 +43,10 @@ export async function clearLocalPrivateData(): Promise<void> {
   const operations = [
     {
       label: 'registered_records',
-      promise: AsyncStorage.multiRemove([
-        ...LOCAL_PRIVATE_DATA_KEYS,
-        ...LOCAL_PRIVATE_METADATA_KEYS,
-      ]),
+      promise: removePrivateItemsForAuthorizedReset(
+        [...LOCAL_PRIVATE_DATA_KEYS, ...LOCAL_PRIVATE_METADATA_KEYS],
+        'account_isolation',
+      ),
     },
     { label: 'encrypted_photos', promise: clearEncryptedPhotoStorage() },
     { label: 'private_kv_key', promise: clearPrivateKVContentKey() },

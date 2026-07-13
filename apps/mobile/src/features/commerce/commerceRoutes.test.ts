@@ -177,4 +177,19 @@ describe('Commerce route contracts', () => {
     expect(notice).toContain('accessibilityRole="alert"');
     expect(notice).toContain('colors.clayTint');
   });
+
+  it('keeps retailer handoff and feedback inside the initiating owner scope', () => {
+    const whereToBuy = readFeatureFile('WhereToBuy.tsx');
+    const stackDetail = readAppRoute('commerce/stack/[slug].tsx');
+    const consent = readAppRoute('commerce/consent.tsx');
+
+    expect(whereToBuy).toContain('await runCommerceClickOperation(');
+    expect(whereToBuy).toContain('const opened = await openExternalHttpsUrl(outboundUrl, {');
+    expect(whereToBuy).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
+    expect(whereToBuy).toContain('if (feedback) setLinkFeedback(feedback);');
+    expect(stackDetail).toContain('await runCommerceClickOperation(');
+    expect(stackDetail).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
+    expect(consent).toContain('onPress={() => void allow().catch(() => undefined)}');
+    expect(consent).toContain('onPress={() => void decline().catch(() => undefined)}');
+  });
 });
