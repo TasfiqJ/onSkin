@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T15:32:53.056Z",
+  "generatedAt": "2026-07-13T18:55:58.568Z",
   "status": "blocked",
   "launchContract": {
     "schemaVersion": 1,
@@ -77,7 +77,7 @@
     "ios": "required",
     "android": "not_applicable"
   },
-  "gitSha": "4bb0f418697f3714da2611cb8dfd318ce612656c",
+  "gitSha": "7bfbe2bfb4ac15d979bee1fe11591c243621311f",
   "gitStatus": "",
   "releaseIdentity": {
     "appEnvironment": "development",
@@ -139,7 +139,7 @@
     "apps/mobile/src/lib/analytics/track.ts": "d613d0f4c9cb794b681b722850dc4b408d06eb8da0574f16681463d7b4c22be2",
     "apps/mobile/src/app/community/ask.tsx": "5603a0c3b19526cea52620c069183efb08f960f1943c77f74aa8bc637022d469",
     "apps/mobile/src/app/community/people-like-you.tsx": "b18c6e540c9451ff47d0bf1ca919d94e8fa14f2ba187f5478b568e5fb686cdf4",
-    "apps/mobile/src/app/trend/optin.tsx": "4f05727b9908e26f7b4cb8b00b76ea8c23ca3e1abe556082053dbd23e3a09ff4",
+    "apps/mobile/src/app/trend/optin.tsx": "59e11ac2d24b435b45b77a07030733ec5bfc93bddeac993f23d915a02a6058b5",
     "apps/mobile/src/app/routine/widgets.tsx": "f7c758cf8e18e10bcbba41f60a0a03fead7a952135ecf58ac95a21b2f623004a",
     "apps/mobile/src/app/routine/_layout.tsx": "3c3fd965a6889c8addbe36a649b3703af5343a5034dd1181c2620d145c36216c",
     "apps/mobile/src/features/subscription/gatedRoutes.ts": "aea4630a6d619bc5a10f6ee247d46af66f0a29887db6f7da869f7f12fdacd4af",
@@ -201,7 +201,7 @@
     "supabase/migrations/20260705000034_phase9_security_definer_hardening.sql": "28e6e359282469c72a5a4669f308cae905141b7a311e4a99aa53834462bbc567",
     "supabase/migrations/20260711000038_shelf_freshness_invariants.sql": "672df1e56fac4cdfc6bf641c3249221aaacf630439d28898a79ace2d25181bcd",
     "supabase/migrations/20260711000039_replenishment_alert_opt_in.sql": "eac60d4bf92f465ad2264c509f8e0a2f412b5780f862cf602b8ff16e1e2e1299",
-    "scripts/phase9/lib.mjs": "6248cbe57cb3a77b3ba8fc36c3a78d4ab18ca363b275c4dbf7735dc3e3f91675",
+    "scripts/phase9/lib.mjs": "0dd6fa1c3cf1e68e26adb577e8d9711e9eacf60e3b2f01a0da3e9ab5268744db",
     "scripts/phase9/release-contact-smoke.mjs": "da12a4b38f9dddd85a6501454c16b92b5cb07f290d9f86f180fcfbe7b26bd0bd",
     "scripts/phase9/evidence-normalization-smoke.mjs": "2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5",
     "scripts/phase9/release-smoke.mjs": "9ba60c729718e063e73915576ee452f81da0da36f68eff1fb25b39661054a3fa",
