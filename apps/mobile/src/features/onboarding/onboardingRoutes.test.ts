@@ -356,9 +356,9 @@ describe('onboarding route contracts', () => {
     expect(source).toContain('Return without changing');
     expect(source).toContain('if (router.canGoBack())');
     expect(source).toContain("pathname: '/settings/skin-profile'");
-    expect(source).toContain("queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] })");
-    expect(source).toContain('resetHealthProfileConsumers(queryClient)');
-    expect(source.indexOf('resetHealthProfileConsumers(queryClient)')).toBeLessThan(
+    expect(source).toContain('ownerQueryPrefixes.skinProfile(ownerScope)');
+    expect(source).toContain('resetHealthProfileConsumers(queryClient, ownerScope)');
+    expect(source.indexOf('resetHealthProfileConsumers(queryClient, ownerScope)')).toBeLessThan(
       source.indexOf("track('health_consent_declined')"),
     );
     expect(quiz).toContain('hasCurrentHealthDataCollectionConsent');
@@ -387,9 +387,9 @@ describe('onboarding route contracts', () => {
     expect(context.indexOf('hasCurrentHealthDataCollectionConsent()')).toBeLessThan(
       context.indexOf('setStoredSkinProfile({ result, goals, completedAt })'),
     );
-    expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] })");
-    expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['shelf'] })");
-    expect(context).toContain("queryClient.invalidateQueries({ queryKey: ['ramp'] })");
+    expect(context).toContain('ownerQueryPrefixes.skinProfile(ownerScope)');
+    expect(context).toContain('ownerQueryPrefixes.shelf(ownerScope)');
+    expect(context).toContain('ownerQueryPrefixes.ramp(ownerScope)');
   });
 
   it('recovers direct quiz completion without inventing missing goals', () => {

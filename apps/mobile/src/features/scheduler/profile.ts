@@ -14,6 +14,8 @@ import {
 } from '@/features/onboarding/skinProfileStore';
 import { hasCurrentHealthDataCollectionConsent } from '@/features/onboarding/healthConsentStore';
 import { isSupabaseConfigured } from '@/lib/env';
+import { queryKeys } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
 import { moistureFromAxis, sensitivityFromAxis, type MoistureBalance } from './profileMapping';
@@ -121,5 +123,6 @@ export async function savePregnancyStatus(status: PregnancyStatus): Promise<Prof
 }
 
 export function useProfileBits() {
-  return useQuery({ queryKey: ['skinProfileBits'], queryFn: readProfileBits });
+  const ownerScope = useOwnerQueryScope();
+  return useQuery({ queryKey: queryKeys.skinProfile(ownerScope), queryFn: readProfileBits });
 }

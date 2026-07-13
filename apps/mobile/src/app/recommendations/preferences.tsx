@@ -16,6 +16,8 @@ import { DEFAULT_PREFERENCES, type RecPreferences } from '@/features/recommendat
 import { loadPreferences, savePreferences } from '@/features/recommendations/store';
 import { track } from '@/lib/analytics/track';
 import { APP_RECOMMENDATIONS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent, ownerQueryPrefixes, queryKeys } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -110,11 +112,12 @@ function Toggle({
 export default function PreferencesScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const simulatedPreferenceFailureUsed = useRef(false);
   const { data: prefs, isLoading } = useQuery({
-    queryKey: ['recPreferences'],
+    queryKey: queryKeys.recommendationPreferences(ownerScope),
     queryFn: loadPreferences,
   });
   const p = prefs ?? DEFAULT_PREFERENCES;
@@ -210,11 +213,14 @@ export default function PreferencesScreen() {
       await applyRecommendationPreferences(next, {
         save: savePreferenceWithFixture,
         onSaved: async () => {
-          qc.setQueryData(['recPreferences'], next);
+          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+          qc.setQueryData(queryKeys.recommendationPreferences(ownerScope), next);
           setSaveFailed(false);
           track('preference_set');
           // The For-you hub reads prefs+dismissals together. Refresh it too.
-          await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
+          await qc.invalidateQueries({
+            queryKey: ownerQueryPrefixes.recommendations(ownerScope),
+          });
         },
         onFailure: () => {
           setSaveFailed(true);

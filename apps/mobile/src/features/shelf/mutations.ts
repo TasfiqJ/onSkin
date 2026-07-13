@@ -3,6 +3,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import { devWarn } from '@/lib/observability/safeLog';
+import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
 import {
@@ -75,7 +77,11 @@ async function mirrorDelete(id: string): Promise<void> {
 
 export function useShelfMutations() {
   const qc = useQueryClient();
-  const invalidate = () => qc.invalidateQueries({ queryKey: ['shelf'] });
+  const ownerScope = useOwnerQueryScope();
+  const invalidate = () => {
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return Promise.resolve();
+    return qc.invalidateQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) });
+  };
 
   return {
     async add(input: NewShelfProduct): Promise<ShelfProduct> {

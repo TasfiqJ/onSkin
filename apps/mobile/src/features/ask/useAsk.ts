@@ -8,8 +8,15 @@ import { usePlan } from '@/features/routine/usePlan';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { useShelf } from '@/features/shelf/useShelf';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
-import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
+import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import {
+  isOwnerQueryScopeCurrent,
+  ownerQueryPrefixes,
+  queryKeys,
+  shouldRefetchCurrentLocalDayQuery,
+} from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import {
   answerPrompt,
@@ -31,10 +38,6 @@ import { getGroundedTurns, recordGroundedTurn } from './store';
 // fully on-device at $0. The orchestration runs every answer through the runtime claim-
 // safety guard and records CONTENT-FREE telemetry. *** No commercial input anywhere. ***
 
-function billingPeriod(): string {
-  return localDateString().slice(0, 7); // 'YYYY-MM'
-}
-
 export function useAsk() {
   const shelf = useShelf();
   const plan = usePlan();
@@ -42,9 +45,13 @@ export function useAsk() {
   const profile = useProfileBits();
   const { data: ent } = useEntitlement();
   const qc = useQueryClient();
-  const period = billingPeriod();
+  const ownerScope = useOwnerQueryScope();
+  const boundary = useLocalDateBoundary();
+  const period = boundary.localDate.slice(0, 7);
   const turns = useQuery({
-    queryKey: ['askGroundedTurns', period],
+    queryKey: queryKeys.askGroundedTurns(ownerScope, boundary, period),
+    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
+    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
     queryFn: () => getGroundedTurns(period),
     retry: 0,
   });
@@ -90,7 +97,12 @@ export function useAsk() {
       // mandatory; this is the local UX gate.
       if (final.kind === 'grounded') {
         void recordGroundedTurn(period)
-          .then(() => qc.invalidateQueries({ queryKey: ['askGroundedTurns', period] }))
+          .then(() => {
+            if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+            return qc.invalidateQueries({
+              queryKey: ownerQueryPrefixes.askGroundedTurns(ownerScope),
+            });
+          })
           .catch(() => undefined);
       }
       if (final.kind === 'escalate') track('ask_escalated_to_clinician');
@@ -100,7 +112,7 @@ export function useAsk() {
       }
       return final;
     },
-    [ctx.groundedReason, period, qc],
+    [ctx.groundedReason, ownerScope, period, qc],
   );
 
   const ask = useCallback(

@@ -10,6 +10,8 @@ import { isNoteHelpful, toggleNoteHelpful } from '@/features/community/reactionS
 import { SHARE_FAILURE_MESSAGE, shareSkinNote } from '@/features/community/shareNote';
 import { track } from '@/lib/analytics/track';
 import { APP_COMMUNITY_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent, queryKeys } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -21,6 +23,7 @@ export default function NoteDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { height, width } = useWindowDimensions();
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const note = id ? noteById(id) : undefined;
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const scrollRef = useRef<ScrollView>(null);
@@ -30,7 +33,7 @@ export default function NoteDetail() {
   const supportFloorMissingNote = splitShortMissingNote || narrowCompactMissingNote;
   // Persisted "This helped" state (survives remount, unlike the prior useState).
   const helpedQ = useQuery({
-    queryKey: ['noteHelped', id],
+    queryKey: queryKeys.noteHelped(ownerScope, id),
     queryFn: () => isNoteHelpful(id ?? ''),
     enabled: !!id,
   });
@@ -41,7 +44,8 @@ export default function NoteDetail() {
     if (!note) return;
     haptics.select();
     const next = await toggleNoteHelpful(note.id);
-    qc.setQueryData(['noteHelped', id], next);
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+    qc.setQueryData(queryKeys.noteHelped(ownerScope, id), next);
     if (next) track('reaction_added', { reaction: 'helped' });
   };
 

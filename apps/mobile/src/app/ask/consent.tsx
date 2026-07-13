@@ -12,6 +12,8 @@ import { clearAskStore, setAskConsentLocal } from '@/features/ask/store';
 import { BRAND } from '@/lib/brand';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_ASK_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent, ownerQueryPrefixes, queryKeys } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
 // The Ask privacy gate (docs/13 §7, design screen 05). The DEFAULT-OFF ask_onskin consent
@@ -60,6 +62,7 @@ function Bullet({ kind, text }: { kind: 'keep' | 'never'; text: string }) {
 
 export default function AskConsentScreen() {
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [askConsentFailureUsed, setAskConsentFailureUsed] = useState({
@@ -70,7 +73,7 @@ export default function AskConsentScreen() {
   const scrollRef = useRef<ScrollView | null>(null);
   const failureModes = devAskConsentFailureModes();
   const consented = useQuery({
-    queryKey: ['ask_onskin'],
+    queryKey: queryKeys.askConsent(ownerScope),
     queryFn: isAskConsented,
     enabled: phase7Flags.cloudAsk,
     retry: 0,
@@ -126,10 +129,14 @@ export default function AskConsentScreen() {
         grant,
         revoke,
         onSaved: () => {
-          qc.setQueryData(['ask_onskin'], enabled);
+          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+          qc.setQueryData(queryKeys.askConsent(ownerScope), enabled);
         },
         onFailure: showSaveFailure,
-        invalidate: () => qc.invalidateQueries({ queryKey: ['ask_onskin'] }),
+        invalidate: () => {
+          if (!isOwnerQueryScopeCurrent(ownerScope)) return Promise.resolve();
+          return qc.invalidateQueries({ queryKey: ownerQueryPrefixes.askConsent(ownerScope) });
+        },
       });
       if (saved) setSaveFailed(false);
     } finally {

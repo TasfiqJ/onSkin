@@ -14,10 +14,18 @@ import { requestReviewAfterValue } from '@/features/review/prompt';
 import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
 import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
 import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';
-import { currentRoutineType, localClockLabel, localDateString } from '@/features/today/useToday';
+import { currentRoutineType, localClockLabel } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { phase7Flags } from '@/lib/launch/phase7';
+import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import {
+  isOwnerQueryScopeCurrent,
+  ownerQueryPrefixes,
+  queryKeys,
+  shouldRefetchCurrentLocalDayQuery,
+} from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -351,9 +359,13 @@ export default function TodayScreen() {
   const { data: progress } = useProgress();
   const { data: cycleData } = useCycle();
   const qc = useQueryClient();
-  const today = localDateString();
+  const ownerScope = useOwnerQueryScope();
+  const boundary = useLocalDateBoundary();
+  const { localDate: today } = boundary;
   const { data: doneData } = useQuery({
-    queryKey: ['completions', today],
+    queryKey: queryKeys.completions(ownerScope, boundary),
+    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
+    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
     queryFn: () => getCompletedSteps(today),
   });
   const done = doneData ?? new Set<string>();
@@ -403,8 +415,10 @@ export default function TodayScreen() {
     }
     if (result.done && (progress?.streak ?? 0) >= 6)
       void requestReviewAfterValue('seven_checkoff_days');
-    await qc.invalidateQueries({ queryKey: ['completions', today] });
-    await qc.invalidateQueries({ queryKey: ['progress'] });
+    if (isOwnerQueryScopeCurrent(ownerScope)) {
+      await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.completions(ownerScope) });
+      await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.progress(ownerScope) });
+    }
   }
 
   const rowState = (key: string, firstUndoneKey: string | null): 'done' | 'next' | 'pending' =>

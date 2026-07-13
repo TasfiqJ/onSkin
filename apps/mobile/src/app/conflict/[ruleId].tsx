@@ -44,6 +44,9 @@ import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { devWarn } from '@/lib/observability/safeLog';
+import { isOwnerQueryScopeCurrent, queryKeys } from '@/lib/query/queryKeys';
+import { readLocalDateBoundarySnapshot } from '@/lib/query/queryDateBoundaryCore';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 import { colors } from '@/theme/tokens';
 
@@ -563,6 +566,7 @@ function StandardBody({
   qc: ReturnType<typeof useQueryClient>;
   onDismiss: () => void;
 }) {
+  const ownerScope = useOwnerQueryScope();
   const saveInFlight = useRef(false);
   const [savingChoice, setSavingChoice] = useState<'keep' | 'use_together' | null>(null);
   const [saveFailed, setSaveFailed] = useState(false);
@@ -584,9 +588,15 @@ function StandardBody({
     setSaveFailed(false);
     try {
       const conflictChoices = await recordChoice(conflict, choice);
-      qc.setQueryData<ShelfData>(['shelf'], (current) =>
-        current ? applyConflictChoicesToShelfData(current, conflictChoices) : current,
-      );
+      const boundary = readLocalDateBoundarySnapshot();
+      if (isOwnerQueryScopeCurrent(ownerScope)) {
+        const shelfQueryKey = queryKeys.shelf(ownerScope, boundary);
+        qc.setQueryData<ShelfData>(shelfQueryKey, (current) =>
+          current
+            ? applyConflictChoicesToShelfData(current, conflictChoices, boundary.localDate)
+            : current,
+        );
+      }
       onDismiss();
     } catch {
       setSaveFailed(true);

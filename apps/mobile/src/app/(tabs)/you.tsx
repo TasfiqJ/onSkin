@@ -25,6 +25,8 @@ import { NOT_MEDICAL_ADVICE } from '@/lib/legal/disclaimer';
 import { type PolicyLinkKey, policyLinkRows } from '@/lib/legal/policyLinks';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
+import { isOwnerQueryScopeCurrent, ownerQueryPrefixes, queryKeys } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
 const POLICY_ROWS = policyLinkRows([
@@ -278,6 +280,7 @@ export default function YouScreen() {
   const { user, isAnonymous, signOut } = useAuth();
   const { enabled: lockEnabled, setEnabled: setLockEnabled } = useAppLock();
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const [busy, setBusy] = useState(false);
   const [savingPrivacy, setSavingPrivacy] = useState<'marketing' | 'data_sharing' | null>(null);
   const [privacyFeedback, setPrivacyFeedback] = useState<{
@@ -302,13 +305,17 @@ export default function YouScreen() {
   const savingPrivacyRef = useRef(false);
   const savingAppLockRef = useRef(false);
 
-  const consents = useQuery({ queryKey: ['consents'], queryFn: getLatestConsents, retry: 0 });
+  const consents = useQuery({
+    queryKey: queryKeys.consents(ownerScope),
+    queryFn: getLatestConsents,
+    retry: 0,
+  });
   // The RESOLVED commerce data-sharing consent (ledger-if-present, else the local
   // flag). Both data-sharing surfaces read this so that offline (v1, no backend) a
   // sheet-granted consent shows ON, instead of the toggle reading the empty ledger
   // while the gate reads the local flag (docs/10 §6 cross-surface consistency).
   const commerceConsent = useQuery({
-    queryKey: ['commerceConsent'],
+    queryKey: queryKeys.commerceConsent(ownerScope),
     queryFn: isCommerceConsented,
     retry: 0,
   });
@@ -484,21 +491,26 @@ export default function YouScreen() {
           }
         },
         onSaved: () => {
-          qc.setQueryData<Record<string, boolean>>(['consents'], (prev) => ({
-            ...(prev ?? {}),
-            [type]: granted,
-          }));
-          if (type === 'data_sharing') {
-            qc.setQueryData<boolean>(['commerceConsent'], granted);
+          if (isOwnerQueryScopeCurrent(ownerScope)) {
+            qc.setQueryData<Record<string, boolean>>(queryKeys.consents(ownerScope), (prev) => ({
+              ...(prev ?? {}),
+              [type]: granted,
+            }));
+            if (type === 'data_sharing') {
+              qc.setQueryData<boolean>(queryKeys.commerceConsent(ownerScope), granted);
+            }
           }
           setPrivacyFeedback(null);
         },
         onFailure: () =>
           setPrivacyFeedback({ key: type, placement, message: privacyChoiceUserMessage() }),
         onSettled: async () => {
-          await qc.invalidateQueries({ queryKey: ['consents'] });
+          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+          await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.consents(ownerScope) });
           if (type === 'data_sharing') {
-            await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
+            await qc.invalidateQueries({
+              queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
+            });
           }
         },
       });

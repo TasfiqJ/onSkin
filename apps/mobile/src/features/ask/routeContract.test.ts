@@ -50,12 +50,12 @@ describe('Ask route launch contracts', () => {
     expect(consent).toContain("new Error('E2E_ASK_CONSENT_GRANT_FAILURE')");
     expect(consent).toContain("new Error('E2E_ASK_CONSENT_REVOKE_FAILURE')");
     expect(consent).toContain('onSaved: () => {');
-    expect(consent).toContain("qc.setQueryData(['ask_onskin'], enabled);");
+    expect(consent).toContain('qc.setQueryData(queryKeys.askConsent(ownerScope), enabled);');
     expect(consent).toContain('ToggleSwitch');
     expect(consent).toContain('accessibilityLabel={ASK_COPY.privacy.toggleLabel}');
     expect(consent).not.toContain('Alert.alert');
     expect(consent).not.toContain('import { Alert');
-    expect(consent).not.toContain("qc.setQueryData(['ask_onskin'], enabled);\n    try");
+    expect(consent).not.toContain("qc.setQueryData(['ask_onskin'], enabled);");
     expect(consent).not.toContain('<Switch');
   });
 
@@ -206,8 +206,8 @@ describe('Ask route launch contracts', () => {
     expect(source).toContain('const qc = useQueryClient();');
     expect(source).toContain("if (final.kind === 'grounded') {");
     expect(source).toContain('void recordGroundedTurn(period)');
-    expect(source).toContain("qc.invalidateQueries({ queryKey: ['askGroundedTurns', period] })");
-    expect(source).toContain('[ctx.groundedReason, period, qc]');
+    expect(source).toContain('ownerQueryPrefixes.askGroundedTurns(ownerScope)');
+    expect(source).toContain('[ctx.groundedReason, ownerScope, period, qc]');
     expect(source).not.toContain('TODO(B-AI-ASSISTANT-VENDOR): wire recordGroundedTurn(period)');
     expect(source.indexOf("if (final.kind === 'grounded')")).toBeLessThan(
       source.indexOf("if (final.kind === 'escalate')"),

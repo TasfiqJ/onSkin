@@ -66,7 +66,10 @@ describe('notification preference application', () => {
     const source = readSource('features/notifications/useNotifications.ts');
 
     expect(source).toContain('applyNotificationPreferencePatch');
-    expect(source).toContain('onSuccess: (next) => qc.setQueryData<NotifPrefs>(KEY, next)');
+    expect(source).toContain(
+      'qc.setQueryData<NotifPrefs>(queryKeys.notificationPreferences(ownerScope), next)',
+    );
+    expect(source).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
     expect(source).not.toContain('onMutate');
     expect(source).not.toContain('qc.setQueryData<NotifPrefs>(KEY, { ...prev');
   });

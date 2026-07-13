@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { supabase } from '@/lib/supabase/client';
+import { queryKeys } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import { isCommerceConsented } from './consent';
 import { demoWhereToBuy, resolveWhereToBuy, type AffiliateLinkRow } from './links';
@@ -12,7 +14,11 @@ import { demoWhereToBuy, resolveWhereToBuy, type AffiliateLinkRow } from './link
 // is ever read or sorted on (church and state). ***
 
 export function useCommerceConsent() {
-  return useQuery({ queryKey: ['commerceConsent'], queryFn: isCommerceConsented });
+  const ownerScope = useOwnerQueryScope();
+  return useQuery({
+    queryKey: queryKeys.commerceConsent(ownerScope),
+    queryFn: isCommerceConsented,
+  });
 }
 
 export function useWhereToBuy(productType: string | null) {

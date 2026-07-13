@@ -2,6 +2,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
 
+import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+
 import { flushCompletions } from './completionQueue';
 
 // Drains the offline check-off queue (docs/01 §6) on mount and whenever the app
@@ -15,12 +18,15 @@ import { flushCompletions } from './completionQueue';
 // no-ops until there is a session + server routine/step ids to insert.
 export function OfflineSync() {
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   useEffect(() => {
     const run = () => {
       void flushCompletions().then(({ flushed }) => {
-        if (flushed > 0) {
-          void qc.invalidateQueries({ queryKey: ['completions'] });
-          void qc.invalidateQueries({ queryKey: ['progress'] });
+        if (flushed > 0 && isOwnerQueryScopeCurrent(ownerScope)) {
+          void qc.invalidateQueries({
+            queryKey: ownerQueryPrefixes.completions(ownerScope),
+          });
+          void qc.invalidateQueries({ queryKey: ownerQueryPrefixes.progress(ownerScope) });
         }
       });
     };
@@ -29,6 +35,6 @@ export function OfflineSync() {
       if (s === 'active') run();
     });
     return () => sub.remove();
-  }, [qc]);
+  }, [ownerScope, qc]);
   return null;
 }

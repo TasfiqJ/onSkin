@@ -1,14 +1,20 @@
 import type { DisruptionReason } from '@onskin/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { AppState, type AppStateStatus } from 'react-native';
+import { useMemo } from 'react';
 
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { useRamp } from '@/features/routine/useRamp';
 import { useShelf } from '@/features/shelf/useShelf';
-import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
+import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import {
+  queryKeys,
+  runOwnerQueryOperation,
+  shouldRefetchCurrentLocalDayQuery,
+} from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
+import { commitCycleConfigForOwner } from './cycleMutationCoordinator';
 import {
   endRecovery,
   loadCycleConfig,
@@ -78,58 +84,21 @@ export function hasUseTogetherChoiceBetween(
   );
 }
 
-function millisecondsUntilNextLocalDay(now = new Date()): number {
-  const next = new Date(now);
-  next.setHours(24, 0, 1, 0);
-  return Math.max(1_000, next.getTime() - now.getTime());
-}
-
-function useCycleLocalDate(): string {
-  const [today, setToday] = useState(() => localDateString());
-  const todayRef = useRef(today);
-
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | null = null;
-
-    const refresh = () => {
-      const next = localDateString();
-      if (next !== todayRef.current) {
-        todayRef.current = next;
-        setToday(next);
-      }
-    };
-    const schedule = () => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        refresh();
-        schedule();
-      }, millisecondsUntilNextLocalDay());
-    };
-    const handleAppState = (state: AppStateStatus) => {
-      if (state !== 'active') return;
-      refresh();
-      schedule();
-    };
-
-    schedule();
-    const subscription = AppState.addEventListener('change', handleAppState);
-    return () => {
-      if (timer) clearTimeout(timer);
-      subscription.remove();
-    };
-  }, []);
-
-  return today;
-}
-
 function daysSince(iso: string): number {
   return Math.round((Date.now() - new Date(iso).getTime()) / 86_400_000);
 }
 
 export function useCycle(): { data: CycleData | undefined; isLoading: boolean } {
   const shelf = useShelf();
-  const today = useCycleLocalDate();
-  const cfg = useQuery({ queryKey: ['cycleConfig', today], queryFn: loadCycleConfig });
+  const ownerScope = useOwnerQueryScope();
+  const boundary = useLocalDateBoundary();
+  const { localDate: today } = boundary;
+  const cfg = useQuery({
+    queryKey: queryKeys.cycleConfig(ownerScope, boundary),
+    queryFn: () => runOwnerQueryOperation(ownerScope, () => loadCycleConfig()),
+    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
+    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
+  });
   const profile = useProfileBits();
   // Live ramp state (the same source tolerance.tsx writes), so the user's actual
   // ramped frequency reaches the scheduler instead of every active defaulting to
@@ -225,11 +194,14 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
 
 export function useCycleMutations() {
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const commit = async (operation: () => Promise<CycleConfig>): Promise<CycleConfig> => {
-    await qc.cancelQueries({ queryKey: ['cycleConfig'] });
-    const next = await operation();
-    qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next);
-    return next;
+    return commitCycleConfigForOwner({
+      cancel: (queryKey) => qc.cancelQueries({ queryKey }),
+      operation: () => runOwnerQueryOperation(ownerScope, operation),
+      publish: (queryKey, next) => qc.setQueryData<CycleConfig>(queryKey, next),
+      scope: ownerScope,
+    });
   };
   return {
     async setVariant(variant: CycleConfig['variant']) {

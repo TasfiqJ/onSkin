@@ -12,6 +12,9 @@ import {
 import { getCompletionSummary } from '@/features/today/completionsStore';
 import { localDateString } from '@/features/today/useToday';
 import { isSupabaseConfigured } from '@/lib/env';
+import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import { queryKeys, shouldRefetchCurrentLocalDayQuery } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
 import {
@@ -76,10 +79,14 @@ async function loadServerLongestStreak(): Promise<number> {
 }
 
 export function useProgress() {
-  const todayISO = localDateString();
+  const ownerScope = useOwnerQueryScope();
+  const boundary = useLocalDateBoundary();
+  const { localDate: todayISO } = boundary;
 
   return useQuery<ProgressData>({
-    queryKey: ['progress', todayISO],
+    queryKey: queryKeys.progress(ownerScope, boundary),
+    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
+    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
     retry: 1,
     queryFn: async () => {
       const today = new Date();

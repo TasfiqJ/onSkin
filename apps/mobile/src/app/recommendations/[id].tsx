@@ -15,6 +15,8 @@ import { trackProductAddStarted } from '@/features/shelf/analytics';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { track } from '@/lib/analytics/track';
 import { APP_RECOMMENDATIONS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -58,13 +60,16 @@ function HowRow({ k, value, accent }: { k: string; value: string; accent?: strin
 
 function Body({ rec }: { rec: Recommendation }) {
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const isConflict = rec.trigger === 'conflict';
 
   const dismiss = async () => {
     haptics.select();
     track('recommendation_dismissed');
     await dismissRecommendation(rec.id);
-    await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
+    if (isOwnerQueryScopeCurrent(ownerScope)) {
+      await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.recommendations(ownerScope) });
+    }
     backOrReplace(router, APP_RECOMMENDATIONS_ROUTE);
   };
 

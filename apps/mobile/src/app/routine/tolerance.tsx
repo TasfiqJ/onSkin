@@ -8,6 +8,8 @@ import { applyToleranceToRamps } from '@/features/routine/rampStore';
 import { useCycleMutations } from '@/features/scheduler/useCycle';
 import { cn } from '@/lib/cn';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
 // 07 · Weekly tolerance check-in (design 07, docs/03 §4). The ONLY assessment ,
@@ -51,6 +53,7 @@ export default function ToleranceScreen() {
   const [recoveryStarted, setRecoveryStarted] = useState(false);
   const m = useCycleMutations();
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const compactSheet = height < 640;
 
   // Each answer states what the app does (docs/03 §4 / docs/05 §7) and now PERSISTS to
@@ -72,7 +75,9 @@ export default function ToleranceScreen() {
         setRecoveryStarted(true);
       }
       await applyToleranceToRamps(selected);
-      await qc.invalidateQueries({ queryKey: ['ramp'] });
+      if (isOwnerQueryScopeCurrent(ownerScope)) {
+        await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) });
+      }
       if (selected === 'irritated') {
         router.replace('/cycle/recovery');
         return;

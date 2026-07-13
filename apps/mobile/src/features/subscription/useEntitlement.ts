@@ -9,6 +9,13 @@ import {
   purchaseWinBackPackage,
   restorePurchases,
 } from '@/lib/iap/revenuecat';
+import {
+  isOwnerQueryScopeCurrent,
+  ownerQueryPrefixes,
+  queryKeys,
+  runOwnerQueryOperation,
+} from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import { deriveState, type StoredEntitlement, type SubscriptionState } from './entitlement';
 import {
@@ -16,11 +23,11 @@ import {
   downgradeToFree,
   fetchServerEntitlement,
   loadEntitlement,
+  readEntitlementCache,
   saveVerifiedEntitlement,
   startReverseTrialOnServer,
 } from './store';
 
-const KEY = ['entitlement'] as const;
 const MAX_E2E_ENTITLEMENT_DELAY_MS = 3_000;
 
 export type EntitlementActionResult = {
@@ -161,15 +168,19 @@ function e2eEntitlementState(): SubscriptionState | null {
   );
 }
 
-async function persistRevenueCatResult(input: {
-  customerInfo?: Parameters<typeof customerInfoToStoredEntitlement>[0];
-  packageId?: string;
-  offeringId?: string;
-  priceLabel?: string;
-}): Promise<StoredEntitlement | null> {
+async function persistRevenueCatResult(
+  input: {
+    customerInfo?: Parameters<typeof customerInfoToStoredEntitlement>[0];
+    packageId?: string;
+    offeringId?: string;
+    priceLabel?: string;
+  },
+  assertCurrentOwner: () => void,
+): Promise<StoredEntitlement | null> {
   if (!input.customerInfo) return null;
   const entitlement = customerInfoToStoredEntitlement(input.customerInfo);
   if (!entitlement) {
+    assertCurrentOwner();
     await clearStoreEntitlementIfRevenueCatVerifiedEmpty();
     return null;
   }
@@ -180,7 +191,9 @@ async function persistRevenueCatResult(input: {
     offeringId: input.offeringId ?? entitlement.offeringId ?? null,
     priceLabel: input.priceLabel ?? entitlement.priceLabel ?? null,
   };
+  assertCurrentOwner();
   await saveVerifiedEntitlement(withAttribution);
+  assertCurrentOwner();
 
   if (withAttribution.isActive && withAttribution.periodType === 'trial') {
     await scheduleTrialReminder();
@@ -192,107 +205,126 @@ async function persistRevenueCatResult(input: {
 }
 
 export function useEntitlement() {
+  const ownerScope = useOwnerQueryScope();
   return useQuery<SubscriptionState>({
-    queryKey: KEY,
+    queryKey: queryKeys.entitlement(ownerScope),
     retry: 0,
-    queryFn: async () => {
-      const e2eDelay = e2eEntitlementDelayMs();
-      if (e2eDelay > 0) await wait(e2eDelay);
+    queryFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        const e2eDelay = e2eEntitlementDelayMs();
+        if (e2eDelay > 0) await wait(e2eDelay);
 
-      const e2e = e2eEntitlementState();
-      if (e2e) return e2e;
+        const e2e = e2eEntitlementState();
+        if (e2e) return e2e;
 
-      const local = await loadEntitlement();
-      const server = await fetchServerEntitlement();
-      return deriveState(server ?? local, new Date().toISOString());
-    },
+        const local = await readEntitlementCache();
+        const server = await fetchServerEntitlement(lease.assertCurrent);
+        const localProof = local.status === 'available' ? local.entitlement : null;
+        return deriveState(server ?? localProof, new Date().toISOString());
+      }),
   });
 }
 
 export function useEntitlementActions() {
   const qc = useQueryClient();
-  const invalidate = () => qc.invalidateQueries({ queryKey: KEY });
+  const ownerScope = useOwnerQueryScope();
+  const invalidate = () => {
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return Promise.resolve();
+    return qc.invalidateQueries({ queryKey: ownerQueryPrefixes.entitlement(ownerScope) });
+  };
 
   const startReverseTrial = useMutation({
-    mutationFn: async () => {
-      const entitlement = await startReverseTrialOnServer();
-      track('reverse_trial_started', { source: entitlement.source ?? 'server' });
-      return activeResult(entitlement);
-    },
+    mutationFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        const entitlement = await startReverseTrialOnServer(lease.assertCurrent);
+        lease.assertCurrent();
+        track('reverse_trial_started', { source: entitlement.source ?? 'server' });
+        return activeResult(entitlement);
+      }),
     onSettled: invalidate,
   });
 
   const startTrial = useMutation({
-    mutationFn: async () => {
-      const result = await purchasePackage('annual');
-      const entitlement = await persistRevenueCatResult(result);
-      if (!entitlement) return activeResult(null, { cancelled: result.cancelled });
+    mutationFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        const result = await purchasePackage('annual');
+        const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
+        lease.assertCurrent();
+        if (!entitlement) return activeResult(null, { cancelled: result.cancelled });
 
-      if (entitlement.isActive && entitlement.periodType === 'trial') {
-        track('trial_started', {
-          source: 'revenuecat',
-          period_type: entitlement.periodType,
-        });
-      } else if (entitlement.isActive) {
-        track('purchase_completed', {
-          source: 'revenuecat',
-          period_type: entitlement.periodType,
-        });
-      }
-      return activeResult(entitlement, { cancelled: result.cancelled });
-    },
+        if (entitlement.isActive && entitlement.periodType === 'trial') {
+          track('trial_started', {
+            source: 'revenuecat',
+            period_type: entitlement.periodType,
+          });
+        } else if (entitlement.isActive) {
+          track('purchase_completed', {
+            source: 'revenuecat',
+            period_type: entitlement.periodType,
+          });
+        }
+        return activeResult(entitlement, { cancelled: result.cancelled });
+      }),
     onSettled: invalidate,
   });
 
   const purchase = useMutation({
-    mutationFn: async () => {
-      const result = await purchasePackage('annual');
-      const entitlement = await persistRevenueCatResult(result);
-      if (entitlement?.isActive) {
-        track('purchase_completed', {
-          source: 'revenuecat',
-          period_type: entitlement.periodType,
-        });
-      }
-      return activeResult(entitlement, { cancelled: result.cancelled });
-    },
+    mutationFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        const result = await purchasePackage('annual');
+        const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
+        lease.assertCurrent();
+        if (entitlement?.isActive) {
+          track('purchase_completed', {
+            source: 'revenuecat',
+            period_type: entitlement.periodType,
+          });
+        }
+        return activeResult(entitlement, { cancelled: result.cancelled });
+      }),
     onSettled: invalidate,
   });
 
   const restore = useMutation({
-    mutationFn: async () => {
-      track('restore_tapped');
-      const result = await restorePurchases();
-      const entitlement = await persistRevenueCatResult(result);
-      return activeResult(entitlement);
-    },
+    mutationFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        track('restore_tapped');
+        const result = await restorePurchases();
+        const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
+        return activeResult(entitlement);
+      }),
     onSettled: invalidate,
   });
 
   const downgrade = useMutation({
-    mutationFn: async () => {
-      await downgradeToFree();
-      track('reverse_trial_expired');
-      return activeResult(await loadEntitlement());
-    },
+    mutationFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        lease.assertCurrent();
+        await downgradeToFree();
+        lease.assertCurrent();
+        track('reverse_trial_expired');
+        return activeResult(await loadEntitlement());
+      }),
     onSettled: invalidate,
   });
 
   const winback = useMutation({
-    mutationFn: async () => {
-      const result = await purchaseWinBackPackage();
-      const entitlement = await persistRevenueCatResult(result);
-      if (entitlement?.isActive) {
-        track('winback_converted', {
-          source: 'revenuecat',
-          period_type: entitlement.periodType,
+    mutationFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        const result = await purchaseWinBackPackage();
+        const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
+        lease.assertCurrent();
+        if (entitlement?.isActive) {
+          track('winback_converted', {
+            source: 'revenuecat',
+            period_type: entitlement.periodType,
+          });
+        }
+        return activeResult(entitlement, {
+          cancelled: result.cancelled,
+          offerUnavailable: result.offerUnavailable,
         });
-      }
-      return activeResult(entitlement, {
-        cancelled: result.cancelled,
-        offerUnavailable: result.offerUnavailable,
-      });
-    },
+      }),
     onSettled: invalidate,
   });
 

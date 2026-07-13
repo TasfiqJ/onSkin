@@ -1,6 +1,11 @@
 import type { QueryClient } from '@tanstack/react-query';
 
 import { recordConsent } from '@/lib/consent/consent';
+import {
+  isOwnerQueryScopeCurrent,
+  ownerQueryPrefixes,
+  type OwnerQueryScope,
+} from '@/lib/query/queryKeys';
 
 import { HEALTH_DATA_CONSENT } from './consentCopy';
 import { setHealthDataCollectionConsentLocal } from './healthConsentStore';
@@ -13,11 +18,15 @@ type HealthConsentDeps = {
 
 const defaultDeps: HealthConsentDeps = { recordConsent };
 
-export async function resetHealthProfileConsumers(queryClient: QueryClient): Promise<void> {
+export async function resetHealthProfileConsumers(
+  queryClient: QueryClient,
+  ownerScope: OwnerQueryScope,
+): Promise<void> {
+  if (!isOwnerQueryScopeCurrent(ownerScope)) return;
   await Promise.all([
-    queryClient.resetQueries({ queryKey: ['skinProfileBits'] }),
-    queryClient.resetQueries({ queryKey: ['shelf'] }),
-    queryClient.resetQueries({ queryKey: ['ramp'] }),
+    queryClient.resetQueries({ queryKey: ownerQueryPrefixes.skinProfile(ownerScope) }),
+    queryClient.resetQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) }),
+    queryClient.resetQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) }),
   ]);
 }
 

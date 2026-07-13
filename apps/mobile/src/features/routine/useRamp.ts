@@ -1,6 +1,13 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { localDateString } from '@/features/today/useToday';
+import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import {
+  ownerQueryPrefixes,
+  queryKeys,
+  runOwnerQueryOperation,
+  shouldRefetchCurrentLocalDayQuery,
+} from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import { shouldOfferStepUp } from './ramp';
 import { ensureRamp, getStoredRamps, stepUpRamp, type StoredRamp } from './rampStore';
@@ -24,42 +31,51 @@ export function useRamp(): {
   acceptStepUp: (productId: string) => Promise<void>;
 } {
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const { data: planData, isLoading: planLoading } = usePlan();
   const planRamps = planData?.plan.ramp ?? [];
-  const today = localDateString();
+  const boundary = useLocalDateBoundary();
+  const { localDate: today } = boundary;
   const keyIds = planRamps.map((r) => r.productId).join(',');
 
   const q = useQuery<RampItem[]>({
-    queryKey: ['ramp', keyIds],
+    queryKey: queryKeys.ramp(ownerScope, boundary, keyIds),
+    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
+    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
     enabled: !planLoading,
-    queryFn: async () => {
-      const stored = await getStoredRamps();
-      const items: RampItem[] = [];
-      for (const r of planRamps) {
-        // Use the stored override if present; otherwise lazily seed from the plan's
-        // generated initial so the screen always has real, persisted state.
-        const state = stored[r.productId] ?? (await ensureRamp(r.productId, r.state));
-        items.push({
-          productId: r.productId,
-          name: r.name,
-          state,
-          offerStepUp: shouldOfferStepUp({
-            startedAt: state.startedAt,
-            lastStepUp: state.lastStepUp,
-            freqPerWeek: state.freqPerWeek,
-            targetPerWeek: state.targetPerWeek,
-            toleranceState: state.toleranceState,
-            today,
-          }),
-        });
-      }
-      return items;
-    },
+    queryFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        const stored = await getStoredRamps();
+        const items: RampItem[] = [];
+        for (const r of planRamps) {
+          // Lazy seeding is a write. Assert the captured owner immediately before it.
+          if (!stored[r.productId]) lease.assertCurrent();
+          const state = stored[r.productId] ?? (await ensureRamp(r.productId, r.state));
+          items.push({
+            productId: r.productId,
+            name: r.name,
+            state,
+            offerStepUp: shouldOfferStepUp({
+              startedAt: state.startedAt,
+              lastStepUp: state.lastStepUp,
+              freqPerWeek: state.freqPerWeek,
+              targetPerWeek: state.targetPerWeek,
+              toleranceState: state.toleranceState,
+              today,
+            }),
+          });
+        }
+        return items;
+      }),
   });
 
   async function acceptStepUp(productId: string): Promise<void> {
-    await stepUpRamp(productId);
-    await qc.invalidateQueries({ queryKey: ['ramp'] });
+    await runOwnerQueryOperation(ownerScope, async (lease) => {
+      lease.assertCurrent();
+      await stepUpRamp(productId);
+      lease.assertCurrent();
+      await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) });
+    });
   }
 
   return { items: q.data ?? [], isLoading: planLoading || q.isLoading, acceptStepUp };

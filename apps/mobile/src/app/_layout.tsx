@@ -18,6 +18,7 @@ import { SessionBoundaryGate } from '@/lib/auth/SessionBoundaryGate';
 import { OfflineSync } from '@/lib/offline/OfflineSync';
 import { initSentry } from '@/lib/observability/sentry';
 import { markStartupPhase } from '@/lib/observability/operationTiming';
+import { QueryDateBoundaryObserver } from '@/lib/query/QueryDateBoundaryObserver';
 import { queryClient } from '@/lib/query/queryClient';
 import { PrivateDataAvailabilityGate } from '@/lib/storage/PrivateDataAvailabilityGate';
 import { scavengePlaintextStaging } from '@/lib/storage/plaintextStaging';
@@ -55,6 +56,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
+          <QueryDateBoundaryObserver />
           <AuthProvider>
             <SessionBoundaryGate>
               <AppLockProvider>

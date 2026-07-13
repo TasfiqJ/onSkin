@@ -15,6 +15,8 @@ import { stackBySlug, type StackItem } from '@/features/commerce/stacks';
 import { buildClickToken, recordClick } from '@/features/commerce/store';
 import { track } from '@/lib/analytics/track';
 import { APP_COMMERCE_STACKS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -26,6 +28,7 @@ export default function StackDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const { height } = useWindowDimensions();
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const stack = slug ? stackBySlug(slug) : undefined;
   const { data: consented } = useCommerceConsent();
   const compactMissingStack = height < 640;
@@ -40,7 +43,11 @@ export default function StackDetailScreen() {
     setLinkFeedback(null);
     if (!consented) {
       router.push('/commerce/consent');
-      await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
+      if (isOwnerQueryScopeCurrent(ownerScope)) {
+        await qc.invalidateQueries({
+          queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
+        });
+      }
       return;
     }
     track('where_to_buy_clicked', { source: 'stack' });

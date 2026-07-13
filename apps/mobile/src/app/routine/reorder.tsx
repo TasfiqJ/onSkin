@@ -6,7 +6,6 @@ import { Platform, Pressable, ScrollView, View } from 'react-native';
 import { Screen, Text } from '@/components/ui';
 import type { PlanStep } from '@/features/routine/generate';
 import {
-  ROUTINE_ORDER_QUERY_KEY,
   routineOrderOverrideForPhase,
   saveRoutineOrderOverrides,
   type RoutineOrderPhase,
@@ -16,6 +15,8 @@ import { usePlan } from '@/features/routine/usePlan';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent, queryKeys } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -117,6 +118,7 @@ function ReorderEditor({
   previousOverrides: RoutineOrderOverrides;
 }) {
   const queryClient = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const simulatedSaveFailureUsed = useRef(false);
   const saveInFlight = useRef(false);
   const [orders, setOrders] = useState<PhaseSteps>(initial);
@@ -196,7 +198,9 @@ function ReorderEditor({
           activeProductIds,
         ),
       });
-      queryClient.setQueryData(ROUTINE_ORDER_QUERY_KEY, saved);
+      if (isOwnerQueryScopeCurrent(ownerScope)) {
+        queryClient.setQueryData(queryKeys.routineOrder(ownerScope), saved);
+      }
 
       if (hasChanges) {
         const changedPhase = amChanged && pmChanged ? 'both' : amChanged ? 'am' : 'pm';

@@ -13,6 +13,10 @@ import type { StoredEntitlement } from '@/features/subscription/entitlement';
 import { PLANS } from '@/features/subscription/plans';
 import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
+import {
+  createRevenueCatIdentityCoordinator,
+  type RevenueCatIdentityAdapter,
+} from '@/lib/iap/revenuecatIdentity';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 
 export type SubscriptionPackageView = {
@@ -79,9 +83,9 @@ type PurchaseResult = {
   customerInfo?: CustomerInfo;
 };
 
-let configuredForUserId: string | null = null;
 let configurePromise: Promise<void> | null = null;
 let cachedOfferings: PurchasesOfferings | null = null;
+const identityCoordinator = createRevenueCatIdentityCoordinator();
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const STORE_CHECKOUT_UNAVAILABLE_REASON =
@@ -297,11 +301,30 @@ async function requireConfigured(action: string) {
     return null;
   }
   if (configurePromise) await configurePromise;
-  if (!configuredForUserId) {
+  if (!identityCoordinator.currentUserId()) {
     productionRequiresRevenueCat(action);
     return null;
   }
   return loadPurchases();
+}
+
+async function loadRevenueCatIdentityAdapter(): Promise<RevenueCatIdentityAdapter> {
+  const Purchases = await loadPurchases();
+  const apiKey = revenueCatKey();
+  assertRevenueCatKeyAllowed(apiKey);
+  await Purchases.setLogLevel(__DEV__ ? Purchases.LOG_LEVEL.DEBUG : Purchases.LOG_LEVEL.WARN);
+  return {
+    configure: (appUserId) =>
+      Purchases.configure({
+        apiKey,
+        appUserID: appUserId,
+        automaticDeviceIdentifierCollectionEnabled: false,
+      }),
+    isAnonymous: () => Purchases.isAnonymous(),
+    isConfigured: () => Purchases.isConfigured(),
+    logIn: (appUserId) => Purchases.logIn(appUserId),
+    logOut: () => Purchases.logOut(),
+  };
 }
 
 async function fetchOfferings(): Promise<PurchasesOfferings | null> {
@@ -349,45 +372,22 @@ export async function configureRevenueCat(appUserId: string): Promise<void> {
     productionRequiresRevenueCat('configuration');
     return;
   }
-  if (configuredForUserId === appUserId) return;
+  if (identityCoordinator.currentUserId() === appUserId) return;
+  // Offering/package objects belong to the configured store identity.
+  cachedOfferings = null;
+  const operation = identityCoordinator.configureFor(appUserId, loadRevenueCatIdentityAdapter);
 
-  configurePromise = (async () => {
-    const Purchases = await loadPurchases();
-    const apiKey = revenueCatKey();
-    assertRevenueCatKeyAllowed(apiKey);
-    await Purchases.setLogLevel(__DEV__ ? Purchases.LOG_LEVEL.DEBUG : Purchases.LOG_LEVEL.WARN);
-
-    if (!configuredForUserId) {
-      Purchases.configure({
-        apiKey,
-        appUserID: appUserId,
-        automaticDeviceIdentifierCollectionEnabled: false,
-      });
-    } else if (configuredForUserId !== appUserId) {
-      await Purchases.logIn(appUserId);
-    }
-
-    configuredForUserId = appUserId;
-  })();
-
-  await configurePromise;
+  configurePromise = operation;
+  await operation;
 }
 
 export async function resetRevenueCatIdentity(): Promise<void> {
-  const pendingConfiguration = configurePromise;
-
   try {
     if (!canUseRevenueCat()) return;
-    await pendingConfiguration?.catch(() => {});
-
-    const Purchases = await loadPurchases();
-    const isConfigured = await Purchases.isConfigured();
-    if (!isConfigured) return;
-
-    const isAnonymous = await Purchases.isAnonymous();
-    if (!isAnonymous) await Purchases.logOut();
+    const operation = identityCoordinator.reset(loadRevenueCatIdentityAdapter);
+    configurePromise = operation;
+    await operation;
   } finally {
-    configuredForUserId = null;
     configurePromise = null;
     cachedOfferings = null;
   }

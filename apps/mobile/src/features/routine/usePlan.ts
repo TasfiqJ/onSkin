@@ -4,6 +4,8 @@ import { shippableRules } from '@/features/intelligence/rules';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
 import { useShelf } from '@/features/shelf/useShelf';
+import { queryKeys } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import {
   generatePlan,
@@ -14,7 +16,6 @@ import {
 import {
   applyRoutineOrderOverrides,
   loadRoutineOrderOverrides,
-  ROUTINE_ORDER_QUERY_KEY,
   type RoutineOrderOverrides,
 } from './orderStore';
 
@@ -49,8 +50,9 @@ export type PlanResult = {
 export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } {
   const shelf = useShelf();
   const profile = useProfileBits();
+  const ownerScope = useOwnerQueryScope();
   const routineOrder = useQuery({
-    queryKey: ROUTINE_ORDER_QUERY_KEY,
+    queryKey: queryKeys.routineOrder(ownerScope),
     queryFn: loadRoutineOrderOverrides,
     retry: 1,
     staleTime: Infinity,

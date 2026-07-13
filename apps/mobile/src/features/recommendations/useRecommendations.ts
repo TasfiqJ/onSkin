@@ -5,6 +5,8 @@ import { classifyRole } from '@/features/routine/sequencing';
 import { useProfileBits } from '@/features/scheduler/profile';
 import type { ShelfProduct } from '@/features/shelf/store';
 import { useShelf } from '@/features/shelf/useShelf';
+import { queryKeys } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import { recommend, type RecReplenishmentItem, type RecResult, type RecShelfItem } from './engine';
 import { isRecommendationDataLoading } from './loading';
@@ -27,8 +29,9 @@ function isFragranced(p: ShelfProduct): boolean {
 export function useRecommendations() {
   const shelf = useShelf();
   const profile = useProfileBits();
+  const ownerScope = useOwnerQueryScope();
   const prefsQ = useQuery({
-    queryKey: ['recPrefsAndDismissed'],
+    queryKey: queryKeys.recommendations(ownerScope),
     queryFn: async () => ({ prefs: await loadPreferences(), dismissed: await loadDismissed() }),
   });
 

@@ -26,6 +26,12 @@ let accountGeneration = 0;
 let accountBoundaryDepth = 0;
 const activeOperations = new Set<ActiveAccountGenerationOperation>();
 
+/** Opaque in-memory owner epoch for cache namespacing; never a raw account identifier. */
+export function getAccountGeneration(): number {
+  if (accountBoundaryDepth > 0) throw invalidLeaseError();
+  return accountGeneration;
+}
+
 function invalidLeaseError(): AccountGenerationLeaseError {
   return new AccountGenerationLeaseError();
 }

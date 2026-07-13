@@ -10,6 +10,8 @@ import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { isSupabaseConfigured } from '@/lib/env';
 import { queryClient } from '@/lib/query/queryClient';
+import { queryKeys } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
 function shouldRunE2ELocalReset(value: string | string[] | undefined): boolean {
@@ -24,6 +26,7 @@ function shouldRunE2ELocalReset(value: string | string[] | undefined): boolean {
 export default function WelcomeScreen() {
   const params = useLocalSearchParams<{ e2eReset?: string }>();
   const { ensureAnonymousSession, session, initializing } = useAuth();
+  const ownerScope = useOwnerQueryScope();
   const [busy, setBusy] = useState(false);
   const [resetting, setResetting] = useState(() => shouldRunE2ELocalReset(params.e2eReset));
 
@@ -56,7 +59,7 @@ export default function WelcomeScreen() {
   // returning onboarded user is recognized even with no backend, so a failed or
   // absent server write never re-onboards them. Falls back to the server row.
   const onboarded = useQuery({
-    queryKey: ['onboarded', session?.user.id],
+    queryKey: queryKeys.onboarded(ownerScope),
     enabled: !resetting && !!session && !initializing,
     retry: 0,
     queryFn: async () => {

@@ -7,8 +7,6 @@ const STORAGE_KEY = 'routinekind.routineOrder.v1';
 export const ROUTINE_ORDER_INVALID = 'ROUTINE_ORDER_INVALID';
 export const ROUTINE_ORDER_UNSUPPORTED_VERSION = 'ROUTINE_ORDER_UNSUPPORTED_VERSION';
 
-export const ROUTINE_ORDER_QUERY_KEY = ['routineOrder', 'v1'] as const;
-
 export type RoutineOrderPhase = 'am' | 'pm';
 
 export type RoutineOrderOverrides = {

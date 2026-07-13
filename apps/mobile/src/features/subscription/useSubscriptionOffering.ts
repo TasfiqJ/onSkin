@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { configureRevenueCat, getSubscriptionOffering } from '@/lib/iap/revenuecat';
-
-const KEY = ['subscription-offering'] as const;
+import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 type SubscriptionOfferingOptions = {
   enabled?: boolean;
@@ -11,15 +11,18 @@ type SubscriptionOfferingOptions = {
 
 export function useSubscriptionOffering({ enabled = true }: SubscriptionOfferingOptions = {}) {
   const { user } = useAuth();
+  const ownerScope = useOwnerQueryScope();
 
   return useQuery({
-    queryKey: [...KEY, user?.id ?? 'anonymous'],
+    queryKey: queryKeys.subscriptionOffering(ownerScope),
     enabled,
     retry: 1,
     staleTime: 5 * 60 * 1000,
-    queryFn: async () => {
-      if (user?.id) await configureRevenueCat(user.id).catch(() => {});
-      return getSubscriptionOffering();
-    },
+    queryFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        if (user?.id) await configureRevenueCat(user.id);
+        lease.assertCurrent();
+        return getSubscriptionOffering();
+      }),
   });
 }

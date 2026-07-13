@@ -21,6 +21,9 @@ import { shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
 import { readProfileBits } from '@/features/scheduler/profile';
 import { localDateString } from '@/features/today/useToday';
+import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import { queryKeys, shouldRefetchCurrentLocalDayQuery } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import { functionalTagsForCategory, isSafetyCriticalCategory } from './categories';
 import { isEstimatedExpiry, surfacedExpiry } from './expiry';
@@ -123,10 +126,14 @@ export function applyConflictChoicesToShelfData(
 }
 
 export function useShelf() {
-  const today = localDateString();
+  const ownerScope = useOwnerQueryScope();
+  const boundary = useLocalDateBoundary();
+  const { localDate: today } = boundary;
 
   return useQuery<ShelfData>({
-    queryKey: ['shelf'],
+    queryKey: queryKeys.shelf(ownerScope, boundary),
+    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
+    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
     retry: 1,
     queryFn: async () => {
       const [products, profileBits, conflictChoices] = await Promise.all([

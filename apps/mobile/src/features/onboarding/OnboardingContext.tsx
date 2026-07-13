@@ -2,6 +2,12 @@ import type { GoalId } from '@onskin/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
+import {
+  AccountGenerationLeaseError,
+  runAccountGenerationOperation,
+} from '@/lib/auth/accountGeneration';
+import { ownerQueryPrefixes } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
 import {
@@ -32,6 +38,7 @@ const OnboardingContext = createContext<OnboardingContextValue | undefined>(unde
 
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const [goals, setGoals] = useState<GoalId[]>([]);
   const [quizAnswers, setQuizAnswers] = useState<QuizAnswers>({});
 
@@ -70,36 +77,48 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         // truth; the Supabase insert below is a best-effort mirror that must not
         // throw past this point (a returning user must never be re-onboarded).
         await setStoredSkinProfile({ result, goals, completedAt });
-        await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] }),
-          queryClient.invalidateQueries({ queryKey: ['shelf'] }),
-          queryClient.invalidateQueries({ queryKey: ['ramp'] }),
-        ]);
-        try {
-          const { data: userData } = await supabase.auth.getUser();
-          const userId = userData.user?.id;
-          if (userId) {
-            // Axis scores are stored as the raw signed sums (docs/01 §3 axis ints).
-            const { error } = await supabase.from('skin_profiles').insert({
-              user_id: userId,
-              oily_dry: result.axisScores.oily_dry,
-              sensitive_resistant: result.axisScores.sensitive_resistant,
-              pigmented_non: result.axisScores.pigmented_non,
-              wrinkled_tight: result.axisScores.wrinkled_tight,
-              fitzpatrick: result.fitzpatrick,
-              monk_tone: result.monkTone,
-              sensitivities: result.sensitivities,
-              pregnancy_status: result.pregnancyStatus,
-              goals,
-              completed_at: completedAt,
-              version: 1,
-            });
-            if (error) throw error;
+        await runAccountGenerationOperation(async (lease) => {
+          if (lease.generation !== ownerScope.generation) {
+            throw new AccountGenerationLeaseError();
           }
-        } catch {
-          // Best-effort server mirror until the backend is configured
-          // (B-SUPABASE). The local record above is the durable v1 signal.
-        }
+          await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ownerQueryPrefixes.skinProfile(ownerScope) }),
+            queryClient.invalidateQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) }),
+            queryClient.invalidateQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) }),
+          ]);
+          lease.assertCurrent();
+
+          let userId: string | undefined;
+          try {
+            const { data: userData } = await supabase.auth.getUser();
+            userId = userData.user?.id;
+          } catch {
+            // Best-effort mirror; the local record is the durable v1 signal.
+          }
+          lease.assertCurrent();
+          if (userId) {
+            try {
+              // Axis scores are stored as the raw signed sums (docs/01 §3 axis ints).
+              await supabase.from('skin_profiles').insert({
+                user_id: userId,
+                oily_dry: result.axisScores.oily_dry,
+                sensitive_resistant: result.axisScores.sensitive_resistant,
+                pigmented_non: result.axisScores.pigmented_non,
+                wrinkled_tight: result.axisScores.wrinkled_tight,
+                fitzpatrick: result.fitzpatrick,
+                monk_tone: result.monkTone,
+                sensitivities: result.sensitivities,
+                pregnancy_status: result.pregnancyStatus,
+                goals,
+                completed_at: completedAt,
+                version: 1,
+              });
+            } catch {
+              // Server mirroring remains best-effort until the backend is available.
+            }
+          }
+          lease.assertCurrent();
+        });
         return result;
       },
       reset() {
@@ -107,7 +126,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         setQuizAnswers({});
       },
     }),
-    [goals, queryClient, quizAnswers],
+    [goals, ownerScope, queryClient, quizAnswers],
   );
 
   return <OnboardingContext.Provider value={value}>{children}</OnboardingContext.Provider>;

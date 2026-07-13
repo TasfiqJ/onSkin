@@ -165,7 +165,11 @@ describe('Conflict route contracts', () => {
     expect(cacheIndex).toBeGreaterThan(analyticsIndex);
     expect(dismissIndex).toBeGreaterThan(analyticsIndex);
     expect(source).toContain('if (saveInFlight.current) return;');
-    expect(source).toContain('applyConflictChoicesToShelfData(current, conflictChoices)');
+    expect(source).toContain(
+      'applyConflictChoicesToShelfData(current, conflictChoices, boundary.localDate)',
+    );
+    expect(source).toContain('queryKeys.shelf(ownerScope, boundary)');
+    expect(source).toContain('if (isOwnerQueryScopeCurrent(ownerScope))');
     expect(source).not.toContain("invalidateQueries({ queryKey: ['shelf'] })");
     expect(privateKV).toContain('EXPO_PUBLIC_E2E_CONFLICT_CHOICE_SAVE_FAILURE');
     expect(privateKV).toContain('await new Promise((resolve) => setTimeout(resolve, 600));');

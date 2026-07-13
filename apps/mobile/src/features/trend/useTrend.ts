@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
 import { usePhotos } from '@/features/photos/usePhotos';
+import { queryKeys } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
 import { isTrendInsightsConsented } from './consent';
@@ -31,11 +33,16 @@ async function readMonkBand(): Promise<number | null> {
 }
 
 export function useTrendConsent() {
-  return useQuery({ queryKey: ['trendConsent'], queryFn: isTrendInsightsConsented });
+  const ownerScope = useOwnerQueryScope();
+  return useQuery({
+    queryKey: queryKeys.trendConsent(ownerScope),
+    queryFn: isTrendInsightsConsented,
+  });
 }
 
 export function useMonkBand() {
-  return useQuery({ queryKey: ['monkBand'], queryFn: readMonkBand });
+  const ownerScope = useOwnerQueryScope();
+  return useQuery({ queryKey: queryKeys.monkBand(ownerScope), queryFn: readMonkBand });
 }
 
 export function useTrendInsight() {

@@ -5,6 +5,8 @@ import { Pressable, View } from 'react-native';
 import { Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
+import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -70,13 +72,16 @@ function ForYouCard({
 
 function GapPrompt({ compact, recId }: { compact?: boolean; recId: string }) {
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const compactTitle = 'No SPF this morning';
   // Persist the dismissal (docs/09 §7.2): writing it to the dismissed store means
   // the engine drops the rec, so a dismissed SPF nudge stays dismissed across
   // sessions, matching the hub. (Was local useState that reappeared on remount.)
   const dismiss = async () => {
     await dismissRecommendation(recId);
-    await qc.invalidateQueries({ queryKey: ['recPrefsAndDismissed'] });
+    if (isOwnerQueryScopeCurrent(ownerScope)) {
+      await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.recommendations(ownerScope) });
+    }
   };
 
   const openRecommendation = () => {

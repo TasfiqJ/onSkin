@@ -1,6 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { localDateString } from '@/features/today/useToday';
+import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import {
+  queryKeys,
+  runOwnerQueryOperation,
+  shouldRefetchCurrentLocalDayQuery,
+} from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 // The skin-cycle anchor (the date the cycle "started"), used to compute which
@@ -49,5 +56,12 @@ export async function setCycleAnchor(iso = localDateString()): Promise<void> {
 }
 
 export function useCycleAnchor() {
-  return useQuery({ queryKey: ['cycleAnchor'], queryFn: getCycleAnchor });
+  const ownerScope = useOwnerQueryScope();
+  const boundary = useLocalDateBoundary();
+  return useQuery({
+    queryKey: queryKeys.cycleAnchor(ownerScope, boundary),
+    queryFn: () => runOwnerQueryOperation(ownerScope, () => getCycleAnchor()),
+    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
+    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
+  });
 }

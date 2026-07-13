@@ -40,6 +40,7 @@ import { clearPersistedSupabaseSession, supabase } from '../supabase/client';
 import {
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  runAccountGenerationOperation,
   waitForAccountGenerationOperationsToSettle,
 } from './accountGeneration';
 import { getAccountIsolationE2EFixture } from './accountIsolationE2E';
@@ -316,14 +317,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const canWriteForUser = () =>
       !cancelled && !sessionBoundaryActiveRef.current && activeUserIdRef.current === userId;
 
-    void (async () => {
+    void runAccountGenerationOperation(async (lease) => {
       await configureRevenueCat(userId);
+      lease.assertCurrent();
       if (!canWriteForUser()) return;
       const current = await getCustomerInfo();
+      lease.assertCurrent();
       if (!canWriteForUser()) return;
       const entitlement = current ? customerInfoToStoredEntitlement(current) : null;
       if (entitlement) await saveVerifiedEntitlement(entitlement);
       else if (current) await clearStoreEntitlementIfRevenueCatVerifiedEmpty();
+      lease.assertCurrent();
       if (!canWriteForUser()) return;
 
       cleanup = await subscribeToCustomerInfoUpdates((customerInfo) => {
@@ -333,7 +337,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         else void clearStoreEntitlementIfRevenueCatVerifiedEmpty();
       });
       if (cancelled && cleanup) cleanup();
-    })().catch((error: unknown) => {
+    }).catch((error: unknown) => {
       devWarn('[revenuecat] configuration failed', error);
     });
 

@@ -172,8 +172,9 @@ describe('Settings route contracts', () => {
     expect(you).toContain("label: 'Pregnancy & breastfeeding'");
     expect(you).toContain("href: '/settings/skin-profile'");
     expect(route).toContain('savePregnancyStatus(selected)');
-    expect(route).toContain("qc.setQueryData(['skinProfileBits'], next)");
-    expect(route).toContain("qc.invalidateQueries({ queryKey: ['shelf'] })");
+    expect(route).toContain('qc.setQueryData(queryKeys.skinProfile(ownerScope), next)');
+    expect(route).toContain('ownerQueryPrefixes.shelf(ownerScope)');
+    expect(route).toContain('ownerQueryPrefixes.ramp(ownerScope)');
     expect(route).toContain('Choice not saved');
     expect(route).toContain('Your previous setting is unchanged.');
     expect(route).toContain('Skin profile unavailable');

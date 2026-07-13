@@ -494,24 +494,35 @@ export async function downgradeToFree(): Promise<void> {
 }
 
 /** Read the server entitlement mirror and refresh the local cache when available. */
-export async function fetchServerEntitlement(): Promise<StoredEntitlement | null> {
+export async function fetchServerEntitlement(
+  assertCurrentOwner: () => void = () => {},
+): Promise<StoredEntitlement | null> {
   if (!isSupabaseConfigured) return null;
+  let entitlement: StoredEntitlement;
   try {
     const { data, error } = await supabase.from('entitlements').select('*').limit(1).maybeSingle();
     if (error || !data) return null;
-    const entitlement = rowToStoredEntitlement(data as EntitlementRow);
-    return saveVerifiedEntitlement(entitlement);
+    entitlement = rowToStoredEntitlement(data as EntitlementRow);
+  } catch {
+    return null;
+  }
+  assertCurrentOwner();
+  try {
+    return await saveVerifiedEntitlement(entitlement);
   } catch {
     return null;
   }
 }
 
-export async function startReverseTrialOnServer(): Promise<StoredEntitlement> {
+export async function startReverseTrialOnServer(
+  assertCurrentOwner: () => void = () => {},
+): Promise<StoredEntitlement> {
   if (!isSupabaseConfigured) {
     if (env.appEnvironment !== 'development') {
       throw new Error('Reverse trial is unavailable until Supabase is configured.');
     }
 
+    assertCurrentOwner();
     return saveVerifiedEntitlement({
       tier: 'pro',
       isActive: true,
@@ -541,6 +552,7 @@ export async function startReverseTrialOnServer(): Promise<StoredEntitlement> {
   if (!row) throw new Error('Reverse trial grant did not return an entitlement.');
 
   const entitlement = rowToStoredEntitlement(row);
+  assertCurrentOwner();
   return saveVerifiedEntitlement(entitlement);
 }
 

@@ -8,6 +8,8 @@ import { declineCommerceConsent, grantCommerceConsent } from '@/features/commerc
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { LockGlyph } from '@/features/commerce/LockGlyph';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -19,6 +21,7 @@ import { colors } from '@/theme/tokens';
 // retailer regardless of consent (the opaque token carries none).
 export default function CommerceConsentSheet() {
   const qc = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const { height: viewportHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const sheetMaxHeight = viewportHeight > 44 ? viewportHeight - 44 : 524;
@@ -29,13 +32,21 @@ export default function CommerceConsentSheet() {
   const allow = async () => {
     haptics.success();
     await grantCommerceConsent();
-    await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
+    if (isOwnerQueryScopeCurrent(ownerScope)) {
+      await qc.invalidateQueries({
+        queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
+      });
+    }
     close();
   };
   const decline = async () => {
     haptics.select();
     await declineCommerceConsent();
-    await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
+    if (isOwnerQueryScopeCurrent(ownerScope)) {
+      await qc.invalidateQueries({
+        queryKey: ownerQueryPrefixes.commerceConsent(ownerScope),
+      });
+    }
     close();
   };
 

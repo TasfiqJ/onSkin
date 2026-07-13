@@ -1,6 +1,8 @@
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { createOwnerQueryScope, queryKeys, type OwnerQueryScope } from '@/lib/query/queryKeys';
+
 import { HEALTH_DATA_CONSENT } from './consentCopy';
 import {
   declineHealthDataCollectionConsent,
@@ -69,15 +71,30 @@ describe('health-data onboarding consent', () => {
 
   it('clears cached profile consumers immediately after consent is declined', async () => {
     const queryClient = new QueryClient();
-    queryClient.setQueryData(['skinProfileBits'], { pregnancySafety: 'clear' });
-    queryClient.setQueryData(['shelf'], { items: ['retinoid'] });
-    queryClient.setQueryData(['ramp'], { items: ['retinoid'] });
+    const ownerScope = createOwnerQueryScope();
+    const otherScope: OwnerQueryScope = { generation: ownerScope.generation + 1 };
+    const boundary = {
+      localDate: '2026-07-13',
+      timeZone: 'America/Toronto|offset:240',
+    };
+    const currentKeys = [
+      queryKeys.skinProfile(ownerScope),
+      queryKeys.shelf(ownerScope, boundary),
+      queryKeys.ramp(ownerScope, boundary, 'retinoid'),
+    ];
+    const otherKeys = [
+      queryKeys.skinProfile(otherScope),
+      queryKeys.shelf(otherScope, boundary),
+      queryKeys.ramp(otherScope, boundary, 'retinoid'),
+    ];
+    for (const key of currentKeys) queryClient.setQueryData(key, { owner: 'current' });
+    for (const key of otherKeys) queryClient.setQueryData(key, { owner: 'other' });
 
-    await resetHealthProfileConsumers(queryClient);
+    await resetHealthProfileConsumers(queryClient, ownerScope);
 
-    expect(queryClient.getQueryData(['skinProfileBits'])).toBeUndefined();
-    expect(queryClient.getQueryData(['shelf'])).toBeUndefined();
-    expect(queryClient.getQueryData(['ramp'])).toBeUndefined();
+    for (const key of currentKeys) expect(queryClient.getQueryData(key)).toBeUndefined();
+    for (const key of otherKeys) expect(queryClient.getQueryData(key)).toEqual({ owner: 'other' });
+    queryClient.clear();
   });
 
   it('keeps pre-account quiz entry local-first when the ledger is unavailable', async () => {

@@ -151,6 +151,10 @@ describe('cycle week route scheduler notes', () => {
   it('persists cycle mutations before cache, analytics, navigation, or success copy', () => {
     const store = readFileSync(`${APP_DIR}/../features/scheduler/cycleStore.ts`, 'utf8');
     const useCycle = readFileSync(`${APP_DIR}/../features/scheduler/useCycle.ts`, 'utf8');
+    const mutationCoordinator = readFileSync(
+      `${APP_DIR}/../features/scheduler/cycleMutationCoordinator.ts`,
+      'utf8',
+    );
     const disruption = readAppRoute('cycle/disruption.tsx');
     const procedure = readAppRoute('cycle/procedure.tsx');
     const recovery = readAppRoute('cycle/recovery.tsx');
@@ -185,13 +189,15 @@ describe('cycle week route scheduler notes', () => {
       "config.variant === 'auto' || config.variant === 'custom' ? null : config.variant",
     );
     expect(useCycle).toContain("cadenceReady && config.variant === 'custom' && config.customCycle");
-    expect(useCycle).toContain("await qc.cancelQueries({ queryKey: ['cycleConfig'] })");
-    expect(useCycle).toContain(
-      "qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next)",
+    expect(useCycle).toContain('return commitCycleConfigForOwner({');
+    expect(useCycle).toContain('operation: () => runOwnerQueryOperation(ownerScope, operation)');
+    expect(mutationCoordinator).toContain('await cancel(ownerQueryPrefixes.cycleConfig(scope))');
+    expect(mutationCoordinator).toContain(
+      'publish(queryKeys.cycleConfig(scope, readBoundary()), next)',
     );
-    expect(useCycle).toContain("queryKey: ['cycleConfig', today]");
-    expect(useCycle).toContain("AppState.addEventListener('change', handleAppState)");
-    expect(useCycle).toContain('millisecondsUntilNextLocalDay()');
+    expect(useCycle).toContain('queryKey: queryKeys.cycleConfig(ownerScope, boundary)');
+    expect(useCycle).not.toContain("AppState.addEventListener('change', handleAppState)");
+    expect(useCycle).not.toContain('millisecondsUntilNextLocalDay()');
 
     expect(disruption).toContain('data?.paused ? (');
     expect(disruption).toContain('Resume my routine');

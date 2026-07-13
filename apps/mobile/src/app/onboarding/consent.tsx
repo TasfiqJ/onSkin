@@ -15,6 +15,11 @@ import { track } from '@/lib/analytics/track';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { POLICY_LINKS } from '@/lib/legal/policyLinks';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
+import {
+  isOwnerQueryScopeCurrent,
+  ownerQueryPrefixes,
+} from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
 // 03 · Health-data collection consent. Dedicated + unbundled, BEFORE the quiz
@@ -46,6 +51,7 @@ export default function HealthConsentScreen() {
   const compactPhone = height < 640;
   const scrollRef = useRef<ScrollView>(null);
   const queryClient = useQueryClient();
+  const ownerScope = useOwnerQueryScope();
   const params = useLocalSearchParams<{
     returnTo?: string | string[];
     profileReturnTo?: string | string[];
@@ -95,10 +101,11 @@ export default function HealthConsentScreen() {
       return;
     }
     setBusy(false);
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
     await Promise.all([
-      queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] }),
-      queryClient.invalidateQueries({ queryKey: ['shelf'] }),
-      queryClient.invalidateQueries({ queryKey: ['ramp'] }),
+      queryClient.invalidateQueries({ queryKey: ownerQueryPrefixes.skinProfile(ownerScope) }),
+      queryClient.invalidateQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) }),
+      queryClient.invalidateQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) }),
     ]);
     if (isSettingsReconsent) {
       returnToSkinProfile();
@@ -115,7 +122,7 @@ export default function HealthConsentScreen() {
       await declineHealthDataCollectionConsent();
       // Reset synchronously before refetching so a previously cached explicit
       // `none` cannot keep driving Plan or Today after consent is withdrawn.
-      await resetHealthProfileConsumers(queryClient);
+      await resetHealthProfileConsumers(queryClient, ownerScope);
       track('health_consent_declined');
       setDeclined(true);
       scrollToStatus();
