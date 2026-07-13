@@ -819,8 +819,8 @@
       "id": "PAY-08",
       "owner": "C",
       "prerequisites": ["PAY-07"],
-      "nextAction": "Complete and capture acceptance evidence: Configure and test eligible/ineligible iOS win-back behavior",
-      "acceptance": "Native offer and fallback are accurate"
+      "nextAction": "Complete and capture acceptance evidence: Configure and test iOS win-back discovery for the approved commercial state: native offer when enabled, or explicit no-offer launch configuration",
+      "acceptance": "Purchase and fallback are accurate; no unavailable or invented discount is shown"
     },
     {
       "id": "PAY-09",
