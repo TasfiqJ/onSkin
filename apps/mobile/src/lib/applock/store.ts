@@ -10,11 +10,16 @@ import {
 // the lock state itself is in-memory in AppLockProvider.
 const KEY = 'onskin.appLock.enabled';
 export const APP_LOCK_PREFERENCE_INVALID = 'APP_LOCK_PREFERENCE_INVALID';
+export const APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION =
+  'APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION';
+const CURRENT_ENABLED = 'v1:1';
+const CURRENT_DISABLED = 'v1:0';
 
 export function isRepairableAppLockPreferenceError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : '';
   return (
     message === APP_LOCK_PREFERENCE_INVALID ||
+    message === APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION ||
     message === PRIVATE_KV_ENVELOPE_INVALID ||
     message === PRIVATE_KV_ENVELOPE_UNSUPPORTED
   );
@@ -30,24 +35,15 @@ function e2eAppLockEnabled(): boolean | null {
   return null;
 }
 
-async function repairStoredValue(value: '0' | '1'): Promise<void> {
-  try {
-    await setPrivateItem(KEY, value);
-  } catch {
-    // Keep reads authoritative even when encrypted preference repair is unavailable.
-  }
-}
+function decodeStoredValue(value: string): boolean {
+  if (value === CURRENT_ENABLED) return true;
+  if (value === CURRENT_DISABLED) return false;
+  if (/^v\d+:/.test(value)) throw new Error(APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION);
 
-async function normalizeStoredValue(value: string): Promise<boolean> {
+  // Pre-version values remain readable but are never repaired during a read.
   const normalized = value.trim().toLowerCase();
-  if (normalized === '1' || normalized === 'true') {
-    if (value !== '1') await repairStoredValue('1');
-    return true;
-  }
-  if (normalized === '0' || normalized === 'false') {
-    if (value !== '0') await repairStoredValue('0');
-    return false;
-  }
+  if (normalized === '1' || normalized === 'true') return true;
+  if (normalized === '0' || normalized === 'false') return false;
 
   throw new Error(APP_LOCK_PREFERENCE_INVALID);
 }
@@ -58,11 +54,11 @@ export async function getAppLockEnabled(): Promise<boolean> {
 
   const value = await getPrivateItem(KEY);
   if (value == null) return false;
-  return normalizeStoredValue(value);
+  return decodeStoredValue(value);
 }
 
 export async function setAppLockEnabledStored(enabled: boolean): Promise<void> {
-  await setPrivateItem(KEY, enabled ? '1' : '0');
+  await setPrivateItem(KEY, enabled ? CURRENT_ENABLED : CURRENT_DISABLED);
 }
 
 export async function clearMalformedAppLockPreference(): Promise<void> {

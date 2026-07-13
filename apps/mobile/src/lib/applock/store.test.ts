@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   APP_LOCK_PREFERENCE_INVALID,
+  APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION,
   clearMalformedAppLockPreference,
   getAppLockEnabled,
   isRepairableAppLockPreferenceError,
@@ -46,19 +47,21 @@ describe('app lock preference storage', () => {
   it('roundtrips the stored app-lock setting', async () => {
     await setAppLockEnabledStored(true);
     await expect(getAppLockEnabled()).resolves.toBe(true);
+    expect(mocks.privateKV.get(KEY)).toBe('v1:1');
 
     await setAppLockEnabledStored(false);
     await expect(getAppLockEnabled()).resolves.toBe(false);
+    expect(mocks.privateKV.get(KEY)).toBe('v1:0');
   });
 
-  it('migrates known legacy boolean strings to canonical values', async () => {
+  it('reads known legacy boolean strings without repairing private bytes', async () => {
     mocks.privateKV.set(KEY, 'true');
     await expect(getAppLockEnabled()).resolves.toBe(true);
-    expect(mocks.privateKV.get(KEY)).toBe('1');
+    expect(mocks.privateKV.get(KEY)).toBe('true');
 
     mocks.privateKV.set(KEY, 'FALSE');
     await expect(getAppLockEnabled()).resolves.toBe(false);
-    expect(mocks.privateKV.get(KEY)).toBe('0');
+    expect(mocks.privateKV.get(KEY)).toBe('FALSE');
   });
 
   it('fails closed without changing malformed stored values', async () => {
@@ -68,15 +71,11 @@ describe('app lock preference storage', () => {
     expect(mocks.privateKV.get(KEY)).toBe('enabled');
   });
 
-  it('keeps a legacy enabled value active if canonical repair fails', async () => {
-    const privateKV = await import('@/lib/storage/privateKV');
-    mocks.privateKV.set(KEY, 'true');
-    vi.mocked(privateKV.setPrivateItem).mockRejectedValueOnce(
-      new Error('encrypted preference write unavailable'),
-    );
+  it('preserves an unsupported future application schema until explicit recovery', async () => {
+    mocks.privateKV.set(KEY, 'v2:1');
 
-    await expect(getAppLockEnabled()).resolves.toBe(true);
-    expect(mocks.privateKV.get(KEY)).toBe('true');
+    await expect(getAppLockEnabled()).rejects.toThrow(APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION);
+    expect(mocks.privateKV.get(KEY)).toBe('v2:1');
   });
 
   it('does not attempt a cleanup write for malformed values', async () => {
@@ -98,6 +97,11 @@ describe('app lock preference storage', () => {
 
   it('identifies only locally repairable malformed preference failures', () => {
     expect(isRepairableAppLockPreferenceError(new Error(APP_LOCK_PREFERENCE_INVALID))).toBe(true);
+    expect(
+      isRepairableAppLockPreferenceError(
+        new Error(APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION),
+      ),
+    ).toBe(true);
     expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_ENVELOPE_INVALID'))).toBe(true);
     expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_ENVELOPE_UNSUPPORTED'))).toBe(
       true,
@@ -122,14 +126,14 @@ describe('app lock preference storage', () => {
 
   it('uses the dev-only E2E fixture before private storage', async () => {
     runtime.__DEV__ = true;
-    mocks.privateKV.set(KEY, '0');
+    mocks.privateKV.set(KEY, 'v1:0');
     process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED = 'enabled';
 
     await expect(getAppLockEnabled()).resolves.toBe(true);
 
     process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED = 'disabled';
     await expect(getAppLockEnabled()).resolves.toBe(false);
-    expect(mocks.privateKV.get(KEY)).toBe('0');
+    expect(mocks.privateKV.get(KEY)).toBe('v1:0');
   });
 
   it('ignores the E2E app-lock fixture outside dev builds', async () => {
