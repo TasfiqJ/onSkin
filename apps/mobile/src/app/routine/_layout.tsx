@@ -5,14 +5,14 @@ import { routineGateFeatureForPath } from '@/features/subscription/gatedRoutes';
 
 // Routine-builder screens (docs/03): plan-built, sequencing/reorder, ramp,
 // tolerance, adaptation, widgets. Presented over the tabs.
-// Full routine intelligence is Pro (docs/08 §2.2); streak/widgets use the
-// reminders/widgets value-prop copy while builder and ramp routes use full_routine.
+// The unavailable widgets route bypasses the Pro paywall so direct entries see
+// the truthful deferred surface instead of an upgrade solicitation.
 export default function RoutineLayout() {
   const pathname = usePathname();
+  const gateFeature = routineGateFeatureForPath(pathname);
+  const stack = <Stack screenOptions={{ headerShown: false }} />;
 
-  return (
-    <ProGate feature={routineGateFeatureForPath(pathname)}>
-      <Stack screenOptions={{ headerShown: false }} />
-    </ProGate>
-  );
+  if (!gateFeature) return stack;
+
+  return <ProGate feature={gateFeature}>{stack}</ProGate>;
 }

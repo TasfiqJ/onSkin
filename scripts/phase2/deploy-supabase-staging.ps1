@@ -23,20 +23,50 @@ if ($appEnv -eq "production" -and $env:PHASE2_ALLOW_PRODUCTION_DEPLOY -ne "1") {
   throw "Refusing production deploy without PHASE2_ALLOW_PRODUCTION_DEPLOY=1."
 }
 
-$requiredSecrets = @(
-  "SUPABASE_SECRET_KEY",
-  "REVENUECAT_WEBHOOK_AUTH",
-  "APPLE_TEAM_ID",
-  "APPLE_SIWA_SERVICE_ID",
-  "APPLE_SIWA_KEY_ID",
-  "APPLE_SIWA_PRIVATE_KEY",
-  "POSTHOG_PERSONAL_API_KEY"
+$manifestPath = Join-Path $PSScriptRoot "..\..\supabase\functions\manifest.json"
+if (-not (Test-Path -LiteralPath $manifestPath)) {
+  throw "Edge Function manifest is missing: $manifestPath"
+}
+$manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+$functionEntries = @(
+  $manifest.functions.PSObject.Properties |
+    Where-Object { $_.Value.deployByDefault -eq $true } |
+    Sort-Object Name
 )
+if ($functionEntries.Count -eq 0) {
+  throw "Edge Function manifest has no deployByDefault functions."
+}
 
-$missingSecrets = $requiredSecrets | Where-Object { -not [Environment]::GetEnvironmentVariable($_) }
+$missingSecrets = @()
+foreach ($entry in $functionEntries) {
+  foreach ($group in $entry.Value.requiredSecrets) {
+    $names = @($group)
+    $hasAny = $false
+    foreach ($name in $names) {
+      if ([Environment]::GetEnvironmentVariable("$name")) {
+        $hasAny = $true
+        break
+      }
+    }
+    if (-not $hasAny) {
+      $missingSecrets += "$($entry.Name): one of [$($names -join ', ')]"
+    }
+  }
+}
+
 if ($missingSecrets.Count -gt 0) {
-  Write-Warning "The following secrets are not set in this shell: $($missingSecrets -join ', ')"
+  Write-Warning "Required Edge Function secret groups not set in this shell: $($missingSecrets -join '; ')"
   Write-Warning "Set them in Supabase with: supabase secrets set NAME=value --project-ref $ProjectRef"
+}
+
+if ($PSBoundParameters.ContainsKey("DeployCommerce")) {
+  Write-Warning "-DeployCommerce is retained for command compatibility; every manifest function is now deployed."
+}
+
+Write-Host "Validating declarative Edge Function manifest"
+node scripts/phase9/edge-function-manifest-check.mjs
+if ($LASTEXITCODE -ne 0) {
+  throw "Edge Function manifest validation failed."
 }
 
 Write-Host "Linking Supabase project $ProjectRef"
@@ -45,17 +75,9 @@ supabase link --project-ref $ProjectRef
 Write-Host "Pushing migrations"
 supabase db push
 
-Write-Host "Deploying required Edge Functions"
-supabase functions deploy revenuecat-webhook --project-ref $ProjectRef
-supabase functions deploy account-deletion --project-ref $ProjectRef
-supabase functions deploy data-export --project-ref $ProjectRef
-supabase functions deploy catalog-lookup --project-ref $ProjectRef
-supabase functions deploy catalog-search --project-ref $ProjectRef
-supabase functions deploy catalog-report --project-ref $ProjectRef
-
-if ($DeployCommerce) {
-  Write-Host "Deploying commerce polling Edge Function"
-  supabase functions deploy order-report-poll --project-ref $ProjectRef
+Write-Host "Deploying every manifest Edge Function"
+foreach ($entry in $functionEntries) {
+  supabase functions deploy $entry.Name --project-ref $ProjectRef
 }
 
 Write-Host "Generating local database types"

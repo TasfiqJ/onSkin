@@ -35,6 +35,7 @@ export type LocalAccountIsolationDependencies = {
   claimOwnership: (userId: string) => Promise<void>;
   clearCleanupRequired: () => Promise<void>;
   clearPersistedPrivateData: () => Promise<void>;
+  clearSensitiveImageMemory?: () => Promise<unknown>;
   markCleanupRequired: () => Promise<void>;
   queryCache: QueryCacheController;
   readOwnership: (userId: string | null) => Promise<LocalDataOwnership>;
@@ -44,6 +45,10 @@ const defaultDependencies: LocalAccountIsolationDependencies = {
   claimOwnership: claimLocalDataOwnership,
   clearCleanupRequired: clearLocalDataCleanupRequired,
   clearPersistedPrivateData: clearLocalPrivateData,
+  clearSensitiveImageMemory: async () => {
+    const { purgeSensitiveImageMemory } = await import('@/features/photos/sensitiveImageMemory');
+    return purgeSensitiveImageMemory();
+  },
   markCleanupRequired: markLocalDataCleanupRequired,
   queryCache: queryClient,
   readOwnership: readLocalDataOwnership,
@@ -52,7 +57,11 @@ const defaultDependencies: LocalAccountIsolationDependencies = {
 export async function clearAccountIsolatedState(
   dependencies: Pick<
     LocalAccountIsolationDependencies,
-    'clearCleanupRequired' | 'clearPersistedPrivateData' | 'markCleanupRequired' | 'queryCache'
+    | 'clearCleanupRequired'
+    | 'clearPersistedPrivateData'
+    | 'markCleanupRequired'
+    | 'queryCache'
+    | 'clearSensitiveImageMemory'
   > = defaultDependencies,
 ): Promise<void> {
   let firstFailure: unknown = null;
@@ -72,6 +81,9 @@ export async function clearAccountIsolatedState(
     await attempt(() => waitForAccountGenerationOperationsToSettle());
     await attempt(() => waitForPrivateKVWritesToSettle());
     await attempt(() => waitForEncryptedPhotoWritesToSettle());
+    if (dependencies.clearSensitiveImageMemory) {
+      await attempt(() => dependencies.clearSensitiveImageMemory?.());
+    }
     await attempt(() => dependencies.queryCache.cancelQueries());
     await attempt(() => dependencies.queryCache.clear());
     await attempt(() => dependencies.clearPersistedPrivateData());

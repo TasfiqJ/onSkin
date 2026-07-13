@@ -19,16 +19,21 @@ import {
   requiredPhase11EvidenceKeys,
   warn,
 } from './lib.mjs';
+import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 
 const errors = [];
 const warnings = [];
 const env = envSnapshot();
 const exampleEnv = envFile('.env.example');
+const launchContract = loadLaunchContract();
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 
 const publicLaunchPacketRequiredSourceFiles = [
   'package.json',
   'turbo.json',
   '.env.example',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'scripts/phase9/lib.mjs',
   'scripts/phase9/evidence-normalization-smoke.mjs',
   'scripts/phase10/lib.mjs',
@@ -158,16 +163,18 @@ block(
   has('docs/phase-11/store-release-plan.md', /first production release/i),
   'Store release plan must document first production release constraints.',
 );
-block(
-  errors,
-  has('docs/phase-11/store-release-plan.md', /rollout percentage/i),
-  'Store release plan must document that first Google release has no rollout percentage.',
-);
-block(
-  errors,
-  has('docs/phase-11/store-release-plan.md', /selected countries/i),
-  'Store release plan must use selected countries as first-release control.',
-);
+if (androidReleaseRequired) {
+  block(
+    errors,
+    has('docs/phase-11/store-release-plan.md', /rollout percentage/i),
+    'Store release plan must document that first Google release has no rollout percentage.',
+  );
+  block(
+    errors,
+    has('docs/phase-11/store-release-plan.md', /selected countries/i),
+    'Store release plan must use selected countries as first-release control.',
+  );
+}
 block(
   errors,
   has('docs/phase-11/production-environment-check.md', /APP_VARIANT=production/),
@@ -231,7 +238,7 @@ for (const [key, validate] of [
   ['EXPO_PUBLIC_MARKETING_URL', productionUrl],
   ['EXPO_PUBLIC_SUPPORT_EMAIL', productionSupportEmail],
   ['EXPO_PUBLIC_APP_STORE_URL', productionUrl],
-  ['EXPO_PUBLIC_PLAY_STORE_URL', productionUrl],
+  ...(androidReleaseRequired ? [['EXPO_PUBLIC_PLAY_STORE_URL', productionUrl]] : []),
 ]) {
   warn(
     warnings,
@@ -242,6 +249,9 @@ for (const [key, validate] of [
 
 for (const key of requiredPhase11EvidenceKeys()) {
   warn(warnings, evidenceFlagEnabled(env[key]), `Missing Phase 11 evidence: ${key}=true.`);
+}
+if (!androidReleaseRequired) {
+  console.log('N/A Google Play release controls and Play Store URL: excluded by launch contract.');
 }
 warn(
   warnings,

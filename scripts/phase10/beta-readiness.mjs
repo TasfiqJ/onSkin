@@ -19,16 +19,21 @@ import {
   requiredPhase10EvidenceKeys,
   warn,
 } from './lib.mjs';
+import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 
 const errors = [];
 const warnings = [];
 const env = envSnapshot();
 const exampleEnv = envFile('.env.example');
+const launchContract = loadLaunchContract();
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 
 const closedBetaPacketRequiredSourceFiles = [
   'package.json',
   'turbo.json',
   '.env.example',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'scripts/phase9/lib.mjs',
   'scripts/phase9/evidence-normalization-smoke.mjs',
   'scripts/phase10-11/public-contact-smoke.mjs',
@@ -174,16 +179,18 @@ block(
   has('docs/phase-10/testflight-packet.md', /sandbox/i),
   'TestFlight packet must explain sandbox purchase limits.',
 );
-block(
-  errors,
-  has('docs/phase-10/google-closed-testing-packet.md', /12 opted-in testers/i),
-  'Google packet must include the 12 opted-in tester requirement.',
-);
-block(
-  errors,
-  has('docs/phase-10/google-closed-testing-packet.md', /14 continuous days/i),
-  'Google packet must include the 14 continuous day requirement.',
-);
+if (androidReleaseRequired) {
+  block(
+    errors,
+    has('docs/phase-10/google-closed-testing-packet.md', /12 opted-in testers/i),
+    'Google packet must include the 12 opted-in tester requirement.',
+  );
+  block(
+    errors,
+    has('docs/phase-10/google-closed-testing-packet.md', /14 continuous days/i),
+    'Google packet must include the 14 continuous day requirement.',
+  );
+}
 block(
   errors,
   has('docs/phase-10/support-operations.md', /unexpected charge/i),
@@ -236,6 +243,11 @@ for (const [key, validate] of [
 
 for (const key of requiredPhase10EvidenceKeys()) {
   warn(warnings, evidenceFlagEnabled(env[key]), `Missing Phase 10 evidence: ${key}=true.`);
+}
+if (!androidReleaseRequired) {
+  console.log(
+    'N/A Google Play closed testing and 12-testers/14-days evidence: excluded by launch contract.',
+  );
 }
 
 warn(

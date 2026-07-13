@@ -136,6 +136,32 @@ const cases = [
     },
   },
   {
+    name: 'iOS launch scope does not require Android RevenueCat or package configuration',
+    result: runCheck(
+      withoutKeys(completeEnv, ['EXPO_PUBLIC_REVENUECAT_ANDROID_KEY', 'APP_ANDROID_PACKAGE']),
+    ),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        /Android release configuration and evidence: excluded by launch contract/.test(
+          result.stdout,
+        )
+      );
+    },
+  },
+  {
+    name: 'iOS launch scope keeps Google Sign-In for iOS required',
+    result: runCheck(withoutKeys(completeEnv, ['EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID'])),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Google Sign-In: missing or placeholder values: EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
     name: 'production strict env passes only with explicit Phase 3 release clearance',
     result: runCheck(completeProductionEnv),
     expect(result) {
@@ -160,7 +186,7 @@ const cases = [
         result.status === 1 &&
         /Staging\/production identity: missing final native identity values/.test(result.stderr) &&
         /APP_IOS_BUNDLE_IDENTIFIER/.test(result.stderr) &&
-        /APP_ANDROID_PACKAGE/.test(result.stderr)
+        !/APP_ANDROID_PACKAGE/.test(result.stderr)
       );
     },
   },
@@ -181,7 +207,7 @@ const cases = [
         result.status === 1 &&
         /Staging\/production identity: missing final native identity values/.test(result.stderr) &&
         /APP_IOS_BUNDLE_IDENTIFIER/.test(result.stderr) &&
-        /APP_ANDROID_PACKAGE/.test(result.stderr)
+        !/APP_ANDROID_PACKAGE/.test(result.stderr)
       );
     },
   },

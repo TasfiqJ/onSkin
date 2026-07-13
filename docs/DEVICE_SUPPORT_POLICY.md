@@ -1,6 +1,6 @@
 # Device Support Policy
 
-Date: 2026-07-09
+Date: 2026-07-12
 Status: accepted launch policy
 
 This policy separates the device/runtime contract from stress-only viewport
@@ -10,19 +10,18 @@ phone envelope.
 
 ## Native Install Floor
 
-| Platform | Launch floor         | Repo enforcement                                                                 |
-| -------- | -------------------- | -------------------------------------------------------------------------------- |
-| iOS      | iOS 17.0+            | `apps/mobile/app.base.json` `ios.deploymentTarget`                               |
-| Android  | Android 10 / API 29+ | `expo-build-properties` `android.minSdkVersion`; compile/target pinned to API 36 |
-| Tablet   | Out of V1 scope      | `ios.supportsTablet=false`; Android tablet QA is deferred                        |
+| Platform | Launch floor     | Repo enforcement                                   |
+| -------- | ---------------- | -------------------------------------------------- |
+| iPhone   | iOS 17.0+        | `apps/mobile/app.base.json` `ios.deploymentTarget` |
+| iPad     | Not supported    | `ios.supportsTablet=false`                         |
+| Android  | Not this release | `docs/hugeToDo/launch-contract.json`               |
 
-Build and store submission targets still follow current platform policy. Expo
-SDK 56 builds with Android compile/target SDK 36 and supports iOS 16.4+ by
-default; this app intentionally raises the iOS deployment floor to 17.0. Apple
-requires current App Store uploads to be built with Xcode 26 and the iOS 26 SDK
-or later. Google Play target-API policy is separate from `minSdkVersion`; this
-app pins compile/target SDK to API 36 while keeping the install floor at Android
-10 / API 29. Do not lower target/compile SDKs to widen support.
+Build and App Store submission targets still follow current Apple policy. Expo
+SDK 56 supports iOS 16.4+ by default; this app intentionally raises the iOS
+deployment floor to 17.0. Apple requires current App Store uploads to be built
+with Xcode 26 and the iOS 26 SDK or later. Android source configuration may
+remain healthy, but it is not release evidence and no Play Console or Android
+device claim is required for this launch.
 
 Repo guard:
 
@@ -39,8 +38,6 @@ References:
 - https://docs.expo.dev/versions/latest/
 - https://docs.expo.dev/versions/latest/sdk/build-properties/
 - https://developer.apple.com/news/upcoming-requirements/
-- https://developer.android.com/google/play/requirements/target-sdk
-- https://developer.android.com/develop/ui/views/layout/responsive-adaptive-design-with-views
 
 ## Layout Support Floor
 
@@ -49,23 +46,19 @@ Launch-blocking native phone QA must cover:
 - iOS 17+ physical iPhone, 375 pt width or wider, including at least one latest
   supported iOS build and one oldest-supported iOS 17-class build when hardware
   is available.
-- Android 10+ physical Android phone, 360 dp smallest width or wider, with at
-  least 640 dp usable height in portrait.
-- Current flagship-class iOS and Android devices for camera, photos,
-  notifications, safe areas, billing, and share-sheet behavior.
+- A current flagship-class iPhone for camera, OCR, photos, notifications, safe
+  areas, subscriptions, widgets, Live Activities, links, and share-sheet behavior.
 
 Launch-blocking Expo web-compatible responsive QA must cover:
 
-- 360 x 640 logical viewport for the shortest supported Android phone envelope.
-- 360 x 740 Android-class compact phone viewport.
-- 375 x 667 compact iPhone-class viewport when text-pressure or safe-area
-  changes touch first-run, paywall, shelf, settings, or progress routes.
-- 390 x 844 and 430 x 932 modern phone viewports for common iOS/Android
-  density and safe-area expectations.
+- 375 x 667 compact iPhone-class viewport for every launch-blocking UI flow.
+- 390 x 844 and 430 x 932 modern iPhone-class viewports for common density and
+  safe-area expectations.
+- 360 x 640 and 360 x 740 remain useful resilience viewports, but are not
+  release blockers unless the same failure reproduces on a supported iPhone or
+  is required by App Review/accessibility.
 
-Do not add Android store/device-catalog screen exclusions without Play Console
-Reach and devices evidence. The 360 x 640 rule is a V1 QA and support floor, not
-a claim that smaller installable Android devices are impossible.
+Do not describe an Expo-web viewport as physical-iPhone evidence.
 
 ## Stress-Only Viewports
 
@@ -97,9 +90,9 @@ inside the support floor.
 
 Revisit this policy when:
 
-- Google Play Console Reach and devices data shows meaningful paid-user demand
-  below Android 10/API 29 or below the 360 x 640 layout floor.
-- Closed beta or support evidence shows real users on unsupported device classes.
-- Expo, React Native, Apple, or Google raises minimum OS/toolchain requirements.
+- The founder adds Android or iPad to the release contract.
+- Closed beta or support evidence shows meaningful demand on unsupported Apple
+  device classes.
+- Expo, React Native, or Apple raises minimum OS/toolchain requirements.
 - The product intentionally adds tablet, foldable, landscape, or split-screen
   launch claims.

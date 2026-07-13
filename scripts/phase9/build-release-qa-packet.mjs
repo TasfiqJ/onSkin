@@ -14,15 +14,24 @@ import {
   normalizeProductionDomain,
   normalizeProductionSupportEmail,
   normalizeProductionUrl,
+  notApplicablePhase9EvidenceKeys,
   printResult,
   requiredPhase9EvidenceKeys,
   warn,
   write,
 } from './lib.mjs';
+import {
+  isReleasePlatformRequired,
+  launchContractSnapshot,
+  loadLaunchContract,
+  platformRequirementStatus,
+} from '../launch/contract.mjs';
 
 const errors = [];
 const warnings = [];
 const env = envSnapshot();
+const launchContract = loadLaunchContract();
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const packetOutDir = String(env.PHASE9_PACKET_OUT_DIR ?? '').trim();
 const outDir = packetOutDir || 'docs/phase-9/generated';
 const packetOutputPaths = [
@@ -36,6 +45,8 @@ function gitStatusExcludingGeneratedPacket() {
 
 const sourceFiles = [
   '.env.example',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'package.json',
   'package-lock.json',
   '.github/workflows/security.yml',
@@ -48,6 +59,13 @@ const sourceFiles = [
   'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/src/lib/analytics/eventRegistry.ts',
   'apps/mobile/src/lib/analytics/track.ts',
+  'apps/mobile/src/app/community/ask.tsx',
+  'apps/mobile/src/app/community/people-like-you.tsx',
+  'apps/mobile/src/app/trend/optin.tsx',
+  'apps/mobile/src/app/routine/widgets.tsx',
+  'apps/mobile/src/app/routine/_layout.tsx',
+  'apps/mobile/src/features/subscription/gatedRoutes.ts',
+  'apps/mobile/src/features/subscription/copy.ts',
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'apps/mobile/src/lib/observability/scrub.ts',
   'apps/mobile/src/lib/observability/sentry.ts',
@@ -58,7 +76,10 @@ const sourceFiles = [
   'apps/mobile/src/app/progress/[id].tsx',
   'apps/mobile/src/features/photos/PhotoTimelineLockGate.tsx',
   'apps/mobile/src/features/photos/PhotoStorageGate.tsx',
+  'apps/mobile/src/features/photos/encryptedStorage.ts',
+  'apps/mobile/src/features/photos/encryptedStorage.test.ts',
   'apps/mobile/src/features/photos/store.ts',
+  'apps/mobile/src/features/photos/store.test.ts',
   'apps/mobile/src/features/photos/usePhotos.ts',
   'apps/mobile/src/features/settings/actions.ts',
   'apps/mobile/src/features/settings/localDeviceExport.ts',
@@ -67,11 +88,21 @@ const sourceFiles = [
   'apps/mobile/src/features/settings/localPrivateData.ts',
   'apps/mobile/src/lib/storage/privateKV.ts',
   'apps/mobile/src/lib/storage/privateKV.test.ts',
+  'apps/mobile/src/lib/supabase/largeSecureStore.ts',
+  'apps/mobile/src/lib/supabase/largeSecureStore.test.ts',
   'apps/mobile/src/lib/applock/AppLockProvider.tsx',
   'apps/mobile/src/lib/applock/authenticate.ts',
   'apps/mobile/src/lib/applock/authenticate.test.ts',
+  'apps/mobile/src/lib/applock/singleFlight.ts',
+  'apps/mobile/src/lib/applock/singleFlight.test.ts',
+  'apps/mobile/src/lib/auth/accountGeneration.ts',
+  'apps/mobile/src/lib/auth/accountGeneration.test.ts',
+  'apps/mobile/src/lib/auth/localAccountIsolation.ts',
+  'apps/mobile/src/lib/auth/localAccountIsolation.test.ts',
   'apps/mobile/src/lib/auth/apple.ts',
   'supabase/functions/account-deletion/index.ts',
+  'supabase/functions/account-deletion/photoStorageCleanup.ts',
+  'supabase/functions/account-deletion/photoStorageCleanup.test.ts',
   'supabase/functions/_shared/body.ts',
   'supabase/functions/_shared/fetch.ts',
   'supabase/functions/_shared/storagePath.ts',
@@ -159,6 +190,9 @@ warn(
 const evidence = Object.fromEntries(
   requiredPhase9EvidenceKeys().map((key) => [key, evidenceFlagEnabled(env[key])]),
 );
+const notApplicableEvidence = Object.fromEntries(
+  notApplicablePhase9EvidenceKeys(launchContract).map((key) => [key, 'not_applicable']),
+);
 for (const [key, passed] of Object.entries(evidence)) {
   warn(warnings, passed, `External RC evidence missing: ${key}=true.`);
 }
@@ -181,6 +215,11 @@ const releaseCandidateFiles =
 const packet = {
   generatedAt: new Date().toISOString(),
   status: errors.length === 0 && warnings.length === 0 ? 'ready' : 'blocked',
+  launchContract: launchContractSnapshot(launchContract),
+  platformStatus: {
+    ios: platformRequirementStatus('ios', launchContract),
+    android: platformRequirementStatus('android', launchContract),
+  },
   gitSha,
   gitStatus,
   releaseIdentity: {
@@ -188,7 +227,9 @@ const packet = {
     finalBrandDomain: normalizeProductionDomain(env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
     marketingUrl: normalizeProductionUrl(env.EXPO_PUBLIC_MARKETING_URL),
     appStoreUrl: normalizeProductionUrl(env.EXPO_PUBLIC_APP_STORE_URL),
-    playStoreUrl: normalizeProductionUrl(env.EXPO_PUBLIC_PLAY_STORE_URL),
+    playStoreUrl: androidReleaseRequired
+      ? normalizeProductionUrl(env.EXPO_PUBLIC_PLAY_STORE_URL)
+      : null,
     supportEmail: normalizeProductionSupportEmail(env.EXPO_PUBLIC_SUPPORT_EMAIL),
   },
   releaseCandidate: {
@@ -196,6 +237,7 @@ const packet = {
     files: releaseCandidateFiles,
   },
   evidence,
+  notApplicableEvidence,
   signedOffBy: normalizeNamedSignoff(env.PHASE9_SIGNED_OFF_BY) ?? '',
   sourceHashes: Object.fromEntries(
     [...sourceFiles, ...releaseCandidateFiles].filter(exists).map((file) => [file, hash(file)]),
@@ -221,7 +263,7 @@ write(
     `- Final domain: ${packet.releaseIdentity.finalBrandDomain || 'BLOCKED'}`,
     `- Marketing URL: ${packet.releaseIdentity.marketingUrl || 'BLOCKED'}`,
     `- App Store URL: ${packet.releaseIdentity.appStoreUrl || 'BLOCKED'}`,
-    `- Play Store URL: ${packet.releaseIdentity.playStoreUrl || 'BLOCKED'}`,
+    `- Play Store URL: ${androidReleaseRequired ? packet.releaseIdentity.playStoreUrl || 'BLOCKED' : 'NOT APPLICABLE'}`,
     `- Support email: ${packet.releaseIdentity.supportEmail || 'BLOCKED'}`,
     `- Signed off by: ${packet.signedOffBy || 'BLOCKED'}`,
     `- Release candidate folder: ${packet.releaseCandidate.dir || 'BLOCKED'}`,
@@ -237,6 +279,7 @@ write(
     '## Evidence',
     '',
     ...Object.entries(evidence).map(([key, value]) => `- ${key}: ${value ? 'PASS' : 'BLOCKED'}`),
+    ...Object.entries(notApplicableEvidence).map(([key, value]) => `- ${key}: ${value}`),
     '',
     '## Source Hashes',
     '',

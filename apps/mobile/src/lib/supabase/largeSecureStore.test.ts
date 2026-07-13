@@ -1,8 +1,16 @@
 import * as aesjs from 'aes-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bytesToHex } from '@noble/ciphers/utils.js';
+import * as SecureStore from 'expo-secure-store';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LargeSecureStore } from './largeSecureStore';
+import {
+  LARGE_SECURE_STORE_CONTENT_KEY_INVALID,
+  LARGE_SECURE_STORE_CONTENT_KEY_MISSING,
+  LARGE_SECURE_STORE_CONTENT_KEY_STORAGE_UNAVAILABLE,
+  LARGE_SECURE_STORE_DECRYPTION_FAILED,
+  LargeSecureStore,
+} from './largeSecureStore';
 import {
   decryptLargeSecureStoreValue,
   encryptLargeSecureStoreValue,
@@ -56,6 +64,7 @@ describe('LargeSecureStore session wrapper', () => {
   beforeEach(() => {
     mocks.asyncStorage.clear();
     mocks.secureStorage.clear();
+    vi.clearAllMocks();
   });
 
   it('roundtrips Supabase session JSON through encrypted AsyncStorage', async () => {
@@ -71,39 +80,131 @@ describe('LargeSecureStore session wrapper', () => {
     await expect(store.getItem(KEY_NAME)).resolves.toBe(session);
   });
 
-  it('removes the encrypted session when the SecureStore content key is missing', async () => {
+  it('preserves the encrypted session when the SecureStore content key is missing', async () => {
     const store = new LargeSecureStore();
-    mocks.asyncStorage.set(KEY_NAME, 'not readable without a key');
+    const encrypted = encryptLargeSecureStoreValue('session', CONTENT_KEY);
+    mocks.asyncStorage.set(KEY_NAME, encrypted);
 
-    await expect(store.getItem(KEY_NAME)).resolves.toBeNull();
+    await expect(store.getItem(KEY_NAME)).rejects.toThrow(LARGE_SECURE_STORE_CONTENT_KEY_MISSING);
 
-    expect(mocks.asyncStorage.has(KEY_NAME)).toBe(false);
+    expect(mocks.asyncStorage.get(KEY_NAME)).toBe(encrypted);
     expect(mocks.secureStorage.has(KEY_NAME)).toBe(false);
+    expect(AsyncStorage.removeItem).not.toHaveBeenCalled();
+    expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
+    expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
   });
 
-  it('removes both stores when the SecureStore content key is malformed', async () => {
+  it('preserves both stores when the SecureStore content key is malformed', async () => {
     const store = new LargeSecureStore();
-    mocks.secureStorage.set(KEY_NAME, 'not-hex');
-    mocks.asyncStorage.set(KEY_NAME, 'not readable with a malformed key');
+    const malformedKey = 'not-hex';
+    const encrypted = encryptLargeSecureStoreValue('session', CONTENT_KEY);
+    mocks.secureStorage.set(KEY_NAME, malformedKey);
+    mocks.asyncStorage.set(KEY_NAME, encrypted);
 
-    await expect(store.getItem(KEY_NAME)).resolves.toBeNull();
+    await expect(store.getItem(KEY_NAME)).rejects.toThrow(LARGE_SECURE_STORE_CONTENT_KEY_INVALID);
 
-    expect(mocks.asyncStorage.has(KEY_NAME)).toBe(false);
-    expect(mocks.secureStorage.has(KEY_NAME)).toBe(false);
+    expect(mocks.asyncStorage.get(KEY_NAME)).toBe(encrypted);
+    expect(mocks.secureStorage.get(KEY_NAME)).toBe(malformedKey);
+    expect(AsyncStorage.removeItem).not.toHaveBeenCalled();
+    expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
+    expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
   });
 
-  it('removes both stores when the encrypted session envelope is tampered', async () => {
+  it('preserves both stores when the encrypted session envelope is tampered', async () => {
     const store = new LargeSecureStore();
-    mocks.secureStorage.set(KEY_NAME, bytesToHex(CONTENT_KEY));
-    mocks.asyncStorage.set(
-      KEY_NAME,
-      tamperCiphertext(encryptLargeSecureStoreValue('session', CONTENT_KEY)),
+    const contentKeyHex = bytesToHex(CONTENT_KEY);
+    const encrypted = tamperCiphertext(encryptLargeSecureStoreValue('session', CONTENT_KEY));
+    mocks.secureStorage.set(KEY_NAME, contentKeyHex);
+    mocks.asyncStorage.set(KEY_NAME, encrypted);
+
+    await expect(store.getItem(KEY_NAME)).rejects.toThrow(LARGE_SECURE_STORE_DECRYPTION_FAILED);
+
+    expect(mocks.asyncStorage.get(KEY_NAME)).toBe(encrypted);
+    expect(mocks.secureStorage.get(KEY_NAME)).toBe(contentKeyHex);
+    expect(AsyncStorage.removeItem).not.toHaveBeenCalled();
+    expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
+    expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
+  });
+
+  it('preserves both stores when the encrypted session envelope is malformed', async () => {
+    const store = new LargeSecureStore();
+    const contentKeyHex = bytesToHex(CONTENT_KEY);
+    const malformedEnvelope = '';
+    mocks.secureStorage.set(KEY_NAME, contentKeyHex);
+    mocks.asyncStorage.set(KEY_NAME, malformedEnvelope);
+
+    await expect(store.getItem(KEY_NAME)).rejects.toThrow(LARGE_SECURE_STORE_DECRYPTION_FAILED);
+
+    expect(mocks.asyncStorage.get(KEY_NAME)).toBe(malformedEnvelope);
+    expect(mocks.secureStorage.get(KEY_NAME)).toBe(contentKeyHex);
+    expect(AsyncStorage.removeItem).not.toHaveBeenCalled();
+    expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
+    expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
+  });
+
+  it('preserves both stores when a well-formed but incorrect content key cannot decrypt', async () => {
+    const store = new LargeSecureStore();
+    const incorrectKeyHex = 'a'.repeat(64);
+    const encrypted = encryptLargeSecureStoreValue('session', CONTENT_KEY);
+    mocks.secureStorage.set(KEY_NAME, incorrectKeyHex);
+    mocks.asyncStorage.set(KEY_NAME, encrypted);
+
+    await expect(store.getItem(KEY_NAME)).rejects.toThrow(LARGE_SECURE_STORE_DECRYPTION_FAILED);
+
+    expect(mocks.asyncStorage.get(KEY_NAME)).toBe(encrypted);
+    expect(mocks.secureStorage.get(KEY_NAME)).toBe(incorrectKeyHex);
+    expect(AsyncStorage.removeItem).not.toHaveBeenCalled();
+    expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
+    expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
+  });
+
+  it('preserves both stores when SecureStore is temporarily unavailable', async () => {
+    const store = new LargeSecureStore();
+    const contentKeyHex = bytesToHex(CONTENT_KEY);
+    const encrypted = encryptLargeSecureStoreValue('session', CONTENT_KEY);
+    mocks.secureStorage.set(KEY_NAME, contentKeyHex);
+    mocks.asyncStorage.set(KEY_NAME, encrypted);
+    vi.mocked(SecureStore.getItemAsync).mockRejectedValueOnce(new Error('temporarily unavailable'));
+
+    await expect(store.getItem(KEY_NAME)).rejects.toThrow(
+      LARGE_SECURE_STORE_CONTENT_KEY_STORAGE_UNAVAILABLE,
     );
 
-    await expect(store.getItem(KEY_NAME)).resolves.toBeNull();
+    expect(mocks.asyncStorage.get(KEY_NAME)).toBe(encrypted);
+    expect(mocks.secureStorage.get(KEY_NAME)).toBe(contentKeyHex);
+    expect(AsyncStorage.removeItem).not.toHaveBeenCalled();
+    expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
+    expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
+  });
+
+  it('does not replace a missing content key while an encrypted session exists', async () => {
+    const store = new LargeSecureStore();
+    const encrypted = encryptLargeSecureStoreValue('existing session', CONTENT_KEY);
+    mocks.asyncStorage.set(KEY_NAME, encrypted);
+
+    await expect(store.setItem(KEY_NAME, 'replacement session')).rejects.toThrow(
+      LARGE_SECURE_STORE_CONTENT_KEY_MISSING,
+    );
+
+    expect(mocks.asyncStorage.get(KEY_NAME)).toBe(encrypted);
+    expect(mocks.secureStorage.has(KEY_NAME)).toBe(false);
+    expect(AsyncStorage.setItem).not.toHaveBeenCalled();
+    expect(AsyncStorage.removeItem).not.toHaveBeenCalled();
+    expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
+    expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
+  });
+
+  it('only destroys session bytes through an explicit removeItem call', async () => {
+    const store = new LargeSecureStore();
+    mocks.asyncStorage.set(KEY_NAME, 'encrypted session');
+    mocks.secureStorage.set(KEY_NAME, bytesToHex(CONTENT_KEY));
+
+    await store.removeItem(KEY_NAME);
 
     expect(mocks.asyncStorage.has(KEY_NAME)).toBe(false);
     expect(mocks.secureStorage.has(KEY_NAME)).toBe(false);
+    expect(AsyncStorage.removeItem).toHaveBeenCalledWith(KEY_NAME);
+    expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith(KEY_NAME);
   });
 
   it('migrates legacy AES-CTR session ciphertext to the authenticated envelope', async () => {

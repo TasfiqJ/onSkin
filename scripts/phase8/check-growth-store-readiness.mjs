@@ -10,9 +10,12 @@ import {
   productionSupportEmail,
   productionUrl,
 } from '../phase9/lib.mjs';
+import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const errors = [];
 const warnings = [];
 
@@ -78,7 +81,7 @@ const requiredEnv = [
   'EXPO_PUBLIC_MARKETING_URL',
   'EXPO_PUBLIC_SUPPORT_EMAIL',
   'EXPO_PUBLIC_APP_STORE_URL',
-  'EXPO_PUBLIC_PLAY_STORE_URL',
+  ...(androidReleaseRequired ? ['EXPO_PUBLIC_PLAY_STORE_URL'] : []),
   'EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED',
   'EXPO_PUBLIC_PHASE8_REVIEW_PROMPT_ENABLED',
   'EXPO_PUBLIC_PHASE8_CREATOR_LINKS_ENABLED',
@@ -86,18 +89,18 @@ const requiredEnv = [
   'PHASE8_BRAND_SOURCE_OF_TRUTH_PASS',
   'PHASE8_DOMAIN_DNS_PASS',
   'PHASE8_IOS_UNIVERSAL_LINKS_PASS',
-  'PHASE8_ANDROID_APP_LINKS_PASS',
+  ...(androidReleaseRequired ? ['PHASE8_ANDROID_APP_LINKS_PASS'] : []),
   'PHASE8_SHARE_CARD_DEVICE_QA_PASS',
   'PHASE8_ATTRIBUTION_PRIVACY_PASS',
   'PHASE8_APP_STORE_PACKET_PASS',
-  'PHASE8_PLAY_STORE_PACKET_PASS',
+  ...(androidReleaseRequired ? ['PHASE8_PLAY_STORE_PACKET_PASS'] : []),
   'PHASE8_CREATOR_COMPLIANCE_PASS',
   'PHASE8_SUPPORT_RESPONSE_PASS',
   'PHASE8_LAUNCH_DASHBOARD_READY',
   'PHASE8_DRY_RUN_PASS',
   'PHASE8_SIGNED_OFF_BY',
   'APPLE_TEAM_ID',
-  'ANDROID_CERT_SHA256_FINGERPRINTS',
+  ...(androidReleaseRequired ? ['ANDROID_CERT_SHA256_FINGERPRINTS'] : []),
 ];
 
 for (const key of requiredEnv) {
@@ -200,18 +203,22 @@ fail(
   has('apps/mobile/app.config.js', /associatedDomains/),
   'app.config.js must configure iOS associated domains.',
 );
-fail(
-  has('apps/mobile/app.config.js', /intentFilters/),
-  'app.config.js must configure Android App Links intent filters.',
-);
+if (androidReleaseRequired) {
+  fail(
+    has('apps/mobile/app.config.js', /intentFilters/),
+    'app.config.js must configure Android App Links intent filters.',
+  );
+}
 fail(
   has('apps/mobile/app.config.js', /appStoreUrl/),
   'app.config.js must expose the App Store URL for native review fallback.',
 );
-fail(
-  has('apps/mobile/app.config.js', /playStoreUrl/),
-  'app.config.js must expose the Play Store URL for native review fallback.',
-);
+if (androidReleaseRequired) {
+  fail(
+    has('apps/mobile/app.config.js', /playStoreUrl/),
+    'app.config.js must expose the Play Store URL for native review fallback.',
+  );
+}
 
 fail(
   has('apps/mobile/src/lib/env.ts', /phase8PublicLinksEnabled/),
@@ -342,6 +349,8 @@ fail(
 );
 for (const file of [
   '.env.example',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'docs/phase-8/public-site/index.html',
   'docs/phase-8/public-site/share.html',
   'docs/phase-8/public-site/waitlist.html',
@@ -388,17 +397,19 @@ warn(
   'Missing production support email.',
 );
 warn(productionUrl(launchEnv.EXPO_PUBLIC_APP_STORE_URL), 'Missing App Store URL.');
-warn(productionUrl(launchEnv.EXPO_PUBLIC_PLAY_STORE_URL), 'Missing Play Store URL.');
+if (androidReleaseRequired) {
+  warn(productionUrl(launchEnv.EXPO_PUBLIC_PLAY_STORE_URL), 'Missing Play Store URL.');
+}
 
 const externalEvidence = [
   'PHASE8_BRAND_SOURCE_OF_TRUTH_PASS',
   'PHASE8_DOMAIN_DNS_PASS',
   'PHASE8_IOS_UNIVERSAL_LINKS_PASS',
-  'PHASE8_ANDROID_APP_LINKS_PASS',
+  ...(androidReleaseRequired ? ['PHASE8_ANDROID_APP_LINKS_PASS'] : []),
   'PHASE8_SHARE_CARD_DEVICE_QA_PASS',
   'PHASE8_ATTRIBUTION_PRIVACY_PASS',
   'PHASE8_APP_STORE_PACKET_PASS',
-  'PHASE8_PLAY_STORE_PACKET_PASS',
+  ...(androidReleaseRequired ? ['PHASE8_PLAY_STORE_PACKET_PASS'] : []),
   'PHASE8_CREATOR_COMPLIANCE_PASS',
   'PHASE8_SUPPORT_RESPONSE_PASS',
   'PHASE8_LAUNCH_DASHBOARD_READY',
@@ -415,12 +426,19 @@ warn(
   Boolean(normalizeAppleTeamId(process.env.APPLE_TEAM_ID)),
   'Missing Apple Team ID evidence for AASA.',
 );
-warn(
-  normalizeAndroidSha256Fingerprints(process.env.ANDROID_CERT_SHA256_FINGERPRINTS).length > 0,
-  'Missing Android release certificate fingerprint evidence.',
-);
+if (androidReleaseRequired) {
+  warn(
+    normalizeAndroidSha256Fingerprints(process.env.ANDROID_CERT_SHA256_FINGERPRINTS).length > 0,
+    'Missing Android release certificate fingerprint evidence.',
+  );
+}
 
 console.log('Phase 8 growth/store readiness check');
+if (!androidReleaseRequired) {
+  console.log(
+    'N/A Android App Links, Play Store packet, URL, and certificate evidence: excluded by launch contract.',
+  );
+}
 for (const warning of warnings) console.warn(`WARN ${warning}`);
 for (const error of errors) console.error(`FAIL ${error}`);
 

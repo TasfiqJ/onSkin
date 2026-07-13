@@ -574,6 +574,10 @@ export type Database = {
           store_user_id: string | null;
           last_reconciled_at: Timestamptz | null;
           raw_status: Json;
+          rc_event_at: Timestamptz | null;
+          rc_event_priority: number | null;
+          rc_original_transaction_id: string | null;
+          rc_transaction_id: string | null;
         };
         Insert: {
           user_id: string;
@@ -598,6 +602,10 @@ export type Database = {
           store_user_id?: string | null;
           last_reconciled_at?: Timestamptz | null;
           raw_status?: Json;
+          rc_event_at?: Timestamptz | null;
+          rc_event_priority?: number | null;
+          rc_original_transaction_id?: string | null;
+          rc_transaction_id?: string | null;
         };
         Update: Partial<Database['public']['Tables']['entitlements']['Insert']>;
         Relationships: [];
@@ -622,6 +630,14 @@ export type Database = {
           error: string | null;
           signature_verified: boolean | null;
           auth_verified: boolean | null;
+          provider_event_at: Timestamptz | null;
+          original_transaction_id: string | null;
+          transaction_id: string | null;
+          transferred_from: string[] | null;
+          transferred_to: string[] | null;
+          projection_priority: number | null;
+          projection_applied: boolean;
+          processing_attempts: number;
         };
         Insert: {
           id?: string;
@@ -642,6 +658,14 @@ export type Database = {
           error?: string | null;
           signature_verified?: boolean | null;
           auth_verified?: boolean | null;
+          provider_event_at?: Timestamptz | null;
+          original_transaction_id?: string | null;
+          transaction_id?: string | null;
+          transferred_from?: string[] | null;
+          transferred_to?: string[] | null;
+          projection_priority?: number | null;
+          projection_applied?: boolean;
+          processing_attempts?: number;
         };
         Update: Partial<Database['public']['Tables']['subscriptions_events']['Insert']>;
         Relationships: [];

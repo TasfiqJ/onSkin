@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "scope": "All iOS all-features launch evidence, including automated tests, human E2E, live service checks, device captures, professional reviews, store submissions, operations, and incident drills.",
+  "evidenceRecord": {
+    "directoryPattern": "docs/hugeToDo/evidence/<WORK_ITEM_ID>/<environment>/<evidence_id>/",
+    "requiredFields": [
+      "schemaVersion",
+      "evidenceId",
+      "workItemIds",
+      "featureIds",
+      "gatedSurfaceIds",
+      "environment",
+      "appVersion",
+      "buildNumber",
+      "gitCommit",
+      "sourceHashes",
+      "startedAt",
+      "completedAt",
+      "operatorRole",
+      "deviceOrRuntime",
+      "commandsOrProcedure",
+      "result",
+      "findings",
+      "redactionsApplied",
+      "retentionClass",
+      "deleteOrReviewAt",
+      "rollbackRef"
+    ],
+    "resultValues": ["pass", "fail", "blocked", "not-applicable"],
+    "integrity": "Hash retained artifacts after redaction. Hashes prove the retained redacted artifact, never the unretained sensitive original.",
+    "truthRule": "A generated flag, checkbox, screenshot, simulator result, or local test cannot claim live, physical-device, professional, production, Apple-review, or staffed-operations evidence."
+  },
+  "redaction": {
+    "default": "Collect the minimum evidence needed, redact before it enters the repository, chat, issue tracker, packet, or long-term store, and verify the redacted artifact cannot be reversed.",
+    "prohibitedContent": [
+      "passwords, MFA or recovery codes, CAPTCHA answers, access or refresh tokens",
+      "private keys, signing certificates with private material, webhook secrets, service-role keys, database passwords",
+      "full payment, banking, tax, government identity, or identity-verification records",
+      "raw auth identifiers, email addresses, phone numbers, IP addresses, precise location, device advertising identifiers",
+      "health answers, pregnancy status, user routines, private notes, community drafts, support content, or other user content",
+      "photo pixels, thumbnails, local photo paths, encryption keys, ciphertext samples, face data, or biometric artifacts",
+      "provider payloads or console screenshots that expose project secrets or personal account data"
+    ],
+    "approvedSubstitutions": [
+      "stable non-reversible evidence-local labels such as tester-A",
+      "last four characters only when needed to distinguish a non-secret identifier",
+      "cropped console state with account chrome and values removed",
+      "aggregate counts meeting documented minimum cohorts",
+      "hashes of approved source/review artifacts after secret scanning"
+    ],
+    "captureProcess": [
+      "capture into an access-restricted temporary location",
+      "remove prohibited data and irrelevant screen regions",
+      "inspect metadata, filenames, OCR text, logs, network bodies, and thumbnails",
+      "run secret and personal-data review",
+      "copy only the approved redacted artifact to its evidence directory",
+      "securely delete the temporary capture and record the redaction actions"
+    ],
+    "failureRule": "If safe redaction cannot be proven, retain a signed result record and non-secret external reference instead of the artifact."
+  },
+  "retention": {
+    "rules": [
+      {
+        "class": "transient-debug",
+        "defaultReview": "30 days after capture",
+        "disposition": "Delete after the defect is verified closed unless a legal hold or incident preservation rule applies."
+      },
+      {
+        "class": "release-qa",
+        "defaultReview": "one year after the applicable app version is no longer supported",
+        "disposition": "Retain the redacted manifest, results, hashes, and minimum supporting artifacts; delete redundant raw captures earlier."
+      },
+      {
+        "class": "store-and-production",
+        "defaultReview": "at each annual legal/data-retention review",
+        "disposition": "Retain submission, approval, release, rollback, and production-verification records until an approved legal retention schedule authorizes deletion."
+      },
+      {
+        "class": "professional-review",
+        "defaultReview": "at each annual legal/data-retention review and whenever reviewed source changes",
+        "disposition": "Retain signed decision, authority/credential verification reference, exact source hashes, scope, conditions, expiry, and revocation history under the counsel-approved schedule."
+      },
+      {
+        "class": "incident-security-finance",
+        "defaultReview": "only under the applicable legal, tax, insurer, processor, or security schedule",
+        "disposition": "Legal-schedule-required; do not invent a deletion date or delete during a legal hold."
+      }
+    ],
+    "requirements": [
+      "Every evidence record has one retention class and an explicit deleteOrReviewAt value.",
+      "Retention is not consent to collect more data; minimize first.",
+      "Deletion includes working copies, exported archives, issue attachments, temporary plaintext, and processor copies where contractually controllable.",
+      "A legal hold overrides normal deletion and is recorded without placing privileged legal advice in the repository.",
+      "Country-specific durations remain an external legal decision and must be recorded before production launch."
+    ]
+  },
+  "rollback": {
+    "requiredFields": [
+      "rollbackId",
+      "workItemIds",
+      "featureIds",
+      "ownerRole",
+      "triggerThresholds",
+      "killSwitches",
+      "lastKnownGoodBuildOrMigration",
+      "dataCompatibility",
+      "backupAndRestorePoint",
+      "executionSteps",
+      "validationSteps",
+      "userCommunication",
+      "vendorActions",
+      "abortConditions",
+      "drillEvidenceRef"
+    ],
+    "rules": [
+      "Networked and high-risk features fail closed through a production kill switch only after their enabled state has passed launch gates.",
+      "Never roll back a database migration until forward/backward schema and data compatibility are proven on a restored staging copy.",
+      "EAS Update rollback must match runtimeVersion and cannot repair native code, entitlements, privacy manifests, or binary-only defects.",
+      "Account deletion, privacy rights, payment state, and owner-scoped data must remain available or fail safely during rollback.",
+      "Rollback completion requires the same privacy, smoke, monitoring, and owner-isolation checks used to declare recovery."
+    ]
+  },
+  "incident": {
+    "severities": [
+      {
+        "id": "P0",
+        "definition": "active private-data exposure, cross-account access, credential/signing compromise, unsafe health guidance at scale, incorrect charges at scale, destructive data loss, or launch-wide outage",
+        "response": "page the named incident lead immediately; contain or disable the affected surface; preserve minimal evidence; notify required decision owners"
+      },
+      {
+        "id": "P1",
+        "definition": "serious security/privacy/safety/payment defect or a critical launch flow unavailable without a safe workaround",
+        "response": "same-day staffed response, prevent further harm, and prepare rollback/repair"
+      },
+      {
+        "id": "P2",
+        "definition": "material degradation with a safe workaround and no known private-data, safety, or payment harm",
+        "response": "triage into the current release window with monitored mitigation"
+      },
+      {
+        "id": "P3",
+        "definition": "minor defect, documentation gap, or cosmetic issue with no material user harm",
+        "response": "prioritize through the normal backlog"
+      }
+    ],
+    "requiredTimelineEvents": [
+      "detectedAt",
+      "declaredAt",
+      "incidentLeadAssignedAt",
+      "containmentStartedAt",
+      "containedAt",
+      "userOrRegulatorDecisionAt",
+      "recoveredAt",
+      "postIncidentReviewAt"
+    ],
+    "rules": [
+      "Do not promise a regulatory, contractual, or user notification deadline without the named privacy/legal decision owner; record the decision and governing jurisdiction.",
+      "Do not place privileged advice, secrets, raw user data, or exploitable detail in public incident records.",
+      "P0/P1 closure requires root cause, affected scope, evidence integrity, corrective actions, recurrence controls, owner, deadline, and verification.",
+      "A production surface without a named staffed escalation owner remains launch-blocked."
+    ]
+  }
+}

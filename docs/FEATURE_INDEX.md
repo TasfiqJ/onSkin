@@ -1,33 +1,36 @@
 # Feature Index
 
-|   # | Feature                                 | Priority            | MVP                          | Complexity | Dependencies                    | Status                            | Future Doc |
-| --: | --------------------------------------- | ------------------- | ---------------------------- | ---------- | ------------------------------- | --------------------------------- | ---------- |
-|   1 | Rebrand and identity migration          | Must-have           | Yes                          | Medium     | founder/counsel                 | Planned                           | TBD        |
-|   2 | Onboarding, age gate, consent           | Must-have           | Yes                          | Medium     | legal/privacy copy              | Existing, needs final copy        | TBD        |
-|   3 | Shelf intake: manual/search/barcode/OCR | Must-have           | Yes                          | High       | catalog, camera, local store    | Existing, needs device/catalog QA | TBD        |
-|   4 | Product catalog import and quality      | Must-have           | Yes                          | High       | OBF/CosIng/source review        | Scaffolded                        | TBD        |
-|   5 | Reviewed conflict engine                | Must-have           | Yes                          | High       | clinical/cosmetic review        | Launch-blocked                    | TBD        |
-|   6 | Routine builder                         | Must-have           | Yes                          | High       | shelf, profile, rules           | Existing, needs review            | TBD        |
-|   7 | Today check-off and adherence           | Must-have           | Yes                          | Medium     | routine plan, local store       | Existing                          | TBD        |
-|   8 | Skin cycling and ramp scheduler         | Must-have           | Yes                          | High       | rules/review                    | Existing, needs review            | TBD        |
-|   9 | Private photo progress                  | Should-have         | Yes if QA passes             | High       | camera, encryption, consent     | Existing, needs device QA         | TBD        |
-|  10 | Reminders                               | Should-have         | Yes                          | Medium     | notification permissions        | Existing, needs device QA         | TBD        |
-|  11 | RevenueCat paywall and entitlements     | Must-have           | Yes                          | High       | final brand/store records       | Scaffolded                        | TBD        |
-|  12 | Reverse trial                           | Should-have         | Yes                          | Medium     | entitlements, analytics         | Existing/scaffolded               | TBD        |
-|  13 | Recommendations                         | Should-have         | No public claim until review | High       | catalog, review, Pro gates      | Existing, gated                   | TBD        |
-|  14 | Ask advisor                             | Could-have          | Local only if reviewed       | High       | reviewed corpus, guardrails     | Existing/gated                    | TBD        |
-|  15 | Shareable conflict card                 | Should-have         | After reviewed rules         | Medium     | final brand, links, share sheet | Existing/gated                    | TBD        |
-|  16 | Commerce/replenishment                  | Later               | No                           | High       | consent, FTC, partner           | Inert/gated                       | TBD        |
-|  17 | Community/Skin Notes                    | Later               | No                           | High       | moderation, legal, experts      | Scaffolded/gated                  | TBD        |
-|  18 | Trend insights                          | Later               | No                           | High       | device/fairness/legal review    | Gated                             | TBD        |
-|  19 | Widgets/live activities                 | Later               | No                           | High       | native targets                  | Inert                             | TBD        |
-|  20 | Admin/operator review tooling           | Must-have for scale | Partial                      | Medium     | backend, reviewer workflow      | Local queue + signoff workflow    | TBD        |
+|   # | Feature                                 | iOS Launch | Complexity | Dependencies                    | Current readiness                 | Source Doc |
+| --: | --------------------------------------- | ---------- | ---------- | ------------------------------- | --------------------------------- | ---------- |
+|   1 | Rebrand and identity migration          | Required   | Medium     | founder/counsel                 | launch-blocked                    | TBD        |
+|   2 | Onboarding, age gate, consent           | Required   | Medium     | legal/privacy copy              | implemented / needs final review  | TBD        |
+|   3 | Shelf intake: manual/search/barcode/OCR | Required   | High       | catalog, camera, local store    | needs device/catalog/OCR QA       | TBD        |
+|   4 | Product catalog import and quality      | Required   | High       | OBF/CosIng/source review        | stubbed / launch-blocked          | TBD        |
+|   5 | Reviewed conflict engine                | Required   | High       | clinical/cosmetic review        | launch-blocked                    | TBD        |
+|   6 | Routine builder                         | Required   | High       | shelf, profile, rules           | implemented / needs review        | TBD        |
+|   7 | Today check-off and adherence           | Required   | Medium     | routine plan, local store       | implemented                       | TBD        |
+|   8 | Skin cycling and ramp scheduler         | Required   | High       | rules/review                    | implemented / needs review        | TBD        |
+|   9 | Private photo progress                  | Required   | High       | camera, encryption, consent     | needs-device-verification         | TBD        |
+|  10 | Reminders                               | Required   | Medium     | notification permissions        | needs-device-verification         | TBD        |
+|  11 | RevenueCat paywall and entitlements     | Required   | High       | final brand/store records       | stubbed                           | TBD        |
+|  12 | Reverse trial                           | Required   | Medium     | entitlements, analytics         | implemented / live-blocked        | TBD        |
+|  13 | Recommendations                         | Required   | High       | catalog, review, Pro gates      | launch-blocked                    | TBD        |
+|  14 | Ask advisor                             | Required   | High       | provider, corpus, guardrails    | local implemented / cloud blocked | TBD        |
+|  15 | Shareable conflict card                 | Required   | Medium     | final brand, links, share sheet | implemented / launch-blocked      | TBD        |
+|  16 | Commerce/replenishment                  | Required   | High       | consent, FTC, partner           | inert / launch-blocked            | TBD        |
+|  17 | Community/Skin Notes                    | Required   | High       | moderation, legal, experts      | stubbed / launch-blocked          | TBD        |
+|  18 | Trend insights                          | Required   | High       | engine, fairness/legal review   | simulated / launch-blocked        | TBD        |
+|  19 | Widgets/live activities                 | Required   | High       | native targets                  | inert                             | TBD        |
+|  20 | Admin/operator review tooling           | Required   | Medium     | backend, reviewer workflow      | partial                           | TBD        |
 
 ## Inclusion Rules
 
-- A feature can exist in code without being marketed.
-- A feature can be shown in beta only if beta copy labels its limits honestly.
-- A feature can be public only when its launch gate is closed with evidence.
+- Every listed feature is required for the iOS launch.
+- A route, flag, preview, fixture, simulation, or inert native target is not a
+  completed feature.
+- A feature can enter TestFlight only with honest beta limitations and its
+  applicable safety/privacy prerequisites.
+- A feature can ship publicly only when its launch gate is closed with evidence.
 
 ## Complexity Key
 

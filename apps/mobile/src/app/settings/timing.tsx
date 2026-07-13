@@ -330,7 +330,7 @@ export default function TimingScreen() {
                   style={{
                     color: 'rgba(244,239,231,0.7)',
                     fontSize: 12,
-                    fontFamily: 'HankenGrotesk_400Regular',
+                    fontFamily: 'HankenGrotesk-Regular',
                   }}
                 >
                   {discreetBody}

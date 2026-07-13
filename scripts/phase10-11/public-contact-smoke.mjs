@@ -123,6 +123,29 @@ const cases = [
     },
   },
   {
+    name: 'Phase 10 excludes Google Play beta evidence through the launch contract',
+    packetCase: runPacket(
+      phase10PacketPath,
+      {
+        PHASE10_PLAY_CLOSED_TEST_READY: '',
+        PHASE10_PLAY_12_TESTERS_14_DAYS_SCHEDULED: '',
+      },
+      'closed-beta-packet.json',
+      'PHASE10_PACKET_OUT_DIR',
+    ),
+    expectPacket({ result, packet }) {
+      const text = combinedOutput(result);
+      return (
+        result.status === 0 &&
+        packet?.platformStatus?.android === 'not_applicable' &&
+        packet?.notApplicableEvidence?.PHASE10_PLAY_CLOSED_TEST_READY === 'not_applicable' &&
+        packet?.notApplicableEvidence?.PHASE10_PLAY_12_TESTERS_14_DAYS_SCHEDULED ===
+          'not_applicable' &&
+        !text.includes('External closed beta evidence missing: PHASE10_PLAY')
+      );
+    },
+  },
+  {
     name: 'Phase 10 rejects reserved final brand domains',
     result: run(phase10ReadinessPath, {
       EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'routinekind.local',
@@ -245,6 +268,22 @@ const cases = [
     result: run(phase11ReadinessPath, {}),
     expect(result) {
       return hasNoFinalContactWarning(result, 'final public launch value');
+    },
+  },
+  {
+    name: 'Phase 11 excludes Play Store URL through the launch contract',
+    packetCase: runPacket(
+      phase11PacketPath,
+      { EXPO_PUBLIC_PLAY_STORE_URL: '' },
+      'public-launch-packet.json',
+      'PHASE11_PACKET_OUT_DIR',
+    ),
+    expectPacket({ result, packet }) {
+      return (
+        result.status === 0 &&
+        packet?.platformStatus?.android === 'not_applicable' &&
+        packet?.launchIdentity?.playStoreUrl === null
+      );
     },
   },
   {

@@ -1,5 +1,9 @@
 # Roadmap
 
+This roadmap executes the iOS-only, all-features contract. Every feature in
+`docs/FEATURE_INDEX.md` is required before public launch; phases describe
+dependency order, not permission to defer an indexed feature.
+
 ## Phase 0: Brand And Strategy Reset
 
 Goal: remove the biggest avoidable launch risk.
@@ -95,7 +99,7 @@ Risks:
 
 ## Phase 4: Closed Beta
 
-Goal: prove or disprove demand before public scale.
+Goal: prove the production-real all-features iOS candidate before public scale.
 
 Features:
 
@@ -104,6 +108,13 @@ Features:
 - catalog miss reporting
 - churn interviews
 - support workflow
+- native OCR and catalog coverage
+- photos and trend calibration
+- cloud Ask safety and cost
+- commerce and creator handoff
+- community posting, moderation, and expert workflow
+- widgets, Live Activities, notifications, links, and sharing
+- admin/operator queues and launch dashboards
 
 Done criteria:
 
@@ -132,9 +143,9 @@ Features:
 
 Done criteria:
 
-- App Store/Play metadata reviewed
+- App Store metadata reviewed
 - privacy labels match behavior
-- device QA attached
+- physical-iPhone QA attached
 - launch ring gates passed
 
 Risks:
@@ -149,7 +160,7 @@ Goal: reach 10,000+ active subscribers over time.
 
 Features:
 
-- shareable conflict card
+- optimize the launch share-card loop
 - creator seeding
 - ASO iteration
 - content/SEO

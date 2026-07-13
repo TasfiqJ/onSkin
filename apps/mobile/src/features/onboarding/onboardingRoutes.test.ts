@@ -3,12 +3,29 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 const APP_DIR = fileURLToPath(new URL('../../app/', import.meta.url));
+const ONBOARDING_E2E_SCRIPT = fileURLToPath(
+  new URL('../../../../../scripts/e2e/onboarding-first-session.mjs', import.meta.url),
+);
 
 function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
 }
 
 describe('onboarding route contracts', () => {
+  it('keeps semantic opened-date radios operable in the first-session E2E driver', () => {
+    const source = readFileSync(ONBOARDING_E2E_SCRIPT, 'utf8');
+
+    expect(source).toContain('button,[role="button"],[role="checkbox"],[role="radio"],a,label');
+    expect(source).toContain(
+      'button,[role="button"],[role="checkbox"],[role="radio"],a,input,textarea,select',
+    );
+    expect(source.match(/\[role="radio"\]/g)).toHaveLength(3);
+    expect(source).toContain(
+      "const controls = Array.from(document.querySelectorAll('input,textarea'));",
+    );
+    expect(source).toContain('if (!visible(node)) return false;');
+  });
+
   it('keeps first-run age gate copy free of mojibake punctuation', () => {
     const source = readAppRoute('onboarding/age.tsx');
 
@@ -51,6 +68,21 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('accessibilityLabel={`Remove ${it.name}`}');
     expect(products).toContain('className="h-12 w-12 items-center justify-center');
     expect(products).not.toContain('hitSlop={8}');
+  });
+
+  it('clears the completed product draft before the next onboarding add', () => {
+    const source = readAppRoute('onboarding/products.tsx');
+
+    expect(source).toContain('useLocalSearchParams<{ addedProductId?: string }>()');
+    expect(source).toContain(
+      "return <ProductsScreenContent key={addedProductId ?? 'initial-add'} />;",
+    );
+    expect(source).toContain('function ProductsScreenContent()');
+    expect(source).toContain("const [name, setName] = useState('');");
+    expect(source).toContain(
+      'const [category, setCategory] = useState<ProductCategory | null>(null);',
+    );
+    expect(source).toContain('onChangeText={setName}');
   });
 
   it('keeps onboarding fixed-footer screens scrollable above phone actions', () => {
@@ -264,11 +296,21 @@ describe('onboarding route contracts', () => {
 
   it('routes every onboarding product through explicit freshness capture', () => {
     const root = readAppRoute('_layout.tsx');
+    const onboardingLayout = readAppRoute('onboarding/_layout.tsx');
     const products = readAppRoute('onboarding/products.tsx');
     const opened = readAppRoute('shelf/opened.tsx');
     const shelfLayout = readAppRoute('shelf/_layout.tsx');
 
     expect(root).toContain("import { IntakeProvider } from '@/features/shelf/IntakeContext';");
+    expect(root).toContain(
+      "import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';",
+    );
+    expect(root).toContain('<OnboardingProvider>');
+    expect(root.indexOf('<OnboardingProvider>')).toBeLessThan(root.indexOf('<IntakeProvider>'));
+    expect(root.indexOf('<SessionBoundaryGate>')).toBeLessThan(
+      root.indexOf('<OnboardingProvider>'),
+    );
+    expect(onboardingLayout).not.toContain('OnboardingProvider');
     expect(root).toContain('<IntakeProvider>');
     expect(shelfLayout).not.toContain('<IntakeProvider>');
     expect(products).toContain('const { reset: resetIntake } = useIntake();');
@@ -278,7 +320,8 @@ describe('onboarding route contracts', () => {
     expect(products).toContain("params: { origin: 'onboarding' }");
     expect(products).not.toContain('await m.add({');
     expect(opened).toContain('APP_ONBOARDING_PRODUCTS_ROUTE');
-    expect(opened).toContain('router.replace(fallbackRoute)');
+    expect(opened).toContain('params: { addedProductId: addedProduct.id }');
+    expect(opened).toContain('router.replace(APP_SHELF_ROUTE)');
   });
 
   it('shows the shelf-derived first insight on reveal before reminder setup', () => {

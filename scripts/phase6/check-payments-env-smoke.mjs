@@ -51,6 +51,12 @@ const completeEnv = {
   PHASE6_SIGNED_OFF_BY: ' Tas Mohammed ',
 };
 
+function withoutKeys(env, keys) {
+  const next = { ...env };
+  for (const key of keys) delete next[key];
+  return next;
+}
+
 function run(extraEnv) {
   return spawnSync(process.execPath, [checkEnvPath, '--strict'], {
     cwd: root,
@@ -90,6 +96,23 @@ function runPacketWithDirtyWorktree(extraEnv) {
 
 const cases = [
   {
+    name: 'iOS launch scope does not require Android RevenueCat configuration or evidence',
+    result: run(
+      withoutKeys(completeEnv, [
+        'EXPO_PUBLIC_REVENUECAT_ANDROID_KEY',
+        'PHASE6_ANDROID_LICENSE_TEST_PASS',
+      ]),
+    ),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        /Android RevenueCat key and license-test evidence: excluded by launch contract/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
     name: 'strict payments env passes with production RevenueCat and policy values',
     result: run({}),
     expect(result) {
@@ -112,7 +135,7 @@ const cases = [
     expect(result) {
       return (
         result.status === 1 &&
-        /Production annual RevenueCat product id must be a final App Store\/Play product id/.test(
+        /Production annual RevenueCat product id must be a final App Store product id/.test(
           output(result),
         )
       );
@@ -168,7 +191,9 @@ const cases = [
         result.packet.productionConfig.webhookSigningSecretConfigured === true &&
         result.packet.productionConfig.privacyUrlProduction === true &&
         result.packet.evidence.rcOfferingReviewed === true &&
-        result.packet.evidence.androidLicenseTestPass === true &&
+        result.packet.evidence.androidLicenseTestPass === null &&
+        result.packet.platformStatus.android === 'not_applicable' &&
+        result.packet.platformEvidenceStatus.androidLicenseTest === 'not_applicable' &&
         result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
         /^[0-9a-f]{40}$/i.test(result.packet.gitSha) &&
         typeof result.packet.gitStatus === 'string' &&

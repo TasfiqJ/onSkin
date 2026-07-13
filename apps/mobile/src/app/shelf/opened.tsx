@@ -58,6 +58,8 @@ function OptionRow({
   return (
     <Pressable
       accessibilityRole="radio"
+      accessibilityLabel={title}
+      accessibilityHint={subtitle}
       accessibilityState={{ selected }}
       onPress={() => {
         haptics.select();
@@ -111,7 +113,7 @@ export default function OpenedDateScreen() {
     setSaving(true);
     const openedAt = mode === 'just' ? today : mode === 'pick' ? pickIso : null;
     const isOpened = mode !== 'unopened';
-    await m.add({
+    const addedProduct = await m.add({
       name: productName,
       brand: draft.brand,
       category: draft.category,
@@ -138,7 +140,14 @@ export default function OpenedDateScreen() {
       addedVia: draft.addedVia,
     });
     reset();
-    router.replace(fallbackRoute);
+    if (origin === 'onboarding') {
+      router.replace({
+        pathname: APP_ONBOARDING_PRODUCTS_ROUTE,
+        params: { addedProductId: addedProduct.id },
+      });
+    } else {
+      router.replace(APP_SHELF_ROUTE);
+    }
   };
 
   if (!hasProductDraft) {

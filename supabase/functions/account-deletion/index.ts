@@ -12,6 +12,7 @@ import {
   readLimitedResponseJson,
   readLimitedResponseText,
 } from '../_shared/fetch.ts';
+import { deletePhotoStorage } from './photoStorageCleanup.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey =
@@ -341,20 +342,6 @@ async function deletePostHogPerson(userId: string): Promise<'deleted' | 'skipped
   }
 
   throw new Error(`POSTHOG_DELETION_FAILED:${lastStatus}:${lastBody.slice(0, 80)}`);
-}
-
-async function deletePhotoStorage(userId: string, supabase: EdgeSupabaseClient): Promise<void> {
-  for (let offset = 0; ; offset += 1000) {
-    const { data, error } = await supabase.storage
-      .from('photos')
-      .list(userId, { limit: 1000, offset });
-    if (error) throw new Error(`STORAGE_LIST_FAILED:${error.message}`);
-    if (!data || data.length === 0) break;
-    const paths = (data as Array<{ name: string }>).map((object) => `${userId}/${object.name}`);
-    const { error: removeError } = await supabase.storage.from('photos').remove(paths);
-    if (removeError) throw new Error(`STORAGE_REMOVE_FAILED:${removeError.message}`);
-    if (data.length < 1000) break;
-  }
 }
 
 async function scrubServiceRoleOnlyRows(

@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
   },
   tabLabel: {
     flexShrink: 1,
-    fontFamily: 'HankenGrotesk_600SemiBold',
+    fontFamily: 'HankenGrotesk-SemiBold',
     fontSize: 12.5,
     includeFontPadding: false,
     letterSpacing: 0,
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   tabLabelActive: {
-    fontFamily: 'HankenGrotesk_700Bold',
+    fontFamily: 'HankenGrotesk-Bold',
   },
   tabItem: {
     alignItems: 'center',

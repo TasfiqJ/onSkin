@@ -51,7 +51,7 @@ function Chip({ label, tone }: { label: string; tone: ChipTone }) {
       }}
     >
       <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: toneColor(tone) }} />
-      <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 11.5, color: '#F4EFE7' }}>
+      <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 11.5, color: '#F4EFE7' }}>
         {label}
       </Text>
     </View>
@@ -228,7 +228,7 @@ function ReviewScreenContent() {
           </Text>
           <Text
             style={{
-              fontFamily: 'HankenGrotesk_600SemiBold',
+              fontFamily: 'HankenGrotesk-SemiBold',
               fontSize: 24,
               lineHeight: 30,
               color: '#F4EFE7',
@@ -239,7 +239,7 @@ function ReviewScreenContent() {
           </Text>
           <Text
             style={{
-              fontFamily: 'HankenGrotesk_400Regular',
+              fontFamily: 'HankenGrotesk-Regular',
               fontSize: 15,
               lineHeight: 22,
               color: 'rgba(244,239,231,0.76)',
@@ -262,7 +262,7 @@ function ReviewScreenContent() {
               justifyContent: 'center',
             }}
           >
-            <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+            <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
               {PHOTO_COPY.review.missingCapture}
             </Text>
           </Pressable>
@@ -277,9 +277,7 @@ function ReviewScreenContent() {
               justifyContent: 'center',
             }}
           >
-            <Text
-              style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: '#F4EFE7' }}
-            >
+            <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: '#F4EFE7' }}>
               {PHOTO_COPY.review.missingBack}
             </Text>
           </Pressable>
@@ -355,7 +353,7 @@ function ReviewScreenContent() {
           <Text
             style={{
               flex: 1,
-              fontFamily: 'HankenGrotesk_400Regular',
+              fontFamily: 'HankenGrotesk-Regular',
               fontSize: 14,
               color: 'rgba(244,239,231,0.85)',
               lineHeight: 20,
@@ -382,7 +380,7 @@ function ReviewScreenContent() {
           >
             <Text
               style={{
-                fontFamily: 'HankenGrotesk_600SemiBold',
+                fontFamily: 'HankenGrotesk-SemiBold',
                 fontSize: 13.5,
                 color: '#F4EFE7',
               }}
@@ -391,7 +389,7 @@ function ReviewScreenContent() {
             </Text>
             <Text
               style={{
-                fontFamily: 'HankenGrotesk_400Regular',
+                fontFamily: 'HankenGrotesk-Regular',
                 fontSize: 13,
                 lineHeight: 18,
                 color: 'rgba(244,239,231,0.78)',
@@ -430,9 +428,7 @@ function ReviewScreenContent() {
               opacity: add.isPending ? 0.6 : 1,
             }}
           >
-            <Text
-              style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: '#F4EFE7' }}
-            >
+            <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: '#F4EFE7' }}>
               {PHOTO_COPY.review.retake}
             </Text>
           </Pressable>
@@ -450,7 +446,7 @@ function ReviewScreenContent() {
               opacity: add.isPending ? 0.6 : 1,
             }}
           >
-            <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+            <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
               {PHOTO_COPY.review.save}
             </Text>
           </Pressable>

@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -12,6 +13,7 @@ import { AppState, Pressable, Text, View, type AppStateStatus } from 'react-nati
 import { BRAND } from '@/lib/brand';
 import { appLockUserMessage } from '@/lib/errors/userFacing';
 import { colors } from '@/theme/tokens';
+import { markStartupPhase } from '@/lib/observability/operationTiming';
 
 import {
   PHOTO_TIMELINE_PROMPT,
@@ -20,6 +22,7 @@ import {
   type AppLockAuthStatus,
 } from './authenticate';
 import { shouldLockForAppState, shouldShowPrivacyShieldForAppState } from './privacyState';
+import { runSingleFlight, type SingleFlightLease } from './singleFlight';
 import {
   clearMalformedAppLockPreference,
   getAppLockEnabled,
@@ -67,10 +70,10 @@ function LockOverlay({
         paddingHorizontal: 28,
       }}
     >
-      <Text style={{ fontFamily: 'InstrumentSerif_400Regular', fontSize: 40, color: colors.ink }}>
+      <Text style={{ fontFamily: 'InstrumentSerif-Regular', fontSize: 40, color: colors.ink }}>
         {BRAND.appName}
       </Text>
-      <Text style={{ fontFamily: 'HankenGrotesk_400Regular', fontSize: 15, color: colors.muted }}>
+      <Text style={{ fontFamily: 'HankenGrotesk-Regular', fontSize: 15, color: colors.muted }}>
         {repairRequired
           ? "The app-lock setting couldn't be read. Unlock this phone to reset only that setting."
           : 'Locked. Unlock to continue'}
@@ -90,7 +93,7 @@ function LockOverlay({
           <Text
             accessibilityRole="alert"
             style={{
-              fontFamily: 'HankenGrotesk_400Regular',
+              fontFamily: 'HankenGrotesk-Regular',
               fontSize: 14,
               lineHeight: 20,
               textAlign: 'center',
@@ -112,9 +115,7 @@ function LockOverlay({
           paddingVertical: 14,
         }}
       >
-        <Text
-          style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: colors.paper }}
-        >
+        <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: colors.paper }}>
           {repairRequired ? 'Unlock and reset app lock' : 'Unlock'}
         </Text>
       </Pressable>
@@ -141,7 +142,7 @@ function PrivacyShield() {
         justifyContent: 'center',
       }}
     >
-      <Text style={{ fontFamily: 'InstrumentSerif_400Regular', fontSize: 40, color: colors.ink }}>
+      <Text style={{ fontFamily: 'InstrumentSerif-Regular', fontSize: 40, color: colors.ink }}>
         {BRAND.appName}
       </Text>
     </View>
@@ -155,7 +156,13 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
   const [lockFeedback, setLockFeedback] = useState<string | null>(null);
   const [preferenceRepairRequired, setPreferenceRepairRequired] = useState(false);
   const [photoTimelineUnlocked, setPhotoTimelineUnlocked] = useState(false);
+
+  useEffect(() => {
+    if (loaded) markStartupPhase('app_lock_decision_complete');
+  }, [loaded]);
   const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
+  const appUnlockLease = useRef<SingleFlightLease<void>>({ current: null });
+  const photoTimelineUnlockLease = useRef<SingleFlightLease<AppLockAuthStatus>>({ current: null });
 
   useEffect(() => {
     let active = true;
@@ -191,8 +198,8 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
     return () => sub.remove();
   }, [enabled]);
 
-  const requestUnlock = useCallback(() => {
-    void (async () => {
+  const requestUnlock = useCallback((): Promise<void> => {
+    return runSingleFlight(appUnlockLease.current, async () => {
       const status = await authenticateAppLock(BRAND.appLockPrompt);
       if (status === 'success') {
         if (preferenceRepairRequired) {
@@ -210,24 +217,26 @@ export function AppLockProvider({ children }: { children: ReactNode }) {
       } else if (status === 'unavailable') {
         setLockFeedback(appLockUserMessage());
       }
-    })();
+    });
   }, [preferenceRepairRequired]);
 
   const authenticate = useCallback(() => {
     setLockFeedback(null);
-    requestUnlock();
+    void requestUnlock();
   }, [requestUnlock]);
 
   const unlockPhotoTimeline = useCallback(async (): Promise<AppLockAuthStatus> => {
-    const status = await authenticateAppLock(PHOTO_TIMELINE_PROMPT);
-    if (status === 'success') setPhotoTimelineUnlocked(true);
-    return status;
+    return runSingleFlight(photoTimelineUnlockLease.current, async () => {
+      const status = await authenticateAppLock(PHOTO_TIMELINE_PROMPT);
+      if (status === 'success') setPhotoTimelineUnlocked(true);
+      return status;
+    });
   }, []);
 
   // Auto-prompt whenever we are active and locked. Do not launch biometrics while
   // the OS is taking an app-switcher snapshot or the app is backgrounded.
   useEffect(() => {
-    if (locked && appState === 'active' && !preferenceRepairRequired) requestUnlock();
+    if (locked && appState === 'active' && !preferenceRepairRequired) void requestUnlock();
   }, [locked, appState, preferenceRepairRequired, requestUnlock]);
 
   const setEnabled = useCallback(async (v: boolean) => {

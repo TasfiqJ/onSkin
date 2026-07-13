@@ -1,5 +1,10 @@
 # Document 10: Creator Stacks + ShopMy — Build Specification & Strategic Validation
 
+> **2026-07-12 launch-scope update:** Creator links and production commerce are
+> required for the iOS all-features release. Older “later” or post-launch
+> sequencing is superseded by `docs/hugeToDo/launch-contract.json`; source,
+> consent, disclosure, ranking-isolation, privacy, and live-rail gates remain.
+
 ## TL;DR
 
 - **Build it, but as a tightly walled-off "where to buy" utility on OnSkin's own independent recommendations — NOT a creator marketplace.** Affiliate commerce is compatible with a trust-first brand only if it follows the Wirecutter "church and state" model: links are attached strictly _after_ ranking, never influence it, and are disclosed radically. ShopMy is the right primary rail.

@@ -13,10 +13,18 @@ import {
   warn,
   write,
 } from './lib.mjs';
+import {
+  isReleasePlatformRequired,
+  launchContractSnapshot,
+  loadLaunchContract,
+  platformRequirementStatus,
+} from '../launch/contract.mjs';
 
 const errors = [];
 const warnings = [];
 const env = envSnapshot();
+const launchContract = loadLaunchContract();
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const app = JSON.parse(read('apps/mobile/app.base.json')).expo;
 const eas = JSON.parse(read('apps/mobile/eas.json'));
 const artifacts = {};
@@ -69,12 +77,14 @@ block(
   'runtimeVersion must use the fingerprint policy for native-compatible OTA updates.',
 );
 block(errors, Boolean(app.ios?.bundleIdentifier), 'iOS bundle identifier is missing.');
-block(errors, Boolean(app.android?.package), 'Android package is missing.');
-block(
-  errors,
-  app.android?.allowBackup === false,
-  'Android Auto Backup must be disabled for local health-adjacent stores.',
-);
+if (androidReleaseRequired) {
+  block(errors, Boolean(app.android?.package), 'Android package is missing.');
+  block(
+    errors,
+    app.android?.allowBackup === false,
+    'Android Auto Backup must be disabled for local health-adjacent stores.',
+  );
+}
 block(
   errors,
   eas?.cli?.appVersionSource === 'local',
@@ -189,30 +199,34 @@ for (const variant of variants) {
     config.ios?.bundleIdentifier === expectedVariantValue(app.ios?.bundleIdentifier, variant),
     `Resolved ${variant} iOS bundle identifier is not isolated.`,
   );
-  block(
-    errors,
-    config.android?.package === expectedVariantValue(app.android?.package, variant),
-    `Resolved ${variant} Android package is not isolated.`,
-  );
-  block(
-    errors,
-    config.android?.allowBackup === false,
-    `Resolved ${variant} Android config must keep allowBackup=false.`,
-  );
+  if (androidReleaseRequired) {
+    block(
+      errors,
+      config.android?.package === expectedVariantValue(app.android?.package, variant),
+      `Resolved ${variant} Android package is not isolated.`,
+    );
+    block(
+      errors,
+      config.android?.allowBackup === false,
+      `Resolved ${variant} Android config must keep allowBackup=false.`,
+    );
+  }
 }
 
 const androidPermissions = new Set(app.android?.permissions ?? []);
-for (const permission of androidPermissions) {
-  block(
-    errors,
-    ['android.permission.CAMERA', 'android.permission.POST_NOTIFICATIONS'].includes(permission),
-    `Unexpected Android permission requires review: ${permission}.`,
-  );
+if (androidReleaseRequired) {
+  for (const permission of androidPermissions) {
+    block(
+      errors,
+      ['android.permission.CAMERA', 'android.permission.POST_NOTIFICATIONS'].includes(permission),
+      `Unexpected Android permission requires review: ${permission}.`,
+    );
+  }
 }
 
 for (const [key, label] of [
   ['PHASE9_IOS_ARTIFACT', 'iOS artifact'],
-  ['PHASE9_ANDROID_ARTIFACT', 'Android artifact'],
+  ...(androidReleaseRequired ? [['PHASE9_ANDROID_ARTIFACT', 'Android artifact']] : []),
 ]) {
   const path = env[key];
   if (path && exists(path)) artifacts[key] = { path, sha256: hash(path) };
@@ -224,21 +238,23 @@ warn(
   evidenceFlagEnabled(env.PHASE9_IOS_TESTFLIGHT_PASS),
   'Missing TestFlight evidence: PHASE9_IOS_TESTFLIGHT_PASS=true.',
 );
-warn(
-  warnings,
-  evidenceFlagEnabled(env.PHASE9_ANDROID_CLOSED_TEST_PASS),
-  'Missing Play internal/closed testing evidence: PHASE9_ANDROID_CLOSED_TEST_PASS=true.',
-);
-warn(
-  warnings,
-  evidenceFlagEnabled(env.PHASE9_ANDROID_TARGET_API_PASS),
-  'Missing Android target API proof from built artifact: PHASE9_ANDROID_TARGET_API_PASS=true.',
-);
-warn(
-  warnings,
-  evidenceFlagEnabled(env.PHASE9_ANDROID_16KB_PASS),
-  'Missing Android 16 KB page-size proof: PHASE9_ANDROID_16KB_PASS=true.',
-);
+if (androidReleaseRequired) {
+  warn(
+    warnings,
+    evidenceFlagEnabled(env.PHASE9_ANDROID_CLOSED_TEST_PASS),
+    'Missing Play internal/closed testing evidence: PHASE9_ANDROID_CLOSED_TEST_PASS=true.',
+  );
+  warn(
+    warnings,
+    evidenceFlagEnabled(env.PHASE9_ANDROID_TARGET_API_PASS),
+    'Missing Android target API proof from built artifact: PHASE9_ANDROID_TARGET_API_PASS=true.',
+  );
+  warn(
+    warnings,
+    evidenceFlagEnabled(env.PHASE9_ANDROID_16KB_PASS),
+    'Missing Android 16 KB page-size proof: PHASE9_ANDROID_16KB_PASS=true.',
+  );
+}
 warn(
   warnings,
   evidenceFlagEnabled(env.PHASE9_IOS_PRIVACY_REPORT_PASS),
@@ -249,17 +265,24 @@ warn(
   evidenceFlagEnabled(env.PHASE9_APP_STORE_PACKET_PASS),
   'Missing App Store review packet evidence: PHASE9_APP_STORE_PACKET_PASS=true.',
 );
-warn(
-  warnings,
-  evidenceFlagEnabled(env.PHASE9_PLAY_PACKET_PASS),
-  'Missing Google Play review packet evidence: PHASE9_PLAY_PACKET_PASS=true.',
-);
+if (androidReleaseRequired) {
+  warn(
+    warnings,
+    evidenceFlagEnabled(env.PHASE9_PLAY_PACKET_PASS),
+    'Missing Google Play review packet evidence: PHASE9_PLAY_PACKET_PASS=true.',
+  );
+}
 
 write(
   'docs/phase-9/generated/store-build-inspection.json',
   `${JSON.stringify(
     {
       generatedAt: new Date().toISOString(),
+      launchContract: launchContractSnapshot(launchContract),
+      platformStatus: {
+        ios: platformRequirementStatus('ios', launchContract),
+        android: platformRequirementStatus('android', launchContract),
+      },
       app: {
         name: app.name,
         slug: app.slug,

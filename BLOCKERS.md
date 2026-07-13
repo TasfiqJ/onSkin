@@ -1,11 +1,17 @@
-# Blockers - Founder Do-Not-Guess List
+# Blockers - iOS All-Features Launch Gates
 
-Date: 2026-07-11
+Date: 2026-07-12
 
 Everything here needs a founder decision, account, API key, payment method,
 legal/clinical signoff, production service, real-device verification, or beta
 proof. The app has substantial implemented surfaces, but it is not
 production-ready.
+
+The current release contract is iOS-only and requires every feature ID 1-20
+plus every Phase 7/8 surface. Older V1/post-launch and Android release language
+is superseded by `docs/hugeToDo/launch-contract.json`. A newly required feature
+keeps its honest current readiness label until implementation and evidence
+exist; it does not become ready through a scope or flag change.
 
 Read this with:
 
@@ -63,7 +69,7 @@ Read this with:
    clearance and production identity evidence are unresolved.
 2. Supabase project not live.
 3. RevenueCat not live.
-4. Apple/Google accounts and store records not verified.
+4. Apple Developer/App Store Connect and Google OAuth for iPhone are not verified.
 5. Clinical review not complete.
 6. Legal/privacy copy not final.
    Production config now fails closed on these Phase 3 blockers unless
@@ -77,8 +83,8 @@ Read this with:
 8. Native camera/barcode/photo capture, encrypted keychain/keystore behavior,
    and app-wide/photo-timeline biometric prompt ordering, deep-link coverage,
    background relock, encrypted Progress read-failure recovery, and screen-reader
-   focus are implemented or specified but not physical-device verified; native
-   OCR remains intentionally gated off.
+   focus are implemented or specified but not physical-device verified; required
+   native iOS OCR is not implemented.
 9. Native notification/device verification incomplete.
 10. Performance baseline and scale evidence are not measured on supported
     physical devices or beta telemetry.
@@ -106,7 +112,7 @@ mirrors are byte-identical and listed in the root source-of-truth docs.
 covers the Phase 2-11 Tas-owned launch evidence gate groups and writes the
 machine-extracted key inventory to `docs/generated/tas-todo-audit.{json,md}`.
 
-Fresh verification through 2026-07-11: `npm run typecheck`, `npm run lint`,
+Fresh verification through 2026-07-12: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,
 `npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`,
 `npm run phase5:verify`, `npm run phase7:verify`, `npm run brand:audit:strict`,
@@ -127,7 +133,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The mobile suite currently
-covers 196 mobile test files / 2094 tests. The human-simulated E2E manifest now
+covers 204 mobile test files / 2137 tests. The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
@@ -156,6 +162,16 @@ the fixed supported-floor scan layout. It does not clear staging deployment of
 the two Shelf migrations, owner/second-user RLS, reviewed region-matched catalog
 responses, native notification delivery, physical-device relaunch/accessibility,
 or named cosmetic-chemistry review; those remain in `docs/FOR_TAS_TO_DO.md`.
+The `Required-surface honest direct-entry and recovery pass` in
+`test-results/human-e2e/2026-07-12/required-surface-honesty-rerun/` proves the
+Widgets, Trend opt-in/fairness, and Community ask/aggregate routes retain exact
+direct entries, show no Trend or Community Ask inputs, avoid horizontal
+overflow and sub-44 px recovery controls, and recover through the expected
+Progress, Skin Notes, or free-fixture entitlement path. It validates truthful
+unavailable-beta behavior only; native widget/live-activity targets, validated
+Trend processing and consent, and production Community moderation, appeals,
+persistence, support, and reviewed aggregate data remain launch blockers under
+the iOS all-features contract.
 It also includes the `360 x 640 account-upgrade error and recovery pass` in
 `test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current/`.
 The required `360 x 640 account-transition isolation and cleanup recovery pass`
@@ -272,8 +288,8 @@ hits are deliberate guard rails, internal namespaces, fixtures, or historical
 context.
 
 This is not legal clearance, trademark clearance, domain registration, App
-Store name reservation, Google Play package reservation, or final production
-identity evidence. Production native config still fails closed unless
+Store name reservation, or final production identity evidence. Production
+native config still fails closed unless
 `BRAND_LEGAL_CLEARANCE=cleared` and explicit final identity env values are set.
 
 Risk:
@@ -282,11 +298,11 @@ Risk:
   a confusingly similar identity
 - users downloading or contacting the wrong app if public surfaces are created
   before final reservation
-- App Store / Play review confusion if bundle/package/name records are created
+- App Store review confusion if bundle/name records are created
   under an uncleared identity
 - paid-search and ASO conflict
 - support/domain/policy URL confusion
-- rework if Apple, Google, RevenueCat, Supabase, policy URLs, or beta users are
+- rework if Apple, Google OAuth, RevenueCat, Supabase, policy URLs, or beta users are
   created under a candidate that later changes
 
 Next action:
@@ -294,7 +310,7 @@ Next action:
 - Give counsel `docs/brand-evidence.md`.
 - Ask counsel to clear or reject `RoutineKind` as the final app identity; do not
   revert to `OnSkin` unless counsel explicitly clears it.
-- Run registrar, App Store Connect, Google Play Console, social-handle, paid
+- Run registrar, App Store Connect, social-handle, paid
   search, and common-law checks for the final candidate.
 - Use `docs/brand-decision-memo.md` to record the final identity decision.
 
@@ -302,7 +318,7 @@ Exit criteria:
 
 - written counsel recommendation exists;
 - founder decision is recorded;
-- final app name, domain, bundle ID, Android package, scheme, support URL, and
+- final app name, domain, bundle ID, scheme, support URL, and
   policy URLs are chosen;
 - store-console and domain reservation evidence is attached;
 - code/copy/share-card/policy/env references match the final identity and
@@ -365,23 +381,23 @@ Exit criteria:
 - subscription metadata and policy links are accurate;
 - app identity matches brand memo.
 
-## B-GOOGLE - Google Sign-In and Play Console
+## B-GOOGLE - Google Sign-In For iPhone
 
 Status: `stubbed`
 
-Play package and OAuth records should be created only under the counsel-cleared
-final identity. Do not use legacy `com.onskin.app` identifiers.
+Google OAuth records should be created only under the counsel-cleared final
+identity. Google Play release work is not part of this contract.
 
 Next action:
 
-- create Play Console app under cleared package ID;
-- configure OAuth client IDs and Android SHA fingerprints;
+- create/configure the Google Cloud OAuth project and iOS client ID;
+- configure the reversed client ID and authorized Supabase callback values;
 - verify Google sign-in, account linking, deletion, and restore behavior.
 
 Exit criteria:
 
-- internal test build installs;
-- Google sign-in works without `DEVELOPER_ERROR`;
+- signed iPhone build installs;
+- Google sign-in works on the supported physical-iPhone matrix;
 - account deletion/revocation behavior is verified.
 
 ## B-VERIFY-AUTH-LINKING - Live Same-User Account Upgrade Proof
@@ -816,15 +832,15 @@ implemented, and none of these paths is device-certified yet.
 Exit criteria:
 
 - custom dev build exists;
-- camera permission, barcode, OCR, and progress photo capture work on real iOS
-  and Android devices;
+- camera permission, barcode, OCR, and progress photo capture work on supported
+  physical iPhones;
 - post-capture one/no/multiple-face, pose/alignment, luminance, uneven-light,
   timeout, and unavailable states pass a calibrated physical-device matrix;
 - launch copy describes the current post-capture check, not real-time guidance
   or auto-capture;
 - photo files are encrypted/local by default;
 - no faceprint/template is stored;
-- V1 exposes no cloud-backup control or automatic photo-metadata/image upload;
+- the release exposes no cloud-backup control or automatic photo-metadata/image upload;
 - optional cloud backup remains excluded unless encrypted upload, retry,
   cross-device restore, object/metadata deletion, unbundled reviewed consent,
   network inspection, and physical-device QA ship together.
@@ -839,32 +855,32 @@ Exit criteria:
 
 - iOS latest and an oldest-supported iOS 17-class device pass per
   `docs/DEVICE_SUPPORT_POLICY.md`;
-- Android latest, Android 10 / API 29+ floor, and Android 14+ alarm behavior
-  pass per `docs/DEVICE_SUPPORT_POLICY.md`;
 - timezone changes, quiet hours, reinstall, and lock-screen privacy pass;
 - notification config plugin assets are included in native build.
 
 ## B-WIDGETS - Native widgets and live activities
 
-Status: `inert`
+Status: `launch-blocked`
 
-In-app previews exist. Native WidgetKit, Android widgets, and live activities are
-not V1-critical.
+In-app previews exist. Required WidgetKit and ActivityKit targets do not.
 
 Exit criteria:
 
-- either remove from launch claims, or implement and verify on devices.
+- implement WidgetKit and ActivityKit targets, App Group data sharing,
+  timelines/lifecycle, privacy redaction, deep links, and failure behavior;
+- pass the supported physical-iPhone matrix.
 
 ## B-ROUTINE-PERSIST - Server routine/cycle persistence
 
 Status: `stubbed`
 
 Local-first routine generation exists. Server authority and multi-device sync are
-not V1-critical unless the product claims cross-device persistence.
+not required unless the product claims cross-device persistence; this does not
+remove durable current-device behavior from the all-features release.
 
 Current implementation note:
 
-- V1 routine, cycle, ramp, and completion surfaces are intentionally
+- Release routine, cycle, ramp, and completion surfaces are intentionally
   local-first. Morning/evening application-order overrides now persist in the
   encrypted current-owner store by stable shelf-product ID, survive relaunch and
   deterministic recompute, participate in account cleanup/export, and remain
@@ -883,7 +899,7 @@ Current implementation note:
 
 Exit criteria:
 
-- either V1 copy clearly states local-first behavior, or server persistence is
+- either release copy clearly states local-first behavior, or server persistence is
   implemented and tested.
 
 ## B-DRAG-DND - Full routine drag/drop
@@ -911,20 +927,18 @@ Exit criteria:
 
 Status: `inert`
 
-Commerce can be a supplement, not the V1 proof. It must not influence rankings.
+Commerce is launch-required but must remain subordinate to the trust/core loop
+and must never influence rankings.
 
-Exit criteria if commerce launches:
+Exit criteria:
 
 - rail selected and working;
 - data-sharing consent finalized;
 - FTC "paid link" style disclosure reviewed;
 - attribution/order-report pipeline works;
-- ranking remains independent from commission.
-
-Exit criteria if commerce is post-launch:
-
-- commerce surfaces remain hidden or clearly preview-only;
-- revenue claims are removed from launch materials.
+- ranking remains independent from commission;
+- live link validation, broken-link monitoring, order reconciliation, support,
+  opt-out, and physical-iPhone handoff evidence pass.
 
 ## B-COMMUNITY-MOD - Human moderation and store floor
 
@@ -936,7 +950,7 @@ Exit criteria:
 
 - report, block, contact, EULA, content filter, human pre-moderation, and
   response SLA are staffed and tested;
-- Apple/Google UGC requirements are satisfied;
+- Apple UGC requirements are satisfied;
 - health/medical claim moderation is reviewed.
 
 ## B-EXPERT-NETWORK - Reviewed expert content
@@ -1000,30 +1014,32 @@ Exit criteria:
 
 Status: `launch-blocked`
 
-The seven-figure thesis is conditional until real users prove the V1 loop.
+The seven-figure thesis is conditional until real users prove the core loop and
+the complete iOS feature set.
 
 Exit criteria:
 
 - 50-100 real users complete beta;
 - onboarding completion, product add rate, first useful insight, routine
-  generation, Today check-off, baseline photo, reminders, trial starts,
-  trial-to-paid, cancel/refund reasons, catalog miss rate, and support tickets
-  are measured;
+  generation, Today check-off, baseline photo, reminders, payments, cloud Ask,
+  commerce, community/moderation, trends, widgets/Live Activities, links,
+  sharing, trial-to-paid, cancel/refund reasons, catalog miss rate, and support
+  tickets are measured;
 - no launch-blocking privacy, clinical, legal, payment, catalog, or trust issue
   remains.
 
-## B-NATIVE-DEVICE-QA - Physical iOS/Android verification
+## B-NATIVE-DEVICE-QA - Physical iPhone verification
 
 Status: `needs-device-verification`
 
 Phase 5 native code exists in repo, but no public or paid beta claim can rely on
-it until installable iOS and Android builds pass the physical-device matrix.
+it until an installable iOS build passes the physical-device matrix.
 
 Exit criteria:
 
-- EAS development and staging iOS/Android builds have recorded build IDs;
-- at least one physical iPhone and one physical Android device install and run
-  the app;
+- EAS development and staging iOS builds have recorded build IDs;
+- supported physical iPhones install and run the app across the declared iOS
+  floor/current-device matrix;
 - barcode, label capture, progress photo, encrypted save/restart/delete,
   notifications, share sheet, RevenueCat native smoke, Sentry native smoke, and
   Supabase catalog calls pass;
@@ -1040,8 +1056,7 @@ It does not claim native OCR while `EXPO_PUBLIC_NATIVE_OCR_ENABLED=false`.
 Exit criteria:
 
 - reviewed ML Kit or Apple Vision text-recognition module is selected;
-- iOS and Android native builds include the module without missing-native-module
-  errors;
+- the iOS native build includes the module without missing-native-module errors;
 - clear, curved, tiny, multilingual, and glare-heavy INCI labels pass beta QA;
 - low-confidence words and user corrections remain visible;
 - launch copy is updated only after device QA passes.
@@ -1071,9 +1086,11 @@ Exit criteria:
   quality/pose metadata without `post_capture_measurement` source;
 - legal/privacy review approves any persisted coarse quality metadata.
 
-## Practical V1 Rule
+## Practical Release Rule
 
-Build and launch only the V1 loop in `docs/v1-scope-freeze.md` until beta data
-shows it works. Defer commerce, peer community, cloud Ask, widgets, advanced
-trend analysis, and referral mechanics unless they directly clear a V1 launch
-gate.
+Build and launch every feature in `docs/FEATURE_INDEX.md` and every required
+surface in `docs/hugeToDo/launch-contract.json`. Prioritize the core value loop
+and dependency chain, but do not hide, defer, simulate, or relabel an incomplete
+required feature to satisfy launch. Keep it launch-blocked, complete the next
+safe task, and retain the exact external dependency where a real person,
+professional, vendor, physical iPhone, beta cohort, or Apple controls the gate.

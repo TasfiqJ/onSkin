@@ -90,6 +90,22 @@ const cases = [
     },
   },
   {
+    name: 'Phase 9 marks Android and Play release evidence not applicable',
+    result: run({ EXPO_PUBLIC_PLAY_STORE_URL: '' }),
+    expect(result) {
+      const text = output(result);
+      return (
+        result.status === 0 &&
+        text.includes(
+          'Android build, Play testing, Play packet, and Play Store URL evidence: excluded by launch contract.',
+        ) &&
+        !text.includes('EXPO_PUBLIC_PLAY_STORE_URL') &&
+        !text.includes('PHASE9_ANDROID_CLOSED_TEST_PASS') &&
+        !text.includes('PHASE9_PLAY_PACKET_PASS')
+      );
+    },
+  },
+  {
     name: 'Phase 9 rejects credential-bearing final policy URLs',
     result: run({ EXPO_PUBLIC_PRIVACY_URL: 'https://user:pass@routinekind.app/privacy' }),
     expect(result) {

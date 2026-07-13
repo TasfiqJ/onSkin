@@ -473,6 +473,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Current local evidence: 2026-07-07 Codex in-app browser Expo web at 320 x 568 adds `Retinol 0.3% Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` through `/onboarding/products`, opens `/routine/plan`, and verifies `BUILT FROM YOUR SHELF`, `Timing handled`, Morning `Mineral SPF 50`, Night 1 `Glycolic 7%`, and Night 2 `Retinol 0.3% Night Serum`. `Start today` opens Today PM on the Glycolic check-off and tapping it reaches `1 of 1` with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-07/routine-front-label-products-current/`.
   - Current 320 x 430 evidence: 2026-07-08 Codex in-app browser Expo web covers the same first-session path from a reset install state. The plan places `Mineral SPF 50` in Morning, `Glycolic 7%` on Night 1, and `Retinol 0.3% Night Serum` on Night 2; `Start today` opens the current morning routine and completes `Mineral SPF 50` at `1 of 1`, and direct `/today?routine=PM` shows Night 1 `Glycolic 7% Toner` and completes at `1 of 1`. Evidence is in `test-results/human-e2e/2026-07-08/onboarding-first-session-430-current/`.
   - Current maintained 320 x 430 evidence: 2026-07-09 headless Chrome Expo web promotes this path into the maintained `npm run e2e:onboarding-first-session` harness. From reset onboarding it adds `Retinol 0.3% serum`, `Glycolic 7% toner`, and `Mineral SPF 50`, chooses `Explore first`, verifies the routine plan includes the first insight plus SPF/glycolic/retinol placement, taps `Start today`, forces AM and PM dev routine states, and completes both Today check-offs to `1 of 1`. Evidence is in `test-results/human-e2e/2026-07-09/onboarding-first-session-430-current/`.
+  - Current 390 x 844 exact-flow evidence: 2026-07-12/13 headless Chrome Expo web reproduced a semantic-radio driver failure, a hidden navigation-stack input selection, and loss of goals/quiz state when the required `/shelf/opened` detour unmounted the route-local onboarding provider. Post-fix, the maintained first-session harness resets local state, completes consent and all 12 quiz questions, adds three named products with explicit opened-date provenance, renders the shelf-derived `Timing handled` insight, uses Explore first, verifies the generated routine plan, and completes both AM and PM check-offs to `1 of 1`. All recorded checkpoints have zero horizontal overflow and no disallowed browser warnings/errors. Evidence and report are in `test-results/human-e2e/2026-07-12/backlog-current-smoke/onboarding-first-session-390x844/` and `docs/e2e-bug-reports/2026-07-12-onboarding-opened-date-radio-driver.md`; native iPhone QA remains open.
   - Current analytics evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 adds `Retinol 0.3% Night Serum`, `Glycolic 7% Toner`, and `Mineral SPF 50` through manual Shelf UI, generates the routine plan, opens direct `/today?routine=PM`, and completes Night 1 `Glycolic 7% Toner` from `0 of 1` to `1 of 1` with the checkbox marked true and zero horizontal overflow. Unit and phase gates verify this final PM cycle-night check-off emits the privacy-safe `cycle_night_completed` payload without product, slot, skin, or goal details. Evidence is in `test-results/human-e2e/2026-07-08/today-cycle-completion-analytics-current/`.
 - Branch: sparse shelf without night actives
   - Priority: Critical
@@ -784,6 +785,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
+- Branch: sensitive image cache and lifecycle boundary
+  - Priority: Critical
+  - Automate later: Yes, with a native filesystem/memory harness after the native E2E decision.
+  - Action: Open populated Progress, show encrypted photos in Compare and Timeline, background/foreground, lock/unlock, delete a visible photo, and cross an account boundary. Relaunch and inspect the application cache/temp directories on a supported physical device.
+  - Expected result: Private `PhotoImage` sources use no Expo Image disk or memory cache and no crossfade. Mounted views drop resolved data URIs on inactive/background, memory warning, app lock, photo-timeline lock, and account isolation; unlocked foreground views decrypt again without showing the previous owner or deleted photo. No recoverable plaintext remains in Expo Image, SDWebImage, Coil, application cache, or temporary directories after relaunch. Functional web/simulator evidence may prove visibility and relock behavior, but only physical-device filesystem and memory inspection can close the native privacy gate.
+  - Evidence: Before/background/locked/resumed screenshots or video, lifecycle logs containing only fixed event enums, native filesystem inventory, memory trace, and account-boundary/delete sequence.
+
 - Branch: camera/photo permission denied
   - Priority: Critical
   - Automate later: Yes
@@ -908,59 +916,52 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ## Flow: Photo Trend Insights
 
-- Goal: A user can review or opt into on-device "changes in your own photos" without score-like claims, silent enrollment, or direct-entry dead ends.
-- Persona: Progress user deciding whether to enable optional photo trend narration.
-- Entry state: User has completed onboarding; photo trend feature flag may be enabled or deferred.
+- Goal: A user cannot be asked to consent to or enable photo-trend processing while no validated Trend engine ships in the app.
+- Persona: Progress user who follows a stale or direct Trend link.
+- Entry state: User has completed onboarding; the Trend engine capability is hard-disabled regardless of environment flags.
 - Start screen/URL/window: Progress tab, You privacy row, direct `/trend/optin`, direct `/trend/fairness`, or deferred Trend routes.
-- Success state: Trend remains off by default, copy stays claim-safe and fairness-aware, and direct-entry exits recover to the photo-progress parent flow.
+- Success state: Every Trend direct entry shows explicit unavailable copy, offers no consent control, and returns safely to Progress.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native photo/toggle confirmation.
 - Evidence folder: `test-results/human-e2e/YYYY-MM-DD/trend-routes/`
 - Current local evidence: `test-results/human-e2e/2026-07-07/trend-routes-current/`
 
-### Path A: Optional Opt-In
+### Path A: Launch-Blocked Direct Entry
 
-1. Action: Open `/trend/optin`, read the consent framing, toggle the setting on and off, open the fairness explainer, then return.
-   Expected result: Consent is separate and revocable, the feature is off by default, no photo is uploaded, the opt-in switch remains a 44 pt phone target, and fairness copy avoids score or diagnostic language.
-   Evidence: Screenshot sequence and local trend-consent state. Current local evidence: 2026-07-07 Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true` and `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only` shows the opt-in switch starts off, toggles on, toggles off, exposes a reachable 48 px fairness-link row after scroll, opens `/trend/fairness`, and returns to `/trend/optin` with zero horizontal overflow and no browser errors.
+1. Action: Open `/trend/optin` and `/trend/fairness` directly, including a build with `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`.
+   Expected result: Both routes remain deferred, show no toggle or `photo_trend_insights` consent request, and expose a `Back to Progress` action.
+   Evidence: Screenshot sequence, visible-text snapshot, and confirmation that no consent ledger mutation occurs. The former enabled Trend evidence is historical and does not describe the current launch contract.
 
 ### Branches
 
 - Branch: direct-entry Trend exits
   - Priority: Important
   - Automate later: Yes
-  - Action: Open `/trend/optin` and `/trend/fairness` directly, then use the visible Back control. Repeat while the Trend feature flag is deferred.
-  - Expected result: Direct opt-in and deferred Trend routes return to the Progress tab; the nested fairness explainer returns to `/trend/optin` instead of a no-history dead end. Visible Back controls meet the 44 pt phone touch target.
+  - Action: Open `/trend/optin` and `/trend/fairness` directly, then use the visible recovery action.
+  - Expected result: Both deferred routes return to the Progress tab without exposing an opt-in, consent save, score, or engine claim. The recovery action meets the 44 pt phone touch target.
   - Evidence: Screenshot sequence and visible route snapshot.
-  - Current local evidence: 2026-07-07 Expo web at 320 x 568 verifies default-gated `/trend/optin` and `/trend/fairness` render the deferred Trend surface with `Back to Progress`, and both return to `/progress`. With Trend enabled, direct `/trend/fairness` returns to `/trend/optin`, direct `/trend/optin` returns to `/progress`, and Back controls are 48 px.
+  - Current local evidence: 2026-07-12 Codex in-app browser Expo web at the 375 x 667 launch floor reproduced `/trend/optin` being canonicalized to `/trend/fairness` by the layout-level fallback. After moving the hard capability gate into each child, direct `/trend/optin` and `/trend/fairness` preserve their exact URLs, render zero inputs or switches, expose 55.99 px `Back to Progress` controls, have zero horizontal overflow, and recover to `/progress`. Evidence and the bug report are in `test-results/human-e2e/2026-07-12/required-surface-honesty-rerun/` and `docs/e2e-bug-reports/2026-07-12-trend-direct-route-layout-redirect.md`.
 - Branch: installed-base reconsent
   - Priority: Critical
   - Automate later: Yes
-  - Action: Simulate a returning user with photo history but no `photo_trend_insights` consent.
-  - Expected result: Trend insight stays hidden until the user explicitly opts in; no previous photo user is silently enrolled.
+  - Action: Simulate a returning user with photo history and any legacy Trend consent state.
+  - Expected result: Trend insight stays hidden, no consent is requested or refreshed, and no previous photo user is silently enrolled into an unavailable engine.
   - Evidence: Screenshot and local consent state.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`, `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated`, and `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only` verifies a clean-origin returning Progress photo user shows `12 weeks · 3 photos · all on this phone` while the Trend insight stays hidden. The preserved no-score refusal surface exposes the optional, on-device, off-by-default opt-in link, `/trend/optin` starts with `Read my progress` off plus separate/revocable consent copy, one explicit toggle changes the switch to `aria-checked=true` without failure copy, and reopening Progress renders the on-device Trend card. The scoped Trend output has no score, grade, skin age, or percentage; visible controls remain 48 px+ and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/installed-base-trend-reconsent-current/`. Source tests now make a configured ledger with legacy `photo_capture` but no `photo_trend_insights` fail closed, so old photo users are not silently enrolled.
-- Branch: consent save or withdrawal failure
+  - Historical superseded evidence: The 2026-07-08 local enabled-fixture run in `test-results/human-e2e/2026-07-08/installed-base-trend-reconsent-current/` exercised an experimental on-device Trend card. It is not evidence for the current launch contract. The current capability is hard-disabled, legacy photo users are not silently enrolled, and 2026-07-12 evidence above proves direct entries expose no Trend consent control.
+- Branch: environment flag accidentally enabled
   - Priority: Critical
   - Automate later: Yes
-  - Action: In a dev build started with `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`, `EXPO_PUBLIC_E2E_TREND_CONSENT_FAILURE=grant_once,revoke_once`, and `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only`, open `/trend/optin`, toggle the opt-in on, retry the grant, toggle it off, then retry the withdrawal.
-  - Expected result: The switch is disabled while saving, keeps a usable 44 pt touch target, failed grant/revoke attempts show stable "choice not saved" copy with a persistent alert region, the compact failure state does not expose clipped secondary controls, the visible consent state refreshes after each attempt, no raw backend/provider error appears, and successful retries clear the failure state.
-  - Evidence: Failure/success screenshots, `role="alert"` copy, switch geometry, visible route state after each retry, and browser warn/error logs.
-  - Current local evidence: 2026-07-08 In-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`, `EXPO_PUBLIC_E2E_TREND_CONSENT_FAILURE=grant_once,revoke_once`, and `EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER=local_only` verifies direct `/trend/optin` starts with the switch off, failed grant renders persistent `Choice not saved` copy in a route-owned alert region with no JavaScript/native dialog, retry turns the switch on and clears the alert, failed withdrawal leaves the switch visibly on with the same inline alert and no dialog, retry turns the switch off and clears the alert, the switch remains 52 x 48, compact secondary links are hidden only while failure copy is visible, horizontal overflow is zero, and no raw backend/provider error appears. Evidence is in `test-results/human-e2e/2026-07-08/trend-consent-failure-inline-feedback/`.
-- Branch: fairness floor copy
-  - Priority: Critical
-  - Automate later: Yes
-  - Action: Open the fairness explainer across light, unknown, and darker Monk tone fixtures.
-  - Expected result: The threshold framing is equal-or-higher for darker tones, redness is not treated as the metric, and no "works for everyone" claim appears.
-  - Evidence: Screenshot or visible-text snapshot.
+  - Action: Start a dev build with `EXPO_PUBLIC_PHASE7_TREND_ENABLED=true`, then open `/trend/optin` and `/trend/fairness`.
+  - Expected result: The frozen missing-engine capability wins over the environment flag; both routes stay deferred and no Trend consent control mounts.
+  - Evidence: Screenshot sequence plus Phase 7 launch-flag and route-contract tests.
 
 ## Flow: Pro Feature Gating
 
 - Goal: A free user cannot reach Pro-only surfaces by direct navigation, while a Pro or reverse-trial user can.
 - Persona: Free user evaluating the app, and reverse-trial/Pro user with local entitlement.
 - Entry state: Fresh free app state for locked checks; Pro entitlement state for unlocked checks.
-- Start screen/URL/window: Direct routes for Pro surfaces such as `/cycle/week`, nested `/cycle/*`, `/routine/widgets`, and `/progress/*`.
+- Start screen/URL/window: Direct routes for Pro surfaces such as `/cycle/week`, nested `/cycle/*`, routine-builder routes, and `/progress/*`. `/routine/widgets` is a separate launch-blocked recovery route and must not be paywalled.
 - Success state: Free users see a contextual paywall or safe fallback with no premium content flash; Pro users reach the intended feature surface.
 - Priority: Critical
 - Automate later: Yes
@@ -972,7 +973,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 1. Action: Open each Pro-only route directly as a fresh free user.
    Expected result: The app renders the matching contextual paywall or safe fallback, not the premium screen.
-   Evidence: 2026-07-07 fresh Chrome context at 320 x 568 verified direct `/routine/widgets`, `/cycle/settings`, and `/routine/plan` render the correct contextual paywalls in free state, with no premium content, zero horizontal overflow, no browser errors, and visible 48 px+ controls.
+   Evidence: 2026-07-07 fresh Chrome context at 320 x 568 verified `/cycle/settings` and `/routine/plan` render the correct contextual paywalls in free state, with no premium content, zero horizontal overflow, no browser errors, and visible 48 px+ controls. Its widgets-paywall observation is superseded by the current launch-honesty contract.
 
 ### Branches
 
@@ -998,19 +999,19 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Save writes separate stable product-ID orders before leaving; Cancel does not write; Morning and Evening choices survive reopening, reload, and deterministic recompute; a new product enters at a deterministic canonical neighbour without erasing existing relative order; duplicate names do not collide; Today uses the saved order after the canonical scheduler selects tonight's active. A failed save stays on the editor, keeps the previous routine active, exposes one inline alert and a retry, and emits no successful-edit analytics. Safety/cadence exclusions and cycle-night assignments are never changed by application order. The encrypted record is included in current-device export and removed by account cleanup.
   - Evidence folder: `test-results/human-e2e/2026-07-10/routine-order-persistence-current/`
   - Current local evidence: 2026-07-10 Codex in-app browser Expo web at 360 x 640 and 390 x 844 adds a real cleanser, toner, moisturiser, retinol, and later face oil through Shelf; saves distinct Morning/Evening orders; verifies reopen, reload, Cancel, Today, and new-product recompute; forces one inline save failure and succeeds on retry; and keeps the cautious safety-excluded retinol out of the plan. The pass found and fixed 43.99 px Plan actions, retinoid-specific cleanser copy without a scheduled retinoid, and missing `aria-selected` phase state. Final Plan/editor/Today geometry reports zero horizontal overflow, clipped controls, or sub-44 visible controls, with no JavaScript dialog or unexpected browser errors. Native encrypted-storage relaunch and VoiceOver/TalkBack remain Phase 5 device work.
-- Branch: reminders, streaks, and widgets routes
+- Branch: reminders and streak routes
   - Priority: Critical
   - Automate later: Yes
-  - Action: Open `/routine/streak`, `/routine/welcome-back`, and `/routine/widgets` directly.
-  - Expected result: Free users see the reminders/widgets contextual paywall, not the streak or widget surface.
-  - Evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 verified fresh free direct `/routine/streak`, `/routine/welcome-back`, and `/routine/widgets` all render the `Reminders, streaks & home-screen widgets.` contextual paywall, expose no streak, welcome-back, or widget surface content before entitlement, keep visible controls 48 px+, keep horizontal overflow at zero, and open no JavaScript dialog. From the same paywall, `Explore first. 7 days of Pro` starts the local no-card reverse trial; direct `/routine/widgets` reaches the deferred widget surface with `Back to Today`, `/routine/streak` renders `Showing up beats being perfect.`, and `/routine/welcome-back` renders `Welcome back.` with the `Tonight's step` CTA. Evidence is in `test-results/human-e2e/2026-07-08/reminders-streak-welcome-current/`.
-  - Current 320 x 480 contextual ProGate follow-up: 2026-07-08 bundled Playwright Chrome Expo web verifies direct `/routine/streak` and `/routine/widgets` keep Terms, Privacy, Restore, Maybe later, Start free trial, and Explore first reachable in the compact header/body layout, with zero target issues, zero visible-control issues, zero horizontal overflow, zero dialogs, and no unexpected browser logs. Evidence is in `test-results/human-e2e/2026-07-08/progate-short-phone-480-compliance/`.
-- Branch: native-widget preview check-off
-  - Priority: Important
+  - Action: Open `/routine/streak` and `/routine/welcome-back` directly.
+  - Expected result: Free users see the reminders contextual paywall, not streak or welcome-back content. Paywall copy promises only the implemented reminder and forgiving-streak value.
+  - Evidence: 2026-07-08 evidence for streak and welcome-back remains relevant. Any widgets/paywall claims in that historical evidence are superseded.
+- Branch: unavailable native widgets direct route
+  - Priority: Critical
   - Automate later: Yes
-  - Action: With Pro entitlement and `EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED=true`, open `/routine/widgets`, tap the in-app one-tap check-off preview rows, and inspect the count and recovery copy.
-  - Expected result: Preview rows that look tappable are real 44 pt controls, update the in-app widget preview count, expose checkbox state to assistive tech, and show honest inline feedback that home-screen check-off still requires the native widget build. No row should render a fake `TAP` label or inert checklist affordance.
-  - Evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro` and `EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED=true` verifies `/routine/widgets` preview rows are 48 px `role="checkbox"` controls, expose checked state after tapping, advance the count from `2 of 4` to `4 of 4`, show inline native-widget-build feedback, open no JavaScript dialog, keep horizontal overflow at 320 px, record zero current-route unexpected browser logs, and have zero visible controls below 44 px. Evidence and report are in `test-results/human-e2e/2026-07-08/widgets-preview-checkoff-current/`; bug report is `docs/e2e-bug-reports/2026-07-08-widgets-preview-inert-checkoff.md`.
+  - Action: As free, reverse-trial, and Pro users, open `/routine/widgets` directly with `EXPO_PUBLIC_PHASE7_WIDGETS_ENABLED` both false and true, then activate `Back to Today`.
+  - Expected result: Every state bypasses the Pro paywall and shows the same explicit unavailable surface. No native-widget preview, Live Activity control, fake check-off, or purchase solicitation appears; the recovery action returns to Today.
+  - Evidence: Screenshot sequence, visible-text/control snapshot, navigation result, and Phase 7/9 route/paywall regression checks. The 2026-07-08 interactive preview evidence is historical and intentionally superseded.
+  - Current local evidence: 2026-07-12 Codex in-app browser Expo web at the 375 x 667 launch floor verifies direct `/routine/widgets` preserves its route, bypasses the widget upsell, states that no native widget or Live Activity target ships in the current build, offers no preview or OS control, has zero horizontal overflow, and exposes a 55.99 px `Back to Today` recovery control. The free fixture reaches the normal entitlement re-offer after targeting Today. Evidence is in `test-results/human-e2e/2026-07-12/required-surface-honesty-rerun/`; native iPhone widget implementation and device evidence remain launch blockers under the all-features contract.
 - Branch: conflict check quota and direct routes
   - Priority: Critical
   - Automate later: Yes
@@ -1049,7 +1050,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Automate later: Yes
   - Action: Open the same routes with an active Pro or reverse-trial entitlement.
   - Expected result: The intended Pro surface renders and remains usable.
-  - Evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 verifies local reverse-trial entitlement unlocks `/cycle/settings`, `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`, `/cycle/phased-intro`, `/cycle/procedure`, `/routine/reorder`, `/routine/ramp`, `/routine/tolerance`, `/routine/adaptation`, `/routine/streak`, `/routine/welcome-back`, and `/routine/widgets`: scheduler routes render their intended nested surfaces instead of the scheduler paywall, full-routine routes render their intended Pro surfaces, streak shows the calm adherence surface, welcome-back shows the earn-back surface with `Tonight's step`, and widgets show the deferred native-widget surface with `Back to Today` instead of the paywall. Earlier 2026-07-07 evidence also verifies local reverse-trial entitlement unlocks `/routine/plan`.
+  - Evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 verifies local reverse-trial entitlement unlocks `/cycle/settings`, `/cycle/disruption`, `/cycle/recovery`, `/cycle/why-tonight`, `/cycle/phased-intro`, `/cycle/procedure`, `/routine/reorder`, `/routine/ramp`, `/routine/tolerance`, `/routine/adaptation`, `/routine/streak`, and `/routine/welcome-back`: scheduler routes render their intended nested surfaces instead of the scheduler paywall, full-routine routes render their intended Pro surfaces, streak shows the calm adherence surface, and welcome-back shows the earn-back surface with `Tonight's step`. Widgets are no longer an entitlement-controlled surface; they stay deferred for every account state. Earlier 2026-07-07 evidence also verifies local reverse-trial entitlement unlocks `/routine/plan`.
 - Branch: unreviewed cycle-cadence production gate
   - Priority: Critical
   - Automate later: Yes
@@ -1077,7 +1078,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Important
   - Automate later: Yes
   - Action: With an active Pro or reverse-trial entitlement, open scheduler and routine routes such as `/cycle/week`, `/cycle/why-tonight`, `/routine/reorder`, `/routine/tolerance`, and `/routine/widgets` directly, then use the visible Back, Done, Got it, Skip, Dismiss, Not yet, or sheet backdrop Dismiss control.
-  - Expected result: The user returns to the Today tab instead of being trapped on a direct-entry Pro surface or modal sheet with no navigation history. Deferred widget routes use a destination-specific `Back to Today` CTA instead of generic Back copy. Visible Pro route exits and the Widgets Live Activity opt-in switch meet the 44 pt phone touch target, empty Pro states still expose an exit, `/routine/welcome-back` keeps its primary action fully visible with a rendered bottom buffer on short phones, projected cycle-night rows open the selected night's explainability sheet instead of an inert haptic-only button, projected row labels and settings active-night labels use wrapped, user-facing cycle-night copy such as `Night 1`, `Night 2`, and `Nights 3-4` instead of terse or impossible row numbers such as `N0`, `N5`, or `N3-4`, repeated retinoid or repeated exfoliant-slot nights are separated by recovery instead of appearing back-to-back, cycle safety/fallback notes render as readable text instead of inert buttons, phased-introduction cycle notes are the only tappable note CTA and meet the 44 pt phone touch target, and modal Pro sheets remain scrollable on short phones.
+  - Expected result: The user returns to the Today tab instead of being trapped on a direct-entry Pro surface or modal sheet with no navigation history. Deferred widget routes use a destination-specific `Back to Today` CTA instead of generic Back copy. Visible Pro route exits and the Widgets recovery action meet the 44 pt phone touch target, empty Pro states still expose an exit, `/routine/welcome-back` keeps its primary action fully visible with a rendered bottom buffer on short phones, projected cycle-night rows open the selected night's explainability sheet instead of an inert haptic-only button, projected row labels and settings active-night labels use wrapped, user-facing cycle-night copy such as `Night 1`, `Night 2`, and `Nights 3-4` instead of terse or impossible row numbers such as `N0`, `N5`, or `N3-4`, repeated retinoid or repeated exfoliant-slot nights are separated by recovery instead of appearing back-to-back, cycle safety/fallback notes render as readable text instead of inert buttons, phased-introduction cycle notes are the only tappable note CTA and meet the 44 pt phone touch target, and modal Pro sheets remain scrollable on short phones.
   - Evidence: Screenshot sequence, visible route snapshot, cycle-night spacing snapshot, and small-phone button-geometry snapshot.
   - Current cycle-label evidence (2026-07-07): In-app browser E2E at 320 x 568 with local reverse trial and two shelf actives reproduced terse `/cycle/week` and `/cycle/settings` labels (`N1`, `N2`, etc.), then verified the fix. Post-fix `/cycle/week` and `/cycle/settings` render `Night 1`, `Night 2`, etc., contain no `N#` visible labels, keep zero horizontal overflow, and expose no clipped or sub-44 px visible controls. Evidence is in `test-results/human-e2e/2026-07-07/cycle-night-labels-current/`.
   - Current shared-sheet evidence (2026-07-07): Codex in-app browser Expo web at 320 x 568 verifies direct `/cycle/disruption` renders one compact modal dialog with all four disruption choices, zero horizontal overflow, no sub-44 exposed controls, a non-focusable hidden backdrop, and the intended compact 24 px web bottom padding after the shared `Sheet` safe-area hardening.
@@ -1097,7 +1098,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Current lifecycle evidence (2026-07-07): `/paywall/reoffer` and `/paywall/downgrade` at 320 x 568 and 390 x 568 in `test-results/human-e2e/2026-07-07/paywall-lifecycle-bottom-buffer/` verify Terms/Privacy/Restore can scroll above fixed footer actions with 48 px controls, the decline actions keep a 32 px bottom buffer, unavailable-store copy stays readable, no visible controls clip or fall below 44 px, and `Continue on free` / `Keep using free` recover to `/today`.
   - Current shortest-phone lifecycle evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 480 reproduced `/paywall/winback`, `/paywall/downgrade`, and `/paywall/reoffer` covering Terms, Privacy, and Restore with compact footer content. Post-fix, those three lifecycle routes render compliance inside the compact action footer; Terms, Privacy, Restore, primary purchase/current-plan action, and decline action are visible and hit-testable with zero blocked controls, zero sub-44 controls, zero visible clipped controls, zero horizontal overflow, and no JavaScript dialog. Evidence is in `test-results/human-e2e/2026-07-08/short-phone-480-paywall-compliance-final/`.
   - Current skipped-route text-pressure evidence: 2026-07-09 headless Chrome Expo web found `/paywall/reoffer` compact annual price text overflow at 320 x 480 / 170% because `$49.99/year` stayed in one nowrap group. Post-fix, the compact billing block separates fitted price and period text, and the 21-route skipped-route sweep reports zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-current/`, `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`, and `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`.
-  - Current 320 x 480 contextual ProGate follow-up: Contextual ProGate paywalls now use a sub-520 px treatment that moves Terms, Privacy, and Restore into a compact header row, keeps `Maybe later` at 48 px in the same top band, hides duplicate bottom compliance, and trims only the paywall body spacing. 2026-07-08 bundled Playwright Chrome Expo web verifies `/progress`, `/routine/plan`, `/routine/ramp`, `/routine/tolerance`, `/routine/reorder`, `/routine/adaptation`, `/cycle/settings`, `/cycle/disruption`, `/cycle/procedure`, `/cycle/phased-intro`, `/cycle/recovery`, `/cycle/why-tonight`, `/cycle/week`, `/routine/streak`, `/routine/widgets`, and `/paywall/upsell?feature=full_routine` at 320 x 480 with zero target issues, zero visible-control issues, zero horizontal overflow, zero dialogs, and no unexpected browser logs. A later 320 x 568 text-pressure audit found the Progress photo paywall needed the same header compliance even outside the sub-520 px band; ProGate now applies that treatment to compact `/progress*` photo paywalls too. The 320 x 390 / 120% sweep verifies direct `/paywall/upsell?feature=full_routine` keeps `Maybe later`, Terms, Privacy, Restore, and Start free trial complete and center-hit-testable with zero overflow. Evidence and reports are in `test-results/human-e2e/2026-07-08/progate-short-phone-480-compliance/`, `test-results/human-e2e/2026-07-08/progress-progate-text-pressure-postfix/`, `test-results/human-e2e/2026-07-08/text-pressure-120-split-short-390-current/`, `docs/e2e-bug-reports/2026-07-08-progate-short-phone-compliance-clipping.md`, and `docs/e2e-bug-reports/2026-07-08-progress-progate-text-pressure-tabbar-overlap.md`; native iOS/Android safe-area and Dynamic Type behavior remain release QA.
+  - Current 320 x 480 contextual ProGate follow-up: Contextual ProGate paywalls now use a sub-520 px treatment that moves Terms, Privacy, and Restore into a compact header row, keeps `Maybe later` at 48 px in the same top band, hides duplicate bottom compliance, and trims only the paywall body spacing. 2026-07-08 bundled Playwright Chrome Expo web verifies `/progress`, `/routine/plan`, `/routine/ramp`, `/routine/tolerance`, `/routine/reorder`, `/routine/adaptation`, `/cycle/settings`, `/cycle/disruption`, `/cycle/procedure`, `/cycle/phased-intro`, `/cycle/recovery`, `/cycle/why-tonight`, `/cycle/week`, `/routine/streak`, and `/paywall/upsell?feature=full_routine` at 320 x 480 with zero target issues, zero visible-control issues, zero horizontal overflow, zero dialogs, and no unexpected browser logs. Its widgets-paywall observation is superseded because `/routine/widgets` now bypasses ProGate. A later 320 x 568 text-pressure audit found the Progress photo paywall needed the same header compliance even outside the sub-520 px band; ProGate now applies that treatment to compact `/progress*` photo paywalls too. The 320 x 390 / 120% sweep verifies direct `/paywall/upsell?feature=full_routine` keeps `Maybe later`, Terms, Privacy, Restore, and Start free trial complete and center-hit-testable with zero overflow. Evidence and reports are in `test-results/human-e2e/2026-07-08/progate-short-phone-480-compliance/`, `test-results/human-e2e/2026-07-08/progress-progate-text-pressure-postfix/`, `test-results/human-e2e/2026-07-08/text-pressure-120-split-short-390-current/`, `docs/e2e-bug-reports/2026-07-08-progate-short-phone-compliance-clipping.md`, and `docs/e2e-bug-reports/2026-07-08-progress-progate-text-pressure-tabbar-overlap.md`; native iOS/Android safe-area and Dynamic Type behavior remain release QA.
   - Current 430 x 932 tall-phone contextual ProGate evidence: 2026-07-09 Codex in-app browser Expo web verifies `/progress` uses the compact compliance header on the tall supported-phone viewport. Terms, Privacy, Restore, and Maybe later render as 48 px top-band controls, `Start free trial` renders as a complete 382 x 54 px CTA above the floating tab bar, the Explore-first visible body compacts to `No card needed.` while retaining the full accessibility label, horizontal overflow is zero, no dialog opens, and tapping Maybe later returns to `/today`. Evidence and report are in `test-results/human-e2e/2026-07-09/progate-tall-phone-header-current/`; native iOS/Android Dynamic Type and store-sheet behavior remain release QA.
   - Current 320 x 430 / 130% contextual ProGate follow-up: 2026-07-08 headless Chrome Expo web reproduced compact-header overlap on routine and cycle locked routes. Post-fix, ultra-short contextual ProGate paywalls reserve a stacked 96 px header band for compliance plus dismiss and hide the monthly-equivalent label, and the 49-route 130% text-pressure sweep reports zero failures. Evidence and report are in `test-results/human-e2e/2026-07-08/text-pressure-130-short-phone-430-postfix/` and `docs/e2e-bug-reports/2026-07-08-progate-text-pressure-130-header-overlap.md`; native iOS/Android safe-area and Dynamic Type behavior remain release QA.
   - Current 320 x 370 / 320 x 360 / 130% contextual upsell follow-up: 2026-07-08 headless Chrome Expo web verifies the sub-380 px contextual ProGate band and direct upsell sheet keep compact compliance, dismiss, annual price, store-unavailable reason, and Start free trial complete while dropping nonessential body copy and the monthly-equivalent price where needed. A 2026-07-09 follow-up gave the micro-short contextual CTA a raised one-line hit target after the loaded `/progress` paywall CTA center resolved to surrounding paywall content. The final 49-route sweeps report zero failed routes with evidence in `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`, `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-5/`, `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-6/`, `test-results/human-e2e/2026-07-08/text-pressure-130-ultra-short-360-postfix-10/`, `test-results/human-e2e/2026-07-09/text-pressure-130-ultra-short-360-postfix-3/`, and `test-results/human-e2e/2026-07-09/text-pressure-130-micro-short-370-postfix-2/`; native iOS/Android safe-area and Dynamic Type behavior remain release QA.
@@ -1276,11 +1277,11 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ## Flow: Skin Notes Community Trust Layer
 
-- Goal: A user can inspect expert Skin Notes, note details, and deferred community posting routes without getting trapped or seeing social-proof patterns that overpromise.
-- Persona: Returning user looking for calm, evidence-backed explanations before asking an anonymous community question.
-- Entry state: User has completed onboarding; community posting may be enabled, consent-gated, or deferred.
+- Goal: A user can inspect expert Skin Notes and recover safely from unavailable posting or aggregate routes without being asked for consent or shown invented social proof.
+- Persona: Returning user looking for calm, evidence-backed explanations who follows a stale community-action link.
+- Entry state: User has completed onboarding; question submission and community aggregates are hard-disabled regardless of environment flags.
 - Start screen/URL/window: You tab Skin Notes row, direct `/community`, direct `/community/note/[id]`, direct `/community/ask`, or direct `/community/people-like-you`.
-- Success state: The library stays expert-led, posting remains clearly gated or deferred, and direct-entry exits return to the right parent surface.
+- Success state: The library stays expert-led; ask and aggregate routes remain clearly unavailable and non-actionable; direct-entry exits return to the right parent surface.
 - Priority: Critical
 - Automate later: Yes
 - Surface: Expo web for route recovery; iOS and Android for native consent and moderation behavior.
@@ -1308,20 +1309,20 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Path B: Posting Gate
 
-1. Action: Open `/community/ask` with posting deferred, then repeat with posting enabled but no age or consent state.
-   Expected result: Deferred posting returns to the Skin Notes hub; enabled posting shows separate 16+ and consent controls, and Not now exits to the hub.
-   Evidence: Screenshot sequence and local gate state.
-   Current local evidence: 2026-07-07 Expo web 320 x 568 covers the default posting-deferred state for `/community/ask` and `/community/people-like-you`: both routes explain peer posting is not in beta, expose `Back to Skin Notes`, return to `/community`, and have zero horizontal overflow.
+1. Action: Open `/community/ask` and `/community/people-like-you`, then repeat with `EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED=true`.
+   Expected result: Both routes remain deferred and return to the Skin Notes hub. Ask shows no age gate, consent control, question input, or submit action; people-like-you shows no illustrative aggregate presented as user data.
+   Evidence: Screenshot sequence, visible-text/control snapshot, and confirmation that no consent or submission state changes.
+   Current local evidence: 2026-07-12 Codex in-app browser Expo web at the 375 x 667 launch floor verifies exact `/community/ask` and `/community/people-like-you` direct entries remain read-only, mount no question input or consent control, show no invented peer aggregate, have zero horizontal overflow, and expose 55.99 px `Back to Skin Notes` recovery controls. Activating the ask-route recovery returns to `/community`. Evidence is in `test-results/human-e2e/2026-07-12/required-surface-honesty-rerun/`.
 
 ### Branches
 
 - Branch: direct-entry Community exits
   - Priority: Important
   - Automate later: Yes
-  - Action: Open `/community`, `/community/note/[id]`, `/community/ask`, and `/community/people-like-you` directly, then use Back or Not now.
-  - Expected result: Direct `/community` returns to the You tab; nested note, ask, people-like-you, and deferred posting surfaces return to `/community`. Deferred posting routes use a destination-specific `Back to Skin Notes` CTA instead of generic Back copy. Visible hub Back/Ask controls, nested-route Back controls, the 16+ consent checkbox, and Not now meet the 44 pt phone touch target.
+  - Action: Open `/community`, `/community/note/[id]`, `/community/ask`, and `/community/people-like-you` directly, then use the visible recovery control.
+  - Expected result: Direct `/community` returns to the You tab; nested note, ask, and people-like-you surfaces return to `/community`. Deferred routes use a destination-specific `Back to Skin Notes` CTA instead of generic Back copy. Visible hub/note controls and deferred recovery actions meet the 44 pt phone touch target.
   - Evidence: Screenshot sequence, visible route snapshot, and small-phone button-geometry snapshot.
-  - Current local evidence: 2026-07-07 focused `communityRoutes.test.ts` route contracts pass, and Expo web 320 x 568 verifies direct `/community/ask` plus `/community/people-like-you` fallback CTAs are 100 px tall, use `Back to Skin Notes`, and route to `/community` with zero horizontal overflow.
+  - Current local evidence: 2026-07-12 focused `communityRoutes.test.ts` route contracts plus Codex in-app browser Expo web verify direct `/community/ask` and `/community/people-like-you` fallback controls are 55.99 px tall, use `Back to Skin Notes`, and return to `/community` with zero horizontal overflow.
   - Current 320 x 370 / 130% micro-short text-pressure evidence: 2026-07-08 headless Chrome Expo web verifies the Skin Notes hub keeps the first topic section complete on the first viewport and pushes later sections below the fold instead of peeking as partial targets. The final 49-route sweep reports zero failed routes with evidence in `test-results/human-e2e/2026-07-08/text-pressure-130-micro-short-370-postfix/`; native iOS/Android safe-area and Dynamic Type behavior remain device QA.
 - Branch: missing note detail
   - Priority: Important
@@ -1338,13 +1339,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The outbound note text keeps the claim-safe disclaimer plus source/reviewer context, and a failed share sheet shows clear route-owned failed-share feedback without also opening a blocking native alert.
   - Evidence: Route alert-region text, absence of a JS/native dialog, and share payload snapshot.
   - Current local evidence: 2026-07-08 Expo web 320 x 568 with `EXPO_PUBLIC_E2E_SHARE_NOTE_FAILURE=1` opens `/community/note/note-niacinamide-vitc`, verifies the claim-safe note detail and 128 x 48 `Share note` control, taps the real control, stays on the note route, opens no JS dialog, and renders the failed-share recovery copy plus both 48 px action controls fully in the viewport with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/community-note-native-alert-current/`.
-- Branch: claim-safe anonymous ask
+- Branch: unavailable anonymous ask cannot collect or submit data
   - Priority: Critical
   - Automate later: Yes
-  - Action: With community posting enabled and consent granted, type claim-heavy and calm questions into the anonymous ask composer.
-  - Expected result: Claim-safety copy flags risky wording as a first pass, never as an automated moderation decision, and no question is posted publicly before human review is staffed.
-  - Evidence: Screenshot sequence and local moderation state.
-  - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED=true` verified the enabled `/community/ask` consent gate requires the 16+ checkbox, local-first consent reaches the anonymous composer with Supabase unconfigured, claim-heavy text (`Can glycolic acid cure acne if I use it every night?`) shows the claim-safety flag, `Submit for review` opens no dialog, and the route-owned `Asking opens soon` `role="alert"` recovery scrolls fully into view at y=292-471 with zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-08/community-ask-submit-inline-recovery-current/`.
+  - Action: Start a dev build with `EXPO_PUBLIC_PHASE7_COMMUNITY_POSTING_ENABLED=true`, then open `/community/ask`.
+  - Expected result: The frozen missing-submission capability wins over the environment flag. No 16+ or community consent is solicited, no text input or `Submit for review` action mounts, and no `question_submitted` analytics event can fire.
+  - Evidence: Screenshot/control snapshot plus Phase 7 launch-flag, route-contract, and analytics-registry tests. The 2026-07-08 enabled-composer evidence is historical and intentionally superseded.
 
 ## Flow: Shelf Conflict Checks And Share Cards
 

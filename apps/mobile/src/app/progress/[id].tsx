@@ -77,7 +77,7 @@ function PhotoDetailScreenContent() {
             </Text>
             <Text
               style={{
-                fontFamily: 'HankenGrotesk_600SemiBold',
+                fontFamily: 'HankenGrotesk-SemiBold',
                 fontSize: compact ? 23 : 26,
                 lineHeight: compact ? 29 : 32,
                 color: '#F4EFE7',
@@ -88,7 +88,7 @@ function PhotoDetailScreenContent() {
             </Text>
             <Text
               style={{
-                fontFamily: 'HankenGrotesk_400Regular',
+                fontFamily: 'HankenGrotesk-Regular',
                 fontSize: 15,
                 lineHeight: 22,
                 color: 'rgba(244,239,231,0.76)',
@@ -113,7 +113,7 @@ function PhotoDetailScreenContent() {
                 paddingVertical: 12,
               }}
             >
-              <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+              <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
                 {PHOTO_COPY.detail.missingCapture}
               </Text>
             </Pressable>
@@ -132,7 +132,7 @@ function PhotoDetailScreenContent() {
             >
               <Text
                 style={{
-                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontFamily: 'HankenGrotesk-SemiBold',
                   fontSize: 16,
                   color: '#F4EFE7',
                 }}
@@ -218,7 +218,7 @@ function PhotoDetailScreenContent() {
             borderColor: 'transparent',
           }}
         />
-        <Text style={{ fontFamily: 'HankenGrotesk_700Bold', fontSize: 14, color: '#F4EFE7' }}>
+        <Text style={{ fontFamily: 'HankenGrotesk-Bold', fontSize: 14, color: '#F4EFE7' }}>
           {dateLabel}
         </Text>
         <View style={{ width: 44 }} />
@@ -266,7 +266,7 @@ function PhotoDetailScreenContent() {
             <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: SAGE }} />
             <Text
               style={{
-                fontFamily: 'HankenGrotesk_600SemiBold',
+                fontFamily: 'HankenGrotesk-SemiBold',
                 fontSize: 12,
                 color: 'rgba(244,239,231,0.8)',
               }}
@@ -285,7 +285,7 @@ function PhotoDetailScreenContent() {
             >
               <Text
                 style={{
-                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontFamily: 'HankenGrotesk-SemiBold',
                   fontSize: 12,
                   color: 'rgba(244,239,231,0.8)',
                 }}
@@ -304,7 +304,7 @@ function PhotoDetailScreenContent() {
               }}
             >
               <Text
-                style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 12, color: '#D9A183' }}
+                style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 12, color: '#D9A183' }}
               >
                 reference
               </Text>
@@ -328,7 +328,7 @@ function PhotoDetailScreenContent() {
             <Text
               style={{
                 color: 'rgba(244,239,231,0.84)',
-                fontFamily: 'HankenGrotesk_400Regular',
+                fontFamily: 'HankenGrotesk-Regular',
                 fontSize: 13,
                 lineHeight: 18,
                 textAlign: 'center',
@@ -359,7 +359,7 @@ function PhotoDetailScreenContent() {
             placeholderTextColor="rgba(244,239,231,0.35)"
             multiline
             style={{
-              fontFamily: 'HankenGrotesk_400Regular',
+              fontFamily: 'HankenGrotesk-Regular',
               fontSize: 13.5,
               color: 'rgba(244,239,231,0.85)',
               lineHeight: 20,
@@ -387,7 +387,7 @@ function PhotoDetailScreenContent() {
               }}
             >
               <Text
-                style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 13, color: '#F4EFE7' }}
+                style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 13, color: '#F4EFE7' }}
               >
                 {PHOTO_COPY.detail.setReference}
               </Text>
@@ -442,7 +442,7 @@ function PhotoDetailScreenContent() {
           <Text
             style={{
               color: '#F4EFE7',
-              fontFamily: 'HankenGrotesk_600SemiBold',
+              fontFamily: 'HankenGrotesk-SemiBold',
               fontSize: 14,
               lineHeight: 19,
             }}
@@ -452,7 +452,7 @@ function PhotoDetailScreenContent() {
           <Text
             style={{
               color: 'rgba(244,239,231,0.76)',
-              fontFamily: 'HankenGrotesk_400Regular',
+              fontFamily: 'HankenGrotesk-Regular',
               fontSize: 13,
               lineHeight: 18,
               marginTop: 4,
@@ -476,7 +476,7 @@ function PhotoDetailScreenContent() {
               <Text
                 style={{
                   color: 'rgba(244,239,231,0.82)',
-                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontFamily: 'HankenGrotesk-SemiBold',
                   fontSize: 13,
                 }}
               >
@@ -498,7 +498,7 @@ function PhotoDetailScreenContent() {
               <Text
                 style={{
                   color: BG,
-                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontFamily: 'HankenGrotesk-SemiBold',
                   fontSize: 13,
                 }}
               >
@@ -525,7 +525,7 @@ function PhotoDetailScreenContent() {
           <Text
             style={{
               color: '#F4EFE7',
-              fontFamily: 'HankenGrotesk_600SemiBold',
+              fontFamily: 'HankenGrotesk-SemiBold',
               fontSize: 14,
               lineHeight: 19,
             }}
@@ -535,7 +535,7 @@ function PhotoDetailScreenContent() {
           <Text
             style={{
               color: 'rgba(244,239,231,0.76)',
-              fontFamily: 'HankenGrotesk_400Regular',
+              fontFamily: 'HankenGrotesk-Regular',
               fontSize: 13,
               lineHeight: 18,
               marginTop: 4,
@@ -561,7 +561,7 @@ function PhotoDetailScreenContent() {
               <Text
                 style={{
                   color: 'rgba(244,239,231,0.82)',
-                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontFamily: 'HankenGrotesk-SemiBold',
                   fontSize: 13,
                 }}
               >
@@ -585,7 +585,7 @@ function PhotoDetailScreenContent() {
               <Text
                 style={{
                   color: BG,
-                  fontFamily: 'HankenGrotesk_600SemiBold',
+                  fontFamily: 'HankenGrotesk-SemiBold',
                   fontSize: 13,
                 }}
               >

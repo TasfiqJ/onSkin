@@ -452,7 +452,11 @@ Sources: [RevenueCat 2026](https://www.revenuecat.com/state-of-subscription-apps
 
 ### Full Product Scope
 
-[Decision] Keep the full product, but classify every feature as `launch-core`, `enabled-after-review`, or `post-launch`.
+[Decision] The public release is iOS-only and includes every feature in
+`docs/FEATURE_INDEX.md` plus every required surface in
+`docs/hugeToDo/launch-contract.json`. The primary shelf -> insight -> routine ->
+Today loop remains the positioning core, but no indexed feature may be deferred
+or hidden to satisfy launch.
 
 ### Launch-Core
 
@@ -466,7 +470,7 @@ Sources: [RevenueCat 2026](https://www.revenuecat.com/state-of-subscription-apps
 - Paywall/RevenueCat.
 - Basic analytics and support.
 
-### Enabled After Review
+### Required High-Risk Surfaces
 
 - Recommendations.
 - Shareable conflict cards.
@@ -475,16 +479,24 @@ Sources: [RevenueCat 2026](https://www.revenuecat.com/state-of-subscription-apps
 - Trend insights.
 - Community/Skin Notes.
 
-### Explicitly Out Of Scope For Public Claims Until Cleared
+These surfaces remain fail-closed until their full implementation, review,
+live-service, physical-iPhone, operational, and production gates pass. The gate
+controls exposure during development and incidents; it does not remove the
+surface from release scope.
+
+### Prohibited Claims And Behaviors
 
 - AI diagnosis.
 - Skin score/skin age.
 - Medical treatment claims.
-- Open community posting.
 - Commission-biased ranking.
 - Cloud photo analysis.
 
-## 7. Complete Feature Index
+## 7. Grouped Feature Notes
+
+The authoritative 20-feature numbering and launch inclusion status is in
+`docs/FEATURE_INDEX.md`. The grouped notes below predate that normalized index
+and remain useful only for product detail.
 
 Feature 1: Rebrand And Identity Migration
 
@@ -567,15 +579,16 @@ Feature 8: Recommendations
 
 - Feature summary: Goal/profile/shelf-aware recommendations.
 - Priority: Should-have.
-- MVP inclusion: No public claim until catalog and review.
+- iOS launch inclusion: Required after catalog and professional review.
 - Complexity: High.
 - Dependencies: catalog quality, commerce independence.
 
 Feature 9: Ask Advisor
 
-- Feature summary: Deterministic local guidance, cloud Ask later.
-- Priority: Could-have.
-- MVP inclusion: Local-only if reviewed.
+- Feature summary: Reviewed deterministic local guidance plus a production
+  cloud path with grounded citations, safety controls, consent, and cost limits.
+- Priority: Launch-required.
+- iOS launch inclusion: Required.
 - Complexity: Medium to High.
 - Dependencies: reviewed corpus, guardrails, consent.
 
@@ -590,32 +603,35 @@ Feature 10: Shareable Conflict Card
 Feature 11: Commerce
 
 - Feature summary: Where-to-buy and replenishment links.
-- Priority: Later.
-- MVP inclusion: No.
+- Priority: Launch-required.
+- iOS launch inclusion: Required after rail, legal/privacy, ranking-isolation,
+  disclosure, reconciliation, and device gates pass.
 - Complexity: High.
 - Dependencies: consent, FTC disclosure, partner, attribution.
 
 Feature 12: Community/Skin Notes
 
-- Feature summary: Expert notes and deferred community posting.
-- Priority: Later.
-- MVP inclusion: No open posting.
+- Feature summary: Reviewed expert notes plus production community posting,
+  reporting, blocking, moderation, appeals, and support.
+- Priority: Launch-required.
+- iOS launch inclusion: Required.
 - Complexity: High.
 - Dependencies: moderation, reviewer network, legal.
 
 Feature 13: Trend Insights
 
 - Feature summary: Descriptive within-person progress notes.
-- Priority: Later.
-- MVP inclusion: No public claim.
+- Priority: Launch-required.
+- iOS launch inclusion: Required after a real engine, calibration, fairness,
+  privacy, device, and professional-review gates pass.
 - Complexity: High.
 - Dependencies: fairness/device/legal review.
 
 Feature 14: Widgets/Live Activities
 
 - Feature summary: Glanceable routine reminders.
-- Priority: Later.
-- MVP inclusion: No.
+- Priority: Launch-required.
+- iOS launch inclusion: Required with real WidgetKit and ActivityKit targets.
 - Complexity: High.
 - Dependencies: native builds and platform QA.
 
@@ -776,7 +792,7 @@ Rules:
 
 Compliance areas:
 
-- App Store/Play policies.
+- App Store policies.
 - Consumer health data privacy, especially Washington MHMDA.
 - GDPR/UK/EU where launched.
 - CCPA/CPRA if applicable.
@@ -804,7 +820,7 @@ RoutineKind Pro:
 - Skin-cycling scheduler.
 - Photo progress timeline.
 - Reminders/adherence.
-- Deeper Ask/recommendations when reviewed.
+- Production Ask and recommendations after their mandatory review gates.
 
 ### Pricing
 
@@ -932,6 +948,8 @@ Done criteria:
 - D7/D14 metrics
 - catalog issue review
 - churn interviews
+- all-features TestFlight coverage, including OCR, Ask, commerce, community,
+  trends, widgets, Live Activities, links, sharing, and operator workflows
 
 ### Phase 5: Public Launch
 
@@ -1008,25 +1026,20 @@ Done criteria:
 
 ## 18. Final Build Order
 
-1. Rebrand decision and migration.
-2. Reviewer/signoff workflow for conflict/routine copy.
-3. Shelf intake friction pass.
-4. First-session insight flow.
-5. Routine and Today retention pass.
-6. Photo progress device QA.
-7. RevenueCat live sandbox and entitlement matrix.
-8. Analytics dashboards.
-9. Shareable conflict card after reviewed rules.
-10. Closed beta and conversion test.
-
-Delay:
-
-- cloud Ask
-- open community
-- commerce
-- trend analysis
-- widgets
-- broad product recommendations
+1. Reconcile the iOS all-features governance contract and validators.
+2. Finalize brand recommendation, clearance packet, and account decisions.
+3. Establish iOS/EAS and live staging foundations.
+4. Complete auth, data rights, catalog, native OCR, Shelf, and reviewed guidance.
+5. Complete the core routine/Today loop, photos, trends, payments, Ask,
+   commerce, community, widgets, Live Activities, links, sharing, growth, and
+   operator tooling.
+6. Incorporate professional decisions tied to exact source hashes.
+7. Run automated, human-simulated, live-staging, physical-iPhone,
+   accessibility, privacy, security, and performance verification.
+8. Run the all-features TestFlight beta and close every P0/P1.
+9. Build and inspect the production candidate and App Store packet.
+10. Submit only when authorized, respond to review, and launch under staffed
+    monitoring and rollback controls.
 
 ## 19. Master Plan Update System
 

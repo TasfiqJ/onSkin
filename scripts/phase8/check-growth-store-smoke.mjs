@@ -193,16 +193,22 @@ const cases = [
     },
   },
   {
-    name: 'Phase 8 rejects malformed Android certificate fingerprints',
+    name: 'Phase 8 marks Android store and link evidence not applicable',
     result: run({
       ...validPublicIdentity,
       ...validEvidence,
+      EXPO_PUBLIC_PLAY_STORE_URL: '',
+      PHASE8_ANDROID_APP_LINKS_PASS: '',
+      PHASE8_PLAY_STORE_PACKET_PASS: '',
       ANDROID_CERT_SHA256_FINGERPRINTS: 'AA:BB',
     }),
     expect(result) {
       return (
         result.status === 0 &&
-        /Missing Android release certificate fingerprint evidence/.test(output(result))
+        /Android App Links, Play Store packet, URL, and certificate evidence: excluded by launch contract/.test(
+          output(result),
+        ) &&
+        !/Missing Android release certificate fingerprint evidence/.test(output(result))
       );
     },
   },
@@ -214,11 +220,16 @@ const cases = [
         result.status === 0 &&
         result.packet.evidence.brandSourceOfTruth === true &&
         result.packet.evidence.appleTeamId === true &&
-        result.packet.evidence.androidCertificateFingerprints === true &&
+        result.packet.evidence.androidAppLinks === null &&
+        result.packet.evidence.playStorePacket === null &&
+        result.packet.evidence.androidCertificateFingerprints === null &&
+        result.packet.platformStatus.android === 'not_applicable' &&
         result.packet.evidence.signedOffBy === 'Tas Mohammed' &&
         /^[0-9a-f]{40}$/i.test(result.packet.gitSha) &&
         typeof result.packet.gitStatus === 'string' &&
         Boolean(result.packet.sourceHashes['.env.example']) &&
+        Boolean(result.packet.sourceHashes['docs/hugeToDo/launch-contract.json']) &&
+        Boolean(result.packet.sourceHashes['scripts/launch/contract.mjs']) &&
         Boolean(result.packet.sourceHashes['scripts/phase8/build-growth-store-qa-packet.mjs']) &&
         Boolean(result.packet.sourceHashes['scripts/phase8/check-growth-store-readiness.mjs']) &&
         Boolean(result.packet.sourceHashes['scripts/phase8/check-growth-store-smoke.mjs']) &&
@@ -278,10 +289,10 @@ const cases = [
         result.status === 0 &&
         result.packet.evidence.signedOffBy === '' &&
         result.packet.evidence.appleTeamId === false &&
-        result.packet.evidence.androidCertificateFingerprints === false &&
+        result.packet.evidence.androidCertificateFingerprints === null &&
         result.packet.warnings.includes('External evidence missing: signedOffBy.') &&
         result.packet.warnings.includes('External evidence missing: appleTeamId.') &&
-        result.packet.warnings.includes(
+        !result.packet.warnings.includes(
           'External evidence missing: androidCertificateFingerprints.',
         )
       );

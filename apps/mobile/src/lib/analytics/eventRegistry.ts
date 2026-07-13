@@ -60,7 +60,6 @@ export const ANALYTICS_ALLOWED_EVENTS = [
   'product_discarded',
   'product_finished',
   'purchase_completed',
-  'question_submitted',
   'quiz_completed',
   'quiz_question_answered',
   'reaction_added',

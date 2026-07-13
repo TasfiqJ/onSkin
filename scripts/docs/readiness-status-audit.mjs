@@ -1,8 +1,16 @@
 #!/usr/bin/env node
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, extname, relative, resolve } from 'node:path';
+import {
+  isReleasePlatformRequired,
+  launchContractSnapshot,
+  loadLaunchContract,
+  platformRequirementStatus,
+} from '../launch/contract.mjs';
 
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const strict = process.argv.includes('--strict');
 const check = process.argv.includes('--check');
 
@@ -11,13 +19,14 @@ const blockersPath = 'BLOCKERS.md';
 const progressPath = 'PROGRESS.md';
 const testingStrategyPath = 'docs/TESTING_STRATEGY.md';
 const packagePath = 'package.json';
+const launchContractPath = 'docs/hugeToDo/launch-contract.json';
 const humanE2eManifestPath = 'docs/e2e/generated/human-e2e-manifest.json';
 const outJson =
   process.env.READINESS_STATUS_AUDIT_JSON ?? 'docs/generated/readiness-status-audit.json';
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
-const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 196);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 2094);
+const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 204);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 2137);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
@@ -33,6 +42,7 @@ const staleTestPatterns = [
   /\b190\s+(?:mobile\s+)?test files?\b/i,
   /\b191\s+(?:mobile\s+)?test files?\b/i,
   /\b192\s+(?:mobile\s+)?test files?\b/i,
+  /\b196\s+(?:mobile\s+)?test files?\b/i,
   /\b1743\s+tests?\b/i,
   /\b1744\s+tests?\b/i,
   /\b1748\s+tests?\b/i,
@@ -61,11 +71,12 @@ const staleTestPatterns = [
   /\b2010\s+tests?\b/i,
   /\b2037\s+tests?\b/i,
   /\b2048\s+tests?\b/i,
+  /\b2094\s+tests?\b/i,
   /320 x 480 support-floor 200%\s+text-pressure/i,
   /support-floor\s+170%\s+text-pressure/i,
 ];
 
-const requiredManifestNeedles = [
+const allRequiredManifestNeedles = [
   '360 x 640 launch-floor 200% text-pressure',
   '360 x 740',
   '375 x 812',
@@ -113,7 +124,22 @@ const requiredManifestNeedles = [
   'cycle-customization-current',
   'Shelf freshness and replacement provenance lifecycle',
   'shelf-freshness-provenance-current',
+  'Required-surface honest direct-entry and recovery pass',
+  'required-surface-honesty-rerun',
 ];
+
+const androidReleaseManifestNeedles = new Set([
+  '360 x 640 launch-floor 200% text-pressure',
+  '360 x 740',
+  '412 x 915',
+  'API 36',
+  'text-pressure-200-supported-360-640-postfix',
+  'text-pressure-200-android-360-740-postfix',
+  'text-pressure-200-android-412-915-postfix2',
+]);
+const requiredManifestNeedles = androidReleaseRequired
+  ? allRequiredManifestNeedles
+  : allRequiredManifestNeedles.filter((needle) => !androidReleaseManifestNeedles.has(needle));
 
 const requiredLaunchCommands = [
   'npm run launch:verify',
@@ -264,6 +290,7 @@ for (const path of [
   progressPath,
   testingStrategyPath,
   packagePath,
+  launchContractPath,
 ]) {
   if (!exists(path)) blockers.push(`Missing ${path}.`);
 }
@@ -379,6 +406,11 @@ if (!progressText.includes('readiness-status-audit')) {
 
 const audit = {
   generatedAt: new Date().toISOString(),
+  launchContract: launchContractSnapshot(launchContract),
+  platformStatus: {
+    ios: platformRequirementStatus('ios', launchContract),
+    android: platformRequirementStatus('android', launchContract),
+  },
   status: blockers.length === 0 ? 'pass' : 'blocked',
   strict,
   purpose:
@@ -416,6 +448,7 @@ const mdContent = [
   'baseline. It intentionally checks documentation freshness only; it does not',
   'replace the launch gates, physical-device QA, live Supabase, RevenueCat,',
   'store, legal, clinical, beta, or launch signoff evidence.',
+  `Required release platforms: ${launchContract.release.platforms.join(', ')}. Android release evidence: ${platformRequirementStatus('android', launchContract)}.`,
   '',
   '## Summary',
   '',

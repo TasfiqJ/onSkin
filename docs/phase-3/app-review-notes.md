@@ -24,7 +24,8 @@ OnSkin is a skincare routine organization app. Users can save products to a priv
 - Photos remain encrypted on device unless the user explicitly shares one.
 - Cloud backup and automatic photo-metadata sync are unavailable in current V1.
 - Paid-link partner sharing is separate and off by default.
-- Ask cloud mode is separate, off by default, and deferred until vendor/legal review.
+- Ask cloud mode is separate and default-off for consent, but launch-required;
+  it remains blocked until vendor, safety, privacy, clinical, and legal gates pass.
 - Account deletion is available in app.
 - Account-data export is available in app. Its versioned JSON wrapper includes owner-scoped server data plus registered encrypted records from the current device, including local-first shelf/routine state and sanitized Progress metadata/notes. Progress image files, thumbnails, device paths, ciphertext, keys, credentials, and transient cache files are excluded; images can be shared individually from Progress.
 

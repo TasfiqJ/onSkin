@@ -23,14 +23,34 @@ export type DeferredSurfaceCopy = {
 const finalDomainReady = Boolean(normalizePublicDomain(env.finalBrandDomain));
 const productionSurfaceReady = env.appEnvironment !== 'production' || finalDomainReady;
 
+// Environment flags can expose only capabilities that actually exist in the
+// release binary. These literals are intentionally not environment-driven:
+// widgets have no native targets, community has no submission/moderation or
+// aggregate-data path, and Trend has no validated engine. Keeping those facts
+// here prevents a release configuration mistake from turning previews,
+// placeholder data, or consent scaffolding into a customer-facing promise.
+export const phase7Capabilities = Object.freeze({
+  communityQuestionSubmission: false,
+  communityAggregates: false,
+  trendEngine: false,
+  nativeWidgets: false,
+} as const);
+
 export const phase7Flags = {
   finalDomainReady,
   productionSurfaceReady,
   commerce: env.phase7CommerceEnabled && finalDomainReady,
-  communityPosting: env.phase7CommunityPostingEnabled && productionSurfaceReady,
-  trend: env.phase7TrendEnabled && productionSurfaceReady,
+  communityPosting:
+    phase7Capabilities.communityQuestionSubmission &&
+    env.phase7CommunityPostingEnabled &&
+    productionSurfaceReady,
+  communityAggregates:
+    phase7Capabilities.communityAggregates &&
+    env.phase7CommunityPostingEnabled &&
+    productionSurfaceReady,
+  trend: phase7Capabilities.trendEngine && env.phase7TrendEnabled && productionSurfaceReady,
   cloudAsk: env.phase7CloudAskEnabled && productionSurfaceReady,
-  widgets: env.phase7WidgetsEnabled && productionSurfaceReady,
+  widgets: phase7Capabilities.nativeWidgets && env.phase7WidgetsEnabled && productionSurfaceReady,
   shareCard:
     env.phase7ShareCardEnabled &&
     env.phase7ReviewedConflictSharingEnabled &&
@@ -60,15 +80,15 @@ export const deferredSurfaceCopy: Record<DeferredSurfaceKind, DeferredSurfaceCop
   },
   communityPosting: {
     title: 'Community posting is not in this beta',
-    body: 'Skin Notes can stay read-only. Asking or aggregate peer features need moderation, legal review, and enough density to be useful.',
+    body: 'Skin Notes stay read-only. This release has no question-submission service or reviewed peer-aggregate dataset.',
     detail:
-      'No user post is accepted until the review desk and consent copy are production-approved.',
+      'No consent or question is collected until moderation, support, appeals, persistence, and legal review are ready.',
     cta: 'Back',
   },
   trend: {
     title: 'Photo trend insights are not in this beta',
-    body: 'The photo timeline stays local-first and score-free. Trend narratives need device QA, fairness review, and final consent copy.',
-    detail: 'Progress photos remain useful without estimated scores or change claims.',
+    body: 'The photo timeline stays local-first and score-free. No validated trend engine ships in this release.',
+    detail: 'No Trend consent is requested. Progress photos remain useful without change claims.',
     cta: 'Back',
   },
   cloudAsk: {
@@ -80,8 +100,8 @@ export const deferredSurfaceCopy: Record<DeferredSurfaceKind, DeferredSurfaceCop
   },
   widgets: {
     title: 'Widgets are not in this beta',
-    body: 'Today check-offs and reminders ship inside the app first. Home-screen widgets and live activity controls need native device QA.',
-    detail: 'The beta should prove the core habit loop before adding OS-level surfaces.',
+    body: 'Today check-offs and reminders work inside the app. No native home-screen widget or live activity target ships in this release.',
+    detail: 'This route does not offer a preview, OS control, or paid widget upgrade.',
     cta: 'Back',
   },
   shareCard: {

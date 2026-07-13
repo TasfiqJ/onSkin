@@ -19,11 +19,14 @@ import {
   requiredPhase9EvidenceKeys,
   warn,
 } from './lib.mjs';
+import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 
 const errors = [];
 const warnings = [];
 const env = envSnapshot();
 const exampleEnv = envFile('.env.example');
+const launchContract = loadLaunchContract();
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 
 const phase7EvidenceKeys = [
   'PHASE7_BRAND_READY',
@@ -65,6 +68,8 @@ const localVerifierFiles = [
 ];
 
 const requiredFiles = [
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'docs/phase-9/source-of-truth.md',
   'docs/phase-9/data-inventory.md',
   'docs/phase-9/edge-function-auth-matrix.md',
@@ -88,6 +93,8 @@ const requiredFiles = [
   'docs/phase-9/release-candidates/_template/incident-plan.md',
   'docs/phase-9/release-candidates/_template/signoff.md',
   'supabase/functions/account-deletion/index.ts',
+  'supabase/functions/account-deletion/photoStorageCleanup.ts',
+  'supabase/functions/account-deletion/photoStorageCleanup.test.ts',
   'supabase/functions/_shared/storagePath.ts',
   'supabase/functions/_shared/storagePath.test.ts',
   'supabase/functions/data-export/index.ts',
@@ -109,6 +116,25 @@ const requiredFiles = [
   'apps/mobile/src/lib/env.test.ts',
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
+  'apps/mobile/src/features/photos/encryptedStorage.ts',
+  'apps/mobile/src/features/photos/encryptedStorage.test.ts',
+  'apps/mobile/src/features/photos/store.ts',
+  'apps/mobile/src/features/photos/store.test.ts',
+  'apps/mobile/src/lib/supabase/largeSecureStore.ts',
+  'apps/mobile/src/lib/supabase/largeSecureStore.test.ts',
+  'apps/mobile/src/lib/applock/singleFlight.ts',
+  'apps/mobile/src/lib/applock/singleFlight.test.ts',
+  'apps/mobile/src/lib/auth/accountGeneration.ts',
+  'apps/mobile/src/lib/auth/accountGeneration.test.ts',
+  'apps/mobile/src/lib/auth/localAccountIsolation.ts',
+  'apps/mobile/src/lib/auth/localAccountIsolation.test.ts',
+  'apps/mobile/src/app/community/ask.tsx',
+  'apps/mobile/src/app/community/people-like-you.tsx',
+  'apps/mobile/src/app/trend/optin.tsx',
+  'apps/mobile/src/app/routine/widgets.tsx',
+  'apps/mobile/src/app/routine/_layout.tsx',
+  'apps/mobile/src/features/subscription/gatedRoutes.ts',
+  'apps/mobile/src/features/subscription/copy.ts',
   'apps/mobile/app.config.js',
   'apps/mobile/eas.json',
 ];
@@ -191,6 +217,8 @@ for (const script of [
   'phase9:security-ci-smoke',
   'phase9:data-rights-smoke',
   'phase9:storage-path-privacy-smoke',
+  'phase9:account-deletion-photo-storage-smoke',
+  'phase9:revenuecat-webhook-atomic-smoke',
   'phase9:live-data-rights',
   'phase9:consent-withdrawal',
   'phase9:live-consent-withdrawal',
@@ -210,6 +238,16 @@ block(
 );
 block(
   errors,
+  /phase9:account-deletion-photo-storage-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
+  'phase9:verify must run the account-deletion photo-storage contract.',
+);
+block(
+  errors,
+  /phase9:revenuecat-webhook-atomic-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
+  'phase9:verify must run the RevenueCat atomic webhook contract.',
+);
+block(
+  errors,
   /phase9:qa-packet && npm run docs:generated-packet-status-audit:strict && npm run typecheck/.test(
     packageJson.scripts?.['phase9:verify'] ?? '',
   ),
@@ -221,11 +259,13 @@ block(
   has('apps/mobile/app.config.js', /associatedDomains/),
   'app.config.js must configure iOS associated domains.',
 );
-block(
-  errors,
-  has('apps/mobile/app.config.js', /intentFilters/),
-  'app.config.js must configure Android App Links.',
-);
+if (androidReleaseRequired) {
+  block(
+    errors,
+    has('apps/mobile/app.config.js', /intentFilters/),
+    'app.config.js must configure Android App Links.',
+  );
+}
 block(
   errors,
   has('apps/mobile/eas.json', /"production"/) &&
@@ -355,14 +395,72 @@ block(
 block(
   errors,
   has(
+    'apps/mobile/src/lib/launch/phase7.ts',
+    /phase7Capabilities\s*=\s*Object\.freeze\([\s\S]*communityQuestionSubmission:\s*false[\s\S]*communityAggregates:\s*false[\s\S]*trendEngine:\s*false[\s\S]*nativeWidgets:\s*false/,
+  ),
+  'Unimplemented community, Trend, and native-widget capabilities must remain non-environment-driven.',
+);
+block(
+  errors,
+  has(
     'apps/mobile/src/lib/launch/phase7.test.ts',
     /keeps production Phase 7 surfaces disabled without a final brand domain/,
   ) &&
     has(
       'apps/mobile/src/lib/launch/phase7.test.ts',
-      /allows staging to exercise deferred surfaces without a final domain/,
+      /keeps unimplemented capabilities closed even when staging flags are enabled/,
     ),
-  'Phase 7 launch tests must cover production fail-closed and staging exercise behavior.',
+  'Phase 7 launch tests must cover production identity gates and non-bypassable unavailable capabilities.',
+);
+
+for (const [path, surface, label] of [
+  ['apps/mobile/src/app/community/ask.tsx', 'communityPosting', 'community ask screen'],
+  [
+    'apps/mobile/src/app/community/people-like-you.tsx',
+    'communityPosting',
+    'community aggregate screen',
+  ],
+  ['apps/mobile/src/app/trend/optin.tsx', 'trend', 'trend opt-in screen'],
+  ['apps/mobile/src/app/routine/widgets.tsx', 'widgets', 'widgets screen'],
+]) {
+  const source = read(path);
+  block(
+    errors,
+    /DeferredSurface/.test(source) && source.includes(`surface="${surface}"`),
+    `${label} must remain a truthful deferred surface.`,
+  );
+}
+
+const communityAsk = read('apps/mobile/src/app/community/ask.tsx');
+const communityAggregate = read('apps/mobile/src/app/community/people-like-you.tsx');
+const trendOptIn = read('apps/mobile/src/app/trend/optin.tsx');
+const widgetsRoute = read('apps/mobile/src/app/routine/widgets.tsx');
+const routineLayout = read('apps/mobile/src/app/routine/_layout.tsx');
+const routineGatedRoutes = read('apps/mobile/src/features/subscription/gatedRoutes.ts');
+const subscriptionCopy = read('apps/mobile/src/features/subscription/copy.ts');
+block(
+  errors,
+  !/question_submitted|grantCommunityConsent|confirmCommunityAge|TextInput/.test(communityAsk),
+  'Unavailable community posting must not collect consent, accept text, or emit submission analytics.',
+);
+block(
+  errors,
+  !/dry, sensitive|alternate-night cycling|Aggregated & anonymised/.test(communityAggregate),
+  'People-like-you must not render illustrative aggregate data as real.',
+);
+block(
+  errors,
+  !/grantTrendConsent|revokeTrendConsent|photo_trend_insights|ToggleSwitch/.test(trendOptIn),
+  'Unavailable Trend must not solicit consent or present an opt-in control.',
+);
+block(
+  errors,
+  !/Show on Lock Screen|useUpdateNotifPrefs|Live Activity/.test(widgetsRoute) &&
+    !/withProGate|<ProGate/.test(widgetsRoute) &&
+    /if \(routeName === 'widgets'\) return null/.test(routineGatedRoutes) &&
+    /if \(!gateFeature\) return stack/.test(routineLayout) &&
+    !/glanceable|home screen|Live Activit(?:y|ies)/i.test(subscriptionCopy),
+  'Unavailable native widgets and Live Activities must bypass paywalls and not appear as working claims.',
 );
 
 blockPublicEnvSecrets(errors, env, exampleEnv);
@@ -389,7 +487,7 @@ for (const [key, validate] of [
   ['EXPO_PUBLIC_MARKETING_URL', productionUrl],
   ['EXPO_PUBLIC_SUPPORT_EMAIL', productionSupportEmail],
   ['EXPO_PUBLIC_APP_STORE_URL', productionUrl],
-  ['EXPO_PUBLIC_PLAY_STORE_URL', productionUrl],
+  ...(androidReleaseRequired ? [['EXPO_PUBLIC_PLAY_STORE_URL', productionUrl]] : []),
 ]) {
   warn(warnings, validate(env[key]), `Missing or non-production final value for ${key}.`);
 }
@@ -758,4 +856,9 @@ if (env.PHASE9_RUN_LIVE_SUPABASE_CHECK === 'true') {
   );
 }
 
+if (!androidReleaseRequired) {
+  console.log(
+    'N/A Android build, Play testing, Play packet, and Play Store URL evidence: excluded by launch contract.',
+  );
+}
 printResult('Phase 9 release smoke', errors, warnings);

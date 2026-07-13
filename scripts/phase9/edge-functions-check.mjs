@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { block, printResult, root } from './lib.mjs';
+import { validateEdgeFunctionManifest } from './edge-function-manifest-lib.mjs';
 
 const errors = [];
 const warnings = [];
@@ -17,6 +18,8 @@ const entrypoints = readdirSync(join(root, functionsDir), { withFileTypes: true 
   .map((entry) => join(functionsDir, entry.name, 'index.ts').replace(/\\/g, '/'))
   .filter((entrypoint) => existsSync(join(root, entrypoint)))
   .sort();
+
+errors.push(...validateEdgeFunctionManifest({ repoRoot: root }));
 
 block(errors, entrypoints.length > 0, 'No Supabase Edge Function entrypoints found.');
 block(errors, existsSync(join(root, lockPath)), `${lockPath} is missing.`);

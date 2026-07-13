@@ -8,8 +8,10 @@ import {
   normalizeNamedSignoff,
   normalizeProductionUrl,
 } from '../phase9/lib.mjs';
+import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs';
 
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
 const strict = process.argv.includes('--strict');
 const positional = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
 const inputPath = resolve(
@@ -36,6 +38,8 @@ const generatedOutputPaths = [
 
 const sourceHashPaths = [
   'package.json',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   '.env.example',
   'scripts/phase4/build-source-worklist.mjs',
   'scripts/phase4/beta-coverage-report.mjs',
@@ -430,6 +434,7 @@ const metrics = {
 
 const report = {
   generatedAt: new Date().toISOString(),
+  launchContract: launchContractSnapshot(launchContract),
   inputPath,
   gitSha,
   gitStatus,

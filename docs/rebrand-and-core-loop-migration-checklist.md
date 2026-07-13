@@ -1,6 +1,6 @@
 # Rebrand And Core-Loop Migration Checklist
 
-Date: 2026-07-06
+Date: 2026-07-12
 
 Purpose: turn the master plan into executable engineering slices without weakening launch gates.
 
@@ -11,6 +11,8 @@ Purpose: turn the master plan into executable engineering slices without weakeni
   explicit final identity env values and `BRAND_LEGAL_CLEARANCE=cleared`.
 - Public position: private skincare shelf and routine tracker, not generic scanner, AI beauty analyzer, or shopping marketplace.
 - Launch loop: add owned products -> get useful reviewed insight -> see AM/PM routine -> complete Today check-off -> understand private progress -> pay after value.
+- Release scope: iOS-only, every feature in `docs/FEATURE_INDEX.md` required;
+  the core loop remains the positioning spine, not a smaller release cutoff.
 
 ## Rebrand Migration Checklist
 
@@ -26,7 +28,7 @@ Do not create production accounts or store records until final brand clearance e
 
    - User-facing copy.
    - App config.
-   - Bundle/package/scheme.
+   - Bundle/scheme.
    - Store metadata.
    - Policy/support URL.
    - Share-card/deep-link asset.
@@ -39,7 +41,6 @@ Do not create production accounts or store records until final brand clearance e
    - Display name.
    - URL scheme.
    - Bundle ID.
-   - Android package.
    - Public domain and support URLs.
    - Policy links.
    - Share-card watermark.
@@ -58,7 +59,7 @@ Do not create production accounts or store records until final brand clearance e
 
    - Counsel/founder brand decision recorded.
    - No public launch asset uses conflicted identity unless cleared.
-   - Final identifiers match Apple, Google, RevenueCat, Supabase, policy URLs, and share links.
+   - Final identifiers match Apple, Google OAuth, RevenueCat, Supabase, policy URLs, and share links.
 
 ## Core-Loop Hardening Checklist
 
@@ -110,3 +111,8 @@ Target user outcome: a new user can add at least three real products and receive
 3. Inspect the first-session shelf-to-insight path and improve the smallest missing clarity or dead-end.
 4. Add production-mode tests proving unreviewed conflict/routine guidance remains hidden.
 5. Keep `docs/FOR_TAS_TO_DO.md`, `BLOCKERS.md`, `LAUNCH_READINESS.md`, and `PROGRESS.md` updated after each slice.
+
+After the core-loop hardening sequence, continue every feature and dependency in
+`docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md`; do not treat this
+checklist as permission to defer Ask, commerce, community, trend, native OCR,
+widgets, Live Activities, creator links, growth, or operator tooling.

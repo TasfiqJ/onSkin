@@ -726,7 +726,12 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('accessibilityLabel="Add product by hand"');
     expect(source).toContain("router.replace('/shelf/manual')");
     expect(source).toContain('if (!hasProductDraft || !productName || !canSave || saving) return;');
+    expect(source).toContain('accessibilityRole="radio"');
+    expect(source).toContain('accessibilityLabel={title}');
+    expect(source).toContain('accessibilityHint={subtitle}');
     expect(source).toContain('name: productName');
+    expect(source).toContain('const addedProduct = await m.add({');
+    expect(source).toContain('params: { addedProductId: addedProduct.id }');
     expect(source).not.toContain("name: draft.name || 'Product'");
     expect(source).toContain('<Sheet fallbackRoute={fallbackRoute} backdropAccessible={false}>');
     expect(source).toContain(

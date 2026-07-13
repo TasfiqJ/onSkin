@@ -40,20 +40,52 @@ Use this format for every significant product, architecture, pricing, privacy, o
 
 ### 2026-07-06 - Keep Full Product, Gate Public Exposure
 
-- Decision: Keep the full feature set in code, but expose/market only reviewed production-real surfaces.
-- Alternatives: cut to V1 only, launch everything, freeze advanced surfaces.
+- Decision: Superseded on 2026-07-12. Keep the full feature set in code and
+  require every indexed feature for the iOS launch; expose/market only reviewed
+  production-real behavior and do not count a hidden surface as complete.
+- Alternatives: cut to the prior V1, launch unreviewed scaffolds, freeze
+  advanced surfaces, or require every feature behind strict gates.
 - Criteria: founder preference, safety, app review, trust.
 - Evidence: existing repo already contains many surfaces and launch gates.
 - Risk: feature complexity can dilute focus.
+- Status: Superseded by the 2026-07-12 iOS all-features decision.
+
+### 2026-07-12 - Launch All Indexed Features On iOS
+
+- Decision: Release on iOS only with all feature IDs 1-20 and every Phase 7/8
+  surface in `docs/hugeToDo/launch-contract.json` production-real and enabled
+  in the approved build. Android release evidence is not applicable. Google
+  Sign-In remains in scope for the iPhone app. Existing safety, privacy,
+  professional-review, live-service, physical-iPhone, production, and App Store
+  gates remain mandatory.
+- Type: Product / Architecture / Launch
+- Alternatives: the smaller cross-platform V1; staged post-launch features;
+  simultaneous iOS/Android all-features release.
+- Criteria: explicit founder directive, one auditable scope, no simulated
+  completion, and no fabricated Android evidence.
+- Evidence: accepted update patch at
+  `docs/hugeToDo/2026-07-12-ios-all-features-master-plan-update.md`, execution
+  charter, and machine-readable launch contract.
+- Risk: broader scope increases time, cost, native work, professional review,
+  moderation/support staffing, and the number of launch failure modes.
 - Status: Accepted.
+- Owner: Founder for scope; Codex for all executable delivery work.
+- Review date: After all-features TestFlight exit review or an explicit founder
+  scope-change directive.
 
 ### 2026-07-09 - Launch Device Support Floor
 
-- Decision: Launch support floor is iOS 17.0+ and Android 10 / API 29+; launch-blocking layout QA starts at 360 x 640 for Expo web-compatible compact-phone coverage, while 320-wide browser viewports and sub-640 browser-only heights remain stress-only unless reproduced on a supported native device or required by app review/accessibility.
+- Decision: Superseded on 2026-07-12 for release-platform evidence. Launch
+  support is iPhone on iOS 17.0+; launch-blocking layout QA starts at 375 x 667
+  for the compact iPhone-class envelope. Android and 360-wide Android-class
+  checks remain source-health/resilience inputs but are not release gates.
 - Alternatives: support Expo's lower Android 7+ default, require Android 12+, keep the earlier 320 x 480 browser floor as launch-blocking, or drop compact Android phones entirely.
 - Criteria: paid consumer market reach, QA burden, current Expo SDK support, App Store/Play submission requirements, camera/photo reliability, accessibility, and launch speed.
 - Evidence: Expo SDK 56 supports iOS 16.4+ and Android compile/target SDK 36; Apple and Google current submission rules require modern build SDK/target API; the repo has passing 360 x 640, 360 x 740, 375 x 667/812, 390 x 844, 412 x 915, and 430 x 932 evidence plus extensive 320-wide stress evidence.
-- Risk: Android 9-or-older and iOS 16 users cannot install; users on sub-360 width or sub-640 height browser/device states may still hit polish bugs that are recorded but not launch-blocking unless real device/app-review evidence elevates them.
+- Risk: iOS 16 users cannot install; iPad and Android are outside this release;
+  smaller browser/device states can still reveal resilience bugs without
+  becoming launch blockers unless reproduced on supported iPhone hardware or
+  required by App Review/accessibility.
 - Status: Accepted.
 
 ### 2026-07-09 - Fail Closed Before Unreviewed Production Builds
@@ -94,7 +126,7 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Alternatives: keep the legacy generic-role Night 1/Night 2 template, schedule every generic treatment like a retinoid, allow unsupported actives to become daily PM rows, silently drop unsupported products, or let Plan and Today build separate schedules.
 - Criteria: no invented medical-adjacent timing, deterministic output, complete multi-active visibility, Plan/Today/product-detail consistency, readable supported-phone presentation, and an explicit path for future reviewed cadence.
 - Evidence: generator/orchestrator/projection and cross-model tests cover multiple retinoids/acids, BP, hydroquinone, copper peptide, category-only intake, permutation stability, and canonical summaries. The 360 x 640 and 390 x 844 browser pass in `test-results/human-e2e/2026-07-10/multi-active-plan-today-current/` verifies all canonical cycle products, BP AM placement, two withheld products, exactly one PM active, persisted completion, product-detail nights, and post-fix phone geometry.
-- Risk: BP phase and every withheld active's future cadence/co-use rules still require named clinical and cosmetic-chemistry review. Physical iOS/Android Dynamic Type and accessibility evidence remains external.
+- Risk: BP phase and every withheld active's future cadence/co-use rules still require named clinical and cosmetic-chemistry review. Physical-iPhone Dynamic Type and accessibility evidence remains external.
 - Status: Accepted.
 
 ### 2026-07-10 - Make Pregnancy Safety One Fail-Closed Local-First Contract
@@ -140,7 +172,7 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Alternatives: clear only AsyncStorage/files, rely on account-agnostic query keys to refetch, key every query by user without clearing local stores, publish account B while cleanup runs, or sign out permanently when one cleanup backend fails.
 - Criteria: no cross-account health/photo/shelf disclosure, no late account A write after deletion, no false empty-state flash, deterministic recovery, preservation of same-user guest value, cold-start mismatch detection, and no raw owner identifier at rest.
 - Evidence: hashed-owner, durable-cleanup-control, partial-retry, and boundary-decision tests, including a signed-out cold start; delayed private-KV read/write/removal and encrypted-photo write/marker tests; strict multi-store deletion tests; serialized provider, persisted-auth, and restore-retry contracts; root-owned account deletion integration; and the 360 x 640 failure/retry plus signed-out direct-route pass in `test-results/human-e2e/2026-07-10/onboarding-account-isolation-current/`.
-- Risk: local proof does not replace live Supabase sign-out, token-expiry, cold-start, and A-to-B testing on supported iOS/Android builds. A genuine cleanup failure intentionally blocks app data access until retry succeeds.
+- Risk: local proof does not replace live Supabase sign-out, token-expiry, cold-start, and A-to-B testing on supported iPhone builds. A genuine cleanup failure intentionally blocks app data access until retry succeeds.
 - Status: Accepted.
 
 ### 2026-07-10 - Compose Account Exports From Both Data Authorities
@@ -158,7 +190,7 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Alternatives: bind only the local read, let Edge/cache/share work continue after sign-out, trust any non-empty server `user_id`, clear generated cache without draining writers, disable sign-out while export runs, or cancel every token refresh as if it were an account change.
 - Criteria: no prior-owner plaintext created or shared after a new account publishes, exact server/local owner composition, prompt sign-out cancellation, deterministic cleanup/retry, device-only export support, and no false cancellation on same-user refresh.
 - Evidence: `accountGeneration.test.ts`, `actions.test.ts`, `localAccountIsolation.test.ts`, and `accountSessionIsolationContracts.test.ts` cover delayed abort/drain, nested boundaries, stale leases, same-generation validity, exact owner mismatch, post-write invalidation, deletion, and root-boundary integration. Supported-phone UI evidence is in `test-results/human-e2e/2026-07-11/data-export-account-generation-current/`.
-- Risk: `getUser`, real Edge cancellation, native share-sheet lifetime, and cache semantics still require configured Supabase plus supported physical iOS/Android proof. A native share sheet already opened by account A intentionally keeps the next account gated until it closes and cleanup settles.
+- Risk: `getUser`, real Edge cancellation, native share-sheet lifetime, and cache semantics still require configured Supabase plus supported physical-iPhone proof. A native share sheet already opened by account A intentionally keeps the next account gated until it closes and cleanup settles.
 - Status: Accepted.
 
 ### 2026-07-10 - Persist Conflict Choices Without Weakening The Reviewed Schedule
@@ -185,7 +217,7 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Alternatives: delete unreadable envelopes and return defaults, rotate keys automatically, write new native keys into AsyncStorage when SecureStore fails, rely on every feature store to distinguish storage failures, or add cloud key recovery before launch.
 - Criteria: no silent local data loss, native key confidentiality, deterministic recovery, concurrency safety, backwards-compatible web and legacy-key behavior, explicit user deletion, and testability without claiming unavailable OS evidence.
 - Evidence: `privateKVContentKey.test.ts`, `privateKV.test.ts`, `encryptedStorage.test.ts`, and `store.test.ts` cover native/web storage boundaries, legacy migration, missing/invalid/wrong keys, malformed/truncated/future envelopes, foreign/reserved-authority isolation, transient read failure, failed-marker persistence, same-key serialization, queued-boundary rejection, stale/concurrent-write refusal, ciphertext preservation, Progress note propagation, and concurrent first writes. Expo web corruption/recovery evidence is in `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/`.
-- Risk: ciphertext is unrecoverable after genuine OS key loss because V1 intentionally has no cloud backup or recovery escrow. Physical iOS/Android keychain/keystore, reinstall, restore, locked-device, and storage-pressure behavior still requires staging-device evidence; the app must surface retry/recovery rather than claim recovery it cannot perform.
+- Risk: ciphertext is unrecoverable after genuine OS key loss because the release intentionally has no cloud backup or recovery escrow. Physical-iPhone Keychain, reinstall, restore, locked-device, and storage-pressure behavior still requires staging-device evidence; the app must surface retry/recovery rather than claim recovery it cannot perform.
 - Status: Accepted.
 
 ### 2026-07-10 - Gate Every Sensitive Progress Entry With Shared App-Lock State
@@ -194,7 +226,7 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Alternatives: keep a tab-local gallery gate, authenticate independently on every nested screen, put the timeline gate outside entitlement checks, treat unreadable lock preference as disabled, or rely only on the app-wide overlay.
 - Criteria: direct-link privacy, no pre-lock content mount/flash, prompt ordering, usable in-session navigation, background relock, free-user paywall ordering, and deterministic browser/native verification.
 - Evidence: `PhotoTimelineLockGate.tsx`, `AppLockProvider.tsx`, app-lock and Progress route contracts, plus 360 x 640 and 390 x 844 direct-route/session evidence in `test-results/human-e2e/2026-07-10/progress-direct-route-lock-current/`. A real malformed web preference stays unchanged behind the lock and then recovers through the named authenticated reset in `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/`.
-- Risk: Expo web proves routing, mounting, geometry, and state transitions but not native biometric security. Physical iOS/Android LocalAuthentication ordering, background transitions, cancellation, and VoiceOver/TalkBack focus restoration remain release QA.
+- Risk: Expo web proves routing, mounting, geometry, and state transitions but not native biometric security. Physical-iPhone LocalAuthentication ordering, background transitions, cancellation, and VoiceOver focus restoration remain release QA.
 - Status: Accepted.
 
 ### 2026-07-10 - Treat Progress Read Failure As Blocked, Never Empty
@@ -203,7 +235,7 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Alternatives: let each route interpret `undefined` as empty, catch storage failure in the store and return `[]`, show route-specific errors while still mounting content, or permit capture/save against cached defaults.
 - Criteria: preserve ciphertext, avoid false deletion/loss signals, prevent stale/default overwrites, keep camera/review/detail content private, make transient SecureStore/Keychain/Keystore failure recoverable, and keep route behavior consistent.
 - Evidence: `PhotoStorageGate.tsx`, `usePhotos.ts`, photo store and route contracts, plus persistent and one-shot supported-phone evidence in `test-results/human-e2e/2026-07-10/progress-storage-recovery-current/`.
-- Risk: Expo web proves query state, content gating, retry, layout, and network absence but cannot inject real native keychain/keystore faults. Physical iOS/Android staging builds must prove ciphertext remains byte-identical and retry succeeds after key access returns.
+- Risk: Expo web proves query state, content gating, retry, layout, and network absence but cannot inject real native Keychain faults. Physical-iPhone staging builds must prove ciphertext remains byte-identical and retry succeeds after key access returns.
 - Status: Accepted.
 
 ### 2026-07-06 - Keep Expo/Supabase/RevenueCat

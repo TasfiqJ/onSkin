@@ -159,26 +159,16 @@ const cases = [
     },
   },
   {
-    name: 'strict Phase 5 QA packet rejects Android device labels without OS versions',
-    result: run({ PHASE5_ANDROID_DEVICE: 'Pixel 8' }),
+    name: 'strict Phase 5 QA packet marks Android build and device evidence not applicable',
+    result: run({ PHASE5_ANDROID_BUILD_ID: '', PHASE5_ANDROID_DEVICE: '' }),
     expect(result) {
+      if (result.status !== 0) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
       return (
-        result.status === 1 &&
-        /PHASE5_ANDROID_DEVICE must name a physical Android model and Android OS version/.test(
-          output(result),
-        )
-      );
-    },
-  },
-  {
-    name: 'strict Phase 5 QA packet rejects generic Android device labels',
-    result: run({ PHASE5_ANDROID_DEVICE: 'Android model / Android 15' }),
-    expect(result) {
-      return (
-        result.status === 1 &&
-        /PHASE5_ANDROID_DEVICE must name a physical Android model and Android OS version/.test(
-          output(result),
-        )
+        packet.buildEvidence.platformStatus.ios === 'required' &&
+        packet.buildEvidence.platformStatus.android === 'not_applicable' &&
+        packet.buildEvidence.androidBuildId === null &&
+        packet.buildEvidence.androidDevice === null
       );
     },
   },
@@ -237,6 +227,8 @@ const cases = [
         packet.files.some(
           (file) => file.path === 'scripts/phase5/performance-evidence-smoke.mjs',
         ) &&
+        packet.files.some((file) => file.path === 'docs/hugeToDo/launch-contract.json') &&
+        packet.files.some((file) => file.path === 'scripts/launch/contract.mjs') &&
         packet.files.some((file) => file.path === 'scripts/e2e/human-e2e-manifest.mjs') &&
         packet.files.some((file) => file.path === 'apps/mobile/src/app/_layout.tsx') &&
         packet.files.some((file) => file.path === 'apps/mobile/src/app/(tabs)/progress.tsx') &&

@@ -47,6 +47,7 @@ const viewport = {
       (accountUpgradeMode || accountIsolationMode ? 360 : 320),
   ),
 };
+const isLaunchFloorViewport = viewport.width >= 375 && viewport.height >= 667;
 
 mkdirSync(evidenceDir, { recursive: true });
 
@@ -366,7 +367,7 @@ function rectByTextExpression(label, exact) {
       return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
     const textMatches = (text) => exact ? text === label : text.includes(label);
-    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],a,label'));
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],[role="radio"],a,label'));
     const matches = [];
     for (const node of nodes) {
       if (!visible(node)) continue;
@@ -439,7 +440,7 @@ function scrollTextIntoViewExpression(label, exact) {
       return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
     const textMatches = (text) => exact ? text === label : text.includes(label);
-    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],a,label'));
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],[role="radio"],a,label'));
     const target = nodes.find((node) => {
       if (!visible(node)) return false;
       const values = [
@@ -484,8 +485,15 @@ function fillExpression(label, value) {
     const label = ${JSON.stringify(label)};
     const value = ${JSON.stringify(value)};
     const normalize = (next) => String(next ?? '').replace(/\\s+/g, ' ').trim();
+    const visible = (node) => {
+      if (!(node instanceof Element)) return false;
+      const rect = node.getBoundingClientRect();
+      const style = getComputedStyle(node);
+      return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
+    };
     const controls = Array.from(document.querySelectorAll('input,textarea'));
     const target = controls.find((node) => {
+      if (!visible(node)) return false;
       const values = [
         node.getAttribute('aria-label'),
         node.getAttribute('accessibilitylabel'),
@@ -527,7 +535,7 @@ function auditExpression() {
       const style = getComputedStyle(node);
       return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight && style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity || '1') > 0;
     };
-    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],a,input,textarea,select'));
+    const nodes = Array.from(document.querySelectorAll('button,[role="button"],[role="checkbox"],[role="radio"],a,input,textarea,select'));
     const controls = [];
     const issues = [];
 
@@ -715,7 +723,7 @@ function writeReport(summary) {
     ? 'Anonymous account-upgrade recovery run'
     : summary.accountIsolationMode
       ? 'Account sign-out isolation and cleanup recovery run'
-      : 'First-session onboarding 320 x 430 stress run';
+      : `First-session onboarding ${viewport.width} x ${viewport.height} run`;
   const featureLabel = summary.accountUpgradeMode
     ? 'Identity-preserving account upgrade UI'
     : summary.accountIsolationMode
@@ -725,7 +733,7 @@ function writeReport(summary) {
     ? 'Invalid email code and successful recovery'
     : summary.accountIsolationMode
       ? 'Cleanup failure, retry, and signed-out direct routes'
-      : 'Happy path / stress viewport';
+      : `Happy path / ${isLaunchFloorViewport ? 'launch-floor phone viewport' : 'stress viewport'}`;
   const lines = [
     '# Human-Simulated E2E Run Report',
     '',
@@ -767,7 +775,9 @@ function writeReport(summary) {
       ? '- The development-only fixture proves route interaction and recovery, not live Supabase email delivery or identity mutation.'
       : summary.accountIsolationMode
         ? '- The development-only fixture proves local cache/storage isolation and recovery; live Supabase A-to-B switching remains staging QA.'
-        : '- 320 x 430 is resilience evidence below the accepted launch web floor.',
+        : isLaunchFloorViewport
+          ? '- Expo web verifies the supported phone geometry and flow logic; it does not replace native iPhone evidence.'
+          : `- ${viewport.width} x ${viewport.height} is resilience evidence below the 375 x 667 phone launch floor.`,
     '- Native iOS/Android onboarding still needs simulator or physical-device QA for OS prompts and platform text settings.',
     '',
   ];
@@ -840,7 +850,17 @@ async function run() {
     await addProduct(client, productNames[2], '12-products-after-3');
     await clickByText(client, 'Continue');
 
-    await waitForText(client, 'Building your plan', 15_000);
+    await waitForCondition(
+      client,
+      `window.location.pathname !== '/onboarding/products'`,
+      30_000,
+      'product intake to leave after Continue',
+    );
+    const postProductsPath = await evaluate(client, 'window.location.pathname');
+    assert(
+      postProductsPath === '/onboarding/analyzing' || postProductsPath === '/onboarding/reveal',
+      `Product intake continued to unexpected path: ${postProductsPath}`,
+    );
     await captureStep(client, '13-post-products-continue-current');
     await waitForText(client, 'YOUR SKIN PROFILE', 45_000);
     await waitForText(client, 'FIRST INSIGHT');
@@ -1226,10 +1246,9 @@ async function run() {
       verdict: 'pass',
       viewport: {
         ...viewport,
-        supportClass:
-          accountUpgradeMode || accountIsolationMode
-            ? 'accepted launch web support floor'
-            : 'resilience stress viewport below launch web support floor',
+        supportClass: isLaunchFloorViewport
+          ? 'supported phone geometry at or above the 375 x 667 launch floor'
+          : 'resilience stress viewport below the 375 x 667 launch floor',
       },
     };
 

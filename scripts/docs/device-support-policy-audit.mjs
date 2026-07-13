@@ -1,8 +1,16 @@
 #!/usr/bin/env node
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
+import {
+  isReleasePlatformRequired,
+  launchContractSnapshot,
+  loadLaunchContract,
+  platformRequirementStatus,
+} from '../launch/contract.mjs';
 
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const strict = process.argv.includes('--strict');
 const check = process.argv.includes('--check');
 
@@ -24,46 +32,36 @@ const files = {
   packageJson: 'package.json',
   testingStrategy: 'docs/TESTING_STRATEGY.md',
   userFlowTree: 'docs/USER_FLOW_TREE.md',
+  launchContract: 'docs/hugeToDo/launch-contract.json',
+  launchContractScript: 'scripts/launch/contract.mjs',
 };
 
 const docNeedles = [
   {
     path: files.devicePolicy,
-    needles: [
-      'iOS 17.0+',
-      'Android 10 / API 29+',
-      '360 x 640',
-      '375 pt width or wider',
-      '360 dp smallest width or wider',
-      'Stress-Only Viewports',
-      '320 x 480',
-      'Sub-360 dp/px width',
-      'reduce usable portrait height below 640 px/dp',
-    ],
+    needles: ['iOS 17.0+', '375 pt width or wider', 'Stress-Only Viewports', '320 x 480'],
   },
   {
     path: files.decisions,
     needles: [
       'Launch Device Support Floor',
-      'iOS 17.0+ and Android 10 / API 29+',
-      'launch-blocking layout QA starts at 360 x 640',
-      '320-wide browser viewports and sub-640 browser-only heights remain stress-only',
+      'iOS 17.0+',
+      '360-wide Android-class',
+      'source-health/resilience inputs but are not release gates',
     ],
   },
   {
     path: files.forTas,
     needles: [
-      'docs/DEVICE_SUPPORT_POLICY.md',
-      'iOS 17.0+',
-      'Android 10 / API 29+',
-      '360 x 640 Expo web-compatible shortest-phone',
-      'time on iOS 16, Android 9-or-older',
+      'supported physical iPhones',
+      'Android credentials, builds, device evidence',
+      'not founder work',
+      'Google OAuth for iPhone remains in scope',
     ],
   },
   {
     path: files.launchReadiness,
     needles: [
-      '360 x 640 launch-floor 200% text-pressure sweep',
       '320-wide stress Expo web route audit',
       'The support contract',
       'is defined in `docs/DEVICE_SUPPORT_POLICY.md`',
@@ -72,7 +70,6 @@ const docNeedles = [
   {
     path: files.blockers,
     needles: [
-      '360 x 640 launch-floor 200% text-pressure sweep',
       'keeps 320-wide browser evidence as stress/resilience coverage',
       'docs/DEVICE_SUPPORT_POLICY.md',
     ],
@@ -81,7 +78,7 @@ const docNeedles = [
     path: files.testingStrategy,
     needles: [
       'Device and viewport support floors are defined in',
-      'supported small phone layout from `docs/DEVICE_SUPPORT_POLICY.md`',
+      'supported compact iPhone layout from `docs/DEVICE_SUPPORT_POLICY.md`',
       'stress-only 320 x 568 / 480 / 430 / 390 / 370 / 360 browser viewports',
     ],
   },
@@ -89,7 +86,6 @@ const docNeedles = [
     path: files.e2eGuide,
     needles: [
       'Device and layout support policy: `docs/DEVICE_SUPPORT_POLICY.md`',
-      'checks the launch-blocking 360 x 640 support-floor route sweep',
       'Whether the viewport/device is inside the launch support floor or is a',
     ],
   },
@@ -97,7 +93,6 @@ const docNeedles = [
     path: files.userFlowTree,
     needles: [
       'Device/layout support policy: `docs/DEVICE_SUPPORT_POLICY.md`',
-      'Launch-blocking Expo web floor: 360 x 640',
       '320-wide browser viewports and',
       'smaller 320-wide stress evidence when available',
     ],
@@ -117,16 +112,10 @@ const requiredLaunchVerifyParts = [
 ];
 
 const manifestScriptNeedles = [
-  'support-floor-360-640-200-text-pressure',
-  "title: '360 x 640 launch-floor 200% text-pressure route sweep'",
   'required: true',
-  "supportClass: 'launch-blocking'",
-  'text-pressure-200-supported-360-640-postfix',
-  'android-360-740-200-text-pressure',
   'iphone-375-667-200-text-pressure',
   'modern-390-200-text-pressure',
   'modern-430-200-text-pressure',
-  'skipped-routes-360-640-200-text-pressure',
   'function textPressureLegacyFloorGate',
   'required: false',
   "supportClass: 'resilience'",
@@ -134,21 +123,28 @@ const manifestScriptNeedles = [
 ];
 
 const requiredSupportedPhoneGateIds = [
-  'android-360-740-200-text-pressure',
   'iphone-375-667-200-text-pressure',
   'iphone-375-200-text-pressure',
   'modern-390-200-text-pressure',
-  'android-412-640-200-text-pressure',
-  'android-412-200-text-pressure',
   'boundary-414-896-200-text-pressure',
-  'android-430-640-200-text-pressure',
   'modern-430-200-text-pressure',
-  'skipped-routes-360-640-200-text-pressure',
   'skipped-routes-375-667-200-text-pressure',
   'skipped-routes-390-844-200-text-pressure',
+  'skipped-routes-430-932-200-text-pressure',
+];
+
+const retainedAndroidViewportGateIds = [
+  'android-360-740-200-text-pressure',
+  'android-412-640-200-text-pressure',
+  'android-412-200-text-pressure',
+  'android-430-640-200-text-pressure',
+];
+
+const retainedBelowFloorGeometryGateIds = [
+  'support-floor-360-640-200-text-pressure',
+  'skipped-routes-360-640-200-text-pressure',
   'skipped-routes-412-640-200-text-pressure',
   'skipped-routes-430-640-200-text-pressure',
-  'skipped-routes-430-932-200-text-pressure',
 ];
 
 function abs(path) {
@@ -246,24 +242,28 @@ const configContracts = [
     label: 'iOS tablet launch scope',
     pass: appBase.expo?.ios?.supportsTablet === false,
   },
-  {
-    actual: androidBuildProperties.minSdkVersion,
-    expected: 29,
-    label: 'Android min SDK install floor',
-    pass: androidBuildProperties.minSdkVersion === 29,
-  },
-  {
-    actual: androidBuildProperties.compileSdkVersion,
-    expected: 36,
-    label: 'Android compile SDK',
-    pass: androidBuildProperties.compileSdkVersion === 36,
-  },
-  {
-    actual: androidBuildProperties.targetSdkVersion,
-    expected: 36,
-    label: 'Android target SDK',
-    pass: androidBuildProperties.targetSdkVersion === 36,
-  },
+  ...(androidReleaseRequired
+    ? [
+        {
+          actual: androidBuildProperties.minSdkVersion,
+          expected: 29,
+          label: 'Android min SDK install floor',
+          pass: androidBuildProperties.minSdkVersion === 29,
+        },
+        {
+          actual: androidBuildProperties.compileSdkVersion,
+          expected: 36,
+          label: 'Android compile SDK',
+          pass: androidBuildProperties.compileSdkVersion === 36,
+        },
+        {
+          actual: androidBuildProperties.targetSdkVersion,
+          expected: 36,
+          label: 'Android target SDK',
+          pass: androidBuildProperties.targetSdkVersion === 36,
+        },
+      ]
+    : []),
 ];
 
 for (const contract of configContracts) {
@@ -274,7 +274,7 @@ for (const contract of configContracts) {
   }
 }
 
-if (!plugin) {
+if (androidReleaseRequired && !plugin) {
   blockers.push('apps/mobile/app.base.json is missing the expo-build-properties plugin.');
 }
 
@@ -312,17 +312,15 @@ const gateResults = manifestGates.map((gate) => ({
   title: gate.title,
 }));
 
-const launchGate = gateResults.find(
-  (gate) => gate.id === 'support-floor-360-640-200-text-pressure',
-);
+const launchGate = gateResults.find((gate) => gate.id === 'iphone-375-667-200-text-pressure');
 if (!launchGate) {
-  blockers.push(`${files.humanManifest} is missing the 360 x 640 launch-floor gate.`);
+  blockers.push(`${files.humanManifest} is missing the iPhone 375 x 667 launch-floor gate.`);
 } else {
-  if (!launchGate.required) blockers.push('360 x 640 launch-floor gate must be required.');
-  if (launchGate.supportClass !== 'launch-blocking') {
-    blockers.push('360 x 640 launch-floor gate must be launch-blocking.');
+  if (!launchGate.required) blockers.push('iPhone 375 x 667 launch-floor gate must be required.');
+  if (launchGate.supportClass !== 'supported-phone') {
+    blockers.push('iPhone 375 x 667 launch-floor gate must be supported-phone evidence.');
   }
-  if (launchGate.status !== 'pass') blockers.push('360 x 640 launch-floor gate must pass.');
+  if (launchGate.status !== 'pass') blockers.push('iPhone 375 x 667 launch-floor gate must pass.');
 }
 
 for (const gateId of requiredSupportedPhoneGateIds) {
@@ -348,6 +346,28 @@ if (gateResults.filter((gate) => /\b320 x 480\b/.test(String(gate.title ?? '')))
   warnings.push(`${files.humanManifest} has no 320 x 480 stress evidence entry.`);
 }
 
+for (const gateId of retainedBelowFloorGeometryGateIds) {
+  const gate = gateResults.find((candidate) => candidate.id === gateId);
+  if (!gate) continue;
+  if (gate.required || gate.supportClass !== 'resilience') {
+    blockers.push(
+      `${files.humanManifest} misclassifies retained below-floor geometry gate ${gateId}.`,
+    );
+  }
+}
+
+if (!androidReleaseRequired) {
+  for (const gateId of retainedAndroidViewportGateIds) {
+    const gate = gateResults.find((candidate) => candidate.id === gateId);
+    if (!gate) continue;
+    if (gate.required || gate.supportClass !== 'resilience') {
+      blockers.push(
+        `${files.humanManifest} misclassifies Android-only viewport gate ${gateId} while Android release evidence is not applicable.`,
+      );
+    }
+  }
+}
+
 for (const command of requiredPackageScripts) {
   if (!Object.hasOwn(packageJson.scripts ?? {}, command)) {
     blockers.push(`${files.packageJson} is missing ${command}.`);
@@ -363,6 +383,11 @@ for (const scriptPart of requiredLaunchVerifyParts) {
 
 const audit = {
   generatedAt: new Date().toISOString(),
+  launchContract: launchContractSnapshot(launchContract),
+  platformStatus: {
+    ios: platformRequirementStatus('ios', launchContract),
+    android: platformRequirementStatus('android', launchContract),
+  },
   status: blockers.length === 0 ? 'pass' : 'blocked',
   strict,
   purpose:
@@ -402,11 +427,11 @@ const mdContent = [
   `Status: ${audit.status}`,
   `Strict mode: ${strict ? 'yes' : 'no'}`,
   '',
-  'This generated audit keeps the V1 device cutoff explicit: iOS 17.0+,',
-  'Android 10 / API 29+, Android compile/target API 36, 360 x 640 as the',
-  'launch-blocking Expo web layout floor, and 320-wide browser sizes as',
+  `This generated audit keeps the contract-required device cutoff explicit: iOS ${launchContract.release.minimumIosVersion}+,`,
+  '375 pt width or wider as the supported iPhone layout floor, and 320-wide browser sizes as',
   'stress/resilience evidence unless real device or review evidence elevates',
   'them.',
+  `Android release evidence: ${platformRequirementStatus('android', launchContract)}.`,
   '',
   '## Summary',
   '',

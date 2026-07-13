@@ -466,6 +466,10 @@ block(
 );
 
 const revenueCat = read('supabase/functions/revenuecat-webhook/index.ts');
+const revenueCatCore = read('supabase/functions/revenuecat-webhook/webhookCore.ts');
+const revenueCatAtomicMigration = read(
+  'supabase/migrations/20260713000041_revenuecat_webhook_atomic_projection.sql',
+);
 const revenueCatHandler = revenueCat.slice(revenueCat.indexOf('Deno.serve'));
 block(
   errors,
@@ -562,27 +566,29 @@ block(
 );
 block(
   errors,
-  /sanitizeRevenueCatEvent/.test(revenueCat),
+  /sanitizeRevenueCatEvent/.test(revenueCatCore),
   'RevenueCat webhook must sanitize provider events before JSON persistence.',
 );
 block(
   errors,
-  /payload:\s*\{\s*event:\s*sanitizedEvent\s*\}/.test(revenueCat),
+  /p_payload:\s*\{\s*event:\s*sanitizedEvent\s*\}/.test(revenueCatCore),
   'RevenueCat webhook must persist only sanitized subscription event payloads.',
 );
 block(
   errors,
-  /raw_status:\s*sanitizedEvent/.test(revenueCat),
+  /coalesce\(p_payload\s*->\s*'event',\s*'\{\}'::jsonb\)/.test(revenueCatAtomicMigration),
   'RevenueCat webhook must persist only sanitized entitlement raw_status snapshots.',
 );
 block(
   errors,
-  /error:\s*error\s*\?\s*'ENTITLEMENT_WRITE_FAILED'\s*:\s*null/.test(revenueCat),
-  'RevenueCat webhook must persist only stable entitlement write failure codes.',
+  /REVENUECAT_ATOMIC_PROCESSING_FAILED:/.test(revenueCatAtomicMigration) &&
+    /return json\('processing failed',\s*503\)/.test(revenueCat),
+  'RevenueCat webhook must persist a stable failure code and request provider retry.',
 );
 block(
   errors,
-  !/error:\s*error\?\.message/.test(revenueCat),
+  !/error:\s*error\?\.message/.test(revenueCat) &&
+    !/error:\s*error\?\.message/.test(revenueCatCore),
   'RevenueCat webhook must not persist raw entitlement write errors.',
 );
 block(
@@ -592,13 +598,18 @@ block(
 );
 block(
   errors,
-  !/raw_status:\s*event/.test(revenueCat),
+  !/raw_status:\s*event/.test(revenueCat) && !/raw_status:\s*event/.test(revenueCatCore),
   'RevenueCat webhook must not persist the raw provider event.',
 );
 block(
   errors,
-  /rc_event_id/.test(revenueCat) && /maybeSingle/.test(revenueCat),
-  'RevenueCat webhook must be idempotent by event id.',
+  /persistRevenueCatEvent\(supabase,\s*atomicArgs\)/.test(revenueCat) &&
+    /on conflict \(rc_event_id\) do nothing/.test(revenueCatAtomicMigration) &&
+    /excluded\.rc_event_at > entitlement_projection\.rc_event_at/.test(revenueCatAtomicMigration) &&
+    /pg_catalog\.convert_to\(excluded\.rc_event_id/.test(revenueCatAtomicMigration) &&
+    !/\.from\('subscriptions_events'\)/.test(revenueCatHandler) &&
+    !/\.from\('entitlements'\)/.test(revenueCatHandler),
+  'RevenueCat webhook must delegate idempotency and ordered event/projection writes to one atomic RPC.',
 );
 block(
   errors,
@@ -623,6 +634,9 @@ block(
     ) &&
     /revenuecat-webhook deactivates entitlement on expiration/.test(liveRevenueCatWebhook) &&
     /revenuecat-webhook revokes entitlement on refund/.test(liveRevenueCatWebhook) &&
+    /revenuecat-webhook records reordered stale events without regressing entitlement/.test(
+      liveRevenueCatWebhook,
+    ) &&
     /revenuecat-webhook does not persist raw provider payload fields/.test(liveRevenueCatWebhook) &&
     /subscriber_attributes/.test(liveRevenueCatWebhook) &&
     /raw_receipt/.test(liveRevenueCatWebhook) &&

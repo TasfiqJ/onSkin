@@ -96,7 +96,7 @@ function ConsentGate({
     <CaptureOverlay backgroundColor={NIGHT_CONSENT_OVERLAY_BG} compact={compact}>
       <Text
         style={{
-          fontFamily: 'InstrumentSerif_400Regular',
+          fontFamily: 'InstrumentSerif-Regular',
           fontSize: shortPhone ? 25 : compact ? 27 : 30,
           lineHeight: shortPhone ? 27 : compact ? 29 : undefined,
           color: '#F4EFE7',
@@ -118,7 +118,7 @@ function ConsentGate({
           </Text>
           <Text
             style={{
-              fontFamily: 'HankenGrotesk_400Regular',
+              fontFamily: 'HankenGrotesk-Regular',
               fontSize: shortPhone ? 13 : compact ? 14 : 14.5,
               color: 'rgba(244,239,231,0.9)',
               lineHeight: shortPhone ? 17 : compact ? 19 : 21,
@@ -130,7 +130,7 @@ function ConsentGate({
       ))}
       <Text
         style={{
-          fontFamily: 'IBMPlexMono_400Regular',
+          fontFamily: 'IBMPlexMono-Regular',
           fontSize: shortPhone ? 10 : compact ? 10.5 : 11,
           color: NIGHT_FOOTNOTE_TEXT,
           lineHeight: shortPhone ? 13 : compact ? 15 : undefined,
@@ -152,7 +152,7 @@ function ConsentGate({
           <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#9DB18A' }} />
           <Text
             style={{
-              fontFamily: 'HankenGrotesk_500Medium',
+              fontFamily: 'HankenGrotesk-Medium',
               fontSize: compact ? 12 : 12.5,
               color: 'rgba(244,239,231,0.88)',
               flex: 1,
@@ -178,7 +178,7 @@ function ConsentGate({
         >
           <Text
             style={{
-              fontFamily: 'HankenGrotesk_600SemiBold',
+              fontFamily: 'HankenGrotesk-SemiBold',
               fontSize: compact ? 12.5 : 13.5,
               color: '#F4EFE7',
               marginBottom: compact ? 0 : 2,
@@ -191,7 +191,7 @@ function ConsentGate({
           {compact ? null : (
             <Text
               style={{
-                fontFamily: 'HankenGrotesk_400Regular',
+                fontFamily: 'HankenGrotesk-Regular',
                 fontSize: 13,
                 color: 'rgba(244,239,231,0.86)',
                 lineHeight: 18,
@@ -215,7 +215,7 @@ function ConsentGate({
           opacity: granting ? 0.6 : 1,
         }}
       >
-        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+        <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
           {granting ? 'Saving choice' : 'Take photos. On device only'}
         </Text>
       </Pressable>
@@ -233,7 +233,7 @@ function ConsentGate({
       >
         <Text
           style={{
-            fontFamily: 'HankenGrotesk_500Medium',
+            fontFamily: 'HankenGrotesk-Medium',
             fontSize: 15,
             color: NIGHT_SECONDARY_ACTION_TEXT,
           }}
@@ -256,7 +256,7 @@ function CameraUnavailableGate({
     <CaptureOverlay>
       <Text
         style={{
-          fontFamily: 'InstrumentSerif_400Regular',
+          fontFamily: 'InstrumentSerif-Regular',
           fontSize: 30,
           lineHeight: 34,
           color: '#F4EFE7',
@@ -267,7 +267,7 @@ function CameraUnavailableGate({
       </Text>
       <Text
         style={{
-          fontFamily: 'HankenGrotesk_400Regular',
+          fontFamily: 'HankenGrotesk-Regular',
           fontSize: 14.5,
           color: 'rgba(244,239,231,0.78)',
           lineHeight: 21,
@@ -287,7 +287,7 @@ function CameraUnavailableGate({
           justifyContent: 'center',
         }}
       >
-        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+        <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
           Try camera again
         </Text>
       </Pressable>
@@ -305,7 +305,7 @@ function CameraUnavailableGate({
       >
         <Text
           style={{
-            fontFamily: 'HankenGrotesk_500Medium',
+            fontFamily: 'HankenGrotesk-Medium',
             fontSize: 15,
             color: NIGHT_SECONDARY_ACTION_TEXT,
           }}
@@ -329,7 +329,7 @@ function PhotoCaptureFailureGate({
       <View accessibilityRole="alert">
         <Text
           style={{
-            fontFamily: 'InstrumentSerif_400Regular',
+            fontFamily: 'InstrumentSerif-Regular',
             fontSize: 30,
             lineHeight: 34,
             color: '#F4EFE7',
@@ -340,7 +340,7 @@ function PhotoCaptureFailureGate({
         </Text>
         <Text
           style={{
-            fontFamily: 'HankenGrotesk_400Regular',
+            fontFamily: 'HankenGrotesk-Regular',
             fontSize: 14.5,
             color: 'rgba(244,239,231,0.78)',
             lineHeight: 21,
@@ -361,7 +361,7 @@ function PhotoCaptureFailureGate({
           justifyContent: 'center',
         }}
       >
-        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+        <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
           Try photo again
         </Text>
       </Pressable>
@@ -379,7 +379,7 @@ function PhotoCaptureFailureGate({
       >
         <Text
           style={{
-            fontFamily: 'HankenGrotesk_500Medium',
+            fontFamily: 'HankenGrotesk-Medium',
             fontSize: 15,
             color: NIGHT_SECONDARY_ACTION_TEXT,
           }}
@@ -408,7 +408,7 @@ function PermissionGate({
     <CaptureOverlay>
       <Text
         style={{
-          fontFamily: 'InstrumentSerif_400Regular',
+          fontFamily: 'InstrumentSerif-Regular',
           fontSize: 30,
           lineHeight: 34,
           color: '#F4EFE7',
@@ -419,7 +419,7 @@ function PermissionGate({
       </Text>
       <Text
         style={{
-          fontFamily: 'HankenGrotesk_400Regular',
+          fontFamily: 'HankenGrotesk-Regular',
           fontSize: 14.5,
           color: 'rgba(244,239,231,0.78)',
           lineHeight: 21,
@@ -443,7 +443,7 @@ function PermissionGate({
         >
           <Text
             style={{
-              fontFamily: 'HankenGrotesk_600SemiBold',
+              fontFamily: 'HankenGrotesk-SemiBold',
               fontSize: 13.5,
               color: '#F4EFE7',
               marginBottom: 2,
@@ -453,7 +453,7 @@ function PermissionGate({
           </Text>
           <Text
             style={{
-              fontFamily: 'HankenGrotesk_400Regular',
+              fontFamily: 'HankenGrotesk-Regular',
               fontSize: 13,
               color: 'rgba(244,239,231,0.86)',
               lineHeight: 18,
@@ -474,7 +474,7 @@ function PermissionGate({
           justifyContent: 'center',
         }}
       >
-        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 16, color: BG }}>
+        <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 16, color: BG }}>
           {canAskAgain ? 'Allow camera' : 'Open settings'}
         </Text>
       </Pressable>
@@ -492,7 +492,7 @@ function PermissionGate({
       >
         <Text
           style={{
-            fontFamily: 'HankenGrotesk_500Medium',
+            fontFamily: 'HankenGrotesk-Medium',
             fontSize: 15,
             color: NIGHT_SECONDARY_ACTION_TEXT,
           }}
@@ -667,7 +667,7 @@ function CaptureScreenContent() {
             borderColor: 'transparent',
           }}
         />
-        <Text style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14, color: '#F4EFE7' }}>
+        <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 14, color: '#F4EFE7' }}>
           Front · weekly
         </Text>
         <View
@@ -747,7 +747,7 @@ function CaptureScreenContent() {
           />
           <Text
             style={{
-              fontFamily: 'IBMPlexMono_400Regular',
+              fontFamily: 'IBMPlexMono-Regular',
               fontSize: 10,
               color: 'rgba(244,239,231,0.75)',
               textAlign: 'center',
@@ -758,7 +758,7 @@ function CaptureScreenContent() {
           </Text>
           <Text
             style={{
-              fontFamily: 'IBMPlexMono_400Regular',
+              fontFamily: 'IBMPlexMono-Regular',
               fontSize: 9,
               color: 'rgba(244,239,231,0.5)',
               textAlign: 'center',
@@ -789,9 +789,7 @@ function CaptureScreenContent() {
               backgroundColor: '#D9A183',
             }}
           />
-          <Text
-            style={{ fontFamily: 'HankenGrotesk_600SemiBold', fontSize: 14.5, color: '#F4EFE7' }}
-          >
+          <Text style={{ fontFamily: 'HankenGrotesk-SemiBold', fontSize: 14.5, color: '#F4EFE7' }}>
             {PHOTO_COPY.capture.guideHint}
           </Text>
         </View>
@@ -812,7 +810,7 @@ function CaptureScreenContent() {
             <Text
               style={{
                 flex: 1,
-                fontFamily: 'HankenGrotesk_600SemiBold',
+                fontFamily: 'HankenGrotesk-SemiBold',
                 fontSize: 12.5,
                 color: 'rgba(244,239,231,0.76)',
               }}
@@ -865,7 +863,7 @@ function CaptureScreenContent() {
               >
                 <Text
                   style={{
-                    fontFamily: 'HankenGrotesk_700Bold',
+                    fontFamily: 'HankenGrotesk-Bold',
                     fontSize: 11,
                     color: BG,
                     textAlign: 'center',
@@ -880,7 +878,7 @@ function CaptureScreenContent() {
               style={{
                 width: 104,
                 textAlign: 'right',
-                fontFamily: 'IBMPlexMono_400Regular',
+                fontFamily: 'IBMPlexMono-Regular',
                 fontSize: 10,
                 lineHeight: 15,
                 color: 'rgba(244,239,231,0.42)',

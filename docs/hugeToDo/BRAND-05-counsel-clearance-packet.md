@@ -1,0 +1,230 @@
+# BRAND-05 Counsel-Ready Clearance Packet
+
+Prepared: 2026-07-12 (America/Toronto)
+Requested decision: written clearance/rejection and conditions for one winner
+and two backups
+Candidates in priority order: `RoutineKind`, `Ritunera`, `Rituvia`
+
+## Important limitation
+
+This is attorney work product input, not legal advice or a clearance opinion.
+The public and official-database screens are preliminary and incomplete. No
+candidate is labeled available, cleared, registrable, non-infringing, reserved,
+or Apple-approved.
+
+## Requested counsel deliverable
+
+For each exact standard-character mark, please return:
+
+1. `Clear`, `Clear with conditions`, `Do not use`, or `Full search required
+before opinion`.
+2. The countries, goods/services, channels, and mark form covered.
+3. The material registered, pending, dead, common-law, company-name, domain,
+   and social risks reviewed.
+4. Likelihood-of-confusion, descriptiveness, dilution, and registrability
+   analysis, including whether the mark is practically enforceable.
+5. Recommended applicant/owner entity and filing basis/priority strategy.
+6. Filing classes and a counsel-approved identification of goods/services.
+7. Any required limitation, consent, coexistence, acquisition, monitoring, or
+   evidence-preservation condition.
+8. A signed or retained written decision that identifies the exact spelling.
+
+## Business and product description
+
+The product is an iPhone skincare shelf and routine application. A user can add
+products by manual entry, search, barcode, or native OCR; receive reviewed
+ingredient-conflict and sequencing guidance; build AM/PM and cycling routines;
+check off adherence; store private progress photos; receive reminders; use a
+subscription advisor and recommendations; create reviewed share cards; and use
+commerce, community, trend, widget, Live Activity, and creator features. High-
+risk paths are required to be reviewed, consented, production-real, and
+fail-closed.
+
+The product does not intend to diagnose, treat, cure, or prevent disease, issue
+AI skin scores or skin-age claims, promise percentage improvement, rank by
+commission, or analyze photos in the cloud without explicit authorization.
+
+Primary positioning: “private skincare shelf and routine tracker,” not a
+generic scanner, beauty analyzer, clinic, or marketplace.
+
+## Intended channels and use
+
+- Apple App Store app and product page;
+- subscription and in-app purchase naming;
+- public website, support, privacy, terms, account deletion, and data export;
+- email and customer support;
+- creator/share links, social profiles, and paid/organic marketing;
+- community and commerce features inside the app;
+- possible future esthetician/professional workflow under the same parent
+  brand.
+
+Launch countries are not yet approved. The working clearance priority is United
+States and Canada, with UK/Australia and EU expansion inputs screened early.
+Please identify how the opinion changes if the initial country list changes.
+
+## Candidate specimens and descriptors
+
+| Priority | Standard-character mark | Spoken form       | App subtitle                | Domain roots screened                |
+| -------: | ----------------------- | ----------------- | --------------------------- | ------------------------------------ |
+|        1 | RoutineKind             | `roo-TEEN kind`   | `Skincare shelf & routines` | `routinekind.com`, `routinekind.app` |
+|        2 | Ritunera                | `rih-too-NEH-ruh` | `Skincare shelf & routines` | `ritunera.com`, `ritunera.app`       |
+|        3 | Rituvia                 | `rih-TOO-vee-uh`  | `Skincare shelf & routines` | `rituvia.com`, `rituvia.app`         |
+
+The initial request is for word-mark analysis. Logo/design work should not be
+used to rescue an unsafe word mark.
+
+## Candidate-specific questions
+
+### RoutineKind
+
+- Is the composite registrable and practically enforceable despite common
+  `Routine` and `Kind` elements?
+- How material are `Skin&Routine`, `Routine Review`, routine-planning apps, and
+  other same-class routine marks?
+- Should separate use of `Routine Kind` with a space be avoided?
+- Does use for community, commerce, or future professional services change the
+  risk materially?
+
+### Ritunera
+
+- Do phonetic forms such as `Ritoonera`, `Ritunaira`, `Ritunera`, or a
+  `RITU-`/`routine-era` construction create conflicts not found by exact search?
+- Does the coined mark create an unwanted medical/pharmaceutical impression in
+  any relevant jurisdiction?
+- Are there linguistic or transliteration risks in approved launch countries?
+
+### Rituvia
+
+- How material are `RITUAL` class 9/42 registrations, `RITUO` class 10,
+  `RITUZENA` class 5, and other `RITU-` marks?
+- Does a parked but registered `.com` create negotiation, cybersquatting,
+  confusion, or brand-control risk?
+- Is the pharmaceutical sound a clearance or regulatory-positioning concern?
+
+## Draft Nice classes for counsel to confirm or prune
+
+These are issue-spotting classes, not filing instructions:
+
+| Class | Potential scope                                                                                                                                               | Why included                                                                           |
+| ----: | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+|     9 | Downloadable mobile application software for organizing skincare products, routines, reminders, progress, community, recommendations, and product information | Core iOS app. WIPO Class 9 includes recorded/downloadable media and computer software. |
+|    35 | Online retail/affiliate product information and commercial consumer information; creator/commerce services if offered under the mark                          | Commerce and replenishment features.                                                   |
+|    41 | Educational skincare and cosmetic-product content, non-downloadable publications, and creator education if actually offered                                   | Reviewed educational content.                                                          |
+|    42 | SaaS and hosted software for account, community, advisor, catalog, and operator services                                                                      | Cloud and administrative services.                                                     |
+|    44 | Beauty-care information concerning skincare routines, expressly non-diagnostic and non-medical where accurate                                                 | Health/beauty-adjacent guidance; may increase risk and should be carefully drafted.    |
+|    45 | Online social networking/community services if the Skin Notes/community layer is offered as a service under the mark                                          | Community feature; include only if accurate and strategically useful.                  |
+
+Official Nice references:
+
+- [Class 9](https://www.wipo.int/classifications/nice/nclpub/en/fr/?class_number=9&explanatory_=)
+- [Class 35](https://www.wipo.int/classifications/nice/nclpub/en/fr/?basic_numbers=show&class_number=35)
+- [Class 41](https://www.wipo.int/classifications/nice/nclpub/en/fr/?basic_numbers=show&class_number=41&explanatory_notes=show&lang=en&menulang=en)
+- [Class 42](https://www.wipo.int/classifications/nice/nclpub/en/fr/?basic_numbers=show&class_number=42&explanatory_notes=show&lang=en&menulang=en)
+- [Class 44](https://www.wipo.int/classifications/nice/nclpub/en/fr/?basic_numbers=show&class_number=44&explanatory_notes=show&lang=en&menulang=en)
+- [Class 45](https://www.wipo.int/classifications/nice/nclpub/en/fr/?class_number=45&gors=&lang=en&menulang=en)
+
+Counsel should use current USPTO/CIPO/Madrid/EUIPO accepted identifications and
+the actual launch behavior rather than copying these descriptions verbatim.
+
+## Preliminary adjacent-mark leads
+
+The dated search record contains query details and limitations:
+[`BRAND-03-knockout-search-record-2026-07-12.md`](./BRAND-03-knockout-search-record-2026-07-12.md).
+
+Priority Canadian leads:
+
+| Lead           | Application | Status/classes shown on search date | Candidate relevance                           |
+| -------------- | ----------- | ----------------------------------- | --------------------------------------------- |
+| Skin&Routine   | 2412865     | Advertised; 3, 9, 35, 42, 44        | RoutineKind; same sector/classes              |
+| Routine Review | 2047002     | Registered; 42, 44, 45              | RoutineKind; software/beauty-adjacent         |
+| RITUAL         | 1726451     | Registered; 9                       | Rituvia/Ritunera formative field              |
+| RITUAL         | 1919057     | Registered; 42                      | Rituvia/Ritunera formative field              |
+| RITUO          | 2348061     | Registered; 10                      | Rituvia visual/phonetic and medical adjacency |
+| RITUZENA       | 1840101     | Registered; 5                       | Rituvia visual/phonetic and pharma adjacency  |
+| EVERSHELF      | 2372521     | Registered; 9, 42                   | Explains removal of Shelfkind                 |
+| Shelf Health   | 2475967     | Formalized; 9, 35, 44               | Explains removal of Shelfkind                 |
+
+Priority common-law/store leads:
+
+- existing exact `OnSkin` skincare scanner:
+  [website](https://onskin.com/),
+  [App Store](https://apps.apple.com/us/app/onskin-beauty-product-scanner/id1630768985),
+  and [Google Play](https://play.google.com/store/apps/details?id=skin.care.product.scanner.skincare.cosmetic.ingredient.checker&hl=en_US);
+- routine-app adjacency such as `Routine Planner`, `RoutineFlow`, `MyRoutine`,
+  and the exact [RoutineNest](https://www.routinenest.com/) website;
+- parked [rituvia.com](https://rituvia.com/) registration;
+- hard-collision records listed in
+  [`BRAND-02-scored-longlist.md`](./BRAND-02-scored-longlist.md).
+
+## Domain, store, and social status
+
+| Candidate   | `.com`                                | `.app`                                | Public Apple exact title            | Social handles |
+| ----------- | ------------------------------------- | ------------------------------------- | ----------------------------------- | -------------- |
+| RoutineKind | No RDAP record returned; not reserved | No RDAP record returned; not reserved | None in checked US/CA/GB/AU results | Unverified     |
+| Ritunera    | No RDAP record returned; not reserved | No RDAP record returned; not reserved | None in checked US results          | Unverified     |
+| Rituvia     | Registered/parked for sale            | No RDAP record returned; not reserved | None in checked US/CA/GB/AU results | Unverified     |
+
+No purchase, cart hold, App Store Connect record, handle claim, company-name
+reservation, or trademark filing was made.
+
+## Required search scope before opinion
+
+- USPTO live/dead exact, wildcard, phonetic, translation, design, owner, and
+  goods/services searches;
+- CIPO exact, wildcard, phonetic, English/French translation, components, and
+  full record review;
+- WIPO Global Brand Database/Madrid Monitor and national registers for every
+  approved country;
+- EUIPO/TMview if EU launch or near-term expansion is planned;
+- US state and Canadian corporate/trade-name sources as applicable;
+- common-law web, app stores, domains, social accounts, company names, product
+  databases, advertising, and marketplaces;
+- linguistic screening by native speakers for every approved launch country;
+- registrability and use analysis for each actual class and service.
+
+## Apple-specific issue
+
+Apple requires a unique app name, bars copycat/impersonating names, and requires
+rights to protected third-party material. A public search does not reserve a
+name. App Store Connect states that if another developer uses a desired name, a
+rights holder may submit a claim:
+
+- [App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
+- [Add a new app](https://developer.apple.com/help/app-store-connect/create-an-app-record/add-a-new-app/)
+
+Please identify any evidence Apple should receive if the cleared mark later
+encounters a name claim.
+
+## Packet index
+
+1. Naming brief:
+   [`BRAND-01-naming-brief.md`](./BRAND-01-naming-brief.md)
+2. Scored longlist:
+   [`BRAND-02-scored-longlist.md`](./BRAND-02-scored-longlist.md)
+3. Dated search record:
+   [`BRAND-03-knockout-search-record-2026-07-12.md`](./BRAND-03-knockout-search-record-2026-07-12.md)
+4. Recommendation:
+   [`BRAND-04-recommendation.md`](./BRAND-04-recommendation.md)
+5. Existing incumbent evidence:
+   [`brand-evidence.md`](../brand-evidence.md)
+6. Product requirements:
+   [`PRODUCT_REQUIREMENTS.md`](../PRODUCT_REQUIREMENTS.md)
+7. Rebrand gate/checklist:
+   [`rebrand-and-core-loop-migration-checklist.md`](../rebrand-and-core-loop-migration-checklist.md)
+8. All-features execution contract:
+   [`IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md`](./IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md)
+
+## Founder/counsel handoff checklist
+
+- [ ] Founder confirms launch countries.
+- [ ] Founder confirms applicant/owner legal entity with counsel.
+- [ ] Counsel runs the unavailable official and common-law searches.
+- [ ] Counsel records exact spelling, countries, classes, conditions, and date.
+- [ ] Founder approves one counsel-cleared candidate.
+- [ ] Authorized account checks App Store name and identifier availability.
+- [ ] Founder authorizes and pays for domains/filings/reservations.
+- [ ] Reservation receipts and counsel decision are retained.
+- [ ] Only then freeze identity and start BRAND-07 through BRAND-10.
+
+Until every applicable item is complete, production identity remains
+`launch-blocked`.

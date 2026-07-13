@@ -10,9 +10,18 @@ import {
   placeholderEnvValue,
   productionUrl,
 } from '../phase9/lib.mjs';
+import {
+  isReleasePlatformRequired,
+  launchContractSnapshot,
+  loadLaunchContract,
+  platformEvidenceStatus,
+  platformRequirementStatus,
+} from '../launch/contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const packetOutDir = process.env.PHASE6_PACKET_OUT_DIR ?? 'docs/phase-6/generated';
 const outDir = resolve(root, packetOutDir);
 const packetOutputPaths = [
@@ -22,6 +31,8 @@ const packetOutputPaths = [
 
 const requiredFiles = [
   'package.json',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'apps/mobile/src/features/subscription/store.ts',
   'apps/mobile/src/features/subscription/useEntitlement.ts',
@@ -153,10 +164,9 @@ const productionConfig = {
   productionHasNoTestStoreKey: !productionEasEnv.EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY,
   entitlementIdIsPro: prodEnv.EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID === 'pro',
   iosPublicKeyConfigured: revenueCatPublicKey(prodEnv.EXPO_PUBLIC_REVENUECAT_IOS_KEY, 'appl'),
-  androidPublicKeyConfigured: revenueCatPublicKey(
-    prodEnv.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY,
-    'goog',
-  ),
+  androidPublicKeyConfigured: androidReleaseRequired
+    ? revenueCatPublicKey(prodEnv.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY, 'goog')
+    : null,
   annualProductIdFinal: finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID),
   monthlyProductIdFinal: finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID),
   reverseTrialProductIdFinal: finalProductId(
@@ -179,7 +189,9 @@ const productionConfigBlockers = [
   ],
   ['entitlementIdIsPro', 'EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID must be `pro`.'],
   ['iosPublicKeyConfigured', 'Missing final EXPO_PUBLIC_REVENUECAT_IOS_KEY.'],
-  ['androidPublicKeyConfigured', 'Missing final EXPO_PUBLIC_REVENUECAT_ANDROID_KEY.'],
+  ...(androidReleaseRequired
+    ? [['androidPublicKeyConfigured', 'Missing final EXPO_PUBLIC_REVENUECAT_ANDROID_KEY.']]
+    : []),
   ['annualProductIdFinal', 'Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.'],
   ['monthlyProductIdFinal', 'Missing final EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID.'],
   ['reverseTrialProductIdFinal', 'Missing final EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID.'],
@@ -195,7 +207,9 @@ const productionConfigBlockers = [
 const evidence = {
   rcOfferingReviewed: evidenceFlagEnabled(process.env.PHASE6_RC_OFFERING_REVIEWED),
   iosSandboxRestorePass: evidenceFlagEnabled(process.env.PHASE6_IOS_SANDBOX_RESTORE_PASS),
-  androidLicenseTestPass: evidenceFlagEnabled(process.env.PHASE6_ANDROID_LICENSE_TEST_PASS),
+  androidLicenseTestPass: androidReleaseRequired
+    ? evidenceFlagEnabled(process.env.PHASE6_ANDROID_LICENSE_TEST_PASS)
+    : null,
   webhookHmacTestPass: evidenceFlagEnabled(process.env.PHASE6_WEBHOOK_HMAC_TEST_PASS),
   financeSignoff: evidenceFlagEnabled(process.env.PHASE6_FINANCE_SIGNOFF),
   signedOffBy: normalizeNamedSignoff(process.env.PHASE6_SIGNED_OFF_BY) ?? '',
@@ -223,7 +237,7 @@ for (const [key, message] of productionConfigBlockers) {
 }
 if (!evidence.rcOfferingReviewed) blockers.push('Missing PHASE6_RC_OFFERING_REVIEWED=true.');
 if (!evidence.iosSandboxRestorePass) blockers.push('Missing PHASE6_IOS_SANDBOX_RESTORE_PASS=true.');
-if (!evidence.androidLicenseTestPass)
+if (androidReleaseRequired && !evidence.androidLicenseTestPass)
   blockers.push('Missing PHASE6_ANDROID_LICENSE_TEST_PASS=true.');
 if (!evidence.webhookHmacTestPass) blockers.push('Missing PHASE6_WEBHOOK_HMAC_TEST_PASS=true.');
 if (!evidence.financeSignoff) blockers.push('Missing PHASE6_FINANCE_SIGNOFF=true.');
@@ -232,6 +246,23 @@ if (!evidence.signedOffBy) blockers.push('Missing PHASE6_SIGNED_OFF_BY.');
 const packet = {
   generatedAt: new Date().toISOString(),
   purpose: 'Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.',
+  launchContract: launchContractSnapshot(launchContract),
+  platformStatus: {
+    ios: platformRequirementStatus('ios', launchContract),
+    android: platformRequirementStatus('android', launchContract),
+  },
+  platformEvidenceStatus: {
+    iosSandboxRestore: platformEvidenceStatus(
+      'ios',
+      evidence.iosSandboxRestorePass,
+      launchContract,
+    ),
+    androidLicenseTest: platformEvidenceStatus(
+      'android',
+      evidence.androidLicenseTestPass,
+      launchContract,
+    ),
+  },
   gitSha,
   gitStatus,
   productionConfig,
@@ -266,13 +297,13 @@ writeFileSync(
     `Git SHA: ${packet.gitSha}`,
     `Git status: ${packet.gitStatus ? 'DIRTY' : 'clean'}`,
     '',
-    'Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.',
+    'Strict completion requires real RevenueCat offering review and store restore evidence for every contract-required platform, webhook HMAC replay evidence, finance signoff, and a named owner.',
     '',
     '## Evidence',
     '',
     `- RevenueCat offering reviewed: ${evidence.rcOfferingReviewed ? 'yes' : 'BLOCKED'}`,
     `- iOS sandbox restore pass: ${evidence.iosSandboxRestorePass ? 'yes' : 'BLOCKED'}`,
-    `- Android license test pass: ${evidence.androidLicenseTestPass ? 'yes' : 'BLOCKED'}`,
+    `- Android license test pass: ${packet.platformEvidenceStatus.androidLicenseTest === 'not_applicable' ? 'NOT APPLICABLE' : evidence.androidLicenseTestPass ? 'yes' : 'BLOCKED'}`,
     `- Webhook HMAC test pass: ${evidence.webhookHmacTestPass ? 'yes' : 'BLOCKED'}`,
     `- Finance signoff: ${evidence.financeSignoff ? 'yes' : 'BLOCKED'}`,
     `- Signed off by: ${evidence.signedOffBy || 'BLOCKED'}`,
@@ -283,7 +314,7 @@ writeFileSync(
     `- Production excludes RevenueCat Test Store key: ${productionConfig.productionHasNoTestStoreKey ? 'yes' : 'BLOCKED'}`,
     `- Entitlement ID is pro: ${productionConfig.entitlementIdIsPro ? 'yes' : 'BLOCKED'}`,
     `- iOS RevenueCat public key configured: ${productionConfig.iosPublicKeyConfigured ? 'yes' : 'BLOCKED'}`,
-    `- Android RevenueCat public key configured: ${productionConfig.androidPublicKeyConfigured ? 'yes' : 'BLOCKED'}`,
+    `- Android RevenueCat public key configured: ${androidReleaseRequired ? (productionConfig.androidPublicKeyConfigured ? 'yes' : 'BLOCKED') : 'NOT APPLICABLE'}`,
     `- Annual product ID final: ${productionConfig.annualProductIdFinal ? 'yes' : 'BLOCKED'}`,
     `- Monthly product ID final: ${productionConfig.monthlyProductIdFinal ? 'yes' : 'BLOCKED'}`,
     `- Reverse-trial product ID final: ${productionConfig.reverseTrialProductIdFinal ? 'yes' : 'BLOCKED'}`,

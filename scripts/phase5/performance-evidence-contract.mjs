@@ -1,4 +1,11 @@
+import { resolve } from 'node:path';
+
 import { normalizeNamedSignoff, placeholderEnvValue } from '../phase9/lib.mjs';
+import {
+  loadLaunchContract,
+  platformRequirementStatus,
+  requiredReleasePlatforms,
+} from '../launch/contract.mjs';
 
 export const PERFORMANCE_EVIDENCE_SCHEMA_VERSION = 3;
 export const PERFORMANCE_MIN_SAMPLE_COUNT = 5;
@@ -23,7 +30,7 @@ export const PERFORMANCE_METRICS = [
   { id: 'photo_timeline_peak_memory_mb', unit: 'mb' },
 ];
 
-const PLATFORMS = ['ios', 'android'];
+const launchContract = loadLaunchContract(resolve(import.meta.dirname, '../..'));
 const MEASUREMENT_SOURCES = new Set(['instrumented_timer', 'manual_stopwatch', 'native_profiler']);
 const EAS_BUILD_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const EAS_BUILD_URL =
@@ -120,31 +127,40 @@ function validateDevice(platform, device, errors) {
   }
 }
 
-export function createPerformanceEvidenceTemplate() {
+export function createPerformanceEvidenceTemplate(contract = launchContract) {
+  const platforms = requiredReleasePlatforms(contract);
   return {
     schemaVersion: PERFORMANCE_EVIDENCE_SCHEMA_VERSION,
     capturedAt: null,
     gitSha: null,
     thresholdsDefinedAt: null,
     thresholdsDefinedBy: null,
-    devices: {
-      ios: {
-        physical: true,
-        buildId: null,
-        deviceModel: null,
-        osVersion: 'iOS 17.0 or newer',
-        logicalWidth: 375,
-        usableHeight: 667,
-      },
-      android: {
-        physical: true,
-        buildId: null,
-        deviceModel: null,
-        osVersion: 'Android 10 or newer',
-        logicalWidth: 360,
-        usableHeight: 640,
-      },
+    platformStatus: {
+      ios: platformRequirementStatus('ios', contract),
+      android: platformRequirementStatus('android', contract),
     },
+    devices: Object.fromEntries(
+      platforms.map((platform) => [
+        platform,
+        platform === 'ios'
+          ? {
+              physical: true,
+              buildId: null,
+              deviceModel: null,
+              osVersion: 'iOS 17.0 or newer',
+              logicalWidth: 375,
+              usableHeight: 667,
+            }
+          : {
+              physical: true,
+              buildId: null,
+              deviceModel: null,
+              osVersion: 'Android 10 or newer',
+              logicalWidth: 360,
+              usableHeight: 640,
+            },
+      ]),
+    ),
     photoDataset: {
       encryptedPhotoCount: 50,
       source: null,
@@ -155,7 +171,7 @@ export function createPerformanceEvidenceTemplate() {
     thresholds: Object.fromEntries(
       PERFORMANCE_METRICS.map(({ id, unit }) => [id, { unit, maxP95: null, rationale: null }]),
     ),
-    measurements: PLATFORMS.flatMap((platform) =>
+    measurements: platforms.flatMap((platform) =>
       PERFORMANCE_METRICS.map(({ id: metric }) => ({
         platform,
         metric,
@@ -176,16 +192,17 @@ export function createPerformanceEvidenceTemplate() {
   };
 }
 
-export function validatePerformanceEvidence(evidence) {
+export function validatePerformanceEvidence(evidence, contract = launchContract) {
   const errors = [];
   const warnings = [];
+  const platforms = requiredReleasePlatforms(contract);
   const metricById = new Map(PERFORMANCE_METRICS.map((metric) => [metric.id, metric]));
 
   if (!isObject(evidence)) {
     return {
       errors: ['Performance evidence must be a JSON object.'],
       warnings,
-      summary: { requiredMeasurements: PERFORMANCE_METRICS.length * PLATFORMS.length, found: 0 },
+      summary: { requiredMeasurements: PERFORMANCE_METRICS.length * platforms.length, found: 0 },
     };
   }
 
@@ -212,7 +229,14 @@ export function validatePerformanceEvidence(evidence) {
     errors.push('thresholdsDefinedBy must name a real owner, not a placeholder.');
   }
 
-  for (const platform of PLATFORMS) {
+  for (const platform of ['ios', 'android']) {
+    const expectedStatus = platformRequirementStatus(platform, contract);
+    if (evidence.platformStatus?.[platform] !== expectedStatus) {
+      errors.push(`platformStatus.${platform} must be ${expectedStatus}.`);
+    }
+  }
+
+  for (const platform of platforms) {
     validateDevice(platform, evidence.devices?.[platform], errors);
   }
 
@@ -274,8 +298,10 @@ export function validatePerformanceEvidence(evidence) {
       errors.push(`${prefix} must be an object.`);
       continue;
     }
-    if (!PLATFORMS.includes(measurement.platform)) {
-      errors.push(`${prefix}.platform must be ios or android.`);
+    if (!platforms.includes(measurement.platform)) {
+      errors.push(
+        `${prefix}.platform must be a required release platform (${platforms.join(', ')}).`,
+      );
       continue;
     }
     const metric = metricById.get(measurement.metric);
@@ -338,7 +364,7 @@ export function validatePerformanceEvidence(evidence) {
     }
   }
 
-  for (const platform of PLATFORMS) {
+  for (const platform of platforms) {
     for (const metric of PERFORMANCE_METRICS) {
       const key = `${platform}:${metric.id}`;
       if (!seen.has(key)) errors.push(`Missing measurement for ${key}.`);
@@ -374,7 +400,7 @@ export function validatePerformanceEvidence(evidence) {
     }
   }
 
-  if (measurements.length > PERFORMANCE_METRICS.length * PLATFORMS.length) {
+  if (measurements.length > PERFORMANCE_METRICS.length * platforms.length) {
     warnings.push(
       'Extra measurements were supplied; each platform/metric pair must remain unique.',
     );
@@ -384,10 +410,10 @@ export function validatePerformanceEvidence(evidence) {
     errors,
     warnings,
     summary: {
-      requiredMeasurements: PERFORMANCE_METRICS.length * PLATFORMS.length,
+      requiredMeasurements: PERFORMANCE_METRICS.length * platforms.length,
       found: seen.size,
       metrics: PERFORMANCE_METRICS.length,
-      platforms: PLATFORMS.length,
+      platforms: platforms.length,
     },
   };
 }

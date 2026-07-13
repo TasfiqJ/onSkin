@@ -20,10 +20,18 @@ import {
   warn,
   write,
 } from './lib.mjs';
+import {
+  isReleasePlatformRequired,
+  launchContractSnapshot,
+  loadLaunchContract,
+  platformRequirementStatus,
+} from '../launch/contract.mjs';
 
 const errors = [];
 const warnings = [];
 const env = envSnapshot();
+const launchContract = loadLaunchContract();
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const sourceFiles = phase11SourceFiles();
 const packetOutDir = String(env.PHASE11_PACKET_OUT_DIR ?? '').trim();
 const outDir = packetOutDir || 'docs/phase-11/generated';
@@ -99,6 +107,11 @@ warn(warnings, Boolean(signedOffBy), 'Public launch named signoff missing: PHASE
 const packet = {
   generatedAt: new Date().toISOString(),
   status: errors.length === 0 && warnings.length === 0 ? 'ready' : 'blocked',
+  launchContract: launchContractSnapshot(launchContract),
+  platformStatus: {
+    ios: platformRequirementStatus('ios', launchContract),
+    android: platformRequirementStatus('android', launchContract),
+  },
   gitSha,
   gitStatus,
   phase9PacketStatus,
@@ -109,7 +122,9 @@ const packet = {
     finalBrandDomain: normalizeProductionDomain(env.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
     marketingUrl: normalizeProductionUrl(env.EXPO_PUBLIC_MARKETING_URL),
     appStoreUrl: normalizeProductionUrl(env.EXPO_PUBLIC_APP_STORE_URL),
-    playStoreUrl: normalizeProductionUrl(env.EXPO_PUBLIC_PLAY_STORE_URL),
+    playStoreUrl: androidReleaseRequired
+      ? normalizeProductionUrl(env.EXPO_PUBLIC_PLAY_STORE_URL)
+      : null,
     supportEmail: normalizeProductionSupportEmail(env.EXPO_PUBLIC_SUPPORT_EMAIL),
   },
   evidence,
@@ -139,7 +154,7 @@ write(
     `- Final domain: ${packet.launchIdentity.finalBrandDomain || 'BLOCKED'}`,
     `- Marketing URL: ${packet.launchIdentity.marketingUrl || 'BLOCKED'}`,
     `- App Store URL: ${packet.launchIdentity.appStoreUrl || 'BLOCKED'}`,
-    `- Play Store URL: ${packet.launchIdentity.playStoreUrl || 'BLOCKED'}`,
+    `- Play Store URL: ${androidReleaseRequired ? packet.launchIdentity.playStoreUrl || 'BLOCKED' : 'NOT APPLICABLE'}`,
     `- Support email: ${packet.launchIdentity.supportEmail || 'BLOCKED'}`,
     `- Signed off by: ${packet.signedOffBy || 'BLOCKED'}`,
     '',

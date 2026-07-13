@@ -41,9 +41,26 @@ This decision is based on product fit and current repo momentum, not loyalty to 
 
 ### A-004: Feature Flags For Risky Surfaces
 
-- Decision: cloud Ask, trend insights, commerce, community posting, widgets, and advanced recommendations stay gated until ready.
+- Decision: cloud Ask, trend insights, commerce, community posting, widgets,
+  Live Activities, and advanced recommendations remain fail-closed until ready,
+  but each is required in the iOS launch binary and must pass its complete
+  enabled-state gate before submission. A flag is an incident control, not a
+  substitute for implementation.
 - Criteria: app review, safety, privacy, trust.
 - Risk: full-product ambition appears incomplete externally.
+- Status: active.
+
+### A-006: iOS-Only All-Features Release Contract
+
+- Decision: the release platform is iOS and every feature ID 1-20 plus every
+  Phase 7/8 surface in `docs/hugeToDo/launch-contract.json` is required.
+  Android code may remain healthy, but Android credentials, builds, device or
+  store evidence, payments, links, performance, beta, and release approval are
+  not launch gates. Google OAuth remains required for Google Sign-In on iPhone.
+- Criteria: founder directive, one auditable scope, no fake Android evidence,
+  and no hidden/inert feature counted as complete.
+- Risk: the larger launch surface expands native, backend, privacy, review,
+  moderation, reliability, and operational dependencies.
 - Status: active.
 
 ### A-005: One Fail-Closed Pregnancy-Safety Profile Contract
@@ -159,10 +176,16 @@ Environments:
 - staging: live Supabase/RevenueCat/Sentry/PostHog, test stores
 - production: final brand, final policies, reviewed rules, release candidate evidence
 
+Release validators and packet builders must read
+`docs/hugeToDo/launch-contract.json`. Platform-specific evidence is required
+only for a platform listed in that contract; every cross-platform service used
+by the iOS app remains fully in scope.
+
 ## Open Technical Questions
 
 - [Open Question] Final brand and package identifiers.
 - [Open Question] First launch countries and privacy law scope.
 - [Open Question] Exact catalog seed source and size.
-- [Open Question] Native OCR module choice.
+- [Open Question] Which production iOS OCR module best satisfies the required
+  accuracy, privacy, binary, and device-performance gates.
 - [Open Question] Whether professional/B2B workflow needs separate tenant model.

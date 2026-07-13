@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
   Platform,
@@ -119,6 +119,12 @@ function CategoryPickerSheet({
 // visible. The full barcode/OCR intake lives on the Shelf (docs/04); this is the
 // lightweight first-population that was previously a dead skip-only screen.
 export default function ProductsScreen() {
+  const { addedProductId } = useLocalSearchParams<{ addedProductId?: string }>();
+
+  return <ProductsScreenContent key={addedProductId ?? 'initial-add'} />;
+}
+
+function ProductsScreenContent() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);

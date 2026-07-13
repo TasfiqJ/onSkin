@@ -1,6 +1,6 @@
 # Performance Readiness Audit
 
-Generated: 2026-07-11T17:31:15.746Z
+Generated: 2026-07-13T04:00:08.191Z
 Status: pass
 Strict mode: yes
 
@@ -10,6 +10,7 @@ blocked JSON template, raw-sample percentile validation, executable smoke
 tests, and `launch:verify`
 continue to cover startup, shelf intake, barcode lookup, routine generation,
 local photo loading, and photo timeline memory evidence.
+Required performance platforms: ios. Android evidence: not_applicable.
 
 ## Summary
 
@@ -56,17 +57,17 @@ local photo loading, and photo timeline memory evidence.
 | Doc                                              | Needles | Missing |
 | ------------------------------------------------ | ------- | ------- |
 | docs/TESTING_STRATEGY.md                         | 13      | none    |
-| docs/FOR_TAS_TO_DO.md                            | 12      | none    |
+| docs/FOR_TAS_TO_DO.md                            | 3       | none    |
 | LAUNCH_READINESS.md                              | 10      | none    |
 | BLOCKERS.md                                      | 9       | none    |
 | docs/00-architecture.md                          | 3       | none    |
 | docs/04-smart-shelf.md                           | 2       | none    |
 | docs/06-photo-progress.md                        | 2       | none    |
-| docs/phase-5/performance-evidence-runbook.md     | 10      | none    |
+| docs/phase-5/performance-evidence-runbook.md     | 9       | none    |
 | scripts/phase5/check-performance-evidence.mjs    | 4       | none    |
-| scripts/phase5/performance-evidence-contract.mjs | 8       | none    |
+| scripts/phase5/performance-evidence-contract.mjs | 10      | none    |
 | scripts/phase5/performance-evidence-smoke.mjs    | 7       | none    |
-| docs/phase-5/performance-evidence.template.json  | 5       | none    |
+| docs/phase-5/performance-evidence.template.json  | 7       | none    |
 
 ## Blockers
 

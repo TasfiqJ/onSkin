@@ -10,10 +10,12 @@ import {
   requiredPhase11EvidenceKeys,
   warn,
 } from './lib.mjs';
+import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 
 const errors = [];
 const warnings = [];
 const env = envSnapshot();
+const launchContract = loadLaunchContract();
 
 for (const file of phase11RequiredDocs()) block(errors, exists(file), `${file} is missing.`);
 
@@ -90,4 +92,7 @@ for (const key of requiredPhase11EvidenceKeys()) {
   warn(warnings, evidenceFlagEnabled(env[key]), `Missing launch readiness evidence: ${key}=true.`);
 }
 
+if (!isReleasePlatformRequired('android', launchContract)) {
+  console.log('N/A Android launch rings: excluded by launch contract.');
+}
 printResult('Phase 11 launch ring gates', errors, warnings);

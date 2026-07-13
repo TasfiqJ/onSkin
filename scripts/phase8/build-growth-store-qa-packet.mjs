@@ -14,9 +14,17 @@ import {
   command,
   gitStatusExcludingGeneratedEvidence,
 } from '../phase9/lib.mjs';
+import {
+  isReleasePlatformRequired,
+  launchContractSnapshot,
+  loadLaunchContract,
+  platformRequirementStatus,
+} from '../launch/contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const packetOutDir = process.env.PHASE8_PACKET_OUT_DIR ?? 'docs/phase-8/generated';
 const outDir = resolve(root, packetOutDir);
 const packetOutputPaths = [
@@ -77,24 +85,31 @@ const evidence = {
   brandSourceOfTruth: evidenceFlagEnabled(process.env.PHASE8_BRAND_SOURCE_OF_TRUTH_PASS),
   domainDns: evidenceFlagEnabled(process.env.PHASE8_DOMAIN_DNS_PASS),
   iosUniversalLinks: evidenceFlagEnabled(process.env.PHASE8_IOS_UNIVERSAL_LINKS_PASS),
-  androidAppLinks: evidenceFlagEnabled(process.env.PHASE8_ANDROID_APP_LINKS_PASS),
+  androidAppLinks: androidReleaseRequired
+    ? evidenceFlagEnabled(process.env.PHASE8_ANDROID_APP_LINKS_PASS)
+    : null,
   shareCardDeviceQa: evidenceFlagEnabled(process.env.PHASE8_SHARE_CARD_DEVICE_QA_PASS),
   attributionPrivacy: evidenceFlagEnabled(process.env.PHASE8_ATTRIBUTION_PRIVACY_PASS),
   appStorePacket: evidenceFlagEnabled(process.env.PHASE8_APP_STORE_PACKET_PASS),
-  playStorePacket: evidenceFlagEnabled(process.env.PHASE8_PLAY_STORE_PACKET_PASS),
+  playStorePacket: androidReleaseRequired
+    ? evidenceFlagEnabled(process.env.PHASE8_PLAY_STORE_PACKET_PASS)
+    : null,
   creatorCompliance: evidenceFlagEnabled(process.env.PHASE8_CREATOR_COMPLIANCE_PASS),
   supportResponse: evidenceFlagEnabled(process.env.PHASE8_SUPPORT_RESPONSE_PASS),
   launchDashboard: evidenceFlagEnabled(process.env.PHASE8_LAUNCH_DASHBOARD_READY),
   dryRun: evidenceFlagEnabled(process.env.PHASE8_DRY_RUN_PASS),
   appleTeamId: Boolean(normalizeAppleTeamId(process.env.APPLE_TEAM_ID)),
-  androidCertificateFingerprints:
-    normalizeAndroidSha256Fingerprints(process.env.ANDROID_CERT_SHA256_FINGERPRINTS).length > 0,
+  androidCertificateFingerprints: androidReleaseRequired
+    ? normalizeAndroidSha256Fingerprints(process.env.ANDROID_CERT_SHA256_FINGERPRINTS).length > 0
+    : null,
   signedOffBy: normalizeNamedSignoff(process.env.PHASE8_SIGNED_OFF_BY) ?? '',
 };
 
 const sourceFiles = [
   '.env.example',
   'package.json',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'apps/mobile/app.config.js',
   'apps/mobile/src/lib/env.ts',
   'apps/mobile/src/lib/launch/phase8.ts',
@@ -163,7 +178,9 @@ const publicIdentity = {
   finalBrandDomain: normalizeProductionDomain(launchEnv.EXPO_PUBLIC_FINAL_BRAND_DOMAIN),
   marketingUrl: normalizeProductionUrl(launchEnv.EXPO_PUBLIC_MARKETING_URL),
   appStoreUrl: normalizeProductionUrl(launchEnv.EXPO_PUBLIC_APP_STORE_URL),
-  playStoreUrl: normalizeProductionUrl(launchEnv.EXPO_PUBLIC_PLAY_STORE_URL),
+  playStoreUrl: androidReleaseRequired
+    ? normalizeProductionUrl(launchEnv.EXPO_PUBLIC_PLAY_STORE_URL)
+    : null,
   supportEmail: normalizeProductionSupportEmail(launchEnv.EXPO_PUBLIC_SUPPORT_EMAIL),
 };
 
@@ -171,10 +188,12 @@ warn(Boolean(publicIdentity.finalBrandDomain), 'Final brand domain is missing.')
 warn(Boolean(publicIdentity.marketingUrl), 'Marketing URL is missing.');
 warn(Boolean(publicIdentity.supportEmail), 'Support email is missing.');
 warn(Boolean(publicIdentity.appStoreUrl), 'App Store URL is missing.');
-warn(Boolean(publicIdentity.playStoreUrl), 'Play Store URL is missing.');
+if (androidReleaseRequired)
+  warn(Boolean(publicIdentity.playStoreUrl), 'Play Store URL is missing.');
 
 for (const [key, passed] of Object.entries(evidence)) {
   if (key === 'signedOffBy') continue;
+  if (passed === null) continue;
   warn(Boolean(passed), `External evidence missing: ${key}.`);
 }
 warn(Boolean(evidence.signedOffBy), 'External evidence missing: signedOffBy.');
@@ -182,6 +201,11 @@ warn(Boolean(evidence.signedOffBy), 'External evidence missing: signedOffBy.');
 const packet = {
   generatedAt: new Date().toISOString(),
   objective: 'Phase 8 growth loop and store readiness',
+  launchContract: launchContractSnapshot(launchContract),
+  platformStatus: {
+    ios: platformRequirementStatus('ios', launchContract),
+    android: platformRequirementStatus('android', launchContract),
+  },
   status: blockers.length === 0 && warnings.length === 0 ? 'ready' : 'blocked',
   gitSha,
   gitStatus,
@@ -191,8 +215,9 @@ const packet = {
     linkRouting: [
       'iOS installed opens app via Universal Links',
       'iOS not installed opens web fallback',
-      'Android installed opens app via App Links',
-      'Android not installed opens web fallback',
+      ...(androidReleaseRequired
+        ? ['Android installed opens app via App Links', 'Android not installed opens web fallback']
+        : []),
       'Desktop opens web fallback',
       'Invalid share ID never reveals sensitive context',
     ],
@@ -241,7 +266,7 @@ const markdown = [
   `- Final domain: ${packet.publicIdentity.finalBrandDomain ?? 'BLOCKED'}`,
   `- Marketing URL: ${packet.publicIdentity.marketingUrl ?? 'BLOCKED'}`,
   `- App Store URL: ${packet.publicIdentity.appStoreUrl ?? 'BLOCKED'}`,
-  `- Play Store URL: ${packet.publicIdentity.playStoreUrl ?? 'BLOCKED'}`,
+  `- Play Store URL: ${androidReleaseRequired ? (packet.publicIdentity.playStoreUrl ?? 'BLOCKED') : 'NOT APPLICABLE'}`,
   `- Support email: ${packet.publicIdentity.supportEmail ?? 'BLOCKED'}`,
   '',
   '## Blockers',

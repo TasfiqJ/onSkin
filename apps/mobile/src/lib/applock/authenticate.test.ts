@@ -138,6 +138,8 @@ describe('app lock local authentication', () => {
     const youTab = readSource('app/(tabs)/you.tsx');
 
     expect(provider).toContain('authenticateAppLock(BRAND.appLockPrompt)');
+    expect(provider).toContain('runSingleFlight(appUnlockLease.current');
+    expect(provider).toContain('runSingleFlight(photoTimelineUnlockLease.current');
     expect(provider).toContain(
       'const [lockFeedback, setLockFeedback] = useState<string | null>(null);',
     );
@@ -145,7 +147,7 @@ describe('app lock local authentication', () => {
     expect(provider).toContain('repairRequired={preferenceRepairRequired}');
     expect(provider).toContain("'Unlock and reset app lock'");
     expect(provider).toContain('await clearMalformedAppLockPreference();');
-    expect(provider).toContain('!preferenceRepairRequired) requestUnlock();');
+    expect(provider).toContain('!preferenceRepairRequired) void requestUnlock();');
     expect(provider).toContain('authenticateAppLock(PHOTO_TIMELINE_PROMPT)');
     expect(provider).toContain('setPhotoTimelineUnlocked(false);');
     expect(provider).toContain('setEnabledState(true);');

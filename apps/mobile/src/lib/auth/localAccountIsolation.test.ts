@@ -56,6 +56,9 @@ function dependencies(
     clearPersistedPrivateData: vi.fn(async () => {
       calls.push('clear:persisted');
     }),
+    clearSensitiveImageMemory: vi.fn(async () => {
+      calls.push('clear:sensitive-image-memory');
+    }),
     markCleanupRequired: vi.fn(async () => {
       calls.push('mark:cleanup-required');
     }),
@@ -104,6 +107,7 @@ describe('local account isolation', () => {
       'read-owner:user-b',
       'before-clear',
       'mark:cleanup-required',
+      'clear:sensitive-image-memory',
       'cancel:queries',
       'clear:queries',
       'clear:persisted',
@@ -144,6 +148,7 @@ describe('local account isolation', () => {
     expect(deps.calls).toEqual([
       'read-owner:signed-out',
       'mark:cleanup-required',
+      'clear:sensitive-image-memory',
       'cancel:queries',
       'clear:queries',
       'clear:persisted',
@@ -163,6 +168,7 @@ describe('local account isolation', () => {
     expect(deps.calls).toEqual([
       'read-owner:user-b',
       'mark:cleanup-required',
+      'clear:sensitive-image-memory',
       'cancel:queries',
       'clear:queries',
       'cancel:queries',
@@ -178,6 +184,7 @@ describe('local account isolation', () => {
     await expect(clearAccountIsolatedState(deps)).rejects.toThrow('cancel failed');
     expect(deps.calls).toEqual([
       'mark:cleanup-required',
+      'clear:sensitive-image-memory',
       'clear:queries',
       'clear:persisted',
       'cancel:queries',

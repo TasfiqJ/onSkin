@@ -1,38 +1,34 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, extname, join, relative, resolve } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, relative, resolve } from 'node:path';
+
+import { loadLaunchContract } from '../launch/contract.mjs';
 
 const root = process.cwd();
 const strict = process.argv.includes('--strict');
 const check = process.argv.includes('--check');
-const forTasPath = 'docs/FOR_TAS_TO_DO.md';
-const deviceSupportPolicyPath = 'docs/DEVICE_SUPPORT_POLICY.md';
-const humanE2eManifestPath = 'docs/e2e/generated/human-e2e-manifest.json';
-const packagePath = 'package.json';
-const envExamplePath = '.env.example';
+const registerPath = 'docs/FOR_TAS_TO_DO.md';
+const executionPlanPath = 'docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md';
 const outJson = process.env.TAS_TODO_AUDIT_JSON ?? 'docs/generated/tas-todo-audit.json';
 const outMd = process.env.TAS_TODO_AUDIT_MD ?? 'docs/generated/tas-todo-audit.md';
 
-const requiredForTasDeviceSupportNeedles = [
-  'docs/DEVICE_SUPPORT_POLICY.md',
-  'iOS 17.0+',
-  'Android 10 / API 29+',
-  '360 x 640',
-  'API 36',
-];
-const requiredDeviceSupportPolicyNeedles = [
-  'iOS 17.0+',
-  'Android 10 / API 29+',
-  '360 x 640',
-  'API 36',
+const REQUIRED_HUMAN_IDS = Array.from(
+  { length: 12 },
+  (_, index) => `H-${String(index + 1).padStart(2, '0')}`,
+);
+const REQUIRED_VENDOR_IDS = ['V-01', 'V-02'];
+const REQUIRED_SAFETY_TEXT = [
+  'Never send passwords',
+  'MFA codes',
+  'private keys',
+  'banking data',
+  'unredacted user data',
+  'Codex-owned',
+  'Pending external work never pauses safe Codex-owned work',
 ];
 
 function abs(path) {
   return resolve(root, path);
-}
-
-function rel(path) {
-  return relative(root, path).replaceAll('\\', '/');
 }
 
 function exists(path) {
@@ -43,36 +39,12 @@ function read(path) {
   return readFileSync(abs(path), 'utf8');
 }
 
-function readJson(path) {
-  return JSON.parse(read(path));
+function rel(path) {
+  return relative(root, path).replaceAll('\\', '/');
 }
 
-function listFiles(path) {
-  if (!exists(path)) return [];
-  return readdirSync(abs(path), { withFileTypes: true }).flatMap((entry) => {
-    const child = `${path}/${entry.name}`;
-    if (entry.isDirectory()) return listFiles(child);
-    if (entry.isFile()) return [child];
-    return [];
-  });
-}
-
-function uniqueSorted(values) {
-  return [...new Set(values)].sort((a, b) => a.localeCompare(b));
-}
-
-function markdownTable(headers, rows) {
-  const allRows = [headers, ...rows];
-  const widths = headers.map((_, index) =>
-    Math.max(...allRows.map((row) => String(row[index] ?? '').length), 3),
-  );
-  const render = (row) =>
-    `| ${row.map((cell, index) => String(cell ?? '').padEnd(widths[index])).join(' | ')} |`;
-  return [
-    render(headers),
-    render(widths.map((width) => '-'.repeat(width))),
-    ...rows.map(render),
-  ].join('\n');
+function extractDate(text) {
+  return text.match(/^Date:\s*(\d{4}-\d{2}-\d{2})$/m)?.[1] ?? null;
 }
 
 function normalizeGeneratedMarkdown(text) {
@@ -93,393 +65,148 @@ function checkGeneratedFile(path, expectedContent, normalize) {
     console.error(`FAIL Missing ${path}. Run npm run docs:tas-todo-audit:strict.`);
     return false;
   }
-  const current = read(path);
-  if (normalize(current) !== normalize(expectedContent)) {
+  if (normalize(read(path)) !== normalize(expectedContent)) {
     console.error(`FAIL ${path} is stale. Run npm run docs:tas-todo-audit:strict.`);
     return false;
   }
   return true;
 }
 
-function collectScriptText(dirs) {
-  return dirs
-    .flatMap((dir) => listFiles(dir))
-    .filter((file) => extname(file) === '.mjs')
-    .map((file) => read(file))
-    .join('\n');
-}
-
-function collectKeys(text, patterns) {
-  return uniqueSorted(
-    patterns.flatMap((pattern) => {
-      const matches = text.match(pattern);
-      return matches ?? [];
-    }),
-  );
-}
-
-function isLocalOnlyGeneratedKey(key) {
-  return (
-    /_OUT_DIR$/.test(key) ||
-    key === 'PHASE3_REVIEW_WORKLIST_JSON' ||
-    key === 'PHASE3_REVIEW_WORKLIST_MD' ||
-    key === 'PHASE4_SOURCE_WORKLIST_JSON' ||
-    key === 'PHASE4_SOURCE_WORKLIST_MD' ||
-    key === 'PHASE5_PERFORMANCE_TEMPLATE_PATH' ||
-    key === 'PHASE8_STORE_METADATA_PACKET' ||
-    key === 'PHASE9_RELEASE_CANDIDATE_DIR'
-  );
-}
-
-function docHasAny(text, needles) {
-  return needles.some((needle) => text.includes(needle));
-}
-
-function extractDate(text) {
-  return text.match(/^Date:\s*(\d{4}-\d{2}-\d{2})$/m)?.[1] ?? null;
-}
-
 const blockers = [];
 const warnings = [];
 
-if (!exists(forTasPath)) blockers.push(`Missing ${forTasPath}.`);
-if (!exists(deviceSupportPolicyPath)) blockers.push(`Missing ${deviceSupportPolicyPath}.`);
-if (!exists(humanE2eManifestPath)) blockers.push(`Missing ${humanE2eManifestPath}.`);
-if (!exists(packagePath)) blockers.push(`Missing ${packagePath}.`);
-if (!exists(envExamplePath)) blockers.push(`Missing ${envExamplePath}.`);
+for (const path of [registerPath, executionPlanPath]) {
+  if (!exists(path)) blockers.push(`Missing ${path}.`);
+}
 
-const forTasText = exists(forTasPath) ? read(forTasPath) : '';
-const deviceSupportPolicyText = exists(deviceSupportPolicyPath)
-  ? read(deviceSupportPolicyPath)
-  : '';
-const humanE2eManifest = exists(humanE2eManifestPath) ? readJson(humanE2eManifestPath) : {};
-const envExampleText = exists(envExamplePath) ? read(envExamplePath) : '';
-const packageJson = exists(packagePath) ? readJson(packagePath) : { scripts: {} };
-const packageScripts = Object.keys(packageJson.scripts ?? {});
-const forTasDate = extractDate(forTasText);
-const expectedEvidenceDate = String(humanE2eManifest.evidenceDate ?? '').trim();
+let contract;
+try {
+  contract = loadLaunchContract(root);
+} catch (error) {
+  blockers.push(error instanceof Error ? error.message : String(error));
+}
 
-const gateGroups = [
-  {
-    id: 'phase2',
-    title: 'Phase 2 environment and RLS',
-    scriptDirs: ['scripts/phase2'],
-    packageScriptNeedles: ['phase2:check-env:strict', 'phase2:rls-smoke'],
-    forTasNeedles: ['phase2:check-env:strict', 'phase2:rls-smoke'],
-    keyPatterns: [
-      /\bBRAND_LEGAL_CLEARANCE\b/g,
-      /\bAPP_VARIANT\b/g,
-      /\bEXPO_PUBLIC_(?:APP|PRIVACY|TERMS|SUPPORT|ACCOUNT|DATA|CONSUMER|SUPABASE|REVENUECAT|GOOGLE|POSTHOG|SENTRY|TURNSTILE)[A-Z0-9_]*\b/g,
-      /\bSUPABASE_[A-Z0-9_]+\b/g,
-      /\bREVENUECAT_[A-Z0-9_]+\b/g,
-      /\bAPPLE_[A-Z0-9_]+\b/g,
-      /\bPOSTHOG_[A-Z0-9_]+\b/g,
-      /\bSENTRY_[A-Z0-9_]+\b/g,
-      /\bPHASE2_[A-Z0-9_]+\b/g,
-    ],
-  },
-  {
-    id: 'phase3',
-    title: 'Phase 3 legal and reviewer signoff',
-    scriptDirs: ['scripts/phase3'],
-    packageScriptNeedles: ['phase3:audit-copy:strict'],
-    forTasNeedles: ['phase3:audit-copy:strict'],
-    keyPatterns: [/\bPHASE3_[A-Z0-9_]+\b/g],
-  },
-  {
-    id: 'phase4',
-    title: 'Phase 4 catalog source posture',
-    scriptDirs: ['scripts/phase4'],
-    packageScriptNeedles: ['phase4:check-source-env:strict'],
-    forTasNeedles: ['phase4:check-source-env'],
-    keyPatterns: [/\bCATALOG_[A-Z0-9_]+\b/g, /\bOBF_[A-Z0-9_]+\b/g, /\bPHASE4_[A-Z0-9_]+\b/g],
-  },
-  {
-    id: 'phase5',
-    title: 'Phase 5 native build and device QA',
-    scriptDirs: ['scripts/phase5'],
-    packageScriptNeedles: ['phase5:check-native-config:strict', 'phase5:qa-packet:strict'],
-    forTasNeedles: ['phase5:check-native-config:strict', 'phase5:qa-packet:strict'],
-    keyPatterns: [/\bPHASE5_[A-Z0-9_]+\b/g],
-  },
-  {
-    id: 'phase6',
-    title: 'Phase 6 payments and RevenueCat',
-    scriptDirs: ['scripts/phase6'],
-    packageScriptNeedles: ['phase6:check-payments-env:strict', 'phase6:qa-packet:strict'],
-    forTasNeedles: ['phase6:check-payments-env:strict'],
-    keyPatterns: [
-      /\bPHASE6_[A-Z0-9_]+\b/g,
-      /\bEXPO_PUBLIC_REVENUECAT_[A-Z0-9_]+\b/g,
-      /\bREVENUECAT_[A-Z0-9_]+\b/g,
-    ],
-  },
-  {
-    id: 'phase7',
-    title: 'Phase 7 core loop launch gates',
-    scriptDirs: ['scripts/phase7'],
-    packageScriptNeedles: ['phase7:check-core-loop:strict', 'phase7:qa-packet:strict'],
-    forTasNeedles: ['phase7:check-core-loop:strict', 'phase7:qa-packet:strict'],
-    keyPatterns: [/\bPHASE7_[A-Z0-9_]+\b/g, /\bEXPO_PUBLIC_PHASE7_[A-Z0-9_]+\b/g],
-  },
-  {
-    id: 'phase8',
-    title: 'Phase 8 growth and store readiness',
-    scriptDirs: ['scripts/phase8'],
-    packageScriptNeedles: ['phase8:check-growth-store:strict', 'phase8:qa-packet:strict'],
-    forTasNeedles: ['phase8:verify', 'Phase 8'],
-    keyPatterns: [
-      /\bPHASE8_[A-Z0-9_]+\b/g,
-      /\bEXPO_PUBLIC_PHASE8_[A-Z0-9_]+\b/g,
-      /\bANDROID_CERT_SHA256_FINGERPRINTS\b/g,
-      /\bAPPLE_TEAM_ID\b/g,
-    ],
-  },
-  {
-    id: 'phase9',
-    title: 'Phase 9 release engineering',
-    scriptDirs: ['scripts/phase9'],
-    packageScriptNeedles: ['phase9:verify', 'phase9:release-smoke:strict'],
-    forTasNeedles: ['phase9:verify', 'Phase 9'],
-    keyPatterns: [/\bPHASE9_[A-Z0-9_]+\b/g],
-  },
-  {
-    id: 'phase10',
-    title: 'Phase 10 closed beta',
-    scriptDirs: ['scripts/phase10'],
-    packageScriptNeedles: ['phase10:verify', 'phase10:beta-readiness:strict'],
-    forTasNeedles: ['phase10:verify', 'Phase 10'],
-    keyPatterns: [/\bPHASE10_[A-Z0-9_]+\b/g],
-  },
-  {
-    id: 'phase11',
-    title: 'Phase 11 public launch',
-    scriptDirs: ['scripts/phase11'],
-    packageScriptNeedles: ['phase11:verify', 'phase11:launch-readiness:strict'],
-    forTasNeedles: ['phase11:verify', 'Phase 11'],
-    keyPatterns: [/\bPHASE11_[A-Z0-9_]+\b/g],
-  },
+const registerText = exists(registerPath) ? read(registerPath) : '';
+const planText = exists(executionPlanPath) ? read(executionPlanPath) : '';
+const registerDate = extractDate(registerText);
+const expectedDate = contract?.effectiveDate ?? null;
+
+if (expectedDate && registerDate !== expectedDate) {
+  blockers.push(`${registerPath} Date is ${registerDate ?? 'missing'}, expected ${expectedDate}.`);
+}
+
+for (const id of [...REQUIRED_HUMAN_IDS, ...REQUIRED_VENDOR_IDS]) {
+  const registerCount = registerText.match(new RegExp(`^\\| ${id} \\|`, 'gm'))?.length ?? 0;
+  if (registerCount !== 1) {
+    blockers.push(
+      `${registerPath} must contain exactly one table row for ${id}; found ${registerCount}.`,
+    );
+  }
+  if (!planText.includes(`| ${id} |`)) {
+    blockers.push(`${executionPlanPath} is missing touchpoint ${id}.`);
+  }
+}
+
+for (const text of REQUIRED_SAFETY_TEXT) {
+  if (!registerText.includes(text))
+    blockers.push(`${registerPath} is missing safety text: ${text}.`);
+}
+
+for (const heading of [
+  '## Founder Touchpoints',
+  '## External Professional And Staffed-Operation Touchpoints',
+  '## Vendor And Apple Outcomes',
+  '## Current Critical Order',
+]) {
+  if (!registerText.includes(heading)) blockers.push(`${registerPath} is missing ${heading}.`);
+}
+
+if (!registerText.includes('Android credentials, builds, device')) {
+  blockers.push(`${registerPath} must state that Android release evidence is not founder work.`);
+}
+
+const dumpedEvidenceKeys = [
+  ...new Set(registerText.match(/\bPHASE(?:[2-9]|10|11)_[A-Z0-9_]+\b/g) ?? []),
 ];
-
-if (!/## Current Command-Gate Evidence Needed/.test(forTasText)) {
-  blockers.push(`${forTasPath} is missing "Current Command-Gate Evidence Needed".`);
-}
-if (!/## How Codex Should Use This/.test(forTasText)) {
-  blockers.push(`${forTasPath} is missing "How Codex Should Use This".`);
-}
-if (expectedEvidenceDate && forTasDate !== expectedEvidenceDate) {
+if (dumpedEvidenceKeys.length > 0) {
   blockers.push(
-    `${forTasPath} Date is ${forTasDate ?? 'missing'}, expected ${expectedEvidenceDate}.`,
-  );
-}
-for (const needle of requiredForTasDeviceSupportNeedles) {
-  if (!forTasText.includes(needle)) {
-    blockers.push(`${forTasPath} does not mention device support handoff detail: ${needle}.`);
-  }
-}
-for (const needle of requiredDeviceSupportPolicyNeedles) {
-  if (!deviceSupportPolicyText.includes(needle)) {
-    blockers.push(`${deviceSupportPolicyPath} does not mention support policy detail: ${needle}.`);
-  }
-}
-if (!/Stress-Only Viewports/.test(deviceSupportPolicyText)) {
-  blockers.push(
-    `${deviceSupportPolicyPath} must distinguish launch-blocking support floors from stress-only viewports.`,
+    `${registerPath} must not dump Codex-owned phase evidence keys: ${dumpedEvidenceKeys.join(', ')}.`,
   );
 }
 
-const groups = gateGroups.map((group) => {
-  const scriptText = collectScriptText(group.scriptDirs);
-  const sourceText = `${scriptText}\n${envExampleText}`;
-  const extractedKeys = collectKeys(sourceText, group.keyPatterns);
-  const localOnlyKeys = extractedKeys.filter(isLocalOnlyGeneratedKey);
-  const keys = extractedKeys.filter((key) => !isLocalOnlyGeneratedKey(key));
-  const packageScriptsPresent = group.packageScriptNeedles.filter((needle) =>
-    packageScripts.includes(needle),
+const commandDump = registerText.match(/npm run [a-z0-9:-]+/gi) ?? [];
+if (commandDump.length > 0) {
+  blockers.push(`${registerPath} must not assign repository commands to the founder.`);
+}
+
+if (/Everything here needs a founder|For Tas To Do|Tas-owned strict/i.test(registerText)) {
+  blockers.push(`${registerPath} still contains the superseded broad founder-task model.`);
+}
+
+if (registerText.length > 15_000) {
+  warnings.push(
+    `${registerPath} exceeds 15,000 characters; recheck that Codex-owned work was not added.`,
   );
-  const forTasCovered = docHasAny(forTasText, group.forTasNeedles);
-  const keysMentionedInForTas = keys.filter((key) => forTasText.includes(key));
-  const keysNotMentionedInForTas = keys.filter((key) => !forTasText.includes(key));
-
-  if (packageScriptsPresent.length === 0) {
-    blockers.push(
-      `${group.title} has no expected package.json strict/verify script (${group.packageScriptNeedles.join(
-        ', ',
-      )}).`,
-    );
-  }
-  if (!forTasCovered) {
-    blockers.push(
-      `${forTasPath} does not cover ${group.title}; expected one of: ${group.forTasNeedles.join(
-        ', ',
-      )}.`,
-    );
-  }
-  if (keysNotMentionedInForTas.length > 0) {
-    warnings.push(
-      `${group.title} has ${keysNotMentionedInForTas.length} extracted key(s) not named verbatim in ${forTasPath}; see generated audit inventory.`,
-    );
-  }
-
-  return {
-    ...group,
-    packageScriptsPresent,
-    forTasCovered,
-    localOnlyKeys,
-    keys,
-    keysMentionedInForTas,
-    keysNotMentionedInForTas,
-  };
-});
+}
 
 const audit = {
   generatedAt: new Date().toISOString(),
   status: blockers.length === 0 ? 'pass' : 'blocked',
   strict,
   purpose:
-    'Audit that docs/FOR_TAS_TO_DO.md covers Tas-owned strict launch evidence gates, current device support floors, and generate an exact key inventory from phase scripts.',
-  sourceFiles: {
-    forTasPath,
-    deviceSupportPolicyPath,
-    humanE2eManifestPath,
-    packagePath,
-    envExamplePath,
-  },
-  handoffFreshness: {
-    forTasDate,
-    expectedEvidenceDate,
-    deviceSupportPolicyPath,
-    requiredForTasDeviceSupportNeedles,
-    requiredDeviceSupportPolicyNeedles,
-  },
+    'Verify that the founder handoff contains only the 12 human/reviewer/staff touchpoints and two Apple/vendor outcomes from the iOS all-features ownership model.',
+  sourceFiles: { registerPath, executionPlanPath },
+  launchContract: contract
+    ? {
+        programId: contract.programId,
+        effectiveDate: contract.effectiveDate,
+        platforms: contract.release.platforms,
+        androidRelease: contract.release.androidRelease,
+      }
+    : null,
+  registerDate,
+  requiredHumanIds: REQUIRED_HUMAN_IDS,
+  requiredVendorIds: REQUIRED_VENDOR_IDS,
+  dumpedEvidenceKeys,
+  commandDump,
   summary: {
-    gateGroupCount: groups.length,
-    coveredGateGroupCount: groups.filter((group) => group.forTasCovered).length,
-    extractedKeyCount: groups.reduce((sum, group) => sum + group.keys.length, 0),
-    localOnlyKeyCount: groups.reduce((sum, group) => sum + group.localOnlyKeys.length, 0),
-    keyMentionCount: groups.reduce((sum, group) => sum + group.keysMentionedInForTas.length, 0),
-    keyNotMentionedCount: groups.reduce(
-      (sum, group) => sum + group.keysNotMentionedInForTas.length,
-      0,
-    ),
+    humanTouchpointCount: REQUIRED_HUMAN_IDS.length,
+    vendorOutcomeCount: REQUIRED_VENDOR_IDS.length,
     blockerCount: blockers.length,
     warningCount: warnings.length,
   },
-  groups: groups.map(
-    ({
-      id,
-      title,
-      scriptDirs,
-      packageScriptNeedles,
-      packageScriptsPresent,
-      forTasNeedles,
-      forTasCovered,
-      localOnlyKeys,
-      keys,
-      keysMentionedInForTas,
-      keysNotMentionedInForTas,
-    }) => ({
-      id,
-      title,
-      scriptDirs,
-      packageScriptNeedles,
-      packageScriptsPresent,
-      forTasNeedles,
-      forTasCovered,
-      localOnlyKeys,
-      keys,
-      keysMentionedInForTas,
-      keysNotMentionedInForTas,
-    }),
-  ),
   blockers,
   warnings,
 };
 
 const jsonContent = `${JSON.stringify(audit, null, 2)}\n`;
-
-const summaryRows = groups.map((group) => [
-  group.id,
-  group.forTasCovered ? 'yes' : 'no',
-  group.packageScriptsPresent.join(', '),
-  group.keys.length,
-  group.keysNotMentionedInForTas.length,
-]);
-
-const keySections = groups.flatMap((group) => [
-  `### ${group.title}`,
-  '',
-  `Covered by \`${forTasPath}\`: ${group.forTasCovered ? 'yes' : 'no'}`,
-  '',
-  group.keys.length
-    ? markdownTable(
-        ['Extracted key', 'Named in FOR_TAS_TO_DO.md'],
-        group.keys.map((key) => [key, group.keysMentionedInForTas.includes(key) ? 'yes' : 'no']),
-      )
-    : '- No machine-detected external evidence keys in this group.',
-  '',
-  group.localOnlyKeys.length
-    ? `Local generated-only keys excluded from evidence warnings: ${group.localOnlyKeys.join(', ')}`
-    : 'Local generated-only keys excluded from evidence warnings: none.',
-  '',
-]);
-
 const mdContent = [
-  '# Tas To Do Audit',
+  '# Founder Touchpoint Audit',
   '',
   `Generated: ${audit.generatedAt}`,
   `Status: ${audit.status}`,
   `Strict mode: ${strict ? 'yes' : 'no'}`,
   '',
-  'This generated audit checks that `docs/FOR_TAS_TO_DO.md` covers the',
-  'Tas-owned strict launch evidence gates, current device support floors,',
-  'and records the exact evidence keys extracted from phase scripts and',
-  '`.env.example`. Local generated-packet',
-  'outputs and source-contract markers are listed separately and excluded',
-  'from evidence warnings.',
-  'Strict mode fails when a phase gate is no longer covered by the founder',
-  'handoff doc; exact key omissions are warnings because the generated',
-  'inventory itself is the canonical machine-readable key list.',
+  'This audit enforces the narrow founder/external ownership boundary from the',
+  'iOS all-features execution charter. Repository commands, environment-key',
+  'inventories, research, engineering, configuration, evidence generation, and',
+  'launch operations must not be handed to the founder.',
   '',
   '## Summary',
   '',
-  `- Gate groups: ${audit.summary.gateGroupCount}`,
-  `- Covered gate groups: ${audit.summary.coveredGateGroupCount}`,
-  `- Extracted keys: ${audit.summary.extractedKeyCount}`,
-  `- Local generated-only keys excluded: ${audit.summary.localOnlyKeyCount}`,
-  `- Keys named verbatim in FOR_TAS_TO_DO.md: ${audit.summary.keyMentionCount}`,
-  `- Keys only in generated inventory: ${audit.summary.keyNotMentionedCount}`,
+  `- Human/reviewer/staff touchpoints: ${audit.summary.humanTouchpointCount}`,
+  `- Apple/vendor outcomes: ${audit.summary.vendorOutcomeCount}`,
+  `- Register date: ${audit.registerDate ?? 'missing'}`,
+  `- Release platforms: ${audit.launchContract?.platforms.join(', ') ?? 'invalid contract'}`,
+  `- Android release: ${audit.launchContract?.androidRelease === false ? 'not applicable' : 'invalid'}`,
   `- Blockers: ${audit.summary.blockerCount}`,
   `- Warnings: ${audit.summary.warningCount}`,
   '',
-  '## Handoff Freshness',
+  '## Required IDs',
   '',
-  `- FOR_TAS date: ${audit.handoffFreshness.forTasDate ?? 'missing'}`,
-  `- Expected evidence date: ${audit.handoffFreshness.expectedEvidenceDate || 'missing'}`,
-  `- Device support policy: \`${audit.handoffFreshness.deviceSupportPolicyPath}\``,
-  `- Required FOR_TAS support-floor details: ${audit.handoffFreshness.requiredForTasDeviceSupportNeedles
-    .map((needle) => `\`${needle}\``)
-    .join(', ')}`,
-  `- Required policy support-floor details: ${audit.handoffFreshness.requiredDeviceSupportPolicyNeedles
-    .map((needle) => `\`${needle}\``)
-    .join(', ')}`,
+  `- Human: ${REQUIRED_HUMAN_IDS.join(', ')}`,
+  `- Vendor: ${REQUIRED_VENDOR_IDS.join(', ')}`,
   '',
-  '## Gate Coverage',
-  '',
-  markdownTable(
-    [
-      'Gate',
-      'FOR_TAS coverage',
-      'Package script evidence',
-      'Keys',
-      'Keys only in generated inventory',
-    ],
-    summaryRows,
-  ),
-  '',
-  '## Extracted Evidence Keys',
-  '',
-  ...keySections,
   '## Blockers',
   '',
   ...(blockers.length ? blockers.map((blocker) => `- ${blocker}`) : ['- None.']),
@@ -493,33 +220,22 @@ const mdContent = [
 if (check) {
   const jsonCurrent = checkGeneratedFile(outJson, jsonContent, normalizeGeneratedJson);
   const mdCurrent = checkGeneratedFile(outMd, mdContent, normalizeGeneratedMarkdown);
-  if (blockers.length > 0) {
-    for (const blocker of blockers) console.error(`FAIL ${blocker}`);
-    process.exit(1);
-  }
-  if (!jsonCurrent || !mdCurrent) process.exit(1);
-  if (strict && warnings.length > 0) {
-    for (const warning of warnings) console.warn(`WARN ${warning}`);
-  }
-  console.log('Tas To Do audit is current.');
-  console.log('Tas To Do audit passed.');
+  if (blockers.length > 0 || !jsonCurrent || !mdCurrent) process.exit(1);
+  if (strict && warnings.length > 0) warnings.forEach((warning) => console.warn(`WARN ${warning}`));
+  console.log('Founder touchpoint audit is current.');
+  console.log('Founder touchpoint audit passed.');
   process.exit(0);
 }
 
 mkdirSync(dirname(abs(outJson)), { recursive: true });
 writeFileSync(abs(outJson), jsonContent);
 writeFileSync(abs(outMd), mdContent);
-
 console.log(`Wrote ${rel(abs(outJson))}`);
 console.log(`Wrote ${rel(abs(outMd))}`);
 
 if (blockers.length > 0) {
-  for (const blocker of blockers) console.error(`FAIL ${blocker}`);
+  blockers.forEach((blocker) => console.error(`FAIL ${blocker}`));
   process.exit(1);
 }
-
-if (strict && warnings.length > 0) {
-  for (const warning of warnings) console.warn(`WARN ${warning}`);
-}
-
-console.log('Tas To Do audit passed.');
+if (strict && warnings.length > 0) warnings.forEach((warning) => console.warn(`WARN ${warning}`));
+console.log('Founder touchpoint audit passed.');

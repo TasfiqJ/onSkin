@@ -201,7 +201,8 @@ const rawRevenueCatPayloadCanaries = [
   'phase9@example.invalid',
 ];
 
-function eventBody(id, type, userId) {
+function eventBody(id, type, userId, overrides = {}) {
+  const eventTimestampMs = overrides.event_timestamp_ms ?? Date.now();
   return {
     event: {
       id,
@@ -213,8 +214,12 @@ function eventBody(id, type, userId) {
       store: 'TEST_STORE',
       environment: 'SANDBOX',
       entitlement_ids: ['pro'],
-      expiration_at_ms: Date.now() + 7 * 86_400_000,
-      original_purchase_date_ms: Date.now() - 60_000,
+      event_timestamp_ms: eventTimestampMs,
+      purchased_at_ms: eventTimestampMs - 60_000,
+      expiration_at_ms: eventTimestampMs + 7 * 86_400_000,
+      original_purchase_date_ms: eventTimestampMs - 60_000,
+      original_transaction_id: `phase9-original-${userId}`,
+      transaction_id: `phase9-transaction-${id}`,
       period_type: 'NORMAL',
       is_sandbox: true,
       presented_offering_id: 'phase9-security-webhook',
@@ -226,6 +231,7 @@ function eventBody(id, type, userId) {
         $email: { value: 'phase9@example.invalid' },
         skin_concern: { value: 'phase9-sensitive-skin-concern' },
       },
+      ...overrides,
     },
   };
 }
@@ -250,7 +256,7 @@ async function oneEvent(admin, eventId) {
   const { data, error } = await admin
     .from('subscriptions_events')
     .select(
-      'rc_event_id,user_id,event_type,resolved_user_id,processing_status,signature_verified,auth_verified,store,environment,product_id,payload,app_user_id,original_app_user_id,aliases',
+      'rc_event_id,user_id,event_type,resolved_user_id,processing_status,signature_verified,auth_verified,store,environment,product_id,payload,app_user_id,original_app_user_id,aliases,provider_event_at,projection_applied,processing_attempts',
     )
     .eq('rc_event_id', eventId)
     .single();
@@ -271,7 +277,7 @@ async function entitlement(admin, userId) {
   const { data, error } = await admin
     .from('entitlements')
     .select(
-      'user_id,entitlement,is_active,product_id,rc_event_id,source,store,environment,will_renew,period_type,store_user_id,raw_status',
+      'user_id,entitlement,is_active,product_id,rc_event_id,source,store,environment,will_renew,period_type,store_user_id,raw_status,rc_event_at,rc_event_priority,rc_original_transaction_id,rc_transaction_id',
     )
     .eq('user_id', userId)
     .single();
@@ -346,6 +352,8 @@ async function main() {
     billingIssue: `phase9-rc-billing-issue-${randomUUID()}`,
     expiration: `phase9-rc-expiration-${randomUUID()}`,
     refund: `phase9-rc-refund-${randomUUID()}`,
+    orderingRenewal: `phase9-rc-order-renewal-${randomUUID()}`,
+    orderingStaleExpiration: `phase9-rc-order-expiration-${randomUUID()}`,
   };
 
   try {
@@ -769,6 +777,40 @@ async function main() {
       assert(row.rc_event_id === eventIds.refund, 'refund entitlement did not record event id.');
       assert(row.will_renew === false, 'refund did not mark will_renew=false.');
     });
+
+    await runCheck(
+      'revenuecat-webhook records reordered stale events without regressing entitlement',
+      async () => {
+        const newerProviderTime = Date.now() + 1_000;
+        const renewalResponse = await postWebhook(
+          eventBody(eventIds.orderingRenewal, 'RENEWAL', user.id, {
+            event_timestamp_ms: newerProviderTime,
+          }),
+          validOptions(),
+        );
+        assertStatus(renewalResponse.status, 200, 'ordered renewal', renewalResponse.text);
+
+        const staleResponse = await postWebhook(
+          eventBody(eventIds.orderingStaleExpiration, 'EXPIRATION', user.id, {
+            event_timestamp_ms: newerProviderTime - 1_000,
+          }),
+          validOptions(),
+        );
+        assertStatus(staleResponse.status, 200, 'stale expiration', staleResponse.text);
+
+        const staleEvent = await oneEvent(admin, eventIds.orderingStaleExpiration);
+        assert(
+          staleEvent.processing_status === 'stale' && staleEvent.projection_applied === false,
+          `reordered expiration status=${staleEvent.processing_status}.`,
+        );
+        const row = await entitlement(admin, user.id);
+        assert(row.is_active === true, 'stale expiration deactivated the entitlement.');
+        assert(
+          row.rc_event_id === eventIds.orderingRenewal,
+          'stale expiration replaced the newer projection.',
+        );
+      },
+    );
   } finally {
     await admin.from('entitlements').delete().eq('user_id', user.id);
     await admin.from('subscriptions_events').delete().in('rc_event_id', Object.values(eventIds));

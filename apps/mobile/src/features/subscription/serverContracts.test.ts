@@ -9,15 +9,28 @@ function readRepo(path: string): string {
 }
 
 describe('subscription server contracts', () => {
-  it('retries RevenueCat entitlement mirroring when a prior event row failed', () => {
+  it('retries RevenueCat entitlement mirroring atomically when a prior event row failed', () => {
     const edgeFunction = readRepo('supabase/functions/revenuecat-webhook/index.ts');
+    const core = readRepo('supabase/functions/revenuecat-webhook/webhookCore.ts');
+    const migration = readRepo(
+      'supabase/migrations/20260713000041_revenuecat_webhook_atomic_projection.sql',
+    );
     const liveHarness = readRepo('scripts/phase9/live-revenuecat-webhook.mjs');
 
-    expect(edgeFunction).toContain(".select('id, processing_status')");
-    expect(edgeFunction).toContain("const retryFailedEvent = seen?.processing_status === 'error';");
-    expect(edgeFunction).toContain('if (seen && !retryFailedEvent) return json');
-    expect(edgeFunction).toContain('processing_status: eventProcessingStatus');
-    expect(edgeFunction).toContain('processed_at: null');
+    expect(edgeFunction).toContain('persistRevenueCatEvent(supabase, atomicArgs)');
+    expect(edgeFunction).not.toContain(".from('subscriptions_events')");
+    expect(edgeFunction).not.toContain(".from('entitlements')");
+    expect(core).toContain("'process_revenuecat_webhook_event'");
+    expect(core).toContain("row.processing_status === 'error'");
+    expect(migration).toContain(
+      "coalesce(v_existing.processing_status, '') not in ('error', 'unresolved_user')",
+    );
+    expect(migration).toContain("processing_status = 'processing'");
+    expect(migration).toContain('processed_at = null');
+    expect(migration).toContain("processing_status = 'error'");
+    expect(migration).toContain(
+      "where event_audit.processing_status in ('processing', 'error', 'unresolved_user')",
+    );
 
     expect(liveHarness).toContain(
       'revenuecat-webhook retries entitlement mirroring after a failed event row',

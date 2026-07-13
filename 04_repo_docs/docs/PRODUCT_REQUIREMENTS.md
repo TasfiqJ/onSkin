@@ -4,7 +4,9 @@
 
 1. [Decision] Help users use the skincare products they already own in the right order, on the right nights.
 2. [Decision] Make the app trustworthy enough to support a paid subscription.
-3. [Decision] Keep the full-product vision, but gate risky features until reviewed and production-real.
+3. [Decision] Launch the full indexed product on iOS; every risky feature stays
+   fail-closed until it is reviewed and production-real, but it may not be
+   removed from the release scope to bypass its gate.
 4. [Decision] Reach a path toward 10,000-14,000 active subscribers, the practical base for about $30k/month after fees and operating drag.
 
 ## Personas
@@ -156,26 +158,23 @@ Acceptance:
 - No dark patterns.
 - Free tier preserves user data.
 
-## MVP Scope
+## iOS All-Features Release Scope
 
-[Decision] The MVP scope for market proof, even if more code exists:
+[Decision] The release includes all 20 features in `docs/FEATURE_INDEX.md` and
+all Phase 7/8 surfaces in `docs/hugeToDo/launch-contract.json`. Android release
+evidence is not required. Every included feature must be production-real; a
+stub, fixture, preview, inert target, simulated response, or hidden route does
+not satisfy scope.
 
-- Rebrand.
-- Onboarding and consent.
-- Shelf add with manual fallback.
-- Reviewed conflict guidance.
-- AM/PM routine builder.
-- Today check-off.
-- Private progress timeline.
-- RevenueCat subscriptions.
-- Basic analytics and support.
+The shelf -> insight -> routine -> Today loop remains the primary positioning
+and activation path. Commerce, community, Ask, trend, native widgets, creator,
+sharing, and growth surfaces support that promise and must not displace it.
 
-## Out-Of-Scope Items For Public Claims
+## Prohibited Public Claims And Behaviors
 
 - AI skin score.
 - Skin age.
 - Diagnosis/treatment/cure/prevention.
-- Open community posting.
 - Cloud photo analysis.
 - Commission-influenced ranking.
 - Unreviewed Ask/recommendations.
@@ -183,6 +182,8 @@ Acceptance:
 ## Acceptance Rules
 
 - [Decision] Every public value claim must map to production-real behavior.
+- [Decision] Every launch-required feature must pass its applicable code,
+  staging, physical-iPhone, professional-review, production, and store gates.
 - [Decision] Every clinical/cosmetic-chemistry claim must be reviewed or hidden.
 - [Decision] Every UI-facing feature needs human-simulated E2E evidence.
 - [Decision] Every health/photo/commerce/AI sharing path must have explicit consent and policy coverage.

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 import {
   normalizeProductionUrl,
   placeholderEnvValue,
@@ -10,6 +11,8 @@ import {
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
+const launchContract = loadLaunchContract(resolve(import.meta.dirname, '../..'));
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 
 function parseDotEnv(content) {
   for (const rawLine of content.split(/\r?\n/)) {
@@ -72,7 +75,7 @@ const groups = [
     name: 'RevenueCat',
     required: [
       'EXPO_PUBLIC_REVENUECAT_IOS_KEY',
-      'EXPO_PUBLIC_REVENUECAT_ANDROID_KEY',
+      ...(androidReleaseRequired ? ['EXPO_PUBLIC_REVENUECAT_ANDROID_KEY'] : []),
       'EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID',
       'EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID',
       'EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID',
@@ -230,7 +233,9 @@ const finalIdentityEnv = [
     names: ['APP_SCHEME', 'EXPO_PUBLIC_APP_SCHEME'],
   },
   { label: 'APP_IOS_BUNDLE_IDENTIFIER', names: ['APP_IOS_BUNDLE_IDENTIFIER'] },
-  { label: 'APP_ANDROID_PACKAGE', names: ['APP_ANDROID_PACKAGE'] },
+  ...(androidReleaseRequired
+    ? [{ label: 'APP_ANDROID_PACKAGE', names: ['APP_ANDROID_PACKAGE'] }]
+    : []),
 ];
 const needsFinalNativeIdentity = [appVariant, appEnv].some((value) =>
   ['staging', 'production'].includes(value),
@@ -332,6 +337,9 @@ for (const group of groups) {
 
 for (const warning of warnings) console.warn(`WARN ${warning}`);
 for (const error of errors) console.error(`FAIL ${error}`);
+if (!androidReleaseRequired) {
+  console.log('N/A Android release configuration and evidence: excluded by launch contract.');
+}
 
 if (errors.length > 0 && strict) process.exit(1);
 if (errors.length > 0) {

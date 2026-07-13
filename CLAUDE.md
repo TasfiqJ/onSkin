@@ -26,6 +26,9 @@ authoritative for product behavior, schema, privacy posture, and launch scope:
 - `docs/MASTER_PLAN_UPDATE_PATCH.md`
 - `docs/rebrand-and-core-loop-migration-checklist.md`
 - `docs/FOR_TAS_TO_DO.md`
+- `docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md`
+- `docs/hugeToDo/2026-07-12-ios-all-features-master-plan-update.md`
+- `docs/hugeToDo/launch-contract.json`
 - `docs/00-architecture.md`
 - `docs/01-auth-onboarding.md`
 - `docs/02-ingredient-intelligence.md`

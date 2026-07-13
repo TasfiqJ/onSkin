@@ -31,7 +31,7 @@ export const COMMUNITY_COPY = {
   },
   ask: {
     title: 'Ask anonymously',
-    phaseTag: 'Phase 2',
+    phaseTag: 'Unavailable',
     postingAs: 'Posting as',
     handleNote: 'a random handle · no profile, no real name',
     claimSafePassed: 'Claim-safety check passed. No “treats/cures” or dosage language.',
@@ -40,12 +40,12 @@ export const COMMUNITY_COPY = {
     ageGate: 'Age confirmed 16+ · faceprints never stored',
     consentRow: 'consent. Separate & unbundled',
     preModeration:
-      'An expert or our team will review this before it appears. If we can’t post it, you’ll get a plain reason and an appeal.',
-    submit: 'Submit for review',
+      'Question posting is unavailable in this release. No question is accepted or sent for review.',
+    submit: 'Posting unavailable',
     // Phase-2 gating notice. Peer posting is deferred behind the moderation floor.
-    deferredTitle: 'Asking opens soon',
+    deferredTitle: 'Question not sent',
     deferredBody:
-      'Anonymous questions arrive once our expert review desk is staffed to the ~24-hour standard. For now, the expert Skin Notes answer the most common questions. Calm and evidence-graded.',
+      'Anonymous questions remain unavailable until moderation, reviewed consent, deletion, support, and appeal workflows are staffed and verified.',
   },
   consent: {
     title: 'Join Skin Notes safely',
@@ -63,13 +63,13 @@ export const COMMUNITY_COPY = {
     subtitle: 'An anonymised pattern, never a list of people.',
     phaseTag: 'Phase 2',
     aggregateNote:
-      'Aggregated & anonymised. It improves your recommendations, never ranks you against anyone.',
+      'No peer aggregate is available until a reviewed, consented dataset is large enough to support it.',
     nevers: [
       'Never a feed of strangers’ faces',
       'Never a comparison ranking or leaderboard',
       'Never a free-text health disclosure from a stranger',
     ],
-    footer: 'the one place community and a proven pillar become one flywheel',
+    footer: 'Unavailable until real, reviewed aggregate evidence exists.',
   },
   settingsRow: 'Skin Notes',
   consentVersion: 'community-participation-2026-06-13-placeholder', // BLOCKED: B-PRIVACY-COPY

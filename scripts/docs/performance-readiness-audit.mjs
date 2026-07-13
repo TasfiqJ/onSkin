@@ -1,8 +1,14 @@
 #!/usr/bin/env node
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
+import {
+  launchContractSnapshot,
+  loadLaunchContract,
+  platformRequirementStatus,
+} from '../launch/contract.mjs';
 
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
 const strict = process.argv.includes('--strict');
 const check = process.argv.includes('--check');
 
@@ -25,6 +31,8 @@ const files = {
   photoProgress: 'docs/06-photo-progress.md',
   smartShelf: 'docs/04-smart-shelf.md',
   testingStrategy: 'docs/TESTING_STRATEGY.md',
+  launchContract: 'docs/hugeToDo/launch-contract.json',
+  launchContractScript: 'scripts/launch/contract.mjs',
 };
 
 const requiredPerformanceMetrics = [
@@ -54,13 +62,9 @@ const docNeedles = [
   {
     path: files.forTas,
     needles: [
-      'P1 - Performance And Scale Evidence',
-      ...requiredPerformanceMetrics,
-      'PHASE5_PERFORMANCE_EVIDENCE_PATH',
-      'phase5:performance-evidence:strict',
-      'phase5:performance-evidence:summarize',
-      'photo_capture_analysis_ms',
-      'raw samples',
+      'supported physical iPhones',
+      'Android credentials, builds, device evidence',
+      'performance, beta, and release approval are outside the current release',
     ],
   },
   {
@@ -99,7 +103,6 @@ const docNeedles = [
     needles: [
       'define every threshold before measurement',
       'at least five raw samples',
-      'both iOS and Android evidence',
       'at least 50 encrypted local photos',
       'photo_capture_analysis_ms',
       'PHASE5_PERFORMANCE_EVIDENCE_PATH',
@@ -129,6 +132,8 @@ const docNeedles = [
       'photo_capture_analysis_ms',
       'photo_timeline_peak_memory_mb',
       'logicalWidth must be at least',
+      'requiredReleasePlatforms',
+      'platformStatus',
     ],
   },
   {
@@ -147,6 +152,8 @@ const docNeedles = [
     path: files.performanceTemplate,
     needles: [
       '"schemaVersion": 3',
+      '"platformStatus"',
+      '"android": "not_applicable"',
       '"app_startup_cold_ms"',
       '"photo_capture_analysis_ms"',
       '"photo_timeline_peak_memory_mb"',
@@ -270,6 +277,11 @@ const docResults = docNeedles.map(({ path, needles }) => {
 
 const audit = {
   generatedAt: new Date().toISOString(),
+  launchContract: launchContractSnapshot(launchContract),
+  platformStatus: {
+    ios: platformRequirementStatus('ios', launchContract),
+    android: platformRequirementStatus('android', launchContract),
+  },
   status: blockers.length === 0 ? 'pass' : 'fail',
   strict,
   summary: {
@@ -307,6 +319,7 @@ const mdContent = [
   'tests, and `launch:verify`',
   'continue to cover startup, shelf intake, barcode lookup, routine generation,',
   'local photo loading, and photo timeline memory evidence.',
+  `Required performance platforms: ${launchContract.release.platforms.join(', ')}. Android evidence: ${platformRequirementStatus('android', launchContract)}.`,
   '',
   '## Summary',
   '',

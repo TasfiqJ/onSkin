@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 const APP_DIR = fileURLToPath(new URL('../../app/', import.meta.url));
+const SUBSCRIPTION_COPY = fileURLToPath(new URL('./copy.ts', import.meta.url));
 
 function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
@@ -45,7 +46,9 @@ describe('Pro-gated route contracts', () => {
   it('gates the routine route group through the contextual route mapper', () => {
     const layout = readAppRoute('routine/_layout.tsx');
 
-    expect(layout).toContain('<ProGate feature={routineGateFeatureForPath(pathname)}>');
+    expect(layout).toContain('const gateFeature = routineGateFeatureForPath(pathname)');
+    expect(layout).toContain('if (!gateFeature) return stack');
+    expect(layout).toContain('<ProGate feature={gateFeature}>');
   });
 
   it('gates conflict details after the free conflict-check quota is used', () => {
@@ -86,7 +89,6 @@ describe('Pro-gated route contracts', () => {
       'routine/plan.tsx',
       'routine/ramp.tsx',
       'routine/streak.tsx',
-      'routine/widgets.tsx',
     ]) {
       expectTouchableRouteIcon(route);
     }
@@ -311,35 +313,25 @@ describe('Pro-gated route contracts', () => {
     expect(tolerance).not.toContain('<Sheet fallbackRoute={APP_HOME_ROUTE} scroll>');
   });
 
-  it('keeps the widgets Live Activity opt-in on the 44px shared switch', () => {
+  it('keeps unavailable native widget and Live Activity controls out of the route', () => {
     const source = readAppRoute('routine/widgets.tsx');
 
-    expect(source).toContain('ToggleSwitch');
-    expect(source).toContain('accessibilityLabel="Show on the Lock Screen"');
-    expect(source).not.toContain('<Switch');
-    expect(source).not.toContain('onValueChange');
+    expect(source).toContain('<DeferredSurface');
+    expect(source).not.toContain('withProGate');
+    expect(source).not.toContain('ToggleSwitch');
+    expect(source).not.toContain('Show on the Lock Screen');
+    expect(source).not.toContain('useUpdateNotifPrefs');
   });
 
-  it('keeps the widgets check-off preview interactive and honest', () => {
+  it('does not market home-screen widgets through the deferred route or paywall', () => {
     const source = readAppRoute('routine/widgets.tsx');
+    const copy = readFileSync(SUBSCRIPTION_COPY, 'utf8');
 
-    expect(source).toContain('type PreviewStepKey');
-    expect(source).toContain('function WidgetPreviewStep');
-    expect(source).toContain('<Pressable');
-    expect(source).toContain('accessibilityRole="checkbox"');
-    expect(source).toContain('accessibilityState={{ checked }}');
-    expect(source).toContain('aria-checked={checked}');
-    expect(source).toContain('accessibilityHint="Updates only this in-app widget preview"');
-    expect(source).toContain('label="Ceramide moisturizer"');
-    expect(source).toContain('label="Mineral SPF 50"');
-    expect(source).toContain('const previewDoneCount =');
-    expect(source).toContain('{previewDoneCount} of 4');
-    expect(source).toContain('Preview updated:');
-    expect(source).toContain('Real home-screen check-off still needs the native widget build.');
-    expect(source).toContain('accessibilityRole="alert"');
-    expect(source).not.toContain('{/* todo */}');
-    expect(source).not.toContain("{checked ? 'DONE' : 'TAP'}");
-    expect(source).not.toContain('>TAP</Text>');
+    expect(source).not.toContain('Check it off right from the home screen');
+    expect(source).not.toContain('Real home-screen check-off');
+    expect(copy).not.toContain('home-screen widgets');
+    expect(copy).not.toContain('glanceable widgets');
+    expect(copy).toContain('Reminders and a forgiving streak');
   });
 
   it('returns deferred widgets direct entries to Today with explicit copy', () => {

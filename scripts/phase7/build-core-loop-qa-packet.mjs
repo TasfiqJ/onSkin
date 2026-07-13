@@ -8,9 +8,11 @@ import {
   gitStatusExcludingGeneratedEvidence,
   normalizeNamedSignoff,
 } from '../phase9/lib.mjs';
+import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
 const packetOutDir = process.env.PHASE7_PACKET_OUT_DIR ?? 'docs/phase-7/generated';
 const outDir = resolve(root, packetOutDir);
 const packetOutputPaths = [
@@ -20,6 +22,8 @@ const packetOutputPaths = [
 
 const requiredFiles = [
   'package.json',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/src/components/launch/DeferredSurface.tsx',
@@ -256,6 +260,7 @@ for (const [key, value] of Object.entries(evidence)) {
 
 const packet = {
   generatedAt: new Date().toISOString(),
+  launchContract: launchContractSnapshot(launchContract),
   purpose: 'Phase 7 closed-beta core-loop launch QA packet.',
   gitSha,
   gitStatus,

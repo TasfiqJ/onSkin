@@ -1,0 +1,46 @@
+name: iOS launch contract
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    name: iOS all-features contract
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        # actions/checkout v6.0.3
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        # actions/setup-node v6.4.0
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Validate launch contract
+        run: npm run launch:contract:verify
+
+      - name: Validate execution baseline
+        run: |
+          npm run launch:execution-baseline:check
+          npm run launch:execution-baseline:smoke
+
+      - name: Run safe repository checks
+        run: |
+          npm run typecheck
+          npm run lint
+          npm test

@@ -1,12 +1,17 @@
 # Codex Implementation Prompt
 
+The 2026-07-12 iOS all-features charter supersedes the earlier ticket sequence
+below wherever it implied a smaller launch. Use
+`docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md` and
+`docs/hugeToDo/launch-contract.json` as the current execution contract.
+
 Copy this prompt into a new Codex session after the documentation pack is copied into the main repo docs and the founder has approved the plan.
 
 ```text
 You are Codex working in the skincare app repo.
 
 Goal:
-Bring the product to life as a serious, revenue-ready skincare shelf/routine/progress app targeting a path to $30k/month, without weakening safety, privacy, legal, or launch gates.
+Bring every indexed feature to a production-real iOS App Store release targeting a path to $30k/month, without weakening safety, privacy, legal, or launch gates. Android release evidence is not required.
 
 Act as:
 - senior mobile engineer
@@ -28,6 +33,8 @@ Read first, in order:
 11. docs/TESTING_STRATEGY.md
 12. docs/CODE_REVIEW.md
 13. docs/MASTER_PLAN_UPDATE_PATCH.md
+14. docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md
+15. docs/hugeToDo/launch-contract.json
 
 Non-negotiables:
 - Do not launch or configure production assets under `OnSkin` unless written counsel clearance exists.
@@ -37,6 +44,12 @@ Non-negotiables:
 - Keep recommendation ranking independent from commerce.
 - Keep Row-Level Security owner-scoped.
 - UI-facing work requires human-simulated E2E verification before done.
+- Every feature ID 1-20 and every Phase 7/8 surface is required for iOS launch.
+- A hidden route, flag, fixture, preview, simulation, or inert native target is
+  not a completed feature.
+- Keep strict physical-iPhone, live-service, external-review, production, and
+  App Store evidence gates; mark Android release checks not applicable through
+  the launch contract rather than faking evidence.
 
 Product positioning to implement:
 The app is a private skincare shelf and routine system.

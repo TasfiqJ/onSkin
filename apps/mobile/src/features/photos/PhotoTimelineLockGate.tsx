@@ -114,7 +114,7 @@ export function PhotoTimelineLockGate({ children }: { children: ReactNode }) {
               color: 'rgba(244,239,231,0.5)',
               fontSize: 12,
               lineHeight: 17,
-              fontFamily: 'HankenGrotesk_400Regular',
+              fontFamily: 'HankenGrotesk-Regular',
             }}
           >
             {PHOTO_COPY.lock.storageBody}

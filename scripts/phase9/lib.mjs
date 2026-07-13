@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 
 export const root = process.cwd();
 export const strict = process.argv.includes('--strict');
@@ -380,8 +381,17 @@ export function markdownList(items, empty = '- None.') {
   return items.length ? items.map((item) => `- ${item}`) : [empty];
 }
 
-export function requiredPhase9EvidenceKeys() {
-  return [
+const PHASE9_ANDROID_EVIDENCE_KEYS = Object.freeze([
+  'PHASE9_ANDROID_CLOSED_TEST_PASS',
+  'PHASE9_ANDROID_TARGET_API_PASS',
+  'PHASE9_ANDROID_16KB_PASS',
+  'PHASE9_PLAY_PACKET_PASS',
+]);
+
+export function requiredPhase9EvidenceKeys(
+  contract = loadLaunchContract(resolve(import.meta.dirname, '../..')),
+) {
+  const keys = [
     'PHASE9_FINAL_IDENTITY_PASS',
     'PHASE9_LIVE_SUPABASE_PASS',
     'PHASE9_RLS_STAGING_PASS',
@@ -396,16 +406,23 @@ export function requiredPhase9EvidenceKeys() {
     'PHASE9_REVENUECAT_WEBHOOK_PASS',
     'PHASE9_REVENUECAT_NATIVE_QA_PASS',
     'PHASE9_IOS_TESTFLIGHT_PASS',
-    'PHASE9_ANDROID_CLOSED_TEST_PASS',
-    'PHASE9_ANDROID_TARGET_API_PASS',
-    'PHASE9_ANDROID_16KB_PASS',
+    ...PHASE9_ANDROID_EVIDENCE_KEYS.slice(0, 3),
     'PHASE9_IOS_PRIVACY_REPORT_PASS',
     'PHASE9_APP_STORE_PACKET_PASS',
-    'PHASE9_PLAY_PACKET_PASS',
+    PHASE9_ANDROID_EVIDENCE_KEYS[3],
     'PHASE9_DEVICE_QA_PASS',
     'PHASE9_ROLLBACK_DRILL_PASS',
     'PHASE9_INCIDENT_RESPONSE_PASS',
     'PHASE9_DEPENDENCY_AUDIT_PASS',
     'PHASE9_BETA_EVIDENCE_PASS',
   ];
+  return isReleasePlatformRequired('android', contract)
+    ? keys
+    : keys.filter((key) => !PHASE9_ANDROID_EVIDENCE_KEYS.includes(key));
+}
+
+export function notApplicablePhase9EvidenceKeys(
+  contract = loadLaunchContract(resolve(import.meta.dirname, '../..')),
+) {
+  return isReleasePlatformRequired('android', contract) ? [] : [...PHASE9_ANDROID_EVIDENCE_KEYS];
 }

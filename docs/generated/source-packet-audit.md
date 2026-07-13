@@ -1,6 +1,6 @@
 # Source Packet Audit
 
-Generated: 2026-07-11T18:49:18.765Z
+Generated: 2026-07-13T03:48:55.796Z
 Status: pass
 Strict mode: yes
 
@@ -25,16 +25,16 @@ the top-level packet markdown shape changes without updating the audit.
 
 | Packet doc                     | Active docs status | AGENTS.md | CLAUDE.md | Packet SHA-256 |
 | ------------------------------ | ------------------ | --------- | --------- | -------------- |
-| ARCHITECTURE.md                | identical          | yes       | yes       | 8b0288d80fb4   |
-| CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | 237c46f8ab33   |
+| ARCHITECTURE.md                | identical          | yes       | yes       | 7951a60c3fdb   |
+| CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | 33b4152b5cfd   |
 | CODE_REVIEW.md                 | identical          | yes       | yes       | 83db5ca6e5ad   |
-| DECISIONS.md                   | identical          | yes       | yes       | a81e102958fd   |
-| FEATURE_INDEX.md               | identical          | yes       | yes       | c729b1642ad1   |
-| MASTER_PLAN.md                 | identical          | yes       | yes       | 30bcdf57b71e   |
+| DECISIONS.md                   | identical          | yes       | yes       | 3d8336ae0cd5   |
+| FEATURE_INDEX.md               | identical          | yes       | yes       | 9e6897ce97f4   |
+| MASTER_PLAN.md                 | identical          | yes       | yes       | 89f355a4d693   |
 | MASTER_PLAN_UPDATE_PATCH.md    | identical          | yes       | yes       | 634edff435fa   |
-| PRODUCT_REQUIREMENTS.md        | identical          | yes       | yes       | fabb281ce1fa   |
-| ROADMAP.md                     | identical          | yes       | yes       | 1d6a7730199b   |
-| TESTING_STRATEGY.md            | identical          | yes       | yes       | 97a1af9f7388   |
+| PRODUCT_REQUIREMENTS.md        | identical          | yes       | yes       | 406d2987034a   |
+| ROADMAP.md                     | identical          | yes       | yes       | c8e0e97427a4   |
+| TESTING_STRATEGY.md            | identical          | yes       | yes       | cea93cca79db   |
 
 ## Top-Level Packet Files
 
@@ -49,16 +49,16 @@ the top-level packet markdown shape changes without updating the audit.
 | ------------------------------------------------ | ----- | ------------ |
 | 04_repo_docs/AGENTS.md                           | 3385  | ef580a3f1d66 |
 | 04_repo_docs/README.md                           | 2924  | b7ebba84d0dd |
-| 04_repo_docs/docs/ARCHITECTURE.md                | 10390 | 8b0288d80fb4 |
-| 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md | 7739  | 237c46f8ab33 |
+| 04_repo_docs/docs/ARCHITECTURE.md                | 11659 | 7951a60c3fdb |
+| 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md | 8516  | 33b4152b5cfd |
 | 04_repo_docs/docs/CODE_REVIEW.md                 | 1985  | 83db5ca6e5ad |
-| 04_repo_docs/docs/DECISIONS.md                   | 40770 | a81e102958fd |
-| 04_repo_docs/docs/FEATURE_INDEX.md               | 4833  | c729b1642ad1 |
-| 04_repo_docs/docs/MASTER_PLAN.md                 | 53863 | 30bcdf57b71e |
+| 04_repo_docs/docs/DECISIONS.md                   | 42210 | 3d8336ae0cd5 |
+| 04_repo_docs/docs/FEATURE_INDEX.md               | 4097  | 9e6897ce97f4 |
+| 04_repo_docs/docs/MASTER_PLAN.md                 | 55528 | 89f355a4d693 |
 | 04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md    | 1473  | 634edff435fa |
-| 04_repo_docs/docs/PRODUCT_REQUIREMENTS.md        | 5347  | fabb281ce1fa |
-| 04_repo_docs/docs/ROADMAP.md                     | 3054  | 1d6a7730199b |
-| 04_repo_docs/docs/TESTING_STRATEGY.md            | 6822  | 97a1af9f7388 |
+| 04_repo_docs/docs/PRODUCT_REQUIREMENTS.md        | 5865  | 406d2987034a |
+| 04_repo_docs/docs/ROADMAP.md                     | 3596  | c8e0e97427a4 |
+| 04_repo_docs/docs/TESTING_STRATEGY.md            | 7409  | cea93cca79db |
 
 ## Blockers
 

@@ -1,10 +1,16 @@
 import { router } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 
+import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { TREND_COPY } from '@/features/trend/copy';
 import { useMonkBand } from '@/features/trend/useTrend';
-import { APP_TREND_OPTIN_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { phase7Flags } from '@/lib/launch/phase7';
+import {
+  APP_PROGRESS_ROUTE,
+  APP_TREND_OPTIN_ROUTE,
+  backOrReplace,
+} from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
 // 05 · The fairness floor (docs/12 §7, design 05). Monk scale (never Fitzpatrick),
@@ -20,6 +26,16 @@ export default function FairnessScreen() {
     monkBand == null
       ? -1
       : Math.min(MONK_SWATCHES.length - 1, Math.floor(((monkBand - 1) / 9) * MONK_SWATCHES.length));
+
+  if (!phase7Flags.trend) {
+    return (
+      <DeferredSurface
+        surface="trend"
+        fallbackRoute={APP_PROGRESS_ROUTE}
+        fallbackLabel="Back to Progress"
+      />
+    );
+  }
 
   return (
     <Screen edges={['top']}>

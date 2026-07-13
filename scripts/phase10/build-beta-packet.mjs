@@ -10,6 +10,7 @@ import {
   markdownList,
   normalizeLaunchDecision,
   normalizeNamedSignoff,
+  notApplicablePhase10EvidenceKeys,
   normalizeProductionDomain,
   normalizeProductionSupportEmail,
   normalizeProductionUrl,
@@ -20,10 +21,16 @@ import {
   warn,
   write,
 } from './lib.mjs';
+import {
+  launchContractSnapshot,
+  loadLaunchContract,
+  platformRequirementStatus,
+} from '../launch/contract.mjs';
 
 const errors = [];
 const warnings = [];
 const env = envSnapshot();
+const launchContract = loadLaunchContract();
 const sourceFiles = phase10SourceFiles();
 const packetOutDir = String(env.PHASE10_PACKET_OUT_DIR ?? '').trim();
 const outDir = packetOutDir || 'docs/phase-10/generated';
@@ -68,6 +75,9 @@ warn(warnings, phase9PacketStatus === 'ready', `Phase 9 packet status is ${phase
 const evidence = Object.fromEntries(
   requiredPhase10EvidenceKeys().map((key) => [key, evidenceFlagEnabled(env[key])]),
 );
+const notApplicableEvidence = Object.fromEntries(
+  notApplicablePhase10EvidenceKeys(launchContract).map((key) => [key, 'not_applicable']),
+);
 for (const [key, passed] of Object.entries(evidence))
   warn(warnings, passed, `External closed beta evidence missing: ${key}=true.`);
 
@@ -83,6 +93,11 @@ warn(warnings, Boolean(signedOffBy), 'Closed beta named signoff missing: PHASE10
 const packet = {
   generatedAt: new Date().toISOString(),
   status: errors.length === 0 && warnings.length === 0 ? 'ready' : 'blocked',
+  launchContract: launchContractSnapshot(launchContract),
+  platformStatus: {
+    ios: platformRequirementStatus('ios', launchContract),
+    android: platformRequirementStatus('android', launchContract),
+  },
   gitSha,
   gitStatus,
   phase9PacketStatus,
@@ -93,6 +108,7 @@ const packet = {
     supportEmail: normalizeProductionSupportEmail(env.EXPO_PUBLIC_SUPPORT_EMAIL),
   },
   evidence,
+  notApplicableEvidence,
   publicLaunchDecision: publicLaunchDecision ?? '',
   signedOffBy: signedOffBy ?? '',
   sourceHashes: Object.fromEntries(sourceFiles.filter(exists).map((file) => [file, hash(file)])),
@@ -132,6 +148,7 @@ write(
     '## Evidence',
     '',
     ...Object.entries(evidence).map(([key, value]) => `- ${key}: ${value ? 'PASS' : 'BLOCKED'}`),
+    ...Object.entries(notApplicableEvidence).map(([key, value]) => `- ${key}: ${value}`),
     '',
     '## Source Hashes',
     '',

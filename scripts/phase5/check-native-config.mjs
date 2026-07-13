@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 
 function readJson(path) {
   return JSON.parse(readFileSync(resolve(root, path), 'utf8'));
@@ -74,7 +77,8 @@ require(!androidPermissions.has(
   'android.permission.SCHEDULE_EXACT_ALARM',
 ), 'SCHEDULE_EXACT_ALARM must not be requested for V1 skincare reminders.');
 require(app.ios?.deploymentTarget ===
-  '17.0', 'iOS deployment target must stay at 17.0+ for the launch support floor.');
+  launchContract.release
+    .minimumIosVersion, `iOS deployment target must stay at ${launchContract.release.minimumIosVersion}+ for the launch support floor.`);
 require(buildProperties.android?.minSdkVersion ===
   29, 'Android minSdkVersion must stay at API 29 / Android 10+ for the launch support floor.');
 require(buildProperties.android?.compileSdkVersion ===
@@ -164,7 +168,7 @@ const productionIdentityKeys = [
   'APP_SLUG',
   'APP_SCHEME',
   'APP_IOS_BUNDLE_IDENTIFIER',
-  'APP_ANDROID_PACKAGE',
+  ...(androidReleaseRequired ? ['APP_ANDROID_PACKAGE'] : []),
 ];
 const missingProductionIdentityKeys = productionIdentityKeys.filter((key) => !productionEnv[key]);
 warn(
@@ -201,6 +205,8 @@ require(/Phase 5 device QA packet generated with a dirty Git worktree/.test(qaPa
   ), 'Phase 5 device QA packet must warn on dirty worktrees and expose Git status in Markdown.');
 for (const file of [
   'package.json',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'apps/mobile/app.base.json',
   'apps/mobile/app.config.js',
   'apps/mobile/eas.json',
@@ -245,6 +251,9 @@ for (const file of [
 }
 
 console.log('Phase 5 native config check');
+if (!androidReleaseRequired) {
+  console.log('N/A Android production identity and device evidence: excluded by launch contract.');
+}
 for (const warning of warnings) console.warn(`WARN ${warning}`);
 for (const error of errors) console.error(`FAIL ${error}`);
 

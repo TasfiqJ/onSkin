@@ -1,5 +1,7 @@
 const base = require('./app.base.json');
+const { createExpoFontPluginOptions } = require('./font-assets');
 const { assertReleaseReadyReviewEvidence } = require('./phase3-review-evidence');
+const launchContract = require('../../docs/hugeToDo/launch-contract.json');
 
 const APP_VARIANTS = new Set(['development', 'staging', 'production']);
 
@@ -18,6 +20,7 @@ const appEnvironment =
     ? variant
     : readVariantEnv('EXPO_PUBLIC_APP_ENV', process.env.EXPO_PUBLIC_APP_ENV);
 const isProduction = variant === 'production';
+const androidReleaseRequired = launchContract.release.platforms.includes('android');
 const legacyIdentityPattern = /(^|[./:_-])onskin($|[./:_-])|onskin/i;
 const CONTROL_CHAR_RE = /[\u0000-\u001F\u007F]/;
 const MAX_EXTERNAL_URL_LENGTH = 2048;
@@ -83,6 +86,10 @@ function buildPlugins(plugins, permissionCopy) {
           faceIDPermission: permissionCopy.faceIDPermission,
         },
       ];
+    }
+
+    if (name === 'expo-font') {
+      return [name, createExpoFontPluginOptions()];
     }
 
     if (name === '@react-native-google-signin/google-signin' && googleIosUrlScheme) {
@@ -183,7 +190,7 @@ function assertProductionIdentity(expo, permissionCopy) {
     APP_SLUG: expo.slug,
     APP_SCHEME: expo.scheme,
     APP_IOS_BUNDLE_IDENTIFIER: expo.ios?.bundleIdentifier,
-    APP_ANDROID_PACKAGE: expo.android?.package,
+    ...(androidReleaseRequired ? { APP_ANDROID_PACKAGE: expo.android?.package } : {}),
     APP_CAMERA_USAGE_DESCRIPTION: permissionCopy.cameraUsageDescription,
     APP_FACE_ID_USAGE_DESCRIPTION: permissionCopy.faceIDUsageDescription,
     APP_CAMERA_PERMISSION: permissionCopy.cameraPermission,
@@ -208,7 +215,7 @@ function assertProductionIdentity(expo, permissionCopy) {
     'APP_SCHEME or EXPO_PUBLIC_APP_SCHEME':
       process.env.APP_SCHEME ?? process.env.EXPO_PUBLIC_APP_SCHEME,
     APP_IOS_BUNDLE_IDENTIFIER: process.env.APP_IOS_BUNDLE_IDENTIFIER,
-    APP_ANDROID_PACKAGE: process.env.APP_ANDROID_PACKAGE,
+    ...(androidReleaseRequired ? { APP_ANDROID_PACKAGE: process.env.APP_ANDROID_PACKAGE } : {}),
   };
   const missingFinalIdentityKeys = Object.entries(finalIdentityEnv)
     .filter(([, value]) => !hasValue(value))

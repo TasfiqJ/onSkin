@@ -4,6 +4,10 @@
   "gitSha": null,
   "thresholdsDefinedAt": null,
   "thresholdsDefinedBy": null,
+  "platformStatus": {
+    "ios": "required",
+    "android": "not_applicable"
+  },
   "devices": {
     "ios": {
       "physical": true,
@@ -12,14 +16,6 @@
       "osVersion": "iOS 17.0 or newer",
       "logicalWidth": 375,
       "usableHeight": 667
-    },
-    "android": {
-      "physical": true,
-      "buildId": null,
-      "deviceModel": null,
-      "osVersion": "Android 10 or newer",
-      "logicalWidth": 360,
-      "usableHeight": 640
     }
   },
   "photoDataset": {
@@ -279,176 +275,6 @@
     },
     {
       "platform": "ios",
-      "metric": "photo_timeline_peak_memory_mb",
-      "source": "native_profiler",
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "app_startup_cold_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "product_add_manual_three_products_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "product_add_search_three_products_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "product_add_barcode_three_products_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "product_add_ocr_manual_fallback_three_products_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "barcode_camera_acquisition_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "barcode_decode_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "barcode_lookup_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "barcode_no_match_recovery_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "routine_generation_three_products_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "routine_generation_five_products_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "routine_generation_ten_products_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "photo_capture_analysis_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "photo_timeline_first_render_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "photo_timeline_restart_first_render_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
-      "metric": "photo_timeline_compare_open_ms",
-      "source": null,
-      "samples": [],
-      "sampleCount": null,
-      "p50": null,
-      "p95": null,
-      "max": null
-    },
-    {
-      "platform": "android",
       "metric": "photo_timeline_peak_memory_mb",
       "source": "native_profiler",
       "samples": [],

@@ -5,7 +5,10 @@
 - Test safety-relevant logic with deterministic fixtures.
 - Test launch gates so unreviewed features cannot leak into production.
 - UI-facing work requires human-simulated E2E evidence.
-- Device-dependent features require physical iOS/Android QA before public claims.
+- Device-dependent launch features require physical iPhone QA before public
+  claims. Android checks are source-health/resilience work, not release evidence.
+- Every Phase 2-11 validator and evidence builder reads the iOS all-features
+  contract at `docs/hugeToDo/launch-contract.json`.
 - Device and viewport support floors are defined in
   `docs/DEVICE_SUPPORT_POLICY.md`.
 
@@ -56,6 +59,12 @@ Priority flows:
 5. Progress photo capture/review.
 6. Paywall purchase/restore.
 7. Settings privacy/export/delete.
+8. Cloud Ask consent, refusal, citation, quota, and outage recovery.
+9. Commerce consent, safe retailer handoff, and disclosure.
+10. Community post/report/block/contact and moderator recovery.
+11. Trend opt-in, processing limits, fairness disclosure, and withdrawal.
+12. Widgets, Live Activities, notifications, links, sharing, creator links,
+    review prompt, and operator workflows.
 
 Reference:
 
@@ -67,7 +76,7 @@ Reference:
 
 Manual QA must cover:
 
-- supported small phone layout from `docs/DEVICE_SUPPORT_POLICY.md`
+- supported compact iPhone layout from `docs/DEVICE_SUPPORT_POLICY.md`
 - large text / Dynamic Type
 - dark/light mode
 - network offline
@@ -159,11 +168,11 @@ Monitor:
 - memory use in photo timeline
 
 Performance readiness is not closed by local unit tests. Before closed beta,
-record baseline measurements on supported iOS and Android physical devices and
+record baseline measurements on supported physical iPhones and
 attach the measurement artifact, device model/OS, build ID, and named owner
 signoff in `docs/FOR_TAS_TO_DO.md`. Thresholds must be defined before
 measurement, and each required metric needs at least five raw samples per
-platform. The validator calculates nearest-rank p50/p95 and max from those
+required platform. The validator calculates nearest-rank p50/p95 and max from those
 observations and rejects mismatched hand-entered summaries. Use the blocked
 template and strict validator documented in
 `docs/phase-5/performance-evidence-runbook.md`:

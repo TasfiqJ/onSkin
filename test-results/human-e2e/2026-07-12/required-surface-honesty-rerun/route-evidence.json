@@ -1,0 +1,120 @@
+{
+  "evidenceDate": "2026-07-12",
+  "browser": "Codex in-app browser",
+  "viewportRequested": {
+    "width": 375,
+    "height": 667
+  },
+  "viewportObserved": {
+    "width": 376,
+    "height": 668
+  },
+  "routes": {
+    "widget": {
+      "url": "http://localhost:8081/routine/widgets",
+      "geometry": {
+        "controls": [
+          {
+            "height": 55.99211502075195,
+            "text": "Back to Today",
+            "visible": true,
+            "width": 327.7305908203125
+          }
+        ],
+        "href": "http://localhost:8081/routine/widgets",
+        "scrollWidth": 376,
+        "text": "BETA\nWidgets are not in this beta\nToday check-offs and reminders work inside the app. No native home-screen widget or live activity target ships in this release.\nThis route does not offer a preview, OS control, or paid widget upgrade.\nBack to Today",
+        "viewport": {
+          "height": 668,
+          "width": 376
+        }
+      }
+    },
+    "trendOptIn": {
+      "url": "http://localhost:8081/trend/optin",
+      "geometry": {
+        "controls": [
+          {
+            "height": 55.99211502075195,
+            "text": "Back to Progress",
+            "width": 327.7305908203125
+          }
+        ],
+        "href": "http://localhost:8081/trend/optin",
+        "inputs": 0,
+        "scrollWidth": 376,
+        "text": "BETA\nPhoto trend insights are not in this beta\nThe photo timeline stays local-first and score-free. No validated trend engine ships in this release.\nNo Trend consent is requested. Progress photos remain useful without change claims.\nBack to Progress",
+        "viewport": {
+          "height": 668,
+          "width": 376
+        }
+      }
+    },
+    "trendFairness": {
+      "url": "http://localhost:8081/trend/fairness",
+      "geometry": {
+        "controls": [
+          {
+            "height": 55.99211502075195,
+            "text": "Back to Progress",
+            "width": 327.7305908203125
+          }
+        ],
+        "href": "http://localhost:8081/trend/fairness",
+        "inputs": 0,
+        "scrollWidth": 376,
+        "text": "BETA\nPhoto trend insights are not in this beta\nThe photo timeline stays local-first and score-free. No validated trend engine ships in this release.\nNo Trend consent is requested. Progress photos remain useful without change claims.\nBack to Progress",
+        "viewport": {
+          "height": 668,
+          "width": 376
+        }
+      }
+    },
+    "communityAsk": {
+      "url": "http://localhost:8081/community/ask",
+      "geometry": {
+        "controls": [
+          {
+            "height": 55.99211502075195,
+            "text": "Back to Skin Notes",
+            "width": 327.7305908203125
+          }
+        ],
+        "href": "http://localhost:8081/community/ask",
+        "inputs": 0,
+        "scrollWidth": 376,
+        "text": "BETA\nCommunity posting is not in this beta\nSkin Notes stay read-only. This release has no question-submission service or reviewed peer-aggregate dataset.\nNo consent or question is collected until moderation, support, appeals, persistence, and legal review are ready.\nBack to Skin Notes"
+      }
+    },
+    "communityAggregates": {
+      "url": "http://localhost:8081/community/people-like-you",
+      "geometry": {
+        "controls": [
+          {
+            "height": 55.99211502075195,
+            "text": "Back to Skin Notes",
+            "width": 327.7305908203125
+          }
+        ],
+        "href": "http://localhost:8081/community/people-like-you",
+        "scrollWidth": 376,
+        "text": "BETA\nCommunity posting is not in this beta\nSkin Notes stay read-only. This release has no question-submission service or reviewed peer-aggregate dataset.\nNo consent or question is collected until moderation, support, appeals, persistence, and legal review are ready.\nBack to Skin Notes"
+      }
+    }
+  },
+  "recoveryActions": {
+    "trendBackToProgress": {
+      "controlCount": 1,
+      "resultUrl": "http://localhost:8081/progress"
+    },
+    "communityBackToSkinNotes": {
+      "controlCount": 1,
+      "resultUrl": "http://localhost:8081/community"
+    },
+    "widgetsBackToToday": {
+      "controlCount": 1,
+      "resultUrl": "http://localhost:8081/paywall/reoffer",
+      "note": "The free fixture reaches the normal entitlement gate after targeting Today."
+    }
+  }
+}

@@ -75,6 +75,8 @@ export function phase11RequiredDocs() {
 export function phase11SourceFiles() {
   return [
     'package.json',
+    'docs/hugeToDo/launch-contract.json',
+    'scripts/launch/contract.mjs',
     'turbo.json',
     '.env.example',
     'scripts/phase9/lib.mjs',

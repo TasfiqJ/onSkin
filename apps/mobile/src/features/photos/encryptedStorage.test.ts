@@ -1,11 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  ACCOUNT_GENERATION_CHANGED,
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
+} from '@/lib/auth/accountGeneration';
+
+import {
   beginEncryptedPhotoAccountBoundary,
   clearEncryptedPhotoStorage,
   createPhotoShareFile,
   decryptPhotoNote,
   decryptPhotoToDataUri,
+  deleteQuarantinedPhoto,
   deletePhotoShareFile,
   encryptCapturedPhoto,
   encryptPhotoNote,
@@ -15,6 +23,9 @@ import {
   PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
   PHOTO_DECRYPTION_FAILED,
   PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+  quarantineEncryptedPhoto,
+  reconcileEncryptedPhotoStorage,
+  restoreQuarantinedPhoto,
   waitForEncryptedPhotoWritesToSettle,
 } from './encryptedStorage';
 
@@ -33,6 +44,7 @@ const mocks = vi.hoisted(() => ({
   getItemAsync: vi.fn(),
   getInfoAsync: vi.fn(),
   makeDirectoryAsync: vi.fn(),
+  moveAsync: vi.fn(),
   platformOS: 'ios',
   readDirectoryAsync: vi.fn(),
   readAsStringAsync: vi.fn(),
@@ -79,6 +91,7 @@ vi.mock('expo-file-system/legacy', () => ({
   deleteAsync: mocks.deleteAsync,
   getInfoAsync: mocks.getInfoAsync,
   makeDirectoryAsync: mocks.makeDirectoryAsync,
+  moveAsync: mocks.moveAsync,
   readDirectoryAsync: mocks.readDirectoryAsync,
   readAsStringAsync: mocks.readAsStringAsync,
   writeAsStringAsync: mocks.writeAsStringAsync,
@@ -103,6 +116,7 @@ describe('encrypted photo storage', () => {
     mocks.getItemAsync.mockReset();
     mocks.getInfoAsync.mockReset();
     mocks.makeDirectoryAsync.mockReset();
+    mocks.moveAsync.mockReset();
     mocks.platformOS = 'ios';
     mocks.readDirectoryAsync.mockReset();
     mocks.readAsStringAsync.mockReset();
@@ -126,6 +140,12 @@ describe('encrypted photo storage', () => {
     });
     mocks.getInfoAsync.mockResolvedValue({ exists: false });
     mocks.makeDirectoryAsync.mockResolvedValue(undefined);
+    mocks.moveAsync.mockImplementation(async ({ from, to }: { from: string; to: string }) => {
+      const value = mocks.files.get(from);
+      if (value == null) throw new Error(`missing file: ${from}`);
+      mocks.files.set(to, value);
+      mocks.files.delete(from);
+    });
     mocks.readDirectoryAsync.mockResolvedValue([]);
     mocks.readAsStringAsync.mockImplementation(async (uri: string) => {
       const value = mocks.files.get(uri);
@@ -214,16 +234,146 @@ describe('encrypted photo storage', () => {
     expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe('1');
   });
 
-  it('round-trips encrypted notes and returns null for malformed note envelopes', async () => {
+  it('round-trips encrypted notes and fails closed for malformed note envelopes', async () => {
     const ciphertext = await encryptPhotoNote('baseline note');
 
     await expect(decryptPhotoNote(ciphertext)).resolves.toBe('baseline note');
-    await expect(decryptPhotoNote('{not-json')).resolves.toBeNull();
+    await expect(decryptPhotoNote('{not-json')).rejects.toThrow(PHOTO_DECRYPTION_FAILED);
 
     const envelope = JSON.parse(ciphertext ?? '{}') as Record<string, unknown>;
     envelope.nonceHex = '00';
 
-    await expect(decryptPhotoNote(JSON.stringify(envelope))).resolves.toBeNull();
+    await expect(decryptPhotoNote(JSON.stringify(envelope))).rejects.toThrow(
+      PHOTO_DECRYPTION_FAILED,
+    );
+  });
+
+  it('publishes encrypted photos with an atomic move and preserves the source on interruption', async () => {
+    const sourceUri = 'file://capture/atomic.jpg';
+    const finalUri = 'file://document/photos/v1/atomic-photo.onskinphoto';
+    mocks.files.set(sourceUri, Buffer.from('image bytes').toString('base64'));
+
+    const result = await encryptCapturedPhoto(sourceUri, 'atomic-photo');
+
+    expect(result.encryptedLocalUri).toBe(finalUri);
+    expect(mocks.moveAsync).toHaveBeenCalledWith({
+      from: expect.stringMatching(/atomic-photo\.onskinphoto\.tmp-/),
+      to: finalUri,
+    });
+    expect(mocks.files.has(finalUri)).toBe(true);
+    expect(mocks.files.has(sourceUri)).toBe(true);
+
+    mocks.files.set(
+      'file://capture/interrupted.jpg',
+      Buffer.from('retry bytes').toString('base64'),
+    );
+    mocks.moveAsync.mockRejectedValueOnce(new Error('interrupted move'));
+
+    await expect(
+      encryptCapturedPhoto('file://capture/interrupted.jpg', 'interrupted-photo'),
+    ).rejects.toThrow('interrupted move');
+
+    expect(mocks.files.has('file://capture/interrupted.jpg')).toBe(true);
+    expect(mocks.files.has('file://document/photos/v1/interrupted-photo.onskinphoto')).toBe(false);
+    expect(
+      [...mocks.files.keys()].some((uri) => uri.includes('interrupted-photo.onskinphoto.tmp-')),
+    ).toBe(false);
+  });
+
+  it('restores or removes quarantined files according to committed metadata', async () => {
+    const directory = 'file://document/photos/v1/';
+    const originalUri = `${directory}photo-1.onskinphoto`;
+    mocks.files.set(originalUri, 'encrypted');
+    mocks.getInfoAsync.mockImplementation(async (uri: string) => ({
+      exists: uri === directory || mocks.files.has(uri),
+    }));
+    mocks.readDirectoryAsync.mockImplementation(async () =>
+      [...mocks.files.keys()]
+        .filter((uri) => uri.startsWith(directory))
+        .map((uri) => uri.slice(directory.length)),
+    );
+
+    const first = await quarantineEncryptedPhoto(originalUri, 'delete-1');
+    expect(first).not.toBeNull();
+    await reconcileEncryptedPhotoStorage([originalUri]);
+    expect(mocks.files.has(originalUri)).toBe(true);
+
+    const second = await quarantineEncryptedPhoto(originalUri, 'delete-2');
+    expect(second).not.toBeNull();
+    await reconcileEncryptedPhotoStorage([]);
+    expect(mocks.files.has(originalUri)).toBe(false);
+    expect(mocks.files.has(second!.quarantinedUri)).toBe(false);
+
+    mocks.files.set(originalUri, 'encrypted-again');
+    const third = await quarantineEncryptedPhoto(originalUri, 'delete-3');
+    await restoreQuarantinedPhoto(third!);
+    expect(mocks.files.has(originalUri)).toBe(true);
+    const fourth = await quarantineEncryptedPhoto(originalUri, 'delete-4');
+    await deleteQuarantinedPhoto(fourth!);
+    expect(mocks.files.has(fourth!.quarantinedUri)).toBe(false);
+
+    const orphanUri = `${directory}orphan.onskinphoto`;
+    const staleQuarantineUri = `${directory}stale.onskinphoto.pending-delete-delete-5`;
+    const incompleteUri = `${directory}unfinished.onskinphoto.tmp-1234`;
+    mocks.files.set(orphanUri, 'unreferenced-but-unproven');
+    mocks.files.set(staleQuarantineUri, 'committed-delete');
+    mocks.files.set(incompleteUri, 'partial-write');
+    await reconcileEncryptedPhotoStorage([], { removeUnreferencedFinals: false });
+    expect(mocks.files.has(orphanUri)).toBe(true);
+    expect(mocks.files.has(staleQuarantineUri)).toBe(false);
+    expect(mocks.files.has(incompleteUri)).toBe(false);
+  });
+
+  it('aborts and drains stale reconciliation before an account switch can publish', async () => {
+    const directory = 'file://document/photos/v1/';
+    const staleUri = `${directory}account-a.onskinphoto.pending-delete-delete-1`;
+    mocks.files.set(staleUri, 'account-a-encrypted');
+    mocks.getInfoAsync.mockResolvedValue({ exists: true });
+
+    let releaseDirectoryRead!: () => void;
+    let markDirectoryReadStarted!: () => void;
+    const directoryReadGate = new Promise<void>((resolve) => {
+      releaseDirectoryRead = resolve;
+    });
+    const directoryReadStarted = new Promise<void>((resolve) => {
+      markDirectoryReadStarted = resolve;
+    });
+    mocks.readDirectoryAsync.mockImplementationOnce(async () => {
+      markDirectoryReadStarted();
+      await directoryReadGate;
+      return ['account-a.onskinphoto.pending-delete-delete-1'];
+    });
+
+    const reconciliation = reconcileEncryptedPhotoStorage([]);
+    await directoryReadStarted;
+    beginAccountGenerationBoundary();
+    beginEncryptedPhotoAccountBoundary();
+
+    try {
+      let drainFinished = false;
+      const drain = Promise.all([
+        waitForAccountGenerationOperationsToSettle(),
+        waitForEncryptedPhotoWritesToSettle(),
+      ]).then(() => {
+        drainFinished = true;
+      });
+      await Promise.resolve();
+      expect(drainFinished).toBe(false);
+
+      releaseDirectoryRead();
+      await expect(reconciliation).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+      await drain;
+
+      expect(drainFinished).toBe(true);
+      expect(mocks.files.get(staleUri)).toBe('account-a-encrypted');
+    } finally {
+      endEncryptedPhotoAccountBoundary();
+      endAccountGenerationBoundary();
+    }
+
+    mocks.readDirectoryAsync.mockResolvedValue(['account-a.onskinphoto.pending-delete-delete-1']);
+    await reconcileEncryptedPhotoStorage([]);
+    expect(mocks.files.has(staleUri)).toBe(false);
   });
 
   it('does not create replacement key material while decrypting a keyless note', async () => {
@@ -254,6 +404,19 @@ describe('encrypted photo storage', () => {
   it('detects legacy encrypted photo files before creating an unmarked replacement key', async () => {
     mocks.getInfoAsync.mockResolvedValue({ exists: true });
     mocks.readDirectoryAsync.mockResolvedValue(['legacy-photo.onskinphoto']);
+
+    await expect(encryptPhotoNote('new note')).rejects.toThrow(PHOTO_CONTENT_KEY_MISSING);
+
+    expect(mocks.setItemAsync).not.toHaveBeenCalled();
+    expect(mocks.secureStorage.has(CONTENT_KEY_NAME)).toBe(false);
+  });
+
+  it('detects interrupted encrypted-photo files before creating a replacement key', async () => {
+    mocks.getInfoAsync.mockResolvedValue({ exists: true });
+    mocks.readDirectoryAsync.mockResolvedValue([
+      'interrupted.onskinphoto.pending-delete-delete-1',
+      'unfinished.onskinphoto.tmp-1234',
+    ]);
 
     await expect(encryptPhotoNote('new note')).rejects.toThrow(PHOTO_CONTENT_KEY_MISSING);
 

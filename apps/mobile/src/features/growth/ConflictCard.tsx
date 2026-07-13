@@ -17,10 +17,10 @@ import { CARD_COPY } from './cardCopy';
 // resolution all come from the engine's presentation helpers (already guard-scanned),
 // so the card can never assert a claim the engine didn't. forwardRef + collapsable
 // false so the share screen can captureRef() it to a PNG (docs/14 one-tap export).
-const SERIF = 'InstrumentSerif_400Regular';
-const SANS = 'HankenGrotesk_400Regular';
-const SANS_SEMI = 'HankenGrotesk_600SemiBold';
-const MONO = 'IBMPlexMono_500Medium';
+const SERIF = 'InstrumentSerif-Regular';
+const SANS = 'HankenGrotesk-Regular';
+const SANS_SEMI = 'HankenGrotesk-SemiBold';
+const MONO = 'IBMPlexMono-Medium';
 
 export const CONFLICT_CARD_SIZE = { width: 320, height: 480 };
 

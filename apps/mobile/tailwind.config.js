@@ -6,6 +6,8 @@
  * a sage/green positive accent for synergy/myth; "night" dark surfaces for
  * PM/capture/reveal where the accent shifts clay → warm-clay (#D9A183).
  */
+const { FONT_FAMILY_TOKENS } = require('./font-assets');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{ts,tsx}'],
@@ -51,14 +53,14 @@ module.exports = {
         },
       },
       fontFamily: {
-        serif: ['InstrumentSerif_400Regular'],
-        'serif-italic': ['InstrumentSerif_400Regular_Italic'],
-        sans: ['HankenGrotesk_400Regular'],
-        'sans-medium': ['HankenGrotesk_500Medium'],
-        'sans-semibold': ['HankenGrotesk_600SemiBold'],
-        'sans-bold': ['HankenGrotesk_700Bold'],
-        mono: ['IBMPlexMono_400Regular'],
-        'mono-medium': ['IBMPlexMono_500Medium'],
+        serif: [FONT_FAMILY_TOKENS.serif],
+        'serif-italic': [FONT_FAMILY_TOKENS['serif-italic']],
+        sans: [FONT_FAMILY_TOKENS.sans],
+        'sans-medium': [FONT_FAMILY_TOKENS['sans-medium']],
+        'sans-semibold': [FONT_FAMILY_TOKENS['sans-semibold']],
+        'sans-bold': [FONT_FAMILY_TOKENS['sans-bold']],
+        mono: [FONT_FAMILY_TOKENS.mono],
+        'mono-medium': [FONT_FAMILY_TOKENS['mono-medium']],
       },
       borderRadius: {
         pill: '999px',

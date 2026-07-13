@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
+import { markStartupPhase } from '@/lib/observability/operationTiming';
 import { colors } from '@/theme/tokens';
 
 import { assertPrivateKVReadable } from './privateKV';
@@ -132,6 +133,12 @@ export function PrivateDataAvailabilityGate({ children }: { children: ReactNode 
       if (revealTimer) clearTimeout(revealTimer);
     };
   }, [availability]);
+
+  useEffect(() => {
+    if (appUnlocked && (availability === 'ready' || availability === 'restoring')) {
+      markStartupPhase('vault_decision_complete');
+    }
+  }, [appUnlocked, availability]);
 
   if (appUnlocked && (availability === 'ready' || availability === 'restoring')) {
     const restoring = availability === 'restoring';

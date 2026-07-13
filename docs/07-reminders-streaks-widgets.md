@@ -1,5 +1,10 @@
 # Document 7: Reminders, Streaks & Widgets — Build Spec
 
+> **2026-07-12 launch-scope update:** Native iOS widgets and Live Activities are
+> required for the all-features release. Any older sequencing or optionality in
+> this document is superseded by `docs/hugeToDo/launch-contract.json`; the
+> privacy, accessibility, lifecycle, and physical-device gates remain binding.
+
 _The engagement & delivery layer · local-first reminders with permission-priming · notification tiers, timing, quiet hours & lock-screen discretion · the calm, forgiving streak & weekly adherence · home-screen widgets (including interactive check-off) · Live Activities for the evening routine._
 
 > This is build-order document **#7** of the 15 named in docs/00 (§"Build order", item 7: _"Reminders/streaks/widgets"_). It is the **delivery and engagement layer** that several earlier documents feed into: it _delivers_ the reminder **content** the scheduler computes (docs/05 §9 — tonight's active, recovery night, next acid night, ramp step-up, de-escalation), the **replenishment alerts** from the Smart Shelf (docs/04 §6), and the **capture nudges** from the photo feature (docs/06 §5); and it _owns and implements_ the **calm, forgiving streak** whose principles docs/03 §6 established and explicitly deferred to "doc #7." It _extends_ docs/01's `notification_preferences` table and the **computed-and-cached streak** on `profiles` (D-011, D-012), and it _implements_ docs/00 §6 (local-first notifications, Android-14 exact-alarm handling, WidgetKit/Glance widgets, Live Activities, permission-priming). Its design principle — **calm, not gamified** — is, as this document shows, not only on-brand but the **retention-optimal** strategy: over-notification and pressure-streaks measurably backfire. It powers the paywall's #4 value prop, _"Reminders, streaks & home-screen widgets,"_ and feeds the subscription/paywall surface (doc #8).

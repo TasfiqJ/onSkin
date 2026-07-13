@@ -118,11 +118,7 @@ describe('Community route contracts', () => {
   });
 
   it('keeps nested community routes safe for direct entry', () => {
-    for (const route of [
-      'community/ask.tsx',
-      'community/people-like-you.tsx',
-      'community/note/[id].tsx',
-    ]) {
+    for (const route of ['community/note/[id].tsx']) {
       const source = readAppRoute(route);
 
       expect(source, `${route} should not depend on direct-entry history`).not.toContain(
@@ -148,11 +144,7 @@ describe('Community route contracts', () => {
   });
 
   it('keeps community route escape controls touchable on phones', () => {
-    for (const route of [
-      'community/ask.tsx',
-      'community/people-like-you.tsx',
-      'community/note/[id].tsx',
-    ]) {
+    for (const route of ['community/note/[id].tsx']) {
       expectTouchableRouteIcon(route);
     }
   });
@@ -225,30 +217,23 @@ describe('Community route contracts', () => {
     expect(source).not.toContain('<View className="flex-1 items-center justify-center px-6">');
   });
 
-  it('keeps community consent text exits at least 44px tall', () => {
-    const source = readAppRoute('community/ask.tsx');
+  it('never exposes question consent or a fake submission path while posting is unavailable', () => {
+    const ask = readAppRoute('community/ask.tsx');
 
-    expect(source).toContain(
-      'min-h-[48px] flex-row items-center gap-3 rounded-xl bg-paper-raised px-3.5 py-3',
-    );
-    expect(source).toContain('className="pb-2 pt-3"');
-    expect(source).toContain('className="h-[48px] items-center justify-center"');
-    expect(source).not.toContain('className="h-[44px] items-center justify-center"');
+    expect(ask).toContain('<DeferredSurface');
+    expect(ask).not.toContain('grantCommunityConsent');
+    expect(ask).not.toContain('confirmCommunityAge');
+    expect(ask).not.toContain('TextInput');
+    expect(ask).not.toContain('question_submitted');
+    expect(ask).not.toContain('Submit for review');
   });
 
-  it('keeps anonymous ask deferred submission inline and route-owned', () => {
-    const source = readAppRoute('community/ask.tsx');
+  it('never renders an illustrative people-like-you aggregate as real data', () => {
+    const aggregate = readAppRoute('community/people-like-you.tsx');
 
-    expect(source).not.toContain('Alert');
-    expect(source).toContain("import { useEffect, useMemo, useRef, useState } from 'react';");
-    expect(source).toContain('const scrollRef = useRef<ScrollView>(null);');
-    expect(source).toContain('deferredNoticeVisible');
-    expect(source).toContain('requestAnimationFrame');
-    expect(source).toContain('scrollRef.current?.scrollToEnd({ animated: true })');
-    expect(source).toContain('ref={scrollRef}');
-    expect(source).toContain('setDeferredNoticeVisible(true)');
-    expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain('COMMUNITY_COPY.ask.deferredTitle');
-    expect(source).toContain('COMMUNITY_COPY.ask.deferredBody');
+    expect(aggregate).toContain('<DeferredSurface');
+    expect(aggregate).not.toContain('dry, sensitive');
+    expect(aggregate).not.toContain('alternate-night cycling');
+    expect(aggregate).not.toContain('Aggregated & anonymised');
   });
 });

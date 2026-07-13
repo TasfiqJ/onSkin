@@ -91,6 +91,7 @@ describe('Phase 7 launch flags', () => {
     expect(phase7Flags.productionSurfaceReady).toBe(false);
     expect(phase7Flags.commerce).toBe(false);
     expect(phase7Flags.communityPosting).toBe(false);
+    expect(phase7Flags.communityAggregates).toBe(false);
     expect(phase7Flags.trend).toBe(false);
     expect(phase7Flags.cloudAsk).toBe(false);
     expect(phase7Flags.widgets).toBe(false);
@@ -132,24 +133,32 @@ describe('Phase 7 launch flags', () => {
     }
   });
 
-  it('allows staging to exercise deferred surfaces without a final domain', async () => {
-    const { phase7Flags } = await loadPhase7With({
+  it('keeps unimplemented capabilities closed even when staging flags are enabled', async () => {
+    const { phase7Capabilities, phase7Flags } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'staging',
       EXPO_PUBLIC_FINAL_BRAND_DOMAIN: '',
       ...enableAllPhase7Flags(),
     });
 
     expect(phase7Flags.productionSurfaceReady).toBe(true);
-    expect(phase7Flags.communityPosting).toBe(true);
-    expect(phase7Flags.trend).toBe(true);
+    expect(Object.isFrozen(phase7Capabilities)).toBe(true);
+    expect(phase7Capabilities).toEqual({
+      communityQuestionSubmission: false,
+      communityAggregates: false,
+      trendEngine: false,
+      nativeWidgets: false,
+    });
+    expect(phase7Flags.communityPosting).toBe(false);
+    expect(phase7Flags.communityAggregates).toBe(false);
+    expect(phase7Flags.trend).toBe(false);
     expect(phase7Flags.cloudAsk).toBe(true);
-    expect(phase7Flags.widgets).toBe(true);
+    expect(phase7Flags.widgets).toBe(false);
     expect(phase7Flags.goalActiveRecommendations).toBe(true);
     expect(phase7Flags.commerce).toBe(false);
     expect(phase7Flags.shareCard).toBe(false);
   });
 
-  it('enables production surfaces only when public identity is ready', async () => {
+  it('enables implemented production surfaces only when public identity is ready', async () => {
     const { phase7Flags } = await loadPhase7With({
       EXPO_PUBLIC_APP_ENV: 'production',
       EXPO_PUBLIC_FINAL_BRAND_DOMAIN: 'https://routinekind.app',
@@ -159,10 +168,11 @@ describe('Phase 7 launch flags', () => {
     expect(phase7Flags.finalDomainReady).toBe(true);
     expect(phase7Flags.productionSurfaceReady).toBe(true);
     expect(phase7Flags.commerce).toBe(true);
-    expect(phase7Flags.communityPosting).toBe(true);
-    expect(phase7Flags.trend).toBe(true);
+    expect(phase7Flags.communityPosting).toBe(false);
+    expect(phase7Flags.communityAggregates).toBe(false);
+    expect(phase7Flags.trend).toBe(false);
     expect(phase7Flags.cloudAsk).toBe(true);
-    expect(phase7Flags.widgets).toBe(true);
+    expect(phase7Flags.widgets).toBe(false);
     expect(phase7Flags.shareCard).toBe(true);
     expect(phase7Flags.goalActiveRecommendations).toBe(true);
   });

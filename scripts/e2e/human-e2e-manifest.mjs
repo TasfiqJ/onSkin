@@ -83,17 +83,17 @@ function gateEvidencePath(gate) {
   return `${gate.folder}/${gate.evidence}`;
 }
 
-function textPressureLaunchFloorGate(date) {
+function textPressureRetainedNarrowGate(date) {
   return {
     id: 'support-floor-360-640-200-text-pressure',
-    title: '360 x 640 launch-floor 200% text-pressure route sweep',
+    title: '360 x 640 retained narrow-phone 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: true,
-    supportClass: 'launch-blocking',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${date}/text-pressure-200-supported-360-640-postfix`,
     evidence: 'summary.json',
     expected:
-      '49 Expo web direct-entry routes have zero launch-floor text-pressure geometry/log failures.',
+      '49 Expo web direct-entry routes have zero retained narrow-phone text-pressure geometry/log failures.',
   };
 }
 
@@ -125,26 +125,18 @@ function legacySupportFloorGate(date) {
 }
 
 function supportFloorGateForDate(date) {
-  return textPressureLaunchFloorGate(date);
+  return textPressureRetainedNarrowGate(date);
 }
 
 function requiredGateEvidenceFiles(date) {
   return [
-    gateEvidencePath(supportFloorGateForDate(date)),
-    `test-results/human-e2e/${date}/text-pressure-200-android-360-740-postfix/summary.json`,
     `test-results/human-e2e/${date}/text-pressure-200-iphone-375-667-full-postfix3-clear/summary.json`,
     `test-results/human-e2e/${date}/text-pressure-200-iphone-375-812-postfix/summary.json`,
     `test-results/human-e2e/${date}/text-pressure-200-modern-390-postfix-7/summary.json`,
-    `test-results/human-e2e/${date}/text-pressure-200-android-412-640-current/summary.json`,
-    `test-results/human-e2e/${date}/text-pressure-200-android-412-915-postfix2/summary.json`,
     `test-results/human-e2e/${date}/text-pressure-200-boundary-414-896-postfix3/summary.json`,
-    `test-results/human-e2e/${date}/text-pressure-200-android-430-640-postfix3/summary.json`,
     `test-results/human-e2e/${date}/text-pressure-200-modern-430-postfix-5/summary.json`,
-    `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-360-640-current/summary.json`,
     `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-375-667-postfix3/summary.json`,
     `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-390-844-postfix/summary.json`,
-    `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-412-640-postfix/summary.json`,
-    `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-430-640-current/summary.json`,
     `test-results/human-e2e/${date}/text-pressure-200-skipped-routes-430-932-postfix/summary.json`,
   ];
 }
@@ -353,6 +345,14 @@ if (!shelfFreshnessProvenanceEvidenceDate) {
   console.error('FAIL Missing Shelf freshness and replacement provenance evidence.');
   process.exit(1);
 }
+const requiredSurfaceHonestyEvidenceDate = latestEvidenceDateForFolder(
+  'required-surface-honesty-rerun',
+  'route-evidence.json',
+);
+if (!requiredSurfaceHonestyEvidenceDate) {
+  console.error('FAIL Missing required-surface honesty route evidence.');
+  process.exit(1);
+}
 const latestManifestEvidenceDate = [
   evidenceDate,
   timelapseEvidenceDate,
@@ -373,6 +373,7 @@ const latestManifestEvidenceDate = [
   accountUpgradeEvidenceDate,
   accountIsolationEvidenceDate,
   shelfFreshnessProvenanceEvidenceDate,
+  requiredSurfaceHonestyEvidenceDate,
 ]
   .sort()
   .at(-1);
@@ -381,10 +382,10 @@ const gates = [
   supportFloorGateForDate(evidenceDate),
   {
     id: 'android-360-740-200-text-pressure',
-    title: '360 x 740 supported Android-class 200% text-pressure route sweep',
+    title: '360 x 740 retained Android-class 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: true,
-    supportClass: 'supported-phone',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-360-740-postfix`,
     evidence: 'summary.json',
     expected: '49 Expo web direct-entry routes have zero Android 360-class failures.',
@@ -422,10 +423,10 @@ const gates = [
   },
   {
     id: 'android-412-640-200-text-pressure',
-    title: '412 x 640 supported Android-class 200% text-pressure route sweep',
+    title: '412 x 640 retained Android-class 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: true,
-    supportClass: 'supported-phone',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-412-640-current`,
     evidence: 'summary.json',
     expected:
@@ -433,10 +434,10 @@ const gates = [
   },
   {
     id: 'android-412-200-text-pressure',
-    title: '412 x 915 supported Android-class 200% text-pressure route sweep',
+    title: '412 x 915 retained Android-class 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: true,
-    supportClass: 'supported-phone',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-412-915-postfix2`,
     evidence: 'summary.json',
     expected:
@@ -455,10 +456,10 @@ const gates = [
   },
   {
     id: 'android-430-640-200-text-pressure',
-    title: '430 x 640 supported Android-class 200% text-pressure route sweep',
+    title: '430 x 640 retained Android-class 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: true,
-    supportClass: 'supported-phone',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-android-430-640-postfix3`,
     evidence: 'summary.json',
     expected:
@@ -478,8 +479,8 @@ const gates = [
     id: 'skipped-routes-360-640-200-text-pressure',
     title: '360 x 640 skipped/direct-entry 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: true,
-    supportClass: 'supported-phone',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-360-640-current`,
     evidence: 'summary.json',
     expected:
@@ -511,8 +512,8 @@ const gates = [
     id: 'skipped-routes-412-640-200-text-pressure',
     title: '412 x 640 skipped/direct-entry 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: true,
-    supportClass: 'supported-phone',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-412-640-postfix`,
     evidence: 'summary.json',
     expected:
@@ -522,8 +523,8 @@ const gates = [
     id: 'skipped-routes-430-640-200-text-pressure',
     title: '430 x 640 skipped/direct-entry 200% text-pressure route sweep',
     kind: 'summary-status',
-    required: true,
-    supportClass: 'supported-phone',
+    required: false,
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${evidenceDate}/text-pressure-200-skipped-routes-430-640-current`,
     evidence: 'summary.json',
     expected:
@@ -601,10 +602,10 @@ const gates = [
   },
   {
     id: 'account-upgrade-supported-phone',
-    title: '360 x 640 account-upgrade error and recovery pass',
+    title: '360 x 640 resilience account-upgrade error and recovery pass',
     kind: 'summary-verdict',
     required: true,
-    supportClass: 'supported-phone',
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${accountUpgradeEvidenceDate}/onboarding-account-upgrade-current`,
     evidence: 'summary.json',
     expected:
@@ -612,10 +613,10 @@ const gates = [
   },
   {
     id: 'account-isolation-supported-phone',
-    title: '360 x 640 account-transition isolation and cleanup recovery pass',
+    title: '360 x 640 resilience account-transition isolation and cleanup recovery pass',
     kind: 'summary-verdict',
     required: true,
-    supportClass: 'supported-phone',
+    supportClass: 'resilience',
     folder: `test-results/human-e2e/${accountIsolationEvidenceDate}/onboarding-account-isolation-current`,
     evidence: 'summary.json',
     expected:
@@ -792,6 +793,25 @@ const gates = [
       'Onboarding freshness intake, honest opened/PAO/expiry provenance, reload, replacement identity/history, explicit replenishment opt-in, and supported-phone geometry pass.',
   },
   {
+    id: 'required-surface-honesty-supported-phone',
+    title: 'Required-surface honest direct-entry and recovery pass',
+    kind: 'required-surface-honesty',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${requiredSurfaceHonestyEvidenceDate}/required-surface-honesty-rerun`,
+    evidence: 'route-evidence.json',
+    requiredFiles: [
+      'browser-warn-error-logs.json',
+      'widgets-route.png',
+      'trend-optin-route.png',
+      'trend-fairness-route.png',
+      'community-ask-route.png',
+      'community-people-like-you-route.png',
+    ],
+    expected:
+      'Widgets, Trend opt-in/fairness, and Community ask/aggregate direct entries remain exact, expose no fake controls or data, state their unavailable-beta posture, and provide working recovery actions at the compact iPhone viewport.',
+  },
+  {
     id: 'data-export-local-photo-disclosure-supported-phone',
     title: 'Account export local-photo scope disclosure',
     kind: 'summary-status',
@@ -839,9 +859,9 @@ const gates = [
 ];
 
 const warnings = [
-  'This manifest verifies committed local Expo web evidence only; it does not replace physical iOS/Android device QA.',
-  'Supported-phone 200% text-pressure gates listed in this manifest are launch-required local Expo web evidence; 320 x 568, 320 x 480, 320 x 430, 320 x 390, 320 x 370, and 320 x 360 remain resilience stress evidence unless tied to a supported physical device.',
-  'Native keyboard events, Dynamic Type, VoiceOver/TalkBack, camera hardware, notification delivery, StoreKit/Play Billing, RevenueCat, and live Supabase remain separate release gates.',
+  'This manifest verifies committed local Expo web evidence only; it does not replace physical-iPhone and iOS build QA.',
+  'Supported-phone 200% text-pressure gates listed in this manifest are launch-required local Expo web evidence. Android-class, 360-wide, and sub-667-height folder names are retained resilience baselines, not Android release evidence; 320-wide browser sizes also remain resilience stress evidence unless tied to a supported physical iPhone.',
+  'Native keyboard events, Dynamic Type, VoiceOver, camera hardware, notification delivery, StoreKit, RevenueCat, and live Supabase remain separate iOS release gates.',
 ];
 const blockers = [];
 let trackedRepoFiles;
@@ -952,6 +972,148 @@ const gateResults = gates.map((gate) => {
         if (requirementFailures.length > 0) {
           detail = `${detail} ${requirementFailures.join('; ')}.`;
         }
+      } else if (gate.kind === 'required-surface-honesty') {
+        const summary = readJson(evidencePath);
+        const expectedRoutes = {
+          widget: {
+            path: '/routine/widgets',
+            copy: [
+              'Widgets are not in this beta',
+              'No native home-screen widget or live activity target ships in this release.',
+              'This route does not offer a preview, OS control, or paid widget upgrade.',
+            ],
+          },
+          trendOptIn: {
+            path: '/trend/optin',
+            inputs: 0,
+            copy: [
+              'Photo trend insights are not in this beta',
+              'No validated trend engine ships in this release.',
+              'No Trend consent is requested.',
+            ],
+          },
+          trendFairness: {
+            path: '/trend/fairness',
+            inputs: 0,
+            copy: [
+              'Photo trend insights are not in this beta',
+              'No validated trend engine ships in this release.',
+              'No Trend consent is requested.',
+            ],
+          },
+          communityAsk: {
+            path: '/community/ask',
+            inputs: 0,
+            copy: [
+              'Community posting is not in this beta',
+              'no question-submission service or reviewed peer-aggregate dataset.',
+              'No consent or question is collected',
+            ],
+          },
+          communityAggregates: {
+            path: '/community/people-like-you',
+            copy: [
+              'Community posting is not in this beta',
+              'no question-submission service or reviewed peer-aggregate dataset.',
+              'No consent or question is collected',
+            ],
+          },
+        };
+        const pathFromUrl = (value) => {
+          try {
+            return new URL(String(value)).pathname;
+          } catch {
+            return null;
+          }
+        };
+
+        if (summary.evidenceDate !== requiredSurfaceHonestyEvidenceDate) {
+          requirementFailures.push(
+            `evidenceDate must be ${requiredSurfaceHonestyEvidenceDate}, received ${String(summary.evidenceDate ?? 'missing')}`,
+          );
+        }
+        if (
+          summary?.viewportRequested?.width !== 375 ||
+          summary?.viewportRequested?.height !== 667
+        ) {
+          requirementFailures.push('requested viewport must be 375 x 667');
+        }
+
+        for (const [routeId, expectation] of Object.entries(expectedRoutes)) {
+          const route = summary?.routes?.[routeId];
+          const geometry = route?.geometry;
+          if (!route || !geometry) {
+            requirementFailures.push(`${routeId} route evidence is missing`);
+            continue;
+          }
+          if (pathFromUrl(route.url) !== expectation.path) {
+            requirementFailures.push(`${routeId} URL must remain ${expectation.path}`);
+          }
+          if (pathFromUrl(geometry.href) !== expectation.path) {
+            requirementFailures.push(`${routeId} geometry href must remain ${expectation.path}`);
+          }
+          if (typeof expectation.inputs === 'number' && geometry.inputs !== expectation.inputs) {
+            requirementFailures.push(`${routeId} must expose ${expectation.inputs} inputs`);
+          }
+          const viewportWidth = Number(
+            geometry?.viewport?.width ?? summary?.viewportObserved?.width,
+          );
+          if (!Number.isFinite(viewportWidth) || geometry.scrollWidth > viewportWidth) {
+            requirementFailures.push(`${routeId} has horizontal overflow`);
+          }
+          const controls = Array.isArray(geometry.controls) ? geometry.controls : [];
+          if (
+            controls.length === 0 ||
+            controls.some((control) => !Number.isFinite(control?.height) || control.height < 44)
+          ) {
+            requirementFailures.push(`${routeId} recovery controls must be at least 44 px tall`);
+          }
+          for (const needle of expectation.copy) {
+            if (!String(geometry.text ?? '').includes(needle)) {
+              requirementFailures.push(`${routeId} is missing honest copy: ${needle}`);
+            }
+          }
+        }
+
+        const recoveryExpectations = {
+          trendBackToProgress: '/progress',
+          communityBackToSkinNotes: '/community',
+          widgetsBackToToday: '/paywall/reoffer',
+        };
+        for (const [recoveryId, expectedPath] of Object.entries(recoveryExpectations)) {
+          const recovery = summary?.recoveryActions?.[recoveryId];
+          if (recovery?.controlCount !== 1 || pathFromUrl(recovery?.resultUrl) !== expectedPath) {
+            requirementFailures.push(
+              `${recoveryId} must use one control and recover to ${expectedPath}`,
+            );
+          }
+        }
+
+        for (const requiredFile of gate.requiredFiles ?? []) {
+          const requiredPath = `${gate.folder}/${requiredFile}`;
+          if (!exists(requiredPath)) {
+            requirementFailures.push(`missing required evidence file ${requiredFile}`);
+          } else if (!trackedRepoFiles.has(normalizeRepoPath(requiredPath))) {
+            requirementFailures.push(`required evidence file is not Git-tracked: ${requiredFile}`);
+          }
+        }
+        const browserLogPath = `${gate.folder}/browser-warn-error-logs.json`;
+        if (exists(browserLogPath)) {
+          const browserLogs = readJson(browserLogPath);
+          if (!Array.isArray(browserLogs)) {
+            requirementFailures.push('browser warn/error log evidence must be an array');
+          } else if (browserLogs.some((entry) => String(entry?.level).toLowerCase() === 'error')) {
+            requirementFailures.push('browser evidence contains error-level logs');
+          }
+        }
+
+        failureCount = requirementFailures.length;
+        verdict = failureCount === 0 ? 'pass' : 'fail';
+        status = verdict;
+        detail =
+          failureCount === 0
+            ? '5 exact direct-entry routes and 3 recovery actions passed without fake inputs, overflow, undersized controls, or browser errors.'
+            : `${failureCount} required-surface evidence failure${failureCount === 1 ? '' : 's'}: ${requirementFailures.join('; ')}.`;
       }
     } catch (error) {
       status = 'fail';

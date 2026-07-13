@@ -1,5 +1,81 @@
 {
-  "generatedAt": "2026-07-11T17:31:15.746Z",
+  "generatedAt": "2026-07-13T04:00:08.191Z",
+  "launchContract": {
+    "schemaVersion": 1,
+    "programId": "ios-all-features-2026",
+    "effectiveDate": "2026-07-12",
+    "releaseMode": "all-features",
+    "platforms": [
+      "ios"
+    ],
+    "androidRelease": false,
+    "minimumIosVersion": "17.0",
+    "supportsIpad": false,
+    "requiredFeatureIds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "requiredFeatureKeys": [
+      "brand_identity",
+      "onboarding_consent",
+      "shelf_intake",
+      "catalog",
+      "conflict_engine",
+      "routine_builder",
+      "today_adherence",
+      "cycle_scheduler",
+      "photo_progress",
+      "reminders",
+      "subscriptions",
+      "reverse_trial",
+      "recommendations",
+      "ask_advisor",
+      "conflict_share",
+      "commerce",
+      "community",
+      "trend_insights",
+      "widgets_live_activities",
+      "admin_tooling"
+    ],
+    "requiredSurfaces": [
+      "commerce",
+      "community_posting",
+      "community_aggregates",
+      "trend_insights",
+      "cloud_ask",
+      "widgets",
+      "live_activities",
+      "share_cards",
+      "reviewed_conflict_sharing",
+      "goal_active_recommendations",
+      "public_links",
+      "review_prompts",
+      "creator_links",
+      "paid_measurement"
+    ]
+  },
+  "platformStatus": {
+    "ios": "required",
+    "android": "not_applicable"
+  },
   "status": "pass",
   "strict": true,
   "summary": {
@@ -78,7 +154,7 @@
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
-      "checkedNeedles": 12,
+      "checkedNeedles": 3,
       "missing": []
     },
     {
@@ -108,7 +184,7 @@
     },
     {
       "path": "docs/phase-5/performance-evidence-runbook.md",
-      "checkedNeedles": 10,
+      "checkedNeedles": 9,
       "missing": []
     },
     {
@@ -118,7 +194,7 @@
     },
     {
       "path": "scripts/phase5/performance-evidence-contract.mjs",
-      "checkedNeedles": 8,
+      "checkedNeedles": 10,
       "missing": []
     },
     {
@@ -128,7 +204,7 @@
     },
     {
       "path": "docs/phase-5/performance-evidence.template.json",
-      "checkedNeedles": 5,
+      "checkedNeedles": 7,
       "missing": []
     }
   ],

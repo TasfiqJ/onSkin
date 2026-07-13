@@ -3,8 +3,10 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
 import { command, gitStatusExcludingGeneratedEvidence } from '../phase9/lib.mjs';
+import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs';
 
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
 const inputPath = resolve(
   root,
   process.argv[2] ?? 'docs/phase-4/generated/obf-fixture-import.json',
@@ -20,6 +22,8 @@ const reportOutputPaths = [jsonOutputPath, mdOutputPath].map((path) =>
 
 const requiredSourceHashPaths = [
   'package.json',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'scripts/phase4/catalog-qa-report.mjs',
   'scripts/phase4/build-source-worklist.mjs',
   'scripts/phase4/beta-coverage-report.mjs',
@@ -116,6 +120,7 @@ const launchClearReason =
 
 const report = {
   generatedAt: new Date().toISOString(),
+  launchContract: launchContractSnapshot(launchContract),
   inputPath,
   gitSha,
   gitStatus,

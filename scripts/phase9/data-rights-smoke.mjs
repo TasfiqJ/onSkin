@@ -5,6 +5,8 @@ const errors = [];
 const warnings = [];
 
 const exportSource = read('supabase/functions/data-export/index.ts');
+const exportCoreSource = read('supabase/functions/data-export/exportCore.ts');
+const completeExportSource = `${exportSource}\n${exportCoreSource}`;
 const deletionSource = read('supabase/functions/account-deletion/index.ts');
 const settingsActionsSource = read('apps/mobile/src/features/settings/actions.ts');
 const settingsRouteSource = read('apps/mobile/src/app/(tabs)/you.tsx');
@@ -134,16 +136,18 @@ block(
 );
 block(
   errors,
-  /\.select\(\s*'id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at'\s*,?\s*\)/s.test(
+  /selectColumns:\s*\n?\s*'id, click_token, external_order_id, order_amount_cents, currency, status, transaction_date, record_updated_at, created_at'/s.test(
     exportSource,
   ),
   'order_attributions export must omit commission_cents.',
 );
 block(
   errors,
-  exportSource.indexOf('photoPathBelongsToUser(userId, photo.storage_path as string)') !== -1 &&
-    exportSource.indexOf('photoPathBelongsToUser(userId, photo.storage_path as string)') <
-      exportSource.indexOf('.createSignedUrl(photo.storage_path as string'),
+  /listStoragePathsVerified/.test(exportSource) &&
+    /photoPathBelongsToUser\(options\.userId/.test(exportCoreSource) &&
+    /photoPathBelongsToUser\(userId, path\)/.test(exportSource) &&
+    exportSource.indexOf('photoPathBelongsToUser(userId, path)') <
+      exportSource.indexOf('.createSignedUrl('),
   'data-export must verify photo storage_path ownership before creating signed URLs.',
 );
 block(
@@ -179,9 +183,9 @@ block(
   exportHandlerSource.indexOf('const rateLimitError = await enforceRateLimit(admin, userId);') !==
     -1 &&
     exportHandlerSource.indexOf('const rateLimitError = await enforceRateLimit(admin, userId);') <
-      exportHandlerSource.indexOf('for (const item of CALLER_RLS_EXPORT_TABLES)') &&
+      exportHandlerSource.indexOf('const sourceTasks:') &&
     exportHandlerSource.indexOf('const rateLimitError = await enforceRateLimit(admin, userId);') <
-      exportHandlerSource.indexOf('.createSignedUrl(photo.storage_path as string'),
+      exportHandlerSource.indexOf('.createSignedUrl('),
   'data-export must enforce per-user rate limits before export table reads or signed URL generation.',
 );
 block(
@@ -191,11 +195,25 @@ block(
 );
 block(
   errors,
-  /createSignedUrl\(photo\.storage_path as string,\s*dataExportPhotoUrlTtlSeconds\)/.test(
-    exportSource,
-  ),
+  /createSignedUrl\(\s*path,\s*dataExportPhotoUrlTtlSeconds\s*,?\s*\)/s.test(exportSource),
   'data-export must use DATA_EXPORT_PHOTO_URL_TTL_SECONDS for photo signed URLs.',
 );
+
+for (const pattern of [
+  /paginateRows/,
+  /listStoragePathsVerified/,
+  /count_before/,
+  /count_after/,
+  /checksum_algorithm/,
+  /independent_count_guarded_reads/,
+  /do not share a database transaction or cross-source snapshot/,
+]) {
+  block(
+    errors,
+    pattern.test(completeExportSource),
+    `data-export is missing pagination/manifest coverage marker ${pattern}.`,
+  );
+}
 block(
   errors,
   /function exportFileSlug\(\)/.test(exportSource),

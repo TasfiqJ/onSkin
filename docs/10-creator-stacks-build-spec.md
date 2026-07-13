@@ -1,5 +1,10 @@
 # Document 10 — Creator Stacks + ShopMy · Build Spec (validation + every-detail implementation notes)
 
+> **2026-07-12 launch-scope update:** The reviewed creator workflow and live
+> commerce rail are required for the iOS all-features release. Older deferral
+> language is superseded by `docs/hugeToDo/launch-contract.json`; all legal,
+> privacy, source, ranking-isolation, operational, and device gates still apply.
+
 > Companion to `docs/10-compass-artifact.md` (the strategic spec). This file is the
 > implementation-grade specification: the validated verdict, then **every** detail of
 > how the commerce layer works, looks, and feels — minor and major. Authoritative for

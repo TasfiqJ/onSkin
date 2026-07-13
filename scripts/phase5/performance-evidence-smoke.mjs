@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -23,10 +24,6 @@ function validEvidence() {
   evidence.devices.ios.buildId = '9f7b48e1-7a52-4efb-9d93-3e93a2bf13e5';
   evidence.devices.ios.deviceModel = 'iPhone 15 Pro';
   evidence.devices.ios.osVersion = 'iOS 18.5';
-  evidence.devices.android.buildId =
-    'https://expo.dev/accounts/routinekind/projects/mobile/builds/7a4d74ae-2acd-4af5-931f-b768565bcd64';
-  evidence.devices.android.deviceModel = 'Pixel 8';
-  evidence.devices.android.osVersion = 'Android 15';
   evidence.photoDataset.source = 'synthetic non-sensitive encrypted test photos';
   evidence.photoDataset.zeroCrashes = true;
   evidence.photoDataset.zeroOsTerminations = true;
@@ -73,7 +70,13 @@ function output(result) {
 }
 
 const unsupportedDevice = validEvidence();
-unsupportedDevice.devices.android.logicalWidth = 320;
+unsupportedDevice.devices.ios.logicalWidth = 320;
+
+const unexpectedAndroidMeasurement = validEvidence();
+unexpectedAndroidMeasurement.measurements.push({
+  ...structuredClone(unexpectedAndroidMeasurement.measurements[0]),
+  platform: 'android',
+});
 
 const postHocThreshold = validEvidence();
 postHocThreshold.thresholdsDefinedAt = '2026-07-09T18:00:00.000Z';
@@ -109,6 +112,15 @@ for (const measurement of unsummarizedEvidence.measurements) {
   measurement.max = null;
 }
 
+const template = createPerformanceEvidenceTemplate();
+assert.equal(template.platformStatus.ios, 'required');
+assert.equal(template.platformStatus.android, 'not_applicable');
+assert.equal(Object.hasOwn(template.devices, 'android'), false);
+assert.equal(
+  template.measurements.every((measurement) => measurement.platform === 'ios'),
+  true,
+);
+
 const cases = [
   {
     name: 'accepts complete supported-device evidence with predeclared thresholds',
@@ -130,7 +142,13 @@ const cases = [
     name: 'rejects devices below the accepted layout support floor',
     result: run(unsupportedDevice),
     test: (result) =>
-      result.status === 1 && /logicalWidth must be at least 360/.test(output(result)),
+      result.status === 1 && /logicalWidth must be at least 375/.test(output(result)),
+  },
+  {
+    name: 'rejects Android measurements instead of accepting fake release evidence',
+    result: run(unexpectedAndroidMeasurement),
+    test: (result) =>
+      result.status === 1 && /must be a required release platform \(ios\)/.test(output(result)),
   },
   {
     name: 'rejects thresholds defined after measurements',

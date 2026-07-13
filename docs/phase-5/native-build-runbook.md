@@ -117,4 +117,5 @@ is enabled in the build; otherwise OCR remains hidden from launch claims.
   Do not describe the current camera overlay as real-time face or lighting
   guidance; measurement occurs after capture.
 - Reminders remain "gentle" and inexact; no exact-alarm permission is requested.
-- Widgets and Live Activities remain post-launch scope.
+- Widgets and Live Activities are launch-required; do not build the release
+  candidate until real WidgetKit/ActivityKit targets and device evidence exist.

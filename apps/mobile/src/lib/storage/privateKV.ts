@@ -16,6 +16,7 @@ import {
   getStoredPrivateKVContentKey,
   setStoredPrivateKVContentKey,
 } from './privateKVContentKey';
+import { withOperationTiming } from '@/lib/observability/operationTiming';
 
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
 const NONCE_BYTES = 24;
@@ -284,96 +285,100 @@ async function assertNoFailedReadRewrite(key: string): Promise<string | null> {
 }
 
 export async function getPrivateItem(key: string): Promise<string | null> {
-  return runAccountScopedPrivateOperation(async () => {
-    assertPrivateDataKey(key);
-    const raw = await AsyncStorage.getItem(key);
-    if (!raw) {
-      failedReadSnapshots.delete(key);
-      return null;
-    }
+  return withOperationTiming('private_kv_read', () =>
+    runAccountScopedPrivateOperation(async () => {
+      assertPrivateDataKey(key);
+      const raw = await AsyncStorage.getItem(key);
+      if (!raw) {
+        failedReadSnapshots.delete(key);
+        return null;
+      }
 
-    const classification = classifyEnvelope(key, raw);
-    if (classification.kind === 'legacy') {
-      failedReadSnapshots.delete(key);
-      return raw;
-    }
-    if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
-      rememberFailedRead(key, raw);
-      throw envelopeClassificationError(classification.kind);
-    }
+      const classification = classifyEnvelope(key, raw);
+      if (classification.kind === 'legacy') {
+        failedReadSnapshots.delete(key);
+        return raw;
+      }
+      if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
+        rememberFailedRead(key, raw);
+        throw envelopeClassificationError(classification.kind);
+      }
 
-    let contentKey: Uint8Array | null;
-    try {
-      contentKey = await getExistingContentKey();
-    } catch (error) {
-      rememberFailedRead(key, raw);
-      throw error;
-    }
-    if (!contentKey) {
-      rememberFailedRead(key, raw);
-      throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
-    }
-    try {
-      const value = decryptEnvelope(classification.envelope, contentKey);
-      failedReadSnapshots.delete(key);
-      return value;
-    } catch {
-      rememberFailedRead(key, raw);
-      throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
-    }
-  });
+      let contentKey: Uint8Array | null;
+      try {
+        contentKey = await getExistingContentKey();
+      } catch (error) {
+        rememberFailedRead(key, raw);
+        throw error;
+      }
+      if (!contentKey) {
+        rememberFailedRead(key, raw);
+        throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+      }
+      try {
+        const value = decryptEnvelope(classification.envelope, contentKey);
+        failedReadSnapshots.delete(key);
+        return value;
+      } catch {
+        rememberFailedRead(key, raw);
+        throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+      }
+    }),
+  );
 }
 
 export async function getPrivateItems(
   keys: readonly string[],
 ): Promise<Map<string, string | null>> {
-  return runAccountScopedPrivateOperation(async () => {
-    for (const key of keys) assertPrivateDataKey(key);
-    const entries = await AsyncStorage.multiGet([...keys]);
-    const result = new Map<string, string | null>();
-    const encryptedEntries: [string, PrivateEnvelope, string][] = [];
+  return withOperationTiming('private_kv_batch_read', () =>
+    runAccountScopedPrivateOperation(async () => {
+      for (const key of keys) assertPrivateDataKey(key);
+      const entries = await AsyncStorage.multiGet([...keys]);
+      const result = new Map<string, string | null>();
+      const encryptedEntries: [string, PrivateEnvelope, string][] = [];
 
-    for (const [key, raw] of entries) {
-      if (!raw) {
-        failedReadSnapshots.delete(key);
-        result.set(key, null);
-        continue;
+      for (const [key, raw] of entries) {
+        if (!raw) {
+          failedReadSnapshots.delete(key);
+          result.set(key, null);
+          continue;
+        }
+        const classification = classifyEnvelope(key, raw);
+        if (classification.kind === 'current') {
+          encryptedEntries.push([key, classification.envelope, raw]);
+        } else if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
+          rememberFailedRead(key, raw);
+          throw envelopeClassificationError(classification.kind);
+        } else {
+          failedReadSnapshots.delete(key);
+          result.set(key, raw);
+        }
       }
-      const classification = classifyEnvelope(key, raw);
-      if (classification.kind === 'current') {
-        encryptedEntries.push([key, classification.envelope, raw]);
-      } else if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
-        rememberFailedRead(key, raw);
-        throw envelopeClassificationError(classification.kind);
-      } else {
-        failedReadSnapshots.delete(key);
-        result.set(key, raw);
-      }
-    }
 
-    if (encryptedEntries.length === 0) return result;
-    let contentKey: Uint8Array | null;
-    try {
-      contentKey = await getExistingContentKey();
-    } catch (error) {
-      for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
-      throw error;
-    }
-    if (!contentKey) {
-      for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
-      throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
-    }
-    for (const [key, envelope, raw] of encryptedEntries) {
+      if (encryptedEntries.length === 0) return result;
+      let contentKey: Uint8Array | null;
       try {
-        result.set(key, decryptEnvelope(envelope, contentKey));
-        failedReadSnapshots.delete(key);
-      } catch {
-        rememberFailedRead(key, raw);
-        throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+        contentKey = await getExistingContentKey();
+      } catch (error) {
+        for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
+        throw error;
       }
-    }
-    return result;
-  });
+      if (!contentKey) {
+        for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
+        throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+      }
+      for (const [key, envelope, raw] of encryptedEntries) {
+        try {
+          result.set(key, decryptEnvelope(envelope, contentKey));
+          failedReadSnapshots.delete(key);
+        } catch {
+          rememberFailedRead(key, raw);
+          throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+        }
+      }
+      return result;
+    }),
+  );
 }
 
 /** Verify every private-KV envelope without creating key material or retaining plaintext. */
@@ -410,77 +415,79 @@ export async function updatePrivateItem(
   key: string,
   updater: (current: string | null) => string | null,
 ): Promise<void> {
-  return runAccountScopedPrivateOperation((generation) =>
-    runSerializedPrivateMutations([key], async () => {
-      assertPrivateDataKey(key);
-      assertAccountScopedPrivateOperationAllowed(generation);
-      const existingRaw = await assertNoFailedReadRewrite(key);
-      const existingClassification = existingRaw ? classifyEnvelope(key, existingRaw) : null;
-      if (
-        existingRaw &&
-        existingClassification &&
-        (existingClassification.kind === 'malformed' ||
-          existingClassification.kind === 'unsupported')
-      ) {
-        rememberFailedRead(key, existingRaw);
-        throw envelopeClassificationError(existingClassification.kind);
-      }
-      let contentKey: Uint8Array | null = null;
-      let currentValue: string | null = null;
-      if (existingClassification?.kind === 'current' && existingRaw) {
-        try {
-          contentKey = await getExistingContentKey();
-        } catch (error) {
+  return withOperationTiming('private_kv_write', () =>
+    runAccountScopedPrivateOperation((generation) =>
+      runSerializedPrivateMutations([key], async () => {
+        assertPrivateDataKey(key);
+        assertAccountScopedPrivateOperationAllowed(generation);
+        const existingRaw = await assertNoFailedReadRewrite(key);
+        const existingClassification = existingRaw ? classifyEnvelope(key, existingRaw) : null;
+        if (
+          existingRaw &&
+          existingClassification &&
+          (existingClassification.kind === 'malformed' ||
+            existingClassification.kind === 'unsupported')
+        ) {
           rememberFailedRead(key, existingRaw);
-          throw error;
+          throw envelopeClassificationError(existingClassification.kind);
         }
-        if (!contentKey) {
-          rememberFailedRead(key, existingRaw);
-          throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+        let contentKey: Uint8Array | null = null;
+        let currentValue: string | null = null;
+        if (existingClassification?.kind === 'current' && existingRaw) {
+          try {
+            contentKey = await getExistingContentKey();
+          } catch (error) {
+            rememberFailedRead(key, existingRaw);
+            throw error;
+          }
+          if (!contentKey) {
+            rememberFailedRead(key, existingRaw);
+            throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+          }
+          try {
+            currentValue = decryptEnvelope(existingClassification.envelope, contentKey);
+          } catch {
+            rememberFailedRead(key, existingRaw);
+            throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+          }
+        } else if (existingClassification?.kind === 'legacy' && existingRaw) {
+          currentValue = existingRaw;
         }
-        try {
-          currentValue = decryptEnvelope(existingClassification.envelope, contentKey);
-        } catch {
-          rememberFailedRead(key, existingRaw);
-          throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+
+        const nextValue = updater(currentValue);
+        if (
+          nextValue === currentValue &&
+          (nextValue === null || existingClassification?.kind === 'current')
+        ) {
+          return;
         }
-      } else if (existingClassification?.kind === 'legacy' && existingRaw) {
-        currentValue = existingRaw;
-      }
 
-      const nextValue = updater(currentValue);
-      if (
-        nextValue === currentValue &&
-        (nextValue === null || existingClassification?.kind === 'current')
-      ) {
-        return;
-      }
+        const latestRaw = await AsyncStorage.getItem(key);
+        if (latestRaw !== existingRaw) {
+          if (latestRaw !== null) rememberFailedRead(key, latestRaw);
+          throw new Error(PRIVATE_KV_WRITE_CONFLICT);
+        }
+        assertAccountScopedPrivateOperationAllowed(generation);
 
-      const latestRaw = await AsyncStorage.getItem(key);
-      if (latestRaw !== existingRaw) {
-        if (latestRaw !== null) rememberFailedRead(key, latestRaw);
-        throw new Error(PRIVATE_KV_WRITE_CONFLICT);
-      }
-      assertAccountScopedPrivateOperationAllowed(generation);
+        if (nextValue === null) {
+          await AsyncStorage.removeItem(key);
+          failedReadSnapshots.delete(key);
+          return;
+        }
 
-      if (nextValue === null) {
-        await AsyncStorage.removeItem(key);
+        contentKey ??= await getOrCreateContentKey();
+        const nonce = randomBytes(NONCE_BYTES);
+        const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(nextValue));
+        const envelope: PrivateEnvelope = {
+          version: ENCRYPTION_VERSION,
+          nonceHex: bytesToHex(nonce),
+          ciphertextHex: bytesToHex(ciphertext),
+        };
+        await maybeRejectConflictChoiceWrite(key);
+        await AsyncStorage.setItem(key, JSON.stringify(envelope));
         failedReadSnapshots.delete(key);
-        return;
-      }
-
-      contentKey ??= await getOrCreateContentKey();
-      const nonce = randomBytes(NONCE_BYTES);
-      const ciphertext = xchacha20poly1305(contentKey, nonce).encrypt(utf8ToBytes(nextValue));
-      const envelope: PrivateEnvelope = {
-        version: ENCRYPTION_VERSION,
-        nonceHex: bytesToHex(nonce),
-        ciphertextHex: bytesToHex(ciphertext),
-      };
-      await maybeRejectConflictChoiceWrite(key);
-      await AsyncStorage.setItem(key, JSON.stringify(envelope));
-      failedReadSnapshots.delete(key);
-    }),
+      }),
+    ),
   );
 }
 
@@ -502,13 +509,15 @@ export function endPrivateKVAccountBoundary(): void {
 }
 
 export async function removePrivateItem(key: string): Promise<void> {
-  return runAccountScopedPrivateOperation((generation) =>
-    runSerializedPrivateMutations([key], async () => {
-      assertPrivateDataKey(key);
-      assertAccountScopedPrivateOperationAllowed(generation);
-      await AsyncStorage.removeItem(key);
-      failedReadSnapshots.delete(key);
-    }),
+  return withOperationTiming('private_kv_remove', () =>
+    runAccountScopedPrivateOperation((generation) =>
+      runSerializedPrivateMutations([key], async () => {
+        assertPrivateDataKey(key);
+        assertAccountScopedPrivateOperationAllowed(generation);
+        await AsyncStorage.removeItem(key);
+        failedReadSnapshots.delete(key);
+      }),
+    ),
   );
 }
 

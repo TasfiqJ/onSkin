@@ -216,6 +216,25 @@ describe('Expo app identity config', () => {
     expect(expo.extra.appEnvironment).toBe('production');
   });
 
+  it('does not require Android production identity for the iOS-only launch contract', () => {
+    const expo = buildExpoConfig(
+      {
+        APP_VARIANT: 'production',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        BRAND_LEGAL_CLEARANCE: 'cleared',
+        PHASE3_RELEASE_CLEARANCE: 'cleared',
+        APP_DISPLAY_NAME: 'RoutineKind',
+        APP_SLUG: 'routinekind',
+        APP_SCHEME: 'routinekind',
+        APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+      },
+      { releaseReadyReviewEvidence: true },
+    );
+
+    expect(expo.ios.bundleIdentifier).toBe('com.routinekind.app');
+    expect(expo.android.package).toBe('com.routinekind.app');
+  });
+
   it('normalizes supported app variant and environment values before resolving identity', () => {
     const expo = buildExpoConfig(
       {

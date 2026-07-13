@@ -1,8 +1,9 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
+import { markStartupPhase } from '@/lib/observability/operationTiming';
 import { colors } from '@/theme/tokens';
 
 import { useAuth } from './AuthProvider';
@@ -18,6 +19,12 @@ const COPY = {
 export function SessionBoundaryGate({ children }: { children: ReactNode }) {
   const insets = useSafeAreaInsets();
   const { initializing, sessionBoundaryError, retrySessionBoundary } = useAuth();
+
+  useEffect(() => {
+    if (initializing || sessionBoundaryError) return;
+    markStartupPhase('authentication_hydration_complete');
+    markStartupPhase('account_generation_complete');
+  }, [initializing, sessionBoundaryError]);
 
   if (!initializing && !sessionBoundaryError) return children;
 

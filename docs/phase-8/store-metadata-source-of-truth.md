@@ -23,7 +23,8 @@ Store copy must not describe:
 - Treatment, prevention, cure, diagnosis, or disease detection
 - AI skin analysis, skin score, skin age, hazard score, or percent improvement
 - Dermatologist-grade or clinically proven personalization claims
-- Creator/community/post-launch surfaces that are not enabled and reviewed
+- Any required surface before it is production-real, enabled, reviewed, and
+  evidenced in the selected build
 - External web checkout
 
 ## iOS Packet

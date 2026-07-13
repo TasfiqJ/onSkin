@@ -2,7 +2,11 @@
 
 ## Purpose
 
-This repo uses human-simulated end-to-end testing to verify that OnSkin works through the same surface a real person uses: iOS Simulator, Android emulator/device, Expo web, or another explicit target surface.
+This repo uses human-simulated end-to-end testing to verify that OnSkin works
+through the same surface a real person uses: physical iPhone/iOS Simulator,
+Expo web where compatible, or another explicit target surface. Android may be
+used for source-health/resilience work, but it is not release evidence under
+the current iOS launch contract.
 
 Unit and integration tests still matter. They verify smaller code behavior and prevent regressions. They do not prove that a real user can complete onboarding, routine, shelf, progress, privacy, commerce, or account flows through the app UI.
 
@@ -21,7 +25,9 @@ Do not mark UI-facing work as complete until Codex has:
 ## Current Repo Surface
 
 - Primary app: Expo React Native mobile app in `apps/mobile`.
-- Primary target surfaces: iOS Simulator/device and Android emulator/device.
+- Primary target surfaces: physical iPhone and iOS Simulator.
+- Secondary implementation surface: Expo web for compatible navigation/state
+  work; it never substitutes for native or physical-iPhone evidence.
 - Secondary target surface: Expo web for flows that render correctly through `npm --workspace apps/mobile run web`.
 - Device and layout support policy: `docs/DEVICE_SUPPORT_POLICY.md`.
 - Current unit/integration test runner: Vitest in `apps/mobile`.

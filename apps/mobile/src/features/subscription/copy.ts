@@ -26,7 +26,7 @@ export const PAYWALL_COPY = {
       'Routine intelligence. Order, timing, skin cycling',
       'Ingredient conflict checks, with evidence grades',
       'Private photo timeline. On-device only',
-      'Reminders, streaks & home-screen widgets',
+      'Reminders and a forgiving streak',
     ],
     annualBadge: 'Annual · best value',
     cta: 'Start free trial',
@@ -146,8 +146,8 @@ export const UPSELL_COPY: Record<GatedFeature, { title: string; body: string }> 
     body: `Unlimited ingredient-conflict checks with evidence grades and calm resolutions. Part of ${BRAND.proName}.`,
   },
   reminders_widgets: {
-    title: 'Reminders, streaks & home-screen widgets.',
-    body: `Gentle nudges at times you choose, a forgiving streak, and glanceable widgets. Part of ${BRAND.proName}.`,
+    title: 'Reminders and a forgiving streak.',
+    body: `Gentle nudges at times you choose, plus a calm view of your routine consistency. Part of ${BRAND.proName}.`,
   },
   full_routine: {
     title: 'Unlock your full routine.',

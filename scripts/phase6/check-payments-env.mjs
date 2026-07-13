@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 
 import {
   evidenceFlagEnabled,
@@ -11,6 +12,8 @@ import {
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const errors = [];
 const warnings = [];
 
@@ -96,6 +99,8 @@ require(/Phase 6 payments QA packet generated with a dirty Git worktree/.test(qa
   ), 'Phase 6 payments QA packet must warn on dirty worktrees and expose Git status in Markdown.');
 for (const file of [
   'package.json',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'apps/mobile/src/features/subscription/store.ts',
   'apps/mobile/src/features/subscription/useEntitlement.ts',
@@ -211,17 +216,19 @@ warn(
   revenueCatPublicKey(prodEnv.EXPO_PUBLIC_REVENUECAT_IOS_KEY, 'appl'),
   'Missing EXPO_PUBLIC_REVENUECAT_IOS_KEY for production.',
 );
-warn(
-  revenueCatPublicKey(prodEnv.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY, 'goog'),
-  'Missing EXPO_PUBLIC_REVENUECAT_ANDROID_KEY for production.',
-);
+if (androidReleaseRequired) {
+  warn(
+    revenueCatPublicKey(prodEnv.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY, 'goog'),
+    'Missing EXPO_PUBLIC_REVENUECAT_ANDROID_KEY for production.',
+  );
+}
 warn(
   finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID),
-  'Production annual RevenueCat product id must be a final App Store/Play product id.',
+  'Production annual RevenueCat product id must be a final App Store product id.',
 );
 warn(
   finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID),
-  'Production monthly RevenueCat product id must be a final App Store/Play product id.',
+  'Production monthly RevenueCat product id must be a final App Store product id.',
 );
 warn(
   finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID),
@@ -259,7 +266,7 @@ for (const key of ['EXPO_PUBLIC_PRIVACY_URL', 'EXPO_PUBLIC_TERMS_URL', 'EXPO_PUB
 const externalEvidence = [
   'PHASE6_RC_OFFERING_REVIEWED',
   'PHASE6_IOS_SANDBOX_RESTORE_PASS',
-  'PHASE6_ANDROID_LICENSE_TEST_PASS',
+  ...(androidReleaseRequired ? ['PHASE6_ANDROID_LICENSE_TEST_PASS'] : []),
   'PHASE6_WEBHOOK_HMAC_TEST_PASS',
   'PHASE6_FINANCE_SIGNOFF',
 ];
@@ -272,6 +279,9 @@ warn(
 );
 
 console.log('Phase 6 payments/entitlements check');
+if (!androidReleaseRequired) {
+  console.log('N/A Android RevenueCat key and license-test evidence: excluded by launch contract.');
+}
 for (const warning of warnings) console.warn(`WARN ${warning}`);
 for (const error of errors) console.error(`FAIL ${error}`);
 

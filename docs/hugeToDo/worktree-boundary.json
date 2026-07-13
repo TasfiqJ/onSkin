@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-12T23:30:00-04:00",
+  "context": "Snapshot observed when the BASE/GOV baseline subtask began. Provenance was not independently attributable, so every pre-existing change is treated as user or parallel-agent work that must be preserved.",
+  "defaultRule": "Do not overwrite, revert, reformat, stage, or claim ownership of a pre-existing dirty path. Inspect overlapping hunks, coordinate with the active owner, and make only additive or non-overlapping changes. If safe separation is impossible, stop and request direction.",
+  "ownedByThisBaselineSlice": [
+    "docs/hugeToDo/EXECUTION_BASELINE.md",
+    "docs/hugeToDo/credential-inventory.json",
+    "docs/hugeToDo/evidence-governance.json",
+    "docs/hugeToDo/execution-status.json",
+    "docs/hugeToDo/feature-inventory.json",
+    "docs/hugeToDo/task-graph.json",
+    "docs/hugeToDo/worktree-boundary.json",
+    "scripts/launch/build-execution-baseline.mjs",
+    "scripts/launch/execution-baseline.mjs",
+    "scripts/launch/validate-execution-baseline.mjs"
+  ],
+  "coordination": [
+    {
+      "path": "package.json",
+      "owner": "contract_wiring parallel agent",
+      "agreement": "That owner adds launch:execution-baseline:check and launch:verify wiring; this slice does not edit package.json."
+    },
+    {
+      "path": ".github/workflows/ios-launch-contract.yml",
+      "owner": "contract_wiring parallel agent",
+      "agreement": "That owner adds the execution-baseline CI step; this slice does not edit the workflow."
+    },
+    {
+      "path": "active strategy and source-of-truth documents",
+      "owner": "root coordinating agent",
+      "agreement": "This slice reads but does not edit the documents being reconciled by the root agent."
+    }
+  ],
+  "observedAtDelegation": [
+    {
+      "path": "04_repo_docs/docs/PRODUCT_REQUIREMENTS.md",
+      "state": "modified",
+      "disposition": "preserve; provenance unknown"
+    },
+    {
+      "path": "AGENTS.md",
+      "state": "modified",
+      "disposition": "preserve; repository instructions"
+    },
+    {
+      "path": "CLAUDE.md",
+      "state": "modified",
+      "disposition": "preserve; repository instructions"
+    },
+    {
+      "path": "apps/mobile/src/app/community/ask.tsx",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/app/community/people-like-you.tsx",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/app/onboarding/products.tsx",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/app/routine/_layout.tsx",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/app/routine/widgets.tsx",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/app/shelf/opened.tsx",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/app/trend/optin.tsx",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/community/claimsafety.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/community/communityRoutes.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/community/copy.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/onboarding/onboardingRoutes.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/encryptedStorage.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/encryptedStorage.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/photos/store.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/subscription/copy.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/subscription/gatedRoutes.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/subscription/gatedRoutes.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/subscription/proGatedRoutes.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/features/trend/trendRoutes.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/lib/analytics/eventRegistry.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/lib/applock/AppLockProvider.tsx",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/lib/applock/authenticate.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/lib/launch/phase7.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/lib/launch/phase7.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/lib/supabase/largeSecureStore.test.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/lib/supabase/largeSecureStore.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "docs/PRODUCT_REQUIREMENTS.md",
+      "state": "modified",
+      "disposition": "preserve; active source-of-truth owned by root"
+    },
+    {
+      "path": "docs/USER_FLOW_TREE.md",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "scripts/e2e/onboarding-first-session.mjs",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "scripts/phase7/check-core-loop.mjs",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "scripts/phase9/build-release-qa-packet.mjs",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "scripts/phase9/release-smoke.mjs",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "supabase/functions/account-deletion/index.ts",
+      "state": "modified",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": ".github/workflows/ios-launch-contract.yml",
+      "state": "untracked",
+      "disposition": "preserve; contract_wiring owner"
+    },
+    {
+      "path": "apps/mobile/src/lib/applock/singleFlight.test.ts",
+      "state": "untracked",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "apps/mobile/src/lib/applock/singleFlight.ts",
+      "state": "untracked",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "docs/MAXIMUM_OPTIMIZATION_CODEX_IMPLEMENTATION_PROMPT.md",
+      "state": "untracked",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "docs/MAXIMUM_REACT_NATIVE_OPTIMIZATION_PLAN.md",
+      "state": "untracked",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "docs/e2e-bug-reports/2026-07-12-onboarding-opened-date-radio-driver.md",
+      "state": "untracked",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "docs/hugeToDo/README.md",
+      "state": "untracked",
+      "disposition": "preserve; founder execution charter"
+    },
+    {
+      "path": "docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md",
+      "state": "untracked",
+      "disposition": "preserve; authoritative execution plan"
+    },
+    {
+      "path": "docs/hugeToDo/2026-07-12-ios-all-features-master-plan-update.md",
+      "state": "untracked",
+      "disposition": "preserve; root-owned strategy reconciliation"
+    },
+    {
+      "path": "docs/hugeToDo/launch-contract.json",
+      "state": "untracked",
+      "disposition": "preserve; contract_wiring owner"
+    },
+    {
+      "path": "scripts/launch/check-contract.mjs",
+      "state": "untracked",
+      "disposition": "preserve; contract_wiring owner"
+    },
+    {
+      "path": "scripts/launch/contract-smoke.mjs",
+      "state": "untracked",
+      "disposition": "preserve; contract_wiring owner"
+    },
+    {
+      "path": "scripts/launch/contract.mjs",
+      "state": "untracked",
+      "disposition": "preserve; contract_wiring owner"
+    },
+    {
+      "path": "supabase/functions/account-deletion/photoStorageCleanup.test.ts",
+      "state": "untracked",
+      "disposition": "preserve; outside baseline scope"
+    },
+    {
+      "path": "supabase/functions/account-deletion/photoStorageCleanup.ts",
+      "state": "untracked",
+      "disposition": "preserve; outside baseline scope"
+    }
+  ]
+}

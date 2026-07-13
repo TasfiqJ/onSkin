@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "programId": "ios-all-features-2026",
+  "effectiveDate": "2026-07-12",
+  "status": "active",
+  "release": {
+    "platforms": ["ios"],
+    "mode": "all-features",
+    "androidRelease": false,
+    "minimumIosVersion": "17.0",
+    "supportsIpad": false
+  },
+  "requiredFeatures": [
+    { "id": 1, "key": "brand_identity", "name": "Rebrand and identity migration" },
+    { "id": 2, "key": "onboarding_consent", "name": "Onboarding, age gate, and consent" },
+    {
+      "id": 3,
+      "key": "shelf_intake",
+      "name": "Shelf intake through manual entry, search, barcode, and native OCR"
+    },
+    { "id": 4, "key": "catalog", "name": "Production product catalog import and quality" },
+    { "id": 5, "key": "conflict_engine", "name": "Reviewed conflict engine" },
+    { "id": 6, "key": "routine_builder", "name": "Routine builder" },
+    { "id": 7, "key": "today_adherence", "name": "Today check-off and adherence" },
+    { "id": 8, "key": "cycle_scheduler", "name": "Skin cycling and ramp scheduler" },
+    { "id": 9, "key": "photo_progress", "name": "Private photo progress" },
+    { "id": 10, "key": "reminders", "name": "Reminders" },
+    { "id": 11, "key": "subscriptions", "name": "RevenueCat paywall and entitlements" },
+    { "id": 12, "key": "reverse_trial", "name": "Reverse trial" },
+    { "id": 13, "key": "recommendations", "name": "Recommendations" },
+    { "id": 14, "key": "ask_advisor", "name": "Ask advisor with production cloud path" },
+    { "id": 15, "key": "conflict_share", "name": "Shareable reviewed conflict cards" },
+    { "id": 16, "key": "commerce", "name": "Commerce and replenishment" },
+    { "id": 17, "key": "community", "name": "Community and Skin Notes" },
+    { "id": 18, "key": "trend_insights", "name": "Trend insights" },
+    { "id": 19, "key": "widgets_live_activities", "name": "Widgets and Live Activities" },
+    { "id": 20, "key": "admin_tooling", "name": "Admin and operator review tooling" }
+  ],
+  "requiredSurfaces": [
+    "commerce",
+    "community_posting",
+    "community_aggregates",
+    "trend_insights",
+    "cloud_ask",
+    "widgets",
+    "live_activities",
+    "share_cards",
+    "reviewed_conflict_sharing",
+    "goal_active_recommendations",
+    "public_links",
+    "review_prompts",
+    "creator_links",
+    "paid_measurement"
+  ],
+  "evidenceLevels": [
+    "code_complete",
+    "locally_verified",
+    "live_staging_verified",
+    "physical_iphone_verified",
+    "external_professional_review_signed",
+    "production_verified",
+    "store_approved"
+  ],
+  "safetyConstraints": {
+    "diagnosisTreatmentCurePreventionClaims": false,
+    "aiSkinScores": false,
+    "skinAgeClaims": false,
+    "percentageImprovementClaims": false,
+    "commissionInfluencedRecommendationRanking": false,
+    "unconsentedCloudPhotoAnalysis": false,
+    "publicBeforeAfterGallery": false,
+    "weakenOwnerScopedRls": false,
+    "photosLocalOnlyByDefault": true
+  }
+}

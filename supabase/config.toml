@@ -56,3 +56,49 @@ enabled = true
 [auth.captcha]
 enabled = true
 provider = "turnstile"
+
+# Per-function JWT behavior is source controlled here. Extended auth, secret,
+# public-access, and resource-budget metadata lives in functions/manifest.json.
+[functions.account-deletion]
+verify_jwt = true
+entrypoint = "./functions/account-deletion/index.ts"
+
+[functions.catalog-lookup]
+verify_jwt = true
+entrypoint = "./functions/catalog-lookup/index.ts"
+
+[functions.catalog-report]
+verify_jwt = true
+entrypoint = "./functions/catalog-report/index.ts"
+
+[functions.catalog-search]
+verify_jwt = true
+entrypoint = "./functions/catalog-search/index.ts"
+
+[functions.consent-withdrawal]
+verify_jwt = true
+entrypoint = "./functions/consent-withdrawal/index.ts"
+
+[functions.data-export]
+verify_jwt = true
+entrypoint = "./functions/data-export/index.ts"
+
+[functions.growth-event]
+verify_jwt = false
+entrypoint = "./functions/growth-event/index.ts"
+
+[functions.order-report-poll]
+verify_jwt = false
+entrypoint = "./functions/order-report-poll/index.ts"
+
+[functions.revenuecat-webhook]
+verify_jwt = false
+entrypoint = "./functions/revenuecat-webhook/index.ts"
+
+[functions.subscription-grants]
+verify_jwt = true
+entrypoint = "./functions/subscription-grants/index.ts"
+
+[functions.waitlist]
+verify_jwt = false
+entrypoint = "./functions/waitlist/index.ts"

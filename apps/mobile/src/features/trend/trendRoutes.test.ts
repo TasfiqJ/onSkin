@@ -20,87 +20,53 @@ function expectTouchableRouteIcon(route: string): void {
 }
 
 describe('Trend route contracts', () => {
-  it('keeps the opt-in screen safe for direct entry', () => {
+  it('keeps the launch-blocked opt-in route deferred on direct entry', () => {
     const source = readAppRoute('trend/optin.tsx');
 
-    expect(source).not.toContain('router.back()');
-    expect(source).toContain('APP_PROGRESS_ROUTE');
-    expect(source).toContain('backOrReplace(router, APP_PROGRESS_ROUTE)');
+    expect(source).toContain('<DeferredSurface');
+    expect(source).toContain('surface="trend"');
+    expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
+    expect(source).toContain('fallbackLabel="Back to Progress"');
   });
 
-  it('keeps the opt-in toggle failure handled and retryable', () => {
+  it('never requests or stores trend consent while the engine is unavailable', () => {
     const source = readAppRoute('trend/optin.tsx');
 
-    expect(source).toContain('applyTrendConsentChoice');
-    expect(source).toContain('useWindowDimensions');
-    expect(source).toContain('const compact = height < 640');
-    expect(source).toContain('const showSecondaryLinks = !(compact && saveFailed)');
-    expect(source).toContain('contentContainerStyle={{ paddingBottom: compact ? 24 : 40 }}');
-    expect(source).toContain("? 'mt-1 rounded-[20px] bg-paper-raised p-4'");
-    expect(source).toContain(
-      "? 'mt-2.5 flex-row items-center justify-between rounded-2xl bg-paper-raised p-3.5'",
-    );
-    expect(source).toContain(
-      "? 'mt-2 min-h-[48px] flex-row items-center justify-between rounded-2xl bg-paper-raised px-3.5 py-1.5'",
-    );
-    expect(source).toContain(
-      "compact ? 'mt-2 rounded-2xl px-3.5 py-2.5' : 'mt-2.5 rounded-2xl px-4 py-3'",
-    );
-    expect(source).toContain('{showSecondaryLinks ? (');
-    expect(source).toContain('EXPO_PUBLIC_E2E_TREND_CONSENT_FAILURE');
-    expect(source).toContain('EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER');
-    expect(source).toContain("process.env.EXPO_PUBLIC_E2E_TREND_CONSENT_LEDGER === 'local_only'");
-    expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
-    expect(source).toContain("modes.has('grant_once') || modes.has('all_once')");
-    expect(source).toContain("modes.has('revoke_once') || modes.has('all_once')");
-    expect(source).toContain('setTrendInsightsLocal(true)');
-    expect(source).toContain('setTrendInsightsLocal(false)');
-    expect(source).toContain('deleteTrendState()');
-    expect(source).toContain("new Error('E2E_TREND_CONSENT_GRANT_FAILURE')");
-    expect(source).toContain("new Error('E2E_TREND_CONSENT_REVOKE_FAILURE')");
-    expect(source).toContain('const [saveFailed, setSaveFailed] = useState(false)');
-    expect(source).toContain('setSaveFailed(false)');
-    expect(source).toContain('setSaveFailed(true)');
-    expect(source).toContain("qc.setQueryData(['trendConsent'], on)");
-    expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain('TREND_COPY.optIn.saveFailedTitle');
-    expect(source).toContain('TREND_COPY.optIn.saveFailedBody');
-    expect(source).not.toContain('Alert.alert');
-    expect(source).toContain(
-      "invalidate: () => qc.invalidateQueries({ queryKey: ['trendConsent'] })",
-    );
-    expect(source).toContain('disabled={saving}');
-    expect(source).toContain('setSaving(false)');
-  });
-
-  it('keeps the opt-in switch semantic and touchable on phones', () => {
-    const source = readAppRoute('trend/optin.tsx');
-
-    expect(source).toContain('ToggleSwitch');
-    expect(source).toContain('accessibilityLabel={TREND_COPY.optIn.toggleLabel}');
-    expect(source).toContain('activeTrackColor={colors.sage}');
-    expect(source).not.toContain('<Switch');
-    expect(source).not.toContain('onValueChange');
+    expect(source).not.toContain('grantTrendInsightsConsent');
+    expect(source).not.toContain('revokeTrendInsightsConsent');
+    expect(source).not.toContain('setTrendInsightsLocal');
+    expect(source).not.toContain('ToggleSwitch');
+    expect(source).not.toContain('photo_trend_insights');
   });
 
   it('keeps the fairness explainer safe for direct entry', () => {
     const source = readAppRoute('trend/fairness.tsx');
 
     expect(source).not.toContain('router.back()');
+    expect(source).toContain('if (!phase7Flags.trend)');
+    expect(source).toContain('<DeferredSurface');
+    expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
     expect(source).toContain('APP_TREND_OPTIN_ROUTE');
     expect(source).toContain('backOrReplace(router, APP_TREND_OPTIN_ROUTE)');
   });
 
   it('returns deferred Trend direct entries to Progress', () => {
-    const source = readAppRoute('trend/_layout.tsx');
+    const optIn = readAppRoute('trend/optin.tsx');
+    const fairness = readAppRoute('trend/fairness.tsx');
+    const layout = readAppRoute('trend/_layout.tsx');
 
-    expect(source).toContain('surface="trend"');
-    expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
-    expect(source).toContain('fallbackLabel="Back to Progress"');
+    for (const source of [optIn, fairness]) {
+      expect(source).toContain('surface="trend"');
+      expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
+      expect(source).toContain('fallbackLabel="Back to Progress"');
+    }
+    expect(layout).not.toContain('<DeferredSurface');
+    expect(layout).toContain('<Stack.Screen name="optin" />');
+    expect(layout).toContain('<Stack.Screen name="fairness" />');
   });
 
   it('keeps Trend route escape controls touchable on phones', () => {
-    for (const route of ['trend/optin.tsx', 'trend/fairness.tsx']) {
+    for (const route of ['trend/fairness.tsx']) {
       expectTouchableRouteIcon(route);
     }
   });

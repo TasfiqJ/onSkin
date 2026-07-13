@@ -39,16 +39,18 @@ or failed `phase2:rls-smoke` as launch blockers.
 
 ## Edge Functions
 
-- `revenuecat-webhook`
-- `account-deletion`
-- `data-export`
-- `order-report-poll`
-- `catalog-lookup`
-- `catalog-search`
-- `catalog-report`
+`functions/manifest.json` is the deployment inventory and extended governance
+source for every Edge Function. `config.toml` is the Supabase CLI source for
+each entrypoint and `verify_jwt` value. Run these before a staging deployment:
 
-These are service-role functions. External provider calls still require live
-account secrets and provider verification before launch.
+```powershell
+npm run phase9:edge-manifest-check
+npm run phase9:edge-manifest-smoke
+```
+
+The manifest distinguishes Supabase-user-JWT functions, provider/scheduler
+authentication, and truly public rate-limited forms. External provider calls
+still require live account secrets and provider verification before launch.
 
 Catalog lookup/search/report functions are Phase 4 infrastructure. Bulk product
 imports must use approved export artifacts and `scripts/phase4/*`, not API

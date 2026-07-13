@@ -14,6 +14,7 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
 import { brandCachePrefix } from '@/lib/brand';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 
 import { stripImageMetadataFromBase64 } from './metadata';
 
@@ -50,6 +51,11 @@ export type EncryptedPhotoWrite = {
   encryptionVersion: typeof ENCRYPTION_VERSION;
 };
 
+export type QuarantinedPhotoFile = {
+  originalUri: string;
+  quarantinedUri: string;
+};
+
 let contentKeyCreation: Promise<Uint8Array> | null = null;
 const inFlightPhotoOperations = new Set<Promise<unknown>>();
 let accountBoundaryWriteBlockDepth = 0;
@@ -77,6 +83,30 @@ async function runAccountScopedPhotoOperation<T>(
   } finally {
     inFlightPhotoOperations.delete(pending);
   }
+}
+
+/**
+ * Destructive filesystem work must be owned by both the photo-storage boundary
+ * and the app-wide account generation. The outer lease is captured when the
+ * public API is called, so an account switch can abort and drain the exact
+ * operation even when it is waiting on the filesystem.
+ */
+function runDestructiveAccountScopedPhotoOperation<T>(
+  operation: (assertCurrent: () => void) => Promise<T>,
+): Promise<T> {
+  return runAccountGenerationOperation((lease) =>
+    runAccountScopedPhotoOperation(async (generation) => {
+      const assertCurrent = () => {
+        lease.assertCurrent();
+        assertPhotoWriteAllowed(generation);
+      };
+
+      assertCurrent();
+      const result = await operation(assertCurrent);
+      assertCurrent();
+      return result;
+    }),
+  );
 }
 
 export function beginEncryptedPhotoAccountBoundary(): void {
@@ -124,7 +154,12 @@ async function hasPriorEncryptedPhotoData(): Promise<boolean> {
     const info = await FileSystem.getInfoAsync(PHOTO_DIR);
     if (!info.exists) return false;
     const entries = await FileSystem.readDirectoryAsync(PHOTO_DIR);
-    return entries.some((name) => name.endsWith('.onskinphoto'));
+    return entries.some(
+      (name) =>
+        name.endsWith('.onskinphoto') ||
+        name.includes('.onskinphoto.pending-delete-') ||
+        name.includes('.onskinphoto.tmp-'),
+    );
   } catch {
     throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
   }
@@ -293,11 +328,17 @@ export async function encryptCapturedPhoto(
       mimeType,
     };
     const encryptedLocalUri = `${PHOTO_DIR}${photoId}.onskinphoto`;
+    const temporaryUri = `${encryptedLocalUri}.tmp-${Date.now()}`;
     assertPhotoWriteAllowed(generation);
-    await FileSystem.writeAsStringAsync(encryptedLocalUri, JSON.stringify(envelope), {
-      encoding: FileSystem.EncodingType.UTF8,
-    });
-    await FileSystem.deleteAsync(sourceUri, { idempotent: true }).catch(() => {});
+    try {
+      await FileSystem.writeAsStringAsync(temporaryUri, JSON.stringify(envelope), {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
+      await FileSystem.moveAsync({ from: temporaryUri, to: encryptedLocalUri });
+    } catch (error) {
+      await FileSystem.deleteAsync(temporaryUri, { idempotent: true }).catch(() => undefined);
+      throw error;
+    }
     return {
       encryptedLocalUri,
       keyId: KEY_ID,
@@ -361,7 +402,100 @@ export async function deletePhotoShareFile(
 
 export async function deleteEncryptedPhoto(uri?: string | null): Promise<void> {
   if (!uri || !isEncryptedPhotoUri(uri)) return;
-  await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => {});
+  await FileSystem.deleteAsync(uri, { idempotent: true });
+}
+
+/** Removes the camera cache source only after both encrypted file and metadata commit. */
+export async function deleteCapturedPhotoSource(uri?: string | null): Promise<void> {
+  if (!uri || isEncryptedPhotoUri(uri)) return;
+  await FileSystem.deleteAsync(uri, { idempotent: true });
+}
+
+/**
+ * Moves an encrypted photo out of its live path before metadata is changed. If
+ * the move fails, callers know the live file is untouched and must keep the
+ * metadata row. The quarantine suffix is reconciled against metadata on the
+ * next successful store read after a crash or interrupted delete.
+ */
+export async function quarantineEncryptedPhoto(
+  uri: string | null | undefined,
+  operationId: string,
+): Promise<QuarantinedPhotoFile | null> {
+  if (!uri || !isEncryptedPhotoUri(uri)) return null;
+  const quarantinedUri = `${uri}.pending-delete-${safePhotoShareId(operationId)}`;
+  return runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
+    assertCurrent();
+    await FileSystem.moveAsync({ from: uri, to: quarantinedUri });
+    return { originalUri: uri, quarantinedUri };
+  });
+}
+
+export async function restoreQuarantinedPhoto(file: QuarantinedPhotoFile): Promise<void> {
+  await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
+    assertCurrent();
+    await FileSystem.moveAsync({ from: file.quarantinedUri, to: file.originalUri });
+  });
+}
+
+export async function deleteQuarantinedPhoto(file: QuarantinedPhotoFile): Promise<void> {
+  await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
+    assertCurrent();
+    await FileSystem.deleteAsync(file.quarantinedUri, { idempotent: true });
+  });
+}
+
+/**
+ * Reconciles files left by process death. A quarantined file whose metadata row
+ * still exists is restored; one whose row committed as deleted is removed.
+ * Incomplete temp writes and unreferenced final envelopes are safe to remove
+ * only after metadata parsed successfully.
+ */
+export async function reconcileEncryptedPhotoStorage(
+  referencedUris: readonly string[],
+  options: { removeUnreferencedFinals?: boolean } = {},
+): Promise<void> {
+  await runDestructiveAccountScopedPhotoOperation(async (assertCurrent) => {
+    const referenced = new Set(referencedUris.filter(isEncryptedPhotoUri));
+    const info = await FileSystem.getInfoAsync(PHOTO_DIR);
+    assertCurrent();
+    if (!info.exists) return;
+    const entries = await FileSystem.readDirectoryAsync(PHOTO_DIR);
+    assertCurrent();
+
+    for (const entry of entries) {
+      assertCurrent();
+      const uri = `${PHOTO_DIR}${entry}`;
+      const quarantined = /^(.+\.onskinphoto)\.pending-delete-.+$/.exec(entry);
+      if (quarantined) {
+        const originalUri = `${PHOTO_DIR}${quarantined[1]}`;
+        if (referenced.has(originalUri)) {
+          const originalInfo = await FileSystem.getInfoAsync(originalUri);
+          assertCurrent();
+          if (originalInfo.exists) {
+            await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+          } else {
+            await FileSystem.moveAsync({ from: uri, to: originalUri });
+          }
+        } else {
+          await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+        }
+        continue;
+      }
+
+      if (/\.onskinphoto\.tmp-.+$/.test(entry)) {
+        await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+        continue;
+      }
+
+      if (
+        options.removeUnreferencedFinals !== false &&
+        entry.endsWith('.onskinphoto') &&
+        !referenced.has(uri)
+      ) {
+        await FileSystem.deleteAsync(uri, { idempotent: true }).catch(() => undefined);
+      }
+    }
+  });
 }
 
 export async function clearEncryptedPhotoStorage(): Promise<void> {
@@ -400,7 +534,7 @@ export async function decryptPhotoNote(
   if (!ciphertext) return null;
   return runAccountScopedPhotoOperation(async (generation) => {
     const envelope = encryptedTextEnvelopeFromRaw(ciphertext);
-    if (!envelope) return null;
+    if (!envelope) throw new Error(PHOTO_DECRYPTION_FAILED);
     const key = await getExistingContentKey(generation);
     const plaintext = decryptEnvelopeToUtf8(envelope, key);
     if (plaintext === null) throw new Error(PHOTO_DECRYPTION_FAILED);

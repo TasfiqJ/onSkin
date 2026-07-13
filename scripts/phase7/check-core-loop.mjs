@@ -7,9 +7,15 @@ import {
   productionDomain,
   productionUrl,
 } from '../phase9/lib.mjs';
+import {
+  isSurfaceRequired,
+  loadLaunchContract,
+  REQUIRED_SURFACE_KEYS,
+} from '../launch/contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
 const errors = [];
 const warnings = [];
 
@@ -40,6 +46,13 @@ function require(condition, message) {
   if (!condition) errors.push(message);
 }
 
+for (const surface of REQUIRED_SURFACE_KEYS) {
+  require(isSurfaceRequired(
+    surface,
+    launchContract,
+  ), `Launch contract must keep required Phase 7/8 surface ${surface}.`);
+}
+
 function warn(condition, message) {
   if (!condition) warnings.push(message);
 }
@@ -58,6 +71,8 @@ const localEnv = envFile('.env');
 const launchEnv = { ...exampleEnv, ...localEnv, ...process.env };
 
 const requiredFiles = [
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/src/components/launch/DeferredSurface.tsx',
@@ -108,6 +123,10 @@ require(has(
   'apps/mobile/src/lib/launch/phase7.ts',
   /productionSurfaceReady/,
 ), 'phase7.ts must fail closed for production deferred surfaces.');
+require(has(
+  'apps/mobile/src/lib/launch/phase7.ts',
+  /phase7Capabilities\s*=\s*Object\.freeze\([\s\S]*communityQuestionSubmission:\s*false[\s\S]*communityAggregates:\s*false[\s\S]*trendEngine:\s*false[\s\S]*nativeWidgets:\s*false/,
+), 'phase7.ts must keep unimplemented community, Trend, and native-widget capabilities non-environment-driven.');
 const qaPacketBuilder = read('scripts/phase7/build-core-loop-qa-packet.mjs');
 const humanE2eManifestBuilder = read('scripts/e2e/human-e2e-manifest.mjs');
 require(/function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
@@ -121,6 +140,8 @@ require(/Phase 7 core-loop QA packet generated with a dirty Git worktree/.test(q
     qaPacketBuilder,
   ), 'Phase 7 core-loop QA packet must warn on dirty worktrees and expose Git status in Markdown.');
 for (const file of [
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
   'package.json',
   'apps/mobile/src/app/cycle/settings.tsx',
   'apps/mobile/src/app/cycle/week.tsx',
@@ -173,28 +194,58 @@ require(has(
 ) &&
   has(
     'apps/mobile/src/lib/launch/phase7.test.ts',
-    /allows staging to exercise deferred surfaces without a final domain/,
-  ), 'phase7.test.ts must cover production fail-closed and staging exercise behavior.');
+    /keeps unimplemented capabilities closed even when staging flags are enabled/,
+  ), 'phase7.test.ts must cover production identity gates and non-bypassable unavailable capabilities.');
 
 const gatedRoutes = [
   ['apps/mobile/src/app/commerce/_layout.tsx', /phase7Flags\.commerce/, 'commerce route group'],
   ['apps/mobile/src/app/trend/_layout.tsx', /phase7Flags\.trend/, 'trend route group'],
-  [
-    'apps/mobile/src/app/community/ask.tsx',
-    /phase7Flags\.communityPosting/,
-    'community ask screen',
-  ],
-  [
-    'apps/mobile/src/app/community/people-like-you.tsx',
-    /phase7Flags\.communityPosting/,
-    'people-like-you screen',
-  ],
-  ['apps/mobile/src/app/routine/widgets.tsx', /phase7Flags\.widgets/, 'widgets screen'],
 ];
 for (const [path, pattern, label] of gatedRoutes) {
   require(has(path, /DeferredSurface/), `${label} must render DeferredSurface when gated.`);
   require(has(path, pattern), `${label} is missing its Phase 7 flag check.`);
 }
+
+for (const [path, surface, label] of [
+  ['apps/mobile/src/app/community/ask.tsx', 'communityPosting', 'community ask screen'],
+  [
+    'apps/mobile/src/app/community/people-like-you.tsx',
+    'communityPosting',
+    'people-like-you screen',
+  ],
+  ['apps/mobile/src/app/trend/optin.tsx', 'trend', 'trend opt-in screen'],
+  ['apps/mobile/src/app/routine/widgets.tsx', 'widgets', 'widgets screen'],
+]) {
+  const source = read(path);
+  require(/DeferredSurface/.test(source), `${label} must remain a deferred surface.`);
+  require(source.includes(`surface="${surface}"`), `${label} must use truthful deferred copy.`);
+}
+
+const communityAsk = read('apps/mobile/src/app/community/ask.tsx');
+const communityAggregate = read('apps/mobile/src/app/community/people-like-you.tsx');
+const trendOptIn = read('apps/mobile/src/app/trend/optin.tsx');
+const widgetsRoute = read('apps/mobile/src/app/routine/widgets.tsx');
+const routineLayout = read('apps/mobile/src/app/routine/_layout.tsx');
+const routineGatedRoutes = read('apps/mobile/src/features/subscription/gatedRoutes.ts');
+const subscriptionCopy = read('apps/mobile/src/features/subscription/copy.ts');
+require(!/question_submitted|grantCommunityConsent|confirmCommunityAge|TextInput/.test(
+  communityAsk,
+), 'Unavailable community posting must not collect consent, accept text, or emit submission analytics.');
+require(!/dry, sensitive|alternate-night cycling|Aggregated & anonymised/.test(
+  communityAggregate,
+), 'People-like-you must not render illustrative aggregate data as real.');
+require(!/grantTrendInsightsConsent|revokeTrendInsightsConsent|setTrendInsightsLocal|ToggleSwitch/.test(
+  trendOptIn,
+), 'Unavailable Trend must not solicit or persist engine consent.');
+require(!/Check it off right from the home screen|Show on the Lock Screen|ToggleSwitch/.test(
+  widgetsRoute,
+) &&
+  !/withProGate|<ProGate/.test(widgetsRoute) &&
+  /if \(routeName === 'widgets'\) return null/.test(routineGatedRoutes) &&
+  /if \(!gateFeature\) return stack/.test(routineLayout) &&
+  !/home-screen widgets|glanceable widgets/.test(
+    subscriptionCopy,
+  ), 'Unavailable native widgets and Live Activities must bypass paywalls and not appear as working claims.');
 
 const askLayout = read('apps/mobile/src/app/ask/_layout.tsx');
 const askConsent = read('apps/mobile/src/app/ask/consent.tsx');

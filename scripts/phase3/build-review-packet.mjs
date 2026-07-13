@@ -3,8 +3,15 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { command, gitStatusExcludingGeneratedEvidence } from '../phase9/lib.mjs';
+import {
+  isReleasePlatformRequired,
+  launchContractSnapshot,
+  loadLaunchContract,
+} from '../launch/contract.mjs';
 
 const root = process.cwd();
+const launchContract = loadLaunchContract(root);
+const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const packetOutDir = process.env.PHASE3_REVIEW_PACKET_OUT_DIR ?? 'docs/phase-3/generated';
 const generatedDir = resolve(root, packetOutDir);
 const signoffDir = 'docs/phase-3/signoffs';
@@ -22,6 +29,8 @@ const packetOutputPaths = [
 const packets = {
   packetContract: [
     'package.json',
+    'docs/hugeToDo/launch-contract.json',
+    'scripts/launch/contract.mjs',
     'scripts/phase3/build-review-packet.mjs',
     'scripts/phase3/build-review-worklist.mjs',
     'scripts/phase3/build-review-operator-queue.mjs',
@@ -48,7 +57,7 @@ const packets = {
     'docs/phase-3/consent-matrix.md',
     'docs/phase-3/store-metadata-review.md',
     'docs/phase-3/app-review-notes.md',
-    'docs/phase-3/google-play-health-declaration-notes.md',
+    ...(androidReleaseRequired ? ['docs/phase-3/google-play-health-declaration-notes.md'] : []),
     'apps/mobile/src/features/onboarding/consentCopy.ts',
     'apps/mobile/src/lib/legal/disclaimer.ts',
     'apps/mobile/src/lib/legal/policyLinks.ts',
@@ -96,16 +105,28 @@ const packets = {
     'apps/mobile/src/features/settings/localDeviceExport.test.ts',
     'apps/mobile/src/lib/storage/privateKV.ts',
     'apps/mobile/src/lib/storage/privateKV.test.ts',
+    'apps/mobile/src/lib/supabase/largeSecureStore.ts',
+    'apps/mobile/src/lib/supabase/largeSecureStore.test.ts',
     'apps/mobile/src/lib/applock/AppLockProvider.tsx',
     'apps/mobile/src/lib/applock/authenticate.ts',
     'apps/mobile/src/lib/applock/authenticate.test.ts',
+    'apps/mobile/src/lib/applock/singleFlight.ts',
+    'apps/mobile/src/lib/applock/singleFlight.test.ts',
+    'apps/mobile/src/lib/auth/accountGeneration.ts',
+    'apps/mobile/src/lib/auth/accountGeneration.test.ts',
+    'apps/mobile/src/lib/auth/localAccountIsolation.ts',
+    'apps/mobile/src/lib/auth/localAccountIsolation.test.ts',
     'apps/mobile/src/features/photos/PhotoTimelineLockGate.tsx',
     'apps/mobile/src/features/photos/PhotoStorageGate.tsx',
+    'apps/mobile/src/features/photos/encryptedStorage.ts',
+    'apps/mobile/src/features/photos/encryptedStorage.test.ts',
     'apps/mobile/src/features/photos/usePhotos.ts',
     'apps/mobile/src/features/photos/store.ts',
     'apps/mobile/src/features/photos/store.test.ts',
     'apps/mobile/src/features/photos/progressRoutes.test.ts',
     'supabase/functions/account-deletion/index.ts',
+    'supabase/functions/account-deletion/photoStorageCleanup.ts',
+    'supabase/functions/account-deletion/photoStorageCleanup.test.ts',
     'supabase/functions/_shared/storagePath.ts',
     'supabase/functions/_shared/storagePath.test.ts',
     'supabase/functions/data-export/index.ts',
@@ -153,6 +174,7 @@ if (gitStatus.length > 0) {
 }
 const manifest = {
   generatedAt: new Date().toISOString(),
+  launchContract: launchContractSnapshot(launchContract),
   purpose:
     'Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.',
   gitSha,

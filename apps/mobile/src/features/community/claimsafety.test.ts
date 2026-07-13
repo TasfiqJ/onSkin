@@ -72,8 +72,11 @@ describe('the mandatory disclosures + "library not a feed" stance are present', 
     expect(COMMUNITY_COPY.consent.never.toLowerCase()).toContain('never sold');
     expect(COMMUNITY_COPY.consent.age.toLowerCase()).toContain('16');
   });
-  it('"people like you" states it is aggregated/anonymised and never a feed/ranking', () => {
-    expect(COMMUNITY_COPY.peopleLikeYou.aggregateNote.toLowerCase()).toContain('anonymised');
+  it('"people like you" stays unavailable until a reviewed, consented dataset exists', () => {
+    expect(COMMUNITY_COPY.peopleLikeYou.aggregateNote.toLowerCase()).toContain('no peer aggregate');
+    expect(COMMUNITY_COPY.peopleLikeYou.aggregateNote.toLowerCase()).toContain(
+      'reviewed, consented',
+    );
     expect(COMMUNITY_COPY.peopleLikeYou.nevers.join(' ').toLowerCase()).toContain('never a feed');
   });
 });
