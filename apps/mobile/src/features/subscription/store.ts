@@ -256,6 +256,7 @@ function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
     env.appEnvironment !== 'development';
   const testStoreInProduction =
     env.appEnvironment === 'production' && (store === 'test_store' || environment === 'test_store');
+  const appGrantedReverseTrial = store === 'app_granted' && periodType === 'reverse_trial';
 
   return {
     tier,
@@ -267,7 +268,7 @@ function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
       !testStoreInProduction,
     periodType,
     store,
-    productId: stringOrNull(value.productId),
+    productId: appGrantedReverseTrial ? null : stringOrNull(value.productId),
     expiresAt,
     willRenew: booleanOrNull(value.willRenew),
     grantedAt,
@@ -275,8 +276,8 @@ function normalizeStoredEntitlement(value: unknown): StoredEntitlement | null {
     environment,
     managementUrl: safeExternalHttpsUrl(stringOrNull(value.managementUrl)),
     verifiedAt,
-    offeringId: stringOrNull(value.offeringId),
-    packageId: stringOrNull(value.packageId),
+    offeringId: appGrantedReverseTrial ? null : stringOrNull(value.offeringId),
+    packageId: appGrantedReverseTrial ? null : stringOrNull(value.packageId),
     storeUserId: stringOrNull(value.storeUserId),
     priceLabel: stringOrNull(value.priceLabel),
   };
@@ -517,7 +518,8 @@ export async function startReverseTrialOnServer(): Promise<StoredEntitlement> {
       isActive: true,
       periodType: 'reverse_trial',
       store: 'app_granted',
-      productId: env.revenueCatReverseTrialProductId,
+      // This is an app-granted entitlement, not a StoreKit/RevenueCat product.
+      productId: null,
       expiresAt: daysFromNowISO(LOCAL_REVERSE_TRIAL_DAYS),
       willRenew: false,
       grantedAt: nowISO(),
@@ -525,8 +527,8 @@ export async function startReverseTrialOnServer(): Promise<StoredEntitlement> {
       environment: 'development',
       managementUrl: null,
       verifiedAt: nowISO(),
-      offeringId: 'local_reverse_trial',
-      packageId: 'reverse_trial_7d',
+      offeringId: null,
+      packageId: null,
       storeUserId: null,
       priceLabel: null,
     });

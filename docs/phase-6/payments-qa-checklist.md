@@ -31,6 +31,10 @@
 - A second reverse trial attempt returns a conflict.
 - `reverse_trial_grants` and `entitlements` are written atomically; partial
   entitlement failures cannot consume the one-time grant.
+- During the staged RPC rollout, the deprecated four-argument compatibility
+  overload preserves but ignores the legacy `p_product_id` argument, writes
+  null Store identity through the three-argument implementation, and remains
+  callable only by `service_role`.
 - `expire_app_granted_reverse_trials()` deactivates expired reverse trials.
 
 ## Webhook
@@ -66,7 +70,8 @@ clean`, current payment source hashes, current human-E2E manifest hashes,
 - `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID=pro`
 - `EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID=<final store product id>`
 - `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID=<final store product id>`
-- `EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID=<final store product id>`
+- The no-card reverse trial has no Store product ID; its app-granted entitlement
+  records `product_id=null`, `offering_id=null`, and `package_id=null`.
 - `REVENUECAT_WEBHOOK_AUTH=<production shared auth>`
 - `REVENUECAT_WEBHOOK_SIGNING_SECRET=<production signing secret>`
 - `REVENUECAT_SECRET_API_KEY=<production secret API key>`

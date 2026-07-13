@@ -30,10 +30,12 @@ const packetOutputPaths = [
 ].map((path) => path.replace(/\\/g, '/'));
 
 const requiredFiles = [
+  '.env.example',
   'package.json',
   'docs/hugeToDo/launch-contract.json',
   'scripts/launch/contract.mjs',
   'apps/mobile/src/lib/iap/revenuecat.ts',
+  'apps/mobile/src/lib/env.ts',
   'apps/mobile/src/features/subscription/store.ts',
   'apps/mobile/src/features/subscription/useEntitlement.ts',
   'apps/mobile/src/features/subscription/useSubscriptionOffering.ts',
@@ -48,6 +50,7 @@ const requiredFiles = [
   'supabase/functions/account-deletion/index.ts',
   'supabase/migrations/20260615000027_phase6_payments.sql',
   'supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql',
+  'supabase/migrations/20260713000044_reverse_trial_no_store_identity.sql',
   'apps/mobile/src/features/subscription/paywallMobileContracts.test.ts',
   'apps/mobile/src/features/subscription/store.test.ts',
   'apps/mobile/src/features/subscription/entitlement.test.ts',
@@ -55,6 +58,9 @@ const requiredFiles = [
   'scripts/phase6/build-payments-qa-packet.mjs',
   'scripts/phase6/check-payments-env.mjs',
   'scripts/phase6/check-payments-env-smoke.mjs',
+  'scripts/phase2/check-env.mjs',
+  'scripts/phase2/check-env-smoke.mjs',
+  'scripts/phase9/supabase-policy-lint.mjs',
   'scripts/e2e/human-e2e-manifest.mjs',
   'scripts/phase9/lib.mjs',
   'docs/HUMAN_SIMULATED_E2E_TESTING.md',
@@ -89,7 +95,7 @@ const scenarios = [
   ['Restore', 'new install restores active subscription and writes verified local cache'],
   [
     'Reverse trial',
-    'authenticated Edge Function atomically grants exactly once, server expiry RPC deactivates after 7 days',
+    'authenticated Edge Function atomically grants exactly once with null product/offering/package identity; server expiry RPC deactivates after 7 days',
   ],
   [
     'Win-back',
@@ -169,9 +175,6 @@ const productionConfig = {
     : null,
   annualProductIdFinal: finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID),
   monthlyProductIdFinal: finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID),
-  reverseTrialProductIdFinal: finalProductId(
-    prodEnv.EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID,
-  ),
   webhookSharedAuthConfigured: !placeholderEnvValue(prodEnv.REVENUECAT_WEBHOOK_AUTH),
   webhookSigningSecretConfigured: !placeholderEnvValue(prodEnv.REVENUECAT_WEBHOOK_SIGNING_SECRET),
   secretApiKeyConfigured: !placeholderEnvValue(prodEnv.REVENUECAT_SECRET_API_KEY),
@@ -194,7 +197,6 @@ const productionConfigBlockers = [
     : []),
   ['annualProductIdFinal', 'Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.'],
   ['monthlyProductIdFinal', 'Missing final EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID.'],
-  ['reverseTrialProductIdFinal', 'Missing final EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID.'],
   ['webhookSharedAuthConfigured', 'Missing production REVENUECAT_WEBHOOK_AUTH.'],
   ['webhookSigningSecretConfigured', 'Missing production REVENUECAT_WEBHOOK_SIGNING_SECRET.'],
   ['secretApiKeyConfigured', 'Missing production REVENUECAT_SECRET_API_KEY.'],
@@ -317,7 +319,6 @@ writeFileSync(
     `- Android RevenueCat public key configured: ${androidReleaseRequired ? (productionConfig.androidPublicKeyConfigured ? 'yes' : 'BLOCKED') : 'NOT APPLICABLE'}`,
     `- Annual product ID final: ${productionConfig.annualProductIdFinal ? 'yes' : 'BLOCKED'}`,
     `- Monthly product ID final: ${productionConfig.monthlyProductIdFinal ? 'yes' : 'BLOCKED'}`,
-    `- Reverse-trial product ID final: ${productionConfig.reverseTrialProductIdFinal ? 'yes' : 'BLOCKED'}`,
     `- Webhook shared auth configured: ${productionConfig.webhookSharedAuthConfigured ? 'yes' : 'BLOCKED'}`,
     `- Webhook signing secret configured: ${productionConfig.webhookSigningSecretConfigured ? 'yes' : 'BLOCKED'}`,
     `- RevenueCat secret API key configured: ${productionConfig.secretApiKeyConfigured ? 'yes' : 'BLOCKED'}`,

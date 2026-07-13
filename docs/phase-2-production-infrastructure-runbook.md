@@ -75,10 +75,11 @@ eas build --profile production --platform all
 
 - Product IDs are read from
   `EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID`,
-  `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID`, and
-  `EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID`. The committed defaults are
-  local placeholders only; replace them with final App Store/Play/RevenueCat IDs
-  after brand clearance.
+  and `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID`. The committed defaults are
+  local placeholders only; replace them with final App Store/RevenueCat IDs
+  after brand clearance. The no-card reverse trial is an app-granted Supabase
+  entitlement with `product_id=null`, `offering_id=null`, and `package_id=null`;
+  it is not a Store product and must not be configured as one.
 - Entitlement defaults to `pro`; override with
   `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID` only if the dashboard uses another ID.
 - `appUserID` is the Supabase user ID, including the anonymous user ID.

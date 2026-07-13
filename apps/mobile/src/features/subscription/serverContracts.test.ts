@@ -43,8 +43,16 @@ describe('subscription server contracts', () => {
     const migration = readRepo(
       'supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql',
     );
+    const noStoreIdentityMigration = readRepo(
+      'supabase/migrations/20260713000044_reverse_trial_no_store_identity.sql',
+    );
     const edgeFunction = readRepo('supabase/functions/subscription-grants/index.ts');
     const policyLint = readRepo('scripts/phase9/supabase-policy-lint.mjs');
+    const entitlementStore = readRepo('apps/mobile/src/features/subscription/store.ts');
+    const entitlementHook = readRepo('apps/mobile/src/features/subscription/useEntitlement.ts');
+    const compatibilityBody = noStoreIdentityMigration.match(
+      /create or replace function public\.grant_app_granted_reverse_trial\(\s*p_user_id uuid,\s*p_expires_at timestamptz,\s*p_environment text,\s*p_product_id text\s*\)[\s\S]*?language sql[\s\S]*?as \$\$([\s\S]*?)\$\$;/,
+    )?.[1];
 
     expect(migration).toContain(
       'create or replace function public.grant_app_granted_reverse_trial',
@@ -55,21 +63,41 @@ describe('subscription server contracts', () => {
     expect(migration).toContain("raise exception 'REVERSE_TRIAL_ALREADY_USED'");
     expect(migration).toContain("raise exception 'ACTIVE_SUBSCRIPTION_EXISTS'");
     expect(migration).toContain('insert into public.entitlements');
-    expect(migration).toContain(
-      'revoke all on function public.grant_app_granted_reverse_trial(uuid, timestamptz, text, text)',
+    expect(noStoreIdentityMigration).toContain(
+      'create or replace function public.grant_app_granted_reverse_trial(',
     );
-    expect(migration).toContain(
-      'grant execute on function public.grant_app_granted_reverse_trial(uuid, timestamptz, text, text) to service_role',
+    expect(compatibilityBody).toBeDefined();
+    expect(compatibilityBody).not.toContain('p_product_id');
+    expect(compatibilityBody).toMatch(
+      /from public\.grant_app_granted_reverse_trial\(\s*p_user_id,\s*p_expires_at,\s*p_environment\s*\);/,
+    );
+    expect(noStoreIdentityMigration).toMatch(/true,\s+null,\s+p_expires_at,/);
+    expect(noStoreIdentityMigration).toMatch(
+      /revoke all on function public\.grant_app_granted_reverse_trial\(\s*uuid,\s*timestamptz,\s*text\s*\) from public, anon, authenticated;/,
+    );
+    expect(noStoreIdentityMigration).toMatch(
+      /grant execute on function public\.grant_app_granted_reverse_trial\(\s*uuid,\s*timestamptz,\s*text\s*\) to service_role;/,
+    );
+    expect(noStoreIdentityMigration).toMatch(
+      /revoke all on function public\.grant_app_granted_reverse_trial\(\s*uuid,\s*timestamptz,\s*text,\s*text\s*\) from public, anon, authenticated;/,
+    );
+    expect(noStoreIdentityMigration).toMatch(
+      /grant execute on function public\.grant_app_granted_reverse_trial\(\s*uuid,\s*timestamptz,\s*text,\s*text\s*\) to service_role;/,
     );
 
     expect(edgeFunction).toContain("supabase.rpc('grant_app_granted_reverse_trial'");
+    expect(edgeFunction).not.toContain('p_product_id');
     expect(edgeFunction).toContain("message.includes('ACTIVE_SUBSCRIPTION_EXISTS')");
     expect(edgeFunction).toContain("message.includes('REVERSE_TRIAL_ALREADY_USED')");
     expect(edgeFunction).not.toContain(".from('reverse_trial_grants').insert");
     expect(edgeFunction).not.toContain(".from('entitlements').upsert");
+    expect(entitlementStore).not.toContain('revenueCatReverseTrialProductId');
+    expect(entitlementHook).not.toContain('routinekind_pro_reverse_trial_local');
 
+    expect(policyLint).toContain("'grant_app_granted_reverse_trial(uuid, timestamptz, text)'");
     expect(policyLint).toContain(
       "'grant_app_granted_reverse_trial(uuid, timestamptz, text, text)'",
     );
+    expect(policyLint).toContain('latestFunctions.delete(key)');
   });
 });

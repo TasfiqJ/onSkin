@@ -50,7 +50,6 @@ const completeEnv = {
   EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID: 'pro',
   EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'routinekind.pro.annual',
   EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID: 'routinekind.pro.monthly',
-  EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID: 'routinekind.pro.reverse_trial',
   REVENUECAT_WEBHOOK_AUTH: 'revenuecat-webhook-auth',
   EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: 'routinekind-ios.apps.googleusercontent.com',
   EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: 'routinekind-web.apps.googleusercontent.com',

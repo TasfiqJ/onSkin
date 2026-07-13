@@ -24,7 +24,6 @@ Production environment:
 - `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID=pro`
 - `EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID`
 - `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID`
-- `EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID`
 - `REVENUECAT_WEBHOOK_SIGNING_SECRET`
 - `REVENUECAT_SECRET_API_KEY`
 - `EXPO_PUBLIC_REVENUECAT_TEST_STORE_KEY` blank
@@ -68,9 +67,16 @@ Rules:
 - 7 days of Pro
 - `will_renew=false`
 - Never creates a store transaction
+- `product_id`, `offering_id`, and `package_id` are null; no App Store Connect or
+  RevenueCat product or package represents this grant
 - The audit row and `entitlements` mirror write commit atomically through
   `grant_app_granted_reverse_trial()`; a partial failure must not burn the
   user's only no-card trial
+- A deprecated four-argument server-only RPC overload temporarily ignores its
+  legacy `p_product_id` argument and delegates to the null-enforcing
+  three-argument RPC so database-first deployment cannot break the previously
+  deployed Edge caller. Remove the overload only after hosted evidence proves
+  all callers use the three-argument signature.
 - Server expiry via `expire_app_granted_reverse_trials()`
 
 ## Webhook Verification

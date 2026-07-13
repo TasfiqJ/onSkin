@@ -22,7 +22,6 @@ const mocks = vi.hoisted(() => ({
   writes: 0,
   env: {
     appEnvironment: 'development' as 'development' | 'staging' | 'production',
-    revenueCatReverseTrialProductId: 'routinekind_pro_reverse_trial_local',
   },
   isSupabaseConfigured: false,
   invoke: vi.fn(),
@@ -112,7 +111,7 @@ function cachedEntitlement(overrides: Record<string, unknown> = {}) {
     isActive: true,
     periodType: 'reverse_trial',
     store: 'app_granted',
-    productId: 'routinekind_pro_reverse_trial_local',
+    productId: null,
     expiresAt: '2026-07-12T12:00:00.000Z',
     willRenew: false,
     grantedAt: '2026-07-05T12:00:00.000Z',
@@ -120,8 +119,8 @@ function cachedEntitlement(overrides: Record<string, unknown> = {}) {
     environment: 'development',
     managementUrl: null,
     verifiedAt: '2026-07-05T12:00:00.000Z',
-    offeringId: 'local_reverse_trial',
-    packageId: 'reverse_trial_7d',
+    offeringId: null,
+    packageId: null,
     storeUserId: null,
     priceLabel: null,
     ...overrides,
@@ -166,17 +165,36 @@ describe('subscription entitlement cache', () => {
       source: 'app_granted',
       environment: 'development',
       willRenew: false,
-      productId: 'routinekind_pro_reverse_trial_local',
+      productId: null,
     });
     expect(entitlement.expiresAt).toBe('2026-07-12T12:00:00.000Z');
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
       version: 1,
-      entitlement: { productId: 'routinekind_pro_reverse_trial_local' },
+      entitlement: { productId: null },
     });
     await expect(loadEntitlement()).resolves.toMatchObject(entitlement);
 
     const state = deriveState(entitlement, NOW.toISOString());
     expect(state).toMatchObject({ isPro: true, inReverseTrial: true, daysLeft: 7 });
+  });
+
+  it('normalizes obsolete app-grant Store identity in memory without rewriting it', async () => {
+    const legacy = cacheEnvelope(
+      cachedEntitlement({
+        productId: 'routinekind_pro_reverse_trial_local',
+        offeringId: 'local_reverse_trial',
+        packageId: 'reverse_trial_7d',
+      }),
+    );
+    mocks.storage.set(KEY, legacy);
+
+    await expect(loadEntitlement()).resolves.toMatchObject({
+      productId: null,
+      offeringId: null,
+      packageId: null,
+    });
+    expect(mocks.storage.get(KEY)).toBe(legacy);
+    expect(mocks.writes).toBe(0);
   });
 
   it('still fails closed outside development when Supabase is not configured', async () => {
@@ -252,7 +270,15 @@ describe('subscription entitlement cache', () => {
   });
 
   it('reads a valid unversioned primary cache without rewriting it', async () => {
-    const legacy = JSON.stringify(cachedEntitlement({ productId: 'legacy-primary' }));
+    const legacy = JSON.stringify(
+      cachedEntitlement({
+        periodType: 'normal',
+        store: 'app_store',
+        productId: 'legacy-primary',
+        source: 'revenuecat',
+        environment: 'sandbox',
+      }),
+    );
     mocks.storage.set(KEY, legacy);
 
     await expect(readEntitlementCache()).resolves.toMatchObject({
@@ -314,7 +340,15 @@ describe('subscription entitlement cache', () => {
   });
 
   it('reads the valid legacy key without migrating it during an ordinary read', async () => {
-    const legacy = JSON.stringify(cachedEntitlement({ productId: 'legacy-key-product' }));
+    const legacy = JSON.stringify(
+      cachedEntitlement({
+        periodType: 'normal',
+        store: 'app_store',
+        productId: 'legacy-key-product',
+        source: 'revenuecat',
+        environment: 'sandbox',
+      }),
+    );
     mocks.storage.set(LEGACY_KEY, legacy);
 
     await expect(readEntitlementCache()).resolves.toMatchObject({
@@ -516,14 +550,22 @@ describe('subscription entitlement cache', () => {
         }),
       ),
     );
-    const replacement = cachedEntitlement({ productId: 'new-app-grant' }) as StoredEntitlement;
+    const replacement = cachedEntitlement({
+      periodType: 'normal',
+      store: 'app_store',
+      productId: 'new-store-product',
+      expiresAt: null,
+      willRenew: true,
+      source: 'revenuecat',
+      environment: 'sandbox',
+    }) as StoredEntitlement;
 
     const clear = clearStoreEntitlementIfRevenueCatVerifiedEmpty();
     const save = saveVerifiedEntitlement(replacement);
     await Promise.all([clear, save]);
 
     await expect(loadEntitlement()).resolves.toMatchObject({
-      productId: 'new-app-grant',
+      productId: 'new-store-product',
       isActive: true,
     });
   });

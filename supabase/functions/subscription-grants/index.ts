@@ -63,7 +63,6 @@ Deno.serve(async (req) => {
     p_user_id: userId,
     p_expires_at: expiresAt,
     p_environment: appEnvironment,
-    p_product_id: null,
   });
   if (error) {
     const code = grantErrorCode(error);

@@ -35,7 +35,6 @@ const completeEnv = {
   EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID: 'pro',
   EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'routinekind.pro.annual',
   EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID: 'routinekind.pro.monthly',
-  EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID: 'routinekind.pro.reverse_trial',
   REVENUECAT_WEBHOOK_AUTH: 'revenuecat-webhook-auth-live',
   REVENUECAT_WEBHOOK_SIGNING_SECRET: 'whsec_livevalue123',
   REVENUECAT_SECRET_API_KEY: 'sk_livevalue123',

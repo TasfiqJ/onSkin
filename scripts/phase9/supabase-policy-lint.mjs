@@ -46,6 +46,14 @@ for (const match of combined.matchAll(
     index: match.index ?? 0,
   });
 }
+for (const match of combined.matchAll(
+  /drop\s+function\s+(?:if\s+exists\s+)?public\.([a-z0-9_]+)\s*\(([^)]*)\)\s*;/gi,
+)) {
+  const [, name, args] = match;
+  const key = functionKey(name, args);
+  const existing = latestFunctions.get(key);
+  if (existing && (match.index ?? 0) > existing.index) latestFunctions.delete(key);
+}
 
 const clientCallableDefiners = new Set([
   'has_current_consent(text)',
@@ -59,6 +67,7 @@ const clientCallableDefiners = new Set([
 const serviceCallableDefiners = new Set([
   'consume_edge_rate_limit(text, text, integer, integer)',
   'expire_app_granted_reverse_trials()',
+  'grant_app_granted_reverse_trial(uuid, timestamptz, text)',
   'grant_app_granted_reverse_trial(uuid, timestamptz, text, text)',
   'process_revenuecat_webhook_event(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)',
 ]);

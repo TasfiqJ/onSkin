@@ -231,10 +231,6 @@ warn(
   'Production monthly RevenueCat product id must be a final App Store product id.',
 );
 warn(
-  finalProductId(prodEnv.EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID),
-  'Production reverse-trial RevenueCat product id must be final or intentionally app-granted in the dashboard/runbook.',
-);
-warn(
   Boolean(exampleEnv.REVENUECAT_WEBHOOK_SIGNING_SECRET),
   '.env.example must document REVENUECAT_WEBHOOK_SIGNING_SECRET.',
 );

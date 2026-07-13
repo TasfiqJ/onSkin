@@ -13,7 +13,6 @@ const APP_ENVIRONMENTS = new Set(['development', 'staging', 'production']);
 const REVENUECAT_DEFAULT_PRODUCT_IDS = {
   annual: 'routinekind_pro_annual_dev',
   monthly: 'routinekind_pro_monthly_dev',
-  reverseTrialLocal: 'routinekind_pro_reverse_trial_local',
 } as const;
 
 export type AppEnvironment = 'development' | 'staging' | 'production';
@@ -147,9 +146,6 @@ export const env = {
   revenueCatMonthlyProductId:
     process.env.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID?.trim() ||
     REVENUECAT_DEFAULT_PRODUCT_IDS.monthly,
-  revenueCatReverseTrialProductId:
-    process.env.EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID?.trim() ||
-    REVENUECAT_DEFAULT_PRODUCT_IDS.reverseTrialLocal,
   // BLOCKED: B-POSTHOG
   posthogKey: process.env.EXPO_PUBLIC_POSTHOG_KEY ?? '',
   posthogHost: process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com',
