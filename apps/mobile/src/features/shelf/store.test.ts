@@ -1,10 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { addProduct, loadShelf, reAddProduct, updateProduct } from './store';
+import {
+  addProduct,
+  loadShelf,
+  reAddProduct,
+  removeProduct,
+  SHELF_STATE_INVALID,
+  SHELF_STATE_UNSUPPORTED_VERSION,
+  updateProduct,
+} from './store';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
   nextId: 0,
+  tails: new Map<string, Promise<void>>(),
+  updateFailure: null as Error | null,
 }));
 
 vi.mock('expo-crypto', () => ({
@@ -13,86 +23,98 @@ vi.mock('expo-crypto', () => ({
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
-  setPrivateItem: vi.fn(async (key: string, value: string) => {
-    mocks.storage.set(key, value);
-  }),
   removePrivateItem: vi.fn(async (key: string) => {
     mocks.storage.delete(key);
   }),
+  updatePrivateItem: vi.fn(
+    async (key: string, updater: (current: string | null) => string | null) => {
+      const previous = mocks.tails.get(key) ?? Promise.resolve();
+      let release!: () => void;
+      const tail = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      mocks.tails.set(key, tail);
+      await previous;
+      try {
+        if (mocks.updateFailure) throw mocks.updateFailure;
+        const next = updater(mocks.storage.get(key) ?? null);
+        if (next === null) mocks.storage.delete(key);
+        else mocks.storage.set(key, next);
+      } finally {
+        release();
+        if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
+      }
+    },
+  ),
 }));
 
 const KEY = 'onskin.shelf.v1';
+
+function storedProducts(): unknown[] {
+  const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
+    products?: unknown[];
+  };
+  return parsed.products ?? [];
+}
 
 describe('shelf local store recovery', () => {
   beforeEach(() => {
     mocks.storage.clear();
     mocks.nextId = 0;
+    mocks.tails.clear();
+    mocks.updateFailure = null;
   });
 
-  it('removes malformed persisted shelf JSON', async () => {
-    mocks.storage.set(KEY, '{not-json');
+  it('preserves malformed persisted shelf JSON', async () => {
+    const original = '{not-json';
+    mocks.storage.set(KEY, original);
 
     await expect(loadShelf()).resolves.toEqual([]);
-    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(original);
   });
 
-  it('removes wrong-shaped persisted shelf state', async () => {
-    mocks.storage.set(KEY, JSON.stringify({ id: 'not-an-array' }));
+  it('preserves wrong-shaped persisted shelf state', async () => {
+    const original = JSON.stringify({ id: 'not-an-array' });
+    mocks.storage.set(KEY, original);
 
     await expect(loadShelf()).resolves.toEqual([]);
-    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(original);
   });
 
-  it('keeps valid legacy shelf rows and drops malformed rows', async () => {
-    mocks.storage.set(
-      KEY,
-      JSON.stringify([
-        {
-          id: 'retinol',
-          name: 'Retinol Serum',
-          addedVia: 'manual',
-          ingredients: ['retinol', '', false],
-          paoMonths: -1,
-          status: 'unknown',
-        },
-        { id: '', name: 'No id', addedVia: 'manual' },
-        'bad-row',
-      ]),
-    );
+  it('rejects a whole legacy shelf containing malformed rows without dropping bytes', async () => {
+    const original = JSON.stringify([
+      {
+        id: 'retinol',
+        name: 'Retinol Serum',
+        addedVia: 'manual',
+        ingredients: ['retinol', '', false],
+        paoMonths: -1,
+        status: 'unknown',
+      },
+      { id: '', name: 'No id', addedVia: 'manual' },
+      'bad-row',
+    ]);
+    mocks.storage.set(KEY, original);
 
     const shelf = await loadShelf();
 
-    expect(shelf).toHaveLength(1);
-    expect(shelf[0]).toMatchObject({
-      id: 'retinol',
-      name: 'Retinol Serum',
-      catalogSource: 'user_local',
-      catalogMatchQuality: 'manual',
-      ingredients: ['retinol'],
-      isOpened: false,
-      openedAt: null,
-      paoMonths: null,
-      paoSource: 'unknown',
-      expirySource: 'estimated',
-      status: 'active',
-      repurchaseCount: 1,
-    });
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '[]')).toHaveLength(1);
+    expect(shelf).toEqual([]);
+    expect(mocks.storage.get(KEY)).toBe(original);
   });
 
-  it('writes a clean shelf after malformed state', async () => {
-    mocks.storage.set(KEY, JSON.stringify({ stale: true }));
+  it('refuses to overwrite malformed shelf state during a write', async () => {
+    const original = JSON.stringify({ stale: true });
+    mocks.storage.set(KEY, original);
 
-    await addProduct({
-      name: 'Mineral SPF 50',
-      category: 'spf',
-      addedVia: 'manual',
-    });
+    await expect(
+      addProduct({
+        name: 'Mineral SPF 50',
+        category: 'spf',
+        addedVia: 'manual',
+      }),
+    ).rejects.toThrow(SHELF_STATE_INVALID);
 
-    const shelf = JSON.parse(mocks.storage.get(KEY) ?? '[]') as { name: string }[];
-    expect(shelf).toHaveLength(1);
-    expect(shelf[0]?.name).toBe('Mineral SPF 50');
-    expect(shelf[0]).toMatchObject({ isOpened: false, openedAt: null, expirySource: 'estimated' });
+    expect(mocks.storage.get(KEY)).toBe(original);
   });
 
   it('normalizes direct updates before persistence', async () => {
@@ -114,7 +136,7 @@ describe('shelf local store recovery', () => {
 
     await updateProduct(product.id, malformedPatch);
 
-    const raw = JSON.parse(mocks.storage.get(KEY) ?? '[]') as {
+    const raw = storedProducts() as {
       status: string;
       finishedAt: string | null;
       paoMonths: number | null;
@@ -252,5 +274,65 @@ describe('shelf local store recovery', () => {
 
     expect(shelf).toHaveLength(1);
     expect(shelf[0]?.name).toBe('Mineral SPF 50');
+  });
+
+  it('keeps a valid legacy shelf readable without rewriting until mutation', async () => {
+    const original = JSON.stringify([
+      {
+        id: 'retinol',
+        name: 'Retinol Serum',
+        addedVia: 'manual',
+        ingredients: [' retinol ', '', false],
+      },
+    ]);
+    mocks.storage.set(KEY, original);
+
+    await expect(loadShelf()).resolves.toMatchObject([
+      { id: 'retinol', ingredients: ['retinol'], status: 'active' },
+    ]);
+    expect(mocks.storage.get(KEY)).toBe(original);
+
+    await updateProduct('retinol', { brand: 'Example' });
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      version: 1,
+      products: [{ id: 'retinol', brand: 'Example', ingredients: ['retinol'] }],
+    });
+  });
+
+  it('preserves future-version shelf bytes and refuses every mutation', async () => {
+    const original = JSON.stringify({ version: 2, products: [] });
+    mocks.storage.set(KEY, original);
+
+    await expect(loadShelf()).resolves.toEqual([]);
+    await expect(
+      addProduct({ name: 'Cleanser', addedVia: 'manual' }),
+    ).rejects.toThrow(SHELF_STATE_UNSUPPORTED_VERSION);
+    await expect(updateProduct('missing', { brand: 'Nope' })).rejects.toThrow(
+      SHELF_STATE_UNSUPPORTED_VERSION,
+    );
+    await expect(removeProduct('missing')).rejects.toThrow(SHELF_STATE_UNSUPPORTED_VERSION);
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('serializes simultaneous additions without losing a product', async () => {
+    const names = Array.from({ length: 30 }, (_, index) => `Product ${index}`);
+
+    await Promise.all(names.map((name) => addProduct({ name, addedVia: 'manual' })));
+
+    const shelf = await loadShelf();
+    expect(shelf).toHaveLength(names.length);
+    expect(new Set(shelf.map((product) => product.name))).toEqual(new Set(names));
+  });
+
+  it('keeps the prior shelf intact when an atomic write fails', async () => {
+    const product = await addProduct({ name: 'Cleanser', addedVia: 'manual' });
+    const original = mocks.storage.get(KEY);
+    mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
+
+    await expect(updateProduct(product.id, { brand: 'Example' })).rejects.toThrow(
+      'PRIVATE_WRITE_FAILED',
+    );
+
+    expect(mocks.storage.get(KEY)).toBe(original);
   });
 });
