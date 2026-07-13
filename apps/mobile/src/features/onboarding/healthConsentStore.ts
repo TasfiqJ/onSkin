@@ -1,11 +1,15 @@
 import type { ConsentType } from '@onskin/types';
 import * as Crypto from 'expo-crypto';
 
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import { HEALTH_DATA_CONSENT } from './consentCopy';
 
 const HEALTH_DATA_CONSENT_KEY = 'onskin.healthDataCollectionConsent.v1';
+const SCHEMA_VERSION = 1 as const;
+
+export const HEALTH_CONSENT_INVALID = 'HEALTH_CONSENT_INVALID';
+export const HEALTH_CONSENT_UNSUPPORTED_VERSION = 'HEALTH_CONSENT_UNSUPPORTED_VERSION';
 
 export type LocalHealthDataConsent = {
   type: ConsentType;
@@ -13,6 +17,11 @@ export type LocalHealthDataConsent = {
   version: string;
   consentTextHash: string;
   recordedAt: string;
+};
+
+type HealthConsentEnvelope = {
+  schemaVersion: typeof SCHEMA_VERSION;
+  consent: LocalHealthDataConsent;
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -54,6 +63,67 @@ function normalizeConsent(value: unknown): LocalHealthDataConsent | null {
   };
 }
 
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  const keys = Object.keys(value);
+  return keys.length === expected.length && expected.every((key) => hasOwn(value, key));
+}
+
+function decodeConsent(raw: string): LocalHealthDataConsent {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    throw new Error(HEALTH_CONSENT_INVALID);
+  }
+  if (!isRecord(parsed)) throw new Error(HEALTH_CONSENT_INVALID);
+
+  if (hasOwn(parsed, 'schemaVersion')) {
+    if (parsed.schemaVersion !== SCHEMA_VERSION) {
+      if (
+        typeof parsed.schemaVersion === 'number' &&
+        Number.isSafeInteger(parsed.schemaVersion) &&
+        parsed.schemaVersion > SCHEMA_VERSION
+      ) {
+        throw new Error(HEALTH_CONSENT_UNSUPPORTED_VERSION);
+      }
+      throw new Error(HEALTH_CONSENT_INVALID);
+    }
+    if (!hasExactKeys(parsed, ['schemaVersion', 'consent']) || !isRecord(parsed.consent)) {
+      throw new Error(HEALTH_CONSENT_INVALID);
+    }
+    const normalized = normalizeConsent(parsed.consent);
+    if (
+      !normalized ||
+      !hasExactKeys(parsed.consent, [
+        'type',
+        'granted',
+        'version',
+        'consentTextHash',
+        'recordedAt',
+      ]) ||
+      JSON.stringify(normalized) !== JSON.stringify(parsed.consent)
+    ) {
+      throw new Error(HEALTH_CONSENT_INVALID);
+    }
+    return normalized;
+  }
+
+  const normalized = normalizeConsent(parsed);
+  if (!normalized) throw new Error(HEALTH_CONSENT_INVALID);
+  return normalized;
+}
+
+function encodeConsent(consent: LocalHealthDataConsent): string {
+  return JSON.stringify({
+    schemaVersion: SCHEMA_VERSION,
+    consent,
+  } satisfies HealthConsentEnvelope);
+}
+
 export async function setHealthDataCollectionConsentLocal(params: {
   granted: boolean;
   version: string;
@@ -64,36 +134,23 @@ export async function setHealthDataCollectionConsentLocal(params: {
     params.consentText,
   );
 
-  await setPrivateItem(
-    HEALTH_DATA_CONSENT_KEY,
-    JSON.stringify({
+  const consent: LocalHealthDataConsent = {
       type: 'health_data_collection',
       granted: params.granted,
       version: params.version,
       consentTextHash,
       recordedAt: new Date().toISOString(),
-    } satisfies LocalHealthDataConsent),
-  );
+  };
+  await updatePrivateItem(HEALTH_DATA_CONSENT_KEY, (current) => {
+    if (current !== null) decodeConsent(current);
+    return encodeConsent(consent);
+  });
 }
 
 export async function getHealthDataCollectionConsentLocal(): Promise<LocalHealthDataConsent | null> {
-  let raw: string | null = null;
   try {
-    raw = await getPrivateItem(HEALTH_DATA_CONSENT_KEY);
-  } catch {
-    return null;
-  }
-  if (!raw) return null;
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    const normalized = normalizeConsent(parsed);
-    if (!normalized) return null;
-    if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
-      await setPrivateItem(HEALTH_DATA_CONSENT_KEY, JSON.stringify(normalized)).catch(
-        () => undefined,
-      );
-    }
-    return normalized;
+    const raw = await getPrivateItem(HEALTH_DATA_CONSENT_KEY);
+    return raw === null ? null : decodeConsent(raw);
   } catch {
     return null;
   }

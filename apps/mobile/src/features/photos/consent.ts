@@ -3,7 +3,8 @@ import * as Crypto from 'expo-crypto';
 
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
 import { recordConsent } from '@/lib/consent/consent';
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateBoolean } from '@/lib/storage/privateBoolean';
+import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 /**
  * Photo consents (docs/01 §4, docs/06 §7). Unbundled and local-first. Capture
@@ -15,6 +16,11 @@ import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage
 const CAPTURE_KEY = 'onskin.photos.captureConsent';
 const CAPTURE_RECORD_KEY = 'onskin.photos.captureConsent.v1';
 const CLOUD_KEY = 'onskin.photos.cloudBackup';
+const CAPTURE_SCHEMA_VERSION = 1 as const;
+
+export const PHOTO_CAPTURE_CONSENT_INVALID = 'PHOTO_CAPTURE_CONSENT_INVALID';
+export const PHOTO_CAPTURE_CONSENT_UNSUPPORTED_VERSION =
+  'PHOTO_CAPTURE_CONSENT_UNSUPPORTED_VERSION';
 
 export const PHOTO_CLOUD_BACKUP_AVAILABLE = false as const;
 
@@ -24,6 +30,11 @@ type LocalPhotoCaptureConsent = {
   version: string;
   consentTextHash: string;
   recordedAt: string;
+};
+
+type PhotoCaptureConsentEnvelope = {
+  schemaVersion: typeof CAPTURE_SCHEMA_VERSION;
+  consent: LocalPhotoCaptureConsent;
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -65,59 +76,78 @@ function normalizePhotoCaptureConsent(value: unknown): LocalPhotoCaptureConsent 
   };
 }
 
-async function repairFlag(key: string, value: '0' | '1'): Promise<void> {
-  try {
-    await setPrivateItem(key, value);
-  } catch {
-    // Consent reads stay fail-closed even if local encrypted flag repair is unavailable.
-  }
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
 }
 
-async function getFlag(key: string): Promise<boolean> {
+function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  const keys = Object.keys(value);
+  return keys.length === expected.length && expected.every((key) => hasOwn(value, key));
+}
+
+function decodePhotoCaptureConsent(raw: string): LocalPhotoCaptureConsent {
+  let parsed: unknown;
   try {
-    const value = await getPrivateItem(key);
-    if (value == null) return false;
-    const normalized = value.trim();
-    if (normalized === '1') {
-      if (value !== '1') await repairFlag(key, '1');
-      return true;
-    }
-    if (normalized === '0') {
-      if (value !== '0') await repairFlag(key, '0');
-      return false;
-    }
-    await repairFlag(key, '0');
-    return false;
+    parsed = JSON.parse(raw) as unknown;
   } catch {
-    return false;
+    throw new Error(PHOTO_CAPTURE_CONSENT_INVALID);
   }
+  if (!isRecord(parsed)) throw new Error(PHOTO_CAPTURE_CONSENT_INVALID);
+
+  if (hasOwn(parsed, 'schemaVersion')) {
+    if (parsed.schemaVersion !== CAPTURE_SCHEMA_VERSION) {
+      if (
+        typeof parsed.schemaVersion === 'number' &&
+        Number.isSafeInteger(parsed.schemaVersion) &&
+        parsed.schemaVersion > CAPTURE_SCHEMA_VERSION
+      ) {
+        throw new Error(PHOTO_CAPTURE_CONSENT_UNSUPPORTED_VERSION);
+      }
+      throw new Error(PHOTO_CAPTURE_CONSENT_INVALID);
+    }
+    if (!hasExactKeys(parsed, ['schemaVersion', 'consent']) || !isRecord(parsed.consent)) {
+      throw new Error(PHOTO_CAPTURE_CONSENT_INVALID);
+    }
+    const normalized = normalizePhotoCaptureConsent(parsed.consent);
+    if (
+      !normalized ||
+      !hasExactKeys(parsed.consent, [
+        'type',
+        'granted',
+        'version',
+        'consentTextHash',
+        'recordedAt',
+      ]) ||
+      JSON.stringify(normalized) !== JSON.stringify(parsed.consent)
+    ) {
+      throw new Error(PHOTO_CAPTURE_CONSENT_INVALID);
+    }
+    return normalized;
+  }
+
+  const normalized = normalizePhotoCaptureConsent(parsed);
+  if (!normalized) throw new Error(PHOTO_CAPTURE_CONSENT_INVALID);
+  return normalized;
+}
+
+function encodePhotoCaptureConsent(consent: LocalPhotoCaptureConsent): string {
+  return JSON.stringify({
+    schemaVersion: CAPTURE_SCHEMA_VERSION,
+    consent,
+  } satisfies PhotoCaptureConsentEnvelope);
 }
 
 async function getPhotoCaptureConsentLocal(): Promise<boolean> {
-  let raw: string | null = null;
   try {
-    raw = await getPrivateItem(CAPTURE_RECORD_KEY);
+    const raw = await getPrivateItem(CAPTURE_RECORD_KEY);
+    if (raw === null) return getPrivateBoolean(CAPTURE_KEY);
+    decodePhotoCaptureConsent(raw);
+    return true;
   } catch {
+    // A non-absent malformed/future primary proof is authoritative and must not
+    // revive a potentially stale legacy grant.
     return false;
   }
-  if (raw) {
-    try {
-      const parsed: unknown = JSON.parse(raw);
-      const normalized = normalizePhotoCaptureConsent(parsed);
-      if (!normalized) {
-        await removePrivateItem(CAPTURE_RECORD_KEY).catch(() => undefined);
-        return getFlag(CAPTURE_KEY);
-      }
-      if (JSON.stringify(parsed) !== JSON.stringify(normalized)) {
-        await setPrivateItem(CAPTURE_RECORD_KEY, JSON.stringify(normalized)).catch(() => undefined);
-      }
-      return true;
-    } catch {
-      await removePrivateItem(CAPTURE_RECORD_KEY).catch(() => undefined);
-      return getFlag(CAPTURE_KEY);
-    }
-  }
-  return getFlag(CAPTURE_KEY);
 }
 
 async function setPhotoCaptureConsentLocal(): Promise<void> {
@@ -125,16 +155,17 @@ async function setPhotoCaptureConsentLocal(): Promise<void> {
     Crypto.CryptoDigestAlgorithm.SHA256,
     PHOTO_CAPTURE_CONSENT.fullText,
   );
-  await setPrivateItem(
-    CAPTURE_RECORD_KEY,
-    JSON.stringify({
+  const consent: LocalPhotoCaptureConsent = {
       type: 'photo_capture',
       granted: true,
       version: PHOTO_CAPTURE_CONSENT.version,
       consentTextHash,
       recordedAt: new Date().toISOString(),
-    } satisfies LocalPhotoCaptureConsent),
-  );
+  };
+  await updatePrivateItem(CAPTURE_RECORD_KEY, (current) => {
+    if (current !== null) decodePhotoCaptureConsent(current);
+    return encodePhotoCaptureConsent(consent);
+  });
 }
 
 export async function hasPhotoCaptureConsent(): Promise<boolean> {

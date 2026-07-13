@@ -193,21 +193,21 @@ describe('Ask consent store', () => {
     vi.clearAllMocks();
   });
 
-  it('normalizes legacy consent grants and writes compact canonical flags', async () => {
+  it('reads legacy consent grants without repair and writes versioned flags', async () => {
     mocks.storage.set(CONSENT_KEY, 'true');
 
     await expect(getAskConsentLocal()).resolves.toBe(true);
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('1');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('true');
 
     await setAskConsentLocal(false);
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('0');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
   });
 
-  it('fails closed and repairs malformed ask consent values', async () => {
+  it('fails closed and preserves malformed ask consent values', async () => {
     mocks.storage.set(CONSENT_KEY, 'yes');
 
     await expect(getAskConsentLocal()).resolves.toBe(false);
 
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('0');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('yes');
   });
 });

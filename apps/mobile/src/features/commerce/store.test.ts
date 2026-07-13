@@ -34,22 +34,22 @@ describe('commerce consent store', () => {
     mocks.storage.clear();
   });
 
-  it('normalizes legacy commerce consent grants and writes compact canonical flags', async () => {
+  it('reads legacy commerce consent grants without repair and writes versioned flags', async () => {
     mocks.storage.set(CONSENT_KEY, ' true ');
 
     await expect(getCommerceConsentLocal()).resolves.toBe(true);
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('1');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe(' true ');
 
     await setCommerceConsentLocal(false);
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('0');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
   });
 
-  it('fails closed and repairs malformed commerce consent values', async () => {
+  it('fails closed and preserves malformed commerce consent values', async () => {
     mocks.storage.set(CONSENT_KEY, 'allowed');
 
     await expect(getCommerceConsentLocal()).resolves.toBe(false);
 
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('0');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('allowed');
   });
 
   it('clears the local commerce consent gate', async () => {

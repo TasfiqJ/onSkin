@@ -32,22 +32,22 @@ describe('trend insight store', () => {
     mocks.storage.clear();
   });
 
-  it('normalizes legacy trend grants and writes compact canonical flags', async () => {
+  it('reads legacy trend grants without repair and writes versioned flags', async () => {
     mocks.storage.set(CONSENT_KEY, 'TRUE');
 
     await expect(getTrendInsightsLocal()).resolves.toBe(true);
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('1');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('TRUE');
 
     await setTrendInsightsLocal(false);
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('0');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('v1:0');
   });
 
-  it('fails closed and repairs malformed trend consent values', async () => {
+  it('fails closed and preserves malformed trend consent values', async () => {
     mocks.storage.set(CONSENT_KEY, 'enabled');
 
     await expect(getTrendInsightsLocal()).resolves.toBe(false);
 
-    expect(mocks.storage.get(CONSENT_KEY)).toBe('0');
+    expect(mocks.storage.get(CONSENT_KEY)).toBe('enabled');
   });
 
   it('deletes derived trend state without changing the consent gate', async () => {
