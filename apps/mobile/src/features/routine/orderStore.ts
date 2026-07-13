@@ -1,8 +1,11 @@
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import type { GeneratedPlan, PlanStep } from './generate';
 
 const STORAGE_KEY = 'routinekind.routineOrder.v1';
+
+export const ROUTINE_ORDER_INVALID = 'ROUTINE_ORDER_INVALID';
+export const ROUTINE_ORDER_UNSUPPORTED_VERSION = 'ROUTINE_ORDER_UNSUPPORTED_VERSION';
 
 export const ROUTINE_ORDER_QUERY_KEY = ['routineOrder', 'v1'] as const;
 
@@ -82,34 +85,35 @@ function hasOverrides(value: RoutineOrderOverrides): boolean {
   return value.am.length > 0 || value.pm.length > 0;
 }
 
-async function persist(value: RoutineOrderOverrides): Promise<void> {
-  if (!hasOverrides(value)) {
-    await removePrivateItem(STORAGE_KEY);
-    return;
-  }
-  await setPrivateItem(STORAGE_KEY, JSON.stringify(value));
-}
-
-export async function loadRoutineOrderOverrides(): Promise<RoutineOrderOverrides> {
-  const raw = await getPrivateItem(STORAGE_KEY);
-  if (!raw) return emptyOverrides();
-
+function decodeOverrides(raw: string): RoutineOrderOverrides {
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
   } catch {
-    await removePrivateItem(STORAGE_KEY);
-    return emptyOverrides();
+    throw new Error(ROUTINE_ORDER_INVALID);
   }
-
+  if (
+    isRecord(parsed) &&
+    typeof parsed.schemaVersion === 'number' &&
+    parsed.schemaVersion > 1
+  ) {
+    throw new Error(ROUTINE_ORDER_UNSUPPORTED_VERSION);
+  }
   const normalized = normalizeOverrides(parsed);
-  if (!normalized) {
-    await removePrivateItem(STORAGE_KEY);
+  if (!normalized) throw new Error(ROUTINE_ORDER_INVALID);
+  if (isRecord(parsed) && parsed.schemaVersion === 1 && normalized.changed) {
+    throw new Error(ROUTINE_ORDER_INVALID);
+  }
+  return normalized.value;
+}
+
+export async function loadRoutineOrderOverrides(): Promise<RoutineOrderOverrides> {
+  try {
+    const raw = await getPrivateItem(STORAGE_KEY);
+    return raw === null ? emptyOverrides() : decodeOverrides(raw);
+  } catch {
     return emptyOverrides();
   }
-
-  if (normalized.changed) await persist(normalized.value);
-  return normalized.value;
 }
 
 export async function saveRoutineOrderOverrides(
@@ -117,7 +121,10 @@ export async function saveRoutineOrderOverrides(
 ): Promise<RoutineOrderOverrides> {
   const normalized = normalizeOverrides(value);
   const next = normalized?.value ?? emptyOverrides();
-  await persist(next);
+  await updatePrivateItem(STORAGE_KEY, (current) => {
+    if (current !== null) decodeOverrides(current);
+    return hasOverrides(next) ? JSON.stringify(next) : null;
+  });
   return next;
 }
 

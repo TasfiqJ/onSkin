@@ -5,20 +5,22 @@ import {
   applyRoutineOrderOverrides,
   loadRoutineOrderOverrides,
   reconcileRoutineSteps,
+  ROUTINE_ORDER_INVALID,
+  ROUTINE_ORDER_UNSUPPORTED_VERSION,
   routineOrderOverrideForPhase,
   saveRoutineOrderOverrides,
 } from './orderStore';
 
 const mocks = vi.hoisted(() => ({
   getPrivateItem: vi.fn(),
-  removePrivateItem: vi.fn(),
-  setPrivateItem: vi.fn(),
+  updatePrivateItem: vi.fn(),
+  storage: new Map<string, string>(),
+  updateFailure: null as Error | null,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: mocks.getPrivateItem,
-  removePrivateItem: mocks.removePrivateItem,
-  setPrivateItem: mocks.setPrivateItem,
+  updatePrivateItem: mocks.updatePrivateItem,
 }));
 
 const KEY = 'routinekind.routineOrder.v1';
@@ -51,11 +53,18 @@ function plan(am: PlanStep[], pm: PlanStep[]): GeneratedPlan {
 describe('routine order persistence', () => {
   beforeEach(() => {
     mocks.getPrivateItem.mockReset();
-    mocks.removePrivateItem.mockReset();
-    mocks.setPrivateItem.mockReset();
-    mocks.getPrivateItem.mockResolvedValue(null);
-    mocks.removePrivateItem.mockResolvedValue(undefined);
-    mocks.setPrivateItem.mockResolvedValue(undefined);
+    mocks.updatePrivateItem.mockReset();
+    mocks.storage.clear();
+    mocks.updateFailure = null;
+    mocks.getPrivateItem.mockImplementation(async (key: string) => mocks.storage.get(key) ?? null);
+    mocks.updatePrivateItem.mockImplementation(
+      async (key: string, updater: (current: string | null) => string | null) => {
+        if (mocks.updateFailure) throw mocks.updateFailure;
+        const next = updater(mocks.storage.get(key) ?? null);
+        if (next === null) mocks.storage.delete(key);
+        else mocks.storage.set(key, next);
+      },
+    );
   });
 
   it('returns an empty versioned record when no preference exists', async () => {
@@ -66,44 +75,45 @@ describe('routine order persistence', () => {
     });
   });
 
-  it('removes malformed or future-version state instead of applying it', async () => {
-    mocks.getPrivateItem.mockResolvedValueOnce('{bad json');
+  it('preserves malformed or future-version state instead of applying it', async () => {
+    const malformed = '{bad json';
+    mocks.storage.set(KEY, malformed);
     await expect(loadRoutineOrderOverrides()).resolves.toEqual({
       schemaVersion: 1,
       am: [],
       pm: [],
     });
-    expect(mocks.removePrivateItem).toHaveBeenCalledWith(KEY);
+    await expect(
+      saveRoutineOrderOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] }),
+    ).rejects.toThrow(ROUTINE_ORDER_INVALID);
+    expect(mocks.storage.get(KEY)).toBe(malformed);
 
-    mocks.getPrivateItem.mockResolvedValueOnce(
-      JSON.stringify({ schemaVersion: 2, am: ['cleanser'], pm: [] }),
-    );
+    const future = JSON.stringify({ schemaVersion: 2, am: ['cleanser'], pm: [] });
+    mocks.storage.set(KEY, future);
     await expect(loadRoutineOrderOverrides()).resolves.toEqual({
       schemaVersion: 1,
       am: [],
       pm: [],
     });
-    expect(mocks.removePrivateItem).toHaveBeenCalledTimes(2);
+    await expect(
+      saveRoutineOrderOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] }),
+    ).rejects.toThrow(ROUTINE_ORDER_UNSUPPORTED_VERSION);
+    expect(mocks.storage.get(KEY)).toBe(future);
   });
 
-  it('repairs duplicate, padded, and invalid product ids while retaining valid choices', async () => {
-    mocks.getPrivateItem.mockResolvedValueOnce(
-      JSON.stringify({ am: [' moisturizer ', 'cleanser', 'cleanser', 4], pm: [null, 'retinol'] }),
-    );
+  it('normalizes legacy ids in memory without rewriting storage during a read', async () => {
+    const legacy = JSON.stringify({
+      am: [' moisturizer ', 'cleanser', 'cleanser', 4],
+      pm: [null, 'retinol'],
+    });
+    mocks.storage.set(KEY, legacy);
 
     await expect(loadRoutineOrderOverrides()).resolves.toEqual({
       schemaVersion: 1,
       am: ['moisturizer', 'cleanser'],
       pm: ['retinol'],
     });
-    expect(mocks.setPrivateItem).toHaveBeenCalledWith(
-      KEY,
-      JSON.stringify({
-        schemaVersion: 1,
-        am: ['moisturizer', 'cleanser'],
-        pm: ['retinol'],
-      }),
-    );
+    expect(mocks.storage.get(KEY)).toBe(legacy);
   });
 
   it('removes storage when both phases return to canonical order', async () => {
@@ -112,12 +122,11 @@ describe('routine order persistence', () => {
       am: [],
       pm: [],
     });
-    expect(mocks.removePrivateItem).toHaveBeenCalledWith(KEY);
-    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 
   it('propagates private-storage failures instead of claiming a save succeeded', async () => {
-    mocks.setPrivateItem.mockRejectedValueOnce(new Error('storage unavailable'));
+    mocks.updateFailure = new Error('storage unavailable');
 
     await expect(
       saveRoutineOrderOverrides({ schemaVersion: 1, am: ['b', 'a'], pm: [] }),
