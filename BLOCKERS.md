@@ -21,6 +21,14 @@ Read this with:
 - `docs/ROADMAP.md`
 - `docs/rebrand-and-core-loop-migration-checklist.md`
 - `docs/FOR_TAS_TO_DO.md`
+- `docs/hugeToDo/IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md`
+- `docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md`
+- `docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md`
+- `docs/hugeToDo/PAY-01-pricing-and-unit-economics-recommendation-2026-07-13.md`
+- `docs/hugeToDo/ACCOUNTS_AND_VENDOR_DECISION_PACKET.md`
+- `docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md`
+- `docs/hugeToDo/IOS-10-EXPORT-COMPLIANCE-GATE.md`
+- `docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md`
 - `LAUNCH_READINESS.md`
 - `docs/brand-decision-memo.md`
 - `docs/brand-evidence.md`
@@ -72,6 +80,10 @@ Read this with:
 4. Apple Developer/App Store Connect and Google OAuth for iPhone are not verified.
 5. Clinical review not complete.
 6. Legal/privacy copy not final.
+   The US Wave 1 privacy and consumer-health packet is a conservative planning
+   gate, not legal clearance. Its federal, state, consumer-health, biometric,
+   minors, subscription, UGC, security, retention, and breach decisions require
+   qualified counsel tied to the actual release data flows and binary.
    Production config now fails closed on these Phase 3 blockers unless
    `PHASE3_RELEASE_CLEARANCE=cleared`; the flag still cannot bypass an
    unresolved, dirty, incomplete, or source-stale reviewer worklist. Keep it
@@ -112,7 +124,7 @@ mirrors are byte-identical and listed in the root source-of-truth docs.
 covers the Phase 2-11 Tas-owned launch evidence gate groups and writes the
 machine-extracted key inventory to `docs/generated/tas-todo-audit.{json,md}`.
 
-Fresh verification through 2026-07-12: `npm run typecheck`, `npm run lint`,
+Broader launch-gate verification retained through 2026-07-12: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,
 `npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`,
 `npm run phase5:verify`, `npm run phase7:verify`, `npm run brand:audit:strict`,
@@ -132,8 +144,9 @@ Phase 5 native-device packet has been refreshed for the current progress
 capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
-confirmation instead of requiring a native alert. The mobile suite currently
-covers 204 mobile test files / 2137 tests. The human-simulated E2E manifest now
+confirmation instead of requiring a native alert. A clean `main` rerun on
+2026-07-13 passes root typecheck, lint, and 209 mobile test files / 2244 tests.
+The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
 `test-results/human-e2e/2026-07-10/progress-timelapse-current/`, plus the
