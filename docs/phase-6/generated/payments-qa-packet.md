@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-13T14:47:22.722Z
-Git SHA: 5ccb42847bd98fb52475cfc49850476924546fa9
+Generated at: 2026-07-13T15:10:51.988Z
+Git SHA: 406645931e9d92b0d816a0560d2fed32e7f63266
 Git status: clean
 
 Strict completion requires real RevenueCat offering review and store restore evidence for every contract-required platform, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -44,7 +44,7 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | Expiration/refund | webhook deactivates entitlement and lifecycle screen downgrades gracefully |
 | Restore | new install restores active subscription and writes verified local cache |
 | Reverse trial | authenticated Edge Function atomically grants exactly once with null product/offering/package identity; server expiry RPC deactivates after 7 days |
-| Win-back | native eligible win-back offer purchases on iOS; unavailable offers are hidden/rerouted |
+| Win-back | approved commercial state is exact: no-offer launch returns unavailable and standard fallback; any later native Apple offer proves eligibility, localized price, purchase, renewal, and fallback |
 | Webhook auth | bad HMAC rejected, stale timestamp rejected, duplicate event id idempotent |
 | Account deletion | mobile copy says deletion does not cancel store billing; server calls RevenueCat delete customer |
 | Finance | $49.99 annual model, refund/churn assumptions, entitlement denial/leakage reviewed |
@@ -59,7 +59,7 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
 | apps/mobile/src/lib/iap/revenuecat.ts | present | 18317 | f89981290f02bc355ca4ac279b9e660c86d480a9c6e54b041a4d600f0468b105 |
 | apps/mobile/src/lib/env.ts | present | 6982 | cee9823ec5d10a90a7dfe0596ce6c9d9b23e3a48d875e7093574b1384a7c1447 |
-| apps/mobile/src/features/subscription/store.ts | present | 18085 | 24f5075ac0540b31c4bf17d66146c9dcc8f66dd99627119f80911baab035a12a |
+| apps/mobile/src/features/subscription/store.ts | present | 18069 | 6ec155fe3fcc419dbee2c35774006fc376519b63991f391e90c587f399701c81 |
 | apps/mobile/src/features/subscription/useEntitlement.ts | present | 8996 | 985461773303cd3a9505999ecfeb4c06d72db0e14fb2a056cbf5394cc6dec7c1 |
 | apps/mobile/src/features/subscription/useSubscriptionOffering.ts | present | 706 | 1652dfe2e6eeb73c7e1ac752fe684465f7083456156a9fc339b122f3a32f752b |
 | apps/mobile/src/app/onboarding/paywall.tsx | present | 13073 | 8431d6eaf1af5b9b3b11929ca846234384beecfeb6606cece8c5b460686530c3 |
@@ -75,10 +75,10 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql | present | 3947 | a88b75b7cfc6cd0fc791d04f466f9ab30b268c892a1603d919f08fe6ae8e2a02 |
 | supabase/migrations/20260713000044_reverse_trial_no_store_identity.sql | present | 4979 | 6644e557e25f9475629b583f16e4db28eb7811ec3a7123eebc3ecb296db8f841 |
 | apps/mobile/src/features/subscription/paywallMobileContracts.test.ts | present | 38547 | 4cfecd7a571a82cda68f8b3f7eabaaa485e79bc00bfd8bc643ab9cbdd1c6072c |
-| apps/mobile/src/features/subscription/store.test.ts | present | 20972 | 954ab74196c4444615884f0d5ef38397bdd98602b010b0c6008afce540bd714d |
+| apps/mobile/src/features/subscription/store.test.ts | present | 20946 | 48f7eaa7af2864c8bf09bf9b458c1104d832b6f055e06e44f409870ceb609881 |
 | apps/mobile/src/features/subscription/entitlement.test.ts | present | 3970 | 2ef807ac5ae4b4bdf0d83e47c3a37c7d1de4eb425c436fec17177991616a273a |
 | apps/mobile/src/features/subscription/serverContracts.test.ts | present | 5589 | 8570de7a1ede32e81b99ec209011db7fd3483971d14d5da33d0c8dfb4718f157 |
-| scripts/phase6/build-payments-qa-packet.mjs | present | 15302 | 1e84ec7975ee3667a974acfbee093be1c07e43036673a854822319e9890c597b |
+| scripts/phase6/build-payments-qa-packet.mjs | present | 15407 | 87d7824d90cb1c3fa5f8abedbf31b7d82346943fbe57ca6904666b9c51e96ad0 |
 | scripts/phase6/check-payments-env.mjs | present | 10888 | a759ca81c4905f1123a8cd62b285279cabf2bb902ea17ac910f41b04827732ef |
 | scripts/phase6/check-payments-env-smoke.mjs | present | 10775 | 1cfdc08c66f9bf5ec1e16443cf5677c5745ebe969171757db2e1bbc9f49acfd2 |
 | scripts/phase2/check-env.mjs | present | 11132 | 520719a738da550be0181335e8175f04f8e8d93c1450b99d2e67546fe9415380 |
@@ -91,8 +91,8 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | docs/USER_FLOW_TREE.md | present | 357258 | a8ee0435bc31e8d32580544586bd1bd36932aa75b8c5cd3dba06c06bb6eabc8d |
 | docs/e2e/generated/human-e2e-manifest.json | present | 38560 | 4c194a4360f1a6376f060c5a2e0fbfcc0249b260b4c84f1771ee260183593832 |
 | docs/e2e/generated/human-e2e-manifest.md | present | 11329 | f4ff33f094697bba7d29bd7eb8596043fd455a90d033ad266bd8385070850d70 |
-| docs/phase-6/payments-runbook.md | present | 4488 | 094cb458ffa75d3efe4882de0d396782fd7aeb78ae1afb976034c9f6d76fa29d |
-| docs/phase-6/payments-qa-checklist.md | present | 4023 | 8d121004e406b383060e0df686710b4da1d2cb6e38c6095b146a4ee7965c02b1 |
+| docs/phase-6/payments-runbook.md | present | 4930 | df69aa37fc10c1d7e82ea7f79ad1f897b99b449b6d33d31ffaf083431fe7927c |
+| docs/phase-6/payments-qa-checklist.md | present | 4421 | 7cecda908ebe97e68dee7a1ee9f03efc44f3299bdd3409250ee991ba39577fa6 |
 | docs/phase-6/phase-6-exit-review.md | present | 2755 | 0ce0003af4a03b66cde2bafe235bae50fbe3a9e66f6ff0b107f74e4c64cd50df |
 
 ## Blockers
