@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase/client';
-import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 /**
  * Local-first notification preferences (docs/07 §7, the D-029 shelf/photos pattern).
@@ -12,6 +13,7 @@ import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage
  * supersedes the Slice-20 local photo-reminder flag (now `captureReminders`).
  */
 const KEY = 'onskin.notifPrefs.v1';
+const SCHEMA_VERSION = 1 as const;
 const REPLENISHMENT_OPT_IN_MARKER = 'replenishmentAlertsOptInConfirmed';
 const HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;
 const TIMEZONE_TEXT = /^[A-Za-z0-9_+\-/.]+$/;
@@ -31,6 +33,14 @@ export type NotifPrefs = {
   promotionalOptIn: boolean;
   lockscreenDiscreet: boolean;
 };
+
+type NotifPrefsEnvelope = {
+  version: typeof SCHEMA_VERSION;
+  prefs: Record<string, unknown>;
+};
+
+export const NOTIF_PREFS_INVALID = 'NOTIF_PREFS_INVALID';
+export const NOTIF_PREFS_UNSUPPORTED_VERSION = 'NOTIF_PREFS_UNSUPPORTED_VERSION';
 
 export const DEFAULT_PREFS: NotifPrefs = {
   amEnabled: true,
@@ -121,29 +131,118 @@ function prefsForStorage(prefs: NotifPrefs): Record<string, unknown> {
   };
 }
 
-export async function loadNotifPrefs(): Promise<NotifPrefs> {
-  let raw: string | null = null;
-  try {
-    raw = await getPrivateItem(KEY);
-  } catch {
-    return DEFAULT_PREFS;
+function failClosedPrefs(): NotifPrefs {
+  return {
+    ...DEFAULT_PREFS,
+    amEnabled: false,
+    pmEnabled: false,
+    streakNudges: false,
+    replenishmentAlerts: false,
+    captureReminders: false,
+    liveActivityEnabled: false,
+    promotionalOptIn: false,
+    timezone: currentDeviceTimezone(),
+  };
+}
+
+function isCurrentStoredPrefs(value: unknown): value is Record<string, unknown> {
+  if (!isRecord(value)) return false;
+  const expectedKeys = [
+    REPLENISHMENT_OPT_IN_MARKER,
+    'amEnabled',
+    'amTime',
+    'captureReminders',
+    'liveActivityEnabled',
+    'lockscreenDiscreet',
+    'pmEnabled',
+    'pmTime',
+    'promotionalOptIn',
+    'quietEnd',
+    'quietStart',
+    'replenishmentAlerts',
+    'streakNudges',
+    'timezone',
+  ].sort();
+  const keys = Object.keys(value).sort();
+  if (keys.length !== expectedKeys.length || keys.some((key, index) => key !== expectedKeys[index])) {
+    return false;
   }
-  if (!raw) return DEFAULT_PREFS;
+  for (const key of [
+    'amEnabled',
+    'pmEnabled',
+    'streakNudges',
+    'replenishmentAlerts',
+    'captureReminders',
+    'liveActivityEnabled',
+    'promotionalOptIn',
+    'lockscreenDiscreet',
+    REPLENISHMENT_OPT_IN_MARKER,
+  ]) {
+    if (typeof value[key] !== 'boolean') return false;
+  }
+  if (value.lockscreenDiscreet !== true) return false;
+  if (value.replenishmentAlerts !== value[REPLENISHMENT_OPT_IN_MARKER]) return false;
+  if (typeof value.amTime !== 'string' || !HH_MM.test(value.amTime)) return false;
+  if (typeof value.pmTime !== 'string' || !HH_MM.test(value.pmTime)) return false;
+  for (const key of ['quietStart', 'quietEnd']) {
+    const time = value[key];
+    if (!(time === null || (typeof time === 'string' && HH_MM.test(time)))) return false;
+  }
+  return (
+    typeof value.timezone === 'string' &&
+    value.timezone.length > 0 &&
+    value.timezone.length <= 128 &&
+    TIMEZONE_TEXT.test(value.timezone)
+  );
+}
+
+function decodeNotifPrefs(raw: string): NotifPrefs {
+  let parsed: unknown;
   try {
-    const parsed: unknown = JSON.parse(raw);
-    if (!isRecord(parsed)) {
-      await removePrivateItem(KEY).catch(() => undefined);
-      return DEFAULT_PREFS;
-    }
-    const normalized = normalizeNotifPrefs(parsed);
-    const stored = prefsForStorage(normalized);
-    if (JSON.stringify(parsed) !== JSON.stringify(stored)) {
-      await setPrivateItem(KEY, JSON.stringify(stored)).catch(() => undefined);
-    }
-    return normalized;
+    parsed = JSON.parse(raw) as unknown;
   } catch {
-    await removePrivateItem(KEY).catch(() => undefined);
-    return DEFAULT_PREFS;
+    throw new Error(NOTIF_PREFS_INVALID);
+  }
+  if (!isRecord(parsed)) throw new Error(NOTIF_PREFS_INVALID);
+
+  if (Object.prototype.hasOwnProperty.call(parsed, 'version')) {
+    if (parsed.version !== SCHEMA_VERSION) {
+      if (
+        typeof parsed.version === 'number' &&
+        Number.isSafeInteger(parsed.version) &&
+        parsed.version > SCHEMA_VERSION
+      ) {
+        throw new Error(NOTIF_PREFS_UNSUPPORTED_VERSION);
+      }
+      throw new Error(NOTIF_PREFS_INVALID);
+    }
+    const keys = Object.keys(parsed).sort();
+    if (keys.length !== 2 || keys[0] !== 'prefs' || keys[1] !== 'version') {
+      throw new Error(NOTIF_PREFS_INVALID);
+    }
+    if (!isCurrentStoredPrefs(parsed.prefs)) throw new Error(NOTIF_PREFS_INVALID);
+    return normalizeNotifPrefs(parsed.prefs);
+  }
+
+  // Pre-envelope records retain their forgiving compatibility normalization.
+  return normalizeNotifPrefs(parsed);
+}
+
+function encodeNotifPrefs(prefs: NotifPrefs): string {
+  return JSON.stringify({
+    version: SCHEMA_VERSION,
+    prefs: prefsForStorage(prefs),
+  } satisfies NotifPrefsEnvelope);
+}
+
+export async function loadNotifPrefs(): Promise<NotifPrefs> {
+  try {
+    const raw = await getPrivateItem(KEY);
+    return raw === null ? { ...DEFAULT_PREFS, timezone: currentDeviceTimezone() } : decodeNotifPrefs(raw);
+  } catch {
+    // Corrupt, unsupported, or unavailable private state disables every optional
+    // notification instead of silently treating it as fresh opt-in state.
+    return failClosedPrefs();
   }
 }
 
@@ -154,23 +253,27 @@ function toDbTime(hm: string | null): string | null {
 /** Best-effort mirror to the owner-only `notification_preferences` row (B-SUPABASE). */
 async function mirror(p: NotifPrefs): Promise<void> {
   try {
-    const { data: u } = await supabase.auth.getUser();
-    if (!u.user?.id) return;
-    await supabase.from('notification_preferences').upsert({
-      user_id: u.user.id,
-      am_reminder_time: toDbTime(p.amTime),
-      pm_reminder_time: toDbTime(p.pmTime),
-      am_reminder_enabled: p.amEnabled,
-      pm_reminder_enabled: p.pmEnabled,
-      streak_nudges: p.streakNudges,
-      replenishment_alerts: p.replenishmentAlerts,
-      capture_reminders: p.captureReminders,
-      quiet_hours_start: toDbTime(p.quietStart),
-      quiet_hours_end: toDbTime(p.quietEnd),
-      timezone: p.timezone,
-      live_activity_enabled: p.liveActivityEnabled,
-      promotional_opt_in: p.promotionalOptIn,
-      lockscreen_discreet: p.lockscreenDiscreet,
+    await runAccountGenerationOperation(async (lease) => {
+      const { data: u } = await supabase.auth.getUser();
+      lease.assertCurrent();
+      if (!u.user?.id) return;
+      await supabase.from('notification_preferences').upsert({
+        user_id: u.user.id,
+        am_reminder_time: toDbTime(p.amTime),
+        pm_reminder_time: toDbTime(p.pmTime),
+        am_reminder_enabled: p.amEnabled,
+        pm_reminder_enabled: p.pmEnabled,
+        streak_nudges: p.streakNudges,
+        replenishment_alerts: p.replenishmentAlerts,
+        capture_reminders: p.captureReminders,
+        quiet_hours_start: toDbTime(p.quietStart),
+        quiet_hours_end: toDbTime(p.quietEnd),
+        timezone: p.timezone,
+        live_activity_enabled: p.liveActivityEnabled,
+        promotional_opt_in: p.promotionalOptIn,
+        lockscreen_discreet: p.lockscreenDiscreet,
+      });
+      lease.assertCurrent();
     });
   } catch {
     /* best-effort until backend configured */
@@ -178,18 +281,22 @@ async function mirror(p: NotifPrefs): Promise<void> {
 }
 
 export async function saveNotifPrefs(patch: Partial<NotifPrefs>): Promise<NotifPrefs> {
-  const current = await loadNotifPrefs();
   const normalizedPatch = normalizeNotifPatch(patch);
-  const replenishmentOptInConfirmed =
-    'replenishmentAlerts' in normalizedPatch
-      ? normalizedPatch.replenishmentAlerts === true
-      : current.replenishmentAlerts;
-  const next = normalizeNotifPrefs({
-    ...current,
-    ...normalizedPatch,
-    [REPLENISHMENT_OPT_IN_MARKER]: replenishmentOptInConfirmed,
+  let next: NotifPrefs | null = null;
+  await updatePrivateItem(KEY, (currentRaw) => {
+    const current = currentRaw === null ? normalizeNotifPrefs() : decodeNotifPrefs(currentRaw);
+    const replenishmentOptInConfirmed =
+      'replenishmentAlerts' in normalizedPatch
+        ? normalizedPatch.replenishmentAlerts === true
+        : current.replenishmentAlerts;
+    next = normalizeNotifPrefs({
+      ...current,
+      ...normalizedPatch,
+      [REPLENISHMENT_OPT_IN_MARKER]: replenishmentOptInConfirmed,
+    });
+    return encodeNotifPrefs(next);
   });
-  await setPrivateItem(KEY, JSON.stringify(prefsForStorage(next)));
+  if (!next) throw new Error('NOTIF_PREFS_WRITE_FAILED');
   void mirror(next);
   return next;
 }
