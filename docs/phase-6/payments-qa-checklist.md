@@ -49,8 +49,14 @@
 
 ## Win-Back
 
-- Eligible iOS win-back offer displays native offer price.
-- Ineligible users do not see a fake discount.
+- The recorded PAY-01 launch state is tested exactly: no offer configured, or a
+  specifically approved native Apple offer.
+- For the recommended no-offer launch, eligible and ineligible discovery both
+  return unavailable and route to the standard Pro offer without showing a
+  discount.
+- If an offer is later approved and configured, an eligible user sees the
+  native localized offer price and purchase grants Pro only from RevenueCat
+  `CustomerInfo`; an ineligible user sees the truthful fallback.
 - Android or unsupported OS routes to the standard Pro offer.
 
 ## Account Deletion

@@ -99,7 +99,7 @@ const scenarios = [
   ],
   [
     'Win-back',
-    'native eligible win-back offer purchases on iOS; unavailable offers are hidden/rerouted',
+    'approved commercial state is exact: no-offer launch returns unavailable and standard fallback; any later native Apple offer proves eligibility, localized price, purchase, renewal, and fallback',
   ],
   ['Webhook auth', 'bad HMAC rejected, stale timestamp rejected, duplicate event id idempotent'],
   [

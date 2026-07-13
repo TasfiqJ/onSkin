@@ -17,6 +17,13 @@ Required dashboard configuration:
 - Webhook signing: enabled with `REVENUECAT_WEBHOOK_SIGNING_SECRET`
 - Webhook Authorization header: set to `REVENUECAT_WEBHOOK_AUTH` as defense in depth
 
+Launch win-back posture follows the approved PAY-01 commercial state. The
+current recommendation is **no win-back offer configured at launch**: discovery
+must return unavailable and route to the standard Pro offer without inventing a
+discount. If a later founder-approved native Apple win-back offer is enabled,
+reopen PAY-08 and verify eligibility, localized price, purchase, renewal, and
+fallback on supported iOS versions before release.
+
 Production environment:
 
 - `EXPO_PUBLIC_REVENUECAT_IOS_KEY`
