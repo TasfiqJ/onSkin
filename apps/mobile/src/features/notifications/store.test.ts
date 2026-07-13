@@ -1,6 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
+} from '@/lib/auth/accountGeneration';
+
+import {
   currentDeviceTimezone,
   DEFAULT_PREFS,
   loadNotifPrefs,
@@ -226,6 +232,28 @@ describe('notification lock-screen privacy preference', () => {
     await expect(saveNotifPrefs({ pmEnabled: false })).rejects.toThrow('PRIVATE_WRITE_FAILED');
 
     expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.upsert).not.toHaveBeenCalled();
+  });
+
+  it('does not publish an old preference mirror after an account boundary begins', async () => {
+    let releaseUser!: () => void;
+    const userGate = new Promise<void>((resolve) => {
+      releaseUser = resolve;
+    });
+    mocks.getUser.mockImplementationOnce(async () => {
+      await userGate;
+      return { data: { user: { id: 'user-1' } } };
+    });
+
+    await saveNotifPrefs({ amEnabled: false });
+    beginAccountGenerationBoundary();
+    try {
+      releaseUser();
+      await waitForAccountGenerationOperationsToSettle();
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
     expect(mocks.upsert).not.toHaveBeenCalled();
   });
 });
