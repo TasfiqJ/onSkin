@@ -2,11 +2,15 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 
 import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
-import { getAppleAuthorizationCodeForRevocation } from '@/lib/auth/apple';
+import {
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
+import { getAppleAuthorizationCodeForRevocation, userHasAppleIdentity } from '@/lib/auth/apple';
 import { BRAND } from '@/lib/brand';
 import { recordConsent } from '@/lib/consent/consent';
 import { isSupabaseConfigured } from '@/lib/env';
+import { invokeEdgeFunction } from '@/lib/network/edgeFunctions';
 import {
   cleanupPlaintextStaging,
   markPlaintextStagingState,
@@ -23,6 +27,8 @@ import {
 const DATA_RIGHTS_BACKEND_UNAVAILABLE = 'DATA_RIGHTS_BACKEND_UNAVAILABLE';
 const DATA_EXPORT_USER_UNAVAILABLE = 'DATA_EXPORT_USER_UNAVAILABLE';
 const DATA_EXPORT_RESPONSE_OWNER_MISMATCH = 'DATA_EXPORT_RESPONSE_OWNER_MISMATCH';
+const ACCOUNT_DELETION_USER_UNAVAILABLE = 'ACCOUNT_DELETION_USER_UNAVAILABLE';
+const APPLE_REAUTHORIZATION_REQUIRED = 'APPLE_REAUTHORIZATION_REQUIRED';
 
 function assertDataRightsBackendAvailable(): void {
   if (!isSupabaseConfigured) throw new Error(DATA_RIGHTS_BACKEND_UNAVAILABLE);
@@ -31,19 +37,48 @@ function assertDataRightsBackendAvailable(): void {
 // Account deletion (Apple 5.1.1(v) / docs/01 §4): calls the service-role Edge
 // Function which revokes the SIWA token, deletes the auth user (FK-cascades all
 // tables), purges Storage, and removes the RC/PostHog records, then signs out.
+async function requestAccountDeletion(lease: AccountGenerationLease): Promise<void> {
+  const { data, error: userError } = await supabase.auth.getUser();
+  lease.assertCurrent();
+  if (userError || !data.user) throw new Error(ACCOUNT_DELETION_USER_UNAVAILABLE);
+
+  let appleAuthorizationCode: string | null = null;
+  if (userHasAppleIdentity(data.user)) {
+    // Apple authorization codes are single-use. Cancellation, native failure,
+    // or a blank refresh result must abort before the Edge Function can record
+    // and freeze a deletion request. Every explicit retry reauthenticates again.
+    appleAuthorizationCode = await getAppleAuthorizationCodeForRevocation(data.user);
+    lease.assertCurrent();
+    if (!appleAuthorizationCode) throw new Error(APPLE_REAUTHORIZATION_REQUIRED);
+  }
+  lease.assertCurrent();
+  await invokeEdgeFunction('account-deletion', {
+    method: 'POST',
+    body: appleAuthorizationCode ? { appleAuthorizationCode } : {},
+    signal: lease.signal,
+  });
+  lease.assertCurrent();
+}
+
+async function completeDeletionBoundaryHandoff(
+  lease: AccountGenerationLease,
+  completeLocalSignOut: () => Promise<void>,
+): Promise<void> {
+  const endHandoff = lease.beginBoundaryHandoff();
+  try {
+    await completeLocalSignOut();
+  } finally {
+    endHandoff();
+  }
+}
+
 export async function deleteAccount(completeLocalSignOut: () => Promise<void>): Promise<void> {
   assertDataRightsBackendAvailable();
 
-  const { data } = await supabase.auth.getUser();
-  const appleAuthorizationCode = data.user
-    ? await getAppleAuthorizationCodeForRevocation(data.user).catch(() => null)
-    : null;
-  const { error } = await supabase.functions.invoke('account-deletion', {
-    method: 'POST',
-    body: appleAuthorizationCode ? { appleAuthorizationCode } : {},
+  await runAccountGenerationOperation(async (lease) => {
+    await requestAccountDeletion(lease);
+    await completeDeletionBoundaryHandoff(lease, completeLocalSignOut);
   });
-  if (error) throw error;
-  await completeLocalSignOut();
 }
 
 // Health-data consent withdrawal (docs/01 §4: MHMDA/GDPR right to withdraw,
@@ -57,18 +92,23 @@ export async function withdrawHealthDataConsent(
 ): Promise<void> {
   assertDataRightsBackendAvailable();
 
-  try {
-    await recordConsent({
-      type: 'health_data_collection',
-      granted: false,
-      version: HEALTH_DATA_WITHDRAWAL.version,
-      consentText: HEALTH_DATA_WITHDRAWAL.fullText,
-    });
-  } catch {
-    // The deletion below is the substantive guarantee and runs even if the
-    // consent-ledger write is temporarily unavailable.
-  }
-  await deleteAccount(completeLocalSignOut);
+  await runAccountGenerationOperation(async (lease) => {
+    try {
+      await recordConsent({
+        type: 'health_data_collection',
+        granted: false,
+        version: HEALTH_DATA_WITHDRAWAL.version,
+        consentText: HEALTH_DATA_WITHDRAWAL.fullText,
+      });
+      lease.assertCurrent();
+    } catch {
+      // Ordinary ledger outages do not weaken deletion, but a boundary makes
+      // this assertion fail so an owner-A withdrawal can never delete owner B.
+      lease.assertCurrent();
+    }
+    await requestAccountDeletion(lease);
+    await completeDeletionBoundaryHandoff(lease, completeLocalSignOut);
+  });
 }
 
 // GDPR Art. 20 export (docs/01 §4): the Edge Function assembles a JSON bundle;
@@ -147,9 +187,9 @@ export async function exportData(): Promise<boolean> {
       'backend_not_configured';
 
     if (expectedUserId) {
-      let response;
+      let responseData: unknown;
       try {
-        response = await supabase.functions.invoke('data-export', {
+        responseData = await invokeEdgeFunction('data-export', {
           method: 'POST',
           signal: lease.signal,
         });
@@ -158,8 +198,7 @@ export async function exportData(): Promise<boolean> {
         throw error;
       }
       lease.assertCurrent();
-      if (response.error) throw response.error;
-      serverAccountData = parseServerExport(response.data, expectedUserId);
+      serverAccountData = parseServerExport(responseData, expectedUserId);
       serverAccountDataStatus = 'included';
     }
 

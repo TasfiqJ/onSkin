@@ -1,4 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
 
 import { deriveState, type StoredEntitlement } from './entitlement';
 import {
@@ -25,6 +30,8 @@ const mocks = vi.hoisted(() => ({
     revenueCatReverseTrialProductId: 'routinekind_pro_reverse_trial_local',
   },
   isSupabaseConfigured: false,
+  getUser: vi.fn(),
+  getSession: vi.fn(),
   invoke: vi.fn(),
 }));
 
@@ -57,29 +64,28 @@ vi.mock('@/lib/storage/privateKV', () => ({
     }
   }),
   updatePrivateItem: vi.fn(
-    (
-      key: string,
-      updater: (current: string | null) => string | null,
-    ): Promise<void> => {
+    (key: string, updater: (current: string | null) => string | null): Promise<void> => {
       const previous = mocks.mutationTails.get(key) ?? Promise.resolve();
-      const operation = previous.catch(() => undefined).then(() => {
-        const readFailure = mocks.nextMutationReadError;
-        if (readFailure) {
-          mocks.nextMutationReadError = null;
-          throw readFailure;
-        }
-        const current = mocks.storage.get(key) ?? null;
-        const next = updater(current);
-        const failure = mocks.nextMutationError;
-        if (failure) {
-          mocks.nextMutationError = null;
-          throw failure;
-        }
-        if (next === current) return;
-        if (next === null) mocks.storage.delete(key);
-        else mocks.storage.set(key, next);
-        mocks.writes += 1;
-      });
+      const operation = previous
+        .catch(() => undefined)
+        .then(() => {
+          const readFailure = mocks.nextMutationReadError;
+          if (readFailure) {
+            mocks.nextMutationReadError = null;
+            throw readFailure;
+          }
+          const current = mocks.storage.get(key) ?? null;
+          const next = updater(current);
+          const failure = mocks.nextMutationError;
+          if (failure) {
+            mocks.nextMutationError = null;
+            throw failure;
+          }
+          if (next === current) return;
+          if (next === null) mocks.storage.delete(key);
+          else mocks.storage.set(key, next);
+          mocks.writes += 1;
+        });
       const settled = operation.then(
         () => undefined,
         () => undefined,
@@ -95,6 +101,10 @@ vi.mock('@/lib/storage/privateKV', () => ({
 
 vi.mock('@/lib/supabase/client', () => ({
   supabase: {
+    auth: {
+      getUser: mocks.getUser,
+      getSession: mocks.getSession,
+    },
     functions: {
       invoke: mocks.invoke,
     },
@@ -132,10 +142,7 @@ function cacheEnvelope(entitlement: Record<string, unknown>, version = 1): strin
   return JSON.stringify({ version, entitlement });
 }
 
-function withoutKey(
-  record: Record<string, unknown>,
-  keyToRemove: string,
-): Record<string, unknown> {
+function withoutKey(record: Record<string, unknown>, keyToRemove: string): Record<string, unknown> {
   return Object.fromEntries(Object.entries(record).filter(([key]) => key !== keyToRemove));
 }
 
@@ -149,9 +156,28 @@ describe('subscription entitlement cache', () => {
     mocks.nextMutationReadError = null;
     mocks.nextMutationError = null;
     mocks.writes = 0;
+    mocks.getUser.mockReset();
+    mocks.getUser.mockResolvedValue({
+      data: { user: { id: 'owner-a' } },
+      error: null,
+    });
+    mocks.getSession.mockReset();
+    mocks.getSession.mockResolvedValue({
+      data: {
+        session: {
+          access_token: 'token-a',
+          user: { id: 'owner-a' },
+        },
+      },
+      error: null,
+    });
     mocks.invoke.mockReset();
     mocks.env.appEnvironment = 'development';
     mocks.isSupabaseConfigured = false;
+  });
+
+  afterEach(() => {
+    endAccountGenerationBoundary();
   });
 
   it('grants and persists a versioned development reverse trial when Supabase is not configured', async () => {
@@ -285,33 +311,27 @@ describe('subscription entitlement cache', () => {
       'an extra envelope key',
       JSON.stringify({ version: 1, entitlement: cachedEntitlement(), extra: true }),
     ],
-    [
-      'a missing entitlement field',
-      cacheEnvelope(withoutKey(cachedEntitlement(), 'priceLabel')),
-    ],
-    [
-      'an extra entitlement field',
-      cacheEnvelope({ ...cachedEntitlement(), extra: true }),
-    ],
-    [
-      'a wrong entitlement field type',
-      cacheEnvelope(cachedEntitlement({ isActive: 'true' })),
-    ],
+    ['a missing entitlement field', cacheEnvelope(withoutKey(cachedEntitlement(), 'priceLabel'))],
+    ['an extra entitlement field', cacheEnvelope({ ...cachedEntitlement(), extra: true })],
+    ['a wrong entitlement field type', cacheEnvelope(cachedEntitlement({ isActive: 'true' }))],
     [
       'a non-canonical entitlement field value',
       cacheEnvelope(cachedEntitlement({ expiresAt: 'not-a-date' })),
     ],
-  ])('classifies a current envelope with %s as corrupt without rewriting it', async (_case, raw) => {
-    mocks.storage.set(KEY, raw);
+  ])(
+    'classifies a current envelope with %s as corrupt without rewriting it',
+    async (_case, raw) => {
+      mocks.storage.set(KEY, raw);
 
-    await expect(readEntitlementCache()).resolves.toEqual({
-      status: 'corrupt',
-      entitlement: null,
-    });
-    await expect(loadEntitlement()).resolves.toBeNull();
-    expect(mocks.storage.get(KEY)).toBe(raw);
-    expect(mocks.writes).toBe(0);
-  });
+      await expect(readEntitlementCache()).resolves.toEqual({
+        status: 'corrupt',
+        entitlement: null,
+      });
+      await expect(loadEntitlement()).resolves.toBeNull();
+      expect(mocks.storage.get(KEY)).toBe(raw);
+      expect(mocks.writes).toBe(0);
+    },
+  );
 
   it('reads the valid legacy key without migrating it during an ordinary read', async () => {
     const legacy = JSON.stringify(cachedEntitlement({ productId: 'legacy-key-product' }));
@@ -368,17 +388,15 @@ describe('subscription entitlement cache', () => {
     expect(mocks.storage.get(KEY)).toBe(raw);
 
     mocks.nextMutationReadError = new Error('PRIVATE_KV_CONTENT_KEY_MISSING');
-    await expect(
-      saveVerifiedEntitlement(cachedEntitlement() as StoredEntitlement),
-    ).rejects.toThrow('PRIVATE_KV_CONTENT_KEY_MISSING');
+    await expect(saveVerifiedEntitlement(cachedEntitlement() as StoredEntitlement)).rejects.toThrow(
+      'PRIVATE_KV_CONTENT_KEY_MISSING',
+    );
     expect(mocks.storage.get(KEY)).toBe(raw);
     expect(mocks.writes).toBe(0);
   });
 
   it('normalizes an active cache without verification to inactive in memory only', async () => {
-    const raw = JSON.stringify(
-      cachedEntitlement({ source: 'revenuecat', verifiedAt: null }),
-    );
+    const raw = JSON.stringify(cachedEntitlement({ source: 'revenuecat', verifiedAt: null }));
     mocks.storage.set(KEY, raw);
 
     await expect(loadEntitlement()).resolves.toMatchObject({
@@ -473,23 +491,21 @@ describe('subscription entitlement cache', () => {
     const malformed = '{not-json';
     mocks.storage.set(KEY, malformed);
 
-    await expect(
-      saveVerifiedEntitlement(cachedEntitlement() as StoredEntitlement),
-    ).rejects.toThrow(ENTITLEMENT_CACHE_INVALID);
+    await expect(saveVerifiedEntitlement(cachedEntitlement() as StoredEntitlement)).rejects.toThrow(
+      ENTITLEMENT_CACHE_INVALID,
+    );
     expect(mocks.storage.get(KEY)).toBe(malformed);
 
     const future = cacheEnvelope(cachedEntitlement(), 2);
     mocks.storage.set(KEY, future);
-    await expect(
-      saveVerifiedEntitlement(cachedEntitlement() as StoredEntitlement),
-    ).rejects.toThrow(ENTITLEMENT_CACHE_UNSUPPORTED_VERSION);
+    await expect(saveVerifiedEntitlement(cachedEntitlement() as StoredEntitlement)).rejects.toThrow(
+      ENTITLEMENT_CACHE_UNSUPPORTED_VERSION,
+    );
     expect(mocks.storage.get(KEY)).toBe(future);
   });
 
   it('keeps the previous cache durable when a verified save fails', async () => {
-    const previous = cacheEnvelope(
-      cachedEntitlement({ productId: 'previous-product' }),
-    );
+    const previous = cacheEnvelope(cachedEntitlement({ productId: 'previous-product' }));
     mocks.storage.set(KEY, previous);
     mocks.nextMutationError = new Error('PRIVATE_KV_WRITE_FAILED');
 
@@ -597,6 +613,52 @@ describe('subscription entitlement cache', () => {
       expiresAt: null,
       isActive: false,
     });
+    expect(mocks.invoke).toHaveBeenCalledWith('subscription-grants', {
+      headers: { Authorization: 'Bearer token-a' },
+      signal: expect.any(AbortSignal),
+      body: { action: 'start_reverse_trial' },
+    });
     await expect(loadEntitlement()).resolves.toMatchObject({ isActive: false });
+  });
+
+  it('does not cache an owner-A reverse trial response after an account boundary begins', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.env.appEnvironment = 'production';
+    let releaseResponse!: (value: unknown) => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    mocks.invoke.mockImplementationOnce(() => {
+      markStarted();
+      return new Promise((resolve) => {
+        releaseResponse = resolve;
+      });
+    });
+
+    const starting = startReverseTrialOnServer();
+    await started;
+    beginAccountGenerationBoundary();
+    releaseResponse({
+      data: {
+        entitlement: {
+          entitlement: 'pro',
+          is_active: true,
+          period_type: 'reverse_trial',
+          store: 'app_granted',
+          product_id: 'owner-a-reverse-trial',
+          expires_at: '2026-07-12T12:00:00.000Z',
+          will_renew: false,
+          original_purchase_at: '2026-07-05T12:00:00.000Z',
+          source: 'server',
+          environment: 'production',
+          verified_at: '2026-07-05T12:00:00.000Z',
+        },
+      },
+      error: null,
+    });
+
+    await expect(starting).rejects.toMatchObject({ kind: 'owner_changed' });
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   conflictCheckAccess,
@@ -19,6 +19,8 @@ vi.mock('@/lib/storage/privateKV', () => ({
 }));
 
 const KEY = 'onskin.subscription.freeConflictCheckRuleIds.v1';
+const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
+const originalDev = runtime.__DEV__;
 
 describe('free conflict-check quota', () => {
   beforeEach(() => {
@@ -37,6 +39,12 @@ describe('free conflict-check quota', () => {
         else mocks.storage.set(key, next);
       },
     );
+  });
+
+  afterEach(() => {
+    if (originalDev === undefined) delete runtime.__DEV__;
+    else runtime.__DEV__ = originalDev;
+    delete process.env.EXPO_PUBLIC_E2E_CONFLICT_QUOTA_STATE;
   });
 
   it('allows and records the first free conflict check', () => {
@@ -187,6 +195,22 @@ describe('free conflict-check quota', () => {
       status: 'unavailable',
       ruleIds: null,
     });
+  });
+
+  it('supports a dev-only unavailable fixture without touching quota bytes', async () => {
+    runtime.__DEV__ = true;
+    process.env.EXPO_PUBLIC_E2E_CONFLICT_QUOTA_STATE = 'unavailable';
+
+    await expect(loadFreeConflictCheckRuleIds()).resolves.toEqual({
+      status: 'unavailable',
+      ruleIds: null,
+    });
+    await expect(recordFreeConflictCheckRuleId('rule-a')).resolves.toEqual({
+      status: 'unavailable',
+      ruleIds: null,
+    });
+    expect(mocks.getPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
   });
 
   it('returns typed unavailable and preserves quota bytes on write failure', async () => {

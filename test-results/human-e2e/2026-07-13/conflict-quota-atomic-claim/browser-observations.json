@@ -1,0 +1,28 @@
+{
+  "date": "2026-07-13",
+  "surface": "expo_web",
+  "browser": "codex_in_app_browser",
+  "configuredViewport": { "width": 390, "height": 844 },
+  "reportedViewport": { "width": 390, "height": 845 },
+  "productsAddedThroughUi": ["Retinol 0.3%", "Lactic Acid 5%"],
+  "firstClaim": {
+    "detailVisible": true,
+    "horizontalOverflowPx": 0
+  },
+  "reopen": {
+    "detailVisible": true,
+    "resolutionControlHeightsPx": [55.99, 48]
+  },
+  "unavailableFixture": {
+    "value": "unavailable",
+    "detailVisible": false,
+    "proGateVisible": true,
+    "horizontalOverflowPx": 0,
+    "visibleControlHeightsPx": [48, 53.99, 61.94, 48, 48, 48]
+  },
+  "exit": {
+    "action": "Maybe later",
+    "destination": "/shelf"
+  },
+  "unexpectedBrowserErrors": 0
+}

@@ -1,5 +1,8 @@
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { env, isSupabaseConfigured } from '@/lib/env';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
+import { invokeEdgeFunction } from '@/lib/network/edgeFunctions';
 import { supabase } from '@/lib/supabase/client';
 import {
   PRIVATE_KV_DECRYPTION_FAILED,
@@ -24,8 +27,7 @@ const LOCAL_REVERSE_TRIAL_DAYS = 7;
 const SCHEMA_VERSION = 1 as const;
 
 export const ENTITLEMENT_CACHE_INVALID = 'ENTITLEMENT_CACHE_INVALID';
-export const ENTITLEMENT_CACHE_UNSUPPORTED_VERSION =
-  'ENTITLEMENT_CACHE_UNSUPPORTED_VERSION';
+export const ENTITLEMENT_CACHE_UNSUPPORTED_VERSION = 'ENTITLEMENT_CACHE_UNSUPPORTED_VERSION';
 
 type EntitlementCacheEnvelope = {
   version: typeof SCHEMA_VERSION;
@@ -335,10 +337,7 @@ function errorMessage(error: unknown): string | null {
 
 function isEntitlementCodecError(error: unknown): boolean {
   const message = errorMessage(error);
-  return (
-    message === ENTITLEMENT_CACHE_INVALID ||
-    message === ENTITLEMENT_CACHE_UNSUPPORTED_VERSION
-  );
+  return message === ENTITLEMENT_CACHE_INVALID || message === ENTITLEMENT_CACHE_UNSUPPORTED_VERSION;
 }
 
 function classifyPrivateReadError(error: unknown): EntitlementCacheRead {
@@ -498,62 +497,102 @@ export async function fetchServerEntitlement(
   assertCurrentOwner: () => void = () => {},
 ): Promise<StoredEntitlement | null> {
   if (!isSupabaseConfigured) return null;
-  let entitlement: StoredEntitlement;
-  try {
-    const { data, error } = await supabase.from('entitlements').select('*').limit(1).maybeSingle();
-    if (error || !data) return null;
-    entitlement = rowToStoredEntitlement(data as EntitlementRow);
-  } catch {
-    return null;
-  }
-  assertCurrentOwner();
-  try {
-    return await saveVerifiedEntitlement(entitlement);
-  } catch {
-    return null;
-  }
+  return runAccountGenerationOperation(async (lease) => {
+    assertCurrentOwner();
+    let owner: Awaited<ReturnType<typeof captureAuthenticatedAccountOwner>>;
+    try {
+      owner = await captureAuthenticatedAccountOwner(lease);
+    } catch {
+      lease.assertCurrent();
+      assertCurrentOwner();
+      return null;
+    }
+    if (!owner) return null;
+    let entitlement: StoredEntitlement;
+    try {
+      const { data, error } = await supabase
+        .from('entitlements')
+        .select('*')
+        .eq('user_id', owner.userId)
+        .limit(1)
+        .maybeSingle();
+      lease.assertCurrent();
+      assertCurrentOwner();
+      if (error || !data) return null;
+      entitlement = rowToStoredEntitlement(data as EntitlementRow);
+    } catch {
+      lease.assertCurrent();
+      assertCurrentOwner();
+      return null;
+    }
+    try {
+      const saved = await saveVerifiedEntitlement(entitlement);
+      lease.assertCurrent();
+      assertCurrentOwner();
+      return saved;
+    } catch {
+      lease.assertCurrent();
+      assertCurrentOwner();
+      return null;
+    }
+  });
 }
 
 export async function startReverseTrialOnServer(
   assertCurrentOwner: () => void = () => {},
 ): Promise<StoredEntitlement> {
-  if (!isSupabaseConfigured) {
-    if (env.appEnvironment !== 'development') {
-      throw new Error('Reverse trial is unavailable until Supabase is configured.');
+  return runAccountGenerationOperation(async (lease) => {
+    assertCurrentOwner();
+    lease.assertCurrent();
+    if (!isSupabaseConfigured) {
+      if (env.appEnvironment !== 'development') {
+        throw new Error('Reverse trial is unavailable until Supabase is configured.');
+      }
+
+      const entitlement = await saveVerifiedEntitlement({
+        tier: 'pro',
+        isActive: true,
+        periodType: 'reverse_trial',
+        store: 'app_granted',
+        productId: env.revenueCatReverseTrialProductId,
+        expiresAt: daysFromNowISO(LOCAL_REVERSE_TRIAL_DAYS),
+        willRenew: false,
+        grantedAt: nowISO(),
+        source: 'app_granted',
+        environment: 'development',
+        managementUrl: null,
+        verifiedAt: nowISO(),
+        offeringId: 'local_reverse_trial',
+        packageId: 'reverse_trial_7d',
+        storeUserId: null,
+        priceLabel: null,
+      });
+      lease.assertCurrent();
+      assertCurrentOwner();
+      return entitlement;
     }
 
+    const data = await invokeEdgeFunction<{ entitlement?: EntitlementRow }>(
+      'subscription-grants',
+      {
+        signal: lease.signal,
+        body: { action: 'start_reverse_trial' },
+      },
+    );
+    lease.assertCurrent();
     assertCurrentOwner();
-    return saveVerifiedEntitlement({
-      tier: 'pro',
-      isActive: true,
-      periodType: 'reverse_trial',
-      store: 'app_granted',
-      productId: env.revenueCatReverseTrialProductId,
-      expiresAt: daysFromNowISO(LOCAL_REVERSE_TRIAL_DAYS),
-      willRenew: false,
-      grantedAt: nowISO(),
-      source: 'app_granted',
-      environment: 'development',
-      managementUrl: null,
-      verifiedAt: nowISO(),
-      offeringId: 'local_reverse_trial',
-      packageId: 'reverse_trial_7d',
-      storeUserId: null,
-      priceLabel: null,
-    });
-  }
 
-  const { data, error } = await supabase.functions.invoke('subscription-grants', {
-    body: { action: 'start_reverse_trial' },
+    const row = data?.entitlement;
+    if (!row) throw new Error('Reverse trial grant did not return an entitlement.');
+
+    const entitlement = rowToStoredEntitlement(row);
+    assertCurrentOwner();
+    lease.assertCurrent();
+    const saved = await saveVerifiedEntitlement(entitlement);
+    lease.assertCurrent();
+    assertCurrentOwner();
+    return saved;
   });
-  if (error) throw error;
-
-  const row = (data as { entitlement?: EntitlementRow })?.entitlement;
-  if (!row) throw new Error('Reverse trial grant did not return an entitlement.');
-
-  const entitlement = rowToStoredEntitlement(row);
-  assertCurrentOwner();
-  return saveVerifiedEntitlement(entitlement);
 }
 
 /** Test/seed reset. */

@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Platform,
@@ -27,6 +27,7 @@ import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
 import { cn } from '@/lib/cn';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isRequestCancellation } from '@/lib/network/requestPolicy';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -64,11 +65,14 @@ function productKey(product: CatalogProductSummary): string {
 
 export default function CatalogSearchScreen() {
   const { update, reset } = useIntake();
+  const isFocused = useIsFocused();
   const { e2eQuery } = useLocalSearchParams<{ e2eQuery?: string | string[] }>();
   const rawE2EQuery = Array.isArray(e2eQuery) ? e2eQuery[0] : (e2eQuery ?? '');
   const initialSearchQuery =
     typeof __DEV__ !== 'undefined' && __DEV__ && Platform.OS === 'web' ? rawE2EQuery : '';
   const autoSearchStarted = useRef(false);
+  const activeSearch = useRef<AbortController | null>(null);
+  const mounted = useRef(true);
   const [query, setQuery] = useState(() => initialSearchQuery.slice(0, 120));
   const [results, setResults] = useState<CatalogProductSummary[]>([]);
   const [message, setMessage] = useState<string | null>(null);
@@ -102,19 +106,33 @@ export default function CatalogSearchScreen() {
       setLastNoMatchQuery(null);
       setMissingProductFeedback(null);
       setWrongMatchFeedback(null);
-      const response = await searchCatalog(cleaned);
-      setResults(response.products ?? []);
-      const noProducts = !response.products?.length;
-      setMessage(
-        response.result === 'offline' || response.result === 'error'
-          ? "Couldn't reach the product catalog. Add this product by hand for now."
-          : !noProducts
-            ? null
-            : 'No catalog match yet. Add it by hand for now.',
-      );
-      if (response.result === 'no_match' && noProducts) setLastNoMatchQuery(cleaned);
-      if (noProducts) track('catalog_lookup_no_match', { lookup_type: 'search' });
-      setSearching(false);
+      activeSearch.current?.abort();
+      const controller = new AbortController();
+      activeSearch.current = controller;
+      try {
+        const response = await searchCatalog(cleaned, { signal: controller.signal });
+        if (controller.signal.aborted) return;
+        setResults(response.products ?? []);
+        const noProducts = !response.products?.length;
+        setMessage(
+          response.result === 'offline' || response.result === 'error'
+            ? "Couldn't reach the product catalog. Add this product by hand for now."
+            : !noProducts
+              ? null
+              : 'No catalog match yet. Add it by hand for now.',
+        );
+        if (response.result === 'no_match' && noProducts) setLastNoMatchQuery(cleaned);
+        if (noProducts) track('catalog_lookup_no_match', { lookup_type: 'search' });
+      } catch (error) {
+        if (controller.signal.aborted || isRequestCancellation(error)) return;
+        setResults([]);
+        setMessage("Couldn't reach the product catalog. Add this product by hand for now.");
+      } finally {
+        if (activeSearch.current === controller) {
+          activeSearch.current = null;
+          if (mounted.current) setSearching(false);
+        }
+      }
     },
     [query, searching],
   );
@@ -124,6 +142,18 @@ export default function CatalogSearchScreen() {
     autoSearchStarted.current = true;
     void runSearch(initialSearchQuery);
   }, [initialSearchQuery, runSearch]);
+
+  useEffect(() => {
+    if (!isFocused) activeSearch.current?.abort();
+  }, [isFocused]);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      activeSearch.current?.abort();
+    };
+  }, []);
 
   const reportMissingProduct = async () => {
     if (!lastNoMatchQuery || reportingMissingProduct) return;

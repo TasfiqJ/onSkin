@@ -1,6 +1,6 @@
 import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -27,6 +27,7 @@ import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
 import { openAppSettings } from '@/lib/navigation/appSettings';
 import { APP_SHELF_ROUTE } from '@/lib/navigation/safeBack';
+import { isRequestCancellation } from '@/lib/network/requestPolicy';
 import { haptics } from '@/theme/haptics';
 
 type ScanState =
@@ -145,6 +146,8 @@ export default function ScanScreen() {
   const [cameraReady, setCameraReady] = useState(false);
   const [settingsOpenFailed, setSettingsOpenFailed] = useState(false);
   const lastScan = useRef<DuplicateBarcodeGate | null>(null);
+  const activeLookup = useRef<AbortController | null>(null);
+  const mounted = useRef(true);
 
   const cameraPermissionMode = devShelfCameraPermissionMode();
   const forceDeniedCameraPermission = cameraPermissionMode === 'denied_no_retry';
@@ -229,14 +232,18 @@ export default function ScanScreen() {
 
     setState({ kind: 'looking_up', barcode: normalized.lookupValue });
     track('barcode_decode_success', { barcode_type: normalized.type });
-    void lookupBarcode(normalized.lookupValue)
+    activeLookup.current?.abort();
+    const controller = new AbortController();
+    activeLookup.current = controller;
+    void lookupBarcode(normalized.lookupValue, { signal: controller.signal })
       .then((response) => {
+        if (controller.signal.aborted) return;
         const scanResult = shelfScanResultFromLookup(response.result);
         void recordShelfScan({
           barcode: normalized.lookupValue,
           result: scanResult,
           matchedProductId: 'product' in response ? response.product.id : null,
-        });
+        }).catch(() => undefined);
 
         if (response.result === 'matched' || response.result === 'external_candidate') {
           setState({
@@ -261,18 +268,42 @@ export default function ScanScreen() {
           reason: 'Lookup failed. Add it another way.',
         });
       })
-      .catch(() => {
+      .catch((error: unknown) => {
+        if (controller.signal.aborted || isRequestCancellation(error)) {
+          if (mounted.current) setState({ kind: 'idle' });
+          return;
+        }
         void recordShelfScan({
           barcode: normalized.lookupValue,
           result: shelfScanResultFromLookup('lookup_error'),
-        });
+        }).catch(() => undefined);
         setState({
           kind: 'error',
           barcode: normalized.lookupValue,
           reason: 'Lookup failed. Add it another way.',
         });
+      })
+      .finally(() => {
+        if (activeLookup.current === controller) {
+          activeLookup.current = null;
+          if (controller.signal.aborted && mounted.current) {
+            setState((current) => (current.kind === 'looking_up' ? { kind: 'idle' } : current));
+          }
+        }
       });
   };
+
+  useEffect(() => {
+    if (!isFocused) activeLookup.current?.abort();
+  }, [isFocused]);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      activeLookup.current?.abort();
+    };
+  }, []);
 
   const requestCamera = () => {
     haptics.select();

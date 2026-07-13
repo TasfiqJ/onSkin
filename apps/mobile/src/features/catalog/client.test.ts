@@ -8,6 +8,8 @@ import {
 } from './client';
 
 const mocks = vi.hoisted(() => ({
+  getSession: vi.fn(),
+  getUser: vi.fn(),
   isSupabaseConfigured: false,
   invoke: vi.fn(),
   track: vi.fn(),
@@ -25,6 +27,10 @@ vi.mock('@/lib/analytics/track', () => ({
 
 vi.mock('@/lib/supabase/client', () => ({
   supabase: {
+    auth: {
+      getSession: mocks.getSession,
+      getUser: mocks.getUser,
+    },
     functions: {
       invoke: mocks.invoke,
     },
@@ -207,6 +213,13 @@ describe('catalog client E2E fixtures', () => {
     mocks.isSupabaseConfigured = false;
     mocks.invoke.mockClear();
     mocks.track.mockClear();
+    mocks.getUser.mockReset();
+    mocks.getSession.mockReset();
+    mocks.getUser.mockResolvedValue({ data: { user: { id: 'account-a' } }, error: null });
+    mocks.getSession.mockResolvedValue({
+      data: { session: { access_token: 'token-a', user: { id: 'account-a' } } },
+      error: null,
+    });
     delete process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT;
   });
 
@@ -214,6 +227,7 @@ describe('catalog client E2E fixtures', () => {
     if (originalDev === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = originalDev;
     delete process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT;
+    delete process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_DELAY_MS;
   });
 
   it('supports a dev-only catalog search no-match fixture', async () => {
@@ -274,6 +288,29 @@ describe('catalog client E2E fixtures', () => {
     expect(mocks.track).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
+
+  it('lets a route cancellation stop a delayed dev search without publishing a result', async () => {
+    vi.useFakeTimers();
+    try {
+      process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT = 'no_match';
+      process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_DELAY_MS = '1500';
+      const controller = new AbortController();
+      const request = searchCatalog('ceramide', { signal: controller.signal });
+
+      controller.abort();
+      await vi.runAllTimersAsync();
+
+      await expect(request).resolves.toEqual({
+        result: 'error',
+        products: [],
+        manualFallback: true,
+      });
+      expect(mocks.track).not.toHaveBeenCalled();
+      expect(mocks.invoke).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });
 
 describe('catalog issue reporting', () => {
@@ -281,6 +318,13 @@ describe('catalog issue reporting', () => {
     mocks.isSupabaseConfigured = false;
     mocks.invoke.mockReset();
     mocks.track.mockClear();
+    mocks.getUser.mockReset();
+    mocks.getSession.mockReset();
+    mocks.getUser.mockResolvedValue({ data: { user: { id: 'account-a' } }, error: null });
+    mocks.getSession.mockResolvedValue({
+      data: { session: { access_token: 'token-a', user: { id: 'account-a' } } },
+      error: null,
+    });
   });
 
   it('tracks only correction type and falls back safely while offline', async () => {
@@ -338,6 +382,8 @@ describe('catalog issue reporting', () => {
           route: 'shelf_detail',
         },
       },
+      headers: { Authorization: 'Bearer token-a' },
+      signal: expect.any(AbortSignal),
     });
   });
 
@@ -379,6 +425,8 @@ describe('catalog issue reporting', () => {
           route: 'shelf_no_match',
         },
       },
+      headers: { Authorization: 'Bearer token-a' },
+      signal: expect.any(AbortSignal),
     });
   });
 });

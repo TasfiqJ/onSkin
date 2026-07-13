@@ -15,6 +15,9 @@ export type AccountGenerationLease = Readonly<{
   generation: number;
   signal: AbortSignal;
   assertCurrent: () => void;
+  /** Terminal handoff into account isolation. Removes only this operation from
+   * drain tracking, starts the boundary synchronously, and returns its release. */
+  beginBoundaryHandoff: () => () => void;
 }>;
 
 type ActiveAccountGenerationOperation = {
@@ -49,10 +52,22 @@ export function runAccountGenerationOperation<T>(
 
   const controller = new AbortController();
   let lease!: AccountGenerationLease;
+  let activeOperation!: ActiveAccountGenerationOperation;
   lease = Object.freeze({
     generation: accountGeneration,
     signal: controller.signal,
     assertCurrent: () => assertAccountGenerationLease(lease),
+    beginBoundaryHandoff: () => {
+      assertAccountGenerationLease(lease);
+      if (!activeOperations.delete(activeOperation)) throw invalidLeaseError();
+      beginAccountGenerationBoundary();
+      let released = false;
+      return () => {
+        if (released) return;
+        released = true;
+        endAccountGenerationBoundary();
+      };
+    },
   });
 
   let resolveCompletion!: (value: T | PromiseLike<T>) => void;
@@ -61,7 +76,7 @@ export function runAccountGenerationOperation<T>(
     resolveCompletion = resolve;
     rejectCompletion = reject;
   });
-  const activeOperation: ActiveAccountGenerationOperation = {
+  activeOperation = {
     completion,
     controller,
   };

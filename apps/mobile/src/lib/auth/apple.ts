@@ -34,6 +34,15 @@ function getAppleSubject(user: User): string | null {
   return null;
 }
 
+export function userHasAppleIdentity(user: User): boolean {
+  const providers = user.app_metadata?.providers;
+  return (
+    user.app_metadata?.provider === 'apple' ||
+    (Array.isArray(providers) && providers.includes('apple')) ||
+    Boolean(user.identities?.some((identity) => identity.provider === 'apple'))
+  );
+}
+
 export async function getAppleAuthorizationCodeForRevocation(user: User): Promise<string | null> {
   const appleUser = getAppleSubject(user);
   if (!appleUser) return null;

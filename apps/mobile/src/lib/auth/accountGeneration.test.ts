@@ -160,4 +160,38 @@ describe('account generation operations', () => {
     await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
     expect(failedLease.signal.aborted).toBe(false);
   });
+
+  it('atomically hands a terminal operation into a boundary without drain deadlock', async () => {
+    let finishHandoff!: () => void;
+    const handoffFinished = new Promise<void>((resolve) => {
+      finishHandoff = resolve;
+    });
+    let handoffStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      handoffStarted = resolve;
+    });
+
+    const operation = runAccountGenerationOperation(async (lease) => {
+      const endHandoff = lease.beginBoundaryHandoff();
+      handoffStarted();
+      try {
+        await handoffFinished;
+      } finally {
+        endHandoff();
+      }
+      return 'signed-out';
+    });
+    await started;
+
+    await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+    await expect(runAccountGenerationOperation(async () => 'wrong-owner')).rejects.toBeInstanceOf(
+      AccountGenerationLeaseError,
+    );
+
+    finishHandoff();
+    await expect(operation).resolves.toBe('signed-out');
+    await expect(runAccountGenerationOperation(async () => 'next-owner')).resolves.toBe(
+      'next-owner',
+    );
+  });
 });

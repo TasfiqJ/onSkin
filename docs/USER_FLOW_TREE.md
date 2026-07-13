@@ -649,6 +649,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Evidence: Screenshot, visible-text snapshot, console/network log snapshot, route snapshot, and control-geometry snapshot.
   - Current local evidence: 2026-07-08 in-app browser Expo web at 320 x 568 uses `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=no_match`, searches `definitely missing sunscreen`, verifies the no-match copy offers `Add by hand`, and confirms the fallback opens `/shelf/manual` with zero horizontal overflow and 50 px+ visible controls. Evidence is in `test-results/human-e2e/2026-07-08/shelf-add-recovery-current/`.
   - Current missing-product report evidence: 2026-07-09 Codex in-app browser Expo web uses `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=no_match` at 390 x 844 to search `definitely missing sunscreen`, verifies `Report missing product` is a 155 x 48 px hit-testable action, taps it, sees inline `Report not sent` feedback with no JavaScript dialog or current-route warn/error logs, and continues through `Add by hand` with the missing query preserved in Product name. A 360 x 640 support-floor spot check verifies Back, Search, Report missing product, and Add by hand remain fully visible, 48 px+, center-hit-testable, and at zero horizontal overflow. Evidence and report are in `test-results/human-e2e/2026-07-09/catalog-missing-product-report-current/`; live Supabase report insertion remains environment QA.
+- Branch: catalog request cancellation and recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Start a deliberately delayed catalog search, leave the route while Search is pending, wait beyond the response delay, then re-enter and search again.
+  - Expected result: The pending request is aborted on blur/unmount, no stale result or analytics outcome is published into the destination route, Search does not remain stuck disabled, and a fresh search can complete normally after re-entry.
+  - Evidence: Pending-state screenshot, destination URL/screenshot after the delayed response would have completed, recovery search screenshot, browser logs, and focused cancellation tests.
+  - Current local evidence: 2026-07-13 Codex in-app browser Expo web at 390 x 844 uses `EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT=no_match` plus a 1.5 s dev-only delay. It starts `different cleanser`, confirms Search is disabled while pending, taps Back, remains on `/shelf` after waiting beyond the delay with no stale result publication, then re-enters `/shelf/search`, completes `recovery`, and sees Search re-enabled with the expected no-match state and zero horizontal overflow. Evidence is in `test-results/human-e2e/2026-07-13/opt-118-catalog-request-cancellation/`; native camera blur/interruption and live controlled-network evidence remain device/backend QA.
 - Branch: wrong catalog match before add
   - Priority: Critical
   - Automate later: Yes
@@ -1378,6 +1385,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The sheet stays open, exposes an accessibility alert that the choice was not saved, emits no success navigation/analytics, leaves the previous schedule and prompt state unchanged, prevents duplicate submits while pending, and succeeds on retry.
   - Evidence: Screenshot, encrypted-storage snapshot, route state, and analytics/network log.
   - Current local evidence: The one-shot private-KV fixture retained the exact route, exposed `Choice not saved`, kept both retry controls complete, preserved the prior accepted choice, and persisted Use together on retry. Pending-state disabling was observed before the delayed rejection. The local run does not replace native encrypted-storage or live analytics/network QA.
+- Branch: free conflict quota claim or storage failure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: As a free user, open the first unresolved exact-pair conflict, return to Shelf and reopen it, then repeat with conflict-quota storage forced unavailable.
+  - Expected result: The first detail is not revealed until the single free claim is durably reserved; reopening the claimed exact pair remains allowed; corrupt, future, or unavailable quota state never becomes a fresh free allowance and never reveals private conflict detail; the fail-closed Pro gate can exit to Shelf.
+  - Evidence: First-claim and reopen screenshots, failure-fixture screenshot, destination snapshot, control geometry, focused 100-way atomic-claim tests, and browser logs.
+  - Current local evidence: 2026-07-13 Codex in-app browser Expo web at 390 x 844 adds Retinol 0.3% and Lactic Acid 5% through the real manual Shelf flow, opens and reopens the exact Retinoid × AHA detail with 48 px+ resolution actions, then restarts with `EXPO_PUBLIC_E2E_CONFLICT_QUOTA_STATE=unavailable`. The unavailable branch hides all exact-pair guidance, shows the Pro gate at zero horizontal overflow, and `Maybe later` returns to `/shelf`. Evidence is in `test-results/human-e2e/2026-07-13/conflict-quota-atomic-claim/`; native encrypted-storage/restart and live entitlement evidence remain device/backend QA.
 - Branch: stale version, safety row, or mismatched pair identity
   - Priority: Critical
   - Automate later: Yes

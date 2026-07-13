@@ -3,7 +3,8 @@ import type { PaoSource } from '@onskin/types';
 import type { ProductCategory } from '@/features/shelf/categories';
 import { track } from '@/lib/analytics/track';
 import { isSupabaseConfigured } from '@/lib/env';
-import { supabase } from '@/lib/supabase/client';
+import { invokeEdgeFunction } from '@/lib/network/edgeFunctions';
+import { isRequestCancellation, RequestPolicyError } from '@/lib/network/requestPolicy';
 
 import type { CatalogQualityGrade } from './quality';
 
@@ -225,29 +226,79 @@ function devCatalogSearchFixture():
   return null;
 }
 
-export async function lookupBarcode(barcode: string): Promise<CatalogLookupResponse> {
+async function waitForDevCatalogSearchDelay(signal: AbortSignal | undefined): Promise<void> {
+  if (!isDevRuntime()) return;
+  const delayMs = Number(process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_DELAY_MS);
+  if (!Number.isFinite(delayMs) || delayMs <= 0) return;
+
+  await new Promise<void>((resolve) => {
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const finish = () => {
+      if (timeout) clearTimeout(timeout);
+      signal?.removeEventListener('abort', finish);
+      resolve();
+    };
+    timeout = setTimeout(finish, Math.min(delayMs, 10_000));
+    if (signal?.aborted) finish();
+    else signal?.addEventListener('abort', finish, { once: true });
+  });
+}
+
+type CatalogRequestOptions = Readonly<{ signal?: AbortSignal }>;
+
+function unavailableResult(error: unknown): 'error' | 'offline' {
+  return error instanceof RequestPolicyError && error.kind === 'offline' ? 'offline' : 'error';
+}
+
+export async function lookupBarcode(
+  barcode: string,
+  options: CatalogRequestOptions = {},
+): Promise<CatalogLookupResponse> {
   if (!isSupabaseConfigured) return { result: 'offline', manualFallback: true };
-  const { data, error } = await supabase.functions.invoke('catalog-lookup', { body: { barcode } });
-  track('catalog_barcode_lookup', { result: error ? 'error' : (data?.result ?? 'unknown') });
-  if (error) return { result: 'error', manualFallback: true };
-  return data as CatalogLookupResponse;
+  try {
+    const data = await invokeEdgeFunction<CatalogLookupResponse>('catalog-lookup', {
+      body: { barcode },
+      signal: options.signal,
+    });
+    track('catalog_barcode_lookup', { result: data?.result ?? 'unknown' });
+    return data ?? { result: 'error', manualFallback: true };
+  } catch (error) {
+    if (isRequestCancellation(error)) throw error;
+    const result = unavailableResult(error);
+    track('catalog_barcode_lookup', { result });
+    return { result, manualFallback: true };
+  }
 }
 
 export async function searchCatalog(
   query: string,
+  options: CatalogRequestOptions = {},
 ): Promise<CatalogLookupResponse & { products?: CatalogProductSummary[] }> {
+  await waitForDevCatalogSearchDelay(options.signal);
+  if (options.signal?.aborted) {
+    return { result: 'error', products: [], manualFallback: true };
+  }
   const fixture = devCatalogSearchFixture();
   if (fixture) {
     track('catalog_search', { result: fixture.result });
     return fixture;
   }
   if (!isSupabaseConfigured) return { result: 'offline', products: [], manualFallback: true };
-  const { data, error } = await supabase.functions.invoke('catalog-search', {
-    body: { query, limit: 12 },
-  });
-  track('catalog_search', { result: error ? 'error' : (data?.result ?? 'unknown') });
-  if (error) return { result: 'error', products: [], manualFallback: true };
-  return data as CatalogLookupResponse & { products?: CatalogProductSummary[] };
+  try {
+    const data = await invokeEdgeFunction<
+      CatalogLookupResponse & { products?: CatalogProductSummary[] }
+    >('catalog-search', {
+      body: { query, limit: 12 },
+      signal: options.signal,
+    });
+    track('catalog_search', { result: data?.result ?? 'unknown' });
+    return data ?? { result: 'error', products: [], manualFallback: true };
+  } catch (error) {
+    if (isRequestCancellation(error)) throw error;
+    const result = unavailableResult(error);
+    track('catalog_search', { result });
+    return { result, products: [], manualFallback: true };
+  }
 }
 
 export type CatalogCorrectionType =
@@ -287,12 +338,20 @@ export async function reportCatalogIssue(input: {
   description?: string | null;
   proposedPayload?: Partial<Record<CatalogReportPayloadKey, CatalogReportScalar>>;
   clientContext?: Partial<Record<CatalogReportContextKey, CatalogReportScalar>>;
-}): Promise<{ ok: boolean; offline?: boolean }> {
+}, options: CatalogRequestOptions = {}): Promise<{ ok: boolean; offline?: boolean }> {
   track('catalog_correction_reported', { correction_type: input.correctionType });
   if (!isSupabaseConfigured) return { ok: false, offline: true };
 
-  const { error } = await supabase.functions.invoke('catalog-report', {
-    body: input,
-  });
-  return { ok: !error };
+  try {
+    await invokeEdgeFunction('catalog-report', { body: input, signal: options.signal });
+    return { ok: true };
+  } catch (error) {
+    if (isRequestCancellation(error)) throw error;
+    return {
+      ok: false,
+      ...(error instanceof RequestPolicyError && error.kind === 'offline'
+        ? { offline: true }
+        : {}),
+    };
+  }
 }

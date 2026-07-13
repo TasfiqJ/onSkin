@@ -6,6 +6,7 @@ import {
   ACCOUNT_GENERATION_CHANGED,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  runAccountGenerationOperation,
   waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 import { BRAND } from '@/lib/brand';
@@ -29,6 +30,7 @@ const mocks = vi.hoisted(() => ({
   collectLocalDeviceExportData: vi.fn(),
   deleteAsync: vi.fn(),
   getAppleAuthorizationCodeForRevocation: vi.fn(),
+  getSession: vi.fn(),
   getUser: vi.fn(),
   invoke: vi.fn(),
   isSupabaseConfigured: true,
@@ -38,6 +40,7 @@ const mocks = vi.hoisted(() => ({
   shareAsync: vi.fn(),
   sharingAvailable: vi.fn(),
   signOut: vi.fn(),
+  userHasAppleIdentity: vi.fn(),
   writeAsStringAsync: vi.fn(),
 }));
 
@@ -60,6 +63,7 @@ vi.mock('@/lib/storage/plaintextStaging', () => ({
 
 vi.mock('@/lib/auth/apple', () => ({
   getAppleAuthorizationCodeForRevocation: mocks.getAppleAuthorizationCodeForRevocation,
+  userHasAppleIdentity: mocks.userHasAppleIdentity,
 }));
 
 vi.mock('@/lib/consent/consent', () => ({
@@ -75,6 +79,7 @@ vi.mock('@/lib/env', () => ({
 vi.mock('@/lib/supabase/client', () => ({
   supabase: {
     auth: {
+      getSession: mocks.getSession,
       getUser: mocks.getUser,
     },
     functions: {
@@ -96,6 +101,7 @@ describe('settings data export', () => {
     mocks.collectLocalDeviceExportData.mockReset();
     mocks.deleteAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
+    mocks.getSession.mockReset();
     mocks.getUser.mockReset();
     mocks.invoke.mockReset();
     mocks.isSupabaseConfigured = true;
@@ -105,6 +111,7 @@ describe('settings data export', () => {
     mocks.shareAsync.mockReset();
     mocks.sharingAvailable.mockReset();
     mocks.signOut.mockReset();
+    mocks.userHasAppleIdentity.mockReset();
     mocks.writeAsStringAsync.mockReset();
     mocks.buildMobileDataExportBundle.mockImplementation((params) => ({
       mobile_export_schema_version: 1,
@@ -132,6 +139,10 @@ describe('settings data export', () => {
     mocks.deleteAsync.mockResolvedValue(undefined);
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
+    mocks.getSession.mockResolvedValue({
+      data: { session: { access_token: 'token-1', user: { id: 'user-1' } } },
+      error: null,
+    });
     mocks.invoke.mockResolvedValue({
       data: { export_schema_version: 2, user_id: 'user-1', account: { id: 'user-1' } },
       error: null,
@@ -140,6 +151,7 @@ describe('settings data export', () => {
     mocks.reservePlaintextStaging.mockResolvedValue(STAGED_EXPORT);
     mocks.markPlaintextStagingState.mockResolvedValue(undefined);
     mocks.signOut.mockResolvedValue(undefined);
+    mocks.userHasAppleIdentity.mockReturnValue(true);
     mocks.writeAsStringAsync.mockResolvedValue(undefined);
   });
 
@@ -153,6 +165,7 @@ describe('settings data export', () => {
       mocks.collectLocalDeviceExportData.mock.invocationCallOrder[0]!,
     );
     expect(mocks.invoke).toHaveBeenCalledWith('data-export', {
+      headers: { Authorization: 'Bearer token-1' },
       method: 'POST',
       signal: expect.any(AbortSignal),
     });
@@ -283,7 +296,7 @@ describe('settings data export', () => {
   it('fails closed when configured server account data cannot be exported', async () => {
     mocks.invoke.mockResolvedValueOnce({ data: null, error: new Error('edge unavailable') });
 
-    await expect(exportData()).rejects.toThrow('edge unavailable');
+    await expect(exportData()).rejects.toThrow('NETWORK_REQUEST_UNKNOWN');
 
     expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
@@ -422,6 +435,7 @@ describe('settings account deletion and consent withdrawal', () => {
   beforeEach(() => {
     mocks.deleteAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
+    mocks.getSession.mockReset();
     mocks.getUser.mockReset();
     mocks.invoke.mockReset();
     mocks.isSupabaseConfigured = true;
@@ -429,12 +443,18 @@ describe('settings account deletion and consent withdrawal', () => {
     mocks.shareAsync.mockReset();
     mocks.sharingAvailable.mockReset();
     mocks.signOut.mockReset();
+    mocks.userHasAppleIdentity.mockReset();
     mocks.writeAsStringAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
+    mocks.getSession.mockResolvedValue({
+      data: { session: { access_token: 'token-1', user: { id: 'user-1' } } },
+      error: null,
+    });
     mocks.invoke.mockResolvedValue({ data: null, error: null });
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.signOut.mockResolvedValue(undefined);
+    mocks.userHasAppleIdentity.mockReturnValue(true);
   });
 
   it('deletes through the backend before handing off to the root account boundary', async () => {
@@ -444,6 +464,8 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
       body: { appleAuthorizationCode: 'apple-revocation-code' },
+      headers: { Authorization: 'Bearer token-1' },
+      signal: expect.any(AbortSignal),
     });
     expect(mocks.signOut).toHaveBeenCalledTimes(1);
     expect(mocks.invoke.mock.invocationCallOrder[0]).toBeLessThan(
@@ -451,10 +473,27 @@ describe('settings account deletion and consent withdrawal', () => {
     );
   });
 
+  it('holds the account boundary during local sign-out without drain deadlock', async () => {
+    let wrongOwnerStarted = false;
+    mocks.signOut.mockImplementationOnce(async () => {
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+      await expect(
+        runAccountGenerationOperation(async () => {
+          wrongOwnerStarted = true;
+        }),
+      ).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+    });
+
+    await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
+
+    expect(wrongOwnerStarted).toBe(false);
+    await expect(runAccountGenerationOperation(async () => 'released')).resolves.toBe('released');
+  });
+
   it('does not clear local private data when backend account deletion fails', async () => {
     mocks.invoke.mockResolvedValueOnce({ data: null, error: new Error('edge unavailable') });
 
-    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('edge unavailable');
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('NETWORK_REQUEST_UNKNOWN');
 
     expect(mocks.signOut).not.toHaveBeenCalled();
   });
@@ -467,22 +506,90 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
       body: { appleAuthorizationCode: 'apple-revocation-code' },
+      headers: { Authorization: 'Bearer token-1' },
+      signal: expect.any(AbortSignal),
     });
     expect(mocks.signOut).toHaveBeenCalledTimes(1);
   });
 
-  it('does not block backend deletion when Apple revocation-code refresh fails locally', async () => {
+  it('aborts before invoking deletion when Apple reauthentication fails or is canceled', async () => {
     mocks.getAppleAuthorizationCodeForRevocation.mockRejectedValueOnce(
       new Error('native apple unavailable'),
     );
 
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('native apple unavailable');
+
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
+
+    mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValueOnce(null);
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('APPLE_REAUTHORIZATION_REQUIRED');
+    expect(mocks.invoke).not.toHaveBeenCalled();
+  });
+
+  it('never sends an owner-A Apple code after an account boundary starts', async () => {
+    let releaseAppleCode!: (code: string) => void;
+    mocks.getAppleAuthorizationCodeForRevocation.mockImplementationOnce(
+      () =>
+        new Promise<string>((resolve) => {
+          releaseAppleCode = resolve;
+        }),
+    );
+
+    const deletion = deleteAccount(mocks.signOut);
+    await vi.waitFor(() =>
+      expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledOnce(),
+    );
+    beginAccountGenerationBoundary();
+    try {
+      releaseAppleCode('single-use-code-for-a');
+      await expect(deletion).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
+  });
+
+  it('does not request Apple reauthentication for a non-Apple account', async () => {
+    mocks.userHasAppleIdentity.mockReturnValueOnce(false);
+
     await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
 
+    expect(mocks.getAppleAuthorizationCodeForRevocation).not.toHaveBeenCalled();
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
       body: {},
+      headers: { Authorization: 'Bearer token-1' },
+      signal: expect.any(AbortSignal),
     });
-    expect(mocks.signOut).toHaveBeenCalledTimes(1);
+  });
+
+  it('obtains a fresh Apple authorization code for each explicit retry', async () => {
+    mocks.getAppleAuthorizationCodeForRevocation
+      .mockResolvedValueOnce('apple-code-1')
+      .mockResolvedValueOnce('apple-code-2');
+    mocks.invoke
+      .mockResolvedValueOnce({ data: null, error: new Error('retryable pre-Apple failure') })
+      .mockResolvedValueOnce({ data: null, error: null });
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('NETWORK_REQUEST_UNKNOWN');
+    await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
+
+    expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledTimes(2);
+    expect(mocks.invoke).toHaveBeenNthCalledWith(1, 'account-deletion', {
+      method: 'POST',
+      body: { appleAuthorizationCode: 'apple-code-1' },
+      headers: { Authorization: 'Bearer token-1' },
+      signal: expect.any(AbortSignal),
+    });
+    expect(mocks.invoke).toHaveBeenNthCalledWith(2, 'account-deletion', {
+      method: 'POST',
+      body: { appleAuthorizationCode: 'apple-code-2' },
+      headers: { Authorization: 'Bearer token-1' },
+      signal: expect.any(AbortSignal),
+    });
   });
 
   it('fails fast without local cleanup when the data-rights backend is unavailable', async () => {
@@ -507,6 +614,8 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
       body: { appleAuthorizationCode: 'apple-revocation-code' },
+      headers: { Authorization: 'Bearer token-1' },
+      signal: expect.any(AbortSignal),
     });
     expect(mocks.recordConsent.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.invoke.mock.invocationCallOrder[0]!,
@@ -521,8 +630,33 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
       body: { appleAuthorizationCode: 'apple-revocation-code' },
+      headers: { Authorization: 'Bearer token-1' },
+      signal: expect.any(AbortSignal),
     });
     expect(mocks.signOut).toHaveBeenCalledTimes(1);
+  });
+
+  it('never turns an owner-A withdrawal race into deletion of owner B', async () => {
+    let releaseConsent!: () => void;
+    mocks.recordConsent.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          releaseConsent = resolve;
+        }),
+    );
+
+    const withdrawal = withdrawHealthDataConsent(mocks.signOut);
+    await vi.waitFor(() => expect(mocks.recordConsent).toHaveBeenCalledOnce());
+    beginAccountGenerationBoundary();
+    try {
+      releaseConsent();
+      await expect(withdrawal).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
   it('does not write withdrawal or cleanup locally when the data-rights backend is unavailable', async () => {

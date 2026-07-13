@@ -1,7 +1,11 @@
 import type { User } from '@supabase/supabase-js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getAppleAuthorizationCodeForRevocation, getAppleIdToken } from './apple';
+import {
+  getAppleAuthorizationCodeForRevocation,
+  getAppleIdToken,
+  userHasAppleIdentity,
+} from './apple';
 
 const mocks = vi.hoisted(() => ({
   isAvailableAsync: vi.fn(),
@@ -100,6 +104,17 @@ describe('Sign in with Apple helpers', () => {
     await expect(getAppleAuthorizationCodeForRevocation(user)).resolves.toBeNull();
     expect(mocks.isAvailableAsync).not.toHaveBeenCalled();
     expect(mocks.refreshAsync).not.toHaveBeenCalled();
+  });
+
+  it('detects Apple linkage from identity or app metadata before account deletion', () => {
+    expect(userHasAppleIdentity(userWithAppleIdentity({ id: 'apple-id' }))).toBe(true);
+    expect(
+      userHasAppleIdentity({
+        ...userWithAppleIdentity(null),
+        app_metadata: { providers: ['email', 'apple'] },
+      }),
+    ).toBe(true);
+    expect(userHasAppleIdentity(userWithAppleIdentity(null))).toBe(false);
   });
 
   it('returns no revocation code when Apple is unavailable or returns a blank code', async () => {

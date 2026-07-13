@@ -23,6 +23,14 @@ export type ConflictCheckAccess = {
   shouldRecord: boolean;
 };
 
+function devConflictQuotaFixture(): ConflictQuotaRead | null {
+  const fixture =
+    typeof __DEV__ !== 'undefined' && __DEV__
+      ? process.env.EXPO_PUBLIC_E2E_CONFLICT_QUOTA_STATE
+      : undefined;
+  return fixture === 'unavailable' ? { status: 'unavailable', ruleIds: null } : null;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -145,6 +153,8 @@ export function conflictCheckAccess(input: {
 /** Read-only quota inspection. Corrupt, future, and unreadable bytes are never
  * repaired, deleted, or translated into an unused quota. */
 export async function loadFreeConflictCheckRuleIds(): Promise<ConflictQuotaRead> {
+  const fixture = devConflictQuotaFixture();
+  if (fixture) return fixture;
   let raw: string | null;
   try {
     raw = await getPrivateItem(KEY);
@@ -163,6 +173,8 @@ export async function loadFreeConflictCheckRuleIds(): Promise<ConflictQuotaRead>
 /** Atomically claim the one free conflict check. The quota limit is enforced
  * inside the same-key transform, so concurrent distinct claims cannot both win. */
 export async function recordFreeConflictCheckRuleId(ruleId: string): Promise<ConflictQuotaRead> {
+  const fixture = devConflictQuotaFixture();
+  if (fixture) return fixture;
   const normalizedRuleId = ruleId.trim();
   if (!normalizedRuleId) return loadFreeConflictCheckRuleIds();
 

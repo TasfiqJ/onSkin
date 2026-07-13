@@ -1,9 +1,9 @@
 import type { ConsentType } from '@onskin/types';
 import * as Crypto from 'expo-crypto';
 
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { isSupabaseConfigured } from '@/lib/env';
-
-import { supabase } from '../supabase/client';
+import { invokeEdgeFunction } from '@/lib/network/edgeFunctions';
 
 export type WithdrawableConsentType =
   | 'photo_cloud_backup'
@@ -20,17 +20,22 @@ export async function withdrawConsent(params: {
 }): Promise<void> {
   if (!isSupabaseConfigured) throw new Error('CONSENT_BACKEND_UNAVAILABLE');
 
-  const consentTextHash = await Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.SHA256,
-    params.consentText,
-  );
-  const { error } = await supabase.functions.invoke('consent-withdrawal', {
-    method: 'POST',
-    body: {
-      consentType: params.type,
-      version: params.version,
-      consentTextHash,
-    },
+  await runAccountGenerationOperation(async (lease) => {
+    const consentTextHash = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      params.consentText,
+    );
+    lease.assertCurrent();
+
+    await invokeEdgeFunction('consent-withdrawal', {
+      method: 'POST',
+      signal: lease.signal,
+      body: {
+        consentType: params.type,
+        version: params.version,
+        consentTextHash,
+      },
+    });
+    lease.assertCurrent();
   });
-  if (error) throw error;
 }
