@@ -93,12 +93,17 @@ const requiredFiles = [
   'docs/phase-9/release-candidates/_template/rollout-plan.md',
   'docs/phase-9/release-candidates/_template/incident-plan.md',
   'docs/phase-9/release-candidates/_template/signoff.md',
+  '.github/workflows/quality.yml',
   'supabase/functions/account-deletion/index.ts',
   'supabase/functions/account-deletion/photoStorageCleanup.ts',
   'supabase/functions/account-deletion/photoStorageCleanup.test.ts',
   'supabase/functions/_shared/storagePath.ts',
   'supabase/functions/_shared/storagePath.test.ts',
   'supabase/functions/data-export/index.ts',
+  'supabase/functions/data-export/exportCore.ts',
+  'supabase/functions/data-export/exportCore.test.ts',
+  'supabase/functions/data-export/exportRegistry.ts',
+  'supabase/functions/data-export/exportRegistry.test.ts',
   'supabase/functions/consent-withdrawal/index.ts',
   'supabase/functions/catalog-lookup/catalogContract.ts',
   'supabase/functions/catalog-lookup/catalogContract.test.ts',
@@ -107,6 +112,7 @@ const requiredFiles = [
   'supabase/migrations/20260705000034_phase9_security_definer_hardening.sql',
   'supabase/migrations/20260711000038_shelf_freshness_invariants.sql',
   'supabase/migrations/20260711000039_replenishment_alert_opt_in.sql',
+  'supabase/migrations/20260615000027_phase6_payments.sql',
   'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
   'scripts/phase9/lib.mjs',
   'scripts/phase2/supabase-rls-smoke.mjs',
@@ -221,6 +227,7 @@ for (const script of [
   'phase9:live-revenuecat-webhook',
   'phase9:security-ci-smoke',
   'phase9:data-rights-smoke',
+  'phase9:data-export-contract-smoke',
   'phase9:storage-path-privacy-smoke',
   'phase9:account-deletion-photo-storage-smoke',
   'phase9:revenuecat-webhook-atomic-smoke',
@@ -248,6 +255,13 @@ block(
     /phase9:rls-adversarial/.test(packageJson.scripts?.['launch:verify'] ?? '') &&
     /phase9:supabase-policy-lint/.test(packageJson.scripts?.['launch:verify'] ?? ''),
   'launch:verify must run the RLS contract, static adversarial, and Supabase policy gates.',
+);
+block(
+  errors,
+  /phase9:data-export-contract-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? '') &&
+    /phase9:data-export-contract-smoke/.test(packageJson.scripts?.['launch:verify'] ?? '') &&
+    has('.github/workflows/quality.yml', /npm run phase9:data-export-contract-smoke/),
+  'Phase 9, launch, and CI verification must run the canonical data-export contract.',
 );
 block(
   errors,

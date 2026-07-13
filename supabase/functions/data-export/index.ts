@@ -17,6 +17,14 @@ import {
   paginateRows,
   type PaginatedRows,
 } from './exportCore.ts';
+import {
+  buildDirectExportPlans,
+  CALLER_RLS_EXPORT_TABLES,
+  type ExportTable,
+  SERVICE_ROLE_FILTERED_EXPORTS,
+  SUBSCRIPTION_EVENT_EXPORT_COLUMNS,
+  subscriptionEventOwnerFilter,
+} from './exportRegistry.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const publishableKey = readSupabasePublishableKey();
@@ -43,218 +51,12 @@ const dataExportFilterBatchSize = intEnv('DATA_EXPORT_FILTER_BATCH_SIZE', 50, 10
 const dataExportFileName = exportFileName();
 let rateLimitHmacKey: CryptoKey | null = null;
 
-type TableFilter = { column: string; value: string } | null;
-type ExportTable = {
-  table: string;
-  filter: TableFilter;
-  scope: 'caller_rls' | 'service_role_filtered';
-  orderBy: readonly string[];
-  note?: string;
-};
 // No generated database type is committed for Edge Functions, so the dynamic
 // table registry cannot be expressed through Supabase's schema generics here.
 // deno-lint-ignore no-explicit-any
 type EdgeSupabaseClient = any;
 // deno-lint-ignore no-explicit-any
 type ExportQuery = any;
-
-export const CALLER_RLS_EXPORT_TABLES: ExportTable[] = [
-  {
-    table: 'profiles',
-    filter: { column: 'id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'skin_profiles',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'user_products',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'routines',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'routine_steps',
-    filter: null,
-    scope: 'caller_rls',
-    orderBy: ['id'],
-    note: 'Owned through routines.',
-  },
-  {
-    table: 'routine_completions',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'routine_conflicts',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'active_ramp',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'shelf_scans',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'cycles',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'cycle_nights',
-    filter: null,
-    scope: 'caller_rls',
-    orderBy: ['cycle_id', 'night_index'],
-    note: 'Owned through cycles.',
-  },
-  {
-    table: 'streak_freezes',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'notification_preferences',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['user_id'],
-  },
-  {
-    table: 'notification_log',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'consents',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'photos',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'entitlements',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['user_id'],
-  },
-  {
-    table: 'reverse_trial_grants',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['user_id'],
-  },
-  {
-    table: 'recommendation_preferences',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['user_id'],
-  },
-  {
-    table: 'recommendations',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'catalog_corrections',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'catalog_lookup_events',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'commerce_click_events',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'community_blocks',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['user_id', 'blocked_handle'],
-  },
-  {
-    table: 'community_questions',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'community_reactions',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'community_reports',
-    filter: { column: 'reporter_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'photo_trend',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'ask_sessions',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-  {
-    table: 'ask_turn_audit',
-    filter: null,
-    scope: 'caller_rls',
-    orderBy: ['id'],
-    note: 'Owned through ask_sessions.',
-  },
-  {
-    table: 'ask_safety_audit',
-    filter: { column: 'user_id', value: 'USER_ID' },
-    scope: 'caller_rls',
-    orderBy: ['id'],
-  },
-];
-
-export const SERVICE_ROLE_FILTERED_EXPORTS = [
-  'subscriptions_events',
-  'obf_contribution_queue',
-  'order_attributions',
-] as const;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -298,9 +100,12 @@ function exportFileName(): string {
   return `${exportFileSlug()}-export.json`;
 }
 
-function applyFilter(query: ExportQuery, filter: TableFilter, userId: string): ExportQuery {
+function applyFilter(
+  query: ExportQuery,
+  filter: { column: string; value: string } | null,
+): ExportQuery {
   if (!filter) return query;
-  return query.eq(filter.column, filter.value === 'USER_ID' ? userId : filter.value);
+  return query.eq(filter.column, filter.value);
 }
 
 type QueryDecorator = (query: ExportQuery) => ExportQuery;
@@ -443,48 +248,38 @@ Deno.serve(async (req) => {
     const sourcePayloads: Record<string, Record<string, unknown>[]> = {};
     const sourceManifest: Record<string, ExportSourceManifest> = {};
 
+    const directPlans = buildDirectExportPlans(userId);
     const sourceTasks: Array<() => Promise<{ source: string; result: PaginatedRows }>> =
-      CALLER_RLS_EXPORT_TABLES.map((item) => async () => ({
+      directPlans.map((item) => async () => ({
         source: item.table,
         result: await paginateQuery({
-          client: supabase,
+          client: item.clientKind === 'caller' ? supabase : admin,
           table: item.table,
           scope: item.scope,
           orderBy: item.orderBy,
-          decorate: (query) => applyFilter(query, item.filter, userId),
+          decorate: (query) => applyFilter(query, item.filter),
+          selectColumns: item.selectColumns,
           note: item.note,
         }),
       }));
 
-    sourceTasks.push(
-      async () => ({
-        source: 'subscriptions_events',
-        result: await paginateQuery({
-          client: admin,
-          table: 'subscriptions_events',
-          scope: 'service_role_filtered',
-          orderBy: ['id'],
-          decorate: (query) =>
-            query.or(
-              `user_id.eq.${userId},resolved_user_id.eq.${userId},app_user_id.eq.${userId},original_app_user_id.eq.${userId}`,
-            ),
-          note: 'Matched to every owner identifier retained from RevenueCat events.',
-        }),
+    sourceTasks.push(async () => ({
+      source: 'subscriptions_events',
+      result: await paginateQuery({
+        client: admin,
+        table: 'subscriptions_events',
+        scope: 'service_role_filtered',
+        orderBy: ['id'],
+        selectColumns: SUBSCRIPTION_EVENT_EXPORT_COLUMNS.join(', '),
+        decorate: (query) => query.or(subscriptionEventOwnerFilter(userId)),
+        note: 'Matched to every retained owner identifier; owner identifiers and internal processing fields are excluded from the exported row.',
       }),
-      async () => ({
-        source: 'obf_contribution_queue',
-        result: await paginateQuery({
-          client: admin,
-          table: 'obf_contribution_queue',
-          scope: 'service_role_filtered',
-          orderBy: ['id'],
-          decorate: (query) => query.eq('user_id', userId),
-        }),
-      }),
-    );
+    }));
 
     const sourceResults = await boundedMap(sourceTasks, dataExportConcurrency, (task) => task());
     for (const { source, result } of sourceResults) {
+      if (Object.hasOwn(sourcePayloads, source))
+        throw new Error(`EXPORT_SOURCE_DUPLICATE:${source}`);
       sourcePayloads[source] = result.rows;
       sourceManifest[source] = result.manifest;
     }

@@ -1,12 +1,28 @@
 #!/usr/bin/env node
-import { block, evidenceFlagEnabled, has, printResult, read, warn } from './lib.mjs';
+import {
+  block,
+  evidenceFlagEnabled,
+  has,
+  listFiles,
+  OWNER_LINKED_PRIVATE_TABLES,
+  printResult,
+  read,
+  SERVICE_ONLY_PRIVATE_TABLES,
+  warn,
+} from './lib.mjs';
 
 const errors = [];
 const warnings = [];
 
 const exportSource = read('supabase/functions/data-export/index.ts');
 const exportCoreSource = read('supabase/functions/data-export/exportCore.ts');
-const completeExportSource = `${exportSource}\n${exportCoreSource}`;
+const exportRegistrySource = read('supabase/functions/data-export/exportRegistry.ts');
+const exportRegistryTestSource = read('supabase/functions/data-export/exportRegistry.test.ts');
+const completeExportSource = `${exportSource}\n${exportCoreSource}\n${exportRegistrySource}`;
+const migrationSource = listFiles('supabase/migrations')
+  .filter((file) => file.endsWith('.sql'))
+  .map((file) => read(file))
+  .join('\n');
 const deletionSource = read('supabase/functions/account-deletion/index.ts');
 const settingsActionsSource = read('apps/mobile/src/features/settings/actions.ts');
 const settingsRouteSource = read('apps/mobile/src/app/(tabs)/you.tsx');
@@ -27,6 +43,55 @@ const storagePathHelper = read('supabase/functions/_shared/storagePath.ts');
 const storagePathHelperTest = read('supabase/functions/_shared/storagePath.test.ts');
 const deletionHandlerSource = deletionSource.slice(deletionSource.indexOf('Deno.serve'));
 const exportHandlerSource = exportSource.slice(exportSource.indexOf('Deno.serve'));
+
+function tableNamesBetween(source, startMarker, endMarker) {
+  const start = source.indexOf(startMarker);
+  const end = source.indexOf(endMarker, start + startMarker.length);
+  if (start < 0 || end < 0) return [];
+  return [...source.slice(start, end).matchAll(/table:\s*'([^']+)'/g)].map((match) => match[1]);
+}
+
+function stringLiteralsBetween(source, startMarker, endMarker) {
+  const start = source.indexOf(startMarker);
+  const end = source.indexOf(endMarker, start + startMarker.length);
+  if (start < 0 || end < 0) return [];
+  return [...source.slice(start, end).matchAll(/'([a-z][a-z0-9_]*)'/g)].map((match) => match[1]);
+}
+
+const callerRegistryTables = tableNamesBetween(
+  exportRegistrySource,
+  'export const CALLER_RLS_EXPORT_TABLES',
+  'export const SERVICE_ROLE_DIRECT_USER_EXPORT_TABLES',
+);
+const directServiceRegistryTables = tableNamesBetween(
+  exportRegistrySource,
+  'export const SERVICE_ROLE_DIRECT_USER_EXPORT_TABLES',
+  'export const SPECIAL_SERVICE_ROLE_FILTERED_EXPORTS',
+);
+const serviceOnlyDenylist = stringLiteralsBetween(
+  exportRegistrySource,
+  'export const SERVICE_ONLY_EXPORT_DENYLIST',
+  'export const CALLER_RLS_EXPORT_TABLES',
+);
+const subscriptionExportColumns = stringLiteralsBetween(
+  exportRegistrySource,
+  'export const SUBSCRIPTION_EVENT_EXPORT_COLUMNS',
+  'export function subscriptionEventOwnerFilter',
+);
+const subscriptionTableDefinition =
+  migrationSource.match(
+    /create table(?: if not exists)? public\.subscriptions_events\s*\(([\s\S]*?)\n\);/i,
+  )?.[1] ?? '';
+const subscriptionSchemaColumns = new Set(
+  [...subscriptionTableDefinition.matchAll(/^\s*([a-z][a-z0-9_]*)\s+/gm)].map((match) => match[1]),
+);
+for (const statement of migrationSource.matchAll(
+  /alter table public\.subscriptions_events([\s\S]*?);/gi,
+)) {
+  for (const column of statement[1].matchAll(/add column if not exists\s+([a-z][a-z0-9_]*)/gi)) {
+    subscriptionSchemaColumns.add(column[1]);
+  }
+}
 
 const requiredExportTables = [
   'profiles',
@@ -66,8 +131,79 @@ const requiredExportTables = [
 ];
 
 for (const table of requiredExportTables) {
-  block(errors, exportSource.includes(table), `data-export is missing ${table}.`);
+  block(errors, completeExportSource.includes(table), `data-export is missing ${table}.`);
 }
+
+block(
+  errors,
+  JSON.stringify([...new Set(callerRegistryTables)].sort()) ===
+    JSON.stringify([...OWNER_LINKED_PRIVATE_TABLES].sort()) &&
+    callerRegistryTables.length === OWNER_LINKED_PRIVATE_TABLES.length,
+  'Caller-RLS export registry must exactly match the canonical owner-linked private-table inventory without duplicates.',
+);
+block(
+  errors,
+  callerRegistryTables.every((table) => !SERVICE_ONLY_PRIVATE_TABLES.includes(table)),
+  'Caller-RLS export registry contains a canonical service-only table.',
+);
+block(
+  errors,
+  JSON.stringify([...new Set(serviceOnlyDenylist)].sort()) ===
+    JSON.stringify([...SERVICE_ONLY_PRIVATE_TABLES].sort()) &&
+    serviceOnlyDenylist.length === SERVICE_ONLY_PRIVATE_TABLES.length,
+  'Runtime export denylist must exactly match the canonical service-only private-table inventory.',
+);
+block(
+  errors,
+  directServiceRegistryTables.filter((table) => table === 'reverse_trial_grants').length === 1 &&
+    directServiceRegistryTables.includes('obf_contribution_queue'),
+  'Direct service-role export registry must contain reverse_trial_grants exactly once and retain OBF coverage.',
+);
+block(
+  errors,
+  /buildDirectExportPlans\(userId\)/.test(exportSource) &&
+    /item\.clientKind === 'caller' \? supabase : admin/.test(exportSource) &&
+    /selectColumns:\s*item\.selectColumns/.test(exportSource) &&
+    /EXPORT_SOURCE_DUPLICATE/.test(exportSource),
+  'data-export must execute the validated caller/service plan with the selected client, allowlist, and duplicate-source guard.',
+);
+block(
+  errors,
+  /table:\s*'reverse_trial_grants'[\s\S]*scope:\s*'service_role_filtered'[\s\S]*selectColumns:\s*'user_id, granted_at, expires_at, source, metadata'/.test(
+    exportRegistrySource,
+  ) &&
+    /EXPORT_REGISTRY_SERVICE_ONLY_IN_CALLER/.test(exportRegistrySource) &&
+    /every canonical service-only table is rejected from the caller registry/.test(
+      exportRegistryTestSource,
+    ),
+  'Reverse-trial export must be service-role filtered, column-allowlisted, and protected by an executable denylist mutation contract.',
+);
+block(
+  errors,
+  /subscriptionEventOwnerFilter\(userId\)/.test(exportSource) &&
+    /SUBSCRIPTION_EVENT_EXPORT_COLUMNS\.join/.test(exportSource) &&
+    /aliases\.cs\.\{\$\{verifiedUserId\}\}/.test(exportRegistrySource) &&
+    /transferred_from\.cs\.\{\$\{verifiedUserId\}\}/.test(exportRegistrySource) &&
+    /transferred_to\.cs\.\{\$\{verifiedUserId\}\}/.test(exportRegistrySource),
+  'Subscription export must match scalar/array owner identities while returning only allowlisted non-owner fields.',
+);
+block(
+  errors,
+  subscriptionExportColumns.length > 0 &&
+    subscriptionExportColumns.every((column) => subscriptionSchemaColumns.has(column)),
+  `Subscription export allowlist contains a column absent from the migrated subscriptions_events schema: ${
+    subscriptionExportColumns
+      .filter((column) => !subscriptionSchemaColumns.has(column))
+      .join(', ') || 'unknown'
+  }.`,
+);
+block(
+  errors,
+  /table:\s*'obf_contribution_queue'[\s\S]*selectColumns:\s*\n?\s*'id, correction_id, user_id, barcode, payload, status, submitted_at, created_at, updated_at'/.test(
+    exportRegistrySource,
+  ) && /EXPORT_REGISTRY_SERVICE_COLUMNS_REQUIRED/.test(exportRegistrySource),
+  'Every direct service-role export must use an explicit reviewed column allowlist.',
+);
 
 for (const pattern of [
   /CALLER_RLS_EXPORT_TABLES/,
@@ -474,6 +610,16 @@ block(
 );
 block(
   errors,
+  /exportCore\.test\.ts/.test(packageJson.scripts?.['phase9:data-export-contract-smoke'] ?? '') &&
+    /exportRegistry\.test\.ts/.test(
+      packageJson.scripts?.['phase9:data-export-contract-smoke'] ?? '',
+    ) &&
+    /phase9:data-export-contract-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? '') &&
+    /phase9:data-export-contract-smoke/.test(packageJson.scripts?.['launch:verify'] ?? ''),
+  'Data-export core/registry contracts must share one package command included in Phase 9 and launch verification.',
+);
+block(
+  errors,
   Boolean(packageJson.scripts?.['phase9:storage-path-privacy-smoke']) &&
     /storagePath\.test\.ts/.test(
       packageJson.scripts?.['phase9:storage-path-privacy-smoke'] ?? '',
@@ -494,8 +640,20 @@ block(
     /data-export photo signed URLs expire after configured TTL/.test(liveHarness) &&
     /data-export returns 429 after configured data-rights rate limit/.test(liveHarness) &&
     /edge_rate_limits stores keyed hashes only for data-export scope/.test(liveHarness) &&
+    /reverse_trial_grants/.test(liveHarness) &&
+    /reverse-trial export manifest is incomplete or misclassified/.test(liveHarness) &&
+    /other user reverse-trial grant retained/.test(liveHarness) &&
+    /body: \{ user_id: userB\.id \}/.test(liveHarness) &&
+    /Storage cleanup left a residual object/.test(liveHarness) &&
+    /Rate-limit cleanup left a residual row/.test(liveHarness) &&
+    /User cleanup left a residual Auth user/.test(liveHarness) &&
+    /harnessErrorDetail/.test(liveHarness) &&
+    /storageObjectMissing/.test(liveHarness) &&
+    /authUserMissing/.test(liveHarness) &&
+    /\^sha256:\[a-f0-9\]\{64\}\$/.test(liveHarness) &&
+    !/response\.text\.slice/.test(liveHarness) &&
     /RATE_LIMITED/.test(liveHarness),
-  'Live data-rights harness must invoke data-export/account-deletion and prove data-export 429/keyed-hash rate-limit behavior behind an explicit run flag.',
+  'Live data-rights harness must prove export/delete isolation, reverse-trial service coverage, redacted evidence, blocking cleanup, and rate-limit behavior behind an explicit run flag.',
 );
 block(
   errors,

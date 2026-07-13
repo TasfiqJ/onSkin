@@ -6879,10 +6879,35 @@ and Supabase policy lint pass; the static gate retains the expected missing-live
 staging/production warnings. No local PostgreSQL reset, hosted Supabase run,
 Turnstile result, raw provider artifact, or UI/device evidence is claimed.
 
-The same audit exposed the next DB-10 source gap: `reverse_trial_grants` is
-service-only to clients but is still queried through the caller-RLS export
-registry, so a user export can silently omit it. That path remains explicitly
-open for the next checkpoint before live data-rights evidence.
+The same audit exposed the next DB-10 source gap: `reverse_trial_grants` was
+service-only to clients but queried through the caller-RLS export registry, so a
+user export could silently omit it.
+
+### DB-10 service-only export completeness contract (2026-07-13)
+
+Moved `reverse_trial_grants` onto the separate backend export client with an
+exact filter derived from the verified JWT identity, an explicit five-column
+allowlist, fail-closed count/page verification, and truthful service-role
+manifest coverage. The new dependency-free export registry is used by the Edge
+Function itself, exactly matches all 30 owner-client tables, derives service
+coverage, rejects duplicates, and refuses every one of the 10 canonical
+service-only tables if mutated into the caller registry. Subscription-event
+export matching now includes scalar, alias, and transfer owner identities while
+excluding every owner identity plus internal processing/security fields from
+returned rows.
+
+Added five registry tests to the existing eight pagination/storage tests, wired
+the 13-test command into local Phase 9 verification, launch verification, CI,
+and release-candidate templates, and expanded Phase 3/Phase 9 packet source
+coverage. The live data-rights harness now seeds owner A/B reverse-trial grants,
+attempts a caller-body identity override, proves A-only export and exact
+manifest classification, proves A deletion/B retention, records only authored
+assertions or redacted error kinds, and treats cleanup residue as blocking.
+
+Credential-free export/data-rights/RLS checks pass. No live evidence is claimed.
+DB-10 remains source-open because the service-only account-deletion scrub still
+ignores database errors and misses retained subscription alias/transfer arrays;
+that is the next bounded checkpoint.
 
 ## Open questions for the founder
 

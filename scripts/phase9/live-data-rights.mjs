@@ -3,12 +3,16 @@ import { createHmac, randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
 import {
+  authUserMissing,
   block,
   envSnapshot,
+  HarnessAssertionError,
+  harnessErrorDetail,
   placeholderEnvValue,
   printResult,
   readScriptAppEnvironment,
   redactedErrorKind,
+  storageObjectMissing,
   write,
 } from './lib.mjs';
 
@@ -79,12 +83,8 @@ function intEnv(name, fallback, min, max) {
   return value;
 }
 
-function resultError(error) {
-  return error instanceof Error ? error.message : String(error);
-}
-
 function assert(condition, message) {
-  if (!condition) throw new Error(message);
+  if (!condition) throw new HarnessAssertionError(message);
 }
 
 function record(name, status, detail = '') {
@@ -147,7 +147,7 @@ async function runCheck(name, fn) {
     await fn();
     record(name, 'pass');
   } catch (error) {
-    const message = resultError(error);
+    const message = harnessErrorDetail(error);
     record(name, 'fail', message);
     errors.push(`${name}: ${message}`);
   }
@@ -163,7 +163,7 @@ function functionUrl(name) {
   return `${supabaseUrl.replace(/\/+$/g, '')}/functions/v1/${name}`;
 }
 
-async function createLiveUser(admin, label) {
+async function createLiveUser(admin, label, trackCreatedUser) {
   const suffix = `${Date.now()}-${randomUUID().slice(0, 8)}`;
   const email = `phase9-data-${label}-${suffix}@example.invalid`;
   const password = `Phase9Data-${suffix}-Password!`;
@@ -175,6 +175,7 @@ async function createLiveUser(admin, label) {
   });
   if (error) throw error;
   if (!data.user) throw new Error(`Supabase did not return a user for ${label}.`);
+  trackCreatedUser({ id: data.user.id });
 
   const client = publicClient();
   const signedIn = await client.auth.signInWithPassword({ email, password });
@@ -225,8 +226,11 @@ async function expectAdminRows(admin, table, column, value, expectedCount, label
 }
 
 async function userExists(admin, userId) {
-  const { data, error } = await admin.auth.admin.getUserById(userId);
-  return !error && Boolean(data.user);
+  const result = await admin.auth.admin.getUserById(userId);
+  if (authUserMissing(result)) return false;
+  if (result.error) throw result.error;
+  if (!result.data?.user) throw new Error('AUTH_USER_LOOKUP_INVALID');
+  return true;
 }
 
 async function postDataExport(token) {
@@ -281,14 +285,8 @@ function assertLocalPhotoExportDisclosure(bundle) {
 
 function assertDataExportRateLimited(response) {
   const body = parseJson(response.text);
-  assert(
-    response.status === 429,
-    `data-export expected HTTP 429, got ${response.status} (${response.text.slice(0, 120)}).`,
-  );
-  assert(
-    body?.error === 'RATE_LIMITED',
-    `data-export expected RATE_LIMITED body, got ${response.text.slice(0, 120)}.`,
-  );
+  assert(response.status === 429, `data-export expected HTTP 429, got ${response.status}.`);
+  assert(body?.error === 'RATE_LIMITED', 'data-export expected stable RATE_LIMITED body.');
   assert(
     /^\d+$/.test(response.retryAfter ?? ''),
     'data-export expected numeric Retry-After header.',
@@ -333,10 +331,7 @@ async function exhaustDataExportRateLimit(user) {
       response.status === 200,
       `data-export before limit expected 200, got ${response.status}.`,
     );
-    assert(
-      body?.user_id === user.id,
-      `data-export before limit returned wrong user_id: ${response.text.slice(0, 120)}.`,
-    );
+    assert(body?.user_id === user.id, 'data-export before limit returned the wrong user_id.');
     assert(
       body?.export_schema_version === 2,
       'data-export before limit returned the wrong export schema version.',
@@ -451,9 +446,8 @@ async function main() {
   const externalOrderIds = [];
 
   try {
-    const userA = await createLiveUser(admin, 'a');
-    const userB = await createLiveUser(admin, 'b');
-    users.push(userA, userB);
+    const userA = await createLiveUser(admin, 'a', (user) => users.push(user));
+    const userB = await createLiveUser(admin, 'b', (user) => users.push(user));
     let callerPhotoSignedUrl = null;
 
     const seed = async (user, label) => {
@@ -569,6 +563,18 @@ async function main() {
       });
       if (entitlementWrite.error) throw entitlementWrite.error;
 
+      const reverseTrialGrant = await insertOne(
+        admin,
+        'reverse_trial_grants',
+        {
+          user_id: user.id,
+          expires_at: new Date(Date.now() + 7 * 86_400_000).toISOString(),
+          source: 'server',
+          metadata: { action: 'phase9_data_export_contract' },
+        },
+        'user_id, granted_at, expires_at, source, metadata',
+      );
+
       return {
         skinProfile,
         product,
@@ -580,6 +586,7 @@ async function main() {
         click,
         clickToken,
         externalOrderId,
+        reverseTrialGrant,
       };
     };
 
@@ -600,6 +607,7 @@ async function main() {
     await runCheck('data-export returns only caller data and safe service-role rows', async () => {
       const { data, error } = await userA.client.functions.invoke('data-export', {
         method: 'POST',
+        body: { user_id: userB.id },
       });
       if (error) throw error;
       assert(data && typeof data === 'object', 'data-export did not return a JSON bundle.');
@@ -615,6 +623,40 @@ async function main() {
       expectBundleHasOnlyUser(data, 'photos', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'commerce_click_events', 'user_id', userA.id, userB.id);
       expectBundleHasOnlyUser(data, 'entitlements', 'user_id', userA.id, userB.id);
+      expectBundleHasOnlyUser(data, 'reverse_trial_grants', 'user_id', userA.id, userB.id);
+
+      const reverseTrialRows = rows(data, 'reverse_trial_grants');
+      assert(
+        reverseTrialRows.length === 1,
+        'export returned an unexpected reverse-trial row count.',
+      );
+      assert(
+        reverseTrialRows[0]?.granted_at === seededA.reverseTrialGrant.granted_at,
+        'export returned the wrong caller reverse-trial grant.',
+      );
+      assert(
+        Object.keys(reverseTrialRows[0] ?? {}).every((key) =>
+          ['user_id', 'granted_at', 'expires_at', 'source', 'metadata'].includes(key),
+        ),
+        'reverse-trial export returned a non-allowlisted column.',
+      );
+      const reverseTrialManifest = data.manifest?.sources?.reverse_trial_grants;
+      assert(
+        reverseTrialManifest?.scope === 'service_role_filtered' &&
+          reverseTrialManifest.complete === true &&
+          reverseTrialManifest.count === 1 &&
+          reverseTrialManifest.count_before === 1 &&
+          reverseTrialManifest.count_after === 1 &&
+          /^sha256:[a-f0-9]{64}$/.test(reverseTrialManifest.checksum),
+        'reverse-trial export manifest is incomplete or misclassified.',
+      );
+      assert(
+        !data.export_coverage?.caller_rls_tables?.includes('reverse_trial_grants') &&
+          data.export_coverage?.service_role_filtered_exports?.filter(
+            (table) => table === 'reverse_trial_grants',
+          ).length === 1,
+        'reverse-trial export coverage is incomplete, duplicated, or misclassified.',
+      );
 
       const orderRows = rows(data, 'order_attributions');
       assert(
@@ -699,10 +741,7 @@ async function main() {
           body: {},
         });
         if (error) throw error;
-        assert(
-          data?.deleted === true,
-          `account-deletion did not report success: ${JSON.stringify(data)}`,
-        );
+        assert(data?.deleted === true, 'account-deletion did not report success.');
 
         assert(!(await userExists(admin, userA.id)), 'deleted user still exists in auth.');
         assert(await userExists(admin, userB.id), 'account-deletion removed the wrong user.');
@@ -737,6 +776,14 @@ async function main() {
           'deleted commerce click',
         );
         await expectAdminRows(admin, 'entitlements', 'user_id', userA.id, 0, 'deleted entitlement');
+        await expectAdminRows(
+          admin,
+          'reverse_trial_grants',
+          'user_id',
+          userA.id,
+          0,
+          'deleted reverse-trial grant',
+        );
 
         await expectAdminRows(admin, 'profiles', 'id', userB.id, 1, 'other user profile retained');
         await expectAdminRows(
@@ -755,9 +802,20 @@ async function main() {
           1,
           'other user photo metadata retained',
         );
+        await expectAdminRows(
+          admin,
+          'reverse_trial_grants',
+          'user_id',
+          userB.id,
+          1,
+          'other user reverse-trial grant retained',
+        );
 
         const ownerPhoto = await admin.storage.from('photos').download(seededA.photo.storage_path);
-        assert(Boolean(ownerPhoto.error), 'deleted user photo object was still downloadable.');
+        assert(
+          storageObjectMissing(ownerPhoto.error),
+          'deleted user photo object absence was not proven by an exact not-found result.',
+        );
         const otherPhoto = await admin.storage.from('photos').download(seededB.photo.storage_path);
         if (otherPhoto.error)
           throw new Error('account-deletion removed another user photo object.');
@@ -787,23 +845,77 @@ async function main() {
     );
   } finally {
     if (storagePaths.length > 0) {
-      await admin.storage
-        .from('photos')
-        .remove(storagePaths)
-        .catch((error) => warnings.push(`Storage cleanup warning: ${redactedErrorKind(error)}`));
+      const { error } = await admin.storage.from('photos').remove(storagePaths);
+      if (error) errors.push(`Storage cleanup failed: ${redactedErrorKind(error)}`);
+      for (const path of storagePaths) {
+        const remaining = await admin.storage.from('photos').download(path);
+        if (!remaining.error) errors.push('Storage cleanup left a residual object.');
+        else if (!storageObjectMissing(remaining.error)) {
+          errors.push(`Storage cleanup verification failed: ${redactedErrorKind(remaining.error)}`);
+        }
+      }
     }
     for (const externalOrderId of externalOrderIds) {
       const { error } = await admin
         .from('order_attributions')
         .delete()
         .eq('external_order_id', externalOrderId);
-      if (error) warnings.push(`Order cleanup warning: ${redactedErrorKind(error)}`);
+      if (error) {
+        errors.push(`Order cleanup failed: ${redactedErrorKind(error)}`);
+        continue;
+      }
+      const { count, error: verifyError } = await admin
+        .from('order_attributions')
+        .select('*', { count: 'exact', head: true })
+        .eq('external_order_id', externalOrderId);
+      if (verifyError)
+        errors.push(`Order cleanup verification failed: ${redactedErrorKind(verifyError)}`);
+      else if (count !== 0) errors.push('Order cleanup left a residual row.');
     }
     for (const user of users) {
       if (!user?.id) continue;
-      if (!(await userExists(admin, user.id))) continue;
+      const keyHash = keyHashFor('data-export', user.id);
+      const { error } = await admin
+        .from('edge_rate_limits')
+        .delete()
+        .eq('scope', 'data-export')
+        .eq('key_hash', keyHash);
+      if (error) {
+        errors.push(`Rate-limit cleanup failed: ${redactedErrorKind(error)}`);
+        continue;
+      }
+      const { count, error: verifyError } = await admin
+        .from('edge_rate_limits')
+        .select('*', { count: 'exact', head: true })
+        .eq('scope', 'data-export')
+        .eq('key_hash', keyHash);
+      if (verifyError) {
+        errors.push(`Rate-limit cleanup verification failed: ${redactedErrorKind(verifyError)}`);
+      } else if (count !== 0) {
+        errors.push('Rate-limit cleanup left a residual row.');
+      }
+    }
+    for (const user of users) {
+      if (!user?.id) continue;
+      let exists = false;
+      try {
+        exists = await userExists(admin, user.id);
+      } catch (error) {
+        errors.push(`User cleanup preflight failed: ${redactedErrorKind(error)}`);
+        continue;
+      }
+      if (!exists) continue;
       const { error } = await admin.auth.admin.deleteUser(user.id);
-      if (error) warnings.push(`User cleanup warning: ${redactedErrorKind(error)}`);
+      if (error) {
+        errors.push(`User cleanup failed: ${redactedErrorKind(error)}`);
+        continue;
+      }
+      try {
+        if (await userExists(admin, user.id))
+          errors.push('User cleanup left a residual Auth user.');
+      } catch (verifyError) {
+        errors.push(`User cleanup verification failed: ${redactedErrorKind(verifyError)}`);
+      }
     }
   }
 
@@ -812,7 +924,7 @@ async function main() {
 }
 
 main().catch((error) => {
-  errors.push(resultError(error));
+  errors.push(harnessErrorDetail(error));
   writeArtifacts('fail');
   printResult('Phase 9 live data rights', errors, warnings);
 });

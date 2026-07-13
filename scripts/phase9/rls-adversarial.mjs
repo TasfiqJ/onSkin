@@ -21,7 +21,8 @@ const migrations = listFiles('supabase/migrations')
   .filter((file) => file.endsWith('.sql'))
   .map((file) => read(file))
   .join('\n');
-const exportSource = read('supabase/functions/data-export/index.ts');
+const exportRegistrySource = read('supabase/functions/data-export/exportRegistry.ts');
+const exportSource = `${read('supabase/functions/data-export/index.ts')}\n${exportRegistrySource}`;
 const packageJson = JSON.parse(read('package.json'));
 const liveHarness = read('scripts/phase9/live-supabase-adversarial.mjs');
 const contractSmoke = read('scripts/phase9/rls-adversarial-smoke.mjs');
@@ -123,6 +124,31 @@ for (const table of OWNER_LINKED_PRIVATE_TABLES) {
     `User-linked table is missing from data-export coverage: ${table}.`,
   );
 }
+
+const callerRegistryStart = exportRegistrySource.indexOf('export const CALLER_RLS_EXPORT_TABLES');
+const callerRegistryEnd = exportRegistrySource.indexOf(
+  'export const SERVICE_ROLE_DIRECT_USER_EXPORT_TABLES',
+  callerRegistryStart,
+);
+const callerRegistryTables = [
+  ...exportRegistrySource
+    .slice(callerRegistryStart, callerRegistryEnd)
+    .matchAll(/table:\s*'([^']+)'/g),
+].map((match) => match[1]);
+block(
+  errors,
+  callerRegistryStart >= 0 &&
+    callerRegistryEnd > callerRegistryStart &&
+    callerRegistryTables.length === OWNER_LINKED_PRIVATE_TABLES.length &&
+    JSON.stringify([...new Set(callerRegistryTables)].sort()) ===
+      JSON.stringify([...OWNER_LINKED_PRIVATE_TABLES].sort()),
+  'Caller-RLS export registry must exactly match the 30 owner-linked private tables without duplicates.',
+);
+block(
+  errors,
+  callerRegistryTables.every((table) => !SERVICE_ONLY_PRIVATE_TABLES.includes(table)),
+  'Caller-RLS export registry contains a service-only private table.',
+);
 
 const serviceOnlyExportExclusions = new Set([
   'catalog_import_batches',

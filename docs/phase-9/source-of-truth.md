@@ -18,6 +18,8 @@ Generated QA packets are supporting artifacts, not launch signoff by themselves.
 
 Generated live evidence must also be minimized. Cleanup failures are blocking errors, not warnings. Evidence may record only authored assertion text, redacted error kinds, or stable codes; it must not include raw provider/database messages, temporary test emails, synthetic order IDs, tokens, URLs, or other diagnostic payloads.
 
+The data-export registry is an executable security boundary. Its caller set must exactly match the canonical 30 owner-client tables, every service-only mutation must be rejected, and every backend read must use the verified JWT user ID with explicit output columns. Reverse-trial and subscription-event coverage now satisfy that source contract. DB-10 remains source-open because account deletion must still fail closed and scrub scalar plus alias/transfer service identities without damaging another account's retained record.
+
 ## RLS Evidence Contract
 
 The migration-derived public-schema inventory is 63 tables: 30 owner-client private tables, 10 service-only private tables, and 23 authenticated catalog/editorial tables. Every table must be classified exactly once and have RLS enabled. Every one of the 40 private tables must be probed for cross-user access, a real signed-anonymous session, and a publishable-key client with no session; these identities are not interchangeable.

@@ -362,11 +362,17 @@ RLS harness. The credential-free DB-09 contract classifies all 63 public tables,
 probes all 40 private tables across permanent, signed-anonymous, and
 unauthenticated identities, rejects non-authorization false positives, blocks
 on cleanup residue, and passes its 10-check behavioral smoke. Migration `0045`
-closes signed-anonymous cloud-photo insert/update access. There is no reviewed
-local reset or live staging/production Supabase project verified for release.
+closes signed-anonymous cloud-photo insert/update access. The DB-10 export
+registry now keeps service-only reverse-trial/subscription rows on verified-user
+backend paths and passes 13 Deno contracts. Account deletion still needs a
+fail-closed, array-aware service-identity scrub before live privacy evidence.
+There is no reviewed local reset or live staging/production Supabase project
+verified for release.
 
 Next action:
 
+- make service-only account deletion fail closed and scrub scalar/alias/transfer
+  identities without damaging another owner's retained event;
 - create staging and production projects after the brand decision;
 - fill `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY`;

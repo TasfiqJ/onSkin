@@ -741,11 +741,13 @@
       "id": "DB-10",
       "status": "in_progress",
       "blockedBy": ["DB-09", "ACCT-03"],
-      "nextAction": "Move reverse_trial_grants from the caller-RLS export registry to a service-role query filtered by the verified user ID and add a registry contract preventing service-only export omissions; then run the staging privacy-rights matrix with owner A and B data, covering complete export, deletion, every consent withdrawal, vendor deletion, account-boundary cancellation, signed URLs, storage and backups, interrupted cleanup, and post-delete denial.",
+      "nextAction": "Make account deletion's service-only scrub fail closed on every database error, remove the deleted identity from scalar/alias/transfer subscription fields without erasing another owner, verify zero matching residue before Auth deletion, and add failure-path/A-B contracts; then run the staging privacy-rights matrix covering complete export, deletion, every consent withdrawal, vendor deletion, account-boundary cancellation, signed URLs, storage/backups, interruption/retry, and post-delete denial.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "supabase/functions/account-deletion",
-        "supabase/functions/data-export",
+        "supabase/functions/data-export/exportRegistry.ts",
+        "supabase/functions/data-export/exportRegistry.test.ts",
+        "scripts/phase9/data-rights-smoke.mjs",
         "supabase/functions/consent-withdrawal"
       ]
     },
