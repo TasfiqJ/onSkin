@@ -1,17 +1,96 @@
 {
-  "generatedAt": "2026-07-11T18:48:42.291Z",
+  "generatedAt": "2026-07-13T14:47:22.722Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
-  "gitSha": "de9bee6b829c97a89c2f0e08a83e59c788baffa9",
+  "launchContract": {
+    "schemaVersion": 1,
+    "programId": "ios-all-features-2026",
+    "effectiveDate": "2026-07-12",
+    "releaseMode": "all-features",
+    "platforms": [
+      "ios"
+    ],
+    "androidRelease": false,
+    "minimumIosVersion": "17.0",
+    "supportsIpad": false,
+    "requiredFeatureIds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "requiredFeatureKeys": [
+      "brand_identity",
+      "onboarding_consent",
+      "shelf_intake",
+      "catalog",
+      "conflict_engine",
+      "routine_builder",
+      "today_adherence",
+      "cycle_scheduler",
+      "photo_progress",
+      "reminders",
+      "subscriptions",
+      "reverse_trial",
+      "recommendations",
+      "ask_advisor",
+      "conflict_share",
+      "commerce",
+      "community",
+      "trend_insights",
+      "widgets_live_activities",
+      "admin_tooling"
+    ],
+    "requiredSurfaces": [
+      "commerce",
+      "community_posting",
+      "community_aggregates",
+      "trend_insights",
+      "cloud_ask",
+      "widgets",
+      "live_activities",
+      "share_cards",
+      "reviewed_conflict_sharing",
+      "goal_active_recommendations",
+      "public_links",
+      "review_prompts",
+      "creator_links",
+      "paid_measurement"
+    ]
+  },
+  "platformStatus": {
+    "ios": "required",
+    "android": "not_applicable"
+  },
+  "platformEvidenceStatus": {
+    "iosSandboxRestore": "blocked",
+    "androidLicenseTest": "not_applicable"
+  },
+  "gitSha": "5ccb42847bd98fb52475cfc49850476924546fa9",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
     "productionHasNoTestStoreKey": true,
     "entitlementIdIsPro": true,
     "iosPublicKeyConfigured": false,
-    "androidPublicKeyConfigured": false,
+    "androidPublicKeyConfigured": null,
     "annualProductIdFinal": false,
     "monthlyProductIdFinal": false,
-    "reverseTrialProductIdFinal": false,
     "webhookSharedAuthConfigured": false,
     "webhookSigningSecretConfigured": false,
     "secretApiKeyConfigured": false,
@@ -23,7 +102,7 @@
   "evidence": {
     "rcOfferingReviewed": false,
     "iosSandboxRestorePass": false,
-    "androidLicenseTestPass": false,
+    "androidLicenseTestPass": null,
     "webhookHmacTestPass": false,
     "financeSignoff": false,
     "signedOffBy": ""
@@ -59,7 +138,7 @@
     },
     {
       "surface": "Reverse trial",
-      "scenario": "authenticated Edge Function atomically grants exactly once, server expiry RPC deactivates after 7 days"
+      "scenario": "authenticated Edge Function atomically grants exactly once with null product/offering/package identity; server expiry RPC deactivates after 7 days"
     },
     {
       "surface": "Win-back",
@@ -80,10 +159,28 @@
   ],
   "files": [
     {
+      "path": ".env.example",
+      "exists": true,
+      "bytes": 16193,
+      "sha256": "970a51b212bea8ebe9024f315ed051d9a9a131adb10a6fcf2f8085e632e0210c"
+    },
+    {
       "path": "package.json",
       "exists": true,
-      "bytes": 18313,
-      "sha256": "5714a4b7bd35cffa77b9951ebfcad3b090cc707a89bf0e0f6001ae7ad49c81b3"
+      "bytes": 20824,
+      "sha256": "8151c6a42a79225e676a2bb20e1bcc21775162305ef13a75c7fe4e35a56fbb9b"
+    },
+    {
+      "path": "docs/hugeToDo/launch-contract.json",
+      "exists": true,
+      "bytes": 2935,
+      "sha256": "43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b"
+    },
+    {
+      "path": "scripts/launch/contract.mjs",
+      "exists": true,
+      "bytes": 6676,
+      "sha256": "6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
@@ -92,22 +189,28 @@
       "sha256": "f89981290f02bc355ca4ac279b9e660c86d480a9c6e54b041a4d600f0468b105"
     },
     {
+      "path": "apps/mobile/src/lib/env.ts",
+      "exists": true,
+      "bytes": 6982,
+      "sha256": "cee9823ec5d10a90a7dfe0596ce6c9d9b23e3a48d875e7093574b1384a7c1447"
+    },
+    {
       "path": "apps/mobile/src/features/subscription/store.ts",
       "exists": true,
-      "bytes": 10936,
-      "sha256": "9ad69b9debf029e4cc4e85d34ff163b855ad32c14f30881f5023dfa8e54ac991"
+      "bytes": 18085,
+      "sha256": "24f5075ac0540b31c4bf17d66146c9dcc8f66dd99627119f80911baab035a12a"
     },
     {
       "path": "apps/mobile/src/features/subscription/useEntitlement.ts",
       "exists": true,
-      "bytes": 9124,
-      "sha256": "9e1c92c8998845c588473acbace1f53a23aed7b6ebae2c75941365830c8a5319"
+      "bytes": 8996,
+      "sha256": "985461773303cd3a9505999ecfeb4c06d72db0e14fb2a056cbf5394cc6dec7c1"
     },
     {
       "path": "apps/mobile/src/features/subscription/useSubscriptionOffering.ts",
       "exists": true,
-      "bytes": 579,
-      "sha256": "68323e5167be9790971105d41d23397bdef153d779cf8e7f2e8a27d4a80a9675"
+      "bytes": 706,
+      "sha256": "1652dfe2e6eeb73c7e1ac752fe684465f7083456156a9fc339b122f3a32f752b"
     },
     {
       "path": "apps/mobile/src/app/onboarding/paywall.tsx",
@@ -148,20 +251,20 @@
     {
       "path": "supabase/functions/revenuecat-webhook/index.ts",
       "exists": true,
-      "bytes": 13445,
-      "sha256": "d240f129c8052426ae8adaea8e4accc17a9c8daf14104899bdc8a0ae7663bf6a"
+      "bytes": 6685,
+      "sha256": "968f41a01907c3f230b05b570bf31c85836105f532e70c9dbaebd594376840b5"
     },
     {
       "path": "supabase/functions/subscription-grants/index.ts",
       "exists": true,
-      "bytes": 3514,
-      "sha256": "706cf81639c3ee765820c482ec0d2a21e8ae63d4711a73b529036b6f153ae4a5"
+      "bytes": 3350,
+      "sha256": "754c849c1e774f3429f9949d90fd599eac79dc23aa0b5c5eb4b057884a11ad10"
     },
     {
       "path": "supabase/functions/account-deletion/index.ts",
       "exists": true,
-      "bytes": 15927,
-      "sha256": "5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b"
+      "bytes": 15316,
+      "sha256": "7441711f06bd443c3d299c4607950c85ac586226c5d9879eeea601511a54659a"
     },
     {
       "path": "supabase/migrations/20260615000027_phase6_payments.sql",
@@ -176,76 +279,100 @@
       "sha256": "a88b75b7cfc6cd0fc791d04f466f9ab30b268c892a1603d919f08fe6ae8e2a02"
     },
     {
+      "path": "supabase/migrations/20260713000044_reverse_trial_no_store_identity.sql",
+      "exists": true,
+      "bytes": 4979,
+      "sha256": "6644e557e25f9475629b583f16e4db28eb7811ec3a7123eebc3ecb296db8f841"
+    },
+    {
       "path": "apps/mobile/src/features/subscription/paywallMobileContracts.test.ts",
       "exists": true,
-      "bytes": 38244,
-      "sha256": "030326dbb2af9331513d6d5f9ad446ac61a26c04ecec559abe7cbecb31ffb669"
+      "bytes": 38547,
+      "sha256": "4cfecd7a571a82cda68f8b3f7eabaaa485e79bc00bfd8bc643ab9cbdd1c6072c"
     },
     {
       "path": "apps/mobile/src/features/subscription/store.test.ts",
       "exists": true,
-      "bytes": 9423,
-      "sha256": "0bd51518170c0b8650fd2da273d8e41e67fc79e67d61d931d26bb60b3bda024a"
+      "bytes": 20972,
+      "sha256": "954ab74196c4444615884f0d5ef38397bdd98602b010b0c6008afce540bd714d"
     },
     {
       "path": "apps/mobile/src/features/subscription/entitlement.test.ts",
       "exists": true,
-      "bytes": 3513,
-      "sha256": "9eacdfb4685fc9a11faa2b65c2becc33f3b3ea7a5b429357f457fb83c2535ed6"
+      "bytes": 3970,
+      "sha256": "2ef807ac5ae4b4bdf0d83e47c3a37c7d1de4eb425c436fec17177991616a273a"
     },
     {
       "path": "apps/mobile/src/features/subscription/serverContracts.test.ts",
       "exists": true,
-      "bytes": 3032,
-      "sha256": "f67ac9c4c1c207a37d674ac1b05cb0b795b36ecd59255ec08404429c191052a2"
+      "bytes": 5589,
+      "sha256": "8570de7a1ede32e81b99ec209011db7fd3483971d14d5da33d0c8dfb4718f157"
     },
     {
       "path": "scripts/phase6/build-payments-qa-packet.mjs",
       "exists": true,
-      "bytes": 14162,
-      "sha256": "fe95b745b23f41cfc89beea08815ddf494357cdcaca5c5de2d32d3d22aa0f5b2"
+      "bytes": 15302,
+      "sha256": "1e84ec7975ee3667a974acfbee093be1c07e43036673a854822319e9890c597b"
     },
     {
       "path": "scripts/phase6/check-payments-env.mjs",
       "exists": true,
-      "bytes": 10597,
-      "sha256": "e6ae3b4acdcda9c085aac4680669adb017a7e1de4d397d69735664aa2e45be67"
+      "bytes": 10888,
+      "sha256": "a759ca81c4905f1123a8cd62b285279cabf2bb902ea17ac910f41b04827732ef"
     },
     {
       "path": "scripts/phase6/check-payments-env-smoke.mjs",
       "exists": true,
-      "bytes": 10114,
-      "sha256": "df4ee4543c815fe726c52ef092caac9e2e56638ac7b1c94b38971f43cee7fe7a"
+      "bytes": 10775,
+      "sha256": "1cfdc08c66f9bf5ec1e16443cf5677c5745ebe969171757db2e1bbc9f49acfd2"
+    },
+    {
+      "path": "scripts/phase2/check-env.mjs",
+      "exists": true,
+      "bytes": 11132,
+      "sha256": "520719a738da550be0181335e8175f04f8e8d93c1450b99d2e67546fe9415380"
+    },
+    {
+      "path": "scripts/phase2/check-env-smoke.mjs",
+      "exists": true,
+      "bytes": 11419,
+      "sha256": "9da4e944217b3e440122690644f4e410ab1017393b04bfcc8f2bd0768421bb66"
+    },
+    {
+      "path": "scripts/phase9/supabase-policy-lint.mjs",
+      "exists": true,
+      "bytes": 9417,
+      "sha256": "937e2ffda3ba57f7cb0f4b82892529695815b15c2e42da8e3c0f952cd4a77c89"
     },
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 45000,
-      "sha256": "6dcd67a5ebf050e4416c0bae9192e1b2ac1e80edd9439b0b1078fc8215785730"
+      "bytes": 51717,
+      "sha256": "a64921f648365daaee7fa72c46010a9662deb11efb62e93c0807ecd2d87c15eb"
     },
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 14020,
-      "sha256": "af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083"
+      "bytes": 14689,
+      "sha256": "6248cbe57cb3a77b3ba8fc36c3a78d4ab18ca363b275c4dbf7735dc3e3f91675"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
       "exists": true,
-      "bytes": 10167,
-      "sha256": "d7d616fcbe9078b55c0d4b3bf5e88ae19570fa533aee8edc599cf1956c7c9149"
+      "bytes": 10431,
+      "sha256": "db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8"
     },
     {
       "path": "docs/E2E_TESTING_CHECKLIST.md",
       "exists": true,
-      "bytes": 3556,
-      "sha256": "014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e"
+      "bytes": 3632,
+      "sha256": "1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f"
     },
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 358477,
-      "sha256": "7fc8375b5a219f6cf1d8e335d353d66999fdd68d8ec57aeea1cac49ed1136ab3"
+      "bytes": 357258,
+      "sha256": "a8ee0435bc31e8d32580544586bd1bd36932aa75b8c5cd3dba06c06bb6eabc8d"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
@@ -262,14 +389,14 @@
     {
       "path": "docs/phase-6/payments-runbook.md",
       "exists": true,
-      "bytes": 4053,
-      "sha256": "fdbeaa848738a3ae2b0048fa6988c10a0e0f70b0b7e0df45d81449ea4169c812"
+      "bytes": 4488,
+      "sha256": "094cb458ffa75d3efe4882de0d396782fd7aeb78ae1afb976034c9f6d76fa29d"
     },
     {
       "path": "docs/phase-6/payments-qa-checklist.md",
       "exists": true,
-      "bytes": 3683,
-      "sha256": "5bec4264a96766fe6861096ec709eab95088b5975c4227c6562f7454f519a291"
+      "bytes": 4023,
+      "sha256": "8d121004e406b383060e0df686710b4da1d2cb6e38c6095b146a4ee7965c02b1"
     },
     {
       "path": "docs/phase-6/phase-6-exit-review.md",
@@ -280,10 +407,8 @@
   ],
   "blockers": [
     "Missing final EXPO_PUBLIC_REVENUECAT_IOS_KEY.",
-    "Missing final EXPO_PUBLIC_REVENUECAT_ANDROID_KEY.",
     "Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.",
     "Missing final EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID.",
-    "Missing final EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID.",
     "Missing production REVENUECAT_WEBHOOK_AUTH.",
     "Missing production REVENUECAT_WEBHOOK_SIGNING_SECRET.",
     "Missing production REVENUECAT_SECRET_API_KEY.",
@@ -293,7 +418,6 @@
     "EXPO_PUBLIC_SUPPORT_URL must be a production HTTPS URL.",
     "Missing PHASE6_RC_OFFERING_REVIEWED=true.",
     "Missing PHASE6_IOS_SANDBOX_RESTORE_PASS=true.",
-    "Missing PHASE6_ANDROID_LICENSE_TEST_PASS=true.",
     "Missing PHASE6_WEBHOOK_HMAC_TEST_PASS=true.",
     "Missing PHASE6_FINANCE_SIGNOFF=true.",
     "Missing PHASE6_SIGNED_OFF_BY."

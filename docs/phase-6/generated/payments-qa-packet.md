@@ -1,16 +1,16 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-11T18:48:42.291Z
-Git SHA: de9bee6b829c97a89c2f0e08a83e59c788baffa9
+Generated at: 2026-07-13T14:47:22.722Z
+Git SHA: 5ccb42847bd98fb52475cfc49850476924546fa9
 Git status: clean
 
-Strict completion requires real RevenueCat offering review, iOS sandbox restore, Android license-test restore, webhook HMAC replay evidence, finance signoff, and a named owner.
+Strict completion requires real RevenueCat offering review and store restore evidence for every contract-required platform, webhook HMAC replay evidence, finance signoff, and a named owner.
 
 ## Evidence
 
 - RevenueCat offering reviewed: BLOCKED
 - iOS sandbox restore pass: BLOCKED
-- Android license test pass: BLOCKED
+- Android license test pass: NOT APPLICABLE
 - Webhook HMAC test pass: BLOCKED
 - Finance signoff: BLOCKED
 - Signed off by: BLOCKED
@@ -21,10 +21,9 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 - Production excludes RevenueCat Test Store key: yes
 - Entitlement ID is pro: yes
 - iOS RevenueCat public key configured: BLOCKED
-- Android RevenueCat public key configured: BLOCKED
+- Android RevenueCat public key configured: NOT APPLICABLE
 - Annual product ID final: BLOCKED
 - Monthly product ID final: BLOCKED
-- Reverse-trial product ID final: BLOCKED
 - Webhook shared auth configured: BLOCKED
 - Webhook signing secret configured: BLOCKED
 - RevenueCat secret API key configured: BLOCKED
@@ -44,7 +43,7 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 | Cancellation | webhook sets will_renew=false but keeps access until expiration |
 | Expiration/refund | webhook deactivates entitlement and lifecycle screen downgrades gracefully |
 | Restore | new install restores active subscription and writes verified local cache |
-| Reverse trial | authenticated Edge Function atomically grants exactly once, server expiry RPC deactivates after 7 days |
+| Reverse trial | authenticated Edge Function atomically grants exactly once with null product/offering/package identity; server expiry RPC deactivates after 7 days |
 | Win-back | native eligible win-back offer purchases on iOS; unavailable offers are hidden/rerouted |
 | Webhook auth | bad HMAC rejected, stale timestamp rejected, duplicate event id idempotent |
 | Account deletion | mobile copy says deletion does not cancel store billing; server calls RevenueCat delete customer |
@@ -54,47 +53,53 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 18313 | 5714a4b7bd35cffa77b9951ebfcad3b090cc707a89bf0e0f6001ae7ad49c81b3 |
+| .env.example | present | 16193 | 970a51b212bea8ebe9024f315ed051d9a9a131adb10a6fcf2f8085e632e0210c |
+| package.json | present | 20824 | 8151c6a42a79225e676a2bb20e1bcc21775162305ef13a75c7fe4e35a56fbb9b |
+| docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
+| scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
 | apps/mobile/src/lib/iap/revenuecat.ts | present | 18317 | f89981290f02bc355ca4ac279b9e660c86d480a9c6e54b041a4d600f0468b105 |
-| apps/mobile/src/features/subscription/store.ts | present | 10936 | 9ad69b9debf029e4cc4e85d34ff163b855ad32c14f30881f5023dfa8e54ac991 |
-| apps/mobile/src/features/subscription/useEntitlement.ts | present | 9124 | 9e1c92c8998845c588473acbace1f53a23aed7b6ebae2c75941365830c8a5319 |
-| apps/mobile/src/features/subscription/useSubscriptionOffering.ts | present | 579 | 68323e5167be9790971105d41d23397bdef153d779cf8e7f2e8a27d4a80a9675 |
+| apps/mobile/src/lib/env.ts | present | 6982 | cee9823ec5d10a90a7dfe0596ce6c9d9b23e3a48d875e7093574b1384a7c1447 |
+| apps/mobile/src/features/subscription/store.ts | present | 18085 | 24f5075ac0540b31c4bf17d66146c9dcc8f66dd99627119f80911baab035a12a |
+| apps/mobile/src/features/subscription/useEntitlement.ts | present | 8996 | 985461773303cd3a9505999ecfeb4c06d72db0e14fb2a056cbf5394cc6dec7c1 |
+| apps/mobile/src/features/subscription/useSubscriptionOffering.ts | present | 706 | 1652dfe2e6eeb73c7e1ac752fe684465f7083456156a9fc339b122f3a32f752b |
 | apps/mobile/src/app/onboarding/paywall.tsx | present | 13073 | 8431d6eaf1af5b9b3b11929ca846234384beecfeb6606cece8c5b460686530c3 |
 | apps/mobile/src/app/paywall/upsell.tsx | present | 10439 | 3aa577c240eaa5085db61a9bab40ece1138bd640f177ef44a3dac1a3d4d4c9eb |
 | apps/mobile/src/app/paywall/reoffer.tsx | present | 9007 | d641e51cf1e1eea76e05bcd5eeb3ca824832465921ae5122fda824762f63a682 |
 | apps/mobile/src/app/paywall/downgrade.tsx | present | 5506 | 8df92df0e0523dfbef418973ab376249bfbbca7f066f02942ff5256b732faa20 |
 | apps/mobile/src/app/paywall/winback.tsx | present | 7585 | 607e9183342717447fcdeea518bcd20f05d5128e407c8e55f4c11e5e0dc5068d |
 | apps/mobile/src/app/settings/subscription.tsx | present | 15590 | f3259cbed4d0b74ba9825b104ae6d30164d208c1db73a1994a1a9a9ee63ef8d1 |
-| supabase/functions/revenuecat-webhook/index.ts | present | 13445 | d240f129c8052426ae8adaea8e4accc17a9c8daf14104899bdc8a0ae7663bf6a |
-| supabase/functions/subscription-grants/index.ts | present | 3514 | 706cf81639c3ee765820c482ec0d2a21e8ae63d4711a73b529036b6f153ae4a5 |
-| supabase/functions/account-deletion/index.ts | present | 15927 | 5bb6817f086f4387e701e205493468c0b9a4c295e993a22ec6fafd7f8fd34d0b |
+| supabase/functions/revenuecat-webhook/index.ts | present | 6685 | 968f41a01907c3f230b05b570bf31c85836105f532e70c9dbaebd594376840b5 |
+| supabase/functions/subscription-grants/index.ts | present | 3350 | 754c849c1e774f3429f9949d90fd599eac79dc23aa0b5c5eb4b057884a11ad10 |
+| supabase/functions/account-deletion/index.ts | present | 15316 | 7441711f06bd443c3d299c4607950c85ac586226c5d9879eeea601511a54659a |
 | supabase/migrations/20260615000027_phase6_payments.sql | present | 3061 | ac68e551a04d938548f93da78994984786e29b3bfdda51d52f39f7371e6b6865 |
 | supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql | present | 3947 | a88b75b7cfc6cd0fc791d04f466f9ab30b268c892a1603d919f08fe6ae8e2a02 |
-| apps/mobile/src/features/subscription/paywallMobileContracts.test.ts | present | 38244 | 030326dbb2af9331513d6d5f9ad446ac61a26c04ecec559abe7cbecb31ffb669 |
-| apps/mobile/src/features/subscription/store.test.ts | present | 9423 | 0bd51518170c0b8650fd2da273d8e41e67fc79e67d61d931d26bb60b3bda024a |
-| apps/mobile/src/features/subscription/entitlement.test.ts | present | 3513 | 9eacdfb4685fc9a11faa2b65c2becc33f3b3ea7a5b429357f457fb83c2535ed6 |
-| apps/mobile/src/features/subscription/serverContracts.test.ts | present | 3032 | f67ac9c4c1c207a37d674ac1b05cb0b795b36ecd59255ec08404429c191052a2 |
-| scripts/phase6/build-payments-qa-packet.mjs | present | 14162 | fe95b745b23f41cfc89beea08815ddf494357cdcaca5c5de2d32d3d22aa0f5b2 |
-| scripts/phase6/check-payments-env.mjs | present | 10597 | e6ae3b4acdcda9c085aac4680669adb017a7e1de4d397d69735664aa2e45be67 |
-| scripts/phase6/check-payments-env-smoke.mjs | present | 10114 | df4ee4543c815fe726c52ef092caac9e2e56638ac7b1c94b38971f43cee7fe7a |
-| scripts/e2e/human-e2e-manifest.mjs | present | 45000 | 6dcd67a5ebf050e4416c0bae9192e1b2ac1e80edd9439b0b1078fc8215785730 |
-| scripts/phase9/lib.mjs | present | 14020 | af0b4c651325a3fbb33eb94147744cb23253fa439066861e3ef1b64cbae7a083 |
-| docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10167 | d7d616fcbe9078b55c0d4b3bf5e88ae19570fa533aee8edc599cf1956c7c9149 |
-| docs/E2E_TESTING_CHECKLIST.md | present | 3556 | 014a9213d104d0a5bac7f1752cd94e938d3d5461d0ec5cffbf92e31678f96f7e |
-| docs/USER_FLOW_TREE.md | present | 358477 | 7fc8375b5a219f6cf1d8e335d353d66999fdd68d8ec57aeea1cac49ed1136ab3 |
+| supabase/migrations/20260713000044_reverse_trial_no_store_identity.sql | present | 4979 | 6644e557e25f9475629b583f16e4db28eb7811ec3a7123eebc3ecb296db8f841 |
+| apps/mobile/src/features/subscription/paywallMobileContracts.test.ts | present | 38547 | 4cfecd7a571a82cda68f8b3f7eabaaa485e79bc00bfd8bc643ab9cbdd1c6072c |
+| apps/mobile/src/features/subscription/store.test.ts | present | 20972 | 954ab74196c4444615884f0d5ef38397bdd98602b010b0c6008afce540bd714d |
+| apps/mobile/src/features/subscription/entitlement.test.ts | present | 3970 | 2ef807ac5ae4b4bdf0d83e47c3a37c7d1de4eb425c436fec17177991616a273a |
+| apps/mobile/src/features/subscription/serverContracts.test.ts | present | 5589 | 8570de7a1ede32e81b99ec209011db7fd3483971d14d5da33d0c8dfb4718f157 |
+| scripts/phase6/build-payments-qa-packet.mjs | present | 15302 | 1e84ec7975ee3667a974acfbee093be1c07e43036673a854822319e9890c597b |
+| scripts/phase6/check-payments-env.mjs | present | 10888 | a759ca81c4905f1123a8cd62b285279cabf2bb902ea17ac910f41b04827732ef |
+| scripts/phase6/check-payments-env-smoke.mjs | present | 10775 | 1cfdc08c66f9bf5ec1e16443cf5677c5745ebe969171757db2e1bbc9f49acfd2 |
+| scripts/phase2/check-env.mjs | present | 11132 | 520719a738da550be0181335e8175f04f8e8d93c1450b99d2e67546fe9415380 |
+| scripts/phase2/check-env-smoke.mjs | present | 11419 | 9da4e944217b3e440122690644f4e410ab1017393b04bfcc8f2bd0768421bb66 |
+| scripts/phase9/supabase-policy-lint.mjs | present | 9417 | 937e2ffda3ba57f7cb0f4b82892529695815b15c2e42da8e3c0f952cd4a77c89 |
+| scripts/e2e/human-e2e-manifest.mjs | present | 51717 | a64921f648365daaee7fa72c46010a9662deb11efb62e93c0807ecd2d87c15eb |
+| scripts/phase9/lib.mjs | present | 14689 | 6248cbe57cb3a77b3ba8fc36c3a78d4ab18ca363b275c4dbf7735dc3e3f91675 |
+| docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
+| docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
+| docs/USER_FLOW_TREE.md | present | 357258 | a8ee0435bc31e8d32580544586bd1bd36932aa75b8c5cd3dba06c06bb6eabc8d |
 | docs/e2e/generated/human-e2e-manifest.json | present | 38560 | 4c194a4360f1a6376f060c5a2e0fbfcc0249b260b4c84f1771ee260183593832 |
 | docs/e2e/generated/human-e2e-manifest.md | present | 11329 | f4ff33f094697bba7d29bd7eb8596043fd455a90d033ad266bd8385070850d70 |
-| docs/phase-6/payments-runbook.md | present | 4053 | fdbeaa848738a3ae2b0048fa6988c10a0e0f70b0b7e0df45d81449ea4169c812 |
-| docs/phase-6/payments-qa-checklist.md | present | 3683 | 5bec4264a96766fe6861096ec709eab95088b5975c4227c6562f7454f519a291 |
+| docs/phase-6/payments-runbook.md | present | 4488 | 094cb458ffa75d3efe4882de0d396782fd7aeb78ae1afb976034c9f6d76fa29d |
+| docs/phase-6/payments-qa-checklist.md | present | 4023 | 8d121004e406b383060e0df686710b4da1d2cb6e38c6095b146a4ee7965c02b1 |
 | docs/phase-6/phase-6-exit-review.md | present | 2755 | 0ce0003af4a03b66cde2bafe235bae50fbe3a9e66f6ff0b107f74e4c64cd50df |
 
 ## Blockers
 
 - Missing final EXPO_PUBLIC_REVENUECAT_IOS_KEY.
-- Missing final EXPO_PUBLIC_REVENUECAT_ANDROID_KEY.
 - Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.
 - Missing final EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID.
-- Missing final EXPO_PUBLIC_REVENUECAT_REVERSE_TRIAL_PRODUCT_ID.
 - Missing production REVENUECAT_WEBHOOK_AUTH.
 - Missing production REVENUECAT_WEBHOOK_SIGNING_SECRET.
 - Missing production REVENUECAT_SECRET_API_KEY.
@@ -104,7 +109,6 @@ Strict completion requires real RevenueCat offering review, iOS sandbox restore,
 - EXPO_PUBLIC_SUPPORT_URL must be a production HTTPS URL.
 - Missing PHASE6_RC_OFFERING_REVIEWED=true.
 - Missing PHASE6_IOS_SANDBOX_RESTORE_PASS=true.
-- Missing PHASE6_ANDROID_LICENSE_TEST_PASS=true.
 - Missing PHASE6_WEBHOOK_HMAC_TEST_PASS=true.
 - Missing PHASE6_FINANCE_SIGNOFF=true.
 - Missing PHASE6_SIGNED_OFF_BY.
