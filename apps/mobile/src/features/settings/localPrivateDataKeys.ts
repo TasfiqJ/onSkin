@@ -3,7 +3,10 @@ import {
   LOCAL_DATA_OWNER_HASH_KEY,
 } from '@/lib/auth/sessionOwnerKey';
 import { brandCachePrefix } from '@/lib/brand';
-import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCore';
+import {
+  LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
+  PLAINTEXT_STAGING_JOURNAL_KEY,
+} from '@/lib/storage/plaintextStagingCore';
 
 export const LOCAL_PRIVATE_DATA_KEYS = [
   'onskin.ageVerified',
@@ -59,6 +62,7 @@ export const LOCAL_PRIVATE_METADATA_KEYS = [
 export const LOCAL_PRIVATE_CONTROL_KEYS = [
   LOCAL_DATA_CLEANUP_REQUIRED_KEY,
   PLAINTEXT_STAGING_JOURNAL_KEY,
+  LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
 ] as const;
 
 export const LOCAL_PRIVATE_CACHE_FILENAMES = ['onskin-export.json'] as const;

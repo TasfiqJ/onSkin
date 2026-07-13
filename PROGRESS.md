@@ -6835,8 +6835,8 @@ conflict, consent, entitlement, notification, Shelf, recommendation, and profile
 stores while preserving malformed/future bytes. Independent review caught and
 fixed a legacy conflict-choice migration regression and a hidden routine-order
 read-error path before treating the checkpoint as release-ready. Clean `main` at
-`02f0b03b3` passes formatting, root typecheck, lint, and all 209 mobile test
-files / 2,244 tests. Native secure-storage/process-death evidence remains open. PAY-06 also
+A clean-main rerun passes formatting, root typecheck, lint, and all 209 mobile
+test files / 2,248 tests. Native secure-storage/process-death evidence remains open. PAY-06 also
 removes the fake reverse-trial Store/RevenueCat identity, preserves a temporary
 null-enforcing four-argument RPC compatibility shim for zero-downtime rollout,
 and regenerates its clean-SHA payment evidence packet.

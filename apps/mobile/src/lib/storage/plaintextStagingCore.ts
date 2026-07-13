@@ -1,4 +1,5 @@
-export const PLAINTEXT_STAGING_JOURNAL_KEY = 'onskin.plaintext_staging_journal.v1';
+export const PLAINTEXT_STAGING_JOURNAL_KEY = 'routinekind.plaintext_staging_journal.v1';
+export const LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY = 'onskin.plaintext_staging_journal.v1';
 export const PLAINTEXT_STAGING_CACHE_UNAVAILABLE = 'PLAINTEXT_STAGING_CACHE_UNAVAILABLE';
 export const PLAINTEXT_STAGING_JOURNAL_INVALID = 'PLAINTEXT_STAGING_JOURNAL_INVALID';
 export const PLAINTEXT_STAGING_ENTRY_UNOWNED = 'PLAINTEXT_STAGING_ENTRY_UNOWNED';
@@ -164,15 +165,33 @@ export function createPlaintextStagingCoordinator(deps: PlaintextStagingDependen
   }
 
   async function readJournal(): Promise<PlaintextStagingJournal> {
-    return parseJournal(await deps.storage.getItem(PLAINTEXT_STAGING_JOURNAL_KEY));
+    const currentRaw = await deps.storage.getItem(PLAINTEXT_STAGING_JOURNAL_KEY);
+    const legacyRaw = await deps.storage.getItem(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY);
+    const current = parseJournal(currentRaw);
+    if (legacyRaw === null) return current;
+
+    const legacy = parseJournal(legacyRaw);
+    if (currentRaw !== null && JSON.stringify(current) !== JSON.stringify(legacy)) {
+      // Two different ownership ledgers could cause either an orphaned plaintext
+      // file or deletion of an unowned file. Preserve both and fail closed.
+      throw new Error(PLAINTEXT_STAGING_JOURNAL_INVALID);
+    }
+
+    if (currentRaw === null) {
+      await deps.storage.setItem(PLAINTEXT_STAGING_JOURNAL_KEY, JSON.stringify(legacy));
+    }
+    await deps.storage.removeItem(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY);
+    return legacy;
   }
 
   async function writeJournal(journal: PlaintextStagingJournal): Promise<void> {
     if (journal.entries.length === 0) {
       await deps.storage.removeItem(PLAINTEXT_STAGING_JOURNAL_KEY);
+      await deps.storage.removeItem(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY);
       return;
     }
     await deps.storage.setItem(PLAINTEXT_STAGING_JOURNAL_KEY, JSON.stringify(journal));
+    await deps.storage.removeItem(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY);
   }
 
   function uriForEntry(

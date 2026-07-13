@@ -145,7 +145,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. A clean `main` rerun on
-2026-07-13 passes root typecheck, lint, and 209 mobile test files / 2244 tests.
+2026-07-13 passes root typecheck, lint, and 209 mobile test files / 2248 tests.
 The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in

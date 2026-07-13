@@ -115,6 +115,12 @@ const testOrScriptFixturePatterns = [
 function isGuardRail(relPath, line) {
   if (relPath === 'apps/mobile/app.config.js' && /legacyIdentityPattern/.test(line)) return true;
   if (
+    relPath === 'apps/mobile/src/lib/storage/plaintextStagingCore.ts' &&
+    /LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY/.test(line)
+  ) {
+    return true;
+  }
+  if (
     relPath === 'scripts/phase2/check-env.mjs' &&
     (/\/onskin\/i\.test\(displayName\)/.test(line) ||
       /Production identity still uses OnSkin without BRAND_LEGAL_CLEARANCE=cleared/.test(line))

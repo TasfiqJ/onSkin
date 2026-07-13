@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   createPlaintextStagingCoordinator,
+  LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
   PLAINTEXT_STAGING_CACHE_UNAVAILABLE,
   PLAINTEXT_STAGING_ENTRY_UNOWNED,
   PLAINTEXT_STAGING_JOURNAL_INVALID,
@@ -69,6 +70,120 @@ function readJournal(storage: Map<string, string>) {
 }
 
 describe('plaintext staging journal', () => {
+  it('uses the current identity namespace and migrates a legacy journal before cleanup', async () => {
+    const harness = createHarness();
+    harness.storage.set(
+      LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
+      JSON.stringify({
+        version: 1,
+        entries: [
+          {
+            operationId: FIRST_ID,
+            createdAt: 1,
+            purpose: 'data_export_json',
+            state: 'plaintext_written',
+          },
+        ],
+      }),
+    );
+    harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.json`);
+
+    expect(PLAINTEXT_STAGING_JOURNAL_KEY).toBe('routinekind.plaintext_staging_journal.v1');
+    await expect(harness.coordinator.scavenge()).resolves.toBe(1);
+
+    expect(harness.files).toEqual(new Set());
+    expect(harness.storage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+    expect(harness.storage.has(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+  });
+
+  it('fails closed when current and legacy journals claim different plaintext', async () => {
+    const harness = createHarness();
+    const journal = (operationId: string) =>
+      JSON.stringify({
+        version: 1,
+        entries: [
+          {
+            operationId,
+            createdAt: 1,
+            purpose: 'data_export_json',
+            state: 'plaintext_written',
+          },
+        ],
+      });
+    harness.storage.set(PLAINTEXT_STAGING_JOURNAL_KEY, journal(FIRST_ID));
+    harness.storage.set(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY, journal(SECOND_ID));
+    harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.json`);
+    harness.files.add(`${STAGING_DIRECTORY}${SECOND_ID}.json`);
+
+    await expect(harness.coordinator.scavenge()).rejects.toThrow(PLAINTEXT_STAGING_JOURNAL_INVALID);
+
+    expect(harness.deleteAsync).not.toHaveBeenCalled();
+    expect(harness.files.size).toBe(2);
+    expect(harness.storage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(true);
+    expect(harness.storage.has(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(true);
+  });
+
+  it('keeps the legacy journal authoritative when the current-key migration write fails', async () => {
+    const harness = createHarness();
+    const legacyJournal = JSON.stringify({
+      version: 1,
+      entries: [
+        {
+          operationId: FIRST_ID,
+          createdAt: 1,
+          purpose: 'data_export_json',
+          state: 'plaintext_written',
+        },
+      ],
+    });
+    harness.storage.set(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY, legacyJournal);
+    harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.json`);
+    harness.deps.storage.setItem.mockRejectedValueOnce(new Error('storage write interrupted'));
+
+    await expect(harness.coordinator.scavenge()).rejects.toThrow('storage write interrupted');
+
+    expect(harness.deleteAsync).not.toHaveBeenCalled();
+    expect(harness.storage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+    expect(harness.storage.get(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(legacyJournal);
+
+    await expect(harness.coordinator.scavenge()).resolves.toBe(1);
+    expect(harness.files).toEqual(new Set());
+    expect(harness.storage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+    expect(harness.storage.has(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+  });
+
+  it('resumes safely from identical dual journals when legacy removal is interrupted', async () => {
+    const harness = createHarness();
+    const legacyJournal = JSON.stringify({
+      version: 1,
+      entries: [
+        {
+          operationId: FIRST_ID,
+          createdAt: 1,
+          purpose: 'data_export_json',
+          state: 'plaintext_written',
+        },
+      ],
+    });
+    harness.storage.set(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY, legacyJournal);
+    harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.json`);
+    harness.deps.storage.removeItem.mockRejectedValueOnce(new Error('storage remove interrupted'));
+
+    await expect(harness.coordinator.scavenge()).rejects.toThrow('storage remove interrupted');
+
+    expect(harness.deleteAsync).not.toHaveBeenCalled();
+    expect(harness.storage.get(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(legacyJournal);
+    expect(harness.storage.get(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(legacyJournal);
+    expect(harness.deps.storage.setItem.mock.invocationCallOrder[0]).toBeLessThan(
+      harness.deps.storage.removeItem.mock.invocationCallOrder[0]!,
+    );
+
+    await expect(harness.coordinator.scavenge()).resolves.toBe(1);
+    expect(harness.files).toEqual(new Set());
+    expect(harness.storage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+    expect(harness.storage.has(LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+  });
+
   it('reserves an opaque owned filename with a content-free strict journal entry', async () => {
     const harness = createHarness();
 
