@@ -1,9 +1,4 @@
-import {
-  getPrivateItem,
-  removePrivateItem,
-  setPrivateItem,
-  updatePrivateItem,
-} from '@/lib/storage/privateKV';
+import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import {
   isConflictChoiceEligible,
@@ -27,6 +22,9 @@ export {
 // cleanup remain compatible. Legacy string arrays migrate as use-together
 // choices for rule version 1.
 const KEY = 'onskin.conflict.overrides';
+
+export const CONFLICT_CHOICES_INVALID = 'CONFLICT_CHOICES_INVALID';
+export const CONFLICT_CHOICES_SCHEMA_UNSUPPORTED = 'CONFLICT_CHOICES_SCHEMA_UNSUPPORTED';
 
 type StoredConflictChoices = {
   schemaVersion: 1;
@@ -132,61 +130,45 @@ function normalizeChoices(value: unknown): NormalizedChoices | null {
  * rewritten or silently omitted by an older app. */
 export function normalizeConflictChoicesForExport(value: unknown): unknown {
   const normalized = normalizeChoices(value);
-  if (normalized) return normalized.value;
+  if (
+    normalized &&
+    !(isRecord(value) && value.schemaVersion === 1 && normalized.changed)
+  ) {
+    return normalized.value;
+  }
   return {
     export_status: 'unrecognized_conflict_choice_schema',
     stored_value: value,
   };
 }
 
-async function persist(value: StoredConflictChoices): Promise<void> {
-  if (Object.keys(value.choices).length === 0) {
-    await removePrivateItem(KEY);
-    return;
-  }
-  await setPrivateItem(KEY, JSON.stringify(value));
-}
-
-function choicesForMutation(raw: string | null): ConflictChoices {
-  if (!raw) return {};
-
+function decodeChoices(raw: string): ConflictChoices {
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
   } catch {
-    return {};
+    throw new Error(CONFLICT_CHOICES_INVALID);
   }
   if (isRecord(parsed) && typeof parsed.schemaVersion === 'number' && parsed.schemaVersion > 1) {
-    throw new Error('CONFLICT_CHOICES_SCHEMA_UNSUPPORTED');
+    throw new Error(CONFLICT_CHOICES_SCHEMA_UNSUPPORTED);
   }
-  return normalizeChoices(parsed)?.value.choices ?? {};
+  const normalized = normalizeChoices(parsed);
+  if (!normalized) throw new Error(CONFLICT_CHOICES_INVALID);
+  if (isRecord(parsed) && parsed.schemaVersion === 1 && normalized.changed) {
+    throw new Error(CONFLICT_CHOICES_INVALID);
+  }
+  return normalized.value.choices;
+}
+
+function choicesForMutation(raw: string | null): ConflictChoices {
+  return raw === null ? {} : decodeChoices(raw);
 }
 
 /** Strict loader for write paths. Private-storage failures propagate so the UI
  * cannot claim a choice was saved or replace unreadable prior state. */
 export async function loadConflictChoices(): Promise<ConflictChoices> {
   const raw = await getPrivateItem(KEY);
-  if (!raw) return {};
-
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw) as unknown;
-  } catch {
-    await removePrivateItem(KEY);
-    return {};
-  }
-
-  if (isRecord(parsed) && typeof parsed.schemaVersion === 'number' && parsed.schemaVersion > 1) {
-    throw new Error('CONFLICT_CHOICES_SCHEMA_UNSUPPORTED');
-  }
-
-  const normalized = normalizeChoices(parsed);
-  if (!normalized) {
-    await removePrivateItem(KEY);
-    return {};
-  }
-  if (normalized.changed) await persist(normalized.value);
-  return normalized.value.choices;
+  return raw === null ? {} : decodeChoices(raw);
 }
 
 /** Conservative read for schedule/shelf rendering. If private state cannot be
