@@ -11,12 +11,22 @@ import {
 import { BRAND } from '@/lib/brand';
 
 import { deleteAccount, exportData, withdrawHealthDataConsent } from './actions';
+import {
+  consumeAccountDeletionNotice,
+  peekAccountDeletionNotice,
+  resetAccountDeletionNoticeForTests,
+} from './accountDeletionNotice';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
 const STAGED_EXPORT = {
   operationId: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
   purpose: 'data_export_json' as const,
   uri: 'file://cache/private-plaintext-staging-v1/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.json',
+};
+const COMPLETE_ACCOUNT_DELETION_RESPONSE = {
+  deleted: true,
+  apple: { status: 'revoked' },
+  posthog: 'skipped',
 };
 
 function readSource(path: string): string {
@@ -432,13 +442,17 @@ describe('settings account deletion and consent withdrawal', () => {
     mocks.writeAsStringAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
-    mocks.invoke.mockResolvedValue({ data: null, error: null });
+    resetAccountDeletionNoticeForTests();
+    mocks.invoke.mockResolvedValue({ data: COMPLETE_ACCOUNT_DELETION_RESPONSE, error: null });
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.signOut.mockResolvedValue(undefined);
   });
 
   it('deletes through the backend before handing off to the root account boundary', async () => {
-    await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
+    await expect(deleteAccount(mocks.signOut)).resolves.toEqual({
+      appleStatus: 'revoked',
+      posthogStatus: 'skipped',
+    });
 
     expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledWith({ id: 'user-1' });
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
@@ -476,13 +490,65 @@ describe('settings account deletion and consent withdrawal', () => {
       new Error('native apple unavailable'),
     );
 
-    await expect(deleteAccount(mocks.signOut)).resolves.toBeUndefined();
+    mocks.invoke.mockResolvedValueOnce({
+      data: {
+        deleted: true,
+        apple: {
+          status: 'manual_revocation_required',
+          reason: 'credential_unavailable',
+          instruction: 'provider copy is not trusted for local rendering',
+          instruction_url: 'https://support.apple.com/en-us/102571',
+        },
+        posthog: 'already_absent',
+      },
+      error: null,
+    });
+    mocks.signOut.mockImplementationOnce(async () => {
+      expect(peekAccountDeletionNotice()).toEqual(
+        expect.objectContaining({ kind: 'apple_manual_revocation' }),
+      );
+    });
+
+    await expect(deleteAccount(mocks.signOut)).resolves.toEqual({
+      appleStatus: 'manual_revocation_required',
+      posthogStatus: 'already_absent',
+    });
 
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
       body: {},
     });
     expect(mocks.signOut).toHaveBeenCalledTimes(1);
+    expect(consumeAccountDeletionNotice()).toEqual(
+      expect.objectContaining({ kind: 'apple_manual_revocation' }),
+    );
+  });
+
+  it('does not report or locally finalize an unattested deletion response', async () => {
+    mocks.invoke.mockResolvedValueOnce({
+      data: { deleted: false, apple: { status: 'revoked' }, posthog: 'skipped' },
+      error: null,
+    });
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('ACCOUNT_DELETION_RESPONSE_INVALID');
+
+    expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(consumeAccountDeletionNotice()).toBeNull();
+  });
+
+  it.each([
+    null,
+    { deleted: true, posthog: 'skipped' },
+    { deleted: true, apple: { status: 'revoked' } },
+    { deleted: true, apple: { status: 'unexpected' }, posthog: 'skipped' },
+    { deleted: true, apple: { status: 'revoked' }, posthog: 'deletion_pending' },
+  ])('rejects malformed account-deletion success payload %#', async (response) => {
+    mocks.invoke.mockResolvedValueOnce({ data: response, error: null });
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('ACCOUNT_DELETION_RESPONSE_INVALID');
+
+    expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(consumeAccountDeletionNotice()).toBeNull();
   });
 
   it('fails fast without local cleanup when the data-rights backend is unavailable', async () => {
@@ -567,5 +633,25 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(source).toContain('setPrivacyActionFeedback(null);');
     expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain('import { Alert');
+  });
+
+  it('keeps the Apple fallback completion surface explicit, scrollable, and accessible', () => {
+    const source = readSource('app/index.tsx');
+
+    expect(source).toContain('useState(peekAccountDeletionNotice)');
+    expect(source).toContain('acknowledgeAccountDeletionNotice(accountDeletionNotice)');
+    expect(source).toMatch(
+      /if \(!accountDeletionNotice \|\| deciding \|\| onboarded\.data === true\) return;/,
+    );
+    expect(source.indexOf('const deciding =')).toBeLessThan(
+      source.indexOf('acknowledgeAccountDeletionNotice(accountDeletionNotice);'),
+    );
+    expect(source).toContain('contentContainerStyle={{ flexGrow: 1 }}');
+    expect(source).toContain('accessibilityLiveRegion="assertive"');
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('label="Open Apple instructions"');
+    expect(source).toContain('Apple Support could not open. Use the iPhone Settings steps above.');
+    expect(source).toContain('min-h-[44px]');
+    expect(source).not.toContain('useState(consumeAccountDeletionNotice)');
   });
 });

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { createHmac, randomUUID } from 'node:crypto';
+import { createHash, createHmac, randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
 import {
@@ -201,6 +201,55 @@ function rows(bundle, key) {
   const value = bundle[key];
   assert(Array.isArray(value), `export field ${key} is not an array.`);
   return value;
+}
+
+const subscriptionIdentityFields = [
+  'user_id',
+  'resolved_user_id',
+  'app_user_id',
+  'original_app_user_id',
+  'aliases',
+  'transferred_from',
+  'transferred_to',
+];
+const subscriptionArrayIdentityFields = ['aliases', 'transferred_from', 'transferred_to'];
+
+function subscriptionEventContainsIdentity(row, userId) {
+  return (
+    row?.user_id === userId ||
+    row?.resolved_user_id === userId ||
+    row?.app_user_id === userId ||
+    row?.original_app_user_id === userId ||
+    subscriptionArrayIdentityFields.some(
+      (field) => Array.isArray(row?.[field]) && row[field].includes(userId),
+    )
+  );
+}
+
+function assertNoSubscriptionIdentity(row, userId, label) {
+  assert(row && typeof row === 'object', `${label}: subscription event row is missing.`);
+  assert(
+    !subscriptionEventContainsIdentity(row, userId),
+    `${label}: deleted account remains in a subscription identity field.`,
+  );
+}
+
+function assertExactArray(actual, expected, label) {
+  assert(
+    JSON.stringify(actual) === JSON.stringify(expected),
+    `${label}: retained array order or membership changed.`,
+  );
+}
+
+async function subscriptionEventById(admin, id, label) {
+  const { data, error } = await admin
+    .from('subscriptions_events')
+    .select('*')
+    .eq('id', id)
+    .single();
+  if (error) throw error;
+  assert(data, `${label}: subscription event row is missing.`);
+  return data;
 }
 
 function expectBundleHasOnlyUser(bundle, key, column, userId, otherUserId) {
@@ -444,6 +493,7 @@ async function main() {
   const users = [];
   const storagePaths = [];
   const externalOrderIds = [];
+  const subscriptionEventIds = [];
 
   try {
     const userA = await createLiveUser(admin, 'a', (user) => users.push(user));
@@ -592,6 +642,85 @@ async function main() {
 
     const seededA = await seed(userA, 'a');
     const seededB = await seed(userB, 'b');
+
+    const seedSubscriptionEvent = async (label, identities) => {
+      const now = new Date().toISOString();
+      const event = await insertOne(admin, 'subscriptions_events', {
+        rc_event_id: `phase9-data-rights-${label}-${randomUUID()}`,
+        event_type: 'PHASE9_DATA_RIGHTS_FIXTURE',
+        payload: { fixture: label, ingress_shape: 'sanitized' },
+        received_at: now,
+        environment: 'sandbox',
+        store: 'app_store',
+        product_id: 'phase9_data_rights_fixture',
+        processed_at: now,
+        processing_status: 'processed',
+        signature_verified: true,
+        auth_verified: true,
+        provider_event_at: now,
+        projection_applied: false,
+        processing_attempts: 1,
+        ...identities,
+      });
+      subscriptionEventIds.push(event.id);
+      return event;
+    };
+
+    // The 0046 root/payload.event legacy sanitizer is a deployment-time
+    // backfill and is covered by the migration contract test. These live rows
+    // use the current sanitized ingress shape so the harness never recreates a
+    // forbidden legacy payload after the migration has already run.
+    const subscriptionFixtures = {
+      aOnlyScalar: await seedSubscriptionEvent('a-only-scalar', {
+        user_id: userA.id,
+        resolved_user_id: userA.id,
+        app_user_id: userA.id,
+        original_app_user_id: userA.id,
+      }),
+      aliasOnly: await seedSubscriptionEvent('a-only-alias', {
+        aliases: [userA.id],
+      }),
+      transferOnly: await seedSubscriptionEvent('a-only-transfer', {
+        transferred_from: [userA.id],
+        transferred_to: [userA.id],
+      }),
+      repeatedA: await seedSubscriptionEvent('repeated-a-shared', {
+        resolved_user_id: userB.id,
+        aliases: [userA.id, 'repeat-alias-1', userA.id, userB.id, userA.id, 'repeat-alias-2'],
+        transferred_from: [userA.id, userA.id, 'repeat-from', userB.id, userA.id],
+        transferred_to: ['repeat-to', userA.id, userB.id, userA.id, userA.id],
+      }),
+      sharedAB: await seedSubscriptionEvent('shared-a-b', {
+        user_id: userA.id,
+        resolved_user_id: userB.id,
+        app_user_id: userA.id,
+        original_app_user_id: userB.id,
+        aliases: ['shared-alias-before', userA.id, userB.id, userA.id, 'shared-alias-after'],
+        transferred_from: [userB.id, 'shared-from-before', userA.id, 'shared-from-after'],
+        transferred_to: ['shared-to-before', userA.id, userB.id, 'shared-to-after', userA.id],
+      }),
+      bOnly: await seedSubscriptionEvent('b-only', {
+        user_id: userB.id,
+        resolved_user_id: userB.id,
+        app_user_id: userB.id,
+        original_app_user_id: userB.id,
+        aliases: ['b-alias-before', userB.id, 'b-alias-after'],
+        transferred_from: [userB.id, 'b-from-after'],
+        transferred_to: ['b-to-before', userB.id],
+      }),
+    };
+    const bOnlySubscriptionSnapshot = JSON.stringify(
+      await subscriptionEventById(
+        admin,
+        subscriptionFixtures.bOnly.id,
+        'B-only pre-deletion snapshot',
+      ),
+    );
+    const providerAuditEventPrefix = `account_deletion_${createHash('sha256')
+      .update(userA.id)
+      .digest('base64url')
+      .slice(0, 20)}_`;
+
     const malformedPhoto = await insertOne(
       admin,
       'photos',
@@ -656,6 +785,42 @@ async function main() {
             (table) => table === 'reverse_trial_grants',
           ).length === 1,
         'reverse-trial export coverage is incomplete, duplicated, or misclassified.',
+      );
+
+      const subscriptionRows = rows(data, 'subscriptions_events');
+      const expectedCallerSubscriptionIds = [
+        subscriptionFixtures.aOnlyScalar.id,
+        subscriptionFixtures.aliasOnly.id,
+        subscriptionFixtures.transferOnly.id,
+        subscriptionFixtures.repeatedA.id,
+        subscriptionFixtures.sharedAB.id,
+      ];
+      for (const id of expectedCallerSubscriptionIds) {
+        assert(
+          subscriptionRows.some((row) => row.id === id),
+          'subscription-event export omitted a caller-linked service row.',
+        );
+      }
+      assert(
+        !subscriptionRows.some((row) => row.id === subscriptionFixtures.bOnly.id),
+        'subscription-event export leaked a B-only service row.',
+      );
+      const forbiddenSubscriptionExportFields = [...subscriptionIdentityFields, 'payload'];
+      assert(
+        subscriptionRows.every((row) =>
+          forbiddenSubscriptionExportFields.every((field) => !Object.hasOwn(row, field)),
+        ),
+        'subscription-event export returned an identity or payload field.',
+      );
+      const subscriptionManifest = data.manifest?.sources?.subscriptions_events;
+      assert(
+        subscriptionManifest?.scope === 'service_role_filtered' &&
+          subscriptionManifest.complete === true &&
+          subscriptionManifest.count === subscriptionRows.length &&
+          subscriptionManifest.count_before === subscriptionRows.length &&
+          subscriptionManifest.count_after === subscriptionRows.length &&
+          /^sha256:[a-f0-9]{64}$/.test(subscriptionManifest.checksum),
+        'subscription-event export manifest is incomplete or misclassified.',
       );
 
       const orderRows = rows(data, 'order_attributions');
@@ -811,6 +976,97 @@ async function main() {
           'other user reverse-trial grant retained',
         );
 
+        const accountOnlySubscriptionIds = [
+          subscriptionFixtures.aOnlyScalar.id,
+          subscriptionFixtures.aliasOnly.id,
+          subscriptionFixtures.transferOnly.id,
+        ];
+        const { data: accountOnlyEvents, error: accountOnlyEventsError } = await admin
+          .from('subscriptions_events')
+          .select('id')
+          .in('id', accountOnlySubscriptionIds);
+        if (accountOnlyEventsError) throw accountOnlyEventsError;
+        assert(
+          (accountOnlyEvents ?? []).length === 0,
+          'account-deletion retained an account-only subscription event.',
+        );
+
+        const repeatedAEvent = await subscriptionEventById(
+          admin,
+          subscriptionFixtures.repeatedA.id,
+          'repeated-A shared event retained',
+        );
+        assertNoSubscriptionIdentity(repeatedAEvent, userA.id, 'repeated-A shared event');
+        assert(
+          subscriptionEventContainsIdentity(repeatedAEvent, userB.id),
+          'repeated-A shared event lost the retained B owner.',
+        );
+        assertExactArray(
+          repeatedAEvent.aliases,
+          ['repeat-alias-1', userB.id, 'repeat-alias-2'],
+          'repeated-A aliases',
+        );
+        assertExactArray(
+          repeatedAEvent.transferred_from,
+          ['repeat-from', userB.id],
+          'repeated-A transferred_from',
+        );
+        assertExactArray(
+          repeatedAEvent.transferred_to,
+          ['repeat-to', userB.id],
+          'repeated-A transferred_to',
+        );
+
+        const sharedEvent = await subscriptionEventById(
+          admin,
+          subscriptionFixtures.sharedAB.id,
+          'shared A/B event retained',
+        );
+        assertNoSubscriptionIdentity(sharedEvent, userA.id, 'shared A/B event');
+        assert(
+          sharedEvent.user_id === null &&
+            sharedEvent.resolved_user_id === userB.id &&
+            sharedEvent.app_user_id === null &&
+            sharedEvent.original_app_user_id === userB.id,
+          'shared A/B event did not preserve only the expected scalar B owners.',
+        );
+        assertExactArray(
+          sharedEvent.aliases,
+          ['shared-alias-before', userB.id, 'shared-alias-after'],
+          'shared A/B aliases',
+        );
+        assertExactArray(
+          sharedEvent.transferred_from,
+          [userB.id, 'shared-from-before', 'shared-from-after'],
+          'shared A/B transferred_from',
+        );
+        assertExactArray(
+          sharedEvent.transferred_to,
+          ['shared-to-before', userB.id, 'shared-to-after'],
+          'shared A/B transferred_to',
+        );
+
+        const bOnlyAfterDeletion = await subscriptionEventById(
+          admin,
+          subscriptionFixtures.bOnly.id,
+          'B-only post-deletion snapshot',
+        );
+        assert(
+          JSON.stringify(bOnlyAfterDeletion) === bOnlySubscriptionSnapshot,
+          'account-deletion changed the byte-equivalent B-only subscription snapshot.',
+        );
+
+        const { data: providerAuditEvents, error: providerAuditEventsError } = await admin
+          .from('subscriptions_events')
+          .select('id')
+          .like('rc_event_id', `${providerAuditEventPrefix}%`);
+        if (providerAuditEventsError) throw providerAuditEventsError;
+        for (const event of providerAuditEvents ?? []) subscriptionEventIds.push(event.id);
+        assert(
+          (providerAuditEvents ?? []).length === 0,
+          'account-deletion created a synthetic provider audit subscription row.',
+        );
+
         const ownerPhoto = await admin.storage.from('photos').download(seededA.photo.storage_path);
         assert(
           storageObjectMissing(ownerPhoto.error),
@@ -871,6 +1127,28 @@ async function main() {
       if (verifyError)
         errors.push(`Order cleanup verification failed: ${redactedErrorKind(verifyError)}`);
       else if (count !== 0) errors.push('Order cleanup left a residual row.');
+    }
+    const trackedSubscriptionEventIds = [...new Set(subscriptionEventIds)];
+    if (trackedSubscriptionEventIds.length > 0) {
+      const { error } = await admin
+        .from('subscriptions_events')
+        .delete()
+        .in('id', trackedSubscriptionEventIds);
+      if (error) {
+        errors.push(`Subscription-event cleanup failed: ${redactedErrorKind(error)}`);
+      } else {
+        const { count, error: verifyError } = await admin
+          .from('subscriptions_events')
+          .select('*', { count: 'exact', head: true })
+          .in('id', trackedSubscriptionEventIds);
+        if (verifyError) {
+          errors.push(
+            `Subscription-event cleanup verification failed: ${redactedErrorKind(verifyError)}`,
+          );
+        } else if (count !== 0) {
+          errors.push('Subscription-event cleanup left a residual row.');
+        }
+      }
     }
     for (const user of users) {
       if (!user?.id) continue;

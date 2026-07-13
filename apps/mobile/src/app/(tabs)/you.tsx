@@ -56,11 +56,11 @@ const DATA_EXPORT_SCOPE_HINT =
 const EXPORT_FAILED_TITLE = 'Export failed';
 const WITHDRAW_HEALTH_DATA_CONFIRM_TITLE = 'Withdraw health-data consent?';
 const WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE =
-  'This records your withdrawal and deletes your collected health data. Your account and routine are closed. Apple or Google subscription billing continues until you cancel in the store.';
+  'This records your withdrawal and deletes your collected health data. Your account and routine are closed. Apple or Google subscription billing continues until you cancel in the store. If Apple sign-in cannot be revoked automatically, we will show the iPhone Settings steps after deletion.';
 const WITHDRAW_HEALTH_DATA_FAILED_TITLE = 'Withdrawal failed';
 const DELETE_ACCOUNT_CONFIRM_TITLE = 'Delete account?';
 const DELETE_ACCOUNT_CONFIRM_MESSAGE =
-  'This permanently deletes your account and data. Apple or Google subscription billing continues until you cancel in the store.';
+  'This permanently deletes your account and data. Apple or Google subscription billing continues until you cancel in the store. If Apple sign-in cannot be revoked automatically, we will show the iPhone Settings steps after deletion.';
 const DELETE_ACCOUNT_FAILED_TITLE = 'Deletion failed';
 const COMPACT_FOR_YOU_TOP_MARGIN = 240;
 const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;

@@ -11,6 +11,9 @@
 | Edge auth             | TBD        | TBD    | TBD      |
 | Data rights           | TBD        | TBD    | TBD      |
 | Data-export contract  | TBD        | TBD    | TBD      |
+| Provider deletion     | TBD        | TBD    | TBD      |
+| Account service scrub | TBD        | TBD    | TBD      |
+| Attribution integrity | TBD        | TBD    | TBD      |
 | Observability payload | TBD        | TBD    | TBD      |
 | Store build inspect   | TBD        | TBD    | TBD      |
 | Dependency/SBOM       | TBD        | TBD    | TBD      |

@@ -154,7 +154,7 @@ export function discoverRuntimeCredentialNames() {
       (name) =>
         /(?:KEY|KEY_ID|TOKEN|SECRET|PASSWORD|PRIVATE_KEY|DSN|CLIENT_ID|TEAM_ID|PROJECT_ID|ISSUER_ID|ORG)$/.test(
           name,
-        ) || ['APPLE_SIWA_SERVICE_ID', 'POSTHOG_ENVIRONMENT_ID'].includes(name),
+        ) || name === 'APPLE_SIWA_SERVICE_ID',
     )
     .sort();
 }
@@ -347,6 +347,7 @@ function discoverVendorOrigins() {
     'api.shopmy.us': ['shopmy', ['F-16']],
     'appleid.apple.com': ['apple-identity', ['F-02']],
     'apps.apple.com': ['apple-app-store', ['F-11', 'F-12']],
+    'support.apple.com': ['apple-identity-support', ['F-02']],
     'challenges.cloudflare.com': ['cloudflare-turnstile', ['F-20']],
     'eu.i.posthog.com': ['posthog', ['F-20']],
     'eu.posthog.com': ['posthog', ['F-20']],

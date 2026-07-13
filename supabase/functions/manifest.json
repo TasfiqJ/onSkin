@@ -15,17 +15,13 @@
       },
       "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
       "requiredSecrets": [
-        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["REVENUECAT_SECRET_API_KEY", "REVENUECAT_REST_API_KEY"]
       ],
       "optionalEnvironment": [
         "EXPO_PUBLIC_APP_ENV",
         "EXPO_PUBLIC_POSTHOG_KEY",
-        "POSTHOG_PROJECT_ID",
-        "POSTHOG_ENVIRONMENT_ID",
-        "POSTHOG_DELETION_APPROVED_ALTERNATE",
         "POSTHOG_API_HOST",
-        "POSTHOG_HOST",
-        "EXPO_PUBLIC_POSTHOG_HOST",
         "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
         "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
         "USER_EDGE_BODY_MAX_BYTES"
@@ -33,12 +29,11 @@
       "conditionalEnvironment": [
         {
           "when": "the caller has a Sign in with Apple identity",
-          "anyOf": [
-            "APPLE_SIWA_CLIENT_ID",
-            "APPLE_SIWA_SERVICE_ID",
-            "APPLE_BUNDLE_ID",
-            "APP_IOS_BUNDLE_IDENTIFIER"
-          ]
+          "anyOf": ["APPLE_SIWA_CLIENT_ID"]
+        },
+        {
+          "when": "the caller has a Sign in with Apple identity",
+          "anyOf": ["APP_IOS_BUNDLE_IDENTIFIER"]
         },
         {
           "when": "the caller has a Sign in with Apple identity",
@@ -47,6 +42,10 @@
         {
           "when": "the caller has a Sign in with Apple identity",
           "anyOf": ["APPLE_SIWA_KEY_ID"]
+        },
+        {
+          "when": "APP_ENV is staging/production or any PostHog deletion signal is configured",
+          "anyOf": ["POSTHOG_PROJECT_ID"]
         }
       ],
       "conditionalSecrets": [
@@ -55,11 +54,7 @@
           "anyOf": ["APPLE_SIWA_PRIVATE_KEY"]
         },
         {
-          "when": "RevenueCat subscriber deletion is enabled",
-          "anyOf": ["REVENUECAT_SECRET_API_KEY", "REVENUECAT_REST_API_KEY"]
-        },
-        {
-          "when": "PostHog person deletion is enabled without an approved alternate",
+          "when": "APP_ENV is staging/production or any PostHog deletion signal is configured",
           "anyOf": ["POSTHOG_PERSONAL_API_KEY"]
         }
       ]
@@ -272,9 +267,7 @@
       },
       "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
       "requiredSecrets": [
-        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
-        ["SHOPMY_BRAND_API_KEY"],
-        ["ORDER_REPORT_POLL_SECRET", "SHOPMY_ORDER_REPORT_POLL_SECRET"]
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
       ],
       "optionalEnvironment": [
         "EXPO_PUBLIC_APP_ENV",
@@ -282,8 +275,22 @@
         "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
         "USER_EDGE_BODY_MAX_BYTES"
       ],
-      "conditionalEnvironment": [],
-      "conditionalSecrets": []
+      "conditionalEnvironment": [
+        {
+          "when": "the ShopMy order-report rail is activated",
+          "anyOf": ["SHOPMY_BRAND_DOMAIN"]
+        }
+      ],
+      "conditionalSecrets": [
+        {
+          "when": "the ShopMy order-report rail is activated",
+          "anyOf": ["SHOPMY_BRAND_API_KEY"]
+        },
+        {
+          "when": "the ShopMy order-report rail is activated",
+          "anyOf": ["ORDER_REPORT_POLL_SECRET", "SHOPMY_ORDER_REPORT_POLL_SECRET"]
+        }
+      ]
     },
     "revenuecat-webhook": {
       "entrypoint": "supabase/functions/revenuecat-webhook/index.ts",

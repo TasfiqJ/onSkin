@@ -51,16 +51,20 @@ const completeEnv = {
   EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'routinekind.pro.annual',
   EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID: 'routinekind.pro.monthly',
   REVENUECAT_WEBHOOK_AUTH: 'revenuecat-webhook-auth',
+  REVENUECAT_SECRET_API_KEY: 'sk_live_revenuecat_customer_deletion',
   EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: 'routinekind-ios.apps.googleusercontent.com',
   EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: 'routinekind-web.apps.googleusercontent.com',
   EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME: 'com.googleusercontent.apps.routinekind',
   APPLE_TEAM_ID: 'TEAMID1234',
+  APPLE_SIWA_CLIENT_ID: 'com.routinekind.app',
   APPLE_SIWA_SERVICE_ID: 'com.routinekind.app.signin',
   APPLE_SIWA_KEY_ID: 'KEYID12345',
   APPLE_SIWA_PRIVATE_KEY: 'apple-siwa-key',
   EXPO_PUBLIC_POSTHOG_KEY: 'phc_livevalue',
-  EXPO_PUBLIC_POSTHOG_HOST: 'https://us.i.posthog.com',
+  EXPO_PUBLIC_POSTHOG_HOST: 'https://eu.i.posthog.com',
   POSTHOG_PERSONAL_API_KEY: 'phx_livevalue',
+  POSTHOG_PROJECT_ID: '12345',
+  POSTHOG_API_HOST: 'https://eu.posthog.com',
   EXPO_PUBLIC_SENTRY_DSN: 'https://abc@o123.ingest.sentry.io/123',
   SENTRY_AUTH_TOKEN: 'sntrys_livevalue',
   SENTRY_ORG: 'routinekind',
@@ -157,6 +161,55 @@ const cases = [
         /Google Sign-In: missing or placeholder values: EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID/.test(
           result.stderr,
         )
+      );
+    },
+  },
+  {
+    name: 'Apple account deletion requires an explicit native client ID',
+    result: runCheck(withoutKeys(completeEnv, ['APPLE_SIWA_CLIENT_ID'])),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Apple Sign-In server secrets: missing or placeholder values: APPLE_SIWA_CLIENT_ID/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'account deletion requires a RevenueCat customer deletion secret',
+    result: runCheck(
+      withoutKeys(completeEnv, ['REVENUECAT_SECRET_API_KEY', 'REVENUECAT_REST_API_KEY']),
+    ),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /RevenueCat customer deletion: missing or placeholder value; configure one of: REVENUECAT_SECRET_API_KEY, REVENUECAT_REST_API_KEY/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'account deletion accepts the legacy RevenueCat REST secret alias',
+    result: runCheck({
+      ...withoutKeys(completeEnv, ['REVENUECAT_SECRET_API_KEY']),
+      REVENUECAT_REST_API_KEY: 'sk_live_revenuecat_legacy_alias',
+    }),
+    expect(result) {
+      return result.status === 0 && /Phase 2 env contract is complete/.test(result.stdout);
+    },
+  },
+  {
+    name: 'Apple revocation client ID must match the iOS bundle identifier',
+    result: runCheck({
+      ...completeEnv,
+      APPLE_SIWA_CLIENT_ID: 'com.routinekind.other',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /APPLE_SIWA_CLIENT_ID must exactly match APP_IOS_BUNDLE_IDENTIFIER/.test(result.stderr)
       );
     },
   },
@@ -276,6 +329,42 @@ const cases = [
       return (
         result.status === 1 &&
         /EXPO_PUBLIC_POSTHOG_HOST must be a real production HTTPS URL/.test(result.stderr)
+      );
+    },
+  },
+  {
+    name: 'strict env rejects the wrong PostHog mobile region host',
+    result: runCheck({
+      ...completeEnv,
+      EXPO_PUBLIC_POSTHOG_HOST: 'https://us.i.posthog.com',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /EXPO_PUBLIC_POSTHOG_HOST must equal https:\/\/eu\.i\.posthog\.com/.test(result.stderr)
+      );
+    },
+  },
+  {
+    name: 'strict env requires a PostHog project ID',
+    result: runCheck(withoutKeys(completeEnv, ['POSTHOG_PROJECT_ID'])),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /PostHog: missing or placeholder values: POSTHOG_PROJECT_ID/.test(result.stderr)
+      );
+    },
+  },
+  {
+    name: 'strict env rejects the wrong PostHog server API region host',
+    result: runCheck({
+      ...completeEnv,
+      POSTHOG_API_HOST: 'https://us.posthog.com',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /POSTHOG_API_HOST must equal https:\/\/eu\.posthog\.com/.test(result.stderr)
       );
     },
   },

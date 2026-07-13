@@ -356,7 +356,7 @@ attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains 44 migrations, Supabase client code, hand-authored stale
+The repo contains 45 migrations, Supabase client code, hand-authored stale
 types, Edge Functions, a staging deploy wrapper, and an exhaustive live-project
 RLS harness. The credential-free DB-09 contract classifies all 63 public tables,
 probes all 40 private tables across permanent, signed-anonymous, and
@@ -364,20 +364,28 @@ unauthenticated identities, rejects non-authorization false positives, blocks
 on cleanup residue, and passes its 10-check behavioral smoke. Migration `0045`
 closes signed-anonymous cloud-photo insert/update access. The DB-10 export
 registry now keeps service-only reverse-trial/subscription rows on verified-user
-backend paths and passes 13 Deno contracts. Account deletion still needs a
-fail-closed, array-aware service-identity scrub before live privacy evidence.
-There is no reviewed local reset or live staging/production Supabase project
-verified for release.
+backend paths and passes 13 Deno contracts. Migration `0046` adds the
+fail-closed, array-aware service-identity scrub; its production-shaped
+PostgreSQL 15/17 rehearsal passes. Provider source contracts require exact
+RevenueCat, PostHog, and Apple attestations and expose a best-effort manual
+Apple outcome without withholding deletion. The full lifecycle still lacks a
+durable barrier/provider-step state, queued PostHog polling, late-webhook and
+stale-session suppression, retry-safe mobile RevenueCat reset, durable Apple
+notice/token handling, and live concurrency/provider proof. There is no
+reviewed full local Supabase reset or live staging/production project verified
+for release.
 
 Next action:
 
-- make service-only account deletion fail closed and scrub scalar/alias/transfer
-  identities without damaging another owner's retained event;
+- add the deletion barrier and durable provider-step state, poll queued PostHog
+  work, suppress late RevenueCat/deleting-identity writes, make mobile pending
+  deletion/RevenueCat reset retry-safe, and make Apple token/manual-notice
+  handling durable;
 - create staging and production projects after the brand decision;
 - fill `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY`;
 - run `npm run phase2:check-env:strict`;
-- reset a clean local stack through all 44 migrations, then apply them with
+- reset a clean local stack through all 45 migrations, then apply them with
   `scripts/phase2/deploy-supabase-staging.ps1`;
 - regenerate `packages/types/src/database.types.ts`;
 - deploy `revenuecat-webhook`, `account-deletion`, `data-export`, and
@@ -410,7 +418,11 @@ Next action:
 
 - create App ID under cleared bundle ID;
 - configure Sign in with Apple;
-- create server-side token revocation credentials for account deletion;
+- create server-side token revocation credentials for account deletion, store
+  usable Apple refresh tokens securely when issued, and handle Apple's
+  credential-revoked notification;
+- verify exact automatic revocation plus the manual iPhone Settings fallback,
+  including durable notice recovery, on a signed physical-iPhone build;
 - create App Store Connect app;
 - prepare privacy nutrition labels and required support/policy URLs.
 
@@ -509,7 +521,9 @@ Next action:
 - fetch localized prices from RevenueCat;
 - wire purchase, restore, intro eligibility, cancellation/manage links;
 - deploy and verify webhook reconciliation;
-- confirm subscriber-deletion API for account deletion.
+- configure and verify the v1 subscriber-deletion call against live sandbox
+  data: only an exact matching `200`/`deleted=true` succeeds, while `404` stays
+  unattested until durable provider-step state can resolve retry ambiguity.
 
 Exit criteria:
 
@@ -523,14 +537,18 @@ Exit criteria:
 Status: `stubbed`
 
 PostHog runtime wiring exists with JSON-safe event properties and session replay
-disabled, but the production project, consent/privacy review, dashboards, and
-deletion behavior are not live.
+disabled. The account-deletion source uses the EU project bulk-delete endpoint,
+accepts only a typed `202`, treats zero matches as already absent, and blocks
+local/Auth deletion when a nonzero deletion is merely queued. The production
+project, consent/privacy review, dashboards, durable queue-status polling, and
+live deletion behavior are still absent.
 
 Exit criteria:
 
 - PostHog project exists under cleared brand;
 - event taxonomy matches V1 loop;
-- person deletion works with account deletion;
+- person/event/recording deletion reaches a durable terminal state during
+  account deletion, including interruption and retry;
 - no health/photo content is sent without explicit consent.
 
 ## B-SENTRY - Crash reporting
@@ -968,6 +986,16 @@ Status: `inert`
 
 Commerce is launch-required but must remain subordinate to the trust/core loop
 and must never influence rankings.
+
+The credential-free Order Report handler now follows ShopMy's documented
+endpoint, Bearer authentication, registered-domain, zero-indexed pagination,
+500-row limit, display-key wire response, bounded-read, and fail-closed
+truncation contracts. However, the public Order Report documents no click-token
+or click-ID field that can be safely joined to an OnSkin outbound click. The
+adapter therefore persists `click_token = null` instead of guessing. ShopMy
+remains blocked for attribution viability until the provider documents an
+approved correlation field for the selected account/rail or a reviewed
+alternative is chosen and proven live.
 
 Exit criteria:
 

@@ -148,7 +148,7 @@ export const env = {
     REVENUECAT_DEFAULT_PRODUCT_IDS.monthly,
   // BLOCKED: B-POSTHOG
   posthogKey: process.env.EXPO_PUBLIC_POSTHOG_KEY ?? '',
-  posthogHost: process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com',
+  posthogHost: process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://eu.i.posthog.com',
   // BLOCKED: B-SENTRY
   sentryDsn: process.env.EXPO_PUBLIC_SENTRY_DSN ?? '',
 } as const;

@@ -85,6 +85,9 @@ const PRIORITY = {
   deactivate: 300,
 } as const;
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const ASCII_BOUNDARY_WHITESPACE = /^[\t\n\v\f\r ]+|[\t\n\v\f\r ]+$/g;
+
 export class RevenueCatAtomicProcessingError extends Error {
   constructor() {
     super('REVENUECAT_ATOMIC_PROCESSING_FAILED');
@@ -94,6 +97,13 @@ export class RevenueCatAtomicProcessingError extends Error {
 
 function optionalString(value: unknown): string | undefined {
   return typeof value === 'string' && value.length > 0 ? value : undefined;
+}
+
+function optionalOwnerString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.replace(ASCII_BOUNDARY_WHITESPACE, '');
+  if (!trimmed) return undefined;
+  return UUID_PATTERN.test(trimmed) ? trimmed.toLowerCase() : value;
 }
 
 function optionalNumber(value: unknown): number | undefined {
@@ -112,8 +122,13 @@ function optionalStringArray(value: unknown): string[] | undefined {
   return filtered.length > 0 ? filtered : undefined;
 }
 
-function stableStrings(values: unknown): string[] {
-  return [...new Set(optionalStringArray(values) ?? [])].sort();
+function stableOwnerStrings(values: unknown): string[] {
+  if (!Array.isArray(values)) return [];
+  return [
+    ...new Set(
+      values.map(optionalOwnerString).filter((value): value is string => value !== undefined),
+    ),
+  ].sort();
 }
 
 function compactRecord(record: Record<string, unknown>): Record<string, unknown> {
@@ -220,13 +235,18 @@ function projectionFor(eventType: string): {
 }
 
 function deterministicUserCandidates(event: RevenueCatEvent, eventType: string): string[] {
-  const destinationCandidates = eventType === 'TRANSFER' ? stableStrings(event.transferred_to) : [];
+  const destinationCandidates =
+    eventType === 'TRANSFER' ? stableOwnerStrings(event.transferred_to) : [];
   const directCandidates = [
-    optionalString(event.app_user_id),
-    optionalString(event.original_app_user_id),
+    optionalOwnerString(event.app_user_id),
+    optionalOwnerString(event.original_app_user_id),
   ].filter((value): value is string => Boolean(value));
   return [
-    ...new Set([...destinationCandidates, ...directCandidates, ...stableStrings(event.aliases)]),
+    ...new Set([
+      ...destinationCandidates,
+      ...directCandidates,
+      ...stableOwnerStrings(event.aliases),
+    ]),
   ];
 }
 
@@ -246,9 +266,9 @@ export function buildRevenueCatAtomicArgs(
 
   const providerEventAt = isoFromMs(event.event_timestamp_ms, true);
   if (!providerEventAt) throw new Error('INVALID_REVENUECAT_EVENT_TIMESTAMP');
-  const aliases = stableStrings(event.aliases);
-  const transferredFrom = stableStrings(event.transferred_from);
-  const transferredTo = stableStrings(event.transferred_to);
+  const aliases = stableOwnerStrings(event.aliases);
+  const transferredFrom = stableOwnerStrings(event.transferred_from);
+  const transferredTo = stableOwnerStrings(event.transferred_to);
   const projection = projectionFor(eventType);
   const sanitizedEvent = sanitizeRevenueCatEvent(event);
   const entitlementIds = optionalStringArray(event.entitlement_ids) ?? [];
@@ -258,8 +278,8 @@ export function buildRevenueCatAtomicArgs(
     p_rc_event_id: eventId,
     p_event_type: eventType,
     p_user_candidates: deterministicUserCandidates(event, eventType),
-    p_app_user_id: optionalString(event.app_user_id) ?? null,
-    p_original_app_user_id: optionalString(event.original_app_user_id) ?? null,
+    p_app_user_id: optionalOwnerString(event.app_user_id) ?? null,
+    p_original_app_user_id: optionalOwnerString(event.original_app_user_id) ?? null,
     p_aliases: aliases.length > 0 ? aliases : null,
     p_transferred_from: transferredFrom.length > 0 ? transferredFrom : null,
     p_transferred_to: transferredTo.length > 0 ? transferredTo : null,

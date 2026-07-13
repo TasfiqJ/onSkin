@@ -83,6 +83,10 @@ const groups = [
     ],
   },
   {
+    name: 'RevenueCat customer deletion',
+    anyOf: ['REVENUECAT_SECRET_API_KEY', 'REVENUECAT_REST_API_KEY'],
+  },
+  {
     name: 'Google Sign-In',
     required: [
       'EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID',
@@ -94,6 +98,7 @@ const groups = [
     name: 'Apple Sign-In server secrets',
     required: [
       'APPLE_TEAM_ID',
+      'APPLE_SIWA_CLIENT_ID',
       'APPLE_SIWA_SERVICE_ID',
       'APPLE_SIWA_KEY_ID',
       'APPLE_SIWA_PRIVATE_KEY',
@@ -101,7 +106,13 @@ const groups = [
   },
   {
     name: 'PostHog',
-    required: ['EXPO_PUBLIC_POSTHOG_KEY', 'EXPO_PUBLIC_POSTHOG_HOST', 'POSTHOG_PERSONAL_API_KEY'],
+    required: [
+      'EXPO_PUBLIC_POSTHOG_KEY',
+      'EXPO_PUBLIC_POSTHOG_HOST',
+      'POSTHOG_PERSONAL_API_KEY',
+      'POSTHOG_PROJECT_ID',
+      'POSTHOG_API_HOST',
+    ],
   },
   {
     name: 'Sentry',
@@ -130,6 +141,8 @@ const policyUrlKeys = [
   'EXPO_PUBLIC_DATA_EXPORT_URL',
   'EXPO_PUBLIC_CONSUMER_HEALTH_PRIVACY_URL',
 ];
+const POSTHOG_MOBILE_INGEST_HOST = 'https://eu.i.posthog.com';
+const POSTHOG_SERVER_API_HOST = 'https://eu.posthog.com';
 
 function valueFor(name) {
   return process.env[name]?.trim() ?? '';
@@ -158,9 +171,14 @@ const errors = [];
 const warnings = [];
 
 for (const group of groups) {
-  const missing = group.required.filter((name) => !isUsable(name));
+  const missing = (group.required ?? []).filter((name) => !isUsable(name));
   if (missing.length > 0)
     errors.push(`${group.name}: missing or placeholder values: ${missing.join(', ')}`);
+  if (group.anyOf && !isAnyUsable(group.anyOf)) {
+    errors.push(
+      `${group.name}: missing or placeholder value; configure one of: ${group.anyOf.join(', ')}`,
+    );
+  }
 }
 
 for (const key of policyUrlKeys) {
@@ -185,6 +203,14 @@ if (supabaseUrl) {
 const posthogHost = valueFor('EXPO_PUBLIC_POSTHOG_HOST');
 if (posthogHost && !productionUrl(posthogHost)) {
   errors.push('EXPO_PUBLIC_POSTHOG_HOST must be a real production HTTPS URL.');
+}
+if (posthogHost && posthogHost !== POSTHOG_MOBILE_INGEST_HOST) {
+  errors.push(`EXPO_PUBLIC_POSTHOG_HOST must equal ${POSTHOG_MOBILE_INGEST_HOST}.`);
+}
+
+const posthogApiHost = valueFor('POSTHOG_API_HOST');
+if (posthogApiHost && posthogApiHost !== POSTHOG_SERVER_API_HOST) {
+  errors.push(`POSTHOG_API_HOST must equal ${POSTHOG_SERVER_API_HOST}.`);
 }
 
 const sentryDsn = valueFor('EXPO_PUBLIC_SENTRY_DSN');
@@ -250,6 +276,12 @@ if (needsFinalNativeIdentity) {
       )}`,
     );
   }
+}
+
+const appleSiwaClientId = valueFor('APPLE_SIWA_CLIENT_ID');
+const iosBundleIdentifier = valueFor('APP_IOS_BUNDLE_IDENTIFIER');
+if (appleSiwaClientId && iosBundleIdentifier && appleSiwaClientId !== iosBundleIdentifier) {
+  errors.push('APPLE_SIWA_CLIENT_ID must exactly match APP_IOS_BUNDLE_IDENTIFIER.');
 }
 
 const publicSecretKeys = Object.keys(process.env)
@@ -328,9 +360,13 @@ if (!isIntegerInRange('PUBLIC_FORMS_MAX_BYTES', 1024, 65536)) {
 }
 
 for (const group of groups) {
-  const readyCount = group.required.filter(isUsable).length;
+  const required = group.required ?? group.anyOf;
+  const expectedCount = group.required ? required.length : 1;
+  const readyCount = group.required
+    ? required.filter(isUsable).length
+    : Number(isAnyUsable(required));
   console.log(
-    `${readyCount === group.required.length ? 'OK ' : 'MISS'} ${group.name}: ${readyCount}/${group.required.length}`,
+    `${readyCount === expectedCount ? 'OK ' : 'MISS'} ${group.name}: ${readyCount}/${expectedCount}`,
   );
 }
 

@@ -180,8 +180,14 @@ function assertNoWriteResponse(response, label) {
   }
   if (response.status === 503) {
     assert(
-      response.body?.error === 'scheduler_secret_not_configured',
-      `${label}: expected scheduler_secret_not_configured body.`,
+      ['scheduler_secret_not_configured', 'shopmy_brand_domain_not_configured'].includes(
+        response.body?.error,
+      ),
+      `${label}: expected a stable activation-configuration error body.`,
+    );
+    assert(
+      !activatedExpected,
+      `${label}: poll configuration is incomplete but PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED=true.`,
     );
     return;
   }
@@ -290,7 +296,7 @@ async function main() {
   });
 
   warnings.push(
-    'Authorized scheduler success path intentionally not run because it would call the ShopMy Order Report API.',
+    'Authorized scheduler success path intentionally not run because it would use the server-only ShopMy token/domain and call the Order Report API.',
   );
 
   writeArtifacts(errors.length > 0 ? 'fail' : 'pass');

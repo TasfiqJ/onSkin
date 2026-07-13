@@ -70,6 +70,7 @@ const serviceCallableDefiners = new Set([
   'grant_app_granted_reverse_trial(uuid, timestamptz, text)',
   'grant_app_granted_reverse_trial(uuid, timestamptz, text, text)',
   'process_revenuecat_webhook_event(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean)',
+  'scrub_account_service_rows(uuid)',
 ]);
 
 const revokePattern = (name) =>

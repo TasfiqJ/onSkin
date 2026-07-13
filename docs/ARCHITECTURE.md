@@ -134,6 +134,26 @@ Supabase Edge Functions:
 - subscription grants
 - public waitlist/support/share routes
 
+Account deletion uses a service-role-only transactional RPC for database rows that
+cannot be safely erased through caller RLS. Commerce click-token ownership is unique;
+deleting a click nulls its order-attribution token. Account-only subscription events
+are deleted, while shared events retain another live Auth owner and remove the deleting
+user from every scalar, alias, and transfer field. The Edge caller accepts only an exact
+zero-residue RPC attestation. This is a bounded scrub invariant, not the final deletion
+lifecycle: a durable barrier/state machine and late webhook/stale-session suppression
+remain required before the flow can be called retry-safe or race-free.
+
+Provider erasure is also fail-closed at its attestation boundary. RevenueCat succeeds
+only on an exact `200` body matching the requested app user with `deleted=true`; an
+undocumented `404` is blocking. PostHog accepts only a typed `202`: zero matches are
+already absent, while a fully queued nonzero deletion stops local storage/Auth erasure
+until durable status polling can confirm completion. Apple is `revoked` only after exact
+token-exchange and revoke `200` responses. Missing/unusable credentials or automatic
+revocation failure do not withhold account deletion; they return a typed manual outcome
+that the mobile app presents once from memory with iPhone Settings instructions. Secure
+Apple refresh-token storage, credential-revoked notification handling, durable provider
+steps/manual-notice recovery, status polling, and live provider/device proof remain open.
+
 Client APIs:
 
 - feature modules call local stores first where privacy/offline matters

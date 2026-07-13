@@ -48,6 +48,14 @@ const validPhase7ShareEvidence = {
   PHASE7_SIGNED_OFF_BY: ' Tas Mohammed ',
 };
 
+const validPosthogEnv = {
+  EXPO_PUBLIC_POSTHOG_KEY: 'phc_livevalue',
+  EXPO_PUBLIC_POSTHOG_HOST: 'https://eu.i.posthog.com',
+  POSTHOG_PERSONAL_API_KEY: 'phx_livevalue',
+  POSTHOG_PROJECT_ID: '12345',
+  POSTHOG_API_HOST: 'https://eu.posthog.com',
+};
+
 function run(extraEnv) {
   return spawnSync(process.execPath, [releaseSmokePath], {
     cwd: root,
@@ -86,6 +94,96 @@ const cases = [
     expect(result) {
       return (
         result.status === 0 && !output(result).includes('Missing or non-production final value')
+      );
+    },
+  },
+  {
+    name: 'Phase 9 requires an explicit Apple revocation client ID',
+    result: run({ APPLE_SIWA_CLIENT_ID: '' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        output(result).includes(
+          'APPLE_SIWA_CLIENT_ID must be explicitly configured for Apple credential revocation.',
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 9 requires the Apple revocation client ID to match the iOS bundle',
+    result: run({
+      APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+      APPLE_SIWA_CLIENT_ID: 'com.routinekind.other',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        output(result).includes(
+          'APPLE_SIWA_CLIENT_ID must exactly match APP_IOS_BUNDLE_IDENTIFIER.',
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 9 accepts the exact paired EU PostHog configuration',
+    result: run(validPosthogEnv),
+    expect(result) {
+      const text = output(result);
+      return (
+        result.status === 0 &&
+        !text.includes('is required when EXPO_PUBLIC_POSTHOG_KEY enables PostHog') &&
+        !text.includes('must equal https://eu.i.posthog.com when PostHog is enabled') &&
+        !text.includes('must equal https://eu.posthog.com when PostHog is enabled')
+      );
+    },
+  },
+  {
+    name: 'Phase 9 requires PostHog server deletion credentials when mobile analytics is enabled',
+    result: run({
+      ...validPosthogEnv,
+      POSTHOG_PROJECT_ID: '',
+      POSTHOG_PERSONAL_API_KEY: '',
+    }),
+    expect(result) {
+      const text = output(result);
+      return (
+        result.status === 1 &&
+        text.includes(
+          'POSTHOG_PROJECT_ID is required when EXPO_PUBLIC_POSTHOG_KEY enables PostHog.',
+        ) &&
+        text.includes(
+          'POSTHOG_PERSONAL_API_KEY is required when EXPO_PUBLIC_POSTHOG_KEY enables PostHog.',
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 9 rejects a mismatched PostHog mobile ingest region',
+    result: run({
+      ...validPosthogEnv,
+      EXPO_PUBLIC_POSTHOG_HOST: 'https://us.i.posthog.com',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        output(result).includes(
+          'EXPO_PUBLIC_POSTHOG_HOST must equal https://eu.i.posthog.com when PostHog is enabled.',
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 9 rejects a mismatched PostHog server API region',
+    result: run({
+      ...validPosthogEnv,
+      POSTHOG_API_HOST: 'https://us.posthog.com',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        output(result).includes(
+          'POSTHOG_API_HOST must equal https://eu.posthog.com when PostHog is enabled.',
+        )
       );
     },
   },

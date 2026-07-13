@@ -14,6 +14,23 @@ import {
 } from '../_shared/fetch.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import { deletePhotoStorage } from './photoStorageCleanup.ts';
+import {
+  ACCOUNT_DELETION_PROVIDER_RESPONSE_MAX_BYTES,
+  attestAppleTokenExchange,
+  attestAppleTokenRevocation,
+  buildPostHogBulkDeleteRequest,
+  buildRevenueCatDeletionRequest,
+  normalizePostHogApiHost,
+  planAppleDeletion,
+  postHogDeletionRequiredForEnvironment,
+  postHogDeletionDisposition,
+  requireAppleRevocationConfiguration,
+  resolveAppleAutomaticRevocation,
+  revenueCatDeletionDisposition,
+  type AppleDeletionOutcome,
+  type AppleRevocationConfiguration,
+} from './providerDeletion.ts';
+import { scrubAccountServiceRows } from './serviceRoleCleanup.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = readSupabaseSecretKey();
@@ -28,10 +45,8 @@ type AuthUser = {
 };
 
 type DeletionBody = {
-  appleAuthorizationCode?: string;
+  appleAuthorizationCode?: unknown;
 };
-
-type EdgeSupabaseClient = any;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -53,17 +68,14 @@ function publicError(error: unknown): string {
   const message = error instanceof Error ? error.message : String(error);
   const code = message.match(/^[A-Z0-9_]+/)?.[0] ?? '';
   const publicCodes = new Set([
-    'APPLE_REVOCATION_NOT_CONFIGURED',
-    'APPLE_AUTHORIZATION_CODE_REQUIRED',
-    'APPLE_TOKEN_EXCHANGE_FAILED',
-    'APPLE_TOKEN_EXCHANGE_RETURNED_NO_TOKEN',
-    'APPLE_TOKEN_REVOKE_FAILED',
     'REVENUECAT_SECRET_API_KEY_NOT_CONFIGURED',
     'REVENUECAT_DELETION_FAILED',
     'POSTHOG_DELETION_NOT_CONFIGURED',
     'POSTHOG_DELETION_FAILED',
+    'POSTHOG_DELETION_PENDING',
     'STORAGE_LIST_FAILED',
     'STORAGE_REMOVE_FAILED',
+    'ACCOUNT_SERVICE_SCRUB_FAILED',
     'AUTH_USER_DELETE_FAILED',
   ]);
   return publicCodes.has(code) ? code : 'ACCOUNT_DELETION_FAILED';
@@ -78,50 +90,44 @@ function userHasProvider(user: AuthUser, provider: string): boolean {
   );
 }
 
-function appleClientId(): string {
-  return (
-    Deno.env.get('APPLE_SIWA_CLIENT_ID') ??
-    Deno.env.get('APPLE_SIWA_SERVICE_ID') ??
-    Deno.env.get('APPLE_BUNDLE_ID') ??
-    Deno.env.get('APP_IOS_BUNDLE_IDENTIFIER') ??
-    ''
-  );
+function appleRevocationConfiguration(): AppleRevocationConfiguration {
+  return requireAppleRevocationConfiguration({
+    teamId: Deno.env.get('APPLE_TEAM_ID'),
+    keyId: Deno.env.get('APPLE_SIWA_KEY_ID'),
+    clientId: Deno.env.get('APPLE_SIWA_CLIENT_ID'),
+    nativeBundleId: Deno.env.get('APP_IOS_BUNDLE_IDENTIFIER'),
+    privateKey: Deno.env.get('APPLE_SIWA_PRIVATE_KEY'),
+  });
 }
 
-function assertAppleRevocationConfigured(): void {
-  const teamId = Deno.env.get('APPLE_TEAM_ID') ?? '';
-  const keyId = Deno.env.get('APPLE_SIWA_KEY_ID') ?? '';
-  const privateKey = Deno.env.get('APPLE_SIWA_PRIVATE_KEY') ?? '';
-  if (!teamId || !keyId || !appleClientId() || !privateKey) {
-    throw new Error('APPLE_REVOCATION_NOT_CONFIGURED');
-  }
+function assertAppleRevocationConfigured(): AppleRevocationConfiguration {
+  return appleRevocationConfiguration();
 }
 
 function posthogDeletionRequired(): boolean {
-  return Boolean(
-    Deno.env.get('EXPO_PUBLIC_POSTHOG_KEY') ||
-    Deno.env.get('POSTHOG_PROJECT_ID') ||
-    Deno.env.get('POSTHOG_PERSONAL_API_KEY') ||
-    Deno.env.get('POSTHOG_ENVIRONMENT_ID'),
-  );
+  return postHogDeletionRequiredForEnvironment({
+    appEnvironment: Deno.env.get('APP_ENV'),
+    publicAppEnvironment: Deno.env.get('EXPO_PUBLIC_APP_ENV'),
+    mobileKey: Deno.env.get('EXPO_PUBLIC_POSTHOG_KEY'),
+    projectId: Deno.env.get('POSTHOG_PROJECT_ID'),
+    personalApiKey: Deno.env.get('POSTHOG_PERSONAL_API_KEY'),
+  });
 }
 
 function assertPostHogDeletionConfigured(): void {
   const personalApiKey = Deno.env.get('POSTHOG_PERSONAL_API_KEY') ?? '';
-  const projectId =
-    Deno.env.get('POSTHOG_PROJECT_ID') ?? Deno.env.get('POSTHOG_ENVIRONMENT_ID') ?? '';
-  const approvedAlternate = Deno.env.get('POSTHOG_DELETION_APPROVED_ALTERNATE') === 'true';
+  const projectId = Deno.env.get('POSTHOG_PROJECT_ID') ?? '';
 
   if (!posthogDeletionRequired()) return;
-  if ((!personalApiKey || !projectId) && approvedAlternate) return;
   if (!personalApiKey || !projectId) throw new Error('POSTHOG_DELETION_NOT_CONFIGURED');
+  posthogApiHost();
 }
 
 function assertDeletionPreconditions(user: AuthUser, body: DeletionBody): void {
-  if (userHasProvider(user, 'apple')) {
-    if (!body.appleAuthorizationCode) throw new Error('APPLE_AUTHORIZATION_CODE_REQUIRED');
-    assertAppleRevocationConfigured();
-  }
+  // Apple configuration cannot withhold deletion under TN3194. It is validated
+  // inside the best-effort revocation attempt and falls back to manual removal.
+  void user;
+  void body;
   if (!revenueCatSecretKey) throw new Error('REVENUECAT_SECRET_API_KEY_NOT_CONFIGURED');
   assertPostHogDeletionConfigured();
 }
@@ -131,18 +137,6 @@ function base64UrlEncode(input: string | ArrayBuffer): string {
   let binary = '';
   for (const byte of bytes) binary += String.fromCharCode(byte);
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
-}
-
-function bytesToHex(bytes: ArrayBuffer): string {
-  return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
-}
-
-async function pseudonymousUserId(userId: string): Promise<string> {
-  const digest = await crypto.subtle.digest(
-    'SHA-256',
-    new TextEncoder().encode(`onskin:user:${userId}`),
-  );
-  return `u_${bytesToHex(digest).slice(0, 32)}`;
 }
 
 function pemToPkcs8(privateKey: string): ArrayBuffer {
@@ -157,29 +151,20 @@ function pemToPkcs8(privateKey: string): ArrayBuffer {
   return bytes.buffer;
 }
 
-async function createAppleClientSecret(): Promise<string> {
-  const teamId = Deno.env.get('APPLE_TEAM_ID') ?? '';
-  const keyId = Deno.env.get('APPLE_SIWA_KEY_ID') ?? '';
-  const clientId = appleClientId();
-  const privateKey = Deno.env.get('APPLE_SIWA_PRIVATE_KEY') ?? '';
-
-  if (!teamId || !keyId || !clientId || !privateKey) {
-    throw new Error('APPLE_REVOCATION_NOT_CONFIGURED');
-  }
-
+async function createAppleClientSecret(config: AppleRevocationConfiguration): Promise<string> {
   const now = Math.floor(Date.now() / 1000);
-  const header = { alg: 'ES256', kid: keyId };
+  const header = { alg: 'ES256', kid: config.keyId };
   const payload = {
-    iss: teamId,
+    iss: config.teamId,
     iat: now,
     exp: now + 60 * 10,
     aud: 'https://appleid.apple.com',
-    sub: clientId,
+    sub: config.clientId,
   };
   const signingInput = `${base64UrlEncode(JSON.stringify(header))}.${base64UrlEncode(JSON.stringify(payload))}`;
   const key = await crypto.subtle.importKey(
     'pkcs8',
-    pemToPkcs8(privateKey),
+    pemToPkcs8(config.privateKey),
     { name: 'ECDSA', namedCurve: 'P-256' },
     false,
     ['sign'],
@@ -194,187 +179,120 @@ async function createAppleClientSecret(): Promise<string> {
 
 async function revokeAppleTokenIfNeeded(
   user: AuthUser,
-  authorizationCode?: string,
-): Promise<'skipped' | 'revoked'> {
-  if (!userHasProvider(user, 'apple')) return 'skipped';
-  if (!authorizationCode) throw new Error('APPLE_AUTHORIZATION_CODE_REQUIRED');
+  authorizationCode: unknown,
+): Promise<AppleDeletionOutcome> {
+  const plan = planAppleDeletion(userHasProvider(user, 'apple'), authorizationCode);
+  if (plan.action !== 'attempt_revocation') return plan.outcome;
 
-  const clientId = appleClientId();
-  const clientSecret = await createAppleClientSecret();
-  const tokenParams = new URLSearchParams({
-    client_id: clientId,
-    client_secret: clientSecret,
-    code: authorizationCode,
-    grant_type: 'authorization_code',
+  const resolution = await resolveAppleAutomaticRevocation(async () => {
+    const config = assertAppleRevocationConfigured();
+    const clientSecret = await createAppleClientSecret(config);
+    const tokenParams = new URLSearchParams({
+      client_id: config.clientId,
+      client_secret: clientSecret,
+      code: plan.authorizationCode,
+      grant_type: 'authorization_code',
+    });
+
+    const tokenResponse = await fetchWithTimeout('https://appleid.apple.com/auth/token', {
+      method: 'POST',
+      redirect: 'error',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: tokenParams,
+    }).catch(() => null);
+    if (!tokenResponse) throw new Error('APPLE_TOKEN_EXCHANGE_FAILED:FETCH_FAILED');
+    const tokenBody = await readLimitedResponseJson<unknown>(
+      tokenResponse,
+      ACCOUNT_DELETION_PROVIDER_RESPONSE_MAX_BYTES,
+    );
+    const token = attestAppleTokenExchange(tokenResponse.status, tokenBody);
+
+    const revokeParams = new URLSearchParams({
+      client_id: config.clientId,
+      client_secret: clientSecret,
+      token: token.token,
+      token_type_hint: token.tokenTypeHint,
+    });
+    const revokeResponse = await fetchWithTimeout('https://appleid.apple.com/auth/revoke', {
+      method: 'POST',
+      redirect: 'error',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: revokeParams,
+    }).catch(() => null);
+    if (!revokeResponse) throw new Error('APPLE_TOKEN_REVOKE_FAILED:FETCH_FAILED');
+    if (revokeResponse.status !== 200) {
+      await readLimitedResponseText(revokeResponse, ACCOUNT_DELETION_PROVIDER_RESPONSE_MAX_BYTES);
+    }
+    attestAppleTokenRevocation(revokeResponse.status);
+    await revokeResponse.body?.cancel().catch(() => undefined);
   });
-
-  const tokenResponse = await fetchWithTimeout('https://appleid.apple.com/auth/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: tokenParams,
-  }).catch(() => null);
-  if (!tokenResponse) throw new Error('APPLE_TOKEN_EXCHANGE_FAILED:FETCH_FAILED');
-  const tokenBody =
-    (await readLimitedResponseJson<{
-      access_token?: string;
-      refresh_token?: string;
-      error?: string;
-    }>(tokenResponse)) ?? {};
-  if (!tokenResponse.ok)
-    throw new Error(`APPLE_TOKEN_EXCHANGE_FAILED:${tokenBody.error ?? tokenResponse.status}`);
-
-  const token = tokenBody.refresh_token ?? tokenBody.access_token;
-  if (!token) throw new Error('APPLE_TOKEN_EXCHANGE_RETURNED_NO_TOKEN');
-
-  const revokeParams = new URLSearchParams({
-    client_id: clientId,
-    client_secret: clientSecret,
-    token,
-    token_type_hint: tokenBody.refresh_token ? 'refresh_token' : 'access_token',
-  });
-  const revokeResponse = await fetchWithTimeout('https://appleid.apple.com/auth/revoke', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: revokeParams,
-  }).catch(() => null);
-  if (!revokeResponse) throw new Error('APPLE_TOKEN_REVOKE_FAILED:FETCH_FAILED');
-  if (!revokeResponse.ok) {
-    const text = (await readLimitedResponseText(revokeResponse)) ?? 'RESPONSE_TOO_LARGE';
-    throw new Error(`APPLE_TOKEN_REVOKE_FAILED:${revokeResponse.status}:${text.slice(0, 80)}`);
+  if (resolution.warningCode) {
+    // Never log provider bodies, credentials, or codes; this stable reason is
+    // sufficient for operations while deletion continues as TN3194 requires.
+    console.warn('[account-deletion]', resolution.warningCode);
   }
-  return 'revoked';
+  return resolution.outcome;
 }
 
-async function deleteRevenueCatSubscriber(
-  userId: string,
-  supabase: EdgeSupabaseClient,
-): Promise<void> {
+async function deleteRevenueCatSubscriber(userId: string): Promise<void> {
   if (!revenueCatSecretKey) throw new Error('REVENUECAT_SECRET_API_KEY_NOT_CONFIGURED');
 
-  const response = await fetchWithTimeout(
-    `https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(userId)}`,
-    {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${revenueCatSecretKey}` },
-    },
-  ).catch(() => null);
+  const request = buildRevenueCatDeletionRequest(userId, revenueCatSecretKey);
+  const response = await fetchWithTimeout(request.url, request.init).catch(() => null);
   if (!response) throw new Error('REVENUECAT_DELETION_FAILED:FETCH_FAILED');
-  const body = (await readLimitedResponseText(response)) ?? 'RESPONSE_TOO_LARGE';
-  if (!response.ok && response.status !== 404) {
-    throw new Error(`REVENUECAT_DELETION_FAILED:${response.status}:${body.slice(0, 80)}`);
+
+  if (response.status !== 200) {
+    await readLimitedResponseText(response, ACCOUNT_DELETION_PROVIDER_RESPONSE_MAX_BYTES);
+    throw new Error(`REVENUECAT_DELETION_FAILED:${response.status}`);
   }
 
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(userId));
-  const userHash = base64UrlEncode(digest).slice(0, 20);
-  await supabase.from('subscriptions_events').insert({
-    rc_event_id: `account_deletion_${userHash}_${Date.now()}`,
-    user_id: null,
-    event_type: 'CUSTOMER_DELETION_REQUESTED',
-    payload: {
-      provider: 'revenuecat',
-      status: response.status,
-      note: 'RevenueCat customer data deletion does not cancel Apple or Google subscriptions.',
-    },
-    resolved_user_id: null,
-    processing_status: 'processed',
-    processed_at: new Date().toISOString(),
-  });
+  const body = await readLimitedResponseJson<unknown>(
+    response,
+    ACCOUNT_DELETION_PROVIDER_RESPONSE_MAX_BYTES,
+  );
+  if (revenueCatDeletionDisposition(response.status, body, userId) !== 'deleted') {
+    throw new Error('REVENUECAT_DELETION_FAILED:UNATTESTED_RESPONSE');
+  }
 }
 
 function posthogApiHost(): string {
-  const host =
-    Deno.env.get('POSTHOG_API_HOST') ??
-    Deno.env.get('POSTHOG_HOST') ??
-    Deno.env.get('EXPO_PUBLIC_POSTHOG_HOST') ??
-    'https://us.posthog.com';
-  return host
-    .replace(/\/+$/g, '')
-    .replace('https://us.i.posthog.com', 'https://us.posthog.com')
-    .replace('https://eu.i.posthog.com', 'https://eu.posthog.com');
+  const host = Deno.env.get('POSTHOG_API_HOST') ?? 'https://eu.posthog.com';
+  return normalizePostHogApiHost(host);
 }
 
-async function deletePostHogPerson(userId: string): Promise<'deleted' | 'skipped'> {
+async function deletePostHogPerson(userId: string): Promise<'already_absent' | 'skipped'> {
   const personalApiKey = Deno.env.get('POSTHOG_PERSONAL_API_KEY') ?? '';
-  const projectId =
-    Deno.env.get('POSTHOG_PROJECT_ID') ?? Deno.env.get('POSTHOG_ENVIRONMENT_ID') ?? '';
-  const approvedAlternate = Deno.env.get('POSTHOG_DELETION_APPROVED_ALTERNATE') === 'true';
-  const posthogEnabled =
-    Boolean(Deno.env.get('EXPO_PUBLIC_POSTHOG_KEY')) || Boolean(Deno.env.get('POSTHOG_PROJECT_ID'));
+  const projectId = Deno.env.get('POSTHOG_PROJECT_ID') ?? '';
 
-  if (!posthogEnabled && !personalApiKey && !projectId) return 'skipped';
-  if ((!personalApiKey || !projectId) && approvedAlternate) return 'skipped';
+  if (!posthogDeletionRequired()) return 'skipped';
   if (!personalApiKey || !projectId) throw new Error('POSTHOG_DELETION_NOT_CONFIGURED');
 
-  const host = posthogApiHost();
-  const payload = JSON.stringify({
-    // Delete the current pseudonymous identity and the legacy raw Supabase id
-    // used by builds before SEC-P1-003.
-    distinct_ids: [await pseudonymousUserId(userId), userId],
+  const request = await buildPostHogBulkDeleteRequest({
+    host: posthogApiHost(),
+    projectId,
+    personalApiKey,
+    userId,
   });
-  const endpoints = [
-    `${host}/api/projects/${encodeURIComponent(projectId)}/persons/bulk_delete/`,
-    `${host}/api/environments/${encodeURIComponent(projectId)}/persons/bulk_delete/`,
-  ];
-
-  let lastStatus = 0;
-  let lastBody = '';
-  for (const endpoint of endpoints) {
-    const response = await fetchWithTimeout(endpoint, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${personalApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: payload,
-    }).catch(() => null);
-    if (!response) {
-      lastStatus = 0;
-      lastBody = 'FETCH_FAILED';
-      break;
-    }
-    lastStatus = response.status;
-    lastBody = (await readLimitedResponseText(response)) ?? 'RESPONSE_TOO_LARGE';
-    if (response.ok || response.status === 404) {
-      if (response.ok) return 'deleted';
-      continue;
-    }
-    break;
+  const response = await fetchWithTimeout(request.url, request.init).catch(() => null);
+  if (!response) throw new Error('POSTHOG_DELETION_FAILED:FETCH_FAILED');
+  if (response.status !== 202) {
+    await readLimitedResponseText(response, ACCOUNT_DELETION_PROVIDER_RESPONSE_MAX_BYTES);
+    throw new Error(`POSTHOG_DELETION_FAILED:${response.status}`);
   }
 
-  throw new Error(`POSTHOG_DELETION_FAILED:${lastStatus}:${lastBody.slice(0, 80)}`);
-}
-
-async function scrubServiceRoleOnlyRows(
-  userId: string,
-  supabase: EdgeSupabaseClient,
-): Promise<void> {
-  const { data: clicks } = await supabase
-    .from('commerce_click_events')
-    .select('click_token')
-    .eq('user_id', userId);
-  const clickTokens = ((clicks ?? []) as Array<{ click_token?: string | null }>)
-    .map((row: { click_token?: string | null }) => row.click_token)
-    .filter((token): token is string => Boolean(token));
-  if (clickTokens.length > 0) {
-    await supabase
-      .from('order_attributions')
-      .update({ click_token: null })
-      .in('click_token', clickTokens);
+  const body = await readLimitedResponseJson<unknown>(
+    response,
+    ACCOUNT_DELETION_PROVIDER_RESPONSE_MAX_BYTES,
+  );
+  const disposition = postHogDeletionDisposition(response.status, body);
+  if (disposition === 'unattested') {
+    throw new Error('POSTHOG_DELETION_FAILED:UNATTESTED_RESPONSE');
   }
+  if (disposition === 'already_absent') return 'already_absent';
 
-  await supabase
-    .from('subscriptions_events')
-    .update({
-      user_id: null,
-      resolved_user_id: null,
-      app_user_id: null,
-      original_app_user_id: null,
-      aliases: null,
-      payload: { erased: true, erased_at: new Date().toISOString(), reason: 'account_deletion' },
-    })
-    .or(
-      `user_id.eq.${userId},resolved_user_id.eq.${userId},app_user_id.eq.${userId},original_app_user_id.eq.${userId}`,
-    );
+  // PostHog confirms only that asynchronous event/recording deletion is queued.
+  // Do not delete local storage or Auth until durable state and status polling exist.
+  throw new Error('POSTHOG_DELETION_PENDING');
 }
 
 Deno.serve(async (req) => {
@@ -398,10 +316,10 @@ Deno.serve(async (req) => {
   try {
     assertDeletionPreconditions(user, body);
     const apple = await revokeAppleTokenIfNeeded(user, body.appleAuthorizationCode);
-    await deleteRevenueCatSubscriber(user.id, supabase);
+    await deleteRevenueCatSubscriber(user.id);
     const posthog = await deletePostHogPerson(user.id);
     await deletePhotoStorage(user.id, supabase);
-    await scrubServiceRoleOnlyRows(user.id, supabase);
+    await scrubAccountServiceRows(user.id, supabase);
 
     const { error: delErr } = await supabase.auth.admin.deleteUser(user.id);
     if (delErr) throw new Error(`AUTH_USER_DELETE_FAILED:${delErr.message}`);

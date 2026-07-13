@@ -24,6 +24,30 @@ const migrationSource = listFiles('supabase/migrations')
   .map((file) => read(file))
   .join('\n');
 const deletionSource = read('supabase/functions/account-deletion/index.ts');
+const deletionProviderSource = read('supabase/functions/account-deletion/providerDeletion.ts');
+const deletionProviderTestSource = read(
+  'supabase/functions/account-deletion/providerDeletion.test.ts',
+);
+const deletionServiceCleanupSource = read(
+  'supabase/functions/account-deletion/serviceRoleCleanup.ts',
+);
+const deletionServiceCleanupTestSource = read(
+  'supabase/functions/account-deletion/serviceRoleCleanup.test.ts',
+);
+const accountServiceScrubMigration = read(
+  'supabase/migrations/20260713000046_account_service_row_scrub.sql',
+);
+const accountServiceScrubPostgresRehearsal = read(
+  'scripts/phase9/account-service-scrub-postgres-rehearsal.sql',
+);
+const orderAttributionCoreSource = read(
+  'supabase/functions/order-report-poll/orderAttributionCore.ts',
+);
+const orderAttributionPollSource = read('supabase/functions/order-report-poll/index.ts');
+const completeDeletionSource = `${deletionSource}\n${deletionProviderSource}\n${deletionServiceCleanupSource}\n${accountServiceScrubMigration}`;
+const environmentExampleSource = read('.env.example');
+const edgeFunctionManifest = JSON.parse(read('supabase/functions/manifest.json'));
+const deletionManifest = edgeFunctionManifest.functions?.['account-deletion'] ?? {};
 const settingsActionsSource = read('apps/mobile/src/features/settings/actions.ts');
 const settingsRouteSource = read('apps/mobile/src/app/(tabs)/you.tsx');
 const localDeviceExportSource = read('apps/mobile/src/features/settings/localDeviceExport.ts');
@@ -398,21 +422,202 @@ for (const pattern of [
   /POSTHOG_PERSONAL_API_KEY/,
   /persons\/bulk_delete/,
   /pseudonymousUserId/,
-  /distinct_ids:\s*\[await pseudonymousUserId\(userId\), userId\]/,
+  /distinct_ids:\s*distinctIds/,
   /deleteRevenueCatSubscriber/,
   /api\.revenuecat\.com\/v1\/subscribers/,
   /deletePhotoStorage/,
-  /scrubServiceRoleOnlyRows/,
+  /scrubAccountServiceRows/,
   /order_attributions.*click_token/s,
   /subscriptions_events.*resolved_user_id/s,
   /auth\.admin\.deleteUser/,
 ]) {
   block(
     errors,
-    pattern.test(deletionSource),
+    pattern.test(completeDeletionSource),
     `account-deletion is missing required deletion marker ${pattern}.`,
   );
 }
+block(
+  errors,
+  /ACCOUNT_DELETION_PROVIDER_RESPONSE_MAX_BYTES\s*=\s*16_384/.test(deletionProviderSource) &&
+    /buildRevenueCatDeletionRequest/.test(deletionSource) &&
+    /readLimitedResponseJson<unknown>\([\s\S]*?ACCOUNT_DELETION_PROVIDER_RESPONSE_MAX_BYTES/.test(
+      deletionSource,
+    ) &&
+    /revenueCatDeletionDisposition\(response\.status, body, userId\)\s*!==\s*'deleted'/.test(
+      deletionSource,
+    ) &&
+    /status\s*!==\s*200/.test(deletionProviderSource) &&
+    /body\.app_user_id\s*!==\s*expectedUserId/.test(deletionProviderSource) &&
+    /body\.deleted\s*!==\s*true/.test(deletionProviderSource) &&
+    !/response\.status\s*===\s*404/.test(deletionSource) &&
+    (deletionProviderSource.match(/redirect:\s*'error'/g)?.length ?? 0) === 2,
+  'RevenueCat deletion must accept only the bounded documented 200 response for the requested app user with deleted=true; undocumented 404 responses must fail closed.',
+);
+block(
+  errors,
+  /\/api\/projects\/\$\{encodeURIComponent\(options\.projectId\)\}\/persons\/bulk_delete\//.test(
+    deletionProviderSource,
+  ) &&
+    /distinct_ids:\s*distinctIds/.test(deletionProviderSource) &&
+    /delete_events:\s*true/.test(deletionProviderSource) &&
+    /delete_recordings:\s*true/.test(deletionProviderSource) &&
+    /status\s*!==\s*202/.test(deletionProviderSource) &&
+    /body\.persons_found\s*===\s*0/.test(deletionProviderSource) &&
+    /body\.persons_deleted\s*!==\s*body\.persons_found/.test(deletionProviderSource) &&
+    /body\.events_queued_for_deletion\s*!==\s*true/.test(deletionProviderSource) &&
+    /body\.recordings_queued_for_deletion\s*!==\s*true/.test(deletionProviderSource) &&
+    /'deletion_errors' in body/.test(deletionProviderSource) &&
+    /body\.deletion_errors\.length\s*!==\s*0/.test(deletionProviderSource) &&
+    /disposition\s*===\s*'already_absent'/.test(deletionSource) &&
+    /throw new Error\('POSTHOG_DELETION_PENDING'\)/.test(deletionSource),
+  'PostHog deletion must distinguish idempotent zero-match absence from a fully attested asynchronous queue response.',
+);
+block(
+  errors,
+  /parsed\s*=\s*new URL\(host\)/.test(deletionProviderSource) &&
+    /parsed\.protocol\s*!==\s*'https:'/.test(deletionProviderSource) &&
+    /parsed\.hostname\s*!==\s*'eu\.posthog\.com'/.test(deletionProviderSource) &&
+    /parsed\.username\s*!==\s*''/.test(deletionProviderSource) &&
+    /parsed\.pathname\s*!==\s*'\/'/.test(deletionProviderSource) &&
+    /parsed\.search\s*!==\s*''/.test(deletionProviderSource) &&
+    /parsed\.hash\s*!==\s*''/.test(deletionProviderSource) &&
+    /const host = normalizePostHogApiHost\(options\.host\);[\s\S]*?pseudonymousUserId/.test(
+      deletionProviderSource,
+    ),
+  'PostHog host validation must allow only the reviewed EU HTTPS API origin before deriving or transmitting account identifiers.',
+);
+block(
+  errors,
+  !/POSTHOG_DELETION_APPROVED_ALTERNATE/.test(
+    `${completeDeletionSource}\n${environmentExampleSource}\n${JSON.stringify(deletionManifest)}`,
+  ) &&
+    !/POSTHOG_ENVIRONMENT_ID/.test(
+      `${completeDeletionSource}\n${environmentExampleSource}\n${JSON.stringify(deletionManifest)}`,
+    ) &&
+    !/\/api\/environments\//.test(completeDeletionSource),
+  'Account deletion must not bypass PostHog erasure or fall back to the deprecated environment endpoint.',
+);
+block(
+  errors,
+  deletionManifest.requiredSecrets?.some(
+    (group) =>
+      group.includes('REVENUECAT_SECRET_API_KEY') && group.includes('REVENUECAT_REST_API_KEY'),
+  ) &&
+    deletionManifest.conditionalEnvironment?.some(
+      (condition) =>
+        /APP_ENV is staging\/production or any PostHog deletion signal/.test(condition.when) &&
+        condition.anyOf?.length === 1 &&
+        condition.anyOf[0] === 'POSTHOG_PROJECT_ID',
+    ) &&
+    deletionManifest.conditionalSecrets?.some(
+      (condition) =>
+        /APP_ENV is staging\/production or any PostHog deletion signal/.test(condition.when) &&
+        condition.anyOf?.length === 1 &&
+        condition.anyOf[0] === 'POSTHOG_PERSONAL_API_KEY',
+    ),
+  'Account deletion manifest must require RevenueCat and fail closed on the PostHog project/PAT pair in staging, production, or any partially configured deletion environment.',
+);
+block(
+  errors,
+  deletionManifest.conditionalEnvironment?.some(
+    (condition) =>
+      /Sign in with Apple identity/.test(condition.when) &&
+      condition.anyOf?.length === 1 &&
+      condition.anyOf[0] === 'APPLE_SIWA_CLIENT_ID',
+  ) &&
+    deletionManifest.conditionalEnvironment?.some(
+      (condition) =>
+        /Sign in with Apple identity/.test(condition.when) &&
+        condition.anyOf?.length === 1 &&
+        condition.anyOf[0] === 'APP_IOS_BUNDLE_IDENTIFIER',
+    ),
+  'Account deletion manifest must separately require the Apple authorization client ID and its iOS bundle-ID attestation input.',
+);
+block(
+  errors,
+  /exact attested 200 response/.test(deletionProviderTestSource) &&
+    /\[404, null\]/.test(deletionProviderTestSource) &&
+    /zero matched persons to be an idempotent absence/.test(deletionProviderTestSource) &&
+    /eu\.posthog\.com\.evil\.example/.test(deletionProviderTestSource) &&
+    /!request\.url\.includes\('\/api\/environments\/'\)/.test(deletionProviderTestSource),
+  'Provider deletion contract tests must cover RevenueCat malformed/404 rejection, PostHog idempotent absence and queued deletion, exact-host enforcement, and endpoint removal.',
+);
+block(
+  errors,
+  /scrubAccountServiceRows\(user\.id, supabase\)/.test(deletionSource) &&
+    /ACCOUNT_SERVICE_SCRUB_FAILED/.test(deletionServiceCleanupSource) &&
+    /rpc\(ACCOUNT_SERVICE_SCRUB_RPC/.test(deletionServiceCleanupSource) &&
+    /complete\s*!==\s*true/.test(deletionServiceCleanupSource) &&
+    /residual_order_attributions\s*!==\s*0/.test(deletionServiceCleanupSource) &&
+    /residual_subscription_identities\s*!==\s*0/.test(deletionServiceCleanupSource),
+  'Account deletion must use the strict service-role scrub RPC attestation before deleting Auth.',
+);
+block(
+  errors,
+  /create unique index[\s\S]*commerce_click_events[\s\S]*click_token/i.test(
+    accountServiceScrubMigration,
+  ) &&
+    /foreign key \(click_token\)[\s\S]*references public\.commerce_click_events \(click_token\)[\s\S]*on delete set null/i.test(
+      accountServiceScrubMigration,
+    ) &&
+    /delete from public\.subscriptions_events as event[\s\S]*from auth\.users as other_user/i.test(
+      accountServiceScrubMigration,
+    ) &&
+    /subscriptions_events_deleted/.test(deletionServiceCleanupSource) &&
+    /account-only subscription events to be deleted/.test(deletionServiceCleanupTestSource),
+  'Service-row deletion must enforce unambiguous click ownership, detach deleted clicks, delete A-only subscription events, and preserve shared owners.',
+);
+block(
+  errors,
+  /_migration_0046_payload_owner_values/.test(accountServiceScrubMigration) &&
+    /join auth\.users as users[\s\S]*?users\.id::text = pg_catalog\.lower/.test(
+      accountServiceScrubMigration,
+    ) &&
+    /canonical_subscription_owner_identity/.test(accountServiceScrubMigration) &&
+    /subscriptions_events_canonical_owner_identities/.test(accountServiceScrubMigration) &&
+    /SUBSCRIPTION_OWNER_CANONICALIZATION_INCOMPLETE/.test(accountServiceScrubMigration) &&
+    /LEGACY_SUBSCRIPTION_OWNER_BACKFILL_INCOMPLETE/.test(accountServiceScrubMigration) &&
+    /_migration_0046_sanitized_payload/.test(accountServiceScrubMigration) &&
+    /LEGACY_SUBSCRIPTION_PAYLOAD_FIXTURE_FAILED/.test(accountServiceScrubMigration) &&
+    /SUBSCRIPTION_PAYLOAD_ALLOWLIST_INCOMPLETE/.test(accountServiceScrubMigration) &&
+    /LEGACY_ACCOUNT_DELETION_HASH_PURGE_INCOMPLETE/.test(accountServiceScrubMigration),
+  'Legacy subscription rows must backfill every live owner before typed payload replacement and purge deterministic deletion-hash audit residue.',
+);
+block(
+  errors,
+  /\\ir \.\.\/\.\.\/supabase\/migrations\/20260713000046_account_service_row_scrub\.sql/.test(
+    accountServiceScrubPostgresRehearsal,
+  ) &&
+    /deleted-payload-shared/.test(accountServiceScrubPostgresRehearsal) &&
+    /deleted-transfer-only/.test(accountServiceScrubPostgresRehearsal) &&
+    /ACTIVE_MARKER_ERASED_LIVE_ACCOUNT/.test(accountServiceScrubPostgresRehearsal) &&
+    /REPEATED_ALIAS_ORDER_CHANGED/.test(accountServiceScrubPostgresRehearsal) &&
+    /B_ONLY_ROW_CHANGED/.test(accountServiceScrubPostgresRehearsal) &&
+    /id uuid primary key default gen_random_uuid\(\)/.test(accountServiceScrubPostgresRehearsal) &&
+    /STRUCTURED_OWNER_NOT_CANONICALIZED/.test(accountServiceScrubPostgresRehearsal) &&
+    /transferred_from is not null/.test(accountServiceScrubPostgresRehearsal),
+  'Disposable PostgreSQL rehearsal must execute migration 0046 against production-shaped UUID rows plus deleted-marker, payload-only, transfer-only, repeated, whitespace/case, empty-array, active-account, and unchanged-B fixtures.',
+);
+block(
+  errors,
+  /persistOrderAttributionPage/.test(orderAttributionPollSource) &&
+    /pollOrderReportPages/.test(orderAttributionPollSource) &&
+    /orderReportFailure/.test(orderAttributionPollSource) &&
+    /findKnownClickTokens/.test(orderAttributionCoreSource) &&
+    /knownTokens\.has\(candidate\) \? candidate : null/.test(orderAttributionCoreSource) &&
+    /ORDER_REPORT_UPSTREAM_FAILED/.test(orderAttributionCoreSource) &&
+    /ORDER_REPORT_PAGE_LIMIT_EXCEEDED/.test(orderAttributionCoreSource) &&
+    /adaptShopMyOrderReportItem/.test(orderAttributionCoreSource) &&
+    /ORDER_ATTRIBUTION_PERSIST_FAILED/.test(orderAttributionPollSource),
+  'Order-report ingestion must fail closed on incomplete provider pages and never invent or restore an unknown/deleted click token.',
+);
+block(
+  errors,
+  !/account_deletion_\$\{userHash\}/.test(deletionSource) &&
+    !/CUSTOMER_DELETION_REQUESTED/.test(deletionSource),
+  'Account deletion must not retain a recomputable user hash in the subscription event log.',
+);
 block(
   errors,
   /EDGE_EXTERNAL_FETCH_TIMEOUT_MS/.test(externalFetchHelper) &&
@@ -426,6 +631,12 @@ block(
   errors,
   /fetchWithTimeout/.test(deletionSource),
   'account-deletion provider calls must use timed external fetches.',
+);
+block(
+  errors,
+  (deletionSource.match(/redirect:\s*'error'/g)?.length ?? 0) === 2 &&
+    (deletionProviderSource.match(/redirect:\s*'error'/g)?.length ?? 0) === 2,
+  'Account deletion must fail closed on redirects for Apple, RevenueCat, and PostHog credential-bearing requests.',
 );
 block(
   errors,
@@ -457,8 +668,8 @@ block(
 );
 block(
   errors,
-  deletionHandlerSource.indexOf('deleteRevenueCatSubscriber(user.id, supabase)') !== -1 &&
-    deletionHandlerSource.indexOf('deleteRevenueCatSubscriber(user.id, supabase)') <
+  deletionHandlerSource.indexOf('deleteRevenueCatSubscriber(user.id)') !== -1 &&
+    deletionHandlerSource.indexOf('deleteRevenueCatSubscriber(user.id)') <
       deletionHandlerSource.indexOf('deletePhotoStorage(user.id, supabase)'),
   'account-deletion must delete the RevenueCat identity before local storage cleanup.',
 );

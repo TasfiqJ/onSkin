@@ -885,12 +885,19 @@ block(
 );
 
 const poll = read('supabase/functions/order-report-poll/index.ts');
+const pollCore = read('supabase/functions/order-report-poll/orderAttributionCore.ts');
+const pollCoreTest = read('supabase/functions/order-report-poll/orderAttributionCore.test.ts');
 block(
   errors,
   /SHOPMY_BRAND_API_KEY/.test(poll),
   'order-report-poll must require ShopMy brand API key before polling.',
 );
 block(errors, /no brand API key/.test(poll), 'order-report-poll must no-op without ShopMy key.');
+block(
+  errors,
+  /SHOPMY_BRAND_DOMAIN/.test(poll) && /shopmy_brand_domain_not_configured/.test(poll),
+  'order-report-poll must require a server-only registered ShopMy brand domain when activated.',
+);
 block(
   errors,
   /ORDER_REPORT_POLL_SECRET/.test(poll),
@@ -936,6 +943,34 @@ block(
       poll.indexOf('fetchWithTimeout(ORDER_REPORT_URL'),
   'order-report-poll scheduler authorization must run before the ShopMy API call.',
 );
+block(
+  errors,
+  /https:\/\/api\.shopmy\.us\/v1\/Partners\/OrderReport/.test(poll) &&
+    /Authorization:\s*`Bearer \$\{shopmyBrandKey\}`/.test(poll) &&
+    /domain:\s*shopmyBrandDomain/.test(poll) &&
+    !/x-api-key/.test(poll),
+  'order-report-poll must use the official ShopMy endpoint, Bearer authentication, and registered-domain body.',
+);
+block(
+  errors,
+  /for \(let page = 0; page < maxPages; page \+= 1\)/.test(pollCore) &&
+    /limit:\s*pageSize/.test(pollCore) &&
+    /ORDER_REPORT_PAGE_LIMIT_EXCEEDED/.test(pollCore) &&
+    /order_report_page_limit_exceeded/.test(pollCore) &&
+    /order_report_upstream_failed/.test(pollCore) &&
+    /official ShopMy wire fixture/.test(pollCoreTest) &&
+    /max-page truncation/.test(pollCoreTest),
+  'order-report-poll must test zero-indexed bounded pagination and map incomplete/upstream responses to stable non-2xx failures.',
+);
+block(
+  errors,
+  /'Order ID'/.test(pollCore) &&
+    /'Order Amount USD'/.test(pollCore) &&
+    /'Commission Amount USD'/.test(pollCore) &&
+    /not expose a click-token/.test(pollCore) &&
+    /click_token === null/.test(pollCoreTest),
+  'order-report-poll must adapt the documented display-key wire DTO without inventing click attribution.',
+);
 warn(
   warnings,
   !/INERT STUB/i.test(poll),
@@ -969,8 +1004,11 @@ block(
   errors,
   /Authorized scheduler success path intentionally not run/.test(liveOrderReportPoll) &&
     !/ORDER_REPORT_POLL_SECRET/.test(liveOrderReportPoll) &&
+    !/SHOPMY_ORDER_REPORT_POLL_SECRET/.test(liveOrderReportPoll) &&
+    !/SHOPMY_BRAND_API_KEY/.test(liveOrderReportPoll) &&
+    !/SHOPMY_BRAND_DOMAIN/.test(liveOrderReportPoll) &&
     /PHASE9_ORDER_REPORT_POLL_ACTIVATED_EXPECTED/.test(liveOrderReportPoll),
-  'Live order-report-poll harness must not read/send the real scheduler secret and must support activated-env expectations.',
+  'Live order-report-poll harness must not read/send ShopMy activation values or the real scheduler secret and must support activated-env expectations.',
 );
 
 warn(

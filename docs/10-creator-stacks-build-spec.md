@@ -200,9 +200,14 @@ type catalog (type-first; specific products arrive with B-CATALOG-SEED).
 
 - The `Fetch Order Report` poll is a **Supabase pg_cron → Edge Function** keyed on
   `recordUpdatedStartDate`, daily, upserting `order_attributions`. v1 ships the schema +
-  an **Edge Function stub** that documents the poll shape; the live poll needs the brand
-  API key + approval (B-SHOPMY). 200 req/day, 500 records/page, 30–120-day pending
-  window → daily/weekly cadence is ample.
+  a fail-closed handler; the live poll still needs the brand API key + approval
+  (B-SHOPMY). The documented response has no click-token/click-ID field and no
+  commission lifecycle-status field. The adapter therefore keeps `click_token = null`
+  and the default `pending` status instead of guessing from `Click Date`, `Code`,
+  `Customer Status`, or any other unrelated field. B-SHOPMY remains blocking until
+  ShopMy approves a usable correlation and reconciliation contract. The API budget is
+  200 requests/day with at most 500 records/page; a full final page is treated as an
+  incomplete run, never a false success.
 
 ---
 
@@ -338,7 +343,8 @@ touched.
   commission metrics tune ranking.
 - **B-SHOPMY (elevated)**: now also covers the **house-account question** (can a brand
   mint links on its own recs?) + the gated Create Link / URL-Rate / Order-Report
-  schemas + approval. **Blocking before any real link is minted.**
+  schemas + approval, including the absence of a documented Order Report correlation
+  field or commission lifecycle status. **Blocking before any real link is minted.**
 - **B-PRIVACY / B-PRIVACY-COPY**: final MHMDA data-sharing consent copy + DPIA for the
   commerce flow + FTC disclosure final wording (counsel).
 - **B-CATALOG-SEED**: real retailers/prices/links; until then where-to-buy is type-first

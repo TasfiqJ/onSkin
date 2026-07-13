@@ -19,10 +19,17 @@ import {
   collectLocalDeviceExportData,
   type MobileDataExportBundle,
 } from './localDeviceExport';
+import { queueAppleManualRevocationNotice } from './accountDeletionNotice';
 
 const DATA_RIGHTS_BACKEND_UNAVAILABLE = 'DATA_RIGHTS_BACKEND_UNAVAILABLE';
 const DATA_EXPORT_USER_UNAVAILABLE = 'DATA_EXPORT_USER_UNAVAILABLE';
 const DATA_EXPORT_RESPONSE_OWNER_MISMATCH = 'DATA_EXPORT_RESPONSE_OWNER_MISMATCH';
+const ACCOUNT_DELETION_RESPONSE_INVALID = 'ACCOUNT_DELETION_RESPONSE_INVALID';
+
+export type AccountDeletionResult = {
+  appleStatus: 'not_linked' | 'revoked' | 'manual_revocation_required';
+  posthogStatus: 'already_absent' | 'skipped';
+};
 
 function assertDataRightsBackendAvailable(): void {
   if (!isSupabaseConfigured) throw new Error(DATA_RIGHTS_BACKEND_UNAVAILABLE);
@@ -31,19 +38,43 @@ function assertDataRightsBackendAvailable(): void {
 // Account deletion (Apple 5.1.1(v) / docs/01 §4): calls the service-role Edge
 // Function which revokes the SIWA token, deletes the auth user (FK-cascades all
 // tables), purges Storage, and removes the RC/PostHog records, then signs out.
-export async function deleteAccount(completeLocalSignOut: () => Promise<void>): Promise<void> {
+function parseAccountDeletionResponse(data: unknown): AccountDeletionResult {
+  if (!isRecord(data) || data.deleted !== true || !isRecord(data.apple)) {
+    throw new Error(ACCOUNT_DELETION_RESPONSE_INVALID);
+  }
+  const appleStatus = data.apple.status;
+  const posthogStatus = data.posthog;
+  if (
+    (appleStatus !== 'not_linked' &&
+      appleStatus !== 'revoked' &&
+      appleStatus !== 'manual_revocation_required') ||
+    (posthogStatus !== 'already_absent' && posthogStatus !== 'skipped')
+  ) {
+    throw new Error(ACCOUNT_DELETION_RESPONSE_INVALID);
+  }
+  return { appleStatus, posthogStatus };
+}
+
+export async function deleteAccount(
+  completeLocalSignOut: () => Promise<void>,
+): Promise<AccountDeletionResult> {
   assertDataRightsBackendAvailable();
 
   const { data } = await supabase.auth.getUser();
   const appleAuthorizationCode = data.user
     ? await getAppleAuthorizationCodeForRevocation(data.user).catch(() => null)
     : null;
-  const { error } = await supabase.functions.invoke('account-deletion', {
+  const { data: deletionData, error } = await supabase.functions.invoke('account-deletion', {
     method: 'POST',
     body: appleAuthorizationCode ? { appleAuthorizationCode } : {},
   });
   if (error) throw error;
+  const result = parseAccountDeletionResponse(deletionData);
+  if (result.appleStatus === 'manual_revocation_required') {
+    queueAppleManualRevocationNotice();
+  }
   await completeLocalSignOut();
+  return result;
 }
 
 // Health-data consent withdrawal (docs/01 §4: MHMDA/GDPR right to withdraw,

@@ -58,6 +58,16 @@ for (const category of [
   );
 }
 
+const appleSupportOrigin = inventory.items.find(
+  (entry) => entry.id === 'vendor-call:origin:support.apple.com',
+);
+assert(appleSupportOrigin, 'missing the Apple account-support origin');
+assert.deepEqual(
+  appleSupportOrigin.featureIds,
+  ['F-02'],
+  'Apple account-support instructions must remain mapped to identity and consent',
+);
+
 console.log(
   'Execution baseline smoke passed: omission, addition, duplicate, feature, and surface guards reject incomplete sets.',
 );

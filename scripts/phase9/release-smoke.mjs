@@ -60,6 +60,7 @@ const localVerifierFiles = [
   'scripts/phase9/edge-auth-smoke.mjs',
   'scripts/phase9/edge-functions-check.mjs',
   'scripts/phase9/data-rights-smoke.mjs',
+  'scripts/phase9/account-service-scrub-postgres-rehearsal.sql',
   'scripts/phase9/consent-withdrawal-smoke.mjs',
   'scripts/phase9/supabase-policy-lint.mjs',
   'scripts/phase9/security-ci-smoke.mjs',
@@ -97,6 +98,13 @@ const requiredFiles = [
   'supabase/functions/account-deletion/index.ts',
   'supabase/functions/account-deletion/photoStorageCleanup.ts',
   'supabase/functions/account-deletion/photoStorageCleanup.test.ts',
+  'supabase/functions/account-deletion/providerDeletion.ts',
+  'supabase/functions/account-deletion/providerDeletion.test.ts',
+  'supabase/functions/account-deletion/serviceRoleCleanup.ts',
+  'supabase/functions/account-deletion/serviceRoleCleanup.test.ts',
+  'supabase/functions/order-report-poll/index.ts',
+  'supabase/functions/order-report-poll/orderAttributionCore.ts',
+  'supabase/functions/order-report-poll/orderAttributionCore.test.ts',
   'supabase/functions/_shared/storagePath.ts',
   'supabase/functions/_shared/storagePath.test.ts',
   'supabase/functions/data-export/index.ts',
@@ -114,6 +122,7 @@ const requiredFiles = [
   'supabase/migrations/20260711000039_replenishment_alert_opt_in.sql',
   'supabase/migrations/20260615000027_phase6_payments.sql',
   'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
+  'supabase/migrations/20260713000046_account_service_row_scrub.sql',
   'scripts/phase9/lib.mjs',
   'scripts/phase2/supabase-rls-smoke.mjs',
   'scripts/phase9/build-release-qa-packet.mjs',
@@ -151,10 +160,13 @@ const requiredFiles = [
 for (const file of requiredFiles) block(errors, exists(file), `${file} is missing.`);
 
 for (const key of [
+  'APP_IOS_BUNDLE_IDENTIFIER',
   'APPLE_SIWA_CLIENT_ID',
+  'EXPO_PUBLIC_POSTHOG_KEY',
+  'EXPO_PUBLIC_POSTHOG_HOST',
+  'POSTHOG_PERSONAL_API_KEY',
   'POSTHOG_PROJECT_ID',
   'POSTHOG_API_HOST',
-  'POSTHOG_DELETION_APPROVED_ALTERNATE',
   'TURNSTILE_SECRET_KEY',
   'PUBLIC_FORMS_TURNSTILE_REQUIRED',
   'PUBLIC_FORMS_RATE_LIMIT_MAX',
@@ -174,7 +186,9 @@ for (const key of [
   'PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_WAIT_SECONDS',
   'PHASE9_CATALOG_RATE_LIMIT_PROBE_MAX',
   'SHOPMY_BRAND_API_KEY',
+  'SHOPMY_BRAND_DOMAIN',
   'ORDER_REPORT_POLL_SECRET',
+  'REVENUECAT_SECRET_API_KEY',
   'REVENUECAT_WEBHOOK_MAX_BYTES',
   'PHASE9_RUN_LIVE_SUPABASE_ADVERSARIAL',
   'PHASE9_ANONYMOUS_CAPTCHA_TOKEN',
@@ -207,10 +221,94 @@ for (const key of [
 }
 
 const packageJson = JSON.parse(read('package.json'));
+const edgeFunctionManifest = JSON.parse(read('supabase/functions/manifest.json'));
 const integerInRange = (value, min, max) => {
   const parsed = Number(value);
   return Number.isInteger(parsed) && parsed >= min && parsed <= max;
 };
+const validServerHostname = (value) =>
+  typeof value === 'string' &&
+  value.length <= 253 &&
+  /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])$/i.test(
+    value.trim(),
+  );
+const POSTHOG_MOBILE_INGEST_HOST = 'https://eu.i.posthog.com';
+const POSTHOG_SERVER_API_HOST = 'https://eu.posthog.com';
+
+block(
+  errors,
+  exampleEnv.EXPO_PUBLIC_POSTHOG_HOST === POSTHOG_MOBILE_INGEST_HOST &&
+    exampleEnv.POSTHOG_API_HOST === POSTHOG_SERVER_API_HOST,
+  'The checked-in PostHog mobile ingest and server API hosts must use the paired EU endpoints.',
+);
+block(
+  errors,
+  has(
+    'apps/mobile/src/lib/env.ts',
+    /posthogHost:\s*process\.env\.EXPO_PUBLIC_POSTHOG_HOST\s*\?\?\s*['"]https:\/\/eu\.i\.posthog\.com['"]/,
+  ) &&
+    has(
+      'supabase/functions/account-deletion/index.ts',
+      /Deno\.env\.get\(['"]POSTHOG_API_HOST['"]\)\s*\?\?\s*['"]https:\/\/eu\.posthog\.com['"]/,
+    ),
+  'Mobile and account-deletion defaults must preserve the paired EU PostHog hosts.',
+);
+
+const appleSiwaClientId = env.APPLE_SIWA_CLIENT_ID;
+const iosBundleIdentifier = env.APP_IOS_BUNDLE_IDENTIFIER;
+block(
+  errors,
+  !placeholderEnvValue(appleSiwaClientId),
+  'APPLE_SIWA_CLIENT_ID must be explicitly configured for Apple credential revocation.',
+);
+if (!placeholderEnvValue(appleSiwaClientId) && !placeholderEnvValue(iosBundleIdentifier)) {
+  block(
+    errors,
+    appleSiwaClientId.trim() === iosBundleIdentifier.trim(),
+    'APPLE_SIWA_CLIENT_ID must exactly match APP_IOS_BUNDLE_IDENTIFIER.',
+  );
+}
+
+if (!placeholderEnvValue(env.EXPO_PUBLIC_POSTHOG_KEY)) {
+  block(
+    errors,
+    !placeholderEnvValue(env.POSTHOG_PROJECT_ID),
+    'POSTHOG_PROJECT_ID is required when EXPO_PUBLIC_POSTHOG_KEY enables PostHog.',
+  );
+  block(
+    errors,
+    !placeholderEnvValue(env.POSTHOG_PERSONAL_API_KEY),
+    'POSTHOG_PERSONAL_API_KEY is required when EXPO_PUBLIC_POSTHOG_KEY enables PostHog.',
+  );
+  block(
+    errors,
+    env.EXPO_PUBLIC_POSTHOG_HOST?.trim() === POSTHOG_MOBILE_INGEST_HOST,
+    `EXPO_PUBLIC_POSTHOG_HOST must equal ${POSTHOG_MOBILE_INGEST_HOST} when PostHog is enabled.`,
+  );
+  block(
+    errors,
+    env.POSTHOG_API_HOST?.trim() === POSTHOG_SERVER_API_HOST,
+    `POSTHOG_API_HOST must equal ${POSTHOG_SERVER_API_HOST} when PostHog is enabled.`,
+  );
+}
+
+const accountDeletionManifest = edgeFunctionManifest.functions?.['account-deletion'];
+block(
+  errors,
+  accountDeletionManifest?.conditionalEnvironment?.some(
+    (condition) =>
+      /Sign in with Apple identity/.test(condition.when) &&
+      condition.anyOf?.length === 1 &&
+      condition.anyOf[0] === 'APPLE_SIWA_CLIENT_ID',
+  ) &&
+    accountDeletionManifest?.conditionalEnvironment?.some(
+      (condition) =>
+        /Sign in with Apple identity/.test(condition.when) &&
+        condition.anyOf?.length === 1 &&
+        condition.anyOf[0] === 'APP_IOS_BUNDLE_IDENTIFIER',
+    ),
+  'Account deletion must separately attest APPLE_SIWA_CLIENT_ID and APP_IOS_BUNDLE_IDENTIFIER instead of using client-ID fallbacks.',
+);
 
 for (const script of [
   'phase9:release-smoke',
@@ -230,6 +328,9 @@ for (const script of [
   'phase9:data-export-contract-smoke',
   'phase9:storage-path-privacy-smoke',
   'phase9:account-deletion-photo-storage-smoke',
+  'phase9:account-provider-deletion-smoke',
+  'phase9:account-service-scrub-smoke',
+  'phase9:order-attribution-integrity-smoke',
   'phase9:revenuecat-webhook-atomic-smoke',
   'phase9:live-data-rights',
   'phase9:consent-withdrawal',
@@ -272,6 +373,35 @@ block(
   errors,
   /phase9:account-deletion-photo-storage-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
   'phase9:verify must run the account-deletion photo-storage contract.',
+);
+block(
+  errors,
+  /phase9:account-provider-deletion-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? '') &&
+    /phase9:account-provider-deletion-smoke/.test(packageJson.scripts?.['launch:verify'] ?? '') &&
+    has('.github/workflows/quality.yml', /npm run phase9:account-provider-deletion-smoke/),
+  'Phase 9, launch, and CI verification must run the account provider-deletion contract.',
+);
+block(
+  errors,
+  /phase9:account-service-scrub-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? '') &&
+    /phase9:account-service-scrub-smoke/.test(packageJson.scripts?.['launch:verify'] ?? '') &&
+    has('.github/workflows/quality.yml', /npm run phase9:account-service-scrub-smoke/),
+  'Phase 9, launch, and CI verification must run the account service-row scrub contract.',
+);
+block(
+  errors,
+  has(
+    '.github/workflows/quality.yml',
+    /services:\s*[\s\S]*?image:\s*postgres:15-alpine[\s\S]*?psql -h 127\.0\.0\.1 -U postgres -v ON_ERROR_STOP=1\s+-f scripts\/phase9\/account-service-scrub-postgres-rehearsal\.sql/,
+  ),
+  'CI must execute the account service-row scrub migration rehearsal on PostgreSQL 15.',
+);
+block(
+  errors,
+  /phase9:order-attribution-integrity-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? '') &&
+    /phase9:order-attribution-integrity-smoke/.test(packageJson.scripts?.['launch:verify'] ?? '') &&
+    has('.github/workflows/quality.yml', /npm run phase9:order-attribution-integrity-smoke/),
+  'Phase 9, launch, and CI verification must run the order-attribution integrity contract.',
 );
 block(
   errors,
@@ -749,6 +879,11 @@ if (!placeholder(env.SHOPMY_BRAND_API_KEY)) {
     errors,
     !placeholder(env.ORDER_REPORT_POLL_SECRET),
     'ORDER_REPORT_POLL_SECRET is required when SHOPMY_BRAND_API_KEY is configured.',
+  );
+  block(
+    errors,
+    !placeholder(env.SHOPMY_BRAND_DOMAIN) && validServerHostname(env.SHOPMY_BRAND_DOMAIN),
+    'SHOPMY_BRAND_DOMAIN must be the registered hostname without a scheme or path when SHOPMY_BRAND_API_KEY is configured.',
   );
 }
 block(

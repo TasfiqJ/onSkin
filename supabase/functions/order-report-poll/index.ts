@@ -1,55 +1,33 @@
 // ShopMy Order-Report poll -> order_attributions ingestion (docs/10 §5).
-// Runs on Supabase Edge (Deno) with the service-role key (bypasses RLS), invoked on a
-// schedule (pg_cron, daily). *** ShopMy has NO webhooks *** — attribution reporting is
-// poll-only, so this scheduled job is the only path commission/order data reaches the
-// commerce wall. order_attributions is SERVICE-ROLE ONLY (RLS deny-all to clients), so
-// commission data never touches the ranking path or a user (church and state, D-058).
+// Runs on Supabase Edge with the service-role key on an authenticated schedule.
+// ShopMy has no webhook; this poll is the only commission/order ingestion path.
 //
-// Deploy: `supabase functions deploy order-report-poll --no-verify-jwt`
-// Schedule (pg_cron): select cron.schedule('order-report-poll','0 9 * * *', ...)
-//
-// *** BLOCKED: B-SHOPMY — this is an INERT STUB. ***
-// The build-time-unconfirmed items (the deep-research pass, D-059): (1) ShopMy API
-// access is GATED to approved partners; (2) it is UNCONFIRMED that a brand/app can mint
-// links on its OWN first-party recommendations under a house account (link creation is
-// creator-OAuth-only; this Brand Partners "Fetch Order Report" API is reporting-only).
-// Until partnerships confirms the account model + provisions a brand API key, this
-// no-ops. The shape below documents the poll contract so it stays version-controlled.
+// BLOCKED: B-SHOPMY. Without an approved brand API key this stays an inert no-op.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
+import {
+  ORDER_ATTRIBUTION_PERSIST_FAILED,
+  ORDER_REPORT_MAX_PAGES,
+  ORDER_REPORT_PAGE_SIZE,
+  normalizeShopMyBrandDomain,
+  orderReportFailure,
+  persistOrderAttributionPage,
+  pollOrderReportPages,
+} from './orderAttributionCore.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = readSupabaseSecretKey();
-const shopmyBrandKey = Deno.env.get('SHOPMY_BRAND_API_KEY') ?? ''; // BLOCKED: B-SHOPMY
+const shopmyBrandKey = Deno.env.get('SHOPMY_BRAND_API_KEY') ?? '';
+const shopmyBrandDomain = normalizeShopMyBrandDomain(Deno.env.get('SHOPMY_BRAND_DOMAIN'));
 const schedulerSecret =
   Deno.env.get('ORDER_REPORT_POLL_SECRET') ?? Deno.env.get('SHOPMY_ORDER_REPORT_POLL_SECRET') ?? '';
 
-// The documented Fetch Order Report contract (verified against docs.shopmy.us):
-//   POST https://api.shopmy.us/api/v1/Partners/OrderReport
-//   headers: { 'x-api-key': <brand key> }
-//   body: { recordUpdatedStartDate, recordUpdatedEndDate, page, pageSize<=500 }
-//   limits: 200 requests/day; 500 records/page (~100k orders/day).
-// Incremental key: record_updated_at — re-poll the 30–120-day pending window so
-// 'pending' commissions flip to 'locked'/'returned' as retailers settle.
-const ORDER_REPORT_URL = 'https://api.shopmy.us/api/v1/Partners/OrderReport';
-const PAGE_SIZE = 500;
-
-type ShopMyOrder = {
-  orderId: string;
-  orderAmountUSD?: number;
-  commissionAmountUSD?: number;
-  status?: string; // pending | locked | returned
-  transactionDate?: string;
-  recordUpdatedDate?: string;
-  clickToken?: string;
-};
-type ShopMyOrderReport = { orders?: ShopMyOrder[] };
-
-function mapStatus(s: string | undefined): 'pending' | 'locked' | 'returned' {
-  const u = (s ?? '').toLowerCase();
-  return u === 'locked' ? 'locked' : u === 'returned' ? 'returned' : 'pending';
-}
+// Official brand-partner contract: docs.shopmy.us/reference/fetch-order-report
+// Pages are zero-indexed, `limit` is at most 500, and production permits 200
+// requests/day. The bounded record-updated window captures provider corrections
+// without assigning undocumented attribution or commission-status semantics.
+const ORDER_REPORT_URL = 'https://api.shopmy.us/v1/Partners/OrderReport';
 
 function json(body: unknown, status = 200, headers: HeadersInit = {}): Response {
   return new Response(JSON.stringify(body), {
@@ -61,10 +39,14 @@ function json(body: unknown, status = 200, headers: HeadersInit = {}): Response 
 function constantTimeEqual(left: string, right: string): boolean {
   let diff = left.length ^ right.length;
   const max = Math.max(left.length, right.length);
-  for (let i = 0; i < max; i += 1) {
-    diff |= (left.charCodeAt(i) || 0) ^ (right.charCodeAt(i) || 0);
+  for (let index = 0; index < max; index += 1) {
+    diff |= (left.charCodeAt(index) || 0) ^ (right.charCodeAt(index) || 0);
   }
   return diff === 0;
+}
+
+function shopMyUtcTimestamp(date: Date): string {
+  return date.toISOString().replace('T', ' ').slice(0, 19);
 }
 
 function authorizedSchedulerRequest(req: Request): boolean {
@@ -81,55 +63,73 @@ function authorizedSchedulerRequest(req: Request): boolean {
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405, { Allow: 'POST' });
 
-  // INERT until B-SHOPMY: no brand key => no poll. Returns 200 so a scheduler treats it
-  // as a successful no-op rather than retrying.
   if (!shopmyBrandKey) {
     return json({ ok: true, skipped: 'B-SHOPMY: no brand API key (poll inert)' });
   }
   if (!schedulerSecret) return json({ error: 'scheduler_secret_not_configured' }, 503);
+  if (!shopmyBrandDomain) return json({ error: 'shopmy_brand_domain_not_configured' }, 503);
   if (!authorizedSchedulerRequest(req)) return json({ error: 'unauthorized' }, 401);
 
   const supabase = createClient(supabaseUrl, serviceKey);
-  // Incremental: poll from the last record_updated_at we ingested (re-cover the pending
-  // window). For the stub, a fixed 30-day lookback documents the intent.
-  const since = new Date(Date.now() - 30 * 86_400_000).toISOString();
-  const until = new Date().toISOString();
+  const until = new Date();
+  const since = new Date(until.getTime() - 30 * 86_400_000);
 
-  let page = 1;
-  let upserted = 0;
-  // The real loop paginates until a short page; capped here to respect 200 req/day.
-  for (; page <= 200; page++) {
-    const res = await fetchWithTimeout(ORDER_REPORT_URL, {
-      method: 'POST',
-      headers: { 'x-api-key': shopmyBrandKey, 'content-type': 'application/json' },
-      body: JSON.stringify({
-        recordUpdatedStartDate: since,
-        recordUpdatedEndDate: until,
-        page,
-        pageSize: PAGE_SIZE,
-      }),
-    }).catch(() => null);
-    if (!res?.ok) break;
-    const orders = ((await readLimitedResponseJson<ShopMyOrderReport>(res))?.orders ??
-      []) as ShopMyOrder[];
-    if (orders.length === 0) break;
-
-    // Idempotent upsert on external_order_id (the report is re-polled as statuses
-    // settle). NO health-adjacent field is read or stored — only the opaque clickToken.
-    const rows = orders.map((o) => ({
-      external_order_id: o.orderId,
-      click_token: o.clickToken ?? null,
-      order_amount_cents: o.orderAmountUSD != null ? Math.round(o.orderAmountUSD * 100) : null,
-      commission_cents:
-        o.commissionAmountUSD != null ? Math.round(o.commissionAmountUSD * 100) : null,
-      status: mapStatus(o.status),
-      transaction_date: o.transactionDate ?? null,
-      record_updated_at: o.recordUpdatedDate ?? null,
-    }));
-    await supabase.from('order_attributions').upsert(rows, { onConflict: 'external_order_id' });
-    upserted += rows.length;
-    if (orders.length < PAGE_SIZE) break;
+  try {
+    const upserted = await pollOrderReportPages(
+      {
+        recordUpdatedStartDate: shopMyUtcTimestamp(since),
+        recordUpdatedEndDate: shopMyUtcTimestamp(until),
+        pageSize: ORDER_REPORT_PAGE_SIZE,
+        maxPages: ORDER_REPORT_MAX_PAGES,
+      },
+      {
+        fetchPage(request) {
+          return fetchWithTimeout(ORDER_REPORT_URL, {
+            method: 'POST',
+            redirect: 'error',
+            headers: {
+              Authorization: `Bearer ${shopmyBrandKey}`,
+              Accept: 'application/json',
+              'content-type': 'application/json',
+            },
+            body: JSON.stringify({
+              domain: shopmyBrandDomain,
+              ...request,
+            }),
+          });
+        },
+        readJson(response) {
+          return readLimitedResponseJson<unknown>(response);
+        },
+        persistPage(orders) {
+          return persistOrderAttributionPage(orders, {
+            async findKnownClickTokens(tokens) {
+              if (tokens.length === 0) return [];
+              const { data, error } = await supabase
+                .from('commerce_click_events')
+                .select('click_token')
+                .in('click_token', [...tokens]);
+              if (error || !Array.isArray(data)) {
+                throw new Error(ORDER_ATTRIBUTION_PERSIST_FAILED);
+              }
+              return data
+                .map((row: { click_token?: unknown }) => row.click_token)
+                .filter((token: unknown): token is string => typeof token === 'string');
+            },
+            async upsertOrderAttributions(rows) {
+              const { error } = await supabase
+                .from('order_attributions')
+                .upsert([...rows], { onConflict: 'external_order_id' });
+              if (error) throw new Error(ORDER_ATTRIBUTION_PERSIST_FAILED);
+            },
+          });
+        },
+      },
+    );
+    return json({ ok: true, upserted });
+  } catch (error) {
+    const failure = orderReportFailure(error);
+    console.warn(failure.logCode);
+    return json({ error: failure.publicCode }, failure.status);
   }
-
-  return json({ ok: true, upserted });
 });

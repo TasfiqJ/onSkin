@@ -10,6 +10,9 @@ npm run phase9:rls-adversarial:strict
 npm run phase9:edge-auth-smoke:strict
 npm run phase9:data-rights-smoke:strict
 npm run phase9:data-export-contract-smoke
+npm run phase9:account-provider-deletion-smoke
+npm run phase9:account-service-scrub-smoke
+npm run phase9:order-attribution-integrity-smoke
 npm run phase9:privacy-payload-audit:strict
 npm run phase9:store-build-inspect:strict
 npm run phase9:dependency-sbom:strict

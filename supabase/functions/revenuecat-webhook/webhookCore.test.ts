@@ -201,6 +201,37 @@ Deno.test(
   },
 );
 
+Deno.test('RevenueCat owner UUIDs canonicalize ASCII boundary whitespace and case', () => {
+  const canonical = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa4';
+  const args = buildRevenueCatAtomicArgs(
+    event('canonical-owner-event', 'RENEWAL', 1_700_000_000_000, {
+      app_user_id: `\t${canonical.toUpperCase()}\n`,
+      original_app_user_id: `\r${USER_ID}\f`,
+      aliases: [` ${canonical.toUpperCase()} `, canonical, 'opaque-provider-alias'],
+      transferred_from: [`\v${canonical.toUpperCase()}\t`],
+      transferred_to: [`\n${USER_ID}\r`],
+    }),
+    verification,
+  );
+
+  assert(args.p_app_user_id === canonical, 'app user UUID was not canonicalized.');
+  assert(args.p_original_app_user_id === USER_ID, 'original app user UUID was not canonicalized.');
+  assert(
+    JSON.stringify(args.p_aliases) === JSON.stringify([canonical, 'opaque-provider-alias']),
+    'alias UUIDs were not canonicalized/deduplicated without changing opaque aliases.',
+  );
+  assert(
+    JSON.stringify(args.p_transferred_from) === JSON.stringify([canonical]) &&
+      JSON.stringify(args.p_transferred_to) === JSON.stringify([USER_ID]),
+    'transfer UUIDs were not canonicalized.',
+  );
+  assert(
+    (args.p_user_candidates as string[]).includes(canonical) &&
+      (args.p_user_candidates as string[]).includes(USER_ID),
+    'canonical owners were not available for Auth resolution.',
+  );
+});
+
 Deno.test('RevenueCat duplicate delivery produces one audit event and one projection', async () => {
   const rpc = new AtomicReferenceRpc();
   const args = buildRevenueCatAtomicArgs(

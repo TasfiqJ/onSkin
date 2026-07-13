@@ -1,14 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, Card, Screen, Text } from '@/components/ui';
 import { isOnboardedLocal } from '@/features/onboarding/skinProfileStore';
+import {
+  acknowledgeAccountDeletionNotice,
+  peekAccountDeletionNotice,
+} from '@/features/settings/accountDeletionNotice';
 import { clearLocalPrivateData } from '@/features/settings/localPrivateData';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { isSupabaseConfigured } from '@/lib/env';
+import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { queryClient } from '@/lib/query/queryClient';
 import { supabase } from '@/lib/supabase/client';
 
@@ -24,6 +29,8 @@ function shouldRunE2ELocalReset(value: string | string[] | undefined): boolean {
 export default function WelcomeScreen() {
   const params = useLocalSearchParams<{ e2eReset?: string }>();
   const { ensureAnonymousSession, session, initializing } = useAuth();
+  const [accountDeletionNotice] = useState(peekAccountDeletionNotice);
+  const [appleInstructionsUnavailable, setAppleInstructionsUnavailable] = useState(false);
   const [busy, setBusy] = useState(false);
   const [resetting, setResetting] = useState(() => shouldRunE2ELocalReset(params.e2eReset));
 
@@ -88,40 +95,95 @@ export default function WelcomeScreen() {
     router.push('/onboarding/age');
   }
 
+  async function openAppleInstructions() {
+    setAppleInstructionsUnavailable(false);
+    const opened = await openExternalHttpsUrl(accountDeletionNotice?.instructionUrl, {
+      mode: 'browser',
+      alertOnFailure: false,
+    });
+    if (!opened) setAppleInstructionsUnavailable(true);
+  }
+
   // Stay on splash while deciding; render nothing while redirecting an onboarded user.
   const deciding = resetting || initializing || (!!session && onboarded.isLoading);
+
+  useEffect(() => {
+    if (!accountDeletionNotice || deciding || onboarded.data === true) return;
+    acknowledgeAccountDeletionNotice(accountDeletionNotice);
+  }, [accountDeletionNotice, deciding, onboarded.data]);
+
   if (deciding || onboarded.data === true) return null;
 
   return (
     <Screen>
-      <View className="flex-1 justify-center">
-        <Text variant="display">
-          Healthier skin in eight weeks, built around{' '}
-          <Text variant="display" italic tone="clay">
-            your
-          </Text>{' '}
-          skin.
-        </Text>
-        <Text variant="body" tone="muted" className="mt-4">
-          A routine that fits what&apos;s already on your shelf. And photos that never leave your
-          phone.
-        </Text>
-      </View>
-      <View className="pb-4">
-        <Button label="Begin" onPress={begin} disabled={busy} />
-        <Pressable
-          accessibilityRole="button"
-          className="mt-3 items-center py-3"
-          onPress={() => router.push('/onboarding/account')}
-        >
-          <Text variant="body" tone="muted" className="font-sans-medium">
-            I already have an account
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View className="flex-1 justify-center py-4">
+          {accountDeletionNotice ? (
+            <Card>
+              <View
+                accessible
+                accessibilityLabel={`Account deleted. ${accountDeletionNotice.title}. ${accountDeletionNotice.message}`}
+                accessibilityLiveRegion="assertive"
+                accessibilityRole="alert"
+              >
+                <Text variant="label" tone="clay">
+                  ACCOUNT DELETED
+                </Text>
+                <Text variant="title" className="mt-2">
+                  {accountDeletionNotice.title}
+                </Text>
+                <Text variant="body" tone="muted" className="mt-3">
+                  {accountDeletionNotice.message}
+                </Text>
+              </View>
+              <Button
+                className="mt-4"
+                label="Open Apple instructions"
+                variant="ghost"
+                onPress={() => void openAppleInstructions()}
+              />
+              {appleInstructionsUnavailable ? (
+                <Text accessibilityRole="alert" variant="bodySm" tone="clay" className="mt-2">
+                  Apple Support could not open. Use the iPhone Settings steps above.
+                </Text>
+              ) : null}
+            </Card>
+          ) : (
+            <>
+              <Text variant="display">
+                Healthier skin in eight weeks, built around{' '}
+                <Text variant="display" italic tone="clay">
+                  your
+                </Text>{' '}
+                skin.
+              </Text>
+              <Text variant="body" tone="muted" className="mt-4">
+                A routine that fits what&apos;s already on your shelf. And photos that never leave
+                your phone.
+              </Text>
+            </>
+          )}
+        </View>
+        <View className="pb-4">
+          <Button label="Begin" onPress={begin} disabled={busy} />
+          <Pressable
+            accessibilityRole="button"
+            className="mt-3 min-h-[44px] items-center justify-center py-3"
+            onPress={() => router.push('/onboarding/account')}
+          >
+            <Text variant="body" tone="muted" className="font-sans-medium">
+              I already have an account
+            </Text>
+          </Pressable>
+          <Text variant="label" tone="clay" className="mt-2 text-center">
+            No ads · no data sales · photos stay on device
           </Text>
-        </Pressable>
-        <Text variant="label" tone="clay" className="mt-2 text-center">
-          No ads · no data sales · photos stay on device
-        </Text>
-      </View>
+        </View>
+      </ScrollView>
     </Screen>
   );
 }
