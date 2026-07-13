@@ -7,18 +7,32 @@ const mocks = vi.hoisted(() => ({
   hasAction: vi.fn(async () => true),
   requestReview: vi.fn(async () => undefined),
   setShouldReject: false,
+  tails: new Map<string, Promise<void>>(),
   track: vi.fn(),
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
-  setPrivateItem: vi.fn(async (key: string, value: string) => {
-    if (mocks.setShouldReject) throw new Error('storage unavailable');
-    mocks.storage.set(key, value);
-  }),
-  removePrivateItem: vi.fn(async (key: string) => {
-    mocks.storage.delete(key);
-  }),
+  updatePrivateItem: vi.fn(
+    async (key: string, updater: (current: string | null) => string | null) => {
+      const previous = mocks.tails.get(key) ?? Promise.resolve();
+      let release!: () => void;
+      const tail = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      mocks.tails.set(key, tail);
+      await previous;
+      try {
+        if (mocks.setShouldReject) throw new Error('storage unavailable');
+        const next = updater(mocks.storage.get(key) ?? null);
+        if (next === null) mocks.storage.delete(key);
+        else mocks.storage.set(key, next);
+      } finally {
+        release();
+        if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
+      }
+    },
+  ),
 }));
 
 vi.mock('expo-store-review', () => ({
@@ -45,28 +59,33 @@ describe('review prompt local history', () => {
     mocks.requestReview.mockClear();
     mocks.requestReview.mockResolvedValue(undefined);
     mocks.setShouldReject = false;
+    mocks.tails.clear();
     mocks.track.mockClear();
   });
 
-  it('recovers from unreadable local history before recording a fresh attempt', async () => {
-    mocks.storage.set(KEY, '{not-json');
-
-    await requestReviewAfterValue('seven_checkoff_days', NOW);
-
-    expect(mocks.requestReview).toHaveBeenCalledTimes(1);
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      attemptedAt: [NOW.toISOString()],
-    });
-  });
-
-  it('removes wrong-shaped local history when no platform prompt is available', async () => {
-    mocks.hasAction.mockResolvedValue(false);
-    mocks.storage.set(KEY, JSON.stringify(['2026-06-01T12:00:00.000Z']));
+  it('preserves unreadable local history and suppresses the native prompt', async () => {
+    const original = '{not-json';
+    mocks.storage.set(KEY, original);
 
     await requestReviewAfterValue('seven_checkoff_days', NOW);
 
     expect(mocks.requestReview).not.toHaveBeenCalled();
-    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.track).toHaveBeenCalledWith('review_prompt_unavailable', {
+      moment: 'seven_checkoff_days',
+    });
+  });
+
+  it('preserves wrong-shaped local history before checking platform availability', async () => {
+    mocks.hasAction.mockResolvedValue(false);
+    const original = JSON.stringify(['2026-06-01T12:00:00.000Z']);
+    mocks.storage.set(KEY, original);
+
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
+
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.hasAction).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toBe(original);
     expect(mocks.track).toHaveBeenCalledWith('review_prompt_unavailable', {
       moment: 'seven_checkoff_days',
     });
@@ -113,19 +132,18 @@ describe('review prompt local history', () => {
       moment: 'first_reviewed_conflict',
     });
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      attemptedAt: [NOW.toISOString()],
+      version: 1,
+      state: { attemptedAt: [NOW.toISOString()] },
     });
   });
 
-  it('does not throw if local attempt history cannot be saved after a prompt attempt', async () => {
+  it('does not prompt if the attempt reservation cannot be saved', async () => {
     mocks.setShouldReject = true;
 
     await expect(requestReviewAfterValue('seven_checkoff_days', NOW)).resolves.toBeUndefined();
 
-    expect(mocks.requestReview).toHaveBeenCalledTimes(1);
-    expect(mocks.track).toHaveBeenCalledWith('review_prompt_attempted', {
-      moment: 'seven_checkoff_days',
-    });
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.track).not.toHaveBeenCalledWith('review_prompt_attempted', expect.anything());
     expect(mocks.storage.has(KEY)).toBe(false);
   });
 
@@ -146,7 +164,31 @@ describe('review prompt local history', () => {
 
     expect(mocks.requestReview).toHaveBeenCalledTimes(1);
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
-      attemptedAt: ['2026-06-01T12:00:00.000Z', NOW.toISOString()],
+      version: 1,
+      state: { attemptedAt: ['2026-06-01T12:00:00.000Z', NOW.toISOString()] },
     });
+  });
+
+  it('serializes simultaneous callers so the native review prompt is requested once', async () => {
+    await Promise.all(
+      Array.from({ length: 20 }, () => requestReviewAfterValue('seven_checkoff_days', NOW)),
+    );
+
+    expect(mocks.requestReview).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
+      version: 1,
+      state: { attemptedAt: [NOW.toISOString()] },
+    });
+  });
+
+  it('preserves future-version attempt history and never invokes native review', async () => {
+    const original = JSON.stringify({ version: 2, state: { attemptedAt: [] } });
+    mocks.storage.set(KEY, original);
+
+    await requestReviewAfterValue('seven_checkoff_days', NOW);
+
+    expect(mocks.hasAction).not.toHaveBeenCalled();
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toBe(original);
   });
 });
