@@ -28,36 +28,44 @@ describe('private boolean storage', () => {
     await setPrivateBoolean('flag-a', true);
     await setPrivateBoolean('flag-b', false);
 
-    expect(mocks.storage.get('flag-a')).toBe('1');
-    expect(mocks.storage.get('flag-b')).toBe('0');
+    expect(mocks.storage.get('flag-a')).toBe('v1:1');
+    expect(mocks.storage.get('flag-b')).toBe('v1:0');
   });
 
-  it('accepts legacy true/false values and repairs them to canonical flags', async () => {
+  it('accepts legacy true/false values without repairing bytes', async () => {
     mocks.storage.set('legacy-true', ' true ');
     mocks.storage.set('legacy-false', 'FALSE');
 
     await expect(getPrivateBoolean('legacy-true')).resolves.toBe(true);
     await expect(getPrivateBoolean('legacy-false')).resolves.toBe(false);
 
-    expect(mocks.storage.get('legacy-true')).toBe('1');
-    expect(mocks.storage.get('legacy-false')).toBe('0');
+    expect(mocks.storage.get('legacy-true')).toBe(' true ');
+    expect(mocks.storage.get('legacy-false')).toBe('FALSE');
   });
 
-  it('fails closed and repairs noncanonical values', async () => {
+  it('fails closed and preserves noncanonical values', async () => {
     mocks.storage.set('bad-flag', 'enabled');
 
     await expect(getPrivateBoolean('bad-flag')).resolves.toBe(false);
 
-    expect(mocks.storage.get('bad-flag')).toBe('0');
+    expect(mocks.storage.get('bad-flag')).toBe('enabled');
   });
 
-  it('keeps an already-granted canonical decision active if repair fails', async () => {
+  it('keeps a legacy granted decision active without issuing a write', async () => {
     mocks.storage.set('padded-grant', ' 1 ');
-    mocks.setPrivateItem.mockRejectedValueOnce(new Error('repair unavailable'));
 
     await expect(getPrivateBoolean('padded-grant')).resolves.toBe(true);
 
     expect(mocks.storage.get('padded-grant')).toBe(' 1 ');
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+  });
+
+  it('fails closed and preserves a future application schema', async () => {
+    mocks.storage.set('future-flag', 'v2:1');
+
+    await expect(getPrivateBoolean('future-flag')).resolves.toBe(false);
+
+    expect(mocks.storage.get('future-flag')).toBe('v2:1');
   });
 
   it('fails closed when encrypted storage cannot be read', async () => {
