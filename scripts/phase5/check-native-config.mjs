@@ -194,6 +194,18 @@ warn(
 );
 
 warn(
+  productionEnv.EXPORT_COMPLIANCE_CLEARANCE === 'cleared' &&
+    ['exempt', 'non_exempt'].includes(productionEnv.APP_ENCRYPTION_CLASSIFICATION),
+  'Production EAS environment is missing a reviewed export declaration. Supply EXPORT_COMPLIANCE_CLEARANCE=cleared and APP_ENCRYPTION_CLASSIFICATION=exempt|non_exempt only after the exact binary and launch territories are classified.',
+);
+if (productionEnv.APP_ENCRYPTION_CLASSIFICATION === 'non_exempt') {
+  warn(
+    Boolean(productionEnv.APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE),
+    'Non-exempt encryption classification requires the App Store Connect compliance code in APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE.',
+  );
+}
+
+warn(
   Boolean(rootPkg.scripts?.['phase5:qa-packet']),
   'Root package is missing phase5:qa-packet script.',
 );

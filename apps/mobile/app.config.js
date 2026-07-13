@@ -30,6 +30,8 @@ const PUBLIC_PRODUCTION_HOSTNAME =
   /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
 const RESERVED_PRODUCTION_HOSTNAME =
   /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
+const EXPORT_CLASSIFICATIONS = new Set(['exempt', 'non_exempt']);
+const MAX_APPLE_EXPORT_COMPLIANCE_CODE_LENGTH = 1024;
 
 const variantSuffix =
   {
@@ -246,6 +248,46 @@ function assertProductionReviewClearance() {
   assertReleaseReadyReviewEvidence({ worklist: testWorklist });
 }
 
+function applyProductionExportCompliance(expo) {
+  if (!isProduction && appEnvironment !== 'production') return;
+
+  if (process.env.EXPORT_COMPLIANCE_CLEARANCE !== 'cleared') {
+    throw new Error(
+      'Production release requires EXPORT_COMPLIANCE_CLEARANCE=cleared after a qualified reviewer classifies the exact shipped binary and launch territories. The app includes XChaCha20-Poly1305 and legacy AES migration code, so this declaration must not be guessed.',
+    );
+  }
+
+  const classification = String(process.env.APP_ENCRYPTION_CLASSIFICATION ?? '')
+    .trim()
+    .toLowerCase();
+  if (!EXPORT_CLASSIFICATIONS.has(classification)) {
+    throw new Error(
+      'Production release requires APP_ENCRYPTION_CLASSIFICATION=exempt or non_exempt, matching the retained export-compliance decision.',
+    );
+  }
+
+  expo.ios.infoPlist ??= {};
+  if (classification === 'exempt') {
+    expo.ios.infoPlist.ITSAppUsesNonExemptEncryption = false;
+    delete expo.ios.infoPlist.ITSEncryptionExportComplianceCode;
+    return;
+  }
+
+  const complianceCode = String(process.env.APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE ?? '').trim();
+  if (
+    !hasValue(complianceCode) ||
+    complianceCode.length > MAX_APPLE_EXPORT_COMPLIANCE_CODE_LENGTH ||
+    CONTROL_CHAR_RE.test(complianceCode) ||
+    placeholderEnvValue(complianceCode)
+  ) {
+    throw new Error(
+      'APP_ENCRYPTION_CLASSIFICATION=non_exempt requires a valid APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE issued through App Store Connect after documentation review.',
+    );
+  }
+  expo.ios.infoPlist.ITSAppUsesNonExemptEncryption = true;
+  expo.ios.infoPlist.ITSEncryptionExportComplianceCode = complianceCode;
+}
+
 module.exports = () => {
   const expo = JSON.parse(JSON.stringify(base.expo));
   const baseScheme = expo.scheme;
@@ -287,6 +329,7 @@ module.exports = () => {
   };
   assertProductionIdentity(expo, permissionCopy);
   assertProductionReviewClearance();
+  applyProductionExportCompliance(expo);
   if (finalDomain) {
     expo.ios.associatedDomains = Array.from(
       new Set([...(expo.ios.associatedDomains ?? []), `applinks:${finalDomain}`]),
