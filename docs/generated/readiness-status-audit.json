@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T15:32:20.445Z",
+  "generatedAt": "2026-07-13T18:52:55.186Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -79,34 +79,34 @@
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
-  "evidenceDate": "2026-07-12",
+  "evidenceDate": "2026-07-13",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 209,
-  "expectedMobileTests": 2248,
-  "actualMobileTestFiles": 209,
-  "expectedTestPhrase": "209 mobile test files / 2248 tests",
+  "expectedMobileTestFiles": 210,
+  "expectedMobileTests": 2251,
+  "actualMobileTestFiles": 210,
+  "expectedTestPhrase": "210 mobile test files / 2251 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
       "requireCurrentEvidence": true,
-      "date": "2026-07-12",
-      "expectedDate": "2026-07-12",
+      "date": "2026-07-13",
+      "expectedDate": "2026-07-13",
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 209,
-          "tests": 2248,
-          "source": "209 mobile test files / 2248 tests"
+          "testFiles": 210,
+          "tests": 2251,
+          "source": "210 mobile test files / 2251 tests"
         },
         {
-          "testFiles": 209,
-          "tests": 2248,
-          "source": "209 mobile test files / 2248 tests"
+          "testFiles": 210,
+          "tests": 2251,
+          "source": "210 mobile test files / 2251 tests"
         },
         {
-          "testFiles": 209,
-          "tests": 2248,
-          "source": "209 test files / 2248 tests"
+          "testFiles": 210,
+          "tests": 2251,
+          "source": "210 test files / 2251 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -117,14 +117,14 @@
     {
       "path": "BLOCKERS.md",
       "requireCurrentEvidence": true,
-      "date": "2026-07-12",
-      "expectedDate": "2026-07-12",
+      "date": "2026-07-13",
+      "expectedDate": "2026-07-13",
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 209,
-          "tests": 2248,
-          "source": "209 mobile test files / 2248 tests"
+          "testFiles": 210,
+          "tests": 2251,
+          "source": "210 mobile test files / 2251 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -136,7 +136,7 @@
       "path": "docs/TESTING_STRATEGY.md",
       "requireCurrentEvidence": false,
       "date": null,
-      "expectedDate": "2026-07-12",
+      "expectedDate": "2026-07-13",
       "hasExpectedTestPhrase": false,
       "testBaselines": [],
       "unexpectedTestBaselines": [],
@@ -182,7 +182,9 @@
         "Shelf freshness and replacement provenance lifecycle",
         "shelf-freshness-provenance-current",
         "Required-surface honest direct-entry and recovery pass",
-        "required-surface-honesty-rerun"
+        "required-surface-honesty-rerun",
+        "Trend navigator privacy and exact-route recovery",
+        "trend-route-group-gate-current"
       ],
       "stalePatterns": [],
       "missingCommands": []
