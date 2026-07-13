@@ -6834,12 +6834,24 @@ Private-state follow-ups atomized review/expiry/activation markers and routine,
 conflict, consent, entitlement, notification, Shelf, recommendation, and profile
 stores while preserving malformed/future bytes. Independent review caught and
 fixed a legacy conflict-choice migration regression and a hidden routine-order
-read-error path before treating the checkpoint as release-ready. Clean `main` at
-A clean-main rerun passes formatting, root typecheck, lint, and all 209 mobile
-test files / 2,248 tests. Native secure-storage/process-death evidence remains open. PAY-06 also
+read-error path before treating the checkpoint as release-ready. A clean-main
+rerun passes formatting, root typecheck, lint, and all 210 mobile test files /
+2,251 tests. Native secure-storage/process-death evidence remains open. PAY-06 also
 removes the fake reverse-trial Store/RevenueCat identity, preserves a temporary
 null-enforcing four-argument RPC compatibility shim for zero-downtime rollout,
 and regenerates its clean-SHA payment evidence packet.
+
+The Phase 7 launch sweep now clears its three source blockers without
+weakening the atomic routine-activation reservation. Trend uses a
+navigator-preserving `screenLayout` refusal gate, and fairness checks the hard
+capability before its Monk-band hook can mount. A human-simulated Expo web pass
+at 375 x 667 caught and fixed an early-return route-canonicalization regression;
+the required `Trend navigator privacy and exact-route recovery` evidence in
+`test-results/human-e2e/2026-07-13/trend-route-group-gate-current/` proves both
+direct URLs, refresh, visibly complete refusal copy, zero consent controls,
+55.99 px deterministic `/progress` recovery with stale Trend history, and zero
+unexpected browser warnings/errors. Phase 7 packet provenance now hashes the
+affected Trend and routine-activation runtime/tests.
 
 The independently source-audited US Wave 1 privacy and consumer-health packet
 remains launch-blocked. It cannot substitute for current, version-specific US

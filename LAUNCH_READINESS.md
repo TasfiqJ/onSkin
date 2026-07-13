@@ -1,6 +1,6 @@
 # Launch Readiness
 
-Date: 2026-07-12
+Date: 2026-07-13
 
 This is the fast source of truth for what exists, what is simulated, and what
 still blocks a paid public launch.
@@ -41,7 +41,7 @@ evidence through 2026-07-12:
   two fixed E2E defects, zero horizontal overflow, no sub-44 visible controls,
   no dialogs, and no unexpected browser errors. Evidence:
   `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`.
-  The current baseline is 209 mobile test files / 2248 tests. Staging deployment
+  The current baseline is 210 mobile test files / 2251 tests. Staging deployment
   of both migrations, owner/second-user RLS, reviewed region-matched catalog
   responses, native notification delivery, physical-device relaunch and
   accessibility, and named cosmetic-chemistry review remain external gates.
@@ -60,6 +60,19 @@ evidence through 2026-07-12:
   unavailable-beta surfaces are honest and recoverable; it does not implement
   or clear the iOS all-features launch requirements for native widgets/live
   activities, validated Trend insights, or moderated Community services.
+
+- The required `Trend navigator privacy and exact-route recovery` gate in
+  `test-results/human-e2e/2026-07-13/trend-route-group-gate-current/` records
+  a same-surface fix and rerun at the 375 x 667 compact iPhone-class viewport.
+  `/trend/optin` and `/trend/fairness` retain their exact URLs through direct
+  entry and refresh while the navigator-level gate withholds disabled child
+  scenes; the fairness Monk-band query remains behind its own pre-hook guard.
+  Both routes expose zero inputs/switches, zero horizontal overflow, no dialog,
+  a visibly complete refusal surface, and a 55.99 px `Back to Progress` action
+  that replaces to `/progress` even when another Trend route is already in
+  history. Unexpected browser warnings/errors remain zero. This proves the
+  launch-blocked refusal boundary on Expo web, not a validated Trend engine or
+  native iPhone QA.
 
 - The required `Canonical multi-active Plan and Today consistency` gate now
   proves one product-level scheduler drives Plan, Today, cycle, and product
@@ -394,7 +407,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 209 mobile test files / 2248 tests.
+- `npm test` passed: 210 mobile test files / 2251 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -425,7 +438,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 209 test files / 2248 tests.
+- `npm --workspace apps/mobile run test` passed: 210 test files / 2251 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain

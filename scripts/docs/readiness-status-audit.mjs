@@ -25,8 +25,8 @@ const outJson =
   process.env.READINESS_STATUS_AUDIT_JSON ?? 'docs/generated/readiness-status-audit.json';
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
-const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 209);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 2248);
+const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 210);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 2251);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
@@ -45,6 +45,7 @@ const staleTestPatterns = [
   /\b196\s+(?:mobile\s+)?test files?\b/i,
   /\b204\s+(?:mobile\s+)?test files?\b/i,
   /\b205\s+(?:mobile\s+)?test files?\b/i,
+  /\b209\s+(?:mobile\s+)?test files?\b/i,
   /\b1743\s+tests?\b/i,
   /\b1744\s+tests?\b/i,
   /\b1748\s+tests?\b/i,
@@ -79,6 +80,8 @@ const staleTestPatterns = [
   /\b2,?243\s+tests?\b/i,
   /\b2,?244\s+tests?\b/i,
   /\b2,?246\s+tests?\b/i,
+  /\b2,?248\s+tests?\b/i,
+  /\b2,?250\s+tests?\b/i,
   /320 x 480 support-floor 200%\s+text-pressure/i,
   /support-floor\s+170%\s+text-pressure/i,
 ];
@@ -133,6 +136,8 @@ const allRequiredManifestNeedles = [
   'shelf-freshness-provenance-current',
   'Required-surface honest direct-entry and recovery pass',
   'required-surface-honesty-rerun',
+  'Trend navigator privacy and exact-route recovery',
+  'trend-route-group-gate-current',
 ];
 
 const androidReleaseManifestNeedles = new Set([

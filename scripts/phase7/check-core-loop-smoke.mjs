@@ -9,6 +9,8 @@ const scriptDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(scriptDir, '..', '..');
 const checkPath = resolve(scriptDir, 'check-core-loop.mjs');
 const packetPath = resolve(scriptDir, 'build-core-loop-qa-packet.mjs');
+const humanE2eManifestPath = resolve(root, 'scripts/e2e/human-e2e-manifest.mjs');
+const upstreamGeneratedEvidencePath = resolve(root, 'docs/e2e/generated/human-e2e-manifest.json');
 
 const passthroughKeys = [
   'ComSpec',
@@ -75,6 +77,14 @@ function run(extraEnv, args = []) {
   });
 }
 
+function runHumanE2eProvenanceSmoke() {
+  return spawnSync(process.execPath, [humanE2eManifestPath, '--provenance-smoke'], {
+    cwd: root,
+    encoding: 'utf8',
+    env: processBaseEnv,
+  });
+}
+
 function runPacket(extraEnv) {
   const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase7-packet-'));
   try {
@@ -100,7 +110,30 @@ function runPacketWithDirtyWorktree(extraEnv) {
   }
 }
 
+function runPacketWithDirtyUpstreamEvidence(extraEnv) {
+  const original = readFileSync(upstreamGeneratedEvidencePath);
+  writeFileSync(
+    upstreamGeneratedEvidencePath,
+    Buffer.concat([
+      original,
+      Buffer.from(`\nphase7-upstream-evidence-dirty-smoke-${process.pid}\n`, 'utf8'),
+    ]),
+  );
+  try {
+    return runPacket(extraEnv);
+  } finally {
+    writeFileSync(upstreamGeneratedEvidencePath, original);
+  }
+}
+
 const cases = [
+  {
+    name: 'Human-E2E provenance rejects missing, untracked, incomplete, and unsafe artifacts',
+    result: runHumanE2eProvenanceSmoke(),
+    expect(result) {
+      return result.status === 0 && /PASS Human-E2E evidence provenance smoke/.test(output(result));
+    },
+  },
   {
     name: 'Phase 7 accepts production public identity from process env',
     result: run(validPublicIdentity),
@@ -223,6 +256,29 @@ const cases = [
           (file) => file.path === 'apps/mobile/src/app/cycle/why-tonight.tsx',
         ) &&
         result.packet.files.some((file) => file.path === 'apps/mobile/src/app/routine/plan.tsx') &&
+        result.packet.files.some((file) => file.path === 'apps/mobile/src/app/trend/_layout.tsx') &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/app/trend/fairness.tsx',
+        ) &&
+        result.packet.files.some((file) => file.path === 'apps/mobile/src/app/trend/optin.tsx') &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/routine/activationAnalytics.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/routine/activationAnalytics.test.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/trend/copy.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/trend/trendRoutes.test.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/trend/useTrend.ts',
+        ) &&
         result.packet.files.some(
           (file) => file.path === 'apps/mobile/src/features/scheduler/customCycle.ts',
         ) &&
@@ -262,6 +318,19 @@ const cases = [
       return (
         result.status === 0 &&
         result.packet.gitStatus.includes(`.phase7-smoke-dirty-${process.pid}.tmp`) &&
+        result.packet.warnings.includes(
+          'Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.',
+        )
+      );
+    },
+  },
+  {
+    name: 'Phase 7 packet reports dirty upstream generated evidence',
+    result: runPacketWithDirtyUpstreamEvidence({ ...validPublicIdentity, ...validEvidence }),
+    expect(result) {
+      return (
+        result.status === 0 &&
+        result.packet.gitStatus.includes('docs/e2e/generated/human-e2e-manifest.json') &&
         result.packet.warnings.includes(
           'Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.',
         )

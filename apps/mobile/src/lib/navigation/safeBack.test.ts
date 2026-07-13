@@ -11,6 +11,7 @@ import {
   APP_TREND_OPTIN_ROUTE,
   APP_YOU_ROUTE,
   backOrReplace,
+  replaceWithFallback,
   type BackOrReplaceRouter,
 } from './safeBack';
 
@@ -111,5 +112,15 @@ describe('safe back navigation', () => {
 
     expect(router.back).not.toHaveBeenCalled();
     expect(router.replace).toHaveBeenCalledWith(APP_ASK_ROUTE);
+  });
+
+  it('replaces with the named route even when stale navigation history exists', () => {
+    const router = routerWithHistory(true);
+
+    replaceWithFallback(router, APP_PROGRESS_ROUTE);
+
+    expect(router.canGoBack).not.toHaveBeenCalled();
+    expect(router.back).not.toHaveBeenCalled();
+    expect(router.replace).toHaveBeenCalledWith(APP_PROGRESS_ROUTE);
   });
 });

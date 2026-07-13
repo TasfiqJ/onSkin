@@ -5,7 +5,7 @@ import { join, relative, resolve } from 'node:path';
 import {
   command,
   evidenceFlagEnabled,
-  gitStatusExcludingGeneratedEvidence,
+  gitStatusExcludingPaths,
   normalizeNamedSignoff,
 } from '../phase9/lib.mjs';
 import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs';
@@ -27,6 +27,9 @@ const requiredFiles = [
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/src/components/launch/DeferredSurface.tsx',
+  'apps/mobile/src/components/launch/DeferredSurface.test.ts',
+  'apps/mobile/src/lib/navigation/safeBack.ts',
+  'apps/mobile/src/lib/navigation/safeBack.test.ts',
   'apps/mobile/src/app/(tabs)/today.tsx',
   'apps/mobile/src/app/(tabs)/progress.tsx',
   'apps/mobile/src/app/(tabs)/shelf.tsx',
@@ -38,6 +41,9 @@ const requiredFiles = [
   'apps/mobile/src/app/onboarding/products.tsx',
   'apps/mobile/src/app/routine/plan.tsx',
   'apps/mobile/src/app/share/conflict/[ruleId].tsx',
+  'apps/mobile/src/app/trend/_layout.tsx',
+  'apps/mobile/src/app/trend/fairness.tsx',
+  'apps/mobile/src/app/trend/optin.tsx',
   'apps/mobile/src/app/conflict/[ruleId].tsx',
   'apps/mobile/src/app/shelf/[id].tsx',
   'apps/mobile/src/app/shelf/_layout.tsx',
@@ -73,6 +79,8 @@ const requiredFiles = [
   'apps/mobile/src/features/recommendations/replenishment.ts',
   'apps/mobile/src/features/recommendations/replenishment.test.ts',
   'apps/mobile/src/features/recommendations/useRecommendations.ts',
+  'apps/mobile/src/features/routine/activationAnalytics.ts',
+  'apps/mobile/src/features/routine/activationAnalytics.test.ts',
   'apps/mobile/src/features/scheduler/cadence.ts',
   'apps/mobile/src/features/scheduler/customCycle.ts',
   'apps/mobile/src/features/scheduler/customCycle.test.ts',
@@ -92,6 +100,10 @@ const requiredFiles = [
   'apps/mobile/src/features/shelf/store.test.ts',
   'apps/mobile/src/features/today/cycleCompletion.ts',
   'apps/mobile/src/features/today/cycleCompletion.test.ts',
+  'apps/mobile/src/features/trend/copy.ts',
+  'apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts',
+  'apps/mobile/src/features/trend/trendRoutes.test.ts',
+  'apps/mobile/src/features/trend/useTrend.ts',
   'supabase/functions/catalog-lookup/index.ts',
   'supabase/functions/catalog-lookup/catalogContract.ts',
   'supabase/functions/catalog-lookup/catalogContract.test.ts',
@@ -218,7 +230,7 @@ for (const scenario of scenarios) {
 }
 
 function gitStatusExcludingGeneratedPacket() {
-  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
+  return gitStatusExcludingPaths(packetOutputPaths);
 }
 
 function hashFile(path) {

@@ -1,6 +1,6 @@
 # Blockers - iOS All-Features Launch Gates
 
-Date: 2026-07-12
+Date: 2026-07-13
 
 Everything here needs a founder decision, account, API key, payment method,
 legal/clinical signoff, production service, real-device verification, or beta
@@ -145,7 +145,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. A clean `main` rerun on
-2026-07-13 passes root typecheck, lint, and 209 mobile test files / 2248 tests.
+2026-07-13 passes root typecheck, lint, and 210 mobile test files / 2251 tests.
 The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
@@ -185,6 +185,17 @@ unavailable-beta behavior only; native widget/live-activity targets, validated
 Trend processing and consent, and production Community moderation, appeals,
 persistence, support, and reviewed aggregate data remain launch blockers under
 the iOS all-features contract.
+The required `Trend navigator privacy and exact-route recovery` gate in
+`test-results/human-e2e/2026-07-13/trend-route-group-gate-current/` catches and
+fixes a layout-level `/trend/optin` to `/trend/fairness` canonicalization
+regression. The 375 x 667 rerun proves both exact direct URLs survive refresh,
+disabled child scenes and the fairness Monk-band hook stay unmounted, no
+consent input or switch appears, the complete refusal is visibly captured at
+375 x 667, and 55.99 px recovery controls deterministically replace to
+`/progress` even with stale Trend history. Unexpected browser warn/error count
+is zero. Native iPhone navigation,
+VoiceOver, Dynamic Type, and any future validated Trend engine remain external
+release gates.
 It also includes the `360 x 640 account-upgrade error and recovery pass` in
 `test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current/`.
 The required `360 x 640 account-transition isolation and cleanup recovery pass`

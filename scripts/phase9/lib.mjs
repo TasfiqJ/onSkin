@@ -340,10 +340,8 @@ function gitStatusLinePaths(line) {
     .filter(Boolean);
 }
 
-export function gitStatusExcludingGeneratedEvidence(extraGeneratedPaths = []) {
-  const excluded = new Set(
-    [...generatedEvidenceOutputPaths, ...extraGeneratedPaths].map(normalizeRepoPath),
-  );
+export function gitStatusExcludingPaths(excludedPaths = []) {
+  const excluded = new Set(excludedPaths.map(normalizeRepoPath));
 
   return command('git', ['status', '--short'])
     .split(/\r?\n/)
@@ -355,6 +353,10 @@ export function gitStatusExcludingGeneratedEvidence(extraGeneratedPaths = []) {
     })
     .join('\n')
     .trim();
+}
+
+export function gitStatusExcludingGeneratedEvidence(extraGeneratedPaths = []) {
+  return gitStatusExcludingPaths([...generatedEvidenceOutputPaths, ...extraGeneratedPaths]);
 }
 
 export function printResult(title, errors, warnings) {

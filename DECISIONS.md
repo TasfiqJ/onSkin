@@ -21,9 +21,11 @@ Format: `D-NNN — date — decision — rationale`.
   - `supabase/`), per docs/00 §9 ("Turborepo monorepo with shared TS packages").
     Shared `@onskin/types` package holds the Supabase `Database` type + domain
     enums so the mobile client and Edge Functions share one source of truth.
-    NOTE: Metro's monorepo module resolution cannot be runtime-verified in this
-    environment (no Mac/simulator/device). Standard Expo monorepo `metro.config.js`
-    is used; flagged for first-device verification (see BLOCKERS B-VERIFY-METRO).
+    Expo web now runtime-verifies `@onskin/types` and hoisted dependencies in
+    the current installed worktree. The Metro config also watches a resolved
+    linked-dependency target when one exists. Native first-device/build
+    verification remains a Phase 5 gate because this Windows host cannot run
+    the iOS simulator.
 
 - **D-003 — 2026-06-12 — expo-router (file-based navigation).** Not specified in
   docs; expo-router is the current Expo default and what the template ships.

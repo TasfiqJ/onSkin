@@ -160,6 +160,17 @@ for (const file of [
   'apps/mobile/src/features/today/cycleCompletion.test.ts',
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
+  'apps/mobile/src/components/launch/DeferredSurface.tsx',
+  'apps/mobile/src/components/launch/DeferredSurface.test.ts',
+  'apps/mobile/src/lib/navigation/safeBack.ts',
+  'apps/mobile/src/lib/navigation/safeBack.test.ts',
+  'apps/mobile/src/app/trend/_layout.tsx',
+  'apps/mobile/src/app/trend/fairness.tsx',
+  'apps/mobile/src/app/trend/optin.tsx',
+  'apps/mobile/src/features/trend/copy.ts',
+  'apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts',
+  'apps/mobile/src/features/trend/trendRoutes.test.ts',
+  'apps/mobile/src/features/trend/useTrend.ts',
   'scripts/phase7/build-core-loop-qa-packet.mjs',
   'scripts/phase7/check-core-loop.mjs',
   'scripts/phase7/check-core-loop-smoke.mjs',
@@ -237,6 +248,17 @@ require(!/dry, sensitive|alternate-night cycling|Aggregated & anonymised/.test(
 require(!/grantTrendInsightsConsent|revokeTrendInsightsConsent|setTrendInsightsLocal|ToggleSwitch/.test(
   trendOptIn,
 ), 'Unavailable Trend must not solicit or persist engine consent.');
+for (const path of [
+  'apps/mobile/src/app/trend/_layout.tsx',
+  'apps/mobile/src/app/trend/optin.tsx',
+  'apps/mobile/src/app/trend/fairness.tsx',
+]) {
+  require(hasSelfClosingJsxWithProps(read(path), 'DeferredSurface', [
+    /fallbackRoute=\{APP_PROGRESS_ROUTE\}/,
+    /fallbackLabel="Back to Progress"/,
+    /fallbackBehavior="replace"/,
+  ]), `${path} must replace to Progress instead of following stale navigation history.`);
+}
 require(!/Check it off right from the home screen|Show on the Lock Screen|ToggleSwitch/.test(
   widgetsRoute,
 ) &&
@@ -304,6 +326,9 @@ const shelfTab = read('apps/mobile/src/app/(tabs)/shelf.tsx');
 const onboardingProducts = read('apps/mobile/src/app/onboarding/products.tsx');
 const routinePlan = read('apps/mobile/src/app/routine/plan.tsx');
 const routineActivationAnalytics = read('apps/mobile/src/features/routine/activationAnalytics.ts');
+const routineActivationAnalyticsTest = read(
+  'apps/mobile/src/features/routine/activationAnalytics.test.ts',
+);
 const routineGenerate = read('apps/mobile/src/features/routine/generate.ts');
 const routineGenerateTest = read('apps/mobile/src/features/routine/generate.test.ts');
 const routineReviewGateTest = read('apps/mobile/src/features/routine/reviewGate.test.ts');
@@ -351,7 +376,20 @@ require(/recordRoutinePlanAnalytics/.test(routinePlan) &&
   /track\('routine_created'/.test(routineActivationAnalytics) &&
   /const hasRoutineSteps = routineStepCount > 0;/.test(routineActivationAnalytics) &&
   /if \(hasRoutineSteps\) \{\s*track\('routine_created'/.test(routineActivationAnalytics) &&
-  /if \(hasRoutineSteps && !flags\.firstRoutineCreated\)/.test(routineActivationAnalytics) &&
+  /async function reserveFirstEvents/.test(routineActivationAnalytics) &&
+  /await updatePrivateItem\(KEY/.test(routineActivationAnalytics) &&
+  /if \(input\.routineCreated && !current\.firstRoutineCreated\)/.test(
+    routineActivationAnalytics,
+  ) &&
+  /routineCreated: hasRoutineSteps/.test(routineActivationAnalytics) &&
+  /if \(reserved\.firstRoutineCreated\)/.test(routineActivationAnalytics) &&
+  /does not count a real plan with no executable steps as routine creation/.test(
+    routineActivationAnalyticsTest,
+  ) &&
+  /serializes simultaneous first-insight reservations/.test(routineActivationAnalyticsTest) &&
+  /does not emit a first event when its durable reservation fails/.test(
+    routineActivationAnalyticsTest,
+  ) &&
   /track\('first_useful_insight'/.test(routineActivationAnalytics) &&
   /track\('conflict_detected'/.test(
     routinePlan,

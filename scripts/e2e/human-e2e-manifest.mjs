@@ -40,6 +40,173 @@ function readJson(path) {
   return JSON.parse(readFileSync(abs(path), 'utf8'));
 }
 
+function normalizeEvidenceRelativePath(path) {
+  if (typeof path !== 'string') return null;
+  const normalized = normalizeRepoPath(path.trim());
+  const segments = normalized.split('/');
+  if (
+    normalized.length === 0 ||
+    normalized.startsWith('/') ||
+    /^[A-Za-z]:\//.test(normalized) ||
+    segments.some((segment) => segment.length === 0 || segment === '.' || segment === '..')
+  ) {
+    return null;
+  }
+  return normalized;
+}
+
+function collectEvidenceProvenanceFailures({
+  folder,
+  evidence,
+  requiredFiles = [],
+  summaryArtifacts,
+  trackedRepoFiles,
+  fileExists = exists,
+  validateRequiredFiles = true,
+  validateSummaryArtifacts = false,
+}) {
+  const failures = [];
+
+  if (validateRequiredFiles) {
+    for (const requiredFile of requiredFiles) {
+      const normalized = normalizeEvidenceRelativePath(requiredFile);
+      if (!normalized) {
+        failures.push(`required evidence file uses an unsafe path: ${String(requiredFile)}`);
+        continue;
+      }
+      const requiredPath = `${folder}/${normalized}`;
+      if (!fileExists(requiredPath)) {
+        failures.push(`missing required evidence file ${normalized}`);
+      } else if (!trackedRepoFiles.has(normalizeRepoPath(requiredPath))) {
+        failures.push(`required evidence file is not Git-tracked: ${normalized}`);
+      }
+    }
+  }
+
+  if (!validateSummaryArtifacts) return failures;
+  if (!Array.isArray(summaryArtifacts)) {
+    failures.push('summary.artifacts must be an array');
+    return failures;
+  }
+
+  const declaredArtifacts = new Set();
+  for (const artifact of summaryArtifacts) {
+    const normalized = normalizeEvidenceRelativePath(artifact);
+    if (!normalized) {
+      failures.push(`summary.artifacts contains an unsafe path: ${String(artifact)}`);
+      continue;
+    }
+    if (declaredArtifacts.has(normalized)) {
+      failures.push(`summary.artifacts contains a duplicate path: ${normalized}`);
+      continue;
+    }
+    declaredArtifacts.add(normalized);
+
+    const artifactPath = `${folder}/${normalized}`;
+    if (!fileExists(artifactPath)) {
+      failures.push(`missing summary artifact ${normalized}`);
+    } else if (!trackedRepoFiles.has(normalizeRepoPath(artifactPath))) {
+      failures.push(`summary artifact is not Git-tracked: ${normalized}`);
+    }
+  }
+
+  const normalizedEvidence = normalizeEvidenceRelativePath(evidence);
+  for (const requiredFile of requiredFiles) {
+    const normalized = normalizeEvidenceRelativePath(requiredFile);
+    if (!normalized || normalized === normalizedEvidence) continue;
+    if (!declaredArtifacts.has(normalized)) {
+      failures.push(`summary.artifacts is missing required evidence file ${normalized}`);
+    }
+  }
+
+  return failures;
+}
+
+function runEvidenceProvenanceSmoke() {
+  const folder = 'test-results/human-e2e/2099-01-01/trend-route-group-gate-current';
+  const evidence = 'summary.json';
+  const requiredFiles = [
+    evidence,
+    'report.md',
+    'pre-fix-route-evidence.json',
+    'pre-fix-optin-canonicalized-to-fairness.png',
+    'post-fix-route-evidence.json',
+    'post-fix-trend-optin.png',
+    'post-fix-trend-fairness.png',
+  ];
+  const artifacts = requiredFiles.slice(1);
+  const repoPaths = requiredFiles.map((file) => `${folder}/${file}`);
+  const existing = new Set(repoPaths);
+  const tracked = new Set(repoPaths);
+  const validate = (overrides = {}) =>
+    collectEvidenceProvenanceFailures({
+      folder,
+      evidence,
+      requiredFiles,
+      summaryArtifacts: artifacts,
+      trackedRepoFiles: tracked,
+      fileExists: (path) => existing.has(path),
+      ...overrides,
+      validateSummaryArtifacts: true,
+    });
+  const assert = (condition, message) => {
+    if (!condition) throw new Error(message);
+  };
+
+  assert(validate().length === 0, 'complete tracked Trend evidence should pass provenance');
+
+  const missingReport = validate({
+    fileExists: (path) => existing.has(path) && !path.endsWith('/report.md'),
+  });
+  assert(
+    missingReport.includes('missing required evidence file report.md') &&
+      missingReport.includes('missing summary artifact report.md'),
+    'missing files must fail both the gate requirement and summary artifact provenance',
+  );
+
+  const untrackedFairness = validate({
+    trackedRepoFiles: new Set(
+      repoPaths.filter((path) => !path.endsWith('/post-fix-trend-fairness.png')),
+    ),
+  });
+  assert(
+    untrackedFairness.includes(
+      'required evidence file is not Git-tracked: post-fix-trend-fairness.png',
+    ) &&
+      untrackedFairness.includes(
+        'summary artifact is not Git-tracked: post-fix-trend-fairness.png',
+      ),
+    'untracked files must fail both the gate requirement and summary artifact provenance',
+  );
+
+  const incompleteSummary = validate({ summaryArtifacts: artifacts.slice(1) });
+  assert(
+    incompleteSummary.includes('summary.artifacts is missing required evidence file report.md'),
+    'summary.artifacts must enumerate every required auxiliary artifact',
+  );
+
+  const unsafeSummary = validate({ summaryArtifacts: [...artifacts, '../outside.png'] });
+  assert(
+    unsafeSummary.includes('summary.artifacts contains an unsafe path: ../outside.png'),
+    'summary.artifacts must not escape the evidence folder',
+  );
+}
+
+if (args.has('--provenance-smoke')) {
+  try {
+    runEvidenceProvenanceSmoke();
+    console.log('PASS Human-E2E evidence provenance smoke');
+    process.exit(0);
+  } catch (error) {
+    console.error(
+      `FAIL Human-E2E evidence provenance smoke: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+    process.exit(1);
+  }
+}
+
 function hashFile(path) {
   return createHash('sha256')
     .update(readFileSync(abs(path)))
@@ -353,6 +520,13 @@ if (!requiredSurfaceHonestyEvidenceDate) {
   console.error('FAIL Missing required-surface honesty route evidence.');
   process.exit(1);
 }
+const trendRouteGroupGateEvidenceDate = latestEvidenceDateForFolder(
+  'trend-route-group-gate-current',
+);
+if (!trendRouteGroupGateEvidenceDate) {
+  console.error('FAIL Missing Trend route-group privacy and recovery evidence.');
+  process.exit(1);
+}
 const latestManifestEvidenceDate = [
   evidenceDate,
   timelapseEvidenceDate,
@@ -374,6 +548,7 @@ const latestManifestEvidenceDate = [
   accountIsolationEvidenceDate,
   shelfFreshnessProvenanceEvidenceDate,
   requiredSurfaceHonestyEvidenceDate,
+  trendRouteGroupGateEvidenceDate,
 ]
   .sort()
   .at(-1);
@@ -812,6 +987,39 @@ const gates = [
       'Widgets, Trend opt-in/fairness, and Community ask/aggregate direct entries remain exact, expose no fake controls or data, state their unavailable-beta posture, and provide working recovery actions at the compact iPhone viewport.',
   },
   {
+    id: 'trend-route-group-gate-supported-phone',
+    title: 'Trend navigator privacy and exact-route recovery',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'supported-phone',
+    folder: `test-results/human-e2e/${trendRouteGroupGateEvidenceDate}/trend-route-group-gate-current`,
+    evidence: 'summary.json',
+    requiredFiles: [
+      'summary.json',
+      'report.md',
+      'pre-fix-route-evidence.json',
+      'pre-fix-optin-canonicalized-to-fairness.png',
+      'post-fix-route-evidence.json',
+      'post-fix-trend-optin.png',
+      'post-fix-trend-fairness.png',
+    ],
+    validateSummaryArtifacts: true,
+    requiredSchemaVersion: 1,
+    requiredStatus: 'pass',
+    requiredFailedRouteCount: 0,
+    requiredViewports: ['375 x 667'],
+    requiredVerified: [
+      'exact /trend/optin direct-entry and refresh identity',
+      'exact /trend/fairness direct-entry and refresh identity',
+      'disabled child scene withheld',
+      'Monk-band hook withheld',
+      'Back to Progress recovery',
+      'zero unexpected browser warn or error logs',
+    ],
+    expected:
+      'The hard-disabled Trend navigator preserves both direct URLs through refresh, withholds child data access, exposes no consent control, and returns safely to Progress at the compact iPhone viewport.',
+  },
+  {
     id: 'data-export-local-photo-disclosure-supported-phone',
     title: 'Account export local-photo scope disclosure',
     kind: 'summary-status',
@@ -894,6 +1102,14 @@ const gateResults = gates.map((gate) => {
     detail = 'Required evidence file is not Git-tracked.';
   } else if (folderExists && evidenceExists) {
     try {
+      requirementFailures.push(
+        ...collectEvidenceProvenanceFailures({
+          folder: gate.folder,
+          evidence: gate.evidence,
+          requiredFiles: gate.requiredFiles,
+          trackedRepoFiles,
+        }),
+      );
       if (gate.kind === 'failures') {
         failureCount = parseFailureCount(evidencePath);
         status = failureCount === 0 ? 'pass' : 'fail';
@@ -907,6 +1123,17 @@ const gateResults = gates.map((gate) => {
         detail = `summary verdict: ${verdict || 'missing'}.`;
       } else if (gate.kind === 'summary-status') {
         const summary = readJson(evidencePath);
+        requirementFailures.push(
+          ...collectEvidenceProvenanceFailures({
+            folder: gate.folder,
+            evidence: gate.evidence,
+            requiredFiles: gate.requiredFiles,
+            summaryArtifacts: summary?.artifacts,
+            trackedRepoFiles,
+            validateRequiredFiles: false,
+            validateSummaryArtifacts: gate.validateSummaryArtifacts === true,
+          }),
+        );
         verdict = String(summary.status ?? summary.verdict ?? '')
           .trim()
           .toLowerCase();
@@ -1089,14 +1316,6 @@ const gateResults = gates.map((gate) => {
           }
         }
 
-        for (const requiredFile of gate.requiredFiles ?? []) {
-          const requiredPath = `${gate.folder}/${requiredFile}`;
-          if (!exists(requiredPath)) {
-            requirementFailures.push(`missing required evidence file ${requiredFile}`);
-          } else if (!trackedRepoFiles.has(normalizeRepoPath(requiredPath))) {
-            requirementFailures.push(`required evidence file is not Git-tracked: ${requiredFile}`);
-          }
-        }
         const browserLogPath = `${gate.folder}/browser-warn-error-logs.json`;
         if (exists(browserLogPath)) {
           const browserLogs = readJson(browserLogPath);
@@ -1114,6 +1333,14 @@ const gateResults = gates.map((gate) => {
           failureCount === 0
             ? '5 exact direct-entry routes and 3 recovery actions passed without fake inputs, overflow, undersized controls, or browser errors.'
             : `${failureCount} required-surface evidence failure${failureCount === 1 ? '' : 's'}: ${requirementFailures.join('; ')}.`;
+      }
+      if (
+        requirementFailures.length > 0 &&
+        gate.kind !== 'summary-status' &&
+        gate.kind !== 'required-surface-honesty'
+      ) {
+        status = 'fail';
+        detail = `${detail} ${requirementFailures.join('; ')}.`;
       }
     } catch (error) {
       status = 'fail';

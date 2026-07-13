@@ -27,6 +27,7 @@ describe('Trend route contracts', () => {
     expect(source).toContain('surface="trend"');
     expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
     expect(source).toContain('fallbackLabel="Back to Progress"');
+    expect(source).toContain('fallbackBehavior="replace"');
   });
 
   it('never requests or stores trend consent while the engine is unavailable', () => {
@@ -46,11 +47,12 @@ describe('Trend route contracts', () => {
     expect(source).toContain('if (!phase7Flags.trend)');
     expect(source).toContain('<DeferredSurface');
     expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
+    expect(source).toContain('fallbackBehavior="replace"');
     expect(source).toContain('APP_TREND_OPTIN_ROUTE');
     expect(source).toContain('backOrReplace(router, APP_TREND_OPTIN_ROUTE)');
   });
 
-  it('returns deferred Trend direct entries to Progress', () => {
+  it('keeps the matched Trend route mounted while gating its child scene', () => {
     const optIn = readAppRoute('trend/optin.tsx');
     const fairness = readAppRoute('trend/fairness.tsx');
     const layout = readAppRoute('trend/_layout.tsx');
@@ -59,8 +61,22 @@ describe('Trend route contracts', () => {
       expect(source).toContain('surface="trend"');
       expect(source).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
       expect(source).toContain('fallbackLabel="Back to Progress"');
+      expect(source).toContain('fallbackBehavior="replace"');
     }
-    expect(layout).not.toContain('<DeferredSurface');
+    const navigator = layout.slice(layout.indexOf('export default function TrendLayout'));
+
+    expect(layout).toContain('function TrendScreenGate');
+    expect(layout).toContain('if (!phase7Flags.trend)');
+    expect(layout).toContain('<DeferredSurface');
+    expect(layout).toContain('surface="trend"');
+    expect(layout).toContain('fallbackRoute={APP_PROGRESS_ROUTE}');
+    expect(layout).toContain('fallbackLabel="Back to Progress"');
+    expect(layout).toContain('fallbackBehavior="replace"');
+    expect(navigator).toContain('<Stack');
+    expect(navigator).toContain(
+      'screenLayout={({ children }) => <TrendScreenGate>{children}</TrendScreenGate>}',
+    );
+    expect(navigator).not.toContain('if (!phase7Flags.trend)');
     expect(layout).toContain('<Stack.Screen name="optin" />');
     expect(layout).toContain('<Stack.Screen name="fairness" />');
   });

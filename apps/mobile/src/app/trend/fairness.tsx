@@ -20,22 +20,27 @@ import { colors } from '@/theme/tokens';
 const MONK_SWATCHES = ['#F4E3D2', '#E9CBAA', '#D2A77E', '#B07E52', '#8A5A36', '#5E3A22', '#3D2417'];
 
 export default function FairnessScreen() {
-  const { data: monkBand } = useMonkBand();
-  // Map Monk 1-10 onto the 7-swatch illustrative row.
-  const activeIdx =
-    monkBand == null
-      ? -1
-      : Math.min(MONK_SWATCHES.length - 1, Math.floor(((monkBand - 1) / 9) * MONK_SWATCHES.length));
-
   if (!phase7Flags.trend) {
     return (
       <DeferredSurface
         surface="trend"
         fallbackRoute={APP_PROGRESS_ROUTE}
         fallbackLabel="Back to Progress"
+        fallbackBehavior="replace"
       />
     );
   }
+
+  return <EnabledFairnessScreen />;
+}
+
+function EnabledFairnessScreen() {
+  const { data: monkBand } = useMonkBand();
+  // Map Monk 1-10 onto the 7-swatch illustrative row.
+  const activeIdx =
+    monkBand == null
+      ? -1
+      : Math.min(MONK_SWATCHES.length - 1, Math.floor(((monkBand - 1) / 9) * MONK_SWATCHES.length));
 
   return (
     <Screen edges={['top']}>

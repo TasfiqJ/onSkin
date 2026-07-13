@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "evidenceDate": "2026-07-13",
+  "status": "pass",
+  "failedRouteCount": 0,
+  "surface": "Expo web",
+  "viewports": ["375 x 667"],
+  "verified": [
+    "exact /trend/optin direct-entry and refresh identity",
+    "exact /trend/fairness direct-entry and refresh identity",
+    "truthful hard-disabled copy with zero inputs or switches",
+    "navigator-preserving group gate with disabled child scene withheld",
+    "fairness Monk-band hook withheld before disabled route render",
+    "visibly rendered BETA badge, refusal heading, body, detail, and recovery label at 375 x 667",
+    "unique 55.99 px Back to Progress recovery from both routes and stale Trend history",
+    "zero horizontal overflow and zero JavaScript dialogs",
+    "zero unexpected browser warn or error logs"
+  ],
+  "artifacts": [
+    "report.md",
+    "pre-fix-route-evidence.json",
+    "pre-fix-optin-canonicalized-to-fairness.png",
+    "post-fix-route-evidence.json",
+    "post-fix-trend-optin.png",
+    "post-fix-trend-fairness.png"
+  ],
+  "remainingRisk": [
+    "Native iPhone navigation, VoiceOver, safe areas, and Dynamic Type remain physical-device QA.",
+    "No validated Trend engine ships; enabled-engine behavior remains intentionally unavailable."
+  ]
+}
