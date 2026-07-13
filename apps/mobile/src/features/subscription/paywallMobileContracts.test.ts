@@ -459,6 +459,7 @@ describe('paywall mobile contracts', () => {
   it('keeps gated content hidden while entitlement is still resolving', () => {
     const proGate = readSource('features/subscription/ProGate.tsx');
     const useEntitlement = readSource('features/subscription/useEntitlement.ts');
+    const offering = readSource('features/subscription/useSubscriptionOffering.ts');
 
     expect(proGate.indexOf('if (isLoading || !data)')).toBeLessThan(
       proGate.indexOf('if (!locked) return <>{children}</>;'),
@@ -472,6 +473,11 @@ describe('paywall mobile contracts', () => {
     expect(useEntitlement).toContain('const MAX_E2E_ENTITLEMENT_DELAY_MS = 3_000;');
     expect(useEntitlement).toContain("if (env.appEnvironment !== 'development') return 0;");
     expect(useEntitlement).toContain('if (e2eDelay > 0) await wait(e2eDelay);');
+    expect(proGate).toContain(
+      'useSubscriptionOffering({ enabled: shouldLoadContextualOffering(data) })',
+    );
+    expect(offering).toContain('enabled?: boolean;');
+    expect(offering).toContain('enabled,');
   });
 
   it('keeps paywall compliance links comfortably large enough for phone taps', () => {

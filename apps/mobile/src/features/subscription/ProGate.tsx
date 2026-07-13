@@ -10,7 +10,7 @@ import type { GatedFeature } from '@onskin/types';
 import { ComplianceRow } from './ComplianceRow';
 import { PAYWALL_COPY, UPSELL_COPY } from './copy';
 import { dismissPaywall, paywallDismissFallbackForFeature } from './dismissPaywall';
-import { canStartContextualReverseTrial } from './entitlement';
+import { canStartContextualReverseTrial, shouldLoadContextualOffering } from './entitlement';
 import { PAYWALL_FEEDBACK, PaywallFeedback, type PaywallFeedbackState } from './PaywallFeedback';
 import { planPriceDisplay } from './priceDisplay';
 import { useEntitlement, useEntitlementActions } from './useEntitlement';
@@ -26,7 +26,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const pathname = usePathname();
   const { data, isLoading } = useEntitlement();
   const { startReverseTrial, startTrial } = useEntitlementActions();
-  const offering = useSubscriptionOffering();
+  const offering = useSubscriptionOffering({ enabled: shouldLoadContextualOffering(data) });
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const locked = data ? !data.isPro : false;
   const compactPaywall = height < 640;

@@ -129,3 +129,14 @@ export function canStartContextualReverseTrial(
 ): boolean {
   return !s.isPro && !s.expired && s.priorPeriodType === null;
 }
+
+/**
+ * A contextual gate needs store metadata only after access has resolved to Free.
+ * Keeping the query disabled while access is unknown also prevents an active Pro
+ * user from paying the native-store/configuration startup cost on every gate.
+ */
+export function shouldLoadContextualOffering(
+  s: Pick<SubscriptionState, 'isPro'> | null | undefined,
+): boolean {
+  return s?.isPro === false;
+}

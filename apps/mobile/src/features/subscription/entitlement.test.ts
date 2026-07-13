@@ -4,6 +4,7 @@ import {
   canStartContextualReverseTrial,
   daysUntil,
   deriveState,
+  shouldLoadContextualOffering,
   type StoredEntitlement,
 } from './entitlement';
 
@@ -115,5 +116,14 @@ describe('contextual reverse-trial eligibility', () => {
         deriveState(ent({ periodType: 'normal', expiresAt: '2026-06-10T12:00:00.000Z' }), NOW),
       ),
     ).toBe(false);
+  });
+});
+
+describe('contextual offering lifecycle', () => {
+  it('waits for entitlement and skips native-store work for active Pro', () => {
+    expect(shouldLoadContextualOffering(undefined)).toBe(false);
+    expect(shouldLoadContextualOffering(null)).toBe(false);
+    expect(shouldLoadContextualOffering(deriveState(ent({}), NOW))).toBe(false);
+    expect(shouldLoadContextualOffering(deriveState(null, NOW))).toBe(true);
   });
 });
