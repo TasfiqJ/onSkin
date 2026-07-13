@@ -304,9 +304,9 @@ describe('shelf local store recovery', () => {
     mocks.storage.set(KEY, original);
 
     await expect(loadShelf()).resolves.toEqual([]);
-    await expect(
-      addProduct({ name: 'Cleanser', addedVia: 'manual' }),
-    ).rejects.toThrow(SHELF_STATE_UNSUPPORTED_VERSION);
+    await expect(addProduct({ name: 'Cleanser', addedVia: 'manual' })).rejects.toThrow(
+      SHELF_STATE_UNSUPPORTED_VERSION,
+    );
     await expect(updateProduct('missing', { brand: 'Nope' })).rejects.toThrow(
       SHELF_STATE_UNSUPPORTED_VERSION,
     );

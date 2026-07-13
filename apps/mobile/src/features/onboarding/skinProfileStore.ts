@@ -216,10 +216,7 @@ function decodeStoredSkinProfile(raw: string): StoredSkinProfile {
       }
       throw new Error(SKIN_PROFILE_INVALID);
     }
-    if (
-      !hasExactKeys(parsed, ['version', 'profile']) ||
-      !isStrictCurrentProfile(parsed.profile)
-    ) {
+    if (!hasExactKeys(parsed, ['version', 'profile']) || !isStrictCurrentProfile(parsed.profile)) {
       throw new Error(SKIN_PROFILE_INVALID);
     }
     return parsed.profile;

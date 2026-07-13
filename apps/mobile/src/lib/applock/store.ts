@@ -10,8 +10,7 @@ import {
 // the lock state itself is in-memory in AppLockProvider.
 const KEY = 'onskin.appLock.enabled';
 export const APP_LOCK_PREFERENCE_INVALID = 'APP_LOCK_PREFERENCE_INVALID';
-export const APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION =
-  'APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION';
+export const APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION = 'APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION';
 const CURRENT_ENABLED = 'v1:1';
 const CURRENT_DISABLED = 'v1:0';
 

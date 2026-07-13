@@ -60,13 +60,7 @@ function normalizeStoredRamp(
   if (!isRecord(value)) return null;
   if (!allowLegacyDefaults) {
     const keys = Object.keys(value).sort();
-    const expected = [
-      'freqPerWeek',
-      'lastStepUp',
-      'startedAt',
-      'targetPerWeek',
-      'toleranceState',
-    ];
+    const expected = ['freqPerWeek', 'lastStepUp', 'startedAt', 'targetPerWeek', 'toleranceState'];
     if (keys.length !== expected.length || keys.some((key, index) => key !== expected[index])) {
       return null;
     }

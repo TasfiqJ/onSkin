@@ -98,9 +98,7 @@ describe('app lock preference storage', () => {
   it('identifies only locally repairable malformed preference failures', () => {
     expect(isRepairableAppLockPreferenceError(new Error(APP_LOCK_PREFERENCE_INVALID))).toBe(true);
     expect(
-      isRepairableAppLockPreferenceError(
-        new Error(APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION),
-      ),
+      isRepairableAppLockPreferenceError(new Error(APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION)),
     ).toBe(true);
     expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_ENVELOPE_INVALID'))).toBe(true);
     expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_ENVELOPE_UNSUPPORTED'))).toBe(

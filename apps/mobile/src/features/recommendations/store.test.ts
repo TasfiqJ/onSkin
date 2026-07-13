@@ -146,9 +146,9 @@ describe('recommendation local store recovery', () => {
     mocks.storage.set(PREF_KEY, original);
 
     await expect(loadPreferences()).resolves.toEqual({ values: [], budget: null, formats: [] });
-    await expect(
-      savePreferences({ values: [], budget: null, formats: [] }),
-    ).rejects.toThrow(REC_PREFERENCES_UNSUPPORTED_VERSION);
+    await expect(savePreferences({ values: [], budget: null, formats: [] })).rejects.toThrow(
+      REC_PREFERENCES_UNSUPPORTED_VERSION,
+    );
 
     expect(mocks.storage.get(PREF_KEY)).toBe(original);
   });
@@ -160,9 +160,9 @@ describe('recommendation local store recovery', () => {
     });
     mocks.storage.set(PREF_KEY, original);
 
-    await expect(
-      savePreferences({ values: [], budget: 'mid', formats: [] }),
-    ).rejects.toThrow(REC_PREFERENCES_INVALID);
+    await expect(savePreferences({ values: [], budget: 'mid', formats: [] })).rejects.toThrow(
+      REC_PREFERENCES_INVALID,
+    );
     expect(mocks.storage.get(PREF_KEY)).toBe(original);
   });
 
@@ -182,9 +182,9 @@ describe('recommendation local store recovery', () => {
     const dismissed = mocks.storage.get(DISMISSED_KEY);
     mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
 
-    await expect(
-      savePreferences({ values: [], budget: null, formats: [] }),
-    ).rejects.toThrow('PRIVATE_WRITE_FAILED');
+    await expect(savePreferences({ values: [], budget: null, formats: [] })).rejects.toThrow(
+      'PRIVATE_WRITE_FAILED',
+    );
     await expect(dismissRecommendation('gap:cleanser')).rejects.toThrow('PRIVATE_WRITE_FAILED');
 
     expect(mocks.storage.get(PREF_KEY)).toBe(prefs);

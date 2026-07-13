@@ -12,7 +12,9 @@ describe('useProgress local-first contract', () => {
     expect(source).toContain('if (!isSupabaseConfigured) return []');
     expect(source).toContain('if (!isSupabaseConfigured) return 0');
     expect(source).toContain('catch {');
-    expect(source).toContain('const [localSummary, completions, serverLongest] = await Promise.all([');
+    expect(source).toContain(
+      'const [localSummary, completions, serverLongest] = await Promise.all([',
+    );
     expect(source).toContain('getCompletionSummary()');
     expect(source).toContain('for (const d of localSummary.completedDates)');
     expect(source).toContain('for (const [d, n] of localSummary.countByDate)');

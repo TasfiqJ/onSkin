@@ -70,9 +70,7 @@ describe('notification sent ledger', () => {
     await expect(sentThisWeekForTierLocal('behavioural', NOW)).resolves.toBe(
       SENT_LEDGER_FAIL_CLOSED_COUNT,
     );
-    await expect(recordSentLocal('capture', NOW)).rejects.toThrow(
-      SENT_LEDGER_UNSUPPORTED_VERSION,
-    );
+    await expect(recordSentLocal('capture', NOW)).rejects.toThrow(SENT_LEDGER_UNSUPPORTED_VERSION);
 
     expect(mocks.storage.get(KEY)).toBe(original);
   });

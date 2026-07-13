@@ -156,11 +156,11 @@ async function setPhotoCaptureConsentLocal(): Promise<void> {
     PHOTO_CAPTURE_CONSENT.fullText,
   );
   const consent: LocalPhotoCaptureConsent = {
-      type: 'photo_capture',
-      granted: true,
-      version: PHOTO_CAPTURE_CONSENT.version,
-      consentTextHash,
-      recordedAt: new Date().toISOString(),
+    type: 'photo_capture',
+    granted: true,
+    version: PHOTO_CAPTURE_CONSENT.version,
+    consentTextHash,
+    recordedAt: new Date().toISOString(),
   };
   await updatePrivateItem(CAPTURE_RECORD_KEY, (current) => {
     if (current !== null) decodePhotoCaptureConsent(current);

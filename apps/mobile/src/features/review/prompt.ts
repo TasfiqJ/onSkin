@@ -15,8 +15,7 @@ const REVIEW_PROMPT_KEY = 'onskin.reviewPrompt.v1';
 const SCHEMA_VERSION = 1 as const;
 
 export const REVIEW_PROMPT_STATE_INVALID = 'REVIEW_PROMPT_STATE_INVALID';
-export const REVIEW_PROMPT_STATE_UNSUPPORTED_VERSION =
-  'REVIEW_PROMPT_STATE_UNSUPPORTED_VERSION';
+export const REVIEW_PROMPT_STATE_UNSUPPORTED_VERSION = 'REVIEW_PROMPT_STATE_UNSUPPORTED_VERSION';
 
 type ReviewPromptEnvelope = {
   version: typeof SCHEMA_VERSION;
@@ -106,10 +105,7 @@ async function loadState(now: Date): Promise<ReviewPromptState | null> {
   }
 }
 
-async function reserveReviewAttempt(
-  moment: ReviewValueMoment,
-  now: Date,
-): Promise<boolean> {
+async function reserveReviewAttempt(moment: ReviewValueMoment, now: Date): Promise<boolean> {
   let reserved = false;
   try {
     await updatePrivateItem(REVIEW_PROMPT_KEY, (current) => {

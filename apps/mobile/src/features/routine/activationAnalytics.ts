@@ -5,8 +5,7 @@ const KEY = 'routinekind.routineActivation.v1';
 const SCHEMA_VERSION = 1 as const;
 
 export const ROUTINE_ACTIVATION_INVALID = 'ROUTINE_ACTIVATION_INVALID';
-export const ROUTINE_ACTIVATION_UNSUPPORTED_VERSION =
-  'ROUTINE_ACTIVATION_UNSUPPORTED_VERSION';
+export const ROUTINE_ACTIVATION_UNSUPPORTED_VERSION = 'ROUTINE_ACTIVATION_UNSUPPORTED_VERSION';
 
 type ActivationFlags = {
   firstRoutineCreated: boolean;
@@ -70,10 +69,7 @@ function decodeFlags(raw: string | null): ActivationFlags {
     ) {
       throw new Error(ROUTINE_ACTIVATION_UNSUPPORTED_VERSION);
     }
-    if (
-      parsed.version !== SCHEMA_VERSION ||
-      !hasExactKeys(parsed, ['version', 'flags'])
-    ) {
+    if (parsed.version !== SCHEMA_VERSION || !hasExactKeys(parsed, ['version', 'flags'])) {
       throw new Error(ROUTINE_ACTIVATION_INVALID);
     }
     return decodeFlagsObject(parsed.flags);

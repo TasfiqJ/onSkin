@@ -24,9 +24,9 @@ describe('versioned private string-set codec', () => {
 
   it('distinguishes invalid and unsupported data', () => {
     expect(() => decodePrivateStringSet('{not-json')).toThrow(PRIVATE_STRING_SET_INVALID);
-    expect(() => decodePrivateStringSet(JSON.stringify({ version: 1, values: [' alpha'] }))).toThrow(
-      PRIVATE_STRING_SET_INVALID,
-    );
+    expect(() =>
+      decodePrivateStringSet(JSON.stringify({ version: 1, values: [' alpha'] })),
+    ).toThrow(PRIVATE_STRING_SET_INVALID);
     expect(() => decodePrivateStringSet(JSON.stringify({ version: 2, values: [] }))).toThrow(
       PRIVATE_STRING_SET_UNSUPPORTED_VERSION,
     );

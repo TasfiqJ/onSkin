@@ -24,8 +24,7 @@ const LOCAL_REVERSE_TRIAL_DAYS = 7;
 const SCHEMA_VERSION = 1 as const;
 
 export const ENTITLEMENT_CACHE_INVALID = 'ENTITLEMENT_CACHE_INVALID';
-export const ENTITLEMENT_CACHE_UNSUPPORTED_VERSION =
-  'ENTITLEMENT_CACHE_UNSUPPORTED_VERSION';
+export const ENTITLEMENT_CACHE_UNSUPPORTED_VERSION = 'ENTITLEMENT_CACHE_UNSUPPORTED_VERSION';
 
 type EntitlementCacheEnvelope = {
   version: typeof SCHEMA_VERSION;
@@ -336,10 +335,7 @@ function errorMessage(error: unknown): string | null {
 
 function isEntitlementCodecError(error: unknown): boolean {
   const message = errorMessage(error);
-  return (
-    message === ENTITLEMENT_CACHE_INVALID ||
-    message === ENTITLEMENT_CACHE_UNSUPPORTED_VERSION
-  );
+  return message === ENTITLEMENT_CACHE_INVALID || message === ENTITLEMENT_CACHE_UNSUPPORTED_VERSION;
 }
 
 function classifyPrivateReadError(error: unknown): EntitlementCacheRead {

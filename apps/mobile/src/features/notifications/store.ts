@@ -164,7 +164,10 @@ function isCurrentStoredPrefs(value: unknown): value is Record<string, unknown> 
     'timezone',
   ].sort();
   const keys = Object.keys(value).sort();
-  if (keys.length !== expectedKeys.length || keys.some((key, index) => key !== expectedKeys[index])) {
+  if (
+    keys.length !== expectedKeys.length ||
+    keys.some((key, index) => key !== expectedKeys[index])
+  ) {
     return false;
   }
   for (const key of [
@@ -238,7 +241,9 @@ function encodeNotifPrefs(prefs: NotifPrefs): string {
 export async function loadNotifPrefs(): Promise<NotifPrefs> {
   try {
     const raw = await getPrivateItem(KEY);
-    return raw === null ? { ...DEFAULT_PREFS, timezone: currentDeviceTimezone() } : decodeNotifPrefs(raw);
+    return raw === null
+      ? { ...DEFAULT_PREFS, timezone: currentDeviceTimezone() }
+      : decodeNotifPrefs(raw);
   } catch {
     // Corrupt, unsupported, or unavailable private state disables every optional
     // notification instead of silently treating it as fresh opt-in state.

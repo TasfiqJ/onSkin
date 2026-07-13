@@ -135,11 +135,11 @@ export async function setHealthDataCollectionConsentLocal(params: {
   );
 
   const consent: LocalHealthDataConsent = {
-      type: 'health_data_collection',
-      granted: params.granted,
-      version: params.version,
-      consentTextHash,
-      recordedAt: new Date().toISOString(),
+    type: 'health_data_collection',
+    granted: params.granted,
+    version: params.version,
+    consentTextHash,
+    recordedAt: new Date().toISOString(),
   };
   await updatePrivateItem(HEALTH_DATA_CONSENT_KEY, (current) => {
     if (current !== null) decodeConsent(current);

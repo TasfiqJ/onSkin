@@ -229,10 +229,7 @@ function normalizeShelfProduct(value: unknown, fallbackISO: string): ShelfProduc
   };
 }
 
-function normalizeShelfProducts(
-  value: unknown,
-  fallbackISO: string,
-): ShelfProduct[] | null {
+function normalizeShelfProducts(value: unknown, fallbackISO: string): ShelfProduct[] | null {
   if (!Array.isArray(value)) return null;
   const items: ShelfProduct[] = [];
   const ids = new Set<string>();
