@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-13T18:56:00.812Z
+Generated: 2026-07-13T20:05:10.223Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 49
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 1424
+- Hash references checked: 1430
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -43,7 +43,7 @@ being treated as trustworthy launch evidence.
 | docs/phase-4/generated/obf-fixture-import.json            | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/source-worklist.json               | json | 0                  | 0                          | 149       | 0               |
 | docs/phase-4/generated/source-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 90        | 0               |
+| docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 93        | 0               |
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-6/generated/payments-qa-packet.json            | json | 0                  | 0                          | 41        | 0               |
 | docs/phase-6/generated/payments-qa-packet.md              | md   | 0                  | 0                          | 0         | 0               |
@@ -69,7 +69,7 @@ being treated as trustworthy launch evidence.
 | docs/phase-9/generated/live-revenuecat-webhook.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.json     | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.md       | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 124       | 0               |
+| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 127       | 0               |
 | docs/phase-9/generated/release-engineering-qa-packet.md   | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/store-build-inspection.json        | json | 0                  | 0                          | 0         | 0               |
 
