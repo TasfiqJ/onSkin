@@ -3,8 +3,11 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import {
-  CATALOG_SEARCH_PRODUCT_SELECT,
-  REVIEWED_CATALOG_FRESHNESS_FILTER,
+  CATALOG_SEARCH_MIN_QUERY_LENGTH,
+  CATALOG_SEARCH_RPC,
+  catalogSearchLimit,
+  catalogSearchTerm,
+  normalizeCatalogSearchQuery,
 } from './catalogContract.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -38,13 +41,6 @@ function intEnv(name: string, fallback: number, min: number, max: number): numbe
   const value = Number(Deno.env.get(name));
   if (!Number.isInteger(value) || value < min || value > max) return fallback;
   return value;
-}
-
-function cleanQuery(value: unknown): string {
-  return String(value ?? '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 80);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -115,20 +111,17 @@ Deno.serve(async (req) => {
   const parsed = await readLimitedJson(req, maxBodyBytes, json, { error: 'bad_json' });
   if (parsed instanceof Response) return parsed;
   const body = isRecord(parsed) ? parsed : {};
-  const query = cleanQuery(body.query);
-  const limit = Math.min(Math.max(Number(body.limit ?? 10), 1), 20);
-  if (query.length < 2) return json({ result: 'too_short', products: [] });
+  const query = normalizeCatalogSearchQuery(body.query);
+  const searchTerm = catalogSearchTerm(query);
+  const limit = catalogSearchLimit(body.limit);
+  if (searchTerm.length < CATALOG_SEARCH_MIN_QUERY_LENGTH) {
+    return json({ result: 'too_short', products: [] });
+  }
 
-  const escaped = query.replace(/[%_,()]/g, ' ');
-
-  const { data, error } = await admin
-    .from('products')
-    .select(CATALOG_SEARCH_PRODUCT_SELECT)
-    .or(`name.ilike.%${escaped}%,brand.ilike.%${escaped}%`)
-    .neq('status', 'blocked')
-    .eq(REVIEWED_CATALOG_FRESHNESS_FILTER.column, REVIEWED_CATALOG_FRESHNESS_FILTER.value)
-    .order('data_quality_score', { ascending: false })
-    .limit(limit);
+  const { data, error } = await admin.rpc(CATALOG_SEARCH_RPC, {
+    p_query: searchTerm,
+    p_limit: limit,
+  });
   if (error) return json({ error: 'search_failed' }, 500);
 
   await caller.from('catalog_lookup_events').insert({
