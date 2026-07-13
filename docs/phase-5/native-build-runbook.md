@@ -1,15 +1,27 @@
 # Phase 5 Native Build Runbook
 
-Phase 5 moves RoutineKind from Expo preview behavior to installable native builds. The product is not beta-ready until the generated device QA packet has real iOS and Android build IDs, physical-device names, and named signoff.
+Phase 5 moves RoutineKind from Expo preview behavior to installable native
+builds. The active launch contract is iOS-only. The product is not beta-ready
+until the generated device QA packet has a real iOS build ID, physical-iPhone
+details, and named signoff. Android source health remains useful but is neither
+required launch evidence nor a public release claim.
 
 The native support floor is defined in `docs/DEVICE_SUPPORT_POLICY.md`: iOS
 17.0+ and Android 10 / API 29+, with 360 x 640 as the launch-blocking
 Expo web-compatible compact-phone layout floor. Builds may target newer SDKs as
 required by Apple, Google, and Expo, but the minimum install floor must not be
 lowered without updating the policy, config guard, and QA matrix together.
-Current Android native builds intentionally pin compile/target SDK to API 36
-while keeping min SDK at API 29, so store submission posture can advance without
-re-expanding the supported customer device matrix.
+Current Android source configuration intentionally pins compile/target SDK to
+API 36 while keeping min SDK at API 29. This is maintenance posture only; it
+does not add Android to the release contract.
+
+Every iOS profile explicitly uses the Expo `sdk-56` build-image alias. Expo's
+current infrastructure maps that alias to Xcode 26.4 and the iOS 26 SDK, which
+satisfies Apple's upload floor in force since April 28, 2026. The alias is a
+selection rule, not evidence: retain the EAS build-log section that names the
+resolved image, Xcode version, and SDK for every candidate. Stop building if
+Expo remaps the alias below Apple's then-current floor or if the resolved
+toolchain differs from the reviewed configuration.
 
 The Progress review pipeline includes native ML Kit face detection and Expo
 image manipulation. Any build created before those dependencies were added is
@@ -30,6 +42,9 @@ photo image or metadata request during local save.
 - `staging`: internal beta candidate, `APP_VARIANT=staging`, native camera enabled, native OCR disabled until ML Kit/Vision is added and verified.
 - `production`: production channel only after brand/legal clearance and store credentials are complete.
 
+All three profiles use the `sdk-56` iOS image alias. Production builds must not
+silently fall back to a different profile or toolchain.
+
 ## Required Commands
 
 Run locally before EAS:
@@ -43,18 +58,17 @@ Create native builds after EAS credentials are configured:
 ```bash
 cd apps/mobile
 eas build --profile development --platform ios
-eas build --profile development --platform android
 eas build --profile staging --platform ios
-eas build --profile staging --platform android
 ```
+
+Android build commands are intentionally omitted while Android is outside the
+active release contract.
 
 Generate the evidence packet after installing on devices:
 
 ```bash
 PHASE5_IOS_BUILD_ID=... \
-PHASE5_ANDROID_BUILD_ID=... \
 PHASE5_IOS_DEVICE="iPhone 15 Pro / iOS 26" \
-PHASE5_ANDROID_DEVICE="Pixel 8 / Android 15" \
 PHASE5_QA_SIGNOFF=true \
 PHASE5_DEVICE_QA_PASS=true \
 PHASE5_INSTALL_QA_PASS=true \
@@ -72,6 +86,10 @@ PHASE5_ACCESSIBILITY_QA_PASS=true \
 PHASE5_SIGNED_OFF_BY="Tas Mohammed" \
 npm run phase5:qa-packet:strict
 ```
+
+Retain the EAS log proving the resolved `sdk-56` image, Xcode 26.4 or later,
+and iOS 26 SDK or later alongside the generated packet. Re-check Apple's
+current upload requirement immediately before every App Store candidate.
 
 Record the supported-device performance baseline separately. Generate the
 blocked schema before testing, set owner-approved p95 thresholds before the
@@ -119,3 +137,9 @@ is enabled in the build; otherwise OCR remains hidden from launch claims.
 - Reminders remain "gentle" and inexact; no exact-alarm permission is requested.
 - Widgets and Live Activities are launch-required; do not build the release
   candidate until real WidgetKit/ActivityKit targets and device evidence exist.
+
+Primary toolchain references:
+
+- https://docs.expo.dev/build-reference/infrastructure/
+- https://docs.expo.dev/eas/json/
+- https://developer.apple.com/news/?id=ueeok6yw

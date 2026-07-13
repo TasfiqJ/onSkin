@@ -158,6 +158,8 @@ require(existsSync(
 for (const profile of ['development', 'staging', 'production']) {
   const env = eas.build?.[profile]?.env ?? {};
   require(Boolean(eas.build?.[profile]), `EAS profile ${profile} is missing.`);
+  require(eas.build?.[profile]?.ios?.image ===
+    'sdk-56', `EAS profile ${profile} must use the Expo SDK 56 iOS image alias (currently Xcode 26.4 / iOS 26 SDK); confirm the resolved image and toolchain in every build log.`);
   require(env.APP_VARIANT === profile, `EAS profile ${profile} must set APP_VARIANT=${profile}.`);
   require(env.EXPO_PUBLIC_NATIVE_CAMERA_ENABLED ===
     'true', `EAS profile ${profile} must enable native camera explicitly.`);

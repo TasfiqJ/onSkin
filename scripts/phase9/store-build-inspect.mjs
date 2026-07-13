@@ -135,6 +135,11 @@ for (const variant of variants) {
     profile.env?.EXPO_PUBLIC_APP_ENV === variant,
     `EAS ${variant} build must set EXPO_PUBLIC_APP_ENV=${variant}.`,
   );
+  block(
+    errors,
+    profile.ios?.image === 'sdk-56',
+    `EAS ${variant} build must use the reviewed Expo SDK 56 iOS image alias.`,
+  );
 }
 
 block(
@@ -299,6 +304,7 @@ write(
           variant,
           {
             channel: eas.build?.[variant]?.channel ?? null,
+            iosImage: eas.build?.[variant]?.ios?.image ?? null,
             distribution: eas.build?.[variant]?.distribution ?? null,
             developmentClient: eas.build?.[variant]?.developmentClient === true,
             appVariant: eas.build?.[variant]?.env?.APP_VARIANT ?? null,
