@@ -1,6 +1,7 @@
 # BRAND-05 Counsel-Ready Clearance Packet
 
-Prepared: 2026-07-12 (America/Toronto)
+Prepared: 2026-07-12 (America/Toronto); official-source evidence refreshed
+2026-07-14
 Requested decision: written clearance/rejection and conditions for one winner
 and two backups
 Candidates in priority order: `RoutineKind`, `Ritunera`, `Rituvia`
@@ -79,8 +80,9 @@ used to rescue an unsafe word mark.
 
 - Is the composite registrable and practically enforceable despite common
   `Routine` and `Kind` elements?
-- How material are `Skin&Routine`, `Routine Review`, routine-planning apps, and
-  other same-class routine marks?
+- How material are `MYROUTINE AI`, `ROUTINE RESET`, `ROOTINE`, `ROUTINE
+BEAUTY`, `THE LAST ROUTINE`, `ROUTINESPOT`, `Skin&Routine`, `Routine Review`,
+  and other same-class routine marks?
 - Should separate use of `Routine Kind` with a space be avoided?
 - Does use for community, commerce, or future professional services change the
   risk materially?
@@ -89,14 +91,17 @@ used to rescue an unsafe word mark.
 
 - Do phonetic forms such as `Ritoonera`, `Ritunaira`, `Ritunera`, or a
   `RITU-`/`routine-era` construction create conflicts not found by exact search?
+- How material are the live U.S. `RITUAL`/`RITUWELL` records and Canadian
+  `RITU`/`RITUALITY` records in classes 9, 41, 42, and 44?
 - Does the coined mark create an unwanted medical/pharmaceutical impression in
   any relevant jurisdiction?
 - Are there linguistic or transliteration risks in approved launch countries?
 
 ### Rituvia
 
-- How material are `RITUAL` class 9/42 registrations, `RITUO` class 10,
-  `RITUZENA` class 5, and other `RITU-` marks?
+- How material are the multiple U.S./Canadian `RITUAL` registrations, U.S.
+  `RITUWELL` class 44, Canadian `RITU` classes 9/35/42, `RITUALITY` classes
+  9/41/42, `RITUO` class 10, `RITUZENA` class 5, and other `RITU-` marks?
 - Does a parked but registered `.com` create negotiation, cybersquatting,
   confusion, or brand-control risk?
 - Is the pharmaceutical sound a clearance or regulatory-positioning concern?
@@ -131,18 +136,44 @@ the actual launch behavior rather than copying these descriptions verbatim.
 The dated search record contains query details and limitations:
 [`BRAND-03-knockout-search-record-2026-07-12.md`](./BRAND-03-knockout-search-record-2026-07-12.md).
 
+The 2026-07-14 official-system refresh returned no exact finalist record in the
+performed USPTO or CIPO queries. That is a narrow knockout observation, not a
+clearance conclusion. Broad live target-class screens produced the following
+U.S. leads for independent counsel review.
+
+Priority U.S. federal leads:
+
+| Lead / TSDR record                                                                                                                                                                                                                                                           | Serial              | Status/classes shown on refresh date | Candidate relevance                             |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------ | ----------------------------------------------- |
+| [MYROUTINE AI](https://tsdr.uspto.gov/#caseNumber=97572754&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                           | 97572754            | Registered; 42, 44                   | RoutineKind; skincare routine/services          |
+| [ROUTINE RESET](https://tsdr.uspto.gov/#caseNumber=79402625&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                          | 79402625            | Registered; 3, 9, 16, 35, 41         | RoutineKind; skincare/software/content          |
+| [ROOTINE](https://tsdr.uspto.gov/#caseNumber=98477283&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                | 98477283            | Pending/non-final action; 5, 9, 44   | RoutineKind; phonetic/software/beauty adjacency |
+| [ROUTINE BEAUTY](https://tsdr.uspto.gov/#caseNumber=99559783&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) and [second filing](https://tsdr.uspto.gov/#caseNumber=99559788&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) | 99559783 / 99559788 | Pending/non-final actions; 44        | RoutineKind; exact sector/component             |
+| [THE LAST ROUTINE](https://tsdr.uspto.gov/#caseNumber=99924586&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                       | 99924586            | Pending/awaiting examination; 35, 42 | RoutineKind; commerce/hosted-software services  |
+| [ROUTINESPOT](https://tsdr.uspto.gov/#caseNumber=99039495&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                            | 99039495            | Live intent-to-use; 9, 41, 45        | RoutineKind; software/community adjacency       |
+| [RITUAL](https://tsdr.uspto.gov/#caseNumber=88223161&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 88223161            | Registered; 9, 41, 44                | Ritunera/Rituvia formative/software/beauty      |
+| [RITUAL](https://tsdr.uspto.gov/#caseNumber=97166601&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 97166601            | Registered; 41, 44                   | Ritunera/Rituvia; skincare/content              |
+| [RITUAL](https://tsdr.uspto.gov/#caseNumber=90133821&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 90133821            | Registered; 9, 38, 42                | Ritunera/Rituvia; mobile/hosted software        |
+| [RITUAL](https://tsdr.uspto.gov/#caseNumber=88123883&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 88123883            | Registered; 42                       | Ritunera/Rituvia; hosted software               |
+| [RITUWELL](https://tsdr.uspto.gov/#caseNumber=90419964&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                               | 90419964            | Registered; 44                       | Ritunera/Rituvia; close prefix/beauty services  |
+
 Priority Canadian leads:
 
-| Lead           | Application | Status/classes shown on search date | Candidate relevance                           |
-| -------------- | ----------- | ----------------------------------- | --------------------------------------------- |
-| Skin&Routine   | 2412865     | Advertised; 3, 9, 35, 42, 44        | RoutineKind; same sector/classes              |
-| Routine Review | 2047002     | Registered; 42, 44, 45              | RoutineKind; software/beauty-adjacent         |
-| RITUAL         | 1726451     | Registered; 9                       | Rituvia/Ritunera formative field              |
-| RITUAL         | 1919057     | Registered; 42                      | Rituvia/Ritunera formative field              |
-| RITUO          | 2348061     | Registered; 10                      | Rituvia visual/phonetic and medical adjacency |
-| RITUZENA       | 1840101     | Registered; 5                       | Rituvia visual/phonetic and pharma adjacency  |
-| EVERSHELF      | 2372521     | Registered; 9, 42                   | Explains removal of Shelfkind                 |
-| Shelf Health   | 2475967     | Formalized; 9, 35, 44               | Explains removal of Shelfkind                 |
+| Lead              | Application | Status/classes shown on refresh date | Candidate relevance                           |
+| ----------------- | ----------- | ------------------------------------ | --------------------------------------------- |
+| Skin&Routine      | 2412865     | Advertised; 3, 9, 35, 42, 44         | RoutineKind; same sector/classes              |
+| Routine Review    | 2047002     | Registered; 42, 44, 45               | RoutineKind; software/beauty-adjacent         |
+| ONLY ROUTINE      | 2439042     | Formalized; 3, 35                    | RoutineKind; cosmetics/retail component       |
+| BrainCare Routine | 2421884     | Searched; 5, 9, 41, 44               | RoutineKind; software/health/education        |
+| RITU              | 2430190     | Searched; 7, 9, 11, 35, 42, 43       | Ritunera/Rituvia short-prefix/software lead   |
+| RITUALITY         | 2475082     | Formalized; 9, 41, 42                | Ritunera/Rituvia formative/software lead      |
+| RITUAL            | 1726451     | Registered; 9                        | Rituvia/Ritunera formative field              |
+| RITUAL            | 1919057     | Registered; 42                       | Rituvia/Ritunera formative field              |
+| RITUO             | 2348061     | Registered; 10                       | Rituvia visual/phonetic and medical adjacency |
+| RITUZENA          | 1840101     | Registered; 5                        | Rituvia visual/phonetic and pharma adjacency  |
+| RITUWELL          | 2061745     | Abandoned section 36; 44             | Inactive in Canada; related live U.S. record  |
+| EVERSHELF         | 2372521     | Registered; 9, 42                    | Explains removal of Shelfkind                 |
+| Shelf Health      | 2475967     | Formalized; 9, 35, 44                | Explains removal of Shelfkind                 |
 
 Priority common-law/store leads:
 
@@ -158,21 +189,30 @@ Priority common-law/store leads:
 
 ## Domain, store, and social status
 
-| Candidate   | `.com`                                | `.app`                                | Public Apple exact title            | Social handles |
-| ----------- | ------------------------------------- | ------------------------------------- | ----------------------------------- | -------------- |
-| RoutineKind | No RDAP record returned; not reserved | No RDAP record returned; not reserved | None in checked US/CA/GB/AU results | Unverified     |
-| Ritunera    | No RDAP record returned; not reserved | No RDAP record returned; not reserved | None in checked US results          | Unverified     |
-| Rituvia     | Registered/parked for sale            | No RDAP record returned; not reserved | None in checked US/CA/GB/AU results | Unverified     |
+Point-in-time public checks were refreshed on 2026-07-14.
+
+| Candidate   | `.com`                                         | `.app`                                       | Public Apple exact title            | Social handles |
+| ----------- | ---------------------------------------------- | -------------------------------------------- | ----------------------------------- | -------------- |
+| RoutineKind | No RDAP record returned; checkout unverified   | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
+| Ritunera    | No RDAP record returned; checkout unverified   | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
+| Rituvia     | Registered 2025-06-14; parked/offered for sale | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
 
 No purchase, cart hold, App Store Connect record, handle claim, company-name
 reservation, or trademark filing was made.
 
+RDAP 404 and DNS non-resolution do not prove that a name is registrable or can
+be purchased. The Apple public Search API does not expose unpublished/reserved
+App Store Connect names. Social checks were index-based, not authenticated
+handle claims.
+
 ## Required search scope before opinion
 
-- USPTO live/dead exact, wildcard, phonetic, translation, design, owner, and
+- counsel independently reproduces and expands the preliminary USPTO
+  live/dead exact, wildcard, phonetic, translation, design, owner, and
   goods/services searches;
-- CIPO exact, wildcard, phonetic, English/French translation, components, and
-  full record review;
+- counsel independently reproduces and expands the preliminary CIPO exact,
+  wildcard, phonetic, English/French translation, components, and full-record
+  review;
 - WIPO Global Brand Database/Madrid Monitor and national registers for every
   approved country;
 - EUIPO/TMview if EU launch or near-term expansion is planned;
@@ -184,13 +224,15 @@ reservation, or trademark filing was made.
 
 ## Apple-specific issue
 
-Apple requires a unique app name, bars copycat/impersonating names, and requires
-rights to protected third-party material. A public search does not reserve a
-name. App Store Connect states that if another developer uses a desired name, a
-rights holder may submit a claim:
+Apple limits an app name to 2–30 characters and permits an app name for one app
+per localization. It bars copycat/impersonating names and requires rights to
+protected third-party material. A public search does not reserve a name. App
+Store Connect states that if another developer uses a desired name, a rights
+holder may submit a claim:
 
 - [App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
 - [Add a new app](https://developer.apple.com/help/app-store-connect/create-an-app-record/add-a-new-app/)
+- [App information field limits](https://developer.apple.com/help/app-store-connect/reference/app-information/app-information/)
 
 Please identify any evidence Apple should receive if the cleared mark later
 encounters a name claim.
@@ -218,7 +260,9 @@ encounters a name claim.
 
 - [ ] Founder confirms launch countries.
 - [ ] Founder confirms applicant/owner legal entity with counsel.
-- [ ] Counsel runs the unavailable official and common-law searches.
+- [ ] Counsel independently reproduces/expands USPTO and CIPO, and runs the
+      still-unverified WIPO, Madrid, EUIPO/TMview (if in scope), company-name,
+      and common-law searches.
 - [ ] Counsel records exact spelling, countries, classes, conditions, and date.
 - [ ] Founder approves one counsel-cleared candidate.
 - [ ] Authorized account checks App Store name and identifier availability.
