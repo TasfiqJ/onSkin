@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-14T00:14:00.548Z",
-  "gitSha": "834e40cde38c795c6c9f1eb5557643a99208fc0b",
+  "generatedAt": "2026-07-14T08:20:28.631Z",
+  "gitSha": "b1cc5f487c9786052c1de647b60233d14f2bfc55",
   "evidenceDate": "2026-07-13",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
@@ -527,6 +527,81 @@
       "evidenceSha256": "e172b003532d8fdea9c69315e4e6b51811ab338c26cd6eecaf1a40463a003ce9"
     },
     {
+      "id": "account-deletion-durable-recovery-expo-web-stress",
+      "title": "Account-deletion recovery Expo-web compatibility pass",
+      "kind": "report-contract",
+      "required": true,
+      "supportClass": "resilience",
+      "folder": "test-results/human-e2e/2026-07-13/account-deletion-durable-recovery-current",
+      "evidence": "report.md",
+      "requiredFiles": [
+        "01-pending-1279x720.jpg",
+        "02-apple-manual-1279x720.jpg",
+        "03-signed-out-landing-1279x720.jpg",
+        "04-invalid-receipt-1279x720.jpg",
+        "05-expired-receipt-1279x720.jpg",
+        "06-ownerless-support-only-1279x720.jpg",
+        "observations.json"
+      ],
+      "requiredJpegDimensions": {
+        "01-pending-1279x720.jpg": {
+          "width": 1279,
+          "height": 720
+        },
+        "02-apple-manual-1279x720.jpg": {
+          "width": 1279,
+          "height": 720
+        },
+        "03-signed-out-landing-1279x720.jpg": {
+          "width": 1279,
+          "height": 720
+        },
+        "04-invalid-receipt-1279x720.jpg": {
+          "width": 1279,
+          "height": 720
+        },
+        "05-expired-receipt-1279x720.jpg": {
+          "width": 1279,
+          "height": 720
+        },
+        "06-ownerless-support-only-1279x720.jpg": {
+          "width": 1279,
+          "height": 720
+        }
+      },
+      "observations": "observations.json",
+      "requiredReportText": [
+        "Run window: 2026-07-13 to 2026-07-14 (America/Toronto)",
+        "App surface: actual Expo web app with credential-free development fixtures; native iPhone evidence remains required",
+        "Browser/device: Codex in-app Chromium browser on Windows; saved JPEG capture surface 1279 x 720",
+        "Overall verdict: Expo-web compatibility pass with the source-level publication-fence gap and native/hosted/provider gates still explicitly blocking launch",
+        "No live Supabase URL, user session, provider credential, status capability, or destructive operation was used.",
+        "`01-pending-1279x720.jpg`",
+        "`02-apple-manual-1279x720.jpg`",
+        "`03-signed-out-landing-1279x720.jpg`",
+        "`04-invalid-receipt-1279x720.jpg`",
+        "`05-expired-receipt-1279x720.jpg`",
+        "`06-ownerless-support-only-1279x720.jpg`",
+        "`observations.json`",
+        "Browser error count was zero.",
+        "This run does not claim a compact-phone viewport pass.",
+        "Repeat the recovery branches on a supported physical iPhone",
+        "This credential-free Expo-web pass is not evidence of hosted-provider completion, legal approval, Apple approval, or revenue readiness."
+      ],
+      "expected": "Credential-free Expo web fixtures cover pending, manual-Apple, signed-out continuation, retryable invalid, expired, and ownerless support-only recovery; compact-phone, native-iPhone, hosted Supabase, and live-provider proof remain launch gates.",
+      "status": "pass",
+      "detail": "6 credential-free Expo web recovery states passed on the recorded desktop capture surface; compact-phone, native-iPhone, hosted-service, and provider proof remain open.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "requirementFailures": [],
+      "folderExists": true,
+      "evidenceExists": true,
+      "evidenceTracked": true,
+      "fileCount": 8,
+      "bytes": 163873,
+      "evidenceSha256": "f4501b3e4387e2fadff2440c115823111665ddde7183390a30872bf4e0846f13"
+    },
+    {
       "id": "progress-timelapse-supported-phone",
       "title": "390 x 844 local Progress time-lapse and reduced-motion pass",
       "kind": "summary-status",
@@ -974,7 +1049,8 @@
   "warnings": [
     "This manifest verifies committed local Expo web evidence only; it does not replace physical-iPhone and iOS build QA.",
     "Supported-phone 200% text-pressure gates listed in this manifest are launch-required local Expo web evidence. Android-class, 360-wide, and sub-667-height folder names are retained resilience baselines, not Android release evidence; 320-wide browser sizes also remain resilience stress evidence unless tied to a supported physical iPhone.",
-    "Native keyboard events, Dynamic Type, VoiceOver, camera hardware, notification delivery, StoreKit, RevenueCat, and live Supabase remain separate iOS release gates."
+    "Native keyboard events, Dynamic Type, VoiceOver, camera hardware, notification delivery, StoreKit, RevenueCat, and live Supabase remain separate iOS release gates.",
+    "The account-deletion recovery gate uses credential-free Expo web development fixtures on a desktop capture surface; it does not prove compact-phone layout, Keychain persistence, native lifecycle behavior, hosted Supabase, live-provider deletion, physical-iPhone accessibility, or App Store acceptance."
   ],
   "blockers": []
 }
