@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T20:03:48.190Z",
+  "generatedAt": "2026-07-14T00:09:06.655Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin-main-pay06\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "8fad7c9a42d36c9b55093e8f189de230b7c4b54a",
+  "gitSha": "399e875a2d1757de91832658fb944bf2eaca3887",
   "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
@@ -87,8 +87,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 21062,
-      "sha256": "9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0"
+      "bytes": 22309,
+      "sha256": "a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -220,13 +220,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 46709,
-      "sha256": "d6dc22b7d44d1299a266f0d9f31dd67beeaef6e1b2028fc90071eb1e69836acd"
+      "sha256": "57a8ab9fe56ffe5cf258dde8bd4acf239bf5222e27af02c8400ce14c972169fa"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 28924,
-      "sha256": "16bb10074161d68c3ad2b224808e40aaf3b2da41c1569b1270499f073b58097d"
+      "sha256": "71dd38b0b5845ea666929f4c7c1575c820b8e9dde0346aed9541d8bb50b2d8fe"
     },
     {
       "path": "docs/phase-4/odbl-compliance-memo.md",
