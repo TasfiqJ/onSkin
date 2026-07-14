@@ -1,6 +1,10 @@
 import * as Crypto from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
 
+import { setAccountActivityBlockedForDeletion } from './accountDeletionBarrier';
+
+export { isAccountActivityBlockedForDeletion } from './accountDeletionBarrier';
+
 export const ACCOUNT_DELETION_CLIENT_STATE_KEY = 'routinekind.account_deletion.pending.v1';
 export const ACCOUNT_DELETION_TOKEN_BYTES = 32;
 
@@ -21,7 +25,6 @@ export type AccountDeletionClientRecord = {
   statusCapability: string;
 };
 
-let accountActivityBlocked = false;
 let stateQueue: Promise<void> = Promise.resolve();
 
 function accountDeletionStateError(
@@ -113,7 +116,7 @@ async function readStoredRecord(): Promise<AccountDeletionClientRecord | null> {
   try {
     return parseAccountDeletionClientRecord(JSON.parse(serialized) as unknown);
   } catch {
-    accountActivityBlocked = true;
+    setAccountActivityBlockedForDeletion(true);
     throw accountDeletionStateError('ACCOUNT_DELETION_CLIENT_STATE_INVALID');
   }
 }
@@ -131,7 +134,7 @@ async function persistRecord(record: AccountDeletionClientRecord): Promise<void>
 export function loadPendingAccountDeletion(): Promise<AccountDeletionClientRecord | null> {
   return serializeState(async () => {
     const record = await readStoredRecord();
-    accountActivityBlocked = record !== null;
+    setAccountActivityBlockedForDeletion(record !== null);
     return record;
   });
 }
@@ -143,7 +146,7 @@ export function preparePendingAccountDeletion(
   return serializeState(async () => {
     const existing = await readStoredRecord();
     if (existing) {
-      accountActivityBlocked = true;
+      setAccountActivityBlockedForDeletion(true);
       return existing;
     }
 
@@ -162,11 +165,11 @@ export function preparePendingAccountDeletion(
 
     // Block capture/writes before persisting and before the network request. If
     // persistence fails, roll back only this newly installed in-memory barrier.
-    accountActivityBlocked = true;
+    setAccountActivityBlockedForDeletion(true);
     try {
       await persistRecord(record);
     } catch (error) {
-      accountActivityBlocked = false;
+      setAccountActivityBlockedForDeletion(false);
       throw error;
     }
     return record;
@@ -183,11 +186,11 @@ export function markAccountDeletionAcceptedOrAmbiguous(): Promise<AccountDeletio
     const record = await readStoredRecord();
     if (!record) throw accountDeletionStateError('ACCOUNT_DELETION_CLIENT_STATE_INVALID');
     if (record.state === 'accepted_or_ambiguous') {
-      accountActivityBlocked = true;
+      setAccountActivityBlockedForDeletion(true);
       return record;
     }
     const next = { ...record, state: 'accepted_or_ambiguous' as const };
-    accountActivityBlocked = true;
+    setAccountActivityBlockedForDeletion(true);
     await persistRecord(next);
     return next;
   });
@@ -198,15 +201,11 @@ export function clearCompletedAccountDeletionState(): Promise<void> {
   return serializeState(async () => {
     await assertSecureStoreAvailable();
     await SecureStore.deleteItemAsync(ACCOUNT_DELETION_CLIENT_STATE_KEY);
-    accountActivityBlocked = false;
+    setAccountActivityBlockedForDeletion(false);
   });
 }
 
-export function isAccountActivityBlockedForDeletion(): boolean {
-  return accountActivityBlocked;
-}
-
 export function resetAccountDeletionClientStateForTests(): void {
-  accountActivityBlocked = false;
+  setAccountActivityBlockedForDeletion(false);
   stateQueue = Promise.resolve();
 }

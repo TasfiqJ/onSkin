@@ -8,7 +8,9 @@ The scrubber drops route params, URLs, query strings, product data, barcodes, OC
 
 ## PostHog
 
-Analytics props are allowlisted in `apps/mobile/src/lib/analytics/eventRegistry.ts`. `identify` uses a pseudonymous account ID. `sanitizeAnalyticsProps` drops keys not in the registry, sensitive keys, complex values, app-supplied dates, contact-looking strings, URL/path/token-looking strings, prose-like strings that are not compact bucket tokens, sensitive-looking strings, and numeric values that are not small finite integers.
+Direct mobile PostHog construction, capture, identify, and flush are launch-gated. This is fail-closed while an approved analytics configuration and durable consent state are absent, as required by `USW1-ENG-03`. The public analytics call sites and sanitizer remain so a later barrier-aware server transport cannot bypass the event/field contract. Account-boundary cleanup deletes both PostHog React Native persistence files and both AsyncStorage fallback keys; it fails closed if any available backend cannot be cleared. This prevents previously queued identified events or logs from being replayed after remote account deletion.
+
+Analytics props are allowlisted in `apps/mobile/src/lib/analytics/eventRegistry.ts`. The retained pseudonymous-ID helper never exposes the raw account UUID. `sanitizeAnalyticsProps` drops keys not in the registry, sensitive keys, complex values, app-supplied dates, contact-looking strings, URL/path/token-looking strings, prose-like strings that are not compact bucket tokens, sensitive-looking strings, and numeric values that are not small finite integers.
 
 Allowed props must remain buckets or opaque IDs only. Product IDs, rule IDs, content IDs, quiz axes, skin profile outputs, local paths, barcodes, notes, OCR text, scores, and free text are not approved telemetry.
 
@@ -18,4 +20,4 @@ Development/QA warning paths use `devWarn()` and `redactedErrorForLog()` so exce
 
 ## Release Requirement
 
-Before public launch, capture live Sentry and PostHog payload samples from the exact release candidate and attach screenshots/JSON exports to the release-candidate folder. Strict scripts fail until `PHASE9_OBSERVABILITY_PAYLOAD_PASS=true`.
+Before enabling analytics or public launch, implement and verify an approved consent ledger plus a deletion-barrier-aware transport. Then capture live Sentry and PostHog payload samples from the exact release candidate and attach screenshots/JSON exports to the release-candidate folder. Strict scripts fail until `PHASE9_OBSERVABILITY_PAYLOAD_PASS=true`; the current PostHog gate is not production analytics evidence.

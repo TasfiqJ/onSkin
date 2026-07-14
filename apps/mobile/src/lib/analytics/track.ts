@@ -1,21 +1,19 @@
 import type { OnboardingEvent } from '@onskin/types';
-import type { PostHog } from 'posthog-react-native';
 
+import { isAccountActivityBlockedForDeletion } from '@/features/settings/accountDeletionBarrier';
 import type { AnalyticsAllowedEventName } from '@/lib/analytics/eventRegistry';
 import {
   isAllowedAnalyticsEventName,
   isAllowedAnalyticsPropKey,
 } from '@/lib/analytics/eventRegistry';
-import { env } from '@/lib/env';
 import {
   GROWTH_ATTRIBUTION_KEYS,
   sanitizeAttribution,
   type GrowthAttributionKey,
 } from '@/lib/growth/attribution';
-import { devWarn } from '@/lib/observability/safeLog';
+import { purgeLegacyPostHogPersistence } from '@/lib/analytics/postHogPersistenceCleanup';
 
-let posthogPromise: Promise<PostHog | null> | null = null;
-type AnalyticsProps = Parameters<PostHog['capture']>[1];
+type AnalyticsProps = Record<string, string | number | boolean | null> | undefined;
 
 export const SENSITIVE_ANALYTICS_KEY =
   /(barcode(?!_type)|ingredient|ocr|raw_text|note|localuri|local_uri|file|path|photo|image|receipt|product_id|product_name|rule_id|content_id|conflict_text|pregnan|condition|diagnos|skin|goal|profile|free_text|message|body|email|phone|address|name|user_id|app_user_id|(^|_)age($|_)|birth|zip|postal|retinoid|retinol|aha|bha|benzoyl|hydroquinone|niacinamide|vitamin_c|sunscreen|peptide|dspt|fitzpatrick|monk|axis|step|score|slug)/i;
@@ -56,34 +54,10 @@ export async function pseudonymousUserId(userId: string): Promise<string> {
   return `u_${digest.slice(0, 32)}`;
 }
 
-function canUsePostHog(): boolean {
-  return env.posthogKey.length > 0 && env.posthogHost.length > 0;
-}
-
 function sanitizeAnalyticsNumber(value: number): number | undefined {
   if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_SAFE_ANALYTICS_INTEGER)
     return undefined;
   return value;
-}
-
-async function getPostHog(): Promise<PostHog | null> {
-  if (!canUsePostHog()) return null;
-
-  posthogPromise ??= import('posthog-react-native')
-    .then(({ default: PostHogClient }) => {
-      return new PostHogClient(env.posthogKey, {
-        host: env.posthogHost,
-        captureAppLifecycleEvents: false,
-        enableSessionReplay: false,
-        persistence: 'file',
-      });
-    })
-    .catch((error: unknown) => {
-      devWarn('[analytics] PostHog initialization failed', error);
-      return null;
-    });
-
-  return posthogPromise;
 }
 
 export function sanitizeAnalyticsProps(props?: Record<string, unknown>): AnalyticsProps {
@@ -125,39 +99,27 @@ export function sanitizeAnalyticsEventName(
 }
 
 export function track(event: OnboardingEvent | string, props?: Record<string, unknown>): void {
+  if (isAccountActivityBlockedForDeletion()) return;
   const safeEvent = sanitizeAnalyticsEventName(event);
   if (!safeEvent) return;
 
-  const safeProps = sanitizeAnalyticsProps(props);
-
-  void getPostHog()
-    .then((posthog) => {
-      posthog?.capture(safeEvent, safeProps);
-    })
-    .catch((error: unknown) => {
-      devWarn('[analytics] capture failed', error);
-    });
+  // Direct mobile vendor capture is intentionally disabled until the approved
+  // analytics configuration and consent state have loaded. Keep sanitization at
+  // every call site so a future barrier-aware server transport cannot bypass it.
+  void sanitizeAnalyticsProps(props);
 }
 
 // Call at the anonymous-to-permanent conversion (account creation) per docs/01 section 7.
 export function identify(userId: string, props?: Record<string, unknown>): void {
-  const safeProps = sanitizeAnalyticsProps(props);
-
-  void Promise.all([getPostHog(), pseudonymousUserId(userId)])
-    .then(([posthog, pseudonymousId]) => {
-      posthog?.identify(pseudonymousId, safeProps);
-    })
-    .catch((error: unknown) => {
-      devWarn('[analytics] identify failed', error);
-    });
+  if (isAccountActivityBlockedForDeletion()) return;
+  void userId;
+  void sanitizeAnalyticsProps(props);
 }
 
 export async function resetAnalyticsIdentity(): Promise<void> {
-  const posthog = await getPostHog();
-  await posthog?.reset();
+  await purgeLegacyPostHogPersistence();
 }
 
 export async function flushAnalytics(): Promise<void> {
-  const posthog = await getPostHog();
-  await posthog?.flush();
+  // There is no direct mobile vendor queue while analytics is launch-gated.
 }

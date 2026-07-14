@@ -223,14 +223,16 @@ describe('analytics sanitizer', () => {
     expect(first).not.toContain(raw);
   });
 
-  it('keeps an explicit account-boundary reset for PostHog identity', () => {
+  it('keeps analytics vendor capture launch-gated and purges legacy persistence', () => {
     const source = readFileSync(TRACK_SOURCE, 'utf8');
 
     expect(source).toContain('sanitizeAnalyticsEventName(event)');
-    expect(source).toContain('posthog?.capture(safeEvent, safeProps)');
-    expect(source).toContain('captureAppLifecycleEvents: false');
-    expect(source).toContain('enableSessionReplay: false');
+    expect(source).toContain('if (isAccountActivityBlockedForDeletion()) return;');
     expect(source).toContain('export async function resetAnalyticsIdentity');
-    expect(source).toContain('posthog?.reset()');
+    expect(source).toContain('await purgeLegacyPostHogPersistence()');
+    expect(source).not.toContain("import('posthog-react-native')");
+    expect(source).not.toContain('.capture(');
+    expect(source).not.toContain('.identify(');
+    expect(source).not.toContain('.flush(');
   });
 });
