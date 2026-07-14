@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T20:06:39.336Z",
+  "generatedAt": "2026-07-14T00:08:28.558Z",
   "objective": "Phase 8 growth loop and store readiness",
   "launchContract": {
     "schemaVersion": 1,
@@ -78,7 +78,7 @@
     "android": "not_applicable"
   },
   "status": "blocked",
-  "gitSha": "55f65098a1e3af561223e625ca67e1c98bb21a3b",
+  "gitSha": "fea7994f29495853d352b11dd76d50930fc742d5",
   "gitStatus": "",
   "publicIdentity": {
     "finalBrandDomain": null,
@@ -133,12 +133,12 @@
     ]
   },
   "sourceHashes": {
-    ".env.example": "c48da3e0c5eb2b900c9a721c35428f2b402b3577e1692b9fae0ad157c64ef091",
-    "package.json": "9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0",
+    ".env.example": "6b4ec777ad4ba73c3e79b0be8be7ed710f31aaddeb0e0e00496eb6c7db99448c",
+    "package.json": "a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e",
     "docs/hugeToDo/launch-contract.json": "43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b",
     "scripts/launch/contract.mjs": "6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d",
     "apps/mobile/app.config.js": "3c8de04b4d7452e7c41922d4202e934f8f201769be01095503b3969ad3fde0a5",
-    "apps/mobile/src/lib/env.ts": "cee9823ec5d10a90a7dfe0596ce6c9d9b23e3a48d875e7093574b1384a7c1447",
+    "apps/mobile/src/lib/env.ts": "22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31",
     "apps/mobile/src/lib/launch/phase8.ts": "8149b2ab7984be03fd26ff44d3d680e422473dd79b7ad559558138cad4cf6ff9",
     "apps/mobile/src/lib/growth/attribution.ts": "80c9c4089fed353e7443deb38f9baa6ebb56b466a4fc07f2ce2caeb4f71f55e2",
     "apps/mobile/src/features/growth/shareLinks.ts": "0173ed4e39393e7c16a597b305f15c02b471f70041574ca785d161137a4b7e4d",
@@ -166,15 +166,15 @@
     "docs/phase-8/public-site/.well-known/assetlinks.template.json": "1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319",
     "docs/HUMAN_SIMULATED_E2E_TESTING.md": "db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8",
     "docs/E2E_TESTING_CHECKLIST.md": "1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f",
-    "docs/USER_FLOW_TREE.md": "1eeb5ae98ce1c98f9f479c9fe720a6ad0eb52a6959fec5f3dc3c54c5696ca461",
+    "docs/USER_FLOW_TREE.md": "059cf974dc272f3b410ee65bc2b3ef5dcf9b5363c5a277bd7ecd39eeb9f396e6",
     "docs/e2e/generated/human-e2e-manifest.json": "2bf6783f104ede6f29d16a4c4f41d78a73ad26ca9208e387b198df28c582a8f2",
     "docs/e2e/generated/human-e2e-manifest.md": "3d34c5c586b41e4c5f77973636bcdb3ad99345c48b645303119f7aa558f81cad",
-    "docs/phase-5/generated/device-qa-packet.json": "5c75407c37aa3953efdf9193b0dd12391fd739bed5741fc88eaa76b60b19325a",
-    "docs/phase-5/generated/device-qa-packet.md": "9ba811fbc4cd0a1248c1f863855bbf61c3755831efa5d1ed4a31e656220fd651",
+    "docs/phase-5/generated/device-qa-packet.json": "263c78ac0123d5560596c828c2afbf4d0a0bca891197ad0471f43177c3d8b831",
+    "docs/phase-5/generated/device-qa-packet.md": "342c5fcd9ecf34babee87b571c49998840fa6e0a218ff4973349816850ab999f",
     "docs/phase-6/generated/payments-qa-packet.json": "3f53b7ecddb1a7fed5d6208a7c8c4a83beea14d769c01f87eeb91f1e0c27dfd9",
     "docs/phase-6/generated/payments-qa-packet.md": "91d41495616f7413dfc3649590effd942ab6d4b823942cc18fe1a50b96eca53b",
-    "docs/phase-7/generated/core-loop-qa-packet.json": "b365700c70dae67a7a157a07322a47a6ed9c13e8de9c35860d73aaaae944dd3c",
-    "docs/phase-7/generated/core-loop-qa-packet.md": "1f1d5dd14dab04ef6ad24fd3b4ad9e1b1d34ea4fbf2684bac36f6aff90be19f9",
+    "docs/phase-7/generated/core-loop-qa-packet.json": "2d960e9d697b971dbdf8622a52b2898a99885dfcc1dfa33a7d8a72459bc5c7bb",
+    "docs/phase-7/generated/core-loop-qa-packet.md": "fe02ca444313f8f5116427a7d0d2486b30685839288fa6e9fba0e10052b1734d",
     "scripts/phase8/build-growth-store-qa-packet.mjs": "417068519980f0e79e36d565a3deac14de38804daa59d0b5773d88fc89768461",
     "scripts/phase8/check-growth-store-readiness.mjs": "014ac3f8dfd4baae43b57c494c778688c180ae996f8cb8b29f0a2660211902a7",
     "scripts/phase8/check-growth-store-smoke.mjs": "89cc87c5da60b6eb86ae112c93eb1995309c82dc2336995113dd5a37b8c37a98",
