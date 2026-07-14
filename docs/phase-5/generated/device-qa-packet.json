@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T20:06:00.901Z",
+  "generatedAt": "2026-07-14T00:08:10.457Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,7 +73,7 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "9b1f60131fd2b085c25833f541f4147703bafde6",
+  "gitSha": "eb693d069ef2ac728ad25759b893adb72ccaf1e7",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -221,8 +221,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 21062,
-      "sha256": "9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0"
+      "bytes": 22309,
+      "sha256": "a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -281,8 +281,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 37119,
-      "sha256": "b13fdc0f555048e214cda72affba45497b2d340b0e60a0ab4ae020a2ccc54c24"
+      "bytes": 37329,
+      "sha256": "ef9b7c6e0e1e848d60577c19a936d91d228421de548af6f157a762ac38f303bf"
     },
     {
       "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -707,8 +707,8 @@
     {
       "path": "scripts/phase9/rls-adversarial.mjs",
       "exists": true,
-      "bytes": 18562,
-      "sha256": "2878cb139c1ee1c8cbd511eecc577d6ab79496761fbe7104697e666acb7e8e3a"
+      "bytes": 19676,
+      "sha256": "a04518fd001aef534da936645b94d4e60ba7e0b377490ea16985fbb88e3e826b"
     },
     {
       "path": "docs/DEVICE_SUPPORT_POLICY.md",
@@ -731,8 +731,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 358190,
-      "sha256": "1eeb5ae98ce1c98f9f479c9fe720a6ad0eb52a6959fec5f3dc3c54c5696ca461"
+      "bytes": 358943,
+      "sha256": "059cf974dc272f3b410ee65bc2b3ef5dcf9b5363c5a277bd7ecd39eeb9f396e6"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
