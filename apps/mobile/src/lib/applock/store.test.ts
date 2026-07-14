@@ -1,30 +1,36 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { PrivateKVReadResult } from '@/lib/storage/privateKV';
+
 import {
-  APP_LOCK_PREFERENCE_INVALID,
-  APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION,
   clearMalformedAppLockPreference,
-  getAppLockEnabled,
-  isRepairableAppLockPreferenceError,
+  isRepairableAppLockPreferenceResult,
+  readAppLockPreference,
   setAppLockEnabledStored,
 } from './store';
 
 const mocks = vi.hoisted(() => ({
   privateKV: new Map<string, string>(),
+  readOverride: null as PrivateKVReadResult | null,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.privateKV.get(key) ?? null),
-  setPrivateItem: vi.fn(async (key: string, value: string) => {
-    mocks.privateKV.set(key, value);
+  readPrivateItem: vi.fn(async (key: string) => {
+    if (mocks.readOverride) return mocks.readOverride;
+    const value = mocks.privateKV.get(key);
+    return value === undefined ? { status: 'absent' } : { status: 'available', value };
   }),
-  removePrivateItemsForAuthorizedReset: vi.fn(
-    async (keys: readonly string[], _reason: string) => {
-      for (const key of keys) mocks.privateKV.delete(key);
+  updatePrivateItem: vi.fn(
+    async (key: string, updater: (current: string | null) => string | null) => {
+      const next = updater(mocks.privateKV.get(key) ?? null);
+      if (next === null) mocks.privateKV.delete(key);
+      else mocks.privateKV.set(key, next);
     },
   ),
-  PRIVATE_KV_ENVELOPE_INVALID: 'PRIVATE_KV_ENVELOPE_INVALID',
-  PRIVATE_KV_ENVELOPE_UNSUPPORTED: 'PRIVATE_KV_ENVELOPE_UNSUPPORTED',
+  removePrivateItemsForAuthorizedReset: vi.fn(async (keys: readonly string[], _reason: string) => {
+    for (const key of keys) mocks.privateKV.delete(key);
+  }),
 }));
 
 const KEY = 'onskin.appLock.enabled';
@@ -34,86 +40,221 @@ const originalDev = runtime.__DEV__;
 describe('app lock preference storage', () => {
   beforeEach(() => {
     mocks.privateKV.clear();
+    mocks.readOverride = null;
     vi.clearAllMocks();
     if (originalDev === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = originalDev;
     delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED;
+    delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_READ_FAILURE;
   });
 
   afterEach(() => {
     if (originalDev === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = originalDev;
     delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED;
+    delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_READ_FAILURE;
   });
 
-  it('roundtrips the stored app-lock setting', async () => {
+  it('keeps absence distinct from an available disabled preference', async () => {
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'absent',
+      enabled: false,
+    });
+
+    mocks.privateKV.set(KEY, 'v1:0');
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'available',
+      enabled: false,
+      format: 'current',
+    });
+  });
+
+  it('roundtrips canonical app-lock settings through the atomic boolean writer', async () => {
+    const privateKV = await import('@/lib/storage/privateKV');
+
     await setAppLockEnabledStored(true);
-    await expect(getAppLockEnabled()).resolves.toBe(true);
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'available',
+      enabled: true,
+      format: 'current',
+    });
     expect(mocks.privateKV.get(KEY)).toBe('v1:1');
 
     await setAppLockEnabledStored(false);
-    await expect(getAppLockEnabled()).resolves.toBe(false);
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'available',
+      enabled: false,
+      format: 'current',
+    });
     expect(mocks.privateKV.get(KEY)).toBe('v1:0');
+    expect(privateKV.updatePrivateItem).toHaveBeenCalledTimes(2);
   });
 
-  it('reads known legacy boolean strings without repairing private bytes', async () => {
-    mocks.privateKV.set(KEY, 'true');
-    await expect(getAppLockEnabled()).resolves.toBe(true);
-    expect(mocks.privateKV.get(KEY)).toBe('true');
-
-    mocks.privateKV.set(KEY, 'FALSE');
-    await expect(getAppLockEnabled()).resolves.toBe(false);
-    expect(mocks.privateKV.get(KEY)).toBe('FALSE');
-  });
-
-  it('fails closed without changing malformed stored values', async () => {
-    mocks.privateKV.set(KEY, 'enabled');
-
-    await expect(getAppLockEnabled()).rejects.toThrow(APP_LOCK_PREFERENCE_INVALID);
-    expect(mocks.privateKV.get(KEY)).toBe('enabled');
-  });
-
-  it('preserves an unsupported future application schema until explicit recovery', async () => {
-    mocks.privateKV.set(KEY, 'v2:1');
-
-    await expect(getAppLockEnabled()).rejects.toThrow(APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION);
-    expect(mocks.privateKV.get(KEY)).toBe('v2:1');
-  });
-
-  it('does not attempt a cleanup write for malformed values', async () => {
+  it.each([
+    [' true ', true],
+    ['FALSE', false],
+    [' 1 ', true],
+    [' 0 ', false],
+  ] as const)('reads legacy value %j without repairing private bytes', async (raw, enabled) => {
     const privateKV = await import('@/lib/storage/privateKV');
-    mocks.privateKV.set(KEY, 'enabled');
+    mocks.privateKV.set(KEY, raw);
 
-    await expect(getAppLockEnabled()).rejects.toThrow(APP_LOCK_PREFERENCE_INVALID);
-    expect(privateKV.setPrivateItem).not.toHaveBeenCalled();
-    expect(mocks.privateKV.get(KEY)).toBe('enabled');
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'available',
+      enabled,
+      format: 'legacy',
+    });
+
+    expect(mocks.privateKV.get(KEY)).toBe(raw);
+    expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
   });
 
-  it('propagates private-storage read failure so the provider can fail closed', async () => {
-    const privateKV = await import('@/lib/storage/privateKV');
-    vi.mocked(privateKV.getPrivateItem).mockRejectedValueOnce(new Error('private kv unavailable'));
+  it.each(['enabled', '', 'v1:true', 'v0:1', 'V1:1'])(
+    'classifies malformed value %j without changing it',
+    async (raw) => {
+      const privateKV = await import('@/lib/storage/privateKV');
+      mocks.privateKV.set(KEY, raw);
 
-    await expect(getAppLockEnabled()).rejects.toThrow('private kv unavailable');
-    expect(mocks.privateKV.get(KEY)).toBeUndefined();
+      await expect(readAppLockPreference()).resolves.toEqual({
+        status: 'corrupt',
+        enabled: null,
+        reason: 'invalid_value',
+      });
+
+      expect(mocks.privateKV.get(KEY)).toBe(raw);
+      expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each(['v2:1', 'v999999999999999999999999:0'])(
+    'preserves unsupported future value %s',
+    async (raw) => {
+      const privateKV = await import('@/lib/storage/privateKV');
+      mocks.privateKV.set(KEY, raw);
+
+      await expect(readAppLockPreference()).resolves.toEqual({
+        status: 'unsupported_version',
+        enabled: null,
+      });
+
+      expect(mocks.privateKV.get(KEY)).toBe(raw);
+      expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([
+    [
+      { status: 'unavailable', reason: 'content_key_storage_unavailable' },
+      {
+        status: 'unavailable',
+        enabled: null,
+        reason: 'content_key_storage_unavailable',
+      },
+    ],
+    [
+      { status: 'corrupt', reason: 'envelope_invalid' },
+      { status: 'corrupt', enabled: null, reason: 'envelope_invalid' },
+    ],
+    [
+      { status: 'corrupt', reason: 'decryption_failed' },
+      { status: 'corrupt', enabled: null, reason: 'decryption_failed' },
+    ],
+    [{ status: 'unsupported_version' }, { status: 'unsupported_version', enabled: null }],
+  ] as const)('preserves typed private-storage result %j', async (source, expected) => {
+    mocks.readOverride = source;
+
+    await expect(readAppLockPreference()).resolves.toEqual(expected);
   });
 
-  it('identifies only locally repairable malformed preference failures', () => {
-    expect(isRepairableAppLockPreferenceError(new Error(APP_LOCK_PREFERENCE_INVALID))).toBe(true);
+  it('limits authenticated setting reset to malformed or unsupported preference bytes', () => {
     expect(
-      isRepairableAppLockPreferenceError(
-        new Error(APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION),
-      ),
+      isRepairableAppLockPreferenceResult({
+        status: 'corrupt',
+        enabled: null,
+        reason: 'invalid_value',
+      }),
     ).toBe(true);
-    expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_ENVELOPE_INVALID'))).toBe(true);
-    expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_ENVELOPE_UNSUPPORTED'))).toBe(
-      true,
-    );
-    expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_DECRYPTION_FAILED'))).toBe(
-      false,
-    );
-    expect(isRepairableAppLockPreferenceError(new Error('PRIVATE_KV_CONTENT_KEY_MISSING'))).toBe(
-      false,
-    );
+    expect(
+      isRepairableAppLockPreferenceResult({
+        status: 'corrupt',
+        enabled: null,
+        reason: 'envelope_invalid',
+      }),
+    ).toBe(true);
+    expect(
+      isRepairableAppLockPreferenceResult({
+        status: 'unsupported_version',
+        enabled: null,
+      }),
+    ).toBe(true);
+
+    expect(isRepairableAppLockPreferenceResult({ status: 'absent', enabled: false })).toBe(false);
+    expect(
+      isRepairableAppLockPreferenceResult({
+        status: 'available',
+        enabled: true,
+        format: 'current',
+      }),
+    ).toBe(false);
+    expect(
+      isRepairableAppLockPreferenceResult({
+        status: 'corrupt',
+        enabled: null,
+        reason: 'content_key_invalid',
+      }),
+    ).toBe(false);
+    expect(
+      isRepairableAppLockPreferenceResult({
+        status: 'corrupt',
+        enabled: null,
+        reason: 'decryption_failed',
+      }),
+    ).toBe(false);
+    expect(
+      isRepairableAppLockPreferenceResult({
+        status: 'unavailable',
+        enabled: null,
+        reason: 'content_key_missing',
+      }),
+    ).toBe(false);
+    expect(
+      isRepairableAppLockPreferenceResult({
+        status: 'unavailable',
+        enabled: null,
+        reason: 'content_key_storage_unavailable',
+      }),
+    ).toBe(false);
+    expect(
+      isRepairableAppLockPreferenceResult({
+        status: 'unavailable',
+        enabled: null,
+        reason: 'storage_unavailable',
+      }),
+    ).toBe(false);
+  });
+
+  it.each(['enabled', 'v1:true', 'v2:1'])(
+    'refuses to overwrite corrupt or future application value %s',
+    async (raw) => {
+      mocks.privateKV.set(KEY, raw);
+
+      await expect(setAppLockEnabledStored(false)).rejects.toThrow();
+      expect(mocks.privateKV.get(KEY)).toBe(raw);
+    },
+  );
+
+  it('canonically upgrades a valid legacy value only during an explicit write', async () => {
+    mocks.privateKV.set(KEY, ' TRUE ');
+
+    await expect(readAppLockPreference()).resolves.toMatchObject({
+      status: 'available',
+      enabled: true,
+      format: 'legacy',
+    });
+    expect(mocks.privateKV.get(KEY)).toBe(' TRUE ');
+
+    await setAppLockEnabledStored(false);
+    expect(mocks.privateKV.get(KEY)).toBe('v1:0');
   });
 
   it('removes only the malformed app-lock preference during explicit recovery', async () => {
@@ -131,22 +272,71 @@ describe('app lock preference storage', () => {
     );
   });
 
-  it('uses the dev-only E2E fixture before private storage', async () => {
+  it('uses the dev-only enabled fixture without touching private storage', async () => {
+    const privateKV = await import('@/lib/storage/privateKV');
     runtime.__DEV__ = true;
     mocks.privateKV.set(KEY, 'v1:0');
     process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED = 'enabled';
 
-    await expect(getAppLockEnabled()).resolves.toBe(true);
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'available',
+      enabled: true,
+      format: 'current',
+    });
 
     process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED = 'disabled';
-    await expect(getAppLockEnabled()).resolves.toBe(false);
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'available',
+      enabled: false,
+      format: 'current',
+    });
     expect(mocks.privateKV.get(KEY)).toBe('v1:0');
+    expect(privateKV.readPrivateItem).not.toHaveBeenCalled();
+    expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
   });
 
-  it('ignores the E2E app-lock fixture outside dev builds', async () => {
+  it('supports persistent and one-shot dev-only read failures before enabled fixtures', async () => {
+    const privateKV = await import('@/lib/storage/privateKV');
+    runtime.__DEV__ = true;
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED = 'enabled';
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_READ_FAILURE = 'always';
+
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'unavailable',
+      enabled: null,
+      reason: 'storage_unavailable',
+    });
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'unavailable',
+      enabled: null,
+      reason: 'storage_unavailable',
+    });
+    expect(privateKV.readPrivateItem).not.toHaveBeenCalled();
+
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_READ_FAILURE = 'once';
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'unavailable',
+      enabled: null,
+      reason: 'storage_unavailable',
+    });
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'available',
+      enabled: true,
+      format: 'current',
+    });
+    expect(privateKV.readPrivateItem).not.toHaveBeenCalled();
+  });
+
+  it('ignores every E2E fixture outside development builds', async () => {
+    const privateKV = await import('@/lib/storage/privateKV');
     runtime.__DEV__ = false;
     process.env.EXPO_PUBLIC_E2E_APP_LOCK_ENABLED = 'enabled';
+    process.env.EXPO_PUBLIC_E2E_APP_LOCK_READ_FAILURE = 'always';
 
-    await expect(getAppLockEnabled()).resolves.toBe(false);
+    await expect(readAppLockPreference()).resolves.toEqual({
+      status: 'absent',
+      enabled: false,
+    });
+    expect(privateKV.readPrivateItem).toHaveBeenCalledWith(KEY);
   });
 });

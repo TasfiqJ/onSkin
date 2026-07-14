@@ -1,28 +1,27 @@
-import {
-  getPrivateItem,
-  PRIVATE_KV_ENVELOPE_INVALID,
-  PRIVATE_KV_ENVELOPE_UNSUPPORTED,
-  removePrivateItemsForAuthorizedReset,
-  setPrivateItem,
-} from '@/lib/storage/privateKV';
+import { readPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
+import { removePrivateItemsForAuthorizedReset } from '@/lib/storage/privateKV';
 
-// Whether the biometric app-lock is enabled (opt-in, docs/01 §5). Stored locally;
-// the lock state itself is in-memory in AppLockProvider.
+import type { AppLockPreferenceReadResult } from './preferenceResult';
+
+export {
+  isRepairableAppLockPreferenceResult,
+  type AppLockPreferenceReadResult,
+} from './preferenceResult';
+
+// Whether the biometric app lock is enabled (opt-in, docs/01 §5). Stored locally;
+// the lock state itself is in memory in AppLockProvider.
 const KEY = 'onskin.appLock.enabled';
-export const APP_LOCK_PREFERENCE_INVALID = 'APP_LOCK_PREFERENCE_INVALID';
-export const APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION =
-  'APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION';
-const CURRENT_ENABLED = 'v1:1';
-const CURRENT_DISABLED = 'v1:0';
 
-export function isRepairableAppLockPreferenceError(error: unknown): boolean {
-  const message = error instanceof Error ? error.message : '';
-  return (
-    message === APP_LOCK_PREFERENCE_INVALID ||
-    message === APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION ||
-    message === PRIVATE_KV_ENVELOPE_INVALID ||
-    message === PRIVATE_KV_ENVELOPE_UNSUPPORTED
-  );
+let e2eReadFailureCount = 0;
+
+function consumeE2EReadFailure(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+
+  const fixture = process.env.EXPO_PUBLIC_E2E_APP_LOCK_READ_FAILURE?.trim().toLowerCase();
+  if (fixture === 'always') return true;
+  if (fixture !== 'once' || e2eReadFailureCount > 0) return false;
+  e2eReadFailureCount += 1;
+  return true;
 }
 
 function e2eAppLockEnabled(): boolean | null {
@@ -35,30 +34,29 @@ function e2eAppLockEnabled(): boolean | null {
   return null;
 }
 
-function decodeStoredValue(value: string): boolean {
-  if (value === CURRENT_ENABLED) return true;
-  if (value === CURRENT_DISABLED) return false;
-  if (/^v\d+:/.test(value)) throw new Error(APP_LOCK_PREFERENCE_UNSUPPORTED_VERSION);
+/** Classify the stored preference without repairing, deleting, or collapsing failed state. */
+export async function readAppLockPreference(): Promise<AppLockPreferenceReadResult> {
+  if (consumeE2EReadFailure()) {
+    return { status: 'unavailable', enabled: null, reason: 'storage_unavailable' };
+  }
 
-  // Pre-version values remain readable but are never repaired during a read.
-  const normalized = value.trim().toLowerCase();
-  if (normalized === '1' || normalized === 'true') return true;
-  if (normalized === '0' || normalized === 'false') return false;
-
-  throw new Error(APP_LOCK_PREFERENCE_INVALID);
-}
-
-export async function getAppLockEnabled(): Promise<boolean> {
   const fixture = e2eAppLockEnabled();
-  if (fixture !== null) return fixture;
+  if (fixture !== null) {
+    return { status: 'available', enabled: fixture, format: 'current' };
+  }
 
-  const value = await getPrivateItem(KEY);
-  if (value == null) return false;
-  return decodeStoredValue(value);
+  const result = await readPrivateBoolean(KEY);
+  if (result.status === 'absent') return { status: 'absent', enabled: false };
+  if (result.status === 'available') {
+    return { status: 'available', enabled: result.value, format: result.format };
+  }
+  if (result.status === 'unavailable') return { ...result, enabled: null };
+  if (result.status === 'corrupt') return { ...result, enabled: null };
+  return { status: 'unsupported_version', enabled: null };
 }
 
 export async function setAppLockEnabledStored(enabled: boolean): Promise<void> {
-  await setPrivateItem(KEY, enabled ? CURRENT_ENABLED : CURRENT_DISABLED);
+  await setPrivateBoolean(KEY, enabled);
 }
 
 export async function clearMalformedAppLockPreference(): Promise<void> {

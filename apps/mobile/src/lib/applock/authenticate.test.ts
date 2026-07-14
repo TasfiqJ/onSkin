@@ -5,7 +5,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { BRAND } from '@/lib/brand';
 
-import { authenticateAppLock, canUseAppLock } from './authenticate';
+import {
+  APP_LOCK_FOREGROUND_RESULT_TIMEOUT_MS,
+  authenticateAppLock,
+  canUseAppLock,
+  getPresentedAppLockAuthenticationToken,
+  invalidatePendingAppLockAuthentication,
+  updateAppLockAuthenticationAppState,
+} from './authenticate';
 
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
 const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
@@ -17,12 +24,14 @@ function readSource(path: string): string {
 
 const mocks = vi.hoisted(() => ({
   authenticateAsync: vi.fn(),
+  cancelAuthenticate: vi.fn(),
   hasHardwareAsync: vi.fn(),
   isEnrolledAsync: vi.fn(),
 }));
 
 vi.mock('expo-local-authentication', () => ({
   authenticateAsync: mocks.authenticateAsync,
+  cancelAuthenticate: mocks.cancelAuthenticate,
   hasHardwareAsync: mocks.hasHardwareAsync,
   isEnrolledAsync: mocks.isEnrolledAsync,
 }));
@@ -30,8 +39,11 @@ vi.mock('expo-local-authentication', () => ({
 describe('app lock local authentication', () => {
   beforeEach(() => {
     mocks.authenticateAsync.mockReset();
+    mocks.cancelAuthenticate.mockReset();
+    mocks.cancelAuthenticate.mockResolvedValue(undefined);
     mocks.hasHardwareAsync.mockReset();
     mocks.isEnrolledAsync.mockReset();
+    updateAppLockAuthenticationAppState('active');
     if (originalDev === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = originalDev;
     delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH;
@@ -40,6 +52,8 @@ describe('app lock local authentication', () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
+    updateAppLockAuthenticationAppState('active');
     if (originalDev === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = originalDev;
     delete process.env.EXPO_PUBLIC_E2E_APP_LOCK_AUTH;
@@ -52,7 +66,10 @@ describe('app lock local authentication', () => {
 
     await expect(authenticateAppLock(BRAND.appLockPrompt)).resolves.toBe('success');
 
-    expect(mocks.authenticateAsync).toHaveBeenCalledWith({ promptMessage: BRAND.appLockPrompt });
+    expect(mocks.authenticateAsync).toHaveBeenCalledWith({
+      promptMessage: BRAND.appLockPrompt,
+      disableDeviceFallback: false,
+    });
   });
 
   it('keeps cancellations quiet as not authenticated', async () => {
@@ -65,6 +82,145 @@ describe('app lock local authentication', () => {
     mocks.authenticateAsync.mockRejectedValueOnce(new Error('native prompt unavailable'));
 
     await expect(authenticateAppLock(BRAND.appLockPrompt)).resolves.toBe('unavailable');
+  });
+
+  it('invalidates a late native success and requests best-effort cancellation', async () => {
+    let resolveAuthentication!: (result: { success: boolean }) => void;
+    mocks.authenticateAsync.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveAuthentication = resolve;
+      }),
+    );
+
+    const pending = authenticateAppLock(BRAND.appLockPrompt);
+    await vi.waitFor(() => expect(mocks.authenticateAsync).toHaveBeenCalledOnce());
+    invalidatePendingAppLockAuthentication();
+    expect(mocks.cancelAuthenticate).toHaveBeenCalledOnce();
+
+    resolveAuthentication({ success: true });
+    await expect(pending).resolves.toBe('not_authenticated');
+  });
+
+  it('holds a prompt-owned native success through inactive until the app is active', async () => {
+    const token = Object.freeze({ flow: 'inactive' });
+    let resolveAuthentication!: (result: { success: boolean }) => void;
+    mocks.authenticateAsync.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveAuthentication = resolve;
+      }),
+    );
+
+    let settled = false;
+    const pending = authenticateAppLock(BRAND.appLockPrompt, token).then((status) => {
+      settled = true;
+      return status;
+    });
+    await vi.waitFor(() => expect(mocks.authenticateAsync).toHaveBeenCalledOnce());
+    expect(getPresentedAppLockAuthenticationToken()).toBe(token);
+
+    updateAppLockAuthenticationAppState('inactive');
+    resolveAuthentication({ success: true });
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(settled).toBe(false);
+    expect(getPresentedAppLockAuthenticationToken()).toBeNull();
+    expect(mocks.cancelAuthenticate).not.toHaveBeenCalled();
+
+    updateAppLockAuthenticationAppState('active');
+    await expect(pending).resolves.toBe('success');
+    expect(getPresentedAppLockAuthenticationToken()).toBeNull();
+  });
+
+  it('bounds a native result that never receives a foreground transition', async () => {
+    vi.useFakeTimers();
+    let resolveAuthentication!: (result: { success: boolean }) => void;
+    mocks.authenticateAsync.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveAuthentication = resolve;
+      }),
+    );
+
+    const pending = authenticateAppLock(BRAND.appLockPrompt);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mocks.authenticateAsync).toHaveBeenCalledOnce();
+    updateAppLockAuthenticationAppState('inactive');
+    resolveAuthentication({ success: true });
+    await vi.advanceTimersByTimeAsync(0);
+
+    await vi.advanceTimersByTimeAsync(APP_LOCK_FOREGROUND_RESULT_TIMEOUT_MS);
+    await expect(pending).resolves.toBe('not_authenticated');
+    expect(getPresentedAppLockAuthenticationToken()).toBeNull();
+  });
+
+  it('serializes a fresh prompt behind an invalidated native attempt', async () => {
+    let resolveFirst!: (result: { success: boolean }) => void;
+    let resolveSecond!: (result: { success: boolean }) => void;
+    mocks.authenticateAsync
+      .mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolveFirst = resolve;
+        }),
+      )
+      .mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolveSecond = resolve;
+        }),
+      );
+
+    const stale = authenticateAppLock('Owner A');
+    await vi.waitFor(() => expect(mocks.authenticateAsync).toHaveBeenCalledOnce());
+    invalidatePendingAppLockAuthentication();
+    const fresh = authenticateAppLock('Owner B');
+    await Promise.resolve();
+    expect(mocks.authenticateAsync).toHaveBeenCalledTimes(1);
+
+    resolveFirst({ success: true });
+    await expect(stale).resolves.toBe('not_authenticated');
+    await vi.waitFor(() => expect(mocks.authenticateAsync).toHaveBeenCalledTimes(2));
+    expect(mocks.authenticateAsync).toHaveBeenLastCalledWith({
+      promptMessage: 'Owner B',
+      disableDeviceFallback: false,
+    });
+
+    resolveSecond({ success: true });
+    await expect(fresh).resolves.toBe('success');
+  });
+
+  it('does not present a queued request whose interaction became stale', async () => {
+    let resolveFirst!: (result: { success: boolean }) => void;
+    mocks.authenticateAsync.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveFirst = resolve;
+      }),
+    );
+    let current = true;
+
+    const first = authenticateAppLock('Owner A');
+    await vi.waitFor(() => expect(mocks.authenticateAsync).toHaveBeenCalledOnce());
+    const queued = authenticateAppLock('Stale queued owner', Object.freeze({}), () => current);
+    current = false;
+
+    resolveFirst({ success: true });
+    await expect(first).resolves.toBe('success');
+    await expect(queued).resolves.toBe('not_authenticated');
+    expect(mocks.authenticateAsync).toHaveBeenCalledOnce();
+  });
+
+  it('discards native success when the request guard changes before publication', async () => {
+    let resolveAuthentication!: (result: { success: boolean }) => void;
+    mocks.authenticateAsync.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveAuthentication = resolve;
+      }),
+    );
+    let current = true;
+
+    const pending = authenticateAppLock('Guarded owner', Object.freeze({}), () => current);
+    await vi.waitFor(() => expect(mocks.authenticateAsync).toHaveBeenCalledOnce());
+    current = false;
+    resolveAuthentication({ success: true });
+
+    await expect(pending).resolves.toBe('not_authenticated');
   });
 
   it('uses dev-only E2E auth and readiness fixtures without opening native auth', async () => {
@@ -134,29 +290,64 @@ describe('app lock local authentication', () => {
 
   it('keeps lock overlays on the failure-handled helper', () => {
     const provider = readSource('lib/applock/AppLockProvider.tsx');
+    const accountOperations = readSource('lib/applock/accountOperations.ts');
+    const preferenceDecision = readSource('lib/applock/preferenceDecision.ts');
     const timelineGate = readSource('features/photos/PhotoTimelineLockGate.tsx');
     const youTab = readSource('app/(tabs)/you.tsx');
 
-    expect(provider).toContain('authenticateAppLock(BRAND.appLockPrompt)');
+    expect(provider).toContain('attemptAppUnlockForCurrentAccount({');
+    expect(provider).toContain('readAppLockPreferenceForCurrentAccount((result) =>');
+    expect(provider).toContain('setAppLockPreferenceForCurrentAccount({');
     expect(provider).toContain('runSingleFlight(appUnlockLease.current');
     expect(provider).toContain('runSingleFlight(photoTimelineUnlockLease.current');
     expect(provider).toContain(
       'const [lockFeedback, setLockFeedback] = useState<string | null>(null);',
     );
     expect(provider).toContain('setLockFeedback(appLockUserMessage());');
-    expect(provider).toContain('repairRequired={preferenceRepairRequired}');
+    expect(provider).toContain(
+      "preferenceRecovery === 'retry' ? retryPreferenceRead : authenticate",
+    );
     expect(provider).toContain("'Unlock and reset app lock'");
-    expect(provider).toContain('await clearMalformedAppLockPreference();');
-    expect(provider).toContain('!preferenceRepairRequired) void requestUnlock();');
-    expect(provider).toContain('authenticateAppLock(PHOTO_TIMELINE_PROMPT)');
+    expect(provider).toContain('APP_LOCK_READ_COPY.retry');
+    expect(provider).toContain('preferenceRecovery === null');
+    expect(provider).toContain('interactionLifecycle.current.preservedLease === null');
+    expect(provider).toContain('interactionLifecycle.current.preservedLease === interaction');
+    expect(provider).toContain('promptMessage: PHOTO_TIMELINE_PROMPT');
     expect(provider).toContain('setPhotoTimelineUnlocked(false);');
-    expect(provider).toContain('setEnabledState(true);');
     expect(provider).toContain('setLocked(true);');
+    expect(provider).toContain('invalidatePendingAppLockAuthentication();');
+    expect(provider).toContain('getPresentedAppLockAuthenticationToken()');
+    expect(provider).toContain('transitionAppLockInteractionLifecycle(');
+    expect(provider).toContain('updateAppLockAuthenticationAppState(s);');
+    expect(provider).toContain('isAppLockInteractionLeaseCurrent(');
+    expect(provider).toContain('authenticationToken: interaction');
+    expect(provider).toContain('isInteractionCurrent: requestIsCurrent');
+    expect(provider).toContain('preferenceReadInFlight.current = true;');
+    expect(provider).toContain('setPreferenceRetrying(true);');
+    expect(provider).toContain('enabledRef.current || settingMutationInFlight.current');
+    expect(provider).toContain('const decision = decideAppLockPreference(result);');
     expect(provider).toContain('{loaded ? children : null}');
     expect(provider).toContain('showPrivacyShield || !loaded');
     expect(provider).toContain('accessibilityRole="alert"');
+    expect(provider).toContain('accessibilityViewIsModal');
+    expect(provider).toContain(
+      "importantForAccessibility={hideAppContent ? 'no-hide-descendants' : 'auto'}",
+    );
+    expect(provider).toContain("pointerEvents: hideAppContent ? 'none' : 'auto'");
     expect(provider).not.toContain("Alert.alert('App lock'");
     expect(provider).not.toContain('LocalAuthentication.authenticateAsync');
+    expect(provider).not.toContain('authenticateAppLock(');
+
+    expect(accountOperations).toContain('runAccountGenerationOperation(async (lease) =>');
+    expect(accountOperations).toContain('awaitAccountGenerationLease(lease');
+    expect(accountOperations).toContain('clearMalformedAppLockPreference');
+    expect(accountOperations).toContain('setAppLockEnabledStored(input.enabled)');
+    expect(accountOperations).toContain('invalidatePendingAppLockAuthentication');
+
+    expect(preferenceDecision).toContain('enabled: true');
+    expect(preferenceDecision).toContain(
+      "recovery: isRepairableAppLockPreferenceResult(result) ? 'repair' : 'retry'",
+    );
 
     expect(timelineGate).toContain('unlockPhotoTimeline()');
     expect(timelineGate).toContain('locked && appUnlocked');

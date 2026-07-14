@@ -186,7 +186,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'onskin.appLock.enabled',
     lifecycle: 'current',
     codec: scalarCodec('app_lock_boolean', 'v1', ['legacy_boolean']),
-    typedRead: gap('Public app-lock read throws/collapses instead of returning a domain result.'),
+    typedRead: typedDomainRead,
     reset: enforced({ authority: 'device_authenticated_setting_repair' as const }),
     recovery: enforced({ mode: 'device_authenticated_setting_reset' as const }),
     export: include('account_and_privacy', 'app_lock_enabled', 'safe_scalar_or_json'),
