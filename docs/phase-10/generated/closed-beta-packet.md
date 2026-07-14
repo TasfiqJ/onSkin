@@ -1,8 +1,8 @@
 # Phase 10 Closed Beta Packet
 
-Generated: 2026-07-13T20:01:52.540Z
+Generated: 2026-07-14T00:08:49.032Z
 Status: blocked
-Git SHA: 18ae1041af38ad4be06e03567b7265309ffad2f5
+Git SHA: 331b2c8c9b7086ef1269490ff319e93004962a01
 Git status: clean
 Phase 9 packet status: blocked
 
@@ -54,11 +54,11 @@ Phase 9 packet status: blocked
 
 ## Source Hashes
 
-- `package.json`: `9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0`
+- `package.json`: `a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e`
 - `docs/hugeToDo/launch-contract.json`: `43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b`
 - `scripts/launch/contract.mjs`: `6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d`
 - `turbo.json`: `66ff5b6919d5b219bbbceb627600554529d75fb5abdc1a35473736a2cb79bd57`
-- `.env.example`: `c48da3e0c5eb2b900c9a721c35428f2b402b3577e1692b9fae0ad157c64ef091`
+- `.env.example`: `6b4ec777ad4ba73c3e79b0be8be7ed710f31aaddeb0e0e00496eb6c7db99448c`
 - `scripts/phase9/lib.mjs`: `01fd4497bb9bb34e80f51a8daa76513edb383c6cb68686b22e72b8e4d8cf5665`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5`
 - `scripts/phase10-11/public-contact-smoke.mjs`: `e9dbae68cacb7118a246c9ae260bd87007d1d847298a09920b755cd89a6a5eca`
@@ -67,15 +67,15 @@ Phase 9 packet status: blocked
 - `scripts/phase10/beta-analytics-audit.mjs`: `b53f5f09236eac44112e145c818cd845e8593a48821e80a3ac96697f88a3570e`
 - `scripts/phase10/build-support-handoff-packet.mjs`: `ea5ded8fefa3a0258b71c7cf26f16365cab41add4882a90bc12b8601805cc20a`
 - `scripts/phase10/build-beta-packet.mjs`: `f5dcf9e8c74dd000a8e9288feef9eb4a5abe9f0ebad57cc1c41878c6aae612ac`
-- `docs/phase-10/generated/support-handoff-packet.json`: `a2e053c06bdbd780338a30cfcfc8e4d1b8fa87f949681534ed94d35f7d8237ce`
-- `docs/phase-10/generated/support-handoff-packet.md`: `b2fe0990f075165eb95aa2cd91169544afb258d6626c78dd8249dfcedb7016d0`
+- `docs/phase-10/generated/support-handoff-packet.json`: `87292a8d5ab88737d62019c2131e1bf0514fe625052ea564ec48443fcb181795`
+- `docs/phase-10/generated/support-handoff-packet.md`: `5389e1d61cff3973f5958de4bec629677e30f57144455848b5eb8be714e3c0bf`
 - `apps/mobile/eas.json`: `1672ae9cdd6fbd4c23c5e468fcbe24e761a5fbfa64279d0627328a981dd8c657`
 - `apps/mobile/app.config.js`: `3c8de04b4d7452e7c41922d4202e934f8f201769be01095503b3969ad3fde0a5`
 - `apps/mobile/src/lib/analytics/eventRegistry.ts`: `c00e23a2c6bdcc6a081dbbea7c7905933ed9ef5929f15a5341b37a6c0dc96cae`
 - `apps/mobile/src/lib/analytics/track.ts`: `d613d0f4c9cb794b681b722850dc4b408d06eb8da0574f16681463d7b4c22be2`
 - `apps/mobile/src/lib/observability/scrub.ts`: `ad231f592848825dbeaffcbd960a31e0ae916fe7e1916ded939e9b0f79deabed`
-- `docs/phase-9/generated/release-engineering-qa-packet.json`: `6f85772d901cb5247f64ec0efc49146bac1e977bbcdbcd6f8d489908b982fbee`
-- `docs/phase-9/generated/release-engineering-qa-packet.md`: `487e0487d9c5b8eb915efbc232595917301418cb2f7b11b3f0d5355dded2acab`
+- `docs/phase-9/generated/release-engineering-qa-packet.json`: `c03b3ed0158cfbbf7013bc80fe0706f025dff091783f573fc026d6a89ebfdc30`
+- `docs/phase-9/generated/release-engineering-qa-packet.md`: `d3fca5941fa426008464ed04b40ea091d51fc8b6b014faf7263455b1a42c5e4e`
 - `docs/phase-10/beta-source-of-truth.md`: `88c3379dbc566fb97183916a476ebbd021fc40ffb72f6ae17f4e126deec32e35`
 - `docs/phase-10/tester-recruitment-sheet.md`: `9b5d0fe3e3f1564b01f74e5b662a61511a6d6676a1ba46b0b012531baaa654ba`
 - `docs/phase-10/tester-brief.md`: `6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16`
