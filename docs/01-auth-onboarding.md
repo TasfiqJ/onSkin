@@ -191,7 +191,7 @@ Routine check-offs happen in bathrooms, often offline, so writes must succeed lo
 
 ### 7. Analytics / Experiment Foundation at Auth Layer
 
-**PostHog identify timing:** call `posthog.identify(userId)` at the value moment when the anonymous→permanent conversion happens (account creation), passing the Supabase user ID. This merges all prior anonymous events to the identified person. **RN caveat:** on Android, persisted anonymous IDs may not migrate across SDK upgrades (you may see inflated `Application Installed` counts) — ensure `identify` runs on app load for known users. Don't call identify repeatedly; if called multiple times with the same data without reload, PostHog ignores subsequent calls.
+**Analytics identity gate:** direct mobile PostHog capture and identify are disabled for the launch candidate until the applicable consent state, deletion barrier, approved regional configuration, retention, and live payload audit all pass. Never pass the raw Supabase user ID to analytics. A later approved transport must use an independently domain-separated analytics identifier, must stop before account deletion is accepted, and must prove queued-event removal before it can replace this fail-closed gate.
 
 **Onboarding funnel taxonomy** (event names): `onboarding_started`, `screen_viewed` (with `screen_name` property for granularity), `quiz_question_answered` (`question_id`, `axis`), `quiz_completed`, `personalization_shown`, `notification_prompt_shown`/`_granted`/`_denied`, `account_created` (`method`), `paywall_shown`, `trial_started`, `purchase_completed`, `first_routine_created`, `first_checkoff_completed`.
 

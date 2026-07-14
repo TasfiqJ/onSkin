@@ -13,12 +13,11 @@ import {
 import { Button, Screen, Text } from '@/components/ui';
 import { recordAccountConsent } from '@/features/onboarding/accountConsent';
 import { ACCOUNT_CONSENT } from '@/features/onboarding/consentCopy';
-import { track, identify } from '@/lib/analytics/track';
+import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { getAccountUpgradeE2EFixture } from '@/lib/auth/accountUpgradeE2E';
 import { isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE, authUserMessage } from '@/lib/errors/userFacing';
-import { supabase } from '@/lib/supabase/client';
 
 // 09 · Account creation at the value moment (docs/01 §1/§2). SIWA mandatory on iOS
 // because Google is offered (Guideline 4.8). Email uses OTP codes (not magic
@@ -46,9 +45,6 @@ export default function AccountScreen() {
         setError(ACCOUNT_CONSENT.saveFailedBody);
         return;
       }
-
-      const response = await supabase.auth.getUser().catch(() => null);
-      if (response?.data.user?.id) identify(response.data.user.id, { method: 'account_created' });
     }
     track('account_created');
     router.replace('/onboarding/paywall');

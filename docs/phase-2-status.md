@@ -9,7 +9,7 @@ Date: 2026-07-04
   custom dev builds.
 - RevenueCat purchase/restore code is wired behind real keys and native platform
   support, while preserving the local dev stub only when RevenueCat is absent.
-- PostHog capture/identify is wired with sanitized JSON-safe properties.
+- PostHog event names/properties are sanitized, but direct mobile capture and identify are intentionally disabled until consent, deletion-barrier, regional configuration, retention, and live payload gates pass.
 - Sentry initializes at app startup with privacy-conservative defaults.
 - Supabase Edge Functions prefer publishable/secret key env names.
 - Phase 2 env audit, Supabase RLS smoke test, and Supabase staging deploy scripts

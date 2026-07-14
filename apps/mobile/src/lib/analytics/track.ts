@@ -37,23 +37,6 @@ const PHOTO_QUALITY_RESULT_VALUES = new Set([
 const MAX_SAFE_ANALYTICS_INTEGER = 10_000;
 const SAFE_ANALYTICS_STRING_VALUE = /^[A-Za-z0-9_-]{1,80}$/;
 
-function bytesToHex(bytes: ArrayBuffer): string {
-  return [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
-}
-
-export async function pseudonymousUserId(userId: string): Promise<string> {
-  const input = `onskin:user:${userId}`;
-  let digest: string;
-  if (globalThis.crypto?.subtle) {
-    const bytes = new TextEncoder().encode(input);
-    digest = bytesToHex(await globalThis.crypto.subtle.digest('SHA-256', bytes));
-  } else {
-    const Crypto = await import('expo-crypto');
-    digest = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, input);
-  }
-  return `u_${digest.slice(0, 32)}`;
-}
-
 function sanitizeAnalyticsNumber(value: number): number | undefined {
   if (!Number.isSafeInteger(value) || Math.abs(value) > MAX_SAFE_ANALYTICS_INTEGER)
     return undefined;
@@ -109,17 +92,6 @@ export function track(event: OnboardingEvent | string, props?: Record<string, un
   void sanitizeAnalyticsProps(props);
 }
 
-// Call at the anonymous-to-permanent conversion (account creation) per docs/01 section 7.
-export function identify(userId: string, props?: Record<string, unknown>): void {
-  if (isAccountActivityBlockedForDeletion()) return;
-  void userId;
-  void sanitizeAnalyticsProps(props);
-}
-
 export async function resetAnalyticsIdentity(): Promise<void> {
   await purgeLegacyPostHogPersistence();
-}
-
-export async function flushAnalytics(): Promise<void> {
-  // There is no direct mobile vendor queue while analytics is launch-gated.
 }

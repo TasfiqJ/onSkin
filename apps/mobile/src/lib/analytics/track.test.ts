@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-import { pseudonymousUserId, sanitizeAnalyticsEventName, sanitizeAnalyticsProps } from './track';
+import { sanitizeAnalyticsEventName, sanitizeAnalyticsProps } from './track';
 
 const TRACK_SOURCE = fileURLToPath(new URL('./track.ts', import.meta.url));
 
@@ -213,16 +213,6 @@ describe('analytics sanitizer', () => {
     expect(sanitizeAnalyticsEventName('Acne concern: cheeks')).toBeNull();
   });
 
-  it('derives a stable pseudonymous user id without exposing the raw Supabase id', async () => {
-    const raw = '00000000-0000-4000-8000-000000000001';
-    const first = await pseudonymousUserId(raw);
-    const second = await pseudonymousUserId(raw);
-
-    expect(first).toBe(second);
-    expect(first).toMatch(/^u_[a-f0-9]{32}$/);
-    expect(first).not.toContain(raw);
-  });
-
   it('keeps analytics vendor capture launch-gated and purges legacy persistence', () => {
     const source = readFileSync(TRACK_SOURCE, 'utf8');
 
@@ -234,5 +224,7 @@ describe('analytics sanitizer', () => {
     expect(source).not.toContain('.capture(');
     expect(source).not.toContain('.identify(');
     expect(source).not.toContain('.flush(');
+    expect(source).not.toContain('export function identify');
+    expect(source).not.toContain('pseudonymousUserId');
   });
 });
