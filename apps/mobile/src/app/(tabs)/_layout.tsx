@@ -16,7 +16,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BehaviouralTriggers } from '@/features/notifications/BehaviouralTriggers';
-import { pendingLifecycleRoute } from '@/features/subscription/lifecycle';
+import { pendingLifecycleRouteResult } from '@/features/subscription/lifecycle';
 import { currentRoutineType } from '@/features/today/useToday';
 import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
@@ -29,8 +29,11 @@ function useExpiryReoffer() {
   const ownerScope = useOwnerQueryScope();
   useEffect(() => {
     let mounted = true;
-    void pendingLifecycleRoute(new Date().toISOString()).then((prompt) => {
-      if (!mounted || !prompt || !isOwnerQueryScopeCurrent(ownerScope)) return;
+    void pendingLifecycleRouteResult(new Date().toISOString()).then((result) => {
+      if (!mounted || result.status !== 'route' || !isOwnerQueryScopeCurrent(ownerScope)) {
+        return;
+      }
+      const { prompt } = result;
       router.push({
         pathname: prompt.route,
         params: { lifecyclePromptId: prompt.promptId },

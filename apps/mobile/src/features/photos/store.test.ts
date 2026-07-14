@@ -1,6 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
+import type { PrivateKVReadResult } from '@/lib/storage/privateKV';
+
+import {
   addPhoto,
   clearPhotos,
   loadPhotos,
@@ -8,6 +14,7 @@ import {
   PHOTO_METADATA_UNSUPPORTED,
   PHOTO_MUTATION_JOURNAL_INCONSISTENT,
   PHOTO_MUTATION_RECOVERY_REQUIRED,
+  readPhotos,
   recoverPhotoStoreMutations,
   removePhoto,
   setReference,
@@ -39,6 +46,7 @@ const mocks = vi.hoisted(() => ({
   deletePhotoAbortSignal: vi.fn(),
   discardPendingEncryptedPhotoForRetry: vi.fn(),
   encryptCapturedPhoto: vi.fn(),
+  encryptPhotoNote: vi.fn(),
   eqPhotoId: vi.fn(),
   eqPhotoOwner: vi.fn(),
   finalFiles: new Set<string>(),
@@ -53,6 +61,8 @@ const mocks = vi.hoisted(() => ({
   quarantines: new Set<string>(),
   randomCounter: 1,
   randomIds: [] as string[],
+  readPrivateItem: vi.fn(),
+  readPrivateItemOverride: null as PrivateKVReadResult | null,
   recoverPreparedEncryptedPhoto: vi.fn(),
   setFailureAfter: new Set<number>(),
   setFailureBefore: new Set<number>(),
@@ -70,6 +80,14 @@ vi.mock('expo-crypto', () => ({
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: mocks.getPrivateItem,
+  PRIVATE_KV_CONTENT_KEY_CONFLICT: 'PRIVATE_KV_CONTENT_KEY_CONFLICT',
+  PRIVATE_KV_CONTENT_KEY_INVALID: 'PRIVATE_KV_CONTENT_KEY_INVALID',
+  PRIVATE_KV_CONTENT_KEY_MISSING: 'PRIVATE_KV_CONTENT_KEY_MISSING',
+  PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE: 'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE',
+  PRIVATE_KV_DECRYPTION_FAILED: 'PRIVATE_KV_DECRYPTION_FAILED',
+  PRIVATE_KV_ENVELOPE_INVALID: 'PRIVATE_KV_ENVELOPE_INVALID',
+  PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY: 'PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY',
+  readPrivateItem: mocks.readPrivateItem,
   setPrivateItem: mocks.setPrivateItem,
 }));
 
@@ -94,14 +112,19 @@ vi.mock('@/lib/supabase/client', () => ({
 }));
 
 vi.mock('./encryptedStorage', () => ({
+  PHOTO_CONTENT_KEY_INVALID: 'PHOTO_CONTENT_KEY_INVALID',
+  PHOTO_CONTENT_KEY_MISSING: 'PHOTO_CONTENT_KEY_MISSING',
+  PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE: 'PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE',
+  PHOTO_DECRYPTION_FAILED: 'PHOTO_DECRYPTION_FAILED',
   PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED: 'PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED',
+  PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY: 'PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY',
   decryptPhotoNote: mocks.decryptPhotoNote,
   discardPendingEncryptedPhotoForRetry: mocks.discardPendingEncryptedPhotoForRetry,
   encryptedPhotoUriForId: (id: string) => photoUri(id.replace(/[^A-Za-z0-9_-]/g, '') || 'photo'),
   encryptedPhotoThumbnailUriForId: (id: string) =>
     thumbnailUri(id.replace(/[^A-Za-z0-9_-]/g, '') || 'photo'),
   encryptCapturedPhoto: mocks.encryptCapturedPhoto,
-  encryptPhotoNote: vi.fn(async (note: string | null) => (note ? `enc:${note}` : null)),
+  encryptPhotoNote: mocks.encryptPhotoNote,
   finalizeEncryptedPhotoDeletions: mocks.finalizeEncryptedPhotoDeletions,
   isEncryptedPhotoUri: (uri?: string | null) => Boolean(uri?.endsWith('.onskinphoto')),
   isOwnedEncryptedPhotoUri: (uri?: string | null) =>
@@ -188,6 +211,9 @@ describe('photo local store journal', () => {
         mocks.finalFiles.add(uri);
         return { encryptedLocalUri: uri, keyId: 'photo-key', encryptionVersion: 'photo-v1' };
       });
+    mocks.encryptPhotoNote
+      .mockReset()
+      .mockImplementation(async (note: string | null) => (note ? `enc:${note}` : null));
     mocks.eqPhotoId.mockReset();
     mocks.eqPhotoOwner.mockReset();
     mocks.finalFiles.clear();
@@ -211,6 +237,25 @@ describe('photo local store journal', () => {
       return mocks.storage.get(key) ?? null;
     });
     mocks.getPrivateItemError = null;
+    mocks.readPrivateItemOverride = null;
+    mocks.readPrivateItem.mockReset().mockImplementation(async (key: string) => {
+      if (mocks.readPrivateItemOverride) return mocks.readPrivateItemOverride;
+      try {
+        const value = await mocks.getPrivateItem(key);
+        return value === null
+          ? ({ status: 'absent' } as const)
+          : ({ status: 'available', value } as const);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : '';
+        if (message === 'PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE') {
+          return {
+            status: 'unavailable',
+            reason: 'content_key_storage_unavailable',
+          } as const;
+        }
+        return { status: 'unavailable', reason: 'storage_unavailable' } as const;
+      }
+    });
     mocks.getUser.mockReset().mockResolvedValue({
       data: { user: { id: 'owner-a' } },
       error: null,
@@ -273,9 +318,80 @@ describe('photo local store journal', () => {
     mocks.storage.set(KEY, stored);
     mocks.getPrivateItemError = new Error('PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE');
 
+    await expect(readPhotos()).resolves.toEqual({
+      status: 'unavailable',
+      photos: null,
+      reason: 'content_key_storage_unavailable',
+    });
     await expect(loadPhotos()).rejects.toThrow('PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE');
     expect(mocks.storage.get(KEY)).toBe(stored);
     expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+  });
+
+  it('returns typed private-envelope failures without decoding or changing bytes', async () => {
+    const original = JSON.stringify([{ id: 'photo-1', takenLocalDate: '2026-07-01' }]);
+    mocks.storage.set(KEY, original);
+
+    for (const [stored, expected] of [
+      [
+        { status: 'corrupt', reason: 'decryption_failed' } as const,
+        { status: 'corrupt', photos: null, reason: 'decryption_failed' } as const,
+      ],
+      [
+        { status: 'unsupported_version' } as const,
+        { status: 'unsupported_version', photos: null } as const,
+      ],
+      [
+        { status: 'unavailable', reason: 'content_key_missing' } as const,
+        { status: 'unavailable', photos: null, reason: 'content_key_missing' } as const,
+      ],
+    ] satisfies readonly (readonly [PrivateKVReadResult, object])[]) {
+      mocks.readPrivateItemOverride = stored;
+      await expect(readPhotos()).resolves.toEqual(expected);
+      expect(mocks.storage.get(KEY)).toBe(original);
+      expect(mocks.decryptPhotoNote).not.toHaveBeenCalled();
+      expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    }
+  });
+
+  it('distinguishes a valid absent timeline from typed read failures', async () => {
+    await expect(readPhotos()).resolves.toEqual({ status: 'absent', photos: [] });
+  });
+
+  it('classifies photo-note key and decryption failures without publishing metadata', async () => {
+    const raw = seedSettled([storedPhoto(uuid(1), { notesCiphertext: 'encrypted-note' })]);
+
+    for (const [code, expected] of [
+      [
+        'PHOTO_CONTENT_KEY_MISSING',
+        {
+          status: 'unavailable',
+          photos: null,
+          reason: 'photo_content_key_missing',
+        } as const,
+      ],
+      [
+        'PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE',
+        {
+          status: 'unavailable',
+          photos: null,
+          reason: 'photo_content_key_storage_unavailable',
+        } as const,
+      ],
+      [
+        'PHOTO_CONTENT_KEY_INVALID',
+        { status: 'corrupt', photos: null, reason: 'photo_content_key_invalid' } as const,
+      ],
+      [
+        'PHOTO_DECRYPTION_FAILED',
+        { status: 'corrupt', photos: null, reason: 'photo_decryption_failed' } as const,
+      ],
+    ] as const) {
+      mocks.decryptPhotoNote.mockRejectedValueOnce(new Error(code));
+      await expect(readPhotos()).resolves.toEqual(expected);
+      expect(mocks.storage.get(KEY)).toBe(raw);
+      expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    }
   });
 
   it('loads legacy photos with zero writes or file recovery', async () => {
@@ -327,19 +443,218 @@ describe('photo local store journal', () => {
       }),
     );
 
+    await expect(readPhotos()).resolves.toEqual({ status: 'recovery_required', photos: null });
     await expect(loadPhotos()).rejects.toThrow(PHOTO_MUTATION_RECOVERY_REQUIRED);
     expect(mocks.setPrivateItem).not.toHaveBeenCalled();
     expect(mocks.recoverPreparedEncryptedPhoto).not.toHaveBeenCalled();
   });
 
   it.each([
-    ['{not-json', PHOTO_METADATA_INVALID],
-    [JSON.stringify({ version: 3, items: [] }), PHOTO_METADATA_UNSUPPORTED],
-    [JSON.stringify({ id: 'wrong-shape' }), PHOTO_METADATA_INVALID],
-  ])('preserves invalid/future metadata %s', async (stored, code) => {
+    [
+      '{not-json',
+      PHOTO_METADATA_INVALID,
+      { status: 'corrupt', photos: null, reason: 'invalid_payload' },
+    ],
+    [
+      JSON.stringify({ version: 3, items: [] }),
+      PHOTO_METADATA_UNSUPPORTED,
+      { status: 'unsupported_version', photos: null },
+    ],
+    [
+      JSON.stringify({ id: 'wrong-shape' }),
+      PHOTO_METADATA_INVALID,
+      { status: 'corrupt', photos: null, reason: 'invalid_payload' },
+    ],
+  ])('preserves invalid/future metadata %s', async (stored, code, expected) => {
     mocks.storage.set(KEY, stored);
+    await expect(readPhotos()).resolves.toEqual(expected);
     await expect(loadPhotos()).rejects.toThrow(code);
     expect(mocks.storage.get(KEY)).toBe(stored);
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['invalid series', { ...storedPhoto(uuid(1)), series: 'diagonal' }],
+    ['non-canonical timestamp', { ...storedPhoto(uuid(1)), takenAt: '2026-07-01T08:00:00-04:00' }],
+    ['invalid local date', { ...storedPhoto(uuid(1)), takenLocalDate: '2026-02-30' }],
+    ['wrong boolean type', { ...storedPhoto(uuid(1)), localOnly: 1 }],
+    ['non-local current row', { ...storedPhoto(uuid(1)), localOnly: false }],
+    ['cloud storage path', { ...storedPhoto(uuid(1)), storagePath: 'owner/photo.jpg' }],
+    ['plaintext URI', { ...storedPhoto(uuid(1)), localUri: 'file://private/plaintext.jpg' }],
+    [
+      'capture marker without encrypted authority',
+      {
+        ...storedPhoto(uuid(1)),
+        captureSessionId: CAPTURE_A,
+        localUri: null,
+        encryptedLocalUri: null,
+        isEncrypted: false,
+        encryptionVersion: 'none',
+        keyId: null,
+      },
+    ],
+    [
+      'mismatched encrypted authority',
+      { ...storedPhoto(uuid(1)), encryptedLocalUri: photoUri(uuid(2)) },
+    ],
+    ['extra field', { ...storedPhoto(uuid(1)), unexpected: true }],
+    [
+      'missing field',
+      (() => {
+        const { series: _series, ...record } = storedPhoto(uuid(1));
+        return record;
+      })(),
+    ],
+  ])('preserves a malformed current V2 row: %s', async (_label, row) => {
+    const raw = seedSettled([row]);
+
+    await expect(readPhotos()).resolves.toMatchObject({ status: 'corrupt', photos: null });
+    await expect(loadPhotos()).rejects.toThrow();
+    expect(mocks.storage.get(KEY)).toBe(raw);
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+  });
+
+  it('never consumes plaintext staging for a malformed V2 capture marker', async () => {
+    const id = uuid(1);
+    seedSettled([
+      storedPhoto(id, {
+        captureSessionId: CAPTURE_A,
+        localUri: null,
+        encryptedLocalUri: null,
+        isEncrypted: false,
+        encryptionVersion: 'none',
+        keyId: null,
+      }),
+    ]);
+    const source = capture(CAPTURE_A);
+
+    await expect(
+      addPhoto({
+        takenLocalDate: '2026-07-03',
+        captureSessionId: CAPTURE_A,
+        localUri: source,
+      }),
+    ).rejects.toThrow(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
+
+    expect(mocks.plaintext.get(CAPTURE_A)).toBe(source);
+    expect(mocks.cleanupCalls).toEqual([]);
+    expect(mocks.encryptCapturedPhoto).not.toHaveBeenCalled();
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+  });
+
+  it('migrates the complete historical V1 placeholder without inventing file authority', async () => {
+    const id = uuid(1);
+    const legacy = JSON.stringify([
+      {
+        id,
+        series: 'front',
+        takenLocalDate: '2026-06-13',
+        takenAt: '2026-06-13T12:00:00.000Z',
+        timeOfDay: 'morning',
+        alignmentScore: 0.9,
+        lightingScore: 0.8,
+        headRoll: 0,
+        headYaw: 0,
+        headPitch: 0,
+        isReference: true,
+        referencePhotoId: null,
+        captureSessionId: null,
+        localUri: null,
+        notes: 'legacy note',
+        localOnly: true,
+        storagePath: null,
+        faceRegionRedacted: false,
+        isEncrypted: true,
+      },
+    ]);
+    mocks.storage.set(KEY, legacy);
+
+    await expect(readPhotos()).resolves.toMatchObject({
+      status: 'available',
+      format: 'legacy',
+      photos: [{ id, isEncrypted: false, localUri: null, localOnly: true, storagePath: null }],
+    });
+    expect(mocks.storage.get(KEY)).toBe(legacy);
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+
+    await updatePhoto(id, { timeOfDay: 'evening' });
+
+    expect(envelope()).toMatchObject({
+      version: 2,
+      mutation: null,
+      retainedItems: [],
+      items: [
+        {
+          id,
+          timeOfDay: 'evening',
+          localUri: null,
+          isEncrypted: false,
+          encryptedLocalUri: null,
+          encryptionVersion: 'none',
+          keyId: null,
+          localOnly: true,
+          storagePath: null,
+          notes: null,
+          notesCiphertext: 'enc:legacy note',
+        },
+      ],
+    });
+  });
+
+  it('preserves a legacy plaintext file row when no owner-bound migration exists', async () => {
+    const id = uuid(1);
+    const legacy = JSON.stringify([
+      {
+        ...storedPhoto(id),
+        localUri: 'file://document/legacy-photo.jpg',
+        notes: 'must remain plaintext until a real migration owns the file',
+        encryptedLocalUri: null,
+        encryptionVersion: 'none',
+        keyId: null,
+      },
+    ]);
+    mocks.storage.set(KEY, legacy);
+
+    await expect(readPhotos()).resolves.toMatchObject({ status: 'available', format: 'legacy' });
+    await expect(updatePhoto(id, { timeOfDay: 'evening' })).rejects.toThrow(
+      PHOTO_MUTATION_JOURNAL_INCONSISTENT,
+    );
+
+    expect(mocks.storage.get(KEY)).toBe(legacy);
+    expect(mocks.setPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.encryptPhotoNote).not.toHaveBeenCalled();
+  });
+
+  it('drops a delayed stale read at an account boundary before note decryption or publication', async () => {
+    const raw = JSON.stringify({
+      version: 2,
+      items: [storedPhoto(uuid(1), { notesCiphertext: 'owner-a-note' })],
+      mutation: null,
+      retainedItems: [],
+    });
+    let releaseRead!: (result: PrivateKVReadResult) => void;
+    mocks.readPrivateItem.mockImplementationOnce(
+      () =>
+        new Promise<PrivateKVReadResult>((resolve) => {
+          releaseRead = resolve;
+        }),
+    );
+
+    const read = readPhotos();
+    await vi.waitFor(() => expect(mocks.readPrivateItem).toHaveBeenCalledOnce());
+    beginAccountGenerationBoundary();
+    try {
+      releaseRead({ status: 'available', value: raw });
+      await expect(read).resolves.toEqual({
+        status: 'unavailable',
+        photos: null,
+        reason: 'account_boundary',
+      });
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(mocks.decryptPhotoNote).not.toHaveBeenCalled();
     expect(mocks.setPrivateItem).not.toHaveBeenCalled();
   });
 
@@ -511,12 +826,13 @@ describe('photo local store journal', () => {
 
   it('fails before destructive authority for an unsafe legacy ID', async () => {
     const unsafeId = 'photo/../other';
-    const raw = seedSettled([
+    const raw = JSON.stringify([
       storedPhoto(unsafeId, {
         localUri: photoUri('photoother'),
         encryptedLocalUri: photoUri('photoother'),
       }),
     ]);
+    mocks.storage.set(KEY, raw);
     mocks.finalFiles.add(photoUri('photoother'));
 
     await expect(removePhoto(unsafeId)).rejects.toThrow(PHOTO_MUTATION_JOURNAL_INCONSISTENT);

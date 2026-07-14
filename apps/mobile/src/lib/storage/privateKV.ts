@@ -19,7 +19,10 @@ import {
   migrateStoredPrivateKVContentKey,
   setStoredPrivateKVContentKey,
 } from './privateKVContentKey';
-import { LOCAL_PRIVATE_BULK_CLEANUP_KEYS } from '@/features/settings/localPrivateDataRegistry';
+import {
+  LOCAL_PRIVATE_BULK_CLEANUP_KEYS,
+  LOCAL_PRIVATE_READ_ONLY_KEYS,
+} from '@/features/settings/localPrivateDataRegistry';
 import { withOperationTiming } from '@/lib/observability/operationTiming';
 
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
@@ -35,6 +38,7 @@ export const PRIVATE_KV_ENVELOPE_INVALID = 'PRIVATE_KV_ENVELOPE_INVALID';
 export const PRIVATE_KV_ENVELOPE_UNSUPPORTED = 'PRIVATE_KV_ENVELOPE_UNSUPPORTED';
 export const PRIVATE_KV_ENVELOPE_FOREIGN = 'PRIVATE_KV_ENVELOPE_FOREIGN';
 export const PRIVATE_KV_RESERVED_KEY = 'PRIVATE_KV_RESERVED_KEY';
+export const PRIVATE_KV_READ_ONLY_KEY = 'PRIVATE_KV_READ_ONLY_KEY';
 export const PRIVATE_KV_WRITE_CONFLICT = 'PRIVATE_KV_WRITE_CONFLICT';
 export const PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE =
   'PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE';
@@ -44,21 +48,27 @@ export const PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID =
   'PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID';
 export { PRIVATE_KV_CONTENT_KEY_CONFLICT, PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE };
 
-export type PrivateKVReadFailureReason =
+export type PrivateKVUnavailableReason =
   | 'content_key_missing'
-  | 'content_key_invalid'
   | 'content_key_conflict'
   | 'content_key_storage_unavailable'
-  | 'envelope_invalid'
-  | 'decryption_failed'
   | 'account_boundary'
   | 'storage_unavailable';
+
+export type PrivateKVCorruptReason =
+  | 'content_key_invalid'
+  | 'envelope_invalid'
+  | 'decryption_failed';
+
+/** Backwards-compatible name for domain unavailable results. Corrupt reasons
+ * belong only to the `corrupt` discriminant. */
+export type PrivateKVReadFailureReason = PrivateKVUnavailableReason;
 
 export type PrivateKVReadResult =
   | { status: 'absent' }
   | { status: 'available'; value: string }
-  | { status: 'unavailable'; reason: PrivateKVReadFailureReason }
-  | { status: 'corrupt'; reason: 'content_key_invalid' | 'envelope_invalid' | 'decryption_failed' }
+  | { status: 'unavailable'; reason: PrivateKVUnavailableReason }
+  | { status: 'corrupt'; reason: PrivateKVCorruptReason }
   | { status: 'unsupported_version' };
 
 export type PrivateKVAuthorizedResetReason =
@@ -67,6 +77,7 @@ export type PrivateKVAuthorizedResetReason =
 
 const DEVICE_AUTHENTICATED_APP_LOCK_REPAIR_KEY = 'onskin.appLock.enabled';
 const ACCOUNT_ISOLATION_RESET_KEYS = new Set<string>(LOCAL_PRIVATE_BULK_CLEANUP_KEYS);
+const READ_ONLY_PRIVATE_KEYS = new Set<string>(LOCAL_PRIVATE_READ_ONLY_KEYS);
 
 type PrivateEnvelope = {
   version: typeof ENCRYPTION_VERSION;
@@ -236,6 +247,11 @@ function isKnownForeignStorageKey(key: string): boolean {
 function assertPrivateDataKey(key: string): void {
   if (key === PRIVATE_KV_CONTENT_KEY_NAME) throw new Error(PRIVATE_KV_RESERVED_KEY);
   if (isKnownForeignStorageKey(key)) throw new Error(PRIVATE_KV_ENVELOPE_FOREIGN);
+}
+
+function assertPrivateDataKeyWritable(key: string): void {
+  assertPrivateDataKey(key);
+  if (READ_ONLY_PRIVATE_KEYS.has(key)) throw new Error(PRIVATE_KV_READ_ONLY_KEY);
 }
 
 function classifyEnvelope(key: string, raw: string): EnvelopeClassification {
@@ -523,7 +539,7 @@ export async function updatePrivateItem(
   return withOperationTiming('private_kv_write', () =>
     runAccountScopedPrivateOperation((generation) =>
       runSerializedPrivateMutations([key], async () => {
-        assertPrivateDataKey(key);
+        assertPrivateDataKeyWritable(key);
         assertAccountScopedPrivateOperationAllowed(generation);
         const existingRaw = await assertNoFailedReadRewrite(key);
         const existingClassification = existingRaw ? classifyEnvelope(key, existingRaw) : null;

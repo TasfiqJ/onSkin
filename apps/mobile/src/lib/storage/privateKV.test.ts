@@ -1,4 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
+
+import { LOCAL_PRIVATE_READ_ONLY_KEYS } from '@/features/settings/localPrivateDataRegistry';
 
 import {
   assertPrivateKVReadable,
@@ -15,6 +17,7 @@ import {
   PRIVATE_KV_ENVELOPE_INVALID,
   PRIVATE_KV_ENVELOPE_UNSUPPORTED,
   PRIVATE_KV_RESERVED_KEY,
+  PRIVATE_KV_READ_ONLY_KEY,
   PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
   PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE,
   PRIVATE_KV_WRITE_CONFLICT,
@@ -26,6 +29,9 @@ import {
   setPrivateItem,
   updatePrivateItem,
   waitForPrivateKVWritesToSettle,
+  type PrivateKVCorruptReason,
+  type PrivateKVReadResult,
+  type PrivateKVUnavailableReason,
 } from './privateKV';
 
 const mocks = vi.hoisted(() => ({
@@ -179,6 +185,42 @@ describe('private KV encrypted storage', () => {
     expect(raw).not.toContain('routine-value');
     await expect(getPrivateItem('routine-key')).resolves.toBe('routine-value');
   });
+
+  it('keeps unavailable and corrupt reasons on their own discriminants', () => {
+    expectTypeOf<
+      Extract<PrivateKVReadResult, { status: 'unavailable' }>['reason']
+    >().toEqualTypeOf<PrivateKVUnavailableReason>();
+    expectTypeOf<
+      Extract<PrivateKVReadResult, { status: 'corrupt' }>['reason']
+    >().toEqualTypeOf<PrivateKVCorruptReason>();
+  });
+
+  it('freezes the exact registry-derived read-only inventory', () => {
+    expect(LOCAL_PRIVATE_READ_ONLY_KEYS).toEqual([
+      'onskin.completions.firstCompletion.v1',
+      'onskin.cycle.v1',
+      'onskin.photos.captureConsent',
+      'onskin.photos.cloudBackup',
+      'onskin.trendState.v1',
+    ]);
+    expect(Object.isFrozen(LOCAL_PRIVATE_READ_ONLY_KEYS)).toBe(true);
+  });
+
+  it.each(LOCAL_PRIVATE_READ_ONLY_KEYS)(
+    'blocks writes to registry read-only key %s while retaining explicit deletion',
+    async (key) => {
+      mocks.asyncStorage.set(key, 'legacy-value');
+
+      await expect(setPrivateItem(key, 'replacement')).rejects.toThrow(PRIVATE_KV_READ_ONLY_KEY);
+      await expect(updatePrivateItem(key, () => 'replacement')).rejects.toThrow(
+        PRIVATE_KV_READ_ONLY_KEY,
+      );
+      expect(mocks.asyncStorage.get(key)).toBe('legacy-value');
+
+      await expect(removePrivateItem(key)).resolves.toBeUndefined();
+      expect(mocks.asyncStorage.has(key)).toBe(false);
+    },
+  );
 
   it('preserves structurally invalid encrypted envelopes and blocks replacement', async () => {
     await setPrivateItem('onskin.seed', 'seed');

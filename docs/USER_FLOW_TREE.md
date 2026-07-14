@@ -1019,6 +1019,51 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The frozen missing-engine capability wins over the environment flag; both routes stay deferred and no Trend consent control mounts.
   - Evidence: Screenshot sequence plus Phase 7 launch-flag and route-contract tests.
 
+## Flow: Satisfaction-Timed Native Review Prompt
+
+- Goal: A user may receive the native store-review prompt only after a real value moment and never because unreadable local history was treated as empty.
+- Persona: A returning user who completes seven check-off days or reviews a real conflict.
+- Entry state: The Phase 8 review-prompt flag is enabled in an internal build; the local attempt history may be absent, valid legacy/current, unavailable, malformed, future-version, or delayed across an account change.
+- Start screen/URL/window: Today after the qualifying check-off, or a reviewed conflict flow after the result is committed.
+- Success state: A valid eligible state reserves one durable attempt before native handoff; capped, cooldown, non-value, unavailable, corrupt, future, failed-write, or stale-owner states never present the prompt and never replace private bytes.
+- Priority: Important
+- Automate later: Yes, for policy/storage/account-boundary logic; native presentation remains physical-device QA.
+- Surface: Physical iPhone/TestFlight for `StoreReview` presentation; deterministic mobile integration tests for storage and account-generation branches. Expo web is not evidence for the native prompt.
+- Evidence folder: `test-results/human-e2e/YYYY-MM-DD/native-review-prompt/`
+
+### Path A: Eligible Value Moment
+
+1. Action: In an internal signed build with review prompting enabled, reach one approved value moment with absent or valid in-policy attempt history.
+   Expected result: The app atomically records the attempt, then hands off once to the OS-owned review surface. No custom rating request, sentiment gate, or five-star language appears.
+   Evidence: Physical-device video/screenshot where the OS permits presentation, private-record snapshot, and content-free analytics log.
+
+### Branches
+
+- Branch: unreadable or unrecognized history
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Repeat the value moment with unavailable encryption, malformed/oversized legacy or current bytes, or a future application/storage envelope.
+  - Expected result: No platform-availability check, reservation, analytics attempt, or native prompt occurs; exact stored bytes remain unchanged.
+  - Evidence: Deterministic adapter/codec tests plus native protected-storage fault evidence when available.
+- Branch: reservation failure or lost response
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Fail the private write before commit, then repeat with a committed write whose response is lost.
+  - Expected result: A pre-commit failure remains retryable and does not present. A lost response proceeds only when same-lease readback exactly matches the intended canonical bytes; mismatch or unavailable readback fails closed without a native handoff.
+  - Evidence: Failure-injection tests and exact stored-record snapshots.
+- Branch: account changes while eligibility work is delayed
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Delay the private read, platform check, and atomic reservation in separate runs, then switch from account A to B.
+  - Expected result: No account-A write, analytics publication, or native handoff is attributed to account B; same-generation delays remain valid.
+  - Evidence: Delayed account-generation tests plus physical-device prompt timing QA.
+- Branch: platform declines to present
+  - Priority: Important
+  - Automate later: Partially
+  - Action: Run when the OS says review actions are unavailable or silently suppresses the system prompt.
+  - Expected result: The product flow remains uninterrupted and shows no fake success/failure UI; the app respects the platform-owned presentation policy.
+  - Evidence: Native log and continuation screenshot.
+
 ## Flow: Pro Feature Gating
 
 - Goal: A free user cannot reach Pro-only surfaces by direct navigation, while a Pro or reverse-trial user can.

@@ -23,15 +23,66 @@ describe('local private-data contract registry', () => {
     expect(LOCAL_PRIVATE_CONTROL_KEYS).toHaveLength(3);
   });
 
-  it('keeps the exact known contract gaps visible until their store migrations land', () => {
-    expect(localPrivateRegistryGaps()).toEqual([
-      'onskin.photos.cloudBackup:codec',
-      'onskin.photos.v1:typedRead',
-      'onskin.reviewPrompt.v1:typedRead',
-      'onskin.subscription.promptedExpiry:typedRead',
-      'onskin.trendState.v1:codec',
-      'routinekind.routineActivation.v1:typedRead',
-    ]);
+  it('has no unresolved per-key contract gaps', () => {
+    expect(localPrivateRegistryGaps()).toEqual([]);
+  });
+
+  it('records the retired cloud-backup flag codec without restoring a live reader', () => {
+    const cloudBackup = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'onskin.photos.cloudBackup',
+    );
+
+    expect(cloudBackup).toMatchObject({
+      lifecycle: 'legacy_retained',
+      discovery: 'retained_inventory',
+      codec: {
+        status: 'enforced',
+        codecId: 'private_boolean',
+        currentVersion: 'legacy_boolean',
+        legacyVersions: [],
+      },
+      typedRead: { status: 'not_applicable' },
+      mutation: { status: 'enforced', mode: 'read_only' },
+    });
+  });
+
+  it('keeps the never-written trend-state key reserved for deletion only', () => {
+    const trendState = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'onskin.trendState.v1',
+    )!;
+
+    expect(trendState).toMatchObject({
+      lifecycle: 'reserved',
+      codec: { status: 'not_applicable' },
+      typedRead: { status: 'not_applicable' },
+      mutation: { status: 'enforced', mode: 'read_only' },
+      recovery: { status: 'enforced', mode: 'explicit_domain_delete' },
+    });
+
+    const invalidReserved = {
+      ...trendState,
+      codec: {
+        status: 'enforced',
+        codecId: 'invented_trend_state',
+        currentVersion: 1,
+        legacyVersions: [],
+      },
+    } as LocalPrivateKeyDescriptor;
+    expect(validateLocalPrivateKeyRegistry([invalidReserved])).toContain(
+      'reserved_codec:onskin.trendState.v1',
+    );
+  });
+
+  it('keeps the subscription prompt legacy scalar export-compatible', () => {
+    const prompt = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'onskin.subscription.promptedExpiry',
+    );
+
+    expect(prompt?.export).toMatchObject({
+      status: 'enforced',
+      mode: 'include',
+      transform: 'safe_scalar_or_json',
+    });
   });
 
   it('tracks durable Ask operation identities in codec v2 while retaining v0/v1 readers', () => {

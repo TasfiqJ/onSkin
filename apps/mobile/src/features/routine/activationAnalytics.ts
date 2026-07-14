@@ -1,21 +1,51 @@
 import { track } from '@/lib/analytics/track';
-import { removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import {
+  AccountGenerationLeaseError,
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
+import {
+  readPrivateItem,
+  removePrivateItem,
+  updatePrivateItem,
+  type PrivateKVReadFailureReason,
+} from '@/lib/storage/privateKV';
 
 const KEY = 'routinekind.routineActivation.v1';
 const SCHEMA_VERSION = 1 as const;
 
 export const ROUTINE_ACTIVATION_INVALID = 'ROUTINE_ACTIVATION_INVALID';
-export const ROUTINE_ACTIVATION_UNSUPPORTED_VERSION =
-  'ROUTINE_ACTIVATION_UNSUPPORTED_VERSION';
+export const ROUTINE_ACTIVATION_UNSUPPORTED_VERSION = 'ROUTINE_ACTIVATION_UNSUPPORTED_VERSION';
+export const MAX_ROUTINE_ACTIVATION_RECORD_CHARS = 1_024;
 
-type ActivationFlags = {
+export type ActivationFlags = {
   firstRoutineCreated: boolean;
   firstUsefulInsight: boolean;
 };
 
+type ActivationStorageFormat = 'current' | 'legacy';
+type ActivationCorruptReason =
+  | 'content_key_invalid'
+  | 'envelope_invalid'
+  | 'decryption_failed'
+  | 'invalid_payload';
+
+export type RoutineActivationStateRead =
+  | { status: 'absent'; flags: ActivationFlags }
+  | { status: 'available'; flags: ActivationFlags; format: ActivationStorageFormat }
+  | { status: 'unavailable'; flags: null; reason: PrivateKVReadFailureReason }
+  | { status: 'corrupt'; flags: null; reason: ActivationCorruptReason }
+  | { status: 'unsupported_version'; flags: null };
+
 type StoredActivationFlags = {
   version: typeof SCHEMA_VERSION;
   flags: ActivationFlags;
+};
+
+type DecodedActivationFlags = {
+  flags: ActivationFlags;
+  format: ActivationStorageFormat | 'absent';
 };
 
 type FirstInsightSource = 'routine_plan' | 'reveal';
@@ -51,8 +81,11 @@ function decodeFlagsObject(value: unknown): ActivationFlags {
   };
 }
 
-function decodeFlags(raw: string | null): ActivationFlags {
-  if (raw === null) return { ...EMPTY_FLAGS };
+function decodeFlags(raw: string | null): DecodedActivationFlags {
+  if (raw === null) return { flags: { ...EMPTY_FLAGS }, format: 'absent' };
+  if (raw.length > MAX_ROUTINE_ACTIVATION_RECORD_CHARS) {
+    throw new Error(ROUTINE_ACTIVATION_INVALID);
+  }
 
   let parsed: unknown;
   try {
@@ -70,25 +103,81 @@ function decodeFlags(raw: string | null): ActivationFlags {
     ) {
       throw new Error(ROUTINE_ACTIVATION_UNSUPPORTED_VERSION);
     }
-    if (
-      parsed.version !== SCHEMA_VERSION ||
-      !hasExactKeys(parsed, ['version', 'flags'])
-    ) {
+    if (parsed.version !== SCHEMA_VERSION || !hasExactKeys(parsed, ['version', 'flags'])) {
       throw new Error(ROUTINE_ACTIVATION_INVALID);
     }
-    return decodeFlagsObject(parsed.flags);
+    return { flags: decodeFlagsObject(parsed.flags), format: 'current' };
   }
 
   // Pre-envelope v1 payload. It is decoded without a read-time rewrite and is
   // upgraded only when an explicit event reservation changes the value.
-  return decodeFlagsObject(parsed);
+  return { flags: decodeFlagsObject(parsed), format: 'legacy' };
 }
 
 function encodeFlags(flags: ActivationFlags): string {
-  return JSON.stringify({
+  const encoded = JSON.stringify({
     version: SCHEMA_VERSION,
     flags,
   } satisfies StoredActivationFlags);
+  if (encoded.length > MAX_ROUTINE_ACTIVATION_RECORD_CHARS) {
+    throw new Error(ROUTINE_ACTIVATION_INVALID);
+  }
+  return encoded;
+}
+
+async function readRoutineActivationStateWithLease(
+  lease: AccountGenerationLease,
+): Promise<RoutineActivationStateRead> {
+  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
+  try {
+    stored = await awaitAccountGenerationLease(lease, () => readPrivateItem(KEY));
+  } catch {
+    lease.assertCurrent();
+    return { status: 'unavailable', flags: null, reason: 'storage_unavailable' };
+  }
+  lease.assertCurrent();
+
+  if (stored.status === 'absent') return { status: 'absent', flags: { ...EMPTY_FLAGS } };
+  if (stored.status === 'unavailable') {
+    return { status: 'unavailable', flags: null, reason: stored.reason };
+  }
+  if (stored.status === 'corrupt') {
+    return { status: 'corrupt', flags: null, reason: stored.reason };
+  }
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', flags: null };
+  }
+
+  try {
+    const decoded = decodeFlags(stored.value);
+    if (decoded.format === 'absent') {
+      return { status: 'absent', flags: decoded.flags };
+    }
+    return {
+      status: 'available',
+      flags: decoded.flags,
+      format: decoded.format,
+    };
+  } catch (error) {
+    return error instanceof Error && error.message === ROUTINE_ACTIVATION_UNSUPPORTED_VERSION
+      ? { status: 'unsupported_version', flags: null }
+      : { status: 'corrupt', flags: null, reason: 'invalid_payload' };
+  }
+}
+
+/** Classify activation-marker bytes without repairing, migrating, deleting,
+ * or publishing a stale account generation. */
+export async function readRoutineActivationState(): Promise<RoutineActivationStateRead> {
+  try {
+    return await runAccountGenerationOperation(readRoutineActivationStateWithLease);
+  } catch (error) {
+    return {
+      status: 'unavailable',
+      flags: null,
+      reason:
+        error instanceof AccountGenerationLeaseError ? 'account_boundary' : 'storage_unavailable',
+    };
+  }
 }
 
 async function reserveFirstEvents(input: {
@@ -97,7 +186,7 @@ async function reserveFirstEvents(input: {
 }): Promise<ActivationFlags> {
   const reserved = { ...EMPTY_FLAGS };
   await updatePrivateItem(KEY, (raw) => {
-    const current = decodeFlags(raw);
+    const current = decodeFlags(raw).flags;
     const next = { ...current };
 
     if (input.routineCreated && !current.firstRoutineCreated) {

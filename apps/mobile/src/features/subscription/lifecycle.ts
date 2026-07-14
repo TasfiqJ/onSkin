@@ -6,9 +6,19 @@ import {
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
-import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import {
+  getPrivateItem,
+  PRIVATE_KV_CONTENT_KEY_INVALID,
+  PRIVATE_KV_DECRYPTION_FAILED,
+  PRIVATE_KV_ENVELOPE_INVALID,
+  PRIVATE_KV_ENVELOPE_UNSUPPORTED,
+  PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+  readPrivateItem,
+  updatePrivateItem,
+  type PrivateKVReadFailureReason,
+} from '@/lib/storage/privateKV';
 
-import { loadEntitlement } from './store';
+import { readEntitlementCache } from './store';
 
 /**
  * The reverse-trial / paid expiry -> re-offer / graceful-downgrade trigger.
@@ -24,12 +34,35 @@ const OPAQUE_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a
 
 export const SUBSCRIPTION_PROMPT_INVALID = 'SUBSCRIPTION_PROMPT_INVALID';
 export const SUBSCRIPTION_PROMPT_UNSUPPORTED_VERSION = 'SUBSCRIPTION_PROMPT_UNSUPPORTED_VERSION';
+export const MAX_SUBSCRIPTION_PROMPT_RECORD_CHARS = 2_048;
 
 export type LifecycleRoute = '/paywall/reoffer' | '/paywall/downgrade';
 export type LifecyclePrompt = Readonly<{
   promptId: string;
   route: LifecycleRoute;
 }>;
+export type LifecyclePromptReservationResult =
+  | { status: 'route'; prompt: LifecyclePrompt }
+  | { status: 'none' }
+  | {
+      status: 'unavailable';
+      reason:
+        | 'entitlement_unavailable'
+        | 'invalid_clock'
+        | 'prompt_storage_unavailable'
+        | 'write_unconfirmed';
+    }
+  | {
+      status: 'corrupt';
+      reason: 'entitlement_corrupt' | 'invalid_payload' | 'private_storage_corrupt';
+    }
+  | { status: 'unsupported_version' }
+  | { status: 'account_boundary' };
+
+type LifecyclePromptReservationFailure = Exclude<
+  LifecyclePromptReservationResult,
+  { status: 'route' } | { status: 'none' }
+>;
 
 type PromptPhase = 'prepared' | 'presented';
 
@@ -47,6 +80,28 @@ type DecodedPromptState =
   | { format: 'legacy_presented'; expiresAt: string }
   | { format: 'v2'; envelope: PromptedExpiryEnvelope };
 
+export type LifecyclePromptPersistedState =
+  | { format: 'legacy_presented'; expiresAt: string; phase: 'presented' }
+  | {
+      format: 'current';
+      expiresAt: string;
+      route: LifecycleRoute;
+      promptId: string;
+      deliverySessionId: string;
+      phase: PromptPhase;
+    };
+
+export type LifecyclePromptStateRead =
+  | { status: 'absent'; state: null }
+  | { status: 'available'; state: LifecyclePromptPersistedState }
+  | { status: 'unavailable'; state: null; reason: PrivateKVReadFailureReason }
+  | {
+      status: 'corrupt';
+      state: null;
+      reason: 'content_key_invalid' | 'decryption_failed' | 'envelope_invalid' | 'invalid_payload';
+    }
+  | { status: 'unsupported_version'; state: null };
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -60,9 +115,49 @@ function hasExactKeys(record: Record<string, unknown>, expected: readonly string
   );
 }
 
-function validISO(value: unknown): string | null {
+function canonicalRFC3339(value: unknown): string | null {
   if (typeof value !== 'string' || value.trim() !== value || value.length === 0) return null;
-  return Number.isFinite(Date.parse(value)) ? value : null;
+  const match =
+    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{1,9})?(?:Z|([+-])(\d{2}):(\d{2}))$/.exec(
+      value,
+    );
+  if (!match) return null;
+  const [
+    ,
+    yearText,
+    monthText,
+    dayText,
+    hourText,
+    minuteText,
+    secondText,
+    ,
+    zoneHourText,
+    zoneMinuteText,
+  ] = match;
+  const year = Number(yearText);
+  const month = Number(monthText);
+  const day = Number(dayText);
+  const hour = Number(hourText);
+  const minute = Number(minuteText);
+  const second = Number(secondText);
+  const zoneHour = zoneHourText === undefined ? 0 : Number(zoneHourText);
+  const zoneMinute = zoneMinuteText === undefined ? 0 : Number(zoneMinuteText);
+  if (
+    year < 1 ||
+    month < 1 ||
+    month > 12 ||
+    day < 1 ||
+    day > new Date(Date.UTC(year, month, 0)).getUTCDate() ||
+    hour > 23 ||
+    minute > 59 ||
+    second > 59 ||
+    zoneHour > 23 ||
+    zoneMinute > 59
+  ) {
+    return null;
+  }
+  const timestamp = Date.parse(value);
+  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : null;
 }
 
 function isLifecycleRoute(value: unknown): value is LifecycleRoute {
@@ -90,11 +185,14 @@ const DELIVERY_SESSION_ID = createOpaqueId();
 
 function decodePromptState(raw: string | null): DecodedPromptState {
   if (raw === null) return { format: 'absent' };
+  if (raw.length > MAX_SUBSCRIPTION_PROMPT_RECORD_CHARS) {
+    throw new Error(SUBSCRIPTION_PROMPT_INVALID);
+  }
 
   // Pre-envelope values were stored as the ISO string itself. They represented
   // the old one-phase "already prompted" state, so retain that interpretation.
   if (!raw.startsWith('{')) {
-    const legacy = validISO(raw);
+    const legacy = canonicalRFC3339(raw);
     if (!legacy) throw new Error(SUBSCRIPTION_PROMPT_INVALID);
     return { format: 'legacy_presented', expiresAt: legacy };
   }
@@ -118,7 +216,7 @@ function decodePromptState(raw: string | null): DecodedPromptState {
     if (!hasExactKeys(parsed, ['version', 'expiresAt'])) {
       throw new Error(SUBSCRIPTION_PROMPT_INVALID);
     }
-    const expiresAt = validISO(parsed.expiresAt);
+    const expiresAt = canonicalRFC3339(parsed.expiresAt);
     if (!expiresAt) throw new Error(SUBSCRIPTION_PROMPT_INVALID);
     return { format: 'legacy_presented', expiresAt };
   }
@@ -137,14 +235,17 @@ function decodePromptState(raw: string | null): DecodedPromptState {
     throw new Error(SUBSCRIPTION_PROMPT_INVALID);
   }
 
-  const expiresAt = validISO(parsed.expiresAt);
+  const expiresAt = canonicalRFC3339(parsed.expiresAt);
   const promptId = normalizeOpaqueId(parsed.promptId);
   const deliverySessionId = normalizeOpaqueId(parsed.deliverySessionId);
   if (
     !expiresAt ||
+    parsed.expiresAt !== expiresAt ||
     !isLifecycleRoute(parsed.route) ||
     !promptId ||
+    parsed.promptId !== promptId ||
     !deliverySessionId ||
+    parsed.deliverySessionId !== deliverySessionId ||
     !isPromptPhase(parsed.phase)
   ) {
     throw new Error(SUBSCRIPTION_PROMPT_INVALID);
@@ -164,7 +265,101 @@ function decodePromptState(raw: string | null): DecodedPromptState {
 }
 
 function encodePromptState(envelope: PromptedExpiryEnvelope): string {
-  return JSON.stringify(envelope);
+  const encoded = JSON.stringify(envelope);
+  if (encoded.length > MAX_SUBSCRIPTION_PROMPT_RECORD_CHARS) {
+    throw new Error(SUBSCRIPTION_PROMPT_INVALID);
+  }
+  return encoded;
+}
+
+function persistedPromptState(
+  decoded: Exclude<DecodedPromptState, { format: 'absent' }>,
+): LifecyclePromptPersistedState {
+  if (decoded.format === 'legacy_presented') {
+    return { format: 'legacy_presented', expiresAt: decoded.expiresAt, phase: 'presented' };
+  }
+  return {
+    format: 'current',
+    expiresAt: decoded.envelope.expiresAt,
+    route: decoded.envelope.route,
+    promptId: decoded.envelope.promptId,
+    deliverySessionId: decoded.envelope.deliverySessionId,
+    phase: decoded.envelope.phase,
+  };
+}
+
+async function readLifecyclePromptStateWithLease(
+  lease: AccountGenerationLease,
+): Promise<LifecyclePromptStateRead> {
+  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
+  try {
+    stored = await awaitAccountGenerationLease(lease, () => readPrivateItem(PROMPT_KEY));
+  } catch {
+    lease.assertCurrent();
+    return { status: 'unavailable', state: null, reason: 'storage_unavailable' };
+  }
+  lease.assertCurrent();
+
+  if (stored.status === 'absent') return { status: 'absent', state: null };
+  if (stored.status === 'unavailable') {
+    return { status: 'unavailable', state: null, reason: stored.reason };
+  }
+  if (stored.status === 'corrupt') {
+    return { status: 'corrupt', state: null, reason: stored.reason };
+  }
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', state: null };
+  }
+
+  try {
+    const decoded = decodePromptState(stored.value);
+    if (decoded.format === 'absent') return { status: 'absent', state: null };
+    return { status: 'available', state: persistedPromptState(decoded) };
+  } catch (error) {
+    return error instanceof Error && error.message === SUBSCRIPTION_PROMPT_UNSUPPORTED_VERSION
+      ? { status: 'unsupported_version', state: null }
+      : { status: 'corrupt', state: null, reason: 'invalid_payload' };
+  }
+}
+
+/** Inspect the persisted delivery journal without reserving, acknowledging,
+ * repairing, migrating, or publishing a stale account generation. */
+export async function readLifecyclePromptState(): Promise<LifecyclePromptStateRead> {
+  try {
+    return await runAccountGenerationOperation(readLifecyclePromptStateWithLease);
+  } catch (error) {
+    return {
+      status: 'unavailable',
+      state: null,
+      reason:
+        error instanceof AccountGenerationLeaseError ? 'account_boundary' : 'storage_unavailable',
+    };
+  }
+}
+
+function reservationFailure(error: unknown): LifecyclePromptReservationFailure {
+  if (error instanceof AccountGenerationLeaseError) return { status: 'account_boundary' };
+  const message = error instanceof Error ? error.message : '';
+  if (message === PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY) {
+    return { status: 'account_boundary' };
+  }
+  if (
+    message === SUBSCRIPTION_PROMPT_UNSUPPORTED_VERSION ||
+    message === PRIVATE_KV_ENVELOPE_UNSUPPORTED
+  ) {
+    return { status: 'unsupported_version' };
+  }
+  if (message === SUBSCRIPTION_PROMPT_INVALID) {
+    return { status: 'corrupt', reason: 'invalid_payload' };
+  }
+  if (
+    message === PRIVATE_KV_CONTENT_KEY_INVALID ||
+    message === PRIVATE_KV_ENVELOPE_INVALID ||
+    message === PRIVATE_KV_DECRYPTION_FAILED
+  ) {
+    return { status: 'corrupt', reason: 'private_storage_corrupt' };
+  }
+  return { status: 'unavailable', reason: 'prompt_storage_unavailable' };
 }
 
 async function exactPromptReadback(
@@ -190,40 +385,64 @@ function expiryForState(state: Exclude<DecodedPromptState, { format: 'absent' }>
 }
 
 /**
- * Returns one durable delivery intent. A prepared intent from another JS
- * process is replayed; one from this process is not duplicated. It remains
- * prepared until the target route explicitly acknowledges presentation.
+ * Atomically reserves one durable delivery intent and classifies every
+ * non-delivery outcome. A prepared intent from another JS process is replayed;
+ * one from this process is not duplicated. It remains prepared until the
+ * target route explicitly acknowledges presentation.
  */
-export async function pendingLifecycleRoute(nowISO: string): Promise<LifecyclePrompt | null> {
-  const now = Date.parse(nowISO);
-  if (!Number.isFinite(now)) return null;
+export async function pendingLifecycleRouteResult(
+  nowISO: string,
+): Promise<LifecyclePromptReservationResult> {
+  const canonicalNow = canonicalRFC3339(nowISO);
+  if (!canonicalNow) return { status: 'unavailable', reason: 'invalid_clock' };
+  const now = Date.parse(canonicalNow);
 
   try {
     return await runAccountGenerationOperation(async (lease) => {
-      const entitlement = await awaitAccountGenerationLease(lease, loadEntitlement);
+      let entitlementRead: Awaited<ReturnType<typeof readEntitlementCache>>;
+      try {
+        entitlementRead = await awaitAccountGenerationLease(lease, readEntitlementCache);
+      } catch {
+        lease.assertCurrent();
+        return { status: 'unavailable', reason: 'entitlement_unavailable' };
+      }
       lease.assertCurrent();
-      if (!entitlement?.tier || !entitlement.expiresAt) return null;
-      const expiry = Date.parse(entitlement.expiresAt);
-      if (!Number.isFinite(expiry)) return null;
+      if (entitlementRead.status !== 'available') {
+        if (entitlementRead.status === 'absent') return { status: 'none' };
+        if (entitlementRead.status === 'unavailable') {
+          return { status: 'unavailable', reason: 'entitlement_unavailable' };
+        }
+        if (entitlementRead.status === 'corrupt') {
+          return { status: 'corrupt', reason: 'entitlement_corrupt' };
+        }
+        return { status: 'unsupported_version' };
+      }
+      const entitlement = entitlementRead.entitlement;
+      if (!entitlement.tier || !entitlement.expiresAt) return { status: 'none' };
+      const entitlementExpiresAt = canonicalRFC3339(entitlement.expiresAt);
+      if (!entitlementExpiresAt || entitlementExpiresAt !== entitlement.expiresAt) {
+        return { status: 'corrupt', reason: 'entitlement_corrupt' };
+      }
+      const expiry = Date.parse(entitlementExpiresAt);
       const lapsed = !entitlement.isActive || expiry <= now;
-      if (!lapsed) return null;
+      if (!lapsed) return { status: 'none' };
 
       const route = routeForPeriod(entitlement.periodType);
       const mutation: {
         expectedRaw: string | null;
         delivery: LifecyclePrompt | null;
       } = { expectedRaw: null, delivery: null };
+      let failure: LifecyclePromptReservationFailure | null = null;
 
       try {
         await awaitAccountGenerationLease(lease, () =>
           updatePrivateItem(PROMPT_KEY, (raw) => {
             const current = decodePromptState(raw);
 
-            if (current.format !== 'absent' && expiryForState(current) === entitlement.expiresAt) {
+            if (current.format !== 'absent' && expiryForState(current) === entitlementExpiresAt) {
               if (current.format === 'legacy_presented') return raw;
               if (
                 current.envelope.phase === 'presented' ||
-                current.envelope.route !== route ||
                 current.envelope.deliverySessionId === DELIVERY_SESSION_ID
               ) {
                 return raw;
@@ -235,7 +454,7 @@ export async function pendingLifecycleRoute(nowISO: string): Promise<LifecyclePr
               };
               mutation.delivery = {
                 promptId: replayed.promptId,
-                route: replayed.route,
+                route: current.envelope.route,
               };
               mutation.expectedRaw = encodePromptState(replayed);
               return mutation.expectedRaw;
@@ -243,7 +462,7 @@ export async function pendingLifecycleRoute(nowISO: string): Promise<LifecyclePr
 
             const prepared: PromptedExpiryEnvelope = {
               version: SCHEMA_VERSION,
-              expiresAt: entitlement.expiresAt!,
+              expiresAt: entitlementExpiresAt,
               route,
               promptId: createOpaqueId(),
               deliverySessionId: DELIVERY_SESSION_ID,
@@ -254,24 +473,35 @@ export async function pendingLifecycleRoute(nowISO: string): Promise<LifecyclePr
             return mutation.expectedRaw;
           }),
         );
-      } catch {
+      } catch (error) {
         // A native write may commit and then reject. Only the exact readback
         // below is allowed to turn that ambiguous outcome into a delivery.
         lease.assertCurrent();
+        if (mutation.expectedRaw === null || mutation.delivery === null) {
+          failure = reservationFailure(error);
+        }
       }
 
       lease.assertCurrent();
-      if (mutation.expectedRaw === null || mutation.delivery === null) return null;
-      if (!(await exactPromptReadback(lease, mutation.expectedRaw))) return null;
+      if (failure) return failure;
+      if (mutation.expectedRaw === null || mutation.delivery === null) return { status: 'none' };
+      if (!(await exactPromptReadback(lease, mutation.expectedRaw))) {
+        return { status: 'unavailable', reason: 'write_unconfirmed' };
+      }
       lease.assertCurrent();
-      return mutation.delivery;
+      return { status: 'route', prompt: mutation.delivery };
     });
   } catch (error) {
-    // This API feeds a fire-and-forget mount effect. Owner replacement and
-    // private-storage failures are cancelled routing decisions.
-    if (error instanceof AccountGenerationLeaseError) return null;
-    return null;
+    return reservationFailure(error);
   }
+}
+
+/** Compatibility adapter for the existing fire-and-forget mount effect. Typed
+ * callers should use `pendingLifecycleRouteResult`; visible navigation remains
+ * intentionally unchanged while failures now stay observable to domain code. */
+export async function pendingLifecycleRoute(nowISO: string): Promise<LifecyclePrompt | null> {
+  const result = await pendingLifecycleRouteResult(nowISO);
+  return result.status === 'route' ? result.prompt : null;
 }
 
 /**

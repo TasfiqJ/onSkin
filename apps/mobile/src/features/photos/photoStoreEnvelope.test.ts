@@ -4,6 +4,8 @@ import {
   decodePhotoStore,
   decodePhotoStoreItemsForExport,
   encodePhotoStore,
+  MAX_PHOTO_RECORDS,
+  MAX_PHOTO_STORE_CHARS,
   PHOTO_METADATA_INVALID,
   PHOTO_METADATA_UNSUPPORTED,
   PHOTO_MUTATION_RECOVERY_REQUIRED,
@@ -21,6 +23,49 @@ describe('photo store envelope', () => {
       mutation: null,
       retainedItems: [],
     });
+  });
+
+  it('bounds legacy and V2 record counts before normalization', () => {
+    const atLimit = Array.from({ length: MAX_PHOTO_RECORDS }, () => null);
+    expect(decodePhotoStore(JSON.stringify(atLimit))).toMatchObject({
+      format: 'legacy',
+      items: atLimit,
+    });
+    expect(() => decodePhotoStore(JSON.stringify([...atLimit, null]))).toThrow(
+      PHOTO_METADATA_INVALID,
+    );
+
+    expect(() => encodePhotoStore({ items: atLimit, mutation: null })).not.toThrow();
+    expect(() => encodePhotoStore({ items: [...atLimit, null], mutation: null })).toThrow(
+      PHOTO_METADATA_INVALID,
+    );
+  });
+
+  it('accepts the raw character limit and rejects one character beyond it', () => {
+    const base = JSON.stringify({ version: 2, items: [], mutation: null, retainedItems: [] });
+    const atLimit = `${base}${' '.repeat(MAX_PHOTO_STORE_CHARS - base.length)}`;
+
+    expect(atLimit).toHaveLength(MAX_PHOTO_STORE_CHARS);
+    expect(decodePhotoStore(atLimit)).toMatchObject({ format: 'v2', items: [] });
+    expect(() => decodePhotoStore(`${atLimit} `)).toThrow(PHOTO_METADATA_INVALID);
+  });
+
+  it('refuses to encode an envelope beyond the raw character limit', () => {
+    const emptyPayload = { payload: '' };
+    const baseLength = JSON.stringify({
+      version: 2,
+      items: [emptyPayload],
+      mutation: null,
+      retainedItems: [],
+    }).length;
+    const atLimitPayload = 'x'.repeat(MAX_PHOTO_STORE_CHARS - baseLength);
+
+    expect(encodePhotoStore({ items: [{ payload: atLimitPayload }], mutation: null })).toHaveLength(
+      MAX_PHOTO_STORE_CHARS,
+    );
+    expect(() =>
+      encodePhotoStore({ items: [{ payload: `${atLimitPayload}x` }], mutation: null }),
+    ).toThrow(PHOTO_METADATA_INVALID);
   });
 
   it('round-trips a strict V2 envelope with a content-free journal', () => {

@@ -45,6 +45,20 @@ describe('local device data export', () => {
     );
   });
 
+  it('exports the supported bare RFC 3339 subscription-prompt legacy value', async () => {
+    const legacy = '2026-07-11T12:00:00.000Z';
+    mocks.getPrivateItems.mockImplementation(
+      async (keys: readonly string[]) =>
+        new Map(
+          keys.map((key) => [key, key === 'onskin.subscription.promptedExpiry' ? legacy : null]),
+        ),
+    );
+
+    const result = await collectLocalDeviceExportData('2026-07-12T12:00:00.000Z');
+
+    expect(result.sections.subscription.prompted_expiry).toBe(legacy);
+  });
+
   it('exports device-authoritative records while redacting media paths and ciphertext', async () => {
     const stored = new Map<string, string>([
       [

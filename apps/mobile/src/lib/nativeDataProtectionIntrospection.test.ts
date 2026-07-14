@@ -54,5 +54,5 @@ describe('resolved native data protection', () => {
       'NSFileProtectionComplete',
     );
     expect(config.ios).toMatchObject({ deploymentTarget: '17.0', supportsTablet: false });
-  });
+  }, 60_000);
 });

@@ -10,6 +10,7 @@ export type LocalPrivateKeyLifecycle =
   | 'current'
   | 'legacy_read'
   | 'legacy_retained'
+  | 'reserved'
   | 'key_material'
   | 'metadata'
   | 'control';
@@ -116,7 +117,6 @@ export type LocalPrivateKeyDescriptor = Readonly<{
 }>;
 
 const enforced = <const T extends object>(value: T) => ({ status: 'enforced', ...value }) as const;
-const gap = (issue: string) => ({ status: 'gap', issue }) as const;
 const notApplicable = (reason: string) => ({ status: 'not_applicable', reason }) as const;
 
 const PRIVATE_KV_MUTATION = enforced({ mode: 'private_kv_atomic_transform' as const });
@@ -130,7 +130,10 @@ const PRESERVE_PRIVATE_BYTES = enforced({ mode: 'preserve_bytes_and_retry' as co
 
 type PrivateDataInput = Readonly<{
   key: string;
-  lifecycle: Extract<LocalPrivateKeyLifecycle, 'current' | 'legacy_read' | 'legacy_retained'>;
+  lifecycle: Extract<
+    LocalPrivateKeyLifecycle,
+    'current' | 'legacy_read' | 'legacy_retained' | 'reserved'
+  >;
   discovery?: LocalPrivateKeyDescriptor['discovery'];
   codec: CodecContract;
   typedRead: TypedReadContract;
@@ -338,9 +341,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'onskin.photos.cloudBackup',
     lifecycle: 'legacy_retained',
     discovery: 'retained_inventory',
-    codec: gap(
-      'No active cloud-backup codec exists; retained bytes are export/delete inventory only.',
-    ),
+    codec: scalarCodec('private_boolean', 'legacy_boolean'),
     typedRead: notApplicable('Cloud backup is unavailable and has no active reader.'),
     mutation: enforced({ mode: 'read_only' as const }),
     export: include(
@@ -353,7 +354,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'onskin.photos.v1',
     lifecycle: 'current',
     codec: jsonCodec('photo_store', 2, [1]),
-    typedRead: gap('Photo reads throw domain errors instead of returning a typed result.'),
+    typedRead: typedDomainRead,
     mutation: enforced({ mode: 'photo_two_phase_journal' as const }),
     ownerBinding: enforced({ mode: 'photo_account_generation' as const }),
     recovery: enforced({ mode: 'journal_replay_before_mount' as const }),
@@ -384,7 +385,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'onskin.reviewPrompt.v1',
     lifecycle: 'current',
     codec: jsonCodec('review_prompt_state', 1, [0]),
-    typedRead: gap('Review-prompt reads map unreadable state to no prompt.'),
+    typedRead: typedDomainRead,
     export: include('activity_and_app_state', 'review_prompt_state'),
   }),
   privateData({
@@ -398,7 +399,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'routinekind.routineActivation.v1',
     lifecycle: 'current',
     codec: jsonCodec('routine_activation_analytics', 1, [0]),
-    typedRead: gap('Activation-state reads are internal and collapse failures to no event.'),
+    typedRead: typedDomainRead,
     export: include('activity_and_app_state', 'routine_activation_state'),
   }),
   privateData({
@@ -433,8 +434,8 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'onskin.subscription.promptedExpiry',
     lifecycle: 'current',
     codec: jsonCodec('subscription_prompt', 2, [0, 1]),
-    typedRead: gap('Lifecycle prompt reads collapse unreadable state to no prompt.'),
-    export: include('subscription', 'prompted_expiry'),
+    typedRead: typedDomainRead,
+    export: include('subscription', 'prompted_expiry', 'safe_scalar_or_json'),
   }),
   privateData({
     key: 'onskin.trendInsights.v1',
@@ -445,9 +446,9 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
   }),
   privateData({
     key: 'onskin.trendState.v1',
-    lifecycle: 'legacy_retained',
-    codec: gap('No active trend-state codec or reader remains.'),
-    typedRead: notApplicable('The retained derived state is export/delete-only.'),
+    lifecycle: 'reserved',
+    codec: notApplicable('This reserved deletion key has never had a production writer.'),
+    typedRead: notApplicable('The reserved deletion key has no payload reader.'),
     mutation: enforced({ mode: 'read_only' as const }),
     recovery: enforced({ mode: 'explicit_domain_delete' as const }),
     export: include('activity_and_app_state', 'photo_trend_state'),
@@ -648,6 +649,22 @@ export function validateLocalPrivateKeyRegistry(
       errors.push(`non_data_export:${entry.key}`);
     }
 
+    if (entry.lifecycle === 'reserved') {
+      if (entry.codec.status !== 'not_applicable') errors.push(`reserved_codec:${entry.key}`);
+      if (entry.typedRead.status !== 'not_applicable') {
+        errors.push(`reserved_typed_read:${entry.key}`);
+      }
+      if (entry.mutation.status !== 'enforced' || entry.mutation.mode !== 'read_only') {
+        errors.push(`reserved_mutation:${entry.key}`);
+      }
+      if (
+        entry.recovery.status !== 'enforced' ||
+        entry.recovery.mode !== 'explicit_domain_delete'
+      ) {
+        errors.push(`reserved_recovery:${entry.key}`);
+      }
+    }
+
     if (entry.category === 'control' && entry.cleanup.status === 'enforced') {
       if (entry.cleanup.mode === 'authorized_private_kv_bulk') {
         errors.push(`control_bulk_cleanup:${entry.key}`);
@@ -697,6 +714,15 @@ export const LOCAL_PRIVATE_BULK_CLEANUP_KEYS = Object.freeze(
     entry.cleanup.status === 'enforced' && entry.cleanup.mode === 'authorized_private_kv_bulk'
       ? [entry.key]
       : [],
+  ),
+);
+
+/** Keys retained only for compatibility, export, or explicit deletion. Private
+ * KV enforces this list at the write boundary while still allowing reads and
+ * domain-authorized removal. */
+export const LOCAL_PRIVATE_READ_ONLY_KEYS = Object.freeze(
+  (LOCAL_PRIVATE_KEY_REGISTRY as readonly LocalPrivateKeyDescriptor[]).flatMap((entry) =>
+    entry.mutation.status === 'enforced' && entry.mutation.mode === 'read_only' ? [entry.key] : [],
   ),
 );
 

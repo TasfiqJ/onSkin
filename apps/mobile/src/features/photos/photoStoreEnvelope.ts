@@ -4,7 +4,8 @@ export const PHOTO_METADATA_UNSUPPORTED = 'PHOTO_METADATA_UNSUPPORTED';
 export const PHOTO_MUTATION_RECOVERY_REQUIRED = 'PHOTO_MUTATION_RECOVERY_REQUIRED';
 export const PHOTO_MUTATION_JOURNAL_INCONSISTENT = 'PHOTO_MUTATION_JOURNAL_INCONSISTENT';
 
-const MAX_PHOTO_RECORDS = 10_000;
+export const MAX_PHOTO_RECORDS = 10_000;
+export const MAX_PHOTO_STORE_CHARS = 8_388_608;
 const OPAQUE_OPERATION_ID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -73,6 +74,9 @@ export function decodePhotoStore(raw: string | null): DecodedPhotoStore {
   if (raw === null) {
     return { format: 'absent', items: [], mutation: null, retainedItems: [] };
   }
+  if (raw.length > MAX_PHOTO_STORE_CHARS) {
+    throw new Error(PHOTO_METADATA_INVALID);
+  }
 
   let parsed: unknown;
   try {
@@ -84,6 +88,7 @@ export function decodePhotoStore(raw: string | null): DecodedPhotoStore {
   // V1 was a bare array. It remains read compatible and is migrated only by an
   // explicit mutation that writes the atomic V2 envelope.
   if (Array.isArray(parsed)) {
+    if (parsed.length > MAX_PHOTO_RECORDS) throw new Error(PHOTO_METADATA_INVALID);
     return { format: 'legacy', items: parsed, mutation: null, retainedItems: [] };
   }
 
@@ -140,12 +145,14 @@ export function encodePhotoStore(params: SettledPhotoStoreInput | PendingPhotoSt
   ) {
     throw new Error(PHOTO_METADATA_INVALID);
   }
-  return JSON.stringify({
+  const encoded = JSON.stringify({
     version: PHOTO_STORE_VERSION,
     items: params.items,
     mutation: params.mutation,
     retainedItems,
   });
+  if (encoded.length > MAX_PHOTO_STORE_CHARS) throw new Error(PHOTO_METADATA_INVALID);
+  return encoded;
 }
 
 /** Pure compatibility decoder for local account export. */

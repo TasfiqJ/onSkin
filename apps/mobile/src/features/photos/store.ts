@@ -3,13 +3,30 @@ import { randomUUID } from 'expo-crypto';
 import type { PhotoSeries, TimeOfDay } from '@onskin/types';
 import { PHOTO_SERIES } from '@onskin/types';
 
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  AccountGenerationLeaseError,
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import {
   cleanupPlaintextStagingOperation,
   lookupPlaintextStaging,
 } from '@/lib/storage/plaintextStaging';
-import { getPrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import {
+  getPrivateItem,
+  PRIVATE_KV_CONTENT_KEY_CONFLICT,
+  PRIVATE_KV_CONTENT_KEY_INVALID,
+  PRIVATE_KV_CONTENT_KEY_MISSING,
+  PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE,
+  PRIVATE_KV_DECRYPTION_FAILED,
+  PRIVATE_KV_ENVELOPE_INVALID,
+  PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+  readPrivateItem,
+  setPrivateItem,
+  type PrivateKVReadFailureReason,
+} from '@/lib/storage/privateKV';
 import { supabase } from '@/lib/supabase/client';
 
 import {
@@ -22,8 +39,13 @@ import {
   finalizeEncryptedPhotoDeletions,
   isEncryptedPhotoUri,
   isOwnedEncryptedPhotoUri,
+  PHOTO_CONTENT_KEY_INVALID,
+  PHOTO_CONTENT_KEY_MISSING,
+  PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
+  PHOTO_DECRYPTION_FAILED,
   photoEncryptionInfo,
   PHOTO_RECOVERY_CANDIDATE_UNAUTHENTICATED,
+  PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
   recoverPreparedEncryptedPhoto,
   stageEncryptedPhotoDeletions,
   verifyEncryptedPhotoDeletionSources,
@@ -32,6 +54,7 @@ import {
   decodePhotoStore,
   encodePhotoStore,
   PHOTO_METADATA_INVALID,
+  PHOTO_METADATA_UNSUPPORTED,
   PHOTO_MUTATION_JOURNAL_INCONSISTENT,
   PHOTO_MUTATION_RECOVERY_REQUIRED,
   type DecodedPhotoStore,
@@ -57,17 +80,49 @@ const PHOTO_SERIES_SET = new Set<PhotoSeries>(PHOTO_SERIES);
 const TIME_OF_DAY = new Set<TimeOfDay>(['morning', 'evening']);
 const CAPTURE_OPERATION_ID = /^[0-9a-f]{32}$/;
 const CANONICAL_PHOTO_FILE_ID = /^[A-Za-z0-9_-]{1,128}$/;
+const MAX_PHOTO_FIELD_CHARS = 1_024;
+const MAX_PHOTO_NOTE_PLAINTEXT_CHARS = 262_144;
+const MAX_PHOTO_NOTE_CIPHERTEXT_CHARS = 1_048_576;
+const STORED_PHOTO_RECORD_KEYS = [
+  'alignmentScore',
+  'captureSessionId',
+  'encryptedLocalUri',
+  'encryptionVersion',
+  'faceRegionRedacted',
+  'headPitch',
+  'headRoll',
+  'headYaw',
+  'id',
+  'isEncrypted',
+  'isReference',
+  'keyId',
+  'lightingScore',
+  'localOnly',
+  'localUri',
+  'notes',
+  'notesCiphertext',
+  'qualitySource',
+  'referencePhotoId',
+  'series',
+  'storagePath',
+  'takenAt',
+  'takenLocalDate',
+  'thumbnailLocalUri',
+  'timeOfDay',
+] as const;
 const PHOTO_MUTATION_CAPTURE_SESSION_REQUIRED = 'PHOTO_MUTATION_CAPTURE_SESSION_REQUIRED';
 const PHOTO_MUTATION_SOURCE_MISSING = 'PHOTO_MUTATION_SOURCE_MISSING';
 const PHOTO_METADATA_COMMIT_UNCERTAIN = 'PHOTO_METADATA_COMMIT_UNCERTAIN';
 
 let photoStoreMutationTail: Promise<void> = Promise.resolve();
 
-function runPhotoStoreMutation<T>(operation: () => Promise<T>): Promise<T> {
+function runPhotoStoreMutation<T>(
+  operation: (lease: AccountGenerationLease) => Promise<T>,
+): Promise<T> {
   return runAccountGenerationOperation(async (lease) => {
     const guardedOperation = async () => {
       lease.assertCurrent();
-      const result = await operation();
+      const result = await operation(lease);
       lease.assertCurrent();
       return result;
     };
@@ -97,9 +152,31 @@ export type PhotoRecord = PhotoMeta & {
   keyId: string | null;
 };
 
+type PhotoStoreFormat = 'legacy' | 'v2';
+type PhotoStoreUnavailableReason =
+  | PrivateKVReadFailureReason
+  | 'photo_content_key_missing'
+  | 'photo_content_key_storage_unavailable';
+type PhotoStoreCorruptReason =
+  | 'content_key_invalid'
+  | 'envelope_invalid'
+  | 'decryption_failed'
+  | 'photo_content_key_invalid'
+  | 'photo_decryption_failed'
+  | 'journal_inconsistent'
+  | 'invalid_payload';
+
+export type PhotoStoreReadResult =
+  | { status: 'absent'; photos: PhotoRecord[] }
+  | { status: 'available'; photos: PhotoRecord[]; format: PhotoStoreFormat }
+  | { status: 'unavailable'; photos: null; reason: PhotoStoreUnavailableReason }
+  | { status: 'corrupt'; photos: null; reason: PhotoStoreCorruptReason }
+  | { status: 'unsupported_version'; photos: null }
+  | { status: 'recovery_required'; photos: null };
+
 type StoredPhotoRecord = Omit<PhotoRecord, 'notes'> & {
   notes: null;
-  notesCiphertext?: string | null;
+  notesCiphertext: string | null;
 };
 
 export type NewPhoto = {
@@ -122,6 +199,122 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+function hasExactKeys(record: Record<string, unknown>, expected: readonly string[]): boolean {
+  const actual = Object.keys(record).sort();
+  const sortedExpected = [...expected].sort();
+  return (
+    actual.length === sortedExpected.length &&
+    actual.every((key, index) => key === sortedExpected[index])
+  );
+}
+
+function isBoundedString(value: unknown, maxChars = MAX_PHOTO_FIELD_CHARS): value is string {
+  return (
+    typeof value === 'string' &&
+    value.length > 0 &&
+    value.length <= maxChars &&
+    value.trim() === value
+  );
+}
+
+function isBoundedStringOrNull(value: unknown, maxChars = MAX_PHOTO_FIELD_CHARS): boolean {
+  return value === null || isBoundedString(value, maxChars);
+}
+
+function isFiniteNumberOrNull(value: unknown): boolean {
+  return value === null || (typeof value === 'number' && Number.isFinite(value));
+}
+
+function isScoreOrNull(value: unknown): boolean {
+  return (
+    value === null ||
+    (typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1)
+  );
+}
+
+function isCanonicalLocalDate(value: unknown): value is string {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split('-').map(Number);
+  const date = new Date(Date.UTC(year!, month! - 1, day!));
+  return (
+    date.getUTCFullYear() === year && date.getUTCMonth() === month! - 1 && date.getUTCDate() === day
+  );
+}
+
+function isCanonicalInstant(value: unknown): value is string {
+  if (typeof value !== 'string' || value.length !== 24) return false;
+  const timestamp = Date.parse(value);
+  return !Number.isNaN(timestamp) && new Date(timestamp).toISOString() === value;
+}
+
+function assertStrictStoredRecord(value: unknown): asserts value is Record<string, unknown> {
+  if (
+    !isRecord(value) ||
+    !hasExactKeys(value, STORED_PHOTO_RECORD_KEYS) ||
+    !isBoundedString(value.id, 128) ||
+    !CANONICAL_PHOTO_FILE_ID.test(value.id) ||
+    !PHOTO_SERIES_SET.has(value.series as PhotoSeries) ||
+    !isCanonicalLocalDate(value.takenLocalDate) ||
+    !isCanonicalInstant(value.takenAt) ||
+    !(value.timeOfDay === null || TIME_OF_DAY.has(value.timeOfDay as TimeOfDay)) ||
+    !isScoreOrNull(value.alignmentScore) ||
+    !isScoreOrNull(value.lightingScore) ||
+    typeof value.isReference !== 'boolean' ||
+    !isBoundedStringOrNull(value.referencePhotoId, 128) ||
+    (typeof value.referencePhotoId === 'string' &&
+      !CANONICAL_PHOTO_FILE_ID.test(value.referencePhotoId)) ||
+    !isBoundedStringOrNull(value.localUri) ||
+    value.notes !== null ||
+    !isBoundedStringOrNull(value.notesCiphertext, MAX_PHOTO_NOTE_CIPHERTEXT_CHARS) ||
+    !isBoundedStringOrNull(value.captureSessionId, 32) ||
+    (typeof value.captureSessionId === 'string' &&
+      !CAPTURE_OPERATION_ID.test(value.captureSessionId)) ||
+    !isFiniteNumberOrNull(value.headRoll) ||
+    !isFiniteNumberOrNull(value.headYaw) ||
+    !isFiniteNumberOrNull(value.headPitch) ||
+    !(value.qualitySource === null || value.qualitySource === 'post_capture_measurement') ||
+    value.localOnly !== true ||
+    value.storagePath !== null ||
+    typeof value.faceRegionRedacted !== 'boolean' ||
+    typeof value.isEncrypted !== 'boolean' ||
+    !isBoundedStringOrNull(value.encryptedLocalUri) ||
+    !isBoundedStringOrNull(value.thumbnailLocalUri) ||
+    !isBoundedString(value.encryptionVersion, 64) ||
+    !isBoundedStringOrNull(value.keyId, 128)
+  ) {
+    throw new Error(PHOTO_METADATA_INVALID);
+  }
+
+  const expectedPrimary = encryptedPhotoUriForId(value.id);
+  const primary = value.encryptedLocalUri;
+  if (primary === null) {
+    if (
+      value.localUri !== null ||
+      value.thumbnailLocalUri !== null ||
+      value.captureSessionId !== null ||
+      value.isEncrypted ||
+      value.encryptionVersion !== 'none' ||
+      value.keyId !== null
+    ) {
+      throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
+    }
+    return;
+  }
+  if (
+    value.localUri !== primary ||
+    primary !== expectedPrimary ||
+    !isEncryptedPhotoUri(primary) ||
+    !value.isEncrypted ||
+    value.encryptionVersion !== photoEncryptionInfo.version ||
+    value.keyId !== photoEncryptionInfo.keyId ||
+    (value.thumbnailLocalUri !== null &&
+      (value.thumbnailLocalUri !== encryptedPhotoThumbnailUriForId(value.id) ||
+        !isOwnedEncryptedPhotoUri(value.thumbnailLocalUri)))
+  ) {
+    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
+  }
+}
+
 function stringOrNull(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const text = value.trim();
@@ -135,7 +328,7 @@ function localDateOrNull(value: unknown): string | null {
 
 function isoOrFallback(value: unknown, fallback: string): string {
   const text = stringOrNull(value);
-  return text && !Number.isNaN(Date.parse(text)) ? text : fallback;
+  return text && !Number.isNaN(Date.parse(text)) ? new Date(text).toISOString() : fallback;
 }
 
 function finiteNumberOrNull(value: unknown): number | null {
@@ -196,10 +389,12 @@ async function normalizeStoredRecord(value: unknown): Promise<PhotoRecord | null
     headPitch: finiteNumberOrNull(value.headPitch),
     qualitySource:
       value.qualitySource === 'post_capture_measurement' ? 'post_capture_measurement' : null,
-    localOnly: booleanOr(value.localOnly, true),
-    storagePath: stringOrNull(value.storagePath),
+    // V1 placeholders claimed encryption even when no file existed. Derive
+    // these storage facts from recognized local authority during migration.
+    localOnly: true,
+    storagePath: null,
     faceRegionRedacted: booleanOr(value.faceRegionRedacted, false),
-    isEncrypted: encrypted || booleanOr(value.isEncrypted, false),
+    isEncrypted: encrypted,
     encryptedLocalUri,
     thumbnailLocalUri: stringOrNull(value.thumbnailLocalUri),
     encryptionVersion:
@@ -208,9 +403,13 @@ async function normalizeStoredRecord(value: unknown): Promise<PhotoRecord | null
   };
 }
 
-async function normalizeStoredRecords(value: readonly unknown[]): Promise<PhotoRecord[]> {
+async function normalizeStoredRecords(
+  value: readonly unknown[],
+  strictCurrentFormat = false,
+): Promise<PhotoRecord[]> {
   const items: PhotoRecord[] = [];
   for (const row of value) {
+    if (strictCurrentFormat) assertStrictStoredRecord(row);
     const photo = await normalizeStoredRecord(row);
     if (!photo) throw new Error(PHOTO_METADATA_INVALID);
     items.push(photo);
@@ -248,6 +447,26 @@ function assertCanonicalRecordUris(photo: PhotoRecord): void {
     photo.encryptedLocalUri ??
     (photo.localUri && isEncryptedPhotoUri(photo.localUri) ? photo.localUri : null);
   if (photo.isEncrypted && primary === null) {
+    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
+  }
+  if (
+    primary === null &&
+    (photo.localUri !== null ||
+      photo.encryptedLocalUri !== null ||
+      photo.thumbnailLocalUri !== null ||
+      photo.encryptionVersion !== 'none' ||
+      photo.keyId !== null)
+  ) {
+    throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
+  }
+  if (
+    primary !== null &&
+    (!photo.isEncrypted ||
+      photo.localUri !== primary ||
+      photo.encryptedLocalUri !== primary ||
+      photo.encryptionVersion !== photoEncryptionInfo.version ||
+      photo.keyId !== photoEncryptionInfo.keyId)
+  ) {
     throw new Error(PHOTO_MUTATION_JOURNAL_INCONSISTENT);
   }
   if (primary !== null && primary !== encryptedPhotoUriForId(photo.id)) {
@@ -310,8 +529,9 @@ function assertMutationConsistency(snapshot: PhotoStoreSnapshot): void {
 }
 
 async function normalizeDecodedPhotoStore(decoded: DecodedPhotoStore): Promise<PhotoStoreSnapshot> {
-  const items = await normalizeStoredRecords(decoded.items);
-  const retainedItems = await normalizeStoredRecords(decoded.retainedItems);
+  const strictCurrentFormat = decoded.format === 'v2';
+  const items = await normalizeStoredRecords(decoded.items, strictCurrentFormat);
+  const retainedItems = await normalizeStoredRecords(decoded.retainedItems, strictCurrentFormat);
   const snapshot: PhotoStoreSnapshot = {
     items,
     mutation: decoded.mutation,
@@ -319,6 +539,7 @@ async function normalizeDecodedPhotoStore(decoded: DecodedPhotoStore): Promise<P
     storedItems: decoded.items,
     storedRetainedItems: decoded.retainedItems,
   };
+  if (strictCurrentFormat) [...items, ...retainedItems].forEach(assertCanonicalRecordUris);
   assertMutationConsistency(snapshot);
   return snapshot;
 }
@@ -327,14 +548,130 @@ async function readPhotosUnlocked(): Promise<PhotoStoreSnapshot> {
   return normalizeDecodedPhotoStore(decodePhotoStore(await getPrivateItem(KEY)));
 }
 
+function classifyPhotoStoreReadError(
+  error: unknown,
+): Exclude<PhotoStoreReadResult, { status: 'absent' | 'available' }> {
+  const message = error instanceof Error ? error.message : '';
+  if (
+    error instanceof AccountGenerationLeaseError ||
+    message === PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY
+  ) {
+    return { status: 'unavailable', photos: null, reason: 'account_boundary' };
+  }
+  if (message === PHOTO_CONTENT_KEY_MISSING) {
+    return { status: 'unavailable', photos: null, reason: 'photo_content_key_missing' };
+  }
+  if (message === PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE) {
+    return {
+      status: 'unavailable',
+      photos: null,
+      reason: 'photo_content_key_storage_unavailable',
+    };
+  }
+  if (message === PHOTO_CONTENT_KEY_INVALID) {
+    return { status: 'corrupt', photos: null, reason: 'photo_content_key_invalid' };
+  }
+  if (message === PHOTO_DECRYPTION_FAILED) {
+    return { status: 'corrupt', photos: null, reason: 'photo_decryption_failed' };
+  }
+  if (message === PHOTO_METADATA_UNSUPPORTED) {
+    return { status: 'unsupported_version', photos: null };
+  }
+  if (message === PHOTO_MUTATION_RECOVERY_REQUIRED) {
+    return { status: 'recovery_required', photos: null };
+  }
+  if (message === PHOTO_MUTATION_JOURNAL_INCONSISTENT) {
+    return { status: 'corrupt', photos: null, reason: 'journal_inconsistent' };
+  }
+  return { status: 'corrupt', photos: null, reason: 'invalid_payload' };
+}
+
+async function readPhotoStoreResultUnlocked(
+  lease: AccountGenerationLease,
+): Promise<PhotoStoreReadResult> {
+  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
+  try {
+    stored = await awaitAccountGenerationLease(lease, () => readPrivateItem(KEY));
+    lease.assertCurrent();
+  } catch {
+    return { status: 'unavailable', photos: null, reason: 'storage_unavailable' };
+  }
+
+  if (stored.status === 'absent') return { status: 'absent', photos: [] };
+  if (stored.status === 'unavailable') {
+    return { status: 'unavailable', photos: null, reason: stored.reason };
+  }
+  if (stored.status === 'corrupt') {
+    return { status: 'corrupt', photos: null, reason: stored.reason };
+  }
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', photos: null };
+  }
+
+  try {
+    const decoded = decodePhotoStore(stored.value);
+    const snapshot = await normalizeDecodedPhotoStore(decoded);
+    if (snapshot.mutation) return { status: 'recovery_required', photos: null };
+    return {
+      status: 'available',
+      photos: snapshot.items,
+      format: decoded.format as PhotoStoreFormat,
+    };
+  } catch (error) {
+    return classifyPhotoStoreReadError(error);
+  }
+}
+
+function photoStoreReadError(
+  result: Exclude<PhotoStoreReadResult, { status: 'absent' | 'available' }>,
+): Error {
+  if (result.status === 'unsupported_version') return new Error(PHOTO_METADATA_UNSUPPORTED);
+  if (result.status === 'recovery_required') return new Error(PHOTO_MUTATION_RECOVERY_REQUIRED);
+  if (result.status === 'unavailable') {
+    const code: Record<PhotoStoreUnavailableReason, string> = {
+      account_boundary: PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+      content_key_conflict: PRIVATE_KV_CONTENT_KEY_CONFLICT,
+      content_key_missing: PRIVATE_KV_CONTENT_KEY_MISSING,
+      content_key_storage_unavailable: PRIVATE_KV_CONTENT_KEY_STORAGE_UNAVAILABLE,
+      photo_content_key_missing: PHOTO_CONTENT_KEY_MISSING,
+      photo_content_key_storage_unavailable: PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
+      storage_unavailable: 'PHOTO_STORE_UNAVAILABLE',
+    };
+    return new Error(code[result.reason]);
+  }
+
+  const code: Record<PhotoStoreCorruptReason, string> = {
+    content_key_invalid: PRIVATE_KV_CONTENT_KEY_INVALID,
+    decryption_failed: PRIVATE_KV_DECRYPTION_FAILED,
+    envelope_invalid: PRIVATE_KV_ENVELOPE_INVALID,
+    invalid_payload: PHOTO_METADATA_INVALID,
+    journal_inconsistent: PHOTO_MUTATION_JOURNAL_INCONSISTENT,
+    photo_content_key_invalid: PHOTO_CONTENT_KEY_INVALID,
+    photo_decryption_failed: PHOTO_DECRYPTION_FAILED,
+  };
+  return new Error(code[result.reason]);
+}
+
 async function encodeStoredRecords(items: readonly PhotoRecord[]): Promise<StoredPhotoRecord[]> {
-  return Promise.all(
+  for (const item of items) {
+    if (
+      item.notes !== null &&
+      (typeof item.notes !== 'string' || item.notes.length > MAX_PHOTO_NOTE_PLAINTEXT_CHARS)
+    ) {
+      throw new Error(PHOTO_METADATA_INVALID);
+    }
+    // Validate every non-note field before encryption can create key material.
+    assertStrictStoredRecord({ ...item, notes: null, notesCiphertext: null });
+  }
+  const stored = await Promise.all(
     items.map(async (item) => ({
       ...item,
       notes: null,
       notesCiphertext: await encryptPhotoNote(item.notes),
     })),
   );
+  stored.forEach(assertStrictStoredRecord);
+  return stored;
 }
 
 async function writeExactPhotoStore(raw: string): Promise<void> {
@@ -499,14 +836,24 @@ export async function recoverPhotoStoreMutations(): Promise<void> {
   });
 }
 
-export async function loadPhotos(): Promise<PhotoRecord[]> {
+/** Classify photo metadata without repairing, migrating, deleting, or
+ * rewriting bytes. Absence alone is a valid empty timeline. */
+export async function readPhotos(): Promise<PhotoStoreReadResult> {
   // Queue behind mutations but never recover, rewrite, move, or delete. A V2
   // journal means metadata is intentionally staged and must not be published.
-  return runPhotoStoreMutation(async () => {
-    const snapshot = await readPhotosUnlocked();
-    if (snapshot.mutation) throw new Error(PHOTO_MUTATION_RECOVERY_REQUIRED);
-    return snapshot.items;
-  });
+  try {
+    return await runPhotoStoreMutation(readPhotoStoreResultUnlocked);
+  } catch (error) {
+    return classifyPhotoStoreReadError(error);
+  }
+}
+
+/** Compatibility boundary for query consumers that use rejection as their
+ * recovery signal. New storage-aware consumers should use `readPhotos`. */
+export async function loadPhotos(): Promise<PhotoRecord[]> {
+  const result = await readPhotos();
+  if (result.status === 'absent' || result.status === 'available') return result.photos;
+  throw photoStoreReadError(result);
 }
 
 export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
