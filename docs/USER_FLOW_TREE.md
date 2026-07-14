@@ -91,6 +91,18 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Cold-open a data-bearing route with a malformed plaintext or encrypted app-lock preference. Inspect the initial state, then choose `Unlock and reset app lock`; repeat with device authentication unavailable, cancelled, failed, and successful.
   - Expected result: No route content, tabs, private-data recovery, or automatic biometric prompt appears before the explicit recovery action. The malformed preference remains unchanged after load and failed/cancelled authentication. The screen explains that only app-lock settings will reset. Successful device authentication removes only that preference, leaves every other private record untouched, and then mounts the requested route. Generic key/decryption failures do not offer destructive preference reset.
   - Evidence: Store/provider contracts and the real web malformed-preference authenticated reset at `test-results/human-e2e/2026-07-10/private-envelope-corruption-current/`; native prompt/cancel/failure/accessibility evidence remains Tas QA.
+- Branch: unavailable or non-repairable app-lock preference
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Cold-open a data-bearing route with `EXPO_PUBLIC_E2E_APP_LOCK_READ_FAILURE=always`, retry twice, refresh, and relaunch. Repeat with `once` over proven disabled and enabled preferences at the 375 x 667 compact launch viewport, 390 x 844 and 430 x 932 modern launch viewports, the 360 x 640 resilience viewport, and the 320 x 480 stress viewport.
+  - Expected result: The app fails closed without mounting route data or automatically opening device authentication. The recovery screen says nothing changed and offers `Try again`, never authenticated reset. Persistent failure stays blocked and preserves the preference bytes. One-shot recovery applies the actual stored value: absent/disabled mounts without a biometric prompt, while enabled enters the ordinary lock and authentication flow. The retry control remains at least 48 points, long text scrolls without horizontal overflow, and no raw storage reason, dialog, analytics request, or private-data request appears.
+  - Evidence: Typed store, provider-decision, owner-generation, interaction-lifecycle, registry, and route contract suites cover the local behavior. Persistent failure plus one-shot disabled/enabled Expo-web interaction evidence is recorded at `test-results/human-e2e/2026-07-14/app-lock-typed-preference-current/`; physical Keychain/Keystore interruption and assistive-technology proof remain Tas QA.
+- Branch: account change while app-lock authentication is pending
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Start ordinary unlock, photo-timeline unlock, malformed-preference repair, and app-lock enable confirmation as account A; hold each native response, complete the A-to-B boundary, then release the old response.
+  - Expected result: Every old operation is cancelled by the originating account-generation lease. A's delayed prompt cannot unlock B, publish stale feedback, reset B's app-lock preference, or write B's enabled value. In-flight reset/write work that already began is drained by account isolation before B can publish. B performs a fresh typed preference read and follows only its own state.
+  - Evidence: Deterministic delayed-boundary tests cover read, readiness, ordinary unlock, timeline-equivalent authentication, repair authentication/reset, enable authentication, disable write, and state publication. Real two-account native-prompt timing remains release-device QA.
 
 ## Flow: Bottom Tab Navigation
 
