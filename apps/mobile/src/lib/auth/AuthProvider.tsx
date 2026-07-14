@@ -29,7 +29,6 @@ import {
   subscribeToCustomerInfoUpdates,
 } from '@/lib/iap/revenuecat';
 import { devWarn } from '@/lib/observability/safeLog';
-import { setSentryUser } from '@/lib/observability/sentry';
 import {
   beginPrivateKVAccountBoundary,
   endPrivateKVAccountBoundary,
@@ -129,7 +128,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSessionBoundaryError(false);
       setInitializing(true);
       setSession(null);
-      setSentryUser(null);
     }
     showSessionBoundaryRef.current = showSessionBoundary;
 
@@ -308,7 +306,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const userId = session?.user.id ?? null;
-    setSentryUser(userId);
     if (!userId || initializing || accountIsolationE2EFixture) return;
 
     let cleanup: (() => void) | null = null;

@@ -1,13 +1,11 @@
 import * as Sentry from '@sentry/react-native';
 import { Platform } from 'react-native';
 
-import { pseudonymousUserId } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
 import { devWarn } from '@/lib/observability/safeLog';
 import { sanitizeCapturedException, sanitizeObservabilityContext } from '@/lib/observability/scrub';
 
 let initialized = false;
-let sentryUserUpdate = 0;
 
 type SentryInitOptions = Parameters<typeof Sentry.init>[0];
 type SentryBeforeSend = NonNullable<SentryInitOptions['beforeSend']>;
@@ -26,11 +24,6 @@ function sanitizeSentryTags(tags: SentryErrorEvent['tags']): SentryErrorEvent['t
     }
   }
   return Object.keys(safeTags).length ? safeTags : undefined;
-}
-
-function sanitizeSentryUser(user: SentryErrorEvent['user']): SentryErrorEvent['user'] {
-  const id = typeof user?.id === 'string' ? user.id : undefined;
-  return id && /^u_[a-f0-9]{32}$/.test(id) ? { id } : undefined;
 }
 
 export function sanitizeSentryEvent(event: SentryErrorEvent): SentryErrorEvent {
@@ -62,7 +55,10 @@ export function sanitizeSentryEvent(event: SentryErrorEvent): SentryErrorEvent {
     transaction: undefined,
     transaction_info: undefined,
     type: undefined,
-    user: sanitizeSentryUser(event.user),
+    // Sentry cannot erase one customer's immutable events without deleting the
+    // whole issue. Do not attach a stable account or device identifier that
+    // would create a remote per-account deletion obligation we cannot attest.
+    user: undefined,
     exception: {
       values: [{ type: safeName, value: 'redacted_exception' }],
     },
@@ -88,23 +84,6 @@ export function initSentry(): void {
 
   Sentry.setTag('app_environment', env.appEnvironment);
   initialized = true;
-}
-
-export function setSentryUser(userId: string | null): void {
-  if (!initialized) return;
-  const update = ++sentryUserUpdate;
-  if (!userId) {
-    Sentry.setUser(null);
-    return;
-  }
-
-  void pseudonymousUserId(userId)
-    .then((id) => {
-      if (initialized && update === sentryUserUpdate) Sentry.setUser({ id });
-    })
-    .catch(() => {
-      if (update === sentryUserUpdate) Sentry.setUser(null);
-    });
 }
 
 export function captureException(error: unknown, context?: Record<string, unknown>): void {

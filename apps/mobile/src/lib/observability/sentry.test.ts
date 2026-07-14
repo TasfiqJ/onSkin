@@ -8,7 +8,6 @@ vi.mock('@sentry/react-native', () => ({
   captureException: vi.fn(),
   init: vi.fn(),
   setTag: vi.fn(),
-  setUser: vi.fn(),
 }));
 
 vi.mock('react-native', () => ({
@@ -44,6 +43,9 @@ describe('Sentry privacy configuration', () => {
     expect(source).toContain('transaction: undefined');
     expect(source).toContain('transaction_info: undefined');
     expect(source).toContain("value: 'redacted_exception'");
+    expect(source).toContain('user: undefined');
+    expect(source).not.toContain('Sentry.setUser');
+    expect(source).not.toContain('pseudonymousUserId');
     expect(source).not.toContain("env.appEnvironment === 'production' ? 0.05 : 0.1");
   });
 
@@ -112,6 +114,6 @@ describe('Sentry privacy configuration', () => {
     expect(safe.exception?.values).toEqual([{ type: 'TypeError', value: 'redacted_exception' }]);
     expect(safe.extra).toEqual({ source: 'settings', nested: { mode: 'restore' } });
     expect(safe.tags).toEqual({ app_environment: 'development' });
-    expect(safe.user).toEqual({ id: 'u_1234567890abcdef1234567890abcdef' });
+    expect(safe.user).toBeUndefined();
   });
 });
