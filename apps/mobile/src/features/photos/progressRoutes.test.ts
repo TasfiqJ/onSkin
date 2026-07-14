@@ -191,7 +191,9 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('const height = useWindowDimensions().height;');
     expect(source).toContain('const compact = height < 640;');
     expect(source).toContain('const shortPhone = height < 520;');
-    expect(source).toContain('const showPrepReminder = !(shortPhone || (compact && saveFailed));');
+    expect(source).toContain(
+      'const showPrepReminder = !(shortPhone || (compact && (saveFailed || reconsentRequired)));',
+    );
     expect(source).toContain('fontSize: shortPhone ? 25 : compact ? 27 : 30');
     expect(source).toContain('lineHeight: shortPhone ? 27 : compact ? 29 : undefined');
     expect(source).toContain('marginBottom: shortPhone ? 6 : compact ? 10 : 16');
@@ -200,7 +202,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('fontSize: shortPhone ? 10 : compact ? 10.5 : 11');
     expect(source).toContain('lineHeight: shortPhone ? 13 : compact ? 15 : undefined');
     expect(source).toContain('marginBottom: shortPhone ? 6 : compact ? 8 : 14');
-    expect(source.match(/height: 48/g)).toHaveLength(5);
+    expect(source.match(/height: 48/g)?.length ?? 0).toBeGreaterThanOrEqual(6);
     expect(source).toContain("const NIGHT_SECONDARY_ACTION_BG = 'rgba(244,239,231,0.08)'");
     expect(source).toContain("const NIGHT_SECONDARY_ACTION_TEXT = 'rgba(244,239,231,0.84)'");
     expect(source).toContain("const NIGHT_FOOTNOTE_TEXT = 'rgba(244,239,231,0.76)'");
@@ -231,9 +233,9 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain("style={{ marginTop: 12, alignItems: 'center' }}");
   });
 
-  it('does not render capture chrome until photo consent is saved', () => {
+  it('does not render capture chrome until exact current photo consent is proven', () => {
     const source = readAppRoute('progress/capture.tsx');
-    const consentGateIndex = source.indexOf('if (consented !== true) {');
+    const consentGateIndex = source.indexOf('if (!consentIsCurrent) {');
     const captureHeaderIndex = source.indexOf(
       '<View className="flex-row items-center justify-between px-6">',
     );
@@ -241,8 +243,28 @@ describe('Progress route mobile contracts', () => {
     expect(consentGateIndex).toBeGreaterThan(-1);
     expect(captureHeaderIndex).toBeGreaterThan(consentGateIndex);
     expect(source).toContain(
-      'const canShowCamera =\n    consented === true &&\n    env.nativeCameraEnabled',
+      'const canShowCamera =\n    consentIsCurrent &&\n    env.nativeCameraEnabled',
     );
+    expect(source).toContain('readPhotoCaptureConsent()');
+    expect(source).toContain('photoCaptureConsentNeedsChoice(consentResult)');
+    expect(source).toContain('function ConsentReadRecoveryGate');
+    expect(source).toContain('function ConsentReadLoadingGate');
+    expect(source).toContain('accessibilityLabel={PHOTO_COPY.capture.consentReadLoadingTitle}');
+    expect(source).toContain('accessibilityRole="progressbar"');
+    expect(source).toContain(
+      'accessibilityValue={{ text: PHOTO_COPY.capture.consentReadLoadingBody }}',
+    );
+    expect(source).toContain("accessibilityState={{ busy: retrying, disabled: retrying }}");
+    expect(source).toContain("'Retry reading saved photo choice'");
+    expect(source).toContain('retrying={currentConsentReadState.retrying}');
+    expect(source).toContain('onRetry={() => loadPhotoCaptureConsent(true)}');
+    expect(source).toContain('PHOTO_CONSENT_READ_TIMEOUT_MS');
+    expect(source).toContain('consentReadGenerationRef.current += 1');
+    expect(source).toContain('consentGrantInFlightRef.current = true');
+    expect(source).toContain('PhotoCaptureConsentStateChangedError');
+    expect(source).toContain('result: error.result');
+    expect(source).toContain('writeUncertain={consentSaveFailure === \'uncertain\'}');
+    expect(source).toContain('router.replace(APP_PROGRESS_ROUTE)');
   });
 
   it('uses measured post-capture quality and never timer-generated scores', () => {

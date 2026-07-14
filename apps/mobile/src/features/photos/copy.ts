@@ -47,6 +47,19 @@ export const PHOTO_COPY = {
     consentFailedTitle: 'Photo choice not saved',
     consentFailedBody:
       "We couldn't save your photo choice. Please try again before opening the camera.",
+    consentWriteUncertainTitle: 'Photo choice not confirmed',
+    consentWriteUncertainBody:
+      "We couldn't confirm whether your choice finished saving. The camera stayed closed. Try again when private storage is available.",
+    consentReadTitle: 'Your photo choice could not open.',
+    consentReadBody:
+      "We couldn't safely read the saved photo choice on this phone. Nothing was reset or changed. Try again before opening the camera.",
+    consentReadLoadingTitle: 'Checking your saved photo choice…',
+    consentReadLoadingBody: 'The camera stays closed until this check finishes.',
+    consentReadRetry: 'Try again',
+    consentReadRetrying: 'Trying again...',
+    consentReadRetryFailed: 'It is still unavailable. Your saved photo choice remains unchanged.',
+    consentReadExit: 'Back to Progress',
+    reconsentNotice: 'Please review this photo choice again before the camera opens.',
   },
   // Review & retake (design screen 02). Quality is FLAGGED, never blocked (D-029).
   review: {

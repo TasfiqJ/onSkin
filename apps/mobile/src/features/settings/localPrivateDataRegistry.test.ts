@@ -29,8 +29,6 @@ describe('local private-data contract registry', () => {
       'onskin.milestones.v1:typedRead',
       'onskin.notifPrefs.v1:typedRead',
       'onskin.notiflog.v1:typedRead',
-      'onskin.photos.captureConsent.v1:typedRead',
-      'onskin.photos.captureConsent:typedRead',
       'onskin.photos.cloudBackup:codec',
       'onskin.photos.v1:typedRead',
       'onskin.recDismissed.v1:typedRead',
@@ -40,6 +38,19 @@ describe('local private-data contract registry', () => {
       'onskin.trendState.v1:codec',
       'routinekind.routineActivation.v1:typedRead',
     ]);
+  });
+
+  it('declares the installed-base bare photo consent proof as a legacy codec', () => {
+    const photoConsent = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'onskin.photos.captureConsent.v1',
+    );
+
+    expect(photoConsent?.codec).toEqual({
+      status: 'enforced',
+      codecId: 'photo_capture_consent',
+      currentVersion: 1,
+      legacyVersions: [0],
+    });
   });
 
   it('derives export and destructive cleanup sets from one registry', () => {

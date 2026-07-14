@@ -325,15 +325,15 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'onskin.photos.captureConsent',
     lifecycle: 'legacy_read',
     codec: scalarCodec('private_boolean', 'v1', ['legacy_boolean']),
-    typedRead: gap('Legacy capture consent is collapsed into the combined boolean gate.'),
+    typedRead: typedDomainRead,
     mutation: enforced({ mode: 'read_only' as const }),
     export: include('account_and_privacy', 'legacy_photo_capture_consent', 'safe_scalar_or_json'),
   }),
   privateData({
     key: 'onskin.photos.captureConsent.v1',
     lifecycle: 'current',
-    codec: jsonCodec('photo_capture_consent', 1),
-    typedRead: gap('Capture-consent reads collapse unavailable/corrupt/future state to false.'),
+    codec: jsonCodec('photo_capture_consent', 1, [0]),
+    typedRead: typedDomainRead,
     export: include('account_and_privacy', 'photo_capture_consent'),
   }),
   privateData({
