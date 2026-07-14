@@ -199,20 +199,32 @@ describe('Ask route launch contracts', () => {
     expect(followUpBlock).toContain('label={ASK_COPY.home.prompts.fit}');
   });
 
-  it('records actual grounded cloud turns before relying on the trial cap gate', () => {
+  it('refuses any grounded answer until a provider can reserve quota before delivery', () => {
     const source = readAskFeature('useAsk.ts');
+    const reservationSource = readAskFeature('groundedTurnReservation.ts');
+    const readinessSource = readAskFeature('readiness.ts');
 
-    expect(source).toContain("import { useQuery, useQueryClient } from '@tanstack/react-query';");
-    expect(source).toContain("import { getGroundedTurns, recordGroundedTurn } from './store';");
-    expect(source).toContain('const qc = useQueryClient();');
-    expect(source).toContain("if (final.kind === 'grounded') {");
-    expect(source).toContain('void recordGroundedTurn(period)');
-    expect(source).toContain('ownerQueryPrefixes.askGroundedTurns(ownerScope)');
-    expect(source).toContain('[ctx.groundedReason, ownerScope, period, qc]');
-    expect(source).not.toContain('TODO(B-AI-ASSISTANT-VENDOR): wire recordGroundedTurn(period)');
-    expect(source.indexOf("if (final.kind === 'grounded')")).toBeLessThan(
-      source.indexOf("if (final.kind === 'escalate')"),
-    );
+    expect(source).toContain("import { useQuery } from '@tanstack/react-query';");
+    expect(source).toContain('groundedTurnsQueryOptions');
+    expect(source).toContain('const cloudGateEnabled = phase7Flags.cloudAsk || quotaFixtureEnabled');
+    expect(source).toContain('useEntitlement({ enabled: cloudGateEnabled })');
+    expect(source).toContain('requiresTrialGroundedQuota(ent)');
+    expect(source).toContain('groundedTurnsQueryOptions(ownerScope, period, trialQuotaRequired)');
+    expect(source).toContain('const cloudGroundingReady =');
+    expect(source).toContain('(!trialQuotaRequired || turns.isSuccess)');
+    expect(source).toContain('cloudGroundingReady && gate.groundedAllowed');
+    expect(source).toContain('groundedReasonForCloudReadiness(');
+    expect(readinessSource).toContain('input.quotaFixtureEnabled && input.turns.isError');
+    expect(readinessSource).not.toContain('cloudGateEnabled');
+    expect(source).toContain('blockUnreservedGroundedAnswer(guarded)');
+    expect(source).toContain('grounded: false');
+    expect(source).not.toContain('void recordGroundedTurn');
+    expect(source).not.toContain('void runGroundedTurnForOwner');
+    expect(reservationSource).toContain('export function runGroundedTurnForOwner');
+    expect(reservationSource).toContain("access.kind === 'trial'");
+    expect(reservationSource).toContain("Readonly<{ kind: 'uncapped' }>");
+    expect(reservationSource).toContain('await reserveTrialGroundedTurn');
+    expect(reservationSource).toContain('return operation({');
   });
 
   it('reports persistent recommendation retry failures to the Ask recovery notice', () => {

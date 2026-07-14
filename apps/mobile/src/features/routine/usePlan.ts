@@ -63,6 +63,7 @@ export function usePlan(): PlanQueryResult {
   const routineOrder = useQuery({
     queryKey: queryKeys.routineOrder(ownerScope),
     queryFn: loadRoutineOrderOverrides,
+    networkMode: 'always',
     retry: 1,
     staleTime: Infinity,
   });

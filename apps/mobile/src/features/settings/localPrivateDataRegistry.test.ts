@@ -25,7 +25,6 @@ describe('local private-data contract registry', () => {
 
   it('keeps the exact known contract gaps visible until their store migrations land', () => {
     expect(localPrivateRegistryGaps()).toEqual([
-      'onskin.ask.groundedTurns.v1:typedRead',
       'onskin.milestones.v1:typedRead',
       'onskin.notifPrefs.v1:typedRead',
       'onskin.notiflog.v1:typedRead',
@@ -36,6 +35,19 @@ describe('local private-data contract registry', () => {
       'onskin.trendState.v1:codec',
       'routinekind.routineActivation.v1:typedRead',
     ]);
+  });
+
+  it('tracks durable Ask operation identities in codec v2 while retaining v0/v1 readers', () => {
+    const askTurns = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'onskin.ask.groundedTurns.v1',
+    );
+
+    expect(askTurns?.codec).toEqual({
+      status: 'enforced',
+      codecId: 'ask_grounded_turns',
+      currentVersion: 2,
+      legacyVersions: [0, 1],
+    });
   });
 
   it('declares the installed-base bare photo consent proof as a legacy codec', () => {

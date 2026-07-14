@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { askGate, ASK_TRIAL_GROUNDED_CAP } from './gate';
+import {
+  askGate,
+  ASK_TRIAL_GROUNDED_CAP,
+  groundedReasonForCloudReadiness,
+  requiresTrialGroundedQuota,
+} from './gate';
 
 // The grounded-turn gate (docs/13 §15). Deterministic answers are always free; only the
 // cloud-grounded layer is Pro-gated, capped during the trial, uncapped when fully paid.
@@ -49,5 +54,43 @@ describe('fully paid: uncapped', () => {
     expect(g.groundedAllowed).toBe(true);
     expect(g.reason).toBeNull();
     expect(g.remaining).toBeNull();
+  });
+});
+
+describe('private trial quota dependency', () => {
+  it.each([
+    {
+      label: 'free',
+      input: { isPro: false, inTrial: false, inReverseTrial: false },
+      expected: false,
+    },
+    {
+      label: 'fully paid',
+      input: { isPro: true, inTrial: false, inReverseTrial: false },
+      expected: false,
+    },
+    {
+      label: 'store trial',
+      input: { isPro: true, inTrial: true, inReverseTrial: false },
+      expected: true,
+    },
+    {
+      label: 'reverse trial',
+      input: { isPro: true, inTrial: false, inReverseTrial: true },
+      expected: true,
+    },
+  ])('is $expected for $label access', ({ input, expected }) => {
+    expect(requiresTrialGroundedQuota(input)).toBe(expected);
+  });
+});
+
+describe('cloud readiness copy', () => {
+  it('uses setup/unavailable copy while enabled cloud state cannot be verified', () => {
+    expect(groundedReasonForCloudReadiness('free_locked', true, false)).toBeNull();
+  });
+
+  it('preserves a verified entitlement decision and the disabled-cloud baseline', () => {
+    expect(groundedReasonForCloudReadiness('free_locked', true, true)).toBe('free_locked');
+    expect(groundedReasonForCloudReadiness('free_locked', false, false)).toBe('free_locked');
   });
 });

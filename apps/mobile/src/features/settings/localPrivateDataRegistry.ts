@@ -201,8 +201,8 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
   privateData({
     key: 'onskin.ask.groundedTurns.v1',
     lifecycle: 'current',
-    codec: jsonCodec('ask_grounded_turns', 1, [0]),
-    typedRead: gap('Grounded-turn reads currently map unreadable state to zero.'),
+    codec: jsonCodec('ask_grounded_turns', 2, [0, 1]),
+    typedRead: typedDomainRead,
     export: include('activity_and_app_state', 'ask_grounded_turn_counts'),
   }),
   privateData({

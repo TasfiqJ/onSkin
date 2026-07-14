@@ -1678,6 +1678,20 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
+- Branch: cold-offline deterministic Ask remains usable
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Disable connectivity before launch, cold-open `/ask`, submit a deterministic shelf/routine prompt, background and foreground the app, then repeat as free and fully paid users with an unreadable trial-quota record present.
+  - Expected result: The on-device advisor loads and answers from local state without waiting for dormant entitlement or quota requests. Free and fully paid users never read or depend on the trial journal; only trial/reverse-trial access fails closed when that private journal is required and unreadable. No network request, false unsourced refusal, or private-data recovery appears for a disabled cloud layer.
+  - Evidence: Offline QueryClient/readiness tests, visible prompt/answer snapshots, request log, and native cold-launch/background transcript.
+  - Current local evidence (2026-07-14): behavioral readiness coverage sets TanStack Query offline, leaves disabled cloud queries pending, and still produces a deterministic tonight answer; local routine-order and grounded-turn reads use `networkMode: 'always'`. Native iOS/Android cold-launch proof remains external.
+- Branch: unreadable grounded-turn quota private state
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Start Expo web with `EXPO_PUBLIC_E2E_ASK_TURNS_STORAGE_FAILURE=always`, open `/ask`, choose Retry, refresh/direct-enter the route, then repeat with `once` and `future`.
+  - Expected result: Genuine absence alone permits a zero-used trial allowance. Unavailable, corrupt, future, or stale-period quota state never becomes a fresh allowance or permits grounded delivery, but production cloud state never blocks the always-free deterministic advisor. The explicit development fault fixture replaces the route with the shared named private-guidance recovery so Retry and `Back to Today` can be exercised; it preserves private bytes and leaks no raw storage code. Persistent Retry stays blocked, a one-shot Retry restores deterministic Ask, and future state stays recoverable rather than silently resetting. Read and quota-reservation work remain bound to the initiating account generation; a delayed account-A result cannot publish to account B. Distinct durable operation identities count independently, exact response-loss replays no-op, and the shipped app refuses any unexpected grounded answer until a future provider can await reservation before delivery.
+  - Evidence: Supported-phone screenshot sequence, retained visible-text snapshots, control geometry/hit tests, current-origin browser warn/error logs, exact-byte unit assertions, and delayed account-generation unit evidence.
+  - Current evidence (2026-07-14): `test-results/human-e2e/2026-07-14/ask-grounded-turns-private-state-current/`; persistent, one-shot, and future-version Expo-web fixtures passed at 390 x 844, including retry, direct-route reload, `Back to Today`, restored typed input/send, deterministic answer, hit targets, overflow, dialog, and current-origin log checks. Native protected-storage interruption remains external.
 - Branch: cloud consent direct route while cloud Ask is disabled
   - Priority: Critical
   - Automate later: Yes

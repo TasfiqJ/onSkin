@@ -117,11 +117,10 @@ describe('owner-scoped query keys', () => {
       generation,
       'v1',
     ]);
-    expect(queryKeys.askGroundedTurns(scope, TORONTO_DAY, '2026-07')).toEqual([
+    expect(queryKeys.askGroundedTurns(scope, '2026-07')).toEqual([
       'askGroundedTurns',
       OWNER_QUERY_NAMESPACE,
       generation,
-      ...localDay,
       '2026-07',
     ]);
     expect(queryKeys.noteHelped(scope, 'note-a')).toEqual([
@@ -487,6 +486,7 @@ describe('owner-scoped query keys', () => {
     const settingsProfile = read('app/settings/skin-profile.tsx');
     const askConsent = read('app/ask/consent.tsx');
     const ask = read('features/ask/useAsk.ts');
+    const askGroundedTurns = read('features/ask/groundedTurnsQuery.ts');
     const recommendationPreferences = read('app/recommendations/preferences.tsx');
     const recommendations = read('features/recommendations/useRecommendations.ts');
     const recommendationInputsQuery = read('features/recommendations/recommendationInputsQuery.ts');
@@ -511,7 +511,9 @@ describe('owner-scoped query keys', () => {
     );
     expect(settingsProfile).toContain('qc.setQueryData(queryKeys.skinProfile(ownerScope), next)');
     expect(askConsent).toContain('queryKeys.askConsent(ownerScope)');
-    expect(ask).toContain('queryKeys.askGroundedTurns(ownerScope, boundary, period)');
+    expect(ask).toContain('groundedTurnsQueryOptions(ownerScope, period, trialQuotaRequired)');
+    expect(askGroundedTurns).toContain('queryKeys.askGroundedTurns(ownerScope, period)');
+    expect(askGroundedTurns).toContain('runOwnerQueryOperation(ownerScope');
     expect(recommendationPreferences).toContain('recommendationInputsQueryOptions(ownerScope)');
     expect(recommendations).toContain('recommendationInputsQueryOptions(ownerScope)');
     expect(recommendationInputsQuery).toContain('queryKeys.recommendations(ownerScope)');

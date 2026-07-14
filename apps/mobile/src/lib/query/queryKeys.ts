@@ -136,8 +136,8 @@ export function shouldRefetchCurrentLocalDayQuery(query: {
 
 export const queryKeys = {
   askConsent: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'ask_onskin'),
-  askGroundedTurns: (scope: OwnerQueryScope, boundary: LocalDateBoundaryIdentity, period: string) =>
-    localDayQueryKey(scope, 'askGroundedTurns', boundary, period),
+  askGroundedTurns: (scope: OwnerQueryScope, period: string) =>
+    ownerScopedQueryKey(scope, 'askGroundedTurns', period),
   commerceConsent: (scope: OwnerQueryScope) => ownerScopedQueryKey(scope, 'commerceConsent'),
   completions: (scope: OwnerQueryScope, boundary: LocalDateBoundaryIdentity) =>
     localDayQueryKey(scope, 'completions', boundary),

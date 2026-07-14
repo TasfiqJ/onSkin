@@ -208,10 +208,11 @@ async function persistRevenueCatResult(
   return withAttribution;
 }
 
-export function useEntitlement() {
+export function useEntitlement(options: { enabled?: boolean } = {}) {
   const ownerScope = useOwnerQueryScope();
   return useQuery<SubscriptionState>({
     queryKey: queryKeys.entitlement(ownerScope),
+    enabled: options.enabled ?? true,
     retry: 0,
     queryFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
