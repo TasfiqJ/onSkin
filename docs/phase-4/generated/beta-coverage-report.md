@@ -1,8 +1,8 @@
 # Phase 4 Beta Coverage Report
 
-Generated: 2026-07-13T20:04:01.163Z
+Generated: 2026-07-14T00:09:07.419Z
 Status: blocked
-Git SHA: 7afd69741c2c73651959fae282555f582e9df338
+Git SHA: d5183635274016fee3f2fda9e0f681a0383517b1
 Git status: clean
 
 
@@ -57,10 +57,10 @@ Phase 4 coverage thresholds below are satisfied.
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-| package.json | present | 21062 | 9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0 |
+| package.json | present | 22309 | a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
-| .env.example | present | 16422 | c48da3e0c5eb2b900c9a721c35428f2b402b3577e1692b9fae0ad157c64ef091 |
+| .env.example | present | 16403 | 6b4ec777ad4ba73c3e79b0be8be7ed710f31aaddeb0e0e00496eb6c7db99448c |
 | scripts/phase4/build-source-worklist.mjs | present | 19918 | ac896b3cbeeaeb36781c5fc7d6e20c87223e30961f52900e9bbb2e2c6fa7d086 |
 | scripts/phase4/beta-coverage-report.mjs | present | 22245 | 708cc87185f72ee9356f73f75ec79c2543744647dae761aa347f55a81c86e4b7 |
 | scripts/phase4/beta-coverage-report-smoke.mjs | present | 8339 | 74be5ca44d86da117f80a514ad283212d05a08549cdafb3e2ed6824e6a118105 |
@@ -74,12 +74,12 @@ Phase 4 coverage thresholds below are satisfied.
 | docs/FOR_TAS_TO_DO.md | present | 11191 | a02a5647d2491966a701743128fbacab0dc57bf72f0067b305be98ffd469d56c |
 | docs/phase-4/beta-coverage-input.template.json | present | 1947 | cf8d5146432335820a361c1ea6d6c7cea1059df602c9d15804fefc01a4bc6cd2 |
 | docs/phase-4/beta-coverage-report.md | present | 2125 | d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d |
-| docs/phase-4/generated/source-worklist.json | present | 46709 | d6dc22b7d44d1299a266f0d9f31dd67beeaef6e1b2028fc90071eb1e69836acd |
-| docs/phase-4/generated/source-worklist.md | present | 28924 | 16bb10074161d68c3ad2b224808e40aaf3b2da41c1569b1270499f073b58097d |
+| docs/phase-4/generated/source-worklist.json | present | 46709 | 57a8ab9fe56ffe5cf258dde8bd4acf239bf5222e27af02c8400ce14c972169fa |
+| docs/phase-4/generated/source-worklist.md | present | 28924 | 71dd38b0b5845ea666929f4c7c1575c820b8e9dde0346aed9541d8bb50b2d8fe |
 | docs/phase-4/observability-dashboard.md | present | 2488 | f2c94ee4b693a2b943134f0c7cbec737fb6017042c8aae3b27fb60330477b981 |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |
-| docs/phase-4/generated/catalog-qa-report.json | present | 7475 | 0e2b934e166f5df994450ae47658569343c9176c0d87b0a1dbf236829218982d |
-| docs/phase-4/generated/catalog-qa-report.md | present | 4055 | 4b4d487289a2a5d9f5704dc8ce601cb020c49df1817a7d36052c0d3f85b72e42 |
+| docs/phase-4/generated/catalog-qa-report.json | present | 7475 | a5af4caedc325fcbb5382524b7ccbe42d5e03c5d2aaec41f1e8a88bb3f7c0c87 |
+| docs/phase-4/generated/catalog-qa-report.md | present | 4055 | 54ab3aac99930c8e362b2d6c1402dafd01b4f351f3bf97e39c9fee66837cc040 |
 | docs/phase-10/beta-event-schema.md | present | 6525 | f3acfb6c84582d279e4000318c1e5c0e297623a80c1ce0bb8be17458313b4269 |
 | docs/phase-10/catalog-beta-report.md | present | 1680 | 28729b9ed344c13414cb6426f0c5360ac21034641b5cd94298d8dbb391165d28 |
 | docs/phase-10/support-beta-report.md | present | 2149 | f25c3841a8bc5649dbd1f38632c756898da46a5d7f4d59ff7c328726dc9d26ac |
