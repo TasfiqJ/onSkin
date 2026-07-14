@@ -68,6 +68,35 @@ assert.deepEqual(
   'Apple account-support instructions must remain mapped to identity and consent',
 );
 
+const postHogDeletionOrigin = inventory.items.find(
+  (entry) => entry.id === 'vendor-call:origin:eu.posthog.com',
+);
+assert(postHogDeletionOrigin, 'missing the environment-configured PostHog deletion origin');
+assert.deepEqual(
+  postHogDeletionOrigin.featureIds,
+  ['F-20'],
+  'PostHog deletion must remain mapped to admin and operator tooling',
+);
+
+const deletionLifecycleTableFeatures = {
+  account_deletion_operations: ['F-02', 'F-20'],
+  account_deletion_barriers: ['F-02', 'F-20'],
+  account_deletion_steps: ['F-02', 'F-20'],
+  account_deletion_receipts: ['F-02', 'F-20'],
+  account_deletion_operator_recovery_audit: ['F-02', 'F-20'],
+  revenuecat_identity_tombstones: ['F-02', 'F-11', 'F-12'],
+  account_publication_leases: ['F-02', 'F-11', 'F-12'],
+};
+for (const [table, expectedFeatureIds] of Object.entries(deletionLifecycleTableFeatures)) {
+  const tableItem = inventory.items.find((entry) => entry.id === `data-store:postgres:${table}`);
+  assert(tableItem, `missing deletion lifecycle table ${table}`);
+  assert.deepEqual(
+    tableItem.featureIds,
+    expectedFeatureIds,
+    `${table} must remain mapped to its account/privacy, payment, and/or operator launch features`,
+  );
+}
+
 console.log(
   'Execution baseline smoke passed: omission, addition, duplicate, feature, and surface guards reject incomplete sets.',
 );

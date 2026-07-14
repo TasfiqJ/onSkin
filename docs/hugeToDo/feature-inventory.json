@@ -226,7 +226,7 @@
     }
   ],
   "categoryCounts": {
-    "data-store": 85,
+    "data-store": 92,
     "edge-function": 11,
     "feature-flag": 17,
     "generated-packet": 30,
@@ -387,6 +387,48 @@
       "category": "data-store",
       "source": "apps/mobile/src/lib/supabase/largeSecureStore.ts",
       "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_barriers",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_operator_recovery_audit",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_receipts",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_deletion_steps",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:account_publication_leases",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000052_account_publication_fence.sql",
+      "featureIds": ["F-02", "F-11", "F-12"],
       "readiness": "implemented"
     },
     {
@@ -744,6 +786,13 @@
       "category": "data-store",
       "source": "supabase/migrations/20260613000021_recommendations.sql",
       "featureIds": ["F-13"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:revenuecat_identity_tombstones",
+      "category": "data-store",
+      "source": "supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql",
+      "featureIds": ["F-02", "F-11", "F-12"],
       "readiness": "implemented"
     },
     {
@@ -2185,7 +2234,7 @@
     {
       "id": "vendor-call:origin:api.revenuecat.com",
       "category": "vendor-call",
-      "source": "supabase/functions/account-deletion/providerDeletion.ts",
+      "source": "supabase/functions/account-deletion/durableProviderDeletion.ts",
       "featureIds": ["F-11", "F-12"],
       "readiness": "simulated"
     },
@@ -2199,7 +2248,7 @@
     {
       "id": "vendor-call:origin:appleid.apple.com",
       "category": "vendor-call",
-      "source": "supabase/functions/account-deletion/index.ts",
+      "source": "supabase/functions/account-deletion/appleDeletionNetwork.ts",
       "featureIds": ["F-02"],
       "readiness": "implemented"
     },
@@ -2227,7 +2276,7 @@
     {
       "id": "vendor-call:origin:eu.posthog.com",
       "category": "vendor-call",
-      "source": "supabase/functions/account-deletion/index.ts",
+      "source": "supabase/functions/account-deletion/providerDeletion.ts",
       "featureIds": ["F-20"],
       "readiness": "implemented"
     },

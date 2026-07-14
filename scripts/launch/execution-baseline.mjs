@@ -242,6 +242,16 @@ function nativeFeatures(name) {
 
 function dataFeatures(name) {
   const value = name.toLowerCase();
+  const exactTableFeatures = {
+    account_deletion_operations: ['F-02', 'F-20'],
+    account_deletion_barriers: ['F-02', 'F-20'],
+    account_deletion_steps: ['F-02', 'F-20'],
+    account_deletion_receipts: ['F-02', 'F-20'],
+    account_deletion_operator_recovery_audit: ['F-02', 'F-20'],
+    revenuecat_identity_tombstones: ['F-02', 'F-11', 'F-12'],
+    account_publication_leases: ['F-02', 'F-11', 'F-12'],
+  };
+  if (exactTableFeatures[value]) return exactTableFeatures[value];
   if (value.includes('/trend/')) return ['F-18'];
   if (/photo/.test(value)) return ['F-09', ...(value.includes('trend') ? ['F-18'] : [])];
   if (/community|moderation|reaction|topic|question/.test(value)) return ['F-17'];
@@ -361,8 +371,14 @@ function discoverVendorOrigins() {
     (path) => /\.(?:ts|tsx)$/.test(path) && !/\.(?:test|spec)\./.test(path),
   );
   for (const path of files) {
-    for (const match of readRepo(path).matchAll(/https:\/\/([a-z0-9.-]+)/gi)) {
-      const host = match[1].toLowerCase();
+    const source = readRepo(path);
+    const sourceHosts = new Set([
+      ...[...source.matchAll(/https:\/\/([a-z0-9.-]+)/gi)].map((match) => match[1].toLowerCase()),
+      ...[...source.matchAll(/\.hostname\s*(?:===|!==)\s*['"]([a-z0-9.-]+)['"]/gi)].map((match) =>
+        match[1].toLowerCase(),
+      ),
+    ]);
+    for (const host of sourceHosts) {
       if (host.endsWith('.invalid') || host === 'example.com' || host.startsWith('your-project'))
         continue;
       const mapping = hostMap[host];
