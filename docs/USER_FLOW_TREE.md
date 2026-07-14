@@ -311,6 +311,20 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Evidence: Screenshot and text snapshot.
   - Current local evidence: 2026-07-07 Expo web 320 x 568 shows `We don't store your birth date.` with no mojibake, complete day/month/year fields, a visible Continue control, zero horizontal overflow, and no visible sub-44 px controls.
   - Current support-floor text-pressure evidence: 2026-07-09 headless Chrome Expo web added a skipped-route sweep for omitted direct-entry routes at 320 x 480 / 170%. Before the fix, `/onboarding/age` put the day, month, and year inputs under the fixed Continue footer. Post-fix, the compact age gate scrolls above the footer, uses shorter support-floor copy, and the full 21-route skipped sweep reports zero failed routes. Evidence and report are in `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-current/`, `test-results/human-e2e/2026-07-09/text-pressure-170-skipped-routes-320-480-postfix/`, and `docs/e2e-bug-reports/2026-07-09-skipped-routes-text-pressure-clearance.md`.
+- Branch: unreadable saved age confirmation
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open `/onboarding/age` with persistent and one-shot age-verification read failures, including a previously passed gate, then activate Try again.
+  - Expected result: Unavailable, corrupt, or future-version state shows one accessible recovery alert and a 56 px retry action; no DOB fields, Continue action, false first-visit state, reset, or navigation is exposed. Persistent retry remains fail-closed. One-shot retry re-reads the exact saved flag and redirects a verified user without asking for DOB again.
+  - Evidence: Phone-width screenshots, visible text/control geometry, route snapshots, browser logs, and exact storage-state comparison where the test surface exposes it.
+  - Current local evidence: 2026-07-13 Codex in-app browser Expo web verifies persistent and one-shot read failures at the 375 × 667 launch floor, 390 × 844 supported modern phone, and 320 × 480 compact stress size. Each unavailable state has exactly one accessible alert, no DOB input or Continue action, a 55.99 px retry control, zero horizontal overflow, no dialogs, and zero browser errors. Persistent retry stays fail-closed; one-shot retry with a previously saved pass flag advances directly to Goals without asking for DOB again. Evidence is in `test-results/human-e2e/2026-07-13/age-verification-storage-recovery-current/`.
+- Branch: age-confirmation save failure
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Enter a valid adult DOB with a targeted write failure, activate Continue, then retry after a one-shot failure.
+  - Expected result: The route never stores the DOB, never advances before the minimized pass flag is durably written, keeps the entered fields intact, exposes one accessible save error, blocks duplicate pending writes, suppresses navigation/state publication if the screen unmounts during a write, and advances only after a successful deliberate retry.
+  - Evidence: Before/after screenshots, visible text and field values, route snapshots, browser logs, and persisted minimized-flag verification where available.
+  - Current local evidence: 2026-07-13 Expo web uses the real DOB form with a one-shot write failure. The first Continue keeps `/onboarding/age`, preserves all three field values, shows one accessible save error, retains a 55.99 px action, and does not navigate. A deliberate second Continue writes the minimized flag and advances to Goals; the later one-shot read-recovery flow confirms that saved pass without exposing DOB fields. The final post-visual save-generation guard invalidates late navigation/state publication on unmount and passed focused/full automated tests plus adversarial review; a requested fresh second browser backend was unavailable, so a direct slow-write-and-leave interaction remains open. Evidence is in `test-results/human-e2e/2026-07-13/age-verification-storage-recovery-current/`.
 - Branch: goal selection on shortest phone
   - Priority: Critical
   - Automate later: Yes

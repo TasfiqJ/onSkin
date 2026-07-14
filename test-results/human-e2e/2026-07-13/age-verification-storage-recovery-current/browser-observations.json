@@ -1,0 +1,100 @@
+{
+  "date": "2026-07-13",
+  "surface": "Expo web in Codex in-app browser",
+  "route": "/onboarding/age",
+  "origin": "http://localhost:8261",
+  "fixtures": {
+    "persistentReadFailure": "EXPO_PUBLIC_E2E_AGE_VERIFICATION_READ_FAILURE=always",
+    "oneShotReadFailure": "EXPO_PUBLIC_E2E_AGE_VERIFICATION_READ_FAILURE=once",
+    "oneShotWriteFailure": "EXPO_PUBLIC_E2E_AGE_VERIFICATION_WRITE_FAILURE=once"
+  },
+  "observations": [
+    {
+      "state": "persistent_read_failure_initial",
+      "requestedViewport": { "width": 375, "height": 667 },
+      "renderedViewport": { "width": 376, "height": 668 },
+      "route": "/onboarding/age",
+      "alertCount": 1,
+      "inputCount": 0,
+      "continueTextCount": 0,
+      "retryButtonHeight": 55.99211502075195,
+      "documentWidth": 376,
+      "result": "pass"
+    },
+    {
+      "state": "persistent_read_failure_after_retry",
+      "requestedViewport": { "width": 375, "height": 667 },
+      "route": "/onboarding/age",
+      "alertCount": 1,
+      "inputCount": 0,
+      "retryFailureCopyVisible": true,
+      "result": "pass"
+    },
+    {
+      "state": "one_shot_write_failure",
+      "requestedViewport": { "width": 375, "height": 667 },
+      "renderedViewport": { "width": 376, "height": 668 },
+      "route": "/onboarding/age",
+      "alertCount": 1,
+      "fieldValuesPreserved": { "day": "01", "month": "01", "year": "1990" },
+      "continueButtonHeight": 55.99211502075195,
+      "documentWidth": 376,
+      "retryRoute": "/onboarding/goals",
+      "result": "pass"
+    },
+    {
+      "state": "one_shot_read_failure_with_verified_flag",
+      "requestedViewport": { "width": 375, "height": 667 },
+      "renderedViewport": { "width": 376, "height": 668 },
+      "initialRoute": "/onboarding/age",
+      "inputCount": 0,
+      "alertCount": 1,
+      "routeAfterUserRetry": "/onboarding/goals",
+      "result": "pass"
+    },
+    {
+      "state": "persistent_read_failure_modern_phone",
+      "requestedViewport": { "width": 390, "height": 844 },
+      "renderedViewport": { "width": 390, "height": 845 },
+      "inputCount": 0,
+      "alertCount": 1,
+      "retryButtonHeight": 55.99211502075195,
+      "documentWidth": 390,
+      "result": "pass"
+    },
+    {
+      "state": "persistent_read_failure_compact_phone_after_retry",
+      "requestedViewport": { "width": 320, "height": 480 },
+      "renderedViewport": { "width": 320, "height": 481 },
+      "inputCount": 0,
+      "alertCount": 1,
+      "retryButtonHeight": 55.99211502075195,
+      "retryButtonBottom": 402.2603340148926,
+      "documentWidth": 320,
+      "documentHeight": 481,
+      "result": "pass"
+    }
+  ],
+  "console": {
+    "errorCount": 0,
+    "javascriptDialogCount": 0,
+    "expectedDevelopmentWarnings": [
+      "Supabase placeholder configuration",
+      "expo-notifications web listener limitation",
+      "existing multiple GoTrueClient development warning"
+    ]
+  },
+  "storageEvidence": {
+    "directBrowserStorageInspection": false,
+    "reason": "Browser privacy guidance prohibits inspecting browser local-storage internals.",
+    "behavioralProof": "A successful one-shot write retry was followed by a fresh one-shot read failure; user-triggered retry redirected to Goals without showing DOB fields.",
+    "unitProof": "ageGateStore.test.ts verifies canonical v1:1 writes and exact preservation of malformed, future-version, and fixture-failure state."
+  },
+  "postVisualReview": {
+    "finding": "A slow age-confirmation save could publish navigation or state after the screen unmounted.",
+    "fix": "The final source commit invalidates a save request generation on unmount and guards post-write navigation, error, and pending-state publication.",
+    "verification": "Focused route tests, final root typecheck/lint, the 235-file 2673-test suite, and an independent adversarial review passed after the guard.",
+    "freshBrowserRecheck": "A second isolated browser backend was unavailable after the completed visual phase; no alternate browser surface was substituted."
+  },
+  "nativeDeviceEvidence": "open"
+}
