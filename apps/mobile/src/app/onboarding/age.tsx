@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
@@ -9,9 +9,23 @@ import {
   meetsMinimumAge,
   MINIMUM_AGE,
 } from '@/features/onboarding/ageGate';
-import { getAgeVerified, setAgeVerified } from '@/features/onboarding/ageGateStore';
+import { readAgeVerification, setAgeVerified } from '@/features/onboarding/ageGateStore';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
+
+const AGE_VERIFICATION_STORAGE_COPY = {
+  loading: 'Checking your age confirmation...',
+  eyebrow: 'Private age confirmation',
+  title: 'Age confirmation unavailable',
+  body: "We couldn't safely read the age confirmation saved on this phone. Nothing was reset or removed. Try again when private storage is available.",
+  retry: 'Try again',
+  retrying: 'Trying again...',
+  retryFailed: 'The saved confirmation is still unavailable. Nothing was changed.',
+  saveFailed:
+    "We couldn't save your age confirmation. Your birth date was not stored. Try again when private storage is available.",
+} as const;
+
+type VerificationStatus = 'checking' | 'ready' | 'error';
 
 // 01b · Neutral age gate (docs/01 §4). We ask for a date of birth (never "are you
 // over X?", which invites falsification) BEFORE any health-data collection, and
@@ -59,23 +73,56 @@ export default function AgeGateScreen() {
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [blocked, setBlocked] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [verificationStatus, setVerificationStatus] = useState<VerificationStatus>('checking');
+  const [retrying, setRetrying] = useState(false);
+  const [retryFailed, setRetryFailed] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
+  const verificationRequestId = useRef(0);
+  const saveRequestId = useRef(0);
   const supportFloorTextPressurePhone =
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPhone = height < 640 || supportFloorTextPressurePhone;
 
+  const checkAgeVerification = useCallback(async (reason: 'initial' | 'retry') => {
+    const requestId = ++verificationRequestId.current;
+    const fromRetry = reason === 'retry';
+    setRetryFailed(false);
+    if (fromRetry) setRetrying(true);
+    else setVerificationStatus('checking');
+
+    try {
+      const result = await readAgeVerification();
+      if (verificationRequestId.current !== requestId) return;
+
+      if (result.status === 'available' && result.value) {
+        router.replace('/onboarding/goals');
+        return;
+      }
+      if (result.status === 'absent' || result.status === 'available') {
+        setVerificationStatus('ready');
+        return;
+      }
+      setRetryFailed(fromRetry);
+      setVerificationStatus('error');
+    } catch {
+      if (verificationRequestId.current !== requestId) return;
+      setRetryFailed(fromRetry);
+      setVerificationStatus('error');
+    } finally {
+      if (verificationRequestId.current === requestId) setRetrying(false);
+    }
+  }, []);
+
   // Skip if a prior session already passed the gate (don't re-ask on re-entry).
   useEffect(() => {
-    let active = true;
-    void getAgeVerified().then((ok) => {
-      if (!active) return;
-      if (ok) router.replace('/onboarding/goals');
-      else setChecked(true);
-    });
+    const timer = setTimeout(() => void checkAgeVerification('initial'), 0);
     return () => {
-      active = false;
+      clearTimeout(timer);
+      verificationRequestId.current += 1;
+      saveRequestId.current += 1;
     };
-  }, []);
+  }, [checkAgeVerification]);
 
   const dob = { year: Number(year), month: Number(month), day: Number(day) };
   const complete = day.length > 0 && month.length > 0 && year.length === 4;
@@ -91,17 +138,80 @@ export default function AgeGateScreen() {
   }
 
   async function submit() {
+    if (saving) return;
     track('screen_viewed', { screen_name: 'age_gate' });
     if (meetsMinimumAge(dob, today)) {
-      await setAgeVerified();
-      router.replace('/onboarding/goals');
+      const requestId = ++saveRequestId.current;
+      setSaveFailed(false);
+      setSaving(true);
+      try {
+        await setAgeVerified();
+        if (saveRequestId.current !== requestId) return;
+        router.replace('/onboarding/goals');
+      } catch {
+        if (saveRequestId.current === requestId) setSaveFailed(true);
+      } finally {
+        if (saveRequestId.current === requestId) setSaving(false);
+      }
     } else {
       setBlocked(true);
     }
   }
 
-  // Render nothing while deciding whether to skip (avoids a flash of the form).
-  if (!checked) return null;
+  if (verificationStatus === 'checking') {
+    return (
+      <Screen>
+        <View
+          accessibilityLabel={AGE_VERIFICATION_STORAGE_COPY.loading}
+          accessibilityLiveRegion="polite"
+          className="flex-1 items-center justify-center"
+        >
+          <Text variant="bodySm" tone="muted" className="text-center">
+            {AGE_VERIFICATION_STORAGE_COPY.loading}
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
+
+  if (verificationStatus === 'error') {
+    return (
+      <Screen>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 32 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <View accessibilityLiveRegion="polite" accessibilityRole="alert">
+            <Text variant="label" tone="clay" className="text-center">
+              {AGE_VERIFICATION_STORAGE_COPY.eyebrow}
+            </Text>
+            <Text variant="title" className="mt-3 text-center">
+              {AGE_VERIFICATION_STORAGE_COPY.title}
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-3 text-center">
+              {AGE_VERIFICATION_STORAGE_COPY.body}
+            </Text>
+            {retryFailed ? (
+              <Text variant="bodySm" className="mt-3 text-center">
+                {AGE_VERIFICATION_STORAGE_COPY.retryFailed}
+              </Text>
+            ) : null}
+          </View>
+          <Button
+            accessibilityLabel="Retry age confirmation"
+            className="mt-7 min-h-[56px]"
+            disabled={retrying}
+            label={
+              retrying
+                ? AGE_VERIFICATION_STORAGE_COPY.retrying
+                : AGE_VERIFICATION_STORAGE_COPY.retry
+            }
+            onPress={() => void checkAgeVerification('retry')}
+          />
+        </ScrollView>
+      </Screen>
+    );
+  }
 
   return (
     <Screen>
@@ -162,7 +272,11 @@ export default function AgeGateScreen() {
             />
           </View>
 
-          {validationError || blocked ? (
+          {saveFailed ? (
+            <Text variant="bodySm" tone="clay" className="mt-5" accessibilityRole="alert">
+              {AGE_VERIFICATION_STORAGE_COPY.saveFailed}
+            </Text>
+          ) : validationError || blocked ? (
             <Text variant="bodySm" tone="clay" className="mt-5" accessibilityRole="alert">
               {validationError ?? `You need to be at least ${MINIMUM_AGE} to use ${BRAND.appName}.`}
             </Text>
@@ -171,7 +285,11 @@ export default function AgeGateScreen() {
       </View>
 
       <View className="bg-paper pb-4 pt-2">
-        <Button label="Continue" disabled={!valid} onPress={() => void submit()} />
+        <Button
+          label={saving ? 'Saving...' : 'Continue'}
+          disabled={!valid || saving}
+          onPress={() => void submit()}
+        />
       </View>
     </Screen>
   );

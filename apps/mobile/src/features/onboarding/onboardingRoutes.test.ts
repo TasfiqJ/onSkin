@@ -34,6 +34,55 @@ describe('onboarding route contracts', () => {
     expect(source).not.toContain('â€™');
   });
 
+  it('keeps unreadable age-verification state out of the DOB form', () => {
+    const route = readAppRoute('onboarding/age.tsx');
+    const store = readFileSync(
+      fileURLToPath(new URL('./ageGateStore.ts', import.meta.url)),
+      'utf8',
+    );
+
+    expect(store).toContain('readAgeVerification(): Promise<PrivateBooleanReadResult>');
+    expect(store).toContain('return readPrivateBoolean(KEY);');
+    expect(store).not.toContain('getPrivateBooleanFailClosed');
+    expect(store).toContain('EXPO_PUBLIC_E2E_AGE_VERIFICATION_READ_FAILURE');
+    expect(store).toContain('EXPO_PUBLIC_E2E_AGE_VERIFICATION_WRITE_FAILURE');
+    expect(store).toContain("if (typeof __DEV__ === 'undefined' || !__DEV__) return false;");
+    expect(route).toContain("type VerificationStatus = 'checking' | 'ready' | 'error';");
+    expect(route).toContain("result.status === 'absent' || result.status === 'available'");
+    expect(route).toContain("if (verificationStatus === 'error')");
+    expect(route).toContain('accessibilityRole="alert"');
+    expect(route).toContain('accessibilityLabel="Retry age confirmation"');
+    expect(route).toContain('className="mt-7 min-h-[56px]"');
+    expect(route).toContain("onPress={() => void checkAgeVerification('retry')}");
+    expect(route).toContain('disabled={retrying}');
+    expect(route).toContain('verificationRequestId.current !== requestId');
+    expect(route.indexOf("if (verificationStatus === 'error')")).toBeLessThan(
+      route.indexOf('<DobField'),
+    );
+  });
+
+  it('does not navigate or lose DOB input when age-confirmation saving fails', () => {
+    const source = readAppRoute('onboarding/age.tsx');
+    const write = source.indexOf('await setAgeVerified();');
+    const navigate = source.indexOf("router.replace('/onboarding/goals');", write);
+    const failure = source.indexOf('setSaveFailed(true);', write);
+
+    expect(write).toBeGreaterThan(-1);
+    expect(navigate).toBeGreaterThan(write);
+    expect(failure).toBeGreaterThan(navigate);
+    expect(source).toContain('if (saving) return;');
+    expect(source).toContain('const saveRequestId = useRef(0);');
+    expect(source).toContain('const requestId = ++saveRequestId.current;');
+    expect(source).toContain('saveRequestId.current += 1;');
+    expect(source).toContain('if (saveRequestId.current !== requestId) return;');
+    expect(source).toContain('if (saveRequestId.current === requestId) setSaveFailed(true);');
+    expect(source).toContain('if (saveRequestId.current === requestId) setSaving(false);');
+    expect(source).toContain("label={saving ? 'Saving...' : 'Continue'}");
+    expect(source).toContain('disabled={!valid || saving}');
+    expect(source).toContain('Your birth date was not stored.');
+    expect(source).toContain('accessibilityRole="alert"');
+  });
+
   it('keeps account creation copy honest about local-first routine state', () => {
     const source = readAppRoute('onboarding/account.tsx');
 

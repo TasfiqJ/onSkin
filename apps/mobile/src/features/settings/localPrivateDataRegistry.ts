@@ -179,7 +179,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'onskin.ageVerified',
     lifecycle: 'current',
     codec: scalarCodec('private_boolean', 'v1', ['legacy_boolean']),
-    typedRead: gap('Public age-gate read collapses private-data failures to false.'),
+    typedRead: typedAdapterRead,
     export: include('account_and_privacy', 'age_verified', 'safe_scalar_or_json'),
   }),
   privateData({

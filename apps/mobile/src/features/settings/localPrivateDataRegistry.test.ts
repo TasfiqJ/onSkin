@@ -25,7 +25,6 @@ describe('local private-data contract registry', () => {
 
   it('keeps the exact known contract gaps visible until their store migrations land', () => {
     expect(localPrivateRegistryGaps()).toEqual([
-      'onskin.ageVerified:typedRead',
       'onskin.appLock.enabled:typedRead',
       'onskin.ask.groundedTurns.v1:typedRead',
       'onskin.conflict.overrides:typedRead',
