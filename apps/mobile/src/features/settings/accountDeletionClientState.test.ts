@@ -114,12 +114,24 @@ describe('durable mobile account-deletion state', () => {
     expect(isAccountActivityBlockedForDeletion()).toBe(true);
   });
 
-  it('rolls back only a new in-memory barrier when secure persistence fails', async () => {
+  it('fails closed when secure persistence has an ambiguous outcome', async () => {
     vi.mocked(SecureStore.setItemAsync).mockRejectedValueOnce(new Error('keychain unavailable'));
 
     await expect(preparePendingAccountDeletion()).rejects.toThrow('keychain unavailable');
-    expect(isAccountActivityBlockedForDeletion()).toBe(false);
+    expect(isAccountActivityBlockedForDeletion()).toBe(true);
     expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
+  });
+
+  it('opens activity only after a definitive successful null read', async () => {
+    expect(isAccountActivityBlockedForDeletion()).toBe(true);
+
+    await expect(loadPendingAccountDeletion()).resolves.toBeNull();
+    expect(isAccountActivityBlockedForDeletion()).toBe(false);
+
+    resetAccountDeletionClientStateForTests();
+    vi.mocked(SecureStore.isAvailableAsync).mockRejectedValueOnce(new Error('keychain failed'));
+    await expect(loadPendingAccountDeletion()).rejects.toThrow('keychain failed');
+    expect(isAccountActivityBlockedForDeletion()).toBe(true);
   });
 
   it('clears the barrier only after terminal capability deletion succeeds', async () => {

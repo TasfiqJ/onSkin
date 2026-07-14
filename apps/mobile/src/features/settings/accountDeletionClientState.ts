@@ -163,15 +163,11 @@ export function preparePendingAccountDeletion(
       statusCapability,
     };
 
-    // Block capture/writes before persisting and before the network request. If
-    // persistence fails, roll back only this newly installed in-memory barrier.
+    // Block capture/writes before persisting and before the network request. A
+    // failed write may be partial or ambiguous, so only a later definitive null
+    // read may reopen account activity.
     setAccountActivityBlockedForDeletion(true);
-    try {
-      await persistRecord(record);
-    } catch (error) {
-      setAccountActivityBlockedForDeletion(false);
-      throw error;
-    }
+    await persistRecord(record);
     return record;
   });
 }
@@ -205,7 +201,7 @@ export function clearCompletedAccountDeletionState(): Promise<void> {
   });
 }
 
-export function resetAccountDeletionClientStateForTests(): void {
-  setAccountActivityBlockedForDeletion(false);
+export function resetAccountDeletionClientStateForTests(blocked = true): void {
+  setAccountActivityBlockedForDeletion(blocked);
   stateQueue = Promise.resolve();
 }

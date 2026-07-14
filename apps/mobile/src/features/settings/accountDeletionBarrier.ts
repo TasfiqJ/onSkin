@@ -1,4 +1,6 @@
-let accountActivityBlocked = false;
+// Startup is unresolved until SecureStore has been read. Default closed so no
+// account-bound vendor capture or mutation can race a restored pending request.
+let accountActivityBlocked = true;
 
 /** Synchronous process-local guard used by capture and mutation entry points. */
 export function isAccountActivityBlockedForDeletion(): boolean {
