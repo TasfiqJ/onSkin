@@ -470,8 +470,9 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
 - `npm run docs:tas-todo-audit:check` passed as the non-mutating freshness gate
   for the committed Tas-owned evidence inventory.
 - `npm run brand:audit:strict` is now part of `npm run launch:verify`, so the
-  root readiness sweep fails if public launch-risk or review-needed legacy brand
-  references return.
+  root readiness sweep fails if a public launch-risk or review-needed legacy
+  reference returns, or if the exact reviewed compatibility manifest is
+  missing, stale, duplicated, count-mismatched, or otherwise invalid.
 - `npm run phase10:beta-analytics-audit` is now part of
   `npm run launch:verify`, so the root readiness sweep fails if the beta event
   schema, analytics allowlist, runtime `track(...)` calls, or privacy-safe
@@ -519,8 +520,12 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   iOS/Android build IDs, physical-device matrix evidence, native
   camera/photo/notification/share/RevenueCat/Sentry QA, and named tester
   signoff evidence.
-- `npm run brand:audit:strict` passed with 0 public launch-risk and 0
-  review-needed hits.
+- `npm run brand:audit:strict` passed with 0 public launch-risk, 0
+  review-needed, and 22 exact reviewed `legacy-compatibility` hits. The retained
+  references are byte-bound cryptographic/domain-separation, migration,
+  live-harness, or rehearsal contracts; the audit prints an explicit
+  non-clearance notice and does not close the legal/final-identity gate. See
+  `docs/hugeToDo/BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md`.
 - The DB-09 source contract now classifies all 63 migrated public tables, binds
   all 40 private tables to permanent-user, signed-anonymous, and no-session
   probes, requires exact PostgreSQL/Storage denial outcomes, and makes cleanup

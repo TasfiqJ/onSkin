@@ -307,13 +307,18 @@ There is already a public skincare/cosmetic scanner branded `OnSkin` at
 the legacy identity for local/native launch defaults: the current working
 candidate is `RoutineKind`, with `routinekind://` and `com.routinekind.app`
 development/staging defaults. `npm run brand:audit:strict` passes with zero
-public launch-risk and zero review-needed legacy-brand hits; remaining legacy
-hits are deliberate guard rails, internal namespaces, fixtures, or historical
-context.
+public launch-risk, zero review-needed, and 22 exact reviewed
+`legacy-compatibility` hits. The retained 22 are cryptographic/domain-separation
+contracts, historical migration contracts, one live compatibility harness, or
+exact PostgreSQL rehearsal fixtures. Their path, literal, expected count,
+subtype, and rationale are fail-closed in
+`scripts/brand-legacy-compatibility.json`; new or drifted references make the
+strict audit fail. Evidence:
+`docs/hugeToDo/BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md`.
 
-This is not legal clearance, trademark clearance, domain registration, App
-Store name reservation, or final production identity evidence. Production
-native config still fails closed unless
+That technical audit result is not legal clearance, trademark clearance,
+domain registration, App Store name reservation, or final production identity
+evidence. Production native config still fails closed unless
 `BRAND_LEGAL_CLEARANCE=cleared` and explicit final identity env values are set.
 
 Risk:

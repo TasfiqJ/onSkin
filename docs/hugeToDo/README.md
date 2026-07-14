@@ -14,6 +14,7 @@ Start here:
 - [Accounts and Vendor Decision Packet](./ACCOUNTS_AND_VENDOR_DECISION_PACKET.md)
 - [DB-01–DB-11 Gap Matrix](./DB-01-11-GAP-MATRIX-2026-07-13.md)
 - [DB-05 Credential-Free Local Reset Evidence](./DB-05-LOCAL-RESET-2026-07-14.md)
+- [Legacy Brand Compatibility Checkpoint](./BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md)
 - [IOS-10 Export-Compliance Gate](./IOS-10-EXPORT-COMPLIANCE-GATE.md)
 - [US Wave 1 Privacy and Consumer-Health Law Gate](./US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md)
 

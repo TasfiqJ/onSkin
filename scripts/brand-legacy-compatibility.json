@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "notice": "Reviewed technical compatibility classification only; this is not trademark, legal, domain, store-name, or final production identity clearance.",
+  "entries": [
+    {
+      "path": "supabase/functions/account-deletion/durableDeletionCore.ts",
+      "literal": "'onskin-account-deletion-status-capability:v1:'",
+      "expectedCount": 1,
+      "subtype": "cryptographic-domain-separation",
+      "rationale": "This SHA-256 domain must stay byte-aligned with migration 0048 and persisted capability digests."
+    },
+    {
+      "path": "supabase/functions/account-deletion/durableDeletionCore.ts",
+      "literal": "'onskin-account-deletion-intake-idempotency:v1:'",
+      "expectedCount": 1,
+      "subtype": "cryptographic-domain-separation",
+      "rationale": "This SHA-256 domain must stay byte-aligned with migration 0048 and persisted idempotency digests."
+    },
+    {
+      "path": "supabase/functions/account-deletion/durableDeletionCrypto.ts",
+      "literal": "'onskin-account-deletion-encrypted-payload'",
+      "expectedCount": 1,
+      "subtype": "cryptographic-domain-separation",
+      "rationale": "This AES-GCM additional-authenticated-data purpose authenticates existing encrypted deletion payloads."
+    },
+    {
+      "path": "supabase/functions/account-deletion/durableDeletionRuntimeCore.ts",
+      "literal": "'onskin-account-deletion-subject:v1:'",
+      "expectedCount": 1,
+      "subtype": "cryptographic-domain-separation",
+      "rationale": "This HMAC domain identifies subjects in retained deletion receipts and must preserve lookup continuity."
+    },
+    {
+      "path": "supabase/functions/account-deletion/durableDeletionRuntimeCore.ts",
+      "literal": "'onskin-account-deletion-intake-owner:v1:'",
+      "expectedCount": 1,
+      "subtype": "cryptographic-domain-separation",
+      "rationale": "This HMAC domain identifies deletion-intake rate-limit owners and must preserve existing buckets."
+    },
+    {
+      "path": "supabase/functions/account-deletion/revenueCatV2DeletionExecutor.ts",
+      "literal": "'onskin:account-deletion:revenuecat-v2-credential:v1\\u0000'",
+      "expectedCount": 1,
+      "subtype": "cryptographic-domain-separation",
+      "rationale": "This credential-binding domain is persisted in resumable provider executor state and validated on resume."
+    },
+    {
+      "path": "supabase/functions/account-deletion/revenueCatV2DeletionExecutor.ts",
+      "literal": "'onskin:account-deletion:revenuecat-v2-observation-claim:v1\\u0000'",
+      "expectedCount": 1,
+      "subtype": "cryptographic-domain-separation",
+      "rationale": "This claim-binding domain prevents provider absence observations from crossing worker claims."
+    },
+    {
+      "path": "supabase/functions/_shared/revenueCatIdentityTombstone.ts",
+      "literal": "'onskin/revenuecat-identity-tombstone/v1'",
+      "expectedCount": 1,
+      "subtype": "cryptographic-domain-separation",
+      "rationale": "This HMAC domain derives retained provider-identity tombstone lookups across configured key versions."
+    },
+    {
+      "path": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "literal": "'onskin-account-write:'",
+      "expectedCount": 1,
+      "subtype": "migration-history",
+      "rationale": "This historical migration defines the account-write advisory-lock namespace used during deletion."
+    },
+    {
+      "path": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "literal": "'onskin-account-deletion-status-capability:v1:'",
+      "expectedCount": 1,
+      "subtype": "migration-history",
+      "rationale": "This historical migration defines persisted status-capability digests shared with the runtime."
+    },
+    {
+      "path": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "literal": "'onskin-account-deletion-intake-idempotency:v1:'",
+      "expectedCount": 1,
+      "subtype": "migration-history",
+      "rationale": "This historical migration defines persisted intake-idempotency digests shared with the runtime."
+    },
+    {
+      "path": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "literal": "'onskin-account-deletion-worker-claim:v1:'",
+      "expectedCount": 1,
+      "subtype": "migration-history",
+      "rationale": "This historical migration defines worker-claim digests that protect durable deletion ownership."
+    },
+    {
+      "path": "supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql",
+      "literal": "'onskin-account-deletion-operator-command:v1:'",
+      "expectedCount": 1,
+      "subtype": "migration-history",
+      "rationale": "This historical migration defines operator-command digests retained for replay protection and audit."
+    },
+    {
+      "path": "supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql",
+      "literal": "'onskin/revenuecat-identity-tombstone-lock/v1:'",
+      "expectedCount": 1,
+      "subtype": "migration-history",
+      "rationale": "This historical migration defines the advisory-lock namespace for provider identity tombstones."
+    },
+    {
+      "path": "supabase/migrations/20260713000052_account_publication_fence.sql",
+      "literal": "'onskin-account-publication-lease-capability:v1:'",
+      "expectedCount": 1,
+      "subtype": "migration-history",
+      "rationale": "This historical migration defines persisted publication-lease capability digests."
+    },
+    {
+      "path": "scripts/phase9/account-publication-fence-postgres-rehearsal.sql",
+      "literal": "'onskin-account-write:'",
+      "expectedCount": 1,
+      "subtype": "test-fixture",
+      "rationale": "This disposable PostgreSQL rehearsal mirrors migration 0048's advisory-lock contract."
+    },
+    {
+      "path": "scripts/phase9/account-publication-fence-postgres-rehearsal.sql",
+      "literal": "'onskin-account-deletion-worker-claim:v1:'",
+      "expectedCount": 1,
+      "subtype": "test-fixture",
+      "rationale": "This disposable PostgreSQL rehearsal mirrors migration 0048's worker-claim digest contract."
+    },
+    {
+      "path": "scripts/phase9/live-data-rights.mjs",
+      "literal": "`onskin-account-deletion-status-capability:v1:${capability}`",
+      "expectedCount": 1,
+      "subtype": "live-compatibility-harness",
+      "rationale": "This live harness must derive the production status-capability digest for cleanup and assertions."
+    },
+    {
+      "path": "scripts/phase9/revenuecat-deletion-barrier-postgres-rehearsal.sql",
+      "literal": "'onskin-account-write:'",
+      "expectedCount": 1,
+      "subtype": "test-fixture",
+      "rationale": "This disposable PostgreSQL rehearsal mirrors the deployed-or-persisted account-lock contract."
+    },
+    {
+      "path": "scripts/phase9/revenuecat-identity-tombstones-postgres-rehearsal.sql",
+      "literal": "'onskin-account-write:'",
+      "expectedCount": 1,
+      "subtype": "test-fixture",
+      "rationale": "This disposable PostgreSQL rehearsal mirrors the account-lock ordering used by tombstone writes."
+    },
+    {
+      "path": "scripts/phase9/revenuecat-identity-tombstones-postgres-rehearsal.sql",
+      "literal": "'onskin/account-deletion-claim/v1:'",
+      "expectedCount": 1,
+      "subtype": "test-fixture",
+      "rationale": "This disposable PostgreSQL rehearsal uses a local claim-digest domain for isolation checks."
+    },
+    {
+      "path": "scripts/phase9/service-writer-deletion-barriers-postgres-rehearsal.sql",
+      "literal": "'onskin-account-write:'",
+      "expectedCount": 1,
+      "subtype": "test-fixture",
+      "rationale": "This disposable PostgreSQL rehearsal mirrors the account-write lock used by guarded services."
+    }
+  ]
+}

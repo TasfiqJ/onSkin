@@ -51,10 +51,16 @@ safe to launch.
 - This repo historically used `OnSkin`, `onskin`, `onskin://`,
   `com.onskin.app`, and placeholder `onskin.app` references. The native
   development/staging defaults and local Supabase redirect placeholders now use
-  RoutineKind. `npm run brand:audit:strict` now passes; remaining audit hits are
-  classified as deliberate legacy-brand guard rails, internal namespaces, or
-  historical docs that still need final clearance or a deliberate migration
-  decision.
+  RoutineKind. `npm run brand:audit:strict` now passes with zero public launch
+  risks, zero unreviewed references, and 22 exact reviewed
+  `legacy-compatibility` references. Those references are retained byte-for-byte
+  because they are cryptographic/domain-separation contracts, historical migration
+  contracts, a live compatibility harness, or exact database rehearsal
+  fixtures. The path/literal/count review is fail-closed in
+  `scripts/brand-legacy-compatibility.json` and documented in
+  [`BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md`](./hugeToDo/BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md).
+  This technical classification is not trademark/legal clearance or final
+  identity approval.
 
 ## Required Counsel Output
 

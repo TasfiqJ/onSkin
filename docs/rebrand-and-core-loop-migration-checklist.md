@@ -33,6 +33,16 @@ Do not create production accounts or store records until final brand clearance e
    - Policy/support URL.
    - Share-card/deep-link asset.
    - Internal package name or historical doc.
+   - Reviewed cryptographic, migration, live-harness, or rehearsal
+     compatibility contract. These require an exact manifest entry and a
+     separately designed versioned migration; never rename them mechanically.
+
+   The compatibility manifest is
+   `scripts/brand-legacy-compatibility.json`. Each entry is bound to one exact
+   repository path, source literal, expected occurrence count, subtype, and
+   rationale. `npm run brand:audit:strict` fails on manifest drift or a new
+   unclassified legacy reference. A passing technical audit does not provide
+   legal clearance or approve the working candidate.
 
 3. Make identity values config-driven where safe. Status: native
    development/staging defaults now use RoutineKind; production still fails
