@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T18:52:55.186Z",
+  "generatedAt": "2026-07-14T00:13:21.522Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -81,10 +81,10 @@
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-13",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 210,
-  "expectedMobileTests": 2251,
-  "actualMobileTestFiles": 210,
-  "expectedTestPhrase": "210 mobile test files / 2251 tests",
+  "expectedMobileTestFiles": 211,
+  "expectedMobileTests": 2262,
+  "actualMobileTestFiles": 211,
+  "expectedTestPhrase": "211 mobile test files / 2262 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -94,19 +94,19 @@
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 210,
-          "tests": 2251,
-          "source": "210 mobile test files / 2251 tests"
+          "testFiles": 211,
+          "tests": 2262,
+          "source": "211 mobile test files / 2262 tests"
         },
         {
-          "testFiles": 210,
-          "tests": 2251,
-          "source": "210 mobile test files / 2251 tests"
+          "testFiles": 211,
+          "tests": 2262,
+          "source": "211 mobile test files / 2262 tests"
         },
         {
-          "testFiles": 210,
-          "tests": 2251,
-          "source": "210 test files / 2251 tests"
+          "testFiles": 211,
+          "tests": 2262,
+          "source": "211 test files / 2262 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -122,9 +122,9 @@
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 210,
-          "tests": 2251,
-          "source": "210 mobile test files / 2251 tests"
+          "testFiles": 211,
+          "tests": 2262,
+          "source": "211 mobile test files / 2262 tests"
         }
       ],
       "unexpectedTestBaselines": [],
