@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-13T20:03:34.570Z
+Generated: 2026-07-14T00:09:05.929Z
 Status: pass
-Git SHA: 5c8b79776b3417f53954746e32ac9dd3d1460f8b
+Git SHA: 133822a75fa14bb5ae7f66a42562ef9506d1474c
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -50,7 +50,7 @@ Required evidence:
 
 Sources:
 
-- `.env.example` - 16422 bytes - sha256 `c48da3e0c5eb2b900c9a721c35428f2b402b3577e1692b9fae0ad157c64ef091`
+- `.env.example` - 16403 bytes - sha256 `6b4ec777ad4ba73c3e79b0be8be7ed710f31aaddeb0e0e00496eb6c7db99448c`
 - `scripts/phase4/check-source-env.mjs` - 3481 bytes - sha256 `dfb219e5ad682a53d99ce03e72cb1e35762c9c92d0081f179f9c8c73118b8e91`
 - `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 2334 bytes - sha256 `441e03ded2314f7a9efc2f11e3b7d0daa97256de17e6c654423124c1c4a4670f`
 - `docs/phase-4/catalog-source-memo-cosing.md` - 2021 bytes - sha256 `49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534`
@@ -264,7 +264,7 @@ Required evidence:
 Sources:
 
 - `docs/04-smart-shelf.md` - 55627 bytes - sha256 `96a33fafa232716b20562d6bf5664ce018284bc4fc59c9003a1437ab37065dce`
-- `docs/USER_FLOW_TREE.md` - 358190 bytes - sha256 `1eeb5ae98ce1c98f9f479c9fe720a6ad0eb52a6959fec5f3dc3c54c5696ca461`
+- `docs/USER_FLOW_TREE.md` - 358943 bytes - sha256 `059cf974dc272f3b410ee65bc2b3ef5dcf9b5363c5a277bd7ecd39eeb9f396e6`
 - `apps/mobile/src/app/onboarding/products.tsx` - 15483 bytes - sha256 `ae461d520feb9894e38ce46222b47963d9f31f9077933eb03142e53898ea72ba`
 - `apps/mobile/src/app/shelf/[id].tsx` - 37135 bytes - sha256 `dfae778efed66e57e151c5bfc14e00c7ce473fd2b4ec02002d90ff27e18770fd`
 - `apps/mobile/src/app/shelf/opened.tsx` - 12059 bytes - sha256 `cac7cfabb2a28e50ebb8138cde5d7c38e0dfbb35a8142ad680697ff816e49cd0`
