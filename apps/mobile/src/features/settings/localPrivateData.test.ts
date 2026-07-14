@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clearLocalPrivateData } from './localPrivateData';
+import {
+  LOCAL_PRIVATE_BULK_CLEANUP_KEYS,
+  LOCAL_PRIVATE_CONTROL_KEYS,
+} from './localPrivateDataRegistry';
 
 const mocks = vi.hoisted(() => ({
   cancelAllScheduledNotificationsAsync: vi.fn(),
@@ -88,18 +92,17 @@ describe('local private data cleanup', () => {
     await expect(clearLocalPrivateData()).resolves.toBeUndefined();
 
     expect(mocks.removePrivateItemsForAuthorizedReset).toHaveBeenCalledWith(
-      expect.arrayContaining([
-        'routinekind.routineActivation.v1',
-        'routinekind.routineOrder.v1',
-        'routinekind.localDataOwnerHash.v1',
-        'onskin.photo.content_key_created.v1',
-        'onskin.skinprofile.v1',
-      ]),
+      LOCAL_PRIVATE_BULK_CLEANUP_KEYS,
       'account_isolation',
     );
-    expect(mocks.removePrivateItemsForAuthorizedReset.mock.calls[0]?.[0]).not.toContain(
-      'routinekind.localDataCleanupRequired.v1',
+    expect(mocks.removePrivateItemsForAuthorizedReset.mock.calls[0]?.[0]).toEqual(
+      LOCAL_PRIVATE_BULK_CLEANUP_KEYS,
     );
+    for (const controlKey of LOCAL_PRIVATE_CONTROL_KEYS) {
+      expect(mocks.removePrivateItemsForAuthorizedReset.mock.calls[0]?.[0]).not.toContain(
+        controlKey,
+      );
+    }
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);
     expect(mocks.cancelAllScheduledNotificationsAsync).toHaveBeenCalledTimes(1);

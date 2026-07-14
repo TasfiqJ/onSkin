@@ -153,16 +153,27 @@ describe('recommendation local store recovery', () => {
     expect(mocks.storage.get(DISMISSED_KEY)).toBe(original);
   });
 
-  it('normalizes duplicate and invalid dismissed ids', async () => {
-    mocks.storage.set(DISMISSED_KEY, JSON.stringify([' gap:spf ', '', 'gap:spf', false]));
+  it('preserves semantically malformed legacy dismissed ids and returns the known fail-empty view', async () => {
+    const original = JSON.stringify([' gap:spf ', '', 'gap:spf', false]);
+    mocks.storage.set(DISMISSED_KEY, original);
+
+    await expect(loadDismissed()).resolves.toEqual([]);
+
+    expect(mocks.storage.get(DISMISSED_KEY)).toBe(original);
+  });
+
+  it('reads strict legacy dismissed ids and upgrades only during an explicit mutation', async () => {
+    const original = JSON.stringify(['gap:spf']);
+    mocks.storage.set(DISMISSED_KEY, original);
 
     await expect(loadDismissed()).resolves.toEqual(['gap:spf']);
-    expect(JSON.parse(mocks.storage.get(DISMISSED_KEY) ?? '[]')).toEqual([
-      ' gap:spf ',
-      '',
-      'gap:spf',
-      false,
-    ]);
+    expect(mocks.storage.get(DISMISSED_KEY)).toBe(original);
+
+    await dismissRecommendation(ownerScope(), 'gap:cleanser');
+    expect(JSON.parse(mocks.storage.get(DISMISSED_KEY) ?? '{}')).toEqual({
+      version: 1,
+      values: ['gap:spf', 'gap:cleanser'],
+    });
   });
 
   it('refuses to overwrite malformed dismissed storage', async () => {

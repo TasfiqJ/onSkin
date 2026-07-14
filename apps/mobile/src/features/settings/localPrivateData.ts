@@ -11,12 +11,8 @@ import {
   removePrivateItemsForAuthorizedReset,
 } from '@/lib/storage/privateKV';
 
-import {
-  LOCAL_PRIVATE_CACHE_FILENAMES,
-  LOCAL_PRIVATE_DATA_KEYS,
-  LOCAL_PRIVATE_METADATA_KEYS,
-  localPrivateCachePrefixes,
-} from './localPrivateDataKeys';
+import { LOCAL_PRIVATE_CACHE_FILENAMES, localPrivateCachePrefixes } from './localPrivateDataKeys';
+import { LOCAL_PRIVATE_BULK_CLEANUP_KEYS } from './localPrivateDataRegistry';
 
 const LOCAL_PRIVATE_VENDOR_RESET_TIMEOUT_MS = 2_000;
 
@@ -64,7 +60,7 @@ export async function clearLocalPrivateData(): Promise<void> {
     {
       label: 'registered_records',
       promise: removePrivateItemsForAuthorizedReset(
-        [...LOCAL_PRIVATE_DATA_KEYS, ...LOCAL_PRIVATE_METADATA_KEYS],
+        LOCAL_PRIVATE_BULK_CLEANUP_KEYS,
         'account_isolation',
       ),
     },

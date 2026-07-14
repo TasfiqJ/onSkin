@@ -1338,6 +1338,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
+- Branch: unreadable local `This helped` state
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open a valid Skin Note after a reaction has been stored, force the encrypted reaction record to return unavailable/corrupt/future state, then retry after restoring read access.
+  - Expected result: The expert note and Share action remain usable, but the app never presents unreadable reaction data as an ordinary unselected heart. It explains that the saved choice was not reset, replaces the mutation control with one 48 pt retry action, emits no reaction analytics, and restores the durable selected/unselected state after retry. A failed desired-state write does not publish an unconfirmed state; route-owned retry copy remains honest about ambiguous completion, and retry idempotently converges to the requested state.
+  - Evidence: Typed reaction-store tests, note-route contract, supported-phone screenshot/role snapshot, analytics log, and byte-preservation assertion under `test-results/human-e2e/YYYY-MM-DD/community-reaction-storage-recovery-current/`.
 - Branch: direct-entry Community exits
   - Priority: Important
   - Automate later: Yes

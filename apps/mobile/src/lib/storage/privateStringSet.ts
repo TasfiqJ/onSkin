@@ -16,16 +16,21 @@ function invalid(code: string): Error {
   return new Error(code);
 }
 
-function normalizeLegacyValues(value: unknown): string[] {
+function decodeLegacyValues(value: unknown): string[] {
   if (!Array.isArray(value)) throw invalid(PRIVATE_STRING_SET_INVALID);
-  return [
-    ...new Set(
-      value
-        .filter((item): item is string => typeof item === 'string')
-        .map((item) => item.trim())
-        .filter((item) => item.length > 0),
-    ),
-  ];
+  const values: string[] = [];
+  for (const item of value) {
+    if (
+      typeof item !== 'string' ||
+      item.length === 0 ||
+      item.trim() !== item ||
+      values.includes(item)
+    ) {
+      throw invalid(PRIVATE_STRING_SET_INVALID);
+    }
+    values.push(item);
+  }
+  return values;
 }
 
 function decodeCurrentEnvelope(value: Record<string, unknown>): string[] {
@@ -65,7 +70,7 @@ export function decodePrivateStringSet(raw: string | null): string[] {
   } catch {
     throw invalid(PRIVATE_STRING_SET_INVALID);
   }
-  if (Array.isArray(parsed)) return normalizeLegacyValues(parsed);
+  if (Array.isArray(parsed)) return decodeLegacyValues(parsed);
   if (!isRecord(parsed)) throw invalid(PRIVATE_STRING_SET_INVALID);
   return decodeCurrentEnvelope(parsed);
 }

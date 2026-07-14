@@ -153,7 +153,7 @@ describe('Community route contracts', () => {
     const source = readAppRoute('community/note/[id].tsx');
     const feedbackIndex = source.indexOf('accessibilityRole="alert"');
     const actionRowIndex = source.indexOf(
-      "className={shareFeedback ? 'mt-3 flex-row gap-3' : 'mt-4 flex-row gap-3'}",
+      'shareFeedback || helpedQ.isError || helpedMutation.isError',
     );
 
     expect(source).toContain("import { useEffect, useRef, useState } from 'react';");
@@ -171,12 +171,29 @@ describe('Community route contracts', () => {
     expect(source).toContain('ref={scrollRef}');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('className="mt-3 text-center"');
-    expect(source).toContain(
-      "className={shareFeedback ? 'mt-3 flex-row gap-3' : 'mt-4 flex-row gap-3'}",
-    );
+    expect(source).toContain('shareFeedback || helpedQ.isError || helpedMutation.isError');
     expect(feedbackIndex).toBeGreaterThan(-1);
     expect(actionRowIndex).toBeGreaterThan(-1);
     expect(feedbackIndex).toBeLessThan(actionRowIndex);
+  });
+
+  it('keeps an unreadable This helped state distinct from an unselected reaction', () => {
+    const source = readAppRoute('community/note/[id].tsx');
+
+    expect(source).toContain('retry: false');
+    expect(source).toContain('helpedQ.isPending');
+    expect(source).toContain('helpedQ.isError');
+    expect(source).toContain('Reaction unavailable. Your saved choice was not reset.');
+    expect(source).toContain('accessibilityLabel="Retry This helped"');
+    expect(source).toContain('void helpedQ.refetch()');
+    expect(source).toContain('helpedMutation.isError');
+    expect(source).toContain(
+      'Reaction status could not be confirmed. Your saved choice was not reset; try again.',
+    );
+    expect(source).toContain('setNoteHelpful(noteId, next)');
+    expect(source).toContain('next: !helped');
+    expect(source).toContain('disabled={helpedMutation.isPending}');
+    expect(source).toContain("helpedMutation.isPending ? 'Saving' : COMMUNITY_COPY.card.helped");
   });
 
   it('recovers missing Skin Note details without a dead empty state', () => {

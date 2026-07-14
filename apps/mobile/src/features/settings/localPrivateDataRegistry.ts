@@ -1,0 +1,711 @@
+import {
+  LOCAL_DATA_CLEANUP_REQUIRED_KEY,
+  LOCAL_DATA_OWNER_HASH_KEY,
+} from '@/lib/auth/sessionOwnerKey';
+import { ACCOUNT_DELETION_VENDOR_FREEZE_KEY } from '@/lib/auth/accountDeletionVendorFreezeKey';
+import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCore';
+
+export type LocalPrivateKeyCategory = 'data' | 'secure_store' | 'metadata' | 'control';
+export type LocalPrivateKeyLifecycle =
+  | 'current'
+  | 'legacy_read'
+  | 'legacy_retained'
+  | 'key_material'
+  | 'metadata'
+  | 'control';
+export type LocalPrivateExportSection =
+  | 'account_and_privacy'
+  | 'profile_and_preferences'
+  | 'shelf_and_routine'
+  | 'activity_and_app_state'
+  | 'subscription'
+  | 'progress';
+export type LocalPrivateExportTransform =
+  | 'structured_json'
+  | 'safe_scalar_or_json'
+  | 'conflict_choices'
+  | 'photo_records';
+
+type Contract<T extends object> =
+  | ({ status: 'enforced' } & T)
+  | { status: 'gap'; issue: string }
+  | { status: 'not_applicable'; reason: string };
+
+type CodecContract = Contract<{
+  codecId: string;
+  currentVersion: string | number;
+  legacyVersions: readonly (string | number)[];
+}>;
+
+type TypedReadContract = Contract<{
+  mode: 'domain_result' | 'typed_adapter' | 'control_state_machine' | 'key_material_error_taxonomy';
+}>;
+
+type MutationContract = Contract<{
+  mode:
+    | 'private_kv_atomic_transform'
+    | 'photo_two_phase_journal'
+    | 'serialized_verified_control'
+    | 'single_flight_key_write'
+    | 'replace_only_control'
+    | 'read_only';
+}>;
+
+type OwnerBindingContract = Contract<{
+  mode:
+    | 'private_kv_account_boundary'
+    | 'photo_account_generation'
+    | 'owner_hash_control'
+    | 'owner_bound_deletion_receipt'
+    | 'verified_owner_startup_control';
+}>;
+
+export type LocalPrivateExportPolicy = Contract<
+  | {
+      mode: 'include';
+      section: LocalPrivateExportSection;
+      field: string;
+      transform: LocalPrivateExportTransform;
+    }
+  | { mode: 'exclude'; reason: string }
+>;
+
+type CleanupContract = Contract<{
+  mode:
+    | 'authorized_private_kv_bulk'
+    | 'photo_storage_delegate'
+    | 'private_kv_key_delegate'
+    | 'preserve_control'
+    | 'clear_after_verified_cleanup';
+  handler: string;
+}>;
+
+type ResetContract = Contract<{
+  authority:
+    | 'account_isolation_only'
+    | 'device_authenticated_setting_repair'
+    | 'backend_deletion_completion_only'
+    | 'startup_recovery_only'
+    | 'none';
+}>;
+
+type RecoveryContract = Contract<{
+  mode:
+    | 'preserve_bytes_and_retry'
+    | 'device_authenticated_setting_reset'
+    | 'journal_replay_before_mount'
+    | 'preserve_key_material_no_rotation'
+    | 'fail_closed_control_retry'
+    | 'explicit_domain_delete';
+}>;
+
+export type LocalPrivateKeyDescriptor = Readonly<{
+  key: string;
+  category: LocalPrivateKeyCategory;
+  storage: 'private_kv' | 'secure_store_with_legacy_fallback' | 'async_storage_control';
+  lifecycle: LocalPrivateKeyLifecycle;
+  discovery: 'production_literal' | 'retained_inventory';
+  codec: CodecContract;
+  typedRead: TypedReadContract;
+  mutation: MutationContract;
+  ownerBinding: OwnerBindingContract;
+  export: LocalPrivateExportPolicy;
+  cleanup: CleanupContract;
+  reset: ResetContract;
+  recovery: RecoveryContract;
+}>;
+
+const enforced = <const T extends object>(value: T) => ({ status: 'enforced', ...value }) as const;
+const gap = (issue: string) => ({ status: 'gap', issue }) as const;
+const notApplicable = (reason: string) => ({ status: 'not_applicable', reason }) as const;
+
+const PRIVATE_KV_MUTATION = enforced({ mode: 'private_kv_atomic_transform' as const });
+const PRIVATE_KV_OWNER = enforced({ mode: 'private_kv_account_boundary' as const });
+const PRIVATE_KV_CLEANUP = enforced({
+  mode: 'authorized_private_kv_bulk' as const,
+  handler: 'removePrivateItemsForAuthorizedReset',
+});
+const ACCOUNT_RESET = enforced({ authority: 'account_isolation_only' as const });
+const PRESERVE_PRIVATE_BYTES = enforced({ mode: 'preserve_bytes_and_retry' as const });
+
+type PrivateDataInput = Readonly<{
+  key: string;
+  lifecycle: Extract<LocalPrivateKeyLifecycle, 'current' | 'legacy_read' | 'legacy_retained'>;
+  discovery?: LocalPrivateKeyDescriptor['discovery'];
+  codec: CodecContract;
+  typedRead: TypedReadContract;
+  mutation?: MutationContract;
+  ownerBinding?: OwnerBindingContract;
+  export: LocalPrivateExportPolicy;
+  cleanup?: CleanupContract;
+  reset?: ResetContract;
+  recovery?: RecoveryContract;
+}>;
+
+function privateData<const T extends PrivateDataInput>(entry: T) {
+  return {
+    category: 'data' as const,
+    storage: 'private_kv' as const,
+    mutation: PRIVATE_KV_MUTATION,
+    ownerBinding: PRIVATE_KV_OWNER,
+    cleanup: PRIVATE_KV_CLEANUP,
+    reset: ACCOUNT_RESET,
+    recovery: PRESERVE_PRIVATE_BYTES,
+    ...entry,
+    discovery: entry.discovery ?? ('production_literal' as const),
+  } as const;
+}
+
+const jsonCodec = (
+  codecId: string,
+  currentVersion: number,
+  legacyVersions: readonly number[] = [],
+) => enforced({ codecId, currentVersion, legacyVersions });
+const scalarCodec = (
+  codecId: string,
+  currentVersion: string,
+  legacyVersions: readonly string[] = [],
+) => enforced({ codecId, currentVersion, legacyVersions });
+const typedDomainRead = enforced({ mode: 'domain_result' as const });
+const typedAdapterRead = enforced({ mode: 'typed_adapter' as const });
+const include = (
+  section: LocalPrivateExportSection,
+  field: string,
+  transform: LocalPrivateExportTransform = 'structured_json',
+) => enforced({ mode: 'include' as const, section, field, transform });
+
+export const LOCAL_PRIVATE_KEY_REGISTRY = [
+  privateData({
+    key: 'onskin.ageVerified',
+    lifecycle: 'current',
+    codec: scalarCodec('private_boolean', 'v1', ['legacy_boolean']),
+    typedRead: gap('Public age-gate read collapses private-data failures to false.'),
+    export: include('account_and_privacy', 'age_verified', 'safe_scalar_or_json'),
+  }),
+  privateData({
+    key: 'onskin.appLock.enabled',
+    lifecycle: 'current',
+    codec: scalarCodec('app_lock_boolean', 'v1', ['legacy_boolean']),
+    typedRead: gap('Public app-lock read throws/collapses instead of returning a domain result.'),
+    reset: enforced({ authority: 'device_authenticated_setting_repair' as const }),
+    recovery: enforced({ mode: 'device_authenticated_setting_reset' as const }),
+    export: include('account_and_privacy', 'app_lock_enabled', 'safe_scalar_or_json'),
+  }),
+  privateData({
+    key: 'onskin.ask.consent.v1',
+    lifecycle: 'current',
+    codec: scalarCodec('private_boolean', 'v1', ['legacy_boolean']),
+    typedRead: typedAdapterRead,
+    export: include('account_and_privacy', 'ask_consent', 'safe_scalar_or_json'),
+  }),
+  privateData({
+    key: 'onskin.ask.groundedTurns.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('ask_grounded_turns', 1, [0]),
+    typedRead: gap('Grounded-turn reads currently map unreadable state to zero.'),
+    export: include('activity_and_app_state', 'ask_grounded_turn_counts'),
+  }),
+  privateData({
+    key: 'onskin.commerceConsent.v1',
+    lifecycle: 'current',
+    codec: scalarCodec('private_boolean', 'v1', ['legacy_boolean']),
+    typedRead: typedAdapterRead,
+    export: include('account_and_privacy', 'commerce_consent', 'safe_scalar_or_json'),
+  }),
+  privateData({
+    key: 'onskin.community.reactions.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('private_string_set', 1, [0]),
+    typedRead: typedDomainRead,
+    export: include('activity_and_app_state', 'community_reactions'),
+  }),
+  privateData({
+    key: 'onskin.communityAge16.v1',
+    lifecycle: 'current',
+    codec: scalarCodec('private_boolean', 'v1', ['legacy_boolean']),
+    typedRead: typedAdapterRead,
+    export: include('account_and_privacy', 'community_age_16_verified', 'safe_scalar_or_json'),
+  }),
+  privateData({
+    key: 'onskin.communityConsent.v1',
+    lifecycle: 'current',
+    codec: scalarCodec('private_boolean', 'v1', ['legacy_boolean']),
+    typedRead: typedAdapterRead,
+    export: include('account_and_privacy', 'community_consent', 'safe_scalar_or_json'),
+  }),
+  privateData({
+    key: 'onskin.completions.firstCompletion.v1',
+    lifecycle: 'legacy_read',
+    codec: scalarCodec('legacy_first_completion_boolean', 'legacy_boolean'),
+    typedRead: typedDomainRead,
+    mutation: enforced({ mode: 'read_only' as const }),
+    export: include('shelf_and_routine', 'first_completion_marker', 'safe_scalar_or_json'),
+  }),
+  privateData({
+    key: 'onskin.completions.pending',
+    lifecycle: 'current',
+    codec: jsonCodec('completion_queue', 1, [0]),
+    typedRead: typedDomainRead,
+    export: include('shelf_and_routine', 'pending_completion_sync'),
+  }),
+  privateData({
+    key: 'onskin.completions.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('completion_log', 2, [0, 1]),
+    typedRead: typedDomainRead,
+    export: include('shelf_and_routine', 'completion_history'),
+  }),
+  privateData({
+    key: 'onskin.conflict.overrides',
+    lifecycle: 'current',
+    codec: jsonCodec('conflict_choices', 1, [0]),
+    typedRead: gap('Compatibility read maps unreadable conflict choices to an empty object.'),
+    export: include('shelf_and_routine', 'conflict_overrides', 'conflict_choices'),
+  }),
+  privateData({
+    key: 'onskin.cycle.v1',
+    lifecycle: 'legacy_read',
+    codec: jsonCodec('legacy_cycle_config', 1, [0]),
+    typedRead: typedDomainRead,
+    mutation: enforced({ mode: 'read_only' as const }),
+    export: include('shelf_and_routine', 'legacy_cycle_configuration'),
+  }),
+  privateData({
+    key: 'onskin.cycleAnchor',
+    lifecycle: 'current',
+    codec: jsonCodec('cycle_anchor', 1, [0]),
+    typedRead: typedDomainRead,
+    export: include('shelf_and_routine', 'legacy_cycle_anchor', 'safe_scalar_or_json'),
+  }),
+  privateData({
+    key: 'onskin.entitlement.v1',
+    lifecycle: 'legacy_read',
+    codec: jsonCodec('entitlement_cache', 1, [0]),
+    typedRead: typedDomainRead,
+    export: include('subscription', 'legacy_entitlement_cache'),
+  }),
+  privateData({
+    key: 'onskin.entitlement.v2',
+    lifecycle: 'current',
+    codec: jsonCodec('entitlement_cache', 1, [0]),
+    typedRead: typedDomainRead,
+    export: include('subscription', 'entitlement_cache'),
+  }),
+  privateData({
+    key: 'onskin.healthDataCollectionConsent.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('health_data_consent', 1),
+    typedRead: typedDomainRead,
+    export: include('account_and_privacy', 'health_data_collection_consent'),
+  }),
+  privateData({
+    key: 'onskin.milestones.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('private_string_set', 1, [0]),
+    typedRead: gap('Milestone mutation maps unreadable state to a false result.'),
+    export: include('activity_and_app_state', 'seen_milestones'),
+  }),
+  privateData({
+    key: 'onskin.notifPrefs.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('notification_preferences', 1, [0]),
+    typedRead: gap(
+      'Notification preference reads return a fail-closed value without typed status.',
+    ),
+    export: include('profile_and_preferences', 'notification_preferences'),
+  }),
+  privateData({
+    key: 'onskin.notiflog.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('notification_sent_ledger', 1, [0]),
+    typedRead: gap('Notification ledger reads use a sentinel rather than a typed status.'),
+    export: include('activity_and_app_state', 'notification_delivery_log'),
+  }),
+  privateData({
+    key: 'onskin.photos.captureConsent',
+    lifecycle: 'legacy_read',
+    codec: scalarCodec('private_boolean', 'v1', ['legacy_boolean']),
+    typedRead: gap('Legacy capture consent is collapsed into the combined boolean gate.'),
+    mutation: enforced({ mode: 'read_only' as const }),
+    export: include('account_and_privacy', 'legacy_photo_capture_consent', 'safe_scalar_or_json'),
+  }),
+  privateData({
+    key: 'onskin.photos.captureConsent.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('photo_capture_consent', 1),
+    typedRead: gap('Capture-consent reads collapse unavailable/corrupt/future state to false.'),
+    export: include('account_and_privacy', 'photo_capture_consent'),
+  }),
+  privateData({
+    key: 'onskin.photos.cloudBackup',
+    lifecycle: 'legacy_retained',
+    discovery: 'retained_inventory',
+    codec: gap(
+      'No active cloud-backup codec exists; retained bytes are export/delete inventory only.',
+    ),
+    typedRead: notApplicable('Cloud backup is unavailable and has no active reader.'),
+    mutation: enforced({ mode: 'read_only' as const }),
+    export: include(
+      'account_and_privacy',
+      'legacy_unavailable_cloud_backup_preference',
+      'safe_scalar_or_json',
+    ),
+  }),
+  privateData({
+    key: 'onskin.photos.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('photo_store', 2, [1]),
+    typedRead: gap('Photo reads throw domain errors instead of returning a typed result.'),
+    mutation: enforced({ mode: 'photo_two_phase_journal' as const }),
+    ownerBinding: enforced({ mode: 'photo_account_generation' as const }),
+    recovery: enforced({ mode: 'journal_replay_before_mount' as const }),
+    export: include('progress', 'photo_records', 'photo_records'),
+  }),
+  privateData({
+    key: 'onskin.ramp.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('ramp_state', 1, [0]),
+    typedRead: gap('Ramp reads map unreadable state to an empty record.'),
+    export: include('shelf_and_routine', 'active_ramps'),
+  }),
+  privateData({
+    key: 'onskin.recDismissed.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('private_string_set', 1, [0]),
+    typedRead: gap('Dismissed-recommendation reads map unreadable state to an empty list.'),
+    export: include('activity_and_app_state', 'dismissed_recommendations'),
+  }),
+  privateData({
+    key: 'onskin.recPrefs.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('recommendation_preferences', 1, [0]),
+    typedRead: gap('Recommendation preference reads map unreadable state to defaults.'),
+    export: include('profile_and_preferences', 'recommendation_preferences'),
+  }),
+  privateData({
+    key: 'onskin.reviewPrompt.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('review_prompt_state', 1, [0]),
+    typedRead: gap('Review-prompt reads map unreadable state to no prompt.'),
+    export: include('activity_and_app_state', 'review_prompt_state'),
+  }),
+  privateData({
+    key: 'routinekind.cycle.v2',
+    lifecycle: 'current',
+    codec: jsonCodec('cycle_config', 1),
+    typedRead: typedDomainRead,
+    export: include('shelf_and_routine', 'cycle_configuration'),
+  }),
+  privateData({
+    key: 'routinekind.routineActivation.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('routine_activation_analytics', 1, [0]),
+    typedRead: gap('Activation-state reads are internal and collapse failures to no event.'),
+    export: include('activity_and_app_state', 'routine_activation_state'),
+  }),
+  privateData({
+    key: 'routinekind.routineOrder.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('routine_order', 1, [0]),
+    typedRead: gap('Routine-order reads map unreadable state to empty overrides.'),
+    export: include('shelf_and_routine', 'routine_order_overrides'),
+  }),
+  privateData({
+    key: 'onskin.shelf.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('shelf_state', 1, [0]),
+    typedRead: gap('Shelf reads map unreadable state to an empty shelf.'),
+    export: include('shelf_and_routine', 'shelf_products'),
+  }),
+  privateData({
+    key: 'onskin.skinprofile.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('skin_profile', 1, [0]),
+    typedRead: typedDomainRead,
+    export: include('profile_and_preferences', 'skin_profile'),
+  }),
+  privateData({
+    key: 'onskin.subscription.freeConflictCheckRuleIds.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('free_conflict_quota', 1, [0]),
+    typedRead: typedDomainRead,
+    export: include('subscription', 'free_conflict_check_rule_ids'),
+  }),
+  privateData({
+    key: 'onskin.subscription.promptedExpiry',
+    lifecycle: 'current',
+    codec: jsonCodec('subscription_prompt', 2, [0, 1]),
+    typedRead: gap('Lifecycle prompt reads collapse unreadable state to no prompt.'),
+    export: include('subscription', 'prompted_expiry'),
+  }),
+  privateData({
+    key: 'onskin.trendInsights.v1',
+    lifecycle: 'current',
+    codec: scalarCodec('private_boolean', 'v1', ['legacy_boolean']),
+    typedRead: typedAdapterRead,
+    export: include('account_and_privacy', 'photo_trend_insights_consent', 'safe_scalar_or_json'),
+  }),
+  privateData({
+    key: 'onskin.trendState.v1',
+    lifecycle: 'legacy_retained',
+    codec: gap('No active trend-state codec or reader remains.'),
+    typedRead: notApplicable('The retained derived state is export/delete-only.'),
+    mutation: enforced({ mode: 'read_only' as const }),
+    recovery: enforced({ mode: 'explicit_domain_delete' as const }),
+    export: include('activity_and_app_state', 'photo_trend_state'),
+  }),
+  {
+    key: 'onskin.photo.content_key.v1',
+    category: 'secure_store',
+    storage: 'secure_store_with_legacy_fallback',
+    lifecycle: 'key_material',
+    discovery: 'production_literal',
+    codec: scalarCodec('xchacha20poly1305_key_hex', 'v1'),
+    typedRead: enforced({ mode: 'key_material_error_taxonomy' as const }),
+    mutation: enforced({ mode: 'single_flight_key_write' as const }),
+    ownerBinding: enforced({ mode: 'photo_account_generation' as const }),
+    export: enforced({ mode: 'exclude' as const, reason: 'encryption_key_material' }),
+    cleanup: enforced({
+      mode: 'photo_storage_delegate' as const,
+      handler: 'clearEncryptedPhotoStorage',
+    }),
+    reset: ACCOUNT_RESET,
+    recovery: enforced({ mode: 'preserve_key_material_no_rotation' as const }),
+  },
+  {
+    key: 'onskin.private_kv.content_key.v1',
+    category: 'secure_store',
+    storage: 'secure_store_with_legacy_fallback',
+    lifecycle: 'key_material',
+    discovery: 'production_literal',
+    codec: scalarCodec('xchacha20poly1305_key_hex', 'v1'),
+    typedRead: enforced({ mode: 'key_material_error_taxonomy' as const }),
+    mutation: enforced({ mode: 'single_flight_key_write' as const }),
+    ownerBinding: PRIVATE_KV_OWNER,
+    export: enforced({ mode: 'exclude' as const, reason: 'encryption_key_material' }),
+    cleanup: enforced({
+      mode: 'private_kv_key_delegate' as const,
+      handler: 'clearPrivateKVContentKey',
+    }),
+    reset: ACCOUNT_RESET,
+    recovery: enforced({ mode: 'preserve_key_material_no_rotation' as const }),
+  },
+  {
+    key: 'onskin.photo.content_key_created.v1',
+    category: 'metadata',
+    storage: 'async_storage_control',
+    lifecycle: 'metadata',
+    discovery: 'production_literal',
+    codec: scalarCodec('photo_key_presence_marker', 'v1'),
+    typedRead: enforced({ mode: 'control_state_machine' as const }),
+    mutation: enforced({ mode: 'replace_only_control' as const }),
+    ownerBinding: enforced({ mode: 'photo_account_generation' as const }),
+    export: enforced({ mode: 'exclude' as const, reason: 'encryption_internal_metadata' }),
+    cleanup: PRIVATE_KV_CLEANUP,
+    reset: ACCOUNT_RESET,
+    recovery: enforced({ mode: 'fail_closed_control_retry' as const }),
+  },
+  {
+    key: LOCAL_DATA_OWNER_HASH_KEY,
+    category: 'metadata',
+    storage: 'async_storage_control',
+    lifecycle: 'metadata',
+    discovery: 'production_literal',
+    codec: scalarCodec('domain_separated_sha256', 'v1'),
+    typedRead: enforced({ mode: 'control_state_machine' as const }),
+    mutation: enforced({ mode: 'replace_only_control' as const }),
+    ownerBinding: enforced({ mode: 'owner_hash_control' as const }),
+    export: enforced({ mode: 'exclude' as const, reason: 'owner_isolation_metadata' }),
+    cleanup: PRIVATE_KV_CLEANUP,
+    reset: ACCOUNT_RESET,
+    recovery: enforced({ mode: 'fail_closed_control_retry' as const }),
+  },
+  {
+    key: LOCAL_DATA_CLEANUP_REQUIRED_KEY,
+    category: 'control',
+    storage: 'async_storage_control',
+    lifecycle: 'control',
+    discovery: 'production_literal',
+    codec: scalarCodec('cleanup_required_presence_marker', 'v1'),
+    typedRead: enforced({ mode: 'control_state_machine' as const }),
+    mutation: enforced({ mode: 'replace_only_control' as const }),
+    ownerBinding: enforced({ mode: 'verified_owner_startup_control' as const }),
+    export: enforced({ mode: 'exclude' as const, reason: 'account_boundary_recovery_control' }),
+    cleanup: enforced({
+      mode: 'clear_after_verified_cleanup' as const,
+      handler: 'clearLocalDataCleanupRequired',
+    }),
+    reset: enforced({ authority: 'startup_recovery_only' as const }),
+    recovery: enforced({ mode: 'fail_closed_control_retry' as const }),
+  },
+  {
+    key: ACCOUNT_DELETION_VENDOR_FREEZE_KEY,
+    category: 'control',
+    storage: 'async_storage_control',
+    lifecycle: 'control',
+    discovery: 'production_literal',
+    codec: jsonCodec('account_deletion_vendor_freeze', 2),
+    typedRead: enforced({ mode: 'control_state_machine' as const }),
+    mutation: enforced({ mode: 'serialized_verified_control' as const }),
+    ownerBinding: enforced({ mode: 'owner_bound_deletion_receipt' as const }),
+    export: enforced({ mode: 'exclude' as const, reason: 'account_deletion_recovery_capability' }),
+    cleanup: enforced({
+      mode: 'clear_after_verified_cleanup' as const,
+      handler: 'clearAccountDeletionVendorFreezeAfterCleanup',
+    }),
+    reset: enforced({ authority: 'backend_deletion_completion_only' as const }),
+    recovery: enforced({ mode: 'fail_closed_control_retry' as const }),
+  },
+  {
+    key: PLAINTEXT_STAGING_JOURNAL_KEY,
+    category: 'control',
+    storage: 'async_storage_control',
+    lifecycle: 'control',
+    discovery: 'production_literal',
+    codec: jsonCodec('plaintext_staging_journal', 1),
+    typedRead: enforced({ mode: 'control_state_machine' as const }),
+    mutation: enforced({ mode: 'serialized_verified_control' as const }),
+    ownerBinding: enforced({ mode: 'verified_owner_startup_control' as const }),
+    export: enforced({ mode: 'exclude' as const, reason: 'temporary_plaintext_recovery_control' }),
+    cleanup: enforced({
+      mode: 'preserve_control' as const,
+      handler: 'scavengePlaintextStaging',
+    }),
+    reset: enforced({ authority: 'startup_recovery_only' as const }),
+    recovery: enforced({ mode: 'journal_replay_before_mount' as const }),
+  },
+] as const satisfies readonly LocalPrivateKeyDescriptor[];
+
+export type LocalPrivateRegistryEntry = (typeof LOCAL_PRIVATE_KEY_REGISTRY)[number];
+export type LocalPrivateDataKey = Extract<LocalPrivateRegistryEntry, { category: 'data' }>['key'];
+export type LocalPrivateRegistryAxis =
+  | 'codec'
+  | 'typedRead'
+  | 'mutation'
+  | 'ownerBinding'
+  | 'export'
+  | 'cleanup'
+  | 'reset'
+  | 'recovery';
+
+const CONTRACT_AXES = [
+  'codec',
+  'typedRead',
+  'mutation',
+  'ownerBinding',
+  'export',
+  'cleanup',
+  'reset',
+  'recovery',
+] as const satisfies readonly LocalPrivateRegistryAxis[];
+
+export function localPrivateRegistryGaps(
+  registry: readonly LocalPrivateKeyDescriptor[] = LOCAL_PRIVATE_KEY_REGISTRY,
+): string[] {
+  return registry
+    .flatMap((entry) =>
+      CONTRACT_AXES.flatMap((axis) =>
+        entry[axis].status === 'gap' ? [`${entry.key}:${axis}`] : [],
+      ),
+    )
+    .sort();
+}
+
+export function validateLocalPrivateKeyRegistry(
+  registry: readonly LocalPrivateKeyDescriptor[] = LOCAL_PRIVATE_KEY_REGISTRY,
+): string[] {
+  const errors: string[] = [];
+  const keys = new Set<string>();
+  const destinations = new Set<string>();
+
+  for (const entry of registry) {
+    if (!/^(onskin|routinekind)\.[A-Za-z0-9._-]+$/.test(entry.key)) {
+      errors.push(`invalid_key:${entry.key}`);
+    }
+    if (keys.has(entry.key)) errors.push(`duplicate_key:${entry.key}`);
+    keys.add(entry.key);
+
+    for (const axis of CONTRACT_AXES) {
+      const contract = entry[axis];
+      if (contract.status === 'gap' && contract.issue.trim().length === 0) {
+        errors.push(`empty_gap:${entry.key}:${axis}`);
+      }
+      if (contract.status === 'not_applicable' && contract.reason.trim().length === 0) {
+        errors.push(`empty_not_applicable:${entry.key}:${axis}`);
+      }
+    }
+
+    if (entry.category === 'data') {
+      if (entry.storage !== 'private_kv') errors.push(`data_storage:${entry.key}`);
+      if (entry.export.status !== 'enforced' || entry.export.mode !== 'include') {
+        errors.push(`data_export:${entry.key}`);
+      }
+      if (
+        entry.cleanup.status !== 'enforced' ||
+        entry.cleanup.mode !== 'authorized_private_kv_bulk'
+      ) {
+        errors.push(`data_cleanup:${entry.key}`);
+      }
+    } else if (entry.export.status !== 'enforced' || entry.export.mode !== 'exclude') {
+      errors.push(`non_data_export:${entry.key}`);
+    }
+
+    if (entry.category === 'control' && entry.cleanup.status === 'enforced') {
+      if (entry.cleanup.mode === 'authorized_private_kv_bulk') {
+        errors.push(`control_bulk_cleanup:${entry.key}`);
+      }
+    }
+
+    if (entry.export.status === 'enforced' && entry.export.mode === 'include') {
+      const destination = `${entry.export.section}:${entry.export.field}`;
+      if (destinations.has(destination)) errors.push(`duplicate_export_destination:${destination}`);
+      destinations.add(destination);
+    }
+  }
+
+  return errors.sort();
+}
+
+export const LOCAL_PRIVATE_DATA_KEYS = Object.freeze(
+  LOCAL_PRIVATE_KEY_REGISTRY.filter(
+    (entry): entry is Extract<LocalPrivateRegistryEntry, { category: 'data' }> =>
+      entry.category === 'data',
+  ).map((entry) => entry.key),
+);
+
+export const LOCAL_PRIVATE_SECURE_STORE_KEYS = Object.freeze(
+  LOCAL_PRIVATE_KEY_REGISTRY.filter(
+    (entry): entry is Extract<LocalPrivateRegistryEntry, { category: 'secure_store' }> =>
+      entry.category === 'secure_store',
+  ).map((entry) => entry.key),
+);
+
+export const LOCAL_PRIVATE_METADATA_KEYS = Object.freeze(
+  LOCAL_PRIVATE_KEY_REGISTRY.filter(
+    (entry): entry is Extract<LocalPrivateRegistryEntry, { category: 'metadata' }> =>
+      entry.category === 'metadata',
+  ).map((entry) => entry.key),
+);
+
+export const LOCAL_PRIVATE_CONTROL_KEYS = Object.freeze(
+  LOCAL_PRIVATE_KEY_REGISTRY.filter(
+    (entry): entry is Extract<LocalPrivateRegistryEntry, { category: 'control' }> =>
+      entry.category === 'control',
+  ).map((entry) => entry.key),
+);
+
+export const LOCAL_PRIVATE_BULK_CLEANUP_KEYS = Object.freeze(
+  LOCAL_PRIVATE_KEY_REGISTRY.flatMap((entry) =>
+    entry.cleanup.status === 'enforced' && entry.cleanup.mode === 'authorized_private_kv_bulk'
+      ? [entry.key]
+      : [],
+  ),
+);
+
+export const LOCAL_PRIVATE_EXPORT_SPECS = Object.freeze(
+  LOCAL_PRIVATE_KEY_REGISTRY.flatMap((entry) =>
+    entry.export.status === 'enforced' && entry.export.mode === 'include'
+      ? [{ key: entry.key as LocalPrivateDataKey, ...entry.export }]
+      : [],
+  ),
+);

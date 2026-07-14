@@ -315,18 +315,13 @@ describe('private KV encrypted storage', () => {
     await expect(multiRemovePrivateItems(['onskin.profile', contentKey])).rejects.toThrow(
       PRIVATE_KV_RESERVED_KEY,
     );
+    beginPrivateKVAccountBoundary();
     await expect(
-      removePrivateItemsForAuthorizedReset(
-        ['onskin.profile', foreignKey],
-        'device_authenticated_app_lock_repair',
-      ),
-    ).rejects.toThrow(PRIVATE_KV_ENVELOPE_FOREIGN);
+      removePrivateItemsForAuthorizedReset(['onskin.profile', foreignKey], 'account_isolation'),
+    ).rejects.toThrow(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
     await expect(
-      removePrivateItemsForAuthorizedReset(
-        ['onskin.profile', contentKey],
-        'device_authenticated_app_lock_repair',
-      ),
-    ).rejects.toThrow(PRIVATE_KV_RESERVED_KEY);
+      removePrivateItemsForAuthorizedReset(['onskin.profile', contentKey], 'account_isolation'),
+    ).rejects.toThrow(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
 
     expect(mocks.asyncStorage.get(foreignKey)).toBe('foreign-session');
     expect(mocks.asyncStorage.get(contentKey)).toBe('legacy-content-key');
@@ -571,20 +566,20 @@ describe('private KV encrypted storage', () => {
   });
 
   it('preserves keyless ciphertext until an explicitly authorized reset', async () => {
-    await setPrivateItem('onskin.keyless-delete', 'private-value');
-    const ciphertext = mocks.asyncStorage.get('onskin.keyless-delete');
+    await setPrivateItem('onskin.shelf.v1', 'private-value');
+    const ciphertext = mocks.asyncStorage.get('onskin.shelf.v1');
     mocks.secureStorage.delete(privateKVEncryptionInfo.secureStoreKey);
 
-    await expect(removePrivateItem('onskin.keyless-delete')).rejects.toThrow(
+    await expect(removePrivateItem('onskin.shelf.v1')).rejects.toThrow(
       PRIVATE_KV_CONTENT_KEY_MISSING,
     );
-    expect(mocks.asyncStorage.get('onskin.keyless-delete')).toBe(ciphertext);
+    expect(mocks.asyncStorage.get('onskin.shelf.v1')).toBe(ciphertext);
 
     beginPrivateKVAccountBoundary();
     await expect(
-      removePrivateItemsForAuthorizedReset(['onskin.keyless-delete'], 'account_isolation'),
+      removePrivateItemsForAuthorizedReset(['onskin.shelf.v1'], 'account_isolation'),
     ).resolves.toBeUndefined();
-    expect(mocks.asyncStorage.has('onskin.keyless-delete')).toBe(false);
+    expect(mocks.asyncStorage.has('onskin.shelf.v1')).toBe(false);
   });
 
   it('preserves every ciphertext when a malformed key blocks a batch deletion', async () => {
@@ -671,14 +666,81 @@ describe('private KV encrypted storage', () => {
 
   it('allows authorized account isolation to remove unreadable registered bytes during a boundary', async () => {
     const malformed = '{"version":"xchacha20poly1305:v1","nonceHex":"invalid"';
-    mocks.asyncStorage.set('onskin.account-a', malformed);
+    mocks.asyncStorage.set('onskin.shelf.v1', malformed);
     beginPrivateKVAccountBoundary();
 
     await expect(
-      removePrivateItemsForAuthorizedReset(['onskin.account-a'], 'account_isolation'),
+      removePrivateItemsForAuthorizedReset(['onskin.shelf.v1'], 'account_isolation'),
     ).resolves.toBeUndefined();
 
-    expect(mocks.asyncStorage.has('onskin.account-a')).toBe(false);
+    expect(mocks.asyncStorage.has('onskin.shelf.v1')).toBe(false);
+  });
+
+  it('allows account isolation to remove registered owner metadata', async () => {
+    mocks.asyncStorage.set('routinekind.localDataOwnerHash.v1', 'owner-hash');
+    beginPrivateKVAccountBoundary();
+
+    await expect(
+      removePrivateItemsForAuthorizedReset(
+        ['routinekind.localDataOwnerHash.v1'],
+        'account_isolation',
+      ),
+    ).resolves.toBeUndefined();
+
+    expect(mocks.asyncStorage.has('routinekind.localDataOwnerHash.v1')).toBe(false);
+  });
+
+  it('rejects account-isolation authority for control, delegated, and unknown keys', async () => {
+    const excludedKeys = [
+      'routinekind.accountDeletionVendorFreeze.v1',
+      'onskin.plaintext_staging_journal.v1',
+      'onskin.private_kv.content_key.v1',
+      'onskin.unregistered.v1',
+    ];
+    for (const key of excludedKeys) mocks.asyncStorage.set(key, `${key}:bytes`);
+    beginPrivateKVAccountBoundary();
+
+    for (const key of excludedKeys) {
+      await expect(
+        removePrivateItemsForAuthorizedReset([key], 'account_isolation'),
+      ).rejects.toThrow(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
+      expect(mocks.asyncStorage.get(key)).toBe(`${key}:bytes`);
+    }
+  });
+
+  it('allows device-authenticated repair to remove only the app-lock preference', async () => {
+    const malformed = '{"version":"xchacha20poly1305:v1","nonceHex":"invalid"';
+    mocks.asyncStorage.set('onskin.appLock.enabled', malformed);
+
+    await expect(
+      removePrivateItemsForAuthorizedReset(
+        ['onskin.appLock.enabled'],
+        'device_authenticated_app_lock_repair',
+      ),
+    ).resolves.toBeUndefined();
+
+    expect(mocks.asyncStorage.has('onskin.appLock.enabled')).toBe(false);
+  });
+
+  it('rejects app-lock repair authority for every other private key', async () => {
+    mocks.asyncStorage.set('onskin.appLock.enabled', 'app-lock-bytes');
+    mocks.asyncStorage.set('onskin.shelf.v1', 'shelf-bytes');
+
+    await expect(
+      removePrivateItemsForAuthorizedReset(
+        ['onskin.appLock.enabled', 'onskin.shelf.v1'],
+        'device_authenticated_app_lock_repair',
+      ),
+    ).rejects.toThrow(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
+    await expect(
+      removePrivateItemsForAuthorizedReset(
+        ['onskin.shelf.v1'],
+        'device_authenticated_app_lock_repair',
+      ),
+    ).rejects.toThrow(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
+
+    expect(mocks.asyncStorage.get('onskin.appLock.enabled')).toBe('app-lock-bytes');
+    expect(mocks.asyncStorage.get('onskin.shelf.v1')).toBe('shelf-bytes');
   });
 
   it('rejects an unreviewed destructive-reset reason at runtime', async () => {

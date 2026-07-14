@@ -59,12 +59,24 @@ describe('streak milestone store', () => {
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
-  it('reads legacy values and migrates only during an explicit mutation', async () => {
-    mocks.storage.set(KEY, JSON.stringify([' d7 ', '', 'd7', 7]));
+  it('preserves semantically malformed legacy milestone bytes', async () => {
+    const original = JSON.stringify([' d7 ', '', 'd7', 7]);
+    mocks.storage.set(KEY, original);
 
     await expect(markMilestoneSeen('d7')).resolves.toBe(false);
 
-    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({ version: 1, values: ['d7'] });
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('reads strict legacy values and migrates only during an explicit state change', async () => {
+    mocks.storage.set(KEY, JSON.stringify(['d7']));
+
+    await expect(markMilestoneSeen('d30')).resolves.toBe(true);
+
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
+      version: 1,
+      values: ['d7', 'd30'],
+    });
   });
 
   it('serializes simultaneous markers without firing the same milestone twice', async () => {

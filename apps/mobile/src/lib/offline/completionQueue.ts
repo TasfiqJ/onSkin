@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase/client';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
-import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { readPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import {
   completionKey,
@@ -31,7 +31,15 @@ const KEY = 'onskin.completions.pending';
 const SCHEMA_VERSION = 1 as const;
 
 export const COMPLETION_QUEUE_INVALID = 'COMPLETION_QUEUE_INVALID';
+export const COMPLETION_QUEUE_UNAVAILABLE = 'COMPLETION_QUEUE_UNAVAILABLE';
 export const COMPLETION_QUEUE_UNSUPPORTED_VERSION = 'COMPLETION_QUEUE_UNSUPPORTED_VERSION';
+
+export type CompletionQueueRead =
+  | { status: 'absent'; items: PendingCompletion[] }
+  | { status: 'available'; items: PendingCompletion[] }
+  | { status: 'unavailable'; items: null }
+  | { status: 'corrupt'; items: null }
+  | { status: 'unsupported_version'; items: null };
 
 type CompletionQueueEnvelope = {
   version: typeof SCHEMA_VERSION;
@@ -92,13 +100,32 @@ function encodePending(items: PendingCompletion[]): string {
   return JSON.stringify({ version: SCHEMA_VERSION, items } satisfies CompletionQueueEnvelope);
 }
 
-export async function getPendingCompletions(): Promise<PendingCompletion[]> {
-  try {
-    return decodePending(await getPrivateItem(KEY));
-  } catch {
-    // Keep the public read fail-soft without repairing/deleting unreadable bytes.
-    return [];
+export async function readCompletionQueue(): Promise<CompletionQueueRead> {
+  const stored = await readPrivateItem(KEY);
+  if (stored.status === 'absent') return { status: 'absent', items: [] };
+  if (stored.status === 'unavailable') return { status: 'unavailable', items: null };
+  if (stored.status === 'corrupt') return { status: 'corrupt', items: null };
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', items: null };
   }
+
+  try {
+    return { status: 'available', items: decodePending(stored.value) };
+  } catch (error) {
+    return error instanceof Error && error.message === COMPLETION_QUEUE_UNSUPPORTED_VERSION
+      ? { status: 'unsupported_version', items: null }
+      : { status: 'corrupt', items: null };
+  }
+}
+
+export async function getPendingCompletions(): Promise<PendingCompletion[]> {
+  const result = await readCompletionQueue();
+  if (result.status === 'available' || result.status === 'absent') return result.items;
+  if (result.status === 'unsupported_version') {
+    throw queueError(COMPLETION_QUEUE_UNSUPPORTED_VERSION);
+  }
+  if (result.status === 'corrupt') throw queueError(COMPLETION_QUEUE_INVALID);
+  throw queueError(COMPLETION_QUEUE_UNAVAILABLE);
 }
 
 export async function enqueueCompletion(rec: PendingCompletion): Promise<void> {

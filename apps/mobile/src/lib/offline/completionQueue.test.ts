@@ -7,11 +7,13 @@ import {
 
 import {
   COMPLETION_QUEUE_INVALID,
+  COMPLETION_QUEUE_UNAVAILABLE,
   COMPLETION_QUEUE_UNSUPPORTED_VERSION,
   enqueueCompletion,
   flushCompletions,
   getPendingCompletions,
   pendingStepIdsForDate,
+  readCompletionQueue,
 } from './completionQueue';
 import { completionKey, isStale, withQueued, type PendingCompletion } from './completionQueue.pure';
 
@@ -30,10 +32,11 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItem: vi.fn(async (key: string) => {
+  readPrivateItem: vi.fn(async (key: string) => {
     const failure = mocks.readFailures.get(key);
-    if (failure) throw failure;
-    return mocks.storage.get(key) ?? null;
+    if (failure) return { status: 'unavailable', reason: 'storage_unavailable' };
+    const value = mocks.storage.get(key);
+    return value === undefined ? { status: 'absent' } : { status: 'available', value };
   }),
   updatePrivateItem: vi.fn(
     async (key: string, updater: (current: string | null) => string | null) => {
@@ -78,13 +81,10 @@ vi.mock('@/lib/supabase/client', () => ({
             await new Promise<void>((resolve, reject) => {
               const onAbort = () => reject(new Error('POSTGREST_ABORTED'));
               signal.addEventListener('abort', onAbort, { once: true });
-              void mocks.insertGate?.then(
-                () => {
-                  signal.removeEventListener('abort', onAbort);
-                  resolve();
-                },
-                reject,
-              );
+              void mocks.insertGate?.then(() => {
+                signal.removeEventListener('abort', onAbort);
+                resolve();
+              }, reject);
             });
           }
           return { error: mocks.insertError };
@@ -175,11 +175,24 @@ describe('offline completion queue (docs/01 §6)', () => {
     expect(isStale('2026-06-27', now)).toBe(true);
   });
 
-  it('returns no pending rows without deleting malformed encrypted bytes', async () => {
+  it('distinguishes an absent queue from an available queue without writing', async () => {
+    await expect(readCompletionQueue()).resolves.toEqual({ status: 'absent', items: [] });
+    await expect(getPendingCompletions()).resolves.toEqual([]);
+
+    const original = JSON.stringify({ version: 1, items: [base] });
+    mocks.storage.set(KEY, original);
+
+    await expect(readCompletionQueue()).resolves.toEqual({ status: 'available', items: [base] });
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
+  });
+
+  it('returns typed corruption and rejects convenience reads without deleting malformed bytes', async () => {
     const original = '{not-json';
     mocks.storage.set(KEY, original);
 
-    await expect(getPendingCompletions()).resolves.toEqual([]);
+    await expect(readCompletionQueue()).resolves.toEqual({ status: 'corrupt', items: null });
+    await expect(getPendingCompletions()).rejects.toThrow(COMPLETION_QUEUE_INVALID);
 
     expect(mocks.storage.get(KEY)).toBe(original);
     expect(mocks.writes).toBe(0);
@@ -199,7 +212,8 @@ describe('offline completion queue (docs/01 §6)', () => {
     const original = JSON.stringify([base, { ...base, stepId: '' }]);
     mocks.storage.set(KEY, original);
 
-    await expect(getPendingCompletions()).resolves.toEqual([]);
+    await expect(readCompletionQueue()).resolves.toEqual({ status: 'corrupt', items: null });
+    await expect(getPendingCompletions()).rejects.toThrow(COMPLETION_QUEUE_INVALID);
     await expect(enqueueCompletion({ ...base, stepId: 's2' })).rejects.toThrow(
       COMPLETION_QUEUE_INVALID,
     );
@@ -296,7 +310,11 @@ describe('offline completion queue (docs/01 §6)', () => {
     const original = JSON.stringify({ version: 2, items: [base] });
     mocks.storage.set(KEY, original);
 
-    await expect(getPendingCompletions()).resolves.toEqual([]);
+    await expect(readCompletionQueue()).resolves.toEqual({
+      status: 'unsupported_version',
+      items: null,
+    });
+    await expect(getPendingCompletions()).rejects.toThrow(COMPLETION_QUEUE_UNSUPPORTED_VERSION);
     await expect(enqueueCompletion({ ...base, stepId: 's2' })).rejects.toThrow(
       COMPLETION_QUEUE_UNSUPPORTED_VERSION,
     );
@@ -310,7 +328,9 @@ describe('offline completion queue (docs/01 §6)', () => {
     mocks.storage.set(KEY, original);
     mocks.readFailures.set(KEY, new Error('PRIVATE_KEY_UNAVAILABLE'));
 
-    await expect(getPendingCompletions()).resolves.toEqual([]);
+    await expect(readCompletionQueue()).resolves.toEqual({ status: 'unavailable', items: null });
+    await expect(getPendingCompletions()).rejects.toThrow(COMPLETION_QUEUE_UNAVAILABLE);
+    await expect(flushCompletions()).rejects.toThrow(COMPLETION_QUEUE_UNAVAILABLE);
     expect(mocks.storage.get(KEY)).toBe(original);
 
     mocks.readFailures.delete(KEY);

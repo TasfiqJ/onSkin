@@ -19,6 +19,7 @@ import {
   migrateStoredPrivateKVContentKey,
   setStoredPrivateKVContentKey,
 } from './privateKVContentKey';
+import { LOCAL_PRIVATE_BULK_CLEANUP_KEYS } from '@/features/settings/localPrivateDataRegistry';
 import { withOperationTiming } from '@/lib/observability/operationTiming';
 
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
@@ -63,6 +64,9 @@ export type PrivateKVReadResult =
 export type PrivateKVAuthorizedResetReason =
   | 'account_isolation'
   | 'device_authenticated_app_lock_repair';
+
+const DEVICE_AUTHENTICATED_APP_LOCK_REPAIR_KEY = 'onskin.appLock.enabled';
+const ACCOUNT_ISOLATION_RESET_KEYS = new Set<string>(LOCAL_PRIVATE_BULK_CLEANUP_KEYS);
 
 type PrivateEnvelope = {
   version: typeof ENCRYPTION_VERSION;
@@ -385,10 +389,9 @@ export async function getPrivateItem(key: string): Promise<string | null> {
   );
 }
 
-function classifyPrivateKVReadFailure(error: unknown): Exclude<
-  PrivateKVReadResult,
-  { status: 'absent' } | { status: 'available'; value: string }
-> {
+function classifyPrivateKVReadFailure(
+  error: unknown,
+): Exclude<PrivateKVReadResult, { status: 'absent' } | { status: 'available'; value: string }> {
   const message = error instanceof Error ? error.message : '';
   if (message === PRIVATE_KV_ENVELOPE_UNSUPPORTED) return { status: 'unsupported_version' };
   if (message === PRIVATE_KV_CONTENT_KEY_INVALID) {
@@ -677,6 +680,14 @@ export async function removePrivateItemsForAuthorizedReset(
       throw new Error(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
     }
     const uniqueKeys = [...new Set(keys)];
+    if (
+      (reason === 'account_isolation' &&
+        uniqueKeys.some((key) => !ACCOUNT_ISOLATION_RESET_KEYS.has(key))) ||
+      (reason === 'device_authenticated_app_lock_repair' &&
+        (uniqueKeys.length !== 1 || uniqueKeys[0] !== DEVICE_AUTHENTICATED_APP_LOCK_REPAIR_KEY))
+    ) {
+      throw new Error(PRIVATE_KV_AUTHORIZED_RESET_REASON_INVALID);
+    }
     const pending = runSerializedPrivateMutations(uniqueKeys, async () => {
       for (const key of uniqueKeys) assertPrivateDataKey(key);
       await AsyncStorage.multiRemove(uniqueKeys);
