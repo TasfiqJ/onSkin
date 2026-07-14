@@ -1,14 +1,19 @@
 import {
+  attachRevenueCatIdentityTombstoneLookup,
   buildRevenueCatAtomicArgs,
   compareProjectionOrder,
+  extractRevenueCatAccountUuidCandidates,
+  filterRevenueCatIdentitiesForActiveAccounts,
   persistRevenueCatEvent,
   type ProjectionOrder,
   type RevenueCatAtomicArgs,
   RevenueCatAtomicProcessingError,
   type RevenueCatAtomicResult,
   type RevenueCatEvent,
+  RevenueCatIdentityInputError,
   type RevenueCatRpcClient,
 } from './webhookCore.ts';
+import { parseRevenueCatIdentityTombstoneKeyring } from '../_shared/revenueCatIdentityTombstone.ts';
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
@@ -26,6 +31,24 @@ async function assertAtomicFailure(operation: () => Promise<unknown>): Promise<v
     return;
   }
   throw new Error('expected atomic operation to fail.');
+}
+
+function assertIdentityInputFailure(
+  operation: () => unknown,
+  code: 'INVALID_REVENUECAT_IDENTITY_SHAPE' | 'INVALID_ACTIVE_ACCOUNT_SET',
+  forbiddenValue?: string,
+): void {
+  try {
+    operation();
+  } catch (error) {
+    assert(error instanceof RevenueCatIdentityInputError, 'expected stable identity input error.');
+    assert(error.message === code, `expected ${code}, received ${error.message}.`);
+    if (forbiddenValue) {
+      assert(!error.message.includes(forbiddenValue), 'identity input error leaked raw input.');
+    }
+    return;
+  }
+  throw new Error('expected identity input operation to fail.');
 }
 
 const USER_ID = '00000000-0000-4000-8000-000000000001';
@@ -71,7 +94,10 @@ class AtomicReferenceRpc implements RevenueCatRpcClient {
   failNext = false;
 
   rpc(functionName: string, args: RevenueCatAtomicArgs) {
-    assert(functionName === 'process_revenuecat_webhook_event', `unexpected RPC ${functionName}.`);
+    assert(
+      functionName === 'process_revenuecat_webhook_event_guarded',
+      `unexpected RPC ${functionName}.`,
+    );
     this.calls.push(structuredClone(args));
 
     const existingEvent = this.events.get(args.p_rc_event_id);
@@ -163,7 +189,7 @@ Deno.test(
   'RevenueCat normalization uses provider time and deterministic reassignment candidates',
   () => {
     const args = buildRevenueCatAtomicArgs(
-      event('transfer-event', 'TRANSFER', 1_700_000_000_000, {
+      event('transfer-event', '\t transfer \n', 1_700_000_000_000, {
         app_user_id: '00000000-0000-4000-8000-000000000009',
         original_app_user_id: '00000000-0000-4000-8000-000000000008',
         aliases: ['00000000-0000-4000-8000-000000000007', '00000000-0000-4000-8000-000000000006'],
@@ -193,6 +219,7 @@ Deno.test(
       args.p_provider_event_at === '2023-11-14T22:13:20.000Z',
       'provider event time was not normalized.',
     );
+    assert(args.p_event_type === 'TRANSFER', 'transfer event type was not trimmed and normalized.');
     assert(args.p_received_at === '2026-07-13T12:00:00.000Z', 'receipt time was not explicit.');
     assert(
       args.p_should_project === false,
@@ -227,8 +254,377 @@ Deno.test('RevenueCat owner UUIDs canonicalize ASCII boundary whitespace and cas
   );
   assert(
     (args.p_user_candidates as string[]).includes(canonical) &&
-      (args.p_user_candidates as string[]).includes(USER_ID),
-    'canonical owners were not available for Auth resolution.',
+      (args.p_user_candidates as string[]).includes(USER_ID) &&
+      !(args.p_user_candidates as string[]).includes('opaque-provider-alias'),
+    'canonical owners were unavailable or an opaque provider alias became an Auth candidate.',
+  );
+});
+
+Deno.test(
+  'RevenueCat account UUID extraction is canonical, deduplicated, and globally sorted',
+  () => {
+    const first = '11111111-1111-4111-8111-111111111111';
+    const second = '22222222-2222-4222-8222-222222222222';
+    const third = '33333333-3333-4333-8333-333333333333';
+    const fourth = '44444444-4444-4444-8444-444444444444';
+    const fifth = '55555555-5555-4555-8555-555555555555';
+    const candidates = extractRevenueCatAccountUuidCandidates({
+      app_user_id: `\n${fifth.toUpperCase()}\t`,
+      original_app_user_id: first,
+      aliases: [fourth, second.toUpperCase(), '$RCAnonymousID:provider-owned', first],
+      transferred_from: [third, second],
+      transferred_to: [fifth, fourth],
+    });
+
+    assert(
+      JSON.stringify(candidates) === JSON.stringify([first, second, third, fourth, fifth]),
+      'lock inputs were not globally sorted canonical UUIDs.',
+    );
+    assert(
+      !candidates.some((candidate) => candidate.includes('RCAnonymousID')),
+      'provider-anonymous identity entered the account lock set.',
+    );
+  },
+);
+
+Deno.test(
+  'RevenueCat embedded UUIDs are lock and suppression inputs but never semantic owners',
+  () => {
+    const embedded = '66666666-6666-4666-8666-666666666666';
+    const providerIdentity = `$RCAnonymousID:${embedded.toUpperCase()}`;
+    assert(
+      JSON.stringify(
+        extractRevenueCatAccountUuidCandidates({
+          app_user_id: providerIdentity,
+        }),
+      ) === JSON.stringify([embedded]),
+      'embedded UUID was omitted from the global lock set.',
+    );
+    const decision = filterRevenueCatIdentitiesForActiveAccounts(
+      { type: 'RENEWAL', app_user_id: providerIdentity },
+      [embedded],
+    );
+    assert(decision.outcome === 'persist', 'live embedded UUID was incorrectly suppressed.');
+    assert(
+      decision.userCandidates.length === 0,
+      'embedded UUID alias was promoted to an entitlement owner.',
+    );
+    const args = buildRevenueCatAtomicArgs(
+      event('embedded-owner-event', 'RENEWAL', 1_700_000_000_000, {
+        app_user_id: providerIdentity,
+        original_app_user_id: undefined,
+        aliases: [],
+      }),
+      verification,
+    );
+    assert(
+      args.p_user_candidates.length === 0,
+      'embedded UUID entered the semantic database candidate list.',
+    );
+  },
+);
+
+Deno.test(
+  'RevenueCat HMAC lookup covers exact and embedded identities across key versions',
+  async () => {
+    const embedded = '77777777-7777-4777-8777-777777777777';
+    const providerIdentity = `$RCAnonymousID:${embedded}`;
+    const webhookEvent = event('hmac-coverage', 'RENEWAL', 1_700_000_000_000, {
+      app_user_id: providerIdentity,
+      original_app_user_id: undefined,
+      aliases: ['opaque-alias'],
+    });
+    const keyring = parseRevenueCatIdentityTombstoneKeyring(
+      `1=${'11'.repeat(32)};2=${'22'.repeat(32)}`,
+      '2',
+    );
+    const args = await attachRevenueCatIdentityTombstoneLookup(
+      buildRevenueCatAtomicArgs(webhookEvent, verification),
+      webhookEvent,
+      'proj_test_123',
+      keyring,
+    );
+
+    assert(
+      args.p_identity_hmacs.length === 6 &&
+        args.p_identity_hmac_key_versions.length === 6 &&
+        args.p_identity_values.length === 6,
+      'lookup did not cover three hash identities under both configured keys.',
+    );
+    assert(
+      args.p_identity_values.filter((value) => value === providerIdentity).length === 4,
+      'provider identity was not mapped to both its full and embedded-UUID HMACs.',
+    );
+    assert(
+      new Set(args.p_identity_hmac_key_versions).size === 2 &&
+        args.p_identity_hmacs.every((value) => /^[a-f0-9]{64}$/.test(value)),
+      'lookup omitted a key version or emitted a malformed HMAC.',
+    );
+    assert(
+      JSON.stringify(args.p_user_candidates) === JSON.stringify([]),
+      'HMAC coverage changed semantic ownership.',
+    );
+  },
+);
+
+Deno.test(
+  'RevenueCat active filtering strips every barred UUID and preserves semantic resolution order',
+  () => {
+    const barredApp = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa1';
+    const activeOriginal = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbb2';
+    const activeDestination = 'cccccccc-cccc-4ccc-8ccc-ccccccccccc3';
+    const activeAlias = 'dddddddd-dddd-4ddd-8ddd-ddddddddddd4';
+    const barredAlias = 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeee5';
+    const decision = filterRevenueCatIdentitiesForActiveAccounts(
+      {
+        type: 'TRANSFER',
+        app_user_id: ` ${barredApp.toUpperCase()} `,
+        original_app_user_id: activeOriginal.toUpperCase(),
+        aliases: [
+          activeAlias.toUpperCase(),
+          barredAlias,
+          '$RCAnonymousID:retained-provider-alias',
+          `$RCAnonymousID:${barredApp.toUpperCase()}`,
+        ],
+        transferred_from: [barredApp, '$RCAnonymousID:retained-source'],
+        transferred_to: [activeDestination, barredAlias, activeOriginal],
+      },
+      [activeAlias, activeOriginal, activeDestination],
+    );
+
+    assert(decision.outcome === 'persist', 'mixed live/deleted event was incorrectly suppressed.');
+    assert(
+      JSON.stringify(decision.userCandidates) ===
+        JSON.stringify([activeDestination, activeOriginal, activeAlias]),
+      'live destination/app/original/alias resolution order was not preserved.',
+    );
+    assert(decision.identityFields.app_user_id === null, 'barred scalar UUID survived.');
+    assert(
+      decision.identityFields.original_app_user_id === activeOriginal,
+      'active original UUID was not canonicalized and retained.',
+    );
+    assert(
+      JSON.stringify(decision.identityFields.aliases) ===
+        JSON.stringify(['$RCAnonymousID:retained-provider-alias', activeAlias]),
+      'alias filtering did not preserve only safe opaque and active identities.',
+    );
+    assert(
+      JSON.stringify(decision.identityFields.transferred_from) ===
+        JSON.stringify(['$RCAnonymousID:retained-source']),
+      'barred transfer source UUID survived.',
+    );
+    const serialized = JSON.stringify(decision).toLowerCase();
+    assert(!serialized.includes(barredApp), 'barred app UUID leaked into the persisted result.');
+    assert(
+      !serialized.includes(barredAlias),
+      'barred alias UUID leaked into the persisted result.',
+    );
+  },
+);
+
+Deno.test('RevenueCat live owner resolution preserves category and provider array order', () => {
+  const destinationTwo = '20000000-0000-4000-8000-000000000002';
+  const destinationOne = '10000000-0000-4000-8000-000000000001';
+  const appUser = '30000000-0000-4000-8000-000000000003';
+  const originalUser = '40000000-0000-4000-8000-000000000004';
+  const aliasTwo = '60000000-0000-4000-8000-000000000006';
+  const aliasOne = '50000000-0000-4000-8000-000000000005';
+  const active = [appUser, originalUser, aliasOne, aliasTwo, destinationOne, destinationTwo];
+  const decision = filterRevenueCatIdentitiesForActiveAccounts(
+    {
+      type: '\t transfer \r\n',
+      app_user_id: appUser,
+      original_app_user_id: originalUser,
+      aliases: [aliasTwo, aliasOne, appUser],
+      transferred_to: [destinationTwo, destinationOne, originalUser],
+      transferred_from: [],
+    },
+    active,
+  );
+
+  assert(decision.outcome === 'persist', 'live transfer event was suppressed.');
+  assert(
+    JSON.stringify(decision.userCandidates) ===
+      JSON.stringify([destinationTwo, destinationOne, originalUser, appUser, aliasTwo, aliasOne]),
+    'resolution did not preserve transfer destination before app/original/aliases.',
+  );
+});
+
+Deno.test('RevenueCat transfer destinations cannot own non-transfer events', () => {
+  const destination = '20000000-0000-4000-8000-000000000002';
+  const nonTransferEvent = {
+    type: '\t renewal \r\n',
+    app_user_id: '$RCAnonymousID:app',
+    transferred_to: [destination],
+  };
+  const decision = filterRevenueCatIdentitiesForActiveAccounts(nonTransferEvent, [destination]);
+
+  assert(decision.outcome === 'persist', 'live non-transfer audit was suppressed.');
+  assert(
+    decision.userCandidates.length === 0,
+    'a transfer destination resolved ownership outside a TRANSFER event.',
+  );
+  assert(
+    JSON.stringify(decision.identityFields.transferred_to) === JSON.stringify([destination]),
+    'a non-transfer destination was not retained as filtered audit evidence.',
+  );
+  assert(
+    JSON.stringify(extractRevenueCatAccountUuidCandidates(nonTransferEvent)) ===
+      JSON.stringify([destination]),
+    'a non-transfer destination was omitted from deletion locking/classification.',
+  );
+
+  const args = buildRevenueCatAtomicArgs(
+    event('non-transfer-destination', '\t renewal \r\n', 1_700_000_000_000, {
+      app_user_id: '$RCAnonymousID:app',
+      original_app_user_id: undefined,
+      aliases: [],
+      transferred_from: [],
+      transferred_to: [destination],
+    }),
+    verification,
+  );
+  assert(args.p_event_type === 'RENEWAL', 'non-transfer event type was not normalized.');
+  assert(
+    JSON.stringify(args.p_transferred_to) === JSON.stringify([destination]),
+    'non-transfer destination was lost before database audit filtering.',
+  );
+  assert(
+    !(args.p_user_candidates as string[]).includes(destination),
+    'Edge semantic candidates promoted a non-transfer destination.',
+  );
+});
+
+Deno.test(
+  'RevenueCat all-barred account events return one identifier-free suppression result',
+  () => {
+    const barred = '99999999-9999-4999-8999-999999999999';
+    const unrelatedActive = '77777777-7777-4777-8777-777777777777';
+    const decision = filterRevenueCatIdentitiesForActiveAccounts(
+      {
+        app_user_id: barred,
+        aliases: [barred.toUpperCase(), '$RCAnonymousID:must-not-revive-account'],
+        transferred_from: [barred],
+        transferred_to: [],
+      },
+      [unrelatedActive],
+    );
+
+    assert(
+      JSON.stringify(decision) === JSON.stringify({ outcome: 'suppressed_deleted_account' }),
+      'suppression result exposed event identity or unstable detail.',
+    );
+    assert(
+      !JSON.stringify(decision).toLowerCase().includes(barred),
+      'suppression result leaked a barred account UUID.',
+    );
+  },
+);
+
+Deno.test(
+  'RevenueCat anonymous-only identities remain audit-only and cannot resolve Auth owners',
+  () => {
+    const unrelatedActive = '88888888-8888-4888-8888-888888888888';
+    const decision = filterRevenueCatIdentitiesForActiveAccounts(
+      {
+        app_user_id: '$RCAnonymousID:app',
+        original_app_user_id: ' provider-original ',
+        aliases: ['$RCAnonymousID:alias', 'provider-alias'],
+        transferred_from: ['$RCAnonymousID:source'],
+        transferred_to: ['$RCAnonymousID:destination'],
+      },
+      [unrelatedActive],
+    );
+
+    assert(
+      decision.outcome === 'persist',
+      'anonymous-only event was treated as a deleted account.',
+    );
+    assert(decision.userCandidates.length === 0, 'anonymous identity could resolve an Auth owner.');
+    assert(
+      decision.identityFields.app_user_id === '$RCAnonymousID:app' &&
+        decision.identityFields.original_app_user_id === ' provider-original ',
+      'safe scalar provider identities were not preserved with existing semantics.',
+    );
+    assert(
+      JSON.stringify(decision.identityFields.transferred_to) ===
+        JSON.stringify(['$RCAnonymousID:destination']),
+      'safe transfer provider identity was not preserved.',
+    );
+  },
+);
+
+Deno.test('RevenueCat UUID case variants deduplicate across fields and active results', () => {
+  const canonical = 'abcdefab-cdef-4abc-8def-abcdefabcdef';
+  const decision = filterRevenueCatIdentitiesForActiveAccounts(
+    {
+      app_user_id: canonical.toUpperCase(),
+      original_app_user_id: `\t${canonical}\r`,
+      aliases: [canonical, canonical.toUpperCase(), canonical],
+      transferred_from: [canonical.toUpperCase(), canonical],
+      transferred_to: [canonical, canonical.toUpperCase()],
+    },
+    [canonical.toUpperCase(), canonical],
+  );
+
+  assert(decision.outcome === 'persist', 'canonical active account was suppressed.');
+  assert(
+    JSON.stringify(decision.userCandidates) === JSON.stringify([canonical]),
+    'semantic owner list retained UUID duplicates.',
+  );
+  assert(
+    JSON.stringify(decision.identityFields.aliases) === JSON.stringify([canonical]) &&
+      JSON.stringify(decision.identityFields.transferred_from) === JSON.stringify([canonical]) &&
+      JSON.stringify(decision.identityFields.transferred_to) === JSON.stringify([canonical]),
+    'structured identity arrays retained case-variant UUID duplicates.',
+  );
+});
+
+Deno.test('RevenueCat identity runtime shapes and active account sets fail closed', () => {
+  const malformedEvents: unknown[] = [
+    null,
+    [],
+    { app_user_id: 42 },
+    { app_user_id: ' \t\r ' },
+    { original_app_user_id: {} },
+    { aliases: {} },
+    { aliases: ['provider-alias', 7] },
+    { transferred_from: [null] },
+    { transferred_to: [''] },
+  ];
+  for (const malformed of malformedEvents) {
+    assertIdentityInputFailure(
+      () => extractRevenueCatAccountUuidCandidates(malformed),
+      'INVALID_REVENUECAT_IDENTITY_SHAPE',
+    );
+  }
+  assertIdentityInputFailure(
+    () =>
+      buildRevenueCatAtomicArgs(
+        event('malformed-handler-event', 'RENEWAL', 1_700_000_000_000, {
+          aliases: ['safe-provider-alias', 7] as unknown as string[],
+        }),
+        verification,
+      ),
+    'INVALID_REVENUECAT_IDENTITY_SHAPE',
+  );
+
+  const privateMalformedValue = 'private-malformed-provider-value';
+  assertIdentityInputFailure(
+    () =>
+      filterRevenueCatIdentitiesForActiveAccounts({ app_user_id: USER_ID }, [
+        privateMalformedValue,
+      ]),
+    'INVALID_ACTIVE_ACCOUNT_SET',
+    privateMalformedValue,
+  );
+  assertIdentityInputFailure(
+    () => filterRevenueCatIdentitiesForActiveAccounts({ app_user_id: USER_ID }, {}),
+    'INVALID_ACTIVE_ACCOUNT_SET',
+  );
+  assertIdentityInputFailure(
+    () => filterRevenueCatIdentitiesForActiveAccounts({ app_user_id: USER_ID }, [7]),
+    'INVALID_ACTIVE_ACCOUNT_SET',
   );
 });
 
@@ -247,6 +643,45 @@ Deno.test('RevenueCat duplicate delivery produces one audit event and one projec
   assert(rpc.events.size === 1, 'duplicate inserted a second audit event.');
   assert(rpc.projection?.p_rc_event_id === 'same-event', 'duplicate changed the projection.');
 });
+
+Deno.test(
+  'RevenueCat persistence accepts only the exact deleted-account suppression result',
+  async () => {
+    const args = buildRevenueCatAtomicArgs(
+      event('suppression-event', 'RENEWAL', 1_700_000_000_000),
+      verification,
+    );
+    const exactClient: RevenueCatRpcClient = {
+      rpc(functionName) {
+        assert(
+          functionName === 'process_revenuecat_webhook_event_guarded',
+          'persistence bypassed the deletion-aware RPC.',
+        );
+        return Promise.resolve({
+          data: [result('suppressed_deleted_account', false, 'suppressed_deleted_account')],
+          error: null,
+        });
+      },
+    };
+    const exact = await persistRevenueCatEvent(exactClient, args);
+    assert(
+      exact.outcome === 'suppressed_deleted_account',
+      'exact suppression was not an acknowledged outcome.',
+    );
+
+    for (const malformed of [
+      result('suppressed_deleted_account', true, 'suppressed_deleted_account'),
+      result('suppressed_deleted_account', false, 'processed'),
+    ]) {
+      const malformedClient: RevenueCatRpcClient = {
+        rpc() {
+          return Promise.resolve({ data: [malformed], error: null });
+        },
+      };
+      await assertAtomicFailure(() => persistRevenueCatEvent(malformedClient, args));
+    }
+  },
+);
 
 Deno.test('RevenueCat cancellation and pause preserve access until expiration', () => {
   const cancellation = buildRevenueCatAtomicArgs(
@@ -367,14 +802,24 @@ Deno.test('RevenueCat atomic failure is retryable without a partial projection',
   );
 });
 
-Deno.test('RevenueCat handler delegates all persistence to the atomic ordered RPC', async () => {
-  const migration = await Deno.readTextFile(
+Deno.test('RevenueCat handler delegates all persistence to the guarded atomic RPC', async () => {
+  const atomicMigration = await Deno.readTextFile(
     new URL(
       '../../migrations/20260713000041_revenuecat_webhook_atomic_projection.sql',
       import.meta.url,
     ),
   );
+  const guardMigration = await Deno.readTextFile(
+    new URL(
+      '../../migrations/20260713000049_revenuecat_deletion_barrier_guard.sql',
+      import.meta.url,
+    ),
+  );
+  const identityMigration = await Deno.readTextFile(
+    new URL('../../migrations/20260713000051_revenuecat_identity_tombstones.sql', import.meta.url),
+  );
   const handler = await Deno.readTextFile(new URL('./index.ts', import.meta.url));
+  const core = await Deno.readTextFile(new URL('./webhookCore.ts', import.meta.url));
   const rpcArgs = buildRevenueCatAtomicArgs(
     event('contract-event', 'RENEWAL', 1_700_000_000_000),
     verification,
@@ -393,25 +838,92 @@ Deno.test('RevenueCat handler delegates all persistence to the atomic ordered RP
     "set search_path = ''",
     'to service_role',
   ]) {
-    assert(migration.toLowerCase().includes(required), `migration is missing: ${required}`);
+    assert(
+      atomicMigration.toLowerCase().includes(required),
+      `atomic migration is missing: ${required}`,
+    );
   }
   for (const argumentName of Object.keys(rpcArgs)) {
     assert(
-      migration.includes(`${argumentName} `),
-      `RPC argument ${argumentName} is missing from the SQL signature.`,
+      identityMigration.includes(`${argumentName} `),
+      `guarded RPC argument ${argumentName} is missing from migration 0051.`,
     );
   }
+  for (const required of [
+    'create table public.revenuecat_identity_tombstones',
+    'create or replace function public.establish_revenuecat_deletion_identity_barrier',
+    'tombstone_version smallint',
+    'identity_count integer',
+    'p_identity_hmac_key_versions smallint[]',
+    'p_identity_hmacs text[]',
+    'p_identity_values text[]',
+    'public._revenuecat_embedded_account_uuids(',
+    'public._revenuecat_identity_tombstone_advisory_key(',
+    'for v_lock_version, v_lock_hmac in',
+    'pg_catalog.pg_advisory_xact_lock(',
+    'v_tombstoned_values',
+    'tombstones.expires_at > v_now',
+    'from public.process_revenuecat_webhook_event_guarded(',
+    'revoke insert, update, delete, truncate, references, trigger',
+    'on table public.subscriptions_events from service_role',
+    'on table public.entitlements from service_role',
+  ]) {
+    assert(
+      identityMigration.toLowerCase().includes(required.toLowerCase()),
+      `identity tombstone migration is missing: ${required}`,
+    );
+  }
+  for (const required of [
+    'create or replace function public.process_revenuecat_webhook_event_guarded',
+    'raw_identities(value)',
+    "coalesce(p_user_candidates, '{}'::text[])",
+    "coalesce(p_aliases, '{}'::text[])",
+    "coalesce(p_transferred_from, '{}'::text[])",
+    "coalesce(p_transferred_to, '{}'::text[])",
+    'array_agg(account_id order by account_id::text)',
+    'foreach v_account_id in array v_all_account_ids loop',
+    'pg_catalog.pg_advisory_xact_lock(',
+    'public._account_deletion_advisory_key(v_account_id)',
+    'from auth.users as users',
+    'from public.account_deletion_barriers as barriers',
+    'public._revenuecat_filter_identity_scalar(',
+    'public._revenuecat_filter_identity_array(',
+    "where v_event_type = 'TRANSFER'",
+    "'suppressed_deleted_account'::text",
+    'from public.process_revenuecat_webhook_event(',
+    ') from public, anon, authenticated, service_role;',
+    ') to service_role;',
+  ]) {
+    assert(
+      guardMigration.toLowerCase().includes(required.toLowerCase()),
+      `deletion guard migration is missing: ${required}`,
+    );
+  }
+  assert(
+    /client\.rpc\(\s*['"]process_revenuecat_webhook_event_guarded['"]/.test(core),
+    'persistence did not select the guarded RPC.',
+  );
+  assert(
+    !/client\.rpc\(\s*['"]process_revenuecat_webhook_event['"]/.test(core),
+    'persistence retained a direct unguarded RPC path.',
+  );
   assert(
     handler.includes('persistRevenueCatEvent(supabase, atomicArgs)'),
     'handler did not call the atomic RPC boundary.',
   );
   assert(
-    !handler.includes(".from('subscriptions_events')") &&
-      !handler.includes(".from('entitlements')"),
+    handler.includes('attachRevenueCatIdentityTombstoneLookup(') &&
+      handler.includes('REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS') &&
+      handler.includes('REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION'),
+    'handler did not authenticate every identity against the tombstone keyring.',
+  );
+  assert(
+    !/\.from\(\s*['"]subscriptions_events['"]/.test(handler) &&
+      !/\.from\(\s*['"]entitlements['"]/.test(handler),
     'handler retained a split event/projection write path.',
   );
   assert(
-    handler.includes("return json('processing failed', 503)"),
+    /return json\(\s*['"]processing failed['"]\s*,\s*503\s*\)/.test(handler),
     'handler did not request provider retry after atomic failure.',
   );
 });

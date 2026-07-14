@@ -31,6 +31,13 @@ npm run phase2:rls-smoke
 The deploy wrapper links the project, pushes migrations, deploys required Edge
 Functions, and regenerates `packages/types/src/database.types.ts`.
 
+The first durable account-deletion cutover is an exception: predeploy the new
+fail-closed `account-deletion` function before applying migrations 0048-0051,
+then immediately deploy the complete manifest function set from the same
+revision. Follow
+`docs/phase-9/account-deletion-operations-runbook.md`; never run migration 0048
+against the old synchronous deletion entrypoint.
+
 ## Launch Gate
 
 Run Supabase Security Advisor and Performance Advisor before every release.
@@ -51,6 +58,17 @@ npm run phase9:edge-manifest-smoke
 The manifest distinguishes Supabase-user-JWT functions, provider/scheduler
 authentication, and truly public rate-limited forms. External provider calls
 still require live account secrets and provider verification before launch.
+
+Durable account-deletion work is scheduled separately from request-scoped
+`EdgeRuntime.waitUntil`. After the coherent migration/function cutover and
+negative-auth checks pass, create the two named Vault values privately and run
+`supabase/ops/account-deletion-work-lane.sql`. The checked-in SQL contains no
+credential values and stores only Vault lookups in the Cron command. Verify it
+with:
+
+```powershell
+node scripts/phase9/account-deletion-work-lane-smoke.mjs
+```
 
 Catalog lookup/search/report functions are Phase 4 infrastructure. Bulk product
 imports must use approved export artifacts and `scripts/phase4/*`, not API

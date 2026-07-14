@@ -31,10 +31,10 @@ export async function fetchWithTimeout(
   }
 }
 
-export async function readLimitedResponseText(
+export async function readLimitedResponseTextWithByteLength(
   response: Response,
   maxBytes = externalResponseMaxBytes(),
-): Promise<string | null> {
+): Promise<{ text: string; byteLength: number } | null> {
   const contentLength = Number(response.headers.get('content-length'));
   if (Number.isFinite(contentLength) && contentLength > maxBytes) {
     await response.body?.cancel().catch(() => undefined);
@@ -42,7 +42,7 @@ export async function readLimitedResponseText(
   }
 
   const reader = response.body?.getReader();
-  if (!reader) return '';
+  if (!reader) return { text: '', byteLength: 0 };
 
   const chunks: Uint8Array[] = [];
   let received = 0;
@@ -64,7 +64,18 @@ export async function readLimitedResponseText(
     bytes.set(chunk, offset);
     offset += chunk.byteLength;
   }
-  return new TextDecoder().decode(bytes);
+  return {
+    text: new TextDecoder().decode(bytes),
+    byteLength: received,
+  };
+}
+
+export async function readLimitedResponseText(
+  response: Response,
+  maxBytes = externalResponseMaxBytes(),
+): Promise<string | null> {
+  const result = await readLimitedResponseTextWithByteLength(response, maxBytes);
+  return result === null ? null : result.text;
 }
 
 export async function readLimitedResponseJson<T = Record<string, unknown>>(

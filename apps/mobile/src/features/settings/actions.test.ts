@@ -10,10 +10,15 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { BRAND } from '@/lib/brand';
 
-import { deleteAccount, exportData, withdrawHealthDataConsent } from './actions';
+import {
+  deleteAccount,
+  exportData,
+  isAcceptedAccountDeletionLocalSignOutIncomplete,
+  isAccountDeletionAuthSessionUnavailable,
+  withdrawHealthDataConsent,
+} from './actions';
 import {
   consumeAccountDeletionNotice,
-  peekAccountDeletionNotice,
   resetAccountDeletionNoticeForTests,
 } from './accountDeletionNotice';
 
@@ -24,9 +29,19 @@ const STAGED_EXPORT = {
   uri: 'file://cache/private-plaintext-staging-v1/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.json',
 };
 const COMPLETE_ACCOUNT_DELETION_RESPONSE = {
-  deleted: true,
-  apple: { status: 'revoked' },
-  posthog: 'skipped',
+  status: 'accepted',
+  phase: 'queued',
+  nextPollAfterSeconds: 2,
+};
+const OWNER_A = 'a1'.repeat(32);
+const OWNER_B = 'b2'.repeat(32);
+const DELETION_TOKENS = {
+  version: 2 as const,
+  ownerBinding: OWNER_A,
+  state: 'prepared' as const,
+  createdAt: '2026-07-13T20:00:00.000Z',
+  idempotencyKey: '01'.repeat(32),
+  statusCapability: '02'.repeat(32),
 };
 
 function readSource(path: string): string {
@@ -38,12 +53,19 @@ const mocks = vi.hoisted(() => ({
   cleanupPlaintextStaging: vi.fn(),
   collectLocalDeviceExportData: vi.fn(),
   deleteAsync: vi.fn(),
+  createAccountDeletionOwnerBinding: vi.fn(),
+  fetch: vi.fn(),
   getAppleAuthorizationCodeForRevocation: vi.fn(),
+  getSession: vi.fn(),
   getUser: vi.fn(),
   invoke: vi.fn(),
   isSupabaseConfigured: true,
   markPlaintextStagingState: vi.fn(),
+  markAccountDeletionIntakeState: vi.fn(),
+  preparePendingAccountDeletion: vi.fn(),
+  quarantineLocalAccount: vi.fn(),
   recordConsent: vi.fn(),
+  requestAccountDeletionRecovery: vi.fn(),
   reservePlaintextStaging: vi.fn(),
   shareAsync: vi.fn(),
   sharingAvailable: vi.fn(),
@@ -76,7 +98,26 @@ vi.mock('@/lib/consent/consent', () => ({
   recordConsent: mocks.recordConsent,
 }));
 
+vi.mock('./accountDeletionRecovery', () => ({
+  quarantineAccountDeletionSession: mocks.quarantineLocalAccount,
+}));
+
+vi.mock('./accountDeletionClientState', () => ({
+  accountDeletionRecordMatchesOwner: (
+    record: { version: number; ownerBinding?: string },
+    ownerBinding: string,
+  ) => record.version === 2 && record.ownerBinding === ownerBinding,
+  createAccountDeletionOwnerBinding: mocks.createAccountDeletionOwnerBinding,
+  markAccountDeletionIntakeState: mocks.markAccountDeletionIntakeState,
+  preparePendingAccountDeletion: mocks.preparePendingAccountDeletion,
+  requestAccountDeletionRecovery: mocks.requestAccountDeletionRecovery,
+}));
+
 vi.mock('@/lib/env', () => ({
+  env: {
+    supabaseUrl: 'https://project.supabase.co',
+    supabasePublishableKey: 'sb_publishable_test',
+  },
   get isSupabaseConfigured() {
     return mocks.isSupabaseConfigured;
   },
@@ -85,6 +126,7 @@ vi.mock('@/lib/env', () => ({
 vi.mock('@/lib/supabase/client', () => ({
   supabase: {
     auth: {
+      getSession: mocks.getSession,
       getUser: mocks.getUser,
     },
     functions: {
@@ -430,125 +472,530 @@ describe('settings data export', () => {
 
 describe('settings account deletion and consent withdrawal', () => {
   beforeEach(() => {
+    vi.stubGlobal('fetch', mocks.fetch);
     mocks.deleteAsync.mockReset();
+    mocks.createAccountDeletionOwnerBinding.mockReset();
+    mocks.fetch.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
+    mocks.getSession.mockReset();
     mocks.getUser.mockReset();
     mocks.invoke.mockReset();
     mocks.isSupabaseConfigured = true;
+    mocks.markAccountDeletionIntakeState.mockReset();
+    mocks.quarantineLocalAccount.mockReset();
+    mocks.preparePendingAccountDeletion.mockReset();
     mocks.recordConsent.mockReset();
+    mocks.requestAccountDeletionRecovery.mockReset();
     mocks.shareAsync.mockReset();
     mocks.sharingAvailable.mockReset();
     mocks.signOut.mockReset();
     mocks.writeAsStringAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
+    mocks.getSession.mockResolvedValue({
+      data: {
+        session: {
+          access_token: 'captured-token-a',
+          user: { id: 'user-1' },
+        },
+      },
+      error: null,
+    });
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
+    mocks.createAccountDeletionOwnerBinding.mockResolvedValue(OWNER_A);
     resetAccountDeletionNoticeForTests();
-    mocks.invoke.mockResolvedValue({ data: COMPLETE_ACCOUNT_DELETION_RESPONSE, error: null });
+    mocks.invoke.mockResolvedValue({
+      data: COMPLETE_ACCOUNT_DELETION_RESPONSE,
+      error: null,
+      response: { status: 202 },
+    });
+    mocks.fetch.mockImplementation(async (_input: string, init?: RequestInit) => {
+      const result = await mocks.invoke('account-deletion', {
+        method: init?.method,
+        body: JSON.parse(String(init?.body)) as unknown,
+        signal: init?.signal,
+      });
+      if (result.error && !result.response) throw result.error;
+      return new Response(JSON.stringify(result.data), {
+        status: result.response?.status ?? (result.error ? 500 : 202),
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
+    mocks.markAccountDeletionIntakeState.mockResolvedValue({
+      ...DELETION_TOKENS,
+      state: 'accepted',
+    });
+    mocks.preparePendingAccountDeletion.mockResolvedValue(DELETION_TOKENS);
+    mocks.quarantineLocalAccount.mockResolvedValue(undefined);
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.signOut.mockResolvedValue(undefined);
   });
 
-  it('deletes through the backend before handing off to the root account boundary', async () => {
+  it('persists both tokens, accepts only HTTP 202, then hands off to the root boundary', async () => {
     await expect(deleteAccount(mocks.signOut)).resolves.toEqual({
-      appleStatus: 'revoked',
-      posthogStatus: 'skipped',
+      status: 'accepted_or_ambiguous',
+      phase: 'queued',
+      nextPollAfterSeconds: 2,
     });
 
+    expect(mocks.getSession).toHaveBeenCalledOnce();
+    expect(mocks.getUser).toHaveBeenCalledWith('captured-token-a');
+    expect(mocks.createAccountDeletionOwnerBinding).toHaveBeenCalledWith('user-1');
+    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledWith(OWNER_A);
     expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledWith({ id: 'user-1' });
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
-      body: { appleAuthorizationCode: 'apple-revocation-code' },
+      body: {
+        action: 'begin',
+        idempotencyKey: DELETION_TOKENS.idempotencyKey,
+        statusCapability: DELETION_TOKENS.statusCapability,
+        appleAuthorizationCode: 'apple-revocation-code',
+      },
+      signal: expect.any(AbortSignal),
     });
-    expect(mocks.signOut).toHaveBeenCalledTimes(1);
-    expect(mocks.invoke.mock.invocationCallOrder[0]).toBeLessThan(
-      mocks.signOut.mock.invocationCallOrder[0]!,
+    expect(mocks.fetch).toHaveBeenCalledWith(
+      'https://project.supabase.co/functions/v1/account-deletion',
+      expect.objectContaining({
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          apikey: 'sb_publishable_test',
+          Authorization: 'Bearer captured-token-a',
+          'Content-Type': 'application/json',
+        },
+        credentials: 'omit',
+        cache: 'no-store',
+        redirect: 'error',
+      }),
     );
+    expect(mocks.preparePendingAccountDeletion.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.invoke.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.markAccountDeletionIntakeState).toHaveBeenCalledWith('accepted', OWNER_A);
+    expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
+    expect(mocks.quarantineLocalAccount).not.toHaveBeenCalled();
   });
 
-  it('does not clear local private data when backend account deletion fails', async () => {
-    mocks.invoke.mockResolvedValueOnce({ data: null, error: new Error('edge unavailable') });
+  it('keeps prepared evidence and does not sign out after an explicit HTTP rejection', async () => {
+    mocks.invoke.mockResolvedValueOnce({
+      data: null,
+      error: new Error('rate limited'),
+      response: { status: 429 },
+    });
 
-    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('edge unavailable');
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('ACCOUNT_DELETION_RESPONSE_INVALID');
 
+    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledOnce();
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
+  });
+
+  it.each(['returned fetch error', 'thrown fetch error'])(
+    'treats a %s as transport-ambiguous, preserves retry auth, and quarantines locally',
+    async (mode) => {
+      const fetchError = Object.assign(new Error('network lost'), {
+        name: 'FunctionsFetchError',
+      });
+      if (mode === 'returned fetch error') {
+        mocks.invoke.mockResolvedValueOnce({ data: null, error: fetchError });
+      } else {
+        mocks.invoke.mockRejectedValueOnce(fetchError);
+      }
+
+      await expect(deleteAccount(mocks.signOut)).resolves.toEqual({
+        status: 'accepted_or_ambiguous',
+        phase: 'unknown',
+        nextPollAfterSeconds: null,
+      });
+
+      expect(mocks.markAccountDeletionIntakeState).toHaveBeenCalledWith('ambiguous', OWNER_A);
+      expect(mocks.signOut).not.toHaveBeenCalled();
+      expect(mocks.quarantineLocalAccount).not.toHaveBeenCalled();
+      expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
+    },
+  );
+
+  it('reuses the original authenticated token pair after lost-before-send then 404 recovery', async () => {
+    const lostBeforeSend = Object.assign(new Error('network lost before send'), {
+      name: 'FunctionsFetchError',
+    });
+    const retryable404Record = { ...DELETION_TOKENS, state: 'invalid_retryable' as const };
+    mocks.preparePendingAccountDeletion
+      .mockResolvedValueOnce(DELETION_TOKENS)
+      .mockResolvedValueOnce(retryable404Record);
+    mocks.invoke.mockRejectedValueOnce(lostBeforeSend).mockResolvedValueOnce({
+      data: COMPLETE_ACCOUNT_DELETION_RESPONSE,
+      error: null,
+      response: { status: 202 },
+    });
+
+    await expect(deleteAccount(mocks.signOut)).resolves.toMatchObject({ phase: 'unknown' });
+    // Capability polling's exact 404 transitions the same durable record to
+    // invalid_retryable; accountDeletionClientState.test.ts covers that commit.
+    await expect(deleteAccount(mocks.signOut)).resolves.toMatchObject({ phase: 'queued' });
+
+    expect(mocks.invoke).toHaveBeenCalledTimes(2);
+    const firstBody = mocks.invoke.mock.calls[0]![1].body;
+    const retryBody = mocks.invoke.mock.calls[1]![1].body;
+    expect(retryBody).toEqual(firstBody);
+    expect(retryBody).toMatchObject({
+      idempotencyKey: DELETION_TOKENS.idempotencyKey,
+      statusCapability: DELETION_TOKENS.statusCapability,
+    });
+    expect(mocks.markAccountDeletionIntakeState).toHaveBeenNthCalledWith(1, 'ambiguous', OWNER_A);
+    expect(mocks.markAccountDeletionIntakeState).toHaveBeenNthCalledWith(2, 'accepted', OWNER_A);
+    expect(mocks.quarantineLocalAccount).not.toHaveBeenCalled();
     expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
-  it('surfaces a root account-boundary failure after backend deletion', async () => {
-    mocks.signOut.mockRejectedValueOnce(new Error('sign out unavailable'));
+  it('aborts intake at 15 seconds and treats the response-lost result as ambiguous', async () => {
+    vi.useFakeTimers();
+    let requestSignal: AbortSignal | undefined;
+    try {
+      mocks.invoke.mockImplementationOnce(
+        (_name: string, options: { signal?: AbortSignal }) =>
+          new Promise((_resolve, reject) => {
+            requestSignal = options.signal;
+            options.signal?.addEventListener(
+              'abort',
+              () => {
+                const error = new Error('request aborted');
+                error.name = 'AbortError';
+                reject(error);
+              },
+              { once: true },
+            );
+          }),
+      );
 
-    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('sign out unavailable');
+      const deletion = deleteAccount(mocks.signOut);
+      await vi.advanceTimersByTimeAsync(0);
+      expect(requestSignal).toBeInstanceOf(AbortSignal);
+      expect(requestSignal?.aborted).toBe(false);
 
-    expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
-      method: 'POST',
-      body: { appleAuthorizationCode: 'apple-revocation-code' },
-    });
-    expect(mocks.signOut).toHaveBeenCalledTimes(1);
+      await vi.advanceTimersByTimeAsync(14_999);
+      expect(mocks.signOut).not.toHaveBeenCalled();
+
+      await vi.advanceTimersByTimeAsync(1);
+      await expect(deletion).resolves.toEqual({
+        status: 'accepted_or_ambiguous',
+        phase: 'unknown',
+        nextPollAfterSeconds: null,
+      });
+
+      expect(requestSignal?.aborted).toBe(true);
+      expect(mocks.markAccountDeletionIntakeState).toHaveBeenCalledWith('ambiguous', OWNER_A);
+      expect(mocks.signOut).not.toHaveBeenCalled();
+      expect(mocks.quarantineLocalAccount).not.toHaveBeenCalled();
+      expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
+      expect(vi.getTimerCount()).toBe(0);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
-  it('does not block backend deletion when Apple revocation-code refresh fails locally', async () => {
+  it('clears the intake deadline after an early response without later aborting its signal', async () => {
+    vi.useFakeTimers();
+    let requestSignal: AbortSignal | undefined;
+    try {
+      mocks.invoke.mockImplementationOnce((_name: string, options: { signal?: AbortSignal }) => {
+        requestSignal = options.signal;
+        return Promise.resolve({
+          data: COMPLETE_ACCOUNT_DELETION_RESPONSE,
+          error: null,
+          response: { status: 202 },
+        });
+      });
+
+      await expect(deleteAccount(mocks.signOut)).resolves.toEqual({
+        status: 'accepted_or_ambiguous',
+        phase: 'queued',
+        nextPollAfterSeconds: 2,
+      });
+
+      expect(vi.getTimerCount()).toBe(0);
+      await vi.advanceTimersByTimeAsync(15_000);
+      expect(requestSignal?.aborted).toBe(false);
+      expect(mocks.signOut).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('ignores a transport completion that arrives after the intake deadline', async () => {
+    vi.useFakeTimers();
+    let completeTransport:
+      | ((value: {
+          data: typeof COMPLETE_ACCOUNT_DELETION_RESPONSE;
+          error: null;
+          response: { status: number };
+        }) => void)
+      | undefined;
+    try {
+      mocks.invoke.mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            completeTransport = resolve;
+          }),
+      );
+
+      const deletion = deleteAccount(mocks.signOut);
+      await vi.advanceTimersByTimeAsync(0);
+      await vi.advanceTimersByTimeAsync(15_000);
+      await expect(deletion).resolves.toEqual({
+        status: 'accepted_or_ambiguous',
+        phase: 'unknown',
+        nextPollAfterSeconds: null,
+      });
+
+      completeTransport?.({
+        data: COMPLETE_ACCOUNT_DELETION_RESPONSE,
+        error: null,
+        response: { status: 202 },
+      });
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(mocks.markAccountDeletionIntakeState).toHaveBeenCalledWith('ambiguous', OWNER_A);
+      expect(mocks.signOut).not.toHaveBeenCalled();
+      expect(mocks.quarantineLocalAccount).not.toHaveBeenCalled();
+      expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
+      expect(vi.getTimerCount()).toBe(0);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('does not misclassify a response parse failure as transport ambiguity', async () => {
+    mocks.fetch.mockResolvedValueOnce(new Response('<html>', { status: 202 }));
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('ACCOUNT_DELETION_RESPONSE_INVALID');
+
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
+  });
+
+  it('does not invoke the backend when token persistence fails', async () => {
+    mocks.preparePendingAccountDeletion.mockRejectedValueOnce(new Error('keychain unavailable'));
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow('keychain unavailable');
+
+    expect(mocks.getUser).toHaveBeenCalledWith('captured-token-a');
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
+  });
+
+  it('keeps the startup barrier closed when Auth lookup fails after token persistence', async () => {
+    mocks.getUser.mockRejectedValueOnce(new Error('auth transport unavailable'));
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+      'ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE',
+    );
+
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
+    expect(
+      isAccountDeletionAuthSessionUnavailable(
+        new Error('ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE'),
+      ),
+    ).toBe(true);
+  });
+
+  it('never sends an unauthenticated retry when the quarantined session is missing', async () => {
+    mocks.getUser.mockResolvedValueOnce({ data: { user: null }, error: null });
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+      'ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE',
+    );
+
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(mocks.quarantineLocalAccount).not.toHaveBeenCalled();
+    expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
+  });
+
+  it('aborts an A-to-B boundary before durable evidence can be persisted', async () => {
+    let resolveSession:
+      | ((value: {
+          data: {
+            session: { access_token: string; user: { id: string } };
+          };
+          error: null;
+        }) => void)
+      | undefined;
+    mocks.getSession.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveSession = resolve;
+        }),
+    );
+    const observed = deleteAccount(mocks.signOut).then(
+      () => null,
+      (error: unknown) => error,
+    );
+    await vi.waitFor(() => expect(mocks.getSession).toHaveBeenCalledOnce());
+
+    beginAccountGenerationBoundary();
+    try {
+      resolveSession?.({
+        data: { session: { access_token: 'token-b', user: { id: 'user-b' } } },
+        error: null,
+      });
+      await expect(observed).resolves.toMatchObject({ message: ACCOUNT_GENERATION_CHANGED });
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.fetch).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+  });
+
+  it('aborts an A-to-B boundary while Apple revocation-code lookup is pending', async () => {
+    let resolveAppleCode: ((value: string) => void) | undefined;
+    mocks.getAppleAuthorizationCodeForRevocation.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveAppleCode = resolve;
+        }),
+    );
+    const observed = deleteAccount(mocks.signOut).then(
+      () => null,
+      (error: unknown) => error,
+    );
+    await vi.waitFor(() =>
+      expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledWith(OWNER_A),
+    );
+
+    beginAccountGenerationBoundary();
+    try {
+      resolveAppleCode?.('apple-code-for-a');
+      await expect(observed).resolves.toMatchObject({ message: ACCOUNT_GENERATION_CHANGED });
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(mocks.fetch).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledTimes(1);
+  });
+
+  it('checks the A lease immediately before dispatch and never sends with B', async () => {
+    mocks.getAppleAuthorizationCodeForRevocation.mockImplementationOnce(async () => {
+      beginAccountGenerationBoundary();
+      return 'apple-code-for-a';
+    });
+    const observed = deleteAccount(mocks.signOut).then(
+      () => null,
+      (error: unknown) => error,
+    );
+    try {
+      await expect(observed).resolves.toMatchObject({ message: ACCOUNT_GENERATION_CHANGED });
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledWith(OWNER_A);
+    expect(mocks.fetch).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+  });
+
+  it('makes a cold A-record retry with B support-only and never overwrites or dispatches', async () => {
+    mocks.getSession.mockResolvedValueOnce({
+      data: { session: { access_token: 'captured-token-b', user: { id: 'user-b' } } },
+      error: null,
+    });
+    mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'user-b' } }, error: null });
+    mocks.createAccountDeletionOwnerBinding.mockResolvedValueOnce(OWNER_B);
+    mocks.preparePendingAccountDeletion.mockRejectedValueOnce(
+      new Error('ACCOUNT_DELETION_OWNER_MISMATCH'),
+    );
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+      'ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE',
+    );
+
+    expect(mocks.getUser).toHaveBeenCalledWith('captured-token-b');
+    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledWith(OWNER_B);
+    expect(mocks.fetch).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+    expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
+  });
+
+  it('surfaces an acceptance-state failure but still wakes durable recovery', async () => {
+    mocks.markAccountDeletionIntakeState.mockRejectedValueOnce(new Error('keychain unavailable'));
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+      'ACCOUNT_DELETION_ACCEPTED_LOCAL_SIGN_OUT_INCOMPLETE',
+    );
+
+    expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
+    expect(
+      isAcceptedAccountDeletionLocalSignOutIncomplete(
+        new Error('ACCOUNT_DELETION_ACCEPTED_LOCAL_SIGN_OUT_INCOMPLETE'),
+      ),
+    ).toBe(true);
+  });
+
+  it('omits only the Apple field when revocation-code refresh fails locally', async () => {
     mocks.getAppleAuthorizationCodeForRevocation.mockRejectedValueOnce(
       new Error('native apple unavailable'),
     );
 
-    mocks.invoke.mockResolvedValueOnce({
-      data: {
-        deleted: true,
-        apple: {
-          status: 'manual_revocation_required',
-          reason: 'credential_unavailable',
-          instruction: 'provider copy is not trusted for local rendering',
-          instruction_url: 'https://support.apple.com/en-us/102571',
-        },
-        posthog: 'already_absent',
-      },
-      error: null,
-    });
-    mocks.signOut.mockImplementationOnce(async () => {
-      expect(peekAccountDeletionNotice()).toEqual(
-        expect.objectContaining({ kind: 'apple_manual_revocation' }),
-      );
-    });
-
     await expect(deleteAccount(mocks.signOut)).resolves.toEqual({
-      appleStatus: 'manual_revocation_required',
-      posthogStatus: 'already_absent',
+      status: 'accepted_or_ambiguous',
+      phase: 'queued',
+      nextPollAfterSeconds: 2,
     });
 
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
-      body: {},
+      body: {
+        action: 'begin',
+        idempotencyKey: DELETION_TOKENS.idempotencyKey,
+        statusCapability: DELETION_TOKENS.statusCapability,
+      },
+      signal: expect.any(AbortSignal),
     });
-    expect(mocks.signOut).toHaveBeenCalledTimes(1);
-    expect(consumeAccountDeletionNotice()).toEqual(
-      expect.objectContaining({ kind: 'apple_manual_revocation' }),
-    );
+    expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(consumeAccountDeletionNotice()).toBeNull();
   });
 
-  it('does not report or locally finalize an unattested deletion response', async () => {
+  it('does not finalize an HTTP 200 even when its JSON looks accepted', async () => {
     mocks.invoke.mockResolvedValueOnce({
-      data: { deleted: false, apple: { status: 'revoked' }, posthog: 'skipped' },
+      data: COMPLETE_ACCOUNT_DELETION_RESPONSE,
       error: null,
+      response: { status: 200 },
     });
 
     await expect(deleteAccount(mocks.signOut)).rejects.toThrow('ACCOUNT_DELETION_RESPONSE_INVALID');
 
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
     expect(mocks.signOut).not.toHaveBeenCalled();
-    expect(consumeAccountDeletionNotice()).toBeNull();
+    expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
   });
 
   it.each([
     null,
-    { deleted: true, posthog: 'skipped' },
-    { deleted: true, apple: { status: 'revoked' } },
-    { deleted: true, apple: { status: 'unexpected' }, posthog: 'skipped' },
-    { deleted: true, apple: { status: 'revoked' }, posthog: 'deletion_pending' },
+    { status: 'accepted', phase: 'queued' },
+    { status: 'completed', phase: 'queued', nextPollAfterSeconds: 2 },
+    { status: 'accepted', phase: 'processing', nextPollAfterSeconds: 2 },
+    { status: 'accepted', phase: 'queued', nextPollAfterSeconds: 1 },
+    { ...COMPLETE_ACCOUNT_DELETION_RESPONSE, extra: true },
   ])('rejects malformed account-deletion success payload %#', async (response) => {
-    mocks.invoke.mockResolvedValueOnce({ data: response, error: null });
+    mocks.invoke.mockResolvedValueOnce({ data: response, error: null, response: { status: 202 } });
 
     await expect(deleteAccount(mocks.signOut)).rejects.toThrow('ACCOUNT_DELETION_RESPONSE_INVALID');
 
     expect(mocks.signOut).not.toHaveBeenCalled();
-    expect(consumeAccountDeletionNotice()).toBeNull();
+    expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
   });
 
   it('fails fast without local cleanup when the data-rights backend is unavailable', async () => {
@@ -572,7 +1019,13 @@ describe('settings account deletion and consent withdrawal', () => {
     );
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
-      body: { appleAuthorizationCode: 'apple-revocation-code' },
+      body: {
+        action: 'begin',
+        idempotencyKey: DELETION_TOKENS.idempotencyKey,
+        statusCapability: DELETION_TOKENS.statusCapability,
+        appleAuthorizationCode: 'apple-revocation-code',
+      },
+      signal: expect.any(AbortSignal),
     });
     expect(mocks.recordConsent.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.invoke.mock.invocationCallOrder[0]!,
@@ -586,9 +1039,15 @@ describe('settings account deletion and consent withdrawal', () => {
 
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
-      body: { appleAuthorizationCode: 'apple-revocation-code' },
+      body: {
+        action: 'begin',
+        idempotencyKey: DELETION_TOKENS.idempotencyKey,
+        statusCapability: DELETION_TOKENS.statusCapability,
+        appleAuthorizationCode: 'apple-revocation-code',
+      },
+      signal: expect.any(AbortSignal),
     });
-    expect(mocks.signOut).toHaveBeenCalledTimes(1);
+    expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
   it('does not write withdrawal or cleanup locally when the data-rights backend is unavailable', async () => {

@@ -107,7 +107,7 @@
 - `$env:EXPO_PUBLIC_PERSONAL_TOKEN='blocked'; node scripts/phase2/check-env.mjs --strict` (expected failure probe for secret-looking public env key names)
 - `$env:EXPO_PUBLIC_POSTHOG_KEY='sk_live_blocked'; node scripts/phase10/beta-readiness.mjs` (expected failure probe for private-looking public env values)
 - `$env:EXPO_PUBLIC_POSTHOG_KEY='sk_live_blocked'; node scripts/phase11/launch-readiness.mjs` (expected failure probe for private-looking public env values)
-- Missing-app-env live Edge auth expected failure probe with `PHASE9_RUN_LIVE_EDGE_AUTH=true` and fake non-placeholder Supabase credentials; proves live harnesses classify absent real app env as production and refuse without `PHASE9_ALLOW_PRODUCTION_LIVE_EDGE_AUTH=true`.
+- Protected-harness env/static expected-failure probes cover missing or non-exact `APP_ENV=staging`, an absent or different `PHASE9_EXPECTED_SUPABASE_PROJECT_REF`, and non-origin `SUPABASE_URL` values. They prove Edge-auth and data-rights stop before client creation or any request unless the reviewed canonical staging target matches exactly.
 - `npm audit --audit-level=moderate`
 - `npm audit --audit-level=high`
 - `npx expo-doctor`

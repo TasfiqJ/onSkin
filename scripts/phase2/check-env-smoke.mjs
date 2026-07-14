@@ -8,6 +8,10 @@ import { spawnSync } from 'node:child_process';
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const checkEnvPath = resolve(scriptDir, 'check-env.mjs');
 const rlsSmokePath = resolve(scriptDir, 'supabase-rls-smoke.mjs');
+const deletionWorkLaneSmokePath = resolve(
+  scriptDir,
+  '../phase9/account-deletion-work-lane-smoke.mjs',
+);
 
 const passthroughKeys = [
   'ComSpec',
@@ -30,6 +34,7 @@ const processBaseEnv = Object.fromEntries(
 
 const completeEnv = {
   APP_VARIANT: 'staging',
+  APP_ENV: 'staging',
   EXPO_PUBLIC_APP_ENV: 'staging',
   BRAND_LEGAL_CLEARANCE: 'cleared',
   EXPO_PUBLIC_PRIVACY_URL: 'https://routinekind.app/privacy',
@@ -51,7 +56,11 @@ const completeEnv = {
   EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID: 'routinekind.pro.annual',
   EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID: 'routinekind.pro.monthly',
   REVENUECAT_WEBHOOK_AUTH: 'revenuecat-webhook-auth',
+  REVENUECAT_PROJECT_ID: 'proj_routinekind_staging',
   REVENUECAT_SECRET_API_KEY: 'sk_live_revenuecat_customer_deletion',
+  REVENUECAT_V2_SECRET_API_KEY: 'sk_live_revenuecat_v2_customer_deletion',
+  REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION: '1',
+  REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS: `1=${'40'.repeat(32)}`,
   EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: 'routinekind-ios.apps.googleusercontent.com',
   EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: 'routinekind-web.apps.googleusercontent.com',
   EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME: 'com.googleusercontent.apps.routinekind',
@@ -65,6 +74,10 @@ const completeEnv = {
   POSTHOG_PERSONAL_API_KEY: 'phx_livevalue',
   POSTHOG_PROJECT_ID: '12345',
   POSTHOG_API_HOST: 'https://eu.posthog.com',
+  POSTHOG_CAPTURE_SHUTDOWN_AT: '2026-01-01T00:00:00.000Z',
+  POSTHOG_ABSENCE_INTERVAL_SECONDS: '60',
+  POSTHOG_NO_RECORDINGS_EVIDENCE: 'production_capture_disabled_and_storage_audited',
+  POSTHOG_NO_RECORDINGS_VERIFIED_AT: '2026-01-02T00:00:00.000Z',
   EXPO_PUBLIC_SENTRY_DSN: 'https://abc@o123.ingest.sentry.io/123',
   SENTRY_AUTH_TOKEN: 'sntrys_livevalue',
   SENTRY_ORG: 'routinekind',
@@ -79,11 +92,16 @@ const completeEnv = {
   EXPO_PUBLIC_APP_SCHEME: 'routinekind',
   APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
   APP_ANDROID_PACKAGE: 'com.routinekind.app',
+  ACCOUNT_DELETION_PAYLOAD_KEY_HEX: '10'.repeat(32),
+  ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX: '20'.repeat(32),
+  ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION: '1',
+  ACCOUNT_DELETION_WORKER_SECRET: '30'.repeat(32),
 };
 
 const completeProductionEnv = {
   ...completeEnv,
   APP_VARIANT: 'production',
+  APP_ENV: 'production',
   EXPO_PUBLIC_APP_ENV: 'production',
   PHASE3_RELEASE_CLEARANCE: 'cleared',
 };
@@ -128,6 +146,14 @@ function runRlsSmoke(extraEnv) {
   } finally {
     rmSync(cwd, { force: true, recursive: true });
   }
+}
+
+function runDeletionWorkLaneSmoke() {
+  return spawnSync(process.execPath, [deletionWorkLaneSmokePath], {
+    cwd: resolve(scriptDir, '../..'),
+    encoding: 'utf8',
+    env: processBaseEnv,
+  });
 }
 
 const cases = [
@@ -177,27 +203,234 @@ const cases = [
     },
   },
   {
-    name: 'account deletion requires a RevenueCat customer deletion secret',
-    result: runCheck(
-      withoutKeys(completeEnv, ['REVENUECAT_SECRET_API_KEY', 'REVENUECAT_REST_API_KEY']),
-    ),
+    name: 'account deletion requires a RevenueCat V2 customer deletion secret',
+    result: runCheck(withoutKeys(completeEnv, ['REVENUECAT_V2_SECRET_API_KEY'])),
     expect(result) {
       return (
         result.status === 1 &&
-        /RevenueCat customer deletion: missing or placeholder value; configure one of: REVENUECAT_SECRET_API_KEY, REVENUECAT_REST_API_KEY/.test(
+        /RevenueCat V2 customer deletion: missing or placeholder values: REVENUECAT_V2_SECRET_API_KEY/.test(
           result.stderr,
         )
       );
     },
   },
   {
-    name: 'account deletion accepts the legacy RevenueCat REST secret alias',
+    name: 'account deletion accepts a RevenueCat V2 secret without a legacy V1 key',
+    result: runCheck(withoutKeys(completeEnv, ['REVENUECAT_SECRET_API_KEY'])),
+    expect(result) {
+      return result.status === 0 && /Phase 2 env contract is complete/.test(result.stdout);
+    },
+  },
+  {
+    name: 'legacy RevenueCat keys cannot satisfy durable V2 deletion',
     result: runCheck({
-      ...withoutKeys(completeEnv, ['REVENUECAT_SECRET_API_KEY']),
+      ...withoutKeys(completeEnv, ['REVENUECAT_V2_SECRET_API_KEY']),
       REVENUECAT_REST_API_KEY: 'sk_live_revenuecat_legacy_alias',
     }),
     expect(result) {
+      return (
+        result.status === 1 &&
+        /RevenueCat V2 customer deletion: missing or placeholder values: REVENUECAT_V2_SECRET_API_KEY/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'durable account deletion requires every independent key',
+    result: runCheck(
+      withoutKeys(completeEnv, [
+        'ACCOUNT_DELETION_PAYLOAD_KEY_HEX',
+        'ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX',
+        'ACCOUNT_DELETION_WORKER_SECRET',
+      ]),
+    ),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Durable account deletion: missing or placeholder values/.test(result.stderr) &&
+        /ACCOUNT_DELETION_PAYLOAD_KEY_HEX/.test(result.stderr) &&
+        /ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX/.test(result.stderr) &&
+        /ACCOUNT_DELETION_WORKER_SECRET/.test(result.stderr)
+      );
+    },
+  },
+  {
+    name: 'durable account deletion rejects non-canonical key encodings',
+    result: runCheck({
+      ...completeEnv,
+      ACCOUNT_DELETION_PAYLOAD_KEY_HEX: 'AA'.repeat(32),
+      ACCOUNT_DELETION_WORKER_SECRET: ` ${'30'.repeat(32)}`,
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /ACCOUNT_DELETION_PAYLOAD_KEY_HEX must be exactly 64 lowercase hexadecimal characters/.test(
+          result.stderr,
+        ) &&
+        /ACCOUNT_DELETION_WORKER_SECRET must be exactly 64 lowercase hexadecimal characters/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'durable account deletion rejects cross-purpose key reuse',
+    result: runCheck({
+      ...completeEnv,
+      ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX: completeEnv.ACCOUNT_DELETION_PAYLOAD_KEY_HEX,
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Durable account-deletion key material must be independent/.test(result.stderr) &&
+        /ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX reuses ACCOUNT_DELETION_PAYLOAD_KEY_HEX/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'RevenueCat tombstone key rotation requires overlap and a present current version',
+    result: runCheck({
+      ...completeEnv,
+      REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION: '3',
+      REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS: `1=${'40'.repeat(32)};2=${'41'.repeat(32)}`,
+    }),
+    expect(result) {
+      return result.status === 1 && /current version must be present/.test(result.stderr);
+    },
+  },
+  {
+    name: 'Edge and mobile environment stages cannot contradict',
+    result: runCheck({ ...completeEnv, APP_ENV: 'production' }),
+    expect(result) {
+      return (
+        result.status === 1 && /APP_ENV must exactly match EXPO_PUBLIC_APP_ENV/.test(result.stderr)
+      );
+    },
+  },
+  {
+    name: 'protected Edge-auth evidence accepts the exact reviewed staging target',
+    result: runCheck({
+      ...completeEnv,
+      PHASE9_RUN_LIVE_EDGE_AUTH: 'true',
+      PHASE9_EXPECTED_SUPABASE_PROJECT_REF: 'abcdefghijklmnopqrst',
+      SUPABASE_URL: 'https://abcdefghijklmnopqrst.supabase.co',
+    }),
+    expect(result) {
       return result.status === 0 && /Phase 2 env contract is complete/.test(result.stdout);
+    },
+  },
+  {
+    name: 'protected data-rights evidence rejects a different Supabase project ref',
+    result: runCheck({
+      ...completeEnv,
+      PHASE9_RUN_LIVE_DATA_RIGHTS: 'true',
+      PHASE9_EXPECTED_SUPABASE_PROJECT_REF: 'abcdefghijklmnopqrst',
+      SUPABASE_URL: 'https://zyxwvutsrqponmlkjihg.supabase.co',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /SUPABASE_URL to exactly equal the reviewed canonical staging project origin/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'protected evidence rejects a non-canonical expected project ref',
+    result: runCheck({
+      ...completeEnv,
+      PHASE9_RUN_LIVE_EDGE_AUTH: 'true',
+      PHASE9_EXPECTED_SUPABASE_PROJECT_REF: 'routinekind-staging',
+      SUPABASE_URL: 'https://routinekind-staging.supabase.co',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /requires a canonical 20-character lowercase alphanumeric PHASE9_EXPECTED_SUPABASE_PROJECT_REF/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'protected evidence rejects a non-origin Supabase URL',
+    result: runCheck({
+      ...completeEnv,
+      PHASE9_RUN_LIVE_EDGE_AUTH: 'true',
+      PHASE9_EXPECTED_SUPABASE_PROJECT_REF: 'abcdefghijklmnopqrst',
+      SUPABASE_URL: 'https://abcdefghijklmnopqrst.supabase.co/rest/v1',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /SUPABASE_URL to exactly equal the reviewed canonical staging project origin/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'protected evidence rejects normalized-but-not-exact APP_ENV text',
+    result: runCheck({
+      ...completeEnv,
+      APP_ENV: 'STAGING',
+      PHASE9_RUN_LIVE_DATA_RIGHTS: 'true',
+      PHASE9_EXPECTED_SUPABASE_PROJECT_REF: 'abcdefghijklmnopqrst',
+      SUPABASE_URL: 'https://abcdefghijklmnopqrst.supabase.co',
+    }),
+    expect(result) {
+      return result.status === 1 && /requires exact APP_ENV=staging/.test(result.stderr);
+    },
+  },
+  {
+    name: 'PostHog durable deletion requires exact reviewed absence evidence',
+    result: runCheck({
+      ...completeEnv,
+      POSTHOG_NO_RECORDINGS_EVIDENCE: 'audited',
+      POSTHOG_NO_RECORDINGS_VERIFIED_AT: '2025-12-31T23:59:59.000Z',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /POSTHOG_NO_RECORDINGS_EVIDENCE must exactly equal production_capture_disabled_and_storage_audited/.test(
+          result.stderr,
+        ) &&
+        /POSTHOG_NO_RECORDINGS_VERIFIED_AT must be at or after POSTHOG_CAPTURE_SHUTDOWN_AT/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'durable provider identifiers and credentials reject surrounding whitespace',
+    result: runCheck({
+      ...completeEnv,
+      REVENUECAT_PROJECT_ID: `${completeEnv.REVENUECAT_PROJECT_ID} `,
+      REVENUECAT_V2_SECRET_API_KEY: ` ${completeEnv.REVENUECAT_V2_SECRET_API_KEY}`,
+      POSTHOG_PROJECT_ID: `${completeEnv.POSTHOG_PROJECT_ID} `,
+      POSTHOG_PERSONAL_API_KEY: ` ${completeEnv.POSTHOG_PERSONAL_API_KEY}`,
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /REVENUECAT_PROJECT_ID must be trimmed and at most 255 characters/.test(result.stderr) &&
+        /REVENUECAT_V2_SECRET_API_KEY must be non-blank, trimmed, and at most 1000 characters/.test(
+          result.stderr,
+        ) &&
+        /POSTHOG_PROJECT_ID must be trimmed and at most 200 characters/.test(result.stderr) &&
+        /POSTHOG_PERSONAL_API_KEY must be trimmed and at most 1000 characters/.test(result.stderr)
+      );
+    },
+  },
+  {
+    name: 'account deletion work lane source contract is statically enforced',
+    result: runDeletionWorkLaneSmoke(),
+    expect(result) {
+      return result.status === 0 && /PASS account-deletion durable work lane/.test(result.stdout);
     },
   },
   {
@@ -401,6 +634,7 @@ const cases = [
     result: runCheck({
       ...withoutKeys(completeEnv, finalIdentityKeys),
       APP_VARIANT: 'development',
+      APP_ENV: 'development',
       EXPO_PUBLIC_APP_ENV: 'development',
       BRAND_LEGAL_CLEARANCE: 'pending',
     }),

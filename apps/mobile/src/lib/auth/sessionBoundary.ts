@@ -3,7 +3,12 @@
  * replaces that user without going through the app's explicit sign-out path, the
  * private offline stores must be wiped before the new account can render.
  */
-export type LocalDataOwnership = 'match' | 'mismatch' | 'unclaimed';
+export type LocalDataOwnership =
+  | 'cleanup_required'
+  | 'match'
+  | 'mismatch'
+  | 'retained'
+  | 'unclaimed';
 
 export function latestSessionForCompletedBoundary<T extends { user: { id: string } }>(
   pending: T | null | undefined,
@@ -18,6 +23,7 @@ export function shouldClearLocalPrivateDataForSessionChange(
   nextUserId: string | null,
   ownership: LocalDataOwnership = 'unclaimed',
 ): boolean {
-  if (ownership === 'mismatch') return true;
+  if (ownership === 'cleanup_required' || ownership === 'mismatch') return true;
+  if (ownership === 'retained') return nextUserId !== null;
   return previousUserId !== null && previousUserId !== nextUserId;
 }

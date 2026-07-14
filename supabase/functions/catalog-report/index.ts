@@ -107,14 +107,10 @@ Deno.serve(async (req) => {
     const admin = createClient(supabaseUrl, serviceKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
-    await admin.from('obf_contribution_queue').insert({
-      correction_id: correction.id,
-      user_id: userId,
-      barcode: normalizeBarcode(body.barcode),
-      payload: proposedPayload.value,
-      status: 'held',
-      hold_reason: 'awaiting_source_review_and_moderation',
+    const { error: enqueueError } = await admin.rpc('enqueue_obf_contribution_for_correction', {
+      p_correction_id: correction.id,
     });
+    if (enqueueError) console.error('[catalog-report]', 'obf_contribution_enqueue_failed');
   }
 
   return json({ result: 'reported', correction });

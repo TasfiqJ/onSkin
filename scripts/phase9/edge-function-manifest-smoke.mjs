@@ -106,6 +106,42 @@ runFailureCase(
 );
 
 runFailureCase(
+  'mixed boundary cannot use gateway JWT verification',
+  ({ fixtureRoot, manifest }) => {
+    const name = Object.keys(manifest.functions).find(
+      (candidate) => manifest.functions[candidate].access === 'mixed',
+    );
+    manifest.functions[name].verifyJwt = true;
+    persistManifest(fixtureRoot, manifest);
+  },
+  /verifyJwt must be false for mixed access/,
+);
+
+runFailureCase(
+  'mixed boundary must disclose public reachability',
+  ({ fixtureRoot, manifest }) => {
+    const name = Object.keys(manifest.functions).find(
+      (candidate) => manifest.functions[candidate].access === 'mixed',
+    );
+    manifest.functions[name].public = false;
+    persistManifest(fixtureRoot, manifest);
+  },
+  /public must match public or mixed access/,
+);
+
+runFailureCase(
+  'mixed boundary must describe route-scoped authentication',
+  ({ fixtureRoot, manifest }) => {
+    const name = Object.keys(manifest.functions).find(
+      (candidate) => manifest.functions[candidate].access === 'mixed',
+    );
+    manifest.functions[name].auth = '   ';
+    persistManifest(fixtureRoot, manifest);
+  },
+  /auth must describe the caller authentication mechanism/,
+);
+
+runFailureCase(
   'source config mismatch',
   ({ fixtureRoot, manifest }) => {
     const name = Object.keys(manifest.functions).find(
@@ -131,6 +167,32 @@ runFailureCase(
     );
   },
   /source references UNDECLARED_SECRET/,
+);
+
+runFailureCase(
+  'undeclared environment helper argument',
+  ({ fixtureRoot, manifest }) => {
+    const [name] = Object.keys(manifest.functions);
+    const entrypoint = join(fixtureRoot, ...manifest.functions[name].entrypoint.split('/'));
+    writeFileSync(
+      entrypoint,
+      `${readFileSync(entrypoint, 'utf8')}\nconst readEnvironment = (name) => Deno.env.get(name);\nconst requiredEnv = (reader, name) => reader(name);\nrequiredEnv(readEnvironment, 'UNDECLARED_HELPER_SECRET');\n`,
+    );
+  },
+  /source references UNDECLARED_HELPER_SECRET/,
+);
+
+runFailureCase(
+  'undeclared environment constant indirection',
+  ({ fixtureRoot, manifest }) => {
+    const [name] = Object.keys(manifest.functions);
+    const entrypoint = join(fixtureRoot, ...manifest.functions[name].entrypoint.split('/'));
+    writeFileSync(
+      entrypoint,
+      `${readFileSync(entrypoint, 'utf8')}\nconst INDIRECT_ENV = 'UNDECLARED_INDIRECT_SECRET';\nconst readEnvironment = (name) => Deno.env.get(name);\nreadEnvironment(INDIRECT_ENV);\n`,
+    );
+  },
+  /source references UNDECLARED_INDIRECT_SECRET/,
 );
 
 console.log('PASS Edge Function manifest smoke');

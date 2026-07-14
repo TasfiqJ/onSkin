@@ -60,7 +60,7 @@ provider = "turnstile"
 # Per-function JWT behavior is source controlled here. Extended auth, secret,
 # public-access, and resource-budget metadata lives in functions/manifest.json.
 [functions.account-deletion]
-verify_jwt = true
+verify_jwt = false
 entrypoint = "./functions/account-deletion/index.ts"
 
 [functions.catalog-lookup]

@@ -1,9 +1,16 @@
 {
-  "generatedAt": "2026-07-10T11:19:00.335Z",
+  "generatedAt": "2026-07-14T06:29:32.406Z",
   "packageManager": null,
   "lockfileVersion": 3,
-  "packageCount": 1082,
-  "vulnerabilities": null,
+  "packageCount": 1083,
+  "vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
   "auditFindings": [],
   "installScriptPackages": [
     {
@@ -3792,6 +3799,13 @@
       "version": "56.0.12",
       "license": "MIT",
       "resolved": "https://registry.npmjs.org/expo-modules-jsi/-/expo-modules-jsi-56.0.12.tgz"
+    },
+    {
+      "path": "node_modules/expo-network",
+      "name": "expo-network",
+      "version": "56.0.5",
+      "license": "MIT",
+      "resolved": "https://registry.npmjs.org/expo-network/-/expo-network-56.0.5.tgz"
     },
     {
       "path": "node_modules/expo-notifications",
@@ -7618,7 +7632,6 @@
   ],
   "blockers": [],
   "warnings": [
-    "npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.",
     "Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true."
   ]
 }

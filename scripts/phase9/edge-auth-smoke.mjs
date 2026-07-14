@@ -16,6 +16,25 @@ const externalFetchHelper = read('supabase/functions/_shared/fetch.ts');
 const supabaseKeyMapHelper = read('supabase/functions/_shared/supabaseKeyMap.ts');
 const supabasePublishableKeyHelper = read('supabase/functions/_shared/supabasePublishableKey.ts');
 const supabaseSecretKeyHelper = read('supabase/functions/_shared/supabaseSecretKey.ts');
+const edgeFunctionManifest = JSON.parse(read('supabase/functions/manifest.json'));
+const accountDeletionManifest = edgeFunctionManifest.functions?.['account-deletion'] ?? {};
+const accountDeletionIndex = read('supabase/functions/account-deletion/index.ts');
+const accountDeletionHandler = read(
+  'supabase/functions/account-deletion/durableDeletionHttpHandler.ts',
+);
+const accountDeletionRuntime = read(
+  'supabase/functions/account-deletion/durableDeletionRuntime.ts',
+);
+const accountDeletionRuntimeCore = read(
+  'supabase/functions/account-deletion/durableDeletionRuntimeCore.ts',
+);
+const accountDeletionProviderNetwork = read(
+  'supabase/functions/account-deletion/deletionProviderNetwork.ts',
+);
+const accountDeletionAppleNetwork = read(
+  'supabase/functions/account-deletion/appleDeletionNetwork.ts',
+);
+const subscriptionGrantErrors = read('supabase/functions/subscription-grants/grantErrors.ts');
 const clientSupabaseSecretReferences = listFiles('apps/mobile')
   .filter((path) => /\.(?:js|jsx|ts|tsx)$/.test(path))
   .filter((path) => /SUPABASE_(?:SECRET_KEYS|SECRET_KEY|SERVICE_ROLE_KEY)/.test(read(path)));
@@ -42,7 +61,6 @@ function publicFormBodyLimitChecks(source, scope) {
 }
 
 const userJwtFunctions = [
-  'account-deletion',
   'data-export',
   'subscription-grants',
   'catalog-search',
@@ -157,6 +175,107 @@ block(
   'Mobile source must never reference Supabase secret/service-role key variables.',
 );
 
+block(
+  errors,
+  accountDeletionManifest.access === 'mixed' &&
+    accountDeletionManifest.public === true &&
+    accountDeletionManifest.verifyJwt === false &&
+    /bearer JWT for begin/.test(accountDeletionManifest.auth ?? '') &&
+    /256-bit capability for status/.test(accountDeletionManifest.auth ?? '') &&
+    /worker secret for scheduled work/.test(accountDeletionManifest.auth ?? ''),
+  'account-deletion must declare its mixed JWT/capability/worker boundary instead of relying on gateway JWT verification.',
+);
+block(
+  errors,
+  /createDurableDeletionRuntime/.test(accountDeletionIndex) &&
+    /createDurableDeletionHttpHandler/.test(accountDeletionIndex) &&
+    /readSupabaseSecretKey/.test(accountDeletionIndex) &&
+    /Deno\.serve\(createDurableDeletionHttpHandler\(dependencies\)\)/.test(accountDeletionIndex),
+  'account-deletion entrypoint must compose the validated durable runtime and mixed-auth HTTP handler with server-only credentials.',
+);
+block(
+  errors,
+  /bearerToken\(request\)/.test(accountDeletionHandler) &&
+    /dependencies\.authenticate\(token\)/.test(accountDeletionHandler) &&
+    /["']UNAUTHORIZED["']/.test(accountDeletionHandler),
+  'account-deletion begin must use the strict shared Bearer parser and return stable 401 responses.',
+);
+const accountDeletionPreflightIndex = accountDeletionHandler.indexOf(
+  "if (parsed.action === 'preflight')",
+);
+const accountDeletionSubjectValidationIndex = accountDeletionHandler.indexOf(
+  'if (!AUTH_USER_ID_PATTERN.test(user.id))',
+  accountDeletionPreflightIndex,
+);
+const accountDeletionBarrierLookupIndex = accountDeletionHandler.indexOf(
+  'dependencies.barrierState(user.id)',
+  accountDeletionPreflightIndex,
+);
+block(
+  errors,
+  /ACCOUNT_DELETION_SESSION_REJECTED/.test(accountDeletionHandler) &&
+    accountDeletionPreflightIndex !== -1 &&
+    accountDeletionSubjectValidationIndex > accountDeletionPreflightIndex &&
+    accountDeletionBarrierLookupIndex > accountDeletionSubjectValidationIndex &&
+    /return json\(\{ status, ownerSubject: user\.id \}, 200\)/.test(accountDeletionHandler),
+  'account-deletion preflight must validate and return the authenticated subject for clear/active and reserve its lane-specific 401 for authoritative bearer rejection.',
+);
+block(
+  errors,
+  accountDeletionHandler.search(/parsed\.action === ["']status["']/) !== -1 &&
+    accountDeletionHandler.indexOf('const token = bearerToken(request)') !== -1 &&
+    accountDeletionHandler.search(/parsed\.action === ["']status["']/) <
+      accountDeletionHandler.indexOf('const token = bearerToken(request)') &&
+    /dependencies\.status\(parsed\.capability\)/.test(accountDeletionHandler) &&
+    /mapPublicDeletionStatus\(lookup\)/.test(accountDeletionHandler),
+  'account-deletion status must be capability-only and resolved before the authenticated begin lane.',
+);
+block(
+  errors,
+  /x-account-deletion-worker-secret/.test(accountDeletionHandler) &&
+    /constantTimeEqual\(supplied, dependencies\.workerSecret\)/.test(accountDeletionHandler) &&
+    /parsed\.action === ["']work["']/.test(accountDeletionHandler) &&
+    /dependencies\.runWorker\(\)/.test(accountDeletionHandler),
+  'account-deletion worker execution must require its dedicated constant-time secret boundary.',
+);
+block(
+  errors,
+  accountDeletionHandler.search(/request\.method === ["']OPTIONS["']/) !== -1 &&
+    accountDeletionHandler.search(/request\.method !== ["']POST["']/) !== -1 &&
+    accountDeletionHandler.indexOf('contentLengthTooLarge(request, dependencies.maxBodyBytes)') !==
+      -1 &&
+    accountDeletionHandler.indexOf('readLimitedJson(') !== -1 &&
+    accountDeletionHandler.indexOf('const token = bearerToken(request)') !== -1 &&
+    accountDeletionHandler.search(/request\.method === ["']OPTIONS["']/) <
+      accountDeletionHandler.indexOf('contentLengthTooLarge(request, dependencies.maxBodyBytes)') &&
+    accountDeletionHandler.search(/request\.method !== ["']POST["']/) <
+      accountDeletionHandler.indexOf('contentLengthTooLarge(request, dependencies.maxBodyBytes)') &&
+    accountDeletionHandler.indexOf('contentLengthTooLarge(request, dependencies.maxBodyBytes)') <
+      accountDeletionHandler.indexOf('readLimitedJson(') &&
+    accountDeletionHandler.indexOf('readLimitedJson(') <
+      accountDeletionHandler.indexOf('const token = bearerToken(request)') &&
+    /\{ error: ["']PAYLOAD_TOO_LARGE["'] \},\s*413/.test(accountDeletionHandler),
+  'account-deletion must reject methods and oversized mixed-boundary bodies before parsing or Auth work.',
+);
+block(
+  errors,
+  /fetcher: fetchWithTimeout/.test(accountDeletionRuntime) &&
+    /createDeletionProviderJsonNetwork/.test(accountDeletionRuntime) &&
+    /createAppleDeletionNetwork/.test(accountDeletionRuntime) &&
+    /readLimitedResponseText/.test(accountDeletionProviderNetwork) &&
+    /readLimitedResponseText/.test(accountDeletionAppleNetwork) &&
+    !/await fetch\(/.test(
+      `${accountDeletionRuntime}\n${accountDeletionProviderNetwork}\n${accountDeletionAppleNetwork}`,
+    ),
+  'account-deletion provider clients must receive timed fetches and use bounded response readers without direct fetch calls.',
+);
+block(
+  errors,
+  /constantTimeEqual/.test(accountDeletionRuntimeCore) &&
+    /difference \|=/.test(accountDeletionRuntimeCore),
+  'account-deletion mixed-auth secret comparisons must remain content- and length-aware.',
+);
+
 for (const fn of userJwtFunctions) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   const handlerSource = source.slice(source.indexOf('Deno.serve'));
@@ -228,13 +347,7 @@ for (const fn of ['catalog-lookup', 'catalog-report', 'catalog-search', 'data-ex
   );
 }
 
-for (const fn of [
-  'account-deletion',
-  'catalog-lookup',
-  'waitlist',
-  'growth-event',
-  'order-report-poll',
-]) {
+for (const fn of ['catalog-lookup', 'waitlist', 'growth-event', 'order-report-poll']) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   block(
     errors,
@@ -265,12 +378,14 @@ block(
 );
 block(
   errors,
-  /active_subscription_exists/.test(subscriptionGrants),
+  /reverseTrialGrantErrorCode\(error\)/.test(subscriptionGrants) &&
+    /active_subscription_exists/.test(subscriptionGrantErrors),
   'subscription-grants must return a stable active-subscription conflict code.',
 );
 block(
   errors,
-  /reverse_trial_already_used/.test(subscriptionGrants),
+  /reverseTrialGrantErrorStatus\(code\)/.test(subscriptionGrants) &&
+    /reverse_trial_already_used/.test(subscriptionGrantErrors),
   'subscription-grants must return a stable already-used reverse-trial conflict code.',
 );
 block(
@@ -483,15 +598,63 @@ block(
 block(
   errors,
   /PHASE9_RUN_LIVE_EDGE_AUTH/.test(liveEdgeAuth) &&
-    /PHASE9_ALLOW_PRODUCTION_LIVE_EDGE_AUTH/.test(liveEdgeAuth) &&
+    /env\.APP_ENV === 'staging'/.test(liveEdgeAuth) &&
+    /resolveHostedSupabaseProjectTarget/.test(liveEdgeAuth) &&
+    /supabaseTarget\.valid/.test(liveEdgeAuth) &&
     /docs\/phase-9\/generated\/live-edge-auth\.json/.test(liveEdgeAuth),
-  'Live Edge auth harness must be explicit-flagged, production-guarded, and write evidence artifacts.',
+  'Live Edge auth harness must be explicit-flagged, staging-only, bound to the reviewed canonical Supabase target, and write evidence artifacts.',
 );
 block(
   errors,
   /user Edge Functions reject missing JWT/.test(liveEdgeAuth) &&
     /user Edge Functions reject invalid JWT/.test(liveEdgeAuth),
   'Live Edge auth harness must cover missing and invalid JWT rejection.',
+);
+block(
+  errors,
+  /accountDeletionFunction = 'account-deletion'/.test(liveEdgeAuth) &&
+    /bearerProtectedFunctions = \[accountDeletionFunction, \.\.\.userJwtFunctions\]/.test(
+      liveEdgeAuth,
+    ) &&
+    /return \{ action: 'begin', idempotencyKey, statusCapability \}/.test(liveEdgeAuth) &&
+    /parseAccountDeletionBegin/.test(liveEdgeAuth) &&
+    /response\.status === 202/.test(liveEdgeAuth) &&
+    /status === 'accepted'/.test(liveEdgeAuth),
+  'Live Edge auth harness must model account-deletion begin as an exact authenticated asynchronous 202 contract.',
+);
+block(
+  errors,
+  /postAccountDeletionStatus/.test(liveEdgeAuth) &&
+    /account-deletion capability status is unauthenticated/.test(liveEdgeAuth) &&
+    /response\.status === 200/.test(liveEdgeAuth) &&
+    /response\.status === 202/.test(liveEdgeAuth) &&
+    /response\.status === 404/.test(liveEdgeAuth) &&
+    /response\.status === 410/.test(liveEdgeAuth) &&
+    /status === 'completed'/.test(liveEdgeAuth) &&
+    /status === 'invalid'/.test(liveEdgeAuth) &&
+    /status === 'expired'/.test(liveEdgeAuth),
+  'Live Edge auth harness must send capability-only status and validate exact 200/202/404/410 response semantics.',
+);
+block(
+  errors,
+  /x-account-deletion-worker-secret/.test(liveEdgeAuth) &&
+    /postAccountDeletionWorker/.test(liveEdgeAuth) &&
+    /body: \{ action: 'work' \}/.test(liveEdgeAuth) &&
+    /account-deletion worker rejects missing and wrong dedicated service credentials without work/.test(
+      liveEdgeAuth,
+    ) &&
+    !/env\.ACCOUNT_DELETION_WORKER_SECRET/.test(liveEdgeAuth) &&
+    /delegated-to-reviewed-cron-evidence/.test(liveEdgeAuth),
+  'Live Edge auth harness must prove safe worker-secret negatives without reading or sending the real global worker credential.',
+);
+block(
+  errors,
+  /PHASE9_EDGE_AUTH_REQUEST_TIMEOUT_SECONDS/.test(liveEdgeAuth) &&
+    /PHASE9_EDGE_AUTH_RESPONSE_MAX_BYTES/.test(liveEdgeAuth) &&
+    /AbortSignal\.timeout/.test(liveEdgeAuth) &&
+    /readBoundedResponseText/.test(liveEdgeAuth) &&
+    /response\.body\.getReader\(\)/.test(liveEdgeAuth),
+  'Live Edge auth harness requests and streamed responses must remain time- and size-bounded.',
 );
 block(
   errors,
@@ -555,14 +718,16 @@ block(
 );
 block(
   errors,
-  /intEnv\(\s*'REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS'\s*,\s*300\s*,\s*1\s*,\s*3600\s*,?\s*\)/.test(
+  /intEnv\(\s*["']REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS["']\s*,\s*300\s*,\s*1\s*,\s*3600\s*,?\s*\)/.test(
     revenueCat,
   ),
   'RevenueCat webhook signature tolerance must be bounded and fail safe.',
 );
 block(
   errors,
-  /intEnv\('REVENUECAT_WEBHOOK_MAX_BYTES',\s*65536,\s*1024,\s*262144\)/.test(revenueCat),
+  /intEnv\(\s*["']REVENUECAT_WEBHOOK_MAX_BYTES["']\s*,\s*65536\s*,\s*1024\s*,\s*262144\s*,?\s*\)/.test(
+    revenueCat,
+  ),
   'RevenueCat webhook body limit must be bounded and fail safe.',
 );
 block(
@@ -592,19 +757,19 @@ block(
 );
 block(
   errors,
-  /return json\('bad signature', 401\)/.test(revenueCat),
+  /return json\(["']bad signature["'],\s*401\)/.test(revenueCat),
   'RevenueCat webhook must return a stable public signature failure.',
 );
 block(
   errors,
-  /req\.method !== 'POST'/.test(revenueCat),
+  /req\.method !== ["']POST["']/.test(revenueCat),
   'RevenueCat webhook must reject non-POST methods before verification work.',
 );
 block(
   errors,
-  revenueCatHandler.indexOf("req.method !== 'POST'") !== -1 &&
+  /req\.method !== ["']POST["']/.test(revenueCatHandler) &&
     revenueCatHandler.indexOf('readLimitedText') !== -1 &&
-    revenueCatHandler.indexOf("req.method !== 'POST'") <
+    revenueCatHandler.search(/req\.method !== ["']POST["']/) <
       revenueCatHandler.indexOf('readLimitedText'),
   'RevenueCat webhook method check must run before reading the raw body.',
 );
@@ -648,7 +813,7 @@ block(
 block(
   errors,
   /REVENUECAT_ATOMIC_PROCESSING_FAILED:/.test(revenueCatAtomicMigration) &&
-    /return json\('processing failed',\s*503\)/.test(revenueCat),
+    /return json\(["']processing failed["'],\s*503\)/.test(revenueCat),
   'RevenueCat webhook must persist a stable failure code and request provider retry.',
 );
 block(

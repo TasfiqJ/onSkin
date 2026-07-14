@@ -1,7 +1,11 @@
 import {
   LOCAL_DATA_CLEANUP_REQUIRED_KEY,
   LOCAL_DATA_OWNER_HASH_KEY,
+  LOCAL_DATA_RETAINED_OWNER_HASH_KEY,
+  LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY,
 } from '@/lib/auth/sessionOwnerKey';
+import { AUTH_DERIVED_CLEANUP_REQUIRED_KEY } from '@/lib/auth/authDerivedCleanupRequired';
+import { APPLE_CREDENTIAL_QUARANTINE_KEY } from '@/lib/auth/appleCredentialQuarantine';
 import { brandCachePrefix } from '@/lib/brand';
 import {
   LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
@@ -53,13 +57,23 @@ export const LOCAL_PRIVATE_SECURE_STORE_KEYS = [
   'onskin.private_kv.content_key.v1',
 ] as const;
 
+// Survives ordinary account-boundary cleanup until the capability-only status
+// endpoint proves terminal deletion and the local completion is committed.
+export const LOCAL_PRIVATE_SECURE_CONTROL_KEYS = [
+  'routinekind.account_deletion.pending.v1',
+] as const;
+
 export const LOCAL_PRIVATE_METADATA_KEYS = [
   'onskin.photo.content_key_created.v1',
   LOCAL_DATA_OWNER_HASH_KEY,
+  LOCAL_DATA_RETAINED_OWNER_HASH_KEY,
+  LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY,
 ] as const;
 
 // Survive partial cleanup so the next launch must retry before data can mount.
 export const LOCAL_PRIVATE_CONTROL_KEYS = [
+  APPLE_CREDENTIAL_QUARANTINE_KEY,
+  AUTH_DERIVED_CLEANUP_REQUIRED_KEY,
   LOCAL_DATA_CLEANUP_REQUIRED_KEY,
   PLAINTEXT_STAGING_JOURNAL_KEY,
   LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,

@@ -3,7 +3,7 @@ import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 
 const FUNCTION_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ENV_NAME = /^[A-Z][A-Z0-9_]*$/;
-const ACCESS_VALUES = new Set(['authenticated', 'provider', 'scheduled', 'public']);
+const ACCESS_VALUES = new Set(['authenticated', 'mixed', 'provider', 'scheduled', 'public']);
 
 function isRecord(value) {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -150,11 +150,30 @@ function collectSourceGraph(entrypoint, repoRoot, errors) {
 function referencedEnvironment(entrypoint, repoRoot, errors) {
   const names = new Set();
   for (const source of collectSourceGraph(entrypoint, repoRoot, errors)) {
+    const environmentConstants = new Map(
+      [
+        ...source.matchAll(
+          /\b(?:export\s+)?const\s+([A-Z][A-Z0-9_]*)\s*=\s*['"]([A-Z][A-Z0-9_]*)['"]/g,
+        ),
+      ].map((match) => [match[1], match[2]]),
+    );
     for (const match of source.matchAll(/Deno\.env\.get\(\s*['"]([A-Z][A-Z0-9_]*)['"]\s*\)/g)) {
       names.add(match[1]);
     }
     for (const match of source.matchAll(/\b(?:intEnv|booleanEnv)\(\s*['"]([A-Z][A-Z0-9_]*)['"]/g)) {
       names.add(match[1]);
+    }
+    for (const match of source.matchAll(
+      /\b(?:envString|requiredEnv)\(\s*[a-zA-Z_$][a-zA-Z0-9_$]*\s*,\s*['"]([A-Z][A-Z0-9_]*)['"]/g,
+    )) {
+      names.add(match[1]);
+    }
+    for (const match of source.matchAll(/\breadEnvironment\(\s*['"]([A-Z][A-Z0-9_]*)['"]\s*\)/g)) {
+      names.add(match[1]);
+    }
+    for (const match of source.matchAll(/\breadEnvironment\(\s*([A-Z][A-Z0-9_]*)\s*\)/g)) {
+      const environmentName = environmentConstants.get(match[1]);
+      if (environmentName) names.add(environmentName);
     }
   }
   return names;
@@ -240,7 +259,9 @@ export function validateEdgeFunctionManifest({
       errors.push(`${functionLabel}.deployByDefault must be true so staging cannot omit it.`);
     }
     if (!ACCESS_VALUES.has(definition.access)) {
-      errors.push(`${functionLabel}.access must be authenticated, provider, scheduled, or public.`);
+      errors.push(
+        `${functionLabel}.access must be authenticated, mixed, provider, scheduled, or public.`,
+      );
     }
     if (typeof definition.auth !== 'string' || !definition.auth.trim()) {
       errors.push(`${functionLabel}.auth must describe the caller authentication mechanism.`);
@@ -257,8 +278,9 @@ export function validateEdgeFunctionManifest({
         `${functionLabel}.verifyJwt must be ${userJwtExpected} for ${definition.access} access.`,
       );
     }
-    if (definition.public !== (definition.access === 'public')) {
-      errors.push(`${functionLabel}.public must match public access.`);
+    const publiclyReachable = definition.access === 'public' || definition.access === 'mixed';
+    if (definition.public !== publiclyReachable) {
+      errors.push(`${functionLabel}.public must match public or mixed access.`);
     }
     if (definition.access === 'authenticated' && definition.auth !== 'supabase-user-jwt') {
       errors.push(`${functionLabel}.auth must be supabase-user-jwt for authenticated access.`);

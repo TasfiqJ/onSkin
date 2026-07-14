@@ -53,6 +53,19 @@ export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
   'edge_rate_limits',
 ]);
 
+// These tables are reachable only through narrowly granted security-definer
+// RPCs. Even service_role has no direct table privileges, so hosted PostgREST
+// evidence must prove they are sealed rather than pretending an admin client
+// can create or read a positive-control row.
+export const SEALED_SERVICE_PRIVATE_TABLES = Object.freeze([
+  'account_deletion_operations',
+  'account_deletion_barriers',
+  'account_deletion_steps',
+  'account_deletion_receipts',
+  'account_deletion_operator_recovery_audit',
+  'revenuecat_identity_tombstones',
+]);
+
 export const AUTHENTICATED_CATALOG_TABLES = Object.freeze([
   'ingredients',
   'ingredient_synonyms',
@@ -82,6 +95,7 @@ export const AUTHENTICATED_CATALOG_TABLES = Object.freeze([
 export const PRIVATE_PUBLIC_TABLES = Object.freeze([
   ...OWNER_LINKED_PRIVATE_TABLES,
   ...SERVICE_ONLY_PRIVATE_TABLES,
+  ...SEALED_SERVICE_PRIVATE_TABLES,
 ]);
 
 export function tableClassificationIssues({ createdTables, rlsTables, classifications }) {
@@ -179,6 +193,56 @@ export function readScriptAppEnvironment() {
   const candidate = typeof raw === 'string' ? raw.trim().toLowerCase() : '';
   if (['development', 'staging', 'production'].includes(candidate)) return candidate;
   return 'production';
+}
+
+// Supabase documents PROJECT_REF as the 20-character unique identifier used
+// in the hosted API URL. Current generated refs are lowercase alphanumeric.
+const HOSTED_SUPABASE_PROJECT_REF = /^[a-z0-9]{20}$/;
+const HOSTED_SUPABASE_HOST = /^([a-z0-9]{20})\.supabase\.co$/;
+
+/**
+ * Resolve only the public, non-secret portions of a reviewed hosted Supabase
+ * target. A match requires the URL text itself to be the canonical origin;
+ * URL equivalence alone is deliberately insufficient because a port, path,
+ * credentials, query, fragment, case change, or trailing slash must fail the
+ * protected destructive harness before a Supabase client can be created.
+ */
+export function resolveHostedSupabaseProjectTarget(supabaseUrlValue, expectedProjectRefValue) {
+  const rawUrl = typeof supabaseUrlValue === 'string' ? supabaseUrlValue : '';
+  const rawExpectedRef = typeof expectedProjectRefValue === 'string' ? expectedProjectRefValue : '';
+  const expectedProjectRef =
+    rawExpectedRef === rawExpectedRef.trim() && HOSTED_SUPABASE_PROJECT_REF.test(rawExpectedRef)
+      ? rawExpectedRef
+      : null;
+
+  let parsedUrl = null;
+  try {
+    parsedUrl = new URL(rawUrl);
+  } catch {
+    // The caller receives only a fixed invalid marker, never the untrusted URL.
+  }
+
+  const hostMatch = parsedUrl?.hostname.match(HOSTED_SUPABASE_HOST) ?? null;
+  const actualProjectRef = hostMatch?.[1] ?? null;
+  const safeHost = parsedUrl?.host ?? (rawUrl ? 'invalid-url' : null);
+  const expectedOrigin = expectedProjectRef ? `https://${expectedProjectRef}.supabase.co` : null;
+
+  return Object.freeze({
+    valid:
+      Boolean(expectedOrigin) &&
+      rawUrl === expectedOrigin &&
+      parsedUrl?.protocol === 'https:' &&
+      parsedUrl.username === '' &&
+      parsedUrl.password === '' &&
+      parsedUrl.port === '' &&
+      parsedUrl.pathname === '/' &&
+      parsedUrl.search === '' &&
+      parsedUrl.hash === '' &&
+      actualProjectRef === expectedProjectRef,
+    expectedProjectRef,
+    actualProjectRef,
+    safeHost,
+  });
 }
 
 export function listFiles(dir = '.') {

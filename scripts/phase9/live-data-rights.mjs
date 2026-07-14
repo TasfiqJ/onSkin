@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { createHash, createHmac, randomUUID } from 'node:crypto';
+import { createHash, createHmac, randomBytes, randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
 import {
@@ -12,7 +12,9 @@ import {
   printResult,
   readScriptAppEnvironment,
   redactedErrorKind,
+  resolveHostedSupabaseProjectTarget,
   storageObjectMissing,
+  strict,
   write,
 } from './lib.mjs';
 
@@ -23,8 +25,13 @@ const samples = [];
 const env = envSnapshot();
 
 const runLive = env.PHASE9_RUN_LIVE_DATA_RIGHTS === 'true';
+const allowDestructiveAccountDeletion = env.PHASE9_ALLOW_DESTRUCTIVE_ACCOUNT_DELETION === 'true';
 const appEnv = readScriptAppEnvironment();
-const supabaseUrl = env.SUPABASE_URL ?? env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseUrl = env.SUPABASE_URL;
+const supabaseTarget = resolveHostedSupabaseProjectTarget(
+  supabaseUrl,
+  env.PHASE9_EXPECTED_SUPABASE_PROJECT_REF,
+);
 const publishableKey =
   env.SUPABASE_PUBLISHABLE_KEY ?? env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? env.SUPABASE_ANON_KEY;
 const secretKey = env.SUPABASE_SECRET_KEY ?? env.SUPABASE_SERVICE_ROLE_KEY;
@@ -49,31 +56,52 @@ const signedUrlExpiryWaitSeconds = intEnv(
   0,
   3900,
 );
+const accountDeletionPollTimeoutSeconds = intEnv(
+  'PHASE9_ACCOUNT_DELETION_POLL_TIMEOUT_SECONDS',
+  900,
+  30,
+  3600,
+);
+const accountDeletionMaxPolls = intEnv('PHASE9_ACCOUNT_DELETION_MAX_POLLS', 300, 1, 1000);
+const accountDeletionRequestTimeoutSeconds = intEnv(
+  'PHASE9_ACCOUNT_DELETION_REQUEST_TIMEOUT_SECONDS',
+  20,
+  1,
+  60,
+);
+const evidenceContext = readEvidenceContext();
 
 const artifact = {
   status: runLive ? 'running' : 'not-run',
+  sourceSha: evidenceContext.sourceSha,
+  workflowRunId: evidenceContext.workflowRunId,
+  workflowRunAttempt: evidenceContext.workflowRunAttempt,
+  ref: evidenceContext.ref,
+  actor: evidenceContext.actor,
+  triggeringActor: evidenceContext.triggeringActor,
+  repository: evidenceContext.repository,
+  workflow: evidenceContext.workflow,
+  event: evidenceContext.event,
+  buildIds: evidenceContext.buildIds,
   appEnvironment: appEnv,
-  supabaseHost: safeHost(supabaseUrl),
+  expectedSupabaseProjectRef: supabaseTarget.expectedProjectRef,
+  actualSupabaseProjectRef: supabaseTarget.actualProjectRef,
+  supabaseHost: supabaseTarget.safeHost,
   dataExportRateLimitMax,
   dataExportRateLimitWindowSeconds,
   dataExportPhotoUrlTtlSeconds,
   dataExportProbeBudget,
   signedUrlExpiryCheck: runSignedUrlExpiryCheck,
   signedUrlExpiryWaitSeconds,
+  destructiveAccountDeletionAuthorized: allowDestructiveAccountDeletion,
+  accountDeletionPollTimeoutSeconds,
+  accountDeletionMaxPolls,
+  accountDeletionRequestTimeoutSeconds,
   checks,
   samples,
   warnings,
   errors,
 };
-
-function safeHost(value) {
-  if (!value) return null;
-  try {
-    return new URL(value).host;
-  } catch {
-    return 'invalid-url';
-  }
-}
 
 const placeholder = placeholderEnvValue;
 
@@ -81,6 +109,70 @@ function intEnv(name, fallback, min, max) {
   const value = Number(env[name]);
   if (!Number.isInteger(value) || value < min || value > max) return fallback;
   return value;
+}
+
+function readEvidenceContext() {
+  const sourceSha = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_SOURCE_SHA ?? env.GITHUB_SHA,
+    /^[a-f0-9]{40}$/i,
+  );
+  const workflowRunId = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_WORKFLOW_RUN_ID ?? env.GITHUB_RUN_ID,
+    /^[1-9][0-9]{0,19}$/,
+  );
+  const workflowRunAttempt = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_WORKFLOW_RUN_ATTEMPT ?? env.GITHUB_RUN_ATTEMPT,
+    /^[1-9][0-9]{0,5}$/,
+  );
+  const ref = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_REF ?? env.GITHUB_REF,
+    /^refs\/(?:heads|tags|pull)\/[A-Za-z0-9._/-]{1,240}$/,
+  );
+  const actor = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_ACTOR ?? env.GITHUB_ACTOR,
+    /^(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})|[A-Za-z0-9](?:[A-Za-z0-9-]{0,32})\[bot\])$/,
+  );
+  const triggeringActor = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_TRIGGERING_ACTOR ?? env.GITHUB_TRIGGERING_ACTOR,
+    /^(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})|[A-Za-z0-9](?:[A-Za-z0-9-]{0,32})\[bot\])$/,
+  );
+  const repository = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_REPOSITORY ?? env.GITHUB_REPOSITORY,
+    /^[A-Za-z0-9_.-]{1,100}\/[A-Za-z0-9_.-]{1,100}$/,
+  );
+  const workflow = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_WORKFLOW ?? env.GITHUB_WORKFLOW,
+    /^[A-Za-z0-9][A-Za-z0-9 ._/-]{0,99}$/,
+  );
+  const event = exactEvidenceValue(
+    env.PHASE9_EVIDENCE_EVENT ?? env.GITHUB_EVENT_NAME,
+    /^workflow_dispatch$/,
+  );
+  const buildPattern =
+    /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|https:\/\/expo\.dev\/accounts\/[A-Za-z0-9._-]+\/projects\/[A-Za-z0-9._-]+\/builds\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/?)$/i;
+  const rawIosBuildId = String(env.PHASE5_IOS_BUILD_ID ?? '').trim();
+  return {
+    sourceSha,
+    workflowRunId,
+    workflowRunAttempt,
+    ref,
+    actor,
+    triggeringActor,
+    repository,
+    workflow,
+    event,
+    buildIds: {
+      ios: exactEvidenceValue(rawIosBuildId, buildPattern),
+    },
+    invalidBuildIds: [
+      rawIosBuildId && !buildPattern.test(rawIosBuildId) ? 'PHASE5_IOS_BUILD_ID' : null,
+    ].filter(Boolean),
+  };
+}
+
+function exactEvidenceValue(value, pattern) {
+  const text = String(value ?? '').trim();
+  return text && pattern.test(text) ? text : null;
 }
 
 function assert(condition, message) {
@@ -92,6 +184,7 @@ function record(name, status, detail = '') {
 }
 
 function writeArtifacts(status) {
+  if (status === 'pass' && strict && warnings.length > 0) status = 'fail';
   artifact.status = status;
   if (status === 'pass' || status === 'fail') artifact.ranAt = new Date().toISOString();
   write('docs/phase-9/generated/live-data-rights.json', `${JSON.stringify(artifact, null, 2)}\n`);
@@ -101,7 +194,19 @@ function writeArtifacts(status) {
       '# Live data rights evidence',
       '',
       `- Status: ${artifact.status}`,
+      `- Source SHA: ${artifact.sourceSha ?? 'not supplied'}`,
+      `- Workflow run: ${artifact.workflowRunId ?? 'not supplied'}`,
+      `- Workflow attempt: ${artifact.workflowRunAttempt ?? 'not supplied'}`,
+      `- Ref: ${artifact.ref ?? 'not supplied'}`,
+      `- Actor: ${artifact.actor ?? 'not supplied'}`,
+      `- Triggering actor: ${artifact.triggeringActor ?? 'not supplied'}`,
+      `- Repository: ${artifact.repository ?? 'not supplied'}`,
+      `- Workflow: ${artifact.workflow ?? 'not supplied'}`,
+      `- Event: ${artifact.event ?? 'not supplied'}`,
+      `- iOS build ID: ${artifact.buildIds.ios ?? 'not supplied'}`,
       `- Environment: ${artifact.appEnvironment}`,
+      `- Expected Supabase project ref: ${artifact.expectedSupabaseProjectRef ?? 'not configured'}`,
+      `- Actual Supabase project ref: ${artifact.actualSupabaseProjectRef ?? 'not canonical'}`,
       `- Supabase host: ${artifact.supabaseHost ?? 'not configured'}`,
       `- Data export configured max: ${artifact.dataExportRateLimitMax}`,
       `- Data export configured window: ${artifact.dataExportRateLimitWindowSeconds}s`,
@@ -109,6 +214,12 @@ function writeArtifacts(status) {
       `- Data export probe budget: ${artifact.dataExportProbeBudget}`,
       `- Signed URL expiry check: ${artifact.signedUrlExpiryCheck ? 'enabled' : 'disabled'}`,
       `- Signed URL expiry wait: ${artifact.signedUrlExpiryWaitSeconds}s`,
+      `- Destructive synthetic-account deletion: ${
+        artifact.destructiveAccountDeletionAuthorized ? 'explicitly authorized' : 'not authorized'
+      }`,
+      `- Account deletion polling timeout: ${artifact.accountDeletionPollTimeoutSeconds}s`,
+      `- Account deletion maximum polls: ${artifact.accountDeletionMaxPolls}`,
+      `- Account deletion request timeout: ${artifact.accountDeletionRequestTimeoutSeconds}s`,
       '',
       '## Checks',
       checks.length
@@ -126,6 +237,9 @@ function writeArtifacts(status) {
             .map((sample) => {
               if (sample.scope === 'data-export-photo-url-expiry') {
                 return `- ${sample.scope}: ttl=${sample.ttlSeconds}s, waited=${sample.waitSeconds}s, before=${sample.beforeStatus}, after=${sample.afterStatus}`;
+              }
+              if (sample.scope === 'account-deletion') {
+                return `- ${sample.scope}: polls=${sample.polls}, terminal_http=${sample.terminalHttpStatus}, auth_absent=${sample.authAbsent}, post_auth_receipt_replay=${sample.postAuthReceiptReplay}`;
               }
               return `- ${sample.scope}: count=${sample.requestCount}, window=${sample.windowSeconds}s, key=${sample.keyHashRedacted}`;
             })
@@ -311,6 +425,258 @@ function parseJson(text) {
   }
 }
 
+const ACCOUNT_DELETION_RESPONSE_MAX_BYTES = 4096;
+const ACCOUNT_DELETION_TOKEN_PATTERN = /^[a-f0-9]{64}$/;
+
+function exactObjectKeys(value, expectedKeys) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const actual = Object.keys(value).sort();
+  const expected = [...expectedKeys].sort();
+  return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
+}
+
+function accountDeletionToken() {
+  return randomBytes(32).toString('hex');
+}
+
+async function readBoundedResponseText(response, maximumBytes) {
+  const declaredLength = Number(response.headers.get('content-length'));
+  if (Number.isFinite(declaredLength) && declaredLength > maximumBytes) {
+    if (response.body) await response.body.cancel().catch(() => {});
+    throw new HarnessAssertionError('account-deletion response exceeded the declared size limit.');
+  }
+  if (!response.body) return '';
+
+  const reader = response.body.getReader();
+  const chunks = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > maximumBytes) {
+      await reader.cancel().catch(() => {});
+      throw new HarnessAssertionError(
+        'account-deletion response exceeded the streamed size limit.',
+      );
+    }
+    chunks.push(value);
+  }
+
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    throw new HarnessAssertionError('account-deletion response was not valid UTF-8.');
+  }
+}
+
+async function accountDeletionResponse(response) {
+  const text = await readBoundedResponseText(response, ACCOUNT_DELETION_RESPONSE_MAX_BYTES);
+  const body = parseJson(text);
+  assert(body !== null, 'account-deletion returned malformed or empty JSON.');
+  return { status: response.status, body };
+}
+
+async function postAccountDeletionBegin(token, request) {
+  const response = await fetch(functionUrl('account-deletion'), {
+    method: 'POST',
+    headers: {
+      apikey: publishableKey,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(request),
+    credentials: 'omit',
+    signal: AbortSignal.timeout(accountDeletionRequestTimeoutSeconds * 1000),
+  });
+  return accountDeletionResponse(response);
+}
+
+async function postAccountDeletionPreflight(token) {
+  const response = await fetch(functionUrl('account-deletion'), {
+    method: 'POST',
+    headers: {
+      apikey: publishableKey,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ action: 'preflight' }),
+    credentials: 'omit',
+    signal: AbortSignal.timeout(accountDeletionRequestTimeoutSeconds * 1000),
+  });
+  return accountDeletionResponse(response);
+}
+
+// Deliberately capability-only: this request must remain usable after Auth is gone.
+async function postAccountDeletionStatus(capability) {
+  const response = await fetch(functionUrl('account-deletion'), {
+    method: 'POST',
+    headers: {
+      apikey: publishableKey,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ action: 'status', capability }),
+    credentials: 'omit',
+    signal: AbortSignal.timeout(accountDeletionRequestTimeoutSeconds * 1000),
+  });
+  return accountDeletionResponse(response);
+}
+
+function parseAccountDeletionBegin(response) {
+  assert(
+    response.status === 202,
+    `account-deletion begin expected HTTP 202, got ${response.status}.`,
+  );
+  assert(
+    exactObjectKeys(response.body, ['status', 'phase', 'nextPollAfterSeconds']) &&
+      response.body.status === 'accepted' &&
+      (response.body.phase === 'queued' || response.body.phase === 'delayed') &&
+      Number.isSafeInteger(response.body.nextPollAfterSeconds) &&
+      response.body.nextPollAfterSeconds >= 2 &&
+      response.body.nextPollAfterSeconds <= 60,
+    'account-deletion begin did not return the exact accepted receipt contract.',
+  );
+  return {
+    phase: response.body.phase,
+    nextPollAfterSeconds: response.body.nextPollAfterSeconds,
+  };
+}
+
+const ACCOUNT_OWNER_SUBJECT_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+
+function assertActiveAccountDeletionPreflight(response, expectedOwnerSubject) {
+  assert(
+    response.status === 200 &&
+      exactObjectKeys(response.body, ['status', 'ownerSubject']) &&
+      response.body.status === 'active' &&
+      typeof response.body.ownerSubject === 'string' &&
+      ACCOUNT_OWNER_SUBJECT_PATTERN.test(response.body.ownerSubject) &&
+      response.body.ownerSubject === expectedOwnerSubject,
+    'account-deletion did not return the exact authenticated active-owner preflight contract.',
+  );
+}
+
+function parseAccountDeletionStatus(response) {
+  if (response.status === 200) {
+    const hasNotice = Object.hasOwn(response.body, 'notice');
+    assert(
+      exactObjectKeys(response.body, hasNotice ? ['status', 'notice'] : ['status']) &&
+        response.body.status === 'completed' &&
+        (!hasNotice || response.body.notice === 'remove_apple_authorization'),
+      'account-deletion returned an invalid completed receipt.',
+    );
+    return {
+      kind: 'completed',
+      httpStatus: 200,
+      notice: hasNotice ? response.body.notice : null,
+    };
+  }
+  if (response.status === 202) {
+    assert(
+      exactObjectKeys(response.body, ['status', 'phase', 'nextPollAfterSeconds']) &&
+        (response.body.status === 'pending' || response.body.status === 'delayed') &&
+        ['queued', 'processing', 'local_erasing', 'provider_verifying', 'delayed'].includes(
+          response.body.phase,
+        ) &&
+        (response.body.status === 'delayed') === (response.body.phase === 'delayed') &&
+        Number.isSafeInteger(response.body.nextPollAfterSeconds) &&
+        response.body.nextPollAfterSeconds >= 2 &&
+        response.body.nextPollAfterSeconds <= 60,
+      'account-deletion returned an invalid pending receipt.',
+    );
+    return {
+      kind: 'pending',
+      httpStatus: 202,
+      phase: response.body.phase,
+      nextPollAfterSeconds: response.body.nextPollAfterSeconds,
+    };
+  }
+  if (
+    response.status === 404 &&
+    exactObjectKeys(response.body, ['status']) &&
+    response.body.status === 'invalid'
+  ) {
+    return { kind: 'invalid', httpStatus: 404 };
+  }
+  if (
+    response.status === 410 &&
+    exactObjectKeys(response.body, ['status']) &&
+    response.body.status === 'expired'
+  ) {
+    return { kind: 'expired', httpStatus: 410 };
+  }
+  throw new HarnessAssertionError(
+    `account-deletion status returned an unexpected HTTP/body contract (${response.status}).`,
+  );
+}
+
+async function pollAccountDeletionToTerminal(admin, userId, capability, firstPollAfterSeconds) {
+  const deadlineAt = Date.now() + accountDeletionPollTimeoutSeconds * 1000;
+  let nextPollAfterSeconds = firstPollAfterSeconds;
+  let authAbsent = false;
+
+  for (let poll = 1; poll <= accountDeletionMaxPolls; poll += 1) {
+    const delayMs = nextPollAfterSeconds * 1000;
+    assert(
+      Date.now() + delayMs <= deadlineAt,
+      'account-deletion polling reached its configured wall-clock deadline.',
+    );
+    await wait(delayMs);
+
+    const outcome = parseAccountDeletionStatus(await postAccountDeletionStatus(capability));
+    if (!(await userExists(admin, userId))) authAbsent = true;
+
+    if (outcome.kind === 'completed') {
+      assert(
+        authAbsent,
+        'completed deletion receipt was returned while the Auth user still existed.',
+      );
+
+      // A second capability-only request after exact Auth absence proves that
+      // the finite terminal receipt survives the account/JWT boundary.
+      const replay = parseAccountDeletionStatus(await postAccountDeletionStatus(capability));
+      assert(
+        replay.kind === 'completed' && replay.notice === outcome.notice,
+        'post-Auth capability replay did not return the same completed receipt.',
+      );
+      const terminal = {
+        ...outcome,
+        polls: poll + 1,
+        authAbsent: true,
+        postAuthReceiptReplay: true,
+      };
+      samples.push({
+        scope: 'account-deletion',
+        polls: terminal.polls,
+        terminalHttpStatus: terminal.httpStatus,
+        authAbsent: terminal.authAbsent,
+        postAuthReceiptReplay: terminal.postAuthReceiptReplay,
+      });
+      return terminal;
+    }
+    if (outcome.kind === 'expired' || outcome.kind === 'invalid') {
+      samples.push({
+        scope: 'account-deletion',
+        polls: poll,
+        terminalHttpStatus: outcome.httpStatus,
+        authAbsent,
+        postAuthReceiptReplay: false,
+      });
+      return { ...outcome, polls: poll, authAbsent, postAuthReceiptReplay: false };
+    }
+    nextPollAfterSeconds = outcome.nextPollAfterSeconds;
+  }
+
+  throw new HarnessAssertionError('account-deletion polling reached its configured poll limit.');
+}
+
 function assertLocalPhotoExportDisclosure(bundle) {
   assert(
     typeof bundle?.local_only_photo_note === 'string' &&
@@ -396,6 +762,12 @@ function keyHashFor(scope, userId) {
   return createHmac('sha256', secretKey).update(`${scope}|${userId}`).digest('hex');
 }
 
+function accountDeletionStatusRateLimitKey(capability) {
+  return createHash('sha256')
+    .update(`onskin-account-deletion-status-capability:v1:${capability}`)
+    .digest('hex');
+}
+
 async function assertDataExportLimiterRow(admin, userId, attempts) {
   const keyHash = keyHashFor('data-export', userId);
   const { data, error } = await admin
@@ -446,8 +818,24 @@ async function main() {
 
   block(
     errors,
-    !placeholder(supabaseUrl),
-    'SUPABASE_URL or EXPO_PUBLIC_SUPABASE_URL is missing or placeholder.',
+    env.APP_ENV === 'staging',
+    'Live data-rights requires the exact server-side APP_ENV=staging contract.',
+  );
+  block(
+    errors,
+    appEnv === 'staging',
+    'Live data-rights requires the effective app environment to be staging.',
+  );
+  block(errors, !placeholder(supabaseUrl), 'SUPABASE_URL is missing or placeholder.');
+  block(
+    errors,
+    Boolean(supabaseTarget.expectedProjectRef),
+    'PHASE9_EXPECTED_SUPABASE_PROJECT_REF must be the reviewed 20-character lowercase alphanumeric project ref.',
+  );
+  block(
+    errors,
+    supabaseTarget.valid,
+    'SUPABASE_URL must exactly equal the canonical HTTPS origin for PHASE9_EXPECTED_SUPABASE_PROJECT_REF.',
   );
   block(
     errors,
@@ -458,6 +846,11 @@ async function main() {
     errors,
     !placeholder(secretKey),
     'SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY is missing or placeholder.',
+  );
+  block(
+    errors,
+    allowDestructiveAccountDeletion,
+    'Refusing the live durable account-deletion run without PHASE9_ALLOW_DESTRUCTIVE_ACCOUNT_DELETION=true.',
   );
   block(
     errors,
@@ -478,8 +871,28 @@ async function main() {
   }
   block(
     errors,
-    appEnv !== 'production' || env.PHASE9_ALLOW_PRODUCTION_LIVE_DATA_RIGHTS === 'true',
-    'Refusing production live data-rights tests without PHASE9_ALLOW_PRODUCTION_LIVE_DATA_RIGHTS=true.',
+    Boolean(evidenceContext.sourceSha),
+    'Live data-rights evidence requires an exact 40-character PHASE9_EVIDENCE_SOURCE_SHA or GITHUB_SHA.',
+  );
+  block(
+    errors,
+    env.GITHUB_ACTIONS !== 'true' ||
+      Boolean(
+        evidenceContext.workflowRunId &&
+        evidenceContext.workflowRunAttempt &&
+        evidenceContext.ref &&
+        evidenceContext.actor &&
+        evidenceContext.triggeringActor &&
+        evidenceContext.repository &&
+        evidenceContext.workflow &&
+        evidenceContext.event,
+      ),
+    'GitHub live data-rights evidence requires exact workflow run, attempt, and ref metadata.',
+  );
+  block(
+    errors,
+    evidenceContext.invalidBuildIds.length === 0,
+    `Live data-rights evidence rejected invalid build identifiers: ${evidenceContext.invalidBuildIds.join(', ')}.`,
   );
   if (errors.length > 0) {
     writeArtifacts('fail');
@@ -494,6 +907,7 @@ async function main() {
   const storagePaths = [];
   const externalOrderIds = [];
   const subscriptionEventIds = [];
+  const accountDeletionRateLimitKeys = [];
 
   try {
     const userA = await createLiveUser(admin, 'a', (user) => users.push(user));
@@ -898,15 +1312,79 @@ async function main() {
       );
     });
 
+    const deletionRequest = {
+      action: 'begin',
+      idempotencyKey: accountDeletionToken(),
+      statusCapability: accountDeletionToken(),
+    };
+    accountDeletionRateLimitKeys.push({
+      scope: 'account-deletion-status',
+      keyHash: accountDeletionStatusRateLimitKey(deletionRequest.statusCapability),
+    });
+    assert(
+      ACCOUNT_DELETION_TOKEN_PATTERN.test(deletionRequest.idempotencyKey) &&
+        ACCOUNT_DELETION_TOKEN_PATTERN.test(deletionRequest.statusCapability) &&
+        deletionRequest.idempotencyKey !== deletionRequest.statusCapability,
+      'account-deletion harness did not generate independent 256-bit intake secrets.',
+    );
+    let acceptedDeletion = null;
+    let terminalDeletion = null;
+    let deletionBeginDispatched = false;
+    let activeDeletionBarrierAttested = false;
+
+    await runCheck('account-deletion accepts an authenticated durable begin request', async () => {
+      // Once dispatch starts, even a lost response may follow a committed
+      // intake. The next check must use the pre-generated capability either way.
+      deletionBeginDispatched = true;
+      const response = await postAccountDeletionBegin(userA.token, deletionRequest);
+      acceptedDeletion = parseAccountDeletionBegin(response);
+    });
+
     await runCheck(
-      'account-deletion deletes caller account/data without touching another user',
+      'account-deletion active preflight binds the same authenticated owner before Auth deletion',
       async () => {
-        const { data, error } = await userA.client.functions.invoke('account-deletion', {
-          method: 'POST',
-          body: {},
-        });
-        if (error) throw error;
-        assert(data?.deleted === true, 'account-deletion did not report success.');
+        const response = await postAccountDeletionPreflight(userA.token);
+        assertActiveAccountDeletionPreflight(response, userA.id);
+        activeDeletionBarrierAttested = true;
+      },
+    );
+
+    await runCheck(
+      'capability-only account-deletion polling crosses Auth deletion and reaches a finite receipt',
+      async () => {
+        assert(
+          deletionBeginDispatched,
+          'account-deletion begin was never dispatched; status polling was not run.',
+        );
+        assert(
+          activeDeletionBarrierAttested,
+          'active owner-bound preflight was not attested before status polling.',
+        );
+        terminalDeletion = await pollAccountDeletionToTerminal(
+          admin,
+          userA.id,
+          deletionRequest.statusCapability,
+          acceptedDeletion?.nextPollAfterSeconds ?? 2,
+        );
+        assert(
+          terminalDeletion.kind === 'completed',
+          terminalDeletion.kind === 'expired'
+            ? 'account-deletion capability returned the exact terminal 410 expired contract before completion could be proven.'
+            : 'account-deletion capability did not return a completed terminal receipt.',
+        );
+      },
+    );
+
+    await runCheck(
+      'completed account-deletion receipt gates caller erasure and other-user isolation checks',
+      async () => {
+        assert(
+          terminalDeletion?.kind === 'completed' &&
+            terminalDeletion.httpStatus === 200 &&
+            terminalDeletion.authAbsent === true &&
+            terminalDeletion.postAuthReceiptReplay === true,
+          'residual checks are forbidden until terminal HTTP 200 completion is attested after Auth deletion.',
+        );
 
         assert(!(await userExists(admin, userA.id)), 'deleted user still exists in auth.');
         assert(await userExists(admin, userB.id), 'account-deletion removed the wrong user.');
@@ -932,6 +1410,14 @@ async function main() {
         );
         await expectAdminRows(admin, 'consents', 'user_id', userA.id, 0, 'deleted consent');
         await expectAdminRows(admin, 'photos', 'user_id', userA.id, 0, 'deleted photo metadata');
+        await expectAdminRows(
+          admin,
+          'edge_rate_limits',
+          'owner_user_id',
+          userA.id,
+          0,
+          'deleted owner rate limits',
+        );
         await expectAdminRows(
           admin,
           'commerce_click_events',
@@ -1173,6 +1659,31 @@ async function main() {
         errors.push('Rate-limit cleanup left a residual row.');
       }
     }
+    for (const entry of accountDeletionRateLimitKeys) {
+      const { error } = await admin
+        .from('edge_rate_limits')
+        .delete()
+        .eq('scope', entry.scope)
+        .eq('key_hash', entry.keyHash);
+      if (error) {
+        errors.push(`Account-deletion rate-limit cleanup failed: ${redactedErrorKind(error)}`);
+        continue;
+      }
+      const { count, error: verifyError } = await admin
+        .from('edge_rate_limits')
+        .select('*', { count: 'exact', head: true })
+        .eq('scope', entry.scope)
+        .eq('key_hash', entry.keyHash);
+      if (verifyError) {
+        errors.push(
+          `Account-deletion rate-limit cleanup verification failed: ${redactedErrorKind(
+            verifyError,
+          )}`,
+        );
+      } else if (count !== 0) {
+        errors.push('Account-deletion rate-limit cleanup left a residual row.');
+      }
+    }
     for (const user of users) {
       if (!user?.id) continue;
       let exists = false;
@@ -1197,7 +1708,7 @@ async function main() {
     }
   }
 
-  writeArtifacts(errors.length > 0 ? 'fail' : 'pass');
+  writeArtifacts(errors.length > 0 || (strict && warnings.length > 0) ? 'fail' : 'pass');
   printResult('Phase 9 live data rights', errors, warnings);
 }
 

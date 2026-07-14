@@ -6,6 +6,7 @@ import { bearerToken } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import { readEdgeAppEnvironment } from '../_shared/env.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
+import { reverseTrialGrantErrorCode, reverseTrialGrantErrorStatus } from './grantErrors.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = readSupabaseSecretKey();
@@ -29,18 +30,6 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function grantErrorCode(
-  error: unknown,
-): 'active_subscription_exists' | 'reverse_trial_already_used' | 'reverse_trial_grant_failed' {
-  const message =
-    typeof (error as { message?: unknown })?.message === 'string'
-      ? (error as { message: string }).message
-      : '';
-  if (message.includes('ACTIVE_SUBSCRIPTION_EXISTS')) return 'active_subscription_exists';
-  if (message.includes('REVERSE_TRIAL_ALREADY_USED')) return 'reverse_trial_already_used';
-  return 'reverse_trial_grant_failed';
-}
-
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok');
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
@@ -58,6 +47,15 @@ Deno.serve(async (req) => {
   const body = isRecord(parsed) ? parsed : {};
   if (body?.action !== 'start_reverse_trial') return json({ error: 'unknown_action' }, 400);
 
+  // Keep global expiry in a separate committed transaction. The guarded grant
+  // can then use account-lock -> target-row-lock ordering without deadlocking
+  // account deletion against a global entitlement update.
+  const { error: expiryError } = await supabase.rpc('expire_app_granted_reverse_trials');
+  if (expiryError) {
+    console.error('[subscription-grants]', 'reverse_trial_expiry_failed');
+    return json({ error: 'reverse_trial_grant_failed' }, 500);
+  }
+
   const expiresAt = addDays(REVERSE_TRIAL_DAYS);
   const { data, error } = await supabase.rpc('grant_app_granted_reverse_trial', {
     p_user_id: userId,
@@ -65,11 +63,9 @@ Deno.serve(async (req) => {
     p_environment: appEnvironment,
   });
   if (error) {
-    const code = grantErrorCode(error);
+    const code = reverseTrialGrantErrorCode(error);
     console.error('[subscription-grants]', code);
-    const status =
-      code === 'active_subscription_exists' || code === 'reverse_trial_already_used' ? 409 : 500;
-    return json({ error: code }, status);
+    return json({ error: code }, reverseTrialGrantErrorStatus(code));
   }
 
   const entitlement = Array.isArray(data) ? data[0] : data;

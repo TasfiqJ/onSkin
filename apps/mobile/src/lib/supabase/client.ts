@@ -33,7 +33,10 @@ export const supabase = createClient<Database>(env.supabaseUrl, env.supabasePubl
   auth: {
     storage: authStorage,
     storageKey: authStorageKey,
-    autoRefreshToken: !isServerRender,
+    // AuthProvider starts refresh after the account-deletion recovery gate opens.
+    // Keeping construction passive prevents a persisted session from refreshing
+    // while a durable deletion request is still unresolved.
+    autoRefreshToken: false,
     persistSession: !isServerRender,
     detectSessionInUrl: false,
   },

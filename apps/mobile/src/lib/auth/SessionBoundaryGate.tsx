@@ -10,9 +10,9 @@ import { useAuth } from './AuthProvider';
 
 const COPY = {
   loading: 'Securing account data...',
-  eyebrow: 'Account change paused',
-  title: 'Your private data could not be cleared.',
-  body: 'The next account is still locked out. Try again to finish clearing private data from the previous account.',
+  eyebrow: 'Account access paused',
+  title: "We couldn't finish securing this account.",
+  body: 'Your account data is still locked. Try again to continue safely.',
   retry: 'Try again',
 } as const;
 

@@ -40,6 +40,43 @@ function readJson(path) {
   return JSON.parse(readFileSync(abs(path), 'utf8'));
 }
 
+const JPEG_SOF_MARKERS = new Set([
+  0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf,
+]);
+
+function parseJpegDimensions(bytes) {
+  if (!Buffer.isBuffer(bytes) || bytes.length < 11 || bytes[0] !== 0xff || bytes[1] !== 0xd8) {
+    throw new Error('invalid JPEG start marker');
+  }
+  let offset = 2;
+  while (offset + 3 < bytes.length) {
+    if (bytes[offset] !== 0xff) throw new Error('invalid JPEG marker boundary');
+    while (offset < bytes.length && bytes[offset] === 0xff) offset += 1;
+    if (offset >= bytes.length) break;
+    const marker = bytes[offset];
+    offset += 1;
+    if (marker === 0x00 || marker === 0x01 || (marker >= 0xd0 && marker <= 0xd9)) continue;
+    if (offset + 2 > bytes.length) throw new Error('truncated JPEG segment');
+    const length = bytes.readUInt16BE(offset);
+    if (length < 2 || offset + length > bytes.length)
+      throw new Error('invalid JPEG segment length');
+    if (JPEG_SOF_MARKERS.has(marker)) {
+      if (length < 7) throw new Error('truncated JPEG frame header');
+      const height = bytes.readUInt16BE(offset + 3);
+      const width = bytes.readUInt16BE(offset + 5);
+      if (width < 1 || height < 1) throw new Error('invalid JPEG dimensions');
+      return { width, height };
+    }
+    if (marker === 0xda || marker === 0xd9) break;
+    offset += length;
+  }
+  throw new Error('JPEG frame dimensions not found');
+}
+
+function readJpegDimensions(path) {
+  return parseJpegDimensions(readFileSync(abs(path)));
+}
+
 function normalizeEvidenceRelativePath(path) {
   if (typeof path !== 'string') return null;
   const normalized = normalizeRepoPath(path.trim());
@@ -122,6 +159,152 @@ function collectEvidenceProvenanceFailures({
   return failures;
 }
 
+function collectRequiredTextFailures({ label, text, requiredText = [] }) {
+  const failures = [];
+  for (const requiredFragment of requiredText) {
+    if (typeof requiredFragment !== 'string' || requiredFragment.length === 0) {
+      failures.push(`${label} contains an invalid required text fragment`);
+    } else if (!text.includes(requiredFragment)) {
+      failures.push(`${label} is missing required text: ${requiredFragment}`);
+    }
+  }
+  return failures;
+}
+
+function hasExactObjectKeys(value, expectedKeys) {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+  const actual = Object.keys(value).sort();
+  const expected = [...expectedKeys].sort();
+  return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
+}
+
+function collectAccountDeletionRecoveryObservationFailures(observations) {
+  const failures = [];
+  const topLevelKeys = [
+    'schemaVersion',
+    'surface',
+    'capture',
+    'browserErrorCount',
+    'expectedWarningClasses',
+    'liveCredentialsUsed',
+    'externalLinksOpened',
+    'destructiveRequestsPermittedByFixture',
+    'states',
+    'limitations',
+  ];
+  if (!hasExactObjectKeys(observations, topLevelKeys)) {
+    return ['observations.json must use the exact reviewed top-level schema'];
+  }
+  if (
+    observations.schemaVersion !== 1 ||
+    !hasExactObjectKeys(observations.capture, ['format', 'width', 'height']) ||
+    observations.capture.format !== 'jpeg' ||
+    observations.capture.width !== 1279 ||
+    observations.capture.height !== 720
+  ) {
+    failures.push('observations.json capture contract must be schema 1 JPEG 1279 x 720');
+  }
+  if (observations.browserErrorCount !== 0) {
+    failures.push('observations.json browserErrorCount must be zero');
+  }
+  if (
+    observations.liveCredentialsUsed !== false ||
+    observations.externalLinksOpened !== false ||
+    observations.destructiveRequestsPermittedByFixture !== false
+  ) {
+    failures.push('observations.json fixture safety flags must remain exact false values');
+  }
+  const expectedWarnings = [
+    'placeholder_supabase_configuration',
+    'expo_notifications_web_unsupported',
+  ];
+  if (JSON.stringify(observations.expectedWarningClasses) !== JSON.stringify(expectedWarnings)) {
+    failures.push('observations.json expected warning classes changed');
+  }
+  const expectedStates = [
+    {
+      id: 'pending',
+      fixture: 'pending_then_completed_manual',
+      actions: ['launch'],
+      alertCount: 1,
+      buttons: ['Check status now'],
+      screenshot: '01-pending-1279x720.jpg',
+    },
+    {
+      id: 'apple_manual',
+      fixture: 'pending_then_completed_manual',
+      actions: ['launch', 'click:Check status now'],
+      alertCount: 1,
+      buttons: ['Open Apple instructions', 'Continue'],
+      screenshot: '02-apple-manual-1279x720.jpg',
+    },
+    {
+      id: 'signed_out',
+      fixture: 'pending_then_completed_manual',
+      actions: ['launch', 'click:Check status now', 'click:Continue'],
+      alertCount: 0,
+      buttons: ['Begin', 'I already have an account'],
+      screenshot: '03-signed-out-landing-1279x720.jpg',
+    },
+    {
+      id: 'invalid_retryable',
+      fixture: 'invalid',
+      actions: ['launch', 'click:Check status now', 'click:Retry deletion request'],
+      alertCount: 1,
+      buttons: ['Check status now', 'Retry deletion request', 'Open support'],
+      screenshot: '04-invalid-receipt-1279x720.jpg',
+    },
+    {
+      id: 'expired',
+      fixture: 'expired',
+      actions: ['launch', 'click:Check status now'],
+      alertCount: 1,
+      buttons: ['Check status now', 'Open support'],
+      screenshot: '05-expired-receipt-1279x720.jpg',
+    },
+    {
+      id: 'ownerless_support_only',
+      fixture: 'invalid_support_only',
+      actions: ['launch', 'click:Check status now'],
+      alertCount: 1,
+      buttons: ['Check status now', 'Open support'],
+      screenshot: '06-ownerless-support-only-1279x720.jpg',
+    },
+  ];
+  if (!Array.isArray(observations.states) || observations.states.length !== expectedStates.length) {
+    failures.push('observations.json must contain exactly six reviewed states');
+  } else {
+    for (let index = 0; index < expectedStates.length; index += 1) {
+      const actual = observations.states[index];
+      const expected = expectedStates[index];
+      if (
+        !hasExactObjectKeys(actual, [
+          'id',
+          'fixture',
+          'actions',
+          'alertCount',
+          'dialogCount',
+          'buttons',
+          'screenshot',
+        ]) ||
+        actual.id !== expected.id ||
+        actual.fixture !== expected.fixture ||
+        JSON.stringify(actual.actions) !== JSON.stringify(expected.actions) ||
+        actual.alertCount !== expected.alertCount ||
+        actual.dialogCount !== 0 ||
+        JSON.stringify(actual.buttons) !== JSON.stringify(expected.buttons) ||
+        actual.screenshot !== expected.screenshot
+      ) {
+        failures.push(`observations.json state ${index + 1} does not match the reviewed trace`);
+      }
+    }
+  }
+  if (!Array.isArray(observations.limitations) || observations.limitations.length < 3) {
+    failures.push('observations.json must retain explicit evidence limitations');
+  }
+  return failures;
+}
+
 function runEvidenceProvenanceSmoke() {
   const folder = 'test-results/human-e2e/2099-01-01/trend-route-group-gate-current';
   const evidence = 'summary.json';
@@ -190,6 +373,44 @@ function runEvidenceProvenanceSmoke() {
     unsafeSummary.includes('summary.artifacts contains an unsafe path: ../outside.png'),
     'summary.artifacts must not escape the evidence folder',
   );
+
+  const reportText = [
+    'App surface: Expo web development fixtures',
+    'native iPhone evidence remains required',
+  ].join('\n');
+  assert(
+    collectRequiredTextFailures({
+      label: 'report.md',
+      text: reportText,
+      requiredText: ['Expo web development fixtures', 'native iPhone evidence remains required'],
+    }).length === 0,
+    'complete report text should pass required-text provenance',
+  );
+  assert(
+    collectRequiredTextFailures({
+      label: 'report.md',
+      text: reportText,
+      requiredText: ['physical iPhone provider proof'],
+    }).includes('report.md is missing required text: physical iPhone provider proof'),
+    'missing report claims must fail required-text provenance',
+  );
+
+  const jpegHeader = Buffer.from([
+    0xff, 0xd8, 0xff, 0xc0, 0x00, 0x11, 0x08, 0x02, 0xd0, 0x04, 0xff, 0x03, 0x01, 0x11, 0x00, 0x02,
+    0x11, 0x00, 0x03, 0x11, 0x00,
+  ]);
+  assert(
+    JSON.stringify(parseJpegDimensions(jpegHeader)) ===
+      JSON.stringify({ width: 1279, height: 720 }),
+    'JPEG evidence dimensions must be parsed from the committed bytes',
+  );
+  let invalidJpegRejected = false;
+  try {
+    parseJpegDimensions(Buffer.from('not-a-jpeg'));
+  } catch {
+    invalidJpegRejected = true;
+  }
+  assert(invalidJpegRejected, 'non-JPEG evidence must fail dimension parsing');
 }
 
 if (args.has('--provenance-smoke')) {
@@ -527,6 +748,14 @@ if (!trendRouteGroupGateEvidenceDate) {
   console.error('FAIL Missing Trend route-group privacy and recovery evidence.');
   process.exit(1);
 }
+const accountDeletionRecoveryEvidenceDate = latestEvidenceDateForFolder(
+  'account-deletion-durable-recovery-current',
+  'report.md',
+);
+if (!accountDeletionRecoveryEvidenceDate) {
+  console.error('FAIL Missing durable account-deletion recovery evidence.');
+  process.exit(1);
+}
 const latestManifestEvidenceDate = [
   evidenceDate,
   timelapseEvidenceDate,
@@ -549,6 +778,7 @@ const latestManifestEvidenceDate = [
   shelfFreshnessProvenanceEvidenceDate,
   requiredSurfaceHonestyEvidenceDate,
   trendRouteGroupGateEvidenceDate,
+  accountDeletionRecoveryEvidenceDate,
 ]
   .sort()
   .at(-1);
@@ -796,6 +1026,53 @@ const gates = [
     evidence: 'summary.json',
     expected:
       'Cleanup failure stays gated, retry succeeds, and signed-out Shelf/Today expose no account A data.',
+  },
+  {
+    id: 'account-deletion-durable-recovery-expo-web-stress',
+    title: 'Account-deletion recovery Expo-web compatibility pass',
+    kind: 'report-contract',
+    required: true,
+    supportClass: 'resilience',
+    folder: `test-results/human-e2e/${accountDeletionRecoveryEvidenceDate}/account-deletion-durable-recovery-current`,
+    evidence: 'report.md',
+    requiredFiles: [
+      '01-pending-1279x720.jpg',
+      '02-apple-manual-1279x720.jpg',
+      '03-signed-out-landing-1279x720.jpg',
+      '04-invalid-receipt-1279x720.jpg',
+      '05-expired-receipt-1279x720.jpg',
+      '06-ownerless-support-only-1279x720.jpg',
+      'observations.json',
+    ],
+    requiredJpegDimensions: {
+      '01-pending-1279x720.jpg': { width: 1279, height: 720 },
+      '02-apple-manual-1279x720.jpg': { width: 1279, height: 720 },
+      '03-signed-out-landing-1279x720.jpg': { width: 1279, height: 720 },
+      '04-invalid-receipt-1279x720.jpg': { width: 1279, height: 720 },
+      '05-expired-receipt-1279x720.jpg': { width: 1279, height: 720 },
+      '06-ownerless-support-only-1279x720.jpg': { width: 1279, height: 720 },
+    },
+    observations: 'observations.json',
+    requiredReportText: [
+      `Run window: ${accountDeletionRecoveryEvidenceDate} to 2026-07-14 (America/Toronto)`,
+      'App surface: actual Expo web app with credential-free development fixtures; native iPhone evidence remains required',
+      'Browser/device: Codex in-app Chromium browser on Windows; saved JPEG capture surface 1279 x 720',
+      'Overall verdict: Expo-web compatibility pass with the source-level publication-fence gap and native/hosted/provider gates still explicitly blocking launch',
+      'No live Supabase URL, user session, provider credential, status capability, or destructive operation was used.',
+      '`01-pending-1279x720.jpg`',
+      '`02-apple-manual-1279x720.jpg`',
+      '`03-signed-out-landing-1279x720.jpg`',
+      '`04-invalid-receipt-1279x720.jpg`',
+      '`05-expired-receipt-1279x720.jpg`',
+      '`06-ownerless-support-only-1279x720.jpg`',
+      '`observations.json`',
+      'Browser error count was zero.',
+      'This run does not claim a compact-phone viewport pass.',
+      'Repeat the recovery branches on a supported physical iPhone',
+      'This credential-free Expo-web pass is not evidence of hosted-provider completion, legal approval, Apple approval, or revenue readiness.',
+    ],
+    expected:
+      'Credential-free Expo web fixtures cover pending, manual-Apple, signed-out continuation, retryable invalid, expired, and ownerless support-only recovery; compact-phone, native-iPhone, hosted Supabase, and live-provider proof remain launch gates.',
   },
   {
     id: 'progress-timelapse-supported-phone',
@@ -1070,6 +1347,7 @@ const warnings = [
   'This manifest verifies committed local Expo web evidence only; it does not replace physical-iPhone and iOS build QA.',
   'Supported-phone 200% text-pressure gates listed in this manifest are launch-required local Expo web evidence. Android-class, 360-wide, and sub-667-height folder names are retained resilience baselines, not Android release evidence; 320-wide browser sizes also remain resilience stress evidence unless tied to a supported physical iPhone.',
   'Native keyboard events, Dynamic Type, VoiceOver, camera hardware, notification delivery, StoreKit, RevenueCat, and live Supabase remain separate iOS release gates.',
+  'The account-deletion recovery gate uses credential-free Expo web development fixtures on a desktop capture surface; it does not prove compact-phone layout, Keychain persistence, native lifecycle behavior, hosted Supabase, live-provider deletion, physical-iPhone accessibility, or App Store acceptance.',
 ];
 const blockers = [];
 let trackedRepoFiles;
@@ -1199,6 +1477,52 @@ const gateResults = gates.map((gate) => {
         if (requirementFailures.length > 0) {
           detail = `${detail} ${requirementFailures.join('; ')}.`;
         }
+      } else if (gate.kind === 'report-contract') {
+        const report = readFileSync(abs(evidencePath), 'utf8');
+        requirementFailures.push(
+          ...collectRequiredTextFailures({
+            label: gate.evidence,
+            text: report,
+            requiredText: gate.requiredReportText,
+          }),
+        );
+        for (const [file, expectedDimensions] of Object.entries(
+          gate.requiredJpegDimensions ?? {},
+        )) {
+          try {
+            const actualDimensions = readJpegDimensions(`${gate.folder}/${file}`);
+            if (
+              actualDimensions.width !== expectedDimensions.width ||
+              actualDimensions.height !== expectedDimensions.height
+            ) {
+              requirementFailures.push(
+                `${file} dimensions must be ${expectedDimensions.width} x ${expectedDimensions.height}, received ${actualDimensions.width} x ${actualDimensions.height}`,
+              );
+            }
+          } catch (error) {
+            requirementFailures.push(
+              `${file} is not a readable reviewed JPEG: ${error instanceof Error ? error.message : String(error)}`,
+            );
+          }
+        }
+        if (typeof gate.observations === 'string') {
+          try {
+            requirementFailures.push(
+              ...collectAccountDeletionRecoveryObservationFailures(
+                readJson(`${gate.folder}/${gate.observations}`),
+              ),
+            );
+          } catch {
+            requirementFailures.push(`${gate.observations} is not valid JSON`);
+          }
+        }
+        failureCount = requirementFailures.length;
+        verdict = failureCount === 0 ? 'pass' : 'fail';
+        status = verdict;
+        detail =
+          failureCount === 0
+            ? '6 credential-free Expo web recovery states passed on the recorded desktop capture surface; compact-phone, native-iPhone, hosted-service, and provider proof remain open.'
+            : `${failureCount} report-contract failure${failureCount === 1 ? '' : 's'}: ${requirementFailures.join('; ')}.`;
       } else if (gate.kind === 'required-surface-honesty') {
         const summary = readJson(evidencePath);
         const expectedRoutes = {
@@ -1337,6 +1661,7 @@ const gateResults = gates.map((gate) => {
       if (
         requirementFailures.length > 0 &&
         gate.kind !== 'summary-status' &&
+        gate.kind !== 'report-contract' &&
         gate.kind !== 'required-surface-honesty'
       ) {
         status = 'fail';
@@ -1360,7 +1685,8 @@ const gateResults = gates.map((gate) => {
     gate.requiredStatus != null ||
     gate.requiredFailedRouteCount != null ||
     gate.requiredViewports ||
-    gate.requiredVerified
+    gate.requiredVerified ||
+    gate.requiredReportText
       ? { requirementFailures }
       : {}),
     folderExists,

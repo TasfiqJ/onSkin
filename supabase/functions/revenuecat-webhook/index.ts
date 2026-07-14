@@ -7,8 +7,10 @@
 //   * Idempotency key = event.id; RevenueCat delivery is at-least-once.
 //   * Cancellation stops renewal but keeps access until expiration.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { parseRevenueCatIdentityTombstoneKeyring } from '../_shared/revenueCatIdentityTombstone.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import {
+  attachRevenueCatIdentityTombstoneLookup,
   buildRevenueCatAtomicArgs,
   persistRevenueCatEvent,
   type RevenueCatAtomicArgs,
@@ -19,6 +21,10 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const serviceKey = readSupabaseSecretKey();
 const webhookAuth = Deno.env.get('REVENUECAT_WEBHOOK_AUTH') ?? '';
 const signingSecret = Deno.env.get('REVENUECAT_WEBHOOK_SIGNING_SECRET') ?? '';
+const revenueCatProjectId = Deno.env.get('REVENUECAT_PROJECT_ID') ?? '';
+const identityTombstoneKeys = Deno.env.get('REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS') ?? '';
+const identityTombstoneCurrentVersion =
+  Deno.env.get('REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION') ?? '';
 const signatureToleranceSeconds = intEnv(
   'REVENUECAT_WEBHOOK_SIGNATURE_TOLERANCE_SECONDS',
   300,
@@ -182,11 +188,30 @@ Deno.serve(async (req) => {
   }
 
   let atomicArgs: RevenueCatAtomicArgs;
+  let identityTombstoneKeyring;
+  if (!/^[A-Za-z0-9_-]{1,255}$/.test(revenueCatProjectId)) {
+    console.warn('REVENUECAT_IDENTITY_TOMBSTONE_CONFIG_INVALID');
+    return json('identity barrier not configured', 503);
+  }
   try {
-    atomicArgs = buildRevenueCatAtomicArgs(event, {
-      signatureVerified: signature.ok,
-      authVerified,
-    });
+    identityTombstoneKeyring = parseRevenueCatIdentityTombstoneKeyring(
+      identityTombstoneKeys,
+      identityTombstoneCurrentVersion,
+    );
+  } catch {
+    console.warn('REVENUECAT_IDENTITY_TOMBSTONE_CONFIG_INVALID');
+    return json('identity barrier not configured', 503);
+  }
+  try {
+    atomicArgs = await attachRevenueCatIdentityTombstoneLookup(
+      buildRevenueCatAtomicArgs(event, {
+        signatureVerified: signature.ok,
+        authVerified,
+      }),
+      event,
+      revenueCatProjectId,
+      identityTombstoneKeyring,
+    );
   } catch {
     return json('bad request', 400);
   }

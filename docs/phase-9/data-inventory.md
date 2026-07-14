@@ -18,13 +18,139 @@ Service-role filtered coverage includes reverse-trial grants, subscription webho
 
 Migrations `20260713000046_account_service_row_scrub.sql` and `20260713000047_account_obf_contribution_erasure.sql` plus the account-deletion helper close the bounded synchronous service-row paths they cover: the service-role-only RPC is transactional, rejects residual identity, deletes account-only subscription events, the caller's commerce clicks, and the caller's OBF contribution payloads, detaches matching order attribution tokens, and removes only the deleting user from all seven scalar/alias/transfer owner fields on a shared event. Migration `0046` repairs legacy missing event IDs, canonicalizes live UUIDs found in old webhook payload owner keys, replaces every historical payload with a typed allowlist, makes click-token ownership unique, and tolerates legacy UUID case/whitespace during deletion. Migration `0047` purges legacy OBF rows with no owner, makes `user_id` mandatory, and changes the Auth FK from `SET NULL` to validated `CASCADE`, so direct Auth deletion cannot strand barcode/payload data. The current official ShopMy report exposes no correlation field, so its adapter always persists `click_token = null`; the known-token lookup and foreign-key path remain a fail-closed invariant for a future provider-approved rail. Strict result-shape validation prevents database errors or malformed attestations from being reported as deletion success. The real migrations pass disposable PostgreSQL 15 and 17 rehearsals, including idempotent RPC retry and direct Auth cascade, but this does not replace a complete Supabase migration reset or live concurrency/provider-interruption evidence.
 
-DB-10 is not yet complete. RevenueCat success now requires the bounded documented 200 JSON response with the requested `app_user_id` and `deleted=true`; a 404 or any other status is not accepted as deletion attestation because it can also indicate a wrong route, project, or credential. PostHog uses only the reviewed EU project bulk-delete endpoint. An exact typed zero-match 202 is idempotent absence; a nonzero fully attested 202 fails closed as `POSTHOG_DELETION_PENDING` because event and recording erasure is asynchronous. For an Apple-linked account, a usable fresh authorization code triggers `/auth/token` then `/auth/revoke`; the automatic path requires the explicit `APPLE_SIWA_CLIENT_ID`, requires it to equal `APP_IOS_BUNDLE_IDENTIFIER`, and no longer substitutes a Service ID or another bundle fallback. Only exact HTTP 200 responses with a usable exchanged token and then an exact HTTP 200 revocation response report `revoked`. In line with Apple TN3194, a missing or unusable code, missing or mismatched automatic-revocation configuration, exchange failure, missing returned token, or revoke failure cannot withhold account deletion. Those paths log only a stable reason and return `manual_revocation_required` with a typed reason and Apple's credential-management instruction; they never claim revocation succeeded. The mobile caller now requires an attested success body, queues a reviewed manual-revocation notice before local sign-out, and presents explicit iPhone Settings steps plus a fail-closed Apple Support handoff on Welcome. It does not yet persist a resumable Apple step, store refresh/access tokens for later revocation, or handle Apple's credential-revoked notification. The RPC protects the rows visible inside its transaction, but the broader audit also found account-derived `edge_rate_limits` hashes and cross-owner `community_blocks.blocked_handle` rows outside that boundary. The overall Edge flow still needs a short-lived deletion barrier, durable resumable provider-step state and PostHog deletion-status polling, exact cleanup for those account-derived rows, RevenueCat late-webhook suppression, stale-session write rejection, and retry-safe mobile RevenueCat reset behavior. Durable local provider-step state is also required to distinguish a safe RevenueCat retry from an unattested 404 after an earlier successful delete. Clean-reset, A/B race, provider interruption/retry, and reviewed staging/production export-deletion evidence remain absent.
+Migrations `20260713000048` through `20260713000051` and the durable Edge
+runtime close the bounded server-lifecycle gaps listed below that the earlier
+synchronous flow could not close. They do not close the client
+preflight-to-provider-publication race described later in this section. A
+service-only barrier and account advisory lock suppress
+owner and guarded service writes; account-owned rate-limit rows carry the Auth
+owner and are scrubbed; six ordered steps persist bounded attempt/lease state;
+Apple, RevenueCat, and PostHog payloads are encrypted at rest; ambiguous
+provider mutations enter reconciliation instead of blind redispatch; Storage
+and the service-row scrub are re-attested under the account lock immediately
+before terminal receipt creation; Auth hard delete is attempted at most once
+and then reconciled through read-only lookup; and only a pseudonymous HMAC,
+key version, manual-Apple flag, capability digest, stable state, and finite
+timestamps enter the terminal receipt.
+
+The deletion Edge boundary also exposes one authenticated, opaque mobile
+session preflight. It derives the owner only from the verified bearer and calls
+a service-role-only security-definer RPC under the same account advisory lock;
+the only successful states are `clear` and `active`, each paired with the same
+canonical authenticated subject. Mobile rejects a cached-session subject
+mismatch and keeps restored and newly authenticated sessions unpublished until
+exact owner-bound `clear`, so RevenueCat and the authenticated product tree
+cannot mount first.
+
+The canonical local owner proof is the complete ordered tuple of
+cleanup-required, owner binding, retained-owner binding, and ownerless
+quarantine. The two markers accept only exact `1`; owner values must be
+canonical lowercase 64-hex bindings; a retained binding must exactly equal the
+owner; and quarantine cannot coexist with owner or retained state. The tuple is
+read as one storage batch. Malformed, inconsistent, reordered, incomplete, or
+unreadable proof fails closed before sign-out, cleanup, adoption, or Auth
+publication. No cleanup decision reads the raw owner key in isolation.
+
+Exact `active` authorizes registered owner-bound records, encrypted
+photos/keys, and generated-cache cleanup only when its authenticated subject
+exactly matches the owner binding, or resumes a destructive boundary already
+marked cleanup-required. A foreign owner binding is copied to the durable
+retained field before forced sign-out and remains preserved through a signed-out
+cold restore; only exact-owner reauthentication consumes it, while a different
+account wipes before claim. Ownerless records receive the mutually exclusive
+quarantine marker before sign-out and cannot be adopted by any later account;
+the destructive boundary must finish before a new owner can be claimed. Partial
+cleanup keeps the tuple gated for retry.
+
+Forced invalidation also uses the separate durable exact-`1`
+`routinekind.authDerivedCleanupRequired.v1` control. It is committed before
+Auth sign-out, is not removed by ordinary private-data cleanup, and is cleared
+only after session/persisted-session removal, write settling, any authorized
+private cleanup, and auth-derived query/notification/analytics/image-memory and
+vendor resets all succeed. Cold restore reads it before `getSession` or Auth
+publication and retries the resets; malformed or unreadable control state holds
+the pre-Auth gate. The control is crash-retry authority for those resets, not
+owner-data deletion authority.
+
+Only exact HTTP
+`401 {"error":"ACCOUNT_DELETION_SESSION_REJECTED"}` proves that the candidate
+bearer is rejected, so the owner is retained or ownerless data is quarantined
+before durable persisted-Auth and auth-derived/vendor cleanup finishes signed
+out. It does not infer deletion or erase unattested owner-bound records.
+Transport, malformed-response, `5xx`, and other unknown outcomes stay behind
+retry rather than being treated as clear. The database RPC is not executable
+by `anon` or `authenticated`, and no operation ID, capability, provider phase,
+or timestamp crosses this API.
+
+This preflight is not yet a linearizable publication admission. Its account
+lock ends before the client publishes the Supabase session and configures or
+logs in to RevenueCat. Deletion can begin during that interval, and a late SDK
+request can recreate provider state after an absence observation. A
+two-phase reserve/activate/renew/release lease under the same account lock,
+worker drain/settling gate, repeated provider absence, and old-client residual
+risk control remain source release blockers. The exact design and external
+provider limits are tracked in
+`docs/phase-9/account-deletion-operations-runbook.md`.
+
+The active lifecycle retains the raw Auth UUID only while work is unfinished,
+with an operation lifetime of 29 days and a database ceiling of 30 days.
+Completed capability receipts are visible for 29 days and retained for at most
+seven additional purge-grace days. Operator recovery audit rows retain digests,
+stable reason/result codes, and finite timestamps, not command tokens or
+provider payloads. The canonical Cron work lane also purges expired lifecycle,
+rate-limit, and RevenueCat tombstone artifacts.
+
+RevenueCat deletion now uses REST API v2 preflight, exact project/customer
+identity evidence, a durable request-started boundary, and read-only
+reconciliation. A V2 secret is mandatory because RevenueCat states that V1
+keys do not work with REST API v2. Migration `0051` stores only versioned HMACs
+of the complete observed identity family, never raw aliases, and the webhook
+computes lookup candidates across every overlapping key version so a late
+event cannot silently recreate the deleted identity. New tombstones are
+configured for 824 days under a 825-day database ceiling; that is an
+engineering bound, not an approved production retention policy. RevenueCat
+must confirm alias/restore/recreation behavior and privacy counsel must approve
+the finite duration and rotation overlap.
+
+PostHog required-mode deletion now persists the exact target person set,
+dispatch cutoff, provider event-status observations, and two durable absence
+observations separated by the configured interval. It reports terminal success
+only after the EU project response set satisfies those checks and a real
+capture-shutdown/no-recordings audit. Development can record a typed
+not-required state only when the environment and all deletion signals prove
+PostHog was unused.
+
+For an Apple-linked account, the fixed-origin token exchange must bind the
+returned token identity to the authenticated Apple subject before revocation.
+Only the exact successful token contract followed by Apple's exact `200`
+no-body revoke contract reports automatic revocation. A missing/unusable code,
+missing or mismatched configuration, subject mismatch, exchange/no-token
+failure, or revoke failure records a stable manual-revocation outcome instead
+of falsely claiming automatic success. The iOS client source observes Apple's
+credential-revoked notification and checks credential state before publishing a
+restored session and again at foreground. Unknown/error results stay behind the
+retryable session gate; confirmed invalid Apple sessions are durably quarantined
+before sign-out without erasing unrelated owner-bound local-first records. A supported physical
+iPhone must still prove that notification/state path, quarantine recovery, and
+same-owner/different-owner behavior. Apple's server-to-server `consent-revoked`
+endpoint and delivery evidence remain external gates wherever selected or
+required.
+
+These are bounded local source/rehearsal properties, not a race-free DB-10
+implementation or production evidence. The publication-lease source slice plus
+hosted clean-reset, A/B stale-session/preflight races, Cron/Vault continuity, provider
+interruption and lost-response recovery, RevenueCat 200/202 and renewal/restore
+recreation behavior, PostHog async completion, Apple native revocation,
+Storage residue, mobile relaunch/status recovery, and reviewed staging and
+production runs remain required. The exact deployment, environment, rotation,
+monitoring, containment, and external-gate contract is in
+`docs/phase-9/account-deletion-operations-runbook.md`.
 
 The exhaustive orphan audit also found launch-significant policy/data-model gaps outside migration `0047`: Sentry receives a deterministic account pseudonym but has no remote erasure/retention attestation; waitlist email and growth share identifiers have no verified account-purpose link or deletion path; community moderation/report cascades currently erase other people's shared safety evidence when an author deletes; and staff/reviewer/access identities lack a dedicated principal namespace and retention contract. These require separate migrations and named Privacy/Legal/Trust-and-Safety/HR/Clinical decisions rather than being silently deleted or retained. OBF migration `0047` remains intentionally narrow and must not be described as closing those gates.
 
 ## RLS And Photo Storage Inventory
 
-The migration-derived public schema has 63 RLS-enabled tables: 30 owner-client private, 10 service-only private, and 23 authenticated catalog/editorial tables. The DB-09 live matrix registers all 40 private tables exactly once and distinguishes cross-user permanent accounts, a real signed-anonymous account, and a publishable-key client with no session.
+The migration-derived public schema has 69 RLS-enabled tables: 30 owner-client private, 10 directly service-only private, six fully sealed service-only lifecycle/tombstone tables, and 23 authenticated catalog/editorial tables. The six tables added by migrations `0048` and `0051` revoke direct table access even from `service_role`; they are reachable only through narrowly granted security-definer RPCs. The DB-09 hosted matrix must register all 46 private tables exactly once, apply row-positive isolation probes to the 40 directly queryable private tables, prove direct denial for every role on the six sealed tables, and distinguish cross-user permanent accounts, a real signed-anonymous account, and a publishable-key client with no session. Disposable PostgreSQL 15/17 rehearsals provide the positive-row and RPC-path evidence for the sealed tables that PostgREST is deliberately unable to inspect directly.
 
 Photo metadata and `photos` bucket objects require an owner-prefixed path plus current `photo_cloud_backup` consent. Migration `20260713000045_anonymous_photo_storage_guard.sql` additionally denies insert/update of cloud photo bytes to signed-anonymous accounts, including an anonymous account that can create its own consent row. Owner-prefixed select/delete remains available so existing legacy objects can still be accessed or removed. This source posture is not release evidence until a reviewed reset and the hosted adversarial matrix pass with unchanged-object and residue-free-cleanup postconditions.
 
@@ -57,10 +183,10 @@ Android Auto Backup is disabled in app config for the same local-only data class
 ## Third Parties
 
 - Supabase: Auth, database, storage, Edge Functions.
-- RevenueCat: subscription/customer data; `account-deletion` requires an exact attested 200 response, while retry idempotency remains blocked on durable local provider-step state.
-- PostHog: analytics person keyed by pseudonymous app user ID plus a legacy raw-ID compatibility path; `account-deletion` requests person/event/recording deletion but intentionally does not report account deletion complete until durable async status polling exists.
+- RevenueCat: subscription/customer data; durable deletion uses REST API v2 preflight, 200/202 acknowledgement plus read-only absence reconciliation, and versioned HMAC identity tombstones. `REVENUECAT_V2_SECRET_API_KEY` is mandatory because V1 keys do not work with v2. Live alias, transfer, renewal, restore, and recreation proof plus approved tombstone retention/rotation remain gates.
+- PostHog: analytics person keyed by pseudonymous app user ID plus a legacy raw-ID compatibility path; required-mode deletion persists the exact target set and provider status observations, then requires two interval-separated absence observations and reviewed capture-shutdown/no-recordings evidence before terminal success. Hosted EU-project completion remains a launch gate.
 - Sentry: crash diagnostics; payload scrubber removes route params, URLs, product context, barcodes, OCR text, notes, photo paths, receipts, and free text before capture.
-- Apple/Google: account and store billing records; the app deletion flow must explain subscription cancellation remains in store account management.
+- Apple/Google: account and store billing records; the app deletion flow must explain subscription cancellation remains in store account management. For Sign in with Apple, fixed-origin exchange is bound to the authenticated Apple subject and only an exact `200` no-body revoke response proves automatic revocation. Native revoke-listener/state-check source is implemented with durable local quarantine, but physical-iPhone evidence and any applicable server-to-server `consent-revoked` delivery remain launch blockers.
 
 ## Review Requirement
 

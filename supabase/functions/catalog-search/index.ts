@@ -71,6 +71,7 @@ async function enforceRateLimit(
     p_key_hash: keyHash,
     p_limit: catalogRateLimitMax,
     p_window_seconds: catalogRateLimitWindowSeconds,
+    p_owner_user_id: userId,
   });
 
   if (error) {

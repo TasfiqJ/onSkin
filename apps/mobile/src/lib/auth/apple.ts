@@ -1,6 +1,8 @@
 import type { User } from '@supabase/supabase-js';
 import * as AppleAuthentication from 'expo-apple-authentication';
 
+import { getAppleCredentialSubject } from './appleCredentialLifecycle';
+
 function nonEmptyString(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const trimmed = value.trim();
@@ -24,18 +26,8 @@ export async function getAppleIdToken(): Promise<{ idToken: string; email: strin
   return { idToken, email: nonEmptyString(credential.email) };
 }
 
-function getAppleSubject(user: User): string | null {
-  const identity = user.identities?.find((item) => item.provider === 'apple');
-  const data = identity?.identity_data as { sub?: unknown } | undefined;
-  const subject = nonEmptyString(data?.sub);
-  if (subject) return subject;
-  const identityId = nonEmptyString(identity?.id);
-  if (identityId) return identityId;
-  return null;
-}
-
 export async function getAppleAuthorizationCodeForRevocation(user: User): Promise<string | null> {
-  const appleUser = getAppleSubject(user);
+  const appleUser = getAppleCredentialSubject(user);
   if (!appleUser) return null;
   if (!(await AppleAuthentication.isAvailableAsync())) return null;
 

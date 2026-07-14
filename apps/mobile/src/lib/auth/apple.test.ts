@@ -4,19 +4,34 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { getAppleAuthorizationCodeForRevocation, getAppleIdToken } from './apple';
 
 const mocks = vi.hoisted(() => ({
+  addRevokeListener: vi.fn(),
+  getCredentialStateAsync: vi.fn(),
   isAvailableAsync: vi.fn(),
   refreshAsync: vi.fn(),
   signInAsync: vi.fn(),
 }));
 
 vi.mock('expo-apple-authentication', () => ({
+  AppleAuthenticationCredentialState: {
+    AUTHORIZED: 1,
+    NOT_FOUND: 2,
+    REVOKED: 0,
+    TRANSFERRED: 3,
+  },
   AppleAuthenticationScope: {
     EMAIL: 'EMAIL',
     FULL_NAME: 'FULL_NAME',
   },
+  addRevokeListener: mocks.addRevokeListener,
+  getCredentialStateAsync: mocks.getCredentialStateAsync,
   isAvailableAsync: mocks.isAvailableAsync,
   refreshAsync: mocks.refreshAsync,
   signInAsync: mocks.signInAsync,
+}));
+
+vi.mock('react-native', () => ({
+  AppState: { addEventListener: vi.fn() },
+  Platform: { OS: 'ios' },
 }));
 
 function userWithAppleIdentity(identity: Record<string, unknown> | null): User {
@@ -39,6 +54,8 @@ function userWithAppleIdentity(identity: Record<string, unknown> | null): User {
 
 describe('Sign in with Apple helpers', () => {
   beforeEach(() => {
+    mocks.addRevokeListener.mockReset();
+    mocks.getCredentialStateAsync.mockReset();
     mocks.isAvailableAsync.mockReset();
     mocks.refreshAsync.mockReset();
     mocks.signInAsync.mockReset();
@@ -96,6 +113,20 @@ describe('Sign in with Apple helpers', () => {
       id: '   ',
       identity_data: { sub: '   ' },
     });
+
+    await expect(getAppleAuthorizationCodeForRevocation(user)).resolves.toBeNull();
+    expect(mocks.isAvailableAsync).not.toHaveBeenCalled();
+    expect(mocks.refreshAsync).not.toHaveBeenCalled();
+  });
+
+  it('does not refresh when multiple Apple identities bind to conflicting subjects', async () => {
+    const user = {
+      ...userWithAppleIdentity(null),
+      identities: [
+        { id: 'one', identity_data: { sub: 'apple-one' }, provider: 'apple' },
+        { id: 'two', identity_data: { sub: 'apple-two' }, provider: 'apple' },
+      ],
+    } as unknown as User;
 
     await expect(getAppleAuthorizationCodeForRevocation(user)).resolves.toBeNull();
     expect(mocks.isAvailableAsync).not.toHaveBeenCalled();

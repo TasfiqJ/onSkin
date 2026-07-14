@@ -7,6 +7,7 @@ import {
   HarnessAssertionError,
   OWNER_LINKED_PRIVATE_TABLES,
   PRIVATE_PUBLIC_TABLES,
+  SEALED_SERVICE_PRIVATE_TABLES,
   SERVICE_ONLY_PRIVATE_TABLES,
   authUserMissing,
   deniedInsertResult,
@@ -36,24 +37,28 @@ function issueKeys(issues) {
 const canonicalClassifications = [
   ['owner-linked private', OWNER_LINKED_PRIVATE_TABLES],
   ['service-only private', SERVICE_ONLY_PRIVATE_TABLES],
+  ['sealed service-only private', SEALED_SERVICE_PRIVATE_TABLES],
   ['authenticated catalog/editorial', AUTHENTICATED_CATALOG_TABLES],
 ];
 const canonicalTables = [
   ...OWNER_LINKED_PRIVATE_TABLES,
   ...SERVICE_ONLY_PRIVATE_TABLES,
+  ...SEALED_SERVICE_PRIVATE_TABLES,
   ...AUTHENTICATED_CATALOG_TABLES,
 ];
 
 test('canonical table inventory is exhaustive and duplicate-free', () => {
-  assert.equal(canonicalTables.length, 63);
+  assert.equal(canonicalTables.length, 69);
   assert.equal(OWNER_LINKED_PRIVATE_TABLES.length, 30);
   assert.equal(SERVICE_ONLY_PRIVATE_TABLES.length, 10);
-  assert.equal(new Set(canonicalTables).size, 63);
+  assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 6);
+  assert.equal(new Set(canonicalTables).size, 69);
   assert.deepEqual(PRIVATE_PUBLIC_TABLES, [
     ...OWNER_LINKED_PRIVATE_TABLES,
     ...SERVICE_ONLY_PRIVATE_TABLES,
+    ...SEALED_SERVICE_PRIVATE_TABLES,
   ]);
-  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 40);
+  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 46);
   assert.deepEqual(
     tableClassificationIssues({
       createdTables: canonicalTables,

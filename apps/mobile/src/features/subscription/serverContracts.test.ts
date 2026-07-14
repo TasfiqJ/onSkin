@@ -20,8 +20,9 @@ describe('subscription server contracts', () => {
     expect(edgeFunction).toContain('persistRevenueCatEvent(supabase, atomicArgs)');
     expect(edgeFunction).not.toContain(".from('subscriptions_events')");
     expect(edgeFunction).not.toContain(".from('entitlements')");
-    expect(core).toContain("'process_revenuecat_webhook_event'");
-    expect(core).toContain("row.processing_status === 'error'");
+    expect(core).toMatch(/\.rpc\(['"]process_revenuecat_webhook_event_guarded['"]/);
+    expect(core).not.toMatch(/\.rpc\(['"]process_revenuecat_webhook_event['"]/);
+    expect(core).toMatch(/row\.processing_status === ['"]error['"]/);
     expect(migration).toContain(
       "coalesce(v_existing.processing_status, '') not in ('error', 'unresolved_user')",
     );
@@ -47,6 +48,7 @@ describe('subscription server contracts', () => {
       'supabase/migrations/20260713000044_reverse_trial_no_store_identity.sql',
     );
     const edgeFunction = readRepo('supabase/functions/subscription-grants/index.ts');
+    const grantErrors = readRepo('supabase/functions/subscription-grants/grantErrors.ts');
     const policyLint = readRepo('scripts/phase9/supabase-policy-lint.mjs');
     const entitlementStore = readRepo('apps/mobile/src/features/subscription/store.ts');
     const entitlementHook = readRepo('apps/mobile/src/features/subscription/useEntitlement.ts');
@@ -87,8 +89,11 @@ describe('subscription server contracts', () => {
 
     expect(edgeFunction).toContain("supabase.rpc('grant_app_granted_reverse_trial'");
     expect(edgeFunction).not.toContain('p_product_id');
-    expect(edgeFunction).toContain("message.includes('ACTIVE_SUBSCRIPTION_EXISTS')");
-    expect(edgeFunction).toContain("message.includes('REVERSE_TRIAL_ALREADY_USED')");
+    expect(edgeFunction).toContain('reverseTrialGrantErrorCode(error)');
+    expect(grantErrors).toContain("message.includes('ACCOUNT_DELETION_IN_PROGRESS')");
+    expect(grantErrors).toContain("message.includes('ACTIVE_SUBSCRIPTION_EXISTS')");
+    expect(grantErrors).toContain("message.includes('REVERSE_TRIAL_ALREADY_USED')");
+    expect(grantErrors).toContain("code === 'account_deletion_in_progress'");
     expect(edgeFunction).not.toContain(".from('reverse_trial_grants').insert");
     expect(edgeFunction).not.toContain(".from('entitlements').upsert");
     expect(entitlementStore).not.toContain('revenueCatReverseTrialProductId');

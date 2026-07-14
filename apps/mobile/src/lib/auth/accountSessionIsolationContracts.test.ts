@@ -22,6 +22,11 @@ describe('account session isolation integration', () => {
     );
     expect(gate).toContain('if (!initializing && !sessionBoundaryError) return children;');
     expect(gate).toContain("loading: 'Securing account data...'");
+    expect(gate).toContain("eyebrow: 'Account access paused'");
+    expect(gate).toContain(
+      "body: 'Your account data is still locked. Try again to continue safely.'",
+    );
+    expect(gate).not.toContain('private data could not be cleared');
     expect(gate).toContain('accessibilityRole="alert"');
     expect(gate).toContain('void retrySessionBoundary()');
     expect(gate).toContain('min-h-[56px]');
@@ -59,7 +64,11 @@ describe('account session isolation integration', () => {
     expect(privateKV).toContain('PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY');
     expect(privateKV).toContain('generation !== accountBoundaryGeneration');
     expect(privateKV).toContain('return runAccountScopedPrivateOperation');
-    expect(actions).toContain('await completeLocalSignOut();');
+    expect(actions).toContain('intake = await runAccountGenerationOperation(async (lease) => {');
+    expect(actions).toContain('await preparePendingAccountDeletion(owner.ownerBinding)');
+    expect(actions).toContain('Authorization: `Bearer ${owner.accessToken}`');
+    expect(actions).toContain('requestAccountDeletionRecovery();');
+    expect(actions).not.toContain('await _completeLocalSignOut()');
     expect(actions).not.toContain('clearAccountIsolatedState');
     expect(supabaseClient).toContain('export async function clearPersistedSupabaseSession');
     expect(supabaseClient).toContain('storageKey: authStorageKey');

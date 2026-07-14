@@ -1,6 +1,6 @@
 # Phase 2 Production Infrastructure Runbook
 
-Date: 2026-07-04
+Date: 2026-07-13
 
 Phase 2 is now scaffolded in code, but it is not externally complete. Do not
 create irreversible production accounts under `OnSkin` until
@@ -27,19 +27,34 @@ create irreversible production accounts under `OnSkin` until
   test for profiles, skin profiles, shelf, routines, consents, and entitlements.
 - `scripts/phase2/deploy-supabase-staging.ps1`: staging deploy wrapper for
   migrations, Edge Functions, and type generation.
+- `supabase/ops/account-deletion-work-lane.sql`: credential-free, fail-closed
+  Cron/Vault provisioning for the durable account-deletion worker.
+- `docs/phase-9/account-deletion-operations-runbook.md`: exact deletion
+  environment, cutover, monitoring, rotation, containment, and live-gate
+  contract.
 
 ## Required Sequence
 
 1. Resolve brand and domain.
 2. Fill `.env` from `.env.example` with staging values.
 3. Run `npm run phase2:check-env:strict`.
-4. Create Supabase staging and set Edge Function secrets.
-5. Run `.\scripts\phase2\deploy-supabase-staging.ps1`.
-6. Run `npm run phase2:rls-smoke`.
-7. Configure Apple, Google, RevenueCat, PostHog, Sentry, Turnstile, and policy
+4. Create Supabase staging and set Edge Function secrets. Durable deletion
+   requires independent payload/receipt/worker/tombstone keys and a RevenueCat
+   **V2** key; a RevenueCat V1/legacy key cannot satisfy that contract.
+5. For the migrations 0048-0051 cutover, follow the dedicated account-deletion
+   runbook: predeploy the new fail-closed deletion function, then apply the four
+   migrations in order and immediately deploy every manifest function from the
+   same revision. Do not use the wrapper alone for this first cutover because it
+   pushes migrations before functions.
+6. Run `.\scripts\phase2\deploy-supabase-staging.ps1` for later coherent
+   manifest deployments and type generation.
+7. Provision the named Vault entries and canonical Cron job only after the
+   deletion function's boot and negative-auth probes pass.
+8. Run `npm run phase2:rls-smoke` plus the Phase 9 account-deletion live matrix.
+9. Configure Apple, Google, RevenueCat, PostHog, Sentry, Turnstile, and policy
    URLs under the cleared identity.
-8. Build custom dev clients and staging builds through EAS.
-9. Run the purchase/auth/deletion/device QA matrix before production.
+10. Build custom dev clients and staging builds through EAS.
+11. Run the purchase/auth/deletion/device QA matrix before production.
 
 ## Commands
 
@@ -54,6 +69,10 @@ PowerShell staging deploy:
 ```powershell
 .\scripts\phase2\deploy-supabase-staging.ps1
 ```
+
+The initial durable-deletion cutover is the documented exception to invoking
+this wrapper directly. Read
+`docs/phase-9/account-deletion-operations-runbook.md` first.
 
 Expo config checks:
 
@@ -101,6 +120,8 @@ expected target is staging.
 - Apple Developer and Google Play Console apps.
 - RevenueCat products, offerings, sandbox testers, and webhooks.
 - PostHog/Sentry projects and deletion/source-map verification.
+- Hosted Cron/Vault worker proof, provider interruption/reconciliation, and
+  account-deletion concurrency/fault-injection evidence.
 - Turnstile site and secret configuration.
 - Final privacy, terms, support, data export, and account deletion URLs.
 - Physical-device QA for auth, purchases, notifications, camera, share card, and

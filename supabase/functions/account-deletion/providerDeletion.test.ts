@@ -233,15 +233,23 @@ Deno.test('Apple automatic revocation accepts only exact documented 200 attestat
     { token: 'access-token', tokenTypeHint: 'access_token' },
     'an access token from an exact 200 may be revoked when no refresh token exists.',
   );
-  attestAppleTokenRevocation(200);
+  attestAppleTokenRevocation(200, '', 0);
 
   for (const status of [0, 199, 201, 202, 204, 299, 400, 500]) {
     assertThrowsCode(
       () => attestAppleTokenExchange(status, { refresh_token: 'must-not-be-trusted' }),
       'APPLE_TOKEN_EXCHANGE_FAILED',
     );
-    assertThrowsCode(() => attestAppleTokenRevocation(status), 'APPLE_TOKEN_REVOKE_FAILED');
+    assertThrowsCode(() => attestAppleTokenRevocation(status, '', 0), 'APPLE_TOKEN_REVOKE_FAILED');
   }
+
+  for (const body of ['unexpected', ' ']) {
+    assertThrowsCode(
+      () => attestAppleTokenRevocation(200, body, new TextEncoder().encode(body).byteLength),
+      'APPLE_TOKEN_REVOKE_FAILED',
+    );
+  }
+  assertThrowsCode(() => attestAppleTokenRevocation(200, '', 3), 'APPLE_TOKEN_REVOKE_FAILED');
 
   for (const body of [
     undefined,

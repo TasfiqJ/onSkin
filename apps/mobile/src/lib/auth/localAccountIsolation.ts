@@ -116,13 +116,12 @@ export async function prepareLocalDataForSession(
   nextUserId: string | null,
   dependencies: LocalAccountIsolationDependencies = defaultDependencies,
   beforeClear?: () => void | Promise<void>,
+  options: { clearUnclaimed?: boolean } = {},
 ): Promise<{ cleared: boolean; resetRoute: boolean }> {
   const ownership = await dependencies.readOwnership(nextUserId);
-  const mustClear = shouldClearLocalPrivateDataForSessionChange(
-    previousUserId,
-    nextUserId,
-    ownership,
-  );
+  const mustClear =
+    (options.clearUnclaimed === true && ownership === 'unclaimed') ||
+    shouldClearLocalPrivateDataForSessionChange(previousUserId, nextUserId, ownership);
 
   if (mustClear) {
     await beforeClear?.();

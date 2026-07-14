@@ -89,13 +89,30 @@ describe('local private data cleanup', () => {
       expect.arrayContaining([
         'routinekind.routineActivation.v1',
         'routinekind.routineOrder.v1',
-        'routinekind.localDataOwnerHash.v1',
         'onskin.photo.content_key_created.v1',
         'onskin.skinprofile.v1',
       ]),
     );
+    expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain('routinekind.localDataOwnerHash.v1');
+    expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain(
+      'routinekind.localDataRetainedOwnerHash.v1',
+    );
+    expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain(
+      'routinekind.localDataUnclaimedQuarantine.v1',
+    );
+    expect(mocks.multiRemove).toHaveBeenNthCalledWith(2, [
+      'routinekind.localDataOwnerHash.v1',
+      'routinekind.localDataRetainedOwnerHash.v1',
+      'routinekind.localDataUnclaimedQuarantine.v1',
+    ]);
+    expect(mocks.multiRemove.mock.invocationCallOrder[1]).toBeGreaterThan(
+      mocks.resetRevenueCatIdentity.mock.invocationCallOrder[0]!,
+    );
     expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain(
       'routinekind.localDataCleanupRequired.v1',
+    );
+    expect(mocks.multiRemove.mock.calls.flatMap(([keys]) => keys)).not.toContain(
+      'routinekind.authDerivedCleanupRequired.v1',
     );
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);
@@ -129,6 +146,25 @@ describe('local private data cleanup', () => {
     expect(mocks.multiRemove).toHaveBeenCalledTimes(1);
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledTimes(1);
     expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledTimes(1);
+  });
+
+  it('fails closed if the final owner-proof removal cannot be committed', async () => {
+    mocks.multiRemove
+      .mockResolvedValueOnce(undefined)
+      .mockRejectedValueOnce(new Error('storage unavailable'));
+
+    await expect(clearLocalPrivateData()).rejects.toThrow(
+      'LOCAL_PRIVATE_DATA_CLEAR_FAILED:owner_proof',
+    );
+
+    expect(mocks.multiRemove).toHaveBeenCalledTimes(2);
+    expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
+    expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledTimes(1);
+    expect(mocks.multiRemove).toHaveBeenNthCalledWith(2, [
+      'routinekind.localDataOwnerHash.v1',
+      'routinekind.localDataRetainedOwnerHash.v1',
+      'routinekind.localDataUnclaimedQuarantine.v1',
+    ]);
   });
 
   it('fails closed when cache enumeration or notification cancellation fails', async () => {

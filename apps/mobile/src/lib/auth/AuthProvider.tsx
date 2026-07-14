@@ -1,4 +1,5 @@
 import type { Session, User } from '@supabase/supabase-js';
+import * as Notifications from 'expo-notifications';
 import { router, type Href } from 'expo-router';
 import {
   createContext,
@@ -20,15 +21,20 @@ import {
   endEncryptedPhotoAccountBoundary,
   waitForEncryptedPhotoWritesToSettle,
 } from '@/features/photos/encryptedStorage';
+import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
+import { rescheduleReminders } from '@/features/notifications/deliver';
 import { isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE } from '@/lib/errors/userFacing';
+import { resetAnalyticsIdentity } from '@/lib/analytics/track';
 import {
   configureRevenueCat,
   customerInfoToStoredEntitlement,
   getCustomerInfo,
+  resetRevenueCatIdentity,
   subscribeToCustomerInfoUpdates,
 } from '@/lib/iap/revenuecat';
 import { devWarn } from '@/lib/observability/safeLog';
+import { queryClient } from '@/lib/query/queryClient';
 import {
   beginPrivateKVAccountBoundary,
   endPrivateKVAccountBoundary,
@@ -48,9 +54,37 @@ import {
   verifyEmailAccountCode,
   type PendingEmailAccountCode,
 } from './accountUpgrade';
+import {
+  activeAccountDeletionOwnsLocalData,
+  fetchAccountDeletionBarrierState,
+  isAccountDeletionBarrierSessionRejected,
+} from './accountDeletionBarrier';
+import {
+  clearAuthDerivedCleanupRequired,
+  markAuthDerivedCleanupRequired,
+  readAuthDerivedCleanupRequired,
+} from './authDerivedCleanupRequired';
 import { getAppleIdToken } from './apple';
+import {
+  clearAppleCredentialQuarantine,
+  isAppleCredentialQuarantined,
+  markAppleCredentialQuarantined,
+} from './appleCredentialQuarantine';
+import {
+  checkAppleCredentialForSession,
+  monitorAppleCredentialLifecycle,
+  type AppleCredentialCheckBlockedReason,
+  type AppleCredentialInvalidReason,
+} from './appleCredentialLifecycle';
 import { getGoogleIdToken } from './google';
-import { prepareLocalDataForSession } from './localAccountIsolation';
+import { clearAccountIsolatedState, prepareLocalDataForSession } from './localAccountIsolation';
+import { clearAuthDerivedLocalActivity } from './revokedCredentialActivity';
+import {
+  markLocalDataCleanupRequired,
+  preserveLocalDataForForcedSignOut,
+  readLocalDataOwnership,
+} from './sessionOwner';
+import { clearRejectedSessionActivityDurably } from './sessionInvalidation';
 import { latestSessionForCompletedBoundary } from './sessionBoundary';
 
 type AuthContextValue = {
@@ -73,6 +107,19 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 type AccountIsolationE2EGlobal = typeof globalThis & {
   __ROUTINEKIND_E2E_NAVIGATE__?: (href: string) => void;
+};
+
+const revokedCredentialActivityDependencies = {
+  cancelQueries: () => queryClient.cancelQueries(),
+  cancelScheduledNotifications: () => Notifications.cancelAllScheduledNotificationsAsync(),
+  clearQueries: () => queryClient.clear(),
+  purgeSensitiveImageMemory,
+  resetAnalyticsIdentity,
+  resetRevenueCatIdentity,
+};
+
+const activeAccountDeletionOwnerProofDependencies = {
+  readLocalDataOwnership,
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -100,9 +147,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     (nextSession: Session | null, initialRestore?: boolean) => Promise<void>
   >(async () => {});
   const showSessionBoundaryRef = useRef<(nextSession: Session | null) => void>(() => {});
+  const handleAppleCredentialInvalidRef = useRef<
+    (reason: AppleCredentialInvalidReason) => Promise<void>
+  >(async () => {});
+  const handleAppleCredentialCheckBlockedRef = useRef<
+    (blockedSession: Session, reason: AppleCredentialCheckBlockedReason) => Promise<void>
+  >(async () => {});
+  const appleCredentialQuarantinedRef = useRef(false);
+  const freshAuthenticationPendingRef = useRef(false);
 
   useEffect(() => {
     let mounted = true;
+    let appleRevocationBoundaryActive = false;
+    let appleRevocationBoundaryPromise: Promise<void> | null = null;
+    let appleRemoteSignOutAttempted = false;
+    let appleCredentialCheckBoundaryActive = false;
+    let appleCredentialCheckPromise: Promise<void> | null = null;
+    let accountDeletionBarrierBoundaryActive = false;
+    let accountDeletionBarrierBoundaryPromise: Promise<void> | null = null;
+    let accountDeletionLocalSignOutAttempted = false;
+    let rejectedSessionBoundaryActive = false;
+    let rejectedSessionBoundaryPromise: Promise<void> | null = null;
+    let rejectedSessionLocalSignOutAttempted = false;
+    let initialSessionRestorePending = true;
 
     function holdSessionBoundaryWriteLock(): void {
       if (sessionBoundaryWriteLockHeldRef.current) return;
@@ -131,11 +198,273 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     showSessionBoundaryRef.current = showSessionBoundary;
 
+    function handleAppleCredentialInvalid(reason: AppleCredentialInvalidReason): Promise<void> {
+      if (appleRevocationBoundaryPromise) return appleRevocationBoundaryPromise;
+
+      appleRevocationBoundaryActive = true;
+      appleCredentialQuarantinedRef.current = true;
+      freshAuthenticationPendingRef.current = false;
+      supabase.auth.stopAutoRefresh();
+      showSessionBoundary(null);
+      const seq = ++sessionChangeSeqRef.current;
+
+      const promise = (async () => {
+        try {
+          // Provider credential invalidation proves only that this session may
+          // no longer publish authenticated state. It does not authorize
+          // erasing local data or letting a later account adopt ownerless data.
+          // Resume an already-authorized cleanup, or commit owner-bound
+          // retention/ownerless quarantine, before the forced local sign-out.
+          const localDataAction = await preserveLocalDataForForcedSignOut();
+          await clearRejectedSessionActivityDurably({
+            markAuthDerivedCleanupRequired,
+            clearAuthDerivedCleanupRequired,
+            persistInvalidationMarker: () => markAppleCredentialQuarantined(),
+            async signOut() {
+              if (appleRemoteSignOutAttempted) return;
+              const { error } = await supabase.auth.signOut({ scope: 'global' });
+              if (error) throw error;
+              appleRemoteSignOutAttempted = true;
+            },
+            // Remove the encrypted local session even if the Auth client
+            // already removed it. This closes response-loss ambiguity.
+            clearPersistedSession: clearPersistedSupabaseSession,
+            waitForAccountOperations: waitForAccountGenerationOperationsToSettle,
+            waitForPrivateWrites: waitForPrivateKVWritesToSettle,
+            waitForPhotoWrites: waitForEncryptedPhotoWritesToSettle,
+            ...(localDataAction === 'resume-cleanup' ? { clearAccountIsolatedState } : {}),
+            clearAuthDerivedActivity: () =>
+              clearAuthDerivedLocalActivity(revokedCredentialActivityDependencies),
+          });
+
+          if (!mounted || seq !== sessionChangeSeqRef.current) return;
+          retrySessionRestoreRef.current = null;
+          pendingBoundarySessionRef.current = null;
+          activeUserIdRef.current = null;
+          explicitSignOutPendingRef.current = false;
+          sessionBoundaryActiveRef.current = false;
+          appleRevocationBoundaryActive = false;
+          releaseSessionBoundaryWriteLock();
+          setSessionBoundaryError(false);
+          setSession(null);
+          router.replace('/');
+          setInitializing(false);
+        } catch (error: unknown) {
+          devWarn(`[auth] Apple credential invalidation failed closed (${reason})`, error);
+          if (!mounted || seq !== sessionChangeSeqRef.current) return;
+          retrySessionRestoreRef.current = () => handleAppleCredentialInvalid(reason);
+          showSessionBoundary(null);
+          setInitializing(false);
+          setSessionBoundaryError(true);
+        }
+      })();
+
+      appleRevocationBoundaryPromise = promise;
+      void promise.finally(() => {
+        if (appleRevocationBoundaryPromise === promise) appleRevocationBoundaryPromise = null;
+      });
+      return promise;
+    }
+    handleAppleCredentialInvalidRef.current = handleAppleCredentialInvalid;
+
+    function handleAppleCredentialCheckBlocked(
+      blockedSession: Session,
+      reason: AppleCredentialCheckBlockedReason,
+    ): Promise<void> {
+      appleCredentialCheckBoundaryActive = true;
+      supabase.auth.stopAutoRefresh();
+      showSessionBoundary(blockedSession);
+      devWarn('[auth] Apple credential-state validation blocked', new Error(reason));
+      retrySessionRestoreRef.current = () => retryAppleCredentialCheck(blockedSession);
+      setInitializing(false);
+      setSessionBoundaryError(true);
+      return Promise.resolve();
+    }
+
+    function retryAppleCredentialCheck(blockedSession: Session): Promise<void> {
+      if (appleCredentialCheckPromise) return appleCredentialCheckPromise;
+
+      showSessionBoundary(blockedSession);
+      const seq = ++sessionChangeSeqRef.current;
+      const promise = (async () => {
+        const result = await checkAppleCredentialForSession(blockedSession.user);
+        if (!mounted || seq !== sessionChangeSeqRef.current) return;
+
+        if (result.status === 'valid' || result.status === 'not_applicable') {
+          appleCredentialCheckBoundaryActive = false;
+          retrySessionRestoreRef.current = null;
+          await applySessionBoundary(blockedSession);
+          return;
+        }
+        if (result.status === 'invalid') {
+          appleCredentialCheckBoundaryActive = false;
+          await handleAppleCredentialInvalid(result.reason);
+          return;
+        }
+        await handleAppleCredentialCheckBlocked(blockedSession, result.reason);
+      })().catch((error: unknown) => {
+        if (!mounted || seq !== sessionChangeSeqRef.current) return;
+        devWarn('[auth] Apple credential-state retry failed closed', error);
+        void handleAppleCredentialCheckBlocked(blockedSession, 'credential_check_failed');
+      });
+
+      appleCredentialCheckPromise = promise;
+      void promise.finally(() => {
+        if (appleCredentialCheckPromise === promise) appleCredentialCheckPromise = null;
+      });
+      return promise;
+    }
+    handleAppleCredentialCheckBlockedRef.current = handleAppleCredentialCheckBlocked;
+
+    function handleRejectedSession(): Promise<void> {
+      if (rejectedSessionBoundaryPromise) return rejectedSessionBoundaryPromise;
+
+      rejectedSessionBoundaryActive = true;
+      freshAuthenticationPendingRef.current = false;
+      supabase.auth.stopAutoRefresh();
+      showSessionBoundary(null);
+      const seq = ++sessionChangeSeqRef.current;
+
+      const promise = (async () => {
+        try {
+          // A rejected bearer proves only that the candidate session is no
+          // longer valid. Resume a previously authorized cleanup, preserve a
+          // known owner's proof, or quarantine ownerless data before local
+          // sign-out can expose a signed-out restore to a later account.
+          const localDataAction = await preserveLocalDataForForcedSignOut();
+          await clearRejectedSessionActivityDurably({
+            markAuthDerivedCleanupRequired,
+            clearAuthDerivedCleanupRequired,
+            async signOut() {
+              if (rejectedSessionLocalSignOutAttempted) return;
+              const { error } = await supabase.auth.signOut({ scope: 'local' });
+              if (error) throw error;
+              rejectedSessionLocalSignOutAttempted = true;
+            },
+            clearPersistedSession: clearPersistedSupabaseSession,
+            waitForAccountOperations: waitForAccountGenerationOperationsToSettle,
+            waitForPrivateWrites: waitForPrivateKVWritesToSettle,
+            waitForPhotoWrites: waitForEncryptedPhotoWritesToSettle,
+            ...(localDataAction === 'resume-cleanup' ? { clearAccountIsolatedState } : {}),
+            clearAuthDerivedActivity: () =>
+              clearAuthDerivedLocalActivity(revokedCredentialActivityDependencies),
+          });
+
+          if (!mounted || seq !== sessionChangeSeqRef.current) return;
+          retrySessionRestoreRef.current = null;
+          pendingBoundarySessionRef.current = null;
+          activeUserIdRef.current = null;
+          explicitSignOutPendingRef.current = false;
+          sessionBoundaryActiveRef.current = false;
+          rejectedSessionBoundaryActive = false;
+          rejectedSessionLocalSignOutAttempted = false;
+          releaseSessionBoundaryWriteLock();
+          setSessionBoundaryError(false);
+          setSession(null);
+          router.replace('/');
+          setInitializing(false);
+        } catch (error: unknown) {
+          devWarn('[auth] rejected session cleanup failed closed', error);
+          if (!mounted || seq !== sessionChangeSeqRef.current) return;
+          retrySessionRestoreRef.current = handleRejectedSession;
+          showSessionBoundary(null);
+          setInitializing(false);
+          setSessionBoundaryError(true);
+        }
+      })();
+
+      rejectedSessionBoundaryPromise = promise;
+      void promise.finally(() => {
+        if (rejectedSessionBoundaryPromise === promise) {
+          rejectedSessionBoundaryPromise = null;
+        }
+      });
+      return promise;
+    }
+
+    function handleAccountDeletionBarrierActive(
+      localDataDecision: Awaited<ReturnType<typeof activeAccountDeletionOwnsLocalData>>,
+    ): Promise<void> {
+      if (accountDeletionBarrierBoundaryPromise) return accountDeletionBarrierBoundaryPromise;
+
+      accountDeletionBarrierBoundaryActive = true;
+      freshAuthenticationPendingRef.current = false;
+      supabase.auth.stopAutoRefresh();
+      showSessionBoundary(null);
+      const seq = ++sessionChangeSeqRef.current;
+
+      const promise = (async () => {
+        try {
+          let resumeAuthorizedPrivateCleanup = localDataDecision === 'clear';
+          if (resumeAuthorizedPrivateCleanup) {
+            // Persist owner-data cleanup authority before the generic crash
+            // marker and before local Auth removal. A cold restore can then
+            // finish the exact destructive boundary even if this process dies
+            // immediately after sign-out.
+            await markLocalDataCleanupRequired();
+          } else {
+            // Commit either the retained owner's proof or an ownerless
+            // quarantine before invalidating the active-barrier session. A
+            // later signed-out restore must not erase or reassign that data.
+            resumeAuthorizedPrivateCleanup =
+              (await preserveLocalDataForForcedSignOut()) === 'resume-cleanup';
+          }
+          await clearRejectedSessionActivityDurably({
+            markAuthDerivedCleanupRequired,
+            clearAuthDerivedCleanupRequired,
+            async signOut() {
+              if (accountDeletionLocalSignOutAttempted) return;
+              const { error } = await supabase.auth.signOut({ scope: 'local' });
+              if (error) throw error;
+              accountDeletionLocalSignOutAttempted = true;
+            },
+            clearPersistedSession: clearPersistedSupabaseSession,
+            waitForAccountOperations: waitForAccountGenerationOperationsToSettle,
+            waitForPrivateWrites: waitForPrivateKVWritesToSettle,
+            waitForPhotoWrites: waitForEncryptedPhotoWritesToSettle,
+            ...(resumeAuthorizedPrivateCleanup ? { clearAccountIsolatedState } : {}),
+            clearAuthDerivedActivity: () =>
+              clearAuthDerivedLocalActivity(revokedCredentialActivityDependencies),
+          });
+
+          if (!mounted || seq !== sessionChangeSeqRef.current) return;
+          retrySessionRestoreRef.current = null;
+          pendingBoundarySessionRef.current = null;
+          activeUserIdRef.current = null;
+          explicitSignOutPendingRef.current = false;
+          sessionBoundaryActiveRef.current = false;
+          accountDeletionBarrierBoundaryActive = false;
+          accountDeletionLocalSignOutAttempted = false;
+          releaseSessionBoundaryWriteLock();
+          setSessionBoundaryError(false);
+          setSession(null);
+          router.replace('/');
+          setInitializing(false);
+        } catch (error: unknown) {
+          devWarn('[auth] rejected account session cleanup failed closed', error);
+          if (!mounted || seq !== sessionChangeSeqRef.current) return;
+          retrySessionRestoreRef.current = () =>
+            handleAccountDeletionBarrierActive(localDataDecision);
+          showSessionBoundary(null);
+          setInitializing(false);
+          setSessionBoundaryError(true);
+        }
+      })();
+
+      accountDeletionBarrierBoundaryPromise = promise;
+      void promise.finally(() => {
+        if (accountDeletionBarrierBoundaryPromise === promise) {
+          accountDeletionBarrierBoundaryPromise = null;
+        }
+      });
+      return promise;
+    }
+
     function applySessionBoundary(
       nextSession: Session | null,
       initialRestore = false,
     ): Promise<void> {
-      const targetUserId = nextSession?.user.id ?? null;
+      let targetUserId = nextSession?.user.id ?? null;
       if (explicitSignOutPendingRef.current && targetUserId) return Promise.resolve();
       pendingBoundarySessionRef.current = { session: nextSession };
       const existing = boundaryInFlightRef.current;
@@ -144,6 +473,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const previousTransition = existing?.promise;
       const seq = ++sessionChangeSeqRef.current;
       if (
+        nextSession !== null ||
         initialRestore ||
         sessionBoundaryActiveRef.current ||
         targetUserId !== activeUserIdRef.current
@@ -157,6 +487,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const previousUserId = activeUserIdRef.current;
 
         try {
+          if (nextSession) {
+            let barrierState: Awaited<ReturnType<typeof fetchAccountDeletionBarrierState>>;
+            try {
+              barrierState = await fetchAccountDeletionBarrierState(nextSession.access_token);
+            } catch (error: unknown) {
+              if (isAccountDeletionBarrierSessionRejected(error)) {
+                await handleRejectedSession();
+                return;
+              }
+              throw error;
+            }
+            if (!mounted || seq !== sessionChangeSeqRef.current) return;
+            if (nextSession.user.id !== barrierState.ownerSubject) {
+              // The encrypted Supabase session contains a mutable cached user
+              // object. Only the subject authenticated by the same preflight
+              // response may become the local/vendor publication target.
+              await handleRejectedSession();
+              return;
+            }
+            targetUserId = barrierState.ownerSubject;
+            if (barrierState.status === 'active') {
+              const localDataDecision = await activeAccountDeletionOwnsLocalData(
+                barrierState.ownerSubject,
+                activeAccountDeletionOwnerProofDependencies,
+              );
+              if (!mounted || seq !== sessionChangeSeqRef.current) return;
+              await handleAccountDeletionBarrierActive(localDataDecision);
+              return;
+            }
+          }
           if (!targetUserId && explicitSignOutPendingRef.current && !accountIsolationE2EFixture) {
             await clearPersistedSupabaseSession();
           }
@@ -183,7 +543,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 }
               }
             },
+            {
+              clearUnclaimed:
+                targetUserId !== null &&
+                freshAuthenticationPendingRef.current &&
+                appleCredentialQuarantinedRef.current,
+            },
           );
+
+          if (targetUserId && freshAuthenticationPendingRef.current) {
+            if (appleCredentialQuarantinedRef.current) {
+              await rescheduleReminders();
+              await clearAppleCredentialQuarantine();
+              appleCredentialQuarantinedRef.current = false;
+              appleRemoteSignOutAttempted = false;
+            }
+            freshAuthenticationPendingRef.current = false;
+          }
 
           if (!mounted || seq !== sessionChangeSeqRef.current) return;
           activeUserIdRef.current = targetUserId;
@@ -235,15 +611,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     async function restoreSession(): Promise<void> {
       if (!mounted) return;
+      initialSessionRestorePending = true;
       const seqBeforeRestore = sessionChangeSeqRef.current;
       showSessionBoundary(null);
       try {
+        if (await isAppleCredentialQuarantined()) {
+          if (!mounted || seqBeforeRestore !== sessionChangeSeqRef.current) return;
+          appleCredentialQuarantinedRef.current = true;
+          initialSessionRestorePending = false;
+          retrySessionRestoreRef.current = null;
+          await handleAppleCredentialInvalid('persisted_revocation');
+          return;
+        }
+        if (await readAuthDerivedCleanupRequired()) {
+          if (!mounted || seqBeforeRestore !== sessionChangeSeqRef.current) return;
+          initialSessionRestorePending = false;
+          retrySessionRestoreRef.current = null;
+          await handleRejectedSession();
+          return;
+        }
         const { data, error: sessionError } = await supabase.auth.getSession();
         if (sessionError) throw sessionError;
         if (!mounted || seqBeforeRestore !== sessionChangeSeqRef.current) return;
         retrySessionRestoreRef.current = null;
+        if (data.session) {
+          const appleCredential = await checkAppleCredentialForSession(data.session.user);
+          if (!mounted || seqBeforeRestore !== sessionChangeSeqRef.current) return;
+          if (appleCredential.status === 'invalid') {
+            initialSessionRestorePending = false;
+            await handleAppleCredentialInvalid(appleCredential.reason);
+            return;
+          }
+          if (appleCredential.status === 'blocked') {
+            initialSessionRestorePending = false;
+            await handleAppleCredentialCheckBlocked(data.session, appleCredential.reason);
+            return;
+          }
+        }
+        initialSessionRestorePending = false;
         await applySessionBoundary(data.session, true);
       } catch (error: unknown) {
+        initialSessionRestorePending = false;
         devWarn('[auth] initial session restore failed', error);
         if (!mounted || seqBeforeRestore !== sessionChangeSeqRef.current) return;
         retrySessionRestoreRef.current = restoreSession;
@@ -262,6 +670,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         applySessionBoundaryRef.current = async () => {};
         showSessionBoundaryRef.current = () => {};
         retrySessionRestoreRef.current = null;
+        handleAppleCredentialInvalidRef.current = async () => {};
+        handleAppleCredentialCheckBlockedRef.current = async () => {};
         releaseSessionBoundaryWriteLock();
       };
     }
@@ -273,12 +683,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         applySessionBoundaryRef.current = async () => {};
         showSessionBoundaryRef.current = () => {};
         retrySessionRestoreRef.current = null;
+        handleAppleCredentialInvalidRef.current = async () => {};
+        handleAppleCredentialCheckBlockedRef.current = async () => {};
         releaseSessionBoundaryWriteLock();
       };
     }
 
     void restoreSession();
     const { data: sub } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      if (initialSessionRestorePending) return;
+      if (appleRevocationBoundaryActive) return;
+      if (appleCredentialCheckBoundaryActive) return;
+      if (accountDeletionBarrierBoundaryActive) return;
+      if (rejectedSessionBoundaryActive) return;
+      if (
+        appleCredentialQuarantinedRef.current &&
+        !(freshAuthenticationPendingRef.current && nextSession)
+      ) {
+        return;
+      }
       void applySessionBoundary(nextSession);
     });
     return () => {
@@ -286,23 +709,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       applySessionBoundaryRef.current = async () => {};
       showSessionBoundaryRef.current = () => {};
       retrySessionRestoreRef.current = null;
+      handleAppleCredentialInvalidRef.current = async () => {};
+      handleAppleCredentialCheckBlockedRef.current = async () => {};
+      appleRevocationBoundaryActive = false;
+      appleCredentialCheckBoundaryActive = false;
+      accountDeletionBarrierBoundaryActive = false;
+      rejectedSessionBoundaryActive = false;
       releaseSessionBoundaryWriteLock();
       sub.subscription.unsubscribe();
     };
   }, [accountIsolationE2EFixture]);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || accountIsolationE2EFixture || initializing || !session?.user) {
+      return;
+    }
+
+    return monitorAppleCredentialLifecycle(session.user, {
+      onCredentialCheckBlocked: (reason) =>
+        handleAppleCredentialCheckBlockedRef.current(session, reason),
+      onCredentialInvalid: (reason) => handleAppleCredentialInvalidRef.current(reason),
+    });
+  }, [accountIsolationE2EFixture, initializing, session]);
 
   // Start/stop token auto-refresh with app foreground/background (docs/01 §5).
   useEffect(() => {
     if (!isSupabaseConfigured) return;
 
     const handle = (state: AppStateStatus) => {
-      if (state === 'active') supabase.auth.startAutoRefresh();
-      else supabase.auth.stopAutoRefresh();
+      if (state === 'active' && session && !sessionBoundaryActiveRef.current) {
+        supabase.auth.startAutoRefresh();
+      } else supabase.auth.stopAutoRefresh();
     };
     handle(AppState.currentState);
     const subscription = AppState.addEventListener('change', handle);
-    return () => subscription.remove();
-  }, []);
+    return () => {
+      subscription.remove();
+      // AccountDeletionRecoveryGate can unmount AuthProvider while a durable
+      // deletion remains unresolved. Do not leave the singleton refresh loop
+      // running behind that pre-Auth gate.
+      supabase.auth.stopAutoRefresh();
+    };
+  }, [session]);
 
   useEffect(() => {
     const userId = session?.user.id ?? null;
@@ -342,6 +790,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<AuthContextValue>(() => {
     const user = session?.user ?? null;
+    const runFreshAuthentication = async <T,>(operation: () => Promise<T>): Promise<T> => {
+      freshAuthenticationPendingRef.current = true;
+      try {
+        return await operation();
+      } catch (error: unknown) {
+        freshAuthenticationPendingRef.current = false;
+        throw error;
+      }
+    };
     return {
       session,
       user,
@@ -364,22 +821,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
-        if (data.session) return;
+        if (data.session && !appleCredentialQuarantinedRef.current) return;
         // BLOCKED: B-TURNSTILE. CaptchaToken expected here once Turnstile is wired.
-        const { error: signInError } = await supabase.auth.signInAnonymously(
-          captchaToken ? { options: { captchaToken } } : undefined,
+        const { error: signInError } = await runFreshAuthentication(() =>
+          supabase.auth.signInAnonymously(captchaToken ? { options: { captchaToken } } : undefined),
         );
-        if (signInError) throw signInError;
+        if (signInError) {
+          freshAuthenticationPendingRef.current = false;
+          throw signInError;
+        }
       },
       async signInWithApple() {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
         const result = await getAppleIdToken();
         if (!result) return false;
-        await authenticateWithProviderToken(supabase.auth, {
-          provider: 'apple',
-          token: result.idToken,
-        });
+        await runFreshAuthentication(() =>
+          authenticateWithProviderToken(supabase.auth, {
+            provider: 'apple',
+            token: result.idToken,
+          }),
+        );
         pendingEmailCodeRef.current = null;
         return true;
       },
@@ -388,10 +850,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const result = await getGoogleIdToken();
         if (!result) return false;
-        await authenticateWithProviderToken(supabase.auth, {
-          provider: 'google',
-          token: result.idToken,
-        });
+        await runFreshAuthentication(() =>
+          authenticateWithProviderToken(supabase.auth, {
+            provider: 'google',
+            token: result.idToken,
+          }),
+        );
         pendingEmailCodeRef.current = null;
         return true;
       },
@@ -400,8 +864,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         // OTP code (not magic link) for mobile reliability (docs/01 §1).
         pendingEmailCodeRef.current = null;
-        const request = await requestEmailAccountCode(supabase.auth, email);
+        const request = await runFreshAuthentication(() =>
+          requestEmailAccountCode(supabase.auth, email),
+        );
         if (request.kind === 'anonymous_upgrade_complete') return 'complete';
+        freshAuthenticationPendingRef.current = false;
         pendingEmailCodeRef.current = request;
         return 'code_sent';
       },
@@ -410,11 +877,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const pending = pendingEmailCodeRef.current;
         if (!pending) throw new Error('Request a new email code before verifying.');
-        await verifyEmailAccountCode(supabase.auth, pending, email, token);
+        await runFreshAuthentication(() =>
+          verifyEmailAccountCode(supabase.auth, pending, email, token),
+        );
         pendingEmailCodeRef.current = null;
       },
       async signOut() {
         pendingEmailCodeRef.current = null;
+        freshAuthenticationPendingRef.current = false;
         explicitSignOutPendingRef.current = true;
         showSessionBoundaryRef.current(null);
         try {

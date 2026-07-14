@@ -208,6 +208,7 @@ async function enforceRateLimit(
     p_key_hash: keyHash,
     p_limit: dataExportRateLimitMax,
     p_window_seconds: dataExportRateLimitWindowSeconds,
+    p_owner_user_id: userId,
   });
 
   if (error) {

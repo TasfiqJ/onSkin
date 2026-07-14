@@ -2,10 +2,13 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
+import { AUTH_DERIVED_CLEANUP_REQUIRED_KEY } from '@/lib/auth/authDerivedCleanupRequired';
+
 import {
   LOCAL_PRIVATE_CONTROL_KEYS,
   LOCAL_PRIVATE_DATA_KEYS,
   LOCAL_PRIVATE_METADATA_KEYS,
+  LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
   LOCAL_PRIVATE_SECURE_STORE_KEYS,
 } from './localPrivateDataKeys';
 
@@ -27,6 +30,7 @@ describe('local private data registry', () => {
       ...LOCAL_PRIVATE_CONTROL_KEYS,
       ...LOCAL_PRIVATE_DATA_KEYS,
       ...LOCAL_PRIVATE_METADATA_KEYS,
+      ...LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
       ...LOCAL_PRIVATE_SECURE_STORE_KEYS,
     ]);
     const discovered = new Set<string>();
@@ -46,8 +50,18 @@ describe('local private data registry', () => {
       ...LOCAL_PRIVATE_CONTROL_KEYS,
       ...LOCAL_PRIVATE_DATA_KEYS,
       ...LOCAL_PRIVATE_METADATA_KEYS,
+      ...LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
       ...LOCAL_PRIVATE_SECURE_STORE_KEYS,
     ];
     expect(new Set(all).size).toBe(all.length);
+  });
+
+  it('keeps auth-derived crash recovery outside destructive private-data registries', () => {
+    expect(LOCAL_PRIVATE_CONTROL_KEYS).toContain(AUTH_DERIVED_CLEANUP_REQUIRED_KEY);
+    expect([
+      ...LOCAL_PRIVATE_DATA_KEYS,
+      ...LOCAL_PRIVATE_METADATA_KEYS,
+      ...LOCAL_PRIVATE_SECURE_STORE_KEYS,
+    ]).not.toContain(AUTH_DERIVED_CLEANUP_REQUIRED_KEY);
   });
 });

@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 
 import {
   PRIVATE_PUBLIC_TABLES,
+  SEALED_SERVICE_PRIVATE_TABLES,
   SERVICE_ONLY_PRIVATE_TABLES,
   HarnessAssertionError,
   authUserMissing,
@@ -252,6 +253,20 @@ function registerPrivateTableProbe(table, column, value, crossClient = 'userB') 
     `Unknown cross-client selector for ${table}.`,
   );
   privateTableProbes.set(table, { column, value, crossClient });
+}
+
+function registerSealedPrivateTableProbe(table, column, value) {
+  assert(
+    SEALED_SERVICE_PRIVATE_TABLES.includes(table),
+    `Unknown sealed private-table probe: ${table}.`,
+  );
+  assert(!privateTableProbes.has(table), `Duplicate private-table probe: ${table}.`);
+  assert(
+    typeof column === 'string' && column.length > 0,
+    `Missing sealed probe column for ${table}.`,
+  );
+  assert(value !== null && value !== undefined, `Missing sealed probe value for ${table}.`);
+  privateTableProbes.set(table, { sealed: true, column, value });
 }
 
 function trackServiceCleanup(table, column, value) {
@@ -2201,6 +2216,27 @@ async function main() {
     });
 
     await runCheck('service-only private table positive controls', async () => {
+      const absentUuid = '00000000-0000-0000-0000-000000000000';
+      const absentDigest = '0'.repeat(64);
+      registerSealedPrivateTableProbe('account_deletion_operations', 'id', absentUuid);
+      registerSealedPrivateTableProbe('account_deletion_barriers', 'user_id', absentUuid);
+      registerSealedPrivateTableProbe('account_deletion_steps', 'operation_id', absentUuid);
+      registerSealedPrivateTableProbe(
+        'account_deletion_receipts',
+        'capability_digest',
+        absentDigest,
+      );
+      registerSealedPrivateTableProbe(
+        'account_deletion_operator_recovery_audit',
+        'command_digest',
+        absentDigest,
+      );
+      registerSealedPrivateTableProbe(
+        'revenuecat_identity_tombstones',
+        'identity_hmac',
+        absentDigest,
+      );
+
       const subscriptionEvent = await insertOne(admin, 'subscriptions_events', {
         rc_event_id: `phase9-${randomUUID()}`,
         user_id: userA.id,
@@ -2287,7 +2323,7 @@ async function main() {
       registerPrivateTableProbe('edge_rate_limits', 'key_hash', rateLimit.key_hash);
     });
 
-    await runCheck('all 40 private tables have positive-control isolation', async () => {
+    await runCheck('all 46 private tables have access-control probes', async () => {
       const registeredTables = [...privateTableProbes.keys()].sort();
       const expectedTables = [...PRIVATE_PUBLIC_TABLES].sort();
       assert(
@@ -2298,6 +2334,24 @@ async function main() {
       for (const table of PRIVATE_PUBLIC_TABLES) {
         const probe = privateTableProbes.get(table);
         assert(Boolean(probe), `Missing private-table positive control: ${table}.`);
+        if (probe.sealed === true) {
+          for (const [client, label] of [
+            [admin, 'service-role admin'],
+            [userA.client, 'owner client'],
+            [userB.client, 'cross-user client'],
+            [signedAnonymous.client, 'signed-anonymous client'],
+            [unauthenticated, 'unauthenticated client'],
+          ]) {
+            await expectNotVisible(
+              client,
+              table,
+              probe.column,
+              probe.value,
+              `${table} ${label} direct table read`,
+            );
+          }
+          continue;
+        }
         const crossClient = probe.crossClient === 'userA' ? userA.client : userB.client;
         await expectVisible(
           admin,

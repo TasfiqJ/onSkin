@@ -19,6 +19,54 @@ env:
   EXPO_NO_TELEMETRY: '1'
 
 jobs:
+  account-deletion-postgres:
+    name: Account deletion ${{ matrix.rehearsal.name }} on PostgreSQL ${{ matrix.postgres }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        postgres:
+          - 15-alpine
+          - 17-alpine
+        rehearsal:
+          - name: lifecycle
+            database: account_deletion_0048
+            script: account-deletion-lifecycle-postgres-rehearsal.sql
+          - name: revenuecat-barrier
+            database: revenuecat_barrier_0049
+            script: revenuecat-deletion-barrier-postgres-rehearsal.sql
+          - name: service-writers
+            database: service_writers_0050
+            script: service-writer-deletion-barriers-postgres-rehearsal.sql
+          - name: revenuecat-tombstones
+            database: revenuecat_tombstones_0051
+            script: revenuecat-identity-tombstones-postgres-rehearsal.sql
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}
+        env:
+          POSTGRES_PASSWORD: onskin_rehearsal
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        # actions/checkout v6.0.3
+        uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+        with:
+          persist-credentials: false
+
+      - name: Execute isolated PostgreSQL rehearsal
+        env:
+          PGPASSWORD: onskin_rehearsal
+        run: |
+          createdb -h 127.0.0.1 -U postgres "${{ matrix.rehearsal.database }}"
+          psql -h 127.0.0.1 -U postgres -d "${{ matrix.rehearsal.database }}" -v ON_ERROR_STOP=1 -f "scripts/phase9/${{ matrix.rehearsal.script }}"
+
   checks:
     name: Repository quality gates
     runs-on: ubuntu-latest
@@ -81,6 +129,8 @@ jobs:
           npm run phase9:data-export-contract-smoke
           npm run phase9:account-provider-deletion-smoke
           npm run phase9:account-service-scrub-smoke
+          npm run phase9:account-deletion-durable-smoke
+          npm run phase9:account-deletion-work-lane-smoke
           npm run phase9:order-attribution-integrity-smoke
           deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/revenuecat-webhook/webhookCore.test.ts
           npm run phase9:revenuecat-webhook-atomic-smoke

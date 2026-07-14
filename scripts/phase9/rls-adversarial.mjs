@@ -3,6 +3,7 @@ import {
   AUTHENTICATED_CATALOG_TABLES,
   OWNER_LINKED_PRIVATE_TABLES,
   PRIVATE_PUBLIC_TABLES,
+  SEALED_SERVICE_PRIVATE_TABLES,
   SERVICE_ONLY_PRIVATE_TABLES,
   block,
   evidenceFlagEnabled,
@@ -67,6 +68,7 @@ for (const match of migrations.matchAll(
 const tableClassifications = [
   ['owner-linked private', OWNER_LINKED_PRIVATE_TABLES],
   ['service-only private', SERVICE_ONLY_PRIVATE_TABLES],
+  ['sealed service-only private', SEALED_SERVICE_PRIVATE_TABLES],
   ['authenticated catalog/editorial', AUTHENTICATED_CATALOG_TABLES],
 ];
 
@@ -82,14 +84,34 @@ block(
 );
 block(
   errors,
+  SEALED_SERVICE_PRIVATE_TABLES.length === 6,
+  `Sealed service-only private-table inventory must contain 6 tables; found ${SEALED_SERVICE_PRIVATE_TABLES.length}.`,
+);
+block(
+  errors,
   AUTHENTICATED_CATALOG_TABLES.length === 23,
   `Authenticated catalog/editorial inventory must contain 23 tables; found ${AUTHENTICATED_CATALOG_TABLES.length}.`,
 );
 block(
   errors,
-  PRIVATE_PUBLIC_TABLES.length === 40,
-  `Combined private-table inventory must contain 40 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
+  PRIVATE_PUBLIC_TABLES.length === 46,
+  `Combined private-table inventory must contain 46 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
 );
+
+for (const table of SEALED_SERVICE_PRIVATE_TABLES) {
+  block(
+    errors,
+    new RegExp(`alter table public\\.${table} force row level security`, 'i').test(migrations),
+    `Sealed service-only table must force RLS: ${table}.`,
+  );
+  block(
+    errors,
+    new RegExp(`revoke all on table public\\.${table}[\\s\\S]{0,160}service_role`, 'i').test(
+      migrations,
+    ),
+    `Sealed service-only table must revoke direct service_role access: ${table}.`,
+  );
+}
 
 for (const issue of tableClassificationIssues({
   createdTables,
@@ -365,13 +387,18 @@ const staticProbeCounts = new Map();
 for (const match of liveHarness.matchAll(/registerPrivateTableProbe\(\s*['"]([a-z_]+)['"]/g)) {
   staticProbeCounts.set(match[1], (staticProbeCounts.get(match[1]) ?? 0) + 1);
 }
+for (const match of liveHarness.matchAll(
+  /registerSealedPrivateTableProbe\(\s*['"]([a-z_]+)['"]/g,
+)) {
+  staticProbeCounts.set(match[1], (staticProbeCounts.get(match[1]) ?? 0) + 1);
+}
 
 for (const table of PRIVATE_PUBLIC_TABLES) {
   const count = staticProbeCounts.get(table) ?? 0;
   block(
     errors,
     count === 1,
-    `Live Supabase adversarial harness must register exactly one positive-control probe for ${table}; found ${count}.`,
+    `Live Supabase adversarial harness must register exactly one access-control probe for ${table}; found ${count}.`,
   );
 }
 
@@ -413,7 +440,7 @@ block(
 );
 
 const requiredLiveHarnessChecks = [
-  'all 40 private tables have positive-control isolation',
+  'all 46 private tables have access-control probes',
   'routine conflict swapped canonical pair',
   'routine conflict duplicate canonical identity',
   'Shelf provenance matrix',

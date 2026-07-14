@@ -12,6 +12,7 @@ import { configureNotifications } from '@/features/notifications/startup';
 import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
 import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
 import { IntakeProvider } from '@/features/shelf/IntakeContext';
+import { AccountDeletionRecoveryGate } from '@/features/settings/AccountDeletionRecoveryGate';
 import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { SessionBoundaryGate } from '@/lib/auth/SessionBoundaryGate';
@@ -55,21 +56,23 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <SessionBoundaryGate>
-              <AppLockProvider>
-                <PrivateDataAvailabilityGate>
-                  <OnboardingProvider>
-                    <IntakeProvider>
-                      <OfflineSync />
-                      <StatusBar style="dark" />
-                      <Stack screenOptions={{ headerShown: false }} />
-                    </IntakeProvider>
-                  </OnboardingProvider>
-                </PrivateDataAvailabilityGate>
-              </AppLockProvider>
-            </SessionBoundaryGate>
-          </AuthProvider>
+          <AccountDeletionRecoveryGate>
+            <AuthProvider>
+              <SessionBoundaryGate>
+                <AppLockProvider>
+                  <PrivateDataAvailabilityGate>
+                    <OnboardingProvider>
+                      <IntakeProvider>
+                        <OfflineSync />
+                        <StatusBar style="dark" />
+                        <Stack screenOptions={{ headerShown: false }} />
+                      </IntakeProvider>
+                    </OnboardingProvider>
+                  </PrivateDataAvailabilityGate>
+                </AppLockProvider>
+              </SessionBoundaryGate>
+            </AuthProvider>
+          </AccountDeletionRecoveryGate>
         </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

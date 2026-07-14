@@ -42,7 +42,7 @@ vi.mock('./sessionOwner', () => ({
 }));
 
 function dependencies(
-  ownership: 'match' | 'mismatch' | 'unclaimed' = 'unclaimed',
+  ownership: 'cleanup_required' | 'match' | 'mismatch' | 'retained' | 'unclaimed' = 'unclaimed',
 ): LocalAccountIsolationDependencies & { calls: string[] } {
   const calls: string[] = [];
   return {
@@ -131,6 +131,15 @@ describe('local account isolation', () => {
     });
   });
 
+  it('resumes an interrupted cleanup even for a signed-out cold restore', async () => {
+    const deps = dependencies('cleanup_required');
+
+    await expect(prepareLocalDataForSession(null, null, deps)).resolves.toMatchObject({
+      cleared: true,
+    });
+    expect(deps.clearPersistedPrivateData).toHaveBeenCalledOnce();
+  });
+
   it('clears on sign-out without claiming a new owner', async () => {
     const deps = dependencies();
 
@@ -161,6 +170,22 @@ describe('local account isolation', () => {
       'clear:queries',
       'clear:cleanup-required',
     ]);
+  });
+
+  it('preserves a durably retained owner across forced sign-out and cold null restore', async () => {
+    const deps = dependencies('retained');
+
+    await expect(prepareLocalDataForSession('user-b', null, deps)).resolves.toEqual({
+      cleared: false,
+      resetRoute: false,
+    });
+    await expect(prepareLocalDataForSession(null, null, deps)).resolves.toEqual({
+      cleared: false,
+      resetRoute: false,
+    });
+
+    expect(deps.clearPersistedPrivateData).not.toHaveBeenCalled();
+    expect(deps.claimOwnership).not.toHaveBeenCalled();
   });
 
   it('clears query memory again when persisted cleanup fails and does not claim', async () => {
@@ -245,6 +270,18 @@ describe('local account isolation', () => {
     expect(deps.markCleanupRequired).toHaveBeenCalledTimes(2);
     expect(deps.clearPersistedPrivateData).toHaveBeenCalledTimes(2);
     expect(deps.clearCleanupRequired).toHaveBeenCalledTimes(1);
+    expect(deps.claimOwnership).toHaveBeenCalledWith('user-b');
+  });
+
+  it('clears unclaimed records when a quarantined credential cannot prove the returning owner', async () => {
+    const deps = dependencies('unclaimed');
+
+    await expect(
+      prepareLocalDataForSession(null, 'user-b', deps, undefined, {
+        clearUnclaimed: true,
+      }),
+    ).resolves.toEqual({ cleared: true, resetRoute: true });
+    expect(deps.clearPersistedPrivateData).toHaveBeenCalledOnce();
     expect(deps.claimOwnership).toHaveBeenCalledWith('user-b');
   });
 });

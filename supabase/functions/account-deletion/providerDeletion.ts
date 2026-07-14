@@ -197,8 +197,14 @@ export function attestAppleTokenExchange(status: number, body: unknown): AppleRe
   throw new Error('APPLE_TOKEN_EXCHANGE_RETURNED_NO_TOKEN');
 }
 
-export function attestAppleTokenRevocation(status: number): void {
-  if (status !== 200) throw new Error('APPLE_TOKEN_REVOKE_FAILED');
+export function attestAppleTokenRevocation(
+  status: number,
+  body: unknown,
+  responseBytes: unknown,
+): void {
+  if (status !== 200 || body !== '' || responseBytes !== 0) {
+    throw new Error('APPLE_TOKEN_REVOKE_FAILED');
+  }
 }
 
 function bytesToHex(bytes: ArrayBuffer): string {
