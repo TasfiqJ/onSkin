@@ -1,0 +1,58 @@
+{
+  "date": "2026-07-14",
+  "timeZone": "America/Toronto",
+  "surface": "Expo web in Codex in-app browser",
+  "viewports": [
+    "375x667",
+    "390x844",
+    "390x845-effective"
+  ],
+  "result": "pass_after_fixes",
+  "seed": {
+    "preferences": [
+      "vegan",
+      "premium",
+      "gel"
+    ],
+    "dismissedSuggestion": "A ceramide moisturiser",
+    "todayRoutineProduct": "Gentle Cleanser"
+  },
+  "fixtures": [
+    "read_always",
+    "preferences_once",
+    "dismissed_once",
+    "future",
+    "read_delay_3000ms",
+    "dismiss_once"
+  ],
+  "assertions": {
+    "persistentRecoveryFailClosed": true,
+    "persistentRetryFailureCopy": true,
+    "namedLoadingBeforeControls": true,
+    "exactPreferencesRestored": true,
+    "dismissedSuggestionNotResurrected": true,
+    "futureSchemaRawCodeLeak": false,
+    "todayFailureAlertPresentAfter4800ms": true,
+    "todayPromptPresentAfterFailedDismissal": true,
+    "todaySecondCommittedDismissalRemovesPrompt": true,
+    "committedDetailPublishedBeforeDelayedRereadMs": 43,
+    "competingAcceptAbsentAfterCommittedPublication": true,
+    "noLateNavigationAfterBackDuringReread": true,
+    "browserErrorCount": 0,
+    "javascriptDialogCount": 0
+  },
+  "automatedVerification": {
+    "mobileTestFiles": 242,
+    "mobileTests": 2849,
+    "mobileTypecheck": "pass",
+    "mobileLint": "pass",
+    "rootTypecheck": "pass",
+    "rootLint": "pass",
+    "rootTests": "pass"
+  },
+  "remainingNativeProof": [
+    "iOS encrypted-storage interruption",
+    "native safe-area and screen-reader verification",
+    "physical-device process interruption"
+  ]
+}
