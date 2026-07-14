@@ -36,7 +36,6 @@ describe('local private-data contract registry', () => {
       'onskin.photos.captureConsent:typedRead',
       'onskin.photos.cloudBackup:codec',
       'onskin.photos.v1:typedRead',
-      'onskin.ramp.v1:typedRead',
       'onskin.recDismissed.v1:typedRead',
       'onskin.recPrefs.v1:typedRead',
       'onskin.reviewPrompt.v1:typedRead',

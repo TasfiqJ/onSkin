@@ -88,7 +88,16 @@ function daysSince(iso: string): number {
   return Math.round((Date.now() - new Date(iso).getTime()) / 86_400_000);
 }
 
-export function useCycle(): { data: CycleData | undefined; isLoading: boolean } {
+export type CycleQueryResult = {
+  data: CycleData | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  retry: () => Promise<void>;
+};
+
+export function useCycle(): CycleQueryResult {
   const shelf = useShelf();
   const ownerScope = useOwnerQueryScope();
   const boundary = useLocalDateBoundary();
@@ -114,7 +123,20 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
   }, [ramp.items]);
 
   const data = useMemo<CycleData | undefined>(() => {
-    if (!shelf.data || !cfg.data || !profile.data) return undefined;
+    // Ramp cadence is a safety input. Never orchestrate with an empty frequency
+    // map while its persisted state is pending or unreadable: that would fall
+    // back to the higher reviewed class cap and silently increase active nights.
+    if (
+      !shelf.isSuccess ||
+      !cfg.isSuccess ||
+      !profile.isSuccess ||
+      !ramp.isSuccess ||
+      !shelf.data ||
+      !cfg.data ||
+      !profile.data
+    ) {
+      return undefined;
+    }
     const config = cfg.data;
 
     const actives: SchedulerActive[] = shelf.data.items.map((i) => ({
@@ -184,11 +206,36 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
       notes,
       conflictChoices,
     };
-  }, [shelf.data, cfg.data, profile.data, freqByProductId, today, cadenceReady]);
+  }, [
+    shelf.isSuccess,
+    cfg.isSuccess,
+    profile.isSuccess,
+    ramp.isSuccess,
+    shelf.data,
+    cfg.data,
+    profile.data,
+    freqByProductId,
+    today,
+    cadenceReady,
+  ]);
+
+  async function retry(): Promise<void> {
+    await Promise.all([
+      shelf.isError ? shelf.refetch() : Promise.resolve(),
+      cfg.isError ? cfg.refetch() : Promise.resolve(),
+      profile.isError ? profile.refetch() : Promise.resolve(),
+      ramp.isError ? ramp.retry() : Promise.resolve(),
+    ]);
+  }
 
   return {
     data,
     isLoading: shelf.isLoading || cfg.isLoading || profile.isLoading || ramp.isLoading,
+    isError: shelf.isError || cfg.isError || profile.isError || ramp.isError,
+    isFetching: shelf.isFetching || cfg.isFetching || profile.isFetching || ramp.isFetching,
+    isSuccess:
+      shelf.isSuccess && cfg.isSuccess && profile.isSuccess && ramp.isSuccess && data !== undefined,
+    retry,
   };
 }
 

@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 
+import { CycleDataAvailabilityGate } from '@/features/scheduler/CycleDataAvailabilityGate';
 import { ProGate } from '@/features/subscription/ProGate';
 
 // Actives & skin-cycling scheduler surfaces (docs/05 §6), presented over the tabs.
@@ -9,24 +10,26 @@ import { ProGate } from '@/features/subscription/ProGate';
 export default function CycleLayout() {
   return (
     <ProGate feature="scheduler">
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="week" />
-        <Stack.Screen name="settings" />
-        <Stack.Screen name="procedure" />
-        <Stack.Screen name="recovery" />
-        <Stack.Screen
-          name="why-tonight"
-          options={{ presentation: 'transparentModal', animation: 'fade' }}
-        />
-        <Stack.Screen
-          name="disruption"
-          options={{ presentation: 'transparentModal', animation: 'fade' }}
-        />
-        <Stack.Screen
-          name="phased-intro"
-          options={{ presentation: 'transparentModal', animation: 'fade' }}
-        />
-      </Stack>
+      <CycleDataAvailabilityGate>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="week" />
+          <Stack.Screen name="settings" />
+          <Stack.Screen name="procedure" />
+          <Stack.Screen name="recovery" />
+          <Stack.Screen
+            name="why-tonight"
+            options={{ presentation: 'transparentModal', animation: 'fade' }}
+          />
+          <Stack.Screen
+            name="disruption"
+            options={{ presentation: 'transparentModal', animation: 'fade' }}
+          />
+          <Stack.Screen
+            name="phased-intro"
+            options={{ presentation: 'transparentModal', animation: 'fade' }}
+          />
+        </Stack>
+      </CycleDataAvailabilityGate>
     </ProGate>
   );
 }

@@ -22,6 +22,7 @@ import { LocalDateField } from '@/features/shelf/LocalDateField';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { editedPaoSource } from '@/features/shelf/paoProvenance';
 import { useShelf } from '@/features/shelf/useShelf';
+import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { usePlan } from '@/features/routine/usePlan';
 import { useCycle } from '@/features/scheduler/useCycle';
 import { localDateString } from '@/features/today/useToday';
@@ -94,7 +95,13 @@ function shiftMonthsISO(months: number): string {
 }
 const monthsAgoISO = (m: number) => shiftMonthsISO(-m);
 
-function RoutineUsageCard({ usage }: { usage: RoutineUsage | null }) {
+function RoutineUsageCard({
+  scheduleUnavailable,
+  usage,
+}: {
+  scheduleUnavailable: boolean;
+  usage: RoutineUsage | null;
+}) {
   const placed = Boolean(usage);
   return (
     <Pressable
@@ -112,7 +119,9 @@ function RoutineUsageCard({ usage }: { usage: RoutineUsage | null }) {
           Routine role
         </Text>
         <Text variant="bodySm" tone="muted" className="mt-1">
-          {usage ? (
+          {scheduleUnavailable ? (
+            'Active-night timing is unavailable right now. This product is still in your evening plan.'
+          ) : usage ? (
             <>
               Used in your{' '}
               <Text variant="bodySm" className="font-sans-semibold">
@@ -129,9 +138,11 @@ function RoutineUsageCard({ usage }: { usage: RoutineUsage | null }) {
           )}
         </Text>
         <Text variant="bodySm" tone="clay" className="mt-1 font-sans-semibold">
-          {usage
-            ? 'Review the AM/PM plan before you check it off.'
-            : 'Build an AM/PM draft from your shelf.'}
+          {scheduleUnavailable
+            ? 'Open your plan to retry safely.'
+            : usage
+              ? 'Review the AM/PM plan before you check it off.'
+              : 'Build an AM/PM draft from your shelf.'}
         </Text>
       </View>
     </Pressable>
@@ -246,7 +257,8 @@ export default function ProductDetailScreen() {
   const insets = useSafeAreaInsets();
   const { data } = useShelf();
   const plan = usePlan();
-  const { data: cycleData } = useCycle();
+  const cycleQuery = useCycle();
+  const { data: cycleData } = cycleQuery;
   const m = useShelfMutations();
   const [editOpen, setEditOpen] = useState(false);
   const [exactOpenedDate, setExactOpenedDate] = useState<string | null>(null);
@@ -329,9 +341,11 @@ export default function ProductDetailScreen() {
 
   // Where it's used. From the live plan (skipped for the example fallback).
   let usage: RoutineUsage | null = null;
+  let cycleTimingRequired = false;
   if (plan.data && !plan.data.isExample) {
     const pm = plan.data.plan.pm.find((s) => s.productId === id);
     if (pm) {
+      cycleTimingRequired = pm.cadence === 'cycle';
       const cycleNightNumbers = cycleData?.cycle?.nights
         .filter((night) => night.productId === id)
         .map((night) => night.index + 1);
@@ -342,6 +356,7 @@ export default function ProductDetailScreen() {
     } else if (plan.data.plan.am.find((s) => s.productId === id))
       usage = { phase: 'Morning routine' };
   }
+  const scheduleUnavailable = cycleTimingRequired && canUseRoutineCadence() && cycleQuery.isError;
 
   const otherName = (c: DetectedConflict) =>
     (c.productAId === id ? c.productBName : c.productAName) ?? 'another product';
@@ -851,7 +866,9 @@ export default function ProductDetailScreen() {
           })}
 
           {/* Where it's used */}
-          {!archived ? <RoutineUsageCard usage={usage} /> : null}
+          {!archived ? (
+            <RoutineUsageCard scheduleUnavailable={scheduleUnavailable} usage={usage} />
+          ) : null}
         </ScrollView>
       </View>
 

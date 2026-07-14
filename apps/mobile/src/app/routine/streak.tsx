@@ -45,13 +45,18 @@ function weekDaySquare(state: DayState): {
 export default function StreakScreen() {
   const progressQuery = useProgress();
   const { data } = progressQuery;
-  const { data: cycleData } = useCycle();
+  const cycleQuery = useCycle();
+  const { data: cycleData } = cycleQuery;
   const week = data?.week ?? [];
   const heat = data?.heat ?? [];
 
   // Highest calm milestone the current streak has reached (docs/07 §4.5). The
   // "one cycle" marker uses the real cycle length when available.
-  const cycleLength = cycleData?.cycle?.lengthNights ?? 4;
+  // Do not manufacture a four-night "one cycle" milestone while the user's
+  // actual cadence is unreadable. Week/day milestones remain available.
+  const cycleLength = cycleQuery.isSuccess
+    ? (cycleData?.cycle?.lengthNights ?? 4)
+    : Number.POSITIVE_INFINITY;
   const milestone = currentMilestone(data?.streak ?? 0, cycleLength);
 
   // Fire the analytics event once per milestone (first crossing only).

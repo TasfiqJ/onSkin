@@ -365,7 +365,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'onskin.ramp.v1',
     lifecycle: 'current',
     codec: jsonCodec('ramp_state', 1, [0]),
-    typedRead: gap('Ramp reads map unreadable state to an empty record.'),
+    typedRead: typedDomainRead,
     export: include('shelf_and_routine', 'active_ramps'),
   }),
   privateData({

@@ -5,6 +5,8 @@ import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'reac
 
 import { Button, Screen, Text } from '@/components/ui';
 import { AskTeaser } from '@/features/ask/AskTeaser';
+import { canUseRoutineCadence } from '@/features/routine/reviewGate';
+import { ActiveScheduleUnavailableNotice } from '@/features/scheduler/ActiveScheduleUnavailableNotice';
 import type { SchedulerSlot } from '@/features/scheduler/orchestrate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
 import { hasUseTogetherChoiceBetween, useCycle } from '@/features/scheduler/useCycle';
@@ -359,7 +361,8 @@ export default function TodayScreen() {
   const dark = type === 'PM';
   const { data: planData } = usePlan();
   const { data: progress } = useProgress();
-  const { data: cycleData } = useCycle();
+  const cycleQuery = useCycle();
+  const { data: cycleData } = cycleQuery;
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
   const boundary = useLocalDateBoundary();
@@ -388,6 +391,8 @@ export default function TodayScreen() {
   const hasExamplePlan = planData?.isExample === true;
   const hasRealRoutine = Boolean(planData && !planData.isExample);
   const plan = hasRealRoutine ? planData?.plan : undefined;
+  const scheduleUnavailable =
+    hasRealRoutine && plan?.cycle != null && canUseRoutineCadence() && cycleQuery.isError;
   const safetyExclusionCount = plan?.safetyExclusions.length ?? 0;
   const cadenceWithheldCount = plan?.cadenceWithheld.length ?? 0;
   const safetyExcludedIds = new Set(
@@ -519,6 +524,14 @@ export default function TodayScreen() {
               compact={compactPhone}
               count={cadenceWithheldCount}
               dark={false}
+            />
+          ) : null}
+
+          {scheduleUnavailable ? (
+            <ActiveScheduleUnavailableNotice
+              className="mt-4"
+              onRetry={() => void cycleQuery.retry()}
+              retrying={cycleQuery.isFetching}
             />
           ) : null}
 
@@ -786,6 +799,15 @@ export default function TodayScreen() {
 
         {cadenceWithheldCount > 0 ? (
           <CadenceWithheldNotice compact={compactPhone} count={cadenceWithheldCount} dark />
+        ) : null}
+
+        {scheduleUnavailable ? (
+          <ActiveScheduleUnavailableNotice
+            className="mt-4"
+            onRetry={() => void cycleQuery.retry()}
+            retrying={cycleQuery.isFetching}
+            tone="night"
+          />
         ) : null}
 
         {/* Skin-cycling strip. Taps through to the week overview (docs/05 §6.1) */}

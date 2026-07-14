@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
@@ -22,15 +22,32 @@ const BARS = [
 ];
 
 export default function RampScreen() {
-  const { items, isLoading, acceptStepUp } = useRamp();
+  const { items, isLoading, isError, isFetching, retry, acceptStepUp } = useRamp();
   // The primary ramping active (first retinoid/exfoliant). The screen paces one at a time.
   const item = items[0] ?? null;
   const state = item?.state ?? null;
   const paused = state?.toleranceState === 'paused_irritation';
+  const [accepting, setAccepting] = useState(false);
+  const [acceptFailed, setAcceptFailed] = useState(false);
 
   useEffect(() => {
     if (item?.offerStepUp) track('ramp_step_up_offered', { source: 'routine_ramp' });
   }, [item?.offerStepUp, item?.productId]);
+
+  async function acceptOfferedStepUp() {
+    if (!item || accepting) return;
+    setAccepting(true);
+    setAcceptFailed(false);
+    try {
+      await acceptStepUp(item.productId);
+      track('ramp_step_up_accepted', { source: 'routine_ramp' });
+      backOrReplace(router);
+    } catch {
+      setAcceptFailed(true);
+    } finally {
+      setAccepting(false);
+    }
+  }
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -52,7 +69,37 @@ export default function RampScreen() {
           a step-up. Never increase it for you.
         </Text>
 
-        {!item && !isLoading ? (
+        {isError ? (
+          <View
+            accessibilityLiveRegion="polite"
+            accessibilityRole="alert"
+            className="mt-6 rounded-[22px] bg-paper-raised p-5"
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
+            <Text variant="body" className="font-sans-semibold">
+              Ramp progress unavailable
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1.5 text-[13.5px] leading-5">
+              Your saved pace wasn&apos;t reset. Step-ups are paused until OnSkin can read it
+              safely.
+            </Text>
+            <Pressable
+              accessibilityLabel="Retry loading ramp progress"
+              accessibilityRole="button"
+              accessibilityState={{ disabled: isFetching }}
+              disabled={isFetching}
+              className="mt-4 min-h-[48px] items-center justify-center rounded-pill bg-ink px-5 py-3"
+              style={{ opacity: isFetching ? 0.5 : 1 }}
+              onPress={() => void retry()}
+            >
+              <Text className="font-sans-semibold text-[15px]" style={{ color: colors.paper }}>
+                {isFetching ? 'Trying...' : 'Try again'}
+              </Text>
+            </Pressable>
+          </View>
+        ) : null}
+
+        {!item && !isLoading && !isError ? (
           <View
             className="mt-6 rounded-[22px] bg-paper-raised p-5"
             style={{ borderWidth: 1, borderColor: colors.hairline }}
@@ -117,28 +164,41 @@ export default function RampScreen() {
                   Skin felt comfortable. Want to try a {state.freqPerWeek + 1}
                   {state.freqPerWeek + 1 === 3 ? 'rd' : 'th'} night?
                 </Text>
+                {acceptFailed ? (
+                  <Text
+                    accessibilityLiveRegion="polite"
+                    accessibilityRole="alert"
+                    className="mt-3 text-[13px]"
+                    style={{ color: colors.cream }}
+                  >
+                    That change wasn&apos;t confirmed. Your previous pace is still active.
+                  </Text>
+                ) : null}
                 <View className="mt-4 flex-row gap-2.5">
                   <Pressable
                     accessibilityRole="button"
+                    accessibilityState={{ disabled: accepting }}
+                    disabled={accepting}
                     className="min-h-[48px] flex-1 items-center justify-center rounded-xl"
-                    style={{ backgroundColor: colors.clay }}
-                    onPress={async () => {
-                      track('ramp_step_up_accepted', { source: 'routine_ramp' });
-                      await acceptStepUp(item.productId);
-                      backOrReplace(router);
-                    }}
+                    style={{ backgroundColor: colors.clay, opacity: accepting ? 0.6 : 1 }}
+                    onPress={() => void acceptOfferedStepUp()}
                   >
                     <Text
                       className="font-sans-semibold text-[14.5px]"
                       style={{ color: colors.paper }}
                     >
-                      Add a night
+                      {accepting ? 'Saving...' : acceptFailed ? 'Try again' : 'Add a night'}
                     </Text>
                   </Pressable>
                   <Pressable
                     accessibilityRole="button"
+                    accessibilityState={{ disabled: accepting }}
+                    disabled={accepting}
                     className="min-h-[48px] flex-1 items-center justify-center rounded-xl"
-                    style={{ backgroundColor: 'rgba(250,247,242,0.1)' }}
+                    style={{
+                      backgroundColor: 'rgba(250,247,242,0.1)',
+                      opacity: accepting ? 0.6 : 1,
+                    }}
                     onPress={() => backOrReplace(router)}
                   >
                     <Text

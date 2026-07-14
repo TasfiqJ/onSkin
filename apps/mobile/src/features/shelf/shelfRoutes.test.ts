@@ -871,11 +871,13 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('Build an AM/PM draft from your shelf.');
     expect(source).toContain("router.push('/routine/plan')");
     expect(source).toContain("import { useCycle } from '@/features/scheduler/useCycle';");
-    expect(source).toContain('const { data: cycleData } = useCycle();');
+    expect(source).toContain('const cycleQuery = useCycle();');
+    expect(source).toContain('const { data: cycleData } = cycleQuery;');
     expect(source).toContain('cycleNightNumbers: cycleNightNumbers?.length');
     expect(source).toContain("usage.cycleNightNumbers.join(', ')");
     expect(source).not.toContain('pm.cyclingNight');
-    expect(source).toContain('{!archived ? <RoutineUsageCard usage={usage} /> : null}');
+    expect(source).toContain('<RoutineUsageCard scheduleUnavailable={scheduleUnavailable}');
+    expect(source).toContain('usage={usage}');
   });
 
   it('keys repeated product-detail conflict rows by rule and product pair', () => {

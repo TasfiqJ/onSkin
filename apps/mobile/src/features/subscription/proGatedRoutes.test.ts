@@ -162,7 +162,8 @@ describe('Pro-gated route contracts', () => {
     expect(plan).toContain('onReviewSafety={');
     expect(plan).toContain("? () => router.push('/settings/skin-profile?returnTo=plan')");
     expect(plan).toContain('Review pregnancy and breastfeeding setting');
-    expect(plan).toContain('const { data: cycleData } = useCycle();');
+    expect(plan).toContain('const cycleQuery = useCycle();');
+    expect(plan).toContain('const { data: cycleData } = cycleQuery;');
     expect(plan).toContain(
       'const canonicalCycle = data && !data.isExample ? (cycleData?.cycle ?? null) : null;',
     );
@@ -173,7 +174,8 @@ describe('Pro-gated route contracts', () => {
     );
     expect(plan).toContain("const hasBarrierStep = plan?.pm.some((s) => s.role === 'moisturiser')");
     expect(plan).toContain("{hasCycle ? 'Evening skin cycling' : 'Evening'}");
-    expect(plan).toContain('{hasCycle ? (');
+    expect(plan).toContain('{scheduleUnavailable ? (');
+    expect(plan).toContain(') : hasCycle ? (');
     expect(plan).toContain('data?.isExample ? (');
     expect(plan).toContain('cycleSummaries.map((summary) =>');
     expect(plan).toContain('key={summary.productId}');

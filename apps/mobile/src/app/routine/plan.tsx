@@ -10,7 +10,9 @@ import {
   routineFirstInsightCopy,
   type RoutineFirstInsightCopy,
 } from '@/features/routine/firstInsight';
+import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { usePlan } from '@/features/routine/usePlan';
+import { ActiveScheduleUnavailableNotice } from '@/features/scheduler/ActiveScheduleUnavailableNotice';
 import { classLabel } from '@/features/scheduler/classes';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { cycleActiveSummaries, cycleRecoveryNightNumbers } from '@/features/scheduler/projection';
@@ -177,7 +179,8 @@ function FirstInsightCard({
 export default function PlanScreen() {
   const { height } = useWindowDimensions();
   const { data } = usePlan();
-  const { data: cycleData } = useCycle();
+  const cycleQuery = useCycle();
+  const { data: cycleData } = cycleQuery;
   const cycleMutations = useCycleMutations();
   const [starting, setStarting] = useState(false);
   const [startFailed, setStartFailed] = useState(false);
@@ -210,11 +213,19 @@ export default function PlanScreen() {
     (item) => item.productId === exampleRetinoid?.productId,
   );
   const canonicalCycle = data && !data.isExample ? (cycleData?.cycle ?? null) : null;
+  const scheduleUnavailable =
+    data?.isExample === false &&
+    plan?.cycle != null &&
+    canUseRoutineCadence() &&
+    cycleQuery.isError;
   const cycleSummaries = canonicalCycle ? cycleActiveSummaries(canonicalCycle) : [];
   const recoveryNightNumbers = canonicalCycle ? cycleRecoveryNightNumbers(canonicalCycle) : [];
   const hasCycle = data?.isExample ? plan?.cycle != null : canonicalCycle != null;
   const awaitingCanonicalCycle =
-    data?.isExample === false && plan?.cycle != null && cycleData === undefined;
+    data?.isExample === false &&
+    plan?.cycle != null &&
+    cycleData === undefined &&
+    !scheduleUnavailable;
   const hasSafetyExclusions = Boolean(plan?.safetyExclusions.length);
   const hasBarrierStep = plan?.pm.some((s) => s.role === 'moisturiser') ?? false;
   const hasVitCSynergy = plan?.conflicts.some(
@@ -413,7 +424,14 @@ export default function PlanScreen() {
                   </Pressable>
                 ) : null}
               </View>
-              {hasCycle ? (
+              {scheduleUnavailable ? (
+                <ActiveScheduleUnavailableNotice
+                  className={compactPlan ? 'my-1' : 'my-1.5'}
+                  onRetry={() => void cycleQuery.retry()}
+                  retrying={cycleQuery.isFetching}
+                  tone="night"
+                />
+              ) : hasCycle ? (
                 data?.isExample ? (
                   <>
                     {exampleExfoliant ? (
@@ -535,8 +553,16 @@ export default function PlanScreen() {
       >
         {startFailed ? <CycleMutationError className="mb-2 mt-0" /> : null}
         <Button
-          disabled={starting}
-          label={starting ? 'Starting...' : startFailed ? 'Try again' : 'Start today'}
+          disabled={starting || scheduleUnavailable}
+          label={
+            scheduleUnavailable
+              ? 'Schedule unavailable'
+              : starting
+                ? 'Starting...'
+                : startFailed
+                  ? 'Try again'
+                  : 'Start today'
+          }
           variant="accent"
           onPress={() => void startToday()}
         />

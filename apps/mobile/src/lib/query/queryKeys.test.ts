@@ -449,10 +449,15 @@ describe('owner-scoped query keys', () => {
     expect(entitlement).toContain('queryKeys.entitlement(ownerScope)');
     expect(today).toContain('queryKeys.completions(ownerScope, boundary)');
     expect(dateBoundary).toContain("refetchType: 'none'");
-    for (const source of [shelf, progress, ramp, photos, today]) {
+    for (const source of [shelf, progress, photos, today]) {
       expect(source).toContain('refetchOnReconnect: shouldRefetchCurrentLocalDayQuery');
       expect(source).toContain('refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery');
     }
+    expect(ramp).toContain('refetchOnReconnect: (query) =>');
+    expect(ramp).toContain('refetchOnWindowFocus: (query) =>');
+    expect(
+      ramp.match(/query\.state\.status !== 'error' && shouldRefetchCurrentLocalDayQuery\(query\)/g),
+    ).toHaveLength(2);
     expect(cycle).not.toContain("AppState.addEventListener('change'");
     expect(cycle).not.toContain('millisecondsUntilNextLocalDay');
     expect(root).toContain('<QueryDateBoundaryObserver />');

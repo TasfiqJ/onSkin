@@ -1,4 +1,4 @@
-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { readPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 import { localDateString } from '@/features/today/useToday';
 
 import { applyTolerance, type RampState } from './ramp';
@@ -13,18 +13,28 @@ const KEY = 'onskin.ramp.v1';
 const SCHEMA_VERSION = 1 as const;
 
 export const RAMP_STATE_INVALID = 'RAMP_STATE_INVALID';
+export const RAMP_STATE_STALE = 'RAMP_STATE_STALE';
 export const RAMP_STATE_UNSUPPORTED_VERSION = 'RAMP_STATE_UNSUPPORTED_VERSION';
+export const RAMP_STATE_UNAVAILABLE = 'RAMP_STATE_UNAVAILABLE';
 
 export type StoredRamp = RampState & {
   startedAt: string; // ISO local date the ramp began
   lastStepUp: string | null; // ISO local date of the last accepted step-up
 };
 
-type Log = Record<string, StoredRamp>; // productId -> ramp
+export type StoredRamps = Record<string, StoredRamp>; // productId -> ramp
+type Log = StoredRamps;
 type RampEnvelope = {
   version: typeof SCHEMA_VERSION;
   ramps: Log;
 };
+
+type RampStateFormat = 'current' | 'legacy';
+
+export type RampStateRead =
+  | { status: 'absent'; ramps: Log }
+  | { status: 'available'; ramps: Log; format: RampStateFormat }
+  | { status: 'unavailable' | 'corrupt' | 'unsupported_version'; ramps: null };
 
 const TOLERANCE_STATES = new Set<StoredRamp['toleranceState']>([
   'building',
@@ -60,13 +70,7 @@ function normalizeStoredRamp(
   if (!isRecord(value)) return null;
   if (!allowLegacyDefaults) {
     const keys = Object.keys(value).sort();
-    const expected = [
-      'freqPerWeek',
-      'lastStepUp',
-      'startedAt',
-      'targetPerWeek',
-      'toleranceState',
-    ];
+    const expected = ['freqPerWeek', 'lastStepUp', 'startedAt', 'targetPerWeek', 'toleranceState'];
     if (keys.length !== expected.length || keys.some((key, index) => key !== expected[index])) {
       return null;
     }
@@ -110,8 +114,11 @@ function decodeLog(value: unknown, fallbackStartedAt: string, allowLegacyDefault
   return log;
 }
 
-function decodeRampState(raw: string | null, fallbackStartedAt = localDateString()): Log {
-  if (raw === null) return {};
+function decodeRampState(
+  raw: string | null,
+  fallbackStartedAt = localDateString(),
+): { ramps: Log; format: RampStateFormat | 'absent' } {
+  if (raw === null) return { ramps: {}, format: 'absent' };
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
@@ -135,28 +142,67 @@ function decodeRampState(raw: string | null, fallbackStartedAt = localDateString
     if (keys.length !== 2 || keys[0] !== 'ramps' || keys[1] !== 'version') {
       throw new Error(RAMP_STATE_INVALID);
     }
-    return decodeLog(parsed.ramps, fallbackStartedAt, false);
+    return { ramps: decodeLog(parsed.ramps, fallbackStartedAt, false), format: 'current' };
   }
 
   // Pre-envelope v1 data remains readable and migrates only during mutation.
-  return decodeLog(parsed, fallbackStartedAt, true);
+  return { ramps: decodeLog(parsed, fallbackStartedAt, true), format: 'legacy' };
 }
 
 function encodeRampState(log: Log): string {
   return JSON.stringify({ version: SCHEMA_VERSION, ramps: log } satisfies RampEnvelope);
 }
 
-async function load(): Promise<Log> {
+let e2eRampReadFailureCount = 0;
+
+function consumeE2ERampReadFailure(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+  const fixture = process.env.EXPO_PUBLIC_E2E_RAMP_STORAGE_FAILURE?.trim().toLowerCase();
+  if (fixture === 'always') return true;
+  if (fixture !== 'once' || e2eRampReadFailureCount > 0) return false;
+  e2eRampReadFailureCount += 1;
+  return true;
+}
+
+/** Read and classify the persisted ramp without repairing, deleting, or migrating it. */
+export async function readStoredRamps(): Promise<RampStateRead> {
+  if (consumeE2ERampReadFailure()) return { status: 'unavailable', ramps: null };
+
+  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
   try {
-    return decodeRampState(await getPrivateItem(KEY));
+    stored = await readPrivateItem(KEY);
   } catch {
-    // Never repair/delete unreadable, unavailable, or future private bytes on read.
-    return {};
+    return { status: 'unavailable', ramps: null };
+  }
+  if (stored.status === 'absent') return { status: 'absent', ramps: {} };
+  if (stored.status === 'unavailable') return { status: 'unavailable', ramps: null };
+  if (stored.status === 'corrupt') return { status: 'corrupt', ramps: null };
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', ramps: null };
+  }
+
+  try {
+    const decoded = decodeRampState(stored.value);
+    return {
+      status: 'available',
+      ramps: decoded.ramps,
+      format: decoded.format === 'legacy' ? 'legacy' : 'current',
+    };
+  } catch (error) {
+    return error instanceof Error && error.message === RAMP_STATE_UNSUPPORTED_VERSION
+      ? { status: 'unsupported_version', ramps: null }
+      : { status: 'corrupt', ramps: null };
   }
 }
 
 export async function getStoredRamps(): Promise<Log> {
-  return load();
+  const result = await readStoredRamps();
+  if (result.status === 'available' || result.status === 'absent') return result.ramps;
+  if (result.status === 'unsupported_version') {
+    throw new Error(RAMP_STATE_UNSUPPORTED_VERSION);
+  }
+  if (result.status === 'corrupt') throw new Error(RAMP_STATE_INVALID);
+  throw new Error(RAMP_STATE_UNAVAILABLE);
 }
 
 /** Seed a product's ramp from the generated initial the first time it is seen. */
@@ -165,7 +211,7 @@ export async function ensureRamp(productId: string, initial: RampState): Promise
   if (normalizedProductId.length === 0) throw new Error(RAMP_STATE_INVALID);
   let result: StoredRamp | null = null;
   await updatePrivateItem(KEY, (current) => {
-    const log = decodeRampState(current);
+    const log = decodeRampState(current).ramps;
     result = log[normalizedProductId] ?? {
       ...initial,
       startedAt: localDateString(),
@@ -181,17 +227,30 @@ export async function ensureRamp(productId: string, initial: RampState): Promise
   return result;
 }
 
-/** Accept a step-up offer: +1 night toward target, mark steady, stamp lastStepUp. */
-export async function stepUpRamp(productId: string): Promise<void> {
+/** Accept a step-up offer. When a desired frequency is supplied, retries are
+ * idempotent and a concurrently de-escalated ramp is never raised from stale UI. */
+export async function stepUpRamp(productId: string, desiredFreqPerWeek?: number): Promise<void> {
   const normalizedProductId = productId.trim();
   if (normalizedProductId.length === 0) return;
+  if (desiredFreqPerWeek !== undefined && !isRampFrequency(desiredFreqPerWeek)) {
+    throw new Error(RAMP_STATE_INVALID);
+  }
   await updatePrivateItem(KEY, (current) => {
-    const log = decodeRampState(current);
+    const log = decodeRampState(current).ramps;
     const ramp = log[normalizedProductId];
     if (!ramp) return current;
+    if (desiredFreqPerWeek !== undefined) {
+      if (desiredFreqPerWeek > ramp.targetPerWeek) throw new Error(RAMP_STATE_INVALID);
+      // An irritation report can race an offered step-up or an uncertain retry.
+      // Never let stale UI clear that safety pause, even when the frequency still
+      // looks like the expected predecessor (including the one-night floor).
+      if (ramp.toleranceState === 'paused_irritation') throw new Error(RAMP_STATE_STALE);
+      if (ramp.freqPerWeek >= desiredFreqPerWeek) return current;
+      if (ramp.freqPerWeek !== desiredFreqPerWeek - 1) throw new Error(RAMP_STATE_STALE);
+    }
     log[normalizedProductId] = {
       ...ramp,
-      freqPerWeek: Math.min(ramp.targetPerWeek, ramp.freqPerWeek + 1),
+      freqPerWeek: desiredFreqPerWeek ?? Math.min(ramp.targetPerWeek, ramp.freqPerWeek + 1),
       toleranceState: 'steady',
       lastStepUp: localDateString(),
     };
@@ -205,7 +264,7 @@ export async function applyToleranceToRamps(
   answer: 'comfortable' | 'a_bit_dry' | 'irritated',
 ): Promise<void> {
   await updatePrivateItem(KEY, (current) => {
-    const log = decodeRampState(current);
+    const log = decodeRampState(current).ramps;
     for (const [id, ramp] of Object.entries(log)) {
       const next = applyTolerance(ramp, answer);
       log[id] = { ...ramp, ...next };

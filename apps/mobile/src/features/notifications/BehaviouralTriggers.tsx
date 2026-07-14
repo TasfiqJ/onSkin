@@ -39,7 +39,9 @@ function EnabledBehaviouralTriggers({ enabled }: { enabled: BehaviouralTriggerEn
   const progress = useProgress();
 
   const needsReplenish = hasReplenishmentSignal(shelf.data);
-  const offerStepUp = ramp.items.some((r) => r.offerStepUp);
+  // A retained ramp value is not authoritative after cadence storage becomes
+  // unreadable. Never schedule a step-up nudge unless the current read succeeded.
+  const offerStepUp = ramp.isSuccess && ramp.items.some((r) => r.offerStepUp);
   // A retained query value is not authoritative after private completion
   // storage becomes unreadable. Never schedule a win-back from stale history.
   const lapsed = progress.isSuccess && progress.data?.lapsed === true;

@@ -28,21 +28,34 @@ export type RampItem = {
 export function useRamp(): {
   items: RampItem[];
   isLoading: boolean;
+  isError: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  retry: () => Promise<void>;
   acceptStepUp: (productId: string) => Promise<void>;
 } {
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
   const { data: planData, isLoading: planLoading } = usePlan();
-  const planRamps = planData?.plan.ramp ?? [];
+  // The design-only empty-shelf example is never user state and must not seed
+  // private ramp records or participate in the live scheduler.
+  const planRamps = planData?.isExample ? [] : (planData?.plan.ramp ?? []);
   const boundary = useLocalDateBoundary();
   const { localDate: today } = boundary;
   const keyIds = planRamps.map((r) => r.productId).join(',');
+  const hasRampInputs = !planLoading && planRamps.length > 0;
 
   const q = useQuery<RampItem[]>({
     queryKey: queryKeys.ramp(ownerScope, boundary, keyIds),
-    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
-    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
-    enabled: !planLoading,
+    // Once an authoritative local read fails, only the explicit recovery action
+    // retries it. Focus/reconnect must not hide the failure or hammer unreadable
+    // storage before the user can see the fail-closed state.
+    refetchOnReconnect: (query) =>
+      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
+    refetchOnWindowFocus: (query) =>
+      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
+    retry: false,
+    enabled: hasRampInputs,
     queryFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
         const stored = await getStoredRamps();
@@ -70,13 +83,32 @@ export function useRamp(): {
   });
 
   async function acceptStepUp(productId: string): Promise<void> {
+    const item = q.isSuccess
+      ? q.data?.find((candidate) => candidate.productId === productId)
+      : null;
+    if (!item?.offerStepUp) throw new Error('RAMP_STEP_UP_UNAVAILABLE');
+    const desiredFreqPerWeek = Math.min(item.state.targetPerWeek, item.state.freqPerWeek + 1);
     await runOwnerQueryOperation(ownerScope, async (lease) => {
       lease.assertCurrent();
-      await stepUpRamp(productId);
+      await stepUpRamp(productId, desiredFreqPerWeek);
       lease.assertCurrent();
       await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) });
     });
   }
 
-  return { items: q.data ?? [], isLoading: planLoading || q.isLoading, acceptStepUp };
+  async function retry(): Promise<void> {
+    if (!hasRampInputs) return;
+    await q.refetch();
+  }
+
+  return {
+    // Retained query data is not authoritative after a failed background read.
+    items: q.isSuccess ? (q.data ?? []) : [],
+    isLoading: planLoading || (hasRampInputs && q.isPending),
+    isError: hasRampInputs && q.isError,
+    isFetching: hasRampInputs && q.isFetching,
+    isSuccess: !planLoading && (!hasRampInputs || q.isSuccess),
+    retry,
+    acceptStepUp,
+  };
 }
