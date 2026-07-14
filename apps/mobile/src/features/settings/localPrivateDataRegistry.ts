@@ -302,23 +302,21 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'onskin.milestones.v1',
     lifecycle: 'current',
     codec: jsonCodec('private_string_set', 1, [0]),
-    typedRead: gap('Milestone mutation maps unreadable state to a false result.'),
+    typedRead: typedDomainRead,
     export: include('activity_and_app_state', 'seen_milestones'),
   }),
   privateData({
     key: 'onskin.notifPrefs.v1',
     lifecycle: 'current',
     codec: jsonCodec('notification_preferences', 1, [0]),
-    typedRead: gap(
-      'Notification preference reads return a fail-closed value without typed status.',
-    ),
+    typedRead: typedDomainRead,
     export: include('profile_and_preferences', 'notification_preferences'),
   }),
   privateData({
     key: 'onskin.notiflog.v1',
     lifecycle: 'current',
     codec: jsonCodec('notification_sent_ledger', 1, [0]),
-    typedRead: gap('Notification ledger reads use a sentinel rather than a typed status.'),
+    typedRead: typedDomainRead,
     export: include('activity_and_app_state', 'notification_delivery_log'),
   }),
   privateData({

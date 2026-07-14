@@ -1,5 +1,11 @@
 import type { NotificationKind, NotificationTier } from '@onskin/types';
-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+
+import {
+  readPrivateItem,
+  removePrivateItem,
+  updatePrivateItem,
+  type PrivateKVReadFailureReason,
+} from '@/lib/storage/privateKV';
 
 import { TIER_OF, tierOf } from './policy';
 
@@ -7,118 +13,271 @@ import { TIER_OF, tierOf } from './policy';
 // (docs/07 §9 frequency caps). The server `notification_log` table is the
 // deferred sync target (B-SUPABASE), but offline it returns 0, which would make
 // the per-tier weekly cap a no-op and let a foreground trigger fire on every app
-// open. This AsyncStorage log is the v1 SOURCE OF TRUTH for the cap (D-029),
-// unioned with the server count so the cap holds with or without a backend.
+// open. This private ledger remains the local source of truth for the cap.
 const KEY = 'onskin.notiflog.v1';
 const SCHEMA_VERSION = 1 as const;
+const RETENTION_MS = 30 * 86_400_000;
+
+/** A defensive ceiling well above any legitimate 30-day notification cadence. */
+export const MAX_SENT_LEDGER_RECORDS = 512;
+export const MAX_SENT_LEDGER_CHARS = 131_072;
 
 export const SENT_LEDGER_INVALID = 'SENT_LEDGER_INVALID';
 export const SENT_LEDGER_UNSUPPORTED_VERSION = 'SENT_LEDGER_UNSUPPORTED_VERSION';
-export const SENT_LEDGER_FAIL_CLOSED_COUNT = Number.MAX_SAFE_INTEGER;
+export const SENT_LEDGER_WRITE_UNCERTAIN = 'SENT_LEDGER_WRITE_UNCERTAIN';
 
-type SentRecord = { kind: NotificationKind; tier: NotificationTier; at: number }; // at = epoch ms
+export type SentRecord = {
+  kind: NotificationKind;
+  tier: NotificationTier;
+  at: number;
+};
+
 type SentLedgerEnvelope = {
   version: typeof SCHEMA_VERSION;
   records: SentRecord[];
 };
 
+type SentLedgerFormat = 'v0' | 'v1';
+type SentLedgerCorruptReason =
+  | 'content_key_invalid'
+  | 'envelope_invalid'
+  | 'decryption_failed'
+  | 'invalid_payload';
+
+export type SentLedgerRead =
+  | { status: 'absent'; records: SentRecord[] }
+  | { status: 'available'; records: SentRecord[]; format: SentLedgerFormat }
+  | {
+      status: 'unavailable';
+      records: null;
+      reason: PrivateKVReadFailureReason;
+    }
+  | { status: 'corrupt'; records: null; reason: SentLedgerCorruptReason }
+  | { status: 'unsupported_version'; records: null };
+
+export type SentTierCountRead =
+  | { status: 'absent'; count: 0 }
+  | { status: 'available'; count: number }
+  | {
+      status: 'unavailable';
+      count: null;
+      reason: PrivateKVReadFailureReason;
+    }
+  | { status: 'corrupt'; count: null; reason: SentLedgerCorruptReason }
+  | { status: 'unsupported_version'; count: null };
+
+type DecodedSentLedger = {
+  format: SentLedgerFormat | 'absent';
+  records: SentRecord[];
+};
+
+function sentLedgerError(code: string): Error {
+  return new Error(code);
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  const keys = Object.keys(value);
+  return (
+    keys.length === expected.length &&
+    expected.every((key) => Object.prototype.hasOwnProperty.call(value, key))
+  );
+}
+
 function isNotificationKind(value: unknown): value is NotificationKind {
-  return typeof value === 'string' && value in TIER_OF;
+  return typeof value === 'string' && Object.prototype.hasOwnProperty.call(TIER_OF, value);
 }
 
-function normalizeSentRecord(value: unknown, strict: boolean): SentRecord | null {
-  if (!isRecord(value) || !isNotificationKind(value.kind)) return null;
-  if (strict) {
-    const keys = Object.keys(value).sort();
-    if (keys.length !== 3 || keys[0] !== 'at' || keys[1] !== 'kind' || keys[2] !== 'tier') {
-      return null;
-    }
-    if (value.tier !== tierOf(value.kind)) return null;
+function isNotificationTier(value: unknown): value is NotificationTier {
+  return value === 'utility' || value === 'behavioural' || value === 'promotional';
+}
+
+function isEpochMilliseconds(value: unknown): value is number {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
+}
+
+function assertNotificationKind(kind: NotificationKind): void {
+  if (!isNotificationKind(kind)) throw sentLedgerError(SENT_LEDGER_INVALID);
+}
+
+function assertNotificationTier(tier: NotificationTier): void {
+  if (!isNotificationTier(tier)) throw sentLedgerError(SENT_LEDGER_INVALID);
+}
+
+function assertEpochMilliseconds(value: number): void {
+  if (!isEpochMilliseconds(value)) throw sentLedgerError(SENT_LEDGER_INVALID);
+}
+
+function normalizeSentRecord(value: unknown, format: SentLedgerFormat): SentRecord | null {
+  if (
+    !isRecord(value) ||
+    !hasExactKeys(value, ['kind', 'tier', 'at']) ||
+    !isNotificationKind(value.kind) ||
+    !isNotificationTier(value.tier) ||
+    !isEpochMilliseconds(value.at)
+  ) {
+    return null;
   }
-  return typeof value.at === 'number' && Number.isFinite(value.at) && value.at >= 0
-    ? { kind: value.kind, tier: tierOf(value.kind), at: value.at }
-    : null;
+
+  const canonicalTier = tierOf(value.kind);
+  // v0 persisted the tier redundantly and some released records carried the
+  // wrong-but-valid tier. Preserve that compatibility while canonicalizing it
+  // in memory. The versioned v1 envelope is strict.
+  if (format === 'v1' && value.tier !== canonicalTier) return null;
+  return { kind: value.kind, tier: canonicalTier, at: value.at };
 }
 
-function decodeRecords(value: unknown, strict: boolean): SentRecord[] {
-  if (!Array.isArray(value)) throw new Error(SENT_LEDGER_INVALID);
-  const items: SentRecord[] = [];
-  for (const row of value) {
-    const normalized = normalizeSentRecord(row, strict);
-    if (!normalized) throw new Error(SENT_LEDGER_INVALID);
-    items.push(normalized);
+function decodeRecords(value: unknown, format: SentLedgerFormat): SentRecord[] {
+  if (!Array.isArray(value) || value.length > MAX_SENT_LEDGER_RECORDS) {
+    throw sentLedgerError(SENT_LEDGER_INVALID);
   }
-  return items;
+
+  return value.map((row) => {
+    const normalized = normalizeSentRecord(row, format);
+    if (!normalized) throw sentLedgerError(SENT_LEDGER_INVALID);
+    return normalized;
+  });
 }
 
-function decodeSentLedger(raw: string | null): SentRecord[] {
-  if (raw === null) return [];
+function decodeSentLedger(raw: string | null): DecodedSentLedger {
+  if (raw === null) return { records: [], format: 'absent' };
+  if (raw.length > MAX_SENT_LEDGER_CHARS) throw sentLedgerError(SENT_LEDGER_INVALID);
+
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
   } catch {
-    throw new Error(SENT_LEDGER_INVALID);
+    throw sentLedgerError(SENT_LEDGER_INVALID);
   }
-  if (Array.isArray(parsed)) return decodeRecords(parsed, false);
-  if (!isRecord(parsed)) throw new Error(SENT_LEDGER_INVALID);
+
+  // v0 was the unversioned record array. It remains readable and migrates only
+  // during an explicit append.
+  if (Array.isArray(parsed)) {
+    return { records: decodeRecords(parsed, 'v0'), format: 'v0' };
+  }
+  if (!isRecord(parsed)) throw sentLedgerError(SENT_LEDGER_INVALID);
+
   if (parsed.version !== SCHEMA_VERSION) {
     if (
       typeof parsed.version === 'number' &&
       Number.isSafeInteger(parsed.version) &&
       parsed.version > SCHEMA_VERSION
     ) {
-      throw new Error(SENT_LEDGER_UNSUPPORTED_VERSION);
+      throw sentLedgerError(SENT_LEDGER_UNSUPPORTED_VERSION);
     }
-    throw new Error(SENT_LEDGER_INVALID);
+    throw sentLedgerError(SENT_LEDGER_INVALID);
   }
-  const keys = Object.keys(parsed).sort();
-  if (keys.length !== 2 || keys[0] !== 'records' || keys[1] !== 'version') {
-    throw new Error(SENT_LEDGER_INVALID);
+  if (!hasExactKeys(parsed, ['version', 'records'])) {
+    throw sentLedgerError(SENT_LEDGER_INVALID);
   }
-  return decodeRecords(parsed.records, true);
+  return { records: decodeRecords(parsed.records, 'v1'), format: 'v1' };
 }
 
 function encodeSentLedger(records: SentRecord[]): string {
-  return JSON.stringify({ version: SCHEMA_VERSION, records } satisfies SentLedgerEnvelope);
+  if (records.length > MAX_SENT_LEDGER_RECORDS) {
+    throw sentLedgerError(SENT_LEDGER_INVALID);
+  }
+  const encoded = JSON.stringify({ version: SCHEMA_VERSION, records } satisfies SentLedgerEnvelope);
+  if (encoded.length > MAX_SENT_LEDGER_CHARS) throw sentLedgerError(SENT_LEDGER_INVALID);
+  return encoded;
 }
 
-async function load(): Promise<SentRecord[] | null> {
+/** Read and classify the ledger without repairing, pruning, or migrating it. */
+export async function readSentLedger(): Promise<SentLedgerRead> {
+  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
   try {
-    return decodeSentLedger(await getPrivateItem(KEY));
+    stored = await readPrivateItem(KEY);
   } catch {
-    // A missing cap ledger is empty. An unreadable/unavailable one must block
-    // optional sends instead of failing open and allowing notification spam.
-    return null;
+    return {
+      status: 'unavailable',
+      records: null,
+      reason: 'storage_unavailable',
+    };
+  }
+
+  if (stored.status === 'absent') return { status: 'absent', records: [] };
+  if (stored.status === 'unavailable') {
+    return { status: 'unavailable', records: null, reason: stored.reason };
+  }
+  if (stored.status === 'corrupt') {
+    return { status: 'corrupt', records: null, reason: stored.reason };
+  }
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', records: null };
+  }
+
+  try {
+    const decoded = decodeSentLedger(stored.value);
+    if (decoded.format === 'absent') return { status: 'absent', records: [] };
+    return { status: 'available', records: decoded.records, format: decoded.format };
+  } catch (error) {
+    return error instanceof Error && error.message === SENT_LEDGER_UNSUPPORTED_VERSION
+      ? { status: 'unsupported_version', records: null }
+      : { status: 'corrupt', records: null, reason: 'invalid_payload' };
   }
 }
 
-/** Record a sent notification locally, pruning entries older than ~30 days. */
+/** Record a sent notification locally, pruning and bounding history atomically. */
 export async function recordSentLocal(kind: NotificationKind, now: number): Promise<void> {
-  const cutoff = now - 30 * 86_400_000;
-  await updatePrivateItem(KEY, (current) => {
-    const records = decodeSentLedger(current).filter((record) => {
-      return record.at >= cutoff && record.at <= now;
+  assertNotificationKind(kind);
+  assertEpochMilliseconds(now);
+  const cutoff = Math.max(0, now - RETENTION_MS);
+
+  let expectedRaw: string | null = null;
+  try {
+    await updatePrivateItem(KEY, (current) => {
+      const retained = decodeSentLedger(current)
+        .records.filter((record) => record.at >= cutoff && record.at <= now)
+        .sort((left, right) => left.at - right.at)
+        .slice(-(MAX_SENT_LEDGER_RECORDS - 1));
+      retained.push({ kind, tier: tierOf(kind), at: now });
+      expectedRaw = encodeSentLedger(retained);
+      return expectedRaw;
     });
-    records.push({ kind, tier: tierOf(kind), at: now });
-    return encodeSentLedger(records);
-  });
+  } catch (error) {
+    if (expectedRaw === null) throw error;
+    let confirmation: Awaited<ReturnType<typeof readPrivateItem>>;
+    try {
+      confirmation = await readPrivateItem(KEY);
+    } catch {
+      throw sentLedgerError(SENT_LEDGER_WRITE_UNCERTAIN);
+    }
+    if (confirmation.status !== 'available' || confirmation.value !== expectedRaw) {
+      throw sentLedgerError(SENT_LEDGER_WRITE_UNCERTAIN);
+    }
+  }
 }
 
-/** How many notifications of a tier were sent locally in the last 7 days. */
+/** Typed weekly count. Unreadable state is never converted into an empty count. */
 export async function sentThisWeekForTierLocal(
   tier: NotificationTier,
   now: number,
-): Promise<number> {
-  const weekAgo = now - 7 * 86_400_000;
-  const records = await load();
-  if (records === null) return SENT_LEDGER_FAIL_CLOSED_COUNT;
-  return records.filter((record) => {
-    return record.tier === tier && record.at >= weekAgo && record.at <= now;
-  }).length;
+): Promise<SentTierCountRead> {
+  assertNotificationTier(tier);
+  assertEpochMilliseconds(now);
+  const weekAgo = Math.max(0, now - 7 * 86_400_000);
+  const ledger = await readSentLedger();
+
+  if (ledger.status === 'absent') return { status: 'absent', count: 0 };
+  if (ledger.status === 'unavailable') {
+    return { status: 'unavailable', count: null, reason: ledger.reason };
+  }
+  if (ledger.status === 'corrupt') {
+    return { status: 'corrupt', count: null, reason: ledger.reason };
+  }
+  if (ledger.status === 'unsupported_version') {
+    return { status: 'unsupported_version', count: null };
+  }
+
+  return {
+    status: 'available',
+    count: ledger.records.filter((record) => {
+      return record.tier === tier && record.at >= weekAgo && record.at <= now;
+    }).length,
+  };
 }
 
 /** Test/seed reset. */

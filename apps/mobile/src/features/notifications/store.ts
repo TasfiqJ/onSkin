@@ -1,6 +1,12 @@
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import {
+  readPrivateItem,
+  removePrivateItem,
+  updatePrivateItem,
+  type PrivateKVReadFailureReason,
+  type PrivateKVReadResult,
+} from '@/lib/storage/privateKV';
 import { supabase } from '@/lib/supabase/client';
 
 /**
@@ -16,6 +22,7 @@ import { supabase } from '@/lib/supabase/client';
 const KEY = 'onskin.notifPrefs.v1';
 const SCHEMA_VERSION = 1 as const;
 const REPLENISHMENT_OPT_IN_MARKER = 'replenishmentAlertsOptInConfirmed';
+const MAX_NOTIF_PREFS_CHARS = 16_384;
 const HH_MM = /^([01]\d|2[0-3]):[0-5]\d$/;
 const TIMEZONE_TEXT = /^[A-Za-z0-9_+\-/.]+$/;
 
@@ -40,15 +47,38 @@ type NotifPrefsEnvelope = {
   prefs: Record<string, unknown>;
 };
 
+type NotifPrefsFormat = 'current' | 'legacy';
+type PrivateKVCorruptReason = Extract<PrivateKVReadResult, { status: 'corrupt' }>['reason'];
+
+export type NotifPrefsRead =
+  | { status: 'absent'; prefs: NotifPrefs }
+  | { status: 'available'; prefs: NotifPrefs; format: NotifPrefsFormat }
+  | { status: 'unavailable'; prefs: null; reason: PrivateKVReadFailureReason }
+  | {
+      status: 'corrupt';
+      prefs: null;
+      reason: PrivateKVCorruptReason | 'invalid_payload';
+    }
+  | { status: 'unsupported_version'; prefs: null };
+
+export type NotifPrefsSaveResult = Readonly<{
+  prefs: NotifPrefs;
+  changed: boolean;
+}>;
+
 export const NOTIF_PREFS_INVALID = 'NOTIF_PREFS_INVALID';
 export const NOTIF_PREFS_UNSUPPORTED_VERSION = 'NOTIF_PREFS_UNSUPPORTED_VERSION';
+export const NOTIF_PREFS_UNAVAILABLE = 'NOTIF_PREFS_UNAVAILABLE';
+export const NOTIF_PREFS_WRITE_UNCERTAIN = 'NOTIF_PREFS_WRITE_UNCERTAIN';
 
 export const DEFAULT_PREFS: NotifPrefs = {
-  amEnabled: true,
-  pmEnabled: true,
+  // Genuine absence is not notification consent. The onboarding soft ask or an
+  // explicit Settings action creates the first affirmative preference record.
+  amEnabled: false,
+  pmEnabled: false,
   amTime: '07:30',
   pmTime: '21:30',
-  streakNudges: true,
+  streakNudges: false,
   replenishmentAlerts: false,
   captureReminders: false,
   quietStart: '22:00',
@@ -92,6 +122,26 @@ function timezoneOr(value: unknown, fallback: string): string {
   return text.length > 0 && text.length <= 128 && TIMEZONE_TEXT.test(text) ? text : fallback;
 }
 
+const BOOLEAN_PREF_KEYS = [
+  'amEnabled',
+  'pmEnabled',
+  'streakNudges',
+  'replenishmentAlerts',
+  'captureReminders',
+  'liveActivityEnabled',
+  'promotionalOptIn',
+  'lockscreenDiscreet',
+] as const satisfies readonly (keyof NotifPrefs)[];
+const REQUIRED_TIME_PREF_KEYS = ['amTime', 'pmTime'] as const;
+const OPTIONAL_TIME_PREF_KEYS = ['quietStart', 'quietEnd'] as const;
+const LEGACY_PREF_KEYS = new Set<string>([
+  ...BOOLEAN_PREF_KEYS,
+  ...REQUIRED_TIME_PREF_KEYS,
+  ...OPTIONAL_TIME_PREF_KEYS,
+  'timezone',
+  REPLENISHMENT_OPT_IN_MARKER,
+]);
+
 export function currentDeviceTimezone(): string {
   try {
     return timezoneOr(Intl.DateTimeFormat().resolvedOptions().timeZone, 'UTC');
@@ -101,6 +151,37 @@ export function currentDeviceTimezone(): string {
 }
 
 export function normalizeNotifPatch(patch: Partial<NotifPrefs>): Partial<NotifPrefs> {
+  if (!isRecord(patch)) throw new Error(NOTIF_PREFS_INVALID);
+  for (const key of Object.keys(patch)) {
+    if (!LEGACY_PREF_KEYS.has(key) || key === REPLENISHMENT_OPT_IN_MARKER) {
+      throw new Error(NOTIF_PREFS_INVALID);
+    }
+  }
+  for (const key of BOOLEAN_PREF_KEYS) {
+    if (key in patch && typeof patch[key] !== 'boolean') throw new Error(NOTIF_PREFS_INVALID);
+  }
+  for (const key of REQUIRED_TIME_PREF_KEYS) {
+    if (key in patch && (typeof patch[key] !== 'string' || !HH_MM.test(patch[key]))) {
+      throw new Error(NOTIF_PREFS_INVALID);
+    }
+  }
+  for (const key of OPTIONAL_TIME_PREF_KEYS) {
+    if (key in patch) {
+      const value = patch[key];
+      if (!(value === null || (typeof value === 'string' && HH_MM.test(value)))) {
+        throw new Error(NOTIF_PREFS_INVALID);
+      }
+    }
+  }
+  if (
+    'timezone' in patch &&
+    (typeof patch.timezone !== 'string' ||
+      patch.timezone.length === 0 ||
+      patch.timezone.length > 128 ||
+      !TIMEZONE_TEXT.test(patch.timezone))
+  ) {
+    throw new Error(NOTIF_PREFS_INVALID);
+  }
   return patch.lockscreenDiscreet === false ? { ...patch, lockscreenDiscreet: true } : patch;
 }
 
@@ -118,7 +199,7 @@ export function normalizeNotifPrefs(prefs: unknown = {}): NotifPrefs {
     captureReminders: booleanOr(source.captureReminders, DEFAULT_PREFS.captureReminders),
     quietStart: optionalTimeOr(source, 'quietStart', DEFAULT_PREFS.quietStart),
     quietEnd: optionalTimeOr(source, 'quietEnd', DEFAULT_PREFS.quietEnd),
-    timezone: timezoneOr(timezone, DEFAULT_PREFS.timezone),
+    timezone: timezoneOr(source.timezone, timezone),
     liveActivityEnabled: booleanOr(source.liveActivityEnabled, DEFAULT_PREFS.liveActivityEnabled),
     promotionalOptIn: booleanOr(source.promotionalOptIn, DEFAULT_PREFS.promotionalOptIn),
     lockscreenDiscreet: true,
@@ -132,18 +213,47 @@ function prefsForStorage(prefs: NotifPrefs): Record<string, unknown> {
   };
 }
 
-function failClosedPrefs(): NotifPrefs {
-  return {
-    ...DEFAULT_PREFS,
-    amEnabled: false,
-    pmEnabled: false,
-    streakNudges: false,
-    replenishmentAlerts: false,
-    captureReminders: false,
-    liveActivityEnabled: false,
-    promotionalOptIn: false,
-    timezone: currentDeviceTimezone(),
-  };
+function validateLegacyPrefs(value: Record<string, unknown>): void {
+  const keys = Object.keys(value);
+  if (keys.length === 0 || keys.some((key) => !LEGACY_PREF_KEYS.has(key))) {
+    throw new Error(NOTIF_PREFS_INVALID);
+  }
+  for (const key of BOOLEAN_PREF_KEYS) {
+    if (key in value && typeof value[key] !== 'boolean') throw new Error(NOTIF_PREFS_INVALID);
+  }
+  if (
+    REPLENISHMENT_OPT_IN_MARKER in value &&
+    typeof value[REPLENISHMENT_OPT_IN_MARKER] !== 'boolean'
+  ) {
+    throw new Error(NOTIF_PREFS_INVALID);
+  }
+  for (const key of REQUIRED_TIME_PREF_KEYS) {
+    if (key in value) {
+      const time = value[key];
+      if (typeof time !== 'string' || !HH_MM.test(time.trim())) {
+        throw new Error(NOTIF_PREFS_INVALID);
+      }
+    }
+  }
+  for (const key of OPTIONAL_TIME_PREF_KEYS) {
+    if (key in value) {
+      const time = value[key];
+      if (!(time === null || (typeof time === 'string' && HH_MM.test(time.trim())))) {
+        throw new Error(NOTIF_PREFS_INVALID);
+      }
+    }
+  }
+  if ('timezone' in value) {
+    const timezone = value.timezone;
+    if (
+      typeof timezone !== 'string' ||
+      timezone.trim().length === 0 ||
+      timezone.trim().length > 128 ||
+      !TIMEZONE_TEXT.test(timezone.trim())
+    ) {
+      throw new Error(NOTIF_PREFS_INVALID);
+    }
+  }
 }
 
 function isCurrentStoredPrefs(value: unknown): value is Record<string, unknown> {
@@ -200,7 +310,8 @@ function isCurrentStoredPrefs(value: unknown): value is Record<string, unknown> 
   );
 }
 
-function decodeNotifPrefs(raw: string): NotifPrefs {
+function decodeNotifPrefs(raw: string): { prefs: NotifPrefs; format: NotifPrefsFormat } {
+  if (raw.length > MAX_NOTIF_PREFS_CHARS) throw new Error(NOTIF_PREFS_INVALID);
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
@@ -225,11 +336,13 @@ function decodeNotifPrefs(raw: string): NotifPrefs {
       throw new Error(NOTIF_PREFS_INVALID);
     }
     if (!isCurrentStoredPrefs(parsed.prefs)) throw new Error(NOTIF_PREFS_INVALID);
-    return normalizeNotifPrefs(parsed.prefs);
+    return { prefs: normalizeNotifPrefs(parsed.prefs), format: 'current' };
   }
 
-  // Pre-envelope records retain their forgiving compatibility normalization.
-  return normalizeNotifPrefs(parsed);
+  // Installed pre-envelope records may omit fields added by later releases, but
+  // every present field must still be known and semantically valid.
+  validateLegacyPrefs(parsed);
+  return { prefs: normalizeNotifPrefs(parsed), format: 'legacy' };
 }
 
 function encodeNotifPrefs(prefs: NotifPrefs): string {
@@ -239,77 +352,224 @@ function encodeNotifPrefs(prefs: NotifPrefs): string {
   } satisfies NotifPrefsEnvelope);
 }
 
-export async function loadNotifPrefs(): Promise<NotifPrefs> {
-  try {
-    const raw = await getPrivateItem(KEY);
-    return raw === null
-      ? { ...DEFAULT_PREFS, timezone: currentDeviceTimezone() }
-      : decodeNotifPrefs(raw);
-  } catch {
-    // Corrupt, unsupported, or unavailable private state disables every optional
-    // notification instead of silently treating it as fresh opt-in state.
-    return failClosedPrefs();
+type DevNotifPrefsReadState = 'unavailable' | 'corrupt' | 'unsupported_version';
+let e2eReadFixtureSignature: string | null = null;
+let e2eReadFailures = 0;
+let e2eWriteFixtureSignature: string | null = null;
+let e2eWriteFailures = 0;
+
+function devNotifPrefsReadState(): DevNotifPrefsReadState | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  const fixture = process.env.EXPO_PUBLIC_E2E_NOTIF_PREFS_STORAGE_FAILURE?.trim().toLowerCase();
+  if (!fixture) {
+    e2eReadFixtureSignature = null;
+    e2eReadFailures = 0;
+    return null;
   }
+  if (fixture !== e2eReadFixtureSignature) {
+    e2eReadFixtureSignature = fixture;
+    e2eReadFailures = 0;
+  }
+  if (fixture === 'always') return 'unavailable';
+  if (fixture === 'corrupt') return 'corrupt';
+  if (fixture === 'future') return 'unsupported_version';
+  if (fixture !== 'once' || e2eReadFailures > 0) return null;
+  e2eReadFailures += 1;
+  return 'unavailable';
+}
+
+function shouldSimulateDevNotifPrefsWriteFailure(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+  const fixture = process.env.EXPO_PUBLIC_E2E_NOTIF_PREFS_WRITE_FAILURE?.trim().toLowerCase();
+  if (!fixture) {
+    e2eWriteFixtureSignature = null;
+    e2eWriteFailures = 0;
+    return false;
+  }
+  if (fixture !== e2eWriteFixtureSignature) {
+    e2eWriteFixtureSignature = fixture;
+    e2eWriteFailures = 0;
+  }
+  if (fixture === 'always') return true;
+  if (fixture !== 'once' || e2eWriteFailures > 0) return false;
+  e2eWriteFailures += 1;
+  return true;
+}
+
+/** Read and classify preferences without repairing, deleting, or migrating bytes. */
+export async function readNotifPrefs(): Promise<NotifPrefsRead> {
+  const fixture = devNotifPrefsReadState();
+  if (fixture === 'unavailable') {
+    return { status: 'unavailable', prefs: null, reason: 'storage_unavailable' };
+  }
+  if (fixture === 'corrupt') {
+    return { status: 'corrupt', prefs: null, reason: 'invalid_payload' };
+  }
+  if (fixture === 'unsupported_version') {
+    return { status: 'unsupported_version', prefs: null };
+  }
+
+  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
+  try {
+    stored = await readPrivateItem(KEY);
+  } catch {
+    return { status: 'unavailable', prefs: null, reason: 'storage_unavailable' };
+  }
+  if (stored.status === 'absent') {
+    return {
+      status: 'absent',
+      prefs: { ...DEFAULT_PREFS, timezone: currentDeviceTimezone() },
+    };
+  }
+  if (stored.status === 'unavailable') {
+    return { status: 'unavailable', prefs: null, reason: stored.reason };
+  }
+  if (stored.status === 'corrupt') {
+    return { status: 'corrupt', prefs: null, reason: stored.reason };
+  }
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', prefs: null };
+  }
+  try {
+    const decoded = decodeNotifPrefs(stored.value);
+    return { status: 'available', prefs: decoded.prefs, format: decoded.format };
+  } catch (error) {
+    return error instanceof Error && error.message === NOTIF_PREFS_UNSUPPORTED_VERSION
+      ? { status: 'unsupported_version', prefs: null }
+      : { status: 'corrupt', prefs: null, reason: 'invalid_payload' };
+  }
+}
+
+/** Strict adapter for imperative consumers that cannot act on an unreadable state. */
+export async function loadNotifPrefs(): Promise<NotifPrefs> {
+  const result = await readNotifPrefs();
+  if (result.status === 'absent' || result.status === 'available') return result.prefs;
+  if (result.status === 'unsupported_version') {
+    throw new Error(NOTIF_PREFS_UNSUPPORTED_VERSION);
+  }
+  if (result.status === 'corrupt') throw new Error(NOTIF_PREFS_INVALID);
+  throw new Error(NOTIF_PREFS_UNAVAILABLE);
 }
 
 function toDbTime(hm: string | null): string | null {
   return hm ? `${hm}:00` : null;
 }
 
+let mirrorTail: Promise<void> = Promise.resolve();
+
+async function runSerializedMirror<T>(operation: () => Promise<T>): Promise<T> {
+  const previous = mirrorTail.catch(() => undefined);
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const tail = previous.then(() => gate);
+  mirrorTail = tail;
+  await previous;
+  try {
+    return await operation();
+  } finally {
+    release();
+    if (mirrorTail === tail) mirrorTail = Promise.resolve();
+  }
+}
+
 /** Best-effort mirror to the owner-only `notification_preferences` row (B-SUPABASE). */
 async function mirror(p: NotifPrefs): Promise<void> {
+  const snapshot = Object.freeze({ ...p });
   try {
     await runAccountGenerationOperation(async (lease) => {
-      const owner = await captureAuthenticatedAccountOwner(lease);
-      if (!owner) return;
-      lease.assertCurrent();
-      await supabase
-        .from('notification_preferences')
-        .upsert({
-          user_id: owner.userId,
-          am_reminder_time: toDbTime(p.amTime),
-          pm_reminder_time: toDbTime(p.pmTime),
-          am_reminder_enabled: p.amEnabled,
-          pm_reminder_enabled: p.pmEnabled,
-          streak_nudges: p.streakNudges,
-          replenishment_alerts: p.replenishmentAlerts,
-          capture_reminders: p.captureReminders,
-          quiet_hours_start: toDbTime(p.quietStart),
-          quiet_hours_end: toDbTime(p.quietEnd),
-          timezone: p.timezone,
-          live_activity_enabled: p.liveActivityEnabled,
-          promotional_opt_in: p.promotionalOptIn,
-          lockscreen_discreet: p.lockscreenDiscreet,
-        })
-        .abortSignal(lease.signal);
-      lease.assertCurrent();
+      await runSerializedMirror(async () => {
+        lease.assertCurrent();
+        const owner = await captureAuthenticatedAccountOwner(lease);
+        if (!owner) return;
+        lease.assertCurrent();
+        const { error } = await supabase
+          .from('notification_preferences')
+          .upsert({
+            user_id: owner.userId,
+            am_reminder_time: toDbTime(snapshot.amTime),
+            pm_reminder_time: toDbTime(snapshot.pmTime),
+            am_reminder_enabled: snapshot.amEnabled,
+            pm_reminder_enabled: snapshot.pmEnabled,
+            streak_nudges: snapshot.streakNudges,
+            replenishment_alerts: snapshot.replenishmentAlerts,
+            capture_reminders: snapshot.captureReminders,
+            quiet_hours_start: toDbTime(snapshot.quietStart),
+            quiet_hours_end: toDbTime(snapshot.quietEnd),
+            timezone: snapshot.timezone,
+            live_activity_enabled: snapshot.liveActivityEnabled,
+            promotional_opt_in: snapshot.promotionalOptIn,
+            lockscreen_discreet: snapshot.lockscreenDiscreet,
+          })
+          .abortSignal(lease.signal);
+        lease.assertCurrent();
+        if (error) throw error;
+      });
     });
   } catch {
     /* best-effort until backend configured */
   }
 }
 
-export async function saveNotifPrefs(patch: Partial<NotifPrefs>): Promise<NotifPrefs> {
+function prefsEqual(left: NotifPrefs, right: NotifPrefs): boolean {
+  return JSON.stringify(prefsForStorage(left)) === JSON.stringify(prefsForStorage(right));
+}
+
+export async function saveNotifPrefs(
+  patch: Partial<NotifPrefs>,
+): Promise<NotifPrefsSaveResult> {
+  const normalizedPatch = normalizeNotifPatch(patch);
+  if (shouldSimulateDevNotifPrefsWriteFailure()) {
+    throw new Error('E2E_NOTIF_PREFS_WRITE_FAILURE');
+  }
   return runAccountGenerationOperation(async (lease) => {
-    const normalizedPatch = normalizeNotifPatch(patch);
     let next: NotifPrefs | null = null;
-    await updatePrivateItem(KEY, (currentRaw) => {
-      const current = currentRaw === null ? normalizeNotifPrefs() : decodeNotifPrefs(currentRaw);
-      const replenishmentOptInConfirmed =
-        'replenishmentAlerts' in normalizedPatch
-          ? normalizedPatch.replenishmentAlerts === true
-          : current.replenishmentAlerts;
-      next = normalizeNotifPrefs({
-        ...current,
-        ...normalizedPatch,
-        [REPLENISHMENT_OPT_IN_MARKER]: replenishmentOptInConfirmed,
+    let changed = false;
+    let expectedRaw: string | null = null;
+    try {
+      await updatePrivateItem(KEY, (currentRaw) => {
+        const current =
+          currentRaw === null
+            ? normalizeNotifPrefs()
+            : decodeNotifPrefs(currentRaw).prefs;
+        const replenishmentOptInConfirmed =
+          'replenishmentAlerts' in normalizedPatch
+            ? normalizedPatch.replenishmentAlerts === true
+            : current.replenishmentAlerts;
+        next = normalizeNotifPrefs({
+          ...current,
+          ...normalizedPatch,
+          timezone: normalizedPatch.timezone ?? currentDeviceTimezone(),
+          [REPLENISHMENT_OPT_IN_MARKER]: replenishmentOptInConfirmed,
+        });
+        changed = currentRaw === null || !prefsEqual(current, next);
+        // For a semantic legacy no-op, privateKV still encrypts the returned
+        // legacy plaintext. Exact response-loss confirmation must therefore
+        // compare with the value actually returned to privateKV, not a v1
+        // envelope that this mutation never requested.
+        expectedRaw = changed ? encodeNotifPrefs(next) : currentRaw;
+        return expectedRaw;
       });
-      return encodeNotifPrefs(next);
-    });
+    } catch (error) {
+      if (expectedRaw === null) throw error;
+      let confirmation: Awaited<ReturnType<typeof readPrivateItem>>;
+      lease.assertCurrent();
+      try {
+        confirmation = await readPrivateItem(KEY);
+      } catch {
+        lease.assertCurrent();
+        throw new Error(NOTIF_PREFS_WRITE_UNCERTAIN);
+      }
+      lease.assertCurrent();
+      if (confirmation.status !== 'available' || confirmation.value !== expectedRaw) {
+        throw new Error(NOTIF_PREFS_WRITE_UNCERTAIN);
+      }
+    }
     lease.assertCurrent();
     if (!next) throw new Error('NOTIF_PREFS_WRITE_FAILED');
-    void mirror(next);
-    return next;
+    if (changed) void mirror(next);
+    return { prefs: next, changed };
   });
 }
 

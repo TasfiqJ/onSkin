@@ -4,7 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text, ToggleSwitch } from '@/components/ui';
 import { SETTINGS_COPY } from '@/features/notifications/copy';
-import { useNotifPrefs, useUpdateNotifPrefs } from '@/features/notifications/useNotifications';
+import {
+  NotificationPreferenceAvailability,
+  NotificationPreferenceMutationFeedback,
+  useNotificationPreferenceRouteState,
+} from '@/features/notifications/NotificationPreferenceState';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -46,6 +50,7 @@ function Row({
   onPress,
   last,
   compact = false,
+  disabled = false,
 }: {
   title: string;
   subtitle?: string;
@@ -54,6 +59,7 @@ function Row({
   onPress?: () => void;
   last?: boolean;
   compact?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <View
@@ -67,6 +73,9 @@ function Row({
       {onPress ? (
         <Pressable
           accessibilityRole="button"
+          accessibilityHint="Opens reminder timing settings"
+          accessibilityState={{ disabled }}
+          disabled={disabled}
           onPress={onPress}
           className={
             compact
@@ -119,16 +128,21 @@ function Row({
           ) : null}
         </View>
       )}
-      <ToggleSwitch accessibilityLabel={title} value={value} onChange={onChange} />
+      <ToggleSwitch
+        accessibilityLabel={title}
+        disabled={disabled}
+        value={value}
+        onChange={onChange}
+      />
     </View>
   );
 }
 
 export default function NotificationSettingsScreen() {
   const { height, width } = useWindowDimensions();
-  const { data: p } = useNotifPrefs();
-  const update = useUpdateNotifPrefs();
-  const set = (patch: Parameters<typeof update.mutate>[0]) => update.mutate(patch);
+  const preference = useNotificationPreferenceRouteState();
+  const p = preference.preferenceState.status === 'ready' ? preference.preferenceState.prefs : null;
+  const set = preference.applyPatch;
   const compactNotifications = height < 600;
   const ultraShortNotifications = height < 460;
   const splitShortNotifications = height < 600;
@@ -156,7 +170,6 @@ export default function NotificationSettingsScreen() {
           ? { marginTop: 64 }
           : undefined;
   const promotionalSectionStyle = splitShortNotifications ? { marginTop: 112 } : undefined;
-  if (!p) return null;
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: colors.greige }} edges={['top']}>
@@ -187,92 +200,120 @@ export default function NotificationSettingsScreen() {
           </Text>
         </View>
 
-        <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
-          UTILITY · YOUR ROUTINE
-        </SectionLabel>
-        <View className="rounded-[18px] bg-paper-raised px-[18px]">
-          <Row
-            title="Morning routine"
-            subtitle={fmtTime(p.amTime)}
-            value={p.amEnabled}
-            onChange={(v) => set({ amEnabled: v })}
-            onPress={() => router.push('/settings/timing')}
-            compact={compactNotifications}
-          />
-          <Row
-            title="Evening · tonight’s step"
-            subtitle={fmtTime(p.pmTime)}
-            value={p.pmEnabled}
-            onChange={(v) => set({ pmEnabled: v })}
-            onPress={() => router.push('/settings/timing')}
-            last
-            compact={compactNotifications}
-          />
-        </View>
-
-        <View style={nudgesSectionStyle}>
-          <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
-            GENTLE NUDGES · CAPPED
-          </SectionLabel>
-          <View className="rounded-[18px] bg-paper-raised px-[18px]">
-            <Row
-              title="Streak &amp; adherence"
-              value={p.streakNudges}
-              onChange={(v) => set({ streakNudges: v })}
-              compact={compactNotifications}
+        {p ? (
+          <>
+            <NotificationPreferenceMutationFeedback
+              failed={preference.mutationFailed}
+              retrying={preference.mutationPending}
+              onRetry={preference.retryLastPatch}
             />
-            <Row
-              title="Replenishment"
-              value={p.replenishmentAlerts}
-              onChange={(v) => set({ replenishmentAlerts: v })}
-              last={deferCaptureNudge}
-              compact={compactNotifications}
-            />
-            {deferCaptureNudge ? null : (
-              <Row
-                title="Progress-photo nudge"
-                value={p.captureReminders}
-                onChange={(v) => set({ captureReminders: v })}
-                last
-                compact={compactNotifications}
-              />
-            )}
-          </View>
-        </View>
 
-        {deferCaptureNudge ? (
-          <View style={deferredNudgeRowStyle}>
+            <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
+              UTILITY · YOUR ROUTINE
+            </SectionLabel>
             <View className="rounded-[18px] bg-paper-raised px-[18px]">
               <Row
-                title="Progress-photo nudge"
-                value={p.captureReminders}
-                onChange={(v) => set({ captureReminders: v })}
+                title="Morning routine"
+                subtitle={fmtTime(p.amTime)}
+                value={p.amEnabled}
+                onChange={(v) => set({ amEnabled: v })}
+                onPress={() => router.push('/settings/timing')}
+                compact={compactNotifications}
+                disabled={preference.mutationPending}
+              />
+              <Row
+                title="Evening · tonight’s step"
+                subtitle={fmtTime(p.pmTime)}
+                value={p.pmEnabled}
+                onChange={(v) => set({ pmEnabled: v })}
+                onPress={() => router.push('/settings/timing')}
                 last
                 compact={compactNotifications}
+                disabled={preference.mutationPending}
               />
             </View>
-          </View>
-        ) : null}
 
-        <View style={promotionalSectionStyle}>
-          <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
-            PROMOTIONAL
-          </SectionLabel>
-          <View className="rounded-[18px] bg-paper-raised px-[18px]">
-            <Row
-              title="Tips &amp; announcements"
-              subtitle="off by default"
-              value={p.promotionalOptIn}
-              onChange={(v) => set({ promotionalOptIn: v })}
-              last
-              compact={compactNotifications}
-            />
-          </View>
-        </View>
+            <View style={nudgesSectionStyle}>
+              <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
+                GENTLE NUDGES · CAPPED
+              </SectionLabel>
+              <View className="rounded-[18px] bg-paper-raised px-[18px]">
+                <Row
+                  title="Streak &amp; adherence"
+                  value={p.streakNudges}
+                  onChange={(v) => set({ streakNudges: v })}
+                  compact={compactNotifications}
+                  disabled={preference.mutationPending}
+                />
+                <Row
+                  title="Replenishment"
+                  value={p.replenishmentAlerts}
+                  onChange={(v) => set({ replenishmentAlerts: v })}
+                  last={deferCaptureNudge}
+                  compact={compactNotifications}
+                  disabled={preference.mutationPending}
+                />
+                {deferCaptureNudge ? null : (
+                  <Row
+                    title="Progress-photo nudge"
+                    value={p.captureReminders}
+                    onChange={(v) => set({ captureReminders: v })}
+                    last
+                    compact={compactNotifications}
+                    disabled={preference.mutationPending}
+                  />
+                )}
+              </View>
+            </View>
 
-        <Text variant="label" tone="muted" className="mt-6 text-center" style={{ fontSize: 10.5 }}>
-          {SETTINGS_COPY.capNote}
-        </Text>
+            {deferCaptureNudge ? (
+              <View style={deferredNudgeRowStyle}>
+                <View className="rounded-[18px] bg-paper-raised px-[18px]">
+                  <Row
+                    title="Progress-photo nudge"
+                    value={p.captureReminders}
+                    onChange={(v) => set({ captureReminders: v })}
+                    last
+                    compact={compactNotifications}
+                    disabled={preference.mutationPending}
+                  />
+                </View>
+              </View>
+            ) : null}
+
+            <View style={promotionalSectionStyle}>
+              <SectionLabel compact={compactNotifications} micro={microShortNotifications}>
+                PROMOTIONAL
+              </SectionLabel>
+              <View className="rounded-[18px] bg-paper-raised px-[18px]">
+                <Row
+                  title="Tips &amp; announcements"
+                  subtitle="off by default"
+                  value={p.promotionalOptIn}
+                  onChange={(v) => set({ promotionalOptIn: v })}
+                  last
+                  compact={compactNotifications}
+                  disabled={preference.mutationPending}
+                />
+              </View>
+            </View>
+
+            <Text
+              variant="label"
+              tone="muted"
+              className="mt-6 text-center"
+              style={{ fontSize: 10.5 }}
+            >
+              {SETTINGS_COPY.capNote}
+            </Text>
+          </>
+        ) : (
+          <NotificationPreferenceAvailability
+            state={preference.preferenceState.status === 'loading' ? 'loading' : 'unavailable'}
+            retrying={preference.readRetrying}
+            onRetry={preference.retryRead}
+          />
+        )}
       </ScrollView>
     </SafeAreaView>
   );

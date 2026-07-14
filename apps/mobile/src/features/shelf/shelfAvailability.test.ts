@@ -61,9 +61,8 @@ describe('Shelf private-data availability contract', () => {
     );
     expect(recommendations).toContain('const isSuccess = inputIsSuccess && !manualRetrying;');
     expect(teaser).toContain('if (!isSuccess || isError) return null;');
-    expect(triggers).toContain(
-      'notifyReplenishmentFromFreshShelf(latest.ownerScope, latest.refetchShelf, now)',
-    );
+    expect(triggers).toContain('notifyReplenishmentFromFreshShelf(');
+    expect(triggers).toContain('latest.replenishment.refetch');
     expect(triggers).toContain('if (!freshShelf.isSuccess || !hasReplenishmentSignal');
   });
 

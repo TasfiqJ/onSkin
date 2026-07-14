@@ -183,6 +183,8 @@ async function persistRevenueCatResult(
     assertCurrentOwner();
     await clearStoreEntitlementIfRevenueCatVerifiedEmpty();
     assertCurrentOwner();
+    await cancelTrialReminder();
+    assertCurrentOwner();
     return null;
   }
 
@@ -199,7 +201,7 @@ async function persistRevenueCatResult(
   if (withAttribution.isActive && withAttribution.periodType === 'trial') {
     assertCurrentOwner();
     await scheduleTrialReminder();
-  } else if (withAttribution.isActive) {
+  } else {
     assertCurrentOwner();
     await cancelTrialReminder();
   }

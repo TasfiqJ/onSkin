@@ -1,37 +1,96 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
-import type { NotificationKind } from '@onskin/types';
+import type { NotificationKind, NotificationTier } from '@onskin/types';
 
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { PLANS } from '@/features/subscription/plans';
 import { loadEntitlement } from '@/features/subscription/store';
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { supabase } from '@/lib/supabase/client';
 
 import { notificationContentForLockScreen } from './copy';
 import { canSend, reminderTimeOutsideQuietHours, tierEnabled, tierOf, toMinutes } from './policy';
 import { recordSentLocal, sentThisWeekForTierLocal } from './sentStore';
-import { loadNotifPrefs, type NotifPrefs } from './store';
+import {
+  readNotifPrefs,
+  saveNotifPrefs,
+  type NotifPrefs,
+  type NotifPrefsSaveResult,
+} from './store';
 
 export { configureNotifications } from './startup';
+
+export const AM_REMINDER_ID = 'onskin-am-reminder';
+export const PM_REMINDER_ID = 'onskin-pm-reminder';
+export const CAPTURE_REMINDER_ID = 'onskin-capture-reminder';
+export const TRIAL_REMINDER_ID = 'onskin-trial-reminder';
+
+const PREFERENCE_REMINDER_IDS = [
+  AM_REMINDER_ID,
+  PM_REMINDER_ID,
+  CAPTURE_REMINDER_ID,
+] as const;
+
+let notificationOperationTail: Promise<void> = Promise.resolve();
+let lastReminderScheduleSignature: string | null = null;
+
+async function preferenceScheduleIdentifiersAreHealthy(
+  prefs: NotifPrefs,
+  lease: AccountGenerationLease,
+): Promise<boolean> {
+  const expected = new Set<string>();
+  if (prefs.amEnabled) expected.add(AM_REMINDER_ID);
+  if (prefs.pmEnabled) expected.add(PM_REMINDER_ID);
+  if (prefs.captureReminders) expected.add(CAPTURE_REMINDER_ID);
+
+  try {
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    lease.assertCurrent();
+    const actual = scheduled
+      .map((request) => request.identifier)
+      .filter((identifier) => PREFERENCE_REMINDER_IDS.includes(
+        identifier as (typeof PREFERENCE_REMINDER_IDS)[number],
+      ));
+    return actual.length === expected.size && actual.every((identifier) => expected.has(identifier));
+  } catch {
+    lease.assertCurrent();
+    return false;
+  }
+}
+
+/** Acquire the owner lease before waiting so an account boundary can abort queued work. */
+function runSerializedNotificationOperation<T>(
+  operation: (lease: AccountGenerationLease) => Promise<T>,
+): Promise<T> {
+  return runAccountGenerationOperation(async (lease) => {
+    const previous = notificationOperationTail.catch(() => undefined);
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const tail = previous.then(() => gate);
+    notificationOperationTail = tail;
+
+    await previous;
+    try {
+      lease.assertCurrent();
+      return await operation(lease);
+    } finally {
+      release();
+      if (notificationOperationTail === tail) notificationOperationTail = Promise.resolve();
+    }
+  });
+}
 
 /** The current local wall-clock time as "HH:MM" (for quiet-hours / cap checks). */
 export function nowHHMM(d = new Date()): string {
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
-
-/**
- * Local-first notification delivery (docs/07 §3.4/§9). The utility AM/PM reminders
- * are scheduled as repeating DAILY local notifications at the user's chosen times
- * (no server round-trip, content on-device, §3.6 discretion). Behavioural triggers
- * go through the frequency-cap engine before firing. Everything is guarded. On
- * Expo Go / emulators / unsupported devices it degrades to a no-op rather than
- * throwing (real on-device behaviour + Android-14 exact-alarm acceptance is
- * B-NOTIF-VERIFY). NO health-revealing content is placed in any push payload; these
- * are LOCAL notifications (§8).
- */
 
 export async function getPermissionStatus(): Promise<'granted' | 'denied' | 'undetermined'> {
   try {
@@ -42,7 +101,7 @@ export async function getPermissionStatus(): Promise<'granted' | 'denied' | 'und
   }
 }
 
-/** The OS prompt. Fired only after the soft-ask "yes" (docs/07 §3.2). */
+/** The OS prompt. Fired only after the in-app soft ask is accepted. */
 export async function requestPermission(): Promise<boolean> {
   try {
     const { status } = await Notifications.requestPermissionsAsync();
@@ -52,111 +111,172 @@ export async function requestPermission(): Promise<boolean> {
   }
 }
 
-/**
- * Cancel + reschedule the utility AM/PM reminders from the user's prefs. A reminder
- * whose chosen time falls inside quiet hours is shifted to the quiet-hours end so
- * nothing fires inside the window and the reminder still arrives. Idempotent and
- * safe to call on every prefs change.
- */
-export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
-  await runAccountGenerationOperation(async (lease) => {
-    const p = prefs ?? (await loadNotifPrefs());
+async function cancelPreferenceRemindersUnderLease(lease: AccountGenerationLease): Promise<void> {
+  const failures: unknown[] = [];
+  for (const identifier of PREFERENCE_REMINDER_IDS) {
     lease.assertCurrent();
-    const scheduledIds: string[] = [];
     try {
-      await Notifications.cancelAllScheduledNotificationsAsync();
-      lease.assertCurrent();
-      const channelId = Platform.OS === 'android' ? 'routine' : undefined;
-      const schedule = async (kind: 'am_reminder' | 'pm_step', hm: string) => {
-        const deliveryTime = reminderTimeOutsideQuietHours(hm, p.quietStart, p.quietEnd);
-        const mins = toMinutes(deliveryTime);
-        if (mins == null) return;
-        lease.assertCurrent();
-        scheduledIds.push(
-          await Notifications.scheduleNotificationAsync({
-            content: notificationContentForLockScreen(kind),
-            // channelId belongs on the trigger in expo-notifications (SDK 56), not on
-            // content. So the calm 'routine' channel is actually applied on Android.
-            trigger: {
-              type: Notifications.SchedulableTriggerInputTypes.DAILY,
-              hour: Math.floor(mins / 60),
-              minute: mins % 60,
-              ...(channelId ? { channelId } : {}),
-            },
-          }),
-        );
-        lease.assertCurrent();
-      };
-      if (p.amEnabled) await schedule('am_reminder', p.amTime);
-      if (p.pmEnabled) await schedule('pm_step', p.pmTime);
-
-      // Weekly progress-photo capture nudge (docs/07 §3.3 / docs/06 §5): a recurring
-      // WEEKLY local notification when opted in, the weekly cadence being its own
-      // frequency control. If the usual AM time is quiet, it waits until quiet ends.
-      if (p.captureReminders) {
-        const mins = toMinutes(reminderTimeOutsideQuietHours(p.amTime, p.quietStart, p.quietEnd));
-        if (mins != null) {
-          lease.assertCurrent();
-          scheduledIds.push(
-            await Notifications.scheduleNotificationAsync({
-              content: notificationContentForLockScreen('capture'),
-              trigger: {
-                type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
-                weekday: 1, // Sunday, a calm weekly check-in cadence
-                hour: Math.floor(mins / 60),
-                minute: mins % 60,
-                ...(channelId ? { channelId } : {}),
-              },
-            }),
-          );
-          lease.assertCurrent();
-        }
-      }
-      // The one-shot "2 days before your trial ends" pre-charge reminder (docs/08
-      // §6, the honesty promise made on the paywall + success screens). Re-created
-      // here so the cancelAll above never strands it when the user edits any pref.
-      await scheduleTrialReminder();
-      lease.assertCurrent();
-    } catch {
-      await Promise.allSettled(
-        scheduledIds.map((id) => Notifications.cancelScheduledNotificationAsync(id)),
-      );
-      lease.assertCurrent();
-      /* unsupported environment. No-op (B-NOTIF-VERIFY) */
+      await Notifications.cancelScheduledNotificationAsync(identifier);
+    } catch (error) {
+      failures.push(error);
     }
+  }
+  lease.assertCurrent();
+  if (failures.length > 0) throw failures[0];
+}
+
+/**
+ * Remove only the schedules owned by notification preferences. This is used when
+ * the private preference record is absent or unreadable; unrelated and trial
+ * schedules are deliberately preserved.
+ */
+export async function suspendPreferenceOwnedReminders(): Promise<void> {
+  await runSerializedNotificationOperation(async (lease) => {
+    lastReminderScheduleSignature = null;
+    if (Platform.OS === 'web') return;
+    await cancelPreferenceRemindersUnderLease(lease);
   });
 }
 
-const TRIAL_REMINDER_ID = 'onskin-trial-reminder';
+/**
+ * Reconcile the fixed-ID AM, PM, and capture schedules with an authoritative
+ * preference snapshot. Native mutations are serialized so overlapping toggles
+ * cannot recreate an older schedule after a newer one. A partial failure is
+ * cleaned up and surfaced to the caller for a truthful retry state.
+ */
+async function reconcileRemindersUnderLease(
+  prefs: NotifPrefs,
+  lease: AccountGenerationLease,
+): Promise<void> {
+  if (Platform.OS === 'web') return;
+
+  const signature = JSON.stringify([
+    lease.generation,
+    prefs.amEnabled,
+    prefs.pmEnabled,
+    prefs.amTime,
+    prefs.pmTime,
+    prefs.captureReminders,
+    prefs.quietStart,
+    prefs.quietEnd,
+    prefs.timezone,
+  ]);
+  if (
+    lastReminderScheduleSignature === signature &&
+    (await preferenceScheduleIdentifiersAreHealthy(prefs, lease))
+  ) {
+    return;
+  }
+
+  lastReminderScheduleSignature = null;
+  await cancelPreferenceRemindersUnderLease(lease);
+  const channelId = Platform.OS === 'android' ? 'routine' : undefined;
+
+  const scheduleDaily = async (
+    identifier: typeof AM_REMINDER_ID | typeof PM_REMINDER_ID,
+    kind: 'am_reminder' | 'pm_step',
+    hm: string,
+  ) => {
+    const deliveryTime = reminderTimeOutsideQuietHours(hm, prefs.quietStart, prefs.quietEnd);
+    const minutes = toMinutes(deliveryTime);
+    if (minutes == null) return;
+    lease.assertCurrent();
+    await Notifications.scheduleNotificationAsync({
+      identifier,
+      content: notificationContentForLockScreen(kind),
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.DAILY,
+        hour: Math.floor(minutes / 60),
+        minute: minutes % 60,
+        ...(channelId ? { channelId } : {}),
+      },
+    });
+    lease.assertCurrent();
+  };
+
+  try {
+    if (prefs.amEnabled) await scheduleDaily(AM_REMINDER_ID, 'am_reminder', prefs.amTime);
+    if (prefs.pmEnabled) await scheduleDaily(PM_REMINDER_ID, 'pm_step', prefs.pmTime);
+
+    if (prefs.captureReminders) {
+      const minutes = toMinutes(
+        reminderTimeOutsideQuietHours(prefs.amTime, prefs.quietStart, prefs.quietEnd),
+      );
+      if (minutes != null) {
+        lease.assertCurrent();
+        await Notifications.scheduleNotificationAsync({
+          identifier: CAPTURE_REMINDER_ID,
+          content: notificationContentForLockScreen('capture'),
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+            weekday: 1,
+            hour: Math.floor(minutes / 60),
+            minute: minutes % 60,
+            ...(channelId ? { channelId } : {}),
+          },
+        });
+        lease.assertCurrent();
+      }
+    }
+    lastReminderScheduleSignature = signature;
+  } catch (error) {
+    await Promise.allSettled(
+      PREFERENCE_REMINDER_IDS.map((identifier) =>
+        Notifications.cancelScheduledNotificationAsync(identifier),
+      ),
+    );
+    lease.assertCurrent();
+    throw error;
+  }
+}
+
+export async function rescheduleReminders(prefs: NotifPrefs): Promise<void> {
+  await runSerializedNotificationOperation((lease) => reconcileRemindersUnderLease(prefs, lease));
+}
+
+/** Persist and reconcile under the same queue used by behavioural delivery. */
+export async function saveAndRescheduleNotifPrefs(
+  patch: Partial<NotifPrefs>,
+): Promise<NotifPrefsSaveResult> {
+  return runSerializedNotificationOperation(async (lease) => {
+    const result = await saveNotifPrefs(patch);
+    lease.assertCurrent();
+    await reconcileRemindersUnderLease(result.prefs, lease);
+    lease.assertCurrent();
+    return result;
+  });
+}
 
 function fmtShortDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-/**
- * Schedule the one-shot pre-charge reminder fired 2 days before a carded trial
- * converts (docs/08 §6 / docs/07): the app promises this on the paywall + success
- * screens, so it must actually be scheduled. Reads the entitlement; only schedules
- * for an ACTIVE carded trial whose 2-days-before instant is still in the future.
- * Idempotent (fixed identifier, cancelled + recreated). No-op off-device.
- */
+/** Schedule the fixed-ID one-shot pre-charge reminder for an active carded trial. */
 export async function scheduleTrialReminder(): Promise<void> {
-  await runAccountGenerationOperation(async (lease) => {
+  await runSerializedNotificationOperation(async (lease) => {
+    if (Platform.OS === 'web') return;
     try {
-      await Notifications.cancelScheduledNotificationAsync(TRIAL_REMINDER_ID).catch(() => {});
+      await Notifications.cancelScheduledNotificationAsync(TRIAL_REMINDER_ID);
       lease.assertCurrent();
-      const e = await loadEntitlement();
+      const entitlement = await loadEntitlement();
       lease.assertCurrent();
-      if (!e || !e.isActive || e.periodType !== 'trial' || !e.expiresAt) return;
-      const fireAt = new Date(e.expiresAt).getTime() - 2 * 86_400_000;
-      if (fireAt <= Date.now()) return; // already inside the final 2 days. Nothing to schedule
+      if (
+        !entitlement ||
+        !entitlement.isActive ||
+        entitlement.periodType !== 'trial' ||
+        !entitlement.expiresAt
+      ) {
+        return;
+      }
+      const fireAt = new Date(entitlement.expiresAt).getTime() - 2 * 86_400_000;
+      if (fireAt <= Date.now()) return;
       await Notifications.scheduleNotificationAsync({
         identifier: TRIAL_REMINDER_ID,
         content: {
           title: PAYWALL_COPY.trialReminder.title,
           body: PAYWALL_COPY.trialReminder.bodyFor(
-            fmtShortDate(e.expiresAt),
-            e.priceLabel ?? PLANS.annual.priceLabel,
+            fmtShortDate(entitlement.expiresAt),
+            entitlement.priceLabel ?? PLANS.annual.priceLabel,
           ),
         },
         trigger: {
@@ -166,101 +286,103 @@ export async function scheduleTrialReminder(): Promise<void> {
         },
       });
       lease.assertCurrent();
-    } catch {
+    } catch (error) {
       if (lease.signal.aborted) {
         await Notifications.cancelScheduledNotificationAsync(TRIAL_REMINDER_ID).catch(() => {});
       }
       lease.assertCurrent();
-      /* unsupported environment. No-op (B-NOTIF-VERIFY) */
+      throw error;
     }
   });
 }
 
-/** Cancel the pre-charge reminder (on conversion or trial cancellation). */
+/** Cancel the pre-charge reminder on conversion or trial cancellation. */
 export async function cancelTrialReminder(): Promise<void> {
-  await runAccountGenerationOperation(async (lease) => {
-    try {
-      await Notifications.cancelScheduledNotificationAsync(TRIAL_REMINDER_ID);
-      lease.assertCurrent();
-    } catch {
-      lease.assertCurrent();
-      /* no-op */
-    }
+  await runSerializedNotificationOperation(async (lease) => {
+    if (Platform.OS === 'web') return;
+    await Notifications.cancelScheduledNotificationAsync(TRIAL_REMINDER_ID);
+    lease.assertCurrent();
   });
 }
 
-/** This week's count for a tier, from the content-free log (best-effort; B-SUPABASE). */
-async function sentThisWeekForTier(
-  userId: string,
-  tier: string,
-  signal: AbortSignal,
-): Promise<number> {
+async function mirrorBehaviouralDelivery(
+  kind: NotificationKind,
+  tier: NotificationTier,
+): Promise<void> {
   try {
-    const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
-    const { count } = await supabase
-      .from('notification_log')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', userId) // explicit per-user scope, not relying on RLS alone
-      .eq('tier', tier)
-      .gte('sent_at', weekAgo)
-      .abortSignal(signal);
-    return count ?? 0;
+    await runAccountGenerationOperation(async (lease) => {
+      const owner = await captureAuthenticatedAccountOwner(lease);
+      if (!owner) return;
+      lease.assertCurrent();
+      const { error } = await supabase
+        .from('notification_log')
+        .insert({ user_id: owner.userId, tier, kind })
+        .abortSignal(lease.signal);
+      lease.assertCurrent();
+      if (error) throw error;
+    });
   } catch {
-    return 0;
+    // Optional owner-bound backend mirror; local cap truth is already durable.
   }
 }
 
 /**
- * A behavioural-trigger notification (replenishment / rampup / de-escalation /
- * streak nudge / capture), gated by the frequency-cap engine + quiet hours (§9).
- * Fires an immediate local notification and logs metadata only. Returns whether it
- * was sent. Behavioural delivery is wired here for the features that raise these
- * triggers to call; the trigger *content* is owned by those features (docs/07 §1).
+ * Deliver a behavioural notification only when preferences and the local cap
+ * ledger are authoritative. The read/decide/reserve/schedule pipeline is globally
+ * serialized, preventing concurrent background evaluations from overshooting the
+ * weekly cap. `hhmm` exists only for deterministic callers/tests; production calls
+ * evaluate the wall clock immediately before the policy decision.
  */
-export async function notifyBehavioural(kind: NotificationKind, hhmm: string): Promise<boolean> {
-  return runAccountGenerationOperation(async (lease) => {
-    const p = await loadNotifPrefs();
+export async function notifyBehavioural(
+  kind: NotificationKind,
+  hhmm?: string,
+): Promise<boolean> {
+  const delivered = await runSerializedNotificationOperation(async (lease) => {
+    if (Platform.OS === 'web') return false;
+
+    const prefRead = await readNotifPrefs();
     lease.assertCurrent();
-    // Honour the user's per-kind opt-out FIRST (docs/07 §3.1/§8): a disabled tier ,
-    // and especially the off-by-default promotional tier. Never fires.
-    if (!tierEnabled(kind, p)) return false;
-    const now = Date.now();
-    // Frequency cap source of truth = the local sent-log (works offline), unioned
-    // with the server log when present. Without this, the server count is 0 offline
-    // (v1) and a foreground trigger would re-fire on every app open (docs/07 §9).
-    let sent = await sentThisWeekForTierLocal(tierOf(kind), now);
+    if (prefRead.status !== 'absent' && prefRead.status !== 'available') return false;
+    const prefs = prefRead.prefs;
+    if (!tierEnabled(kind, prefs)) return false;
+
+    const sentAt = Date.now();
+    const tier = tierOf(kind);
+    const localCount = await sentThisWeekForTierLocal(tier, sentAt);
     lease.assertCurrent();
-    let userId: string | undefined;
-    try {
-      const owner = await captureAuthenticatedAccountOwner(lease);
-      userId = owner?.userId;
-      if (userId) {
-        sent = Math.max(sent, await sentThisWeekForTier(userId, tierOf(kind), lease.signal));
-      }
-      lease.assertCurrent();
-    } catch {
-      lease.assertCurrent();
-      /* offline. Local count stands */
-    }
+    if (localCount.status !== 'absent' && localCount.status !== 'available') return false;
+    // The recurring weekly capture reminder consumes one conservative slot in
+    // the behavioural tier; it cannot otherwise append to the immediate-send
+    // ledger when the OS presents it while JavaScript is suspended.
+    const sent = localCount.count + (tier === 'behavioural' && prefs.captureReminders ? 1 : 0);
+
     const decision = canSend({
       kind,
       sentThisWeekForTier: sent,
-      now: hhmm,
-      quietStart: p.quietStart,
-      quietEnd: p.quietEnd,
+      now: hhmm ?? nowHHMM(),
+      quietStart: prefs.quietStart,
+      quietEnd: prefs.quietEnd,
     });
     if (!decision.allowed) return false;
-    let scheduledNotificationId: string | null = null;
+
+    // Reserve the local cap slot before asking the OS to present anything. A
+    // native failure may conservatively consume a slot, but can never produce an
+    // unlogged immediate banner that is free to repeat.
     try {
       lease.assertCurrent();
+      await recordSentLocal(kind, sentAt);
+      lease.assertCurrent();
+    } catch {
+      lease.assertCurrent();
+      return false;
+    }
+
+    let scheduledNotificationId: string | null = null;
+    try {
       scheduledNotificationId = await Notifications.scheduleNotificationAsync({
         content: notificationContentForLockScreen(kind),
-        // Immediate, on the calm 'routine' channel (Android); channelId must be on the
-        // trigger, not content (SDK 56). A bare { channelId } means deliver now.
         trigger: Platform.OS === 'android' ? { channelId: 'routine' } : null,
       });
-      lease.assertCurrent();
-      await recordSentLocal(kind, now); // local cap ledger (v1 source of truth)
       lease.assertCurrent();
     } catch {
       if (scheduledNotificationId) {
@@ -271,19 +393,9 @@ export async function notifyBehavioural(kind: NotificationKind, hhmm: string): P
       lease.assertCurrent();
       return false;
     }
-    if (userId) {
-      try {
-        lease.assertCurrent();
-        await supabase
-          .from('notification_log')
-          .insert({ user_id: userId, tier: tierOf(kind), kind })
-          .abortSignal(lease.signal);
-        lease.assertCurrent();
-      } catch {
-        lease.assertCurrent();
-        /* best-effort backend mirror; local delivery already succeeded */
-      }
-    }
+
     return true;
   });
+  if (delivered) void mirrorBehaviouralDelivery(kind, tierOf(kind));
+  return delivered;
 }

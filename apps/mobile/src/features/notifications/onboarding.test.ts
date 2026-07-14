@@ -24,31 +24,29 @@ const mocks = vi.hoisted(() => ({
     promotionalOptIn: false,
     lockscreenDiscreet: true,
   },
-  saveNotifPrefs: vi.fn(async (patch: Partial<NotifPrefs>) => ({
-    ...mocks.defaultPrefs,
-    ...patch,
+  saveAndReschedule: vi.fn(async (patch: Partial<NotifPrefs>) => ({
+    prefs: { ...mocks.defaultPrefs, ...patch },
+    changed: true,
   })),
 }));
 
 vi.mock('./deliver', () => ({
   requestPermission: vi.fn(async () => false),
-  rescheduleReminders: vi.fn(async () => {}),
+  saveAndRescheduleNotifPrefs: mocks.saveAndReschedule,
 }));
 
 vi.mock('./store', () => ({
   DEFAULT_PREFS: mocks.defaultPrefs,
-  saveNotifPrefs: mocks.saveNotifPrefs,
 }));
 
 function deps(requestGranted: boolean) {
-  const saveNotifPrefs = vi.fn(async (patch: Partial<NotifPrefs>) => ({
-    ...DEFAULT_PREFS,
-    ...patch,
+  const saveAndReschedule = vi.fn(async (patch: Partial<NotifPrefs>) => ({
+    prefs: { ...DEFAULT_PREFS, ...patch },
+    changed: true,
   }));
   return {
     requestPermission: vi.fn(async () => requestGranted),
-    saveNotifPrefs,
-    rescheduleReminders: vi.fn(async () => {}),
+    saveAndReschedule,
   };
 }
 
@@ -68,10 +66,7 @@ describe('notification onboarding choice', () => {
     await expect(acceptRoutineReminderSoftAsk(d)).resolves.toBe(true);
 
     expect(d.requestPermission).toHaveBeenCalledTimes(1);
-    expect(d.saveNotifPrefs).toHaveBeenCalledWith({ amEnabled: true, pmEnabled: true });
-    expect(d.rescheduleReminders).toHaveBeenCalledWith(
-      expect.objectContaining({ amEnabled: true, pmEnabled: true }),
-    );
+    expect(d.saveAndReschedule).toHaveBeenCalledWith({ amEnabled: true, pmEnabled: true });
   });
 
   it('persists routine reminders off when the OS prompt is denied', async () => {
@@ -79,10 +74,7 @@ describe('notification onboarding choice', () => {
 
     await expect(acceptRoutineReminderSoftAsk(d)).resolves.toBe(false);
 
-    expect(d.saveNotifPrefs).toHaveBeenCalledWith({ amEnabled: false, pmEnabled: false });
-    expect(d.rescheduleReminders).toHaveBeenCalledWith(
-      expect.objectContaining({ amEnabled: false, pmEnabled: false }),
-    );
+    expect(d.saveAndReschedule).toHaveBeenCalledWith({ amEnabled: false, pmEnabled: false });
   });
 
   it('persists routine reminders off when the soft ask is skipped', async () => {
@@ -91,10 +83,7 @@ describe('notification onboarding choice', () => {
     await expect(declineRoutineReminderSoftAsk(d)).resolves.toBeUndefined();
 
     expect(d.requestPermission).not.toHaveBeenCalled();
-    expect(d.saveNotifPrefs).toHaveBeenCalledWith({ amEnabled: false, pmEnabled: false });
-    expect(d.rescheduleReminders).toHaveBeenCalledWith(
-      expect.objectContaining({ amEnabled: false, pmEnabled: false }),
-    );
+    expect(d.saveAndReschedule).toHaveBeenCalledWith({ amEnabled: false, pmEnabled: false });
   });
 
   it('does not apply owner-A permission results after an account boundary starts', async () => {
@@ -118,7 +107,6 @@ describe('notification onboarding choice', () => {
     releasePermission(true);
 
     await expect(accepting).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-    expect(d.saveNotifPrefs).not.toHaveBeenCalled();
-    expect(d.rescheduleReminders).not.toHaveBeenCalled();
+    expect(d.saveAndReschedule).not.toHaveBeenCalled();
   });
 });

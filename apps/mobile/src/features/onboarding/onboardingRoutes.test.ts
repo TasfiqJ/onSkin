@@ -394,9 +394,18 @@ describe('onboarding route contracts', () => {
 
     expect(notifications).toContain('const ownerScope = useOwnerQueryScope();');
     expect(notifications).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
-    expect(notifications.indexOf('await action();')).toBeLessThan(
+    expect(notifications.indexOf("await acceptRoutineReminderSoftAsk();")).toBeLessThan(
       notifications.indexOf("router.push('/onboarding/account')"),
     );
+    expect(notifications.indexOf('await declineRoutineReminderSoftAsk();')).toBeLessThan(
+      notifications.indexOf("router.push('/onboarding/account')"),
+    );
+    expect(notifications).toContain('setFailedChoice(choice)');
+    expect(notifications).toContain('Notification choice incomplete');
+    expect(notifications).toContain('nothing was silently skipped');
+    expect(notifications).toContain("finish(failedChoice, true)");
+    expect(notifications).toContain('<ScrollView');
+    expect(notifications).toContain('contentContainerStyle={{ flexGrow: 1 }}');
     expect(notifications).not.toMatch(/finally\s*{[\s\S]*router\.push\('\/onboarding\/account'\)/);
   });
 

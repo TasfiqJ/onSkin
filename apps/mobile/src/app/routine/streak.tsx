@@ -62,10 +62,13 @@ export default function StreakScreen() {
   // Fire the analytics event once per milestone (first crossing only).
   useEffect(() => {
     if (!milestone) return;
-    void markMilestoneSeen(milestone.key).then((fresh) => {
-      if (fresh)
-        track('streak_milestone_reached', { milestone: milestone.key, streak: data?.streak });
-    });
+    void markMilestoneSeen(milestone.key)
+      .then((result) => {
+        if (result.status === 'recorded') {
+          track('streak_milestone_reached', { milestone: milestone.key, streak: data?.streak });
+        }
+      })
+      .catch(() => undefined);
   }, [milestone?.key]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (progressQuery.isPending || progressQuery.isError) {

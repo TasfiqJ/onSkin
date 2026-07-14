@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { SOFT_ASK } from '@/features/notifications/copy';
@@ -36,14 +36,26 @@ function CheckRow({ label }: { label: string }) {
 export default function NotificationsScreen() {
   const ownerScope = useOwnerQueryScope();
   const [busy, setBusy] = useState(false);
+  const [failedChoice, setFailedChoice] = useState<'enable' | 'skip' | null>(null);
 
-  async function finish(action: () => Promise<void>) {
+  async function finish(choice: 'enable' | 'skip', retry = false) {
     if (busy || !isOwnerQueryScopeCurrent(ownerScope)) return;
     setBusy(true);
+    setFailedChoice(null);
     try {
-      await action();
+      if (choice === 'enable') {
+        if (!retry) track('notification_prompt_shown');
+        const granted = await acceptRoutineReminderSoftAsk();
+        if (granted) track('notification_prompt_granted');
+        else track('notification_prompt_denied');
+      } else {
+        await declineRoutineReminderSoftAsk();
+      }
     } catch {
-      /* Unsupported local notification/storage environments should not trap onboarding. */
+      if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+      setBusy(false);
+      setFailedChoice(choice);
+      return;
     }
     if (!isOwnerQueryScopeCurrent(ownerScope)) return;
     setBusy(false);
@@ -51,51 +63,79 @@ export default function NotificationsScreen() {
   }
 
   function enable() {
-    void finish(async () => {
-      track('notification_prompt_shown');
-      const granted = await acceptRoutineReminderSoftAsk();
-      if (granted) track('notification_prompt_granted');
-      else track('notification_prompt_denied');
-    }).catch(() => undefined);
+    void finish('enable').catch(() => undefined);
   }
 
   function skip() {
-    void finish(declineRoutineReminderSoftAsk).catch(() => undefined);
+    void finish('skip').catch(() => undefined);
   }
 
   return (
     <Screen>
-      <View className="flex-1 justify-center">
-        <View
-          className="mb-6 h-14 w-14 items-center justify-center rounded-[18px]"
-          style={{ backgroundColor: colors.clayTint }}
-        >
-          <View className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: colors.clay }} />
-        </View>
-        <Text variant="title">{SOFT_ASK.title}</Text>
-        <Text variant="body" tone="muted" className="mt-3" style={{ lineHeight: 24 }}>
-          {SOFT_ASK.body}
-        </Text>
-        <View className="mt-6 gap-1">
-          {SOFT_ASK.bullets.map((b) => (
-            <CheckRow key={b} label={b} />
-          ))}
-        </View>
-      </View>
-      <View className="pb-4">
-        <Button label={SOFT_ASK.yes} onPress={enable} disabled={busy} />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ disabled: busy }}
-          className="mt-3 items-center py-3"
-          disabled={busy}
-          onPress={skip}
-        >
-          <Text variant="body" tone="muted" className="font-sans-medium">
-            {SOFT_ASK.no}
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View className="flex-1 justify-center py-6">
+          <View
+            className="mb-6 h-14 w-14 items-center justify-center rounded-[18px]"
+            style={{ backgroundColor: colors.clayTint }}
+          >
+            <View className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: colors.clay }} />
+          </View>
+          <Text variant="title">{SOFT_ASK.title}</Text>
+          <Text variant="body" tone="muted" className="mt-3" style={{ lineHeight: 24 }}>
+            {SOFT_ASK.body}
           </Text>
-        </Pressable>
-      </View>
+          <View className="mt-6 gap-1">
+            {SOFT_ASK.bullets.map((b) => (
+              <CheckRow key={b} label={b} />
+            ))}
+          </View>
+        </View>
+        <View className="pb-4">
+          {failedChoice ? (
+            <View
+              accessibilityLiveRegion="polite"
+              accessibilityRole="alert"
+              className="mb-4 rounded-[16px] p-4"
+              style={{ backgroundColor: colors.clayTint }}
+            >
+              <Text variant="bodySm" className="font-sans-bold">
+                Notification choice incomplete
+              </Text>
+              <Text variant="bodySm" tone="muted" className="mt-1" style={{ lineHeight: 19 }}>
+                We couldn&apos;t safely save that choice on this device. You&apos;re still on this
+                step, and nothing was silently skipped.
+              </Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ disabled: busy }}
+                className="mt-3 min-h-[56px] items-center justify-center rounded-pill px-4 py-3"
+                disabled={busy}
+                onPress={() => void finish(failedChoice, true).catch(() => undefined)}
+                style={{ backgroundColor: colors.paperRaised, opacity: busy ? 0.68 : 1 }}
+              >
+                <Text variant="bodySm" className="font-sans-semibold">
+                  {busy ? 'Trying again...' : 'Try again'}
+                </Text>
+              </Pressable>
+            </View>
+          ) : null}
+          <Button label={SOFT_ASK.yes} onPress={enable} disabled={busy} />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ disabled: busy }}
+            className="mt-3 items-center py-3"
+            disabled={busy}
+            onPress={skip}
+          >
+            <Text variant="body" tone="muted" className="font-sans-medium">
+              {SOFT_ASK.no}
+            </Text>
+          </Pressable>
+        </View>
+      </ScrollView>
     </Screen>
   );
 }

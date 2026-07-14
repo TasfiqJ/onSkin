@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 
 import { hasReplenishmentSignal } from '@/features/recommendations/replenishment';
@@ -8,26 +8,78 @@ import { useShelf, type ShelfData } from '@/features/shelf/useShelf';
 import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
-import { notifyBehavioural, nowHHMM } from './deliver';
+import { notifyBehavioural } from './deliver';
 import { useNotifPrefs } from './useNotifications';
 
-// Wires the behavioural/promotional notification engine (notifyBehavioural) to the
-// real user state it is meant to nudge on (docs/07 §3.3). Without this the engine
-// had ZERO callers, so the replenishment / ramp-step-up / win-back nudges the
-// settings screen advertises could never fire. Evaluated when the app goes to the
-// BACKGROUND, so the nudge lands while the user is away rather than while they are
-// looking at the screen. The engine enforces per-kind opt-outs, the per-tier weekly
-// caps (local-first sentStore, so the cap holds offline), and quiet hours, so it is
-// safe to evaluate every applicable kind on each transition. Real on-device
-// delivery + send-timing tuning is B-NOTIF-VERIFY; off-device this is a no-op.
-//
-// Note: the weekly capture nudge is a recurring schedule in deliver.rescheduleReminders;
-// de-escalation is surfaced in-app by the recovery flow (docs/05 §7) rather than a push.
 type BehaviouralTriggerEnables = {
   promotional: boolean;
   ramp: boolean;
   replenishment: boolean;
 };
+
+type ReplenishmentTriggerValue = {
+  isSuccess: boolean;
+  refetch: () => Promise<{
+    isSuccess: boolean;
+    data?: Pick<ShelfData, 'items' | 'archive'>;
+  }>;
+};
+
+type ReplenishmentSnapshot = ReplenishmentTriggerValue & { generation: number };
+
+type ScopedTriggerValue = { generation: number; value: boolean };
+
+type TriggerSnapshot = {
+  ownerScope: OwnerQueryScope;
+  replenishment?: ReplenishmentSnapshot;
+  ramp?: ScopedTriggerValue;
+  promotional?: ScopedTriggerValue;
+};
+
+type BehaviouralEvaluationCoordinator = Readonly<{
+  evaluate: (
+    ownerScope: OwnerQueryScope,
+    operation: () => void | Promise<void>,
+  ) => Promise<boolean>;
+}>;
+
+/** Single-flight background evaluation with an owner-scoped cooldown. */
+export function createBehaviouralEvaluationCoordinator(
+  cooldownMs = 60_000,
+  clock: () => number = Date.now,
+): BehaviouralEvaluationCoordinator {
+  let inFlight: { generation: number; promise: Promise<boolean> } | null = null;
+  let lastGeneration: number | null = null;
+  let lastStartedAt = Number.NEGATIVE_INFINITY;
+
+  return Object.freeze({
+    evaluate(ownerScope, operation) {
+      if (inFlight?.generation === ownerScope.generation) return inFlight.promise;
+
+      const startedAt = clock();
+      if (
+        lastGeneration === ownerScope.generation &&
+        startedAt - lastStartedAt < cooldownMs
+      ) {
+        return Promise.resolve(false);
+      }
+      lastGeneration = ownerScope.generation;
+      lastStartedAt = startedAt;
+
+      let pending!: Promise<boolean>;
+      pending = Promise.resolve()
+        .then(operation)
+        .then(() => true)
+        .finally(() => {
+          if (inFlight?.promise === pending) inFlight = null;
+        });
+      inFlight = { generation: ownerScope.generation, promise: pending };
+      return pending;
+    },
+  });
+}
+
+const backgroundEvaluationCoordinator = createBehaviouralEvaluationCoordinator();
 
 export function anyBehaviouralTriggerEnabled(
   enabled: BehaviouralTriggerEnables | undefined,
@@ -41,7 +93,7 @@ export async function notifyReplenishmentFromFreshShelf(
     isSuccess: boolean;
     data?: Pick<ShelfData, 'items' | 'archive'>;
   }>,
-  now: string,
+  hhmm?: string,
 ): Promise<boolean> {
   try {
     return await runOwnerQueryOperation(ownerScope, async (lease) => {
@@ -49,7 +101,7 @@ export async function notifyReplenishmentFromFreshShelf(
       lease.assertCurrent();
       if (!freshShelf.isSuccess || !hasReplenishmentSignal(freshShelf.data)) return false;
       lease.assertCurrent();
-      await notifyBehavioural('replenishment', now);
+      await notifyBehavioural('replenishment', hhmm);
       lease.assertCurrent();
       return true;
     });
@@ -58,67 +110,124 @@ export async function notifyReplenishmentFromFreshShelf(
   }
 }
 
-function EnabledBehaviouralTriggers({ enabled }: { enabled: BehaviouralTriggerEnables }) {
-  const ownerScope = useOwnerQueryScope();
+function ReplenishmentTrigger({
+  onSnapshot,
+}: {
+  onSnapshot: (value: ReplenishmentTriggerValue | undefined) => void;
+}) {
   const shelf = useShelf();
-  const ramp = useRamp();
-  const progress = useProgress();
-
-  // A retained ramp value is not authoritative after cadence storage becomes
-  // unreadable. Never schedule a step-up nudge unless the current read succeeded.
-  const offerStepUp = ramp.isSuccess && ramp.items.some((r) => r.offerStepUp);
-  // A retained query value is not authoritative after private completion
-  // storage becomes unreadable. Never schedule a win-back from stale history.
-  const lapsed = progress.isSuccess && progress.data?.lapsed === true;
-
-  // Mirror the latest derived state into a ref (in an effect, never during render)
-  // so the long-lived AppState listener always reads current values without
-  // re-subscribing on every change.
-  const stateRef = useRef({
-    enabled,
-    ownerScope,
-    shelfWasSuccess: shelf.isSuccess,
-    refetchShelf: shelf.refetch,
-    offerStepUp,
-    lapsed,
-  });
   useEffect(() => {
-    stateRef.current = {
-      enabled,
-      ownerScope,
-      shelfWasSuccess: shelf.isSuccess,
-      refetchShelf: shelf.refetch,
-      offerStepUp,
-      lapsed,
-    };
-  }, [enabled, ownerScope, shelf.isSuccess, shelf.refetch, offerStepUp, lapsed]);
-
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', (s) => {
-      if (s !== 'background') return;
-      const now = nowHHMM();
-      const latest = stateRef.current;
-      // A render snapshot can become unreadable while the app backgrounds. A
-      // purchase-adjacent replenishment nudge therefore requires a fresh strict
-      // Shelf read at decision time; retained success/data can never authorize it.
-      if (latest.enabled.replenishment && latest.shelfWasSuccess) {
-        void notifyReplenishmentFromFreshShelf(latest.ownerScope, latest.refetchShelf, now);
-      }
-      if (latest.enabled.ramp && latest.offerStepUp) {
-        void notifyBehavioural('rampup', now).catch(() => undefined);
-      }
-      if (latest.enabled.promotional && latest.lapsed) {
-        void notifyBehavioural('winback', now).catch(() => undefined);
-      }
+    onSnapshot({
+      isSuccess: shelf.isSuccess,
+      refetch: shelf.refetch,
     });
-    return () => sub.remove();
-  }, []);
-
+    return () => {
+      onSnapshot(undefined);
+    };
+  }, [onSnapshot, shelf.isSuccess, shelf.refetch]);
   return null;
 }
 
+function RampTrigger({ onSnapshot }: { onSnapshot: (value: boolean | undefined) => void }) {
+  const ramp = useRamp();
+  const offerStepUp = ramp.isSuccess && ramp.items.some((item) => item.offerStepUp);
+  useEffect(() => {
+    onSnapshot(offerStepUp);
+    return () => {
+      onSnapshot(undefined);
+    };
+  }, [offerStepUp, onSnapshot]);
+  return null;
+}
+
+function PromotionalTrigger({ onSnapshot }: { onSnapshot: (value: boolean | undefined) => void }) {
+  const progress = useProgress();
+  const lapsed = progress.isSuccess && progress.data?.lapsed === true;
+  useEffect(() => {
+    onSnapshot(lapsed);
+    return () => {
+      onSnapshot(undefined);
+    };
+  }, [lapsed, onSnapshot]);
+  return null;
+}
+
+function EnabledBehaviouralTriggers({ enabled }: { enabled: BehaviouralTriggerEnables }) {
+  const ownerScope = useOwnerQueryScope();
+  const snapshot = useRef<TriggerSnapshot>({ ownerScope });
+  useEffect(() => {
+    snapshot.current.ownerScope = ownerScope;
+  }, [ownerScope]);
+  const setReplenishmentSnapshot = useCallback((value: ReplenishmentTriggerValue | undefined) => {
+    snapshot.current.replenishment = value
+      ? { ...value, generation: ownerScope.generation }
+      : undefined;
+  }, [ownerScope.generation]);
+  const setRampSnapshot = useCallback((value: boolean | undefined) => {
+    snapshot.current.ramp =
+      value === undefined ? undefined : { generation: ownerScope.generation, value };
+  }, [ownerScope.generation]);
+  const setPromotionalSnapshot = useCallback((value: boolean | undefined) => {
+    snapshot.current.promotional =
+      value === undefined ? undefined : { generation: ownerScope.generation, value };
+  }, [ownerScope.generation]);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state !== 'background') return;
+      const latest = snapshot.current;
+      void backgroundEvaluationCoordinator
+        .evaluate(latest.ownerScope, () =>
+          runOwnerQueryOperation(latest.ownerScope, async (lease) => {
+            const generation = latest.ownerScope.generation;
+            if (
+              enabled.replenishment &&
+              latest.replenishment?.generation === generation &&
+              latest.replenishment.isSuccess
+            ) {
+              await notifyReplenishmentFromFreshShelf(
+                latest.ownerScope,
+                latest.replenishment.refetch,
+              );
+            } else if (
+              enabled.ramp &&
+              latest.ramp?.generation === generation &&
+              latest.ramp.value
+            ) {
+              await notifyBehavioural('rampup');
+            } else if (
+              enabled.promotional &&
+              latest.promotional?.generation === generation &&
+              latest.promotional.value
+            ) {
+              await notifyBehavioural('winback');
+            }
+            lease.assertCurrent();
+          }),
+        )
+        .catch(() => undefined);
+    });
+    return () => sub.remove();
+  }, [enabled.promotional, enabled.ramp, enabled.replenishment]);
+
+  return (
+    <>
+      {enabled.replenishment ? (
+        <ReplenishmentTrigger onSnapshot={setReplenishmentSnapshot} />
+      ) : null}
+      {enabled.ramp ? <RampTrigger onSnapshot={setRampSnapshot} /> : null}
+      {enabled.promotional ? (
+        <PromotionalTrigger onSnapshot={setPromotionalSnapshot} />
+      ) : null}
+    </>
+  );
+}
+
 export function BehaviouralTriggers() {
-  const prefs = useNotifPrefs().data;
+  const query = useNotifPrefs();
+  const read = query.data;
+
+  const prefs = query.isSuccess && read?.status === 'available' ? read.prefs : null;
   const enabled = {
     promotional: prefs?.promotionalOptIn === true,
     ramp: prefs?.streakNudges === true,

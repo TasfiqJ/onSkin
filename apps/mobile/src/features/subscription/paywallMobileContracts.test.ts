@@ -477,6 +477,43 @@ describe('paywall mobile contracts', () => {
     );
   });
 
+  it('cancels stale trial reminders for verified-empty and inactive RevenueCat results', () => {
+    const source = readSource('features/subscription/useEntitlement.ts');
+    const helperStart = source.indexOf('async function persistRevenueCatResult');
+    const helperEnd = source.indexOf('\nexport function useEntitlement', helperStart);
+
+    expect(helperStart).toBeGreaterThanOrEqual(0);
+    expect(helperEnd).toBeGreaterThan(helperStart);
+
+    const helper = source.slice(helperStart, helperEnd);
+    const emptyStart = helper.indexOf('if (!entitlement) {');
+    const emptyReturn = helper.indexOf('return null;', emptyStart);
+    const emptyBranch = helper.slice(emptyStart, emptyReturn + 'return null;'.length);
+    const trialCondition =
+      "if (withAttribution.isActive && withAttribution.periodType === 'trial') {";
+    const trialStart = helper.indexOf(trialCondition);
+    const inactiveStart = helper.indexOf('} else {', trialStart);
+    const inactiveEnd = helper.indexOf('\n  assertCurrentOwner();', inactiveStart);
+    const inactiveBranch = helper.slice(inactiveStart, inactiveEnd);
+
+    expect(emptyStart).toBeGreaterThanOrEqual(0);
+    expect(emptyReturn).toBeGreaterThan(emptyStart);
+    expect(emptyBranch).toContain('await clearStoreEntitlementIfRevenueCatVerifiedEmpty();');
+    expect(emptyBranch).toContain('await cancelTrialReminder();');
+    expect(emptyBranch.indexOf('await clearStoreEntitlementIfRevenueCatVerifiedEmpty();')).toBeLessThan(
+      emptyBranch.indexOf('await cancelTrialReminder();'),
+    );
+    expect(trialStart).toBeGreaterThanOrEqual(0);
+    expect(inactiveStart).toBeGreaterThan(trialStart);
+    expect(inactiveEnd).toBeGreaterThan(inactiveStart);
+    expect(inactiveBranch).toContain('await cancelTrialReminder();');
+    expect(helper.match(/await cancelTrialReminder\(\);/g)).toHaveLength(2);
+
+    // Both awaits stay uncaught so scheduling failures propagate to the query/mutation caller.
+    expect(helper).not.toContain('cancelTrialReminder().catch');
+    expect(helper).not.toContain('try {');
+  });
+
   it('keeps gated content hidden while entitlement is still resolving', () => {
     const proGate = readSource('features/subscription/ProGate.tsx');
     const useEntitlement = readSource('features/subscription/useEntitlement.ts');

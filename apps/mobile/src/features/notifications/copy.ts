@@ -71,9 +71,13 @@ export function notificationContentForLockScreen(kind: NotificationKind): {
 
 /** Soft-ask permission priming (design screen 01, docs/07 §3.2). */
 export const SOFT_ASK = {
-  title: 'A gentle nudge at your routine times?',
-  body: 'You pick the moments. Morning and evening, and we’ll quietly remind you. No noise, no pressure, and you can change it anytime.',
-  bullets: ['Only at times you choose', 'Discreet on your lock screen', 'Off in one tap, whenever'],
+  title: 'A gentle morning and evening nudge?',
+  body: 'Turning this on uses the morning and evening times in Settings. On a new setup, those start at 7:30 AM and 9:30 PM. Both stay generic on your lock screen.',
+  bullets: [
+    'New setups start at 7:30 AM and 9:30 PM',
+    'Discreet on your lock screen',
+    'Change or turn off each reminder anytime',
+  ],
   yes: 'Yes, remind me',
   no: 'Not now',
 } as const;

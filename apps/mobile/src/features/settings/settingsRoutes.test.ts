@@ -364,6 +364,45 @@ describe('Settings route contracts', () => {
     expect(notifications).toContain('accessibilityLabel={title}');
   });
 
+  it('keeps typed notification preferences behind route-owned recovery and mutation feedback', () => {
+    const notifications = readAppRoute('settings/notifications.tsx');
+    const timing = readAppRoute('settings/timing.tsx');
+
+    for (const source of [notifications, timing]) {
+      expect(source).toContain('useNotificationPreferenceRouteState');
+      expect(source).toContain('<NotificationPreferenceAvailability');
+      expect(source).toContain('<NotificationPreferenceMutationFeedback');
+      expect(source).toContain("preference.preferenceState.status === 'ready'");
+      expect(source).toContain('preference.mutationPending');
+      expect(source).toContain('preference.retryLastPatch');
+      expect(source).toContain('preference.retryRead');
+      expect(source).not.toContain('if (!p) return null');
+      expect(source).not.toContain('error.message');
+    }
+
+    expect(notifications).toContain('disabled={preference.mutationPending}');
+    expect(notifications).toContain('accessibilityState={{ disabled }}');
+    expect(timing).toContain('disabled={preference.mutationPending}');
+    expect(timing).toContain('field={p ? picking : null}');
+  });
+
+  it('does not fabricate a quiet-hours window when nullable preference endpoints are unset', () => {
+    const timing = readAppRoute('settings/timing.tsx');
+
+    expect(timing).toContain("const pickerFallback = picking === 'qend' ? '07:00' : '22:00';");
+    expect(timing).toContain("p.quietStart ? fmtTime(p.quietStart) : 'Off'");
+    expect(timing).toContain("p.quietEnd ? fmtTime(p.quietEnd) : 'Off'");
+    expect(timing).toContain(
+      'const quietHoursEnabled = p?.quietStart != null && p.quietEnd != null;',
+    );
+    expect(timing).toContain("'Quiet hours are off until both a start and end time are set.'");
+    expect(timing).toContain("{quietHoursEnabled ? SETTINGS_COPY.quietLabel : 'Quiet hours off'}");
+    expect(timing).toContain("{quietHoursEnabled ? 'Turn off quiet hours' : 'Turn on quiet hours'}");
+    expect(timing).toContain('? { quietStart: null, quietEnd: null }');
+    expect(timing).not.toContain("fmtTime(p.quietStart ?? '22:00')");
+    expect(timing).not.toContain("fmtTime(p.quietEnd ?? '07:00')");
+  });
+
   it('keeps the reminder time picker dismissible without inert sheet buttons', () => {
     const source = readAppRoute('settings/timing.tsx');
 

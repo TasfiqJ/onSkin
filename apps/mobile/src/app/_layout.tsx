@@ -3,7 +3,7 @@ import '../global.css';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -27,6 +27,12 @@ initSentry();
 markStartupPhase('javascript_started');
 void SplashScreen.preventAutoHideAsync();
 
+// Keep root notification handler startup minimal. Business-store/scheduling
+// code is evaluated as a deferred module after the private-data boundary mounts.
+const NotificationPreferenceScheduleReconciler = lazy(
+  () => import('@/features/notifications/NotificationPreferenceScheduleReconciler'),
+);
+
 function RootContent() {
   // Set the local-notification handler + Android channel once at startup (docs/07 §9).
   useEffect(() => {
@@ -41,6 +47,9 @@ function RootContent() {
           <PlaintextStagingStartupGate>
             <AppLockProvider>
               <PrivateDataAvailabilityGate>
+                <Suspense fallback={null}>
+                  <NotificationPreferenceScheduleReconciler />
+                </Suspense>
                 <OnboardingProvider>
                   <IntakeProvider>
                     <OfflineSync />

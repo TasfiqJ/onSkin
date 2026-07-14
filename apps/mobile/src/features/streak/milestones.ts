@@ -5,7 +5,10 @@ import { MILESTONE_COPY } from '@/features/notifications/copy';
 // the streak screen renders the highest reached marker and fires the analytics
 // event once per milestone (via milestoneStore).
 
-export type Milestone = { key: string; threshold: number; copy: string };
+export const MILESTONE_KEYS = ['d7', 'one_cycle', 'd30'] as const;
+
+export type MilestoneKey = (typeof MILESTONE_KEYS)[number];
+export type Milestone = { key: MilestoneKey; threshold: number; copy: string };
 
 /** Ascending, de-duplicated milestone thresholds for a given cycle length. */
 export function milestoneThresholds(cycleLength: number): Milestone[] {
@@ -13,7 +16,7 @@ export function milestoneThresholds(cycleLength: number): Milestone[] {
     { key: 'd7', threshold: 7 },
     { key: 'one_cycle', threshold: Math.max(2, Math.round(cycleLength)) },
     { key: 'd30', threshold: 30 },
-  ];
+  ] satisfies { key: MilestoneKey; threshold: number }[];
   const seen = new Set<number>();
   return raw
     .sort((a, b) => a.threshold - b.threshold)
