@@ -1,8 +1,8 @@
 # Phase 10 Beta Support Handoff Packet
 
-Generated: 2026-07-13T20:01:36.168Z
+Generated: 2026-07-14T00:08:48.241Z
 Status: pass
-Git SHA: bb008e6a39070e88a65a9a963fdf626f3263317e
+Git SHA: 4304f19a7546098ccb14a3961aab8fe5e9858324
 Git status: clean
 
 This generated packet converts the in-app Beta feedback route into exact
@@ -54,7 +54,7 @@ SLA reports before `PHASE10_SUPPORT_DESK_PASS=true` can be set.
 
 ## Source Hashes
 
-- `package.json`: `9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0`
+- `package.json`: `a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e`
 - `scripts/phase10/build-support-handoff-packet.mjs`: `ea5ded8fefa3a0258b71c7cf26f16365cab41add4882a90bc12b8601805cc20a`
 - `scripts/phase10/lib.mjs`: `ede0cba473e147f80438708cbdfb9dbe1a178186997292ad9ee62e38912a7f2a`
 - `apps/mobile/src/app/settings/beta-feedback.tsx`: `0fa17f838f101c1340c11afe026c8efa4fa11534fd12a2d18eb89e0c944954ea`
