@@ -1,9 +1,14 @@
 -- Phase 8 growth loop tables. These tables intentionally store only contact-free
 -- growth attribution and waitlist contact submitted directly by the user.
 
+-- Supabase provisions the `extensions` schema in a fresh project, but citext is
+-- opt-in. Keep this dependency next to its first use so full source replay is
+-- deterministic; no hosted migration history is inferred from this repair.
+create extension if not exists citext with schema extensions;
+
 create table if not exists public.waitlist_signups (
   id uuid primary key default gen_random_uuid(),
-  email citext not null unique,
+  email extensions.citext not null unique,
   source text not null default 'unknown',
   attribution jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now()

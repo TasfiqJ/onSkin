@@ -5,7 +5,11 @@
 -- applies the real migration, and exercises authorization, request ambiguity,
 -- reconciliation, stale-JWT barriers, Storage attestation, expiry, and cleanup.
 
-create extension pgcrypto with schema public;
+-- Match the pinned Supabase image's extension namespace so this rehearsal
+-- catches the same qualification errors as a full local source replay.
+create schema extensions;
+create extension pgcrypto with schema extensions;
+grant usage on schema extensions to public;
 
 create role anon noinherit;
 create role authenticated noinherit;
@@ -391,14 +395,14 @@ begin
   )
   select users.id,
          pg_catalog.encode(
-           public.digest(
+           extensions.digest(
              pg_catalog.convert_to('starvation-idempotency:' || users.id::text, 'UTF8'),
              'sha256'
            ),
            'hex'
          ),
          pg_catalog.encode(
-           public.digest(
+           extensions.digest(
              pg_catalog.convert_to('starvation-capability:' || users.id::text, 'UTF8'),
              'sha256'
            ),
@@ -1528,7 +1532,7 @@ begin
     ) as updated;
   if v_payload_octets <> 4
      or v_payload_digest <> pg_catalog.encode(
-       public.digest(decode('21222324', 'hex'), 'sha256'),
+       extensions.digest(decode('21222324', 'hex'), 'sha256'),
        'hex'
      ) then
     raise exception 'REHEARSAL_PROVIDER_PAYLOAD_ATTESTATION_FAILED';

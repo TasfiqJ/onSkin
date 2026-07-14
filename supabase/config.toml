@@ -15,6 +15,14 @@ max_rows = 1000
 port = 54322
 major_version = 15
 
+[db.migrations]
+enabled = true
+schema_paths = []
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
 [studio]
 enabled = true
 port = 54323
@@ -35,8 +43,9 @@ enable_refresh_token_rotation = true
 enable_anonymous_sign_ins = true
 # Required for anon->permanent identity linking (docs/01 §1).
 enable_manual_linking = true
-# Leaked-password protection (HaveIBeenPwned) — low cost, real value (docs/01 §5).
-enable_leaked_password_protection = true
+# The local CLI config has no leaked-password-protection key. Hosted staging
+# and production must still enable Auth's `password_hibp_enabled` control in
+# the dashboard/Management API on a supported plan; see supabase/README.md.
 
 [auth.email]
 enable_signup = true

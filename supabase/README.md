@@ -20,6 +20,58 @@ catalog seeding, and import QA clear.
 - Client roles do not write entitlement mirrors or raw subscription event logs.
 - Append-only ledgers remain append-only.
 
+## Credential-Free Local Reset (DB-05)
+
+The repository pins Supabase CLI `2.109.1` as an exact development dependency.
+Use the checked-in scripts instead of a global or floating CLI:
+
+```powershell
+npm ci
+npm run phase2:db-local-contract
+npm run phase2:db-local-reset
+npm run phase2:db-local-verify
+```
+
+`phase2:db-local-verify` copies `supabase/` to a uniquely named temporary
+workdir, excludes `.temp`, `.branches`, every `.env` variant, inherited hosted
+credentials, and every linked-project input, allocates an isolated local port
+block, and uses explicit
+`--local` targets. It starts the Auth/Storage-aware Docker stack, resets all 51
+migrations plus `seed.sql` twice, verifies exact migration history, runs the
+structural pgTAP suite and database lint, requires an empty local-vs-migrations
+schema diff, generates database types only into the temporary workdir, then
+removes the containers, volumes, and temporary files. It never links, pushes,
+or accepts a database URL. DB-08 remains open until local output is reconciled
+with reviewed staging and the repository type file is deliberately replaced.
+
+The empty diff proves only that a freshly replayed local schema matches the
+repository migration shadow. It does not compare, mutate, or attest hosted
+staging/production schemas, migration checksums, or migration history. The
+historical SQL repairs made for deterministic fresh replay likewise make no
+claim about an already-hosted project. DB-06 remains the reviewed hosted
+reconciliation/deployment gate. The reproducible 2026-07-14 local evidence is
+recorded in
+[`docs/hugeToDo/DB-05-LOCAL-RESET-2026-07-14.md`](../docs/hugeToDo/DB-05-LOCAL-RESET-2026-07-14.md).
+
+Supabase's local CLI config reference does not define a leaked-password
+protection field, so `config.toml` intentionally contains no
+`enable_leaked_password_protection` setting. This does not relax the hosted
+security gate: staging and production must enable Auth's
+`password_hibp_enabled` control through the dashboard or Management API on a
+supported plan, and retain redacted configuration evidence before launch.
+
+Official references reviewed for this gate:
+
+- https://supabase.com/docs/guides/local-development/cli/getting-started
+- https://supabase.com/docs/guides/local-development/cli/config
+- https://supabase.com/docs/guides/local-development/testing/overview
+- https://supabase.com/docs/guides/local-development/cli/testing-and-linting
+- https://supabase.com/docs/guides/deployment/ci/testing
+- https://supabase.com/docs/reference/cli/supabase-projects-create
+- https://supabase.com/docs/guides/auth/password-security
+- https://supabase.com/docs/reference/api/management
+- https://github.com/supabase/cli
+
 ## Applying To Staging
 
 ```powershell

@@ -19,6 +19,9 @@
     "phase2:check-env": "node scripts/phase2/check-env.mjs",
     "phase2:check-env-smoke": "node scripts/phase2/check-env-smoke.mjs",
     "phase2:check-env:strict": "node scripts/phase2/check-env.mjs --strict",
+    "phase2:db-local-contract": "node --test scripts/phase2/local-supabase-signal-cleanup.test.mjs scripts/phase2/local-supabase-target-guard.test.mjs && node scripts/phase2/local-supabase-contract.mjs",
+    "phase2:db-local-reset": "node scripts/phase2/local-supabase-reset.mjs --reset-only",
+    "phase2:db-local-verify": "node scripts/phase2/local-supabase-reset.mjs --verify",
     "phase2:edge-app-env-smoke": "deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/_shared/env.test.ts",
     "phase2:deploy-env-smoke": "node scripts/phase2/deploy-supabase-staging-smoke.mjs",
     "phase2:rls-smoke": "node scripts/phase2/supabase-rls-smoke.mjs",
@@ -195,6 +198,7 @@
   },
   "devDependencies": {
     "prettier": "^3.4.2",
+    "supabase": "2.109.1",
     "turbo": "2.9.18",
     "typescript": "~6.0.3"
   },

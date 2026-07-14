@@ -242,7 +242,7 @@ immutable
 set search_path = ''
 as $$
   select pg_catalog.encode(
-    public.digest(
+    extensions.digest(
       pg_catalog.convert_to(p_context || p_token, 'UTF8'),
       'sha256'
     ),
@@ -1214,7 +1214,7 @@ begin
     return;
   end if;
 
-  v_claim_token := pg_catalog.encode(public.gen_random_bytes(32), 'hex');
+  v_claim_token := pg_catalog.encode(extensions.gen_random_bytes(32), 'hex');
 
   update public.account_deletion_steps as claimed_step
      set status = 'leased',
@@ -1494,7 +1494,7 @@ begin
     v_step.request_started_at,
     v_step.lease_expires_at,
     pg_catalog.octet_length(v_step.encrypted_payload),
-    pg_catalog.encode(public.digest(v_step.encrypted_payload, 'sha256'), 'hex'),
+    pg_catalog.encode(extensions.digest(v_step.encrypted_payload, 'sha256'), 'hex'),
     v_step.updated_at;
 end;
 $$;
