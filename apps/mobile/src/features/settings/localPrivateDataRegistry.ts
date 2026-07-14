@@ -259,7 +259,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'onskin.conflict.overrides',
     lifecycle: 'current',
     codec: jsonCodec('conflict_choices', 1, [0]),
-    typedRead: gap('Compatibility read maps unreadable conflict choices to an empty object.'),
+    typedRead: typedDomainRead,
     export: include('shelf_and_routine', 'conflict_overrides', 'conflict_choices'),
   }),
   privateData({

@@ -13,7 +13,7 @@ describe('conflict choice integration contracts', () => {
   it('loads choices once at the Shelf boundary and separates detected from unresolved rows', () => {
     const source = readSource('features/shelf/useShelf.ts');
 
-    expect(source).toContain('getConflictChoices()');
+    expect(source).toContain('loadConflictChoices()');
     expect(source).toContain(
       'const unresolvedConflicts = filterUnresolvedConflicts(conflicts, conflictChoices);',
     );
@@ -64,6 +64,7 @@ describe('conflict choice integration contracts', () => {
       'utf8',
     );
     const route = readSource('app/conflict/[ruleId].tsx');
+    const mirror = readSource('features/intelligence/conflictChoiceMirror.ts');
 
     expect(migration).toContain('routine_conflicts_choice_pair_canonical');
     expect(migration).toContain("status in ('accepted', 'overridden')");
@@ -73,7 +74,10 @@ describe('conflict choice integration contracts', () => {
     expect(migration).toContain('product_a_id::text < product_b_id::text');
     expect(migration).toContain('create unique index if not exists');
     expect(migration).toContain('(user_id, rule_id, product_a_id, product_b_id)');
-    expect(route).toContain("onConflict: 'user_id,rule_id,product_a_id,product_b_id'");
+    expect(route).toContain('void mirrorConflictChoiceForOwner(ownerScope, c, userChoice);');
+    expect(mirror).toContain("onConflict: 'user_id,rule_id,product_a_id,product_b_id'");
+    expect(mirror).toContain('.abortSignal(lease.signal)');
+    expect(mirror).toContain('const conflictChoiceMirrorTails = new Map');
   });
 
   it('mirrors shelf lifecycle rows under the same UUID used by conflict foreign keys', () => {

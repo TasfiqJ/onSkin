@@ -26,11 +26,18 @@ describe('Shelf private-data availability contract', () => {
     const hook = read('features/shelf/useShelf.ts');
 
     expect(hook).toContain('runOwnerQueryOperation(ownerScope');
+    expect(hook).toContain('loadConflictChoices()');
     expect(hook).toContain('lease.assertCurrent();');
     expect(hook).toContain('retry: false');
     expect(hook).toContain('retryOnMount: false');
     expect(hook).toContain("activeQuery.state.status !== 'error'");
     expect(hook).toContain('data: query.isSuccess ? query.data : undefined');
+
+    const gate = read('features/shelf/ShelfDataAvailabilityGate.tsx');
+    expect(gate).toContain('the private Shelf data this screen needs');
+    expect(gate).toContain('OnSkin did not reset or remove it');
+    expect(gate).toContain('Retry loading private Shelf data');
+    expect(gate).not.toContain('Nothing was changed');
   });
 
   it('prevents unreadable Shelf state from becoming routine, Ask, or purchase guidance', () => {

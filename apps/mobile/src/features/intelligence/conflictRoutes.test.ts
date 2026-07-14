@@ -155,6 +155,10 @@ describe('Conflict route contracts', () => {
   it('persists before analytics/navigation and recovers failed encrypted writes inline', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
     const privateKV = readFileSync(`${APP_DIR}/../lib/storage/privateKV.ts`, 'utf8');
+    const mirror = readFileSync(
+      `${APP_DIR}/../features/intelligence/conflictChoiceMirror.ts`,
+      'utf8',
+    );
     const writeIndex = source.indexOf('await setConflictChoice(c, userChoice);');
     const analyticsIndex = source.indexOf("track('conflict_resolution_chosen'", writeIndex);
     const cacheIndex = source.indexOf('qc.setQueryData<ShelfData>', analyticsIndex);
@@ -165,20 +169,36 @@ describe('Conflict route contracts', () => {
     expect(cacheIndex).toBeGreaterThan(analyticsIndex);
     expect(dismissIndex).toBeGreaterThan(analyticsIndex);
     expect(source).toContain('if (saveInFlight.current) return;');
+    expect(source).toContain('const saveRequestId = useRef(0);');
+    expect(source).toContain('saveRequestId.current += 1;');
+    expect(source).toContain('saveRequestId.current !== requestId');
+    expect(source).toContain('saveRequestId.current === requestId');
+    expect(source.match(/saveRequestId\.current !== requestId/g)).toHaveLength(2);
+    expect(source).toContain(
+      'saveRequestId.current === requestId && isOwnerQueryScopeCurrent(ownerScope)',
+    );
     expect(source).toContain(
       'applyConflictChoicesToShelfData(current, conflictChoices, boundary.localDate)',
     );
     expect(source).toContain('queryKeys.shelf(ownerScope, boundary)');
-    expect(source).toContain('if (isOwnerQueryScopeCurrent(ownerScope))');
+    expect(source).toContain('!isOwnerQueryScopeCurrent(ownerScope)');
+    expect(source).toContain('await failClosedShelfQueriesAfterMutationFailure(qc, ownerScope);');
+    expect(source).toContain('Recovery failure must not suppress honest mutation feedback.');
     expect(source).not.toContain("invalidateQueries({ queryKey: ['shelf'] })");
     expect(privateKV).toContain('EXPO_PUBLIC_E2E_CONFLICT_CHOICE_SAVE_FAILURE');
     expect(privateKV).toContain('await new Promise((resolve) => setTimeout(resolve, 600));');
     expect(privateKV).toContain('key !== CONFLICT_CHOICE_STORAGE_KEY');
-    expect(source).toContain('Choice not saved');
-    expect(source).toContain('Your previous schedule is unchanged. Try again.');
+    expect(source).toContain('Choice not confirmed');
+    expect(source).toContain('couldn&apos;t confirm whether this choice was saved');
+    expect(source).toContain('It did not reset or remove');
+    expect(source).not.toContain('Your previous schedule is unchanged');
     expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain('.upsert(');
-    expect(source).toContain("onConflict: 'user_id,rule_id,product_a_id,product_b_id'");
+    expect(source).toContain('void mirrorConflictChoiceForOwner(ownerScope, c, userChoice);');
+    expect(source).not.toContain('async function mirrorChoice');
+    expect(source).not.toContain('.upsert(');
+    expect(mirror).toContain('.upsert(');
+    expect(mirror).toContain("onConflict: 'user_id,rule_id,product_a_id,product_b_id'");
+    expect(mirror).toContain('.abortSignal(lease.signal)');
   });
 
   it('names the exact shelf products before a timing choice is made', () => {

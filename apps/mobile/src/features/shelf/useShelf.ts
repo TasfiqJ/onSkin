@@ -15,7 +15,7 @@ import {
   type ConflictChoices,
 } from '@/features/intelligence/conflictChoices';
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
-import { getConflictChoices } from '@/features/intelligence/overrides';
+import { loadConflictChoices } from '@/features/intelligence/overrides';
 import { expiryBadge, type ExpiryBadge } from '@/features/intelligence/pao';
 import { shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
@@ -150,7 +150,7 @@ export function useShelf() {
         const [products, profileBits, conflictChoices] = await Promise.all([
           loadShelf(),
           readProfileBits(),
-          getConflictChoices(),
+          loadConflictChoices(),
         ]);
         lease.assertCurrent();
         const profile: EngineProfile = {

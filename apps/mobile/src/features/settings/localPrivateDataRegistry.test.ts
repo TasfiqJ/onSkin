@@ -27,7 +27,6 @@ describe('local private-data contract registry', () => {
     expect(localPrivateRegistryGaps()).toEqual([
       'onskin.appLock.enabled:typedRead',
       'onskin.ask.groundedTurns.v1:typedRead',
-      'onskin.conflict.overrides:typedRead',
       'onskin.milestones.v1:typedRead',
       'onskin.notifPrefs.v1:typedRead',
       'onskin.notiflog.v1:typedRead',

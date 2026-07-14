@@ -17,6 +17,7 @@ import { InContextNote } from '@/features/community/InContextNote';
 import { noteForTags } from '@/features/community/notes';
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import type { ConflictChoices, ConflictUserChoice } from '@/features/intelligence/conflictChoices';
+import { mirrorConflictChoiceForOwner } from '@/features/intelligence/conflictChoiceMirror';
 import { conflictShareRoute } from '@/features/intelligence/conflictIdentity';
 import { setConflictChoice } from '@/features/intelligence/overrides';
 import {
@@ -31,6 +32,7 @@ import {
   useShelf,
   type ShelfData,
 } from '@/features/shelf/useShelf';
+import { failClosedShelfQueriesAfterMutationFailure } from '@/features/shelf/mutationFailure';
 import {
   conflictCheckAccess,
   loadFreeConflictCheckRuleIds,
@@ -40,12 +42,10 @@ import {
 import { ProGate } from '@/features/subscription/ProGate';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
-import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { BRAND } from '@/lib/brand';
 import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
-import { devWarn } from '@/lib/observability/safeLog';
 import {
   isOwnerQueryScopeCurrent,
   queryKeys,
@@ -54,7 +54,6 @@ import {
 } from '@/lib/query/queryKeys';
 import { readLocalDateBoundarySnapshot } from '@/lib/query/queryDateBoundaryCore';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
-import { supabase } from '@/lib/supabase/client';
 import { colors } from '@/theme/tokens';
 
 // Conflict override sheet (design frames 04/05/06, docs/02 §7.3 / docs/03 §7). The
@@ -161,40 +160,6 @@ function persistedChoice(choice: 'keep' | 'use_together'): ConflictUserChoice {
   return choice === 'use_together' ? 'use_together' : 'accept_suggested_timing';
 }
 
-async function mirrorChoice(
-  ownerScope: OwnerQueryScope,
-  c: DetectedConflict,
-  userChoice: ConflictUserChoice,
-): Promise<void> {
-  try {
-    await runOwnerQueryOperation(ownerScope, async (lease) => {
-      const owner = await captureAuthenticatedAccountOwner(lease);
-      if (!owner || !c.productAId || !c.productBId) return;
-      const [productAId, productBId] = [c.productAId, c.productBId].sort();
-      lease.assertCurrent();
-      const { error } = await supabase.from('routine_conflicts').upsert(
-        {
-          user_id: owner.userId,
-          rule_id: c.rule.id,
-          product_a_id: productAId,
-          product_b_id: productBId,
-          computed_severity: c.computedSeverity,
-          status: userChoice === 'use_together' ? 'overridden' : 'accepted',
-          user_choice: userChoice,
-          rule_version: c.rule.ruleVersion,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: 'user_id,rule_id,product_a_id,product_b_id' },
-      );
-      lease.assertCurrent();
-      if (error) throw new Error('SUPABASE_ROUTINE_CONFLICT_UPSERT_FAILED');
-    });
-  } catch (error) {
-    devWarn('routine_conflict_mirror_upsert_failed', error);
-    /* best-effort until backend configured (B-SUPABASE) */
-  }
-}
-
 async function recordChoice(
   ownerScope: OwnerQueryScope,
   c: DetectedConflict,
@@ -211,7 +176,7 @@ async function recordChoice(
       source: 'detail',
     });
     if (choice === 'use_together') track('conflict_overridden', { source: 'detail' });
-    void mirrorChoice(ownerScope, c, userChoice);
+    void mirrorConflictChoiceForOwner(ownerScope, c, userChoice);
     return conflictChoices;
   });
 }
@@ -597,6 +562,7 @@ function StandardBody({
 }) {
   const ownerScope = useOwnerQueryScope();
   const saveInFlight = useRef(false);
+  const saveRequestId = useRef(0);
   const [savingChoice, setSavingChoice] = useState<'keep' | 'use_together' | null>(null);
   const [saveFailed, setSaveFailed] = useState(false);
   const r = conflict.rule;
@@ -610,28 +576,48 @@ function StandardBody({
   const keepLabel =
     r.resolutionType === 'alternate_nights' ? 'Keep alternate nights' : 'Keep suggested timing';
 
+  useEffect(
+    () => () => {
+      saveRequestId.current += 1;
+    },
+    [],
+  );
+
   async function choose(choice: 'keep' | 'use_together') {
     if (saveInFlight.current) return;
+    const requestId = saveRequestId.current + 1;
+    saveRequestId.current = requestId;
     saveInFlight.current = true;
     setSavingChoice(choice);
     setSaveFailed(false);
     try {
       const conflictChoices = await recordChoice(ownerScope, conflict, choice);
-      const boundary = readLocalDateBoundarySnapshot();
-      if (isOwnerQueryScopeCurrent(ownerScope)) {
-        const shelfQueryKey = queryKeys.shelf(ownerScope, boundary);
-        qc.setQueryData<ShelfData>(shelfQueryKey, (current) =>
-          current
-            ? applyConflictChoicesToShelfData(current, conflictChoices, boundary.localDate)
-            : current,
-        );
+      if (saveRequestId.current !== requestId || !isOwnerQueryScopeCurrent(ownerScope)) {
+        return;
       }
+      const boundary = readLocalDateBoundarySnapshot();
+      const shelfQueryKey = queryKeys.shelf(ownerScope, boundary);
+      qc.setQueryData<ShelfData>(shelfQueryKey, (current) =>
+        current
+          ? applyConflictChoicesToShelfData(current, conflictChoices, boundary.localDate)
+          : current,
+      );
+      if (saveRequestId.current !== requestId || !isOwnerQueryScopeCurrent(ownerScope)) return;
       onDismiss();
     } catch {
-      setSaveFailed(true);
+      try {
+        await failClosedShelfQueriesAfterMutationFailure(qc, ownerScope);
+      } catch {
+        // Recovery failure must not suppress honest mutation feedback.
+      }
+      if (saveRequestId.current === requestId && isOwnerQueryScopeCurrent(ownerScope)) {
+        setSaveFailed(true);
+      }
     } finally {
-      saveInFlight.current = false;
-      setSavingChoice(null);
+      if (saveRequestId.current === requestId && isOwnerQueryScopeCurrent(ownerScope)) {
+        saveInFlight.current = false;
+        setSavingChoice(null);
+      }
     }
   }
 
@@ -735,10 +721,11 @@ function StandardBody({
         {saveFailed ? (
           <View accessibilityRole="alert" className="rounded-[8px] bg-clay-tint px-4 py-3">
             <Text className="font-sans-semibold text-[13.5px]" style={{ color: colors.ink }}>
-              Choice not saved
+              Choice not confirmed
             </Text>
             <Text variant="bodySm" tone="muted" className="mt-1 text-[12.5px]">
-              Your previous schedule is unchanged. Try again.
+              OnSkin couldn&apos;t confirm whether this choice was saved. It did not reset or remove
+              your private Shelf data. Try again.
             </Text>
           </View>
         ) : null}

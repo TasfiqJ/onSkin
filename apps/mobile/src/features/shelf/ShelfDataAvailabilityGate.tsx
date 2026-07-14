@@ -11,10 +11,10 @@ export const SHELF_AVAILABILITY_COPY = {
   loading: 'Opening your Shelf...',
   eyebrow: 'Private Shelf',
   title: 'Shelf data unavailable',
-  body: "We couldn't safely read your saved products. They weren't reset or removed. Shelf-based guidance and changes are paused until OnSkin can read them again.",
+  body: "We couldn't safely read the private Shelf data this screen needs. OnSkin did not reset or remove it. Shelf-based guidance and changes are paused until OnSkin can read it again.",
   retry: 'Try again',
   retrying: 'Trying again...',
-  retryFailed: 'Your Shelf is still unavailable. Your saved products remain unchanged.',
+  retryFailed: 'Your private Shelf data is still unavailable. OnSkin did not reset or remove it.',
 } as const;
 
 export type DataAvailabilityCopy = {
@@ -29,10 +29,10 @@ export type DataAvailabilityCopy = {
 export const PRIVATE_GUIDANCE_AVAILABILITY_COPY: DataAvailabilityCopy = {
   eyebrow: 'Private data',
   title: 'Guidance unavailable',
-  body: "We couldn't safely read the private data this guidance needs. Nothing was changed. Guidance and related actions are paused until OnSkin can read it again.",
+  body: "We couldn't safely read the private data this guidance needs. OnSkin did not reset or remove it. Guidance and related actions are paused until OnSkin can read it again.",
   retry: 'Try again',
   retrying: 'Trying again...',
-  retryFailed: 'The private data is still unavailable. Nothing was changed.',
+  retryFailed: 'The private data is still unavailable. OnSkin did not reset or remove it.',
 };
 
 type RetryResult = void | { isError?: boolean };
@@ -88,7 +88,7 @@ export function ShelfDataUnavailableNotice({
 
       <View className="mt-7 gap-2.5">
         <Pressable
-          accessibilityLabel="Retry loading Shelf data"
+          accessibilityLabel="Retry loading private Shelf data"
           accessibilityRole="button"
           accessibilityState={{ disabled: retrying }}
           disabled={retrying}
