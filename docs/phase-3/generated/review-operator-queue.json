@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-13T18:54:04.231Z",
+  "generatedAt": "2026-07-14T00:10:58.789Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "43467f0135b715bac01b697feba5515f77b74715",
+  "gitSha": "b1ff015503257e300c568d5cb2804dd60539c0d9",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 109813,
-    "sha256": "c80093766388a571ce0ee2131f3b139806f7cd87c40aad639bfcdfaeb88bfba1",
-    "currentSha256": "c80093766388a571ce0ee2131f3b139806f7cd87c40aad639bfcdfaeb88bfba1"
+    "bytes": 111319,
+    "sha256": "82b1cb3fbf5c34ef7c6e60def48ba3800febba243608c6b3d5d6aecfe9709f7d",
+    "currentSha256": "82b1cb3fbf5c34ef7c6e60def48ba3800febba243608c6b3d5d6aecfe9709f7d"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -563,7 +563,7 @@
       "requiredReviewer": "qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "ff7f240ab6e5c9236970c09e2562ea1e19d0690a40760af5d008149da1857bed",
+      "reviewSnapshotSha256": "cd28ea7eb5c9839782ff866bfddfe042c7722f6b099a2f1f29a78bdf007d09fc",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -682,8 +682,8 @@
         {
           "path": "supabase/functions/order-report-poll/index.ts",
           "exists": true,
-          "bytes": 6210,
-          "sha256": "711fe84dbd24c92d7dc349c9a5be31a20fbe9bd0af7765b062d60383e0d5ed64"
+          "bytes": 5391,
+          "sha256": "5709d7128e0e151148a704a8e19d06220bd6d8959eb5f8a7071b0acc7f1f4b81"
         }
       ]
     },
@@ -747,19 +747,19 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "ea70a857aa9011bf645e4dab6c1daca89c533daeb18b012486b77c784c3a86fb",
+      "reviewSnapshotSha256": "2f20934bb601edf98c037475a1430291150aebbf132204cfb0b5b3f8a99a9b3d",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "notes": "Must prove owner-scoped staging server data, seeded local coverage, redaction, and native cache cleanup.",
-      "currentBehavior": "Combined server/device export, batched encrypted reads, and exhaustive local redaction tests exist; live backend/native artifact not verified",
+      "notes": "Must prove owner-scoped staging server data, seeded local coverage, reverse-trial/service-event completeness, deletion/vendor scrubbing, redaction, and native cache cleanup.",
+      "currentBehavior": "Combined server/device export, batched encrypted reads, exhaustive local redaction tests, and a service-only export registry mutation contract exist; live backend/native artifact not verified",
       "sourcePaths": [
         {
           "path": "apps/mobile/src/features/settings/actions.ts",
           "exists": true,
-          "bytes": 7326,
-          "sha256": "c57765ab321d7331872ec2127895f70101d7abd313be26bfd7efcfc5714efcf0"
+          "bytes": 8475,
+          "sha256": "2694b10eab06294abef612a907cd426f43ac3242ca338dca4224db9013b8d06f"
         },
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.ts",
@@ -794,14 +794,44 @@
         {
           "path": "supabase/functions/account-deletion/index.ts",
           "exists": true,
-          "bytes": 15316,
-          "sha256": "7441711f06bd443c3d299c4607950c85ac586226c5d9879eeea601511a54659a"
+          "bytes": 12999,
+          "sha256": "910099e3293553b83b5b55b0a923021a316ff8e01af67a59f538e2db9d805490"
         },
         {
           "path": "supabase/functions/data-export/index.ts",
           "exists": true,
-          "bytes": 21892,
-          "sha256": "60a72ff0588741c040f6cfe5d2a10f000e49ffa9d6aafe212fe6d6875a1e207a"
+          "bytes": 17220,
+          "sha256": "63742bf8fb230789275eeb5ef7d3044dbf3d60e408643a6c85c43d7782cf4bb1"
+        },
+        {
+          "path": "supabase/functions/data-export/exportCore.ts",
+          "exists": true,
+          "bytes": 13115,
+          "sha256": "82d5284617ea31c14b28308f0594dd6946d67e7e5bd99c886b1dc4c459e871a8"
+        },
+        {
+          "path": "supabase/functions/data-export/exportCore.test.ts",
+          "exists": true,
+          "bytes": 8843,
+          "sha256": "8b06212f7072ec31647a298fae66f0b133f28603edb4bf9cf0af054f451bd78a"
+        },
+        {
+          "path": "supabase/functions/data-export/exportRegistry.ts",
+          "exists": true,
+          "bytes": 9516,
+          "sha256": "2535337af91faa1150aa41fb2d1608385eef6cb0787682399ec0475d7cc6fb41"
+        },
+        {
+          "path": "supabase/functions/data-export/exportRegistry.test.ts",
+          "exists": true,
+          "bytes": 7293,
+          "sha256": "6680aaeafc26910dffeca595130a07f13e9f669b27424f40da724883756d9194"
+        },
+        {
+          "path": "scripts/phase9/data-rights-smoke.mjs",
+          "exists": true,
+          "bytes": 39492,
+          "sha256": "5a040c40ef5876dd10699509a92c99ebab30ab6e362dcd06d51dbadbf43c930f"
         },
         {
           "path": "supabase/functions/_shared/storagePath.ts",
@@ -1038,7 +1068,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "42f22959a4cdbcd0a3d40d1b2dd40ff01b00820c2d3a152842a1e58b2e6892ba",
+      "reviewSnapshotSha256": "0e9c1e76686a611d41c6a3624cf5da2c64547a1f5b43fe41d86be4dc84768141",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1103,8 +1133,8 @@
         {
           "path": "apps/mobile/src/features/settings/actions.ts",
           "exists": true,
-          "bytes": 7326,
-          "sha256": "c57765ab321d7331872ec2127895f70101d7abd313be26bfd7efcfc5714efcf0"
+          "bytes": 8475,
+          "sha256": "2694b10eab06294abef612a907cd426f43ac3242ca338dca4224db9013b8d06f"
         },
         {
           "path": "supabase/functions/consent-withdrawal/index.ts",
