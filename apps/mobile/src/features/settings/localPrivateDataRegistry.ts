@@ -372,14 +372,14 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'onskin.recDismissed.v1',
     lifecycle: 'current',
     codec: jsonCodec('private_string_set', 1, [0]),
-    typedRead: gap('Dismissed-recommendation reads map unreadable state to an empty list.'),
+    typedRead: typedDomainRead,
     export: include('activity_and_app_state', 'dismissed_recommendations'),
   }),
   privateData({
     key: 'onskin.recPrefs.v1',
     lifecycle: 'current',
     codec: jsonCodec('recommendation_preferences', 1, [0]),
-    typedRead: gap('Recommendation preference reads map unreadable state to defaults.'),
+    typedRead: typedDomainRead,
     export: include('profile_and_preferences', 'recommendation_preferences'),
   }),
   privateData({

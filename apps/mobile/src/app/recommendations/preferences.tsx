@@ -12,8 +12,14 @@ import {
   REC_COPY,
   VALUES_LABEL,
 } from '@/features/recommendations/copy';
-import { DEFAULT_PREFERENCES, type RecPreferences } from '@/features/recommendations/preferences';
-import { loadPreferences, savePreferences } from '@/features/recommendations/store';
+import type { RecPreferences } from '@/features/recommendations/preferences';
+import { failClosedRecommendationQueriesAfterMutationFailure } from '@/features/recommendations/mutationFailure';
+import { recommendationInputsQueryOptions } from '@/features/recommendations/recommendationInputsQuery';
+import { savePreferences, type RecommendationInputs } from '@/features/recommendations/store';
+import {
+  ShelfDataUnavailableNotice,
+  type DataAvailabilityCopy,
+} from '@/features/shelf/ShelfDataAvailabilityGate';
 import { track } from '@/lib/analytics/track';
 import { APP_RECOMMENDATIONS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { isOwnerQueryScopeCurrent, ownerQueryPrefixes, queryKeys } from '@/lib/query/queryKeys';
@@ -30,6 +36,15 @@ import { colors } from '@/theme/tokens';
 const BUDGETS: BudgetBand[] = ['drugstore', 'mid', 'premium'];
 const FORMATS = ['gel', 'cream', 'fluid', 'balm', 'oil'];
 const MAX_E2E_RECOMMENDATION_PREFERENCES_DELAY_MS = 3_000;
+const RECOMMENDATION_PREFERENCES_AVAILABILITY_COPY: DataAvailabilityCopy = {
+  eyebrow: 'Private choices',
+  title: 'Recommendation choices unavailable',
+  body: "We couldn't safely read your saved recommendation choices. OnSkin did not reset or remove them. Preferences, dismissed suggestions, and personalized guidance are paused until they can be read again.",
+  retry: 'Try again',
+  retrying: 'Trying again...',
+  retryFailed:
+    'Your saved recommendation choices are still unavailable. Nothing was reset or removed.',
+};
 
 function devRecommendationPreferenceFailureMode(): 'once' | null {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
@@ -115,13 +130,83 @@ export default function PreferencesScreen() {
   const ownerScope = useOwnerQueryScope();
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
+  const [manualRetrying, setManualRetrying] = useState(false);
   const simulatedPreferenceFailureUsed = useRef(false);
-  const { data: prefs, isLoading } = useQuery({
-    queryKey: queryKeys.recommendationPreferences(ownerScope),
-    queryFn: loadPreferences,
-  });
-  const p = prefs ?? DEFAULT_PREFERENCES;
-  const controlsDisabled = isLoading || saving;
+  const commitInFlight = useRef(false);
+  const {
+    data: recommendationInputs,
+    isError: inputIsError,
+    isFetching,
+    isLoading,
+    refetch,
+  } = useQuery(recommendationInputsQueryOptions(ownerScope));
+  const isError = inputIsError || manualRetrying;
+
+  if (isError) {
+    return (
+      <Screen edges={['top']}>
+        <View className="flex-row items-center gap-3 pb-2 pt-1">
+          <RouteIconButton
+            accessibilityLabel="Back"
+            onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
+          />
+          <Text variant="body" className="font-sans-semibold" tone="muted">
+            Preferences
+          </Text>
+        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 48 }}
+        >
+          <ShelfDataUnavailableNotice
+            copy={RECOMMENDATION_PREFERENCES_AVAILABILITY_COPY}
+            onRetry={async () => {
+              if (manualRetrying) return { isError: true };
+              setManualRetrying(true);
+              try {
+                const result = await refetch();
+                return { isError: result.isError };
+              } finally {
+                setManualRetrying(false);
+              }
+            }}
+            retrying={manualRetrying || isFetching}
+            retryAccessibilityLabel="Retry loading recommendation choices"
+            onExit={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
+            exitLabel="Back to For you"
+          />
+        </ScrollView>
+      </Screen>
+    );
+  }
+
+  if (isLoading || !recommendationInputs) {
+    return (
+      <Screen edges={['top']}>
+        <View className="flex-row items-center gap-3 pb-2 pt-1">
+          <RouteIconButton
+            accessibilityLabel="Back"
+            onPress={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
+          />
+          <Text variant="body" className="font-sans-semibold" tone="muted">
+            Preferences
+          </Text>
+        </View>
+        <View
+          accessibilityLabel="Loading recommendation preferences"
+          accessibilityLiveRegion="polite"
+          className="flex-1 items-center justify-center px-7 pb-12"
+        >
+          <Text variant="bodySm" tone="muted" className="text-center">
+            Loading recommendation preferences…
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
+
+  const p = recommendationInputs.prefs;
+  const controlsDisabled = saving;
   const preferenceFailureMode = devRecommendationPreferenceFailureMode();
   const preferenceDelayMs = devRecommendationPreferenceDelayMs();
   const compactPreferences = height < 640;
@@ -205,7 +290,8 @@ export default function PreferencesScreen() {
   };
 
   const commit = async (next: RecPreferences) => {
-    if (controlsDisabled) return;
+    if (controlsDisabled || commitInFlight.current) return;
+    commitInFlight.current = true;
     haptics.select();
     setSaveFailed(false);
     setSaving(true);
@@ -214,7 +300,9 @@ export default function PreferencesScreen() {
         save: savePreferenceWithFixture,
         onSaved: async () => {
           if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-          qc.setQueryData(queryKeys.recommendationPreferences(ownerScope), next);
+          qc.setQueryData<RecommendationInputs>(queryKeys.recommendations(ownerScope), (current) =>
+            current ? { ...current, prefs: next } : current,
+          );
           setSaveFailed(false);
           track('preference_set');
           // The For-you hub reads prefs+dismissals together. Refresh it too.
@@ -222,12 +310,14 @@ export default function PreferencesScreen() {
             queryKey: ownerQueryPrefixes.recommendations(ownerScope),
           });
         },
-        onFailure: () => {
+        onFailure: async () => {
           if (!isOwnerQueryScopeCurrent(ownerScope)) return;
           setSaveFailed(true);
+          await failClosedRecommendationQueriesAfterMutationFailure(qc, ownerScope);
         },
       });
     } finally {
+      commitInFlight.current = false;
       if (isOwnerQueryScopeCurrent(ownerScope)) setSaving(false);
     }
   };

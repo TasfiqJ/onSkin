@@ -148,5 +148,12 @@ export async function savePregnancyStatus(status: PregnancyStatus): Promise<Prof
 
 export function useProfileBits() {
   const ownerScope = useOwnerQueryScope();
-  return useQuery({ queryKey: queryKeys.skinProfile(ownerScope), queryFn: readProfileBits });
+  return useQuery({
+    queryKey: queryKeys.skinProfile(ownerScope),
+    queryFn: readProfileBits,
+    // Consent and the authoritative profile are encrypted local reads. Let
+    // them resolve offline; readProfileBits already contains the optional,
+    // failure-tolerant server fallback for a genuinely missing local profile.
+    networkMode: 'always',
+  });
 }

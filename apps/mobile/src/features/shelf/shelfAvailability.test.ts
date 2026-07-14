@@ -30,6 +30,7 @@ describe('Shelf private-data availability contract', () => {
     expect(hook).toContain('lease.assertCurrent();');
     expect(hook).toContain('retry: false');
     expect(hook).toContain('retryOnMount: false');
+    expect(hook).toContain("networkMode: 'always'");
     expect(hook).toContain("activeQuery.state.status !== 'error'");
     expect(hook).toContain('data: query.isSuccess ? query.data : undefined');
 
@@ -56,9 +57,10 @@ describe('Shelf private-data availability contract', () => {
     expect(ask).toContain('if (!isSuccess) return safetyRefusal');
     expect(ask).toContain('hasShelf: isSuccess && ctx.hasShelfProducts');
     expect(recommendations).toContain(
-      'const isSuccess = shelf.isSuccess && profile.isSuccess && prefsQ.isSuccess;',
+      'const inputIsSuccess = shelf.isSuccess && profile.isSuccess && prefsQ.isSuccess;',
     );
-    expect(teaser).toContain('if (!isSuccess) return null;');
+    expect(recommendations).toContain('const isSuccess = inputIsSuccess && !manualRetrying;');
+    expect(teaser).toContain('if (!isSuccess || isError) return null;');
     expect(triggers).toContain(
       'notifyReplenishmentFromFreshShelf(latest.ownerScope, latest.refetchShelf, now)',
     );

@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import type { SequencingRole } from '@onskin/types';
@@ -8,6 +9,10 @@ import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { WhereToBuy } from '@/features/commerce/WhereToBuy';
 import { recTypeByKey } from '@/features/recommendations/catalog';
 import { REC_COPY } from '@/features/recommendations/copy';
+import {
+  containRecommendationDismissalFailure,
+  publishCommittedRecommendationDismissal,
+} from '@/features/recommendations/dismissalMutation';
 import type { Recommendation } from '@/features/recommendations/engine';
 import { dismissRecommendation } from '@/features/recommendations/store';
 import { useRecommendations } from '@/features/recommendations/useRecommendations';
@@ -16,10 +21,11 @@ import type { ProductCategory } from '@/features/shelf/categories';
 import {
   PRIVATE_GUIDANCE_AVAILABILITY_COPY,
   ShelfDataUnavailableNotice,
+  type DataAvailabilityCopy,
 } from '@/features/shelf/ShelfDataAvailabilityGate';
 import { track } from '@/lib/analytics/track';
 import { APP_RECOMMENDATIONS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
-import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
+import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
@@ -34,6 +40,15 @@ const ROLE_TO_CATEGORY: Partial<Record<SequencingRole, ProductCategory>> = {
   antioxidant: 'vitamin_c_serum',
   treatment: 'retinoid_serum',
   exfoliant: 'serum',
+};
+
+const RECOMMENDATION_DISMISS_AVAILABILITY_COPY: DataAvailabilityCopy = {
+  eyebrow: 'Private choices',
+  title: 'Suggestion not dismissed',
+  body: "We couldn't save “Not for me,” then couldn't safely reload your recommendation choices. Nothing was removed. Reload them before trying again.",
+  retry: 'Try again',
+  retrying: 'Trying again...',
+  retryFailed: 'Your saved recommendation choices are still unavailable. Nothing was removed.',
 };
 
 // 02 · The what / why / how card (docs/09 §6, design 02). Every recommendation
@@ -62,22 +77,57 @@ function HowRow({ k, value, accent }: { k: string; value: string; accent?: strin
   );
 }
 
-function Body({ rec }: { rec: Recommendation }) {
+function Body({
+  rec,
+  dismissFailed,
+  onDismissFailure,
+  onDismissSuccess,
+}: {
+  rec: Recommendation;
+  dismissFailed: boolean;
+  onDismissFailure: () => void;
+  onDismissSuccess: () => void;
+}) {
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
+  const mountedRef = useRef(true);
+  const dismissInFlightRef = useRef(false);
+  const [dismissing, setDismissing] = useState(false);
   const isConflict = rec.trigger === 'conflict';
+  const canPublish = () => mountedRef.current && isOwnerQueryScopeCurrent(ownerScope);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   const dismiss = async () => {
+    if (dismissInFlightRef.current) return;
+    dismissInFlightRef.current = true;
+    setDismissing(true);
     haptics.select();
-    track('recommendation_dismissed');
     try {
       await dismissRecommendation(ownerScope, rec.id);
     } catch {
+      await containRecommendationDismissalFailure(qc, ownerScope, {
+        isMounted: () => mountedRef.current,
+        onFailure: onDismissFailure,
+        onRelease: () => {
+          dismissInFlightRef.current = false;
+          setDismissing(false);
+        },
+      });
       return;
     }
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
-    await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.recommendations(ownerScope) });
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+
+    if (!publishCommittedRecommendationDismissal(qc, ownerScope, rec.id)) return;
+    track('recommendation_dismissed');
+    if (!canPublish()) return;
+    onDismissSuccess();
+    // The cache update above removes this stale detail before its strict reread.
+    // Keep the action lock set until unmount and navigate exactly once now.
     backOrReplace(router, APP_RECOMMENDATIONS_ROUTE);
   };
 
@@ -86,6 +136,7 @@ function Body({ rec }: { rec: Recommendation }) {
   const showWhereToBuy = rec.trigger !== 'replacement' && rec.trigger !== 'conflict';
 
   const accept = () => {
+    if (dismissing) return;
     haptics.success();
     track('recommendation_accepted');
     if (isConflict && rec.relatedRuleId) {
@@ -174,13 +225,31 @@ function Body({ rec }: { rec: Recommendation }) {
         {showWhereToBuy ? <WhereToBuy productType={rec.productType} /> : null}
       </View>
 
+      {dismissFailed ? (
+        <View
+          accessibilityLiveRegion="polite"
+          accessibilityRole="alert"
+          className="mt-4 rounded-xl bg-clay-tint px-3.5 py-3"
+          style={{ borderWidth: 1, borderColor: colors.hairline }}
+        >
+          <Text className="font-sans-bold text-[13px]" style={{ color: colors.clayDeep }}>
+            Suggestion not dismissed
+          </Text>
+          <Text variant="bodySm" tone="muted" className="mt-1">
+            We couldn&apos;t save “Not for me.” Nothing was removed. You can try again.
+          </Text>
+        </View>
+      ) : null}
+
       {/* actions */}
       <View className="mt-4 flex-row gap-3">
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ disabled: dismissing }}
+          disabled={dismissing}
           onPress={accept}
           className="h-[50px] flex-1 items-center justify-center rounded-pill"
-          style={{ backgroundColor: colors.clay }}
+          style={{ backgroundColor: colors.clay, opacity: dismissing ? 0.6 : 1 }}
         >
           <Text className="font-sans-semibold text-[15px]" style={{ color: colors.paper }}>
             {isConflict ? 'See the clash' : REC_COPY.card.addToShelf}
@@ -188,9 +257,15 @@ function Body({ rec }: { rec: Recommendation }) {
         </Pressable>
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ disabled: dismissing }}
+          disabled={dismissing}
           onPress={dismiss}
           className="h-[50px] items-center justify-center rounded-pill px-6"
-          style={{ borderWidth: 1.5, borderColor: colors.hairlineStrong }}
+          style={{
+            borderWidth: 1.5,
+            borderColor: colors.hairlineStrong,
+            opacity: dismissing ? 0.6 : 1,
+          }}
         >
           <Text className="font-sans-semibold text-[15px]" tone="muted">
             {REC_COPY.card.dismiss}
@@ -208,6 +283,7 @@ export default function RecommendationDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { width } = useWindowDimensions();
   const { result, isError, isFetching, isLoading, retry } = useRecommendations();
+  const [dismissFailed, setDismissFailed] = useState(false);
   const rec = result.recommendations.find((r) => r.id === id);
   const compactHeader = width <= 360;
 
@@ -238,7 +314,11 @@ export default function RecommendationDetail() {
           contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 48 }}
         >
           <ShelfDataUnavailableNotice
-            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
+            copy={
+              dismissFailed
+                ? RECOMMENDATION_DISMISS_AVAILABILITY_COPY
+                : PRIVATE_GUIDANCE_AVAILABILITY_COPY
+            }
             onRetry={retry}
             retrying={isFetching}
             onExit={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
@@ -267,7 +347,12 @@ export default function RecommendationDetail() {
           </Pressable>
         </View>
       ) : (
-        <Body rec={rec} />
+        <Body
+          rec={rec}
+          dismissFailed={dismissFailed}
+          onDismissFailure={() => setDismissFailed(true)}
+          onDismissSuccess={() => setDismissFailed(false)}
+        />
       )}
     </Screen>
   );

@@ -31,8 +31,6 @@ describe('local private-data contract registry', () => {
       'onskin.notiflog.v1:typedRead',
       'onskin.photos.cloudBackup:codec',
       'onskin.photos.v1:typedRead',
-      'onskin.recDismissed.v1:typedRead',
-      'onskin.recPrefs.v1:typedRead',
       'onskin.reviewPrompt.v1:typedRead',
       'onskin.subscription.promptedExpiry:typedRead',
       'onskin.trendState.v1:codec',

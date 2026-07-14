@@ -136,6 +136,9 @@ export function useShelf() {
 
   const query = useQuery<ShelfData>({
     queryKey: queryKeys.shelf(ownerScope, boundary),
+    // Shelf, profile-consent, and conflict-choice inputs are authoritative
+    // encrypted local reads, so they must execute while React Query is offline.
+    networkMode: 'always',
     refetchOnReconnect: (activeQuery) =>
       activeQuery.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(activeQuery),
     refetchOnWindowFocus: (activeQuery) =>

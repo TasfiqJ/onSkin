@@ -489,6 +489,7 @@ describe('owner-scoped query keys', () => {
     const ask = read('features/ask/useAsk.ts');
     const recommendationPreferences = read('app/recommendations/preferences.tsx');
     const recommendations = read('features/recommendations/useRecommendations.ts');
+    const recommendationInputsQuery = read('features/recommendations/recommendationInputsQuery.ts');
     const note = read('app/community/note/[id].tsx');
     const community = read('features/community/useCommunity.ts');
     const cycleAnchor = read('features/routine/cycleAnchor.ts');
@@ -511,8 +512,9 @@ describe('owner-scoped query keys', () => {
     expect(settingsProfile).toContain('qc.setQueryData(queryKeys.skinProfile(ownerScope), next)');
     expect(askConsent).toContain('queryKeys.askConsent(ownerScope)');
     expect(ask).toContain('queryKeys.askGroundedTurns(ownerScope, boundary, period)');
-    expect(recommendationPreferences).toContain('queryKeys.recommendationPreferences(ownerScope)');
-    expect(recommendations).toContain('queryKeys.recommendations(ownerScope)');
+    expect(recommendationPreferences).toContain('recommendationInputsQueryOptions(ownerScope)');
+    expect(recommendations).toContain('recommendationInputsQueryOptions(ownerScope)');
+    expect(recommendationInputsQuery).toContain('queryKeys.recommendations(ownerScope)');
     expect(note).toContain('queryKeys.noteHelped(ownerScope, id)');
     expect(community).toContain('queryKeys.communityGate(ownerScope)');
     expect(cycleAnchor).toContain('queryKeys.cycleAnchor(ownerScope, boundary)');
@@ -532,6 +534,7 @@ describe('owner-scoped query keys', () => {
       ask,
       recommendationPreferences,
       recommendations,
+      recommendationInputsQuery,
       note,
       community,
       cycleAnchor,

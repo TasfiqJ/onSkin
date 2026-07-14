@@ -48,7 +48,9 @@ describe('RecommendationsTeaser mobile contracts', () => {
     expect(source).toContain(
       'const showCompactGapOnly = compact && showGapPrompt && Boolean(spfGap)',
     );
-    expect(source).toContain('<GapPrompt compact={compact} recId={spfGap.id} />');
+    expect(source).toContain('recId={spfGap.id}');
+    expect(source).toContain('onDismissFailure={markDismissFailure}');
+    expect(source).toContain('onDismissSuccess={clearDismissFailure}');
     expect(source).toContain('showCompactGapOnly ? null');
     expect(source).toContain('<ForYouCard');
     expect(source).toContain('compact={compact}');
@@ -59,5 +61,29 @@ describe('RecommendationsTeaser mobile contracts', () => {
     expect(source).not.toContain(
       'className="h-[38px] items-center justify-center rounded-pill px-5"',
     );
+    expect(source).toContain('Suggestion not dismissed');
+    expect(source).toContain('if (dismissFailed && !isSuccess)');
+    expect(source).toContain(
+      'const dismissFailed = controlledDismissFailed ?? localDismissFailed;',
+    );
+    expect(source).toContain('className="mt-2 min-h-[48px] items-center justify-center');
+    expect(source).toContain('accessibilityState={{ disabled: dismissing }}');
+  });
+
+  it('keeps dismissal single-flight until the committed cache update removes the prompt', () => {
+    const source = readFileSync(`${RECS_DIR}/RecommendationsTeaser.tsx`, 'utf8');
+    const handler = source.slice(
+      source.indexOf('const dismiss = async () => {'),
+      source.indexOf('\n\n  const openRecommendation'),
+    );
+    const publishIndex = handler.indexOf('publishCommittedRecommendationDismissal');
+
+    expect(handler).toContain('if (dismissInFlightRef.current) return;');
+    expect(handler).toContain('dismissInFlightRef.current = true;');
+    expect(handler).toContain('if (!canPublish()) return;');
+    expect(publishIndex).toBeGreaterThan(-1);
+    expect(handler.lastIndexOf('setDismissing(false);')).toBeLessThan(publishIndex);
+    expect(publishIndex).toBeLessThan(handler.indexOf('onDismissSuccess();'));
+    expect(handler).not.toContain('await qc.invalidateQueries');
   });
 });

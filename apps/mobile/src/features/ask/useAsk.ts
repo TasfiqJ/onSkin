@@ -138,8 +138,8 @@ export function useAsk() {
     [ctx, finalise, isSuccess],
   );
 
-  async function retry(): Promise<void> {
-    await Promise.all([
+  async function retry(): Promise<{ isError: boolean }> {
+    const results = await Promise.all([
       shelf.isError ? shelf.refetch() : Promise.resolve(),
       plan.isError ? plan.retry() : Promise.resolve(),
       recs.isError ? recs.retry() : Promise.resolve(),
@@ -147,6 +147,11 @@ export function useAsk() {
       entitlement.isError ? entitlement.refetch() : Promise.resolve(),
       turns.isError ? turns.refetch() : Promise.resolve(),
     ]);
+    return {
+      isError: results.some(
+        (result) => result && typeof result === 'object' && 'isError' in result && result.isError,
+      ),
+    };
   }
 
   const isError =

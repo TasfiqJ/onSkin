@@ -126,9 +126,12 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('lineHeight: compact ? 16 : undefined');
     expect(source).not.toContain('numberOfLines={compact ? 1 : undefined}');
     expect(source.match(/<CheckRow[\s\S]*?compact=\{compactPhone\}/g)).toHaveLength(2);
-    expect(source).toContain(
-      '<RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />',
-    );
+    expect(source).toContain('const [recommendationDismissFailed, setRecommendationDismissFailed]');
+    expect(source).toContain('<RecommendationsTeaser');
+    expect(source).toContain('compact={compactRecommendationPrompt}');
+    expect(source).toContain('dismissFailed={recommendationDismissFailed}');
+    expect(source).toContain('onDismissFailure={() => setRecommendationDismissFailed(true)}');
+    expect(source).toContain('onDismissSuccess={() => setRecommendationDismissFailed(false)}');
     expect(source).toContain('{showRecommendations ? (');
     expect(source).not.toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
     expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');

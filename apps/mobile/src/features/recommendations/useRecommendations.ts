@@ -1,18 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { classifyRole } from '@/features/routine/sequencing';
 import { useProfileBits } from '@/features/scheduler/profile';
 import type { ShelfProduct } from '@/features/shelf/store';
 import { useShelf } from '@/features/shelf/useShelf';
-import { queryKeys } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import { recommend, type RecReplenishmentItem, type RecResult, type RecShelfItem } from './engine';
 import { isRecommendationDataLoading } from './loading';
-import { DEFAULT_PREFERENCES } from './preferences';
+import { recommendationInputsQueryOptions } from './recommendationInputsQuery';
 import { collectReplenishmentCandidates } from './replenishment';
-import { loadDismissed, loadPreferences } from './store';
 
 // The recommendation data layer (docs/09 §5/§12). Assembles the engine's inputs
 // from the user's REAL state. The live shelf + its conflicts (useShelf), the shared
@@ -30,12 +28,12 @@ export function useRecommendations() {
   const shelf = useShelf();
   const profile = useProfileBits();
   const ownerScope = useOwnerQueryScope();
-  const prefsQ = useQuery({
-    queryKey: queryKeys.recommendations(ownerScope),
-    queryFn: async () => ({ prefs: await loadPreferences(), dismissed: await loadDismissed() }),
-  });
-  const isSuccess = shelf.isSuccess && profile.isSuccess && prefsQ.isSuccess;
-  const isError = shelf.isError || profile.isError || prefsQ.isError;
+  const [manualRetrying, setManualRetrying] = useState(false);
+  const prefsQ = useQuery(recommendationInputsQueryOptions(ownerScope));
+  const inputIsSuccess = shelf.isSuccess && profile.isSuccess && prefsQ.isSuccess;
+  const isSuccess = inputIsSuccess && !manualRetrying;
+  const inputIsError = shelf.isError || profile.isError || prefsQ.isError;
+  const isError = inputIsError || manualRetrying;
 
   const result = useMemo<RecResult>(() => {
     if (!isSuccess || !shelf.data || !profile.data || !prefsQ.data) return EMPTY;
@@ -67,17 +65,26 @@ export function useRecommendations() {
       shelf: items,
       replenishment,
       conflicts: shelf.data.unresolvedConflicts,
-      preferences: prefsQ.data.prefs ?? DEFAULT_PREFERENCES,
-      dismissed: new Set(prefsQ.data.dismissed ?? []),
+      preferences: prefsQ.data.prefs,
+      dismissed: new Set(prefsQ.data.dismissed),
     });
   }, [isSuccess, shelf.data, profile.data, prefsQ.data]);
 
-  async function retry(): Promise<void> {
-    await Promise.all([
-      shelf.isError ? shelf.refetch() : Promise.resolve(),
-      profile.isError ? profile.refetch() : Promise.resolve(),
-      prefsQ.isError ? prefsQ.refetch() : Promise.resolve(),
-    ]);
+  async function retry(): Promise<{ isError: boolean }> {
+    if (manualRetrying) return { isError: true };
+    setManualRetrying(true);
+    try {
+      const results = await Promise.all([
+        shelf.isError ? shelf.refetch() : Promise.resolve(),
+        profile.isError ? profile.refetch() : Promise.resolve(),
+        prefsQ.isError ? prefsQ.refetch() : Promise.resolve(),
+      ]);
+      return {
+        isError: results.some((result) => result && 'isError' in result && result.isError),
+      };
+    } finally {
+      setManualRetrying(false);
+    }
   }
 
   return {
@@ -90,7 +97,7 @@ export function useRecommendations() {
       }) ||
       (!isSuccess && !isError),
     isError,
-    isFetching: shelf.isFetching || profile.isFetching || prefsQ.isFetching,
+    isFetching: manualRetrying || shelf.isFetching || profile.isFetching || prefsQ.isFetching,
     isSuccess,
     retry,
   };

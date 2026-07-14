@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -116,6 +118,14 @@ afterEach(() => {
 });
 
 describe('skin profile axis mapping', () => {
+  it('runs the encrypted local profile query while the network is offline', () => {
+    const source = readFileSync(fileURLToPath(new URL('./profile.ts', import.meta.url)), 'utf8');
+
+    expect(source).toContain('queryKey: queryKeys.skinProfile(ownerScope)');
+    expect(source).toContain('queryFn: readProfileBits');
+    expect(source).toContain("networkMode: 'always'");
+  });
+
   it('maps sensitivity axis scores into coarse planner buckets', () => {
     expect(sensitivityFromAxis(null)).toBe('neutral');
     expect(sensitivityFromAxis(0)).toBe('neutral');

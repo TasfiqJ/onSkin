@@ -43,12 +43,14 @@ export function ShelfDataUnavailableNotice({
   onExit,
   exitLabel = 'Back',
   copy = SHELF_AVAILABILITY_COPY,
+  retryAccessibilityLabel = 'Retry loading private data',
 }: {
   onRetry: () => Promise<RetryResult>;
   retrying: boolean;
   onExit?: () => void;
   exitLabel?: string;
   copy?: DataAvailabilityCopy;
+  retryAccessibilityLabel?: string;
 }) {
   const [retryFailed, setRetryFailed] = useState(false);
 
@@ -88,7 +90,7 @@ export function ShelfDataUnavailableNotice({
 
       <View className="mt-7 gap-2.5">
         <Pressable
-          accessibilityLabel="Retry loading private Shelf data"
+          accessibilityLabel={retryAccessibilityLabel}
           accessibilityRole="button"
           accessibilityState={{ disabled: retrying }}
           disabled={retrying}
@@ -162,6 +164,7 @@ export function ShelfDataAvailabilityGate({
         retrying={query.isFetching}
         onExit={onExit}
         exitLabel={exitLabel}
+        retryAccessibilityLabel="Retry loading private Shelf data"
       />
     </ScrollView>
   );

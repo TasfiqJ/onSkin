@@ -400,6 +400,7 @@ function TodayScreenContent() {
     },
   });
   const [completionMutationFailed, setCompletionMutationFailed] = useState(false);
+  const [recommendationDismissFailed, setRecommendationDismissFailed] = useState(false);
   const { data: doneData } = completionQuery;
   const done = doneData ?? new Set<string>();
   const hasExamplePlan = planData?.isExample === true;
@@ -612,7 +613,13 @@ function TodayScreenContent() {
 
           {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
           {showRecommendations ? (
-            <RecommendationsTeaser compact={compactRecommendationPrompt} showGapPrompt />
+            <RecommendationsTeaser
+              compact={compactRecommendationPrompt}
+              showGapPrompt
+              dismissFailed={recommendationDismissFailed}
+              onDismissFailure={() => setRecommendationDismissFailed(true)}
+              onDismissSuccess={() => setRecommendationDismissFailed(false)}
+            />
           ) : null}
 
           {/* Ask. The deterministic, on-device advisor (docs/13 §9 moat taste) */}

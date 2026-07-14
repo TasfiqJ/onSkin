@@ -214,4 +214,12 @@ describe('Ask route launch contracts', () => {
       source.indexOf("if (final.kind === 'escalate')"),
     );
   });
+
+  it('reports persistent recommendation retry failures to the Ask recovery notice', () => {
+    const source = readAskFeature('useAsk.ts');
+
+    expect(source).toContain('async function retry(): Promise<{ isError: boolean }>');
+    expect(source).toContain('recs.isError ? recs.retry() : Promise.resolve()');
+    expect(source).toContain("'isError' in result && result.isError");
+  });
 });

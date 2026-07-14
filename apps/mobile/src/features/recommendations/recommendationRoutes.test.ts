@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 const APP_DIR = fileURLToPath(new URL('../../app/', import.meta.url));
+const RECOMMENDATIONS_DIR = fileURLToPath(new URL('./', import.meta.url));
 
 function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
@@ -130,13 +131,90 @@ describe('Recommendation route contracts', () => {
     );
     expect(source).toContain('await savePreferences(ownerScope, next);');
     expect(source).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
+    expect(source).toContain('const commitInFlight = useRef(false);');
+    expect(source).toContain('if (controlsDisabled || commitInFlight.current) return;');
+    expect(source).toContain('commitInFlight.current = true;');
+    expect(source).toContain('commitInFlight.current = false;');
+    expect(source).toContain('failClosedRecommendationQueriesAfterMutationFailure');
+  });
+
+  it('never renders default preference controls or recommendation output from unreadable state', () => {
+    const preferences = readAppRoute('recommendations/preferences.tsx');
+    const hook = readFileSync(`${RECOMMENDATIONS_DIR}/useRecommendations.ts`, 'utf8');
+    const queryOptions = readFileSync(
+      `${RECOMMENDATIONS_DIR}/recommendationInputsQuery.ts`,
+      'utf8',
+    );
+    const store = readFileSync(`${RECOMMENDATIONS_DIR}/store.ts`, 'utf8');
+
+    expect(preferences).not.toContain('prefs ?? DEFAULT_PREFERENCES');
+    expect(preferences).not.toContain('DEFAULT_PREFERENCES');
+    expect(preferences).toContain('if (isError) {');
+    expect(preferences.indexOf('if (isError) {')).toBeLessThan(
+      preferences.indexOf('const p = recommendationInputs.prefs;'),
+    );
+    expect(preferences).toContain('Recommendation choices unavailable');
+    expect(preferences).toContain('Preferences, dismissed suggestions');
+    expect(preferences).toContain('Retry loading recommendation choices');
+    expect(preferences).toContain('Loading recommendation preferences…');
+    expect(preferences).toContain('recommendationInputsQueryOptions(ownerScope)');
+    expect(preferences).toContain('const [manualRetrying, setManualRetrying] = useState(false);');
+    expect(preferences).toContain('const isError = inputIsError || manualRetrying;');
+    expect(preferences).toContain('retrying={manualRetrying || isFetching}');
+
+    expect(hook).toContain('recommendationInputsQueryOptions(ownerScope)');
+    expect(hook).toContain('const isSuccess = inputIsSuccess && !manualRetrying;');
+    expect(hook).not.toContain('?? DEFAULT_PREFERENCES');
+    expect(hook).not.toContain('prefsQ.data.dismissed ?? []');
+
+    expect(queryOptions).toContain('loadRecommendationInputs');
+    expect(queryOptions).toContain('runOwnerQueryOperation(ownerScope');
+    expect(queryOptions).toContain('queryKeys.recommendations(ownerScope)');
+    expect(queryOptions).toContain('retry: false');
+    expect(queryOptions).toContain('retryOnMount: false');
+    expect(queryOptions).toContain('refetchOnReconnect: false');
+    expect(queryOptions).toContain('refetchOnWindowFocus: false');
+    expect(queryOptions).toContain("networkMode: 'always'");
+    expect(store).toContain('EXPO_PUBLIC_E2E_RECOMMENDATION_READ_DELAY_MS');
+    expect(store).toContain('const MAX_E2E_RECOMMENDATION_READ_DELAY_MS = 3_000;');
+  });
+
+  it('keeps failed recommendation dismissals visible and retryable', () => {
+    const teaser = readFileSync(`${RECOMMENDATIONS_DIR}/RecommendationsTeaser.tsx`, 'utf8');
+    const detail = readAppRoute('recommendations/[id].tsx');
+
+    expect(teaser).toContain('Suggestion not dismissed');
+    expect(teaser).toContain('Retry loading recommendation choices after dismissal failure');
+    expect(teaser).toContain('if (dismissFailed && !isSuccess)');
+    expect(teaser).toContain('onDismissFailure={markDismissFailure}');
+    expect(detail).toContain('RECOMMENDATION_DISMISS_AVAILABILITY_COPY');
+    expect(detail).toContain('onDismissFailure={() => setDismissFailed(true)}');
+    expect(detail).toContain('accessibilityState={{ disabled: dismissing }}');
   });
 
   it('passes the mounted owner scope into every recommendation dismissal', () => {
     const detail = readAppRoute('recommendations/[id].tsx');
 
     expect(detail).toContain('await dismissRecommendation(ownerScope, rec.id);');
-    expect(detail).toContain('if (!isOwnerQueryScopeCurrent(ownerScope)) return;');
+    expect(detail).toContain('mountedRef.current && isOwnerQueryScopeCurrent(ownerScope)');
+    expect(detail).toContain('publishCommittedRecommendationDismissal(qc, ownerScope, rec.id)');
+  });
+
+  it('publishes a committed detail dismissal before one guarded terminal navigation', () => {
+    const detail = readAppRoute('recommendations/[id].tsx');
+    const handler = detail.slice(
+      detail.indexOf('const dismiss = async () => {'),
+      detail.indexOf('\n\n  // Where-to-buy'),
+    );
+    const publishIndex = handler.indexOf('publishCommittedRecommendationDismissal');
+    const navigateIndex = handler.lastIndexOf('backOrReplace(router, APP_RECOMMENDATIONS_ROUTE);');
+
+    expect(handler).toContain('if (dismissInFlightRef.current) return;');
+    expect(handler).toContain('if (!canPublish()) return;');
+    expect(publishIndex).toBeGreaterThan(-1);
+    expect(handler.lastIndexOf('setDismissing(false);')).toBeLessThan(publishIndex);
+    expect(publishIndex).toBeLessThan(navigateIndex);
+    expect(handler).not.toContain('await qc.invalidateQueries');
   });
 
   it('keeps recommendation preferences navigation touchable on phones', () => {
