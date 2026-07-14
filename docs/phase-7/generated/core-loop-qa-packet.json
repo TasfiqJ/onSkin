@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T20:06:25.601Z",
+  "generatedAt": "2026-07-14T00:08:27.759Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "0c66557d9c730275ff2d79e61b1ac9c7a8229a6f",
+  "gitSha": "d32779024da7ada5f8f935e17743163b0ecc919f",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -188,8 +188,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 21062,
-      "sha256": "9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0"
+      "bytes": 22309,
+      "sha256": "a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -260,8 +260,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 37119,
-      "sha256": "b13fdc0f555048e214cda72affba45497b2d340b0e60a0ab4ae020a2ccc54c24"
+      "bytes": 37329,
+      "sha256": "ef9b7c6e0e1e848d60577c19a936d91d228421de548af6f157a762ac38f303bf"
     },
     {
       "path": "apps/mobile/src/app/_layout.tsx",
@@ -776,8 +776,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 358190,
-      "sha256": "1eeb5ae98ce1c98f9f479c9fe720a6ad0eb52a6959fec5f3dc3c54c5696ca461"
+      "bytes": 358943,
+      "sha256": "059cf974dc272f3b410ee65bc2b3ef5dcf9b5363c5a277bd7ecd39eeb9f396e6"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
@@ -795,13 +795,13 @@
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
       "bytes": 26526,
-      "sha256": "5c75407c37aa3953efdf9193b0dd12391fd739bed5741fc88eaa76b60b19325a"
+      "sha256": "263c78ac0123d5560596c828c2afbf4d0a0bca891197ad0471f43177c3d8b831"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 23039,
-      "sha256": "9ba811fbc4cd0a1248c1f863855bbf61c3755831efa5d1ed4a31e656220fd651"
+      "sha256": "342c5fcd9ecf34babee87b571c49998840fa6e0a218ff4973349816850ab999f"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
