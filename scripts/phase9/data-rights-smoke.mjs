@@ -37,6 +37,9 @@ const deletionServiceCleanupTestSource = read(
 const accountServiceScrubMigration = read(
   'supabase/migrations/20260713000046_account_service_row_scrub.sql',
 );
+const accountObfErasureMigration = read(
+  'supabase/migrations/20260713000047_account_obf_contribution_erasure.sql',
+);
 const accountServiceScrubPostgresRehearsal = read(
   'scripts/phase9/account-service-scrub-postgres-rehearsal.sql',
 );
@@ -44,7 +47,7 @@ const orderAttributionCoreSource = read(
   'supabase/functions/order-report-poll/orderAttributionCore.ts',
 );
 const orderAttributionPollSource = read('supabase/functions/order-report-poll/index.ts');
-const completeDeletionSource = `${deletionSource}\n${deletionProviderSource}\n${deletionServiceCleanupSource}\n${accountServiceScrubMigration}`;
+const completeDeletionSource = `${deletionSource}\n${deletionProviderSource}\n${deletionServiceCleanupSource}\n${accountServiceScrubMigration}\n${accountObfErasureMigration}`;
 const environmentExampleSource = read('.env.example');
 const edgeFunctionManifest = JSON.parse(read('supabase/functions/manifest.json'));
 const deletionManifest = edgeFunctionManifest.functions?.['account-deletion'] ?? {};
@@ -550,6 +553,7 @@ block(
     /rpc\(ACCOUNT_SERVICE_SCRUB_RPC/.test(deletionServiceCleanupSource) &&
     /complete\s*!==\s*true/.test(deletionServiceCleanupSource) &&
     /residual_order_attributions\s*!==\s*0/.test(deletionServiceCleanupSource) &&
+    /residual_obf_contributions\s*!==\s*0/.test(deletionServiceCleanupSource) &&
     /residual_subscription_identities\s*!==\s*0/.test(deletionServiceCleanupSource),
   'Account deletion must use the strict service-role scrub RPC attestation before deleting Auth.',
 );
@@ -567,6 +571,22 @@ block(
     /subscriptions_events_deleted/.test(deletionServiceCleanupSource) &&
     /account-only subscription events to be deleted/.test(deletionServiceCleanupTestSource),
   'Service-row deletion must enforce unambiguous click ownership, detach deleted clicks, delete A-only subscription events, and preserve shared owners.',
+);
+block(
+  errors,
+  /delete\s+from\s+public\.obf_contribution_queue\s+where\s+user_id\s+is\s+null/i.test(
+    accountObfErasureMigration,
+  ) &&
+    /alter\s+column\s+user_id\s+set\s+not\s+null/i.test(accountObfErasureMigration) &&
+    /foreign\s+key\s*\(\s*user_id\s*\)[\s\S]*references\s+auth\.users\s*\(\s*id\s*\)[\s\S]*on\s+delete\s+cascade/i.test(
+      accountObfErasureMigration,
+    ) &&
+    /delete\s+from\s+public\.obf_contribution_queue\s+as\s+contribution[\s\S]*contribution\.user_id\s*=\s*p_user_id/i.test(
+      accountObfErasureMigration,
+    ) &&
+    /REHEARSAL_DIRECT_AUTH_DELETE_LEFT_OBF_PAYLOAD/.test(accountServiceScrubPostgresRehearsal) &&
+    /REHEARSAL_OBF_RETRY_NOT_IDEMPOTENT/.test(accountServiceScrubPostgresRehearsal),
+  'OBF contribution payloads must have mandatory Auth ownership, atomic scrub coverage, direct-delete cascade, and idempotent rehearsal proof.',
 );
 block(
   errors,
@@ -873,13 +893,6 @@ block(
     /Any server-side photo metadata rows are exported separately in photos\./.test(liveHarness) &&
     (liveHarness.match(/assertLocalPhotoExportDisclosure\(/g)?.length ?? 0) >= 3,
   'Live data-rights harness must verify the local-photo exclusion in normal and rate-limit export responses.',
-);
-
-const migrationText = read('supabase/migrations/20260614000026_phase4_catalog.sql');
-warn(
-  warnings,
-  /obf_contribution_queue[\s\S]*on delete set null/.test(migrationText),
-  'OBF contribution queue user link is not documented as set-null on account deletion.',
 );
 
 warn(

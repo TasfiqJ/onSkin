@@ -141,6 +141,7 @@ const packets = {
     'supabase/functions/consent-withdrawal/index.ts',
     'supabase/migrations/20260615000027_phase6_payments.sql',
     'supabase/migrations/20260713000046_account_service_row_scrub.sql',
+    'supabase/migrations/20260713000047_account_obf_contribution_erasure.sql',
     'scripts/phase9/data-rights-smoke.mjs',
     'scripts/phase9/account-service-scrub-postgres-rehearsal.sql',
     'scripts/phase9/live-data-rights.mjs',

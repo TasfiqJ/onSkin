@@ -138,6 +138,7 @@ const sourceFiles = [
   'supabase/migrations/20260711000039_replenishment_alert_opt_in.sql',
   'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
   'supabase/migrations/20260713000046_account_service_row_scrub.sql',
+  'supabase/migrations/20260713000047_account_obf_contribution_erasure.sql',
   'scripts/phase9/lib.mjs',
   'scripts/phase2/supabase-rls-smoke.mjs',
   'scripts/phase9/release-contact-smoke.mjs',

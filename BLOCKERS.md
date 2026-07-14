@@ -356,7 +356,7 @@ attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains 45 migrations, Supabase client code, hand-authored stale
+The repo contains 46 migrations, Supabase client code, hand-authored stale
 types, Edge Functions, a staging deploy wrapper, and an exhaustive live-project
 RLS harness. The credential-free DB-09 contract classifies all 63 public tables,
 probes all 40 private tables across permanent, signed-anonymous, and
@@ -366,26 +366,30 @@ closes signed-anonymous cloud-photo insert/update access. The DB-10 export
 registry now keeps service-only reverse-trial/subscription rows on verified-user
 backend paths and passes 13 Deno contracts. Migration `0046` adds the
 fail-closed, array-aware service-identity scrub; its production-shaped
-PostgreSQL 15/17 rehearsal passes. Provider source contracts require exact
+PostgreSQL 15/17 rehearsal passes. Migration `0047` removes legacy null-owner
+OBF contribution payloads, requires a live cascading Auth owner, and extends
+the scrub's exact deletion/residue attestation; its PostgreSQL 15/17 rehearsal
+also proves idempotent scrub and direct Auth cascade. Provider source contracts require exact
 RevenueCat, PostHog, and Apple attestations and expose a best-effort manual
 Apple outcome without withholding deletion. The full lifecycle still lacks a
 durable barrier/provider-step state, queued PostHog polling, late-webhook and
-stale-session suppression, retry-safe mobile RevenueCat reset, durable Apple
-notice/token handling, and live concurrency/provider proof. There is no
+stale-session suppression, account-keyed rate-limit and cross-owner community
+handle cleanup, retry-safe mobile RevenueCat reset, durable Apple notice/token
+handling, and live concurrency/provider proof. There is no
 reviewed full local Supabase reset or live staging/production project verified
 for release.
 
 Next action:
 
 - add the deletion barrier and durable provider-step state, poll queued PostHog
-  work, suppress late RevenueCat/deleting-identity writes, make mobile pending
-  deletion/RevenueCat reset retry-safe, and make Apple token/manual-notice
-  handling durable;
+  work, suppress late RevenueCat/deleting-identity writes, clean account-keyed
+  rate-limit and cross-owner community-handle residue, make mobile pending
+  deletion/RevenueCat reset retry-safe, and make Apple token/manual-notice handling durable;
 - create staging and production projects after the brand decision;
 - fill `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY`;
 - run `npm run phase2:check-env:strict`;
-- reset a clean local stack through all 45 migrations, then apply them with
+- reset a clean local stack through all 46 migrations, then apply them with
   `scripts/phase2/deploy-supabase-staging.ps1`;
 - regenerate `packages/types/src/database.types.ts`;
 - deploy `revenuecat-webhook`, `account-deletion`, `data-export`, and

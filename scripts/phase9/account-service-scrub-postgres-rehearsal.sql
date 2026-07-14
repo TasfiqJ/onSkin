@@ -1,8 +1,9 @@
 \set ON_ERROR_STOP on
 
--- Disposable PostgreSQL rehearsal for migration 0046. Run only in an empty
--- throwaway database; this script creates the minimum pre-0046 schema, applies
--- the real migration, and exercises legacy/current A/B fixtures through the RPC.
+-- Disposable PostgreSQL rehearsal for migrations 0046 and 0047. Run only in an
+-- empty throwaway database; this script creates the minimum pre-migration
+-- schema, applies the real migrations, and exercises legacy/current A/B
+-- fixtures through both the RPC and a direct Auth hard deletion.
 
 create role anon noinherit;
 create role authenticated noinherit;
@@ -22,6 +23,13 @@ create table public.commerce_click_events (
 create table public.order_attributions (
   id text primary key,
   click_token text
+);
+
+create table public.obf_contribution_queue (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users (id) on delete set null,
+  barcode text not null,
+  payload jsonb not null
 );
 
 create table public.subscriptions_events (
@@ -67,6 +75,32 @@ insert into public.order_attributions (id, click_token) values
   ('order-a', 'token-a'),
   ('order-b', 'token-b'),
   ('order-unknown', 'unknown-token');
+
+insert into public.obf_contribution_queue (id, user_id, barcode, payload) values
+  (
+    '10000000-0000-4000-8000-000000000001',
+    '00000000-0000-4000-8000-000000000001',
+    'obf-a',
+    '{"fixture":"delete-through-scrub","private_note":"account-a"}'::jsonb
+  ),
+  (
+    '10000000-0000-4000-8000-000000000002',
+    '00000000-0000-4000-8000-000000000002',
+    'obf-b',
+    '{"fixture":"retain-byte-identical","private_note":"account-b"}'::jsonb
+  ),
+  (
+    '10000000-0000-4000-8000-000000000003',
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa4',
+    'obf-c',
+    '{"fixture":"delete-through-auth-cascade","private_note":"account-c"}'::jsonb
+  ),
+  (
+    '10000000-0000-4000-8000-000000000004',
+    null,
+    'obf-legacy-orphan',
+    '{"fixture":"legacy-null-owner","private_note":"orphaned"}'::jsonb
+  );
 
 insert into public.subscriptions_events (
   fixture_label,
@@ -381,6 +415,11 @@ select pg_catalog.to_jsonb(events) as row_snapshot
   from public.subscriptions_events as events
  where fixture_label = 'b-only';
 
+create temporary table b_obf_snapshot as
+select pg_catalog.to_jsonb(contribution) as row_snapshot
+  from public.obf_contribution_queue as contribution
+ where barcode = 'obf-b';
+
 create temporary table b_only_update_count (
   updates integer not null default 0
 );
@@ -403,6 +442,53 @@ before update on public.subscriptions_events
 for each row execute function pg_temp.rehearsal_count_b_only_update();
 
 \ir ../../supabase/migrations/20260713000046_account_service_row_scrub.sql
+\ir ../../supabase/migrations/20260713000047_account_obf_contribution_erasure.sql
+
+do $$
+begin
+  if exists (
+    select 1
+      from public.obf_contribution_queue
+     where barcode = 'obf-legacy-orphan'
+  ) then
+    raise exception 'REHEARSAL_LEGACY_OBF_ORPHAN_RETAINED';
+  end if;
+
+  if exists (
+    select 1
+      from pg_catalog.pg_attribute
+     where attrelid = 'public.obf_contribution_queue'::pg_catalog.regclass
+       and attname = 'user_id'
+       and not attnotnull
+       and not attisdropped
+  ) or not exists (
+    select 1
+      from pg_catalog.pg_attribute
+     where attrelid = 'public.obf_contribution_queue'::pg_catalog.regclass
+       and attname = 'user_id'
+       and attnotnull
+       and not attisdropped
+  ) then
+    raise exception 'REHEARSAL_OBF_OWNER_NOT_REQUIRED';
+  end if;
+
+  if not exists (
+    select 1
+      from pg_catalog.pg_constraint
+     where conrelid = 'public.obf_contribution_queue'::pg_catalog.regclass
+       and conname = 'obf_contribution_queue_user_id_fkey'
+       and contype = 'f'
+       and confdeltype = 'c'
+       and convalidated
+  ) then
+    raise exception 'REHEARSAL_OBF_AUTH_CASCADE_NOT_VALIDATED';
+  end if;
+
+  if pg_catalog.to_regclass('public.obf_contribution_queue_user_id_idx') is null then
+    raise exception 'REHEARSAL_OBF_OWNER_INDEX_MISSING';
+  end if;
+end;
+$$;
 
 -- Exercise the trigger under the same non-owner role used by Edge Functions.
 -- The canonical helper is intentionally not executable by service_role; the
@@ -610,8 +696,23 @@ begin
 end;
 $$;
 
+create temporary table account_scrub_results (
+  attempt text primary key,
+  result jsonb not null
+);
+grant insert on table account_scrub_results to service_role;
+
 set role service_role;
-select public.scrub_account_service_rows('00000000-0000-4000-8000-000000000001');
+insert into account_scrub_results (attempt, result)
+values (
+  'first',
+  public.scrub_account_service_rows('00000000-0000-4000-8000-000000000001')
+);
+insert into account_scrub_results (attempt, result)
+values (
+  'idempotent-retry',
+  public.scrub_account_service_rows('00000000-0000-4000-8000-000000000001')
+);
 reset role;
 
 do $$
@@ -631,6 +732,42 @@ begin
      where user_id = retained_user::uuid and click_token = 'token-b'
   ) then
     raise exception 'REHEARSAL_B_CLICK_CHANGED';
+  end if;
+  if exists (
+    select 1 from public.obf_contribution_queue
+     where user_id = deleting_user::uuid
+  ) then
+    raise exception 'REHEARSAL_A_OBF_CONTRIBUTION_RETAINED';
+  end if;
+  if (
+    select pg_catalog.to_jsonb(contribution)
+      from public.obf_contribution_queue as contribution
+     where barcode = 'obf-b'
+  ) is distinct from (
+    select row_snapshot from b_obf_snapshot
+  ) then
+    raise exception 'REHEARSAL_B_OBF_CONTRIBUTION_CHANGED';
+  end if;
+  if (
+    select result
+      from account_scrub_results
+     where attempt = 'first'
+  ) ->> 'obf_contribution_queue_deleted' is distinct from '1' then
+    raise exception 'REHEARSAL_OBF_DELETE_COUNT_NOT_ATTESTED';
+  end if;
+  if (
+    select result
+      from account_scrub_results
+     where attempt = 'first'
+  ) ->> 'residual_obf_contributions' is distinct from '0' then
+    raise exception 'REHEARSAL_OBF_ZERO_RESIDUE_NOT_ATTESTED';
+  end if;
+  if (
+    select result
+      from account_scrub_results
+     where attempt = 'idempotent-retry'
+  ) ->> 'obf_contribution_queue_deleted' is distinct from '0' then
+    raise exception 'REHEARSAL_OBF_RETRY_NOT_IDEMPOTENT';
   end if;
   if (select click_token from public.order_attributions where id = 'order-a') is not null then
     raise exception 'REHEARSAL_A_ORDER_NOT_DETACHED';
@@ -755,6 +892,21 @@ begin
     select row_snapshot from b_only_snapshot
   ) then
     raise exception 'REHEARSAL_B_ONLY_ROW_CHANGED';
+  end if;
+end;
+$$;
+
+delete from auth.users
+ where id = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa4';
+
+do $$
+begin
+  if exists (
+    select 1
+      from public.obf_contribution_queue
+     where barcode = 'obf-c'
+  ) then
+    raise exception 'REHEARSAL_DIRECT_AUTH_DELETE_LEFT_OBF_PAYLOAD';
   end if;
 end;
 $$;

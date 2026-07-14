@@ -38,6 +38,7 @@ function clientReturning(data: unknown, error: unknown = null, calls: RpcCall[] 
 function successfulResult(options?: {
   orderAttributions?: number;
   commerceClickEventsDeleted?: number;
+  obfContributionQueueDeleted?: number;
   subscriptionEventsDeleted?: number;
   subscriptionEventsScrubbed?: number;
 }) {
@@ -45,9 +46,11 @@ function successfulResult(options?: {
     complete: true,
     order_attributions_scrubbed: options?.orderAttributions ?? 2,
     commerce_click_events_deleted: options?.commerceClickEventsDeleted ?? 4,
+    obf_contribution_queue_deleted: options?.obfContributionQueueDeleted ?? 2,
     subscriptions_events_deleted: options?.subscriptionEventsDeleted ?? 3,
     subscriptions_events_scrubbed: options?.subscriptionEventsScrubbed ?? 1,
     residual_order_attributions: 0,
+    residual_obf_contributions: 0,
     residual_subscription_identities: 0,
   };
 }
@@ -73,6 +76,7 @@ Deno.test(
     assert(result.complete === true, 'expected the database completeness attestation.');
     assert(result.order_attributions_scrubbed === 2, 'expected the order scrub count.');
     assert(result.commerce_click_events_deleted === 4, 'expected the click deletion count.');
+    assert(result.obf_contribution_queue_deleted === 2, 'expected the OBF deletion count.');
     assert(result.subscriptions_events_deleted === 3, 'expected the subscription delete count.');
     assert(result.subscriptions_events_scrubbed === 1, 'expected the subscription scrub count.');
   },
@@ -85,6 +89,7 @@ Deno.test('account service cleanup accepts a complete zero-count idempotent retr
       successfulResult({
         orderAttributions: 0,
         commerceClickEventsDeleted: 0,
+        obfContributionQueueDeleted: 0,
         subscriptionEventsDeleted: 0,
         subscriptionEventsScrubbed: 0,
       }),
@@ -93,9 +98,11 @@ Deno.test('account service cleanup accepts a complete zero-count idempotent retr
 
   assert(result.order_attributions_scrubbed === 0, 'expected a zero order retry count.');
   assert(result.commerce_click_events_deleted === 0, 'expected a zero click delete count.');
+  assert(result.obf_contribution_queue_deleted === 0, 'expected a zero OBF delete count.');
   assert(result.subscriptions_events_deleted === 0, 'expected a zero subscription delete count.');
   assert(result.subscriptions_events_scrubbed === 0, 'expected a zero subscription retry count.');
   assert(result.residual_order_attributions === 0, 'expected no residual order attribution.');
+  assert(result.residual_obf_contributions === 0, 'expected no residual OBF contribution.');
   assert(
     result.residual_subscription_identities === 0,
     'expected no residual subscription identity.',
@@ -141,8 +148,10 @@ Deno.test(
       },
       { ...successfulResult(), subscriptions_events_scrubbed: '3' },
       { ...successfulResult(), commerce_click_events_deleted: -1 },
+      { ...successfulResult(), obf_contribution_queue_deleted: -1 },
       { ...successfulResult(), subscriptions_events_deleted: -1 },
       { ...successfulResult(), residual_order_attributions: 1 },
+      { ...successfulResult(), residual_obf_contributions: 1 },
       { ...successfulResult(), residual_subscription_identities: 1 },
     ];
 
@@ -164,6 +173,11 @@ Deno.test(
       import.meta.url,
     );
     const sql = (await Deno.readTextFile(migrationUrl)).replace(/--.*$/gm, ' ');
+    const obfErasureMigrationUrl = new URL(
+      '../../migrations/20260713000047_account_obf_contribution_erasure.sql',
+      import.meta.url,
+    );
+    const obfErasureSql = (await Deno.readTextFile(obfErasureMigrationUrl)).replace(/--.*$/gm, ' ');
 
     assert(/^\s*begin\s*;/i.test(sql), 'expected the migration to begin one transaction.');
     assert(/commit\s*;\s*$/i.test(sql), 'expected the migration to commit the transaction.');
@@ -342,6 +356,51 @@ Deno.test(
         sql,
       ),
       'expected residual rows to abort the RPC before completion.',
+    );
+
+    assert(/^\s*begin\s*;/i.test(obfErasureSql), 'expected the OBF migration transaction.');
+    assert(/commit\s*;\s*$/i.test(obfErasureSql), 'expected the OBF migration commit.');
+    assert(
+      /delete\s+from\s+public\.obf_contribution_queue\s+where\s+user_id\s+is\s+null/i.test(
+        obfErasureSql,
+      ) && /alter\s+column\s+user_id\s+set\s+not\s+null/i.test(obfErasureSql),
+      'expected legacy orphan removal and a mandatory owner.',
+    );
+    assert(
+      /foreign\s+key\s*\(\s*user_id\s*\)[\s\S]*?references\s+auth\.users\s*\(\s*id\s*\)[\s\S]*?on\s+delete\s+cascade/i.test(
+        obfErasureSql,
+      ),
+      'expected direct Auth deletion to cascade OBF contribution payloads.',
+    );
+    assert(
+      /create\s+index\s+if\s+not\s+exists\s+obf_contribution_queue_user_id_idx[\s\S]*?\(\s*user_id\s*\)/i.test(
+        obfErasureSql,
+      ),
+      'expected an indexed exact-owner delete.',
+    );
+    assert(
+      /delete\s+from\s+public\.obf_contribution_queue\s+as\s+contribution\s+where\s+contribution\.user_id\s*=\s*p_user_id/i.test(
+        obfErasureSql,
+      ) &&
+        /residual_obf_contributions\s*<>\s*0[\s\S]*?ACCOUNT_SERVICE_SCRUB_INCOMPLETE/i.test(
+          obfErasureSql,
+        ),
+      'expected atomic RPC deletion and zero-residue enforcement for OBF contributions.',
+    );
+    for (const key of ['obf_contribution_queue_deleted', 'residual_obf_contributions']) {
+      assert(
+        new RegExp(`'${key}'`, 'i').test(obfErasureSql),
+        `expected OBF RPC result key ${key}.`,
+      );
+    }
+    assert(
+      /revoke\s+all\s+on\s+function\s+public\.scrub_account_service_rows\s*\(\s*uuid\s*\)\s+from\s+public\s*,\s*anon\s*,\s*authenticated\s*;/i.test(
+        obfErasureSql,
+      ) &&
+        /grant\s+execute\s+on\s+function\s+public\.scrub_account_service_rows\s*\(\s*uuid\s*\)\s+to\s+service_role\s*;/i.test(
+          obfErasureSql,
+        ),
+      'expected the replaced OBF-aware RPC to remain service-role-only.',
     );
   },
 );

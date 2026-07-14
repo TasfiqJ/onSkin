@@ -727,7 +727,7 @@
       "id": "DB-09",
       "status": "in_progress",
       "blockedBy": ["DB-05", "DB-06", "DB-07", "DB-08", "ACCT-03"],
-      "nextAction": "Reset and apply all 45 migrations in a reviewed local stack, then run the exhaustive 40-private-table permanent-user, signed-anonymous, and unauthenticated matrix against staging and production with real anonymous Auth and Turnstile behavior where configured; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, or objects.",
+      "nextAction": "Reset and apply all 46 migrations in a reviewed local stack, then run the exhaustive 40-private-table permanent-user, signed-anonymous, and unauthenticated matrix against staging and production with real anonymous Auth and Turnstile behavior where configured; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, or objects.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",
@@ -735,6 +735,7 @@
         "scripts/phase9/supabase-policy-lint.mjs",
         "supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql",
         "supabase/migrations/20260713000046_account_service_row_scrub.sql",
+        "supabase/migrations/20260713000047_account_obf_contribution_erasure.sql",
         "docs/phase-9/generated/live-supabase-adversarial.json"
       ]
     },
@@ -742,7 +743,7 @@
       "id": "DB-10",
       "status": "in_progress",
       "blockedBy": ["DB-09", "ACCT-03"],
-      "nextAction": "Build the deletion barrier and durable resumable provider-step state around the fail-closed service-row scrub; poll queued PostHog deletion to completion; suppress late deleting/deleted identities in RevenueCat webhook processing; block stale-session commerce writes; remove caller-keyed rate-limit residue; and make mobile pending-deletion and RevenueCat reset behavior retry-safe. Add secure Apple refresh-token storage, Apple's credential-revoked notification, and durable manual notice/status recovery. Then clean-reset migration 0046 and run A/B concurrency, provider interruption/retry, complete export/deletion, consent withdrawal, signed URL/storage/backup, and post-delete denial matrices in reviewed staging and production. Do not describe the lifecycle as durable, retry-safe, or race-free before those gates pass.",
+      "nextAction": "Build the deletion barrier and durable resumable provider-step state around the fail-closed service-row scrub; poll queued PostHog deletion to completion; suppress late deleting/deleted identities in RevenueCat webhook processing; block stale-session commerce writes; remove caller-keyed rate-limit residue and cross-owner community block handles; and make mobile pending-deletion and RevenueCat reset behavior retry-safe. Add secure Apple refresh-token storage, Apple's credential-revoked notification, and durable manual notice/status recovery. Then clean-reset migrations 0046/0047 and run A/B concurrency, provider interruption/retry, complete export/deletion, consent withdrawal, signed URL/storage/backup, and post-delete denial matrices in reviewed staging and production. Do not describe the lifecycle as durable, retry-safe, or race-free before those gates pass.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "supabase/functions/account-deletion",
@@ -758,6 +759,7 @@
         "supabase/functions/order-report-poll/orderAttributionCore.ts",
         "supabase/functions/order-report-poll/orderAttributionCore.test.ts",
         "supabase/migrations/20260713000046_account_service_row_scrub.sql",
+        "supabase/migrations/20260713000047_account_obf_contribution_erasure.sql",
         "scripts/phase9/account-service-scrub-postgres-rehearsal.sql",
         "supabase/functions/data-export/exportRegistry.ts",
         "supabase/functions/data-export/exportRegistry.test.ts",

@@ -5,9 +5,11 @@ export type AccountServiceScrubResult = {
   complete: true;
   order_attributions_scrubbed: number;
   commerce_click_events_deleted: number;
+  obf_contribution_queue_deleted: number;
   subscriptions_events_deleted: number;
   subscriptions_events_scrubbed: number;
   residual_order_attributions: 0;
+  residual_obf_contributions: 0;
   residual_subscription_identities: 0;
 };
 
@@ -21,7 +23,9 @@ type ServiceRoleRpcClient = {
 const RESULT_KEYS = [
   'commerce_click_events_deleted',
   'complete',
+  'obf_contribution_queue_deleted',
   'order_attributions_scrubbed',
+  'residual_obf_contributions',
   'residual_order_attributions',
   'residual_subscription_identities',
   'subscriptions_events_deleted',
@@ -51,9 +55,11 @@ function validatedResult(data: unknown): AccountServiceScrubResult {
     record.complete !== true ||
     !isNonnegativeSafeInteger(record.order_attributions_scrubbed) ||
     !isNonnegativeSafeInteger(record.commerce_click_events_deleted) ||
+    !isNonnegativeSafeInteger(record.obf_contribution_queue_deleted) ||
     !isNonnegativeSafeInteger(record.subscriptions_events_deleted) ||
     !isNonnegativeSafeInteger(record.subscriptions_events_scrubbed) ||
     record.residual_order_attributions !== 0 ||
+    record.residual_obf_contributions !== 0 ||
     record.residual_subscription_identities !== 0
   ) {
     throw scrubFailure();
@@ -63,9 +69,11 @@ function validatedResult(data: unknown): AccountServiceScrubResult {
     complete: true,
     order_attributions_scrubbed: record.order_attributions_scrubbed,
     commerce_click_events_deleted: record.commerce_click_events_deleted,
+    obf_contribution_queue_deleted: record.obf_contribution_queue_deleted,
     subscriptions_events_deleted: record.subscriptions_events_deleted,
     subscriptions_events_scrubbed: record.subscriptions_events_scrubbed,
     residual_order_attributions: 0,
+    residual_obf_contributions: 0,
     residual_subscription_identities: 0,
   };
 }

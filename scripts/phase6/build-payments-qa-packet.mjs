@@ -59,6 +59,7 @@ const requiredFiles = [
   'supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql',
   'supabase/migrations/20260713000044_reverse_trial_no_store_identity.sql',
   'supabase/migrations/20260713000046_account_service_row_scrub.sql',
+  'supabase/migrations/20260713000047_account_obf_contribution_erasure.sql',
   'apps/mobile/src/features/subscription/paywallMobileContracts.test.ts',
   'apps/mobile/src/features/subscription/store.test.ts',
   'apps/mobile/src/features/subscription/entitlement.test.ts',
