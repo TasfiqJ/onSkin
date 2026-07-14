@@ -1432,9 +1432,16 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Priority: Critical
   - Automate later: Yes
   - Action: With the one-shot conflict-choice failure fixture enabled, choose either action, inspect the inline state, then retry.
-  - Expected result: The sheet stays open, exposes an accessibility alert that the choice was not saved, emits no success navigation/analytics, leaves the previous schedule and prompt state unchanged, prevents duplicate submits while pending, and succeeds on retry.
-  - Evidence: Screenshot, encrypted-storage snapshot, route state, and analytics/network log.
-  - Current local evidence: The one-shot private-KV fixture retained the exact route, exposed `Choice not saved`, kept both retry controls complete, preserved the prior accepted choice, and persisted Use together on retry. Pending-state disabling was observed before the delayed rejection. The local run does not replace native encrypted-storage or live analytics/network QA.
+  - Expected result: The sheet stays open, exposes an accessibility alert that OnSkin could not confirm whether the choice was saved, emits no success navigation/analytics, prevents duplicate submits while pending, drops any retained Shelf success snapshot, and succeeds or restores the exact persisted choice only after a strict recovery read. The copy does not claim the previous schedule is unchanged because a rejected storage call cannot prove whether bytes landed.
+  - Evidence: Screenshot, encrypted-storage snapshot, route state, strict recovery-query result, and analytics/network log.
+  - Historical local evidence: The earlier one-shot private-KV run retained the exact route, exposed the former `Choice not saved` copy, kept both retry controls complete, preserved the prior accepted choice, and persisted Use together on retry. Fresh evidence is required for the uncertainty-safe copy and cache containment. The local run does not replace native encrypted-storage or live analytics/network QA.
+- Branch: unreadable conflict-choice private state and recovery
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Seed a current-version exact-pair choice, force the dev-only conflict-choice read fixture, and open Shelf plus representative conflict detail, product detail, Plan/Today/cycle, Recommendations, and Ask consumers. Retry while failure remains, then relaunch with the one-shot fixture or remove it and retry.
+  - Expected result: The complete owner-bound Shelf derivation fails closed behind one accessible private-Shelf recovery state. No consumer treats unreadable choices as an empty map, re-surfaces a resolved advisory, claims the pair is all clear, or publishes a routine/recommendation from partial private data. Persistent retry remains unavailable without rewriting the stored choice; successful retry restores the exact pair, rule version, and choice and resumes every downstream consumer consistently.
+  - Evidence: Supported-phone recovery screenshots, accessible role/text and control geometry, representative route/URL snapshots, exact-choice recovery snapshot, browser logs, and focused typed-read/consumer tests.
+  - Current verification status: Typed-read, byte-preservation, 100-writer, strict-consumer, cache-containment, mirror-order, and owner-boundary tests pass. The mapped Expo-web pass was attempted on 2026-07-13, but the required in-app Browser runtime reported no available browser after its prescribed troubleshooting check. No standalone browser or Computer Use substitute was used, so supported-phone screenshots and user-driven retry remain open rather than being inferred from source tests.
 - Branch: free conflict quota claim or storage failure
   - Priority: Critical
   - Automate later: Yes
