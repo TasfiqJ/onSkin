@@ -4,6 +4,10 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import type { GeneratedPlan } from '@/features/routine/generate';
 import { usePlan } from '@/features/routine/usePlan';
+import {
+  PRIVATE_GUIDANCE_AVAILABILITY_COPY,
+  ShelfDataUnavailableNotice,
+} from '@/features/shelf/ShelfDataAvailabilityGate';
 import { backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
 
@@ -123,8 +127,27 @@ function ChangeCard({ change }: { change: Change }) {
 }
 
 export default function AdaptationScreen() {
-  const { data, isLoading } = usePlan();
+  const planQuery = usePlan();
+  const { data, isLoading } = planQuery;
   const changes = adaptationChanges(data?.plan, Boolean(data?.isExample));
+
+  if (planQuery.isError) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 24 }}
+        >
+          <ShelfDataUnavailableNotice
+            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
+            onRetry={planQuery.retry}
+            retrying={planQuery.isFetching}
+            onExit={() => backOrReplace(router)}
+          />
+        </ScrollView>
+      </Screen>
+    );
+  }
 
   return (
     <Screen edges={['top', 'bottom']}>

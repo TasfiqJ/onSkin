@@ -1,8 +1,8 @@
-import { randomUUID } from 'expo-crypto';
+import * as Crypto from 'expo-crypto';
 
 import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@onskin/types';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { readPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import { normalizeShelfFreshness, validLocalDate } from './freshness';
 
@@ -13,9 +13,12 @@ import { normalizeShelfFreshness, validLocalDate } from './freshness';
 // reconcile via the persisted mutation queue (D-007) once the project exists.
 const KEY = 'onskin.shelf.v1';
 const SCHEMA_VERSION = 1 as const;
+const REPLENISHMENT_ID_NAMESPACE = 'onskin:shelf-replenishment:v1:';
 
 export const SHELF_STATE_INVALID = 'SHELF_STATE_INVALID';
 export const SHELF_STATE_UNSUPPORTED_VERSION = 'SHELF_STATE_UNSUPPORTED_VERSION';
+export const SHELF_STATE_UNAVAILABLE = 'SHELF_STATE_UNAVAILABLE';
+export const SHELF_REPLENISHMENT_ALREADY_REPLACED = 'SHELF_REPLENISHMENT_ALREADY_REPLACED';
 
 const PRODUCT_STATUSES = new Set<ProductStatus>(['active', 'finished', 'discarded']);
 const ADDED_VIA = new Set<AddedVia>(['barcode', 'search', 'ocr', 'manual', 'onboarding']);
@@ -96,6 +99,18 @@ export type NewShelfProduct = {
 type ShelfEnvelope = {
   version: typeof SCHEMA_VERSION;
   products: ShelfProduct[];
+};
+
+type ShelfStateFormat = 'current' | 'legacy';
+
+export type ShelfStateRead =
+  | { status: 'absent'; products: ShelfProduct[] }
+  | { status: 'available'; products: ShelfProduct[]; format: ShelfStateFormat }
+  | { status: 'unavailable' | 'corrupt' | 'unsupported_version'; products: null };
+
+export type ReAddedShelfProduct = {
+  fresh: ShelfProduct;
+  archived: ShelfProduct;
 };
 
 function nowISO(): string {
@@ -229,10 +244,7 @@ function normalizeShelfProduct(value: unknown, fallbackISO: string): ShelfProduc
   };
 }
 
-function normalizeShelfProducts(
-  value: unknown,
-  fallbackISO: string,
-): ShelfProduct[] | null {
+function normalizeShelfProducts(value: unknown, fallbackISO: string): ShelfProduct[] | null {
   if (!Array.isArray(value)) return null;
   const items: ShelfProduct[] = [];
   const ids = new Set<string>();
@@ -245,8 +257,11 @@ function normalizeShelfProducts(
   return items;
 }
 
-function decodeShelfState(raw: string | null, fallbackISO = nowISO()): ShelfProduct[] {
-  if (raw === null) return [];
+function decodeShelfState(
+  raw: string | null,
+  fallbackISO = nowISO(),
+): { products: ShelfProduct[]; format: ShelfStateFormat | 'absent' } {
+  if (raw === null) return { products: [], format: 'absent' };
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw) as unknown;
@@ -257,7 +272,7 @@ function decodeShelfState(raw: string | null, fallbackISO = nowISO()): ShelfProd
   if (Array.isArray(parsed)) {
     const legacy = normalizeShelfProducts(parsed, fallbackISO);
     if (!legacy) throw new Error(SHELF_STATE_INVALID);
-    return legacy;
+    return { products: legacy, format: 'legacy' };
   }
   if (!isRecord(parsed)) throw new Error(SHELF_STATE_INVALID);
   if (parsed.version !== SCHEMA_VERSION) {
@@ -275,35 +290,70 @@ function decodeShelfState(raw: string | null, fallbackISO = nowISO()): ShelfProd
   if (!products || canonicalJson(products) !== canonicalJson(parsed.products)) {
     throw new Error(SHELF_STATE_INVALID);
   }
-  return products;
+  return { products, format: 'current' };
 }
 
 function encodeShelfState(products: ShelfProduct[]): string {
   return JSON.stringify({ version: SCHEMA_VERSION, products } satisfies ShelfEnvelope);
 }
 
-export async function loadShelf(): Promise<ShelfProduct[]> {
+let e2eShelfReadFailureCount = 0;
+
+function consumeE2EShelfReadFailure(): boolean {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
+  const fixture = process.env.EXPO_PUBLIC_E2E_SHELF_STORAGE_FAILURE?.trim().toLowerCase();
+  if (fixture === 'always') return true;
+  if (fixture !== 'once' || e2eShelfReadFailureCount > 0) return false;
+  e2eShelfReadFailureCount += 1;
+  return true;
+}
+
+/** Read and classify Shelf state without repairing, deleting, or migrating bytes. */
+export async function readShelfState(): Promise<ShelfStateRead> {
+  if (consumeE2EShelfReadFailure()) return { status: 'unavailable', products: null };
+
+  let stored: Awaited<ReturnType<typeof readPrivateItem>>;
   try {
-    return decodeShelfState(await getPrivateItem(KEY));
+    stored = await readPrivateItem(KEY);
   } catch {
-    // Ordinary reads never repair, delete, or replace private shelf bytes.
-    return [];
+    return { status: 'unavailable', products: null };
+  }
+  if (stored.status === 'absent') return { status: 'absent', products: [] };
+  if (stored.status === 'unavailable') return { status: 'unavailable', products: null };
+  if (stored.status === 'corrupt') return { status: 'corrupt', products: null };
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', products: null };
+  }
+
+  try {
+    const decoded = decodeShelfState(stored.value);
+    return {
+      status: 'available',
+      products: decoded.products,
+      format: decoded.format === 'legacy' ? 'legacy' : 'current',
+    };
+  } catch (error) {
+    return error instanceof Error && error.message === SHELF_STATE_UNSUPPORTED_VERSION
+      ? { status: 'unsupported_version', products: null }
+      : { status: 'corrupt', products: null };
   }
 }
 
-function normalizeProductForWrite(
-  value: ShelfProduct,
-  fallbackISO: string,
-  fallback: ShelfProduct,
-): ShelfProduct {
-  return normalizeShelfProduct(value, fallbackISO) ?? { ...fallback, updatedAt: fallbackISO };
+export async function loadShelf(): Promise<ShelfProduct[]> {
+  const result = await readShelfState();
+  if (result.status === 'available' || result.status === 'absent') return result.products;
+  if (result.status === 'unsupported_version') {
+    throw new Error(SHELF_STATE_UNSUPPORTED_VERSION);
+  }
+  if (result.status === 'corrupt') throw new Error(SHELF_STATE_INVALID);
+  throw new Error(SHELF_STATE_UNAVAILABLE);
 }
 
 export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
   const ts = nowISO();
   const freshness = normalizeShelfFreshness(input, ts.slice(0, 10));
   const candidate: ShelfProduct = {
-    id: randomUUID(),
+    id: Crypto.randomUUID(),
     name: input.name,
     brand: input.brand ?? null,
     category: input.category ?? null,
@@ -335,7 +385,7 @@ export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> 
   const product = normalizeShelfProduct(candidate, ts);
   if (!product) throw new Error(SHELF_STATE_INVALID);
   await updatePrivateItem(KEY, (current) => {
-    const items = decodeShelfState(current, ts);
+    const items = decodeShelfState(current, ts).products;
     if (items.some((item) => item.id === product.id)) throw new Error(SHELF_STATE_INVALID);
     return encodeShelfState([product, ...items]);
   });
@@ -349,10 +399,11 @@ export async function updateProduct(
   const ts = nowISO();
   let updated: ShelfProduct | null = null;
   await updatePrivateItem(KEY, (current) => {
-    const items = decodeShelfState(current, ts);
+    const items = decodeShelfState(current, ts).products;
+    let changed = false;
     const next = items.map((product) => {
       if (product.id !== id) return product;
-      updated = normalizeProductForWrite(
+      const candidate = normalizeShelfProduct(
         {
           ...product,
           ...patch,
@@ -361,11 +412,24 @@ export async function updateProduct(
           updatedAt: ts,
         },
         ts,
-        product,
       );
-      return updated;
+      if (!candidate) {
+        updated = product;
+        return product;
+      }
+      const { updatedAt: candidateUpdatedAt, ...candidateContent } = candidate;
+      const { updatedAt: productUpdatedAt, ...productContent } = product;
+      void candidateUpdatedAt;
+      void productUpdatedAt;
+      if (canonicalJson(candidateContent) === canonicalJson(productContent)) {
+        updated = product;
+        return product;
+      }
+      changed = true;
+      updated = candidate;
+      return candidate;
     });
-    return updated ? encodeShelfState(next) : current;
+    return changed ? encodeShelfState(next) : current;
   });
   return updated;
 }
@@ -373,11 +437,29 @@ export async function updateProduct(
 export async function removeProduct(id: string): Promise<ShelfProduct | null> {
   let removed: ShelfProduct | null = null;
   await updatePrivateItem(KEY, (current) => {
-    const items = decodeShelfState(current);
+    const items = decodeShelfState(current).products;
     removed = items.find((product) => product.id === id) ?? null;
     return removed ? encodeShelfState(items.filter((product) => product.id !== id)) : current;
   });
   return removed;
+}
+
+async function replacementIdForSource(sourceId: string): Promise<string> {
+  const digest = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    `${REPLENISHMENT_ID_NAMESPACE}${sourceId}`,
+  );
+  if (!/^[0-9a-f]{64}$/i.test(digest)) throw new Error(SHELF_STATE_INVALID);
+
+  // Format the first 128 digest bits as a UUIDv5-shaped identifier. The digest
+  // is deterministic from the immutable physical-unit ID, so every retry finds
+  // the same successor without persisting mutable coordination metadata.
+  const chars = digest.slice(0, 32).toLowerCase().split('');
+  chars[12] = '5';
+  chars[16] = ((Number.parseInt(chars[16]!, 16) & 0x3) | 0x8).toString(16);
+  return `${chars.slice(0, 8).join('')}-${chars.slice(8, 12).join('')}-${chars
+    .slice(12, 16)
+    .join('')}-${chars.slice(16, 20).join('')}-${chars.slice(20).join('')}`;
 }
 
 /**
@@ -385,16 +467,27 @@ export async function removeProduct(id: string): Promise<ShelfProduct | null> {
  * resetting the opened-date clock and carrying the repurchase count forward
  * (docs/04 §6 "re-add the same one").
  */
-export async function reAddProduct(id: string): Promise<ShelfProduct | null> {
+export async function reAddProduct(id: string): Promise<ReAddedShelfProduct | null> {
   const ts = nowISO();
-  const replacementId = randomUUID();
-  let fresh: ShelfProduct | null = null;
+  const replacementId = await replacementIdForSource(id);
+  if (!replacementId || replacementId === id) throw new Error(SHELF_STATE_INVALID);
+  let result: ReAddedShelfProduct | null = null;
   await updatePrivateItem(KEY, (current) => {
-    const items = decodeShelfState(current, ts);
+    const items = decodeShelfState(current, ts).products;
     const prev = items.find((product) => product.id === id);
     if (!prev) return current;
-    if (items.some((product) => product.id === replacementId)) {
-      throw new Error(SHELF_STATE_INVALID);
+
+    const existingReplacement = items.find((product) => product.id === replacementId);
+    if (existingReplacement) {
+      // The cryptographic source-derived ID is the immutable lineage marker.
+      // An active source alongside that successor is inconsistent/colliding;
+      // a consumed successor proves this older source was already replaced.
+      if (prev.status === 'active') throw new Error(SHELF_STATE_INVALID);
+      if (existingReplacement.status !== 'active') {
+        throw new Error(SHELF_REPLENISHMENT_ALREADY_REPLACED);
+      }
+      result = { fresh: existingReplacement, archived: prev };
+      return current;
     }
     const archived: ShelfProduct =
       prev.status === 'active'
@@ -414,7 +507,7 @@ export async function reAddProduct(id: string): Promise<ShelfProduct | null> {
       },
       ts.slice(0, 10),
     );
-    fresh = {
+    const fresh: ShelfProduct = {
       ...prev,
       id: replacementId,
       ...freshness,
@@ -424,15 +517,19 @@ export async function reAddProduct(id: string): Promise<ShelfProduct | null> {
       createdAt: ts,
       updatedAt: ts,
     };
+    result = { fresh, archived };
     return encodeShelfState([
       fresh,
       ...items.map((product) => (product.id === id ? archived : product)),
     ]);
   });
-  return fresh;
+  return result;
 }
 
-/** Test/seed reset. */
+/** Explicit reset for tests/seeding. Refuses to delete unreadable domain bytes. */
 export async function clearShelf(): Promise<void> {
-  await removePrivateItem(KEY);
+  await updatePrivateItem(KEY, (current) => {
+    decodeShelfState(current);
+    return current === null ? current : null;
+  });
 }

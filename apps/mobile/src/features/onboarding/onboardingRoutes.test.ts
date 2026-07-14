@@ -74,9 +74,8 @@ describe('onboarding route contracts', () => {
     const source = readAppRoute('onboarding/products.tsx');
 
     expect(source).toContain('useLocalSearchParams<{ addedProductId?: string }>()');
-    expect(source).toContain(
-      "return <ProductsScreenContent key={addedProductId ?? 'initial-add'} />;",
-    );
+    expect(source).toContain("<ProductsScreenContent key={addedProductId ?? 'initial-add'} />");
+    expect(source).toContain('<ShelfDataAvailabilityGate');
     expect(source).toContain('function ProductsScreenContent()');
     expect(source).toContain("const [name, setName] = useState('');");
     expect(source).toContain(
@@ -332,7 +331,10 @@ describe('onboarding route contracts', () => {
     expect(reveal).toContain('recordFirstUsefulInsightAnalytics');
     expect(reveal).toContain("source: 'reveal'");
     expect(reveal).toContain('routineInsightCount(planResult.data.plan)');
-    expect(reveal).toContain("(firstInsight?.eyebrow ?? 'Routine preview').toUpperCase()");
+    expect(reveal).toContain("firstInsight?.eyebrow ?? 'Routine preview'");
+    expect(reveal).toContain("? 'Routine preview unavailable'");
+    expect(reveal).toContain('planResult.isError');
+    expect(reveal).toContain('onPress={() => void planResult.retry()}');
     expect(reveal).toContain('label="Continue"');
     expect(reveal).toContain("router.push('/onboarding/notifications')");
     expect(reveal).not.toContain('label="See my routine"');

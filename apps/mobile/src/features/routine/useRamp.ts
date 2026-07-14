@@ -36,14 +36,15 @@ export function useRamp(): {
 } {
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
-  const { data: planData, isLoading: planLoading } = usePlan();
+  const planQuery = usePlan();
+  const { data: planData } = planQuery;
   // The design-only empty-shelf example is never user state and must not seed
   // private ramp records or participate in the live scheduler.
   const planRamps = planData?.isExample ? [] : (planData?.plan.ramp ?? []);
   const boundary = useLocalDateBoundary();
   const { localDate: today } = boundary;
   const keyIds = planRamps.map((r) => r.productId).join(',');
-  const hasRampInputs = !planLoading && planRamps.length > 0;
+  const hasRampInputs = planQuery.isSuccess && planRamps.length > 0;
 
   const q = useQuery<RampItem[]>({
     queryKey: queryKeys.ramp(ownerScope, boundary, keyIds),
@@ -97,17 +98,19 @@ export function useRamp(): {
   }
 
   async function retry(): Promise<void> {
-    if (!hasRampInputs) return;
-    await q.refetch();
+    await Promise.all([
+      planQuery.isError ? planQuery.retry() : Promise.resolve(),
+      hasRampInputs && q.isError ? q.refetch() : Promise.resolve(),
+    ]);
   }
 
   return {
     // Retained query data is not authoritative after a failed background read.
     items: q.isSuccess ? (q.data ?? []) : [],
-    isLoading: planLoading || (hasRampInputs && q.isPending),
-    isError: hasRampInputs && q.isError,
-    isFetching: hasRampInputs && q.isFetching,
-    isSuccess: !planLoading && (!hasRampInputs || q.isSuccess),
+    isLoading: planQuery.isLoading || (hasRampInputs && q.isPending),
+    isError: planQuery.isError || (hasRampInputs && q.isError),
+    isFetching: planQuery.isFetching || (hasRampInputs && q.isFetching),
+    isSuccess: planQuery.isSuccess && (!hasRampInputs || q.isSuccess),
     retry,
     acceptStepUp,
   };

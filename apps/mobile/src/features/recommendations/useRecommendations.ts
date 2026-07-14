@@ -34,9 +34,11 @@ export function useRecommendations() {
     queryKey: queryKeys.recommendations(ownerScope),
     queryFn: async () => ({ prefs: await loadPreferences(), dismissed: await loadDismissed() }),
   });
+  const isSuccess = shelf.isSuccess && profile.isSuccess && prefsQ.isSuccess;
+  const isError = shelf.isError || profile.isError || prefsQ.isError;
 
   const result = useMemo<RecResult>(() => {
-    if (!shelf.data || !profile.data) return EMPTY;
+    if (!isSuccess || !shelf.data || !profile.data || !prefsQ.data) return EMPTY;
     const items: RecShelfItem[] = shelf.data.items.flatMap((i) => {
       const role = classifyRole({ ...i.engineProduct, category: i.category });
       if (!role) return [];
@@ -65,17 +67,31 @@ export function useRecommendations() {
       shelf: items,
       replenishment,
       conflicts: shelf.data.unresolvedConflicts,
-      preferences: prefsQ.data?.prefs ?? DEFAULT_PREFERENCES,
-      dismissed: new Set(prefsQ.data?.dismissed ?? []),
+      preferences: prefsQ.data.prefs ?? DEFAULT_PREFERENCES,
+      dismissed: new Set(prefsQ.data.dismissed ?? []),
     });
-  }, [shelf.data, profile.data, prefsQ.data]);
+  }, [isSuccess, shelf.data, profile.data, prefsQ.data]);
+
+  async function retry(): Promise<void> {
+    await Promise.all([
+      shelf.isError ? shelf.refetch() : Promise.resolve(),
+      profile.isError ? profile.refetch() : Promise.resolve(),
+      prefsQ.isError ? prefsQ.refetch() : Promise.resolve(),
+    ]);
+  }
 
   return {
     result,
-    isLoading: isRecommendationDataLoading({
-      shelfLoading: shelf.isLoading,
-      profileLoading: profile.isLoading,
-      prefsLoading: prefsQ.isLoading,
-    }),
+    isLoading:
+      isRecommendationDataLoading({
+        shelfLoading: shelf.isLoading,
+        profileLoading: profile.isLoading,
+        prefsLoading: prefsQ.isLoading,
+      }) ||
+      (!isSuccess && !isError),
+    isError,
+    isFetching: shelf.isFetching || profile.isFetching || prefsQ.isFetching,
+    isSuccess,
+    retry,
   };
 }

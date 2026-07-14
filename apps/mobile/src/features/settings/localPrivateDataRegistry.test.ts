@@ -39,11 +39,9 @@ describe('local private-data contract registry', () => {
       'onskin.recDismissed.v1:typedRead',
       'onskin.recPrefs.v1:typedRead',
       'onskin.reviewPrompt.v1:typedRead',
-      'onskin.shelf.v1:typedRead',
       'onskin.subscription.promptedExpiry:typedRead',
       'onskin.trendState.v1:codec',
       'routinekind.routineActivation.v1:typedRead',
-      'routinekind.routineOrder.v1:typedRead',
     ]);
   });
 

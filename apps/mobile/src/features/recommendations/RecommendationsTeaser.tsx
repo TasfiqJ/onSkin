@@ -229,8 +229,8 @@ export function RecommendationsTeaser({
   compact?: boolean;
   showGapPrompt?: boolean;
 }) {
-  const { result, isLoading } = useRecommendations();
-  if (isLoading) return null;
+  const { result, isSuccess } = useRecommendations();
+  if (!isSuccess) return null;
 
   const spfGap = result.recommendations.find(
     (r) =>

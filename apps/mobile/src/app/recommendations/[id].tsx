@@ -13,6 +13,10 @@ import { dismissRecommendation } from '@/features/recommendations/store';
 import { useRecommendations } from '@/features/recommendations/useRecommendations';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import type { ProductCategory } from '@/features/shelf/categories';
+import {
+  PRIVATE_GUIDANCE_AVAILABILITY_COPY,
+  ShelfDataUnavailableNotice,
+} from '@/features/shelf/ShelfDataAvailabilityGate';
 import { track } from '@/lib/analytics/track';
 import { APP_RECOMMENDATIONS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { isOwnerQueryScopeCurrent, ownerQueryPrefixes } from '@/lib/query/queryKeys';
@@ -203,7 +207,7 @@ function Body({ rec }: { rec: Recommendation }) {
 export default function RecommendationDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { width } = useWindowDimensions();
-  const { result, isLoading } = useRecommendations();
+  const { result, isError, isFetching, isLoading, retry } = useRecommendations();
   const rec = result.recommendations.find((r) => r.id === id);
   const compactHeader = width <= 360;
 
@@ -228,7 +232,20 @@ export default function RecommendationDetail() {
         </Text>
       </View>
 
-      {isLoading ? (
+      {isError ? (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 48 }}
+        >
+          <ShelfDataUnavailableNotice
+            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
+            onRetry={retry}
+            retrying={isFetching}
+            onExit={() => backOrReplace(router, APP_RECOMMENDATIONS_ROUTE)}
+            exitLabel="Back to For you"
+          />
+        </ScrollView>
+      ) : isLoading ? (
         <View className="flex-1 items-center justify-center">
           <Text variant="bodySm" tone="muted">
             Looking at your routine…

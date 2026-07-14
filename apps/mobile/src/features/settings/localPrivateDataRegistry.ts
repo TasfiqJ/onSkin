@@ -407,14 +407,14 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     key: 'routinekind.routineOrder.v1',
     lifecycle: 'current',
     codec: jsonCodec('routine_order', 1, [0]),
-    typedRead: gap('Routine-order reads map unreadable state to empty overrides.'),
+    typedRead: typedDomainRead,
     export: include('shelf_and_routine', 'routine_order_overrides'),
   }),
   privateData({
     key: 'onskin.shelf.v1',
     lifecycle: 'current',
     codec: jsonCodec('shelf_state', 1, [0]),
-    typedRead: gap('Shelf reads map unreadable state to an empty shelf.'),
+    typedRead: typedDomainRead,
     export: include('shelf_and_routine', 'shelf_products'),
   }),
   privateData({

@@ -47,7 +47,16 @@ export type PlanResult = {
   activeProductIds: string[];
 };
 
-export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } {
+export type PlanQueryResult = {
+  data: PlanResult | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  retry: () => Promise<void>;
+};
+
+export function usePlan(): PlanQueryResult {
   const shelf = useShelf();
   const profile = useProfileBits();
   const ownerScope = useOwnerQueryScope();
@@ -57,11 +66,51 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
     retry: 1,
     staleTime: Infinity,
   });
-  if (shelf.isLoading || profile.isLoading || routineOrder.isLoading) {
-    return { data: undefined, isLoading: true };
+
+  async function retry(): Promise<void> {
+    await Promise.all([
+      shelf.isError ? shelf.refetch() : Promise.resolve(),
+      profile.isError ? profile.refetch() : Promise.resolve(),
+      routineOrder.isError ? routineOrder.refetch() : Promise.resolve(),
+    ]);
   }
 
-  const orderOverrides = routineOrder.data ?? { schemaVersion: 1, am: [], pm: [] };
+  if (shelf.isPending || profile.isPending || routineOrder.isPending) {
+    return {
+      data: undefined,
+      isLoading: true,
+      isError: false,
+      isFetching: shelf.isFetching || profile.isFetching || routineOrder.isFetching,
+      isSuccess: false,
+      retry,
+    };
+  }
+
+  // A missing/empty Shelf is valid and may intentionally render the design
+  // example. An unreadable Shelf, profile, or saved routine order is not absence
+  // and must never seed Maya products or publish derived routine guidance.
+  if (
+    shelf.isError ||
+    profile.isError ||
+    routineOrder.isError ||
+    !shelf.isSuccess ||
+    !profile.isSuccess ||
+    !routineOrder.isSuccess ||
+    !shelf.data ||
+    !profile.data ||
+    !routineOrder.data
+  ) {
+    return {
+      data: undefined,
+      isLoading: false,
+      isError: true,
+      isFetching: shelf.isFetching || profile.isFetching || routineOrder.isFetching,
+      isSuccess: false,
+      retry,
+    };
+  }
+
+  const orderOverrides = routineOrder.data;
 
   const items = shelf.data?.items ?? [];
   if (items.length > 0) {
@@ -74,15 +123,13 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
     }));
     // Use the REAL profile (sensitivity + pregnancy + goals) so the plan honours
     // pregnancy retinoid suppression etc. everywhere, not just the cycle engine.
-    const real: RoutineGenerationProfile = profile.data
-      ? {
-          sensitivity: profile.data.sensitivity,
-          pregnancy: profile.data.pregnancy,
-          pregnancySafety: profile.data.pregnancySafety,
-          pregnancyStatus: profile.data.pregnancyStatus,
-          goals: profile.data.goals,
-        }
-      : MAYA_PROFILE;
+    const real: RoutineGenerationProfile = {
+      sensitivity: profile.data.sensitivity,
+      pregnancy: profile.data.pregnancy,
+      pregnancySafety: profile.data.pregnancySafety,
+      pregnancyStatus: profile.data.pregnancyStatus,
+      goals: profile.data.goals,
+    };
     // Use the launch-gated rule set (docs/02 §9 B-DERM-REVIEW), consistent with
     // useShelf/recommendations. In production the conflict layer stays inert until
     // clinical sign-off; in dev the full starter matrix drives the plan.
@@ -103,6 +150,10 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
         activeProductIds: items.map((item) => item.id),
       },
       isLoading: false,
+      isError: false,
+      isFetching: shelf.isFetching || profile.isFetching || routineOrder.isFetching,
+      isSuccess: true,
+      retry,
     };
   }
   const canonicalPlan = generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, shippableRules());
@@ -117,5 +168,9 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
       activeProductIds: [],
     },
     isLoading: false,
+    isError: false,
+    isFetching: shelf.isFetching || profile.isFetching || routineOrder.isFetching,
+    isSuccess: true,
+    retry,
   };
 }

@@ -17,6 +17,10 @@ import { classLabel } from '@/features/scheduler/classes';
 import { CycleMutationError } from '@/features/scheduler/CycleMutationError';
 import { cycleActiveSummaries, cycleRecoveryNightNumbers } from '@/features/scheduler/projection';
 import { useCycle, useCycleMutations } from '@/features/scheduler/useCycle';
+import {
+  PRIVATE_GUIDANCE_AVAILABILITY_COPY,
+  ShelfDataUnavailableNotice,
+} from '@/features/shelf/ShelfDataAvailabilityGate';
 import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { colors } from '@/theme/tokens';
@@ -178,7 +182,8 @@ function FirstInsightCard({
 
 export default function PlanScreen() {
   const { height } = useWindowDimensions();
-  const { data } = usePlan();
+  const planQuery = usePlan();
+  const { data } = planQuery;
   const cycleQuery = useCycle();
   const { data: cycleData } = cycleQuery;
   const cycleMutations = useCycleMutations();
@@ -257,6 +262,25 @@ export default function PlanScreen() {
       track('conflict_detected', { count: data.plan.conflicts.length });
     }
   }, [data]);
+
+  if (planQuery.isError) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 24 }}
+        >
+          <ShelfDataUnavailableNotice
+            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
+            onRetry={planQuery.retry}
+            retrying={planQuery.isFetching}
+            onExit={() => backOrReplace(router, APP_YOU_ROUTE)}
+            exitLabel="Back to You"
+          />
+        </ScrollView>
+      </Screen>
+    );
+  }
 
   const planNote = plan ? (plan.unplacedProducts.length > 0 ? null : (plan.gaps[0] ?? null)) : null;
 
@@ -553,15 +577,17 @@ export default function PlanScreen() {
       >
         {startFailed ? <CycleMutationError className="mb-2 mt-0" /> : null}
         <Button
-          disabled={starting || scheduleUnavailable}
+          disabled={starting || scheduleUnavailable || !planQuery.isSuccess}
           label={
-            scheduleUnavailable
-              ? 'Schedule unavailable'
-              : starting
-                ? 'Starting...'
-                : startFailed
-                  ? 'Try again'
-                  : 'Start today'
+            planQuery.isLoading
+              ? 'Building routine...'
+              : scheduleUnavailable
+                ? 'Schedule unavailable'
+                : starting
+                  ? 'Starting...'
+                  : startFailed
+                    ? 'Try again'
+                    : 'Start today'
           }
           variant="accent"
           onPress={() => void startToday()}

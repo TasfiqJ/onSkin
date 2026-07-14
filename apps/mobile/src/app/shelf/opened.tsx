@@ -100,6 +100,7 @@ export default function OpenedDateScreen() {
   const [paoSource, setPaoSource] = useState<PaoSource>(draft.paoSource);
   const [paoEditOpen, setPaoEditOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
   const fallbackRoute = origin === 'onboarding' ? APP_ONBOARDING_PRODUCTS_ROUTE : APP_SHELF_ROUTE;
   const today = localDateString();
 
@@ -111,42 +112,49 @@ export default function OpenedDateScreen() {
     const productName = draft.name.trim();
     if (!hasProductDraft || !productName || !canSave || saving) return;
     setSaving(true);
+    setSaveFailed(false);
     const openedAt = mode === 'just' ? today : mode === 'pick' ? pickIso : null;
     const isOpened = mode !== 'unopened';
-    const addedProduct = await m.add({
-      name: productName,
-      brand: draft.brand,
-      category: draft.category,
-      barcode: draft.barcode,
-      catalogProductId: draft.catalogProductId,
-      catalogSourceId: draft.catalogSourceId,
-      catalogSource: draft.catalogSource,
-      catalogSourceName: draft.catalogSourceName,
-      catalogSourceRef: draft.catalogSourceRef,
-      catalogSourceUrl: draft.catalogSourceUrl,
-      catalogSourceSnapshotDate: draft.catalogSourceSnapshotDate,
-      catalogMatchQuality: draft.catalogMatchQuality,
-      dataQualityScore: draft.dataQualityScore,
-      ingredientParseStatus: draft.ingredientParseStatus,
-      ingredientParseConfidence: draft.ingredientParseConfidence,
-      parserVersion: draft.parserVersion,
-      sourceDisclosureAckAt: draft.sourceDisclosureAckAt,
-      ingredients: draft.ingredients,
-      openedAt,
-      isOpened,
-      paoMonths: pao,
-      paoSource,
-      expiryDate: draft.expiryDate,
-      addedVia: draft.addedVia,
-    });
-    reset();
-    if (origin === 'onboarding') {
-      router.replace({
-        pathname: APP_ONBOARDING_PRODUCTS_ROUTE,
-        params: { addedProductId: addedProduct.id },
+    try {
+      const addedProduct = await m.add({
+        name: productName,
+        brand: draft.brand,
+        category: draft.category,
+        barcode: draft.barcode,
+        catalogProductId: draft.catalogProductId,
+        catalogSourceId: draft.catalogSourceId,
+        catalogSource: draft.catalogSource,
+        catalogSourceName: draft.catalogSourceName,
+        catalogSourceRef: draft.catalogSourceRef,
+        catalogSourceUrl: draft.catalogSourceUrl,
+        catalogSourceSnapshotDate: draft.catalogSourceSnapshotDate,
+        catalogMatchQuality: draft.catalogMatchQuality,
+        dataQualityScore: draft.dataQualityScore,
+        ingredientParseStatus: draft.ingredientParseStatus,
+        ingredientParseConfidence: draft.ingredientParseConfidence,
+        parserVersion: draft.parserVersion,
+        sourceDisclosureAckAt: draft.sourceDisclosureAckAt,
+        ingredients: draft.ingredients,
+        openedAt,
+        isOpened,
+        paoMonths: pao,
+        paoSource,
+        expiryDate: draft.expiryDate,
+        addedVia: draft.addedVia,
       });
-    } else {
-      router.replace(APP_SHELF_ROUTE);
+      reset();
+      if (origin === 'onboarding') {
+        router.replace({
+          pathname: APP_ONBOARDING_PRODUCTS_ROUTE,
+          params: { addedProductId: addedProduct.id },
+        });
+      } else {
+        router.replace(APP_SHELF_ROUTE);
+      }
+    } catch {
+      setSaveFailed(true);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -333,9 +341,21 @@ export default function OpenedDateScreen() {
         </View>
       ) : null}
 
+      {saveFailed ? (
+        <View accessibilityRole="alert" className="mt-4 rounded-[14px] bg-clay-tint px-4 py-3">
+          <Text variant="bodySm" className="font-sans-semibold">
+            Product not added
+          </Text>
+          <Text variant="bodySm" tone="muted" className="mt-1">
+            Your draft is still here and your saved Shelf was not reset. Try again when private
+            storage is available.
+          </Text>
+        </View>
+      ) : null}
+
       <Button
         className="mt-6"
-        label="Add to shelf"
+        label={saving ? 'Adding...' : saveFailed ? 'Try adding again' : 'Add to shelf'}
         disabled={!canSave || saving}
         onPress={onSave}
       />

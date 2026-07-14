@@ -17,7 +17,8 @@ describe('Ask route launch contracts', () => {
   it('keeps the deterministic Ask home independent from the cloud Ask flag', () => {
     const layout = readAppRoute('ask/_layout.tsx');
 
-    expect(layout).toContain('<Stack screenOptions={{ headerShown: false }} />');
+    expect(layout).toContain('screenLayout={AskScreenLayout}');
+    expect(layout).toContain('screenOptions={{ headerShown: false }}');
     expect(layout).not.toContain('phase7Flags.cloudAsk');
     expect(layout).not.toContain('DeferredSurface');
   });

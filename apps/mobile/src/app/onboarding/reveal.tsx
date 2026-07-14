@@ -1,7 +1,7 @@
 import type { SkinAxis } from '@onskin/types';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useRef } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
@@ -132,15 +132,41 @@ export default function RevealScreen() {
 
         <Card tone="night" className="mt-4">
           <Text variant="label" tone="inverseMuted" className="font-mono">
-            {(firstInsight?.eyebrow ?? 'Routine preview').toUpperCase()}
+            {(planResult.isError
+              ? 'Routine preview unavailable'
+              : (firstInsight?.eyebrow ?? 'Routine preview')
+            ).toUpperCase()}
           </Text>
           <Text variant="body" tone="inverse" className="mt-1 font-sans-semibold">
-            {firstInsight?.title ?? 'Your first routine starts gentle.'}
+            {planResult.isError
+              ? 'Your saved products could not be read safely.'
+              : planResult.isLoading
+                ? 'Building your routine preview.'
+                : (firstInsight?.title ?? 'Your routine preview is ready after setup.')}
           </Text>
           <Text variant="bodySm" tone="inverseMuted" className="mt-1">
-            {firstInsight?.body ??
-              'Your full plan and conflict checks are ready after this setup step.'}
+            {planResult.isError
+              ? 'Nothing was reset or removed. Shelf-based guidance is paused until OnSkin can read it again.'
+              : planResult.isLoading
+                ? 'Checking your Shelf and profile without changing them.'
+                : (firstInsight?.body ??
+                  'Your full plan and conflict checks are ready after this setup step.')}
           </Text>
+          {planResult.isError ? (
+            <Pressable
+              accessibilityLabel="Retry routine preview"
+              accessibilityRole="button"
+              accessibilityState={{ disabled: planResult.isFetching }}
+              disabled={planResult.isFetching}
+              onPress={() => void planResult.retry()}
+              className="mt-3 min-h-[48px] items-center justify-center rounded-pill border border-paper/20 px-4 py-2.5"
+              style={{ opacity: planResult.isFetching ? 0.68 : 1 }}
+            >
+              <Text variant="bodySm" tone="inverse" className="font-sans-semibold">
+                {planResult.isFetching ? 'Trying again...' : 'Try preview again'}
+              </Text>
+            </Pressable>
+          ) : null}
         </Card>
       </View>
       <View className="pb-4">

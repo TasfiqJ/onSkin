@@ -8,6 +8,10 @@ import { goalRecsShippable } from '@/features/recommendations/catalog';
 import { REC_COPY } from '@/features/recommendations/copy';
 import type { Recommendation } from '@/features/recommendations/engine';
 import { useRecommendations } from '@/features/recommendations/useRecommendations';
+import {
+  PRIVATE_GUIDANCE_AVAILABILITY_COPY,
+  ShelfDataUnavailableNotice,
+} from '@/features/shelf/ShelfDataAvailabilityGate';
 import { track } from '@/lib/analytics/track';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -343,7 +347,7 @@ function HubIntro({
 
 export default function ForYouScreen() {
   const { height, width } = useWindowDimensions();
-  const { result, isLoading } = useRecommendations();
+  const { result, isError, isFetching, isLoading, isSuccess, retry } = useRecommendations();
   const groups = grouped(result.recommendations);
   const compactHub = height < 640;
   const shortHub = height < 520;
@@ -352,10 +356,29 @@ export default function ForYouScreen() {
   const narrowCompactHub = compactHub && width <= 430;
 
   useEffect(() => {
-    if (isLoading) return;
+    if (!isSuccess) return;
     if (result.youreSet) track('youre_set_shown');
     else track('recommendation_shown', { count: result.recommendations.length });
-  }, [isLoading, result.youreSet, result.recommendations.length]);
+  }, [isSuccess, result.youreSet, result.recommendations.length]);
+
+  if (isError) {
+    return (
+      <Screen edges={['top']}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 96 }}
+        >
+          <ShelfDataUnavailableNotice
+            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
+            onRetry={retry}
+            retrying={isFetching}
+            onExit={() => backOrReplace(router, APP_YOU_ROUTE)}
+            exitLabel="Back to You"
+          />
+        </ScrollView>
+      </Screen>
+    );
+  }
 
   return (
     <Screen edges={['top']}>

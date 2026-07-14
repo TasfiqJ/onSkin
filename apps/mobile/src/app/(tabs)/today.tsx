@@ -14,6 +14,11 @@ import { usePlan } from '@/features/routine/usePlan';
 import { useProgress } from '@/features/routine/useProgress';
 import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
 import { requestReviewAfterValue } from '@/features/review/prompt';
+import {
+  PRIVATE_GUIDANCE_AVAILABILITY_COPY,
+  ShelfDataAvailabilityGate,
+  ShelfDataUnavailableNotice,
+} from '@/features/shelf/ShelfDataAvailabilityGate';
 import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
 import { CompletionHistoryState } from '@/features/today/CompletionHistoryState';
 import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
@@ -356,10 +361,19 @@ function CheckRow({
 }
 
 export default function TodayScreen() {
+  return (
+    <ShelfDataAvailabilityGate>
+      <TodayScreenContent />
+    </ShelfDataAvailabilityGate>
+  );
+}
+
+function TodayScreenContent() {
   const { height, width } = useWindowDimensions();
   const type = currentRoutineType();
   const dark = type === 'PM';
-  const { data: planData } = usePlan();
+  const planQuery = usePlan();
+  const { data: planData } = planQuery;
   const { data: progress } = useProgress();
   const cycleQuery = useCycle();
   const { data: cycleData } = cycleQuery;
@@ -470,6 +484,23 @@ export default function TodayScreen() {
     !compactPhone &&
     cycle != null &&
     (cadenceWithheldCount === 0 || height >= 932);
+
+  if (planQuery.isError) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 24 }}
+        >
+          <ShelfDataUnavailableNotice
+            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
+            onRetry={planQuery.retry}
+            retrying={planQuery.isFetching}
+          />
+        </ScrollView>
+      </Screen>
+    );
+  }
 
   if (completionQuery.isPending || completionQuery.isError || completionMutationFailed) {
     return (

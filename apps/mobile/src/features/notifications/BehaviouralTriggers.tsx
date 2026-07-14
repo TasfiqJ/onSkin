@@ -4,7 +4,9 @@ import { AppState } from 'react-native';
 import { hasReplenishmentSignal } from '@/features/recommendations/replenishment';
 import { useProgress } from '@/features/routine/useProgress';
 import { useRamp } from '@/features/routine/useRamp';
-import { useShelf } from '@/features/shelf/useShelf';
+import { useShelf, type ShelfData } from '@/features/shelf/useShelf';
+import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import { notifyBehavioural, nowHHMM } from './deliver';
 import { useNotifPrefs } from './useNotifications';
@@ -33,12 +35,35 @@ export function anyBehaviouralTriggerEnabled(
   return Boolean(enabled?.promotional || enabled?.ramp || enabled?.replenishment);
 }
 
+export async function notifyReplenishmentFromFreshShelf(
+  ownerScope: OwnerQueryScope,
+  refetchShelf: () => Promise<{
+    isSuccess: boolean;
+    data?: Pick<ShelfData, 'items' | 'archive'>;
+  }>,
+  now: string,
+): Promise<boolean> {
+  try {
+    return await runOwnerQueryOperation(ownerScope, async (lease) => {
+      const freshShelf = await refetchShelf();
+      lease.assertCurrent();
+      if (!freshShelf.isSuccess || !hasReplenishmentSignal(freshShelf.data)) return false;
+      lease.assertCurrent();
+      await notifyBehavioural('replenishment', now);
+      lease.assertCurrent();
+      return true;
+    });
+  } catch {
+    return false;
+  }
+}
+
 function EnabledBehaviouralTriggers({ enabled }: { enabled: BehaviouralTriggerEnables }) {
+  const ownerScope = useOwnerQueryScope();
   const shelf = useShelf();
   const ramp = useRamp();
   const progress = useProgress();
 
-  const needsReplenish = hasReplenishmentSignal(shelf.data);
   // A retained ramp value is not authoritative after cadence storage becomes
   // unreadable. Never schedule a step-up nudge unless the current read succeeded.
   const offerStepUp = ramp.isSuccess && ramp.items.some((r) => r.offerStepUp);
@@ -49,18 +74,35 @@ function EnabledBehaviouralTriggers({ enabled }: { enabled: BehaviouralTriggerEn
   // Mirror the latest derived state into a ref (in an effect, never during render)
   // so the long-lived AppState listener always reads current values without
   // re-subscribing on every change.
-  const stateRef = useRef({ enabled, needsReplenish, offerStepUp, lapsed });
+  const stateRef = useRef({
+    enabled,
+    ownerScope,
+    shelfWasSuccess: shelf.isSuccess,
+    refetchShelf: shelf.refetch,
+    offerStepUp,
+    lapsed,
+  });
   useEffect(() => {
-    stateRef.current = { enabled, needsReplenish, offerStepUp, lapsed };
-  }, [enabled, needsReplenish, offerStepUp, lapsed]);
+    stateRef.current = {
+      enabled,
+      ownerScope,
+      shelfWasSuccess: shelf.isSuccess,
+      refetchShelf: shelf.refetch,
+      offerStepUp,
+      lapsed,
+    };
+  }, [enabled, ownerScope, shelf.isSuccess, shelf.refetch, offerStepUp, lapsed]);
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', (s) => {
       if (s !== 'background') return;
       const now = nowHHMM();
       const latest = stateRef.current;
-      if (latest.enabled.replenishment && latest.needsReplenish) {
-        void notifyBehavioural('replenishment', now).catch(() => undefined);
+      // A render snapshot can become unreadable while the app backgrounds. A
+      // purchase-adjacent replenishment nudge therefore requires a fresh strict
+      // Shelf read at decision time; retained success/data can never authorize it.
+      if (latest.enabled.replenishment && latest.shelfWasSuccess) {
+        void notifyReplenishmentFromFreshShelf(latest.ownerScope, latest.refetchShelf, now);
       }
       if (latest.enabled.ramp && latest.offerStepUp) {
         void notifyBehavioural('rampup', now).catch(() => undefined);

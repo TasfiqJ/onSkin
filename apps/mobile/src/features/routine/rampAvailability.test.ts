@@ -16,12 +16,12 @@ describe('ramp availability contract', () => {
     const orchestrateIndex = useCycle.indexOf('} = orchestrate(actives');
 
     expect(useRamp).toContain('const planRamps = planData?.isExample ? []');
-    expect(useRamp).toContain('const hasRampInputs = !planLoading && planRamps.length > 0;');
+    expect(useRamp).toContain('const hasRampInputs = planQuery.isSuccess && planRamps.length > 0;');
     expect(useRamp).toContain('enabled: hasRampInputs');
     expect(useRamp).toContain('retry: false');
     expect(useRamp).toContain("query.state.status !== 'error'");
     expect(useRamp).toContain('items: q.isSuccess ? (q.data ?? []) : []');
-    expect(useRamp).toContain('isSuccess: !planLoading && (!hasRampInputs || q.isSuccess)');
+    expect(useRamp).toContain('isSuccess: planQuery.isSuccess && (!hasRampInputs || q.isSuccess)');
 
     expect(guardIndex).toBeGreaterThan(-1);
     expect(orchestrateIndex).toBeGreaterThan(guardIndex);
@@ -54,7 +54,7 @@ describe('ramp availability contract', () => {
     expect(today).toContain('plan?.cycle != null && canUseRoutineCadence() && cycleQuery.isError');
     expect(today).toContain('<ActiveScheduleUnavailableNotice');
     expect(plan).toContain('scheduleUnavailable ? (');
-    expect(plan).toContain('disabled={starting || scheduleUnavailable}');
+    expect(plan).toContain('disabled={starting || scheduleUnavailable || !planQuery.isSuccess}');
     expect(plan).toContain("? 'Schedule unavailable'");
     expect(ramp).toContain('!item && !isLoading && !isError');
     expect(ramp).toContain('Ramp progress unavailable');

@@ -9,6 +9,7 @@ import { createOwnerQueryScope } from '@/lib/query/queryKeys';
 import {
   mirrorShelfDeleteForOwner,
   mirrorShelfUpsertForOwner,
+  resetShelfMutationStateForTests,
   useShelfMutations,
 } from './mutations';
 import type { NewShelfProduct, ShelfProduct } from './store';
@@ -29,11 +30,11 @@ const mocks = vi.hoisted(() => {
     from: vi.fn(() => ({ delete: remove, upsert })),
     getUser: vi.fn(),
     invalidateQueries: vi.fn(),
-    loadShelf: vi.fn(),
     ownerScope: { generation: 0 },
     reAddProduct: vi.fn(),
     remove,
     removeProduct: vi.fn(),
+    resetQueries: vi.fn(),
     track: vi.fn(),
     updateProduct: vi.fn(),
     upsert,
@@ -44,14 +45,16 @@ const mocks = vi.hoisted(() => {
 vi.mock('@/lib/observability/safeLog', () => ({ devWarn: mocks.devWarn }));
 vi.mock('@/lib/analytics/track', () => ({ track: mocks.track }));
 vi.mock('@tanstack/react-query', () => ({
-  useQueryClient: () => ({ invalidateQueries: mocks.invalidateQueries }),
+  useQueryClient: () => ({
+    invalidateQueries: mocks.invalidateQueries,
+    resetQueries: mocks.resetQueries,
+  }),
 }));
 vi.mock('@/lib/query/useOwnerQueryScope', () => ({
   useOwnerQueryScope: () => mocks.ownerScope,
 }));
 vi.mock('./store', () => ({
   addProduct: mocks.addProduct,
-  loadShelf: mocks.loadShelf,
   reAddProduct: mocks.reAddProduct,
   removeProduct: mocks.removeProduct,
   updateProduct: mocks.updateProduct,
@@ -126,11 +129,11 @@ describe('shelf owner-bound mirrors', () => {
     mocks.from.mockClear();
     mocks.getUser.mockReset();
     mocks.invalidateQueries.mockReset();
-    mocks.loadShelf.mockReset();
     mocks.ownerScope = createOwnerQueryScope();
     mocks.reAddProduct.mockReset();
     mocks.remove.mockClear();
     mocks.removeProduct.mockReset();
+    mocks.resetQueries.mockReset();
     mocks.track.mockReset();
     mocks.updateProduct.mockReset();
     mocks.upsert.mockClear();
@@ -142,10 +145,14 @@ describe('shelf owner-bound mirrors', () => {
       error: null,
     });
     mocks.invalidateQueries.mockResolvedValue(undefined);
-    mocks.loadShelf.mockResolvedValue([PRODUCT]);
-    mocks.reAddProduct.mockResolvedValue(PRODUCT);
+    mocks.resetQueries.mockResolvedValue(undefined);
+    mocks.reAddProduct.mockResolvedValue({
+      fresh: PRODUCT,
+      archived: { ...PRODUCT, status: 'finished' },
+    });
     mocks.removeProduct.mockResolvedValue(undefined);
     mocks.updateProduct.mockResolvedValue(PRODUCT);
+    resetShelfMutationStateForTests();
   });
 
   it('writes an explicit captured owner on a current-generation upsert', async () => {
@@ -165,6 +172,56 @@ describe('shelf owner-bound mirrors', () => {
 
     expect(mocks.eqUser).toHaveBeenCalledWith('user_id', 'owner-a');
     expect(mocks.deleteAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+  });
+
+  it('serializes two mirrors for the same product so an older upsert cannot finish last', async () => {
+    let releaseFirst!: (value: { error: null }) => void;
+    mocks.upsertAbortSignal.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          releaseFirst = resolve;
+        }),
+    );
+    const ownerScope = createOwnerQueryScope();
+    const first = mirrorShelfUpsertForOwner(ownerScope, PRODUCT);
+    await vi.waitFor(() => expect(mocks.upsert).toHaveBeenCalledOnce());
+
+    const newest = { ...PRODUCT, name: 'Newest cleanser name' };
+    const second = mirrorShelfUpsertForOwner(ownerScope, newest);
+    await Promise.resolve();
+    expect(mocks.upsert).toHaveBeenCalledOnce();
+
+    releaseFirst({ error: null });
+    await first;
+    await second;
+
+    expect(mocks.upsert).toHaveBeenCalledTimes(2);
+    const upsertCalls = mocks.upsert.mock.calls as unknown as [Record<string, unknown>][];
+    expect(upsertCalls[1]?.[0]).toMatchObject({ manual_name: newest.name });
+  });
+
+  it('keeps a queued delete after an earlier upsert so the row cannot be resurrected', async () => {
+    let releaseUpsert!: (value: { error: null }) => void;
+    mocks.upsertAbortSignal.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          releaseUpsert = resolve;
+        }),
+    );
+    const ownerScope = createOwnerQueryScope();
+    const upsert = mirrorShelfUpsertForOwner(ownerScope, PRODUCT);
+    await vi.waitFor(() => expect(mocks.upsert).toHaveBeenCalledOnce());
+
+    const remove = mirrorShelfDeleteForOwner(ownerScope, PRODUCT.id);
+    await Promise.resolve();
+    expect(mocks.remove).not.toHaveBeenCalled();
+
+    releaseUpsert({ error: null });
+    await upsert;
+    await remove;
+
+    expect(mocks.remove).toHaveBeenCalledOnce();
+    expect(mocks.deleteAbortSignal).toHaveBeenCalledOnce();
   });
 
   it('drops a delayed owner-A upsert before it can publish under owner B', async () => {
@@ -286,7 +343,7 @@ describe('shelf owner-bound mirrors', () => {
   });
 
   it('stops a delayed owner-A replenishment before reading or mirroring follow-up rows', async () => {
-    let releaseReplenishment!: (product: ShelfProduct) => void;
+    let releaseReplenishment!: (product: { fresh: ShelfProduct; archived: ShelfProduct }) => void;
     let markReplenishmentStarted!: () => void;
     const replenishmentStarted = new Promise<void>((resolve) => {
       markReplenishmentStarted = resolve;
@@ -303,12 +360,68 @@ describe('shelf owner-bound mirrors', () => {
     await replenishmentStarted;
     beginAccountGenerationBoundary();
     boundaryActive = true;
-    releaseReplenishment(PRODUCT);
+    releaseReplenishment({
+      fresh: PRODUCT,
+      archived: { ...PRODUCT, status: 'finished' },
+    });
 
     await expect(replacing).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-    expect(mocks.loadShelf).not.toHaveBeenCalled();
     expect(mocks.upsert).not.toHaveBeenCalled();
     expect(mocks.track).not.toHaveBeenCalled();
     expect(mocks.invalidateQueries).not.toHaveBeenCalled();
+  });
+
+  it('shares one in-flight replacement across routes and revalidates settled retries in the store', async () => {
+    const fresh = { ...PRODUCT, id: 'stable-replacement-id', repurchaseCount: 1 };
+    mocks.reAddProduct.mockResolvedValue({
+      fresh,
+      archived: { ...PRODUCT, status: 'finished' },
+    });
+    const firstRouteActions = useShelfMutations();
+    const secondRouteActions = useShelfMutations();
+
+    const [first, second] = await Promise.all([
+      firstRouteActions.replace(PRODUCT.id),
+      secondRouteActions.replace(PRODUCT.id),
+    ]);
+    const repeated = await useShelfMutations().replace(PRODUCT.id);
+
+    expect(first).toEqual(fresh);
+    expect(second).toEqual(fresh);
+    expect(repeated).toEqual(fresh);
+    expect(mocks.reAddProduct).toHaveBeenCalledTimes(2);
+    expect(mocks.reAddProduct).toHaveBeenNthCalledWith(1, PRODUCT.id);
+    expect(mocks.reAddProduct).toHaveBeenNthCalledWith(2, PRODUCT.id);
+    expect(mocks.track).toHaveBeenCalledTimes(2);
+    expect(mocks.invalidateQueries).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not return a settled owner-A replenishment after the owner boundary begins', async () => {
+    const actions = useShelfMutations();
+    await actions.replace(PRODUCT.id);
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+
+    await expect(actions.replace(PRODUCT.id)).rejects.toMatchObject({
+      code: 'ACCOUNT_GENERATION_CHANGED',
+    });
+    expect(mocks.reAddProduct).toHaveBeenCalledOnce();
+    expect(mocks.resetQueries).not.toHaveBeenCalled();
+  });
+
+  it('resets the active Shelf query when a strict local mutation discovers unreadable state', async () => {
+    const mutationError = new Error('SHELF_STATE_INVALID');
+    mocks.updateProduct.mockRejectedValueOnce(mutationError);
+    const actions = useShelfMutations();
+
+    await expect(actions.edit(PRODUCT.id, { name: 'Unsafe stale edit' })).rejects.toBe(
+      mutationError,
+    );
+
+    expect(mocks.resetQueries).toHaveBeenCalledWith({
+      queryKey: ['shelf', 'account-generation', mocks.ownerScope.generation],
+    });
+    expect(mocks.upsert).not.toHaveBeenCalled();
   });
 });

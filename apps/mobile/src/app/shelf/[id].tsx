@@ -269,6 +269,8 @@ export default function ProductDetailScreen() {
   const [catalogReportFeedback, setCatalogReportFeedback] = useState<CatalogReportFeedback | null>(
     null,
   );
+  const [replacingArchived, setReplacingArchived] = useState(false);
+  const [replaceArchivedFailed, setReplaceArchivedFailed] = useState(false);
   const supportFloorTextPressureDetail = width <= 390 && height >= 640 && height < 700;
   const compactMissingDetail = height < 640 || supportFloorTextPressureDetail;
 
@@ -874,13 +876,35 @@ export default function ProductDetailScreen() {
 
       {/* Lifecycle actions */}
       {archived ? (
-        <Button
-          label="Replace. Add a fresh one"
-          onPress={async () => {
-            await m.replace(id);
-            router.replace('/shelf');
-          }}
-        />
+        <View>
+          {replaceArchivedFailed ? (
+            <View accessibilityRole="alert" className="mb-2 rounded-[14px] bg-clay-tint px-4 py-3">
+              <Text variant="bodySm" className="font-sans-semibold">
+                Replacement not confirmed
+              </Text>
+              <Text variant="bodySm" tone="muted" className="mt-1">
+                Your saved Shelf was not reset. Try again when private storage is available.
+              </Text>
+            </View>
+          ) : null}
+          <Button
+            disabled={replacingArchived}
+            label={replacingArchived ? 'Adding fresh unit...' : 'Replace. Add a fresh one'}
+            onPress={async () => {
+              if (replacingArchived) return;
+              setReplacingArchived(true);
+              setReplaceArchivedFailed(false);
+              try {
+                await m.replace(id);
+                router.replace('/shelf');
+              } catch {
+                setReplaceArchivedFailed(true);
+              } finally {
+                setReplacingArchived(false);
+              }
+            }}
+          />
+        </View>
       ) : (
         <View className="flex-row gap-2.5">
           <Pressable

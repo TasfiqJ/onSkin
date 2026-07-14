@@ -15,13 +15,49 @@ import { supabase } from '@/lib/supabase/client';
 
 import {
   addProduct,
-  loadShelf,
   reAddProduct,
   removeProduct,
   updateProduct,
   type NewShelfProduct,
   type ShelfProduct,
 } from './store';
+import { failClosedShelfQueriesAfterMutationFailure } from './mutationFailure';
+
+const shelfMirrorTails = new Map<string, Promise<void>>();
+
+type ReplenishmentAttempt = {
+  pending: Promise<ShelfProduct | null>;
+};
+
+// Shared across route-local hook instances and remounts. The atomic store also
+// recovers a committed replacement from durable v1 lineage after a process
+// restart, when this in-memory coordinator no longer exists.
+const replenishmentAttempts = new Map<string, ReplenishmentAttempt>();
+
+function replenishmentAttemptKey(ownerScope: OwnerQueryScope, productId: string): string {
+  return `${ownerScope.generation}:${productId}`;
+}
+
+export function resetShelfMutationStateForTests(): void {
+  replenishmentAttempts.clear();
+}
+
+function enqueueShelfMirror(
+  ownerScope: OwnerQueryScope,
+  productId: string,
+  operation: () => Promise<void>,
+): Promise<void> {
+  const key = `${ownerScope.generation}:${productId}`;
+  const previous = shelfMirrorTails.get(key) ?? Promise.resolve();
+  const current = previous.catch(() => undefined).then(operation);
+  const tail = current
+    .catch(() => undefined)
+    .finally(() => {
+      if (shelfMirrorTails.get(key) === tail) shelfMirrorTails.delete(key);
+    });
+  shelfMirrorTails.set(key, tail);
+  return current;
+}
 
 // Shelf lifecycle mutations (docs/04 §5.7). Each writes the local-first store
 // (source of truth, D-029) and best-effort-mirrors to Supabase so it's ready to
@@ -29,7 +65,7 @@ import {
 
 /** Best-effort mirror to user_products. Local and server rows deliberately share
  * one UUID so routine_conflicts foreign keys can reference the mirrored shelf. */
-export async function mirrorShelfUpsertForOwner(
+async function performShelfMirrorUpsertForOwner(
   ownerScope: OwnerQueryScope,
   p: ShelfProduct,
 ): Promise<void> {
@@ -74,7 +110,16 @@ export async function mirrorShelfUpsertForOwner(
   }
 }
 
-export async function mirrorShelfDeleteForOwner(
+export function mirrorShelfUpsertForOwner(
+  ownerScope: OwnerQueryScope,
+  product: ShelfProduct,
+): Promise<void> {
+  return enqueueShelfMirror(ownerScope, product.id, () =>
+    performShelfMirrorUpsertForOwner(ownerScope, product),
+  );
+}
+
+async function performShelfMirrorDeleteForOwner(
   ownerScope: OwnerQueryScope,
   id: string,
 ): Promise<void> {
@@ -97,6 +142,10 @@ export async function mirrorShelfDeleteForOwner(
   }
 }
 
+export function mirrorShelfDeleteForOwner(ownerScope: OwnerQueryScope, id: string): Promise<void> {
+  return enqueueShelfMirror(ownerScope, id, () => performShelfMirrorDeleteForOwner(ownerScope, id));
+}
+
 export function useShelfMutations() {
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
@@ -104,18 +153,33 @@ export function useShelfMutations() {
     if (!isOwnerQueryScopeCurrent(ownerScope)) return Promise.resolve();
     return qc.invalidateQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) });
   };
+  const runWithFailureRecovery = async <T>(operation: () => Promise<T>): Promise<T> => {
+    try {
+      return await operation();
+    } catch (error) {
+      try {
+        await failClosedShelfQueriesAfterMutationFailure(qc, ownerScope);
+      } catch {
+        // Preserve the authoritative mutation error. The reset is best effort;
+        // the next mounted owner-scoped query still performs a strict read.
+      }
+      throw error;
+    }
+  };
 
   return {
     async add(input: NewShelfProduct): Promise<ShelfProduct> {
-      return runOwnerQueryOperation(ownerScope, async (lease) => {
-        const product = await addProduct(input);
-        lease.assertCurrent();
-        track('product_added', { added_via: input.addedVia });
-        void mirrorShelfUpsertForOwner(ownerScope, product);
-        await invalidate();
-        lease.assertCurrent();
-        return product;
-      });
+      return runWithFailureRecovery(() =>
+        runOwnerQueryOperation(ownerScope, async (lease) => {
+          const product = await addProduct(input);
+          lease.assertCurrent();
+          track('product_added', { added_via: input.addedVia });
+          void mirrorShelfUpsertForOwner(ownerScope, product);
+          await invalidate();
+          lease.assertCurrent();
+          return product;
+        }),
+      );
     },
 
     /** The opened-date linchpin write (docs/04 §4.5). */
@@ -123,78 +187,110 @@ export function useShelfMutations() {
       id: string,
       patch: { openedAt: string | null; isOpened: boolean; paoMonths?: number | null },
     ): Promise<void> {
-      await runOwnerQueryOperation(ownerScope, async (lease) => {
-        const product = await updateProduct(id, {
-          openedAt: patch.openedAt,
-          isOpened: patch.isOpened,
-          ...(patch.paoMonths !== undefined ? { paoMonths: patch.paoMonths } : {}),
-        });
-        lease.assertCurrent();
-        if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
-        track('opened_date_set', { is_opened: patch.isOpened });
-        await invalidate();
-      });
+      await runWithFailureRecovery(() =>
+        runOwnerQueryOperation(ownerScope, async (lease) => {
+          const product = await updateProduct(id, {
+            openedAt: patch.openedAt,
+            isOpened: patch.isOpened,
+            ...(patch.paoMonths !== undefined ? { paoMonths: patch.paoMonths } : {}),
+          });
+          lease.assertCurrent();
+          if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
+          track('opened_date_set', { is_opened: patch.isOpened });
+          await invalidate();
+        }),
+      );
     },
 
     async edit(id: string, patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>): Promise<void> {
-      await runOwnerQueryOperation(ownerScope, async (lease) => {
-        const product = await updateProduct(id, patch);
-        lease.assertCurrent();
-        if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
-        await invalidate();
-      });
+      await runWithFailureRecovery(() =>
+        runOwnerQueryOperation(ownerScope, async (lease) => {
+          const product = await updateProduct(id, patch);
+          lease.assertCurrent();
+          if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
+          await invalidate();
+        }),
+      );
     },
 
     async markFinished(id: string): Promise<void> {
-      await runOwnerQueryOperation(ownerScope, async (lease) => {
-        const product = await updateProduct(id, {
-          status: 'finished',
-          finishedAt: localDateString(),
-        });
-        lease.assertCurrent();
-        if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
-        track('product_finished', { source: 'shelf' });
-        await invalidate();
-      });
+      await runWithFailureRecovery(() =>
+        runOwnerQueryOperation(ownerScope, async (lease) => {
+          const product = await updateProduct(id, {
+            status: 'finished',
+            finishedAt: localDateString(),
+          });
+          lease.assertCurrent();
+          if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
+          track('product_finished', { source: 'shelf' });
+          await invalidate();
+        }),
+      );
     },
 
     async markDiscarded(id: string): Promise<void> {
-      await runOwnerQueryOperation(ownerScope, async (lease) => {
-        const product = await updateProduct(id, {
-          status: 'discarded',
-          finishedAt: localDateString(),
-        });
-        lease.assertCurrent();
-        if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
-        track('product_discarded', { source: 'shelf' });
-        await invalidate();
-      });
+      await runWithFailureRecovery(() =>
+        runOwnerQueryOperation(ownerScope, async (lease) => {
+          const product = await updateProduct(id, {
+            status: 'discarded',
+            finishedAt: localDateString(),
+          });
+          lease.assertCurrent();
+          if (product) void mirrorShelfUpsertForOwner(ownerScope, product);
+          track('product_discarded', { source: 'shelf' });
+          await invalidate();
+        }),
+      );
     },
 
     async remove(id: string): Promise<void> {
-      await runOwnerQueryOperation(ownerScope, async (lease) => {
-        await removeProduct(id);
-        lease.assertCurrent();
-        void mirrorShelfDeleteForOwner(ownerScope, id);
-        await invalidate();
-      });
+      await runWithFailureRecovery(() =>
+        runOwnerQueryOperation(ownerScope, async (lease) => {
+          await removeProduct(id);
+          lease.assertCurrent();
+          void mirrorShelfDeleteForOwner(ownerScope, id);
+          await invalidate();
+        }),
+      );
     },
 
     /** Replenish "re-add the same one". Archives the unit, resets the clock (§6). */
     async replace(id: string): Promise<ShelfProduct | null> {
-      return runOwnerQueryOperation(ownerScope, async (lease) => {
-        const fresh = await reAddProduct(id);
-        lease.assertCurrent();
-        if (fresh) {
-          const archived = (await loadShelf()).find((product) => product.id === id);
+      const attemptKey = replenishmentAttemptKey(ownerScope, id);
+      const existing = replenishmentAttempts.get(attemptKey);
+      if (existing) {
+        return runOwnerQueryOperation(ownerScope, async (lease) => {
+          const completed = await existing.pending;
           lease.assertCurrent();
-          if (archived) void mirrorShelfUpsertForOwner(ownerScope, archived);
-          void mirrorShelfUpsertForOwner(ownerScope, fresh);
+          return completed;
+        });
+      }
+
+      // Concurrent taps and separate route-local hooks share one in-flight write.
+      // After settlement the store's source-derived UUID—not retained product
+      // data in module memory—makes any uncertain retry idempotent.
+      const pending = runWithFailureRecovery(() =>
+        runOwnerQueryOperation(ownerScope, async (lease) => {
+          const replaced = await reAddProduct(id);
+          lease.assertCurrent();
+          if (replaced) {
+            void mirrorShelfUpsertForOwner(ownerScope, replaced.archived);
+            void mirrorShelfUpsertForOwner(ownerScope, replaced.fresh);
+          }
+          track('replenishment_nudge_tapped', { action: 're_add' });
+          await invalidate();
+          lease.assertCurrent();
+          return replaced?.fresh ?? null;
+        }),
+      );
+      replenishmentAttempts.set(attemptKey, { pending });
+      try {
+        return await pending;
+      } finally {
+        if (replenishmentAttempts.get(attemptKey)?.pending === pending) {
+          replenishmentAttempts.delete(attemptKey);
         }
-        track('replenishment_nudge_tapped', { action: 're_add' });
-        await invalidate();
-        return fresh;
-      });
+      }
     },
   };
 }

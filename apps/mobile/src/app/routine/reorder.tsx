@@ -12,6 +12,10 @@ import {
   type RoutineOrderOverrides,
 } from '@/features/routine/orderStore';
 import { usePlan } from '@/features/routine/usePlan';
+import {
+  PRIVATE_GUIDANCE_AVAILABILITY_COPY,
+  ShelfDataUnavailableNotice,
+} from '@/features/shelf/ShelfDataAvailabilityGate';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { backOrReplace } from '@/lib/navigation/safeBack';
@@ -64,7 +68,8 @@ export default function ReorderScreen() {
   const params = useLocalSearchParams<{ phase?: string | string[] }>();
   const requestedPhase = Array.isArray(params.phase) ? params.phase[0] : params.phase;
   const initialPhase: RoutineOrderPhase = requestedPhase === 'pm' ? 'pm' : 'am';
-  const { data, isLoading } = usePlan();
+  const planQuery = usePlan();
+  const { data, isLoading } = planQuery;
   const canonical = useMemo<PhaseSteps>(
     () => ({
       am: data?.canonicalPlan.am ?? [],
@@ -82,6 +87,24 @@ export default function ReorderScreen() {
   const editorKey = `${phaseOrderKey(canonical.am)}|${phaseOrderKey(canonical.pm)}|${phaseOrderKey(
     initial.am,
   )}|${phaseOrderKey(initial.pm)}|${initialPhase}`;
+
+  if (planQuery.isError) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 24 }}
+        >
+          <ShelfDataUnavailableNotice
+            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
+            onRetry={planQuery.retry}
+            retrying={planQuery.isFetching}
+            onExit={() => backOrReplace(router)}
+          />
+        </ScrollView>
+      </Screen>
+    );
+  }
 
   return (
     <ReorderEditor

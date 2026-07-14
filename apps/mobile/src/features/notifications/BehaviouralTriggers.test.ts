@@ -1,11 +1,23 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { anyBehaviouralTriggerEnabled, BehaviouralTriggers } from './BehaviouralTriggers';
+import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+} from '@/lib/auth/accountGeneration';
+import { createOwnerQueryScope } from '@/lib/query/queryKeys';
+
+import {
+  anyBehaviouralTriggerEnabled,
+  BehaviouralTriggers,
+  notifyReplenishmentFromFreshShelf,
+} from './BehaviouralTriggers';
 
 const mocks = vi.hoisted(() => ({
   addEventListener: vi.fn(),
+  hasReplenishmentSignal: vi.fn(),
+  notifyBehavioural: vi.fn(),
   useNotifPrefs: vi.fn(),
   useProgress: vi.fn(),
   useRamp: vi.fn(),
@@ -16,15 +28,87 @@ vi.mock('react-native', () => ({
   AppState: { addEventListener: mocks.addEventListener },
 }));
 vi.mock('./useNotifications', () => ({ useNotifPrefs: mocks.useNotifPrefs }));
-vi.mock('./deliver', () => ({ notifyBehavioural: vi.fn(), nowHHMM: vi.fn(() => '12:00') }));
+vi.mock('./deliver', () => ({
+  notifyBehavioural: mocks.notifyBehavioural,
+  nowHHMM: vi.fn(() => '12:00'),
+}));
 vi.mock('@/features/recommendations/replenishment', () => ({
-  hasReplenishmentSignal: vi.fn(() => false),
+  hasReplenishmentSignal: mocks.hasReplenishmentSignal,
 }));
 vi.mock('@/features/routine/useProgress', () => ({ useProgress: mocks.useProgress }));
 vi.mock('@/features/routine/useRamp', () => ({ useRamp: mocks.useRamp }));
 vi.mock('@/features/shelf/useShelf', () => ({ useShelf: mocks.useShelf }));
 
 describe('behavioural trigger preference gate', () => {
+  let boundaryActive = false;
+
+  afterEach(() => {
+    if (boundaryActive) {
+      endAccountGenerationBoundary();
+      boundaryActive = false;
+    }
+  });
+
+  it('requires a fresh successful Shelf read before scheduling replenishment', async () => {
+    mocks.hasReplenishmentSignal.mockReset();
+    mocks.hasReplenishmentSignal.mockReturnValue(true);
+    mocks.notifyBehavioural.mockReset();
+    const retainedData = { items: [], archive: [] };
+
+    await expect(
+      notifyReplenishmentFromFreshShelf(
+        createOwnerQueryScope(),
+        async () => ({ isSuccess: false, data: retainedData }),
+        '12:00',
+      ),
+    ).resolves.toBe(false);
+    expect(mocks.hasReplenishmentSignal).not.toHaveBeenCalled();
+    expect(mocks.notifyBehavioural).not.toHaveBeenCalled();
+
+    await expect(
+      notifyReplenishmentFromFreshShelf(
+        createOwnerQueryScope(),
+        async () => ({ isSuccess: true, data: retainedData }),
+        '12:00',
+      ),
+    ).resolves.toBe(true);
+    expect(mocks.notifyBehavioural).toHaveBeenCalledWith('replenishment', '12:00');
+  });
+
+  it('drops an owner-A replenishment decision when the account changes during the fresh read', async () => {
+    mocks.hasReplenishmentSignal.mockReset();
+    mocks.hasReplenishmentSignal.mockReturnValue(true);
+    mocks.notifyBehavioural.mockReset();
+    const ownerA = createOwnerQueryScope();
+    let releaseRead!: (result: {
+      isSuccess: boolean;
+      data: { items: never[]; archive: never[] };
+    }) => void;
+    let markReadStarted!: () => void;
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    const decision = notifyReplenishmentFromFreshShelf(
+      ownerA,
+      () => {
+        markReadStarted();
+        return new Promise((resolve) => {
+          releaseRead = resolve;
+        });
+      },
+      '12:00',
+    );
+    await readStarted;
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    releaseRead({ isSuccess: true, data: { items: [], archive: [] } });
+
+    await expect(decision).resolves.toBe(false);
+    expect(mocks.hasReplenishmentSignal).not.toHaveBeenCalled();
+    expect(mocks.notifyBehavioural).not.toHaveBeenCalled();
+  });
+
   it('treats only the preferences used by mounted background triggers as relevant', () => {
     expect(anyBehaviouralTriggerEnabled(undefined)).toBe(false);
     expect(
@@ -75,6 +159,9 @@ describe('behavioural trigger preference gate', () => {
     expect(inner).toContain('useShelf()');
     expect(inner).toContain('useRamp()');
     expect(inner).toContain('useProgress()');
+    expect(inner).toContain(
+      'notifyReplenishmentFromFreshShelf(latest.ownerScope, latest.refetchShelf, now)',
+    );
     expect(inner).toContain('ramp.isSuccess && ramp.items.some');
     expect(inner).toContain('progress.isSuccess && progress.data?.lapsed === true');
     expect(inner).toContain("AppState.addEventListener('change'");

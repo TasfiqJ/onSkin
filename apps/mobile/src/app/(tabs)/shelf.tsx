@@ -14,6 +14,7 @@ import {
 import { conflictDetailRoute } from '@/features/intelligence/conflictIdentity';
 import { bannerSubhead, bannerTitle, severityLabel } from '@/features/intelligence/presentation';
 import { trackProductAddStarted, type ProductAddStartSource } from '@/features/shelf/analytics';
+import { ShelfDataUnavailableNotice } from '@/features/shelf/ShelfDataAvailabilityGate';
 import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
@@ -337,7 +338,7 @@ function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }
 }
 
 export default function ShelfScreen() {
-  const { data, isLoading } = useShelf();
+  const { data, isError, isFetching, isLoading, refetch } = useShelf();
   const [filter, setFilter] = useState<Filter>('all');
   const { height } = useWindowDimensions();
   const compactShelf = height < 640;
@@ -360,6 +361,13 @@ export default function ShelfScreen() {
     <Screen edges={['top']}>
       {showLoading ? (
         <SkeletonShelf compactFilterLabels={compactFilterLabels} />
+      ) : isError ? (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingBottom: 96 }}
+        >
+          <ShelfDataUnavailableNotice onRetry={refetch} retrying={isFetching} />
+        </ScrollView>
       ) : isEmpty ? (
         <>
           <View className="mt-2">

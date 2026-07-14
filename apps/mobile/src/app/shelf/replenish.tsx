@@ -11,6 +11,7 @@ import {
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { isSafetyCriticalCategory } from '@/features/shelf/categories';
 import { useShelfMutations } from '@/features/shelf/mutations';
+import { SHELF_REPLENISHMENT_ALREADY_REPLACED } from '@/features/shelf/store';
 import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -28,6 +29,9 @@ export default function ReplenishScreen() {
     itemId: string;
     feedback: CommerceLinkFeedback;
   } | null>(null);
+  const [reAdding, setReAdding] = useState(false);
+  const [reAddFailed, setReAddFailed] = useState(false);
+  const [alreadyReplaced, setAlreadyReplaced] = useState(false);
 
   const item = [...(data?.items ?? []), ...(data?.archive ?? [])].find((i) => i.id === id);
 
@@ -93,9 +97,23 @@ export default function ReplenishScreen() {
     similarFeedback?.itemId === item.id ? similarFeedback.feedback : null;
 
   const reAdd = async () => {
+    if (reAdding) return;
     haptics.select();
-    await m.replace(item.id);
-    router.replace('/shelf');
+    setReAdding(true);
+    setReAddFailed(false);
+    setAlreadyReplaced(false);
+    try {
+      await m.replace(item.id);
+      router.replace('/shelf');
+    } catch (error) {
+      if (error instanceof Error && error.message === SHELF_REPLENISHMENT_ALREADY_REPLACED) {
+        setAlreadyReplaced(true);
+      } else {
+        setReAddFailed(true);
+      }
+    } finally {
+      setReAdding(false);
+    }
   };
 
   const seeSimilar = async () => {
@@ -143,21 +161,45 @@ export default function ReplenishScreen() {
       <View className="mt-5 gap-2.5">
         <Pressable
           accessibilityRole="button"
-          onPress={reAdd}
+          accessibilityState={{ disabled: reAdding }}
+          disabled={reAdding}
+          onPress={() => void reAdd()}
           className="flex-row items-center gap-3.5 rounded-[18px] border-2 border-clay bg-paper-raised p-4"
+          style={{ opacity: reAdding ? 0.68 : 1 }}
         >
           <View className="h-9 w-9 items-center justify-center rounded-[10px] bg-clay-tint">
             <Text className="font-sans-bold text-clay">+</Text>
           </View>
           <View className="flex-1">
             <Text variant="body" className="font-sans-semibold">
-              Re-add the same one
+              {reAdding ? 'Adding fresh unit...' : 'Re-add the same one'}
             </Text>
             <Text variant="bodySm" tone="muted">
               Resets the freshness clock
             </Text>
           </View>
         </Pressable>
+        {reAddFailed ? (
+          <View accessibilityRole="alert" className="rounded-[14px] bg-clay-tint px-4 py-3">
+            <Text variant="bodySm" className="font-sans-semibold">
+              Replacement not confirmed
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              Your saved Shelf was not reset. Try again; this replacement keeps the same identity so
+              it cannot create a duplicate from an uncertain attempt.
+            </Text>
+          </View>
+        ) : null}
+        {alreadyReplaced ? (
+          <View accessibilityRole="alert" className="rounded-[14px] bg-clay-tint px-4 py-3">
+            <Text variant="bodySm" className="font-sans-semibold">
+              Replacement already recorded
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              This older package was already replaced. Return to Shelf and choose the latest unit.
+            </Text>
+          </View>
+        ) : null}
         <Pressable
           accessibilityRole="button"
           onPress={() => void seeSimilar()}

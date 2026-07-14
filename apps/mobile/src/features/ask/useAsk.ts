@@ -43,7 +43,8 @@ export function useAsk() {
   const plan = usePlan();
   const recs = useRecommendations();
   const profile = useProfileBits();
-  const { data: ent } = useEntitlement();
+  const entitlement = useEntitlement();
+  const { data: ent } = entitlement;
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
   const boundary = useLocalDateBoundary();
@@ -55,6 +56,13 @@ export function useAsk() {
     queryFn: () => getGroundedTurns(period),
     retry: 0,
   });
+  const isSuccess =
+    shelf.isSuccess &&
+    plan.isSuccess &&
+    recs.isSuccess &&
+    profile.isSuccess &&
+    entitlement.isSuccess &&
+    turns.isSuccess;
 
   const ctx = useMemo<AskContext>(() => {
     const gate = askGate({
@@ -118,15 +126,36 @@ export function useAsk() {
   const ask = useCallback(
     (question: string): AskAnswer => {
       if (question.trim().length === 0) return safetyRefusal('out_of_scope');
+      if (!isSuccess) return safetyRefusal('out_of_scope');
       return finalise(answerQuestion(question, ctx));
     },
-    [ctx, finalise],
+    [ctx, finalise, isSuccess],
   );
 
   const askSuggested = useCallback(
-    (prompt: 'conflict' | 'tonight' | 'fit'): AskAnswer => finalise(answerPrompt(prompt, ctx)),
-    [ctx, finalise],
+    (prompt: 'conflict' | 'tonight' | 'fit'): AskAnswer =>
+      isSuccess ? finalise(answerPrompt(prompt, ctx)) : safetyRefusal('out_of_scope'),
+    [ctx, finalise, isSuccess],
   );
+
+  async function retry(): Promise<void> {
+    await Promise.all([
+      shelf.isError ? shelf.refetch() : Promise.resolve(),
+      plan.isError ? plan.retry() : Promise.resolve(),
+      recs.isError ? recs.retry() : Promise.resolve(),
+      profile.isError ? profile.refetch() : Promise.resolve(),
+      entitlement.isError ? entitlement.refetch() : Promise.resolve(),
+      turns.isError ? turns.refetch() : Promise.resolve(),
+    ]);
+  }
+
+  const isError =
+    shelf.isError ||
+    plan.isError ||
+    recs.isError ||
+    profile.isError ||
+    entitlement.isError ||
+    turns.isError;
 
   return {
     ctx,
@@ -134,7 +163,24 @@ export function useAsk() {
     askSuggested,
     // Whether the user has any products on their shelf, so the screen can lead
     // proactively only when there is something real to answer about (docs/13 §14).
-    hasShelf: ctx.hasShelfProducts,
-    isLoading: shelf.isLoading || plan.isLoading || recs.isLoading,
+    hasShelf: isSuccess && ctx.hasShelfProducts,
+    isLoading:
+      shelf.isLoading ||
+      plan.isLoading ||
+      recs.isLoading ||
+      profile.isLoading ||
+      entitlement.isLoading ||
+      turns.isLoading ||
+      (!isSuccess && !isError),
+    isError,
+    isFetching:
+      shelf.isFetching ||
+      plan.isFetching ||
+      recs.isFetching ||
+      profile.isFetching ||
+      entitlement.isFetching ||
+      turns.isFetching,
+    isSuccess,
+    retry,
   };
 }

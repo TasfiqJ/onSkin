@@ -6,6 +6,10 @@ import { RouteIconButton, Screen, Text } from '@/components/ui';
 import type { AskAnswer } from '@/features/ask/answer';
 import { ASK_COPY } from '@/features/ask/copy';
 import { useAsk } from '@/features/ask/useAsk';
+import {
+  PRIVATE_GUIDANCE_AVAILABILITY_COPY,
+  ShelfDataUnavailableNotice,
+} from '@/features/shelf/ShelfDataAvailabilityGate';
 import { track } from '@/lib/analytics/track';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -333,7 +337,7 @@ function SuggestedPrompt({
 
 export default function AskScreen() {
   const { height, width } = useWindowDimensions();
-  const { ask, askSuggested, isLoading, hasShelf } = useAsk();
+  const { ask, askSuggested, isError, isFetching, isLoading, hasShelf, retry } = useAsk();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
   const idRef = useRef(0);
@@ -397,6 +401,25 @@ export default function AskScreen() {
         ? SHORT_PHONE_EMPTY_PROMPT_ORDER
         : EMPTY_PROMPT_ORDER;
   const promptLabels = supportFloorPhone ? SUPPORT_FLOOR_PROMPT_LABELS : ASK_COPY.home.prompts;
+
+  if (isError) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 24 }}
+        >
+          <ShelfDataUnavailableNotice
+            copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
+            onRetry={retry}
+            retrying={isFetching}
+            onExit={() => backOrReplace(router, APP_HOME_ROUTE)}
+            exitLabel="Back to Today"
+          />
+        </ScrollView>
+      </Screen>
+    );
+  }
 
   return (
     <Screen edges={['top', 'bottom']}>
