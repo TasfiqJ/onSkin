@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T20:06:13.093Z",
+  "generatedAt": "2026-07-14T00:09:08.179Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -81,7 +81,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "61f1c8c5338a771fce635a31353ff138e74080bf",
+  "gitSha": "7bfaf714b4edc6a2ff49ee4125f0cdd0b0a43afb",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -161,14 +161,14 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 16422,
-      "sha256": "c48da3e0c5eb2b900c9a721c35428f2b402b3577e1692b9fae0ad157c64ef091"
+      "bytes": 16403,
+      "sha256": "6b4ec777ad4ba73c3e79b0be8be7ed710f31aaddeb0e0e00496eb6c7db99448c"
     },
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 21062,
-      "sha256": "9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0"
+      "bytes": 22309,
+      "sha256": "a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -192,7 +192,7 @@
       "path": "apps/mobile/src/lib/env.ts",
       "exists": true,
       "bytes": 6982,
-      "sha256": "cee9823ec5d10a90a7dfe0596ce6c9d9b23e3a48d875e7093574b1384a7c1447"
+      "sha256": "22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31"
     },
     {
       "path": "apps/mobile/src/features/subscription/store.ts",
@@ -263,8 +263,50 @@
     {
       "path": "supabase/functions/account-deletion/index.ts",
       "exists": true,
-      "bytes": 15316,
-      "sha256": "7441711f06bd443c3d299c4607950c85ac586226c5d9879eeea601511a54659a"
+      "bytes": 12999,
+      "sha256": "910099e3293553b83b5b55b0a923021a316ff8e01af67a59f538e2db9d805490"
+    },
+    {
+      "path": "supabase/functions/account-deletion/providerDeletion.ts",
+      "exists": true,
+      "bytes": 11026,
+      "sha256": "0aa0f2b92f7473d3d57444d909a7669ea4955d3d6c451f49396358f00b3dc1b0"
+    },
+    {
+      "path": "supabase/functions/account-deletion/providerDeletion.test.ts",
+      "exists": true,
+      "bytes": 17446,
+      "sha256": "ce9e10bedcbd3a85f42009a79c9d4a7c5db9450c7cd1cc6ff8081b6b99e81d81"
+    },
+    {
+      "path": "supabase/functions/account-deletion/serviceRoleCleanup.ts",
+      "exists": true,
+      "bytes": 3440,
+      "sha256": "f8d8d06f9fdf4b940af912773c6293eeb4530df110c8279b7d58788f344f053d"
+    },
+    {
+      "path": "supabase/functions/account-deletion/serviceRoleCleanup.test.ts",
+      "exists": true,
+      "bytes": 16530,
+      "sha256": "e93c3fe4cd82445ad5833a148ec5aaee95eb95b17b29e02170693623b3f4f95a"
+    },
+    {
+      "path": "supabase/functions/order-report-poll/index.ts",
+      "exists": true,
+      "bytes": 5391,
+      "sha256": "5709d7128e0e151148a704a8e19d06220bd6d8959eb5f8a7071b0acc7f1f4b81"
+    },
+    {
+      "path": "supabase/functions/order-report-poll/orderAttributionCore.ts",
+      "exists": true,
+      "bytes": 10537,
+      "sha256": "434abcf6f1f7424d503fcec137bd799dc66b520c26d0e76bd36d0820f1dfa7f0"
+    },
+    {
+      "path": "supabase/functions/order-report-poll/orderAttributionCore.test.ts",
+      "exists": true,
+      "bytes": 14124,
+      "sha256": "63105c5562be39504a68075984320cb2105d8f84be04d67d282135f79fb30f6b"
     },
     {
       "path": "supabase/migrations/20260615000027_phase6_payments.sql",
@@ -283,6 +325,18 @@
       "exists": true,
       "bytes": 4979,
       "sha256": "6644e557e25f9475629b583f16e4db28eb7811ec3a7123eebc3ecb296db8f841"
+    },
+    {
+      "path": "supabase/migrations/20260713000046_account_service_row_scrub.sql",
+      "exists": true,
+      "bytes": 45399,
+      "sha256": "268234dbc7c423eef097a2ea17790b871d8413913df71006c73d686e3bd471cf"
+    },
+    {
+      "path": "supabase/migrations/20260713000047_account_obf_contribution_erasure.sql",
+      "exists": true,
+      "bytes": 8297,
+      "sha256": "152f6ecaf1def7bebd0a5ff1d71b4152b336de72dc8ce8e465f071810f7d023b"
     },
     {
       "path": "apps/mobile/src/features/subscription/paywallMobileContracts.test.ts",
@@ -311,8 +365,8 @@
     {
       "path": "scripts/phase6/build-payments-qa-packet.mjs",
       "exists": true,
-      "bytes": 15407,
-      "sha256": "87d7824d90cb1c3fa5f8abedbf31b7d82346943fbe57ca6904666b9c51e96ad0"
+      "bytes": 16106,
+      "sha256": "ab723045668673092089227520ba3af441529c8de4175f28f013371aa35c55f2"
     },
     {
       "path": "scripts/phase6/check-payments-env.mjs",
@@ -329,20 +383,32 @@
     {
       "path": "scripts/phase2/check-env.mjs",
       "exists": true,
-      "bytes": 11132,
-      "sha256": "520719a738da550be0181335e8175f04f8e8d93c1450b99d2e67546fe9415380"
+      "bytes": 12471,
+      "sha256": "4b46946953830817527a3d4998bd9cb7be4c6d07b3fd60d284659ae0384da449"
     },
     {
       "path": "scripts/phase2/check-env-smoke.mjs",
       "exists": true,
-      "bytes": 11419,
-      "sha256": "9da4e944217b3e440122690644f4e410ab1017393b04bfcc8f2bd0768421bb66"
+      "bytes": 14224,
+      "sha256": "5a017c0b30fca0f54e257a150fbfab6e1c979881555a295ef768ea4bd3331aa4"
     },
     {
       "path": "scripts/phase9/supabase-policy-lint.mjs",
       "exists": true,
-      "bytes": 9417,
-      "sha256": "937e2ffda3ba57f7cb0f4b82892529695815b15c2e42da8e3c0f952cd4a77c89"
+      "bytes": 9455,
+      "sha256": "203cde7da5c694aae8378ead6853242ffec636e0ac9403b0bbba2ca6639b67ca"
+    },
+    {
+      "path": "scripts/phase9/account-service-scrub-postgres-rehearsal.sql",
+      "exists": true,
+      "bytes": 26077,
+      "sha256": "b4898279189ebca369eaa9f212632d0a903917fe137c8ccbbec994cb3c34743a"
+    },
+    {
+      "path": "scripts/phase9/live-data-rights.mjs",
+      "exists": true,
+      "bytes": 43632,
+      "sha256": "9e394c076a62b5604a0842441d01edb19cde3b90e057cae354862f7f0b525216"
     },
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
@@ -371,8 +437,8 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 358190,
-      "sha256": "1eeb5ae98ce1c98f9f479c9fe720a6ad0eb52a6959fec5f3dc3c54c5696ca461"
+      "bytes": 358943,
+      "sha256": "059cf974dc272f3b410ee65bc2b3ef5dcf9b5363c5a277bd7ecd39eeb9f396e6"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
