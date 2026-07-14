@@ -242,10 +242,11 @@
     },
     {
       "id": "BASE-02",
-      "status": "in_progress",
+      "status": "complete",
       "blockedBy": [],
-      "nextAction": "Re-run the full clean-worktree baseline after active optimization work settles; strict brand clearance remains open.",
+      "nextAction": "Maintain the dated clean-worktree baseline after coherent source and evidence refreshes; resolve its recorded audit failures in the owning work items without fabricating live pass flags.",
       "evidenceRefs": [
+        "docs/hugeToDo/BASE-02-CLEAN-BASELINE-2026-07-14.md",
         "LAUNCH_READINESS.md",
         "docs/generated/readiness-status-audit.json",
         "docs/optimization/evidence/2026-07-12_local-verification-summary.md"
