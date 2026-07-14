@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T00:08:27.759Z",
+  "generatedAt": "2026-07-14T00:10:04.997Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "d32779024da7ada5f8f935e17743163b0ecc919f",
+  "gitSha": "ae2f1b827e300ce600897b5f0aa669d285cace13",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -806,14 +806,14 @@
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 13569,
-      "sha256": "3f53b7ecddb1a7fed5d6208a7c8c4a83beea14d769c01f87eeb91f1e0c27dfd9"
+      "bytes": 15937,
+      "sha256": "70dce5b79086f597cadda30753aaf621522e100959d38af01f192a8f5b10956a"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 8815,
-      "sha256": "91d41495616f7413dfc3649590effd942ab6d4b823942cc18fe1a50b96eca53b"
+      "bytes": 10435,
+      "sha256": "5392e4e1f1bcbe5570ef1cd60738c916c2c8b3e94fc11b8b58acad4e10b8d113"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
