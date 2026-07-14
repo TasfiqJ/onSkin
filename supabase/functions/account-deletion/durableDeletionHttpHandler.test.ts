@@ -2,12 +2,14 @@ import {
   createDurableDeletionHttpHandler,
   type DurableDeletionHttpDependencies,
 } from './durableDeletionHttpHandler.ts';
+import { DurableDeletionDatabaseError } from './durableDeletionDatabaseGateway.ts';
 import type { AccountDeletionWorkerReport } from './durableDeletionWorker.ts';
 
 const IDEMPOTENCY = '01'.repeat(32);
 const CAPABILITY = '23'.repeat(32);
 const SECRET = '45'.repeat(32);
 const USER_ID = '22222222-2222-4222-8222-222222222222';
+const SESSION_ID = '33333333-3333-4333-8333-333333333333';
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
@@ -34,24 +36,41 @@ function harness() {
       calls.push(`auth:${token}`);
       return Promise.resolve({
         id: USER_ID,
+        sessionId: SESSION_ID,
         appleLinked: true,
         appleSubject: 'apple-subject',
       });
     },
-    consumeIntakeRateLimit(userId) {
-      calls.push(`intake-rate:${userId}`);
+    consumeIntakeRateLimit(userId, sessionId) {
+      calls.push(`intake-rate:${userId}:${sessionId}`);
       return Promise.resolve(true);
     },
     consumeStatusRateLimit(capability) {
       calls.push(`status-rate:${capability}`);
       return Promise.resolve(true);
     },
-    barrierState(userId) {
-      calls.push(`barrier:${userId}`);
+    barrierState(userId, sessionId) {
+      calls.push(`barrier:${userId}:${sessionId}`);
       return Promise.resolve('clear');
     },
+    reservePublicationLease(userId, sessionId, capability) {
+      calls.push(`publication-reserve:${userId}:${sessionId}:${capability}`);
+      return Promise.resolve('reserved');
+    },
+    activatePublicationLease(userId, sessionId, capability) {
+      calls.push(`publication-activate:${userId}:${sessionId}:${capability}`);
+      return Promise.resolve('active');
+    },
+    renewPublicationLease(userId, sessionId, capability) {
+      calls.push(`publication-renew:${userId}:${sessionId}:${capability}`);
+      return Promise.resolve('active');
+    },
+    releasePublicationLease(capability) {
+      calls.push(`publication-release:${capability}`);
+      return Promise.resolve('released');
+    },
     begin(user, request) {
-      calls.push(`begin:${user.id}:${request.idempotencyKey}`);
+      calls.push(`begin:${user.id}:${user.sessionId}:${request.idempotencyKey}`);
       return Promise.resolve({
         operationId: '11111111-1111-4111-8111-111111111111',
         operationState: 'pending',
@@ -122,7 +141,7 @@ Deno.test('durable deletion begin authenticates, commits 202, and accelerates wo
     h.calls
       .join(',')
       .startsWith(
-        `auth:user-jwt,intake-rate:${USER_ID},begin:${USER_ID}:${IDEMPOTENCY},accelerate:11111111-1111-4111-8111-111111111111:${USER_ID},schedule`,
+        `auth:user-jwt,intake-rate:${USER_ID}:${SESSION_ID},begin:${USER_ID}:${SESSION_ID}:${IDEMPOTENCY},accelerate:11111111-1111-4111-8111-111111111111:${USER_ID},schedule`,
       ),
     'barrier before accelerator',
   );
@@ -134,7 +153,7 @@ Deno.test(
   async () => {
     const h = harness();
     h.dependencies.begin = (user, request) => {
-      h.calls.push(`begin:${user.id}:${request.idempotencyKey}`);
+      h.calls.push(`begin:${user.id}:${user.sessionId}:${request.idempotencyKey}`);
       return Promise.resolve({
         operationId: '11111111-1111-4111-8111-111111111111',
         operationState: 'running',
@@ -154,7 +173,7 @@ Deno.test(
     assert(response.status === 202, 'idempotent retry remains accepted');
     assert(
       h.calls.join(',') ===
-        `auth:user-jwt,intake-rate:${USER_ID},begin:${USER_ID}:${'67'.repeat(32)}`,
+        `auth:user-jwt,intake-rate:${USER_ID}:${SESSION_ID},begin:${USER_ID}:${SESSION_ID}:${'67'.repeat(32)}`,
       'caller tokens must not select quota buckets or global accelerators',
     );
     assert(h.scheduled.length === 0, 'existing operation is never accelerated');
@@ -203,8 +222,8 @@ Deno.test(
   async () => {
     for (const state of ['clear', 'active'] as const) {
       const h = harness();
-      h.dependencies.barrierState = (userId) => {
-        h.calls.push(`barrier:${userId}`);
+      h.dependencies.barrierState = (userId, sessionId) => {
+        h.calls.push(`barrier:${userId}:${sessionId}`);
         return Promise.resolve(state);
       };
       const response = await createDurableDeletionHttpHandler(h.dependencies)(
@@ -217,7 +236,7 @@ Deno.test(
         'preflight discloses only state plus the authenticated-owner attestation',
       );
       assert(
-        h.calls.join(',') === `auth:user-jwt,barrier:${USER_ID}`,
+        h.calls.join(',') === `auth:user-jwt,barrier:${USER_ID}:${SESSION_ID}`,
         'verified owner selects the service-only lookup',
       );
     }
@@ -252,12 +271,56 @@ Deno.test('preflight rejects missing and stale bearer sessions before database w
   assert(!h.calls.some((call) => call.startsWith('barrier:')), 'no stale-owner lookup');
 });
 
+Deno.test('database-revoked sessions cannot preflight, consume intake quota, or begin', async () => {
+  for (const action of ['preflight', 'begin'] as const) {
+    const h = harness();
+    if (action === 'preflight') {
+      h.dependencies.barrierState = () =>
+        Promise.reject(
+          new DurableDeletionDatabaseError('DELETION_DATABASE_SESSION_REJECTED'),
+        );
+    } else {
+      h.dependencies.consumeIntakeRateLimit = () =>
+        Promise.reject(
+          new DurableDeletionDatabaseError('DELETION_DATABASE_SESSION_REJECTED'),
+        );
+    }
+    const response = await createDurableDeletionHttpHandler(h.dependencies)(
+      request(
+        action === 'preflight'
+          ? { action }
+          : {
+              action,
+              idempotencyKey: IDEMPOTENCY,
+              statusCapability: CAPABILITY,
+            },
+        { authorization: 'Bearer signed-out-jwt' },
+      ),
+    );
+    assert(response.status === 401, 'database session rejection remains authoritative');
+    assert(
+      (await responseBody(response)).error === 'ACCOUNT_DELETION_SESSION_REJECTED',
+      'stale session exposes only the stable rejection code',
+    );
+    assert(!h.calls.some((call) => call.startsWith('begin:')), 'stale session cannot begin');
+    assert(
+      action !== 'preflight' || !h.calls.some((call) => call.startsWith('intake-rate:')),
+      'preflight rejection cannot consume intake quota',
+    );
+  }
+});
+
 Deno.test('preflight validates the authenticated subject before every barrier lookup', async () => {
   const h = harness();
   h.dependencies.authenticate = () =>
-    Promise.resolve({ id: 'not-a-uuid', appleLinked: false, appleSubject: null });
-  h.dependencies.barrierState = (userId) => {
-    h.calls.push(`barrier:${userId}`);
+    Promise.resolve({
+      id: 'not-a-uuid',
+      sessionId: SESSION_ID,
+      appleLinked: false,
+      appleSubject: null,
+    });
+  h.dependencies.barrierState = (userId, sessionId) => {
+    h.calls.push(`barrier:${userId}:${sessionId}`);
     return Promise.resolve('clear');
   };
 
@@ -265,11 +328,11 @@ Deno.test('preflight validates the authenticated subject before every barrier lo
     request({ action: 'preflight' }, { authorization: 'Bearer candidate-jwt' }),
   );
 
-  assert(response.status === 503, 'malformed owner attestation must remain unavailable');
+  assert(response.status === 401, 'malformed owner attestation must be rejected');
   const body = await responseBody(response);
   assert(
-    Object.keys(body).length === 1 && body.error === 'ACCOUNT_DELETION_UNAVAILABLE',
-    'malformed authenticated subject exposes only the stable code',
+    Object.keys(body).length === 1 && body.error === 'ACCOUNT_DELETION_SESSION_REJECTED',
+    'malformed authenticated subject exposes only the stable rejection code',
   );
   assert(
     !h.calls.some((call) => call.startsWith('barrier:')),
@@ -296,6 +359,166 @@ Deno.test(
     assert(!h.calls.some((call) => call.startsWith('barrier:')), 'no unauthenticated owner lookup');
   },
 );
+
+Deno.test(
+  'publication reserve, activate, and renew require the verified Auth session binding',
+  async () => {
+    for (const [action, publicStatus, callPrefix] of [
+      ['publication_reserve', 'reserved', 'publication-reserve'],
+      ['publication_activate', 'active', 'publication-activate'],
+      ['publication_renew', 'active', 'publication-renew'],
+    ] as const) {
+      const h = harness();
+      const response = await createDurableDeletionHttpHandler(h.dependencies)(
+        request({ action, capability: CAPABILITY }, { authorization: 'Bearer verified-jwt' }),
+      );
+      const body = await responseBody(response);
+      assert(response.status === 200, `${action} accepted`);
+      assert(
+        Object.keys(body).length === 1 && body.status === publicStatus,
+        `${action} returns only its exact success status`,
+      );
+      assert(
+        h.calls.join(',') ===
+          `auth:verified-jwt,${callPrefix}:${USER_ID}:${SESSION_ID}:${CAPABILITY}`,
+        `${action} passes the verified user and session binding`,
+      );
+    }
+  },
+);
+
+Deno.test('publication release is capability-only and accepts only exact released', async () => {
+  const success = harness();
+  const released = await createDurableDeletionHttpHandler(success.dependencies)(
+    request(
+      { action: 'publication_release', capability: CAPABILITY },
+      { authorization: 'Bearer stale-or-deleted-user-jwt' },
+    ),
+  );
+  const releasedBody = await responseBody(released);
+  assert(released.status === 200, 'release survives Auth hard deletion');
+  assert(
+    Object.keys(releasedBody).length === 1 && releasedBody.status === 'released',
+    'release response is exact',
+  );
+  assert(
+    success.calls.join(',') === `publication-release:${CAPABILITY}`,
+    'release never authenticates the stale bearer',
+  );
+
+  for (const malformedStatus of [
+    'blocked',
+    'session_rejected',
+    'lease_rejected',
+    'active',
+    'reserved',
+  ] as const) {
+    const h = harness();
+    h.dependencies.releasePublicationLease = () => Promise.resolve(malformedStatus);
+    const response = await createDurableDeletionHttpHandler(h.dependencies)(
+      request({ action: 'publication_release', capability: CAPABILITY }),
+    );
+    assert(response.status === 503, 'non-released release status is malformed');
+    assert(
+      (await responseBody(response)).error === 'ACCOUNT_PUBLICATION_UNAVAILABLE',
+      'malformed release exposes only bounded unavailability',
+    );
+  }
+});
+
+Deno.test('publication lease outcomes map to exact bounded responses', async () => {
+  for (const [rpcStatus, httpStatus, errorCode] of [
+    ['blocked', 409, 'ACCOUNT_DELETION_ACTIVE'],
+    ['session_rejected', 401, 'ACCOUNT_PUBLICATION_SESSION_REJECTED'],
+    ['lease_rejected', 409, 'ACCOUNT_PUBLICATION_LEASE_REJECTED'],
+  ] as const) {
+    const h = harness();
+    h.dependencies.reservePublicationLease = () => Promise.resolve(rpcStatus);
+    const response = await createDurableDeletionHttpHandler(h.dependencies)(
+      request(
+        { action: 'publication_reserve', capability: CAPABILITY },
+        { authorization: 'Bearer verified-jwt' },
+      ),
+    );
+    const body = await responseBody(response);
+    assert(response.status === httpStatus, `${rpcStatus} HTTP mapping`);
+    assert(
+      Object.keys(body).length === 1 && body.error === errorCode,
+      `${rpcStatus} public mapping is exact`,
+    );
+  }
+});
+
+Deno.test('publication authentication and dependency failures fail closed by lane', async () => {
+  const missing = harness();
+  const missingResponse = await createDurableDeletionHttpHandler(missing.dependencies)(
+    request({ action: 'publication_reserve', capability: CAPABILITY }),
+  );
+  assert(missingResponse.status === 401, 'publication reserve needs bearer');
+  assert(
+    (await responseBody(missingResponse)).error === 'ACCOUNT_PUBLICATION_SESSION_REJECTED',
+    'missing bearer has lane-specific rejection',
+  );
+
+  const stale = harness();
+  stale.dependencies.authenticate = () => Promise.resolve(null);
+  const staleResponse = await createDurableDeletionHttpHandler(stale.dependencies)(
+    request(
+      { action: 'publication_renew', capability: CAPABILITY },
+      { authorization: 'Bearer stale-jwt' },
+    ),
+  );
+  assert(staleResponse.status === 401, 'stale JWT rejected');
+  assert(
+    (await responseBody(staleResponse)).error === 'ACCOUNT_PUBLICATION_SESSION_REJECTED',
+    'stale JWT has lane-specific rejection',
+  );
+  assert(
+    !stale.calls.some((call) => call.startsWith('publication-renew:')),
+    'stale session never reaches RPC',
+  );
+
+  const malformedSession = harness();
+  malformedSession.dependencies.authenticate = () =>
+    Promise.resolve({
+      id: USER_ID,
+      sessionId: 'not-a-session-id',
+      appleLinked: false,
+      appleSubject: null,
+    });
+  const malformedResponse = await createDurableDeletionHttpHandler(malformedSession.dependencies)(
+    request(
+      { action: 'publication_activate', capability: CAPABILITY },
+      { authorization: 'Bearer malformed-session-jwt' },
+    ),
+  );
+  assert(malformedResponse.status === 401, 'malformed session binding rejected');
+  assert(
+    (await responseBody(malformedResponse)).error === 'ACCOUNT_PUBLICATION_SESSION_REJECTED',
+    'malformed session binding has lane-specific rejection',
+  );
+
+  for (const dependency of ['authentication', 'database'] as const) {
+    const h = harness();
+    if (dependency === 'authentication') {
+      h.dependencies.authenticate = () => Promise.reject(new Error('private Auth transport'));
+    } else {
+      h.dependencies.reservePublicationLease = () =>
+        Promise.reject(new Error('private database transport'));
+    }
+    const response = await createDurableDeletionHttpHandler(h.dependencies)(
+      request(
+        { action: 'publication_reserve', capability: CAPABILITY },
+        { authorization: 'Bearer candidate-jwt' },
+      ),
+    );
+    assert(response.status === 503, `${dependency} failure remains retryable`);
+    assert(
+      (await responseBody(response)).error === 'ACCOUNT_PUBLICATION_UNAVAILABLE',
+      `${dependency} failure uses publication-lane unavailability`,
+    );
+  }
+});
 
 Deno.test('worker lane requires the dedicated constant-time header', async () => {
   for (const [supplied, expected] of [

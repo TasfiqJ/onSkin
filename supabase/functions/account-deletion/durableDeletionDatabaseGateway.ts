@@ -14,19 +14,43 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 const TOKEN_PATTERN = /^[a-f0-9]{64}$/;
 const BYTEA_PATTERN = /^\\x[a-f0-9]+$/;
 
-export type DeletionRpcResult = { data: unknown; error: unknown };
+export type DeletionRpcResult =
+  | { data: unknown; error: unknown }
+  | {
+      success: boolean;
+      data: unknown;
+      error: unknown;
+      count: number | null;
+      status: number;
+      statusText: string;
+    };
 export type DeletionRpcClient = {
   rpc: (name: string, args: Record<string, unknown>) => Promise<DeletionRpcResult>;
 };
 
 export type BeginAccountDeletionInput = {
   userId: string;
+  sessionId: string;
   idempotencyKey: string;
   capability: string;
   operationExpiresAt: string;
   appleEncryptedPayload: string;
   revenueCatEncryptedPayload: string | null;
   postHogEncryptedPayload: string | null;
+};
+
+export type AccountPublicationLeaseStatus =
+  | 'reserved'
+  | 'active'
+  | 'released'
+  | 'blocked'
+  | 'session_rejected'
+  | 'lease_rejected';
+
+export type AccountPublicationLeaseAuthenticatedInput = {
+  userId: string;
+  sessionId: string;
+  capability: string;
 };
 
 export type RecordDeletionStepInput = {
@@ -48,7 +72,8 @@ export class DurableDeletionDatabaseError extends Error {
     public readonly code:
       | 'DELETION_DATABASE_UNAVAILABLE'
       | 'DELETION_DATABASE_RESPONSE_INVALID'
-      | 'DELETION_DATABASE_INPUT_INVALID',
+      | 'DELETION_DATABASE_INPUT_INVALID'
+      | 'DELETION_DATABASE_SESSION_REJECTED',
   ) {
     super(code);
     this.name = 'DurableDeletionDatabaseError';
@@ -113,6 +138,34 @@ function nonNegativeSafeInteger(value: unknown): value is number {
   return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
 }
 
+function isInstalledPostgrestRpcEnvelope(value: Record<string, unknown>): boolean {
+  if (
+    !hasExactKeys(value, ['success', 'error', 'data', 'count', 'status', 'statusText']) ||
+    typeof value.success !== 'boolean' ||
+    !(value.count === null || nonNegativeSafeInteger(value.count)) ||
+    !Number.isSafeInteger(value.status) ||
+    (value.status as number) < 0 ||
+    (value.status as number) > 599 ||
+    typeof value.statusText !== 'string' ||
+    value.statusText.length > 256 ||
+    value.success !== (value.error === null)
+  ) {
+    return false;
+  }
+  if (value.success) {
+    return (value.status as number) >= 200 && (value.status as number) < 300;
+  }
+  return value.data === null && value.count === null;
+}
+
+function isSessionRejectedRpcError(error: unknown): boolean {
+  return (
+    isRecord(error) &&
+    error.code === '28000' &&
+    error.message === 'ACCOUNT_DELETION_SESSION_REJECTED'
+  );
+}
+
 export class DurableDeletionDatabaseGateway {
   constructor(private readonly client: DeletionRpcClient) {
     if (!isRecord(client) || typeof client.rpc !== 'function') {
@@ -127,10 +180,16 @@ export class DurableDeletionDatabaseGateway {
     } catch {
       throw new DurableDeletionDatabaseError('DELETION_DATABASE_UNAVAILABLE');
     }
-    if (!isRecord(result) || !hasExactKeys(result, ['data', 'error'])) {
+    if (
+      !isRecord(result) ||
+      (!hasExactKeys(result, ['data', 'error']) && !isInstalledPostgrestRpcEnvelope(result))
+    ) {
       throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
     }
     if (result.error !== null) {
+      if (isSessionRejectedRpcError(result.error)) {
+        throw new DurableDeletionDatabaseError('DELETION_DATABASE_SESSION_REJECTED');
+      }
       throw new DurableDeletionDatabaseError('DELETION_DATABASE_UNAVAILABLE');
     }
     return result.data;
@@ -146,6 +205,7 @@ export class DurableDeletionDatabaseGateway {
       !isRecord(input) ||
       !hasExactKeys(input, [
         'userId',
+        'sessionId',
         'idempotencyKey',
         'capability',
         'operationExpiresAt',
@@ -154,6 +214,7 @@ export class DurableDeletionDatabaseGateway {
         'postHogEncryptedPayload',
       ]) ||
       !validUuid(input.userId) ||
+      !validUuid(input.sessionId) ||
       !TOKEN_PATTERN.test(input.idempotencyKey) ||
       !TOKEN_PATTERN.test(input.capability) ||
       input.idempotencyKey === input.capability ||
@@ -169,6 +230,7 @@ export class DurableDeletionDatabaseGateway {
     const row = oneRow(
       await this.call('begin_account_deletion', {
         p_user_id: input.userId,
+        p_session_id: input.sessionId,
         p_idempotency_key: input.idempotencyKey,
         p_capability: input.capability,
         p_operation_expires_at: input.operationExpiresAt,
@@ -218,17 +280,106 @@ export class DurableDeletionDatabaseGateway {
     return result[0] as unknown as AccountDeletionStatusRow;
   }
 
-  async barrierState(userId: string): Promise<'clear' | 'active'> {
-    if (!validUuid(userId)) {
+  async barrierState(userId: string, sessionId: string): Promise<'clear' | 'active'> {
+    if (!validUuid(userId) || !validUuid(sessionId)) {
       throw new DurableDeletionDatabaseError('DELETION_DATABASE_INPUT_INVALID');
     }
     const result = await this.call('get_account_deletion_barrier_state', {
       p_user_id: userId,
+      p_session_id: sessionId,
     });
     if (result !== 'clear' && result !== 'active') {
       throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
     }
     return result;
+  }
+
+  private async authenticatedPublicationLeaseAction(
+    rpcName:
+      | 'reserve_account_publication_lease'
+      | 'activate_account_publication_lease'
+      | 'renew_account_publication_lease',
+    input: AccountPublicationLeaseAuthenticatedInput,
+    expectedSuccess: 'reserved' | 'active',
+  ): Promise<AccountPublicationLeaseStatus> {
+    if (
+      !isRecord(input) ||
+      !hasExactKeys(input, ['userId', 'sessionId', 'capability']) ||
+      !validUuid(input.userId) ||
+      !validUuid(input.sessionId) ||
+      !TOKEN_PATTERN.test(input.capability)
+    ) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_INPUT_INVALID');
+    }
+    const result = rows(
+      await this.call(rpcName, {
+        p_user_id: input.userId,
+        p_session_id: input.sessionId,
+        p_capability: input.capability,
+      }),
+    );
+    if (result.length !== 1) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
+    }
+    const row = result[0];
+    if (
+      !hasExactKeys(row, ['status']) ||
+      ![expectedSuccess, 'blocked', 'session_rejected', 'lease_rejected'].includes(
+        String(row.status),
+      )
+    ) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
+    }
+    return row.status as AccountPublicationLeaseStatus;
+  }
+
+  reservePublicationLease(
+    input: AccountPublicationLeaseAuthenticatedInput,
+  ): Promise<AccountPublicationLeaseStatus> {
+    return this.authenticatedPublicationLeaseAction(
+      'reserve_account_publication_lease',
+      input,
+      'reserved',
+    );
+  }
+
+  activatePublicationLease(
+    input: AccountPublicationLeaseAuthenticatedInput,
+  ): Promise<AccountPublicationLeaseStatus> {
+    return this.authenticatedPublicationLeaseAction(
+      'activate_account_publication_lease',
+      input,
+      'active',
+    );
+  }
+
+  renewPublicationLease(
+    input: AccountPublicationLeaseAuthenticatedInput,
+  ): Promise<AccountPublicationLeaseStatus> {
+    return this.authenticatedPublicationLeaseAction(
+      'renew_account_publication_lease',
+      input,
+      'active',
+    );
+  }
+
+  async releasePublicationLease(capability: string): Promise<AccountPublicationLeaseStatus> {
+    if (!TOKEN_PATTERN.test(capability)) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_INPUT_INVALID');
+    }
+    const result = rows(
+      await this.call('release_account_publication_lease', {
+        p_capability: capability,
+      }),
+    );
+    if (result.length !== 1) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
+    }
+    const row = result[0];
+    if (!hasExactKeys(row, ['status']) || row.status !== 'released') {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
+    }
+    return 'released';
   }
 
   async claimNext(
@@ -404,6 +555,52 @@ export class DurableDeletionDatabaseGateway {
       throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
     }
     return row.request_started_at;
+  }
+
+  async recordRevenueCatAbsenceObservation(
+    claim: DeletionClaimCasIdentity,
+  ): Promise<{ confirmed: boolean; observationCount: 1 | 2 }> {
+    if (!validClaimIdentity(claim) || claim.stepName !== 'revenuecat_delete') {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_INPUT_INVALID');
+    }
+    const row = oneRow(
+      await this.call('record_account_deletion_revenuecat_absence_observation', {
+        p_operation_id: claim.operationId,
+        p_step_name: claim.stepName,
+        p_claim_token: claim.claimToken,
+      }),
+    );
+    if (
+      !hasExactKeys(row, ['confirmed', 'observation_count']) ||
+      typeof row.confirmed !== 'boolean' ||
+      (row.observation_count !== 1 && row.observation_count !== 2) ||
+      row.confirmed !== (row.observation_count === 2)
+    ) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
+    }
+    return {
+      confirmed: row.confirmed,
+      observationCount: row.observation_count,
+    };
+  }
+
+  async resetRevenueCatAbsenceObservations(
+    claim: DeletionClaimCasIdentity,
+  ): Promise<{ reset: true }> {
+    if (!validClaimIdentity(claim) || claim.stepName !== 'revenuecat_delete') {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_INPUT_INVALID');
+    }
+    const row = oneRow(
+      await this.call('reset_account_deletion_revenuecat_absence_observations', {
+        p_operation_id: claim.operationId,
+        p_step_name: claim.stepName,
+        p_claim_token: claim.claimToken,
+      }),
+    );
+    if (!hasExactKeys(row, ['reset']) || row.reset !== true) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
+    }
+    return { reset: true };
   }
 
   async updatePayload(claim: DeletionClaimCasIdentity, encryptedPayload: string): Promise<void> {
@@ -627,17 +824,62 @@ export class DurableDeletionDatabaseGateway {
     }
   }
 
+  async reapExpiredPublicationLeases(limit: number): Promise<void> {
+    if (!Number.isSafeInteger(limit) || limit < 1 || limit > 1_000) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_INPUT_INVALID');
+    }
+    const row = oneRow(
+      await this.call('reap_expired_account_publication_leases', {
+        p_limit: limit,
+      }),
+    );
+    if (
+      !hasExactKeys(row, ['leases_closed', 'operations_drained', 'leases_purged']) ||
+      Object.values(row).some((value) => !nonNegativeSafeInteger(value))
+    ) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
+    }
+  }
+
+  async deferRevenueCatProviderCapacity(
+    claim: AccountDeletionClaim,
+    retryAt: string,
+  ): Promise<void> {
+    if (
+      !validClaimIdentity(claim) ||
+      claim.stepName !== 'revenuecat_delete' ||
+      !validIso(retryAt)
+    ) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_INPUT_INVALID');
+    }
+    const row = oneRow(
+      await this.call('defer_account_deletion_revenuecat_provider_capacity', {
+        p_operation_id: claim.operationId,
+        p_step_name: claim.stepName,
+        p_claim_token: claim.claimToken,
+        p_retry_at: retryAt,
+      }),
+    );
+    if (
+      !hasExactKeys(row, ['deferred', 'next_attempt_at']) ||
+      row.deferred !== true ||
+      !validIso(row.next_attempt_at)
+    ) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
+    }
+  }
+
   async consumeRateLimit(args: {
     scope: string;
     keyHash: string;
     limit: number;
     windowSeconds: number;
     ownerUserId?: string;
+    sessionId?: string;
   }): Promise<boolean> {
-    const expectedKeys =
-      args.ownerUserId === undefined
-        ? ['scope', 'keyHash', 'limit', 'windowSeconds']
-        : ['scope', 'keyHash', 'limit', 'windowSeconds', 'ownerUserId'];
+    const expectedKeys = ['scope', 'keyHash', 'limit', 'windowSeconds'];
+    if (args.ownerUserId !== undefined) expectedKeys.push('ownerUserId');
+    if (args.sessionId !== undefined) expectedKeys.push('sessionId');
     if (
       !isRecord(args) ||
       !hasExactKeys(args, expectedKeys) ||
@@ -648,7 +890,11 @@ export class DurableDeletionDatabaseGateway {
       args.limit < 1 ||
       !Number.isSafeInteger(args.windowSeconds) ||
       args.windowSeconds < 1 ||
-      !(args.ownerUserId === undefined || validUuid(args.ownerUserId))
+      !(args.ownerUserId === undefined || validUuid(args.ownerUserId)) ||
+      !(args.sessionId === undefined || validUuid(args.sessionId)) ||
+      (args.scope === 'account-deletion-intake' &&
+        (args.ownerUserId === undefined || args.sessionId === undefined)) ||
+      (args.scope !== 'account-deletion-intake' && args.sessionId !== undefined)
     ) {
       throw new DurableDeletionDatabaseError('DELETION_DATABASE_INPUT_INVALID');
     }
@@ -658,6 +904,28 @@ export class DurableDeletionDatabaseGateway {
       p_limit: args.limit,
       p_window_seconds: args.windowSeconds,
       ...(args.ownerUserId === undefined ? {} : { p_owner_user_id: args.ownerUserId }),
+      ...(args.sessionId === undefined ? {} : { p_session_id: args.sessionId }),
+    });
+    if (typeof data !== 'boolean') {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
+    }
+    return data;
+  }
+
+  async consumeRevenueCatProviderBudget(
+    keyHash: string,
+    domain: 'customer-information' | 'project-configuration',
+  ): Promise<boolean> {
+    if (
+      typeof keyHash !== 'string' ||
+      !TOKEN_PATTERN.test(keyHash) ||
+      !['customer-information', 'project-configuration'].includes(domain)
+    ) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_INPUT_INVALID');
+    }
+    const data = await this.call('consume_revenuecat_account_deletion_budget', {
+      p_key_hash: keyHash,
+      p_domain: domain,
     });
     if (typeof data !== 'boolean') {
       throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');

@@ -41,6 +41,9 @@ jobs:
           - name: revenuecat-tombstones
             database: revenuecat_tombstones_0051
             script: revenuecat-identity-tombstones-postgres-rehearsal.sql
+          - name: publication-fence
+            database: account_publication_fence_0052
+            script: account-publication-fence-postgres-rehearsal.sql
     services:
       postgres:
         image: postgres:${{ matrix.postgres }}

@@ -68,7 +68,7 @@ $replace_account_deletion_work_lane$;
 
 select cron.schedule(
   'account-deletion-work-lane',
-  '* * * * *',
+  '*/2 * * * *',
   $account_deletion_cron$
     select net.http_post(
       url := (
@@ -85,7 +85,7 @@ select cron.schedule(
         )
       ),
       body := '{"action":"work"}'::jsonb,
-      timeout_milliseconds := 30000
+      timeout_milliseconds := 110000
     ) as request_id;
   $account_deletion_cron$
 );

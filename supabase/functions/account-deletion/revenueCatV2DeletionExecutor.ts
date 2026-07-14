@@ -28,12 +28,15 @@ import {
   type RevenueCatV2ProjectVisibilityEvidence,
 } from './durableProviderDeletion.ts';
 import {
+  AccountDeletionWorkerCapacityError,
   type AccountDeletionClaim,
   type AccountDeletionStepExecutor,
 } from './durableDeletionWorker.ts';
 
-export const REVENUECAT_V2_EXECUTOR_STATE_VERSION = 1 as const;
+export const REVENUECAT_V2_EXECUTOR_STATE_VERSION = 2 as const;
 export const REVENUECAT_V2_EXECUTOR_MAX_PLAINTEXT_BYTES = 24_518;
+export const REVENUECAT_V2_MAX_NETWORK_TIMEOUT_MS = 10_000;
+export const REVENUECAT_V2_MAX_RECONCILIATION_CONCURRENCY = 14;
 
 const MAX_PROJECT_ID_CHARS = 255;
 const MAX_CUSTOMER_ID_CHARS = 1_500;
@@ -42,10 +45,12 @@ const MAX_ALIAS_PAGES = 50;
 const MAX_ALIASES = 64;
 const MAX_PAGE_ALIASES = 20;
 const MAX_EVIDENCE_ID_BYTES = 4_096;
+const MAX_PROVIDER_RETRY_AFTER_MS = 7 * 86_400_000;
 const UTF8_ENCODER = new TextEncoder();
 const UTF8_DECODER = new TextDecoder('utf-8', { fatal: true });
 const CREDENTIAL_BINDING_PATTERN = /^[a-f0-9]{64}$/;
 const CLAIM_TOKEN_PATTERN = /^[a-f0-9]{64}$/;
+const CLAIM_BINDING_PATTERN = /^[a-f0-9]{64}$/;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 type RevenueCatV2CustomerSnapshot =
@@ -58,6 +63,9 @@ export type RevenueCatV2PreflightExecutorState = {
   phase: 'preflight';
   operationId: string;
   credentialBinding: string;
+  priorAbsenceObservation: boolean;
+  providerProbeInFlight: boolean;
+  absenceClaimBinding: string | null;
   projectId: string;
   lookupCustomerId: string;
   projectPageNumber: number;
@@ -72,6 +80,7 @@ export type RevenueCatV2AlreadyAbsentExecutorState = {
   phase: 'already_absent';
   operationId: string;
   credentialBinding: string;
+  absenceClaimBinding: string;
   projectVisibility: RevenueCatV2ProjectVisibilityEvidence;
   customerAbsence: RevenueCatV2CustomerAbsenceEvidence;
 };
@@ -90,9 +99,12 @@ export type RevenueCatV2ReconciliationExecutorState = {
   phase: 'reconciling';
   operationId: string;
   credentialBinding: string;
+  roundClaimBinding: string;
   projectVisibility: RevenueCatV2ProjectVisibilityEvidence;
   preflightEvidence: RevenueCatV2PreflightEvidence;
   dispatchEvidence: RevenueCatV2DispatchEvidence;
+  presenceResetRequired: boolean;
+  providerProbeInFlight: boolean;
   customerObservations: Array<RevenueCatV2CustomerReconciliationObservation | null>;
   aliasesObservation: RevenueCatV2AliasesReconciliationObservation | null;
 };
@@ -111,13 +123,17 @@ export type RevenueCatV2HttpRequest = {
 export type RevenueCatV2NetworkResponse = {
   status: number;
   body: unknown;
+  /** Parsed Retry-After header delay; null when absent or malformed. */
+  retryAfterMs?: number | null;
 };
 
 export type RevenueCatV2ExecutorNetwork = {
+  /** Acquires a distributed provider permit before request_started is durable. */
+  reserveMutation: (context: { deadlineAtMs: number }) => Promise<void>;
   /** The adapter owns timeout, response-size limits, and bounded JSON parsing. */
   execute: (
     request: RevenueCatV2HttpRequest,
-    context: { deadlineAtMs: number },
+    context: { deadlineAtMs: number; requestBudgetReserved: boolean },
   ) => Promise<RevenueCatV2NetworkResponse>;
 };
 
@@ -131,7 +147,7 @@ export type RevenueCatV2ExecutorStateStore = {
 export type RevenueCatV2StepOutcome =
   | { kind: 'succeeded'; resultCode: ProviderResultCode }
   | { kind: 'retryable'; resultCode: ProviderResultCode; retryAt: string }
-  | { kind: 'ambiguous'; resultCode: ProviderResultCode }
+  | { kind: 'ambiguous'; resultCode: ProviderResultCode; retryAt?: string }
   | { kind: 'action_required'; resultCode: ProviderResultCode };
 
 export type RevenueCatV2IdentityBarrierSnapshot = {
@@ -156,6 +172,16 @@ export type RevenueCatV2ExecutorGateway = {
     tombstoneVersion: 1;
     identityCount: number;
   }>;
+  /**
+   * Records one complete provider-absence round using the database clock. The
+   * database owns the minimum interval and terminal two-round requirement.
+   */
+  recordAbsenceObservation: (claim: AccountDeletionClaim) => Promise<{
+    confirmed: boolean;
+    observationCount: 1 | 2;
+  }>;
+  /** Clears an earlier absence round after the provider family reappears. */
+  resetAbsenceObservations: (claim: AccountDeletionClaim) => Promise<{ reset: true }>;
   markRequestStarted: (claim: AccountDeletionClaim) => Promise<{ requestStartedAt: string }>;
   recordOutcome: (claim: AccountDeletionClaim, outcome: RevenueCatV2StepOutcome) => Promise<void>;
 };
@@ -223,6 +249,27 @@ export async function deriveRevenueCatV2CredentialBinding(secretApiKey: string):
         'SHA-256',
         UTF8_ENCODER.encode(
           'onskin:account-deletion:revenuecat-v2-credential:v1\u0000' + secretApiKey,
+        ),
+      ),
+    );
+    return [...digest].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+  } catch (error) {
+    if (error instanceof RevenueCatV2DeletionExecutorError) throw error;
+    throw new RevenueCatV2DeletionExecutorError('REVENUECAT_V2_EXECUTOR_INPUT_INVALID');
+  }
+}
+
+/** Domain-separated fingerprint of one worker claim; never persists the bearer token. */
+export async function deriveRevenueCatV2ClaimBinding(claimToken: string): Promise<string> {
+  if (!CLAIM_TOKEN_PATTERN.test(claimToken)) {
+    throw new RevenueCatV2DeletionExecutorError('REVENUECAT_V2_EXECUTOR_INPUT_INVALID');
+  }
+  try {
+    const digest = new Uint8Array(
+      await crypto.subtle.digest(
+        'SHA-256',
+        UTF8_ENCODER.encode(
+          'onskin:account-deletion:revenuecat-v2-observation-claim:v1\u0000' + claimToken,
         ),
       ),
     );
@@ -417,6 +464,9 @@ function validatePreflightState(
       'phase',
       'operationId',
       'credentialBinding',
+      'priorAbsenceObservation',
+      'providerProbeInFlight',
+      'absenceClaimBinding',
       'projectId',
       'lookupCustomerId',
       'projectPageNumber',
@@ -425,10 +475,15 @@ function validatePreflightState(
       'customerSnapshot',
       'aliasPages',
     ]) ||
-    state.version !== 1 ||
+    state.version !== REVENUECAT_V2_EXECUTOR_STATE_VERSION ||
     state.phase !== 'preflight' ||
     !canonicalUuid(state.operationId) ||
     !validCredentialBinding(state.credentialBinding) ||
+    typeof state.priorAbsenceObservation !== 'boolean' ||
+    typeof state.providerProbeInFlight !== 'boolean' ||
+    (state.absenceClaimBinding !== null &&
+      (typeof state.absenceClaimBinding !== 'string' ||
+        !CLAIM_BINDING_PATTERN.test(state.absenceClaimBinding))) ||
     !exactBoundedString(state.projectId, MAX_PROJECT_ID_CHARS) ||
     !canonicalUuid(state.lookupCustomerId) ||
     typeof state.projectPageNumber !== 'number' ||
@@ -446,11 +501,24 @@ function validatePreflightState(
   }
   if (
     state.projectVisibility === null &&
-    (state.customerSnapshot !== null || state.aliasPages.length !== 0)
+    (state.customerSnapshot !== null ||
+      state.aliasPages.length !== 0 ||
+      state.absenceClaimBinding !== null)
   ) {
     return false;
   }
-  if (state.customerSnapshot === null) return state.aliasPages.length === 0;
+  if (
+    state.providerProbeInFlight &&
+    (state.projectVisibility === null ||
+      state.customerSnapshot !== null ||
+      state.aliasPages.length !== 0 ||
+      state.absenceClaimBinding !== null)
+  ) {
+    return false;
+  }
+  if (state.customerSnapshot === null) {
+    return state.absenceClaimBinding === null && state.aliasPages.length === 0;
+  }
   if (
     timestampMs(state.customerSnapshot.evidence.observedAt) <
     timestampMs(state.projectVisibility!.observedAt)
@@ -458,9 +526,12 @@ function validatePreflightState(
     return false;
   }
   if (state.customerSnapshot.kind === 'absent') {
-    return state.aliasPages.length === 0;
+    return state.absenceClaimBinding !== null && state.aliasPages.length === 0;
   }
-  return validAliasPages(state.aliasPages, state.customerSnapshot.evidence);
+  return (
+    state.absenceClaimBinding === null &&
+    validAliasPages(state.aliasPages, state.customerSnapshot.evidence)
+  );
 }
 
 function validatePreflightEvidence(value: unknown): value is RevenueCatV2PreflightEvidence {
@@ -484,13 +555,16 @@ function validateAlreadyAbsentState(
       'phase',
       'operationId',
       'credentialBinding',
+      'absenceClaimBinding',
       'projectVisibility',
       'customerAbsence',
     ]) ||
-    state.version !== 1 ||
+    state.version !== REVENUECAT_V2_EXECUTOR_STATE_VERSION ||
     state.phase !== 'already_absent' ||
     !canonicalUuid(state.operationId) ||
     !validCredentialBinding(state.credentialBinding) ||
+    typeof state.absenceClaimBinding !== 'string' ||
+    !CLAIM_BINDING_PATTERN.test(state.absenceClaimBinding) ||
     !validProjectVisibility(state.projectVisibility) ||
     !isRecord(state.customerAbsence) ||
     !canonicalUuid(state.customerAbsence.lookupCustomerId) ||
@@ -539,7 +613,7 @@ function validateReadyState(
       'projectVisibility',
       'preflightEvidence',
     ]) &&
-    state.version === 1 &&
+    state.version === REVENUECAT_V2_EXECUTOR_STATE_VERSION &&
     state.phase === 'ready' &&
     canonicalUuid(state.operationId) &&
     validCredentialBinding(state.credentialBinding) &&
@@ -594,21 +668,28 @@ function validateReconciliationState(
       'phase',
       'operationId',
       'credentialBinding',
+      'roundClaimBinding',
       'projectVisibility',
       'preflightEvidence',
       'dispatchEvidence',
+      'presenceResetRequired',
+      'providerProbeInFlight',
       'customerObservations',
       'aliasesObservation',
     ]) ||
-    state.version !== 1 ||
+    state.version !== REVENUECAT_V2_EXECUTOR_STATE_VERSION ||
     state.phase !== 'reconciling' ||
     !canonicalUuid(state.operationId) ||
     !validCredentialBinding(state.credentialBinding) ||
+    typeof state.roundClaimBinding !== 'string' ||
+    !CLAIM_BINDING_PATTERN.test(state.roundClaimBinding) ||
     !validatePreflightEvidence(state.preflightEvidence) ||
     !validProjectVisibility(state.projectVisibility, state.preflightEvidence.projectId) ||
     timestampMs(state.projectVisibility.observedAt) >
       timestampMs(state.preflightEvidence.aliasSnapshotCompletedAt) ||
     !validDispatchEvidence(state.dispatchEvidence, state.preflightEvidence) ||
+    typeof state.presenceResetRequired !== 'boolean' ||
+    typeof state.providerProbeInFlight !== 'boolean' ||
     !Array.isArray(state.customerObservations)
   ) {
     return false;
@@ -645,7 +726,16 @@ function validateReconciliationState(
       return false;
     }
   }
-  return true;
+  const hasProviderPresence =
+    state.customerObservations.some((observation) => observation?.kind === 'present') ||
+    (isRecord(state.aliasesObservation) && state.aliasesObservation.kind === 'present');
+  const hasPendingProbeTarget =
+    state.customerObservations.some((observation) => observation === null) ||
+    state.aliasesObservation === null;
+  return (
+    state.presenceResetRequired === hasProviderPresence &&
+    (!state.providerProbeInFlight || hasPendingProbeTarget)
+  );
 }
 
 function assertState(value: unknown): asserts value is RevenueCatV2ExecutorState {
@@ -764,6 +854,9 @@ function canonicalState(value: RevenueCatV2ExecutorState): Record<string, unknow
         phase: value.phase,
         operationId: value.operationId,
         credentialBinding: value.credentialBinding,
+        priorAbsenceObservation: value.priorAbsenceObservation,
+        providerProbeInFlight: value.providerProbeInFlight,
+        absenceClaimBinding: value.absenceClaimBinding,
         projectId: value.projectId,
         lookupCustomerId: value.lookupCustomerId,
         projectPageNumber: value.projectPageNumber,
@@ -792,6 +885,7 @@ function canonicalState(value: RevenueCatV2ExecutorState): Record<string, unknow
         phase: value.phase,
         operationId: value.operationId,
         credentialBinding: value.credentialBinding,
+        absenceClaimBinding: value.absenceClaimBinding,
         projectVisibility: canonicalProjectVisibility(value.projectVisibility),
         customerAbsence: canonicalCustomerAbsence(value.customerAbsence),
       };
@@ -810,9 +904,12 @@ function canonicalState(value: RevenueCatV2ExecutorState): Record<string, unknow
         phase: value.phase,
         operationId: value.operationId,
         credentialBinding: value.credentialBinding,
+        roundClaimBinding: value.roundClaimBinding,
         projectVisibility: canonicalProjectVisibility(value.projectVisibility),
         preflightEvidence: canonicalPreflightEvidence(value.preflightEvidence),
         dispatchEvidence: canonicalDispatch(value.dispatchEvidence),
+        presenceResetRequired: value.presenceResetRequired,
+        providerProbeInFlight: value.providerProbeInFlight,
         customerObservations: value.customerObservations.map(canonicalCustomerObservation),
         aliasesObservation: canonicalAliasesObservation(value.aliasesObservation),
       };
@@ -871,13 +968,18 @@ function validOptions(options: unknown): options is RevenueCatV2DeletionExecutor
     hasExactKeys(options.gateway, [
       'establishIdentityBarrier',
       'markRequestStarted',
+      'recordAbsenceObservation',
       'recordOutcome',
+      'resetAbsenceObservations',
     ]) &&
     typeof options.gateway.establishIdentityBarrier === 'function' &&
     typeof options.gateway.markRequestStarted === 'function' &&
+    typeof options.gateway.recordAbsenceObservation === 'function' &&
     typeof options.gateway.recordOutcome === 'function' &&
+    typeof options.gateway.resetAbsenceObservations === 'function' &&
     isRecord(options.network) &&
-    hasExactKeys(options.network, ['execute']) &&
+    hasExactKeys(options.network, ['execute', 'reserveMutation']) &&
+    typeof options.network.reserveMutation === 'function' &&
     typeof options.network.execute === 'function' &&
     isRecord(options.stateStore) &&
     hasExactKeys(options.stateStore, ['load', 'persist']) &&
@@ -967,11 +1069,18 @@ function iso(ms: number): string {
 function validNetworkResponse(value: unknown): value is RevenueCatV2NetworkResponse {
   return (
     isRecord(value) &&
-    hasExactKeys(value, ['status', 'body']) &&
+    (hasExactKeys(value, ['status', 'body']) ||
+      hasExactKeys(value, ['status', 'body', 'retryAfterMs'])) &&
     typeof value.status === 'number' &&
     Number.isInteger(value.status) &&
     value.status >= 100 &&
-    value.status <= 599
+    value.status <= 599 &&
+    (value.retryAfterMs === undefined ||
+      value.retryAfterMs === null ||
+      (typeof value.retryAfterMs === 'number' &&
+        Number.isSafeInteger(value.retryAfterMs) &&
+        value.retryAfterMs >= 0 &&
+        value.retryAfterMs <= 7 * 86_400_000))
   );
 }
 
@@ -985,12 +1094,16 @@ function responseOrThrow(value: unknown): RevenueCatV2NetworkResponse {
 function initialState(
   options: ResolvedRevenueCatV2DeletionExecutorOptions,
   claim: AccountDeletionClaim,
+  priorAbsenceObservation = false,
 ): RevenueCatV2PreflightExecutorState {
   return {
-    version: 1,
+    version: REVENUECAT_V2_EXECUTOR_STATE_VERSION,
     phase: 'preflight',
     operationId: claim.operationId,
     credentialBinding: options.credentialBinding,
+    priorAbsenceObservation,
+    providerProbeInFlight: false,
+    absenceClaimBinding: null,
     projectId: options.projectId,
     lookupCustomerId: claim.userId,
     projectPageNumber: 0,
@@ -1050,9 +1163,33 @@ async function recordActionRequired(
   await record(options, claim, { kind: 'action_required', resultCode });
 }
 
-function retryAt(options: ResolvedRevenueCatV2DeletionExecutorOptions): string {
+function providerRetryAfterMs(response: RevenueCatV2NetworkResponse): number {
+  let delay =
+    typeof response.retryAfterMs === 'number' && Number.isSafeInteger(response.retryAfterMs)
+      ? response.retryAfterMs
+      : 0;
+  if (
+    isRecord(response.body) &&
+    typeof response.body.backoff_ms === 'number' &&
+    Number.isSafeInteger(response.body.backoff_ms) &&
+    response.body.backoff_ms >= 0
+  ) {
+    delay = Math.max(delay, response.body.backoff_ms);
+  }
+  return Math.min(delay, MAX_PROVIDER_RETRY_AFTER_MS);
+}
+
+function retryAt(
+  options: ResolvedRevenueCatV2DeletionExecutorOptions,
+  providerMinimumDelayMs = 0,
+): string {
   const now = checkedNow(options.clock);
-  const next = now + options.retryDelayMs;
+  const next =
+    now +
+    Math.max(
+      options.retryDelayMs,
+      Math.min(providerMinimumDelayMs, MAX_PROVIDER_RETRY_AFTER_MS),
+    );
   if (!Number.isSafeInteger(next)) {
     throw new RevenueCatV2DeletionExecutorError('REVENUECAT_V2_EXECUTOR_INPUT_INVALID');
   }
@@ -1063,25 +1200,57 @@ async function recordRetry(
   options: ResolvedRevenueCatV2DeletionExecutorOptions,
   claim: AccountDeletionClaim,
   resultCode: ProviderResultCode,
+  providerMinimumDelayMs = 0,
 ): Promise<void> {
   await record(options, claim, {
     kind: 'retryable',
     resultCode,
-    retryAt: retryAt(options),
+    retryAt: retryAt(options, providerMinimumDelayMs),
   });
 }
 
+async function recordAbsenceObservation(
+  options: ResolvedRevenueCatV2DeletionExecutorOptions,
+  claim: AccountDeletionClaim,
+): Promise<boolean> {
+  const result = await options.gateway.recordAbsenceObservation(claim);
+  if (
+    !isRecord(result) ||
+    !hasExactKeys(result, ['confirmed', 'observationCount']) ||
+    typeof result.confirmed !== 'boolean' ||
+    (result.observationCount !== 1 && result.observationCount !== 2) ||
+    result.confirmed !== (result.observationCount === 2)
+  ) {
+    throw new RevenueCatV2DeletionExecutorError('REVENUECAT_V2_EXECUTOR_RESPONSE_INVALID');
+  }
+  return result.confirmed;
+}
+
+async function resetAbsenceObservations(
+  options: ResolvedRevenueCatV2DeletionExecutorOptions,
+  claim: AccountDeletionClaim,
+): Promise<void> {
+  const result = await options.gateway.resetAbsenceObservations(claim);
+  if (!isRecord(result) || !hasExactKeys(result, ['reset']) || result.reset !== true) {
+    throw new RevenueCatV2DeletionExecutorError('REVENUECAT_V2_EXECUTOR_RESPONSE_INVALID');
+  }
+}
+
 type RequestBudget = { used: number };
+
+function hasDeadlineReserve(
+  options: ResolvedRevenueCatV2DeletionExecutorOptions,
+  context: { deadlineAtMs: number },
+): boolean {
+  return checkedNow(options.clock) + options.deadlineReserveMs < context.deadlineAtMs;
+}
 
 function canRequest(
   options: ResolvedRevenueCatV2DeletionExecutorOptions,
   context: { deadlineAtMs: number },
   budget: RequestBudget,
 ): boolean {
-  const now = checkedNow(options.clock);
-  return (
-    budget.used < options.maxRequests && now + options.deadlineReserveMs < context.deadlineAtMs
-  );
+  return budget.used < options.maxRequests && hasDeadlineReserve(options, context);
 }
 
 async function executeNetwork(
@@ -1089,11 +1258,13 @@ async function executeNetwork(
   request: RevenueCatV2HttpRequest,
   context: { deadlineAtMs: number },
   budget: RequestBudget,
+  requestBudgetReserved = false,
 ): Promise<RevenueCatV2NetworkResponse> {
   budget.used += 1;
   return responseOrThrow(
     await options.network.execute(request, {
       deadlineAtMs: context.deadlineAtMs,
+      requestBudgetReserved,
     }),
   );
 }
@@ -1135,7 +1306,9 @@ async function finishAlreadyAbsent(
   options: ResolvedRevenueCatV2DeletionExecutorOptions,
   claim: AccountDeletionClaim,
   state: RevenueCatV2AlreadyAbsentExecutorState,
+  context: { deadlineAtMs: number },
 ): Promise<void> {
+  if (!hasDeadlineReserve(options, context)) return;
   const terminal = attestRevenueCatV2AlreadyAbsent({
     projectVisibility: state.projectVisibility,
     customerAbsence: state.customerAbsence,
@@ -1152,6 +1325,18 @@ async function finishAlreadyAbsent(
     canonicalCustomerId: null,
     aliases: [],
   });
+  // Persist the next-round state before recording this observation. A crash
+  // after the DB write must never replay the same persisted provider evidence
+  // as a later observation.
+  // Conservatively remember that the following database call may have
+  // recorded a complete absence round. A later provider reappearance must
+  // reset that counter before any DELETE, even if this claim crashes after the
+  // database write but before its outcome is recorded.
+  await persistState(options, claim, initialState(options, claim, true));
+  if (!(await recordAbsenceObservation(options, claim))) {
+    await recordRetry(options, claim, 'REVENUECAT_V2_QUIESCENCE_PENDING');
+    return;
+  }
   // This non-mutating proof intentionally does not mark request_started.
   await record(options, claim, {
     kind: 'succeeded',
@@ -1187,6 +1372,7 @@ async function advancePreflight(
   context: { deadlineAtMs: number },
   budget: RequestBudget,
   initial: RevenueCatV2PreflightExecutorState,
+  claimBinding: string,
 ): Promise<void> {
   let state = initial;
   if (state.projectVisibility === null) {
@@ -1200,8 +1386,10 @@ async function advancePreflight(
       pageNumber: state.projectPageNumber,
     });
     let disposition;
+    let providerMinimumDelayMs = 0;
     try {
       const response = await executeNetwork(options, request, context, budget);
+      providerMinimumDelayMs = providerRetryAfterMs(response);
       disposition = classifyRevenueCatV2ProjectPageResponse(
         response.status,
         response.body,
@@ -1211,6 +1399,7 @@ async function advancePreflight(
         iso(checkedNow(options.clock)),
       );
     } catch (error) {
+      if (error instanceof AccountDeletionWorkerCapacityError) throw error;
       if (error instanceof RevenueCatV2DeletionExecutorError) {
         await recordActionRequired(options, claim, 'REVENUECAT_V2_PROJECT_ATTESTATION_UNRESOLVED');
         return;
@@ -1218,7 +1407,7 @@ async function advancePreflight(
       disposition = classifyRevenueCatV2ProjectTransportFailure('before_request_started');
     }
     if (disposition.kind === 'retryable') {
-      await recordRetry(options, claim, disposition.resultCode);
+      await recordRetry(options, claim, disposition.resultCode, providerMinimumDelayMs);
       return;
     }
     if (disposition.kind === 'action_required') {
@@ -1240,7 +1429,7 @@ async function advancePreflight(
         await budgetRetry(options, claim, state);
         return;
       }
-      return await advancePreflight(options, claim, context, budget, state);
+      return await advancePreflight(options, claim, context, budget, state, claimBinding);
     }
     state = { ...state, projectVisibility: disposition.transientEvidence };
     await persistState(options, claim, state);
@@ -1256,9 +1445,16 @@ async function advancePreflight(
       secretApiKey: options.secretApiKey,
       lookupCustomerId: claim.userId,
     });
+    state = { ...state, providerProbeInFlight: true };
+    // Write ahead before the GET. If the process dies after observing a
+    // reappearance but before persisting its disposition, the next claim will
+    // conservatively reset any earlier DB absence round before probing again.
+    await persistState(options, claim, state);
     let disposition;
+    let providerMinimumDelayMs = 0;
     try {
       const response = await executeNetwork(options, request, context, budget);
+      providerMinimumDelayMs = providerRetryAfterMs(response);
       disposition = classifyRevenueCatV2CustomerLookupResponse(
         response.status,
         response.body,
@@ -1267,6 +1463,7 @@ async function advancePreflight(
         iso(checkedNow(options.clock)),
       );
     } catch (error) {
+      if (error instanceof AccountDeletionWorkerCapacityError) throw error;
       if (error instanceof RevenueCatV2DeletionExecutorError) {
         await recordActionRequired(options, claim, 'REVENUECAT_V2_PREFLIGHT_UNATTESTED');
         return;
@@ -1274,7 +1471,7 @@ async function advancePreflight(
       disposition = classifyRevenueCatV2PreflightTransportFailure('before_request_started');
     }
     if (disposition.kind === 'retryable') {
-      await recordRetry(options, claim, disposition.resultCode);
+      await recordRetry(options, claim, disposition.resultCode, providerMinimumDelayMs);
       return;
     }
     if (disposition.kind === 'action_required') {
@@ -1285,13 +1482,26 @@ async function advancePreflight(
       await recordActionRequired(options, claim, 'REVENUECAT_V2_PREFLIGHT_UNATTESTED');
       return;
     }
+    if (!hasDeadlineReserve(options, context)) return;
     state = {
       ...state,
+      providerProbeInFlight: false,
+      absenceClaimBinding: disposition.kind === 'absent' ? claimBinding : null,
       customerSnapshot:
         disposition.kind === 'found'
           ? { kind: 'found', evidence: disposition.transientEvidence }
           : { kind: 'absent', evidence: disposition.transientEvidence },
     };
+    await persistState(options, claim, state);
+  }
+
+  if (state.customerSnapshot?.kind === 'found' && state.priorAbsenceObservation) {
+    // The provider family has reappeared after a prior full-family absence may
+    // have reached the database. Persisted found evidence plus this flag keeps
+    // the reset crash-safe: DELETE remains impossible until the idempotent DB
+    // reset succeeds and the cleared flag is durably stored.
+    await resetAbsenceObservations(options, claim);
+    state = { ...state, priorAbsenceObservation: false };
     await persistState(options, claim, state);
   }
 
@@ -1303,15 +1513,16 @@ async function advancePreflight(
   const customerSnapshot = state.customerSnapshot;
   if (customerSnapshot.kind === 'absent') {
     const absent: RevenueCatV2AlreadyAbsentExecutorState = {
-      version: 1,
+      version: REVENUECAT_V2_EXECUTOR_STATE_VERSION,
       phase: 'already_absent',
       operationId: state.operationId,
       credentialBinding: state.credentialBinding,
+      absenceClaimBinding: state.absenceClaimBinding!,
       projectVisibility,
       customerAbsence: customerSnapshot.evidence,
     };
     await persistState(options, claim, absent);
-    await finishAlreadyAbsent(options, claim, absent);
+    await finishAlreadyAbsent(options, claim, absent, context);
     return;
   }
 
@@ -1335,8 +1546,10 @@ async function advancePreflight(
       startingAfter,
     });
     let disposition;
+    let providerMinimumDelayMs = 0;
     try {
       const response = await executeNetwork(options, request, context, budget);
+      providerMinimumDelayMs = providerRetryAfterMs(response);
       disposition = classifyRevenueCatV2AliasPageResponse(
         response.status,
         response.body,
@@ -1346,6 +1559,7 @@ async function advancePreflight(
         iso(checkedNow(options.clock)),
       );
     } catch (error) {
+      if (error instanceof AccountDeletionWorkerCapacityError) throw error;
       if (error instanceof RevenueCatV2DeletionExecutorError) {
         await recordActionRequired(options, claim, 'REVENUECAT_V2_ALIAS_SNAPSHOT_UNATTESTED');
         return;
@@ -1353,7 +1567,7 @@ async function advancePreflight(
       disposition = classifyRevenueCatV2PreflightTransportFailure('before_request_started');
     }
     if (disposition.kind === 'retryable') {
-      await recordRetry(options, claim, disposition.resultCode);
+      await recordRetry(options, claim, disposition.resultCode, providerMinimumDelayMs);
       return;
     }
     if (disposition.kind === 'action_required') {
@@ -1374,7 +1588,7 @@ async function advancePreflight(
         await budgetRetry(options, claim, state);
         return;
       }
-      return await advancePreflight(options, claim, context, budget, state);
+      return await advancePreflight(options, claim, context, budget, state, claimBinding);
     }
   }
 
@@ -1389,7 +1603,7 @@ async function advancePreflight(
     return;
   }
   const ready: RevenueCatV2ReadyExecutorState = {
-    version: 1,
+    version: REVENUECAT_V2_EXECUTOR_STATE_VERSION,
     phase: 'ready',
     operationId: state.operationId,
     credentialBinding: state.credentialBinding,
@@ -1402,22 +1616,26 @@ async function advancePreflight(
     await budgetRetry(options, claim, ready);
     return;
   }
-  await dispatchDelete(options, claim, context, budget, ready);
+  await dispatchDelete(options, claim, context, budget, ready, claimBinding);
 }
 
 function blankReconciliation(
   ready: RevenueCatV2ReadyExecutorState,
   dispatchEvidence: RevenueCatV2DispatchEvidence,
+  roundClaimBinding: string,
 ): RevenueCatV2ReconciliationExecutorState {
   const requests = identityRequests(ready.preflightEvidence);
   return {
-    version: 1,
+    version: REVENUECAT_V2_EXECUTOR_STATE_VERSION,
     phase: 'reconciling',
     operationId: ready.operationId,
     credentialBinding: ready.credentialBinding,
+    roundClaimBinding,
     projectVisibility: ready.projectVisibility,
     preflightEvidence: ready.preflightEvidence,
     dispatchEvidence,
+    presenceResetRequired: false,
+    providerProbeInFlight: false,
     customerObservations: requests.customers.map(() => null),
     aliasesObservation: null,
   };
@@ -1427,11 +1645,13 @@ async function persistAndTransitionToReconciliation(
   options: ResolvedRevenueCatV2DeletionExecutorOptions,
   claim: AccountDeletionClaim,
   state: RevenueCatV2ReconciliationExecutorState,
+  retryAtValue: string | null = null,
 ): Promise<void> {
   await persistState(options, claim, state);
   await record(options, claim, {
     kind: 'ambiguous',
     resultCode: state.dispatchEvidence.resultCode,
+    ...(retryAtValue === null ? {} : { retryAt: retryAtValue }),
   });
 }
 
@@ -1441,6 +1661,7 @@ async function dispatchDelete(
   context: { deadlineAtMs: number },
   budget: RequestBudget,
   ready: RevenueCatV2ReadyExecutorState,
+  claimBinding: string,
 ): Promise<void> {
   if (claim.claimMode !== 'dispatch' || claim.requestStartedAt !== null) {
     await recordActionRequired(options, claim, 'REVENUECAT_V2_TERMINAL_VERIFICATION_UNRESOLVED');
@@ -1461,6 +1682,14 @@ async function dispatchDelete(
     evidence: ready.preflightEvidence,
     secretApiKey: options.secretApiKey,
   });
+  // Distributed provider capacity must be acquired while the step is still
+  // safely dispatchable. Once request_started is recorded, no quota failure is
+  // allowed to turn an unsent DELETE into durable ambiguity.
+  await options.network.reserveMutation({ deadlineAtMs: context.deadlineAtMs });
+  if (!canRequest(options, context, budget)) {
+    await budgetRetry(options, claim, ready);
+    return;
+  }
   const started = await options.gateway.markRequestStarted(claim);
   if (
     !isRecord(started) ||
@@ -1473,14 +1702,17 @@ async function dispatchDelete(
   }
 
   let disposition;
+  let providerMinimumDelayMs = 0;
   try {
-    const response = await executeNetwork(options, request, context, budget);
+    const response = await executeNetwork(options, request, context, budget, true);
+    providerMinimumDelayMs = providerRetryAfterMs(response);
     disposition = classifyRevenueCatV2DeleteResponse(
       response.status,
       response.body,
       ready.preflightEvidence,
     );
-  } catch {
+  } catch (error) {
+    if (error instanceof AccountDeletionWorkerCapacityError) throw error;
     disposition = classifyRevenueCatV2TransportFailure('after_request_started');
   }
 
@@ -1503,7 +1735,8 @@ async function dispatchDelete(
   await persistAndTransitionToReconciliation(
     options,
     claim,
-    blankReconciliation(ready, dispatchEvidence),
+    blankReconciliation(ready, dispatchEvidence, claimBinding),
+    providerMinimumDelayMs > 0 ? retryAt(options, providerMinimumDelayMs) : null,
   );
 }
 
@@ -1519,48 +1752,125 @@ async function reconcile(
     evidence: state.preflightEvidence,
     secretApiKey: options.secretApiKey,
   });
-  for (let index = 0; index < requests.customers.length; index += 1) {
-    if (state.customerObservations[index] !== null) continue;
+  while (state.customerObservations.some((observation) => observation === null)) {
     if (!canRequest(options, context, budget)) {
       await budgetRetry(options, claim, state);
       return;
     }
-    let disposition;
-    try {
-      const response = await executeNetwork(options, requests.customers[index], context, budget);
-      disposition = classifyRevenueCatV2CustomerReconciliationResponse(
-        response.status,
-        response.body,
-        state.preflightEvidence,
-        index,
-        iso(checkedNow(options.clock)),
+    const availableRequests = options.maxRequests - budget.used;
+    const batchIndexes = state.customerObservations
+      .map((observation, index) => (observation === null ? index : -1))
+      .filter((index) => index >= 0)
+      .slice(
+        0,
+        Math.min(REVENUECAT_V2_MAX_RECONCILIATION_CONCURRENCY, availableRequests),
       );
-    } catch (error) {
-      if (error instanceof RevenueCatV2DeletionExecutorError) {
-        await recordActionRequired(
-          options,
-          claim,
-          'REVENUECAT_V2_TERMINAL_VERIFICATION_UNRESOLVED',
-        );
-        return;
-      }
-      disposition = classifyRevenueCatV2ReconciliationTransportFailure('before_request_started');
-    }
-    if (disposition.kind === 'retryable') {
-      await recordRetry(options, claim, disposition.resultCode);
+    if (batchIndexes.length === 0) {
+      await budgetRetry(options, claim, state);
       return;
     }
-    if (disposition.kind === 'action_required') {
-      await recordActionRequired(options, claim, disposition.resultCode);
-      return;
-    }
-    if (disposition.kind === 'ambiguous') {
-      await recordActionRequired(options, claim, 'REVENUECAT_V2_TERMINAL_VERIFICATION_UNRESOLVED');
-      return;
+    state = { ...state, providerProbeInFlight: true };
+    await persistState(options, claim, state);
+    const batchResults = await Promise.all(
+      batchIndexes.map(async (index) => {
+        try {
+          const response = await executeNetwork(
+            options,
+            requests.customers[index],
+            context,
+            budget,
+          );
+          return {
+            index,
+            error: null,
+            providerMinimumDelayMs: providerRetryAfterMs(response),
+            disposition: classifyRevenueCatV2CustomerReconciliationResponse(
+              response.status,
+              response.body,
+              state.preflightEvidence,
+              index,
+              iso(checkedNow(options.clock)),
+            ),
+          };
+        } catch (error) {
+          return { index, error, providerMinimumDelayMs: 0, disposition: null };
+        }
+      }),
+    );
+    const capacityFailure = batchResults.find(
+      (result) => result.error instanceof AccountDeletionWorkerCapacityError,
+    );
+    if (capacityFailure?.error instanceof AccountDeletionWorkerCapacityError) {
+      throw capacityFailure.error;
     }
     const observations = [...state.customerObservations];
-    observations[index] = disposition;
-    state = { ...state, customerObservations: observations };
+    let providerPresence = state.presenceResetRequired;
+    let retryableResultCode: ProviderResultCode | null = null;
+    let retryableMinimumDelayMs = 0;
+    let actionRequiredResultCode: ProviderResultCode | null = null;
+    let unresolved = false;
+    for (const result of batchResults) {
+      let disposition = result.disposition;
+      if (result.error instanceof RevenueCatV2DeletionExecutorError) {
+        unresolved = true;
+        continue;
+      }
+      if (result.error !== null) {
+        disposition = classifyRevenueCatV2ReconciliationTransportFailure(
+          'before_request_started',
+        );
+      }
+      if (disposition === null) {
+        unresolved = true;
+        continue;
+      }
+      if (disposition.kind === 'retryable') {
+        retryableResultCode ??= disposition.resultCode;
+        retryableMinimumDelayMs = Math.max(
+          retryableMinimumDelayMs,
+          result.providerMinimumDelayMs,
+        );
+        continue;
+      }
+      if (disposition.kind === 'action_required') {
+        actionRequiredResultCode ??= disposition.resultCode;
+        continue;
+      }
+      if (disposition.kind === 'ambiguous') {
+        unresolved = true;
+        continue;
+      }
+      observations[result.index] = disposition;
+      providerPresence = providerPresence || disposition.kind === 'present';
+    }
+    if (actionRequiredResultCode !== null) {
+      await recordActionRequired(options, claim, actionRequiredResultCode);
+      return;
+    }
+    if (unresolved) {
+      await recordActionRequired(
+        options,
+        claim,
+        'REVENUECAT_V2_TERMINAL_VERIFICATION_UNRESOLVED',
+      );
+      return;
+    }
+    if (retryableResultCode !== null) {
+      await recordRetry(
+        options,
+        claim,
+        retryableResultCode,
+        retryableMinimumDelayMs,
+      );
+      return;
+    }
+    if (!hasDeadlineReserve(options, context)) return;
+    state = {
+      ...state,
+      presenceResetRequired: providerPresence,
+      providerProbeInFlight: false,
+      customerObservations: observations,
+    };
     await persistState(options, claim, state);
   }
 
@@ -1569,9 +1879,13 @@ async function reconcile(
       await budgetRetry(options, claim, state);
       return;
     }
+    state = { ...state, providerProbeInFlight: true };
+    await persistState(options, claim, state);
     let disposition;
+    let providerMinimumDelayMs = 0;
     try {
       const response = await executeNetwork(options, requests.aliases, context, budget);
+      providerMinimumDelayMs = providerRetryAfterMs(response);
       disposition = classifyRevenueCatV2AliasesReconciliationResponse(
         response.status,
         response.body,
@@ -1579,6 +1893,7 @@ async function reconcile(
         iso(checkedNow(options.clock)),
       );
     } catch (error) {
+      if (error instanceof AccountDeletionWorkerCapacityError) throw error;
       if (error instanceof RevenueCatV2DeletionExecutorError) {
         await recordActionRequired(
           options,
@@ -1590,7 +1905,7 @@ async function reconcile(
       disposition = classifyRevenueCatV2ReconciliationTransportFailure('before_request_started');
     }
     if (disposition.kind === 'retryable') {
-      await recordRetry(options, claim, disposition.resultCode);
+      await recordRetry(options, claim, disposition.resultCode, providerMinimumDelayMs);
       return;
     }
     if (disposition.kind === 'action_required') {
@@ -1601,7 +1916,13 @@ async function reconcile(
       await recordActionRequired(options, claim, 'REVENUECAT_V2_TERMINAL_VERIFICATION_UNRESOLVED');
       return;
     }
-    state = { ...state, aliasesObservation: disposition };
+    if (!hasDeadlineReserve(options, context)) return;
+    state = {
+      ...state,
+      presenceResetRequired: state.presenceResetRequired || disposition.kind === 'present',
+      providerProbeInFlight: false,
+      aliasesObservation: disposition,
+    };
     await persistState(options, claim, state);
   }
 
@@ -1620,15 +1941,34 @@ async function reconcile(
       aliasesObservation: state.aliasesObservation,
     },
   });
+  if (!hasDeadlineReserve(options, context)) return;
   if (terminal.kind === 'succeeded') {
+    const reset: RevenueCatV2ReconciliationExecutorState = {
+      ...state,
+      presenceResetRequired: false,
+      providerProbeInFlight: false,
+      customerObservations: state.customerObservations.map(() => null),
+      aliasesObservation: null,
+    };
+    // Consume the provider evidence before its DB observation is recorded. If
+    // any later durable transition fails, recovery performs an extra full
+    // round instead of counting the same round twice.
+    await persistState(options, claim, reset);
+    if (!(await recordAbsenceObservation(options, claim))) {
+      await recordRetry(options, claim, 'REVENUECAT_V2_QUIESCENCE_PENDING');
+      return;
+    }
     await record(options, claim, {
       kind: 'succeeded',
       resultCode: terminal.resultCode,
     });
     return;
   }
+  await resetAbsenceObservations(options, claim);
   const reset: RevenueCatV2ReconciliationExecutorState = {
     ...state,
+    presenceResetRequired: false,
+    providerProbeInFlight: false,
     customerObservations: state.customerObservations.map(() => null),
     aliasesObservation: null,
   };
@@ -1645,6 +1985,7 @@ async function executeRevenueCatV2Deletion(
   if (!validClaim(claim) || !validExecutorContext(context)) {
     throw new RevenueCatV2DeletionExecutorError('REVENUECAT_V2_EXECUTOR_INPUT_INVALID');
   }
+  const claimBinding = await deriveRevenueCatV2ClaimBinding(claim.claimToken);
   const budget: RequestBudget = { used: 0 };
   let state: RevenueCatV2ExecutorState | null;
   try {
@@ -1681,23 +2022,100 @@ async function executeRevenueCatV2Deletion(
         resultCode: 'REVENUECAT_V2_DISPATCH_AMBIGUOUS',
         deletedAt: null,
       };
-      state = blankReconciliation(state, dispatchEvidence);
+      state = blankReconciliation(state, dispatchEvidence, claimBinding);
       await persistState(options, claim, state);
     }
     if (state.phase !== 'reconciling') {
       await recordActionRequired(options, claim, 'REVENUECAT_V2_TERMINAL_VERIFICATION_UNRESOLVED');
       return;
     }
+    if (state.presenceResetRequired || state.providerProbeInFlight) {
+      // Persisted presence, or a write-ahead probe whose result was not durably
+      // stored, invalidates every earlier database absence observation. Keep
+      // the flag durable until the idempotent reset and blank round persist.
+      await resetAbsenceObservations(options, claim);
+      state = {
+        ...state,
+        roundClaimBinding: claimBinding,
+        presenceResetRequired: false,
+        providerProbeInFlight: false,
+        customerObservations: state.customerObservations.map(() => null),
+        aliasesObservation: null,
+      };
+      await persistState(options, claim, state);
+    } else if (state.roundClaimBinding !== claimBinding) {
+      state = {
+        ...state,
+        roundClaimBinding: claimBinding,
+        presenceResetRequired: false,
+        providerProbeInFlight: false,
+        customerObservations: state.customerObservations.map(() => null),
+        aliasesObservation: null,
+      };
+      // No provider evidence may span worker claims. Persist the blank round
+      // before the first GET so a lost/expired claim can never lend an old 404
+      // to a later full-family absence attestation.
+      await persistState(options, claim, state);
+    }
     await reconcile(options, claim, context, budget, state);
     return;
   }
 
+  if (state.phase === 'preflight' && state.providerProbeInFlight) {
+    // The prior process may have observed a reappearance without persisting
+    // the response. Reset conservatively before another GET or any DELETE.
+    await resetAbsenceObservations(options, claim);
+    state = {
+      ...state,
+      priorAbsenceObservation: false,
+      providerProbeInFlight: false,
+    };
+    await persistState(options, claim, state);
+  }
+
+  if (
+    state.phase === 'preflight' &&
+    state.customerSnapshot?.kind === 'absent' &&
+    state.absenceClaimBinding !== claimBinding
+  ) {
+    state = {
+      ...state,
+      absenceClaimBinding: null,
+      customerSnapshot: null,
+      aliasPages: [],
+    };
+    // Keep completed project pagination, but never lend a customer 404 to a
+    // later claim. Persist the cleared snapshot before re-reading the customer.
+    await persistState(options, claim, state);
+  } else if (
+    state.phase === 'already_absent' &&
+    state.absenceClaimBinding !== claimBinding
+  ) {
+    state = {
+      version: REVENUECAT_V2_EXECUTOR_STATE_VERSION,
+      phase: 'preflight',
+      operationId: state.operationId,
+      credentialBinding: state.credentialBinding,
+      priorAbsenceObservation: true,
+      providerProbeInFlight: false,
+      absenceClaimBinding: null,
+      projectId: state.projectVisibility.projectId,
+      lookupCustomerId: state.customerAbsence.lookupCustomerId,
+      projectPageNumber: 0,
+      projectStartingAfter: null,
+      projectVisibility: state.projectVisibility,
+      customerSnapshot: null,
+      aliasPages: [],
+    };
+    await persistState(options, claim, state);
+  }
+
   if (state.phase === 'already_absent') {
-    await finishAlreadyAbsent(options, claim, state);
+    await finishAlreadyAbsent(options, claim, state, context);
     return;
   }
   if (state.phase === 'preflight') {
-    await advancePreflight(options, claim, context, budget, state);
+    await advancePreflight(options, claim, context, budget, state, claimBinding);
     return;
   }
   if (state.phase === 'ready') {
@@ -1705,7 +2123,7 @@ async function executeRevenueCatV2Deletion(
       await budgetRetry(options, claim, state);
       return;
     }
-    await dispatchDelete(options, claim, context, budget, state);
+    await dispatchDelete(options, claim, context, budget, state, claimBinding);
     return;
   }
   await recordActionRequired(options, claim, 'REVENUECAT_V2_TERMINAL_VERIFICATION_UNRESOLVED');

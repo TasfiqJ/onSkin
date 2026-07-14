@@ -84,8 +84,8 @@ block(
 );
 block(
   errors,
-  SEALED_SERVICE_PRIVATE_TABLES.length === 6,
-  `Sealed service-only private-table inventory must contain 6 tables; found ${SEALED_SERVICE_PRIVATE_TABLES.length}.`,
+  SEALED_SERVICE_PRIVATE_TABLES.length === 7,
+  `Sealed service-only private-table inventory must contain 7 tables; found ${SEALED_SERVICE_PRIVATE_TABLES.length}.`,
 );
 block(
   errors,
@@ -94,8 +94,8 @@ block(
 );
 block(
   errors,
-  PRIVATE_PUBLIC_TABLES.length === 46,
-  `Combined private-table inventory must contain 46 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
+  PRIVATE_PUBLIC_TABLES.length === 47,
+  `Combined private-table inventory must contain 47 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
 );
 
 for (const table of SEALED_SERVICE_PRIVATE_TABLES) {
@@ -440,7 +440,7 @@ block(
 );
 
 const requiredLiveHarnessChecks = [
-  'all 46 private tables have access-control probes',
+  'all 47 private tables have access-control probes',
   'routine conflict swapped canonical pair',
   'routine conflict duplicate canonical identity',
   'Shelf provenance matrix',

@@ -143,19 +143,31 @@ deleted, while shared events retain another live Auth owner and remove the delet
 from every scalar, alias, and transfer field. The Edge caller accepts only an exact
 zero-residue RPC attestation.
 
-Migrations `20260713000048` through `20260713000051` add a bounded durable lifecycle
+Migrations `20260713000048` through `20260713000052` add a bounded durable lifecycle
 around that scrub: authenticated owner-derived `begin`, authenticated opaque
 `preflight`, capability-only `status`, and worker-secret-only `work` lanes; sealed
 operation, encrypted provider-step, receipt, recovery-audit, and RevenueCat-tombstone
 state; per-account locks and barriers; account-owned rate-limit cleanup; guarded service
 writers; reconciliation instead of blind provider redispatch; and at-most-once Auth hard
-deletion after locked local re-attestation. The Cron worker is authoritative;
+deletion after locked local re-attestation. Migration 0052 also session-binds intake and
+preflight, seals short-lived publication capabilities, atomically drains them at deletion
+intake, gates local erasure on exact authority end, and gates RevenueCat completion on a
+five-minute settle plus two claim-distinct full-family absence rounds. RevenueCat calls
+consume credential-bound database-global Customer Information/Project Configuration
+budgets of 225/25 per fixed UTC minute, honor the maximum valid provider backoff, and
+defer capacity without spending an attempt. Full-family customer reads are fourteen-wide,
+capped to ten seconds each, and the subsequent aliases read keeps the maximum accepted
+family within 60 seconds in the deterministic bound. Identity state is capped at
+64 aliases as a local fail-closed/manual-review bound and protected by write-ahead probe
+state so an interrupted scan resets absence evidence. The Cron worker is authoritative;
 `EdgeRuntime.waitUntil` is only an intake accelerator.
 
 Provider erasure remains fail-closed at its attestation boundary. RevenueCat REST API v2
 treats exact `200`, `202`, or `404` deletion outcomes only as nonterminal dispatch
 evidence and requires full read-only identity-family absence reconciliation before
-completion; no bare `404` is terminal proof. Required-mode PostHog deletion persists the
+completion; no bare `404` is terminal proof. Provider timeouts remain armed through the
+bounded response-body read, and an ambiguous DELETE is never redispatched. Required-mode
+PostHog deletion persists the
 exact target set and provider status, then requires two interval-separated absence
 observations. Apple is `revoked` only after subject-bound token exchange and Apple's
 exact `200` no-body revoke response. Missing or failed automatic proof records a durable
@@ -164,12 +176,12 @@ The mobile client observes Apple's native revoke event, checks credential state 
 restored-session publication and on foreground, and retains owner-bound recovery and
 manual instructions until safe cleanup or explicit acknowledgement.
 
-These controls are not a race-free end-to-end deletion lifecycle. `preflight=clear`
-releases the account lock before Supabase session publication and RevenueCat
-configuration, so deletion can begin in that interval and a late SDK call can recreate
-provider state. Migration `0052`, mobile publication-lease fencing, provider settling and
-repeated absence, and a provider-approved blocking or continuing re-deletion control for
-old or tampered clients remain source release blockers. Hosted clean-reset,
+These controls are not proof of a race-free end-to-end deletion lifecycle. Migration
+`0052` supplies the database publication fence, but the exact Edge/mobile candidate must
+still prove that every Supabase/RevenueCat publication path holds the lease and survives
+process death, configure-in-flight, and lost release. A provider-approved block,
+enforceable mandatory-version gate, or continuing re-deletion control for old/tampered
+clients remains a release blocker. Hosted clean-reset,
 Cron/Vault/concurrency, provider interruption and recreation, physical-iPhone,
 privacy/security/legal, and App Review evidence remain required.
 

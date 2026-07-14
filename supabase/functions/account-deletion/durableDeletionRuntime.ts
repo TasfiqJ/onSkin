@@ -30,6 +30,7 @@ import {
   deletionStatusLookupFromDatabaseRow,
   deletionSubjectHmac,
   loadDeletionReceiptHmacKey,
+  verifiedAuthSessionClaimsFromJwt,
 } from './durableDeletionRuntimeCore.ts';
 import { hashDeletionCapability } from './durableDeletionCore.ts';
 import {
@@ -37,6 +38,7 @@ import {
   type DurableDeletionHttpDependencies,
 } from './durableDeletionHttpHandler.ts';
 import {
+  AccountDeletionWorkerCapacityError,
   type AccountDeletionStepExecutor,
   type AccountDeletionStepName,
   runAccountDeletionWorker,
@@ -47,7 +49,11 @@ import {
   ACCOUNT_DELETION_PROVIDER_RESPONSE_MAX_BYTES,
   requireAppleRevocationConfiguration,
 } from './providerDeletion.ts';
-import { createRevenueCatV2DeletionExecutor } from './revenueCatV2DeletionExecutor.ts';
+import {
+  createRevenueCatV2DeletionExecutor,
+  deriveRevenueCatV2CredentialBinding,
+  REVENUECAT_V2_MAX_NETWORK_TIMEOUT_MS,
+} from './revenueCatV2DeletionExecutor.ts';
 import { executeServiceRowsDeletionStep } from './serviceRowsDeletionExecutor.ts';
 import { scrubAccountServiceRows } from './serviceRoleCleanup.ts';
 
@@ -55,7 +61,12 @@ const DAY_MS = 86_400_000;
 const OPERATION_LIFETIME_MS = 29 * DAY_MS;
 const RECEIPT_LIFETIME_MS = 29 * DAY_MS;
 const TOMBSTONE_LIFETIME_MS = 824 * DAY_MS;
-const WORKER_BUDGET_MS = 20_000;
+// A complete RevenueCat identity-family verification may require 67 bounded
+// read-only requests (lookup + canonical + 64 aliases + aliases endpoint).
+// Ninety seconds stays below the 120s DB claim lease and Supabase's documented
+// 150s free-plan wall-clock/request-idle limit while allowing one whole round
+// to remain bound to a single claim.
+const WORKER_BUDGET_MS = 90_000;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const AUTHORITATIVE_AUTH_REJECTION_CODES = new Set([
   'bad_jwt',
@@ -218,8 +229,9 @@ function postHogNoRecordingsEvidence(readEnvironment: (name: string) => string |
     verifiedAt === undefined ||
     !Number.isFinite(Date.parse(verifiedAt)) ||
     new Date(Date.parse(verifiedAt)).toISOString() !== verifiedAt
-  )
+  ) {
     return undefined;
+  }
   return {
     recordingsCollected: false,
     durable: true as const,
@@ -271,6 +283,7 @@ export async function createDurableDeletionRuntime(
   // V2. Requiring a separately named V2 key prevents a legacy key from
   // surviving deploy validation only to strand a deletion after intake.
   const revenueCatSecret = requiredEnv(readEnvironment, 'REVENUECAT_V2_SECRET_API_KEY', 1_000);
+  const revenueCatProviderBudgetKey = await deriveRevenueCatV2CredentialBinding(revenueCatSecret);
   const tombstoneKeyring = parseRevenueCatIdentityTombstoneKeyring(
     requiredEnv(readEnvironment, 'REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS', 1_024),
     requiredEnv(readEnvironment, 'REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION', 5),
@@ -287,6 +300,49 @@ export async function createDurableDeletionRuntime(
     now,
     fetcher: fetchWithTimeout,
   });
+  // A maximum family contains 66 customer reads plus one aliases read.
+  // Fourteen-wide customer batches plus a ten-second per-call ceiling require
+  // at most six network waves in total (60s),
+  // retaining 30s of the 90s claim for quota RPCs and durable state writes.
+  // Apple and PostHog keep the separately configured shared timeout.
+  const revenueCatProviderNetwork = createDeletionProviderJsonNetwork({
+    maxResponseBytes: ACCOUNT_DELETION_PROVIDER_RESPONSE_MAX_BYTES,
+    maxTimeoutMs: Math.min(providerTimeoutMs, REVENUECAT_V2_MAX_NETWORK_TIMEOUT_MS),
+    now,
+    fetcher: fetchWithTimeout,
+  });
+  function revenueCatBudgetDomain(
+    request: { url: string; init: RequestInit },
+  ): 'customer-information' | 'project-configuration' {
+    let url: URL;
+    try {
+      url = new URL(request.url);
+    } catch {
+      throw new DurableDeletionRuntimeError('DELETION_RUNTIME_CONFIGURATION_INVALID');
+    }
+    return url.pathname === '/v2/projects'
+      ? 'project-configuration'
+      : 'customer-information';
+  }
+  async function acquireRevenueCatProviderBudget(
+    domain: 'customer-information' | 'project-configuration',
+  ): Promise<void> {
+    let allowed = false;
+    try {
+      allowed = await gateway.consumeRevenueCatProviderBudget(
+        revenueCatProviderBudgetKey,
+        domain,
+      );
+    } catch {
+      // A missing distributed quota decision must stop this worker slice,
+      // not fan out unmetered calls or burn attempts across the backlog.
+    }
+    if (!allowed) {
+      throw new AccountDeletionWorkerCapacityError(
+        'DELETION_WORKER_PROVIDER_CAPACITY_EXHAUSTED',
+      );
+    }
+  }
 
   let appleNetworkPromise: ReturnType<typeof createAppleDeletionNetwork> | null = null;
   function appleNetwork() {
@@ -329,10 +385,25 @@ export async function createDurableDeletionRuntime(
   const revenueCatExecutor = createRevenueCatV2DeletionExecutor({
     projectId: revenueCatProjectId,
     secretApiKey: revenueCatSecret,
-    network: { execute: providerNetwork.execute },
+    network: {
+      reserveMutation: () => acquireRevenueCatProviderBudget('customer-information'),
+      async execute(request, context) {
+        if (context.requestBudgetReserved) {
+          if (String(request.init.method) !== 'DELETE') {
+            throw new DurableDeletionRuntimeError('DELETION_RUNTIME_CONFIGURATION_INVALID');
+          }
+        } else {
+          await acquireRevenueCatProviderBudget(revenueCatBudgetDomain(request));
+        }
+        return await revenueCatProviderNetwork.execute(request, context);
+      },
+    },
     clock: { nowMs: now },
-    maxRequests: 20,
-    retryDelayMs: 30_000,
+    maxRequests: 70,
+    // Migration 0052 admits a second full-family absence round only after a
+    // DB-clock 60-second interval. Match that floor locally as a liveness
+    // optimization; the database remains the authoritative safety gate.
+    retryDelayMs: 60_000,
     deadlineReserveMs: 500,
     stateStore: {
       load: (claim) => encryptedState.load(claim, 'revenuecat_delete'),
@@ -380,13 +451,23 @@ export async function createDurableDeletionRuntime(
       async markRequestStarted(claim) {
         return { requestStartedAt: await gateway.markRequestStarted(claim) };
       },
+      recordAbsenceObservation(claim) {
+        return gateway.recordRevenueCatAbsenceObservation(claim);
+      },
       recordOutcome(claim, outcome) {
         return record(
           claim,
           outcome.kind,
           outcome.resultCode,
-          outcome.kind === 'retryable' ? outcome.retryAt : null,
+          outcome.kind === 'retryable'
+            ? outcome.retryAt
+            : outcome.kind === 'ambiguous' && outcome.retryAt !== undefined
+              ? outcome.retryAt
+              : null,
         );
+      },
+      resetAbsenceObservations(claim) {
+        return gateway.resetRevenueCatAbsenceObservations(claim);
       },
     },
   });
@@ -529,14 +610,32 @@ export async function createDurableDeletionRuntime(
     const deadlineAtMs = now() + WORKER_BUDGET_MS;
     const claim = await gateway.claimOperation(operationId, userId, 'dispatch');
     if (claim === null || now() >= deadlineAtMs) return;
-    await executors[claim.stepName](claim, { deadlineAtMs });
+    try {
+      await executors[claim.stepName](claim, { deadlineAtMs });
+    } catch (error) {
+      if (error instanceof AccountDeletionWorkerCapacityError) {
+        await gateway.deferRevenueCatProviderCapacity(
+          claim,
+          new Date(now() + 65_000).toISOString(),
+        );
+        return;
+      }
+      throw error;
+    }
   }
 
   async function runWorker() {
     const deadlineAtMs = now() + WORKER_BUDGET_MS;
     return await runAccountDeletionWorker({
       gateway: {
+        reapExpiredPublicationLeases: (limit) =>
+          gateway.reapExpiredPublicationLeases(limit),
         claimNext: (mode) => gateway.claimNext(mode),
+        deferProviderCapacity: (claim) =>
+          gateway.deferRevenueCatProviderCapacity(
+            claim,
+            new Date(now() + 65_000).toISOString(),
+          ),
         listReadyToFinalize: (limit) => gateway.listReadyToFinalize(limit),
         async finalize(candidate) {
           await gateway.finalize({
@@ -592,20 +691,24 @@ export async function createDurableDeletionRuntime(
       if (typeof user.id !== 'string' || !UUID_PATTERN.test(user.id)) {
         throw authenticationUnavailable();
       }
+      const session = verifiedAuthSessionClaimsFromJwt(token, user.id);
+      if (session === null) return null;
       const apple = appleIdentity(user);
       return {
         id: user.id,
+        sessionId: session.sessionId,
         appleLinked: apple.linked,
         appleSubject: apple.subject,
       };
     },
-    async consumeIntakeRateLimit(userId) {
+    async consumeIntakeRateLimit(userId, sessionId) {
       return await gateway.consumeRateLimit({
         scope: 'account-deletion-intake',
         keyHash: await deletionIntakeOwnerHmac(receiptKey.key, userId),
         limit: 5,
         windowSeconds: 600,
         ownerUserId: userId,
+        sessionId,
       });
     },
     async consumeStatusRateLimit(capability) {
@@ -616,7 +719,14 @@ export async function createDurableDeletionRuntime(
         windowSeconds: 60,
       });
     },
-    barrierState: (userId) => gateway.barrierState(userId),
+    barrierState: (userId, sessionId) => gateway.barrierState(userId, sessionId),
+    reservePublicationLease: (userId, sessionId, capability) =>
+      gateway.reservePublicationLease({ userId, sessionId, capability }),
+    activatePublicationLease: (userId, sessionId, capability) =>
+      gateway.activatePublicationLease({ userId, sessionId, capability }),
+    renewPublicationLease: (userId, sessionId, capability) =>
+      gateway.renewPublicationLease({ userId, sessionId, capability }),
+    releasePublicationLease: (capability) => gateway.releasePublicationLease(capability),
     async begin(user, request) {
       const plaintext = encodeAppleDeletionPayload(
         createAppleDeletionPayload({
@@ -643,6 +753,7 @@ export async function createDurableDeletionRuntime(
       }
       const result = await gateway.begin({
         userId: user.id,
+        sessionId: user.sessionId,
         idempotencyKey: request.idempotencyKey,
         capability: request.statusCapability,
         operationExpiresAt: new Date(now() + OPERATION_LIFETIME_MS).toISOString(),

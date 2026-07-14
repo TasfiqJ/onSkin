@@ -31,7 +31,7 @@ For containment, stop only the canonical Cron job when continued dispatch
 could worsen harm, keep the lifecycle tables/barriers/receipts/tombstones
 intact, and leave intake fail-closed or temporarily unavailable. Do not restore
 the synchronous deletion implementation, delete lifecycle rows, remove write
-barriers, reuse an old function with migrations `0048`-`0051`, or blindly
+barriers, reuse an old function with migrations `0048`-`0052`, or blindly
 redispatch an ambiguous RevenueCat/PostHog/Apple mutation. Diagnose and roll
 forward; resume the job only after a reviewed `action: work` canary and queue
 reconciliation. A stopped scheduler is itself an incident until continuity is

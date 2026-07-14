@@ -121,7 +121,7 @@
     "phase9:account-deletion-photo-storage-smoke": "deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/account-deletion/photoStorageCleanup.test.ts",
     "phase9:account-provider-deletion-smoke": "deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/account-deletion/providerDeletion.test.ts",
     "phase9:account-service-scrub-smoke": "deno test --no-config --quiet --allow-read=supabase --lock=supabase/functions/deno.lock --frozen=true supabase/functions/account-deletion/serviceRoleCleanup.test.ts",
-    "phase9:account-deletion-durable-smoke": "deno test --no-config --quiet --allow-read=supabase --lock=supabase/functions/deno.lock --frozen=true supabase/functions/account-deletion/*.test.ts",
+    "phase9:account-deletion-durable-smoke": "deno test --no-config --quiet --allow-read=supabase --lock=supabase/functions/deno.lock --frozen=true supabase/functions/_shared/fetch.test.ts supabase/functions/account-deletion/*.test.ts",
     "phase9:account-deletion-work-lane-smoke": "node scripts/phase9/account-deletion-work-lane-smoke.mjs",
     "phase9:order-attribution-integrity-smoke": "deno test --no-config --quiet --lock=supabase/functions/deno.lock --frozen=true supabase/functions/order-report-poll/orderAttributionCore.test.ts",
     "phase9:revenuecat-webhook-atomic-smoke": "deno test --no-config --quiet --allow-read=supabase --lock=supabase/functions/deno.lock --frozen=true supabase/functions/revenuecat-webhook/webhookCore.test.ts",

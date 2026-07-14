@@ -16,7 +16,12 @@ Deno.test('provider network bounds timeout and returns measured JSON', async () 
     now: () => now,
     fetcher(_input, _init, timeoutMs) {
       timeouts.push(timeoutMs);
-      return Promise.resolve(new Response('{"ok":true}', { status: 200 }));
+      return Promise.resolve(
+        new Response('{"ok":true}', {
+          status: 200,
+          headers: { 'retry-after': '120' },
+        }),
+      );
     },
   });
   const response = await network.sendJson(
@@ -27,6 +32,11 @@ Deno.test('provider network bounds timeout and returns measured JSON', async () 
   assert((response.body as { ok: boolean }).ok, 'JSON parsed');
   assert(response.responseBytes === 11, 'raw bytes measured');
   assert(timeouts[0] === 1_234, 'deadline constrains timeout');
+  const revenueCatResponse = await network.execute(
+    { url: 'https://example.test', init: { method: 'GET' } },
+    { deadlineAtMs: now + 5_000 },
+  );
+  assert(revenueCatResponse.retryAfterMs === 120_000, 'Retry-After seconds are bounded');
 });
 
 Deno.test('provider network contains malformed JSON and rejects oversized bodies', async () => {

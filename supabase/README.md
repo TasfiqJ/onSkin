@@ -34,7 +34,10 @@ Functions, and regenerates `packages/types/src/database.types.ts`.
 The first durable account-deletion cutover is an exception: predeploy the new
 fail-closed `account-deletion` function before applying migrations 0048-0051,
 then immediately deploy the complete manifest function set from the same
-revision. Follow
+revision. Migration 0052 is a second hard cutover: freeze deletion intake and
+every legacy/unfenced session or RevenueCat publication producer, prove zero
+active operations/barriers and zero in-flight bypasses, deploy the compatible
+Edge/mobile contract, and reopen only after the reviewed canary. Follow
 `docs/phase-9/account-deletion-operations-runbook.md`; never run migration 0048
 against the old synchronous deletion entrypoint.
 

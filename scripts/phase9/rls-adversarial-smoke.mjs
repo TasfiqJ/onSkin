@@ -48,17 +48,17 @@ const canonicalTables = [
 ];
 
 test('canonical table inventory is exhaustive and duplicate-free', () => {
-  assert.equal(canonicalTables.length, 69);
+  assert.equal(canonicalTables.length, 70);
   assert.equal(OWNER_LINKED_PRIVATE_TABLES.length, 30);
   assert.equal(SERVICE_ONLY_PRIVATE_TABLES.length, 10);
-  assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 6);
-  assert.equal(new Set(canonicalTables).size, 69);
+  assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 7);
+  assert.equal(new Set(canonicalTables).size, 70);
   assert.deepEqual(PRIVATE_PUBLIC_TABLES, [
     ...OWNER_LINKED_PRIVATE_TABLES,
     ...SERVICE_ONLY_PRIVATE_TABLES,
     ...SEALED_SERVICE_PRIVATE_TABLES,
   ]);
-  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 46);
+  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 47);
   assert.deepEqual(
     tableClassificationIssues({
       createdTables: canonicalTables,

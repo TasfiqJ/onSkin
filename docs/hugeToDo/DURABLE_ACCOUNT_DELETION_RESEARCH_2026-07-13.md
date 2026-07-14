@@ -158,6 +158,36 @@ and 404 outcomes. Production still needs RevenueCat's written confirmation of
 alias-family deletion, terminal verification, sandbox/production mapping, and
 whether later App Store renewals recreate a deleted customer.
 
+The implemented v2 worker applies a database-global provider budget keyed by a
+one-way binding of the exact v2 credential. RevenueCat currently documents
+per-minute, per-key/developer domain limits of 480 requests for Customer
+Information and 60 for Project Configuration. The deletion lane uses fixed UTC
+minute budgets of 225 and 25 respectively; even two adjacent full local buckets
+remain below those documented domain limits (450 and 50). The only Project
+Configuration call in this workflow is `GET /v2/projects`; mapping, customer
+reads, and customer deletion are Customer Information calls. A missing quota
+decision fails closed, defers the exact claim by 65 seconds, restores the claim's
+attempt count, and stops the invocation from claiming more work.
+
+Provider `Retry-After` and valid `backoff_ms` values are combined by taking the
+maximum of the local 60-second floor and every response in the current parallel
+batch, with a seven-day safety cap. Malformed retry metadata becomes durable
+operator action instead of an immediate retry. The external-fetch deadline
+remains active through the bounded response-body read or cancellation, not just
+until headers arrive, so a stalled body cannot hold the worker indefinitely.
+
+Full-family reconciliation accepts at most 64 aliases as a local fail-closed
+bound, adds the lookup and canonical customer identities, and probes up to 14
+identities concurrently behind the distributed quota. The maximum locally
+accepted encoded family completes in 60 seconds in the deterministic harness
+when every RevenueCat network wave consumes the enforced ten-second maximum,
+within the 90-second worker budget. The number 64 is **not** represented as a
+RevenueCat-supported alias
+maximum: an overflow becomes `action_required`, and launch still needs written
+provider confirmation or an approved operator procedure. Write-ahead probe state
+also forces database absence observations to reset after an interrupted read;
+no partial or pre-crash family scan can count as a complete absence round.
+
 - [RevenueCat API v1](https://www.revenuecat.com/docs/api-v1)
 - [RevenueCat API v2](https://www.revenuecat.com/docs/api-v2)
 - [RevenueCat webhooks](https://www.revenuecat.com/docs/integrations/webhooks)
@@ -168,6 +198,50 @@ sorted order, discard deleting/deleted candidates, and avoid storing their raw
 IDs in event/audit rows. If all candidates are barred, suppress the event. If a
 transfer contains a barred A and active B, persist only B and strip A from every
 scalar, alias, and transfer field.
+
+#### Session publication and late recreation
+
+An authenticated `preflight=clear` response is not a durable admission grant.
+Its transaction ends before the app publishes the Auth session or calls the
+RevenueCat SDK, so deletion can begin in that interval. Supabase documents that
+each user access token carries a `session_id` corresponding to
+`auth.sessions`, and that checking this row is the stronger way to reject a JWT
+after sign-out. The publication protocol therefore binds a memory-only random
+capability to both the verified JWT subject and that verified session ID:
+
+- [Supabase sessions and post-sign-out session checks](https://supabase.com/docs/guides/auth/sessions)
+- [Supabase JWT claims](https://supabase.com/docs/guides/auth/jwt-fields)
+
+Reservation, activation, renewal, release, and deletion intake serialize only
+their database transitions under the same transaction-scoped account advisory
+lock. No database lock is held across a provider request. Deletion closes new
+reservations, freezes active lease deadlines, waits for every cooperating
+client to release or expire, then applies a deterministic settling interval and
+requires two fresh full-family absence rounds separated by database time:
+
+- [PostgreSQL advisory-lock semantics](https://www.postgresql.org/docs/current/explicit-locking.html#ADVISORY-LOCKS)
+- [Supabase database-function security](https://supabase.com/docs/guides/database/functions)
+
+This fence controls current cooperating OnSkin clients and the deletion worker;
+it is not a RevenueCat-side tombstone. RevenueCat documents that configuring
+without an App User ID creates an anonymous customer, `logIn()` can create a
+missing custom identity, `logOut()` creates a new anonymous identity, cached or
+offline work can later upload, and a deleted customer may be recreated. Its
+documented permanent blocking control is dashboard-oriented, limited, and
+warned against for legitimate subscribers. Consequently, neither the source
+lease nor a five-minute settling value proves permanent non-reappearance:
+
+- [RevenueCat customer identification](https://www.revenuecat.com/docs/customers/identifying-customers)
+- [RevenueCat caching behavior](https://www.revenuecat.com/docs/test-and-launch/debugging/caching)
+- [RevenueCat offline entitlements](https://www.revenuecat.com/docs/customers/customer-info#offline-entitlements)
+- [RevenueCat account-deletion engineering guidance](https://www.revenuecat.com/blog/engineering/app-store-account-deletion)
+- [RevenueCat customer blocking](https://www.revenuecat.com/docs/customers/blocking-customers)
+
+Release still requires written RevenueCat confirmation or an approved
+continuing detect-and-redelete control for stale/tampered binaries, queued store
+activity, aliases, and anonymous identities. Privacy/legal review must approve
+the retention and operational treatment. The code and this memo do not claim
+that provider approval, legal compliance, or App Review acceptance has occurred.
 
 ### Sign in with Apple
 

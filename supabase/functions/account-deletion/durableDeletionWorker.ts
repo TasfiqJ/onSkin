@@ -36,7 +36,9 @@ export type AccountDeletionStepExecutor = (
 ) => Promise<void>;
 
 export type AccountDeletionWorkerGateway = {
+  reapExpiredPublicationLeases: (limit: number) => Promise<void>;
   claimNext: (claimMode: AccountDeletionClaimMode) => Promise<AccountDeletionClaim | null>;
+  deferProviderCapacity: (claim: AccountDeletionClaim) => Promise<void>;
   listReadyToFinalize: (limit: number) => Promise<ReadyAccountDeletion[]>;
   finalize: (candidate: ReadyAccountDeletion) => Promise<void>;
   purgeExpiredArtifacts: (limit: number) => Promise<void>;
@@ -57,6 +59,18 @@ export class DurableDeletionWorkerError extends Error {
   ) {
     super(code);
     this.name = 'DurableDeletionWorkerError';
+  }
+}
+
+/**
+ * Signals invocation-wide provider capacity exhaustion. Unlike a generic
+ * executor failure, the worker must stop claiming more rows so it does not
+ * spend retry attempts while a shared provider-key budget is unavailable.
+ */
+export class AccountDeletionWorkerCapacityError extends Error {
+  constructor(public readonly code: 'DELETION_WORKER_PROVIDER_CAPACITY_EXHAUSTED') {
+    super(code);
+    this.name = 'AccountDeletionWorkerCapacityError';
   }
 }
 
@@ -93,6 +107,8 @@ function validOptions(options: unknown): options is {
     !isRecord(options.gateway) ||
     !isRecord(options.executors) ||
     typeof options.gateway.claimNext !== 'function' ||
+    typeof options.gateway.reapExpiredPublicationLeases !== 'function' ||
+    typeof options.gateway.deferProviderCapacity !== 'function' ||
     typeof options.gateway.listReadyToFinalize !== 'function' ||
     typeof options.gateway.finalize !== 'function' ||
     typeof options.gateway.purgeExpiredArtifacts !== 'function' ||
@@ -149,6 +165,20 @@ export async function runAccountDeletionWorker(options: {
   let nextMode: AccountDeletionClaimMode = 'reconcile';
   let consecutiveEmptyLanes = 0;
 
+  // Publication expiry is a safety-critical liveness gate, not optional tail
+  // housekeeping. Run it before provider claims so a saturated queue cannot
+  // indefinitely starve deletion operations waiting only for lease drain.
+  if (options.now() < options.deadlineAtMs) {
+    try {
+      await options.gateway.reapExpiredPublicationLeases(options.maintenanceBatchSize);
+    } catch {
+      report.maintenanceFailed = true;
+    }
+  } else {
+    report.deadlineReached = true;
+    return report;
+  }
+
   while (report.claimsProcessed < options.maxClaims) {
     if (options.now() >= options.deadlineAtMs) {
       report.deadlineReached = true;
@@ -175,7 +205,15 @@ export async function runAccountDeletionWorker(options: {
     report.claimsProcessed += 1;
     try {
       await executor(claim, { deadlineAtMs: options.deadlineAtMs });
-    } catch {
+    } catch (error) {
+      if (error instanceof AccountDeletionWorkerCapacityError) {
+        try {
+          await options.gateway.deferProviderCapacity(claim);
+        } catch {
+          report.executorFailures += 1;
+        }
+        break;
+      }
       report.executorFailures += 1;
     }
   }

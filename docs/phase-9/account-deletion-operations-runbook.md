@@ -3,12 +3,13 @@
 Date: 2026-07-13
 Status: bounded source checkpoint; live staging, production, provider,
 physical-iPhone, privacy/security-review, and App Review evidence is still
-required. The preflight-to-session/provider publication fence described below
-is also an open source release blocker, so this document does not claim the
-overall lifecycle is race-free or source-complete.
+required. Migration `20260713000052` now supplies the database publication
+fence, exact-session intake boundary, and deterministic PostgreSQL rehearsal;
+compatible Edge/mobile deployment and reviewed residual-risk controls remain
+release blockers, so this document does not claim production readiness.
 
 This runbook operates the durable account-deletion lifecycle introduced by
-migrations `20260713000048` through `20260713000051`. It does not establish
+migrations `20260713000048` through `20260713000052`. It does not establish
 legal compliance, vendor acceptance, Apple approval, or production readiness.
 
 ## Runtime model
@@ -94,53 +95,70 @@ state, or timestamp is returned. Do not release a mobile build using this
 contract before the Edge function and migration `0048` RPC are deployed
 coherently.
 
-### Open session-publication fence
+### Session/provider publication fence
 
-The current authenticated `preflight` is a fail-closed check, but its database
-transaction and account advisory lock end before the client publishes the
-Supabase session and configures or logs in to RevenueCat. Deletion can begin in
-that interval. A stale `clear` result therefore cannot prove that provider
-publication is still admitted, and a late RevenueCat SDK request could recreate
-a customer after the worker observed absence. This is a release blocker, not a
-live-evidence omission.
+Migration `20260713000052_account_publication_fence.sql` adds the bounded
+database half of the publication protocol under the existing per-account
+advisory lock. Reserve is bound to an exact live `auth.sessions(id,user_id)` row
+and a client-generated 256-bit in-memory capability whose digest alone is
+stored. Activation occurs immediately before publication and grants at most a
+60-second server-clock authority window. Renewal grants a fresh 60-second
+window only while the same Auth session remains live and no deletion barrier
+exists. At most eight live authorities are admitted per account.
 
-The next bounded source slice must add a two-phase, server-serialized
-publication lease under the same per-account lock:
+Deletion intake atomically removes reservations and changes active leases to
+non-renewable `draining` state without extending their existing deadline. Local
+photo/service erasure may begin after every authority has ended and exact drain
+metadata is persisted; it need not wait for RevenueCat's settling interval.
+Local erasure must never run while a reserved, active, or unexpired draining
+authority remains. RevenueCat deletion/reconciliation remains blocked until the
+exact latest authority deadline, a further five-minute settling interval, and
+two full-family absence observations under distinct worker claims separated by
+at least 60 seconds. One observation RPC call attests one complete family scan
+under its current CAS-valid claim; identity-level partial scans must never be
+combined across claims. Presence resets the observation sequence.
 
-1. reserve a short-lived, owner-authenticated publication capability;
-2. activate it immediately before session publication;
-3. require the active lease for every RevenueCat operation and renew only while
-   no deletion barrier exists;
-4. have deletion intake cancel reservations and drain active leases without
-   allowing their deadline to extend;
-5. release only after local provider work has stopped and identity reset has
-   completed; and
-6. keep the worker and finalization blocked through lease expiry plus a
-   provider settling interval, with repeated absence checks before completion.
+Begin intake, intake rate consumption, and preflight now require the exact live
+Auth session in addition to the canonical user. Missing or mismatched sessions
+fail with SQLSTATE `28000` and exact
+`ACCOUNT_DELETION_SESSION_REJECTED` before their protected mutation. The old
+user-only begin/preflight signatures no longer exist, and the five-argument
+rate-limit overload rejects account-deletion intake. Capability-only publication
+release is intentionally non-enumerating and remains usable after Auth hard
+deletion so a client can close a draining authority without a bearer.
 
-The lease table must be sealed behind narrow service-role RPCs, retain drain
-evidence across Auth hard deletion, store only a digest of a client-generated
-256-bit in-memory capability, and expose no user, operation, provider, or timing
-details to the client. Deterministic PostgreSQL concurrency tests must cover
-reserve/begin/activate and renew/begin lock order, multi-device drain, hard
-deletion, finalization denial, privilege denial, and retention. Mobile tests
-must cover backgrounding, process death, configure-in-flight, reset failure,
-lost release, and every RevenueCat wrapper failing closed without a matching
-lease.
+`account_publication_leases` is forced-RLS and sealed from direct access,
+including `service_role`; only narrow security-definer RPCs are granted.
+Unattached lease rows are deleted on release/expiry. Drain rows are removed as
+soon as their exact authority end is folded into operation metadata, preserving
+the safety proof without retaining session/account/capability data longer than
+needed. The PostgreSQL 15/17 rehearsal covers stale and mismatched sessions,
+legacy signature denial, reserve/begin/activate and renew/begin lock ordering,
+multi-device drain, Auth deletion, capability-only release, direct privilege
+denial, unequal lost-lease deadlines, settling, and two-claim absence proof.
 
-Even that protocol governs only updated compliant clients. RevenueCat's public
+The database protocol is not permission to ship the flow by itself. Mobile
+tests must still cover backgrounding, process death, configure-in-flight,
+identity-reset failure, lost release, and every RevenueCat wrapper failing
+closed without a matching active lease. Hosted staging must prove the exact
+candidate Edge/mobile build uses every session-bound RPC and that no provider
+publication path bypasses the lease.
+
+Even this protocol governs only updated compliant clients. RevenueCat's public
 SDK accepts caller-selected App User IDs, so old or tampered binaries may still
 recreate a deleted identifier. A finite settling interval cannot be described
 as mathematical prevention without a documented provider bound. Provider-side
-blocking or a continuing detect-and-redelete control requires written
-RevenueCat approval, privacy/legal review, and sandbox evidence before it can be
-accepted as the production residual-risk control.
+blocking, an enforceable mandatory-version gate, or a continuing
+detect-and-redelete control requires written RevenueCat approval where
+applicable, privacy/legal review, and sandbox evidence before it can be accepted
+as the production residual-risk control. Without one of those reviewed controls,
+old/tampered-client recreation remains a launch blocker.
 
 `EdgeRuntime.waitUntil` starts a best-effort worker after accepted intake, but
 it is only a latency optimization. Supabase documents runtime ceilings and
 local instance termination after a response; therefore the separately
 authenticated Cron `work` lane is authoritative. Each invocation has a
-20-second application budget, at most 20 claims, a 20-row finalization batch,
+90-second application budget, at most 20 claims, a 20-row finalization batch,
 and a 100-row maintenance batch. Database leases and account advisory locks,
 not the scheduler, prevent unsafe concurrent mutation.
 
@@ -242,6 +260,49 @@ them so staging and production never depend on that fallback.
 account-deletion provider-body limit; deletion responses are independently
 capped at 16,384 bytes in source.
 
+### RevenueCat capacity, retry, and full-family bounds
+
+RevenueCat documents independent v2 rate-limit domains, including 480 requests
+per minute for Customer Information and 60 per minute for Project
+Configuration, applied per API key or developer as applicable. The deletion
+runtime therefore uses the database, not one Edge process, to enforce fixed UTC
+minute budgets keyed by a one-way credential binding:
+
+| RevenueCat domain | Deletion-lane budget | Workflow calls |
+| ----------------- | -------------------- | -------------- |
+| Customer Information | 225/minute | customer mapping, lookup, reconciliation, and deletion |
+| Project Configuration | 25/minute | `GET /v2/projects` project attestation |
+
+These values deliberately keep two adjacent full local buckets below the
+documented provider limits: 450 is below 480 and 50 is below 60. They are a
+local safety reserve, not a promise that RevenueCat will always grant those
+limits. Preserve and monitor RevenueCat's returned rate-limit headers. If the
+database cannot grant a permit, the worker defers the exact claim for 65
+seconds, restores the just-acquired attempt, stops claiming more rows, and never
+sends the unmetered provider call.
+
+For `423`, `429`, `503`, or another typed retryable response, scheduling uses
+the greatest of the local 60-second floor, a valid `Retry-After` header, and
+valid `backoff_ms` from every response in the current parallel batch, capped at
+seven days. A DELETE response remains ambiguous and read-only reconciliation
+resumes after that delay; the DELETE is not redispatched. Invalid retry metadata
+moves the step to operator action. `EDGE_EXTERNAL_FETCH_TIMEOUT_MS` covers the
+complete bounded body read/cancel path after headers as well as the initial
+fetch. Apple and PostHog may use the configured value up to 30 seconds;
+RevenueCat requests are additionally capped at ten seconds so a complete
+accepted family has a provable single-claim bound.
+
+One reconciliation claim permits at most 70 RevenueCat calls and probes at most
+14 customer identities concurrently. The locally accepted family is bounded
+at 64 aliases plus lookup/canonical IDs. The deterministic maximum-family test
+finishes in 60 seconds when every RevenueCat network wave consumes the enforced
+ten-second maximum, inside the 90-second worker budget. This is a tested
+application bound, **not** a provider-published alias maximum. Alias overflow is fail-closed
+`action_required`; written RevenueCat confirmation or a reviewed manual
+procedure is still required before production deletion can be called complete.
+An interrupted provider scan leaves a write-ahead marker that resets database
+absence evidence before another read, so partial scans cannot be combined.
+
 ## Key generation and secret loading
 
 Generate every 32-byte value independently in an approved secret manager or a
@@ -261,41 +322,83 @@ work-lane probe.
 Run this sequence on staging first from one frozen clean revision. Production
 requires a separate authorization and evidence set.
 
+Migration 0052 is a hard cutover, not an online backfill. Before applying it,
+freeze both deletion intake **and every legacy or unfenced producer that can
+publish a Supabase session or RevenueCat identity**. This includes old mobile
+builds, background/restore paths, configure/log-in/restore/purchase calls,
+support/admin tools, and test automation. Wait at least the reviewed maximum
+old-request/SDK propagation window plus the selected provider settling window;
+if those bounds cannot be established with evidence, the cutover is blocked.
+Then prove all of the following from database state, application/Edge telemetry,
+device telemetry, and RevenueCat evidence:
+
+- zero `account_deletion_operations` rows and zero
+  `account_deletion_barriers` rows;
+- zero in-flight legacy session-publication or RevenueCat requests;
+- zero reachable producer paths that bypass reserve/activate/renew/release; and
+- a compatible Edge/mobile candidate is ready to deploy and can be held closed
+  until post-migration verification passes.
+
+The migration takes `ACCESS EXCLUSIVE` locks on both deletion tables and aborts
+with exact `ACCOUNT_PUBLICATION_FENCE_REQUIRES_ZERO_ACTIVE_DELETIONS` if either
+contains a row. Do not delete a real operation to satisfy this assertion, do
+not invent a `publication_drained_at` value, and do not synthesize historical
+drain/settling/absence evidence. Finish or honestly contain every operation,
+repeat the freeze proof, and only then retry the migration.
+
 1. Record the revision, project ref, existing function versions, migration
    state, backup/PITR posture, incident owner, and rollback owner. Confirm all
    required Edge secrets by **name only**.
-2. Run local Deno checks/tests, migrations 0048-0051 rehearsals on supported
+2. Run local Deno checks/tests, migrations 0048-0052 rehearsals on supported
    PostgreSQL versions, the Phase 2 env smoke, Edge manifest checks, policy
    lint, and the account-deletion work-lane smoke.
-3. Deploy the new `account-deletion` function **before** migration 0048. Until
-   its RPCs exist it fails intake/work closed with `503`; this short maintenance
-   error is safer than allowing the old synchronous function to run against the
-   new lifecycle schema.
-4. Apply, without reordering or skipping:
+3. If migrations 0048-0051 are not already installed, deploy the durable
+   `account-deletion` function **before** migration 0048. Until its RPCs exist it
+   fails intake/work closed with `503`; this short maintenance error is safer
+   than allowing the old synchronous function to run against the new lifecycle
+   schema.
+4. Apply the base lifecycle, without reordering or skipping:
    `20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql`,
    `20260713000049_revenuecat_deletion_barrier_guard.sql`,
    `20260713000050_service_writer_deletion_barriers.sql`, then
    `20260713000051_revenuecat_identity_tombstones.sql`.
-5. Immediately deploy every `deployByDefault` function from the same revision.
+5. Establish and retain the 0052 cutover freeze/evidence above. Predeploy the
+   compatible `account-deletion` Edge function while the freeze is active; its
+   new session-bound RPC calls may fail closed until the schema lands.
+6. Apply `20260713000052_account_publication_fence.sql` exactly once. Confirm
+   the old user-only begin/preflight signatures are absent, legacy five-argument
+   intake fails, and the new session-bound RPC ACLs are service-only.
+7. Immediately deploy every `deployByDefault` function from the same revision.
    At minimum this coherently updates `account-deletion`,
    `revenuecat-webhook`, `subscription-grants`, `catalog-report`, and the
    rate-limit-owning user functions. Revoked direct writer privileges make old
    writer code fail closed during this bounded window.
-6. Re-run function boot, negative auth, RLS/policy, provider-shape, and database
-   rehearsal checks against staging. Do not provision Cron while boot or auth
-   is failing.
-7. In the private Supabase Vault UI, create exactly one secret named
+8. Re-run function boot, exact-session negative auth, RLS/policy,
+   provider-shape, database concurrency, process-death/lost-release, and
+   configure-in-flight checks against staging. Keep both freezes in force.
+9. Deploy the compatible mobile candidate only to the controlled staging
+   cohort. Prove every RevenueCat entry point requires an active lease and that
+   release succeeds capability-only after Auth deletion. Do not reopen legacy
+   clients through a compatibility bypass.
+10. Re-run function boot, negative auth, RLS/policy, provider-shape, and database
+    rehearsal checks against staging. Do not provision Cron while boot or auth
+    is failing.
+11. In the private Supabase Vault UI, create exactly one secret named
    `account_deletion_project_url` containing the exact hosted project origin,
    and exactly one `account_deletion_worker_secret` containing the same value
    as the Edge worker secret. Do not put either value in the SQL file.
-8. Run `supabase/ops/account-deletion-work-lane.sql` as the project Postgres
+12. Run `supabase/ops/account-deletion-work-lane.sql` as the project Postgres
    owner. It validates Vault, replaces only the canonical named job, and
-   schedules `{"action":"work"}` every minute with a 30-second `pg_net`
-   timeout.
-9. Prove a missing and a fake worker header return `401`, then observe a
+   schedules `{"action":"work"}` every two minutes with a 110-second
+   `pg_net` timeout. The two-minute cadence leaves a ten-second margin after
+   the timeout before the next enqueue; the 90-second worker budget remains
+   below both the 120-second database claim lease and Supabase's documented
+   150-second free-plan wall-clock/request-idle limit.
+13. Prove a missing and a fake worker header return `401`, then observe a
    Vault-backed run return `200` with `status=worked`. Never paste the real
    worker secret into a retained transcript.
-10. Execute an authorized disposable staging deletion through `begin`,
+14. While general intake remains frozen, execute one explicitly authorized
+    disposable staging canary through `begin`,
     authenticated `preflight`, and capability-only `status`, including clear
     before intake, active after intake, direct-RPC privilege denial, stale Auth
     rejection, provider delay/reconciliation, second-device relaunch, terminal
@@ -303,10 +406,14 @@ requires a separate authorization and evidence set.
     attempts. Verify no candidate session or RevenueCat identity publishes
     while the barrier is active, plus zero database, Storage, provider, and
     account-derived rate-limit residue.
+15. Only after the full freeze proof and canary remain clean may deletion intake
+    and compliant publication producers reopen. If a legacy/unfenced build can
+    still reach RevenueCat, keep the production gate closed.
 
 The existing staging wrapper pushes all pending migrations before deploying
-functions. For this lifecycle cutover, step 3 is a mandatory manual predeploy;
-do not run the wrapper alone against an old account-deletion deployment.
+functions. For a fresh lifecycle install, step 3 is a mandatory manual
+predeploy; for the 0052 hard cutover, step 5 and the freeze are mandatory. Do
+not run the wrapper alone against an old account-deletion deployment.
 
 ## Scheduler verification
 
@@ -489,9 +596,10 @@ expected; active operations remain durable.
 - A missing/wrong worker secret, invalid startup configuration, unavailable
   provider, or failed RPC returns `401`/`503` or records a retry/action-required
   state. It must never return deletion success.
-- Do not drop migrations 0048-0051, barriers, operations, receipts, recovery
-  audit, or RevenueCat tombstones during rollback. Do not restore the old
-  synchronous account-deletion function after migration 0048.
+- Do not drop migrations 0048-0052, publication-drain metadata, leases,
+  barriers, operations, receipts, recovery audit, or RevenueCat tombstones
+  during rollback. Do not restore the old synchronous or user-only-session
+  account-deletion function after migration 0048/0052.
 - Preserve the status endpoint and mobile recovery capability. If the function
   must be replaced, roll forward with a compatible build that can reconcile
   every existing step state.
@@ -562,10 +670,11 @@ case returning only `{ "status": "active", "ownerSubject": "<authenticated UUID>
 synthetic Auth user is deleted while its old token is replayed. Unknown fields,
 operation identifiers, capabilities, phases, and timestamps are forbidden in
 the response. The destructive data-rights run separately proves active-barrier
-and terminal lifecycle behavior. It cannot close the open
-preflight-to-publication source race; the publication-lease implementation must
-land first, after which reviewed multi-device race evidence remains an external
-gate.
+and terminal lifecycle behavior. Migration 0052 closes the bounded database
+race in source, but this packet alone cannot prove the Edge/mobile candidate
+uses the lease around every real RevenueCat publication path. Reviewed
+multi-device, process-death, configure-in-flight, lost-release, exact-session,
+and provider-reappearance evidence remains an external gate.
 
 - hosted Supabase reset/migration, RLS, Storage, Cron/Vault, lease concurrency,
   function limit, and failure-injection evidence in staging and production;
@@ -604,6 +713,5 @@ gate.
 - [RevenueCat: SDK configuration](https://www.revenuecat.com/docs/getting-started/configuring-sdk)
 - [RevenueCat: Blocking customers](https://www.revenuecat.com/docs/customers/blocking-customers)
 - [RevenueCat: Customer-profile deletion](https://www.revenuecat.com/docs/dashboard-and-metrics/customer-profile)
-- [RevenueCat: REST API v2](https://www.revenuecat.com/docs/api-v2)
 - [RevenueCat: REST API v2](https://www.revenuecat.com/docs/api-v2)
 - [Apple TN3194: Account deletion and Sign in with Apple token revocation](https://developer.apple.com/documentation/technotes/tn3194-handling-account-deletions-and-revoking-tokens-for-sign-in-with-apple)

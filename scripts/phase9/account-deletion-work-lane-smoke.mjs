@@ -50,15 +50,15 @@ assert(
   'Provisioning must validate first, then replace the named job idempotently before scheduling it.',
 );
 assert(
-  sql.includes("'account-deletion-work-lane'") && sql.includes("'* * * * *'"),
-  'The durable worker must run every minute under the canonical job name.',
+  sql.includes("'account-deletion-work-lane'") && sql.includes("'*/2 * * * *'"),
+  'The durable worker must run every two minutes under the canonical job name.',
 );
 assert(
   sql.includes("'/functions/v1/account-deletion'") &&
     sql.includes("'x-account-deletion-worker-secret'") &&
     sql.includes(`body := '{"action":"work"}'::jsonb`) &&
-    sql.includes('timeout_milliseconds := 30000'),
-  'Cron must call the exact work action with the dedicated header and a timeout beyond the 20-second worker budget.',
+    sql.includes('timeout_milliseconds := 110000'),
+  'Cron must call the exact work action with the dedicated header and a 110-second timeout beyond the 90-second worker budget.',
 );
 assert(
   !/['"](?:Authorization|apikey)['"]/i.test(sql) &&

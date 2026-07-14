@@ -11,6 +11,7 @@ import {
   loadDeletionReceiptHmacKey,
   parseAccountDeletionRequest,
   validDeletionResultCode,
+  verifiedAuthSessionClaimsFromJwt,
 } from './durableDeletionRuntimeCore.ts';
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -37,6 +38,14 @@ function assertRuntimeError(action: () => unknown, expected: string): void {
 const IDEMPOTENCY = '11'.repeat(32);
 const CAPABILITY = '22'.repeat(32);
 const USER_ID = '11111111-1111-4111-8111-111111111111';
+const LETTER_USER_ID = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+const SESSION_ID = '33333333-3333-4333-8333-333333333333';
+
+function jwt(payload: Record<string, unknown>): string {
+  const encode = (value: Record<string, unknown>) =>
+    btoa(JSON.stringify(value)).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
+  return `${encode({ alg: 'ES256', typ: 'JWT' })}.${encode(payload)}.signature`;
+}
 
 Deno.test('request parser accepts only exact begin/preflight/status/work envelopes', () => {
   assertDeepEqual(parseAccountDeletionRequest({ action: 'preflight' }), { action: 'preflight' });
@@ -64,6 +73,17 @@ Deno.test('request parser accepts only exact begin/preflight/status/work envelop
   assertDeepEqual(parseAccountDeletionRequest({ action: 'work' }), {
     action: 'work',
   });
+  for (const action of [
+    'publication_reserve',
+    'publication_activate',
+    'publication_renew',
+    'publication_release',
+  ] as const) {
+    assertDeepEqual(parseAccountDeletionRequest({ action, capability: CAPABILITY }), {
+      action,
+      capability: CAPABILITY,
+    });
+  }
 });
 
 Deno.test('request parser rejects token reuse, extras, controls, and oversized Apple codes', () => {
@@ -74,6 +94,10 @@ Deno.test('request parser rejects token reuse, extras, controls, and oversized A
     { action: 'preflight', extra: true },
     { action: 'status', capability: CAPABILITY, extra: true },
     { action: 'status', capability: 'AB'.repeat(32) },
+    { action: 'publication_reserve', capability: CAPABILITY, extra: true },
+    { action: 'publication_activate', capability: 'AB'.repeat(32) },
+    { action: 'publication_renew', capability: `${CAPABILITY}0` },
+    { action: 'publication_release' },
     {
       action: 'begin',
       idempotencyKey: CAPABILITY,
@@ -100,6 +124,36 @@ Deno.test('request parser rejects token reuse, extras, controls, and oversized A
   ];
   for (const value of invalid) {
     assertRuntimeError(() => parseAccountDeletionRequest(value), 'DELETION_REQUEST_INVALID');
+  }
+});
+
+Deno.test('verified Auth JWT claims bind canonical subject and session id', () => {
+  assertDeepEqual(
+    verifiedAuthSessionClaimsFromJwt(
+      jwt({ sub: USER_ID, session_id: SESSION_ID, role: 'authenticated' }),
+      USER_ID,
+    ),
+    { subject: USER_ID, sessionId: SESSION_ID },
+  );
+  for (const [token, expectedUserId] of [
+    ['not-a-jwt', USER_ID],
+    ['a.%%%%.c', USER_ID],
+    [jwt({ sub: USER_ID }), USER_ID],
+    [jwt({ sub: USER_ID, session_id: 'not-a-uuid' }), USER_ID],
+    [jwt({ sub: LETTER_USER_ID.toUpperCase(), session_id: SESSION_ID }), LETTER_USER_ID],
+    [
+      jwt({
+        sub: '22222222-2222-4222-8222-222222222222',
+        session_id: SESSION_ID,
+      }),
+      USER_ID,
+    ],
+    [jwt({ sub: LETTER_USER_ID, session_id: SESSION_ID }), LETTER_USER_ID.toUpperCase()],
+  ] as const) {
+    assert(
+      verifiedAuthSessionClaimsFromJwt(token, expectedUserId) === null,
+      'malformed or misbound claims must reject the session',
+    );
   }
 });
 

@@ -25,6 +25,9 @@ const accountDeletionHandler = read(
 const accountDeletionRuntime = read(
   'supabase/functions/account-deletion/durableDeletionRuntime.ts',
 );
+const accountDeletionGateway = read(
+  'supabase/functions/account-deletion/durableDeletionDatabaseGateway.ts',
+);
 const accountDeletionRuntimeCore = read(
   'supabase/functions/account-deletion/durableDeletionRuntimeCore.ts',
 );
@@ -204,11 +207,11 @@ const accountDeletionPreflightIndex = accountDeletionHandler.indexOf(
   "if (parsed.action === 'preflight')",
 );
 const accountDeletionSubjectValidationIndex = accountDeletionHandler.indexOf(
-  'if (!AUTH_USER_ID_PATTERN.test(user.id))',
+  '!AUTH_USER_ID_PATTERN.test(user.id)',
   accountDeletionPreflightIndex,
 );
 const accountDeletionBarrierLookupIndex = accountDeletionHandler.indexOf(
-  'dependencies.barrierState(user.id)',
+  'dependencies.barrierState(user.id, user.sessionId)',
   accountDeletionPreflightIndex,
 );
 block(
@@ -219,6 +222,13 @@ block(
     accountDeletionBarrierLookupIndex > accountDeletionSubjectValidationIndex &&
     /return json\(\{ status, ownerSubject: user\.id \}, 200\)/.test(accountDeletionHandler),
   'account-deletion preflight must validate and return the authenticated subject for clear/active and reserve its lane-specific 401 for authoritative bearer rejection.',
+);
+block(
+  errors,
+  /dependencies\.consumeIntakeRateLimit\(user\.id, user\.sessionId\)/.test(
+    accountDeletionHandler,
+  ) && /p_session_id: input\.sessionId/.test(accountDeletionGateway),
+  'account-deletion rate admission and irreversible begin must retain the verified live-session binding.',
 );
 block(
   errors,

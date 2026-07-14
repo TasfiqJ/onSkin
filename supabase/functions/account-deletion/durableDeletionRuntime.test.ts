@@ -11,10 +11,23 @@ import {
 } from './durableDeletionRuntime.ts';
 
 const USER_ID = '22222222-2222-4222-8222-222222222222';
+const SESSION_ID = '33333333-3333-4333-8333-333333333333';
 const OPERATION_ID = '11111111-1111-4111-8111-111111111111';
 const IDEMPOTENCY = '01'.repeat(32);
 const CAPABILITY = '23'.repeat(32);
 const NOW = Date.parse('2026-07-13T12:00:00.000Z');
+
+function jwt(payload: Record<string, unknown>): string {
+  const encode = (value: Record<string, unknown>) =>
+    btoa(JSON.stringify(value)).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
+  return `${encode({ alg: 'ES256', typ: 'JWT' })}.${encode(payload)}.signature`;
+}
+
+const AUTH_JWT = jwt({
+  sub: USER_ID,
+  session_id: SESSION_ID,
+  role: 'authenticated',
+});
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
@@ -37,6 +50,7 @@ function environment(): Record<string, string> {
 
 class FakeClient implements DurableDeletionRuntimeClient {
   readonly calls: Array<{ name: string; args: Record<string, unknown> }> = [];
+  publicationReserveStatus: 'reserved' | 'session_rejected' = 'reserved';
 
   auth: DurableDeletionRuntimeClient['auth'] = {
     getUser: (_token: string) =>
@@ -93,6 +107,16 @@ class FakeClient implements DurableDeletionRuntimeClient {
         return Promise.resolve({ data: [], error: null });
       case 'get_account_deletion_barrier_state':
         return Promise.resolve({ data: 'clear', error: null });
+      case 'reserve_account_publication_lease':
+        return Promise.resolve({
+          data: [{ status: this.publicationReserveStatus }],
+          error: null,
+        });
+      case 'activate_account_publication_lease':
+      case 'renew_account_publication_lease':
+        return Promise.resolve({ data: [{ status: 'active' }], error: null });
+      case 'release_account_publication_lease':
+        return Promise.resolve({ data: [{ status: 'released' }], error: null });
       case 'claim_next_account_deletion_step':
       case 'list_account_deletions_ready_to_finalize':
         return Promise.resolve({ data: [], error: null });
@@ -112,6 +136,11 @@ class FakeClient implements DurableDeletionRuntimeClient {
       case 'purge_expired_edge_rate_limits':
       case 'purge_expired_revenuecat_identity_tombstones':
         return Promise.resolve({ data: 0, error: null });
+      case 'reap_expired_account_publication_leases':
+        return Promise.resolve({
+          data: [{ leases_closed: 0, operations_drained: 0, leases_purged: 0 }],
+          error: null,
+        });
       default:
         return Promise.reject(new Error(`unexpected RPC:${name}`));
     }
@@ -130,14 +159,24 @@ Deno.test(
       schedule: () => undefined,
     });
     assert(runtime.workerSecret === env.ACCOUNT_DELETION_WORKER_SECRET, 'worker secret');
-    const user = await runtime.authenticate('jwt');
+    const user = await runtime.authenticate(AUTH_JWT);
     assert(
-      user?.id === USER_ID && user.appleLinked && user.appleSubject === 'apple-subject',
+      user?.id === USER_ID &&
+        user.sessionId === SESSION_ID &&
+        user.appleLinked &&
+        user.appleSubject === 'apple-subject',
       'verified Apple user and subject',
     );
-    assert(await runtime.consumeIntakeRateLimit(USER_ID), 'intake rate');
-    assert(await runtime.consumeIntakeRateLimit(USER_ID), 'intake retry rate');
-    assert((await runtime.barrierState(USER_ID)) === 'clear', 'session preflight');
+    assert(await runtime.consumeIntakeRateLimit(USER_ID, SESSION_ID), 'intake rate');
+    assert(await runtime.consumeIntakeRateLimit(USER_ID, SESSION_ID), 'intake retry rate');
+    assert((await runtime.barrierState(USER_ID, SESSION_ID)) === 'clear', 'session preflight');
+    assert(
+      (await runtime.reservePublicationLease(USER_ID, SESSION_ID, CAPABILITY)) === 'reserved' &&
+        (await runtime.activatePublicationLease(USER_ID, SESSION_ID, CAPABILITY)) === 'active' &&
+        (await runtime.renewPublicationLease(USER_ID, SESSION_ID, CAPABILITY)) === 'active' &&
+        (await runtime.releasePublicationLease(CAPABILITY)) === 'released',
+      'publication lease gateway wired',
+    );
     const intakeCalls = client.calls.filter(
       (call) =>
         call.name === 'consume_edge_rate_limit' && call.args.p_scope === 'account-deletion-intake',
@@ -145,6 +184,8 @@ Deno.test(
     assert(intakeCalls.length === 2, 'both owner attempts are counted');
     assert(
       intakeCalls[0].args.p_key_hash === intakeCalls[1].args.p_key_hash &&
+        intakeCalls[0].args.p_session_id === SESSION_ID &&
+        intakeCalls[1].args.p_session_id === SESSION_ID &&
         typeof intakeCalls[0].args.p_key_hash === 'string' &&
         /^[a-f0-9]{64}$/.test(intakeCalls[0].args.p_key_hash),
       'caller-minted idempotency keys cannot select intake buckets',
@@ -152,7 +193,25 @@ Deno.test(
     const barrierCall = client.calls.find(
       (call) => call.name === 'get_account_deletion_barrier_state',
     );
-    assert(barrierCall?.args.p_user_id === USER_ID, 'preflight uses only the verified Auth owner');
+    assert(
+      barrierCall?.args.p_user_id === USER_ID && barrierCall.args.p_session_id === SESSION_ID,
+      'preflight uses the verified Auth owner and live session',
+    );
+    for (const call of client.calls.filter((entry) => entry.name.includes('publication_lease'))) {
+      if (call.name === 'release_account_publication_lease') {
+        assert(
+          Object.keys(call.args).length === 1 && call.args.p_capability === CAPABILITY,
+          'release remains capability-only',
+        );
+      } else {
+        assert(
+          call.args.p_user_id === USER_ID &&
+            call.args.p_session_id === SESSION_ID &&
+            call.args.p_capability === CAPABILITY,
+          'authenticated publication RPC carries verified user/session binding',
+        );
+      }
+    }
     const began = await runtime.begin(user!, {
       action: 'begin',
       idempotencyKey: IDEMPOTENCY,
@@ -165,6 +224,7 @@ Deno.test(
     );
     const beginCall = client.calls.find((call) => call.name === 'begin_account_deletion');
     assert(beginCall !== undefined, 'begin RPC called');
+    assert(beginCall.args.p_session_id === SESSION_ID, 'begin binds the live Auth session');
     const encrypted = beginCall.args.p_apple_encrypted_credential;
     assert(typeof encrypted === 'string' && encrypted.startsWith('\\x'), 'bytea envelope');
     assert(!encrypted.includes('one-time-code'), 'code never plaintext in database call');
@@ -194,6 +254,61 @@ Deno.test(
     assert(
       client.calls.some((call) => call.name === 'purge_expired_revenuecat_identity_tombstones'),
       'tombstone maintenance included',
+    );
+    assert(
+      client.calls.some((call) => call.name === 'reap_expired_account_publication_leases'),
+      'publication lease maintenance included',
+    );
+  },
+);
+
+Deno.test(
+  'runtime rejects malformed or misbound JWT claims after successful Auth verification',
+  async () => {
+    const client = new FakeClient();
+    const env = environment();
+    const runtime = await createDurableDeletionRuntime({
+      client,
+      readEnvironment: (name) => env[name],
+      now: () => NOW,
+      schedule: () => undefined,
+    });
+
+    for (const token of [
+      'malformed-after-get-user',
+      jwt({ sub: USER_ID }),
+      jwt({ sub: USER_ID, session_id: 'not-a-uuid' }),
+      jwt({
+        sub: '44444444-4444-4444-8444-444444444444',
+        session_id: SESSION_ID,
+      }),
+    ]) {
+      assert(
+        (await runtime.authenticate(token)) === null,
+        'verified getUser cannot rescue malformed or misbound session claims',
+      );
+    }
+  },
+);
+
+Deno.test(
+  'runtime preserves database session rejection for signed-out stale JWT binding',
+  async () => {
+    const client = new FakeClient();
+    client.publicationReserveStatus = 'session_rejected';
+    const env = environment();
+    const runtime = await createDurableDeletionRuntime({
+      client,
+      readEnvironment: (name) => env[name],
+      now: () => NOW,
+      schedule: () => undefined,
+    });
+    const user = await runtime.authenticate(AUTH_JWT);
+    assert(user?.sessionId === SESSION_ID, 'JWT session binding extracted');
+    assert(
+      (await runtime.reservePublicationLease(user.id, user.sessionId, CAPABILITY)) ===
+        'session_rejected',
+      'stale signed-out session rejection remains authoritative',
     );
   },
 );
@@ -363,7 +478,7 @@ Deno.test('conflicting Apple subjects force the truthful manual fallback', async
     now: () => NOW,
     schedule: () => undefined,
   });
-  const user = await runtime.authenticate('jwt');
+  const user = await runtime.authenticate(AUTH_JWT);
   assert(
     user?.appleLinked === true && user.appleSubject === null,
     'conflicting subjects are never selected',

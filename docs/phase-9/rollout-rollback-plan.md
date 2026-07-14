@@ -2,8 +2,8 @@
 
 Status: BLOCKED. A real staging rollback drill and production owner evidence
 remain required, and account-deletion user traffic cannot open until the
-publication-fence source blocker, old/tampered-client provider control, and
-live/provider/device/professional gates below are closed.
+publication-fence Edge/mobile evidence, old/tampered-client provider control,
+and live/provider/device/professional gates below are closed.
 
 ## Freeze Rules
 
@@ -40,9 +40,13 @@ Use the exact sequence in
 Edge secrets first, including a RevenueCat REST API v2 key; a legacy V1 key is
 not a deletion credential. Predeploy the new fail-closed `account-deletion`
 function from the frozen SHA, apply migrations `20260713000048` through
-`20260713000051` in exact order, then immediately deploy every default function
+`20260713000052` in exact order, then immediately deploy every default function
 from the same SHA so webhook and service writers honor the new barriers and
-tombstones. Create the two private Vault entries and apply
+tombstones. Migration 0052 is a hard cutover: freeze deletion intake and every
+legacy/unfenced Supabase-session or RevenueCat publication producer, wait the
+reviewed old-request/SDK propagation bound plus provider settlement, prove zero
+operations/barriers/in-flight bypasses, and keep the freeze through compatible
+Edge/mobile deployment and canary verification. Create the two private Vault entries and apply
 `supabase/ops/account-deletion-work-lane.sql` only after the function and schema
 are coherent. Prove missing/wrong/correct worker-secret behavior, one-minute
 Cron continuity, begin/status/receipt recovery, queue/lease/expiry monitoring,
@@ -50,25 +54,24 @@ and provider-negative paths before exercising authorized internal staging
 fixtures. `EdgeRuntime.waitUntil` is only an accelerator and cannot satisfy the
 scheduler gate.
 
-This `0048`-`0051` sequence is a bounded staging/internal checkpoint; it does
-not authorize release-candidate or user traffic. `preflight=clear` currently
-releases the account lock before Supabase session publication and RevenueCat
-configuration. Migration `0052` must add the two-phase publication lease and
-worker drain/settling gate, every mobile RevenueCat publication path must fail
-closed without that lease, and terminal provider proof must include settling
-plus repeated absence. RevenueCat must also approve a blocking or continuing
-re-deletion control for old or tampered clients that can bypass the updated
-binary. Only after those source controls and the runbook's hosted,
+This `0048`-`0052` sequence is a bounded staging/internal checkpoint; it does
+not authorize release-candidate or user traffic. Migration 0052 supplies the
+sealed two-phase publication lease, exact-session intake/preflight, atomic
+worker drain, five-minute settling gate, and two claim-distinct absence rounds
+in database source. Every mobile RevenueCat publication path must still prove
+it fails closed without that lease. RevenueCat/provider owners must also approve
+a blocking control, enforceable mandatory-version gate, or continuing
+re-deletion control for old/tampered clients that can bypass the updated binary.
+Only after those client/live controls and the runbook's hosted,
 provider-recreation, physical-iPhone, privacy/security/legal, and App Review
 gates pass may traffic opening be considered under the general rollout above.
 
 This cutover is roll-forward only. If provider dispatch may be unsafe,
 unschedule only the canonical work job and preserve operations, barriers,
 encrypted step state, receipts, recovery audit, and RevenueCat tombstones.
-Never reverse migrations `0048`-`0051`, deploy the old synchronous function,
+Never reverse migrations `0048`-`0052`, deploy the old synchronous/user-only-session function,
 drop barriers to unblock clients, or rotate away the only payload key while
-live encrypted steps remain. Once migration `0052` lands, it is covered by the
-same roll-forward-only rule. Re-enable work after the repaired same-schema
+live encrypted steps remain. Re-enable work after the repaired same-schema
 function passes a reviewed canary and ambiguous operations are reconciled; that
 worker recovery does not itself authorize user traffic.
 

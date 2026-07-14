@@ -3,6 +3,7 @@ import { contentLengthTooLarge, readLimitedJson } from '../_shared/body.ts';
 import { mapPublicDeletionStatus, type PublicDeletionStatusLookup } from './durableDeletionCore.ts';
 import {
   type AccountDeletionBeginRequest,
+  type AccountPublicationLeaseAction,
   constantTimeEqual,
   parseAccountDeletionRequest,
 } from './durableDeletionRuntimeCore.ts';
@@ -14,17 +15,42 @@ const AUTH_USER_ID_PATTERN =
 
 export type DeletionAuthenticatedUser = {
   id: string;
+  sessionId: string;
   appleLinked: boolean;
   appleSubject: string | null;
 };
+
+export type AccountPublicationLeaseRpcStatus =
+  | 'reserved'
+  | 'active'
+  | 'released'
+  | 'blocked'
+  | 'session_rejected'
+  | 'lease_rejected';
 
 export type DurableDeletionHttpDependencies = {
   workerSecret: string;
   maxBodyBytes: number;
   authenticate: (bearer: string) => Promise<DeletionAuthenticatedUser | null>;
-  consumeIntakeRateLimit: (userId: string) => Promise<boolean>;
+  consumeIntakeRateLimit: (userId: string, sessionId: string) => Promise<boolean>;
   consumeStatusRateLimit: (capability: string) => Promise<boolean>;
-  barrierState: (userId: string) => Promise<'clear' | 'active'>;
+  barrierState: (userId: string, sessionId: string) => Promise<'clear' | 'active'>;
+  reservePublicationLease: (
+    userId: string,
+    sessionId: string,
+    capability: string,
+  ) => Promise<AccountPublicationLeaseRpcStatus>;
+  activatePublicationLease: (
+    userId: string,
+    sessionId: string,
+    capability: string,
+  ) => Promise<AccountPublicationLeaseRpcStatus>;
+  renewPublicationLease: (
+    userId: string,
+    sessionId: string,
+    capability: string,
+  ) => Promise<AccountPublicationLeaseRpcStatus>;
+  releasePublicationLease: (capability: string) => Promise<AccountPublicationLeaseRpcStatus>;
   begin: (
     user: DeletionAuthenticatedUser,
     request: AccountDeletionBeginRequest,
@@ -76,12 +102,58 @@ function validDependencies(value: DurableDeletionHttpDependencies): boolean {
     typeof value.consumeIntakeRateLimit === 'function' &&
     typeof value.consumeStatusRateLimit === 'function' &&
     typeof value.barrierState === 'function' &&
+    typeof value.reservePublicationLease === 'function' &&
+    typeof value.activatePublicationLease === 'function' &&
+    typeof value.renewPublicationLease === 'function' &&
+    typeof value.releasePublicationLease === 'function' &&
     typeof value.begin === 'function' &&
     typeof value.status === 'function' &&
     typeof value.accelerate === 'function' &&
     typeof value.runWorker === 'function' &&
     typeof value.schedule === 'function'
   );
+}
+
+function publicationSessionRejected(): Response {
+  return json({ error: 'ACCOUNT_PUBLICATION_SESSION_REJECTED' }, 401);
+}
+
+function deletionSessionRejected(): Response {
+  return json({ error: 'ACCOUNT_DELETION_SESSION_REJECTED' }, 401);
+}
+
+function isDeletionSessionRejected(error: unknown): boolean {
+  return (
+    error !== null &&
+    typeof error === 'object' &&
+    'code' in error &&
+    error.code === 'DELETION_DATABASE_SESSION_REJECTED'
+  );
+}
+
+function publicationLeaseResponse(
+  action: AccountPublicationLeaseAction,
+  status: AccountPublicationLeaseRpcStatus,
+): Response {
+  if (action === 'publication_release') {
+    return status === 'released'
+      ? json({ status: 'released' }, 200)
+      : json({ error: 'ACCOUNT_PUBLICATION_UNAVAILABLE' }, 503);
+  }
+  const expectedSuccess = action === 'publication_reserve' ? 'reserved' : 'active';
+  if (status === expectedSuccess) return json({ status }, 200);
+  if (status === 'session_rejected') return publicationSessionRejected();
+  if (status === 'blocked') return json({ error: 'ACCOUNT_DELETION_ACTIVE' }, 409);
+  if (status === 'lease_rejected') {
+    return json({ error: 'ACCOUNT_PUBLICATION_LEASE_REJECTED' }, 409);
+  }
+  return json({ error: 'ACCOUNT_PUBLICATION_UNAVAILABLE' }, 503);
+}
+
+function isAuthenticatedPublicationAction(
+  action: AccountPublicationLeaseAction,
+): action is Exclude<AccountPublicationLeaseAction, 'publication_release'> {
+  return action !== 'publication_release';
 }
 
 function scheduleAcceleration(
@@ -176,8 +248,26 @@ export function createDurableDeletionHttpHandler(
       }
     }
 
+    if (parsed.action === 'publication_release') {
+      try {
+        return publicationLeaseResponse(
+          parsed.action,
+          await dependencies.releasePublicationLease(parsed.capability),
+        );
+      } catch {
+        return json({ error: 'ACCOUNT_PUBLICATION_UNAVAILABLE' }, 503);
+      }
+    }
+
     const token = bearerToken(request);
     if (token === null) {
+      if (
+        parsed.action === 'publication_reserve' ||
+        parsed.action === 'publication_activate' ||
+        parsed.action === 'publication_renew'
+      ) {
+        return publicationSessionRejected();
+      }
       return json(
         {
           error:
@@ -190,9 +280,23 @@ export function createDurableDeletionHttpHandler(
     try {
       user = await dependencies.authenticate(token);
     } catch {
+      if (
+        parsed.action === 'publication_reserve' ||
+        parsed.action === 'publication_activate' ||
+        parsed.action === 'publication_renew'
+      ) {
+        return json({ error: 'ACCOUNT_PUBLICATION_UNAVAILABLE' }, 503);
+      }
       return json({ error: 'ACCOUNT_DELETION_UNAVAILABLE' }, 503);
     }
     if (user === null) {
+      if (
+        parsed.action === 'publication_reserve' ||
+        parsed.action === 'publication_activate' ||
+        parsed.action === 'publication_renew'
+      ) {
+        return publicationSessionRejected();
+      }
       return json(
         {
           error:
@@ -202,23 +306,64 @@ export function createDurableDeletionHttpHandler(
       );
     }
 
+    if (
+      parsed.action === 'publication_reserve' ||
+      parsed.action === 'publication_activate' ||
+      parsed.action === 'publication_renew'
+    ) {
+      try {
+        if (!AUTH_USER_ID_PATTERN.test(user.id) || !AUTH_USER_ID_PATTERN.test(user.sessionId)) {
+          return publicationSessionRejected();
+        }
+        const action: AccountPublicationLeaseAction = parsed.action;
+        if (!isAuthenticatedPublicationAction(action)) {
+          return json({ error: 'ACCOUNT_PUBLICATION_UNAVAILABLE' }, 503);
+        }
+        const status =
+          action === 'publication_reserve'
+            ? await dependencies.reservePublicationLease(user.id, user.sessionId, parsed.capability)
+            : action === 'publication_activate'
+              ? await dependencies.activatePublicationLease(
+                  user.id,
+                  user.sessionId,
+                  parsed.capability,
+                )
+              : await dependencies.renewPublicationLease(
+                  user.id,
+                  user.sessionId,
+                  parsed.capability,
+                );
+        return publicationLeaseResponse(action, status);
+      } catch {
+        return json({ error: 'ACCOUNT_PUBLICATION_UNAVAILABLE' }, 503);
+      }
+    }
+
     if (parsed.action === 'preflight') {
       try {
         // The same authenticated subject binds every successful admission
         // response. Validate it before the service lookup so neither `clear`
         // nor `active` can authorize a mutable/corrupt client session object.
-        if (!AUTH_USER_ID_PATTERN.test(user.id)) {
-          throw new Error('invalid authenticated subject');
+        if (!AUTH_USER_ID_PATTERN.test(user.id) || !AUTH_USER_ID_PATTERN.test(user.sessionId)) {
+          return deletionSessionRejected();
         }
-        const status = await dependencies.barrierState(user.id);
+        const status = await dependencies.barrierState(user.id, user.sessionId);
         return json({ status, ownerSubject: user.id }, 200);
-      } catch {
+      } catch (error) {
+        if (isDeletionSessionRejected(error)) return deletionSessionRejected();
         return json({ error: 'ACCOUNT_DELETION_UNAVAILABLE' }, 503);
       }
     }
 
+    if (parsed.action !== 'begin') {
+      return json({ error: 'BAD_REQUEST' }, 400);
+    }
+
     try {
-      if (!(await dependencies.consumeIntakeRateLimit(user.id))) {
+      if (!AUTH_USER_ID_PATTERN.test(user.id) || !AUTH_USER_ID_PATTERN.test(user.sessionId)) {
+        return deletionSessionRejected();
+      }
+      if (!(await dependencies.consumeIntakeRateLimit(user.id, user.sessionId))) {
         return json({ error: 'RATE_LIMITED' }, 429);
       }
       const result = await dependencies.begin(user, parsed);
@@ -233,7 +378,8 @@ export function createDurableDeletionHttpHandler(
         },
         202,
       );
-    } catch {
+    } catch (error) {
+      if (isDeletionSessionRejected(error)) return deletionSessionRejected();
       return json({ error: 'ACCOUNT_DELETION_UNAVAILABLE' }, 503);
     }
   };

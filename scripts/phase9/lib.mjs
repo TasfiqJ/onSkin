@@ -58,6 +58,7 @@ export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
 // evidence must prove they are sealed rather than pretending an admin client
 // can create or read a positive-control row.
 export const SEALED_SERVICE_PRIVATE_TABLES = Object.freeze([
+  'account_publication_leases',
   'account_deletion_operations',
   'account_deletion_barriers',
   'account_deletion_steps',

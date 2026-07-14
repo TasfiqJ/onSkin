@@ -731,7 +731,7 @@
       "id": "DB-09",
       "status": "in_progress",
       "blockedBy": ["DB-05", "DB-06", "DB-07", "DB-08", "ACCT-03"],
-      "nextAction": "Reset and apply all 50 migrations in a reviewed local stack, then run the exhaustive 46-private-table access-control matrix against staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, and configured Turnstile behavior; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
+      "nextAction": "Reset and apply all 51 migrations in a reviewed local stack, then run the exhaustive 47-private-table access-control matrix against staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, and configured Turnstile behavior; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",
@@ -744,6 +744,7 @@
         "supabase/migrations/20260713000049_revenuecat_deletion_barrier_guard.sql",
         "supabase/migrations/20260713000050_service_writer_deletion_barriers.sql",
         "supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql",
+        "supabase/migrations/20260713000052_account_publication_fence.sql",
         "docs/phase-9/generated/live-supabase-adversarial.json"
       ]
     },
@@ -751,7 +752,7 @@
       "id": "DB-10",
       "status": "in_progress",
       "blockedBy": ["DB-09", "ACCT-03"],
-      "nextAction": "Implement migration 0052 as a two-phase, server-serialized session/provider publication fence: sealed lease table; reserve, activate, renew, release, and worker-drain RPCs; deletion-intake drain trigger under the existing account lock; finalization denial while waiting or settling; retention; and deterministic PostgreSQL concurrency/privilege tests. Then fence every RevenueCat client operation, prove crash/background/configure-in-flight behavior, require provider settling plus repeated absence, and obtain a documented provider bound or approved blocking/reaper control for old or tampered clients. Also close capability-read amplification, global worker scope, unfinished-operation/key-rotation procedures, cross-owner community block handles, and Apple server-to-server revocation where applicable. Clean-reset all 50 current migrations through 0051 and run the full A/B, provider interruption/recreation, export/deletion, consent, Storage/backup, post-delete denial, and physical-iPhone matrices in reviewed staging and production. Do not describe the end-to-end lifecycle as race-free or launch-ready before those gates pass.",
+      "nextAction": "Prove migration 0052 end to end on the exact Edge/mobile candidate: every RevenueCat path lease-bound; exact-session rate, preflight, and begin; multi-device drain; process death; configure-in-flight; lost release; five-minute settle; and two claim-distinct full-family absence rounds. Obtain a documented provider bound plus an approved block, mandatory-version gate, or continuing re-deletion control for old/tampered clients. Also close capability-read amplification, global worker scope, unfinished-operation/key-rotation procedures, cross-owner community block handles, and Apple server-to-server revocation where applicable. Clean-reset all 51 current migrations through 0052 and run the full A/B, provider interruption/recreation, export/deletion, consent, Storage/backup, post-delete denial, and physical-iPhone matrices in reviewed staging and production. Do not describe the end-to-end lifecycle as race-free or launch-ready before those gates pass.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "supabase/functions/account-deletion",
@@ -780,7 +781,9 @@
         "supabase/migrations/20260713000049_revenuecat_deletion_barrier_guard.sql",
         "supabase/migrations/20260713000050_service_writer_deletion_barriers.sql",
         "supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql",
+        "supabase/migrations/20260713000052_account_publication_fence.sql",
         "docs/phase-9/account-deletion-operations-runbook.md",
+        "scripts/phase9/account-publication-fence-postgres-rehearsal.sql",
         "scripts/phase9/account-service-scrub-postgres-rehearsal.sql",
         "supabase/functions/data-export/exportRegistry.ts",
         "supabase/functions/data-export/exportRegistry.test.ts",

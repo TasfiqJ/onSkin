@@ -41,11 +41,12 @@ create irreversible production accounts under `OnSkin` until
 4. Create Supabase staging and set Edge Function secrets. Durable deletion
    requires independent payload/receipt/worker/tombstone keys and a RevenueCat
    **V2** key; a RevenueCat V1/legacy key cannot satisfy that contract.
-5. For the migrations 0048-0051 cutover, follow the dedicated account-deletion
-   runbook: predeploy the new fail-closed deletion function, then apply the four
-   migrations in order and immediately deploy every manifest function from the
-   same revision. Do not use the wrapper alone for this first cutover because it
-   pushes migrations before functions.
+5. For migrations 0048-0052, follow the dedicated account-deletion runbook.
+   Predeploy the fail-closed deletion function before the base lifecycle, then
+   freeze deletion intake and every legacy/unfenced session or RevenueCat
+   publication producer before the 0052 hard cutover. Apply migrations in exact
+   order and immediately deploy every manifest function from the same revision.
+   Do not use the wrapper alone because it pushes migrations before functions.
 6. Run `.\scripts\phase2\deploy-supabase-staging.ps1` for later coherent
    manifest deployments and type generation.
 7. Provision the named Vault entries and canonical Cron job only after the

@@ -18,11 +18,9 @@ Service-role filtered coverage includes reverse-trial grants, subscription webho
 
 Migrations `20260713000046_account_service_row_scrub.sql` and `20260713000047_account_obf_contribution_erasure.sql` plus the account-deletion helper close the bounded synchronous service-row paths they cover: the service-role-only RPC is transactional, rejects residual identity, deletes account-only subscription events, the caller's commerce clicks, and the caller's OBF contribution payloads, detaches matching order attribution tokens, and removes only the deleting user from all seven scalar/alias/transfer owner fields on a shared event. Migration `0046` repairs legacy missing event IDs, canonicalizes live UUIDs found in old webhook payload owner keys, replaces every historical payload with a typed allowlist, makes click-token ownership unique, and tolerates legacy UUID case/whitespace during deletion. Migration `0047` purges legacy OBF rows with no owner, makes `user_id` mandatory, and changes the Auth FK from `SET NULL` to validated `CASCADE`, so direct Auth deletion cannot strand barcode/payload data. The current official ShopMy report exposes no correlation field, so its adapter always persists `click_token = null`; the known-token lookup and foreign-key path remain a fail-closed invariant for a future provider-approved rail. Strict result-shape validation prevents database errors or malformed attestations from being reported as deletion success. The real migrations pass disposable PostgreSQL 15 and 17 rehearsals, including idempotent RPC retry and direct Auth cascade, but this does not replace a complete Supabase migration reset or live concurrency/provider-interruption evidence.
 
-Migrations `20260713000048` through `20260713000051` and the durable Edge
+Migrations `20260713000048` through `20260713000052` and the durable Edge
 runtime close the bounded server-lifecycle gaps listed below that the earlier
-synchronous flow could not close. They do not close the client
-preflight-to-provider-publication race described later in this section. A
-service-only barrier and account advisory lock suppress
+synchronous flow could not close. A service-only barrier and account advisory lock suppress
 owner and guarded service writes; account-owned rate-limit rows carry the Auth
 owner and are scrubbed; six ordered steps persist bounded attempt/lease state;
 Apple, RevenueCat, and PostHog payloads are encrypted at rest; ambiguous
@@ -34,8 +32,8 @@ key version, manual-Apple flag, capability digest, stable state, and finite
 timestamps enter the terminal receipt.
 
 The deletion Edge boundary also exposes one authenticated, opaque mobile
-session preflight. It derives the owner only from the verified bearer and calls
-a service-role-only security-definer RPC under the same account advisory lock;
+session preflight. It derives the owner and exact session only from the verified
+bearer and calls a service-role-only security-definer RPC under the same account advisory lock;
 the only successful states are `clear` and `active`, each paired with the same
 canonical authenticated subject. Mobile rejects a cached-session subject
 mismatch and keeps restored and newly authenticated sessions unpublished until
@@ -82,14 +80,16 @@ retry rather than being treated as clear. The database RPC is not executable
 by `anon` or `authenticated`, and no operation ID, capability, provider phase,
 or timestamp crosses this API.
 
-This preflight is not yet a linearizable publication admission. Its account
-lock ends before the client publishes the Supabase session and configures or
-logs in to RevenueCat. Deletion can begin during that interval, and a late SDK
-request can recreate provider state after an absence observation. A
-two-phase reserve/activate/renew/release lease under the same account lock,
-worker drain/settling gate, repeated provider absence, and old-client residual
-risk control remain source release blockers. The exact design and external
-provider limits are tracked in
+Migration 0052 adds a two-phase reserve/activate/renew/release publication lease
+under that same account lock. It binds reserve, activation, renewal, preflight,
+intake rate consumption, and begin to the exact live Auth session; deletion
+removes reservations and drains active authority without extending its
+deadline. Local erasure waits for exact authority end. RevenueCat completion
+also waits five minutes and requires two full-family absence observations under
+distinct claims at least 60 seconds apart. The database source closes the
+bounded admission race for compliant clients, but hosted Edge/mobile evidence
+and an approved old/tampered-client residual-risk control remain release
+blockers. The exact design and external provider limits are tracked in
 `docs/phase-9/account-deletion-operations-runbook.md`.
 
 The active lifecycle retains the raw Auth UUID only while work is unfinished,
@@ -136,9 +136,10 @@ same-owner/different-owner behavior. Apple's server-to-server `consent-revoked`
 endpoint and delivery evidence remain external gates wherever selected or
 required.
 
-These are bounded local source/rehearsal properties, not a race-free DB-10
-implementation or production evidence. The publication-lease source slice plus
-hosted clean-reset, A/B stale-session/preflight races, Cron/Vault continuity, provider
+These are bounded local source/rehearsal properties, not proof of a race-free
+production system. Hosted clean-reset, A/B stale-session/preflight races,
+publication-lease process-death/configure-in-flight/lost-release checks,
+Cron/Vault continuity, provider
 interruption and lost-response recovery, RevenueCat 200/202 and renewal/restore
 recreation behavior, PostHog async completion, Apple native revocation,
 Storage residue, mobile relaunch/status recovery, and reviewed staging and
@@ -150,7 +151,7 @@ The exhaustive orphan audit also found launch-significant policy/data-model gaps
 
 ## RLS And Photo Storage Inventory
 
-The migration-derived public schema has 69 RLS-enabled tables: 30 owner-client private, 10 directly service-only private, six fully sealed service-only lifecycle/tombstone tables, and 23 authenticated catalog/editorial tables. The six tables added by migrations `0048` and `0051` revoke direct table access even from `service_role`; they are reachable only through narrowly granted security-definer RPCs. The DB-09 hosted matrix must register all 46 private tables exactly once, apply row-positive isolation probes to the 40 directly queryable private tables, prove direct denial for every role on the six sealed tables, and distinguish cross-user permanent accounts, a real signed-anonymous account, and a publishable-key client with no session. Disposable PostgreSQL 15/17 rehearsals provide the positive-row and RPC-path evidence for the sealed tables that PostgREST is deliberately unable to inspect directly.
+The migration-derived public schema has 70 RLS-enabled tables: 30 owner-client private, 10 directly service-only private, seven fully sealed service-only lifecycle/tombstone/publication tables, and 23 authenticated catalog/editorial tables. The seven tables added by migrations `0048`, `0051`, and `0052` revoke direct table access even from `service_role`; they are reachable only through narrowly granted security-definer RPCs. The DB-09 hosted matrix must register all 47 private tables exactly once, apply row-positive isolation probes to the 40 directly queryable private tables, prove direct denial for every role on the seven sealed tables, and distinguish cross-user permanent accounts, a real signed-anonymous account, and a publishable-key client with no session. Disposable PostgreSQL 15/17 rehearsals provide the positive-row and RPC-path evidence for the sealed tables that PostgREST is deliberately unable to inspect directly.
 
 Photo metadata and `photos` bucket objects require an owner-prefixed path plus current `photo_cloud_backup` consent. Migration `20260713000045_anonymous_photo_storage_guard.sql` additionally denies insert/update of cloud photo bytes to signed-anonymous accounts, including an anonymous account that can create its own consent row. Owner-prefixed select/delete remains available so existing legacy objects can still be accessed or removed. This source posture is not release evidence until a reviewed reset and the hosted adversarial matrix pass with unchanged-object and residue-free-cleanup postconditions.
 

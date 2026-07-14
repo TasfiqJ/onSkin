@@ -3,10 +3,7 @@ import type {
   PostHogDeletionNetwork,
   PostHogDeletionNetworkResponse,
 } from './postHogDeletionExecutor.ts';
-import type {
-  RevenueCatV2ExecutorNetwork,
-  RevenueCatV2NetworkResponse,
-} from './revenueCatV2DeletionExecutor.ts';
+import type { RevenueCatV2NetworkResponse } from './revenueCatV2DeletionExecutor.ts';
 
 export type DeletionProviderFetch = (
   input: string | URL | Request,
@@ -14,13 +11,35 @@ export type DeletionProviderFetch = (
   timeoutMs: number,
 ) => Promise<Response>;
 
-export type DeletionProviderJsonNetwork = RevenueCatV2ExecutorNetwork & PostHogDeletionNetwork;
+export type DeletionProviderJsonNetwork = PostHogDeletionNetwork & {
+  execute: (
+    request: { url: string; init: RequestInit },
+    context: { deadlineAtMs: number },
+  ) => Promise<RevenueCatV2NetworkResponse>;
+};
 
 export class DeletionProviderNetworkError extends Error {
   constructor(public readonly code: 'DELETION_PROVIDER_NETWORK_FAILED') {
     super(code);
     this.name = 'DeletionProviderNetworkError';
   }
+}
+
+const MAX_PROVIDER_RETRY_AFTER_MS = 7 * 86_400_000;
+
+function retryAfterMs(response: Response, nowMs: number): number | null {
+  const raw = response.headers.get('retry-after')?.trim();
+  if (!raw) return null;
+  if (/^[0-9]+$/.test(raw)) {
+    const seconds = Number(raw);
+    if (!Number.isSafeInteger(seconds)) return null;
+    return seconds >= MAX_PROVIDER_RETRY_AFTER_MS / 1_000
+      ? MAX_PROVIDER_RETRY_AFTER_MS
+      : seconds * 1_000;
+  }
+  const at = Date.parse(raw);
+  if (!Number.isFinite(at)) return null;
+  return Math.min(Math.max(0, at - nowMs), MAX_PROVIDER_RETRY_AFTER_MS);
 }
 
 function boundedTimeout(deadlineAtMs: number, now: () => number, maxTimeoutMs: number): number {
@@ -47,7 +66,7 @@ async function execute(
     maxResponseBytes: number;
     maxTimeoutMs: number;
   },
-): Promise<{ status: number; body: unknown; responseBytes: number }> {
+): Promise<{ status: number; body: unknown; responseBytes: number; retryAfterMs: number | null }> {
   if (
     request === null ||
     typeof request !== 'object' ||
@@ -84,6 +103,7 @@ async function execute(
     status: response.status,
     body,
     responseBytes: new TextEncoder().encode(text).byteLength,
+    retryAfterMs: retryAfterMs(response, options.now()),
   };
 }
 
@@ -116,10 +136,19 @@ export function createDeletionProviderJsonNetwork(options: {
   return {
     async execute(request, context): Promise<RevenueCatV2NetworkResponse> {
       const response = await execute(request, context, resolved);
-      return { status: response.status, body: response.body };
+      return {
+        status: response.status,
+        body: response.body,
+        retryAfterMs: response.retryAfterMs,
+      };
     },
     async sendJson(request, context): Promise<PostHogDeletionNetworkResponse> {
-      return await execute(request, context, resolved);
+      const response = await execute(request, context, resolved);
+      return {
+        status: response.status,
+        body: response.body,
+        responseBytes: response.responseBytes,
+      };
     },
   };
 }

@@ -122,8 +122,14 @@ const serviceWriterDeletionBarrierMigration = read(
 const revenueCatIdentityTombstoneMigration = read(
   'supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql',
 );
+const accountPublicationFenceMigration = read(
+  'supabase/migrations/20260713000052_account_publication_fence.sql',
+);
 const accountServiceScrubPostgresRehearsal = read(
   'scripts/phase9/account-service-scrub-postgres-rehearsal.sql',
+);
+const accountPublicationFencePostgresRehearsal = read(
+  'scripts/phase9/account-publication-fence-postgres-rehearsal.sql',
 );
 const orderAttributionCoreSource = read(
   'supabase/functions/order-report-poll/orderAttributionCore.ts',
@@ -156,6 +162,7 @@ const completeDeletionSource = [
   revenueCatDeletionBarrierMigration,
   serviceWriterDeletionBarrierMigration,
   revenueCatIdentityTombstoneMigration,
+  accountPublicationFenceMigration,
 ].join('\n');
 const environmentExampleSource = read('.env.example');
 const edgeFunctionManifest = JSON.parse(read('supabase/functions/manifest.json'));
@@ -587,7 +594,7 @@ block(
 block(
   errors,
   /bearerToken\(request\)/.test(deletionHttpSource) &&
-    /consumeIntakeRateLimit\(user\.id\)/.test(deletionHttpSource) &&
+  /consumeIntakeRateLimit\(user\.id, user\.sessionId\)/.test(deletionHttpSource) &&
     /dependencies\.begin\(user, parsed\)/.test(deletionHttpSource) &&
     /if \(result\.created\)/.test(deletionHttpSource) &&
     /scheduleAcceleration\(dependencies, result\.operationId, user\.id\)/.test(
@@ -692,6 +699,76 @@ block(
     /_revenuecat_identity_tombstone_advisory_key/.test(revenueCatIdentityTombstoneMigration) &&
     /purge_expired_revenuecat_identity_tombstones/.test(revenueCatIdentityTombstoneMigration),
   'Webhook and service writers must serialize against deletion while RevenueCat identities remain HMAC-tombstoned, ingress-suppressed, and finitely purgeable.',
+);
+block(
+  errors,
+  /ACCOUNT_PUBLICATION_FENCE_REQUIRES_ZERO_ACTIVE_DELETIONS/.test(
+    accountPublicationFenceMigration,
+  ) &&
+    /lock table public\.account_deletion_operations,\s*public\.account_deletion_barriers\s*in access exclusive mode/i.test(
+      accountPublicationFenceMigration,
+    ) &&
+    /create table public\.account_publication_leases/.test(accountPublicationFenceMigration) &&
+    /alter table public\.account_publication_leases force row level security/.test(
+      accountPublicationFenceMigration,
+    ) &&
+    /reserve_account_publication_lease/.test(accountPublicationFenceMigration) &&
+    /activate_account_publication_lease/.test(accountPublicationFenceMigration) &&
+    /renew_account_publication_lease/.test(accountPublicationFenceMigration) &&
+    /release_account_publication_lease/.test(accountPublicationFenceMigration) &&
+    /record_account_deletion_revenuecat_absence_observation/.test(
+      accountPublicationFenceMigration,
+    ) &&
+    /reset_account_deletion_revenuecat_absence_observations/.test(
+      accountPublicationFenceMigration,
+    ) &&
+    /revenuecat_absence_last_claim_digest/.test(accountPublicationFenceMigration) &&
+    /interval '60 seconds'/.test(accountPublicationFenceMigration) &&
+    /publication_settle_not_before[\s\S]*interval '5 minutes'/.test(
+      accountPublicationFenceMigration,
+    ) &&
+    /alter function public\.begin_account_deletion\([\s\S]*?\) rename to _begin_account_deletion_v0048_unbound/.test(
+      accountPublicationFenceMigration,
+    ) &&
+    /create or replace function public\.begin_account_deletion\(\s*p_user_id uuid,\s*p_session_id uuid,/.test(
+      accountPublicationFenceMigration,
+    ) &&
+    /create or replace function public\.get_account_deletion_barrier_state\(\s*p_user_id uuid,\s*p_session_id uuid\s*\)/.test(
+      accountPublicationFenceMigration,
+    ) &&
+    /create or replace function public\.consume_edge_rate_limit\([\s\S]*?p_owner_user_id uuid,\s*p_session_id uuid\s*\)/.test(
+      accountPublicationFenceMigration,
+    ) &&
+    (accountPublicationFenceMigration.match(/for key share/g)?.length ?? 0) >= 6 &&
+    /ACCOUNT_DELETION_SESSION_REJECTED[\s\S]*errcode = '28000'/.test(
+      accountPublicationFenceMigration,
+    ) &&
+    /dblink_send_query/.test(accountPublicationFencePostgresRehearsal) &&
+    /REHEARSAL_SIGNED_OUT_SESSION_BEGIN_ALLOWED/.test(
+      accountPublicationFencePostgresRehearsal,
+    ) &&
+    /ACCOUNT_PUBLICATION_FENCE_POSTGRES_REHEARSAL_PASS/.test(
+      accountPublicationFencePostgresRehearsal,
+    ),
+  'Migration 0052 must install only at zero active deletions, bind authenticated intake to an exact live session, drain finite publication authority, require two claim-distinct RevenueCat absence rounds, seal every RPC/table boundary, and retain deterministic concurrency rehearsal coverage.',
+);
+block(
+  errors,
+  /sessionId: string/.test(deletionDatabaseGatewaySource) &&
+    /begin_account_deletion[\s\S]*p_session_id: input\.sessionId/.test(
+      deletionDatabaseGatewaySource,
+    ) &&
+    /barrierState\(userId: string, sessionId: string\)[\s\S]*p_session_id: sessionId/.test(
+      deletionDatabaseGatewaySource,
+    ) &&
+    /args\.scope === 'account-deletion-intake'[\s\S]*args\.sessionId/.test(
+      deletionDatabaseGatewaySource,
+    ) &&
+    /consumeIntakeRateLimit\(user\.id, user\.sessionId\)/.test(deletionHttpSource) &&
+    /barrierState\(user\.id, user\.sessionId\)/.test(deletionHttpSource) &&
+    /DELETION_DATABASE_SESSION_REJECTED/.test(deletionDatabaseGatewaySource) &&
+    /ACCOUNT_DELETION_SESSION_REJECTED/.test(deletionHttpSource),
+  'Edge deletion intake, quota, and preflight must carry the exact authenticated session into migration-0052 RPCs and map only SQLSTATE 28000 to the stable 401 session-rejected response.',
 );
 block(
   errors,

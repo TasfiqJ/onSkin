@@ -2218,6 +2218,11 @@ async function main() {
     await runCheck('service-only private table positive controls', async () => {
       const absentUuid = '00000000-0000-0000-0000-000000000000';
       const absentDigest = '0'.repeat(64);
+      registerSealedPrivateTableProbe(
+        'account_publication_leases',
+        'capability_digest',
+        absentDigest,
+      );
       registerSealedPrivateTableProbe('account_deletion_operations', 'id', absentUuid);
       registerSealedPrivateTableProbe('account_deletion_barriers', 'user_id', absentUuid);
       registerSealedPrivateTableProbe('account_deletion_steps', 'operation_id', absentUuid);
@@ -2323,7 +2328,7 @@ async function main() {
       registerPrivateTableProbe('edge_rate_limits', 'key_hash', rateLimit.key_hash);
     });
 
-    await runCheck('all 46 private tables have access-control probes', async () => {
+    await runCheck('all 47 private tables have access-control probes', async () => {
       const registeredTables = [...privateTableProbes.keys()].sort();
       const expectedTables = [...PRIVATE_PUBLIC_TABLES].sort();
       assert(

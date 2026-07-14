@@ -67,6 +67,7 @@ const localVerifierFiles = [
   'scripts/phase9/account-service-scrub-postgres-rehearsal.sql',
   'scripts/phase9/revenuecat-deletion-barrier-postgres-rehearsal.sql',
   'scripts/phase9/revenuecat-identity-tombstones-postgres-rehearsal.sql',
+  'scripts/phase9/account-publication-fence-postgres-rehearsal.sql',
   'scripts/phase9/service-writer-deletion-barriers-postgres-rehearsal.sql',
   'scripts/phase9/consent-withdrawal-smoke.mjs',
   'scripts/phase9/supabase-policy-lint.mjs',
@@ -192,6 +193,7 @@ const requiredFiles = [
   'supabase/migrations/20260713000049_revenuecat_deletion_barrier_guard.sql',
   'supabase/migrations/20260713000050_service_writer_deletion_barriers.sql',
   'supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql',
+  'supabase/migrations/20260713000052_account_publication_fence.sql',
   'scripts/phase9/lib.mjs',
   'scripts/phase2/supabase-rls-smoke.mjs',
   'scripts/phase9/build-release-qa-packet.mjs',
@@ -502,12 +504,16 @@ block(
       '.github/workflows/quality.yml',
       /database:\s*revenuecat_tombstones_0051[\s\S]{0,120}script:\s*revenuecat-identity-tombstones-postgres-rehearsal\.sql/,
     ) &&
+    has(
+      '.github/workflows/quality.yml',
+      /database:\s*account_publication_fence_0052[\s\S]{0,120}script:\s*account-publication-fence-postgres-rehearsal\.sql/,
+    ) &&
     has('.github/workflows/quality.yml', /image:\s*postgres:\$\{\{ matrix\.postgres \}\}/) &&
     has(
       '.github/workflows/quality.yml',
       /-f \"scripts\/phase9\/\$\{\{ matrix\.rehearsal\.script \}\}\"/,
     ),
-  'CI must execute migrations 0048-0051 in isolated PostgreSQL 15 and 17 rehearsals.',
+  'CI must execute migrations 0048-0052 in isolated PostgreSQL 15 and 17 rehearsals.',
 );
 block(
   errors,

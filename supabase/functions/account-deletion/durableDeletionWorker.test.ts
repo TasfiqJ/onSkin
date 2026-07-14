@@ -4,6 +4,7 @@ import {
   type AccountDeletionStepExecutor,
   type AccountDeletionStepName,
   type AccountDeletionWorkerGateway,
+  AccountDeletionWorkerCapacityError,
   DurableDeletionWorkerError,
   runAccountDeletionWorker,
 } from './durableDeletionWorker.ts';
@@ -61,9 +62,17 @@ Deno.test('worker alternates reconcile and dispatch, then finalizes and purges',
     dispatch: [claim('service_rows_scrub', 'dispatch')],
   };
   const gateway: AccountDeletionWorkerGateway = {
+    reapExpiredPublicationLeases(limit) {
+      assert(limit === 100, 'bounded critical maintenance batch');
+      executed.push('reap');
+      return Promise.resolve();
+    },
     claimNext(mode) {
       modes.push(mode);
       return Promise.resolve(queue[mode].shift() ?? null);
+    },
+    deferProviderCapacity() {
+      return Promise.resolve();
     },
     listReadyToFinalize(limit) {
       assert(limit === 10, 'bounded finalization batch');
@@ -93,6 +102,7 @@ Deno.test('worker alternates reconcile and dispatch, then finalizes and purges',
   });
   assertDeepEqual(modes, ['reconcile', 'dispatch', 'reconcile', 'dispatch']);
   assertDeepEqual(executed, [
+    'reap',
     'reconcile:photo_storage_delete',
     'dispatch:service_rows_scrub',
     `finalize:${OPERATION_ID}`,
@@ -116,8 +126,14 @@ Deno.test('executor failure is contained and the other lane still progresses', a
   const processed: string[] = [];
   const report = await runAccountDeletionWorker({
     gateway: {
+      reapExpiredPublicationLeases() {
+        return Promise.resolve();
+      },
       claimNext(mode) {
         return Promise.resolve(queues[mode].shift() ?? null);
+      },
+      deferProviderCapacity() {
+        return Promise.resolve();
       },
       listReadyToFinalize() {
         return Promise.resolve([]);
@@ -146,13 +162,101 @@ Deno.test('executor failure is contained and the other lane still progresses', a
   assert(report.executorFailures === 1, 'one generic failure counted');
 });
 
+Deno.test('provider capacity defers the exact claim and stops leasing the backlog', async () => {
+  let claims = 0;
+  const deferred: AccountDeletionClaim[] = [];
+  const report = await runAccountDeletionWorker({
+    gateway: {
+      reapExpiredPublicationLeases: () => Promise.resolve(),
+      claimNext(mode) {
+        claims += 1;
+        return Promise.resolve(claim('revenuecat_delete', mode));
+      },
+      deferProviderCapacity(current) {
+        deferred.push(current);
+        return Promise.resolve();
+      },
+      listReadyToFinalize: () => Promise.resolve([]),
+      finalize: () => Promise.resolve(),
+      purgeExpiredArtifacts: () => Promise.resolve(),
+    },
+    executors: executors(() =>
+      Promise.reject(
+        new AccountDeletionWorkerCapacityError(
+          'DELETION_WORKER_PROVIDER_CAPACITY_EXHAUSTED',
+        ),
+      ),
+    ),
+    deadlineAtMs: 10_000,
+    maxClaims: 100,
+    finalizationBatchSize: 10,
+    maintenanceBatchSize: 100,
+    now: () => 1_000,
+  });
+  assert(claims === 1, 'capacity exhaustion stops additional claims in this slice');
+  assert(deferred.length === 1, 'the exact leased claim is released without an attempt');
+  assert(report.executorFailures === 0, 'successful capacity deferral is not an executor failure');
+});
+
+Deno.test('critical publication reaping cannot be starved by a saturated claim queue', async () => {
+  const events: string[] = [];
+  let nowMs = 0;
+  const report = await runAccountDeletionWorker({
+    gateway: {
+      reapExpiredPublicationLeases(limit) {
+        events.push(`reap:${limit}`);
+        return Promise.resolve();
+      },
+      claimNext(mode) {
+        events.push(`claim:${mode}`);
+        return Promise.resolve(claim('revenuecat_delete', mode));
+      },
+      deferProviderCapacity() {
+        return Promise.resolve();
+      },
+      listReadyToFinalize() {
+        events.push('finalize-list');
+        return Promise.resolve([]);
+      },
+      finalize() {
+        return Promise.resolve();
+      },
+      purgeExpiredArtifacts() {
+        events.push('purge');
+        return Promise.resolve();
+      },
+    },
+    executors: executors(() => {
+      nowMs += 40;
+      return Promise.resolve();
+    }),
+    deadlineAtMs: 100,
+    maxClaims: 100,
+    finalizationBatchSize: 10,
+    maintenanceBatchSize: 100,
+    now: () => nowMs,
+  });
+  assert(events[0] === 'reap:100', 'critical reaper runs before the first saturated claim');
+  assert(report.claimsProcessed === 3, 'claims may consume the remaining slice');
+  assert(report.deadlineReached, 'clock advance ends the saturated slice');
+  assert(!events.includes('finalize-list') && !events.includes('purge'), 'tail work is skipped');
+});
+
 Deno.test('deadline prevents new side effects, finalization, and maintenance', async () => {
   let called = false;
   const report = await runAccountDeletionWorker({
     gateway: {
+      reapExpiredPublicationLeases() {
+        called = true;
+        return Promise.resolve();
+      },
       claimNext() {
         called = true;
         return Promise.resolve(null);
+      },
+      deferProviderCapacity() {
+        called = true;
+        return Promise.resolve();
       },
       listReadyToFinalize() {
         called = true;
@@ -185,8 +289,14 @@ Deno.test('finalization and maintenance failures remain isolated', async () => {
   let finalizations = 0;
   const report = await runAccountDeletionWorker({
     gateway: {
+      reapExpiredPublicationLeases() {
+        return Promise.reject(new Error('private detail'));
+      },
       claimNext() {
         return Promise.resolve(null);
+      },
+      deferProviderCapacity() {
+        return Promise.resolve();
       },
       listReadyToFinalize() {
         return Promise.resolve([
@@ -221,8 +331,14 @@ Deno.test('finalization and maintenance failures remain isolated', async () => {
 
 Deno.test('worker options reject missing executors and unsafe bounds', async () => {
   const gateway: AccountDeletionWorkerGateway = {
+    reapExpiredPublicationLeases() {
+      return Promise.resolve();
+    },
     claimNext() {
       return Promise.resolve(null);
+    },
+    deferProviderCapacity() {
+      return Promise.resolve();
     },
     listReadyToFinalize() {
       return Promise.resolve([]);

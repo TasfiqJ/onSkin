@@ -1,5 +1,8 @@
 import { intEnv } from './body.ts';
 
+const RESPONSE_TIMEOUT_CLEANUP = Symbol('response-timeout-cleanup');
+type TimedResponse = Response & { [RESPONSE_TIMEOUT_CLEANUP]?: () => void };
+
 export function externalFetchTimeoutMs(): number {
   return intEnv('EDGE_EXTERNAL_FETCH_TIMEOUT_MS', 5000, 1000, 30000);
 }
@@ -12,10 +15,22 @@ export async function fetchWithTimeout(
   input: string | URL | Request,
   init: RequestInit = {},
   timeoutMs = externalFetchTimeoutMs(),
+  baseFetch: typeof fetch = fetch,
 ): Promise<Response> {
   const controller = new AbortController();
-  const abortFromCaller = () => controller.abort();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  let timeout: number | undefined;
+  let cleaned = false;
+  const cleanup = () => {
+    if (cleaned) return;
+    cleaned = true;
+    if (timeout !== undefined) clearTimeout(timeout);
+    init.signal?.removeEventListener('abort', abortFromCaller);
+  };
+  const abortFromCaller = () => {
+    controller.abort();
+    cleanup();
+  };
+  timeout = setTimeout(abortFromCaller, timeoutMs);
 
   if (init.signal?.aborted) {
     controller.abort();
@@ -24,10 +39,21 @@ export async function fetchWithTimeout(
   }
 
   try {
-    return await fetch(input, { ...init, signal: controller.signal });
-  } finally {
-    clearTimeout(timeout);
-    init.signal?.removeEventListener('abort', abortFromCaller);
+    const response = await baseFetch(input, { ...init, signal: controller.signal });
+    if (response.body === null) {
+      cleanup();
+    } else {
+      Object.defineProperty(response, RESPONSE_TIMEOUT_CLEANUP, {
+        configurable: false,
+        enumerable: false,
+        value: cleanup,
+        writable: false,
+      });
+    }
+    return response;
+  } catch (error) {
+    cleanup();
+    throw error;
   }
 }
 
@@ -35,39 +61,43 @@ export async function readLimitedResponseTextWithByteLength(
   response: Response,
   maxBytes = externalResponseMaxBytes(),
 ): Promise<{ text: string; byteLength: number } | null> {
-  const contentLength = Number(response.headers.get('content-length'));
-  if (Number.isFinite(contentLength) && contentLength > maxBytes) {
-    await response.body?.cancel().catch(() => undefined);
-    return null;
-  }
-
-  const reader = response.body?.getReader();
-  if (!reader) return { text: '', byteLength: 0 };
-
-  const chunks: Uint8Array[] = [];
-  let received = 0;
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    if (!value) continue;
-    received += value.byteLength;
-    if (received > maxBytes) {
-      await reader.cancel().catch(() => undefined);
+  try {
+    const contentLength = Number(response.headers.get('content-length'));
+    if (Number.isFinite(contentLength) && contentLength > maxBytes) {
+      await response.body?.cancel().catch(() => undefined);
       return null;
     }
-    chunks.push(value);
-  }
 
-  const bytes = new Uint8Array(received);
-  let offset = 0;
-  for (const chunk of chunks) {
-    bytes.set(chunk, offset);
-    offset += chunk.byteLength;
+    const reader = response.body?.getReader();
+    if (!reader) return { text: '', byteLength: 0 };
+
+    const chunks: Uint8Array[] = [];
+    let received = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (!value) continue;
+      received += value.byteLength;
+      if (received > maxBytes) {
+        await reader.cancel().catch(() => undefined);
+        return null;
+      }
+      chunks.push(value);
+    }
+
+    const bytes = new Uint8Array(received);
+    let offset = 0;
+    for (const chunk of chunks) {
+      bytes.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+    return {
+      text: new TextDecoder().decode(bytes),
+      byteLength: received,
+    };
+  } finally {
+    (response as TimedResponse)[RESPONSE_TIMEOUT_CLEANUP]?.();
   }
-  return {
-    text: new TextDecoder().decode(bytes),
-    byteLength: received,
-  };
 }
 
 export async function readLimitedResponseText(
