@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-13T18:54:03.726Z
+Generated: 2026-07-14T00:10:44.693Z
 Status: pass
-Git SHA: 43467f0135b715bac01b697feba5515f77b74715
+Git SHA: e9883f6f93fd42a955b7c774c3bb5c6b47ce33f6
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -13,7 +13,7 @@ reviewers must inspect before launch gates can close.
 ## Summary
 
 - Review items: 37
-- Source files hashed: 313
+- Source files hashed: 318
 - Missing source files: 0
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
@@ -52,7 +52,7 @@ reviewers must inspect before launch gates can close.
 | privacySecurity   | Photo privacy and local storage                   | Not cleared | TBD      | TBD  | not-applicable | 4       | 0               |
 | privacySecurity   | Trend and cloud-backup consent                    | Blocked     | TBD      | TBD  | not-applicable | 15      | 0               |
 | privacySecurity   | Ask, commerce, and community consent              | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
-| privacySecurity   | Account deletion and data export                  | Blocked     | TBD      | TBD  | not-applicable | 10      | 0               |
+| privacySecurity   | Account deletion and data export                  | Blocked     | TBD      | TBD  | not-applicable | 15      | 0               |
 | privacySecurity   | Analytics and crash payloads                      | Not cleared | TBD      | TBD  | not-applicable | 13      | 0               |
 | privacySecurity   | Auth and processor posture                        | Blocked     | TBD      | TBD  | not-applicable | 23      | 0               |
 | ipFto             | Brand and trademark clearance                     | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
@@ -165,7 +165,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `ff7f240ab6e5c9236970c09e2562ea1e19d0690a40760af5d008149da1857bed`
+- Review snapshot SHA-256: `cd28ea7eb5c9839782ff866bfddfe042c7722f6b099a2f1f29a78bdf007d09fc`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: FTC disclosure, partner data sharing, source rights, order reports.
@@ -190,7 +190,7 @@ Sources:
 - `apps/mobile/src/features/commerce/store.ts` - 2057 bytes - sha256 `63588c7d7e65e6fe0568138aadd34a2c71f9f0cae546e3ac81711bf532c7a279`
 - `apps/mobile/src/features/commerce/useCommerce.ts` - 1609 bytes - sha256 `a542c1503fe78f280f0d98e369e49a4d35209a1f261ef138b95526225072135c`
 - `apps/mobile/src/features/commerce/WhereToBuy.tsx` - 8380 bytes - sha256 `236b8c3c89b38d689ee02f83f18b90638a0ada5b4659edc8235df803d6b30293`
-- `supabase/functions/order-report-poll/index.ts` - 6210 bytes - sha256 `711fe84dbd24c92d7dc349c9a5be31a20fbe9bd0af7765b062d60383e0d5ed64`
+- `supabase/functions/order-report-poll/index.ts` - 5391 bytes - sha256 `5709d7128e0e151148a704a8e19d06220bd6d8959eb5f8a7071b0acc7f1f4b81`
 
 ### legalRegulatory - Ask and AI disclosures
 
@@ -600,7 +600,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `42f22959a4cdbcd0a3d40d1b2dd40ff01b00820c2d3a152842a1e58b2e6892ba`
+- Review snapshot SHA-256: `0e9c1e76686a611d41c6a3624cf5da2c64547a1f5b43fe41d86be4dc84768141`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review installed-base reconsent, local-first processing, trying/pregnancy/breastfeeding disclosure, preserved malformed records, server-only status handling, live ledger/RLS, and final consumer-health notice.
@@ -616,7 +616,7 @@ Sources:
 - `apps/mobile/src/lib/consent/consent.ts` - 1863 bytes - sha256 `b7e0a3d4e38a271f742826f6a1125de05b0e34fa0f1758e614a6d27eb30eb33a`
 - `apps/mobile/src/lib/consent/withdrawal.test.ts` - 1033 bytes - sha256 `7a4b15f07b67f884fce6540ff51309d01feffd7c387e359de7793bbfc903c6c3`
 - `apps/mobile/src/lib/consent/withdrawal.ts` - 961 bytes - sha256 `53073b8e3f422ff127594b6157821180864cfd7261c0e69cfc5df33da14bc316`
-- `apps/mobile/src/features/settings/actions.ts` - 7326 bytes - sha256 `c57765ab321d7331872ec2127895f70101d7abd313be26bfd7efcfc5714efcf0`
+- `apps/mobile/src/features/settings/actions.ts` - 8475 bytes - sha256 `2694b10eab06294abef612a907cd426f43ac3242ca338dca4224db9013b8d06f`
 - `supabase/functions/consent-withdrawal/index.ts` - 9129 bytes - sha256 `e4d2668a02048e1767f221c1486365a0fe18d709e462ff9ef1d9d590f3c4a2df`
 - `supabase/functions/_shared/storagePath.ts` - 591 bytes - sha256 `9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594`
 - `supabase/functions/_shared/storagePath.test.ts` - 1355 bytes - sha256 `3caf9cbb38b676c4a96dd9ae3f19479c205a90d31bb83fee7c7474bc76a2a2e9`
@@ -692,21 +692,26 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `ea70a857aa9011bf645e4dab6c1daca89c533daeb18b012486b77c784c3a86fb`
+- Review snapshot SHA-256: `2f20934bb601edf98c037475a1430291150aebbf132204cfb0b5b3f8a99a9b3d`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
-- Review-log notes: Must prove owner-scoped staging server data, seeded local coverage, redaction, and native cache cleanup.
+- Review-log notes: Must prove owner-scoped staging server data, seeded local coverage, reverse-trial/service-event completeness, deletion/vendor scrubbing, redaction, and native cache cleanup.
 
 Sources:
 
-- `apps/mobile/src/features/settings/actions.ts` - 7326 bytes - sha256 `c57765ab321d7331872ec2127895f70101d7abd313be26bfd7efcfc5714efcf0`
+- `apps/mobile/src/features/settings/actions.ts` - 8475 bytes - sha256 `2694b10eab06294abef612a907cd426f43ac3242ca338dca4224db9013b8d06f`
 - `apps/mobile/src/features/settings/localDeviceExport.ts` - 11185 bytes - sha256 `16dd55731879bace8db794440b2a369d40ea53cf092a7029d6ead480a8a12064`
 - `apps/mobile/src/features/settings/localDeviceExport.test.ts` - 7844 bytes - sha256 `a9694e2201bcd58b8479bf40011b152a5192e2700451e37c7a630daffc448dd5`
 - `apps/mobile/src/lib/storage/privateKV.ts` - 19145 bytes - sha256 `c8b6b56ddb38da8167adaf15d305ee8c5a8d1aaea2d8c344444cd426bc9e3971`
 - `apps/mobile/src/lib/storage/privateKV.test.ts` - 21541 bytes - sha256 `f40598f25641df646c012689736eb110d8686c82247447a62581f56b5bce1daf`
 - `apps/mobile/src/lib/legal/policyLinks.ts` - 722 bytes - sha256 `0fe9cf269e6b5e48119771f7b111d1620c095ffe35bb6ac56f63c2cd2ec1c863`
-- `supabase/functions/account-deletion/index.ts` - 15316 bytes - sha256 `7441711f06bd443c3d299c4607950c85ac586226c5d9879eeea601511a54659a`
-- `supabase/functions/data-export/index.ts` - 21892 bytes - sha256 `60a72ff0588741c040f6cfe5d2a10f000e49ffa9d6aafe212fe6d6875a1e207a`
+- `supabase/functions/account-deletion/index.ts` - 12999 bytes - sha256 `910099e3293553b83b5b55b0a923021a316ff8e01af67a59f538e2db9d805490`
+- `supabase/functions/data-export/index.ts` - 17220 bytes - sha256 `63742bf8fb230789275eeb5ef7d3044dbf3d60e408643a6c85c43d7782cf4bb1`
+- `supabase/functions/data-export/exportCore.ts` - 13115 bytes - sha256 `82d5284617ea31c14b28308f0594dd6946d67e7e5bd99c886b1dc4c459e871a8`
+- `supabase/functions/data-export/exportCore.test.ts` - 8843 bytes - sha256 `8b06212f7072ec31647a298fae66f0b133f28603edb4bf9cf0af054f451bd78a`
+- `supabase/functions/data-export/exportRegistry.ts` - 9516 bytes - sha256 `2535337af91faa1150aa41fb2d1608385eef6cb0787682399ec0475d7cc6fb41`
+- `supabase/functions/data-export/exportRegistry.test.ts` - 7293 bytes - sha256 `6680aaeafc26910dffeca595130a07f13e9f669b27424f40da724883756d9194`
+- `scripts/phase9/data-rights-smoke.mjs` - 39492 bytes - sha256 `5a040c40ef5876dd10699509a92c99ebab30ab6e362dcd06d51dbadbf43c930f`
 - `supabase/functions/_shared/storagePath.ts` - 591 bytes - sha256 `9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594`
 - `supabase/functions/_shared/storagePath.test.ts` - 1355 bytes - sha256 `3caf9cbb38b676c4a96dd9ae3f19479c205a90d31bb83fee7c7474bc76a2a2e9`
 
