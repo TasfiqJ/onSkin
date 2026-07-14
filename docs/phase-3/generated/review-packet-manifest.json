@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T20:03:15.505Z",
+  "generatedAt": "2026-07-14T00:08:50.613Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,15 +73,15 @@
     ]
   },
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "639c2b3b32a84eeb64f7a16303727ff298fea260",
+  "gitSha": "91534d5adea531db71867090745ba4226d6069c2",
   "gitStatus": "",
   "files": [
     {
       "packet": "packetContract",
       "path": "package.json",
       "exists": true,
-      "bytes": 21062,
-      "sha256": "9941896bfa7a3ee09bff6dee4c377410c6009c417111786732e974503cf42ca0"
+      "bytes": 22309,
+      "sha256": "a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e"
     },
     {
       "packet": "packetContract",
@@ -101,8 +101,8 @@
       "packet": "packetContract",
       "path": "scripts/phase3/build-review-packet.mjs",
       "exists": true,
-      "bytes": 8916,
-      "sha256": "2ab6f02e2fa4fbcf66e1adc337bfbaa0e55f7cab534d5c39f2e3706805291b00"
+      "bytes": 9775,
+      "sha256": "64e4a5ca3cf1fb249e6ef1671edcc4a2484248b2df8bafd17433c7609505e856"
     },
     {
       "packet": "packetContract",
@@ -472,8 +472,8 @@
       "packet": "privacyPlatform",
       "path": "docs/phase-3/privacy-security-review-log.md",
       "exists": true,
-      "bytes": 10686,
-      "sha256": "d65b951eebeb3d5b57bb998eb81d9145ba62b3f6a06724573928086410ee9c48"
+      "bytes": 13386,
+      "sha256": "597d6630a0525a7470ea368cb1b465c8fbcc80f6b7cbdd346efa8c25894b5e1e"
     },
     {
       "packet": "privacyPlatform",
@@ -500,8 +500,8 @@
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/features/settings/actions.ts",
       "exists": true,
-      "bytes": 7326,
-      "sha256": "c57765ab321d7331872ec2127895f70101d7abd313be26bfd7efcfc5714efcf0"
+      "bytes": 8475,
+      "sha256": "2694b10eab06294abef612a907cd426f43ac3242ca338dca4224db9013b8d06f"
     },
     {
       "packet": "privacyPlatform",
@@ -668,8 +668,8 @@
       "packet": "privacyPlatform",
       "path": "supabase/functions/account-deletion/index.ts",
       "exists": true,
-      "bytes": 15316,
-      "sha256": "7441711f06bd443c3d299c4607950c85ac586226c5d9879eeea601511a54659a"
+      "bytes": 12999,
+      "sha256": "910099e3293553b83b5b55b0a923021a316ff8e01af67a59f538e2db9d805490"
     },
     {
       "packet": "privacyPlatform",
@@ -684,6 +684,34 @@
       "exists": true,
       "bytes": 7141,
       "sha256": "447cc4ff465f1de1c4bfe86b32fa41bc777bc3c9a95a95a9822d039d99744361"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/functions/account-deletion/providerDeletion.ts",
+      "exists": true,
+      "bytes": 11026,
+      "sha256": "0aa0f2b92f7473d3d57444d909a7669ea4955d3d6c451f49396358f00b3dc1b0"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/functions/account-deletion/providerDeletion.test.ts",
+      "exists": true,
+      "bytes": 17446,
+      "sha256": "ce9e10bedcbd3a85f42009a79c9d4a7c5db9450c7cd1cc6ff8081b6b99e81d81"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/functions/account-deletion/serviceRoleCleanup.ts",
+      "exists": true,
+      "bytes": 3440,
+      "sha256": "f8d8d06f9fdf4b940af912773c6293eeb4530df110c8279b7d58788f344f053d"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/functions/account-deletion/serviceRoleCleanup.test.ts",
+      "exists": true,
+      "bytes": 16530,
+      "sha256": "e93c3fe4cd82445ad5833a148ec5aaee95eb95b17b29e02170693623b3f4f95a"
     },
     {
       "packet": "privacyPlatform",
@@ -703,8 +731,36 @@
       "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/index.ts",
       "exists": true,
-      "bytes": 21892,
-      "sha256": "60a72ff0588741c040f6cfe5d2a10f000e49ffa9d6aafe212fe6d6875a1e207a"
+      "bytes": 17220,
+      "sha256": "63742bf8fb230789275eeb5ef7d3044dbf3d60e408643a6c85c43d7782cf4bb1"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/functions/data-export/exportCore.ts",
+      "exists": true,
+      "bytes": 13115,
+      "sha256": "82d5284617ea31c14b28308f0594dd6946d67e7e5bd99c886b1dc4c459e871a8"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/functions/data-export/exportCore.test.ts",
+      "exists": true,
+      "bytes": 8843,
+      "sha256": "8b06212f7072ec31647a298fae66f0b133f28603edb4bf9cf0af054f451bd78a"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/functions/data-export/exportRegistry.ts",
+      "exists": true,
+      "bytes": 9516,
+      "sha256": "2535337af91faa1150aa41fb2d1608385eef6cb0787682399ec0475d7cc6fb41"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/functions/data-export/exportRegistry.test.ts",
+      "exists": true,
+      "bytes": 7293,
+      "sha256": "6680aaeafc26910dffeca595130a07f13e9f669b27424f40da724883756d9194"
     },
     {
       "packet": "privacyPlatform",
@@ -715,10 +771,52 @@
     },
     {
       "packet": "privacyPlatform",
+      "path": "supabase/migrations/20260615000027_phase6_payments.sql",
+      "exists": true,
+      "bytes": 3061,
+      "sha256": "ac68e551a04d938548f93da78994984786e29b3bfdda51d52f39f7371e6b6865"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/migrations/20260713000046_account_service_row_scrub.sql",
+      "exists": true,
+      "bytes": 45399,
+      "sha256": "268234dbc7c423eef097a2ea17790b871d8413913df71006c73d686e3bd471cf"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "supabase/migrations/20260713000047_account_obf_contribution_erasure.sql",
+      "exists": true,
+      "bytes": 8297,
+      "sha256": "152f6ecaf1def7bebd0a5ff1d71b4152b336de72dc8ce8e465f071810f7d023b"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "scripts/phase9/data-rights-smoke.mjs",
+      "exists": true,
+      "bytes": 39492,
+      "sha256": "5a040c40ef5876dd10699509a92c99ebab30ab6e362dcd06d51dbadbf43c930f"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "scripts/phase9/account-service-scrub-postgres-rehearsal.sql",
+      "exists": true,
+      "bytes": 26077,
+      "sha256": "b4898279189ebca369eaa9f212632d0a903917fe137c8ccbbec994cb3c34743a"
+    },
+    {
+      "packet": "privacyPlatform",
+      "path": "scripts/phase9/live-data-rights.mjs",
+      "exists": true,
+      "bytes": 43632,
+      "sha256": "9e394c076a62b5604a0842441d01edb19cde3b90e057cae354862f7f0b525216"
+    },
+    {
+      "packet": "privacyPlatform",
       "path": "scripts/phase2/check-env.mjs",
       "exists": true,
-      "bytes": 11132,
-      "sha256": "520719a738da550be0181335e8175f04f8e8d93c1450b99d2e67546fe9415380"
+      "bytes": 12471,
+      "sha256": "4b46946953830817527a3d4998bd9cb7be4c6d07b3fd60d284659ae0384da449"
     },
     {
       "packet": "privacyPlatform",
