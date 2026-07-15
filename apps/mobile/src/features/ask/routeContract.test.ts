@@ -37,7 +37,7 @@ describe('Ask route launch contracts', () => {
 
     expect(consent).toContain('applyAskConsentChoice');
     expect(consent).toContain('savingRef.current');
-    expect(consent).toContain('disabled={saving}');
+    expect(consent).toContain('disabled={saving || !consentControl.canChange}');
     expect(consent).toContain('ASK_COPY.privacy.saveFailedTitle');
     expect(consent).toContain('const [saveFailed, setSaveFailed] = useState(false)');
     expect(consent).toContain('accessibilityRole="alert"');
@@ -52,6 +52,12 @@ describe('Ask route launch contracts', () => {
     expect(consent).toContain("new Error('E2E_ASK_CONSENT_REVOKE_FAILURE')");
     expect(consent).toContain('onSaved: () => {');
     expect(consent).toContain('qc.setQueryData(queryKeys.askConsent(ownerScope), enabled);');
+    expect(consent).toContain('askConsentQueryOptions(ownerScope)');
+    expect(consent).toContain('consentManagementState(consented');
+    expect(consent).toContain('value={consentControl.value}');
+    expect(consent).toContain('disabled={saving || !consentControl.canChange}');
+    expect(consent).toContain('Consent status unavailable');
+    expect(consent).toContain('onPress={() => void consented.refetch()}');
     expect(consent).toContain('ToggleSwitch');
     expect(consent).toContain('accessibilityLabel={ASK_COPY.privacy.toggleLabel}');
     expect(consent).not.toContain('Alert.alert');

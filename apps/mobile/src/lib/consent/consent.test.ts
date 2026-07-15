@@ -1,21 +1,30 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  ACCOUNT_GENERATION_CHANGED,
   AccountGenerationLeaseError,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 
 import { getLatestConsents, recordConsent } from './consent';
 
 const mocks = vi.hoisted(() => {
   const insertAbortSignal = vi.fn(async () => ({ error: null }));
-  const latestAbortSignal = vi.fn(async () => ({
+  const latestAbortSignal = vi.fn(async (_signal: AbortSignal) => ({
     data: [{ consent_type: 'marketing', granted: true, granted_at: '2026-07-13' }],
     error: null,
   }));
-  const order = vi.fn(() => ({ abortSignal: latestAbortSignal }));
-  const select = vi.fn(() => ({ order }));
+  const latestBuilder: {
+    abortSignal: typeof latestAbortSignal;
+    order: ReturnType<typeof vi.fn>;
+  } = {
+    abortSignal: latestAbortSignal,
+    order: vi.fn(),
+  };
+  latestBuilder.order.mockReturnValue(latestBuilder);
+  const select = vi.fn(() => latestBuilder);
   const insert = vi.fn(() => ({ abortSignal: insertAbortSignal }));
   return {
     digest: vi.fn(async () => 'hash'),
@@ -24,7 +33,7 @@ const mocks = vi.hoisted(() => {
     insert,
     insertAbortSignal,
     latestAbortSignal,
-    order,
+    order: latestBuilder.order,
     select,
   };
 });
@@ -105,6 +114,62 @@ describe('consent backend guards', () => {
 
     expect(mocks.insertAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
     expect(mocks.latestAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+    expect(mocks.order).toHaveBeenNthCalledWith(1, 'granted_at', { ascending: false });
+    expect(mocks.order).toHaveBeenNthCalledWith(2, 'granted', { ascending: true });
+  });
+
+  it('detaches a hung ledger transport so an account boundary drains and late rows stay unpublished', async () => {
+    state.isSupabaseConfigured = true;
+    let resolveLedger!: (value: {
+      data: { consent_type: string; granted: boolean; granted_at: string }[];
+      error: null;
+    }) => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    let serverSignal: AbortSignal | null = null;
+    mocks.latestAbortSignal.mockImplementationOnce(
+      (signal: AbortSignal) =>
+        new Promise((resolve) => {
+          serverSignal = signal;
+          resolveLedger = resolve;
+          markStarted();
+        }),
+    );
+
+    let published = false;
+    const outcome = getLatestConsents().then(
+      (value) => {
+        published = true;
+        return { status: 'resolved' as const, value };
+      },
+      (error: unknown) => ({ status: 'rejected' as const, error }),
+    );
+    await started;
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    try {
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+      const rejected = await outcome;
+      expect(rejected.status).toBe('rejected');
+      expect((rejected as { error: Error }).error.message).toBe(ACCOUNT_GENERATION_CHANGED);
+      expect((serverSignal as AbortSignal | null)?.aborted).toBe(true);
+      expect(published).toBe(false);
+
+      resolveLedger({
+        data: [{ consent_type: 'marketing', granted: true, granted_at: '2026-07-14' }],
+        error: null,
+      });
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(published).toBe(false);
+    } finally {
+      resolveLedger({ data: [], error: null });
+      endAccountGenerationBoundary();
+      boundaryActive = false;
+    }
   });
 
   it('detaches a stalled consent hash when the owner generation changes', async () => {

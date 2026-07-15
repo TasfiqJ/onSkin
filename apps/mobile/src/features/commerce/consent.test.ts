@@ -1,7 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  ACCOUNT_GENERATION_CHANGED,
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
+} from '@/lib/auth/accountGeneration';
 
 const mocks = vi.hoisted(() => ({
-  getLatestConsents: vi.fn(),
+  getLatestConsentsWithLease: vi.fn(),
   recordConsent: vi.fn(),
   track: vi.fn(),
   withdrawConsent: vi.fn(),
@@ -14,7 +21,7 @@ vi.mock('@/lib/analytics/track', () => ({
 }));
 
 vi.mock('@/lib/consent/consent', () => ({
-  getLatestConsents: mocks.getLatestConsents,
+  getLatestConsentsWithLease: mocks.getLatestConsentsWithLease,
   recordConsent: mocks.recordConsent,
 }));
 
@@ -39,9 +46,17 @@ vi.mock('@/lib/storage/privateBoolean', () => ({
   },
 }));
 
+let boundaryActive = false;
+
+afterEach(() => {
+  if (!boundaryActive) return;
+  endAccountGenerationBoundary();
+  boundaryActive = false;
+});
+
 describe('commerce consent persistence', () => {
   beforeEach(() => {
-    mocks.getLatestConsents.mockReset();
+    mocks.getLatestConsentsWithLease.mockReset();
     mocks.recordConsent.mockReset();
     mocks.track.mockReset();
     mocks.withdrawConsent.mockReset();
@@ -55,7 +70,7 @@ describe('commerce consent persistence', () => {
 
   it('does not consult local storage when the consent ledger is authoritative', async () => {
     const { isCommerceConsented } = await import('./consent');
-    mocks.getLatestConsents.mockResolvedValueOnce({ data_sharing: false });
+    mocks.getLatestConsentsWithLease.mockResolvedValueOnce({ data_sharing: false });
 
     await expect(isCommerceConsented()).resolves.toBe(false);
 
@@ -64,7 +79,7 @@ describe('commerce consent persistence', () => {
 
   it('uses a valid local decision only when the ledger has no decision', async () => {
     const { isCommerceConsented } = await import('./consent');
-    mocks.getLatestConsents.mockResolvedValueOnce({});
+    mocks.getLatestConsentsWithLease.mockResolvedValueOnce({});
     mocks.readCommerceConsentLocal.mockResolvedValueOnce({
       status: 'available',
       value: true,
@@ -76,13 +91,62 @@ describe('commerce consent persistence', () => {
 
   it('does not disguise unavailable local commerce consent as a decline', async () => {
     const { isCommerceConsented } = await import('./consent');
-    mocks.getLatestConsents.mockRejectedValueOnce(new Error('ledger unavailable'));
+    mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
     mocks.readCommerceConsentLocal.mockResolvedValueOnce({
       status: 'unavailable',
       reason: 'content_key_storage_unavailable',
     });
 
     await expect(isCommerceConsented()).rejects.toThrow('PRIVATE_BOOLEAN_UNAVAILABLE');
+  });
+
+  it('detaches a hung local fallback on A to B and never publishes its late grant', async () => {
+    const { isCommerceConsented } = await import('./consent');
+    mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
+    let resolveLocal!: (value: {
+      status: 'available';
+      value: boolean;
+      format: 'current';
+    }) => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    mocks.readCommerceConsentLocal.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveLocal = resolve;
+          markStarted();
+        }),
+    );
+
+    let published = false;
+    const outcome = isCommerceConsented().then(
+      (value) => {
+        published = true;
+        return { status: 'resolved' as const, value };
+      },
+      (error: unknown) => ({ status: 'rejected' as const, error }),
+    );
+    await started;
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    try {
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+      const rejected = await outcome;
+      expect(rejected.status).toBe('rejected');
+      expect((rejected as { error: Error }).error.message).toBe(ACCOUNT_GENERATION_CHANGED);
+      expect(published).toBe(false);
+
+      resolveLocal({ status: 'available', value: true, format: 'current' });
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(published).toBe(false);
+    } finally {
+      resolveLocal({ status: 'available', value: true, format: 'current' });
+      endAccountGenerationBoundary();
+      boundaryActive = false;
+    }
   });
 
   it('records commerce grant analytics after the local-first consent flag saves', async () => {

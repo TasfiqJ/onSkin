@@ -73,8 +73,20 @@ describe('settings privacy choice application', () => {
     expect(source).toContain("onChange={(v) => void setConsent('data_sharing', v, 'privacy')}");
     expect(source).not.toContain("Alert.alert('Choice not saved'");
     expect(source).not.toContain("Alert.alert('Encrypted cloud backup'");
-    expect(source).toContain("disabled={savingPrivacy === 'marketing'}");
-    expect(source).toContain("disabled={savingPrivacy === 'data_sharing'}");
+    expect(source).toContain(
+      "disabled={savingPrivacy === 'marketing' || !marketingConsentControl.canChange}",
+    );
+    expect(source).toContain("savingPrivacy === 'data_sharing' || !commerceConsentControl.canChange");
+    expect(source).toContain('latestConsentsQueryOptions(ownerScope)');
+    expect(source).toContain('commerceConsentQueryOptions(ownerScope)');
+    expect(source).toContain('const marketingConsentControl = consentManagementState(');
+    expect(source).toContain('const commerceConsentControl = consentManagementState(');
+    expect(source).toContain('value={marketingConsentControl.value}');
+    expect(source).toContain('value={commerceConsentControl.value}');
+    expect(source).toContain('!marketingConsentControl.canChange');
+    expect(source).toContain('!commerceConsentControl.canChange');
+    expect(source).toContain('onRetry={() => void consents.refetch()}');
+    expect(source).toContain('onRetry={() => void commerceConsent.refetch()}');
     expect(source).toContain("if (type !== 'data_sharing') throw error;");
     expect(source).not.toContain("if (type === 'data_sharing' && granted)");
     expect(source).not.toContain('await setCommerceConsentLocal(false).catch(() => undefined);');

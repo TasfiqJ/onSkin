@@ -38,6 +38,7 @@ type StoredSkinProfileEnvelope = {
 };
 
 export const SKIN_PROFILE_INVALID = 'SKIN_PROFILE_INVALID';
+export const SKIN_PROFILE_UNAVAILABLE = 'SKIN_PROFILE_UNAVAILABLE';
 export const SKIN_PROFILE_UNSUPPORTED_VERSION = 'SKIN_PROFILE_UNSUPPORTED_VERSION';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -260,6 +261,24 @@ export async function getStoredSkinProfile(): Promise<StoredSkinProfile | null> 
   return result.status === 'available' ? result.profile : null;
 }
 
+export type LocalOnboardingStatus = 'complete' | 'missing';
+
+/**
+ * Strict entry-gate read. Only a genuinely absent profile means onboarding can
+ * continue or fall through to the server mirror. Unreadable or unrecognized
+ * private bytes are retained for explicit recovery and must fail closed.
+ */
+export async function readLocalOnboardingStatus(): Promise<LocalOnboardingStatus> {
+  const result = await readStoredSkinProfile();
+  if (result.status === 'available') return 'complete';
+  if (result.status === 'missing') return 'missing';
+  if (result.status === 'unsupported_version') {
+    throw new Error(SKIN_PROFILE_UNSUPPORTED_VERSION);
+  }
+  if (result.status === 'invalid') throw new Error(SKIN_PROFILE_INVALID);
+  throw new Error(SKIN_PROFILE_UNAVAILABLE);
+}
+
 export async function setStoredSkinProfile(rec: StoredSkinProfile): Promise<void> {
   const normalized = normalizeStoredSkinProfile(rec);
   if (!normalized) throw new Error('INVALID_SKIN_PROFILE_RECORD');
@@ -277,7 +296,7 @@ export async function updateStoredPregnancyStatus(
   }
   let next: StoredSkinProfile | null = null;
   await updatePrivateItem(KEY, (currentRaw) => {
-    if (currentRaw === null) throw new Error('SKIN_PROFILE_UNAVAILABLE');
+    if (currentRaw === null) throw new Error(SKIN_PROFILE_UNAVAILABLE);
     const current = decodeStoredSkinProfile(currentRaw);
     next = {
       ...current,
@@ -285,13 +304,13 @@ export async function updateStoredPregnancyStatus(
     };
     return encodeStoredSkinProfile(next);
   });
-  if (!next) throw new Error('SKIN_PROFILE_UNAVAILABLE');
+  if (!next) throw new Error(SKIN_PROFILE_UNAVAILABLE);
   return next;
 }
 
 /** Has the user completed onboarding on this device? (the entry-gate signal). */
 export async function isOnboardedLocal(): Promise<boolean> {
-  return (await getStoredSkinProfile()) !== null;
+  return (await readLocalOnboardingStatus()) === 'complete';
 }
 
 /** Cleared on account deletion / full reset (not on an in-session retry). */

@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { supabase } from '@/lib/supabase/client';
-import { queryKeys } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+import { supabase } from '@/lib/supabase/client';
 
-import { isCommerceConsented } from './consent';
+import { commerceConsentQueryOptions } from './consentQuery';
 import { demoWhereToBuy, resolveWhereToBuy, type AffiliateLinkRow } from './links';
 
 // Commerce data hooks (docs/10). The "where to buy" options resolve from the
@@ -15,10 +14,10 @@ import { demoWhereToBuy, resolveWhereToBuy, type AffiliateLinkRow } from './link
 
 export function useCommerceConsent() {
   const ownerScope = useOwnerQueryScope();
-  return useQuery({
-    queryKey: queryKeys.commerceConsent(ownerScope),
-    queryFn: isCommerceConsented,
-  });
+  const query = useQuery(commerceConsentQueryOptions(ownerScope));
+  // Consent enforcement never publishes a prior grant while a fresh strict
+  // read is pending or unavailable. Management screens use separate semantics.
+  return { ...query, data: query.isSuccess && !query.isFetching ? query.data : undefined };
 }
 
 export function useWhereToBuy(productType: string | null) {

@@ -4,6 +4,7 @@ import * as Crypto from 'expo-crypto';
 import {
   awaitAccountGenerationLease,
   runAccountGenerationOperation,
+  type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { requireAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { isSupabaseConfigured } from '@/lib/env';
@@ -44,22 +45,32 @@ export async function recordConsent(params: {
   });
 }
 
-/** Latest consent state per type for the current user (a revocation is a newer row). */
-export async function getLatestConsents(): Promise<Record<string, boolean>> {
+/** Latest consent state per type for the leased owner (a revocation is a newer row). */
+export async function getLatestConsentsWithLease(
+  lease: AccountGenerationLease,
+): Promise<Record<string, boolean>> {
+  lease.assertCurrent();
   if (!isSupabaseConfigured) return {};
 
-  return runAccountGenerationOperation(async (lease) => {
-    const { data, error } = await supabase
+  const { data, error } = await awaitAccountGenerationLease(lease, () =>
+    supabase
       .from('consents')
       .select('consent_type, granted, granted_at')
       .order('granted_at', { ascending: false })
-      .abortSignal(lease.signal);
-    lease.assertCurrent();
-    if (error) throw error;
-    const latest: Record<string, boolean> = {};
-    for (const row of data ?? []) {
-      if (!(row.consent_type in latest)) latest[row.consent_type] = row.granted;
-    }
-    return latest;
-  });
+      // Match public.has_current_consent: an equal-time revocation wins.
+      .order('granted', { ascending: true })
+      .abortSignal(lease.signal),
+  );
+  lease.assertCurrent();
+  if (error) throw error;
+  const latest: Record<string, boolean> = {};
+  for (const row of data ?? []) {
+    if (!(row.consent_type in latest)) latest[row.consent_type] = row.granted;
+  }
+  return latest;
+}
+
+/** Compatibility entry point for non-query callers. Owner-bound queries reuse their lease. */
+export function getLatestConsents(): Promise<Record<string, boolean>> {
+  return runAccountGenerationOperation(getLatestConsentsWithLease);
 }

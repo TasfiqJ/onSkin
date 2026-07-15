@@ -6,10 +6,12 @@ import { ScrollView, View } from 'react-native';
 import { DeferredSurface } from '@/components/launch/DeferredSurface';
 import { Button, Card, RouteIconButton, Screen, Text, ToggleSwitch } from '@/components/ui';
 import { applyAskConsentChoice } from '@/features/ask/applyConsentChoice';
-import { grantAskConsent, isAskConsented, revokeAskConsent } from '@/features/ask/consent';
+import { grantAskConsent, revokeAskConsent } from '@/features/ask/consent';
+import { askConsentQueryOptions } from '@/features/ask/consentQuery';
 import { ASK_COPY } from '@/features/ask/copy';
 import { clearAskStore, setAskConsentLocal } from '@/features/ask/store';
 import { BRAND } from '@/lib/brand';
+import { consentManagementState } from '@/lib/consent/consentQuery';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_ASK_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { isOwnerQueryScopeCurrent, ownerQueryPrefixes, queryKeys } from '@/lib/query/queryKeys';
@@ -73,11 +75,10 @@ export default function AskConsentScreen() {
   const scrollRef = useRef<ScrollView | null>(null);
   const failureModes = devAskConsentFailureModes();
   const consented = useQuery({
-    queryKey: queryKeys.askConsent(ownerScope),
-    queryFn: isAskConsented,
+    ...askConsentQueryOptions(ownerScope),
     enabled: phase7Flags.cloudAsk,
-    retry: 0,
   });
+  const consentControl = consentManagementState(consented, (value) => value === true);
 
   if (!phase7Flags.cloudAsk)
     return (
@@ -203,12 +204,39 @@ export default function AskConsentScreen() {
           </View>
           <ToggleSwitch
             accessibilityLabel={ASK_COPY.privacy.toggleLabel}
-            value={consented.data ?? false}
-            disabled={saving}
+            value={consentControl.value}
+            disabled={saving || !consentControl.canChange}
             inactiveTrackColor={colors.greigeDeep}
             onChange={(v) => void onToggle(v)}
           />
         </Card>
+
+        {consentControl.isUnavailable ? (
+          <Card accessibilityRole="alert" className="mt-3">
+            <Text className="font-sans-semibold text-[13px]">Consent status unavailable</Text>
+            <Text className="mt-1 text-[12px]" tone="muted" style={{ lineHeight: 17 }}>
+              {consentControl.hasVerifiedValue
+                ? 'The last confirmed choice is still shown. You can turn an active choice off, or try the read again.'
+                : 'We could not safely read this choice. Nothing was changed, and the switch stays unavailable until the read succeeds.'}
+            </Text>
+            <Button
+              accessibilityLabel="Retry Ask consent status"
+              className="mt-3"
+              disabled={!consentControl.canRetry}
+              label={consentControl.isChecking ? 'Trying again...' : 'Try again'}
+              variant="ghost"
+              onPress={() => void consented.refetch()}
+            />
+          </Card>
+        ) : consentControl.isChecking ? (
+          <Text
+            accessibilityLiveRegion="polite"
+            className="mt-3 text-center text-[12px]"
+            tone="muted"
+          >
+            Checking your saved consent choice...
+          </Text>
+        ) : null}
 
         {saveFailed ? (
           <Card

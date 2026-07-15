@@ -149,19 +149,23 @@ export function usePhotoActions() {
   };
 
   const add = useMutation({
-    mutationFn: (input: NewPhoto) => addPhoto(input),
+    mutationFn: (input: NewPhoto) =>
+      runOwnerQueryOperation(ownerScope, () => addPhoto(input)),
     onSettled: invalidate,
   });
   const reference = useMutation({
-    mutationFn: (id: string) => setReference(id),
+    mutationFn: (id: string) =>
+      runOwnerQueryOperation(ownerScope, () => setReference(id)),
     onSettled: invalidate,
   });
   const remove = useMutation({
-    mutationFn: (id: string) => removePhoto(id),
+    mutationFn: (id: string) =>
+      runOwnerQueryOperation(ownerScope, () => removePhoto(id)),
     onSettled: invalidate,
   });
   const note = useMutation({
-    mutationFn: ({ id, notes }: { id: string; notes: string }) => updatePhoto(id, { notes }),
+    mutationFn: ({ id, notes }: { id: string; notes: string }) =>
+      runOwnerQueryOperation(ownerScope, () => updatePhoto(id, { notes })),
     onSettled: invalidate,
   });
 

@@ -1,7 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  ACCOUNT_GENERATION_CHANGED,
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
+} from '@/lib/auth/accountGeneration';
 
 const mocks = vi.hoisted(() => ({
-  getLatestConsents: vi.fn(),
+  getLatestConsentsWithLease: vi.fn(),
   recordConsent: vi.fn(),
   track: vi.fn(),
   withdrawConsent: vi.fn(),
@@ -15,7 +22,7 @@ vi.mock('@/lib/analytics/track', () => ({
 }));
 
 vi.mock('@/lib/consent/consent', () => ({
-  getLatestConsents: mocks.getLatestConsents,
+  getLatestConsentsWithLease: mocks.getLatestConsentsWithLease,
   recordConsent: mocks.recordConsent,
 }));
 
@@ -41,9 +48,17 @@ vi.mock('@/lib/storage/privateBoolean', () => ({
   },
 }));
 
+let boundaryActive = false;
+
+afterEach(() => {
+  if (!boundaryActive) return;
+  endAccountGenerationBoundary();
+  boundaryActive = false;
+});
+
 describe('community consent persistence', () => {
   beforeEach(() => {
-    mocks.getLatestConsents.mockReset();
+    mocks.getLatestConsentsWithLease.mockReset();
     mocks.recordConsent.mockReset();
     mocks.track.mockReset();
     mocks.withdrawConsent.mockReset();
@@ -59,7 +74,7 @@ describe('community consent persistence', () => {
 
   it('uses the explicit local community decision when the ledger is unavailable', async () => {
     const { isCommunityConsented } = await import('./consent');
-    mocks.getLatestConsents.mockRejectedValueOnce(new Error('ledger unavailable'));
+    mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
     mocks.readCommunityConsentLocal.mockResolvedValueOnce({
       status: 'available',
       value: false,
@@ -71,12 +86,61 @@ describe('community consent persistence', () => {
 
   it('does not disguise a future local community consent schema as a decline', async () => {
     const { isCommunityConsented } = await import('./consent');
-    mocks.getLatestConsents.mockRejectedValueOnce(new Error('ledger unavailable'));
+    mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
     mocks.readCommunityConsentLocal.mockResolvedValueOnce({ status: 'unsupported_version' });
 
     await expect(isCommunityConsented()).rejects.toThrow(
       'PRIVATE_BOOLEAN_UNSUPPORTED_VERSION',
     );
+  });
+
+  it('detaches a hung local fallback on A to B without publishing its late grant', async () => {
+    const { isCommunityConsented } = await import('./consent');
+    mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
+    let resolveLocal!: (value: {
+      status: 'available';
+      value: boolean;
+      format: 'current';
+    }) => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    mocks.readCommunityConsentLocal.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveLocal = resolve;
+          markStarted();
+        }),
+    );
+
+    let published = false;
+    const outcome = isCommunityConsented().then(
+      (value) => {
+        published = true;
+        return { status: 'resolved' as const, value };
+      },
+      (error: unknown) => ({ status: 'rejected' as const, error }),
+    );
+    await started;
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    try {
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+      const rejected = await outcome;
+      expect(rejected.status).toBe('rejected');
+      expect((rejected as { error: Error }).error.message).toBe(ACCOUNT_GENERATION_CHANGED);
+      expect(published).toBe(false);
+
+      resolveLocal({ status: 'available', value: true, format: 'current' });
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(published).toBe(false);
+    } finally {
+      resolveLocal({ status: 'available', value: true, format: 'current' });
+      endAccountGenerationBoundary();
+      boundaryActive = false;
+    }
   });
 
   it('records community grant analytics only after the consent ledger saves', async () => {

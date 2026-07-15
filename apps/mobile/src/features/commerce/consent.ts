@@ -1,6 +1,10 @@
 import { track } from '@/lib/analytics/track';
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
-import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
+import { getLatestConsentsWithLease, recordConsent } from '@/lib/consent/consent';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 
@@ -22,27 +26,32 @@ import { readCommerceConsentLocal, setCommerceConsentLocal } from './store';
 // "add it to your shelf" path. Revocable from the You-tab "Share data with partners"
 // toggle (a new ledger row). Which re-locks the affordance.
 
-export async function isCommerceConsented(): Promise<boolean> {
+export async function isCommerceConsentedWithLease(
+  lease: AccountGenerationLease,
+): Promise<boolean> {
   // Ledger authoritative-if-present, else the local-first flag (resolveCommerceConsent,
   // tested). A revocation re-locks even against a stale local flag (review fix, D-061);
   // the You-tab toggle ALSO mirrors the local flag (you.tsx) so v1 (no backend)
   // revocation re-locks too.
-  return runAccountGenerationOperation(async (lease) => {
-    let ledger: boolean | undefined;
-    try {
-      const consents = await getLatestConsents();
-      lease.assertCurrent();
-      if ('data_sharing' in consents) ledger = consents['data_sharing'];
-    } catch {
-      lease.assertCurrent();
-      /* offline / no DB. Fall back to the local-first flag */
-    }
-    if (ledger !== undefined) return resolveCommerceConsent(ledger, false);
-
-    const local = await readCommerceConsentLocal();
+  lease.assertCurrent();
+  let ledger: boolean | undefined;
+  try {
+    const consents = await getLatestConsentsWithLease(lease);
     lease.assertCurrent();
-    return resolveCommerceConsent(ledger, requirePrivateBoolean(local));
-  });
+    if ('data_sharing' in consents) ledger = consents['data_sharing'];
+  } catch {
+    lease.assertCurrent();
+    /* offline / no DB. Fall back to the local-first flag */
+  }
+  if (ledger !== undefined) return resolveCommerceConsent(ledger, false);
+
+  const local = await awaitAccountGenerationLease(lease, readCommerceConsentLocal);
+  lease.assertCurrent();
+  return resolveCommerceConsent(ledger, requirePrivateBoolean(local));
+}
+
+export function isCommerceConsented(): Promise<boolean> {
+  return runAccountGenerationOperation(isCommerceConsentedWithLease);
 }
 
 export async function grantCommerceConsent(): Promise<void> {

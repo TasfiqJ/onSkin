@@ -1,13 +1,16 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, ExpiryBadge, Sheet, StripedThumb, Text } from '@/components/ui';
-import { isCommerceConsented } from '@/features/commerce/consent';
 import {
   CommerceLinkNotice,
   type CommerceLinkFeedback,
 } from '@/features/commerce/CommerceLinkNotice';
+import {
+  readCommerceConsentForOwner,
+  resolveCommerceConsentRead,
+} from '@/features/commerce/consentQuery';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { isSafetyCriticalCategory } from '@/features/shelf/categories';
 import { useShelfMutations } from '@/features/shelf/mutations';
@@ -15,6 +18,8 @@ import { SHELF_REPLENISHMENT_ALREADY_REPLACED } from '@/features/shelf/store';
 import { useShelf } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
+import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 
 // Replenishment (design screen 09, docs/04 §6). An honest PAO/expiry/finished
@@ -25,6 +30,7 @@ export default function ReplenishScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data } = useShelf();
   const m = useShelfMutations();
+  const ownerScope = useOwnerQueryScope();
   const [similarFeedback, setSimilarFeedback] = useState<{
     itemId: string;
     feedback: CommerceLinkFeedback;
@@ -32,8 +38,22 @@ export default function ReplenishScreen() {
   const [reAdding, setReAdding] = useState(false);
   const [reAddFailed, setReAddFailed] = useState(false);
   const [alreadyReplaced, setAlreadyReplaced] = useState(false);
+  const [similarPending, setSimilarPending] = useState(false);
+  const [similarReadFailureItemId, setSimilarReadFailureItemId] = useState<string | null>(null);
+  const mountedRef = useRef(true);
+  const similarPendingRef = useRef(false);
+  const similarRequestRef = useRef(0);
 
   const item = [...(data?.items ?? []), ...(data?.archive ?? [])].find((i) => i.id === id);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      similarPendingRef.current = false;
+      similarRequestRef.current += 1;
+    };
+  }, []);
 
   // Surface the nudge once (analytics). The in-app prompt, not a notification (§6).
   useEffect(() => {
@@ -95,6 +115,7 @@ export default function ReplenishScreen() {
     : 'Same role, claim-safe matches';
   const activeSimilarFeedback =
     similarFeedback?.itemId === item.id ? similarFeedback.feedback : null;
+  const activeSimilarReadFailure = similarReadFailureItemId === item.id;
 
   const reAdd = async () => {
     if (reAdding) return;
@@ -117,24 +138,52 @@ export default function ReplenishScreen() {
   };
 
   const seeSimilar = async () => {
+    if (similarPendingRef.current || !isOwnerQueryScopeCurrent(ownerScope)) return;
+    const itemId = item.id;
+    const requestId = ++similarRequestRef.current;
+    similarPendingRef.current = true;
+    setSimilarPending(true);
+    setSimilarReadFailureItemId(null);
     haptics.select();
     track('replenishment_nudge_tapped', { action: 'see_similar' });
     // Route through the SAME commerce MHMDA gate the where-to-buy surface uses
     // (docs/10 §3): no consent => open the consent sheet, never share silently.
     // Consented => the honest empty state until the catalog lands (B-CATALOG-SEED).
-    const consented = await isCommerceConsented();
-    if (!consented) {
-      setSimilarFeedback(null);
-      router.push('/commerce/consent');
-      return;
+    const isCurrent = () =>
+      mountedRef.current &&
+      similarRequestRef.current === requestId &&
+      isOwnerQueryScopeCurrent(ownerScope);
+    try {
+      const outcome = await resolveCommerceConsentRead(
+        () => readCommerceConsentForOwner(ownerScope),
+        isCurrent,
+      );
+
+      if (!isCurrent()) return;
+      if (outcome === 'stale') return;
+      if (outcome === 'unavailable') {
+        setSimilarFeedback(null);
+        setSimilarReadFailureItemId(itemId);
+        return;
+      }
+      if (outcome === 'declined') {
+        setSimilarFeedback(null);
+        router.push('/commerce/consent');
+        return;
+      }
+      setSimilarFeedback({
+        itemId,
+        feedback: {
+          title: 'Similar options',
+          body: COMMERCE_COPY.whereToBuy.emptyState,
+        },
+      });
+    } finally {
+      if (isCurrent()) {
+        similarPendingRef.current = false;
+        setSimilarPending(false);
+      }
     }
-    setSimilarFeedback({
-      itemId: item.id,
-      feedback: {
-        title: 'Similar options',
-        body: COMMERCE_COPY.whereToBuy.emptyState,
-      },
-    });
   };
 
   return (
@@ -202,15 +251,18 @@ export default function ReplenishScreen() {
         ) : null}
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ busy: similarPending, disabled: similarPending }}
+          disabled={similarPending}
           onPress={() => void seeSimilar()}
           className="flex-row items-center gap-3.5 rounded-[18px] border border-hairline bg-paper-raised p-4"
+          style={{ opacity: similarPending ? 0.68 : 1 }}
         >
           <View className="h-9 w-9 items-center justify-center rounded-[10px] bg-greige">
             <Text tone="muted">⌕</Text>
           </View>
           <View className="flex-1">
             <Text variant="body" className="font-sans-semibold">
-              See similar options
+              {similarPending ? 'Checking consent...' : 'See similar options'}
             </Text>
             <Text variant="bodySm" tone="muted">
               {similarSub}
@@ -218,6 +270,24 @@ export default function ReplenishScreen() {
           </View>
         </Pressable>
         {activeSimilarFeedback ? <CommerceLinkNotice feedback={activeSimilarFeedback} /> : null}
+        {activeSimilarReadFailure ? (
+          <View accessibilityRole="alert" className="rounded-[14px] bg-clay-tint px-4 py-3">
+            <Text variant="bodySm" className="font-sans-semibold">
+              Consent status unavailable
+            </Text>
+            <Text variant="bodySm" tone="muted" className="mt-1">
+              We could not safely read your saved data-sharing choice. Nothing was changed, and no
+              shopping link was opened.
+            </Text>
+            <Button
+              accessibilityLabel="Retry data-sharing consent status"
+              className="mt-2"
+              label="Try again"
+              variant="ghost"
+              onPress={() => void seeSimilar()}
+            />
+          </View>
+        ) : null}
       </View>
 
       <View className="mt-4 flex-row items-center justify-center gap-2">

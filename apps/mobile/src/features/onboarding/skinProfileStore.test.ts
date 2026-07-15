@@ -3,9 +3,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   getStoredSkinProfile,
   isOnboardedLocal,
+  readLocalOnboardingStatus,
   readStoredSkinProfile,
   setStoredSkinProfile,
   SKIN_PROFILE_INVALID,
+  SKIN_PROFILE_UNAVAILABLE,
   SKIN_PROFILE_UNSUPPORTED_VERSION,
   type StoredSkinProfile,
   updateStoredPregnancyStatus,
@@ -83,7 +85,7 @@ describe('skin profile local onboarding gate store', () => {
     mocks.storage.set(KEY, '{not-json');
 
     await expect(getStoredSkinProfile()).resolves.toBeNull();
-    await expect(isOnboardedLocal()).resolves.toBe(false);
+    await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_INVALID);
     expect(mocks.storage.get(KEY)).toBe('{not-json');
     await expect(readStoredSkinProfile()).resolves.toEqual({ status: 'invalid', profile: null });
   });
@@ -92,6 +94,7 @@ describe('skin profile local onboarding gate store', () => {
     mocks.storage.set(KEY, JSON.stringify({ goals: ['clear_skin'], completedAt: '2026-07-07' }));
 
     await expect(getStoredSkinProfile()).resolves.toBeNull();
+    await expect(readLocalOnboardingStatus()).rejects.toThrow(SKIN_PROFILE_INVALID);
     expect(mocks.storage.has(KEY)).toBe(true);
   });
 
@@ -133,7 +136,7 @@ describe('skin profile local onboarding gate store', () => {
     );
 
     await expect(getStoredSkinProfile()).resolves.toBeNull();
-    await expect(isOnboardedLocal()).resolves.toBe(false);
+    await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_INVALID);
     expect(mocks.storage.has(KEY)).toBe(true);
   });
 
@@ -148,18 +151,25 @@ describe('skin profile local onboarding gate store', () => {
     );
 
     await expect(getStoredSkinProfile()).resolves.toBeNull();
-    await expect(isOnboardedLocal()).resolves.toBe(false);
+    await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_INVALID);
     expect(mocks.storage.has(KEY)).toBe(true);
   });
 
   it('distinguishes a private-storage read failure from an absent profile', async () => {
+    const preserved = JSON.stringify({ version: 99, opaque: 'keep-me' });
+    mocks.storage.set(KEY, preserved);
     mocks.getPrivateItem.mockRejectedValueOnce(new Error('secure storage unavailable'));
 
     await expect(readStoredSkinProfile()).resolves.toEqual({
       status: 'unavailable',
       profile: null,
     });
-    await expect(readStoredSkinProfile()).resolves.toEqual({ status: 'missing', profile: null });
+    mocks.getPrivateItem.mockRejectedValueOnce(new Error('secure storage unavailable'));
+    await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_UNAVAILABLE);
+    expect(mocks.storage.get(KEY)).toBe(preserved);
+    mocks.storage.delete(KEY);
+    await expect(readLocalOnboardingStatus()).resolves.toBe('missing');
+    await expect(isOnboardedLocal()).resolves.toBe(false);
   });
 
   it('saves only valid skin profile records', async () => {
@@ -223,6 +233,7 @@ describe('skin profile local onboarding gate store', () => {
       mocks.storage.set(KEY, raw);
 
       await expect(readStoredSkinProfile()).resolves.toEqual({ status, profile: null });
+      await expect(isOnboardedLocal()).rejects.toThrow(code);
       await expect(setStoredSkinProfile(validProfile)).rejects.toThrow(code);
       await expect(updateStoredPregnancyStatus('pregnant')).rejects.toThrow(code);
       expect(mocks.storage.get(KEY)).toBe(raw);

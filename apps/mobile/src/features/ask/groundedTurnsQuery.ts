@@ -1,5 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import { awaitAccountGenerationLease } from '@/lib/auth/accountGeneration';
 import {
   queryKeys,
   runOwnerQueryOperation,
@@ -17,7 +18,12 @@ export function groundedTurnsQueryOptions(
     queryKey: queryKeys.askGroundedTurns(ownerScope, period),
     refetchOnReconnect: true,
     refetchOnWindowFocus: true,
-    queryFn: () => runOwnerQueryOperation(ownerScope, () => getGroundedTurns(period)),
+    queryFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        const count = await awaitAccountGenerationLease(lease, () => getGroundedTurns(period));
+        lease.assertCurrent();
+        return count;
+      }),
     enabled,
     networkMode: 'always',
     retry: 0,

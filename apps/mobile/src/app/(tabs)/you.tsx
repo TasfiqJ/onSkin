@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
-import { isCommerceConsented } from '@/features/commerce/consent';
+import { commerceConsentQueryOptions } from '@/features/commerce/consentQuery';
 import { setCommerceConsentLocal } from '@/features/commerce/store';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { requestReviewAfterValue } from '@/features/review/prompt';
@@ -15,7 +15,12 @@ import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { BRAND } from '@/lib/brand';
-import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import { recordConsent } from '@/lib/consent/consent';
+import {
+  consentManagementState,
+  latestConsentsQueryOptions,
+  type ConsentManagementState,
+} from '@/lib/consent/consentQuery';
 import {
   appLockUserMessage,
   dataRightsUserMessage,
@@ -96,6 +101,54 @@ type InlineNotice = {
   message: string;
 };
 type PendingDataRightsAction = 'withdraw_health_data' | 'delete_account';
+
+function ConsentReadState({
+  label,
+  onRetry,
+  state,
+}: {
+  label: string;
+  onRetry: () => void;
+  state: ConsentManagementState;
+}) {
+  if (state.isUnavailable) {
+    return (
+      <View
+        accessibilityRole="alert"
+        className="mb-2 rounded-[12px] bg-clay-tint px-4 py-3"
+      >
+        <Text variant="bodySm" className="font-sans-semibold">
+          {label} status unavailable
+        </Text>
+        <Text variant="bodySm" tone="muted" className="mt-1">
+          {state.hasVerifiedValue
+            ? 'The last confirmed choice is shown. You can turn an active choice off, or try the read again.'
+            : 'We could not safely read this choice. Nothing was changed, and the switch remains unavailable.'}
+        </Text>
+        <Button
+          accessibilityLabel={`Retry ${label} consent status`}
+          className="mt-2"
+          disabled={!state.canRetry}
+          label={state.isChecking ? 'Trying again...' : 'Try again'}
+          variant="ghost"
+          onPress={onRetry}
+        />
+      </View>
+    );
+  }
+
+  if (!state.isChecking) return null;
+  return (
+    <Text
+      accessibilityLiveRegion="polite"
+      variant="bodySm"
+      tone="muted"
+      className="pb-2 text-center"
+    >
+      Checking {label.toLowerCase()} consent...
+    </Text>
+  );
+}
 
 function Row({
   label,
@@ -305,20 +358,20 @@ export default function YouScreen() {
   const savingPrivacyRef = useRef(false);
   const savingAppLockRef = useRef(false);
 
-  const consents = useQuery({
-    queryKey: queryKeys.consents(ownerScope),
-    queryFn: getLatestConsents,
-    retry: 0,
-  });
+  const consents = useQuery(latestConsentsQueryOptions(ownerScope));
   // The RESOLVED commerce data-sharing consent (ledger-if-present, else the local
   // flag). Both data-sharing surfaces read this so that offline (v1, no backend) a
   // sheet-granted consent shows ON, instead of the toggle reading the empty ledger
   // while the gate reads the local flag (docs/10 §6 cross-surface consistency).
-  const commerceConsent = useQuery({
-    queryKey: queryKeys.commerceConsent(ownerScope),
-    queryFn: isCommerceConsented,
-    retry: 0,
-  });
+  const commerceConsent = useQuery(commerceConsentQueryOptions(ownerScope));
+  const marketingConsentControl = consentManagementState(
+    consents,
+    (latest) => latest.marketing === true,
+  );
+  const commerceConsentControl = consentManagementState(
+    commerceConsent,
+    (value) => value === true,
+  );
   const { data: ent } = useEntitlement();
   const accountLabel = isAnonymous ? 'Guest (not saved)' : (user?.email ?? 'Signed in');
   const planLabel = ent?.inReverseTrial
@@ -789,12 +842,19 @@ export default function YouScreen() {
             >
               <Toggle
                 accessibilityLabel="Share data with partners for where-to-buy"
-                value={commerceConsent.data ?? false}
-                disabled={savingPrivacy === 'data_sharing'}
+                value={commerceConsentControl.value}
+                disabled={
+                  savingPrivacy === 'data_sharing' || !commerceConsentControl.canChange
+                }
                 onChange={(v) => void setConsent('data_sharing', v, 'commerce')}
               />
             </Row>
             {renderPrivacyFeedback('data_sharing', 'commerce')}
+            <ConsentReadState
+              label="Data sharing"
+              state={commerceConsentControl}
+              onRetry={() => void commerceConsent.refetch()}
+            />
           </Card>
         ) : null}
 
@@ -890,12 +950,17 @@ export default function YouScreen() {
           >
             <Toggle
               accessibilityLabel="Marketing emails"
-              value={consents.data?.marketing ?? false}
-              disabled={savingPrivacy === 'marketing'}
+              value={marketingConsentControl.value}
+              disabled={savingPrivacy === 'marketing' || !marketingConsentControl.canChange}
               onChange={(v) => void setConsent('marketing', v, 'privacy')}
             />
           </Row>
           {renderPrivacyFeedback('marketing', 'privacy')}
+          <ConsentReadState
+            label="Marketing"
+            state={marketingConsentControl}
+            onRetry={() => void consents.refetch()}
+          />
           {phase7Flags.commerce ? (
             <>
               <Row
@@ -904,12 +969,19 @@ export default function YouScreen() {
               >
                 <Toggle
                   accessibilityLabel="Share data with partners"
-                  value={commerceConsent.data ?? false}
-                  disabled={savingPrivacy === 'data_sharing'}
+                  value={commerceConsentControl.value}
+                  disabled={
+                    savingPrivacy === 'data_sharing' || !commerceConsentControl.canChange
+                  }
                   onChange={(v) => void setConsent('data_sharing', v, 'privacy')}
                 />
               </Row>
               {renderPrivacyFeedback('data_sharing', 'privacy')}
+              <ConsentReadState
+                label="Data sharing"
+                state={commerceConsentControl}
+                onRetry={() => void commerceConsent.refetch()}
+              />
             </>
           ) : null}
           {privacyDirectEntry ? null : (

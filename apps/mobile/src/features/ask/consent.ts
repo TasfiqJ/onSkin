@@ -1,6 +1,10 @@
 import { track } from '@/lib/analytics/track';
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
-import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
+import { getLatestConsentsWithLease, recordConsent } from '@/lib/consent/consent';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 
@@ -15,20 +19,25 @@ import { clearAskStore, readAskConsentLocal, setAskConsentLocal } from './store'
 // gates only the cloud path. Ledger-authoritative-then-local (the Slice-24 precedence)
 // so a withdrawal re-locks even before the backend exists. Final copy: B-PRIVACY-COPY.
 
-export async function isAskConsented(): Promise<boolean> {
-  return runAccountGenerationOperation(async (lease) => {
-    try {
-      const consents = await getLatestConsents();
-      lease.assertCurrent();
-      if ('ask_onskin' in consents) return consents['ask_onskin'] === true;
-    } catch {
-      lease.assertCurrent();
-      /* offline / no DB. Fall back to the local-first flag */
-    }
-    const local = await readAskConsentLocal();
+export async function isAskConsentedWithLease(
+  lease: AccountGenerationLease,
+): Promise<boolean> {
+  lease.assertCurrent();
+  try {
+    const consents = await getLatestConsentsWithLease(lease);
     lease.assertCurrent();
-    return requirePrivateBoolean(local);
-  });
+    if ('ask_onskin' in consents) return consents['ask_onskin'] === true;
+  } catch {
+    lease.assertCurrent();
+    /* offline / no DB. Fall back to the local-first flag */
+  }
+  const local = await awaitAccountGenerationLease(lease, readAskConsentLocal);
+  lease.assertCurrent();
+  return requirePrivateBoolean(local);
+}
+
+export function isAskConsented(): Promise<boolean> {
+  return runAccountGenerationOperation(isAskConsentedWithLease);
 }
 
 export async function grantAskConsent(): Promise<void> {

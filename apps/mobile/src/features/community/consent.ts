@@ -1,6 +1,10 @@
 import { track } from '@/lib/analytics/track';
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
-import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
+import { getLatestConsentsWithLease, recordConsent } from '@/lib/consent/consent';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 
@@ -18,22 +22,27 @@ import {
 // ledger-authoritative-when-present so a withdrawal re-locks (the Slice-24 precedence).
 // Withdrawal deletes the user's questions (Edge Function, deferred B-COMMUNITY-MOD).
 
-export async function isCommunityConsented(): Promise<boolean> {
-  return runAccountGenerationOperation(async (lease) => {
-    try {
-      const consents = await getLatestConsents();
-      lease.assertCurrent();
-      if ('community_participation' in consents) {
-        return consents['community_participation'] === true;
-      }
-    } catch {
-      lease.assertCurrent();
-      /* offline / no DB. Fall back to the local-first flag */
-    }
-    const local = await readCommunityConsentLocal();
+export async function isCommunityConsentedWithLease(
+  lease: AccountGenerationLease,
+): Promise<boolean> {
+  lease.assertCurrent();
+  try {
+    const consents = await getLatestConsentsWithLease(lease);
     lease.assertCurrent();
-    return requirePrivateBoolean(local);
-  });
+    if ('community_participation' in consents) {
+      return consents['community_participation'] === true;
+    }
+  } catch {
+    lease.assertCurrent();
+    /* offline / no DB. Fall back to the local-first flag */
+  }
+  const local = await awaitAccountGenerationLease(lease, readCommunityConsentLocal);
+  lease.assertCurrent();
+  return requirePrivateBoolean(local);
+}
+
+export function isCommunityConsented(): Promise<boolean> {
+  return runAccountGenerationOperation(isCommunityConsentedWithLease);
 }
 
 /** Grant the community_participation consent. The 16+ age gate is a SEPARATE

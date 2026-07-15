@@ -402,6 +402,26 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('COMMERCE_COPY.whereToBuy.emptyState');
   });
 
+  it('keeps replenishment consent reads and navigation inside the latest mounted request', () => {
+    const source = readAppRoute('shelf/replenish.tsx');
+    const readIndex = source.indexOf('readCommerceConsentForOwner(ownerScope)');
+    const postReadGuard = source.indexOf('if (!isCurrent()) return;', readIndex);
+    const navigationIndex = source.indexOf("router.push('/commerce/consent')", readIndex);
+
+    expect(readIndex).toBeGreaterThan(-1);
+    expect(postReadGuard).toBeGreaterThan(readIndex);
+    expect(navigationIndex).toBeGreaterThan(postReadGuard);
+    expect(source).toContain('resolveCommerceConsentRead(');
+    expect(source).toContain('mountedRef.current = false;');
+    expect(source).toContain('similarRequestRef.current += 1;');
+    expect(source).toContain('if (similarPendingRef.current || !isOwnerQueryScopeCurrent(ownerScope))');
+    expect(source).toContain(
+      'accessibilityState={{ busy: similarPending, disabled: similarPending }}',
+    );
+    expect(source).toContain('Consent status unavailable');
+    expect(source).toContain('accessibilityLabel="Retry data-sharing consent status"');
+  });
+
   it('keeps archived products reachable when the active Shelf is empty', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 

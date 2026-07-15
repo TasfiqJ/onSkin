@@ -1,12 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  ACCOUNT_GENERATION_CHANGED,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 
 const mocks = vi.hoisted(() => ({
-  getLatestConsents: vi.fn(),
+  getLatestConsentsWithLease: vi.fn(),
   recordConsent: vi.fn(),
   track: vi.fn(),
   withdrawConsent: vi.fn(),
@@ -20,7 +22,7 @@ vi.mock('@/lib/analytics/track', () => ({
 }));
 
 vi.mock('@/lib/consent/consent', () => ({
-  getLatestConsents: mocks.getLatestConsents,
+  getLatestConsentsWithLease: mocks.getLatestConsentsWithLease,
   recordConsent: mocks.recordConsent,
 }));
 
@@ -57,7 +59,7 @@ afterEach(() => {
 
 describe('Ask consent persistence', () => {
   beforeEach(() => {
-    mocks.getLatestConsents.mockReset();
+    mocks.getLatestConsentsWithLease.mockReset();
     mocks.recordConsent.mockReset();
     mocks.track.mockReset();
     mocks.withdrawConsent.mockReset();
@@ -73,7 +75,7 @@ describe('Ask consent persistence', () => {
 
   it('uses a definitive consent ledger decision without consulting local storage', async () => {
     const { isAskConsented } = await import('./consent');
-    mocks.getLatestConsents.mockResolvedValueOnce({ ask_onskin: true });
+    mocks.getLatestConsentsWithLease.mockResolvedValueOnce({ ask_onskin: true });
 
     await expect(isAskConsented()).resolves.toBe(true);
 
@@ -82,7 +84,7 @@ describe('Ask consent persistence', () => {
 
   it('uses a valid local consent value when the ledger is unavailable', async () => {
     const { isAskConsented } = await import('./consent');
-    mocks.getLatestConsents.mockRejectedValueOnce(new Error('ledger unavailable'));
+    mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
     mocks.readAskConsentLocal.mockResolvedValueOnce({
       status: 'available',
       value: true,
@@ -94,13 +96,51 @@ describe('Ask consent persistence', () => {
 
   it('does not disguise unavailable local consent storage as a decline', async () => {
     const { isAskConsented } = await import('./consent');
-    mocks.getLatestConsents.mockRejectedValueOnce(new Error('ledger unavailable'));
+    mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
     mocks.readAskConsentLocal.mockResolvedValueOnce({
       status: 'unavailable',
       reason: 'storage_unavailable',
     });
 
     await expect(isAskConsented()).rejects.toThrow('PRIVATE_BOOLEAN_UNAVAILABLE');
+  });
+
+  it('detaches a hung local fallback on account change without converting cancellation to false', async () => {
+    const { isAskConsented } = await import('./consent');
+    mocks.getLatestConsentsWithLease.mockRejectedValueOnce(new Error('ledger unavailable'));
+    let resolveLocal!: (value: {
+      status: 'available';
+      value: boolean;
+      format: 'current';
+    }) => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    mocks.readAskConsentLocal.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveLocal = resolve;
+          markStarted();
+        }),
+    );
+
+    const outcome = isAskConsented();
+    await started;
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    try {
+      await expect(outcome).rejects.toMatchObject({ code: ACCOUNT_GENERATION_CHANGED });
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+      resolveLocal({ status: 'available', value: true, format: 'current' });
+      await Promise.resolve();
+      await Promise.resolve();
+      await expect(outcome).rejects.toMatchObject({ code: ACCOUNT_GENERATION_CHANGED });
+    } finally {
+      resolveLocal({ status: 'available', value: true, format: 'current' });
+      endAccountGenerationBoundary();
+      boundaryActive = false;
+    }
   });
 
   it('records Ask grant analytics only after the consent ledger saves', async () => {

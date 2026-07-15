@@ -549,11 +549,13 @@ describe('owner-scoped query keys', () => {
     const profile = read('features/scheduler/profile.ts');
     const you = read('app/(tabs)/you.tsx');
     const commerce = read('features/commerce/useCommerce.ts');
+    const commerceConsentQuery = read('features/commerce/consentQuery.ts');
     const trend = read('features/trend/useTrend.ts');
     const plan = read('features/routine/usePlan.ts');
     const reorder = read('app/routine/reorder.tsx');
     const settingsProfile = read('app/settings/skin-profile.tsx');
     const askConsent = read('app/ask/consent.tsx');
+    const askConsentQuery = read('features/ask/consentQuery.ts');
     const ask = read('features/ask/useAsk.ts');
     const askGroundedTurns = read('features/ask/groundedTurnsQuery.ts');
     const recommendationPreferences = read('app/recommendations/preferences.tsx');
@@ -561,8 +563,11 @@ describe('owner-scoped query keys', () => {
     const recommendationInputsQuery = read('features/recommendations/recommendationInputsQuery.ts');
     const note = read('app/community/note/[id].tsx');
     const community = read('features/community/useCommunity.ts');
+    const communityGateQuery = read('features/community/communityGateQuery.ts');
+    const latestConsentsQuery = read('lib/consent/consentQuery.ts');
     const cycleAnchor = read('features/routine/cycleAnchor.ts');
     const onboarded = read('app/index.tsx');
+    const onboardingStatusQuery = read('features/onboarding/onboardingStatusQuery.ts');
     const offering = read('features/subscription/useSubscriptionOffering.ts');
 
     expect(notifications).toContain('queryKeys.notificationPreferences(ownerScope)');
@@ -571,7 +576,13 @@ describe('owner-scoped query keys', () => {
     expect(profile).toContain('queryKeys.skinProfile(ownerScope)');
     expect(you).toContain('queryKeys.consents(ownerScope)');
     expect(you).toContain('queryKeys.commerceConsent(ownerScope)');
-    expect(commerce).toContain('queryKeys.commerceConsent(ownerScope)');
+    expect(you).toContain('latestConsentsQueryOptions(ownerScope)');
+    expect(you).toContain('commerceConsentQueryOptions(ownerScope)');
+    expect(latestConsentsQuery).toContain('queryKeys.consents(ownerScope)');
+    expect(latestConsentsQuery).toContain('runOwnerQueryOperation(ownerScope');
+    expect(commerce).toContain('commerceConsentQueryOptions(ownerScope)');
+    expect(commerceConsentQuery).toContain('queryKeys.commerceConsent(ownerScope)');
+    expect(commerceConsentQuery).toContain('runOwnerQueryOperation(ownerScope');
     expect(trend).toContain('queryKeys.trendConsent(ownerScope)');
     expect(trend).toContain('queryKeys.monkBand(ownerScope)');
     expect(plan).toContain('queryKeys.routineOrder(ownerScope)');
@@ -580,6 +591,9 @@ describe('owner-scoped query keys', () => {
     );
     expect(settingsProfile).toContain('qc.setQueryData(queryKeys.skinProfile(ownerScope), next)');
     expect(askConsent).toContain('queryKeys.askConsent(ownerScope)');
+    expect(askConsent).toContain('askConsentQueryOptions(ownerScope)');
+    expect(askConsentQuery).toContain('queryKeys.askConsent(ownerScope)');
+    expect(askConsentQuery).toContain('runOwnerQueryOperation(ownerScope');
     expect(ask).toContain('groundedTurnsQueryOptions(ownerScope, period, trialQuotaRequired)');
     expect(askGroundedTurns).toContain('queryKeys.askGroundedTurns(ownerScope, period)');
     expect(askGroundedTurns).toContain('runOwnerQueryOperation(ownerScope');
@@ -587,9 +601,13 @@ describe('owner-scoped query keys', () => {
     expect(recommendations).toContain('recommendationInputsQueryOptions(ownerScope)');
     expect(recommendationInputsQuery).toContain('queryKeys.recommendations(ownerScope)');
     expect(note).toContain('queryKeys.noteHelped(ownerScope, id)');
-    expect(community).toContain('queryKeys.communityGate(ownerScope)');
+    expect(community).toContain('communityGateQueryOptions(ownerScope)');
+    expect(communityGateQuery).toContain('queryKeys.communityGate(ownerScope)');
+    expect(communityGateQuery).toContain('runOwnerQueryOperation(ownerScope');
     expect(cycleAnchor).toContain('queryKeys.cycleAnchor(ownerScope, boundary)');
-    expect(onboarded).toContain('queryKeys.onboarded(ownerScope)');
+    expect(onboarded).toContain('onboardingStatusQueryOptions(ownerScope)');
+    expect(onboardingStatusQuery).toContain('queryKeys.onboarded(ownerScope)');
+    expect(onboardingStatusQuery).toContain('runOwnerQueryOperation(ownerScope');
     expect(offering).toContain('queryKeys.subscriptionOffering(ownerScope)');
     expect(offering).not.toContain("user?.id ?? 'anonymous'");
 
@@ -598,18 +616,23 @@ describe('owner-scoped query keys', () => {
       profile,
       you,
       commerce,
+      commerceConsentQuery,
       trend,
       plan,
       reorder,
       askConsent,
+      askConsentQuery,
       ask,
       recommendationPreferences,
       recommendations,
       recommendationInputsQuery,
       note,
       community,
+      communityGateQuery,
+      latestConsentsQuery,
       cycleAnchor,
       onboarded,
+      onboardingStatusQuery,
       offering,
     ]) {
       expect(source).not.toMatch(

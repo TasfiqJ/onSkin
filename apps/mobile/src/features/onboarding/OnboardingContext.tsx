@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
-import { ownerQueryPrefixes, runOwnerQueryOperation } from '@/lib/query/queryKeys';
+import { ownerQueryPrefixes, queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
@@ -78,6 +78,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
           // throw past this point (a returning user must never be re-onboarded).
           await setStoredSkinProfile({ result, goals, completedAt });
           ownerLease.assertCurrent();
+          queryClient.setQueryData(queryKeys.onboarded(ownerScope), true);
           await Promise.all([
             queryClient.invalidateQueries({
               queryKey: ownerQueryPrefixes.skinProfile(ownerScope),

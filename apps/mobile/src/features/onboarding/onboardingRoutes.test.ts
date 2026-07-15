@@ -103,9 +103,47 @@ describe('onboarding route contracts', () => {
     expect(source).toContain('clearLocalPrivateData');
     expect(source).toContain('queryClient.clear()');
     expect(source).toContain("router.replace('/')");
-    expect(source).toContain('enabled: !resetting && !!session && !initializing');
-    expect(source).toContain('if (!isSupabaseConfigured) return false;');
-    expect(source).toContain('const deciding = resetting || initializing ||');
+    expect(source).toContain('...onboardingStatusQueryOptions(ownerScope)');
+    expect(source).toContain('isFocused && !resetting && !initializing');
+    expect(source).toContain('useIsFocused()');
+    expect(source).toContain('if (!isFocused) {');
+    expect(source).toContain('beginRequestSeqRef.current += 1;');
+    expect(source).toContain('const resetLocalBeginState = () => {');
+    expect(source).toContain('if (!effectActive) return;');
+    expect(source).toContain('setBusy(false);');
+    expect(source).toContain('setBeginError(false);');
+    expect(source).toContain('const onboardingGate = decideWelcomeOnboardingGate({');
+    expect(source).toContain('isFetching: onboarded.isFetching');
+    expect(source).toContain(
+      "if (onboardingGate === 'checking' || onboardingGate === 'redirect_today') return null;",
+    );
+  });
+
+  it('fails the startup gate closed and keeps both retries accessible', () => {
+    const source = readAppRoute('index.tsx');
+    const begin = source.indexOf('async function begin()');
+    const configuredFailure = source.indexOf('if (isSupabaseConfigured)', begin);
+    const inlineError = source.indexOf('setBeginError(true);', configuredFailure);
+    const stop = source.indexOf('return;', inlineError);
+    const navigate = source.indexOf("router.push('/onboarding/age');", begin);
+
+    expect(configuredFailure).toBeGreaterThan(begin);
+    expect(inlineError).toBeGreaterThan(configuredFailure);
+    expect(stop).toBeGreaterThan(inlineError);
+    expect(navigate).toBeGreaterThan(stop);
+    expect(source).toContain("if (onboardingGate === 'error')");
+    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('accessibilityLabel="Retry checking onboarding progress"');
+    expect(source).toContain("label={onboarded.isFetching ? 'Trying again...' : 'Try again'}");
+    expect(source).toContain("label={beginError ? 'Try again' : 'Begin'}");
+    expect(source).toContain('onPress={() => void onboarded.refetch()}');
+    expect(source).toContain('disabled={accountActionPending}');
+    expect(source).toContain('accessibilityState={{ disabled: accountActionPending }}');
+    expect(source).toContain('decideAnonymousOnboardingHandoff({');
+    expect(source).toContain('settleAnonymousOnboardingHandoff(pending.requestId)');
+    expect(source).toContain('registerAnonymousOnboardingConsumer()');
+    expect(source).toContain("pending.phase === 'resolving'");
+    expect(source).toContain('if (!isFocused || !activeWelcomeRef.current) return;');
   });
 
   it('keeps onboarding chip and product-remove controls touchable on phones', () => {
@@ -457,6 +495,9 @@ describe('onboarding route contracts', () => {
     expect(context).toContain("throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED')");
     expect(context.indexOf('hasCurrentHealthDataCollectionConsent()')).toBeLessThan(
       context.indexOf('setStoredSkinProfile({ result, goals, completedAt })'),
+    );
+    expect(context).toContain(
+      'queryClient.setQueryData(queryKeys.onboarded(ownerScope), true)',
     );
     expect(context).toContain('ownerQueryPrefixes.skinProfile(ownerScope)');
     expect(context).toContain('ownerQueryPrefixes.shelf(ownerScope)');

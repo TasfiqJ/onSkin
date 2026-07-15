@@ -2,6 +2,7 @@ import type { Session, User } from '@supabase/supabase-js';
 import { router, type Href } from 'expo-router';
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -20,6 +21,13 @@ import {
   endEncryptedPhotoAccountBoundary,
   waitForEncryptedPhotoWritesToSettle,
 } from '@/features/photos/encryptedStorage';
+import {
+  AnonymousOnboardingRequestSupersededError,
+  anonymousHandoffNeedsSessionPublication,
+  createWelcomeHandoffCoordinator,
+  decideAnonymousSessionResolution,
+  type PendingAnonymousOnboardingHandoff,
+} from '@/features/onboarding/welcomeSessionHandoff';
 import { isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE } from '@/lib/errors/userFacing';
 import {
@@ -69,9 +77,16 @@ type AuthContextValue = {
   isAnonymous: boolean;
   initializing: boolean;
   sessionBoundaryError: boolean;
+  anonymousOnboardingHandoff: PendingAnonymousOnboardingHandoff | null;
+  completedSessionPublication: number;
   retrySessionBoundary: () => Promise<void>;
   /** Guest-first entry: create an anonymous session if none exists (docs/01 §1). */
-  ensureAnonymousSession: (captchaToken?: string) => Promise<void>;
+  ensureAnonymousSession: (
+    captchaToken?: string,
+  ) => Promise<PendingAnonymousOnboardingHandoff | null>;
+  isAnonymousOnboardingHandoffCurrent: (requestId: number) => boolean;
+  registerAnonymousOnboardingConsumer: () => () => void;
+  settleAnonymousOnboardingHandoff: (requestId: number) => boolean;
   signInWithApple: () => Promise<boolean>;
   signInWithGoogle: () => Promise<boolean>;
   sendEmailOtp: (email: string) => Promise<'code_sent' | 'complete'>;
@@ -88,11 +103,16 @@ type AccountIsolationE2EGlobal = typeof globalThis & {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const accountIsolationE2EFixture = useMemo(() => getAccountIsolationE2EFixture(), []);
   const [session, setSession] = useState<Session | null>(null);
+  const [completedSessionPublication, setCompletedSessionPublication] = useState(0);
+  const [anonymousOnboardingHandoff, setAnonymousOnboardingHandoff] =
+    useState<PendingAnonymousOnboardingHandoff | null>(null);
   const [initializing, setInitializing] = useState(
     isSupabaseConfigured || accountIsolationE2EFixture !== null,
   );
   const [sessionBoundaryError, setSessionBoundaryError] = useState(false);
   const activeUserIdRef = useRef<string | null>(null);
+  const publishedSessionUserIdRef = useRef<string | null>(null);
+  const completedSessionPublicationRef = useRef(0);
   const pendingEmailCodeRef = useRef<PendingEmailAccountCode | null>(null);
   const sessionChangeSeqRef = useRef(0);
   const sessionBoundaryActiveRef = useRef(false);
@@ -112,6 +132,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     (nextSession: Session | null, initialRestore?: boolean) => Promise<void>
   >(async () => {});
   const showSessionBoundaryRef = useRef<(nextSession: Session | null) => void>(() => {});
+  const [welcomeHandoffCoordinator] = useState(() =>
+    createWelcomeHandoffCoordinator({
+      onChange: setAnonymousOnboardingHandoff,
+    }),
+  );
+  const isAnonymousOnboardingHandoffCurrent = useCallback(
+    (requestId: number) => welcomeHandoffCoordinator.isCurrent(requestId),
+    [welcomeHandoffCoordinator],
+  );
+  const registerAnonymousOnboardingConsumer = useCallback(
+    () =>
+      welcomeHandoffCoordinator.registerConsumer(
+        () => sessionBoundaryActiveRef.current,
+      ),
+    [welcomeHandoffCoordinator],
+  );
+  const settleAnonymousOnboardingHandoff = useCallback(
+    (requestId: number) => welcomeHandoffCoordinator.settle(requestId),
+    [welcomeHandoffCoordinator],
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -252,6 +292,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           sessionBoundaryActiveRef.current = false;
           releaseSessionBoundaryWriteLock();
           setSessionBoundaryError(false);
+          publishedSessionUserIdRef.current = latestPendingSession?.user.id ?? null;
+          completedSessionPublicationRef.current += 1;
+          setCompletedSessionPublication(completedSessionPublicationRef.current);
           setSession(latestPendingSession);
           if (result.resetRoute) router.replace('/');
           setInitializing(false);
@@ -414,6 +457,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAnonymous: user?.is_anonymous ?? false,
       initializing,
       sessionBoundaryError,
+      anonymousOnboardingHandoff,
+      completedSessionPublication,
       async retrySessionBoundary() {
         const restoreSession = retrySessionRestoreRef.current;
         if (restoreSession) {
@@ -426,17 +471,76 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await applySessionBoundaryRef.current(pending.session);
       },
       async ensureAnonymousSession(captchaToken?: string) {
-        if (!isSupabaseConfigured) return;
+        if (!isSupabaseConfigured) return null;
+        const resolving = welcomeHandoffCoordinator.begin(sessionChangeSeqRef.current);
+        const { requestId } = resolving;
 
-        const { data, error } = await supabase.auth.getSession();
-        if (error) throw error;
-        if (data.session) return;
-        // BLOCKED: B-TURNSTILE. CaptchaToken expected here once Turnstile is wired.
-        const { error: signInError } = await supabase.auth.signInAnonymously(
-          captchaToken ? { options: { captchaToken } } : undefined,
-        );
-        if (signInError) throw signInError;
+        const latestAuthTargetUserId = (): string | null => {
+          const pendingBoundary = pendingBoundarySessionRef.current;
+          if (pendingBoundary) return pendingBoundary.session?.user.id ?? null;
+          const inFlightBoundary = boundaryInFlightRef.current;
+          if (inFlightBoundary) return inFlightBoundary.targetUserId;
+          return publishedSessionUserIdRef.current;
+        };
+
+        const registerSessionHandoff = (nextSession: Session) => {
+          if (!welcomeHandoffCoordinator.isCurrent(requestId)) {
+            throw new AnonymousOnboardingRequestSupersededError();
+          }
+
+          const expectedUserId = nextSession.user.id;
+          const resolution = decideAnonymousSessionResolution({
+            authTransitionEpochAtStart: resolving.authTransitionEpochAtStart,
+            currentAuthTransitionEpoch: sessionChangeSeqRef.current,
+            expectedUserId,
+            latestAuthTargetUserId: latestAuthTargetUserId(),
+          });
+          if (resolution === 'superseded_by_newer_target') {
+            welcomeHandoffCoordinator.settle(requestId);
+            throw new AnonymousOnboardingRequestSupersededError();
+          }
+
+          let requiresSessionPublication = anonymousHandoffNeedsSessionPublication(
+            expectedUserId,
+            publishedSessionUserIdRef.current,
+            sessionBoundaryActiveRef.current,
+          );
+          if (resolution === 'apply_returned_session') {
+            // No auth callback ran after this request started. Publish this exact
+            // returned session through the normal isolation boundary ourselves.
+            requiresSessionPublication = true;
+            void applySessionBoundaryRef.current(nextSession);
+          }
+
+          const pending = welcomeHandoffCoordinator.advanceToAwaitingPublication({
+            completedSessionPublication: completedSessionPublicationRef.current,
+            expectedUserId,
+            requestId,
+            requiresSessionPublication,
+          });
+          if (!pending) throw new AnonymousOnboardingRequestSupersededError();
+          return pending;
+        };
+
+        try {
+          const { data, error } = await supabase.auth.getSession();
+          if (error) throw error;
+          if (data.session) return registerSessionHandoff(data.session);
+          // BLOCKED: B-TURNSTILE. CaptchaToken expected here once Turnstile is wired.
+          const { data: signInData, error: signInError } = await supabase.auth.signInAnonymously(
+            captchaToken ? { options: { captchaToken } } : undefined,
+          );
+          if (signInError) throw signInError;
+          if (!signInData.session) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
+          return registerSessionHandoff(signInData.session);
+        } catch (error) {
+          welcomeHandoffCoordinator.settle(requestId);
+          throw error;
+        }
       },
+      isAnonymousOnboardingHandoffCurrent,
+      registerAnonymousOnboardingConsumer,
+      settleAnonymousOnboardingHandoff,
       async signInWithApple() {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
@@ -495,7 +599,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       },
     };
-  }, [accountIsolationE2EFixture, initializing, session, sessionBoundaryError]);
+  }, [
+    accountIsolationE2EFixture,
+    anonymousOnboardingHandoff,
+    completedSessionPublication,
+    initializing,
+    isAnonymousOnboardingHandoffCurrent,
+    registerAnonymousOnboardingConsumer,
+    session,
+    sessionBoundaryError,
+    settleAnonymousOnboardingHandoff,
+    welcomeHandoffCoordinator,
+  ]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -1,18 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
-import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
-import { isOnboardedLocal } from '@/features/onboarding/skinProfileStore';
+import {
+  classifyOnboardingStatusFailure,
+  decideWelcomeOnboardingGate,
+  onboardingStatusQueryOptions,
+} from '@/features/onboarding/onboardingStatusQuery';
+import {
+  decideAnonymousOnboardingHandoff,
+  isAnonymousOnboardingRequestSuperseded,
+} from '@/features/onboarding/welcomeSessionHandoff';
 import { clearLocalPrivateData } from '@/features/settings/localPrivateData';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { isSupabaseConfigured } from '@/lib/env';
 import { queryClient } from '@/lib/query/queryClient';
-import { queryKeys } from '@/lib/query/queryKeys';
+import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
-import { supabase } from '@/lib/supabase/client';
 
 function shouldRunE2ELocalReset(value: string | string[] | undefined): boolean {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
@@ -25,10 +32,52 @@ function shouldRunE2ELocalReset(value: string | string[] | undefined): boolean {
 // (a completed skin_profile exists) is sent straight to Today.
 export default function WelcomeScreen() {
   const params = useLocalSearchParams<{ e2eReset?: string }>();
-  const { ensureAnonymousSession, session, initializing } = useAuth();
+  const {
+    anonymousOnboardingHandoff,
+    completedSessionPublication,
+    ensureAnonymousSession,
+    initializing,
+    isAnonymousOnboardingHandoffCurrent,
+    registerAnonymousOnboardingConsumer,
+    session,
+    settleAnonymousOnboardingHandoff,
+  } = useAuth();
+  const isFocused = useIsFocused();
   const ownerScope = useOwnerQueryScope();
+  const activeWelcomeRef = useRef(false);
+  const beginRequestSeqRef = useRef(0);
   const [busy, setBusy] = useState(false);
+  const [beginError, setBeginError] = useState(false);
   const [resetting, setResetting] = useState(() => shouldRunE2ELocalReset(params.e2eReset));
+  const accountActionPending = busy || anonymousOnboardingHandoff !== null;
+
+  useEffect(() => {
+    let effectActive = true;
+    const resetLocalBeginState = () => {
+      void Promise.resolve().then(() => {
+        if (!effectActive) return;
+        setBusy(false);
+        setBeginError(false);
+      });
+    };
+    if (!isFocused) {
+      activeWelcomeRef.current = false;
+      beginRequestSeqRef.current += 1;
+      resetLocalBeginState();
+      return () => {
+        effectActive = false;
+      };
+    }
+    activeWelcomeRef.current = true;
+    resetLocalBeginState();
+    const unregisterConsumer = registerAnonymousOnboardingConsumer();
+    return () => {
+      effectActive = false;
+      activeWelcomeRef.current = false;
+      beginRequestSeqRef.current += 1;
+      unregisterConsumer();
+    };
+  }, [isFocused, registerAnonymousOnboardingConsumer]);
 
   useEffect(() => {
     if (!shouldRunE2ELocalReset(params.e2eReset)) return;
@@ -59,31 +108,87 @@ export default function WelcomeScreen() {
   // returning onboarded user is recognized even with no backend, so a failed or
   // absent server write never re-onboards them. Falls back to the server row.
   const onboarded = useQuery({
-    queryKey: queryKeys.onboarded(ownerScope),
-    enabled: !resetting && !!session && !initializing,
-    retry: 0,
-    queryFn: async () => {
-      if (await isOnboardedLocal()) return true;
-      if (!isSupabaseConfigured) return false;
-      const { count } = await supabase
-        .from('skin_profiles')
-        .select('id', { count: 'exact', head: true })
-        .not('completed_at', 'is', null);
-      return (count ?? 0) > 0;
-    },
+    ...onboardingStatusQueryOptions(ownerScope),
+    enabled:
+      isFocused && !resetting && !initializing && (!!session || !isSupabaseConfigured),
+  });
+
+  const checkingOnboarding = !!session || !isSupabaseConfigured;
+  const ownerScopeCurrent = isOwnerQueryScopeCurrent(ownerScope);
+  const onboardingGate = decideWelcomeOnboardingGate({
+    data: onboarded.data,
+    initializing,
+    isError: onboarded.isError,
+    isFetching: onboarded.isFetching,
+    isSuccess: onboarded.isSuccess,
+    ownerScopeCurrent,
+    resetting,
+    shouldCheck: checkingOnboarding,
   });
 
   useEffect(() => {
-    if (onboarded.data === true) router.replace('/today');
-  }, [onboarded.data]);
+    if (!isFocused || !activeWelcomeRef.current) return;
+    const pending = anonymousOnboardingHandoff;
+    if (onboardingGate === 'redirect_today') {
+      if (pending) settleAnonymousOnboardingHandoff(pending.requestId);
+      router.replace('/today');
+      return;
+    }
+    if (!pending || pending.phase === 'resolving') return;
+
+    const decision = decideAnonymousOnboardingHandoff({
+      completedSessionPublication,
+      initializing,
+      mounted: activeWelcomeRef.current,
+      onboardingGate,
+      ownerScopeCurrent,
+      pending,
+      publishedUserId: session?.user.id ?? null,
+      requestIsLatest: isAnonymousOnboardingHandoffCurrent(pending.requestId),
+    });
+    if (decision === 'cancel') {
+      settleAnonymousOnboardingHandoff(pending.requestId);
+      setBusy(false);
+      return;
+    }
+    if (
+      decision === 'navigate' &&
+      settleAnonymousOnboardingHandoff(pending.requestId)
+    ) {
+      router.push('/onboarding/age');
+    }
+  }, [
+    anonymousOnboardingHandoff,
+    completedSessionPublication,
+    initializing,
+    isAnonymousOnboardingHandoffCurrent,
+    isFocused,
+    onboardingGate,
+    ownerScopeCurrent,
+    session?.user.id,
+    settleAnonymousOnboardingHandoff,
+  ]);
 
   async function begin() {
+    const requestId = ++beginRequestSeqRef.current;
     setBusy(true);
+    setBeginError(false);
     track('onboarding_started');
     try {
-      await ensureAnonymousSession();
-    } catch {
-      // non-fatal before backend is configured
+      const handoff = await ensureAnonymousSession();
+      if (!activeWelcomeRef.current || requestId !== beginRequestSeqRef.current) return;
+      if (handoff) return;
+    } catch (error) {
+      if (!activeWelcomeRef.current || requestId !== beginRequestSeqRef.current) return;
+      if (isAnonymousOnboardingRequestSuperseded(error)) {
+        setBusy(false);
+        return;
+      }
+      if (isSupabaseConfigured) {
+        setBusy(false);
+        setBeginError(true);
+        return;
+      }
     }
     setBusy(false);
     // Neutral DOB age gate (docs/01 §4) precedes any data collection; it self-skips
@@ -92,8 +197,42 @@ export default function WelcomeScreen() {
   }
 
   // Stay on splash while deciding; render nothing while redirecting an onboarded user.
-  const deciding = resetting || initializing || (!!session && onboarded.isLoading);
-  if (deciding || onboarded.data === true) return null;
+  if (onboardingGate === 'checking' || onboardingGate === 'redirect_today') return null;
+
+  if (onboardingGate === 'error') {
+    const failureKind = classifyOnboardingStatusFailure(onboarded.error);
+    const title =
+      failureKind === 'unsupported_profile'
+        ? 'This saved profile needs a newer version of OnSkin.'
+        : failureKind === 'invalid_profile'
+          ? 'We found saved profile data we can\'t safely read.'
+          : 'We couldn\'t safely check your progress.';
+    const body =
+      failureKind === 'unsupported_profile'
+        ? 'Your saved profile was preserved unchanged. Update OnSkin, then check again.'
+        : failureKind === 'invalid_profile'
+          ? 'Your saved profile was preserved unchanged. Try again, and contact support before resetting local data if this continues.'
+          : 'Your saved skincare data was not changed. Check your connection and private storage, then try again.';
+    return (
+      <Screen>
+        <View className="flex-1 justify-center">
+          <View accessibilityLiveRegion="polite" accessibilityRole="alert">
+            <Text variant="title">{title}</Text>
+            <Text variant="body" tone="muted" className="mt-4">
+              {body}
+            </Text>
+          </View>
+          <Button
+            accessibilityLabel="Retry checking onboarding progress"
+            className="mt-7"
+            disabled={onboarded.isFetching}
+            label={onboarded.isFetching ? 'Trying again...' : 'Try again'}
+            onPress={() => void onboarded.refetch()}
+          />
+        </View>
+      </Screen>
+    );
+  }
 
   return (
     <Screen>
@@ -111,10 +250,27 @@ export default function WelcomeScreen() {
         </Text>
       </View>
       <View className="pb-4">
-        <Button label="Begin" onPress={begin} disabled={busy} />
+        {beginError ? (
+          <View
+            accessibilityLiveRegion="polite"
+            accessibilityRole="alert"
+            className="mb-4"
+          >
+            <Text variant="bodySm" tone="clay" className="text-center">
+              We couldn&apos;t start your private session. Check your connection and try again.
+            </Text>
+          </View>
+        ) : null}
+        <Button
+          label={beginError ? 'Try again' : 'Begin'}
+          onPress={begin}
+          disabled={accountActionPending}
+        />
         <Pressable
           accessibilityRole="button"
-          className="mt-3 items-center py-3"
+          accessibilityState={{ disabled: accountActionPending }}
+          className={`mt-3 items-center py-3 ${accountActionPending ? 'opacity-50' : ''}`}
+          disabled={accountActionPending}
           onPress={() => router.push('/onboarding/account')}
         >
           <Text variant="body" tone="muted" className="font-sans-medium">

@@ -1,23 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { queryKeys } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
-import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
 
-import { isCommunityConsented } from './consent';
-import { readAgeConfirmedLocal } from './store';
+import { communityGateQueryOptions } from './communityGateQuery';
 
 // Community gate state (docs/11 §8). Whether the user has granted the separate
 // community_participation consent + confirmed 16+. Phase-1 (read-mostly Skin Notes)
 // needs no gate; this governs the Phase-2 ask composer.
 export function useCommunityGate() {
   const ownerScope = useOwnerQueryScope();
-  return useQuery({
-    queryKey: queryKeys.communityGate(ownerScope),
-    queryFn: async () => {
-      const consented = await isCommunityConsented();
-      const ageConfirmed = requirePrivateBoolean(await readAgeConfirmedLocal());
-      return { consented, ageConfirmed };
-    },
-  });
+  const query = useQuery(communityGateQueryOptions(ownerScope));
+  return { ...query, data: query.isSuccess && !query.isFetching ? query.data : undefined };
 }
