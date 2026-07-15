@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T04:23:56.178Z",
+  "generatedAt": "2026-07-15T04:26:29.173Z",
   "status": "blocked",
   "launchContract": {
     "schemaVersion": 1,
@@ -77,8 +77,8 @@
     "ios": "required",
     "android": "not_applicable"
   },
-  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
-  "gitStatus": "M docs/hugeToDo/feature-inventory.json",
+  "gitSha": "071c77a3eecd8a4a980b9e027e857e09f9ec75f2",
+  "gitStatus": "",
   "releaseIdentity": {
     "appEnvironment": "development",
     "finalBrandDomain": null,
@@ -346,7 +346,6 @@
   },
   "blockers": [],
   "warnings": [
-    "Release QA packet generated with a dirty Git worktree; do not use it as final RC evidence.",
     "External RC evidence missing: PHASE9_FINAL_IDENTITY_PASS=true.",
     "External RC evidence missing: PHASE9_LIVE_SUPABASE_PASS=true.",
     "External RC evidence missing: PHASE9_RLS_STAGING_PASS=true.",

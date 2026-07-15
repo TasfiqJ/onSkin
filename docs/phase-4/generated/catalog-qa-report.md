@@ -1,17 +1,10 @@
 # Catalog QA Report
 
-Generated: 2026-07-15T04:25:14.916Z
+Generated: 2026-07-15T04:26:24.833Z
 
-Git SHA: 91b3dea40bf81057561b406eee08cf394921cdb8
+Git SHA: 071c77a3eecd8a4a980b9e027e857e09f9ec75f2
 
-Git status: DIRTY
-
-Dirty paths:
-
-```
-M LAUNCH_READINESS.md
- M docs/hugeToDo/feature-inventory.json
-```
+Git status: clean
 
 Accepted products: 2
 
@@ -19,9 +12,9 @@ Rejected records: 1
 
 Blockers: none
 
-Warnings: Catalog QA report generated with a dirty Git worktree; do not use it as final catalog-source evidence.
+Warnings: none
 
-Local fixture QA clear: no
+Local fixture QA clear: yes
 
 Launch clear: no
 
@@ -59,7 +52,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | docs/phase-4/beta-coverage-report.md | present | 2125 | d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2021 | 49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534 |
 | docs/phase-4/catalog-source-memo-open-beauty-facts.md | present | 2334 | 441e03ded2314f7a9efc2f11e3b7d0daa97256de17e6c654423124c1c4a4670f |
-| docs/phase-4/generated/source-worklist.json | present | 46865 | ea5065712c4af656a9a4edfea99e9f09253097a2a0ddebbf10ec43eb0c7a99db |
-| docs/phase-4/generated/source-worklist.md | present | 29027 | 6571c4e37a9bdbb5835cdef59caf621cbe68e48b7f737974bd197e71b8c1d5c4 |
+| docs/phase-4/generated/source-worklist.json | present | 46709 | 6e4ba8c1cc37cb4e607021e5516fbf23e6d8b6c08071f026b90d101e674edc3b |
+| docs/phase-4/generated/source-worklist.md | present | 28924 | 8e3bdd8f5ffd9d0249de6f62c8cde396d84892a02fc7b5e5101f9fe0c9272b23 |
 | docs/phase-4/odbl-compliance-memo.md | present | 2019 | 0fe9bc07e3c4d34129ac8f8f2ba410a64e6caa0d77a3b7994198e0b4d9e18e69 |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |

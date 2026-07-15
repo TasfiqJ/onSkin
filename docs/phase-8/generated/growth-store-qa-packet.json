@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T04:23:56.095Z",
+  "generatedAt": "2026-07-15T04:26:28.454Z",
   "objective": "Phase 8 growth loop and store readiness",
   "launchContract": {
     "schemaVersion": 1,
@@ -78,8 +78,8 @@
     "android": "not_applicable"
   },
   "status": "blocked",
-  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
-  "gitStatus": "M docs/hugeToDo/feature-inventory.json",
+  "gitSha": "071c77a3eecd8a4a980b9e027e857e09f9ec75f2",
+  "gitStatus": "",
   "publicIdentity": {
     "finalBrandDomain": null,
     "marketingUrl": null,
@@ -169,12 +169,12 @@
     "docs/USER_FLOW_TREE.md": "1de6bed099cfdc527c730313228f09cc01dbe43a21b9d35d743cfbad50ba678c",
     "docs/e2e/generated/human-e2e-manifest.json": "10e71178edcde089211e8dbfb570c1111da443db54856668249ebcf795e67326",
     "docs/e2e/generated/human-e2e-manifest.md": "d3fdb28a97c3f66e5ddd7c15d23e991098f7f67852bfb87f5191a6fb93714f7b",
-    "docs/phase-5/generated/device-qa-packet.json": "19777ceba8f7cfb78000c186a68763a52637c17b3d6a5253b6da0a72339c9648",
-    "docs/phase-5/generated/device-qa-packet.md": "afad0fc7e1ab2bf783c9ce10eae10663cd01256acea080f589250446e6c08eb1",
-    "docs/phase-6/generated/payments-qa-packet.json": "fd16720adfd5d25741adc7812f01f8026a53b9544c08c436f004b1eb05483472",
-    "docs/phase-6/generated/payments-qa-packet.md": "717e0e97c8b6f20d691936633b5a82877ece10a5bf8ec67025c9d77d23b36900",
-    "docs/phase-7/generated/core-loop-qa-packet.json": "11cd5df6c017bc29906a2e15561226af7a531a1a15ade35efe03900e6ee0e941",
-    "docs/phase-7/generated/core-loop-qa-packet.md": "86217788c2014057777bc7713c2c9f98fdbfbdab8ffa482d84f33916f3857bc4",
+    "docs/phase-5/generated/device-qa-packet.json": "6dbcc22947198269553109f5d88f388dbec5f2b322e70466bfcdae0dac729929",
+    "docs/phase-5/generated/device-qa-packet.md": "2aa8d67aed05efb4d2e0696c315f8ead8012b7328f1f0c868a397a476b3995ac",
+    "docs/phase-6/generated/payments-qa-packet.json": "04c0561436a272ed26a267340423719c106eb68d33966ddc581cb1f1c4b515a3",
+    "docs/phase-6/generated/payments-qa-packet.md": "6d5c960a3a60abbd1745501fc6196c1d443e8d12d550db9eb637a98b1eae95a3",
+    "docs/phase-7/generated/core-loop-qa-packet.json": "40500f634500f0400bed398a49288f30fcffc4c57e59fd15d26554af468f70c8",
+    "docs/phase-7/generated/core-loop-qa-packet.md": "b58c84cfecf8072d0980d7e267dc41f3a78aace9c68b220704ae81468a2e02e2",
     "scripts/phase8/build-growth-store-qa-packet.mjs": "417068519980f0e79e36d565a3deac14de38804daa59d0b5773d88fc89768461",
     "scripts/phase8/check-growth-store-readiness.mjs": "014ac3f8dfd4baae43b57c494c778688c180ae996f8cb8b29f0a2660211902a7",
     "scripts/phase8/check-growth-store-smoke.mjs": "89cc87c5da60b6eb86ae112c93eb1995309c82dc2336995113dd5a37b8c37a98",
@@ -185,7 +185,6 @@
   },
   "blockers": [],
   "warnings": [
-    "Phase 8 QA packet generated with a dirty Git worktree; do not use it as final growth/store evidence.",
     "Final brand domain is missing.",
     "Marketing URL is missing.",
     "Support email is missing.",

@@ -1,10 +1,10 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-15T04:24:07.391Z
+Generated: 2026-07-15T04:26:22.521Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 91b3dea40bf81057561b406eee08cf394921cdb8
-Git status: DIRTY
+Git SHA: 071c77a3eecd8a4a980b9e027e857e09f9ec75f2
+Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
 order for founder, counsel, clinical, chemistry, privacy/security, and IP/FTO
@@ -20,7 +20,7 @@ names, credentials, dates, or legal/clinical decisions.
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
 - Blockers: 0
-- Warnings: 2
+- Warnings: 0
 
 ## Next Operator Actions
 
@@ -1015,5 +1015,4 @@ Sources:
 
 ## Warnings
 
-- Phase 3 review operator queue generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.
-- Source Phase 3 review worklist records a dirty Git worktree; regenerate from a clean tree before final reviewer handoff.
+- None.

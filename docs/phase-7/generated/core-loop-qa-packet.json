@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T04:23:56.140Z",
+  "generatedAt": "2026-07-15T04:26:27.757Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,8 +73,8 @@
     ]
   },
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
-  "gitStatus": "M docs/e2e/generated/human-e2e-manifest.json\n M docs/e2e/generated/human-e2e-manifest.md\n M docs/hugeToDo/feature-inventory.json\n M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md\n M docs/phase-5/generated/device-qa-packet.json\n M docs/phase-5/generated/device-qa-packet.md\n M docs/phase-6/generated/payments-qa-packet.json\n M docs/phase-6/generated/payments-qa-packet.md",
+  "gitSha": "071c77a3eecd8a4a980b9e027e857e09f9ec75f2",
+  "gitStatus": "M docs/phase-3/generated/review-operator-queue.json\n M docs/phase-3/generated/review-operator-queue.md\n M docs/phase-3/generated/review-packet-manifest.json\n M docs/phase-3/generated/review-packet.md\n M docs/phase-3/generated/review-worklist.json\n M docs/phase-3/generated/review-worklist.md\n M docs/phase-4/generated/beta-coverage-report.json\n M docs/phase-4/generated/beta-coverage-report.md\n M docs/phase-4/generated/catalog-qa-report.json\n M docs/phase-4/generated/catalog-qa-report.md\n M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md\n M docs/phase-5/generated/device-qa-packet.json\n M docs/phase-5/generated/device-qa-packet.md\n M docs/phase-6/generated/payments-qa-packet.json\n M docs/phase-6/generated/payments-qa-packet.md",
   "evidence": {
     "brandReady": false,
     "supabaseRlsPass": false,
@@ -794,26 +794,26 @@
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
-      "bytes": 26526,
-      "sha256": "47be0118304ea5a68372169a21634f2f073e471b0d0db6f7f78191034c3b3919"
+      "bytes": 26527,
+      "sha256": "6dbcc22947198269553109f5d88f388dbec5f2b322e70466bfcdae0dac729929"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 23039,
-      "sha256": "7e3a0c16df9b800b03a54036543c6c5972255db1a10c18c9a96b4188e764c731"
+      "sha256": "2aa8d67aed05efb4d2e0696c315f8ead8012b7328f1f0c868a397a476b3995ac"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
-      "bytes": 15937,
-      "sha256": "ef722d8dcb95a204a27786953a3414eba912d7fd899c76c696b7ca9c5f412bbf"
+      "bytes": 17984,
+      "sha256": "04c0561436a272ed26a267340423719c106eb68d33966ddc581cb1f1c4b515a3"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
-      "bytes": 10435,
-      "sha256": "1af1e8092dceb8c6913c01597819816791518ff3ca4c21922ed1c672b385ce46"
+      "bytes": 11870,
+      "sha256": "6d5c960a3a60abbd1745501fc6196c1d443e8d12d550db9eb637a98b1eae95a3"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",

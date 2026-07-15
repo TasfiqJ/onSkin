@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T04:23:56.096Z",
+  "generatedAt": "2026-07-15T04:26:26.993Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -81,8 +81,8 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
-  "gitStatus": "M docs/hugeToDo/feature-inventory.json",
+  "gitSha": "071c77a3eecd8a4a980b9e027e857e09f9ec75f2",
+  "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
     "productionHasNoTestStoreKey": true,
@@ -542,7 +542,5 @@
     "Missing PHASE6_FINANCE_SIGNOFF=true.",
     "Missing PHASE6_SIGNED_OFF_BY."
   ],
-  "warnings": [
-    "Phase 6 payments QA packet generated with a dirty Git worktree; do not use it as final payments evidence."
-  ]
+  "warnings": []
 }

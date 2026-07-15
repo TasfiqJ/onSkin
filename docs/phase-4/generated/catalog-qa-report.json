@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T04:25:14.916Z",
+  "generatedAt": "2026-07-15T04:26:24.833Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,8 +73,8 @@
     ]
   },
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin-main-pay06\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
-  "gitStatus": "M LAUNCH_READINESS.md\n M docs/hugeToDo/feature-inventory.json",
+  "gitSha": "071c77a3eecd8a4a980b9e027e857e09f9ec75f2",
+  "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
   "inputArtifact": {
@@ -219,14 +219,14 @@
     {
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
-      "bytes": 46865,
-      "sha256": "ea5065712c4af656a9a4edfea99e9f09253097a2a0ddebbf10ec43eb0c7a99db"
+      "bytes": 46709,
+      "sha256": "6e4ba8c1cc37cb4e607021e5516fbf23e6d8b6c08071f026b90d101e674edc3b"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
-      "bytes": 29027,
-      "sha256": "6571c4e37a9bdbb5835cdef59caf621cbe68e48b7f737974bd197e71b8c1d5c4"
+      "bytes": 28924,
+      "sha256": "8e3bdd8f5ffd9d0249de6f62c8cde396d84892a02fc7b5e5101f9fe0c9272b23"
     },
     {
       "path": "docs/phase-4/odbl-compliance-memo.md",
@@ -250,10 +250,8 @@
     "missingIngredients": 0
   },
   "blockers": [],
-  "warnings": [
-    "Catalog QA report generated with a dirty Git worktree; do not use it as final catalog-source evidence."
-  ],
-  "localQaClear": false,
+  "warnings": [],
+  "localQaClear": true,
   "launchClear": false,
   "launchClearReason": "No. This report only validates the local fixture/export output; launch clearance still requires final source identity, ODbL/CosIng legal review, curated batch QA, beta coverage, and reviewer signoff."
 }

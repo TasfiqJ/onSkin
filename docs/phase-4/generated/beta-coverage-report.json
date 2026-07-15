@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T04:25:14.918Z",
+  "generatedAt": "2026-07-15T04:26:25.568Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,8 +73,8 @@
     ]
   },
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin-main-pay06\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
-  "gitStatus": "M LAUNCH_READINESS.md\n M docs/hugeToDo/feature-inventory.json",
+  "gitSha": "071c77a3eecd8a4a980b9e027e857e09f9ec75f2",
+  "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
     "exists": false
@@ -185,14 +185,14 @@
     {
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
-      "bytes": 46865,
-      "sha256": "ea5065712c4af656a9a4edfea99e9f09253097a2a0ddebbf10ec43eb0c7a99db"
+      "bytes": 46709,
+      "sha256": "6e4ba8c1cc37cb4e607021e5516fbf23e6d8b6c08071f026b90d101e674edc3b"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
-      "bytes": 29027,
-      "sha256": "6571c4e37a9bdbb5835cdef59caf621cbe68e48b7f737974bd197e71b8c1d5c4"
+      "bytes": 28924,
+      "sha256": "8e3bdd8f5ffd9d0249de6f62c8cde396d84892a02fc7b5e5101f9fe0c9272b23"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -210,13 +210,13 @@
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
       "bytes": 7475,
-      "sha256": "a5af4caedc325fcbb5382524b7ccbe42d5e03c5d2aaec41f1e8a88bb3f7c0c87"
+      "sha256": "12d42059300e3363842d9708b108bc6c55938a4600d6200f56b098d4972522b2"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 4055,
-      "sha256": "54ab3aac99930c8e362b2d6c1402dafd01b4f351f3bf97e39c9fee66837cc040"
+      "sha256": "4735c9bc70aa18ba74f4473b5f9a9b3e5b2e31da67cfff8a211b7cd8ebcbd9dd"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",
@@ -292,8 +292,6 @@
   "evidenceBlockers": [
     "Missing beta coverage input artifact. Set PHASE4_BETA_COVERAGE_INPUT or copy docs/phase-4/beta-coverage-input.template.json to docs/phase-4/beta-coverage-input.json and replace it with real beta exports."
   ],
-  "warnings": [
-    "Beta coverage report generated with a dirty Git worktree; do not use it as final beta evidence."
-  ],
+  "warnings": [],
   "localBetaCoverageClear": false
 }

@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-15T04:24:07.391Z",
+  "generatedAt": "2026-07-15T04:26:22.521Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
-  "gitStatus": "M docs/hugeToDo/feature-inventory.json",
+  "gitSha": "071c77a3eecd8a4a980b9e027e857e09f9ec75f2",
+  "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 119475,
-    "sha256": "14e81ca3ebdca03acb5fabfbb32dfdcb3eeba6ba7e8ce8a122f48fd319d17e8e",
-    "currentSha256": "14e81ca3ebdca03acb5fabfbb32dfdcb3eeba6ba7e8ce8a122f48fd319d17e8e"
+    "bytes": 119317,
+    "sha256": "0639b7488bf3df399b663ec141e8177d51bcd61f4c0406b1deb5483b53959e69",
+    "currentSha256": "0639b7488bf3df399b663ec141e8177d51bcd61f4c0406b1deb5483b53959e69"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -33,7 +33,7 @@
     "signedItemCount": 0,
     "unsignedReleaseDispositionCount": 0,
     "blockerCount": 0,
-    "warningCount": 2
+    "warningCount": 0
   },
   "items": [
     {
@@ -2995,8 +2995,5 @@
     }
   ],
   "blockers": [],
-  "warnings": [
-    "Phase 3 review operator queue generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.",
-    "Source Phase 3 review worklist records a dirty Git worktree; regenerate from a clean tree before final reviewer handoff."
-  ]
+  "warnings": []
 }

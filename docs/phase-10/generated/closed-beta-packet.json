@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T04:24:08.156Z",
+  "generatedAt": "2026-07-15T04:26:37.311Z",
   "status": "blocked",
   "launchContract": {
     "schemaVersion": 1,
@@ -77,8 +77,8 @@
     "ios": "required",
     "android": "not_applicable"
   },
-  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
-  "gitStatus": "M docs/hugeToDo/feature-inventory.json",
+  "gitSha": "071c77a3eecd8a4a980b9e027e857e09f9ec75f2",
+  "gitStatus": "",
   "phase9PacketStatus": "blocked",
   "betaIdentity": {
     "appEnvironment": "development",
@@ -119,15 +119,15 @@
     "scripts/phase10/beta-analytics-audit.mjs": "b53f5f09236eac44112e145c818cd845e8593a48821e80a3ac96697f88a3570e",
     "scripts/phase10/build-support-handoff-packet.mjs": "ea5ded8fefa3a0258b71c7cf26f16365cab41add4882a90bc12b8601805cc20a",
     "scripts/phase10/build-beta-packet.mjs": "f5dcf9e8c74dd000a8e9288feef9eb4a5abe9f0ebad57cc1c41878c6aae612ac",
-    "docs/phase-10/generated/support-handoff-packet.json": "ff4d070a44ea6543f29a97244bcc9a4ae42f874ecb96915dbcaa0c65d4a9e14e",
-    "docs/phase-10/generated/support-handoff-packet.md": "09a138fecb1cc71158de383104702025013eff74bd16169fd93679e372a2682d",
+    "docs/phase-10/generated/support-handoff-packet.json": "556f0e00ee31dc1715949af20fa8026f973eabd745b831ef38a9d2ac80e1bc91",
+    "docs/phase-10/generated/support-handoff-packet.md": "d509b95a48676150e023c032c1c67316e5e055e1781efc48c11747c26eba53b7",
     "apps/mobile/eas.json": "1672ae9cdd6fbd4c23c5e468fcbe24e761a5fbfa64279d0627328a981dd8c657",
     "apps/mobile/app.config.js": "3c8de04b4d7452e7c41922d4202e934f8f201769be01095503b3969ad3fde0a5",
     "apps/mobile/src/lib/analytics/eventRegistry.ts": "c00e23a2c6bdcc6a081dbbea7c7905933ed9ef5929f15a5341b37a6c0dc96cae",
     "apps/mobile/src/lib/analytics/track.ts": "b705e35e12f4a584bb97abc02df1d6855d44cc725834812a275a077132f9d617",
     "apps/mobile/src/lib/observability/scrub.ts": "ad231f592848825dbeaffcbd960a31e0ae916fe7e1916ded939e9b0f79deabed",
-    "docs/phase-9/generated/release-engineering-qa-packet.json": "84df0ea6deaec8be62e6c3663f6fd468030282f5aaff9e17390bb74d841f1446",
-    "docs/phase-9/generated/release-engineering-qa-packet.md": "eac9e5d1c683d85a97e301e0861c13d08aa0d992fead6258ca8e86baf5b1e0a0",
+    "docs/phase-9/generated/release-engineering-qa-packet.json": "24c8056d4bddfe88ca19b3333689d6ea157ba0b03bed5e2c359f9d0d9b3abde9",
+    "docs/phase-9/generated/release-engineering-qa-packet.md": "58c2f53b92b31f9162a92ab8fb2cf8f815edae9344075e64d650a54dde29bfcc",
     "docs/phase-10/beta-source-of-truth.md": "88c3379dbc566fb97183916a476ebbd021fc40ffb72f6ae17f4e126deec32e35",
     "docs/phase-10/tester-recruitment-sheet.md": "9b5d0fe3e3f1564b01f74e5b662a61511a6d6676a1ba46b0b012531baaa654ba",
     "docs/phase-10/tester-brief.md": "6e048b4c6615a3ff93b1d3ab08a49869fb4345b1a287858185c30c73fbf73c16",
@@ -144,7 +144,6 @@
   },
   "blockers": [],
   "warnings": [
-    "Closed beta packet generated with a dirty Git worktree; do not use it as final beta evidence.",
     "Phase 9 packet status is blocked.",
     "External closed beta evidence missing: PHASE10_PHASE9_BETA_CANDIDATE_PASS=true.",
     "External closed beta evidence missing: PHASE10_BETA_IDENTITY_PASS=true.",
