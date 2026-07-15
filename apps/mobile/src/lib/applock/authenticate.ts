@@ -12,7 +12,9 @@ let lastGalleryFixture: string | undefined;
 let galleryFixtureCalls = 0;
 let authenticationInvalidationEpoch = 0;
 let authenticationTail: Promise<void> = Promise.resolve();
-let nativeAuthenticationPending = false;
+type NativeAuthenticationAttempt = Readonly<{ token: AppLockAuthenticationToken }>;
+let nativeAuthenticationAttempt: NativeAuthenticationAttempt | null = null;
+let quarantinedNativeAuthenticationAttempt: NativeAuthenticationAttempt | null = null;
 let appLockAuthenticationAppState = 'active';
 let presentedAuthentication: Readonly<{
   token: AppLockAuthenticationToken;
@@ -83,14 +85,21 @@ async function runSerializedAuthentication<T>(operation: () => Promise<T>): Prom
 /**
  * Invalidate the current or queued prompt. Android receives an explicit native
  * cancellation; every platform also discards a late result by epoch. The
- * serialized queue prevents a new owner/provider from opening a second sheet
- * until the stale native attempt has actually settled.
+ * A stale native promise may ignore cancellation indefinitely. Quarantine that
+ * exact attempt so a new owner fails closed immediately instead of waiting in
+ * the serialized queue or opening an overlapping native sheet. Only settlement
+ * of the quarantined native promise clears the quarantine.
  */
 export function invalidatePendingAppLockAuthentication(): void {
   authenticationInvalidationEpoch += 1;
   settleActivationWaiters();
-  if (!nativeAuthenticationPending) return;
-  void LocalAuthentication.cancelAuthenticate().catch(() => undefined);
+  if (!nativeAuthenticationAttempt) return;
+  quarantinedNativeAuthenticationAttempt = nativeAuthenticationAttempt;
+  try {
+    void LocalAuthentication.cancelAuthenticate().catch(() => undefined);
+  } catch {
+    // Quarantine is authoritative even if the native cancellation bridge throws.
+  }
 }
 
 function e2eAppLockAuthStatus(promptMessage: string): AppLockAuthStatus | null {
@@ -139,8 +148,10 @@ export async function authenticateAppLock(
   token: AppLockAuthenticationToken = Object.freeze({}),
   isRequestCurrent: AppLockAuthenticationRequestGuard = () => true,
 ): Promise<AppLockAuthStatus> {
+  if (quarantinedNativeAuthenticationAttempt) return 'unavailable';
   const requestEpoch = authenticationInvalidationEpoch;
   return runSerializedAuthentication(async () => {
+    if (quarantinedNativeAuthenticationAttempt) return 'unavailable';
     if (
       requestEpoch !== authenticationInvalidationEpoch ||
       appLockAuthenticationAppState !== 'active' ||
@@ -153,10 +164,11 @@ export async function authenticateAppLock(
     if (fixture) return fixture;
 
     const presentation = Object.freeze({ token, requestEpoch });
+    const nativeAttempt = Object.freeze({ token });
     presentedAuthentication = presentation;
     let status: AppLockAuthStatus;
     try {
-      nativeAuthenticationPending = true;
+      nativeAuthenticationAttempt = nativeAttempt;
       try {
         const result = await LocalAuthentication.authenticateAsync({
           promptMessage,
@@ -169,7 +181,12 @@ export async function authenticateAppLock(
       } catch {
         status = 'unavailable';
       } finally {
-        nativeAuthenticationPending = false;
+        if (nativeAuthenticationAttempt === nativeAttempt) {
+          nativeAuthenticationAttempt = null;
+        }
+        if (quarantinedNativeAuthenticationAttempt === nativeAttempt) {
+          quarantinedNativeAuthenticationAttempt = null;
+        }
       }
     } finally {
       if (presentedAuthentication === presentation) presentedAuthentication = null;

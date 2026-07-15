@@ -152,7 +152,71 @@ describe('app lock local authentication', () => {
     expect(getPresentedAppLockAuthenticationToken()).toBeNull();
   });
 
-  it('serializes a fresh prompt behind an invalidated native attempt', async () => {
+  it.each(['resolve', 'reject'] as const)(
+    'quarantines an invalidated native prompt through its late %s, then permits recovery',
+    async (lateOutcome) => {
+      let resolveOwnerA!: (result: { success: boolean }) => void;
+      let rejectOwnerA!: (error: Error) => void;
+      const ownerAToken = Object.freeze({ owner: 'A' });
+      mocks.authenticateAsync
+        .mockReturnValueOnce(
+          new Promise((resolve, reject) => {
+            resolveOwnerA = resolve;
+            rejectOwnerA = reject;
+          }),
+        )
+        .mockResolvedValueOnce({ success: true });
+
+      const ownerA = authenticateAppLock('Owner A', ownerAToken);
+      await vi.waitFor(() => expect(mocks.authenticateAsync).toHaveBeenCalledOnce());
+      expect(getPresentedAppLockAuthenticationToken()).toBe(ownerAToken);
+      invalidatePendingAppLockAuthentication();
+
+      await expect(authenticateAppLock('Owner B')).resolves.toBe('unavailable');
+      expect(mocks.authenticateAsync).toHaveBeenCalledTimes(1);
+      expect(getPresentedAppLockAuthenticationToken()).toBe(ownerAToken);
+
+      if (lateOutcome === 'resolve') resolveOwnerA({ success: true });
+      else rejectOwnerA(new Error('stale native rejection'));
+      await expect(ownerA).resolves.toBe('not_authenticated');
+      expect(getPresentedAppLockAuthenticationToken()).toBeNull();
+
+      await expect(authenticateAppLock('Owner C')).resolves.toBe('success');
+      expect(mocks.authenticateAsync).toHaveBeenCalledTimes(2);
+      expect(mocks.authenticateAsync).toHaveBeenLastCalledWith({
+        promptMessage: 'Owner C',
+        disableDeviceFallback: false,
+      });
+    },
+  );
+
+  it('keeps quarantine when explicit native cancellation rejects', async () => {
+    let resolveOwnerA!: (result: { success: boolean }) => void;
+    mocks.authenticateAsync
+      .mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolveOwnerA = resolve;
+        }),
+      )
+      .mockResolvedValueOnce({ success: true });
+    mocks.cancelAuthenticate.mockRejectedValueOnce(new Error('native cancellation unavailable'));
+
+    const ownerA = authenticateAppLock('Owner A');
+    await vi.waitFor(() => expect(mocks.authenticateAsync).toHaveBeenCalledOnce());
+    invalidatePendingAppLockAuthentication();
+    await Promise.resolve();
+
+    await expect(authenticateAppLock('Owner B')).resolves.toBe('unavailable');
+    expect(mocks.cancelAuthenticate).toHaveBeenCalledOnce();
+    expect(mocks.authenticateAsync).toHaveBeenCalledOnce();
+
+    resolveOwnerA({ success: false });
+    await expect(ownerA).resolves.toBe('not_authenticated');
+    await expect(authenticateAppLock('Owner C')).resolves.toBe('success');
+    expect(mocks.authenticateAsync).toHaveBeenCalledTimes(2);
+  });
+
+  it('still serializes same-owner prompts without opening overlapping native sheets', async () => {
     let resolveFirst!: (result: { success: boolean }) => void;
     let resolveSecond!: (result: { success: boolean }) => void;
     mocks.authenticateAsync
@@ -167,23 +231,18 @@ describe('app lock local authentication', () => {
         }),
       );
 
-    const stale = authenticateAppLock('Owner A');
+    const first = authenticateAppLock('Same owner first');
     await vi.waitFor(() => expect(mocks.authenticateAsync).toHaveBeenCalledOnce());
-    invalidatePendingAppLockAuthentication();
-    const fresh = authenticateAppLock('Owner B');
+    const second = authenticateAppLock('Same owner second');
     await Promise.resolve();
-    expect(mocks.authenticateAsync).toHaveBeenCalledTimes(1);
+    expect(mocks.authenticateAsync).toHaveBeenCalledOnce();
 
     resolveFirst({ success: true });
-    await expect(stale).resolves.toBe('not_authenticated');
+    await expect(first).resolves.toBe('success');
     await vi.waitFor(() => expect(mocks.authenticateAsync).toHaveBeenCalledTimes(2));
-    expect(mocks.authenticateAsync).toHaveBeenLastCalledWith({
-      promptMessage: 'Owner B',
-      disableDeviceFallback: false,
-    });
 
     resolveSecond({ success: true });
-    await expect(fresh).resolves.toBe('success');
+    await expect(second).resolves.toBe('success');
   });
 
   it('does not present a queued request whose interaction became stale', async () => {
