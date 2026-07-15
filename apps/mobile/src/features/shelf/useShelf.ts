@@ -19,12 +19,14 @@ import { loadConflictChoices } from '@/features/intelligence/overrides';
 import { expiryBadge, type ExpiryBadge } from '@/features/intelligence/pao';
 import { shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
-import { readProfileBits } from '@/features/scheduler/profile';
+import { readProfileBitsWithLease } from '@/features/scheduler/profile';
 import { localDateString } from '@/features/today/useToday';
+import { awaitAccountGenerationLease } from '@/lib/auth/accountGeneration';
 import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
 import {
   queryKeys,
   runOwnerQueryOperation,
+  settleOwnerQueryOperations,
   shouldRefetchCurrentLocalDayQuery,
 } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
@@ -150,11 +152,12 @@ export function useShelf() {
     retryOnMount: false,
     queryFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const [products, profileBits, conflictChoices] = await Promise.all([
-          loadShelf(),
-          readProfileBits(),
-          loadConflictChoices(),
-        ]);
+        const [products, profileBits, conflictChoices] = await settleOwnerQueryOperations(lease, [
+          (childLease) => awaitAccountGenerationLease(childLease, () => loadShelf()),
+          (childLease) => readProfileBitsWithLease(childLease),
+          (childLease) =>
+            awaitAccountGenerationLease(childLease, () => loadConflictChoices()),
+        ] as const);
         lease.assertCurrent();
         const profile: EngineProfile = {
           sensitivity: profileBits.sensitivity,

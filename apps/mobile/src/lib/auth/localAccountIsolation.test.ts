@@ -134,6 +134,25 @@ describe('local account isolation', () => {
     });
   });
 
+  it('preserves every byte when the owner control marker cannot be decoded', async () => {
+    const deps = dependencies();
+    const beforeClear = vi.fn();
+    vi.mocked(deps.readOwnership).mockImplementationOnce(async (userId: string | null) => {
+      deps.calls.push(`read-owner:${userId ?? 'signed-out'}`);
+      throw new Error('LOCAL_DATA_OWNER_UNSUPPORTED_VERSION');
+    });
+
+    await expect(
+      prepareLocalDataForSession('user-a', 'user-b', deps, beforeClear),
+    ).rejects.toThrow('LOCAL_DATA_OWNER_UNSUPPORTED_VERSION');
+
+    expect(deps.calls).toEqual(['read-owner:user-b']);
+    expect(beforeClear).not.toHaveBeenCalled();
+    expect(deps.markCleanupRequired).not.toHaveBeenCalled();
+    expect(deps.clearPersistedPrivateData).not.toHaveBeenCalled();
+    expect(deps.claimOwnership).not.toHaveBeenCalled();
+  });
+
   it('clears on sign-out without claiming a new owner', async () => {
     const deps = dependencies();
 
@@ -205,6 +224,22 @@ describe('local account isolation', () => {
       accountGenerationMocks.waitForAccountGenerationOperationsToSettle,
     ).toHaveBeenCalledOnce();
     expect(accountGenerationMocks.endAccountGenerationBoundary).toHaveBeenCalledOnce();
+  });
+
+  it('starts no destructive boundary when cleanup authority is not durable', async () => {
+    const deps = dependencies();
+    vi.mocked(deps.markCleanupRequired).mockRejectedValueOnce(
+      new Error('LOCAL_DATA_CLEANUP_MARKER_WRITE_UNCONFIRMED'),
+    );
+
+    await expect(clearAccountIsolatedState(deps)).rejects.toThrow(
+      'LOCAL_DATA_CLEANUP_MARKER_WRITE_UNCONFIRMED',
+    );
+
+    expect(deps.calls).toEqual([]);
+    expect(accountGenerationMocks.beginAccountGenerationBoundary).not.toHaveBeenCalled();
+    expect(deps.clearPersistedPrivateData).not.toHaveBeenCalled();
+    expect(deps.clearCleanupRequired).not.toHaveBeenCalled();
   });
 
   it('still clears persisted state and releases the boundary when an account operation fails', async () => {

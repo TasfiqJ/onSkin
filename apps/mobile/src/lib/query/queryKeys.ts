@@ -43,6 +43,69 @@ export function runOwnerQueryOperation<T>(
   });
 }
 
+/**
+ * Run owner reads under a shared child signal. The first same-generation error
+ * aborts its siblings, while the parent remains registered until every sibling
+ * acknowledges cancellation. This both surfaces strict storage failures without
+ * waiting for an unrelated hung request and prevents that request from escaping
+ * account-boundary drain tracking.
+ */
+export async function settleOwnerQueryOperations<const T extends readonly unknown[]>(
+  lease: AccountGenerationLease,
+  operations: {
+    readonly [K in keyof T]: (childLease: AccountGenerationLease) => T[K] | Promise<T[K]>;
+  },
+): Promise<T> {
+  lease.assertCurrent();
+  const controller = new AbortController();
+  const abortChildren = () => controller.abort();
+  lease.signal.addEventListener('abort', abortChildren, { once: true });
+  if (lease.signal.aborted) abortChildren();
+
+  let hasFailure = false;
+  let firstFailure: unknown;
+  const childLease: AccountGenerationLease = Object.freeze({
+    generation: lease.generation,
+    signal: controller.signal,
+    assertCurrent: () => {
+      lease.assertCurrent();
+      if (controller.signal.aborted) throw new AccountGenerationLeaseError();
+    },
+    // Query branches are not destructive boundary owners.
+    beginBoundaryHandoff: () => {
+      throw new AccountGenerationLeaseError();
+    },
+  });
+
+  try {
+    const pending = operations.map((operation) =>
+      Promise.resolve()
+        .then(() => {
+          childLease.assertCurrent();
+          return operation(childLease);
+        })
+        .catch((error: unknown) => {
+          if (!hasFailure) {
+            hasFailure = true;
+            firstFailure = error;
+            abortChildren();
+          }
+          throw error;
+        }),
+    );
+    const settled = await Promise.allSettled(pending);
+    lease.assertCurrent();
+
+    if (hasFailure) throw firstFailure;
+
+    return settled.map(
+      (result) => (result as PromiseFulfilledResult<unknown>).value,
+    ) as unknown as T;
+  } finally {
+    lease.signal.removeEventListener('abort', abortChildren);
+  }
+}
+
 export const queryPrefixes = {
   askConsent: ['ask_onskin'] as const,
   askGroundedTurns: ['askGroundedTurns'] as const,

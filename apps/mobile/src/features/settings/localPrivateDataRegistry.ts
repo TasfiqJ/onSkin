@@ -1,5 +1,7 @@
 import {
   LOCAL_DATA_CLEANUP_REQUIRED_KEY,
+  LOCAL_DATA_OWNER_CLAIM_INTENT_KEY,
+  LOCAL_DATA_OWNER_CLAIM_NONCE_KEY,
   LOCAL_DATA_OWNER_HASH_KEY,
 } from '@/lib/auth/sessionOwnerKey';
 import { ACCOUNT_DELETION_VENDOR_FREEZE_KEY } from '@/lib/auth/accountDeletionVendorFreezeKey';
@@ -97,6 +99,8 @@ type RecoveryContract = Contract<{
     | 'journal_replay_before_mount'
     | 'preserve_key_material_no_rotation'
     | 'fail_closed_control_retry'
+    | 'authenticated_claim_repair'
+    | 'pending_key_fingerprint_reconciliation'
     | 'explicit_domain_delete';
 }>;
 
@@ -495,14 +499,18 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     storage: 'async_storage_control',
     lifecycle: 'metadata',
     discovery: 'production_literal',
-    codec: scalarCodec('photo_key_presence_marker', 'v1'),
+    codec: scalarCodec(
+      'photo_key_presence_marker',
+      'v1:created:<sha256>|v1:pending:<sha256>',
+      ['1', 'v1:created'],
+    ),
     typedRead: enforced({ mode: 'control_state_machine' as const }),
     mutation: enforced({ mode: 'replace_only_control' as const }),
     ownerBinding: enforced({ mode: 'photo_account_generation' as const }),
     export: enforced({ mode: 'exclude' as const, reason: 'encryption_internal_metadata' }),
     cleanup: PRIVATE_KV_CLEANUP,
     reset: ACCOUNT_RESET,
-    recovery: enforced({ mode: 'fail_closed_control_retry' as const }),
+    recovery: enforced({ mode: 'pending_key_fingerprint_reconciliation' as const }),
   },
   {
     key: LOCAL_DATA_OWNER_HASH_KEY,
@@ -510,7 +518,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     storage: 'async_storage_control',
     lifecycle: 'metadata',
     discovery: 'production_literal',
-    codec: scalarCodec('domain_separated_sha256', 'v1'),
+    codec: scalarCodec('owner_hash_control', 'v1', ['raw_sha256']),
     typedRead: enforced({ mode: 'control_state_machine' as const }),
     mutation: enforced({ mode: 'replace_only_control' as const }),
     ownerBinding: enforced({ mode: 'owner_hash_control' as const }),
@@ -520,12 +528,42 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     recovery: enforced({ mode: 'fail_closed_control_retry' as const }),
   },
   {
+    key: LOCAL_DATA_OWNER_CLAIM_INTENT_KEY,
+    category: 'metadata',
+    storage: 'async_storage_control',
+    lifecycle: 'metadata',
+    discovery: 'production_literal',
+    codec: scalarCodec('owner_claim_intent_control', 'v1:<claim_sha256>'),
+    typedRead: enforced({ mode: 'control_state_machine' as const }),
+    mutation: enforced({ mode: 'replace_only_control' as const }),
+    ownerBinding: enforced({ mode: 'verified_owner_startup_control' as const }),
+    export: enforced({ mode: 'exclude' as const, reason: 'owner_isolation_metadata' }),
+    cleanup: PRIVATE_KV_CLEANUP,
+    reset: ACCOUNT_RESET,
+    recovery: enforced({ mode: 'authenticated_claim_repair' as const }),
+  },
+  {
+    key: LOCAL_DATA_OWNER_CLAIM_NONCE_KEY,
+    category: 'metadata',
+    storage: 'async_storage_control',
+    lifecycle: 'metadata',
+    discovery: 'production_literal',
+    codec: scalarCodec('owner_claim_nonce_control', 'v1:<sha256>'),
+    typedRead: enforced({ mode: 'control_state_machine' as const }),
+    mutation: enforced({ mode: 'replace_only_control' as const }),
+    ownerBinding: enforced({ mode: 'verified_owner_startup_control' as const }),
+    export: enforced({ mode: 'exclude' as const, reason: 'owner_isolation_metadata' }),
+    cleanup: PRIVATE_KV_CLEANUP,
+    reset: ACCOUNT_RESET,
+    recovery: enforced({ mode: 'authenticated_claim_repair' as const }),
+  },
+  {
     key: LOCAL_DATA_CLEANUP_REQUIRED_KEY,
     category: 'control',
     storage: 'async_storage_control',
     lifecycle: 'control',
     discovery: 'production_literal',
-    codec: scalarCodec('cleanup_required_presence_marker', 'v1'),
+    codec: scalarCodec('cleanup_required_presence_marker', 'v1:required', ['1']),
     typedRead: enforced({ mode: 'control_state_machine' as const }),
     mutation: enforced({ mode: 'replace_only_control' as const }),
     ownerBinding: enforced({ mode: 'verified_owner_startup_control' as const }),

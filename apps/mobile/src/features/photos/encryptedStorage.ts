@@ -9,6 +9,7 @@ import {
   randomBytes,
   utf8ToBytes,
 } from '@noble/ciphers/utils.js';
+import * as Crypto from 'expo-crypto';
 import * as FileSystem from 'expo-file-system/legacy';
 import { Platform } from 'react-native';
 
@@ -31,10 +32,22 @@ const PHOTO_DIR = `${FileSystem.documentDirectory ?? ''}photos/v1/`;
 const KEY_ID = 'photo-content-key-v1';
 const KEY_STORE_NAME = 'onskin.photo.content_key.v1';
 const KEY_CREATION_MARKER = 'onskin.photo.content_key_created.v1';
+const KEY_CREATION_MARKER_CURRENT_PREFIX = 'v1:created:';
+const KEY_CREATION_MARKER_UNBOUND_LEGACY = 'v1:created';
+const KEY_CREATION_MARKER_LEGACY = '1';
+const KEY_CREATION_PENDING_PREFIX = 'v1:pending:';
+const KEY_FINGERPRINT_DOMAIN = 'onskin:photo-content-key:v1:';
+const KEY_CREATION_MARKER_MAX_LENGTH = 96;
+const SHA256_HEX = /^[0-9a-f]{64}$/;
 const ENCRYPTION_VERSION = 'xchacha20poly1305:v1';
 const NONCE_BYTES = 24;
 export const PHOTO_CONTENT_KEY_MISSING = 'PHOTO_CONTENT_KEY_MISSING';
 export const PHOTO_CONTENT_KEY_INVALID = 'PHOTO_CONTENT_KEY_INVALID';
+export const PHOTO_CONTENT_KEY_MARKER_INVALID = 'PHOTO_CONTENT_KEY_MARKER_INVALID';
+export const PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION =
+  'PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION';
+export const PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH =
+  'PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH';
 export const PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE = 'PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE';
 export const PHOTO_DECRYPTION_FAILED = 'PHOTO_DECRYPTION_FAILED';
 export const PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY = 'PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY';
@@ -71,6 +84,7 @@ export type QuarantinedPhotoFile = {
 };
 
 let contentKeyCreation: Promise<Uint8Array> | null = null;
+let contentKeyMarkerMutationTail: Promise<void> = Promise.resolve();
 const inFlightPhotoOperations = new Set<Promise<unknown>>();
 let destructivePhotoOperationTail: Promise<void> = Promise.resolve();
 let accountBoundaryWriteBlockDepth = 0;
@@ -163,21 +177,135 @@ async function readStoredContentKey(): Promise<string | null> {
   }
 }
 
-async function markContentKeyCreated(): Promise<void> {
-  await AsyncStorage.setItem(KEY_CREATION_MARKER, '1');
-}
+type ContentKeyMarkerState =
+  | 'absent'
+  | 'legacy'
+  | 'legacy_unbound'
+  | 'invalid'
+  | 'unsupported_version'
+  | `current:${string}`
+  | `pending:${string}`;
 
-async function requireContentKeyMarker(): Promise<void> {
+async function readContentKeyMarkerState(): Promise<ContentKeyMarkerState> {
+  let stored: string | null;
   try {
-    await markContentKeyCreated();
+    stored = await AsyncStorage.getItem(KEY_CREATION_MARKER);
   } catch {
     throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
   }
+
+  if (stored === null) return 'absent';
+  if (stored.length > KEY_CREATION_MARKER_MAX_LENGTH) return 'invalid';
+  if (stored === KEY_CREATION_MARKER_UNBOUND_LEGACY) return 'legacy_unbound';
+  if (stored === KEY_CREATION_MARKER_LEGACY) return 'legacy';
+  if (stored.startsWith(KEY_CREATION_MARKER_CURRENT_PREFIX)) {
+    const fingerprint = stored.slice(KEY_CREATION_MARKER_CURRENT_PREFIX.length);
+    if (SHA256_HEX.test(fingerprint)) return `current:${fingerprint}`;
+    return 'invalid';
+  }
+  if (stored.startsWith(KEY_CREATION_PENDING_PREFIX)) {
+    const fingerprint = stored.slice(KEY_CREATION_PENDING_PREFIX.length);
+    if (SHA256_HEX.test(fingerprint)) return `pending:${fingerprint}`;
+    return 'invalid';
+  }
+  const version = /^v([1-9]\d*):/.exec(stored)?.[1];
+  if (version && Number(version) > 1) return 'unsupported_version';
+  return 'invalid';
 }
 
-async function hasPriorEncryptedPhotoData(): Promise<boolean> {
+function rejectBlockedContentKeyMarker(state: ContentKeyMarkerState): void {
+  if (state === 'unsupported_version') {
+    throw new Error(PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION);
+  }
+  if (state === 'invalid') throw new Error(PHOTO_CONTENT_KEY_MARKER_INVALID);
+}
+
+function pendingContentKeyFingerprint(state: ContentKeyMarkerState): string | null {
+  return state.startsWith('pending:') ? state.slice('pending:'.length) : null;
+}
+
+function currentContentKeyFingerprint(state: ContentKeyMarkerState): string | null {
+  return state.startsWith('current:') ? state.slice('current:'.length) : null;
+}
+
+async function contentKeyFingerprint(keyHex: string): Promise<string> {
   try {
-    if ((await AsyncStorage.getItem(KEY_CREATION_MARKER)) === '1') return true;
+    const fingerprint = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      `${KEY_FINGERPRINT_DOMAIN}${keyHex}`,
+    );
+    if (SHA256_HEX.test(fingerprint)) return fingerprint;
+  } catch {
+    // Normalize native hashing failures to the storage recovery contract.
+  }
+  throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
+}
+
+function runSerializedContentKeyMarkerMutation<T>(operation: () => Promise<T>): Promise<T> {
+  const result = contentKeyMarkerMutationTail.catch(() => {}).then(operation);
+  contentKeyMarkerMutationTail = result.then(
+    () => undefined,
+    () => undefined,
+  );
+  return result;
+}
+
+async function writeAndVerifyCurrentContentKeyMarker(fingerprint: string): Promise<void> {
+  const marker = `${KEY_CREATION_MARKER_CURRENT_PREFIX}${fingerprint}`;
+  try {
+    await AsyncStorage.setItem(KEY_CREATION_MARKER, marker);
+  } catch {
+    // AsyncStorage can reject after committing. The exact readback below is authoritative.
+  }
+
+  const stored = await readContentKeyMarkerState();
+  if (stored === `current:${fingerprint}`) return;
+  rejectBlockedContentKeyMarker(stored);
+  throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
+}
+
+async function writeAndVerifyPendingContentKeyMarker(fingerprint: string): Promise<void> {
+  const marker = `${KEY_CREATION_PENDING_PREFIX}${fingerprint}`;
+  try {
+    await AsyncStorage.setItem(KEY_CREATION_MARKER, marker);
+  } catch {
+    // AsyncStorage can reject after committing. Exact readback remains authoritative.
+  }
+
+  const stored = await readContentKeyMarkerState();
+  if (stored === `pending:${fingerprint}`) return;
+  rejectBlockedContentKeyMarker(stored);
+  throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
+}
+
+async function requireContentKeyMarkerWithinMutation(keyHex: string): Promise<void> {
+  const marker = await readContentKeyMarkerState();
+  rejectBlockedContentKeyMarker(marker);
+  const fingerprint = await contentKeyFingerprint(keyHex);
+  const currentFingerprint = currentContentKeyFingerprint(marker);
+  if (currentFingerprint) {
+    if (currentFingerprint !== fingerprint) {
+      throw new Error(PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH);
+    }
+    return;
+  }
+  const pendingFingerprint = pendingContentKeyFingerprint(marker);
+  if (pendingFingerprint) {
+    if (fingerprint !== pendingFingerprint) {
+      throw new Error(PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH);
+    }
+  }
+  await writeAndVerifyCurrentContentKeyMarker(fingerprint);
+}
+
+async function requireContentKeyMarker(keyHex: string): Promise<void> {
+  await runSerializedContentKeyMarkerMutation(() =>
+    requireContentKeyMarkerWithinMutation(keyHex),
+  );
+}
+
+async function hasPriorEncryptedPhotoFiles(): Promise<boolean> {
+  try {
     const info = await FileSystem.getInfoAsync(PHOTO_DIR);
     if (!info.exists) return false;
     const entries = await FileSystem.readDirectoryAsync(PHOTO_DIR);
@@ -214,31 +342,47 @@ async function getOrCreateContentKey(): Promise<Uint8Array> {
   const existing = await readStoredContentKey();
   const existingKey = contentKeyFromHex(existing);
   if (existingKey) {
-    await requireContentKeyMarker();
+    await requireContentKeyMarker(existing!);
     return existingKey;
   }
   if (existing) throw new Error(PHOTO_CONTENT_KEY_INVALID);
 
   if (!contentKeyCreation) {
-    contentKeyCreation = (async () => {
+    contentKeyCreation = runSerializedContentKeyMarkerMutation(async () => {
       const rechecked = await readStoredContentKey();
       const recheckedKey = contentKeyFromHex(rechecked);
       if (recheckedKey) {
-        await requireContentKeyMarker();
+        await requireContentKeyMarkerWithinMutation(rechecked!);
         return recheckedKey;
       }
       if (rechecked) throw new Error(PHOTO_CONTENT_KEY_INVALID);
-      if (await hasPriorEncryptedPhotoData()) throw new Error(PHOTO_CONTENT_KEY_MISSING);
+
+      const marker = await readContentKeyMarkerState();
+      rejectBlockedContentKeyMarker(marker);
+      if (marker !== 'absent' || (await hasPriorEncryptedPhotoFiles())) {
+        throw new Error(PHOTO_CONTENT_KEY_MISSING);
+      }
 
       const key = randomBytes(32);
+      const keyHex = bytesToHex(key);
+      const fingerprint = await contentKeyFingerprint(keyHex);
+      await writeAndVerifyPendingContentKeyMarker(fingerprint);
       try {
-        await setPrivateSecureStoreItemAsync(KEY_STORE_NAME, bytesToHex(key));
-        await markContentKeyCreated();
+        await setPrivateSecureStoreItemAsync(KEY_STORE_NAME, keyHex);
       } catch {
+        // SecureStore can commit and lose only the acknowledgement. Exact
+        // readback below, not the native return value, is authoritative.
+      }
+      const verifiedKey = await readStoredContentKey();
+      if (verifiedKey !== keyHex) throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
+      const markerBeforeWrite = await readContentKeyMarkerState();
+      rejectBlockedContentKeyMarker(markerBeforeWrite);
+      if (markerBeforeWrite !== `pending:${fingerprint}`) {
         throw new Error(PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE);
       }
+      await writeAndVerifyCurrentContentKeyMarker(fingerprint);
       return key;
-    })();
+    });
   }
 
   const pending = contentKeyCreation;

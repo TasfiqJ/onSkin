@@ -48,7 +48,10 @@ import {
   hydrateAccountDeletionVendorFreeze,
 } from './accountDeletionVendorFreeze';
 import { reconcileAccountDeletionCompletionReceipt } from './accountDeletionCompletion';
-import { getAccountIsolationE2EFixture } from './accountIsolationE2E';
+import {
+  getAccountIsolationE2EFixture,
+  seedAccountIsolationE2EFixture,
+} from './accountIsolationE2E';
 import {
   authenticateWithProviderToken,
   requestEmailAccountCode,
@@ -102,6 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     targetUserId: string | null;
   } | null>(null);
   const boundaryClearFailureConsumedRef = useRef(false);
+  const accountIsolationE2ESeededRef = useRef(false);
   const explicitSignOutPendingRef = useRef(false);
   const retrySessionRestoreRef = useRef<(() => Promise<void>) | null>(null);
   const applySessionBoundaryRef = useRef<
@@ -181,6 +185,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const previousUserId = activeUserIdRef.current;
 
         try {
+          if (accountIsolationE2EFixture && !accountIsolationE2ESeededRef.current) {
+            await seedAccountIsolationE2EFixture(accountIsolationE2EFixture);
+            accountIsolationE2ESeededRef.current = true;
+          }
           const deletionCompleted = accountIsolationE2EFixture
             ? false
             : await reconcileAccountDeletionCompletionReceipt();

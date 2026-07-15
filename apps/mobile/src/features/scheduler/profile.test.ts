@@ -6,6 +6,7 @@ import {
   AccountGenerationLeaseError,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 
 import type {
@@ -22,7 +23,10 @@ const mocks = vi.hoisted(() => ({
   consentCurrent: true,
   supabaseConfigured: false,
   serverData: null as Record<string, unknown> | null,
+  serverSignal: null as AbortSignal | null,
   from: vi.fn(),
+  abortSignal: vi.fn(),
+  maybeSingle: vi.fn(),
   hasCurrentHealthDataCollectionConsent: vi.fn(),
   updateStoredPregnancyStatus: vi.fn(),
 }));
@@ -88,16 +92,25 @@ beforeEach(() => {
   mocks.consentCurrent = true;
   mocks.supabaseConfigured = false;
   mocks.serverData = null;
+  mocks.serverSignal = null;
   mocks.from.mockReset();
   mocks.from.mockImplementation(() => {
     const query = {
       select: vi.fn(() => query),
       order: vi.fn(() => query),
       limit: vi.fn(() => query),
-      maybeSingle: vi.fn(async () => ({ data: mocks.serverData })),
+      abortSignal: mocks.abortSignal,
+      maybeSingle: mocks.maybeSingle,
     };
+    mocks.abortSignal.mockImplementation((signal: AbortSignal) => {
+      mocks.serverSignal = signal;
+      return query;
+    });
     return query;
   });
+  mocks.abortSignal.mockReset();
+  mocks.maybeSingle.mockReset();
+  mocks.maybeSingle.mockImplementation(async () => ({ data: mocks.serverData }));
   mocks.hasCurrentHealthDataCollectionConsent
     .mockReset()
     .mockImplementation(async () => mocks.consentCurrent);
@@ -122,8 +135,86 @@ describe('skin profile axis mapping', () => {
     const source = readFileSync(fileURLToPath(new URL('./profile.ts', import.meta.url)), 'utf8');
 
     expect(source).toContain('queryKey: queryKeys.skinProfile(ownerScope)');
-    expect(source).toContain('queryFn: readProfileBits');
+    expect(source).toContain('runOwnerQueryOperation(ownerScope, readProfileBitsWithLease)');
     expect(source).toContain("networkMode: 'always'");
+  });
+
+  it('aborts and drains a delayed owner-A server fallback without publishing it', async () => {
+    mocks.supabaseConfigured = true;
+    let published = false;
+    mocks.maybeSingle.mockImplementationOnce(
+      () =>
+        new Promise((_resolve, reject) => {
+          const signal = mocks.serverSignal!;
+          const rejectForAbort = () => {
+            reject(Object.assign(new Error('ABORTED'), { name: 'AbortError' }));
+          };
+          if (signal.aborted) rejectForAbort();
+          else signal.addEventListener('abort', rejectForAbort, { once: true });
+        }),
+    );
+
+    const read = readProfileBits();
+    void read.then(
+      () => {
+        published = true;
+      },
+      () => undefined,
+    );
+    await vi.waitFor(() => expect(mocks.maybeSingle).toHaveBeenCalledOnce());
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    const drain = waitForAccountGenerationOperationsToSettle();
+
+    await expect(read).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    await expect(drain).resolves.toBeUndefined();
+    expect(mocks.serverSignal?.aborted).toBe(true);
+    expect(published).toBe(false);
+  });
+
+  it('publishes a delayed server fallback while the same generation remains current', async () => {
+    mocks.supabaseConfigured = true;
+    let releaseServer!: () => void;
+    mocks.maybeSingle.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          releaseServer = () =>
+            resolve({
+              data: {
+                oily_dry: -2,
+                sensitive_resistant: 2,
+                goals: ['hydration'],
+              },
+            });
+        }),
+    );
+
+    const read = readProfileBits();
+    await vi.waitFor(() => expect(mocks.maybeSingle).toHaveBeenCalledOnce());
+    expect(mocks.serverSignal?.aborted).toBe(false);
+
+    releaseServer();
+    await expect(read).resolves.toMatchObject({
+      source: 'server',
+      sensitivity: 'sensitive',
+      moisture: 'dry',
+      goals: ['hydration'],
+    });
+  });
+
+  it('keeps the same-generation offline fallback but never translates cancellation to data', async () => {
+    mocks.supabaseConfigured = true;
+    mocks.maybeSingle.mockRejectedValueOnce(new Error('offline'));
+    await expect(readProfileBits()).resolves.toMatchObject({
+      source: 'unavailable',
+      consentCurrent: true,
+    });
+
+    mocks.maybeSingle.mockRejectedValueOnce(
+      Object.assign(new Error('aborted'), { name: 'AbortError' }),
+    );
+    await expect(readProfileBits()).rejects.toMatchObject({ name: 'AbortError' });
   });
 
   it('maps sensitivity axis scores into coarse planner buckets', () => {

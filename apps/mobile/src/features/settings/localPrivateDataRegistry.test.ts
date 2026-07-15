@@ -16,10 +16,10 @@ import {
 describe('local private-data contract registry', () => {
   it('is structurally valid and assigns every export destination once', () => {
     expect(validateLocalPrivateKeyRegistry()).toEqual([]);
-    expect(LOCAL_PRIVATE_KEY_REGISTRY).toHaveLength(44);
+    expect(LOCAL_PRIVATE_KEY_REGISTRY).toHaveLength(46);
     expect(LOCAL_PRIVATE_DATA_KEYS).toHaveLength(37);
     expect(LOCAL_PRIVATE_SECURE_STORE_KEYS).toHaveLength(2);
-    expect(LOCAL_PRIVATE_METADATA_KEYS).toHaveLength(2);
+    expect(LOCAL_PRIVATE_METADATA_KEYS).toHaveLength(4);
     expect(LOCAL_PRIVATE_CONTROL_KEYS).toHaveLength(3);
   });
 
@@ -108,6 +108,81 @@ describe('local private-data contract registry', () => {
       codecId: 'photo_capture_consent',
       currentVersion: 1,
       legacyVersions: [0],
+    });
+  });
+
+  it('declares the installed-base raw owner hash as a read-only legacy codec', () => {
+    const ownerMarker = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'routinekind.localDataOwnerHash.v1',
+    );
+
+    expect(ownerMarker?.codec).toEqual({
+      status: 'enforced',
+      codecId: 'owner_hash_control',
+      currentVersion: 'v1',
+      legacyVersions: ['raw_sha256'],
+    });
+  });
+
+  it('registers the nonce-bound owner-claim records used for authenticated write repair', () => {
+    const intent = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'routinekind.localDataOwnerClaimIntent.v1',
+    );
+    const nonce = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'routinekind.localDataOwnerClaimNonce.v1',
+    );
+
+    expect(intent).toMatchObject({
+      codec: {
+        status: 'enforced',
+        codecId: 'owner_claim_intent_control',
+        currentVersion: 'v1:<claim_sha256>',
+        legacyVersions: [],
+      },
+      recovery: { status: 'enforced', mode: 'authenticated_claim_repair' },
+    });
+    expect(nonce).toMatchObject({
+      codec: {
+        status: 'enforced',
+        codecId: 'owner_claim_nonce_control',
+        currentVersion: 'v1:<sha256>',
+        legacyVersions: [],
+      },
+      recovery: { status: 'enforced', mode: 'authenticated_claim_repair' },
+    });
+  });
+
+  it('declares the strict photo key-history marker with its read-only legacy scalar', () => {
+    const photoKeyMarker = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'onskin.photo.content_key_created.v1',
+    );
+
+    expect(photoKeyMarker).toMatchObject({
+      codec: {
+        status: 'enforced',
+        codecId: 'photo_key_presence_marker',
+        currentVersion: 'v1:created:<sha256>|v1:pending:<sha256>',
+        legacyVersions: ['1', 'v1:created'],
+      },
+      typedRead: { status: 'enforced', mode: 'control_state_machine' },
+      mutation: { status: 'enforced', mode: 'replace_only_control' },
+      recovery: {
+        status: 'enforced',
+        mode: 'pending_key_fingerprint_reconciliation',
+      },
+    });
+  });
+
+  it('declares exact cleanup-authority bytes and the installed-base legacy scalar', () => {
+    const cleanupMarker = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'routinekind.localDataCleanupRequired.v1',
+    );
+
+    expect(cleanupMarker?.codec).toEqual({
+      status: 'enforced',
+      codecId: 'cleanup_required_presence_marker',
+      currentVersion: 'v1:required',
+      legacyVersions: ['1'],
     });
   });
 

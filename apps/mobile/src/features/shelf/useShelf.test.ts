@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { detectConflicts, isReassuring } from '@/features/intelligence/engine';
@@ -50,6 +52,17 @@ function shelfProduct(overrides: Partial<ShelfProduct> = {}): ShelfProduct {
 }
 
 describe('shelf paired badge resolution gate', () => {
+  it('reuses the Shelf owner lease for the safety profile read', () => {
+    const source = readFileSync(fileURLToPath(new URL('./useShelf.ts', import.meta.url)), 'utf8');
+
+    expect(source).toContain('readProfileBitsWithLease(childLease)');
+    expect(source).toContain('awaitAccountGenerationLease(childLease, () => loadShelf())');
+    expect(source).toContain(
+      'awaitAccountGenerationLease(childLease, () => loadConflictChoices())',
+    );
+    expect(source).not.toMatch(/\breadProfileBits\(\)/);
+  });
+
   it('does not mark alternate-night advice as paired until scheduler placement resolves it', () => {
     const [conflict] = detectConflicts(
       [

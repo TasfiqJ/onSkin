@@ -23,7 +23,9 @@ describe('account session isolation integration', () => {
     expect(gate).toContain('if (!initializing && !sessionBoundaryError) return children;');
     expect(gate).toContain("loading: 'Securing account data...'");
     expect(gate).toContain('accessibilityRole="alert"');
-    expect(gate).toContain('void retrySessionBoundary()');
+    expect(gate).toContain('setE2EStorageProof(null);');
+    expect(gate).toContain('await retrySessionBoundary();');
+    expect(gate).toContain('onPress={() => void retryBoundary()}');
     expect(gate).toContain('min-h-[56px]');
   });
 
@@ -36,6 +38,11 @@ describe('account session isolation integration', () => {
     const supabaseClient = readSource('lib/supabase/client.ts');
 
     expect(provider).toContain('await prepareLocalDataForSession(');
+    const fixtureSeedIndex = provider.indexOf('await seedAccountIsolationE2EFixture(');
+    const prepareIsolationIndex = provider.indexOf('await prepareLocalDataForSession(');
+    expect(fixtureSeedIndex).toBeGreaterThanOrEqual(0);
+    expect(prepareIsolationIndex).toBeGreaterThanOrEqual(0);
+    expect(fixtureSeedIndex).toBeLessThan(prepareIsolationIndex);
     expect(provider).toContain('beginPrivateKVAccountBoundary();');
     expect(provider).toContain('beginAccountGenerationBoundary();');
     expect(provider).toContain('await waitForAccountGenerationOperationsToSettle();');

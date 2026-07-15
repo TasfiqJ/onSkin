@@ -14,11 +14,14 @@ import {
 } from '@/features/onboarding/skinProfileStore';
 import { hasCurrentHealthDataCollectionConsent } from '@/features/onboarding/healthConsentStore';
 import {
+  ACCOUNT_GENERATION_CHANGED,
+  AccountGenerationLeaseError,
   awaitAccountGenerationLease,
   runAccountGenerationOperation,
+  type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { isSupabaseConfigured } from '@/lib/env';
-import { queryKeys } from '@/lib/query/queryKeys';
+import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
@@ -71,6 +74,20 @@ function normalizePregnancyStatus(value: unknown): PregnancySafetyStatus {
     : 'unknown';
 }
 
+function isAbortOrAccountGenerationError(error: unknown): boolean {
+  if (error === ACCOUNT_GENERATION_CHANGED || error instanceof AccountGenerationLeaseError) {
+    return true;
+  }
+  if (!error || typeof error !== 'object') return false;
+  const candidate = error as { code?: unknown; message?: unknown; name?: unknown };
+  return (
+    candidate.name === 'AbortError' ||
+    candidate.code === 'ABORT_ERR' ||
+    candidate.code === ACCOUNT_GENERATION_CHANGED ||
+    candidate.message === ACCOUNT_GENERATION_CHANGED
+  );
+}
+
 function pregnancyBits(status: PregnancySafetyStatus) {
   return {
     pregnancyStatus: status,
@@ -91,10 +108,18 @@ function profileBitsFromStoredProfile(profile: StoredSkinProfile): ProfileBits {
   };
 }
 
-export async function readProfileBits(): Promise<ProfileBits> {
-  if (!(await hasCurrentHealthDataCollectionConsent())) return UNKNOWN_PROFILE;
+export async function readProfileBitsWithLease(
+  lease: AccountGenerationLease,
+): Promise<ProfileBits> {
+  lease.assertCurrent();
+  const consentCurrent = await awaitAccountGenerationLease(lease, () =>
+    hasCurrentHealthDataCollectionConsent(),
+  );
+  lease.assertCurrent();
+  if (!consentCurrent) return UNKNOWN_PROFILE;
 
-  const local = await readStoredSkinProfile();
+  const local = await awaitAccountGenerationLease(lease, () => readStoredSkinProfile());
+  lease.assertCurrent();
   if (local.status === 'available') return profileBitsFromStoredProfile(local.profile);
 
   // A private read/validation failure is not absence. Never consult a stale
@@ -104,12 +129,15 @@ export async function readProfileBits(): Promise<ProfileBits> {
   if (!isSupabaseConfigured) return { ...UNKNOWN_PROFILE, consentCurrent: true };
 
   try {
+    lease.assertCurrent();
     const { data } = await supabase
       .from('skin_profiles')
       .select('oily_dry, sensitive_resistant, goals')
       .order('created_at', { ascending: false })
       .limit(1)
+      .abortSignal(lease.signal)
       .maybeSingle();
+    lease.assertCurrent();
     if (data) {
       return {
         source: 'server',
@@ -122,10 +150,19 @@ export async function readProfileBits(): Promise<ProfileBits> {
         goals: (data.goals ?? []) as GoalId[],
       };
     }
-  } catch {
+  } catch (error) {
+    // Preserve the existing offline/server fallback only while this exact
+    // owner generation remains current. An account boundary must reject.
+    lease.assertCurrent();
+    if (isAbortOrAccountGenerationError(error)) throw error;
     /* offline / no DB */
   }
+  lease.assertCurrent();
   return { ...UNKNOWN_PROFILE, consentCurrent: true };
+}
+
+export function readProfileBits(): Promise<ProfileBits> {
+  return runAccountGenerationOperation(readProfileBitsWithLease);
 }
 
 /** V1 profile updates are local-first; the server profile remains a fallback mirror. */
@@ -150,7 +187,7 @@ export function useProfileBits() {
   const ownerScope = useOwnerQueryScope();
   return useQuery({
     queryKey: queryKeys.skinProfile(ownerScope),
-    queryFn: readProfileBits,
+    queryFn: () => runOwnerQueryOperation(ownerScope, readProfileBitsWithLease),
     // Consent and the authoritative profile are encrypted local reads. Let
     // them resolve offline; readProfileBits already contains the optional,
     // failure-tolerant server fallback for a genuinely missing local profile.

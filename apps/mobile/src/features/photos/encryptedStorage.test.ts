@@ -27,6 +27,9 @@ import {
   finalizeEncryptedPhotoDeletions,
   isOwnedEncryptedPhotoUri,
   PHOTO_CONTENT_KEY_INVALID,
+  PHOTO_CONTENT_KEY_MARKER_INVALID,
+  PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH,
+  PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION,
   PHOTO_CONTENT_KEY_MISSING,
   PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
   PHOTO_DECRYPTION_FAILED,
@@ -47,9 +50,16 @@ import {
 
 const CONTENT_KEY_NAME = 'onskin.photo.content_key.v1';
 const CONTENT_KEY_MARKER = 'onskin.photo.content_key_created.v1';
+const CONTENT_KEY_MARKER_CURRENT = `v1:created:${'a'.repeat(64)}`;
+const CONTENT_KEY_MARKER_UNBOUND_LEGACY = 'v1:created';
+const CONTENT_KEY_MARKER_LEGACY = '1';
+const CONTENT_KEY_MARKER_PENDING = `v1:pending:${'a'.repeat(64)}`;
 const PHOTO_DIR = 'file://document/photos/v1/';
 
 const mocks = vi.hoisted(() => ({
+  asyncGetThrows: false,
+  asyncSetCommitsThenThrows: false,
+  asyncSetDrops: false,
   asyncSetThrows: false,
   asyncGetItem: vi.fn(),
   asyncRemoveItem: vi.fn(),
@@ -61,6 +71,7 @@ const mocks = vi.hoisted(() => ({
   secureStorage: new Map<string, string>(),
   deleteAsync: vi.fn(),
   deleteItemAsync: vi.fn(),
+  digestStringAsync: vi.fn(),
   getItemAsync: vi.fn(),
   getInfoAsync: vi.fn(),
   makeDirectoryAsync: vi.fn(),
@@ -69,7 +80,10 @@ const mocks = vi.hoisted(() => ({
   readDirectoryAsync: vi.fn(),
   readAsStringAsync: vi.fn(),
   secureGetThrows: false,
+  secureSetCommitsThenThrows: false,
+  secureSetDrops: false,
   secureSetThrows: false,
+  secureSetWrongValue: false,
   setItemAsync: vi.fn(),
   writeGate: null as Promise<void> | null,
   writeStarted: null as (() => void) | null,
@@ -79,6 +93,8 @@ const mocks = vi.hoisted(() => ({
 vi.mock('react-native-get-random-values', () => ({}));
 
 vi.mock('expo-crypto', () => ({
+  CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
+  digestStringAsync: mocks.digestStringAsync,
   randomUUID: vi.fn(() => 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'),
 }));
 
@@ -156,6 +172,9 @@ function encryptedAuthoritySnapshot() {
 
 describe('encrypted photo storage', () => {
   beforeEach(() => {
+    mocks.asyncGetThrows = false;
+    mocks.asyncSetCommitsThenThrows = false;
+    mocks.asyncSetDrops = false;
     mocks.asyncSetThrows = false;
     mocks.asyncGetItem.mockReset();
     mocks.asyncRemoveItem.mockReset();
@@ -167,6 +186,7 @@ describe('encrypted photo storage', () => {
     mocks.secureStorage.clear();
     mocks.deleteAsync.mockReset();
     mocks.deleteItemAsync.mockReset();
+    mocks.digestStringAsync.mockReset();
     mocks.getItemAsync.mockReset();
     mocks.getInfoAsync.mockReset();
     mocks.makeDirectoryAsync.mockReset();
@@ -175,14 +195,22 @@ describe('encrypted photo storage', () => {
     mocks.readDirectoryAsync.mockReset();
     mocks.readAsStringAsync.mockReset();
     mocks.secureGetThrows = false;
+    mocks.secureSetCommitsThenThrows = false;
+    mocks.secureSetDrops = false;
     mocks.secureSetThrows = false;
+    mocks.secureSetWrongValue = false;
     mocks.setItemAsync.mockReset();
     mocks.writeGate = null;
     mocks.writeStarted = null;
     mocks.writeAsStringAsync.mockReset();
     endEncryptedPhotoAccountBoundary();
 
+    mocks.digestStringAsync.mockImplementation(async (_algorithm: string, value: string) =>
+      value.endsWith('c'.repeat(64)) ? 'c'.repeat(64) : 'a'.repeat(64),
+    );
+
     mocks.asyncGetItem.mockImplementation(async (key: string) => {
+      if (mocks.asyncGetThrows) throw new Error('async read failed');
       return mocks.asyncStorage.get(key) ?? null;
     });
     mocks.asyncRemoveItem.mockImplementation(async (key: string) => {
@@ -192,7 +220,9 @@ describe('encrypted photo storage', () => {
       if (mocks.asyncSetThrows) throw new Error('async write failed');
       mocks.asyncWriteStarted?.(key);
       if (mocks.asyncWriteGate) await mocks.asyncWriteGate;
+      if (mocks.asyncSetDrops) return;
       mocks.asyncStorage.set(key, value);
+      if (mocks.asyncSetCommitsThenThrows) throw new Error('async post-commit failure');
     });
     mocks.deleteAsync.mockImplementation(async (uri: string) => {
       mocks.files.delete(uri);
@@ -220,7 +250,9 @@ describe('encrypted photo storage', () => {
     });
     mocks.setItemAsync.mockImplementation(async (key: string, value: string) => {
       if (mocks.secureSetThrows) throw new Error('secure write failed');
-      mocks.secureStorage.set(key, value);
+      if (mocks.secureSetDrops) return;
+      mocks.secureStorage.set(key, mocks.secureSetWrongValue ? 'c'.repeat(64) : value);
+      if (mocks.secureSetCommitsThenThrows) throw new Error('secure post-commit failure');
     });
     mocks.writeAsStringAsync.mockImplementation(async (uri: string, value: string) => {
       mocks.writeStarted?.();
@@ -268,6 +300,38 @@ describe('encrypted photo storage', () => {
     await drain;
     expect(drainFinished).toBe(true);
     expect(mocks.files.has('file://document/photos/v1/account-a-photo.onskinphoto')).toBe(true);
+    endEncryptedPhotoAccountBoundary();
+  });
+
+  it('drains an in-flight key-marker write and rejects owner-A ciphertext publication', async () => {
+    mocks.secureStorage.set(CONTENT_KEY_NAME, 'b'.repeat(64));
+    let releaseMarkerWrite!: () => void;
+    let markMarkerWriteStarted!: () => void;
+    mocks.asyncWriteGate = new Promise<void>((resolve) => {
+      releaseMarkerWrite = resolve;
+    });
+    const markerWriteStarted = new Promise<void>((resolve) => {
+      markMarkerWriteStarted = resolve;
+    });
+    mocks.asyncWriteStarted = (key) => {
+      if (key === CONTENT_KEY_MARKER) markMarkerWriteStarted();
+    };
+
+    const write = encryptPhotoNote('account A note');
+    await markerWriteStarted;
+    beginEncryptedPhotoAccountBoundary();
+    let drainFinished = false;
+    const drain = waitForEncryptedPhotoWritesToSettle().then(() => {
+      drainFinished = true;
+    });
+    await Promise.resolve();
+    expect(drainFinished).toBe(false);
+
+    releaseMarkerWrite();
+    await expect(write).rejects.toThrow(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+    await drain;
+    expect(drainFinished).toBe(true);
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_CURRENT);
     endEncryptedPhotoAccountBoundary();
   });
 
@@ -878,7 +942,7 @@ describe('encrypted photo storage', () => {
     await expect(encryptPhotoNote('replacement note')).rejects.toThrow(PHOTO_CONTENT_KEY_MISSING);
 
     expect(mocks.setItemAsync).not.toHaveBeenCalled();
-    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe('1');
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_CURRENT);
     mocks.secureStorage.set(CONTENT_KEY_NAME, originalKey!);
     await expect(decryptPhotoNote(ciphertext)).resolves.toBe('baseline note');
   });
@@ -945,14 +1009,170 @@ describe('encrypted photo storage', () => {
     expect(mocks.files.has('file://capture/photo.jpg')).toBe(true);
   });
 
-  it('shares one content key across concurrent first note writes', async () => {
-    const [first, second] = await Promise.all([
-      encryptPhotoNote('first note'),
-      encryptPhotoNote('second note'),
-    ]);
+  it('shares one content key and marker commit across 100 concurrent first note writes', async () => {
+    const notes = Array.from({ length: 100 }, (_, index) => `note ${index}`);
+    const ciphertexts = await Promise.all(notes.map((note) => encryptPhotoNote(note)));
 
-    await expect(decryptPhotoNote(first)).resolves.toBe('first note');
-    await expect(decryptPhotoNote(second)).resolves.toBe('second note');
+    expect(mocks.setItemAsync).toHaveBeenCalledTimes(1);
+    expect(mocks.asyncSetItem).toHaveBeenCalledTimes(2);
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_CURRENT);
+    await expect(Promise.all(ciphertexts.map((value) => decryptPhotoNote(value)))).resolves.toEqual(
+      notes,
+    );
+  });
+
+  it.each([
+    ['malformed', 'not-a-marker', PHOTO_CONTENT_KEY_MARKER_INVALID],
+    ['current-invalid', 'v1:not-created', PHOTO_CONTENT_KEY_MARKER_INVALID],
+    ['future', 'v2:created', PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION],
+    ['multi-digit future', 'v10:created', PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION],
+    ['oversized', 'x'.repeat(65), PHOTO_CONTENT_KEY_MARKER_INVALID],
+  ])(
+    'preserves a %s key-history marker and blocks first-key creation in an empty directory',
+    async (_label, marker, expectedError) => {
+      mocks.asyncStorage.set(CONTENT_KEY_MARKER, marker);
+
+      await expect(encryptPhotoNote('blocked note')).rejects.toThrow(expectedError);
+
+      expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(marker);
+      expect(mocks.asyncSetItem).not.toHaveBeenCalled();
+      expect(mocks.setItemAsync).not.toHaveBeenCalled();
+      expect(mocks.secureStorage.has(CONTENT_KEY_NAME)).toBe(false);
+    },
+  );
+
+  it.each([
+    ['malformed', 'not-a-marker', PHOTO_CONTENT_KEY_MARKER_INVALID],
+    ['current-invalid', 'v1:not-created', PHOTO_CONTENT_KEY_MARKER_INVALID],
+    ['future', 'v2:created', PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION],
+    ['multi-digit future', 'v10:created', PHOTO_CONTENT_KEY_MARKER_UNSUPPORTED_VERSION],
+    ['oversized', 'x'.repeat(65), PHOTO_CONTENT_KEY_MARKER_INVALID],
+  ])(
+    'preserves an existing key and %s marker without overwriting either',
+    async (_label, marker, expectedError) => {
+      const existingKey = 'b'.repeat(64);
+      mocks.secureStorage.set(CONTENT_KEY_NAME, existingKey);
+      mocks.asyncStorage.set(CONTENT_KEY_MARKER, marker);
+
+      await expect(encryptPhotoNote('blocked note')).rejects.toThrow(expectedError);
+
+      expect(mocks.secureStorage.get(CONTENT_KEY_NAME)).toBe(existingKey);
+      expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(marker);
+      expect(mocks.setItemAsync).not.toHaveBeenCalled();
+      expect(mocks.asyncSetItem).not.toHaveBeenCalled();
+    },
+  );
+
+  it('does not create a key when the key-history marker is unavailable', async () => {
+    mocks.asyncGetThrows = true;
+
+    await expect(encryptPhotoNote('blocked note')).rejects.toThrow(
+      PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
+    );
+
+    expect(mocks.setItemAsync).not.toHaveBeenCalled();
+    expect(mocks.asyncSetItem).not.toHaveBeenCalled();
+    expect(mocks.secureStorage.has(CONTENT_KEY_NAME)).toBe(false);
+  });
+
+  it('migrates the read-only legacy marker only when an existing key authorizes mutation', async () => {
+    mocks.secureStorage.set(CONTENT_KEY_NAME, 'b'.repeat(64));
+    mocks.asyncStorage.set(CONTENT_KEY_MARKER, CONTENT_KEY_MARKER_LEGACY);
+
+    const ciphertext = await encryptPhotoNote('migrated note');
+
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_CURRENT);
+    await expect(decryptPhotoNote(ciphertext)).resolves.toBe('migrated note');
+  });
+
+  it('binds the transitional unbound v1 marker to the existing key before a new write', async () => {
+    mocks.secureStorage.set(CONTENT_KEY_NAME, 'b'.repeat(64));
+    mocks.asyncStorage.set(CONTENT_KEY_MARKER, CONTENT_KEY_MARKER_UNBOUND_LEGACY);
+
+    const ciphertext = await encryptPhotoNote('bound migration note');
+
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_CURRENT);
+    await expect(decryptPhotoNote(ciphertext)).resolves.toBe('bound migration note');
+  });
+
+  it('finishes a pending first-key commit only when its fingerprint matches the stored key', async () => {
+    mocks.secureStorage.set(CONTENT_KEY_NAME, 'b'.repeat(64));
+    mocks.asyncStorage.set(CONTENT_KEY_MARKER, CONTENT_KEY_MARKER_PENDING);
+
+    const ciphertext = await encryptPhotoNote('recovered pending note');
+
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_CURRENT);
+    await expect(decryptPhotoNote(ciphertext)).resolves.toBe('recovered pending note');
+  });
+
+  it('preserves a pending marker and blocks creation when its key is missing', async () => {
+    mocks.asyncStorage.set(CONTENT_KEY_MARKER, CONTENT_KEY_MARKER_PENDING);
+
+    await expect(encryptPhotoNote('blocked note')).rejects.toThrow(PHOTO_CONTENT_KEY_MISSING);
+
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_PENDING);
+    expect(mocks.setItemAsync).not.toHaveBeenCalled();
+  });
+
+  it('preserves a legacy marker and blocks replacement when its key is missing', async () => {
+    mocks.asyncStorage.set(CONTENT_KEY_MARKER, CONTENT_KEY_MARKER_LEGACY);
+
+    await expect(encryptPhotoNote('blocked note')).rejects.toThrow(PHOTO_CONTENT_KEY_MISSING);
+
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_LEGACY);
+    expect(mocks.asyncSetItem).not.toHaveBeenCalled();
+    expect(mocks.setItemAsync).not.toHaveBeenCalled();
+  });
+
+  it('accepts a marker write rejection only when exact post-write readback proves commit', async () => {
+    mocks.asyncSetCommitsThenThrows = true;
+
+    const ciphertext = await encryptPhotoNote('committed note');
+
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_CURRENT);
+    expect(mocks.asyncSetItem).toHaveBeenCalledWith(
+      CONTENT_KEY_MARKER,
+      CONTENT_KEY_MARKER_CURRENT,
+    );
+    await expect(decryptPhotoNote(ciphertext)).resolves.toBe('committed note');
+  });
+
+  it('accepts a content-key write rejection only when exact readback proves commit', async () => {
+    mocks.secureSetCommitsThenThrows = true;
+
+    const ciphertext = await encryptPhotoNote('committed key note');
+
+    expect(mocks.secureStorage.get(CONTENT_KEY_NAME)).toMatch(/^[0-9a-f]{64}$/);
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_CURRENT);
+    await expect(decryptPhotoNote(ciphertext)).resolves.toBe('committed key note');
+  });
+
+  it.each([
+    ['silently dropped', 'drop'],
+    ['wrong value', 'wrong'],
+  ])('durably quarantines a %s content-key write before any ciphertext', async (_label, mode) => {
+    mocks.secureSetDrops = mode === 'drop';
+    mocks.secureSetWrongValue = mode === 'wrong';
+
+    await expect(encryptPhotoNote('unreadable note')).rejects.toThrow(
+      PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
+    );
+
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_PENDING);
+    expect(mocks.asyncSetItem).toHaveBeenCalledWith(
+      CONTENT_KEY_MARKER,
+      CONTENT_KEY_MARKER_PENDING,
+    );
+    expect(mocks.secureStorage.get(CONTENT_KEY_NAME)).toBe(
+      mode === 'wrong' ? 'c'.repeat(64) : undefined,
+    );
+
+    mocks.secureSetDrops = false;
+    mocks.secureSetWrongValue = false;
+    await expect(encryptPhotoNote('retry must stay blocked')).rejects.toThrow(
+      mode === 'wrong' ? PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH : PHOTO_CONTENT_KEY_MISSING,
+    );
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_PENDING);
   });
 
   it('does not encrypt new data when the key-history marker cannot persist', async () => {
@@ -965,6 +1185,17 @@ describe('encrypted photo storage', () => {
 
     expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
     expect(mocks.secureStorage.get(CONTENT_KEY_NAME)).toBe('b'.repeat(64));
+  });
+
+  it('does not publish ciphertext when a first-key marker write is silently dropped', async () => {
+    mocks.asyncSetDrops = true;
+
+    await expect(encryptPhotoNote('blocked note')).rejects.toThrow(
+      PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
+    );
+
+    expect(mocks.secureStorage.has(CONTENT_KEY_NAME)).toBe(false);
+    expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
   });
 
   it('keeps decryption independent from key-history marker availability', async () => {
@@ -982,12 +1213,19 @@ describe('encrypted photo storage', () => {
   it('reports authentication failure without replacing a valid but wrong key', async () => {
     const ciphertext = await encryptPhotoNote('baseline note');
     mocks.secureStorage.set(CONTENT_KEY_NAME, 'a'.repeat(64));
+    mocks.digestStringAsync.mockResolvedValue('c'.repeat(64));
     mocks.setItemAsync.mockClear();
+    mocks.asyncSetItem.mockClear();
 
     await expect(decryptPhotoNote(ciphertext)).rejects.toThrow(PHOTO_DECRYPTION_FAILED);
+    await expect(encryptPhotoNote('must not split key history')).rejects.toThrow(
+      PHOTO_CONTENT_KEY_MARKER_KEY_MISMATCH,
+    );
 
     expect(mocks.setItemAsync).not.toHaveBeenCalled();
+    expect(mocks.asyncSetItem).not.toHaveBeenCalled();
     expect(mocks.secureStorage.get(CONTENT_KEY_NAME)).toBe('a'.repeat(64));
+    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe(CONTENT_KEY_MARKER_CURRENT);
   });
 
   it('rejects malformed photo envelopes with a stable storage error', async () => {

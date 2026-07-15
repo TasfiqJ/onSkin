@@ -4,9 +4,11 @@ import { focusManager, onlineManager, QueryClient, QueryObserver } from '@tansta
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  awaitAccountGenerationLease,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
   runAccountGenerationOperation,
+  waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 
 import {
@@ -24,6 +26,7 @@ import {
   queryKeyMatchesLocalDateBoundary,
   queryPrefixes,
   runOwnerQueryOperation,
+  settleOwnerQueryOperations,
   shouldRefetchCurrentLocalDayQuery,
 } from './queryKeys';
 import { readLocalDateBoundarySnapshot } from './queryDateBoundaryCore';
@@ -175,6 +178,72 @@ describe('owner-scoped query keys', () => {
       release();
       await expect(pending).rejects.toThrow('ACCOUNT_GENERATION_CHANGED');
       expect(published).toEqual([]);
+    } finally {
+      endAccountGenerationBoundary();
+    }
+  });
+
+  it('cancels siblings on the first owner-query failure and stays tracked until they acknowledge it', async () => {
+    const scopeA = createOwnerQueryScope();
+    let siblingSawAbort = false;
+    let releaseAbortAcknowledgement!: () => void;
+    const abortAcknowledged = new Promise<void>((resolve) => {
+      releaseAbortAcknowledgement = resolve;
+    });
+    const pending = runOwnerQueryOperation(scopeA, async (lease) => {
+      const operations = [
+        () => Promise.reject(new Error('owner read failed')),
+        (childLease: Parameters<typeof awaitAccountGenerationLease>[0]) =>
+          new Promise<string>((_resolve, reject) => {
+            childLease.signal.addEventListener(
+              'abort',
+              () => {
+                siblingSawAbort = true;
+                void abortAcknowledged.then(() => reject(new Error('sibling cancelled')));
+              },
+              { once: true },
+            );
+          }),
+      ] as const;
+      return settleOwnerQueryOperations(lease, operations);
+    });
+    let parentSettled = false;
+    void pending.then(
+      () => {
+        parentSettled = true;
+      },
+      () => {
+        parentSettled = true;
+      },
+    );
+
+    await vi.waitFor(() => expect(siblingSawAbort).toBe(true));
+    await Promise.resolve();
+    expect(parentSettled).toBe(false);
+
+    releaseAbortAcknowledgement();
+    await expect(pending).rejects.toThrow('owner read failed');
+    await waitForAccountGenerationOperationsToSettle();
+    expect(parentSettled).toBe(true);
+  });
+
+  it('does not invoke deferred owner-query factories after a boundary starts', async () => {
+    const scopeA = createOwnerQueryScope();
+    const invoked = vi.fn();
+    const pending = runOwnerQueryOperation(scopeA, (lease) =>
+      settleOwnerQueryOperations(lease, [
+        () => {
+          invoked();
+          return Promise.resolve('owner-a');
+        },
+      ] as const),
+    );
+
+    beginAccountGenerationBoundary();
+    try {
+      await waitForAccountGenerationOperationsToSettle();
+      await expect(pending).rejects.toThrow('ACCOUNT_GENERATION_CHANGED');
+      expect(invoked).not.toHaveBeenCalled();
     } finally {
       endAccountGenerationBoundary();
     }
