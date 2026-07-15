@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T20:03:35.122Z",
+  "generatedAt": "2026-07-15T20:05:57.598Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,8 +73,8 @@
     ]
   },
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "90ed58d6dc8038bf5f2aa2a841b211683f3205c0",
-  "gitStatus": "M .env.example\n M .github/workflows/security.yml\n M apps/mobile/src/app/(tabs)/today.tsx\n M apps/mobile/src/app/(tabs)/you.tsx\n M apps/mobile/src/app/_layout.tsx\n M apps/mobile/src/app/ask/consent.tsx\n M apps/mobile/src/app/commerce/consent.tsx\n M apps/mobile/src/app/commerce/stack/[slug].tsx\n M apps/mobile/src/app/conflict/[ruleId].tsx\n M apps/mobile/src/app/index.tsx\n M apps/mobile/src/app/onboarding/age.tsx\n M apps/mobile/src/app/onboarding/consent.tsx\n M apps/mobile/src/app/onboarding/goals.tsx\n M apps/mobile/src/features/ask/consent.test.ts\n M apps/mobile/src/features/ask/consent.ts\n M apps/mobile/src/features/ask/routeContract.test.ts\n M apps/mobile/src/features/ask/store.test.ts\n M apps/mobile/src/features/ask/store.ts\n M apps/mobile/src/features/catalog/client.test.ts\n M apps/mobile/src/features/catalog/client.ts\n M apps/mobile/src/features/catalog/obf.ts\n M apps/mobile/src/features/commerce/WhereToBuy.tsx\n M apps/mobile/src/features/commerce/commerce.test.ts\n M apps/mobile/src/features/commerce/consent.test.ts\n M apps/mobile/src/features/commerce/consent.ts\n M apps/mobile/src/features/commerce/consentLogic.ts\n M apps/mobile/src/features/commerce/store.test.ts\n M apps/mobile/src/features/commerce/store.ts\n M apps/mobile/src/features/community/consent.test.ts\n M apps/mobile/src/features/community/consent.ts\n M apps/mobile/src/features/community/reactionStore.test.ts\n M apps/mobile/src/features/community/reactionStore.ts\n M apps/mobile/src/features/intelligence/conflictChoiceIntegration.test.ts\n M apps/mobile/src/features/intelligence/overrides.test.ts\n M apps/mobile/src/features/intelligence/overrides.ts\n M apps/mobile/src/features/notifications/applyPreferences.test.ts\n M apps/mobile/src/features/notifications/applyPreferences.ts\n M apps/mobile/src/features/notifications/deliver.test.ts\n M apps/mobile/src/features/notifications/deliver.ts\n M apps/mobile/src/features/notifications/onboarding.test.ts\n M apps/mobile/src/features/notifications/onboarding.ts\n M apps/mobile/src/features/notifications/sentStore.test.ts\n M apps/mobile/src/features/notifications/sentStore.ts\n M apps/mobile/src/features/notifications/store.test.ts\n M apps/mobile/src/features/notifications/store.ts\n M apps/mobile/src/features/notifications/useNotifications.ts\n M apps/mobile/src/features/onboarding/OnboardingContext.tsx\n M apps/mobile/src/features/onboarding/consentCopy.test.ts\n M apps/mobile/src/features/onboarding/consentCopy.ts\n M apps/mobile/src/features/onboarding/healthConsent.test.ts\n M apps/mobile/src/features/onboarding/healthConsent.ts\n M apps/mobile/src/features/onboarding/healthConsentStore.test.ts\n M apps/mobile/src/features/onboarding/healthConsentStore.ts\n M apps/mobile/src/features/onboarding/onboardingRoutes.test.ts\n M apps/mobile/src/features/onboarding/skinProfileStore.test.ts\n M apps/mobile/src/features/onboarding/skinProfileStore.ts\n M apps/mobile/src/features/photos/consent.test.ts\n M apps/mobile/src/features/photos/consent.ts\n M apps/mobile/src/features/photos/encryptedStorage.test.ts\n M apps/mobile/src/features/photos/encryptedStorage.ts\n M apps/mobile/src/features/photos/progressRoutes.test.ts\n M apps/mobile/src/features/photos/store.test.ts\n M apps/mobile/src/features/photos/store.ts\n M apps/mobile/src/features/photos/usePhotos.ts\n M apps/mobile/src/features/recommendations/store.test.ts\n M apps/mobile/src/features/recommendations/store.ts\n M apps/mobile/src/features/recommendations/useRecommendations.ts\n M apps/mobile/src/features/review/prompt.test.ts\n M apps/mobile/src/features/review/prompt.ts\n M apps/mobile/src/features/routine/activationAnalytics.test.ts\n M apps/mobile/src/features/routine/activationAnalytics.ts\n M apps/mobile/src/features/routine/cycleAnchor.test.ts\n M apps/mobile/src/features/routine/cycleAnchor.ts\n M apps/mobile/src/features/routine/orderStore.test.ts\n M apps/mobile/src/features/routine/orderStore.ts\n M apps/mobile/src/features/routine/rampStore.test.ts\n M apps/mobile/src/features/routine/rampStore.ts\n M apps/mobile/src/features/routine/usePlan.ts\n M apps/mobile/src/features/routine/useProgress.ts\n M apps/mobile/src/features/routine/useRamp.ts\n M apps/mobile/src/features/scheduler/cycleStore.test.ts\n M apps/mobile/src/features/scheduler/cycleStore.ts\n M apps/mobile/src/features/scheduler/cycleWeekRoute.test.ts\n M apps/mobile/src/features/scheduler/profile.test.ts\n M apps/mobile/src/features/scheduler/profile.ts\n M apps/mobile/src/features/scheduler/useCycle.ts\n M apps/mobile/src/features/settings/accountDeletionForeignOwnerPreservation.test.ts\n M apps/mobile/src/features/settings/accountDeletionRecovery.test.ts\n M apps/mobile/src/features/settings/accountDeletionRecovery.ts\n M apps/mobile/src/features/settings/accountDeletionRecoveryGate.test.ts\n M apps/mobile/src/features/settings/actions.test.ts\n M apps/mobile/src/features/settings/actions.ts\n M apps/mobile/src/features/settings/applyPrivacyChoice.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.test.ts\n M apps/mobile/src/features/settings/localDeviceExport.ts\n M apps/mobile/src/features/settings/localPrivateData.test.ts\n M apps/mobile/src/features/settings/localPrivateData.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.test.ts\n M apps/mobile/src/features/settings/localPrivateDataKeys.ts\n M apps/mobile/src/features/settings/settingsRoutes.test.ts\n M apps/mobile/src/features/shelf/mutations.ts\n M apps/mobile/src/features/shelf/scanLog.test.ts\n M apps/mobile/src/features/shelf/scanLog.ts\n M apps/mobile/src/features/shelf/store.test.ts\n M apps/mobile/src/features/shelf/store.ts\n M apps/mobile/src/features/shelf/useShelf.ts\n M apps/mobile/src/features/streak/milestoneStore.test.ts\n M apps/mobile/src/features/streak/milestoneStore.ts\n M apps/mobile/src/features/subscription/conflictQuota.test.ts\n M apps/mobile/src/features/subscription/conflictQuota.ts\n M apps/mobile/src/features/today/completionsStore.test.ts\n M apps/mobile/src/features/today/completionsStore.ts\n M apps/mobile/src/features/trend/consent.test.ts\n M apps/mobile/src/features/trend/consent.ts\n M apps/mobile/src/features/trend/store.test.ts\n M apps/mobile/src/features/trend/store.ts\n M apps/mobile/src/features/trend/useTrend.ts\n M apps/mobile/src/lib/auth/accountGeneration.test.ts\n M apps/mobile/src/lib/auth/accountGeneration.ts\n M apps/mobile/src/lib/consent/consent.test.ts\n M apps/mobile/src/lib/consent/consent.ts\n M apps/mobile/src/lib/consent/withdrawal.test.ts\n M apps/mobile/src/lib/consent/withdrawal.ts\n M apps/mobile/src/lib/offline/OfflineSync.test.ts\n M apps/mobile/src/lib/offline/OfflineSync.tsx\n M apps/mobile/src/lib/offline/completionQueue.test.ts\n M apps/mobile/src/lib/offline/completionQueue.ts\n M apps/mobile/src/lib/storage/privateKV.test.ts\n M apps/mobile/src/lib/storage/privateKV.ts\n M apps/mobile/src/lib/supabase/client.test.ts\n M apps/mobile/src/lib/supabase/client.ts\n M docs/ARCHITECTURE.md\n M docs/MASTER_PLAN.md\n M docs/TESTING_STRATEGY.md\n M docs/USER_FLOW_TREE.md\n M docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md\n M docs/hugeToDo/README.md\n M docs/hugeToDo/credential-inventory.json\n M docs/hugeToDo/execution-status.json\n M docs/hugeToDo/feature-inventory.json\n M docs/phase-3/consent-matrix.md\n M docs/phase-3/data-inventory.md\n M docs/phase-3/privacy-security-review-log.md\n M docs/phase-4/catalog-source-memo-open-beauty-facts.md\n M docs/phase-9/data-inventory.md\n M docs/phase-9/edge-function-auth-matrix.md\n M docs/phase-9/source-of-truth.md\n M package.json\n M packages/types/src/database.types.ts\n M scripts/e2e/human-e2e-manifest.mjs\n M scripts/launch/execution-baseline-smoke.mjs\n M scripts/launch/execution-baseline.mjs\n M scripts/phase2/check-env-smoke.mjs\n M scripts/phase2/check-env.mjs\n M scripts/phase2/local-supabase-contract.mjs\n M scripts/phase2/local-supabase-reset.mjs\n M scripts/phase2/supabase-rls-smoke.mjs\n M scripts/phase3/build-review-packet.mjs\n M scripts/phase4/check-source-env-smoke.mjs\n M scripts/phase4/check-source-env.mjs\n M scripts/phase9/build-release-qa-packet.mjs\n M scripts/phase9/consent-withdrawal-smoke.mjs\n M scripts/phase9/data-rights-smoke.mjs\n M scripts/phase9/edge-auth-smoke.mjs\n M scripts/phase9/lib.mjs\n M scripts/phase9/live-consent-withdrawal.mjs\n M scripts/phase9/live-data-rights.mjs\n M scripts/phase9/live-edge-auth.mjs\n M scripts/phase9/live-supabase-adversarial.mjs\n M scripts/phase9/release-smoke.mjs\n M scripts/phase9/rls-adversarial-smoke.mjs\n M scripts/phase9/rls-adversarial.mjs\n M scripts/phase9/security-ci-smoke.mjs\n M scripts/phase9/supabase-policy-lint.mjs\n M supabase/README.md\n M supabase/config.toml\n M supabase/functions/catalog-lookup/catalogContract.test.ts\n M supabase/functions/catalog-lookup/catalogContract.ts\n M supabase/functions/catalog-lookup/index.ts\n M supabase/functions/catalog-report/deletionBarrier.test.ts\n M supabase/functions/catalog-report/index.ts\n M supabase/functions/catalog-search/index.ts\n M supabase/functions/consent-withdrawal/index.ts\n M supabase/functions/data-export/exportCore.test.ts\n M supabase/functions/data-export/exportCore.ts\n M supabase/functions/data-export/index.ts\n M supabase/functions/manifest.json\n M supabase/tests/database/schema_contract.test.sql\n?? apps/mobile/src/features/commerce/disclosureOperation.test.ts\n?? apps/mobile/src/features/commerce/disclosureOperation.ts\n?? apps/mobile/src/features/healthConsent/\n?? apps/mobile/src/features/onboarding/consentNavigation.test.ts\n?? apps/mobile/src/features/settings/accountDeletionWithdrawalJournalIsolation.test.ts\n?? apps/mobile/src/lib/consent/dependentConsentContract.test.ts\n?? apps/mobile/src/lib/consent/dependentConsentContract.ts\n?? apps/mobile/src/lib/consent/dependentConsentLease.test.ts\n?? apps/mobile/src/lib/consent/dependentConsentLease.ts\n?? apps/mobile/src/lib/consent/dependentConsentLifecycle.test.ts\n?? apps/mobile/src/lib/consent/dependentConsentLifecycle.ts\n?? apps/mobile/src/lib/consent/dependentConsentLocal.test.ts\n?? apps/mobile/src/lib/consent/dependentConsentLocal.ts\n?? apps/mobile/src/lib/consent/dependentConsentRecoveryContract.ts\n?? apps/mobile/src/lib/consent/dependentConsentRecoveryStore.test.ts\n?? apps/mobile/src/lib/consent/dependentConsentRecoveryStore.ts\n?? apps/mobile/src/lib/consent/dependentConsentTransport.test.ts\n?? apps/mobile/src/lib/consent/healthDataWriteAdmission.test.ts\n?? apps/mobile/src/lib/consent/healthDataWriteAdmission.ts\n?? apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts\n?? apps/mobile/src/lib/consent/healthProcessingEpoch.test.ts\n?? apps/mobile/src/lib/consent/healthProcessingEpoch.ts\n?? docs/e2e-bug-reports/2026-07-15-expo-router-app-root-test-bundle.md\n?? docs/e2e-bug-reports/2026-07-15-health-consent-e2e-reset-control-journal.md\n?? docs/e2e-bug-reports/2026-07-15-health-consent-grant-navigation-race.md\n?? docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md\n?? docs/hugeToDo/health-processor-inventory-v1.json\n?? scripts/phase9/consent-withdrawal-evidence.mjs\n?? scripts/phase9/consent-withdrawal-evidence.test.mjs\n?? scripts/phase9/health-consent-work-lane-smoke.mjs\n?? scripts/phase9/health-processor-inventory-smoke.mjs\n?? supabase/functions/_shared/catalogHealthEpochContract.test.ts\n?? supabase/functions/_shared/healthProcessingEpoch.test.ts\n?? supabase/functions/_shared/healthProcessingEpoch.ts\n?? supabase/functions/consent-withdrawal/dependentCleanupRuntime.ts\n?? supabase/functions/consent-withdrawal/granularWithdrawalCore.test.ts\n?? supabase/functions/consent-withdrawal/granularWithdrawalCore.ts\n?? supabase/functions/consent-withdrawal/healthConsentContract.ts\n?? supabase/functions/consent-withdrawal/healthLifecycleCore.test.ts\n?? supabase/functions/consent-withdrawal/healthLifecycleCore.ts\n?? supabase/functions/health-consent-worker/\n?? supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql\n?? supabase/ops/health-consent-work-lane.sql\n?? supabase/tests/database/health_consent_lifecycle.test.sql",
+  "gitSha": "ebaa10fa5c42d96d4e455442cc1323f397025f2c",
+  "gitStatus": "",
   "files": [
     {
       "packet": "packetContract",
@@ -297,29 +297,29 @@
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 145771,
-      "sha256": "a50d4af0c32fb73426add6cc0caa090f15346fef15f26f3ddf980b92d528cb81"
+      "bytes": 133452,
+      "sha256": "f3e631094decb2c69eb839715156834509fa4cb960b88be82c490a124b346302"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 87291,
-      "sha256": "ff087a36cc0cd2a2118133f3eb9bb0b5a9c5409bc3f15b4e78961c618abdff3a"
+      "bytes": 87186,
+      "sha256": "1e442748c38ba75413af1fe6a232f19f3ddf8f15d4bed32a45aa7a5183f1d226"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 149455,
-      "sha256": "a37f2f2230fa02b4f661e72f456bd9b0f5aa2d57d59fa464a5bce7d91d1e38aa"
+      "bytes": 137002,
+      "sha256": "ed35349a029dd429874d8c117afdfbc79b021db6134fe64df1f53f45acdec09a"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 100810,
-      "sha256": "f068184f67814f64c6d1120ccea52722c774f01b78033cba58b08b55985a2601"
+      "bytes": 100576,
+      "sha256": "449444635bef493d14d5e769a18bd72b07eb1343f7fd6a54dcbf9a0ea11d4ddc"
     },
     {
       "packet": "clinical",
@@ -374,29 +374,29 @@
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 145771,
-      "sha256": "a50d4af0c32fb73426add6cc0caa090f15346fef15f26f3ddf980b92d528cb81"
+      "bytes": 133452,
+      "sha256": "f3e631094decb2c69eb839715156834509fa4cb960b88be82c490a124b346302"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 87291,
-      "sha256": "ff087a36cc0cd2a2118133f3eb9bb0b5a9c5409bc3f15b4e78961c618abdff3a"
+      "bytes": 87186,
+      "sha256": "1e442748c38ba75413af1fe6a232f19f3ddf8f15d4bed32a45aa7a5183f1d226"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 149455,
-      "sha256": "a37f2f2230fa02b4f661e72f456bd9b0f5aa2d57d59fa464a5bce7d91d1e38aa"
+      "bytes": 137002,
+      "sha256": "ed35349a029dd429874d8c117afdfbc79b021db6134fe64df1f53f45acdec09a"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 100810,
-      "sha256": "f068184f67814f64c6d1120ccea52722c774f01b78033cba58b08b55985a2601"
+      "bytes": 100576,
+      "sha256": "449444635bef493d14d5e769a18bd72b07eb1343f7fd6a54dcbf9a0ea11d4ddc"
     },
     {
       "packet": "cosmeticChemistry",
@@ -500,8 +500,8 @@
       "packet": "privacyPlatform",
       "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
       "exists": true,
-      "bytes": 32985,
-      "sha256": "345458552722359f8ec5f997640823376ac74dc9f9ca2d89f7f144eeaa0dcb02"
+      "bytes": 32987,
+      "sha256": "d53808d01d7bb568a7a6c1d51351cbb3554c625fba3c517832ab31ce8ce8784f"
     },
     {
       "packet": "privacyPlatform",
@@ -1064,7 +1064,5 @@
       "sha256": "8ad2be6cecfd8be4d73679041204015edb17e492b398e7a59467542da9bace41"
     }
   ],
-  "warnings": [
-    "Phase 3 review packet generated with a dirty Git worktree; do not use it as final reviewer signoff evidence."
-  ]
+  "warnings": []
 }

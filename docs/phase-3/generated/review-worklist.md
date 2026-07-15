@@ -1,9 +1,9 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-15T20:03:33.717Z
+Generated: 2026-07-15T20:05:56.285Z
 Status: pass
-Git SHA: 90ed58d6dc8038bf5f2aa2a841b211683f3205c0
-Git status: DIRTY
+Git SHA: ebaa10fa5c42d96d4e455442cc1323f397025f2c
+Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
 privacy/security, and IP/FTO review logs into an operator handoff. It does
@@ -18,7 +18,7 @@ reviewers must inspect before launch gates can close.
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
 - Blockers: 0
-- Warnings: 1
+- Warnings: 0
 
 ## Items
 
@@ -610,7 +610,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `7da6776f685b4d583a7ff6021fd711d793bba6b9b1e88b05c8bd61c855847208`
+- Review snapshot SHA-256: `2c9fd49192aa1fe471f67fff47f70683362cfab9c8121affeb620b951d2b250c`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Review age -> consent -> goals ordering; immediate local/server freeze; exact deletion/preservation scope; legacy users; terminal-only fresh reconsent; installed-client rollout; minimized receipt retention; Supabase backup/restore; processor versioning; and final consumer-health notice.
@@ -619,7 +619,7 @@ Sources:
 
 - `docs/phase-3/consent-matrix.md` - 10237 bytes - sha256 `a50b3b1baf6c996409b85df19899ac3e80482dbd2043b02677ccec4cccf38130`
 - `docs/store-privacy-inventory.md` - 21854 bytes - sha256 `8543da0e266a036f2ae283c1f9e898ae1c67919746d28777389b6d824295cfe6`
-- `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32985 bytes - sha256 `345458552722359f8ec5f997640823376ac74dc9f9ca2d89f7f144eeaa0dcb02`
+- `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32987 bytes - sha256 `d53808d01d7bb568a7a6c1d51351cbb3554c625fba3c517832ab31ce8ce8784f`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3039 bytes - sha256 `fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674`
 - `docs/hugeToDo/credential-inventory.json` - 19405 bytes - sha256 `e8935e4c5bd4fa9e2b5c3a06cf53fcb83f83deaf07523ac3cef9cd5364ba63d0`
 - `apps/mobile/src/features/onboarding/consentCopy.ts` - 5658 bytes - sha256 `6e0cc1d6de3cad0b84c5cdb7463ed8b171820a9e436d5075f3b54623e6a47034`
@@ -811,7 +811,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `c24745d5f934581140754fc344856b159f292508cd6f008384b202f3efa71c52`
+- Review snapshot SHA-256: `7f44314d50a650a94e84e348c341f118d212fcd85e4ce49c27dbbf6825cde2fc`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Verify Apple/Google auth, Supabase DPA/region/backups, observed SDK traffic, processor/subprocessor contracts, HBNR posture, breach contacts, retention, deletion APIs, and RLS.
@@ -864,7 +864,7 @@ Sources:
 - `supabase/functions/_shared/auth.ts` - 321 bytes - sha256 `cac2bbac4936c570508b764482d8c396693bda989f4f605514b8a3ca06397999`
 - `docs/phase-3/data-inventory.md` - 16182 bytes - sha256 `09a230298d739de01a0e9bb2fb22d9f8a51897c20bcccbf251f7a86d027ad056`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3039 bytes - sha256 `fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674`
-- `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32985 bytes - sha256 `345458552722359f8ec5f997640823376ac74dc9f9ca2d89f7f144eeaa0dcb02`
+- `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32987 bytes - sha256 `d53808d01d7bb568a7a6c1d51351cbb3554c625fba3c517832ab31ce8ce8784f`
 
 ### ipFto - Brand and trademark clearance
 
@@ -993,4 +993,4 @@ Sources:
 
 ## Warnings
 
-- Phase 3 review worklist generated with a dirty Git worktree; do not use it as final reviewer handoff evidence.
+- None.
