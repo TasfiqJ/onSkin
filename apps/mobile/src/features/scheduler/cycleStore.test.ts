@@ -4,6 +4,7 @@ import {
   AccountGenerationLeaseError,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 
 import {
@@ -43,6 +44,14 @@ const CYCLE_KEY = 'routinekind.cycle.v2';
 const LEGACY_CYCLE_KEY = 'onskin.cycle.v1';
 const LEGACY_ANCHOR_KEY = 'onskin.cycleAnchor';
 const TODAY = '2026-07-10';
+
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((nextResolve) => {
+    resolve = nextResolve;
+  });
+  return { promise, resolve };
+}
 
 function config(overrides: Partial<CycleConfig> = {}): CycleConfig {
   return {
@@ -149,6 +158,33 @@ describe('cycle configuration persistence and reconciliation', () => {
       },
     });
     expect(mocks.storage.size).toBe(0);
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['missing cycle state', () => undefined],
+    [
+      'legacy cycle state without an embedded anchor',
+      () => storeLegacyCycle({ variant: 'gentle', skips: ['2026-07-11'] }),
+    ],
+  ])('preserves account cancellation during the %s anchor fallback', async (_label, arrange) => {
+    arrange();
+    const anchorRead = deferred<string | null>();
+    mocks.getPrivateItem.mockImplementation(async (key: string) => {
+      if (key === LEGACY_ANCHOR_KEY) return anchorRead.promise;
+      return mocks.storage.get(key) ?? null;
+    });
+    const pending = loadCycleConfig();
+    await vi.waitFor(() => expect(mocks.getPrivateItem).toHaveBeenCalledWith(LEGACY_ANCHOR_KEY));
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+
+    await expect(pending).rejects.toBeInstanceOf(AccountGenerationLeaseError);
+    await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+
+    anchorRead.resolve('2026-07-01');
+    await Promise.resolve();
     expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
   });
 

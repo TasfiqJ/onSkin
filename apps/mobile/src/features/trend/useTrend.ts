@@ -2,11 +2,16 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
 import { usePhotos } from '@/features/photos/usePhotos';
-import { queryKeys } from '@/lib/query/queryKeys';
+import {
+  ACCOUNT_GENERATION_CHANGED,
+  awaitAccountGenerationLease,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
+import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
-import { isTrendInsightsConsented } from './consent';
+import { isTrendInsightsConsentedWithLease } from './consent';
 import { trendNarrative } from './copy';
 import { classifyChange, MIN_CAPTURES } from './trend';
 
@@ -18,16 +23,39 @@ import { classifyChange, MIN_CAPTURES } from './trend';
 // renders, while the classification + the fairness floor are the real, tested logic. ***
 // Nothing is uploaded; there is no score, ever.
 
-async function readMonkBand(): Promise<number | null> {
+function isAbortOrAccountGenerationError(error: unknown): boolean {
+  if (error === ACCOUNT_GENERATION_CHANGED) return true;
+  if (!error || typeof error !== 'object') return false;
+  const candidate = error as { code?: unknown; message?: unknown; name?: unknown };
+  return (
+    candidate.name === 'AbortError' ||
+    candidate.code === 'ABORT_ERR' ||
+    candidate.code === ACCOUNT_GENERATION_CHANGED ||
+    candidate.message === ACCOUNT_GENERATION_CHANGED
+  );
+}
+
+export async function readMonkBandWithLease(
+  lease: AccountGenerationLease,
+): Promise<number | null> {
+  lease.assertCurrent();
   try {
-    const { data } = await supabase
-      .from('skin_profiles')
-      .select('monk_tone')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+    const { data } = await awaitAccountGenerationLease(lease, () =>
+      supabase
+        .from('skin_profiles')
+        .select('monk_tone')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .abortSignal(lease.signal)
+        .maybeSingle(),
+    );
+    lease.assertCurrent();
     return data?.monk_tone ?? null;
-  } catch {
+  } catch (error) {
+    // An ordinary server/offline failure retains the typed null fallback. An
+    // owner change must reject so React Query cannot cache account A as absent.
+    lease.assertCurrent();
+    if (isAbortOrAccountGenerationError(error)) throw error;
     return null;
   }
 }
@@ -36,13 +64,17 @@ export function useTrendConsent() {
   const ownerScope = useOwnerQueryScope();
   return useQuery({
     queryKey: queryKeys.trendConsent(ownerScope),
-    queryFn: isTrendInsightsConsented,
+    queryFn: () => runOwnerQueryOperation(ownerScope, isTrendInsightsConsentedWithLease),
+    networkMode: 'always',
   });
 }
 
 export function useMonkBand() {
   const ownerScope = useOwnerQueryScope();
-  return useQuery({ queryKey: queryKeys.monkBand(ownerScope), queryFn: readMonkBand });
+  return useQuery({
+    queryKey: queryKeys.monkBand(ownerScope),
+    queryFn: () => runOwnerQueryOperation(ownerScope, readMonkBandWithLease),
+  });
 }
 
 export function useTrendInsight() {
@@ -51,7 +83,15 @@ export function useTrendInsight() {
   const monk = useMonkBand();
 
   const insight = useMemo(() => {
-    if (!consent.data) return null;
+    if (
+      !consent.isSuccess ||
+      consent.data !== true ||
+      !photos.isSuccess ||
+      !photos.data ||
+      !monk.isSuccess
+    ) {
+      return null;
+    }
     // Count the FRONT series the trend actually narrates, not the cross-series
     // total (`count` = all angles). Using the total could tell a user their FRONT
     // texture "looked consistent over your last N captures" with N counting
@@ -75,11 +115,11 @@ export function useTrendInsight() {
       narrative: trendNarrative(changeState, { n: captureCount }),
       monkBand: monk.data ?? null,
     };
-  }, [consent.data, photos.data, monk.data]);
+  }, [consent.data, consent.isSuccess, photos.data, photos.isSuccess, monk.data, monk.isSuccess]);
 
   return {
-    consented: consent.data ?? false,
+    consented: consent.isSuccess && consent.data === true,
     insight,
-    isLoading: consent.isLoading || photos.isLoading,
+    isLoading: consent.isLoading || photos.isLoading || monk.isLoading,
   };
 }

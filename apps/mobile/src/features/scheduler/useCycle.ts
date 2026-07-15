@@ -17,7 +17,7 @@ import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { commitCycleConfigForOwner } from './cycleMutationCoordinator';
 import {
   endRecovery,
-  loadCycleConfig,
+  loadCycleConfigWithLease,
   overrideStagingProducts,
   pauseCycle,
   recoveryProgress,
@@ -104,7 +104,7 @@ export function useCycle(): CycleQueryResult {
   const { localDate: today } = boundary;
   const cfg = useQuery({
     queryKey: queryKeys.cycleConfig(ownerScope, boundary),
-    queryFn: () => runOwnerQueryOperation(ownerScope, () => loadCycleConfig()),
+    queryFn: () => runOwnerQueryOperation(ownerScope, loadCycleConfigWithLease),
     refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
     refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
   });

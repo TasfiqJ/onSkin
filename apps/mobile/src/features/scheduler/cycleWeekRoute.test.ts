@@ -196,6 +196,9 @@ describe('cycle week route scheduler notes', () => {
       'publish(queryKeys.cycleConfig(scope, readBoundary()), next)',
     );
     expect(useCycle).toContain('queryKey: queryKeys.cycleConfig(ownerScope, boundary)');
+    expect(useCycle).toContain(
+      'queryFn: () => runOwnerQueryOperation(ownerScope, loadCycleConfigWithLease)',
+    );
     expect(useCycle).not.toContain("AppState.addEventListener('change', handleAppState)");
     expect(useCycle).not.toContain('millisecondsUntilNextLocalDay()');
 

@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { awaitAccountGenerationLease } from '@/lib/auth/accountGeneration';
 import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
 import {
   ownerQueryPrefixes,
@@ -59,12 +60,18 @@ export function useRamp(): {
     enabled: hasRampInputs,
     queryFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const stored = await getStoredRamps();
+        lease.assertCurrent();
+        const stored = await awaitAccountGenerationLease(lease, () => getStoredRamps());
+        lease.assertCurrent();
         const items: RampItem[] = [];
         for (const r of planRamps) {
           // Lazy seeding is a write. Assert the captured owner immediately before it.
-          if (!stored[r.productId]) lease.assertCurrent();
-          const state = stored[r.productId] ?? (await ensureRamp(r.productId, r.state));
+          let state = stored[r.productId];
+          if (!state) {
+            lease.assertCurrent();
+            state = await ensureRamp(r.productId, r.state);
+            lease.assertCurrent();
+          }
           items.push({
             productId: r.productId,
             name: r.name,
@@ -79,6 +86,7 @@ export function useRamp(): {
             }),
           });
         }
+        lease.assertCurrent();
         return items;
       }),
   });
@@ -93,7 +101,10 @@ export function useRamp(): {
       lease.assertCurrent();
       await stepUpRamp(productId, desiredFreqPerWeek);
       lease.assertCurrent();
-      await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) });
+      await awaitAccountGenerationLease(lease, () =>
+        qc.invalidateQueries({ queryKey: ownerQueryPrefixes.ramp(ownerScope) }),
+      );
+      lease.assertCurrent();
     });
   }
 

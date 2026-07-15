@@ -4,7 +4,8 @@ import { shippableRules } from '@/features/intelligence/rules';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
 import { useShelf } from '@/features/shelf/useShelf';
-import { queryKeys } from '@/lib/query/queryKeys';
+import { awaitAccountGenerationLease } from '@/lib/auth/accountGeneration';
+import { queryKeys, runOwnerQueryOperation } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import {
@@ -62,7 +63,15 @@ export function usePlan(): PlanQueryResult {
   const ownerScope = useOwnerQueryScope();
   const routineOrder = useQuery({
     queryKey: queryKeys.routineOrder(ownerScope),
-    queryFn: loadRoutineOrderOverrides,
+    queryFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        lease.assertCurrent();
+        const overrides = await awaitAccountGenerationLease(lease, () =>
+          loadRoutineOrderOverrides(),
+        );
+        lease.assertCurrent();
+        return overrides;
+      }),
     networkMode: 'always',
     retry: 1,
     staleTime: Infinity,

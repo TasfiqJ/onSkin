@@ -1,8 +1,9 @@
 import type { CycleVariant, DisruptionReason } from '@onskin/types';
 
-import { getCycleAnchor } from '@/features/routine/cycleAnchor';
+import { getCycleAnchorWithLease } from '@/features/routine/cycleAnchor';
 import { localDateString } from '@/features/today/useToday';
 import {
+  awaitAccountGenerationLease,
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
@@ -401,12 +402,14 @@ function classifyCycleConfigError(error: unknown): CycleConfigRead {
   return { status: 'unavailable', config: null };
 }
 
-async function readCycleConfigValue(): Promise<
+async function readCycleConfigValue(lease: AccountGenerationLease): Promise<
   | { status: 'missing'; config: CycleConfig; source: 'default' }
   | { status: 'available'; config: CycleConfig; source: 'current' | 'legacy' }
 > {
+  lease.assertCurrent();
   const today = localDateString();
-  const raw = await getPrivateItem(KEY);
+  const raw = await awaitAccountGenerationLease(lease, () => getPrivateItem(KEY));
+  lease.assertCurrent();
   if (raw !== null) {
     return {
       status: 'available',
@@ -415,10 +418,13 @@ async function readCycleConfigValue(): Promise<
     };
   }
 
-  const legacyRaw = await getPrivateItem(LEGACY_KEY);
+  const legacyRaw = await awaitAccountGenerationLease(lease, () => getPrivateItem(LEGACY_KEY));
+  lease.assertCurrent();
   if (legacyRaw !== null) {
     const parsed = parseStoredJson(legacyRaw);
-    const fallbackAnchor = embeddedLegacyAnchor(parsed) ?? (await getCycleAnchor());
+    const fallbackAnchor =
+      embeddedLegacyAnchor(parsed) ?? (await getCycleAnchorWithLease(lease));
+    lease.assertCurrent();
     return {
       status: 'available',
       source: 'legacy',
@@ -426,30 +432,47 @@ async function readCycleConfigValue(): Promise<
     };
   }
 
-  const fallbackAnchor = await getCycleAnchor();
+  const fallbackAnchor = await getCycleAnchorWithLease(lease);
+  lease.assertCurrent();
   return { status: 'missing', source: 'default', config: defaults(fallbackAnchor) };
 }
 
 /** Read and reconcile only in memory. Ordinary reads never migrate, normalize,
  * repair, delete, or persist date rollover changes. */
-export async function readCycleConfig(): Promise<CycleConfigRead> {
+export async function readCycleConfigWithLease(
+  lease: AccountGenerationLease,
+): Promise<CycleConfigRead> {
   try {
-    return await readCycleConfigValue();
+    const result = await readCycleConfigValue(lease);
+    lease.assertCurrent();
+    return result;
   } catch (error) {
+    lease.assertCurrent();
     return classifyCycleConfigError(error);
   }
 }
 
+export function readCycleConfig(): Promise<CycleConfigRead> {
+  return runAccountGenerationOperation(readCycleConfigWithLease);
+}
+
 /** Query-facing compatibility API: valid missing state receives defaults; every
  * unreadable state throws a typed fail-closed error. */
-export async function loadCycleConfig(): Promise<CycleConfig> {
-  const result = await readCycleConfig();
+export async function loadCycleConfigWithLease(
+  lease: AccountGenerationLease,
+): Promise<CycleConfig> {
+  const result = await readCycleConfigWithLease(lease);
+  lease.assertCurrent();
   if (result.status === 'available' || result.status === 'missing') return result.config;
   if (result.status === 'unsupported_version') {
     throw cycleConfigError(CYCLE_CONFIG_UNSUPPORTED_VERSION);
   }
   if (result.status === 'corrupt') throw cycleConfigError(CYCLE_CONFIG_INVALID);
   throw cycleConfigError(CYCLE_CONFIG_UNAVAILABLE);
+}
+
+export function loadCycleConfig(): Promise<CycleConfig> {
+  return runAccountGenerationOperation(loadCycleConfigWithLease);
 }
 
 async function prepareMissingCurrentConfig(
@@ -463,11 +486,12 @@ async function prepareMissingCurrentConfig(
   lease.assertCurrent();
   if (legacyRaw !== null) {
     const parsed = parseStoredJson(legacyRaw);
-    const fallbackAnchor = embeddedLegacyAnchor(parsed) ?? (await getCycleAnchor());
+    const fallbackAnchor =
+      embeddedLegacyAnchor(parsed) ?? (await getCycleAnchorWithLease(lease));
     lease.assertCurrent();
     return decodeLegacyConfig(parsed, fallbackAnchor);
   }
-  const fallbackAnchor = await getCycleAnchor();
+  const fallbackAnchor = await getCycleAnchorWithLease(lease);
   lease.assertCurrent();
   return defaults(fallbackAnchor);
 }

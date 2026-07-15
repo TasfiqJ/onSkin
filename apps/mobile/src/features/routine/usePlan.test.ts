@@ -1,6 +1,102 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
+import {
+  ACCOUNT_GENERATION_CHANGED,
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
+} from '@/lib/auth/accountGeneration';
+import { createOwnerQueryScope, queryKeys } from '@/lib/query/queryKeys';
+
+import { usePlan } from './usePlan';
+
+const mocks = vi.hoisted(() => ({
+  loadRoutineOrderOverrides: vi.fn(),
+  ownerScope: { generation: 0 },
+  useQuery: vi.fn((options: Record<string, unknown>) => ({
+    ...options,
+    data: { schemaVersion: 1, am: [], pm: [] },
+    isError: false,
+    isFetching: false,
+    isPending: false,
+    isSuccess: true,
+    refetch: vi.fn(async () => undefined),
+  })),
+}));
+
+vi.mock('@tanstack/react-query', () => ({
+  useQuery: mocks.useQuery,
+}));
+
+vi.mock('@/features/scheduler/profile', () => ({
+  useProfileBits: () => ({
+    data: {
+      goals: [],
+      moisture: 'balanced',
+      pregnancy: false,
+      pregnancySafety: 'standard',
+      pregnancyStatus: 'none',
+      sensitivity: 'neutral',
+    },
+    isError: false,
+    isFetching: false,
+    isPending: false,
+    isSuccess: true,
+    refetch: vi.fn(async () => undefined),
+  }),
+}));
+
+vi.mock('@/features/shelf/useShelf', () => ({
+  useShelf: () => ({
+    data: { conflictChoices: {}, items: [] },
+    isError: false,
+    isFetching: false,
+    isPending: false,
+    isSuccess: true,
+    refetch: vi.fn(async () => undefined),
+  }),
+}));
+
+vi.mock('@/lib/query/useOwnerQueryScope', () => ({
+  useOwnerQueryScope: () => mocks.ownerScope,
+}));
+
+vi.mock('./orderStore', () => ({
+  applyRoutineOrderOverrides: (plan: unknown) => plan,
+  loadRoutineOrderOverrides: mocks.loadRoutineOrderOverrides,
+}));
+
+type Deferred<T> = Readonly<{
+  promise: Promise<T>;
+  resolve: (value: T) => void;
+}>;
+
+function deferred<T>(): Deferred<T> {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((nextResolve) => {
+    resolve = nextResolve;
+  });
+  return { promise, resolve };
+}
+
+function useCapturedRoutineOrderQuery(): {
+  queryFn: () => Promise<{ schemaVersion: 1; am: string[]; pm: string[] }>;
+  queryKey: readonly unknown[];
+} {
+  usePlan();
+  return mocks.useQuery.mock.calls.at(-1)?.[0] as {
+    queryFn: () => Promise<{ schemaVersion: 1; am: string[]; pm: string[] }>;
+    queryKey: readonly unknown[];
+  };
+}
+
+beforeEach(() => {
+  mocks.loadRoutineOrderOverrides.mockReset();
+  mocks.loadRoutineOrderOverrides.mockResolvedValue({ schemaVersion: 1, am: [], pm: [] });
+  mocks.useQuery.mockClear();
+  mocks.ownerScope = createOwnerQueryScope();
+});
 
 describe('routine plan profile label', () => {
   it('labels the empty-shelf fallback as an example', () => {
@@ -48,5 +144,55 @@ describe('routine plan profile label', () => {
         false,
       ),
     ).toBe('BUILT FOR SAFETY-FIRST SKIN');
+  });
+});
+
+describe('routine order owner-bound query', () => {
+  it('uses the owner-scoped key and keeps a delayed same-generation read valid', async () => {
+    const delayed = deferred<{ schemaVersion: 1; am: string[]; pm: string[] }>();
+    mocks.loadRoutineOrderOverrides.mockReturnValueOnce(delayed.promise);
+    const query = useCapturedRoutineOrderQuery();
+
+    expect(query.queryKey).toEqual(queryKeys.routineOrder(mocks.ownerScope));
+    const pending = query.queryFn();
+    await Promise.resolve();
+    expect(mocks.loadRoutineOrderOverrides).toHaveBeenCalledOnce();
+
+    delayed.resolve({ schemaVersion: 1, am: ['cleanser'], pm: ['retinoid'] });
+    await expect(pending).resolves.toEqual({
+      schemaVersion: 1,
+      am: ['cleanser'],
+      pm: ['retinoid'],
+    });
+  });
+
+  it('detaches a hung owner-A read, drains the boundary, and permits owner B', async () => {
+    const ownerARead = deferred<{ schemaVersion: 1; am: string[]; pm: string[] }>();
+    mocks.loadRoutineOrderOverrides.mockReturnValueOnce(ownerARead.promise);
+    const pendingA = useCapturedRoutineOrderQuery().queryFn();
+    await Promise.resolve();
+
+    beginAccountGenerationBoundary();
+    try {
+      await expect(pendingA).rejects.toMatchObject({ code: ACCOUNT_GENERATION_CHANGED });
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    ownerARead.resolve({ schemaVersion: 1, am: ['owner-a'], pm: [] });
+    await Promise.resolve();
+
+    mocks.ownerScope = createOwnerQueryScope();
+    mocks.loadRoutineOrderOverrides.mockResolvedValueOnce({
+      schemaVersion: 1,
+      am: ['owner-b'],
+      pm: [],
+    });
+    await expect(useCapturedRoutineOrderQuery().queryFn()).resolves.toEqual({
+      schemaVersion: 1,
+      am: ['owner-b'],
+      pm: [],
+    });
   });
 });

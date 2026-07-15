@@ -1,6 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { localDateString } from '@/features/today/useToday';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
 import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
 import {
   queryKeys,
@@ -112,25 +117,38 @@ function classifyCycleAnchorError(error: unknown): CycleAnchorRead {
 }
 
 /** Read without repairing, deleting, or upgrading stored bytes. */
-export async function readCycleAnchor(): Promise<CycleAnchorRead> {
+export async function readCycleAnchorWithLease(
+  lease: AccountGenerationLease,
+): Promise<CycleAnchorRead> {
+  lease.assertCurrent();
   let raw: string | null;
   try {
-    raw = await getPrivateItem(KEY);
+    raw = await awaitAccountGenerationLease(lease, () => getPrivateItem(KEY));
   } catch (error) {
+    lease.assertCurrent();
     return classifyCycleAnchorError(error);
   }
+  lease.assertCurrent();
   if (raw === null) return { status: 'missing', anchorISO: null };
   try {
     const decoded = decodeCycleAnchor(raw);
+    lease.assertCurrent();
     return { status: 'available', ...decoded };
   } catch (error) {
+    lease.assertCurrent();
     return classifyCycleAnchorError(error);
   }
 }
 
+export function readCycleAnchor(): Promise<CycleAnchorRead> {
+  return runAccountGenerationOperation(readCycleAnchorWithLease);
+}
+
 /** Missing is a valid first-run state. Every unreadable state fails closed. */
-export async function getCycleAnchor(): Promise<string> {
-  const result = await readCycleAnchor();
+export async function getCycleAnchorWithLease(lease: AccountGenerationLease): Promise<string> {
+  lease.assertCurrent();
+  const result = await readCycleAnchorWithLease(lease);
+  lease.assertCurrent();
   if (result.status === 'available') return result.anchorISO;
   if (result.status === 'missing') return localDateString();
   if (result.status === 'unsupported_version') {
@@ -138,6 +156,10 @@ export async function getCycleAnchor(): Promise<string> {
   }
   if (result.status === 'corrupt') throw anchorError(CYCLE_ANCHOR_INVALID);
   throw anchorError(CYCLE_ANCHOR_UNAVAILABLE);
+}
+
+export function getCycleAnchor(): Promise<string> {
+  return runAccountGenerationOperation(getCycleAnchorWithLease);
 }
 
 /** Explicit mutation: validate the request, reject unreadable existing bytes,
@@ -159,7 +181,7 @@ export function useCycleAnchor() {
   const boundary = useLocalDateBoundary();
   return useQuery({
     queryKey: queryKeys.cycleAnchor(ownerScope, boundary),
-    queryFn: () => runOwnerQueryOperation(ownerScope, () => getCycleAnchor()),
+    queryFn: () => runOwnerQueryOperation(ownerScope, getCycleAnchorWithLease),
     refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
     refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
   });

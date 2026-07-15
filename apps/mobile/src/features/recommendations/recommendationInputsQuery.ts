@@ -1,5 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import { awaitAccountGenerationLease } from '@/lib/auth/accountGeneration';
 import { queryKeys, runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
 
 import { loadRecommendationInputs } from './store';
@@ -11,7 +12,9 @@ export function recommendationInputsQueryOptions(ownerScope: OwnerQueryScope) {
     queryKey: queryKeys.recommendations(ownerScope),
     queryFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const inputs = await loadRecommendationInputs();
+        const inputs = await awaitAccountGenerationLease(lease, () =>
+          loadRecommendationInputs(),
+        );
         lease.assertCurrent();
         return inputs;
       }),

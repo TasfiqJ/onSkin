@@ -1,9 +1,14 @@
 import { track } from '@/lib/analytics/track';
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
-import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
+import { recordConsent } from '@/lib/consent/consent';
 import { isSupabaseConfigured } from '@/lib/env';
 import { withdrawConsent } from '@/lib/consent/withdrawal';
 import { requirePrivateBoolean } from '@/lib/storage/privateBoolean';
+import { supabase } from '@/lib/supabase/client';
 
 import { TREND_COPY } from './copy';
 import { deleteTrendState, readTrendInsightsLocal, setTrendInsightsLocal } from './store';
@@ -16,21 +21,42 @@ import { deleteTrendState, readTrendInsightsLocal, setTrendInsightsLocal } from 
 // "no AI grades" refusal) is re-consented here, never silently enrolled. Ledger-
 // authoritative-then-local (the Slice-24 precedence) so a withdrawal re-locks.
 
-export async function isTrendInsightsConsented(): Promise<boolean> {
-  return runAccountGenerationOperation(async (lease) => {
+export async function isTrendInsightsConsentedWithLease(
+  lease: AccountGenerationLease,
+): Promise<boolean> {
+  lease.assertCurrent();
+  if (isSupabaseConfigured) {
     try {
-      const consents = await getLatestConsents();
+      const { data, error } = await awaitAccountGenerationLease(lease, () =>
+        supabase
+          .from('consents')
+          .select('granted')
+          .eq('consent_type', 'photo_trend_insights')
+          .order('granted_at', { ascending: false })
+          .limit(1)
+          .abortSignal(lease.signal)
+          .maybeSingle(),
+      );
       lease.assertCurrent();
-      if ('photo_trend_insights' in consents) return consents['photo_trend_insights'] === true;
-      if (isSupabaseConfigured) return false;
+      if (error) throw error;
+      // A reachable ledger is authoritative. Missing is the default-off state;
+      // never reuse a stale local grant for an installed-base user.
+      return data?.granted === true;
     } catch {
+      // Account-generation cancellation is asserted, not collapsed into the
+      // local fallback. Ordinary offline/server failure remains local-first.
       lease.assertCurrent();
       /* offline / no DB. Fall back to the local-first flag */
     }
-    const local = await readTrendInsightsLocal();
-    lease.assertCurrent();
-    return requirePrivateBoolean(local);
-  });
+  }
+
+  const local = await awaitAccountGenerationLease(lease, () => readTrendInsightsLocal());
+  lease.assertCurrent();
+  return requirePrivateBoolean(local);
+}
+
+export function isTrendInsightsConsented(): Promise<boolean> {
+  return runAccountGenerationOperation(isTrendInsightsConsentedWithLease);
 }
 
 export async function grantTrendInsightsConsent(): Promise<void> {
