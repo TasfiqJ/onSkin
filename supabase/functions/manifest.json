@@ -367,6 +367,34 @@
       "conditionalEnvironment": [],
       "conditionalSecrets": []
     },
+    "subscription-reconciliation": {
+      "entrypoint": "supabase/functions/subscription-reconciliation/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": true,
+      "access": "authenticated",
+      "auth": "supabase-user-jwt",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 30,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["REVENUECAT_SECRET_API_KEY"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
+        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
+        "ENTITLEMENT_RECONCILIATION_MAX_SNAPSHOT_AGE_SECONDS",
+        "ENTITLEMENT_RECONCILIATION_RATE_LIMIT_MAX",
+        "ENTITLEMENT_RECONCILIATION_RATE_LIMIT_WINDOW_SECONDS",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
     "waitlist": {
       "entrypoint": "supabase/functions/waitlist/index.ts",
       "deployByDefault": true,

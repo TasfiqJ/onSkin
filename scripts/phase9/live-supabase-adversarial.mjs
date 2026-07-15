@@ -1028,15 +1028,35 @@ async function main() {
         'consent row changed after append-only update denials.',
       );
 
-      const entitlementWrite = await admin.from('entitlements').upsert({
-        user_id: userA.id,
-        entitlement: 'pro',
-        is_active: true,
-        product_id: 'phase9_live_adversarial',
-        expires_at: new Date(Date.now() + 7 * 86_400_000).toISOString(),
-        rc_event_id: `phase9-${randomUUID()}`,
+      const { error: reverseTrialGrantError } = await admin.rpc('grant_app_granted_reverse_trial', {
+        p_user_id: userA.id,
+        p_expires_at: new Date(Date.now() + 3 * 86_400_000).toISOString(),
+        p_environment: appEnv === 'production' ? 'production' : 'development',
       });
-      if (entitlementWrite.error) throw entitlementWrite.error;
+      if (reverseTrialGrantError) throw reverseTrialGrantError;
+
+      const snapshotAt = new Date();
+      const entitlementExpiresAt = new Date(snapshotAt.getTime() + 7 * 86_400_000).toISOString();
+      const { error: entitlementWriteError } = await admin.rpc(
+        'reconcile_revenuecat_entitlement_snapshot',
+        {
+          p_user_id: userA.id,
+          p_snapshot_at: snapshotAt.toISOString(),
+          p_entitlement: 'pro',
+          p_is_active: true,
+          p_product_id: 'phase9_live_adversarial',
+          p_expires_at: entitlementExpiresAt,
+          p_store: 'app_store',
+          p_period_type: 'normal',
+          p_will_renew: true,
+          p_original_purchase_at: new Date(snapshotAt.getTime() - 86_400_000).toISOString(),
+          p_offering_id: null,
+          p_environment: 'sandbox',
+          p_management_url: null,
+          p_package_id: null,
+        },
+      );
+      if (entitlementWriteError) throw entitlementWriteError;
       registerPrivateTableProbe('entitlements', 'user_id', userA.id);
       await expectVisible(
         userA.client,
@@ -1061,14 +1081,6 @@ async function main() {
           .select('user_id'),
       );
 
-      const reverseTrialWrite = await admin.from('reverse_trial_grants').upsert({
-        user_id: userA.id,
-        expires_at: new Date(Date.now() + 3 * 86_400_000).toISOString(),
-        source: 'phase9-live-adversarial',
-        metadata: { phase9: true },
-      });
-      if (reverseTrialWrite.error) throw reverseTrialWrite.error;
-      trackServiceCleanup('reverse_trial_grants', 'user_id', userA.id);
       registerPrivateTableProbe('reverse_trial_grants', 'user_id', userA.id);
       await expectNotVisible(
         userA.client,

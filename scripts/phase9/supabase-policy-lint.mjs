@@ -64,6 +64,7 @@ const clientCallableDefiners = new Set([
   'owns_photo(uuid)',
   'owns_routine(uuid)',
   'owns_user_product(uuid)',
+  'read_entitlement_projections()',
 ]);
 const serviceCallableDefiners = new Set([
   'account_write_allowed(uuid)',
@@ -93,6 +94,7 @@ const serviceCallableDefiners = new Set([
   'purge_expired_account_deletion_artifacts(integer)',
   'purge_expired_edge_rate_limits(integer)',
   'purge_expired_revenuecat_identity_tombstones(integer)',
+  'reconcile_revenuecat_entitlement_snapshot(uuid, timestamptz, text, boolean, text, timestamptz, text, text, boolean, timestamptz, text, text, text, text)',
   'reap_expired_account_publication_leases(integer)',
   'record_account_deletion_step(uuid, text, text, text, text, timestamptz)',
   'record_account_deletion_revenuecat_absence_observation(uuid, text, text)',

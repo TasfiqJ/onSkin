@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = extensions, public, pg_catalog;
 
-select plan(16);
+select plan(21);
 
 select has_extension('citext', 'the case-insensitive email type dependency is installed');
 
@@ -31,14 +31,14 @@ select is(
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  51::bigint,
-  'all 51 repository migrations are recorded'
+  52::bigint,
+  'all 52 repository migrations are recorded'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260713000052'::text,
-  'migration history reaches the publication fence'
+  '20260714000053'::text,
+  'migration history reaches the entitlement authority lanes'
 );
 
 select is(
@@ -72,6 +72,47 @@ select has_table(
   'public',
   'account_publication_leases',
   'the final account-publication fence table is present'
+);
+
+select has_column(
+  'public',
+  'entitlements',
+  'rc_cursor_state',
+  'the RevenueCat projection records its cursor authority'
+);
+select has_column(
+  'public',
+  'entitlements',
+  'rc_snapshot_at',
+  'the RevenueCat projection records a provider snapshot watermark'
+);
+select has_column(
+  'public',
+  'entitlements',
+  'rc_snapshot_fingerprint',
+  'the RevenueCat projection detects equal-watermark conflicts'
+);
+
+select ok(
+  has_function_privilege('authenticated', 'public.read_entitlement_projections()', 'execute')
+    and not has_function_privilege('anon', 'public.read_entitlement_projections()', 'execute')
+    and not has_function_privilege('service_role', 'public.read_entitlement_projections()', 'execute'),
+  'the owner-derived projection read is authenticated-only'
+);
+
+select ok(
+  exists (
+    select 1
+      from pg_catalog.pg_constraint as constraints
+     where constraints.conrelid = 'public.edge_rate_limits'::regclass
+       and constraints.conname = 'edge_rate_limits_scope_owner_classification'
+       and pg_catalog.pg_get_constraintdef(constraints.oid)
+         like '%subscription-reconciliation%'
+  )
+    and pg_catalog.pg_get_functiondef(
+      'public._consume_edge_rate_limit_v0048_unbound(text,text,integer,integer,uuid)'::regprocedure
+    ) like '%subscription-reconciliation%',
+  'subscription reconciliation has an owner-scoped database rate-limit lane'
 );
 
 select is(

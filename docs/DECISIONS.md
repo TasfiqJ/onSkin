@@ -256,6 +256,15 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: migration `0052` now supplies the two-phase publication lease and worker drain/settling gate in database source, but the exact Edge/mobile candidate must prove every publication path uses it through process death, configure-in-flight, and lost release. Old/tampered clients still require an approved provider block, enforceable mandatory-version gate, or continuing re-deletion control. Hosted, provider, physical-iPhone, privacy/legal, and App Review evidence remains external.
 - Status: Accepted for owner-bound mobile recovery; end-to-end DB-10 remains in progress and not race-free.
 
+### 2026-07-14 - Separate Store And App-Grant Entitlement Authorities
+
+- Decision: Keep `entitlements` exclusively as the RevenueCat projection and `reverse_trial_grants` as the independent local no-card grant. Return both through one no-argument `auth.uid()` RPC. Preserve exact webhook ordering; classify old rows without trusted provider order as fail-closed `legacy_unknown` until a bounded authenticated server fetch supplies RevenueCat v1 `request_date` as a snapshot watermark.
+- Alternatives: continue last-writer-wins in one row, add source to the existing primary key, fabricate a migration cursor, or let clients submit a user ID/snapshot.
+- Criteria: a local grant cannot overwrite/revoke a purchase, provider events cannot erase local grant history, no caller-selected owner, deterministic delayed-event handling, data minimization, deletion/export continuity, and forward-only rollout.
+- Evidence: migration `20260714000053_entitlement_authority_lanes.sql`, authenticated `subscription-reconciliation`, PostgreSQL 15/17 rehearsal, Edge/parser contracts, and `docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md`.
+- Risk: old binaries that read `entitlements` directly cannot see the app lane after relaunch. Database rollout requires the updated reader or a mandatory-version/zero-installed-cohort proof. Hosted RevenueCat, sandbox/TestFlight, device, privacy/legal, and App Review evidence remain open.
+- Status: Accepted for the source invariant; production rollout remains gated.
+
 ### 2026-07-06 - Keep Expo/Supabase/RevenueCat
 
 - Decision: Continue current stack unless beta/device/compliance evidence says otherwise.

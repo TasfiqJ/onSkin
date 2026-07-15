@@ -812,7 +812,6 @@ async function main() {
       },
     );
   } finally {
-    await admin.from('entitlements').delete().eq('user_id', user.id);
     await admin.from('subscriptions_events').delete().in('rc_event_id', Object.values(eventIds));
     const { error } = await admin.auth.admin.deleteUser(user.id);
     if (error)

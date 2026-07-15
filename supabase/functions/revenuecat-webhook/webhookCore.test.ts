@@ -228,6 +228,18 @@ Deno.test(
   },
 );
 
+Deno.test('RevenueCat promotional webhooks stay in the provider authority lane', () => {
+  const args = buildRevenueCatAtomicArgs(
+    event('promotional-provider-event', 'INITIAL_PURCHASE', 1_700_000_000_000, {
+      store: 'PROMOTIONAL',
+      product_id: 'rc_promo_pro_monthly',
+    }),
+    verification,
+  );
+
+  assert(args.p_store === 'promotional', 'provider promotional access was misclassified.');
+});
+
 Deno.test('RevenueCat owner UUIDs canonicalize ASCII boundary whitespace and case', () => {
   const canonical = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa4';
   const args = buildRevenueCatAtomicArgs(

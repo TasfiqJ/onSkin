@@ -44,6 +44,7 @@ const accountDeletionTokenPattern = /^[a-f0-9]{64}$/;
 const userJwtFunctions = [
   'data-export',
   'subscription-grants',
+  'subscription-reconciliation',
   'catalog-search',
   'catalog-lookup',
   'catalog-report',
@@ -951,6 +952,23 @@ async function main() {
         assert(
           (await countRows(admin, 'reverse_trial_grants', 'user_id', user.id)) === 0,
           'unknown subscription action wrote grant.',
+        );
+      },
+    );
+
+    await runCheck(
+      'subscription-reconciliation valid JWT rejects caller-selected authority without fetch',
+      async () => {
+        const response = await postFunction('subscription-reconciliation', {
+          auth: 'valid',
+          token: user.token,
+          body: { p_user_id: user.id, request_date: new Date().toISOString() },
+        });
+        assertStatus(response.status, 400, 'subscription-reconciliation input', response.text);
+        assertErrorCode(response, 'unexpected_input', 'subscription-reconciliation input');
+        assert(
+          (await countRows(admin, 'entitlements', 'user_id', user.id)) === 0,
+          'caller-selected reconciliation wrote entitlement.',
         );
       },
     );

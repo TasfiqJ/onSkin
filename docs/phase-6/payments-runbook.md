@@ -46,12 +46,18 @@ payments signoff.
 
 ## Entitlement Truth
 
-RevenueCat is the source of truth for store purchases. Supabase mirrors RevenueCat events into `public.entitlements` for fast reads. The mobile AsyncStorage entitlement is a cache only.
+RevenueCat is the source of truth for store purchases. Supabase mirrors only
+RevenueCat authority into `public.entitlements`; the one-time local reverse
+trial remains in `public.reverse_trial_grants`. Authenticated clients call the
+no-argument `read_entitlement_projections()` RPC, which derives `auth.uid()` and
+returns both lanes in one schema-versioned object. The mobile AsyncStorage
+entitlement is a cache only.
 
 Allowed grant sources:
 
 - `source='revenuecat'`: RevenueCat `CustomerInfo` or verified webhook
-- `source='app_granted'`: Supabase `subscription-grants` Edge Function for the no-card reverse trial
+- `source='app_granted'`: normalized read output derived from the durable
+  `reverse_trial_grants` row; it is never persisted over the RevenueCat row
 
 Forbidden production behavior:
 
@@ -76,15 +82,24 @@ Rules:
 - Never creates a store transaction
 - `product_id`, `offering_id`, and `package_id` are null; no App Store Connect or
   RevenueCat product or package represents this grant
-- The audit row and `entitlements` mirror write commit atomically through
-  `grant_app_granted_reverse_trial()`; a partial failure must not burn the
-  user's only no-card trial
+- `grant_app_granted_reverse_trial()` inserts only `reverse_trial_grants`; it
+  never inserts, updates, expires, or revokes `public.entitlements`
+- The compatibility return still has the historical entitlement row shape, but
+  every RevenueCat-only event, transaction, store-user, offering, package, and
+  cursor identifier is null
 - A deprecated four-argument server-only RPC overload temporarily ignores its
   legacy `p_product_id` argument and delegates to the null-enforcing
   three-argument RPC so database-first deployment cannot break the previously
   deployed Edge caller. Remove the overload only after hosted evidence proves
   all callers use the three-argument signature.
-- Server expiry via `expire_app_granted_reverse_trials()`
+- Expiry is derived from the immutable grant window. The old
+  `expire_app_granted_reverse_trials()` entry point is a rolling-deploy no-op.
+
+Historical store rows with no trustworthy provider cursor fail closed as
+`legacy_unknown`. The authenticated `subscription-reconciliation` Edge Function
+accepts no caller fields, fetches bounded RevenueCat v1 CustomerInfo for the
+JWT-derived user, requires a fresh provider `request_date`, and invokes the
+service-only snapshot RPC. It never substitutes Edge/database processing time.
 
 ## Webhook Verification
 

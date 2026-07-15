@@ -10,11 +10,15 @@ const migrationUrl = new URL(
   '../../migrations/20260713000050_service_writer_deletion_barriers.sql',
   import.meta.url,
 );
+const laneMigrationUrl = new URL(
+  '../../migrations/20260714000053_entitlement_authority_lanes.sql',
+  import.meta.url,
+);
 
 Deno.test(
-  'service-writer migration scopes reverse-trial row locks after the account lock',
+  'reverse-trial grant writes only its app authority lane after the account lock',
   async () => {
-    const sql = compact(await Deno.readTextFile(migrationUrl));
+    const sql = compact(await Deno.readTextFile(laneMigrationUrl));
     const grantStart = sql.indexOf(
       'create or replace function public.grant_app_granted_reverse_trial( p_user_id uuid, p_expires_at timestamptz, p_environment text )',
     );
@@ -24,19 +28,20 @@ Deno.test(
     const grant = sql.slice(grantStart, grantEnd);
     assert(grantStart >= 0 && grantEnd > grantStart, 'guarded three-argument grant is missing.');
     assert(
-      !grant.includes('perform public.expire_app_granted_reverse_trials()'),
-      'global expiry must not hold cross-account row locks in the grant transaction.',
-    );
-    assert(
       grant.indexOf('public.account_write_allowed(p_user_id)') <
-        grant.indexOf('update public.entitlements'),
-      'the account lock/check must precede target entitlement expiry.',
+        grant.indexOf('from public.entitlements as entitlements'),
+      'the account lock/check must precede the store-lane read.',
     );
     assert(
-      grant.includes('where user_id = p_user_id') &&
-        grant.includes("and store = 'app_granted'") &&
-        grant.includes("and period_type = 'reverse_trial'"),
-      'in-transaction expiry must be scoped to the target reverse trial.',
+      !grant.includes('insert into public.entitlements') &&
+        !grant.includes('update public.entitlements') &&
+        !grant.includes('delete from public.entitlements'),
+      'an app grant must never mutate the RevenueCat authority lane.',
+    );
+    assert(
+      grant.includes("current_entitlement.rc_cursor_state = 'legacy_unknown'") &&
+        grant.includes("raise exception 'STORE_ENTITLEMENT_RECONCILIATION_REQUIRED'"),
+      'an unordered legacy store row must fail closed before granting.',
     );
     assert(
       grant.includes("raise exception 'ACCOUNT_DELETION_IN_PROGRESS' using errcode = 'P0001'"),
@@ -45,23 +50,26 @@ Deno.test(
     assert(
       grant.indexOf('public.account_write_allowed(p_user_id)') <
         grant.indexOf('insert into public.reverse_trial_grants'),
-      'the deletion check must precede both reverse-trial writes.',
+      'the deletion check must precede the app-grant write.',
+    );
+    assert(
+      grant.includes('null::text') && grant.includes('null::timestamptz'),
+      'the compatibility return must not fabricate RevenueCat identifiers or cursors.',
     );
   },
 );
 
 Deno.test(
-  'subscription-grants commits global expiry before the guarded account grant',
+  'subscription-grants relies on derived expiry and calls only the guarded grant',
   async () => {
     const source = compact(await Deno.readTextFile(new URL('./index.ts', import.meta.url)));
     assert(
-      source.indexOf("supabase.rpc('expire_app_granted_reverse_trials')") <
-        source.indexOf("supabase.rpc('grant_app_granted_reverse_trial'"),
-      'global expiry must complete as a separate RPC before the account-scoped grant RPC.',
+      !source.includes("supabase.rpc('expire_app_granted_reverse_trials')"),
+      'derived app-grant expiry must not require a global mutation RPC.',
     );
     assert(
-      source.includes("console.error('[subscription-grants]', 'reverse_trial_expiry_failed')"),
-      'global expiry failure must be contained behind one stable code.',
+      source.includes("supabase.rpc('grant_app_granted_reverse_trial'"),
+      'the account-scoped grant RPC must remain the only write entry point.',
     );
   },
 );

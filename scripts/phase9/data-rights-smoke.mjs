@@ -125,11 +125,17 @@ const revenueCatIdentityTombstoneMigration = read(
 const accountPublicationFenceMigration = read(
   'supabase/migrations/20260713000052_account_publication_fence.sql',
 );
+const entitlementAuthorityLanesMigration = read(
+  'supabase/migrations/20260714000053_entitlement_authority_lanes.sql',
+);
 const accountServiceScrubPostgresRehearsal = read(
   'scripts/phase9/account-service-scrub-postgres-rehearsal.sql',
 );
 const accountPublicationFencePostgresRehearsal = read(
   'scripts/phase9/account-publication-fence-postgres-rehearsal.sql',
+);
+const entitlementAuthorityLanesPostgresRehearsal = read(
+  'scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql',
 );
 const orderAttributionCoreSource = read(
   'supabase/functions/order-report-poll/orderAttributionCore.ts',
@@ -163,6 +169,7 @@ const completeDeletionSource = [
   serviceWriterDeletionBarrierMigration,
   revenueCatIdentityTombstoneMigration,
   accountPublicationFenceMigration,
+  entitlementAuthorityLanesMigration,
 ].join('\n');
 const environmentExampleSource = read('.env.example');
 const edgeFunctionManifest = JSON.parse(read('supabase/functions/manifest.json'));
@@ -594,7 +601,7 @@ block(
 block(
   errors,
   /bearerToken\(request\)/.test(deletionHttpSource) &&
-  /consumeIntakeRateLimit\(user\.id, user\.sessionId\)/.test(deletionHttpSource) &&
+    /consumeIntakeRateLimit\(user\.id, user\.sessionId\)/.test(deletionHttpSource) &&
     /dependencies\.begin\(user, parsed\)/.test(deletionHttpSource) &&
     /if \(result\.created\)/.test(deletionHttpSource) &&
     /scheduleAcceleration\(dependencies, result\.operationId, user\.id\)/.test(
@@ -702,6 +709,21 @@ block(
 );
 block(
   errors,
+  /insert into public\.reverse_trial_grants/.test(entitlementAuthorityLanesMigration) &&
+    /delete from public\.entitlements/.test(entitlementAuthorityLanesMigration) &&
+    /metadata = pg_catalog\.jsonb_build_object/.test(entitlementAuthorityLanesMigration) &&
+    /public\.account_write_allowed\(p_user_id\)/.test(entitlementAuthorityLanesMigration) &&
+    /v_user_id uuid := \(select auth\.uid\(\)\)/.test(entitlementAuthorityLanesMigration) &&
+    /REHEARSAL_0051_PRIVACY_SCRUB_COMPATIBILITY_FAILED/.test(
+      entitlementAuthorityLanesPostgresRehearsal,
+    ) &&
+    /ENTITLEMENT_AUTHORITY_LANES_POSTGRES_REHEARSAL_PASS/.test(
+      entitlementAuthorityLanesPostgresRehearsal,
+    ),
+  'Migration 0053 must preserve deletion coverage while separating authority lanes, minimizing recovered app-grant metadata, deriving owner reads, and retaining 0051 privacy-scrub compatibility.',
+);
+block(
+  errors,
   /ACCOUNT_PUBLICATION_FENCE_REQUIRES_ZERO_ACTIVE_DELETIONS/.test(
     accountPublicationFenceMigration,
   ) &&
@@ -744,9 +766,7 @@ block(
       accountPublicationFenceMigration,
     ) &&
     /dblink_send_query/.test(accountPublicationFencePostgresRehearsal) &&
-    /REHEARSAL_SIGNED_OUT_SESSION_BEGIN_ALLOWED/.test(
-      accountPublicationFencePostgresRehearsal,
-    ) &&
+    /REHEARSAL_SIGNED_OUT_SESSION_BEGIN_ALLOWED/.test(accountPublicationFencePostgresRehearsal) &&
     /ACCOUNT_PUBLICATION_FENCE_POSTGRES_REHEARSAL_PASS/.test(
       accountPublicationFencePostgresRehearsal,
     ),

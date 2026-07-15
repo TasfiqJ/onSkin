@@ -578,6 +578,9 @@ export type Database = {
           rc_event_priority: number | null;
           rc_original_transaction_id: string | null;
           rc_transaction_id: string | null;
+          rc_cursor_state: 'ordered' | 'snapshot' | 'legacy_unknown';
+          rc_snapshot_at: Timestamptz | null;
+          rc_snapshot_fingerprint: string | null;
         };
         Insert: {
           user_id: string;
@@ -606,6 +609,9 @@ export type Database = {
           rc_event_priority?: number | null;
           rc_original_transaction_id?: string | null;
           rc_transaction_id?: string | null;
+          rc_cursor_state?: 'ordered' | 'snapshot' | 'legacy_unknown';
+          rc_snapshot_at?: Timestamptz | null;
+          rc_snapshot_fingerprint?: string | null;
         };
         Update: Partial<Database['public']['Tables']['entitlements']['Insert']>;
         Relationships: [];
@@ -1120,6 +1126,29 @@ export type Database = {
       recompute_streak: {
         Args: { p_user_id: string };
         Returns: undefined;
+      };
+      read_entitlement_projections: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      reconcile_revenuecat_entitlement_snapshot: {
+        Args: {
+          p_user_id: string;
+          p_snapshot_at: Timestamptz;
+          p_entitlement: string | null;
+          p_is_active: boolean;
+          p_product_id: string | null;
+          p_expires_at: Timestamptz | null;
+          p_store: string | null;
+          p_period_type: string | null;
+          p_will_renew: boolean | null;
+          p_original_purchase_at: Timestamptz | null;
+          p_offering_id: string | null;
+          p_environment: string | null;
+          p_management_url: string | null;
+          p_package_id: string | null;
+        };
+        Returns: string;
       };
     };
     Enums: Record<string, never>;

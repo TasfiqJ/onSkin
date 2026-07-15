@@ -1013,31 +1013,41 @@ async function main() {
       });
       if (orderWrite.error) throw orderWrite.error;
 
-      const entitlementWrite = await admin.from('entitlements').upsert({
-        user_id: user.id,
-        entitlement: 'pro',
-        is_active: true,
-        product_id: `phase9_data_${label}`,
-        expires_at: new Date(Date.now() + 7 * 86_400_000).toISOString(),
-        rc_event_id: `phase9-data-${label}-${randomUUID()}`,
-        store: 'app_granted',
-        period_type: 'reverse_trial',
-        will_renew: false,
-        original_purchase_at: new Date().toISOString(),
+      const grantExpiresAt = new Date(Date.now() + 7 * 86_400_000).toISOString();
+      const { error: grantError } = await admin.rpc('grant_app_granted_reverse_trial', {
+        p_user_id: user.id,
+        p_expires_at: grantExpiresAt,
+        p_environment: appEnv === 'production' ? 'production' : 'development',
       });
-      if (entitlementWrite.error) throw entitlementWrite.error;
+      if (grantError) throw grantError;
+      const { data: reverseTrialGrant, error: reverseTrialGrantError } = await admin
+        .from('reverse_trial_grants')
+        .select('user_id, granted_at, expires_at, source, metadata')
+        .eq('user_id', user.id)
+        .single();
+      if (reverseTrialGrantError) throw reverseTrialGrantError;
 
-      const reverseTrialGrant = await insertOne(
-        admin,
-        'reverse_trial_grants',
+      const snapshotAt = new Date();
+      const { error: entitlementError } = await admin.rpc(
+        'reconcile_revenuecat_entitlement_snapshot',
         {
-          user_id: user.id,
-          expires_at: new Date(Date.now() + 7 * 86_400_000).toISOString(),
-          source: 'server',
-          metadata: { action: 'phase9_data_export_contract' },
+          p_user_id: user.id,
+          p_snapshot_at: snapshotAt.toISOString(),
+          p_entitlement: 'pro',
+          p_is_active: false,
+          p_product_id: `phase9_data_${label}`,
+          p_expires_at: new Date(snapshotAt.getTime() - 3_600_000).toISOString(),
+          p_store: 'app_store',
+          p_period_type: 'normal',
+          p_will_renew: false,
+          p_original_purchase_at: new Date(snapshotAt.getTime() - 30 * 86_400_000).toISOString(),
+          p_offering_id: null,
+          p_environment: 'sandbox',
+          p_management_url: null,
+          p_package_id: null,
         },
-        'user_id, granted_at, expires_at, source, metadata',
       );
+      if (entitlementError) throw entitlementError;
 
       return {
         skinProfile,

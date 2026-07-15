@@ -398,18 +398,27 @@ async function main() {
     );
 
     const entitlementExpiresAt = new Date(Date.now() + 7 * 86_400_000).toISOString();
-    const entitlementWrite = await admin.from('entitlements').upsert({
-      user_id: userA.id,
-      entitlement: 'pro',
-      is_active: true,
-      product_id: 'phase2_smoke',
-      expires_at: entitlementExpiresAt,
-      store: 'app_granted',
-      period_type: 'reverse_trial',
-      will_renew: false,
-      original_purchase_at: new Date().toISOString(),
-    });
-    if (entitlementWrite.error) throw entitlementWrite.error;
+    const snapshotAt = new Date();
+    const { error: entitlementWriteError } = await admin.rpc(
+      'reconcile_revenuecat_entitlement_snapshot',
+      {
+        p_user_id: userA.id,
+        p_snapshot_at: snapshotAt.toISOString(),
+        p_entitlement: 'pro',
+        p_is_active: true,
+        p_product_id: 'phase2_smoke',
+        p_expires_at: entitlementExpiresAt,
+        p_store: 'app_store',
+        p_period_type: 'normal',
+        p_will_renew: true,
+        p_original_purchase_at: snapshotAt.toISOString(),
+        p_offering_id: null,
+        p_environment: appEnv === 'production' ? 'production' : 'sandbox',
+        p_management_url: null,
+        p_package_id: null,
+      },
+    );
+    if (entitlementWriteError) throw entitlementWriteError;
     await expectOwnRead(userA.client, 'entitlements', 'user_id', userA.id, 'entitlement own read');
     await expectNoPrivateRead(
       userB.client,

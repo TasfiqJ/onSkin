@@ -66,6 +66,7 @@ function publicFormBodyLimitChecks(source, scope) {
 const userJwtFunctions = [
   'data-export',
   'subscription-grants',
+  'subscription-reconciliation',
   'catalog-search',
   'catalog-lookup',
   'catalog-report',
@@ -357,7 +358,13 @@ for (const fn of ['catalog-lookup', 'catalog-report', 'catalog-search', 'data-ex
   );
 }
 
-for (const fn of ['catalog-lookup', 'waitlist', 'growth-event', 'order-report-poll']) {
+for (const fn of [
+  'catalog-lookup',
+  'waitlist',
+  'growth-event',
+  'order-report-poll',
+  'subscription-reconciliation',
+]) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   block(
     errors,
@@ -695,6 +702,13 @@ block(
   /subscription-grants valid JWT rejects unknown action without grant/.test(liveEdgeAuth) &&
     /unknown subscription action wrote entitlement/.test(liveEdgeAuth),
   'Live Edge auth harness must prove subscription-grants malformed actions do not grant entitlements.',
+);
+block(
+  errors,
+  /subscription-reconciliation valid JWT rejects caller-selected authority without fetch/.test(
+    liveEdgeAuth,
+  ) && /caller-selected reconciliation wrote entitlement/.test(liveEdgeAuth),
+  'Live Edge auth harness must prove callers cannot select reconciliation subjects or clocks.',
 );
 block(
   errors,

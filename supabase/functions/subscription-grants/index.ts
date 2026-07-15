@@ -1,6 +1,6 @@
 // App-granted subscription actions. V1 only supports the no-card reverse trial.
 // Runs with the service-role key and verify_jwt=true. Clients can request a grant,
-// but cannot write entitlements directly.
+// but cannot write either entitlement authority lane directly.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerToken } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
@@ -46,15 +46,6 @@ Deno.serve(async (req) => {
   if (parsed instanceof Response) return parsed;
   const body = isRecord(parsed) ? parsed : {};
   if (body?.action !== 'start_reverse_trial') return json({ error: 'unknown_action' }, 400);
-
-  // Keep global expiry in a separate committed transaction. The guarded grant
-  // can then use account-lock -> target-row-lock ordering without deadlocking
-  // account deletion against a global entitlement update.
-  const { error: expiryError } = await supabase.rpc('expire_app_granted_reverse_trials');
-  if (expiryError) {
-    console.error('[subscription-grants]', 'reverse_trial_expiry_failed');
-    return json({ error: 'reverse_trial_grant_failed' }, 500);
-  }
 
   const expiresAt = addDays(REVERSE_TRIAL_DAYS);
   const { data, error } = await supabase.rpc('grant_app_granted_reverse_trial', {

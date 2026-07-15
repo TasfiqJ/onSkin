@@ -44,6 +44,9 @@ jobs:
           - name: publication-fence
             database: account_publication_fence_0052
             script: account-publication-fence-postgres-rehearsal.sql
+          - name: entitlement-lanes
+            database: entitlement_lanes_0053
+            script: entitlement-authority-lanes-postgres-rehearsal.sql
     services:
       postgres:
         image: postgres:${{ matrix.postgres }}

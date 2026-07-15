@@ -45,10 +45,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 51, `Expected 51 migration files; found ${migrations.length}.`);
+check(migrations.length === 52, `Expected 52 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260713000052_'),
-  'The latest migration must remain 20260713000052.',
+  migrations.at(-1)?.startsWith('20260714000053_'),
+  'The latest migration must remain 20260714000053.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
@@ -126,7 +126,7 @@ check(
 check(/reset 1 of 2/u.test(runner) && /reset 2 of 2/u.test(runner), 'Verify two clean resets.');
 check(/DB-08 remains open/u.test(runner), 'Temporary type output must not close DB-08.');
 
-check(/select plan\(16\)/u.test(tests), 'The structural pgTAP plan must remain explicit.');
+check(/select plan\(21\)/u.test(tests), 'The structural pgTAP plan must remain explicit.');
 check(
   !/public\.(?:digest|gen_random_bytes)\s*\(/u.test(accountDeletionMigration),
   'pgcrypto functions must use the pinned image extension namespace.',

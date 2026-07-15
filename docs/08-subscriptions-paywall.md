@@ -126,17 +126,17 @@ A **Settings → Subscription** screen shows the current plan/state (Pro, revers
 
 **The model.** RevenueCat **Offerings → Packages → Entitlements**: an _Offering_ (e.g., "default") contains _Packages_ (annual, monthly) mapped to StoreKit/Play products; granting any activates the **`pro` Entitlement**. The app reads `CustomerInfo.entitlements.active["pro"]` to gate features.
 
-**The reverse-trial entitlement (new).** The reverse trial is an **app-granted, time-boxed entitlement**, _not_ a store transaction: on a dismissed offer, the server (Edge Function) writes an `entitlements` row with `entitlement='pro'`, `period_type='reverse_trial'`, `is_active=true`, and `expires_at` ~7 days out; the app gates on `is_active` **regardless of source** (store-granted or app-granted). At expiry, a scheduled job / next-launch check deactivates it and the app drops to the free tier and re-presents the offer. (RevenueCat can also model this via a promotional/granted entitlement; either way the `entitlements` mirror is the source of truth the client caches.)
+**The reverse-trial entitlement (new).** The reverse trial is an **app-granted, time-boxed entitlement**, _not_ a store transaction: on a dismissed offer, the server writes the one-time window only to `reverse_trial_grants`. RevenueCat store authority remains exclusively in `entitlements`, so a local grant can neither overwrite nor revoke a purchase. The owner-derived read RPC returns both lanes; effective access is active when either verified lane is active. Reverse-trial expiry is derived from the immutable grant timestamp rather than a job that mutates the store projection. RevenueCat promotional access remains provider authority and is not classified as the local reverse-trial lane.
 
 **The paywall rendering.** A **custom native paywall** styled to the editorial-clinical system (§3), reading the offering's localized prices (RevenueCat Paywalls is the faster-to-iterate alternative; decide at build).
 
 **Purchase & restore.** **StoreKit 2** (iOS) / **Google Play Billing** (Android) via the RevenueCat SDK: `purchasePackage()` and `restorePurchases()`; localized prices and intro-offer eligibility from the store; **sandbox / TestFlight** testing for the full purchase, trial, reverse-trial, renewal, and restore matrix before launch.
 
-**The webhook → `entitlements` mirror (extends docs/01 §3).** RevenueCat → **Supabase Edge Function** (service-role, bypasses RLS): read **`event.app_user_id`** (NOT `body.app_user_id` — the common 400 "user*id not found" bug), **return 200 fast**, **idempotent on `event.id`** (RevenueCat is at-least-once, not exactly-once), \*\*handle event \_types* correctly** — grant on `INITIAL_PURCHASE`/`RENEWAL`/`PRODUCT_CHANGE`, revoke on `EXPIRATION`, **never grant on a `CANCELLATION`** (access continues until `expires_at`). Optionally call RC **`GET /subscribers`** to reconcile. The mirror is **SELECT owner-only, writes service-role only\*\*.
+**The webhook → `entitlements` mirror (extends docs/01 §3).** RevenueCat → **Supabase Edge Function** (service-role, bypasses RLS): read **`event.app_user_id`** (NOT `body.app_user_id` — the common 400 "user*id not found" bug), **return 200 fast**, **idempotent on `event.id`** (RevenueCat is at-least-once, not exactly-once), \*\*handle event \_types* correctly** — grant on `INITIAL_PURCHASE`/`RENEWAL`/`PRODUCT_CHANGE`, revoke on `EXPIRATION`, **never grant on a `CANCELLATION`** (access continues until `expires_at`). The authenticated reconciliation endpoint accepts no subject, fetches bounded RC **`GET /subscribers/{auth.uid}`\*\* server-side, and accepts only a fresh provider `request_date` snapshot. The store mirror and reconciliation write path are service-role only; clients read the combined no-argument projection RPC.
 
 **App-user-ID aliasing (anonymous → authenticated).** Initialise RevenueCat with the **Supabase user ID as the `appUserID`** (the anonymous user's ID); on linking to SIWA/Google/email (docs/01 §2) the **same Supabase ID is preserved**, so the reverse-trial/purchase carries over without aliasing breakage. Avoid RevenueCat anonymous IDs; bind to the stable Supabase ID from first launch.
 
-**Gating & offline.** Feature gates read the **cached `is_active` entitlement** so Pro and the reverse trial work **offline** (docs/01 §6); a webhook/`CustomerInfo` refresh reconciles on reconnect. Gate at the UI _and_ defensively at the data layer where a Pro-only write could occur.
+**Gating & offline.** Feature gates read the cached effective result of the two-lane projection so Pro and the reverse trial work **offline** (docs/01 §6); a webhook/`CustomerInfo` refresh reconciles on reconnect. A `legacy_unknown` store row is never treated as active until a fresh authoritative provider snapshot initializes its watermark. Gate at the UI _and_ defensively at the data layer where a Pro-only write could occur.
 
 ### 5. The conversion flow (anonymous → quiz → aha → offer → reverse trial / purchase → link → Day-0)
 
@@ -179,7 +179,9 @@ The full path (docs/01 §2 owns the funnel; this is the monetisation slice):
 
 ### 8. Data model (extends docs/01 §3)
 
-**`entitlements`** (recap, docs/01 §3): `user_id PK`, `entitlement text` (`pro`/`pro_plus`), `is_active bool`, `product_id text`, `expires_at timestamptz`, `rc_event_id text`, `updated_at`. SELECT owner-only; writes service-role only.
+**`entitlements`** (recap, docs/01 §3): the RevenueCat-only projection, keyed by `user_id`, including the exact webhook ordering tuple or a provider snapshot watermark. Historical rows with neither remain `legacy_unknown` and fail closed. Writes are service-role only.
+
+**`reverse_trial_grants`**: the independent one-time app-grant authority (`user_id`, `granted_at`, `expires_at`, bounded metadata). It stores no RevenueCat event, transaction, store-user, offering, package, product, or cursor identifier. `read_entitlement_projections()` derives the authenticated owner and returns both explicit lanes.
 
 **`subscriptions_events`** (the optional raw webhook log, docs/01 §3): service-role write, for audit/debug/reconciliation; stores the raw RevenueCat event (type, `event.id`, `app_user_id`, product, timestamps) so the entitlement state is reconstructable and the idempotency key (`event.id`) is enforced.
 
@@ -187,14 +189,14 @@ The full path (docs/01 §2 owns the funnel; this is the monetisation slice):
 
 ```sql
 alter table public.entitlements
-  add column store          text,    -- 'app_store' | 'play_store' | 'web' | 'app_granted'
-  add column period_type    text,    -- 'reverse_trial' | 'trial' | 'intro' | 'normal'
+  add column store          text,    -- provider store only in this table
+  add column period_type    text,    -- provider trial/intro/normal period
   add column will_renew     boolean, -- from CustomerInfo (false after a cancellation, before expiry)
   add column original_purchase_at timestamptz,
   add column offering_id    text,    -- which RevenueCat offering/experiment the user saw (attribution)
   add column experiment_id  text,    -- paywall/price/model A/B assignment (analytics)
   add column acquisition_channel text; -- attributed channel for LTV-by-channel (TikTok, ASA, organic, creator code)
--- Owner-only SELECT; writes service-role (webhook + the reverse-trial grant). period_type='reverse_trial' rows are app-granted (no store txn).
+-- Store projection writes are service-role only; app grants live separately.
 ```
 
 Feature-gating reads `is_active` (+ `expires_at` as a safety check); `period_type` distinguishes the reverse trial from a carded trial/subscription (for copy and analytics); `will_renew` powers "renews / ends on…" copy; `offering_id`/`experiment_id` tie conversions to the A/B variant (§10); `acquisition_channel` enables **LTV-by-channel** so the model A/B and the GTM spend are judged on the right metric (§10/§11).
@@ -260,9 +262,9 @@ Design tokens (docs/00 §8, D-005): Instrument Serif (paywall headline), Hanken 
 ### 13. Engineering / implementation notes
 
 - **RevenueCat SDK** initialised with the **Supabase user ID as `appUserID`** from first launch (anonymous), preserving identity through account linking (§4); Offerings/Packages/Entitlements in the dashboard.
-- **Reverse trial:** an **Edge Function grants the time-boxed `pro` entitlement** (`period_type='reverse_trial'`, `expires_at` ~7 days) on a dismissed offer; a scheduled job / next-launch check deactivates it at expiry and triggers the re-offer; the client caches and gates on `is_active` (offline-safe).
+- **Reverse trial:** an **Edge Function grants the time-boxed `pro` window** only in `reverse_trial_grants` on a dismissed offer; the client derives expiry and combines that app lane with the independent RevenueCat lane (offline-safe).
 - **Purchase/restore** via StoreKit 2 / Play Billing through the SDK; **sandbox/TestFlight** test matrix (purchase, carded trial, reverse trial grant + expiry, renewal, grace, restore, refund, upgrade/downgrade) before launch.
-- **Webhook → Edge Function → `entitlements`** (service-role): `event.app_user_id`, return 200 fast, idempotent on `event.id`, event-type-correct (don't grant on cancellation), optional `GET /subscribers` reconcile; raw log to `subscriptions_events`.
+- **Webhook → Edge Function → `entitlements`** (service-role): `event.app_user_id`, return 200 fast, idempotent on `event.id`, event-type-correct (don't grant on cancellation); the separate authenticated, owner-derived endpoint performs bounded v1 `GET /subscribers` reconciliation using only fresh provider `request_date`; raw log to `subscriptions_events`.
 - **Gating** reads the cached entitlement (offline-safe, docs/01 §6); defensive server-side checks where a Pro-only write could occur.
 - **Compliance wiring:** Terms/Privacy links in the paywall **and** App Store Connect metadata; Restore on the paywall; the standard Apple EULA link in the description (or a custom EULA); price-increase consent via the store; **subscriber-deletion API** in the deletion Edge Function (docs/01 §4).
 - **Attribution:** capture `acquisition_channel` (per-creator codes, UTM, MMP/SKAN/attribution SDK) so LTV-by-channel and the model A/B are measurable (§10/§11).

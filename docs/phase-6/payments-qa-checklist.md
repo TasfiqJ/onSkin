@@ -29,13 +29,20 @@
 - Reverse trial uses `store='app_granted'`, `period_type='reverse_trial'`, `will_renew=false`.
 - A user with an active paid subscription cannot start a reverse trial.
 - A second reverse trial attempt returns a conflict.
-- `reverse_trial_grants` and `entitlements` are written atomically; partial
-  entitlement failures cannot consume the one-time grant.
+- The grant writes only `reverse_trial_grants`; an existing RevenueCat row is
+  neither overwritten nor revoked, and both lanes can be active together.
 - During the staged RPC rollout, the deprecated four-argument compatibility
   overload preserves but ignores the legacy `p_product_id` argument, writes
   null Store identity through the three-argument implementation, and remains
   callable only by `service_role`.
-- `expire_app_granted_reverse_trials()` deactivates expired reverse trials.
+- Expiry is derived from `reverse_trial_grants.expires_at`; the compatibility
+  expiry RPC is a no-op and never mutates RevenueCat state.
+- A no-cursor store row is `legacy_unknown`, fails closed, and can exit only
+  after the authenticated reconciliation endpoint receives a fresh RevenueCat
+  v1 `request_date` snapshot for the JWT-derived account.
+- Reconciliation rejects caller subjects/timestamps, stale/camel-case/v2
+  timestamps, unknown or `app_granted` provider stores, and equal-watermark
+  contradictions.
 
 ## Webhook
 

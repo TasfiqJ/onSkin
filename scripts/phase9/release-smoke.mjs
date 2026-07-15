@@ -69,6 +69,7 @@ const localVerifierFiles = [
   'scripts/phase9/revenuecat-identity-tombstones-postgres-rehearsal.sql',
   'scripts/phase9/account-publication-fence-postgres-rehearsal.sql',
   'scripts/phase9/service-writer-deletion-barriers-postgres-rehearsal.sql',
+  'scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql',
   'scripts/phase9/consent-withdrawal-smoke.mjs',
   'scripts/phase9/supabase-policy-lint.mjs',
   'scripts/phase9/security-ci-smoke.mjs',
@@ -79,6 +80,7 @@ const localVerifierFiles = [
 
 const requiredFiles = [
   'docs/hugeToDo/launch-contract.json',
+  'docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md',
   'scripts/launch/contract.mjs',
   'docs/phase-9/source-of-truth.md',
   'docs/phase-9/data-inventory.md',
@@ -178,6 +180,13 @@ const requiredFiles = [
   'supabase/functions/subscription-grants/deletionBarrierContract.test.ts',
   'supabase/functions/subscription-grants/grantErrors.ts',
   'supabase/functions/subscription-grants/grantErrors.test.ts',
+  'supabase/functions/subscription-reconciliation/index.ts',
+  'supabase/functions/subscription-reconciliation/publicationLease.ts',
+  'supabase/functions/subscription-reconciliation/publicationLease.test.ts',
+  'supabase/functions/subscription-reconciliation/reconciliationCore.ts',
+  'supabase/functions/subscription-reconciliation/reconciliationCore.test.ts',
+  'supabase/functions/subscription-reconciliation/reconciliationContract.test.ts',
+  'supabase/functions/_shared/verifiedAuthSessionClaims.ts',
   'supabase/functions/catalog-lookup/catalogContract.ts',
   'supabase/functions/catalog-lookup/catalogContract.test.ts',
   'supabase/functions/catalog-search/catalogContract.ts',
@@ -194,6 +203,7 @@ const requiredFiles = [
   'supabase/migrations/20260713000050_service_writer_deletion_barriers.sql',
   'supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql',
   'supabase/migrations/20260713000052_account_publication_fence.sql',
+  'supabase/migrations/20260714000053_entitlement_authority_lanes.sql',
   'scripts/phase9/lib.mjs',
   'scripts/phase2/supabase-rls-smoke.mjs',
   'scripts/phase9/build-release-qa-packet.mjs',
@@ -508,12 +518,16 @@ block(
       '.github/workflows/quality.yml',
       /database:\s*account_publication_fence_0052[\s\S]{0,120}script:\s*account-publication-fence-postgres-rehearsal\.sql/,
     ) &&
+    has(
+      '.github/workflows/quality.yml',
+      /database:\s*entitlement_lanes_0053[\s\S]{0,120}script:\s*entitlement-authority-lanes-postgres-rehearsal\.sql/,
+    ) &&
     has('.github/workflows/quality.yml', /image:\s*postgres:\$\{\{ matrix\.postgres \}\}/) &&
     has(
       '.github/workflows/quality.yml',
       /-f \"scripts\/phase9\/\$\{\{ matrix\.rehearsal\.script \}\}\"/,
     ),
-  'CI must execute migrations 0048-0052 in isolated PostgreSQL 15 and 17 rehearsals.',
+  'CI must execute migrations 0048-0053 in isolated PostgreSQL 15 and 17 rehearsals.',
 );
 block(
   errors,
@@ -534,6 +548,20 @@ block(
   errors,
   /phase9:revenuecat-webhook-atomic-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
   'phase9:verify must run the RevenueCat atomic webhook contract.',
+);
+block(
+  errors,
+  /reconciliationCore\.test\.ts/.test(
+    packageJson.scripts?.['phase6:subscription-reconciliation-smoke'] ?? '',
+  ) &&
+    /reconciliationContract\.test\.ts/.test(
+      packageJson.scripts?.['phase6:subscription-reconciliation-smoke'] ?? '',
+    ) &&
+    /publicationLease\.test\.ts/.test(
+      packageJson.scripts?.['phase6:subscription-reconciliation-smoke'] ?? '',
+    ) &&
+    /phase6:subscription-reconciliation-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? ''),
+  'Phase 6 and Phase 9 must run the bounded RevenueCat CustomerInfo and publication-lease contracts.',
 );
 block(
   errors,

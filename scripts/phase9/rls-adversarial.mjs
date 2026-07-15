@@ -413,6 +413,19 @@ for (const table of staticProbeCounts.keys()) {
 for (const table of SERVICE_ONLY_PRIVATE_TABLES) {
   const cleanupMarker = `trackServiceCleanup('${table}'`;
   const probeMarker = `registerPrivateTableProbe('${table}'`;
+  if (table === 'reverse_trial_grants') {
+    block(
+      errors,
+      !liveHarness.includes(cleanupMarker) &&
+        /admin\.rpc\('grant_app_granted_reverse_trial'/.test(liveHarness) &&
+        liveHarness.indexOf(probeMarker) >= 0 &&
+        /admin\.auth\.admin\.deleteUser\(user\.id\)[\s\S]*owner-cascade cleanup left a residual row/.test(
+          liveHarness,
+        ),
+      'Live harness must create reverse_trial_grants only through the guarded RPC and verify Auth-owner cascade cleanup.',
+    );
+    continue;
+  }
   block(
     errors,
     liveHarness.indexOf(cleanupMarker) >= 0 &&

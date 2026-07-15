@@ -30,6 +30,17 @@ Deno.test('reverse-trial grant keeps existing conflict classifications', () => {
   );
 });
 
+Deno.test('reverse-trial grant fails closed until legacy store state is reconciled', () => {
+  const code = reverseTrialGrantErrorCode({
+    message: 'P0001: STORE_ENTITLEMENT_RECONCILIATION_REQUIRED',
+  });
+  assert(
+    code === 'store_entitlement_reconciliation_required',
+    'legacy store-state reconciliation was not classified.',
+  );
+  assert(reverseTrialGrantErrorStatus(code) === 409, 'reconciliation must be a conflict.');
+});
+
 Deno.test('reverse-trial grant contains unknown database failures', () => {
   const code = reverseTrialGrantErrorCode({ message: 'provider detail must not escape' });
   assert(code === 'reverse_trial_grant_failed', 'unknown failures must be contained.');

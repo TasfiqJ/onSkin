@@ -108,6 +108,10 @@ entrypoint = "./functions/revenuecat-webhook/index.ts"
 verify_jwt = true
 entrypoint = "./functions/subscription-grants/index.ts"
 
+[functions.subscription-reconciliation]
+verify_jwt = true
+entrypoint = "./functions/subscription-reconciliation/index.ts"
+
 [functions.waitlist]
 verify_jwt = false
 entrypoint = "./functions/waitlist/index.ts"
