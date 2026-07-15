@@ -11,13 +11,16 @@ function nonEmptyString(value: unknown): string | null {
 // Apple Guideline 4.8). Returns the identity token for Supabase sign-in or
 // same-user identity linking.
 // BLOCKED: B-APPLE. Needs the registered Service ID / capability to actually run.
-export async function getAppleIdToken(): Promise<{ idToken: string; email: string | null } | null> {
+export async function getAppleIdToken(
+  assertRequestCurrent: () => void = () => {},
+): Promise<{ idToken: string; email: string | null } | null> {
   const credential = await AppleAuthentication.signInAsync({
     requestedScopes: [
       AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
       AppleAuthentication.AppleAuthenticationScope.EMAIL,
     ],
   });
+  assertRequestCurrent();
   const idToken = nonEmptyString(credential.identityToken);
   if (!idToken) return null;
   // NOTE: email is only returned on the FIRST authorization for a given Apple ID.

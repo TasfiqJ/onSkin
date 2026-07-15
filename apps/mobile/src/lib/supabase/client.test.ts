@@ -2,6 +2,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   createClient: vi.fn(),
+  processLock: vi.fn(async (_name: string, _timeout: number, operation: () => Promise<unknown>) =>
+    operation(),
+  ),
   removeItem: vi.fn(),
   setItem: vi.fn(),
   signOut: vi.fn(),
@@ -18,6 +21,7 @@ vi.mock('@supabase/supabase-js', () => ({
       },
     };
   },
+  processLock: mocks.processLock,
 }));
 
 vi.mock('react-native-url-polyfill/auto', () => ({}));
@@ -41,6 +45,7 @@ describe('Supabase local session invalidation', () => {
     vi.resetModules();
     vi.stubGlobal('window', {});
     mocks.createClient.mockClear();
+    mocks.processLock.mockClear();
     mocks.removeItem.mockReset().mockResolvedValue(undefined);
     mocks.signOut.mockReset().mockResolvedValue({ error: null });
     mocks.setItem.mockReset().mockResolvedValue(undefined);
@@ -62,6 +67,19 @@ describe('Supabase local session invalidation', () => {
     expect(mocks.removeItem).toHaveBeenNthCalledWith(2, 'sb-project-auth-token-code-verifier');
     expect(mocks.signOut.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.removeItem.mock.invocationCallOrder[0]!,
+    );
+  });
+
+  it('runs provider commits under the exact auth-js storage process lock', async () => {
+    const { runSupabaseAuthStorageMutation } = await import('./client');
+    const operation = vi.fn(async () => 'complete');
+
+    await expect(runSupabaseAuthStorageMutation(operation)).resolves.toBe('complete');
+
+    expect(mocks.processLock).toHaveBeenCalledExactlyOnceWith(
+      'lock:sb-project-auth-token',
+      -1,
+      operation,
     );
   });
 

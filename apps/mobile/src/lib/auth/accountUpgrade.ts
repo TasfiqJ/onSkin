@@ -1,6 +1,14 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Session, SupabaseClient } from '@supabase/supabase-js';
 
 export type AccountProvider = 'apple' | 'google';
+
+export type AuthSessionFingerprint =
+  | { status: 'signed_out' }
+  | {
+      status: 'signed_in';
+      userId: string;
+      identity: 'anonymous' | 'permanent';
+    };
 
 export type PendingEmailAccountCode =
   | {
@@ -29,9 +37,39 @@ export type AccountUpgradeAuthClient = Pick<
   'getSession' | 'linkIdentity' | 'signInWithIdToken' | 'signInWithOtp' | 'updateUser' | 'verifyOtp'
 >;
 
+export type AuthStorageMutationRunner = <T>(operation: () => Promise<T>) => Promise<T>;
+
 const IDENTITY_CHANGED_ERROR = 'Account upgrade could not preserve the current authenticated user.';
 const UPGRADE_INCOMPLETE_ERROR = 'Account upgrade did not create a permanent identity.';
 const STALE_EMAIL_CODE_ERROR = 'This email code is no longer valid for the current session.';
+export const PROVIDER_AUTH_SESSION_CHANGED = 'PROVIDER_AUTH_SESSION_CHANGED';
+
+export class ProviderAuthSessionChangedError extends Error {
+  readonly code = PROVIDER_AUTH_SESSION_CHANGED;
+
+  constructor() {
+    super(PROVIDER_AUTH_SESSION_CHANGED);
+    this.name = 'ProviderAuthSessionChangedError';
+  }
+}
+
+export function authSessionFingerprint(session: Session | null): AuthSessionFingerprint {
+  if (!session) return Object.freeze({ status: 'signed_out' });
+  return Object.freeze({
+    status: 'signed_in',
+    userId: session.user.id,
+    identity: session.user.is_anonymous === true ? 'anonymous' : 'permanent',
+  });
+}
+
+export function authSessionFingerprintMatches(
+  expected: AuthSessionFingerprint,
+  actual: AuthSessionFingerprint,
+): boolean {
+  if (expected.status !== actual.status) return false;
+  if (expected.status === 'signed_out' || actual.status === 'signed_out') return true;
+  return expected.userId === actual.userId && expected.identity === actual.identity;
+}
 
 function normalizeRequired(value: string, label: string): string {
   const normalized = value.trim();
@@ -75,26 +113,48 @@ async function getCurrentSession(auth: AccountUpgradeAuthClient) {
 export async function authenticateWithProviderToken(
   auth: AccountUpgradeAuthClient,
   credentials: { provider: AccountProvider; token: string },
+  expectedSession: AuthSessionFingerprint,
+  assertRequestCurrent: () => void,
+  runAuthStorageMutation: AuthStorageMutationRunner,
 ): Promise<void> {
   const token = normalizeRequired(credentials.token, 'Provider token');
+  assertRequestCurrent();
   const currentSession = await getCurrentSession(auth);
-  const anonymousUserId = currentSession?.user.is_anonymous ? currentSession.user.id : null;
+  assertRequestCurrent();
+  if (!authSessionFingerprintMatches(expectedSession, authSessionFingerprint(currentSession))) {
+    throw new ProviderAuthSessionChangedError();
+  }
+  const anonymousUserId =
+    expectedSession.status === 'signed_in' && expectedSession.identity === 'anonymous'
+      ? expectedSession.userId
+      : null;
 
   if (anonymousUserId) {
-    const { data, error } = await auth.linkIdentity({
-      provider: credentials.provider,
-      token,
+    await runAuthStorageMutation(async () => {
+      // The manual auth-storage lock has drained earlier refresh/session work.
+      // Keep the final assertion and SDK call in one turn while that exact lock
+      // excludes newer capture/save work for the full native mutation.
+      assertRequestCurrent();
+      const link = auth.linkIdentity({
+        provider: credentials.provider,
+        token,
+      });
+      const { data, error } = await link;
+      if (error) throw error;
+      assertSameUser(anonymousUserId, data, true);
     });
-    if (error) throw error;
-    assertSameUser(anonymousUserId, data, true);
     return;
   }
 
-  const { error } = await auth.signInWithIdToken({
-    provider: credentials.provider,
-    token,
+  await runAuthStorageMutation(async () => {
+    assertRequestCurrent();
+    const signIn = auth.signInWithIdToken({
+      provider: credentials.provider,
+      token,
+    });
+    const { error } = await signIn;
+    if (error) throw error;
   });
-  if (error) throw error;
 }
 
 /**

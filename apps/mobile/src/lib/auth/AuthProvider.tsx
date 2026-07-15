@@ -44,7 +44,11 @@ import {
   waitForPrivateKVWritesToSettle,
 } from '@/lib/storage/privateKV';
 
-import { invalidateLocalSupabaseSession, supabase } from '../supabase/client';
+import {
+  invalidateLocalSupabaseSession,
+  runSupabaseAuthStorageMutation,
+  supabase,
+} from '../supabase/client';
 import {
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
@@ -61,14 +65,21 @@ import {
   seedAccountIsolationE2EFixture,
 } from './accountIsolationE2E';
 import {
+  authSessionFingerprint,
   authenticateWithProviderToken,
   requestEmailAccountCode,
   verifyEmailAccountCode,
   type PendingEmailAccountCode,
 } from './accountUpgrade';
 import { getAppleIdToken } from './apple';
+import { createAuthMutationFence } from './authMutationFence';
 import { getGoogleIdToken } from './google';
 import { clearAccountIsolatedState, prepareLocalDataForSession } from './localAccountIsolation';
+import {
+  createProviderAuthTransitionTracker,
+  createProviderSignInCoordinator,
+} from './providerSignIn';
+import { createProviderAuthCommitCoordinator } from './providerAuthCommit';
 import { latestSessionForCompletedBoundary } from './sessionBoundary';
 
 type AuthContextValue = {
@@ -116,6 +127,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const pendingEmailCodeRef = useRef<PendingEmailAccountCode | null>(null);
   const sessionChangeSeqRef = useRef(0);
   const sessionBoundaryActiveRef = useRef(false);
+  const publishedProviderSessionRef = useRef(authSessionFingerprint(session));
   const sessionBoundaryWriteLockHeldRef = useRef(false);
   const pendingBoundarySessionRef = useRef<{ session: Session | null } | null>(null);
   const authEffectEpochRef = useRef(0);
@@ -137,6 +149,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       onChange: setAnonymousOnboardingHandoff,
     }),
   );
+  const [authMutationFence] = useState(createAuthMutationFence);
+  const [providerAuthTransitionTracker] = useState(() =>
+    createProviderAuthTransitionTracker(authSessionFingerprint(session)),
+  );
+  const [providerAuthCommitCoordinator] = useState(() =>
+    createProviderAuthCommitCoordinator({
+      authMutationFence,
+      isAppActive: () => AppState.currentState === 'active',
+      startAutoRefresh: () => supabase.auth.startAutoRefresh(),
+      stopAutoRefresh: () => supabase.auth.stopAutoRefresh(),
+    }),
+  );
+  const [providerSignInCoordinator] = useState(createProviderSignInCoordinator);
   const isAnonymousOnboardingHandoffCurrent = useCallback(
     (requestId: number) => welcomeHandoffCoordinator.isCurrent(requestId),
     [welcomeHandoffCoordinator],
@@ -181,6 +206,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       pendingEmailCodeRef.current = null;
       setSessionBoundaryError(false);
       setInitializing(true);
+      publishedProviderSessionRef.current = authSessionFingerprint(null);
       setSession(null);
       setSentryUser(null);
     }
@@ -190,6 +216,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       nextSession: Session | null,
       initialRestore = false,
     ): Promise<void> {
+      providerAuthTransitionTracker.observe(authSessionFingerprint(nextSession));
       const targetUserId = nextSession?.user.id ?? null;
       if (explicitSignOutPendingRef.current && targetUserId) return Promise.resolve();
       pendingBoundarySessionRef.current = { session: nextSession };
@@ -235,6 +262,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (deletionCompleted) {
             resolvedSession = null;
             resolvedTargetUserId = null;
+            providerAuthTransitionTracker.observe(authSessionFingerprint(null));
             pendingBoundarySessionRef.current = { session: null };
             showSessionBoundary(null);
             await invalidateLocalSupabaseSession();
@@ -295,6 +323,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           publishedSessionUserIdRef.current = latestPendingSession?.user.id ?? null;
           completedSessionPublicationRef.current += 1;
           setCompletedSessionPublication(completedSessionPublicationRef.current);
+          providerAuthTransitionTracker.observe(authSessionFingerprint(latestPendingSession));
+          publishedProviderSessionRef.current = authSessionFingerprint(latestPendingSession);
           setSession(latestPendingSession);
           if (result.resetRoute) router.replace('/');
           setInitializing(false);
@@ -394,20 +424,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       releaseSessionBoundaryWriteLock();
       sub.subscription.unsubscribe();
     };
-  }, [accountIsolationE2EFixture]);
+  }, [accountIsolationE2EFixture, providerAuthTransitionTracker]);
 
   // Start/stop token auto-refresh with app foreground/background (docs/01 §5).
   useEffect(() => {
     if (!isSupabaseConfigured) return;
 
-    const handle = (state: AppStateStatus) => {
-      if (state === 'active') supabase.auth.startAutoRefresh();
-      else supabase.auth.stopAutoRefresh();
-    };
+    const handle = (state: AppStateStatus) =>
+      providerAuthCommitCoordinator.handleAppStateChange(state);
     handle(AppState.currentState);
     const subscription = AppState.addEventListener('change', handle);
     return () => subscription.remove();
-  }, []);
+  }, [providerAuthCommitCoordinator]);
 
   useEffect(() => {
     const userId = session?.user.id ?? null;
@@ -472,71 +500,73 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       async ensureAnonymousSession(captchaToken?: string) {
         if (!isSupabaseConfigured) return null;
-        const resolving = welcomeHandoffCoordinator.begin(sessionChangeSeqRef.current);
-        const { requestId } = resolving;
+        return authMutationFence.runExclusive(async () => {
+          const resolving = welcomeHandoffCoordinator.begin(sessionChangeSeqRef.current);
+          const { requestId } = resolving;
 
-        const latestAuthTargetUserId = (): string | null => {
-          const pendingBoundary = pendingBoundarySessionRef.current;
-          if (pendingBoundary) return pendingBoundary.session?.user.id ?? null;
-          const inFlightBoundary = boundaryInFlightRef.current;
-          if (inFlightBoundary) return inFlightBoundary.targetUserId;
-          return publishedSessionUserIdRef.current;
-        };
+          const latestAuthTargetUserId = (): string | null => {
+            const pendingBoundary = pendingBoundarySessionRef.current;
+            if (pendingBoundary) return pendingBoundary.session?.user.id ?? null;
+            const inFlightBoundary = boundaryInFlightRef.current;
+            if (inFlightBoundary) return inFlightBoundary.targetUserId;
+            return publishedSessionUserIdRef.current;
+          };
 
-        const registerSessionHandoff = (nextSession: Session) => {
-          if (!welcomeHandoffCoordinator.isCurrent(requestId)) {
-            throw new AnonymousOnboardingRequestSupersededError();
-          }
+          const registerSessionHandoff = (nextSession: Session) => {
+            if (!welcomeHandoffCoordinator.isCurrent(requestId)) {
+              throw new AnonymousOnboardingRequestSupersededError();
+            }
 
-          const expectedUserId = nextSession.user.id;
-          const resolution = decideAnonymousSessionResolution({
-            authTransitionEpochAtStart: resolving.authTransitionEpochAtStart,
-            currentAuthTransitionEpoch: sessionChangeSeqRef.current,
-            expectedUserId,
-            latestAuthTargetUserId: latestAuthTargetUserId(),
-          });
-          if (resolution === 'superseded_by_newer_target') {
+            const expectedUserId = nextSession.user.id;
+            const resolution = decideAnonymousSessionResolution({
+              authTransitionEpochAtStart: resolving.authTransitionEpochAtStart,
+              currentAuthTransitionEpoch: sessionChangeSeqRef.current,
+              expectedUserId,
+              latestAuthTargetUserId: latestAuthTargetUserId(),
+            });
+            if (resolution === 'superseded_by_newer_target') {
+              welcomeHandoffCoordinator.settle(requestId);
+              throw new AnonymousOnboardingRequestSupersededError();
+            }
+
+            let requiresSessionPublication = anonymousHandoffNeedsSessionPublication(
+              expectedUserId,
+              publishedSessionUserIdRef.current,
+              sessionBoundaryActiveRef.current,
+            );
+            if (resolution === 'apply_returned_session') {
+              // No auth callback ran after this request started. Publish this exact
+              // returned session through the normal isolation boundary ourselves.
+              requiresSessionPublication = true;
+              void applySessionBoundaryRef.current(nextSession);
+            }
+
+            const pending = welcomeHandoffCoordinator.advanceToAwaitingPublication({
+              completedSessionPublication: completedSessionPublicationRef.current,
+              expectedUserId,
+              requestId,
+              requiresSessionPublication,
+            });
+            if (!pending) throw new AnonymousOnboardingRequestSupersededError();
+            return pending;
+          };
+
+          try {
+            const { data, error } = await supabase.auth.getSession();
+            if (error) throw error;
+            if (data.session) return registerSessionHandoff(data.session);
+            // BLOCKED: B-TURNSTILE. CaptchaToken expected here once Turnstile is wired.
+            const { data: signInData, error: signInError } = await supabase.auth.signInAnonymously(
+              captchaToken ? { options: { captchaToken } } : undefined,
+            );
+            if (signInError) throw signInError;
+            if (!signInData.session) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
+            return registerSessionHandoff(signInData.session);
+          } catch (error) {
             welcomeHandoffCoordinator.settle(requestId);
-            throw new AnonymousOnboardingRequestSupersededError();
+            throw error;
           }
-
-          let requiresSessionPublication = anonymousHandoffNeedsSessionPublication(
-            expectedUserId,
-            publishedSessionUserIdRef.current,
-            sessionBoundaryActiveRef.current,
-          );
-          if (resolution === 'apply_returned_session') {
-            // No auth callback ran after this request started. Publish this exact
-            // returned session through the normal isolation boundary ourselves.
-            requiresSessionPublication = true;
-            void applySessionBoundaryRef.current(nextSession);
-          }
-
-          const pending = welcomeHandoffCoordinator.advanceToAwaitingPublication({
-            completedSessionPublication: completedSessionPublicationRef.current,
-            expectedUserId,
-            requestId,
-            requiresSessionPublication,
-          });
-          if (!pending) throw new AnonymousOnboardingRequestSupersededError();
-          return pending;
-        };
-
-        try {
-          const { data, error } = await supabase.auth.getSession();
-          if (error) throw error;
-          if (data.session) return registerSessionHandoff(data.session);
-          // BLOCKED: B-TURNSTILE. CaptchaToken expected here once Turnstile is wired.
-          const { data: signInData, error: signInError } = await supabase.auth.signInAnonymously(
-            captchaToken ? { options: { captchaToken } } : undefined,
-          );
-          if (signInError) throw signInError;
-          if (!signInData.session) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
-          return registerSessionHandoff(signInData.session);
-        } catch (error) {
-          welcomeHandoffCoordinator.settle(requestId);
-          throw error;
-        }
+        });
       },
       isAnonymousOnboardingHandoffCurrent,
       registerAnonymousOnboardingConsumer,
@@ -544,67 +574,97 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async signInWithApple() {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
-        const result = await getAppleIdToken();
-        if (!result) return false;
-        await authenticateWithProviderToken(supabase.auth, {
-          provider: 'apple',
-          token: result.idToken,
+        const authenticated = await providerSignInCoordinator.run('apple', getAppleIdToken, {
+          authenticate: (provider, token, expectedSession, assertRequestCurrent) =>
+            providerAuthCommitCoordinator.runExclusive(() => {
+              assertRequestCurrent();
+              return authenticateWithProviderToken(
+                supabase.auth,
+                { provider, token },
+                expectedSession,
+                assertRequestCurrent,
+                runSupabaseAuthStorageMutation,
+              );
+            }),
+          getAuthTransitionEpoch: providerAuthTransitionTracker.getEpoch,
+          getPublishedSessionFingerprint: () => publishedProviderSessionRef.current,
+          isSessionStable: () => !sessionBoundaryActiveRef.current,
         });
-        pendingEmailCodeRef.current = null;
-        return true;
+        if (authenticated) pendingEmailCodeRef.current = null;
+        return authenticated;
       },
       async signInWithGoogle() {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
-        const result = await getGoogleIdToken();
-        if (!result) return false;
-        await authenticateWithProviderToken(supabase.auth, {
-          provider: 'google',
-          token: result.idToken,
+        const authenticated = await providerSignInCoordinator.run('google', getGoogleIdToken, {
+          authenticate: (provider, token, expectedSession, assertRequestCurrent) =>
+            providerAuthCommitCoordinator.runExclusive(() => {
+              assertRequestCurrent();
+              return authenticateWithProviderToken(
+                supabase.auth,
+                { provider, token },
+                expectedSession,
+                assertRequestCurrent,
+                runSupabaseAuthStorageMutation,
+              );
+            }),
+          getAuthTransitionEpoch: providerAuthTransitionTracker.getEpoch,
+          getPublishedSessionFingerprint: () => publishedProviderSessionRef.current,
+          isSessionStable: () => !sessionBoundaryActiveRef.current,
         });
-        pendingEmailCodeRef.current = null;
-        return true;
+        if (authenticated) pendingEmailCodeRef.current = null;
+        return authenticated;
       },
       async sendEmailOtp(email: string) {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
         // OTP code (not magic link) for mobile reliability (docs/01 §1).
-        pendingEmailCodeRef.current = null;
-        const request = await requestEmailAccountCode(supabase.auth, email);
-        if (request.kind === 'anonymous_upgrade_complete') return 'complete';
-        pendingEmailCodeRef.current = request;
-        return 'code_sent';
+        return authMutationFence.runExclusive(async () => {
+          pendingEmailCodeRef.current = null;
+          const request = await requestEmailAccountCode(supabase.auth, email);
+          if (request.kind === 'anonymous_upgrade_complete') return 'complete';
+          pendingEmailCodeRef.current = request;
+          return 'code_sent';
+        });
       },
       async verifyEmailOtp(email: string, token: string) {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
-        const pending = pendingEmailCodeRef.current;
-        if (!pending) throw new Error('Request a new email code before verifying.');
-        await verifyEmailAccountCode(supabase.auth, pending, email, token);
-        pendingEmailCodeRef.current = null;
+        return authMutationFence.runExclusive(async () => {
+          const pending = pendingEmailCodeRef.current;
+          if (!pending) throw new Error('Request a new email code before verifying.');
+          await verifyEmailAccountCode(supabase.auth, pending, email, token);
+          pendingEmailCodeRef.current = null;
+        });
       },
       async signOut() {
-        pendingEmailCodeRef.current = null;
-        explicitSignOutPendingRef.current = true;
-        showSessionBoundaryRef.current(null);
-        try {
-          if (isSupabaseConfigured && !accountIsolationE2EFixture) {
-            const { error } = await supabase.auth.signOut();
-            if (error) devWarn('[auth] remote sign-out failed; completing local sign-out', error);
+        return authMutationFence.runExclusive(async () => {
+          pendingEmailCodeRef.current = null;
+          explicitSignOutPendingRef.current = true;
+          showSessionBoundaryRef.current(null);
+          try {
+            if (isSupabaseConfigured && !accountIsolationE2EFixture) {
+              const { error } = await supabase.auth.signOut();
+              if (error) devWarn('[auth] remote sign-out failed; completing local sign-out', error);
+            }
+          } catch (error: unknown) {
+            devWarn('[auth] remote sign-out failed; completing local sign-out', error);
+          } finally {
+            await applySessionBoundaryRef.current(null);
           }
-        } catch (error: unknown) {
-          devWarn('[auth] remote sign-out failed; completing local sign-out', error);
-        } finally {
-          await applySessionBoundaryRef.current(null);
-        }
+        });
       },
     };
   }, [
     accountIsolationE2EFixture,
     anonymousOnboardingHandoff,
+    authMutationFence,
     completedSessionPublication,
     initializing,
     isAnonymousOnboardingHandoffCurrent,
+    providerAuthCommitCoordinator,
+    providerAuthTransitionTracker,
+    providerSignInCoordinator,
     registerAnonymousOnboardingConsumer,
     session,
     sessionBoundaryError,

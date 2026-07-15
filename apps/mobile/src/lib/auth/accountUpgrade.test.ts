@@ -2,10 +2,14 @@ import type { Session, User } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  authenticateWithProviderToken,
+  authSessionFingerprint,
+  authenticateWithProviderToken as authenticateWithProviderTokenUnderLock,
+  ProviderAuthSessionChangedError,
   requestEmailAccountCode,
   verifyEmailAccountCode,
   type AccountUpgradeAuthClient,
+  type AccountProvider,
+  type AuthSessionFingerprint,
   type PendingEmailAccountCode,
 } from './accountUpgrade';
 
@@ -42,47 +46,80 @@ function makeAuth(session: Session | null) {
   };
   return {
     auth: spies as unknown as AccountUpgradeAuthClient,
+    expectedSession: authSessionFingerprint(session),
     spies,
   };
+}
+
+const assertRequestCurrent = () => {};
+
+function authenticateWithProviderToken(
+  auth: AccountUpgradeAuthClient,
+  credentials: { provider: AccountProvider; token: string },
+  expectedSession: AuthSessionFingerprint,
+  assertCurrent: () => void,
+): Promise<void> {
+  return authenticateWithProviderTokenUnderLock(
+    auth,
+    credentials,
+    expectedSession,
+    assertCurrent,
+    (operation) => operation(),
+  );
 }
 
 describe('account upgrade', () => {
   it('links a provider token to the current anonymous user instead of signing in as a new user', async () => {
     const anonymousUser = makeUser('anon-user', true);
     const permanentUser = makeUser('anon-user', false);
-    const { auth, spies } = makeAuth(makeSession(anonymousUser));
+    const { auth, expectedSession, spies } = makeAuth(makeSession(anonymousUser));
     spies.linkIdentity.mockResolvedValue({
       data: { session: makeSession(permanentUser), user: permanentUser },
       error: null,
     });
 
-    await authenticateWithProviderToken(auth, { provider: 'google', token: '  id-token  ' });
+    await authenticateWithProviderToken(
+      auth,
+      { provider: 'google', token: '  id-token  ' },
+      expectedSession,
+      assertRequestCurrent,
+    );
 
     expect(spies.linkIdentity).toHaveBeenCalledWith({ provider: 'google', token: 'id-token' });
     expect(spies.signInWithIdToken).not.toHaveBeenCalled();
   });
 
   it('never falls back to a user-switching sign-in when provider linking fails', async () => {
-    const { auth, spies } = makeAuth(makeSession(makeUser('anon-user', true)));
+    const { auth, expectedSession, spies } = makeAuth(makeSession(makeUser('anon-user', true)));
     spies.linkIdentity.mockResolvedValue({
       data: { session: null, user: null },
       error: new Error('Identity is already linked to another user'),
     });
 
     await expect(
-      authenticateWithProviderToken(auth, { provider: 'apple', token: 'id-token' }),
+      authenticateWithProviderToken(
+        auth,
+        { provider: 'apple', token: 'id-token' },
+        expectedSession,
+        assertRequestCurrent,
+      ),
     ).rejects.toThrow('already linked');
     expect(spies.signInWithIdToken).not.toHaveBeenCalled();
   });
 
   it('uses normal provider sign-in when there is no anonymous session to preserve', async () => {
-    const { auth, spies } = makeAuth(null);
+    const { auth, expectedSession, spies } = makeAuth(null);
     spies.signInWithIdToken.mockResolvedValue({
       data: { session: makeSession(makeUser('returning-user', false)), user: null },
       error: null,
     });
 
-    await authenticateWithProviderToken(auth, { provider: 'google', token: 'id-token' });
+    await authenticateWithProviderToken(
+      auth,
+      { provider: 'google', token: 'id-token' },
+      expectedSession,
+      assertRequestCurrent,
+    );
 
     expect(spies.signInWithIdToken).toHaveBeenCalledWith({
       provider: 'google',
@@ -92,7 +129,7 @@ describe('account upgrade', () => {
   });
 
   it('rejects a provider response that changes the anonymous user id', async () => {
-    const { auth, spies } = makeAuth(makeSession(makeUser('anon-user', true)));
+    const { auth, expectedSession, spies } = makeAuth(makeSession(makeUser('anon-user', true)));
     const wrongUser = makeUser('different-user', false);
     spies.linkIdentity.mockResolvedValue({
       data: { session: makeSession(wrongUser), user: wrongUser },
@@ -100,8 +137,112 @@ describe('account upgrade', () => {
     });
 
     await expect(
-      authenticateWithProviderToken(auth, { provider: 'google', token: 'id-token' }),
+      authenticateWithProviderToken(
+        auth,
+        { provider: 'google', token: 'id-token' },
+        expectedSession,
+        assertRequestCurrent,
+      ),
     ).rejects.toThrow('preserve the current authenticated user');
+  });
+
+  it('rejects a changed owner before any provider mutation', async () => {
+    const expectedSession = authSessionFingerprint(makeSession(makeUser('owner-a', true)));
+    const { auth, spies } = makeAuth(makeSession(makeUser('owner-b', true)));
+
+    await expect(
+      authenticateWithProviderToken(
+        auth,
+        { provider: 'apple', token: 'late-token' },
+        expectedSession,
+        assertRequestCurrent,
+      ),
+    ).rejects.toBeInstanceOf(ProviderAuthSessionChangedError);
+
+    expect(spies.linkIdentity).not.toHaveBeenCalled();
+    expect(spies.signInWithIdToken).not.toHaveBeenCalled();
+  });
+
+  it('rejects an anonymous-to-permanent fingerprint change before provider mutation', async () => {
+    const expectedSession = authSessionFingerprint(makeSession(makeUser('same-owner', true)));
+    const { auth, spies } = makeAuth(makeSession(makeUser('same-owner', false)));
+
+    await expect(
+      authenticateWithProviderToken(
+        auth,
+        { provider: 'google', token: 'late-token' },
+        expectedSession,
+        assertRequestCurrent,
+      ),
+    ).rejects.toBeInstanceOf(ProviderAuthSessionChangedError);
+
+    expect(spies.linkIdentity).not.toHaveBeenCalled();
+    expect(spies.signInWithIdToken).not.toHaveBeenCalled();
+  });
+
+  it('rejects signed-out to signed-in session replacement before provider mutation', async () => {
+    const expectedSession = authSessionFingerprint(null);
+    const { auth, spies } = makeAuth(makeSession(makeUser('owner-b', false)));
+
+    await expect(
+      authenticateWithProviderToken(
+        auth,
+        { provider: 'google', token: 'late-signed-out-token' },
+        expectedSession,
+        assertRequestCurrent,
+      ),
+    ).rejects.toBeInstanceOf(ProviderAuthSessionChangedError);
+
+    expect(spies.linkIdentity).not.toHaveBeenCalled();
+    expect(spies.signInWithIdToken).not.toHaveBeenCalled();
+  });
+
+  it('rechecks request lifecycle after session lookup and before provider mutation', async () => {
+    const session = makeSession(makeUser('owner-a', true));
+    const { auth, expectedSession, spies } = makeAuth(session);
+    let current = true;
+    spies.getSession.mockImplementationOnce(async () => {
+      current = false;
+      return { data: { session }, error: null };
+    });
+
+    await expect(
+      authenticateWithProviderToken(
+        auth,
+        { provider: 'apple', token: 'late-token' },
+        expectedSession,
+        () => {
+          if (!current) throw new Error('request superseded');
+        },
+      ),
+    ).rejects.toThrow('request superseded');
+
+    expect(spies.linkIdentity).not.toHaveBeenCalled();
+    expect(spies.signInWithIdToken).not.toHaveBeenCalled();
+  });
+
+  it('rechecks request lifecycle after waiting for the auth storage lock', async () => {
+    const session = makeSession(makeUser('owner-a', true));
+    const { auth, expectedSession, spies } = makeAuth(session);
+    let current = true;
+
+    await expect(
+      authenticateWithProviderTokenUnderLock(
+        auth,
+        { provider: 'google', token: 'late-token' },
+        expectedSession,
+        () => {
+          if (!current) throw new Error('request superseded while waiting for storage lock');
+        },
+        async (operation) => {
+          current = false;
+          return operation();
+        },
+      ),
+    ).rejects.toThrow('superseded while waiting for storage lock');
+
+    expect(spies.linkIdentity).not.toHaveBeenCalled();
+    expect(spies.signInWithIdToken).not.toHaveBeenCalled();
   });
 
   it('requests an email-change code against the same anonymous user', async () => {

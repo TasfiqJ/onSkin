@@ -69,6 +69,19 @@ describe('Sign in with Apple helpers', () => {
     await expect(getAppleIdToken()).resolves.toBeNull();
   });
 
+  it('rechecks request ownership immediately after the native Apple prompt resolves', async () => {
+    mocks.signInAsync.mockResolvedValueOnce({
+      email: 'user@example.com',
+      identityToken: 'late-token',
+    });
+    const assertRequestCurrent = vi.fn(() => {
+      throw new Error('request superseded');
+    });
+
+    await expect(getAppleIdToken(assertRequestCurrent)).rejects.toThrow('request superseded');
+    expect(assertRequestCurrent).toHaveBeenCalledTimes(1);
+  });
+
   it('refreshes a revocation code with a trimmed Apple subject', async () => {
     mocks.isAvailableAsync.mockResolvedValueOnce(true);
     mocks.refreshAsync.mockResolvedValueOnce({ authorizationCode: ' code-1 ' });

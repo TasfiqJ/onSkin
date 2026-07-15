@@ -1,6 +1,6 @@
 import 'react-native-url-polyfill/auto'; // supabase-js needs a WHATWG URL on RN
 import type { Database } from '@onskin/types/database';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, processLock } from '@supabase/supabase-js';
 
 import { env } from '../env';
 import { LargeSecureStore } from './largeSecureStore';
@@ -15,6 +15,11 @@ const serverAuthStorage = {
 };
 const authStorage = isServerRender ? serverAuthStorage : new LargeSecureStore();
 const authStorageKey = `sb-${new URL(env.supabaseUrl).hostname.split('.')[0]}-auth-token`;
+const authStorageLockName = `lock:${authStorageKey}`;
+
+export function runSupabaseAuthStorageMutation<T>(operation: () => Promise<T>): Promise<T> {
+  return processLock(authStorageLockName, -1, operation);
+}
 
 export async function clearPersistedSupabaseSession(): Promise<void> {
   const results = await Promise.allSettled([
@@ -31,6 +36,7 @@ export async function clearPersistedSupabaseSession(): Promise<void> {
 // BLOCKED: B-SUPABASE. Url/key read from env placeholders until the project exists.
 export const supabase = createClient<Database>(env.supabaseUrl, env.supabasePublishableKey, {
   auth: {
+    lock: processLock,
     storage: authStorage,
     storageKey: authStorageKey,
     autoRefreshToken: !isServerRender,

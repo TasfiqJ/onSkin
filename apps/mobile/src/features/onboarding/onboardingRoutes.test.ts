@@ -594,6 +594,20 @@ describe('onboarding route contracts', () => {
     expect(source).toContain("if (result === 'complete')");
     expect(source).toContain('const result = await sendEmailOtp(email)');
     expect(source).toContain('if (!accountUpgradeE2EFixture) await verifyEmailOtp(email, code)');
+    expect(source).toContain('const isFocused = useIsFocused();');
+    expect(source).toContain('useLayoutEffect(() => {');
+    expect(source).toContain('canPublishAccountRouteRequest({');
+    expect(source).toContain('const requestInFlightRef = useRef<number | null>(null);');
+    expect(source).toContain('if (requestInFlightRef.current !== null) return;');
+    expect(source).toContain('requestSequence: requestSeqRef.current');
+    expect(source).toContain('focused: focusedRef.current');
+    expect(source).toContain('isOwnerQueryScopeCurrent(ownerScope)');
+    expect(source).toContain('ProviderSignInRequestSupersededError');
+    expect(source).toContain("pointerEvents={busy ? 'none' : 'auto'}");
+    expect(source).toContain('accessibilityState={{ disabled: busy }}');
+    expect(source).toContain('if (isCurrent()) await finish(isCurrent);');
+    expect(source).toContain('editable={!busy}');
+    expect(source).toContain('disabled={busy}');
   });
 
   it('does not reveal the profile after a failed local profile save', () => {
