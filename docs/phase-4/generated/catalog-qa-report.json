@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T04:26:24.833Z",
+  "generatedAt": "2026-07-15T20:20:42.557Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin-main-pay06\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "071c77a3eecd8a4a980b9e027e857e09f9ec75f2",
+  "gitSha": "58c9d37dd0c7eb3386e0a3af4607faeecf9f7f6f",
   "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
@@ -87,8 +87,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 24237,
-      "sha256": "851d5a88cf5461d88015f461b53b9ba71b8bd45ea2093018e8f5d36164495113"
+      "bytes": 25674,
+      "sha256": "d3121bec90301e1bd3cb5129105946ef524d96f3edc3fa9f5c8e5a072713e7c5"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -147,14 +147,14 @@
     {
       "path": "scripts/phase4/check-source-env.mjs",
       "exists": true,
-      "bytes": 3481,
-      "sha256": "dfb219e5ad682a53d99ce03e72cb1e35762c9c92d0081f179f9c8c73118b8e91"
+      "bytes": 2989,
+      "sha256": "ad8eaa253c3dd97fd6ea09a1cdbf11fb1aec96212a90a610e690a74981989a1a"
     },
     {
       "path": "scripts/phase4/check-source-env-smoke.mjs",
       "exists": true,
-      "bytes": 3992,
-      "sha256": "ae38709e83827c30bfbc2c52b4d4165a0ada5bc1ab36f9cc2a37cdc986f40149"
+      "bytes": 3933,
+      "sha256": "462b2461ca7948033e90e2b1183eda50b4df658393863472680b7d06d4906ede"
     },
     {
       "path": "scripts/phase4/catalog-qa-report-smoke.mjs",
@@ -165,8 +165,8 @@
     {
       "path": "supabase/functions/catalog-report/index.ts",
       "exists": true,
-      "bytes": 4582,
-      "sha256": "22bfc7ac5d043b4672be693009fcaac01759264146b9c3923f41022a59144d71"
+      "bytes": 6168,
+      "sha256": "f5adfda703d9a1cd6510bd5559dd68f9b928fb9d7a574e4ae411e67a7591d8b8"
     },
     {
       "path": "supabase/functions/catalog-report/privacy.ts",
@@ -189,8 +189,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 22989,
-      "sha256": "4a3308895a90563fa0edd328e3829105eccb45ee74a838e6fede07b8de7ba8cc"
+      "bytes": 24200,
+      "sha256": "4b1c8b7bb69b2d489c0b455022b2568bb9d3a8e6cc91ead4e6c8e09376bd3e5a"
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
@@ -213,20 +213,20 @@
     {
       "path": "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
       "exists": true,
-      "bytes": 2334,
-      "sha256": "441e03ded2314f7a9efc2f11e3b7d0daa97256de17e6c654423124c1c4a4670f"
+      "bytes": 4263,
+      "sha256": "9b14b91a64c721d3f2c3a172c38f31afe881282ca50d96f1ecdef2e4e5c13626"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
-      "bytes": 46709,
-      "sha256": "6e4ba8c1cc37cb4e607021e5516fbf23e6d8b6c08071f026b90d101e674edc3b"
+      "bytes": 46711,
+      "sha256": "9b659644a64db0488e224cff65838ae8c63d3475b121f627b6ad535bf549dfe5"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
-      "bytes": 28924,
-      "sha256": "8e3bdd8f5ffd9d0249de6f62c8cde396d84892a02fc7b5e5101f9fe0c9272b23"
+      "bytes": 28926,
+      "sha256": "5c267aedc31515570b25dc9fd222d9b15c16ab12415fd14bdf127c9ee99e72be"
     },
     {
       "path": "docs/phase-4/odbl-compliance-memo.md",

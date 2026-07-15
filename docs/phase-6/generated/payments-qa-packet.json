@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T04:28:20.266Z",
+  "generatedAt": "2026-07-15T20:20:44.524Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -81,7 +81,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "ab13029e41276a8ff24b4ceddc03f9c1db95b6d5",
+  "gitSha": "58c9d37dd0c7eb3386e0a3af4607faeecf9f7f6f",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -161,14 +161,14 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 20536,
-      "sha256": "b82d2217b2ef5fced6fb857dcbd7d713ce15fb7fe746cd75b4963307bcf02658"
+      "bytes": 21485,
+      "sha256": "7350e24144ebf44cd060c6c82772e59c1ac9a4945da383f2ba9b71b9dd951213"
     },
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 24237,
-      "sha256": "851d5a88cf5461d88015f461b53b9ba71b8bd45ea2093018e8f5d36164495113"
+      "bytes": 25674,
+      "sha256": "d3121bec90301e1bd3cb5129105946ef524d96f3edc3fa9f5c8e5a072713e7c5"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -437,20 +437,20 @@
     {
       "path": "scripts/phase2/check-env.mjs",
       "exists": true,
-      "bytes": 21150,
-      "sha256": "639e9ac3e68fd15bfed16a8c1c06e881bd2befa9e6ae10bfba8e99cb25fbcf4e"
+      "bytes": 21920,
+      "sha256": "c12bcc548afae7cae1992c290ef65f5a425ccbbb52edba1b4931a3e7a3d2298a"
     },
     {
       "path": "scripts/phase2/check-env-smoke.mjs",
       "exists": true,
-      "bytes": 22495,
-      "sha256": "158a6318e5c756df1745d601bebf1012d924bd48bc0c74922e686c8a730afcc2"
+      "bytes": 25482,
+      "sha256": "8b9de5340f2fb90f70d9d70f3ea0d1598e7507d3d7abed3890da145f82d0f270"
     },
     {
       "path": "scripts/phase9/supabase-policy-lint.mjs",
       "exists": true,
-      "bytes": 13019,
-      "sha256": "601be991ca51d486cfb915460d287d3f6a1f9957f3ecb9c9b83f777038176e24"
+      "bytes": 14152,
+      "sha256": "89b60416278ffd20eb1443b163195419211349edd4410fdb038aeeeb9658f626"
     },
     {
       "path": "scripts/phase9/account-service-scrub-postgres-rehearsal.sql",
@@ -461,20 +461,20 @@
     {
       "path": "scripts/phase9/live-data-rights.mjs",
       "exists": true,
-      "bytes": 63735,
-      "sha256": "48de113bf49720a6f2a3ad95a72bb194d861d7d9cc6868607160f008c9ec72de"
+      "bytes": 65163,
+      "sha256": "e6f38463e270d3e35de42261ee3788e30dd74fbf38f866ca385bd8e756084dbc"
     },
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 72843,
-      "sha256": "6ebdbc979cbe2008cabda4eb138badcdf9a580597f02c8e48e9c9202fa38c1df"
+      "bytes": 75305,
+      "sha256": "15a92f3558f39b6c8efb47159e43270a532de13dfeae5f02f56fdca385eca9b7"
     },
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 22989,
-      "sha256": "4a3308895a90563fa0edd328e3829105eccb45ee74a838e6fede07b8de7ba8cc"
+      "bytes": 24200,
+      "sha256": "4b1c8b7bb69b2d489c0b455022b2568bb9d3a8e6cc91ead4e6c8e09376bd3e5a"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
@@ -491,20 +491,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 373686,
-      "sha256": "1de6bed099cfdc527c730313228f09cc01dbe43a21b9d35d743cfbad50ba678c"
+      "bytes": 378984,
+      "sha256": "019abc9d719b00d076dd4a94c8cad70b25257bfa745abefeebe0a6329b5ce66f"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
-      "bytes": 45470,
-      "sha256": "099f933244a956e7de2c31e79c74cc28ca7add2f71ceb8f873b62f2319508464"
+      "bytes": 48121,
+      "sha256": "9af984f7adcb87b6d2dfe674c3ea1f62488c1c78057aa43e7e8920dd8856e836"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
-      "bytes": 19027,
-      "sha256": "ede586d07bfcc6b1c3924a7c3df88751bab311868701157b482f5ae8b5b6044a"
+      "bytes": 19687,
+      "sha256": "c9debcd96b9f5303b1c0adf7fe12297a3ccf7836805c6d61292c4d2975b25818"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",

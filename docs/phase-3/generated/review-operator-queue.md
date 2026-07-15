@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-15T20:05:56.927Z
+Generated: 2026-07-15T20:20:30.073Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: ebaa10fa5c42d96d4e455442cc1323f397025f2c
+Git SHA: 58c9d37dd0c7eb3386e0a3af4607faeecf9f7f6f
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -364,7 +364,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `7f44314d50a650a94e84e348c341f118d212fcd85e4ce49c27dbbf6825cde2fc`
+- Review snapshot SHA-256: `92dec4d5efbe2e52ff61e3ff07eb045a0c6ad52fd5ba2e2482de01be192e9ce8`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -418,7 +418,7 @@ Sources:
 - `supabase/functions/_shared/auth.ts` - 321 bytes - sha256 `cac2bbac4936c570508b764482d8c396693bda989f4f605514b8a3ca06397999`
 - `docs/phase-3/data-inventory.md` - 16182 bytes - sha256 `09a230298d739de01a0e9bb2fb22d9f8a51897c20bcccbf251f7a86d027ad056`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3039 bytes - sha256 `fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674`
-- `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32987 bytes - sha256 `d53808d01d7bb568a7a6c1d51351cbb3554c625fba3c517832ab31ce8ce8784f`
+- `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32996 bytes - sha256 `91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4`
 
 ### P0 - Privacy/security - Health-data consent and withdrawal
 
@@ -427,7 +427,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `2c9fd49192aa1fe471f67fff47f70683362cfab9c8121affeb620b951d2b250c`
+- Review snapshot SHA-256: `06c98d4cd184909ec7c822447e2ded4729b9313d5838cffc7f37fcc0a1bc19a7`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -437,7 +437,7 @@ Sources:
 
 - `docs/phase-3/consent-matrix.md` - 10237 bytes - sha256 `a50b3b1baf6c996409b85df19899ac3e80482dbd2043b02677ccec4cccf38130`
 - `docs/store-privacy-inventory.md` - 21854 bytes - sha256 `8543da0e266a036f2ae283c1f9e898ae1c67919746d28777389b6d824295cfe6`
-- `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32987 bytes - sha256 `d53808d01d7bb568a7a6c1d51351cbb3554c625fba3c517832ab31ce8ce8784f`
+- `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32996 bytes - sha256 `91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3039 bytes - sha256 `fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674`
 - `docs/hugeToDo/credential-inventory.json` - 19405 bytes - sha256 `e8935e4c5bd4fa9e2b5c3a06cf53fcb83f83deaf07523ac3cef9cd5364ba63d0`
 - `apps/mobile/src/features/onboarding/consentCopy.ts` - 5658 bytes - sha256 `6e0cc1d6de3cad0b84c5cdb7463ed8b171820a9e436d5075f3b54623e6a47034`

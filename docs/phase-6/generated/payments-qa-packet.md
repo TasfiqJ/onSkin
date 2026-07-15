@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-15T04:28:20.266Z
-Git SHA: ab13029e41276a8ff24b4ceddc03f9c1db95b6d5
+Generated at: 2026-07-15T20:20:44.524Z
+Git SHA: 58c9d37dd0c7eb3386e0a3af4607faeecf9f7f6f
 Git status: clean
 
 Strict completion requires real RevenueCat offering review and store restore evidence for every contract-required platform, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -53,8 +53,8 @@ Strict completion requires real RevenueCat offering review and store restore evi
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| .env.example | present | 20536 | b82d2217b2ef5fced6fb857dcbd7d713ce15fb7fe746cd75b4963307bcf02658 |
-| package.json | present | 24237 | 851d5a88cf5461d88015f461b53b9ba71b8bd45ea2093018e8f5d36164495113 |
+| .env.example | present | 21485 | 7350e24144ebf44cd060c6c82772e59c1ac9a4945da383f2ba9b71b9dd951213 |
+| package.json | present | 25674 | d3121bec90301e1bd3cb5129105946ef524d96f3edc3fa9f5c8e5a072713e7c5 |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md | present | 11287 | b3aa6768944665294ecc730c23a4834d150cb09328571befa0edd145697783b5 |
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
@@ -99,18 +99,18 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | scripts/phase6/build-payments-qa-packet.mjs | present | 16789 | d1862e0d2c3348d69fcab35836d73cac0c2d551cbc0d123ebdddd44017e6242d |
 | scripts/phase6/check-payments-env.mjs | present | 10888 | a759ca81c4905f1123a8cd62b285279cabf2bb902ea17ac910f41b04827732ef |
 | scripts/phase6/check-payments-env-smoke.mjs | present | 10775 | 1cfdc08c66f9bf5ec1e16443cf5677c5745ebe969171757db2e1bbc9f49acfd2 |
-| scripts/phase2/check-env.mjs | present | 21150 | 639e9ac3e68fd15bfed16a8c1c06e881bd2befa9e6ae10bfba8e99cb25fbcf4e |
-| scripts/phase2/check-env-smoke.mjs | present | 22495 | 158a6318e5c756df1745d601bebf1012d924bd48bc0c74922e686c8a730afcc2 |
-| scripts/phase9/supabase-policy-lint.mjs | present | 13019 | 601be991ca51d486cfb915460d287d3f6a1f9957f3ecb9c9b83f777038176e24 |
+| scripts/phase2/check-env.mjs | present | 21920 | c12bcc548afae7cae1992c290ef65f5a425ccbbb52edba1b4931a3e7a3d2298a |
+| scripts/phase2/check-env-smoke.mjs | present | 25482 | 8b9de5340f2fb90f70d9d70f3ea0d1598e7507d3d7abed3890da145f82d0f270 |
+| scripts/phase9/supabase-policy-lint.mjs | present | 14152 | 89b60416278ffd20eb1443b163195419211349edd4410fdb038aeeeb9658f626 |
 | scripts/phase9/account-service-scrub-postgres-rehearsal.sql | present | 26077 | b4898279189ebca369eaa9f212632d0a903917fe137c8ccbbec994cb3c34743a |
-| scripts/phase9/live-data-rights.mjs | present | 63735 | 48de113bf49720a6f2a3ad95a72bb194d861d7d9cc6868607160f008c9ec72de |
-| scripts/e2e/human-e2e-manifest.mjs | present | 72843 | 6ebdbc979cbe2008cabda4eb138badcdf9a580597f02c8e48e9c9202fa38c1df |
-| scripts/phase9/lib.mjs | present | 22989 | 4a3308895a90563fa0edd328e3829105eccb45ee74a838e6fede07b8de7ba8cc |
+| scripts/phase9/live-data-rights.mjs | present | 65163 | e6f38463e270d3e35de42261ee3788e30dd74fbf38f866ca385bd8e756084dbc |
+| scripts/e2e/human-e2e-manifest.mjs | present | 75305 | 15a92f3558f39b6c8efb47159e43270a532de13dfeae5f02f56fdca385eca9b7 |
+| scripts/phase9/lib.mjs | present | 24200 | 4b1c8b7bb69b2d489c0b455022b2568bb9d3a8e6cc91ead4e6c8e09376bd3e5a |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
-| docs/USER_FLOW_TREE.md | present | 373686 | 1de6bed099cfdc527c730313228f09cc01dbe43a21b9d35d743cfbad50ba678c |
-| docs/e2e/generated/human-e2e-manifest.json | present | 45470 | 099f933244a956e7de2c31e79c74cc28ca7add2f71ceb8f873b62f2319508464 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 19027 | ede586d07bfcc6b1c3924a7c3df88751bab311868701157b482f5ae8b5b6044a |
+| docs/USER_FLOW_TREE.md | present | 378984 | 019abc9d719b00d076dd4a94c8cad70b25257bfa745abefeebe0a6329b5ce66f |
+| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 9af984f7adcb87b6d2dfe674c3ea1f62488c1c78057aa43e7e8920dd8856e836 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | c9debcd96b9f5303b1c0adf7fe12297a3ccf7836805c6d61292c4d2975b25818 |
 | docs/phase-6/payments-runbook.md | present | 5833 | 18b15bfd5ea5e8d0b8f5f410c4367d05b50c2ba9778c8d393e36692e409a4320 |
 | docs/phase-6/payments-qa-checklist.md | present | 4881 | 221820b219447c879c19f9dc2ac4fa742d0fa95be9702e0e22bc27da40d53c5c |
 | docs/phase-6/phase-6-exit-review.md | present | 4798 | 85e5e80e3d3b14d12cbeae0a4abdbf7a66eba1128b527705bf076a6957fbba28 |

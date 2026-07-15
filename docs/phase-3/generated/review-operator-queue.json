@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-15T20:05:56.927Z",
+  "generatedAt": "2026-07-15T20:20:30.073Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "ebaa10fa5c42d96d4e455442cc1323f397025f2c",
+  "gitSha": "58c9d37dd0c7eb3386e0a3af4607faeecf9f7f6f",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
     "bytes": 133452,
-    "sha256": "f3e631094decb2c69eb839715156834509fa4cb960b88be82c490a124b346302",
-    "currentSha256": "f3e631094decb2c69eb839715156834509fa4cb960b88be82c490a124b346302"
+    "sha256": "aacf9e42274cf7981ac2ab4e0f094b02f31815a9cfe54e9e00c67ac4635f1bf0",
+    "currentSha256": "aacf9e42274cf7981ac2ab4e0f094b02f31815a9cfe54e9e00c67ac4635f1bf0"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -919,7 +919,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "7f44314d50a650a94e84e348c341f118d212fcd85e4ce49c27dbbf6825cde2fc",
+      "reviewSnapshotSha256": "92dec4d5efbe2e52ff61e3ff07eb045a0c6ad52fd5ba2e2482de01be192e9ce8",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1206,8 +1206,8 @@
         {
           "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
           "exists": true,
-          "bytes": 32987,
-          "sha256": "d53808d01d7bb568a7a6c1d51351cbb3554c625fba3c517832ab31ce8ce8784f"
+          "bytes": 32996,
+          "sha256": "91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4"
         }
       ]
     },
@@ -1224,7 +1224,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "2c9fd49192aa1fe471f67fff47f70683362cfab9c8121affeb620b951d2b250c",
+      "reviewSnapshotSha256": "06c98d4cd184909ec7c822447e2ded4729b9313d5838cffc7f37fcc0a1bc19a7",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1247,8 +1247,8 @@
         {
           "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
           "exists": true,
-          "bytes": 32987,
-          "sha256": "d53808d01d7bb568a7a6c1d51351cbb3554c625fba3c517832ab31ce8ce8784f"
+          "bytes": 32996,
+          "sha256": "91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4"
         },
         {
           "path": "docs/hugeToDo/health-processor-inventory-v1.json",

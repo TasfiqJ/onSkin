@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-15T20:05:56.285Z",
+  "generatedAt": "2026-07-15T20:20:29.396Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "ebaa10fa5c42d96d4e455442cc1323f397025f2c",
+  "gitSha": "58c9d37dd0c7eb3386e0a3af4607faeecf9f7f6f",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -1776,8 +1776,8 @@
         {
           "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
           "exists": true,
-          "bytes": 32987,
-          "sha256": "d53808d01d7bb568a7a6c1d51351cbb3554c625fba3c517832ab31ce8ce8784f"
+          "bytes": 32996,
+          "sha256": "91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4"
         },
         {
           "path": "docs/hugeToDo/health-processor-inventory-v1.json",
@@ -2141,7 +2141,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "2c9fd49192aa1fe471f67fff47f70683362cfab9c8121affeb620b951d2b250c",
+      "reviewSnapshotSha256": "06c98d4cd184909ec7c822447e2ded4729b9313d5838cffc7f37fcc0a1bc19a7",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2856,12 +2856,12 @@
         {
           "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
           "exists": true,
-          "bytes": 32987,
-          "sha256": "d53808d01d7bb568a7a6c1d51351cbb3554c625fba3c517832ab31ce8ce8784f"
+          "bytes": 32996,
+          "sha256": "91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "7f44314d50a650a94e84e348c341f118d212fcd85e4ce49c27dbbf6825cde2fc",
+      "reviewSnapshotSha256": "92dec4d5efbe2e52ff61e3ff07eb045a0c6ad52fd5ba2e2482de01be192e9ce8",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
