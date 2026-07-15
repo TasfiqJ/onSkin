@@ -2,12 +2,15 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { cancelTrialReminder, scheduleTrialReminder } from '@/features/notifications/deliver';
 import { track } from '@/lib/analytics/track';
+import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
+import { useAuth } from '@/lib/auth/AuthProvider';
 import { env } from '@/lib/env';
 import {
   customerInfoToStoredEntitlement,
   purchasePackage,
   purchaseWinBackPackage,
   restorePurchases,
+  showNativeManageSubscriptions,
 } from '@/lib/iap/revenuecat';
 import {
   isOwnerQueryScopeCurrent,
@@ -234,7 +237,12 @@ export function useEntitlement(options: { enabled?: boolean } = {}) {
 
 export function useEntitlementActions() {
   const qc = useQueryClient();
+  const { user } = useAuth();
   const ownerScope = useOwnerQueryScope();
+  const revenueCatOwner = (lease: AccountGenerationLease) => {
+    if (!user?.id) throw new Error('REVENUECAT_OWNER_REQUIRED');
+    return { appUserId: user.id, lease } as const;
+  };
   const invalidate = () => {
     if (!isOwnerQueryScopeCurrent(ownerScope)) return Promise.resolve();
     return qc.invalidateQueries({ queryKey: ownerQueryPrefixes.entitlement(ownerScope) });
@@ -254,7 +262,7 @@ export function useEntitlementActions() {
   const startTrial = useMutation({
     mutationFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const result = await purchasePackage('annual');
+        const result = await purchasePackage(revenueCatOwner(lease), 'annual');
         const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
         lease.assertCurrent();
         if (!entitlement) return activeResult(null, { cancelled: result.cancelled });
@@ -273,12 +281,13 @@ export function useEntitlementActions() {
         return activeResult(entitlement, { cancelled: result.cancelled });
       }),
     onSettled: invalidate,
+    retry: 0,
   });
 
   const purchase = useMutation({
     mutationFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const result = await purchasePackage('annual');
+        const result = await purchasePackage(revenueCatOwner(lease), 'annual');
         const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
         lease.assertCurrent();
         if (entitlement?.isActive) {
@@ -290,17 +299,19 @@ export function useEntitlementActions() {
         return activeResult(entitlement, { cancelled: result.cancelled });
       }),
     onSettled: invalidate,
+    retry: 0,
   });
 
   const restore = useMutation({
     mutationFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
         track('restore_tapped');
-        const result = await restorePurchases();
+        const result = await restorePurchases(revenueCatOwner(lease));
         const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
         return activeResult(entitlement);
       }),
     onSettled: invalidate,
+    retry: 0,
   });
 
   const downgrade = useMutation({
@@ -318,7 +329,7 @@ export function useEntitlementActions() {
   const winback = useMutation({
     mutationFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const result = await purchaseWinBackPackage();
+        const result = await purchaseWinBackPackage(revenueCatOwner(lease));
         const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
         lease.assertCurrent();
         if (entitlement?.isActive) {
@@ -333,7 +344,18 @@ export function useEntitlementActions() {
         });
       }),
     onSettled: invalidate,
+    retry: 0,
   });
 
-  return { startReverseTrial, startTrial, purchase, restore, downgrade, winback };
+  const manage = useMutation({
+    mutationFn: () =>
+      runOwnerQueryOperation(ownerScope, async (lease) => {
+        const opened = await showNativeManageSubscriptions(revenueCatOwner(lease));
+        lease.assertCurrent();
+        return opened;
+      }),
+    retry: 0,
+  });
+
+  return { startReverseTrial, startTrial, purchase, restore, downgrade, winback, manage };
 }

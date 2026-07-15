@@ -798,4 +798,30 @@ describe('paywall mobile contracts', () => {
     expect(source).not.toContain(`>${String.fromCharCode(0x2713)}</Text>`);
     expect(source).not.toContain(`>${String.fromCharCode(0x00e2, 0x0153, 0x201c)}</Text>`);
   });
+
+  it('binds every RevenueCat store action to one exact owner lease without mutation retries', () => {
+    const actions = readSource('features/subscription/useEntitlement.ts');
+    const offering = readSource('features/subscription/useSubscriptionOffering.ts');
+    const revenuecat = readSource('lib/iap/revenuecat.ts');
+    const settings = readAppRoute('settings/subscription.tsx');
+
+    expect(actions).toContain('const revenueCatOwner = (lease: AccountGenerationLease) =>');
+    expect(actions).toContain("if (!user?.id) throw new Error('REVENUECAT_OWNER_REQUIRED');");
+    expect(actions).toContain("purchasePackage(revenueCatOwner(lease), 'annual')");
+    expect(actions).toContain('restorePurchases(revenueCatOwner(lease))');
+    expect(actions).toContain('purchaseWinBackPackage(revenueCatOwner(lease))');
+    expect(actions).toContain('showNativeManageSubscriptions(revenueCatOwner(lease))');
+    expect(actions.match(/retry: 0,/g)?.length).toBeGreaterThanOrEqual(5);
+
+    expect(offering).toContain('const owner = { appUserId: user.id, lease } as const;');
+    expect(offering).toContain('await configureRevenueCat(owner);');
+    expect(offering).toContain('return getSubscriptionOffering(owner);');
+
+    expect(revenuecat).toContain('context: RevenueCatOperationContext');
+    expect(revenuecat).toContain('type OwnerTaggedOfferings');
+    expect(revenuecat).toContain('ownerCoordinator.runHazard(');
+    expect(settings).toContain('const { manage, restore } = useEntitlementActions();');
+    expect(settings).toContain('openedNative = await manage.mutateAsync();');
+    expect(settings).not.toContain('showNativeManageSubscriptions()');
+  });
 });

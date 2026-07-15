@@ -34,6 +34,7 @@ import {
   configureRevenueCat,
   customerInfoToStoredEntitlement,
   getCustomerInfo,
+  prepareRevenueCatIdentityForSessionPublication,
   subscribeToCustomerInfoUpdates,
 } from '@/lib/iap/revenuecat';
 import { devWarn } from '@/lib/observability/safeLog';
@@ -72,6 +73,10 @@ import {
   type PendingEmailAccountCode,
 } from './accountUpgrade';
 import { createAuthMutationFence } from './authMutationFence';
+import {
+  createDevLocalResetCoordinator,
+  latestSessionForDevLocalReset,
+} from './devLocalResetCoordinator';
 import { clearAccountIsolatedState, prepareLocalDataForSession } from './localAccountIsolation';
 import {
   createProviderAuthTransitionTracker,
@@ -79,7 +84,12 @@ import {
   requestTokenFromLazyProviderModule,
 } from './providerSignIn';
 import { createProviderAuthCommitCoordinator } from './providerAuthCommit';
+import {
+  createSessionBoundaryQueueState,
+  enqueueSessionBoundaryOperation,
+} from './sessionBoundaryQueue';
 import { latestSessionForCompletedBoundary } from './sessionBoundary';
+import { claimLocalDataOwnership } from './sessionOwner';
 
 type AuthContextValue = {
   session: Session | null;
@@ -90,6 +100,7 @@ type AuthContextValue = {
   anonymousOnboardingHandoff: PendingAnonymousOnboardingHandoff | null;
   completedSessionPublication: number;
   retrySessionBoundary: () => Promise<void>;
+  resetLocalStateForE2E: () => Promise<void>;
   /** Guest-first entry: create an anonymous session if none exists (docs/01 §1). */
   ensureAnonymousSession: (
     captchaToken?: string,
@@ -121,26 +132,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
   const [sessionBoundaryError, setSessionBoundaryError] = useState(false);
   const activeUserIdRef = useRef<string | null>(null);
+  const publishedSessionRef = useRef<Session | null>(session);
   const publishedSessionUserIdRef = useRef<string | null>(null);
   const completedSessionPublicationRef = useRef(0);
   const pendingEmailCodeRef = useRef<PendingEmailAccountCode | null>(null);
-  const sessionChangeSeqRef = useRef(0);
   const sessionBoundaryActiveRef = useRef(false);
   const publishedProviderSessionRef = useRef(authSessionFingerprint(session));
   const sessionBoundaryWriteLockHeldRef = useRef(false);
   const pendingBoundarySessionRef = useRef<{ session: Session | null } | null>(null);
   const authEffectEpochRef = useRef(0);
-  const boundaryInFlightRef = useRef<{
-    effectEpoch: number;
-    promise: Promise<void>;
-    targetUserId: string | null;
-  } | null>(null);
+  const sessionBoundaryQueueRef = useRef(createSessionBoundaryQueueState());
   const boundaryClearFailureConsumedRef = useRef(false);
   const accountIsolationE2ESeededRef = useRef(false);
   const explicitSignOutPendingRef = useRef(false);
   const retrySessionRestoreRef = useRef<(() => Promise<void>) | null>(null);
   const applySessionBoundaryRef = useRef<
-    (nextSession: Session | null, initialRestore?: boolean) => Promise<void>
+    (
+      nextSession: Session | null,
+      initialRestore?: boolean,
+      forceQueue?: boolean,
+    ) => Promise<void>
   >(async () => {});
   const showSessionBoundaryRef = useRef<(nextSession: Session | null) => void>(() => {});
   const [welcomeHandoffCoordinator] = useState(() =>
@@ -149,6 +160,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }),
   );
   const [authMutationFence] = useState(createAuthMutationFence);
+  const [devLocalResetCoordinator] = useState(() =>
+    createDevLocalResetCoordinator({
+      claimOwnership: claimLocalDataOwnership,
+      clearAccountState: clearAccountIsolatedState,
+    }),
+  );
   const [providerAuthTransitionTracker] = useState(() =>
     createProviderAuthTransitionTracker(authSessionFingerprint(session)),
   );
@@ -176,6 +193,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     (requestId: number) => welcomeHandoffCoordinator.settle(requestId),
     [welcomeHandoffCoordinator],
   );
+  const resetLocalStateForE2E = useCallback(() => {
+    if (
+      typeof __DEV__ === 'undefined' ||
+      !__DEV__ ||
+      process.env.EXPO_PUBLIC_E2E_LOCAL_RESET !== '1'
+    ) {
+      return Promise.reject(new Error('E2E_LOCAL_RESET_UNAVAILABLE'));
+    }
+    return devLocalResetCoordinator.requestSingleFlight(() =>
+      authMutationFence.runExclusive(async () => {
+        const targetSession = latestSessionForDevLocalReset(
+          pendingBoundarySessionRef.current,
+          publishedSessionRef.current,
+        );
+        await applySessionBoundaryRef.current(targetSession, false, true);
+      }),
+    );
+  }, [authMutationFence, devLocalResetCoordinator]);
 
   useEffect(() => {
     let mounted = true;
@@ -214,165 +249,179 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     function applySessionBoundary(
       nextSession: Session | null,
       initialRestore = false,
+      forceQueue = false,
     ): Promise<void> {
       providerAuthTransitionTracker.observe(authSessionFingerprint(nextSession));
       const targetUserId = nextSession?.user.id ?? null;
-      if (explicitSignOutPendingRef.current && targetUserId) return Promise.resolve();
+      if (explicitSignOutPendingRef.current && targetUserId && !forceQueue) {
+        return Promise.resolve();
+      }
       pendingBoundarySessionRef.current = { session: nextSession };
-      const existing = boundaryInFlightRef.current;
-      if (existing?.targetUserId === targetUserId) {
-        if (existing.effectEpoch === effectEpoch) return existing.promise;
-        // React development effect replay can inherit an operation whose
-        // closure has already been unmounted. Let that serialized boundary
-        // settle, then let the current effect own session publication.
-        return existing.promise.then(() => {
+      return enqueueSessionBoundaryOperation(sessionBoundaryQueueRef.current, {
+        effectEpoch,
+        forceQueue,
+        targetUserId,
+        onQueued: () => {
+          if (
+            forceQueue ||
+            initialRestore ||
+            sessionBoundaryActiveRef.current ||
+            targetUserId !== activeUserIdRef.current
+          ) {
+            showSessionBoundary(nextSession);
+          }
+        },
+        resumeAfterInherited: async () => {
           if (!mounted) return;
-          const inheritedSuccessor = boundaryInFlightRef.current;
+          const inheritedSuccessor = sessionBoundaryQueueRef.current.inFlight;
           if (inheritedSuccessor) return inheritedSuccessor.promise;
-          return applySessionBoundary(nextSession, initialRestore);
-        });
-      }
+          await applySessionBoundary(nextSession, initialRestore, forceQueue);
+        },
+        run: async ({ isCurrent }) => {
+          if (!mounted || !isCurrent()) return;
 
-      const previousTransition = existing?.promise;
-      const seq = ++sessionChangeSeqRef.current;
-      if (
-        initialRestore ||
-        sessionBoundaryActiveRef.current ||
-        targetUserId !== activeUserIdRef.current
-      ) {
-        showSessionBoundary(nextSession);
-      }
+          let resolvedSession = nextSession;
+          let resolvedTargetUserId = targetUserId;
+          const previousUserId = activeUserIdRef.current;
 
-      const promise = (async () => {
-        let resolvedSession = nextSession;
-        let resolvedTargetUserId = targetUserId;
-        if (previousTransition) await previousTransition;
-        if (!mounted || seq !== sessionChangeSeqRef.current) return;
-        const previousUserId = activeUserIdRef.current;
-
-        try {
-          if (accountIsolationE2EFixture && !accountIsolationE2ESeededRef.current) {
-            await seedAccountIsolationE2EFixture(accountIsolationE2EFixture);
-            accountIsolationE2ESeededRef.current = true;
-          }
-          const deletionCompleted = accountIsolationE2EFixture
-            ? false
-            : await reconcileAccountDeletionCompletionReceipt();
-          if (deletionCompleted) {
-            resolvedSession = null;
-            resolvedTargetUserId = null;
-            providerAuthTransitionTracker.observe(authSessionFingerprint(null));
-            pendingBoundarySessionRef.current = { session: null };
-            showSessionBoundary(null);
-            await invalidateLocalSupabaseSession();
-          }
-          if (
-            !resolvedTargetUserId &&
-            explicitSignOutPendingRef.current &&
-            !accountIsolationE2EFixture &&
-            !deletionCompleted
-          ) {
-            await invalidateLocalSupabaseSession();
-          }
-          let result = await prepareLocalDataForSession(
-            previousUserId,
-            resolvedTargetUserId,
-            undefined,
-            async () => {
-              if (!mounted || seq !== sessionChangeSeqRef.current) return;
-              showSessionBoundary(resolvedSession);
-              await waitForAccountGenerationOperationsToSettle();
-              await waitForPrivateKVWritesToSettle();
-              await waitForEncryptedPhotoWritesToSettle();
-              if (accountIsolationE2EFixture) {
-                await new Promise((resolve) =>
-                  setTimeout(resolve, accountIsolationE2EFixture.clearDelayMs),
-                );
-                if (
-                  accountIsolationE2EFixture.failFirstClear &&
-                  !boundaryClearFailureConsumedRef.current
-                ) {
-                  boundaryClearFailureConsumedRef.current = true;
-                  throw new Error('E2E_ACCOUNT_ISOLATION_CLEAR_FAILED');
+          try {
+            if (accountIsolationE2EFixture && !accountIsolationE2ESeededRef.current) {
+              await seedAccountIsolationE2EFixture(accountIsolationE2EFixture);
+              accountIsolationE2ESeededRef.current = true;
+            }
+            const deletionCompleted = accountIsolationE2EFixture
+              ? false
+              : await reconcileAccountDeletionCompletionReceipt();
+            if (deletionCompleted) {
+              resolvedSession = null;
+              resolvedTargetUserId = null;
+              providerAuthTransitionTracker.observe(authSessionFingerprint(null));
+              pendingBoundarySessionRef.current = { session: null };
+              showSessionBoundary(null);
+              await invalidateLocalSupabaseSession();
+            }
+            if (
+              !resolvedTargetUserId &&
+              explicitSignOutPendingRef.current &&
+              !accountIsolationE2EFixture &&
+              !deletionCompleted
+            ) {
+              await invalidateLocalSupabaseSession();
+            }
+            let result = await prepareLocalDataForSession(
+              previousUserId,
+              resolvedTargetUserId,
+              undefined,
+              async () => {
+                if (!mounted || !isCurrent()) return;
+                showSessionBoundary(resolvedSession);
+                await waitForAccountGenerationOperationsToSettle();
+                await waitForPrivateKVWritesToSettle();
+                await waitForEncryptedPhotoWritesToSettle();
+                if (accountIsolationE2EFixture) {
+                  await new Promise((resolve) =>
+                    setTimeout(resolve, accountIsolationE2EFixture.clearDelayMs),
+                  );
+                  if (
+                    accountIsolationE2EFixture.failFirstClear &&
+                    !boundaryClearFailureConsumedRef.current
+                  ) {
+                    boundaryClearFailureConsumedRef.current = true;
+                    throw new Error('E2E_ACCOUNT_ISOLATION_CLEAR_FAILED');
+                  }
                 }
-              }
-            },
-          );
-          if (deletionCompleted && !result.cleared) {
-            await clearAccountIsolatedState();
-            result = { cleared: true, resetRoute: true };
-          }
-          // Hydrate the durable deletion receipt before publishing the session.
-          // The RevenueCat effect below can therefore never reconfigure an
-          // owner whose deletion survived a force-quit/relaunch.
-          await hydrateAccountDeletionVendorFreeze(resolvedTargetUserId);
-
-          if (!mounted || seq !== sessionChangeSeqRef.current) return;
-          activeUserIdRef.current = resolvedTargetUserId;
-          if (!resolvedTargetUserId) explicitSignOutPendingRef.current = false;
-          const latestPendingSession = latestSessionForCompletedBoundary(
-            pendingBoundarySessionRef.current?.session,
-            resolvedSession,
-            resolvedTargetUserId,
-          );
-          pendingBoundarySessionRef.current = null;
-          sessionBoundaryActiveRef.current = false;
-          releaseSessionBoundaryWriteLock();
-          setSessionBoundaryError(false);
-          publishedSessionUserIdRef.current = latestPendingSession?.user.id ?? null;
-          completedSessionPublicationRef.current += 1;
-          setCompletedSessionPublication(completedSessionPublicationRef.current);
-          providerAuthTransitionTracker.observe(authSessionFingerprint(latestPendingSession));
-          publishedProviderSessionRef.current = authSessionFingerprint(latestPendingSession);
-          setSession(latestPendingSession);
-          if (result.resetRoute) router.replace('/');
-          setInitializing(false);
-        } catch (error: unknown) {
-          if (
-            !(
-              accountIsolationE2EFixture &&
-              error instanceof Error &&
-              error.message.startsWith('E2E_')
-            )
-          ) {
-            devWarn(
-              initialRestore
-                ? '[auth] local account isolation failed during session restore'
-                : '[auth] local account isolation failed during session transition',
-              error,
+              },
             );
-          }
-          if (!mounted || seq !== sessionChangeSeqRef.current) return;
-          showSessionBoundary(resolvedSession);
-          setInitializing(false);
-          setSessionBoundaryError(true);
-        }
-      })();
+            if (deletionCompleted && !result.cleared) {
+              await clearAccountIsolatedState();
+              result = { cleared: true, resetRoute: true };
+            }
+            await devLocalResetCoordinator.runIfRequired(resolvedTargetUserId, isCurrent);
+            if (devLocalResetCoordinator.isPublicationBlocked()) {
+              throw new Error('E2E_LOCAL_RESET_INCOMPLETE');
+            }
+            // Hydrate the durable deletion receipt before publishing the session.
+            // The RevenueCat effect below can therefore never reconfigure an
+            // owner whose deletion survived a force-quit/relaunch.
+            const revenueCatFreezeState = await hydrateAccountDeletionVendorFreeze(
+              resolvedTargetUserId,
+            );
+            // A native RevenueCat singleton can outlive the local JS/session
+            // owner (for example across a reload). Keep the session unpublished
+            // until it is anonymous or, only with an open deletion gate, proves
+            // this exact target. Failure remains behind SessionBoundaryGate and
+            // its explicit retry path.
+            if (sessionBoundaryActiveRef.current && !accountIsolationE2EFixture) {
+              await prepareRevenueCatIdentityForSessionPublication(
+                revenueCatFreezeState === 'frozen' ? null : resolvedTargetUserId,
+              );
+            }
 
-      boundaryInFlightRef.current = { effectEpoch, promise, targetUserId };
-      void promise.finally(() => {
-        if (boundaryInFlightRef.current?.promise === promise) {
-          boundaryInFlightRef.current = null;
-        }
+            if (devLocalResetCoordinator.isPublicationBlocked()) {
+              throw new Error('E2E_LOCAL_RESET_INCOMPLETE');
+            }
+            if (!mounted || !isCurrent()) return;
+            activeUserIdRef.current = resolvedTargetUserId;
+            if (!resolvedTargetUserId) explicitSignOutPendingRef.current = false;
+            const latestPendingSession = latestSessionForCompletedBoundary(
+              pendingBoundarySessionRef.current?.session,
+              resolvedSession,
+              resolvedTargetUserId,
+            );
+            pendingBoundarySessionRef.current = null;
+            sessionBoundaryActiveRef.current = false;
+            releaseSessionBoundaryWriteLock();
+            setSessionBoundaryError(false);
+            publishedSessionUserIdRef.current = latestPendingSession?.user.id ?? null;
+            completedSessionPublicationRef.current += 1;
+            setCompletedSessionPublication(completedSessionPublicationRef.current);
+            providerAuthTransitionTracker.observe(authSessionFingerprint(latestPendingSession));
+            publishedProviderSessionRef.current = authSessionFingerprint(latestPendingSession);
+            publishedSessionRef.current = latestPendingSession;
+            setSession(latestPendingSession);
+            const redirectAfterDevReset =
+              devLocalResetCoordinator.consumeRedirectAfterSuccessfulPublication();
+            if (result.resetRoute || redirectAfterDevReset) router.replace('/');
+            setInitializing(false);
+          } catch (error: unknown) {
+            if (
+              !(
+                accountIsolationE2EFixture &&
+                error instanceof Error &&
+                error.message.startsWith('E2E_')
+              )
+            ) {
+              devWarn(
+                initialRestore
+                  ? '[auth] local account isolation failed during session restore'
+                  : '[auth] local account isolation failed during session transition',
+                error,
+              );
+            }
+            if (!mounted || !isCurrent()) return;
+            showSessionBoundary(resolvedSession);
+            setInitializing(false);
+            setSessionBoundaryError(true);
+          }
+        },
       });
-      return promise;
     }
 
     applySessionBoundaryRef.current = applySessionBoundary;
 
     async function restoreSession(): Promise<void> {
       if (!mounted) return;
-      const seqBeforeRestore = sessionChangeSeqRef.current;
+      const seqBeforeRestore = sessionBoundaryQueueRef.current.sequence;
       showSessionBoundary(null);
       try {
         const { data, error: sessionError } = await supabase.auth.getSession();
         if (sessionError) throw sessionError;
-        if (!mounted || seqBeforeRestore !== sessionChangeSeqRef.current) return;
+        if (!mounted || seqBeforeRestore !== sessionBoundaryQueueRef.current.sequence) return;
         retrySessionRestoreRef.current = null;
         await applySessionBoundary(data.session, true);
       } catch (error: unknown) {
         devWarn('[auth] initial session restore failed', error);
-        if (!mounted || seqBeforeRestore !== sessionChangeSeqRef.current) return;
+        if (!mounted || seqBeforeRestore !== sessionBoundaryQueueRef.current.sequence) return;
         retrySessionRestoreRef.current = restoreSession;
         showSessionBoundary(null);
         setInitializing(false);
@@ -423,7 +472,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       releaseSessionBoundaryWriteLock();
       sub.subscription.unsubscribe();
     };
-  }, [accountIsolationE2EFixture, providerAuthTransitionTracker]);
+  }, [accountIsolationE2EFixture, devLocalResetCoordinator, providerAuthTransitionTracker]);
 
   // Start/stop token auto-refresh with app foreground/background (docs/01 §5).
   useEffect(() => {
@@ -447,10 +496,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       !cancelled && !sessionBoundaryActiveRef.current && activeUserIdRef.current === userId;
 
     void runAccountGenerationOperation(async (lease) => {
-      await configureRevenueCat(userId);
+      const revenueCatOwner = { appUserId: userId, lease } as const;
+      await configureRevenueCat(revenueCatOwner);
       lease.assertCurrent();
       if (!canWriteForUser()) return;
-      const current = await getCustomerInfo();
+      const current = await getCustomerInfo(revenueCatOwner);
       lease.assertCurrent();
       if (!canWriteForUser()) return;
       const entitlement = current ? customerInfoToStoredEntitlement(current) : null;
@@ -459,11 +509,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       lease.assertCurrent();
       if (!canWriteForUser()) return;
 
-      cleanup = await subscribeToCustomerInfoUpdates((customerInfo) => {
+      const listenerGeneration = lease.generation;
+      cleanup = await subscribeToCustomerInfoUpdates(revenueCatOwner, (customerInfo) => {
         if (!canWriteForUser()) return;
-        const next = customerInfoToStoredEntitlement(customerInfo);
-        if (next) void saveVerifiedEntitlement(next);
-        else void clearStoreEntitlementIfRevenueCatVerifiedEmpty();
+        void runAccountGenerationOperation(async (callbackLease) => {
+          if (callbackLease.generation !== listenerGeneration || !canWriteForUser()) return;
+          callbackLease.assertCurrent();
+          const next = customerInfoToStoredEntitlement(customerInfo);
+          if (next) await saveVerifiedEntitlement(next);
+          else await clearStoreEntitlementIfRevenueCatVerifiedEmpty();
+          callbackLease.assertCurrent();
+        }).catch((error: unknown) => {
+          devWarn('[revenuecat] listener update failed', error);
+        });
       });
       if (cancelled && cleanup) cleanup();
     }).catch((error: unknown) => {
@@ -486,6 +544,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       sessionBoundaryError,
       anonymousOnboardingHandoff,
       completedSessionPublication,
+      resetLocalStateForE2E,
       async retrySessionBoundary() {
         const restoreSession = retrySessionRestoreRef.current;
         if (restoreSession) {
@@ -495,18 +554,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const pending = pendingBoundarySessionRef.current;
         if (!pending) return;
         showSessionBoundaryRef.current(pending.session);
-        await applySessionBoundaryRef.current(pending.session);
+        await applySessionBoundaryRef.current(
+          pending.session,
+          false,
+          devLocalResetCoordinator.isPublicationBlocked(),
+        );
       },
       async ensureAnonymousSession(captchaToken?: string) {
         if (!isSupabaseConfigured) return null;
         return authMutationFence.runExclusive(async () => {
-          const resolving = welcomeHandoffCoordinator.begin(sessionChangeSeqRef.current);
+          const resolving = welcomeHandoffCoordinator.begin(
+            sessionBoundaryQueueRef.current.sequence,
+          );
           const { requestId } = resolving;
 
           const latestAuthTargetUserId = (): string | null => {
             const pendingBoundary = pendingBoundarySessionRef.current;
             if (pendingBoundary) return pendingBoundary.session?.user.id ?? null;
-            const inFlightBoundary = boundaryInFlightRef.current;
+            const inFlightBoundary = sessionBoundaryQueueRef.current.inFlight;
             if (inFlightBoundary) return inFlightBoundary.targetUserId;
             return publishedSessionUserIdRef.current;
           };
@@ -519,7 +584,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const expectedUserId = nextSession.user.id;
             const resolution = decideAnonymousSessionResolution({
               authTransitionEpochAtStart: resolving.authTransitionEpochAtStart,
-              currentAuthTransitionEpoch: sessionChangeSeqRef.current,
+              currentAuthTransitionEpoch: sessionBoundaryQueueRef.current.sequence,
               expectedUserId,
               latestAuthTargetUserId: latestAuthTargetUserId(),
             });
@@ -675,12 +740,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     anonymousOnboardingHandoff,
     authMutationFence,
     completedSessionPublication,
+    devLocalResetCoordinator,
     initializing,
     isAnonymousOnboardingHandoffCurrent,
     providerAuthCommitCoordinator,
     providerAuthTransitionTracker,
     providerSignInCoordinator,
     registerAnonymousOnboardingConsumer,
+    resetLocalStateForE2E,
     session,
     sessionBoundaryError,
     settleAnonymousOnboardingHandoff,

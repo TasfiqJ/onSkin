@@ -100,16 +100,6 @@ describe('onboarding route contracts', () => {
     expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
     expect(source).toContain("process.env.EXPO_PUBLIC_E2E_LOCAL_RESET !== '1'");
     expect(source).toContain("return value === 'local'");
-    expect(source).not.toMatch(
-      /import\s+{\s*clearLocalPrivateData\s*}\s+from\s+['"]@\/features\/settings\/localPrivateData['"]/,
-    );
-    expect(source).toContain("await import('@/features/settings/localPrivateData')");
-    expect(source.indexOf('if (!shouldRunE2ELocalReset(params.e2eReset)) return;')).toBeLessThan(
-      source.indexOf("await import('@/features/settings/localPrivateData')"),
-    );
-    expect(source).toContain('await clearLocalPrivateData();');
-    expect(source).toContain('queryClient.clear()');
-    expect(source).toContain("router.replace('/')");
     expect(source).toContain('...onboardingStatusQueryOptions(ownerScope)');
     expect(source).toContain('isFocused && !resetting && !initializing');
     expect(source).toContain('useIsFocused()');
@@ -124,6 +114,30 @@ describe('onboarding route contracts', () => {
     expect(source).toContain(
       "if (onboardingGate === 'checking' || onboardingGate === 'redirect_today') return null;",
     );
+  });
+
+  it('delegates the E2E local reset to AuthProvider without a route-owned fail-open', () => {
+    const source = readAppRoute('index.tsx');
+
+    expect(source).not.toMatch(
+      /import\s+{\s*clearLocalPrivateData\s*}\s+from\s+['"]@\/features\/settings\/localPrivateData['"]/,
+    );
+    expect(source).not.toContain("await import('@/features/settings/localPrivateData')");
+    expect(source).not.toContain('await clearLocalPrivateData();');
+    expect(source).not.toContain("await import('@/lib/auth/localAccountIsolation')");
+    expect(source).not.toContain('await clearAccountIsolatedState();');
+    expect(source).toContain('resetLocalStateForE2E,');
+    expect(source).toContain('const e2eResetRequestStartedRef = useRef(false);');
+    expect(source).toContain('if (e2eResetRequestStartedRef.current) return;');
+    expect(source).toContain('e2eResetRequestStartedRef.current = true;');
+    expect(source).toContain('void resetLocalStateForE2E().catch(() => undefined);');
+    expect(source.indexOf('if (!shouldRunE2ELocalReset(params.e2eReset)) return;')).toBeLessThan(
+      source.indexOf('void resetLocalStateForE2E()'),
+    );
+    expect(source).toContain('const resetting = shouldRunE2ELocalReset(params.e2eReset);');
+    expect(source).not.toContain('setResetting(');
+    expect(source).not.toContain("router.replace('/')");
+    expect(source).not.toContain('queryClient.clear()');
   });
 
   it('fails the startup gate closed and keeps both retries accessible', () => {

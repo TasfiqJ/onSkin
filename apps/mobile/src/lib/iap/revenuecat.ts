@@ -11,13 +11,19 @@ import type {
 
 import type { StoredEntitlement } from '@/features/subscription/entitlement';
 import { PLANS } from '@/features/subscription/plans';
+import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
 import { accountDeletionVendorWritesBlocked } from '@/lib/auth/accountDeletionVendorFreezeRuntime';
 import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
 import {
-  createRevenueCatIdentityCoordinator,
+  RevenueCatIdentityMismatchError,
+  RevenueCatOperationBusyError,
+  RevenueCatOperationFencedError,
+  RevenueCatOwnerCoordinator,
   type RevenueCatIdentityAdapter,
-} from '@/lib/iap/revenuecatIdentity';
+  type RevenueCatOwnerContext,
+  type RevenueCatOwnerStamp,
+} from '@/lib/iap/revenuecatOwnerCoordinator';
 import { createRevenueCatOperationBarrier } from '@/lib/iap/revenuecatOperationBarrier';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 
@@ -85,9 +91,37 @@ type PurchaseResult = {
   customerInfo?: CustomerInfo;
 };
 
-let configurePromise: Promise<void> | null = null;
-let cachedOfferings: PurchasesOfferings | null = null;
-const identityCoordinator = createRevenueCatIdentityCoordinator();
+type NativePurchaseResult = {
+  customerInfo: CustomerInfo;
+  productIdentifier: string;
+};
+
+type RevenueCatAdapter = RevenueCatIdentityAdapter & {
+  addCustomerInfoUpdateListener: (listener: CustomerInfoUpdateListener) => void;
+  getCustomerInfo: () => Promise<CustomerInfo>;
+  getEligibleWinBackOffersForPackage: (
+    pack: PurchasesPackage,
+  ) => Promise<PurchasesWinBackOffer[] | undefined>;
+  getOfferings: () => Promise<PurchasesOfferings>;
+  purchasePackage: (pack: PurchasesPackage) => Promise<NativePurchaseResult>;
+  purchasePackageWithWinBackOffer: (
+    pack: PurchasesPackage,
+    offer: PurchasesWinBackOffer,
+  ) => Promise<NativePurchaseResult>;
+  purchaseCancelledErrorCode: string;
+  removeCustomerInfoUpdateListener: (listener: CustomerInfoUpdateListener) => boolean;
+  restorePurchases: () => Promise<CustomerInfo>;
+  showManageSubscriptions: () => Promise<void>;
+};
+
+type OwnerTaggedOfferings = {
+  offerings: PurchasesOfferings;
+  stamp: RevenueCatOwnerStamp;
+};
+
+let cachedOfferings: OwnerTaggedOfferings | null = null;
+let adapterPromise: Promise<RevenueCatAdapter> | null = null;
+const ownerCoordinator = new RevenueCatOwnerCoordinator();
 const deletionOperationBarrier = createRevenueCatOperationBarrier(
   accountDeletionVendorWritesBlocked,
 );
@@ -97,6 +131,12 @@ const STORE_CHECKOUT_UNAVAILABLE_REASON =
   'Store checkout is unavailable right now. Please try again later.';
 const PREVIEW_CHECKOUT_DISABLED_REASON =
   'Store checkout is unavailable in this preview. You can keep exploring.';
+const REVENUECAT_SESSION_PUBLICATION_TIMEOUT_MS = 2_000;
+
+export type RevenueCatOperationContext = Readonly<{
+  appUserId: string;
+  lease: AccountGenerationLease;
+}>;
 
 function revenueCatKey(): string {
   if (env.appEnvironment === 'development' && env.revenueCatTestStoreKey.length > 0) {
@@ -139,6 +179,11 @@ function productionRequiresRevenueCat(action: string): void {
 async function loadPurchases() {
   const mod = await import('react-native-purchases');
   return mod.default;
+}
+
+function runDeletionTracked<T>(operation: () => T | Promise<T>): Promise<T> {
+  const tracked = deletionOperationBarrier.run(operation);
+  return tracked ?? Promise.reject(new RevenueCatOperationFencedError());
 }
 
 function entitlementInfo(customerInfo: CustomerInfo) {
@@ -300,65 +345,136 @@ function findPackage(offerings: PurchasesOfferings, plan: PlanId): PurchasesPack
   return current.availablePackages.find((pack) => pack.product.identifier === productId) ?? null;
 }
 
-async function requireConfigured(action: string) {
+function ownerContext(context: RevenueCatOperationContext): RevenueCatOwnerContext {
+  assertAppUserId(context.appUserId);
+  context.lease.assertCurrent();
+  return context;
+}
+
+async function requireConfigured(context: RevenueCatOperationContext, action: string) {
   if (accountDeletionVendorWritesBlocked()) return null;
   if (!canUseRevenueCat()) {
     productionRequiresRevenueCat(action);
     return null;
   }
-  if (configurePromise) await configurePromise;
+  await configureRevenueCat(context);
+  context.lease.assertCurrent();
   if (accountDeletionVendorWritesBlocked()) return null;
-  if (!identityCoordinator.currentUserId()) {
-    productionRequiresRevenueCat(action);
+  ownerCoordinator.stampFor(ownerContext(context));
+  return loadRevenueCatIdentityAdapter();
+}
+
+async function loadRevenueCatIdentityAdapter(): Promise<RevenueCatAdapter> {
+  if (adapterPromise) return adapterPromise;
+  const loading = (async () => {
+    const Purchases = await loadPurchases();
+    const apiKey = revenueCatKey();
+    assertRevenueCatKeyAllowed(apiKey);
+    await Purchases.setLogLevel(__DEV__ ? Purchases.LOG_LEVEL.DEBUG : Purchases.LOG_LEVEL.WARN);
+    return {
+      addCustomerInfoUpdateListener: (listener) =>
+        Purchases.addCustomerInfoUpdateListener(listener),
+      configure: (appUserId, markNativeConfigureDispatched) =>
+        runDeletionTracked(() => {
+          Purchases.configure({
+            apiKey,
+            appUserID: appUserId,
+            automaticDeviceIdentifierCollectionEnabled: false,
+          });
+          // Mark only after the barrier admitted the callback and the native
+          // bridge call returned without throwing. A pre-dispatch barrier
+          // rejection must not leave an impossible configure quarantine.
+          markNativeConfigureDispatched();
+        }),
+      // These direct same-module bridge reads are ordered behind configure(),
+      // remain callable while cleanup writes are blocked, and do not require a
+      // network customer-info refresh. A genuinely unconfigured SDK resolves
+      // false, allowing pre-dispatch barrier rejection to recover safely.
+      fenceIdentity: async () => {
+        const configured = await Purchases.isConfigured();
+        if (configured) await Purchases.getAppUserID();
+        return { configured };
+      },
+      getAppUserID: () => Purchases.getAppUserID(),
+      getCustomerInfo: () => runDeletionTracked(() => Purchases.getCustomerInfo()),
+      getEligibleWinBackOffersForPackage: (pack) =>
+        runDeletionTracked(() => Purchases.getEligibleWinBackOffersForPackage(pack)),
+      getOfferings: () => runDeletionTracked(() => Purchases.getOfferings()),
+      isAnonymous: () => Purchases.isAnonymous(),
+      isConfigured: () => Purchases.isConfigured(),
+      logIn: (appUserId) => runDeletionTracked(() => Purchases.logIn(appUserId)),
+      // Logout and its identity probes are cleanup operations and intentionally
+      // remain available after the durable deletion write gate is armed.
+      logOut: () => Purchases.logOut(),
+      purchasePackage: (pack) =>
+        runDeletionTracked(() => Purchases.purchasePackage(pack)),
+      purchasePackageWithWinBackOffer: (pack, offer) =>
+        runDeletionTracked(() => Purchases.purchasePackageWithWinBackOffer(pack, offer)),
+      purchaseCancelledErrorCode: Purchases.PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR,
+      removeCustomerInfoUpdateListener: (listener) =>
+        Purchases.removeCustomerInfoUpdateListener(listener),
+      restorePurchases: () => runDeletionTracked(() => Purchases.restorePurchases()),
+      showManageSubscriptions: () =>
+        runDeletionTracked(() => Purchases.showManageSubscriptions()),
+    } satisfies RevenueCatAdapter;
+  })();
+  adapterPromise = loading;
+  try {
+    return await loading;
+  } catch (error) {
+    if (adapterPromise === loading) adapterPromise = null;
+    throw error;
+  }
+}
+
+function cachedOfferingsFor(context: RevenueCatOperationContext): PurchasesOfferings | null {
+  if (
+    !cachedOfferings ||
+    cachedOfferings.stamp.appUserId !== context.appUserId ||
+    cachedOfferings.stamp.generation !== context.lease.generation ||
+    !ownerCoordinator.isStampCurrent(cachedOfferings.stamp)
+  ) {
     return null;
   }
-  return loadPurchases();
+  return cachedOfferings.offerings;
 }
 
-async function loadRevenueCatIdentityAdapter(): Promise<RevenueCatIdentityAdapter> {
-  const Purchases = await loadPurchases();
-  const apiKey = revenueCatKey();
-  assertRevenueCatKeyAllowed(apiKey);
-  await Purchases.setLogLevel(__DEV__ ? Purchases.LOG_LEVEL.DEBUG : Purchases.LOG_LEVEL.WARN);
-  return {
-    configure: (appUserId) =>
-      deletionOperationBarrier.run(() =>
-        Purchases.configure({
-          apiKey,
-          appUserID: appUserId,
-          automaticDeviceIdentifierCollectionEnabled: false,
-        }),
-      ) ?? Promise.resolve(),
-    // This call intentionally bypasses the deletion write barrier: it is the
-    // supported native completion fence for configure(), whose JS API returns
-    // void, and performs no identity write of its own.
-    fenceIdentity: () => Purchases.getCustomerInfo(),
-    isAnonymous: () => Purchases.isAnonymous(),
-    isConfigured: () => Purchases.isConfigured(),
-    logIn: (appUserId) =>
-      deletionOperationBarrier.run(() => Purchases.logIn(appUserId)) ?? Promise.resolve(),
-    logOut: () => Purchases.logOut(),
-  };
-}
-
-async function fetchOfferings(): Promise<PurchasesOfferings | null> {
-  const Purchases = await requireConfigured('offerings');
-  if (!Purchases) return null;
-  const operation = deletionOperationBarrier.run(() => Purchases.getOfferings());
-  if (!operation) return null;
-  cachedOfferings = await operation;
-  return cachedOfferings;
-}
-
-async function winBackViewForPackage(pack: PurchasesPackage): Promise<WinBackOfferView | null> {
-  if (Platform.OS !== 'ios') return null;
-  const Purchases = await requireConfigured('win-back offers');
-  if (!Purchases) return null;
-
-  const operation = deletionOperationBarrier.run(() =>
-    Purchases.getEligibleWinBackOffersForPackage(pack),
+async function fetchOfferings(
+  context: RevenueCatOperationContext,
+): Promise<PurchasesOfferings | null> {
+  const adapter = await requireConfigured(context, 'offerings');
+  if (!adapter) return null;
+  const existing = cachedOfferingsFor(context);
+  if (existing) return existing;
+  const offerings = await ownerCoordinator.runRead(
+    ownerContext(context),
+    loadRevenueCatIdentityAdapter,
+    (current) => current.getOfferings(),
   );
-  const offers = operation ? await operation.catch(() => undefined) : undefined;
+  context.lease.assertCurrent();
+  const stamp = ownerCoordinator.stampFor(ownerContext(context));
+  cachedOfferings = { offerings, stamp };
+  return offerings;
+}
+
+async function winBackViewForPackage(
+  context: RevenueCatOperationContext,
+  pack: PurchasesPackage,
+): Promise<WinBackOfferView | null> {
+  if (Platform.OS !== 'ios') return null;
+  const adapter = await requireConfigured(context, 'win-back offers');
+  if (!adapter) return null;
+
+  let offers: PurchasesWinBackOffer[] | undefined;
+  try {
+    offers = await ownerCoordinator.runRead(
+      ownerContext(context),
+      loadRevenueCatIdentityAdapter,
+      (current) => current.getEligibleWinBackOffersForPackage(pack),
+    );
+  } catch {
+    context.lease.assertCurrent();
+  }
   const offer: PurchasesWinBackOffer | undefined = offers?.[0];
   if (!offer) return null;
 
@@ -384,35 +500,22 @@ async function winBackViewForPackage(pack: PurchasesPackage): Promise<WinBackOff
 }
 
 /** Bind RevenueCat to the stable Supabase user id. Never configure with email or a device id. */
-export async function configureRevenueCat(appUserId: string): Promise<void> {
-  if (!appUserId) return;
+export async function configureRevenueCat(context: RevenueCatOperationContext): Promise<void> {
+  const owned = ownerContext(context);
   if (accountDeletionVendorWritesBlocked()) return;
-  assertAppUserId(appUserId);
   if (!canUseRevenueCat()) {
     productionRequiresRevenueCat('configuration');
     return;
   }
-  if (identityCoordinator.currentUserId() === appUserId) return;
-  // Offering/package objects belong to the configured store identity.
-  cachedOfferings = null;
-  const operation = identityCoordinator.configureFor(
-    appUserId,
-    loadRevenueCatIdentityAdapter,
-    () => !accountDeletionVendorWritesBlocked(),
-  );
-
-  configurePromise = operation;
-  await operation;
+  await ownerCoordinator.configureFor(owned, loadRevenueCatIdentityAdapter);
 }
 
 async function resetRevenueCatSdkIdentity(): Promise<void> {
+  cachedOfferings = null;
   try {
     if (!canUseRevenueCat()) return;
-    const operation = identityCoordinator.reset(loadRevenueCatIdentityAdapter);
-    configurePromise = operation;
-    await operation;
+    await ownerCoordinator.reset(loadRevenueCatIdentityAdapter);
   } finally {
-    configurePromise = null;
     cachedOfferings = null;
   }
 }
@@ -426,16 +529,60 @@ export async function resetRevenueCatIdentity(): Promise<void> {
 }
 
 /**
- * Called only after the durable deletion gate is armed. No new asynchronous
- * subscriber operation can register. The deletion-specific reset then performs
- * an ordered native customer-info read to fence configure(), whose JS API is
- * synchronous even though its native initialization can continue.
+ * Fail-closed gate used by AuthProvider before publishing a restored or
+ * switched session. The native SDK must be anonymous or already bound to the
+ * exact session owner; a mismatched authenticated owner is logged out first.
  */
-export async function waitForRevenueCatOperationsToSettle(): Promise<void> {
-  await deletionOperationBarrier.waitForSettled();
+export async function prepareRevenueCatIdentityForSessionPublication(
+  appUserId: string | null,
+): Promise<void> {
+  if (appUserId) assertAppUserId(appUserId);
+  cachedOfferings = null;
+  if (!canUseRevenueCat()) return;
+
+  const proof = ownerCoordinator.prepareForSessionPublication(
+    appUserId,
+    loadRevenueCatIdentityAdapter,
+  );
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<void>((_resolve, reject) => {
+    timeout = setTimeout(
+      () => reject(new Error('REVENUECAT_SESSION_PUBLICATION_TIMEOUT')),
+      REVENUECAT_SESSION_PUBLICATION_TIMEOUT_MS,
+    );
+  });
+
+  try {
+    await Promise.race([proof, deadline]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+    cachedOfferings = null;
+  }
 }
 
-export async function getSubscriptionOffering(): Promise<SubscriptionOfferingView> {
+/**
+ * Called only after the durable deletion gate is armed. No new asynchronous
+ * subscriber operation can register. Identity hazards remain tracked beyond a
+ * detached account owner, including the ordered native identity-state fence
+ * and exact app-user proof that follow configure(), whose JavaScript API
+ * returns void.
+ */
+export async function waitForRevenueCatOperationsToSettle(): Promise<void> {
+  while (true) {
+    await deletionOperationBarrier.waitForSettled();
+    await ownerCoordinator.waitForNativeHazardsToSettle();
+    if (
+      deletionOperationBarrier.activeCount() === 0 &&
+      ownerCoordinator.activeNativeCount() === 0
+    ) {
+      return;
+    }
+  }
+}
+
+export async function getSubscriptionOffering(
+  context: RevenueCatOperationContext,
+): Promise<SubscriptionOfferingView> {
   if (!canUseRevenueCat()) {
     if (env.appEnvironment === 'production') {
       return unavailableOffering(STORE_CHECKOUT_UNAVAILABLE_REASON);
@@ -452,8 +599,9 @@ export async function getSubscriptionOffering(): Promise<SubscriptionOfferingVie
 
   let offerings: PurchasesOfferings | null;
   try {
-    offerings = await fetchOfferings();
+    offerings = await fetchOfferings(context);
   } catch {
+    context.lease.assertCurrent();
     return unavailableOffering(STORE_CHECKOUT_UNAVAILABLE_REASON);
   }
 
@@ -470,7 +618,7 @@ export async function getSubscriptionOffering(): Promise<SubscriptionOfferingVie
     offeringId: current.identifier,
     annual: packageToView('annual', annual, true),
     monthly: packageToView('monthly', monthly, true),
-    winBack: await winBackViewForPackage(annual),
+    winBack: await winBackViewForPackage(context, annual),
   };
 }
 
@@ -507,11 +655,14 @@ export function customerInfoToStoredEntitlement(
  * Opens the native StoreKit/Play purchase sheet. Production never returns a stub;
  * callers must grant access only from returned CustomerInfo.
  */
-export async function purchasePackage(plan: PlanId): Promise<PurchaseResult> {
-  const Purchases = await requireConfigured('purchase');
-  if (!Purchases) return { purchased: false };
+export async function purchasePackage(
+  context: RevenueCatOperationContext,
+  plan: PlanId,
+): Promise<PurchaseResult> {
+  const adapter = await requireConfigured(context, 'purchase');
+  if (!adapter) return { purchased: false };
 
-  const offerings = cachedOfferings ?? (await fetchOfferings());
+  const offerings = cachedOfferingsFor(context) ?? (await fetchOfferings(context));
   const selectedPackage = offerings ? findPackage(offerings, plan) : null;
   if (!selectedPackage) {
     throw new Error(
@@ -521,11 +672,12 @@ export async function purchasePackage(plan: PlanId): Promise<PurchaseResult> {
   if (accountDeletionVendorWritesBlocked()) return { purchased: false };
 
   try {
-    const operation = deletionOperationBarrier.run(() =>
-      Purchases.purchasePackage(selectedPackage),
+    const result = await ownerCoordinator.runHazard(
+      ownerContext(context),
+      'purchase',
+      loadRevenueCatIdentityAdapter,
+      (current) => current.purchasePackage(selectedPackage),
     );
-    if (!operation) return { purchased: false };
-    const result = await operation;
     return {
       purchased: hasActiveEntitlement(result.customerInfo),
       productId: result.productIdentifier,
@@ -540,7 +692,7 @@ export async function purchasePackage(plan: PlanId): Promise<PurchaseResult> {
     const purchasesError = error as { code?: string; userCancelled?: boolean };
     if (
       purchasesError.userCancelled ||
-      purchasesError.code === Purchases.PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR
+      purchasesError.code === adapter.purchaseCancelledErrorCode
     ) {
       return { purchased: false, cancelled: true };
     }
@@ -548,28 +700,37 @@ export async function purchasePackage(plan: PlanId): Promise<PurchaseResult> {
   }
 }
 
-export async function purchaseWinBackPackage(): Promise<PurchaseResult> {
-  const Purchases = await requireConfigured('win-back purchase');
-  if (!Purchases) return { purchased: false };
+export async function purchaseWinBackPackage(
+  context: RevenueCatOperationContext,
+): Promise<PurchaseResult> {
+  const adapter = await requireConfigured(context, 'win-back purchase');
+  if (!adapter) return { purchased: false };
 
-  const offerings = cachedOfferings ?? (await fetchOfferings());
+  const offerings = cachedOfferingsFor(context) ?? (await fetchOfferings(context));
   const annualPackage = offerings ? findPackage(offerings, 'annual') : null;
   if (!annualPackage || Platform.OS !== 'ios') return { purchased: false, offerUnavailable: true };
 
-  const offerOperation = deletionOperationBarrier.run(() =>
-    Purchases.getEligibleWinBackOffersForPackage(annualPackage),
-  );
-  const offers = offerOperation ? await offerOperation.catch(() => undefined) : undefined;
+  let offers: PurchasesWinBackOffer[] | undefined;
+  try {
+    offers = await ownerCoordinator.runRead(
+      ownerContext(context),
+      loadRevenueCatIdentityAdapter,
+      (current) => current.getEligibleWinBackOffersForPackage(annualPackage),
+    );
+  } catch {
+    context.lease.assertCurrent();
+  }
   const winBackOffer = offers?.[0];
   if (!winBackOffer) return { purchased: false, offerUnavailable: true };
   if (accountDeletionVendorWritesBlocked()) return { purchased: false };
 
   try {
-    const operation = deletionOperationBarrier.run(() =>
-      Purchases.purchasePackageWithWinBackOffer(annualPackage, winBackOffer),
+    const result = await ownerCoordinator.runHazard(
+      ownerContext(context),
+      'winback',
+      loadRevenueCatIdentityAdapter,
+      (current) => current.purchasePackageWithWinBackOffer(annualPackage, winBackOffer),
     );
-    if (!operation) return { purchased: false };
-    const result = await operation;
     return {
       purchased: hasActiveEntitlement(result.customerInfo),
       productId: result.productIdentifier,
@@ -584,7 +745,7 @@ export async function purchaseWinBackPackage(): Promise<PurchaseResult> {
     const purchasesError = error as { code?: string; userCancelled?: boolean };
     if (
       purchasesError.userCancelled ||
-      purchasesError.code === Purchases.PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR
+      purchasesError.code === adapter.purchaseCancelledErrorCode
     ) {
       return { purchased: false, cancelled: true };
     }
@@ -593,46 +754,101 @@ export async function purchaseWinBackPackage(): Promise<PurchaseResult> {
 }
 
 /** Re-syncs entitlements for reinstalls/device switches. */
-export async function restorePurchases(): Promise<{
+export async function restorePurchases(
+  context: RevenueCatOperationContext,
+): Promise<{
   restored: boolean;
   customerInfo?: CustomerInfo;
 }> {
-  const Purchases = await requireConfigured('restore');
-  if (!Purchases) return { restored: false };
+  const adapter = await requireConfigured(context, 'restore');
+  if (!adapter) return { restored: false };
   if (accountDeletionVendorWritesBlocked()) return { restored: false };
 
-  const operation = deletionOperationBarrier.run(() => Purchases.restorePurchases());
-  if (!operation) return { restored: false };
-  const customerInfo = await operation;
+  const customerInfo = await ownerCoordinator.runHazard(
+    ownerContext(context),
+    'restore',
+    loadRevenueCatIdentityAdapter,
+    (current) => current.restorePurchases(),
+  );
   return { restored: hasActiveEntitlement(customerInfo), customerInfo };
 }
 
-export async function getCustomerInfo(): Promise<CustomerInfo | null> {
-  const Purchases = await requireConfigured('customer info');
-  if (!Purchases) return null;
-  const operation = deletionOperationBarrier.run(() => Purchases.getCustomerInfo());
-  return operation ? await operation : null;
+export async function getCustomerInfo(
+  context: RevenueCatOperationContext,
+): Promise<CustomerInfo | null> {
+  const adapter = await requireConfigured(context, 'customer info');
+  if (!adapter) return null;
+  return ownerCoordinator.runRead(
+    ownerContext(context),
+    loadRevenueCatIdentityAdapter,
+    (current) => current.getCustomerInfo(),
+  );
 }
 
 export async function subscribeToCustomerInfoUpdates(
+  context: RevenueCatOperationContext,
   listener: CustomerInfoUpdateListener,
 ): Promise<() => void> {
   if (accountDeletionVendorWritesBlocked() || !canUseRevenueCat()) return () => {};
-  const Purchases = await loadPurchases();
+  const adapter = await requireConfigured(context, 'customer info listener');
+  if (!adapter) return () => {};
   if (accountDeletionVendorWritesBlocked()) return () => {};
-  Purchases.addCustomerInfoUpdateListener(listener);
-  return () => {
-    Purchases.removeCustomerInfoUpdateListener(listener);
+  const stamp = ownerCoordinator.stampFor(ownerContext(context));
+  let cleanup: (() => void) | null = null;
+  const removeInstalledListener = () => {
+    const installed = cleanup;
+    if (installed) installed();
   };
+  try {
+    await ownerCoordinator.runRead(
+      ownerContext(context),
+      loadRevenueCatIdentityAdapter,
+      async (current) => {
+        const guarded: CustomerInfoUpdateListener = (customerInfo) => {
+          if (
+            accountDeletionVendorWritesBlocked() ||
+            !ownerCoordinator.isStampCurrent(stamp)
+          ) {
+            return;
+          }
+          listener(customerInfo);
+        };
+        current.addCustomerInfoUpdateListener(guarded);
+        cleanup = ownerCoordinator.registerListener(stamp, () => {
+          current.removeCustomerInfoUpdateListener(guarded);
+        });
+      },
+    );
+    return cleanup ?? (() => {});
+  } catch (error) {
+    removeInstalledListener();
+    throw error;
+  }
 }
 
-export async function showNativeManageSubscriptions(): Promise<boolean> {
+export async function showNativeManageSubscriptions(
+  context: RevenueCatOperationContext,
+): Promise<boolean> {
   if (Platform.OS !== 'ios' || !canUseRevenueCat()) return false;
   try {
-    const Purchases = await loadPurchases();
-    await Purchases.showManageSubscriptions();
+    const adapter = await requireConfigured(context, 'subscription management');
+    if (!adapter) return false;
+    await ownerCoordinator.runHazard(
+      ownerContext(context),
+      'manage',
+      loadRevenueCatIdentityAdapter,
+      (current) => current.showManageSubscriptions(),
+    );
     return true;
-  } catch {
+  } catch (error) {
+    context.lease.assertCurrent();
+    if (
+      error instanceof RevenueCatIdentityMismatchError ||
+      error instanceof RevenueCatOperationBusyError ||
+      error instanceof RevenueCatOperationFencedError
+    ) {
+      throw error;
+    }
     return false;
   }
 }

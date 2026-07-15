@@ -32,6 +32,7 @@ describe('account session isolation integration', () => {
   it('drains private writes, clears query memory, and keeps failed cleanup gated', () => {
     const provider = readSource('lib/auth/AuthProvider.tsx');
     const isolation = readSource('lib/auth/localAccountIsolation.ts');
+    const boundaryQueue = readSource('lib/auth/sessionBoundaryQueue.ts');
     const accountGeneration = readSource('lib/auth/accountGeneration.ts');
     const privateKV = readSource('lib/storage/privateKV.ts');
     const encryptedStorage = readSource('features/photos/encryptedStorage.ts');
@@ -48,9 +49,12 @@ describe('account session isolation integration', () => {
     expect(provider).toContain('beginAccountGenerationBoundary();');
     expect(provider).toContain('await waitForAccountGenerationOperationsToSettle();');
     expect(provider).toContain('await waitForPrivateKVWritesToSettle();');
-    expect(provider).toContain('if (previousTransition) await previousTransition;');
-    expect(provider).toContain('existing.effectEpoch === effectEpoch');
-    expect(provider).toContain('return applySessionBoundary(nextSession, initialRestore);');
+    expect(provider).toContain('enqueueSessionBoundaryOperation(sessionBoundaryQueueRef.current');
+    expect(boundaryQueue).toContain('if (previous) await previous;');
+    expect(boundaryQueue).toContain('existing.effectEpoch === options.effectEpoch');
+    expect(provider).toContain(
+      'await applySessionBoundary(nextSession, initialRestore, forceQueue);',
+    );
     expect(provider).toContain('retrySessionRestoreRef.current = restoreSession;');
     expect(provider).toContain('if (sessionError) throw sessionError;');
     expect(provider).toContain('invalidateLocalSupabaseSession()');
@@ -60,6 +64,13 @@ describe('account session isolation integration', () => {
       'void applySessionBoundary(accountIsolationE2EFixture.session, true);',
     );
     expect(provider).toContain('setSessionBoundaryError(true);');
+    expect(provider).toContain(
+      'devLocalResetCoordinator.runIfRequired(resolvedTargetUserId, isCurrent)',
+    );
+    expect(provider).toContain('devLocalResetCoordinator.isPublicationBlocked()');
+    expect(provider).toContain(
+      'devLocalResetCoordinator.consumeRedirectAfterSuccessfulPublication()',
+    );
     expect(provider).toContain("router.replace('/');");
     expect(provider).toContain('activeUserIdRef.current === userId');
     expect(isolation.match(/queryCache\.clear\(\)/g)).toHaveLength(2);

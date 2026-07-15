@@ -16,7 +16,6 @@ import {
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { isSupabaseConfigured } from '@/lib/env';
-import { queryClient } from '@/lib/query/queryClient';
 import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
@@ -38,6 +37,7 @@ export default function WelcomeScreen() {
     initializing,
     isAnonymousOnboardingHandoffCurrent,
     registerAnonymousOnboardingConsumer,
+    resetLocalStateForE2E,
     session,
     settleAnonymousOnboardingHandoff,
   } = useAuth();
@@ -45,9 +45,10 @@ export default function WelcomeScreen() {
   const ownerScope = useOwnerQueryScope();
   const activeWelcomeRef = useRef(false);
   const beginRequestSeqRef = useRef(0);
+  const e2eResetRequestStartedRef = useRef(false);
   const [busy, setBusy] = useState(false);
   const [beginError, setBeginError] = useState(false);
-  const [resetting, setResetting] = useState(() => shouldRunE2ELocalReset(params.e2eReset));
+  const resetting = shouldRunE2ELocalReset(params.e2eReset);
   const accountActionPending = busy || anonymousOnboardingHandoff !== null;
 
   useEffect(() => {
@@ -80,28 +81,13 @@ export default function WelcomeScreen() {
 
   useEffect(() => {
     if (!shouldRunE2ELocalReset(params.e2eReset)) return;
-    let active = true;
-
-    async function resetLocalState() {
-      setResetting(true);
-      try {
-        const { clearLocalPrivateData } = await import('@/features/settings/localPrivateData');
-        await clearLocalPrivateData();
-      } catch {
-        // Dev-only E2E fixture reset; keep the app reachable if one cleanup backend is unavailable.
-      }
-      queryClient.clear();
-      if (!active) return;
-      setResetting(false);
-      router.replace('/');
-    }
-
-    void resetLocalState();
-
-    return () => {
-      active = false;
-    };
-  }, [params.e2eReset]);
+    if (e2eResetRequestStartedRef.current) return;
+    e2eResetRequestStartedRef.current = true;
+    // AuthProvider owns the destructive boundary. A rejection deliberately
+    // remains behind SessionBoundaryGate, whose accessible retry re-enters the
+    // same serialized reset instead of letting this route fail open.
+    void resetLocalStateForE2E().catch(() => undefined);
+  }, [params.e2eReset, resetLocalStateForE2E]);
 
   // Onboarding-completion check as a query (no setState-in-effect). Reads the
   // local-first completion record FIRST (the v1 source of truth, D-029): a

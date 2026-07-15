@@ -20,9 +20,11 @@ export function useSubscriptionOffering({ enabled = true }: SubscriptionOffering
     staleTime: 5 * 60 * 1000,
     queryFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        if (user?.id) await configureRevenueCat(user.id);
+        if (!user?.id) throw new Error('REVENUECAT_OWNER_REQUIRED');
+        const owner = { appUserId: user.id, lease } as const;
+        await configureRevenueCat(owner);
         lease.assertCurrent();
-        return getSubscriptionOffering();
+        return getSubscriptionOffering(owner);
       }),
   });
 }

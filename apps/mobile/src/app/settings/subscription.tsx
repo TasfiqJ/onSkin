@@ -14,7 +14,6 @@ import { BRAND } from '@/lib/brand';
 import {
   MANAGE_SUBSCRIPTION_URL_ANDROID,
   MANAGE_SUBSCRIPTION_URL_IOS,
-  showNativeManageSubscriptions,
 } from '@/lib/iap/revenuecat';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
@@ -84,7 +83,7 @@ function Row({
 export default function SubscriptionScreen() {
   const { height, width } = useWindowDimensions();
   const { data } = useEntitlement();
-  const { restore } = useEntitlementActions();
+  const { manage, restore } = useEntitlementActions();
   const offering = useSubscriptionOffering();
   const [subscriptionFeedback, setSubscriptionFeedback] = useState<string | null>(null);
   const ultraShortSubscription = height < 460;
@@ -107,7 +106,13 @@ export default function SubscriptionScreen() {
         period_type: entitlementState.periodType,
       });
     }
-    const openedNative = await showNativeManageSubscriptions();
+    let openedNative: boolean;
+    try {
+      openedNative = await manage.mutateAsync();
+    } catch {
+      setSubscriptionFeedback(SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE);
+      return;
+    }
     if (openedNative) return;
     const fallbackUrl =
       Platform.OS === 'android' ? MANAGE_SUBSCRIPTION_URL_ANDROID : MANAGE_SUBSCRIPTION_URL_IOS;
