@@ -115,6 +115,21 @@ describe('Ask route launch contracts', () => {
     expect(composer).toContain('if (hidden) return null;');
   });
 
+  it('binds the route to the shared-snapshot Ask view model', () => {
+    const home = readAppRoute('ask/index.tsx');
+    const viewModel = readAskFeature('useAsk.ts');
+
+    expect(home).toContain("import { useAskViewModel } from '@/features/ask/useAsk';");
+    expect(home).toContain('useAskViewModel();');
+    expect(home).not.toContain('useAsk();');
+    expect(viewModel).toContain('const shelf = useShelf();');
+    expect(viewModel).toContain('const profile = useProfileBits();');
+    expect(viewModel).toContain('const plan = usePlanFromSources(shelf, profile);');
+    expect(viewModel).toContain('const recs = useRecommendationsFromSources(shelf, profile);');
+    expect(viewModel.match(/useShelf\(\)/g)).toHaveLength(1);
+    expect(viewModel.match(/useProfileBits\(\)/g)).toHaveLength(1);
+  });
+
   it('uses one trim, blank-rejection, and publish path for Return and Send', () => {
     const home = readAppRoute('ask/index.tsx');
     const composerStart = home.indexOf('function AskComposer({');

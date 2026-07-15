@@ -24,9 +24,24 @@ function isFragranced(p: ShelfProduct): boolean {
   return [p.name, ...p.ingredients].some((t) => /fragrance|parfum|perfume/i.test(t));
 }
 
-export function useRecommendations() {
-  const shelf = useShelf();
-  const profile = useProfileBits();
+export type RecommendationShelfSource = Pick<
+  ReturnType<typeof useShelf>,
+  'data' | 'isError' | 'isFetching' | 'isLoading' | 'isSuccess'
+>;
+export type RecommendationProfileSource = Pick<
+  ReturnType<typeof useProfileBits>,
+  'data' | 'isError' | 'isFetching' | 'isLoading' | 'isSuccess'
+>;
+
+/**
+ * Build recommendations from route-owned domain snapshots. This preserves the
+ * independent preferences observer while avoiding recursive Shelf/profile
+ * observers on routes that already consume those exact owner-scoped queries.
+ */
+export function useRecommendationsFromSources(
+  shelf: RecommendationShelfSource,
+  profile: RecommendationProfileSource,
+) {
   const ownerScope = useOwnerQueryScope();
   const [manualRetrying, setManualRetrying] = useState(false);
   const prefsQ = useQuery(recommendationInputsQueryOptions(ownerScope));
@@ -72,16 +87,11 @@ export function useRecommendations() {
 
   async function retry(): Promise<{ isError: boolean }> {
     if (manualRetrying) return { isError: true };
+    if (!prefsQ.isError) return { isError: false };
     setManualRetrying(true);
     try {
-      const results = await Promise.all([
-        shelf.isError ? shelf.refetch() : Promise.resolve(),
-        profile.isError ? profile.refetch() : Promise.resolve(),
-        prefsQ.isError ? prefsQ.refetch() : Promise.resolve(),
-      ]);
-      return {
-        isError: results.some((result) => result && 'isError' in result && result.isError),
-      };
+      const result = await prefsQ.refetch();
+      return { isError: result.isError };
     } finally {
       setManualRetrying(false);
     }
@@ -100,5 +110,28 @@ export function useRecommendations() {
     isFetching: manualRetrying || shelf.isFetching || profile.isFetching || prefsQ.isFetching,
     isSuccess,
     retry,
+  };
+}
+
+/** Standalone recommendation consumer. Route view models should prefer shared sources. */
+export function useRecommendations() {
+  const shelf = useShelf();
+  const profile = useProfileBits();
+  const recommendations = useRecommendationsFromSources(shelf, profile);
+
+  return {
+    ...recommendations,
+    retry: async (): Promise<{ isError: boolean }> => {
+      const results = await Promise.all([
+        shelf.isError ? shelf.refetch() : Promise.resolve(),
+        profile.isError ? profile.refetch() : Promise.resolve(),
+        recommendations.retry(),
+      ]);
+      return {
+        isError: results.some(
+          (result) => result && typeof result === 'object' && 'isError' in result && result.isError,
+        ),
+      };
+    },
   };
 }

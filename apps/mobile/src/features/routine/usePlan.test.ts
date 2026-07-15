@@ -9,11 +9,14 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { createOwnerQueryScope, queryKeys } from '@/lib/query/queryKeys';
 
-import { usePlan } from './usePlan';
+import { usePlan, usePlanFromSources } from './usePlan';
 
 const mocks = vi.hoisted(() => ({
   loadRoutineOrderOverrides: vi.fn(),
   ownerScope: { generation: 0 },
+  profileRefetch: vi.fn(),
+  shelfRefetch: vi.fn(),
+  useProfileBits: vi.fn(),
   useQuery: vi.fn((options: Record<string, unknown>) => ({
     ...options,
     data: { schemaVersion: 1, am: [], pm: [] },
@@ -23,39 +26,23 @@ const mocks = vi.hoisted(() => ({
     isSuccess: true,
     refetch: vi.fn(async () => undefined),
   })),
+  useShelf: vi.fn(),
 }));
 
 vi.mock('@tanstack/react-query', () => ({
   useQuery: mocks.useQuery,
 }));
 
+vi.mock('react', () => ({
+  useMemo: <T>(factory: () => T) => factory(),
+}));
+
 vi.mock('@/features/scheduler/profile', () => ({
-  useProfileBits: () => ({
-    data: {
-      goals: [],
-      moisture: 'balanced',
-      pregnancy: false,
-      pregnancySafety: 'standard',
-      pregnancyStatus: 'none',
-      sensitivity: 'neutral',
-    },
-    isError: false,
-    isFetching: false,
-    isPending: false,
-    isSuccess: true,
-    refetch: vi.fn(async () => undefined),
-  }),
+  useProfileBits: mocks.useProfileBits,
 }));
 
 vi.mock('@/features/shelf/useShelf', () => ({
-  useShelf: () => ({
-    data: { conflictChoices: {}, items: [] },
-    isError: false,
-    isFetching: false,
-    isPending: false,
-    isSuccess: true,
-    refetch: vi.fn(async () => undefined),
-  }),
+  useShelf: mocks.useShelf,
 }));
 
 vi.mock('@/lib/query/useOwnerQueryScope', () => ({
@@ -94,7 +81,46 @@ function useCapturedRoutineOrderQuery(): {
 beforeEach(() => {
   mocks.loadRoutineOrderOverrides.mockReset();
   mocks.loadRoutineOrderOverrides.mockResolvedValue({ schemaVersion: 1, am: [], pm: [] });
+  mocks.profileRefetch.mockReset();
+  mocks.profileRefetch.mockResolvedValue({ isError: false });
+  mocks.shelfRefetch.mockReset();
+  mocks.shelfRefetch.mockResolvedValue({ isError: false });
+  mocks.useProfileBits.mockReset();
+  mocks.useProfileBits.mockReturnValue({
+    data: {
+      consentCurrent: true,
+      goals: [],
+      moisture: 'balanced',
+      pregnancy: false,
+      pregnancySafety: 'clear',
+      pregnancyStatus: 'none',
+      sensitivity: 'neutral',
+      source: 'local',
+    },
+    isError: false,
+    isFetching: false,
+    isPending: false,
+    isSuccess: true,
+    refetch: mocks.profileRefetch,
+  });
   mocks.useQuery.mockClear();
+  mocks.useShelf.mockReset();
+  mocks.useShelf.mockReturnValue({
+    data: {
+      archive: [],
+      banner: null,
+      conflictChoices: {},
+      conflicts: [],
+      items: [],
+      reassurances: [],
+      unresolvedConflicts: [],
+    },
+    isError: false,
+    isFetching: false,
+    isPending: false,
+    isSuccess: true,
+    refetch: mocks.shelfRefetch,
+  });
   mocks.ownerScope = createOwnerQueryScope();
 });
 
@@ -148,6 +174,137 @@ describe('routine plan profile label', () => {
 });
 
 describe('routine order owner-bound query', () => {
+  it('reports persistent failures from every standalone retry owner', async () => {
+    const routineOrderRefetch = vi.fn(async () => ({ isError: true }));
+    mocks.shelfRefetch.mockResolvedValueOnce({ isError: true });
+    mocks.profileRefetch.mockResolvedValueOnce({ isError: true });
+    mocks.useShelf.mockReturnValueOnce({
+      data: undefined,
+      isError: true,
+      isFetching: false,
+      isPending: false,
+      isSuccess: false,
+      refetch: mocks.shelfRefetch,
+    });
+    mocks.useProfileBits.mockReturnValueOnce({
+      data: undefined,
+      isError: true,
+      isFetching: false,
+      isPending: false,
+      isSuccess: false,
+      refetch: mocks.profileRefetch,
+    });
+    mocks.useQuery.mockReturnValueOnce(
+      {
+        data: undefined,
+        isError: true,
+        isFetching: false,
+        isPending: false,
+        isSuccess: false,
+        refetch: routineOrderRefetch,
+      } as never,
+    );
+
+    const result = usePlan();
+
+    await expect(result.retry()).resolves.toEqual({ isError: true });
+    expect(mocks.shelfRefetch).toHaveBeenCalledOnce();
+    expect(mocks.profileRefetch).toHaveBeenCalledOnce();
+    expect(routineOrderRefetch).toHaveBeenCalledOnce();
+  });
+
+  it('keeps shared Shelf/profile retry ownership with the route view model', async () => {
+    const shelfRefetch = vi.fn(async () => ({ isError: false }));
+    const profileRefetch = vi.fn(async () => ({ isError: false }));
+    const routineOrderRefetch = vi.fn(async () => ({ isError: false }));
+    mocks.useQuery.mockReturnValueOnce(
+      {
+        data: undefined,
+        isError: true,
+        isFetching: false,
+        isPending: false,
+        isSuccess: false,
+        refetch: routineOrderRefetch,
+      } as never,
+    );
+
+    const result = usePlanFromSources(
+      {
+        data: undefined,
+        isError: true,
+        isFetching: false,
+        isPending: false,
+        isSuccess: false,
+        refetch: shelfRefetch,
+      } as never,
+      {
+        data: undefined,
+        isError: true,
+        isFetching: false,
+        isPending: false,
+        isSuccess: false,
+        refetch: profileRefetch,
+      } as never,
+    );
+
+    await expect(result.retry()).resolves.toEqual({ isError: false });
+
+    expect(routineOrderRefetch).toHaveBeenCalledOnce();
+    expect(shelfRefetch).not.toHaveBeenCalled();
+    expect(profileRefetch).not.toHaveBeenCalled();
+  });
+
+  it('reports a persistent routine-order retry failure to the route owner', async () => {
+    const routineOrderRefetch = vi.fn(async () => ({ isError: true }));
+    mocks.useQuery.mockReturnValueOnce(
+      {
+        data: undefined,
+        isError: true,
+        isFetching: false,
+        isPending: false,
+        isSuccess: false,
+        refetch: routineOrderRefetch,
+      } as never,
+    );
+
+    const result = usePlanFromSources(
+      {
+        data: {
+          archive: [],
+          banner: null,
+          conflictChoices: {},
+          conflicts: [],
+          items: [],
+          reassurances: [],
+          unresolvedConflicts: [],
+        },
+        isError: false,
+        isFetching: false,
+        isPending: false,
+        isSuccess: true,
+      },
+      {
+        data: {
+          consentCurrent: true,
+          goals: [],
+          moisture: 'balanced',
+          pregnancy: false,
+          pregnancySafety: 'clear',
+          pregnancyStatus: 'none',
+          sensitivity: 'neutral',
+          source: 'local',
+        },
+        isError: false,
+        isFetching: false,
+        isPending: false,
+        isSuccess: true,
+      },
+    );
+
+    await expect(result.retry()).resolves.toEqual({ isError: true });
+    expect(routineOrderRefetch).toHaveBeenCalledOnce();
+  });
+
   it('uses the owner-scoped key and keeps a delayed same-generation read valid', async () => {
     const delayed = deferred<{ schemaVersion: 1; am: string[]; pm: string[] }>();
     mocks.loadRoutineOrderOverrides.mockReturnValueOnce(delayed.promise);

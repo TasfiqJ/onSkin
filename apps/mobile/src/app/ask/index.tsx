@@ -5,7 +5,7 @@ import { Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'rea
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import type { AskAnswer } from '@/features/ask/answer';
 import { ASK_COPY } from '@/features/ask/copy';
-import { useAsk } from '@/features/ask/useAsk';
+import { useAskViewModel } from '@/features/ask/useAsk';
 import {
   PRIVATE_GUIDANCE_AVAILABILITY_COPY,
   ShelfDataUnavailableNotice,
@@ -408,7 +408,8 @@ function AskComposer({
 
 export default function AskScreen() {
   const { height, width } = useWindowDimensions();
-  const { ask, askSuggested, isError, isFetching, isLoading, hasShelf, retry } = useAsk();
+  const { ask, askSuggested, isError, isFetching, isLoading, hasShelf, retry } =
+    useAskViewModel();
   const [messages, setMessages] = useState<Msg[]>([]);
   const idRef = useRef(0);
   const ledRef = useRef(false);

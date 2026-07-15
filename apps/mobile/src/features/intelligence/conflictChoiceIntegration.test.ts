@@ -37,7 +37,7 @@ describe('conflict choice integration contracts', () => {
     const cycle = readSource('features/scheduler/useCycle.ts');
     const scheduler = readSource('features/scheduler/orchestrate.ts');
 
-    expect(plan).toContain('shelf.data?.conflictChoices');
+    expect(plan).toContain('shelf.data.conflictChoices');
     expect(cycle).toContain('conflictChoices: shelf.data.conflictChoices');
     expect(cycle).toContain('subflags: i.engineProduct.subflags');
     expect(scheduler).toContain('choiceForConflict(choices, conflict)');

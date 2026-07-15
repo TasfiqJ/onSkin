@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
 import { shippableRules } from '@/features/intelligence/rules';
 import { useProfileBits } from '@/features/scheduler/profile';
@@ -54,12 +55,27 @@ export type PlanQueryResult = {
   isError: boolean;
   isFetching: boolean;
   isSuccess: boolean;
-  retry: () => Promise<void>;
+  retry: () => Promise<{ isError: boolean }>;
 };
 
-export function usePlan(): PlanQueryResult {
-  const shelf = useShelf();
-  const profile = useProfileBits();
+export type PlanShelfSource = Pick<
+  ReturnType<typeof useShelf>,
+  'data' | 'isError' | 'isFetching' | 'isPending' | 'isSuccess'
+>;
+export type PlanProfileSource = Pick<
+  ReturnType<typeof useProfileBits>,
+  'data' | 'isError' | 'isFetching' | 'isPending' | 'isSuccess'
+>;
+
+/**
+ * Derive one plan observer from route-owned Shelf/profile snapshots. Routes that
+ * already need those domains must pass the exact query results here instead of
+ * recursively mounting duplicate TanStack observers through `usePlan()`.
+ */
+export function usePlanFromSources(
+  shelf: PlanShelfSource,
+  profile: PlanProfileSource,
+): PlanQueryResult {
   const ownerScope = useOwnerQueryScope();
   const routineOrder = useQuery({
     queryKey: queryKeys.routineOrder(ownerScope),
@@ -77,12 +93,77 @@ export function usePlan(): PlanQueryResult {
     staleTime: Infinity,
   });
 
-  async function retry(): Promise<void> {
-    await Promise.all([
-      shelf.isError ? shelf.refetch() : Promise.resolve(),
-      profile.isError ? profile.refetch() : Promise.resolve(),
-      routineOrder.isError ? routineOrder.refetch() : Promise.resolve(),
-    ]);
+  const data = useMemo<PlanResult | undefined>(() => {
+    if (
+      !shelf.isSuccess ||
+      !profile.isSuccess ||
+      !routineOrder.isSuccess ||
+      !shelf.data ||
+      !profile.data ||
+      !routineOrder.data
+    ) {
+      return undefined;
+    }
+
+    const orderOverrides = routineOrder.data;
+    const items = shelf.data.items ?? [];
+    if (items.length > 0) {
+      const products: RoutineProduct[] = items.map((item) => ({
+        id: item.engineProduct.id,
+        name: item.engineProduct.name,
+        tags: item.engineProduct.tags,
+        category: item.category,
+        concentration: item.engineProduct.concentration,
+      }));
+      const real: RoutineGenerationProfile = {
+        sensitivity: profile.data.sensitivity,
+        pregnancy: profile.data.pregnancy,
+        pregnancySafety: profile.data.pregnancySafety,
+        pregnancyStatus: profile.data.pregnancyStatus,
+        goals: profile.data.goals,
+      };
+      const canonicalPlan = generatePlan(
+        products,
+        real,
+        shippableRules(),
+        shelf.data.conflictChoices,
+      );
+      return {
+        plan: applyRoutineOrderOverrides(canonicalPlan, orderOverrides),
+        canonicalPlan,
+        isExample: false,
+        profileLabel: routinePlanProfileLabel(profile.data, false),
+        orderOverrides,
+        orderPersistenceUnavailable: false,
+        activeProductIds: items.map((item) => item.id),
+      };
+    }
+
+    const canonicalPlan = generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, shippableRules());
+    return {
+      plan: canonicalPlan,
+      canonicalPlan,
+      isExample: true,
+      profileLabel: routinePlanProfileLabel(null, true),
+      orderOverrides,
+      orderPersistenceUnavailable: false,
+      activeProductIds: [],
+    };
+  }, [
+    shelf.isSuccess,
+    shelf.data,
+    profile.isSuccess,
+    profile.data,
+    routineOrder.isSuccess,
+    routineOrder.data,
+  ]);
+
+  // The route owns shared Shelf/profile recovery. This hook retries only the
+  // routine-order observer it mounted itself.
+  async function retry(): Promise<{ isError: boolean }> {
+    if (!routineOrder.isError) return { isError: false };
+    const result = await routineOrder.refetch();
+    return { isError: result.isError };
   }
 
   if (shelf.isPending || profile.isPending || routineOrder.isPending) {
@@ -106,9 +187,7 @@ export function usePlan(): PlanQueryResult {
     !shelf.isSuccess ||
     !profile.isSuccess ||
     !routineOrder.isSuccess ||
-    !shelf.data ||
-    !profile.data ||
-    !routineOrder.data
+    !data
   ) {
     return {
       data: undefined,
@@ -120,67 +199,35 @@ export function usePlan(): PlanQueryResult {
     };
   }
 
-  const orderOverrides = routineOrder.data;
-
-  const items = shelf.data?.items ?? [];
-  if (items.length > 0) {
-    const products: RoutineProduct[] = items.map((i) => ({
-      id: i.engineProduct.id,
-      name: i.engineProduct.name,
-      tags: i.engineProduct.tags,
-      category: i.category,
-      concentration: i.engineProduct.concentration,
-    }));
-    // Use the REAL profile (sensitivity + pregnancy + goals) so the plan honours
-    // pregnancy retinoid suppression etc. everywhere, not just the cycle engine.
-    const real: RoutineGenerationProfile = {
-      sensitivity: profile.data.sensitivity,
-      pregnancy: profile.data.pregnancy,
-      pregnancySafety: profile.data.pregnancySafety,
-      pregnancyStatus: profile.data.pregnancyStatus,
-      goals: profile.data.goals,
-    };
-    // Use the launch-gated rule set (docs/02 §9 B-DERM-REVIEW), consistent with
-    // useShelf/recommendations. In production the conflict layer stays inert until
-    // clinical sign-off; in dev the full starter matrix drives the plan.
-    const canonicalPlan = generatePlan(
-      products,
-      real,
-      shippableRules(),
-      shelf.data?.conflictChoices,
-    );
-    return {
-      data: {
-        plan: applyRoutineOrderOverrides(canonicalPlan, orderOverrides),
-        canonicalPlan,
-        isExample: false,
-        profileLabel: routinePlanProfileLabel(profile.data ?? null, false),
-        orderOverrides,
-        orderPersistenceUnavailable: routineOrder.isError,
-        activeProductIds: items.map((item) => item.id),
-      },
-      isLoading: false,
-      isError: false,
-      isFetching: shelf.isFetching || profile.isFetching || routineOrder.isFetching,
-      isSuccess: true,
-      retry,
-    };
-  }
-  const canonicalPlan = generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, shippableRules());
   return {
-    data: {
-      plan: canonicalPlan,
-      canonicalPlan,
-      isExample: true,
-      profileLabel: routinePlanProfileLabel(null, true),
-      orderOverrides,
-      orderPersistenceUnavailable: routineOrder.isError,
-      activeProductIds: [],
-    },
+    data,
     isLoading: false,
     isError: false,
     isFetching: shelf.isFetching || profile.isFetching || routineOrder.isFetching,
     isSuccess: true,
     retry,
+  };
+}
+
+/** Standalone plan consumer. Route view models should prefer `usePlanFromSources`. */
+export function usePlan(): PlanQueryResult {
+  const shelf = useShelf();
+  const profile = useProfileBits();
+  const plan = usePlanFromSources(shelf, profile);
+
+  return {
+    ...plan,
+    retry: async () => {
+      const results = await Promise.all([
+        shelf.isError ? shelf.refetch() : Promise.resolve(),
+        profile.isError ? profile.refetch() : Promise.resolve(),
+        plan.retry(),
+      ]);
+      return {
+        isError: results.some(
+          (result) => result && typeof result === 'object' && 'isError' in result && result.isError,
+        ),
+      };
+    },
   };
 }

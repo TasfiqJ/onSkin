@@ -3,8 +3,8 @@ import { useCallback, useMemo } from 'react';
 
 import { goalConcern } from '@/features/recommendations/copy';
 import { hasReplenishmentSignal } from '@/features/recommendations/replenishment';
-import { useRecommendations } from '@/features/recommendations/useRecommendations';
-import { usePlan } from '@/features/routine/usePlan';
+import { useRecommendationsFromSources } from '@/features/recommendations/useRecommendations';
+import { usePlanFromSources } from '@/features/routine/usePlan';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { useShelf } from '@/features/shelf/useShelf';
 import { isEntitlementEvidenceUncertain } from '@/features/subscription/entitlement';
@@ -40,16 +40,16 @@ import { deriveAskReadiness } from './readiness';
 // fully on-device at $0. The orchestration runs every answer through the runtime claim-
 // safety guard and records CONTENT-FREE telemetry. *** No commercial input anywhere. ***
 
-export function useAsk() {
+export function useAskViewModel() {
   const quotaFixtureEnabled =
     typeof __DEV__ !== 'undefined' &&
     __DEV__ &&
     Boolean(process.env.EXPO_PUBLIC_E2E_ASK_TURNS_STORAGE_FAILURE?.trim());
   const cloudGateEnabled = phase7Flags.cloudAsk || quotaFixtureEnabled;
   const shelf = useShelf();
-  const plan = usePlan();
-  const recs = useRecommendations();
   const profile = useProfileBits();
+  const plan = usePlanFromSources(shelf, profile);
+  const recs = useRecommendationsFromSources(shelf, profile);
   const entitlement = useEntitlement({ enabled: cloudGateEnabled });
   const { data: ent } = entitlement;
   const entitlementUncertain = isEntitlementEvidenceUncertain(ent);
