@@ -226,7 +226,7 @@
     }
   ],
   "categoryCounts": {
-    "data-store": 96,
+    "data-store": 101,
     "edge-function": 13,
     "feature-flag": 16,
     "generated-packet": 30,
@@ -386,6 +386,13 @@
       "id": "data-store:local:apps/mobile/src/lib/applock/store.ts",
       "category": "data-store",
       "source": "apps/mobile/src/lib/applock/store.ts",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/lib/consent/dependentConsentRecoveryStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/lib/consent/dependentConsentRecoveryStore.ts",
       "featureIds": ["F-02"],
       "readiness": "implemented"
     },
@@ -635,6 +642,20 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:postgres:health_consent_copy_registry",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_consent_copy_review_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:postgres:health_consent_withdrawal_operations",
       "category": "data-store",
       "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
@@ -643,6 +664,20 @@
     },
     {
       "id": "data-store:postgres:health_consent_withdrawal_steps",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_dependent_consent_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_dependent_consent_states",
       "category": "data-store",
       "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
       "featureIds": ["F-02"],
