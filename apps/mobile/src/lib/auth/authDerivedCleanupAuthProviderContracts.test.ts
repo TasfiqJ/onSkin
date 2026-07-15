@@ -18,13 +18,19 @@ function functionSlice(startNeedle: string, endNeedle: string): string {
 function expectDurableCleanupOrdering(source: string): void {
   const durableCleanup = source.indexOf('await clearRejectedSessionActivityDurably({');
   const mark = source.indexOf('markAuthDerivedCleanupRequired,', durableCleanup);
-  const signOut = source.indexOf('supabase.auth.signOut(');
+  const signOut = source.indexOf('async signOut() {', durableCleanup);
   const clearMarker = source.indexOf('clearAuthDerivedCleanupRequired,', durableCleanup);
+  const storageClear = source.indexOf(
+    'clearPersistedSession: clearPersistedSessionAfterRemoteDrain',
+    durableCleanup,
+  );
 
   expect(durableCleanup).toBeGreaterThanOrEqual(0);
   expect(mark).toBeGreaterThanOrEqual(0);
   expect(clearMarker).toBeGreaterThan(mark);
   expect(signOut).toBeGreaterThan(durableCleanup);
+  expect(storageClear).toBeGreaterThan(signOut);
+  expect(source).not.toContain("supabase.auth.signOut({ scope: 'local' })");
 }
 
 describe('AuthProvider durable auth-derived cleanup recovery', () => {
@@ -56,7 +62,7 @@ describe('AuthProvider durable auth-derived cleanup recovery', () => {
     );
     const markerRead = restore.indexOf('await readAuthDerivedCleanupRequired()');
     const cleanup = restore.indexOf('await handleRejectedSession();', markerRead);
-    const sessionRead = restore.indexOf('await supabase.auth.getSession()');
+    const sessionRead = restore.indexOf('await readPersistedSupabaseSessionCandidate()');
 
     expect(markerRead).toBeGreaterThanOrEqual(0);
     expect(cleanup).toBeGreaterThan(markerRead);

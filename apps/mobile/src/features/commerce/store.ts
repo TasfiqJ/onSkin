@@ -1,6 +1,6 @@
 import { randomUUID } from 'expo-crypto';
 
-import { supabase } from '@/lib/supabase/client';
+import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
 import { removePrivateItem } from '@/lib/storage/privateKV';
 
@@ -33,7 +33,7 @@ export function buildClickToken(): string {
 export async function recordClick(payload: ClickPayload): Promise<void> {
   if (!isHealthSafePayload(payload as unknown as Record<string, unknown>)) return;
   try {
-    const { data } = await supabase.auth.getUser();
+    const { data } = await getPersistedSupabaseUser();
     if (!data.user?.id) return;
     await supabase.from('commerce_click_events').insert({
       user_id: data.user.id,

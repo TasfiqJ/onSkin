@@ -1,5 +1,19 @@
 import type { EntitlementStore, PeriodType, SubscriptionTier } from '@onskin/types';
 
+export const ENTITLEMENT_QUERY_KEY = ['entitlement'] as const;
+export const ENTITLEMENT_OWNER_BINDING_PATTERN = /^[a-f0-9]{64}$/;
+
+export type EntitlementOwnerContext = Readonly<{ ownerBinding: string }>;
+
+/** Exact account-scoped query identity. The root constant is retained only as
+ * a prefix for deliberate all-owner cancellation/removal at account boundaries. */
+export function entitlementQueryKey(ownerBinding: string) {
+  if (!ENTITLEMENT_OWNER_BINDING_PATTERN.test(ownerBinding)) {
+    throw new Error('ENTITLEMENT_OWNER_BINDING_INVALID');
+  }
+  return [...ENTITLEMENT_QUERY_KEY, ownerBinding] as const;
+}
+
 /**
  * Pure entitlement-state derivation (docs/08 §4 "gate on the cached entitlement,
  * offline-safe"). The app gates on `is_active` regardless of SOURCE. A store
@@ -18,7 +32,7 @@ export type StoredEntitlement = {
   expiresAt: string | null; // ISO; null = no expiry known
   willRenew: boolean | null;
   grantedAt: string | null; // ISO
-  source?: 'revenuecat' | 'app_granted' | 'server' | 'local_cache' | null;
+  source?: 'revenuecat' | 'app_granted' | 'server' | null;
   environment?: 'production' | 'sandbox' | 'test_store' | 'development' | 'unknown' | null;
   managementUrl?: string | null;
   verifiedAt?: string | null; // ISO; when RC/server last confirmed this row

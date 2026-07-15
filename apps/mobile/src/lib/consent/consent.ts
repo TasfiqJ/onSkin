@@ -3,7 +3,7 @@ import * as Crypto from 'expo-crypto';
 
 import { isSupabaseConfigured } from '@/lib/env';
 
-import { supabase } from '../supabase/client';
+import { getPersistedSupabaseUser, supabase } from '../supabase/client';
 
 // Records an unbundled consent into the immutable ledger (docs/01 §3/§4). Stores
 // a SHA-256 hash of the EXACT text the user agreed to + the version, so we can
@@ -14,6 +14,8 @@ export async function recordConsent(params: {
   granted: boolean;
   version: string;
   consentText: string;
+  /** Optional in-memory owner fence for a larger destructive workflow. */
+  expectedUserId?: string;
 }): Promise<void> {
   if (!isSupabaseConfigured) throw new Error('CONSENT_BACKEND_UNAVAILABLE');
 
@@ -21,9 +23,12 @@ export async function recordConsent(params: {
     Crypto.CryptoDigestAlgorithm.SHA256,
     params.consentText,
   );
-  const { data: userData } = await supabase.auth.getUser();
+  const { data: userData } = await getPersistedSupabaseUser();
   const userId = userData.user?.id;
   if (!userId) throw new Error('recordConsent requires an authenticated session');
+  if (params.expectedUserId !== undefined && userId !== params.expectedUserId) {
+    throw new Error('CONSENT_OWNER_CHANGED');
+  }
 
   const { error } = await supabase.from('consents').insert({
     user_id: userId,

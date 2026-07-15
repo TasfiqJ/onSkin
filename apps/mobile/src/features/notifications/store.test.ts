@@ -51,6 +51,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
 }));
 
 vi.mock('@/lib/supabase/client', () => ({
+  getPersistedSupabaseUser: mocks.getUser,
   supabase: {
     auth: {
       getUser: mocks.getUser,

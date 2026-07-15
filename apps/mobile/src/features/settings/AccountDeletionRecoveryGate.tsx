@@ -37,6 +37,7 @@ import {
   isAcceptedAccountDeletionLocalSignOutIncomplete,
   isAccountDeletionAuthSessionUnavailable,
 } from './actions';
+import { ACCOUNT_DELETION_ERASURE_WINDOW_COPY } from './accountDeletionCopy';
 
 type RecoveryView =
   | { kind: 'loading' | 'checking' }
@@ -63,10 +64,8 @@ const COPY = {
   checking: 'Checking the saved deletion request...',
   eyebrow: 'Account activity paused',
   pendingTitle: 'Deleting your account',
-  pendingBody:
-    'Your deletion request is safely queued. This device will keep checking, and account activity stays paused until completion is verified.',
-  delayedBody:
-    'Your deletion needs more time. Your recovery key is still saved and account activity stays paused while we verify completion.',
+  pendingBody: `Your deletion request is safely queued. ${ACCOUNT_DELETION_ERASURE_WINDOW_COPY} This device will keep checking, and account activity stays paused until completion is verified.`,
+  delayedBody: `Your deletion needs more time. ${ACCOUNT_DELETION_ERASURE_WINDOW_COPY} Your recovery key is still saved and account activity stays paused while we verify completion.`,
   invalidTitle: 'Deletion status could not be verified',
   invalidBody:
     'This device kept the saved recovery key and did not reopen the account. Retry the deletion request or check again. If that does not work, contact support.',

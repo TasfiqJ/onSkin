@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/client';
+import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import {
@@ -127,7 +127,7 @@ export async function flushCompletions(
   const pending = await getPendingCompletions();
   if (pending.length === 0) return { flushed: 0, remaining: 0 };
 
-  const { data } = await supabase.auth.getUser();
+  const { data } = await getPersistedSupabaseUser();
   const userId = data.user?.id;
   if (!userId) return { flushed: 0, remaining: pending.length }; // no session yet; retry later
 

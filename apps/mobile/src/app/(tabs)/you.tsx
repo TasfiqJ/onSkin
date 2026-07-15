@@ -8,8 +8,10 @@ import { isCommerceConsented } from '@/features/commerce/consent';
 import { setCommerceConsentLocal } from '@/features/commerce/store';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { requestReviewAfterValue } from '@/features/review/prompt';
+import { ACCOUNT_DELETION_ERASURE_WINDOW_COPY } from '@/features/settings/accountDeletionCopy';
 import { applySettingsPrivacyChoice } from '@/features/settings/applyPrivacyChoice';
 import { deleteAccount, exportData, withdrawHealthDataConsent } from '@/features/settings/actions';
+import { subscriptionStorefrontCopy } from '@/features/subscription/storefrontCopy';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
@@ -54,13 +56,16 @@ const EXPORT_UNAVAILABLE_MESSAGE =
 const DATA_EXPORT_SCOPE_HINT =
   'Includes data saved to your account and on this device: profile, shelf, routine settings, completion history, preferences, and Progress notes. Photo files and thumbnails stay encrypted here; share images individually from Progress.';
 const EXPORT_FAILED_TITLE = 'Export failed';
+const SUBSCRIPTION_STOREFRONT_COPY = subscriptionStorefrontCopy(Platform.OS);
+const APPLE_SIGN_IN_REVOCATION_COPY =
+  Platform.OS === 'ios'
+    ? ' If Apple sign-in cannot be revoked automatically, we will show the iPhone Settings steps after deletion.'
+    : '';
 const WITHDRAW_HEALTH_DATA_CONFIRM_TITLE = 'Withdraw health-data consent?';
-const WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE =
-  'This records your withdrawal and deletes your collected health data. Your account and routine are closed. Apple or Google subscription billing continues until you cancel in the store. If Apple sign-in cannot be revoked automatically, we will show the iPhone Settings steps after deletion.';
+const WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE = `This records your withdrawal and starts deleting your collected health data. Your account and routine close now. ${ACCOUNT_DELETION_ERASURE_WINDOW_COPY} ${SUBSCRIPTION_STOREFRONT_COPY.billingContinuation}${APPLE_SIGN_IN_REVOCATION_COPY}`;
 const WITHDRAW_HEALTH_DATA_FAILED_TITLE = 'Withdrawal failed';
 const DELETE_ACCOUNT_CONFIRM_TITLE = 'Delete account?';
-const DELETE_ACCOUNT_CONFIRM_MESSAGE =
-  'This permanently deletes your account and data. Apple or Google subscription billing continues until you cancel in the store. If Apple sign-in cannot be revoked automatically, we will show the iPhone Settings steps after deletion.';
+const DELETE_ACCOUNT_CONFIRM_MESSAGE = `This permanently closes your account and starts deleting its data. ${ACCOUNT_DELETION_ERASURE_WINDOW_COPY} ${SUBSCRIPTION_STOREFRONT_COPY.billingContinuation}${APPLE_SIGN_IN_REVOCATION_COPY}`;
 const DELETE_ACCOUNT_FAILED_TITLE = 'Deletion failed';
 const COMPACT_FOR_YOU_TOP_MARGIN = 240;
 const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;

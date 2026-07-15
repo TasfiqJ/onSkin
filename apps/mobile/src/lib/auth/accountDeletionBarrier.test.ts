@@ -7,15 +7,29 @@ import {
   type ActiveAccountDeletionOwnerProofDependencies,
 } from './accountDeletionBarrier';
 
+const remoteGateMocks = vi.hoisted(() => ({
+  requireBinding: vi.fn((accessToken: string, subject: string) => ({
+    accessToken,
+    sessionId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+    subject,
+  })),
+  runDeletionPermit: vi.fn(async (_permit, transport, operation) => operation(transport)),
+}));
+
 vi.mock('@/lib/env', () => ({
   env: {
     supabaseUrl: 'https://project.supabase.co',
     supabasePublishableKey: 'sb_publishable_test',
   },
 }));
+vi.mock('@/lib/supabase/remoteRequestGate', () => ({
+  requireSupabaseRemoteSessionBinding: remoteGateMocks.requireBinding,
+  runWithSupabaseAccountDeletionRequestPermit: remoteGateMocks.runDeletionPermit,
+}));
 
 afterEach(() => {
   vi.useRealTimers();
+  vi.clearAllMocks();
 });
 
 describe('account deletion barrier preflight', () => {
@@ -127,9 +141,9 @@ describe('account deletion barrier preflight', () => {
           }),
       );
 
-      await expect(fetchAccountDeletionBarrierState('candidate-jwt', transport)).resolves.toEqual(
-        expected,
-      );
+      await expect(
+        fetchAccountDeletionBarrierState('candidate-jwt', USER_B, transport),
+      ).resolves.toEqual(expected);
       expect(transport).toHaveBeenCalledOnce();
       const [url, init] = transport.mock.calls[0]!;
       expect(url).toBe('https://project.supabase.co/functions/v1/account-deletion');
@@ -145,6 +159,20 @@ describe('account deletion barrier preflight', () => {
         },
       });
       expect(init?.signal).toBeInstanceOf(AbortSignal);
+      expect(remoteGateMocks.requireBinding).toHaveBeenCalledWith('candidate-jwt', USER_B);
+      expect(remoteGateMocks.runDeletionPermit).toHaveBeenCalledWith(
+        {
+          action: 'preflight',
+          timeoutMs: 15_000,
+          binding: {
+            accessToken: 'candidate-jwt',
+            sessionId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+            subject: USER_B,
+          },
+        },
+        transport,
+        expect.any(Function),
+      );
     },
   );
 
@@ -190,9 +218,35 @@ describe('account deletion barrier preflight', () => {
           { status: 200 },
         ),
     );
-    await expect(fetchAccountDeletionBarrierState('candidate-jwt', oversized)).rejects.toThrow(
-      'ACCOUNT_DELETION_BARRIER_PREFLIGHT_FAILED',
+    await expect(
+      fetchAccountDeletionBarrierState('candidate-jwt', USER_B, oversized),
+    ).rejects.toThrow('ACCOUNT_DELETION_BARRIER_PREFLIGHT_FAILED');
+  });
+
+  it('rejects a valid-looking response attested for a foreign owner subject', async () => {
+    const foreignSubject = '33333333-3333-4333-8333-333333333333';
+    const transport = vi.fn(async () =>
+      new Response(JSON.stringify({ status: 'clear', ownerSubject: foreignSubject }), {
+        status: 200,
+      }),
     );
+
+    await expect(
+      fetchAccountDeletionBarrierState('candidate-jwt', USER_B, transport),
+    ).rejects.toThrow('ACCOUNT_DELETION_BARRIER_PREFLIGHT_FAILED');
+  });
+
+  it('does not dispatch after the candidate permit becomes stale', async () => {
+    const transport = vi.fn();
+    remoteGateMocks.runDeletionPermit.mockRejectedValueOnce(
+      new Error('SUPABASE_REMOTE_REQUEST_RESULT_STALE'),
+    );
+
+    await expect(
+      fetchAccountDeletionBarrierState('candidate-jwt', USER_B, transport),
+    ).rejects.toThrow('ACCOUNT_DELETION_BARRIER_PREFLIGHT_FAILED');
+
+    expect(transport).not.toHaveBeenCalled();
   });
 
   it('distinguishes exact bearer rejection from a retryable server outage', async () => {
@@ -210,16 +264,16 @@ describe('account deletion barrier preflight', () => {
         new Response(JSON.stringify({ error: 'ACCOUNT_DELETION_UNAVAILABLE' }), { status: 503 }),
     );
 
-    await expect(fetchAccountDeletionBarrierState('stale-jwt', rejected)).rejects.toMatchObject({
-      code: 'ACCOUNT_DELETION_BARRIER_SESSION_REJECTED',
-    });
     await expect(
-      fetchAccountDeletionBarrierState('candidate-jwt', unclassified401),
+      fetchAccountDeletionBarrierState('stale-jwt', USER_B, rejected),
+    ).rejects.toMatchObject({ code: 'ACCOUNT_DELETION_BARRIER_SESSION_REJECTED' });
+    await expect(
+      fetchAccountDeletionBarrierState('candidate-jwt', USER_B, unclassified401),
     ).rejects.toMatchObject({
       code: 'ACCOUNT_DELETION_BARRIER_PREFLIGHT_FAILED',
     });
     await expect(
-      fetchAccountDeletionBarrierState('candidate-jwt', unavailable),
+      fetchAccountDeletionBarrierState('candidate-jwt', USER_B, unavailable),
     ).rejects.toMatchObject({
       code: 'ACCOUNT_DELETION_BARRIER_PREFLIGHT_FAILED',
     });
@@ -235,7 +289,7 @@ describe('account deletion barrier preflight', () => {
         }),
     );
 
-    const pending = fetchAccountDeletionBarrierState('candidate-jwt', transport);
+    const pending = fetchAccountDeletionBarrierState('candidate-jwt', USER_B, transport);
     const rejected = expect(pending).rejects.toThrow('ACCOUNT_DELETION_BARRIER_PREFLIGHT_FAILED');
     await vi.advanceTimersByTimeAsync(15_000);
     await rejected;
@@ -252,7 +306,7 @@ describe('account deletion barrier preflight', () => {
         }),
     );
 
-    const outcome = fetchAccountDeletionBarrierState('candidate-jwt', transport).then(
+    const outcome = fetchAccountDeletionBarrierState('candidate-jwt', USER_B, transport).then(
       (state) => `published:${state}`,
       (error: unknown) => (error instanceof Error ? error.message : 'unknown'),
     );
@@ -268,10 +322,10 @@ describe('account deletion barrier preflight', () => {
 
   it('rejects missing and whitespace-padded bearer values without transport work', async () => {
     const transport = vi.fn();
-    await expect(fetchAccountDeletionBarrierState('', transport)).rejects.toThrow(
+    await expect(fetchAccountDeletionBarrierState('', USER_B, transport)).rejects.toThrow(
       'ACCOUNT_DELETION_BARRIER_PREFLIGHT_FAILED',
     );
-    await expect(fetchAccountDeletionBarrierState(' padded ', transport)).rejects.toThrow(
+    await expect(fetchAccountDeletionBarrierState(' padded ', USER_B, transport)).rejects.toThrow(
       'ACCOUNT_DELETION_BARRIER_PREFLIGHT_FAILED',
     );
     expect(transport).not.toHaveBeenCalled();

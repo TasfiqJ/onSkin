@@ -44,7 +44,7 @@ import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { devWarn } from '@/lib/observability/safeLog';
-import { supabase } from '@/lib/supabase/client';
+import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 import { colors } from '@/theme/tokens';
 
 // Conflict override sheet (design frames 04/05/06, docs/02 §7.3 / docs/03 §7). The
@@ -153,7 +153,7 @@ function persistedChoice(choice: 'keep' | 'use_together'): ConflictUserChoice {
 
 async function mirrorChoice(c: DetectedConflict, userChoice: ConflictUserChoice): Promise<void> {
   try {
-    const { data } = await supabase.auth.getUser();
+    const { data } = await getPersistedSupabaseUser();
     if (!data.user?.id || !c.productAId || !c.productBId) return;
     const [productAId, productBId] = [c.productAId, c.productBId].sort();
     const { error } = await supabase.from('routine_conflicts').upsert(

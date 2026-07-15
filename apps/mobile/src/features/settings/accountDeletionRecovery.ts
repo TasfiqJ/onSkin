@@ -1,4 +1,5 @@
 import * as Notifications from 'expo-notifications';
+import type { Session } from '@supabase/supabase-js';
 
 import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
@@ -10,9 +11,24 @@ import {
   readLocalDataOwnerProofBinding,
   retainLocalDataOwnerForSignedOutRestore,
 } from '@/lib/auth/sessionOwner';
-import { clearPersistedSupabaseSession, supabase } from '@/lib/supabase/client';
+import {
+  clearPersistedSupabaseSession,
+  readPersistedSupabaseSessionCandidate,
+  supabase,
+} from '@/lib/supabase/client';
+import { parseSupabaseAccessTokenClaims } from '@/lib/supabase/authRefreshProtection';
+import {
+  closeSupabaseRemoteRequestBoundary,
+  isSupabaseRemoteRequestAdmissionError,
+  runWithSupabaseAccountDeletionRequestPermit,
+  runWithSupabaseAuthVerificationPermit,
+  setSupabaseRemoteRequestCandidate,
+  type SupabaseRemoteRequestTransport,
+  waitForSupabaseRemoteResidualSettlement,
+} from '@/lib/supabase/remoteRequestGate';
 import { env, isSupabaseConfigured } from '@/lib/env';
 import { resetRevenueCatIdentity } from '@/lib/iap/revenuecat';
+import { convertStoreTransactionNoticeForTerminalDeletion } from '@/lib/iap/storeTransactionNotice';
 import { queryClient } from '@/lib/query/queryClient';
 
 import {
@@ -55,10 +71,7 @@ export type AccountDeletionStatusOutcome =
   | { kind: 'invalid' }
   | { kind: 'expired' };
 
-export type AccountDeletionStatusTransport = (
-  input: string,
-  init: RequestInit,
-) => Promise<Response>;
+export type AccountDeletionStatusTransport = SupabaseRemoteRequestTransport;
 
 export type AccountDeletionSessionDependencies = {
   clearSession: () => Promise<void>;
@@ -69,6 +82,7 @@ export type AccountDeletionSessionDependencies = {
 };
 
 export type AccountDeletionFinalizationDependencies = AccountDeletionSessionDependencies & {
+  convertStoreSafetyNotice: (ownerBinding: string) => Promise<void>;
   queueAppleNotice: () => unknown;
   clearCompletedState: () => Promise<void>;
 };
@@ -95,8 +109,8 @@ export type AccountDeletionRecoveryOwnership = {
 };
 
 export type AccountDeletionOwnershipDependencies = {
-  getSession: typeof supabase.auth.getSession;
-  getUser: typeof supabase.auth.getUser;
+  readSessionCandidate: () => Promise<Session | null>;
+  verifyUser: typeof supabase.auth.getUser;
   readLocalOwnerBinding: () => Promise<string | null>;
 };
 
@@ -113,22 +127,37 @@ class AccountDeletionRecoveryError extends Error {
   }
 }
 
-async function clearRecoverySupabaseSession(): Promise<void> {
-  let firstFailure: unknown = null;
+async function closeRemoteBeforeAuthStorageMutation(): Promise<void> {
   try {
-    const { data, error } = await supabase.auth.getSession();
-    if (error) throw error;
-    if (data.session) {
-      const { error: signOutError } = await supabase.auth.signOut({ scope: 'local' });
-      if (signOutError) throw signOutError;
-    }
+    await closeSupabaseRemoteRequestBoundary();
   } catch (error) {
-    firstFailure = error;
+    if (
+      !isSupabaseRemoteRequestAdmissionError(
+        error,
+        'SUPABASE_REMOTE_REQUEST_DRAIN_QUARANTINED',
+      )
+    ) {
+      throw error;
+    }
+    // A drain deadline closes admission but does not prove an SDK continuation
+    // stopped. Preserve the encrypted session until that continuation truly
+    // settles, then repeat close so no stale completion can republish it.
+    await waitForSupabaseRemoteResidualSettlement();
+    await closeSupabaseRemoteRequestBoundary();
   }
+}
 
-  // Supabase's in-memory sign-out normally removes storage. Repeat the direct
-  // encrypted-storage clear to close partial and response-loss outcomes.
+async function clearRecoverySupabaseSession(): Promise<void> {
+  // Central remote authority must be closed and fully drained before encrypted
+  // auth storage changes.
+  await closeRemoteBeforeAuthStorageMutation();
+  let firstFailure: unknown = null;
+  // Do not call auth.signOut({ scope: 'local' }): auth-js routes it through
+  // _useSession/getSession and may implicitly refresh a near-expiry token. The
+  // pre-Auth recovery gate owns no mounted AuthProvider state; clearing the
+  // encrypted backing store after true remote quiescence is the local signout.
   try {
+    await closeRemoteBeforeAuthStorageMutation();
     await clearPersistedSupabaseSession();
   } catch (error) {
     firstFailure ??= error;
@@ -161,6 +190,7 @@ const defaultQuarantineDependencies: AccountDeletionQuarantineDependencies = {
 
 const defaultFinalizationDependencies: AccountDeletionFinalizationDependencies = {
   ...defaultSessionDependencies,
+  convertStoreSafetyNotice: convertStoreTransactionNoticeForTerminalDeletion,
   queueAppleNotice: queueAppleManualRevocationNotice,
   clearCompletedState: clearCompletedAccountDeletionState,
 };
@@ -170,9 +200,34 @@ const defaultAcceptedDependencies: AcceptedAccountDeletionDependencies = {
   markAccepted: (ownerBinding) => markAccountDeletionIntakeState('accepted', ownerBinding),
 };
 
+async function verifyPersistedRecoveryUser(accessToken: string) {
+  const claims = parseSupabaseAccessTokenClaims(accessToken);
+  if (claims === null || !LOWERCASE_CANONICAL_UUID_PATTERN.test(claims.subject)) {
+    throw accountDeletionRecoveryError('ACCOUNT_DELETION_OWNERSHIP_UNAVAILABLE');
+  }
+
+  // This gate mounts before AuthProvider, so normal active-session admission is
+  // deliberately closed. Establish only an exact candidate bearer and only an
+  // auth-verify semantic permit; never open the general Supabase lane or let
+  // auth-js refresh the retained deletion-recovery session.
+  await closeRemoteBeforeAuthStorageMutation();
+  const binding = setSupabaseRemoteRequestCandidate(accessToken, claims.subject);
+  try {
+    return await runWithSupabaseAuthVerificationPermit(
+      binding,
+      () => supabase.auth.getUser(accessToken),
+      ACCOUNT_DELETION_REQUEST_TIMEOUT_MS,
+    );
+  } finally {
+    // Recovery ownership proof is a one-request capability. Close and truly
+    // drain it before status polling or any eventual encrypted-session clear.
+    await closeRemoteBeforeAuthStorageMutation();
+  }
+}
+
 const defaultOwnershipDependencies: AccountDeletionOwnershipDependencies = {
-  getSession: () => supabase.auth.getSession(),
-  getUser: (jwt) => supabase.auth.getUser(jwt),
+  readSessionCandidate: readPersistedSupabaseSessionCandidate,
+  verifyUser: verifyPersistedRecoveryUser,
   readLocalOwnerBinding: readLocalDataOwnerProofBinding,
 };
 
@@ -209,21 +264,17 @@ export async function resolveAccountDeletionRecoveryOwnership(
 
   if (record.version !== 2) return { localData, session: 'unverified' };
 
-  let sessionResult: Awaited<ReturnType<AccountDeletionOwnershipDependencies['getSession']>>;
+  let candidate: Session | null;
   try {
-    sessionResult = await dependencies.getSession();
+    candidate = await dependencies.readSessionCandidate();
   } catch {
     throw accountDeletionRecoveryError('ACCOUNT_DELETION_OWNERSHIP_UNAVAILABLE');
   }
-  if (sessionResult.error) {
-    throw accountDeletionRecoveryError('ACCOUNT_DELETION_OWNERSHIP_UNAVAILABLE');
-  }
-  const candidate = sessionResult.data.session;
   if (!candidate) return { localData, session: 'none' };
 
-  let verified: Awaited<ReturnType<AccountDeletionOwnershipDependencies['getUser']>>;
+  let verified: Awaited<ReturnType<AccountDeletionOwnershipDependencies['verifyUser']>>;
   try {
-    verified = await dependencies.getUser(candidate.access_token);
+    verified = await dependencies.verifyUser(candidate.access_token);
   } catch {
     throw accountDeletionRecoveryError('ACCOUNT_DELETION_OWNERSHIP_UNAVAILABLE');
   }
@@ -392,20 +443,25 @@ export async function fetchAccountDeletionStatus(
   try {
     return await Promise.race([
       (async () => {
-        const response = await transport(
-          new URL('/functions/v1/account-deletion', env.supabaseUrl).toString(),
-          {
-            method: 'POST',
-            headers: {
-              apikey: env.supabasePublishableKey,
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ action: 'status', capability: statusCapability }),
-            cache: 'no-store',
-            credentials: 'omit',
-            signal: controller.signal,
-          },
+        const response = await runWithSupabaseAccountDeletionRequestPermit(
+          { action: 'status', timeoutMs: ACCOUNT_DELETION_REQUEST_TIMEOUT_MS },
+          transport,
+          (gatedTransport) =>
+            gatedTransport(
+              new URL('/functions/v1/account-deletion', env.supabaseUrl).toString(),
+              {
+                method: 'POST',
+                headers: {
+                  apikey: env.supabasePublishableKey,
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ action: 'status', capability: statusCapability }),
+                cache: 'no-store',
+                credentials: 'omit',
+                signal: controller.signal,
+              },
+            ),
         );
 
         if (![200, 202, 404, 410].includes(response.status)) {
@@ -544,6 +600,13 @@ export async function finalizeCompletedAccountDeletion(
     throw accountDeletionRecoveryError('ACCOUNT_DELETION_COMPLETION_INVALID');
   }
 
+  if (record.version !== 2 || !STATUS_CAPABILITY_PATTERN.test(record.ownerBinding)) {
+    throw accountDeletionRecoveryError('ACCOUNT_DELETION_COMPLETION_INVALID');
+  }
+  // The server has terminally deleted this subject. Remove the final local
+  // owner correlation before any later cleanup failure can leave it retained.
+  // The ownerless tombstone remains a device-only purchase safety bit.
+  await dependencies.convertStoreSafetyNotice(record.ownerBinding);
   await completeAccountDeletionLocalSignOut(dependencies, options);
   if (record.notice === 'remove_apple_authorization') {
     dependencies.queueAppleNotice();

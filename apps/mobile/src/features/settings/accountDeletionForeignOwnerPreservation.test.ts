@@ -83,6 +83,9 @@ vi.mock('@/lib/env', () => ({
   isSupabaseConfigured: false,
 }));
 vi.mock('@/lib/iap/revenuecat', () => ({ resetRevenueCatIdentity: vi.fn(async () => {}) }));
+vi.mock('@/lib/iap/storeTransactionNotice', () => ({
+  convertStoreTransactionNoticeForTerminalDeletion: vi.fn(async () => {}),
+}));
 vi.mock('@/lib/query/queryClient', () => ({
   queryClient: { cancelQueries: vi.fn(async () => {}), clear: vi.fn() },
 }));
@@ -93,6 +96,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
 }));
 vi.mock('@/lib/supabase/client', () => ({
   clearPersistedSupabaseSession: vi.fn(async () => {}),
+  readPersistedSupabaseSessionCandidate: vi.fn(async () => null),
   supabase: {
     auth: {
       getSession: vi.fn(async () => ({ data: { session: null }, error: null })),
@@ -163,6 +167,9 @@ describe('account-deletion foreign-owner preservation lifecycle', () => {
             order.push('derived');
           }),
           quarantineUnclaimedLocalData: vi.fn(async () => {}),
+          convertStoreSafetyNotice: vi.fn(async () => {
+            order.push('store-safety');
+          }),
           queueAppleNotice: vi.fn(),
           clearCompletedState: vi.fn(async () => {
             order.push('recovery-proof');
@@ -177,7 +184,13 @@ describe('account-deletion foreign-owner preservation lifecycle', () => {
       ),
     ).resolves.toBe('cleared');
 
-    expect(order).toEqual(['retained-owner', 'session', 'derived', 'recovery-proof']);
+    expect(order).toEqual([
+      'store-safety',
+      'retained-owner',
+      'session',
+      'derived',
+      'recovery-proof',
+    ]);
     expect(storage.get(LOCAL_DATA_OWNER_HASH_KEY)).toBe(OWNER_B);
     expect(storage.get(LOCAL_DATA_RETAINED_OWNER_HASH_KEY)).toBe(OWNER_B);
 
@@ -244,6 +257,9 @@ describe('account-deletion foreign-owner preservation lifecycle', () => {
           clearAuthDerivedActivity: vi.fn(async () => {
             order.push('derived');
           }),
+          convertStoreSafetyNotice: vi.fn(async () => {
+            order.push('store-safety');
+          }),
           queueAppleNotice: vi.fn(),
           clearCompletedState: vi.fn(async () => {
             order.push('recovery-proof');
@@ -258,7 +274,13 @@ describe('account-deletion foreign-owner preservation lifecycle', () => {
       ),
     ).resolves.toBe('cleared');
 
-    expect(order).toEqual(['unclaimed-quarantine', 'session', 'derived', 'recovery-proof']);
+    expect(order).toEqual([
+      'store-safety',
+      'unclaimed-quarantine',
+      'session',
+      'derived',
+      'recovery-proof',
+    ]);
     expect(storage.get(LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY)).toBe('1');
     expect(storage.has(LOCAL_DATA_OWNER_HASH_KEY)).toBe(false);
 

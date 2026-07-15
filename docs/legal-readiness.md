@@ -112,6 +112,39 @@ questions + scoring and avoid the protected "16 types" branding.
 
 ---
 
+### E. Account deletion versus unresolved store billing — counsel + App Review gate
+
+Apple requires account-creation apps to offer in-app deletion, remove associated
+data not legally required, explain how subscription billing/cancellation is
+handled, and keep an immediate deletion option even if later deletion is also
+offered. See Apple's current developer guidance:
+https://developer.apple.com/support/offering-account-deletion-in-your-app.
+
+The client therefore does not require a user to resolve a possible store charge
+before deletion intake. After server-verified terminal deletion, it removes the
+exact owner correlation and, only when commerce safety still requires it, keeps
+one ownerless/actionless/productless device bit with a fresh timestamp and a
+30-day review marker. That bit offers Restore, Manage subscription, and configured
+Support; Manage/Support and verified-empty Restore do not count as resolution.
+The same marker is anchored to the original native-call journal timestamp for an
+exact RevenueCat payment-pending record. Because device wall time is not trusted,
+neither marker automatically deletes data or reopens checkout; persisted active
+provider proof is currently required.
+
+- **Status:** implemented and unit/contract tested, but **not legally approved**.
+  Privacy/consumer counsel must approve the disclosure and retention basis for
+  launch jurisdictions. App Review/TestFlight must validate deletion copy and
+  subscription management. Physical-device Ask-to-Buy approval/decline, one
+  subscription group, and live RevenueCat restore/transfer/alias behavior remain
+  release gates. Resolution-bound retention and any future trusted-time/provider
+  release policy require explicit counsel and native/provider review; the review
+  marker is not a legal safe harbor or guarantee of Apple acceptance.
+- **Open deletion-recovery gate:** a malformed or unavailable local store journal
+  currently blocks deletion intake and terminal local finalization rather than
+  overwriting possibly relevant commerce state. Apple/counsel must approve a
+  tested recovery path that does not make in-app account deletion unavailable;
+  the current fail-closed behavior is not launch-ready evidence.
+
 ## 3. What "approvals" actually means here
 
 | Gate                                          | Is it a government permit?                        | What's required                                                                                                             |

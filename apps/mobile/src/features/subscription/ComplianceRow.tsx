@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
+import { storeTransactionRecoveryMessage } from '@/lib/iap/storeTransactionNotice';
 import { POLICY_LINKS } from '@/lib/legal/policyLinks';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { colors } from '@/theme/tokens';
@@ -62,8 +63,10 @@ export function ComplianceRow({
         const message = restoreFeedbackMessage(result.active);
         setFeedback(message);
       },
-      onError: () => {
-        const message = 'We could not restore purchases. Please try again.';
+      onError: (error) => {
+        const message =
+          storeTransactionRecoveryMessage(error, 'restore') ??
+          'We could not restore purchases. Please try again.';
         setFeedback(message);
       },
     });

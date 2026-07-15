@@ -77,6 +77,9 @@ export const LOCAL_PRIVATE_CONTROL_KEYS = [
   LOCAL_DATA_CLEANUP_REQUIRED_KEY,
   PLAINTEXT_STAGING_JOURNAL_KEY,
   LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
+  // Device-global purchase admission remains closed across sign-out/account
+  // cleanup until the exact owner completes an authenticated Restore check.
+  'routinekind.store_transaction_notice.v2',
 ] as const;
 
 export const LOCAL_PRIVATE_CACHE_FILENAMES = ['onskin-export.json'] as const;

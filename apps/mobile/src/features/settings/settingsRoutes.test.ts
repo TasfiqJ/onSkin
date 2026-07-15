@@ -639,7 +639,7 @@ describe('Settings route contracts', () => {
     expect(source).toContain('PAYWALL_COPY.reverseTrial.keepCta');
     expect(source).toContain('PAYWALL_COPY.reverseTrial.settingsNote(endDateLabel)');
     expect(source).toContain('PAYWALL_COPY.manage.appGrantedNote(endDateLabel)');
-    expect(source).toContain('PAYWALL_COPY.manage.cancelNote(endDateLabel)');
+    expect(source).toContain('SUBSCRIPTION_STOREFRONT_COPY.cancellationNote(endDateLabel)');
     expect(source).toContain('const statusPillLabel = data?.inReverseTrial');
     expect(source).toContain("? 'No card'");
     expect(source).toContain("? 'Store trial'");

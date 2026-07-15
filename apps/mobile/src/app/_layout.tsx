@@ -13,6 +13,7 @@ import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
 import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
 import { IntakeProvider } from '@/features/shelf/IntakeContext';
 import { AccountDeletionRecoveryGate } from '@/features/settings/AccountDeletionRecoveryGate';
+import { StoreTransactionNoticeHost } from '@/features/subscription/StoreTransactionNoticeHost';
 import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { SessionBoundaryGate } from '@/lib/auth/SessionBoundaryGate';
@@ -60,6 +61,7 @@ export default function RootLayout() {
             <AuthProvider>
               <SessionBoundaryGate>
                 <AppLockProvider>
+                  <StoreTransactionNoticeHost />
                   <PrivateDataAvailabilityGate>
                     <OnboardingProvider>
                       <IntakeProvider>

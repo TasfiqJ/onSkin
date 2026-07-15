@@ -7,6 +7,7 @@ import { RouteIconButton, Text } from '@/components/ui';
 import { openPolicy, PRIVACY_URL, TERMS_URL } from '@/features/subscription/ComplianceRow';
 import { shouldTrackSubscriptionCancelIntent } from '@/features/subscription/cancelIntent';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
+import { subscriptionStorefrontCopy } from '@/features/subscription/storefrontCopy';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
@@ -16,6 +17,7 @@ import {
   MANAGE_SUBSCRIPTION_URL_IOS,
   showNativeManageSubscriptions,
 } from '@/lib/iap/revenuecat';
+import { storeTransactionRecoveryMessage } from '@/lib/iap/storeTransactionNotice';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -23,8 +25,8 @@ import { colors } from '@/theme/tokens';
 
 const POLICY_LINK_UNAVAILABLE_MESSAGE =
   'Link unavailable. We could not open this policy link. Please try again.';
-const SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE =
-  'We could not open subscription management. You can manage billing from your App Store or Google Play account settings.';
+const SUBSCRIPTION_STOREFRONT_COPY = subscriptionStorefrontCopy(Platform.OS);
+const SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE = SUBSCRIPTION_STOREFRONT_COPY.managementUnavailable;
 const RESTORE_UNAVAILABLE_MESSAGE = 'We could not restore purchases. Please try again.';
 
 // Manage subscription (design 06, docs/08 §3.4). Plan/state, renewal date, one-tap
@@ -115,8 +117,7 @@ export default function SubscriptionScreen() {
     const opened = await openExternalHttpsUrl(url, {
       mode: 'linking',
       failureTitle: 'Subscription link unavailable',
-      failureMessage:
-        'We could not open subscription management. You can manage billing from your App Store or Google Play account settings.',
+      failureMessage: SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE,
       alertOnFailure: false,
     });
     if (!opened) setSubscriptionFeedback(SUBSCRIPTION_LINK_UNAVAILABLE_MESSAGE);
@@ -136,8 +137,10 @@ export default function SubscriptionScreen() {
           : 'No active subscription was found for this account.';
         setSubscriptionFeedback(message);
       },
-      onError: () => {
-        setSubscriptionFeedback(RESTORE_UNAVAILABLE_MESSAGE);
+      onError: (error) => {
+        setSubscriptionFeedback(
+          storeTransactionRecoveryMessage(error, 'restore') ?? RESTORE_UNAVAILABLE_MESSAGE,
+        );
       },
     });
   }
@@ -155,14 +158,11 @@ export default function SubscriptionScreen() {
       : `${BRAND.proName}${data?.priceLabel ? ` · ${data.priceLabel}` : offering.data?.annual ? ` · ${offering.data.annual.priceLabel}` : ''}`;
   const isAppGrantedAccess = data?.store === 'app_granted';
   const isReverseTrialAccess = isAppGrantedAccess && data?.inReverseTrial === true;
-  const manageLabel =
-    data?.store === 'play_store'
-      ? 'Manage in Google Play'
-      : isReverseTrialAccess
-        ? PAYWALL_COPY.reverseTrial.keepCta
-        : isAppGrantedAccess
-          ? 'Review Pro options'
-          : PAYWALL_COPY.manage.manageRow;
+  const manageLabel = isReverseTrialAccess
+    ? PAYWALL_COPY.reverseTrial.keepCta
+    : isAppGrantedAccess
+      ? 'Review Pro options'
+      : SUBSCRIPTION_STOREFRONT_COPY.manageLabel;
   const manageAction = isAppGrantedAccess
     ? isReverseTrialAccess
       ? openReverseTrialOptions
@@ -173,7 +173,7 @@ export default function SubscriptionScreen() {
     ? PAYWALL_COPY.reverseTrial.settingsNote(endDateLabel)
     : isAppGrantedAccess
       ? PAYWALL_COPY.manage.appGrantedNote(endDateLabel)
-      : PAYWALL_COPY.manage.cancelNote(endDateLabel);
+      : SUBSCRIPTION_STOREFRONT_COPY.cancellationNote(endDateLabel);
   const statusPillLabel = data?.inReverseTrial
     ? 'No card'
     : data?.inTrial

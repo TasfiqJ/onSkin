@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Session } from '@supabase/supabase-js';
 
 import {
   acceptAccountDeletionAndSignOut,
@@ -11,6 +12,11 @@ import {
   quarantineAccountDeletionSession,
   resolveAccountDeletionRecoveryOwnership,
 } from './accountDeletionRecovery';
+import {
+  closeSupabaseRemoteRequestBoundary,
+  supabaseRemoteRequestAdmission,
+} from '@/lib/supabase/remoteRequestGate';
+import { SupabaseRemoteRequestAdmissionError } from '@/lib/supabase/remoteRequestAdmission';
 
 const CAPABILITY = '02'.repeat(32);
 const OWNER_A = 'a1'.repeat(32);
@@ -25,6 +31,15 @@ const RECORD_A = {
   idempotencyKey: '01'.repeat(32),
   statusCapability: CAPABILITY,
 } as const;
+const SESSION_A = '10000000-0000-4000-8000-0000000000a1';
+
+function recoveryJwt(subject = USER_A): string {
+  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
+  const payload = Buffer.from(
+    JSON.stringify({ exp: 4_000_000_000, session_id: SESSION_A, sub: subject }),
+  ).toString('base64url');
+  return `${header}.${payload}.signature`;
+}
 
 const mocks = vi.hoisted(() => ({
   cancelQueries: vi.fn(),
@@ -32,6 +47,7 @@ const mocks = vi.hoisted(() => ({
   clearCompletedAccountDeletionState: vi.fn(),
   clearAccountIsolatedState: vi.fn(),
   clearPersistedSupabaseSession: vi.fn(),
+  convertStoreTransactionNoticeForTerminalDeletion: vi.fn(),
   clearQueries: vi.fn(),
   getSession: vi.fn(),
   getUser: vi.fn(),
@@ -63,6 +79,11 @@ vi.mock('@/lib/iap/revenuecat', () => ({
   resetRevenueCatIdentity: mocks.resetRevenueCatIdentity,
 }));
 
+vi.mock('@/lib/iap/storeTransactionNotice', () => ({
+  convertStoreTransactionNoticeForTerminalDeletion:
+    mocks.convertStoreTransactionNoticeForTerminalDeletion,
+}));
+
 vi.mock('@/lib/query/queryClient', () => ({
   queryClient: {
     cancelQueries: mocks.cancelQueries,
@@ -91,6 +112,11 @@ vi.mock('@/lib/auth/sessionOwner', () => ({
 
 vi.mock('@/lib/supabase/client', () => ({
   clearPersistedSupabaseSession: mocks.clearPersistedSupabaseSession,
+  readPersistedSupabaseSessionCandidate: async () => {
+    const result = await mocks.getSession();
+    if (result.error) throw result.error;
+    return result.data.session;
+  },
   supabase: {
     auth: {
       getSession: mocks.getSession,
@@ -132,11 +158,10 @@ function ownershipDependencies(input: {
       }
     : null;
   return {
-    getSession: vi.fn(async () => ({
-      data: { session },
-      error: null,
-    })) as unknown as AccountDeletionOwnershipDependencies['getSession'],
-    getUser: vi.fn(async () => ({
+    readSessionCandidate: vi.fn(
+      async () => session as unknown as Session | null,
+    ) as unknown as AccountDeletionOwnershipDependencies['readSessionCandidate'],
+    verifyUser: vi.fn(async () => ({
       data: {
         user:
           input.verifiedUserId === null
@@ -144,7 +169,7 @@ function ownershipDependencies(input: {
             : { id: input.verifiedUserId ?? input.sessionUserId },
       },
       error: null,
-    })) as unknown as AccountDeletionOwnershipDependencies['getUser'],
+    })) as unknown as AccountDeletionOwnershipDependencies['verifyUser'],
     readLocalOwnerBinding: vi.fn(async () => input.localOwnerBinding),
   };
 }
@@ -155,6 +180,7 @@ beforeEach(() => {
   mocks.cancelScheduledNotifications.mockResolvedValue(undefined);
   mocks.clearAccountIsolatedState.mockResolvedValue(undefined);
   mocks.clearPersistedSupabaseSession.mockResolvedValue(undefined);
+  mocks.convertStoreTransactionNoticeForTerminalDeletion.mockResolvedValue(undefined);
   mocks.clearQueries.mockReturnValue(undefined);
   mocks.getSession.mockResolvedValue({
     data: { session: { access_token: 'quarantined-access-token', user: { id: USER_A } } },
@@ -212,11 +238,11 @@ describe('account-deletion recovery session boundary', () => {
     expect(mocks.clearPersistedSupabaseSession).not.toHaveBeenCalled();
   });
 
-  it('clears the in-memory and persisted session after capability polling proves acceptance', async () => {
+  it('clears persisted auth directly after capability polling proves acceptance', async () => {
     await expect(completeAccountDeletionLocalSignOut()).resolves.toBeUndefined();
 
-    expect(mocks.getSession).toHaveBeenCalledOnce();
-    expect(mocks.signOut).toHaveBeenCalledWith({ scope: 'local' });
+    expect(mocks.getSession).not.toHaveBeenCalled();
+    expect(mocks.signOut).not.toHaveBeenCalled();
     expect(mocks.clearPersistedSupabaseSession).toHaveBeenCalledOnce();
     expect(mocks.clearAccountIsolatedState).toHaveBeenCalledOnce();
     expect(mocks.cancelQueries).toHaveBeenCalledTimes(2);
@@ -271,6 +297,48 @@ describe('account-deletion recovery session boundary', () => {
 });
 
 describe('account-deletion recovery ownership boundary', () => {
+  it('uses a one-shot candidate verification permit while the pre-Auth gate is closed', async () => {
+    const accessToken = recoveryJwt();
+    let observedState: string | null = null;
+    mocks.getSession.mockResolvedValueOnce({
+      data: {
+        session: {
+          access_token: accessToken,
+          expires_at: 4_000_000_000,
+          refresh_token: 'retained-refresh-token',
+          user: { id: USER_A },
+        },
+      },
+      error: null,
+    });
+    mocks.getUser.mockImplementationOnce(async (observedToken: string) => {
+      observedState = supabaseRemoteRequestAdmission.snapshot().state;
+      const response = await supabaseRemoteRequestAdmission.createFetch(async () =>
+        jsonResponse(200, { id: USER_A }),
+      )('https://project.supabase.co/auth/v1/user', {
+        method: 'GET',
+        headers: {
+          apikey: 'sb_publishable_test',
+          Authorization: `Bearer ${observedToken}`,
+        },
+      });
+      return { data: { user: await response.json() }, error: null };
+    });
+
+    await expect(resolveAccountDeletionRecoveryOwnership(RECORD_A)).resolves.toEqual({
+      localData: 'match',
+      session: 'match',
+    });
+
+    expect(mocks.getUser).toHaveBeenCalledOnce();
+    expect(observedState).toBe('candidate');
+    expect(supabaseRemoteRequestAdmission.snapshot()).toMatchObject({
+      inFlight: 0,
+      state: 'closed',
+      subject: null,
+    });
+  });
+
   it('holds the pre-Auth gate when local owner storage cannot be read', async () => {
     const dependencies = ownershipDependencies({
       localOwnerBinding: OWNER_B,
@@ -284,7 +352,7 @@ describe('account-deletion recovery ownership boundary', () => {
       'ACCOUNT_DELETION_OWNERSHIP_UNAVAILABLE',
     );
 
-    expect(dependencies.getSession).not.toHaveBeenCalled();
+    expect(dependencies.readSessionCandidate).not.toHaveBeenCalled();
     expect(mocks.signOut).not.toHaveBeenCalled();
     expect(mocks.clearPersistedSupabaseSession).not.toHaveBeenCalled();
     expect(mocks.clearAccountIsolatedState).not.toHaveBeenCalled();
@@ -295,28 +363,29 @@ describe('account-deletion recovery ownership boundary', () => {
     {
       label: 'session storage throws',
       arrange(dependencies: AccountDeletionOwnershipDependencies) {
-        vi.mocked(dependencies.getSession).mockRejectedValueOnce(new Error('storage offline'));
+        vi.mocked(dependencies.readSessionCandidate).mockRejectedValueOnce(
+          new Error('storage offline'),
+        );
       },
     },
     {
-      label: 'session storage returns an error',
+      label: 'encrypted session reader rejects malformed state',
       arrange(dependencies: AccountDeletionOwnershipDependencies) {
-        vi.mocked(dependencies.getSession).mockResolvedValueOnce({
-          data: { session: null },
-          error: new Error('session unavailable'),
-        } as never);
+        vi.mocked(dependencies.readSessionCandidate).mockRejectedValueOnce(
+          new Error('SUPABASE_PERSISTED_SESSION_INVALID'),
+        );
       },
     },
     {
       label: 'bearer verification throws',
       arrange(dependencies: AccountDeletionOwnershipDependencies) {
-        vi.mocked(dependencies.getUser).mockRejectedValueOnce(new Error('Auth offline'));
+        vi.mocked(dependencies.verifyUser).mockRejectedValueOnce(new Error('Auth offline'));
       },
     },
     {
       label: 'bearer verification returns a non-authoritative error',
       arrange(dependencies: AccountDeletionOwnershipDependencies) {
-        vi.mocked(dependencies.getUser).mockResolvedValueOnce({
+        vi.mocked(dependencies.verifyUser).mockResolvedValueOnce({
           data: { user: null },
           error: { status: 503 },
         } as never);
@@ -325,7 +394,7 @@ describe('account-deletion recovery ownership boundary', () => {
     {
       label: 'bearer verification returns no user without an error',
       arrange(dependencies: AccountDeletionOwnershipDependencies) {
-        vi.mocked(dependencies.getUser).mockResolvedValueOnce({
+        vi.mocked(dependencies.verifyUser).mockResolvedValueOnce({
           data: { user: null },
           error: null,
         } as never);
@@ -356,7 +425,7 @@ describe('account-deletion recovery ownership boundary', () => {
         localOwnerBinding: OWNER_A,
         sessionUserId: USER_A,
       });
-      vi.mocked(dependencies.getUser).mockResolvedValueOnce({
+      vi.mocked(dependencies.verifyUser).mockResolvedValueOnce({
         data: { user: null },
         error: { status },
       } as never);
@@ -439,7 +508,7 @@ describe('account-deletion recovery ownership boundary', () => {
     });
     await expect(completeAccountDeletionLocalSignOut(undefined, options)).resolves.toBeUndefined();
 
-    expect(mocks.signOut).toHaveBeenCalledWith({ scope: 'local' });
+    expect(mocks.signOut).not.toHaveBeenCalled();
     expect(mocks.clearPersistedSupabaseSession).toHaveBeenCalledOnce();
     expect(mocks.cancelQueries).toHaveBeenCalledTimes(2);
     expect(mocks.clearQueries).toHaveBeenCalledTimes(2);
@@ -448,7 +517,7 @@ describe('account-deletion recovery ownership boundary', () => {
     expect(mocks.clearAccountIsolatedState).not.toHaveBeenCalled();
     expect(mocks.retainLocalDataOwner).toHaveBeenCalledOnce();
     expect(mocks.retainLocalDataOwner.mock.invocationCallOrder[0]).toBeLessThan(
-      mocks.signOut.mock.invocationCallOrder[0]!,
+      mocks.clearPersistedSupabaseSession.mock.invocationCallOrder[0]!,
     );
   });
 
@@ -492,7 +561,7 @@ describe('account-deletion recovery ownership boundary', () => {
 
     expect(mocks.quarantineUnclaimedLocalData).toHaveBeenCalledOnce();
     expect(mocks.quarantineUnclaimedLocalData.mock.invocationCallOrder[0]).toBeLessThan(
-      mocks.signOut.mock.invocationCallOrder[0]!,
+      mocks.clearPersistedSupabaseSession.mock.invocationCallOrder[0]!,
     );
     expect(mocks.retainLocalDataOwner).not.toHaveBeenCalled();
     expect(mocks.clearAccountIsolatedState).not.toHaveBeenCalled();
@@ -542,25 +611,22 @@ describe('account-deletion public status contract', () => {
       nextPollAfterSeconds: 30,
     });
 
-    expect(transport).toHaveBeenCalledWith(
-      'https://project.supabase.co/functions/v1/account-deletion',
-      {
-        method: 'POST',
-        headers: {
-          apikey: 'sb_publishable_test',
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'status', capability: CAPABILITY }),
-        cache: 'no-store',
-        credentials: 'omit',
-        signal: expect.any(AbortSignal),
-      },
+    expect(transport).toHaveBeenCalledOnce();
+    const request = transport.mock.calls[0]![0] as Request;
+    expect(request).toBeInstanceOf(Request);
+    expect(request.url).toBe('https://project.supabase.co/functions/v1/account-deletion');
+    expect(request.method).toBe('POST');
+    expect(request.cache).toBe('no-store');
+    expect(request.credentials).toBe('omit');
+    expect(request.redirect).toBe('manual');
+    expect(request.headers.get('apikey')).toBe('sb_publishable_test');
+    expect(request.headers.get('accept')).toBe('application/json');
+    expect(request.headers.get('content-type')).toBe('application/json');
+    expect(request.headers.has('authorization')).toBe(false);
+    await expect(request.clone().text()).resolves.toBe(
+      JSON.stringify({ action: 'status', capability: CAPABILITY }),
     );
-    const init = transport.mock.calls[0]![1];
-    const headers = init.headers as Record<string, string>;
-    expect(Object.keys(headers).map((key) => key.toLowerCase())).not.toContain('authorization');
-    expect(init.signal?.aborted).toBe(false);
+    expect(request.signal.aborted).toBe(false);
   });
 
   it('aborts status polling at 15 seconds and preserves every recovery authority', async () => {
@@ -568,10 +634,11 @@ describe('account-deletion public status contract', () => {
     let requestSignal: AbortSignal | undefined;
     try {
       const transport = vi.fn(
-        (_input: string, init: RequestInit) =>
+        (input: string | URL | Request, init?: RequestInit) =>
           new Promise<Response>((_resolve, reject) => {
-            requestSignal = init.signal ?? undefined;
-            init.signal?.addEventListener(
+            const request = new Request(input, init);
+            requestSignal = request.signal;
+            request.signal.addEventListener(
               'abort',
               () => {
                 const error = new Error('request aborted');
@@ -607,8 +674,8 @@ describe('account-deletion public status contract', () => {
     vi.useFakeTimers();
     let requestSignal: AbortSignal | undefined;
     try {
-      const transport = vi.fn((_input: string, init: RequestInit) => {
-        requestSignal = init.signal ?? undefined;
+      const transport = vi.fn((input: string | URL | Request, init?: RequestInit) => {
+        requestSignal = new Request(input, init).signal;
         return Promise.resolve(
           jsonResponse(202, {
             status: 'pending',
@@ -670,6 +737,33 @@ describe('account-deletion public status contract', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it('rejects a capability result when an account boundary invalidates its semantic permit', async () => {
+    let requestStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      requestStarted = resolve;
+    });
+    const transport = vi.fn(
+      (input: string | URL | Request, init?: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          const request = new Request(input, init);
+          requestStarted();
+          request.signal.addEventListener(
+            'abort',
+            () => reject(new Error('aborted by account boundary')),
+            { once: true },
+          );
+        }),
+    );
+
+    const status = fetchAccountDeletionStatus(CAPABILITY, transport);
+    await started;
+    const closed = closeSupabaseRemoteRequestBoundary();
+
+    await expect(status).rejects.toThrow('ACCOUNT_DELETION_STATUS_UNAVAILABLE');
+    await closed;
+    expect(transport).toHaveBeenCalledOnce();
   });
 
   it('accepts the exact completed response and optional Apple notice', () => {
@@ -742,6 +836,41 @@ describe('account-deletion local terminal commit', () => {
     notice: 'remove_apple_authorization',
   } as const;
 
+  it('waits for quarantined remote work and recloses before auth storage mutation', async () => {
+    const close = vi
+      .spyOn(supabaseRemoteRequestAdmission, 'close')
+      .mockRejectedValueOnce(
+        new SupabaseRemoteRequestAdmissionError(
+          'SUPABASE_REMOTE_REQUEST_DRAIN_QUARANTINED',
+        ),
+      )
+      .mockResolvedValue(undefined);
+    const waitForResidual = vi
+      .spyOn(supabaseRemoteRequestAdmission, 'waitForResidualSettlement')
+      .mockResolvedValue(undefined);
+
+    try {
+      await expect(completeAccountDeletionLocalSignOut()).resolves.toBeUndefined();
+
+      expect(close).toHaveBeenCalledTimes(3);
+      expect(close.mock.invocationCallOrder[0]).toBeLessThan(
+        waitForResidual.mock.invocationCallOrder[0]!,
+      );
+      expect(waitForResidual.mock.invocationCallOrder[0]).toBeLessThan(
+        close.mock.invocationCallOrder[1]!,
+      );
+      expect(close.mock.invocationCallOrder[1]).toBeLessThan(
+        close.mock.invocationCallOrder[2]!,
+      );
+      expect(close.mock.invocationCallOrder[2]).toBeLessThan(
+        mocks.clearPersistedSupabaseSession.mock.invocationCallOrder[0]!,
+      );
+    } finally {
+      close.mockRestore();
+      waitForResidual.mockRestore();
+    }
+  });
+
   it('keeps the completed capability durable until Apple instructions are acknowledged', async () => {
     const order: string[] = [];
     await expect(
@@ -757,6 +886,9 @@ describe('account-deletion local terminal commit', () => {
         }),
         quarantineUnclaimedLocalData: vi.fn(async () => {}),
         retainLocalDataOwner: vi.fn(async () => {}),
+        convertStoreSafetyNotice: vi.fn(async () => {
+          order.push('store-safety');
+        }),
         queueAppleNotice: vi.fn(() => order.push('notice')),
         clearCompletedState: vi.fn(async () => {
           order.push('capability');
@@ -764,7 +896,7 @@ describe('account-deletion local terminal commit', () => {
       }),
     ).resolves.toBe('manual_notice_pending');
 
-    expect(order).toEqual(['session', 'local', 'derived', 'notice']);
+    expect(order).toEqual(['store-safety', 'session', 'local', 'derived', 'notice']);
   });
 
   it('removes capability after local cleanup when no manual notice remains', async () => {
@@ -784,6 +916,9 @@ describe('account-deletion local terminal commit', () => {
           }),
           quarantineUnclaimedLocalData: vi.fn(async () => {}),
           retainLocalDataOwner: vi.fn(async () => {}),
+          convertStoreSafetyNotice: vi.fn(async () => {
+            order.push('store-safety');
+          }),
           queueAppleNotice: vi.fn(() => order.push('notice')),
           clearCompletedState: vi.fn(async () => {
             order.push('capability');
@@ -791,7 +926,7 @@ describe('account-deletion local terminal commit', () => {
         },
       ),
     ).resolves.toBe('cleared');
-    expect(order).toEqual(['session', 'local', 'derived', 'capability']);
+    expect(order).toEqual(['store-safety', 'session', 'local', 'derived', 'capability']);
   });
 
   it('finalizes completed A evidence without erasing B private data', async () => {
@@ -812,7 +947,7 @@ describe('account-deletion local terminal commit', () => {
       finalizeCompletedAccountDeletion({ ...completed, notice: null }, undefined, options),
     ).resolves.toBe('cleared');
 
-    expect(mocks.signOut).toHaveBeenCalledWith({ scope: 'local' });
+    expect(mocks.signOut).not.toHaveBeenCalled();
     expect(mocks.clearPersistedSupabaseSession).toHaveBeenCalledOnce();
     expect(mocks.clearAccountIsolatedState).not.toHaveBeenCalled();
     expect(mocks.retainLocalDataOwner).toHaveBeenCalledOnce();
@@ -883,11 +1018,27 @@ describe('account-deletion local terminal commit', () => {
         clearAuthDerivedActivity: vi.fn().mockResolvedValue(undefined),
         quarantineUnclaimedLocalData: vi.fn().mockResolvedValue(undefined),
         retainLocalDataOwner: vi.fn().mockResolvedValue(undefined),
+        convertStoreSafetyNotice: vi.fn().mockResolvedValue(undefined),
         queueAppleNotice: vi.fn(),
         clearCompletedState,
       }),
     ).rejects.toThrow('cleanup unavailable');
 
     expect(clearCompletedState).not.toHaveBeenCalled();
+  });
+
+  it('keeps terminal recovery retryable when owner-correlation conversion cannot commit', async () => {
+    mocks.convertStoreTransactionNoticeForTerminalDeletion.mockRejectedValueOnce(
+      new Error('store safety unavailable'),
+    );
+
+    await expect(finalizeCompletedAccountDeletion({ ...completed, notice: null })).rejects.toThrow(
+      'store safety unavailable',
+    );
+
+    expect(mocks.convertStoreTransactionNoticeForTerminalDeletion).toHaveBeenCalledWith(OWNER_A);
+    expect(mocks.signOut).not.toHaveBeenCalled();
+    expect(mocks.clearAccountIsolatedState).not.toHaveBeenCalled();
+    expect(mocks.clearCompletedAccountDeletionState).not.toHaveBeenCalled();
   });
 });

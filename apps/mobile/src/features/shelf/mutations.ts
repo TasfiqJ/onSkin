@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import { devWarn } from '@/lib/observability/safeLog';
-import { supabase } from '@/lib/supabase/client';
+import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 
 import {
   addProduct,
@@ -23,7 +23,7 @@ import {
  * one UUID so routine_conflicts foreign keys can reference the mirrored shelf. */
 async function mirrorUpsert(p: ShelfProduct): Promise<void> {
   try {
-    const { data } = await supabase.auth.getUser();
+    const { data } = await getPersistedSupabaseUser();
     const userId = data.user?.id;
     if (!userId) return;
     const { error } = await supabase.from('user_products').upsert(
@@ -59,7 +59,7 @@ async function mirrorUpsert(p: ShelfProduct): Promise<void> {
 
 async function mirrorDelete(id: string): Promise<void> {
   try {
-    const { data } = await supabase.auth.getUser();
+    const { data } = await getPersistedSupabaseUser();
     const userId = data.user?.id;
     if (!userId) return;
     const { error } = await supabase

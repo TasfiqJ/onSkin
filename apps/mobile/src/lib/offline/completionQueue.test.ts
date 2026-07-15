@@ -56,6 +56,9 @@ vi.mock('@/lib/storage/privateKV', () => ({
 }));
 
 vi.mock('@/lib/supabase/client', () => ({
+  getPersistedSupabaseUser: vi.fn(async () => ({
+    data: { user: mocks.currentUserId ? { id: mocks.currentUserId } : null },
+  })),
   supabase: {
     auth: {
       getUser: vi.fn(async () => ({

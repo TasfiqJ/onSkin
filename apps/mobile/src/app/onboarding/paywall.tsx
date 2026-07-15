@@ -80,9 +80,10 @@ export default function PaywallScreen() {
     startTrial.mutate(undefined, {
       onSuccess: (result) => {
         if (result.active) router.replace('/paywall/success');
-        else if (!result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
+        else if (result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseCancelled);
+        else setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
       },
-      onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
+      onError: (error) => setActionFeedback(PAYWALL_FEEDBACK.purchaseError(error)),
     });
   }
 

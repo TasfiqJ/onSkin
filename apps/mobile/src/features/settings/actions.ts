@@ -3,6 +3,7 @@ import * as Sharing from 'expo-sharing';
 import type { Session, User } from '@supabase/supabase-js';
 
 import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
+import { beginAccountDeletionIntakeHold } from '@/features/settings/accountDeletionBarrier';
 import {
   runAccountGenerationOperation,
   type AccountGenerationLease,
@@ -11,12 +12,21 @@ import { getAppleAuthorizationCodeForRevocation } from '@/lib/auth/apple';
 import { BRAND } from '@/lib/brand';
 import { recordConsent } from '@/lib/consent/consent';
 import { env, isSupabaseConfigured } from '@/lib/env';
+import { startRevenueCatDeletionQuiesce } from '@/lib/iap/revenuecat';
+import { assertStoreTransactionDeletionJournalReadable } from '@/lib/iap/storeTransactionNotice';
 import {
   cleanupPlaintextStaging,
   markPlaintextStagingState,
   reservePlaintextStaging,
 } from '@/lib/storage/plaintextStaging';
-import { supabase } from '@/lib/supabase/client';
+import { readPersistedSupabaseSessionCandidate, supabase } from '@/lib/supabase/client';
+import {
+  beginSupabaseRemoteDeletionBoundary,
+  closeSupabaseRemoteRequestBoundary,
+  requireSupabaseRemoteSessionBinding,
+  runWithSupabaseAccountDeletionRequestPermit,
+  type SupabaseRemoteSessionBinding,
+} from '@/lib/supabase/remoteRequestGate';
 
 import {
   buildMobileDataExportBundle,
@@ -57,8 +67,46 @@ export type AccountDeletionIntakeTransport = (
 type VerifiedDeletionOwner = {
   accessToken: string;
   ownerBinding: string;
+  remoteBinding: SupabaseRemoteSessionBinding;
   user: User;
 };
+
+type AccountDeletionInitiator = Readonly<{
+  generation: number;
+  userId: string;
+}>;
+
+function startDeletionIntakeHandoff(
+  expectedUserId: string,
+  remoteBinding: SupabaseRemoteSessionBinding,
+): {
+  publicationQuiescence: Promise<void>;
+  releaseIntakeHold: () => void;
+} {
+  // Enter the exact-session remote deletion state before the local hold emits.
+  // AuthProvider observes the already-entered state and must preserve it; this
+  // prevents the hold notification from collapsing the only lane authorized to
+  // durably enqueue the deletion.
+  const remoteQuiescence = beginSupabaseRemoteDeletionBoundary(remoteBinding);
+  const releaseIntakeHold = beginAccountDeletionIntakeHold();
+  try {
+    return {
+      publicationQuiescence: Promise.all([
+        remoteQuiescence,
+        startRevenueCatDeletionQuiesce(expectedUserId),
+      ]).then(() => undefined),
+      releaseIntakeHold,
+    };
+  } catch (error) {
+    void remoteQuiescence.catch(() => undefined);
+    // close() publishes the closed state synchronously. The returned drain may
+    // still be waiting for an abort-ignoring platform transport, so do not turn
+    // that provider defect into an unhandled rejection.
+    void closeSupabaseRemoteRequestBoundary().catch(() => undefined);
+    releaseIntakeHold();
+    throw error;
+  }
+}
 
 function assertDataRightsBackendAvailable(): void {
   if (!isSupabaseConfigured) throw new Error(DATA_RIGHTS_BACKEND_UNAVAILABLE);
@@ -120,16 +168,14 @@ function validAccessToken(value: unknown): value is string {
 async function captureVerifiedDeletionOwner(
   lease: AccountGenerationLease,
 ): Promise<VerifiedDeletionOwner> {
-  let sessionResponse: Awaited<ReturnType<typeof supabase.auth.getSession>>;
+  let session: Session | null;
   try {
-    sessionResponse = await supabase.auth.getSession();
+    session = await readPersistedSupabaseSessionCandidate();
   } catch {
     throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
   }
-  const { data: sessionData, error: sessionError } = sessionResponse;
   lease.assertCurrent();
-  const session: Session | null = sessionData.session;
-  if (sessionError || !session || !validAccessToken(session.access_token)) {
+  if (!session || !validAccessToken(session.access_token)) {
     throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
   }
 
@@ -145,9 +191,43 @@ async function captureVerifiedDeletionOwner(
   if (userError || !user || user.id !== session.user.id) {
     throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
   }
+  let remoteBinding: SupabaseRemoteSessionBinding;
+  try {
+    remoteBinding = requireSupabaseRemoteSessionBinding(session.access_token, user.id);
+  } catch {
+    throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
+  }
   const ownerBinding = await createAccountDeletionOwnerBinding(user.id);
   lease.assertCurrent();
-  return { accessToken: session.access_token, ownerBinding, user };
+  return { accessToken: session.access_token, ownerBinding, remoteBinding, user };
+}
+
+async function captureAccountDeletionInitiator(): Promise<AccountDeletionInitiator> {
+  return runAccountGenerationOperation(async (lease) => {
+    let session: Session | null;
+    try {
+      session = await readPersistedSupabaseSessionCandidate();
+    } catch {
+      throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
+    }
+    lease.assertCurrent();
+    if (!session || !validAccessToken(session.access_token)) {
+      throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
+    }
+
+    let response: Awaited<ReturnType<typeof supabase.auth.getUser>>;
+    try {
+      response = await supabase.auth.getUser(session.access_token);
+    } catch {
+      throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
+    }
+    lease.assertCurrent();
+    const user = response.data.user;
+    if (response.error || !user || user.id !== session.user.id) {
+      throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
+    }
+    return Object.freeze({ generation: lease.generation, userId: user.id });
+  });
 }
 
 async function readBoundedAccountDeletionResponse(response: Response): Promise<unknown> {
@@ -170,13 +250,10 @@ async function invokeAccountDeletionWithDeadline(
   pending: AccountDeletionClientRecord,
   owner: VerifiedDeletionOwner,
   appleAuthorizationCode: string | null,
-  leaseSignal: AbortSignal,
   transport: AccountDeletionIntakeTransport,
 ): Promise<AccountDeletionResult> {
   const controller = new AbortController();
   let timeout: ReturnType<typeof setTimeout> | undefined;
-  const abortForLease = () => controller.abort();
-  leaseSignal.addEventListener('abort', abortForLease, { once: true });
   const deadline = new Promise<never>((_resolve, reject) => {
     timeout = setTimeout(() => {
       controller.abort();
@@ -189,27 +266,36 @@ async function invokeAccountDeletionWithDeadline(
       (async () => {
         let response: Response;
         try {
-          response = await transport(
-            new URL('/functions/v1/account-deletion', env.supabaseUrl).toString(),
+          response = await runWithSupabaseAccountDeletionRequestPermit(
             {
-              method: 'POST',
-              headers: {
-                Accept: 'application/json',
-                apikey: env.supabasePublishableKey,
-                Authorization: `Bearer ${owner.accessToken}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                action: 'begin',
-                idempotencyKey: pending.idempotencyKey,
-                statusCapability: pending.statusCapability,
-                ...(appleAuthorizationCode ? { appleAuthorizationCode } : {}),
-              }),
-              cache: 'no-store',
-              credentials: 'omit',
-              redirect: 'error',
-              signal: controller.signal,
+              action: 'begin',
+              binding: owner.remoteBinding,
+              timeoutMs: ACCOUNT_DELETION_REQUEST_TIMEOUT_MS,
             },
+            transport,
+            (gatedTransport) =>
+              gatedTransport(
+                new URL('/functions/v1/account-deletion', env.supabaseUrl).toString(),
+                {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    apikey: env.supabasePublishableKey,
+                    Authorization: `Bearer ${owner.accessToken}`,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    action: 'begin',
+                    idempotencyKey: pending.idempotencyKey,
+                    statusCapability: pending.statusCapability,
+                    ...(appleAuthorizationCode ? { appleAuthorizationCode } : {}),
+                  }),
+                  cache: 'no-store',
+                  credentials: 'omit',
+                  redirect: 'error',
+                  signal: controller.signal,
+                },
+              ),
           );
         } catch {
           throw new AccountDeletionTransportLostError();
@@ -221,7 +307,10 @@ async function invokeAccountDeletionWithDeadline(
     ]);
   } finally {
     if (timeout !== undefined) clearTimeout(timeout);
-    leaseSignal.removeEventListener('abort', abortForLease);
+    // State closes synchronously even when a native transport ignores abort.
+    // This must happen before any failed pre-durable attempt can release its
+    // hold and allow AuthProvider to reacquire candidate authority.
+    void closeSupabaseRemoteRequestBoundary().catch(() => undefined);
   }
 }
 
@@ -255,58 +344,101 @@ export async function deleteAccount(
   _completeLocalSignOut: () => Promise<void>,
   _quarantineLocalAccount: () => Promise<void> = quarantineAccountDeletionSession,
   transport: AccountDeletionIntakeTransport = (input, init) => fetch(input, init),
+  expectedInitiator?: AccountDeletionInitiator,
 ): Promise<AccountDeletionResult> {
   assertDataRightsBackendAvailable();
 
   let intake:
     | { kind: 'accepted'; ownerBinding: string; result: AccountDeletionResult }
     | { kind: 'ambiguous'; ownerBinding: string; result: AccountDeletionResult };
+  let releaseIntakeHold: (() => void) | null = null;
   try {
-    intake = await runAccountGenerationOperation(async (lease) => {
-      const owner = await captureVerifiedDeletionOwner(lease);
-      let pending: AccountDeletionClientRecord;
-      try {
-        pending = await preparePendingAccountDeletion(owner.ownerBinding);
-      } catch (error) {
-        if (error instanceof Error && error.message === 'ACCOUNT_DELETION_OWNER_MISMATCH') {
-          throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
-        }
-        throw error;
-      }
-      lease.assertCurrent();
-      if (!accountDeletionRecordMatchesOwner(pending, owner.ownerBinding)) {
+    const quiescing = await runAccountGenerationOperation(async (lease) => {
+      if (expectedInitiator && lease.generation !== expectedInitiator.generation) {
         throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
       }
-
+      const owner = await captureVerifiedDeletionOwner(lease);
+      if (expectedInitiator && owner.user.id !== expectedInitiator.userId) {
+        throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
+      }
       const appleAuthorizationCode = await getAppleAuthorizationCodeForRevocation(owner.user).catch(
         () => null,
       );
       lease.assertCurrent();
+      await assertStoreTransactionDeletionJournalReadable(owner.ownerBinding);
+      lease.assertCurrent();
 
-      try {
-        const result = await invokeAccountDeletionWithDeadline(
-          pending,
-          owner,
-          appleAuthorizationCode,
-          lease.signal,
-          transport,
-        );
-        lease.assertCurrent();
-        return { kind: 'accepted', ownerBinding: owner.ownerBinding, result } as const;
-      } catch (error) {
-        if (!isTransportLostInvocationError(error)) throw error;
-        return {
-          kind: 'ambiguous',
-          ownerBinding: owner.ownerBinding,
-          result: {
-            status: 'accepted_or_ambiguous',
-            phase: 'unknown',
-            nextPollAfterSeconds: null,
-          },
-        } as const;
-      }
+      // This helper must remain the final account-generation action. It closes
+      // account/vendor admission synchronously and starts exact-owner commerce
+      // quiescence in the same call stack. Its promise may outlive the
+      // intentional account-boundary abort while native/provider work drains.
+      // Do not await it or assert this lease after starting it.
+      return {
+        appleAuthorizationCode,
+        owner,
+        ...startDeletionIntakeHandoff(owner.user.id, owner.remoteBinding),
+      } as const;
     });
+    releaseIntakeHold = quiescing.releaseIntakeHold;
+
+    // Wait outside the intentionally abortable generation operation. Neither
+    // durable preparation for this attempt nor transport may begin until the
+    // captured owner's commerce controller proves exact closed quiescence.
+    await quiescing.publicationQuiescence;
+
+    let pending: AccountDeletionClientRecord;
+    try {
+      pending = await preparePendingAccountDeletion(quiescing.owner.ownerBinding);
+    } catch (error) {
+      if (error instanceof Error && error.message === 'ACCOUNT_DELETION_OWNER_MISMATCH') {
+        throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
+      }
+      throw error;
+    }
+    if (!accountDeletionRecordMatchesOwner(pending, quiescing.owner.ownerBinding)) {
+      throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
+    }
+
+    // `preparePendingAccountDeletion` publishes the durable process-local
+    // block before its successful persistence resolves. Releasing only after
+    // the owner-bound record is verified transfers authority without an open
+    // provider/Auth admission edge.
+    const releasePreparedIntakeHold = releaseIntakeHold;
+    releaseIntakeHold = null;
+    releasePreparedIntakeHold();
+
+    try {
+      const result = await invokeAccountDeletionWithDeadline(
+        pending,
+        quiescing.owner,
+        quiescing.appleAuthorizationCode,
+        transport,
+      );
+      intake = {
+        kind: 'accepted',
+        ownerBinding: quiescing.owner.ownerBinding,
+        result,
+      };
+    } catch (error) {
+      if (!isTransportLostInvocationError(error)) throw error;
+      intake = {
+        kind: 'ambiguous',
+        ownerBinding: quiescing.owner.ownerBinding,
+        result: {
+          status: 'accepted_or_ambiguous',
+          phase: 'unknown',
+          nextPollAfterSeconds: null,
+        },
+      };
+    }
   } catch (error) {
+    // close() changes state before returning its drain promise. Do this before
+    // releasing a pre-durable hold so no lifecycle observer can resume on the
+    // failed deletion session.
+    if (releaseIntakeHold !== null) {
+      void closeSupabaseRemoteRequestBoundary().catch(() => undefined);
+    }
+    releaseIntakeHold?.();
     requestAccountDeletionRecovery();
     throw error;
   }
@@ -329,18 +461,29 @@ export async function withdrawHealthDataConsent(
 ): Promise<void> {
   assertDataRightsBackendAvailable();
 
+  // Bind both the ledger write and destructive intake to the exact subject and
+  // account generation that initiated this action. A stale A continuation may
+  // never resume after an A-to-B boundary and capture B for deletion.
+  const initiator = await captureAccountDeletionInitiator();
+
   try {
     await recordConsent({
       type: 'health_data_collection',
       granted: false,
       version: HEALTH_DATA_WITHDRAWAL.version,
       consentText: HEALTH_DATA_WITHDRAWAL.fullText,
+      expectedUserId: initiator.userId,
     });
   } catch {
     // The deletion below is the substantive guarantee and runs even if the
     // consent-ledger write is temporarily unavailable.
   }
-  await deleteAccount(completeLocalSignOut);
+  await deleteAccount(
+    completeLocalSignOut,
+    quarantineAccountDeletionSession,
+    (input, init) => fetch(input, init),
+    initiator,
+  );
 }
 
 // GDPR Art. 20 export (docs/01 §4): the Edge Function assembles a JSON bundle;
@@ -402,11 +545,18 @@ export async function exportData(): Promise<boolean> {
   return runAccountGenerationOperation(async (lease) => {
     let expectedUserId: string | null = null;
     if (isSupabaseConfigured) {
-      const { data, error } = await supabase.auth.getUser();
+      const candidate = await readPersistedSupabaseSessionCandidate();
+      lease.assertCurrent();
+      if (!candidate || !validAccessToken(candidate.access_token)) {
+        throw new Error(DATA_EXPORT_USER_UNAVAILABLE);
+      }
+      const { data, error } = await supabase.auth.getUser(candidate.access_token);
       lease.assertCurrent();
       if (error) throw error;
       const userId = data.user?.id.trim();
-      if (!userId) throw new Error(DATA_EXPORT_USER_UNAVAILABLE);
+      if (!userId || userId !== candidate.user.id) {
+        throw new Error(DATA_EXPORT_USER_UNAVAILABLE);
+      }
       expectedUserId = userId;
     }
 

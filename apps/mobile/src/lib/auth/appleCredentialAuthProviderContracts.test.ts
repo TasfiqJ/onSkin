@@ -12,9 +12,8 @@ describe('AuthProvider Apple credential revocation integration', () => {
   it('registers the native lifecycle only for a published configured session', () => {
     const provider = source('AuthProvider.tsx');
 
-    expect(provider).toContain('return monitorAppleCredentialLifecycle(session.user, {');
+    expect(provider).toContain('return monitorAppleCredentialRevocation(session.user, {');
     expect(provider).toContain('accountIsolationE2EFixture ||');
-    expect(provider).toContain('initializing ||');
     expect(provider).toContain('!session?.user');
   });
 
@@ -26,9 +25,11 @@ describe('AuthProvider Apple credential revocation integration', () => {
 
     expect(start).toBeGreaterThan(-1);
     expect(end).toBeGreaterThan(start);
-    expect(boundary.indexOf('markAppleCredentialQuarantined()')).toBeLessThan(
-      boundary.indexOf("supabase.auth.signOut({ scope: 'global' })"),
+    expect(boundary.indexOf('persistInvalidationMarker: () => markAppleCredentialQuarantined()')).toBeLessThan(
+      boundary.indexOf('async signOut() {'),
     );
+    expect(boundary).toContain('await revokeSupabaseRefreshTokens(invalidatedBinding);');
+    expect(boundary).not.toContain('supabase.auth.signOut(');
     expect(boundary).toContain('clearRejectedSessionActivityDurably({');
     expect(boundary).toContain(
       'const localDataAction = await preserveLocalDataForForcedSignOut();',
@@ -56,12 +57,22 @@ describe('AuthProvider Apple credential revocation integration', () => {
     );
 
     expect(restore.indexOf('isAppleCredentialQuarantined()')).toBeLessThan(
-      restore.indexOf('supabase.auth.getSession()'),
+      restore.indexOf('readPersistedSupabaseSessionCandidate()'),
     );
-    expect(restore.indexOf('checkAppleCredentialForSession(data.session.user)')).toBeLessThan(
-      restore.indexOf('applySessionBoundary(data.session, true)'),
+    expect(restore.indexOf('checkAppleCredentialForSession(restoredSession.user)')).toBeLessThan(
+      restore.indexOf('applySessionBoundary(restoredSession, true)'),
     );
-    expect(provider).toContain('if (initialSessionRestorePending) return;');
+    const restoreEventGuard = provider.slice(
+      provider.indexOf('if (initialSessionRestorePendingRef.current) {'),
+      provider.indexOf('if (appleRevocationBoundaryActive) return;'),
+    );
+    expect(restoreEventGuard).toContain('initialSessionRestoreRereadRequested = true;');
+    expect(restoreEventGuard).toContain('sessionChangeSeqRef.current += 1;');
+    expect(restoreEventGuard).toContain('showSessionBoundary(null);');
+    const authSubscription = provider.indexOf('supabase.auth.onAuthStateChange(');
+    expect(authSubscription).toBeLessThan(
+      provider.indexOf('void restoreSession();', authSubscription),
+    );
     expect(apply.indexOf('prepareLocalDataForSession(')).toBeLessThan(
       apply.indexOf('clearAppleCredentialQuarantine()'),
     );
@@ -92,10 +103,10 @@ describe('AuthProvider Apple credential revocation integration', () => {
   it('keeps Supabase refresh stopped without a published, ungated session', () => {
     const provider = source('AuthProvider.tsx');
 
-    expect(provider).toContain(
-      "state === 'active' && session && !sessionBoundaryActiveRef.current",
-    );
+    expect(provider).toContain('published &&');
+    expect(provider).toContain('!sessionBoundaryActiveRef.current &&');
+    expect(provider).toContain('hasActiveRevenueCatPublication(published.user.id');
     expect(provider).toContain('supabase.auth.stopAutoRefresh();');
-    expect(provider).toContain('}, [session]);');
+    expect(provider).toContain('}, [accountIsolationE2EFixture]);');
   });
 });

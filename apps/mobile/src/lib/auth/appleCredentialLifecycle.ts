@@ -129,6 +129,51 @@ export async function checkAppleCredentialForSession(
 }
 
 /**
+ * Install only Apple's native revoke notification. AuthProvider owns startup
+ * and foreground credential-state checks in its single publication state
+ * machine so an independent AppState listener cannot race commerce admission.
+ */
+export function monitorAppleCredentialRevocation(
+  user: User,
+  callbacks: AppleCredentialLifecycleCallbacks,
+  dependencies: AppleCredentialLifecycleDependencies = defaultDependencies,
+): () => void {
+  if (dependencies.platformOS !== 'ios' || !hasAppleIdentity(user)) return () => {};
+
+  let stopped = false;
+  let terminal = false;
+  const invoke = (operation: () => void | Promise<void>) => {
+    void Promise.resolve()
+      .then(operation)
+      .catch(() => {
+        // AuthProvider retains the fail-closed recovery state.
+      });
+  };
+  const invalidate = (reason: AppleCredentialInvalidReason) => {
+    if (stopped || terminal) return;
+    terminal = true;
+    invoke(() => callbacks.onCredentialInvalid(reason));
+  };
+  const block = (reason: AppleCredentialCheckBlockedReason) => {
+    if (stopped || terminal) return;
+    terminal = true;
+    invoke(() => callbacks.onCredentialCheckBlocked(reason));
+  };
+
+  let subscription: RemovableSubscription | null = null;
+  try {
+    subscription = dependencies.addRevokeListener(() => invalidate('revoked_notification'));
+  } catch {
+    block('credential_check_failed');
+  }
+
+  return () => {
+    stopped = true;
+    subscription?.remove();
+  };
+}
+
+/**
  * Observe native Apple credential revocations and re-check at startup/foreground.
  * Expo documents both APIs as iOS/tvOS-only, so this deliberately does nothing
  * off iOS. A blocked check is terminal for this subscription because the caller

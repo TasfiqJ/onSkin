@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/client';
+import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
@@ -259,7 +259,7 @@ function toDbTime(hm: string | null): string | null {
 async function mirror(p: NotifPrefs): Promise<void> {
   try {
     await runAccountGenerationOperation(async (lease) => {
-      const { data: u } = await supabase.auth.getUser();
+      const { data: u } = await getPersistedSupabaseUser();
       lease.assertCurrent();
       if (!u.user?.id) return;
       await supabase.from('notification_preferences').upsert({

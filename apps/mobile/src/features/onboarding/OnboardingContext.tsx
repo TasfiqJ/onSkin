@@ -2,7 +2,7 @@ import type { GoalId } from '@onskin/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
-import { supabase } from '@/lib/supabase/client';
+import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 
 import {
   getQuizCompletionState,
@@ -76,7 +76,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
           queryClient.invalidateQueries({ queryKey: ['ramp'] }),
         ]);
         try {
-          const { data: userData } = await supabase.auth.getUser();
+          const { data: userData } = await getPersistedSupabaseUser();
           const userId = userData.user?.id;
           if (userId) {
             // Axis scores are stored as the raw signed sums (docs/01 §3 axis ints).

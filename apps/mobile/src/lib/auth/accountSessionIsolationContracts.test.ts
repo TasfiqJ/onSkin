@@ -38,6 +38,9 @@ describe('account session isolation integration', () => {
     const accountGeneration = readSource('lib/auth/accountGeneration.ts');
     const privateKV = readSource('lib/storage/privateKV.ts');
     const actions = readSource('features/settings/actions.ts');
+    const deletionBarrier = readSource('features/settings/accountDeletionBarrier.ts');
+    const entitlementStore = readSource('features/subscription/store.ts');
+    const useEntitlement = readSource('features/subscription/useEntitlement.ts');
     const supabaseClient = readSource('lib/supabase/client.ts');
 
     expect(provider).toContain('await prepareLocalDataForSession(');
@@ -47,8 +50,9 @@ describe('account session isolation integration', () => {
     expect(provider).toContain('await waitForPrivateKVWritesToSettle();');
     expect(provider).toContain('if (previousTransition) await previousTransition;');
     expect(provider).toContain('retrySessionRestoreRef.current = restoreSession;');
-    expect(provider).toContain('if (sessionError) throw sessionError;');
-    expect(provider).toContain('clearPersistedSupabaseSession()');
+    expect(provider).toContain('await readPersistedSupabaseSessionCandidate();');
+    expect(provider).toContain('await clearPersistedSessionAfterRemoteDrain();');
+    expect(provider).toContain('await awaitRemoteRequestAuthorityClosed();');
     expect(provider).toContain('latestSessionForCompletedBoundary(');
     expect(provider).toContain('setSessionBoundaryError(true);');
     expect(provider).toContain("router.replace('/');");
@@ -64,12 +68,45 @@ describe('account session isolation integration', () => {
     expect(privateKV).toContain('PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY');
     expect(privateKV).toContain('generation !== accountBoundaryGeneration');
     expect(privateKV).toContain('return runAccountScopedPrivateOperation');
-    expect(actions).toContain('intake = await runAccountGenerationOperation(async (lease) => {');
-    expect(actions).toContain('await preparePendingAccountDeletion(owner.ownerBinding)');
+    const capture = actions.indexOf('runAccountGenerationOperation(async (lease) =>');
+    const journalRead = actions.indexOf('assertStoreTransactionDeletionJournalReadable(');
+    const intakeHold = actions.indexOf(
+      'startDeletionIntakeHandoff(owner.user.id, owner.remoteBinding)',
+    );
+    const exactQuiescence = actions.indexOf('await quiescing.publicationQuiescence;');
+    const durablePrepare = actions.indexOf(
+      'preparePendingAccountDeletion(quiescing.owner.ownerBinding)',
+    );
+    const releaseHold = actions.indexOf('releasePreparedIntakeHold();');
+    const transport = actions.indexOf('const result = await invokeAccountDeletionWithDeadline(');
+    expect(capture).toBeGreaterThan(-1);
+    expect(journalRead).toBeGreaterThan(capture);
+    expect(intakeHold).toBeGreaterThan(journalRead);
+    expect(exactQuiescence).toBeGreaterThan(intakeHold);
+    expect(durablePrepare).toBeGreaterThan(exactQuiescence);
+    expect(releaseHold).toBeGreaterThan(durablePrepare);
+    expect(transport).toBeGreaterThan(releaseHold);
+    expect(deletionBarrier).toContain(
+      'return durableAccountActivityBlocked || deletionIntakeHoldCount > 0;',
+    );
+    expect(provider).toContain('subscribeToAccountDeletionIntakeHold((active) =>');
+    expect(provider).toContain('if (accountDeletionIntakeBoundaryActiveRef.current)');
+    expect(provider).toContain("if (event === 'TOKEN_REFRESHED') {");
+    expect(provider).toContain('void Promise.resolve().then(() => handleRejectedSessionRef.current());');
     expect(actions).toContain('Authorization: `Bearer ${owner.accessToken}`');
     expect(actions).toContain('requestAccountDeletionRecovery();');
     expect(actions).not.toContain('await _completeLocalSignOut()');
     expect(actions).not.toContain('clearAccountIsolatedState');
+    expect(
+      entitlementStore.match(/runAccountGenerationOperation\(async \(lease\) =>/g),
+    ).toHaveLength(2);
+    expect(entitlementStore).toContain('fetchServerEvidence(context, lease.signal)');
+    expect(entitlementStore).toContain('.abortSignal(signal)');
+    expect(entitlementStore).toContain('signal: lease.signal');
+    expect(useEntitlement).toContain(
+      'queryFn: () =>\n      runAccountGenerationOperation(async (lease) =>',
+    );
+    expect(useEntitlement.match(/lease\.assertCurrent\(\);/g)?.length).toBeGreaterThanOrEqual(3);
     expect(supabaseClient).toContain('export async function clearPersistedSupabaseSession');
     expect(supabaseClient).toContain('storageKey: authStorageKey');
   });

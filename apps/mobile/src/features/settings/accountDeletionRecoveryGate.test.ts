@@ -2,7 +2,15 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
+import { ACCOUNT_DELETION_ERASURE_WINDOW_COPY } from './accountDeletionCopy';
+
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
+const DURABLE_DELETION_RUNTIME = fileURLToPath(
+  new URL(
+    '../../../../../supabase/functions/account-deletion/durableDeletionRuntime.ts',
+    import.meta.url,
+  ),
+);
 
 function source(path: string): string {
   return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
@@ -30,7 +38,8 @@ describe('account-deletion pre-Auth recovery gate', () => {
       root.indexOf('<Stack screenOptions='),
     );
     expect(supabaseClient).toContain('autoRefreshToken: false');
-    expect(authProvider).toContain('supabase.auth.startAutoRefresh()');
+    expect(authProvider).toContain('scheduleControlledSessionRefresh(');
+    expect(authProvider).not.toContain('supabase.auth.startAutoRefresh()');
     expect(authProvider).toContain('supabase.auth.stopAutoRefresh()');
   });
 
@@ -57,6 +66,23 @@ describe('account-deletion pre-Auth recovery gate', () => {
     expect(gate).toContain('Open Apple instructions');
     expect(gate).toContain('EXPO_PUBLIC_E2E_ACCOUNT_DELETION_RECOVERY');
     expect(gate).not.toContain('Alert.alert');
+  });
+
+  it('discloses the server-bounded provider-erasure window before and after queueing', () => {
+    const you = source('app/(tabs)/you.tsx');
+    const gate = source('features/settings/AccountDeletionRecoveryGate.tsx');
+    const runtime = readFileSync(DURABLE_DELETION_RUNTIME, 'utf8');
+
+    expect(runtime).toContain('const OPERATION_LIFETIME_MS = 29 * DAY_MS;');
+    expect(ACCOUNT_DELETION_ERASURE_WINDOW_COPY).toBe(
+      'Completing deletion can take up to 29 days while providers verify erasure.',
+    );
+    expect(ACCOUNT_DELETION_ERASURE_WINDOW_COPY).not.toMatch(/App Store|billing|subscription/i);
+    expect(you.match(/ACCOUNT_DELETION_ERASURE_WINDOW_COPY/g)).toHaveLength(3);
+    expect(you).toContain('SUBSCRIPTION_STOREFRONT_COPY.billingContinuation');
+    expect(gate.match(/ACCOUNT_DELETION_ERASURE_WINDOW_COPY/g)).toHaveLength(3);
+    expect(gate).toContain('Your deletion request is safely queued.');
+    expect(gate).toContain('Your deletion needs more time.');
   });
 
   it('proves the retained owner before cleanup and clears foreign Auth without foreign data', () => {

@@ -1,4 +1,8 @@
 import { env } from '@/lib/env';
+import {
+  requireSupabaseRemoteSessionBinding,
+  runWithSupabaseAccountDeletionRequestPermit,
+} from '@/lib/supabase/remoteRequestGate';
 
 export type AccountDeletionBarrierState =
   | { status: 'clear'; ownerSubject: string }
@@ -127,6 +131,7 @@ async function readBoundedJson(response: Response): Promise<unknown> {
  */
 export async function fetchAccountDeletionBarrierState(
   accessToken: string,
+  expectedOwnerSubject: string,
   transport: AccountDeletionBarrierTransport = (input, init) => fetch(input, init),
 ): Promise<AccountDeletionBarrierState> {
   if (
@@ -141,25 +146,37 @@ export async function fetchAccountDeletionBarrierState(
   const controller = new AbortController();
   let timeout: ReturnType<typeof setTimeout> | undefined;
   try {
+    const binding = requireSupabaseRemoteSessionBinding(accessToken, expectedOwnerSubject);
     const exchange = (async () => {
-      const response = await transport(
-        new URL('/functions/v1/account-deletion', env.supabaseUrl).toString(),
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            apikey: env.supabasePublishableKey,
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ action: 'preflight' }),
-          cache: 'no-store',
-          credentials: 'omit',
-          redirect: 'error',
-          signal: controller.signal,
+      return runWithSupabaseAccountDeletionRequestPermit(
+        { action: 'preflight', binding, timeoutMs: PREFLIGHT_TIMEOUT_MS },
+        transport,
+        async (gatedTransport) => {
+          const response = await gatedTransport(
+            new URL('/functions/v1/account-deletion', env.supabaseUrl).toString(),
+            {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                apikey: env.supabasePublishableKey,
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ action: 'preflight' }),
+              cache: 'no-store',
+              credentials: 'omit',
+              redirect: 'error',
+              signal: controller.signal,
+            },
+          );
+          const state = parseAccountDeletionBarrierResponse(
+            response.status,
+            await readBoundedJson(response),
+          );
+          if (state.ownerSubject !== binding.subject) throw preflightError();
+          return state;
         },
       );
-      return parseAccountDeletionBarrierResponse(response.status, await readBoundedJson(response));
     })();
     const deadline = new Promise<never>((_resolve, reject) => {
       timeout = setTimeout(() => {

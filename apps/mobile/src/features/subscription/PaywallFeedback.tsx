@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { Text } from '@/components/ui';
+import { storeTransactionRecoveryMessage } from '@/lib/iap/storeTransactionNotice';
 import { colors } from '@/theme/tokens';
 
 export type PaywallFeedbackState = {
@@ -17,9 +18,22 @@ export const PAYWALL_FEEDBACK = {
     title: 'Purchase not active',
     body: 'No active subscription was found for this account.',
   },
+  purchaseCancelled: {
+    title: 'Purchase not completed',
+    body: 'No new charge was made. If you expected access from an earlier purchase, use Restore purchases.',
+  },
   purchaseUnavailable: {
     title: 'Purchase unavailable',
     body: 'We could not open the store purchase sheet. Please try again.',
+  },
+  purchaseError: (error: unknown): PaywallFeedbackState => {
+    const uncertain = storeTransactionRecoveryMessage(error, 'purchase');
+    return uncertain
+      ? { title: 'Purchase status needs confirmation', body: uncertain }
+      : {
+          title: 'Purchase unavailable',
+          body: 'We could not open the store purchase sheet. Please try again.',
+        };
   },
   exploreFirstUnavailable: {
     title: 'Explore first unavailable',

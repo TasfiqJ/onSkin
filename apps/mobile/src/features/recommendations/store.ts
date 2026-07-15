@@ -2,7 +2,7 @@ import type { BudgetBand, ValuesFilter } from '@onskin/types';
 import { VALUES_FILTERS } from '@onskin/types';
 
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
-import { supabase } from '@/lib/supabase/client';
+import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 import {
   getPrivateItem,
   multiRemovePrivateItems,
@@ -147,7 +147,7 @@ export async function savePreferences(prefs: RecPreferences): Promise<void> {
   // Best-effort mirror (B-SUPABASE). Owner-RLS table; clients can only write their
   // own row. Guarded so the store works fully before the backend is configured.
   void runAccountGenerationOperation(async (lease) => {
-    const { data } = await supabase.auth.getUser();
+    const { data } = await getPersistedSupabaseUser();
     lease.assertCurrent();
     if (!data.user?.id) return;
     await supabase.from('recommendation_preferences').upsert({

@@ -6,6 +6,7 @@ import {
   checkAppleCredentialForSession,
   getAppleCredentialSubject,
   monitorAppleCredentialLifecycle,
+  monitorAppleCredentialRevocation,
   type AppleCredentialLifecycleDependencies,
 } from './appleCredentialLifecycle';
 
@@ -248,6 +249,30 @@ describe('Apple credential lifecycle', () => {
     expect(invalid).toHaveBeenCalledOnce();
     expect(invalid).toHaveBeenCalledWith('revoked_notification');
     expect(blocked).not.toHaveBeenCalled();
+  });
+
+  it('installs a revoke-only monitor without a competing credential or AppState check', async () => {
+    const harness = dependencies();
+    const blocked = vi.fn();
+    const invalid = vi.fn();
+
+    const stop = monitorAppleCredentialRevocation(
+      appleUser(),
+      { onCredentialCheckBlocked: blocked, onCredentialInvalid: invalid },
+      harness.deps,
+    );
+    expect(harness.getCredentialState).not.toHaveBeenCalled();
+    expect(harness.deps.addAppStateListener).not.toHaveBeenCalled();
+
+    harness.revoke();
+    await flushPromises();
+    expect(invalid).toHaveBeenCalledOnce();
+    expect(invalid).toHaveBeenCalledWith('revoked_notification');
+    expect(blocked).not.toHaveBeenCalled();
+
+    stop();
+    expect(harness.removeRevoke).toHaveBeenCalledOnce();
+    expect(harness.removeAppState).not.toHaveBeenCalled();
   });
 
   it('fails closed when an authenticated Apple identity has no unambiguous subject', async () => {

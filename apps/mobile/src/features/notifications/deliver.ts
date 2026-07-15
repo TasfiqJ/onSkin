@@ -6,7 +6,11 @@ import type { NotificationKind } from '@onskin/types';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { PLANS } from '@/features/subscription/plans';
 import { loadEntitlement } from '@/features/subscription/store';
-import { supabase } from '@/lib/supabase/client';
+import {
+  AccountGenerationLeaseError,
+  runAccountGenerationOperation,
+} from '@/lib/auth/accountGeneration';
+import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 
 import { notificationContentForLockScreen } from './copy';
 import { canSend, reminderTimeOutsideQuietHours, tierEnabled, tierOf, toMinutes } from './policy';
@@ -180,48 +184,78 @@ async function sentThisWeekForTier(userId: string, tier: string): Promise<number
  * triggers to call; the trigger *content* is owned by those features (docs/07 §1).
  */
 export async function notifyBehavioural(kind: NotificationKind, hhmm: string): Promise<boolean> {
-  const p = await loadNotifPrefs();
-  // Honour the user's per-kind opt-out FIRST (docs/07 §3.1/§8): a disabled tier ,
-  // and especially the off-by-default promotional tier. Never fires.
-  if (!tierEnabled(kind, p)) return false;
-  const now = Date.now();
-  // Frequency cap source of truth = the local sent-log (works offline), unioned
-  // with the server log when present. Without this, the server count is 0 offline
-  // (v1) and a foreground trigger would re-fire on every app open (docs/07 §9).
-  let sent = await sentThisWeekForTierLocal(tierOf(kind), now);
-  let userId: string | undefined;
   try {
-    const { data } = await supabase.auth.getUser();
-    userId = data.user?.id;
-    if (userId) sent = Math.max(sent, await sentThisWeekForTier(userId, tierOf(kind)));
-  } catch {
-    /* offline. Local count stands */
-  }
-  const decision = canSend({
-    kind,
-    sentThisWeekForTier: sent,
-    now: hhmm,
-    quietStart: p.quietStart,
-    quietEnd: p.quietEnd,
-  });
-  if (!decision.allowed) return false;
-  try {
-    await Notifications.scheduleNotificationAsync({
-      content: notificationContentForLockScreen(kind),
-      // Immediate, on the calm 'routine' channel (Android); channelId must be on the
-      // trigger, not content (SDK 56). A bare { channelId } means deliver now.
-      trigger: Platform.OS === 'android' ? { channelId: 'routine' } : null,
+    return await runAccountGenerationOperation(async (lease) => {
+      const p = await loadNotifPrefs();
+      lease.assertCurrent();
+      // Honour the user's per-kind opt-out FIRST (docs/07 §3.1/§8): a disabled tier ,
+      // and especially the off-by-default promotional tier. Never fires.
+      if (!tierEnabled(kind, p)) return false;
+      const now = Date.now();
+      // Frequency cap source of truth = the local sent-log (works offline), unioned
+      // with the server log when present. Without this, the server count is 0 offline
+      // (v1) and a foreground trigger would re-fire on every app open (docs/07 §9).
+      let sent = await sentThisWeekForTierLocal(tierOf(kind), now);
+      lease.assertCurrent();
+      let userId: string | undefined;
+      try {
+        const { data } = await getPersistedSupabaseUser();
+        lease.assertCurrent();
+        userId = data.user?.id;
+        if (userId) {
+          sent = Math.max(sent, await sentThisWeekForTier(userId, tierOf(kind)));
+          lease.assertCurrent();
+        }
+      } catch {
+        // A boundary invalidation is not an offline fallback. Re-asserting the
+        // lease propagates it before any notification can be scheduled.
+        lease.assertCurrent();
+        /* offline. Local count stands */
+      }
+      const decision = canSend({
+        kind,
+        sentThisWeekForTier: sent,
+        now: hhmm,
+        quietStart: p.quietStart,
+        quietEnd: p.quietEnd,
+      });
+      if (!decision.allowed) return false;
+      try {
+        lease.assertCurrent();
+        await Notifications.scheduleNotificationAsync({
+          content: notificationContentForLockScreen(kind),
+          // Immediate, on the calm 'routine' channel (Android); channelId must be on the
+          // trigger, not content (SDK 56). A bare { channelId } means deliver now.
+          trigger: Platform.OS === 'android' ? { channelId: 'routine' } : null,
+        });
+        lease.assertCurrent();
+        await recordSentLocal(kind, now); // local cap ledger (v1 source of truth)
+        lease.assertCurrent();
+      } catch {
+        // Do not collapse an account-boundary invalidation into an ordinary
+        // notification failure; the outer boundary handler must stop this
+        // continuation before it can write into the next owner's state.
+        lease.assertCurrent();
+        return false;
+      }
+      if (userId) {
+        try {
+          lease.assertCurrent();
+          await supabase.from('notification_log').insert({
+            user_id: userId,
+            tier: tierOf(kind),
+            kind,
+          });
+          lease.assertCurrent();
+        } catch {
+          lease.assertCurrent();
+          /* best-effort backend mirror; local delivery already succeeded */
+        }
+      }
+      return true;
     });
-    await recordSentLocal(kind, now); // local cap ledger (v1 source of truth)
-  } catch {
-    return false;
+  } catch (error) {
+    if (error instanceof AccountGenerationLeaseError) return false;
+    throw error;
   }
-  if (userId) {
-    try {
-      await supabase.from('notification_log').insert({ user_id: userId, tier: tierOf(kind), kind });
-    } catch {
-      /* best-effort backend mirror; local delivery already succeeded */
-    }
-  }
-  return true;
 }

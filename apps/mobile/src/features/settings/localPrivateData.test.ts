@@ -114,6 +114,9 @@ describe('local private data cleanup', () => {
     expect(mocks.multiRemove.mock.calls.flatMap(([keys]) => keys)).not.toContain(
       'routinekind.authDerivedCleanupRequired.v1',
     );
+    expect(mocks.multiRemove.mock.calls.flatMap(([keys]) => keys)).not.toContain(
+      'routinekind.store_transaction_notice.v2',
+    );
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);
     expect(mocks.cancelAllScheduledNotificationsAsync).toHaveBeenCalledTimes(1);

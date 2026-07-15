@@ -521,7 +521,7 @@ describe('paywall mobile contracts', () => {
     expect(entitlement).toContain("managementUrl: 'https://apps.apple.com/account/subscriptions'");
   });
 
-  it('keeps purchase and restore recovery route-owned instead of native alerts', () => {
+  it('keeps purchase and restore feedback inline while durable uncertainty is root-owned', () => {
     const feedback = readSource('features/subscription/PaywallFeedback.tsx');
     const externalOpen = readSource('lib/navigation/externalOpen.ts');
 
@@ -566,7 +566,9 @@ describe('paywall mobile contracts', () => {
     const subscriptionSettings = readAppRoute('settings/subscription.tsx');
     expect(subscriptionSettings).toContain('alertOnFailure: false');
     expect(subscriptionSettings).toContain('setSubscriptionFeedback(message);');
-    expect(subscriptionSettings).toContain('setSubscriptionFeedback(RESTORE_UNAVAILABLE_MESSAGE);');
+    expect(subscriptionSettings).toContain(
+      "storeTransactionRecoveryMessage(error, 'restore') ?? RESTORE_UNAVAILABLE_MESSAGE",
+    );
     expect(subscriptionSettings).not.toContain('Alert.alert');
     expect(subscriptionSettings).not.toContain('import { Alert');
   });

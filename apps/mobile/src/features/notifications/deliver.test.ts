@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import {
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
+} from '@/lib/auth/accountGeneration';
+
 import type { NotifPrefs } from './store';
 
 const mocks = vi.hoisted(() => ({
@@ -81,6 +87,7 @@ vi.mock('./store', () => ({
 }));
 
 vi.mock('@/lib/supabase/client', () => ({
+  getPersistedSupabaseUser: mocks.getUser,
   supabase: {
     auth: { getUser: mocks.getUser },
     from: vi.fn(() => ({
@@ -300,5 +307,82 @@ describe('notifyBehavioural', () => {
       tier: 'behavioural',
       kind: 'replenishment',
     });
+  });
+
+  it('does not schedule or write after an A-to-B boundary interrupts user verification', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    let releaseUser!: () => void;
+    const userGate = new Promise<void>((resolve) => {
+      releaseUser = resolve;
+    });
+    let signalUserRead!: () => void;
+    const userReadStarted = new Promise<void>((resolve) => {
+      signalUserRead = resolve;
+    });
+    mocks.getUser.mockImplementationOnce(async () => {
+      signalUserRead();
+      await userGate;
+      return { data: { user: { id: 'account-a' } } };
+    });
+
+    const delivery = notifyBehavioural('replenishment', '12:00');
+    await userReadStarted;
+    beginAccountGenerationBoundary();
+    const drained = waitForAccountGenerationOperationsToSettle();
+    try {
+      releaseUser();
+      await expect(delivery).resolves.toBe(false);
+      await drained;
+
+      expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+      expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+      expect(mocks.insertNotificationLog).not.toHaveBeenCalled();
+    } finally {
+      releaseUser();
+      await drained;
+      endAccountGenerationBoundary();
+    }
+  });
+
+  it('keeps boundary drain open through a delayed native schedule and never records stale A', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    let releaseSchedule!: () => void;
+    const scheduleGate = new Promise<void>((resolve) => {
+      releaseSchedule = resolve;
+    });
+    let signalScheduleStarted!: () => void;
+    const scheduleStarted = new Promise<void>((resolve) => {
+      signalScheduleStarted = resolve;
+    });
+    mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'account-a' } } });
+    mocks.scheduleNotificationAsync.mockImplementationOnce(async () => {
+      signalScheduleStarted();
+      await scheduleGate;
+      return 'notification-id';
+    });
+
+    const delivery = notifyBehavioural('replenishment', '12:00');
+    await scheduleStarted;
+    beginAccountGenerationBoundary();
+    let drainSettled = false;
+    const drained = waitForAccountGenerationOperationsToSettle().then(() => {
+      drainSettled = true;
+    });
+    try {
+      await Promise.resolve();
+      expect(drainSettled).toBe(false);
+
+      releaseSchedule();
+      await expect(delivery).resolves.toBe(false);
+      await drained;
+
+      expect(mocks.scheduleNotificationAsync).toHaveBeenCalledOnce();
+      expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+      expect(mocks.insertNotificationLog).not.toHaveBeenCalled();
+    } finally {
+      releaseSchedule();
+      await drained;
+      endAccountGenerationBoundary();
+    }
   });
 });

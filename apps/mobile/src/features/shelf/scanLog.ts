@@ -3,7 +3,7 @@ import type { ShelfScanResult } from '@onskin/types';
 import type { CatalogLookupResponse } from '@/features/catalog/client';
 import { track } from '@/lib/analytics/track';
 import { isSupabaseConfigured } from '@/lib/env';
-import { supabase } from '@/lib/supabase/client';
+import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 
 export type ShelfScanLookupResult = CatalogLookupResponse['result'] | 'lookup_error';
 
@@ -50,7 +50,7 @@ export async function recordShelfScan(input: {
   if (!isSupabaseConfigured) return;
 
   try {
-    const { data } = await supabase.auth.getUser();
+    const { data } = await getPersistedSupabaseUser();
     const userId = data.user?.id;
     if (!userId) return;
 

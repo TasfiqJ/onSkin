@@ -34,6 +34,7 @@ vi.mock('@/lib/analytics/track', () => ({
 }));
 
 vi.mock('@/lib/supabase/client', () => ({
+  getPersistedSupabaseUser: mocks.getUser,
   supabase: {
     auth: {
       getUser: mocks.getUser,

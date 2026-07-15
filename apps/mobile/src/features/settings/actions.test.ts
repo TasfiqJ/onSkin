@@ -44,15 +44,29 @@ const DELETION_TOKENS = {
   statusCapability: '02'.repeat(32),
 };
 
+function deferred<T>() {
+  let resolve!: (value: T | PromiseLike<T>) => void;
+  let reject!: (reason?: unknown) => void;
+  const promise = new Promise<T>((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise;
+    reject = rejectPromise;
+  });
+  return { promise, reject, resolve };
+}
+
 function readSource(path: string): string {
   return readFileSync(`${SRC_DIR}/${path}`, 'utf8');
 }
 
 const mocks = vi.hoisted(() => ({
+  beginAccountDeletionIntakeHold: vi.fn(),
+  beginSupabaseRemoteDeletionBoundary: vi.fn(),
   buildMobileDataExportBundle: vi.fn(),
   cleanupPlaintextStaging: vi.fn(),
   collectLocalDeviceExportData: vi.fn(),
+  closeSupabaseRemoteRequestBoundary: vi.fn(),
   deleteAsync: vi.fn(),
+  assertStoreTransactionDeletionJournalReadable: vi.fn(),
   createAccountDeletionOwnerBinding: vi.fn(),
   fetch: vi.fn(),
   getAppleAuthorizationCodeForRevocation: vi.fn(),
@@ -66,11 +80,19 @@ const mocks = vi.hoisted(() => ({
   quarantineLocalAccount: vi.fn(),
   recordConsent: vi.fn(),
   requestAccountDeletionRecovery: vi.fn(),
+  requireSupabaseRemoteSessionBinding: vi.fn(),
+  releaseAccountDeletionIntakeHold: vi.fn(),
   reservePlaintextStaging: vi.fn(),
   shareAsync: vi.fn(),
   sharingAvailable: vi.fn(),
   signOut: vi.fn(),
+  startRevenueCatDeletionQuiesce: vi.fn(),
+  runWithSupabaseAccountDeletionRequestPermit: vi.fn(),
   writeAsStringAsync: vi.fn(),
+}));
+
+vi.mock('@/features/settings/accountDeletionBarrier', () => ({
+  beginAccountDeletionIntakeHold: mocks.beginAccountDeletionIntakeHold,
 }));
 
 vi.mock('expo-file-system/legacy', () => ({
@@ -92,6 +114,15 @@ vi.mock('@/lib/storage/plaintextStaging', () => ({
 
 vi.mock('@/lib/auth/apple', () => ({
   getAppleAuthorizationCodeForRevocation: mocks.getAppleAuthorizationCodeForRevocation,
+}));
+
+vi.mock('@/lib/iap/revenuecat', () => ({
+  startRevenueCatDeletionQuiesce: mocks.startRevenueCatDeletionQuiesce,
+}));
+
+vi.mock('@/lib/iap/storeTransactionNotice', () => ({
+  assertStoreTransactionDeletionJournalReadable:
+    mocks.assertStoreTransactionDeletionJournalReadable,
 }));
 
 vi.mock('@/lib/consent/consent', () => ({
@@ -124,6 +155,11 @@ vi.mock('@/lib/env', () => ({
 }));
 
 vi.mock('@/lib/supabase/client', () => ({
+  readPersistedSupabaseSessionCandidate: async () => {
+    const result = await mocks.getSession();
+    if (result.error) throw result.error;
+    return result.data.session;
+  },
   supabase: {
     auth: {
       getSession: mocks.getSession,
@@ -133,6 +169,14 @@ vi.mock('@/lib/supabase/client', () => ({
       invoke: mocks.invoke,
     },
   },
+}));
+
+vi.mock('@/lib/supabase/remoteRequestGate', () => ({
+  beginSupabaseRemoteDeletionBoundary: mocks.beginSupabaseRemoteDeletionBoundary,
+  closeSupabaseRemoteRequestBoundary: mocks.closeSupabaseRemoteRequestBoundary,
+  requireSupabaseRemoteSessionBinding: mocks.requireSupabaseRemoteSessionBinding,
+  runWithSupabaseAccountDeletionRequestPermit:
+    mocks.runWithSupabaseAccountDeletionRequestPermit,
 }));
 
 vi.mock('./localDeviceExport', () => ({
@@ -148,6 +192,7 @@ describe('settings data export', () => {
     mocks.collectLocalDeviceExportData.mockReset();
     mocks.deleteAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockReset();
+    mocks.getSession.mockReset();
     mocks.getUser.mockReset();
     mocks.invoke.mockReset();
     mocks.isSupabaseConfigured = true;
@@ -183,6 +228,15 @@ describe('settings data export', () => {
     mocks.cleanupPlaintextStaging.mockResolvedValue(undefined);
     mocks.deleteAsync.mockResolvedValue(undefined);
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
+    mocks.getSession.mockResolvedValue({
+      data: {
+        session: {
+          access_token: 'export-token-a',
+          user: { id: 'user-1' },
+        },
+      },
+      error: null,
+    });
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
     mocks.invoke.mockResolvedValue({
       data: { export_schema_version: 2, user_id: 'user-1', account: { id: 'user-1' } },
@@ -201,6 +255,7 @@ describe('settings data export', () => {
 
     await expect(exportData()).resolves.toBe(true);
 
+    expect(mocks.getUser).toHaveBeenCalledWith('export-token-a');
     expect(mocks.getUser.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.collectLocalDeviceExportData.mock.invocationCallOrder[0]!,
     );
@@ -473,6 +528,10 @@ describe('settings data export', () => {
 describe('settings account deletion and consent withdrawal', () => {
   beforeEach(() => {
     vi.stubGlobal('fetch', mocks.fetch);
+    mocks.assertStoreTransactionDeletionJournalReadable.mockReset();
+    mocks.beginAccountDeletionIntakeHold.mockReset();
+    mocks.beginSupabaseRemoteDeletionBoundary.mockReset();
+    mocks.closeSupabaseRemoteRequestBoundary.mockReset();
     mocks.deleteAsync.mockReset();
     mocks.createAccountDeletionOwnerBinding.mockReset();
     mocks.fetch.mockReset();
@@ -486,9 +545,13 @@ describe('settings account deletion and consent withdrawal', () => {
     mocks.preparePendingAccountDeletion.mockReset();
     mocks.recordConsent.mockReset();
     mocks.requestAccountDeletionRecovery.mockReset();
+    mocks.requireSupabaseRemoteSessionBinding.mockReset();
+    mocks.releaseAccountDeletionIntakeHold.mockReset();
     mocks.shareAsync.mockReset();
     mocks.sharingAvailable.mockReset();
     mocks.signOut.mockReset();
+    mocks.startRevenueCatDeletionQuiesce.mockReset();
+    mocks.runWithSupabaseAccountDeletionRequestPermit.mockReset();
     mocks.writeAsStringAsync.mockReset();
     mocks.getAppleAuthorizationCodeForRevocation.mockResolvedValue('apple-revocation-code');
     mocks.getSession.mockResolvedValue({
@@ -502,6 +565,19 @@ describe('settings account deletion and consent withdrawal', () => {
     });
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } }, error: null });
     mocks.createAccountDeletionOwnerBinding.mockResolvedValue(OWNER_A);
+    mocks.assertStoreTransactionDeletionJournalReadable.mockResolvedValue(undefined);
+    mocks.beginAccountDeletionIntakeHold.mockReturnValue(mocks.releaseAccountDeletionIntakeHold);
+    mocks.requireSupabaseRemoteSessionBinding.mockReturnValue({
+      accessToken: 'captured-token-a',
+      sessionId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+      subject: 'user-1',
+    });
+    mocks.beginSupabaseRemoteDeletionBoundary.mockImplementation(async (binding) => binding);
+    mocks.closeSupabaseRemoteRequestBoundary.mockResolvedValue(undefined);
+    mocks.runWithSupabaseAccountDeletionRequestPermit.mockImplementation(
+      async (_permit, transport, operation) => operation(transport),
+    );
+    mocks.startRevenueCatDeletionQuiesce.mockResolvedValue(undefined);
     resetAccountDeletionNoticeForTests();
     mocks.invoke.mockResolvedValue({
       data: COMPLETE_ACCOUNT_DELETION_RESPONSE,
@@ -539,9 +615,21 @@ describe('settings account deletion and consent withdrawal', () => {
 
     expect(mocks.getSession).toHaveBeenCalledOnce();
     expect(mocks.getUser).toHaveBeenCalledWith('captured-token-a');
+    expect(mocks.requireSupabaseRemoteSessionBinding).toHaveBeenCalledWith(
+      'captured-token-a',
+      'user-1',
+    );
     expect(mocks.createAccountDeletionOwnerBinding).toHaveBeenCalledWith('user-1');
-    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledWith(OWNER_A);
     expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledWith({ id: 'user-1' });
+    expect(mocks.assertStoreTransactionDeletionJournalReadable).toHaveBeenCalledWith(OWNER_A);
+    expect(mocks.beginAccountDeletionIntakeHold).toHaveBeenCalledOnce();
+    expect(mocks.beginSupabaseRemoteDeletionBoundary).toHaveBeenCalledWith({
+      accessToken: 'captured-token-a',
+      sessionId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+      subject: 'user-1',
+    });
+    expect(mocks.startRevenueCatDeletionQuiesce).toHaveBeenCalledWith('user-1');
+    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledWith(OWNER_A);
     expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
       method: 'POST',
       body: {
@@ -567,13 +655,212 @@ describe('settings account deletion and consent withdrawal', () => {
         redirect: 'error',
       }),
     );
+    expect(mocks.runWithSupabaseAccountDeletionRequestPermit).toHaveBeenCalledWith(
+      {
+        action: 'begin',
+        timeoutMs: 15_000,
+        binding: {
+          accessToken: 'captured-token-a',
+          sessionId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+          subject: 'user-1',
+        },
+      },
+      expect.any(Function),
+      expect.any(Function),
+    );
+    expect(mocks.getAppleAuthorizationCodeForRevocation.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.assertStoreTransactionDeletionJournalReadable.mock.invocationCallOrder[0]!,
+    );
+    expect(
+      mocks.assertStoreTransactionDeletionJournalReadable.mock.invocationCallOrder[0],
+    ).toBeLessThan(mocks.beginSupabaseRemoteDeletionBoundary.mock.invocationCallOrder[0]!);
+    expect(mocks.beginSupabaseRemoteDeletionBoundary.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.beginAccountDeletionIntakeHold.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.beginAccountDeletionIntakeHold.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.startRevenueCatDeletionQuiesce.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.startRevenueCatDeletionQuiesce.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.preparePendingAccountDeletion.mock.invocationCallOrder[0]!,
+    );
     expect(mocks.preparePendingAccountDeletion.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.releaseAccountDeletionIntakeHold.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.releaseAccountDeletionIntakeHold.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.invoke.mock.invocationCallOrder[0]!,
     );
+    expect(mocks.invoke.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.closeSupabaseRemoteRequestBoundary.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.closeSupabaseRemoteRequestBoundary).toHaveBeenCalledOnce();
     expect(mocks.markAccountDeletionIntakeState).toHaveBeenCalledWith('accepted', OWNER_A);
     expect(mocks.signOut).not.toHaveBeenCalled();
     expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
     expect(mocks.quarantineLocalAccount).not.toHaveBeenCalled();
+    expect(readSource('features/settings/actions.ts')).not.toContain('supabase.auth.getSession');
+  });
+
+  it('does not create deletion authority when the exact-owner commerce journal is unreadable', async () => {
+    mocks.assertStoreTransactionDeletionJournalReadable.mockRejectedValueOnce(
+      new Error('STORE_TRANSACTION_NOTICE_STORAGE_UNAVAILABLE'),
+    );
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+      'STORE_TRANSACTION_NOTICE_STORAGE_UNAVAILABLE',
+    );
+
+    expect(mocks.assertStoreTransactionDeletionJournalReadable).toHaveBeenCalledWith(OWNER_A);
+    expect(mocks.startRevenueCatDeletionQuiesce).not.toHaveBeenCalled();
+    expect(mocks.beginAccountDeletionIntakeHold).not.toHaveBeenCalled();
+    expect(mocks.releaseAccountDeletionIntakeHold).not.toHaveBeenCalled();
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.fetch).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+    expect(mocks.beginSupabaseRemoteDeletionBoundary).not.toHaveBeenCalled();
+    expect(mocks.closeSupabaseRemoteRequestBoundary).not.toHaveBeenCalled();
+  });
+
+  it('enters exact remote deletion state before the intake-hold notification runs', async () => {
+    mocks.beginAccountDeletionIntakeHold.mockImplementationOnce(() => {
+      expect(mocks.beginSupabaseRemoteDeletionBoundary).toHaveBeenCalledOnce();
+      return mocks.releaseAccountDeletionIntakeHold;
+    });
+
+    await expect(deleteAccount(mocks.signOut)).resolves.toMatchObject({ phase: 'queued' });
+
+    expect(mocks.beginSupabaseRemoteDeletionBoundary.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.beginAccountDeletionIntakeHold.mock.invocationCallOrder[0]!,
+    );
+  });
+
+  it('does not treat a readable unresolved commerce journal as a deletion blocker', async () => {
+    // The journal API intentionally resolves for a structurally valid pending
+    // transaction. Its own tests cover that state; this test guards the
+    // deletion caller from adding a transaction-resolution wait afterward.
+    mocks.assertStoreTransactionDeletionJournalReadable.mockResolvedValueOnce(undefined);
+
+    await expect(deleteAccount(mocks.signOut)).resolves.toMatchObject({ phase: 'queued' });
+
+    expect(mocks.assertStoreTransactionDeletionJournalReadable).toHaveBeenCalledWith(OWNER_A);
+    expect(mocks.startRevenueCatDeletionQuiesce).toHaveBeenCalledWith('user-1');
+    expect(mocks.beginAccountDeletionIntakeHold).toHaveBeenCalledOnce();
+    expect(mocks.releaseAccountDeletionIntakeHold).toHaveBeenCalledOnce();
+    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledWith(OWNER_A);
+    expect(mocks.fetch).toHaveBeenCalledOnce();
+  });
+
+  it('keeps durable preparation and transport closed while commerce quiescence is pending', async () => {
+    const quiescence = deferred<void>();
+    mocks.startRevenueCatDeletionQuiesce.mockReturnValueOnce(quiescence.promise);
+
+    const deletion = deleteAccount(mocks.signOut);
+    await vi.waitFor(() => expect(mocks.startRevenueCatDeletionQuiesce).toHaveBeenCalledOnce());
+
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.fetch).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+    expect(mocks.releaseAccountDeletionIntakeHold).not.toHaveBeenCalled();
+
+    quiescence.resolve(undefined);
+    await expect(deletion).resolves.toMatchObject({ phase: 'queued' });
+    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledOnce();
+    expect(mocks.releaseAccountDeletionIntakeHold).toHaveBeenCalledOnce();
+    expect(mocks.fetch).toHaveBeenCalledOnce();
+  });
+
+  it('leaves no durable deletion record when commerce quiescence times out or remains quarantined', async () => {
+    const quiescence = deferred<void>();
+    mocks.startRevenueCatDeletionQuiesce.mockReturnValueOnce(quiescence.promise);
+
+    const deletion = deleteAccount(mocks.signOut);
+    await vi.waitFor(() => expect(mocks.startRevenueCatDeletionQuiesce).toHaveBeenCalledOnce());
+    quiescence.reject(new Error('ACCOUNT_PUBLICATION_OPERATION_QUARANTINED'));
+
+    await expect(deletion).rejects.toThrow('ACCOUNT_PUBLICATION_OPERATION_QUARANTINED');
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.fetch).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+    expect(mocks.releaseAccountDeletionIntakeHold).toHaveBeenCalledOnce();
+    expect(mocks.closeSupabaseRemoteRequestBoundary.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.releaseAccountDeletionIntakeHold.mock.invocationCallOrder[0]!,
+    );
+  });
+
+  it('leaves no durable deletion record when subject-bound quiescence rejects synchronously', async () => {
+    mocks.startRevenueCatDeletionQuiesce.mockImplementationOnce(() => {
+      throw new Error('ACCOUNT_PUBLICATION_BINDING_REJECTED');
+    });
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+      'ACCOUNT_PUBLICATION_BINDING_REJECTED',
+    );
+
+    expect(mocks.assertStoreTransactionDeletionJournalReadable).toHaveBeenCalledWith(OWNER_A);
+    expect(mocks.startRevenueCatDeletionQuiesce).toHaveBeenCalledWith('user-1');
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.fetch).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+    expect(mocks.releaseAccountDeletionIntakeHold).toHaveBeenCalledOnce();
+    expect(mocks.closeSupabaseRemoteRequestBoundary.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.releaseAccountDeletionIntakeHold.mock.invocationCallOrder[0]!,
+    );
+  });
+
+  it('allows a later explicit quiescence retry before preparing or dispatching once', async () => {
+    mocks.startRevenueCatDeletionQuiesce
+      .mockRejectedValueOnce(new Error('ACCOUNT_PUBLICATION_OPERATION_QUARANTINED'))
+      .mockResolvedValueOnce(undefined);
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+      'ACCOUNT_PUBLICATION_OPERATION_QUARANTINED',
+    );
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.fetch).not.toHaveBeenCalled();
+    expect(mocks.releaseAccountDeletionIntakeHold).toHaveBeenCalledOnce();
+
+    await expect(deleteAccount(mocks.signOut)).resolves.toMatchObject({ phase: 'queued' });
+    expect(mocks.startRevenueCatDeletionQuiesce).toHaveBeenCalledTimes(2);
+    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledOnce();
+    expect(mocks.fetch).toHaveBeenCalledOnce();
+    expect(mocks.releaseAccountDeletionIntakeHold).toHaveBeenCalledTimes(2);
+  });
+
+  it('returns pending quiescence across the intentional boundary abort, then uses a fresh signal', async () => {
+    const quiescence = deferred<void>();
+    mocks.beginAccountDeletionIntakeHold.mockImplementationOnce(() => {
+      beginAccountGenerationBoundary();
+      return mocks.releaseAccountDeletionIntakeHold;
+    });
+    mocks.startRevenueCatDeletionQuiesce.mockReturnValueOnce(quiescence.promise);
+
+    const deletion = deleteAccount(mocks.signOut);
+    try {
+      await vi.waitFor(() => expect(mocks.startRevenueCatDeletionQuiesce).toHaveBeenCalledOnce());
+
+      let generationOperationSettled = false;
+      void waitForAccountGenerationOperationsToSettle().then(() => {
+        generationOperationSettled = true;
+      });
+      await vi.waitFor(() => expect(generationOperationSettled).toBe(true));
+
+      expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
+      expect(mocks.fetch).not.toHaveBeenCalled();
+      expect(mocks.releaseAccountDeletionIntakeHold).not.toHaveBeenCalled();
+
+      quiescence.resolve(undefined);
+      await expect(deletion).resolves.toMatchObject({ phase: 'queued' });
+
+      const requestSignal = mocks.invoke.mock.calls[0]?.[1].signal as AbortSignal | undefined;
+      expect(requestSignal).toBeInstanceOf(AbortSignal);
+      expect(requestSignal?.aborted).toBe(false);
+      expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledOnce();
+      expect(mocks.releaseAccountDeletionIntakeHold).toHaveBeenCalledOnce();
+      expect(mocks.fetch).toHaveBeenCalledOnce();
+    } finally {
+      quiescence.resolve(undefined);
+      endAccountGenerationBoundary();
+      await deletion.catch(() => undefined);
+    }
   });
 
   it('keeps prepared evidence and does not sign out after an explicit HTTP rejection', async () => {
@@ -817,6 +1104,35 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(mocks.requestAccountDeletionRecovery).toHaveBeenCalledOnce();
   });
 
+  it('rejects a server-verified foreign user before deriving or entering deletion authority', async () => {
+    mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'user-b' } }, error: null });
+
+    await expect(deleteAccount(mocks.signOut)).rejects.toThrow(
+      'ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE',
+    );
+
+    expect(mocks.requireSupabaseRemoteSessionBinding).not.toHaveBeenCalled();
+    expect(mocks.beginSupabaseRemoteDeletionBoundary).not.toHaveBeenCalled();
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.fetch).not.toHaveBeenCalled();
+  });
+
+  it('treats a stale exact-bound begin permit as ambiguous without dispatching a foreign request', async () => {
+    mocks.runWithSupabaseAccountDeletionRequestPermit.mockRejectedValueOnce(
+      new Error('SUPABASE_REMOTE_REQUEST_RESULT_STALE'),
+    );
+
+    await expect(deleteAccount(mocks.signOut)).resolves.toEqual({
+      status: 'accepted_or_ambiguous',
+      phase: 'unknown',
+      nextPollAfterSeconds: null,
+    });
+
+    expect(mocks.fetch).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionIntakeState).toHaveBeenCalledWith('ambiguous', OWNER_A);
+    expect(mocks.closeSupabaseRemoteRequestBoundary).toHaveBeenCalledOnce();
+  });
+
   it('aborts an A-to-B boundary before durable evidence can be persisted', async () => {
     let resolveSession:
       | ((value: {
@@ -868,7 +1184,7 @@ describe('settings account deletion and consent withdrawal', () => {
       (error: unknown) => error,
     );
     await vi.waitFor(() =>
-      expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledWith(OWNER_A),
+      expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledWith({ id: 'user-1' }),
     );
 
     beginAccountGenerationBoundary();
@@ -882,10 +1198,38 @@ describe('settings account deletion and consent withdrawal', () => {
 
     expect(mocks.fetch).not.toHaveBeenCalled();
     expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
-    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledTimes(1);
+    expect(mocks.assertStoreTransactionDeletionJournalReadable).not.toHaveBeenCalled();
+    expect(mocks.startRevenueCatDeletionQuiesce).not.toHaveBeenCalled();
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
   });
 
-  it('checks the A lease immediately before dispatch and never sends with B', async () => {
+  it('aborts an A-to-B boundary while commerce-journal validation is pending', async () => {
+    const journalRead = deferred<void>();
+    mocks.assertStoreTransactionDeletionJournalReadable.mockReturnValueOnce(journalRead.promise);
+    const observed = deleteAccount(mocks.signOut).then(
+      () => null,
+      (error: unknown) => error,
+    );
+    await vi.waitFor(() =>
+      expect(mocks.assertStoreTransactionDeletionJournalReadable).toHaveBeenCalledWith(OWNER_A),
+    );
+
+    beginAccountGenerationBoundary();
+    try {
+      journalRead.resolve(undefined);
+      await expect(observed).resolves.toMatchObject({ message: ACCOUNT_GENERATION_CHANGED });
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+    } finally {
+      endAccountGenerationBoundary();
+    }
+
+    expect(mocks.startRevenueCatDeletionQuiesce).not.toHaveBeenCalled();
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.fetch).not.toHaveBeenCalled();
+    expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+  });
+
+  it('rejects a lease invalidated immediately after Apple evidence capture', async () => {
     mocks.getAppleAuthorizationCodeForRevocation.mockImplementationOnce(async () => {
       beginAccountGenerationBoundary();
       return 'apple-code-for-a';
@@ -901,7 +1245,9 @@ describe('settings account deletion and consent withdrawal', () => {
       endAccountGenerationBoundary();
     }
 
-    expect(mocks.preparePendingAccountDeletion).toHaveBeenCalledWith(OWNER_A);
+    expect(mocks.assertStoreTransactionDeletionJournalReadable).not.toHaveBeenCalled();
+    expect(mocks.startRevenueCatDeletionQuiesce).not.toHaveBeenCalled();
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
     expect(mocks.fetch).not.toHaveBeenCalled();
     expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
   });
@@ -1048,6 +1394,50 @@ describe('settings account deletion and consent withdrawal', () => {
       signal: expect.any(AbortSignal),
     });
     expect(mocks.signOut).not.toHaveBeenCalled();
+  });
+
+  it('never lets a delayed A withdrawal continuation capture B for deletion', async () => {
+    const consent = deferred<void>();
+    mocks.recordConsent.mockReturnValueOnce(consent.promise);
+
+    const withdrawal = withdrawHealthDataConsent(mocks.signOut);
+    await vi.waitFor(() => expect(mocks.recordConsent).toHaveBeenCalledOnce());
+    expect(mocks.recordConsent).toHaveBeenCalledWith(
+      expect.objectContaining({ expectedUserId: 'user-1' }),
+    );
+    expect(mocks.getSession).toHaveBeenCalledOnce();
+
+    let boundaryOpen = true;
+    beginAccountGenerationBoundary();
+    try {
+      await waitForAccountGenerationOperationsToSettle();
+      endAccountGenerationBoundary();
+      boundaryOpen = false;
+      // Model the next published account before allowing A's stale consent
+      // continuation to settle. The initiating generation mismatch must stop
+      // deletion before this B session is even read.
+      mocks.getSession.mockResolvedValue({
+        data: {
+          session: {
+            access_token: 'captured-token-b',
+            user: { id: 'user-2' },
+          },
+        },
+        error: null,
+      });
+      mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-2' } }, error: null });
+      consent.resolve();
+
+      await expect(withdrawal).rejects.toThrow('ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE');
+      expect(mocks.getSession).toHaveBeenCalledOnce();
+      expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
+      expect(mocks.beginSupabaseRemoteDeletionBoundary).not.toHaveBeenCalled();
+      expect(mocks.fetch).not.toHaveBeenCalled();
+      expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
+    } finally {
+      consent.resolve();
+      if (boundaryOpen) endAccountGenerationBoundary();
+    }
   });
 
   it('does not write withdrawal or cleanup locally when the data-rights backend is unavailable', async () => {
