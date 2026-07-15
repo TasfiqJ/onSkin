@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T20:20:44.524Z",
+  "generatedAt": "2026-07-15T20:35:24.323Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -81,7 +81,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "58c9d37dd0c7eb3386e0a3af4607faeecf9f7f6f",
+  "gitSha": "87eef049f4cf2e10bd3a7efa42208b1bb50b0c87",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -191,8 +191,8 @@
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
       "exists": true,
-      "bytes": 37620,
-      "sha256": "6e6aab0795c6455d9465af89f3b35b0b1a56866b868aa0bfeab2eeaf3661809d"
+      "bytes": 37617,
+      "sha256": "6ae4921ebcdfd202dad381661dddcefd28add835b2502328946c8ae1a52b0358"
     },
     {
       "path": "apps/mobile/src/lib/env.ts",
@@ -461,8 +461,8 @@
     {
       "path": "scripts/phase9/live-data-rights.mjs",
       "exists": true,
-      "bytes": 65163,
-      "sha256": "e6f38463e270d3e35de42261ee3788e30dd74fbf38f866ca385bd8e756084dbc"
+      "bytes": 65167,
+      "sha256": "09ec415fb85071cba9a483ad07c94936713612ce00bbb92c25ee1609c6de5c11"
     },
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
@@ -498,13 +498,13 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 48121,
-      "sha256": "9af984f7adcb87b6d2dfe674c3ea1f62488c1c78057aa43e7e8920dd8856e836"
+      "sha256": "cff94ddc52d62952b034756406b095b22c7388594c6218b4e235434b224366aa"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 19687,
-      "sha256": "c9debcd96b9f5303b1c0adf7fe12297a3ccf7836805c6d61292c4d2975b25818"
+      "sha256": "52ee6c89fa062026ac2e1794ad07b815ca0b042277bbd798a3c419596c84e553"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",

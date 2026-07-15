@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-15T20:20:29.396Z",
+  "generatedAt": "2026-07-15T20:35:18.244Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "58c9d37dd0c7eb3386e0a3af4607faeecf9f7f6f",
+  "gitSha": "87eef049f4cf2e10bd3a7efa42208b1bb50b0c87",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -417,12 +417,12 @@
         {
           "path": "apps/mobile/src/lib/iap/revenuecat.ts",
           "exists": true,
-          "bytes": 37620,
-          "sha256": "6e6aab0795c6455d9465af89f3b35b0b1a56866b868aa0bfeab2eeaf3661809d"
+          "bytes": 37617,
+          "sha256": "6ae4921ebcdfd202dad381661dddcefd28add835b2502328946c8ae1a52b0358"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "c76839aacaa23e547c035acd90717bbad45997e20aa262573fd821d9471ef88a",
+      "reviewSnapshotSha256": "e9ebcc0fb4d64e3ee60e774e02aa98ed4540d79dd70315e234a3a85a8c3ae42c",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1998,8 +1998,8 @@
         {
           "path": "apps/mobile/src/lib/consent/dependentConsentTransport.test.ts",
           "exists": true,
-          "bytes": 4745,
-          "sha256": "bcd77afa676f2a5cbc9306e5e40593c5b66251e5c6126b5dfb135c3a5daf5670"
+          "bytes": 4757,
+          "sha256": "3bd97c342b3950e38ad7aae57e3444911a1c826d4702a54073226b7a01a353ea"
         },
         {
           "path": "apps/mobile/src/lib/consent/healthDataWriteAdmission.test.ts",
@@ -2022,14 +2022,14 @@
         {
           "path": "apps/mobile/src/lib/consent/healthProcessingEpoch.test.ts",
           "exists": true,
-          "bytes": 17929,
-          "sha256": "1bb1c828df0ad2481c27a7fe7f04afcdd420577555c80bd9f6c7c49debee9eb7"
+          "bytes": 18018,
+          "sha256": "5bfe73fe0b706557cfeabaa94bc964a891e2f07c2315667506da696c00d392fd"
         },
         {
           "path": "apps/mobile/src/lib/consent/healthProcessingEpoch.ts",
           "exists": true,
-          "bytes": 17862,
-          "sha256": "69fa8213c8b04fa827f9aa958ccf68742a9ced782f16d104090b58528719ca68"
+          "bytes": 17870,
+          "sha256": "c4b94c58bf99fedd072ab1f040d4609386581864f5bdda8dd442ab573e0c39a9"
         },
         {
           "path": "apps/mobile/src/lib/consent/withdrawal.test.ts",
@@ -2118,8 +2118,8 @@
         {
           "path": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
           "exists": true,
-          "bytes": 238931,
-          "sha256": "9c26f0c13a2e8413959e892a2c1f3a67b32b3a045c874483c858464ef33c0288"
+          "bytes": 238933,
+          "sha256": "8bee91bcaedd3909b2f033ddbce47f1960e366fa30d6442a10b889941f3ad524"
         },
         {
           "path": "supabase/ops/health-consent-work-lane.sql",
@@ -2141,7 +2141,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "06c98d4cd184909ec7c822447e2ded4729b9313d5838cffc7f37fcc0a1bc19a7",
+      "reviewSnapshotSha256": "42cee4b58f7825279db826e017e1fe37b4a8f7593c66db6007fb90da685a9815",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2882,7 +2882,7 @@
           "path": "docs/brand-decision-memo.md",
           "exists": true,
           "bytes": 5729,
-          "sha256": "30152b7c067521199fc0142876179e83783be56f2ef9d16753d59d1c82eb63ac"
+          "sha256": "30f89ff0e2cffab9c53911815f8f9e9b41279396b74976c07f18dc21089bcf99"
         },
         {
           "path": "docs/brand-evidence.md",
@@ -2904,7 +2904,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "6ca42dc4b1a16041321d4a8860d9141eae6627c49ac988909096392b8315be20",
+      "reviewSnapshotSha256": "cde5e46969ab3347a61d04e8922c66ccb96f3c574174eb499f479045f706c385",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -3193,11 +3193,11 @@
           "path": "docs/brand-decision-memo.md",
           "exists": true,
           "bytes": 5729,
-          "sha256": "30152b7c067521199fc0142876179e83783be56f2ef9d16753d59d1c82eb63ac"
+          "sha256": "30f89ff0e2cffab9c53911815f8f9e9b41279396b74976c07f18dc21089bcf99"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "9ca438678f3494583e6bae6f101883f81cf2bf6e9f3e4ff5111f9432bac05f5f",
+      "reviewSnapshotSha256": "cc2ec257a383805bff4eee340b7b0171c6bdeff37fb730a8d3806f1c3c660e3b",
       "signoff": null,
       "signoffStatus": "not-applicable"
     }

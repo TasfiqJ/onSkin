@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T20:20:43.881Z",
+  "generatedAt": "2026-07-15T20:35:23.586Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,7 +73,7 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "58c9d37dd0c7eb3386e0a3af4607faeecf9f7f6f",
+  "gitSha": "87eef049f4cf2e10bd3a7efa42208b1bb50b0c87",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -623,8 +623,8 @@
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
       "exists": true,
-      "bytes": 37620,
-      "sha256": "6e6aab0795c6455d9465af89f3b35b0b1a56866b868aa0bfeab2eeaf3661809d"
+      "bytes": 37617,
+      "sha256": "6ae4921ebcdfd202dad381661dddcefd28add835b2502328946c8ae1a52b0358"
     },
     {
       "path": "apps/mobile/src/lib/applock/AppLockProvider.tsx",
@@ -683,8 +683,8 @@
     {
       "path": "scripts/phase2/supabase-rls-smoke.mjs",
       "exists": true,
-      "bytes": 15337,
-      "sha256": "7458a217d244b45dbb685b20d026e5d46c23c404f5b4b3ca13ffb9ffd63d6856"
+      "bytes": 15341,
+      "sha256": "8f1641ccf40b4733a577e454191041b47dbe239f1af691e4eb2109e8ce237762"
     },
     {
       "path": "scripts/phase9/lib.mjs",
@@ -695,8 +695,8 @@
     {
       "path": "scripts/phase9/live-supabase-adversarial.mjs",
       "exists": true,
-      "bytes": 88919,
-      "sha256": "a0aa6eaef164a6eafc81da20ee9ec16317b242616de5351912ef5eef2596acc6"
+      "bytes": 88927,
+      "sha256": "04655c7f180eab859ddb1edd9a8a52654db70418d7eb86de4428f9df45ecd9c1"
     },
     {
       "path": "scripts/phase9/rls-adversarial-smoke.mjs",
@@ -738,13 +738,13 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 48121,
-      "sha256": "9af984f7adcb87b6d2dfe674c3ea1f62488c1c78057aa43e7e8920dd8856e836"
+      "sha256": "cff94ddc52d62952b034756406b095b22c7388594c6218b4e235434b224366aa"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 19687,
-      "sha256": "c9debcd96b9f5303b1c0adf7fe12297a3ccf7836805c6d61292c4d2975b25818"
+      "sha256": "52ee6c89fa062026ac2e1794ad07b815ca0b042277bbd798a3c419596c84e553"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
