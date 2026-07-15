@@ -1,8 +1,8 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-15T04:26:27.757Z
-Git SHA: 071c77a3eecd8a4a980b9e027e857e09f9ec75f2
-Git status: DIRTY
+Generated at: 2026-07-15T04:27:07.045Z
+Git SHA: ca900b9beb7c5cf0bc50b28506620a33e2f3bedb
+Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
 
@@ -191,4 +191,4 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 ## Warnings
 
-- Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.
+- none

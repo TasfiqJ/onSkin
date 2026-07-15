@@ -1,7 +1,7 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-15T04:26:47.749Z
-Status: blocked
+Generated: 2026-07-15T04:27:15.041Z
+Status: pass
 Strict mode: no
 
 This generated audit scans committed phase packet outputs for dirty-worktree
@@ -12,11 +12,11 @@ being treated as trustworthy launch evidence.
 ## Summary
 
 - Generated files scanned: 49
-- Files with dirty text: 2
-- Files with non-empty gitStatus: 1
+- Files with dirty text: 0
+- Files with non-empty gitStatus: 0
 - Hash references checked: 1634
 - Stale hash references: 0
-- Blockers: 3
+- Blockers: 0
 - Warnings: 0
 
 ## Files
@@ -47,8 +47,8 @@ being treated as trustworthy launch evidence.
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-6/generated/payments-qa-packet.json            | json | 0                  | 0                          | 61        | 0               |
 | docs/phase-6/generated/payments-qa-packet.md              | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-7/generated/core-loop-qa-packet.json           | json | 1                  | 1                          | 110       | 0               |
-| docs/phase-7/generated/core-loop-qa-packet.md             | md   | 2                  | 0                          | 0         | 0               |
+| docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 110       | 0               |
+| docs/phase-7/generated/core-loop-qa-packet.md             | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-8/generated/growth-store-qa-packet.json        | json | 0                  | 0                          | 49        | 0               |
 | docs/phase-8/generated/growth-store-qa-packet.md          | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/dependency-inventory.json          | json | 0                  | 0                          | 0         | 0               |
@@ -75,24 +75,7 @@ being treated as trustworthy launch evidence.
 
 ## Blockers
 
-- docs/phase-7/generated/core-loop-qa-packet.json contains dirty generated-packet text.
-- docs/phase-7/generated/core-loop-qa-packet.json records non-empty gitStatus: M docs/phase-3/generated/review-operator-queue.json
- M docs/phase-3/generated/review-operator-queue.md
- M docs/phase-3/generated/review-packet-manifest.json
- M docs/phase-3/generated/review-packet.md
- M docs/phase-3/generated/review-worklist.json
- M docs/phase-3/generated/review-worklist.md
- M docs/phase-4/generated/beta-coverage-report.json
- M docs/phase-4/generated/beta-coverage-report.md
- M docs/phase-4/generated/catalog-qa-report.json
- M docs/phase-4/generated/catalog-qa-report.md
- M docs/phase-4/generated/source-worklist.json
- M docs/phase-4/generated/source-worklist.md
- M docs/phase-5/generated/device-qa-packet.json
- M docs/phase-5/generated/device-qa-packet.md
- M docs/phase-6/generated/payments-qa-packet.json
- M docs/phase-6/generated/payments-qa-packet.md
-- docs/phase-7/generated/core-loop-qa-packet.md contains dirty generated-packet text.
+- None.
 
 ## Warnings
 

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-15T04:26:47.749Z",
-  "status": "blocked",
+  "generatedAt": "2026-07-15T04:27:15.041Z",
+  "status": "pass",
   "strict": false,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
   "generatedRoots": [
@@ -210,15 +210,15 @@
     {
       "path": "docs/phase-7/generated/core-loop-qa-packet.json",
       "kind": "json",
-      "dirtyTextMatchCount": 1,
-      "nonEmptyGitStatusCount": 1,
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 110,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-7/generated/core-loop-qa-packet.md",
       "kind": "md",
-      "dirtyTextMatchCount": 2,
+      "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 0,
       "staleHashReferenceCount": 0
@@ -415,17 +415,13 @@
   ],
   "summary": {
     "generatedFileCount": 49,
-    "dirtyTextFileCount": 2,
-    "nonEmptyGitStatusFileCount": 1,
+    "dirtyTextFileCount": 0,
+    "nonEmptyGitStatusFileCount": 0,
     "hashReferenceCount": 1634,
     "staleHashReferenceCount": 0,
-    "blockerCount": 3,
+    "blockerCount": 0,
     "warningCount": 0
   },
-  "blockers": [
-    "docs/phase-7/generated/core-loop-qa-packet.json contains dirty generated-packet text.",
-    "docs/phase-7/generated/core-loop-qa-packet.json records non-empty gitStatus: M docs/phase-3/generated/review-operator-queue.json\n M docs/phase-3/generated/review-operator-queue.md\n M docs/phase-3/generated/review-packet-manifest.json\n M docs/phase-3/generated/review-packet.md\n M docs/phase-3/generated/review-worklist.json\n M docs/phase-3/generated/review-worklist.md\n M docs/phase-4/generated/beta-coverage-report.json\n M docs/phase-4/generated/beta-coverage-report.md\n M docs/phase-4/generated/catalog-qa-report.json\n M docs/phase-4/generated/catalog-qa-report.md\n M docs/phase-4/generated/source-worklist.json\n M docs/phase-4/generated/source-worklist.md\n M docs/phase-5/generated/device-qa-packet.json\n M docs/phase-5/generated/device-qa-packet.md\n M docs/phase-6/generated/payments-qa-packet.json\n M docs/phase-6/generated/payments-qa-packet.md",
-    "docs/phase-7/generated/core-loop-qa-packet.md contains dirty generated-packet text."
-  ],
+  "blockers": [],
   "warnings": []
 }
