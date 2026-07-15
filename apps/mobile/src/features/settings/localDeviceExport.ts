@@ -90,6 +90,22 @@ function parseStructuredStoredValue(raw: string, key: string): unknown {
   }
 }
 
+function parseShelfProductsForExport(raw: string, key: string): unknown[] {
+  const parsed = parseStructuredStoredValue(raw, key);
+  if (Array.isArray(parsed)) return parsed;
+  if (!isRecord(parsed) || !Array.isArray(parsed.products)) return invalidExportRecord(key);
+  const keys = Object.keys(parsed).sort();
+  if (parsed.version === 1 && keys.join(',') === 'products,version') return parsed.products;
+  if (
+    (parsed.version === 2 || parsed.version === 3) &&
+    Array.isArray(parsed.addOperations) &&
+    keys.join(',') === 'addOperations,products,version'
+  ) {
+    return parsed.products;
+  }
+  return invalidExportRecord(key);
+}
+
 const SAFE_SCALAR =
   /^(?:v[1-9]\d*:[A-Za-z0-9._-]{1,128}|\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2}))?|true|false|0|1)$/;
 
@@ -214,6 +230,8 @@ export async function collectLocalDeviceExportData(
       exportValue = await exportPhotoRecords(raw);
     } else if (spec.transform === 'conflict_choices') {
       exportValue = normalizeConflictChoicesForExport(parseStructuredStoredValue(raw, spec.key));
+    } else if (spec.transform === 'shelf_products') {
+      exportValue = parseShelfProductsForExport(raw, spec.key);
     } else if (spec.transform === 'safe_scalar_or_json') {
       exportValue = parseSafeScalarOrJson(raw, spec.key);
     } else {

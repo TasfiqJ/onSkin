@@ -1,5 +1,13 @@
+import * as Crypto from 'expo-crypto';
 import type { AddedVia, PaoSource } from '@onskin/types';
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
 
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
 
@@ -62,6 +70,8 @@ const EMPTY: IntakeDraft = {
 
 type IntakeContextValue = {
   draft: IntakeDraft;
+  /** Stable for one intake; reset rotates it for the next explicit intent. */
+  addOperationId: string;
   update: (patch: Partial<IntakeDraft>) => void;
   reset: (init?: Partial<IntakeDraft>) => void;
 };
@@ -69,14 +79,23 @@ type IntakeContextValue = {
 const IntakeContext = createContext<IntakeContextValue | null>(null);
 
 export function IntakeProvider({ children }: { children: ReactNode }) {
-  const [draft, setDraft] = useState<IntakeDraft>(EMPTY);
+  const [draft, setDraft] = useState<IntakeDraft>(() => ({ ...EMPTY }));
+  const [addOperationId, setAddOperationId] = useState(() => Crypto.randomUUID());
+  const update = useCallback((patch: Partial<IntakeDraft>) => {
+    setDraft((current) => ({ ...current, ...patch }));
+  }, []);
+  const reset = useCallback((init?: Partial<IntakeDraft>) => {
+    setDraft({ ...EMPTY, ...init });
+    setAddOperationId(Crypto.randomUUID());
+  }, []);
   const value = useMemo<IntakeContextValue>(
     () => ({
       draft,
-      update: (patch) => setDraft((d) => ({ ...d, ...patch })),
-      reset: (init) => setDraft({ ...EMPTY, ...init }),
+      addOperationId,
+      update,
+      reset,
     }),
-    [draft],
+    [addOperationId, draft, reset, update],
   );
   return <IntakeContext.Provider value={value}>{children}</IntakeContext.Provider>;
 }

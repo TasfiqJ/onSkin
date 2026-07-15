@@ -173,6 +173,29 @@ describe('local private-data contract registry', () => {
     });
   });
 
+  it('declares the tombstone-aware Shelf v3 codec and product-only export transform', () => {
+    const shelf = LOCAL_PRIVATE_KEY_REGISTRY.find((entry) => entry.key === 'onskin.shelf.v1');
+
+    expect(shelf).toMatchObject({
+      codec: {
+        status: 'enforced',
+        codecId: 'shelf_state',
+        currentVersion: 3,
+        legacyVersions: [0, 1, 2],
+      },
+      mutation: { status: 'enforced', mode: 'private_kv_atomic_transform' },
+      ownerBinding: { status: 'enforced', mode: 'private_kv_account_boundary' },
+      export: {
+        status: 'enforced',
+        mode: 'include',
+        section: 'shelf_and_routine',
+        field: 'shelf_products',
+        transform: 'shelf_products',
+      },
+      recovery: { status: 'enforced', mode: 'preserve_bytes_and_retry' },
+    });
+  });
+
   it('declares exact cleanup-authority bytes and the installed-base legacy scalar', () => {
     const cleanupMarker = LOCAL_PRIVATE_KEY_REGISTRY.find(
       (entry) => entry.key === 'routinekind.localDataCleanupRequired.v1',

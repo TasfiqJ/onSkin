@@ -1,9 +1,13 @@
 import type { PaoSource } from '@onskin/types';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Button, RouteIconButton, Sheet, Text } from '@/components/ui';
+import {
+  beginShelfAddSubmissionAttempt,
+  type ShelfAddSubmissionAttempt,
+} from '@/features/shelf/addSubmissionAttempt';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { PAO_MONTH_OPTIONS, shiftLocalDateMonths } from '@/features/shelf/freshness';
 import { useIntake } from '@/features/shelf/IntakeContext';
@@ -92,7 +96,7 @@ function OptionRow({
 
 export default function OpenedDateScreen() {
   const { origin } = useLocalSearchParams<{ origin?: string }>();
-  const { draft, reset } = useIntake();
+  const { draft, addOperationId, reset } = useIntake();
   const m = useShelfMutations();
   const [mode, setMode] = useState<Mode>('just');
   const [pickIso, setPickIso] = useState<string | null>(null);
@@ -101,6 +105,7 @@ export default function OpenedDateScreen() {
   const [paoEditOpen, setPaoEditOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
+  const submissionAttemptRef = useRef<ShelfAddSubmissionAttempt | null>(null);
   const fallbackRoute = origin === 'onboarding' ? APP_ONBOARDING_PRODUCTS_ROUTE : APP_SHELF_ROUTE;
   const today = localDateString();
 
@@ -110,43 +115,59 @@ export default function OpenedDateScreen() {
 
   const onSave = async () => {
     const productName = draft.name.trim();
-    if (!hasProductDraft || !productName || !canSave || saving) return;
+    if ((!submissionAttemptRef.current && (!hasProductDraft || !productName || !canSave)) || saving) {
+      return;
+    }
     setSaving(true);
     setSaveFailed(false);
-    const openedAt = mode === 'just' ? today : mode === 'pick' ? pickIso : null;
-    const isOpened = mode !== 'unopened';
     try {
-      const addedProduct = await m.add({
-        name: productName,
-        brand: draft.brand,
-        category: draft.category,
-        barcode: draft.barcode,
-        catalogProductId: draft.catalogProductId,
-        catalogSourceId: draft.catalogSourceId,
-        catalogSource: draft.catalogSource,
-        catalogSourceName: draft.catalogSourceName,
-        catalogSourceRef: draft.catalogSourceRef,
-        catalogSourceUrl: draft.catalogSourceUrl,
-        catalogSourceSnapshotDate: draft.catalogSourceSnapshotDate,
-        catalogMatchQuality: draft.catalogMatchQuality,
-        dataQualityScore: draft.dataQualityScore,
-        ingredientParseStatus: draft.ingredientParseStatus,
-        ingredientParseConfidence: draft.ingredientParseConfidence,
-        parserVersion: draft.parserVersion,
-        sourceDisclosureAckAt: draft.sourceDisclosureAckAt,
-        ingredients: draft.ingredients,
-        openedAt,
-        isOpened,
-        paoMonths: pao,
-        paoSource,
-        expiryDate: draft.expiryDate,
-        addedVia: draft.addedVia,
-      });
+      const attempt = beginShelfAddSubmissionAttempt(
+        submissionAttemptRef.current,
+        addOperationId,
+        () => {
+          const openedAt = mode === 'just' ? today : mode === 'pick' ? pickIso : null;
+          const isOpened = mode !== 'unopened';
+          return {
+            name: productName,
+            brand: draft.brand,
+            category: draft.category,
+            barcode: draft.barcode,
+            catalogProductId: draft.catalogProductId,
+            catalogSourceId: draft.catalogSourceId,
+            catalogSource: draft.catalogSource,
+            catalogSourceName: draft.catalogSourceName,
+            catalogSourceRef: draft.catalogSourceRef,
+            catalogSourceUrl: draft.catalogSourceUrl,
+            catalogSourceSnapshotDate: draft.catalogSourceSnapshotDate,
+            catalogMatchQuality: draft.catalogMatchQuality,
+            dataQualityScore: draft.dataQualityScore,
+            ingredientParseStatus: draft.ingredientParseStatus,
+            ingredientParseConfidence: draft.ingredientParseConfidence,
+            parserVersion: draft.parserVersion,
+            sourceDisclosureAckAt: draft.sourceDisclosureAckAt,
+            ingredients: draft.ingredients,
+            openedAt,
+            isOpened,
+            paoMonths: pao,
+            paoSource,
+            expiryDate: draft.expiryDate,
+            addedVia: draft.addedVia,
+          };
+        },
+      );
+      submissionAttemptRef.current = attempt;
+      if (!attempt.productId) {
+        const addedProduct = await m.add(attempt.input, attempt.operationId);
+        attempt.productId = addedProduct.id;
+      }
+      await m.acknowledgeAdd(attempt.productId);
+      const productId = attempt.productId;
+      submissionAttemptRef.current = null;
       reset();
       if (origin === 'onboarding') {
         router.replace({
           pathname: APP_ONBOARDING_PRODUCTS_ROUTE,
-          params: { addedProductId: addedProduct.id },
+          params: { addedProductId: productId },
         });
       } else {
         router.replace(APP_SHELF_ROUTE);

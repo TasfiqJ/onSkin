@@ -27,6 +27,7 @@ export type LocalPrivateExportTransform =
   | 'structured_json'
   | 'safe_scalar_or_json'
   | 'conflict_choices'
+  | 'shelf_products'
   | 'photo_records';
 
 type Contract<T extends object> =
@@ -416,9 +417,9 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
   privateData({
     key: 'onskin.shelf.v1',
     lifecycle: 'current',
-    codec: jsonCodec('shelf_state', 1, [0]),
+    codec: jsonCodec('shelf_state', 3, [0, 1, 2]),
     typedRead: typedDomainRead,
-    export: include('shelf_and_routine', 'shelf_products'),
+    export: include('shelf_and_routine', 'shelf_products', 'shelf_products'),
   }),
   privateData({
     key: 'onskin.skinprofile.v1',

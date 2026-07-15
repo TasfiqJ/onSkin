@@ -427,7 +427,7 @@ describe('onboarding route contracts', () => {
     expect(products).toContain("params: { origin: 'onboarding' }");
     expect(products).not.toContain('await m.add({');
     expect(opened).toContain('APP_ONBOARDING_PRODUCTS_ROUTE');
-    expect(opened).toContain('params: { addedProductId: addedProduct.id }');
+    expect(opened).toContain('params: { addedProductId: productId }');
     expect(opened).toContain('router.replace(APP_SHELF_ROUTE)');
   });
 

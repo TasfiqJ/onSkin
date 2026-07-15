@@ -67,18 +67,32 @@ describe('local device data export', () => {
       ],
       [
         'onskin.shelf.v1',
-        JSON.stringify([
-          {
-            id: 'shelf-1',
-            name: 'Retinol 0.3%',
-            thumbnailPath: 'file:///private/shelf-1.jpg',
-            nested: {
-              LocalUri: 'file:///private/other.jpg',
-              preview: 'cached at ph://library/private-photo',
-              safe: true,
+        JSON.stringify({
+          version: 3,
+          products: [
+            {
+              id: 'shelf-1',
+              name: 'Retinol 0.3%',
+              thumbnailPath: 'file:///private/shelf-1.jpg',
+              nested: {
+                LocalUri: 'file:///private/other.jpg',
+                preview: 'cached at ph://library/private-photo',
+                safe: true,
+              },
             },
-          },
-        ]),
+          ],
+          addOperations: [
+            {
+              operationId: 'private-operation-id',
+              ownerHash: 'a'.repeat(64),
+              inputHash: 'b'.repeat(64),
+              productId: 'shelf-1',
+              createdAt: '2026-07-10T11:59:00.000Z',
+              status: 'acknowledged',
+              acknowledgedAt: '2026-07-10T12:00:00.000Z',
+            },
+          ],
+        }),
       ],
       ['onskin.completions.v1', JSON.stringify({ '2026-07-09': ['PM:shelf-1'] })],
       ['onskin.conflict.overrides', JSON.stringify(['rule-1:acid+retinoid'])],
@@ -189,6 +203,9 @@ describe('local device data export', () => {
     expect(serialized).not.toContain('notesCiphertext');
     expect(serialized).not.toContain('storagePath');
     expect(serialized).not.toContain('thumbnailPath');
+    expect(serialized).not.toContain('private-operation-id');
+    expect(serialized).not.toContain('ownerHash');
+    expect(serialized).not.toContain('inputHash');
     expect(serialized).not.toContain('photo-content-key-v1');
   });
 

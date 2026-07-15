@@ -22,6 +22,7 @@ const mocks = vi.hoisted(() => {
   const eqId = vi.fn(() => ({ eq: eqUser }));
   const remove = vi.fn(() => ({ eq: eqId }));
   return {
+    acknowledgeProductAdd: vi.fn(),
     addProduct: vi.fn(),
     devWarn: vi.fn(),
     deleteAbortSignal,
@@ -39,11 +40,13 @@ const mocks = vi.hoisted(() => {
     updateProduct: vi.fn(),
     upsert,
     upsertAbortSignal,
+    user: { id: 'owner-a' } as { id: string } | null,
   };
 });
 
 vi.mock('@/lib/observability/safeLog', () => ({ devWarn: mocks.devWarn }));
 vi.mock('@/lib/analytics/track', () => ({ track: mocks.track }));
+vi.mock('@/lib/auth/AuthProvider', () => ({ useAuth: () => ({ user: mocks.user }) }));
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({
     invalidateQueries: mocks.invalidateQueries,
@@ -54,6 +57,7 @@ vi.mock('@/lib/query/useOwnerQueryScope', () => ({
   useOwnerQueryScope: () => mocks.ownerScope,
 }));
 vi.mock('./store', () => ({
+  acknowledgeProductAdd: mocks.acknowledgeProductAdd,
   addProduct: mocks.addProduct,
   reAddProduct: mocks.reAddProduct,
   removeProduct: mocks.removeProduct,
@@ -120,6 +124,7 @@ afterEach(() => {
 
 describe('shelf owner-bound mirrors', () => {
   beforeEach(() => {
+    mocks.acknowledgeProductAdd.mockReset();
     mocks.addProduct.mockReset();
     mocks.devWarn.mockClear();
     mocks.deleteAbortSignal.mockClear();
@@ -139,6 +144,7 @@ describe('shelf owner-bound mirrors', () => {
     mocks.upsert.mockClear();
     mocks.upsertAbortSignal.mockClear();
     mocks.upsertAbortSignal.mockResolvedValue({ error: null });
+    mocks.user = { id: 'owner-a' };
     mocks.addProduct.mockResolvedValue(PRODUCT);
     mocks.getUser.mockResolvedValue({
       data: { user: { id: 'owner-a' } },
@@ -153,6 +159,32 @@ describe('shelf owner-bound mirrors', () => {
     mocks.removeProduct.mockResolvedValue(undefined);
     mocks.updateProduct.mockResolvedValue(PRODUCT);
     resetShelfMutationStateForTests();
+  });
+
+  it('binds the durable local add receipt to the exact published owner', async () => {
+    const actions = useShelfMutations();
+
+    await actions.add(NEW_PRODUCT, 'owner-a-add-operation');
+
+    expect(mocks.addProduct).toHaveBeenCalledWith(
+      NEW_PRODUCT,
+      expect.objectContaining({
+        ownerId: 'owner-a',
+        operationId: 'owner-a-add-operation',
+        assertCurrent: expect.any(Function),
+      }),
+    );
+  });
+
+  it('acknowledges an add receipt inside the same owner generation', async () => {
+    const actions = useShelfMutations();
+
+    await actions.acknowledgeAdd(PRODUCT.id);
+
+    expect(mocks.acknowledgeProductAdd).toHaveBeenCalledWith(
+      PRODUCT.id,
+      expect.objectContaining({ ownerId: 'owner-a', assertCurrent: expect.any(Function) }),
+    );
   });
 
   it('writes an explicit captured owner on a current-generation upsert', async () => {
@@ -280,7 +312,7 @@ describe('shelf owner-bound mirrors', () => {
     });
     const actions = useShelfMutations();
 
-    const adding = actions.add(NEW_PRODUCT);
+    const adding = actions.add(NEW_PRODUCT, 'boundary-add-operation');
     await addStarted;
     beginAccountGenerationBoundary();
     boundaryActive = true;

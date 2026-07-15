@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  acknowledgeProductAdd,
   addProduct,
   clearShelf,
   loadShelf,
@@ -8,6 +9,8 @@ import {
   reAddProduct,
   removeProduct,
   SHELF_REPLENISHMENT_ALREADY_REPLACED,
+  SHELF_ADD_OPERATION_INPUT_MISMATCH,
+  SHELF_ADD_OPERATION_OWNER_MISMATCH,
   SHELF_STATE_INVALID,
   SHELF_STATE_UNAVAILABLE,
   SHELF_STATE_UNSUPPORTED_VERSION,
@@ -20,6 +23,7 @@ const mocks = vi.hoisted(() => ({
   nextId: 0,
   tails: new Map<string, Promise<void>>(),
   updateFailure: null as Error | null,
+  responseLossAfterCommit: 0,
   readOverride: null as
     | null
     | { status: 'absent' }
@@ -60,6 +64,10 @@ vi.mock('@/lib/storage/privateKV', () => ({
         if (next !== current) mocks.writeCalls += 1;
         if (next === null) mocks.storage.delete(key);
         else mocks.storage.set(key, next);
+        if (next !== current && mocks.responseLossAfterCommit > 0) {
+          mocks.responseLossAfterCommit -= 1;
+          throw new Error('PRIVATE_WRITE_RESPONSE_LOST');
+        }
       } finally {
         release();
         if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
@@ -99,6 +107,7 @@ describe('shelf local store recovery', () => {
     mocks.nextId = 0;
     mocks.tails.clear();
     mocks.updateFailure = null;
+    mocks.responseLossAfterCommit = 0;
     mocks.readOverride = null;
     mocks.updateCalls = 0;
     mocks.writeCalls = 0;
@@ -113,11 +122,25 @@ describe('shelf local store recovery', () => {
   it('distinguishes absence from valid empty current and legacy shelves without writing', async () => {
     await expect(readShelfState()).resolves.toEqual({ status: 'absent', products: [] });
 
-    mocks.storage.set(KEY, JSON.stringify({ version: 1, products: [] }));
+    mocks.storage.set(KEY, JSON.stringify({ version: 3, products: [], addOperations: [] }));
     await expect(readShelfState()).resolves.toEqual({
       status: 'available',
       products: [],
       format: 'current',
+    });
+
+    mocks.storage.set(KEY, JSON.stringify({ version: 2, products: [], addOperations: [] }));
+    await expect(readShelfState()).resolves.toEqual({
+      status: 'available',
+      products: [],
+      format: 'legacy',
+    });
+
+    mocks.storage.set(KEY, JSON.stringify({ version: 1, products: [] }));
+    await expect(readShelfState()).resolves.toEqual({
+      status: 'available',
+      products: [],
+      format: 'legacy',
     });
 
     mocks.storage.set(KEY, '[]');
@@ -149,7 +172,7 @@ describe('shelf local store recovery', () => {
   });
 
   it('supports a dev-only unavailable fixture without touching stored bytes', async () => {
-    const original = JSON.stringify({ version: 1, products: [] });
+    const original = JSON.stringify({ version: 2, products: [], addOperations: [] });
     mocks.storage.set(KEY, original);
     runtime.__DEV__ = true;
     process.env.EXPO_PUBLIC_E2E_SHELF_STORAGE_FAILURE = 'always';
@@ -421,13 +444,14 @@ describe('shelf local store recovery', () => {
 
     await updateProduct('retinol', { brand: 'Example' });
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
-      version: 1,
+      version: 3,
       products: [{ id: 'retinol', brand: 'Example', ingredients: ['retinol'] }],
+      addOperations: [],
     });
   });
 
   it('preserves future-version shelf bytes and refuses every mutation', async () => {
-    const original = JSON.stringify({ version: 2, products: [] });
+    const original = JSON.stringify({ version: 4, products: [], addOperations: [] });
     mocks.storage.set(KEY, original);
 
     await expect(readShelfState()).resolves.toEqual({
@@ -438,10 +462,96 @@ describe('shelf local store recovery', () => {
     await expect(addProduct({ name: 'Cleanser', addedVia: 'manual' })).rejects.toThrow(
       SHELF_STATE_UNSUPPORTED_VERSION,
     );
+    await expect(acknowledgeProductAdd('missing')).rejects.toThrow(SHELF_STATE_UNSUPPORTED_VERSION);
     await expect(updateProduct('missing', { brand: 'Nope' })).rejects.toThrow(
       SHELF_STATE_UNSUPPORTED_VERSION,
     );
     await expect(removeProduct('missing')).rejects.toThrow(SHELF_STATE_UNSUPPORTED_VERSION);
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('preserves malformed add-operation bytes and refuses add acknowledgement or retry', async () => {
+    const original = JSON.stringify({
+      version: 2,
+      products: [],
+      addOperations: [
+        {
+          operationId: 'operation-1',
+          ownerHash: 'not-a-sha256',
+          inputHash: 'b'.repeat(64),
+          productId: 'missing-product',
+          createdAt: '2026-07-15T12:00:00.000Z',
+        },
+      ],
+    });
+    mocks.storage.set(KEY, original);
+
+    await expect(readShelfState()).resolves.toEqual({ status: 'corrupt', products: null });
+    await expect(
+      addProduct({ name: 'Must not overwrite', addedVia: 'manual' }, { ownerId: 'owner-a' }),
+    ).rejects.toThrow(SHELF_STATE_INVALID);
+    await expect(acknowledgeProductAdd('missing-product', { ownerId: 'owner-a' })).rejects.toThrow(
+      SHELF_STATE_INVALID,
+    );
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('reads strict v2 pending mappings without rewriting and upgrades them on acknowledgement', async () => {
+    const owner = { ownerId: 'owner-a', operationId: 'installed-v2-operation' };
+    const product = await addProduct({ name: 'Installed v2 row', addedVia: 'manual' }, owner);
+    const current = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
+      products: unknown[];
+      addOperations: Record<string, unknown>[];
+    };
+    const v2 = JSON.stringify({
+      version: 2,
+      products: current.products,
+      addOperations: current.addOperations.map((operation) => ({
+        operationId: operation.operationId,
+        ownerHash: operation.ownerHash,
+        inputHash: operation.inputHash,
+        productId: operation.productId,
+        createdAt: operation.createdAt,
+      })),
+    });
+    mocks.storage.set(KEY, v2);
+    mocks.writeCalls = 0;
+
+    await expect(readShelfState()).resolves.toMatchObject({ status: 'available', format: 'legacy' });
+    expect(mocks.storage.get(KEY)).toBe(v2);
+    expect(mocks.writeCalls).toBe(0);
+
+    await acknowledgeProductAdd(product.id, owner);
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({
+      version: 3,
+      addOperations: [
+        {
+          operationId: owner.operationId,
+          status: 'acknowledged',
+          acknowledgedAt: expect.any(String),
+        },
+      ],
+    });
+  });
+
+  it('preserves non-canonical v3 ledger bytes and refuses every relevant mutation', async () => {
+    const owner = { ownerId: 'owner-a', operationId: 'strict-v3-operation' };
+    const product = await addProduct({ name: 'Strict v3 row', addedVia: 'manual' }, owner);
+    const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
+      addOperations: Record<string, unknown>[];
+    };
+    parsed.addOperations[0] = { ...parsed.addOperations[0], unexpected: true };
+    const original = JSON.stringify(parsed);
+    mocks.storage.set(KEY, original);
+
+    await expect(readShelfState()).resolves.toEqual({ status: 'corrupt', products: null });
+    await expect(
+      addProduct(
+        { name: 'Must not replace strict bytes', addedVia: 'manual' },
+        { ownerId: 'owner-a', operationId: 'another-operation' },
+      ),
+    ).rejects.toThrow(SHELF_STATE_INVALID);
+    await expect(acknowledgeProductAdd(product.id, owner)).rejects.toThrow(SHELF_STATE_INVALID);
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
@@ -511,7 +621,10 @@ describe('shelf local store recovery', () => {
     await clearShelf();
     expect(mocks.storage.has(KEY)).toBe(false);
 
-    for (const original of ['{not-json', JSON.stringify({ version: 2, products: [] })]) {
+    for (const original of [
+      '{not-json',
+      JSON.stringify({ version: 4, products: [], addOperations: [] }),
+    ]) {
       mocks.storage.set(KEY, original);
       await expect(clearShelf()).rejects.toThrow();
       expect(mocks.storage.get(KEY)).toBe(original);
@@ -526,6 +639,298 @@ describe('shelf local store recovery', () => {
     const shelf = await loadShelf();
     expect(shelf).toHaveLength(names.length);
     expect(new Set(shelf.map((product) => product.name))).toEqual(new Set(names));
+  });
+
+  it('converges 100 concurrent retries of one owner operation on one product id', async () => {
+    const input = { name: 'One uncertain cleanser add', addedVia: 'manual' as const };
+    const owner = { ownerId: 'owner-a', operationId: 'one-cleanser-operation' };
+
+    const results = await Promise.all(Array.from({ length: 100 }, () => addProduct(input, owner)));
+
+    expect(new Set(results.map((product) => product.id))).toEqual(new Set([results[0]!.id]));
+    await expect(loadShelf()).resolves.toHaveLength(1);
+    expect(mocks.writeCalls).toBe(1);
+  });
+
+  it('keeps 100 distinct operation ids with identical payloads distinct', async () => {
+    const input = { name: 'Identical units', addedVia: 'manual' as const };
+    const results = await Promise.all(
+      Array.from({ length: 100 }, (_, index) =>
+        addProduct(input, { ownerId: 'owner-a', operationId: `distinct-operation-${index}` }),
+      ),
+    );
+
+    expect(new Set(results.map((product) => product.id)).size).toBe(100);
+    await expect(loadShelf()).resolves.toHaveLength(100);
+  });
+
+  it('recovers the same product after a committed add loses its response', async () => {
+    const input = { name: 'Commit response loss', addedVia: 'manual' as const };
+    const owner = { ownerId: 'owner-a', operationId: 'response-loss-operation' };
+    mocks.responseLossAfterCommit = 1;
+
+    await expect(addProduct(input, owner)).rejects.toThrow('PRIVATE_WRITE_RESPONSE_LOST');
+    const committedId = (await loadShelf())[0]!.id;
+    const writesAfterUncertainCommit = mocks.writeCalls;
+
+    await expect(addProduct(input, owner)).resolves.toMatchObject({ id: committedId });
+    expect(mocks.writeCalls).toBe(writesAfterUncertainCommit);
+  });
+
+  it('keeps the same frozen operation identity across UTC midnight', async () => {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date('2026-07-15T23:59:59.900Z'));
+      const input = {
+        name: 'Time-zone-safe recovery',
+        openedAt: '2026-07-16',
+        isOpened: true,
+        paoMonths: 12,
+        paoSource: 'label' as const,
+        addedVia: 'manual' as const,
+      };
+      const owner = { ownerId: 'owner-a', operationId: 'utc-midnight-operation' };
+      mocks.responseLossAfterCommit = 1;
+
+      await expect(addProduct(input, owner)).rejects.toThrow('PRIVATE_WRITE_RESPONSE_LOST');
+      const committedId = (await loadShelf())[0]!.id;
+      const writesAfterUncertainCommit = mocks.writeCalls;
+
+      vi.setSystemTime(new Date('2026-07-16T00:00:00.100Z'));
+      await expect(addProduct(input, owner)).resolves.toMatchObject({ id: committedId });
+      expect(mocks.writeCalls).toBe(writesAfterUncertainCommit);
+      await expect(loadShelf()).resolves.toHaveLength(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('does not reinterpret persisted local freshness after a clock rollback', async () => {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date('2026-07-16T12:00:00.000Z'));
+      const product = await addProduct({
+        name: 'Local-date recovery',
+        openedAt: '2026-07-16',
+        isOpened: true,
+        paoMonths: 12,
+        paoSource: 'label',
+        addedVia: 'manual',
+      });
+      expect(product).toMatchObject({ openedAt: '2026-07-16', isOpened: true });
+      const original = mocks.storage.get(KEY);
+
+      vi.setSystemTime(new Date('2026-07-15T23:59:59.900Z'));
+      await expect(readShelfState()).resolves.toMatchObject({
+        status: 'available',
+        products: [{ id: product.id, openedAt: '2026-07-16', isOpened: true }],
+      });
+      expect(mocks.storage.get(KEY)).toBe(original);
+
+      await updateProduct(product.id, { brand: 'Clock-safe edit' });
+      await expect(loadShelf()).resolves.toEqual([
+        expect.objectContaining({
+          id: product.id,
+          brand: 'Clock-safe edit',
+          openedAt: '2026-07-16',
+          isOpened: true,
+        }),
+      ]);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('matches a retry through normalized defaults and cosmetic whitespace', async () => {
+    const owner = { ownerId: 'owner-a', operationId: 'normalized-operation' };
+    const first = await addProduct(
+      {
+        name: '  Retinol serum  ',
+        brand: ' Example ',
+        ingredients: [' retinol '],
+        addedVia: 'manual',
+      },
+      owner,
+    );
+    mocks.writeCalls = 0;
+
+    const recovered = await addProduct(
+      {
+        name: 'Retinol serum',
+        brand: 'Example',
+        catalogSource: 'user_local',
+        catalogMatchQuality: 'manual',
+        ingredients: ['retinol'],
+        addedVia: 'manual',
+      },
+      owner,
+    );
+
+    expect(recovered.id).toBe(first.id);
+    expect(mocks.writeCalls).toBe(0);
+  });
+
+  it('rejects the same operation token with a changed semantic payload without touching bytes', async () => {
+    const owner = { ownerId: 'owner-a', operationId: 'immutable-input-operation' };
+    await addProduct(
+      {
+        name: 'Retinol serum',
+        openedAt: '2026-07-15',
+        isOpened: true,
+        sourceDisclosureAckAt: '2026-07-15T23:59:59.900Z',
+        addedVia: 'manual',
+      },
+      owner,
+    );
+    const original = mocks.storage.get(KEY);
+
+    await expect(
+      addProduct(
+        {
+          name: 'Retinol serum',
+          openedAt: '2026-07-16',
+          isOpened: true,
+          sourceDisclosureAckAt: '2026-07-16T00:00:00.100Z',
+          addedVia: 'manual',
+        },
+        owner,
+      ),
+    ).rejects.toThrow(SHELF_ADD_OPERATION_INPUT_MISMATCH);
+    expect(mocks.storage.get(KEY)).toBe(original);
+    await expect(loadShelf()).resolves.toHaveLength(1);
+  });
+
+  it('retains the durable mapping after acknowledgement and a new token creates a new unit', async () => {
+    const input = { name: 'Restart-safe add', addedVia: 'manual' as const };
+    const owner = { ownerId: 'owner-a', operationId: 'restart-safe-operation' };
+    const committed = await addProduct(input, owner);
+    mocks.writeCalls = 0;
+
+    // The store has no module-memory attempt coordinator. Reusing the exact
+    // caller-owned token proves durable lookup, not process-death token recovery.
+    const recovered = await addProduct(input, owner);
+    expect(recovered.id).toBe(committed.id);
+    expect(mocks.writeCalls).toBe(0);
+
+    await acknowledgeProductAdd(committed.id, owner);
+    const acknowledgedRetry = await addProduct(input, owner);
+    expect(acknowledgedRetry.id).toBe(committed.id);
+
+    const intentionalSecondUnit = await addProduct(input, {
+      ownerId: 'owner-a',
+      operationId: 'intentional-second-unit',
+    });
+    expect(intentionalSecondUnit.id).not.toBe(committed.id);
+    await expect(loadShelf()).resolves.toHaveLength(2);
+  });
+
+  it('rejects an owner-B retry of owner-A unacknowledged operation without changing bytes', async () => {
+    const input = { name: 'Owner-bound add', addedVia: 'manual' as const };
+    const operationId = 'owner-bound-operation';
+    await addProduct(input, { ownerId: 'owner-a', operationId });
+    const original = mocks.storage.get(KEY);
+
+    await expect(addProduct(input, { ownerId: 'owner-b', operationId })).rejects.toThrow(
+      SHELF_ADD_OPERATION_OWNER_MISMATCH,
+    );
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('reconciles a committed acknowledgement whose storage response is lost', async () => {
+    const input = { name: 'Acknowledgement response loss', addedVia: 'manual' as const };
+    const owner = { ownerId: 'owner-a', operationId: 'ack-response-loss-operation' };
+    const product = await addProduct(input, owner);
+    mocks.responseLossAfterCommit = 1;
+
+    await expect(acknowledgeProductAdd(product.id, owner)).resolves.toBeUndefined();
+
+    const acknowledgedRetry = await addProduct(input, owner);
+    expect(acknowledgedRetry.id).toBe(product.id);
+    const intentionalSecondUnit = await addProduct(input, {
+      ownerId: 'owner-a',
+      operationId: 'new-identical-operation',
+    });
+    expect(intentionalSecondUnit.id).not.toBe(product.id);
+  });
+
+  it('keeps the origin tombstone after ack commit, lost response, and unavailable readback', async () => {
+    const input = { name: 'Uncertain acknowledged add', addedVia: 'manual' as const };
+    const owner = { ownerId: 'owner-a', operationId: 'uncertain-ack-operation' };
+    const product = await addProduct(input, owner);
+    mocks.responseLossAfterCommit = 1;
+    mocks.readOverride = { status: 'unavailable', reason: 'storage_unavailable' };
+
+    await expect(acknowledgeProductAdd(product.id, owner)).rejects.toThrow(
+      'PRIVATE_WRITE_RESPONSE_LOST',
+    );
+
+    mocks.readOverride = null;
+    const sameTokenRetry = await addProduct(input, owner);
+    expect(sameTokenRetry.id).toBe(product.id);
+    expect(await loadShelf()).toHaveLength(1);
+
+    const newIdenticalIntent = await addProduct(input, {
+      ownerId: 'owner-a',
+      operationId: 'new-intent-after-uncertain-ack',
+    });
+    expect(newIdenticalIntent.id).not.toBe(product.id);
+    expect(await loadShelf()).toHaveLength(2);
+  });
+
+  it('does not treat whole-Shelf absence as proof that acknowledgement committed', async () => {
+    const owner = { ownerId: 'owner-a' };
+    const product = await addProduct(
+      { name: 'Missing Shelf is not an acknowledgement', addedVia: 'manual' },
+      owner,
+    );
+    mocks.updateFailure = new Error('PRIVATE_WRITE_FAILED');
+    mocks.readOverride = { status: 'absent' };
+
+    await expect(acknowledgeProductAdd(product.id, owner)).rejects.toThrow(
+      'PRIVATE_WRITE_FAILED',
+    );
+  });
+
+  it('bounds pending add mappings and preserves the full prior envelope at the limit', async () => {
+    const owner = { ownerId: 'owner-a' };
+    for (let index = 0; index < 128; index += 1) {
+      await addProduct({ name: `Unacknowledged ${index}`, addedVia: 'manual' }, owner);
+    }
+    const original = mocks.storage.get(KEY);
+
+    await expect(
+      addProduct({ name: 'One beyond the bounded ledger', addedVia: 'manual' }, owner),
+    ).rejects.toThrow('SHELF_ADD_OPERATION_LIMIT_REACHED');
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('prunes only the oldest acknowledged tombstone when the bounded ledger needs room', async () => {
+    const products: Awaited<ReturnType<typeof addProduct>>[] = [];
+    for (let index = 0; index < 128; index += 1) {
+      products.push(
+        await addProduct(
+          { name: `Bounded mapping ${index}`, addedVia: 'manual' },
+          { ownerId: 'owner-a', operationId: `operation-${String(index).padStart(3, '0')}` },
+        ),
+      );
+    }
+    await acknowledgeProductAdd(products[0]!.id, { ownerId: 'owner-a' });
+    await acknowledgeProductAdd(products[1]!.id, { ownerId: 'owner-a' });
+
+    await addProduct(
+      { name: 'Makes room by pruning one tombstone', addedVia: 'manual' },
+      { ownerId: 'owner-a', operationId: 'operation-new' },
+    );
+
+    const stored = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
+      addOperations: { operationId: string; status: string }[];
+    };
+    expect(stored.addOperations).toHaveLength(128);
+    expect(stored.addOperations).toContainEqual(
+      expect.objectContaining({ operationId: 'operation-001', status: 'acknowledged' }),
+    );
+    expect(stored.addOperations.some((row) => row.operationId === 'operation-000')).toBe(false);
+    expect(stored.addOperations.filter((row) => row.status === 'pending')).toHaveLength(127);
   });
 
   it('serializes 100 distinct simultaneous edits without losing any update', async () => {

@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
+import { useAuth } from '@/lib/auth/AuthProvider';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { devWarn } from '@/lib/observability/safeLog';
 import {
@@ -14,6 +15,7 @@ import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { supabase } from '@/lib/supabase/client';
 
 import {
+  acknowledgeProductAdd,
   addProduct,
   reAddProduct,
   removeProduct,
@@ -149,6 +151,8 @@ export function mirrorShelfDeleteForOwner(ownerScope: OwnerQueryScope, id: strin
 export function useShelfMutations() {
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
+  const { user } = useAuth();
+  const ownerId = user?.id.trim();
   const invalidate = () => {
     if (!isOwnerQueryScopeCurrent(ownerScope)) return Promise.resolve();
     return qc.invalidateQueries({ queryKey: ownerQueryPrefixes.shelf(ownerScope) });
@@ -168,16 +172,33 @@ export function useShelfMutations() {
   };
 
   return {
-    async add(input: NewShelfProduct): Promise<ShelfProduct> {
+    async add(input: NewShelfProduct, operationId: string): Promise<ShelfProduct> {
       return runWithFailureRecovery(() =>
         runOwnerQueryOperation(ownerScope, async (lease) => {
-          const product = await addProduct(input);
+          const product = await addProduct(input, {
+            ...(ownerId ? { ownerId } : {}),
+            operationId,
+            assertCurrent: lease.assertCurrent,
+          });
           lease.assertCurrent();
           track('product_added', { added_via: input.addedVia });
           void mirrorShelfUpsertForOwner(ownerScope, product);
           await invalidate();
           lease.assertCurrent();
           return product;
+        }),
+      );
+    },
+
+    /** Clear the durable retry receipt only after the route received the row. */
+    async acknowledgeAdd(productId: string): Promise<void> {
+      await runWithFailureRecovery(() =>
+        runOwnerQueryOperation(ownerScope, async (lease) => {
+          await acknowledgeProductAdd(productId, {
+            ...(ownerId ? { ownerId } : {}),
+            assertCurrent: lease.assertCurrent,
+          });
+          lease.assertCurrent();
         }),
       );
     },

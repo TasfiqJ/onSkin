@@ -761,13 +761,18 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('if (!hasProductDraft)');
     expect(source).toContain('accessibilityLabel="Add product by hand"');
     expect(source).toContain("router.replace('/shelf/manual')");
-    expect(source).toContain('if (!hasProductDraft || !productName || !canSave || saving) return;');
+    expect(source).toContain('!submissionAttemptRef.current');
     expect(source).toContain('accessibilityRole="radio"');
     expect(source).toContain('accessibilityLabel={title}');
     expect(source).toContain('accessibilityHint={subtitle}');
     expect(source).toContain('name: productName');
-    expect(source).toContain('const addedProduct = await m.add({');
-    expect(source).toContain('params: { addedProductId: addedProduct.id }');
+    expect(source).toContain(
+      'const submissionAttemptRef = useRef<ShelfAddSubmissionAttempt | null>(null);',
+    );
+    expect(source).toContain('submissionAttemptRef.current = attempt;');
+    expect(source).toContain('const addedProduct = await m.add(attempt.input, attempt.operationId);');
+    expect(source).toContain('await m.acknowledgeAdd(attempt.productId);');
+    expect(source).toContain('params: { addedProductId: productId }');
     expect(source).not.toContain("name: draft.name || 'Product'");
     expect(source).toContain('<Sheet fallbackRoute={fallbackRoute} backdropAccessible={false}>');
     expect(source).toContain(
@@ -801,6 +806,14 @@ describe('Shelf route mobile contracts', () => {
     );
     expect(source).not.toContain("'rounded-pill px-3.5 py-2'");
     expect(source).not.toContain("'rounded-pill px-4 py-2'");
+  });
+
+  it('keeps one caller-owned add token stable until intake reset rotates it', () => {
+    const source = readFeatureFile('IntakeContext.tsx');
+
+    expect(source).toContain('const [addOperationId, setAddOperationId] = useState');
+    expect(source).toContain('addOperationId,');
+    expect(source).toContain('setAddOperationId(Crypto.randomUUID());');
   });
 
   it('keeps Shelf product detail management actions above sub-pixel 44px targets', () => {
