@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-15T20:35:18.941Z",
+  "generatedAt": "2026-07-15T23:47:58.110Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "87eef049f4cf2e10bd3a7efa42208b1bb50b0c87",
+  "gitSha": "2be7a7c07b33cc15a03d84e6a91f54f555be631d",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
-    "bytes": 133452,
-    "sha256": "5cb7ec52a3214fe26ca489c5a686fff99f50b9ca3a1f0fa2f612c694138e3276",
-    "currentSha256": "5cb7ec52a3214fe26ca489c5a686fff99f50b9ca3a1f0fa2f612c694138e3276"
+    "bytes": 134170,
+    "sha256": "8cb4bf5afb255e5fd017e5ccd667898cd77770a16090d7188e3f3be2a1851d6e",
+    "currentSha256": "8cb4bf5afb255e5fd017e5ccd667898cd77770a16090d7188e3f3be2a1851d6e"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -261,7 +261,7 @@
       "requiredReviewer": "qualified trademark, copyright, and product/FTO counsel",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "96a428696c9d6e835846dd02c29a8ed20a60de2be85832c7d2834fe1d5c63920",
+      "reviewSnapshotSha256": "43713a087e9296ef737e0f843d7e199d332f9224eb4fadd0953fa837389e3605",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -284,8 +284,8 @@
         {
           "path": "supabase/config.toml",
           "exists": true,
-          "bytes": 3382,
-          "sha256": "d9611198f104f626fde54fbb6843678427002860211319263a5dd8c8f78a4aa6"
+          "bytes": 3705,
+          "sha256": "9e9a43474b23512ede53dc855800a5671da39255ad65babec0263241bc08154a"
         }
       ]
     },
@@ -759,7 +759,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "6a2df2e4ca3a4be0b31c6c16ba02efc808d59fac1a4ae74134dbbf6893bf7b5a",
+      "reviewSnapshotSha256": "7f3d49fab98d5c47ff5b4b6c605a09c0b4955e1a154ee5e3d2df321bd17cb444",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -812,8 +812,8 @@
         {
           "path": "supabase/functions/data-export/index.ts",
           "exists": true,
-          "bytes": 20692,
-          "sha256": "04069ff5b37dfbff770070e6554e8213fe31206e9d6d5e8a6db6b10baf8be0e0"
+          "bytes": 22497,
+          "sha256": "3743c7a665c8f6f885bf4787a7809174874391373d488892be6367b2d2830908"
         },
         {
           "path": "supabase/functions/data-export/exportCore.ts",
@@ -919,7 +919,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "92dec4d5efbe2e52ff61e3ff07eb045a0c6ad52fd5ba2e2482de01be192e9ce8",
+      "reviewSnapshotSha256": "8ab077cca193fb32b50a6fbdc9ae00676b01562a30e5d0b2909738adfe136f73",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -948,8 +948,8 @@
         {
           "path": "apps/mobile/src/lib/auth/accountDeletionPublication.integration.test.ts",
           "exists": true,
-          "bytes": 21233,
-          "sha256": "12ef059f3cc3e70df9d67157871757a088e7c0d3ba671f3195396bd318c1a465"
+          "bytes": 21277,
+          "sha256": "f8871c921b1af255acc3ebd6257b060bea1c31c89dcda5706e8a0f6315d03158"
         },
         {
           "path": "apps/mobile/src/lib/auth/accountGeneration.test.ts",
@@ -1014,14 +1014,14 @@
         {
           "path": "apps/mobile/src/lib/auth/accountUpgrade.test.ts",
           "exists": true,
-          "bytes": 14800,
-          "sha256": "2b1a2398873ff719ad602714e5f61f71cf9c6078347f808df57b7890054ae9c3"
+          "bytes": 20379,
+          "sha256": "92898ecc3eee1c793f635428fae4ef39fa7e2ba063fda9c9fff5c37a76e11509"
         },
         {
           "path": "apps/mobile/src/lib/auth/accountUpgrade.ts",
           "exists": true,
-          "bytes": 6501,
-          "sha256": "a7ebfe19b607448174ca2fd73be610cb3a2b44b311ccebfaa7fa09e0c97e26ac"
+          "bytes": 9601,
+          "sha256": "2eb750806a98057b7b904f68d0b6bbfd32997aa7c5bf1bbd9a898fe2e17e7db7"
         },
         {
           "path": "apps/mobile/src/lib/auth/accountUpgradeE2E.test.ts",
@@ -1038,20 +1038,32 @@
         {
           "path": "apps/mobile/src/lib/auth/apple.test.ts",
           "exists": true,
-          "bytes": 4973,
-          "sha256": "6990d01155724b6a0cff47c40fdfa8937626d14c8eccb32c4c832d856bb708a7"
+          "bytes": 9443,
+          "sha256": "24de675100b4388abbcec5c41242a79ed16ad3c48428287d5ea3216cf4d36b81"
         },
         {
           "path": "apps/mobile/src/lib/auth/apple.ts",
           "exists": true,
-          "bytes": 1664,
-          "sha256": "830335de64c3bab09efd0903469fcdd7b2a5c7d922dd35156cf20e29aa6ca287"
+          "bytes": 5302,
+          "sha256": "ba35fc4aa35ed8f15bf0bf6acf200f135e7fecbf6ab022bc1f9366754925c53f"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/appleAuthLifecycleClient.test.ts",
+          "exists": true,
+          "bytes": 5154,
+          "sha256": "1abdfa0b0744f5467978cf23fd30d2a3d4457d7940aad100ca4af644e4b8e207"
+        },
+        {
+          "path": "apps/mobile/src/lib/auth/appleAuthLifecycleClient.ts",
+          "exists": true,
+          "bytes": 4479,
+          "sha256": "110a51f259599138f96b2fc5809642855a1d2beed3d1c276d97bdc0d9746ab2f"
         },
         {
           "path": "apps/mobile/src/lib/auth/appleCredentialAuthProviderContracts.test.ts",
           "exists": true,
-          "bytes": 5279,
-          "sha256": "69843cb20ae7aa03b18b96995c2d534620ae2f173d766ca9a211975c068363a8"
+          "bytes": 5632,
+          "sha256": "9ce0b7fe6a25b668e922314463aaf835f9fd79c511a54d1726467bfe7b6f91cb"
         },
         {
           "path": "apps/mobile/src/lib/auth/appleCredentialLifecycle.test.ts",
@@ -1078,6 +1090,12 @@
           "sha256": "15fdc37f16cd24fdec374a7cb6591446e3f10ed0c3a74fec8712b4cfa073c8bd"
         },
         {
+          "path": "apps/mobile/src/lib/auth/appleSignInAuthProviderContracts.test.ts",
+          "exists": true,
+          "bytes": 1922,
+          "sha256": "ee95e0a9f619b910c6f18f9beffc351bfd672764d50bf157f97a8cb80279a43e"
+        },
+        {
           "path": "apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts",
           "exists": true,
           "bytes": 2730,
@@ -1098,14 +1116,14 @@
         {
           "path": "apps/mobile/src/lib/auth/AuthProvider.lifecycle.test.ts",
           "exists": true,
-          "bytes": 82529,
-          "sha256": "fb0397f3f1c3a9a463d20ecbaf1a19fee60d5121adbadac106ef22856deb7401"
+          "bytes": 88869,
+          "sha256": "87ee0fc3aa0463e034b9176c3890c31f60409321cc24842a7cb29fa5f2a91884"
         },
         {
           "path": "apps/mobile/src/lib/auth/AuthProvider.tsx",
           "exists": true,
-          "bytes": 96116,
-          "sha256": "78c33eb1997456c2d50f06869e8208474c6afce9ac67a26d69505aa3e8177445"
+          "bytes": 99108,
+          "sha256": "b5824cfe7e1fc40b586fcc950e445112cb274cccf54a270eb1747ee89cf8040e"
         },
         {
           "path": "apps/mobile/src/lib/auth/google.ts",
@@ -1194,8 +1212,8 @@
         {
           "path": "docs/phase-3/data-inventory.md",
           "exists": true,
-          "bytes": 16182,
-          "sha256": "09a230298d739de01a0e9bb2fb22d9f8a51897c20bcccbf251f7a86d027ad056"
+          "bytes": 18228,
+          "sha256": "32d58bfd29e72e194abdb7dded742d9c09fa1af2f922bb5a00dbf3c1b61b0163"
         },
         {
           "path": "docs/hugeToDo/health-processor-inventory-v1.json",
@@ -1224,7 +1242,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "42cee4b58f7825279db826e017e1fe37b4a8f7593c66db6007fb90da685a9815",
+      "reviewSnapshotSha256": "d2a89bd9eb79cc914f86b0be732330dcfec1f90b8b0afc998fa6aac5415afdfd",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1259,8 +1277,8 @@
         {
           "path": "docs/hugeToDo/credential-inventory.json",
           "exists": true,
-          "bytes": 19405,
-          "sha256": "e8935e4c5bd4fa9e2b5c3a06cf53fcb83f83deaf07523ac3cef9cd5364ba63d0"
+          "bytes": 22214,
+          "sha256": "8424ffa22560bc3a82d0b820cc79d509e2de54dea5c1a0ae353ad09ada160d3f"
         },
         {
           "path": "apps/mobile/src/features/onboarding/consentCopy.ts",
@@ -1523,8 +1541,8 @@
         {
           "path": "supabase/functions/consent-withdrawal/index.ts",
           "exists": true,
-          "bytes": 9310,
-          "sha256": "ee7324f11dbe77db59a9d0e24c55b871ebdea571f7f8a6ff69f12a2549e2e157"
+          "bytes": 10539,
+          "sha256": "758fc421c25906db740c15e77e3a3f444dc3b598c5e44bb1ad265bdee182fb0c"
         },
         {
           "path": "supabase/functions/consent-withdrawal/healthLifecycleCore.ts",
@@ -2872,7 +2890,7 @@
       "requiredReviewer": "qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "e9ebcc0fb4d64e3ee60e774e02aa98ed4540d79dd70315e234a3a85a8c3ae42c",
+      "reviewSnapshotSha256": "d45872bc60beb74f849b6dec93b08be0322191bb5b9c1fa1a174e37d2f2d5372",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -3039,8 +3057,8 @@
         {
           "path": "apps/mobile/src/features/subscription/serverContracts.test.ts",
           "exists": true,
-          "bytes": 6907,
-          "sha256": "027e2992fa251363eba87ec2399dd2b8502a6053de4745f3ab83a43876520176"
+          "bytes": 7049,
+          "sha256": "daca502833a84b5c01167cbe3b1c0c72e2042bc6514cbda4e56329f284f3f5be"
         },
         {
           "path": "apps/mobile/src/features/subscription/store.test.ts",

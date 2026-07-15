@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T20:35:22.237Z",
+  "generatedAt": "2026-07-15T23:48:46.913Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin-main-pay06\\docs\\phase-4\\generated\\obf-fixture-import.json",
-  "gitSha": "87eef049f4cf2e10bd3a7efa42208b1bb50b0c87",
+  "gitSha": "2be7a7c07b33cc15a03d84e6a91f54f555be631d",
   "gitStatus": "",
   "source": "open_beauty_facts",
   "importMode": "export_or_fixture",
@@ -87,8 +87,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 25674,
-      "sha256": "d3121bec90301e1bd3cb5129105946ef524d96f3edc3fa9f5c8e5a072713e7c5"
+      "bytes": 26529,
+      "sha256": "7efcdf7c170856b835cbb6dc08d5b6f64ef47f751035c1be7fc92957863771a5"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -165,8 +165,8 @@
     {
       "path": "supabase/functions/catalog-report/index.ts",
       "exists": true,
-      "bytes": 6172,
-      "sha256": "4eec64a1c25be201a2200be9056b986d3cd32391d06777b1de37cb7dbc2cdcf1"
+      "bytes": 7233,
+      "sha256": "880ce46ef60f12c719c20c5584d35def6de24e08dcbd9358cdb6791a67c0807f"
     },
     {
       "path": "supabase/functions/catalog-report/privacy.ts",
@@ -189,8 +189,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 24200,
-      "sha256": "4b1c8b7bb69b2d489c0b455022b2568bb9d3a8e6cc91ead4e6c8e09376bd3e5a"
+      "bytes": 24292,
+      "sha256": "463a0aa7832651f966fe437216da56c7c50349f8016c9ab5cf0b5e52fb0bc2c5"
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
@@ -219,14 +219,14 @@
     {
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
-      "bytes": 46711,
-      "sha256": "bf5b7778ba6d64c4b79cb43c3716bd5e148b7aa09cb80eac9a243109a66f6768"
+      "bytes": 46713,
+      "sha256": "209f8be3a5fa485d0d633d60be0a20b6708238b27e310acbb52c7c85949de7a5"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
-      "bytes": 28926,
-      "sha256": "d009ce79ae5feae440e00da1f03ab3ec2a5b4732df35c0aada04bb21ea75989c"
+      "bytes": 28928,
+      "sha256": "de59e374092fe3c66f6b54aad6c57eae1915638f646e2085d9d83f650efffbf0"
     },
     {
       "path": "docs/phase-4/odbl-compliance-memo.md",

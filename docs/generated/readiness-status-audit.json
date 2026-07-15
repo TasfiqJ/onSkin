@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T20:35:10.366Z",
+  "generatedAt": "2026-07-15T23:47:42.193Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -81,10 +81,10 @@
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-15",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 266,
-  "expectedMobileTests": 3026,
-  "actualMobileTestFiles": 266,
-  "expectedTestPhrase": "266 mobile test files / 3026 tests",
+  "expectedMobileTestFiles": 269,
+  "expectedMobileTests": 3087,
+  "actualMobileTestFiles": 269,
+  "expectedTestPhrase": "269 mobile test files / 3087 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -94,19 +94,19 @@
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 266,
-          "tests": 3026,
-          "source": "266 mobile test files / 3026 tests"
+          "testFiles": 269,
+          "tests": 3087,
+          "source": "269 mobile test files / 3087 tests"
         },
         {
-          "testFiles": 266,
-          "tests": 3026,
-          "source": "266 mobile test files / 3026 tests"
+          "testFiles": 269,
+          "tests": 3087,
+          "source": "269 mobile test files / 3087 tests"
         },
         {
-          "testFiles": 266,
-          "tests": 3026,
-          "source": "266 mobile test files / 3026 tests"
+          "testFiles": 269,
+          "tests": 3087,
+          "source": "269 mobile test files / 3087 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -122,9 +122,9 @@
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 266,
-          "tests": 3026,
-          "source": "266 mobile test files / 3026 tests"
+          "testFiles": 269,
+          "tests": 3087,
+          "source": "269 mobile test files / 3087 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -143,9 +143,20 @@
           "testFiles": 266,
           "tests": 3026,
           "source": "266 test files / 3,026 tests"
+        },
+        {
+          "testFiles": 269,
+          "tests": 3087,
+          "source": "269 test files /\n3087 tests"
         }
       ],
-      "unexpectedTestBaselines": [],
+      "unexpectedTestBaselines": [
+        {
+          "testFiles": 266,
+          "tests": 3026,
+          "source": "266 test files / 3,026 tests"
+        }
+      ],
       "missingManifestNeedles": [
         "375 x 812",
         "390 x 844",

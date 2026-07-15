@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T20:35:19.633Z",
+  "generatedAt": "2026-07-15T23:48:03.804Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,15 +73,15 @@
     ]
   },
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "87eef049f4cf2e10bd3a7efa42208b1bb50b0c87",
+  "gitSha": "2be7a7c07b33cc15a03d84e6a91f54f555be631d",
   "gitStatus": "",
   "files": [
     {
       "packet": "packetContract",
       "path": "package.json",
       "exists": true,
-      "bytes": 25674,
-      "sha256": "d3121bec90301e1bd3cb5129105946ef524d96f3edc3fa9f5c8e5a072713e7c5"
+      "bytes": 26529,
+      "sha256": "7efcdf7c170856b835cbb6dc08d5b6f64ef47f751035c1be7fc92957863771a5"
     },
     {
       "packet": "packetContract",
@@ -178,8 +178,8 @@
       "packet": "packetContract",
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 24200,
-      "sha256": "4b1c8b7bb69b2d489c0b455022b2568bb9d3a8e6cc91ead4e6c8e09376bd3e5a"
+      "bytes": 24292,
+      "sha256": "463a0aa7832651f966fe437216da56c7c50349f8016c9ab5cf0b5e52fb0bc2c5"
     },
     {
       "packet": "packetContract",
@@ -234,8 +234,8 @@
       "packet": "legalRegulatory",
       "path": "docs/phase-3/data-inventory.md",
       "exists": true,
-      "bytes": 16182,
-      "sha256": "09a230298d739de01a0e9bb2fb22d9f8a51897c20bcccbf251f7a86d027ad056"
+      "bytes": 18228,
+      "sha256": "32d58bfd29e72e194abdb7dded742d9c09fa1af2f922bb5a00dbf3c1b61b0163"
     },
     {
       "packet": "legalRegulatory",
@@ -297,29 +297,29 @@
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 133452,
-      "sha256": "5cb7ec52a3214fe26ca489c5a686fff99f50b9ca3a1f0fa2f612c694138e3276"
+      "bytes": 134170,
+      "sha256": "8cb4bf5afb255e5fd017e5ccd667898cd77770a16090d7188e3f3be2a1851d6e"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 87186,
-      "sha256": "2ded969b317cdf2ee5e050af2e10907328934a5b1c89b5ac46f928201c543b9f"
+      "bytes": 87643,
+      "sha256": "349f641afc4217350d0fe0ffb22504856c2b3acafc3fc03362ca138fa7848b78"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 137002,
-      "sha256": "c24dcaed39823cb328d08f7626d89fe3f0898ebb4f605a721aac45d716236bf5"
+      "bytes": 137720,
+      "sha256": "d04edc0811447b433936e17ae6d635d01a438dc9c6295984adb62dc25b969727"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 100576,
-      "sha256": "f4c851ba5f0a2e10edb60df83f207922a6444756196c7fa34c480619e3b70405"
+      "bytes": 101033,
+      "sha256": "05798174f63399fadda3945879a5330d4b5e67631cacd57533aeaf8525d211e5"
     },
     {
       "packet": "clinical",
@@ -374,29 +374,29 @@
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 133452,
-      "sha256": "5cb7ec52a3214fe26ca489c5a686fff99f50b9ca3a1f0fa2f612c694138e3276"
+      "bytes": 134170,
+      "sha256": "8cb4bf5afb255e5fd017e5ccd667898cd77770a16090d7188e3f3be2a1851d6e"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 87186,
-      "sha256": "2ded969b317cdf2ee5e050af2e10907328934a5b1c89b5ac46f928201c543b9f"
+      "bytes": 87643,
+      "sha256": "349f641afc4217350d0fe0ffb22504856c2b3acafc3fc03362ca138fa7848b78"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 137002,
-      "sha256": "c24dcaed39823cb328d08f7626d89fe3f0898ebb4f605a721aac45d716236bf5"
+      "bytes": 137720,
+      "sha256": "d04edc0811447b433936e17ae6d635d01a438dc9c6295984adb62dc25b969727"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 100576,
-      "sha256": "f4c851ba5f0a2e10edb60df83f207922a6444756196c7fa34c480619e3b70405"
+      "bytes": 101033,
+      "sha256": "05798174f63399fadda3945879a5330d4b5e67631cacd57533aeaf8525d211e5"
     },
     {
       "packet": "cosmeticChemistry",
@@ -486,8 +486,8 @@
       "packet": "privacyPlatform",
       "path": "docs/phase-3/data-inventory.md",
       "exists": true,
-      "bytes": 16182,
-      "sha256": "09a230298d739de01a0e9bb2fb22d9f8a51897c20bcccbf251f7a86d027ad056"
+      "bytes": 18228,
+      "sha256": "32d58bfd29e72e194abdb7dded742d9c09fa1af2f922bb5a00dbf3c1b61b0163"
     },
     {
       "packet": "privacyPlatform",
@@ -514,8 +514,8 @@
       "packet": "privacyPlatform",
       "path": "docs/hugeToDo/credential-inventory.json",
       "exists": true,
-      "bytes": 19405,
-      "sha256": "e8935e4c5bd4fa9e2b5c3a06cf53fcb83f83deaf07523ac3cef9cd5364ba63d0"
+      "bytes": 22214,
+      "sha256": "8424ffa22560bc3a82d0b820cc79d509e2de54dea5c1a0ae353ad09ada160d3f"
     },
     {
       "packet": "privacyPlatform",
@@ -892,8 +892,8 @@
       "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/index.ts",
       "exists": true,
-      "bytes": 20692,
-      "sha256": "04069ff5b37dfbff770070e6554e8213fe31206e9d6d5e8a6db6b10baf8be0e0"
+      "bytes": 22497,
+      "sha256": "3743c7a665c8f6f885bf4787a7809174874391373d488892be6367b2d2830908"
     },
     {
       "packet": "privacyPlatform",
@@ -927,8 +927,8 @@
       "packet": "privacyPlatform",
       "path": "supabase/functions/consent-withdrawal/index.ts",
       "exists": true,
-      "bytes": 9310,
-      "sha256": "ee7324f11dbe77db59a9d0e24c55b871ebdea571f7f8a6ff69f12a2549e2e157"
+      "bytes": 10539,
+      "sha256": "758fc421c25906db740c15e77e3a3f444dc3b598c5e44bb1ad265bdee182fb0c"
     },
     {
       "packet": "privacyPlatform",
@@ -1046,8 +1046,8 @@
       "packet": "privacyPlatform",
       "path": "scripts/phase9/live-data-rights.mjs",
       "exists": true,
-      "bytes": 65167,
-      "sha256": "09ec415fb85071cba9a483ad07c94936713612ce00bbb92c25ee1609c6de5c11"
+      "bytes": 65161,
+      "sha256": "0e6d7604437b35fa2e9f1fa2a6afbee6743cac829f58f0861e9aff46a28df13a"
     },
     {
       "packet": "privacyPlatform",
