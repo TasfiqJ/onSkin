@@ -6,6 +6,7 @@ import {
 
 export const REQUEST_ENDPOINTS = [
   'account_deletion',
+  'ask_grounded',
   'catalog_lookup',
   'catalog_report',
   'catalog_search',
@@ -96,6 +97,8 @@ export type RequestPolicy = Readonly<{
   signal?: AbortSignal;
   runtime?: RequestRuntime;
 }>;
+
+export type LeasedRequestPolicy = Omit<RequestPolicy, 'ownerScoped'>;
 
 type NormalizedFailure = Readonly<{
   kind: RequestFailureKind;
@@ -555,4 +558,15 @@ export function runRequest<T>(
 ): Promise<T> {
   if (policy.ownerScoped === false) return executeWithLease(policy, operation, null);
   return runAccountGenerationOperation((lease) => executeWithLease(policy, operation, lease));
+}
+
+/** Reuse an already-captured owner lease instead of nesting another generation
+ * operation. The request still gets the shared deadline, abort race, retry
+ * taxonomy, response bound, and content-free metric handling. */
+export function runRequestWithLease<T>(
+  lease: AccountGenerationLease,
+  policy: LeasedRequestPolicy,
+  operation: (context: RequestAttemptContext) => Promise<T>,
+): Promise<T> {
+  return executeWithLease(policy, operation, lease);
 }

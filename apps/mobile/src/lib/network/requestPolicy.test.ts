@@ -8,6 +8,7 @@ import {
 import {
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  runAccountGenerationOperation,
 } from '@/lib/auth/accountGeneration';
 
 import {
@@ -15,6 +16,7 @@ import {
   RequestPolicyError,
   resetRequestMetricSamplesForTests,
   runRequest,
+  runRequestWithLease,
 } from './requestPolicy';
 
 function httpError(status: number, retryAfter?: string): Error {
@@ -65,6 +67,35 @@ describe('request policy network failure matrix', () => {
     expect(readRequestMetricSamples()).toEqual([
       { endpoint: 'catalog_lookup', durationMs: 12.35, statusClass: '2xx', attemptCount: 1 },
     ]);
+  });
+
+  it('reuses an existing owner lease without opening a nested request operation', async () => {
+    const operation = vi.fn(async () => ({ answer: 'bounded' }));
+
+    await expect(
+      runAccountGenerationOperation((lease) =>
+        runRequestWithLease(
+          lease,
+          {
+            endpoint: 'ask_grounded',
+            deadlineMs: 1_000,
+            idempotent: true,
+            maxResponseBytes: 100,
+          },
+          (context) => {
+            expect(context.ownerLease).toBe(lease);
+            return operation();
+          },
+        ),
+      ),
+    ).resolves.toEqual({ answer: 'bounded' });
+
+    expect(operation).toHaveBeenCalledOnce();
+    expect(readRequestMetricSamples()[0]).toMatchObject({
+      endpoint: 'ask_grounded',
+      statusClass: '2xx',
+      attemptCount: 1,
+    });
   });
 
   it('enforces the deadline even when the underlying operation ignores its signal', async () => {

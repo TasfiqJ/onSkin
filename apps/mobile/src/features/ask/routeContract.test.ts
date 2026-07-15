@@ -228,9 +228,13 @@ describe('Ask route launch contracts', () => {
     expect(source).not.toContain('void runGroundedTurnForOwner');
     expect(reservationSource).toContain('export function runGroundedTurnForOwner');
     expect(reservationSource).toContain("access.kind === 'trial'");
-    expect(reservationSource).toContain("Readonly<{ kind: 'uncapped' }>");
+    expect(reservationSource).toContain("kind: 'uncapped';");
     expect(reservationSource).toContain('await reserveTrialGroundedTurn');
-    expect(reservationSource).toContain('return operation({');
+    expect(reservationSource).toContain("endpoint: 'ask_grounded'");
+    expect(reservationSource).toContain('runRequestWithLease(');
+    expect(reservationSource).toContain('queryKeys.askGroundedTurns(ownerScope, access.period)');
+    expect(reservationSource).toContain('published = execution.publish(');
+    expect(reservationSource).toContain('requestFingerprint: GroundedTurnRequestFingerprint');
   });
 
   it('reports persistent recommendation retry failures to the Ask recovery notice', () => {
