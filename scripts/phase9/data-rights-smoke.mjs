@@ -938,8 +938,22 @@ block(
 );
 block(
   errors,
-  /preparePendingAccountDeletion\(owner\.ownerBinding\)/.test(settingsActionsSource) &&
+  /readPersistedSupabaseSessionCandidate\(\)/.test(settingsActionsSource) &&
     /supabase\.auth\.getUser\(session\.access_token\)/.test(settingsActionsSource) &&
+    /requireSupabaseRemoteSessionBinding\(session\.access_token, user\.id\)/.test(
+      settingsActionsSource,
+    ) &&
+    /assertStoreTransactionDeletionJournalReadable\(owner\.ownerBinding\)/.test(
+      settingsActionsSource,
+    ) &&
+    /beginSupabaseRemoteDeletionBoundary\(remoteBinding\)/.test(settingsActionsSource) &&
+    /startRevenueCatDeletionQuiesce\(expectedUserId\)/.test(settingsActionsSource) &&
+    /await quiescing\.publicationQuiescence/.test(settingsActionsSource) &&
+    /preparePendingAccountDeletion\(quiescing\.owner\.ownerBinding\)/.test(settingsActionsSource) &&
+    /accountDeletionRecordMatchesOwner\(pending, quiescing\.owner\.ownerBinding\)/.test(
+      settingsActionsSource,
+    ) &&
+    /runWithSupabaseAccountDeletionRequestPermit/.test(settingsActionsSource) &&
     /Authorization: `Bearer \$\{owner\.accessToken\}`/.test(settingsActionsSource) &&
     /action: 'begin'/.test(settingsActionsSource) &&
     /idempotencyKey: pending\.idempotencyKey/.test(settingsActionsSource) &&
