@@ -788,30 +788,44 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
-  it('never sends an owner-A Apple code after an account boundary starts', async () => {
-    let releaseAppleCode!: (code: string) => void;
-    mocks.getAppleAuthorizationCodeForRevocation.mockImplementationOnce(
-      () =>
-        new Promise<string>((resolve) => {
-          releaseAppleCode = resolve;
-        }),
-    );
+  it.each(['resolve', 'reject'] as const)(
+    'detaches a never-settling owner-A Apple prompt and contains its late %s',
+    async (lateOutcome) => {
+      let resolveAppleCode!: (code: string) => void;
+      let rejectAppleCode!: (error: Error) => void;
+      mocks.getAppleAuthorizationCodeForRevocation.mockImplementationOnce(
+        () =>
+          new Promise<string>((resolve, reject) => {
+            resolveAppleCode = resolve;
+            rejectAppleCode = reject;
+          }),
+      );
 
-    const deletion = deleteAccount(mocks.signOut);
-    await vi.waitFor(() =>
-      expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledOnce(),
-    );
-    beginAccountGenerationBoundary();
-    try {
-      releaseAppleCode('single-use-code-for-a');
-      await expect(deletion).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
-    } finally {
-      endAccountGenerationBoundary();
-    }
+      const deletion = deleteAccount(mocks.signOut);
+      const rejected = expect(deletion).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+      await vi.waitFor(() =>
+        expect(mocks.getAppleAuthorizationCodeForRevocation).toHaveBeenCalledOnce(),
+      );
+      beginAccountGenerationBoundary();
+      try {
+        await waitForAccountGenerationOperationsToSettle();
+        await rejected;
+        expect(mocks.armAccountDeletionVendorFreeze).not.toHaveBeenCalled();
+        expect(mocks.invoke).not.toHaveBeenCalled();
+        expect(mocks.signOut).not.toHaveBeenCalled();
 
-    expect(mocks.invoke).not.toHaveBeenCalled();
-    expect(mocks.signOut).not.toHaveBeenCalled();
-  });
+        if (lateOutcome === 'resolve') resolveAppleCode('single-use-code-for-a');
+        else rejectAppleCode(new Error('late Apple reauthorization failure'));
+        await Promise.resolve();
+      } finally {
+        endAccountGenerationBoundary();
+      }
+
+      expect(mocks.armAccountDeletionVendorFreeze).not.toHaveBeenCalled();
+      expect(mocks.invoke).not.toHaveBeenCalled();
+      expect(mocks.signOut).not.toHaveBeenCalled();
+    },
+  );
 
   it('drains an in-flight owner-A freeze write before account-boundary cleanup', async () => {
     let releaseFreeze!: () => void;

@@ -133,7 +133,16 @@ async function requestAccountDeletion(lease: AccountGenerationLease): Promise<vo
     // Apple authorization codes are single-use. Cancellation, native failure,
     // or a blank refresh result must abort before the Edge Function can record
     // and freeze a deletion request. Every explicit retry reauthenticates again.
-    appleAuthorizationCode = await getAppleAuthorizationCodeForRevocation(data.user);
+    try {
+      appleAuthorizationCode = await awaitAccountGenerationLease(lease, () =>
+        getAppleAuthorizationCodeForRevocation(data.user),
+      );
+    } catch (error) {
+      // A prompt that ignores cancellation must not pin account isolation, and
+      // its late native error must never replace generation invalidation.
+      lease.assertCurrent();
+      throw error;
+    }
     lease.assertCurrent();
     if (!appleAuthorizationCode) throw new Error(APPLE_REAUTHORIZATION_REQUIRED);
   }
