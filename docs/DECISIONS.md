@@ -163,7 +163,7 @@ Use this format for every significant product, architecture, pricing, privacy, o
   shared account-access fence, focused source tests, and
   `docs/phase-9/apple-auth-lifecycle-operations-runbook.md`. The current local
   gate includes two clean resets, exact 54/0055 history, the full structural
-  suite plus 111 Apple pgTAP assertions, schema lint, empty shadow diff,
+  suite plus 114 Apple pgTAP assertions, schema lint, empty shadow diff,
   temporary type generation, 20 focused event/lifecycle Edge tests, and the
   47-test Apple auth work lane.
 - Risk: migration cutover blocks an existing Apple account until it completes

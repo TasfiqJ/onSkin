@@ -296,8 +296,16 @@ begin
   if not exists (select 1 from auth.users as users where users.id = p_user_id) then
     return false;
   end if;
-  if not public._apple_auth_has_identity(p_user_id) then
-    return true;
+  -- A lifecycle row remains authoritative after an Apple identity is unlinked.
+  -- Otherwise a terminal lifecycle could be bypassed by establishing a new
+  -- session through a retained alternate provider. Only an owner that has
+  -- neither an Apple identity nor any Apple lifecycle is not applicable.
+  if not exists (
+    select 1
+      from public.apple_auth_lifecycles as lifecycles
+     where lifecycles.user_id = p_user_id
+  ) then
+    return not public._apple_auth_has_identity(p_user_id);
   end if;
 
   return exists (
@@ -478,14 +486,14 @@ begin
     raise exception 'ACCOUNT_ACCESS_SESSION_REJECTED' using errcode = '28000';
   end if;
 
-  if not public._apple_auth_has_identity(v_user_id) then
-    return query select v_user_id, 'not_applicable'::text, 0::bigint;
-    return;
-  end if;
-
   select * into v_lifecycle
     from public.apple_auth_lifecycles as lifecycles
    where lifecycles.user_id = v_user_id;
+
+  if v_lifecycle.user_id is null and not public._apple_auth_has_identity(v_user_id) then
+    return query select v_user_id, 'not_applicable'::text, 0::bigint;
+    return;
+  end if;
 
   if public._account_access_allowed(v_user_id) then
     return query select v_user_id, 'active'::text, v_lifecycle.generation;

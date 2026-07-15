@@ -212,7 +212,7 @@ before code exchange without relying on Apple replay. Exact primary-App-ID
 registration and real Apple delivery remain external gates.
 
 The current local 0055 gate passed two clean resets, exact 54/0055 history, the
-full structural suite plus 111/111 Apple lifecycle pgTAP, schema lint, an empty
+full structural suite plus 114/114 Apple lifecycle pgTAP, schema lint, an empty
 shadow diff, temporary types, 20/20 focused event/lifecycle Edge tests, and the
 47-test Apple auth work lane.
 

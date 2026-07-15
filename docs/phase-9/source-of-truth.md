@@ -44,7 +44,7 @@ raw Apple subject is never persisted, and exact duplicate promotion remains an
 opportunistic idempotency path only.
 
 The current migration-0055 local replay gate passed two clean resets, exact
-54-migration history, the full structural pgTAP suite plus 111/111 Apple
+54-migration history, the full structural pgTAP suite plus 114/114 Apple
 lifecycle assertions, schema lint, an empty migration shadow diff, temporary
 type generation, 20/20 focused Apple event/lifecycle Edge tests, and the
 47-test Apple auth work lane. This evidence is local and disposable; it does not

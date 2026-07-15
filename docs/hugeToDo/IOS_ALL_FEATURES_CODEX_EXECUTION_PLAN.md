@@ -342,7 +342,7 @@ review, and App Review remain required. Operations are defined in
 `docs/phase-9/apple-auth-lifecycle-operations-runbook.md`.
 
 The local migration-0055 replay gate passed two clean resets, exact 54/0055
-history, the full structural suite plus 111/111 Apple pgTAP, schema lint, empty
+history, the full structural suite plus 114/114 Apple pgTAP, schema lint, empty
 shadow diff, temporary types, 20/20 focused event/lifecycle Edge tests, and the
 47-test Apple auth work lane. These results advance source evidence only.
 

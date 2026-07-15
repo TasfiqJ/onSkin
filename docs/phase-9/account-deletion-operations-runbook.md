@@ -310,7 +310,7 @@ deletion graph, and returns `blocked` before marking or exchanging the one-use
 code. Duplicate Apple delivery is not required for this recovery closure, and
 the transient raw subject is never persisted.
 
-This 0055 path passed two clean resets, the full structural suite plus 111/111
+This 0055 path passed two clean resets, the full structural suite plus 114/114
 Apple lifecycle pgTAP, 20/20 focused event/lifecycle Edge tests, and the
 47-test Apple auth work lane. Those local results do not prove hosted Apple
 delivery, provider revocation, Cron continuity, or physical-device behavior.

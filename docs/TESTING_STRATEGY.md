@@ -95,7 +95,7 @@ reuse, and the 60-second export URL bound. Apple `TRANSFERRED` remains a tested
 fail-closed `credential_transferred` result, not an approved transfer policy.
 
 The current post-0055 local gate passed two clean resets, exact 54-migration
-history, the full structural pgTAP suite plus 111/111 Apple lifecycle
+history, the full structural pgTAP suite plus 114/114 Apple lifecycle
 assertions, schema lint, an empty migration shadow diff, temporary type
 generation, 20/20 focused Apple event/lifecycle Edge tests, and the 47-test
 Apple auth work lane. The current full mobile suite also passes 269 test files /

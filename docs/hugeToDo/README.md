@@ -42,7 +42,7 @@ App Review remain open. Successful daily validation advances both subject and
 vault key versions, but dormant or failing rows still require zero-row evidence,
 recapture/reauthorization, or lifecycle retirement before old-key removal.
 The local 0055 replay gate is green: two clean resets, exact 54/0055 history,
-the full structural suite plus 111/111 Apple pgTAP, lint, empty shadow diff,
+the full structural suite plus 114/114 Apple pgTAP, lint, empty shadow diff,
 temporary types, 20/20 focused event/lifecycle Edge tests, and the 47-test Apple
 auth work lane. This is not hosted or device acceptance.
 

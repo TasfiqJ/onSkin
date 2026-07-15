@@ -270,7 +270,7 @@ user recapture/reauthorization, or lifecycle retirement before an old key can be
 Hosted cutover, live Apple event delivery, Cron/Vault continuity, stale-JWT denial, and
 physical-iPhone proof remain open.
 The post-0055 local gate passed two clean resets, exact 54-migration history, the full
-structural pgTAP suite plus 111 Apple lifecycle assertions, schema lint, an empty shadow
+structural pgTAP suite plus 114 Apple lifecycle assertions, schema lint, an empty shadow
 diff, temporary type generation, 20 focused event/lifecycle Edge tests, and the 47-test
 Apple auth work lane. These results do not replace hosted or device evidence.
 Hosted non-destructive health-consent worker/Storage/backup and physical-iPhone proof,

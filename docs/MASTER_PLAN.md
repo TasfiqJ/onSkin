@@ -784,7 +784,7 @@ fails closed as `credential_transferred`, but no transfer/migration policy is ap
 
 [Confirmed] The migration-0055 candidate subsequently passed two clean resets,
 exact 54-migration history through 0055, the full structural pgTAP suite plus
-111/111 Apple lifecycle assertions, schema lint, an empty shadow diff, temporary
+114/114 Apple lifecycle assertions, schema lint, an empty shadow diff, temporary
 type generation, 20/20 focused Apple event/lifecycle Edge tests, and the 47-test
 Apple auth work lane. This closes the local source replay gate only; every hosted,
 Apple-provider, device, professional-review, and App Review gate above remains open.

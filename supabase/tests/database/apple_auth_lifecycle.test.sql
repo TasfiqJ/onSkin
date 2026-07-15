@@ -5,7 +5,7 @@ set local search_path = extensions, public, pg_catalog;
 
 -- Keep this explicit so adding or removing a lifecycle guarantee requires a
 -- deliberate review of the database contract.
-select plan(111);
+select plan(114);
 
 -- Supabase's hosted bootstrap owns ordinary API table grants. Rehearse the
 -- owner-facing profile lane so the restrictive Apple read/write barriers are
@@ -38,7 +38,8 @@ insert into auth.users (id) values
   ('80000000-0000-4000-8000-000000000006'),
   ('80000000-0000-4000-8000-000000000007'),
   ('80000000-0000-4000-8000-000000000008'),
-  ('80000000-0000-4000-8000-000000000009');
+  ('80000000-0000-4000-8000-000000000009'),
+  ('80000000-0000-4000-8000-000000000010');
 
 insert into auth.sessions (id, user_id) values
   ('81000000-0000-4000-8000-000000000001', '80000000-0000-4000-8000-000000000001'),
@@ -49,7 +50,8 @@ insert into auth.sessions (id, user_id) values
   ('81000000-0000-4000-8000-000000000006', '80000000-0000-4000-8000-000000000006'),
   ('81000000-0000-4000-8000-000000000007', '80000000-0000-4000-8000-000000000007'),
   ('81000000-0000-4000-8000-000000000008', '80000000-0000-4000-8000-000000000008'),
-  ('81000000-0000-4000-8000-000000000009', '80000000-0000-4000-8000-000000000009');
+  ('81000000-0000-4000-8000-000000000009', '80000000-0000-4000-8000-000000000009'),
+  ('81000000-0000-4000-8000-000000000010', '80000000-0000-4000-8000-000000000010');
 
 -- User 2 deliberately remains non-Apple. Users 8 and 9 receive their Apple
 -- identities later to exercise pre-identity terminal-event recovery.
@@ -77,6 +79,15 @@ insert into auth.identities (provider_id, user_id, identity_data, provider) valu
   (
     'apple.subject.legacy', '80000000-0000-4000-8000-000000000007',
     '{"sub":"apple.subject.legacy"}'::jsonb, 'apple'
+  ),
+  (
+    'apple.subject.unlinked', '80000000-0000-4000-8000-000000000010',
+    '{"sub":"apple.subject.unlinked"}'::jsonb, 'apple'
+  ),
+  (
+    'alternate@example.invalid', '80000000-0000-4000-8000-000000000010',
+    '{"sub":"alternate@example.invalid","email":"alternate@example.invalid"}'::jsonb,
+    'email'
   );
 
 -- This ordinary, non-health receipt is a positive control for the legacy
@@ -363,6 +374,57 @@ select throws_ok(
   '28000',
   'ACCOUNT_ACCESS_SESSION_REJECTED',
   'preflight rejects a stale or forged session id'
+);
+
+-- A lifecycle must outlive the mutable Auth identity list. Reproduce an Apple
+-- owner unlinking Apple, reaching a terminal lifecycle, and then acquiring a
+-- new session through the retained alternate provider.
+reset role;
+insert into public.apple_auth_lifecycles (
+  user_id, apple_subject_hmac, subject_hmac_key_version, client_id, state,
+  encrypted_refresh_token, vault_key_version, last_validated_at, next_validation_at
+) values (
+  '80000000-0000-4000-8000-000000000010', repeat('f', 63) || 'e', 'unlink-v1',
+  'com.onskin.app', 'active', decode('01', 'hex'), 'vault-v1',
+  clock_timestamp(), clock_timestamp() + interval '1 day'
+);
+delete from auth.identities
+ where user_id = '80000000-0000-4000-8000-000000000010'
+   and provider = 'apple';
+update public.apple_auth_lifecycles
+   set state = 'revoked', generation = generation + 1,
+       encrypted_refresh_token = null, vault_key_version = null,
+       next_validation_at = null, last_failure_code = 'APPLE_INVALID_GRANT'
+ where user_id = '80000000-0000-4000-8000-000000000010';
+delete from auth.sessions
+ where id = '81000000-0000-4000-8000-000000000010';
+insert into auth.sessions (id, user_id) values (
+  '81000000-0000-4000-8000-000000000011',
+  '80000000-0000-4000-8000-000000000010'
+);
+set local role authenticated;
+select pg_catalog.set_config(
+  'request.jwt.claims',
+  '{"sub":"80000000-0000-4000-8000-000000000010","role":"authenticated","session_id":"81000000-0000-4000-8000-000000000011"}',
+  true
+);
+select ok(
+  not public.account_access_allowed(),
+  'an unlinked terminal Apple lifecycle denies a new alternate-provider session'
+);
+select is(
+  (select state || ':' || generation::text from public.get_account_access_state()),
+  'blocked:2'::text,
+  'preflight keeps the unlinked terminal lifecycle authoritative'
+);
+select is(
+  (
+    select count(*)
+      from public.profiles
+     where id = '80000000-0000-4000-8000-000000000010'
+  ),
+  0::bigint,
+  'the restrictive read barrier hides an unlinked terminal Apple owner'
 );
 
 select pg_catalog.set_config(

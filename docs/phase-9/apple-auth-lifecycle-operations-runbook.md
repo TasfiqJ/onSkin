@@ -12,7 +12,7 @@ readiness.
 ## Local Source Evidence
 
 The current migration-0055 candidate passed two clean disposable resets, exact
-54-migration history through 0055, the full structural pgTAP suite plus 111/111
+54-migration history through 0055, the full structural pgTAP suite plus 114/114
 Apple lifecycle assertions, schema lint, an empty migration shadow diff, and
 temporary database type generation. The focused Apple event/lifecycle Edge
 suite passed 20/20; the complete Apple auth work-lane command below passed
