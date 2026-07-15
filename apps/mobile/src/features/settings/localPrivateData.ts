@@ -1,7 +1,7 @@
 import * as FileSystem from 'expo-file-system/legacy';
-import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
+import { clearNativeNotificationsForAccountIsolation } from '@/features/notifications/nativeMutation';
 import { clearEncryptedPhotoStorage } from '@/features/photos/encryptedStorage';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
 import { clearAccountDeletionVendorFreezeAfterCleanup } from '@/lib/auth/accountDeletionVendorFreeze';
@@ -70,9 +70,7 @@ export async function clearLocalPrivateData(): Promise<void> {
     {
       label: 'scheduled_notifications',
       promise:
-        Platform.OS === 'web'
-          ? Promise.resolve()
-          : Notifications.cancelAllScheduledNotificationsAsync(),
+        Platform.OS === 'web' ? Promise.resolve() : clearNativeNotificationsForAccountIsolation(),
     },
     {
       label: 'analytics_identity',

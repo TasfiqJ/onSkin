@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import {
+  NotificationNativeMutationSupersededError,
+  scheduleNativeNotificationExact,
+} from '@/features/notifications/nativeMutation';
+
 import { clearLocalPrivateData } from './localPrivateData';
 import {
   LOCAL_PRIVATE_BULK_CLEANUP_KEYS,
@@ -8,6 +13,10 @@ import {
 
 const mocks = vi.hoisted(() => ({
   cancelAllScheduledNotificationsAsync: vi.fn(),
+  dismissAllNotificationsAsync: vi.fn(),
+  dismissNotificationAsync: vi.fn(),
+  cancelScheduledNotificationAsync: vi.fn(),
+  scheduleNotificationAsync: vi.fn(),
   clearAccountDeletionVendorFreezeAfterCleanup: vi.fn(),
   clearEncryptedPhotoStorage: vi.fn(),
   clearPrivateKVContentKey: vi.fn(),
@@ -27,6 +36,10 @@ vi.mock('expo-file-system/legacy', () => ({
 
 vi.mock('expo-notifications', () => ({
   cancelAllScheduledNotificationsAsync: mocks.cancelAllScheduledNotificationsAsync,
+  cancelScheduledNotificationAsync: mocks.cancelScheduledNotificationAsync,
+  dismissAllNotificationsAsync: mocks.dismissAllNotificationsAsync,
+  dismissNotificationAsync: mocks.dismissNotificationAsync,
+  scheduleNotificationAsync: mocks.scheduleNotificationAsync,
 }));
 
 vi.mock('react-native', () => ({
@@ -61,21 +74,28 @@ vi.mock('@/lib/storage/privateKV', () => ({
 describe('local private data cleanup', () => {
   beforeEach(() => {
     mocks.cancelAllScheduledNotificationsAsync.mockReset();
+    mocks.cancelScheduledNotificationAsync.mockReset();
     mocks.clearAccountDeletionVendorFreezeAfterCleanup.mockReset();
     mocks.clearEncryptedPhotoStorage.mockReset();
     mocks.clearPrivateKVContentKey.mockReset();
     mocks.deleteAsync.mockReset();
+    mocks.dismissAllNotificationsAsync.mockReset();
+    mocks.dismissNotificationAsync.mockReset();
     mocks.platformOS = 'ios';
     mocks.readDirectoryAsync.mockReset();
     mocks.removePrivateItemsForAuthorizedReset.mockReset();
     mocks.resetAnalyticsIdentity.mockReset();
     mocks.resetRevenueCatIdentity.mockReset();
+    mocks.scheduleNotificationAsync.mockReset();
 
     mocks.cancelAllScheduledNotificationsAsync.mockResolvedValue(undefined);
+    mocks.cancelScheduledNotificationAsync.mockResolvedValue(undefined);
     mocks.clearAccountDeletionVendorFreezeAfterCleanup.mockResolvedValue(undefined);
     mocks.clearEncryptedPhotoStorage.mockResolvedValue(undefined);
     mocks.clearPrivateKVContentKey.mockResolvedValue(undefined);
     mocks.deleteAsync.mockResolvedValue(undefined);
+    mocks.dismissAllNotificationsAsync.mockResolvedValue(undefined);
+    mocks.dismissNotificationAsync.mockResolvedValue(undefined);
     mocks.removePrivateItemsForAuthorizedReset.mockResolvedValue(undefined);
     mocks.readDirectoryAsync.mockResolvedValue([
       'routinekind-export-456.json',
@@ -86,6 +106,7 @@ describe('local private data cleanup', () => {
     ]);
     mocks.resetAnalyticsIdentity.mockResolvedValue(undefined);
     mocks.resetRevenueCatIdentity.mockResolvedValue(undefined);
+    mocks.scheduleNotificationAsync.mockResolvedValue('notification-id');
   });
 
   it('clears local stores, cache files, notifications, and client vendor identities', async () => {
@@ -106,6 +127,7 @@ describe('local private data cleanup', () => {
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);
     expect(mocks.cancelAllScheduledNotificationsAsync).toHaveBeenCalledTimes(1);
+    expect(mocks.dismissAllNotificationsAsync).toHaveBeenCalledTimes(1);
     expect(mocks.deleteAsync).toHaveBeenCalledWith('file://cache/onskin-export-123.json', {
       idempotent: true,
     });
@@ -130,6 +152,44 @@ describe('local private data cleanup', () => {
     expect(mocks.resetRevenueCatIdentity.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.clearAccountDeletionVendorFreezeAfterCleanup.mock.invocationCallOrder[0]!,
     );
+  });
+
+  it('withholds cleanup success until a prior owner schedule is exactly compensated', async () => {
+    const ownerA = new AbortController();
+    const identifier = 'owner-a-immediate';
+    let resolveSchedule!: (value: string) => void;
+    mocks.scheduleNotificationAsync.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveSchedule = resolve;
+        }),
+    );
+    const scheduled = scheduleNativeNotificationExact(ownerA.signal, {
+      identifier,
+      content: { title: 'RoutineKind' },
+      trigger: null,
+    });
+    ownerA.abort();
+
+    let cleanupSettled = false;
+    const cleanup = clearLocalPrivateData().then(() => {
+      cleanupSettled = true;
+    });
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(cleanupSettled).toBe(false);
+    expect(mocks.cancelAllScheduledNotificationsAsync).toHaveBeenCalledTimes(1);
+    expect(mocks.dismissAllNotificationsAsync).toHaveBeenCalledTimes(1);
+    expect(mocks.clearAccountDeletionVendorFreezeAfterCleanup).not.toHaveBeenCalled();
+
+    resolveSchedule(identifier);
+    await expect(scheduled).rejects.toBeInstanceOf(NotificationNativeMutationSupersededError);
+    await expect(cleanup).resolves.toBeUndefined();
+
+    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith(identifier);
+    expect(mocks.dismissNotificationAsync).toHaveBeenCalledWith(identifier);
+    expect(mocks.clearAccountDeletionVendorFreezeAfterCleanup).toHaveBeenCalledTimes(1);
   });
 
   it('fails the account-boundary cleanup when a client identity reset fails', async () => {
@@ -191,7 +251,46 @@ describe('local private data cleanup', () => {
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledTimes(1);
     expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledTimes(1);
+    expect(mocks.dismissAllNotificationsAsync).toHaveBeenCalledTimes(1);
     expect(mocks.clearAccountDeletionVendorFreezeAfterCleanup).not.toHaveBeenCalled();
+  });
+
+  it('bounds a wedged native notification cleanup and permits an explicit retry', async () => {
+    vi.useFakeTimers();
+    let resolveFirstCancellation!: () => void;
+    try {
+      mocks.cancelAllScheduledNotificationsAsync
+        .mockImplementationOnce(
+          () =>
+            new Promise<void>((resolve) => {
+              resolveFirstCancellation = resolve;
+            }),
+        )
+        .mockResolvedValue(undefined);
+
+      const firstClear = clearLocalPrivateData().catch((error: unknown) => error);
+      await vi.advanceTimersByTimeAsync(2_001);
+
+      await expect(firstClear).resolves.toEqual(
+        expect.objectContaining({
+          message: 'LOCAL_PRIVATE_DATA_CLEAR_FAILED:scheduled_notifications',
+        }),
+      );
+      expect(mocks.cancelAllScheduledNotificationsAsync).toHaveBeenCalledTimes(1);
+      expect(mocks.dismissAllNotificationsAsync).toHaveBeenCalledTimes(1);
+      expect(mocks.clearAccountDeletionVendorFreezeAfterCleanup).not.toHaveBeenCalled();
+
+      await expect(clearLocalPrivateData()).resolves.toBeUndefined();
+      expect(mocks.cancelAllScheduledNotificationsAsync).toHaveBeenCalledTimes(2);
+      expect(mocks.dismissAllNotificationsAsync).toHaveBeenCalledTimes(2);
+      expect(mocks.clearAccountDeletionVendorFreezeAfterCleanup).toHaveBeenCalledTimes(1);
+
+      resolveFirstCancellation();
+      await Promise.resolve();
+      await Promise.resolve();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('does not call the unavailable scheduled-notification backend on web', async () => {
@@ -200,5 +299,6 @@ describe('local private data cleanup', () => {
     await expect(clearLocalPrivateData()).resolves.toBeUndefined();
 
     expect(mocks.cancelAllScheduledNotificationsAsync).not.toHaveBeenCalled();
+    expect(mocks.dismissAllNotificationsAsync).not.toHaveBeenCalled();
   });
 });

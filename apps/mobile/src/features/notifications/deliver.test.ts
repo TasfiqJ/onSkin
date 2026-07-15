@@ -14,6 +14,8 @@ import type { SentTierCountRead } from './sentStore';
 const mocks = vi.hoisted(() => ({
   cancelAllScheduledNotificationsAsync: vi.fn(async () => {}),
   cancelScheduledNotificationAsync: vi.fn(async () => {}),
+  dismissAllNotificationsAsync: vi.fn(async () => {}),
+  dismissNotificationAsync: vi.fn(async () => {}),
   getAllScheduledNotificationsAsync: vi.fn(async () => [] as { identifier: string }[]),
   getUser: vi.fn(async () => ({ data: { user: null as { id: string } | null } })),
   insertNotificationLog: vi.fn(),
@@ -21,13 +23,20 @@ const mocks = vi.hoisted(() => ({
   readNotifPrefs: vi.fn(),
   loadEntitlement: vi.fn(async (): Promise<unknown> => null),
   recordSentLocal: vi.fn(async () => {}),
+  randomUUID: vi.fn(() => 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'),
   saveNotifPrefs: vi.fn(),
-  scheduleNotificationAsync: vi.fn(async () => 'notification-id'),
+  scheduleNotificationAsync: vi.fn(async (request: { identifier?: string }) =>
+    Promise.resolve(request.identifier ?? 'notification-id'),
+  ),
   setNotificationChannelAsync: vi.fn(async () => {}),
   setNotificationHandler: vi.fn(),
   sentThisWeekForTierLocal: vi.fn<
     (tier: NotificationTier, now: number) => Promise<SentTierCountRead>
   >(async () => ({ status: 'available', count: 0 })),
+}));
+
+vi.mock('expo-crypto', () => ({
+  randomUUID: mocks.randomUUID,
 }));
 
 vi.mock('expo-notifications', () => ({
@@ -39,6 +48,8 @@ vi.mock('expo-notifications', () => ({
   },
   cancelAllScheduledNotificationsAsync: mocks.cancelAllScheduledNotificationsAsync,
   cancelScheduledNotificationAsync: mocks.cancelScheduledNotificationAsync,
+  dismissAllNotificationsAsync: mocks.dismissAllNotificationsAsync,
+  dismissNotificationAsync: mocks.dismissNotificationAsync,
   getAllScheduledNotificationsAsync: mocks.getAllScheduledNotificationsAsync,
   getPermissionsAsync: vi.fn(async () => ({ status: 'undetermined' })),
   requestPermissionsAsync: vi.fn(async () => ({ status: 'denied' })),
@@ -127,6 +138,8 @@ describe('rescheduleReminders', () => {
   beforeEach(() => {
     mocks.cancelAllScheduledNotificationsAsync.mockClear();
     mocks.cancelScheduledNotificationAsync.mockClear();
+    mocks.dismissAllNotificationsAsync.mockClear();
+    mocks.dismissNotificationAsync.mockClear();
     mocks.getAllScheduledNotificationsAsync.mockClear();
     mocks.getAllScheduledNotificationsAsync.mockResolvedValue([]);
     mocks.loadEntitlement.mockClear();
@@ -143,6 +156,8 @@ describe('rescheduleReminders', () => {
     mocks.readNotifPrefs.mockResolvedValue({ status: 'available', prefs, format: 'current' });
     mocks.recordSentLocal.mockClear();
     mocks.recordSentLocal.mockResolvedValue(undefined);
+    mocks.randomUUID.mockClear();
+    mocks.randomUUID.mockReturnValue('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
     mocks.saveNotifPrefs.mockClear();
     mocks.saveNotifPrefs.mockResolvedValue({ prefs, changed: true });
     mocks.scheduleNotificationAsync.mockClear();
@@ -240,6 +255,7 @@ describe('rescheduleReminders', () => {
 
     await rescheduleReminders(healthPrefs);
     mocks.cancelScheduledNotificationAsync.mockClear();
+    mocks.dismissNotificationAsync.mockClear();
     mocks.scheduleNotificationAsync.mockClear();
 
     await rescheduleReminders(healthPrefs);
@@ -362,9 +378,9 @@ describe('rescheduleReminders', () => {
     const { rescheduleReminders } = await import('./deliver');
     mocks.scheduleNotificationAsync.mockRejectedValueOnce(new Error('native schedule failed'));
 
-    await expect(
-      rescheduleReminders({ ...prefs, amTime: '08:02' }),
-    ).rejects.toThrow('native schedule failed');
+    await expect(rescheduleReminders({ ...prefs, amTime: '08:02' })).rejects.toThrow(
+      'native schedule failed',
+    );
 
     expect(mocks.cancelScheduledNotificationAsync.mock.calls.slice(-3)).toEqual([
       ['onskin-am-reminder'],
@@ -436,9 +452,7 @@ describe('scheduleTrialReminder', () => {
 
     await expect(scheduleTrialReminder()).rejects.toBe(nativeError);
 
-    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith(
-      'onskin-trial-reminder',
-    );
+    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith('onskin-trial-reminder');
     expect(mocks.scheduleNotificationAsync).toHaveBeenCalledTimes(1);
   });
 
@@ -460,9 +474,7 @@ describe('scheduleTrialReminder', () => {
 
     await expect(cancelTrialReminder()).rejects.toBe(cancelError);
 
-    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith(
-      'onskin-trial-reminder',
-    );
+    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith('onskin-trial-reminder');
   });
 });
 
@@ -470,6 +482,7 @@ describe('notifyBehavioural', () => {
   beforeEach(() => {
     mocks.cancelAllScheduledNotificationsAsync.mockClear();
     mocks.cancelScheduledNotificationAsync.mockClear();
+    mocks.dismissNotificationAsync.mockClear();
     mocks.getUser.mockClear();
     mocks.getUser.mockResolvedValue({ data: { user: null } });
     mocks.insertNotificationLog.mockClear();
@@ -483,6 +496,8 @@ describe('notifyBehavioural', () => {
     mocks.readNotifPrefs.mockResolvedValue({ status: 'available', prefs, format: 'current' });
     mocks.recordSentLocal.mockClear();
     mocks.recordSentLocal.mockResolvedValue(undefined);
+    mocks.randomUUID.mockClear();
+    mocks.randomUUID.mockReturnValue('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
     mocks.saveNotifPrefs.mockClear();
     mocks.saveNotifPrefs.mockResolvedValue({ prefs, changed: true });
     mocks.scheduleNotificationAsync.mockClear();
@@ -496,6 +511,7 @@ describe('notifyBehavioural', () => {
     await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(true);
 
     expect(mocks.scheduleNotificationAsync).toHaveBeenCalledWith({
+      identifier: 'onskin-behavioural-aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
       content: { body: 'body:replenishment', title: 'RoutineKind' },
       trigger: null,
     });
@@ -514,6 +530,18 @@ describe('notifyBehavioural', () => {
     expect(mocks.recordSentLocal).toHaveBeenCalledTimes(1);
     expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
     expect(mocks.getUser).not.toHaveBeenCalled();
+  });
+
+  it('does not reserve a cap slot when an exact immediate identifier is unavailable', async () => {
+    const { notifyBehavioural } = await import('./deliver');
+    mocks.randomUUID.mockImplementationOnce(() => {
+      throw new Error('secure random unavailable');
+    });
+
+    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
+
+    expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
   });
 
   it('conservatively retains the reserved cap slot when native presentation fails', async () => {
@@ -583,30 +611,36 @@ describe('notifyBehavioural', () => {
     { status: 'unavailable', count: null, reason: 'storage_unavailable' },
     { status: 'corrupt', count: null, reason: 'invalid_payload' },
     { status: 'unsupported_version', count: null },
-  ] as const)('suppresses delivery when the local cap ledger is not authoritative', async (state) => {
-    const { notifyBehavioural } = await import('./deliver');
-    mocks.sentThisWeekForTierLocal.mockResolvedValueOnce(state);
+  ] as const)(
+    'suppresses delivery when the local cap ledger is not authoritative',
+    async (state) => {
+      const { notifyBehavioural } = await import('./deliver');
+      mocks.sentThisWeekForTierLocal.mockResolvedValueOnce(state);
 
-    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
+      await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
 
-    expect(mocks.getUser).not.toHaveBeenCalled();
-    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
-    expect(mocks.recordSentLocal).not.toHaveBeenCalled();
-  });
+      expect(mocks.getUser).not.toHaveBeenCalled();
+      expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+      expect(mocks.recordSentLocal).not.toHaveBeenCalled();
+    },
+  );
 
   it.each([
     { status: 'unavailable', prefs: null, reason: 'storage_unavailable' },
     { status: 'corrupt', prefs: null, reason: 'invalid_payload' },
     { status: 'unsupported_version', prefs: null },
-  ] as const)('suppresses delivery when notification preferences are not authoritative', async (state) => {
-    const { notifyBehavioural } = await import('./deliver');
-    mocks.readNotifPrefs.mockResolvedValueOnce(state);
+  ] as const)(
+    'suppresses delivery when notification preferences are not authoritative',
+    async (state) => {
+      const { notifyBehavioural } = await import('./deliver');
+      mocks.readNotifPrefs.mockResolvedValueOnce(state);
 
-    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
+      await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
 
-    expect(mocks.sentThisWeekForTierLocal).not.toHaveBeenCalled();
-    expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
-  });
+      expect(mocks.sentThisWeekForTierLocal).not.toHaveBeenCalled();
+      expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();
+    },
+  );
 
   it('serializes concurrent evaluations within the cap left after the capture reservation', async () => {
     const { notifyBehavioural } = await import('./deliver');
@@ -674,14 +708,16 @@ describe('notifyBehavioural', () => {
     await waitForAccountGenerationOperationsToSettle();
   });
 
-  it('cancels a delayed owner-A native request but retains its pre-reserved cap slot', async () => {
+  it('detaches a delayed owner-A native request, fences B, and compensates its exact ID', async () => {
     const { notifyBehavioural } = await import('./deliver');
     let releaseSchedule!: (id: string) => void;
     let markStarted!: () => void;
+    let ownerANotificationId = '';
     const started = new Promise<void>((resolve) => {
       markStarted = resolve;
     });
-    mocks.scheduleNotificationAsync.mockImplementationOnce(() => {
+    mocks.scheduleNotificationAsync.mockImplementationOnce((request) => {
+      ownerANotificationId = request.identifier ?? '';
       markStarted();
       return new Promise<string>((resolve) => {
         releaseSchedule = resolve;
@@ -692,18 +728,24 @@ describe('notifyBehavioural', () => {
     await started;
     beginAccountGenerationBoundary();
     boundaryActive = true;
-    let drainSettled = false;
-    const draining = waitForAccountGenerationOperationsToSettle().then(() => {
-      drainSettled = true;
-    });
-    await Promise.resolve();
-    expect(drainSettled).toBe(false);
-    releaseSchedule('owner-a-notification');
-    await draining;
+    await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
 
     await expect(notification).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
-    expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith('owner-a-notification');
+    endAccountGenerationBoundary();
+    boundaryActive = false;
+
+    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(false);
+    expect(mocks.scheduleNotificationAsync).toHaveBeenCalledTimes(1);
     expect(mocks.recordSentLocal).toHaveBeenCalledTimes(1);
+
+    releaseSchedule(ownerANotificationId);
+    await vi.waitFor(() => {
+      expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith(ownerANotificationId);
+      expect(mocks.dismissNotificationAsync).toHaveBeenCalledWith(ownerANotificationId);
+    });
+    await Promise.resolve();
+    await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(true);
+    expect(mocks.recordSentLocal).toHaveBeenCalledTimes(2);
     expect(mocks.recordSentLocal.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.scheduleNotificationAsync.mock.invocationCallOrder[0]!,
     );
