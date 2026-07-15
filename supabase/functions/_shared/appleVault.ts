@@ -1,5 +1,6 @@
-export const APPLE_VAULT_KEYS_ENV = 'APPLE_SIWA_VAULT_KEYS';
-export const APPLE_VAULT_CURRENT_VERSION_ENV = 'APPLE_SIWA_VAULT_CURRENT_VERSION';
+export const APPLE_VAULT_KEYS_ENV = "APPLE_SIWA_VAULT_KEYS";
+export const APPLE_VAULT_CURRENT_VERSION_ENV =
+  "APPLE_SIWA_VAULT_CURRENT_VERSION";
 export const APPLE_VAULT_ENVELOPE_VERSION = 1 as const;
 
 const KEY_BYTES = 32;
@@ -8,11 +9,12 @@ const GCM_TAG_BYTES = 16;
 const ENVELOPE_MAX_BYTES = 8_192;
 const REFRESH_TOKEN_MAX_BYTES = 4_096;
 const VERSION_PATTERN = /^[A-Za-z0-9._-]{1,64}$/;
-const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const HMAC_PATTERN = /^[a-f0-9]{64}$/;
 const BASE64URL_PATTERN = /^[A-Za-z0-9_-]+$/;
 const UTF8 = new TextEncoder();
-const UTF8_FATAL = new TextDecoder('utf-8', { fatal: true });
+const UTF8_FATAL = new TextDecoder("utf-8", { fatal: true });
 
 export type AppleVaultKeyring = Readonly<{
   currentVersion: string;
@@ -29,23 +31,26 @@ type AppleVaultEnvelope = Readonly<{
 export class AppleVaultError extends Error {
   constructor(
     readonly code:
-      | 'APPLE_VAULT_CONFIGURATION_INVALID'
-      | 'APPLE_VAULT_CONTEXT_INVALID'
-      | 'APPLE_VAULT_ENVELOPE_INVALID'
-      | 'APPLE_VAULT_DECRYPT_FAILED',
+      | "APPLE_VAULT_CONFIGURATION_INVALID"
+      | "APPLE_VAULT_CONTEXT_INVALID"
+      | "APPLE_VAULT_ENVELOPE_INVALID"
+      | "APPLE_VAULT_DECRYPT_FAILED",
   ) {
     super(code);
-    this.name = 'AppleVaultError';
+    this.name = "AppleVaultError";
   }
 }
 
 type EnvReader = (name: string) => string | undefined;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-function exactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+function exactKeys(
+  value: Record<string, unknown>,
+  expected: readonly string[],
+): boolean {
   const actual = Object.keys(value).sort();
   const sortedExpected = [...expected].sort();
   return (
@@ -60,9 +65,12 @@ function owned(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
   return copy;
 }
 
-function hexBytes(value: unknown, expectedBytes?: number): Uint8Array<ArrayBuffer> | null {
+function hexBytes(
+  value: unknown,
+  expectedBytes?: number,
+): Uint8Array<ArrayBuffer> | null {
   if (
-    typeof value !== 'string' ||
+    typeof value !== "string" ||
     value.length === 0 ||
     value.length % 2 !== 0 ||
     !/^[a-f0-9]+$/.test(value) ||
@@ -78,7 +86,9 @@ function hexBytes(value: unknown, expectedBytes?: number): Uint8Array<ArrayBuffe
 }
 
 function bytesHex(bytes: Uint8Array): string {
-  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join(
+    "",
+  );
 }
 
 function binary(bytes: Uint8Array): string {
@@ -86,16 +96,19 @@ function binary(bytes: Uint8Array): string {
   for (let offset = 0; offset < bytes.length; offset += 8_192) {
     chunks.push(String.fromCharCode(...bytes.subarray(offset, offset + 8_192)));
   }
-  return chunks.join('');
+  return chunks.join("");
 }
 
 function base64Url(bytes: Uint8Array): string {
-  return btoa(binary(bytes)).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/u, '');
+  return btoa(binary(bytes)).replaceAll("+", "-").replaceAll("/", "_").replace(
+    /=+$/u,
+    "",
+  );
 }
 
 function base64UrlBytes(value: unknown): Uint8Array<ArrayBuffer> | null {
   if (
-    typeof value !== 'string' ||
+    typeof value !== "string" ||
     value.length === 0 ||
     value.length % 4 === 1 ||
     !BASE64URL_PATTERN.test(value)
@@ -103,16 +116,25 @@ function base64UrlBytes(value: unknown): Uint8Array<ArrayBuffer> | null {
     return null;
   }
   try {
-    const standard = value.replaceAll('-', '+').replaceAll('_', '/');
-    const decoded = atob(standard + '='.repeat((4 - (standard.length % 4)) % 4));
-    const bytes = Uint8Array.from(decoded, (character) => character.charCodeAt(0));
+    const standard = value.replaceAll("-", "+").replaceAll("_", "/");
+    const decoded = atob(
+      standard + "=".repeat((4 - (standard.length % 4)) % 4),
+    );
+    const bytes = Uint8Array.from(
+      decoded,
+      (character) => character.charCodeAt(0),
+    );
     return base64Url(bytes) === value ? owned(bytes) : null;
   } catch {
     return null;
   }
 }
 
-function assertContext(userId: string, subjectHmac: string, clientId: string): void {
+function assertContext(
+  userId: string,
+  subjectHmac: string,
+  clientId: string,
+): void {
   if (
     !UUID_PATTERN.test(userId) ||
     !HMAC_PATTERN.test(subjectHmac) ||
@@ -121,7 +143,7 @@ function assertContext(userId: string, subjectHmac: string, clientId: string): v
     clientId !== clientId.trim() ||
     /[\u0000-\u001f\u007f]/u.test(clientId)
   ) {
-    throw new AppleVaultError('APPLE_VAULT_CONTEXT_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_CONTEXT_INVALID");
   }
 }
 
@@ -133,13 +155,13 @@ function aad(options: {
 }): Uint8Array<ArrayBuffer> {
   return UTF8.encode(
     JSON.stringify({
-      purpose: 'onskin-apple-refresh-token-vault',
+      purpose: "routinekind-apple-refresh-token-vault",
       version: APPLE_VAULT_ENVELOPE_VERSION,
       userId: options.userId,
       subjectHmac: options.subjectHmac,
       clientId: options.clientId,
       keyVersion: options.keyVersion,
-      tokenKind: 'refresh_token',
+      tokenKind: "refresh_token",
     }),
   );
 }
@@ -159,7 +181,7 @@ function parseEnvelope(value: Uint8Array): {
   ciphertext: Uint8Array<ArrayBuffer>;
 } {
   if (value.byteLength === 0 || value.byteLength > ENVELOPE_MAX_BYTES) {
-    throw new AppleVaultError('APPLE_VAULT_ENVELOPE_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_ENVELOPE_INVALID");
   }
   let text: string;
   let parsed: unknown;
@@ -167,18 +189,18 @@ function parseEnvelope(value: Uint8Array): {
     text = UTF8_FATAL.decode(value);
     parsed = JSON.parse(text) as unknown;
   } catch {
-    throw new AppleVaultError('APPLE_VAULT_ENVELOPE_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_ENVELOPE_INVALID");
   }
   if (
     !isRecord(parsed) ||
-    !exactKeys(parsed, ['version', 'keyVersion', 'nonce', 'ciphertext']) ||
+    !exactKeys(parsed, ["version", "keyVersion", "nonce", "ciphertext"]) ||
     parsed.version !== APPLE_VAULT_ENVELOPE_VERSION ||
-    typeof parsed.keyVersion !== 'string' ||
+    typeof parsed.keyVersion !== "string" ||
     !VERSION_PATTERN.test(parsed.keyVersion) ||
-    typeof parsed.nonce !== 'string' ||
-    typeof parsed.ciphertext !== 'string'
+    typeof parsed.nonce !== "string" ||
+    typeof parsed.ciphertext !== "string"
   ) {
-    throw new AppleVaultError('APPLE_VAULT_ENVELOPE_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_ENVELOPE_INVALID");
   }
   const envelope: AppleVaultEnvelope = {
     version: APPLE_VAULT_ENVELOPE_VERSION,
@@ -187,7 +209,7 @@ function parseEnvelope(value: Uint8Array): {
     ciphertext: parsed.ciphertext,
   };
   if (canonicalEnvelope(envelope) !== text) {
-    throw new AppleVaultError('APPLE_VAULT_ENVELOPE_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_ENVELOPE_INVALID");
   }
   const nonce = base64UrlBytes(envelope.nonce);
   const ciphertext = base64UrlBytes(envelope.ciphertext);
@@ -198,7 +220,7 @@ function parseEnvelope(value: Uint8Array): {
     ciphertext.byteLength <= GCM_TAG_BYTES ||
     ciphertext.byteLength > REFRESH_TOKEN_MAX_BYTES + GCM_TAG_BYTES
   ) {
-    throw new AppleVaultError('APPLE_VAULT_ENVELOPE_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_ENVELOPE_INVALID");
   }
   return { envelope, nonce, ciphertext };
 }
@@ -212,19 +234,21 @@ export async function loadAppleVaultKeyring(
     currentVersion = readEnv(APPLE_VAULT_CURRENT_VERSION_ENV);
     encodedKeys = readEnv(APPLE_VAULT_KEYS_ENV);
   } catch {
-    throw new AppleVaultError('APPLE_VAULT_CONFIGURATION_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_CONFIGURATION_INVALID");
   }
-  if (!currentVersion || !VERSION_PATTERN.test(currentVersion) || !encodedKeys) {
-    throw new AppleVaultError('APPLE_VAULT_CONFIGURATION_INVALID');
+  if (
+    !currentVersion || !VERSION_PATTERN.test(currentVersion) || !encodedKeys
+  ) {
+    throw new AppleVaultError("APPLE_VAULT_CONFIGURATION_INVALID");
   }
   let parsed: unknown;
   try {
     parsed = JSON.parse(encodedKeys) as unknown;
   } catch {
-    throw new AppleVaultError('APPLE_VAULT_CONFIGURATION_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_CONFIGURATION_INVALID");
   }
   if (!isRecord(parsed)) {
-    throw new AppleVaultError('APPLE_VAULT_CONFIGURATION_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_CONFIGURATION_INVALID");
   }
   const versions = Object.keys(parsed);
   if (
@@ -233,23 +257,25 @@ export async function loadAppleVaultKeyring(
     !versions.includes(currentVersion) ||
     versions.some((version) => !VERSION_PATTERN.test(version))
   ) {
-    throw new AppleVaultError('APPLE_VAULT_CONFIGURATION_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_CONFIGURATION_INVALID");
   }
   const keys = new Map<string, CryptoKey>();
   for (const version of versions) {
     const raw = hexBytes(parsed[version], KEY_BYTES);
-    if (raw === null) throw new AppleVaultError('APPLE_VAULT_CONFIGURATION_INVALID');
+    if (raw === null) {
+      throw new AppleVaultError("APPLE_VAULT_CONFIGURATION_INVALID");
+    }
     try {
       const key = await crypto.subtle.importKey(
-        'raw',
+        "raw",
         raw,
-        { name: 'AES-GCM', length: 256 },
+        { name: "AES-GCM", length: 256 },
         false,
-        ['encrypt', 'decrypt'],
+        ["encrypt", "decrypt"],
       );
       keys.set(version, key);
     } catch {
-      throw new AppleVaultError('APPLE_VAULT_CONFIGURATION_INVALID');
+      throw new AppleVaultError("APPLE_VAULT_CONFIGURATION_INVALID");
     } finally {
       raw.fill(0);
     }
@@ -274,14 +300,14 @@ export async function sealAppleRefreshToken(options: {
     plaintext.byteLength > REFRESH_TOKEN_MAX_BYTES
   ) {
     plaintext.fill(0);
-    throw new AppleVaultError('APPLE_VAULT_CONTEXT_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_CONTEXT_INVALID");
   }
   const nonce = crypto.getRandomValues(new Uint8Array(NONCE_BYTES));
   let encrypted: ArrayBuffer;
   try {
     encrypted = await crypto.subtle.encrypt(
       {
-        name: 'AES-GCM',
+        name: "AES-GCM",
         iv: nonce,
         additionalData: aad({
           userId: options.userId,
@@ -295,7 +321,7 @@ export async function sealAppleRefreshToken(options: {
       plaintext,
     );
   } catch {
-    throw new AppleVaultError('APPLE_VAULT_ENVELOPE_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_ENVELOPE_INVALID");
   } finally {
     plaintext.fill(0);
   }
@@ -308,7 +334,7 @@ export async function sealAppleRefreshToken(options: {
     }),
   );
   if (envelope.byteLength > ENVELOPE_MAX_BYTES) {
-    throw new AppleVaultError('APPLE_VAULT_ENVELOPE_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_ENVELOPE_INVALID");
   }
   parseEnvelope(envelope);
   return envelope;
@@ -324,12 +350,14 @@ export async function openAppleRefreshToken(options: {
   assertContext(options.userId, options.subjectHmac, options.clientId);
   const parsed = parseEnvelope(options.envelope);
   const key = options.keyring.keys.get(parsed.envelope.keyVersion);
-  if (key === undefined) throw new AppleVaultError('APPLE_VAULT_DECRYPT_FAILED');
+  if (key === undefined) {
+    throw new AppleVaultError("APPLE_VAULT_DECRYPT_FAILED");
+  }
   let decrypted: ArrayBuffer;
   try {
     decrypted = await crypto.subtle.decrypt(
       {
-        name: 'AES-GCM',
+        name: "AES-GCM",
         iv: parsed.nonce,
         additionalData: aad({
           userId: options.userId,
@@ -343,18 +371,18 @@ export async function openAppleRefreshToken(options: {
       parsed.ciphertext,
     );
   } catch {
-    throw new AppleVaultError('APPLE_VAULT_DECRYPT_FAILED');
+    throw new AppleVaultError("APPLE_VAULT_DECRYPT_FAILED");
   }
   const plaintext = new Uint8Array(decrypted);
   try {
     const token = UTF8_FATAL.decode(plaintext);
     if (token.length === 0 || token !== token.trim()) {
-      throw new AppleVaultError('APPLE_VAULT_DECRYPT_FAILED');
+      throw new AppleVaultError("APPLE_VAULT_DECRYPT_FAILED");
     }
     return token;
   } catch (error) {
     if (error instanceof AppleVaultError) throw error;
-    throw new AppleVaultError('APPLE_VAULT_DECRYPT_FAILED');
+    throw new AppleVaultError("APPLE_VAULT_DECRYPT_FAILED");
   } finally {
     plaintext.fill(0);
   }
@@ -365,17 +393,19 @@ export function appleVaultEnvelopeToBytea(envelope: Uint8Array): string {
   return `\\x${bytesHex(envelope)}`;
 }
 
-export function appleVaultEnvelopeFromBytea(value: unknown): Uint8Array<ArrayBuffer> {
+export function appleVaultEnvelopeFromBytea(
+  value: unknown,
+): Uint8Array<ArrayBuffer> {
   if (
-    typeof value !== 'string' ||
-    !value.startsWith('\\x') ||
+    typeof value !== "string" ||
+    !value.startsWith("\\x") ||
     value.length <= 2 ||
     value.length > ENVELOPE_MAX_BYTES * 2 + 2
   ) {
-    throw new AppleVaultError('APPLE_VAULT_ENVELOPE_INVALID');
+    throw new AppleVaultError("APPLE_VAULT_ENVELOPE_INVALID");
   }
   const bytes = hexBytes(value.slice(2));
-  if (bytes === null) throw new AppleVaultError('APPLE_VAULT_ENVELOPE_INVALID');
+  if (bytes === null) throw new AppleVaultError("APPLE_VAULT_ENVELOPE_INVALID");
   parseEnvelope(bytes);
   return bytes;
 }

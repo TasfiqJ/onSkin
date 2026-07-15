@@ -385,7 +385,7 @@ insert into public.apple_auth_lifecycles (
   encrypted_refresh_token, vault_key_version, last_validated_at, next_validation_at
 ) values (
   '80000000-0000-4000-8000-000000000010', repeat('f', 63) || 'e', 'unlink-v1',
-  'com.onskin.app', 'active', decode('01', 'hex'), 'vault-v1',
+  'com.routinekind.app', 'active', decode('01', 'hex'), 'vault-v1',
   clock_timestamp(), clock_timestamp() + interval '1 day'
 );
 delete from auth.identities
@@ -468,7 +468,7 @@ select is(
     '80000000-0000-4000-8000-000000000007',
     '81000000-0000-4000-8000-000000000007',
     'apple.subject.legacy', array[repeat('b', 64)], array['subject-v2'],
-    repeat('7', 64), 'com.onskin.app'
+    repeat('7', 64), 'com.routinekind.app'
   ),
   'reserved'::text,
   'the pre-lifecycle owner can reserve a capture before terminal evidence wins the race'
@@ -487,7 +487,7 @@ select is(
     '80000000-0000-4000-8000-000000000001',
     '81000000-0000-4000-8000-000000000001',
     'apple.subject.capture', array[repeat('a', 64)], array['v1'], repeat('1', 64),
-    'com.onskin.app'
+    'com.routinekind.app'
   ),
   'reserved'::text,
   'a verified identity and exact live session reserve one authorization-code digest'
@@ -498,7 +498,7 @@ select is(
     '80000000-0000-4000-8000-000000000001',
     '81000000-0000-4000-8000-000000000001',
     'apple.subject.capture', array[repeat('a', 64)], array['v1'], repeat('1', 64),
-    'com.onskin.app'
+    'com.routinekind.app'
   ),
   'reserved'::text,
   'an exact reservation replay is idempotent before exchange starts'
@@ -509,7 +509,7 @@ select throws_ok(
     '80000000-0000-4000-8000-000000000001',
     '81000000-0000-4000-8000-000000000001',
     'apple.subject.capture', array[repeat('a', 64)], array['v1'], repeat('1', 64),
-    'com.onskin.app'
+    'com.routinekind.app'
   )$$,
   '23505',
   'APPLE_AUTH_CAPTURE_REPLAY_REJECTED',
@@ -521,7 +521,7 @@ select throws_ok(
     '80000000-0000-4000-8000-000000000001',
     '81000000-0000-4000-8000-000000000001',
     'apple.subject.wrong', array[repeat('a', 64)], array['v1'], repeat('2', 64),
-    'com.onskin.app'
+    'com.routinekind.app'
   )$$,
   '22023',
   'APPLE_AUTH_CAPTURE_REJECTED',
@@ -533,7 +533,7 @@ select throws_ok(
     '80000000-0000-4000-8000-000000000001',
     '81000000-0000-4000-8000-000000000099',
     'apple.subject.capture', array[repeat('a', 64)], array['v1'], repeat('2', 64),
-    'com.onskin.app'
+    'com.routinekind.app'
   )$$,
   '28000',
   'APPLE_AUTH_CAPTURE_SESSION_REJECTED',
@@ -705,7 +705,7 @@ insert into public.apple_auth_lifecycles (
   next_validation_at
 ) values (
   '80000000-0000-4000-8000-000000000003', repeat('c', 64), 'v1',
-  'com.onskin.app', 'active', 4, decode('0304', 'hex'), 'vault-v1',
+  'com.routinekind.app', 'active', 4, decode('0304', 'hex'), 'vault-v1',
   clock_timestamp() - interval '1 hour', clock_timestamp() - interval '1 minute'
 );
 
@@ -855,7 +855,7 @@ select throws_ok(
   $$select * from public.apply_apple_auth_server_event(
     repeat('5', 64), repeat('5', 64),
     array[repeat('a', 64), repeat('3', 64)], array['v1', 'subject-v2'],
-    null, 'com.onskin.app',
+    null, 'com.routinekind.app',
     'email-disabled', clock_timestamp(), null
   )$$,
   'P0001',
@@ -866,7 +866,7 @@ select throws_ok(
   $$select * from public.apply_apple_auth_server_event(
     repeat('5', 64), repeat('6', 64),
     array[repeat('a', 64), repeat('3', 64)], array['v1'],
-    null, 'com.onskin.app',
+    null, 'com.routinekind.app',
     'email-disabled', clock_timestamp(), null
   )$$,
   '22023',
@@ -878,7 +878,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('1', 64), repeat('a', 64), array[repeat('a', 64)], array['v1'],
-        null, 'com.onskin.app',
+        null, 'com.routinekind.app',
         'email-disabled', '2026-07-15 12:00:00+00', repeat('7', 64)
       )
   ),
@@ -890,7 +890,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('1', 64), repeat('a', 64), array[repeat('a', 64)], array['v1'],
-        null, 'com.onskin.app',
+        null, 'com.routinekind.app',
         'email-disabled', '2026-07-15 12:00:00+00', repeat('7', 64)
       )
   ),
@@ -902,7 +902,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('2', 64), repeat('b', 64), array[repeat('a', 64)], array['v1'],
-        null, 'com.onskin.app',
+        null, 'com.routinekind.app',
         'email-enabled', '2026-07-15 11:59:59+00', repeat('6', 64)
       )
   ),
@@ -914,7 +914,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('3', 64), repeat('c', 64), array[repeat('a', 64)], array['v1'],
-        null, 'com.onskin.app',
+        null, 'com.routinekind.app',
         'unknown', '2026-07-15 12:01:00+00', null
       )
   ),
@@ -926,7 +926,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('a', 63) || '1', repeat('b', 63) || '1',
-        array[repeat('1', 64)], array['v0'], null, 'com.onskin.app',
+        array[repeat('1', 64)], array['v0'], null, 'com.routinekind.app',
         'unknown', '2026-07-15 12:01:30+00', null
       )
   ),
@@ -950,7 +950,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('4', 64), repeat('d', 64), array[repeat('e', 64)], array['v0'],
-        null, 'com.onskin.app',
+        null, 'com.routinekind.app',
         'email-disabled', '2026-07-15 12:02:00+00', repeat('5', 64)
       )
   ),
@@ -1013,7 +1013,7 @@ select is(
         '81000000-0000-4000-8000-000000000001'
       )
   ),
-  repeat('a', 64) || ':com.onskin.app:01020304:vault-v1:1',
+  repeat('a', 64) || ':com.routinekind.app:01020304:vault-v1:1',
   'the exact live session can hand the encrypted vault to deletion intake'
 );
 select is(
@@ -1086,7 +1086,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('6', 64), repeat('e', 64), array[repeat('a', 64)], array['v1'],
-        'apple.subject.capture', 'com.onskin.app',
+        'apple.subject.capture', 'com.routinekind.app',
         'account-deleted', '2026-07-15 12:03:00+00', null
       )
   ),
@@ -1142,7 +1142,7 @@ insert into public.apple_auth_lifecycles (
   next_validation_at
 ) values (
   '80000000-0000-4000-8000-000000000006', repeat('f', 64), 'v1',
-  'com.onskin.app', 'active', 2, decode('0607', 'hex'), 'vault-v1',
+  'com.routinekind.app', 'active', 2, decode('0607', 'hex'), 'vault-v1',
   clock_timestamp(), clock_timestamp() + interval '24 hours'
 );
 set local role service_role;
@@ -1151,7 +1151,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('7', 64), repeat('f', 64), array[repeat('f', 64)], array['v1'],
-        'apple.subject.consent', 'com.onskin.app',
+        'apple.subject.consent', 'com.routinekind.app',
         'consent-revoked', '2026-07-15 12:04:00+00', null
       )
   ),
@@ -1206,7 +1206,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('8', 64), repeat('8', 64), array[repeat('b', 64)], array['subject-v2'],
-        'apple.subject.legacy', 'com.onskin.app',
+        'apple.subject.legacy', 'com.routinekind.app',
         'account-deleted', '2026-07-15 12:05:00+00', null
       )
   ),
@@ -1221,7 +1221,7 @@ select ok(
      where user_id = '80000000-0000-4000-8000-000000000007'
        and apple_subject_hmac = repeat('b', 64)
        and subject_hmac_key_version = 'subject-v2'
-       and client_id = 'com.onskin.app'
+       and client_id = 'com.routinekind.app'
        and state = 'account_deleted'
        and generation = 1
        and encrypted_refresh_token is null
@@ -1286,7 +1286,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('9', 64), repeat('9', 64), array[repeat('c', 64)], array['subject-v2'],
-        'apple.subject.late', 'com.onskin.app',
+        'apple.subject.late', 'com.routinekind.app',
         'consent-revoked', '2026-07-15 12:06:00+00', null
       )
   ),
@@ -1306,7 +1306,7 @@ select is(
     '80000000-0000-4000-8000-000000000008',
     '81000000-0000-4000-8000-000000000008',
     'apple.subject.late', array[repeat('c', 64)], array['subject-v2'],
-    repeat('6', 64), 'com.onskin.app'
+    repeat('6', 64), 'com.routinekind.app'
   ),
   'blocked'::text,
   'first capture reconciles pre-identity terminal evidence without dispatching the one-use code'
@@ -1316,7 +1316,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('9', 64), repeat('9', 64), array[repeat('c', 64)], array['subject-v2'],
-        'apple.subject.late', 'com.onskin.app',
+        'apple.subject.late', 'com.routinekind.app',
         'consent-revoked', '2026-07-15 12:06:00+00', null
       )
   ),
@@ -1359,7 +1359,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('0', 64), repeat('0', 64), array[repeat('0', 64)], array['subject-v2'],
-        'apple.subject.replay', 'com.onskin.app',
+        'apple.subject.replay', 'com.routinekind.app',
         'account-deleted', '2026-07-15 12:07:00+00', null
       )
   ),
@@ -1377,7 +1377,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('0', 64), repeat('0', 64), array[repeat('0', 64)], array['subject-v2'],
-        'apple.subject.replay', 'com.onskin.app',
+        'apple.subject.replay', 'com.routinekind.app',
         'account-deleted', '2026-07-15 12:07:00+00', null
       )
   ),
@@ -1389,7 +1389,7 @@ select is(
     select result_code
       from public.apply_apple_auth_server_event(
         repeat('0', 64), repeat('0', 64), array[repeat('0', 64)], array['subject-v2'],
-        'apple.subject.replay', 'com.onskin.app',
+        'apple.subject.replay', 'com.routinekind.app',
         'account-deleted', '2026-07-15 12:07:00+00', null
       )
   ),
@@ -1432,7 +1432,7 @@ insert into public.apple_auth_lifecycles (
   next_validation_at
 ) values (
   '80000000-0000-4000-8000-000000000004', repeat('d', 64), 'v1',
-  'com.onskin.app', 'active', 1, decode('0405', 'hex'), 'vault-v1',
+  'com.routinekind.app', 'active', 1, decode('0405', 'hex'), 'vault-v1',
   clock_timestamp(), clock_timestamp() + interval '24 hours'
 );
 set local role service_role;
@@ -1485,7 +1485,7 @@ select is(
     '80000000-0000-4000-8000-000000000005',
     '81000000-0000-4000-8000-000000000005',
     'apple.subject.failure', array[repeat('5', 64)], array['v1'], repeat('2', 64),
-    'com.onskin.app'
+    'com.routinekind.app'
   ),
   'reserved'::text,
   'a second Apple owner can reserve an independent code digest'

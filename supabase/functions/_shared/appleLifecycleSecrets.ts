@@ -1,22 +1,23 @@
 const VERSION_PATTERN = /^[A-Za-z0-9._-]{1,64}$/;
 const HEX_32_BYTES = /^[a-f0-9]{64}$/;
 
-export const APPLE_SUBJECT_HMAC_KEYS_ENV = 'APPLE_SIWA_SUBJECT_HMAC_KEYS';
-export const APPLE_SUBJECT_HMAC_CURRENT_VERSION_ENV = 'APPLE_SIWA_SUBJECT_HMAC_CURRENT_VERSION';
-export const APPLE_CODE_HMAC_KEY_ENV = 'APPLE_SIWA_CODE_HMAC_KEY_HEX';
-export const APPLE_EVENT_HMAC_KEY_ENV = 'APPLE_SIWA_EVENT_HMAC_KEY_HEX';
+export const APPLE_SUBJECT_HMAC_KEYS_ENV = "APPLE_SIWA_SUBJECT_HMAC_KEYS";
+export const APPLE_SUBJECT_HMAC_CURRENT_VERSION_ENV =
+  "APPLE_SIWA_SUBJECT_HMAC_CURRENT_VERSION";
+export const APPLE_CODE_HMAC_KEY_ENV = "APPLE_SIWA_CODE_HMAC_KEY_HEX";
+export const APPLE_EVENT_HMAC_KEY_ENV = "APPLE_SIWA_EVENT_HMAC_KEY_HEX";
 
 export class AppleLifecycleSecretError extends Error {
   constructor() {
-    super('APPLE_LIFECYCLE_SECRET_INVALID');
-    this.name = 'AppleLifecycleSecretError';
+    super("APPLE_LIFECYCLE_SECRET_INVALID");
+    this.name = "AppleLifecycleSecretError";
   }
 }
 
 type EnvReader = (name: string) => string | undefined;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 function bytes(value: string): Uint8Array<ArrayBuffer> {
@@ -28,17 +29,17 @@ function bytes(value: string): Uint8Array<ArrayBuffer> {
 }
 
 async function hmacKey(encoded: unknown): Promise<CryptoKey> {
-  if (typeof encoded !== 'string' || !HEX_32_BYTES.test(encoded)) {
+  if (typeof encoded !== "string" || !HEX_32_BYTES.test(encoded)) {
     throw new AppleLifecycleSecretError();
   }
   const raw = bytes(encoded);
   try {
     return await crypto.subtle.importKey(
-      'raw',
+      "raw",
       raw,
-      { name: 'HMAC', hash: 'SHA-256', length: 256 },
+      { name: "HMAC", hash: "SHA-256", length: 256 },
       false,
-      ['sign'],
+      ["sign"],
     );
   } catch {
     throw new AppleLifecycleSecretError();
@@ -83,7 +84,9 @@ export async function loadAppleLifecycleSecrets(
     !isRecord(subjectKeys) ||
     Object.keys(subjectKeys).length < 1 ||
     Object.keys(subjectKeys).length > 3 ||
-    !Object.keys(subjectKeys).every((candidate) => VERSION_PATTERN.test(candidate))
+    !Object.keys(subjectKeys).every((candidate) =>
+      VERSION_PATTERN.test(candidate)
+    )
   ) {
     throw new AppleLifecycleSecretError();
   }
@@ -106,14 +109,21 @@ export async function loadAppleLifecycleSecrets(
 }
 
 function hex(value: ArrayBuffer): string {
-  return Array.from(new Uint8Array(value), (byte) => byte.toString(16).padStart(2, '0')).join('');
+  return Array.from(
+    new Uint8Array(value),
+    (byte) => byte.toString(16).padStart(2, "0"),
+  ).join("");
 }
 
-export async function keyedDigest(key: CryptoKey, purpose: string, value: string): Promise<string> {
+export async function keyedDigest(
+  key: CryptoKey,
+  purpose: string,
+  value: string,
+): Promise<string> {
   if (
     !(key instanceof CryptoKey) ||
-    key.type !== 'secret' ||
-    !key.usages.includes('sign') ||
+    key.type !== "secret" ||
+    !key.usages.includes("sign") ||
     purpose.length === 0 ||
     purpose.length > 128 ||
     !/^[a-z0-9:-]+$/u.test(purpose) ||
@@ -125,15 +135,21 @@ export async function keyedDigest(key: CryptoKey, purpose: string, value: string
   }
   try {
     return hex(
-      await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(`${purpose}\u0000${value}`)),
+      await crypto.subtle.sign(
+        "HMAC",
+        key,
+        new TextEncoder().encode(`${purpose}\u0000${value}`),
+      ),
     );
   } catch {
     throw new AppleLifecycleSecretError();
   }
 }
 
-export const appleSubjectDigest = (secrets: AppleLifecycleSecrets, subject: string) =>
-  keyedDigest(secrets.subjectKey, 'onskin:apple-subject:v1', subject);
+export const appleSubjectDigest = (
+  secrets: AppleLifecycleSecrets,
+  subject: string,
+) => keyedDigest(secrets.subjectKey, "routinekind:apple-subject:v1", subject);
 export function appleSubjectDigestForVersion(
   secrets: AppleLifecycleSecrets,
   version: string,
@@ -141,13 +157,25 @@ export function appleSubjectDigestForVersion(
 ): Promise<string> {
   const key = secrets.subjectKeys.get(version);
   if (!key) throw new AppleLifecycleSecretError();
-  return keyedDigest(key, 'onskin:apple-subject:v1', subject);
+  return keyedDigest(key, "routinekind:apple-subject:v1", subject);
 }
 export const appleCodeDigest = (secrets: AppleLifecycleSecrets, code: string) =>
-  keyedDigest(secrets.codeKey, 'onskin:apple-code:v1', code);
-export const appleEventJtiDigest = (secrets: AppleLifecycleSecrets, jti: string) =>
-  keyedDigest(secrets.eventKey, 'onskin:apple-event-jti:v1', jti);
-export const appleEventPayloadDigest = (secrets: AppleLifecycleSecrets, payload: string) =>
-  keyedDigest(secrets.eventKey, 'onskin:apple-event-payload:v1', payload);
-export const appleRelayEmailDigest = (secrets: AppleLifecycleSecrets, email: string) =>
-  keyedDigest(secrets.eventKey, 'onskin:apple-relay-email:v1', email.toLowerCase());
+  keyedDigest(secrets.codeKey, "routinekind:apple-code:v1", code);
+export const appleEventJtiDigest = (
+  secrets: AppleLifecycleSecrets,
+  jti: string,
+) => keyedDigest(secrets.eventKey, "routinekind:apple-event-jti:v1", jti);
+export const appleEventPayloadDigest = (
+  secrets: AppleLifecycleSecrets,
+  payload: string,
+) =>
+  keyedDigest(secrets.eventKey, "routinekind:apple-event-payload:v1", payload);
+export const appleRelayEmailDigest = (
+  secrets: AppleLifecycleSecrets,
+  email: string,
+) =>
+  keyedDigest(
+    secrets.eventKey,
+    "routinekind:apple-relay-email:v1",
+    email.toLowerCase(),
+  );

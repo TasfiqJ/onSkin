@@ -194,7 +194,7 @@ set search_path = ''
 as $$
   select pg_catalog.encode(
     extensions.digest(
-      pg_catalog.convert_to('onskin-apple-auth-validation-claim:v1:' || p_claim_token, 'UTF8'),
+      pg_catalog.convert_to('routinekind-apple-auth-validation-claim:v1:' || p_claim_token, 'UTF8'),
       'sha256'
     ),
     'hex'
@@ -1605,7 +1605,7 @@ $$;
 -- -----------------------------------------------------------------------------
 
 -- A verified terminal Apple event is an authoritative account-level erasure
--- signal under OnSkin's conservative Sign in with Apple policy. Queue the same
+-- signal under RoutineKind's conservative Sign in with Apple policy. Queue the same
 -- six-step durable deletion coordinator used by in-app deletion, in the same
 -- transaction as the lifecycle transition. Apple has already terminated the
 -- authorization, so that provider step is durably attested as complete while
@@ -1781,11 +1781,11 @@ begin
   -- retries return the stable duplicate disposition instead of a transient
   -- uniqueness error that would provoke another provider retry.
   v_jti_lock := pg_catalog.hashtextextended(
-    'onskin-apple-event-jti:v1:' || p_jti_hmac,
+    'routinekind-apple-event-jti:v1:' || p_jti_hmac,
     0
   );
   v_payload_lock := pg_catalog.hashtextextended(
-    'onskin-apple-event-payload:v1:' || p_payload_hmac,
+    'routinekind-apple-event-payload:v1:' || p_payload_hmac,
     0
   );
   if v_jti_lock <= v_payload_lock then

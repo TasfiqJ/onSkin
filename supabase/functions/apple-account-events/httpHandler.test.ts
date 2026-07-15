@@ -11,7 +11,7 @@ function assert(condition: unknown, message: string): asserts condition {
 const URL = "https://example.invalid/functions/v1/apple-account-events";
 const PAYLOAD = "a.b.c";
 const CLAIMS: AppleServerEventClaims = Object.freeze({
-  audience: "com.example.onskin",
+  audience: "com.example.routinekind",
   eventAtSeconds: 1_750_000_000,
   eventType: "consent-revoked",
   issuer: "https://appleid.apple.com",

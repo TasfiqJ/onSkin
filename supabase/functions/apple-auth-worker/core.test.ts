@@ -28,7 +28,7 @@ function assert(condition: unknown, message: string): asserts condition {
 
 const USER_ID = "00000000-0000-4000-8000-000000000001";
 const APPLE_SUBJECT = "001234.abcdef";
-const CLIENT_ID = "com.example.onskin";
+const CLIENT_ID = "com.example.routinekind";
 const CLAIM_TOKEN = "aa".repeat(32);
 
 function user(subject = APPLE_SUBJECT): User {

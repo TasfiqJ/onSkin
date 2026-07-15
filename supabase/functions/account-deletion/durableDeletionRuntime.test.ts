@@ -281,13 +281,13 @@ Deno.test('runtime re-seals the retained Apple refresh token into durable deleti
     keyring: vault,
     userId: USER_ID,
     subjectHmac,
-    clientId: 'com.onskin.app',
+    clientId: 'com.routinekind.app',
     refreshToken: 'server-retained-refresh-token',
   });
   client.appleVaultRows = [
     {
       apple_subject_hmac: subjectHmac,
-      client_id: 'com.onskin.app',
+      client_id: 'com.routinekind.app',
       encrypted_refresh_token: appleVaultEnvelopeToBytea(sealed),
       vault_key_version: 'v1',
       generation: 3,
