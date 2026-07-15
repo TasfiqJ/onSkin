@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url';
 
 export const OPTIMIZATION_FIXTURE_VERSION = 'optimization-fixtures:v1';
 export const OPTIMIZATION_FIXTURE_SEED = 'routinekind-synthetic-2026-07-12';
+export const PHOTO_FIXTURE_CARDINALITIES = Object.freeze([0, 1, 2, 10, 50, 100, 250]);
 
 const SCALE_COUNTS = Object.freeze({
   empty: {
@@ -115,9 +116,20 @@ function createExportRows(count) {
   }));
 }
 
-export function createOptimizationFixture(scale) {
+function requirePhotoCount(photoCount) {
+  if (!Number.isInteger(photoCount) || !PHOTO_FIXTURE_CARDINALITIES.includes(photoCount)) {
+    throw new Error(
+      `Photo fixture count must be one of: ${PHOTO_FIXTURE_CARDINALITIES.join(', ')}`,
+    );
+  }
+  return photoCount;
+}
+
+export function createOptimizationFixture(scale, options = {}) {
   const counts = SCALE_COUNTS[scale];
   if (!counts) throw new Error(`Unknown fixture scale: ${scale}`);
+  const photoCount =
+    options.photoCount === undefined ? counts.photos : requirePhotoCount(options.photoCount);
   return {
     metadata: {
       version: OPTIMIZATION_FIXTURE_VERSION,
@@ -128,15 +140,15 @@ export function createOptimizationFixture(scale) {
     },
     shelf: createShelf(counts.activeShelf, counts.archivedShelf),
     completions: createCompletions(counts.completionDays),
-    photos: createPhotos(counts.photos),
+    photos: createPhotos(photoCount),
     outbox: createOutbox(counts.outbox),
     askMessages: createAskMessages(counts.askMessages),
     exportRows: createExportRows(counts.exportRows),
   };
 }
 
-export function fixtureDocument(scale) {
-  const data = createOptimizationFixture(scale);
+export function fixtureDocument(scale, options = {}) {
+  const data = createOptimizationFixture(scale, options);
   const serializedData = JSON.stringify(data);
   return {
     manifest: {
@@ -157,19 +169,24 @@ export function fixtureDocument(scale) {
 function parseArguments(argv) {
   let scale = 'median';
   let output = '';
+  let photoCount;
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === '--scale') scale = argv[++index] ?? '';
     else if (argument === '--output') output = argv[++index] ?? '';
-    else throw new Error(`Unknown argument: ${argument}`);
+    else if (argument === '--photo-count') {
+      const value = argv[++index] ?? '';
+      if (!/^\d+$/.test(value)) throw new Error('--photo-count must be a non-negative integer');
+      photoCount = requirePhotoCount(Number(value));
+    } else throw new Error(`Unknown argument: ${argument}`);
   }
   if (!output) throw new Error('--output is required');
-  return { scale, output: resolve(output) };
+  return { scale, output: resolve(output), photoCount };
 }
 
 async function main() {
-  const { scale, output } = parseArguments(process.argv.slice(2));
-  const document = fixtureDocument(scale);
+  const { scale, output, photoCount } = parseArguments(process.argv.slice(2));
+  const document = fixtureDocument(scale, { photoCount });
   await mkdir(dirname(output), { recursive: true });
   await writeFile(output, `${JSON.stringify(document, null, 2)}\n`, 'utf8');
   console.log(

@@ -12,12 +12,17 @@ Available scales:
 - `stress`: 750 Shelf rows, one year of AM/PM completions, 250 photo metadata
   rows, 1,000 outbox operations, 200 Ask messages, and 1,205 export rows.
 
+For focused photo-list profiling, `--photo-count` overrides only the selected
+scale's metadata-only photo rows. Supported cardinalities are `0`, `1`, `2`,
+`10`, `50`, `100`, and `250`; all other collections retain the selected scale.
+
 Each generated document includes the fixture version, seed, record counts, and
 SHA-256 digest of its data. Generate artifacts outside Git unless a focused test
 requires a committed fixture:
 
 ```bash
 node scripts/optimization/generate-fixtures.mjs --scale stress --output .expo/optimization/stress.json
+node scripts/optimization/generate-fixtures.mjs --scale empty --photo-count 100 --output .expo/optimization/photos-100.json
 node scripts/optimization/generate-fixtures-smoke.mjs
 ```
 

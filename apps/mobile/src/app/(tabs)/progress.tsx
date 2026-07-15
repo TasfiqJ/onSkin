@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { FlatList, Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, Screen, Text } from '@/components/ui';
@@ -139,6 +139,52 @@ function FirstRun({ compact = false }: { compact?: boolean }) {
 
 // ── Compare-pair picker (docs/06 §4: "tap a date to change") ─────────────────
 type PhotoLite = NonNullable<ReturnType<typeof usePhotos>['data']>['series'][number];
+function PairPickerPhoto({
+  id,
+  localUri,
+  takenLocalDate,
+  target,
+  selected,
+  onSelect,
+}: {
+  id: PhotoLite['id'];
+  localUri: PhotoLite['localUri'];
+  takenLocalDate: PhotoLite['takenLocalDate'];
+  target: 'first' | 'second';
+  selected: boolean;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Choose ${short(takenLocalDate)} as the ${target} comparison photo`}
+      accessibilityHint="Updates the side-by-side comparison pair"
+      accessibilityState={{ selected }}
+      onPress={() => onSelect(id)}
+      style={{ width: 92, aspectRatio: 3 / 4 }}
+      className="overflow-hidden rounded-[12px]"
+    >
+      {localUri ? (
+        <PhotoImage uri={localUri} style={{ flex: 1 }} />
+      ) : (
+        <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
+      )}
+      <View
+        className="absolute inset-x-0 bottom-0 top-0 rounded-[12px]"
+        style={{ borderWidth: selected ? 2.5 : 0, borderColor: colors.clay }}
+      />
+      <View
+        className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5"
+        style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}
+      >
+        <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
+          {short(takenLocalDate)}
+        </Text>
+      </View>
+    </Pressable>
+  );
+}
+
 function PairPicker({
   which,
   photos,
@@ -158,6 +204,7 @@ function PairPicker({
   const sheetPaddingBottom = insets.bottom > 0 ? Math.max(40, insets.bottom + 24) : undefined;
   const title = which === 'before' ? 'Choose the first photo' : 'Choose the second photo';
   const target = which === 'before' ? 'first' : 'second';
+  const latestFirstPhotos = useMemo(() => photos.slice().reverse(), [photos]);
 
   return (
     <Modal
@@ -193,48 +240,23 @@ function PairPicker({
           <Text variant="bodySm" tone="muted" className="mb-4">
             Any two captures. You decide what to compare.
           </Text>
-          <ScrollView
+          <FlatList
             horizontal
+            data={latestFirstPhotos}
+            keyExtractor={(photo) => photo.id}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 10 }}
-          >
-            {photos
-              .slice()
-              .reverse()
-              .map((p) => {
-                const sel = p.id === selectedId;
-                return (
-                  <Pressable
-                    key={p.id}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Choose ${short(p.takenLocalDate)} as the ${target} comparison photo`}
-                    accessibilityHint="Updates the side-by-side comparison pair"
-                    accessibilityState={{ selected: sel }}
-                    onPress={() => onSelect(p.id)}
-                    style={{ width: 92, aspectRatio: 3 / 4 }}
-                    className="overflow-hidden rounded-[12px]"
-                  >
-                    {p.localUri ? (
-                      <PhotoImage uri={p.localUri} style={{ flex: 1 }} />
-                    ) : (
-                      <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
-                    )}
-                    <View
-                      className="absolute inset-x-0 bottom-0 top-0 rounded-[12px]"
-                      style={{ borderWidth: sel ? 2.5 : 0, borderColor: colors.clay }}
-                    />
-                    <View
-                      className="absolute bottom-1.5 left-1.5 rounded-[4px] px-1.5 py-0.5"
-                      style={{ backgroundColor: 'rgba(250,247,242,0.85)' }}
-                    >
-                      <Text variant="label" style={{ fontSize: 9, color: colors.muted }}>
-                        {short(p.takenLocalDate)}
-                      </Text>
-                    </View>
-                  </Pressable>
-                );
-              })}
-          </ScrollView>
+            renderItem={({ item: photo }) => (
+              <PairPickerPhoto
+                id={photo.id}
+                localUri={photo.localUri}
+                takenLocalDate={photo.takenLocalDate}
+                target={target}
+                selected={photo.id === selectedId}
+                onSelect={onSelect}
+              />
+            )}
+          />
         </View>
       </View>
     </Modal>

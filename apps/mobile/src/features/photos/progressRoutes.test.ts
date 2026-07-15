@@ -513,7 +513,7 @@ describe('Progress route mobile contracts', () => {
       'className="flex-1"\n          accessibilityLabel="Dismiss photo picker"',
     );
     expect(source).toContain(
-      "import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';",
+      "import { FlatList, Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';",
     );
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
@@ -527,11 +527,41 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain(': { maxHeight: sheetMaxHeight, paddingBottom: sheetPaddingBottom }');
     expect(source).toContain('accessibilityViewIsModal');
     expect(source).toContain(
-      'accessibilityLabel={`Choose ${short(p.takenLocalDate)} as the ${target} comparison photo`}',
+      'accessibilityLabel={`Choose ${short(takenLocalDate)} as the ${target} comparison photo`}',
     );
     expect(source).not.toContain('role="dialog"');
     expect(source).not.toContain('aria-modal');
     expect(source).not.toContain('onPress={() => {}}');
+  });
+
+  it('virtualizes the latest-first comparison picker with default FlatList tuning', () => {
+    const source = readAppRoute('(tabs)/progress.tsx');
+    const pickerStart = source.indexOf('function PairPickerPhoto');
+    const picker = source.slice(pickerStart, source.indexOf('function CompareView', pickerStart));
+
+    expect(picker).toContain('function PairPickerPhoto({');
+    expect(picker).toContain('<FlatList');
+    expect(picker).toContain('horizontal');
+    expect(picker).toContain(
+      'const latestFirstPhotos = useMemo(() => photos.slice().reverse(), [photos]);',
+    );
+    expect(picker).toContain('data={latestFirstPhotos}');
+    expect(picker).toContain('keyExtractor={(photo) => photo.id}');
+    expect(picker).toContain('showsHorizontalScrollIndicator={false}');
+    expect(picker).toContain('contentContainerStyle={{ gap: 10 }}');
+    expect(picker).toContain('renderItem={({ item: photo }) => (');
+    expect(picker).toContain('localUri={photo.localUri}');
+    expect(picker).toContain('{localUri ? (');
+    expect(picker).toContain('<PhotoImage uri={localUri} style={{ flex: 1 }} />');
+    expect(picker).toContain('style={{ width: 92, aspectRatio: 3 / 4 }}');
+    expect(picker).toContain('accessibilityHint="Updates the side-by-side comparison pair"');
+    expect(picker).toContain('accessibilityState={{ selected }}');
+    expect(picker).toContain('onPress={() => onSelect(id)}');
+    expect(picker).not.toContain('<ScrollView');
+    expect(picker).not.toContain('initialNumToRender');
+    expect(picker).not.toContain('maxToRenderPerBatch');
+    expect(picker).not.toContain('windowSize');
+    expect(picker).not.toContain('removeClippedSubviews');
   });
 
   it('plays real local time-lapse frames with finite and reduced-motion-safe controls', () => {
