@@ -78,6 +78,15 @@ assert.deepEqual(
   'PostHog deletion must remain mapped to admin and operator tooling',
 );
 
+assert(
+  !inventory.items.some((entry) => entry.id === 'feature-flag:OBF_API_ENABLED'),
+  'the retired live Open Beauty Facts API flag must not return to the launch inventory',
+);
+assert(
+  !inventory.items.some((entry) => entry.id === 'vendor-call:origin:world.openbeautyfacts.org'),
+  'offline Open Beauty Facts artifacts must not be classified as a live vendor call',
+);
+
 const deletionLifecycleTableFeatures = {
   account_deletion_operations: ['F-02', 'F-20'],
   account_deletion_barriers: ['F-02', 'F-20'],
@@ -94,6 +103,22 @@ for (const [table, expectedFeatureIds] of Object.entries(deletionLifecycleTableF
     tableItem.featureIds,
     expectedFeatureIds,
     `${table} must remain mapped to its account/privacy, payment, and/or operator launch features`,
+  );
+}
+
+for (const id of [
+  'data-store:postgres:health_processing_states',
+  'data-store:postgres:health_consent_withdrawal_operations',
+  'data-store:postgres:health_consent_withdrawal_steps',
+  'data-store:local:apps/mobile/src/features/healthConsent/lifecycleStore.ts',
+  'edge-function:health-consent-worker',
+]) {
+  const healthLifecycleItem = inventory.items.find((entry) => entry.id === id);
+  assert(healthLifecycleItem, `missing health-consent lifecycle item ${id}`);
+  assert.deepEqual(
+    healthLifecycleItem.featureIds,
+    ['F-02'],
+    `${id} must map to onboarding, identity, and consent rather than skin cycling`,
   );
 }
 

@@ -1,4 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 
 import { detectConflicts, type DetectedConflict } from './engine';
 import {
@@ -27,6 +33,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
 }));
 
 const KEY = 'onskin.conflict.overrides';
+let accountGeneration = 0;
 
 function conflict(): DetectedConflict {
   const [result] = detectConflicts(
@@ -41,7 +48,7 @@ function conflict(): DetectedConflict {
 }
 
 describe('conflict choice persistence', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     mocks.storage.clear();
     mocks.getPrivateItem.mockReset();
     mocks.updatePrivateItem.mockReset();
@@ -53,6 +60,18 @@ describe('conflict choice persistence', () => {
         else mocks.storage.set(key, next);
       },
     );
+    clearActiveHealthProcessingEpoch();
+    await runAccountGenerationOperation((lease) => {
+      accountGeneration = lease.generation;
+    });
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'user-a',
+      accountGeneration,
+    });
+  });
+
+  afterEach(() => {
+    clearActiveHealthProcessingEpoch();
   });
 
   it('returns an empty map when no choice exists', async () => {

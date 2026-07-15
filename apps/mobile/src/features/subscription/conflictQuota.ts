@@ -1,4 +1,8 @@
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
+import {
+  runCurrentHealthDataOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 
 const KEY = 'onskin.subscription.freeConflictCheckRuleIds.v1';
 
@@ -49,34 +53,59 @@ export function conflictCheckAccess(input: {
   return { allowed: false, reason: 'quota_exhausted', shouldRecord: false };
 }
 
-export async function loadFreeConflictCheckRuleIds(): Promise<string[]> {
+async function loadFreeConflictCheckRuleIdsWithLease(
+  lease: HealthDataWriteOperationLease,
+): Promise<string[]> {
   let raw: string | null = null;
   try {
+    lease.assertCurrent();
     raw = await getPrivateItem(KEY);
+    lease.assertCurrent();
   } catch {
+    lease.assertCurrent();
     return [];
   }
   if (!raw) return [];
   try {
     const parsed: unknown = JSON.parse(raw);
     const normalized = normalizeRuleIds(parsed);
+    lease.assertCurrent();
     if (didNormalizeRuleIds(parsed, normalized)) {
-      if (normalized.length > 0)
+      if (normalized.length > 0) {
+        lease.assertCurrent();
         await setPrivateItem(KEY, JSON.stringify(normalized)).catch(() => undefined);
-      else await removePrivateItem(KEY).catch(() => undefined);
+      } else {
+        lease.assertCurrent();
+        await removePrivateItem(KEY).catch(() => undefined);
+      }
+      lease.assertCurrent();
     }
+    lease.assertCurrent();
     return normalized;
   } catch {
+    lease.assertCurrent();
+    // This is the store's established explicit repair policy. It remains
+    // purpose-authorized and cannot dispatch after its exact lease changes.
     await removePrivateItem(KEY).catch(() => undefined);
+    lease.assertCurrent();
     return [];
   }
 }
 
+export async function loadFreeConflictCheckRuleIds(): Promise<string[]> {
+  return runCurrentHealthDataOperation((lease) => loadFreeConflictCheckRuleIdsWithLease(lease));
+}
+
 export async function recordFreeConflictCheckRuleId(ruleId: string): Promise<string[]> {
-  const normalizedRuleId = ruleId.trim();
-  const seen = await loadFreeConflictCheckRuleIds();
-  if (!normalizedRuleId) return seen;
-  const next = seen.includes(normalizedRuleId) ? seen : [...seen, normalizedRuleId];
-  await setPrivateItem(KEY, JSON.stringify(next));
-  return next;
+  return runCurrentHealthDataOperation(async (lease) => {
+    const normalizedRuleId = ruleId.trim();
+    const seen = await loadFreeConflictCheckRuleIdsWithLease(lease);
+    lease.assertCurrent();
+    if (!normalizedRuleId) return seen;
+    const next = seen.includes(normalizedRuleId) ? seen : [...seen, normalizedRuleId];
+    lease.assertCurrent();
+    await setPrivateItem(KEY, JSON.stringify(next));
+    lease.assertCurrent();
+    return next;
+  });
 }

@@ -1,7 +1,27 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_PREFS, type NotifPrefs } from './store';
 import { acceptRoutineReminderSoftAsk, declineRoutineReminderSoftAsk } from './onboarding';
+
+const leaseState = vi.hoisted(() => ({ current: true }));
+
+vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
+  activeHealthProcessingOwnerUserId: () => 'user-1',
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED: 'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+  runHealthDataWriteOperation: async (
+    expectedOwnerUserId: string,
+    operation: (lease: { ownerUserId: string; assertCurrent: () => void }) => Promise<unknown>,
+  ) =>
+    operation({
+      ownerUserId: expectedOwnerUserId,
+      assertCurrent: () => {
+        if (!leaseState.current) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CHANGED');
+      },
+    }),
+}));
 
 const mocks = vi.hoisted(() => ({
   defaultPrefs: {
@@ -48,6 +68,10 @@ function deps(requestGranted: boolean) {
 }
 
 describe('notification onboarding choice', () => {
+  beforeEach(() => {
+    leaseState.current = true;
+  });
+
   it('enables and schedules routine reminders only when permission is granted', async () => {
     const d = deps(true);
 
@@ -81,5 +105,20 @@ describe('notification onboarding choice', () => {
     expect(d.rescheduleReminders).toHaveBeenCalledWith(
       expect.objectContaining({ amEnabled: false, pmEnabled: false }),
     );
+  });
+
+  it('does not persist a permission result after its health-data lease becomes stale', async () => {
+    const d = deps(true);
+    d.requestPermission.mockImplementationOnce(async () => {
+      leaseState.current = false;
+      return true;
+    });
+
+    await expect(acceptRoutineReminderSoftAsk(d)).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CHANGED',
+    );
+
+    expect(d.saveNotifPrefs).not.toHaveBeenCalled();
+    expect(d.rescheduleReminders).not.toHaveBeenCalled();
   });
 });

@@ -4,12 +4,16 @@ import type { Session } from '@supabase/supabase-js';
 import { createClient } from '@supabase/supabase-js';
 
 import { env } from '../env';
+import { createHealthEpochFetch } from '../consent/healthProcessingEpoch';
 import {
   createSupabaseAuthRefreshProtectiveFetch,
   parseSupabaseAccessTokenClaims,
 } from './authRefreshProtection';
 import { LargeSecureStore } from './largeSecureStore';
-import { createSupabaseRemoteRequestGatedFetch } from './remoteRequestGate';
+import {
+  createSupabaseRemoteRequestGatedFetch,
+  supabaseRemoteRequestSnapshot,
+} from './remoteRequestGate';
 
 const isServerRender = typeof window === 'undefined';
 const serverAuthStorage = {
@@ -26,6 +30,11 @@ const authRefreshProtectiveFetch = createSupabaseAuthRefreshProtectiveFetch({
   supabaseUrl: env.supabaseUrl,
 });
 const remotelyAdmittedFetch = createSupabaseRemoteRequestGatedFetch(authRefreshProtectiveFetch);
+const healthEpochFetch = createHealthEpochFetch(
+  remotelyAdmittedFetch,
+  env.supabaseUrl,
+  supabaseRemoteRequestSnapshot,
+);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -167,7 +176,7 @@ export async function clearPersistedSupabaseSession(): Promise<void> {
 // docs/01 §5 client flags. Storage is the encrypted LargeSecureStore.
 // BLOCKED: B-SUPABASE. Url/key read from env placeholders until the project exists.
 export const supabase = createClient<Database>(env.supabaseUrl, env.supabasePublishableKey, {
-  global: { fetch: remotelyAdmittedFetch },
+  global: { fetch: healthEpochFetch },
   auth: {
     storage: authStorage,
     storageKey: authStorageKey,

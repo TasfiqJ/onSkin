@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { localDateString } from '@/features/today/useToday';
+import { setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
 
 import { getCycleAnchor, setCycleAnchor } from './cycleAnchor';
 
@@ -23,6 +24,7 @@ const KEY = 'onskin.cycleAnchor';
 describe('cycle anchor store', () => {
   beforeEach(() => {
     mocks.storage.clear();
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
   it('returns and preserves a valid local-date anchor', async () => {

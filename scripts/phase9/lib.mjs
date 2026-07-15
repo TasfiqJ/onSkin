@@ -40,6 +40,40 @@ export const OWNER_LINKED_PRIVATE_TABLES = Object.freeze([
   'ask_safety_audit',
 ]);
 
+// Owner/client tables whose rows are health-purpose data and therefore become
+// unreadable as soon as health processing is not active. `profiles` is the
+// retained account shell (its streak caches are synchronously zeroed), while
+// `consents` and `entitlements` are the preserved policy and billing lanes.
+export const HEALTH_PURPOSE_READ_FENCED_TABLES = Object.freeze([
+  'skin_profiles',
+  'user_products',
+  'routines',
+  'routine_steps',
+  'routine_completions',
+  'routine_conflicts',
+  'active_ramp',
+  'shelf_scans',
+  'cycles',
+  'cycle_nights',
+  'streak_freezes',
+  'notification_preferences',
+  'notification_log',
+  'photos',
+  'recommendation_preferences',
+  'recommendations',
+  'catalog_corrections',
+  'catalog_lookup_events',
+  'commerce_click_events',
+  'community_blocks',
+  'community_questions',
+  'community_reactions',
+  'community_reports',
+  'photo_trend',
+  'ask_sessions',
+  'ask_turn_audit',
+  'ask_safety_audit',
+]);
+
 export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
   'reverse_trial_grants',
   'subscriptions_events',
@@ -58,6 +92,9 @@ export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
 // evidence must prove they are sealed rather than pretending an admin client
 // can create or read a positive-control row.
 export const SEALED_SERVICE_PRIVATE_TABLES = Object.freeze([
+  'health_processing_states',
+  'health_consent_withdrawal_operations',
+  'health_consent_withdrawal_steps',
   'account_publication_leases',
   'account_deletion_operations',
   'account_deletion_barriers',

@@ -117,6 +117,11 @@ describe('local private data cleanup', () => {
     expect(mocks.multiRemove.mock.calls.flatMap(([keys]) => keys)).not.toContain(
       'routinekind.store_transaction_notice.v2',
     );
+    expect(
+      mocks.multiRemove.mock.calls
+        .flatMap(([keys]) => keys as string[])
+        .some((key) => key.startsWith('routinekind.health_dependent_withdrawal.owner.')),
+    ).toBe(false);
     expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledTimes(1);
     expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledTimes(1);
     expect(mocks.cancelAllScheduledNotificationsAsync).toHaveBeenCalledTimes(1);

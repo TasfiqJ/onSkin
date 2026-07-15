@@ -4,7 +4,7 @@ import { Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
-import { declineCommerceConsent, grantCommerceConsent } from '@/features/commerce/consent';
+import { grantCommerceConsent, refuseCommerceConsent } from '@/features/commerce/consent';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { LockGlyph } from '@/features/commerce/LockGlyph';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -34,7 +34,7 @@ export default function CommerceConsentSheet() {
   };
   const decline = async () => {
     haptics.select();
-    await declineCommerceConsent();
+    await refuseCommerceConsent();
     await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
     close();
   };

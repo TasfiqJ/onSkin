@@ -5,10 +5,17 @@ import { PHOTO_SERIES } from '@onskin/types';
 
 import { supabase } from '@/lib/supabase/client';
 import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  runHealthDataWriteOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 import {
   decryptPhotoNote,
+  clearEncryptedPhotoStorage,
   deleteCapturedPhotoSource,
   deleteQuarantinedPhoto,
   encryptCapturedPhoto,
@@ -35,20 +42,63 @@ export const PHOTO_METADATA_INVALID = 'PHOTO_METADATA_INVALID';
 
 let photoStoreMutationTail: Promise<void> = Promise.resolve();
 
-function runPhotoStoreMutation<T>(operation: () => Promise<T>): Promise<T> {
+type PhotoOperationGuard = Readonly<{ assertCurrent: () => void }>;
+
+function runCurrentHealthDataOperation<T>(
+  operation: (lease: HealthDataWriteOperationLease) => T | Promise<T>,
+): Promise<T> {
+  const ownerUserId = activeHealthProcessingOwnerUserId();
+  if (!ownerUserId) return Promise.reject(new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED));
+  return runHealthDataWriteOperation(ownerUserId, operation);
+}
+
+function queuePhotoStoreMutation<T, Guard extends PhotoOperationGuard>(
+  guard: Guard,
+  operation: (guard: Guard) => Promise<T>,
+): Promise<T> {
+  const guardedOperation = async () => {
+    guard.assertCurrent();
+    try {
+      const result = await operation(guard);
+      guard.assertCurrent();
+      return result;
+    } catch (error) {
+      // Never collapse withdrawal/re-grant or an account transition into a
+      // feature/storage error from the authority window that just ended.
+      guard.assertCurrent();
+      throw error;
+    }
+  };
+  const pending = photoStoreMutationTail.then(guardedOperation, guardedOperation);
+  photoStoreMutationTail = pending.then(
+    () => undefined,
+    () => undefined,
+  );
+  return pending;
+}
+
+function runPhotoStoreMutation<T>(
+  operation: (lease: HealthDataWriteOperationLease) => Promise<T>,
+): Promise<T> {
+  return runCurrentHealthDataOperation((lease) => queuePhotoStoreMutation(lease, operation));
+}
+
+function runPhotoStoreCleanup<T>(
+  operation: (guard: PhotoOperationGuard) => Promise<T>,
+): Promise<T> {
   return runAccountGenerationOperation(async (lease) => {
     const guardedOperation = async () => {
       lease.assertCurrent();
-      const result = await operation();
+      const result = await operation(lease);
       lease.assertCurrent();
       return result;
     };
-    const pending = photoStoreMutationTail.then(guardedOperation, guardedOperation);
-    photoStoreMutationTail = pending.then(
-      () => undefined,
-      () => undefined,
-    );
-    return pending;
+    try {
+      return await queuePhotoStoreMutation(lease, () => guardedOperation());
+    } catch (error) {
+      lease.assertCurrent();
+      throw error;
+    }
   });
 }
 
@@ -134,7 +184,10 @@ function timeOfDayOrNull(value: unknown): TimeOfDay | null {
   return text && TIME_OF_DAY.has(text as TimeOfDay) ? (text as TimeOfDay) : null;
 }
 
-async function normalizeStoredRecord(value: unknown): Promise<PhotoRecord | null> {
+async function normalizeStoredRecord(
+  value: unknown,
+  guard: PhotoOperationGuard,
+): Promise<PhotoRecord | null> {
   if (!isRecord(value)) return null;
   const id = stringOrNull(value.id);
   const takenLocalDate = localDateOrNull(value.takenLocalDate);
@@ -145,9 +198,11 @@ async function normalizeStoredRecord(value: unknown): Promise<PhotoRecord | null
   const encryptedLocalUri =
     explicitEncryptedUri ?? (localUri && isEncryptedPhotoUri(localUri) ? localUri : null);
   const notesCiphertext = stringOrNull(value.notesCiphertext);
+  guard.assertCurrent();
   const notes = notesCiphertext
     ? await decryptPhotoNote(notesCiphertext)
     : stringOrNull(value.notes);
+  guard.assertCurrent();
   const encrypted = encryptedLocalUri != null;
   const isEncrypted = encrypted || booleanOr(value.isEncrypted, false);
 
@@ -181,21 +236,30 @@ async function normalizeStoredRecord(value: unknown): Promise<PhotoRecord | null
   };
 }
 
-async function normalizeStoredRecords(value: unknown): Promise<PhotoRecord[] | null> {
+async function normalizeStoredRecords(
+  value: unknown,
+  guard: PhotoOperationGuard,
+): Promise<PhotoRecord[] | null> {
   if (!Array.isArray(value)) return null;
   const items: PhotoRecord[] = [];
   for (const row of value) {
-    const photo = await normalizeStoredRecord(row);
+    guard.assertCurrent();
+    const photo = await normalizeStoredRecord(row, guard);
+    guard.assertCurrent();
     if (!photo) return null;
     items.push(photo);
   }
   return items;
 }
 
-async function loadPhotosUnlocked(): Promise<PhotoRecord[]> {
+async function loadPhotosUnlocked(guard: PhotoOperationGuard): Promise<PhotoRecord[]> {
+  guard.assertCurrent();
   const raw = await getPrivateItem(KEY);
+  guard.assertCurrent();
   if (raw === null) {
+    guard.assertCurrent();
     await reconcileEncryptedPhotoStorage([], { removeUnreferencedFinals: false });
+    guard.assertCurrent();
     return [];
   }
   let parsed: unknown;
@@ -204,8 +268,10 @@ async function loadPhotosUnlocked(): Promise<PhotoRecord[]> {
   } catch {
     throw new Error(PHOTO_METADATA_INVALID);
   }
-  const normalized = await normalizeStoredRecords(parsed);
+  const normalized = await normalizeStoredRecords(parsed, guard);
+  guard.assertCurrent();
   if (!normalized) throw new Error(PHOTO_METADATA_INVALID);
+  guard.assertCurrent();
   await reconcileEncryptedPhotoStorage(
     normalized.flatMap((photo) =>
       [photo.encryptedLocalUri ?? photo.localUri, photo.thumbnailLocalUri].filter(
@@ -213,6 +279,7 @@ async function loadPhotosUnlocked(): Promise<PhotoRecord[]> {
       ),
     ),
   );
+  guard.assertCurrent();
   return normalized;
 }
 
@@ -220,7 +287,8 @@ export async function loadPhotos(): Promise<PhotoRecord[]> {
   return runPhotoStoreMutation(loadPhotosUnlocked);
 }
 
-async function persist(items: PhotoRecord[]): Promise<void> {
+async function persist(items: PhotoRecord[], guard: PhotoOperationGuard): Promise<void> {
+  guard.assertCurrent();
   const stored: StoredPhotoRecord[] = await Promise.all(
     items.map(async (item) => ({
       ...item,
@@ -228,7 +296,9 @@ async function persist(items: PhotoRecord[]): Promise<void> {
       notesCiphertext: await encryptPhotoNote(item.notes),
     })),
   );
+  guard.assertCurrent();
   await setPrivateItem(KEY, JSON.stringify(stored));
+  guard.assertCurrent();
 }
 
 async function quarantineUncommittedEncryptedPhoto(
@@ -244,18 +314,35 @@ async function quarantineUncommittedEncryptedPhoto(
 async function quarantinePhotoFiles(
   uris: (string | null | undefined)[],
   operationId: string,
+  guard: PhotoOperationGuard,
 ): Promise<QuarantinedPhotoFile[]> {
   const quarantined: QuarantinedPhotoFile[] = [];
   try {
     for (const uri of new Set(uris.filter((value): value is string => Boolean(value)))) {
+      guard.assertCurrent();
       const file = await quarantineEncryptedPhoto(uri, operationId);
+      guard.assertCurrent();
       if (file) quarantined.push(file);
     }
     return quarantined;
   } catch (error) {
+    try {
+      guard.assertCurrent();
+    } catch (authorityError) {
+      // Withdrawal/account cleanup owns the bytes now. Finish deleting any
+      // already-quarantined envelopes; never restore health data into a new lease.
+      await finishQuarantinedFiles(quarantined);
+      throw authorityError;
+    }
     const restored = await Promise.allSettled(
       [...quarantined].reverse().map((file) => restoreQuarantinedPhoto(file)),
     );
+    try {
+      guard.assertCurrent();
+    } catch (authorityError) {
+      await finishQuarantinedFiles(quarantined);
+      throw authorityError;
+    }
     if (restored.some((result) => result.status === 'rejected')) {
       throw new Error('PHOTO_DELETE_ROLLBACK_FAILED');
     }
@@ -277,12 +364,14 @@ async function finishQuarantinedFiles(files: QuarantinedPhotoFile[]): Promise<vo
 }
 
 export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
-  return runPhotoStoreMutation(async () => {
-    const items = await loadPhotosUnlocked();
+  return runPhotoStoreMutation(async (lease) => {
+    const items = await loadPhotosUnlocked(lease);
+    lease.assertCurrent();
     const series = input.series ?? 'front';
     const hasReference = items.some((p) => p.series === series);
     const id = randomUUID();
     const sourceNeedsCleanup = Boolean(input.localUri && !isEncryptedPhotoUri(input.localUri));
+    lease.assertCurrent();
     const encrypted =
       input.localUri && !isEncryptedPhotoUri(input.localUri)
         ? await encryptCapturedPhoto(input.localUri, id)
@@ -293,6 +382,7 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
               encryptionVersion: photoEncryptionInfo.version,
             }
           : null;
+    lease.assertCurrent();
 
     const rec: PhotoRecord = {
       id,
@@ -321,18 +411,29 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
       keyId: encrypted?.keyId ?? null,
     };
     try {
-      await persist([rec, ...items]);
+      await persist([rec, ...items], lease);
     } catch (error) {
       if (encrypted && sourceNeedsCleanup) {
         await quarantineUncommittedEncryptedPhoto(encrypted.encryptedLocalUri, `add-${id}`).catch(
           () => undefined,
         );
       }
+      try {
+        lease.assertCurrent();
+      } catch (authorityError) {
+        // A capture cannot remain retryable into a later consent/account lease.
+        // Delete the unencrypted camera-cache source without reading it.
+        if (sourceNeedsCleanup) {
+          await deleteCapturedPhotoSource(input.localUri).catch(() => undefined);
+        }
+        throw authorityError;
+      }
       throw error;
     }
     if (sourceNeedsCleanup) {
       await deleteCapturedPhotoSource(input.localUri).catch(() => undefined);
     }
+    lease.assertCurrent();
     return rec;
   });
 }
@@ -341,67 +442,93 @@ export async function updatePhoto(
   id: string,
   patch: Partial<Pick<PhotoRecord, 'notes' | 'timeOfDay' | 'faceRegionRedacted'>>,
 ): Promise<void> {
-  await runPhotoStoreMutation(async () => {
-    const items = await loadPhotosUnlocked();
-    await persist(items.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+  await runPhotoStoreMutation(async (lease) => {
+    const items = await loadPhotosUnlocked(lease);
+    lease.assertCurrent();
+    await persist(
+      items.map((p) => (p.id === id ? { ...p, ...patch } : p)),
+      lease,
+    );
   });
 }
 
 export async function removePhoto(id: string): Promise<void> {
-  const removed = await runPhotoStoreMutation(async () => {
-    const items = await loadPhotosUnlocked();
+  await runPhotoStoreMutation(async (lease) => {
+    const items = await loadPhotosUnlocked(lease);
     const target = items.find((p) => p.id === id);
-    if (!target) return false;
+    if (!target) return;
+    lease.assertCurrent();
     const quarantined = await quarantinePhotoFiles(
       [target.encryptedLocalUri ?? target.localUri, target.thumbnailLocalUri],
       `delete-${id}-${randomUUID()}`,
+      lease,
     );
     try {
-      await persist(items.filter((p) => p.id !== id));
+      await persist(
+        items.filter((p) => p.id !== id),
+        lease,
+      );
     } catch (error) {
-      await restoreQuarantinedFiles(quarantined);
+      try {
+        lease.assertCurrent();
+      } catch (authorityError) {
+        await finishQuarantinedFiles(quarantined);
+        throw authorityError;
+      }
+      try {
+        await restoreQuarantinedFiles(quarantined);
+        lease.assertCurrent();
+      } catch (restoreError) {
+        try {
+          lease.assertCurrent();
+        } catch (authorityError) {
+          await finishQuarantinedFiles(quarantined);
+          throw authorityError;
+        }
+        throw restoreError;
+      }
       throw error;
     }
+    lease.assertCurrent();
     await finishQuarantinedFiles(quarantined);
-    return true;
+    lease.assertCurrent();
+    try {
+      await supabase.from('photos').delete().eq('id', id).abortSignal(lease.signal);
+      lease.assertCurrent();
+    } catch {
+      lease.assertCurrent();
+      /* best-effort while the exact owner/epoch remains current */
+    }
   });
-  if (!removed) return;
-  try {
-    await supabase.from('photos').delete().eq('id', id);
-  } catch {
-    /* best-effort */
-  }
 }
 
 /** Make `id` the reference for its series. */
 export async function setReference(id: string): Promise<void> {
-  await runPhotoStoreMutation(async () => {
-    const items = await loadPhotosUnlocked();
+  await runPhotoStoreMutation(async (lease) => {
+    const items = await loadPhotosUnlocked(lease);
     const target = items.find((p) => p.id === id);
     if (!target) return;
+    lease.assertCurrent();
     await persist(
       items.map((p) => (p.series === target.series ? { ...p, isReference: p.id === id } : p)),
+      lease,
     );
   });
 }
 
-/** Test/seed reset. */
+/**
+ * Explicit privacy-reducing reset. It never decrypts photo metadata and remains
+ * available after consent closes so lifecycle/account cleanup can only delete.
+ */
 export async function clearPhotos(): Promise<void> {
-  await runPhotoStoreMutation(async () => {
-    const items = await loadPhotosUnlocked();
-    const quarantined = await quarantinePhotoFiles(
-      items.flatMap((photo) => [
-        photo.encryptedLocalUri ?? photo.localUri,
-        photo.thumbnailLocalUri,
-      ]),
-      `clear-${randomUUID()}`,
-    );
-    try {
-      await removePrivateItem(KEY);
-    } catch (error) {
-      await restoreQuarantinedFiles(quarantined);
-      throw error;
-    }
-    await finishQuarantinedFiles(quarantined);
+  await runPhotoStoreCleanup(async (guard) => {
+    guard.assertCurrent();
+    const results = await Promise.allSettled([
+      removePrivateItem(KEY),
+      clearEncryptedPhotoStorage(),
+    ]);
+    guard.assertCurrent();
+    const failures = results.filter((result) => result.status === 'rejected');
+    if (failures.length > 0) throw new Error(`PHOTO_CLEAR_FAILED:${failures.length}`);
   });
 }

@@ -76,6 +76,7 @@ const admin = createClient(supabaseUrl, secretKey, {
 
 function publicClient() {
   return createClient(supabaseUrl, publishableKey, {
+    global: { headers: { 'x-onskin-health-epoch': '1' } },
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
   });
 }
@@ -174,6 +175,22 @@ async function main() {
   try {
     const userA = await createSmokeUser('a', users);
     const userB = await createSmokeUser('b', users);
+    for (const [label, user] of [
+      ['a', userA],
+      ['b', userB],
+    ]) {
+      const { data, error } = await user.client.rpc('grant_health_data_consent', {
+        p_expected_epoch: 0,
+        p_version: 'draft-v1-2026-07-10',
+        p_consent_text_hash:
+          '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+      });
+      if (error) throw error;
+      assert(
+        Array.isArray(data) && data[0]?.state === 'active' && data[0]?.epoch === 1,
+        `Health consent activation failed for user ${label}.`,
+      );
+    }
 
     const profile = await upsertOne(userA.client, 'profiles', {
       id: userA.id,
@@ -371,13 +388,14 @@ async function main() {
       userB.client.from('routine_steps').insert({ routine_id: routine.id, step_order: 2 }),
     );
 
-    const consent = await insertOne(userA.client, 'consents', {
-      user_id: userA.id,
-      consent_type: 'health_data_collection',
-      granted: true,
-      version: 'phase2-smoke',
-      consent_text_hash: 'phase2-smoke',
-    });
+    const { data: consent, error: consentReadError } = await userA.client
+      .from('consents')
+      .select('id')
+      .eq('consent_type', 'health_data_collection')
+      .order('granted_at', { ascending: false })
+      .limit(1)
+      .single();
+    if (consentReadError) throw consentReadError;
     await expectOwnRead(userA.client, 'consents', 'id', consent.id, 'consent own read');
     await expectNoPrivateRead(
       userB.client,
@@ -385,6 +403,16 @@ async function main() {
       'id',
       consent.id,
       'consent cross-user read',
+    );
+    await expectBlocked(
+      'health consent owner direct insert',
+      userA.client.from('consents').insert({
+        user_id: userA.id,
+        consent_type: 'health_data_collection',
+        granted: false,
+        version: 'bad-direct-revocation',
+        consent_text_hash: 'c'.repeat(64),
+      }),
     );
     await expectBlocked(
       'consent cross-user insert',

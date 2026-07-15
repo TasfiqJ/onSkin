@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { PhotoSeries } from '@onskin/types';
 
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+
 import {
   defaultComparePair,
   detectMilestones,
@@ -104,45 +106,60 @@ export function usePhotos(series: PhotoSeries = 'front') {
   const todayYmd = localDay();
   return useQuery({
     queryKey: [...KEY, series, todayYmd],
-    queryFn: async () => {
-      const storageFailure = e2eProgressStorageFailure();
-      if (storageFailure) throw storageFailure;
-      const photos = e2eProgressPhotoFixture() ?? (await loadPhotos());
-      const inSeries = forSeries(photos, series);
-      return {
-        all: photos,
-        series: inSeries,
-        count: photos.length,
-        metadata: metadataLine(photos),
-        comparePair: defaultComparePair(photos, { series }),
-        monthGroups: groupByMonth(photos, series, todayYmd),
-        milestones: detectMilestones(photos, series),
-        reference: referenceFor(photos, series),
-      };
-    },
+    queryFn: () =>
+      runCurrentHealthDataOperation(async (lease) => {
+        const storageFailure = e2eProgressStorageFailure();
+        if (storageFailure) throw storageFailure;
+        const fixture = e2eProgressPhotoFixture();
+        lease.assertCurrent();
+        const photos = fixture ?? (await loadPhotos());
+        lease.assertCurrent();
+        const inSeries = forSeries(photos, series);
+        const result = {
+          all: photos,
+          series: inSeries,
+          count: photos.length,
+          metadata: metadataLine(photos),
+          comparePair: defaultComparePair(photos, { series }),
+          monthGroups: groupByMonth(photos, series, todayYmd),
+          milestones: detectMilestones(photos, series),
+          reference: referenceFor(photos, series),
+        };
+        lease.assertCurrent();
+        return result;
+      }),
     retry: 0,
   });
 }
 
 export function usePhotoActions() {
   const qc = useQueryClient();
-  const invalidate = () => qc.invalidateQueries({ queryKey: KEY });
+  const mutateAndInvalidate = <T>(operation: () => Promise<T>): Promise<T> =>
+    runCurrentHealthDataOperation(async (lease) => {
+      try {
+        lease.assertCurrent();
+        return await operation();
+      } finally {
+        // Invalidating is itself a cache publication boundary. Keep it under
+        // the same immutable lease as the local mutation that triggered it.
+        lease.assertCurrent();
+        await qc.invalidateQueries({ queryKey: KEY });
+        lease.assertCurrent();
+      }
+    });
 
   const add = useMutation({
-    mutationFn: (input: NewPhoto) => addPhoto(input),
-    onSettled: invalidate,
+    mutationFn: (input: NewPhoto) => mutateAndInvalidate(() => addPhoto(input)),
   });
   const reference = useMutation({
-    mutationFn: (id: string) => setReference(id),
-    onSettled: invalidate,
+    mutationFn: (id: string) => mutateAndInvalidate(() => setReference(id)),
   });
   const remove = useMutation({
-    mutationFn: (id: string) => removePhoto(id),
-    onSettled: invalidate,
+    mutationFn: (id: string) => mutateAndInvalidate(() => removePhoto(id)),
   });
   const note = useMutation({
-    mutationFn: ({ id, notes }: { id: string; notes: string }) => updatePhoto(id, { notes }),
-    onSettled: invalidate,
+    mutationFn: ({ id, notes }: { id: string; notes: string }) =>
+      mutateAndInvalidate(() => updatePhoto(id, { notes })),
   });
 
   return { add, reference, remove, note };

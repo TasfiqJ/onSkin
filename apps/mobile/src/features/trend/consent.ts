@@ -1,54 +1,31 @@
 import { track } from '@/lib/analytics/track';
-import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
-import { isSupabaseConfigured } from '@/lib/env';
-import { withdrawConsent } from '@/lib/consent/withdrawal';
+import {
+  grantHealthDependentConsent,
+  isHealthDependentConsentActive,
+  withdrawHealthDependentConsent,
+} from '@/lib/consent/dependentConsentLifecycle';
 
-import { TREND_COPY } from './copy';
-import { deleteTrendState, getTrendInsightsLocal, setTrendInsightsLocal } from './store';
+import { clearTrendStore } from './store';
 
-// The photo_trend_insights consent (docs/12 §8, D-072). A NEW, separate, explicit,
-// revocable, DEFAULT-OFF consent for the on-device within-person trend insight. The
-// derived insight is STILL a health inference (MHMDA / GDPR Art. 9), so it is excluded
-// from cloud backup and DELETED on revocation. NEVER reused from photo_capture /
-// photo_cloud_backup, and never default-on: the installed base (who onboarded under the
-// "no AI grades" refusal) is re-consented here, never silently enrolled. Ledger-
-// authoritative-then-local (the Slice-24 precedence) so a withdrawal re-locks.
-
-export async function isTrendInsightsConsented(): Promise<boolean> {
-  try {
-    const consents = await getLatestConsents();
-    if ('photo_trend_insights' in consents) return consents['photo_trend_insights'] === true;
-    if (isSupabaseConfigured) return false;
-  } catch {
-    /* offline / no DB. Fall back to the local-first flag */
-  }
-  return getTrendInsightsLocal();
+/** On-device trend may use only a full exact local receipt when no backend exists. */
+export function isTrendInsightsConsented(): Promise<boolean> {
+  return isHealthDependentConsentActive('photo_trend_insights', {
+    allowExactLocalReceiptWhenUnconfigured: true,
+    deleteLocalOnAuthoritativeClose: clearTrendStore,
+  });
 }
 
 export async function grantTrendInsightsConsent(): Promise<void> {
-  await setTrendInsightsLocal(true);
-  try {
-    await recordConsent({
-      type: 'photo_trend_insights',
-      granted: true,
-      version: TREND_COPY.consentVersion,
-      consentText: `[PLACEHOLDER photo_trend_insights consent. B-PRIVACY-COPY] ${TREND_COPY.consentLedgerBody}`,
-    });
-    track('trend_insights_opted_in');
-  } catch (error) {
-    await setTrendInsightsLocal(false).catch(() => undefined);
-    await deleteTrendState().catch(() => undefined);
-    throw error;
-  }
+  await grantHealthDependentConsent('photo_trend_insights', {
+    allowExactLocalReceiptWhenUnconfigured: true,
+  });
+  track('trend_insights_opted_in');
 }
 
 export async function revokeTrendInsightsConsent(): Promise<void> {
-  await setTrendInsightsLocal(false);
-  await deleteTrendState(); // deletion-on-revocation (§8/§10)
-  await withdrawConsent({
+  await withdrawHealthDependentConsent({
     type: 'photo_trend_insights',
-    version: TREND_COPY.consentVersion,
-    consentText: `[PLACEHOLDER photo_trend_insights withdrawal. B-PRIVACY-COPY]`,
+    deleteLocal: clearTrendStore,
   });
   track('trend_consent_revoked');
 }

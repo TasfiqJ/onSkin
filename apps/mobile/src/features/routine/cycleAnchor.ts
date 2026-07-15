@@ -1,6 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { localDateString } from '@/features/today/useToday';
+import {
+  runCurrentHealthDataOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { getPrivateItem, removePrivateItem, setPrivateItem } from '@/lib/storage/privateKV';
 
 // The skin-cycle anchor (the date the cycle "started"), used to compute which
@@ -24,28 +28,64 @@ function normalizeLocalDateISO(value: unknown): string | null {
     : null;
 }
 
-export async function getCycleAnchor(): Promise<string> {
+async function repairInvalidAnchor(
+  lease: HealthDataWriteOperationLease,
+  repair: () => Promise<void>,
+): Promise<void> {
   try {
-    const raw = await getPrivateItem(KEY);
-    if (!raw) return localDateString();
-    const normalized = normalizeLocalDateISO(raw);
-    if (!normalized) {
-      await removePrivateItem(KEY).catch(() => undefined);
-      return localDateString();
-    }
-    if (normalized !== raw) await setPrivateItem(KEY, normalized).catch(() => undefined);
-    return normalized;
+    lease.assertCurrent();
+    await repair();
+    lease.assertCurrent();
   } catch {
-    return localDateString();
+    // Repairs are best-effort only for ordinary storage failures. A revoked,
+    // replaced, or account-stale operation must still reject.
+    lease.assertCurrent();
   }
 }
 
-export async function setCycleAnchor(iso = localDateString()): Promise<void> {
-  try {
-    await setPrivateItem(KEY, normalizeLocalDateISO(iso) ?? localDateString());
-  } catch {
-    /* best-effort */
-  }
+export function getCycleAnchor(): Promise<string> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    try {
+      lease.assertCurrent();
+      const raw = await getPrivateItem(KEY);
+      lease.assertCurrent();
+      if (!raw) {
+        const fallback = localDateString();
+        lease.assertCurrent();
+        return fallback;
+      }
+      const normalized = normalizeLocalDateISO(raw);
+      if (!normalized) {
+        await repairInvalidAnchor(lease, () => removePrivateItem(KEY));
+        lease.assertCurrent();
+        return localDateString();
+      }
+      if (normalized !== raw) {
+        await repairInvalidAnchor(lease, () => setPrivateItem(KEY, normalized));
+      }
+      lease.assertCurrent();
+      return normalized;
+    } catch {
+      // Preserve the documented local fallback without turning authorization
+      // invalidation into a successful read under a replacement lease.
+      lease.assertCurrent();
+      return localDateString();
+    }
+  });
+}
+
+export function setCycleAnchor(iso = localDateString()): Promise<void> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    try {
+      lease.assertCurrent();
+      await setPrivateItem(KEY, normalizeLocalDateISO(iso) ?? localDateString());
+      lease.assertCurrent();
+    } catch {
+      // Best-effort applies only while the operation's original authority is
+      // current. Consent/account invalidation must propagate to the caller.
+      lease.assertCurrent();
+    }
+  });
 }
 
 export function useCycleAnchor() {

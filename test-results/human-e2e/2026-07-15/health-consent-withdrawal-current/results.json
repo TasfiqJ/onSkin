@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-15",
+  "feature": "health-consent-withdrawal",
+  "verdict": "pass_local_web_launch_blocked_external_gates",
+  "source": {
+    "baseCommit": "90ed58d6dc8038bf5f2aa2a841b211683f3205c0",
+    "state": "uncommitted_checkpoint"
+  },
+  "surface": {
+    "app": "Expo web",
+    "browser": "Codex in-app browser",
+    "port": 8291,
+    "viewports": [
+      "390x844",
+      "360x640"
+    ],
+    "environment": {
+      "EXPO_PUBLIC_E2E_LOCAL_RESET": "1",
+      "supabase": "placeholder_unconfigured"
+    },
+    "destructiveExternalCalls": false
+  },
+  "flows": [
+    {
+      "id": "fresh-entry-order",
+      "result": "pass",
+      "assertion": "Fresh reset progressed Welcome -> age -> consent before goals."
+    },
+    {
+      "id": "decline",
+      "result": "pass",
+      "assertion": "Decline displayed 'No consent recorded' and did not enter goals."
+    },
+    {
+      "id": "direct-goals-no-grant",
+      "result": "pass",
+      "assertion": "Direct /onboarding/goals recovered to consent without mounting goals content."
+    },
+    {
+      "id": "fresh-grant-route-stability",
+      "result": "pass",
+      "samples": {
+        "intervalMs": 100,
+        "continuousThroughMs": 1900,
+        "finalSampleMs": 6500,
+        "expectedPath": "/onboarding/goals",
+        "reloadExpectedPath": "/onboarding/goals"
+      },
+      "evidence": [
+        "23-fresh-grant-goals-final-390x844.png",
+        "24-fresh-grant-goals-reload-final-390x844.png"
+      ]
+    },
+    {
+      "id": "withdrawal-confirmation",
+      "result": "pass",
+      "assertion": "Cancel preserved active state; confirm entered the paused shell.",
+      "evidence": [
+        "15-privacy-active-postfix-390x844.png",
+        "16-withdrawal-confirm-postfix-390x844.png",
+        "17-withdrawn-paused-postfix-390x844.png"
+      ]
+    },
+    {
+      "id": "withdrawn-reload",
+      "result": "pass",
+      "assertion": "Paused shell displayed 'Status: withdrawn. Local cleanup complete.' and survived reload.",
+      "evidence": [
+        "18-withdrawn-reload-postfix-390x844.png"
+      ]
+    },
+    {
+      "id": "fresh-consent-refusal",
+      "result": "pass",
+      "assertion": "Fresh disclosure was reviewable and Not now returned to the paused shell.",
+      "evidence": [
+        "19-fresh-consent-postfix-390x844.png"
+      ]
+    },
+    {
+      "id": "reconsent-route-stability",
+      "result": "pass",
+      "samples": {
+        "intervalMs": 100,
+        "continuousThroughMs": 1900,
+        "finalSampleMs": 6500,
+        "expectedPath": "/onboarding/goals",
+        "reloadExpectedPath": "/onboarding/goals"
+      },
+      "evidence": [
+        "20-reconsent-goals-stable-postfix-390x844.png",
+        "22-reconsent-goals-reload-postfix-390x844.png"
+      ]
+    },
+    {
+      "id": "compact-consent",
+      "result": "pass",
+      "assertion": "Agree, decline, and policy controls were visible and reachable at 360x640.",
+      "evidence": [
+        "21-consent-360x640-postfix.png"
+      ]
+    }
+  ],
+  "automated": {
+    "mobile": {
+      "typecheck": "pass",
+      "lint": "pass",
+      "testFilesPassed": 266,
+      "testsPassed": 3026
+    },
+    "database": {
+      "result": "pass",
+      "resets": 2,
+      "migrations": 53,
+      "pgTapAssertions": 261,
+      "schemaAssertions": 46,
+      "healthConsentLifecycleAssertions": 215
+    },
+    "phase9ConsentWithdrawal": {
+      "result": "pass",
+      "denoTests": 104,
+      "evidenceTests": 7
+    }
+  },
+  "expectedWarnings": [
+    "Supabase URL and publishable key placeholders",
+    "Expo Notifications push-token-change listener is not fully supported on web"
+  ],
+  "validScreenshots": [
+    "13-goals-stable-postfix-390x844.png",
+    "15-privacy-active-postfix-390x844.png",
+    "16-withdrawal-confirm-postfix-390x844.png",
+    "17-withdrawn-paused-postfix-390x844.png",
+    "18-withdrawn-reload-postfix-390x844.png",
+    "19-fresh-consent-postfix-390x844.png",
+    "20-reconsent-goals-stable-postfix-390x844.png",
+    "21-consent-360x640-postfix.png",
+    "22-reconsent-goals-reload-postfix-390x844.png",
+    "23-fresh-grant-goals-final-390x844.png",
+    "24-fresh-grant-goals-reload-final-390x844.png"
+  ],
+  "excludedTransientScreenshots": [
+    "10-goals-stable-390x844.png",
+    "12-goals-stable-390x844.png",
+    "14 (if present)"
+  ],
+  "openGates": [
+    "hosted Supabase, live worker, Cron/Vault, Storage and v2 zero-residue artifact",
+    "physical iPhone, TestFlight, process death, VoiceOver and Dynamic Type",
+    "15 legal-copy tuples remain draft_blocked",
+    "counsel, production processor/backup and Apple review approval",
+    "DB-08 generated database types"
+  ]
+}

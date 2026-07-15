@@ -78,7 +78,10 @@ describe('account-deletion pre-Auth recovery gate', () => {
       'Completing deletion can take up to 29 days while providers verify erasure.',
     );
     expect(ACCOUNT_DELETION_ERASURE_WINDOW_COPY).not.toMatch(/App Store|billing|subscription/i);
-    expect(you.match(/ACCOUNT_DELETION_ERASURE_WINDOW_COPY/g)).toHaveLength(3);
+    expect(you.match(/ACCOUNT_DELETION_ERASURE_WINDOW_COPY/g)).toHaveLength(2);
+    expect(you).toContain(
+      'Your account, App Lock, subscription, billing, and purchase-safety records stay in place.',
+    );
     expect(you).toContain('SUBSCRIPTION_STOREFRONT_COPY.billingContinuation');
     expect(gate.match(/ACCOUNT_DELETION_ERASURE_WINDOW_COPY/g)).toHaveLength(3);
     expect(gate).toContain('Your deletion request is safely queued.');

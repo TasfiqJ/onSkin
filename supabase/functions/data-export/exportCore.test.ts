@@ -2,10 +2,12 @@ import {
   boundedMap,
   checksumRows,
   EXPORT_CONSISTENCY,
+  healthLifecycleExportDecision,
   listStoragePathsVerified,
   paginateRows,
   type StorageListOptions,
 } from './exportCore.ts';
+import type { HealthLifecycleExportSnapshot } from '../consent-withdrawal/healthLifecycleCore.ts';
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
@@ -30,6 +32,67 @@ async function assertRejectsReason(
 
 const USER_ID = '00000000-0000-4000-8000-000000000001';
 
+function healthLifecycle(
+  overrides: Partial<HealthLifecycleExportSnapshot> = {},
+): HealthLifecycleExportSnapshot {
+  return {
+    state: 'active',
+    processing_epoch: 3,
+    operation_state: null,
+    result_code: null,
+    consent_version: 'draft-v1-2026-07-10',
+    consent_text_hash: 'a'.repeat(64),
+    server_verified_at: '2026-07-15T12:00:00.000Z',
+    ...overrides,
+  };
+}
+
+Deno.test('export is blocked while health withdrawal is nonterminal', () => {
+  const decision = healthLifecycleExportDecision(
+    healthLifecycle(),
+    healthLifecycle({
+      state: 'withdrawing',
+      operation_state: 'storage_pending',
+      result_code: 'DATABASE_AND_PROCESSORS_RECONCILED',
+    }),
+  );
+  assert(
+    !decision.allowed,
+    'nonterminal withdrawal must block a partial export',
+  );
+  assert(
+    decision.error === 'HEALTH_DATA_WITHDRAWAL_IN_PROGRESS' &&
+      decision.retryAfterSeconds > 0,
+    'blocked export must return a stable retry contract',
+  );
+});
+
+Deno.test('export requires one stable terminal or active health lifecycle snapshot', () => {
+  const stable = healthLifecycleExportDecision(
+    healthLifecycle(),
+    healthLifecycle({ server_verified_at: '2026-07-15T12:01:00.000Z' }),
+  );
+  assert(
+    stable.allowed,
+    'server verification timestamp can advance between guarded reads',
+  );
+  if (stable.allowed) {
+    assert(
+      stable.snapshot.server_verified_at === '2026-07-15T12:01:00.000Z',
+      'export should include the final sanitized verification time',
+    );
+  }
+
+  const changed = healthLifecycleExportDecision(
+    healthLifecycle({ state: 'unconsented', processing_epoch: 0 }),
+    healthLifecycle({ state: 'active', processing_epoch: 1 }),
+  );
+  assert(
+    !changed.allowed && changed.error === 'HEALTH_DATA_LIFECYCLE_CHANGED',
+    'a lifecycle transition during collection must retry instead of mixing snapshots',
+  );
+});
+
 Deno.test('database export paginates and verifies more than 1,000 deterministic rows', async () => {
   const sourceRows = Array.from({ length: 1_205 }, (_, index) => ({
     id: `row-${String(index).padStart(4, '0')}`,
@@ -50,16 +113,31 @@ Deno.test('database export paginates and verifies more than 1,000 deterministic 
     },
   });
 
-  assert(result.rows.length === 1_205, 'expected every row above the platform default cap.');
-  assert(result.rows[1_204]?.id === 'row-1204', 'expected deterministic final-row ordering.');
+  assert(
+    result.rows.length === 1_205,
+    'expected every row above the platform default cap.',
+  );
+  assert(
+    result.rows[1_204]?.id === 'row-1204',
+    'expected deterministic final-row ordering.',
+  );
   assert(
     pageCalls.some((call) => call.offset === 1_000),
     'expected a page request beyond 1,000 rows.',
   );
-  assert(result.manifest.count_before === 1_205, 'expected exact pre-read count evidence.');
-  assert(result.manifest.count_after === 1_205, 'expected exact post-read count evidence.');
+  assert(
+    result.manifest.count_before === 1_205,
+    'expected exact pre-read count evidence.',
+  );
+  assert(
+    result.manifest.count_after === 1_205,
+    'expected exact post-read count evidence.',
+  );
   assert(result.manifest.count === 1_205, 'expected exported count evidence.');
-  assert(result.manifest.complete === true, 'expected an explicitly complete source manifest.');
+  assert(
+    result.manifest.complete === true,
+    'expected an explicitly complete source manifest.',
+  );
   assert(
     result.manifest.checksum === (await checksumRows(sourceRows)),
     'expected the manifest checksum to cover every ordered row.',
@@ -67,7 +145,10 @@ Deno.test('database export paginates and verifies more than 1,000 deterministic 
 });
 
 Deno.test('database export fails closed when a response cap truncates a page', async () => {
-  const rows = Array.from({ length: 1_205 }, (_, index) => ({ id: `row-${index}` }));
+  const rows = Array.from(
+    { length: 1_205 },
+    (_, index) => ({ id: `row-${index}` }),
+  );
 
   await assertRejectsReason(
     () =>
@@ -79,7 +160,8 @@ Deno.test('database export fails closed when a response cap truncates a page', a
         maxRows: 2_000,
         fetchCount: () => Promise.resolve(rows.length),
         // Simulates a lower PostgREST max-rows setting than the requested page.
-        fetchPage: (offset) => Promise.resolve(rows.slice(offset, offset + 100)),
+        fetchPage: (offset) =>
+          Promise.resolve(rows.slice(offset, offset + 100)),
       }),
     'COUNT_MISMATCH',
   );
@@ -96,7 +178,8 @@ Deno.test('database export rejects cardinality changes and duplicate ordering ke
         pageSize: 100,
         maxRows: 1_000,
         fetchCount: () => Promise.resolve(countCall++ === 0 ? 2 : 3),
-        fetchPage: (offset) => Promise.resolve(offset === 0 ? [{ id: 'a' }, { id: 'b' }] : []),
+        fetchPage: (offset) =>
+          Promise.resolve(offset === 0 ? [{ id: 'a' }, { id: 'b' }] : []),
       }),
     'COUNT_MISMATCH',
   );
@@ -114,9 +197,9 @@ Deno.test('database export rejects cardinality changes and duplicate ordering ke
           Promise.resolve(
             offset === 0
               ? [
-                  { user_id: USER_ID, blocked_handle: 'same' },
-                  { user_id: USER_ID, blocked_handle: 'same' },
-                ]
+                { user_id: USER_ID, blocked_handle: 'same' },
+                { user_id: USER_ID, blocked_handle: 'same' },
+              ]
               : [],
           ),
       }),
@@ -137,7 +220,8 @@ type StorageEntry = { name: string; id: string | null };
 
 class FakeStorageBucket {
   readonly paths: Set<string>;
-  readonly listCalls: Array<{ prefix: string; options: StorageListOptions }> = [];
+  readonly listCalls: Array<{ prefix: string; options: StorageListOptions }> =
+    [];
   mutateAtSecondRootPass = false;
   hardPageCap: number | null = null;
   private rootPasses = 0;
@@ -170,7 +254,10 @@ class FakeStorageBucket {
         name,
         id: kind === 'folder' ? null : `object:${prefix}/${name}`,
       }));
-    const effectiveLimit = Math.min(options.limit, this.hardPageCap ?? options.limit);
+    const effectiveLimit = Math.min(
+      options.limit,
+      this.hardPageCap ?? options.limit,
+    );
     return Promise.resolve({
       data: entries.slice(options.offset, options.offset + effectiveLimit),
       error: null,
@@ -195,17 +282,27 @@ Deno.test('storage export verifies every path after the first 1,000', async () =
   });
 
   assert(result.paths.length === 1_205, 'expected every owned storage object.');
-  assert(result.paths[1_204] === paths[1_204], 'expected stable path ordering.');
+  assert(
+    result.paths[1_204] === paths[1_204],
+    'expected stable path ordering.',
+  );
   assert(
     bucket.listCalls.filter(
       (call) =>
-        call.prefix === USER_ID && call.options.offset === 1_000 && call.options.limit === 500,
+        call.prefix === USER_ID && call.options.offset === 1_000 &&
+        call.options.limit === 500,
     ).length === 2,
     'expected both verification passes to follow the effective cap beyond 1,000 objects.',
   );
   assert(result.manifest.count === 1_205, 'expected a storage source count.');
-  assert(result.manifest.verification_passes === 2, 'expected two stable inventory passes.');
-  assert(result.manifest.complete === true, 'expected explicit storage completeness evidence.');
+  assert(
+    result.manifest.verification_passes === 2,
+    'expected two stable inventory passes.',
+  );
+  assert(
+    result.manifest.complete === true,
+    'expected explicit storage completeness evidence.',
+  );
 });
 
 Deno.test(
@@ -227,6 +324,80 @@ Deno.test(
   },
 );
 
+Deno.test('storage export fails closed at the configured traversal depth', async () => {
+  const bucket = new FakeStorageBucket([
+    `${USER_ID}/level-one/level-two/too-deep.enc`,
+  ]);
+  await assertRejectsReason(
+    () =>
+      listStoragePathsVerified({
+        userId: USER_ID,
+        bucket,
+        pageSize: 100,
+        maxObjects: 1_000,
+        maxDepth: 2,
+      }),
+    'PATH_DEPTH_LIMIT_EXCEEDED',
+  );
+});
+
+Deno.test('storage export fails closed at the configured prefix bound', async () => {
+  const bucket = new FakeStorageBucket([
+    `${USER_ID}/folder-a/photo.enc`,
+    `${USER_ID}/folder-b/photo.enc`,
+  ]);
+  await assertRejectsReason(
+    () =>
+      listStoragePathsVerified({
+        userId: USER_ID,
+        bucket,
+        pageSize: 100,
+        maxObjects: 1_000,
+        maxPrefixes: 2,
+      }),
+    'PREFIX_LIMIT_EXCEEDED',
+  );
+});
+
+Deno.test('storage export fails closed before exceeding the page-request bound', async () => {
+  const bucket = new FakeStorageBucket([`${USER_ID}/photo.enc`]);
+  bucket.hardPageCap = 1;
+  await assertRejectsReason(
+    () =>
+      listStoragePathsVerified({
+        userId: USER_ID,
+        bucket,
+        pageSize: 100,
+        maxObjects: 1_000,
+        maxPageRequests: 1,
+      }),
+    'PAGE_REQUEST_LIMIT_EXCEEDED',
+  );
+  assert(
+    bucket.listCalls.length === 1,
+    'the hard request cap must be prospective',
+  );
+});
+
+Deno.test('storage page-request bound covers both verification passes in total', async () => {
+  const bucket = new FakeStorageBucket([`${USER_ID}/photo.enc`]);
+  await assertRejectsReason(
+    () =>
+      listStoragePathsVerified({
+        userId: USER_ID,
+        bucket,
+        pageSize: 100,
+        maxObjects: 1_000,
+        maxPageRequests: 3,
+      }),
+    'PAGE_REQUEST_LIMIT_EXCEEDED',
+  );
+  assert(
+    bucket.listCalls.length === 3,
+    'two-pass verification must share one prospective request budget',
+  );
+});
+
 Deno.test('bounded export concurrency preserves result order and respects the cap', async () => {
   let active = 0;
   let maximumActive = 0;
@@ -240,7 +411,10 @@ Deno.test('bounded export concurrency preserves result order and respects the ca
     return value * 2;
   });
 
-  assert(maximumActive === 3, `expected concurrency 3, observed ${maximumActive}.`);
+  assert(
+    maximumActive === 3,
+    `expected concurrency 3, observed ${maximumActive}.`,
+  );
   assert(
     results.every((value, index) => value === index * 2),
     'expected stable output order.',
@@ -253,11 +427,15 @@ Deno.test('export consistency contract explicitly declines unsupported snapshot 
     'expected independent source semantics.',
   );
   assert(
-    EXPORT_CONSISTENCY.limitations.some((line) => line.includes('do not share')),
+    EXPORT_CONSISTENCY.limitations.some((line) =>
+      line.includes('do not share')
+    ),
     'expected the lack of a shared transaction/snapshot to be explicit.',
   );
   assert(
-    EXPORT_CONSISTENCY.limitations.some((line) => line.includes('delete and insert')),
+    EXPORT_CONSISTENCY.limitations.some((line) =>
+      line.includes('delete and insert')
+    ),
     'expected the count-guard replacement limitation to be explicit.',
   );
 });

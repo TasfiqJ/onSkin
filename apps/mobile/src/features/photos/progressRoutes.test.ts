@@ -443,7 +443,11 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('e2e-front-2026-04-01');
     expect(source).toContain('e2e-front-2026-05-12');
     expect(source).toContain('e2e-front-2026-06-24');
-    expect(source).toContain('const photos = e2eProgressPhotoFixture() ?? (await loadPhotos());');
+    expect(source).toContain('const fixture = e2eProgressPhotoFixture();');
+    expect(source).toContain('const photos = fixture ?? (await loadPhotos());');
+    expect(source.indexOf('lease.assertCurrent();')).toBeLessThan(
+      source.indexOf('const photos = fixture ?? (await loadPhotos());'),
+    );
     expect(entitlement).toContain("fixture !== 'expired_store'");
     expect(entitlement).toContain("fixture !== 'expired_reverse_trial'");
     expect(entitlement).toContain("if (fixture === 'store_pro')");

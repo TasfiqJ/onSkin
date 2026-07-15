@@ -1,8 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+
+import {
   COMPLETION_LOG_INVALID,
   COMPLETION_LOG_UNSUPPORTED_VERSION,
+  clearCompletions,
   getCompletedSteps,
   getCompletionSummary,
   getCountByDate,
@@ -17,6 +23,8 @@ const mocks = vi.hoisted(() => ({
   updateFailures: new Map<string, Error>(),
   reads: 0,
   writes: 0,
+  readGate: null as Promise<void> | null,
+  readStarted: null as (() => void) | null,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -24,6 +32,8 @@ vi.mock('@/lib/storage/privateKV', () => ({
     mocks.reads += 1;
     const failure = mocks.readFailures.get(key);
     if (failure) throw failure;
+    mocks.readStarted?.();
+    if (mocks.readGate) await mocks.readGate;
     return mocks.storage.get(key) ?? null;
   }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
@@ -84,7 +94,10 @@ describe('today completion persistence', () => {
     mocks.updateFailures.clear();
     mocks.reads = 0;
     mocks.writes = 0;
+    mocks.readGate = null;
+    mocks.readStarted = null;
     vi.clearAllMocks();
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
   afterEach(() => {
@@ -293,5 +306,40 @@ describe('today completion persistence', () => {
       ]),
     );
     expect(mocks.reads).toBe(1);
+  });
+
+  it('does not return account-A completion data after an A-to-B same-epoch switch', async () => {
+    mocks.storage.set(
+      KEY,
+      JSON.stringify({ version: 1, days: { [DAY]: ['AM:account-a-secret'] } }),
+    );
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.readGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.readStarted = markReadStarted;
+
+    const pending = getCompletedSteps(DAY);
+    await readStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-b', accountGeneration: 0 });
+    releaseRead();
+
+    await expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+  });
+
+  it('keeps the deletion-only reset available after health processing closes', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ version: 1, days: { [DAY]: ['AM:cleanser'] } }));
+    mocks.storage.set(FIRST_COMPLETION_KEY, 'true');
+    clearActiveHealthProcessingEpoch();
+
+    await expect(clearCompletions()).resolves.toBeUndefined();
+
+    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.storage.has(FIRST_COMPLETION_KEY)).toBe(false);
   });
 });

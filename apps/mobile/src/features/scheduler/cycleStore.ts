@@ -2,6 +2,10 @@ import type { CycleVariant, DisruptionReason } from '@onskin/types';
 
 import { getCycleAnchor } from '@/features/routine/cycleAnchor';
 import { localDateString } from '@/features/today/useToday';
+import {
+  runCurrentHealthDataOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import { addDays } from './projection';
@@ -270,22 +274,29 @@ function reconcileStoredConfig(config: CycleConfig, todayISO: string): CycleConf
 async function normalizeLatestStoredConfig(
   fallbackAnchorISO: string,
   todayISO: string,
+  lease: HealthDataWriteOperationLease,
 ): Promise<CycleConfig | null> {
   let latest: CycleConfig | null = null;
+  lease.assertCurrent();
   await updatePrivateItem(KEY, (currentRaw) => {
+    lease.assertCurrent();
     if (!currentRaw) return null;
     const { config: current } = parseStoredConfig(currentRaw, fallbackAnchorISO);
     latest = reconcileStoredConfig(current, todayISO);
     return JSON.stringify(latest);
   });
+  lease.assertCurrent();
   return latest;
 }
 
 async function migrateLegacyConfig(
   fallbackAnchorISO: string,
   todayISO: string,
+  lease: HealthDataWriteOperationLease,
 ): Promise<CycleConfig | null> {
+  lease.assertCurrent();
   const legacyRaw = await getPrivateItem(LEGACY_KEY);
+  lease.assertCurrent();
   if (!legacyRaw) return null;
   const legacy = reconcileStoredConfig(
     parseStoredConfig(legacyRaw, fallbackAnchorISO, true).config,
@@ -295,27 +306,45 @@ async function migrateLegacyConfig(
 
   // The old key is intentionally retained for account cleanup and downgrade
   // isolation. Once v2 exists, older builds can no longer overwrite this state.
+  lease.assertCurrent();
   await updatePrivateItem(KEY, (currentRaw) => {
+    lease.assertCurrent();
     migrated = currentRaw
       ? reconcileStoredConfig(parseStoredConfig(currentRaw, fallbackAnchorISO).config, todayISO)
       : legacy;
     return JSON.stringify(migrated);
   });
+  lease.assertCurrent();
   if (!migrated) throw new Error('CYCLE_CONFIG_WRITE_FAILED');
   return migrated;
 }
 
-export async function loadCycleConfig(): Promise<CycleConfig> {
+async function loadCycleConfigForLease(lease: HealthDataWriteOperationLease): Promise<CycleConfig> {
+  lease.assertCurrent();
   const fallbackAnchor = await getCycleAnchor();
+  lease.assertCurrent();
   const today = localDateString();
+  lease.assertCurrent();
   const raw = await getPrivateItem(KEY);
-  if (!raw) return (await migrateLegacyConfig(fallbackAnchor, today)) ?? defaults(fallbackAnchor);
+  lease.assertCurrent();
+  if (!raw) {
+    const migrated = await migrateLegacyConfig(fallbackAnchor, today, lease);
+    lease.assertCurrent();
+    return migrated ?? defaults(fallbackAnchor);
+  }
 
   const { parsed, config: normalized } = parseStoredConfig(raw, fallbackAnchor);
   const reconciled = reconcileStoredConfig(normalized, today);
+  lease.assertCurrent();
   if (JSON.stringify(parsed) === JSON.stringify(reconciled)) return reconciled;
 
-  return (await normalizeLatestStoredConfig(fallbackAnchor, today)) ?? defaults(fallbackAnchor);
+  const latest = await normalizeLatestStoredConfig(fallbackAnchor, today, lease);
+  lease.assertCurrent();
+  return latest ?? defaults(fallbackAnchor);
+}
+
+export async function loadCycleConfig(): Promise<CycleConfig> {
+  return runCurrentHealthDataOperation(loadCycleConfigForLease);
 }
 
 function configForMutation(
@@ -343,21 +372,29 @@ async function maybeRejectDevCycleConfigWrite(): Promise<void> {
 async function mutateCycleConfig(
   transform: (current: CycleConfig, todayISO: string) => CycleConfig,
 ): Promise<CycleConfig> {
-  const today = localDateString();
-  const fallbackAnchor = (await loadCycleConfig()).anchorISO;
-  let next: CycleConfig | null = null;
+  return runCurrentHealthDataOperation(async (lease) => {
+    const today = localDateString();
+    lease.assertCurrent();
+    const fallbackAnchor = (await loadCycleConfigForLease(lease)).anchorISO;
+    lease.assertCurrent();
+    let next: CycleConfig | null = null;
 
-  await maybeRejectDevCycleConfigWrite();
-  await updatePrivateItem(KEY, (raw) => {
-    const current = configForMutation(raw, fallbackAnchor, today);
-    const candidate = normalizeStoredConfig(transform(current, today), current.anchorISO);
-    if (!candidate) throw new Error('CYCLE_CONFIG_INVALID');
-    next = reconcileStoredConfig(candidate, today);
-    return JSON.stringify(next);
+    await maybeRejectDevCycleConfigWrite();
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (raw) => {
+      lease.assertCurrent();
+      const current = configForMutation(raw, fallbackAnchor, today);
+      const candidate = normalizeStoredConfig(transform(current, today), current.anchorISO);
+      if (!candidate) throw new Error('CYCLE_CONFIG_INVALID');
+      next = reconcileStoredConfig(candidate, today);
+      lease.assertCurrent();
+      return JSON.stringify(next);
+    });
+    lease.assertCurrent();
+
+    if (!next) throw new Error('CYCLE_CONFIG_WRITE_FAILED');
+    return next;
   });
-
-  if (!next) throw new Error('CYCLE_CONFIG_WRITE_FAILED');
-  return next;
 }
 
 export async function updateCycleConfig(

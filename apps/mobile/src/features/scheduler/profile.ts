@@ -13,6 +13,11 @@ import {
   type StoredSkinProfile,
 } from '@/features/onboarding/skinProfileStore';
 import { hasCurrentHealthDataCollectionConsent } from '@/features/onboarding/healthConsentStore';
+import {
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  runHealthDataWriteOperation,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
@@ -75,49 +80,65 @@ function profileBitsFromStoredProfile(profile: StoredSkinProfile): ProfileBits {
 }
 
 export async function readProfileBits(): Promise<ProfileBits> {
-  if (!(await hasCurrentHealthDataCollectionConsent())) return UNKNOWN_PROFILE;
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) return UNKNOWN_PROFILE;
+  return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    const consentCurrent = await hasCurrentHealthDataCollectionConsent();
+    lease.assertCurrent();
+    if (!consentCurrent) return UNKNOWN_PROFILE;
 
-  const local = await readStoredSkinProfile();
-  if (local.status === 'available') return profileBitsFromStoredProfile(local.profile);
+    const local = await readStoredSkinProfile();
+    lease.assertCurrent();
+    if (local.status === 'available') return profileBitsFromStoredProfile(local.profile);
 
-  // A private read/validation failure is not absence. Never consult a stale
-  // server mirror after an authoritative local record becomes unreadable.
-  if (local.status !== 'missing') return { ...UNKNOWN_PROFILE, consentCurrent: true };
+    // A private read/validation failure is not absence. Never consult a stale
+    // server mirror after an authoritative local record becomes unreadable.
+    if (local.status !== 'missing') return { ...UNKNOWN_PROFILE, consentCurrent: true };
 
-  if (!isSupabaseConfigured) return { ...UNKNOWN_PROFILE, consentCurrent: true };
+    if (!isSupabaseConfigured) return { ...UNKNOWN_PROFILE, consentCurrent: true };
 
-  try {
-    const { data } = await supabase
-      .from('skin_profiles')
-      .select('oily_dry, sensitive_resistant, goals')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    if (data) {
-      return {
-        source: 'server',
-        sensitivity: sensitivityFromAxis(data.sensitive_resistant ?? null),
-        moisture: moistureFromAxis(data.oily_dry ?? null),
-        // V1 status edits are local-only. A server-only row may be stale, so it
-        // can provide non-safety profile bits but can never clear caution.
-        ...pregnancyBits('unknown'),
-        consentCurrent: true,
-        goals: (data.goals ?? []) as GoalId[],
-      };
+    try {
+      lease.assertCurrent();
+      const { data } = await supabase
+        .from('skin_profiles')
+        .select('oily_dry, sensitive_resistant, goals')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      lease.assertCurrent();
+      if (data) {
+        return {
+          source: 'server',
+          sensitivity: sensitivityFromAxis(data.sensitive_resistant ?? null),
+          moisture: moistureFromAxis(data.oily_dry ?? null),
+          // V1 status edits are local-only. A server-only row may be stale, so it
+          // can provide non-safety profile bits but can never clear caution.
+          ...pregnancyBits('unknown'),
+          consentCurrent: true,
+          goals: (data.goals ?? []) as GoalId[],
+        };
+      }
+    } catch {
+      lease.assertCurrent();
     }
-  } catch {
-    /* offline / no DB */
-  }
-  return { ...UNKNOWN_PROFILE, consentCurrent: true };
+    lease.assertCurrent();
+    return { ...UNKNOWN_PROFILE, consentCurrent: true };
+  });
 }
 
 /** V1 profile updates are local-first; the server profile remains a fallback mirror. */
 export async function savePregnancyStatus(status: PregnancyStatus): Promise<ProfileBits> {
-  if (!(await hasCurrentHealthDataCollectionConsent())) {
-    throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');
-  }
-  const stored = await updateStoredPregnancyStatus(status);
-  return profileBitsFromStoredProfile(stored);
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+  return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    if (!(await hasCurrentHealthDataCollectionConsent())) {
+      throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');
+    }
+    lease.assertCurrent();
+    const stored = await updateStoredPregnancyStatus(status);
+    lease.assertCurrent();
+    return profileBitsFromStoredProfile(stored);
+  });
 }
 
 export function useProfileBits() {

@@ -96,6 +96,13 @@ const completeEnv = {
   ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX: '20'.repeat(32),
   ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION: '1',
   ACCOUNT_DELETION_WORKER_SECRET: '30'.repeat(32),
+  HEALTH_CONSENT_WORKER_SECRET: '50'.repeat(32),
+  HEALTH_CONSENT_WORKER_CLAIM_LIMIT: '10',
+  HEALTH_CONSENT_WORKER_STORAGE_BATCH_SIZE: '100',
+  HEALTH_CONSENT_WORKER_MAX_STORAGE_BATCHES: '5',
+  HEALTH_CONSENT_WORKER_BUDGET_MS: '45000',
+  HEALTH_CONSENT_WORKER_RETRY_AFTER_SECONDS: '60',
+  HEALTH_CONSENT_WORKER_ACTION_REQUIRED_RETRY_AFTER_SECONDS: '86400',
 };
 
 const completeProductionEnv = {
@@ -275,6 +282,63 @@ const cases = [
     },
   },
   {
+    name: 'durable health-consent withdrawal requires an independent scheduler secret',
+    result: runCheck(withoutKeys(completeEnv, ['HEALTH_CONSENT_WORKER_SECRET'])),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Durable health-consent withdrawal: missing or placeholder values: HEALTH_CONSENT_WORKER_SECRET/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'durable health-consent withdrawal rejects non-canonical scheduler secrets',
+    result: runCheck({ ...completeEnv, HEALTH_CONSENT_WORKER_SECRET: 'AA'.repeat(32) }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /HEALTH_CONSENT_WORKER_SECRET must be exactly 64 lowercase hexadecimal characters/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
+    name: 'durable health-consent worker rejects database-incompatible runtime bounds',
+    result: runCheck({
+      ...completeEnv,
+      HEALTH_CONSENT_WORKER_CLAIM_LIMIT: '26',
+      HEALTH_CONSENT_WORKER_STORAGE_BATCH_SIZE: '101',
+      HEALTH_CONSENT_WORKER_MAX_STORAGE_BATCHES: '0',
+      HEALTH_CONSENT_WORKER_BUDGET_MS: '999',
+      HEALTH_CONSENT_WORKER_RETRY_AFTER_SECONDS: '4',
+      HEALTH_CONSENT_WORKER_ACTION_REQUIRED_RETRY_AFTER_SECONDS: '86401',
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /HEALTH_CONSENT_WORKER_CLAIM_LIMIT must be an integer from 1 to 25/.test(result.stderr) &&
+        /HEALTH_CONSENT_WORKER_STORAGE_BATCH_SIZE must be an integer from 1 to 100/.test(
+          result.stderr,
+        ) &&
+        /HEALTH_CONSENT_WORKER_MAX_STORAGE_BATCHES must be an integer from 1 to 100/.test(
+          result.stderr,
+        ) &&
+        /HEALTH_CONSENT_WORKER_BUDGET_MS must be an integer from 1000 to 55000/.test(
+          result.stderr,
+        ) &&
+        /HEALTH_CONSENT_WORKER_RETRY_AFTER_SECONDS must be an integer from 5 to 86400/.test(
+          result.stderr,
+        ) &&
+        /HEALTH_CONSENT_WORKER_ACTION_REQUIRED_RETRY_AFTER_SECONDS must be an integer from 5 to 86400/.test(
+          result.stderr,
+        )
+      );
+    },
+  },
+  {
     name: 'durable account deletion rejects cross-purpose key reuse',
     result: runCheck({
       ...completeEnv,
@@ -283,10 +347,24 @@ const cases = [
     expect(result) {
       return (
         result.status === 1 &&
-        /Durable account-deletion key material must be independent/.test(result.stderr) &&
+        /Durable privacy-lifecycle key material must be independent/.test(result.stderr) &&
         /ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX reuses ACCOUNT_DELETION_PAYLOAD_KEY_HEX/.test(
           result.stderr,
         )
+      );
+    },
+  },
+  {
+    name: 'health-consent scheduler secret cannot reuse account-deletion key material',
+    result: runCheck({
+      ...completeEnv,
+      HEALTH_CONSENT_WORKER_SECRET: completeEnv.ACCOUNT_DELETION_WORKER_SECRET,
+    }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Durable privacy-lifecycle key material must be independent/.test(result.stderr) &&
+        /HEALTH_CONSENT_WORKER_SECRET reuses ACCOUNT_DELETION_WORKER_SECRET/.test(result.stderr)
       );
     },
   },

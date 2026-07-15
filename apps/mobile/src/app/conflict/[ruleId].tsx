@@ -40,6 +40,12 @@ import { ProGate } from '@/features/subscription/ProGate';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
+import {
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  runHealthDataWriteOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { canShareConflictCard } from '@/lib/launch/phase7';
 import { NOT_MEDICAL_ADVICE_SHORT } from '@/lib/legal/disclaimer';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -151,14 +157,20 @@ function persistedChoice(choice: 'keep' | 'use_together'): ConflictUserChoice {
   return choice === 'use_together' ? 'use_together' : 'accept_suggested_timing';
 }
 
-async function mirrorChoice(c: DetectedConflict, userChoice: ConflictUserChoice): Promise<void> {
+async function mirrorChoice(
+  c: DetectedConflict,
+  userChoice: ConflictUserChoice,
+  lease: HealthDataWriteOperationLease,
+): Promise<void> {
   try {
-    const { data } = await getPersistedSupabaseUser();
-    if (!data.user?.id || !c.productAId || !c.productBId) return;
+    if (!c.productAId || !c.productBId) return;
     const [productAId, productBId] = [c.productAId, c.productBId].sort();
+    const { data } = await getPersistedSupabaseUser();
+    lease.assertCurrent();
+    if (data.user?.id !== lease.ownerUserId) return;
     const { error } = await supabase.from('routine_conflicts').upsert(
       {
-        user_id: data.user.id,
+        user_id: lease.ownerUserId,
         rule_id: c.rule.id,
         product_a_id: productAId,
         product_b_id: productBId,
@@ -170,8 +182,10 @@ async function mirrorChoice(c: DetectedConflict, userChoice: ConflictUserChoice)
       },
       { onConflict: 'user_id,rule_id,product_a_id,product_b_id' },
     );
+    lease.assertCurrent();
     if (error) throw new Error('SUPABASE_ROUTINE_CONFLICT_UPSERT_FAILED');
   } catch (error) {
+    lease.assertCurrent();
     devWarn('routine_conflict_mirror_upsert_failed', error);
     /* best-effort until backend configured (B-SUPABASE) */
   }
@@ -181,17 +195,23 @@ async function recordChoice(
   c: DetectedConflict,
   choice: 'keep' | 'use_together',
 ): Promise<ConflictChoices> {
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
   // Local-first so the choice sticks offline and the app stops re-nagging
   // immediately (docs/03 §7); the server mirror below is best-effort.
-  const userChoice = persistedChoice(choice);
-  const conflictChoices = await setConflictChoice(c, userChoice);
-  track('conflict_resolution_chosen', {
-    action: choice === 'use_together' ? 'use_together' : 'keep',
-    source: 'detail',
+  return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    const userChoice = persistedChoice(choice);
+    const conflictChoices = await setConflictChoice(c, userChoice);
+    lease.assertCurrent();
+    track('conflict_resolution_chosen', {
+      action: choice === 'use_together' ? 'use_together' : 'keep',
+      source: 'detail',
+    });
+    if (choice === 'use_together') track('conflict_overridden', { source: 'detail' });
+    await mirrorChoice(c, userChoice, lease);
+    lease.assertCurrent();
+    return conflictChoices;
   });
-  if (choice === 'use_together') track('conflict_overridden', { source: 'detail' });
-  void mirrorChoice(c, userChoice);
-  return conflictChoices;
 }
 
 function firstSearchParam(value: string | string[] | undefined): string | null {

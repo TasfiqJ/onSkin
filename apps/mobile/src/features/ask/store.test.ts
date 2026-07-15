@@ -1,7 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 
 import { ASK_TRIAL_GROUNDED_CAP } from './gate';
 import {
+  clearAskStore,
   getAskConsentLocal,
   getGroundedTurns,
   recordGroundedTurn,
@@ -14,12 +21,16 @@ const mocks = vi.hoisted(() => ({
   readFailures: new Map<string, Error>(),
   updateFailures: new Map<string, Error>(),
   writes: 0,
+  readGate: null as Promise<void> | null,
+  readStarted: null as (() => void) | null,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => {
     const failure = mocks.readFailures.get(key);
     if (failure) throw failure;
+    mocks.readStarted?.();
+    if (mocks.readGate) await mocks.readGate;
     return mocks.storage.get(key) ?? null;
   }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
@@ -58,6 +69,14 @@ vi.mock('@/lib/storage/privateKV', () => ({
 
 const TURNS_KEY = 'onskin.ask.groundedTurns.v1';
 const CONSENT_KEY = 'onskin.ask.consent.v1';
+let accountGeneration = 0;
+
+async function openHealthProcessing(ownerUserId = 'user-a', epoch = 1): Promise<void> {
+  await runAccountGenerationOperation((lease) => {
+    accountGeneration = lease.generation;
+  });
+  setActiveHealthProcessingEpoch(epoch, { ownerUserId, accountGeneration });
+}
 
 function storedTurns(): { version: number; period: string; count: number } {
   return JSON.parse(mocks.storage.get(TURNS_KEY) ?? '{}') as {
@@ -68,13 +87,21 @@ function storedTurns(): { version: number; period: string; count: number } {
 }
 
 describe('Ask grounded-turn store', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     mocks.storage.clear();
     mocks.tails.clear();
     mocks.readFailures.clear();
     mocks.updateFailures.clear();
     mocks.writes = 0;
+    mocks.readGate = null;
+    mocks.readStarted = null;
     vi.clearAllMocks();
+    clearActiveHealthProcessingEpoch();
+    await openHealthProcessing();
+  });
+
+  afterEach(() => {
+    clearActiveHealthProcessingEpoch();
   });
 
   it('treats unreadable JSON as unused without deleting the original bytes', async () => {
@@ -181,16 +208,62 @@ describe('Ask grounded-turn store', () => {
 
     expect(mocks.storage.has(TURNS_KEY)).toBe(false);
   });
+
+  it('does not publish its fail-soft result after close and same-epoch re-grant', async () => {
+    mocks.storage.set(
+      TURNS_KEY,
+      JSON.stringify({ version: 1, period: '2026-07', count: 2 }),
+    );
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.readGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.readStarted = markReadStarted;
+
+    const pending = getGroundedTurns('2026-07');
+    await readStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'user-a',
+      accountGeneration,
+    });
+    releaseRead();
+
+    await expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+  });
+
+  it('keeps deletion-only cleanup callable after health processing closes', async () => {
+    mocks.storage.set(TURNS_KEY, 'turns');
+    mocks.storage.set(CONSENT_KEY, 'v1:1');
+    clearActiveHealthProcessingEpoch();
+
+    await expect(clearAskStore()).resolves.toBeUndefined();
+
+    expect(mocks.storage.has(TURNS_KEY)).toBe(false);
+    expect(mocks.storage.has(CONSENT_KEY)).toBe(false);
+  });
 });
 
 describe('Ask consent store', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     mocks.storage.clear();
     mocks.tails.clear();
     mocks.readFailures.clear();
     mocks.updateFailures.clear();
     mocks.writes = 0;
+    mocks.readGate = null;
+    mocks.readStarted = null;
     vi.clearAllMocks();
+    clearActiveHealthProcessingEpoch();
+    await openHealthProcessing();
+  });
+
+  afterEach(() => {
+    clearActiveHealthProcessingEpoch();
   });
 
   it('reads legacy consent grants without repair and writes versioned flags', async () => {

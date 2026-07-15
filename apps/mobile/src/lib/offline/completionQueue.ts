@@ -1,3 +1,7 @@
+import {
+  captureHealthDataWriteLease,
+  runHealthDataOperation,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
@@ -100,7 +104,15 @@ export async function getPendingCompletions(): Promise<PendingCompletion[]> {
 }
 
 export async function enqueueCompletion(rec: PendingCompletion): Promise<void> {
-  await updatePrivateItem(KEY, (current) => encodePending(withQueued(decodePending(current), rec)));
+  const normalized = normalizePendingCompletion(rec);
+  if (normalized === null) return;
+  await runHealthDataOperation(normalized.userId, async (lease) => {
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) =>
+      encodePending(withQueued(decodePending(current), normalized)),
+    );
+    lease.assertCurrent();
+  });
 }
 
 /** Step ids checked off but not yet synced, for a given local day (read merge). */
@@ -124,46 +136,61 @@ export async function pendingStepIdsForDate(date: string): Promise<Set<string>> 
 export async function flushCompletions(
   now: Date = new Date(),
 ): Promise<{ flushed: number; remaining: number }> {
-  const pending = await getPendingCompletions();
-  if (pending.length === 0) return { flushed: 0, remaining: 0 };
+  const initialLease = captureHealthDataWriteLease();
+  return runHealthDataOperation(initialLease.ownerUserId, async (lease) => {
+    const pending = await getPendingCompletions();
+    lease.assertCurrent();
+    if (pending.length === 0) return { flushed: 0, remaining: 0 };
 
-  const { data } = await getPersistedSupabaseUser();
-  const userId = data.user?.id;
-  if (!userId) return { flushed: 0, remaining: pending.length }; // no session yet; retry later
+    const { data } = await getPersistedSupabaseUser();
+    lease.assertCurrent();
+    const userId = data.user?.id;
+    if (!userId) return { flushed: 0, remaining: pending.length };
+    if (userId !== lease.ownerUserId) {
+      throw new Error('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+    }
 
-  const removeKeys = new Set<string>();
-  let flushed = 0;
-  for (const rec of pending) {
-    if (rec.userId !== userId) {
-      removeKeys.add(completionKey(rec)); // a prior account's row; drop
-      continue;
-    }
-    if (isStale(rec.completedDate, now)) {
-      removeKeys.add(completionKey(rec)); // outside the server window; drop
-      continue;
-    }
-    try {
-      const { error } = await supabase.from('routine_completions').insert({
-        user_id: userId,
-        routine_id: rec.routineId,
-        step_id: rec.stepId,
-        completed_date: rec.completedDate,
-      });
-      if (!error || error.code === '23505') {
-        removeKeys.add(completionKey(rec));
-        flushed += 1; // landed, or already recorded (dedup)
+    const removeKeys = new Set<string>();
+    let flushed = 0;
+    for (const rec of pending) {
+      if (rec.userId !== userId) {
+        removeKeys.add(completionKey(rec)); // a prior account's row; drop
+        continue;
       }
-    } catch {
-      // Network failure: leave the row in the latest queue for the next flush.
+      if (isStale(rec.completedDate, now)) {
+        removeKeys.add(completionKey(rec)); // outside the server window; drop
+        continue;
+      }
+      try {
+        lease.assertCurrent();
+        const { error } = await supabase.from('routine_completions').insert({
+          user_id: userId,
+          routine_id: rec.routineId,
+          step_id: rec.stepId,
+          completed_date: rec.completedDate,
+        });
+        lease.assertCurrent();
+        if (!error || error.code === '23505') {
+          removeKeys.add(completionKey(rec));
+          flushed += 1; // landed, or already recorded (dedup)
+        }
+      } catch (error) {
+        // Only an ordinary network failure is retryable. Account/consent
+        // invalidation must escape before any later queue mutation.
+        lease.assertCurrent();
+        void error;
+      }
     }
-  }
 
-  let remaining = pending.length;
-  await updatePrivateItem(KEY, (current) => {
-    const latest = decodePending(current);
-    const next = latest.filter((rec) => !removeKeys.has(completionKey(rec)));
-    remaining = next.length;
-    return encodePending(next);
+    let remaining = pending.length;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      const latest = decodePending(current);
+      const next = latest.filter((rec) => !removeKeys.has(completionKey(rec)));
+      remaining = next.length;
+      return encodePending(next);
+    });
+    lease.assertCurrent();
+    return { flushed, remaining };
   });
-  return { flushed, remaining };
 }

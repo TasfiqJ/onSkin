@@ -113,17 +113,9 @@
         "EXPO_PUBLIC_APP_ENV",
         "CATALOG_RATE_LIMIT_MAX",
         "CATALOG_RATE_LIMIT_WINDOW_SECONDS",
-        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
-        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
-        "OBF_API_ENABLED",
         "USER_EDGE_BODY_MAX_BYTES"
       ],
-      "conditionalEnvironment": [
-        {
-          "when": "OBF_API_ENABLED is true",
-          "anyOf": ["OBF_USER_AGENT"]
-        }
-      ],
+      "conditionalEnvironment": [],
       "conditionalSecrets": []
     },
     "catalog-report": {
@@ -147,9 +139,7 @@
           "SUPABASE_ANON_KEY"
         ]
       ],
-      "requiredSecrets": [
-        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
-      ],
+      "requiredSecrets": [],
       "optionalEnvironment": [
         "EXPO_PUBLIC_APP_ENV",
         "OBF_CONTRIBUTION_ENABLED",
@@ -202,7 +192,16 @@
         "timeoutSeconds": 60,
         "memoryMb": 256
       },
-      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ]
+      ],
       "requiredSecrets": [
         ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"]
       ],
@@ -245,8 +244,38 @@
         "DATA_EXPORT_MAX_STORAGE_OBJECTS",
         "DATA_EXPORT_CONCURRENCY",
         "DATA_EXPORT_FILTER_BATCH_SIZE",
+        "USER_EDGE_BODY_MAX_BYTES",
         "EXPO_PUBLIC_APP_DISPLAY_NAME",
         "APP_DISPLAY_NAME"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
+    "health-consent-worker": {
+      "entrypoint": "supabase/functions/health-consent-worker/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": false,
+      "access": "scheduled",
+      "auth": "scheduler-secret",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 60,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [["SUPABASE_URL"], ["APP_ENV"]],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["HEALTH_CONSENT_WORKER_SECRET"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "USER_EDGE_BODY_MAX_BYTES",
+        "HEALTH_CONSENT_WORKER_CLAIM_LIMIT",
+        "HEALTH_CONSENT_WORKER_STORAGE_BATCH_SIZE",
+        "HEALTH_CONSENT_WORKER_MAX_STORAGE_BATCHES",
+        "HEALTH_CONSENT_WORKER_BUDGET_MS",
+        "HEALTH_CONSENT_WORKER_RETRY_AFTER_SECONDS",
+        "HEALTH_CONSENT_WORKER_ACTION_REQUIRED_RETRY_AFTER_SECONDS"
       ],
       "conditionalEnvironment": [],
       "conditionalSecrets": []

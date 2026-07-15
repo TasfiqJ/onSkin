@@ -1,0 +1,161 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { clearHealthPurposeLocalData, HEALTH_PURPOSE_PRIVATE_DATA_KEYS } from './selectiveCleanup';
+
+const mocks = vi.hoisted(() => ({
+  beginAccount: vi.fn(),
+  beginPhoto: vi.fn(),
+  beginPrivate: vi.fn(),
+  cancelNotifications: vi.fn(async () => {}),
+  cancelQueries: vi.fn(async () => {}),
+  clearCache: vi.fn(async () => {}),
+  clearPhotos: vi.fn(async () => {}),
+  clearQueries: vi.fn(),
+  endAccount: vi.fn(),
+  endPhoto: vi.fn(),
+  endPrivate: vi.fn(),
+  multiRemove: vi.fn(async () => {}),
+  purgeImages: vi.fn(async () => true),
+  resetAnalyticsIdentity: vi.fn(async () => {}),
+  scavenge: vi.fn(async () => 0),
+  scheduleTrialReminder: vi.fn(async () => {}),
+  waitAccount: vi.fn(async () => {}),
+  waitPhoto: vi.fn(async () => {}),
+  waitPrivate: vi.fn(async () => {}),
+  waitNotifications: vi.fn(async () => {}),
+  ownership: 'match',
+  runAccountGenerationOperation: vi.fn(),
+}));
+
+vi.mock('@react-native-async-storage/async-storage', () => ({
+  default: { multiRemove: mocks.multiRemove },
+}));
+vi.mock('react-native', () => ({ Platform: { OS: 'ios' } }));
+vi.mock('expo-notifications', () => ({
+  cancelAllScheduledNotificationsAsync: mocks.cancelNotifications,
+}));
+vi.mock('@/features/photos/encryptedStorage', () => ({
+  beginEncryptedPhotoAccountBoundary: mocks.beginPhoto,
+  clearEncryptedPhotoStorage: mocks.clearPhotos,
+  endEncryptedPhotoAccountBoundary: mocks.endPhoto,
+  waitForEncryptedPhotoWritesToSettle: mocks.waitPhoto,
+}));
+vi.mock('@/features/notifications/deliver', () => ({
+  scheduleTrialReminder: mocks.scheduleTrialReminder,
+  waitForHealthNotificationOperationsToSettle: mocks.waitNotifications,
+}));
+vi.mock('@/features/photos/sensitiveImageMemory', () => ({
+  purgeSensitiveImageMemory: mocks.purgeImages,
+}));
+vi.mock('@/features/settings/localPrivateData', () => ({
+  clearGeneratedPrivateCacheFiles: mocks.clearCache,
+}));
+vi.mock('@/lib/analytics/track', () => ({
+  resetAnalyticsIdentity: mocks.resetAnalyticsIdentity,
+}));
+vi.mock('@/lib/auth/accountGeneration', () => ({
+  beginAccountGenerationBoundaryFromLease: mocks.beginAccount,
+  runAccountGenerationOperation: mocks.runAccountGenerationOperation,
+  waitForAccountGenerationOperationsToSettle: mocks.waitAccount,
+}));
+vi.mock('@/lib/auth/sessionOwner', () => ({
+  readLocalDataOwnership: vi.fn(async () => mocks.ownership),
+}));
+vi.mock('@/lib/env', () => ({ isSupabaseConfigured: true }));
+vi.mock('@/lib/query/queryClient', () => ({
+  queryClient: { cancelQueries: mocks.cancelQueries, clear: mocks.clearQueries },
+}));
+vi.mock('@/lib/storage/privateKV', () => ({
+  beginPrivateKVAccountBoundary: mocks.beginPrivate,
+  endPrivateKVAccountBoundary: mocks.endPrivate,
+  waitForPrivateKVWritesToSettle: mocks.waitPrivate,
+}));
+vi.mock('@/lib/storage/plaintextStaging', () => ({
+  scavengePlaintextStaging: mocks.scavenge,
+}));
+
+describe('health-purpose local cleanup', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.ownership = 'match';
+    mocks.beginAccount.mockReturnValue(mocks.endAccount);
+    mocks.runAccountGenerationOperation.mockImplementation(
+      (operation: (lease: { signal: AbortSignal; assertCurrent: () => void }) => unknown) =>
+        operation({ signal: new AbortController().signal, assertCurrent: vi.fn() }),
+    );
+  });
+
+  it('clears health records and media behind all account boundaries', async () => {
+    const order: string[] = [];
+    mocks.endPrivate.mockImplementationOnce(() => order.push('end-private'));
+    mocks.endAccount.mockImplementationOnce(() => order.push('end-account'));
+    mocks.scheduleTrialReminder.mockImplementationOnce(async () => {
+      order.push('trial-reminder');
+    });
+    await clearHealthPurposeLocalData('owner-a');
+
+    expect(mocks.beginAccount).toHaveBeenCalledOnce();
+    expect(mocks.beginPrivate).toHaveBeenCalledOnce();
+    expect(mocks.beginPhoto).toHaveBeenCalledOnce();
+    expect(mocks.multiRemove).toHaveBeenCalledWith([...HEALTH_PURPOSE_PRIVATE_DATA_KEYS]);
+    expect(mocks.clearPhotos).toHaveBeenCalledOnce();
+    expect(mocks.purgeImages).toHaveBeenCalledOnce();
+    expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledOnce();
+    expect(mocks.waitNotifications).toHaveBeenCalledTimes(2);
+    expect(mocks.cancelNotifications).toHaveBeenCalledTimes(2);
+    expect(mocks.scheduleTrialReminder).toHaveBeenCalledOnce();
+    expect(mocks.endPhoto).toHaveBeenCalledOnce();
+    expect(mocks.endPrivate).toHaveBeenCalledOnce();
+    expect(mocks.endAccount).toHaveBeenCalledOnce();
+    expect(order).toEqual(['end-private', 'end-account', 'trial-reminder']);
+  });
+
+  it('does not include account, App Lock, entitlement, or store-safety authority', () => {
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).toContain('onskin.commerceConsent.v1');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).toContain('onskin.communityConsent.v1');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('onskin.communityAge16.v1');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('onskin.appLock.enabled');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('onskin.entitlement.v2');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain(
+      'routinekind.store_transaction_notice.v2',
+    );
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('routinekind.healthDataLifecycle.v1');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('onskin.ageVerified');
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).not.toContain('onskin.subscription.promptedExpiry');
+  });
+
+  it('keeps every boundary closed until a failed cleanup has been observed', async () => {
+    mocks.clearPhotos.mockRejectedValueOnce(new Error('disk unavailable'));
+    await expect(clearHealthPurposeLocalData('owner-a')).rejects.toThrow(
+      'HEALTH_PURPOSE_LOCAL_CLEAR_FAILED',
+    );
+    expect(mocks.endPhoto).toHaveBeenCalledOnce();
+    expect(mocks.endPrivate).toHaveBeenCalledOnce();
+    expect(mocks.endAccount).toHaveBeenCalledOnce();
+  });
+
+  it('keeps cleanup incomplete when legacy analytics persistence cannot be purged', async () => {
+    mocks.resetAnalyticsIdentity.mockRejectedValueOnce(new Error('analytics storage unavailable'));
+
+    await expect(clearHealthPurposeLocalData('owner-a')).rejects.toThrow(
+      'HEALTH_PURPOSE_LOCAL_CLEAR_FAILED',
+    );
+
+    expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledOnce();
+    expect(mocks.multiRemove).toHaveBeenCalledOnce();
+    expect(mocks.clearPhotos).toHaveBeenCalledOnce();
+    expect(mocks.endPhoto).toHaveBeenCalledOnce();
+    expect(mocks.endPrivate).toHaveBeenCalledOnce();
+    expect(mocks.endAccount).toHaveBeenCalledOnce();
+  });
+
+  it('does not open a destructive boundary for a foreign local owner', async () => {
+    mocks.ownership = 'mismatch';
+
+    await expect(clearHealthPurposeLocalData('owner-a')).rejects.toThrow(
+      'HEALTH_PURPOSE_LOCAL_CLEAR_OWNER_MISMATCH',
+    );
+    expect(mocks.beginAccount).not.toHaveBeenCalled();
+    expect(mocks.multiRemove).not.toHaveBeenCalled();
+  });
+});

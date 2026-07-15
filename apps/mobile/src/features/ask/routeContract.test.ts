@@ -45,8 +45,10 @@ describe('Ask route launch contracts', () => {
     expect(consent).toContain("process.env.EXPO_PUBLIC_E2E_ASK_CONSENT_LEDGER === 'local_only'");
     expect(consent).toContain("modes.has('grant_once') || modes.has('all_once')");
     expect(consent).toContain("modes.has('revoke_once') || modes.has('all_once')");
-    expect(consent).toContain('setAskConsentLocal(true)');
-    expect(consent).toContain('clearAskStore()');
+    expect(consent).toContain('await grantAskConsent();');
+    expect(consent).toContain('await revokeAskConsent();');
+    expect(consent).not.toContain('setAskConsentLocal(true)');
+    expect(consent).not.toContain('clearAskStore()');
     expect(consent).toContain("new Error('E2E_ASK_CONSENT_GRANT_FAILURE')");
     expect(consent).toContain("new Error('E2E_ASK_CONSENT_REVOKE_FAILURE')");
     expect(consent).toContain('onSaved: () => {');

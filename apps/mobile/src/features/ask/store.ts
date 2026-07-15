@@ -4,6 +4,7 @@ import {
   updatePrivateItem,
 } from '@/lib/storage/privateKV';
 import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 import { ASK_TRIAL_GROUNDED_CAP } from './gate';
 
@@ -23,11 +24,19 @@ export const ASK_TURN_RECORD_INVALID = 'ASK_TURN_RECORD_INVALID';
 export const ASK_TURN_RECORD_UNSUPPORTED_VERSION = 'ASK_TURN_RECORD_UNSUPPORTED_VERSION';
 
 export async function getAskConsentLocal(): Promise<boolean> {
-  return getPrivateBoolean(CONSENT_KEY);
+  return runCurrentHealthDataOperation(async (lease) => {
+    const enabled = await getPrivateBoolean(CONSENT_KEY);
+    lease.assertCurrent();
+    return enabled;
+  });
 }
 
 export async function setAskConsentLocal(enabled: boolean): Promise<void> {
-  await setPrivateBoolean(CONSENT_KEY, enabled);
+  await runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    await setPrivateBoolean(CONSENT_KEY, enabled);
+    lease.assertCurrent();
+  });
 }
 
 type TurnRecord = { period: string; count: number };
@@ -89,32 +98,49 @@ function encodeTurns(record: TurnRecord): string {
 
 /** Grounded (cloud) turns used in `period` (a 'YYYY-MM' string); resets per period. */
 export async function getGroundedTurns(period: string): Promise<number> {
-  try {
-    const currentPeriod = normalizePeriod(period);
-    if (!currentPeriod) return 0;
-    const rec = decodeTurns(await getPrivateItem(TURNS_KEY));
-    return rec && rec.period === currentPeriod ? rec.count : 0;
-  } catch {
-    return 0;
-  }
+  return runCurrentHealthDataOperation(async (lease) => {
+    try {
+      const currentPeriod = normalizePeriod(period);
+      if (!currentPeriod) return 0;
+      lease.assertCurrent();
+      const raw = await getPrivateItem(TURNS_KEY);
+      lease.assertCurrent();
+      const rec = decodeTurns(raw);
+      lease.assertCurrent();
+      return rec && rec.period === currentPeriod ? rec.count : 0;
+    } catch {
+      // Preserve the fail-soft cost counter, but never turn a withdrawal,
+      // owner switch, or same-epoch re-grant into a publishable fallback.
+      lease.assertCurrent();
+      return 0;
+    }
+  });
 }
 
 /** Increment the grounded-turn counter for `period` (resets when the period rolls over). */
 export async function recordGroundedTurn(period: string): Promise<void> {
-  try {
-    const currentPeriod = normalizePeriod(period);
-    if (!currentPeriod) return;
-    await updatePrivateItem(TURNS_KEY, (current) => {
-      const rec = decodeTurns(current);
-      const count = rec && rec.period === currentPeriod ? rec.count + 1 : 1;
-      return encodeTurns({
-        period: currentPeriod,
-        count: Math.min(count, ASK_TRIAL_GROUNDED_CAP),
+  await runCurrentHealthDataOperation(async (lease) => {
+    try {
+      const currentPeriod = normalizePeriod(period);
+      if (!currentPeriod) return;
+      lease.assertCurrent();
+      await updatePrivateItem(TURNS_KEY, (current) => {
+        lease.assertCurrent();
+        const rec = decodeTurns(current);
+        const count = rec && rec.period === currentPeriod ? rec.count + 1 : 1;
+        lease.assertCurrent();
+        return encodeTurns({
+          period: currentPeriod,
+          count: Math.min(count, ASK_TRIAL_GROUNDED_CAP),
+        });
       });
-    });
-  } catch {
-    /* best-effort. The cap is a cost guardrail, not a hard wall */
-  }
+      lease.assertCurrent();
+    } catch {
+      // The counter remains best-effort for ordinary storage failures. Health
+      // authority invalidation must still escape rather than be swallowed.
+      lease.assertCurrent();
+    }
+  });
 }
 
 /** Test/seed reset, and the deletion-on-revocation hook (no content is stored here). */

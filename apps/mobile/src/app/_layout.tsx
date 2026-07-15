@@ -9,6 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { configureNotifications } from '@/features/notifications/startup';
+import { HealthDataLifecycleGate } from '@/features/healthConsent/HealthDataLifecycleGate';
 import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
 import { clearUnavailableCloudBackupPreference } from '@/features/photos/consent';
 import { IntakeProvider } from '@/features/shelf/IntakeContext';
@@ -63,13 +64,15 @@ export default function RootLayout() {
                 <AppLockProvider>
                   <StoreTransactionNoticeHost />
                   <PrivateDataAvailabilityGate>
-                    <OnboardingProvider>
-                      <IntakeProvider>
-                        <OfflineSync />
-                        <StatusBar style="dark" />
-                        <Stack screenOptions={{ headerShown: false }} />
-                      </IntakeProvider>
-                    </OnboardingProvider>
+                    <HealthDataLifecycleGate>
+                      <OnboardingProvider>
+                        <IntakeProvider>
+                          <OfflineSync />
+                          <StatusBar style="dark" />
+                          <Stack screenOptions={{ headerShown: false }} />
+                        </IntakeProvider>
+                      </OnboardingProvider>
+                    </HealthDataLifecycleGate>
                   </PrivateDataAvailabilityGate>
                 </AppLockProvider>
               </SessionBoundaryGate>

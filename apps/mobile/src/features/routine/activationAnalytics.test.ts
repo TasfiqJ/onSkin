@@ -6,9 +6,29 @@ import {
 } from './activationAnalytics';
 
 const mocks = vi.hoisted(() => ({
+  closeAfterUpdate: false,
+  healthGeneration: 1,
+  healthOpen: true,
   storage: new Map<string, string>(),
   track: vi.fn(),
   updateFailure: null as Error | null,
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+  runCurrentHealthDataOperation: async (
+    operation: (lease: { assertCurrent: () => void }) => unknown,
+  ) => {
+    if (!mocks.healthOpen) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    const generation = mocks.healthGeneration;
+    const assertCurrent = () => {
+      if (!mocks.healthOpen || generation !== mocks.healthGeneration) {
+        throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+      }
+    };
+    const result = await operation({ assertCurrent });
+    assertCurrent();
+    return result;
+  },
 }));
 
 vi.mock('@/lib/analytics/track', () => ({
@@ -25,6 +45,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
       const next = updater(mocks.storage.get(key) ?? null);
       if (next === null) mocks.storage.delete(key);
       else mocks.storage.set(key, next);
+      if (mocks.closeAfterUpdate) mocks.healthGeneration += 1;
     },
   ),
 }));
@@ -33,6 +54,9 @@ const KEY = 'routinekind.routineActivation.v1';
 
 describe('routine activation analytics', () => {
   beforeEach(() => {
+    mocks.closeAfterUpdate = false;
+    mocks.healthGeneration = 1;
+    mocks.healthOpen = true;
     mocks.storage.clear();
     mocks.track.mockClear();
     mocks.updateFailure = null;
@@ -181,5 +205,19 @@ describe('routine activation analytics', () => {
 
     expect(mocks.track).not.toHaveBeenCalled();
     expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('does not emit a reserved first event after withdrawal and re-grant', async () => {
+    mocks.closeAfterUpdate = true;
+
+    await expect(
+      recordFirstUsefulInsightAnalytics({
+        insightCount: 1,
+        isExample: false,
+        source: 'reveal',
+      }),
+    ).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+
+    expect(mocks.track).not.toHaveBeenCalled();
   });
 });

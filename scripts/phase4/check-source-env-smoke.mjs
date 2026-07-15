@@ -32,7 +32,6 @@ const completeEnv = {
   CATALOG_APP_VERSION: '0.1.0',
   CATALOG_CONTACT_EMAIL: 'catalog@routinekind.app',
   CATALOG_ATTRIBUTION_URL: 'https://routinekind.app/catalog-sources',
-  OBF_USER_AGENT: 'RoutineKind/0.1.0 (catalog@routinekind.app)',
 };
 
 function runCheck(extraEnv) {
@@ -100,15 +99,17 @@ const cases = [
     },
   },
   {
-    name: 'strict catalog source env rejects local OBF user-agent contacts',
+    name: 'strict catalog source env rejects the retired live OBF API flag',
     result: runCheck({
       ...completeEnv,
-      OBF_USER_AGENT: 'RoutineKind/0.1.0 (catalog@routinekind.test)',
+      OBF_API_ENABLED: 'true',
     }),
     expect(result) {
       return (
         result.status === 1 &&
-        /OBF_USER_AGENT must include a production contact email address/.test(result.stderr)
+        /OBF_API_ENABLED is retired: request-time Open Beauty Facts lookup must remain disabled/.test(
+          result.stderr,
+        )
       );
     },
   },

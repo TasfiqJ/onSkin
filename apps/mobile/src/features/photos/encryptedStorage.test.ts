@@ -1,11 +1,17 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   ACCOUNT_GENERATION_CHANGED,
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  runAccountGenerationOperation,
   waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
+import {
+  clearActiveHealthProcessingEpoch,
+  HEALTH_PROCESSING_STATUS_LEASE_MS,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 import { PLAINTEXT_STAGING_JOURNAL_KEY } from '@/lib/storage/plaintextStagingCore';
 
 import {
@@ -13,6 +19,7 @@ import {
   clearEncryptedPhotoStorage,
   createPhotoShareFile,
   decryptPhotoNote,
+  decryptPhotoNoteForPurposeLimitedExport,
   decryptPhotoToDataUri,
   deleteQuarantinedPhoto,
   deletePhotoShareFile,
@@ -33,6 +40,17 @@ import {
 const CONTENT_KEY_NAME = 'onskin.photo.content_key.v1';
 const CONTENT_KEY_MARKER = 'onskin.photo.content_key_created.v1';
 
+function activateExpiringHealthLease(epoch: number): void {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2026-07-15T16:00:00.000Z'));
+  clearActiveHealthProcessingEpoch();
+  setActiveHealthProcessingEpoch(epoch, {
+    ownerUserId: 'test-owner',
+    accountGeneration: 0,
+    serverVerifiedAt: new Date(Date.now()).toISOString(),
+  });
+}
+
 const mocks = vi.hoisted(() => ({
   asyncSetThrows: false,
   asyncWriteGate: null as Promise<void> | null,
@@ -45,11 +63,15 @@ const mocks = vi.hoisted(() => ({
   getItemAsync: vi.fn(),
   getInfoAsync: vi.fn(),
   makeDirectoryAsync: vi.fn(),
+  moveGate: null as Promise<void> | null,
+  moveStarted: null as (() => void) | null,
   moveAsync: vi.fn(),
   platformOS: 'ios',
   readDirectoryAsync: vi.fn(),
   readAsStringAsync: vi.fn(),
   secureGetThrows: false,
+  secureReadGate: null as Promise<void> | null,
+  secureReadStarted: null as (() => void) | null,
   secureSetThrows: false,
   setItemAsync: vi.fn(),
   writeGate: null as Promise<void> | null,
@@ -121,17 +143,27 @@ describe('encrypted photo storage', () => {
     mocks.getItemAsync.mockReset();
     mocks.getInfoAsync.mockReset();
     mocks.makeDirectoryAsync.mockReset();
+    mocks.moveGate = null;
+    mocks.moveStarted = null;
     mocks.moveAsync.mockReset();
     mocks.platformOS = 'ios';
     mocks.readDirectoryAsync.mockReset();
     mocks.readAsStringAsync.mockReset();
     mocks.secureGetThrows = false;
+    mocks.secureReadGate = null;
+    mocks.secureReadStarted = null;
     mocks.secureSetThrows = false;
     mocks.setItemAsync.mockReset();
     mocks.writeGate = null;
     mocks.writeStarted = null;
     mocks.writeAsStringAsync.mockReset();
     endEncryptedPhotoAccountBoundary();
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'test-owner',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
 
     mocks.deleteAsync.mockImplementation(async (uri: string) => {
       mocks.files.delete(uri);
@@ -140,12 +172,16 @@ describe('encrypted photo storage', () => {
       mocks.secureStorage.delete(key);
     });
     mocks.getItemAsync.mockImplementation(async (key: string) => {
+      mocks.secureReadStarted?.();
+      if (mocks.secureReadGate) await mocks.secureReadGate;
       if (mocks.secureGetThrows) throw new Error('secure read failed');
       return mocks.secureStorage.get(key) ?? null;
     });
     mocks.getInfoAsync.mockResolvedValue({ exists: false });
     mocks.makeDirectoryAsync.mockResolvedValue(undefined);
     mocks.moveAsync.mockImplementation(async ({ from, to }: { from: string; to: string }) => {
+      mocks.moveStarted?.();
+      if (mocks.moveGate) await mocks.moveGate;
       const value = mocks.files.get(from);
       if (value == null) throw new Error(`missing file: ${from}`);
       mocks.files.set(to, value);
@@ -168,6 +204,10 @@ describe('encrypted photo storage', () => {
     });
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('blocks new encrypted photo and note writes during an account boundary', async () => {
     beginEncryptedPhotoAccountBoundary();
 
@@ -178,6 +218,220 @@ describe('encrypted photo storage', () => {
       PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
     );
     expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+  });
+
+  it('blocks photo and note repopulation after health processing closes', async () => {
+    clearActiveHealthProcessingEpoch();
+    mocks.files.set('file://capture.jpg', Buffer.from('image bytes').toString('base64'));
+
+    await expect(encryptPhotoNote('stale note')).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    );
+    await expect(encryptCapturedPhoto('file://capture.jpg', 'stale-photo')).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    );
+    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+  });
+
+  it('purges a final encrypted photo when its status lease expires during the atomic move', async () => {
+    activateExpiringHealthLease(10);
+    const sourceUri = 'file://capture/lease-expiry.jpg';
+    const finalUri = 'file://document/photos/v1/lease-expiry.onskinphoto';
+    mocks.files.set(sourceUri, Buffer.from('image bytes').toString('base64'));
+    let releaseMove!: () => void;
+    let markMoveStarted!: () => void;
+    mocks.moveGate = new Promise<void>((resolve) => {
+      releaseMove = resolve;
+    });
+    const moveStarted = new Promise<void>((resolve) => {
+      markMoveStarted = resolve;
+    });
+    mocks.moveStarted = markMoveStarted;
+
+    const write = encryptCapturedPhoto(sourceUri, 'lease-expiry');
+    await moveStarted;
+    const rejection = expect(write).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
+    releaseMove();
+
+    await rejection;
+    expect(mocks.files.has(finalUri)).toBe(false);
+    expect(
+      [...mocks.files.keys()].some((uri) => uri.includes('lease-expiry.onskinphoto.tmp-')),
+    ).toBe(false);
+    expect(mocks.files.has(sourceUri)).toBe(true);
+  });
+
+  it('does not publish an encrypted note when key persistence outlives its status lease', async () => {
+    activateExpiringHealthLease(11);
+    let releaseMarkerWrite!: () => void;
+    let markMarkerWriteStarted!: () => void;
+    mocks.asyncWriteGate = new Promise<void>((resolve) => {
+      releaseMarkerWrite = resolve;
+    });
+    const markerWriteStarted = new Promise<void>((resolve) => {
+      markMarkerWriteStarted = resolve;
+    });
+    mocks.asyncWriteStarted = (key) => {
+      if (key === CONTENT_KEY_MARKER) markMarkerWriteStarted();
+    };
+    let publishedNote: string | null | undefined;
+    const encryption = encryptPhotoNote('lease-bound note').then((value) => {
+      publishedNote = value;
+      return value;
+    });
+    await markerWriteStarted;
+    const rejection = expect(encryption).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
+    releaseMarkerWrite();
+
+    await rejection;
+    expect(publishedNote).toBeUndefined();
+  });
+
+  it('does not return decrypted note or photo plaintext after status expiry during key I/O', async () => {
+    const encryptedNote = await encryptPhotoNote('private note');
+    const sourceUri = 'file://capture/private-photo.jpg';
+    mocks.files.set(sourceUri, Buffer.from('private image').toString('base64'));
+    const encryptedPhoto = await encryptCapturedPhoto(sourceUri, 'private-photo');
+
+    activateExpiringHealthLease(12);
+    let releaseNoteKeyRead!: () => void;
+    let markNoteKeyReadStarted!: () => void;
+    mocks.secureReadGate = new Promise<void>((resolve) => {
+      releaseNoteKeyRead = resolve;
+    });
+    const noteKeyReadStarted = new Promise<void>((resolve) => {
+      markNoteKeyReadStarted = resolve;
+    });
+    mocks.secureReadStarted = markNoteKeyReadStarted;
+    let notePlaintext: string | null | undefined;
+    const noteRead = decryptPhotoNote(encryptedNote).then((value) => {
+      notePlaintext = value;
+      return value;
+    });
+    await noteKeyReadStarted;
+    const noteRejection = expect(noteRead).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
+    releaseNoteKeyRead();
+    await noteRejection;
+    expect(notePlaintext).toBeUndefined();
+
+    activateExpiringHealthLease(13);
+    let releasePhotoKeyRead!: () => void;
+    let markPhotoKeyReadStarted!: () => void;
+    mocks.secureReadGate = new Promise<void>((resolve) => {
+      releasePhotoKeyRead = resolve;
+    });
+    const photoKeyReadStarted = new Promise<void>((resolve) => {
+      markPhotoKeyReadStarted = resolve;
+    });
+    mocks.secureReadStarted = markPhotoKeyReadStarted;
+    let photoPlaintext: string | undefined;
+    const photoRead = decryptPhotoToDataUri(encryptedPhoto.encryptedLocalUri).then((value) => {
+      photoPlaintext = value;
+      return value;
+    });
+    await photoKeyReadStarted;
+    const photoRejection = expect(photoRead).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
+    releasePhotoKeyRead();
+
+    await photoRejection;
+    expect(photoPlaintext).toBeUndefined();
+  });
+
+  it('purges plaintext share staging when its status lease expires during the file write', async () => {
+    const sourceUri = 'file://capture/share-expiry.jpg';
+    mocks.files.set(sourceUri, Buffer.from('private image').toString('base64'));
+    const encrypted = await encryptCapturedPhoto(sourceUri, 'share-expiry');
+    activateExpiringHealthLease(14);
+    let releaseShareWrite!: () => void;
+    let markShareWriteStarted!: () => void;
+    mocks.writeGate = new Promise<void>((resolve) => {
+      releaseShareWrite = resolve;
+    });
+    const shareWriteStarted = new Promise<void>((resolve) => {
+      markShareWriteStarted = resolve;
+    });
+    mocks.writeStarted = markShareWriteStarted;
+    let shareUri: string | undefined;
+    const share = createPhotoShareFile(encrypted.encryptedLocalUri).then((value) => {
+      shareUri = value;
+      return value;
+    });
+    await shareWriteStarted;
+    const rejection = expect(share).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
+    releaseShareWrite();
+
+    await rejection;
+    expect(shareUri).toBeUndefined();
+    expect(
+      [...mocks.files.keys()].some((uri) =>
+        uri.startsWith('file://cache/private-plaintext-staging-v1/'),
+      ),
+    ).toBe(false);
+    expect(mocks.asyncStorage.has(PLAINTEXT_STAGING_JOURNAL_KEY)).toBe(false);
+  });
+
+  it('purges a restored live photo when its status lease expires during restore', async () => {
+    const originalUri = 'file://document/photos/v1/restore-expiry.onskinphoto';
+    const quarantinedUri = `${originalUri}.pending-delete-operation`;
+    mocks.files.set(quarantinedUri, 'encrypted');
+    activateExpiringHealthLease(15);
+    let releaseMove!: () => void;
+    let markMoveStarted!: () => void;
+    mocks.moveGate = new Promise<void>((resolve) => {
+      releaseMove = resolve;
+    });
+    const moveStarted = new Promise<void>((resolve) => {
+      markMoveStarted = resolve;
+    });
+    mocks.moveStarted = markMoveStarted;
+
+    const restore = restoreQuarantinedPhoto({ originalUri, quarantinedUri });
+    await moveStarted;
+    const rejection = expect(restore).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
+    releaseMove();
+
+    await rejection;
+    expect(mocks.files.has(originalUri)).toBe(false);
+    expect(mocks.files.has(quarantinedUri)).toBe(false);
+  });
+
+  it('purges a reconciled live photo when its status lease expires during restoration', async () => {
+    const directory = 'file://document/photos/v1/';
+    const originalUri = `${directory}reconcile-expiry.onskinphoto`;
+    const quarantinedUri = `${originalUri}.pending-delete-operation`;
+    mocks.files.set(quarantinedUri, 'encrypted');
+    mocks.getInfoAsync.mockImplementation(async (uri: string) => ({
+      exists: uri === directory || mocks.files.has(uri),
+    }));
+    mocks.readDirectoryAsync.mockResolvedValue([
+      'reconcile-expiry.onskinphoto.pending-delete-operation',
+    ]);
+    activateExpiringHealthLease(16);
+    let releaseMove!: () => void;
+    let markMoveStarted!: () => void;
+    mocks.moveGate = new Promise<void>((resolve) => {
+      releaseMove = resolve;
+    });
+    const moveStarted = new Promise<void>((resolve) => {
+      markMoveStarted = resolve;
+    });
+    mocks.moveStarted = markMoveStarted;
+
+    const reconciliation = reconcileEncryptedPhotoStorage([originalUri]);
+    await moveStarted;
+    const rejection = expect(reconciliation).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
+    releaseMove();
+
+    await rejection;
+    expect(mocks.files.has(originalUri)).toBe(false);
+    expect(mocks.files.has(quarantinedUri)).toBe(false);
   });
 
   it('drains a photo file write already in progress before account cleanup', async () => {
@@ -209,34 +463,12 @@ describe('encrypted photo storage', () => {
     expect(mocks.files.has('file://document/photos/v1/account-a-photo.onskinphoto')).toBe(true);
   });
 
-  it('drains a decrypt marker write before account cleanup', async () => {
+  it('keeps decryption read-only instead of repopulating a cleared marker', async () => {
     const ciphertext = await encryptPhotoNote('account A note');
     mocks.asyncStorage.delete(CONTENT_KEY_MARKER);
-    let releaseMarker!: () => void;
-    let markWriteStarted!: () => void;
-    mocks.asyncWriteGate = new Promise<void>((resolve) => {
-      releaseMarker = resolve;
-    });
-    const writeStarted = new Promise<void>((resolve) => {
-      markWriteStarted = resolve;
-    });
-    mocks.asyncWriteStarted = markWriteStarted;
 
-    const decrypt = decryptPhotoNote(ciphertext);
-    await writeStarted;
-    beginEncryptedPhotoAccountBoundary();
-    let drainFinished = false;
-    const drain = waitForEncryptedPhotoWritesToSettle().then(() => {
-      drainFinished = true;
-    });
-    await Promise.resolve();
-    expect(drainFinished).toBe(false);
-
-    releaseMarker();
-    await expect(decrypt).resolves.toBe('account A note');
-    await drain;
-    expect(drainFinished).toBe(true);
-    expect(mocks.asyncStorage.get(CONTENT_KEY_MARKER)).toBe('1');
+    await expect(decryptPhotoNote(ciphertext)).resolves.toBe('account A note');
+    expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
   });
 
   it('round-trips encrypted notes and fails closed for malformed note envelopes', async () => {
@@ -251,6 +483,46 @@ describe('encrypted photo storage', () => {
     await expect(decryptPhotoNote(JSON.stringify(envelope))).rejects.toThrow(
       PHOTO_DECRYPTION_FAILED,
     );
+  });
+
+  it('keeps normal note reads closed while an exact-account data export can decrypt', async () => {
+    const ciphertext = await encryptPhotoNote('data-rights note');
+    clearActiveHealthProcessingEpoch();
+
+    await expect(decryptPhotoNote(ciphertext)).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    );
+    await expect(
+      runAccountGenerationOperation((accountLease) =>
+        decryptPhotoNoteForPurposeLimitedExport(ciphertext, accountLease),
+      ),
+    ).resolves.toBe('data-rights note');
+  });
+
+  it('rejects purpose-limited note decryption after an A-to-B-to-A boundary', async () => {
+    const ciphertext = await encryptPhotoNote('account A note');
+    clearActiveHealthProcessingEpoch();
+    let releaseKeyRead!: () => void;
+    let markKeyReadStarted!: () => void;
+    mocks.secureReadGate = new Promise<void>((resolve) => {
+      releaseKeyRead = resolve;
+    });
+    const keyReadStarted = new Promise<void>((resolve) => {
+      markKeyReadStarted = resolve;
+    });
+    mocks.secureReadStarted = markKeyReadStarted;
+
+    const pending = runAccountGenerationOperation((accountLease) =>
+      decryptPhotoNoteForPurposeLimitedExport(ciphertext, accountLease),
+    );
+    await keyReadStarted;
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+    releaseKeyRead();
+
+    await expect(pending).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
   });
 
   it('publishes encrypted photos with an atomic move and preserves the source on interruption', async () => {
@@ -282,6 +554,23 @@ describe('encrypted photo storage', () => {
     expect(mocks.files.has('file://document/photos/v1/interrupted-photo.onskinphoto')).toBe(false);
     expect(
       [...mocks.files.keys()].some((uri) => uri.includes('interrupted-photo.onskinphoto.tmp-')),
+    ).toBe(false);
+  });
+
+  it('preserves a pre-existing final when an atomic move fails before completion', async () => {
+    const sourceUri = 'file://capture/existing-final.jpg';
+    const finalUri = 'file://document/photos/v1/existing-final.onskinphoto';
+    mocks.files.set(sourceUri, Buffer.from('new image').toString('base64'));
+    mocks.files.set(finalUri, 'prior-encrypted-envelope');
+    mocks.moveAsync.mockRejectedValueOnce(new Error('target already exists'));
+
+    await expect(encryptCapturedPhoto(sourceUri, 'existing-final')).rejects.toThrow(
+      'target already exists',
+    );
+
+    expect(mocks.files.get(finalUri)).toBe('prior-encrypted-envelope');
+    expect(
+      [...mocks.files.keys()].some((uri) => uri.includes('existing-final.onskinphoto.tmp-')),
     ).toBe(false);
   });
 
@@ -377,6 +666,13 @@ describe('encrypted photo storage', () => {
     }
 
     mocks.readDirectoryAsync.mockResolvedValue(['account-a.onskinphoto.pending-delete-delete-1']);
+    await runAccountGenerationOperation((accountLease) => {
+      setActiveHealthProcessingEpoch(2, {
+        ownerUserId: 'test-owner',
+        accountGeneration: accountLease.generation,
+        serverVerifiedAt: null,
+      });
+    });
     await reconcileEncryptedPhotoStorage([]);
     expect(mocks.files.has(staleUri)).toBe(false);
   });
@@ -490,13 +786,13 @@ describe('encrypted photo storage', () => {
     expect(mocks.secureStorage.get(CONTENT_KEY_NAME)).toBe('b'.repeat(64));
   });
 
-  it('does not complete decryption when key-history persistence fails', async () => {
+  it('does not require a marker write to decrypt existing data', async () => {
     const ciphertext = await encryptPhotoNote('baseline note');
+    mocks.asyncStorage.delete(CONTENT_KEY_MARKER);
     mocks.asyncSetThrows = true;
 
-    await expect(decryptPhotoNote(ciphertext)).rejects.toThrow(
-      PHOTO_CONTENT_KEY_STORAGE_UNAVAILABLE,
-    );
+    await expect(decryptPhotoNote(ciphertext)).resolves.toBe('baseline note');
+    expect(mocks.asyncStorage.has(CONTENT_KEY_MARKER)).toBe(false);
   });
 
   it('reports authentication failure without replacing a valid but wrong key', async () => {

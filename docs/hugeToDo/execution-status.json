@@ -737,7 +737,7 @@
       "id": "DB-09",
       "status": "in_progress",
       "blockedBy": ["DB-06", "DB-07", "DB-08", "ACCT-03"],
-      "nextAction": "The credential-free two-reset gate now proves all 52 migrations through 0053 locally. Run the exhaustive 47-private-table access-control matrix against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, and configured Turnstile behavior; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
+      "nextAction": "The combined credential-free run passed two resets across all 53 migrations through 0054, 73/73 RLS tables, the exact 50-private-table classification, and 261 pgTAP assertions (46 schema + 215 health-consent lifecycle); schema lint and shadow drift were also clean. Run the exhaustive 50-private-table access-control matrix against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, and configured Turnstile behavior; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",
@@ -759,7 +759,7 @@
       "id": "DB-10",
       "status": "in_progress",
       "blockedBy": ["DB-09", "ACCT-03"],
-      "nextAction": "Local source now composes the migration-0052 lease with central exact-session remote admission and passes process-death, configure-in-flight, lost-release, caller-detachment, quarantine, and child-request settlement contracts; all 52 migrations through 0053 pass the two-reset gate. Prove that exact candidate end to end in reviewed staging and production: exact-session rate/preflight/begin, every Supabase and RevenueCat path fenced, multi-device drain, five-minute settle, and two claim-distinct full-family absence rounds. Obtain a documented provider bound plus an approved block, mandatory-version gate, or continuing re-deletion control for old/tampered clients. Close cross-owner community handles, bounded unfinished-operation/key-rotation procedures, the complete Sign in with Apple authorization-code/token/server-event lifecycle, non-destructive health-consent withdrawal, and the full A/B, provider interruption/recreation, export/deletion, Storage/backup, post-delete denial, and physical-iPhone matrices. Do not describe the end-to-end lifecycle as race-free or launch-ready before those gates pass.",
+      "nextAction": "Local source now composes the migration-0052 lease with central exact-session remote admission and passes process-death, configure-in-flight, lost-release, caller-detachment, quarantine, and child-request settlement contracts; all 53 migrations through 0054 pass the two-reset gate. Migration 0054 and the mobile lifecycle implement non-destructive health-consent withdrawal with processing-epoch publication fences, durable service-only work claims, relational/Storage absence attestation, purpose-limited device cleanup, and cross-owner report/moderation detachment. Prove that exact candidate end to end in reviewed staging and production: exact-session rate/preflight/begin, every Supabase and RevenueCat path fenced, multi-device drain, five-minute settle, two claim-distinct account-deletion absence rounds, hosted health worker continuation, two-device health withdrawal, Storage and backup handling, and terminal fresh reconsent. Obtain a documented provider bound plus an approved block, mandatory-version gate, or continuing re-deletion control for old/tampered clients. Close cross-owner community handles, bounded unfinished-operation/key-rotation procedures, the complete Sign in with Apple authorization-code/token/server-event lifecycle, and the full A/B, provider interruption/recreation, export/deletion, post-delete denial, physical-iPhone, and professional-review matrices. Do not describe the end-to-end lifecycle as race-free or launch-ready before those gates pass.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "supabase/functions/account-deletion",
@@ -800,7 +800,15 @@
         "supabase/functions/data-export/exportRegistry.ts",
         "supabase/functions/data-export/exportRegistry.test.ts",
         "scripts/phase9/data-rights-smoke.mjs",
-        "supabase/functions/consent-withdrawal"
+        "supabase/functions/consent-withdrawal",
+        "supabase/functions/health-consent-worker",
+        "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+        "supabase/ops/health-consent-work-lane.sql",
+        "docs/hugeToDo/credential-inventory.json",
+        "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
+        "docs/hugeToDo/health-processor-inventory-v1.json",
+        "scripts/phase9/health-consent-work-lane-smoke.mjs",
+        "scripts/phase9/health-processor-inventory-smoke.mjs"
       ]
     },
     {
@@ -971,7 +979,12 @@
       "status": "not_started",
       "blockedBy": ["AUTH-06", "CAT-09"],
       "nextAction": "Complete and capture acceptance evidence: Finalize onboarding, age gate, health profile, consent copy, scoring, and quiz IP posture",
-      "evidenceRefs": []
+      "evidenceRefs": [
+        "docs/phase-3/consent-matrix.md",
+        "docs/USER_FLOW_TREE.md",
+        "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
+        "docs/hugeToDo/health-processor-inventory-v1.json"
+      ]
     },
     {
       "id": "CORE-02",
@@ -1549,7 +1562,14 @@
         "supabase/functions/account-deletion",
         "supabase/functions/data-export",
         "supabase/functions/consent-withdrawal",
-        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md"
+        "supabase/functions/health-consent-worker",
+        "supabase/ops/health-consent-work-lane.sql",
+        "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md",
+        "docs/hugeToDo/credential-inventory.json",
+        "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
+        "docs/hugeToDo/health-processor-inventory-v1.json",
+        "scripts/phase9/health-consent-work-lane-smoke.mjs",
+        "scripts/phase9/health-processor-inventory-smoke.mjs"
       ]
     },
     {

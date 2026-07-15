@@ -15,12 +15,14 @@ const mocks = vi.hoisted(() => {
     ),
     insert,
     from: vi.fn(() => ({ insert })),
+    runHealthDataWriteOperation: vi.fn(),
     track: vi.fn(),
   };
 });
 
 const state = vi.hoisted(() => ({
   isSupabaseConfigured: true,
+  leaseOpen: true,
 }));
 
 vi.mock('@/lib/env', () => ({
@@ -31,6 +33,14 @@ vi.mock('@/lib/env', () => ({
 
 vi.mock('@/lib/analytics/track', () => ({
   track: mocks.track,
+}));
+
+vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
+  activeHealthProcessingOwnerUserId: () => 'user-1',
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+  runHealthDataWriteOperation: mocks.runHealthDataWriteOperation,
 }));
 
 vi.mock('@/lib/supabase/client', () => ({
@@ -46,10 +56,25 @@ vi.mock('@/lib/supabase/client', () => ({
 describe('shelf scan intake log', () => {
   beforeEach(() => {
     state.isSupabaseConfigured = true;
+    state.leaseOpen = true;
     mocks.getUser.mockReset();
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-1' } } });
-    mocks.insert.mockClear();
+    mocks.insert.mockReset();
+    mocks.insert.mockResolvedValue({ error: null });
     mocks.from.mockClear();
+    mocks.runHealthDataWriteOperation.mockReset();
+    mocks.runHealthDataWriteOperation.mockImplementation(
+      async (
+        ownerUserId: string,
+        operation: (lease: { ownerUserId: string; assertCurrent: () => void }) => unknown,
+      ) =>
+        operation({
+          ownerUserId,
+          assertCurrent: () => {
+            if (!state.leaseOpen) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+          },
+        }),
+    );
     mocks.track.mockClear();
   });
 
@@ -143,5 +168,16 @@ describe('shelf scan intake log', () => {
     });
     expect(mocks.track).not.toHaveBeenCalledWith('scan_matched', expect.anything());
     expect(mocks.track).not.toHaveBeenCalledWith('scan_no_match', expect.anything());
+  });
+
+  it('does not swallow lease invalidation after a stale insert response', async () => {
+    mocks.insert.mockImplementationOnce(async () => {
+      state.leaseOpen = false;
+      return { error: null };
+    });
+
+    await expect(
+      recordShelfScan({ barcode: '1234567890123', result: 'matched' }),
+    ).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
   });
 });

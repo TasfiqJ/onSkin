@@ -4,8 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
-import { isCommerceConsented } from '@/features/commerce/consent';
-import { setCommerceConsentLocal } from '@/features/commerce/store';
+import {
+  declineCommerceConsent,
+  grantCommerceConsent,
+  isCommerceConsented,
+} from '@/features/commerce/consent';
+import { LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER } from '@/features/healthConsent/lifecycle';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { requestReviewAfterValue } from '@/features/review/prompt';
 import { ACCOUNT_DELETION_ERASURE_WINDOW_COPY } from '@/features/settings/accountDeletionCopy';
@@ -15,9 +19,12 @@ import { subscriptionStorefrontCopy } from '@/features/subscription/storefrontCo
 import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { BRAND } from '@/lib/brand';
 import { getLatestConsents, recordConsent } from '@/lib/consent/consent';
+import { runHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingLeaseSnapshot } from '@/lib/consent/healthProcessingEpoch';
 import {
   appLockUserMessage,
   dataRightsUserMessage,
@@ -26,6 +33,7 @@ import {
 import { NOT_MEDICAL_ADVICE } from '@/lib/legal/disclaimer';
 import { type PolicyLinkKey, policyLinkRows } from '@/lib/legal/policyLinks';
 import { phase7Flags } from '@/lib/launch/phase7';
+import { isSupabaseConfigured } from '@/lib/env';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { colors } from '@/theme/tokens';
 
@@ -62,7 +70,8 @@ const APPLE_SIGN_IN_REVOCATION_COPY =
     ? ' If Apple sign-in cannot be revoked automatically, we will show the iPhone Settings steps after deletion.'
     : '';
 const WITHDRAW_HEALTH_DATA_CONFIRM_TITLE = 'Withdraw health-data consent?';
-const WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE = `This records your withdrawal and starts deleting your collected health data. Your account and routine close now. ${ACCOUNT_DELETION_ERASURE_WINDOW_COPY} ${SUBSCRIPTION_STOREFRONT_COPY.billingContinuation}${APPLE_SIGN_IN_REVOCATION_COPY}`;
+const WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE =
+  'This immediately pauses personalized skin features and starts deleting health-purpose data from this device and the live service. Protected backups, if any, follow the disclosed retention period and are not used for personalization. Your account, App Lock, subscription, billing, and purchase-safety records stay in place. You can start again only with fresh consent and an empty profile.';
 const WITHDRAW_HEALTH_DATA_FAILED_TITLE = 'Withdrawal failed';
 const DELETE_ACCOUNT_CONFIRM_TITLE = 'Delete account?';
 const DELETE_ACCOUNT_CONFIRM_MESSAGE = `This permanently closes your account and starts deleting its data. ${ACCOUNT_DELETION_ERASURE_WINDOW_COPY} ${SUBSCRIPTION_STOREFRONT_COPY.billingContinuation}${APPLE_SIGN_IN_REVOCATION_COPY}`;
@@ -99,6 +108,7 @@ type InlineNotice = {
   message: string;
 };
 type PendingDataRightsAction = 'withdraw_health_data' | 'delete_account';
+type PrivacyOperationLease = Readonly<{ assertCurrent: () => void }>;
 
 function Row({
   label,
@@ -281,6 +291,8 @@ export default function YouScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const params = useLocalSearchParams<{ section?: string }>();
   const { user, isAnonymous, signOut } = useAuth();
+  const healthDataOwnerId =
+    user?.id ?? (!isSupabaseConfigured ? LOCAL_UNCONFIGURED_HEALTH_DATA_OWNER : null);
   const { enabled: lockEnabled, setEnabled: setLockEnabled } = useAppLock();
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
@@ -465,48 +477,89 @@ export default function YouScreen() {
     placement: PrivacyFeedbackPlacement,
   ) {
     if (savingPrivacyRef.current) return;
+    const initiatingUserId = user?.id ?? null;
+    const initiatingHealthLease = activeHealthProcessingLeaseSnapshot();
     savingPrivacyRef.current = true;
-    setSavingPrivacy(type);
-    setPrivacyFeedback(null);
     try {
-      await applySettingsPrivacyChoice({
-        save: async () => {
-          if (type === 'data_sharing') {
-            await setCommerceConsentLocal(granted);
+      const applyChoice = async (
+        operationLease: PrivacyOperationLease,
+        requireHealthToRemainClosed = false,
+      ) => {
+        const assertCurrent = () => {
+          operationLease.assertCurrent();
+          if (requireHealthToRemainClosed && activeHealthProcessingLeaseSnapshot() !== null) {
+            throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
           }
-          // data_sharing IS the MHMDA third-party-sharing consent that gates "where to buy"
-          // Keep the local-first commerce flag in sync so revoking here re-locks paid links
-          // even before the backend exists (review fix, docs/10 §6 / D-061).
-          try {
-            await recordConsent({
-              type,
-              granted,
-              version: CONSENT_COPY_VERSION,
-              consentText: `[PLACEHOLDER ${type} consent. B-PRIVACY-COPY]`,
-            });
-          } catch (error) {
-            if (type !== 'data_sharing') throw error;
-          }
-        },
-        onSaved: () => {
-          qc.setQueryData<Record<string, boolean>>(['consents'], (prev) => ({
-            ...(prev ?? {}),
-            [type]: granted,
-          }));
-          if (type === 'data_sharing') {
-            qc.setQueryData<boolean>(['commerceConsent'], granted);
-          }
-          setPrivacyFeedback(null);
-        },
-        onFailure: () =>
-          setPrivacyFeedback({ key: type, placement, message: privacyChoiceUserMessage() }),
-        onSettled: async () => {
-          await qc.invalidateQueries({ queryKey: ['consents'] });
-          if (type === 'data_sharing') {
-            await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
-          }
-        },
-      });
+        };
+        assertCurrent();
+        setSavingPrivacy(type);
+        setPrivacyFeedback(null);
+        await applySettingsPrivacyChoice({
+          save: async () => {
+            assertCurrent();
+            if (type === 'data_sharing') {
+              if (granted) await grantCommerceConsent();
+              else await declineCommerceConsent();
+            } else {
+              if (!initiatingUserId) throw new Error('CONSENT_OWNER_CHANGED');
+              if (granted) {
+                await recordConsent({
+                  type,
+                  granted: true,
+                  version: CONSENT_COPY_VERSION,
+                  consentText: `[PLACEHOLDER ${type} consent. B-PRIVACY-COPY]`,
+                  expectedUserId: initiatingUserId,
+                });
+              } else {
+                await recordConsent({
+                  type,
+                  granted: false,
+                  version: CONSENT_COPY_VERSION,
+                  consentText: `[PLACEHOLDER ${type} withdrawal. B-PRIVACY-COPY]`,
+                  expectedUserId: initiatingUserId,
+                });
+              }
+            }
+            assertCurrent();
+          },
+          onSaved: () => {
+            assertCurrent();
+            qc.setQueryData<Record<string, boolean>>(['consents'], (prev) => ({
+              ...(prev ?? {}),
+              [type]: granted,
+            }));
+            if (type === 'data_sharing') {
+              qc.setQueryData<boolean>(['commerceConsent'], granted);
+            }
+            assertCurrent();
+            setPrivacyFeedback(null);
+          },
+          onFailure: () => {
+            assertCurrent();
+            setPrivacyFeedback({ key: type, placement, message: privacyChoiceUserMessage() });
+          },
+          onSettled: async () => {
+            assertCurrent();
+            await qc.invalidateQueries({ queryKey: ['consents'] });
+            assertCurrent();
+            if (type === 'data_sharing') {
+              await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
+              assertCurrent();
+            }
+          },
+        });
+        assertCurrent();
+      };
+
+      if (type === 'data_sharing' && initiatingHealthLease?.ownerUserId) {
+        await runHealthDataOperation(initiatingHealthLease.ownerUserId, (lease) =>
+          applyChoice(lease),
+        );
+      } else {
+        await runAccountGenerationOperation((lease) =>
+          applyChoice(lease, type === 'data_sharing'),
+        );
+      }
     } finally {
       savingPrivacyRef.current = false;
       setSavingPrivacy(null);
@@ -613,8 +666,8 @@ export default function YouScreen() {
     setConfirmingDataRightsAction(null);
     setPrivacyActionFeedback(null);
     try {
-      await withdrawHealthDataConsent(signOut);
-      router.replace('/');
+      if (!healthDataOwnerId) throw new Error('HEALTH_DATA_CONSENT_OWNER_UNAVAILABLE');
+      await withdrawHealthDataConsent(healthDataOwnerId);
     } catch {
       setPrivacyActionFeedback({
         title: WITHDRAW_HEALTH_DATA_FAILED_TITLE,
@@ -883,7 +936,7 @@ export default function YouScreen() {
           >
             <Toggle
               accessibilityLabel="Marketing emails"
-              value={consents.data?.marketing ?? false}
+              value={consents.data?.marketing?.granted ?? false}
               disabled={savingPrivacy === 'marketing'}
               onChange={(v) => void setConsent('marketing', v, 'privacy')}
             />
@@ -933,8 +986,8 @@ export default function YouScreen() {
                 supportFloorPrivacyEntry || ultraShortPrivacyEntry
                   ? undefined
                   : compactPhone
-                    ? 'Records withdrawal and deletes collected health data.'
-                    : 'Records your withdrawal in the consent ledger and deletes your collected health data.'
+                    ? 'Pauses health use; starts active-data deletion; keeps billing.'
+                    : 'Pauses personalization and starts deleting health-purpose data from this device and the live service. Protected backups follow disclosed retention and stay out of personalization.'
               }
               compact={compactPhone}
               onPress={promptWithdrawHealthData}
@@ -943,7 +996,7 @@ export default function YouScreen() {
               <InlineConfirmCard
                 title={WITHDRAW_HEALTH_DATA_CONFIRM_TITLE}
                 message={WITHDRAW_HEALTH_DATA_CONFIRM_MESSAGE}
-                confirmLabel={busy ? 'Working...' : 'Withdraw & delete'}
+                confirmLabel={busy ? 'Working...' : 'Withdraw health consent'}
                 disabled={busy}
                 onCancel={cancelDataRightsConfirmation}
                 onConfirm={() => void runWithdrawHealthData()}

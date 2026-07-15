@@ -1,4 +1,8 @@
 import type { NotificationKind, NotificationTier } from '@onskin/types';
+import {
+  runCurrentHealthDataOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import { TIER_OF, tierOf } from './policy';
@@ -86,12 +90,18 @@ function encodeSentLedger(records: SentRecord[]): string {
   return JSON.stringify({ version: SCHEMA_VERSION, records } satisfies SentLedgerEnvelope);
 }
 
-async function load(): Promise<SentRecord[] | null> {
+async function load(lease: HealthDataWriteOperationLease): Promise<SentRecord[] | null> {
   try {
-    return decodeSentLedger(await getPrivateItem(KEY));
+    lease.assertCurrent();
+    const raw = await getPrivateItem(KEY);
+    lease.assertCurrent();
+    const records = decodeSentLedger(raw);
+    lease.assertCurrent();
+    return records;
   } catch {
     // A missing cap ledger is empty. An unreadable/unavailable one must block
     // optional sends instead of failing open and allowing notification spam.
+    lease.assertCurrent();
     return null;
   }
 }
@@ -99,12 +109,18 @@ async function load(): Promise<SentRecord[] | null> {
 /** Record a sent notification locally, pruning entries older than ~30 days. */
 export async function recordSentLocal(kind: NotificationKind, now: number): Promise<void> {
   const cutoff = now - 30 * 86_400_000;
-  await updatePrivateItem(KEY, (current) => {
-    const records = decodeSentLedger(current).filter((record) => {
-      return record.at >= cutoff && record.at <= now;
+  await runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const records = decodeSentLedger(current).filter((record) => {
+        return record.at >= cutoff && record.at <= now;
+      });
+      records.push({ kind, tier: tierOf(kind), at: now });
+      lease.assertCurrent();
+      return encodeSentLedger(records);
     });
-    records.push({ kind, tier: tierOf(kind), at: now });
-    return encodeSentLedger(records);
+    lease.assertCurrent();
   });
 }
 
@@ -113,15 +129,24 @@ export async function sentThisWeekForTierLocal(
   tier: NotificationTier,
   now: number,
 ): Promise<number> {
-  const weekAgo = now - 7 * 86_400_000;
-  const records = await load();
-  if (records === null) return SENT_LEDGER_FAIL_CLOSED_COUNT;
-  return records.filter((record) => {
-    return record.tier === tier && record.at >= weekAgo && record.at <= now;
-  }).length;
+  return runCurrentHealthDataOperation(async (lease) => {
+    const weekAgo = now - 7 * 86_400_000;
+    const records = await load(lease);
+    lease.assertCurrent();
+    if (records === null) {
+      lease.assertCurrent();
+      return SENT_LEDGER_FAIL_CLOSED_COUNT;
+    }
+    const count = records.filter((record) => {
+      return record.tier === tier && record.at >= weekAgo && record.at <= now;
+    }).length;
+    lease.assertCurrent();
+    return count;
+  });
 }
 
 /** Test/seed reset. */
 export async function clearSentLocal(): Promise<void> {
+  // Closed-consent cleanup: deletion is account-scoped and never reads plaintext.
   await removePrivateItem(KEY);
 }

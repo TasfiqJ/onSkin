@@ -17,6 +17,7 @@ import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion
 import { currentRoutineType, localClockLabel, localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
@@ -382,29 +383,38 @@ export default function TodayScreen() {
     key: string,
     context?: { phase: 'AM' | 'PM'; cycleActive: boolean; stepKeys: readonly string[] },
   ) {
-    const result = await toggleCompletion(key, today);
-    if (result.done) {
-      const moment = type.toLowerCase();
-      track('routine_checkoff_completed', { moment });
-      if (result.firstEver) track('first_checkoff_completed', { moment });
-      const checkoffPhase = context?.phase ?? (type === 'PM' ? 'PM' : 'AM');
-      if (
-        shouldTrackCycleNightCompleted({
-          completedBefore: done,
-          completedKey: key,
-          cycleActive: context?.cycleActive === true,
-          phase: checkoffPhase,
-          stepKeys: context?.stepKeys ?? [],
-          completionDone: result.done,
-        })
-      ) {
-        track('cycle_night_completed', { moment: 'pm', source: 'today' });
+    await runCurrentHealthDataOperation(async (lease) => {
+      lease.assertCurrent();
+      const result = await toggleCompletion(key, today);
+      lease.assertCurrent();
+      if (result.done) {
+        const moment = type.toLowerCase();
+        track('routine_checkoff_completed', { moment });
+        if (result.firstEver) track('first_checkoff_completed', { moment });
+        const checkoffPhase = context?.phase ?? (type === 'PM' ? 'PM' : 'AM');
+        if (
+          shouldTrackCycleNightCompleted({
+            completedBefore: done,
+            completedKey: key,
+            cycleActive: context?.cycleActive === true,
+            phase: checkoffPhase,
+            stepKeys: context?.stepKeys ?? [],
+            completionDone: result.done,
+          })
+        ) {
+          track('cycle_night_completed', { moment: 'pm', source: 'today' });
+        }
       }
-    }
-    if (result.done && (progress?.streak ?? 0) >= 6)
-      void requestReviewAfterValue('seven_checkoff_days');
-    await qc.invalidateQueries({ queryKey: ['completions', today] });
-    await qc.invalidateQueries({ queryKey: ['progress'] });
+      lease.assertCurrent();
+      if (result.done && (progress?.streak ?? 0) >= 6) {
+        await requestReviewAfterValue('seven_checkoff_days');
+        lease.assertCurrent();
+      }
+      await qc.invalidateQueries({ queryKey: ['completions', today] });
+      lease.assertCurrent();
+      await qc.invalidateQueries({ queryKey: ['progress'] });
+      lease.assertCurrent();
+    });
   }
 
   const rowState = (key: string, firstUndoneKey: string | null): 'done' | 'next' | 'pending' =>

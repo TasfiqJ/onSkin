@@ -2,6 +2,8 @@ import * as Notifications from 'expo-notifications';
 import type { Session } from '@supabase/supabase-js';
 
 import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
+import { clearPendingHealthWithdrawalIntentByOwnerBinding } from '@/features/healthConsent/pendingIntent';
+import { clearAllDependentConsentWithdrawalTombstonesByOwnerBinding } from '@/lib/consent/dependentConsentLocal';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
 import { clearAuthDerivedLocalActivity } from '@/lib/auth/revokedCredentialActivity';
 import { clearAccountIsolatedState } from '@/lib/auth/localAccountIsolation';
@@ -83,6 +85,8 @@ export type AccountDeletionSessionDependencies = {
 
 export type AccountDeletionFinalizationDependencies = AccountDeletionSessionDependencies & {
   convertStoreSafetyNotice: (ownerBinding: string) => Promise<void>;
+  clearHealthWithdrawalIntent?: (ownerBinding: string) => Promise<void>;
+  clearDependentWithdrawalRecovery?: (ownerBinding: string) => Promise<void>;
   queueAppleNotice: () => unknown;
   clearCompletedState: () => Promise<void>;
 };
@@ -188,6 +192,9 @@ const defaultQuarantineDependencies: AccountDeletionQuarantineDependencies = {
 const defaultFinalizationDependencies: AccountDeletionFinalizationDependencies = {
   ...defaultSessionDependencies,
   convertStoreSafetyNotice: convertStoreTransactionNoticeForTerminalDeletion,
+  clearHealthWithdrawalIntent: clearPendingHealthWithdrawalIntentByOwnerBinding,
+  clearDependentWithdrawalRecovery:
+    clearAllDependentConsentWithdrawalTombstonesByOwnerBinding,
   queueAppleNotice: queueAppleManualRevocationNotice,
   clearCompletedState: clearCompletedAccountDeletionState,
 };
@@ -601,6 +608,14 @@ export async function finalizeCompletedAccountDeletion(
   // owner correlation before any later cleanup failure can leave it retained.
   // The ownerless tombstone remains a device-only purchase safety bit.
   await dependencies.convertStoreSafetyNotice(record.ownerBinding);
+  // Full-account deletion subsumes a purpose-limited withdrawal. Remove only
+  // the exact deleted owner's journal after terminal server proof; otherwise
+  // deleted accounts would consume durable-journal capacity indefinitely.
+  await dependencies.clearHealthWithdrawalIntent?.(record.ownerBinding);
+  // Dependent-consent capabilities deliberately survive ordinary sign-out and
+  // account-local cleanup. Only this server-proven terminal owner binding may
+  // retire its namespace; failures keep the completed deletion proof retryable.
+  await dependencies.clearDependentWithdrawalRecovery?.(record.ownerBinding);
   await completeAccountDeletionLocalSignOut(dependencies, options);
   if (record.notice === 'remove_apple_authorization') {
     dependencies.queueAppleNotice();

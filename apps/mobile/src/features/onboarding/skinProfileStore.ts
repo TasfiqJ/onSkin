@@ -1,6 +1,10 @@
 import type { GoalId, PregnancyStatus, SkinAxis } from '@onskin/types';
 import { GOALS, SKIN_AXES } from '@onskin/types';
 
+import {
+  runCurrentHealthDataOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import type { SkinProfileResult } from './quiz';
@@ -234,35 +238,63 @@ function encodeStoredSkinProfile(profile: StoredSkinProfile): string {
   } satisfies StoredSkinProfileEnvelope);
 }
 
-export async function readStoredSkinProfile(): Promise<StoredSkinProfileRead> {
+async function readStoredSkinProfileForLease(
+  lease: HealthDataWriteOperationLease,
+): Promise<StoredSkinProfileRead> {
   let raw: string | null;
   try {
+    lease.assertCurrent();
     raw = await getPrivateItem(KEY);
+    lease.assertCurrent();
   } catch {
+    // Storage unavailability is fail-soft only while this exact owner/account
+    // authorization remains current.
+    lease.assertCurrent();
     return { status: 'unavailable', profile: null };
   }
-  if (raw === null) return { status: 'missing', profile: null };
+  let result: StoredSkinProfileRead;
+  if (raw === null) {
+    result = { status: 'missing', profile: null };
+    lease.assertCurrent();
+    return result;
+  }
   try {
-    return { status: 'available', profile: decodeStoredSkinProfile(raw) };
+    result = { status: 'available', profile: decodeStoredSkinProfile(raw) };
   } catch (error) {
     if (error instanceof Error && error.message === SKIN_PROFILE_UNSUPPORTED_VERSION) {
-      return { status: 'unsupported_version', profile: null };
+      result = { status: 'unsupported_version', profile: null };
+    } else {
+      result = { status: 'invalid', profile: null };
     }
-    return { status: 'invalid', profile: null };
   }
+  lease.assertCurrent();
+  return result;
 }
 
-export async function getStoredSkinProfile(): Promise<StoredSkinProfile | null> {
-  const result = await readStoredSkinProfile();
-  return result.status === 'available' ? result.profile : null;
+export function readStoredSkinProfile(): Promise<StoredSkinProfileRead> {
+  return runCurrentHealthDataOperation((lease) => readStoredSkinProfileForLease(lease));
+}
+
+export function getStoredSkinProfile(): Promise<StoredSkinProfile | null> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const result = await readStoredSkinProfileForLease(lease);
+    lease.assertCurrent();
+    return result.status === 'available' ? result.profile : null;
+  });
 }
 
 export async function setStoredSkinProfile(rec: StoredSkinProfile): Promise<void> {
   const normalized = normalizeStoredSkinProfile(rec);
   if (!normalized) throw new Error('INVALID_SKIN_PROFILE_RECORD');
-  await updatePrivateItem(KEY, (current) => {
-    if (current !== null) decodeStoredSkinProfile(current);
-    return encodeStoredSkinProfile(normalized);
+  await runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      if (current !== null) decodeStoredSkinProfile(current);
+      lease.assertCurrent();
+      return encodeStoredSkinProfile(normalized);
+    });
+    lease.assertCurrent();
   });
 }
 
@@ -272,26 +304,37 @@ export async function updateStoredPregnancyStatus(
   if (!PREGNANCY_STATUSES.has(pregnancyStatus)) {
     throw new Error('INVALID_PREGNANCY_STATUS');
   }
-  let next: StoredSkinProfile | null = null;
-  await updatePrivateItem(KEY, (currentRaw) => {
-    if (currentRaw === null) throw new Error('SKIN_PROFILE_UNAVAILABLE');
-    const current = decodeStoredSkinProfile(currentRaw);
-    next = {
-      ...current,
-      result: { ...current.result, pregnancyStatus },
-    };
-    return encodeStoredSkinProfile(next);
+  return runCurrentHealthDataOperation(async (lease) => {
+    let next: StoredSkinProfile | null = null;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (currentRaw) => {
+      lease.assertCurrent();
+      if (currentRaw === null) throw new Error('SKIN_PROFILE_UNAVAILABLE');
+      const current = decodeStoredSkinProfile(currentRaw);
+      next = {
+        ...current,
+        result: { ...current.result, pregnancyStatus },
+      };
+      lease.assertCurrent();
+      return encodeStoredSkinProfile(next);
+    });
+    lease.assertCurrent();
+    if (!next) throw new Error('SKIN_PROFILE_UNAVAILABLE');
+    return next;
   });
-  if (!next) throw new Error('SKIN_PROFILE_UNAVAILABLE');
-  return next;
 }
 
 /** Has the user completed onboarding on this device? (the entry-gate signal). */
-export async function isOnboardedLocal(): Promise<boolean> {
-  return (await getStoredSkinProfile()) !== null;
+export function isOnboardedLocal(): Promise<boolean> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const result = await readStoredSkinProfileForLease(lease);
+    lease.assertCurrent();
+    return result.status === 'available';
+  });
 }
 
 /** Cleared on account deletion / full reset (not on an in-session retry). */
 export async function clearStoredSkinProfile(): Promise<void> {
+  // Closed-consent cleanup: deletion is account-scoped and never reads plaintext.
   await removePrivateItem(KEY);
 }

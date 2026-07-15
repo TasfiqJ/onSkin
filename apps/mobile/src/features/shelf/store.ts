@@ -2,6 +2,7 @@ import { randomUUID } from 'expo-crypto';
 
 import type { AddedVia, ExpirySource, PaoSource, ProductStatus } from '@onskin/types';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 import { normalizeShelfFreshness, validLocalDate } from './freshness';
@@ -279,13 +280,22 @@ function encodeShelfState(products: ShelfProduct[]): string {
   return JSON.stringify({ version: SCHEMA_VERSION, products } satisfies ShelfEnvelope);
 }
 
-export async function loadShelf(): Promise<ShelfProduct[]> {
-  try {
-    return decodeShelfState(await getPrivateItem(KEY));
-  } catch {
-    // Ordinary reads never repair, delete, or replace private shelf bytes.
-    return [];
-  }
+export function loadShelf(): Promise<ShelfProduct[]> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    try {
+      lease.assertCurrent();
+      const raw = await getPrivateItem(KEY);
+      lease.assertCurrent();
+      const products = decodeShelfState(raw);
+      lease.assertCurrent();
+      return products;
+    } catch {
+      // Ordinary reads never repair, delete, or replace private shelf bytes.
+      // Authorization invalidation is not an ordinary recovery condition.
+      lease.assertCurrent();
+      return [];
+    }
+  });
 }
 
 function normalizeProductForWrite(
@@ -296,85 +306,103 @@ function normalizeProductForWrite(
   return normalizeShelfProduct(value, fallbackISO) ?? { ...fallback, updatedAt: fallbackISO };
 }
 
-export async function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
-  const ts = nowISO();
-  const freshness = normalizeShelfFreshness(input, ts.slice(0, 10));
-  const candidate: ShelfProduct = {
-    id: randomUUID(),
-    name: input.name,
-    brand: input.brand ?? null,
-    category: input.category ?? null,
-    barcode: input.barcode ?? null,
-    catalogProductId: input.catalogProductId ?? null,
-    catalogSourceId: input.catalogSourceId ?? null,
-    catalogSource: input.catalogSource ?? (input.addedVia === 'manual' ? 'user_local' : null),
-    catalogSourceName: input.catalogSourceName ?? null,
-    catalogSourceRef: input.catalogSourceRef ?? null,
-    catalogSourceUrl: input.catalogSourceUrl ?? null,
-    catalogSourceSnapshotDate: input.catalogSourceSnapshotDate ?? null,
-    catalogMatchQuality:
-      input.catalogMatchQuality ?? (input.addedVia === 'manual' ? 'manual' : null),
-    dataQualityScore: input.dataQualityScore ?? null,
-    ingredientParseStatus: input.ingredientParseStatus ?? null,
-    ingredientParseConfidence: input.ingredientParseConfidence ?? null,
-    parserVersion: input.parserVersion ?? null,
-    sourceDisclosureAckAt: input.sourceDisclosureAckAt ?? null,
-    ingredients: input.ingredients ?? [],
-    ...freshness,
-    status: 'active',
-    finishedAt: null,
-    addedVia: input.addedVia,
-    repurchaseCount: 1,
-    thumbnailPath: null,
-    createdAt: ts,
-    updatedAt: ts,
-  };
-  const product = normalizeShelfProduct(candidate, ts);
-  if (!product) throw new Error(SHELF_STATE_INVALID);
-  await updatePrivateItem(KEY, (current) => {
-    const items = decodeShelfState(current, ts);
-    if (items.some((item) => item.id === product.id)) throw new Error(SHELF_STATE_INVALID);
-    return encodeShelfState([product, ...items]);
+export function addProduct(input: NewShelfProduct): Promise<ShelfProduct> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    const freshness = normalizeShelfFreshness(input, ts.slice(0, 10));
+    const candidate: ShelfProduct = {
+      id: randomUUID(),
+      name: input.name,
+      brand: input.brand ?? null,
+      category: input.category ?? null,
+      barcode: input.barcode ?? null,
+      catalogProductId: input.catalogProductId ?? null,
+      catalogSourceId: input.catalogSourceId ?? null,
+      catalogSource: input.catalogSource ?? (input.addedVia === 'manual' ? 'user_local' : null),
+      catalogSourceName: input.catalogSourceName ?? null,
+      catalogSourceRef: input.catalogSourceRef ?? null,
+      catalogSourceUrl: input.catalogSourceUrl ?? null,
+      catalogSourceSnapshotDate: input.catalogSourceSnapshotDate ?? null,
+      catalogMatchQuality:
+        input.catalogMatchQuality ?? (input.addedVia === 'manual' ? 'manual' : null),
+      dataQualityScore: input.dataQualityScore ?? null,
+      ingredientParseStatus: input.ingredientParseStatus ?? null,
+      ingredientParseConfidence: input.ingredientParseConfidence ?? null,
+      parserVersion: input.parserVersion ?? null,
+      sourceDisclosureAckAt: input.sourceDisclosureAckAt ?? null,
+      ingredients: input.ingredients ?? [],
+      ...freshness,
+      status: 'active',
+      finishedAt: null,
+      addedVia: input.addedVia,
+      repurchaseCount: 1,
+      thumbnailPath: null,
+      createdAt: ts,
+      updatedAt: ts,
+    };
+    const product = normalizeShelfProduct(candidate, ts);
+    if (!product) throw new Error(SHELF_STATE_INVALID);
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const items = decodeShelfState(current, ts);
+      if (items.some((item) => item.id === product.id)) throw new Error(SHELF_STATE_INVALID);
+      lease.assertCurrent();
+      return encodeShelfState([product, ...items]);
+    });
+    lease.assertCurrent();
+    return product;
   });
-  return product;
 }
 
 export async function updateProduct(
   id: string,
   patch: Partial<Omit<ShelfProduct, 'id' | 'createdAt'>>,
 ): Promise<ShelfProduct | null> {
-  const ts = nowISO();
-  let updated: ShelfProduct | null = null;
-  await updatePrivateItem(KEY, (current) => {
-    const items = decodeShelfState(current, ts);
-    const next = items.map((product) => {
-      if (product.id !== id) return product;
-      updated = normalizeProductForWrite(
-        {
-          ...product,
-          ...patch,
-          id: product.id,
-          createdAt: product.createdAt,
-          updatedAt: ts,
-        },
-        ts,
-        product,
-      );
-      return updated;
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    let updated: ShelfProduct | null = null;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const items = decodeShelfState(current, ts);
+      const next = items.map((product) => {
+        if (product.id !== id) return product;
+        updated = normalizeProductForWrite(
+          {
+            ...product,
+            ...patch,
+            id: product.id,
+            createdAt: product.createdAt,
+            updatedAt: ts,
+          },
+          ts,
+          product,
+        );
+        return updated;
+      });
+      lease.assertCurrent();
+      return updated ? encodeShelfState(next) : current;
     });
-    return updated ? encodeShelfState(next) : current;
+    lease.assertCurrent();
+    return updated;
   });
-  return updated;
 }
 
 export async function removeProduct(id: string): Promise<ShelfProduct | null> {
-  let removed: ShelfProduct | null = null;
-  await updatePrivateItem(KEY, (current) => {
-    const items = decodeShelfState(current);
-    removed = items.find((product) => product.id === id) ?? null;
-    return removed ? encodeShelfState(items.filter((product) => product.id !== id)) : current;
+  return runCurrentHealthDataOperation(async (lease) => {
+    let removed: ShelfProduct | null = null;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const items = decodeShelfState(current);
+      removed = items.find((product) => product.id === id) ?? null;
+      lease.assertCurrent();
+      return removed ? encodeShelfState(items.filter((product) => product.id !== id)) : current;
+    });
+    lease.assertCurrent();
+    return removed;
   });
-  return removed;
 }
 
 /**
@@ -383,53 +411,63 @@ export async function removeProduct(id: string): Promise<ShelfProduct | null> {
  * (docs/04 §6 "re-add the same one").
  */
 export async function reAddProduct(id: string): Promise<ShelfProduct | null> {
-  const ts = nowISO();
-  const replacementId = randomUUID();
-  let fresh: ShelfProduct | null = null;
-  await updatePrivateItem(KEY, (current) => {
-    const items = decodeShelfState(current, ts);
-    const prev = items.find((product) => product.id === id);
-    if (!prev) return current;
-    if (items.some((product) => product.id === replacementId)) {
-      throw new Error(SHELF_STATE_INVALID);
-    }
-    const archived: ShelfProduct =
-      prev.status === 'active'
-        ? {
-            ...prev,
-            status: 'finished',
-            finishedAt: ts.slice(0, 10),
-            updatedAt: ts,
-          }
-        : { ...prev, updatedAt: ts };
-    const freshness = normalizeShelfFreshness(
-      {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const ts = nowISO();
+    const replacementId = randomUUID();
+    let fresh: ShelfProduct | null = null;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const items = decodeShelfState(current, ts);
+      const prev = items.find((product) => product.id === id);
+      if (!prev) {
+        lease.assertCurrent();
+        return current;
+      }
+      if (items.some((product) => product.id === replacementId)) {
+        throw new Error(SHELF_STATE_INVALID);
+      }
+      const archived: ShelfProduct =
+        prev.status === 'active'
+          ? {
+              ...prev,
+              status: 'finished',
+              finishedAt: ts.slice(0, 10),
+              updatedAt: ts,
+            }
+          : { ...prev, updatedAt: ts };
+      const freshness = normalizeShelfFreshness(
+        {
+          ...prev,
+          openedAt: ts.slice(0, 10),
+          isOpened: true,
+          expiryDate: null,
+        },
+        ts.slice(0, 10),
+      );
+      fresh = {
         ...prev,
-        openedAt: ts.slice(0, 10),
-        isOpened: true,
-        expiryDate: null,
-      },
-      ts.slice(0, 10),
-    );
-    fresh = {
-      ...prev,
-      id: replacementId,
-      ...freshness,
-      status: 'active',
-      finishedAt: null,
-      repurchaseCount: prev.repurchaseCount + 1,
-      createdAt: ts,
-      updatedAt: ts,
-    };
-    return encodeShelfState([
-      fresh,
-      ...items.map((product) => (product.id === id ? archived : product)),
-    ]);
+        id: replacementId,
+        ...freshness,
+        status: 'active',
+        finishedAt: null,
+        repurchaseCount: prev.repurchaseCount + 1,
+        createdAt: ts,
+        updatedAt: ts,
+      };
+      lease.assertCurrent();
+      return encodeShelfState([
+        fresh,
+        ...items.map((product) => (product.id === id ? archived : product)),
+      ]);
+    });
+    lease.assertCurrent();
+    return fresh;
   });
-  return fresh;
 }
 
 /** Test/seed reset. */
 export async function clearShelf(): Promise<void> {
+  // Closed-consent cleanup: deletion is account-scoped and never reads plaintext.
   await removePrivateItem(KEY);
 }

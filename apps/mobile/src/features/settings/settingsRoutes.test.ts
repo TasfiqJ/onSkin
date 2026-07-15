@@ -399,9 +399,11 @@ describe('Settings route contracts', () => {
   it('keeps the You tab commerce toggle local-first when the ledger is offline', () => {
     const source = readAppRoute('(tabs)/you.tsx');
 
-    expect(source).toContain("if (type !== 'data_sharing') throw error;");
-    expect(source).not.toContain("if (type === 'data_sharing' && granted)");
-    expect(source).not.toContain('await setCommerceConsentLocal(false).catch(() => undefined)');
+    expect(source).toContain('if (granted) await grantCommerceConsent();');
+    expect(source).toContain('else await declineCommerceConsent();');
+    expect(source).not.toContain('setCommerceConsentLocal');
+    expect(source).toContain('runHealthDataOperation(initiatingHealthLease.ownerUserId');
+    expect(source).toContain('expectedUserId: initiatingUserId');
   });
 
   it('keeps You tab navigation rows touchable beyond the chevron glyph', () => {
@@ -539,7 +541,13 @@ describe('Settings route contracts', () => {
     );
     expect(source).toContain('hint={ultraShortPrivacyEntry ? undefined : POLICY_HINTS[row.key]}');
     expect(source).toMatch(
-      /hint=\{\s*supportFloorPrivacyEntry\s*\|\|\s*ultraShortPrivacyEntry\s*\?\s*undefined\s*:\s*compactPhone\s*\?\s*'Records withdrawal and deletes collected health data\.'/,
+      /hint=\{\s*supportFloorPrivacyEntry\s*\|\|\s*ultraShortPrivacyEntry\s*\?\s*undefined\s*:\s*compactPhone\s*\?\s*'Pauses health use; starts active-data deletion; keeps billing\.'/,
+    );
+    expect(source).toContain(
+      'starts deleting health-purpose data from this device and the live service',
+    );
+    expect(source).toContain(
+      'Protected backups, if any, follow the disclosed retention period and are not used for personalization.',
     );
   });
 

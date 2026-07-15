@@ -92,6 +92,10 @@ entrypoint = "./functions/consent-withdrawal/index.ts"
 verify_jwt = true
 entrypoint = "./functions/data-export/index.ts"
 
+[functions.health-consent-worker]
+verify_jwt = false
+entrypoint = "./functions/health-consent-worker/index.ts"
+
 [functions.growth-event]
 verify_jwt = false
 entrypoint = "./functions/growth-event/index.ts"

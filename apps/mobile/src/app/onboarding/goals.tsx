@@ -1,9 +1,11 @@
 import { GOALS, type GoalId } from '@onskin/types';
 import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, OptionCard, ProgressBar, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { hasCurrentHealthDataCollectionConsent } from '@/features/onboarding/healthConsentStore';
 import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
@@ -78,20 +80,52 @@ function CompactGoalCard({
   );
 }
 
-// 02 · Goals. Large tappable cards, multi-select up to two (design spec p.3).
+// 03 · Goals. Large tappable cards, multi-select up to two, after consent.
 export default function GoalsScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const { goals, quizAnswers, toggleGoal } = useOnboarding();
+  const [consentChecked, setConsentChecked] = useState(false);
   const supportFloorTextPressurePhone =
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPhone = height < 640 || supportFloorTextPressurePhone;
   const splitShortPhone = height < 420;
   const quizCompletion = getQuizCompletionState(quizAnswers);
 
+  useEffect(() => {
+    let active = true;
+    void hasCurrentHealthDataCollectionConsent()
+      .then((hasCurrentConsent) => {
+        if (!active) return;
+        if (hasCurrentConsent) setConsentChecked(true);
+        else router.replace('/onboarding/consent');
+      })
+      .catch(() => {
+        if (active) router.replace('/onboarding/consent');
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (!consentChecked) {
+    return (
+      <Screen>
+        <View className="flex-1 justify-center">
+          <Text variant="eyebrow" tone="clay" className="text-center">
+            Privacy check
+          </Text>
+          <Text variant="title" className="mt-2 text-center">
+            Checking your privacy choice
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
+
   return (
     <Screen>
       <View className="pt-2">
-        <ProgressBar total={5} current={1} />
+        <ProgressBar total={5} current={2} />
       </View>
       <View className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>
         <ScrollView
@@ -147,7 +181,7 @@ export default function GoalsScreen() {
           disabled={goals.length === 0}
           onPress={() => {
             track('screen_viewed', { screen_name: 'goals' });
-            router.push(quizCompletion.complete ? '/onboarding/products' : '/onboarding/consent');
+            router.push(quizCompletion.complete ? '/onboarding/products' : '/onboarding/quiz');
           }}
         />
       </View>

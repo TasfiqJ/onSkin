@@ -1,9 +1,19 @@
-// Pure consent precedence (docs/10 §6, D-061). Extracted so it can be unit-tested
-// without the native/Supabase deps that consent.ts pulls in. The immutable ledger is
-// AUTHORITATIVE when it has a data_sharing entry (so a revocation. A newer
-// granted=false row. Re-locks the "where to buy" affordance even if a stale local
-// flag still says granted); only when the ledger is unavailable (offline / no backend)
-// does the local-first flag govern.
-export function resolveCommerceConsent(ledger: boolean | undefined, local: boolean): boolean {
-  return ledger === undefined ? local : ledger;
+import type { HealthDependentConsentStatus } from '@/lib/consent/consent';
+
+/** Pure presentation helper; partner disclosure never accepts a boolean ledger. */
+export function resolveCommerceConsent(params: {
+  configured: boolean;
+  status: HealthDependentConsentStatus | null;
+  exactLocalReceipt: boolean;
+}): boolean {
+  if (params.configured) {
+    return (
+      params.status?.consentType === 'data_sharing' &&
+      params.status.state === 'active' &&
+      params.status.generation > 0
+    );
+  }
+  // Even an exact local receipt is intentionally insufficient for partner
+  // disclosure; this field exists so tests make that policy explicit.
+  return false;
 }

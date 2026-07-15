@@ -18,6 +18,7 @@ const exportSource = read('supabase/functions/data-export/index.ts');
 const exportCoreSource = read('supabase/functions/data-export/exportCore.ts');
 const exportRegistrySource = read('supabase/functions/data-export/exportRegistry.ts');
 const exportRegistryTestSource = read('supabase/functions/data-export/exportRegistry.test.ts');
+const healthLifecycleSource = read('supabase/functions/consent-withdrawal/healthLifecycleCore.ts');
 const completeExportSource = `${exportSource}\n${exportCoreSource}\n${exportRegistrySource}`;
 const migrationSource = listFiles('supabase/migrations')
   .filter((file) => file.endsWith('.sql'))
@@ -382,6 +383,7 @@ for (const pattern of [
   /createSignedUrl/,
   /photoPathBelongsToUser/,
   /photo_download_url_omissions/,
+  /health_consent_lifecycle/,
   /INVALID_STORAGE_PATH/,
   /EXPORT_TABLE_FAILED/,
   /DATA_EXPORT_FAILED/,
@@ -395,6 +397,26 @@ for (const pattern of [
 }
 block(
   errors,
+  /get_health_data_consent_status/.test(exportSource) &&
+    /initialHealthLifecycle/.test(exportSource) &&
+    /finalHealthLifecycle/.test(exportSource) &&
+    /healthLifecycleExportDecision/.test(exportSource) &&
+    /HEALTH_DATA_WITHDRAWAL_IN_PROGRESS/.test(exportCoreSource) &&
+    /Retry-After/.test(exportSource),
+  'data-export must reject nonterminal or changing health-withdrawal snapshots with a retry contract.',
+);
+block(
+  errors,
+  /export_schema_version:\s*3/.test(exportSource) &&
+    /healthLifecycleExportSnapshot/.test(exportSource) &&
+    /processing_epoch/.test(healthLifecycleSource) &&
+    !/operation_id:\s*row\.operation_id/.test(
+      healthLifecycleSource.match(/healthLifecycleExportSnapshot[\s\S]*?\n\}/)?.[0] ?? '',
+    ),
+  'data-export schema v3 must include sanitized health lifecycle status without an internal operation id.',
+);
+block(
+  errors,
   /Includes data saved to your account and on this device:/.test(settingsRouteSource) &&
     /completion history, preferences, and Progress notes\./.test(settingsRouteSource) &&
     /Photo files and thumbnails stay encrypted here;/.test(settingsRouteSource) &&
@@ -405,7 +427,8 @@ block(
 );
 block(
   errors,
-  /collectLocalDeviceExportData\(\)/.test(settingsActionsSource) &&
+  /collectLocalDeviceExportData\(lease\)/.test(settingsActionsSource) &&
+    /readLocalDataOwnership\(expectedUserId\)/.test(settingsActionsSource) &&
     /if \(isSupabaseConfigured\)/.test(settingsActionsSource) &&
     /serverAccountDataStatus = 'included'/.test(settingsActionsSource) &&
     /DATA_EXPORT_RESPONSE_INVALID/.test(settingsActionsSource) &&
@@ -418,7 +441,13 @@ block(
   errors,
   /LOCAL_PRIVATE_DATA_KEYS/.test(localDeviceExportSource) &&
     /LOCAL_DEVICE_EXPORT_STORAGE_KEYS/.test(localDeviceExportSource) &&
-    /getPrivateItems\(LOCAL_DEVICE_EXPORT_STORAGE_KEYS\)/.test(localDeviceExportSource) &&
+    /getPrivateItemsForPurposeLimitedExport\(\s*LOCAL_DEVICE_EXPORT_STORAGE_KEYS,\s*accountLease,\s*\)/s.test(
+      localDeviceExportSource,
+    ) &&
+    /decryptPhotoNoteForPurposeLimitedExport\(ciphertext, accountLease\)/.test(
+      localDeviceExportSource,
+    ) &&
+    /accountLease\.assertCurrent\(\)/.test(localDeviceExportSource) &&
     /REDACTED_LOCAL_FIELD_NAMES/.test(localDeviceExportSource) &&
     /progress_photo_files_and_thumbnails/.test(localDeviceExportSource) &&
     /encryption_keys_and_auth_credentials/.test(localDeviceExportSource) &&

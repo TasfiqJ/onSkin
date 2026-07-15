@@ -31,6 +31,9 @@ const accountDeletionGateway = read(
 const accountDeletionRuntimeCore = read(
   'supabase/functions/account-deletion/durableDeletionRuntimeCore.ts',
 );
+const healthConsentWorkerManifest = edgeFunctionManifest.functions?.['health-consent-worker'] ?? {};
+const healthConsentWorkerIndex = read('supabase/functions/health-consent-worker/index.ts');
+const healthConsentWorkerHandler = read('supabase/functions/health-consent-worker/httpHandler.ts');
 const accountDeletionProviderNetwork = read(
   'supabase/functions/account-deletion/deletionProviderNetwork.ts',
 );
@@ -251,6 +254,23 @@ block(
 );
 block(
   errors,
+  healthConsentWorkerManifest.access === 'scheduled' &&
+    healthConsentWorkerManifest.public === false &&
+    healthConsentWorkerManifest.verifyJwt === false &&
+    healthConsentWorkerManifest.auth === 'scheduler-secret',
+  'health-consent-worker must declare its private scheduler-secret boundary.',
+);
+block(
+  errors,
+  /x-health-consent-worker-secret/.test(healthConsentWorkerHandler) &&
+    /constantTimeEqual\(supplied, dependencies\.workerSecret\)/.test(healthConsentWorkerHandler) &&
+    /action !== 'work'/.test(healthConsentWorkerHandler) &&
+    /dependencies\.runWorker\(\)/.test(healthConsentWorkerHandler) &&
+    /readEdgeAppEnvironment/.test(healthConsentWorkerIndex),
+  'health-consent-worker must require its exact dedicated secret/action and fail closed on environment configuration.',
+);
+block(
+  errors,
   accountDeletionHandler.search(/request\.method === ["']OPTIONS["']/) !== -1 &&
     accountDeletionHandler.search(/request\.method !== ["']POST["']/) !== -1 &&
     accountDeletionHandler.indexOf('contentLengthTooLarge(request, dependencies.maxBodyBytes)') !==
@@ -290,6 +310,9 @@ block(
 for (const fn of userJwtFunctions) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   const handlerSource = source.slice(source.indexOf('Deno.serve'));
+  const referencesServerCredential =
+    /\b(?:service|secret)Key\b/i.test(source) ||
+    /SUPABASE_(?:SECRET_KEY|SERVICE_ROLE_KEY)/.test(source);
   block(errors, /auth\.getUser/.test(source), `${fn} must validate caller JWT with auth.getUser.`);
   block(
     errors,
@@ -330,13 +353,19 @@ for (const fn of userJwtFunctions) {
   );
   block(
     errors,
-    /readSupabaseSecretKey/.test(source) &&
+    (!referencesServerCredential || /readSupabaseSecretKey/.test(source)) &&
       !/Deno\.env\.get\(['"]SUPABASE_(?:SECRET_KEY|SERVICE_ROLE_KEY)['"]\)/.test(source),
-    `${fn} must resolve server credentials through the shared hosted-key helper.`,
+    `${fn} must resolve any server credentials through the shared hosted-key helper.`,
   );
 }
 
-for (const fn of ['growth-event', 'order-report-poll', 'revenuecat-webhook', 'waitlist']) {
+for (const fn of [
+  'growth-event',
+  'health-consent-worker',
+  'order-report-poll',
+  'revenuecat-webhook',
+  'waitlist',
+]) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   block(
     errors,
@@ -346,7 +375,13 @@ for (const fn of ['growth-event', 'order-report-poll', 'revenuecat-webhook', 'wa
   );
 }
 
-for (const fn of ['catalog-lookup', 'catalog-report', 'catalog-search', 'data-export']) {
+for (const fn of [
+  'catalog-lookup',
+  'catalog-report',
+  'catalog-search',
+  'consent-withdrawal',
+  'data-export',
+]) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   block(
     errors,
@@ -358,13 +393,7 @@ for (const fn of ['catalog-lookup', 'catalog-report', 'catalog-search', 'data-ex
   );
 }
 
-for (const fn of [
-  'catalog-lookup',
-  'waitlist',
-  'growth-event',
-  'order-report-poll',
-  'subscription-reconciliation',
-]) {
+for (const fn of ['waitlist', 'growth-event', 'order-report-poll', 'subscription-reconciliation']) {
   const source = read(`supabase/functions/${fn}/index.ts`);
   block(
     errors,
@@ -489,12 +518,19 @@ const catalogLookup = read('supabase/functions/catalog-lookup/index.ts');
 block(
   errors,
   !/req\.method === 'GET'/.test(catalogLookup),
-  'catalog-lookup must not support GET because lookups write caller telemetry and can call external catalog APIs.',
+  'catalog-lookup must not support GET because lookups write caller telemetry.',
 );
 block(
   errors,
   !/searchParams\.get\('barcode'\)/.test(catalogLookup),
   'catalog-lookup must not accept barcodes from query strings.',
+);
+block(
+  errors,
+  !/(?:fetchOpenBeautyFacts|fetchWithTimeout|world\.openbeautyfacts\.org|OBF_API_ENABLED|OBF_USER_AGENT|external_candidate)/.test(
+    catalogLookup,
+  ),
+  'catalog-lookup must remain local-catalog-only and expose no live Open Beauty Facts path.',
 );
 
 function orderedCatalogRateLimit(source, scope, firstBodyMarker, firstWorkMarker) {
@@ -521,7 +557,7 @@ for (const [label, source, scope, firstBodyMarker, firstWorkMarker] of [
     catalogLookup,
     'catalog-lookup',
     'requestBarcode(req)',
-    'fetchOpenBeautyFacts',
+    ".from('product_barcodes')",
   ],
 ]) {
   block(
@@ -663,6 +699,17 @@ block(
     !/env\.ACCOUNT_DELETION_WORKER_SECRET/.test(liveEdgeAuth) &&
     /delegated-to-reviewed-cron-evidence/.test(liveEdgeAuth),
   'Live Edge auth harness must prove safe worker-secret negatives without reading or sending the real global worker credential.',
+);
+block(
+  errors,
+  /x-health-consent-worker-secret/.test(liveEdgeAuth) &&
+    /postHealthConsentWorker/.test(liveEdgeAuth) &&
+    /health-consent worker rejects missing and wrong dedicated service credentials without work/.test(
+      liveEdgeAuth,
+    ) &&
+    !/env\.HEALTH_CONSENT_WORKER_SECRET/.test(liveEdgeAuth) &&
+    /healthConsentAuthorizedWorker: 'delegated-to-reviewed-cron-evidence'/.test(liveEdgeAuth),
+  'Live Edge auth harness must prove health-worker secret negatives without reading or sending the real global credential.',
 );
 block(
   errors,

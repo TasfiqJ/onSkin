@@ -1,16 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { HEALTH_DATA_CONSENT } from './consentCopy';
+import { HEALTH_DATA_CONSENT, HEALTH_DATA_WITHDRAWAL } from './consentCopy';
 import {
   clearHealthDataCollectionConsentLocal,
   getHealthDataCollectionConsentLocal,
   hasCurrentHealthDataCollectionConsent,
   HEALTH_CONSENT_INVALID,
+  HEALTH_CONSENT_MUTATION_SUPERSEDED,
   HEALTH_CONSENT_UNSUPPORTED_VERSION,
   setHealthDataCollectionConsentLocal,
+  synchronizeAuthoritativeHealthDataCollectionConsent,
 } from './healthConsentStore';
 
 const HEALTH_DATA_CONSENT_KEY = 'onskin.healthDataCollectionConsent.v1';
+const CURRENT_GRANT_HASH =
+  '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd';
 
 const mocks = vi.hoisted(() => ({
   privateStore: new Map<string, string>(),
@@ -66,7 +70,7 @@ function seedConsent(
       type: 'health_data_collection',
       granted: true,
       version: HEALTH_DATA_CONSENT.version,
-      consentTextHash: `sha256:${HEALTH_DATA_CONSENT.fullText}`,
+      consentTextHash: CURRENT_GRANT_HASH,
       recordedAt: '2026-07-10T00:00:00.000Z',
       ...overrides,
     }),
@@ -107,7 +111,23 @@ describe('health-data local consent store', () => {
     seedConsent();
 
     await expect(hasCurrentHealthDataCollectionConsent()).resolves.toBe(true);
-    expect(mocks.digestStringAsync).toHaveBeenCalledWith('SHA-256', HEALTH_DATA_CONSENT.fullText);
+    expect(mocks.digestStringAsync).not.toHaveBeenCalled();
+  });
+
+  it('caches only an exact authoritative grant for the fresh-profile guard', async () => {
+    await expect(
+      synchronizeAuthoritativeHealthDataCollectionConsent({
+        version: 'stale-version',
+        consentTextHash: CURRENT_GRANT_HASH,
+      }),
+    ).rejects.toThrow('AUTHORITATIVE_HEALTH_CONSENT_CONTRACT_MISMATCH');
+    expect(mocks.privateStore.has(HEALTH_DATA_CONSENT_KEY)).toBe(false);
+
+    await synchronizeAuthoritativeHealthDataCollectionConsent({
+      version: HEALTH_DATA_CONSENT.version,
+      consentTextHash: CURRENT_GRANT_HASH,
+    });
+    await expect(hasCurrentHealthDataCollectionConsent()).resolves.toBe(true);
   });
 
   it('rejects a granted consent record with a stale version', async () => {
@@ -238,5 +258,54 @@ describe('health-data local consent store', () => {
     ).rejects.toThrow('PRIVATE_WRITE_FAILED');
 
     expect(mocks.privateStore.get(HEALTH_DATA_CONSENT_KEY)).toBe(original);
+  });
+
+  it('does not let a deferred grant hash overwrite a newer withdrawal choice', async () => {
+    let resolveGrantHash!: (hash: string) => void;
+    mocks.digestStringAsync.mockReturnValueOnce(
+      new Promise<string>((resolve) => {
+        resolveGrantHash = resolve;
+      }),
+    );
+    const staleGrant = setHealthDataCollectionConsentLocal({
+      granted: true,
+      version: 'custom-v1',
+      consentText: 'custom grant copy',
+    });
+    await vi.waitFor(() => expect(mocks.digestStringAsync).toHaveBeenCalledOnce());
+
+    await setHealthDataCollectionConsentLocal({
+      granted: false,
+      version: HEALTH_DATA_WITHDRAWAL.version,
+      consentText: HEALTH_DATA_WITHDRAWAL.fullText,
+    });
+    resolveGrantHash('stale-grant-hash');
+
+    await expect(staleGrant).rejects.toThrow(HEALTH_CONSENT_MUTATION_SUPERSEDED);
+    await expect(getHealthDataCollectionConsentLocal()).resolves.toMatchObject({
+      granted: false,
+      consentTextHash: '5200ef21982670cf73539d8a7d3e0f9c2219b40ee8d63be0a83d3e10043ba37f',
+    });
+  });
+
+  it('does not let a deferred consent hash restore a record after clear', async () => {
+    let resolveHash!: (hash: string) => void;
+    mocks.digestStringAsync.mockReturnValueOnce(
+      new Promise<string>((resolve) => {
+        resolveHash = resolve;
+      }),
+    );
+    const staleSet = setHealthDataCollectionConsentLocal({
+      granted: true,
+      version: 'custom-v1',
+      consentText: 'custom copy',
+    });
+    await vi.waitFor(() => expect(mocks.digestStringAsync).toHaveBeenCalledOnce());
+
+    await clearHealthDataCollectionConsentLocal();
+    resolveHash('stale-hash');
+
+    await expect(staleSet).rejects.toThrow(HEALTH_CONSENT_MUTATION_SUPERSEDED);
+    expect(mocks.privateStore.has(HEALTH_DATA_CONSENT_KEY)).toBe(false);
   });
 });

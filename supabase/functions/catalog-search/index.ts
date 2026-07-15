@@ -2,6 +2,11 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
+import {
+  healthProcessingCallerHeaders,
+  preflightActiveHealthProcessing,
+  readHealthProcessingEpochHeader,
+} from '../_shared/healthProcessingEpoch.ts';
 import { readSupabasePublishableKey } from '../_shared/supabasePublishableKey.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import {
@@ -22,17 +27,33 @@ let rateLimitHmacKey: CryptoKey | null = null;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type, x-onskin-health-epoch',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-type EdgeSupabaseClient = any;
+type EdgeRateLimitClient = {
+  rpc(
+    functionName: 'consume_edge_rate_limit',
+    args: Record<string, string | number>,
+  ): PromiseLike<{ data: unknown; error: unknown }>;
+};
+type HealthProcessingPreflightClient = Parameters<typeof preflightActiveHealthProcessing>[0];
 
 function json(body: unknown, status = 200, headers: HeadersInit = {}): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json', ...headers },
   });
+}
+
+async function requireActiveHealthProcessing(
+  caller: HealthProcessingPreflightClient,
+  userId: string,
+  epoch: string,
+): Promise<Response | null> {
+  const result = await preflightActiveHealthProcessing(caller, userId, epoch);
+  return result.ok ? null : json({ error: result.error }, result.status);
 }
 
 function intEnv(name: string, fallback: number, min: number, max: number): number {
@@ -61,7 +82,7 @@ async function hmacSha256Hex(value: string): Promise<string> {
 }
 
 async function enforceRateLimit(
-  admin: EdgeSupabaseClient,
+  admin: EdgeRateLimitClient,
   scope: string,
   userId: string,
 ): Promise<Response | null> {
@@ -87,19 +108,38 @@ async function enforceRateLimit(
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
-  if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);
+  if (contentLengthTooLarge(req, maxBodyBytes)) {
+    return json({ error: 'payload_too_large' }, 413);
+  }
 
   const authHeader = bearerAuthorizationHeader(req);
   if (!authHeader) return json({ error: 'unauthorized' }, 401);
+  const healthProcessingEpoch = readHealthProcessingEpochHeader(req.headers);
   const caller = createClient(supabaseUrl, publishableKey, {
-    global: { headers: { Authorization: authHeader } },
+    global: {
+      headers: healthProcessingEpoch
+        ? healthProcessingCallerHeaders(authHeader, healthProcessingEpoch)
+        : { Authorization: authHeader },
+    },
     auth: { persistSession: false, autoRefreshToken: false },
   });
   const { data: userData } = await caller.auth.getUser();
   const userId = userData.user?.id;
   if (!userId) return json({ error: 'unauthorized' }, 401);
+  if (!healthProcessingEpoch) {
+    return json({ error: 'HEALTH_PROCESSING_EPOCH_REQUIRED' }, 409);
+  }
+
+  const initialHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (initialHealthError) return initialHealthError;
 
   const admin = createClient(supabaseUrl, serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false },
@@ -107,15 +147,37 @@ Deno.serve(async (req) => {
   const rateLimitError = await enforceRateLimit(admin, 'catalog-search', userId);
   if (rateLimitError) return rateLimitError;
 
-  const parsed = await readLimitedJson(req, maxBodyBytes, json, { error: 'bad_json' });
+  const bodyHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (bodyHealthError) return bodyHealthError;
+
+  const parsed = await readLimitedJson(req, maxBodyBytes, json, {
+    error: 'bad_json',
+  });
   if (parsed instanceof Response) return parsed;
   const body = isRecord(parsed) ? parsed : {};
   const query = normalizeCatalogSearchQuery(body.query);
   const searchTerm = catalogSearchTerm(query);
   const limit = catalogSearchLimit(body.limit);
   if (searchTerm.length < CATALOG_SEARCH_MIN_QUERY_LENGTH) {
+    const responseHealthError = await requireActiveHealthProcessing(
+      caller,
+      userId,
+      healthProcessingEpoch,
+    );
+    if (responseHealthError) return responseHealthError;
     return json({ result: 'too_short', products: [] });
   }
+
+  const searchHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (searchHealthError) return searchHealthError;
 
   const { data, error } = await admin.rpc(CATALOG_SEARCH_RPC, {
     p_query: searchTerm,
@@ -123,7 +185,15 @@ Deno.serve(async (req) => {
   });
   if (error) return json({ error: 'search_failed' }, 500);
 
-  await caller.from('catalog_lookup_events').insert({
+  const persistHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (persistHealthError) return persistHealthError;
+
+  // The direct-write trigger atomically rechecks active state and this exact epoch.
+  const { error: eventError } = await caller.from('catalog_lookup_events').insert({
     user_id: userId,
     lookup_type: 'search',
     query,
@@ -133,5 +203,17 @@ Deno.serve(async (req) => {
     quality_grade: data?.[0]?.quality_grade ?? null,
   });
 
-  return json({ result: data?.length ? 'matched' : 'no_match', products: data ?? [] });
+  if (eventError) {
+    const withdrawalError = await requireActiveHealthProcessing(
+      caller,
+      userId,
+      healthProcessingEpoch,
+    );
+    return withdrawalError ?? json({ error: 'search_failed' }, 500);
+  }
+
+  return json({
+    result: data?.length ? 'matched' : 'no_match',
+    products: data ?? [],
+  });
 });

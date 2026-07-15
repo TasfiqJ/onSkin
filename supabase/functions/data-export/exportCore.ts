@@ -1,4 +1,43 @@
 import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
+import type { HealthLifecycleExportSnapshot } from '../consent-withdrawal/healthLifecycleCore.ts';
+
+export type HealthLifecycleExportDecision =
+  | { allowed: true; snapshot: HealthLifecycleExportSnapshot }
+  | {
+    allowed: false;
+    error:
+      | 'HEALTH_DATA_WITHDRAWAL_IN_PROGRESS'
+      | 'HEALTH_DATA_LIFECYCLE_CHANGED';
+    retryAfterSeconds: number;
+  };
+
+export function healthLifecycleExportDecision(
+  initial: HealthLifecycleExportSnapshot,
+  final: HealthLifecycleExportSnapshot,
+): HealthLifecycleExportDecision {
+  if (initial.state === 'withdrawing' || final.state === 'withdrawing') {
+    return {
+      allowed: false,
+      error: 'HEALTH_DATA_WITHDRAWAL_IN_PROGRESS',
+      retryAfterSeconds: 60,
+    };
+  }
+  if (
+    initial.state !== final.state ||
+    initial.processing_epoch !== final.processing_epoch ||
+    initial.operation_state !== final.operation_state ||
+    initial.result_code !== final.result_code ||
+    initial.consent_version !== final.consent_version ||
+    initial.consent_text_hash !== final.consent_text_hash
+  ) {
+    return {
+      allowed: false,
+      error: 'HEALTH_DATA_LIFECYCLE_CHANGED',
+      retryAfterSeconds: 5,
+    };
+  }
+  return { allowed: true, snapshot: final };
+}
 
 export type DatabaseSourceManifest = {
   kind: 'database_table';
@@ -89,16 +128,22 @@ function sourceFailure(source: string, reason: string): Error {
 }
 
 function normalizeForCanonicalJson(value: unknown): unknown {
-  if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;
+  if (
+    value === null || typeof value === 'string' || typeof value === 'boolean'
+  ) return value;
   if (typeof value === 'number') return Number.isFinite(value) ? value : null;
   if (Array.isArray(value)) {
-    return value.map((item) => (item === undefined ? null : normalizeForCanonicalJson(item)));
+    return value.map((
+      item,
+    ) => (item === undefined ? null : normalizeForCanonicalJson(item)));
   }
   if (typeof value === 'object') {
     const record = value as Record<string, unknown>;
     const normalized: Record<string, unknown> = {};
     for (const key of Object.keys(record).sort()) {
-      if (record[key] !== undefined) normalized[key] = normalizeForCanonicalJson(record[key]);
+      if (record[key] !== undefined) {
+        normalized[key] = normalizeForCanonicalJson(record[key]);
+      }
     }
     return normalized;
   }
@@ -110,8 +155,14 @@ export function canonicalJson(value: unknown): string {
 }
 
 async function sha256Hex(value: string): Promise<string> {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
-  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+  const digest = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(value),
+  );
+  return Array.from(
+    new Uint8Array(digest),
+    (byte) => byte.toString(16).padStart(2, '0'),
+  ).join('');
 }
 
 export async function checksumRows(rows: readonly unknown[]): Promise<string> {
@@ -148,11 +199,18 @@ export async function paginateRows(options: {
   maxRows: number;
   note?: string;
   fetchCount: () => Promise<number | null>;
-  fetchPage: (offset: number, limit: number) => Promise<Record<string, unknown>[]>;
+  fetchPage: (
+    offset: number,
+    limit: number,
+  ) => Promise<Record<string, unknown>[]>;
 }): Promise<PaginatedRows> {
   const { source, pageSize, maxRows, orderBy } = options;
-  if (!Number.isInteger(pageSize) || pageSize < 1) throw new Error('INVALID_EXPORT_PAGE_SIZE');
-  if (!Number.isInteger(maxRows) || maxRows < pageSize) throw new Error('INVALID_EXPORT_ROW_LIMIT');
+  if (!Number.isInteger(pageSize) || pageSize < 1) {
+    throw new Error('INVALID_EXPORT_PAGE_SIZE');
+  }
+  if (!Number.isInteger(maxRows) || maxRows < pageSize) {
+    throw new Error('INVALID_EXPORT_ROW_LIMIT');
+  }
   if (orderBy.length === 0) throw new Error('EXPORT_ORDER_REQUIRED');
 
   const countBefore = exactCount(source, await options.fetchCount());
@@ -162,7 +220,7 @@ export async function paginateRows(options: {
   const orderIdentities = new Set<string>();
   let pageRequests = 0;
 
-  for (let offset = 0; ; offset += pageSize) {
+  for (let offset = 0;; offset += pageSize) {
     const page = await options.fetchPage(offset, pageSize);
     pageRequests += 1;
     if (!Array.isArray(page) || page.length > pageSize) {
@@ -230,7 +288,12 @@ export async function boundedMap<T, R>(
     }
   };
 
-  await Promise.all(Array.from({ length: Math.min(concurrency, values.length) }, () => worker()));
+  await Promise.all(
+    Array.from(
+      { length: Math.min(concurrency, values.length) },
+      () => worker(),
+    ),
+  );
   return results;
 }
 
@@ -250,50 +313,101 @@ async function listStorageOnce(options: {
   bucket: StorageBucket;
   pageSize: number;
   maxObjects: number;
+  maxDepth: number;
+  maxPrefixes: number;
+  maxPageRequests: number;
 }): Promise<{ paths: string[]; pageRequests: number }> {
-  const { userId, bucket, pageSize, maxObjects } = options;
+  const {
+    userId,
+    bucket,
+    pageSize,
+    maxObjects,
+    maxDepth,
+    maxPrefixes,
+    maxPageRequests,
+  } = options;
   const pendingPrefixes = [userId];
+  const scheduledPrefixes = new Set(pendingPrefixes);
   const visitedPrefixes = new Set<string>();
   const paths = new Set<string>();
   let pageRequests = 0;
 
-  for (let prefixIndex = 0; prefixIndex < pendingPrefixes.length; prefixIndex += 1) {
+  const listPage = async (
+    prefix: string,
+    limit: number,
+    offset: number,
+  ): Promise<StorageListEntry[]> => {
+    if (pageRequests >= maxPageRequests) {
+      throw sourceFailure(
+        'photo_storage_objects',
+        'PAGE_REQUEST_LIMIT_EXCEEDED',
+      );
+    }
+    try {
+      const { data, error } = await bucket.list(prefix, {
+        limit,
+        offset,
+        sortBy: { column: 'name', order: 'asc' },
+      });
+      pageRequests += 1;
+      if (error || !data || data.length > limit) {
+        throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
+      }
+      return data;
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message.startsWith('EXPORT_SOURCE_INCOMPLETE:')
+      ) {
+        throw error;
+      }
+      throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
+    }
+  };
+
+  for (
+    let prefixIndex = 0;
+    prefixIndex < pendingPrefixes.length;
+    prefixIndex += 1
+  ) {
     const prefix = pendingPrefixes[prefixIndex]!;
     if (visitedPrefixes.has(prefix)) continue;
     visitedPrefixes.add(prefix);
 
     let offset = 0;
     while (true) {
-      let page: StorageListEntry[];
-      try {
-        const { data, error } = await bucket.list(prefix, {
-          limit: pageSize,
-          offset,
-          sortBy: { column: 'name', order: 'asc' },
-        });
-        pageRequests += 1;
-        if (error || !data || data.length > pageSize) {
-          throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
-        }
-        page = data;
-      } catch (error) {
-        if (error instanceof Error && error.message.startsWith('EXPORT_SOURCE_INCOMPLETE:')) {
-          throw error;
-        }
-        throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
-      }
+      const page = await listPage(prefix, pageSize, offset);
 
       for (const entry of page) {
         const path = ownedChildPath(userId, prefix, entry.name);
+        const depth = path.split('/').length - 1;
+        if (depth > maxDepth) {
+          throw sourceFailure(
+            'photo_storage_objects',
+            'PATH_DEPTH_LIMIT_EXCEEDED',
+          );
+        }
         if (entry.id === null) {
-          if (!visitedPrefixes.has(path)) pendingPrefixes.push(path);
+          if (!visitedPrefixes.has(path) && !scheduledPrefixes.has(path)) {
+            if (scheduledPrefixes.size >= maxPrefixes) {
+              throw sourceFailure(
+                'photo_storage_objects',
+                'PREFIX_LIMIT_EXCEEDED',
+              );
+            }
+            scheduledPrefixes.add(path);
+            pendingPrefixes.push(path);
+          }
         } else if (typeof entry.id === 'string' && entry.id.length > 0) {
           if (paths.has(path)) {
             throw sourceFailure('photo_storage_objects', 'DUPLICATE_PATH');
           }
           paths.add(path);
           if (paths.size > maxObjects) {
-            throw sourceFailure('photo_storage_objects', 'OBJECT_LIMIT_EXCEEDED');
+            throw sourceFailure(
+              'photo_storage_objects',
+              'OBJECT_LIMIT_EXCEEDED',
+            );
           }
         } else {
           throw sourceFailure('photo_storage_objects', 'INVALID_LIST_ENTRY');
@@ -303,23 +417,8 @@ async function listStorageOnce(options: {
       offset += page.length;
       if (page.length === 0) break;
       if (page.length < pageSize) {
-        try {
-          const { data, error } = await bucket.list(prefix, {
-            limit: 1,
-            offset,
-            sortBy: { column: 'name', order: 'asc' },
-          });
-          pageRequests += 1;
-          if (error || !data || data.length > 1) {
-            throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
-          }
-          if (data.length === 0) break;
-        } catch (error) {
-          if (error instanceof Error && error.message.startsWith('EXPORT_SOURCE_INCOMPLETE:')) {
-            throw error;
-          }
-          throw sourceFailure('photo_storage_objects', 'LIST_FAILED');
-        }
+        const lookahead = await listPage(prefix, 1, offset);
+        if (lookahead.length === 0) break;
       }
     }
   }
@@ -332,23 +431,70 @@ export async function listStoragePathsVerified(options: {
   bucket: StorageBucket;
   pageSize: number;
   maxObjects: number;
+  maxDepth?: number;
+  maxPrefixes?: number;
+  maxPageRequests?: number;
 }): Promise<{ paths: string[]; manifest: StorageSourceManifest }> {
-  if (!photoPathBelongsToUser(options.userId, `${options.userId}/ownership-check`)) {
+  if (
+    !photoPathBelongsToUser(options.userId, `${options.userId}/ownership-check`)
+  ) {
     throw sourceFailure('photo_storage_objects', 'INVALID_OWNER');
   }
   if (!Number.isInteger(options.pageSize) || options.pageSize < 1) {
     throw new Error('INVALID_STORAGE_PAGE_SIZE');
   }
-  if (!Number.isInteger(options.maxObjects) || options.maxObjects < options.pageSize) {
+  if (
+    !Number.isInteger(options.maxObjects) ||
+    options.maxObjects < options.pageSize
+  ) {
     throw new Error('INVALID_STORAGE_OBJECT_LIMIT');
   }
 
-  const first = await listStorageOnce(options);
-  const firstChecksum = await checksumRows(first.paths.map((path) => ({ path })));
-  const second = await listStorageOnce(options);
-  const secondChecksum = await checksumRows(second.paths.map((path) => ({ path })));
+  // These defaults are deliberately finite so every caller, including future
+  // ones, has a hard traversal ceiling. Privacy deletion callers pass tighter
+  // limits appropriate to a single Edge invocation.
+  const boundedOptions = {
+    ...options,
+    maxDepth: options.maxDepth ?? 32,
+    maxPrefixes: options.maxPrefixes ?? 4_096,
+    maxPageRequests: options.maxPageRequests ?? 8_192,
+  };
+  if (
+    !Number.isInteger(boundedOptions.maxDepth) || boundedOptions.maxDepth < 1
+  ) {
+    throw new Error('INVALID_STORAGE_DEPTH_LIMIT');
+  }
+  if (
+    !Number.isInteger(boundedOptions.maxPrefixes) ||
+    boundedOptions.maxPrefixes < 1
+  ) {
+    throw new Error('INVALID_STORAGE_PREFIX_LIMIT');
+  }
+  if (
+    !Number.isInteger(boundedOptions.maxPageRequests) ||
+    boundedOptions.maxPageRequests < 1
+  ) {
+    throw new Error('INVALID_STORAGE_PAGE_REQUEST_LIMIT');
+  }
 
-  if (first.paths.length !== second.paths.length || firstChecksum !== secondChecksum) {
+  const first = await listStorageOnce(boundedOptions);
+  const firstChecksum = await checksumRows(
+    first.paths.map((path) => ({ path })),
+  );
+  const second = await listStorageOnce({
+    ...boundedOptions,
+    // maxPageRequests is a total two-pass request budget, not a per-pass
+    // budget. This keeps verification executable within an Edge deadline.
+    maxPageRequests: boundedOptions.maxPageRequests - first.pageRequests,
+  });
+  const secondChecksum = await checksumRows(
+    second.paths.map((path) => ({ path })),
+  );
+
+  if (
+    first.paths.length !== second.paths.length ||
+    firstChecksum !== secondChecksum
+  ) {
     throw sourceFailure('photo_storage_objects', 'UNSTABLE_INVENTORY');
   }
 

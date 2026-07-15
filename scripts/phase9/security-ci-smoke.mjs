@@ -213,8 +213,9 @@ if (exists(workflowPath)) {
     /if:\s*github\.event_name == 'workflow_dispatch'/.test(workflow) &&
       /npm run phase9:live-consent-withdrawal:strict/.test(workflow) &&
       /PHASE9_RUN_LIVE_CONSENT_WITHDRAWAL/.test(workflow) &&
+      /id:\s*live_consent_withdrawal/.test(workflow) &&
       /STAGING_SUPABASE_SERVICE_ROLE_KEY/.test(workflow),
-    'Live consent-withdrawal CI job must be manual-only, strict, and use staging Supabase secrets.',
+    'Live consent-withdrawal CI job must be manual-only, strict, outcome-addressable, and use staging Supabase secrets.',
   );
   block(
     errors,
@@ -308,10 +309,11 @@ if (exists(workflowPath)) {
   }
   block(
     errors,
-    /Remove stale account-deletion live evidence/.test(liveJob) &&
+    /Remove stale protected live evidence/.test(liveJob) &&
       /live-edge-auth\.json/.test(liveJob) &&
-      /live-data-rights\.json/.test(liveJob),
-    'Protected live job must remove tracked/stale account-deletion evidence before execution.',
+      /live-data-rights\.json/.test(liveJob) &&
+      /live-consent-withdrawal\.json/.test(liveJob),
+    'Protected live job must remove tracked/stale account-deletion and consent-withdrawal evidence before execution.',
   );
   block(
     errors,
@@ -321,11 +323,12 @@ if (exists(workflowPath)) {
           /if:\s*always\(\)/.test(step) &&
           /live-edge-auth\.json/.test(step) &&
           /live-data-rights\.json/.test(step) &&
+          /live-consent-withdrawal\.json/.test(step) &&
           /account-deletion-live-outcomes\.json/.test(step) &&
           /if-no-files-found:\s*error/.test(step) &&
           /retention-days:\s*30/.test(step),
       ),
-    'Protected live job must always upload bounded, redacted account-deletion evidence and its outcome manifest.',
+    'Protected live job must always upload bounded, redacted account-deletion and consent-withdrawal evidence plus its outcome manifest.',
   );
   block(
     errors,
@@ -335,14 +338,21 @@ if (exists(workflowPath)) {
       /PHASE9_EVIDENCE_WORKFLOW/.test(liveJob) &&
       /PHASE9_EVIDENCE_EVENT/.test(liveJob) &&
       /LIVE_EDGE_AUTH_OUTCOME/.test(liveJob) &&
-      /LIVE_DATA_RIGHTS_OUTCOME/.test(liveJob),
-    'Live outcome manifest must bind authorization identity and both account-deletion step outcomes.',
+      /LIVE_DATA_RIGHTS_OUTCOME/.test(liveJob) &&
+      /LIVE_CONSENT_WITHDRAWAL_OUTCOME/.test(liveJob) &&
+      /liveConsentWithdrawal/.test(liveJob),
+    'Live outcome manifest must bind authorization identity and all three protected live step outcomes.',
   );
   block(
     errors,
-    /Enforce account-deletion live evidence results/.test(liveJob) &&
+    /Enforce protected live evidence results/.test(liveJob) &&
       /test "\$LIVE_EDGE_AUTH_OUTCOME" = "success"/.test(liveJob) &&
       /test "\$LIVE_DATA_RIGHTS_OUTCOME" = "success"/.test(liveJob) &&
+      /test "\$LIVE_CONSENT_WITHDRAWAL_OUTCOME" = "success"/.test(liveJob) &&
+      /live-consent-withdrawal\.json/.test(liveJob) &&
+      /evidence\.schemaVersion !== 2/.test(liveJob) &&
+      /evidence\.sourceTreeClean !== true/.test(liveJob) &&
+      /evidence\.checkManifest\.names\.length !== 8/.test(liveJob) &&
       /evidence\.status !== 'pass'/.test(liveJob) &&
       /evidence\.sourceSha !== process\.env\.PHASE9_EVIDENCE_SOURCE_SHA/.test(liveJob) &&
       /evidence\.triggeringActor !== process\.env\.PHASE9_EVIDENCE_TRIGGERING_ACTOR/.test(
@@ -357,7 +367,7 @@ if (exists(workflowPath)) {
       /evidence\.supabaseHost !== process\.env\.PHASE9_EXPECTED_SUPABASE_PROJECT_REF \+ '\.supabase\.co'/.test(
         liveJob,
       ),
-    'Protected live job must fail unless both harnesses pass and their uploaded metadata matches the run.',
+    'Protected live job must fail unless all three harnesses pass and their uploaded revision, target, and exact consent-check metadata matches the run.',
   );
 }
 

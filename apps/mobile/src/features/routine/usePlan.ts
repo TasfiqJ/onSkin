@@ -4,6 +4,7 @@ import { shippableRules } from '@/features/intelligence/rules';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { routinePlanProfileLabel } from '@/features/scheduler/profileMapping';
 import { useShelf } from '@/features/shelf/useShelf';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 import {
   generatePlan,
@@ -46,12 +47,21 @@ export type PlanResult = {
   activeProductIds: string[];
 };
 
+function loadRoutineOrderForCurrentHealthLease(): Promise<RoutineOrderOverrides> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    const overrides = await loadRoutineOrderOverrides();
+    lease.assertCurrent();
+    return overrides;
+  });
+}
+
 export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } {
   const shelf = useShelf();
   const profile = useProfileBits();
   const routineOrder = useQuery({
     queryKey: ROUTINE_ORDER_QUERY_KEY,
-    queryFn: loadRoutineOrderOverrides,
+    queryFn: loadRoutineOrderForCurrentHealthLease,
     retry: 1,
     staleTime: Infinity,
   });

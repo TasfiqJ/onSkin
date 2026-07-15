@@ -8,8 +8,17 @@ import { PLANS } from '@/features/subscription/plans';
 import { loadEntitlement } from '@/features/subscription/store';
 import {
   AccountGenerationLeaseError,
+  type AccountGenerationLease,
   runAccountGenerationOperation,
 } from '@/lib/auth/accountGeneration';
+import {
+  assertHealthDataWriteLease,
+  captureHealthDataWriteLease,
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  HEALTH_DATA_WRITE_OWNER_MISMATCH,
+  runHealthDataWriteOperation,
+  type HealthDataWriteLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 
 import { notificationContentForLockScreen } from './copy';
@@ -18,6 +27,79 @@ import { recordSentLocal, sentThisWeekForTierLocal } from './sentStore';
 import { loadNotifPrefs, type NotifPrefs } from './store';
 
 export { configureNotifications } from './startup';
+
+type HealthNotificationOperation = Readonly<{
+  assertCurrent: () => void;
+  schedule: (
+    request: Parameters<typeof Notifications.scheduleNotificationAsync>[0],
+  ) => Promise<string>;
+}>;
+
+const inFlightHealthNotificationOperations = new Set<Promise<unknown>>();
+
+function assertHealthNotificationOperationCurrent(
+  accountLease: AccountGenerationLease,
+  healthLease: HealthDataWriteLease,
+): void {
+  accountLease.assertCurrent();
+  assertHealthDataWriteLease(healthLease);
+}
+
+async function cancelCreatedHealthNotifications(ids: ReadonlySet<string>): Promise<void> {
+  await Promise.allSettled(
+    [...ids].map((id) => Notifications.cancelScheduledNotificationAsync(id)),
+  );
+}
+
+async function runHealthNotificationOperation<T>(
+  operation: (context: HealthNotificationOperation) => Promise<T>,
+): Promise<T> {
+  const pending = runAccountGenerationOperation(async (accountLease) => {
+    const healthLease = captureHealthDataWriteLease();
+    const createdIds = new Set<string>();
+    const assertCurrent = () => assertHealthNotificationOperationCurrent(accountLease, healthLease);
+    const schedule = async (
+      request: Parameters<typeof Notifications.scheduleNotificationAsync>[0],
+    ) => {
+      assertCurrent();
+      const id = await Notifications.scheduleNotificationAsync(request);
+      createdIds.add(id);
+      try {
+        assertCurrent();
+      } catch (error) {
+        await Notifications.cancelScheduledNotificationAsync(id).catch(() => undefined);
+        createdIds.delete(id);
+        throw error;
+      }
+      return id;
+    };
+
+    try {
+      assertCurrent();
+      const result = await operation({ assertCurrent, schedule });
+      assertCurrent();
+      return result;
+    } catch (error) {
+      // If authorization closes between two schedules, remove every reminder
+      // this exact operation already published before allowing cleanup to drain.
+      await cancelCreatedHealthNotifications(createdIds);
+      throw error;
+    }
+  });
+  inFlightHealthNotificationOperations.add(pending);
+  try {
+    return await pending;
+  } finally {
+    inFlightHealthNotificationOperations.delete(pending);
+  }
+}
+
+/** Drain point used by consent withdrawal before its final native cancel-all. */
+export async function waitForHealthNotificationOperationsToSettle(): Promise<void> {
+  while (inFlightHealthNotificationOperations.size > 0) {
+    await Promise.allSettled([...inFlightHealthNotificationOperations]);
+  }
+}
 
 /** The current local wall-clock time as "HH:MM" (for quiet-hours / cap checks). */
 export function nowHHMM(d = new Date()): string {
@@ -61,54 +143,65 @@ export async function requestPermission(): Promise<boolean> {
  * safe to call on every prefs change.
  */
 export async function rescheduleReminders(prefs?: NotifPrefs): Promise<void> {
-  const p = prefs ?? (await loadNotifPrefs());
   try {
-    await Notifications.cancelAllScheduledNotificationsAsync();
-    const channelId = Platform.OS === 'android' ? 'routine' : undefined;
-    const schedule = async (kind: 'am_reminder' | 'pm_step', hm: string) => {
-      const deliveryTime = reminderTimeOutsideQuietHours(hm, p.quietStart, p.quietEnd);
-      const mins = toMinutes(deliveryTime);
-      if (mins == null) return;
-      await Notifications.scheduleNotificationAsync({
-        content: notificationContentForLockScreen(kind),
-        // channelId belongs on the trigger in expo-notifications (SDK 56), not on
-        // content. So the calm 'routine' channel is actually applied on Android.
-        trigger: {
-          type: Notifications.SchedulableTriggerInputTypes.DAILY,
-          hour: Math.floor(mins / 60),
-          minute: mins % 60,
-          ...(channelId ? { channelId } : {}),
-        },
-      });
-    };
-    if (p.amEnabled) await schedule('am_reminder', p.amTime);
-    if (p.pmEnabled) await schedule('pm_step', p.pmTime);
-
-    // Weekly progress-photo capture nudge (docs/07 §3.3 / docs/06 §5): a recurring
-    // WEEKLY local notification when opted in, the weekly cadence being its own
-    // frequency control. If the usual AM time is quiet, it waits until quiet ends.
-    if (p.captureReminders) {
-      const mins = toMinutes(reminderTimeOutsideQuietHours(p.amTime, p.quietStart, p.quietEnd));
-      if (mins != null) {
-        await Notifications.scheduleNotificationAsync({
-          content: notificationContentForLockScreen('capture'),
+    await runHealthNotificationOperation(async ({ assertCurrent, schedule }) => {
+      assertCurrent();
+      const p = prefs ?? (await loadNotifPrefs());
+      assertCurrent();
+      await Notifications.cancelAllScheduledNotificationsAsync();
+      assertCurrent();
+      const channelId = Platform.OS === 'android' ? 'routine' : undefined;
+      const scheduleRoutine = async (kind: 'am_reminder' | 'pm_step', hm: string) => {
+        const deliveryTime = reminderTimeOutsideQuietHours(hm, p.quietStart, p.quietEnd);
+        const mins = toMinutes(deliveryTime);
+        if (mins == null) return;
+        assertCurrent();
+        await schedule({
+          content: notificationContentForLockScreen(kind),
+          // channelId belongs on the trigger in expo-notifications (SDK 56), not on
+          // content. So the calm 'routine' channel is actually applied on Android.
           trigger: {
-            type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
-            weekday: 1, // Sunday, a calm weekly check-in cadence
+            type: Notifications.SchedulableTriggerInputTypes.DAILY,
             hour: Math.floor(mins / 60),
             minute: mins % 60,
             ...(channelId ? { channelId } : {}),
           },
         });
+        assertCurrent();
+      };
+      if (p.amEnabled) await scheduleRoutine('am_reminder', p.amTime);
+      if (p.pmEnabled) await scheduleRoutine('pm_step', p.pmTime);
+
+      // Weekly progress-photo capture nudge (docs/07 §3.3 / docs/06 §5): a recurring
+      // WEEKLY local notification when opted in, the weekly cadence being its own
+      // frequency control. If the usual AM time is quiet, it waits until quiet ends.
+      if (p.captureReminders) {
+        const mins = toMinutes(reminderTimeOutsideQuietHours(p.amTime, p.quietStart, p.quietEnd));
+        if (mins != null) {
+          assertCurrent();
+          await schedule({
+            content: notificationContentForLockScreen('capture'),
+            trigger: {
+              type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+              weekday: 1, // Sunday, a calm weekly check-in cadence
+              hour: Math.floor(mins / 60),
+              minute: mins % 60,
+              ...(channelId ? { channelId } : {}),
+            },
+          });
+          assertCurrent();
+        }
       }
-    }
-    // The one-shot "2 days before your trial ends" pre-charge reminder (docs/08
-    // §6, the honesty promise made on the paywall + success screens). Re-created
-    // here so the cancelAll above never strands it when the user edits any pref.
-    await scheduleTrialReminder();
+      // cancelAll also removes the billing reminder; it is rebuilt below after
+      // this health-purpose operation and admission scope have ended.
+    });
   } catch {
     /* unsupported environment. No-op (B-NOTIF-VERIFY) */
   }
+
+  // Billing safety is deliberately outside health admission and its tracked
+  // operation. Re-create it even if health scheduling was closed or aborted.
+  await scheduleTrialReminder();
 }
 
 const TRIAL_REMINDER_ID = 'onskin-trial-reminder';
@@ -163,14 +256,18 @@ export async function cancelTrialReminder(): Promise<void> {
 /** This week's count for a tier, from the content-free log (best-effort; B-SUPABASE). */
 async function sentThisWeekForTier(userId: string, tier: string): Promise<number> {
   try {
-    const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
-    const { count } = await supabase
-      .from('notification_log')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', userId) // explicit per-user scope, not relying on RLS alone
-      .eq('tier', tier)
-      .gte('sent_at', weekAgo);
-    return count ?? 0;
+    return await runHealthDataWriteOperation(userId, async (lease) => {
+      const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
+      lease.assertCurrent();
+      const { count } = await supabase
+        .from('notification_log')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId) // explicit per-user scope, not relying on RLS alone
+        .eq('tier', tier)
+        .gte('sent_at', weekAgo);
+      lease.assertCurrent();
+      return count ?? 0;
+    });
   } catch {
     return 0;
   }
@@ -185,9 +282,10 @@ async function sentThisWeekForTier(userId: string, tier: string): Promise<number
  */
 export async function notifyBehavioural(kind: NotificationKind, hhmm: string): Promise<boolean> {
   try {
-    return await runAccountGenerationOperation(async (lease) => {
+    return await runHealthNotificationOperation(async ({ assertCurrent, schedule }) => {
+      assertCurrent();
       const p = await loadNotifPrefs();
-      lease.assertCurrent();
+      assertCurrent();
       // Honour the user's per-kind opt-out FIRST (docs/07 §3.1/§8): a disabled tier ,
       // and especially the off-by-default promotional tier. Never fires.
       if (!tierEnabled(kind, p)) return false;
@@ -196,20 +294,20 @@ export async function notifyBehavioural(kind: NotificationKind, hhmm: string): P
       // with the server log when present. Without this, the server count is 0 offline
       // (v1) and a foreground trigger would re-fire on every app open (docs/07 §9).
       let sent = await sentThisWeekForTierLocal(tierOf(kind), now);
-      lease.assertCurrent();
+      assertCurrent();
       let userId: string | undefined;
       try {
         const { data } = await getPersistedSupabaseUser();
-        lease.assertCurrent();
+        assertCurrent();
         userId = data.user?.id;
         if (userId) {
           sent = Math.max(sent, await sentThisWeekForTier(userId, tierOf(kind)));
-          lease.assertCurrent();
+          assertCurrent();
         }
       } catch {
         // A boundary invalidation is not an offline fallback. Re-asserting the
         // lease propagates it before any notification can be scheduled.
-        lease.assertCurrent();
+        assertCurrent();
         /* offline. Local count stands */
       }
       const decision = canSend({
@@ -221,34 +319,38 @@ export async function notifyBehavioural(kind: NotificationKind, hhmm: string): P
       });
       if (!decision.allowed) return false;
       try {
-        lease.assertCurrent();
-        await Notifications.scheduleNotificationAsync({
+        assertCurrent();
+        await schedule({
           content: notificationContentForLockScreen(kind),
           // Immediate, on the calm 'routine' channel (Android); channelId must be on the
           // trigger, not content (SDK 56). A bare { channelId } means deliver now.
           trigger: Platform.OS === 'android' ? { channelId: 'routine' } : null,
         });
-        lease.assertCurrent();
+        assertCurrent();
         await recordSentLocal(kind, now); // local cap ledger (v1 source of truth)
-        lease.assertCurrent();
+        assertCurrent();
       } catch {
         // Do not collapse an account-boundary invalidation into an ordinary
         // notification failure; the outer boundary handler must stop this
         // continuation before it can write into the next owner's state.
-        lease.assertCurrent();
+        assertCurrent();
         return false;
       }
       if (userId) {
         try {
-          lease.assertCurrent();
-          await supabase.from('notification_log').insert({
-            user_id: userId,
-            tier: tierOf(kind),
-            kind,
+          assertCurrent();
+          await runHealthDataWriteOperation(userId, async (lease) => {
+            lease.assertCurrent();
+            await supabase.from('notification_log').insert({
+              user_id: userId,
+              tier: tierOf(kind),
+              kind,
+            });
+            lease.assertCurrent();
           });
-          lease.assertCurrent();
+          assertCurrent();
         } catch {
-          lease.assertCurrent();
+          assertCurrent();
           /* best-effort backend mirror; local delivery already succeeded */
         }
       }
@@ -256,6 +358,10 @@ export async function notifyBehavioural(kind: NotificationKind, hhmm: string): P
     });
   } catch (error) {
     if (error instanceof AccountGenerationLeaseError) return false;
+    if (error instanceof Error && error.message === HEALTH_DATA_WRITE_ADMISSION_CLOSED) {
+      return false;
+    }
+    if (error instanceof Error && error.message === HEALTH_DATA_WRITE_OWNER_MISMATCH) return false;
     throw error;
   }
 }

@@ -60,6 +60,7 @@ function readSource(path: string): string {
 
 const mocks = vi.hoisted(() => ({
   beginAccountDeletionIntakeHold: vi.fn(),
+  beginHealthDataConsentWithdrawal: vi.fn(),
   beginSupabaseRemoteDeletionBoundary: vi.fn(),
   buildMobileDataExportBundle: vi.fn(),
   cleanupPlaintextStaging: vi.fn(),
@@ -78,6 +79,7 @@ const mocks = vi.hoisted(() => ({
   markAccountDeletionIntakeState: vi.fn(),
   preparePendingAccountDeletion: vi.fn(),
   quarantineLocalAccount: vi.fn(),
+  readLocalDataOwnership: vi.fn(),
   recordConsent: vi.fn(),
   requestAccountDeletionRecovery: vi.fn(),
   requireSupabaseRemoteSessionBinding: vi.fn(),
@@ -93,6 +95,10 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/features/settings/accountDeletionBarrier', () => ({
   beginAccountDeletionIntakeHold: mocks.beginAccountDeletionIntakeHold,
+}));
+
+vi.mock('@/features/healthConsent/lifecycle', () => ({
+  beginHealthDataConsentWithdrawal: mocks.beginHealthDataConsentWithdrawal,
 }));
 
 vi.mock('expo-file-system/legacy', () => ({
@@ -114,6 +120,10 @@ vi.mock('@/lib/storage/plaintextStaging', () => ({
 
 vi.mock('@/lib/auth/apple', () => ({
   getAppleAuthorizationCodeForRevocation: mocks.getAppleAuthorizationCodeForRevocation,
+}));
+
+vi.mock('@/lib/auth/sessionOwner', () => ({
+  readLocalDataOwnership: mocks.readLocalDataOwnership,
 }));
 
 vi.mock('@/lib/iap/revenuecat', () => ({
@@ -196,6 +206,7 @@ describe('settings data export', () => {
     mocks.invoke.mockReset();
     mocks.isSupabaseConfigured = true;
     mocks.markPlaintextStagingState.mockReset();
+    mocks.readLocalDataOwnership.mockReset();
     mocks.recordConsent.mockReset();
     mocks.reservePlaintextStaging.mockReset();
     mocks.shareAsync.mockReset();
@@ -241,6 +252,9 @@ describe('settings data export', () => {
       data: { export_schema_version: 2, user_id: 'user-1', account: { id: 'user-1' } },
       error: null,
     });
+    mocks.readLocalDataOwnership.mockImplementation(async (userId: string | null) =>
+      userId === null ? 'unclaimed' : 'match',
+    );
     mocks.recordConsent.mockResolvedValue(undefined);
     mocks.reservePlaintextStaging.mockResolvedValue(STAGED_EXPORT);
     mocks.markPlaintextStagingState.mockResolvedValue(undefined);
@@ -255,6 +269,14 @@ describe('settings data export', () => {
     await expect(exportData()).resolves.toBe(true);
 
     expect(mocks.getUser).toHaveBeenCalledWith('export-token-a');
+    expect(mocks.readLocalDataOwnership).toHaveBeenCalledWith('user-1');
+    expect(mocks.collectLocalDeviceExportData).toHaveBeenCalledWith(
+      expect.objectContaining({
+        generation: expect.any(Number),
+        signal: expect.any(AbortSignal),
+        assertCurrent: expect.any(Function),
+      }),
+    );
     expect(mocks.getUser.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.collectLocalDeviceExportData.mock.invocationCallOrder[0]!,
     );
@@ -414,6 +436,16 @@ describe('settings data export', () => {
     expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
   });
 
+  it('fails closed before reading local data when its durable owner does not match', async () => {
+    mocks.readLocalDataOwnership.mockResolvedValueOnce('mismatch');
+
+    await expect(exportData()).rejects.toThrow('DATA_EXPORT_LOCAL_OWNER_MISMATCH');
+
+    expect(mocks.collectLocalDeviceExportData).not.toHaveBeenCalled();
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.reservePlaintextStaging).not.toHaveBeenCalled();
+  });
+
   it('rejects a valid server bundle owned by a different account', async () => {
     mocks.invoke.mockResolvedValueOnce({
       data: { export_schema_version: 2, user_id: 'user-2' },
@@ -448,6 +480,37 @@ describe('settings data export', () => {
 
     expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
     expect(mocks.shareAsync).not.toHaveBeenCalled();
+  });
+
+  it('rejects an A-to-B-to-A boundary during the local snapshot before staging plaintext', async () => {
+    const localSnapshot = deferred<unknown>();
+    mocks.collectLocalDeviceExportData.mockReturnValueOnce(localSnapshot.promise);
+
+    const pendingExport = exportData();
+    await vi.waitFor(() => expect(mocks.collectLocalDeviceExportData).toHaveBeenCalledOnce());
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+    localSnapshot.resolve({
+      schema_version: 1,
+      collected_at: '2026-07-10T12:00:00.000Z',
+      storage_scope: 'encrypted_private_storage_on_this_device',
+      sections: {
+        account_and_privacy: {},
+        profile_and_preferences: {},
+        shelf_and_routine: {},
+        activity_and_app_state: {},
+        subscription: {},
+        progress: {},
+      },
+      exclusions: [],
+    });
+
+    await expect(pendingExport).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+    expect(mocks.invoke).not.toHaveBeenCalled();
+    expect(mocks.reservePlaintextStaging).not.toHaveBeenCalled();
+    expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
   });
 
   it('deletes a written cache file without sharing when the account changes after the write', async () => {
@@ -499,7 +562,8 @@ describe('settings data export', () => {
     const actions = readSource('features/settings/actions.ts');
 
     expect(actions).toContain('if (isSupabaseConfigured)');
-    expect(actions).toContain('collectLocalDeviceExportData()');
+    expect(actions).toContain('collectLocalDeviceExportData(lease)');
+    expect(actions).toContain('readLocalDataOwnership(expectedUserId)');
     expect(actions).toContain("serverAccountDataStatus = 'included'");
     expect(source).toContain('onSuccess: (shared)');
     expect(source).toContain('if (!shared)');
@@ -529,6 +593,7 @@ describe('settings account deletion and consent withdrawal', () => {
     vi.stubGlobal('fetch', mocks.fetch);
     mocks.assertStoreTransactionDeletionJournalReadable.mockReset();
     mocks.beginAccountDeletionIntakeHold.mockReset();
+    mocks.beginHealthDataConsentWithdrawal.mockReset();
     mocks.beginSupabaseRemoteDeletionBoundary.mockReset();
     mocks.closeSupabaseRemoteRequestBoundary.mockReset();
     mocks.deleteAsync.mockReset();
@@ -602,6 +667,7 @@ describe('settings account deletion and consent withdrawal', () => {
     mocks.preparePendingAccountDeletion.mockResolvedValue(DELETION_TOKENS);
     mocks.quarantineLocalAccount.mockResolvedValue(undefined);
     mocks.recordConsent.mockResolvedValue(undefined);
+    mocks.beginHealthDataConsentWithdrawal.mockResolvedValue(undefined);
     mocks.signOut.mockResolvedValue(undefined);
   });
 
@@ -1353,101 +1419,21 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
-  it('records health-data consent withdrawal before deleting the account', async () => {
-    await expect(withdrawHealthDataConsent(mocks.signOut)).resolves.toBeUndefined();
+  it('delegates health withdrawal to the purpose-limited lifecycle', async () => {
+    await expect(withdrawHealthDataConsent('user-1')).resolves.toBeUndefined();
 
-    expect(mocks.recordConsent).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: 'health_data_collection',
-        granted: false,
-      }),
-    );
-    expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
-      method: 'POST',
-      body: {
-        action: 'begin',
-        idempotencyKey: DELETION_TOKENS.idempotencyKey,
-        statusCapability: DELETION_TOKENS.statusCapability,
-        appleAuthorizationCode: 'apple-revocation-code',
-      },
-      signal: expect.any(AbortSignal),
-    });
-    expect(mocks.recordConsent.mock.invocationCallOrder[0]).toBeLessThan(
-      mocks.invoke.mock.invocationCallOrder[0]!,
-    );
-  });
-
-  it('continues to account deletion when the withdrawal ledger write is unavailable', async () => {
-    mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
-
-    await expect(withdrawHealthDataConsent(mocks.signOut)).resolves.toBeUndefined();
-
-    expect(mocks.invoke).toHaveBeenCalledWith('account-deletion', {
-      method: 'POST',
-      body: {
-        action: 'begin',
-        idempotencyKey: DELETION_TOKENS.idempotencyKey,
-        statusCapability: DELETION_TOKENS.statusCapability,
-        appleAuthorizationCode: 'apple-revocation-code',
-      },
-      signal: expect.any(AbortSignal),
-    });
+    expect(mocks.beginHealthDataConsentWithdrawal).toHaveBeenCalledExactlyOnceWith('user-1');
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
+    expect(mocks.beginSupabaseRemoteDeletionBoundary).not.toHaveBeenCalled();
+    expect(mocks.fetch).not.toHaveBeenCalled();
     expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
-  it('never lets a delayed A withdrawal continuation capture B for deletion', async () => {
-    const consent = deferred<void>();
-    mocks.recordConsent.mockReturnValueOnce(consent.promise);
+  it('propagates a lifecycle failure without falling back to account deletion', async () => {
+    mocks.beginHealthDataConsentWithdrawal.mockRejectedValueOnce(new Error('withdrawal pending'));
 
-    const withdrawal = withdrawHealthDataConsent(mocks.signOut);
-    await vi.waitFor(() => expect(mocks.recordConsent).toHaveBeenCalledOnce());
-    expect(mocks.recordConsent).toHaveBeenCalledWith(
-      expect.objectContaining({ expectedUserId: 'user-1' }),
-    );
-    expect(mocks.getSession).toHaveBeenCalledOnce();
-
-    let boundaryOpen = true;
-    beginAccountGenerationBoundary();
-    try {
-      await waitForAccountGenerationOperationsToSettle();
-      endAccountGenerationBoundary();
-      boundaryOpen = false;
-      // Model the next published account before allowing A's stale consent
-      // continuation to settle. The initiating generation mismatch must stop
-      // deletion before this B session is even read.
-      mocks.getSession.mockResolvedValue({
-        data: {
-          session: {
-            access_token: 'captured-token-b',
-            user: { id: 'user-2' },
-          },
-        },
-        error: null,
-      });
-      mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-2' } }, error: null });
-      consent.resolve();
-
-      await expect(withdrawal).rejects.toThrow('ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE');
-      expect(mocks.getSession).toHaveBeenCalledOnce();
-      expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
-      expect(mocks.beginSupabaseRemoteDeletionBoundary).not.toHaveBeenCalled();
-      expect(mocks.fetch).not.toHaveBeenCalled();
-      expect(mocks.markAccountDeletionIntakeState).not.toHaveBeenCalled();
-    } finally {
-      consent.resolve();
-      if (boundaryOpen) endAccountGenerationBoundary();
-    }
-  });
-
-  it('does not write withdrawal or cleanup locally when the data-rights backend is unavailable', async () => {
-    mocks.isSupabaseConfigured = false;
-
-    await expect(withdrawHealthDataConsent(mocks.signOut)).rejects.toThrow(
-      'DATA_RIGHTS_BACKEND_UNAVAILABLE',
-    );
-
-    expect(mocks.recordConsent).not.toHaveBeenCalled();
-    expect(mocks.invoke).not.toHaveBeenCalled();
+    await expect(withdrawHealthDataConsent('user-1')).rejects.toThrow('withdrawal pending');
+    expect(mocks.preparePendingAccountDeletion).not.toHaveBeenCalled();
     expect(mocks.signOut).not.toHaveBeenCalled();
   });
 

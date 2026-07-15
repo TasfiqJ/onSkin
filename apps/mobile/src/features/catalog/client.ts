@@ -2,6 +2,8 @@ import type { PaoSource } from '@onskin/types';
 
 import type { ProductCategory } from '@/features/shelf/categories';
 import { track } from '@/lib/analytics/track';
+import { runHealthDataWriteOperation } from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { isSupabaseConfigured } from '@/lib/env';
 import { supabase } from '@/lib/supabase/client';
 
@@ -188,6 +190,7 @@ function devCatalogSearchFixture():
   const fixture = process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT?.trim().toLowerCase();
   if (fixture === 'no_match') return { result: 'no_match', products: [], manualFallback: true };
   if (fixture === 'wrong_match') {
+    // Development-only UI fixture: provenance is deliberately non-routable and performs no fetch.
     const product: CatalogProductSummary = {
       id: 'e2e-wrong-match-product',
       barcode: '012345678905',
@@ -199,7 +202,7 @@ function devCatalogSearchFixture():
       source: 'open_beauty_facts',
       catalog_source_id: '00000000-0000-4000-8000-000000000042',
       source_ref: '012345678905',
-      source_url: 'https://world.openbeautyfacts.org/product/012345678905',
+      source_url: 'https://offline-fixture.invalid/open-beauty-facts/product/012345678905',
       source_snapshot_date: '2026-07-09',
       quality_grade: 'limited',
       review_status: 'fixture',
@@ -226,28 +229,48 @@ function devCatalogSearchFixture():
 }
 
 export async function lookupBarcode(barcode: string): Promise<CatalogLookupResponse> {
-  if (!isSupabaseConfigured) return { result: 'offline', manualFallback: true };
-  const { data, error } = await supabase.functions.invoke('catalog-lookup', { body: { barcode } });
-  track('catalog_barcode_lookup', { result: error ? 'error' : (data?.result ?? 'unknown') });
-  if (error) return { result: 'error', manualFallback: true };
-  return data as CatalogLookupResponse;
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) return { result: 'offline', manualFallback: true };
+  return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    if (!isSupabaseConfigured) return { result: 'offline', manualFallback: true };
+    lease.assertCurrent();
+    const { data, error } = await supabase.functions.invoke('catalog-lookup', {
+      body: { barcode },
+    });
+    lease.assertCurrent();
+    track('catalog_barcode_lookup', { result: error ? 'error' : (data?.result ?? 'unknown') });
+    lease.assertCurrent();
+    if (error) return { result: 'error', manualFallback: true };
+    return data as CatalogLookupResponse;
+  });
 }
 
 export async function searchCatalog(
   query: string,
 ): Promise<CatalogLookupResponse & { products?: CatalogProductSummary[] }> {
-  const fixture = devCatalogSearchFixture();
-  if (fixture) {
-    track('catalog_search', { result: fixture.result });
-    return fixture;
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) {
+    return { result: 'offline', products: [], manualFallback: true };
   }
-  if (!isSupabaseConfigured) return { result: 'offline', products: [], manualFallback: true };
-  const { data, error } = await supabase.functions.invoke('catalog-search', {
-    body: { query, limit: 12 },
+  return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    const fixture = devCatalogSearchFixture();
+    if (fixture) {
+      lease.assertCurrent();
+      track('catalog_search', { result: fixture.result });
+      lease.assertCurrent();
+      return fixture;
+    }
+    if (!isSupabaseConfigured) return { result: 'offline', products: [], manualFallback: true };
+    lease.assertCurrent();
+    const { data, error } = await supabase.functions.invoke('catalog-search', {
+      body: { query, limit: 12 },
+    });
+    lease.assertCurrent();
+    track('catalog_search', { result: error ? 'error' : (data?.result ?? 'unknown') });
+    lease.assertCurrent();
+    if (error) return { result: 'error', products: [], manualFallback: true };
+    return data as CatalogLookupResponse & { products?: CatalogProductSummary[] };
   });
-  track('catalog_search', { result: error ? 'error' : (data?.result ?? 'unknown') });
-  if (error) return { result: 'error', products: [], manualFallback: true };
-  return data as CatalogLookupResponse & { products?: CatalogProductSummary[] };
 }
 
 export type CatalogCorrectionType =
@@ -288,11 +311,18 @@ export async function reportCatalogIssue(input: {
   proposedPayload?: Partial<Record<CatalogReportPayloadKey, CatalogReportScalar>>;
   clientContext?: Partial<Record<CatalogReportContextKey, CatalogReportScalar>>;
 }): Promise<{ ok: boolean; offline?: boolean }> {
-  track('catalog_correction_reported', { correction_type: input.correctionType });
-  if (!isSupabaseConfigured) return { ok: false, offline: true };
-
-  const { error } = await supabase.functions.invoke('catalog-report', {
-    body: input,
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) return { ok: false, offline: true };
+  return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    lease.assertCurrent();
+    track('catalog_correction_reported', { correction_type: input.correctionType });
+    lease.assertCurrent();
+    if (!isSupabaseConfigured) return { ok: false, offline: true };
+    lease.assertCurrent();
+    const { error } = await supabase.functions.invoke('catalog-report', {
+      body: input,
+    });
+    lease.assertCurrent();
+    return { ok: !error };
   });
-  return { ok: !error };
 }

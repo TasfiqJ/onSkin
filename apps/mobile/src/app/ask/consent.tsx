@@ -8,7 +8,6 @@ import { Button, Card, RouteIconButton, Screen, Text, ToggleSwitch } from '@/com
 import { applyAskConsentChoice } from '@/features/ask/applyConsentChoice';
 import { grantAskConsent, isAskConsented, revokeAskConsent } from '@/features/ask/consent';
 import { ASK_COPY } from '@/features/ask/copy';
-import { clearAskStore, setAskConsentLocal } from '@/features/ask/store';
 import { BRAND } from '@/lib/brand';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_ASK_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -98,8 +97,7 @@ export default function AskConsentScreen() {
       throw new Error('E2E_ASK_CONSENT_GRANT_FAILURE');
     }
     if (failureModes.ledgerLocalOnly) {
-      await setAskConsentLocal(true);
-      return;
+      throw new Error('E2E_ASK_CONSENT_LEDGER_REQUIRED');
     }
     await grantAskConsent();
   };
@@ -110,8 +108,7 @@ export default function AskConsentScreen() {
       throw new Error('E2E_ASK_CONSENT_REVOKE_FAILURE');
     }
     if (failureModes.ledgerLocalOnly) {
-      await clearAskStore();
-      return;
+      throw new Error('E2E_ASK_WITHDRAWAL_LEDGER_REQUIRED');
     }
     await revokeAskConsent();
   };

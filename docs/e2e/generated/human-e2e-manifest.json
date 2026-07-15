@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-15T04:28:00.762Z",
-  "gitSha": "ca900b9beb7c5cf0bc50b28506620a33e2f3bedb",
-  "evidenceDate": "2026-07-13",
+  "generatedAt": "2026-07-15T20:04:38.962Z",
+  "gitSha": "90ed58d6dc8038bf5f2aa2a841b211683f3205c0",
+  "evidenceDate": "2026-07-15",
   "baselineEvidenceDate": "2026-07-09",
   "status": "pass",
   "purpose": "Durable local human-simulated E2E manifest for Expo web-compatible launch gates.",
@@ -602,6 +602,60 @@
       "evidenceSha256": "f4501b3e4387e2fadff2440c115823111665ddde7183390a30872bf4e0846f13"
     },
     {
+      "id": "health-consent-withdrawal-expo-web-compatibility",
+      "title": "Health-consent withdrawal and fresh-reconsent Expo-web compatibility pass",
+      "kind": "summary-status",
+      "required": true,
+      "supportClass": "resilience",
+      "folder": "test-results/human-e2e/2026-07-15/health-consent-withdrawal-current",
+      "evidence": "summary.json",
+      "requiredFiles": [
+        "report.md",
+        "results.json",
+        "13-goals-stable-postfix-390x844.png",
+        "15-privacy-active-postfix-390x844.png",
+        "16-withdrawal-confirm-postfix-390x844.png",
+        "17-withdrawn-paused-postfix-390x844.png",
+        "18-withdrawn-reload-postfix-390x844.png",
+        "19-fresh-consent-postfix-390x844.png",
+        "20-reconsent-goals-stable-postfix-390x844.png",
+        "21-consent-360x640-postfix.png",
+        "22-reconsent-goals-reload-postfix-390x844.png",
+        "23-fresh-grant-goals-final-390x844.png",
+        "24-fresh-grant-goals-reload-final-390x844.png"
+      ],
+      "validateSummaryArtifacts": true,
+      "requiredSchemaVersion": 1,
+      "requiredStatus": "pass",
+      "requiredFailedRouteCount": 0,
+      "requiredViewports": [
+        "390 x 844",
+        "360 x 640"
+      ],
+      "requiredVerified": [
+        "current consent before goals",
+        "direct goals entry recovers to consent",
+        "fresh grant stays on /onboarding/goals through 6.5 seconds and reload",
+        "confirm reaches the paused shell",
+        "paused state survives reload",
+        "fresh-consent refusal remains paused",
+        "fresh reconsent stays on /onboarding/goals through 6.5 seconds and reload",
+        "compact 360 x 640 consent controls"
+      ],
+      "expected": "Credential-free Expo web proves consent-before-goals, decline/direct-route denial, non-destructive withdrawal, durable paused state, and stable fresh reconsent; hosted, native-iPhone, accessibility, and legal-review gates remain open.",
+      "status": "pass",
+      "detail": "summary status: pass; 0 failed routes.",
+      "failureCount": 0,
+      "verdict": "pass",
+      "requirementFailures": [],
+      "folderExists": true,
+      "evidenceExists": true,
+      "evidenceTracked": true,
+      "fileCount": 14,
+      "bytes": 326046,
+      "evidenceSha256": "d3fc57f344cb407b85aae0ed9c0b66206ce10c0d212710e902852b41004e7a3d"
+    },
+    {
       "id": "progress-timelapse-supported-phone",
       "title": "390 x 844 local Progress time-lapse and reduced-motion pass",
       "kind": "summary-status",
@@ -1050,7 +1104,8 @@
     "This manifest verifies committed local Expo web evidence only; it does not replace physical-iPhone and iOS build QA.",
     "Supported-phone 200% text-pressure gates listed in this manifest are launch-required local Expo web evidence. Android-class, 360-wide, and sub-667-height folder names are retained resilience baselines, not Android release evidence; 320-wide browser sizes also remain resilience stress evidence unless tied to a supported physical iPhone.",
     "Native keyboard events, Dynamic Type, VoiceOver, camera hardware, notification delivery, StoreKit, RevenueCat, and live Supabase remain separate iOS release gates.",
-    "The account-deletion recovery gate uses credential-free Expo web development fixtures on a desktop capture surface; it does not prove compact-phone layout, Keychain persistence, native lifecycle behavior, hosted Supabase, live-provider deletion, physical-iPhone accessibility, or App Store acceptance."
+    "The account-deletion recovery gate uses credential-free Expo web development fixtures on a desktop capture surface; it does not prove compact-phone layout, Keychain persistence, native lifecycle behavior, hosted Supabase, live-provider deletion, physical-iPhone accessibility, or App Store acceptance.",
+    "The health-consent withdrawal gate uses credential-free Expo web and placeholder Supabase configuration; it does not prove hosted cleanup, Storage deletion, worker scheduling, physical-iPhone lifecycle or accessibility behavior, professional legal approval, or App Store acceptance."
   ],
   "blockers": []
 }

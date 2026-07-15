@@ -226,13 +226,13 @@
     }
   ],
   "categoryCounts": {
-    "data-store": 92,
-    "edge-function": 12,
-    "feature-flag": 17,
+    "data-store": 96,
+    "edge-function": 13,
+    "feature-flag": 16,
     "generated-packet": 30,
     "native-module": 43,
     "route": 90,
-    "vendor-call": 14
+    "vendor-call": 13
   },
   "items": [
     {
@@ -262,6 +262,13 @@
       "source": "apps/mobile/src/features/community/store.ts",
       "featureIds": ["F-17"],
       "readiness": "stubbed"
+    },
+    {
+      "id": "data-store:local:apps/mobile/src/features/healthConsent/lifecycleStore.ts",
+      "category": "data-store",
+      "source": "apps/mobile/src/features/healthConsent/lifecycleStore.ts",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
     },
     {
       "id": "data-store:local:apps/mobile/src/features/notifications/sentStore.ts",
@@ -628,6 +635,27 @@
       "readiness": "implemented"
     },
     {
+      "id": "data-store:postgres:health_consent_withdrawal_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_consent_withdrawal_steps",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:health_processing_states",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
       "id": "data-store:postgres:ingredient_pao_defaults",
       "category": "data-store",
       "source": "supabase/migrations/20260612000003_catalog.sql",
@@ -929,6 +957,13 @@
       "readiness": "launch-blocked"
     },
     {
+      "id": "edge-function:health-consent-worker",
+      "category": "edge-function",
+      "source": "supabase/functions/health-consent-worker/index.ts",
+      "featureIds": ["F-02"],
+      "readiness": "implemented"
+    },
+    {
       "id": "edge-function:order-report-poll",
       "category": "edge-function",
       "source": "supabase/functions/order-report-poll/index.ts",
@@ -1067,13 +1102,6 @@
       "source": "apps/mobile/src/lib/env.ts",
       "featureIds": ["F-01"],
       "readiness": "launch-blocked"
-    },
-    {
-      "id": "feature-flag:OBF_API_ENABLED",
-      "category": "feature-flag",
-      "source": "supabase/functions/catalog-lookup/index.ts",
-      "featureIds": ["F-03", "F-04"],
-      "readiness": "needs-device-verification"
     },
     {
       "id": "feature-flag:OBF_CONTRIBUTION_ENABLED",
@@ -2300,13 +2328,6 @@
       "source": "apps/mobile/src/features/settings/accountDeletionNotice.ts",
       "featureIds": ["F-02"],
       "readiness": "implemented"
-    },
-    {
-      "id": "vendor-call:origin:world.openbeautyfacts.org",
-      "category": "vendor-call",
-      "source": "apps/mobile/src/features/catalog/client.ts",
-      "featureIds": ["F-04"],
-      "readiness": "stubbed"
     },
     {
       "id": "vendor-call:origin:www.revenuecat.com",

@@ -5,6 +5,7 @@ import { classifyRole } from '@/features/routine/sequencing';
 import { useProfileBits } from '@/features/scheduler/profile';
 import type { ShelfProduct } from '@/features/shelf/store';
 import { useShelf } from '@/features/shelf/useShelf';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 import { recommend, type RecReplenishmentItem, type RecResult, type RecShelfItem } from './engine';
 import { isRecommendationDataLoading } from './loading';
@@ -20,6 +21,15 @@ import { loadDismissed, loadPreferences } from './store';
 
 const EMPTY: RecResult = { recommendations: [], youreSet: false };
 
+async function loadRecommendationStateForCurrentHealthLease() {
+  return runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    const [prefs, dismissed] = await Promise.all([loadPreferences(), loadDismissed()]);
+    lease.assertCurrent();
+    return { prefs, dismissed };
+  });
+}
+
 function isFragranced(p: ShelfProduct): boolean {
   return [p.name, ...p.ingredients].some((t) => /fragrance|parfum|perfume/i.test(t));
 }
@@ -29,7 +39,7 @@ export function useRecommendations() {
   const profile = useProfileBits();
   const prefsQ = useQuery({
     queryKey: ['recPrefsAndDismissed'],
-    queryFn: async () => ({ prefs: await loadPreferences(), dismissed: await loadDismissed() }),
+    queryFn: loadRecommendationStateForCurrentHealthLease,
   });
 
   const result = useMemo<RecResult>(() => {

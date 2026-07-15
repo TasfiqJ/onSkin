@@ -40,6 +40,8 @@ const evidenceContext = readEvidenceContext();
 const accountDeletionFunction = 'account-deletion';
 const accountDeletionWorkerHeader = 'x-account-deletion-worker-secret';
 const accountDeletionTokenPattern = /^[a-f0-9]{64}$/;
+const healthConsentWorkerFunction = 'health-consent-worker';
+const healthConsentWorkerHeader = 'x-health-consent-worker-secret';
 
 const userJwtFunctions = [
   'data-export',
@@ -79,6 +81,7 @@ const artifact = {
   accountDeletionPreflight: 'authenticated-live-clear-missing-invalid-stale',
   accountDeletionPositiveLifecycle: 'delegated-to-phase9-live-data-rights',
   accountDeletionAuthorizedWorker: 'delegated-to-reviewed-cron-evidence',
+  healthConsentAuthorizedWorker: 'delegated-to-reviewed-cron-evidence',
   checks,
   warnings,
   errors,
@@ -605,6 +608,14 @@ async function postAccountDeletionWorker(workerCredential) {
   });
 }
 
+async function postHealthConsentWorker(workerCredential) {
+  return postFunction(healthConsentWorkerFunction, {
+    body: { action: 'work' },
+    extraHeaders:
+      workerCredential === undefined ? {} : { [healthConsentWorkerHeader]: workerCredential },
+  });
+}
+
 function assertStatus(actual, expected, label) {
   assert(actual === expected, `${label}: expected HTTP ${expected}, got ${actual}.`);
 }
@@ -931,6 +942,23 @@ async function main() {
           const response = await postAccountDeletionWorker(credential);
           assertStatus(response.status, 401, `account-deletion ${label} worker credential`);
           assertErrorCode(response, 'UNAUTHORIZED', `account-deletion ${label} worker credential`);
+        }
+      },
+    );
+
+    await runCheck(
+      'health-consent worker rejects missing and wrong dedicated service credentials without work',
+      async () => {
+        // The real HEALTH_CONSENT_WORKER_SECRET is deliberately never read or
+        // sent by this auth-negative harness. Authorized global queue work
+        // belongs to reviewed Vault/Cron evidence.
+        for (const [label, credential] of [
+          ['missing', undefined],
+          ['wrong', 'A'.repeat(64)],
+        ]) {
+          const response = await postHealthConsentWorker(credential);
+          assertStatus(response.status, 401, `health-consent ${label} worker credential`);
+          assertErrorCode(response, 'UNAUTHORIZED', `health-consent ${label} worker credential`);
         }
       },
     );

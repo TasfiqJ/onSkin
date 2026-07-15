@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Platform, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
@@ -9,7 +9,7 @@ import {
   meetsMinimumAge,
   MINIMUM_AGE,
 } from '@/features/onboarding/ageGate';
-import { getAgeVerified, setAgeVerified } from '@/features/onboarding/ageGateStore';
+import { setAgeVerified } from '@/features/onboarding/ageGateStore';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
 
@@ -59,23 +59,9 @@ export default function AgeGateScreen() {
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [blocked, setBlocked] = useState(false);
-  const [checked, setChecked] = useState(false);
   const supportFloorTextPressurePhone =
     width <= 430 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPhone = height < 640 || supportFloorTextPressurePhone;
-
-  // Skip if a prior session already passed the gate (don't re-ask on re-entry).
-  useEffect(() => {
-    let active = true;
-    void getAgeVerified().then((ok) => {
-      if (!active) return;
-      if (ok) router.replace('/onboarding/goals');
-      else setChecked(true);
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
 
   const dob = { year: Number(year), month: Number(month), day: Number(day) };
   const complete = day.length > 0 && month.length > 0 && year.length === 4;
@@ -94,14 +80,11 @@ export default function AgeGateScreen() {
     track('screen_viewed', { screen_name: 'age_gate' });
     if (meetsMinimumAge(dob, today)) {
       await setAgeVerified();
-      router.replace('/onboarding/goals');
+      router.replace('/onboarding/consent');
     } else {
       setBlocked(true);
     }
   }
-
-  // Render nothing while deciding whether to skip (avoids a flash of the form).
-  if (!checked) return null;
 
   return (
     <Screen>

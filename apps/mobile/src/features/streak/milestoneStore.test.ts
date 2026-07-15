@@ -3,8 +3,28 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { markMilestoneSeen } from './milestoneStore';
 
 const mocks = vi.hoisted(() => ({
+  closeAfterUpdate: false,
+  healthGeneration: 1,
+  healthOpen: true,
   storage: new Map<string, string>(),
   tails: new Map<string, Promise<void>>(),
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+  runCurrentHealthDataOperation: async (
+    operation: (lease: { assertCurrent: () => void }) => unknown,
+  ) => {
+    if (!mocks.healthOpen) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    const generation = mocks.healthGeneration;
+    const assertCurrent = () => {
+      if (!mocks.healthOpen || generation !== mocks.healthGeneration) {
+        throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+      }
+    };
+    const result = await operation({ assertCurrent });
+    assertCurrent();
+    return result;
+  },
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -25,6 +45,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
         const next = updater(mocks.storage.get(key) ?? null);
         if (next === null) mocks.storage.delete(key);
         else mocks.storage.set(key, next);
+        if (mocks.closeAfterUpdate) mocks.healthGeneration += 1;
       } finally {
         release();
         if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
@@ -37,6 +58,9 @@ const KEY = 'onskin.milestones.v1';
 
 describe('streak milestone store', () => {
   beforeEach(() => {
+    mocks.closeAfterUpdate = false;
+    mocks.healthGeneration = 1;
+    mocks.healthOpen = true;
     mocks.storage.clear();
     mocks.tails.clear();
   });
@@ -78,5 +102,13 @@ describe('streak milestone store', () => {
     await expect(markMilestoneSeen('   ')).resolves.toBe(false);
 
     expect(mocks.storage.has(KEY)).toBe(false);
+  });
+
+  it('does not publish a marker result across withdrawal and same-session re-grant', async () => {
+    mocks.closeAfterUpdate = true;
+
+    await expect(markMilestoneSeen('d7')).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    );
   });
 });

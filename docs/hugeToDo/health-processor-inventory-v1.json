@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "inventoryVersion": "health-processors-v1",
+  "effectiveDate": "2026-07-15",
+  "status": "source-candidate-not-production-cleared",
+  "purpose": "health_data_collection",
+  "hashContract": {
+    "field": "separatelyReconciledExternalHealthProcessors",
+    "canonicalEncoding": "JSON.stringify(value)",
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "separatelyReconciledExternalHealthProcessors": [],
+  "primaryInfrastructureProcessors": [
+    {
+      "id": "supabase",
+      "purpose": "Authentication, owner-scoped Postgres data, Storage, and Edge Functions",
+      "mayProcessHealthPurposeData": true,
+      "withdrawalLane": "Relational rows are removed by the database-cleanup step and owned photo objects by the Storage work step; Supabase is therefore not duplicated in the separate external-processor array.",
+      "productionEvidence": "blocked_pending_live_project_dpa_region_backup_and_deletion_verification"
+    }
+  ],
+  "purposeExcludedOrUnconfiguredProviders": [
+    {
+      "id": "posthog",
+      "reason": "Direct mobile vendor capture is disabled in the source candidate; health fields and values are forbidden by the sanitizer."
+    },
+    {
+      "id": "sentry",
+      "reason": "Only scrubbed, non-user-bound diagnostics are permitted; health/profile/product/photo context and stable user identity are removed before capture."
+    },
+    {
+      "id": "revenuecat",
+      "reason": "Subscription and entitlement processing is purpose-separated and must not receive health-profile, shelf, routine, photo, or consent-answer payloads."
+    },
+    {
+      "id": "apple",
+      "reason": "Authentication, App Store billing, and distribution are purpose-separated; the app does not approve Apple as a recipient of its health-purpose dataset."
+    },
+    {
+      "id": "google",
+      "reason": "Optional iPhone authentication is purpose-separated; the app does not approve Google as a recipient of its health-purpose dataset."
+    },
+    {
+      "id": "cloud_ai_vendor",
+      "reason": "No production provider is selected or approved; cloud Ask remains launch-blocked."
+    },
+    {
+      "id": "affiliate_or_commerce_partner",
+      "reason": "No production rail is approved; health attributes are prohibited from affiliate payloads and ranking."
+    },
+    {
+      "id": "support_vendor",
+      "reason": "No production support processor is selected; free-form health intake is not an approved path."
+    },
+    {
+      "id": "open_beauty_facts",
+      "reason": "Request-time lookup and live contribution are disabled in the source candidate. Reviewed offline artifacts may populate the local Supabase catalog without transmitting a user's barcode or product-interest request; legacy owner-linked contribution queue data remains covered by the in-line database-cleanup step. Any live Open Beauty Facts transport requires a new processor inventory version plus reviewed purpose, sharing, retention, deletion, and provider-contract evidence."
+    }
+  ]
+}

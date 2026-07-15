@@ -5,49 +5,56 @@
 // only after that proof to append the revocation ledger row and perform the
 // promised cleanup for prior cloud/shared data.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
-import { bearerToken } from '../_shared/auth.ts';
-import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
-import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
+import { bearerAuthorizationHeader, bearerToken } from '../_shared/auth.ts';
+import {
+  contentLengthTooLarge,
+  readLimitedJson,
+  userEdgeBodyMaxBytes,
+} from '../_shared/body.ts';
+import { readEdgeAppEnvironment } from '../_shared/env.ts';
+import { readSupabasePublishableKey } from '../_shared/supabasePublishableKey.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
+import { verifiedAuthSessionClaimsFromJwt } from '../_shared/verifiedAuthSessionClaims.ts';
+import {
+  assertBaseHealthGrantCopyEnvironment,
+  CONSENT_GRANT_COPY_PRODUCTION_ERROR,
+  parseGranularWithdrawalRequest,
+  runGranularWithdrawalLifecycle,
+} from './granularWithdrawalCore.ts';
+import { runAuthenticatedHealthDependentCleanup } from './dependentCleanupRuntime.ts';
+import {
+  type HealthLifecycleDependencies,
+  parseHealthLifecycleRequest,
+  runHealthLifecycle,
+} from './healthLifecycleCore.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const publishableKey = readSupabasePublishableKey();
 const serviceKey = readSupabaseSecretKey();
 const maxBodyBytes = userEdgeBodyMaxBytes();
+const appEnvironment = readEdgeAppEnvironment();
+let ownerClaimHmacKey: CryptoKey | null = null;
 
-type ConsentWithdrawalType =
-  | 'photo_cloud_backup'
-  | 'photo_trend_insights'
-  | 'ask_onskin'
-  | 'community_participation'
-  | 'data_sharing'
-  | 'marketing';
-type WithdrawalBody = {
-  consentType: ConsentWithdrawalType;
-  version: string;
-  consentTextHash: string;
-};
+// Supabase's ungenerated Edge client deliberately has no table schema generic.
+// deno-lint-ignore no-explicit-any
 type EdgeSupabaseClient = any;
-
-const allowedConsentTypes = new Set<ConsentWithdrawalType>([
-  'photo_cloud_backup',
-  'photo_trend_insights',
-  'ask_onskin',
-  'community_participation',
-  'data_sharing',
-  'marketing',
-]);
-const allowedBodyKeys = new Set(['consentType', 'version', 'consentTextHash']);
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: {
+      ...corsHeaders,
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff',
+    },
   });
 }
 
@@ -55,208 +62,183 @@ function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function validateBody(value: unknown): WithdrawalBody | null {
-  if (!isObject(value)) return null;
-  if (Object.keys(value).some((key) => !allowedBodyKeys.has(key))) return null;
-
-  const consentType = value.consentType;
-  const version = value.version;
-  const consentTextHash = value.consentTextHash;
-  if (
-    typeof consentType !== 'string' ||
-    !allowedConsentTypes.has(consentType as ConsentWithdrawalType)
-  )
-    return null;
-  if (typeof version !== 'string' || version.trim().length === 0 || version.length > 120)
-    return null;
-  if (typeof consentTextHash !== 'string' || !/^[a-f0-9]{64}$/i.test(consentTextHash)) return null;
-
-  return {
-    consentType: consentType as ConsentWithdrawalType,
-    version,
-    consentTextHash: consentTextHash.toLowerCase(),
-  };
-}
-
-function rowCount(data: unknown): number {
-  return Array.isArray(data) ? data.length : 0;
-}
-
-async function deleteUserRows(
-  supabase: EdgeSupabaseClient,
-  table: string,
-  column: string,
+async function ownerClaimToken(
   userId: string,
-): Promise<number> {
-  const { data, error } = await supabase.from(table).delete().eq(column, userId).select('id');
-  if (error) throw new Error('CONSENT_WITHDRAWAL_CLEANUP_FAILED');
-  return rowCount(data);
-}
-
-async function insertRevocation(
-  supabase: EdgeSupabaseClient,
-  userId: string,
-  body: WithdrawalBody,
-): Promise<void> {
-  const { error } = await supabase.from('consents').insert({
-    user_id: userId,
-    consent_type: body.consentType,
-    granted: false,
-    version: body.version,
-    consent_text_hash: body.consentTextHash,
-    revoked_at: new Date().toISOString(),
-  });
-  if (error) throw new Error('CONSENT_WITHDRAWAL_LEDGER_FAILED');
-}
-
-async function withdrawPhotoCloudBackup(supabase: EdgeSupabaseClient, userId: string) {
-  const { data, error } = await supabase
-    .from('photos')
-    .select('id, storage_path')
-    .eq('user_id', userId)
-    .eq('local_only', false);
-  if (error) throw new Error('CONSENT_WITHDRAWAL_CLEANUP_FAILED');
-
-  const rows = (data ?? []) as Array<{ id?: string; storage_path?: string | null }>;
-  const ownedPaths = [
-    ...new Set(
-      rows
-        .map((row) => row.storage_path)
-        .filter(
-          (path): path is string =>
-            typeof path === 'string' && photoPathBelongsToUser(userId, path),
-        ),
-    ),
-  ];
-
-  if (ownedPaths.length > 0) {
-    const { error: removeError } = await supabase.storage.from('photos').remove(ownedPaths);
-    if (removeError) throw new Error('CONSENT_WITHDRAWAL_CLEANUP_FAILED');
-  }
-
-  const { data: relocalized, error: updateError } = await supabase
-    .from('photos')
-    .update({ local_only: true, storage_path: null })
-    .eq('user_id', userId)
-    .eq('local_only', false)
-    .select('id');
-  if (updateError) throw new Error('CONSENT_WITHDRAWAL_CLEANUP_FAILED');
-
-  return {
-    photo_rows_relocalized: rowCount(relocalized),
-    storage_objects_removed: ownedPaths.length,
-    skipped_storage_paths: rows.length - ownedPaths.length,
-  };
-}
-
-async function withdrawAskOnSkin(supabase: EdgeSupabaseClient, userId: string) {
-  return {
-    ask_safety_audit_deleted: await deleteUserRows(supabase, 'ask_safety_audit', 'user_id', userId),
-  };
-}
-
-async function withdrawTrendInsights(supabase: EdgeSupabaseClient, userId: string) {
-  return {
-    photo_trend_deleted: await deleteUserRows(supabase, 'photo_trend', 'user_id', userId),
-  };
-}
-
-async function withdrawCommunityParticipation(supabase: EdgeSupabaseClient, userId: string) {
-  const reportsDeleted = await deleteUserRows(supabase, 'community_reports', 'reporter_id', userId);
-  const reactionsDeleted = await deleteUserRows(supabase, 'community_reactions', 'user_id', userId);
-  const questionsDeleted = await deleteUserRows(supabase, 'community_questions', 'user_id', userId);
-  const blocksDeleted = await deleteUserRows(supabase, 'community_blocks', 'user_id', userId);
-  return {
-    community_reports_deleted: reportsDeleted,
-    community_reactions_deleted: reactionsDeleted,
-    community_questions_deleted: questionsDeleted,
-    community_blocks_deleted: blocksDeleted,
-  };
-}
-
-async function withdrawDataSharing(supabase: EdgeSupabaseClient, userId: string) {
-  const { data, error } = await supabase
-    .from('commerce_click_events')
-    .select('click_token')
-    .eq('user_id', userId);
-  if (error) throw new Error('CONSENT_WITHDRAWAL_CLEANUP_FAILED');
-
-  const clickTokens = [
-    ...new Set(
-      ((data ?? []) as Array<{ click_token?: string | null }>)
-        .map((row) => row.click_token)
-        .filter((token): token is string => Boolean(token)),
-    ),
-  ];
-
-  let orderAttributionsDetached = 0;
-  if (clickTokens.length > 0) {
-    const { data: detached, error: detachError } = await supabase
-      .from('order_attributions')
-      .update({ click_token: null })
-      .in('click_token', clickTokens)
-      .select('id');
-    if (detachError) throw new Error('CONSENT_WITHDRAWAL_CLEANUP_FAILED');
-    orderAttributionsDetached = rowCount(detached);
-  }
-
-  return {
-    order_attributions_detached: orderAttributionsDetached,
-    commerce_click_events_deleted: await deleteUserRows(
-      supabase,
-      'commerce_click_events',
-      'user_id',
-      userId,
-    ),
-  };
-}
-
-async function runCleanup(
-  supabase: EdgeSupabaseClient,
-  userId: string,
-  consentType: ConsentWithdrawalType,
-) {
-  switch (consentType) {
-    case 'photo_cloud_backup':
-      return withdrawPhotoCloudBackup(supabase, userId);
-    case 'ask_onskin':
-      return withdrawAskOnSkin(supabase, userId);
-    case 'photo_trend_insights':
-      return withdrawTrendInsights(supabase, userId);
-    case 'community_participation':
-      return withdrawCommunityParticipation(supabase, userId);
-    case 'data_sharing':
-      return withdrawDataSharing(supabase, userId);
-    case 'marketing':
-      return { marketing_withdrawal_recorded: true };
-  }
+  operationId: string,
+): Promise<string> {
+  const encoder = new TextEncoder();
+  ownerClaimHmacKey ??= await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(serviceKey),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+  const signature = await crypto.subtle.sign(
+    'HMAC',
+    ownerClaimHmacKey,
+    encoder.encode(`health-owner-claim-v1|${userId}|${operationId}`),
+  );
+  return Array.from(
+    new Uint8Array(signature),
+    (byte) => byte.toString(16).padStart(2, '0'),
+  ).join('');
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
   if (req.method !== 'POST') return json({ error: 'METHOD_NOT_ALLOWED' }, 405);
-  if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);
+  if (contentLengthTooLarge(req, maxBodyBytes)) {
+    return json({ error: 'payload_too_large' }, 413);
+  }
 
   const token = bearerToken(req);
-  if (!token) return json({ error: 'UNAUTHORIZED' }, 401);
-  const supabase = createClient(supabaseUrl, serviceKey, {
+  const authorization = bearerAuthorizationHeader(req);
+  if (!token || !authorization) return json({ error: 'UNAUTHORIZED' }, 401);
+  const caller = createClient(supabaseUrl, publishableKey, {
+    global: { headers: { Authorization: authorization } },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const admin = createClient(supabaseUrl, serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  const { data: userData, error: userErr } = await supabase.auth.getUser(token);
+  const { data: userData, error: userErr } = await caller.auth.getUser();
   const userId = userData.user?.id;
-  if (userErr || !userId) return json({ error: 'UNAUTHORIZED' }, 401);
+  if (userErr || !userId || !verifiedAuthSessionClaimsFromJwt(token, userId)) {
+    return json({ error: 'UNAUTHORIZED' }, 401);
+  }
 
-  const parsed = await readLimitedJson(req, maxBodyBytes, json, { error: 'BAD_JSON' });
+  const parsed = await readLimitedJson(req, maxBodyBytes, json, {
+    error: 'BAD_JSON',
+  });
   if (parsed instanceof Response) return parsed;
 
-  const body = validateBody(parsed);
-  if (!body) return json({ error: 'INVALID_BODY' }, 400);
+  const healthRequest = parseHealthLifecycleRequest(parsed);
+  const granularRequest = healthRequest
+    ? null
+    : parseGranularWithdrawalRequest(parsed);
+  if (!healthRequest && !granularRequest) {
+    return json({ error: 'INVALID_BODY' }, 400);
+  }
+  if (healthRequest?.action === 'reconsent') {
+    try {
+      assertBaseHealthGrantCopyEnvironment(appEnvironment);
+    } catch {
+      return json({ error: CONSENT_GRANT_COPY_PRODUCTION_ERROR }, 503);
+    }
+  }
 
   try {
-    await insertRevocation(supabase, userId, body);
-    const cleanup = await runCleanup(supabase, userId, body.consentType);
-    return json({ withdrawn: true, consent_type: body.consentType, cleanup });
+    if (healthRequest) {
+      const operationClaims = new Map<string, Promise<string | null>>();
+      const claimOperation = (operationId: string): Promise<string | null> => {
+        const existing = operationClaims.get(operationId);
+        if (existing) return existing;
+        const claimed = (async () => {
+          const claimToken = await ownerClaimToken(userId, operationId);
+          // Audited RPC contract: 'claim_health_consent_withdrawal_for_owner'.
+          const { data, error } = await admin.rpc(
+            'claim_health_consent_withdrawal_for_owner',
+            {
+              p_user_id: userId,
+              p_operation_id: operationId,
+              p_claim_token: claimToken,
+            },
+          );
+          const row = Array.isArray(data) && data.length === 1 ? data[0] : null;
+          if (
+            error ||
+            !isObject(row) ||
+            row.operation_id !== operationId ||
+            row.user_id !== userId ||
+            !Number.isSafeInteger(row.epoch) ||
+            (row.epoch as number) < 1
+          ) {
+            return null;
+          }
+          return claimToken;
+        })();
+        operationClaims.set(operationId, claimed);
+        return claimed;
+      };
+      const dependencies: HealthLifecycleDependencies = {
+        authenticatedUserId: userId,
+        begin: (request) =>
+          caller.rpc('begin_health_data_consent_withdrawal', {
+            p_expected_epoch: request.expectedProcessingEpoch,
+            p_idempotency_key: request.idempotencyKey,
+            p_version: request.version,
+            p_consent_text_hash: request.consentTextHash,
+          }),
+        readStatus: () => caller.rpc('get_health_data_consent_status'),
+        prepare: async (operationId) => {
+          const claimToken = await claimOperation(operationId);
+          return claimToken
+            ? admin.rpc('prepare_health_data_consent_withdrawal', {
+              p_operation_id: operationId,
+              p_claim_token: claimToken,
+            })
+            : { data: null, error: 'HEALTH_WITHDRAWAL_CLAIM_UNAVAILABLE' };
+        },
+        listStorage: async (operationId, limit) => {
+          const claimToken = await claimOperation(operationId);
+          return claimToken
+            ? admin.rpc('list_health_consent_storage_work', {
+              p_operation_id: operationId,
+              p_limit: limit,
+              p_claim_token: claimToken,
+            })
+            : { data: null, error: 'HEALTH_WITHDRAWAL_CLAIM_UNAVAILABLE' };
+        },
+        removeStorage: (paths) => admin.storage.from('photos').remove(paths),
+        complete: async (operationId) => {
+          const claimToken = await claimOperation(operationId);
+          return claimToken
+            ? admin.rpc('complete_health_data_consent_withdrawal', {
+              p_operation_id: operationId,
+              p_claim_token: claimToken,
+            })
+            : { data: null, error: 'HEALTH_WITHDRAWAL_CLAIM_UNAVAILABLE' };
+        },
+        reconsent: (request) =>
+          caller.rpc('grant_health_data_consent', {
+            p_expected_epoch: request.expectedProcessingEpoch,
+            p_version: request.version,
+            p_consent_text_hash: request.consentTextHash,
+          }),
+        decline: (request) =>
+          caller.rpc('decline_initial_health_data_consent', {
+            p_expected_epoch: request.expectedProcessingEpoch,
+            p_version: request.version,
+            p_consent_text_hash: request.consentTextHash,
+          }),
+      };
+      const result = await runHealthLifecycle(healthRequest, dependencies);
+      return json(result.body, result.status);
+    }
+
+    const result = await runGranularWithdrawalLifecycle(granularRequest!, {
+      authenticatedUserId: userId,
+      begin: (request) =>
+        caller.rpc('begin_health_dependent_consent_withdrawal', {
+          p_expected_epoch: request.expectedProcessingEpoch,
+          p_expected_generation: request.expectedConsentGeneration,
+          p_consent_type: request.consentType,
+          p_idempotency_key: request.idempotencyKey,
+          p_version: request.version,
+          p_consent_text_hash: request.consentTextHash,
+        }),
+      cleanup: (operation) =>
+        runAuthenticatedHealthDependentCleanup(admin, operation),
+      complete: (operationId) =>
+        admin.rpc('complete_health_dependent_consent_withdrawal', {
+          p_operation_id: operationId,
+        }),
+    });
+    return json(result.body, result.status);
   } catch {
     console.error('[consent-withdrawal]', 'CONSENT_WITHDRAWAL_FAILED');
     return json({ withdrawn: false, error: 'CONSENT_WITHDRAWAL_FAILED' }, 500);

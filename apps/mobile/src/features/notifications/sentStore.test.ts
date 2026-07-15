@@ -1,6 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+
+import {
+  clearSentLocal,
   recordSentLocal,
   SENT_LEDGER_FAIL_CLOSED_COUNT,
   SENT_LEDGER_INVALID,
@@ -49,6 +55,7 @@ describe('notification sent ledger', () => {
     mocks.storage.clear();
     mocks.tails.clear();
     mocks.updateFailure = null;
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
   it('preserves unreadable local history and fails the frequency cap closed', async () => {
@@ -152,5 +159,14 @@ describe('notification sent ledger', () => {
     await expect(recordSentLocal('rampup', NOW + 1)).rejects.toThrow('PRIVATE_WRITE_FAILED');
 
     expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('clears the sent ledger after health processing closes', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ version: 1, records: [] }));
+    clearActiveHealthProcessingEpoch();
+
+    await clearSentLocal();
+
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

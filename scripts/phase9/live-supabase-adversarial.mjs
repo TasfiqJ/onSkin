@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
 import {
@@ -119,6 +119,7 @@ async function runCheck(name, fn) {
 
 function publicClient() {
   return createClient(supabaseUrl, publishableKey, {
+    global: { headers: { 'x-onskin-health-epoch': '1' } },
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
   });
 }
@@ -149,6 +150,13 @@ async function createLiveUser(admin, label, cleanupUsers) {
     signedIn.data.user?.id === createdUser.id,
     `Signed-in user identity did not match the created ${label} user.`,
   );
+  const healthGrant = await client.rpc('grant_health_data_consent', {
+    p_expected_epoch: 0,
+    p_version: 'draft-v1-2026-07-10',
+    p_consent_text_hash:
+      '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+  });
+  if (healthGrant.error) throw healthGrant.error;
   return { id: createdUser.id, client };
 }
 
@@ -166,6 +174,13 @@ async function createSignedAnonymousUser(cleanupUsers) {
     data.session?.user?.id === data.user.id,
     'Anonymous Auth session identity did not match its created user.',
   );
+  const healthGrant = await client.rpc('grant_health_data_consent', {
+    p_expected_epoch: 0,
+    p_version: 'draft-v1-2026-07-10',
+    p_consent_text_hash:
+      '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+  });
+  if (healthGrant.error) throw healthGrant.error;
   return { id: data.user.id, client };
 }
 
@@ -343,6 +358,7 @@ async function main() {
   }
 
   const admin = createClient(supabaseUrl, secretKey, {
+    global: { headers: { 'x-onskin-health-epoch': '1' } },
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
   });
   const unauthenticated = publicClient();
@@ -358,6 +374,24 @@ async function main() {
     const userA = await createLiveUser(admin, 'a', users);
     const userB = await createLiveUser(admin, 'b', users);
     const signedAnonymous = await createSignedAnonymousUser(users);
+
+    for (const [label, user] of [
+      ['a', userA],
+      ['b', userB],
+      ['anonymous', signedAnonymous],
+    ]) {
+      const { data, error } = await user.client.rpc('grant_health_data_consent', {
+        p_expected_epoch: 0,
+        p_version: 'draft-v1-2026-07-10',
+        p_consent_text_hash:
+          '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+      });
+      if (error) throw error;
+      assert(
+        Array.isArray(data) && data[0]?.state === 'active' && data[0]?.epoch === 1,
+        `Health consent activation failed for user ${label}.`,
+      );
+    }
 
     await runCheck('profile owner isolation', async () => {
       const profile = await upsertOne(userA.client, 'profiles', {
@@ -986,16 +1020,27 @@ async function main() {
     });
 
     await runCheck('consent append-only and entitlement service-only isolation', async () => {
-      const consent = await insertOne(userA.client, 'consents', {
-        user_id: userA.id,
-        consent_type: 'health_data_collection',
-        granted: true,
-        version: 'phase9-live-adversarial',
-        consent_text_hash: 'phase9-live-adversarial',
-      });
+      const { data: consent, error: consentReadError } = await userA.client
+        .from('consents')
+        .select('id, granted, revoked_at, version')
+        .eq('consent_type', 'health_data_collection')
+        .order('granted_at', { ascending: false })
+        .limit(1)
+        .single();
+      if (consentReadError) throw consentReadError;
       registerPrivateTableProbe('consents', 'id', consent.id);
       await expectVisible(userA.client, 'consents', 'id', consent.id, 'consent owner read');
       await expectNotVisible(userB.client, 'consents', 'id', consent.id, 'consent cross-user read');
+      await expectBlockedInsert(
+        'health consent owner direct insert',
+        userA.client.from('consents').insert({
+          user_id: userA.id,
+          consent_type: 'health_data_collection',
+          granted: false,
+          version: 'bad-direct-revocation',
+          consent_text_hash: 'c'.repeat(64),
+        }),
+      );
       await expectBlockedInsert(
         'consent cross-user insert',
         userB.client.from('consents').insert({
@@ -1024,7 +1069,7 @@ async function main() {
       assert(
         unchangedConsent.data.granted === true &&
           unchangedConsent.data.revoked_at === null &&
-          unchangedConsent.data.version === 'phase9-live-adversarial',
+          unchangedConsent.data.version === 'phase9-live-adversarial-a',
         'consent row changed after append-only update denials.',
       );
 
@@ -1888,12 +1933,12 @@ async function main() {
     });
 
     await runCheck('photos table and storage object isolation', async () => {
-      const ownerPath = `${userA.id}/phase9-${randomUUID()}.bin`;
-      const crossPath = `${userA.id}/phase9-cross-${randomUUID()}.bin`;
-      const foreignMetadataPath = `${userB.id}/phase9-foreign-${randomUUID()}.bin`;
-      const revokedPath = `${userA.id}/phase9-revoked-${randomUUID()}.bin`;
-      const signedAnonymousCloudPath = `${signedAnonymous.id}/phase9-anonymous-${randomUUID()}.bin`;
-      const signedAnonymousUpdatePath = `${signedAnonymous.id}/phase9-anonymous-update-${randomUUID()}.bin`;
+      const ownerPath = `${userA.id}/e1/phase9-${randomUUID()}.bin`;
+      const crossPath = `${userA.id}/e1/phase9-cross-${randomUUID()}.bin`;
+      const foreignMetadataPath = `${userB.id}/e1/phase9-foreign-${randomUUID()}.bin`;
+      const revokedPath = `${userA.id}/e1/phase9-revoked-${randomUUID()}.bin`;
+      const signedAnonymousCloudPath = `${signedAnonymous.id}/e1/phase9-anonymous-${randomUUID()}.bin`;
+      const signedAnonymousUpdatePath = `${signedAnonymous.id}/e1/phase9-anonymous-update-${randomUUID()}.bin`;
       const originalObjectBody = 'phase9 live adversarial object';
       const ownerUpdatedObjectBody = 'phase9 live adversarial owner update';
       const signedAnonymousOriginalBody = 'phase9 signed anonymous seeded object';
@@ -2091,7 +2136,7 @@ async function main() {
         'photo metadata local-only storage path insert',
         userA.client.from('photos').insert({
           user_id: userA.id,
-          storage_path: `${userA.id}/phase9-local-only-${randomUUID()}.bin`,
+          storage_path: `${userA.id}/e1/phase9-local-only-${randomUUID()}.bin`,
           local_only: true,
           face_region_redacted: true,
         }),
@@ -2231,6 +2276,21 @@ async function main() {
       const absentUuid = '00000000-0000-0000-0000-000000000000';
       const absentDigest = '0'.repeat(64);
       registerSealedPrivateTableProbe(
+        'health_processing_states',
+        'user_id',
+        absentUuid,
+      );
+      registerSealedPrivateTableProbe(
+        'health_consent_withdrawal_operations',
+        'id',
+        absentUuid,
+      );
+      registerSealedPrivateTableProbe(
+        'health_consent_withdrawal_steps',
+        'operation_id',
+        absentUuid,
+      );
+      registerSealedPrivateTableProbe(
         'account_publication_leases',
         'capability_digest',
         absentDigest,
@@ -2340,7 +2400,7 @@ async function main() {
       registerPrivateTableProbe('edge_rate_limits', 'key_hash', rateLimit.key_hash);
     });
 
-    await runCheck('all 47 private tables have access-control probes', async () => {
+    await runCheck('all 50 private tables have access-control probes', async () => {
       const registeredTables = [...privateTableProbes.keys()].sort();
       const expectedTables = [...PRIVATE_PUBLIC_TABLES].sort();
       assert(

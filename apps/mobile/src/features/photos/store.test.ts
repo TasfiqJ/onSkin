@@ -6,17 +6,24 @@ import {
   endAccountGenerationBoundary,
   waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
+import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 
 import { addPhoto, clearPhotos, loadPhotos, PHOTO_METADATA_INVALID, removePhoto } from './store';
 
 const mocks = vi.hoisted(() => ({
   decryptPhotoNoteError: null as Error | null,
+  clearEncryptedPhotoStorage: vi.fn(),
   storage: new Map<string, string>(),
   deleteCapturedPhotoSource: vi.fn(),
   deleteQuarantinedPhoto: vi.fn(),
   encryptCapturedPhoto: vi.fn(),
   from: vi.fn(),
   getPrivateItemError: null as Error | null,
+  getPrivateItemGate: null as Promise<void> | null,
+  getPrivateItemStarted: null as (() => void) | null,
   quarantineEncryptedPhoto: vi.fn(),
   quarantineError: null as Error | null,
   randomIds: [] as string[],
@@ -35,6 +42,8 @@ vi.mock('expo-crypto', () => ({
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => {
     if (mocks.getPrivateItemError) throw mocks.getPrivateItemError;
+    mocks.getPrivateItemStarted?.();
+    if (mocks.getPrivateItemGate) await mocks.getPrivateItemGate;
     return mocks.storage.get(key) ?? null;
   }),
   setPrivateItem: vi.fn(async (key: string, value: string) => {
@@ -53,6 +62,7 @@ vi.mock('@/lib/supabase/client', () => ({
 }));
 
 vi.mock('./encryptedStorage', () => ({
+  clearEncryptedPhotoStorage: mocks.clearEncryptedPhotoStorage,
   decryptPhotoNote: vi.fn(async (ciphertext: string) => {
     if (mocks.decryptPhotoNoteError) throw mocks.decryptPhotoNoteError;
     return `note:${ciphertext}`;
@@ -77,16 +87,20 @@ vi.mock('./encryptedStorage', () => ({
 }));
 
 const KEY = 'onskin.photos.v1';
+let testAccountGeneration = 0;
 
 describe('photo local store recovery', () => {
   beforeEach(() => {
     mocks.decryptPhotoNoteError = null;
+    mocks.clearEncryptedPhotoStorage.mockReset();
     mocks.storage.clear();
     mocks.deleteCapturedPhotoSource.mockReset();
     mocks.deleteQuarantinedPhoto.mockReset();
     mocks.encryptCapturedPhoto.mockReset();
     mocks.from.mockClear();
     mocks.getPrivateItemError = null;
+    mocks.getPrivateItemGate = null;
+    mocks.getPrivateItemStarted = null;
     mocks.quarantineEncryptedPhoto.mockReset();
     mocks.quarantineError = null;
     mocks.randomIds = [];
@@ -98,6 +112,7 @@ describe('photo local store recovery', () => {
     mocks.setPrivateItemStarted = null;
 
     mocks.deleteCapturedPhotoSource.mockResolvedValue(undefined);
+    mocks.clearEncryptedPhotoStorage.mockResolvedValue(undefined);
     mocks.deleteQuarantinedPhoto.mockResolvedValue(undefined);
     mocks.encryptCapturedPhoto.mockImplementation(async (uri: string, id: string) => ({
       encryptedLocalUri: `${uri}.${id}.onskinphoto`,
@@ -116,6 +131,10 @@ describe('photo local store recovery', () => {
       mocks.storage.delete(key);
     });
     mocks.restoreQuarantinedPhoto.mockResolvedValue(undefined);
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'user-a',
+      accountGeneration: testAccountGeneration,
+    });
   });
 
   it('propagates encrypted private-store failures without replacing photo metadata', async () => {
@@ -287,6 +306,7 @@ describe('photo local store recovery', () => {
     await firstWriteStarted;
     const queuedClear = clearPhotos();
     beginAccountGenerationBoundary();
+    testAccountGeneration += 1;
 
     try {
       let drainFinished = false;
@@ -306,6 +326,63 @@ describe('photo local store recovery', () => {
     } finally {
       endAccountGenerationBoundary();
     }
+  });
+
+  it('rejects an epoch-1 photo queued behind a write after withdrawal and epoch-2 re-grant', async () => {
+    mocks.randomIds = ['photo-a', 'photo-b'];
+    let releaseFirstWrite!: () => void;
+    let markFirstWriteStarted!: () => void;
+    mocks.setPrivateItemGate = new Promise<void>((resolve) => {
+      releaseFirstWrite = resolve;
+    });
+    const firstWriteStarted = new Promise<void>((resolve) => {
+      markFirstWriteStarted = resolve;
+    });
+    mocks.setPrivateItemStarted = markFirstWriteStarted;
+
+    const first = addPhoto({ takenLocalDate: '2026-07-03', localUri: 'file:///first.jpg' });
+    await firstWriteStarted;
+    const queued = addPhoto({ takenLocalDate: '2026-07-04', localUri: 'file:///second.jpg' });
+
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(2, {
+      ownerUserId: 'user-a',
+      accountGeneration: testAccountGeneration,
+    });
+    releaseFirstWrite();
+
+    await expect(first).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    await expect(queued).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.encryptCapturedPhoto).toHaveBeenCalledTimes(1);
+    expect(mocks.encryptCapturedPhoto).not.toHaveBeenCalledWith(
+      'file:///second.jpg',
+      expect.anything(),
+    );
+  });
+
+  it('does not return account-A photo plaintext after an A-to-B same-epoch switch', async () => {
+    mocks.storage.set(KEY, JSON.stringify([{ id: 'photo-a', takenLocalDate: '2026-07-01' }]));
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.getPrivateItemGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.getPrivateItemStarted = markReadStarted;
+
+    const pending = loadPhotos();
+    await readStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'user-b',
+      accountGeneration: testAccountGeneration,
+    });
+    releaseRead();
+
+    await expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+    expect(mocks.reconcileEncryptedPhotoStorage).not.toHaveBeenCalled();
   });
 
   it('keeps metadata intact when a photo cannot be quarantined for deletion', async () => {
@@ -418,7 +495,7 @@ describe('photo local store recovery', () => {
     expect(mocks.from).not.toHaveBeenCalled();
   });
 
-  it('clears encrypted photo and thumbnail envelopes', async () => {
+  it('clears photo metadata and encrypted envelopes without decrypting the metadata log', async () => {
     mocks.storage.set(
       KEY,
       JSON.stringify([
@@ -432,17 +509,12 @@ describe('photo local store recovery', () => {
       ]),
     );
 
+    clearActiveHealthProcessingEpoch();
     await clearPhotos();
 
-    expect(mocks.quarantineEncryptedPhoto).toHaveBeenCalledWith(
-      'file:///photo-1.onskinphoto',
-      expect.stringMatching(/^clear-/),
-    );
-    expect(mocks.quarantineEncryptedPhoto).toHaveBeenCalledWith(
-      'file:///photo-1-thumb.onskinphoto',
-      expect.stringMatching(/^clear-/),
-    );
-    expect(mocks.deleteQuarantinedPhoto).toHaveBeenCalledTimes(2);
+    expect(mocks.getPrivateItemStarted).toBeNull();
+    expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledOnce();
+    expect(mocks.quarantineEncryptedPhoto).not.toHaveBeenCalled();
     expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

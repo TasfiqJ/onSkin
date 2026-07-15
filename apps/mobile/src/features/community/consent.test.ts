@@ -1,83 +1,62 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import {
+  confirmCommunityAge,
+  grantCommunityConsent,
+  isCommunityConsented,
+  withdrawCommunityConsent,
+} from './consent';
+
 const mocks = vi.hoisted(() => ({
-  getLatestConsents: vi.fn(),
-  recordConsent: vi.fn(),
+  active: vi.fn(),
+  grant: vi.fn(),
+  withdraw: vi.fn(),
+  clear: vi.fn(),
+  age: vi.fn(),
   track: vi.fn(),
-  withdrawConsent: vi.fn(),
-  getCommunityConsentLocal: vi.fn(),
-  setAgeConfirmedLocal: vi.fn(),
-  setCommunityConsentLocal: vi.fn(),
 }));
-
-vi.mock('@/lib/analytics/track', () => ({
-  track: mocks.track,
+vi.mock('@/lib/consent/dependentConsentLifecycle', () => ({
+  isHealthDependentConsentActive: mocks.active,
+  grantHealthDependentConsent: mocks.grant,
+  withdrawHealthDependentConsent: mocks.withdraw,
 }));
-
-vi.mock('@/lib/consent/consent', () => ({
-  getLatestConsents: mocks.getLatestConsents,
-  recordConsent: mocks.recordConsent,
-}));
-
-vi.mock('@/lib/consent/withdrawal', () => ({
-  withdrawConsent: mocks.withdrawConsent,
-}));
-
 vi.mock('./store', () => ({
-  getCommunityConsentLocal: mocks.getCommunityConsentLocal,
-  setAgeConfirmedLocal: mocks.setAgeConfirmedLocal,
-  setCommunityConsentLocal: mocks.setCommunityConsentLocal,
+  clearCommunityState: mocks.clear,
+  setAgeConfirmedLocal: mocks.age,
 }));
+vi.mock('@/lib/analytics/track', () => ({ track: mocks.track }));
 
-describe('community consent persistence', () => {
+describe('community dependent consent facade', () => {
   beforeEach(() => {
-    mocks.getLatestConsents.mockReset();
-    mocks.recordConsent.mockReset();
-    mocks.track.mockReset();
-    mocks.withdrawConsent.mockReset();
-    mocks.getCommunityConsentLocal.mockReset();
-    mocks.setAgeConfirmedLocal.mockReset();
-    mocks.setCommunityConsentLocal.mockReset();
-    mocks.recordConsent.mockResolvedValue(undefined);
-    mocks.withdrawConsent.mockResolvedValue(undefined);
-    mocks.getCommunityConsentLocal.mockResolvedValue(false);
-    mocks.setAgeConfirmedLocal.mockResolvedValue(undefined);
-    mocks.setCommunityConsentLocal.mockResolvedValue(undefined);
+    for (const mock of Object.values(mocks)) mock.mockReset();
+    mocks.active.mockResolvedValue(false);
+    mocks.grant.mockResolvedValue(undefined);
+    mocks.withdraw.mockResolvedValue(undefined);
+    mocks.age.mockResolvedValue(undefined);
   });
 
-  it('records community grant analytics only after the consent ledger saves', async () => {
-    const { grantCommunityConsent } = await import('./consent');
-
-    await expect(grantCommunityConsent()).resolves.toBeUndefined();
-
-    expect(mocks.setCommunityConsentLocal).toHaveBeenCalledWith(true);
-    expect(mocks.recordConsent).toHaveBeenCalledWith(
-      expect.objectContaining({ type: 'community_participation', granted: true }),
-    );
-    expect(mocks.track).toHaveBeenCalledWith('community_consent_granted');
-    expect(mocks.recordConsent.mock.invocationCallOrder[0]).toBeLessThan(
-      mocks.track.mock.invocationCallOrder[0],
-    );
+  it('has no boolean/offline fallback for community disclosure', async () => {
+    await isCommunityConsented();
+    expect(mocks.active).toHaveBeenCalledWith('community_participation', {
+      deleteLocalOnAuthoritativeClose: mocks.clear,
+    });
   });
 
-  it('keeps local-first community consent when the consent ledger mirror fails', async () => {
-    const { grantCommunityConsent } = await import('./consent');
-    mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
-
-    await expect(grantCommunityConsent()).resolves.toBeUndefined();
-
-    expect(mocks.setCommunityConsentLocal).toHaveBeenCalledTimes(1);
-    expect(mocks.setCommunityConsentLocal).toHaveBeenCalledWith(true);
-    expect(mocks.track).not.toHaveBeenCalledWith('community_consent_granted');
+  it('keeps age affirmation separate', async () => {
+    await confirmCommunityAge();
+    expect(mocks.age).toHaveBeenCalledWith(true);
+    expect(mocks.grant).not.toHaveBeenCalled();
   });
 
-  it('records the age gate separately from community consent', async () => {
-    const { confirmCommunityAge } = await import('./consent');
-
-    await expect(confirmCommunityAge()).resolves.toBeUndefined();
-
-    expect(mocks.setAgeConfirmedLocal).toHaveBeenCalledWith(true);
-    expect(mocks.recordConsent).not.toHaveBeenCalled();
-    expect(mocks.track).not.toHaveBeenCalled();
+  it('tracks only successful grant and withdrawal operations', async () => {
+    await grantCommunityConsent();
+    await withdrawCommunityConsent();
+    expect(mocks.withdraw).toHaveBeenCalledWith({
+      type: 'community_participation',
+      deleteLocal: mocks.clear,
+    });
+    mocks.withdraw.mockRejectedValueOnce(new Error('pending'));
+    await expect(withdrawCommunityConsent()).rejects.toThrow('pending');
+    expect(mocks.track).toHaveBeenCalledTimes(2);
   });
 });

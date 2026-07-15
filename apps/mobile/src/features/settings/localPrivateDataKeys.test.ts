@@ -9,6 +9,7 @@ import {
   LOCAL_PRIVATE_DATA_KEYS,
   LOCAL_PRIVATE_METADATA_KEYS,
   LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
+  LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES,
   LOCAL_PRIVATE_SECURE_STORE_KEYS,
 } from './localPrivateDataKeys';
 
@@ -31,6 +32,7 @@ describe('local private data registry', () => {
       ...LOCAL_PRIVATE_DATA_KEYS,
       ...LOCAL_PRIVATE_METADATA_KEYS,
       ...LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
+      ...LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES,
       ...LOCAL_PRIVATE_SECURE_STORE_KEYS,
     ]);
     const discovered = new Set<string>();
@@ -51,6 +53,7 @@ describe('local private data registry', () => {
       ...LOCAL_PRIVATE_DATA_KEYS,
       ...LOCAL_PRIVATE_METADATA_KEYS,
       ...LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
+      ...LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES,
       ...LOCAL_PRIVATE_SECURE_STORE_KEYS,
     ];
     expect(new Set(all).size).toBe(all.length);

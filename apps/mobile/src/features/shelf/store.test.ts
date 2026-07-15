@@ -1,7 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+
+import {
   addProduct,
+  clearShelf,
   loadShelf,
   reAddProduct,
   removeProduct,
@@ -15,6 +21,8 @@ const mocks = vi.hoisted(() => ({
   nextId: 0,
   tails: new Map<string, Promise<void>>(),
   updateFailure: null as Error | null,
+  updateGate: null as Promise<void> | null,
+  updateStarted: null as (() => void) | null,
 }));
 
 vi.mock('expo-crypto', () => ({
@@ -37,6 +45,8 @@ vi.mock('@/lib/storage/privateKV', () => ({
       await previous;
       try {
         if (mocks.updateFailure) throw mocks.updateFailure;
+        mocks.updateStarted?.();
+        if (mocks.updateGate) await mocks.updateGate;
         const next = updater(mocks.storage.get(key) ?? null);
         if (next === null) mocks.storage.delete(key);
         else mocks.storage.set(key, next);
@@ -63,6 +73,9 @@ describe('shelf local store recovery', () => {
     mocks.nextId = 0;
     mocks.tails.clear();
     mocks.updateFailure = null;
+    mocks.updateGate = null;
+    mocks.updateStarted = null;
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
   it('preserves malformed persisted shelf JSON', async () => {
@@ -334,5 +347,37 @@ describe('shelf local store recovery', () => {
     );
 
     expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('rejects a queued write after close and same-epoch regrant without changing shelf bytes', async () => {
+    const product = await addProduct({ name: 'Cleanser', addedVia: 'manual' });
+    const original = mocks.storage.get(KEY);
+    let releaseUpdate!: () => void;
+    mocks.updateGate = new Promise<void>((resolve) => {
+      releaseUpdate = resolve;
+    });
+    const updateStarted = new Promise<void>((resolve) => {
+      mocks.updateStarted = resolve;
+    });
+
+    const pending = updateProduct(product.id, { brand: 'Stale brand' });
+    await updateStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
+    const rejection = expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+
+    releaseUpdate();
+    await rejection;
+
+    expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('clears shelf bytes after health processing closes', async () => {
+    await addProduct({ name: 'Cleanser', addedVia: 'manual' });
+    clearActiveHealthProcessingEpoch();
+
+    await clearShelf();
+
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

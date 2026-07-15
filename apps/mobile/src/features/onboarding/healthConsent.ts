@@ -1,17 +1,10 @@
 import type { QueryClient } from '@tanstack/react-query';
 
-import { recordConsent } from '@/lib/consent/consent';
-
-import { HEALTH_DATA_CONSENT } from './consentCopy';
-import { setHealthDataCollectionConsentLocal } from './healthConsentStore';
-
-type RecordConsent = typeof recordConsent;
-
-type HealthConsentDeps = {
-  recordConsent: RecordConsent;
-};
-
-const defaultDeps: HealthConsentDeps = { recordConsent };
+import {
+  declineAuthoritativeInitialHealthDataConsent,
+  grantAuthoritativeHealthDataConsent,
+  reconcileHealthDataLifecycle,
+} from '@/features/healthConsent/lifecycle';
 
 export async function resetHealthProfileConsumers(queryClient: QueryClient): Promise<void> {
   await Promise.all([
@@ -22,41 +15,33 @@ export async function resetHealthProfileConsumers(queryClient: QueryClient): Pro
 }
 
 export async function grantHealthDataCollectionConsent(
-  deps: HealthConsentDeps = defaultDeps,
-): Promise<void> {
-  await setHealthDataCollectionConsentLocal({
-    granted: true,
-    version: HEALTH_DATA_CONSENT.version,
-    consentText: HEALTH_DATA_CONSENT.fullText,
-  });
-  try {
-    await deps.recordConsent({
-      type: 'health_data_collection',
-      granted: true,
-      version: HEALTH_DATA_CONSENT.version,
-      consentText: HEALTH_DATA_CONSENT.fullText,
+  ownerUserId: string,
+) {
+  const lifecycle = await reconcileHealthDataLifecycle(ownerUserId);
+  if (lifecycle.state === 'active') {
+    return grantAuthoritativeHealthDataConsent({
+      ownerUserId,
+      expectedProcessingEpoch: lifecycle.processingEpoch,
     });
-  } catch {
-    /* offline / no anonymous session. Keep the local-first consent proof. */
   }
+  if (
+    lifecycle.state !== 'unconsented' &&
+    !(lifecycle.state === 'withdrawn' && lifecycle.localCleanupComplete)
+  ) {
+    throw new Error('HEALTH_DATA_CONSENT_NOT_GRANTABLE');
+  }
+  return grantAuthoritativeHealthDataConsent({
+    ownerUserId,
+    expectedProcessingEpoch: lifecycle.processingEpoch,
+  });
 }
 
 export async function declineHealthDataCollectionConsent(
-  deps: HealthConsentDeps = defaultDeps,
+  ownerUserId: string,
 ): Promise<void> {
-  await setHealthDataCollectionConsentLocal({
-    granted: false,
-    version: HEALTH_DATA_CONSENT.version,
-    consentText: HEALTH_DATA_CONSENT.declineText,
-  });
-  try {
-    await deps.recordConsent({
-      type: 'health_data_collection',
-      granted: false,
-      version: HEALTH_DATA_CONSENT.version,
-      consentText: HEALTH_DATA_CONSENT.declineText,
-    });
-  } catch {
-    /* Declines are recorded locally first; ledger decline is best-effort pre-account. */
+  const lifecycle = await reconcileHealthDataLifecycle(ownerUserId);
+  if (lifecycle.state !== 'unconsented') {
+    throw new Error('HEALTH_DATA_CONSENT_DECLINE_NOT_ALLOWED');
   }
+  await declineAuthoritativeInitialHealthDataConsent(ownerUserId);
 }

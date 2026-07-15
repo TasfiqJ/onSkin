@@ -1,5 +1,9 @@
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 import { localDateString } from '@/features/today/useToday';
+import {
+  runCurrentHealthDataOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 
 import { applyTolerance, type RampState } from './ramp';
 
@@ -140,56 +144,81 @@ function encodeRampState(log: Log): string {
   return JSON.stringify({ version: SCHEMA_VERSION, ramps: log } satisfies RampEnvelope);
 }
 
-async function load(): Promise<Log> {
+async function load(lease: HealthDataWriteOperationLease): Promise<Log> {
   try {
-    return decodeRampState(await getPrivateItem(KEY));
+    lease.assertCurrent();
+    const raw = await getPrivateItem(KEY);
+    lease.assertCurrent();
+    const log = decodeRampState(raw);
+    lease.assertCurrent();
+    return log;
   } catch {
     // Never repair/delete unreadable, unavailable, or future private bytes on read.
+    lease.assertCurrent();
     return {};
   }
 }
 
-export async function getStoredRamps(): Promise<Log> {
-  return load();
+export function getStoredRamps(): Promise<Log> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    const log = await load(lease);
+    lease.assertCurrent();
+    return log;
+  });
 }
 
 /** Seed a product's ramp from the generated initial the first time it is seen. */
 export async function ensureRamp(productId: string, initial: RampState): Promise<StoredRamp> {
   const normalizedProductId = productId.trim();
   if (normalizedProductId.length === 0) throw new Error(RAMP_STATE_INVALID);
-  let result: StoredRamp | null = null;
-  await updatePrivateItem(KEY, (current) => {
-    const log = decodeRampState(current);
-    result = log[normalizedProductId] ?? {
-      ...initial,
-      startedAt: localDateString(),
-      lastStepUp: null,
-    };
-    const normalized = normalizeStoredRamp(result, localDateString());
-    if (!normalized) throw new Error(RAMP_STATE_INVALID);
-    result = normalized;
-    log[normalizedProductId] = normalized;
-    return encodeRampState(log);
+  return runCurrentHealthDataOperation(async (lease) => {
+    let result: StoredRamp | null = null;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const log = decodeRampState(current);
+      result = log[normalizedProductId] ?? {
+        ...initial,
+        startedAt: localDateString(),
+        lastStepUp: null,
+      };
+      const normalized = normalizeStoredRamp(result, localDateString());
+      if (!normalized) throw new Error(RAMP_STATE_INVALID);
+      result = normalized;
+      log[normalizedProductId] = normalized;
+      lease.assertCurrent();
+      return encodeRampState(log);
+    });
+    lease.assertCurrent();
+    if (!result) throw new Error('RAMP_STATE_WRITE_FAILED');
+    return result;
   });
-  if (!result) throw new Error('RAMP_STATE_WRITE_FAILED');
-  return result;
 }
 
 /** Accept a step-up offer: +1 night toward target, mark steady, stamp lastStepUp. */
 export async function stepUpRamp(productId: string): Promise<void> {
   const normalizedProductId = productId.trim();
   if (normalizedProductId.length === 0) return;
-  await updatePrivateItem(KEY, (current) => {
-    const log = decodeRampState(current);
-    const ramp = log[normalizedProductId];
-    if (!ramp) return current;
-    log[normalizedProductId] = {
-      ...ramp,
-      freqPerWeek: Math.min(ramp.targetPerWeek, ramp.freqPerWeek + 1),
-      toleranceState: 'steady',
-      lastStepUp: localDateString(),
-    };
-    return encodeRampState(log);
+  await runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const log = decodeRampState(current);
+      const ramp = log[normalizedProductId];
+      if (!ramp) {
+        lease.assertCurrent();
+        return current;
+      }
+      log[normalizedProductId] = {
+        ...ramp,
+        freqPerWeek: Math.min(ramp.targetPerWeek, ramp.freqPerWeek + 1),
+        toleranceState: 'steady',
+        lastStepUp: localDateString(),
+      };
+      lease.assertCurrent();
+      return encodeRampState(log);
+    });
+    lease.assertCurrent();
   });
 }
 
@@ -198,17 +227,24 @@ export async function stepUpRamp(productId: string): Promise<void> {
 export async function applyToleranceToRamps(
   answer: 'comfortable' | 'a_bit_dry' | 'irritated',
 ): Promise<void> {
-  await updatePrivateItem(KEY, (current) => {
-    const log = decodeRampState(current);
-    for (const [id, ramp] of Object.entries(log)) {
-      const next = applyTolerance(ramp, answer);
-      log[id] = { ...ramp, ...next };
-    }
-    return Object.keys(log).length > 0 ? encodeRampState(log) : current;
+  await runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const log = decodeRampState(current);
+      for (const [id, ramp] of Object.entries(log)) {
+        const next = applyTolerance(ramp, answer);
+        log[id] = { ...ramp, ...next };
+      }
+      lease.assertCurrent();
+      return Object.keys(log).length > 0 ? encodeRampState(log) : current;
+    });
+    lease.assertCurrent();
   });
 }
 
 /** Test/seed reset. */
 export async function clearRamps(): Promise<void> {
+  // Closed-consent cleanup: deletion is account-scoped and never reads plaintext.
   await removePrivateItem(KEY);
 }

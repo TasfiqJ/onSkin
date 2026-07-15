@@ -2,6 +2,7 @@ import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 import * as StoreReview from 'expo-store-review';
 
 import { track } from '@/lib/analytics/track';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { env } from '@/lib/env';
 
 import {
@@ -130,42 +131,54 @@ export async function requestReviewAfterValue(
   moment: ReviewValueMoment,
   now: Date = new Date(),
 ): Promise<void> {
-  const state = await loadState(now);
-  if (!state) {
-    track('review_prompt_unavailable', { moment });
-    return;
-  }
-  const decision = canRequestReviewPrompt({
-    enabled: env.phase8ReviewPromptEnabled,
-    moment,
-    state,
-    now,
+  await runCurrentHealthDataOperation(async (lease) => {
+    const state = await loadState(now);
+    lease.assertCurrent();
+    if (!state) {
+      track('review_prompt_unavailable', { moment });
+      return;
+    }
+    const decision = canRequestReviewPrompt({
+      enabled: env.phase8ReviewPromptEnabled,
+      moment,
+      state,
+      now,
+    });
+
+    if (!decision.ok) {
+      track('review_prompt_skipped', { moment, reason: decision.reason });
+      return;
+    }
+
+    let platformAvailable = false;
+    try {
+      platformAvailable = await StoreReview.hasAction();
+    } catch {
+      lease.assertCurrent();
+      platformAvailable = false;
+    }
+    lease.assertCurrent();
+    if (!platformAvailable) {
+      track('review_prompt_unavailable', { moment });
+      return;
+    }
+
+    // Reserve the attempt durably before invoking the native prompt. This keeps
+    // simultaneous callers and a crash after native handoff from double-prompting.
+    if (!(await reserveReviewAttempt(moment, now))) {
+      lease.assertCurrent();
+      return;
+    }
+    lease.assertCurrent();
+
+    track('review_prompt_attempted', { moment });
+    lease.assertCurrent();
+    try {
+      await StoreReview.requestReview();
+      lease.assertCurrent();
+    } catch {
+      lease.assertCurrent();
+      track('review_prompt_unavailable', { moment });
+    }
   });
-
-  if (!decision.ok) {
-    track('review_prompt_skipped', { moment, reason: decision.reason });
-    return;
-  }
-
-  let platformAvailable = false;
-  try {
-    platformAvailable = await StoreReview.hasAction();
-  } catch {
-    platformAvailable = false;
-  }
-  if (!platformAvailable) {
-    track('review_prompt_unavailable', { moment });
-    return;
-  }
-
-  // Reserve the attempt durably before invoking the native prompt. This keeps
-  // simultaneous callers and a crash after native handoff from double-prompting.
-  if (!(await reserveReviewAttempt(moment, now))) return;
-
-  track('review_prompt_attempted', { moment });
-  try {
-    await StoreReview.requestReview();
-  } catch {
-    track('review_prompt_unavailable', { moment });
-  }
 }

@@ -1,6 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+
+import {
+  clearStoredSkinProfile,
   getStoredSkinProfile,
   isOnboardedLocal,
   readStoredSkinProfile,
@@ -17,6 +23,8 @@ const mocks = vi.hoisted(() => {
   return {
     storage,
     getPrivateItem: vi.fn(async (key: string) => storage.get(key) ?? null),
+    getPrivateItemGate: null as Promise<void> | null,
+    getPrivateItemStarted: null as (() => void) | null,
     tails: new Map<string, Promise<void>>(),
     updateFailure: null as Error | null,
   };
@@ -74,9 +82,16 @@ describe('skin profile local onboarding gate store', () => {
   beforeEach(() => {
     mocks.storage.clear();
     mocks.getPrivateItem.mockReset();
-    mocks.getPrivateItem.mockImplementation(async (key: string) => mocks.storage.get(key) ?? null);
+    mocks.getPrivateItemGate = null;
+    mocks.getPrivateItemStarted = null;
+    mocks.getPrivateItem.mockImplementation(async (key: string) => {
+      mocks.getPrivateItemStarted?.();
+      if (mocks.getPrivateItemGate) await mocks.getPrivateItemGate;
+      return mocks.storage.get(key) ?? null;
+    });
     mocks.tails.clear();
     mocks.updateFailure = null;
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
   it('preserves malformed skin profile JSON for explicit recovery', async () => {
@@ -264,5 +279,37 @@ describe('skin profile local onboarding gate store', () => {
     await expect(updateStoredPregnancyStatus('pregnant')).rejects.toThrow('PRIVATE_WRITE_FAILED');
 
     expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('rejects an A-to-B same-epoch read instead of publishing a fail-soft result', async () => {
+    await setStoredSkinProfile({
+      result: RESULT,
+      goals: ['clear_skin'],
+      completedAt: '2026-07-07T00:00:00.000Z',
+    });
+    let releaseRead!: () => void;
+    mocks.getPrivateItemGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      mocks.getPrivateItemStarted = resolve;
+    });
+
+    const pending = readStoredSkinProfile();
+    await readStarted;
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-b', accountGeneration: 0 });
+    const rejection = expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+
+    releaseRead();
+    await rejection;
+  });
+
+  it('clears the stored profile after health processing closes', async () => {
+    mocks.storage.set(KEY, 'private-profile-bytes');
+    clearActiveHealthProcessingEpoch();
+
+    await clearStoredSkinProfile();
+
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

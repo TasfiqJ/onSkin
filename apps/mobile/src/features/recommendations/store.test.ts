@@ -14,7 +14,17 @@ const mocks = vi.hoisted(() => ({
   tails: new Map<string, Promise<void>>(),
   updateFailure: null as Error | null,
   getUser: vi.fn(async () => ({ data: { user: null as { id: string } | null } })),
+  runHealthDataWriteOperation: vi.fn(),
   upsert: vi.fn(async () => ({ error: null })),
+}));
+
+vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
+  activeHealthProcessingOwnerUserId: () => 'user-1',
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED: 'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+  runHealthDataWriteOperation: mocks.runHealthDataWriteOperation,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -45,6 +55,7 @@ vi.mock('@/lib/storage/privateKV', () => ({
 }));
 
 vi.mock('@/lib/supabase/client', () => ({
+  getPersistedSupabaseUser: mocks.getUser,
   supabase: {
     auth: {
       getUser: mocks.getUser,
@@ -62,6 +73,13 @@ describe('recommendation local store recovery', () => {
     mocks.tails.clear();
     mocks.updateFailure = null;
     mocks.getUser.mockClear();
+    mocks.runHealthDataWriteOperation.mockReset();
+    mocks.runHealthDataWriteOperation.mockImplementation(
+      async (
+        ownerUserId: string,
+        operation: (lease: { ownerUserId: string; assertCurrent: () => void }) => unknown,
+      ) => operation({ ownerUserId, assertCurrent: vi.fn() }),
+    );
     mocks.upsert.mockClear();
   });
 

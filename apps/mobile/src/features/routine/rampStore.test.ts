@@ -1,9 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { localDateString } from '@/features/today/useToday';
+import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 
 import {
   applyToleranceToRamps,
+  clearRamps,
   ensureRamp,
   getStoredRamps,
   RAMP_STATE_INVALID,
@@ -51,6 +56,7 @@ describe('routine ramp persistence', () => {
     mocks.storage.clear();
     mocks.tails.clear();
     mocks.updateFailure = null;
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
   it('preserves unreadable ramp state and returns a fail-closed empty view', async () => {
@@ -190,5 +196,14 @@ describe('routine ramp persistence', () => {
       version: 1,
       ramps: { retinol: { freqPerWeek: 4 } },
     });
+  });
+
+  it('clears ramp bytes after health processing closes', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ version: 1, ramps: {} }));
+    clearActiveHealthProcessingEpoch();
+
+    await clearRamps();
+
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

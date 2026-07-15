@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
 import { usePhotos } from '@/features/photos/usePhotos';
+import { runHealthDataWriteOperation } from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { supabase } from '@/lib/supabase/client';
 
 import { isTrendInsightsConsented } from './consent';
@@ -17,17 +19,24 @@ import { classifyChange, MIN_CAPTURES } from './trend';
 // Nothing is uploaded; there is no score, ever.
 
 async function readMonkBand(): Promise<number | null> {
-  try {
-    const { data } = await supabase
-      .from('skin_profiles')
-      .select('monk_tone')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    return data?.monk_tone ?? null;
-  } catch {
-    return null;
-  }
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) return null;
+  return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    try {
+      lease.assertCurrent();
+      const { data } = await supabase
+        .from('skin_profiles')
+        .select('monk_tone')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      lease.assertCurrent();
+      return data?.monk_tone ?? null;
+    } catch {
+      lease.assertCurrent();
+      return null;
+    }
+  });
 }
 
 export function useTrendConsent() {

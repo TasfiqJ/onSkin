@@ -75,9 +75,18 @@ describe('settings privacy choice application', () => {
     expect(source).not.toContain("Alert.alert('Encrypted cloud backup'");
     expect(source).toContain("disabled={savingPrivacy === 'marketing'}");
     expect(source).toContain("disabled={savingPrivacy === 'data_sharing'}");
-    expect(source).toContain("if (type !== 'data_sharing') throw error;");
-    expect(source).not.toContain("if (type === 'data_sharing' && granted)");
-    expect(source).not.toContain('await setCommerceConsentLocal(false).catch(() => undefined);');
+    expect(source).toContain('if (granted) await grantCommerceConsent();');
+    expect(source).toContain('else await declineCommerceConsent();');
+    expect(source).not.toContain('withdrawConsent');
+    expect(source).toContain('await recordConsent({');
+    expect(source).toContain('granted: false,');
+    expect(source).not.toContain('setCommerceConsentLocal');
+    expect(source).toContain('runHealthDataOperation(initiatingHealthLease.ownerUserId');
+    expect(source).toContain('runAccountGenerationOperation((lease) =>');
+    expect(source).toContain('expectedUserId: initiatingUserId');
+    expect(source).toContain('operationLease.assertCurrent();');
+    expect(source.indexOf('assertCurrent();\n            qc.setQueryData')).toBeGreaterThan(-1);
+    expect(source.indexOf('assertCurrent();\n            setPrivacyFeedback')).toBeGreaterThan(-1);
     expect(source).toContain('label="Progress photo storage"');
     expect(source).toContain('Cloud backup is not available in this build.');
     expect(source).toContain('Device only');
@@ -85,5 +94,15 @@ describe('settings privacy choice application', () => {
     expect(source).not.toContain('getCloudBackupEnabled');
     expect(source).not.toContain("track('cloud_backup_opted_in')");
     expect(source).not.toContain('accessibilityLabel="Encrypted cloud backup"');
+  });
+
+  it('separates never-consented commerce refusal from active settings withdrawal', () => {
+    const sheet = readSource('app/commerce/consent.tsx');
+    const settings = readSource('app/(tabs)/you.tsx');
+
+    expect(sheet).toContain('refuseCommerceConsent');
+    expect(sheet).not.toContain('declineCommerceConsent');
+    expect(settings).toContain('else await declineCommerceConsent();');
+    expect(settings).not.toContain('refuseCommerceConsent');
   });
 });

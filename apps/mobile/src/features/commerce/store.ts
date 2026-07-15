@@ -1,5 +1,6 @@
 import { randomUUID } from 'expo-crypto';
 
+import { runHealthDependentConsentOperation } from '@/lib/consent/dependentConsentLease';
 import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 import { getPrivateBoolean, setPrivateBoolean } from '@/lib/storage/privateBoolean';
 import { removePrivateItem } from '@/lib/storage/privateKV';
@@ -31,20 +32,30 @@ export function buildClickToken(): string {
 /** Mirror a content-free click event (owner-RLS). Never persists a health-adjacent
  *  key (guarded). Guarded for offline / no backend (B-SUPABASE). */
 export async function recordClick(payload: ClickPayload): Promise<void> {
-  if (!isHealthSafePayload(payload as unknown as Record<string, unknown>)) return;
-  try {
-    const { data } = await getPersistedSupabaseUser();
-    if (!data.user?.id) return;
-    await supabase.from('commerce_click_events').insert({
-      user_id: data.user.id,
-      click_token: payload.clickToken,
-      product_type: payload.productType,
-      source: payload.source,
-      consented: payload.consented,
-    });
-  } catch {
-    /* offline / no DB */
+  if (!isHealthSafePayload(payload as unknown as Record<string, unknown>)) {
+    throw new Error('COMMERCE_CLICK_PAYLOAD_INVALID');
   }
+  await runHealthDependentConsentOperation('data_sharing', async (lease) => {
+    lease.assertCurrent();
+    const { data } = await getPersistedSupabaseUser();
+    lease.assertCurrent();
+    if (data.user?.id !== lease.ownerUserId) {
+      throw new Error('HEALTH_DEPENDENT_CONSENT_OWNER_CHANGED');
+    }
+    lease.assertCurrent();
+    const { error } = await supabase
+      .from('commerce_click_events')
+      .insert({
+        user_id: lease.ownerUserId,
+        click_token: payload.clickToken,
+        product_type: payload.productType,
+        source: payload.source,
+        consented: payload.consented,
+      })
+      .abortSignal(lease.signal);
+    lease.assertCurrent();
+    if (error) throw error;
+  });
 }
 
 /** Test/seed reset. */

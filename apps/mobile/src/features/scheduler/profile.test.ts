@@ -15,7 +15,28 @@ const mocks = vi.hoisted(() => ({
   supabaseConfigured: false,
   serverData: null as Record<string, unknown> | null,
   from: vi.fn(),
+  leaseOpen: true,
   updateStoredPregnancyStatus: vi.fn(),
+}));
+
+vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
+  activeHealthProcessingOwnerUserId: () => 'user-1',
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED: 'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+  runHealthDataWriteOperation: async (
+    ownerUserId: string,
+    operation: (lease: { ownerUserId: string; assertCurrent: () => void }) => unknown,
+  ) => {
+    const assertCurrent = () => {
+      if (!mocks.leaseOpen) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    };
+    assertCurrent();
+    const result = await operation({ ownerUserId, assertCurrent });
+    assertCurrent();
+    return result;
+  },
 }));
 
 vi.mock('@/features/onboarding/skinProfileStore', () => ({
@@ -77,6 +98,7 @@ beforeEach(() => {
   mocks.consentCurrent = true;
   mocks.supabaseConfigured = false;
   mocks.serverData = null;
+  mocks.leaseOpen = true;
   mocks.from.mockReset();
   mocks.from.mockImplementation(() => {
     const query = {
@@ -190,6 +212,24 @@ describe('skin profile axis mapping', () => {
       consentCurrent: true,
       goals: ['anti_aging'],
     });
+  });
+
+  it('does not let the fail-soft server fallback swallow lease invalidation', async () => {
+    mocks.supabaseConfigured = true;
+    mocks.from.mockImplementationOnce(() => {
+      const query = {
+        select: vi.fn(() => query),
+        order: vi.fn(() => query),
+        limit: vi.fn(() => query),
+        maybeSingle: vi.fn(async () => {
+          mocks.leaseOpen = false;
+          return { data: { oily_dry: 2, sensitive_resistant: -2, goals: ['anti_aging'] } };
+        }),
+      };
+      return query;
+    });
+
+    await expect(readProfileBits()).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
   });
 
   it('withholds personal profile bits until the current consent text is granted', async () => {

@@ -1,4 +1,8 @@
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import {
+  runCurrentHealthDataOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 
 import {
   isConflictChoiceEligible,
@@ -218,78 +222,115 @@ function choicesForMutation(raw: string | null): ConflictChoices {
 
 /** Strict loader for write paths. Private-storage failures propagate so the UI
  * cannot claim a choice was saved or replace unreadable prior state. */
-export async function loadConflictChoices(): Promise<ConflictChoices> {
+async function loadConflictChoicesWithLease(
+  lease: HealthDataWriteOperationLease,
+): Promise<ConflictChoices> {
+  lease.assertCurrent();
   const raw = await getPrivateItem(KEY);
-  return raw === null ? {} : decodeChoices(raw);
+  lease.assertCurrent();
+  const choices = raw === null ? {} : decodeChoices(raw);
+  lease.assertCurrent();
+  return choices;
+}
+
+export async function loadConflictChoices(): Promise<ConflictChoices> {
+  return runCurrentHealthDataOperation((lease) => loadConflictChoicesWithLease(lease));
 }
 
 /** Conservative read for schedule/shelf rendering. If private state cannot be
  * read, the app falls back to the safer suggested schedule and may re-surface
  * the conflict rather than applying an unverified override. */
 export async function getConflictChoices(): Promise<ConflictChoices> {
-  try {
-    return await loadConflictChoices();
-  } catch {
-    return {};
-  }
+  return runCurrentHealthDataOperation(async (lease) => {
+    try {
+      return await loadConflictChoicesWithLease(lease);
+    } catch {
+      lease.assertCurrent();
+      return {};
+    }
+  });
 }
 
 export async function setConflictChoice(
   conflict: DetectedConflict,
   choice: ConflictUserChoice,
 ): Promise<ConflictChoices> {
-  if (!isConflictChoiceEligible(conflict)) {
-    throw new Error('CONFLICT_CHOICE_NOT_ELIGIBLE');
-  }
+  return runCurrentHealthDataOperation(async (lease) => {
+    if (!isConflictChoiceEligible(conflict)) {
+      throw new Error('CONFLICT_CHOICE_NOT_ELIGIBLE');
+    }
 
-  const identity = normalizedIdentity(conflict.rule.id, [conflict.productAId, conflict.productBId]);
-  if (!identity) throw new Error('CONFLICT_CHOICE_IDENTITY_INVALID');
+    const identity = normalizedIdentity(conflict.rule.id, [
+      conflict.productAId,
+      conflict.productBId,
+    ]);
+    if (!identity) throw new Error('CONFLICT_CHOICE_IDENTITY_INVALID');
 
-  let next: ConflictChoices = {};
-  await updatePrivateItem(KEY, (raw) => {
-    next = {
-      ...choicesForMutation(raw),
-      [identity.key]: {
-        choice,
-        ruleId: identity.ruleId,
-        ruleVersion: conflict.rule.ruleVersion,
-        productIds: identity.productIds,
-      },
-    };
-    return JSON.stringify({ schemaVersion: 1, choices: next });
+    let next: ConflictChoices = {};
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (raw) => {
+      lease.assertCurrent();
+      next = {
+        ...choicesForMutation(raw),
+        [identity.key]: {
+          choice,
+          ruleId: identity.ruleId,
+          ruleVersion: conflict.rule.ruleVersion,
+          productIds: identity.productIds,
+        },
+      };
+      lease.assertCurrent();
+      return JSON.stringify({ schemaVersion: 1, choices: next });
+    });
+    lease.assertCurrent();
+    return next;
   });
-  return next;
 }
 
 /** Compatibility adapter for existing badge helpers and older callers. */
 export async function getOverriddenKeys(): Promise<Set<string>> {
-  const choices = await getConflictChoices();
-  return new Set(
-    Object.entries(choices).flatMap(([key, record]) =>
-      record.choice === 'use_together' ? [key] : [],
-    ),
-  );
+  return runCurrentHealthDataOperation(async (lease) => {
+    let choices: ConflictChoices;
+    try {
+      choices = await loadConflictChoicesWithLease(lease);
+    } catch {
+      lease.assertCurrent();
+      choices = {};
+    }
+    lease.assertCurrent();
+    return new Set(
+      Object.entries(choices).flatMap(([key, record]) =>
+        record.choice === 'use_together' ? [key] : [],
+      ),
+    );
+  });
 }
 
 /** Legacy API retained for migrations/tests. New UI writes should use
  * setConflictChoice so rule version and pair identity come from detection. */
 export async function setConflictOverride(key: string, overridden: boolean): Promise<void> {
-  const identity = identityFromLegacyKey(key);
-  if (!identity) return;
-  await updatePrivateItem(KEY, (raw) => {
-    const next = { ...choicesForMutation(raw) };
-    if (overridden) {
-      next[identity.key] = {
-        choice: 'use_together',
-        ruleId: identity.ruleId,
-        ruleVersion: 1,
-        productIds: identity.productIds,
-      };
-    } else {
-      delete next[identity.key];
-    }
-    return Object.keys(next).length > 0
-      ? JSON.stringify({ schemaVersion: 1, choices: next })
-      : null;
+  await runCurrentHealthDataOperation(async (lease) => {
+    const identity = identityFromLegacyKey(key);
+    if (!identity) return;
+    lease.assertCurrent();
+    await updatePrivateItem(KEY, (raw) => {
+      lease.assertCurrent();
+      const next = { ...choicesForMutation(raw) };
+      if (overridden) {
+        next[identity.key] = {
+          choice: 'use_together',
+          ruleId: identity.ruleId,
+          ruleVersion: 1,
+          productIds: identity.productIds,
+        };
+      } else {
+        delete next[identity.key];
+      }
+      lease.assertCurrent();
+      return Object.keys(next).length > 0
+        ? JSON.stringify({ schemaVersion: 1, choices: next })
+        : null;
+    });
+    lease.assertCurrent();
   });
 }

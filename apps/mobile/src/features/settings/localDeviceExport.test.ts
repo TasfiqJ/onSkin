@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LOCAL_PRIVATE_DATA_KEYS } from './localPrivateDataKeys';
+import {
+  LOCAL_PRIVATE_DATA_KEYS,
+  LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
+  LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES,
+} from './localPrivateDataKeys';
 import {
   buildMobileDataExportBundle,
   collectLocalDeviceExportData,
@@ -8,24 +12,32 @@ import {
 } from './localDeviceExport';
 
 const mocks = vi.hoisted(() => ({
-  decryptPhotoNote: vi.fn(),
-  getPrivateItems: vi.fn(),
+  decryptPhotoNoteForPurposeLimitedExport: vi.fn(),
+  getPrivateItemsForPurposeLimitedExport: vi.fn(),
 }));
 
 vi.mock('@/features/photos/encryptedStorage', () => ({
-  decryptPhotoNote: mocks.decryptPhotoNote,
+  decryptPhotoNoteForPurposeLimitedExport: mocks.decryptPhotoNoteForPurposeLimitedExport,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItems: mocks.getPrivateItems,
+  getPrivateItemsForPurposeLimitedExport: mocks.getPrivateItemsForPurposeLimitedExport,
 }));
 
 describe('local device data export', () => {
+  const controller = new AbortController();
+  const accountLease = {
+    generation: 0,
+    signal: controller.signal,
+    assertCurrent: vi.fn(),
+  };
+
   beforeEach(() => {
-    mocks.decryptPhotoNote.mockReset();
-    mocks.getPrivateItems.mockReset();
-    mocks.decryptPhotoNote.mockResolvedValue(null);
-    mocks.getPrivateItems.mockResolvedValue(new Map());
+    accountLease.assertCurrent.mockReset();
+    mocks.decryptPhotoNoteForPurposeLimitedExport.mockReset();
+    mocks.getPrivateItemsForPurposeLimitedExport.mockReset();
+    mocks.decryptPhotoNoteForPurposeLimitedExport.mockResolvedValue(null);
+    mocks.getPrivateItemsForPurposeLimitedExport.mockResolvedValue(new Map());
   });
 
   it('accounts for every encrypted local private-data key exactly once', () => {
@@ -35,6 +47,19 @@ describe('local device data export', () => {
     expect(new Set(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).size).toBe(
       LOCAL_DEVICE_EXPORT_STORAGE_KEYS.length,
     );
+  });
+
+  it('never reads or exports durable privacy-request recovery capabilities', async () => {
+    await collectLocalDeviceExportData(accountLease, '2026-07-10T12:00:00.000Z');
+
+    const requested = mocks.getPrivateItemsForPurposeLimitedExport.mock
+      .calls[0]?.[0] as readonly string[];
+    for (const key of LOCAL_PRIVATE_SECURE_CONTROL_KEYS) {
+      expect(requested).not.toContain(key);
+    }
+    for (const prefix of LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES) {
+      expect(requested.some((key) => key.startsWith(prefix))).toBe(false);
+    }
   });
 
   it('exports device-authoritative records while redacting media paths and ciphertext', async () => {
@@ -77,6 +102,23 @@ describe('local device data export', () => {
         JSON.stringify({ schemaVersion: 1, am: ['shelf-1'], pm: ['shelf-1'] }),
       ],
       [
+        'routinekind.healthDataLifecycle.v1',
+        JSON.stringify({
+          schemaVersion: 3,
+          ownerUserId: 'user-1',
+          state: 'withdrawing',
+          processingEpoch: 2,
+          operationId: 'operation-1',
+          idempotencyKey: 'secret-idempotency-key',
+          localCleanupComplete: true,
+          activationRoutePending: false,
+          verificationReason: null,
+          verificationResumeState: null,
+          serverVerifiedAt: '2026-07-10T11:59:00.000Z',
+          updatedAt: '2026-07-10T12:00:00.000Z',
+        }),
+      ],
+      [
         'onskin.photos.v1',
         JSON.stringify([
           {
@@ -95,12 +137,12 @@ describe('local device data export', () => {
         ]),
       ],
     ]);
-    mocks.getPrivateItems.mockImplementation(
+    mocks.getPrivateItemsForPurposeLimitedExport.mockImplementation(
       async (keys: readonly string[]) => new Map(keys.map((key) => [key, stored.get(key) ?? null])),
     );
-    mocks.decryptPhotoNote.mockResolvedValue('Less redness today');
+    mocks.decryptPhotoNoteForPurposeLimitedExport.mockResolvedValue('Less redness today');
 
-    const result = await collectLocalDeviceExportData('2026-07-10T12:00:00.000Z');
+    const result = await collectLocalDeviceExportData(accountLease, '2026-07-10T12:00:00.000Z');
 
     expect(result.sections.profile_and_preferences.skin_profile).toEqual(
       expect.objectContaining({ goals: ['acne'] }),
@@ -123,6 +165,11 @@ describe('local device data export', () => {
     });
     expect(result.sections.shelf_and_routine.legacy_cycle_configuration).toMatchObject({
       variant: 'gentle',
+    });
+    expect(result.sections.account_and_privacy.health_data_lifecycle).toMatchObject({
+      state: 'withdrawing',
+      processingEpoch: 2,
+      localCleanupComplete: true,
     });
     expect(result.sections.shelf_and_routine.conflict_overrides).toEqual({
       schemaVersion: 1,
@@ -163,10 +210,11 @@ describe('local device data export', () => {
     expect(serialized).not.toContain('storagePath');
     expect(serialized).not.toContain('thumbnailPath');
     expect(serialized).not.toContain('photo-content-key-v1');
+    expect(serialized).not.toContain('secret-idempotency-key');
   });
 
   it('marks an undecryptable photo note without exporting its ciphertext', async () => {
-    mocks.getPrivateItems.mockImplementation(
+    mocks.getPrivateItemsForPurposeLimitedExport.mockImplementation(
       async (keys: readonly string[]) =>
         new Map(
           keys.map((key) => [
@@ -178,7 +226,7 @@ describe('local device data export', () => {
         ),
     );
 
-    const result = await collectLocalDeviceExportData('2026-07-10T12:00:00.000Z');
+    const result = await collectLocalDeviceExportData(accountLease, '2026-07-10T12:00:00.000Z');
 
     expect(result.sections.progress.photo_records?.records[0]).toEqual({
       id: 'photo-1',
@@ -190,7 +238,7 @@ describe('local device data export', () => {
 
   it('preserves an unsupported future conflict-choice schema with an explicit export status', async () => {
     const future = { schemaVersion: 2, choices: { future: true } };
-    mocks.getPrivateItems.mockImplementation(
+    mocks.getPrivateItemsForPurposeLimitedExport.mockImplementation(
       async (keys: readonly string[]) =>
         new Map(
           keys.map((key) => [
@@ -200,7 +248,7 @@ describe('local device data export', () => {
         ),
     );
 
-    const result = await collectLocalDeviceExportData('2026-07-10T12:00:00.000Z');
+    const result = await collectLocalDeviceExportData(accountLease, '2026-07-10T12:00:00.000Z');
     expect(result.sections.shelf_and_routine.conflict_overrides).toEqual({
       export_status: 'unrecognized_conflict_choice_schema',
       stored_value: future,
@@ -208,13 +256,20 @@ describe('local device data export', () => {
   });
 
   it('fails rather than silently omitting an unreadable private record', async () => {
-    mocks.getPrivateItems.mockRejectedValueOnce(new Error('secure storage unavailable'));
+    mocks.getPrivateItemsForPurposeLimitedExport.mockRejectedValueOnce(
+      new Error('secure storage unavailable'),
+    );
 
-    await expect(collectLocalDeviceExportData()).rejects.toThrow('secure storage unavailable');
+    await expect(collectLocalDeviceExportData(accountLease)).rejects.toThrow(
+      'secure storage unavailable',
+    );
   });
 
   it('wraps server and local scopes in a versioned, explicit bundle', async () => {
-    const localDeviceData = await collectLocalDeviceExportData('2026-07-10T12:00:00.000Z');
+    const localDeviceData = await collectLocalDeviceExportData(
+      accountLease,
+      '2026-07-10T12:00:00.000Z',
+    );
 
     expect(
       buildMobileDataExportBundle({

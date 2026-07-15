@@ -168,14 +168,12 @@ describe('cycle week route scheduler notes', () => {
     expect(store).toContain('currentAndFutureSkips');
     expect(store).not.toContain('/* best-effort */');
 
-    const commitIndex = useCycle.indexOf('await commit(() => updateCycleConfig({ variant }))');
+    const commitIndex = useCycle.indexOf('() => updateCycleConfig({ variant })');
     expect(commitIndex).toBeGreaterThan(-1);
     expect(useCycle.indexOf("track('cycle_variant_changed'", commitIndex)).toBeGreaterThan(
       commitIndex,
     );
-    const customCommitIndex = useCycle.indexOf(
-      'await commit(() => saveCustomCycleDefinition(definition))',
-    );
+    const customCommitIndex = useCycle.indexOf('() => saveCustomCycleDefinition(definition)');
     expect(customCommitIndex).toBeGreaterThan(-1);
     expect(useCycle.indexOf("track('routine_edited'", customCommitIndex)).toBeGreaterThan(
       customCommitIndex,
@@ -189,6 +187,10 @@ describe('cycle week route scheduler notes', () => {
     expect(useCycle).toContain(
       "qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next)",
     );
+    expect(useCycle.indexOf('afterCommit?.();')).toBeGreaterThan(
+      useCycle.indexOf("qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next)"),
+    );
+    expect(useCycle).toContain('lease.assertCurrent();');
     expect(useCycle).toContain("queryKey: ['cycleConfig', today]");
     expect(useCycle).toContain("AppState.addEventListener('change', handleAppState)");
     expect(useCycle).toContain('millisecondsUntilNextLocalDay()');

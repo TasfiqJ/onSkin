@@ -1,14 +1,26 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { isNoteHelpful, toggleNoteHelpful } from './reactionStore';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+
+import { clearNoteReactions, isNoteHelpful, toggleNoteHelpful } from './reactionStore';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
   tails: new Map<string, Promise<void>>(),
+  readGate: null as Promise<void> | null,
+  readStarted: null as (() => void) | null,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
+  getPrivateItem: vi.fn(async (key: string) => {
+    mocks.readStarted?.();
+    if (mocks.readGate) await mocks.readGate;
+    return mocks.storage.get(key) ?? null;
+  }),
   removePrivateItem: vi.fn(async (key: string) => {
     mocks.storage.delete(key);
   }),
@@ -34,11 +46,26 @@ vi.mock('@/lib/storage/privateKV', () => ({
 }));
 
 const KEY = 'onskin.community.reactions.v1';
+let accountGeneration = 0;
 
 describe('community reaction store', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     mocks.storage.clear();
     mocks.tails.clear();
+    mocks.readGate = null;
+    mocks.readStarted = null;
+    clearActiveHealthProcessingEpoch();
+    await runAccountGenerationOperation((lease) => {
+      accountGeneration = lease.generation;
+    });
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'user-a',
+      accountGeneration,
+    });
+  });
+
+  afterEach(() => {
+    clearActiveHealthProcessingEpoch();
   });
 
   it('preserves unreadable reaction bytes and refuses to overwrite them', async () => {
@@ -92,5 +119,38 @@ describe('community reaction store', () => {
       version: 1,
       values: ['note-a', 'note-b', 'note-c'],
     });
+  });
+
+  it('does not return a fallback reaction from the prior owner', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ version: 1, values: ['note-a'] }));
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.readGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.readStarted = markReadStarted;
+
+    const pending = isNoteHelpful('note-a');
+    await readStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'user-b',
+      accountGeneration,
+    });
+    releaseRead();
+
+    await expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+  });
+
+  it('keeps deletion-only cleanup callable after health processing closes', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ version: 1, values: ['note-a'] }));
+    clearActiveHealthProcessingEpoch();
+
+    await expect(clearNoteReactions()).resolves.toBeUndefined();
+
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 });

@@ -20,7 +20,7 @@ import {
   localPrivateCachePrefixes,
 } from './localPrivateDataKeys';
 
-async function clearGeneratedCacheFiles(): Promise<void> {
+export async function clearGeneratedPrivateCacheFiles(): Promise<void> {
   const cacheDirectory = FileSystem.cacheDirectory;
   if (!cacheDirectory) return;
 
@@ -54,11 +54,14 @@ export async function clearLocalPrivateData(): Promise<void> {
   const operations = [
     {
       label: 'registered_records',
-      promise: AsyncStorage.multiRemove([...LOCAL_PRIVATE_DATA_KEYS, ...metadataWithoutOwnerProof]),
+      promise: AsyncStorage.multiRemove([
+        ...LOCAL_PRIVATE_DATA_KEYS,
+        ...metadataWithoutOwnerProof,
+      ]),
     },
     { label: 'encrypted_photos', promise: clearEncryptedPhotoStorage() },
     { label: 'private_kv_key', promise: clearPrivateKVContentKey() },
-    { label: 'generated_cache', promise: clearGeneratedCacheFiles() },
+    { label: 'generated_cache', promise: clearGeneratedPrivateCacheFiles() },
     {
       label: 'scheduled_notifications',
       promise:

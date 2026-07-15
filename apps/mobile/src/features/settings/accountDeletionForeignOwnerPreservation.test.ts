@@ -19,6 +19,7 @@ const OWNER_B = 'b2'.repeat(32);
 const storage = new Map<string, string>();
 
 const peripheral = vi.hoisted(() => ({
+  clearDependentRecovery: vi.fn(async (_ownerBinding: string) => {}),
   clearPersistedPrivateData: vi.fn(async () => {
     storage.delete('routinekind.localDataOwnerHash.v1');
     storage.delete('routinekind.localDataRetainedOwnerHash.v1');
@@ -63,6 +64,15 @@ vi.mock('@/features/photos/encryptedStorage', () => ({
 
 vi.mock('@/features/photos/sensitiveImageMemory', () => ({
   purgeSensitiveImageMemory: vi.fn(async () => {}),
+}));
+
+vi.mock('@/features/healthConsent/pendingIntent', () => ({
+  clearPendingHealthWithdrawalIntentByOwnerBinding: vi.fn(async () => {}),
+}));
+
+vi.mock('@/lib/consent/dependentConsentLocal', () => ({
+  clearAllDependentConsentWithdrawalTombstonesByOwnerBinding:
+    peripheral.clearDependentRecovery,
 }));
 
 vi.mock('@/features/settings/localPrivateData', () => ({
@@ -134,6 +144,7 @@ function isolationDependencies() {
 describe('account-deletion foreign-owner preservation lifecycle', () => {
   beforeEach(() => {
     storage.clear();
+    peripheral.clearDependentRecovery.mockClear();
     peripheral.clearPersistedPrivateData.mockClear();
   });
 
@@ -170,6 +181,10 @@ describe('account-deletion foreign-owner preservation lifecycle', () => {
           convertStoreSafetyNotice: vi.fn(async () => {
             order.push('store-safety');
           }),
+          clearDependentWithdrawalRecovery: vi.fn(async (ownerBinding: string) => {
+            await peripheral.clearDependentRecovery(ownerBinding);
+            order.push('dependent-recovery');
+          }),
           queueAppleNotice: vi.fn(),
           clearCompletedState: vi.fn(async () => {
             order.push('recovery-proof');
@@ -186,6 +201,7 @@ describe('account-deletion foreign-owner preservation lifecycle', () => {
 
     expect(order).toEqual([
       'store-safety',
+      'dependent-recovery',
       'retained-owner',
       'session',
       'derived',
@@ -193,6 +209,9 @@ describe('account-deletion foreign-owner preservation lifecycle', () => {
     ]);
     expect(storage.get(LOCAL_DATA_OWNER_HASH_KEY)).toBe(OWNER_B);
     expect(storage.get(LOCAL_DATA_RETAINED_OWNER_HASH_KEY)).toBe(OWNER_B);
+    expect(peripheral.clearDependentRecovery).toHaveBeenCalledExactlyOnceWith(
+      'a1'.repeat(32),
+    );
 
     const dependencies = isolationDependencies();
     await expect(prepareLocalDataForSession('user-b', null, dependencies)).resolves.toEqual({

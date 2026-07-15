@@ -756,6 +756,13 @@ if (!accountDeletionRecoveryEvidenceDate) {
   console.error('FAIL Missing durable account-deletion recovery evidence.');
   process.exit(1);
 }
+const healthConsentWithdrawalEvidenceDate = latestEvidenceDateForFolder(
+  'health-consent-withdrawal-current',
+);
+if (!healthConsentWithdrawalEvidenceDate) {
+  console.error('FAIL Missing health-consent withdrawal and reconsent evidence.');
+  process.exit(1);
+}
 const latestManifestEvidenceDate = [
   evidenceDate,
   timelapseEvidenceDate,
@@ -779,6 +786,7 @@ const latestManifestEvidenceDate = [
   requiredSurfaceHonestyEvidenceDate,
   trendRouteGroupGateEvidenceDate,
   accountDeletionRecoveryEvidenceDate,
+  healthConsentWithdrawalEvidenceDate,
 ]
   .sort()
   .at(-1);
@@ -1075,6 +1083,47 @@ const gates = [
       'Credential-free Expo web fixtures cover pending, manual-Apple, signed-out continuation, retryable invalid, expired, and ownerless support-only recovery; compact-phone, native-iPhone, hosted Supabase, and live-provider proof remain launch gates.',
   },
   {
+    id: 'health-consent-withdrawal-expo-web-compatibility',
+    title: 'Health-consent withdrawal and fresh-reconsent Expo-web compatibility pass',
+    kind: 'summary-status',
+    required: true,
+    supportClass: 'resilience',
+    folder: `test-results/human-e2e/${healthConsentWithdrawalEvidenceDate}/health-consent-withdrawal-current`,
+    evidence: 'summary.json',
+    requiredFiles: [
+      'report.md',
+      'results.json',
+      '13-goals-stable-postfix-390x844.png',
+      '15-privacy-active-postfix-390x844.png',
+      '16-withdrawal-confirm-postfix-390x844.png',
+      '17-withdrawn-paused-postfix-390x844.png',
+      '18-withdrawn-reload-postfix-390x844.png',
+      '19-fresh-consent-postfix-390x844.png',
+      '20-reconsent-goals-stable-postfix-390x844.png',
+      '21-consent-360x640-postfix.png',
+      '22-reconsent-goals-reload-postfix-390x844.png',
+      '23-fresh-grant-goals-final-390x844.png',
+      '24-fresh-grant-goals-reload-final-390x844.png',
+    ],
+    validateSummaryArtifacts: true,
+    requiredSchemaVersion: 1,
+    requiredStatus: 'pass',
+    requiredFailedRouteCount: 0,
+    requiredViewports: ['390 x 844', '360 x 640'],
+    requiredVerified: [
+      'current consent before goals',
+      'direct goals entry recovers to consent',
+      'fresh grant stays on /onboarding/goals through 6.5 seconds and reload',
+      'confirm reaches the paused shell',
+      'paused state survives reload',
+      'fresh-consent refusal remains paused',
+      'fresh reconsent stays on /onboarding/goals through 6.5 seconds and reload',
+      'compact 360 x 640 consent controls',
+    ],
+    expected:
+      'Credential-free Expo web proves consent-before-goals, decline/direct-route denial, non-destructive withdrawal, durable paused state, and stable fresh reconsent; hosted, native-iPhone, accessibility, and legal-review gates remain open.',
+  },
+  {
     id: 'progress-timelapse-supported-phone',
     title: '390 x 844 local Progress time-lapse and reduced-motion pass',
     kind: 'summary-status',
@@ -1348,6 +1397,7 @@ const warnings = [
   'Supported-phone 200% text-pressure gates listed in this manifest are launch-required local Expo web evidence. Android-class, 360-wide, and sub-667-height folder names are retained resilience baselines, not Android release evidence; 320-wide browser sizes also remain resilience stress evidence unless tied to a supported physical iPhone.',
   'Native keyboard events, Dynamic Type, VoiceOver, camera hardware, notification delivery, StoreKit, RevenueCat, and live Supabase remain separate iOS release gates.',
   'The account-deletion recovery gate uses credential-free Expo web development fixtures on a desktop capture surface; it does not prove compact-phone layout, Keychain persistence, native lifecycle behavior, hosted Supabase, live-provider deletion, physical-iPhone accessibility, or App Store acceptance.',
+  'The health-consent withdrawal gate uses credential-free Expo web and placeholder Supabase configuration; it does not prove hosted cleanup, Storage deletion, worker scheduling, physical-iPhone lifecycle or accessibility behavior, professional legal approval, or App Store acceptance.',
 ];
 const blockers = [];
 let trackedRepoFiles;

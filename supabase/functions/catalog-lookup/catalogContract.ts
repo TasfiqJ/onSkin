@@ -5,17 +5,3 @@ export const REVIEWED_CATALOG_FRESHNESS_FILTER = {
   column: 'product_pao_expiry.review_status',
   value: 'reviewed',
 } as const;
-
-export function externalCatalogProvenance(barcode: string, snapshotDate: string | null) {
-  return {
-    region: null,
-    default_pao_months: null,
-    source: 'open_beauty_facts' as const,
-    catalog_source_id: null,
-    catalog_sources: null,
-    source_ref: barcode,
-    source_url: `https://world.openbeautyfacts.org/product/${barcode}`,
-    source_snapshot_date: snapshotDate,
-    product_pao_expiry: [],
-  };
-}

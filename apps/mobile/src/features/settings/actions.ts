@@ -2,15 +2,15 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import type { Session, User } from '@supabase/supabase-js';
 
-import { HEALTH_DATA_WITHDRAWAL } from '@/features/onboarding/consentCopy';
+import { beginHealthDataConsentWithdrawal } from '@/features/healthConsent/lifecycle';
 import { beginAccountDeletionIntakeHold } from '@/features/settings/accountDeletionBarrier';
 import {
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { getAppleAuthorizationCodeForRevocation } from '@/lib/auth/apple';
+import { readLocalDataOwnership } from '@/lib/auth/sessionOwner';
 import { BRAND } from '@/lib/brand';
-import { recordConsent } from '@/lib/consent/consent';
 import { env, isSupabaseConfigured } from '@/lib/env';
 import { startRevenueCatDeletionQuiesce } from '@/lib/iap/revenuecat';
 import { assertStoreTransactionDeletionJournalReadable } from '@/lib/iap/storeTransactionNotice';
@@ -45,6 +45,7 @@ import { quarantineAccountDeletionSession } from './accountDeletionRecovery';
 
 const DATA_RIGHTS_BACKEND_UNAVAILABLE = 'DATA_RIGHTS_BACKEND_UNAVAILABLE';
 const DATA_EXPORT_USER_UNAVAILABLE = 'DATA_EXPORT_USER_UNAVAILABLE';
+const DATA_EXPORT_LOCAL_OWNER_MISMATCH = 'DATA_EXPORT_LOCAL_OWNER_MISMATCH';
 const DATA_EXPORT_RESPONSE_OWNER_MISMATCH = 'DATA_EXPORT_RESPONSE_OWNER_MISMATCH';
 const ACCOUNT_DELETION_RESPONSE_INVALID = 'ACCOUNT_DELETION_RESPONSE_INVALID';
 const ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE = 'ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE';
@@ -200,34 +201,6 @@ async function captureVerifiedDeletionOwner(
   const ownerBinding = await createAccountDeletionOwnerBinding(user.id);
   lease.assertCurrent();
   return { accessToken: session.access_token, ownerBinding, remoteBinding, user };
-}
-
-async function captureAccountDeletionInitiator(): Promise<AccountDeletionInitiator> {
-  return runAccountGenerationOperation(async (lease) => {
-    let session: Session | null;
-    try {
-      session = await readPersistedSupabaseSessionCandidate();
-    } catch {
-      throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
-    }
-    lease.assertCurrent();
-    if (!session || !validAccessToken(session.access_token)) {
-      throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
-    }
-
-    let response: Awaited<ReturnType<typeof supabase.auth.getUser>>;
-    try {
-      response = await supabase.auth.getUser(session.access_token);
-    } catch {
-      throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
-    }
-    lease.assertCurrent();
-    const user = response.data.user;
-    if (response.error || !user || user.id !== session.user.id) {
-      throw new Error(ACCOUNT_DELETION_AUTH_SESSION_UNAVAILABLE);
-    }
-    return Object.freeze({ generation: lease.generation, userId: user.id });
-  });
 }
 
 async function readBoundedAccountDeletionResponse(response: Response): Promise<unknown> {
@@ -450,40 +423,12 @@ export async function deleteAccount(
   return intake.result;
 }
 
-// Health-data consent withdrawal (docs/01 §4: MHMDA/GDPR right to withdraw,
-// which must be as easy as granting). The skin profile, quiz answers, and
-// goals ARE the account, so withdrawing health-data-collection consent records
-// an immutable granted=false ledger row (proof of the withdrawal) and then
-// deletes the account and all data via the same cascade as deleteAccount. The
-// You-tab copy that promises "your data is then deleted" is now backed by code.
-export async function withdrawHealthDataConsent(
-  completeLocalSignOut: () => Promise<void>,
-): Promise<void> {
-  assertDataRightsBackendAvailable();
-
-  // Bind both the ledger write and destructive intake to the exact subject and
-  // account generation that initiated this action. A stale A continuation may
-  // never resume after an A-to-B boundary and capture B for deletion.
-  const initiator = await captureAccountDeletionInitiator();
-
-  try {
-    await recordConsent({
-      type: 'health_data_collection',
-      granted: false,
-      version: HEALTH_DATA_WITHDRAWAL.version,
-      consentText: HEALTH_DATA_WITHDRAWAL.fullText,
-      expectedUserId: initiator.userId,
-    });
-  } catch {
-    // The deletion below is the substantive guarantee and runs even if the
-    // consent-ledger write is temporarily unavailable.
-  }
-  await deleteAccount(
-    completeLocalSignOut,
-    quarantineAccountDeletionSession,
-    (input, init) => fetch(input, init),
-    initiator,
-  );
+// Health-data withdrawal is purpose-limited. It freezes health processing and
+// removes that purpose's data while preserving Auth, billing, entitlements,
+// App Lock, and the device's store-transaction safety journal. Full account
+// deletion remains a separate user action.
+export async function withdrawHealthDataConsent(ownerUserId: string): Promise<void> {
+  await beginHealthDataConsentWithdrawal(ownerUserId);
 }
 
 // GDPR Art. 20 export (docs/01 §4): the Edge Function assembles a JSON bundle;
@@ -560,7 +505,19 @@ export async function exportData(): Promise<boolean> {
       expectedUserId = userId;
     }
 
-    const localDeviceData = await collectLocalDeviceExportData();
+    const localOwnership = await readLocalDataOwnership(expectedUserId);
+    lease.assertCurrent();
+    if (
+      (expectedUserId !== null && localOwnership !== 'match') ||
+      (expectedUserId === null && localOwnership !== 'unclaimed')
+    ) {
+      throw new Error(DATA_EXPORT_LOCAL_OWNER_MISMATCH);
+    }
+
+    // The purpose-limited collector can read health-classified local bytes
+    // while processing is paused only because this exact account generation
+    // has just verified the durable local owner proof.
+    const localDeviceData = await collectLocalDeviceExportData(lease);
     lease.assertCurrent();
     await waitForExportE2EDelay(lease.signal);
     lease.assertCurrent();

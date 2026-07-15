@@ -1,8 +1,8 @@
 # Human E2E Manifest
 
-Generated: 2026-07-15T04:28:00.762Z
-Git SHA: ca900b9beb7c5cf0bc50b28506620a33e2f3bedb
-Evidence date: 2026-07-13
+Generated: 2026-07-15T20:04:38.962Z
+Git SHA: 90ed58d6dc8038bf5f2aa2a841b211683f3205c0
+Evidence date: 2026-07-15
 Baseline suite date: 2026-07-09
 Status: pass
 
@@ -42,6 +42,7 @@ dependency to the repo.
 | 360 x 640 resilience account-upgrade error and recovery pass                | resilience      | pass   | summary verdict: pass.                                                                                                                                                   | 62    | test-results/human-e2e/2026-07-10/onboarding-account-upgrade-current                   |
 | 360 x 640 resilience account-transition isolation and cleanup recovery pass | resilience      | pass   | summary verdict: pass.                                                                                                                                                   | 1     | test-results/human-e2e/2026-07-10/onboarding-account-isolation-current                 |
 | Account-deletion recovery Expo-web compatibility pass                       | resilience      | pass   | 6 credential-free Expo web recovery states passed on the recorded desktop capture surface; compact-phone, native-iPhone, hosted-service, and provider proof remain open. | 8     | test-results/human-e2e/2026-07-13/account-deletion-durable-recovery-current            |
+| Health-consent withdrawal and fresh-reconsent Expo-web compatibility pass   | resilience      | pass   | summary status: pass; 0 failed routes.                                                                                                                                   | 14    | test-results/human-e2e/2026-07-15/health-consent-withdrawal-current                    |
 | 390 x 844 local Progress time-lapse and reduced-motion pass                 | supported-phone | pass   | summary status: pass.                                                                                                                                                    | 17    | test-results/human-e2e/2026-07-10/progress-timelapse-current                           |
 | Progress quality states and support-floor save recovery                     | supported-phone | pass   | summary status: pass.                                                                                                                                                    | 19    | test-results/human-e2e/2026-07-10/progress-capture-analysis-current                    |
 | Device-only Progress photo storage                                          | supported-phone | pass   | summary status: pass; 0 failed routes.                                                                                                                                   | 1     | test-results/human-e2e/2026-07-10/progress-device-only-backup-current                  |
@@ -67,6 +68,7 @@ dependency to the repo.
 - Supported-phone 200% text-pressure gates listed in this manifest are launch-required local Expo web evidence. Android-class, 360-wide, and sub-667-height folder names are retained resilience baselines, not Android release evidence; 320-wide browser sizes also remain resilience stress evidence unless tied to a supported physical iPhone.
 - Native keyboard events, Dynamic Type, VoiceOver, camera hardware, notification delivery, StoreKit, RevenueCat, and live Supabase remain separate iOS release gates.
 - The account-deletion recovery gate uses credential-free Expo web development fixtures on a desktop capture surface; it does not prove compact-phone layout, Keychain persistence, native lifecycle behavior, hosted Supabase, live-provider deletion, physical-iPhone accessibility, or App Store acceptance.
+- The health-consent withdrawal gate uses credential-free Expo web and placeholder Supabase configuration; it does not prove hosted cleanup, Storage deletion, worker scheduling, physical-iPhone lifecycle or accessibility behavior, professional legal approval, or App Store acceptance.
 
 ## Blockers
 

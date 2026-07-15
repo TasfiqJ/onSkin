@@ -1,7 +1,6 @@
 import {
   CATALOG_LOOKUP_PRODUCT_SELECT,
   REVIEWED_CATALOG_FRESHNESS_FILTER,
-  externalCatalogProvenance,
 } from './catalogContract.ts';
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -30,20 +29,20 @@ Deno.test('catalog lookup exposes source UUID and reviewed freshness evidence se
   );
 });
 
-Deno.test('external lookup candidates do not fabricate catalog or freshness provenance', () => {
-  const provenance = externalCatalogProvenance('012345678905', '2026-07-09');
-
-  assert(provenance.catalog_source_id === null, 'external candidates have no catalog source UUID');
+Deno.test('catalog lookup has no request-time external provider path', async () => {
+  const source = await Deno.readTextFile(new URL('./index.ts', import.meta.url));
+  for (const forbidden of [
+    'fetchOpenBeautyFacts',
+    'fetchWithTimeout',
+    'world.openbeautyfacts.org',
+    'OBF_API_ENABLED',
+    'OBF_USER_AGENT',
+    'external_candidate',
+  ]) {
+    assert(!source.includes(forbidden), `catalog lookup must not contain ${forbidden}`);
+  }
   assert(
-    provenance.source_ref === '012345678905',
-    'the upstream reference must remain the barcode',
-  );
-  assert(
-    provenance.source_snapshot_date === '2026-07-09',
-    'the external source snapshot date must be preserved',
-  );
-  assert(
-    provenance.default_pao_months === null && provenance.product_pao_expiry.length === 0,
-    'external candidates must not synthesize PAO or expiry evidence',
+    source.includes("return json({ result: 'no_match', manualFallback: true });"),
+    'a local catalog miss must retain the manual fallback',
   );
 });

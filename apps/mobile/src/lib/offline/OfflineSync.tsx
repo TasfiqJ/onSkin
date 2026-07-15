@@ -2,6 +2,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
 
+import { activeHealthProcessingLeaseSnapshot } from '@/lib/consent/healthProcessingEpoch';
+
 import { flushCompletions } from './completionQueue';
 
 // Drains the offline check-off queue (docs/01 §6) on mount and whenever the app
@@ -17,12 +19,24 @@ export function OfflineSync() {
   const qc = useQueryClient();
   useEffect(() => {
     const run = () => {
+      const admittedLease = activeHealthProcessingLeaseSnapshot();
+      if (admittedLease === null || admittedLease.ownerUserId === null) return;
       void flushCompletions().then(({ flushed }) => {
-        if (flushed > 0) {
+        // Withdrawal, lease expiry, foreground revalidation, or an account
+        // boundary may close processing while the asynchronous drain settles.
+        // Never publish its completion into a later closed lifecycle.
+        const currentLease = activeHealthProcessingLeaseSnapshot();
+        if (
+          currentLease?.generation === admittedLease.generation &&
+          currentLease.epoch === admittedLease.epoch &&
+          currentLease.ownerUserId === admittedLease.ownerUserId &&
+          currentLease.accountGeneration === admittedLease.accountGeneration &&
+          flushed > 0
+        ) {
           void qc.invalidateQueries({ queryKey: ['completions'] });
           void qc.invalidateQueries({ queryKey: ['progress'] });
         }
-      });
+      }).catch(() => undefined);
     };
     run();
     const sub = AppState.addEventListener('change', (s) => {

@@ -1,17 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
+import { getAgeVerified } from '@/features/onboarding/ageGateStore';
 import { isOnboardedLocal } from '@/features/onboarding/skinProfileStore';
 import {
   acknowledgeAccountDeletionNotice,
   peekAccountDeletionNotice,
 } from '@/features/settings/accountDeletionNotice';
 import { clearLocalPrivateData } from '@/features/settings/localPrivateData';
+import {
+  LOCAL_PRIVATE_CONTROL_KEYS,
+  LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES,
+  LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
+} from '@/features/settings/localPrivateDataKeys';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { runHealthDataWriteOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { isSupabaseConfigured } from '@/lib/env';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { queryClient } from '@/lib/query/queryClient';
@@ -21,6 +29,18 @@ function shouldRunE2ELocalReset(value: string | string[] | undefined): boolean {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return false;
   if (process.env.EXPO_PUBLIC_E2E_LOCAL_RESET !== '1') return false;
   return value === 'local';
+}
+
+async function clearE2ELocalControlState(): Promise<void> {
+  const storedKeys = await AsyncStorage.getAllKeys();
+  const prefixedControlKeys = storedKeys.filter((key) =>
+    LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES.some((prefix) => key.startsWith(prefix)),
+  );
+  await AsyncStorage.multiRemove([
+    ...LOCAL_PRIVATE_CONTROL_KEYS,
+    ...LOCAL_PRIVATE_SECURE_CONTROL_KEYS,
+    ...prefixedControlKeys,
+  ]);
 }
 
 // 01 · Welcome. The anonymous session starts silently here (docs/01 §1/§2).
@@ -45,6 +65,15 @@ export default function WelcomeScreen() {
       } catch {
         // Dev-only E2E fixture reset; keep the app reachable if one cleanup backend is unavailable.
       }
+      try {
+        // Production cleanup deliberately preserves recovery controls. A
+        // dev-only first-run fixture must remove them as well, otherwise a
+        // completed withdrawal reopens the paused shell instead of Welcome.
+        await clearE2ELocalControlState();
+      } catch {
+        // Keep the fixture reachable so the visible flow can expose any stale
+        // control state instead of failing on a blank reset screen.
+      }
       queryClient.clear();
       if (!active) return;
       setResetting(false);
@@ -67,13 +96,21 @@ export default function WelcomeScreen() {
     enabled: !resetting && !!session && !initializing,
     retry: 0,
     queryFn: async () => {
-      if (await isOnboardedLocal()) return true;
-      if (!isSupabaseConfigured) return false;
-      const { count } = await supabase
-        .from('skin_profiles')
-        .select('id', { count: 'exact', head: true })
-        .not('completed_at', 'is', null);
-      return (count ?? 0) > 0;
+      const expectedOwnerUserId = session?.user.id;
+      if (!expectedOwnerUserId) return false;
+      return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+        const localOnboarded = await isOnboardedLocal();
+        lease.assertCurrent();
+        if (localOnboarded) return true;
+        if (!isSupabaseConfigured) return false;
+        lease.assertCurrent();
+        const { count } = await supabase
+          .from('skin_profiles')
+          .select('id', { count: 'exact', head: true })
+          .not('completed_at', 'is', null);
+        lease.assertCurrent();
+        return (count ?? 0) > 0;
+      });
     },
   });
 
@@ -89,10 +126,11 @@ export default function WelcomeScreen() {
     } catch {
       // non-fatal before backend is configured
     }
+    const ageVerified = await getAgeVerified().catch(() => false);
     setBusy(false);
-    // Neutral DOB age gate (docs/01 §4) precedes any data collection; it self-skips
-    // to goals if this device already passed it.
-    router.push('/onboarding/age');
+    // Neutral DOB age gate (docs/01 §4) precedes any data collection. Resolve
+    // the skip here so an inactive age screen cannot redirect a later route.
+    router.push(ageVerified ? '/onboarding/consent' : '/onboarding/age');
   }
 
   async function openAppleInstructions() {

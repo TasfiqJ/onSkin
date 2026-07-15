@@ -36,7 +36,7 @@ npm run phase2:db-local-verify
 workdir, excludes `.temp`, `.branches`, every `.env` variant, inherited hosted
 credentials, and every linked-project input, allocates an isolated local port
 block, and uses explicit
-`--local` targets. It starts the Auth/Storage-aware Docker stack, resets all 51
+`--local` targets. It starts the Auth/Storage-aware Docker stack, resets all 53
 migrations plus `seed.sql` twice, verifies exact migration history, runs the
 structural pgTAP suite and database lint, requires an empty local-vs-migrations
 schema diff, generates database types only into the temporary workdir, then
@@ -123,6 +123,20 @@ with:
 
 ```powershell
 node scripts/phase9/account-deletion-work-lane-smoke.mjs
+```
+
+Durable health-consent withdrawal cleanup uses the same request-independent
+pattern with a distinct credential boundary. After deploying the compatible
+migration and `health-consent-worker` function, create exactly one active Vault
+value for each of `health_consent_worker_secret` and
+`health_consent_project_url`, then run
+`supabase/ops/health-consent-work-lane.sql`. The worker secret must match the
+64-character lowercase-hex `HEALTH_CONSENT_WORKER_SECRET` Edge secret and must
+not be reused for account deletion. The checked-in operations SQL contains no
+credential values. Verify its one-minute, Vault-backed route with:
+
+```powershell
+npm run phase9:health-consent-work-lane-smoke
 ```
 
 Catalog lookup/search/report functions are Phase 4 infrastructure. Bulk product

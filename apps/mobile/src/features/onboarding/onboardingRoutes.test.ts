@@ -34,6 +34,23 @@ describe('onboarding route contracts', () => {
     expect(source).not.toContain('â€™');
   });
 
+  it('keeps age routing outside the transition-prone age screen and gates direct consent links', () => {
+    const welcome = readAppRoute('index.tsx');
+    const age = readAppRoute('onboarding/age.tsx');
+    const consent = readAppRoute('onboarding/consent.tsx');
+
+    expect(welcome).toContain('const ageVerified = await getAgeVerified().catch(() => false);');
+    expect(welcome).toContain(
+      "router.push(ageVerified ? '/onboarding/consent' : '/onboarding/age')",
+    );
+    expect(age).not.toContain('getAgeVerified');
+    expect(consent).toContain('await getAgeVerified().catch(() => false)');
+    expect(consent).toContain("router.replace('/onboarding/age')");
+    expect(consent.indexOf('await getAgeVerified().catch(() => false)')).toBeLessThan(
+      consent.indexOf('grantHealthDataCollectionConsent(healthDataOwnerId)'),
+    );
+  });
+
   it('keeps account creation copy honest about local-first routine state', () => {
     const source = readAppRoute('onboarding/account.tsx');
 
@@ -52,6 +69,9 @@ describe('onboarding route contracts', () => {
     expect(source).toContain("process.env.EXPO_PUBLIC_E2E_LOCAL_RESET !== '1'");
     expect(source).toContain("return value === 'local'");
     expect(source).toContain('clearLocalPrivateData');
+    expect(source).toContain('clearE2ELocalControlState()');
+    expect(source).toContain('LOCAL_PRIVATE_SECURE_CONTROL_KEYS');
+    expect(source).toContain('LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES');
     expect(source).toContain('queryClient.clear()');
     expect(source).toContain("router.replace('/')");
     expect(source).toContain('enabled: !resetting && !!session && !initializing');
@@ -346,10 +366,12 @@ describe('onboarding route contracts', () => {
     expect(source).toContain('setConsentSaveError(true)');
     expect(source).toContain('HEALTH_DATA_CONSENT.saveFailedTitle');
     expect(source).toContain('HEALTH_DATA_CONSENT.saveFailedBody');
-    expect(source.indexOf('grantHealthDataCollectionConsent()')).toBeLessThan(
-      source.indexOf("router.push('/onboarding/quiz')"),
+    expect(source).toContain('grantHealthDataCollectionConsent(healthDataOwnerId)');
+    expect(source.indexOf('grantHealthDataCollectionConsent(healthDataOwnerId)')).toBeLessThan(
+      source.indexOf("if (!activationRoutePending) router.replace('/onboarding/goals')"),
     );
-    expect(source.indexOf('declineHealthDataCollectionConsent()')).toBeLessThan(
+    expect(source).toContain('declineHealthDataCollectionConsent(healthDataOwnerId)');
+    expect(source.indexOf('declineHealthDataCollectionConsent(healthDataOwnerId)')).toBeLessThan(
       source.indexOf("track('health_consent_declined')"),
     );
     expect(source).toContain("const isSettingsReconsent = requestedReturn === 'skin-profile';");
@@ -357,6 +379,7 @@ describe('onboarding route contracts', () => {
     expect(source).toContain('if (router.canGoBack())');
     expect(source).toContain("pathname: '/settings/skin-profile'");
     expect(source).toContain("queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] })");
+    expect(source).toContain('void Promise.allSettled([');
     expect(source).toContain('resetHealthProfileConsumers(queryClient)');
     expect(source.indexOf('resetHealthProfileConsumers(queryClient)')).toBeLessThan(
       source.indexOf("track('health_consent_declined')"),
@@ -401,8 +424,10 @@ describe('onboarding route contracts', () => {
     expect(goals).toContain('const { goals, quizAnswers, toggleGoal } = useOnboarding();');
     expect(goals).toContain('const quizCompletion = getQuizCompletionState(quizAnswers);');
     expect(goals).toContain(
-      "router.push(quizCompletion.complete ? '/onboarding/products' : '/onboarding/consent')",
+      "router.push(quizCompletion.complete ? '/onboarding/products' : '/onboarding/quiz')",
     );
+    expect(goals).toContain('hasCurrentHealthDataCollectionConsent');
+    expect(goals).toContain("router.replace('/onboarding/consent')");
     expect(products).toContain('const { goals } = useOnboarding();');
     expect(products).toContain('if (goals.length === 0)');
     expect(products).toContain("router.replace('/onboarding/goals')");

@@ -1,4 +1,5 @@
 import { getPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 import type { GeneratedPlan, PlanStep } from './generate';
 
@@ -103,9 +104,15 @@ function decodeOverrides(raw: string): RoutineOrderOverrides {
   return normalized.value;
 }
 
-export async function loadRoutineOrderOverrides(): Promise<RoutineOrderOverrides> {
-  const raw = await getPrivateItem(STORAGE_KEY);
-  return raw === null ? emptyOverrides() : decodeOverrides(raw);
+export function loadRoutineOrderOverrides(): Promise<RoutineOrderOverrides> {
+  return runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    const raw = await getPrivateItem(STORAGE_KEY);
+    lease.assertCurrent();
+    const overrides = raw === null ? emptyOverrides() : decodeOverrides(raw);
+    lease.assertCurrent();
+    return overrides;
+  });
 }
 
 export async function saveRoutineOrderOverrides(
@@ -113,11 +120,17 @@ export async function saveRoutineOrderOverrides(
 ): Promise<RoutineOrderOverrides> {
   const normalized = normalizeOverrides(value);
   const next = normalized?.value ?? emptyOverrides();
-  await updatePrivateItem(STORAGE_KEY, (current) => {
-    if (current !== null) decodeOverrides(current);
-    return hasOverrides(next) ? JSON.stringify(next) : null;
+  return runCurrentHealthDataOperation(async (lease) => {
+    lease.assertCurrent();
+    await updatePrivateItem(STORAGE_KEY, (current) => {
+      lease.assertCurrent();
+      if (current !== null) decodeOverrides(current);
+      lease.assertCurrent();
+      return hasOverrides(next) ? JSON.stringify(next) : null;
+    });
+    lease.assertCurrent();
+    return next;
   });
-  return next;
 }
 
 function stepIds(steps: readonly PlanStep[]): string[] {

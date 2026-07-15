@@ -9,10 +9,12 @@ import {
   type CommerceLinkFeedback,
 } from '@/features/commerce/CommerceLinkNotice';
 import { LockGlyph } from '@/features/commerce/LockGlyph';
+import { isCommerceConsented } from '@/features/commerce/consent';
 import { useCommerceConsent } from '@/features/commerce/useCommerce';
 import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { stackBySlug, type StackItem } from '@/features/commerce/stacks';
 import { buildClickToken, recordClick } from '@/features/commerce/store';
+import { runCommerceDisclosure } from '@/features/commerce/disclosureOperation';
 import { track } from '@/lib/analytics/track';
 import { APP_COMMERCE_STACKS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -43,20 +45,40 @@ export default function StackDetailScreen() {
       await qc.invalidateQueries({ queryKey: ['commerceConsent'] });
       return;
     }
-    track('where_to_buy_clicked', { source: 'stack' });
-    const token = buildClickToken();
-    await recordClick({
-      clickToken: token,
-      productType: item.productType,
-      source: 'none',
-      consented: true,
-    });
-    // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Resolve + open the real retailer link here
-    // (opaque token only). Until then, the honest stub.
-    setLinkFeedback({
-      title: COMMERCE_COPY.whereToBuy.stubTitle,
-      body: COMMERCE_COPY.whereToBuy.stubBody,
-    });
+    try {
+      const disclosure = await runCommerceDisclosure({
+        refreshConsent: isCommerceConsented,
+        confirmServerClick: () => {
+          const token = buildClickToken();
+          return recordClick({
+            clickToken: token,
+            productType: item.productType,
+            source: 'none',
+            consented: true,
+          });
+        },
+        finalAction: () => {
+          track('where_to_buy_clicked', { source: 'stack' });
+          // BLOCKED: B-SHOPMY / B-CATALOG-SEED. A future URL open must remain
+          // inside runCommerceDisclosure after the confirmed insert.
+          setLinkFeedback({
+            title: COMMERCE_COPY.whereToBuy.stubTitle,
+            body: COMMERCE_COPY.whereToBuy.stubBody,
+          });
+        },
+      });
+      if (disclosure === 'consent_closed') {
+        setLinkFeedback({
+          title: 'Consent needed',
+          body: 'Where-to-buy access was turned off. Turn it on again before using a paid link.',
+        });
+      }
+    } catch {
+      setLinkFeedback({
+        title: 'Link unavailable',
+        body: 'Consent or click confirmation changed before the link could continue. Please try again.',
+      });
+    }
   };
 
   return (

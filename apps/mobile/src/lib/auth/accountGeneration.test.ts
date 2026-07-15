@@ -5,12 +5,19 @@ import {
   ACCOUNT_GENERATION_LEASE_INVALID_MESSAGE,
   AccountGenerationLeaseError,
   assertAccountGenerationLease,
+  assertAccountIdentityGeneration,
   beginAccountGenerationBoundary,
+  beginAccountGenerationBoundaryFromLease,
+  captureAccountIdentityGeneration,
   endAccountGenerationBoundary,
   runAccountGenerationOperation,
   type AccountGenerationLease,
   waitForAccountGenerationOperationsToSettle,
 } from './accountGeneration';
+import {
+  activeHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 
 let boundaryDepth = 0;
 
@@ -109,6 +116,29 @@ describe('account generation operations', () => {
     expect(operation).toHaveBeenCalledOnce();
   });
 
+  it('advances Auth identity for every nested boundary and closes health authority synchronously', async () => {
+    const identityBefore = captureAccountIdentityGeneration();
+    let accountGeneration!: number;
+    await runAccountGenerationOperation((lease) => {
+      accountGeneration = lease.generation;
+    });
+    setActiveHealthProcessingEpoch(4, {
+      ownerUserId: 'owner-a',
+      accountGeneration,
+      serverVerifiedAt: null,
+    });
+
+    beginBoundary();
+    expect(activeHealthProcessingEpoch()).toBeNull();
+    beginBoundary();
+    expect(captureAccountIdentityGeneration()).toBe(identityBefore + 2);
+    expect(() => assertAccountIdentityGeneration(identityBefore)).toThrow(
+      ACCOUNT_GENERATION_LEASE_INVALID_MESSAGE,
+    );
+    endBoundary();
+    endBoundary();
+  });
+
   it('increments the generation only for the outermost boundary', async () => {
     let before!: AccountGenerationLease;
     let after!: AccountGenerationLease;
@@ -159,5 +189,24 @@ describe('account generation operations', () => {
     beginBoundary();
     await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
     expect(failedLease.signal.aborted).toBe(false);
+  });
+
+  it('hands a current lease into a boundary without waiting on itself', async () => {
+    const identityBefore = captureAccountIdentityGeneration();
+    let releaseBoundary!: () => void;
+    await runAccountGenerationOperation((lease) => {
+      releaseBoundary = beginAccountGenerationBoundaryFromLease(lease);
+    });
+    boundaryDepth += 1;
+    expect(captureAccountIdentityGeneration()).toBe(identityBefore);
+
+    await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+    await expect(runAccountGenerationOperation(async () => 'blocked')).rejects.toBeInstanceOf(
+      AccountGenerationLeaseError,
+    );
+
+    releaseBoundary();
+    boundaryDepth = Math.max(0, boundaryDepth - 1);
+    await expect(runAccountGenerationOperation(async () => 'ready')).resolves.toBe('ready');
   });
 });

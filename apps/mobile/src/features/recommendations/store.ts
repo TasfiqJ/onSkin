@@ -1,7 +1,11 @@
 import type { BudgetBand, ValuesFilter } from '@onskin/types';
 import { VALUES_FILTERS } from '@onskin/types';
 
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  runHealthDataWriteOperation,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 import {
   getPrivateItem,
@@ -139,25 +143,34 @@ export async function loadPreferences(): Promise<RecPreferences> {
 }
 
 export async function savePreferences(prefs: RecPreferences): Promise<void> {
-  const normalized = normalizePreferences(prefs) ?? DEFAULT_PREFERENCES;
-  await updatePrivateItem(PREF_KEY, (current) => {
-    if (current !== null) decodePreferences(current);
-    return encodePreferences(normalized);
-  });
-  // Best-effort mirror (B-SUPABASE). Owner-RLS table; clients can only write their
-  // own row. Guarded so the store works fully before the backend is configured.
-  void runAccountGenerationOperation(async (lease) => {
-    const { data } = await getPersistedSupabaseUser();
-    lease.assertCurrent();
-    if (!data.user?.id) return;
-    await supabase.from('recommendation_preferences').upsert({
-      user_id: data.user.id,
-      values_filters: normalized.values,
-      budget_band: normalized.budget,
-      format_prefs: normalized.formats,
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+  await runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    const normalized = normalizePreferences(prefs) ?? DEFAULT_PREFERENCES;
+    await updatePrivateItem(PREF_KEY, (current) => {
+      if (current !== null) decodePreferences(current);
+      return encodePreferences(normalized);
     });
     lease.assertCurrent();
-  }).catch(() => undefined);
+    // Best-effort mirror (B-SUPABASE). Owner-RLS table; clients can only write their
+    // own row. Guarded so the store works fully before the backend is configured.
+    try {
+      const { data } = await getPersistedSupabaseUser();
+      lease.assertCurrent();
+      if (data.user?.id !== lease.ownerUserId) return;
+      await supabase.from('recommendation_preferences').upsert({
+        user_id: lease.ownerUserId,
+        values_filters: normalized.values,
+        budget_band: normalized.budget,
+        format_prefs: normalized.formats,
+      });
+      lease.assertCurrent();
+    } catch {
+      lease.assertCurrent();
+      /* offline / no DB. The encrypted local preference remains authoritative. */
+    }
+    lease.assertCurrent();
+  });
 }
 
 // --- dismissed suggestions ("not for me") -------------------------------------

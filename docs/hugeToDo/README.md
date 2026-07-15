@@ -17,11 +17,18 @@ Start here:
 - [Legacy Brand Compatibility Checkpoint](./BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md)
 - [IOS-10 Export-Compliance Gate](./IOS-10-EXPORT-COMPLIANCE-GATE.md)
 - [US Wave 1 Privacy and Consumer-Health Law Gate](./US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md)
+- [Health-Consent Withdrawal, Processor, and Retention Matrix](./HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md)
+- [Health Processor Inventory v1](./health-processor-inventory-v1.json)
 
 Execution state and dependency artifacts in this directory are generated or
 validated from the plan. Readiness remains evidence-based: a checked-in status
 cannot substitute for live service, physical iPhone, professional, production,
 or App Store proof.
+
+The health-withdrawal matrix and inventory are source-candidate controls, not
+production clearance. In particular, an empty separately reconciled external
+processor list does not remove Supabase database, Storage, backup, DPA, region,
+worker, or live zero-residue evidence gates.
 
 All new execution trackers, research packets, vendor comparisons, naming
 artifacts, launch worklists, and completion reports created for this program

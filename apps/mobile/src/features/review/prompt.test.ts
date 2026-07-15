@@ -3,12 +3,31 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { requestReviewAfterValue } from './prompt';
 
 const mocks = vi.hoisted(() => ({
+  healthGeneration: 1,
+  healthOpen: true,
   storage: new Map<string, string>(),
   hasAction: vi.fn(async () => true),
   requestReview: vi.fn(async () => undefined),
   setShouldReject: false,
   tails: new Map<string, Promise<void>>(),
   track: vi.fn(),
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+  runCurrentHealthDataOperation: async (
+    operation: (lease: { assertCurrent: () => void }) => unknown,
+  ) => {
+    if (!mocks.healthOpen) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    const generation = mocks.healthGeneration;
+    const assertCurrent = () => {
+      if (!mocks.healthOpen || generation !== mocks.healthGeneration) {
+        throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+      }
+    };
+    const result = await operation({ assertCurrent });
+    assertCurrent();
+    return result;
+  },
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -53,6 +72,8 @@ const NOW = new Date('2026-07-04T12:00:00.000Z');
 
 describe('review prompt local history', () => {
   beforeEach(() => {
+    mocks.healthGeneration = 1;
+    mocks.healthOpen = true;
     mocks.storage.clear();
     mocks.hasAction.mockClear();
     mocks.hasAction.mockResolvedValue(true);
@@ -190,5 +211,29 @@ describe('review prompt local history', () => {
     expect(mocks.hasAction).not.toHaveBeenCalled();
     expect(mocks.requestReview).not.toHaveBeenCalled();
     expect(mocks.storage.get(KEY)).toBe(original);
+  });
+
+  it('never invokes the native prompt when withdrawal lands during availability', async () => {
+    let release!: (available: boolean) => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+    mocks.hasAction.mockImplementationOnce(
+      () =>
+        new Promise<boolean>((resolve) => {
+          release = resolve;
+          markStarted();
+        }),
+    );
+
+    const prompting = requestReviewAfterValue('seven_checkoff_days', NOW);
+    await started;
+    mocks.healthGeneration += 1;
+    release(true);
+
+    await expect(prompting).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.requestReview).not.toHaveBeenCalled();
+    expect(mocks.track).not.toHaveBeenCalledWith('review_prompt_attempted', expect.anything());
   });
 });

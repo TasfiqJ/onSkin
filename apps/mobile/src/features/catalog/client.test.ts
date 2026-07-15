@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   catalogIntakeProvenance,
+  lookupBarcode,
   reportCatalogIssue,
   searchCatalog,
   type CatalogProductSummary,
@@ -10,7 +11,27 @@ import {
 const mocks = vi.hoisted(() => ({
   isSupabaseConfigured: false,
   invoke: vi.fn(),
+  leaseOpen: true,
   track: vi.fn(),
+}));
+
+vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
+  activeHealthProcessingOwnerUserId: () => 'user-1',
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+  runHealthDataWriteOperation: async (
+    ownerUserId: string,
+    operation: (lease: { ownerUserId: string; assertCurrent: () => void }) => unknown,
+  ) => {
+    const assertCurrent = () => {
+      if (!mocks.leaseOpen) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    };
+    assertCurrent();
+    const result = await operation({ ownerUserId, assertCurrent });
+    assertCurrent();
+    return result;
+  },
 }));
 
 vi.mock('@/lib/env', () => ({
@@ -205,6 +226,7 @@ describe('catalog client E2E fixtures', () => {
   beforeEach(() => {
     runtime.__DEV__ = true;
     mocks.isSupabaseConfigured = false;
+    mocks.leaseOpen = true;
     mocks.invoke.mockClear();
     mocks.track.mockClear();
     delete process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT;
@@ -278,6 +300,7 @@ describe('catalog client E2E fixtures', () => {
 
 describe('catalog issue reporting', () => {
   beforeEach(() => {
+    mocks.leaseOpen = true;
     mocks.isSupabaseConfigured = false;
     mocks.invoke.mockReset();
     mocks.track.mockClear();
@@ -380,5 +403,19 @@ describe('catalog issue reporting', () => {
         },
       },
     });
+  });
+
+  it('rejects a stale lookup response before analytics or result publication', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockImplementationOnce(async () => {
+      mocks.leaseOpen = false;
+      return { data: { result: 'matched' }, error: null };
+    });
+
+    await expect(lookupBarcode('012345678905')).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    );
+
+    expect(mocks.track).not.toHaveBeenCalledWith('catalog_barcode_lookup', expect.anything());
   });
 });

@@ -1,5 +1,10 @@
 import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  runHealthDataWriteOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 /**
@@ -256,54 +261,59 @@ function toDbTime(hm: string | null): string | null {
 }
 
 /** Best-effort mirror to the owner-only `notification_preferences` row (B-SUPABASE). */
-async function mirror(p: NotifPrefs): Promise<void> {
+async function mirror(p: NotifPrefs, lease: HealthDataWriteOperationLease): Promise<void> {
   try {
-    await runAccountGenerationOperation(async (lease) => {
-      const { data: u } = await getPersistedSupabaseUser();
-      lease.assertCurrent();
-      if (!u.user?.id) return;
-      await supabase.from('notification_preferences').upsert({
-        user_id: u.user.id,
-        am_reminder_time: toDbTime(p.amTime),
-        pm_reminder_time: toDbTime(p.pmTime),
-        am_reminder_enabled: p.amEnabled,
-        pm_reminder_enabled: p.pmEnabled,
-        streak_nudges: p.streakNudges,
-        replenishment_alerts: p.replenishmentAlerts,
-        capture_reminders: p.captureReminders,
-        quiet_hours_start: toDbTime(p.quietStart),
-        quiet_hours_end: toDbTime(p.quietEnd),
-        timezone: p.timezone,
-        live_activity_enabled: p.liveActivityEnabled,
-        promotional_opt_in: p.promotionalOptIn,
-        lockscreen_discreet: p.lockscreenDiscreet,
-      });
-      lease.assertCurrent();
+    const { data: u } = await getPersistedSupabaseUser();
+    lease.assertCurrent();
+    if (u.user?.id !== lease.ownerUserId) return;
+    await supabase.from('notification_preferences').upsert({
+      user_id: lease.ownerUserId,
+      am_reminder_time: toDbTime(p.amTime),
+      pm_reminder_time: toDbTime(p.pmTime),
+      am_reminder_enabled: p.amEnabled,
+      pm_reminder_enabled: p.pmEnabled,
+      streak_nudges: p.streakNudges,
+      replenishment_alerts: p.replenishmentAlerts,
+      capture_reminders: p.captureReminders,
+      quiet_hours_start: toDbTime(p.quietStart),
+      quiet_hours_end: toDbTime(p.quietEnd),
+      timezone: p.timezone,
+      live_activity_enabled: p.liveActivityEnabled,
+      promotional_opt_in: p.promotionalOptIn,
+      lockscreen_discreet: p.lockscreenDiscreet,
     });
+    lease.assertCurrent();
   } catch {
+    lease.assertCurrent();
     /* best-effort until backend configured */
   }
 }
 
 export async function saveNotifPrefs(patch: Partial<NotifPrefs>): Promise<NotifPrefs> {
-  const normalizedPatch = normalizeNotifPatch(patch);
-  let next: NotifPrefs | null = null;
-  await updatePrivateItem(KEY, (currentRaw) => {
-    const current = currentRaw === null ? normalizeNotifPrefs() : decodeNotifPrefs(currentRaw);
-    const replenishmentOptInConfirmed =
-      'replenishmentAlerts' in normalizedPatch
-        ? normalizedPatch.replenishmentAlerts === true
-        : current.replenishmentAlerts;
-    next = normalizeNotifPrefs({
-      ...current,
-      ...normalizedPatch,
-      [REPLENISHMENT_OPT_IN_MARKER]: replenishmentOptInConfirmed,
+  const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+  if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+  return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+    const normalizedPatch = normalizeNotifPatch(patch);
+    let next: NotifPrefs | null = null;
+    await updatePrivateItem(KEY, (currentRaw) => {
+      const current = currentRaw === null ? normalizeNotifPrefs() : decodeNotifPrefs(currentRaw);
+      const replenishmentOptInConfirmed =
+        'replenishmentAlerts' in normalizedPatch
+          ? normalizedPatch.replenishmentAlerts === true
+          : current.replenishmentAlerts;
+      next = normalizeNotifPrefs({
+        ...current,
+        ...normalizedPatch,
+        [REPLENISHMENT_OPT_IN_MARKER]: replenishmentOptInConfirmed,
+      });
+      return encodeNotifPrefs(next);
     });
-    return encodeNotifPrefs(next);
+    lease.assertCurrent();
+    if (!next) throw new Error('NOTIF_PREFS_WRITE_FAILED');
+    await mirror(next, lease);
+    lease.assertCurrent();
+    return next;
   });
-  if (!next) throw new Error('NOTIF_PREFS_WRITE_FAILED');
-  void mirror(next);
-  return next;
 }
 
 /** Test/seed reset. */

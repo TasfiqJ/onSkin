@@ -1,4 +1,16 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+  ACCOUNT_GENERATION_CHANGED,
+  beginAccountGenerationBoundary,
+  endAccountGenerationBoundary,
+  runAccountGenerationOperation,
+} from '@/lib/auth/accountGeneration';
+import {
+  clearActiveHealthProcessingEpoch,
+  HEALTH_PROCESSING_STATUS_LEASE_MS,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
 
 import {
   assertPrivateKVReadable,
@@ -6,6 +18,7 @@ import {
   endPrivateKVAccountBoundary,
   getPrivateItem,
   getPrivateItems,
+  getPrivateItemsForPurposeLimitedExport,
   PRIVATE_KV_CONTENT_KEY_INVALID,
   PRIVATE_KV_CONTENT_KEY_MISSING,
   PRIVATE_KV_DECRYPTION_FAILED,
@@ -28,6 +41,8 @@ const mocks = vi.hoisted(() => ({
   asyncStorage: new Map<string, string>(),
   getItemGate: null as Promise<void> | null,
   getItemStarted: null as (() => void) | null,
+  multiGetGate: null as Promise<void> | null,
+  multiGetStarted: null as (() => void) | null,
   platformOS: 'ios',
   removeItemGate: null as Promise<void> | null,
   removeItemStarted: null as (() => void) | null,
@@ -55,9 +70,13 @@ vi.mock('@react-native-async-storage/async-storage', () => ({
       return mocks.asyncStorage.get(key) ?? null;
     }),
     getAllKeys: vi.fn(async () => [...mocks.asyncStorage.keys()]),
-    multiGet: vi.fn(async (keys: string[]) =>
-      keys.map((key) => [key, mocks.asyncStorage.get(key) ?? null] as [string, string | null]),
-    ),
+    multiGet: vi.fn(async (keys: string[]) => {
+      mocks.multiGetStarted?.();
+      if (mocks.multiGetGate) await mocks.multiGetGate;
+      return keys.map(
+        (key) => [key, mocks.asyncStorage.get(key) ?? null] as [string, string | null],
+      );
+    }),
     setItem: vi.fn(async (key: string, value: string) => {
       mocks.setItemStarted?.();
       if (mocks.setItemGate) await mocks.setItemGate;
@@ -99,6 +118,8 @@ describe('private KV encrypted storage', () => {
     mocks.asyncStorage.clear();
     mocks.getItemGate = null;
     mocks.getItemStarted = null;
+    mocks.multiGetGate = null;
+    mocks.multiGetStarted = null;
     mocks.platformOS = 'ios';
     mocks.removeItemGate = null;
     mocks.removeItemStarted = null;
@@ -109,6 +130,16 @@ describe('private KV encrypted storage', () => {
     mocks.setItemGate = null;
     mocks.setItemStarted = null;
     endPrivateKVAccountBoundary();
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'test-owner',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('keeps legacy plaintext values readable', async () => {
@@ -124,6 +155,159 @@ describe('private KV encrypted storage', () => {
     expect(raw).toContain(privateKVEncryptionInfo.version);
     expect(raw).not.toContain('routine-value');
     await expect(getPrivateItem('routine-key')).resolves.toBe('routine-value');
+  });
+
+  it('blocks a classified health record when local processing is closed', async () => {
+    clearActiveHealthProcessingEpoch();
+
+    await expect(setPrivateItem('onskin.skinprofile.v1', 'stale-profile')).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    );
+    expect(mocks.asyncStorage.has('onskin.skinprofile.v1')).toBe(false);
+  });
+
+  it('does not return a classified pre-withdrawal read after same-value re-grant', async () => {
+    await setPrivateItem('onskin.skinprofile.v1', 'prior-profile');
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.getItemGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.getItemStarted = markReadStarted;
+
+    const staleRead = getPrivateItem('onskin.skinprofile.v1');
+    await readStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, {
+      ownerUserId: 'test-owner',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
+    releaseRead();
+
+    await expect(staleRead).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+  });
+
+  it('removes a new classified commit when its status lease expires during storage I/O', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-15T16:00:00.000Z'));
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(7, {
+      ownerUserId: 'test-owner',
+      accountGeneration: 0,
+      serverVerifiedAt: new Date(Date.now()).toISOString(),
+    });
+
+    let releaseWrite!: () => void;
+    let markWriteStarted!: () => void;
+    mocks.setItemGate = new Promise<void>((resolve) => {
+      releaseWrite = resolve;
+    });
+    const writeStarted = new Promise<void>((resolve) => {
+      markWriteStarted = resolve;
+    });
+    mocks.setItemStarted = markWriteStarted;
+
+    const write = setPrivateItem('onskin.skinprofile.v1', 'lease-bound-profile');
+    await writeStarted;
+    const rejection = expect(write).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
+    releaseWrite();
+
+    await rejection;
+    expect(mocks.asyncStorage.has('onskin.skinprofile.v1')).toBe(false);
+  });
+
+  it('restores the exact prior ciphertext when a classified update outlives its status lease', async () => {
+    await setPrivateItem('onskin.skinprofile.v1', 'prior-profile');
+    const priorRaw = mocks.asyncStorage.get('onskin.skinprofile.v1');
+
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-15T16:00:00.000Z'));
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(8, {
+      ownerUserId: 'test-owner',
+      accountGeneration: 0,
+      serverVerifiedAt: new Date(Date.now()).toISOString(),
+    });
+    let releaseWrite!: () => void;
+    let markWriteStarted!: () => void;
+    mocks.setItemGate = new Promise<void>((resolve) => {
+      releaseWrite = resolve;
+    });
+    const writeStarted = new Promise<void>((resolve) => {
+      markWriteStarted = resolve;
+    });
+    mocks.setItemStarted = markWriteStarted;
+
+    const write = setPrivateItem('onskin.skinprofile.v1', 'expired-update');
+    await writeStarted;
+    const rejection = expect(write).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    vi.advanceTimersByTime(HEALTH_PROCESSING_STATUS_LEASE_MS);
+    releaseWrite();
+
+    await rejection;
+    expect(mocks.asyncStorage.get('onskin.skinprofile.v1')).toBe(priorRaw);
+    setActiveHealthProcessingEpoch(8, {
+      ownerUserId: 'test-owner',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
+    await expect(getPrivateItem('onskin.skinprofile.v1')).resolves.toBe('prior-profile');
+  });
+
+  it('keeps classified deletion and nonclassified account state available after withdrawal', async () => {
+    await Promise.all([
+      setPrivateItem('onskin.skinprofile.v1', 'profile'),
+      setPrivateItem('onskin.shelf.v1', 'shelf'),
+      setPrivateItem('onskin.notifPrefs.v1', 'notifications'),
+    ]);
+    clearActiveHealthProcessingEpoch();
+
+    const genericUpdater = vi.fn(() => null);
+    await expect(updatePrivateItem('onskin.skinprofile.v1', genericUpdater)).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    );
+    expect(genericUpdater).not.toHaveBeenCalled();
+    await removePrivateItem('onskin.skinprofile.v1');
+    await removePrivateItem('onskin.shelf.v1');
+    await multiRemovePrivateItems(['onskin.notifPrefs.v1']);
+    await setPrivateItem('onskin.account-control.v1', 'retained-control');
+
+    expect(mocks.asyncStorage.has('onskin.skinprofile.v1')).toBe(false);
+    expect(mocks.asyncStorage.has('onskin.shelf.v1')).toBe(false);
+    expect(mocks.asyncStorage.has('onskin.notifPrefs.v1')).toBe(false);
+    await expect(getPrivateItem('onskin.account-control.v1')).resolves.toBe('retained-control');
+  });
+
+  it('never exposes decrypted classified bytes to an updater after withdrawal during key read', async () => {
+    await setPrivateItem('onskin.skinprofile.v1', 'prior-profile');
+    let releaseKeyRead!: () => void;
+    let markKeyReadStarted!: () => void;
+    mocks.secureGetGate = new Promise<void>((resolve) => {
+      releaseKeyRead = resolve;
+    });
+    const keyReadStarted = new Promise<void>((resolve) => {
+      markKeyReadStarted = resolve;
+    });
+    mocks.secureGetStarted = markKeyReadStarted;
+    const updater = vi.fn(() => 'resurrected-profile');
+
+    const staleUpdate = updatePrivateItem('onskin.skinprofile.v1', updater);
+    await keyReadStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(2, {
+      ownerUserId: 'test-owner',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
+    releaseKeyRead();
+
+    await expect(staleUpdate).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(updater).not.toHaveBeenCalled();
   });
 
   it('preserves structurally invalid encrypted envelopes and blocks replacement', async () => {
@@ -220,6 +404,46 @@ describe('private KV encrypted storage', () => {
     );
   });
 
+  it('keeps ordinary health reads closed while a verified data export can read them', async () => {
+    await setPrivateItem('onskin.skinprofile.v1', 'exportable-profile');
+    clearActiveHealthProcessingEpoch();
+
+    await expect(getPrivateItems(['onskin.skinprofile.v1'])).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    );
+    await expect(
+      runAccountGenerationOperation((accountLease) =>
+        getPrivateItemsForPurposeLimitedExport(['onskin.skinprofile.v1'], accountLease),
+      ),
+    ).resolves.toEqual(new Map([['onskin.skinprofile.v1', 'exportable-profile']]));
+  });
+
+  it('rejects a purpose-limited export read after an A-to-B-to-A account boundary', async () => {
+    await setPrivateItem('onskin.skinprofile.v1', 'account-a-profile');
+    clearActiveHealthProcessingEpoch();
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.multiGetGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.multiGetStarted = markReadStarted;
+
+    const pending = runAccountGenerationOperation((accountLease) =>
+      getPrivateItemsForPurposeLimitedExport(['onskin.skinprofile.v1'], accountLease),
+    );
+    await readStarted;
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+    releaseRead();
+
+    await expect(pending).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+  });
+
   it('audits every private envelope without treating other encrypted formats as private KV', async () => {
     await setPrivateItem('onskin.profile', 'profile-value');
     mocks.asyncStorage.set('legacy', 'legacy-value');
@@ -240,6 +464,38 @@ describe('private KV encrypted storage', () => {
       PRIVATE_KV_ENVELOPE_FOREIGN,
     );
     expect(mocks.asyncStorage.get(foreignKey)).toBe(foreignRaw);
+  });
+
+  it('authenticates availability without retaining decrypted byte buffers', async () => {
+    await setPrivateItem('onskin.profile', 'sensitive-profile');
+    const fillSpy = vi.spyOn(Uint8Array.prototype, 'fill');
+    try {
+      await expect(assertPrivateKVReadable()).resolves.toBeUndefined();
+      expect(fillSpy.mock.calls.some(([value]) => value === 0)).toBe(true);
+    } finally {
+      fillSpy.mockRestore();
+    }
+  });
+
+  it('invalidates availability authentication at an account boundary', async () => {
+    await setPrivateItem('onskin.profile', 'account-a-profile');
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.multiGetGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.multiGetStarted = markReadStarted;
+
+    const pending = assertPrivateKVReadable();
+    await readStarted;
+    beginAccountGenerationBoundary();
+    endAccountGenerationBoundary();
+    releaseRead();
+
+    await expect(pending).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
   });
 
   it('rejects reads, writes, and removals against reserved storage authorities', async () => {

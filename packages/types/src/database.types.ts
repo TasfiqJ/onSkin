@@ -722,6 +722,175 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['consents']['Insert']>;
         Relationships: [];
       };
+      // Sealed server-owned registry. API roles have no direct table grants;
+      // lifecycle RPCs validate exact disclosure copy against these rows.
+      health_consent_copy_registry: {
+        Row: {
+          consent_type: string;
+          action: string;
+          version: string;
+          consent_text_hash: string;
+          review_status: string;
+          is_current: boolean;
+          created_at: Timestamptz;
+        };
+        Insert: {
+          consent_type: string;
+          action: string;
+          version: string;
+          consent_text_hash: string;
+          review_status: string;
+          is_current?: boolean;
+          created_at?: Timestamptz;
+        };
+        Update: Partial<
+          Database['public']['Tables']['health_consent_copy_registry']['Insert']
+        >;
+        Relationships: [];
+      };
+      health_consent_copy_review_events: {
+        Row: {
+          id: string;
+          event_type: string;
+          consent_type: string;
+          action: string;
+          version: string;
+          consent_text_hash: string;
+          from_status: string;
+          to_status: string;
+          from_is_current: boolean;
+          to_is_current: boolean;
+          successor_version: string | null;
+          successor_consent_text_hash: string | null;
+          successor_review_status: string | null;
+          successor_is_current: boolean | null;
+          review_ticket: string;
+          reviewed_by: string;
+          review_evidence_hash: string;
+          lifecycle_xid: string;
+          lifecycle_backend_pid: number;
+          reviewed_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          event_type: string;
+          consent_type: string;
+          action: string;
+          version: string;
+          consent_text_hash: string;
+          from_status: string;
+          to_status: string;
+          from_is_current: boolean;
+          to_is_current: boolean;
+          successor_version?: string | null;
+          successor_consent_text_hash?: string | null;
+          successor_review_status?: string | null;
+          successor_is_current?: boolean | null;
+          review_ticket: string;
+          reviewed_by: string;
+          review_evidence_hash: string;
+          lifecycle_xid: string;
+          lifecycle_backend_pid: number;
+          reviewed_at?: Timestamptz;
+        };
+        Update: Partial<
+          Database['public']['Tables']['health_consent_copy_review_events']['Insert']
+        >;
+        Relationships: [];
+      };
+      // Sealed, durable idempotency and worker-recovery journal for each
+      // purpose-specific consent grant or withdrawal.
+      health_dependent_consent_operations: {
+        Row: {
+          id: string;
+          user_id: string;
+          consent_type: string;
+          action: string;
+          idempotency_digest: string;
+          expected_processing_epoch: number;
+          expected_generation: number;
+          consent_generation: number;
+          version: string;
+          consent_text_hash: string;
+          receipt_id: string | null;
+          state: string;
+          attempt_count: number;
+          last_result_code: string | null;
+          next_attempt_at: Timestamptz;
+          worker_claim_digest: string | null;
+          worker_lease_expires_at: Timestamptz | null;
+          requested_at: Timestamptz;
+          completed_at: Timestamptz | null;
+          updated_at: Timestamptz;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          consent_type: string;
+          action: string;
+          idempotency_digest: string;
+          expected_processing_epoch: number;
+          expected_generation: number;
+          consent_generation: number;
+          version: string;
+          consent_text_hash: string;
+          receipt_id?: string | null;
+          state?: string;
+          attempt_count?: number;
+          last_result_code?: string | null;
+          next_attempt_at?: Timestamptz;
+          worker_claim_digest?: string | null;
+          worker_lease_expires_at?: Timestamptz | null;
+          requested_at?: Timestamptz;
+          completed_at?: Timestamptz | null;
+          updated_at?: Timestamptz;
+        };
+        Update: Partial<
+          Database['public']['Tables']['health_dependent_consent_operations']['Insert']
+        >;
+        Relationships: [];
+      };
+      // Sealed generation/CAS projection for each protected dependent purpose.
+      health_dependent_consent_states: {
+        Row: {
+          user_id: string;
+          consent_type: string;
+          state: string;
+          generation: number;
+          health_epoch: number | null;
+          current_receipt_id: string | null;
+          current_operation_id: string | null;
+          base_withdrawal_operation_id: string | null;
+          parent_withdrawal_operation_id: string | null;
+          version: string | null;
+          consent_text_hash: string | null;
+          withdrawal_requested_at: Timestamptz | null;
+          withdrawal_completed_at: Timestamptz | null;
+          created_at: Timestamptz;
+          updated_at: Timestamptz;
+        };
+        Insert: {
+          user_id: string;
+          consent_type: string;
+          state?: string;
+          generation?: number;
+          health_epoch?: number | null;
+          current_receipt_id?: string | null;
+          current_operation_id?: string | null;
+          base_withdrawal_operation_id?: string | null;
+          parent_withdrawal_operation_id?: string | null;
+          version?: string | null;
+          consent_text_hash?: string | null;
+          withdrawal_requested_at?: Timestamptz | null;
+          withdrawal_completed_at?: Timestamptz | null;
+          created_at?: Timestamptz;
+          updated_at?: Timestamptz;
+        };
+        Update: Partial<
+          Database['public']['Tables']['health_dependent_consent_states']['Insert']
+        >;
+        Relationships: [];
+      };
       notification_preferences: {
         Row: {
           user_id: string;
@@ -931,6 +1100,8 @@ export type Database = {
           id: string;
           user_id: string;
           click_token: string;
+          health_processing_epoch: number;
+          data_sharing_generation: number;
           product_type: string | null;
           affiliate_link_id: string | null;
           source: string;
@@ -941,6 +1112,8 @@ export type Database = {
           id?: string;
           user_id: string;
           click_token: string;
+          health_processing_epoch?: number;
+          data_sharing_generation?: number;
           product_type?: string | null;
           affiliate_link_id?: string | null;
           source?: string;
@@ -1111,6 +1284,197 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      promote_health_consent_copy_for_release: {
+        Args: {
+          p_consent_type: string;
+          p_action: string;
+          p_version: string;
+          p_consent_text_hash: string;
+          p_review_ticket: string;
+          p_reviewed_by: string;
+          p_review_evidence_hash: string;
+        };
+        Returns: {
+          review_event_id: string;
+          consent_type: string;
+          action: string;
+          version: string;
+          consent_text_hash: string;
+          review_status: string;
+          review_ticket: string;
+          reviewed_by: string;
+          review_evidence_hash: string;
+          reviewed_at: Timestamptz;
+        }[];
+      };
+      supersede_health_consent_copy_for_release: {
+        Args: {
+          p_consent_type: string;
+          p_action: string;
+          p_previous_version: string;
+          p_previous_consent_text_hash: string;
+          p_successor_version: string;
+          p_successor_consent_text_hash: string;
+          p_review_ticket: string;
+          p_reviewed_by: string;
+          p_review_evidence_hash: string;
+        };
+        Returns: {
+          lifecycle_event_id: string;
+          consent_type: string;
+          action: string;
+          previous_version: string;
+          previous_consent_text_hash: string;
+          successor_version: string;
+          successor_consent_text_hash: string;
+          successor_review_status: string;
+          successor_is_current: boolean;
+          review_ticket: string;
+          reviewed_by: string;
+          review_evidence_hash: string;
+          reviewed_at: Timestamptz;
+        }[];
+      };
+      close_health_consent_copy_for_emergency: {
+        Args: {
+          p_consent_type: string;
+          p_action: string;
+          p_version: string;
+          p_consent_text_hash: string;
+          p_review_ticket: string;
+          p_reviewed_by: string;
+          p_review_evidence_hash: string;
+        };
+        Returns: {
+          lifecycle_event_id: string;
+          consent_type: string;
+          action: string;
+          version: string;
+          consent_text_hash: string;
+          review_status: string;
+          is_current: boolean;
+          review_ticket: string;
+          reviewed_by: string;
+          review_evidence_hash: string;
+          reviewed_at: Timestamptz;
+        }[];
+      };
+      defer_health_consent_withdrawal: {
+        Args: {
+          p_operation_id: string;
+          p_claim_token: string;
+          p_result_code: string;
+          p_retry_after_seconds: number;
+        };
+        Returns: {
+          operation_id: string;
+          operation_state: string;
+          result_code: string;
+          next_attempt_at: Timestamptz;
+        }[];
+      };
+      get_health_dependent_consent_status: {
+        Args: { p_consent_type: string };
+        Returns: {
+          consent_type: string;
+          state: string;
+          generation: number;
+          health_epoch: number | null;
+          version: string | null;
+          consent_text_hash: string | null;
+        }[];
+      };
+      record_health_dependent_consent: {
+        Args: {
+          p_expected_epoch: number;
+          p_expected_generation: number;
+          p_idempotency_key: string;
+          p_consent_type: string;
+          p_version: string;
+          p_consent_text_hash: string;
+        };
+        Returns: {
+          consent_type: string;
+          state: string;
+          generation: number;
+          health_epoch: number;
+          version: string | null;
+          consent_text_hash: string | null;
+        }[];
+      };
+      begin_health_dependent_consent_withdrawal: {
+        Args: {
+          p_expected_epoch: number;
+          p_expected_generation: number;
+          p_consent_type: string;
+          p_idempotency_key: string;
+          p_version: string;
+          p_consent_text_hash: string;
+        };
+        Returns: {
+          operation_id: string;
+          user_id: string;
+          consent_type: string;
+          state: string;
+          processing_epoch: number;
+          consent_generation: number;
+        }[];
+      };
+      complete_health_dependent_consent_withdrawal: {
+        Args: { p_operation_id: string };
+        Returns: {
+          operation_id: string;
+          user_id: string;
+          consent_type: string;
+          state: string;
+          processing_epoch: number;
+          consent_generation: number;
+        }[];
+      };
+      claim_due_health_dependent_consent_withdrawals: {
+        Args: { p_claim_token: string; p_limit?: number };
+        Returns: {
+          operation_id: string;
+          user_id: string;
+          consent_type: string;
+          processing_epoch: number;
+          consent_generation: number;
+        }[];
+      };
+      list_health_dependent_consent_storage_work: {
+        Args: {
+          p_operation_id: string;
+          p_limit: number;
+          p_claim_token: string;
+        };
+        Returns: { storage_path: string }[];
+      };
+      defer_health_dependent_consent_withdrawal: {
+        Args: {
+          p_operation_id: string;
+          p_claim_token: string;
+          p_result_code: string;
+          p_retry_after_seconds?: number;
+        };
+        Returns: {
+          operation_id: string;
+          state: string;
+          result_code: string;
+          next_attempt_at: Timestamptz;
+        }[];
+      };
+      mark_health_dependent_consent_withdrawal_action_required: {
+        Args: {
+          p_operation_id: string;
+          p_claim_token: string;
+          p_result_code: string;
+        };
+        Returns: {
+          operation_id: string;
+          state: string;
+          result_code: string;
+        }[];
+      };
       owns_routine: {
         Args: { p_routine_id: string };
         Returns: boolean;

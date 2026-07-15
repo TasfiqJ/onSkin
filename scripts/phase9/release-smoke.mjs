@@ -71,6 +71,8 @@ const localVerifierFiles = [
   'scripts/phase9/service-writer-deletion-barriers-postgres-rehearsal.sql',
   'scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql',
   'scripts/phase9/consent-withdrawal-smoke.mjs',
+  'scripts/phase9/consent-withdrawal-evidence.mjs',
+  'scripts/phase9/consent-withdrawal-evidence.test.mjs',
   'scripts/phase9/supabase-policy-lint.mjs',
   'scripts/phase9/security-ci-smoke.mjs',
   'scripts/phase9/privacy-payload-audit.mjs',
@@ -273,6 +275,7 @@ for (const key of [
   'ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX',
   'ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION',
   'ACCOUNT_DELETION_WORKER_SECRET',
+  'HEALTH_CONSENT_WORKER_SECRET',
   'REVENUECAT_PROJECT_ID',
   'REVENUECAT_SECRET_API_KEY',
   'REVENUECAT_V2_SECRET_API_KEY',
@@ -299,7 +302,8 @@ for (const key of [
   'PHASE9_ALLOW_PRODUCTION_LIVE_REVENUECAT_WEBHOOK',
   'PHASE9_RUN_LIVE_DATA_RIGHTS',
   'PHASE9_RUN_LIVE_CONSENT_WITHDRAWAL',
-  'PHASE9_ALLOW_PRODUCTION_LIVE_CONSENT_WITHDRAWAL',
+  'PHASE9_CONSENT_WITHDRAWAL_WORKER_POLL_TIMEOUT_SECONDS',
+  'PHASE9_CONSENT_WITHDRAWAL_WORKER_POLL_INTERVAL_SECONDS',
   'PHASE9_RELEASE_CANDIDATE_DIR',
   ...phase7EvidenceKeys,
   ...requiredPhase9EvidenceKeys(),
@@ -449,6 +453,15 @@ block(
     /phase9:rls-adversarial/.test(packageJson.scripts?.['launch:verify'] ?? '') &&
     /phase9:supabase-policy-lint/.test(packageJson.scripts?.['launch:verify'] ?? ''),
   'launch:verify must run the RLS contract, static adversarial, and Supabase policy gates.',
+);
+block(
+  errors,
+  /phase9:consent-withdrawal/.test(packageJson.scripts?.['launch:verify'] ?? '') &&
+    /consent-withdrawal-evidence\.test\.mjs/.test(
+      packageJson.scripts?.['phase9:consent-withdrawal'] ?? '',
+    ) &&
+    /consent-withdrawal-smoke\.mjs/.test(packageJson.scripts?.['phase9:consent-withdrawal'] ?? ''),
+  'launch:verify must run the health-consent source gate, including the bound-artifact validator meta-tests and release smoke.',
 );
 block(
   errors,

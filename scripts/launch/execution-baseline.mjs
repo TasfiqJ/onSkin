@@ -250,6 +250,9 @@ function dataFeatures(name) {
     account_deletion_operator_recovery_audit: ['F-02', 'F-20'],
     revenuecat_identity_tombstones: ['F-02', 'F-11', 'F-12'],
     account_publication_leases: ['F-02', 'F-11', 'F-12'],
+    health_processing_states: ['F-02'],
+    health_consent_withdrawal_operations: ['F-02'],
+    health_consent_withdrawal_steps: ['F-02'],
   };
   if (exactTableFeatures[value]) return exactTableFeatures[value];
   if (value.includes('/trend/')) return ['F-18'];
@@ -261,6 +264,9 @@ function dataFeatures(name) {
   if (/entitlement|subscription|reverse_trial/.test(value)) return ['F-11', 'F-12'];
   if (/notification/.test(value)) return ['F-10'];
   if (/streak|completion|\/today\//.test(value)) return ['F-07'];
+  if (/healthconsent|health[_-]consent|healthprocessing|health_processing/.test(value)) {
+    return ['F-02'];
+  }
   if (/cycle|ramp/.test(value)) return ['F-08'];
   if (/routine/.test(value)) return ['F-06'];
   if (/conflict|sequencing|ingredient_tag/.test(value)) return ['F-05'];
@@ -278,6 +284,7 @@ function edgeFeatures(name) {
     'catalog-report': ['F-04'],
     'catalog-search': ['F-03', 'F-04'],
     'consent-withdrawal': ['F-02'],
+    'health-consent-worker': ['F-02'],
     'data-export': ['F-02'],
     'growth-event': ['F-15', 'F-20'],
     'order-report-poll': ['F-16'],
@@ -366,7 +373,6 @@ function discoverVendorOrigins() {
     'play.google.com': ['google-play-subscriptions-source-only', ['F-11', 'F-12']],
     'us.i.posthog.com': ['posthog', ['F-20']],
     'us.posthog.com': ['posthog', ['F-20']],
-    'world.openbeautyfacts.org': ['open-beauty-facts', ['F-04']],
   };
   const origins = new Map();
   const files = [...walk('apps/mobile/src'), ...walk('supabase/functions')].filter(

@@ -8,6 +8,7 @@ import { useRamp } from '@/features/routine/useRamp';
 import { useShelf } from '@/features/shelf/useShelf';
 import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 import {
   endRecovery,
@@ -225,48 +226,63 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
 
 export function useCycleMutations() {
   const qc = useQueryClient();
-  const commit = async (operation: () => Promise<CycleConfig>): Promise<CycleConfig> => {
-    await qc.cancelQueries({ queryKey: ['cycleConfig'] });
-    const next = await operation();
-    qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next);
-    return next;
-  };
+  const commit = (operation: () => Promise<CycleConfig>, afterCommit?: () => void): Promise<void> =>
+    runCurrentHealthDataOperation(async (lease) => {
+      lease.assertCurrent();
+      await qc.cancelQueries({ queryKey: ['cycleConfig'] });
+      lease.assertCurrent();
+      const next = await operation();
+      lease.assertCurrent();
+      qc.setQueryData<CycleConfig>(['cycleConfig', localDateString()], next);
+      lease.assertCurrent();
+      afterCommit?.();
+      lease.assertCurrent();
+    });
   return {
-    async setVariant(variant: CycleConfig['variant']) {
-      await commit(() => updateCycleConfig({ variant }));
-      track('cycle_variant_changed', { variant });
+    setVariant(variant: CycleConfig['variant']) {
+      return commit(
+        () => updateCycleConfig({ variant }),
+        () => track('cycle_variant_changed', { variant }),
+      );
     },
-    async saveCustom(definition: CustomCycleDefinition, variantChanged: boolean) {
-      await commit(() => saveCustomCycleDefinition(definition));
-      if (variantChanged) track('cycle_variant_changed', { variant: 'custom' });
-      track('routine_edited', { action: 'cycle_customized', source: 'cycle_settings' });
+    saveCustom(definition: CustomCycleDefinition, variantChanged: boolean) {
+      return commit(
+        () => saveCustomCycleDefinition(definition),
+        () => {
+          if (variantChanged) track('cycle_variant_changed', { variant: 'custom' });
+          track('routine_edited', { action: 'cycle_customized', source: 'cycle_settings' });
+        },
+      );
     },
-    async start() {
-      await commit(startCycleToday);
-      track('cycle_started');
+    start() {
+      return commit(startCycleToday, () => track('cycle_started'));
     },
-    async pause(reason: DisruptionReason) {
-      await commit(() => pauseCycle(reason));
-      track('cycle_paused');
+    pause(reason: DisruptionReason) {
+      return commit(
+        () => pauseCycle(reason),
+        () => track('cycle_paused'),
+      );
     },
-    async resume() {
-      await commit(resumeCycle);
-      track('cycle_resumed');
+    resume() {
+      return commit(resumeCycle, () => track('cycle_resumed'));
     },
-    async skip() {
-      await commit(skipTonight);
-      track('night_skipped');
+    skip() {
+      return commit(skipTonight, () => track('night_skipped'));
     },
-    async overrideStaging(productIds: readonly string[]) {
-      await commit(() => overrideStagingProducts(productIds));
-      track('phased_intro_overridden');
+    overrideStaging(productIds: readonly string[]) {
+      return commit(
+        () => overrideStagingProducts(productIds),
+        () => track('phased_intro_overridden'),
+      );
     },
-    async beginRecovery(days: number, reason: RecoveryReason) {
-      await commit(() => startRecovery(days, reason));
-      track('cycle_recovery_started');
+    beginRecovery(days: number, reason: RecoveryReason) {
+      return commit(
+        () => startRecovery(days, reason),
+        () => track('cycle_recovery_started'),
+      );
     },
-    async finishRecovery() {
-      await commit(endRecovery);
+    finishRecovery() {
+      return commit(endRecovery);
     },
   };
 }

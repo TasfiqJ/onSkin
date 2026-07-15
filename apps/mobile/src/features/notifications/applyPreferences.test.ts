@@ -5,6 +5,36 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyNotificationPreferencePatch } from './applyPreferences';
 import type { NotifPrefs } from './store';
 
+const leaseState = vi.hoisted(() => ({ current: true }));
+
+vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
+  activeHealthProcessingOwnerUserId: () => 'user-1',
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', () => ({
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED: 'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+  runHealthDataOperation: async (
+    expectedOwnerUserId: string,
+    operation: (lease: { ownerUserId: string; assertCurrent: () => void }) => Promise<unknown>,
+  ) =>
+    operation({
+      ownerUserId: expectedOwnerUserId,
+      assertCurrent: () => {
+        if (!leaseState.current) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CHANGED');
+      },
+    }),
+  runHealthDataWriteOperation: async (
+    expectedOwnerUserId: string,
+    operation: (lease: { ownerUserId: string; assertCurrent: () => void }) => Promise<unknown>,
+  ) =>
+    operation({
+      ownerUserId: expectedOwnerUserId,
+      assertCurrent: () => {
+        if (!leaseState.current) throw new Error('HEALTH_DATA_WRITE_ADMISSION_CHANGED');
+      },
+    }),
+}));
+
 const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
 
 function readSource(path: string): string {
@@ -34,6 +64,7 @@ const deps = {
 
 describe('notification preference application', () => {
   beforeEach(() => {
+    leaseState.current = true;
     deps.save.mockReset();
     deps.reschedule.mockReset();
     deps.save.mockResolvedValue(next);
@@ -66,8 +97,25 @@ describe('notification preference application', () => {
     const source = readSource('features/notifications/useNotifications.ts');
 
     expect(source).toContain('applyNotificationPreferencePatch');
-    expect(source).toContain('onSuccess: (next) => qc.setQueryData<NotifPrefs>(KEY, next)');
+    expect(source).toContain('runHealthDataOperation(expectedOwnerUserId');
+    expect(source).toContain('const prefs = await loadNotifPrefs()');
+    expect(source).toContain('qc.setQueryData<NotifPrefs>(KEY, next)');
+    expect(source).toContain('await qc.invalidateQueries({ queryKey: KEY })');
+    expect(source).not.toContain('onSuccess:');
     expect(source).not.toContain('onMutate');
     expect(source).not.toContain('qc.setQueryData<NotifPrefs>(KEY, { ...prev');
+  });
+
+  it('rejects a stale result before rescheduling', async () => {
+    deps.save.mockImplementationOnce(async () => {
+      leaseState.current = false;
+      return next;
+    });
+
+    await expect(applyNotificationPreferencePatch({ amEnabled: false }, deps)).rejects.toThrow(
+      'HEALTH_DATA_WRITE_ADMISSION_CHANGED',
+    );
+
+    expect(deps.reschedule).not.toHaveBeenCalled();
   });
 });

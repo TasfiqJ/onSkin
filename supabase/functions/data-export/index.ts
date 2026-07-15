@@ -4,18 +4,25 @@
 // Deploy with JWT verification enabled: `supabase functions deploy data-export`
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
+import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
 import { readSupabasePublishableKey } from '../_shared/supabasePublishableKey.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
+import {
+  type HealthLifecycleExportSnapshot,
+  healthLifecycleExportSnapshot,
+  parseHealthLifecycleRow,
+} from '../consent-withdrawal/healthLifecycleCore.ts';
 import {
   boundedMap,
   checksumRows,
   derivedManifest,
   EXPORT_CONSISTENCY,
   type ExportSourceManifest,
+  healthLifecycleExportDecision,
   listStoragePathsVerified,
-  paginateRows,
   type PaginatedRows,
+  paginateRows,
 } from './exportCore.ts';
 import {
   buildDirectExportPlans,
@@ -48,6 +55,7 @@ const dataExportMaxStorageObjects = intEnv(
 );
 const dataExportConcurrency = intEnv('DATA_EXPORT_CONCURRENCY', 4, 1, 8);
 const dataExportFilterBatchSize = intEnv('DATA_EXPORT_FILTER_BATCH_SIZE', 50, 10, 100);
+const dataExportBodyMaxBytes = userEdgeBodyMaxBytes();
 const dataExportFileName = exportFileName();
 let rateLimitHmacKey: CryptoKey | null = null;
 
@@ -57,6 +65,13 @@ let rateLimitHmacKey: CryptoKey | null = null;
 type EdgeSupabaseClient = any;
 // deno-lint-ignore no-explicit-any
 type ExportQuery = any;
+
+class ExportHealthLifecycleUnavailableError extends Error {
+  constructor() {
+    super('EXPORT_HEALTH_LIFECYCLE_UNAVAILABLE');
+    this.name = 'ExportHealthLifecycleUnavailableError';
+  }
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -70,8 +85,30 @@ function json(body: unknown, status = 200, headers: HeadersInit = {}): Response 
     headers: {
       ...corsHeaders,
       'Content-Type': typeof body === 'string' ? 'text/plain' : 'application/json',
+      'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff',
       ...headers,
     },
+  });
+}
+
+async function readExportHealthLifecycle(
+  client: EdgeSupabaseClient,
+  userId: string,
+): Promise<HealthLifecycleExportSnapshot> {
+  const { data, error } = await client.rpc('get_health_data_consent_status');
+  const row = error ? null : parseHealthLifecycleRow(data);
+  if (!row || row.user_id !== userId) {
+    throw new ExportHealthLifecycleUnavailableError();
+  }
+  return healthLifecycleExportSnapshot(row);
+}
+
+function healthLifecycleRetryResponse(
+  decision: Exclude<ReturnType<typeof healthLifecycleExportDecision>, { allowed: true }>,
+): Response {
+  return json({ error: decision.error, retryable: true }, 409, {
+    'Retry-After': String(decision.retryAfterSeconds),
   });
 }
 
@@ -118,7 +155,9 @@ async function selectExactCount(
   const { count, error } = await decorate(
     client.from(table).select('*', { count: 'exact', head: true }),
   );
-  if (error) throw new Error(`EXPORT_TABLE_FAILED:${table}:COUNT:${error.message}`);
+  if (error) {
+    throw new Error(`EXPORT_TABLE_FAILED:${table}:COUNT:${error.message}`);
+  }
   return count;
 }
 
@@ -132,10 +171,16 @@ async function selectPage(
   limit: number,
 ): Promise<Record<string, unknown>[]> {
   let query = decorate(client.from(table).select(selectColumns));
-  for (const column of orderBy) query = query.order(column, { ascending: true });
+  for (const column of orderBy) {
+    query = query.order(column, { ascending: true });
+  }
   const { data, error } = await query.range(offset, offset + limit - 1);
-  if (error) throw new Error(`EXPORT_TABLE_FAILED:${table}:PAGE:${error.message}`);
-  if (!Array.isArray(data)) throw new Error(`EXPORT_TABLE_FAILED:${table}:PAGE:INVALID_DATA`);
+  if (error) {
+    throw new Error(`EXPORT_TABLE_FAILED:${table}:PAGE:${error.message}`);
+  }
+  if (!Array.isArray(data)) {
+    throw new Error(`EXPORT_TABLE_FAILED:${table}:PAGE:INVALID_DATA`);
+  }
   return data as Record<string, unknown>[];
 }
 
@@ -224,8 +269,13 @@ async function enforceRateLimit(
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
   if (req.method !== 'POST') return json({ error: 'METHOD_NOT_ALLOWED' }, 405);
+  if (contentLengthTooLarge(req, dataExportBodyMaxBytes)) {
+    return json({ error: 'payload_too_large' }, 413);
+  }
 
   const authHeader = bearerAuthorizationHeader(req);
   if (!authHeader) return json('unauthorized', 401);
@@ -241,6 +291,28 @@ Deno.serve(async (req) => {
   const { data: userData, error: userErr } = await supabase.auth.getUser();
   const userId = userData.user?.id;
   if (userErr || !userId) return json('unauthorized', 401);
+
+  const requestBody = await readLimitedJson(req, dataExportBodyMaxBytes, json, {
+    error: 'BAD_JSON',
+  });
+  if (requestBody instanceof Response) return requestBody;
+  if (requestBody === null || typeof requestBody !== 'object' || Array.isArray(requestBody)) {
+    return json({ error: 'INVALID_BODY' }, 400);
+  }
+
+  let initialHealthLifecycle: HealthLifecycleExportSnapshot;
+  try {
+    initialHealthLifecycle = await readExportHealthLifecycle(supabase, userId);
+  } catch {
+    return json({ error: 'HEALTH_DATA_LIFECYCLE_UNAVAILABLE' }, 503);
+  }
+  const initialHealthDecision = healthLifecycleExportDecision(
+    initialHealthLifecycle,
+    initialHealthLifecycle,
+  );
+  if (!initialHealthDecision.allowed) {
+    return healthLifecycleRetryResponse(initialHealthDecision);
+  }
 
   const rateLimitError = await enforceRateLimit(admin, userId);
   if (rateLimitError) return rateLimitError;
@@ -279,8 +351,9 @@ Deno.serve(async (req) => {
 
     const sourceResults = await boundedMap(sourceTasks, dataExportConcurrency, (task) => task());
     for (const { source, result } of sourceResults) {
-      if (Object.hasOwn(sourcePayloads, source))
+      if (Object.hasOwn(sourcePayloads, source)) {
         throw new Error(`EXPORT_SOURCE_DUPLICATE:${source}`);
+      }
       sourcePayloads[source] = result.rows;
       sourceManifest[source] = result.manifest;
     }
@@ -358,11 +431,19 @@ Deno.serve(async (req) => {
       const id = typeof photo.id === 'string' ? photo.id : null;
       const path = photo.storage_path as string;
       if (!photoPathBelongsToUser(userId, path)) {
-        photoUrlOmissions.push({ id, path: null, reason: 'INVALID_STORAGE_PATH' });
+        photoUrlOmissions.push({
+          id,
+          path: null,
+          reason: 'INVALID_STORAGE_PATH',
+        });
         continue;
       }
       if (!storagePathSet.has(path)) {
-        photoUrlOmissions.push({ id, path, reason: 'STORAGE_OBJECT_NOT_LISTED' });
+        photoUrlOmissions.push({
+          id,
+          path,
+          reason: 'STORAGE_OBJECT_NOT_LISTED',
+        });
         continue;
       }
       const ids = photoIdsByPath.get(path) ?? [];
@@ -379,7 +460,9 @@ Deno.serve(async (req) => {
           path,
           dataExportPhotoUrlTtlSeconds,
         );
-        if (error || !signed?.signedUrl) throw new Error('EXPORT_PHOTO_URL_FAILED');
+        if (error || !signed?.signedUrl) {
+          throw new Error('EXPORT_PHOTO_URL_FAILED');
+        }
         return {
           id: photoIdsByPath.get(path)?.[0] ?? null,
           path,
@@ -388,7 +471,9 @@ Deno.serve(async (req) => {
         };
       },
     );
-    const photoStorageObjects = storageInventory.paths.map((path) => ({ path }));
+    const photoStorageObjects = storageInventory.paths.map((path) => ({
+      path,
+    }));
     sourcePayloads.photo_storage_objects = photoStorageObjects;
     sourcePayloads.photo_download_urls = photoUrls;
     sourcePayloads.photo_download_url_omissions = photoUrlOmissions;
@@ -404,9 +489,31 @@ Deno.serve(async (req) => {
       checksumFields: ['id', 'path', 'reason'],
     });
 
+    const finalHealthLifecycle = await readExportHealthLifecycle(supabase, userId);
+    const healthDecision = healthLifecycleExportDecision(
+      initialHealthLifecycle,
+      finalHealthLifecycle,
+    );
+    if (!healthDecision.allowed) {
+      return healthLifecycleRetryResponse(healthDecision);
+    }
+    sourceManifest.health_consent_lifecycle = await derivedManifest({
+      rows: [healthDecision.snapshot],
+      checksumFields: [
+        'state',
+        'processing_epoch',
+        'operation_state',
+        'result_code',
+        'consent_version',
+        'consent_text_hash',
+        'server_verified_at',
+      ],
+      note: 'Sanitized owner-derived health-purpose lifecycle status; internal operation identifiers, claim tokens, and lease state are excluded.',
+    });
+
     const exportedAt = new Date().toISOString();
     const bundle: Record<string, unknown> = {
-      export_schema_version: 2,
+      export_schema_version: 3,
       exported_at: exportedAt,
       user_id: userId,
       manifest: {
@@ -426,11 +533,16 @@ Deno.serve(async (req) => {
         'Progress photo files and thumbnails are not included in this account export. In the current build they stay encrypted on the device unless the user explicitly shares one from Progress; cloud backup is unavailable.',
       server_photo_object_note:
         'Any owner-prefixed server photo objects that already exist are inventoried and receive short-lived download URLs.',
+      health_consent_lifecycle: healthDecision.snapshot,
       export_coverage: {
         caller_rls_tables: CALLER_RLS_EXPORT_TABLES.map((item) => item.table),
         service_role_filtered_exports: SERVICE_ROLE_FILTERED_EXPORTS,
         storage_sources: ['photo_storage_objects'],
-        derived_sources: ['photo_download_urls', 'photo_download_url_omissions'],
+        derived_sources: [
+          'photo_download_urls',
+          'photo_download_url_omissions',
+          'health_consent_lifecycle',
+        ],
       },
       exclusion_register: [
         {
@@ -451,6 +563,9 @@ Deno.serve(async (req) => {
       'Content-Disposition': `attachment; filename="${dataExportFileName}"`,
     });
   } catch (_error) {
+    if (_error instanceof ExportHealthLifecycleUnavailableError) {
+      return json({ error: 'HEALTH_DATA_LIFECYCLE_UNAVAILABLE' }, 503);
+    }
     console.error('[data-export]', 'DATA_EXPORT_FAILED');
     return json({ error: 'DATA_EXPORT_FAILED' }, 500);
   }

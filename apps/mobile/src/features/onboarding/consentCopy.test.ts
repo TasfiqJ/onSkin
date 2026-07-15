@@ -1,8 +1,14 @@
+import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 
 import {
   ACCOUNT_CONSENT,
+  CONSENT_COPY_VERSION,
+  assertHealthDataConsentCopyReleaseAllowed,
   HEALTH_DATA_CONSENT,
+  HEALTH_DATA_CONSENT_COPY_RELEASE_BLOCKED,
+  HEALTH_DATA_CONSENT_COPY_REVIEW_STATUS,
+  HEALTH_DATA_WITHDRAWAL,
   PHOTO_CAPTURE_CONSENT,
   PHOTO_CLOUD_BACKUP_CONSENT,
 } from './consentCopy';
@@ -25,8 +31,38 @@ const visibleConsentCopy = [
 ];
 
 describe('visible consent copy', () => {
+  it('matches the server allowlisted health-consent contract exactly', () => {
+    const sha256 = (value: string) => createHash('sha256').update(value, 'utf8').digest('hex');
+
+    expect(CONSENT_COPY_VERSION).toBe('draft-v1-2026-07-10');
+    expect(sha256(HEALTH_DATA_CONSENT.fullText)).toBe(
+      '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+    );
+    expect(sha256(HEALTH_DATA_CONSENT.declineText)).toBe(
+      '6a34a4d3b8086a0ee86951261f612c502bd4376bc8378cf22533b49817cdedea',
+    );
+    expect(sha256(HEALTH_DATA_WITHDRAWAL.fullText)).toBe(
+      '5200ef21982670cf73539d8a7d3e0f9c2219b40ee8d63be0a83d3e10043ba37f',
+    );
+  });
+
   it('does not expose placeholder markers in user-facing consent screens', () => {
     expect(visibleConsentCopy).not.toContainEqual(expect.stringMatching(/placeholder/i));
+  });
+
+  it('blocks only new production grants while keeping withdrawal available', () => {
+    expect(HEALTH_DATA_CONSENT_COPY_REVIEW_STATUS).toEqual({
+      collection: 'draft_blocked',
+      withdrawal: 'draft_blocked',
+    });
+    expect(() => assertHealthDataConsentCopyReleaseAllowed('grant', 'development')).not.toThrow();
+    expect(() => assertHealthDataConsentCopyReleaseAllowed('grant', 'staging')).not.toThrow();
+    expect(() => assertHealthDataConsentCopyReleaseAllowed('grant', 'production')).toThrow(
+      HEALTH_DATA_CONSENT_COPY_RELEASE_BLOCKED,
+    );
+    expect(() =>
+      assertHealthDataConsentCopyReleaseAllowed('withdrawal', 'production'),
+    ).not.toThrow();
   });
 
   it('keeps photo capture consent honest about local-only backup tradeoffs', () => {

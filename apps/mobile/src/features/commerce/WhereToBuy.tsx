@@ -5,12 +5,14 @@ import { Pressable, View } from 'react-native';
 import { Text } from '@/components/ui';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { track } from '@/lib/analytics/track';
+import { isCommerceConsented } from '@/features/commerce/consent';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 import { COMMERCE_COPY } from './copy';
+import { runCommerceDisclosure } from './disclosureOperation';
 import { CommerceLinkNotice, type CommerceLinkFeedback } from './CommerceLinkNotice';
 import { LockGlyph } from './LockGlyph';
 import { formatPrice, outboundFor, type WhereToBuyOption } from './links';
@@ -96,30 +98,49 @@ function EnabledWhereToBuy({ productType }: { productType: string }) {
       });
       return;
     }
-    track('where_to_buy_clicked', { source: option.source });
-    await recordClick({ clickToken: token, productType, source: option.source, consented: true });
-    // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Dev demo links stay inert; real approved
-    // retailer links open only after the HTTPS URL guard appends the opaque token.
-    const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
-    if (isDev && option.url.startsWith('https://example.com')) {
-      setLinkFeedback({
-        title: COMMERCE_COPY.whereToBuy.stubTitle,
-        body: COMMERCE_COPY.whereToBuy.stubBody,
+    try {
+      const disclosure = await runCommerceDisclosure({
+        refreshConsent: isCommerceConsented,
+        confirmServerClick: () =>
+          recordClick({ clickToken: token, productType, source: option.source, consented: true }),
+        finalAction: async () => {
+          track('where_to_buy_clicked', { source: option.source });
+          // BLOCKED: B-SHOPMY / B-CATALOG-SEED. Dev demo links stay inert; real approved
+          // retailer links open only after the HTTPS URL guard appends the opaque token.
+          const isDev = typeof __DEV__ !== 'undefined' && __DEV__;
+          if (isDev && option.url.startsWith('https://example.com')) {
+            setLinkFeedback({
+              title: COMMERCE_COPY.whereToBuy.stubTitle,
+              body: COMMERCE_COPY.whereToBuy.stubBody,
+            });
+            return;
+          }
+          const opened = await openExternalHttpsUrl(outboundUrl, {
+            mode: 'linking',
+            failureTitle: 'Link unavailable',
+            failureMessage: 'We could not open this retailer link. Please try again.',
+            alertOnFailure: false,
+          });
+          if (!opened) {
+            track('where_to_buy_link_failed', { source: option.source });
+            setLinkFeedback({
+              title: 'Link unavailable',
+              body: 'We could not open this retailer link. Please try again.',
+            });
+          }
+        },
       });
-    } else {
-      const opened = await openExternalHttpsUrl(outboundUrl, {
-        mode: 'linking',
-        failureTitle: 'Link unavailable',
-        failureMessage: 'We could not open this retailer link. Please try again.',
-        alertOnFailure: false,
-      });
-      if (!opened) {
-        track('where_to_buy_link_failed', { source: option.source });
+      if (disclosure === 'consent_closed') {
         setLinkFeedback({
-          title: 'Link unavailable',
-          body: 'We could not open this retailer link. Please try again.',
+          title: 'Consent needed',
+          body: 'Where-to-buy access was turned off. Turn it on again before opening a link.',
         });
       }
+    } catch {
+      setLinkFeedback({
+        title: 'Link unavailable',
+        body: 'Consent or click confirmation changed before the retailer opened. Please try again.',
+      });
     }
   };
 

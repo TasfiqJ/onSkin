@@ -1,98 +1,61 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { grantAskConsent, isAskConsented, revokeAskConsent } from './consent';
+
 const mocks = vi.hoisted(() => ({
-  getLatestConsents: vi.fn(),
-  recordConsent: vi.fn(),
+  active: vi.fn(),
+  grant: vi.fn(),
+  withdraw: vi.fn(),
+  clear: vi.fn(),
   track: vi.fn(),
-  withdrawConsent: vi.fn(),
-  clearAskStore: vi.fn(),
-  getAskConsentLocal: vi.fn(),
-  setAskConsentLocal: vi.fn(),
 }));
 
-vi.mock('@/lib/analytics/track', () => ({
-  track: mocks.track,
+vi.mock('@/lib/consent/dependentConsentLifecycle', () => ({
+  isHealthDependentConsentActive: mocks.active,
+  grantHealthDependentConsent: mocks.grant,
+  withdrawHealthDependentConsent: mocks.withdraw,
 }));
+vi.mock('./store', () => ({ clearAskStore: mocks.clear }));
+vi.mock('@/lib/analytics/track', () => ({ track: mocks.track }));
 
-vi.mock('@/lib/consent/consent', () => ({
-  getLatestConsents: mocks.getLatestConsents,
-  recordConsent: mocks.recordConsent,
-}));
-
-vi.mock('@/lib/consent/withdrawal', () => ({
-  withdrawConsent: mocks.withdrawConsent,
-}));
-
-vi.mock('./store', () => ({
-  clearAskStore: mocks.clearAskStore,
-  getAskConsentLocal: mocks.getAskConsentLocal,
-  setAskConsentLocal: mocks.setAskConsentLocal,
-}));
-
-describe('Ask consent persistence', () => {
+describe('Ask consent facade', () => {
   beforeEach(() => {
-    mocks.getLatestConsents.mockReset();
-    mocks.recordConsent.mockReset();
-    mocks.track.mockReset();
-    mocks.withdrawConsent.mockReset();
-    mocks.clearAskStore.mockReset();
-    mocks.getAskConsentLocal.mockReset();
-    mocks.setAskConsentLocal.mockReset();
-    mocks.recordConsent.mockResolvedValue(undefined);
-    mocks.withdrawConsent.mockResolvedValue(undefined);
-    mocks.clearAskStore.mockResolvedValue(undefined);
-    mocks.getAskConsentLocal.mockResolvedValue(false);
-    mocks.setAskConsentLocal.mockResolvedValue(undefined);
+    for (const mock of Object.values(mocks)) mock.mockReset();
+    mocks.active.mockResolvedValue(false);
+    mocks.grant.mockResolvedValue(undefined);
+    mocks.withdraw.mockResolvedValue(undefined);
   });
 
-  it('records Ask grant analytics only after the consent ledger saves', async () => {
-    const { grantAskConsent } = await import('./consent');
+  it('uses only the authoritative dependent status gate', async () => {
+    mocks.active.mockResolvedValueOnce(true);
+    await expect(isAskConsented()).resolves.toBe(true);
+    expect(mocks.active).toHaveBeenCalledWith('ask_onskin', {
+      deleteLocalOnAuthoritativeClose: mocks.clear,
+    });
+  });
 
-    await expect(grantAskConsent()).resolves.toBeUndefined();
-
-    expect(mocks.setAskConsentLocal).toHaveBeenCalledWith(true);
-    expect(mocks.recordConsent).toHaveBeenCalledWith(
-      expect.objectContaining({ type: 'ask_onskin', granted: true }),
-    );
-    expect(mocks.track).toHaveBeenCalledWith('ask_consent_granted');
-    expect(mocks.recordConsent.mock.invocationCallOrder[0]).toBeLessThan(
+  it('publishes grant analytics only after the exact CAS succeeds', async () => {
+    await grantAskConsent();
+    expect(mocks.grant).toHaveBeenCalledWith('ask_onskin');
+    expect(mocks.grant.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.track.mock.invocationCallOrder[0],
     );
   });
 
-  it('fails closed and relocks Ask consent when the consent ledger fails', async () => {
-    const { grantAskConsent } = await import('./consent');
-    mocks.recordConsent.mockRejectedValueOnce(new Error('ledger unavailable'));
-
-    await expect(grantAskConsent()).rejects.toThrow('ledger unavailable');
-
-    expect(mocks.setAskConsentLocal).toHaveBeenNthCalledWith(1, true);
-    expect(mocks.setAskConsentLocal).toHaveBeenNthCalledWith(2, false);
-    expect(mocks.track).not.toHaveBeenCalledWith('ask_consent_granted');
+  it('does not publish a failed grant', async () => {
+    mocks.grant.mockRejectedValueOnce(new Error('configured outage'));
+    await expect(grantAskConsent()).rejects.toThrow('configured outage');
+    expect(mocks.track).not.toHaveBeenCalled();
   });
 
-  it('records Ask revocation analytics only after withdrawal succeeds', async () => {
-    const { revokeAskConsent } = await import('./consent');
-
-    await expect(revokeAskConsent()).resolves.toBeUndefined();
-
-    expect(mocks.clearAskStore).toHaveBeenCalledTimes(1);
-    expect(mocks.withdrawConsent).toHaveBeenCalledWith(
-      expect.objectContaining({ type: 'ask_onskin' }),
-    );
-    expect(mocks.track).toHaveBeenCalledWith('ask_consent_revoked');
-    expect(mocks.withdrawConsent.mock.invocationCallOrder[0]).toBeLessThan(
-      mocks.track.mock.invocationCallOrder[0],
-    );
-  });
-
-  it('does not emit Ask revocation analytics when withdrawal fails', async () => {
-    const { revokeAskConsent } = await import('./consent');
-    mocks.withdrawConsent.mockRejectedValueOnce(new Error('withdrawal unavailable'));
-
-    await expect(revokeAskConsent()).rejects.toThrow('withdrawal unavailable');
-
-    expect(mocks.clearAskStore).toHaveBeenCalledTimes(1);
-    expect(mocks.track).not.toHaveBeenCalledWith('ask_consent_revoked');
+  it('passes local deletion into the durable withdrawal and reports no false success', async () => {
+    await revokeAskConsent();
+    expect(mocks.withdraw).toHaveBeenCalledWith({
+      type: 'ask_onskin',
+      deleteLocal: mocks.clear,
+    });
+    mocks.withdraw.mockRejectedValueOnce(new Error('withdrawal pending'));
+    await expect(revokeAskConsent()).rejects.toThrow('withdrawal pending');
+    expect(mocks.track).toHaveBeenCalledTimes(1);
   });
 });

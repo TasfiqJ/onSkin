@@ -1,6 +1,7 @@
-import { decryptPhotoNote } from '@/features/photos/encryptedStorage';
+import { decryptPhotoNoteForPurposeLimitedExport } from '@/features/photos/encryptedStorage';
 import { normalizeConflictChoicesForExport } from '@/features/intelligence/overrides';
-import { getPrivateItems } from '@/lib/storage/privateKV';
+import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
+import { getPrivateItemsForPurposeLimitedExport } from '@/lib/storage/privateKV';
 
 import { LOCAL_PRIVATE_DATA_KEYS } from './localPrivateDataKeys';
 
@@ -51,6 +52,11 @@ const LOCAL_EXPORT_SPECS = [
     key: 'onskin.healthDataCollectionConsent.v1',
     section: 'account_and_privacy',
     field: 'health_data_collection_consent',
+  },
+  {
+    key: 'routinekind.healthDataLifecycle.v1',
+    section: 'account_and_privacy',
+    field: 'health_data_lifecycle',
   },
   {
     key: 'onskin.photos.captureConsent',
@@ -198,6 +204,7 @@ export const LOCAL_DEVICE_EXPORT_STORAGE_KEYS = [
 
 const REDACTED_LOCAL_FIELD_NAMES = new Set([
   'encryptedLocalUri',
+  'idempotencyKey',
   'keyId',
   'localUri',
   'notesCiphertext',
@@ -276,7 +283,10 @@ function redactLocalFields(value: unknown): unknown {
   return sanitized;
 }
 
-async function exportPhotoRecords(raw: string): Promise<{
+async function exportPhotoRecords(
+  raw: string,
+  accountLease: AccountGenerationLease,
+): Promise<{
   records: Record<string, unknown>[];
   omitted_invalid_record_count: number;
   photo_files_included: false;
@@ -301,7 +311,10 @@ async function exportPhotoRecords(raw: string): Promise<{
 
     const legacyNote = typeof value.notes === 'string' ? value.notes : null;
     const ciphertext = typeof value.notesCiphertext === 'string' ? value.notesCiphertext : null;
-    const decryptedNote = ciphertext ? await decryptPhotoNote(ciphertext) : null;
+    const decryptedNote = ciphertext
+      ? await decryptPhotoNoteForPurposeLimitedExport(ciphertext, accountLease)
+      : null;
+    accountLease.assertCurrent();
     record.notes = ciphertext ? decryptedNote : legacyNote;
     record.notesExportStatus = ciphertext
       ? decryptedNote === null
@@ -333,10 +346,16 @@ function emptySections(): LocalDeviceExportData['sections'] {
 }
 
 export async function collectLocalDeviceExportData(
+  accountLease: AccountGenerationLease,
   collectedAt = new Date().toISOString(),
 ): Promise<LocalDeviceExportData> {
+  accountLease.assertCurrent();
   const sections = emptySections();
-  const stored = await getPrivateItems(LOCAL_DEVICE_EXPORT_STORAGE_KEYS);
+  const stored = await getPrivateItemsForPurposeLimitedExport(
+    LOCAL_DEVICE_EXPORT_STORAGE_KEYS,
+    accountLease,
+  );
+  accountLease.assertCurrent();
 
   for (const spec of LOCAL_EXPORT_SPECS) {
     const raw = stored.get(spec.key) ?? null;
@@ -351,7 +370,10 @@ export async function collectLocalDeviceExportData(
   }
 
   const photoRaw = stored.get(PHOTO_RECORDS_KEY) ?? null;
-  if (photoRaw !== null) sections.progress.photo_records = await exportPhotoRecords(photoRaw);
+  if (photoRaw !== null) {
+    sections.progress.photo_records = await exportPhotoRecords(photoRaw, accountLease);
+  }
+  accountLease.assertCurrent();
 
   return {
     schema_version: 1,
@@ -375,6 +397,11 @@ export async function collectLocalDeviceExportData(
       {
         data_class: 'temporary_export_and_share_cache',
         reason: 'One-time cache files are deleted after each share attempt and are not exported.',
+      },
+      {
+        data_class: 'privacy_request_recovery_capabilities',
+        reason:
+          'Owner bindings, idempotency keys, and recovery capabilities used to finish deletion or consent-withdrawal requests are security control data and are never exported.',
       },
     ],
   };

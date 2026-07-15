@@ -1,6 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+
+import {
   endRecovery,
   loadCycleConfig,
   overrideStagingProducts,
@@ -19,6 +24,8 @@ const mocks = vi.hoisted(() => ({
   getPrivateItem: vi.fn(),
   removePrivateItem: vi.fn(),
   updatePrivateItem: vi.fn(),
+  updateGate: null as Promise<void> | null,
+  updateStarted: null as (() => void) | null,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -68,17 +75,22 @@ describe('cycle configuration persistence and reconciliation', () => {
     mocks.getPrivateItem.mockReset();
     mocks.removePrivateItem.mockReset();
     mocks.updatePrivateItem.mockReset();
+    mocks.updateGate = null;
+    mocks.updateStarted = null;
     mocks.getPrivateItem.mockImplementation(async (key: string) => mocks.storage.get(key) ?? null);
     mocks.removePrivateItem.mockImplementation(async (key: string) => {
       mocks.storage.delete(key);
     });
     mocks.updatePrivateItem.mockImplementation(
       async (key: string, updater: (current: string | null) => string | null) => {
+        mocks.updateStarted?.();
+        if (mocks.updateGate) await mocks.updateGate;
         const next = updater(mocks.storage.get(key) ?? null);
         if (next === null) mocks.storage.delete(key);
         else mocks.storage.set(key, next);
       },
     );
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
   afterEach(() => {
@@ -455,6 +467,28 @@ describe('cycle configuration persistence and reconciliation', () => {
       customCycle,
       stagingOverrides: ['retinol'],
     });
+  });
+
+  it('does not write a stale cycle mutation after same-owner same-epoch re-grant', async () => {
+    const before = storeCycle(config({ variant: 'classic' }));
+    let releaseUpdate!: () => void;
+    let markUpdateStarted!: () => void;
+    mocks.updateGate = new Promise<void>((resolve) => {
+      releaseUpdate = resolve;
+    });
+    const updateStarted = new Promise<void>((resolve) => {
+      markUpdateStarted = resolve;
+    });
+    mocks.updateStarted = markUpdateStarted;
+
+    const pending = updateCycleConfig({ variant: 'gentle' });
+    await updateStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
+    releaseUpdate();
+
+    await expect(pending).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.storage.get(CYCLE_KEY)).toBe(before);
   });
 
   it('reports future recovery as inactive without producing a negative day', () => {

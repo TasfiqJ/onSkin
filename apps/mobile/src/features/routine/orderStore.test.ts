@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { setActiveHealthProcessingEpoch } from '@/lib/consent/healthProcessingEpoch';
+
 import type { GeneratedPlan, PlanStep } from './generate';
 import {
   applyRoutineOrderOverrides,
@@ -65,6 +67,7 @@ describe('routine order persistence', () => {
         else mocks.storage.set(key, next);
       },
     );
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
   it('returns an empty versioned record when no preference exists', async () => {

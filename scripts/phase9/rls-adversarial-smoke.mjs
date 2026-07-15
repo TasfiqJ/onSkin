@@ -4,6 +4,7 @@ import { AuthApiError, StorageApiError } from '@supabase/supabase-js';
 
 import {
   AUTHENTICATED_CATALOG_TABLES,
+  HEALTH_PURPOSE_READ_FENCED_TABLES,
   HarnessAssertionError,
   OWNER_LINKED_PRIVATE_TABLES,
   PRIVATE_PUBLIC_TABLES,
@@ -48,17 +49,29 @@ const canonicalTables = [
 ];
 
 test('canonical table inventory is exhaustive and duplicate-free', () => {
-  assert.equal(canonicalTables.length, 70);
+  assert.equal(canonicalTables.length, 73);
   assert.equal(OWNER_LINKED_PRIVATE_TABLES.length, 30);
+  assert.equal(HEALTH_PURPOSE_READ_FENCED_TABLES.length, 27);
+  assert.equal(new Set(HEALTH_PURPOSE_READ_FENCED_TABLES).size, 27);
+  assert(
+    HEALTH_PURPOSE_READ_FENCED_TABLES.every((table) =>
+      OWNER_LINKED_PRIVATE_TABLES.includes(table),
+    ),
+  );
+  assert(
+    ['profiles', 'consents', 'entitlements'].every(
+      (table) => !HEALTH_PURPOSE_READ_FENCED_TABLES.includes(table),
+    ),
+  );
   assert.equal(SERVICE_ONLY_PRIVATE_TABLES.length, 10);
-  assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 7);
-  assert.equal(new Set(canonicalTables).size, 70);
+  assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 10);
+  assert.equal(new Set(canonicalTables).size, 73);
   assert.deepEqual(PRIVATE_PUBLIC_TABLES, [
     ...OWNER_LINKED_PRIVATE_TABLES,
     ...SERVICE_ONLY_PRIVATE_TABLES,
     ...SEALED_SERVICE_PRIVATE_TABLES,
   ]);
-  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 47);
+  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 50);
   assert.deepEqual(
     tableClassificationIssues({
       createdTables: canonicalTables,

@@ -48,6 +48,7 @@ vi.mock('./remoteRequestGate', () => ({
     (transport: typeof fetch) =>
     (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) =>
       transport(input, init),
+  supabaseRemoteRequestSnapshot: () => ({ state: 'closed', subject: null }),
 }));
 
 vi.mock('@supabase/supabase-js', () => ({

@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+
+import {
   clearTrendStore,
   deleteTrendState,
   getTrendInsightsLocal,
@@ -30,6 +35,7 @@ const STATE_KEY = 'onskin.trendState.v1';
 describe('trend insight store', () => {
   beforeEach(() => {
     mocks.storage.clear();
+    setActiveHealthProcessingEpoch(1, { ownerUserId: 'user-a', accountGeneration: 0 });
   });
 
   it('reads legacy trend grants without repair and writes versioned flags', async () => {
@@ -54,6 +60,7 @@ describe('trend insight store', () => {
     mocks.storage.set(CONSENT_KEY, '1');
     mocks.storage.set(STATE_KEY, 'derived-state');
 
+    clearActiveHealthProcessingEpoch();
     await deleteTrendState();
 
     expect(mocks.storage.get(CONSENT_KEY)).toBe('1');
@@ -64,6 +71,7 @@ describe('trend insight store', () => {
     mocks.storage.set(CONSENT_KEY, '1');
     mocks.storage.set(STATE_KEY, 'derived-state');
 
+    clearActiveHealthProcessingEpoch();
     await clearTrendStore();
 
     expect(mocks.storage.has(CONSENT_KEY)).toBe(false);

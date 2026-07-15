@@ -269,6 +269,7 @@ async function runCheck(name, fn) {
 
 function publicClient() {
   return createClient(supabaseUrl, publishableKey, {
+    global: { headers: { 'x-onskin-health-epoch': '1' } },
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
   });
 }
@@ -696,6 +697,26 @@ function assertLocalPhotoExportDisclosure(bundle) {
       ),
     'data-export does not distinguish device-only photo files from server-side photo metadata.',
   );
+  const lifecycle = bundle?.health_consent_lifecycle;
+  assert(
+    lifecycle &&
+      typeof lifecycle === 'object' &&
+      ['unconsented', 'active', 'withdrawn'].includes(lifecycle.state) &&
+      Number.isSafeInteger(lifecycle.processing_epoch) &&
+      lifecycle.processing_epoch >= 0 &&
+      !Object.hasOwn(lifecycle, 'operation_id') &&
+      typeof lifecycle.server_verified_at === 'string' &&
+      !Number.isNaN(Date.parse(lifecycle.server_verified_at)),
+    'data-export is missing a sanitized terminal/active health lifecycle status.',
+  );
+  const lifecycleManifest = bundle?.manifest?.sources?.health_consent_lifecycle;
+  assert(
+    lifecycleManifest?.kind === 'derived' &&
+      lifecycleManifest?.count === 1 &&
+      lifecycleManifest?.complete === true &&
+      /^sha256:[a-f0-9]{64}$/.test(lifecycleManifest?.checksum ?? ''),
+    'data-export health lifecycle manifest is incomplete.',
+  );
 }
 
 function assertDataExportRateLimited(response) {
@@ -748,7 +769,7 @@ async function exhaustDataExportRateLimit(user) {
     );
     assert(body?.user_id === user.id, 'data-export before limit returned the wrong user_id.');
     assert(
-      body?.export_schema_version === 2,
+      body?.export_schema_version === 3,
       'data-export before limit returned the wrong export schema version.',
     );
     assertLocalPhotoExportDisclosure(body);
@@ -920,6 +941,23 @@ async function main() {
         display_name: `Phase 9 Data ${label}`,
         units: 'metric',
       });
+      const healthConsentVersion = 'draft-v1-2026-07-10';
+      const healthConsentHash =
+        '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd';
+      const { data: consentRows, error: consentError } = await user.client.rpc(
+        'grant_health_data_consent',
+        {
+          p_expected_epoch: 0,
+          p_version: healthConsentVersion,
+          p_consent_text_hash: healthConsentHash,
+        },
+      );
+      if (consentError) throw consentError;
+      const consent = Array.isArray(consentRows) ? consentRows[0] : null;
+      assert(
+        consent?.user_id === user.id && consent?.state === 'active' && consent?.epoch === 1,
+        `health consent activation failed for ${label}.`,
+      );
       const skinProfile = await insertOne(user.client, 'skin_profiles', {
         user_id: user.id,
         oily_dry: label === 'a' ? 1 : 2,
@@ -947,26 +985,19 @@ async function main() {
         frequency: 'daily',
         instructions: `Phase 9 ${label} step`,
       });
-      const consent = await insertOne(user.client, 'consents', {
-        user_id: user.id,
-        consent_type: 'health_data_collection',
-        granted: true,
-        version: `phase9-data-${label}`,
-        consent_text_hash: `phase9-data-${label}`,
-      });
       await insertOne(user.client, 'consents', {
         user_id: user.id,
         consent_type: 'photo_cloud_backup',
         granted: true,
         version: `phase9-data-${label}`,
-        consent_text_hash: `phase9-data-${label}`,
+        consent_text_hash: healthConsentHash,
       });
       await insertOne(user.client, 'consents', {
         user_id: user.id,
         consent_type: 'data_sharing',
         granted: true,
         version: `phase9-data-${label}`,
-        consent_text_hash: `phase9-data-${label}`,
+        consent_text_hash: healthConsentHash,
       });
       const completion = await insertOne(user.client, 'routine_completions', {
         user_id: user.id,
@@ -975,7 +1006,7 @@ async function main() {
         completed_date: new Date().toISOString().slice(0, 10),
       });
 
-      const photoPath = `${user.id}/phase9-data-${label}-${randomUUID()}.bin`;
+      const photoPath = `${user.id}/e1/phase9-data-${label}-${randomUUID()}.bin`;
       storagePaths.push(photoPath);
       const upload = await user.client.storage
         .from('photos')
@@ -1165,7 +1196,7 @@ async function main() {
       if (error) throw error;
       assert(data && typeof data === 'object', 'data-export did not return a JSON bundle.');
       assert(data.user_id === userA.id, 'data-export returned the wrong user_id.');
-      assert(data.export_schema_version === 2, 'data-export schema version mismatch.');
+      assert(data.export_schema_version === 3, 'data-export schema version mismatch.');
       assertLocalPhotoExportDisclosure(data);
 
       expectBundleHasOnlyUser(data, 'skin_profiles', 'user_id', userA.id, userB.id);

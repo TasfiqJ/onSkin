@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  clearActiveHealthProcessingEpoch,
+  setActiveHealthProcessingEpoch,
+} from '@/lib/consent/healthProcessingEpoch';
+
+import {
   COMPLETION_QUEUE_INVALID,
   COMPLETION_QUEUE_UNSUPPORTED_VERSION,
   enqueueCompletion,
@@ -21,10 +26,14 @@ const mocks = vi.hoisted(() => ({
   insertGate: null as Promise<void> | null,
   onInsert: null as (() => void) | null,
   insertError: null as { code: string } | null,
+  readGate: null as Promise<void> | null,
+  readStarted: null as (() => void) | null,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => {
+    mocks.readStarted?.();
+    if (mocks.readGate) await mocks.readGate;
     const failure = mocks.readFailures.get(key);
     if (failure) throw failure;
     return mocks.storage.get(key) ?? null;
@@ -107,6 +116,14 @@ describe('offline completion queue (docs/01 §6)', () => {
     mocks.insertGate = null;
     mocks.onInsert = null;
     mocks.insertError = null;
+    mocks.readGate = null;
+    mocks.readStarted = null;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(4, {
+      ownerUserId: 'u1',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
     vi.clearAllMocks();
   });
 
@@ -241,6 +258,74 @@ describe('offline completion queue (docs/01 §6)', () => {
     await expect(getPendingCompletions()).resolves.toEqual([concurrent]);
   });
 
+  it('rejects a cross-owner enqueue before touching the private queue', async () => {
+    await expect(enqueueCompletion({ ...base, userId: 'u2' })).rejects.toThrow(
+      'HEALTH_DATA_WRITE_OWNER_MISMATCH',
+    );
+
+    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.writes).toBe(0);
+  });
+
+  it('does not dispatch or rewrite a deferred old-lease flush after withdrawal and re-grant', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ version: 1, items: [base] }));
+    mocks.currentUserId = 'u1';
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.readGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.readStarted = markReadStarted;
+
+    const staleFlush = flushCompletions(new Date(2026, 5, 25, 9));
+    await readStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(5, {
+      ownerUserId: 'u1',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
+    releaseRead();
+
+    await expect(staleFlush).rejects.toThrow('HEALTH_DATA_WRITE_ADMISSION_CLOSED');
+    expect(mocks.insertCalls).toEqual([]);
+    expect(storedItems()).toEqual([base]);
+    expect(mocks.writes).toBe(0);
+  });
+
+  it('does not dispatch an exact-epoch A-to-B collision from a deferred queue read', async () => {
+    mocks.storage.set(KEY, JSON.stringify({ version: 1, items: [base] }));
+    mocks.currentUserId = 'u1';
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    mocks.readGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.readStarted = markReadStarted;
+
+    const staleFlush = flushCompletions(new Date(2026, 5, 25, 9));
+    await readStarted;
+    clearActiveHealthProcessingEpoch();
+    setActiveHealthProcessingEpoch(4, {
+      ownerUserId: 'u2',
+      accountGeneration: 0,
+      serverVerifiedAt: null,
+    });
+    mocks.currentUserId = 'u2';
+    releaseRead();
+
+    await expect(staleFlush).rejects.toThrow('HEALTH_DATA_WRITE_OWNER_MISMATCH');
+    expect(mocks.insertCalls).toEqual([]);
+    expect(storedItems()).toEqual([base]);
+    expect(mocks.writes).toBe(0);
+  });
+
   it('preserves future-version bytes and refuses to downgrade them', async () => {
     const original = JSON.stringify({ version: 2, items: [base] });
     mocks.storage.set(KEY, original);
@@ -285,11 +370,12 @@ describe('offline completion queue (docs/01 §6)', () => {
     expect(mocks.writes).toBe(0);
   });
 
-  it('keeps public behavior for invalid enqueue inputs without inventing rows', async () => {
+  it('ignores invalid enqueue inputs without inventing rows or queue bytes', async () => {
     await enqueueCompletion({ ...base, userId: '   ' });
     await enqueueCompletion({ ...base, completedDate: '2026-02-31' });
 
-    expect(storedItems()).toEqual([]);
+    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.writes).toBe(0);
   });
 
   it('normalizes pending-read dates before matching queued step ids', async () => {

@@ -2,6 +2,11 @@ import type { GoalId } from '@onskin/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
+import {
+  HEALTH_DATA_WRITE_ADMISSION_CLOSED,
+  runHealthDataWriteOperation,
+} from '@/lib/consent/healthDataWriteAdmission';
+import { activeHealthProcessingOwnerUserId } from '@/lib/consent/healthProcessingEpoch';
 import { getPersistedSupabaseUser, supabase } from '@/lib/supabase/client';
 
 import {
@@ -53,35 +58,43 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         return scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
       },
       async persistSkinProfile() {
-        if (!(await hasCurrentHealthDataCollectionConsent())) {
-          throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');
-        }
-        const completion = getQuizCompletionState(quizAnswers, ONBOARDING_QUIZ);
-        if (!completion.complete) {
-          throw new Error(
-            `Cannot persist incomplete onboarding quiz: ${completion.missingQuestionIds.join(', ')}`,
-          );
-        }
-        const result = scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
-        const completedAt = new Date().toISOString();
-        // Local-first (D-029): record completion on-device FIRST so the entry
-        // gate (app/index.tsx) recognizes this user as onboarded even if the
-        // server write fails or no backend exists yet. This is the v1 source of
-        // truth; the Supabase insert below is a best-effort mirror that must not
-        // throw past this point (a returning user must never be re-onboarded).
-        await setStoredSkinProfile({ result, goals, completedAt });
-        await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] }),
-          queryClient.invalidateQueries({ queryKey: ['shelf'] }),
-          queryClient.invalidateQueries({ queryKey: ['ramp'] }),
-        ]);
-        try {
-          const { data: userData } = await getPersistedSupabaseUser();
-          const userId = userData.user?.id;
-          if (userId) {
+        const expectedOwnerUserId = activeHealthProcessingOwnerUserId();
+        if (!expectedOwnerUserId) throw new Error(HEALTH_DATA_WRITE_ADMISSION_CLOSED);
+        return runHealthDataWriteOperation(expectedOwnerUserId, async (lease) => {
+          if (!(await hasCurrentHealthDataCollectionConsent())) {
+            throw new Error('CURRENT_HEALTH_CONSENT_REQUIRED');
+          }
+          lease.assertCurrent();
+          const completion = getQuizCompletionState(quizAnswers, ONBOARDING_QUIZ);
+          if (!completion.complete) {
+            throw new Error(
+              `Cannot persist incomplete onboarding quiz: ${completion.missingQuestionIds.join(', ')}`,
+            );
+          }
+          const result = scoreQuiz(quizAnswers, ONBOARDING_QUIZ);
+          const completedAt = new Date().toISOString();
+          // Local-first (D-029): record completion on-device FIRST so the entry
+          // gate (app/index.tsx) recognizes this user as onboarded even if the
+          // server write fails or no backend exists yet. This is the v1 source of
+          // truth; the Supabase insert below is a best-effort mirror that must not
+          // throw past this point (a returning user must never be re-onboarded).
+          await setStoredSkinProfile({ result, goals, completedAt });
+          lease.assertCurrent();
+          await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ['skinProfileBits'] }),
+            queryClient.invalidateQueries({ queryKey: ['shelf'] }),
+            queryClient.invalidateQueries({ queryKey: ['ramp'] }),
+          ]);
+          lease.assertCurrent();
+          try {
+            const { data: userData } = await getPersistedSupabaseUser();
+            lease.assertCurrent();
+            if (userData.user?.id !== lease.ownerUserId) {
+              throw new Error('SUPABASE_SESSION_OWNER_MISMATCH');
+            }
             // Axis scores are stored as the raw signed sums (docs/01 §3 axis ints).
             const { error } = await supabase.from('skin_profiles').insert({
-              user_id: userId,
+              user_id: lease.ownerUserId,
               oily_dry: result.axisScores.oily_dry,
               sensitive_resistant: result.axisScores.sensitive_resistant,
               pigmented_non: result.axisScores.pigmented_non,
@@ -94,13 +107,16 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
               completed_at: completedAt,
               version: 1,
             });
+            lease.assertCurrent();
             if (error) throw error;
+          } catch {
+            // Best-effort server mirror until the backend is configured. A
+            // stale lease must still escape instead of becoming offline success.
+            lease.assertCurrent();
           }
-        } catch {
-          // Best-effort server mirror until the backend is configured
-          // (B-SUPABASE). The local record above is the durable v1 signal.
-        }
-        return result;
+          lease.assertCurrent();
+          return result;
+        });
       },
       reset() {
         setGoals([]);

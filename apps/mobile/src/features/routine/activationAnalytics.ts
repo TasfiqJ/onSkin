@@ -1,4 +1,5 @@
 import { track } from '@/lib/analytics/track';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 import { removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
 const KEY = 'routinekind.routineActivation.v1';
@@ -121,15 +122,19 @@ export async function recordFirstUsefulInsightAnalytics({
 }): Promise<void> {
   if (isExample || insightCount <= 0) return;
 
-  let reserved: ActivationFlags;
-  try {
-    reserved = await reserveFirstEvents({ routineCreated: false, usefulInsight: true });
-  } catch {
-    return;
-  }
-  if (reserved.firstUsefulInsight) {
-    track('first_useful_insight', { count: insightCount, source });
-  }
+  await runCurrentHealthDataOperation(async (lease) => {
+    let reserved: ActivationFlags;
+    try {
+      reserved = await reserveFirstEvents({ routineCreated: false, usefulInsight: true });
+    } catch {
+      lease.assertCurrent();
+      return;
+    }
+    lease.assertCurrent();
+    if (reserved.firstUsefulInsight) {
+      track('first_useful_insight', { count: insightCount, source });
+    }
+  });
 }
 
 export async function recordRoutinePlanAnalytics({
@@ -143,31 +148,40 @@ export async function recordRoutinePlanAnalytics({
   isExample: boolean;
   source: 'example' | 'routine_plan';
 }): Promise<void> {
-  track('routine_plan_viewed', { source });
-
-  if (isExample) return;
-
-  const hasRoutineSteps = routineStepCount > 0;
-  if (hasRoutineSteps) {
-    track('routine_created', { source });
-  }
-
-  let reserved: ActivationFlags;
-  try {
-    reserved = await reserveFirstEvents({
-      routineCreated: hasRoutineSteps,
-      usefulInsight: insightCount > 0,
-    });
-  } catch {
+  // The bundled example contains no user health data and may be viewed before
+  // consent. Real-plan analytics remain bound to the exact processing grant.
+  if (isExample) {
+    track('routine_plan_viewed', { source });
     return;
   }
 
-  if (reserved.firstRoutineCreated) {
-    track('first_routine_created', { source });
-  }
-  if (reserved.firstUsefulInsight) {
-    track('first_useful_insight', { count: insightCount, source });
-  }
+  await runCurrentHealthDataOperation(async (lease) => {
+    track('routine_plan_viewed', { source });
+
+    const hasRoutineSteps = routineStepCount > 0;
+    if (hasRoutineSteps) {
+      track('routine_created', { source });
+    }
+
+    let reserved: ActivationFlags;
+    try {
+      reserved = await reserveFirstEvents({
+        routineCreated: hasRoutineSteps,
+        usefulInsight: insightCount > 0,
+      });
+    } catch {
+      lease.assertCurrent();
+      return;
+    }
+    lease.assertCurrent();
+
+    if (reserved.firstRoutineCreated) {
+      track('first_routine_created', { source });
+    }
+    if (reserved.firstUsefulInsight) {
+      track('first_useful_insight', { count: insightCount, source });
+    }
+  });
 }
 
 export async function clearRoutineActivationAnalytics(): Promise<void> {

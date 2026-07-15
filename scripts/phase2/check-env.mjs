@@ -101,6 +101,10 @@ const groups = [
     ],
   },
   {
+    name: 'Durable health-consent withdrawal',
+    required: ['HEALTH_CONSENT_WORKER_SECRET'],
+  },
+  {
     name: 'Google Sign-In',
     required: [
       'EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID',
@@ -462,10 +466,24 @@ if (!isIntegerInRange('EDGE_EXTERNAL_RESPONSE_MAX_BYTES', 1024, 1048576)) {
   errors.push('EDGE_EXTERNAL_RESPONSE_MAX_BYTES must be an integer from 1024 to 1048576.');
 }
 
+for (const [name, minimum, maximum] of [
+  ['HEALTH_CONSENT_WORKER_CLAIM_LIMIT', 1, 25],
+  ['HEALTH_CONSENT_WORKER_STORAGE_BATCH_SIZE', 1, 100],
+  ['HEALTH_CONSENT_WORKER_MAX_STORAGE_BATCHES', 1, 100],
+  ['HEALTH_CONSENT_WORKER_BUDGET_MS', 1000, 55000],
+  ['HEALTH_CONSENT_WORKER_RETRY_AFTER_SECONDS', 5, 86400],
+  ['HEALTH_CONSENT_WORKER_ACTION_REQUIRED_RETRY_AFTER_SECONDS', 5, 86400],
+]) {
+  if (rawValueFor(name) && !isIntegerInRange(name, minimum, maximum)) {
+    errors.push(`${name} must be an integer from ${minimum} to ${maximum}.`);
+  }
+}
+
 for (const key of [
   'ACCOUNT_DELETION_PAYLOAD_KEY_HEX',
   'ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX',
   'ACCOUNT_DELETION_WORKER_SECRET',
+  'HEALTH_CONSENT_WORKER_SECRET',
 ]) {
   if (rawValueFor(key) && !LOWERCASE_256_BIT_HEX.test(rawValueFor(key))) {
     errors.push(`${key} must be exactly 64 lowercase hexadecimal characters.`);
@@ -496,6 +514,7 @@ const deletionKeyMaterials = [
   ['ACCOUNT_DELETION_PAYLOAD_KEY_HEX', rawValueFor('ACCOUNT_DELETION_PAYLOAD_KEY_HEX')],
   ['ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX', rawValueFor('ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX')],
   ['ACCOUNT_DELETION_WORKER_SECRET', rawValueFor('ACCOUNT_DELETION_WORKER_SECRET')],
+  ['HEALTH_CONSENT_WORKER_SECRET', rawValueFor('HEALTH_CONSENT_WORKER_SECRET')],
 ];
 for (const entry of rawValueFor('REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS').split(';')) {
   const [version, keyHex, ...extra] = entry.split('=');
@@ -516,7 +535,7 @@ for (const [name, material] of deletionKeyMaterials) {
   const existing = deletionKeyOwnerByMaterial.get(material);
   if (existing) {
     errors.push(
-      `Durable account-deletion key material must be independent; ${name} reuses ${existing}.`,
+      `Durable privacy-lifecycle key material must be independent; ${name} reuses ${existing}.`,
     );
   } else {
     deletionKeyOwnerByMaterial.set(material, name);

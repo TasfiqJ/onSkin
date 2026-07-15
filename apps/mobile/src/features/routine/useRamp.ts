@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { localDateString } from '@/features/today/useToday';
+import { runCurrentHealthDataOperation } from '@/lib/consent/healthDataWriteAdmission';
 
 import { shouldOfferStepUp } from './ramp';
 import { ensureRamp, getStoredRamps, stepUpRamp, type StoredRamp } from './rampStore';
@@ -32,34 +33,45 @@ export function useRamp(): {
   const q = useQuery<RampItem[]>({
     queryKey: ['ramp', keyIds],
     enabled: !planLoading,
-    queryFn: async () => {
-      const stored = await getStoredRamps();
-      const items: RampItem[] = [];
-      for (const r of planRamps) {
-        // Use the stored override if present; otherwise lazily seed from the plan's
-        // generated initial so the screen always has real, persisted state.
-        const state = stored[r.productId] ?? (await ensureRamp(r.productId, r.state));
-        items.push({
-          productId: r.productId,
-          name: r.name,
-          state,
-          offerStepUp: shouldOfferStepUp({
-            startedAt: state.startedAt,
-            lastStepUp: state.lastStepUp,
-            freqPerWeek: state.freqPerWeek,
-            targetPerWeek: state.targetPerWeek,
-            toleranceState: state.toleranceState,
-            today,
-          }),
-        });
-      }
-      return items;
-    },
+    queryFn: () =>
+      runCurrentHealthDataOperation(async (lease) => {
+        lease.assertCurrent();
+        const stored = await getStoredRamps();
+        lease.assertCurrent();
+        const items: RampItem[] = [];
+        for (const r of planRamps) {
+          // Use the stored override if present; otherwise lazily seed from the plan's
+          // generated initial so the screen always has real, persisted state.
+          lease.assertCurrent();
+          const state = stored[r.productId] ?? (await ensureRamp(r.productId, r.state));
+          lease.assertCurrent();
+          items.push({
+            productId: r.productId,
+            name: r.name,
+            state,
+            offerStepUp: shouldOfferStepUp({
+              startedAt: state.startedAt,
+              lastStepUp: state.lastStepUp,
+              freqPerWeek: state.freqPerWeek,
+              targetPerWeek: state.targetPerWeek,
+              toleranceState: state.toleranceState,
+              today,
+            }),
+          });
+        }
+        lease.assertCurrent();
+        return items;
+      }),
   });
 
-  async function acceptStepUp(productId: string): Promise<void> {
-    await stepUpRamp(productId);
-    await qc.invalidateQueries({ queryKey: ['ramp'] });
+  function acceptStepUp(productId: string): Promise<void> {
+    return runCurrentHealthDataOperation(async (lease) => {
+      lease.assertCurrent();
+      await stepUpRamp(productId);
+      lease.assertCurrent();
+      await qc.invalidateQueries({ queryKey: ['ramp'] });
+      lease.assertCurrent();
+    });
   }
 
   return { items: q.data ?? [], isLoading: planLoading || q.isLoading, acceptStepUp };

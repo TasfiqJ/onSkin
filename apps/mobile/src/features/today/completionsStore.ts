@@ -4,6 +4,11 @@ import {
   setPrivateItem,
   updatePrivateItem,
 } from '@/lib/storage/privateKV';
+import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  runCurrentHealthDataOperation,
+  type HealthDataWriteOperationLease,
+} from '@/lib/consent/healthDataWriteAdmission';
 import { localDateString } from './useToday';
 
 // Local-first daily check-off log (docs/03 §6: the activation + streak loop, and
@@ -121,29 +126,55 @@ export function stepKey(phase: 'AM' | 'PM', productId: string): string {
   return `${phase}:${productId}`;
 }
 
-async function load(): Promise<Log> {
+async function load(lease: HealthDataWriteOperationLease): Promise<Log> {
   try {
-    return decodeCompletionLog(await getPrivateItem(KEY));
+    lease.assertCurrent();
+    const raw = await getPrivateItem(KEY);
+    lease.assertCurrent();
+    return decodeCompletionLog(raw);
   } catch {
+    lease.assertCurrent();
     // Reads stay fail-soft for existing UI callers, but never repair/delete bytes.
     return {};
   }
 }
 
-async function hasFirstCompletionMarker(): Promise<boolean> {
-  return (await getPrivateItem(FIRST_COMPLETION_KEY).catch(() => null)) === 'true';
+async function hasFirstCompletionMarker(lease: HealthDataWriteOperationLease): Promise<boolean> {
+  try {
+    lease.assertCurrent();
+    const marker = await getPrivateItem(FIRST_COMPLETION_KEY);
+    lease.assertCurrent();
+    return marker === 'true';
+  } catch {
+    lease.assertCurrent();
+    return false;
+  }
 }
 
-async function markFirstCompletion(): Promise<void> {
-  await setPrivateItem(FIRST_COMPLETION_KEY, 'true').catch(() => undefined);
+async function markFirstCompletion(lease: HealthDataWriteOperationLease): Promise<void> {
+  try {
+    lease.assertCurrent();
+    await setPrivateItem(FIRST_COMPLETION_KEY, 'true');
+    lease.assertCurrent();
+  } catch {
+    lease.assertCurrent();
+  }
+}
+
+async function getCompletedStepsForLease(
+  date: string,
+  lease: HealthDataWriteOperationLease,
+): Promise<Set<string>> {
+  const normalizedDate = normalizeLocalDateISO(date);
+  if (!normalizedDate) return new Set();
+  const log = await load(lease);
+  lease.assertCurrent();
+  return new Set(log[normalizedDate] ?? []);
 }
 
 /** The step keys checked off on `date`. */
 export async function getCompletedSteps(date: string = localDateString()): Promise<Set<string>> {
-  const normalizedDate = normalizeLocalDateISO(date);
-  if (!normalizedDate) return new Set();
-  const log = await load();
-  return new Set(log[normalizedDate] ?? []);
+  return runCurrentHealthDataOperation((lease) => getCompletedStepsForLease(date, lease));
 }
 
 /** Whether a completion date is outside the server validation window (docs/03 §6):
@@ -166,45 +197,61 @@ export async function toggleCompletion(
   key: string,
   date: string = localDateString(),
 ): Promise<{ done: boolean; firstEver: boolean }> {
-  const normalizedKey = normalizeStepKey(key);
-  const normalizedDate = normalizeLocalDateISO(date);
-  if (!normalizedKey || !normalizedDate || isBeyondBackfillCap(normalizedDate)) {
-    // Outside the server completion window: do not record, report it as not-done.
-    const existing = await getCompletedSteps(normalizedDate ?? date);
-    return { done: normalizedKey ? existing.has(normalizedKey) : false, firstEver: false };
-  }
-  const firstCompletionAlreadyMarked = await hasFirstCompletionMarker();
-  let result = { done: false, firstEver: false };
-  let shouldMarkFirstCompletion = false;
-  await updatePrivateItem(KEY, (current) => {
-    const log = decodeCompletionLog(current);
-    const hadAny = Object.values(log).some((steps) => steps.length > 0);
-    const day = new Set(log[normalizedDate] ?? []);
-    const alreadyCompleted = day.has(normalizedKey);
-    if (!alreadyCompleted) day.add(normalizedKey);
-    log[normalizedDate] = [...day];
+  return runCurrentHealthDataOperation(async (lease) => {
+    const normalizedKey = normalizeStepKey(key);
+    const normalizedDate = normalizeLocalDateISO(date);
+    if (!normalizedKey || !normalizedDate || isBeyondBackfillCap(normalizedDate)) {
+      // Outside the server completion window: do not record, report it as not-done.
+      const existing = await getCompletedStepsForLease(normalizedDate ?? date, lease);
+      lease.assertCurrent();
+      return { done: normalizedKey ? existing.has(normalizedKey) : false, firstEver: false };
+    }
+    const firstCompletionAlreadyMarked = await hasFirstCompletionMarker(lease);
+    lease.assertCurrent();
+    let result = { done: false, firstEver: false };
+    let shouldMarkFirstCompletion = false;
+    await updatePrivateItem(KEY, (current) => {
+      lease.assertCurrent();
+      const log = decodeCompletionLog(current);
+      const hadAny = Object.values(log).some((steps) => steps.length > 0);
+      const day = new Set(log[normalizedDate] ?? []);
+      const alreadyCompleted = day.has(normalizedKey);
+      if (!alreadyCompleted) day.add(normalizedKey);
+      log[normalizedDate] = [...day];
 
-    result = {
-      done: true,
-      firstEver: !alreadyCompleted && !hadAny && !firstCompletionAlreadyMarked,
-    };
-    shouldMarkFirstCompletion = hadAny || result.firstEver;
-    return encodeCompletionLog(log);
+      result = {
+        done: true,
+        firstEver: !alreadyCompleted && !hadAny && !firstCompletionAlreadyMarked,
+      };
+      shouldMarkFirstCompletion = hadAny || result.firstEver;
+      lease.assertCurrent();
+      return encodeCompletionLog(log);
+    });
+    lease.assertCurrent();
+    if (shouldMarkFirstCompletion && !firstCompletionAlreadyMarked) {
+      await markFirstCompletion(lease);
+    }
+    lease.assertCurrent();
+    return result;
   });
-  if (shouldMarkFirstCompletion && !firstCompletionAlreadyMarked) {
-    await markFirstCompletion();
-  }
-  return result;
 }
 
 /** Dates with at least one completion (the streak's "completion days"). */
 export async function getCompletedDates(): Promise<Set<string>> {
-  return (await getCompletionSummary()).completedDates;
+  return runCurrentHealthDataOperation(async (lease) => {
+    const summary = await getCompletionSummaryForLease(lease);
+    lease.assertCurrent();
+    return summary.completedDates;
+  });
 }
 
 /** Per-day completion counts (heat-map intensity). */
 export async function getCountByDate(): Promise<Map<string, number>> {
-  return (await getCompletionSummary()).countByDate;
+  return runCurrentHealthDataOperation(async (lease) => {
+    const summary = await getCompletionSummaryForLease(lease);
+    lease.assertCurrent();
+    return summary.countByDate;
+  });
 }
 
 export type CompletionSummary = {
@@ -217,8 +264,11 @@ export type CompletionSummary = {
  * counts. Deriving both views together prevents duplicate private-store reads and
  * guarantees they describe the same atomic completion-log version.
  */
-export async function getCompletionSummary(): Promise<CompletionSummary> {
-  const log = await load();
+async function getCompletionSummaryForLease(
+  lease: HealthDataWriteOperationLease,
+): Promise<CompletionSummary> {
+  const log = await load(lease);
+  lease.assertCurrent();
   const completedDates = new Set<string>();
   const countByDate = new Map<string, number>();
   for (const [date, keys] of Object.entries(log)) {
@@ -226,11 +276,21 @@ export async function getCompletionSummary(): Promise<CompletionSummary> {
     completedDates.add(date);
     countByDate.set(date, keys.length);
   }
+  lease.assertCurrent();
   return { completedDates, countByDate };
 }
 
-/** Test/seed reset. */
+export async function getCompletionSummary(): Promise<CompletionSummary> {
+  return runCurrentHealthDataOperation(getCompletionSummaryForLease);
+}
+
+/** Explicit deletion lane: no health plaintext is read or returned. */
 export async function clearCompletions(): Promise<void> {
-  await removePrivateItem(KEY);
-  await removePrivateItem(FIRST_COMPLETION_KEY);
+  await runAccountGenerationOperation(async (lease) => {
+    lease.assertCurrent();
+    await removePrivateItem(KEY);
+    lease.assertCurrent();
+    await removePrivateItem(FIRST_COMPLETION_KEY);
+    lease.assertCurrent();
+  });
 }

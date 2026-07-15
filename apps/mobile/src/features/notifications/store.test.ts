@@ -23,6 +23,39 @@ const mocks = vi.hoisted(() => ({
   updateFailure: null as Error | null,
 }));
 
+vi.mock('@/lib/consent/healthProcessingEpoch', () => ({
+  activeHealthProcessingOwnerUserId: () => 'user-1',
+  clearActiveHealthProcessingEpoch: vi.fn(),
+}));
+
+vi.mock('@/lib/consent/healthDataWriteAdmission', async () => {
+  const { runAccountGenerationOperation } = await import('@/lib/auth/accountGeneration');
+  return {
+    HEALTH_DATA_WRITE_ADMISSION_CLOSED: 'HEALTH_DATA_WRITE_ADMISSION_CLOSED',
+    runHealthDataWriteOperation: (
+      ownerUserId: string,
+      operation: (lease: {
+        generation: number;
+        epoch: number;
+        ownerUserId: string;
+        accountGeneration: number;
+        signal: AbortSignal;
+        assertCurrent: () => void;
+      }) => unknown,
+    ) =>
+      runAccountGenerationOperation((accountLease) =>
+        operation({
+          generation: 1,
+          epoch: 1,
+          ownerUserId,
+          accountGeneration: accountLease.generation,
+          signal: accountLease.signal,
+          assertCurrent: accountLease.assertCurrent,
+        }),
+      ),
+  };
+});
+
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
   removePrivateItem: vi.fn(async (key: string) => {
@@ -246,10 +279,12 @@ describe('notification lock-screen privacy preference', () => {
       return { data: { user: { id: 'user-1' } } };
     });
 
-    await saveNotifPrefs({ amEnabled: false });
+    const saving = saveNotifPrefs({ amEnabled: false });
+    await vi.waitFor(() => expect(mocks.getUser).toHaveBeenCalled());
     beginAccountGenerationBoundary();
     try {
       releaseUser();
+      await expect(saving).rejects.toThrow('ACCOUNT_GENERATION_CHANGED');
       await waitForAccountGenerationOperationsToSettle();
     } finally {
       endAccountGenerationBoundary();

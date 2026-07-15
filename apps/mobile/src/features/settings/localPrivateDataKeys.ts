@@ -8,6 +8,9 @@ import { AUTH_DERIVED_CLEANUP_REQUIRED_KEY } from '@/lib/auth/authDerivedCleanup
 import { APPLE_CREDENTIAL_QUARANTINE_KEY } from '@/lib/auth/appleCredentialQuarantine';
 import { brandCachePrefix } from '@/lib/brand';
 import {
+  HEALTH_DEPENDENT_CONSENT_RECOVERY_KEY_PREFIX,
+} from '@/lib/consent/dependentConsentRecoveryContract';
+import {
   LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
   PLAINTEXT_STAGING_JOURNAL_KEY,
 } from '@/lib/storage/plaintextStagingCore';
@@ -42,6 +45,7 @@ export const LOCAL_PRIVATE_DATA_KEYS = [
   'onskin.recPrefs.v1',
   'onskin.reviewPrompt.v1',
   'routinekind.cycle.v2',
+  'routinekind.healthDataLifecycle.v1',
   'routinekind.routineActivation.v1',
   'routinekind.routineOrder.v1',
   'onskin.shelf.v1',
@@ -61,6 +65,11 @@ export const LOCAL_PRIVATE_SECURE_STORE_KEYS = [
 // endpoint proves terminal deletion and the local completion is committed.
 export const LOCAL_PRIVATE_SECURE_CONTROL_KEYS = [
   'routinekind.account_deletion.pending.v1',
+  'routinekind.health_data_withdrawal.pending.v1',
+] as const;
+
+export const LOCAL_PRIVATE_SECURE_CONTROL_KEY_PREFIXES = [
+  HEALTH_DEPENDENT_CONSENT_RECOVERY_KEY_PREFIX,
 ] as const;
 
 export const LOCAL_PRIVATE_METADATA_KEYS = [
