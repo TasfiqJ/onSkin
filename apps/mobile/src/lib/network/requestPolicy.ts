@@ -12,6 +12,8 @@ export const REQUEST_ENDPOINTS = [
   'catalog_search',
   'consent_withdrawal',
   'data_export',
+  'progress_completions',
+  'progress_longest_streak',
   'subscription_grants',
 ] as const;
 

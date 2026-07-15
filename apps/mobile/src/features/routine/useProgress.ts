@@ -17,6 +17,7 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { isSupabaseConfigured } from '@/lib/env';
+import { isRequestCancellation, runRequestWithLease } from '@/lib/network/requestPolicy';
 import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
 import {
   queryKeys,
@@ -58,6 +59,29 @@ export type ProgressData = {
 
 type ServerCompletion = { completed_date: string };
 
+// These are failure ceilings for optional reconciliation, not approved latency
+// SLAs. Local completion data remains the user-facing source of truth.
+const OPTIONAL_PROGRESS_READ_DEADLINE_MS = 8_000;
+const COMPLETIONS_RESPONSE_LIMIT_BYTES = 512 * 1024;
+const LONGEST_STREAK_RESPONSE_LIMIT_BYTES = 64 * 1024;
+
+function supabaseFailure(error: unknown, status: number): unknown {
+  if (status === 0 && error && typeof error === 'object') {
+    const message = (error as { message?: unknown }).message;
+    if (
+      typeof message === 'string' &&
+      /^(?:FetchError|TypeError):/i.test(message) &&
+      /(?:fetch|load failed|network)/i.test(message)
+    ) {
+      return {
+        cause: { cause: error, message, name: 'TypeError' },
+        status,
+      };
+    }
+  }
+  return { cause: error, status };
+}
+
 function isAbortOrAccountGenerationError(error: unknown): boolean {
   if (error === ACCOUNT_GENERATION_CHANGED) return true;
   if (!error || typeof error !== 'object') return false;
@@ -76,19 +100,34 @@ async function loadServerCompletions(
 ): Promise<ServerCompletion[]> {
   if (!isSupabaseConfigured) return [];
   try {
-    const { data } = await supabase
-      .from('routine_completions')
-      .select('completed_date')
-      .gte('completed_date', lookbackISO)
-      .abortSignal(lease.signal);
+    const data = await runRequestWithLease(
+      lease,
+      {
+        endpoint: 'progress_completions',
+        deadlineMs: OPTIONAL_PROGRESS_READ_DEADLINE_MS,
+        idempotent: true,
+        maxAttempts: 2,
+        maxResponseBytes: COMPLETIONS_RESPONSE_LIMIT_BYTES,
+      },
+      async ({ signal }) => {
+        const response = await supabase
+          .from('routine_completions')
+          .select('completed_date')
+          .gte('completed_date', lookbackISO)
+          .retry(false)
+          .abortSignal(signal);
+        if (response.error) throw supabaseFailure(response.error, response.status);
+        return response.data ?? [];
+      },
+    );
     lease.assertCurrent();
-    return (data ?? [])
+    return data
       .map((completion) => normalizeProgressCompletionDate(completion.completed_date))
       .filter((completedDate): completedDate is string => Boolean(completedDate))
       .map((completedDate) => ({ completed_date: completedDate }));
   } catch (error) {
     lease.assertCurrent();
-    if (isAbortOrAccountGenerationError(error)) throw error;
+    if (isAbortOrAccountGenerationError(error) || isRequestCancellation(error)) throw error;
     return [];
   }
 }
@@ -96,17 +135,32 @@ async function loadServerCompletions(
 async function loadServerLongestStreak(lease: AccountGenerationLease): Promise<number> {
   if (!isSupabaseConfigured) return 0;
   try {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('longest_streak')
-      .limit(1)
-      .abortSignal(lease.signal)
-      .maybeSingle();
+    const profile = await runRequestWithLease(
+      lease,
+      {
+        endpoint: 'progress_longest_streak',
+        deadlineMs: OPTIONAL_PROGRESS_READ_DEADLINE_MS,
+        idempotent: true,
+        maxAttempts: 2,
+        maxResponseBytes: LONGEST_STREAK_RESPONSE_LIMIT_BYTES,
+      },
+      async ({ signal }) => {
+        const response = await supabase
+          .from('profiles')
+          .select('longest_streak')
+          .limit(1)
+          .retry(false)
+          .abortSignal(signal)
+          .maybeSingle();
+        if (response.error) throw supabaseFailure(response.error, response.status);
+        return response.data;
+      },
+    );
     lease.assertCurrent();
     return normalizeProgressLongestStreak(profile?.longest_streak);
   } catch (error) {
     lease.assertCurrent();
-    if (isAbortOrAccountGenerationError(error)) throw error;
+    if (isAbortOrAccountGenerationError(error) || isRequestCancellation(error)) throw error;
     return 0;
   }
 }
@@ -131,7 +185,7 @@ export function useProgress() {
 
         let localSummary: Awaited<ReturnType<typeof getCompletionSummary>>;
         let completions: ServerCompletion[];
-          let serverLongest: number;
+        let serverLongest: number;
         try {
           [localSummary, completions, serverLongest] = await settleOwnerQueryOperations(lease, [
             (childLease) =>
