@@ -45,6 +45,33 @@ describe('Conflict route contracts', () => {
     expect(source).not.toContain('Alert.alert');
   });
 
+  it('fences conflict-card externalization to one exact focused owner request', () => {
+    const route = readAppRoute('share/conflict/[ruleId].tsx');
+    const exporter = readFileSync(`${APP_DIR}/../features/growth/shareCard.ts`, 'utf8');
+
+    expect(route).toContain('const isFocused = useIsFocused();');
+    expect(route).toContain('const ownerScope = useOwnerQueryScope();');
+    expect(route).toContain('const shareRequestRef = useRef<Promise<void> | null>(null);');
+    expect(route).toContain('shareActionRef.current?.invalidate();');
+    expect(route).toContain('mountedRef.current &&');
+    expect(route).toContain('focusedRef.current &&');
+    expect(route).toContain('isOwnerQueryScopeCurrent(ownerScope)');
+    expect(route).toContain('shareRequestRef.current = completion;');
+    expect(route).toContain('const nextBusy = isFocused ? (action?.isRunning() ?? false) : false;');
+    expect(route).toContain('setBusy(nextBusy);');
+    expect(route).toContain('if (shareRequestRef.current !== completion) return;');
+    expect(route).toContain('setBusy(false);');
+
+    expect(exporter).toContain('runOwnerQueryOperation');
+    expect(exporter).toContain('awaitAccountGenerationLease');
+    expect(exporter).toContain("result: 'base64'");
+    expect(exporter).toContain("deps.reserve('conflict_share_png')");
+    expect(exporter).toContain("deps.markState(staging, 'plaintext_written')");
+    expect(exporter).toContain("deps.markState(staging, 'sharing')");
+    expect(exporter).toContain('await deps.cleanup(staging);');
+    expect(exporter).not.toContain("result: 'tmpfile'");
+  });
+
   it('recovers missing conflict-detail routes without stale guidance', () => {
     const source = readAppRoute('conflict/[ruleId].tsx');
 

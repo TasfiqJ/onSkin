@@ -13,6 +13,7 @@ const OWNED_INGRESS_DIRECTORY_NAMES = ['Camera/', 'ImageManipulator/'] as const;
 const OPAQUE_OPERATION_ID = /^[0-9a-f]{32}$/;
 
 export type PlaintextStagingPurpose =
+  | 'conflict_share_png'
   | 'data_export_json'
   | 'label_capture_jpeg'
   | 'photo_analysis_jpeg'
@@ -76,6 +77,7 @@ function hasExactKeys(record: Record<string, unknown>, expected: readonly string
 
 function isPurpose(value: unknown): value is PlaintextStagingPurpose {
   return (
+    value === 'conflict_share_png' ||
     value === 'data_export_json' ||
     value === 'label_capture_jpeg' ||
     value === 'photo_analysis_jpeg' ||
@@ -145,7 +147,7 @@ function parseJournal(raw: string | null): PlaintextStagingJournal {
 
 function extensionForPurpose(purpose: PlaintextStagingPurpose): string {
   if (purpose === 'data_export_json') return 'json';
-  return purpose === 'photo_share_png' ? 'png' : 'jpg';
+  return purpose === 'conflict_share_png' || purpose === 'photo_share_png' ? 'png' : 'jpg';
 }
 
 function fileNameForEntry(
@@ -321,11 +323,23 @@ export function createPlaintextStagingCoordinator(deps: PlaintextStagingDependen
 
     cleanup(handle: PlaintextStagingHandle): Promise<void> {
       return serialize(async () => {
+        if (
+          !OPAQUE_OPERATION_ID.test(handle.operationId) ||
+          !isPurpose(handle.purpose) ||
+          handle.uri !== uriForEntry(handle)
+        ) {
+          throw new Error(PLAINTEXT_STAGING_ENTRY_UNOWNED);
+        }
         const journal = await readJournal();
         const index = journal.entries.findIndex(
           (entry) => entry.operationId === handle.operationId,
         );
-        if (index < 0) return;
+        if (index < 0) {
+          if ((await deps.fileSystem.getInfoAsync(handle.uri)).exists) {
+            throw new Error(PLAINTEXT_STAGING_ENTRY_UNOWNED);
+          }
+          return;
+        }
         const entry = journal.entries[index]!;
         assertOwnedHandle(handle, entry);
         await cleanupJournalEntry(journal, index);

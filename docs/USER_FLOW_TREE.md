@@ -1579,6 +1579,12 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Evidence: Screenshot or platform log.
   - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_PHASE7_SHARE_CARD_ENABLED=true`, `EXPO_PUBLIC_PHASE7_REVIEWED_CONFLICT_SHARING_ENABLED=true`, `EXPO_PUBLIC_PHASE8_PUBLIC_LINKS_ENABLED=true`, `EXPO_PUBLIC_FINAL_BRAND_DOMAIN=https://routinekind.app`, `EXPO_PUBLIC_E2E_REVIEWED_CONFLICT_SHARING=true`, and `EXPO_PUBLIC_E2E_SHARE_CARD_EXPORT=unavailable` adds real Retinol 0.3% and Glycolic 7% products through manual shelf intake, opens the reviewed conflict share route, verifies the share card is present with a 272 x 56 Share to Stories control and 272 x 48 Done control, taps Share to Stories, renders inline `Sharing unavailable` recovery, opens no JavaScript/native dialog, leaks no raw native/provider text, and keeps horizontal overflow at zero. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`.
   - Current local evidence: 2026-07-08 Codex in-app browser Expo web at 320 x 568 opened a seeded reviewed conflict share card, tapped `Share to Stories` with native sharing forced unavailable, verified no native/browser dialog, kept the branded card and controls visible, and rendered inline `Sharing unavailable` feedback above the export action. Evidence is in `test-results/human-e2e/2026-07-08/share-conflict-progress-inline-recovery-current/`.
+- Branch: account or route changes during conflict-card export
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Delay view capture, start `Share to Stories` as owner A, then switch accounts before capture resolves. Repeat by navigating away during capture and by starting an account switch while the native share sheet is open.
+  - Expected result: A delayed capture is memory-only and discarded without creating a file, journal entry, share sheet, analytics event, or late route feedback. Blur/unmount clears or reconciles the visible busy state without enabling a second in-flight share. Once an owner-A native share sheet has opened, the account boundary remains fail-closed until the sheet settles and its exact journal-owned PNG is cleaned; only then may owner B publish.
+  - Evidence: Owner-generation/action-coordinator and plaintext-staging tests plus Expo-web blur/recovery interaction evidence. Native iOS share-sheet/account-switch interruption, process-kill cleanup, and physical file inspection remain required.
 
 ## Flow: Settings Account Controls
 

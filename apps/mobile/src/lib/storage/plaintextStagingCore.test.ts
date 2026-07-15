@@ -75,6 +75,21 @@ function readJournal(storage: Map<string, string>) {
 }
 
 describe('plaintext staging journal', () => {
+  it('reserves conflict-card exports under an exact owned PNG purpose', async () => {
+    const harness = createHarness();
+
+    const handle = await harness.coordinator.reserve('conflict_share_png');
+
+    expect(handle).toEqual({
+      operationId: FIRST_ID,
+      purpose: 'conflict_share_png',
+      uri: `${STAGING_DIRECTORY}${FIRST_ID}.png`,
+    });
+    expect(readJournal(harness.storage)).toMatchObject({
+      entries: [{ operationId: FIRST_ID, purpose: 'conflict_share_png', state: 'reserved' }],
+    });
+  });
+
   it('reserves an opaque owned filename with a content-free strict journal entry', async () => {
     const harness = createHarness();
 
@@ -224,6 +239,24 @@ describe('plaintext staging journal', () => {
     harness.files.add(`${STAGING_DIRECTORY}${FIRST_ID}.jpg`);
     await expect(
       harness.coordinator.cleanupOperation(FIRST_ID, 'photo_capture_jpeg'),
+    ).rejects.toThrow(PLAINTEXT_STAGING_ENTRY_UNOWNED);
+  });
+
+  it('never treats a lost journal as proof that an exact handle plaintext file is absent', async () => {
+    const harness = createHarness();
+    const handle = await harness.coordinator.reserve('conflict_share_png');
+    harness.files.add(handle.uri);
+    harness.storage.delete(PLAINTEXT_STAGING_JOURNAL_KEY);
+
+    await expect(harness.coordinator.cleanup(handle)).rejects.toThrow(
+      PLAINTEXT_STAGING_ENTRY_UNOWNED,
+    );
+    expect(harness.files.has(handle.uri)).toBe(true);
+
+    harness.files.delete(handle.uri);
+    await expect(harness.coordinator.cleanup(handle)).resolves.toBeUndefined();
+    await expect(
+      harness.coordinator.cleanup({ ...handle, uri: `${handle.uri}.forged` }),
     ).rejects.toThrow(PLAINTEXT_STAGING_ENTRY_UNOWNED);
   });
 
