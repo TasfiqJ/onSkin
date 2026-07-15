@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-15T20:21:30.843Z
+Generated: 2026-07-15T20:35:42.598Z
 Status: blocked
-Git SHA: 21fae74518aefdd015cd6c8dc95699421104ae97
+Git SHA: 4abdcac4f1de24429f23b40a03d2e3196e41993f
 Git status: clean
 
 ## Release Identity
@@ -101,7 +101,7 @@ Git status: clean
 - `apps/mobile/src/app/routine/_layout.tsx`: `3c3fd965a6889c8addbe36a649b3703af5343a5034dd1181c2620d145c36216c`
 - `apps/mobile/src/features/subscription/gatedRoutes.ts`: `aea4630a6d619bc5a10f6ee247d46af66f0a29887db6f7da869f7f12fdacd4af`
 - `apps/mobile/src/features/subscription/copy.ts`: `1a9ce7ca24c4de4b8631166a12351307e8facb6372bec4262193ad726147477c`
-- `apps/mobile/src/lib/iap/revenuecat.ts`: `6e6aab0795c6455d9465af89f3b35b0b1a56866b868aa0bfeab2eeaf3661809d`
+- `apps/mobile/src/lib/iap/revenuecat.ts`: `6ae4921ebcdfd202dad381661dddcefd28add835b2502328946c8ae1a52b0358`
 - `apps/mobile/src/lib/observability/scrub.ts`: `ad231f592848825dbeaffcbd960a31e0ae916fe7e1916ded939e9b0f79deabed`
 - `apps/mobile/src/lib/observability/sentry.ts`: `591ffcd81e9f012aaeacc4bc55c769d001d657b626b10f9a2a6fa2668e9aa2ed`
 - `apps/mobile/src/app/_layout.tsx`: `89197d975de81cc9c1a1e808a0ede821ee126bd0c8d9867a7e537897e75df529`
@@ -211,17 +211,17 @@ Git status: clean
 - `supabase/functions/subscription-reconciliation/reconciliationCore.test.ts`: `cff4523c5cf1305f90be5889ad366582f32717804fe4d99d524cebf5c7b87ec3`
 - `supabase/functions/subscription-reconciliation/reconciliationContract.test.ts`: `1d724448169cc36cba21d0efd84d2e586a820e718bac1f025d974ea77e1c75b1`
 - `supabase/functions/_shared/verifiedAuthSessionClaims.ts`: `39db868ee1aa517c95b03102990793d52ad45079b6b18bbebb5640ee44207443`
-- `supabase/functions/catalog-search/index.ts`: `b20580878e9fcdd45f46336315e256fb764f95e34ed80ee9554f2e94e9fb813f`
+- `supabase/functions/catalog-search/index.ts`: `f9ac2957764962226fcaf7e938b7b7a6b2d934de75bb0e49f1d79c66bb45ea15`
 - `supabase/functions/catalog-search/catalogContract.ts`: `3b51d16f5b8d5b24a9f87d2e445c28391c8f6407d39150f4085910da97f380e0`
 - `supabase/functions/catalog-search/catalogContract.test.ts`: `18adc4c4572004285afab509ab0d100daeaaa905ce5895d1783a0a792d15cc59`
-- `supabase/functions/catalog-lookup/index.ts`: `b761a48e3cf3b8b693d2c232b375a067431f8924dd2542d160c5828ed4d3093c`
+- `supabase/functions/catalog-lookup/index.ts`: `7d3ba29cfa384e7eb20fd93fa0e4ec9471da057bcc6385c10fa4a00122bbe17a`
 - `supabase/functions/catalog-lookup/catalogContract.ts`: `e205eae032c22fab88748e3f7b47a92ba65c74b0fa9f4372e03896839af45f94`
 - `supabase/functions/catalog-lookup/catalogContract.test.ts`: `5ae64b92a6baa5707bdea6e6aff7d59ef04e5138354a75e772c1d8ba7b31a6ec`
-- `supabase/functions/catalog-report/index.ts`: `f5adfda703d9a1cd6510bd5559dd68f9b928fb9d7a574e4ae411e67a7591d8b8`
+- `supabase/functions/catalog-report/index.ts`: `4eec64a1c25be201a2200be9056b986d3cd32391d06777b1de37cb7dbc2cdcf1`
 - `supabase/functions/catalog-report/privacy.ts`: `9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e`
 - `supabase/functions/catalog-report/privacy.test.ts`: `db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac`
 - `supabase/functions/revenuecat-webhook/index.ts`: `8044179aa075d3789c676f266d65c1aa74a7832e4c4ce0e08a59cec38118b33f`
-- `supabase/functions/revenuecat-webhook/webhookCore.ts`: `2321e7ebadece1a862692ab166af1b769b3c774f87809c922615b9fede554ec6`
+- `supabase/functions/revenuecat-webhook/webhookCore.ts`: `b4e1b8b677c7d4a419ccec00f288643debd4cd810bab5ef72f58819c4734e154`
 - `supabase/functions/revenuecat-webhook/webhookCore.test.ts`: `e892bcec5deba6a27572f53b87e9acb4fea87fba3fbda134388719f3fa949390`
 - `supabase/functions/subscription-grants/deletionBarrierContract.test.ts`: `30ca9f7926bef7371a658484fd58b15c7229e650cbf622eb8f92b19af943cab2`
 - `supabase/functions/subscription-grants/grantErrors.ts`: `bea0805decc23cd51e203b58c577b13343ff1c4a46a7a678b54000b1f8fdfcc0`
@@ -239,9 +239,9 @@ Git status: clean
 - `supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql`: `887bc82835479875553b4a2b71b9e756a6507a2ad15c5903a4e02762c05a268c`
 - `supabase/migrations/20260713000052_account_publication_fence.sql`: `b19dcada637f30c4a7756711aed2ad6809877f2e043fc79c9c36ed107169b05d`
 - `supabase/migrations/20260714000053_entitlement_authority_lanes.sql`: `d1aba134336ccb38292134dc5e10528b6a9370489413e5bd2b7992c03525cec1`
-- `supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql`: `9c26f0c13a2e8413959e892a2c1f3a67b32b3a045c874483c858464ef33c0288`
+- `supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql`: `8bee91bcaedd3909b2f033ddbce47f1960e366fa30d6442a10b889941f3ad524`
 - `scripts/phase9/lib.mjs`: `4b1c8b7bb69b2d489c0b455022b2568bb9d3a8e6cc91ead4e6c8e09376bd3e5a`
-- `scripts/phase2/supabase-rls-smoke.mjs`: `7458a217d244b45dbb685b20d026e5d46c23c404f5b4b3ca13ffb9ffd63d6856`
+- `scripts/phase2/supabase-rls-smoke.mjs`: `8f1641ccf40b4733a577e454191041b47dbe239f1af691e4eb2109e8ce237762`
 - `scripts/phase9/release-contact-smoke.mjs`: `d1808486b8747f40e8212ac71e5fa8a21ae8cd8198db63d0ad4cc0c80a6a4e0a`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5`
 - `scripts/phase9/release-smoke.mjs`: `3b046993f7da92d40a780d5b14071011e550dd946581defabd18a4c427128da2`
@@ -251,10 +251,10 @@ Git status: clean
 - `scripts/phase9/edge-function-manifest-lib.mjs`: `57deb682b6cd1e23e5c820366c94e1676c68d0d16c141d108235e8f5a129c0fd`
 - `scripts/phase9/edge-function-manifest-smoke.mjs`: `f9766fc6e70ab30459a0d28a77316179b5cd0f9fd8aba3241d4061da177d10c7`
 - `scripts/phase9/build-release-qa-packet.mjs`: `231a8d8a7568b44eaf451617fded5f4910ba6438c77aff6e473c0acd5a391ff4`
-- `scripts/phase9/live-supabase-adversarial.mjs`: `a0aa6eaef164a6eafc81da20ee9ec16317b242616de5351912ef5eef2596acc6`
+- `scripts/phase9/live-supabase-adversarial.mjs`: `04655c7f180eab859ddb1edd9a8a52654db70418d7eb86de4428f9df45ecd9c1`
 - `scripts/phase9/live-edge-auth.mjs`: `fb6732b68710779acade64da955e0db0522dda69d7b2825b8eae65d939604158`
-- `scripts/phase9/live-data-rights.mjs`: `e6f38463e270d3e35de42261ee3788e30dd74fbf38f866ca385bd8e756084dbc`
-- `scripts/phase9/live-consent-withdrawal.mjs`: `648a259c4e950319696d68cc37e7d6c1eaf7e3dbe851530fd3ff4946a6d320c9`
+- `scripts/phase9/live-data-rights.mjs`: `09ec415fb85071cba9a483ad07c94936713612ce00bbb92c25ee1609c6de5c11`
+- `scripts/phase9/live-consent-withdrawal.mjs`: `0135ea69f7f7ffe3aa1ef58e208eb77fe63865d69c76c65d69421400121fd54b`
 - `scripts/phase9/consent-withdrawal-evidence.mjs`: `8ba1841b7c8f41f7056dc06ef04f353d801f45c525575574058489b7fe9f865e`
 - `scripts/phase9/consent-withdrawal-evidence.test.mjs`: `c43aaa6ad85cd3b4fb13fd248a925bf0109304528519b99ab7fe88d9a9d0bec8`
 - `scripts/phase9/live-public-forms.mjs`: `e4bb52bf67f60df98aabcc9095dc7758e92c376d06cd17887bf12e70220ae789`
@@ -271,7 +271,7 @@ Git status: clean
 - `scripts/phase9/account-publication-fence-postgres-rehearsal.sql`: `999939ab312ec8d15da6256de60e72b0a4764339d9acebad62b7c5927258bfcb`
 - `scripts/phase9/service-writer-deletion-barriers-postgres-rehearsal.sql`: `45dcf34c01b53d77245c08105432e5d47e07df3e7d32f0c3bf205b866657e39b`
 - `scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql`: `1717baff7788481ece8fdc21170822b5bbf6f3f9e28e761d83e1fe989f1a9fbc`
-- `scripts/phase9/consent-withdrawal-smoke.mjs`: `ad8bb95a60c1d7e6df9becf41e6ffd2ce6bb8a7b143c59d6b4dfd765890ce18b`
+- `scripts/phase9/consent-withdrawal-smoke.mjs`: `b8a6d98bcc469f28b12b278bdeb475abead8b3eaed2ce2490c4cc2d14132fae2`
 - `scripts/phase9/supabase-policy-lint.mjs`: `89b60416278ffd20eb1443b163195419211349edd4410fdb038aeeeb9658f626`
 - `scripts/phase9/security-ci-smoke.mjs`: `49d0e8eb01e28497347e8d2e82d20a40ce487987e97bc592523ad7bafa3060a2`
 - `scripts/phase9/privacy-payload-audit.mjs`: `4f8c1bba9c1b9f8dbb29b8f7dee5b8688a16e609a4b455797ed6472ec5db5fc7`
