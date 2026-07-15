@@ -1592,7 +1592,7 @@ begin
     raise exception 'HEALTH_PROCESSING_EPOCH_REQUIRED' using errcode = '55000';
   end if;
 
-  v_epoch_header := v_headers ->> 'x-onskin-health-epoch';
+  v_epoch_header := v_headers ->> 'x-health-processing-epoch';
   v_client_info := v_headers ->> 'x-client-info';
 
   if v_epoch_header is not null
@@ -1608,7 +1608,7 @@ begin
   if v_client_info is not null
      and pg_catalog.strpos(
        pg_catalog.lower(v_client_info),
-       'onskin-health-epoch'
+       'health-processing-epoch'
      ) > 0 then
     foreach v_client_info_segment in array pg_catalog.regexp_split_to_array(
       v_client_info,
@@ -1616,10 +1616,10 @@ begin
     ) loop
       if pg_catalog.strpos(
         pg_catalog.lower(v_client_info_segment),
-        'onskin-health-epoch'
+        'health-processing-epoch'
       ) > 0 then
         v_client_info_segment := pg_catalog.btrim(v_client_info_segment, ' ');
-        if v_client_info_segment !~ '^onskin-health-epoch=[1-9][0-9]{0,18}$' then
+        if v_client_info_segment !~ '^health-processing-epoch=[1-9][0-9]{0,18}$' then
           raise exception 'HEALTH_PROCESSING_EPOCH_REQUIRED' using errcode = '55000';
         end if;
         v_client_info_epoch_count := v_client_info_epoch_count + 1;
@@ -1628,7 +1628,7 @@ begin
         end if;
         v_client_info_epoch := pg_catalog.substr(
           v_client_info_segment,
-          pg_catalog.length('onskin-health-epoch=') + 1
+          pg_catalog.length('health-processing-epoch=') + 1
         );
       end if;
     end loop;
@@ -1689,23 +1689,23 @@ begin
     raise exception 'HEALTH_DEPENDENT_GENERATION_REQUIRED' using errcode = '55000';
   end;
   if v_headers is null or pg_catalog.jsonb_typeof(v_headers) <> 'object'
-     or v_headers ? 'x-onskin-consent-generation' then
+     or v_headers ? 'x-health-consent-generation' then
     raise exception 'HEALTH_DEPENDENT_GENERATION_REQUIRED' using errcode = '55000';
   end if;
   v_client_info := v_headers ->> 'x-client-info';
   if v_client_info is null
      or pg_catalog.strpos(
-       pg_catalog.lower(v_client_info), 'onskin-consent-generation'
+       pg_catalog.lower(v_client_info), 'health-consent-generation'
      ) = 0 then
     raise exception 'HEALTH_DEPENDENT_GENERATION_REQUIRED' using errcode = '55000';
   end if;
 
   foreach v_segment in array pg_catalog.regexp_split_to_array(v_client_info, ';') loop
     if pg_catalog.strpos(
-      pg_catalog.lower(v_segment), 'onskin-consent-generation'
+      pg_catalog.lower(v_segment), 'health-consent-generation'
     ) > 0 then
       v_segment := pg_catalog.btrim(v_segment, ' ');
-      if v_segment !~ '^onskin-consent-generation=(photo_capture|photo_cloud_backup|photo_trend_insights|ask_onskin|community_participation|data_sharing):[1-9][0-9]{0,18}$' then
+      if v_segment !~ '^health-consent-generation=(photo_capture|photo_cloud_backup|photo_trend_insights|ask_onskin|community_participation|data_sharing):[1-9][0-9]{0,18}$' then
         raise exception 'HEALTH_DEPENDENT_GENERATION_REQUIRED' using errcode = '55000';
       end if;
       v_type := pg_catalog.split_part(
@@ -2030,7 +2030,7 @@ set search_path = ''
 as $$
 begin
   if p_user_id is null
-     or pg_catalog.current_setting('onskin.health_purge', true)
+     or pg_catalog.current_setting('app.health_purge', true)
        is distinct from p_user_id::text
      or not pg_catalog.pg_try_advisory_xact_lock(
        public._account_deletion_advisory_key(p_user_id)
@@ -2070,7 +2070,7 @@ set search_path = ''
 as $$
 begin
   if p_user_id is null
-     or pg_catalog.current_setting('onskin.health_read_barrier', true)
+     or pg_catalog.current_setting('app.health_read_barrier', true)
        is distinct from p_user_id::text
      or not pg_catalog.pg_try_advisory_xact_lock(
        public._account_deletion_advisory_key(p_user_id)
@@ -5256,7 +5256,7 @@ begin
    where states.user_id = v_user_id;
 
   perform pg_catalog.set_config(
-    'onskin.health_read_barrier', v_user_id::text, true
+    'app.health_read_barrier', v_user_id::text, true
   );
   update public.profiles
      set current_streak = 0,
@@ -5264,7 +5264,7 @@ begin
          updated_at = v_now
    where id = v_user_id
      and (current_streak <> 0 or longest_streak <> 0);
-  perform pg_catalog.set_config('onskin.health_read_barrier', '', true);
+  perform pg_catalog.set_config('app.health_read_barrier', '', true);
 
   -- Append the exact base withdrawal receipt through the same sealed one-shot
   -- channel used by every dependent receipt.
@@ -5566,7 +5566,7 @@ begin
        and steps.step_name = 'database_cleanup';
 
     perform pg_catalog.set_config(
-      'onskin.health_purge', v_operation.user_id::text, true
+      'app.health_purge', v_operation.user_id::text, true
     );
 
     -- Break non-health business records' correlation to health-purpose events.
@@ -5611,7 +5611,7 @@ begin
     if public._health_relational_data_exists(v_operation.user_id) then
       raise exception 'HEALTH_WITHDRAWAL_DATABASE_RESIDUAL' using errcode = '55000';
     end if;
-    perform pg_catalog.set_config('onskin.health_purge', '', true);
+    perform pg_catalog.set_config('app.health_purge', '', true);
 
     update public.health_consent_withdrawal_steps as steps
        set status = 'succeeded',

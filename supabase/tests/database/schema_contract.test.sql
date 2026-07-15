@@ -495,7 +495,7 @@ select ok(
 select ok(
   pg_catalog.pg_get_functiondef(
     'public._request_health_processing_epoch()'::regprocedure
-  ) like '%x-onskin-health-epoch%'
+  ) like '%x-health-processing-epoch%'
     and pg_catalog.pg_get_functiondef(
       'public._request_health_processing_epoch()'::regprocedure
     ) like '%x-client-info%'

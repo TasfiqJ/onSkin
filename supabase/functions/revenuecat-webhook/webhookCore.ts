@@ -439,7 +439,7 @@ function mapStore(store: string | undefined): string | null {
   if (normalized.includes('PLAY')) return 'play_store';
   if (normalized.includes('TEST_STORE')) return 'test_store';
   // RevenueCat promotional entitlements are still provider authority. The
-  // `app_granted` value is reserved for OnSkin's independent reverse-trial
+  // `app_granted` value is reserved for the app's independent reverse-trial
   // lane and must never be emitted by a provider webhook.
   if (normalized.includes('PROMOTIONAL')) return 'promotional';
   if (

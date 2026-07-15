@@ -76,7 +76,7 @@ const admin = createClient(supabaseUrl, secretKey, {
 
 function publicClient() {
   return createClient(supabaseUrl, publishableKey, {
-    global: { headers: { 'x-onskin-health-epoch': '1' } },
+    global: { headers: { 'x-health-processing-epoch': '1' } },
     auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
   });
 }

@@ -1,5 +1,5 @@
-const HEALTH_EPOCH_HEADER = 'x-onskin-health-epoch';
-const HEALTH_EPOCH_CLIENT_INFO_KEY = 'onskin-health-epoch';
+const HEALTH_EPOCH_HEADER = 'x-health-processing-epoch';
+const HEALTH_EPOCH_CLIENT_INFO_KEY = 'health-processing-epoch';
 const HEALTH_EPOCH_CLIENT_INFO_PREFIX = `${HEALTH_EPOCH_CLIENT_INFO_KEY}=`;
 export const CATALOG_HEALTH_EPOCH_FUNCTION_NAMES = [
   'catalog-lookup',
@@ -472,7 +472,7 @@ export function createHealthEpochFetch(
     if (epoch !== null && route?.kind === 'postgrest') {
       const marker = `${HEALTH_EPOCH_CLIENT_INFO_PREFIX}${epoch}`;
       const dependentMarker = transportAuthority?.dependentConsent
-        ? `onskin-consent-generation=${transportAuthority.dependentConsent.type}:${transportAuthority.dependentConsent.generation}`
+        ? `health-consent-generation=${transportAuthority.dependentConsent.type}:${transportAuthority.dependentConsent.generation}`
         : null;
       const markers = [marker, dependentMarker].filter((value): value is string => value !== null);
       headers.set(

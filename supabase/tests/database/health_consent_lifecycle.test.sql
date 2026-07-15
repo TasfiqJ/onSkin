@@ -126,11 +126,11 @@ security definer
 set search_path = ''
 as $$
   select pg_catalog.jsonb_build_object(
-    'x-onskin-health-epoch', p_epoch::text,
+    'x-health-processing-epoch', p_epoch::text,
     'x-client-info',
     'pgtap' || coalesce((
       select pg_catalog.string_agg(
-        '; onskin-consent-generation=' || states.consent_type
+        '; health-consent-generation=' || states.consent_type
           || ':' || states.generation::text,
         '' order by states.consent_type
       )
@@ -164,7 +164,7 @@ values (
 
 select pg_catalog.set_config(
   'request.headers',
-  '{"x-client-info":"supabase-js/2.108.1; runtime=web; onskin-health-epoch=1"}',
+  '{"x-client-info":"supabase-js/2.108.1; runtime=web; health-processing-epoch=1"}',
   true
 );
 select is(
@@ -175,7 +175,7 @@ select is(
 
 select pg_catalog.set_config(
   'request.headers',
-  '{"x-client-info":"sdk; onskin-health-epoch=1; onskin-health-epoch=1"}',
+  '{"x-client-info":"sdk; health-processing-epoch=1; health-processing-epoch=1"}',
   true
 );
 select throws_ok(
@@ -187,7 +187,7 @@ select throws_ok(
 
 select pg_catalog.set_config(
   'request.headers',
-  '{"x-onskin-health-epoch":"1","x-client-info":"sdk; onskin-health-epoch=2"}',
+  '{"x-health-processing-epoch":"1","x-client-info":"sdk; health-processing-epoch=2"}',
   true
 );
 select throws_ok(
@@ -199,7 +199,7 @@ select throws_ok(
 
 select pg_catalog.set_config(
   'request.headers',
-  '{"x-onskin-health-epoch":"1","x-client-info":"sdk; onskin-health-epoch=1"}',
+  '{"x-health-processing-epoch":"1","x-client-info":"sdk; health-processing-epoch=1"}',
   true
 );
 select throws_ok(
@@ -211,7 +211,7 @@ select throws_ok(
 
 select pg_catalog.set_config(
   'request.headers',
-  '{"x-client-info":"sdk; onskin-health-epoch =1"}',
+  '{"x-client-info":"sdk; health-processing-epoch =1"}',
   true
 );
 select throws_ok(
@@ -223,7 +223,7 @@ select throws_ok(
 
 select pg_catalog.set_config(
   'request.headers',
-  '{"x-client-info":"sdk; onskin-health-epoch=\"1\""}',
+  '{"x-client-info":"sdk; health-processing-epoch=\"1\""}',
   true
 );
 select throws_ok(
@@ -235,7 +235,7 @@ select throws_ok(
 
 select pg_catalog.set_config(
   'request.headers',
-  '{"x-client-info":"sdk; onskin-health-epoch=9223372036854775808"}',
+  '{"x-client-info":"sdk; health-processing-epoch=9223372036854775808"}',
   true
 );
 select throws_ok(
@@ -247,7 +247,7 @@ select throws_ok(
 
 select pg_catalog.set_config(
   'request.headers',
-  '{"x-onskin-health-epoch":"1, 1"}',
+  '{"x-health-processing-epoch":"1, 1"}',
   true
 );
 select throws_ok(
@@ -430,7 +430,7 @@ update public.health_processing_states
        consent_text_hash =
          '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd'
  where user_id = '70000000-0000-4000-8000-000000000001';
-select pg_catalog.set_config('request.headers', '{"x-onskin-health-epoch":"1"}', true);
+select pg_catalog.set_config('request.headers', '{"x-health-processing-epoch":"1"}', true);
 insert into public.skin_profiles (user_id, goals)
 values ('70000000-0000-4000-8000-000000000001', array['legacy-residual']);
 update public.health_processing_states
@@ -1060,7 +1060,7 @@ values (
 );
 select pg_catalog.set_config(
   'request.headers',
-  '{"x-onskin-health-epoch":"1","x-client-info":"pgtap; onskin-consent-generation=community_participation:1"}',
+  '{"x-health-processing-epoch":"1","x-client-info":"pgtap; health-consent-generation=community_participation:1"}',
   true
 );
 insert into public.community_questions (
@@ -1233,7 +1233,7 @@ select throws_ok(
   'health publication without an epoch is rejected'
 );
 select pg_catalog.set_config(
-  'request.headers', '{"x-onskin-health-epoch":"1"}', true
+  'request.headers', '{"x-health-processing-epoch":"1"}', true
 );
 select lives_ok(
   $$insert into public.skin_profiles (user_id, goals)
@@ -1284,7 +1284,7 @@ select pg_catalog.set_config(
   true
 );
 select pg_catalog.set_config(
-  'onskin.health_consent_rpc',
+  'app.health_consent_rpc',
   '70000000-0000-4000-8000-000000000001',
   true
 );
@@ -1313,7 +1313,7 @@ select throws_ok(
   'service role cannot spoof the legacy GUC to mint a dependent grant'
 );
 reset role;
-select pg_catalog.set_config('onskin.health_consent_rpc', '', true);
+select pg_catalog.set_config('app.health_consent_rpc', '', true);
 set local role authenticated;
 select lives_ok(
   $$select public.pgtap_grant_health_dependent_consent(
@@ -1689,7 +1689,7 @@ select throws_ok(
   'delayed health publication is rejected after the barrier commits'
 );
 select pg_catalog.set_config(
-  'onskin.health_purge', '70000000-0000-4000-8000-000000000001', true
+  'app.health_purge', '70000000-0000-4000-8000-000000000001', true
 );
 select throws_ok(
   $$update public.profiles
@@ -1699,7 +1699,7 @@ select throws_ok(
   'HEALTH_PROCESSING_NOT_ACTIVE',
   'authenticated callers cannot spoof the transaction-local purge marker'
 );
-select pg_catalog.set_config('onskin.health_purge', '', true);
+select pg_catalog.set_config('app.health_purge', '', true);
 select lives_ok(
   $$update public.profiles
        set display_name = 'Preserved shell'
@@ -1745,7 +1745,7 @@ select throws_ok(
 
 set local role service_role;
 select pg_catalog.set_config(
-  'onskin.health_purge', '70000000-0000-4000-8000-000000000001', true
+  'app.health_purge', '70000000-0000-4000-8000-000000000001', true
 );
 select throws_ok(
   $$update public.profiles
@@ -1755,7 +1755,7 @@ select throws_ok(
   'HEALTH_PROCESSING_NOT_ACTIVE',
   'service-role writes cannot spoof the transaction-local purge marker'
 );
-select pg_catalog.set_config('onskin.health_purge', '', true);
+select pg_catalog.set_config('app.health_purge', '', true);
 reset role;
 
 set local role authenticated;
@@ -1901,7 +1901,7 @@ update public.health_processing_states
        consent_text_hash =
          '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd'
  where user_id = '70000000-0000-4000-8000-000000000001';
-select pg_catalog.set_config('request.headers', '{"x-onskin-health-epoch":"1"}', true);
+select pg_catalog.set_config('request.headers', '{"x-health-processing-epoch":"1"}', true);
 insert into public.skin_profiles (user_id, goals)
 values ('70000000-0000-4000-8000-000000000001', array['residual']);
 update public.health_processing_states
@@ -1948,7 +1948,7 @@ update public.health_processing_states
        consent_text_hash =
          '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd'
  where user_id = '70000000-0000-4000-8000-000000000001';
-select pg_catalog.set_config('request.headers', '{"x-onskin-health-epoch":"1"}', true);
+select pg_catalog.set_config('request.headers', '{"x-health-processing-epoch":"1"}', true);
 insert into public.skin_profiles (user_id, goals)
 values ('70000000-0000-4000-8000-000000000001', array['withdrawn-residual']);
 update public.health_processing_states
@@ -1989,7 +1989,7 @@ select ok(
 );
 
 set local role authenticated;
-select pg_catalog.set_config('request.headers', '{"x-onskin-health-epoch":"1"}', true);
+select pg_catalog.set_config('request.headers', '{"x-health-processing-epoch":"1"}', true);
 select throws_ok(
   $$insert into public.skin_profiles (user_id, goals)
     values ('70000000-0000-4000-8000-000000000001', array['stale'])$$,
@@ -1997,7 +1997,7 @@ select throws_ok(
   'HEALTH_PROCESSING_EPOCH_STALE',
   'old-epoch publication remains rejected after reconsent'
 );
-select pg_catalog.set_config('request.headers', '{"x-onskin-health-epoch":"2"}', true);
+select pg_catalog.set_config('request.headers', '{"x-health-processing-epoch":"2"}', true);
 select lives_ok(
   $$insert into public.skin_profiles (user_id, goals)
     values ('70000000-0000-4000-8000-000000000001', array['fresh'])$$,
@@ -2048,7 +2048,7 @@ select pg_catalog.set_config(
   '{"sub":"70000000-0000-4000-8000-000000000002","role":"authenticated","session_id":"71000000-0000-4000-8000-000000000002"}',
   true
 );
-select pg_catalog.set_config('request.headers', '{"x-onskin-health-epoch":"1"}', true);
+select pg_catalog.set_config('request.headers', '{"x-health-processing-epoch":"1"}', true);
 select throws_ok(
   $$insert into public.skin_profiles (user_id, goals)
     values ('70000000-0000-4000-8000-000000000002', array['old-client'])$$,

@@ -52,7 +52,7 @@ safe to launch.
   `com.onskin.app`, and placeholder `onskin.app` references. The native
   development/staging defaults and local Supabase redirect placeholders now use
   RoutineKind. `npm run brand:audit:strict` now passes with zero public launch
-  risks, zero unreviewed references, and 22 exact reviewed
+  risks, zero unreviewed references, and 23 exact reviewed
   `legacy-compatibility` references. Those references are retained byte-for-byte
   because they are cryptographic/domain-separation contracts, historical migration
   contracts, a live compatibility harness, or exact database rehearsal

@@ -541,7 +541,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   camera/photo/notification/share/RevenueCat/Sentry QA, and named tester
   signoff evidence.
 - `npm run brand:audit:strict` passed with 0 public launch-risk, 0
-  review-needed, and 22 exact reviewed `legacy-compatibility` hits. The retained
+  review-needed, and 23 exact reviewed `legacy-compatibility` hits. The retained
   references are byte-bound cryptographic/domain-separation, migration,
   live-harness, or rehearsal contracts; the audit prints an explicit
   non-clearance notice and does not close the legal/final-identity gate. See

@@ -105,10 +105,10 @@ describe('health processing epoch transport', () => {
     });
 
     const headers = new Headers(calls[0]?.init?.headers);
-    expect(headers.get('x-onskin-health-epoch')).toBeNull();
+    expect(headers.get('x-health-processing-epoch')).toBeNull();
     expect(headers.get('Authorization')).toBe('Bearer redacted');
     expect(headers.get('x-client-info')).toBe(
-      'supabase-js/2.108.1; runtime=web; onskin-health-epoch=7',
+      'supabase-js/2.108.1; runtime=web; health-processing-epoch=7',
     );
     expect(headers.get('Prefer')).toBe('handling=strict, return=representation');
   });
@@ -127,7 +127,7 @@ describe('health processing epoch transport', () => {
     expect(calls).toHaveLength(3);
     for (const call of calls) {
       const headers = new Headers(call.init?.headers);
-      expect(headers.get('x-onskin-health-epoch')).toBe('9');
+      expect(headers.get('x-health-processing-epoch')).toBe('9');
       expect(headers.get('x-client-info')).toBe('supabase-js/2.108.1; runtime=web');
     }
   });
@@ -151,7 +151,7 @@ describe('health processing epoch transport', () => {
 
     for (const call of calls) {
       const headers = new Headers(call.init?.headers);
-      expect(headers.get('x-onskin-health-epoch')).toBeNull();
+      expect(headers.get('x-health-processing-epoch')).toBeNull();
       expect(headers.get('x-client-info')).toBe('sdk');
     }
   });
@@ -172,9 +172,9 @@ describe('health processing epoch transport', () => {
     );
 
     const restHeaders = new Headers(calls[0]?.init?.headers);
-    expect(restHeaders.get('x-client-info')).toBe('url-input; onskin-health-epoch=13');
+    expect(restHeaders.get('x-client-info')).toBe('url-input; health-processing-epoch=13');
     const edgeHeaders = new Headers(calls[1]?.init?.headers);
-    expect(edgeHeaders.get('x-onskin-health-epoch')).toBe('13');
+    expect(edgeHeaders.get('x-health-processing-epoch')).toBe('13');
     expect(edgeHeaders.get('x-client-info')).toBe('init-override');
     expect(edgeHeaders.get('x-request-only')).toBe('kept');
   });
@@ -199,7 +199,7 @@ describe('health processing epoch transport', () => {
 
     for (const call of calls) {
       const headers = new Headers(call.init?.headers);
-      expect(headers.get('x-onskin-health-epoch')).toBeNull();
+      expect(headers.get('x-health-processing-epoch')).toBeNull();
       expect(headers.get('x-client-info')).toBe('sdk');
     }
   });
@@ -211,25 +211,25 @@ describe('health processing epoch transport', () => {
 
     await wrapped(`${SUPABASE_URL}/auth/v1/user`, {
       headers: {
-        'X-OnSkin-Health-Epoch': '999',
-        'X-Client-Info': 'sdk; ONSKIN-HEALTH-EPOCH=999',
+        'X-Health-Processing-Epoch': '999',
+        'X-Client-Info': 'sdk; HEALTH-PROCESSING-EPOCH=999',
         Authorization: 'Bearer retained',
       },
     });
     await wrapped(`${SUPABASE_URL}/rest/v1/skin_profiles`, {
       headers: {
-        'X-OnSkin-Health-Epoch': '999',
-        'X-Client-Info': 'sdk; onskin-health-epoch=999',
+        'X-Health-Processing-Epoch': '999',
+        'X-Client-Info': 'sdk; health-processing-epoch=999',
       },
     });
 
     const authHeaders = new Headers(calls[0]?.init?.headers);
-    expect(authHeaders.get('x-onskin-health-epoch')).toBeNull();
+    expect(authHeaders.get('x-health-processing-epoch')).toBeNull();
     expect(authHeaders.get('x-client-info')).toBeNull();
     expect(authHeaders.get('Authorization')).toBe('Bearer retained');
     const restHeaders = new Headers(calls[1]?.init?.headers);
-    expect(restHeaders.get('x-onskin-health-epoch')).toBeNull();
-    expect(restHeaders.get('x-client-info')).toBe('onskin-health-epoch=19');
+    expect(restHeaders.get('x-health-processing-epoch')).toBeNull();
+    expect(restHeaders.get('x-client-info')).toBe('health-processing-epoch=19');
   });
 
   it('leaves requests unchanged while health processing is closed', async () => {
@@ -349,12 +349,12 @@ describe('health processing epoch transport', () => {
     await wrapped(`${SUPABASE_URL}/rest/v1/photos`, {
       method: 'DELETE',
       headers: {
-        'x-onskin-health-epoch': '23',
-        'x-client-info': 'sdk; onskin-health-epoch=23',
+        'x-health-processing-epoch': '23',
+        'x-client-info': 'sdk; health-processing-epoch=23',
       },
     });
     const headers = new Headers(calls[0]?.init?.headers);
-    expect(headers.get('x-onskin-health-epoch')).toBeNull();
+    expect(headers.get('x-health-processing-epoch')).toBeNull();
     expect(headers.get('x-client-info')).toBeNull();
   });
 
@@ -419,7 +419,9 @@ describe('health processing epoch transport', () => {
 
     activate(7, 'owner-b', 3);
     await wrapped(`${SUPABASE_URL}/rest/v1/skin_profiles`);
-    expect(new Headers(calls[1]?.init?.headers).get('x-client-info')).toBe('onskin-health-epoch=7');
+    expect(new Headers(calls[1]?.init?.headers).get('x-client-info')).toBe(
+      'health-processing-epoch=7',
+    );
 
     remote = {
       state: 'candidate',
@@ -428,7 +430,7 @@ describe('health processing epoch transport', () => {
       sessionId: 'session-b',
     };
     await wrapped(`${SUPABASE_URL}/functions/v1/catalog-search`);
-    expect(new Headers(calls[2]?.init?.headers).get('x-onskin-health-epoch')).toBeNull();
+    expect(new Headers(calls[2]?.init?.headers).get('x-health-processing-epoch')).toBeNull();
   });
 
   it('uses exact lease CAS so stale owners and renewed proof timers cannot clear a later lease', () => {

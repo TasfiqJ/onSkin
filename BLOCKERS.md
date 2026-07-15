@@ -317,8 +317,8 @@ There is already a public skincare/cosmetic scanner branded `OnSkin` at
 the legacy identity for local/native launch defaults: the current working
 candidate is `RoutineKind`, with `routinekind://` and `com.routinekind.app`
 development/staging defaults. `npm run brand:audit:strict` passes with zero
-public launch-risk, zero review-needed, and 22 exact reviewed
-`legacy-compatibility` hits. The retained 22 are cryptographic/domain-separation
+public launch-risk, zero review-needed, and 23 exact reviewed
+`legacy-compatibility` hits. The retained 23 are cryptographic/domain-separation
 contracts, historical migration contracts, one live compatibility harness, or
 exact PostgreSQL rehearsal fixtures. Their path, literal, expected count,
 subtype, and rationale are fail-closed in

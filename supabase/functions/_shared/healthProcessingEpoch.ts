@@ -1,6 +1,6 @@
 import { CURRENT_HEALTH_CONSENT_DISCLOSURE_CONTRACT } from '../consent-withdrawal/healthConsentContract.ts';
 
-export const HEALTH_PROCESSING_EPOCH_HEADER = 'x-onskin-health-epoch' as const;
+export const HEALTH_PROCESSING_EPOCH_HEADER = 'x-health-processing-epoch' as const;
 
 const MAX_POSTGRES_BIGINT = 9_223_372_036_854_775_807n;
 const POSITIVE_DECIMAL = /^[1-9][0-9]{0,18}$/;

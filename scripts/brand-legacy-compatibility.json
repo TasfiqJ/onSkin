@@ -122,6 +122,13 @@
       "rationale": "This disposable PostgreSQL rehearsal mirrors migration 0048's worker-claim digest contract."
     },
     {
+      "path": "scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql",
+      "literal": "'onskin-account-write:'",
+      "expectedCount": 1,
+      "subtype": "test-fixture",
+      "rationale": "This disposable PostgreSQL rehearsal mirrors migration 0048's deployed advisory-lock domain and must remain byte-compatible with the account-deletion write fence."
+    },
+    {
       "path": "scripts/phase9/live-data-rights.mjs",
       "literal": "`onskin-account-deletion-status-capability:v1:${capability}`",
       "expectedCount": 1,

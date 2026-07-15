@@ -69,7 +69,7 @@ for (const functionName of catalogFunctions) {
         `${functionName} must forward only the validated epoch`,
       );
       assert(
-        source.includes('content-type, x-onskin-health-epoch'),
+        source.includes('content-type, x-health-processing-epoch'),
         `${functionName} CORS must allow the epoch header`,
       );
       assert(

@@ -26,7 +26,7 @@ let rateLimitHmacKey: CryptoKey | null = null;
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type, x-onskin-health-epoch',
+    'authorization, x-client-info, apikey, content-type, x-health-processing-epoch',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 

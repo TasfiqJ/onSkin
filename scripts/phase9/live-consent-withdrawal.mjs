@@ -220,10 +220,10 @@ async function createLiveUser(admin, onCreated) {
 
 async function authenticatedFixtureClient(session, epoch, generations) {
   const generationMarkers = Object.entries(generations)
-    .map(([type, generation]) => `onskin-consent-generation=${type}:${generation}`)
+    .map(([type, generation]) => `health-consent-generation=${type}:${generation}`)
     .join(';');
   const client = publicClient({
-    'x-onskin-health-epoch': String(epoch),
+    'x-health-processing-epoch': String(epoch),
     'x-client-info': `phase9-live-consent-withdrawal;${generationMarkers}`,
   });
   const result = await client.auth.setSession({

@@ -30,7 +30,7 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type, x-onskin-health-epoch',
+    'authorization, x-client-info, apikey, content-type, x-health-processing-epoch',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 

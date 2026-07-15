@@ -428,7 +428,7 @@ block(
       dependentConsentRpc,
     ) &&
     /public\._assert_health_consent_capability_cleared\(v_user_id\)/.test(dependentConsentRpc) &&
-    !/set_config\(\s*'onskin\.health_consent_rpc'/.test(dependentConsentRpc) &&
+    !/set_config\(\s*'app\.health_consent_rpc'/.test(dependentConsentRpc) &&
     /revoke all on function public\.record_health_dependent_consent\(\s*bigint, bigint, text, text, text, text\s*\)\s+from public, anon, service_role/.test(
       healthLifecycleMigration,
     ) &&
@@ -670,8 +670,8 @@ block(
 );
 block(
   errors,
-  /x-onskin-health-epoch/.test(liveHarness) &&
-    /onskin-consent-generation=\$\{type\}:\$\{generation\}/.test(liveHarness) &&
+  /x-health-processing-epoch/.test(liveHarness) &&
+    /health-consent-generation=\$\{type\}:\$\{generation\}/.test(liveHarness) &&
     /e\$\{epoch\}\/phase9-consent-/.test(liveHarness) &&
     /response\?\.status === 200/.test(liveHarness) &&
     (liveHarness.match(/withdrawal\.status === 202/g)?.length ?? 0) === 2 &&

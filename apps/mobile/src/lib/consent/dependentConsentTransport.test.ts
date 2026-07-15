@@ -52,7 +52,7 @@ describe('dependent consent PostgREST generation carrier', () => {
     });
     const headers = new Headers(transport.mock.calls[0]?.[1]?.headers);
     expect(headers.get('x-client-info')).toBe(
-      'supabase-js/2; onskin-health-epoch=7; onskin-consent-generation=data_sharing:12',
+      'supabase-js/2; health-processing-epoch=7; health-consent-generation=data_sharing:12',
     );
   });
 
@@ -71,7 +71,7 @@ describe('dependent consent PostgREST generation carrier', () => {
       await wrapped(`${URL}/rest/v1/photos`, { method });
       const headers = new Headers(transport.mock.calls.at(-1)?.[1]?.headers);
       expect(headers.get('x-client-info')).toBe(
-        'onskin-health-epoch=7; onskin-consent-generation=photo_cloud_backup:12',
+        'health-processing-epoch=7; health-consent-generation=photo_cloud_backup:12',
       );
     }
 
@@ -92,8 +92,8 @@ describe('dependent consent PostgREST generation carrier', () => {
 
     expect(transport).toHaveBeenCalledOnce();
     const headers = new Headers(transport.mock.calls[0]?.[1]?.headers);
-    expect(headers.get('x-client-info')).toBe('onskin-health-epoch=7');
-    expect(headers.get('x-client-info')).not.toContain('onskin-consent-generation');
+    expect(headers.get('x-client-info')).toBe('health-processing-epoch=7');
+    expect(headers.get('x-client-info')).not.toContain('health-consent-generation');
   });
 
   it('uses the effective init method when a Request method is overridden', async () => {

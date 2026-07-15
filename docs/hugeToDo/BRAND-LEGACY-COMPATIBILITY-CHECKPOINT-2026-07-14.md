@@ -105,6 +105,14 @@ remaining schema, path, literal, subtype, and rationale constraints on every
 strict run. The strict command runs the focused suite before scanning the
 repository.
 
+Current-state addendum (2026-07-15): strict audit now reports 23 exact
+`legacy-compatibility` references. The additional reference is the entitlement
+authority PostgreSQL rehearsal's byte-compatible use of migration 0048's
+deployed account-write advisory-lock domain. It is classified as one exact
+`test-fixture` entry in the same fail-closed manifest. The dated 22-reference
+verification table above remains the historical result of this checkpoint;
+the current 23-reference result does not change the non-clearance boundary.
+
 ## Future migration rule
 
 If counsel or final identity architecture later requires removing these

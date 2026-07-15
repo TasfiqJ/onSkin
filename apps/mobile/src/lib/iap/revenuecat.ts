@@ -177,7 +177,7 @@ function serializeIdentityTransition<T>(operation: () => Promise<T>): Promise<T>
 }
 
 /**
- * Seal every OnSkin-owned RevenueCat entry point without calling logOut().
+ * Seal every app-owned RevenueCat entry point without calling logOut().
  * RevenueCat documents that logOut creates a new anonymous customer and that
  * known-account switching should use logIn(nextKnownId) directly:
  * https://www.revenuecat.com/docs/customers/identifying-customers
