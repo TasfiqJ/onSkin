@@ -695,6 +695,7 @@
         "scripts/phase9/revenuecat-deletion-barrier-postgres-rehearsal.sql",
         "scripts/phase9/service-writer-deletion-barriers-postgres-rehearsal.sql",
         "scripts/phase9/revenuecat-identity-tombstones-postgres-rehearsal.sql",
+        "scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql",
         "supabase/seed.sql"
       ]
     },
@@ -736,7 +737,7 @@
       "id": "DB-09",
       "status": "in_progress",
       "blockedBy": ["DB-06", "DB-07", "DB-08", "ACCT-03"],
-      "nextAction": "Reset and apply all 51 migrations in a reviewed local stack, then run the exhaustive 47-private-table access-control matrix against staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, and configured Turnstile behavior; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
+      "nextAction": "The credential-free two-reset gate now proves all 52 migrations through 0053 locally. Run the exhaustive 47-private-table access-control matrix against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, and configured Turnstile behavior; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",
@@ -750,6 +751,7 @@
         "supabase/migrations/20260713000050_service_writer_deletion_barriers.sql",
         "supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql",
         "supabase/migrations/20260713000052_account_publication_fence.sql",
+        "supabase/migrations/20260714000053_entitlement_authority_lanes.sql",
         "docs/phase-9/generated/live-supabase-adversarial.json"
       ]
     },
@@ -757,7 +759,7 @@
       "id": "DB-10",
       "status": "in_progress",
       "blockedBy": ["DB-09", "ACCT-03"],
-      "nextAction": "Prove migration 0052 end to end on the exact Edge/mobile candidate: every RevenueCat path lease-bound; exact-session rate, preflight, and begin; multi-device drain; process death; configure-in-flight; lost release; five-minute settle; and two claim-distinct full-family absence rounds. Obtain a documented provider bound plus an approved block, mandatory-version gate, or continuing re-deletion control for old/tampered clients. Also close capability-read amplification, global worker scope, unfinished-operation/key-rotation procedures, cross-owner community block handles, and Apple server-to-server revocation where applicable. Clean-reset all 51 current migrations through 0052 and run the full A/B, provider interruption/recreation, export/deletion, consent, Storage/backup, post-delete denial, and physical-iPhone matrices in reviewed staging and production. Do not describe the end-to-end lifecycle as race-free or launch-ready before those gates pass.",
+      "nextAction": "Local source now composes the migration-0052 lease with central exact-session remote admission and passes process-death, configure-in-flight, lost-release, caller-detachment, quarantine, and child-request settlement contracts; all 52 migrations through 0053 pass the two-reset gate. Prove that exact candidate end to end in reviewed staging and production: exact-session rate/preflight/begin, every Supabase and RevenueCat path fenced, multi-device drain, five-minute settle, and two claim-distinct full-family absence rounds. Obtain a documented provider bound plus an approved block, mandatory-version gate, or continuing re-deletion control for old/tampered clients. Close cross-owner community handles, bounded unfinished-operation/key-rotation procedures, the complete Sign in with Apple authorization-code/token/server-event lifecycle, non-destructive health-consent withdrawal, and the full A/B, provider interruption/recreation, export/deletion, Storage/backup, post-delete denial, and physical-iPhone matrices. Do not describe the end-to-end lifecycle as race-free or launch-ready before those gates pass.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "supabase/functions/account-deletion",
@@ -787,6 +789,11 @@
         "supabase/migrations/20260713000050_service_writer_deletion_barriers.sql",
         "supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql",
         "supabase/migrations/20260713000052_account_publication_fence.sql",
+        "apps/mobile/src/lib/supabase/remoteRequestAdmission.ts",
+        "apps/mobile/src/lib/supabase/remoteRequestAdmission.test.ts",
+        "apps/mobile/src/lib/auth/accountPublicationController.ts",
+        "apps/mobile/src/lib/auth/accountPublicationController.test.ts",
+        "apps/mobile/src/lib/auth/accountDeletionPublication.integration.test.ts",
         "docs/phase-9/account-deletion-operations-runbook.md",
         "scripts/phase9/account-publication-fence-postgres-rehearsal.sql",
         "scripts/phase9/account-service-scrub-postgres-rehearsal.sql",
@@ -861,17 +868,40 @@
     },
     {
       "id": "AUTH-05",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["AUTH-04"],
-      "nextAction": "Complete and capture acceptance evidence: Prove sign-out, token expiry, cold start, owner mismatch, cleanup failure, and A-to-B switching isolation",
-      "evidenceRefs": []
+      "nextAction": "Local lifecycle/adversarial coverage now proves encrypted candidate restore, one exact-subject controlled refresh, sign-out and cleanup ordering, cold exact-owner local-only recovery, owner mismatch, rejected sessions, cleanup failure, and A-to-B publication isolation. Apple TRANSFERRED now fails closed as credential_transferred pending an approved no-transfer or migration policy. Repeat the complete matrix against configured staging on the exact signed iOS build, including token expiry, airplane-mode cold start/reconnect, background/foreground, live provider conflicts, and physical-iPhone process death; separately close authorization-code plus nonce/state capture, the encrypted rotating token vault, daily validation, signed notification ingress, and the authoritative session-access fence.",
+      "evidenceRefs": [
+        "apps/mobile/src/lib/auth/AuthProvider.tsx",
+        "apps/mobile/src/lib/auth/AuthProvider.lifecycle.test.ts",
+        "apps/mobile/src/lib/auth/appleCredentialLifecycle.ts",
+        "apps/mobile/src/lib/auth/appleCredentialLifecycle.test.ts",
+        "apps/mobile/src/lib/supabase/client.ts",
+        "apps/mobile/src/lib/supabase/client.test.ts",
+        "apps/mobile/src/lib/supabase/authRefreshProtection.ts",
+        "apps/mobile/src/lib/supabase/authRefreshProtection.test.ts",
+        "apps/mobile/src/lib/auth/accountSessionIsolationContracts.test.ts",
+        "docs/USER_FLOW_TREE.md",
+        "BLOCKERS.md"
+      ]
     },
     {
       "id": "AUTH-06",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["AUTH-05"],
-      "nextAction": "Complete and capture acceptance evidence: Bind RevenueCat identity, analytics identity, query caches, encrypted stores, exports, and in-flight operations to the account generation",
-      "evidenceRefs": []
+      "nextAction": "Local source binds remote requests, RevenueCat identity and SDK work, analytics/query/private stores, exports, notification delivery, recommendations, commerce, Shelf writes, and account deletion to exact owner/session authority with bounded drain and quarantine. Prove the complete binding against live staging and RevenueCat on physical iPhones, including delayed bodies, detached callers, listener writes, process death, deletion intake, A-to-B switching, and provider recreation; retain redacted evidence with no stale write/share or cross-account entitlement.",
+      "evidenceRefs": [
+        "apps/mobile/src/lib/supabase/remoteRequestAdmission.ts",
+        "apps/mobile/src/lib/supabase/remoteRequestAdmission.test.ts",
+        "apps/mobile/src/lib/supabase/remoteRequestGate.ts",
+        "apps/mobile/src/lib/auth/accountPublicationController.ts",
+        "apps/mobile/src/lib/auth/accountPublicationFence.ts",
+        "apps/mobile/src/lib/iap/revenuecat.ts",
+        "apps/mobile/src/lib/iap/revenuecatPublication.test.ts",
+        "apps/mobile/src/features/settings/actions.ts",
+        "apps/mobile/src/lib/auth/accountDeletionPublication.integration.test.ts",
+        "docs/phase-9/account-deletion-operations-runbook.md"
+      ]
     },
     {
       "id": "CAT-01",
@@ -1085,6 +1115,8 @@
       "evidenceRefs": [
         "apps/mobile/src/lib/iap/revenuecat.ts",
         "apps/mobile/src/lib/auth/AuthProvider.tsx",
+        "apps/mobile/src/lib/auth/accountPublicationController.ts",
+        "apps/mobile/src/lib/iap/revenuecatPublication.test.ts",
         "docs/phase-6/phase-6-exit-review.md",
         "docs/phase-6/generated/payments-qa-packet.md"
       ]
@@ -1093,11 +1125,18 @@
       "id": "PAY-06",
       "status": "in_progress",
       "blockedBy": ["PAY-05"],
-      "nextAction": "Deploy migration 0044 before the updated Edge Function, retain proof that the legacy four-argument and current three-argument RPC calls both persist null Store identity during rollout, then prove one-time grant, rollback, expiry, reconciliation, deletion, and UI lifecycle on staging.",
+      "nextAction": "Deploy migration 0053, subscription-reconciliation, the updated grants/webhook functions, and the compatible no-argument mobile projection reader in the reviewed order; prove zero installed old direct-table readers or enforce a mandatory-version fence. Then prove one-time app grant, store/app-lane coexistence, legacy_unknown reconciliation from fresh RevenueCat request_date, rollback/forward repair, derived expiry, deletion, offline cache, and UI lifecycle in staging and on the exact iOS candidate.",
       "evidenceRefs": [
         "supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql",
         "supabase/migrations/20260713000044_reverse_trial_no_store_identity.sql",
+        "supabase/migrations/20260714000053_entitlement_authority_lanes.sql",
         "supabase/functions/subscription-grants/index.ts",
+        "supabase/functions/subscription-reconciliation/index.ts",
+        "supabase/functions/subscription-reconciliation/reconciliationCore.test.ts",
+        "scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql",
+        "apps/mobile/src/features/subscription/store.ts",
+        "apps/mobile/src/features/subscription/store.test.ts",
+        "docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md",
         "docs/phase-6/generated/payments-qa-packet.md",
         "docs/phase-6/phase-6-exit-review.md"
       ]
@@ -1109,6 +1148,11 @@
       "nextAction": "Run purchase, restore, manage and cancel, Terms and Privacy failure, missing offering, offline, interrupted purchase, refund, grace, expiry, and reinstall flows on the actual iOS candidate and prove no local, preview, or stale-cache path grants Pro.",
       "evidenceRefs": [
         "apps/mobile/src/lib/iap/revenuecat.ts",
+        "apps/mobile/src/lib/iap/storeTransactionNotice.ts",
+        "apps/mobile/src/lib/iap/storeTransactionNotice.test.ts",
+        "apps/mobile/src/features/subscription/StoreTransactionNoticeHost.tsx",
+        "apps/mobile/src/features/subscription/entitlementEvidence.ts",
+        "apps/mobile/src/features/subscription/storefrontCopy.ts",
         "apps/mobile/src/features/subscription/paywallMobileContracts.test.ts",
         "docs/phase-6/payments-qa-checklist.md",
         "docs/phase-6/generated/payments-qa-packet.md"

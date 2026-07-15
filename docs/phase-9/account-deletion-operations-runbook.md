@@ -1,16 +1,39 @@
 # Durable Account-Deletion Operations Runbook
 
-Date: 2026-07-13
+Date: 2026-07-15
 Status: bounded source checkpoint; live staging, production, provider,
-physical-iPhone, privacy/security-review, and App Review evidence is still
-required. Migration `20260713000052` now supplies the database publication
-fence, exact-session intake boundary, and deterministic PostgreSQL rehearsal;
-compatible Edge/mobile deployment and reviewed residual-risk controls remain
-release blockers, so this document does not claim production readiness.
+physical-iPhone, privacy/security/legal review, and App Review evidence is
+still required. Migration `20260713000052` supplies the database publication
+fence and exact-session intake boundary. Migration `20260714000053` separates
+store and app-grant entitlement authority and adds reconciliation. Compatible
+schema, 12-function, and mobile deployment plus reviewed residual-risk controls
+remain release blockers, so this document does not claim production readiness.
 
 This runbook operates the durable account-deletion lifecycle introduced by
-migrations `20260713000048` through `20260713000052`. It does not establish
+migrations `20260713000048` through `20260713000052` and its entitlement
+publication interaction updated by `20260714000053`. It does not establish
 legal compliance, vendor acceptance, Apple approval, or production readiness.
+
+## 2026-07-15 source checkpoint
+
+The credential-free checkpoint passed two local resets with 52 migrations and
+`20260714000053` latest, structural pgTAP, error-level database lint, and an
+empty local schema-versus-migration-shadow diff. Temporary type generation
+produced 4,602 lines with SHA-256
+`dae61a16d2958ccc7ddc64ed4abac96163d13c1c81a5d6d10d4da827b5ee4c17`.
+That file was not copied into the repository; DB-08 remains open.
+
+PostgreSQL 15/17 deletion/publication and entitlement-authority-lane rehearsals
+passed. Focused server results were reconciliation 20/20, subscription grants
+8/8, RevenueCat webhook atomicity 20/20, durable account deletion 215/215, and
+the focused mobile/server publication contract 2/2. Edge manifest, Deno check,
+policy, data-rights, RLS, and release source gates passed. The isolated server
+worktree passed 227 test files / 2,430 tests; integrated main passed 244 test
+files / 2,780 tests plus typecheck, lint, and formatting.
+
+These are source results only. Hosted migration/checksum parity, live provider
+behavior, physical-iPhone flows, professional review, and App Store acceptance
+remain open.
 
 ## Runtime model
 
@@ -23,6 +46,14 @@ The `account-deletion` Edge Function has four mutually exclusive POST actions:
 | `status`    | 256-bit status capability in the exact JSON body                        | Opaque operation/receipt state; no JWT or account identifier            |
 | `work`      | Exact `x-account-deletion-worker-secret` header                         | Bounded worker report; no user JWT                                      |
 
+The iOS customer surface names the App Store rather than presenting a generic
+or Play Billing marketplace label. The account-deletion confirmation and
+recovery surface discloses: “Completing deletion can take up to 29 days while
+providers verify erasure.” This copy reflects the bounded server operation but
+does not itself prove legal sufficiency or App Review acceptance; retain the
+final screenshot, localization, counsel review, and exact submitted build in
+the release packet.
+
 `preflight` is the mobile session-publication boundary, not a status API. The
 Edge runtime resolves the bearer to a still-live Auth subject and calls the
 service-role-only `get_account_deletion_barrier_state(uuid)` RPC. The Edge
@@ -34,6 +65,23 @@ exact owner-bound `clear`, rejects a cached `session.user.id` mismatch, and uses
 the response subject as the local/vendor publication target. The authenticated
 `active` response itself carries cleanup authority, so Auth deletion after the
 barrier lookup cannot destroy the proof.
+
+The mobile Supabase transport now uses one process-wide remote-admission gate.
+Admission is bound to the exact authenticated subject, access token, and Auth
+session ID; a stale or cross-owner candidate cannot borrow authority from the
+current React state. Automatic refresh is disabled in favor of a controlled
+refresh path that enters candidate state, verifies the new exact session,
+re-runs deletion preflight, and only then publishes active remote authority.
+Backgrounding, sign-out, Apple credential invalidation, account transition, and
+deletion close or pause admission before dependent remote work can resume.
+
+Deletion intake enters the exact-session deletion state synchronously, rejects
+new remote permits, aborts/drains existing transport leases, and coordinates
+the separately bounded RevenueCat publication controller before destructive
+cleanup proceeds. The local tests cover cross-owner transition, refresh,
+background/foreground, deletion, process-recovery, and lost-release source
+contracts. Staging must still prove the exact candidate and hosted transport
+cannot bypass this gate.
 
 ### Mobile owner proof and forced-sign-out crash recovery
 
@@ -137,12 +185,22 @@ legacy signature denial, reserve/begin/activate and renew/begin lock ordering,
 multi-device drain, Auth deletion, capability-only release, direct privilege
 denial, unequal lost-lease deadlines, settling, and two-claim absence proof.
 
-The database protocol is not permission to ship the flow by itself. Mobile
-tests must still cover backgrounding, process death, configure-in-flight,
-identity-reset failure, lost release, and every RevenueCat wrapper failing
-closed without a matching active lease. Hosted staging must prove the exact
-candidate Edge/mobile build uses every session-bound RPC and that no provider
-publication path bypasses the lease.
+Migration `20260714000053_entitlement_authority_lanes.sql` is the next ordered
+schema boundary. RevenueCat/store events may write only store-sourced snapshots;
+app-granted reverse trials remain exclusively in `reverse_trial_grants` and do
+not impersonate an App Store product or RevenueCat identity. The authenticated
+`subscription-reconciliation` function refreshes server-owned store state and
+uses the same exact-session publication lease. Reconciliation, grants, webhook,
+and export/deletion surfaces preserve that separation.
+
+The database protocol is not permission to ship the flow by itself. Focused
+source tests now cover backgrounding, process death, configure-in-flight,
+identity-reset failure, lost release, centralized remote admission, controlled
+refresh, and RevenueCat wrappers failing closed without matching authority.
+Hosted staging must prove the exact candidate schema/Edge/mobile build uses
+every session-bound RPC and that no Supabase or provider publication path
+bypasses the gate. Migration `0053`, the 12 compatible functions, and the
+compatible mobile client must be treated as one deployment unit.
 
 Even this protocol governs only updated compliant clients. RevenueCat's public
 SDK accepts caller-selected App User IDs, so old or tampered binaries may still
@@ -219,14 +277,24 @@ Automatic and manual branches still require a real Sign in with Apple account
 on a physical iPhone before release. The mobile source registers Expo's native
 revoke listener and validates the authenticated Apple subject before publishing
 a restored session and again at foreground. Unknown/error results stay behind a
-retryable session gate. Confirmed invalid credentials enter a durable quarantine,
-stop refresh/account activity, clear auth-derived ephemeral state, and preserve
-owner-bound local-first records until a fresh owner boundary succeeds. Retain
-physical-iPhone evidence for the notification/state path, retry/relaunch,
-same-owner recovery, and different/unprovable-owner cleanup. Apple's
-server-to-server `consent-revoked` endpoint and delivery evidence also remain
-external gates wherever selected or required. This runbook does not claim those
-live paths are complete.
+retryable session gate. Confirmed invalid credentials enter a durable
+quarantine, stop refresh/account activity, clear auth-derived ephemeral state,
+and preserve owner-bound local-first records until a fresh owner boundary
+succeeds. Apple `CredentialState.TRANSFERRED` now also fails closed as
+`credential_transferred`; the source does not treat a transfer as a valid
+credential or silently migrate it.
+
+Retain physical-iPhone evidence for the notification/state path,
+retry/relaunch, same-owner recovery, and different/unprovable-owner cleanup.
+Retain the focused fail-closed `TRANSFERRED` source evidence and approve either
+a formal no-transfer policy or a tested app/team-transfer migration before
+release. Broader Sign in with Apple initial authorization-code plus nonce/state
+capture, an encrypted rotating Apple refresh-token vault, daily refresh-token
+validation, canonical signed server-to-server notification ingress, and an
+authoritative session-access fence remain incomplete launch gates. Apple's
+`consent-revoked` delivery evidence also remains external wherever selected or
+required. This runbook does not claim those live or server-lifecycle paths are
+complete.
 
 ### Conditional PostHog contract
 
@@ -349,9 +417,10 @@ repeat the freeze proof, and only then retry the migration.
 1. Record the revision, project ref, existing function versions, migration
    state, backup/PITR posture, incident owner, and rollback owner. Confirm all
    required Edge secrets by **name only**.
-2. Run local Deno checks/tests, migrations 0048-0052 rehearsals on supported
+2. Run local Deno checks/tests, migrations 0048-0053 rehearsals on supported
    PostgreSQL versions, the Phase 2 env smoke, Edge manifest checks, policy
-   lint, and the account-deletion work-lane smoke.
+   lint, and the account-deletion work-lane smoke. Require the deletion and
+   entitlement-authority PostgreSQL 15/17 rehearsals to pass.
 3. If migrations 0048-0051 are not already installed, deploy the durable
    `account-deletion` function **before** migration 0048. Until its RPCs exist it
    fails intake/work closed with `503`; this short maintenance error is safer
@@ -368,18 +437,24 @@ repeat the freeze proof, and only then retry the migration.
 6. Apply `20260713000052_account_publication_fence.sql` exactly once. Confirm
    the old user-only begin/preflight signatures are absent, legacy five-argument
    intake fails, and the new session-bound RPC ACLs are service-only.
-7. Immediately deploy every `deployByDefault` function from the same revision.
+7. Apply `20260714000053_entitlement_authority_lanes.sql` exactly once, then
+   immediately deploy every `deployByDefault` function from the same revision.
    At minimum this coherently updates `account-deletion`,
-   `revenuecat-webhook`, `subscription-grants`, `catalog-report`, and the
-   rate-limit-owning user functions. Revoked direct writer privileges make old
-   writer code fail closed during this bounded window.
+   `revenuecat-webhook`, `subscription-grants`, `subscription-reconciliation`,
+   `catalog-report`, and the rate-limit-owning user functions. Confirm store
+   snapshots cannot enter the app-grant lane, reverse trials cannot impersonate
+   store products, and the reconciliation endpoint requires an exact live Auth
+   session plus an active publication lease. Revoked direct writer privileges
+   make old writer code fail closed during this bounded window.
 8. Re-run function boot, exact-session negative auth, RLS/policy,
    provider-shape, database concurrency, process-death/lost-release, and
    configure-in-flight checks against staging. Keep both freezes in force.
 9. Deploy the compatible mobile candidate only to the controlled staging
-   cohort. Prove every RevenueCat entry point requires an active lease and that
-   release succeeds capability-only after Auth deletion. Do not reopen legacy
-   clients through a compatibility bypass.
+   cohort. Prove every Supabase remote request uses centralized exact-session
+   admission, controlled refresh re-runs preflight before publication, every
+   RevenueCat entry point requires an active lease, both entitlement lanes
+   reconcile independently, and release succeeds capability-only after Auth
+   deletion. Do not reopen legacy clients through a compatibility bypass.
 10. Re-run function boot, negative auth, RLS/policy, provider-shape, and database
     rehearsal checks against staging. Do not provision Cron while boot or auth
     is failing.
@@ -412,8 +487,11 @@ repeat the freeze proof, and only then retry the migration.
 
 The existing staging wrapper pushes all pending migrations before deploying
 functions. For a fresh lifecycle install, step 3 is a mandatory manual
-predeploy; for the 0052 hard cutover, step 5 and the freeze are mandatory. Do
-not run the wrapper alone against an old account-deletion deployment.
+predeploy; for the 0052 hard cutover, step 5 and the freeze are mandatory. The
+0053 schema, all 12 functions, and the compatible mobile candidate must come
+from one reviewed frozen revision. Do not run the wrapper alone against an old
+account-deletion deployment or reopen publication between the 0053 schema and
+compatible function verification.
 
 ## Scheduler verification
 
@@ -596,10 +674,10 @@ expected; active operations remain durable.
 - A missing/wrong worker secret, invalid startup configuration, unavailable
   provider, or failed RPC returns `401`/`503` or records a retry/action-required
   state. It must never return deletion success.
-- Do not drop migrations 0048-0052, publication-drain metadata, leases,
-  barriers, operations, receipts, recovery audit, or RevenueCat tombstones
-  during rollback. Do not restore the old synchronous or user-only-session
-  account-deletion function after migration 0048/0052.
+- Do not drop migrations 0048-0053, publication-drain metadata, leases,
+  barriers, operations, receipts, recovery audit, entitlement-lane state, or
+  RevenueCat tombstones during rollback. Do not restore the old synchronous,
+  user-only-session, or mixed-authority function set after migration 0048/0052/0053.
 - Preserve the status endpoint and mobile recovery capability. If the function
   must be replaced, roll forward with a compatible build that can reconcile
   every existing step state.
@@ -671,10 +749,13 @@ synthetic Auth user is deleted while its old token is replayed. Unknown fields,
 operation identifiers, capabilities, phases, and timestamps are forbidden in
 the response. The destructive data-rights run separately proves active-barrier
 and terminal lifecycle behavior. Migration 0052 closes the bounded database
-race in source, but this packet alone cannot prove the Edge/mobile candidate
-uses the lease around every real RevenueCat publication path. Reviewed
-multi-device, process-death, configure-in-flight, lost-release, exact-session,
-and provider-reappearance evidence remains an external gate.
+race in source, and migration 0053 separates entitlement authority, but this
+packet alone cannot prove the Edge/mobile candidate routes every Supabase
+request through centralized exact-session admission, uses controlled refresh,
+or holds a lease around every real RevenueCat publication/reconciliation path.
+Reviewed multi-device, process-death, configure-in-flight, lost-release,
+exact-session, entitlement-lane, and provider-reappearance evidence remains an
+external gate.
 
 - hosted Supabase reset/migration, RLS, Storage, Cron/Vault, lease concurrency,
   function limit, and failure-injection evidence in staging and production;
@@ -689,12 +770,21 @@ and provider-reappearance evidence remains an external gate.
   an exact `200`/no-body revoke response;
 - Apple credential-revoked notification/state handling on a supported physical
   iPhone through the implemented native listener, including quarantine,
-  relaunch, retry, same-owner recovery, and different-owner cleanup; plus the
-  server-to-server `consent-revoked` event path wherever selected or required;
+  relaunch, retry, same-owner recovery, different-owner cleanup, and fail-closed
+  `credential_transferred` behavior;
+- Sign in with Apple authorization-code capture, encrypted rotating refresh-token
+  storage, daily validation, canonical signed server-notification ingress, and
+  an authoritative session-access fence, including the server-to-server
+  `consent-revoked` path wherever selected or required;
 - Supabase Auth one-hard-delete/read-only-reconciliation behavior and stale JWT
   writer rejection against the hosted project;
 - mobile accepted/lost-response/relaunch/delayed/invalid/expired/completed/manual
   recovery branches on the exact TestFlight build;
+- a reviewed non-destructive health-consent withdrawal design that does not
+  force account deletion as the only withdrawal path;
+- the exact privacy report URL, final privacy-policy and support URLs, and
+  non-expiring App Review access/demo credentials validated from the submitted
+  build and review notes;
 - named privacy/security/legal review of scope, retention, operator access,
   incident handling, policy copy, and vendor terms; and
 - Apple review and founder release authorization.

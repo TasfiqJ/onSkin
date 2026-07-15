@@ -77,6 +77,8 @@ apps/mobile
   UI routes and feature modules
   local-first stores
   deterministic client mirrors
+  central exact-session remote admission and controlled refresh
+  durable owner-aware store transaction journal
 
 Supabase
   Auth
@@ -84,12 +86,15 @@ Supabase
   RLS
   Edge Functions
   catalog/rules/routine data
+  entitlements (RevenueCat projection)
+  reverse_trial_grants (independent no-card grant)
+  account publication leases and deletion barriers
 
 RevenueCat
   IAP purchases
   offerings
-  entitlements
-  webhook -> Supabase Edge Function
+  ordered webhook -> Supabase entitlement projection
+  authenticated reconciliation -> provider request_date watermark
 
 External data
   Open Beauty Facts exports/API
@@ -119,7 +124,9 @@ Core tables:
 - `photos`
 - `notification_preferences`
 - `entitlements`
+- `reverse_trial_grants`
 - `subscription_events`
+- `account_publication_leases`
 - `catalog_reports`
 
 ## API Structure
@@ -132,6 +139,7 @@ Supabase Edge Functions:
 - consent withdrawal
 - RevenueCat webhook
 - subscription grants
+- subscription reconciliation
 - public waitlist/support/share routes
 
 Account deletion uses a service-role-only transactional RPC for database rows that
@@ -174,22 +182,49 @@ exact `200` no-body revoke response. Missing or failed automatic proof records a
 manual-revocation outcome instead of withholding account deletion or claiming success.
 The mobile client observes Apple's native revoke event, checks credential state before
 restored-session publication and on foreground, and retains owner-bound recovery and
-manual instructions until safe cleanup or explicit acknowledgement.
+manual instructions until safe cleanup or explicit acknowledgement. A transferred Apple
+credential now fails closed as `credential_transferred`; the product does not treat that
+state as a valid credential or claim that transfer handling is complete.
 
-These controls are not proof of a race-free end-to-end deletion lifecycle. Migration
-`0052` supplies the database publication fence, but the exact Edge/mobile candidate must
-still prove that every Supabase/RevenueCat publication path holds the lease and survives
-process death, configure-in-flight, and lost release. A provider-approved block,
-enforceable mandatory-version gate, or continuing re-deletion control for old/tampered
-clients remains a release blocker. Hosted clean-reset,
-Cron/Vault/concurrency, provider interruption and recreation, physical-iPhone,
-privacy/security/legal, and App Review evidence remain required.
+Migration `0052` supplies the database publication fence. The 2026-07-15 source candidate
+routes authenticated Supabase traffic through one exact-session remote-admission gate,
+uses one controlled refresh path bound to the retained opaque refresh token, closes new
+Supabase and RevenueCat publication synchronously, and drains already-admitted work before
+account replacement or deletion publication. The deletion handoff, RevenueCat publication
+controller, and central remote gate have focused process-death, configure-in-flight,
+lost-release, caller-detachment, and child-request-settlement coverage. This is source
+evidence, not proof of a race-free hosted lifecycle.
+
+Migration `20260714000053_entitlement_authority_lanes.sql` completes the current set of
+52 migrations and separates commerce authority: `entitlements` is the ordered RevenueCat
+projection, while `reverse_trial_grants` is the independent app-issued no-card lane. An
+owner-derived, no-argument `auth.uid()` projection RPC returns both without accepting a
+caller-selected user ID. Authenticated reconciliation performs a bounded RevenueCat v1
+read and accepts the provider's fresh snake-case `request_date` as the snapshot watermark;
+it never fabricates provider order. The mobile store durably journals native transaction
+admission before purchase or restore can be repeated, and keeps unresolved ownership or
+confirmation state visible and fail-closed.
+
+The full 52-migration chain passes two clean local resets, pgTAP, database lint, and an
+empty shadow diff; the publication/entitlement lane rehearsals pass on PostgreSQL 15 and 17. Hosted clean-reset, Cron/Vault/concurrency, live RevenueCat and App Store sandbox,
+provider interruption and recreation, physical-iPhone, professional, privacy/security/
+legal, and App Review evidence remain required. Old or tampered clients still require an
+approved provider block, enforceable mandatory-version/zero-installed-cohort proof, or
+continuing re-deletion control. The Sign in with Apple authorization-code capture and
+state/nonce binding, encrypted rotating token vault, daily token validation, canonical
+signed server-notification ingress, and authoritative session-access fence remain open.
+Non-destructive health-consent withdrawal plus the exact privacy report, policy/support
+URLs, and non-expiring demo review access are also launch blockers.
 
 Client APIs:
 
 - feature modules call local stores first where privacy/offline matters
-- Supabase queries only when configured and consented
-- Pro gates read RevenueCat/Supabase entitlement mirror
+- authenticated Supabase requests use the central exact-session admission gate and its
+  controlled refresh path; a closed gate cannot be bypassed by feature code
+- entitlement readers call the owner-derived projection RPC and combine, rather than
+  overwrite, the RevenueCat and no-card grant lanes
+- native purchase and restore admission is serialized through the durable transaction
+  journal; unresolved transactions block repeat purchase attempts
 
 ## Auth Model
 
@@ -224,6 +259,9 @@ Client APIs:
 - Supabase user ID becomes stable app user identity.
 - RevenueCat `appUserID` bound to Supabase user ID.
 - Owner-scoped RLS on user tables.
+- Session candidates are server-verified before central remote admission. Controlled
+  refresh atomically rotates the candidate lineage, and sign-out, owner change, deletion,
+  invalid Apple credential state, or lease failure closes publication synchronously.
 
 ## Deployment Notes
 

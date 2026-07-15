@@ -22,8 +22,11 @@ Required for:
 - PAO/expiry badges
 - routine generation
 - check-off persistence
-- subscription entitlement helpers
+- independent RevenueCat/no-card entitlement projection and reconciliation helpers
+- durable store-transaction admission and recovery journal
+- exact-session remote admission, controlled refresh, and synchronous closure
 - privacy/consent logic
+- Apple credential-state fail-closed behavior
 - claim-safety copy scans
 
 Example commands:
@@ -40,11 +43,40 @@ Required for:
 - shelf add -> conflict detection
 - shelf add -> routine builder
 - routine check-off -> progress/adherence
-- RevenueCat webhook -> entitlements
+- RevenueCat webhook -> ordered `entitlements` projection
+- subscription grant -> independent `reverse_trial_grants` lane
+- bounded authenticated RevenueCat reconciliation using provider `request_date`
+- owner-derived no-argument entitlement projection RPC -> combined client evidence
+- purchase/restore -> durable transaction journal -> confirmed promotion or blocked retry
 - Supabase RLS owner isolation
 - account deletion/export, including delayed export versus sign-out/A-to-B,
-  exact server owner, post-write invalidation, and same-user refresh
+  exact server owner, post-write invalidation, same-user refresh, central remote-admission
+  closure, RevenueCat drain, and durable deletion handoff
 - catalog lookup/search/report
+
+## 2026-07-15 Source Checkpoint
+
+The current source checkpoint passes:
+
+- PostgreSQL 15 and 17 account-publication and entitlement-authority rehearsals.
+- Two clean local Supabase resets across all 52 migrations through
+  `20260714000053_entitlement_authority_lanes.sql`, plus pgTAP, database lint, and an
+  empty shadow diff.
+- Subscription reconciliation 20/20, subscription grants 8/8, atomic RevenueCat webhook
+  20/20, durable account deletion 215/215, and the focused mobile server contract 2/2.
+- Integrated repository verification: 244 test files / 2,780 tests, typecheck, lint, and
+  format.
+
+These results prove source contracts only. They do not close hosted migration/Cron/Vault,
+live Supabase or RevenueCat, App Store sandbox/TestFlight, provider interruption and
+recreation, physical-iPhone, professional-review, privacy/legal, or App Review gates.
+
+Apple `TRANSFERRED` is now a tested fail-closed `credential_transferred` result. Release
+testing must still prove initial authorization-code plus state/nonce capture, encrypted
+rotating token storage, daily refresh-token validation, canonical signed server-notification
+ingress, and an authoritative server session-access fence. A reviewed non-destructive
+health-consent withdrawal flow and the exact privacy report, policy/support URLs, and
+non-expiring demo review access also remain launch blockers.
 
 ## E2E Tests
 
@@ -94,6 +126,11 @@ Manual QA must cover:
 Run or maintain:
 
 - RLS smoke/adversarial tests.
+- Two-reset full migration replay, pgTAP, database lint, and empty shadow diff.
+- Central exact-session remote-admission tests covering controlled refresh, synchronous
+  closure, child-request settlement, account replacement, and deletion handoff.
+- Independent entitlement-lane, owner-derived projection, provider-watermark, and durable
+  transaction-journal adversarial tests.
 - privacy payload audit.
 - edge auth smoke.
 - dependency inventory/SBOM.

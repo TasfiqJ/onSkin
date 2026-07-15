@@ -37,28 +37,42 @@ npm run phase2:db-local-reset
 npm run phase2:db-local-verify
 ```
 
-The 2026-07-14 run used Node `24.14.0`, Docker Engine `29.2.1`, the CLI's local
-PostgreSQL 15 image, and exact Supabase CLI `2.109.1`. It recorded:
+The 2026-07-15 verification checkpoint used Node `24.14.0`, Docker Engine `29.2.1`, the
+CLI's local PostgreSQL 15 image, and exact Supabase CLI `2.109.1`. It recorded:
 
 - local-only structural contract: pass;
 - independent reset-only replay: pass;
 - two consecutive explicit migration-plus-seed resets: pass;
-- exact local history: 51 unique versions through `20260713000052`;
-- structural pgTAP: 16 assertions pass, including Auth, Storage, extension
-  namespaces, the 70-table/RLS inventory, seed invariants, and sealed-table
-  grants;
+- exact local history: 52 unique versions through
+  `20260714000053_entitlement_authority_lanes.sql`;
+- structural pgTAP: pass, including Auth, Storage, extension namespaces, the
+  70-table/RLS inventory, seed invariants, sealed-table grants, and the
+  entitlement-authority contract;
 - `supabase db lint --local --schema public --level error --fail-on error`:
   pass;
 - local schema versus fresh migration shadow for `public`, `auth`, and
   `storage`: semantically empty diff;
-- temporary local type generation: 4,556 lines, SHA-256
-  `710b86ee8acba569a3258d22479db911672029d2aefd06afffd71526d02a10ec`;
+- temporary local type generation: 4,602 lines, SHA-256
+  `dae61a16d2958ccc7ddc64ed4abac96163d13c1c81a5d6d10d4da827b5ee4c17`;
 - repository database types unchanged and DB-08 still open; and
 - no remaining DB-05-named container or volume after cleanup.
 
-The policy lint and rate-limit cleanup-index smoke also passed. The adversarial
-RLS harness passed its source gates while correctly warning that live staging
-and production evidence is absent.
+The PostgreSQL 15/17 deletion/publication and entitlement-authority-lane
+rehearsals passed. The source checkpoint also recorded the following focused
+server results:
+
+- subscription reconciliation: 20/20;
+- reverse-trial subscription grants: 8/8;
+- atomic RevenueCat webhook handling: 20/20;
+- durable account deletion: 215/215; and
+- focused mobile/server publication contract: 2/2.
+
+Edge manifest, Deno check, policy, data-rights, RLS, and release source gates
+passed. The isolated server worktree passed 227 test files / 2,430 tests. The
+integrated main checkpoint passed 244 test files / 2,780 tests plus typecheck,
+lint, and formatting. The policy lint and rate-limit cleanup-index smoke also
+passed. The adversarial RLS harness passed its source gates while correctly
+warning that live staging and production evidence is absent.
 
 CI reruns `phase2:db-local-contract` and `phase2:db-local-verify` from the
 accepted lockfile; that clean-revision run is the durable acceptance evidence.
@@ -70,11 +84,21 @@ database URL, or hosted credential was required or used. No remote migration
 list, push, repair, reset, diff, type generation, or other mutation was run.
 
 Accordingly, “empty diff” in this evidence means only local replay versus a
-local migration shadow. It is not hosted drift parity. DB-06 must still capture
-reviewed staging migration/checksum/deployment evidence. DB-08 must reconcile
-local generated types with reviewed staging before deliberately replacing the
-hand-authored repository types. DB-09/DB-10 hosted, provider, concurrency, and
-device gates also remain open.
+local migration shadow. It is not hosted drift parity. The 4,602-line temporary
+type file was evidence only: the repository database types were not replaced,
+and DB-08 remains open. DB-06 must still capture reviewed staging
+migration/checksum/deployment evidence. DB-08 must reconcile local generated
+types with reviewed staging before deliberately replacing the hand-authored
+repository types. DB-09/DB-10 hosted, provider, concurrency, and physical-iPhone
+gates also remain open.
+
+Migration `0053` and the compatible function/mobile revision must be deployed
+as one ordered change. It separates RevenueCat/store entitlement snapshots from
+app-granted reverse trials, adds an authenticated reconciliation lane, and
+keeps both behind the exact-session publication/deletion fence. Local source
+proof does not replace RevenueCat sandbox evidence, hosted exact-session
+concurrency evidence, an enforceable old-client control, professional privacy
+and security review, or App Store review.
 
 The local CLI has no supported leaked-password-protection config key. Hosted
 staging and production must still enable and evidence Auth's

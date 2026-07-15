@@ -101,6 +101,14 @@ Read this with:
 10. Performance baseline and scale evidence are not measured on supported
     physical devices or beta telemetry.
 11. Closed beta not run.
+12. Health-consent withdrawal has no approved non-destructive product/data
+    contract.
+13. Sign in with Apple still lacks authorization-code plus nonce/state capture,
+    an encrypted rotating refresh-token vault, daily validation, canonical
+    signed server-notification ingress, and an authoritative session-access
+    fence. `TRANSFERRED` is fail-closed pending a formal transfer decision.
+14. The exact release privacy report, live policy/support URLs, and
+    non-expiring App Review demo access/instructions do not exist.
 
 ## Source-Of-Truth Status
 
@@ -124,7 +132,7 @@ mirrors are byte-identical and listed in the root source-of-truth docs.
 covers the Phase 2-11 Tas-owned launch evidence gate groups and writes the
 machine-extracted key inventory to `docs/generated/tas-todo-audit.{json,md}`.
 
-Broader launch-gate verification retained through 2026-07-12: `npm run typecheck`, `npm run lint`,
+Broader launch-gate verification retained through 2026-07-15: `npm run typecheck`, `npm run lint`,
 `npm test`, `npm --workspace apps/mobile run typecheck`,
 `npm --workspace apps/mobile run lint`, `npm --workspace apps/mobile run test`,
 `npm run phase5:verify`, `npm run phase7:verify`, `npm run brand:audit:strict`,
@@ -145,7 +153,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. A clean `main` rerun on
-2026-07-13 passes root typecheck, lint, and 211 mobile test files / 2262 tests.
+2026-07-15 passes root typecheck, lint, and 244 mobile test files / 2780 tests.
 The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
@@ -361,50 +369,49 @@ attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains 46 migrations, Supabase client code, hand-authored stale
-types, Edge Functions, a staging deploy wrapper, and an exhaustive live-project
-RLS harness. The credential-free DB-09 contract classifies all 63 public tables,
-probes all 40 private tables across permanent, signed-anonymous, and
-unauthenticated identities, rejects non-authorization false positives, blocks
-on cleanup residue, and passes its 10-check behavioral smoke. Migration `0045`
-closes signed-anonymous cloud-photo insert/update access. The DB-10 export
-registry now keeps service-only reverse-trial/subscription rows on verified-user
-backend paths and passes 13 Deno contracts. Migration `0046` adds the
-fail-closed, array-aware service-identity scrub; its production-shaped
-PostgreSQL 15/17 rehearsal passes. Migration `0047` removes legacy null-owner
-OBF contribution payloads, requires a live cascading Auth owner, and extends
-the scrub's exact deletion/residue attestation; its PostgreSQL 15/17 rehearsal
-also proves idempotent scrub and direct Auth cascade. Provider source contracts require exact
-RevenueCat, PostHog, and Apple attestations and expose a best-effort manual
-Apple outcome without withholding deletion. The full lifecycle still lacks a
-durable barrier/provider-step state, queued PostHog polling, late-webhook and
-stale-session suppression, account-keyed rate-limit and cross-owner community
-handle cleanup, retry-safe mobile RevenueCat reset, durable Apple notice/token
-handling, and live concurrency/provider proof. There is no
-reviewed full local Supabase reset or live staging/production project verified
-for release.
+The repo contains 52 migrations through `20260714000053`, targeted current RPC
+types, 12 deploy-by-default Edge Functions, a staging deploy wrapper, and an
+exhaustive live-project RLS harness. The isolated DB-05 gate passes two clean
+migration-plus-seed resets, structural pgTAP across all 70 RLS-enabled public
+tables, error-level schema lint, and an empty migration-shadow drift check.
+PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system and
+the separate RevenueCat/app-grant entitlement authorities.
+
+Migrations `0048`-`0052` provide the durable deletion operation, provider-step,
+barrier, guarded-writer, identity-tombstone, exact-session publication-lease,
+drain, settling, and repeated-absence contracts. Mobile now places every
+Supabase request and RevenueCat identity/operation behind one purpose-scoped,
+exact-session remote-admission controller; controlled refresh validates and
+persists only the exact subject. Migration `0053` keeps RevenueCat authority in
+`entitlements`, the no-card grant in `reverse_trial_grants`, and exposes both
+through an owner-derived RPC. Bounded authenticated reconciliation uses only a
+fresh provider `request_date`. Focused deletion, reconciliation, grant, webhook,
+auth, RLS, policy, and data-rights source gates pass.
+
+This is not a hosted deployment or provider proof. Full generated-type parity,
+hosted RLS/Cron/Vault/concurrency, old/tampered-client containment,
+cross-owner community-handle cleanup, complete Sign in with Apple server
+lifecycle, and staging/production provider evidence remain open.
 
 Next action:
 
-- add the deletion barrier and durable provider-step state, poll queued PostHog
-  work, suppress late RevenueCat/deleting-identity writes, clean account-keyed
-  rate-limit and cross-owner community-handle residue, make mobile pending
-  deletion/RevenueCat reset retry-safe, and make Apple token/manual-notice handling durable;
 - create staging and production projects after the brand decision;
 - fill `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY`;
 - run `npm run phase2:check-env:strict`;
-- reset a clean local stack through all 46 migrations, then apply them with
+- apply all 52 reviewed migrations through `0053` with
   `scripts/phase2/deploy-supabase-staging.ps1`;
 - regenerate `packages/types/src/database.types.ts`;
-- deploy `revenuecat-webhook`, `account-deletion`, `data-export`, and
-  `order-report-poll`;
+- deploy the exact 12-function manifest, including `subscription-reconciliation`;
 - run Security Advisor and Performance Advisor;
 - configure anonymous Auth and Turnstile, then run
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
 - retain clean-revision, redacted artifacts covering both permanent users, the
-  signed-anonymous user, the no-session client, all 40 private tables, exact
-  database/Storage outcomes, and zero cleanup residue.
+  signed-anonymous user, the no-session client, all 47 private tables, exact
+  database/Storage outcomes, publication/deletion concurrency, provider
+  interruption/recreation, and zero cleanup residue;
+- obtain an approved old/tampered-client control and finish the SIWA
+  authorization-code/token/server-event lifecycle before production.
 
 Exit criteria:
 
@@ -427,19 +434,57 @@ Next action:
 
 - create App ID under cleared bundle ID;
 - configure Sign in with Apple;
-- create server-side token revocation credentials for account deletion, store
-  usable Apple refresh tokens securely when issued, and handle Apple's
-  credential-revoked notification;
+- create server-side token exchange/revocation credentials, store usable Apple
+  refresh tokens in the reviewed rotating vault, validate them on the approved
+  schedule, and handle the native credential-state listener plus Apple's signed
+  server notifications;
 - verify exact automatic revocation plus the manual iPhone Settings fallback,
   including durable notice recovery, on a signed physical-iPhone build;
 - create App Store Connect app;
 - prepare privacy nutrition labels and required support/policy URLs.
+- produce the exact release privacy report and a non-expiring ordinary App
+  Review demo account with complete feature/deletion/Restore instructions.
 
 Exit criteria:
 
 - TestFlight build installs and auth/deletion flows pass;
 - subscription metadata and policy links are accurate;
 - app identity matches brand memo.
+
+## B-SIWA-SERVER-LIFECYCLE - Sign in with Apple token and event proof
+
+Status: `launch-blocked`
+
+The source binds Apple credential checks and deletion revocation attempts to the
+authenticated Supabase subject and retains a durable manual fallback. Commit
+`6869b7f07` also maps Apple `TRANSFERRED` to the fail-closed
+`credential_transferred` publication state; it is no longer accepted as valid
+or mislabeled as revoked. The mobile authorization path still discards the
+single-use authorization code and its state/nonce context after the identity
+token handoff. There is no encrypted rotating Apple token vault, daily
+refresh-token validation, canonical signed server-notification ingress, or
+authoritative session-access fence. Before launch, the exact signed iOS build
+and backend must demonstrate that a fresh code is exchanged only by the trusted
+server, the resulting refresh token is encrypted and account-bound,
+rotation/retry cannot cross users, revocation uses the intended
+client/team/key identity, and Apple's server events are authenticated,
+deduplicated, ordered, and reconciled without accepting a caller-supplied
+subject. Product/counsel must also approve either a formal no-transfer policy or
+a tested app/team-transfer migration before changing the fail-closed behavior.
+
+Exit criteria:
+
+- fresh-code exchange, encrypted refresh-token retention/rotation, account
+  deletion revocation, invalid/expired/replayed code handling, and exact
+  `200`/no-body revoke proof pass in staging and on a supported physical iPhone;
+- native credential-state notification and server-to-server `consent-revoked`,
+  `account-deleted`, `email-enabled`, and `email-disabled` events applicable to
+  the release are
+  signature/issuer/audience/time checked, deduplicated, and owner-bound;
+- missing automatic proof leaves truthful durable manual recovery and never
+  blocks deletion or claims revocation success; and
+- privacy/security counsel approves token retention, operator access,
+  rotation, incident, and deletion behavior.
 
 ## B-GOOGLE - Google Sign-In For iPhone
 
@@ -468,24 +513,27 @@ The client now upgrades active anonymous sessions in place: Apple/Google native
 tokens use Supabase `linkIdentity`, email uses `updateUser` plus an
 `email_change` OTP, and every successful path asserts the original user ID.
 Focused local tests prove routing, same-user invariants, and no unsafe fallback,
-plus hashed local ownership, query-cache eviction, write draining, cleanup
-failure recovery, and signed-out route isolation. Codex has no Tas-owned
-Supabase project, live provider identities, email inbox, second real account, or
-physical release build with which to prove the external configuration.
+plus hashed local ownership, encrypted raw-session restore, exact-subject
+controlled refresh, query-cache eviction, write and child-request draining,
+purpose/URL/body/response binding, deadline/quarantine handling, cleanup failure
+recovery, and signed-out route isolation. Every production Supabase request
+uses the central remote-admission fetch. No hosted Supabase project, live
+provider identity, email inbox, second real account, or physical release build
+proves the external configuration.
 
 Next action:
 
 - enable anonymous sign-in and manual identity linking in staging and production;
 - configure and review email-change OTP delivery/templates, expiry, and rate limits;
 - after final brand clearance, configure Apple and Google provider credentials;
-- on supported iOS and Android devices, capture the anonymous `auth.users.id`
+- on supported physical iPhones, capture the anonymous `auth.users.id`
   before and after Apple, Google, and email upgrades;
 - exercise an identity already owned by another account and confirm the app
   stays on the anonymous user without deleting local private data;
 - populate account A with distinctive Shelf/routine/completion/Progress data,
   then verify sign-out, a signed-out cold start with retained owner metadata,
   cold-start owner mismatch, token expiry, and account A to account B switching on
-  supported iOS and Android builds;
+  the supported iOS build;
 - after every destructive account boundary, open direct Shelf, Today, Progress,
   and You routes and verify no account A query or metadata is visible to account B.
 - start a combined export for account A, delay the `data-export` response, then
@@ -497,6 +545,10 @@ Next action:
 - force a partial cleanup after the owner hash is removed and a remote sign-out
   failure; verify the cleanup-required control survives, persisted local auth is
   removed, and account B remains gated until every native store succeeds on retry.
+- exercise background/foreground, refresh expiry, delayed response bodies,
+  aborted callers, transport ambiguity, and fire-and-forget child requests;
+  prove no remote request or RevenueCat result survives closure, owner switch,
+  deletion intake, or a mismatched session generation.
 
 Exit criteria:
 
@@ -515,12 +567,17 @@ Exit criteria:
 
 ## B-REVENUECAT - Live purchases and entitlements
 
-Status: `stubbed`
+Status: `source-hardened / live-blocked`
 
-Paywall and entitlement surfaces exist. The native RevenueCat SDK is installed
-and guarded purchase/restore runtime wiring exists, bound to the Supabase user
-ID, but real products, offerings, sandbox purchases, localized pricing, webhook
-reconciliation, and account deletion cleanup are not live.
+Paywall and entitlement surfaces exist. Store authority is isolated in
+`entitlements`; the no-card app grant is isolated in `reverse_trial_grants`.
+The owner-derived read RPC returns both lanes, `legacy_unknown` fails closed,
+and the authenticated reconciliation function accepts no caller owner/time.
+Every configure/log-in/offering/purchase/Restore/customer-info request requires
+exact publication authority. A durable write-ahead journal prevents a second
+charge after an unconfirmed native result. iOS copy names the App Store and
+deletion copy discloses up to 29 days for provider verification. None of this is
+live RevenueCat, StoreKit, counsel, physical-iPhone, or App Review evidence.
 
 Next action:
 
@@ -528,11 +585,17 @@ Next action:
 - configure monthly/annual products, offerings, and entitlements;
 - bind RevenueCat `appUserID` to Supabase user ID;
 - fetch localized prices from RevenueCat;
-- wire purchase, restore, intro eligibility, cancellation/manage links;
+- verify purchase, Restore, intro eligibility, cancellation/manage links and
+  the unconfirmed/payment-pending journal on a physical iPhone;
+- deploy migration `0053`, `subscription-reconciliation`, webhook, grants, and
+  the compatible mobile reader in the reviewed order; prove no installed old
+  direct-table reader remains or enforce a mandatory-version fence;
 - deploy and verify webhook reconciliation;
-- configure and verify the v1 subscriber-deletion call against live sandbox
-  data: only an exact matching `200`/`deleted=true` succeeds, while `404` stays
-  unattested until durable provider-step state can resolve retry ambiguity.
+- configure and verify provider deletion/recreation, alias/transfer, late
+  webhook, fresh v1 reconciliation, and the v2 full-family absence contract
+  against disposable sandbox data;
+- obtain counsel/App Review approval for the transaction-journal retention and
+  29-day deletion disclosure.
 
 Exit criteria:
 
@@ -632,6 +695,9 @@ Current implementation note:
   approved or that a claimed credential is authentic.
 - The copy and URLs are still placeholders until counsel supplies final text and
   the final brand/domain.
+- No exact release privacy report or non-expiring ordinary App Review demo
+  account/instructions have been reconciled to the observed binary and network
+  behavior.
 
 Exit criteria:
 
@@ -649,6 +715,14 @@ commerce data. Washington MHMDA, FTC health-app guidance, GDPR/UK/EU if
 applicable, Apple/Google data policies, and affiliate disclosure rules need
 review before launch.
 
+The current `Withdraw health-data consent` behavior is not accepted as the
+launch design. Withdrawal must stop future processing and revoke the applicable
+purpose without silently converting into account deletion, destroying
+unrelated account/store data, or retaining derived health state without a
+documented basis. The exact local/server/cache/analytics/recommendation effects,
+re-consent behavior, pending/offline work, export treatment, and legally
+required retention need one reviewed non-destructive contract and live proof.
+
 Exit criteria:
 
 - DPIA or equivalent review complete for health data and photos;
@@ -657,6 +731,30 @@ Exit criteria:
 - data-sharing consent is separate from collection consent where required;
 - commerce disclosure language is counsel-approved;
 - Ask/cloud transmission consent is final if cloud Ask ever launches.
+
+## B-HEALTH-CONSENT-WITHDRAWAL - Non-destructive purpose withdrawal
+
+Status: `launch-blocked`
+
+Design and implement one source-of-truth state machine that distinguishes
+withdrawal of health-data processing from account deletion. It must freeze new
+health-dependent work before acknowledgement, cancel or reject stale in-flight
+work, remove or quarantine data and derived state only according to the approved
+purpose/retention matrix, preserve unrelated account and billing records, and
+offer a truthful re-consent path without resurrecting data that was required to
+be erased.
+
+Exit criteria:
+
+- counsel-approved consent/data-retention matrix names every local, Supabase,
+  analytics, notification, recommendation, Ask, photo, export, backup, and
+  processor effect;
+- online, offline, interrupted, A-to-B, retry, re-consent, export, and account
+  deletion interactions pass automated and human E2E tests;
+- staging proves processor withdrawal/deletion and no stale health-derived
+  result is published after withdrawal; and
+- the exact Settings copy, privacy policy, App Privacy answers, and App Review
+  instructions match observed behavior.
 
 ## B-LEGAL - Store, subscription, claims, and commerce legal review
 
@@ -678,6 +776,29 @@ Exit criteria:
 - affiliate disclosures reviewed;
 - no unbuilt, simulated, or unreviewed feature is marketed as live;
 - UGC/community/legal floor is approved before any peer posting launches.
+
+## B-APP-REVIEW-PRIVACY - Exact privacy report, URLs, and reviewer access
+
+Status: `launch-blocked`
+
+Source manifests and draft policy packets do not establish what the frozen
+release binary actually sends or stores, and placeholder links or a
+short-lived/privileged account cannot support App Review.
+
+Exit criteria:
+
+- inspect the exact archived iOS build and reconcile its privacy manifest,
+  required-reason APIs, SDK signatures, observed network/storage behavior, data
+  inventory, retention, tracking/linkage, and App Privacy answers;
+- publish final HTTPS Terms, Privacy, Consumer Health Data Privacy, Support,
+  account-deletion, data-export, and privacy-choices URLs under the cleared
+  identity, with uptime and device handoff verified;
+- create a non-expiring ordinary production-like reviewer account and complete
+  instructions/sample data for all 20 features, purchase/Restore, deletion,
+  moderation, Ask, commerce, widgets, and links without exposing staff/admin or
+  real-user data; and
+- counsel approves the final report/answers and the exact review build passes
+  reviewer-account and policy-link human E2E before submission.
 
 ## B-DERM-REVIEW - Clinical and cosmetic chemistry review
 

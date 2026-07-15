@@ -88,6 +88,48 @@ Use this format for every significant product, architecture, pricing, privacy, o
   required by App Review/accessibility.
 - Status: Accepted.
 
+### 2026-07-14 - Use iOS-Specific Commerce And Honest Deletion-Timing Copy
+
+- Decision: On iOS, purchase, cancellation, restore, and subscription-management copy
+  names Apple or the App Store only; it does not mention a marketplace that is outside the
+  iOS release. Account-deletion recovery says completion can take up to 29 days while
+  providers verify erasure. An unresolved native purchase/restore is surfaced from the
+  durable transaction journal with a do-not-buy-again/restore-first recovery path instead
+  of a false success or a second charge attempt.
+- Type: Product / Privacy / Legal / Launch
+- Alternatives: reuse cross-platform marketplace copy, imply immediate provider erasure,
+  hide ambiguous native transactions, or permit another purchase before reconciliation.
+- Criteria: truthful marketplace semantics, no misleading erasure timing, charge safety,
+  durable recovery, and an auditable App Review surface.
+- Evidence: `storefrontCopy.ts`, `accountDeletionCopy.ts`,
+  `storeTransactionNotice.ts`, their focused tests, and the 2026-07-14 source checkpoint.
+- Risk: source copy and tests are not Apple, legal, or privacy approval. Exact App Store
+  metadata, policy/support/privacy-report URLs, counsel review, sandbox/TestFlight proof,
+  non-expiring demo review access, and App Review remain open.
+- Status: Accepted for source behavior; external approval remains gated.
+
+### 2026-07-15 - Keep Source Hardening Separate From Launch Clearance
+
+- Decision: Do not treat local migration, server, mobile, or repository tests as proof of
+  hosted/provider behavior or legal/App Store acceptance. Launch remains blocked on a
+  reviewed non-destructive health-consent withdrawal flow; the complete Sign in with Apple
+  authorization-code, state/nonce, encrypted rotating token-vault, daily validation,
+  canonical signed server-notification, and authoritative session-access lifecycle; exact
+  privacy-report and policy/support URLs; stable non-expiring demo access; live-service and
+  provider evidence; physical-iPhone QA; professional signoff; and App Review.
+- Type: Privacy / Legal / Launch
+- Alternatives: declare launch readiness from source coverage, use account deletion as a
+  substitute for consent withdrawal, or infer Apple/legal acceptance from fail-closed code.
+- Criteria: truthful evidence boundaries, purpose-limited consent, revocation completeness,
+  reviewer reproducibility, and no unsupported compliance claim.
+- Evidence: the 52-migration/two-reset checkpoint, focused server/mobile suites, integrated
+  repository verification, and the remaining blockers recorded in the launch-readiness
+  documents. Apple `TRANSFERRED` now fails closed as `credential_transferred`; that is a
+  safety control, not an approved transfer/migration policy.
+- Risk: the app cannot be submitted honestly until the external owners and live candidate
+  close these gates against exact evidence.
+- Status: Accepted.
+
 ### 2026-07-09 - Fail Closed Before Unreviewed Production Builds
 
 - Decision: Production Expo config requires `PHASE3_RELEASE_CLEARANCE=cleared`; development and staging remain available for implementation and reviewer QA.
@@ -247,14 +289,14 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: this transaction alone covers only rows visible inside the scrub. Migrations `0048`-`0052` subsequently add the bounded deletion barrier, durable provider-step state, PostHog polling, account-owned rate-limit cleanup, guarded service writers, late RevenueCat webhook tombstones, durable mobile status/manual-notice recovery, and an exact-session publication lease with drain/settling proof. The database source does not prove that every real Edge/mobile RevenueCat path complies or prevent old/tampered clients from bypassing the updated binary. The 64-alias ceiling is an application fail-closed bound, not a RevenueCat-published maximum. An approved provider block, enforceable mandatory-version gate, or continuing re-deletion control, written alias/recreation confirmation or reviewed manual procedure, cross-owner community-handle cleanup, bounded unfinished-operation/key-rotation procedures, any applicable Apple server-to-server `consent-revoked` path, and live provider/device/professional proof remain launch gates.
 - Status: Accepted for the bounded scrub invariant; overall DB-10 remains in progress.
 
-### 2026-07-13 - Bind Mobile Deletion Recovery To One Verified Owner And Keep Publication Fencing Open
+### 2026-07-13 - Bind Mobile Deletion Recovery To One Verified Owner And Keep Live Publication Proof Open
 
-- Decision: A mobile deletion request captures one Supabase session, verifies the captured bearer against Auth, derives a domain-separated SHA-256 owner binding, and persists two independent 256-bit capabilities plus that binding before sending `begin` with only the captured bearer. A v2 record can be retried or authorize private cleanup only for that exact owner. Every authenticated `preflight=clear|active` carries the Auth-derived subject in the same bounded response, avoiding a second-lookup proof-loss race; the client rejects a mutable cached-session subject mismatch and uses the response subject for local/vendor publication or owner-conditional cleanup. Cleanup authority is derived from one canonical validation of the private-cleanup, owner, retained-owner, and ownerless-quarantine tuple. Before a foreign session is removed, the current pseudonymous owner proof is copied to a durable retained-owner marker: signed-out cold restore preserves it, only exact-owner reauthentication reopens it, and a different login performs the normal pre-publication wipe. Ownerless data receives a durable no-adoption quarantine before forced sign-out, so every later login must wipe before claiming it. A separate auth-derived-cleanup marker is committed before session removal and cleared only after session storage, queries, notifications, analytics, image memory, and vendor identities are reset; cold restore retries it before reading or publishing Auth. Matching-owner cleanup removes ownership proofs only after every sensitive cleanup stage succeeds. Transient/unclassified owner-storage or Auth proof failures hold the pre-Auth gate and retain retry authority; only an exact verified foreign subject, authoritative missing session, or lane-specific Auth rejection consumes it. Ownerless nonterminal v1 records are support-only. Cross-device `preflight` remains required before session publication, but is not treated as a complete provider-publication fence.
+- Decision: A mobile deletion request captures one Supabase session, verifies the captured bearer against Auth, derives a domain-separated SHA-256 owner binding, and persists two independent 256-bit capabilities plus that binding before sending `begin` with only the captured bearer. A v2 record can be retried or authorize private cleanup only for that exact owner. Every authenticated `preflight=clear|active` carries the Auth-derived subject in the same bounded response, avoiding a second-lookup proof-loss race; the client rejects a mutable cached-session subject mismatch and uses the response subject for local/vendor publication or owner-conditional cleanup. Cleanup authority is derived from one canonical validation of the private-cleanup, owner, retained-owner, and ownerless-quarantine tuple. Before a foreign session is removed, the current pseudonymous owner proof is copied to a durable retained-owner marker: signed-out cold restore preserves it, only exact-owner reauthentication reopens it, and a different login performs the normal pre-publication wipe. Ownerless data receives a durable no-adoption quarantine before forced sign-out, so every later login must wipe before claiming it. A separate auth-derived-cleanup marker is committed before session removal and cleared only after session storage, queries, notifications, analytics, image memory, and vendor identities are reset; cold restore retries it before reading or publishing Auth. Matching-owner cleanup removes ownership proofs only after every sensitive cleanup stage succeeds. Transient/unclassified owner-storage or Auth proof failures hold the pre-Auth gate and retain retry authority; only an exact verified foreign subject, authoritative missing session, or lane-specific Auth rejection consumes it. Ownerless nonterminal v1 records are support-only. Cross-device `preflight` remains required before session publication. The 2026-07-14 source candidate additionally routes authenticated Supabase requests through one exact-session remote-admission gate, binds controlled refresh to the retained opaque refresh token, closes Supabase and RevenueCat publication synchronously, and drains admitted child work before account replacement or deletion handoff.
 - Alternatives: reuse ownerless tokens, let the Supabase singleton choose the bearer after persistence, erase all local data whenever any account has an active barrier, trust a candidate session's mutable user object without server verification, or describe one preflight as race-free admission.
-- Criteria: no A-to-B deletion dispatch, no token overwrite, no immediate or deferred foreign-account erasure, no temporary Auth outage consuming retry authority, crash-retry authority, exact-owner cleanup, bounded response handling, and honest separation between implemented recovery safety and the remaining provider-publication race.
-- Evidence: owner-bound client-state, intake, recovery, cleanup-order, and root-gate tests; cross-account interruption tests before persistence, during Apple lookup, and before dispatch; static/live-gate contracts; and the non-destructive recovery fixtures under `test-results/human-e2e/2026-07-13/account-deletion-durable-recovery-current/`.
-- Risk: migration `0052` now supplies the two-phase publication lease and worker drain/settling gate in database source, but the exact Edge/mobile candidate must prove every publication path uses it through process death, configure-in-flight, and lost release. Old/tampered clients still require an approved provider block, enforceable mandatory-version gate, or continuing re-deletion control. Hosted, provider, physical-iPhone, privacy/legal, and App Review evidence remains external.
-- Status: Accepted for owner-bound mobile recovery; end-to-end DB-10 remains in progress and not race-free.
+- Criteria: no A-to-B deletion dispatch, no token overwrite, no immediate or deferred foreign-account erasure, no temporary Auth outage consuming retry authority, crash-retry authority, exact-owner cleanup, bounded response handling, synchronous closure, child-request settlement, and honest separation between source proof and live provider proof.
+- Evidence: owner-bound client-state, intake, recovery, cleanup-order, and root-gate tests; cross-account interruption tests before persistence, during Apple lookup, and before dispatch; the central remote-admission and RevenueCat publication-controller suites; durable deletion 215/215; the focused mobile server contract 2/2; PostgreSQL 15/17 rehearsals; the two-reset 52-migration local gate; and static release/security contracts.
+- Risk: the exact source candidate covers process death, configure-in-flight, lost release, caller detachment, quarantine, and child-request settlement, but hosted multi-device/Cron/Vault/provider behavior is unproven. Old/tampered clients still require an approved provider block, enforceable mandatory-version/zero-installed-cohort proof, or continuing re-deletion control. Live Supabase/RevenueCat, provider interruption/recreation, physical-iPhone, professional, privacy/legal, and App Review evidence remains external.
+- Status: Accepted for the source publication invariant; end-to-end DB-10 remains in progress and is not described as race-free.
 
 ### 2026-07-14 - Separate Store And App-Grant Entitlement Authorities
 
@@ -264,6 +306,23 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Evidence: migration `20260714000053_entitlement_authority_lanes.sql`, authenticated `subscription-reconciliation`, PostgreSQL 15/17 rehearsal, Edge/parser contracts, and `docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md`.
 - Risk: old binaries that read `entitlements` directly cannot see the app lane after relaunch. Database rollout requires the updated reader or a mandatory-version/zero-installed-cohort proof. Hosted RevenueCat, sandbox/TestFlight, device, privacy/legal, and App Review evidence remain open.
 - Status: Accepted for the source invariant; production rollout remains gated.
+
+### 2026-07-14 - Journal Native Store Transactions Before Re-Admission
+
+- Decision: Before a native purchase or restore can outlive its initiating call, persist an
+  owner-aware, device-global transaction journal. Promote confirmation atomically; if
+  durable persistence, ownership, or provider confirmation is ambiguous, keep Store
+  admission closed, show recovery, and require reconciliation/restore before another
+  purchase. Device time alone cannot clear the journal.
+- Alternatives: track the transaction only in component state, clear ambiguity on relaunch,
+  allow repeat purchase after a timeout, or infer owner from the next signed-in session.
+- Criteria: no duplicate-charge encouragement, process-death recovery, account isolation,
+  monotonic evidence, truthful UI, and deterministic support recovery.
+- Evidence: `storeTransactionNotice.ts`, `StoreTransactionNoticeHost.tsx`, owner-aware
+  purchase/restore entry points, and the focused transaction/publication tests.
+- Risk: source tests do not prove StoreKit/App Store sandbox delivery, interrupted native
+  callbacks, reinstall behavior, or physical-iPhone UX. Those remain release gates.
+- Status: Accepted for source behavior; live StoreKit proof remains gated.
 
 ### 2026-07-06 - Keep Expo/Supabase/RevenueCat
 

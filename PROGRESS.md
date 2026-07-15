@@ -4,6 +4,74 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
+## 2026-07-15
+
+### Source-only account-publication and entitlement-authority checkpoint
+
+Commits `a6a5d4a69`, `a7266ce09`, `134aba540`, `87646c935`, and `6869b7f07`
+split store and app-grant entitlement authority, integrated the mobile
+account-publication boundary, verified the deletion handoff, and made an Apple
+credential-transfer state fail closed.
+The Supabase client now places every remote request behind one exact-session,
+purpose-scoped admission controller with bounded request/response handling,
+deadline and quarantine behavior, child-request settlement, and synchronous
+closure before account boundaries. Session restore reads the encrypted
+persisted candidate without allowing auth-js to refresh implicitly; refresh is
+one controlled, exact-subject request whose rotated credentials are persisted
+only after validation. Auth publication, RevenueCat identity, account upgrade,
+deletion intake/recovery, queries, notifications, commerce, recommendations,
+Shelf writes, and offline completion work now share the same owner boundary.
+
+Migration `20260714000053_entitlement_authority_lanes.sql` makes
+`entitlements` the RevenueCat-only projection and keeps the one-time no-card
+window in `reverse_trial_grants`. The no-argument
+`read_entitlement_projections()` RPC derives `auth.uid()` and returns both
+lanes; a missing provider cursor is `legacy_unknown` and cannot grant access.
+The authenticated `subscription-reconciliation` function accepts no caller
+subject or timestamp, fetches bounded RevenueCat v1 CustomerInfo for the JWT
+owner, and accepts only a fresh provider `request_date` watermark. Mobile reads
+both lanes, reconciles `legacy_unknown` once, preserves last verified access on
+an ambiguous read, and never lets the app-grant lane overwrite or revoke a
+store purchase.
+
+The purchase/Restore write-ahead journal now blocks a second charge when a
+native result becomes unconfirmed, survives account and process boundaries,
+and exposes only minimized owner-bound or terminal ownerless state. iOS
+settings and deletion surfaces name the App Store rather than presenting a
+combined marketplace, and deletion copy truthfully says provider verification
+can take up to 29 days. These are source-level safety and disclosure choices,
+not counsel approval or evidence of Apple acceptance.
+
+Verification on the source checkpoint passed:
+
+- `subscription-reconciliation`: 20/20;
+- `subscription-grants`: 8/8;
+- RevenueCat webhook atomic contracts: 20/20;
+- durable account-deletion contracts: 215/215;
+- focused mobile server contract: 2/2;
+- entitlement-authority PostgreSQL 15 and PostgreSQL 17 rehearsals: pass;
+- the isolated DB-05 gate: two clean resets, all 52 migrations through `0053`,
+  structural pgTAP, error-level schema lint, and an empty migration-shadow
+  drift check;
+- Edge manifest/check/policy, data-rights, RLS, and release code gates: pass;
+- focused Apple credential/publication lifecycle tests: 67/67;
+- server checkpoint root suite: 227 files / 2,430 tests; and
+- integrated `main`: typecheck, lint, format, and 244 mobile test files / 2780
+  tests pass.
+
+This checkpoint remains source-only. No hosted Supabase migration, deployed
+Edge inventory, live RevenueCat response, Apple sandbox purchase/Restore,
+physical-iPhone lifecycle, professional review, production environment, or App
+Store review result is claimed. The next Apple-policy work also remains open:
+design and review non-destructive health-consent withdrawal; capture the Sign in
+with Apple authorization code and nonce/state context, implement the encrypted
+rotating token vault, daily validation, signed server-notification ingress, and
+authoritative session-access fence; and produce the exact release privacy
+report, live policy/support URLs, and non-expiring demo-review access. Apple
+`TRANSFERRED` is now blocked as `credential_transferred`; it is not treated as
+valid or falsely labeled revoked while the formal no-transfer/migration policy
+remains unresolved.
+
 ## 2026-07-11
 
 - Closed Shelf freshness and replacement provenance as one normalized lifecycle.

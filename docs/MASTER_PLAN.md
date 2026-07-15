@@ -715,9 +715,11 @@ No dead ends. Every scan/catalog/camera failure must offer manual add or safe ex
 ```text
 Expo mobile app
   -> local private storage for shelf, photos, completions
-  -> Supabase Auth/Postgres/RLS for account, profiles, catalog, entitlements
-  -> Supabase Edge Functions for catalog, deletion/export, RevenueCat webhook
-  -> RevenueCat SDK for IAP/subscriptions
+  -> central exact-session admission for authenticated Supabase requests
+  -> Supabase Auth/Postgres/RLS for account, catalog, publication fences
+  -> separate RevenueCat entitlement and no-card reverse-trial projections
+  -> Supabase Edge Functions for deletion/export, webhook, grants, reconciliation
+  -> RevenueCat SDK for IAP/subscriptions behind a durable transaction journal
   -> PostHog for consented analytics
   -> Sentry for scrubbed crash reporting
   -> Open Beauty Facts/CosIng import pipelines for catalog data
@@ -747,6 +749,30 @@ Expo mobile app
 - RevenueCat speeds billing, but store setup still blocks launch.
 - Local-first privacy is strong, but multi-device sync is deferred.
 
+### 2026-07-15 Integrated Source Checkpoint
+
+[Confirmed] The source candidate has 52 migrations through
+`20260714000053_entitlement_authority_lanes.sql`. Local verification passes two clean
+resets, pgTAP, database lint, and an empty shadow diff, and the authority-lane rehearsals
+pass on PostgreSQL 15 and 17. Focused server suites pass 20/20 subscription reconciliation,
+8/8 subscription grants, 20/20 atomic RevenueCat webhook, and 215/215 durable deletion;
+the focused mobile server contract passes 2/2. The integrated repository passes 244 test
+files / 2,780 tests plus typecheck, lint, and format.
+
+[Confirmed] This checkpoint centralizes exact-session remote admission and controlled
+refresh, synchronously closes Supabase and RevenueCat publication during account
+replacement/deletion, separates the RevenueCat and no-card grant authorities, projects
+both through an owner-derived RPC, reconciles only against a fresh provider
+`request_date`, and durably journals native purchase/restore admission.
+
+[Open Question] This is source-only evidence. Hosted migrations, live Supabase/RevenueCat
+and App Store sandbox behavior, physical-iPhone QA, professional review, final privacy/
+legal approval, and App Review remain open. Apple authorization-code plus state/nonce
+capture, the encrypted rotating token vault, daily token validation, canonical signed
+server notifications, and an authoritative session-access fence also remain open;
+`TRANSFERRED` now fails closed as `credential_transferred` but no transfer/migration
+policy is approved.
+
 ## 11. Data Model Summary
 
 Main entities:
@@ -766,13 +792,17 @@ Main entities:
 - `photos`
 - `notification_preferences`
 - `entitlements`
+- `reverse_trial_grants`
 - `subscription_events`
+- `account_publication_leases`
 - `catalog_reports`
 - `analytics_events`
 
 Data retention:
 
-- User-owned data deleted on account deletion.
+- The source deletion lifecycle covers registered user-owned data and advertises an
+  honest provider-verification window of up to 29 days; live end-to-end erasure proof
+  remains a launch gate.
 - Photos local-only by default.
 - Catalog provenance retained.
 - Subscription events retained for finance/legal reconciliation.
@@ -784,11 +814,18 @@ Rules:
 
 - Owner-scoped RLS on all user tables.
 - Service-role only for trusted backend jobs.
+- All authenticated mobile Supabase traffic uses one exact-session admission gate and
+  controlled refresh path; account deletion, owner replacement, invalid credential
+  state, or lease failure closes new remote/provider publication synchronously.
 - No sensitive health/photo data in analytics or logs.
 - Granular consent for health data, photos, analytics, commerce, cloud Ask, community.
+- Health-consent withdrawal must have a reviewed non-destructive design; deleting the
+  entire account is not an acceptable substitute for withdrawing one consent purpose.
 - Data export and deletion must work against live backend.
 - Do not expose unreviewed rules in production.
 - Do not store faceprints, embeddings, identity vectors, or cloud photo analysis by default.
+- Exact privacy-report, privacy-policy, support, and other App Store URLs plus stable
+  non-expiring review/demo access must be verified in the submitted candidate.
 
 Compliance areas:
 
@@ -834,6 +871,12 @@ RoutineKind Pro:
 
 - 7-day reverse trial with no card after onboarding value.
 - Optional store-backed 14-day trial test after RevenueCat live.
+- Keep the no-card grant in `reverse_trial_grants`; never write it into or revoke the
+  ordered RevenueCat `entitlements` projection. Read both through the owner-derived
+  no-argument projection RPC.
+- On iOS, billing and cancellation copy names the App Store only. Purchase and restore
+  admission is durably journaled so an unresolved native transaction blocks a repeat
+  purchase and directs the user to restore instead.
 
 ### Upgrade Triggers
 
@@ -913,8 +956,10 @@ Done criteria:
 - reviewer signoff path
 - live Supabase staging
 - RevenueCat sandbox
-- final policy URLs
+- exact final policy/support/privacy-report URLs and non-expiring review/demo access
 - device QA plan
+- reviewed non-destructive health-consent withdrawal and complete Sign in with Apple
+  server credential lifecycle
 
 ### Phase 2: Core Workflow
 
@@ -934,8 +979,9 @@ Goal: test willingness to pay.
 Done criteria:
 
 - paywall after value
-- reverse trial works
-- RevenueCat webhook reconciles
+- no-card reverse trial and RevenueCat entitlements remain independent
+- RevenueCat webhook ordering and bounded provider reconciliation work
+- durable purchase/restore journal prevents unsafe repeat transactions
 - PostHog funnel dashboard works
 
 ### Phase 4: Closed Beta
@@ -1004,11 +1050,14 @@ Done criteria:
 - Camera/OCR unreliable on devices.
 - Supabase RLS mistakes.
 - RevenueCat entitlement bugs.
+- Old clients bypassing the publication/authority-lane rollout.
+- Incomplete Sign in with Apple token and server-notification lifecycle.
 - Local photo storage edge cases.
 
 ### Legal/Privacy Risks
 
 - Consumer health data handling.
+- Destructive or ambiguous health-consent withdrawal.
 - Face/photo data trust.
 - Unreviewed medical-adjacent claims.
 - ODbL/source obligations.
@@ -1023,6 +1072,8 @@ Done criteria:
 - What exact free tier creates word-of-mouth without killing conversion?
 - What catalog coverage threshold is acceptable?
 - Which beta metrics kill or greenlight public launch?
+- What approved Apple account-transfer policy applies after fail-closed
+  `credential_transferred`?
 
 ## 18. Final Build Order
 

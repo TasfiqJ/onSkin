@@ -283,6 +283,7 @@ function edgeFeatures(name) {
     'order-report-poll': ['F-16'],
     'revenuecat-webhook': ['F-11', 'F-12'],
     'subscription-grants': ['F-11', 'F-12'],
+    'subscription-reconciliation': ['F-11', 'F-12'],
     waitlist: ['F-01'],
   };
   return map[name] ?? [];
@@ -354,6 +355,7 @@ function discoverGeneratedArtifacts() {
 function discoverVendorOrigins() {
   const hostMap = {
     'api.revenuecat.com': ['revenuecat', ['F-11', 'F-12']],
+    'www.revenuecat.com': ['revenuecat-documentation', ['F-11', 'F-12']],
     'api.shopmy.us': ['shopmy', ['F-16']],
     'appleid.apple.com': ['apple-identity', ['F-02']],
     'apps.apple.com': ['apple-app-store', ['F-11', 'F-12']],
