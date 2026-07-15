@@ -16,7 +16,10 @@ type AppStateListener = (state: AppStateValue) => void;
 type OnlineListener = (online: boolean) => void;
 type AuthStateListener = (event: string, session: Session | null) => void;
 type AppleCheckResult =
-  | { status: 'blocked'; reason: 'credential_check_failed' | 'credential_state_unknown' }
+  | {
+      status: 'blocked';
+      reason: 'credential_check_failed' | 'credential_state_unknown' | 'credential_transferred';
+    }
   | { status: 'invalid'; reason: 'credential_not_found' | 'credential_revoked' }
   | { status: 'not_applicable' }
   | { status: 'valid' };

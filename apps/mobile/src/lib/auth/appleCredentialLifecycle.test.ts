@@ -111,9 +111,12 @@ describe('Apple credential lifecycle', () => {
     ).toBeNull();
   });
 
-  it('allows authorized/transferred, invalidates revoked/not-found, and blocks unknown states', () => {
+  it('allows authorized, blocks transferred/unknown, and invalidates revoked/not-found', () => {
     expect(appleCredentialResultForState(AUTHORIZED)).toEqual({ status: 'valid' });
-    expect(appleCredentialResultForState(TRANSFERRED)).toEqual({ status: 'valid' });
+    expect(appleCredentialResultForState(TRANSFERRED)).toEqual({
+      reason: 'credential_transferred',
+      status: 'blocked',
+    });
     expect(appleCredentialResultForState(REVOKED)).toEqual({
       reason: 'credential_revoked',
       status: 'invalid',
@@ -176,7 +179,8 @@ describe('Apple credential lifecycle', () => {
     harness.appState('active');
     await flushPromises();
     expect(harness.getCredentialState).toHaveBeenCalledTimes(2);
-    expect(blocked).not.toHaveBeenCalled();
+    expect(blocked).toHaveBeenCalledOnce();
+    expect(blocked).toHaveBeenCalledWith('credential_transferred');
     expect(invalid).not.toHaveBeenCalled();
 
     stop();
@@ -207,6 +211,7 @@ describe('Apple credential lifecycle', () => {
   });
 
   it.each([
+    [TRANSFERRED, 'credential_transferred'],
     [999, 'credential_state_unknown'],
     ['error', 'credential_check_failed'],
   ])('blocks and does not invent revocation for %s', async (state, reason) => {

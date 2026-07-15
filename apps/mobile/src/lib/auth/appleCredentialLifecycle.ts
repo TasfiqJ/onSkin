@@ -13,6 +13,7 @@ export type AppleCredentialInvalidReason =
 
 export type AppleCredentialCheckBlockedReason =
   | 'credential_check_failed'
+  | 'credential_transferred'
   | 'credential_state_unknown';
 
 export type AppleCredentialCheckResult =
@@ -91,8 +92,12 @@ export function appleCredentialResultForState(
 ): AppleCredentialCheckResult {
   switch (state) {
     case AppleAuthentication.AppleAuthenticationCredentialState.AUTHORIZED:
-    case AppleAuthentication.AppleAuthenticationCredentialState.TRANSFERRED:
       return { status: 'valid' };
+    case AppleAuthentication.AppleAuthenticationCredentialState.TRANSFERRED:
+      // A transferred credential requires Apple's explicit app/team-transfer
+      // migration. Until that operator flow exists, never publish the account
+      // as ordinary valid or mislabel the credential as revoked.
+      return { status: 'blocked', reason: 'credential_transferred' };
     case AppleAuthentication.AppleAuthenticationCredentialState.REVOKED:
       return { status: 'invalid', reason: 'credential_revoked' };
     case AppleAuthentication.AppleAuthenticationCredentialState.NOT_FOUND:
