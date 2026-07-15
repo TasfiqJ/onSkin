@@ -530,11 +530,18 @@
       "id": "IOS-03",
       "status": "in_progress",
       "blockedBy": ["IOS-02", "H-08"],
-      "nextAction": "Configure the final Apple identifiers and revocation secrets in staging, build a fresh iPhone binary, and pass Sign in with Apple, account upgrade, deletion, token revocation, retry, and failure-path tests on a physical iPhone.",
+      "nextAction": "The source now implements native nonce/state capture, composite server lifecycle admission, encrypted refresh-token retention, daily validation, signed account events, no-retry terminal-event reconciliation before code exchange, native invalidation, and deletion-vault reuse. Configure the final Apple identifiers and secrets in staging, deploy migration 0055 plus all compatible functions, register the primary-App-ID endpoint, provision Vault/Cron, execute existing-account recapture and rotation/rollback canaries, then pass sign-in, upgrade, invalidation, deletion, retry, and failure paths on the exact physical-iPhone/TestFlight build.",
       "evidenceRefs": [
         "apps/mobile/app.base.json",
         "apps/mobile/src/lib/auth/apple.ts",
+        "apps/mobile/src/lib/auth/appleAuthLifecycleClient.ts",
+        "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+        "supabase/functions/apple-auth-lifecycle",
+        "supabase/functions/apple-account-events",
+        "supabase/functions/apple-auth-worker",
         "supabase/functions/account-deletion/index.ts",
+        "supabase/ops/apple-auth-work-lane.sql",
+        "docs/phase-9/apple-auth-lifecycle-operations-runbook.md",
         "docs/phase-5/device-qa-checklist.md"
       ]
     },
@@ -737,7 +744,7 @@
       "id": "DB-09",
       "status": "in_progress",
       "blockedBy": ["DB-06", "DB-07", "DB-08", "ACCT-03"],
-      "nextAction": "The combined credential-free run passed two resets across all 53 migrations through 0054, 77/77 RLS tables, the exact 54-private-table classification (40 directly queryable + 14 sealed), and 261 pgTAP assertions (46 schema + 215 health-consent lifecycle); schema lint and shadow drift were also clean. Run the exhaustive 54-private-table access-control matrix against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, and configured Turnstile behavior; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
+      "nextAction": "The 0055 local gate now passes two clean resets, exact 54-migration history through 0055, the full structural suite plus 111/111 Apple lifecycle pgTAP, database lint, an empty migration shadow diff, and temporary type generation. The expected inventory is 80 RLS tables and 57 private tables (40 directly queryable + 17 sealed) with exact-session Apple access controls. Run the exhaustive 57-private-table matrix against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, stale Apple JWT/session cases, and configured Turnstile behavior; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",
@@ -752,6 +759,10 @@
         "supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql",
         "supabase/migrations/20260713000052_account_publication_fence.sql",
         "supabase/migrations/20260714000053_entitlement_authority_lanes.sql",
+        "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
+        "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+        "supabase/tests/database/apple_auth_lifecycle.test.sql",
+        "docs/phase-9/apple-auth-lifecycle-operations-runbook.md",
         "docs/phase-9/generated/live-supabase-adversarial.json"
       ]
     },
@@ -759,7 +770,7 @@
       "id": "DB-10",
       "status": "in_progress",
       "blockedBy": ["DB-09", "ACCT-03"],
-      "nextAction": "Local source now composes the migration-0052 lease with central exact-session remote admission and passes process-death, configure-in-flight, lost-release, caller-detachment, quarantine, and child-request settlement contracts; all 53 migrations through 0054 pass the two-reset gate. Migration 0054 and the mobile lifecycle implement non-destructive health-consent withdrawal with processing-epoch publication fences, durable service-only work claims, relational/Storage absence attestation, purpose-limited device cleanup, and cross-owner report/moderation detachment. Prove that exact candidate end to end in reviewed staging and production: exact-session rate/preflight/begin, every Supabase and RevenueCat path fenced, multi-device drain, five-minute settle, two claim-distinct account-deletion absence rounds, hosted health worker continuation, two-device health withdrawal, Storage and backup handling, and terminal fresh reconsent. Obtain a documented provider bound plus an approved block, mandatory-version gate, or continuing re-deletion control for old/tampered clients. Close cross-owner community handles, bounded unfinished-operation/key-rotation procedures, the complete Sign in with Apple authorization-code/token/server-event lifecycle, and the full A/B, provider interruption/recreation, export/deletion, post-delete denial, physical-iPhone, and professional-review matrices. Do not describe the end-to-end lifecycle as race-free or launch-ready before those gates pass.",
+      "nextAction": "Local source composes the migration-0052 publication lease, migration-0054 non-destructive health withdrawal, and migration-0055 Sign in with Apple authority. The 0055 replay gate passes two clean resets, exact 54/0055 history, the full structural suite plus 111/111 Apple pgTAP, lint, empty shadow diff, temporary types, 20/20 focused event/lifecycle Edge tests, and the 47-test Apple auth work lane. The Apple candidate implements nonce/state and one-use code capture, owner/subject/client-bound encrypted refresh tokens, daily validation, signed terminal events, no-retry terminal-event reconciliation before code exchange, native invalidation, deletion-vault reuse, and exact-session denial across RLS, photo Storage, authenticated Edge functions, writes, and direct authenticated helper RPCs. Every successful daily validation atomically advances the current subject digest and freshly sealed vault envelope, but dormant, deferred, or failing rows do not advance from configuration alone. Prove the complete candidate end to end in reviewed staging and production: every publication path fenced, stale JWT/session denial, existing-Apple-account recapture/mandatory-version cutover, primary-App-ID event delivery, one-minute Vault/Cron continuity, key rotation/rollback with zero-row or reauth evidence, multi-device drain, deletion and health workers, Storage/backup, provider interruption/recreation, post-delete denial, 60-second export URL expiry, and terminal fresh reconsent. Obtain the documented old/tampered-client control, close cross-owner community handles and retention decisions, and complete physical-iPhone/TestFlight and professional-review matrices. Do not describe the end-to-end lifecycle as race-free or launch-ready before those gates pass.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "supabase/functions/account-deletion",
@@ -804,6 +815,12 @@
         "supabase/functions/health-consent-worker",
         "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
         "supabase/ops/health-consent-work-lane.sql",
+        "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+        "supabase/functions/apple-auth-lifecycle",
+        "supabase/functions/apple-account-events",
+        "supabase/functions/apple-auth-worker",
+        "supabase/ops/apple-auth-work-lane.sql",
+        "docs/phase-9/apple-auth-lifecycle-operations-runbook.md",
         "docs/hugeToDo/credential-inventory.json",
         "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
         "docs/hugeToDo/health-processor-inventory-v1.json",
@@ -848,10 +865,17 @@
     },
     {
       "id": "AUTH-01",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["DB-03", "IOS-07"],
-      "nextAction": "Complete and capture acceptance evidence: Complete anonymous-first onboarding and same-user Apple, Google, and email upgrade",
-      "evidenceRefs": []
+      "nextAction": "Source now separates Apple from generic provider auth and composes same-user link/sign-in with server lifecycle capture before session publication. Complete the remaining Google/email matrix, deploy the Apple candidate, and prove anonymous UUID preservation plus fresh-account Apple sign-in/linking, cancellation, capture failure, relaunch, and existing-account recapture on the signed physical-iPhone/TestFlight build.",
+      "evidenceRefs": [
+        "apps/mobile/src/lib/auth/accountUpgrade.ts",
+        "apps/mobile/src/lib/auth/apple.ts",
+        "apps/mobile/src/lib/auth/appleAuthLifecycleClient.ts",
+        "apps/mobile/src/lib/auth/AuthProvider.tsx",
+        "supabase/functions/apple-auth-lifecycle",
+        "docs/phase-9/apple-auth-lifecycle-operations-runbook.md"
+      ]
     },
     {
       "id": "AUTH-02",
@@ -862,10 +886,17 @@
     },
     {
       "id": "AUTH-03",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["AUTH-02"],
-      "nextAction": "Complete and capture acceptance evidence: Complete Sign in with Apple token revocation during account deletion",
-      "evidenceRefs": []
+      "nextAction": "Source account deletion can reuse the owner/session-bound Apple refresh-token vault, immediately re-seals it under the deletion-step key, clears the reusable lifecycle vault after durable intake, and continues erasure with a truthful manual-revocation result when automatic proof is unavailable. Signed terminal events also close a pre-capture identity directly or leave audience-bound keyed evidence that first capture reconciles before code exchange without relying on Apple retry. Prove fresh and vaulted token revocation, exact Apple 200/no-body handling, ambiguous/manual recovery, terminal signed-event deletion, provider interruption, and physical-iPhone/TestFlight behavior against hosted staging.",
+      "evidenceRefs": [
+        "supabase/functions/account-deletion/durableDeletionRuntime.ts",
+        "supabase/functions/account-deletion/durableDeletionRuntime.test.ts",
+        "supabase/functions/apple-account-events",
+        "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+        "docs/phase-9/account-deletion-operations-runbook.md",
+        "docs/phase-9/apple-auth-lifecycle-operations-runbook.md"
+      ]
     },
     {
       "id": "AUTH-04",
@@ -878,12 +909,18 @@
       "id": "AUTH-05",
       "status": "in_progress",
       "blockedBy": ["AUTH-04"],
-      "nextAction": "Local lifecycle/adversarial coverage now proves encrypted candidate restore, one exact-subject controlled refresh, sign-out and cleanup ordering, cold exact-owner local-only recovery, owner mismatch, rejected sessions, cleanup failure, and A-to-B publication isolation. Apple TRANSFERRED now fails closed as credential_transferred pending an approved no-transfer or migration policy. Repeat the complete matrix against configured staging on the exact signed iOS build, including token expiry, airplane-mode cold start/reconnect, background/foreground, live provider conflicts, and physical-iPhone process death; separately close authorization-code plus nonce/state capture, the encrypted rotating token vault, daily validation, signed notification ingress, and the authoritative session-access fence.",
+      "nextAction": "Local lifecycle/adversarial coverage now includes encrypted candidate restore, one exact-subject controlled refresh, sign-out/cleanup ordering, A-to-B isolation, nonce/state plus one-use-code capture, versioned encrypted vault, daily validation, signed notification ingress, native server invalidation, and the authoritative exact-session access fence. Apple TRANSFERRED fails closed as credential_transferred pending an approved policy. Repeat the full matrix against configured staging on the exact signed iOS build, including existing-user recapture, token expiry, worker/event outages, stale JWT/RLS/Storage/Edge/direct-RPC denial, rotation/rollback, airplane-mode cold start/reconnect, background/foreground, live provider conflicts, and physical-iPhone process death.",
       "evidenceRefs": [
         "apps/mobile/src/lib/auth/AuthProvider.tsx",
         "apps/mobile/src/lib/auth/AuthProvider.lifecycle.test.ts",
         "apps/mobile/src/lib/auth/appleCredentialLifecycle.ts",
         "apps/mobile/src/lib/auth/appleCredentialLifecycle.test.ts",
+        "apps/mobile/src/lib/auth/appleAuthLifecycleClient.ts",
+        "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+        "supabase/functions/apple-auth-lifecycle",
+        "supabase/functions/apple-account-events",
+        "supabase/functions/apple-auth-worker",
+        "docs/phase-9/apple-auth-lifecycle-operations-runbook.md",
         "apps/mobile/src/lib/supabase/client.ts",
         "apps/mobile/src/lib/supabase/client.test.ts",
         "apps/mobile/src/lib/supabase/authRefreshProtection.ts",
@@ -897,7 +934,7 @@
       "id": "AUTH-06",
       "status": "in_progress",
       "blockedBy": ["AUTH-05"],
-      "nextAction": "Local source binds remote requests, RevenueCat identity and SDK work, analytics/query/private stores, exports, notification delivery, recommendations, commerce, Shelf writes, and account deletion to exact owner/session authority with bounded drain and quarantine. Prove the complete binding against live staging and RevenueCat on physical iPhones, including delayed bodies, detached callers, listener writes, process death, deletion intake, A-to-B switching, and provider recreation; retain redacted evidence with no stale write/share or cross-account entitlement.",
+      "nextAction": "Local source binds remote requests, RevenueCat identity and SDK work, analytics/query/private stores, exports, notification delivery, recommendations, commerce, Shelf writes, account deletion, and Apple lifecycle generation to exact owner/session authority with bounded drain and quarantine. Migration 0055 adds a server exact-session decision at RLS, photo Storage, authenticated Edge, write, entitlement, health, and direct ownership-helper boundaries. Prove the complete binding against live staging and RevenueCat on physical iPhones, including stale issued JWTs after session/lifecycle invalidation, delayed bodies, detached callers, listener writes, process death, deletion intake, signed Apple terminal events, A-to-B switching, and provider recreation; retain redacted evidence with no stale write/share or cross-account entitlement.",
       "evidenceRefs": [
         "apps/mobile/src/lib/supabase/remoteRequestAdmission.ts",
         "apps/mobile/src/lib/supabase/remoteRequestAdmission.test.ts",
@@ -908,7 +945,10 @@
         "apps/mobile/src/lib/iap/revenuecatPublication.test.ts",
         "apps/mobile/src/features/settings/actions.ts",
         "apps/mobile/src/lib/auth/accountDeletionPublication.integration.test.ts",
-        "docs/phase-9/account-deletion-operations-runbook.md"
+        "supabase/functions/_shared/accountAccess.ts",
+        "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+        "docs/phase-9/account-deletion-operations-runbook.md",
+        "docs/phase-9/apple-auth-lifecycle-operations-runbook.md"
       ]
     },
     {
@@ -1557,13 +1597,18 @@
       "id": "OPS-04",
       "status": "in_progress",
       "blockedBy": ["OPS-03"],
-      "nextAction": "Complete the online, offline, owner-switch, interruption, provider, backup, and retention matrix for export, deletion, consent withdrawal, token revocation, processor deletion, temporary files, and post-delete denial, then run it against staging.",
+      "nextAction": "Complete the online, offline, owner-switch, interruption, provider, backup, and retention matrix for export, deletion, consent withdrawal, Apple authorization-code/refresh-token lifecycle and signed events, provider deletion, temporary files, 60-second export links, and post-delete stale-JWT denial, then run it against reviewed staging and the exact physical-iPhone/TestFlight build.",
       "evidenceRefs": [
         "supabase/functions/account-deletion",
         "supabase/functions/data-export",
         "supabase/functions/consent-withdrawal",
         "supabase/functions/health-consent-worker",
         "supabase/ops/health-consent-work-lane.sql",
+        "supabase/functions/apple-auth-lifecycle",
+        "supabase/functions/apple-account-events",
+        "supabase/functions/apple-auth-worker",
+        "supabase/ops/apple-auth-work-lane.sql",
+        "docs/phase-9/apple-auth-lifecycle-operations-runbook.md",
         "docs/hugeToDo/US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md",
         "docs/hugeToDo/credential-inventory.json",
         "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",

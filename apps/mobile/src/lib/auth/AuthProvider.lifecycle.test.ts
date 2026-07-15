@@ -9,7 +9,7 @@ import { createElement, useEffect } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AuthProvider, useAuth } from './AuthProvider';
+import { AuthProvider, appleServerInvalidationReason, useAuth } from './AuthProvider';
 
 type AppStateValue = 'active' | 'background' | 'inactive' | null;
 type AppStateListener = (state: AppStateValue) => void;
@@ -20,7 +20,15 @@ type AppleCheckResult =
       status: 'blocked';
       reason: 'credential_check_failed' | 'credential_state_unknown' | 'credential_transferred';
     }
-  | { status: 'invalid'; reason: 'credential_not_found' | 'credential_revoked' }
+  | {
+      status: 'invalid';
+      reason:
+        | 'apple_subject_unavailable'
+        | 'credential_not_found'
+        | 'credential_revoked'
+        | 'persisted_revocation'
+        | 'revoked_notification';
+    }
   | { status: 'not_applicable' }
   | { status: 'valid' };
 type LocalOwnerProof =
@@ -84,6 +92,7 @@ const h = vi.hoisted(() => {
     auth,
     appState,
     onlineManager,
+    authenticateWithAppleCredential: vi.fn(),
     clearAuthDerivedCleanupRequired: vi.fn(async () => {}),
     checkAppleCredentialForSession: vi.fn<(_user: User) => Promise<AppleCheckResult>>(async () => ({
       status: 'not_applicable',
@@ -91,13 +100,16 @@ const h = vi.hoisted(() => {
     clearPersistedSession: vi.fn(async () => {}),
     fetchBarrier: vi.fn(),
     prepareLocalDataForSession: vi.fn(async () => ({ cleared: false, resetRoute: false })),
+    preserveLocalDataForForcedSignOut: vi.fn(async () => 'retain' as const),
     assertRevenueCatResultCurrent: vi.fn(),
     clearStoreEntitlement: vi.fn(async () => 'committed' as const),
     customerInfoToStoredEntitlement: vi.fn<(customerInfo: unknown) => unknown | null>(() => null),
     entitlementOwnerContextForUser: vi.fn(async () => ({ ownerBinding: 'a'.repeat(64) })),
     getCustomerInfo: vi.fn<() => Promise<unknown | null>>(async () => null),
+    getAppleIdToken: vi.fn(),
     getUncachedCustomerInfo: vi.fn<() => Promise<unknown | null>>(async () => null),
     invalidateEntitlementQueries: vi.fn(async () => {}),
+    invalidateAppleAuthLifecycle: vi.fn(async () => ({ status: 'blocked' as const })),
     loadEntitlement: vi.fn(async () => null),
     localDataOwnerBinding: vi.fn(async (userId: string) => `binding:${userId}`),
     markAuthDerivedCleanupRequired: vi.fn(async () => {}),
@@ -344,6 +356,7 @@ vi.mock('./accountGeneration', () => ({
 }));
 vi.mock('./accountIsolationE2E', () => ({ getAccountIsolationE2EFixture: () => null }));
 vi.mock('./accountUpgrade', () => ({
+  authenticateWithAppleCredential: h.authenticateWithAppleCredential,
   authenticateWithProviderToken: vi.fn(),
   requestEmailAccountCode: vi.fn(),
   verifyEmailAccountCode: vi.fn(),
@@ -368,7 +381,7 @@ vi.mock('./authDerivedCleanupRequired', () => ({
   markAuthDerivedCleanupRequired: h.markAuthDerivedCleanupRequired,
   readAuthDerivedCleanupRequired: h.readAuthDerivedCleanupRequired,
 }));
-vi.mock('./apple', () => ({ getAppleIdToken: vi.fn() }));
+vi.mock('./apple', () => ({ getAppleIdToken: h.getAppleIdToken }));
 vi.mock('./appleCredentialQuarantine', () => ({
   clearAppleCredentialQuarantine: vi.fn(),
   isAppleCredentialQuarantined: vi.fn(async () => false),
@@ -376,12 +389,21 @@ vi.mock('./appleCredentialQuarantine', () => ({
 }));
 vi.mock('./appleCredentialLifecycle', () => ({
   checkAppleCredentialForSession: h.checkAppleCredentialForSession,
+  getAppleCredentialSubject: (user: User) => {
+    const apple = user.identities?.filter((identity) => identity.provider === 'apple') ?? [];
+    if (apple.length !== 1) return null;
+    const subject = (apple[0]?.identity_data as { sub?: unknown } | undefined)?.sub;
+    return typeof subject === 'string' && subject.length > 0 ? subject : null;
+  },
   hasAppleIdentity: (user: User) =>
     user.app_metadata?.provider === 'apple' ||
     user.app_metadata?.providers?.includes('apple') === true ||
     user.identities?.some((identity) => identity.provider === 'apple') === true,
   monitorAppleCredentialLifecycle: vi.fn(() => vi.fn()),
   monitorAppleCredentialRevocation: vi.fn(() => vi.fn()),
+}));
+vi.mock('./appleAuthLifecycleClient', () => ({
+  invalidateAppleAuthLifecycle: h.invalidateAppleAuthLifecycle,
 }));
 vi.mock('./google', () => ({ getGoogleIdToken: vi.fn() }));
 vi.mock('./localAccountIsolation', () => ({
@@ -392,7 +414,7 @@ vi.mock('./revokedCredentialActivity', () => ({ clearAuthDerivedLocalActivity: v
 vi.mock('./sessionOwner', () => ({
   localDataOwnerBinding: h.localDataOwnerBinding,
   markLocalDataCleanupRequired: vi.fn(),
-  preserveLocalDataForForcedSignOut: vi.fn(async () => 'retain'),
+  preserveLocalDataForForcedSignOut: h.preserveLocalDataForForcedSignOut,
   readLocalDataOwnerProof: h.readLocalDataOwnerProof,
   readLocalDataOwnership: vi.fn(),
 }));
@@ -578,6 +600,7 @@ beforeEach(() => {
   h.auth.refreshSession.mockReset();
   h.auth.signOut.mockReset().mockResolvedValue({ error: null });
   h.auth.admin.signOut.mockReset().mockResolvedValue({ data: null, error: null });
+  h.authenticateWithAppleCredential.mockReset();
   h.checkAppleCredentialForSession.mockReset().mockResolvedValue({ status: 'not_applicable' });
   h.clearAuthDerivedCleanupRequired.mockReset().mockResolvedValue(undefined);
   h.clearPersistedSession.mockReset().mockResolvedValue(undefined);
@@ -606,10 +629,13 @@ beforeEach(() => {
     return { ownerSubject: decodeClaim(token, 'sub'), status: 'none' };
   });
   h.getCustomerInfo.mockReset().mockResolvedValue(null);
+  h.getAppleIdToken.mockReset();
   h.getUncachedCustomerInfo.mockReset().mockResolvedValue(null);
   h.invalidateEntitlementQueries.mockReset().mockResolvedValue(undefined);
+  h.invalidateAppleAuthLifecycle.mockReset().mockResolvedValue({ status: 'blocked' });
   h.loadEntitlement.mockReset().mockResolvedValue(null);
   h.prepareLocalDataForSession.mockReset().mockResolvedValue({ cleared: false, resetRoute: false });
+  h.preserveLocalDataForForcedSignOut.mockReset().mockResolvedValue('retain');
   h.entitlementOwnerContextForUser.mockReset().mockResolvedValue({ ownerBinding: 'a'.repeat(64) });
   h.publishCustomerInfoEvidence.mockReset().mockResolvedValue({
     status: 'committed',
@@ -632,6 +658,130 @@ afterEach(async () => {
     await act(async () => renderer?.unmount());
     renderer = null;
   }
+});
+
+describe('Apple native invalidation mapping', () => {
+  it.each([
+    ['credential_not_found', 'not_found'],
+    ['credential_revoked', 'revoked'],
+    ['revoked_notification', 'revoked'],
+    ['persisted_revocation', 'revoked'],
+    ['apple_subject_unavailable', null],
+  ] as const)('maps %s to the exact server reason %s', (reason, expected) => {
+    expect(appleServerInvalidationReason(reason)).toBe(expected);
+  });
+});
+
+describe('AuthProvider Sign in with Apple publication boundary', () => {
+  const appleCredential = Object.freeze({
+    appleUser: 'apple-subject',
+    authorizationCode: 'single-use-code',
+    email: null,
+    idToken: 'apple-id-token',
+    nonce: 'a'.repeat(43),
+  });
+
+  it('does not publish the deferred Apple session before lifecycle capture settles', async () => {
+    h.auth.getSession.mockResolvedValueOnce({ data: { session: null }, error: null });
+    h.getAppleIdToken.mockResolvedValueOnce(appleCredential);
+    const next = appleSession(USER_A, SESSION_A, 'apple-bootstrap', 'refresh-apple');
+    const lifecycle = deferred<void>();
+    h.authenticateWithAppleCredential.mockImplementationOnce(async () => {
+      h.state.authStateListener?.('SIGNED_IN', next);
+      await lifecycle.promise;
+    });
+    await mount();
+
+    let completion!: Promise<boolean>;
+    await act(async () => {
+      completion = currentAuth!.signInWithApple();
+      await Promise.resolve();
+    });
+    await flush();
+
+    expect(currentAuth?.session).toBeNull();
+    expect(h.fetchBarrier).not.toHaveBeenCalled();
+
+    lifecycle.resolve();
+    await act(async () => {
+      await expect(completion).resolves.toBe(true);
+    });
+    await flush();
+
+    expect(currentAuth?.session?.access_token).toBe(next.access_token);
+    expect(h.fetchBarrier).toHaveBeenCalledWith(next.access_token, USER_A);
+  });
+
+  it('durably rejects a partial Apple session when lifecycle capture fails', async () => {
+    h.auth.getSession.mockResolvedValueOnce({ data: { session: null }, error: null });
+    h.getAppleIdToken.mockResolvedValueOnce(appleCredential);
+    const partial = appleSession(USER_A, SESSION_A, 'partial-apple', 'refresh-partial');
+    h.authenticateWithAppleCredential.mockImplementationOnce(async () => {
+      h.state.authStateListener?.('SIGNED_IN', partial);
+      throw new Error('APPLE_AUTH_LIFECYCLE_CAPTURE_FAILED');
+    });
+    await mount();
+
+    await act(async () => {
+      await expect(currentAuth!.signInWithApple()).rejects.toThrow(
+        'APPLE_AUTH_LIFECYCLE_CAPTURE_FAILED',
+      );
+    });
+    await flush();
+
+    expect(currentAuth?.session).toBeNull();
+    expect(h.fetchBarrier).not.toHaveBeenCalled();
+    expect(h.clearPersistedSession).toHaveBeenCalledOnce();
+    expect(h.markAuthDerivedCleanupRequired).toHaveBeenCalledOnce();
+    expect(h.clearAuthDerivedCleanupRequired).toHaveBeenCalledOnce();
+  });
+
+  it('cleans a failed bootstrap without a callback and retains anonymous owner data', async () => {
+    const anonymous = session(USER_A, SESSION_A, 'anonymous', 'refresh-anonymous');
+    anonymous.user.is_anonymous = true;
+    h.auth.getSession.mockResolvedValueOnce({ data: { session: anonymous }, error: null });
+    h.getAppleIdToken.mockResolvedValueOnce(appleCredential);
+    h.authenticateWithAppleCredential.mockRejectedValueOnce(
+      new Error('APPLE_AUTH_LIFECYCLE_CAPTURE_FAILED'),
+    );
+    await mount();
+    expect(currentAuth?.session?.user.id).toBe(USER_A);
+
+    await act(async () => {
+      await expect(currentAuth!.signInWithApple()).rejects.toThrow(
+        'APPLE_AUTH_LIFECYCLE_CAPTURE_FAILED',
+      );
+    });
+    await flush();
+
+    expect(currentAuth?.session).toBeNull();
+    expect(h.preserveLocalDataForForcedSignOut).toHaveBeenCalledOnce();
+    expect(h.clearPersistedSession).toHaveBeenCalledOnce();
+    expect(h.prepareLocalDataForSession).toHaveBeenCalledWith(
+      null,
+      USER_A,
+      undefined,
+      expect.any(Function),
+      expect.any(Object),
+    );
+  });
+
+  it('keeps an unavailable Apple subject quarantined without forging a server call', async () => {
+    const owner = appleSession(USER_A, SESSION_A, 'missing-subject', 'refresh-missing-subject');
+    owner.user.identities![0]!.identity_data = {};
+    h.auth.getSession.mockResolvedValueOnce({ data: { session: owner }, error: null });
+    h.checkAppleCredentialForSession.mockResolvedValueOnce({
+      status: 'invalid',
+      reason: 'apple_subject_unavailable',
+    });
+
+    await mount();
+
+    expect(currentAuth?.session).toBeNull();
+    expect(h.invalidateAppleAuthLifecycle).not.toHaveBeenCalled();
+    expect(h.preserveLocalDataForForcedSignOut).toHaveBeenCalledOnce();
+    expect(h.clearPersistedSession).toHaveBeenCalledOnce();
+  });
 });
 
 describe('AuthProvider cold restore and foreground publication lifecycle', () => {
@@ -1172,6 +1322,16 @@ describe('AuthProvider cold restore and foreground publication lifecycle', () =>
       expect(h.fetchBarrier).not.toHaveBeenCalled();
       expect(h.state.events.some((event) => event.startsWith('reserve:'))).toBe(false);
       expect(h.state.events.some((event) => event.startsWith('activate:'))).toBe(false);
+      if (result.status === 'invalid') {
+        expect(h.invalidateAppleAuthLifecycle).toHaveBeenCalledWith(
+          expect.objectContaining({ accessToken: owner.access_token, subject: USER_A }),
+          `apple-${USER_A}`,
+          'revoked',
+        );
+        expect(h.auth.admin.signOut).not.toHaveBeenCalled();
+      } else {
+        expect(h.invalidateAppleAuthLifecycle).not.toHaveBeenCalled();
+      }
       if (result.status === 'invalid') {
         expect(h.clearPersistedSession).toHaveBeenCalled();
       } else {

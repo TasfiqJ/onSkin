@@ -47,6 +47,7 @@ describe('subscription server contracts', () => {
     const edgeFunction = readRepo('supabase/functions/subscription-grants/index.ts');
     const grantErrors = readRepo('supabase/functions/subscription-grants/grantErrors.ts');
     const policyLint = readRepo('scripts/phase9/supabase-policy-lint.mjs');
+    const functionAcl = readRepo('scripts/phase9/supabase-function-acl.mjs');
     const entitlementStore = readRepo('apps/mobile/src/features/subscription/store.ts');
     const entitlementHook = readRepo('apps/mobile/src/features/subscription/useEntitlement.ts');
     const grantBody = laneMigration.match(
@@ -116,6 +117,7 @@ describe('subscription server contracts', () => {
       "'grant_app_granted_reverse_trial(uuid, timestamptz, text, text)'",
     );
     expect(policyLint).toContain("'read_entitlement_projections()'");
-    expect(policyLint).toContain('latestFunctions.delete(key)');
+    expect(policyLint).toContain('publicFunctionCatalog(combined)');
+    expect(functionAcl).toContain('functions.delete(key)');
   });
 });

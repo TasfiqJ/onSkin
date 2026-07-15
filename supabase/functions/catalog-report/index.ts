@@ -1,6 +1,7 @@
 // User correction reports. Users can report wrong/missing product data without
 // writing global catalog tables.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import {
@@ -42,6 +43,7 @@ function json(body: unknown, status = 200): Response {
 }
 
 type HealthProcessingPreflightClient = Parameters<typeof preflightActiveHealthProcessing>[0];
+type AccountAccessPreflightClient = Parameters<typeof preflightAccountAccess>[0];
 
 async function requireActiveHealthProcessing(
   caller: HealthProcessingPreflightClient,
@@ -49,6 +51,15 @@ async function requireActiveHealthProcessing(
   epoch: string,
 ): Promise<Response | null> {
   const result = await preflightActiveHealthProcessing(caller, userId, epoch);
+  return result.ok ? null : json({ error: result.error }, result.status);
+}
+
+async function requireSameAccountAccess(
+  caller: AccountAccessPreflightClient,
+  userId: string,
+  snapshot: AccountAccessSnapshot,
+): Promise<Response | null> {
+  const result = await preflightAccountAccess(caller, userId, snapshot);
   return result.ok ? null : json({ error: result.error }, result.status);
 }
 
@@ -108,6 +119,11 @@ Deno.serve(async (req) => {
     return json({ error: 'HEALTH_PROCESSING_EPOCH_REQUIRED' }, 409);
   }
 
+  const initialAccountAccess = await preflightAccountAccess(caller, userId);
+  if (!initialAccountAccess.ok) {
+    return json({ error: initialAccountAccess.error }, initialAccountAccess.status);
+  }
+
   const initialHealthError = await requireActiveHealthProcessing(
     caller,
     userId,
@@ -148,6 +164,12 @@ Deno.serve(async (req) => {
     healthProcessingEpoch,
   );
   if (persistHealthError) return persistHealthError;
+  const persistAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (persistAccountError) return persistAccountError;
 
   // The direct-write trigger atomically rechecks active state and this exact epoch.
   const { data: correction, error } = await caller
@@ -173,6 +195,13 @@ Deno.serve(async (req) => {
   }
 
   noteSuppressedObfContributionRequest(correctionType);
+
+  const responseAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (responseAccountError) return responseAccountError;
 
   return json({ result: 'reported', correction });
 });

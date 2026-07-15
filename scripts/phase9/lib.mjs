@@ -106,6 +106,9 @@ export const SEALED_SERVICE_PRIVATE_TABLES = Object.freeze([
   'account_deletion_receipts',
   'account_deletion_operator_recovery_audit',
   'revenuecat_identity_tombstones',
+  'apple_auth_lifecycles',
+  'apple_auth_capture_operations',
+  'apple_auth_server_events',
 ]);
 
 export const AUTHENTICATED_CATALOG_TABLES = Object.freeze([

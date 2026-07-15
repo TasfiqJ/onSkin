@@ -3,7 +3,8 @@
 // fetches a fresh bounded provider response, then invokes the service-only
 // snapshot RPC with RevenueCat request_date as the only watermark.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
-import { bearerToken } from '../_shared/auth.ts';
+import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
+import { bearerAuthorizationHeader, bearerToken } from '../_shared/auth.ts';
 import {
   contentLengthTooLarge,
   intEnv,
@@ -64,6 +65,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+async function requireSameAccountAccess(
+  caller: Parameters<typeof preflightAccountAccess>[0],
+  userId: string,
+  snapshot: AccountAccessSnapshot,
+): Promise<Response | null> {
+  const result = await preflightAccountAccess(caller, userId, snapshot);
+  return result.ok ? null : json({ error: result.error }, result.status);
+}
+
 async function rateLimitHash(value: string): Promise<string> {
   const encoder = new TextEncoder();
   rateLimitHmacKey ??= await crypto.subtle.importKey(
@@ -113,8 +123,13 @@ Deno.serve(async (req) => {
   }
 
   const token = bearerToken(req);
-  if (!token) return json({ error: 'unauthorized' }, 401);
+  const authorization = bearerAuthorizationHeader(req);
+  if (!token || !authorization) return json({ error: 'unauthorized' }, 401);
   const admin = createClient(supabaseUrl, serviceKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const caller = createClient(supabaseUrl, serviceKey, {
+    global: { headers: { Authorization: authorization } },
     auth: { persistSession: false, autoRefreshToken: false },
   });
   const { data: userData, error: userError } = await admin.auth.getUser(token);
@@ -122,6 +137,11 @@ Deno.serve(async (req) => {
   if (userError || !userId) return json({ error: 'unauthorized' }, 401);
   const verifiedSession = verifiedAuthSessionClaimsFromJwt(token, userId);
   if (!verifiedSession) return json({ error: 'unauthorized' }, 401);
+
+  const initialAccountAccess = await preflightAccountAccess(caller, userId);
+  if (!initialAccountAccess.ok) {
+    return json({ error: initialAccountAccess.error }, initialAccountAccess.status);
+  }
 
   const rateLimitResponse = await enforceRateLimit(admin, userId);
   if (rateLimitResponse) return rateLimitResponse;
@@ -140,6 +160,13 @@ Deno.serve(async (req) => {
       userId: verifiedSession.subject,
       sessionId: verifiedSession.sessionId,
       operation: async ({ renew }) => {
+        const providerAdmissionError = await requireSameAccountAccess(
+          caller,
+          userId,
+          initialAccountAccess.snapshot,
+        );
+        if (providerAdmissionError) return providerAdmissionError;
+
         // withAccountPublicationLease has renewed the active migration-0052
         // lease immediately before this callback. No RevenueCat get-or-create
         // request exists outside this fenced scope.
@@ -147,11 +174,23 @@ Deno.serve(async (req) => {
           providerRequest.url,
           providerRequest.init,
         ).catch(() => null);
+        const providerResponseAccountError = await requireSameAccountAccess(
+          caller,
+          userId,
+          initialAccountAccess.snapshot,
+        );
+        if (providerResponseAccountError) return providerResponseAccountError;
         if (!providerResponse) {
           console.warn('[subscription-reconciliation]', 'provider_request_failed');
           return json({ error: 'reconciliation_unavailable' }, 503);
         }
         const providerBody = await readLimitedResponseJson<unknown>(providerResponse);
+        const providerBodyAccountError = await requireSameAccountAccess(
+          caller,
+          userId,
+          initialAccountAccess.snapshot,
+        );
+        if (providerBodyAccountError) return providerBodyAccountError;
         if (![200, 201].includes(providerResponse.status) || providerBody === null) {
           console.warn('[subscription-reconciliation]', 'provider_response_rejected');
           return json({ error: 'reconciliation_unavailable' }, 503);
@@ -177,12 +216,24 @@ Deno.serve(async (req) => {
         // If deletion began, the active lease is now draining and this renew
         // fails before any local projection can be committed. Deletion waits
         // for the capability release/TTL before provider erasure proceeds.
+        const projectionAccountError = await requireSameAccountAccess(
+          caller,
+          userId,
+          initialAccountAccess.snapshot,
+        );
+        if (projectionAccountError) return projectionAccountError;
         await renew();
         const { data, error } = await admin.rpc(
           'reconcile_revenuecat_entitlement_snapshot',
           snapshot,
         );
         if (error) {
+          const responseAccountError = await requireSameAccountAccess(
+            caller,
+            userId,
+            initialAccountAccess.snapshot,
+          );
+          if (responseAccountError) return responseAccountError;
           const message = typeof error.message === 'string' ? error.message : '';
           if (message.includes('ACCOUNT_DELETION_IN_PROGRESS')) {
             return json({ error: 'account_deletion_in_progress' }, 409);
@@ -196,6 +247,13 @@ Deno.serve(async (req) => {
           console.error('[subscription-reconciliation]', 'snapshot_write_failed');
           return json({ error: 'reconciliation_failed' }, 500);
         }
+
+        const responseAccountError = await requireSameAccountAccess(
+          caller,
+          userId,
+          initialAccountAccess.snapshot,
+        );
+        if (responseAccountError) return responseAccountError;
 
         const outcome = typeof data === 'string' ? data : Array.isArray(data) ? data[0] : null;
         if (

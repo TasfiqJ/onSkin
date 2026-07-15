@@ -510,6 +510,13 @@ block(
 );
 block(
   errors,
+  /phase9:apple-auth-work-lane-smoke/.test(packageJson.scripts?.['phase9:verify'] ?? '') &&
+    /phase9:apple-auth-work-lane-smoke/.test(packageJson.scripts?.['launch:verify'] ?? '') &&
+    has('.github/workflows/quality.yml', /npm run phase9:apple-auth-work-lane-smoke/),
+  'Phase 9, launch, and CI verification must run the durable Apple-auth work-lane contract.',
+);
+block(
+  errors,
   has('.github/workflows/quality.yml', /postgres:\s*\n\s*- 15-alpine\s*\n\s*- 17-alpine/) &&
     has(
       '.github/workflows/quality.yml',
@@ -1116,8 +1123,8 @@ block(
 );
 block(
   errors,
-  integerInRange(env.DATA_EXPORT_PHOTO_URL_TTL_SECONDS, 60, 3600),
-  'DATA_EXPORT_PHOTO_URL_TTL_SECONDS must be an integer from 60 to 3600.',
+  integerInRange(env.DATA_EXPORT_PHOTO_URL_TTL_SECONDS, 30, 60),
+  'DATA_EXPORT_PHOTO_URL_TTL_SECONDS must be an integer from 30 to 60.',
 );
 block(
   errors,
@@ -1142,8 +1149,8 @@ block(
 if (env.PHASE9_DATA_EXPORT_SIGNED_URL_EXPIRY_CHECK === 'true') {
   block(
     errors,
-    Number(env.DATA_EXPORT_PHOTO_URL_TTL_SECONDS) <= 120,
-    'DATA_EXPORT_PHOTO_URL_TTL_SECONDS must be 120 or lower when signed URL expiry evidence is enabled.',
+    Number(env.DATA_EXPORT_PHOTO_URL_TTL_SECONDS) <= 60,
+    'DATA_EXPORT_PHOTO_URL_TTL_SECONDS must be 60 or lower when signed URL expiry evidence is enabled.',
   );
   block(
     errors,

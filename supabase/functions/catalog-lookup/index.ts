@@ -1,6 +1,7 @@
 // Exact barcode lookup against the reviewed local catalog only. Bulk import
 // may use reviewed offline artifacts; lookup payloads never go to a catalog provider.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import {
@@ -37,6 +38,7 @@ type EdgeRateLimitClient = {
   ): PromiseLike<{ data: unknown; error: unknown }>;
 };
 type HealthProcessingPreflightClient = Parameters<typeof preflightActiveHealthProcessing>[0];
+type AccountAccessPreflightClient = Parameters<typeof preflightAccountAccess>[0];
 
 function json(body: unknown, status = 200, headers: HeadersInit = {}): Response {
   return new Response(JSON.stringify(body), {
@@ -51,6 +53,15 @@ async function requireActiveHealthProcessing(
   epoch: string,
 ): Promise<Response | null> {
   const result = await preflightActiveHealthProcessing(caller, userId, epoch);
+  return result.ok ? null : json({ error: result.error }, result.status);
+}
+
+async function requireSameAccountAccess(
+  caller: AccountAccessPreflightClient,
+  userId: string,
+  snapshot: AccountAccessSnapshot,
+): Promise<Response | null> {
+  const result = await preflightAccountAccess(caller, userId, snapshot);
   return result.ok ? null : json({ error: result.error }, result.status);
 }
 
@@ -146,6 +157,11 @@ Deno.serve(async (req) => {
     return json({ error: 'HEALTH_PROCESSING_EPOCH_REQUIRED' }, 409);
   }
 
+  const initialAccountAccess = await preflightAccountAccess(caller, userId);
+  if (!initialAccountAccess.ok) {
+    return json({ error: initialAccountAccess.error }, initialAccountAccess.status);
+  }
+
   const initialHealthError = await requireActiveHealthProcessing(
     caller,
     userId,
@@ -165,6 +181,12 @@ Deno.serve(async (req) => {
     healthProcessingEpoch,
   );
   if (bodyHealthError) return bodyHealthError;
+  const bodyAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (bodyAccountError) return bodyAccountError;
 
   const barcode = await requestBarcode(req);
   if (barcode instanceof Response) return barcode;
@@ -176,6 +198,12 @@ Deno.serve(async (req) => {
     healthProcessingEpoch,
   );
   if (catalogHealthError) return catalogHealthError;
+  const catalogAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (catalogAccountError) return catalogAccountError;
 
   const { data: barcodeRow, error: barcodeError } = await admin
     .from('product_barcodes')
@@ -191,6 +219,12 @@ Deno.serve(async (req) => {
       healthProcessingEpoch,
     );
     if (productHealthError) return productHealthError;
+    const productAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (productAccountError) return productAccountError;
 
     const { data: product, error: productError } = await admin
       .from('products')
@@ -206,6 +240,12 @@ Deno.serve(async (req) => {
         healthProcessingEpoch,
       );
       if (persistHealthError) return persistHealthError;
+      const persistAccountError = await requireSameAccountAccess(
+        caller,
+        userId,
+        initialAccountAccess.snapshot,
+      );
+      if (persistAccountError) return persistAccountError;
 
       // The direct-write trigger atomically rechecks active state and this exact epoch.
       const { error: eventError } = await caller.from('catalog_lookup_events').insert({
@@ -227,6 +267,13 @@ Deno.serve(async (req) => {
         return withdrawalError ?? json({ error: 'lookup_failed' }, 500);
       }
 
+      const responseAccountError = await requireSameAccountAccess(
+        caller,
+        userId,
+        initialAccountAccess.snapshot,
+      );
+      if (responseAccountError) return responseAccountError;
+
       return json({ result: 'matched', product: { ...product, barcode } });
     }
   }
@@ -237,6 +284,12 @@ Deno.serve(async (req) => {
     healthProcessingEpoch,
   );
   if (fallbackHealthError) return fallbackHealthError;
+  const fallbackAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (fallbackAccountError) return fallbackAccountError;
 
   // The direct-write trigger atomically rechecks active state and this exact epoch.
   const { error: eventError } = await caller.from('catalog_lookup_events').insert({
@@ -256,6 +309,13 @@ Deno.serve(async (req) => {
     );
     return withdrawalError ?? json({ error: 'lookup_failed' }, 500);
   }
+
+  const responseAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (responseAccountError) return responseAccountError;
 
   return json({ result: 'no_match', manualFallback: true });
 });

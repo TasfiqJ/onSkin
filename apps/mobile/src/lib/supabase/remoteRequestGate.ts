@@ -3,6 +3,8 @@ import {
   SupabaseRemoteRequestAdmissionController,
   SupabaseRemoteRequestAdmissionError,
   parseSupabaseRemoteSessionBinding,
+  type SupabaseAppleAuthBootstrapCredentials,
+  type SupabaseAppleCredentialInvalidReason,
   type SupabaseAccountDeletionAction,
   type SupabaseRemoteRequestSnapshot,
   type SupabaseRemoteRequestTransport,
@@ -129,6 +131,42 @@ export function runWithSupabaseIdentityUpgradePermit<T>(
   );
 }
 
+export function runWithSupabaseAppleAuthBootstrapPermit<T>(
+  credentials: SupabaseAppleAuthBootstrapCredentials,
+  binding: SupabaseRemoteSessionBinding | undefined,
+  operation: () => T | Promise<T>,
+  timeoutMs?: number,
+): Promise<T> {
+  return supabaseRemoteRequestAdmission.runWithPermit(
+    {
+      purpose: 'apple_auth_bootstrap',
+      credentials,
+      ...(binding === undefined ? {} : { binding }),
+      timeoutMs,
+    },
+    operation,
+  );
+}
+
+export function runWithSupabaseAppleCredentialInvalidationPermit<T>(
+  binding: SupabaseRemoteSessionBinding,
+  appleUser: string,
+  reason: SupabaseAppleCredentialInvalidReason,
+  operation: () => T | Promise<T>,
+  timeoutMs?: number,
+): Promise<T> {
+  return supabaseRemoteRequestAdmission.runWithPermit(
+    {
+      purpose: 'apple_credential_invalid',
+      binding,
+      appleUser,
+      reason,
+      timeoutMs,
+    },
+    operation,
+  );
+}
+
 export function runWithSupabaseAuthRefreshPermit<T>(
   binding: SupabaseRemoteSessionBinding,
   refreshToken: string,
@@ -191,6 +229,8 @@ export {
   parseSupabaseRemoteSessionBinding,
 } from './remoteRequestAdmission';
 export type {
+  SupabaseAppleAuthBootstrapCredentials,
+  SupabaseAppleCredentialInvalidReason,
   SupabaseRemoteRequestAdmissionErrorCode,
   SupabaseRemoteRequestState,
   SupabaseRemoteRequestTransport,

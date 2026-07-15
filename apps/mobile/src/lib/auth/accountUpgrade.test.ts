@@ -2,6 +2,7 @@ import type { Session, User } from '@supabase/supabase-js';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  authenticateWithAppleCredential,
   authenticateWithProviderToken,
   requestEmailAccountCode,
   verifyEmailAccountCode,
@@ -16,6 +17,10 @@ const remoteGateMocks = vi.hoisted(() => ({
     subject,
   })),
   runFresh: vi.fn(async <T>(operation: () => T | Promise<T>) => operation()),
+  runApple: vi.fn(
+    async <T>(_credentials: unknown, _binding: unknown, operation: () => T | Promise<T>) =>
+      operation(),
+  ),
   runIdentityUpgrade: vi.fn(async <T>(_binding: unknown, operation: () => T | Promise<T>) =>
     operation(),
   ),
@@ -24,7 +29,20 @@ const remoteGateMocks = vi.hoisted(() => ({
 vi.mock('@/lib/supabase/remoteRequestGate', () => ({
   requireSupabaseRemoteSessionBinding: remoteGateMocks.requireBinding,
   runWithSupabaseFreshAuthPermit: remoteGateMocks.runFresh,
+  runWithSupabaseAppleAuthBootstrapPermit: remoteGateMocks.runApple,
   runWithSupabaseIdentityUpgradePermit: remoteGateMocks.runIdentityUpgrade,
+}));
+
+const appleLifecycleMocks = vi.hoisted(() => ({
+  capture: vi.fn(async () => ({
+    status: 'active' as const,
+    generation: 1,
+    nextValidationAt: '2026-07-16T00:00:00.000Z',
+  })),
+}));
+
+vi.mock('./appleAuthLifecycleClient', () => ({
+  captureAppleAuthLifecycle: appleLifecycleMocks.capture,
 }));
 
 function makeUser(id: string, isAnonymous: boolean): User {
@@ -48,6 +66,14 @@ function makeSession(user: User): Session {
     user,
   };
 }
+
+const APPLE_CREDENTIAL = Object.freeze({
+  appleUser: 'apple-subject',
+  authorizationCode: 'single-use-code',
+  email: null,
+  idToken: 'apple-id-token',
+  nonce: 'a'.repeat(43),
+});
 
 const sessionByAuth = new WeakMap<AccountUpgradeAuthClient, Session | null>();
 
@@ -79,7 +105,15 @@ afterEach(() => {
     subject,
   }));
   remoteGateMocks.runFresh.mockImplementation(async (operation) => operation());
+  remoteGateMocks.runApple.mockImplementation(async (_credentials, _binding, operation) =>
+    operation(),
+  );
   remoteGateMocks.runIdentityUpgrade.mockImplementation(async (_binding, operation) => operation());
+  appleLifecycleMocks.capture.mockResolvedValue({
+    status: 'active',
+    generation: 1,
+    nextValidationAt: '2026-07-16T00:00:00.000Z',
+  });
 });
 
 describe('account upgrade', () => {
@@ -115,11 +149,58 @@ describe('account upgrade', () => {
     });
 
     await expect(
-      authenticateWithProviderToken(auth, explicitSession(auth), {
-        provider: 'apple',
-        token: 'id-token',
-      }),
+      authenticateWithAppleCredential(auth, explicitSession(auth), APPLE_CREDENTIAL),
     ).rejects.toThrow('already linked');
+    expect(spies.signInWithIdToken).not.toHaveBeenCalled();
+  });
+
+  it('passes the raw Apple nonce while linking the exact anonymous user', async () => {
+    const anonymousUser = makeUser('anon-user', true);
+    const permanentUser = makeUser('anon-user', false);
+    const { auth, spies } = makeAuth(makeSession(anonymousUser));
+    spies.linkIdentity.mockResolvedValue({
+      data: { session: makeSession(permanentUser), user: permanentUser },
+      error: null,
+    });
+
+    await authenticateWithAppleCredential(auth, explicitSession(auth), APPLE_CREDENTIAL);
+
+    expect(spies.linkIdentity).toHaveBeenCalledWith({
+      nonce: APPLE_CREDENTIAL.nonce,
+      provider: 'apple',
+      token: 'apple-id-token',
+    });
+    expect(spies.signInWithIdToken).not.toHaveBeenCalled();
+    expect(remoteGateMocks.runApple).toHaveBeenCalledWith(
+      {
+        appleUser: 'apple-subject',
+        authorizationCode: 'single-use-code',
+        identityToken: 'apple-id-token',
+        nonce: APPLE_CREDENTIAL.nonce,
+      },
+      expect.objectContaining({ accessToken: 'access-token', subject: 'anon-user' }),
+      expect.any(Function),
+    );
+    expect(appleLifecycleMocks.capture).toHaveBeenCalledWith('access-token', {
+      appleUser: 'apple-subject',
+      authorizationCode: 'single-use-code',
+      identityToken: 'apple-id-token',
+      nonce: APPLE_CREDENTIAL.nonce,
+    });
+  });
+
+  it('captures against the previous bearer when same-user linking returns no session token', async () => {
+    const anonymousUser = makeUser('anon-user', true);
+    const permanentUser = makeUser('anon-user', false);
+    const { auth, spies } = makeAuth(makeSession(anonymousUser));
+    spies.linkIdentity.mockResolvedValue({
+      data: { session: null, user: permanentUser },
+      error: null,
+    });
+
+    await authenticateWithAppleCredential(auth, explicitSession(auth), APPLE_CREDENTIAL);
+
+    expect(appleLifecycleMocks.capture).toHaveBeenCalledWith('access-token', expect.any(Object));
     expect(spies.signInWithIdToken).not.toHaveBeenCalled();
   });
 
@@ -143,6 +224,39 @@ describe('account upgrade', () => {
     expect(remoteGateMocks.runFresh).toHaveBeenCalledWith(expect.any(Function));
   });
 
+  it('passes the raw Apple nonce through the signed-out sign-in lane', async () => {
+    const { auth, spies } = makeAuth(null);
+    spies.signInWithIdToken.mockResolvedValue({
+      data: { session: makeSession(makeUser('returning-user', false)), user: null },
+      error: null,
+    });
+
+    await authenticateWithAppleCredential(auth, explicitSession(auth), APPLE_CREDENTIAL);
+
+    expect(spies.signInWithIdToken).toHaveBeenCalledWith({
+      nonce: APPLE_CREDENTIAL.nonce,
+      provider: 'apple',
+      token: 'apple-id-token',
+    });
+    expect(spies.linkIdentity).not.toHaveBeenCalled();
+    expect(appleLifecycleMocks.capture).toHaveBeenCalledWith('access-token', expect.any(Object));
+  });
+
+  it('rejects a blank Apple nonce before opening either Supabase auth lane', async () => {
+    const { auth, spies } = makeAuth(null);
+
+    await expect(
+      authenticateWithAppleCredential(auth, explicitSession(auth), {
+        ...APPLE_CREDENTIAL,
+        nonce: '   ',
+      }),
+    ).rejects.toThrow('invalid credential');
+
+    expect(remoteGateMocks.runApple).not.toHaveBeenCalled();
+    expect(spies.linkIdentity).not.toHaveBeenCalled();
+    expect(spies.signInWithIdToken).not.toHaveBeenCalled();
+  });
+
   it('never treats a permanent active session as a signed-out provider lane', async () => {
     const { auth, spies } = makeAuth(makeSession(makeUser('current-user', false)));
 
@@ -156,6 +270,39 @@ describe('account upgrade', () => {
     expect(remoteGateMocks.runFresh).not.toHaveBeenCalled();
     expect(spies.linkIdentity).not.toHaveBeenCalled();
     expect(spies.signInWithIdToken).not.toHaveBeenCalled();
+  });
+
+  it('never treats a permanent active session as an Apple bootstrap lane', async () => {
+    const { auth, spies } = makeAuth(makeSession(makeUser('current-user', false)));
+
+    await expect(
+      authenticateWithAppleCredential(auth, explicitSession(auth), APPLE_CREDENTIAL),
+    ).rejects.toThrow('cannot replace an existing authenticated account');
+
+    expect(remoteGateMocks.runApple).not.toHaveBeenCalled();
+    expect(spies.linkIdentity).not.toHaveBeenCalled();
+    expect(spies.signInWithIdToken).not.toHaveBeenCalled();
+    expect(appleLifecycleMocks.capture).not.toHaveBeenCalled();
+  });
+
+  it('fails the whole Apple bootstrap when lifecycle capture fails after auth succeeds', async () => {
+    const permanentUser = makeUser('returning-user', false);
+    const { auth, spies } = makeAuth(null);
+    spies.signInWithIdToken.mockResolvedValue({
+      data: { session: makeSession(permanentUser), user: permanentUser },
+      error: null,
+    });
+    appleLifecycleMocks.capture.mockRejectedValueOnce(
+      new Error('APPLE_AUTH_LIFECYCLE_CAPTURE_FAILED'),
+    );
+
+    await expect(
+      authenticateWithAppleCredential(auth, explicitSession(auth), APPLE_CREDENTIAL),
+    ).rejects.toThrow('APPLE_AUTH_LIFECYCLE_CAPTURE_FAILED');
+
+    expect(spies.signInWithIdToken).toHaveBeenCalledOnce();
+    expect(appleLifecycleMocks.capture).toHaveBeenCalledOnce();
+    expect(remoteGateMocks.runApple).toHaveBeenCalledOnce();
   });
 
   it('rejects a provider response that changes the anonymous user id', async () => {

@@ -1,5 +1,6 @@
 // Local catalog search only. Do not proxy Open Beauty Facts search-as-you-type.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import {
@@ -39,6 +40,7 @@ type EdgeRateLimitClient = {
   ): PromiseLike<{ data: unknown; error: unknown }>;
 };
 type HealthProcessingPreflightClient = Parameters<typeof preflightActiveHealthProcessing>[0];
+type AccountAccessPreflightClient = Parameters<typeof preflightAccountAccess>[0];
 
 function json(body: unknown, status = 200, headers: HeadersInit = {}): Response {
   return new Response(JSON.stringify(body), {
@@ -53,6 +55,15 @@ async function requireActiveHealthProcessing(
   epoch: string,
 ): Promise<Response | null> {
   const result = await preflightActiveHealthProcessing(caller, userId, epoch);
+  return result.ok ? null : json({ error: result.error }, result.status);
+}
+
+async function requireSameAccountAccess(
+  caller: AccountAccessPreflightClient,
+  userId: string,
+  snapshot: AccountAccessSnapshot,
+): Promise<Response | null> {
+  const result = await preflightAccountAccess(caller, userId, snapshot);
   return result.ok ? null : json({ error: result.error }, result.status);
 }
 
@@ -134,6 +145,11 @@ Deno.serve(async (req) => {
     return json({ error: 'HEALTH_PROCESSING_EPOCH_REQUIRED' }, 409);
   }
 
+  const initialAccountAccess = await preflightAccountAccess(caller, userId);
+  if (!initialAccountAccess.ok) {
+    return json({ error: initialAccountAccess.error }, initialAccountAccess.status);
+  }
+
   const initialHealthError = await requireActiveHealthProcessing(
     caller,
     userId,
@@ -153,6 +169,12 @@ Deno.serve(async (req) => {
     healthProcessingEpoch,
   );
   if (bodyHealthError) return bodyHealthError;
+  const bodyAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (bodyAccountError) return bodyAccountError;
 
   const parsed = await readLimitedJson(req, maxBodyBytes, json, {
     error: 'bad_json',
@@ -169,6 +191,12 @@ Deno.serve(async (req) => {
       healthProcessingEpoch,
     );
     if (responseHealthError) return responseHealthError;
+    const responseAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (responseAccountError) return responseAccountError;
     return json({ result: 'too_short', products: [] });
   }
 
@@ -178,6 +206,12 @@ Deno.serve(async (req) => {
     healthProcessingEpoch,
   );
   if (searchHealthError) return searchHealthError;
+  const searchAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (searchAccountError) return searchAccountError;
 
   const { data, error } = await admin.rpc(CATALOG_SEARCH_RPC, {
     p_query: searchTerm,
@@ -191,6 +225,12 @@ Deno.serve(async (req) => {
     healthProcessingEpoch,
   );
   if (persistHealthError) return persistHealthError;
+  const persistAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (persistAccountError) return persistAccountError;
 
   // The direct-write trigger atomically rechecks active state and this exact epoch.
   const { error: eventError } = await caller.from('catalog_lookup_events').insert({
@@ -211,6 +251,13 @@ Deno.serve(async (req) => {
     );
     return withdrawalError ?? json({ error: 'search_failed' }, 500);
   }
+
+  const responseAccountError = await requireSameAccountAccess(
+    caller,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (responseAccountError) return responseAccountError;
 
   return json({
     result: data?.length ? 'matched' : 'no_match',

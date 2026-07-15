@@ -5,6 +5,7 @@
 // only after that proof to append the revocation ledger row and perform the
 // promised cleanup for prior cloud/shared data.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader, bearerToken } from '../_shared/auth.ts';
 import {
   contentLengthTooLarge,
@@ -62,6 +63,15 @@ function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+async function requireSameAccountAccess(
+  caller: Parameters<typeof preflightAccountAccess>[0],
+  userId: string,
+  snapshot: AccountAccessSnapshot,
+): Promise<Response | null> {
+  const result = await preflightAccountAccess(caller, userId, snapshot);
+  return result.ok ? null : json({ error: result.error }, result.status);
+}
+
 async function ownerClaimToken(
   userId: string,
   operationId: string,
@@ -109,6 +119,11 @@ Deno.serve(async (req) => {
   const userId = userData.user?.id;
   if (userErr || !userId || !verifiedAuthSessionClaimsFromJwt(token, userId)) {
     return json({ error: 'UNAUTHORIZED' }, 401);
+  }
+
+  const initialAccountAccess = await preflightAccountAccess(caller, userId);
+  if (!initialAccountAccess.ok) {
+    return json({ error: initialAccountAccess.error }, initialAccountAccess.status);
   }
 
   const parsed = await readLimitedJson(req, maxBodyBytes, json, {
@@ -217,6 +232,12 @@ Deno.serve(async (req) => {
           }),
       };
       const result = await runHealthLifecycle(healthRequest, dependencies);
+      const responseAccountError = await requireSameAccountAccess(
+        caller,
+        userId,
+        initialAccountAccess.snapshot,
+      );
+      if (responseAccountError) return responseAccountError;
       return json(result.body, result.status);
     }
 
@@ -238,8 +259,20 @@ Deno.serve(async (req) => {
           p_operation_id: operationId,
         }),
     });
+    const responseAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (responseAccountError) return responseAccountError;
     return json(result.body, result.status);
   } catch {
+    const responseAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (responseAccountError) return responseAccountError;
     console.error('[consent-withdrawal]', 'CONSENT_WITHDRAWAL_FAILED');
     return json({ withdrawn: false, error: 'CONSENT_WITHDRAWAL_FAILED' }, 500);
   }

@@ -13,8 +13,8 @@ import { installSignalCleanup } from './local-supabase-signal-cleanup.mjs';
 import { assertLocalOnlyInvocation } from './local-supabase-target-guard.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
-const EXPECTED_MIGRATION_COUNT = 53;
-const EXPECTED_LATEST_MIGRATION = '20260715000054';
+const EXPECTED_MIGRATION_COUNT = 54;
+const EXPECTED_LATEST_MIGRATION = '20260715000055';
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(SCRIPT_DIR, '..', '..');
 const SOURCE_SUPABASE_DIR = join(REPO_ROOT, 'supabase');

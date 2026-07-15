@@ -63,6 +63,32 @@ This decision is based on product fit and current repo momentum, not loyalty to 
   moderation, reliability, and operational dependencies.
 - Status: active.
 
+### A-007: Server-Attested Sign in with Apple Lifecycle
+
+- Decision: Apple-backed Supabase sessions are usable only after one exact
+  native authorization has passed state/nonce checks, its one-use code has
+  been exchanged by the lifecycle server, and the resulting refresh token has
+  been stored in an owner/subject/client-bound AES-GCM envelope. A scheduled
+  worker validates the retained refresh token daily, signed Apple account
+  events can terminate authorization, and the database/Storage/Edge access
+  fence rejects stale or unvalidated Apple sessions. A terminal event can
+  transiently exact-match one existing Apple Auth identity before lifecycle
+  capture; if the identity itself is not present yet, first capture reconciles
+  the audience-bound keyed event before code exchange and remains terminal.
+- Criteria: one code consumer, replay resistance, exact-session authority,
+  durable revocation/deletion, no plaintext provider token at rest, and
+  bounded access when the worker or Apple is unavailable.
+- Risk: existing Apple users require fresh capture at cutover; referenced
+  subject/vault key versions cannot be retired until zero-row evidence exists.
+  Each successful daily validation atomically advances the current subject
+  digest and freshly seals the token under the current vault key; dormant,
+  deferred, or failing rows do not advance from configuration alone. Unresolved
+  terminal `unknown_subject` evidence also pins its subject-key version until
+  capture reconciliation or reviewed disposition. Hosted
+  Apple delivery, Cron/Vault, physical-iPhone, legal/privacy, and App Review
+  evidence remain open.
+- Status: locally verified source; production rollout gated.
+
 ### A-005: One Fail-Closed Pregnancy-Safety Profile Contract
 
 - Decision: the encrypted local skin profile is the V1 authority for pregnancy/breastfeeding status, and it can be read or changed only with a granted consent record whose version and SHA-256 text hash match the current health-data copy. Malformed or unreadable local profile/consent records are preserved and fail closed; they never trigger a server fallback. When no local profile exists, the newest server profile may supply non-safety axes/goals, but its pregnancy status is always treated as unknown because a local V1 edit may be newer. Shelf, Plan, scheduler, Today, recommendations, and conflict explanations consume the shared `ProfileBits` reader. Only a successfully read explicit local `none` clears caution; affirmative, prefer-not, unknown, missing, and unavailable states remain cautious without an inferred pregnancy claim. Exclusions are derived from the launch-gated docs/02 safety rules, not a parallel table: production accepts only rules carrying recorded review metadata, while development/staging can exercise starter rules for review. Eligible reviewed rules remove retinoids and hydroquinone and remove BHA unless every threshold-bearing active percentage is unambiguously tag-associated and confirmed low, before sequence, cadence, cycle, ramp, replacement recommendations, or Today. If the separate cadence review gate is closed, all treatment/exfoliant placement is withheld instead of becoming an unassigned daily step. Writes persist locally first, disable competing selection input while pending, and invalidate every dependent query.
@@ -78,6 +104,7 @@ apps/mobile
   local-first stores
   deterministic client mirrors
   central exact-session remote admission and controlled refresh
+  composite Apple ID-token authentication plus lifecycle capture permit
   durable owner-aware store transaction journal
 
 Supabase
@@ -89,6 +116,12 @@ Supabase
   entitlements (RevenueCat projection)
   reverse_trial_grants (independent no-card grant)
   account publication leases and deletion barriers
+  sealed Apple lifecycle, one-use capture, and signed-event state
+
+Apple
+  native authorization -> identity token + one-use authorization code
+  token/JWKS endpoints -> server verification, exchange, daily validation, revoke
+  signed account events -> public-signature-verified Edge ingress
 
 RevenueCat
   IAP purchases
@@ -128,6 +161,9 @@ Core tables:
 - `subscription_events`
 - `account_publication_leases`
 - `catalog_reports`
+- `apple_auth_lifecycles`
+- `apple_auth_capture_operations`
+- `apple_auth_server_events`
 
 ## API Structure
 
@@ -140,6 +176,9 @@ Supabase Edge Functions:
 - RevenueCat webhook
 - subscription grants
 - subscription reconciliation
+- Apple authorization capture / native credential invalidation
+- signed Apple account-event ingress
+- scheduled Apple refresh-token validation
 - public waitlist/support/share routes
 
 Account deletion uses a service-role-only transactional RPC for database rows that
@@ -206,7 +245,7 @@ admission before purchase or restore can be repeated, and keeps unresolved owner
 confirmation state visible and fail-closed.
 
 Migration `20260715000054_health_consent_withdrawal_lifecycle.sql` brings the current chain
-to 53 migrations. It adds a non-account-deleting health-consent lifecycle, processing-epoch
+to the prior fully verified 53-migration checkpoint. It adds a non-account-deleting health-consent lifecycle, processing-epoch
 write barrier, service-only durable worker claims, relational/Storage absence attestation,
 and cross-owner community-evidence detachment. The combined local checkpoint passed two
 clean resets, 261 pgTAP assertions (46 schema + 215 health-consent lifecycle), database lint,
@@ -220,8 +259,20 @@ provider interruption and recreation, physical-iPhone, professional, privacy/sec
 legal, and App Review evidence remain required. Old or tampered clients still require an
 approved provider block, enforceable mandatory-version/zero-installed-cohort proof, or
 continuing re-deletion control. The Sign in with Apple authorization-code capture and
-state/nonce binding, encrypted rotating token vault, daily token validation, canonical
-signed server-notification ingress, and authoritative session-access fence remain open.
+state/nonce binding, encrypted versioned token vault, daily token validation, canonical
+signed server-notification ingress, and authoritative session-access fence are implemented
+in the subsequent source candidate, migration
+`20260715000055_apple_auth_lifecycle.sql`, and the three Apple Edge Functions. The vault
+and subject-HMAC keyrings retain at most three overlapping versions. Successful daily
+validation atomically re-derives the current subject digest and freshly seals the token
+under the current vault key; dormant or failing rows still need zero-old-key evidence,
+user recapture/reauthorization, or lifecycle retirement before an old key can be removed.
+Hosted cutover, live Apple event delivery, Cron/Vault continuity, stale-JWT denial, and
+physical-iPhone proof remain open.
+The post-0055 local gate passed two clean resets, exact 54-migration history, the full
+structural pgTAP suite plus 111 Apple lifecycle assertions, schema lint, an empty shadow
+diff, temporary type generation, 20 focused event/lifecycle Edge tests, and the 47-test
+Apple auth work lane. These results do not replace hosted or device evidence.
 Hosted non-destructive health-consent worker/Storage/backup and physical-iPhone proof,
 approved final consent copy, the exact privacy report, policy/support URLs, and non-expiring
 demo review access are also launch blockers.
@@ -244,6 +295,18 @@ Client APIs:
   `email_change` OTP. If a development project auto-confirms that same-user
   email update, the route completes immediately instead of asking for a code
   that was never sent.
+- Native Apple authentication creates independent CSPRNG state and raw nonce
+  values, sends the nonce digest to Apple, and requires the exact state echo.
+  The raw nonce accompanies the ID token to Supabase while the authorization
+  code is reserved for the lifecycle server. One composite permit prevents the
+  resulting session from publishing until the server has verified the token,
+  exchanged the code, and sealed the refresh token. Ambiguous exchange requires
+  a new user-authorized code; it is never blindly retried.
+- Verified terminal Apple events pass a raw subject only transiently to the
+  service-only RPC. The value is not persisted. A pre-identity terminal event
+  leaves audience-bound keyed evidence that first capture must reconcile under
+  the owner lock before code dispatch; duplicate delivery is not required for
+  closure.
 - Provider and email account upgrades assert that the Supabase user ID remains
   unchanged and that the resulting identity is permanent.
 - A linking conflict fails closed. The app never falls back to a normal sign-in
@@ -272,6 +335,10 @@ Client APIs:
 - Session candidates are server-verified before central remote admission. Controlled
   refresh atomically rotates the candidate lineage, and sign-out, owner change, deletion,
   invalid Apple credential state, or lease failure closes publication synchronously.
+- Apple-backed access additionally requires the exact JWT session to remain in
+  `auth.sessions` and an active lifecycle validated within 72 hours. Native
+  invalidation and terminal signed Apple events retire the vault, increment the
+  generation, delete sessions, and keep remote authority closed.
 
 ## Deployment Notes
 
@@ -286,6 +353,12 @@ Release validators and packet builders must read
 only for a platform listed in that contract; every cross-platform service used
 by the iOS app remains fully in scope.
 
+The coherent Apple deployment, event registration, one-minute worker,
+monitoring, key-rotation, deletion, and rollback procedure is
+`docs/phase-9/apple-auth-lifecycle-operations-runbook.md`. Migration 0055 must
+not be applied separately from compatible functions, mobile recovery, and an
+existing-account recapture/mandatory-version plan.
+
 ## Open Technical Questions
 
 - [Open Question] Final brand and package identifiers.
@@ -294,3 +367,5 @@ by the iOS app remains fully in scope.
 - [Open Question] Which production iOS OCR module best satisfies the required
   accuracy, privacy, binary, and device-performance gates.
 - [Open Question] Whether professional/B2B workflow needs separate tenant model.
+- [Open Question] Which reviewed no-transfer or app/team-transfer migration
+  policy applies to Apple `TRANSFERRED` accounts.

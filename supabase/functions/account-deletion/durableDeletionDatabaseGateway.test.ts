@@ -64,6 +64,52 @@ Deno.test('database gateway accepts the installed Supabase PostgREST RPC envelop
   assert(requests === 1, 'one real client RPC envelope exercised');
 });
 
+Deno.test('database gateway reads only an exact session-bound Apple deletion vault row', async () => {
+  const exact = {
+    apple_subject_hmac: '45'.repeat(32),
+    client_id: 'com.onskin.app',
+    encrypted_refresh_token: '\\x0102',
+    vault_key_version: 'v1',
+    generation: '7',
+  };
+  const client = new QueueClient([ok([exact]), ok([])]);
+  const gateway = new DurableDeletionDatabaseGateway(client);
+  const retained = await gateway.appleDeletionVault(USER_ID, SESSION_ID);
+  assert(
+    retained?.appleSubjectHmac === exact.apple_subject_hmac &&
+      retained.encryptedRefreshToken === exact.encrypted_refresh_token &&
+      retained.generation === '7',
+    'exact retained vault mapped',
+  );
+  assert((await gateway.appleDeletionVault(USER_ID, SESSION_ID)) === null, 'no active vault maps null');
+  for (const call of client.calls) {
+    assert(
+      call.name === 'get_apple_auth_deletion_vault' &&
+        call.args.p_user_id === USER_ID &&
+        call.args.p_session_id === SESSION_ID &&
+        Object.keys(call.args).length === 2,
+      'vault read carries only exact live-session binding',
+    );
+  }
+
+  for (const malformed of [
+    [exact, exact],
+    [{ ...exact, apple_subject_hmac: 'raw-subject' }],
+    [{ ...exact, encrypted_refresh_token: 'plaintext' }],
+    [{ ...exact, vault_key_version: '../v1' }],
+    [{ ...exact, extra: true }],
+  ]) {
+    const invalid = new DurableDeletionDatabaseGateway(new QueueClient([ok(malformed)]));
+    let code = '';
+    try {
+      await invalid.appleDeletionVault(USER_ID, SESSION_ID);
+    } catch (error) {
+      code = error instanceof DurableDeletionDatabaseError ? error.code : 'unexpected';
+    }
+    assert(code === 'DELETION_DATABASE_RESPONSE_INVALID', 'malformed vault fails closed');
+  }
+});
+
 Deno.test('database gateway maps begin and validates opaque status rows', async () => {
   const statusRow = {
     operation_id: OPERATION_ID,

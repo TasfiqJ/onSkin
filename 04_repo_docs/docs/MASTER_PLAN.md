@@ -751,7 +751,7 @@ Expo mobile app
 
 ### 2026-07-15 Integrated Source Checkpoint
 
-[Confirmed] The source candidate has 53 migrations through
+[Confirmed] The prior fully verified source checkpoint has 53 migrations through
 `20260715000054_health_consent_withdrawal_lifecycle.sql`. The combined local verification
 passed two clean resets, 261 pgTAP assertions (46 schema + 215 health-consent lifecycle),
 database lint, an empty shadow diff, 77/77 public tables with RLS, and an exact
@@ -770,11 +770,24 @@ both through an owner-derived RPC, reconciles only against a fresh provider
 
 [Open Question] This is source-only evidence. Hosted migrations, live Supabase/RevenueCat
 and App Store sandbox behavior, physical-iPhone QA, professional review, final privacy/
-legal approval, and App Review remain open. Apple authorization-code plus state/nonce
-capture, the encrypted rotating token vault, daily token validation, canonical signed
-server notifications, and an authoritative session-access fence also remain open;
-`TRANSFERRED` now fails closed as `credential_transferred` but no transfer/migration
-policy is approved.
+legal approval, and App Review remain open. The subsequent migration-0055 source
+candidate implements Apple authorization-code plus state/nonce capture, a versioned
+encrypted token vault, daily token validation, canonical signed server notifications,
+native credential invalidation, terminal event-before-identity reconciliation before code
+exchange, and an authoritative exact-session access fence.
+Hosted cutover, primary-App-ID delivery, Vault/Cron continuity, existing-account
+recapture, key rotation/rollback, stale-JWT denial, and physical-iPhone/TestFlight proof
+remain open. Successful daily validation advances the subject digest and freshly seals
+the refresh token under the current keys, but dormant or failing rows still require
+zero-row evidence, recapture/reauthorization, or lifecycle retirement. `TRANSFERRED`
+fails closed as `credential_transferred`, but no transfer/migration policy is approved.
+
+[Confirmed] The migration-0055 candidate subsequently passed two clean resets,
+exact 54-migration history through 0055, the full structural pgTAP suite plus
+111/111 Apple lifecycle assertions, schema lint, an empty shadow diff, temporary
+type generation, 20/20 focused Apple event/lifecycle Edge tests, and the 47-test
+Apple auth work lane. This closes the local source replay gate only; every hosted,
+Apple-provider, device, professional-review, and App Review gate above remains open.
 
 ## 11. Data Model Summary
 

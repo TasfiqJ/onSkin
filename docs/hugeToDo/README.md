@@ -19,6 +19,7 @@ Start here:
 - [US Wave 1 Privacy and Consumer-Health Law Gate](./US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md)
 - [Health-Consent Withdrawal, Processor, and Retention Matrix](./HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md)
 - [Health Processor Inventory v1](./health-processor-inventory-v1.json)
+- [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
 validated from the plan. Readiness remains evidence-based: a checked-in status
@@ -29,6 +30,21 @@ The health-withdrawal matrix and inventory are source-candidate controls, not
 production clearance. In particular, an empty separately reconciled external
 processor list does not remove Supabase database, Storage, backup, DPA, region,
 worker, or live zero-residue evidence gates.
+
+The Sign in with Apple lifecycle is also a source checkpoint, not launch
+clearance. Migration 0055 and the mobile/Edge contracts implement nonce/state
+capture, server code exchange, encrypted refresh-token retention, daily
+validation, signed account events, no-retry terminal-event reconciliation
+before code exchange, and exact-session denial. Hosted deployment,
+primary-App-ID endpoint delivery, Vault/Cron, key rotation/recapture,
+physical-iPhone/TestFlight, professional review, legal/privacy conclusions, and
+App Review remain open. Successful daily validation advances both subject and
+vault key versions, but dormant or failing rows still require zero-row evidence,
+recapture/reauthorization, or lifecycle retirement before old-key removal.
+The local 0055 replay gate is green: two clean resets, exact 54/0055 history,
+the full structural suite plus 111/111 Apple pgTAP, lint, empty shadow diff,
+temporary types, 20/20 focused event/lifecycle Edge tests, and the 47-test Apple
+auth work lane. This is not hosted or device acceptance.
 
 All new execution trackers, research packets, vendor comparisons, naming
 artifacts, launch worklists, and completion reports created for this program

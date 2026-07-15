@@ -8,6 +8,12 @@ const JWT_SEGMENT_PATTERN = /^[A-Za-z0-9_-]+$/;
 const JWT_MAX_CHARS = 16_384;
 const JWT_PAYLOAD_MAX_CHARS = 8_192;
 const REFRESH_TOKEN_MAX_CHARS = 16_384;
+const APPLE_USER_MAX_CHARS = 512;
+const APPLE_AUTHORIZATION_CODE_MAX_CHARS = 4_096;
+const APPLE_IDENTITY_TOKEN_MAX_CHARS = 16_384;
+const APPLE_NONCE_PATTERN = /^[A-Za-z0-9_-]{43}$/;
+const APPLE_LIFECYCLE_DATE_MAX_CHARS = 64;
+const POSTGRES_BIGINT_MAX_DECIMAL = '9223372036854775807';
 const UNRESERVED_CHARACTER = /^[A-Za-z0-9._~-]$/;
 const MINIMUM_PERMIT_TIMEOUT_MS = 10;
 const MAXIMUM_PERMIT_TIMEOUT_MS = 120_000;
@@ -23,8 +29,18 @@ export type SupabaseRemoteRequestTarget =
   | 'graphql'
   | 'realtime'
   | 'functions'
+  | 'apple_auth_lifecycle'
   | 'account_deletion'
   | 'unknown';
+
+export type SupabaseAppleAuthBootstrapCredentials = Readonly<{
+  appleUser: string;
+  authorizationCode: string;
+  identityToken: string;
+  nonce: string;
+}>;
+
+export type SupabaseAppleCredentialInvalidReason = 'not_found' | 'revoked';
 
 export type SupabaseAccountDeletionAction =
   | 'preflight'
@@ -47,6 +63,20 @@ export type SupabaseRemoteRequestPermit =
   | Readonly<{
       purpose: 'auth_verify' | 'auth_logout' | 'auth_identity_upgrade';
       binding: SupabaseRemoteSessionBinding;
+      timeoutMs?: number;
+    }>
+  | Readonly<{
+      purpose: 'apple_auth_bootstrap';
+      /** Present only when an anonymous session must retain its exact user id. */
+      binding?: SupabaseRemoteSessionBinding;
+      credentials: SupabaseAppleAuthBootstrapCredentials;
+      timeoutMs?: number;
+    }>
+  | Readonly<{
+      purpose: 'apple_credential_invalid';
+      binding: SupabaseRemoteSessionBinding;
+      appleUser: string;
+      reason: SupabaseAppleCredentialInvalidReason;
       timeoutMs?: number;
     }>
   | Readonly<{
@@ -136,6 +166,9 @@ type PermitScope = {
   readonly lease: TrackedLease;
   requestCount: number;
   nextBinding: SupabaseRemoteSessionBinding | null;
+  appleBootstrapBinding: SupabaseRemoteSessionBinding | null;
+  appleLifecycleValidated: boolean;
+  appleCredentialInvalidationValidated: boolean;
   expired: boolean;
 };
 
@@ -362,6 +395,7 @@ function classifyStrictUrl(strict: StrictUrl, origin: URL): SupabaseRemoteReques
   if (path === '/graphql/v1' || path.startsWith('/graphql/v1/')) return 'graphql';
   if (path === '/realtime/v1' || path.startsWith('/realtime/v1/')) return 'realtime';
   if (path === '/functions/v1/account-deletion') return 'account_deletion';
+  if (path === '/functions/v1/apple-auth-lifecycle') return 'apple_auth_lifecycle';
   if (path === '/functions/v1' || path.startsWith('/functions/v1/')) return 'functions';
   return 'unknown';
 }
@@ -373,13 +407,20 @@ function readBearer(headers: readonly (readonly [string, string])[]): string | n
   return token.length > 0 && token === token.trim() ? token : null;
 }
 
-function isBoundedRequiredString(value: unknown, maximum = SUPABASE_REMOTE_REQUEST_BODY_MAX_CHARS) {
+function isBoundedRequiredString(
+  value: unknown,
+  maximum = SUPABASE_REMOTE_REQUEST_BODY_MAX_CHARS,
+): value is string {
   return (
     typeof value === 'string' &&
     value.length > 0 &&
     value.length <= maximum &&
     value === value.trim()
   );
+}
+
+function isBoundedAppleString(value: unknown, maximum: number): value is string {
+  return isBoundedRequiredString(value, maximum) && !/[\u0000-\u001f\u007f]/u.test(value);
 }
 
 function hasOnlyKeys(
@@ -424,6 +465,11 @@ function hasDuplicateSecurityProperty(body: string): boolean {
     'provider',
     'email',
     'token',
+    'appleUser',
+    'authorizationCode',
+    'identityToken',
+    'nonce',
+    'reason',
   ];
   return securityKeys.some((key) => {
     const matches = body.match(new RegExp(`"${key}"\\s*:`, 'g'));
@@ -593,6 +639,64 @@ function parseDeletionAction(bodyText: string | null): string | null {
   if (bodyText === null || hasDuplicateSecurityProperty(bodyText)) return null;
   const body = parseJsonRecord(bodyText);
   return body !== null && typeof body.action === 'string' ? body.action : null;
+}
+
+function parseAppleCaptureBody(
+  bodyText: string | null,
+): SupabaseAppleAuthBootstrapCredentials | null {
+  if (bodyText === null || hasDuplicateSecurityProperty(bodyText)) return null;
+  const body = parseJsonRecord(bodyText);
+  if (
+    body === null ||
+    !hasOnlyKeys(
+      body,
+      ['action', 'appleUser', 'authorizationCode', 'identityToken', 'nonce'],
+      ['action', 'appleUser', 'authorizationCode', 'identityToken', 'nonce'],
+    ) ||
+    body.action !== 'capture' ||
+    !isBoundedAppleString(body.appleUser, APPLE_USER_MAX_CHARS) ||
+    !isBoundedAppleString(body.authorizationCode, APPLE_AUTHORIZATION_CODE_MAX_CHARS) ||
+    !isBoundedAppleString(body.identityToken, APPLE_IDENTITY_TOKEN_MAX_CHARS) ||
+    typeof body.nonce !== 'string' ||
+    !APPLE_NONCE_PATTERN.test(body.nonce)
+  ) {
+    return null;
+  }
+  return Object.freeze({
+    appleUser: body.appleUser,
+    authorizationCode: body.authorizationCode,
+    identityToken: body.identityToken,
+    nonce: body.nonce,
+  });
+}
+
+function parseAppleCredentialInvalidBody(
+  bodyText: string | null,
+): { appleUser: string; reason: SupabaseAppleCredentialInvalidReason } | null {
+  if (bodyText === null || hasDuplicateSecurityProperty(bodyText)) return null;
+  const body = parseJsonRecord(bodyText);
+  if (
+    body === null ||
+    !hasOnlyKeys(body, ['action', 'appleUser', 'reason'], ['action', 'appleUser', 'reason']) ||
+    body.action !== 'credential_invalid' ||
+    !isBoundedAppleString(body.appleUser, APPLE_USER_MAX_CHARS) ||
+    (body.reason !== 'not_found' && body.reason !== 'revoked')
+  ) {
+    return null;
+  }
+  return Object.freeze({ appleUser: body.appleUser, reason: body.reason });
+}
+
+function exactAppleBootstrapCredentials(
+  left: SupabaseAppleAuthBootstrapCredentials,
+  right: SupabaseAppleAuthBootstrapCredentials,
+): boolean {
+  return (
+    left.appleUser === right.appleUser &&
+    left.authorizationCode === right.authorizationCode &&
+    left.identityToken === right.identityToken &&
+    left.nonce === right.nonce
+  );
 }
 
 function combineAbortSignals(gateSignal: AbortSignal, callerSignal: AbortSignal): CombinedSignal {
@@ -806,6 +910,7 @@ function authenticatedDeletionAction(action: SupabaseAccountDeletionAction): boo
 function defaultPermitTimeoutMs(permit: SupabaseRemoteRequestPermit): number {
   if (permit.purpose === 'auth_refresh' || permit.purpose === 'auth_verify') return 15_000;
   if (permit.purpose === 'auth_logout') return 15_000;
+  if (permit.purpose === 'apple_credential_invalid') return 15_000;
   if (permit.purpose === 'account_deletion' && permit.action === 'status') return 15_000;
   return 30_000;
 }
@@ -822,6 +927,27 @@ function validatedPermitTimeoutMs(permit: SupabaseRemoteRequestPermit): number {
   return timeout;
 }
 
+function snapshotAppleBootstrapCredentials(
+  value: SupabaseAppleAuthBootstrapCredentials,
+): SupabaseAppleAuthBootstrapCredentials {
+  if (
+    !isRecord(value) ||
+    !isBoundedAppleString(value.appleUser, APPLE_USER_MAX_CHARS) ||
+    !isBoundedAppleString(value.authorizationCode, APPLE_AUTHORIZATION_CODE_MAX_CHARS) ||
+    !isBoundedAppleString(value.identityToken, APPLE_IDENTITY_TOKEN_MAX_CHARS) ||
+    typeof value.nonce !== 'string' ||
+    !APPLE_NONCE_PATTERN.test(value.nonce)
+  ) {
+    throw admissionError('SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED');
+  }
+  return Object.freeze({
+    appleUser: value.appleUser,
+    authorizationCode: value.authorizationCode,
+    identityToken: value.identityToken,
+    nonce: value.nonce,
+  });
+}
+
 function snapshotPermit(permit: SupabaseRemoteRequestPermit): SupabaseRemoteRequestPermit {
   const timeoutMs = validatedPermitTimeoutMs(permit);
   if (permit.purpose === 'auth_fresh_sign_in') {
@@ -833,6 +959,29 @@ function snapshotPermit(permit: SupabaseRemoteRequestPermit): SupabaseRemoteRequ
       action: permit.action,
       timeoutMs,
       ...(permit.binding === undefined ? {} : { binding: validateBinding(permit.binding) }),
+    });
+  }
+  if (permit.purpose === 'apple_auth_bootstrap') {
+    return Object.freeze({
+      purpose: permit.purpose,
+      credentials: snapshotAppleBootstrapCredentials(permit.credentials),
+      timeoutMs,
+      ...(permit.binding === undefined ? {} : { binding: validateBinding(permit.binding) }),
+    });
+  }
+  if (permit.purpose === 'apple_credential_invalid') {
+    if (
+      !isBoundedAppleString(permit.appleUser, APPLE_USER_MAX_CHARS) ||
+      (permit.reason !== 'not_found' && permit.reason !== 'revoked')
+    ) {
+      throw admissionError('SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED');
+    }
+    return Object.freeze({
+      purpose: permit.purpose,
+      binding: validateBinding(permit.binding),
+      appleUser: permit.appleUser,
+      reason: permit.reason,
+      timeoutMs,
     });
   }
   const binding = validateBinding(permit.binding);
@@ -951,6 +1100,29 @@ function parseBufferedJson(bytes: Uint8Array): Record<string, unknown> | null {
   }
 }
 
+function isPositiveAppleLifecycleGeneration(value: unknown): boolean {
+  if (typeof value === 'number') return Number.isSafeInteger(value) && value > 0;
+  if (typeof value !== 'string' || !/^[1-9][0-9]{0,18}$/u.test(value)) return false;
+  return value.length < POSTGRES_BIGINT_MAX_DECIMAL.length || value <= POSTGRES_BIGINT_MAX_DECIMAL;
+}
+
+function isExactAppleLifecycleSuccess(value: Record<string, unknown>): boolean {
+  if (
+    !hasOnlyKeys(
+      value,
+      ['status', 'generation', 'nextValidationAt'],
+      ['status', 'generation', 'nextValidationAt'],
+    ) ||
+    value.status !== 'active' ||
+    !isPositiveAppleLifecycleGeneration(value.generation) ||
+    !isBoundedRequiredString(value.nextValidationAt, APPLE_LIFECYCLE_DATE_MAX_CHARS)
+  ) {
+    return false;
+  }
+  const timestamp = Date.parse(value.nextValidationAt);
+  return Number.isFinite(timestamp) && timestamp > 0;
+}
+
 function userIdFromResponse(value: Record<string, unknown>): string | null {
   if (typeof value.id === 'string') return value.id;
   return isRecord(value.user) && typeof value.user.id === 'string' ? value.user.id : null;
@@ -967,9 +1139,11 @@ function sessionBindingFromResponse(
   return userId === expected.subject ? binding : null;
 }
 
-function selfConsistentFreshSession(value: Record<string, unknown>): boolean {
+function selfConsistentFreshSessionBinding(
+  value: Record<string, unknown>,
+): SupabaseRemoteSessionBinding | null {
   const userId = userIdFromResponse(value);
-  if (userId === null || !AUTH_UUID_PATTERN.test(userId)) return false;
+  if (userId === null || !AUTH_UUID_PATTERN.test(userId)) return null;
   const binding = sessionBindingFromResponse(value, {
     subject: userId,
     sessionId:
@@ -977,7 +1151,13 @@ function selfConsistentFreshSession(value: Record<string, unknown>): boolean {
         ? (parseSupabaseRemoteSessionBinding(value.access_token, userId)?.sessionId ?? '')
         : '',
   });
-  return binding !== null && isBoundedRequiredString(value.refresh_token, REFRESH_TOKEN_MAX_CHARS);
+  return binding !== null && isBoundedRequiredString(value.refresh_token, REFRESH_TOKEN_MAX_CHARS)
+    ? binding
+    : null;
+}
+
+function selfConsistentFreshSession(value: Record<string, unknown>): boolean {
+  return selfConsistentFreshSessionBinding(value) !== null;
 }
 
 /**
@@ -992,6 +1172,8 @@ export class SupabaseRemoteRequestAdmissionController {
   private permitEpoch = 0;
   private permitTail: Promise<void> = Promise.resolve();
   private currentPermit: PermitScope | null = null;
+  private appleBootstrapPending = false;
+  private appleCredentialInvalidationPending = false;
   private readonly inFlight = new Set<TrackedLease>();
   private drainPromise: Promise<void> | null = null;
 
@@ -1239,6 +1421,38 @@ export class SupabaseRemoteRequestAdmissionController {
       }
       return;
     }
+    if (permit.purpose === 'apple_auth_bootstrap') {
+      const binding = permit.binding ?? null;
+      if (binding === null) {
+        if (state.kind !== 'closed') {
+          throw admissionError('SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED');
+        }
+        return;
+      }
+      if (
+        state.kind === 'closed' ||
+        state.kind === 'deletion' ||
+        !exactBinding(state.binding, binding)
+      ) {
+        throw admissionError('SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED');
+      }
+      if (this.inFlight.size !== 1) {
+        throw admissionError('SUPABASE_REMOTE_REQUEST_ADMISSION_CLOSED');
+      }
+      return;
+    }
+    if (permit.purpose === 'apple_credential_invalid') {
+      if (
+        state.kind === 'deletion' ||
+        (state.kind !== 'closed' && !exactBinding(state.binding, permit.binding))
+      ) {
+        throw admissionError('SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED');
+      }
+      if (this.inFlight.size !== 1) {
+        throw admissionError('SUPABASE_REMOTE_REQUEST_ADMISSION_CLOSED');
+      }
+      return;
+    }
     if (permit.purpose === 'account_deletion') {
       const binding = permit.binding ?? null;
       if (authenticatedDeletionAction(permit.action)) {
@@ -1301,6 +1515,18 @@ export class SupabaseRemoteRequestAdmissionController {
     } catch (error) {
       return Promise.reject(error);
     }
+    if (permit.purpose === 'apple_auth_bootstrap') {
+      if (this.appleBootstrapPending) {
+        return Promise.reject(admissionError('SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED'));
+      }
+      this.appleBootstrapPending = true;
+    }
+    if (permit.purpose === 'apple_credential_invalid') {
+      if (this.appleCredentialInvalidationPending) {
+        return Promise.reject(admissionError('SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED'));
+      }
+      this.appleCredentialInvalidationPending = true;
+    }
     const generation = this.state.generation;
     const epoch = this.permitEpoch;
     let scopeReference: PermitScope | null = null;
@@ -1326,6 +1552,9 @@ export class SupabaseRemoteRequestAdmissionController {
           lease,
           requestCount: 0,
           nextBinding: null,
+          appleBootstrapBinding: null,
+          appleLifecycleValidated: false,
+          appleCredentialInvalidationValidated: false,
           expired: false,
         };
         scopeReference = scope;
@@ -1352,7 +1581,13 @@ export class SupabaseRemoteRequestAdmissionController {
           ) {
             throw admissionError('SUPABASE_REMOTE_REQUEST_RESULT_STALE');
           }
-          if (scope.requestCount === 0) {
+          if (
+            scope.requestCount === 0 ||
+            (permit.purpose === 'apple_auth_bootstrap' &&
+              (scope.requestCount !== 2 || !scope.appleLifecycleValidated)) ||
+            (permit.purpose === 'apple_credential_invalid' &&
+              (scope.requestCount !== 1 || !scope.appleCredentialInvalidationValidated))
+          ) {
             throw admissionError('SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED');
           }
           if (scope.nextBinding !== null) {
@@ -1371,6 +1606,28 @@ export class SupabaseRemoteRequestAdmissionController {
               binding: scope.nextBinding,
             };
             this.permitEpoch += 1;
+          }
+          if (
+            permit.purpose === 'apple_auth_bootstrap' &&
+            permit.binding !== undefined &&
+            scope.appleBootstrapBinding !== null
+          ) {
+            const state = this.state;
+            if (
+              state.kind === 'closed' ||
+              state.kind === 'deletion' ||
+              !exactBinding(state.binding, permit.binding)
+            ) {
+              throw admissionError('SUPABASE_REMOTE_REQUEST_RESULT_STALE');
+            }
+            if (!exactBinding(state.binding, scope.appleBootstrapBinding)) {
+              this.state = {
+                kind: state.kind,
+                generation: state.generation + 1,
+                binding: scope.appleBootstrapBinding,
+              };
+              this.permitEpoch += 1;
+            }
           }
           return result;
         } catch (error) {
@@ -1393,7 +1650,24 @@ export class SupabaseRemoteRequestAdmissionController {
       () => undefined,
       () => undefined,
     );
-    return completion;
+    if (
+      permit.purpose !== 'apple_auth_bootstrap' &&
+      permit.purpose !== 'apple_credential_invalid'
+    ) {
+      return completion;
+    }
+    return completion.then(
+      (result) => {
+        if (permit.purpose === 'apple_auth_bootstrap') this.appleBootstrapPending = false;
+        else this.appleCredentialInvalidationPending = false;
+        return result;
+      },
+      (error: unknown) => {
+        if (permit.purpose === 'apple_auth_bootstrap') this.appleBootstrapPending = false;
+        else this.appleCredentialInvalidationPending = false;
+        throw error;
+      },
+    );
   }
 
   private assertInvocationCurrent(request: CanonicalRequestSnapshot): void {
@@ -1422,6 +1696,65 @@ export class SupabaseRemoteRequestAdmissionController {
       return false;
     }
     const { permit } = scope;
+    if (permit.purpose === 'apple_auth_bootstrap') {
+      if (scope.requestCount === 0) {
+        const expectedAuthPurpose =
+          permit.binding === undefined ? 'auth_fresh_sign_in' : 'auth_identity_upgrade';
+        if (request.target !== 'auth' || authPurpose !== expectedAuthPurpose) return false;
+        const parsedBody = body === null ? null : parseJsonRecord(body);
+        if (
+          parsedBody === null ||
+          parsedBody.provider !== 'apple' ||
+          parsedBody.id_token !== permit.credentials.identityToken ||
+          parsedBody.nonce !== permit.credentials.nonce ||
+          parsedBody.access_token !== undefined ||
+          (permit.binding === undefined
+            ? parsedBody.link_identity !== undefined
+            : parsedBody.link_identity !== true)
+        ) {
+          return false;
+        }
+        const bearer = readBearer(request.headers);
+        return (
+          bearer ===
+          (permit.binding === undefined
+            ? this.publicAuthorizationToken
+            : permit.binding.accessToken)
+        );
+      }
+      if (
+        scope.requestCount !== 1 ||
+        scope.appleBootstrapBinding === null ||
+        request.target !== 'apple_auth_lifecycle' ||
+        request.method !== 'POST' ||
+        request.strictUrl.rawQuery !== ''
+      ) {
+        return false;
+      }
+      const capture = parseAppleCaptureBody(body);
+      return (
+        capture !== null &&
+        exactAppleBootstrapCredentials(capture, permit.credentials) &&
+        readBearer(request.headers) === scope.appleBootstrapBinding.accessToken
+      );
+    }
+    if (permit.purpose === 'apple_credential_invalid') {
+      if (
+        scope.requestCount !== 0 ||
+        request.target !== 'apple_auth_lifecycle' ||
+        request.method !== 'POST' ||
+        request.strictUrl.rawQuery !== '' ||
+        readBearer(request.headers) !== permit.binding.accessToken
+      ) {
+        return false;
+      }
+      const invalidation = parseAppleCredentialInvalidBody(body);
+      return (
+        invalidation !== null &&
+        invalidation.appleUser === permit.appleUser &&
+        invalidation.reason === permit.reason
+      );
+    }
     if (permit.purpose === 'account_deletion') {
       if (
         scope.requestCount >= 1 ||
@@ -1476,7 +1809,20 @@ export class SupabaseRemoteRequestAdmissionController {
       scope.requestCount += 1;
       return { generation: request.generation, scope, authPurpose };
     }
-    if (target === 'account_deletion' || (target === 'auth' && authPurpose !== 'auth_verify')) {
+    if (
+      scope?.permit.purpose === 'apple_auth_bootstrap' ||
+      scope?.permit.purpose === 'apple_credential_invalid'
+    ) {
+      throw admissionError('SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED');
+    }
+    if (this.appleCredentialInvalidationPending) {
+      throw admissionError('SUPABASE_REMOTE_REQUEST_ADMISSION_CLOSED');
+    }
+    if (
+      target === 'account_deletion' ||
+      target === 'apple_auth_lifecycle' ||
+      (target === 'auth' && authPurpose !== 'auth_verify')
+    ) {
       throw admissionError('SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED');
     }
     const state = this.state;
@@ -1494,9 +1840,57 @@ export class SupabaseRemoteRequestAdmissionController {
     authorization: Authorization,
     buffered: BufferedResponse,
   ): void {
-    if (!buffered.response.ok || request.target !== 'auth') return;
+    if (!buffered.response.ok) return;
     const parsed = parseBufferedJson(buffered.bytes);
     const scope = authorization.scope;
+    if (request.target === 'apple_auth_lifecycle') {
+      if (parsed === null || scope === null) {
+        throw admissionError('SUPABASE_REMOTE_REQUEST_BINDING_REJECTED');
+      }
+      if (scope.permit.purpose === 'apple_auth_bootstrap') {
+        if (!isExactAppleLifecycleSuccess(parsed)) {
+          throw admissionError('SUPABASE_REMOTE_REQUEST_BINDING_REJECTED');
+        }
+        scope.appleLifecycleValidated = true;
+        return;
+      }
+      if (
+        scope.permit.purpose !== 'apple_credential_invalid' ||
+        !hasOnlyKeys(parsed, ['status'], ['status']) ||
+        parsed.status !== 'blocked'
+      ) {
+        throw admissionError('SUPABASE_REMOTE_REQUEST_BINDING_REJECTED');
+      }
+      scope.appleCredentialInvalidationValidated = true;
+      return;
+    }
+    if (request.target !== 'auth') return;
+    if (scope?.permit.purpose === 'apple_auth_bootstrap') {
+      if (parsed === null || scope.requestCount !== 1) {
+        throw admissionError('SUPABASE_REMOTE_REQUEST_BINDING_REJECTED');
+      }
+      if (scope.permit.binding === undefined) {
+        const binding = selfConsistentFreshSessionBinding(parsed);
+        if (binding === null) {
+          throw admissionError('SUPABASE_REMOTE_REQUEST_BINDING_REJECTED');
+        }
+        scope.appleBootstrapBinding = binding;
+        return;
+      }
+      if (typeof parsed.access_token === 'string') {
+        const binding = sessionBindingFromResponse(parsed, scope.permit.binding);
+        if (binding === null) {
+          throw admissionError('SUPABASE_REMOTE_REQUEST_BINDING_REJECTED');
+        }
+        scope.appleBootstrapBinding = binding;
+        return;
+      }
+      if (userIdFromResponse(parsed) !== scope.permit.binding.subject) {
+        throw admissionError('SUPABASE_REMOTE_REQUEST_BINDING_REJECTED');
+      }
+      scope.appleBootstrapBinding = scope.permit.binding;
+      return;
+    }
     if (authorization.authPurpose === 'auth_refresh') {
       if (parsed === null || scope?.permit.purpose !== 'auth_refresh') {
         throw admissionError('SUPABASE_REMOTE_REQUEST_BINDING_REJECTED');
@@ -1585,7 +1979,9 @@ export class SupabaseRemoteRequestAdmissionController {
       try {
         this.assertInvocationCurrent(request);
         const body =
-          request.target === 'auth' || request.target === 'account_deletion'
+          request.target === 'auth' ||
+          request.target === 'account_deletion' ||
+          request.target === 'apple_auth_lifecycle'
             ? await readBoundedRequestBody(request.request)
             : null;
         this.assertInvocationCurrent(request);
@@ -1600,7 +1996,9 @@ export class SupabaseRemoteRequestAdmissionController {
             throw admissionError('SUPABASE_REMOTE_REQUEST_TARGET_REJECTED');
           }
           const responseLimit =
-            request.target === 'auth' || request.target === 'account_deletion'
+            request.target === 'auth' ||
+            request.target === 'account_deletion' ||
+            request.target === 'apple_auth_lifecycle'
               ? SUPABASE_CONTROL_RESPONSE_MAX_BYTES
               : SUPABASE_REMOTE_RESPONSE_MAX_BYTES;
           const buffered = await bufferResponse(

@@ -72,6 +72,18 @@ provider = "turnstile"
 verify_jwt = false
 entrypoint = "./functions/account-deletion/index.ts"
 
+[functions.apple-account-events]
+verify_jwt = false
+entrypoint = "./functions/apple-account-events/index.ts"
+
+[functions.apple-auth-lifecycle]
+verify_jwt = true
+entrypoint = "./functions/apple-auth-lifecycle/index.ts"
+
+[functions.apple-auth-worker]
+verify_jwt = false
+entrypoint = "./functions/apple-auth-worker/index.ts"
+
 [functions.catalog-lookup]
 verify_jwt = true
 entrypoint = "./functions/catalog-lookup/index.ts"

@@ -250,6 +250,9 @@ function dataFeatures(name) {
     account_deletion_operator_recovery_audit: ['F-02', 'F-20'],
     revenuecat_identity_tombstones: ['F-02', 'F-11', 'F-12'],
     account_publication_leases: ['F-02', 'F-11', 'F-12'],
+    apple_auth_lifecycles: ['F-02', 'F-20'],
+    apple_auth_capture_operations: ['F-02', 'F-20'],
+    apple_auth_server_events: ['F-02', 'F-20'],
     health_processing_states: ['F-02'],
     health_consent_withdrawal_operations: ['F-02'],
     health_consent_withdrawal_steps: ['F-02'],
@@ -280,6 +283,9 @@ function dataFeatures(name) {
 function edgeFeatures(name) {
   const map = {
     'account-deletion': ['F-02', 'F-20'],
+    'apple-account-events': ['F-02', 'F-20'],
+    'apple-auth-lifecycle': ['F-02', 'F-20'],
+    'apple-auth-worker': ['F-02', 'F-20'],
     'catalog-lookup': ['F-03', 'F-04'],
     'catalog-report': ['F-04'],
     'catalog-search': ['F-03', 'F-04'],

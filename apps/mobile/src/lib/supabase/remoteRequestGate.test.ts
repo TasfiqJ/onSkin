@@ -4,6 +4,8 @@ import {
   hasActiveSupabaseRemoteRequestBinding,
   requireSupabaseRemoteSessionBinding,
   rotateActiveSupabaseRemoteRequestBinding,
+  runWithSupabaseAppleAuthBootstrapPermit,
+  runWithSupabaseAppleCredentialInvalidationPermit,
   runWithSupabaseAccountDeletionRequestPermit,
   runWithSupabaseAuthLogoutPermit,
   runWithSupabaseAuthRefreshPermit,
@@ -34,6 +36,12 @@ const BINDING = Object.freeze({
   accessToken: jwt(),
   sessionId: SESSION_ID,
   subject: SUBJECT,
+});
+const APPLE_BOOTSTRAP = Object.freeze({
+  appleUser: 'apple-subject',
+  authorizationCode: 'single-use-code',
+  identityToken: 'identity-token',
+  nonce: 'a'.repeat(43),
 });
 
 afterEach(() => {
@@ -87,6 +95,56 @@ describe('process-wide Supabase remote request gate wrappers', () => {
       { purpose: 'auth_identity_upgrade', binding: BINDING, timeoutMs: 30_000 },
       { purpose: 'auth_logout', binding: BINDING, timeoutMs: 5_000 },
     ]);
+  });
+
+  it('forwards a narrowly scoped Apple bootstrap with optional same-user binding', async () => {
+    const runWithPermit = vi
+      .spyOn(supabaseRemoteRequestAdmission, 'runWithPermit')
+      .mockResolvedValue(undefined);
+    const operation = vi.fn(async () => undefined);
+
+    await runWithSupabaseAppleAuthBootstrapPermit(APPLE_BOOTSTRAP, undefined, operation, 45_000);
+    await runWithSupabaseAppleAuthBootstrapPermit(APPLE_BOOTSTRAP, BINDING, operation, 45_000);
+
+    expect(runWithPermit.mock.calls.map(([permit]) => permit)).toEqual([
+      {
+        purpose: 'apple_auth_bootstrap',
+        credentials: APPLE_BOOTSTRAP,
+        timeoutMs: 45_000,
+      },
+      {
+        purpose: 'apple_auth_bootstrap',
+        credentials: APPLE_BOOTSTRAP,
+        binding: BINDING,
+        timeoutMs: 45_000,
+      },
+    ]);
+  });
+
+  it('forwards an exact bound Apple credential invalidation', async () => {
+    const runWithPermit = vi
+      .spyOn(supabaseRemoteRequestAdmission, 'runWithPermit')
+      .mockResolvedValue(undefined);
+    const operation = vi.fn(async () => undefined);
+
+    await runWithSupabaseAppleCredentialInvalidationPermit(
+      BINDING,
+      'apple-subject',
+      'revoked',
+      operation,
+      15_000,
+    );
+
+    expect(runWithPermit).toHaveBeenCalledWith(
+      {
+        purpose: 'apple_credential_invalid',
+        binding: BINDING,
+        appleUser: 'apple-subject',
+        reason: 'revoked',
+        timeoutMs: 15_000,
+      },
+      operation,
+    );
   });
 
   it('keeps deletion status bearerless and begin exactly bound', async () => {

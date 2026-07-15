@@ -4,6 +4,7 @@ import {
   APPLE_SUBJECT_MAX_CHARS,
   applePayloadWithRevocationToken,
   createAppleDeletionPayload,
+  createAppleDeletionPayloadWithRevocationToken,
   decodeAppleDeletionPayload,
   DurableDeletionPayloadError,
   encodeAppleDeletionPayload,
@@ -81,6 +82,28 @@ Deno.test('Apple payload code-to-token transition removes the consumed code', ()
       !JSON.stringify(transitioned).includes('apple-subject'),
     'consumed code and temporary subject binding removed',
   );
+});
+
+Deno.test('Apple retained refresh token enters deletion without a one-use code', () => {
+  const payload = createAppleDeletionPayloadWithRevocationToken('retained-refresh-token');
+  assertDeepEqual(payload, {
+    version: 1,
+    appleLinked: true,
+    phase: 'revocation_token',
+    revocationToken: 'retained-refresh-token',
+    tokenTypeHint: 'refresh_token',
+  });
+  for (const invalid of [
+    '',
+    ' leading',
+    'bad\ntoken',
+    'x'.repeat(APPLE_REVOCATION_TOKEN_MAX_CHARS + 1),
+  ]) {
+    assertPayloadError(
+      () => createAppleDeletionPayloadWithRevocationToken(invalid),
+      'APPLE_DELETION_PAYLOAD_INVALID',
+    );
+  }
 });
 
 Deno.test('Apple payload encoding is canonical and round-trips every phase', () => {

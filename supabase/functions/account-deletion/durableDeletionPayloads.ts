@@ -203,6 +203,26 @@ export function createAppleDeletionPayload(options: {
   };
 }
 
+/**
+ * Builds the durable Apple step directly from a server-retained refresh token.
+ * The token is opened from the Apple vault only long enough to be re-sealed
+ * under the deletion operation's independent AEAD key.
+ */
+export function createAppleDeletionPayloadWithRevocationToken(
+  revocationToken: string,
+): DurableAppleDeletionPayload {
+  if (!validBoundedSecret(revocationToken, APPLE_REVOCATION_TOKEN_MAX_CHARS)) {
+    throw new DurableDeletionPayloadError('APPLE_DELETION_PAYLOAD_INVALID');
+  }
+  return {
+    version: 1,
+    appleLinked: true,
+    phase: 'revocation_token',
+    revocationToken,
+    tokenTypeHint: 'refresh_token',
+  };
+}
+
 export function applePayloadWithRevocationToken(
   current: DurableAppleDeletionPayload,
   revocationToken: string,

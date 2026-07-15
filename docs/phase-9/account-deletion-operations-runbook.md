@@ -263,6 +263,8 @@ For automatic revocation on an Apple-linked account, configure all of:
 - `APPLE_SIWA_CLIENT_ID`
 - `APP_IOS_BUNDLE_IDENTIFIER`
 - `APPLE_SIWA_PRIVATE_KEY`
+- `APPLE_SIWA_VAULT_CURRENT_VERSION`
+- `APPLE_SIWA_VAULT_KEYS`
 
 `APPLE_SIWA_CLIENT_ID` must exactly equal `APP_IOS_BUNDLE_IDENTIFIER`. The
 private key is the `.p8` signing material. The exchanged token response must be
@@ -289,12 +291,36 @@ retry/relaunch, same-owner recovery, and different/unprovable-owner cleanup.
 Retain the focused fail-closed `TRANSFERRED` source evidence and approve either
 a formal no-transfer policy or a tested app/team-transfer migration before
 release. Broader Sign in with Apple initial authorization-code plus nonce/state
-capture, an encrypted rotating Apple refresh-token vault, daily refresh-token
+capture, a versioned encrypted Apple refresh-token vault, daily refresh-token
 validation, canonical signed server-to-server notification ingress, and an
-authoritative session-access fence remain incomplete launch gates. Apple's
-`consent-revoked` delivery evidence also remains external wherever selected or
-required. This runbook does not claim those live or server-lifecycle paths are
-complete.
+authoritative exact-session access fence are implemented in the migration-0055
+source candidate. Deletion can reuse the owner/session-bound vault, re-seal the
+token under the separate deletion-step key, and clear the reusable lifecycle
+vault after durable intake; vault failure still produces the manual outcome
+and cannot block erasure. Successful daily Apple validation freshly seals the
+lifecycle token under the current vault key, while dormant or failing rows still
+require zero-row/recapture evidence before an old key can be removed.
+
+A signature-verified terminal Apple event can close a unique exact Apple Auth
+identity even if lifecycle capture has not completed. If the event precedes the
+Auth identity itself, only audience-bound keyed evidence is retained; first
+capture reconciles it under the owner/deletion lock, creates or updates a
+no-vault terminal lifecycle, deletes sessions, queues/reuses this six-step
+deletion graph, and returns `blocked` before marking or exchanging the one-use
+code. Duplicate Apple delivery is not required for this recovery closure, and
+the transient raw subject is never persisted.
+
+This 0055 path passed two clean resets, the full structural suite plus 111/111
+Apple lifecycle pgTAP, 20/20 focused event/lifecycle Edge tests, and the
+47-test Apple auth work lane. Those local results do not prove hosted Apple
+delivery, provider revocation, Cron continuity, or physical-device behavior.
+
+Hosted deployment, existing-account recapture, Vault/Cron continuity,
+primary-App-ID endpoint registration and actual Apple `consent-revoked`/
+`account-deleted` delivery, stale-JWT denial, physical-iPhone/TestFlight, and
+professional/legal/App Review evidence remain external launch gates. The full
+deployment and rotation contract is
+`docs/phase-9/apple-auth-lifecycle-operations-runbook.md`.
 
 ### Conditional PostHog contract
 
@@ -772,7 +798,7 @@ external gate.
   iPhone through the implemented native listener, including quarantine,
   relaunch, retry, same-owner recovery, different-owner cleanup, and fail-closed
   `credential_transferred` behavior;
-- Sign in with Apple authorization-code capture, encrypted rotating refresh-token
+- Sign in with Apple authorization-code capture, versioned encrypted refresh-token
   storage, daily validation, canonical signed server-notification ingress, and
   an authoritative session-access fence, including the server-to-server
   `consent-revoked` path wherever selected or required;

@@ -49,7 +49,7 @@ const canonicalTables = [
 ];
 
 test('canonical table inventory is exhaustive and duplicate-free', () => {
-  assert.equal(canonicalTables.length, 77);
+  assert.equal(canonicalTables.length, 80);
   assert.equal(OWNER_LINKED_PRIVATE_TABLES.length, 30);
   assert.equal(HEALTH_PURPOSE_READ_FENCED_TABLES.length, 27);
   assert.equal(new Set(HEALTH_PURPOSE_READ_FENCED_TABLES).size, 27);
@@ -62,23 +62,26 @@ test('canonical table inventory is exhaustive and duplicate-free', () => {
     ),
   );
   assert.equal(SERVICE_ONLY_PRIVATE_TABLES.length, 10);
-  assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 14);
+  assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 17);
   assert.deepEqual(
     [
       'health_consent_copy_registry',
       'health_consent_copy_review_events',
       'health_dependent_consent_operations',
       'health_dependent_consent_states',
+      'apple_auth_lifecycles',
+      'apple_auth_capture_operations',
+      'apple_auth_server_events',
     ].filter((table) => !SEALED_SERVICE_PRIVATE_TABLES.includes(table)),
     [],
   );
-  assert.equal(new Set(canonicalTables).size, 77);
+  assert.equal(new Set(canonicalTables).size, 80);
   assert.deepEqual(PRIVATE_PUBLIC_TABLES, [
     ...OWNER_LINKED_PRIVATE_TABLES,
     ...SERVICE_ONLY_PRIVATE_TABLES,
     ...SEALED_SERVICE_PRIVATE_TABLES,
   ]);
-  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 54);
+  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 57);
   assert.equal(
     PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_SERVICE_PRIVATE_TABLES.includes(table)).length,
     40,

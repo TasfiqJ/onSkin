@@ -2310,6 +2310,9 @@ async function main() {
         'identity_hmac',
         absentDigest,
       );
+      registerSealedPrivateTableProbe('apple_auth_lifecycles', 'user_id', absentUuid);
+      registerSealedPrivateTableProbe('apple_auth_capture_operations', 'id', absentUuid);
+      registerSealedPrivateTableProbe('apple_auth_server_events', 'jti_hmac', absentDigest);
 
       const subscriptionEvent = await insertOne(admin, 'subscriptions_events', {
         rc_event_id: `phase9-${randomUUID()}`,
@@ -2397,7 +2400,7 @@ async function main() {
       registerPrivateTableProbe('edge_rate_limits', 'key_hash', rateLimit.key_hash);
     });
 
-    await runCheck('all 54 private tables have access-control probes', async () => {
+    await runCheck('all 57 private tables have access-control probes', async () => {
       const registeredTables = [...privateTableProbes.keys()].sort();
       const expectedTables = [...PRIVATE_PUBLIC_TABLES].sort();
       assert(

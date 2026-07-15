@@ -18,7 +18,8 @@
         ["APP_ENV"],
         ["ACCOUNT_DELETION_RECEIPT_HMAC_KEY_VERSION"],
         ["REVENUECAT_PROJECT_ID"],
-        ["REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION"]
+        ["REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION"],
+        ["APPLE_SIWA_VAULT_CURRENT_VERSION"]
       ],
       "requiredSecrets": [
         ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
@@ -26,7 +27,8 @@
         ["ACCOUNT_DELETION_RECEIPT_HMAC_KEY_HEX"],
         ["ACCOUNT_DELETION_WORKER_SECRET"],
         ["REVENUECAT_V2_SECRET_API_KEY"],
-        ["REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS"]
+        ["REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS"],
+        ["APPLE_SIWA_VAULT_KEYS"]
       ],
       "optionalEnvironment": [
         "EXPO_PUBLIC_APP_ENV",
@@ -84,6 +86,122 @@
           "anyOf": ["POSTHOG_PERSONAL_API_KEY"]
         }
       ]
+    },
+    "apple-account-events": {
+      "entrypoint": "supabase/functions/apple-account-events/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": false,
+      "access": "public",
+      "auth": "Apple RS256 server-to-server notification JWS",
+      "public": true,
+      "resourceLimits": {
+        "timeoutSeconds": 30,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["APPLE_SIWA_CLIENT_ID"],
+        ["APPLE_SIWA_SUBJECT_HMAC_CURRENT_VERSION"]
+      ],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["APPLE_SIWA_SUBJECT_HMAC_KEYS"],
+        ["APPLE_SIWA_CODE_HMAC_KEY_HEX"],
+        ["APPLE_SIWA_EVENT_HMAC_KEY_HEX"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
+        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
+    "apple-auth-lifecycle": {
+      "entrypoint": "supabase/functions/apple-auth-lifecycle/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": true,
+      "access": "authenticated",
+      "auth": "supabase-user-jwt",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 30,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        [
+          "SUPABASE_PUBLISHABLE_KEYS",
+          "SUPABASE_PUBLISHABLE_KEY",
+          "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+          "SUPABASE_ANON_KEY"
+        ],
+        ["APPLE_SIWA_CLIENT_ID"],
+        ["APP_IOS_BUNDLE_IDENTIFIER"],
+        ["APPLE_TEAM_ID"],
+        ["APPLE_SIWA_KEY_ID"],
+        ["APPLE_SIWA_SUBJECT_HMAC_CURRENT_VERSION"],
+        ["APPLE_SIWA_VAULT_CURRENT_VERSION"]
+      ],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["APPLE_SIWA_PRIVATE_KEY"],
+        ["APPLE_SIWA_SUBJECT_HMAC_KEYS"],
+        ["APPLE_SIWA_CODE_HMAC_KEY_HEX"],
+        ["APPLE_SIWA_EVENT_HMAC_KEY_HEX"],
+        ["APPLE_SIWA_VAULT_KEYS"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
+        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
+    },
+    "apple-auth-worker": {
+      "entrypoint": "supabase/functions/apple-auth-worker/index.ts",
+      "deployByDefault": true,
+      "verifyJwt": false,
+      "access": "scheduled",
+      "auth": "scheduler secret",
+      "public": false,
+      "resourceLimits": {
+        "timeoutSeconds": 60,
+        "memoryMb": 256
+      },
+      "requiredEnvironment": [
+        ["SUPABASE_URL"],
+        ["APP_ENV"],
+        ["APPLE_SIWA_CLIENT_ID"],
+        ["APP_IOS_BUNDLE_IDENTIFIER"],
+        ["APPLE_TEAM_ID"],
+        ["APPLE_SIWA_KEY_ID"],
+        ["APPLE_SIWA_SUBJECT_HMAC_CURRENT_VERSION"],
+        ["APPLE_SIWA_VAULT_CURRENT_VERSION"]
+      ],
+      "requiredSecrets": [
+        ["SUPABASE_SECRET_KEYS", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY"],
+        ["APPLE_SIWA_PRIVATE_KEY"],
+        ["APPLE_SIWA_SUBJECT_HMAC_KEYS"],
+        ["APPLE_SIWA_CODE_HMAC_KEY_HEX"],
+        ["APPLE_SIWA_EVENT_HMAC_KEY_HEX"],
+        ["APPLE_SIWA_VAULT_KEYS"],
+        ["APPLE_AUTH_WORKER_SECRET"]
+      ],
+      "optionalEnvironment": [
+        "EXPO_PUBLIC_APP_ENV",
+        "APPLE_AUTH_WORKER_CLAIM_LIMIT",
+        "EDGE_EXTERNAL_FETCH_TIMEOUT_MS",
+        "EDGE_EXTERNAL_RESPONSE_MAX_BYTES",
+        "USER_EDGE_BODY_MAX_BYTES"
+      ],
+      "conditionalEnvironment": [],
+      "conditionalSecrets": []
     },
     "catalog-lookup": {
       "entrypoint": "supabase/functions/catalog-lookup/index.ts",

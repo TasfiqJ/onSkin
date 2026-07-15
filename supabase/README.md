@@ -1,7 +1,9 @@
 # Supabase - schema, RLS, and Edge Functions
 
 Source of truth: `docs/01-auth-onboarding.md`, `BLOCKERS.md`, and
-`docs/phase-2-production-infrastructure-runbook.md`.
+`docs/phase-2-production-infrastructure-runbook.md`. Sign in with Apple
+deployment and operations are governed by
+`docs/phase-9/apple-auth-lifecycle-operations-runbook.md`.
 
 ## Migrations
 
@@ -36,7 +38,7 @@ npm run phase2:db-local-verify
 workdir, excludes `.temp`, `.branches`, every `.env` variant, inherited hosted
 credentials, and every linked-project input, allocates an isolated local port
 block, and uses explicit
-`--local` targets. It starts the Auth/Storage-aware Docker stack, resets all 53
+`--local` targets. It starts the Auth/Storage-aware Docker stack, resets all 54
 migrations plus `seed.sql` twice, verifies exact migration history, runs the
 structural pgTAP suite and database lint, requires an empty local-vs-migrations
 schema diff, generates database types only into the temporary workdir, then
@@ -93,6 +95,30 @@ Edge/mobile contract, and reopen only after the reviewed canary. Follow
 `docs/phase-9/account-deletion-operations-runbook.md`; never run migration 0048
 against the old synchronous deletion entrypoint.
 
+Migration 0055 is another coherent auth cutover. It denies ordinary account
+access for an Apple-linked user until a fresh native authorization has been
+verified, its one-use code exchanged by `apple-auth-lifecycle`, and its refresh
+token sealed. Freeze Apple sign-in/publication, configure secrets, deploy the
+three Apple functions plus every account-access-fenced authenticated function,
+apply the migration through the reviewed path, install the worker, and run the
+hosted/device canary before reopening. Existing Apple accounts need a fresh
+capture or an enforced compatible-version recovery path; do not backfill a
+lifecycle or bypass the access fence manually.
+
+Verified terminal Apple events are also closed before vault capture. The event
+RPC can transiently exact-match one Apple Auth identity without persisting the
+raw subject. If the signed event predates the Auth identity, it stores only
+audience-bound keyed evidence; `begin_apple_auth_capture` reconciles that event
+under the owner lock and returns `blocked` before the authorization code is
+marked or exchanged. This no-retry recovery path must remain intact during
+deployment; duplicate Apple delivery is opportunistic only.
+
+The current local 0055 gate passed two clean resets, exact 54-migration history,
+the full structural pgTAP suite plus 109/109 Apple assertions, database lint,
+an empty migration shadow diff, temporary type generation, 20/20 focused
+event/lifecycle Edge tests, and the 47-test Apple auth work lane. Hosted
+migration history and live service behavior remain separate evidence gates.
+
 ## Launch Gate
 
 Run Supabase Security Advisor and Performance Advisor before every release.
@@ -138,6 +164,40 @@ credential values. Verify its one-minute, Vault-backed route with:
 ```powershell
 npm run phase9:health-consent-work-lane-smoke
 ```
+
+Sign in with Apple uses three separate Edge boundaries:
+
+- `apple-auth-lifecycle` requires a verified Supabase user JWT and serves exact
+  native capture/credential-invalidation requests;
+- `apple-account-events` has gateway JWT verification disabled only because it
+  verifies Apple's signed compact JWS itself; and
+- `apple-auth-worker` has gateway JWT verification disabled only for its
+  independent constant-time scheduler secret.
+
+After migration 0055 and the compatible functions pass negative-auth probes,
+create exactly one active Vault value for each of `apple_auth_project_url` and
+`apple_auth_worker_secret`, then run
+`supabase/ops/apple-auth-work-lane.sql`. The worker secret must match the
+64-character lowercase-hex `APPLE_AUTH_WORKER_SECRET` Edge secret and must not
+be reused by either deletion worker. Verify the one-minute Vault-backed lane
+with:
+
+```powershell
+npm run phase9:apple-auth-work-lane-smoke
+```
+
+Register
+`https://<reviewed-project-ref>.supabase.co/functions/v1/apple-account-events`
+on the intended primary Sign in with Apple App ID only after the deployed
+endpoint is ready. Apple permits one absolute endpoint per app grouping/key;
+staging and production require intentional identifier isolation or a reviewed
+relay. Vault and subject-HMAC keyrings allow up to three overlapping versions.
+Every successful daily validation advances the subject digest and freshly seals
+the token under the current vault key; dormant, deferred, or failing rows do not
+advance from configuration alone. Follow the Phase 9 runbook for rotation,
+zero-row/recapture evidence, unresolved terminal-event key-version handling,
+monitoring,
+containment, and forward-only rollback.
 
 Catalog lookup/search/report functions are Phase 4 infrastructure. Bulk product
 imports must use approved export artifacts and `scripts/phase4/*`, not API

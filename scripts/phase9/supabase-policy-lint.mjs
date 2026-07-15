@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { block, listFiles, printResult, read } from './lib.mjs';
+import { publicFunctionCatalog, publicFunctionKey } from './supabase-function-acl.mjs';
 
 const errors = [];
 const warnings = [];
@@ -9,58 +10,32 @@ const migrationFiles = listFiles('supabase/migrations')
   .sort((a, b) => a.localeCompare(b));
 
 const combined = migrationFiles.map((file) => `\n-- FILE: ${file}\n${read(file)}\n`).join('\n');
-
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-const normalizeSql = (value) =>
-  String(value ?? '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLowerCase();
-const splitArgs = (args) =>
-  String(args ?? '')
-    .split(',')
-    .map((arg) => arg.trim())
-    .filter(Boolean);
-const normalizeArg = (arg) => {
-  const withoutDefault = arg.replace(/\s+default\s+[\s\S]+$/i, '').trim();
-  if (!withoutDefault) return '';
-  const tokens = withoutDefault.split(/\s+/).filter(Boolean);
-  if (/^(in|out|inout|variadic)$/i.test(tokens[0] ?? '')) tokens.shift();
-  if (tokens.length <= 1) return normalizeSql(tokens.join(' '));
-  return normalizeSql(tokens.slice(1).join(' '));
-};
-const normalizeArgs = (args) => splitArgs(args).map(normalizeArg).join(', ');
-const functionKey = (name, args) => `${name}(${normalizeArgs(args)})`;
 
-const latestFunctions = new Map();
-for (const match of combined.matchAll(
-  /create\s+or\s+replace\s+function\s+public\.([a-z0-9_]+)\s*\(([^)]*)\)([\s\S]*?)\$\$;/gi,
-)) {
-  const [source, name, args, definition] = match;
-  latestFunctions.set(functionKey(name, args), {
-    name,
-    args,
-    normalizedArgs: normalizeArgs(args),
-    source,
-    definition,
-    index: match.index ?? 0,
-  });
-}
-for (const match of combined.matchAll(
-  /drop\s+function\s+(?:if\s+exists\s+)?public\.([a-z0-9_]+)\s*\(([^)]*)\)\s*;/gi,
-)) {
-  const [, name, args] = match;
-  const key = functionKey(name, args);
-  const existing = latestFunctions.get(key);
-  if (existing && (match.index ?? 0) > existing.index) latestFunctions.delete(key);
-}
+const {
+  functions: latestFunctions,
+  unresolvedPrivilegeEvents,
+  unresolvedRenameEvents,
+} = publicFunctionCatalog(combined);
+block(
+  errors,
+  unresolvedPrivilegeEvents.length === 0,
+  `function ACL parser left ${unresolvedPrivilegeEvents.length} GRANT/REVOKE event(s) unresolved.`,
+);
+block(
+  errors,
+  unresolvedRenameEvents.length === 0,
+  `function ACL parser left ${unresolvedRenameEvents.length} ALTER FUNCTION RENAME event(s) unresolved.`,
+);
 
 const clientCallableDefiners = new Set([
+  'account_access_allowed()',
   'account_write_allowed()',
   'begin_health_data_consent_withdrawal(bigint, text, text, text)',
   'decline_initial_health_data_consent(bigint, text, text)',
   'get_health_data_consent_status()',
   'get_health_dependent_consent_status(text)',
+  'get_account_access_state()',
   'grant_health_data_consent(bigint, text, text)',
   'has_current_consent(text)',
   'owns_ask_turn_audit(uuid)',
@@ -76,12 +51,15 @@ const clientCallableDefiners = new Set([
 const serviceCallableDefiners = new Set([
   'account_write_allowed(uuid)',
   'activate_account_publication_lease(uuid, uuid, text)',
+  'apply_apple_auth_server_event(text, text, text[], text[], text, text, text, timestamptz, text)',
   'begin_account_deletion(uuid, uuid, text, text, timestamptz, bytea, bytea, bytea)',
+  'begin_apple_auth_capture(uuid, uuid, uuid, text, text[], text[], text, text)',
   'claim_due_health_consent_withdrawals(text, integer)',
   'claim_due_health_dependent_consent_withdrawals(text, integer)',
   'claim_health_consent_withdrawal_for_owner(uuid, uuid, text)',
   'claim_account_deletion_step(uuid, text, integer)',
   'claim_next_account_deletion_step(text, integer)',
+  'claim_due_apple_auth_validations(text, integer)',
   'count_account_photo_storage_objects(uuid)',
   'consume_edge_rate_limit(text, text, integer, integer)',
   'consume_edge_rate_limit(text, text, integer, integer, uuid)',
@@ -89,26 +67,34 @@ const serviceCallableDefiners = new Set([
   'consume_revenuecat_account_deletion_budget(text, text)',
   'complete_health_data_consent_withdrawal(uuid, text)',
   'complete_health_dependent_consent_withdrawal(uuid)',
+  'complete_apple_auth_capture(uuid, uuid, uuid, bytea, text)',
+  'complete_apple_auth_validation(uuid, bigint, text, text, text, bytea, text)',
   'defer_health_consent_withdrawal(uuid, text, text, integer)',
   'defer_health_dependent_consent_withdrawal(uuid, text, text, integer)',
+  'defer_apple_auth_validation(uuid, bigint, text, text, integer)',
   'defer_account_deletion_revenuecat_provider_capacity(uuid, text, text, timestamptz)',
   'enqueue_obf_contribution_for_correction(uuid)',
   'establish_revenuecat_deletion_identity_barrier(uuid, text, smallint, text[], text[], timestamptz)',
   'expire_app_granted_reverse_trials()',
   'finalize_account_deletion(uuid, text, smallint, timestamptz)',
+  'fail_apple_auth_capture(uuid, uuid, text)',
   'get_account_deletion_barrier_state(uuid, uuid)',
   'get_account_deletion_receipt(text, smallint)',
   'get_account_deletion_status(text)',
+  'get_apple_auth_deletion_vault(uuid, uuid)',
   'grant_app_granted_reverse_trial(uuid, timestamptz, text)',
   'grant_app_granted_reverse_trial(uuid, timestamptz, text, text)',
   'list_account_deletions_ready_to_finalize(integer)',
   'list_account_photo_storage_objects(uuid, text, integer)',
   'list_health_consent_storage_work(uuid, integer, text)',
   'list_health_dependent_consent_storage_work(uuid, integer, text)',
+  'invalidate_apple_auth_for_session(uuid, uuid, text, text)',
+  'invalidate_apple_auth_lifecycle(uuid, bigint, text, text)',
   'mark_health_dependent_consent_withdrawal_action_required(uuid, text, text)',
   'mark_account_deletion_step_request_started(uuid, text, text)',
   'process_revenuecat_webhook_event_guarded(text, text, text[], text, text, text[], text[], text[], text, text, text, text, timestamptz, timestamptz, timestamptz, timestamptz, text, text, text, boolean, boolean, boolean, smallint, text, jsonb, boolean, boolean, smallint[], text[], text[])',
   'purge_expired_account_deletion_artifacts(integer)',
+  'purge_expired_apple_auth_artifacts(integer)',
   'purge_expired_edge_rate_limits(integer)',
   'purge_expired_revenuecat_identity_tombstones(integer)',
   'prepare_health_data_consent_withdrawal(uuid, text)',
@@ -122,6 +108,7 @@ const serviceCallableDefiners = new Set([
   'reserve_account_publication_lease(uuid, uuid, text)',
   'reset_account_deletion_revenuecat_absence_observations(uuid, text, text)',
   'scrub_account_service_rows(uuid)',
+  'mark_apple_auth_capture_exchange_started(uuid, uuid, uuid)',
   'update_account_deletion_step_payload(uuid, text, text, bytea)',
 ]);
 
@@ -142,85 +129,38 @@ for (const [allowlistName, allowlist] of [
   }
 }
 
-const revokePattern = (name) =>
-  new RegExp(
-    `revoke\\s+all\\s+on\\s+function\\s+public\\.${escapeRegExp(name)}\\s*\\(([^)]*)\\)\\s+from\\s+([^;]+);`,
-    'gi',
-  );
-const grantPattern = (name) =>
-  new RegExp(
-    `grant\\s+execute\\s+on\\s+function\\s+public\\.${escapeRegExp(name)}\\s*\\(([^)]*)\\)\\s+to\\s+([^;]+);`,
-    'gi',
-  );
-
 for (const fn of latestFunctions.values()) {
   if (!/security\s+definer/i.test(fn.definition)) continue;
-  const key = functionKey(fn.name, fn.args);
-  const afterDefinition = combined.slice(fn.index + fn.source.length);
+  const key = publicFunctionKey(fn.name, fn.args);
+  const revokeEvents = fn.privilegeEventsAfterDefinition.filter((event) => event.kind === 'revoke');
+  const grantEvents = fn.privilegeEventsAfterDefinition.filter((event) => event.kind === 'grant');
   block(
     errors,
     /set\s+search_path\s*=\s*''/i.test(fn.definition),
     `${key} must pin SECURITY DEFINER search_path to ''.`,
   );
 
-  const revokeMatches = [...afterDefinition.matchAll(revokePattern(fn.name))].filter(
-    (match) => normalizeArgs(match[1]) === fn.normalizedArgs,
-  );
   block(
     errors,
-    revokeMatches.some((match) => /\bpublic\b/i.test(match[2])),
+    revokeEvents.some((event) => event.roles.includes('public')),
     `${key} must explicitly revoke default PUBLIC function execute privileges.`,
   );
 
-  const grantMatches = [...afterDefinition.matchAll(grantPattern(fn.name))].filter(
-    (match) => normalizeArgs(match[1]) === fn.normalizedArgs,
-  );
-  for (const grant of grantMatches) {
-    const roles = grant[2]
-      .split(',')
-      .map((role) => role.trim().toLowerCase())
-      .filter(Boolean);
+  for (const grant of grantEvents) {
     block(
       errors,
-      !roles.includes('public') && !roles.includes('anon'),
+      !grant.roles.includes('public') && !grant.roles.includes('anon'),
       `${key} must not grant execute to public or anon.`,
     );
   }
 
-  // CREATE OR REPLACE preserves a function's ACL. Model every later explicit
-  // GRANT/REVOKE in migration order so a retired RPC is not kept on the active
-  // allowlist merely because an older migration once granted it execution.
-  const effectiveGrantRoles = new Set();
-  const privilegeEvents = [
-    ...revokeMatches.map((match) => ({
-      index: match.index ?? 0,
-      kind: 'revoke',
-      roles: match[2]
-        .split(',')
-        .map((role) => role.trim().toLowerCase())
-        .filter(Boolean),
-    })),
-    ...grantMatches.map((match) => ({
-      index: match.index ?? 0,
-      kind: 'grant',
-      roles: match[2]
-        .split(',')
-        .map((role) => role.trim().toLowerCase())
-        .filter(Boolean),
-    })),
-  ].sort((a, b) => a.index - b.index);
-  for (const event of privilegeEvents) {
-    for (const role of event.roles) {
-      if (event.kind === 'grant') effectiveGrantRoles.add(role);
-      else effectiveGrantRoles.delete(role);
-    }
-  }
+  const { effectiveGrantRoles } = fn;
 
   if (effectiveGrantRoles.has('authenticated')) {
     block(
       errors,
       clientCallableDefiners.has(key),
-      `${key} grants execute to authenticated but is not an approved RLS helper.`,
+      `${key} grants execute to authenticated but is not an approved client RPC/helper.`,
     );
   }
   if (effectiveGrantRoles.has('service_role')) {
@@ -235,7 +175,7 @@ for (const fn of latestFunctions.values()) {
     block(
       errors,
       effectiveGrantRoles.has('authenticated'),
-      `${key} RLS helper must grant execute to authenticated.`,
+      `${key} client RPC/helper must grant execute to authenticated.`,
     );
   }
   if (serviceCallableDefiners.has(key)) {
@@ -251,6 +191,34 @@ for (const fn of latestFunctions.values()) {
     );
   }
 }
+
+const fencedEntitlementProjection = latestFunctions.get('read_entitlement_projections()');
+const unfencedEntitlementProjection = latestFunctions.get(
+  '_read_entitlement_projections_v0053_unfenced()',
+);
+block(
+  errors,
+  Boolean(fencedEntitlementProjection),
+  'the plain-CREATE read_entitlement_projections() wrapper must remain installed.',
+);
+block(
+  errors,
+  fencedEntitlementProjection?.definition.includes('public.account_access_allowed()'),
+  'read_entitlement_projections() must remain behind the account-access fence.',
+);
+block(
+  errors,
+  Boolean(unfencedEntitlementProjection),
+  'the renamed entitlement implementation must remain visible to the ACL model.',
+);
+block(
+  errors,
+  unfencedEntitlementProjection !== undefined &&
+    !['public', 'anon', 'authenticated', 'service_role'].some((role) =>
+      unfencedEntitlementProjection.effectiveGrantRoles.has(role),
+    ),
+  'the renamed unfenced entitlement implementation must be executable by no API role.',
+);
 
 const publicCatalogTables = new Set([
   'affiliate_links',
@@ -347,32 +315,28 @@ block(
   `${revenueCatAtomicKey} must exist with the reviewed signature.`,
 );
 if (revenueCatAtomicFunction) {
-  const afterDefinition = combined.slice(
-    revenueCatAtomicFunction.index + revenueCatAtomicFunction.source.length,
+  const matchingRevokes = revenueCatAtomicFunction.privilegeEventsAfterDefinition.filter(
+    (event) => event.kind === 'revoke',
   );
-  const matchingRevokes = [
-    ...afterDefinition.matchAll(revokePattern(revenueCatAtomicFunction.name)),
-  ].filter((match) => normalizeArgs(match[1]) === revenueCatAtomicFunction.normalizedArgs);
   block(
     errors,
-    matchingRevokes.some((match) => {
-      const roles = new Set(
-        match[2]
-          .split(',')
-          .map((role) => role.trim().toLowerCase())
-          .filter(Boolean),
-      );
-      return roles.has('public') && roles.has('anon') && roles.has('authenticated');
-    }),
+    matchingRevokes.some(
+      (event) =>
+        event.roles.includes('public') &&
+        event.roles.includes('anon') &&
+        event.roles.includes('authenticated'),
+    ),
     `${revenueCatAtomicKey} must revoke execute from public, anon, and authenticated.`,
   );
 
-  const matchingGrants = [
-    ...afterDefinition.matchAll(grantPattern(revenueCatAtomicFunction.name)),
-  ].filter((match) => normalizeArgs(match[1]) === revenueCatAtomicFunction.normalizedArgs);
+  const matchingGrants = revenueCatAtomicFunction.privilegeEventsAfterDefinition.filter(
+    (event) => event.kind === 'grant',
+  );
   block(
     errors,
-    matchingGrants.length === 1 && matchingGrants[0][2].trim().toLowerCase() === 'service_role',
+    matchingGrants.length === 1 &&
+      matchingGrants[0].roles.length === 1 &&
+      matchingGrants[0].roles[0] === 'service_role',
     `${revenueCatAtomicKey} must grant execute to service_role only.`,
   );
 }

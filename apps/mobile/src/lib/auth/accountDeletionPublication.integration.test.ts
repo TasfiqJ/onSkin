@@ -165,6 +165,7 @@ vi.mock('../supabase/client', () => ({
 }));
 vi.mock('./accountIsolationE2E', () => ({ getAccountIsolationE2EFixture: () => null }));
 vi.mock('./accountUpgrade', () => ({
+  authenticateWithAppleCredential: vi.fn(),
   authenticateWithProviderToken: vi.fn(),
   requestEmailAccountCode: vi.fn(),
   verifyEmailAccountCode: vi.fn(),

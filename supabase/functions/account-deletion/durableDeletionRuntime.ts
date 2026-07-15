@@ -4,6 +4,12 @@ import {
   buildRevenueCatIdentityTombstoneFamily,
   parseRevenueCatIdentityTombstoneKeyring,
 } from '../_shared/revenueCatIdentityTombstone.ts';
+import {
+  appleVaultEnvelopeFromBytea,
+  AppleVaultError,
+  loadAppleVaultKeyring,
+  openAppleRefreshToken,
+} from '../_shared/appleVault.ts';
 import { executeAppleDeletionStep } from './appleDeletionExecutor.ts';
 import { createAppleDeletionNetwork } from './appleDeletionNetwork.ts';
 import { executeAuthDeletionStep } from './authDeletionExecutor.ts';
@@ -22,6 +28,7 @@ import {
 import { createDurableDeletionEncryptedStateStore } from './durableDeletionEncryptedStateStore.ts';
 import {
   createAppleDeletionPayload,
+  createAppleDeletionPayloadWithRevocationToken,
   decodeAppleDeletionPayload,
   encodeAppleDeletionPayload,
 } from './durableDeletionPayloads.ts';
@@ -356,6 +363,14 @@ export async function createDurableDeletionRuntime(
       });
     }
     return appleNetworkPromise;
+  }
+
+  let appleVaultKeyringPromise: ReturnType<typeof loadAppleVaultKeyring> | null = null;
+  function appleVaultKeyring() {
+    if (appleVaultKeyringPromise === null) {
+      appleVaultKeyringPromise = loadAppleVaultKeyring(readEnvironment);
+    }
+    return appleVaultKeyringPromise;
   }
 
   const record = async (
@@ -718,7 +733,7 @@ export async function createDurableDeletionRuntime(
       gateway.renewPublicationLease({ userId, sessionId, capability }),
     releasePublicationLease: (capability) => gateway.releasePublicationLease(capability),
     async begin(user, request) {
-      const plaintext = encodeAppleDeletionPayload(
+      const fallbackPayload = () =>
         createAppleDeletionPayload({
           appleLinked: user.appleLinked,
           ...(request.appleAuthorizationCode === undefined || user.appleSubject === null
@@ -727,8 +742,37 @@ export async function createDurableDeletionRuntime(
                 authorizationCode: request.appleAuthorizationCode,
                 expectedAppleSubject: user.appleSubject,
               }),
-        }),
-      );
+        });
+      let applePayload = fallbackPayload();
+      if (user.appleLinked) {
+        const retained = await gateway.appleDeletionVault(user.id, user.sessionId);
+        if (retained !== null) {
+          let refreshToken = '';
+          try {
+            const vault = await appleVaultKeyring();
+            if (!vault.keys.has(retained.vaultKeyVersion)) {
+              throw new AppleVaultError('APPLE_VAULT_DECRYPT_FAILED');
+            }
+            refreshToken = await openAppleRefreshToken({
+              keyring: vault,
+              userId: user.id,
+              subjectHmac: retained.appleSubjectHmac,
+              clientId: retained.clientId,
+              envelope: appleVaultEnvelopeFromBytea(retained.encryptedRefreshToken),
+            });
+            applePayload = createAppleDeletionPayloadWithRevocationToken(refreshToken);
+          } catch (error) {
+            if (!(error instanceof AppleVaultError)) throw error;
+            // A corrupt/unreadable retained credential must never withhold the
+            // user's erasure request. Preserve the existing fresh-code path
+            // when available, otherwise record the durable manual fallback.
+            applePayload = fallbackPayload();
+          } finally {
+            refreshToken = '';
+          }
+        }
+      }
+      const plaintext = encodeAppleDeletionPayload(applePayload);
       let appleEncryptedPayload: string;
       try {
         const envelope = await sealDeletionPayload({

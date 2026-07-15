@@ -28,6 +28,13 @@ describe('AuthProvider Apple credential revocation integration', () => {
     expect(
       boundary.indexOf('persistInvalidationMarker: () => markAppleCredentialQuarantined()'),
     ).toBeLessThan(boundary.indexOf('async signOut() {'));
+    expect(boundary).toContain(
+      'await invalidateAppleAuthLifecycle(invalidatedBinding, appleUser, serverReason);',
+    );
+    expect(boundary.indexOf('await invalidateAppleAuthLifecycle(')).toBeLessThan(
+      boundary.indexOf('showSessionBoundary(null);'),
+    );
+    expect(boundary).toContain('if (!serverInvalidated && invalidatedBinding)');
     expect(boundary).toContain('await revokeSupabaseRefreshTokens(invalidatedBinding);');
     expect(boundary).not.toContain('supabase.auth.signOut(');
     expect(boundary).toContain('clearRejectedSessionActivityDurably({');

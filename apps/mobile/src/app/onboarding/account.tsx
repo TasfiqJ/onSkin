@@ -1,6 +1,6 @@
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Platform,
   Pressable,
@@ -16,6 +16,7 @@ import { ACCOUNT_CONSENT } from '@/features/onboarding/consentCopy';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { getAccountUpgradeE2EFixture } from '@/lib/auth/accountUpgradeE2E';
+import { isAppleAuthAvailable } from '@/lib/auth/apple';
 import { isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE, authUserMessage } from '@/lib/errors/userFacing';
 
@@ -31,11 +32,28 @@ export default function AccountScreen() {
   const [stage, setStage] = useState<'menu' | 'code'>('menu');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [appleAuthAvailable, setAppleAuthAvailable] = useState(false);
+  const operationPendingRef = useRef(false);
   const accountUpgradeE2EFixture = getAccountUpgradeE2EFixture();
   const authAvailable = isSupabaseConfigured || accountUpgradeE2EFixture !== null;
   const supportFloorTextPressurePhone =
     width <= 390 && height >= 640 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
   const compactPhone = height < 640 || supportFloorTextPressurePhone;
+
+  useEffect(() => {
+    if (Platform.OS !== 'ios' || !authAvailable) return;
+    let active = true;
+    void isAppleAuthAvailable()
+      .then((available) => {
+        if (active) setAppleAuthAvailable(available);
+      })
+      .catch(() => {
+        if (active) setAppleAuthAvailable(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [authAvailable]);
 
   async function finish() {
     if (!accountUpgradeE2EFixture) {
@@ -51,11 +69,15 @@ export default function AccountScreen() {
   }
 
   async function run(fn: () => Promise<void>) {
+    // State updates are not synchronous. This ref is the admission gate that
+    // prevents two native provider sheets or OTP requests from a rapid tap.
+    if (operationPendingRef.current) return;
     if (!authAvailable) {
       setError(AUTH_UNAVAILABLE_MESSAGE);
       return;
     }
 
+    operationPendingRef.current = true;
     setBusy(true);
     setError(null);
     try {
@@ -63,6 +85,7 @@ export default function AccountScreen() {
     } catch (e) {
       setError(authUserMessage(e));
     } finally {
+      operationPendingRef.current = false;
       setBusy(false);
     }
   }
@@ -100,18 +123,21 @@ export default function AccountScreen() {
           {authAvailable ? (
             stage === 'menu' ? (
               <View className="mt-8 gap-3">
-                {Platform.OS === 'ios' ? (
-                  <AppleAuthentication.AppleAuthenticationButton
-                    buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
-                    buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-                    cornerRadius={999}
-                    style={{ height: 56 }}
-                    onPress={() =>
-                      run(async () => {
-                        if (accountUpgradeE2EFixture || (await signInWithApple())) await finish();
-                      })
-                    }
-                  />
+                {Platform.OS === 'ios' && appleAuthAvailable ? (
+                  <View pointerEvents={busy ? 'none' : 'auto'} style={{ opacity: busy ? 0.55 : 1 }}>
+                    <AppleAuthentication.AppleAuthenticationButton
+                      accessibilityState={{ disabled: busy }}
+                      buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
+                      buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+                      cornerRadius={999}
+                      style={{ height: 56 }}
+                      onPress={() =>
+                        void run(async () => {
+                          if (accountUpgradeE2EFixture || (await signInWithApple())) await finish();
+                        })
+                      }
+                    />
+                  </View>
                 ) : null}
                 <Button
                   label="Continue with Google"
@@ -190,7 +216,11 @@ export default function AccountScreen() {
                 <Pressable
                   accessibilityRole="button"
                   className="min-h-[48px] items-center justify-center py-2"
-                  onPress={() => setStage('menu')}
+                  disabled={busy}
+                  onPress={() => {
+                    if (operationPendingRef.current) return;
+                    setStage('menu');
+                  }}
                 >
                   <Text variant="body" tone="muted">
                     Use a different method
@@ -212,7 +242,11 @@ export default function AccountScreen() {
         <Pressable
           accessibilityRole="button"
           className="min-h-[48px] items-center justify-center py-2"
-          onPress={() => router.replace('/onboarding/paywall')}
+          disabled={busy}
+          onPress={() => {
+            if (operationPendingRef.current) return;
+            router.replace('/onboarding/paywall');
+          }}
         >
           <Text variant="body" tone="muted" className="font-sans-medium">
             Not now

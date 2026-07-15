@@ -42,7 +42,7 @@ const dataExportRateLimitWindowSeconds = intEnv(
   60,
   86400,
 );
-const dataExportPhotoUrlTtlSeconds = intEnv('DATA_EXPORT_PHOTO_URL_TTL_SECONDS', 3600, 60, 3600);
+const dataExportPhotoUrlTtlSeconds = intEnv('DATA_EXPORT_PHOTO_URL_TTL_SECONDS', 60, 30, 60);
 const dataExportProbeBudget = intEnv(
   'PHASE9_DATA_EXPORT_RATE_LIMIT_PROBE_MAX',
   Math.min(dataExportRateLimitMax + 2, 102),
@@ -881,8 +881,8 @@ async function main() {
   if (runSignedUrlExpiryCheck) {
     block(
       errors,
-      dataExportPhotoUrlTtlSeconds <= 120,
-      'DATA_EXPORT_PHOTO_URL_TTL_SECONDS must be 120 or lower for the live signed URL expiry check.',
+      dataExportPhotoUrlTtlSeconds <= 60,
+      'DATA_EXPORT_PHOTO_URL_TTL_SECONDS must be 60 or lower for the live signed URL expiry check.',
     );
     block(
       errors,

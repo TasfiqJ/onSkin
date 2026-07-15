@@ -3,6 +3,11 @@ import {
   loadDeletionPayloadKeyFromEnv,
   openDeletionPayload,
 } from './durableDeletionCrypto.ts';
+import {
+  appleVaultEnvelopeToBytea,
+  loadAppleVaultKeyring,
+  sealAppleRefreshToken,
+} from '../_shared/appleVault.ts';
 import { decodeAppleDeletionPayload } from './durableDeletionPayloads.ts';
 import {
   createDurableDeletionRuntime,
@@ -43,6 +48,8 @@ function environment(): Record<string, string> {
     REVENUECAT_V2_SECRET_API_KEY: 'sk_test',
     REVENUECAT_IDENTITY_TOMBSTONE_HMAC_KEYS: `1=${'40'.repeat(32)}`,
     REVENUECAT_IDENTITY_TOMBSTONE_HMAC_CURRENT_VERSION: '1',
+    APPLE_SIWA_VAULT_CURRENT_VERSION: 'v1',
+    APPLE_SIWA_VAULT_KEYS: JSON.stringify({ v1: '50'.repeat(32) }),
     APP_ENV: 'development',
     EXPO_PUBLIC_APP_ENV: 'development',
   };
@@ -51,6 +58,7 @@ function environment(): Record<string, string> {
 class FakeClient implements DurableDeletionRuntimeClient {
   readonly calls: Array<{ name: string; args: Record<string, unknown> }> = [];
   publicationReserveStatus: 'reserved' | 'session_rejected' = 'reserved';
+  appleVaultRows: unknown[] = [];
 
   auth: DurableDeletionRuntimeClient['auth'] = {
     getUser: (_token: string) =>
@@ -103,6 +111,8 @@ class FakeClient implements DurableDeletionRuntimeClient {
           ],
           error: null,
         });
+      case 'get_apple_auth_deletion_vault':
+        return Promise.resolve({ data: this.appleVaultRows, error: null });
       case 'get_account_deletion_status':
         return Promise.resolve({ data: [], error: null });
       case 'get_account_deletion_barrier_state':
@@ -261,6 +271,76 @@ Deno.test(
     );
   },
 );
+
+Deno.test('runtime re-seals the retained Apple refresh token into durable deletion', async () => {
+  const client = new FakeClient();
+  const env = environment();
+  const subjectHmac = '61'.repeat(32);
+  const vault = await loadAppleVaultKeyring((name) => env[name]);
+  const sealed = await sealAppleRefreshToken({
+    keyring: vault,
+    userId: USER_ID,
+    subjectHmac,
+    clientId: 'com.onskin.app',
+    refreshToken: 'server-retained-refresh-token',
+  });
+  client.appleVaultRows = [
+    {
+      apple_subject_hmac: subjectHmac,
+      client_id: 'com.onskin.app',
+      encrypted_refresh_token: appleVaultEnvelopeToBytea(sealed),
+      vault_key_version: 'v1',
+      generation: 3,
+    },
+  ];
+  const runtime = await createDurableDeletionRuntime({
+    client,
+    readEnvironment: (name) => env[name],
+    now: () => NOW,
+    schedule: () => undefined,
+  });
+  const user = await runtime.authenticate(AUTH_JWT);
+  assert(user !== null, 'Apple user authenticates');
+  await runtime.begin(user, {
+    action: 'begin',
+    idempotencyKey: IDEMPOTENCY,
+    statusCapability: CAPABILITY,
+    appleAuthorizationCode: 'unused-fresh-code',
+  });
+
+  const vaultCall = client.calls.find((call) => call.name === 'get_apple_auth_deletion_vault');
+  const beginCall = client.calls.find((call) => call.name === 'begin_account_deletion');
+  assert(
+    vaultCall?.args.p_user_id === USER_ID && vaultCall.args.p_session_id === SESSION_ID,
+    'vault lookup is live-session bound',
+  );
+  assert(beginCall !== undefined, 'durable begin follows vault read');
+  const encrypted = beginCall.args.p_apple_encrypted_credential;
+  assert(typeof encrypted === 'string', 'deletion envelope persisted');
+  assert(
+    !encrypted.includes('server-retained-refresh-token') && !encrypted.includes('unused-fresh-code'),
+    'neither provider credential is plaintext at the RPC boundary',
+  );
+  const key = await loadDeletionPayloadKeyFromEnv((name) => env[name]);
+  const plaintext = await openDeletionPayload({
+    key,
+    userId: USER_ID,
+    stepName: 'apple_revoke',
+    serializedEnvelope: deletionPayloadEnvelopeFromByteaRpc('apple_revoke', encrypted),
+  });
+  try {
+    const payload = decodeAppleDeletionPayload(plaintext);
+    assert(
+      payload.phase === 'revocation_token' &&
+        payload.revocationToken === 'server-retained-refresh-token' &&
+        payload.tokenTypeHint === 'refresh_token',
+      'retained token is re-keyed directly into the revocation phase',
+    );
+    assert(!JSON.stringify(payload).includes('unused-fresh-code'), 'fresh code is not retained');
+  } finally {
+    plaintext.fill(0);
+  }
+});
 
 Deno.test(
   'runtime rejects malformed or misbound JWT claims after successful Auth verification',

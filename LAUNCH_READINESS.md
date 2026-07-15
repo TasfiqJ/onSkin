@@ -58,7 +58,7 @@ evidence through 2026-07-13:
   two fixed E2E defects, zero horizontal overflow, no sub-44 visible controls,
   no dialogs, and no unexpected browser errors. Evidence:
   `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`.
-  The current baseline is 266 mobile test files / 3026 tests. Staging deployment
+  The current baseline is 269 mobile test files / 3087 tests. Staging deployment
   of both migrations, owner/second-user RLS, reviewed region-matched catalog
   responses, native notification delivery, physical-device relaunch and
   accessibility, and named cosmetic-chemistry review remain external gates.
@@ -424,7 +424,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 266 mobile test files / 3026 tests.
+- `npm test` passed: 269 mobile test files / 3087 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -455,7 +455,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   guard for the same OS support and Android build-target posture.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 266 mobile test files / 3026 tests.
+- `npm --workspace apps/mobile run test` passed: 269 mobile test files / 3087 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain

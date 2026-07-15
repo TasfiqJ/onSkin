@@ -86,6 +86,7 @@ import {
 } from './accountGeneration';
 import { getAccountIsolationE2EFixture } from './accountIsolationE2E';
 import {
+  authenticateWithAppleCredential,
   authenticateWithProviderToken,
   requestEmailAccountCode,
   verifyEmailAccountCode,
@@ -113,11 +114,13 @@ import {
 } from './appleCredentialQuarantine';
 import {
   checkAppleCredentialForSession,
+  getAppleCredentialSubject,
   hasAppleIdentity,
   monitorAppleCredentialRevocation,
   type AppleCredentialCheckBlockedReason,
   type AppleCredentialInvalidReason,
 } from './appleCredentialLifecycle';
+import { invalidateAppleAuthLifecycle } from './appleAuthLifecycleClient';
 import { getGoogleIdToken } from './google';
 import { clearAccountIsolatedState, prepareLocalDataForSession } from './localAccountIsolation';
 import { clearAuthDerivedLocalActivity } from './revokedCredentialActivity';
@@ -186,6 +189,20 @@ function hasMatchingSessionStateBinding(
 ): boolean {
   if (expected === null || observed === null) return expected === observed;
   return hasUnchangedSessionBinding(expected, observed);
+}
+
+export function appleServerInvalidationReason(
+  reason: AppleCredentialInvalidReason,
+): 'not_found' | 'revoked' | null {
+  if (reason === 'credential_not_found') return 'not_found';
+  if (
+    reason === 'credential_revoked' ||
+    reason === 'revoked_notification' ||
+    reason === 'persisted_revocation'
+  ) {
+    return 'revoked';
+  }
+  return null;
 }
 
 const REMOTE_SIGN_OUT_DEADLINE_MS = 5_000;
@@ -274,7 +291,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ) => void
   >(() => {});
   const handleAppleCredentialInvalidRef = useRef<
-    (reason: AppleCredentialInvalidReason) => Promise<void>
+    (reason: AppleCredentialInvalidReason, invalidatedSession?: Session | null) => Promise<void>
   >(async () => {});
   const handleAppleCredentialCheckBlockedRef = useRef<
     (blockedSession: Session, reason: AppleCredentialCheckBlockedReason) => Promise<void>
@@ -480,11 +497,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSessionBoundaryError(true);
     });
 
-    function handleAppleCredentialInvalid(reason: AppleCredentialInvalidReason): Promise<void> {
+    function handleAppleCredentialInvalid(
+      reason: AppleCredentialInvalidReason,
+      invalidatedSessionOverride?: Session | null,
+    ): Promise<void> {
       if (appleRevocationBoundaryPromise) return appleRevocationBoundaryPromise;
 
       const invalidatedSession =
-        pendingBoundarySessionRef.current?.session ?? publishedSessionRef.current;
+        invalidatedSessionOverride ??
+        pendingBoundarySessionRef.current?.session ??
+        publishedSessionRef.current;
       let invalidatedBinding: SupabaseRemoteSessionBinding | null = null;
       if (invalidatedSession) {
         try {
@@ -496,16 +518,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // No structurally valid remote credential remains to revoke.
         }
       }
+      const appleUser = invalidatedSession
+        ? getAppleCredentialSubject(invalidatedSession.user)
+        : null;
+      const serverReason = appleServerInvalidationReason(reason);
 
       appleRevocationBoundaryActive = true;
       appleCredentialQuarantinedRef.current = true;
       freshAuthenticationPendingRef.current = false;
       supabase.auth.stopAutoRefresh();
-      showSessionBoundary(null);
       const seq = ++sessionChangeSeqRef.current;
+      authBoundaryEpochRef.current += 1;
+      cancelPublicationRecoveryRef.current();
+      cancelControlledSessionRefreshRef.current();
+      const publicationDrain = closeRevenueCatPublication('account_boundary');
+      publicationDrainPromiseRef.current = publicationDrain;
+      void publicationDrain.catch(() => {});
+      pendingBoundarySessionRef.current = { session: null };
+      sessionBoundaryActiveRef.current = true;
+      holdSessionBoundaryWriteLock();
+      setSessionBoundaryError(false);
+      setInitializing(true);
+      // Hide owner data immediately, while retaining only the exact central
+      // bearer lane required to persist server-side Apple invalidation.
+      setSession(null);
 
       const promise = (async () => {
         try {
+          let serverInvalidated = false;
+          if (invalidatedBinding && appleUser && serverReason) {
+            try {
+              await invalidateAppleAuthLifecycle(invalidatedBinding, appleUser, serverReason);
+              serverInvalidated = true;
+            } catch (error: unknown) {
+              // Response loss is ambiguous: continue the fail-closed local
+              // quarantine and make global logout a best-effort fallback.
+              devWarn('[auth] Apple lifecycle server invalidation unavailable', error);
+            }
+          }
+          showSessionBoundary(null);
           // Provider credential invalidation proves only that this session may
           // no longer publish authenticated state. It does not authorize
           // erasing local data or letting a later account adopt ownerless data.
@@ -518,8 +569,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             persistInvalidationMarker: () => markAppleCredentialQuarantined(),
             async signOut() {
               if (appleRemoteSignOutAttempted) return;
-              if (invalidatedBinding) {
-                await revokeSupabaseRefreshTokens(invalidatedBinding);
+              if (!serverInvalidated && invalidatedBinding) {
+                try {
+                  await revokeSupabaseRefreshTokens(invalidatedBinding);
+                } catch (error: unknown) {
+                  devWarn(
+                    '[auth] Supabase logout fallback unavailable after Apple invalidation',
+                    error,
+                  );
+                }
               }
               appleRemoteSignOutAttempted = true;
             },
@@ -550,7 +608,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (error: unknown) {
           devWarn(`[auth] Apple credential invalidation failed closed (${reason})`, error);
           if (!mounted || seq !== sessionChangeSeqRef.current) return;
-          retrySessionRestoreRef.current = () => handleAppleCredentialInvalid(reason);
+          retrySessionRestoreRef.current = () =>
+            handleAppleCredentialInvalid(reason, invalidatedSession);
           showSessionBoundary(null);
           setInitializing(false);
           setSessionBoundaryError(true);
@@ -1309,7 +1368,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const appleCredential = await checkAppleCredentialForSession(restoredSession.user);
           if (!mounted || seqBeforeRestore !== sessionChangeSeqRef.current) return;
           if (appleCredential.status === 'invalid') {
-            await handleAppleCredentialInvalid(appleCredential.reason);
+            await handleAppleCredentialInvalid(appleCredential.reason, restoredSession);
             return;
           }
           if (appleCredential.status === 'blocked') {
@@ -2053,15 +2112,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<AuthContextValue>(() => {
     const user = session?.user ?? null;
-    const runFreshAuthentication = async <T,>(operation: () => Promise<T>): Promise<T> => {
+    const runFreshAuthentication = async <T,>(
+      operation: () => Promise<T>,
+      options: { rejectSessionOnFailure?: boolean } = {},
+    ): Promise<T> => {
       if (authSemanticOperationPendingRef.current) {
         throw new Error('AUTH_SEMANTIC_OPERATION_ALREADY_ACTIVE');
       }
       authBoundaryEpochRef.current += 1;
       freshAuthenticationPendingRef.current = true;
       authSemanticOperationPendingRef.current = true;
+      let completed = false;
       try {
-        return await operation();
+        const result = await operation();
+        completed = true;
+        return result;
       } catch (error: unknown) {
         freshAuthenticationPendingRef.current = false;
         throw error;
@@ -2069,7 +2134,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         authSemanticOperationPendingRef.current = false;
         const deferred = deferredAuthSemanticBoundaryRef.current;
         deferredAuthSemanticBoundaryRef.current = null;
-        if (deferred) {
+        if (!completed && options.rejectSessionOnFailure) {
+          // Auth may already have persisted a session even when its listener
+          // callback is delayed or missing. The rejected-session boundary
+          // preserves owner-bound anonymous data, closes remote authority, and
+          // clears that persisted candidate before this failure is returned.
+          await handleRejectedSessionRef.current();
+        } else if (deferred) {
           void applySessionBoundaryRef.current(deferred.session);
         }
       }
@@ -2202,11 +2273,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const result = await getAppleIdToken();
         if (!result) return false;
-        await runFreshAuthentication(() =>
-          authenticateWithProviderToken(supabase.auth, session, {
-            provider: 'apple',
-            token: result.idToken,
-          }),
+        await runFreshAuthentication(
+          () => authenticateWithAppleCredential(supabase.auth, session, result),
+          { rejectSessionOnFailure: true },
         );
         pendingEmailCodeRef.current = null;
         return true;

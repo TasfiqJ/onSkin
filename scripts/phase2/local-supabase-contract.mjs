@@ -45,10 +45,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 53, `Expected 53 migration files; found ${migrations.length}.`);
+check(migrations.length === 54, `Expected 54 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260715000054_'),
-  'The latest migration must remain 20260715000054.',
+  migrations.at(-1)?.startsWith('20260715000055_'),
+  'The latest migration must remain 20260715000055.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,
@@ -136,7 +136,7 @@ check(
   'pgTAP must verify migration history.',
 );
 check(
-  /77::bigint/u.test(tests) && /relrowsecurity/u.test(tests),
+  /80::bigint/u.test(tests) && /relrowsecurity/u.test(tests),
   'pgTAP must verify the RLS table inventory.',
 );
 check(

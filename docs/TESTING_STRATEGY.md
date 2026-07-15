@@ -26,7 +26,16 @@ Required for:
 - durable store-transaction admission and recovery journal
 - exact-session remote admission, controlled refresh, and synchronous closure
 - privacy/consent logic
-- Apple credential-state fail-closed behavior
+- Apple native state/nonce generation and echo, ID-token/capture composite
+  admission, exact one-use authorization-code routing, lifecycle response
+  bounds, and credential-state fail-closed behavior
+- Apple JWS/JWKS verification, event replay/staleness ordering, encrypted vault
+  AAD/key-version behavior, daily validation classification, worker secret
+  authentication, and account-access coverage
+- Apple terminal-event races: no-lifecycle exact Auth-identity closure,
+  pre-identity keyed `unknown_subject` capture reconciliation before code
+  dispatch, audience/HMAC/version mismatch rejection, no raw-subject storage,
+  and duplicate promotion treated as opportunistic rather than required
 - claim-safety copy scans
 
 Example commands:
@@ -52,11 +61,13 @@ Required for:
 - account deletion/export, including delayed export versus sign-out/A-to-B,
   exact server owner, post-write invalidation, same-user refresh, central remote-admission
   closure, RevenueCat drain, and durable deletion handoff
+- Apple capture -> encrypted lifecycle -> daily validation -> access fence;
+  native/server-event invalidation -> session denial -> durable deletion
 - catalog lookup/search/report
 
 ## 2026-07-15 Source Checkpoint
 
-The current source checkpoint passes:
+The prior fully verified source checkpoint passes:
 
 - PostgreSQL 15 and 17 account-publication and entitlement-authority rehearsals.
 - The combined database run completed two clean local Supabase resets across all 53
@@ -69,15 +80,42 @@ The current source checkpoint passes:
 - Health-consent Phase 9 verification: 104 Deno tests plus 7 evidence tests.
 - Mobile workspace verification: 266 test files / 3,026 tests, typecheck, and lint.
 
-These results prove source contracts only. They do not close hosted migration/Cron/Vault,
+These results prove the prior source contracts only. They do not close hosted migration/Cron/Vault,
 live Supabase or RevenueCat, App Store sandbox/TestFlight, provider interruption and
 recreation, physical-iPhone, professional-review, privacy/legal, or App Review gates.
 
-Apple `TRANSFERRED` is now a tested fail-closed `credential_transferred` result. Release
-testing must still prove initial authorization-code plus state/nonce capture, encrypted
-rotating token storage, daily refresh-token validation, canonical signed server-notification
-ingress, and an authoritative server session-access fence. The non-destructive
-health-consent withdrawal source contract now has local two-reset and focused test evidence;
+The subsequent migration-0055 source candidate implements initial Apple
+authorization-code plus state/nonce capture, owner/subject/client-bound
+encrypted token storage, daily refresh-token validation, canonical signed
+server-notification ingress, native invalidation, and an authoritative exact-session
+access fence. Focused tests cover the mobile permit/capture contract, Apple network and
+worker classifications, signed-event verification/idempotency, encrypted keyrings,
+database lifecycle/RLS behavior, authenticated Edge coverage, account-deletion vault
+reuse, and the 60-second export URL bound. Apple `TRANSFERRED` remains a tested
+fail-closed `credential_transferred` result, not an approved transfer policy.
+
+The current post-0055 local gate passed two clean resets, exact 54-migration
+history, the full structural pgTAP suite plus 111/111 Apple lifecycle
+assertions, schema lint, an empty migration shadow diff, temporary type
+generation, 20/20 focused Apple event/lifecycle Edge tests, and the 47-test
+Apple auth work lane. The current full mobile suite also passes 269 test files /
+3087 tests. The race assertions include terminal-before-lifecycle,
+terminal-before-identity, capture-time no-retry reconciliation, and no code
+dispatch after the committed `blocked` result.
+
+Release testing must still deploy the coherent candidate to a reviewed hosted project
+and prove fresh and existing-account capture, real Apple code exchange, registered event
+delivery, Vault/Cron continuity, key rotation/rollback, exact stale-JWT denial across
+RLS/Storage/Edge/direct RPCs, provider outage recovery, physical-iPhone/TestFlight, and
+deletion. Vault and subject-HMAC keyrings allow up to three overlapping versions, and
+each successful daily validation must atomically re-derive the current subject digest
+and freshly seal the token under the current vault key. Dormant, deferred, and failing
+rows do not advance from configuration alone, so old-key retirement still needs
+zero-row evidence or fail-closed recapture/reauthentication. Subject-key
+retirement must also prove zero unresolved terminal `unknown_subject` rows for
+that version, or a reviewed reconciliation/disposition, so the no-retry bridge
+cannot be orphaned. The non-destructive health-consent withdrawal source
+contract now has local two-reset and focused test evidence;
 reviewed hosted worker/Storage/backup, two-device, physical-iPhone, and professional evidence
 remain open. The exact privacy report, policy/support URLs, and
 non-expiring demo review access also remain launch blockers.
@@ -95,11 +133,14 @@ Priority flows:
 5. Progress photo capture/review.
 6. Paywall purchase/restore.
 7. Settings privacy/export/delete.
-8. Cloud Ask consent, refusal, citation, quota, and outage recovery.
-9. Commerce consent, safe retailer handoff, and disclosure.
-10. Community post/report/block/contact and moderator recovery.
-11. Trend opt-in, processing limits, fairness disclosure, and withdrawal.
-12. Widgets, Live Activities, notifications, links, sharing, creator links,
+8. Apple sign-in/linking cancellation and success, capture ambiguity, relaunch,
+   revoked/not-found/transferred state, same-owner recovery, account switching,
+   and deletion.
+9. Cloud Ask consent, refusal, citation, quota, and outage recovery.
+10. Commerce consent, safe retailer handoff, and disclosure.
+11. Community post/report/block/contact and moderator recovery.
+12. Trend opt-in, processing limits, fairness disclosure, and withdrawal.
+13. Widgets, Live Activities, notifications, links, sharing, creator links,
     review prompt, and operator workflows.
 
 Reference:
@@ -131,6 +172,19 @@ Run or maintain:
 
 - RLS smoke/adversarial tests.
 - Two-reset full migration replay, pgTAP, database lint, and empty shadow diff.
+- Sealed Apple table/function ACL tests; active/non-Apple/blocked/stale-session
+  RLS and Storage tests; direct authenticated RPC fence tests; and terminal
+  Apple-event-to-deletion assertions.
+- Apple lifecycle Edge tests for exact request/response schemas, nonce and
+  subject verification, code single use, vault AAD/tampering/key overlap,
+  worker secret negatives, daily validation/defer/invalidate outcomes, signed
+  event JWKS caching/replay/staleness, and account-deletion vault reuse.
+- Database tests for event-before-lifecycle and event-before-identity races must
+  prove one owner under the account-deletion lock, a terminal no-vault lifecycle,
+  six-step deletion reuse, session destruction, losing-capture `blocked` before
+  exchange dispatch, exact audience plus paired HMAC/key-version matching, and
+  no plaintext subject in lifecycle/event rows. The test must not assume Apple
+  delivers a duplicate event.
 - Central exact-session remote-admission tests covering controlled refresh, synchronous
   closure, child-request settlement, account replacement, and deletion handoff.
 - Independent entitlement-lane, owner-derived projection, provider-watermark, and durable
@@ -139,6 +193,13 @@ Run or maintain:
 - edge auth smoke.
 - dependency inventory/SBOM.
 - account deletion and data export smoke.
+
+Hosted Apple verification must additionally retain redacted evidence for the
+registered primary-App-ID endpoint, actual signed event delivery, exactly one
+one-minute Vault-backed Cron job, worker interruption and recovery, 72-hour
+fail-closed behavior, existing-account recapture, and 60-second photo signed
+URL expiry. Source mocks or manually posted lookalike JWS values cannot satisfy
+Apple-delivery evidence.
 
 ## Generated Evidence Checks
 
@@ -258,6 +319,7 @@ npm --workspace apps/mobile run typecheck
 npm --workspace apps/mobile run lint
 npm --workspace apps/mobile run test
 npm run phase2:rls-smoke
+npm run phase9:apple-auth-work-lane-smoke
 npm run phase3:audit-copy
 npm run phase4:qa-report
 npm run phase5:qa-packet

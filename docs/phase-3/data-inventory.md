@@ -24,6 +24,38 @@ This inventory must match Apple privacy labels, Google Data Safety, the privacy 
 | Crash/performance telemetry           | Device/app version, stack traces                                                                        | Runtime errors                                 | Sentry if configured                                                            | Sentry                                                                  | Configured by environment                    | Scrub health payloads.                                                                                                                                           |
 | Product analytics                     | Events, feature usage                                                                                   | Runtime                                        | PostHog if configured                                                           | PostHog                                                                 | Configured by environment                    | No raw health payloads or photos.                                                                                                                                |
 
+## Apple Authentication Data
+
+The migration-0055 source candidate sends Apple the native authorization
+request and server token-validation/revocation requests. Supabase stores the
+app account/session and Apple identity. Sealed lifecycle tables additionally
+store a versioned HMAC of the Apple subject, an owner/subject/client-bound
+AES-GCM refresh-token envelope while active, key-version labels, validation and
+state metadata, one-use capture/code HMAC metadata, and keyed signed-event/JTI/
+relay-email metadata. Authorization codes, raw compact JWS values, identity
+tokens, plaintext Apple subjects/relay emails, and plaintext refresh tokens are
+not stored in these tables.
+
+A signature-verified terminal event may transiently pass its raw Apple subject
+to a service-only RPC to exact-match one Apple Auth identity. If the identity
+does not exist yet, the event ledger retains only paired subject HMAC/key
+version, verified client ID, and keyed event metadata; first capture reconciles
+that evidence before code exchange. Raw-subject parameter and error logging is
+therefore prohibited even though the raw subject is not persisted in tables.
+
+Capture artifacts are short-lived, but signed event digests currently have no
+final approved retention/purge schedule and become pseudonymous rather than
+fully removed when Auth deletion nulls their user UUID. The current user export
+does not include sealed Apple operational state. Both retention and access/
+export treatment require named privacy/legal/security review; this inventory
+does not conclude that keyed data is anonymous or exempt. Every successful
+daily validation atomically advances the subject digest and freshly seals the
+token under the current vault key. Dormant, deferred, or failing rows do not
+advance from configuration alone, so key retirement requires zero-row evidence
+or affected-user recapture/reauthentication. A subject key must additionally
+remain available while unresolved terminal `unknown_subject` event evidence
+uses that version for capture-time reconciliation.
+
 ## Phase 5 Native Notes
 
 - Barcode scanning uses on-device camera decode, then calls the OnSkin catalog Edge Function. The function queries only reviewed Supabase catalog rows and returns manual fallback on a miss; it does not call Open Beauty Facts or another catalog recipient. Raw barcode values are not allowed in analytics payloads.

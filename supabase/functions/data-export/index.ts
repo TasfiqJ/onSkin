@@ -3,6 +3,7 @@
 // exported.
 // Deploy with JWT verification enabled: `supabase functions deploy data-export`
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import { photoPathBelongsToUser } from '../_shared/storagePath.ts';
@@ -43,7 +44,7 @@ const dataExportRateLimitWindowSeconds = intEnv(
   60,
   86400,
 );
-const dataExportPhotoUrlTtlSeconds = intEnv('DATA_EXPORT_PHOTO_URL_TTL_SECONDS', 3600, 60, 3600);
+const dataExportPhotoUrlTtlSeconds = intEnv('DATA_EXPORT_PHOTO_URL_TTL_SECONDS', 60, 30, 60);
 const dataExportPageSize = intEnv('DATA_EXPORT_PAGE_SIZE', 500, 100, 1000);
 const dataExportMaxRowsPerSource = intEnv('DATA_EXPORT_MAX_ROWS_PER_SOURCE', 50_000, 1000, 250_000);
 const dataExportStoragePageSize = intEnv('DATA_EXPORT_STORAGE_PAGE_SIZE', 500, 100, 1000);
@@ -90,6 +91,15 @@ function json(body: unknown, status = 200, headers: HeadersInit = {}): Response 
       ...headers,
     },
   });
+}
+
+async function requireSameAccountAccess(
+  caller: Parameters<typeof preflightAccountAccess>[0],
+  userId: string,
+  snapshot: AccountAccessSnapshot,
+): Promise<Response | null> {
+  const result = await preflightAccountAccess(caller, userId, snapshot);
+  return result.ok ? null : json({ error: result.error }, result.status);
 }
 
 async function readExportHealthLifecycle(
@@ -292,6 +302,11 @@ Deno.serve(async (req) => {
   const userId = userData.user?.id;
   if (userErr || !userId) return json('unauthorized', 401);
 
+  const initialAccountAccess = await preflightAccountAccess(supabase, userId);
+  if (!initialAccountAccess.ok) {
+    return json({ error: initialAccountAccess.error }, initialAccountAccess.status);
+  }
+
   const requestBody = await readLimitedJson(req, dataExportBodyMaxBytes, json, {
     error: 'BAD_JSON',
   });
@@ -316,6 +331,13 @@ Deno.serve(async (req) => {
 
   const rateLimitError = await enforceRateLimit(admin, userId);
   if (rateLimitError) return rateLimitError;
+
+  const sourceAccountError = await requireSameAccountAccess(
+    supabase,
+    userId,
+    initialAccountAccess.snapshot,
+  );
+  if (sourceAccountError) return sourceAccountError;
 
   try {
     const sourcePayloads: Record<string, Record<string, unknown>[]> = {};
@@ -357,6 +379,13 @@ Deno.serve(async (req) => {
       sourcePayloads[source] = result.rows;
       sourceManifest[source] = result.manifest;
     }
+
+    const attributionAccountError = await requireSameAccountAccess(
+      supabase,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (attributionAccountError) return attributionAccountError;
 
     const clickTokens = [
       ...new Set(
@@ -414,6 +443,13 @@ Deno.serve(async (req) => {
       note: 'Matched only through bounded click-token batches from exported commerce_click_events; commission_cents is excluded as internal accounting.',
     };
 
+    const storageAccountError = await requireSameAccountAccess(
+      supabase,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (storageAccountError) return storageAccountError;
+
     const photoBucket = admin.storage.from('photos');
     const storageInventory = await listStoragePathsVerified({
       userId,
@@ -451,6 +487,13 @@ Deno.serve(async (req) => {
       photoIdsByPath.set(path, ids);
     }
     for (const ids of photoIdsByPath.values()) ids.sort();
+
+    const signingAccountError = await requireSameAccountAccess(
+      supabase,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (signingAccountError) return signingAccountError;
 
     const photoUrls = await boundedMap(
       storageInventory.paths,
@@ -497,6 +540,12 @@ Deno.serve(async (req) => {
     if (!healthDecision.allowed) {
       return healthLifecycleRetryResponse(healthDecision);
     }
+    const responseAccountError = await requireSameAccountAccess(
+      supabase,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (responseAccountError) return responseAccountError;
     sourceManifest.health_consent_lifecycle = await derivedManifest({
       rows: [healthDecision.snapshot],
       checksumFields: [
@@ -558,6 +607,13 @@ Deno.serve(async (req) => {
       ],
       ...sourcePayloads,
     };
+
+    const deliveryAccountError = await requireSameAccountAccess(
+      supabase,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (deliveryAccountError) return deliveryAccountError;
 
     return json(bundle, 200, {
       'Content-Disposition': `attachment; filename="${dataExportFileName}"`,

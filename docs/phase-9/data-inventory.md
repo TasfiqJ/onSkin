@@ -2,6 +2,60 @@
 
 This inventory is the source for export, deletion, App Store privacy labels, Google Play Data safety, support escalation, and incident response. It must be rechecked for every release candidate.
 
+## Sign in with Apple Lifecycle Data
+
+Migration `20260715000055_apple_auth_lifecycle.sql` adds three fully sealed
+tables. Direct table access is revoked from `anon`, `authenticated`, and
+`service_role`; narrow security-definer RPCs are the only application path.
+
+- `apple_auth_lifecycles` holds the Auth user UUID while the account exists, a
+  versioned HMAC of the Apple subject, client ID, lifecycle state/generation,
+  an owner/subject/client-bound AES-GCM refresh-token envelope and key version
+  while active, validation/lease timestamps and failure code, and keyed relay
+  email state. No plaintext Apple subject, relay email, or refresh token is
+  stored.
+- `apple_auth_capture_operations` holds one-use capture metadata: operation,
+  Auth user/session, code HMAC, versioned subject HMAC, client ID,
+  state/failure, and bounded timestamps. It never stores the authorization code
+  or identity token. Nonterminal rows expire after ten minutes; terminal rows
+  become purgeable after 24 hours.
+- `apple_auth_server_events` holds keyed JTI, payload, subject, and optional
+  relay-email digests plus verified client ID, event type/time, bounded
+  disposition, receipt time, and the Auth user UUID while it still exists. The
+  raw compact JWS and raw Apple subject are not retained. Auth deletion nulls
+  the user UUID but currently retains the keyed event record; exact retention,
+  export/access-rights treatment, and eventual purge require named privacy/
+  legal/security approval before launch.
+
+Only a signature-verified terminal event transiently forwards its raw subject
+to the service-only RPC. The RPC can exact-match one Apple `auth.identities`
+row; the subject must equal both `provider_id` and `identity_data.sub`. If no
+identity exists yet, only the paired subject HMAC/key version, verified client
+ID, event metadata, and replay/relay digests are stored. A later first capture
+reconciles matching keyed terminal evidence under the owner lock before marking
+or exchanging the authorization code. This processing path makes database
+parameter/error-log minimization part of the production privacy review; it does
+not turn the keyed event ledger into anonymous data.
+
+The lifecycle worker opens a refresh token only in memory for Apple validation
+and clears its string reference afterward. Account deletion may open the same
+envelope in memory and immediately re-seal the token under the separate
+deletion-step key; after durable deletion intake, the reusable lifecycle vault
+is cleared. Vault and subject-HMAC keyrings support one to three overlapping
+versions. Every successful daily validation atomically re-derives the current
+subject digest and freshly seals the token under the current vault key. Dormant,
+deferred, or failing rows do not advance from configuration alone, and an old
+version cannot be retired until zero-row evidence exists or affected users
+recapture/reauthorize and old lifecycles are retired. Subject-key retirement
+also requires zero unresolved terminal `unknown_subject` events for that
+version, or a reviewed reconciliation/disposition; those keyed rows are the
+only no-retry link to a later first capture.
+
+These sealed operational tables are intentionally absent from the current
+user-facing export. That exclusion is a source boundary, not a legal conclusion;
+the final access/export policy and disclosure must be reviewed against launch
+jurisdictions and the exact production retention schedule.
+
 ## Exported From Supabase
 
 The `data-export` Edge Function exports the caller-scoped tables listed in `CALLER_RLS_EXPORT_TABLES` and the service-role filtered exports listed in `SERVICE_ROLE_FILTERED_EXPORTS`.
@@ -10,7 +64,7 @@ Caller-scoped coverage includes account profile, skin profile, shelf, routines, 
 
 `reverse_trial_grants` remains service-only under RLS and is now exported only through the separate backend service-role client, with an exact `user_id` filter resolved from `auth.getUser()` rather than request data. Its output is allowlisted to `user_id`, grant/expiry timestamps, source, and reviewed metadata. The executable registry rejects every canonical service-only table if it is inserted into the caller-RLS set; the caller registry now exactly matches all 30 owner-client private tables.
 
-Cloud photo export links are generated only when the photo metadata path is a well-formed object path under the caller's user ID storage prefix. Malformed, cross-user, dot-segment, empty-segment, query/fragment, or control-character legacy paths are reported as `INVALID_STORAGE_PATH` omissions and are not signed.
+Cloud photo export links are generated only when the photo metadata path is a well-formed object path under the caller's user ID storage prefix. Malformed, cross-user, dot-segment, empty-segment, query/fragment, or control-character legacy paths are reported as `INVALID_STORAGE_PATH` omissions and are not signed. Signed links default to and are capped at 60 seconds. Already issued links cannot be revoked; live evidence must prove they work before expiry and fail afterward.
 
 Granular consent withdrawal is handled by the JWT-gated, POST-only
 `consent-withdrawal` Edge Function. It accepts only the exact six-field
@@ -135,8 +189,10 @@ capture-shutdown/no-recordings audit. Development can record a typed
 not-required state only when the environment and all deletion signals prove
 PostHog was unused.
 
-For an Apple-linked account, the fixed-origin token exchange must bind the
-returned token identity to the authenticated Apple subject before revocation.
+For an Apple-linked account, initial native authentication now binds independent
+CSPRNG state/raw nonce values to the ID token and keeps the one-use code for the
+lifecycle server. The fixed-origin token exchange must bind the returned token
+identity to the authenticated Apple subject before capture or revocation.
 Only the exact successful token contract followed by Apple's exact `200`
 no-body revoke contract reports automatic revocation. A missing/unusable code,
 missing or mismatched configuration, subject mismatch, exchange/no-token
@@ -145,16 +201,25 @@ of falsely claiming automatic success. The iOS client source observes Apple's
 credential-revoked notification and checks credential state before publishing a
 restored session and again at foreground. Unknown/error results stay behind the
 retryable session gate; confirmed invalid Apple sessions are durably quarantined
-before sign-out without erasing unrelated owner-bound local-first records. A supported physical
-iPhone must still prove that notification/state path, quarantine recovery, and
-same-owner/different-owner behavior. Apple's server-to-server `consent-revoked`
-endpoint and delivery evidence remain external gates wherever selected or
-required.
+before sign-out without erasing unrelated owner-bound local-first records. A
+supported physical iPhone must still prove that notification/state path,
+quarantine recovery, and same-owner/different-owner behavior. The source now includes signed
+server-to-server ingress for relay-email changes, `consent-revoked`, and
+`account-deleted`; terminal events close sessions and create or reuse the same
+durable six-step deletion operation. If the event predates the Auth identity,
+first capture reconciles its audience-bound keyed record and returns `blocked`
+before code exchange without relying on Apple replay. Exact primary-App-ID
+registration and real Apple delivery remain external gates.
+
+The current local 0055 gate passed two clean resets, exact 54/0055 history, the
+full structural suite plus 111/111 Apple lifecycle pgTAP, schema lint, an empty
+shadow diff, temporary types, 20/20 focused event/lifecycle Edge tests, and the
+47-test Apple auth work lane.
 
 These are bounded local source/rehearsal properties, not proof of a race-free
 production system. Hosted clean-reset, A/B stale-session/preflight races,
 publication-lease process-death/configure-in-flight/lost-release checks,
-Cron/Vault continuity, provider
+Cron/Vault continuity, Apple event delivery, provider
 interruption and lost-response recovery, RevenueCat 200/202 and renewal/restore
 recreation behavior, PostHog async completion, Apple native revocation,
 Storage residue, mobile relaunch/status recovery, and reviewed staging and
@@ -166,7 +231,7 @@ The exhaustive orphan audit also found launch-significant policy/data-model gaps
 
 ## RLS And Photo Storage Inventory
 
-The migration-derived public schema has 77 RLS-enabled tables: 30 owner-client private, 10 directly service-only private, 14 fully sealed service-only lifecycle/tombstone/publication/copy tables, and 23 authenticated catalog/editorial tables. The sealed tables added by migrations `0048`, `0051`, `0052`, and `0054` revoke direct table access even from `service_role`; they are reachable only through narrowly granted security-definer RPCs. The DB-09 hosted matrix must register all 54 private tables exactly once, apply row-positive isolation probes to the 40 directly queryable private tables, prove direct denial for every role on the 14 sealed tables, and distinguish cross-user permanent accounts, a real signed-anonymous account, and a publishable-key client with no session. Disposable PostgreSQL 15/17 rehearsals provide positive-row/RPC-path evidence for sealed state that PostgREST is deliberately unable to inspect directly.
+The migration-derived public schema has 80 RLS-enabled tables: 30 owner-client private, 10 directly service-only private, 17 fully sealed service-only lifecycle/tombstone/publication/copy tables, and 23 authenticated catalog/editorial tables. The sealed tables added by migrations `0048`, `0051`, `0052`, `0054`, and `0055` revoke direct table access even from `service_role`; they are reachable only through narrowly granted security-definer RPCs. The DB-09 hosted matrix must register all 57 private tables exactly once, apply row-positive isolation probes to the 40 directly queryable private tables, prove direct denial for every role on the 17 sealed tables, and distinguish cross-user permanent accounts, a real signed-anonymous account, and a publishable-key client with no session. Disposable PostgreSQL rehearsals and local pgTAP provide source evidence for sealed state that PostgREST is deliberately unable to inspect directly; hosted proof remains open.
 
 Photo metadata and `photos` bucket objects require an owner-prefixed path plus current `photo_cloud_backup` consent. Migration `20260713000045_anonymous_photo_storage_guard.sql` additionally denies insert/update of cloud photo bytes to signed-anonymous accounts, including an anonymous account that can create its own consent row. Owner-prefixed select/delete remains available so existing legacy objects can still be accessed or removed. This source posture is not release evidence until a reviewed reset and the hosted adversarial matrix pass with unchanged-object and residue-free-cleanup postconditions.
 
@@ -202,7 +267,7 @@ Android Auto Backup is disabled in app config for the same local-only data class
 - RevenueCat: subscription/customer data; durable deletion uses REST API v2 preflight, 200/202 acknowledgement plus read-only absence reconciliation, and versioned HMAC identity tombstones. `REVENUECAT_V2_SECRET_API_KEY` is mandatory because V1 keys do not work with v2. Live alias, transfer, renewal, restore, and recreation proof plus approved tombstone retention/rotation remain gates.
 - PostHog: analytics person keyed by pseudonymous app user ID plus a legacy raw-ID compatibility path; required-mode deletion persists the exact target set and provider status observations, then requires two interval-separated absence observations and reviewed capture-shutdown/no-recordings evidence before terminal success. Hosted EU-project completion remains a launch gate.
 - Sentry: crash diagnostics; payload scrubber removes route params, URLs, product context, barcodes, OCR text, notes, photo paths, receipts, and free text before capture.
-- Apple/Google: account and store billing records; the app deletion flow must explain subscription cancellation remains in store account management. For Sign in with Apple, fixed-origin exchange is bound to the authenticated Apple subject and only an exact `200` no-body revoke response proves automatic revocation. Native revoke-listener/state-check source is implemented with durable local quarantine, but physical-iPhone evidence and any applicable server-to-server `consent-revoked` delivery remain launch blockers.
+- Apple/Google: account and store billing records; the app deletion flow must explain subscription cancellation remains in store account management. For Sign in with Apple, the lifecycle server exchanges the one-use code, retains the encrypted refresh token for daily validation/deletion revocation, and accepts only verified signed account events. Fixed-origin exchange is bound to the authenticated Apple subject and only an exact `200` no-body revoke response proves automatic revocation. Native revoke-listener/state-check and signed-event source are implemented, but physical-iPhone, hosted token exchange/validation, primary-App-ID endpoint registration, real Apple event delivery, retention review, and App Review remain launch blockers.
 
 ## Review Requirement
 

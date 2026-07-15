@@ -130,6 +130,61 @@ Use this format for every significant product, architecture, pricing, privacy, o
   close these gates against exact evidence.
 - Status: Accepted.
 
+### 2026-07-15 - Require A Server-Attested Apple Credential Lifecycle
+
+- Decision: Treat a Supabase Apple identity or issued access JWT as
+  insufficient account authority on its own. Native Apple sign-in must bind an
+  exact state echo and raw nonce, authenticate/link with the ID token without
+  giving the one-use authorization code to Supabase, and complete a composite
+  server capture before the session can publish. The server verifies the token
+  and nonce, matches the exact Apple identity and Supabase session, exchanges
+  the code once, and stores only an AES-GCM refresh-token envelope. A
+  one-minute scheduled worker performs no-more-than-daily refresh-token
+  validation; signed Apple account events and native credential invalidation
+  retire the lifecycle and sessions. RLS, photo Storage, authenticated Edge
+  Functions, writes, and direct authenticated helper RPCs enforce the same
+  exact-session account-access decision. Terminal signed events can exact-match
+  an existing Apple Auth identity before lifecycle capture, while a terminal
+  event that precedes the identity is stored only as audience-bound keyed
+  evidence and reconciled by first capture before code exchange. No Apple retry
+  is required for that closure, and the raw subject is never persisted.
+- Type: Architecture / Privacy / Security / Launch
+- Alternatives: trust Supabase's Apple ID-token session alone; pass the
+  authorization code to Supabase and lose the lifecycle exchange; store the
+  refresh token in plaintext; rely only on device credential state; or process
+  unsigned/unpersisted provider callbacks.
+- Criteria: one code consumer, nonce/state replay resistance, owner and subject
+  binding, encrypted provider credentials, daily validity evidence, durable
+  terminal events, no-retry pre-identity reconciliation, stale-JWT denial,
+  deletion continuity, and bounded outage behavior.
+- Evidence: migration `20260715000055_apple_auth_lifecycle.sql`, the
+  `apple-auth-lifecycle`, `apple-account-events`, and `apple-auth-worker`
+  functions, mobile composite permit/capture and invalidation clients, the
+  shared account-access fence, focused source tests, and
+  `docs/phase-9/apple-auth-lifecycle-operations-runbook.md`. The current local
+  gate includes two clean resets, exact 54/0055 history, the full structural
+  suite plus 111 Apple pgTAP assertions, schema lint, empty shadow diff,
+  temporary type generation, 20 focused event/lifecycle Edge tests, and the
+  47-test Apple auth work lane.
+- Risk: migration cutover blocks an existing Apple account until it completes
+  fresh capture. Subject-HMAC and vault keyrings support at most three
+  overlapping versions. Each successful daily validation atomically moves the
+  subject digest and a freshly sealed refresh-token envelope to the current
+  versions; dormant, deferred, or failing rows do not advance from configuration
+  alone, so old-key retirement still requires zero-row evidence, recapture, or
+  fail-closed reauthentication. Unresolved terminal `unknown_subject` evidence
+  also pins its subject-key version until reconciliation or reviewed
+  disposition. Code/event HMACs are single-key boundaries and
+  require a separately reviewed rotation plan. Hosted deployment, live Apple
+  event delivery, Cron/Vault continuity, physical-iPhone/TestFlight,
+  privacy/security/legal review, transfer policy, and App Review remain open.
+- Status: Accepted and locally verified for source architecture; production
+  rollout and external acceptance remain gated.
+- Owner: Engineering for source and operations; named reviewers and Apple for
+  external decisions/outcomes.
+- Review date: Before hosted migration 0055 and after the first complete
+  rotation/rollback drill.
+
 ### 2026-07-09 - Fail Closed Before Unreviewed Production Builds
 
 - Decision: Production Expo config requires `PHASE3_RELEASE_CLEARANCE=cleared`; development and staging remain available for implementation and reviewer QA.

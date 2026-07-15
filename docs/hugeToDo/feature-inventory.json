@@ -226,8 +226,8 @@
     }
   ],
   "categoryCounts": {
-    "data-store": 101,
-    "edge-function": 13,
+    "data-store": 104,
+    "edge-function": 16,
     "feature-flag": 16,
     "generated-packet": 30,
     "native-module": 43,
@@ -457,6 +457,27 @@
       "category": "data-store",
       "source": "supabase/migrations/20260613000022_commerce.sql",
       "featureIds": ["F-16"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:apple_auth_capture_operations",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:apple_auth_lifecycles",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "data-store:postgres:apple_auth_server_events",
+      "category": "data-store",
+      "source": "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
+      "featureIds": ["F-02", "F-20"],
       "readiness": "implemented"
     },
     {
@@ -946,6 +967,27 @@
       "id": "edge-function:account-deletion",
       "category": "edge-function",
       "source": "supabase/functions/account-deletion/index.ts",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "edge-function:apple-account-events",
+      "category": "edge-function",
+      "source": "supabase/functions/apple-account-events/index.ts",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "edge-function:apple-auth-lifecycle",
+      "category": "edge-function",
+      "source": "supabase/functions/apple-auth-lifecycle/index.ts",
+      "featureIds": ["F-02", "F-20"],
+      "readiness": "implemented"
+    },
+    {
+      "id": "edge-function:apple-auth-worker",
+      "category": "edge-function",
+      "source": "supabase/functions/apple-auth-worker/index.ts",
       "featureIds": ["F-02", "F-20"],
       "readiness": "implemented"
     },

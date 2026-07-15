@@ -12,6 +12,8 @@ import {
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const TOKEN_PATTERN = /^[a-f0-9]{64}$/;
+const HMAC_PATTERN = /^[a-f0-9]{64}$/;
+const VERSION_PATTERN = /^[A-Za-z0-9._-]{1,64}$/;
 const BYTEA_PATTERN = /^\\x[a-f0-9]+$/;
 
 export type DeletionRpcResult =
@@ -38,6 +40,14 @@ export type BeginAccountDeletionInput = {
   revenueCatEncryptedPayload: string | null;
   postHogEncryptedPayload: string | null;
 };
+
+export type AppleDeletionVaultRow = Readonly<{
+  appleSubjectHmac: string;
+  clientId: string;
+  encryptedRefreshToken: string;
+  vaultKeyVersion: string;
+  generation: number | string;
+}>;
 
 export type AccountPublicationLeaseStatus =
   | 'reserved'
@@ -193,6 +203,57 @@ export class DurableDeletionDatabaseGateway {
       throw new DurableDeletionDatabaseError('DELETION_DATABASE_UNAVAILABLE');
     }
     return result.data;
+  }
+
+  async appleDeletionVault(userId: string, sessionId: string): Promise<AppleDeletionVaultRow | null> {
+    if (!validUuid(userId) || !validUuid(sessionId)) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_INPUT_INVALID');
+    }
+    const result = rows(
+      await this.call('get_apple_auth_deletion_vault', {
+        p_user_id: userId,
+        p_session_id: sessionId,
+      }),
+    );
+    if (result.length === 0) return null;
+    if (result.length !== 1) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
+    }
+    const row = result[0];
+    if (
+      !hasExactKeys(row, [
+        'apple_subject_hmac',
+        'client_id',
+        'encrypted_refresh_token',
+        'vault_key_version',
+        'generation',
+      ]) ||
+      typeof row.apple_subject_hmac !== 'string' ||
+      !HMAC_PATTERN.test(row.apple_subject_hmac) ||
+      typeof row.client_id !== 'string' ||
+      row.client_id.length < 3 ||
+      row.client_id.length > 255 ||
+      row.client_id !== row.client_id.trim() ||
+      /[\u0000-\u001f\u007f]/u.test(row.client_id) ||
+      !validBytea(row.encrypted_refresh_token) ||
+      typeof row.vault_key_version !== 'string' ||
+      !VERSION_PATTERN.test(row.vault_key_version) ||
+      !(
+        (typeof row.generation === 'number' &&
+          Number.isSafeInteger(row.generation) &&
+          row.generation >= 1) ||
+        (typeof row.generation === 'string' && /^[1-9][0-9]*$/u.test(row.generation))
+      )
+    ) {
+      throw new DurableDeletionDatabaseError('DELETION_DATABASE_RESPONSE_INVALID');
+    }
+    return {
+      appleSubjectHmac: row.apple_subject_hmac,
+      clientId: row.client_id,
+      encryptedRefreshToken: row.encrypted_refresh_token,
+      vaultKeyVersion: row.vault_key_version,
+      generation: row.generation,
+    };
   }
 
   async begin(input: BeginAccountDeletionInput): Promise<{

@@ -322,6 +322,30 @@ Known deployment contradictions are Codex work.
 | AUTH-05 | C     | Prove sign-out, token expiry, cold start, owner mismatch, cleanup failure, and A-to-B switching isolation                                 | No prior-owner data appears on any route                   |
 | AUTH-06 | C     | Bind RevenueCat identity, analytics identity, query caches, encrypted stores, exports, and in-flight operations to the account generation | No stale write/share or cross-account entitlement survives |
 
+2026-07-15 source checkpoint: the current candidate implements the native
+state/raw-nonce contract, composite ID-token plus server-capture permit,
+one-use authorization-code exchange, versioned encrypted refresh-token vault,
+daily validation worker, canonical signed Apple event ingress, native
+credential invalidation, terminal event-before-identity reconciliation before
+code exchange, deletion-vault reuse, and exact-session
+RLS/Storage/Edge/direct-RPC fence. This advances IOS-03, AUTH-01, AUTH-03,
+AUTH-05, AUTH-06, DB-09, and DB-10 source work; it does not complete their live
+acceptance. Existing Apple accounts require fresh capture or a compatible
+mandatory-version recovery plan. Vault and subject-HMAC keyrings allow up to
+three overlapping versions. Every successful daily validation atomically
+advances the current subject digest and freshly sealed vault envelope; dormant,
+deferred, or failing rows do not advance from configuration alone. Hosted
+migration/function deployment, primary-App-ID event
+registration and actual delivery, Vault/Cron continuity and rotation,
+stale-JWT adversarial proof, physical-iPhone/TestFlight, privacy/security/legal
+review, and App Review remain required. Operations are defined in
+`docs/phase-9/apple-auth-lifecycle-operations-runbook.md`.
+
+The local migration-0055 replay gate passed two clean resets, exact 54/0055
+history, the full structural suite plus 111/111 Apple pgTAP, schema lint, empty
+shadow diff, temporary types, 20/20 focused event/lifecycle Edge tests, and the
+47-test Apple auth work lane. These results advance source evidence only.
+
 ## 14. Catalog, Shelf, Camera, Barcode, and Native OCR
 
 | ID     | Owner | Codex deliverable                                                                                                           | Acceptance                                                                      |
@@ -618,7 +642,11 @@ As of this document date:
 - Widgets and Live Activities lack finished native targets.
 - Cross-platform validators still require Android and must be migrated.
 - The Supabase staging deploy wrapper has missing functions/auth/secrets.
-- Native Sign in with Apple configuration requires correction.
+- Native Sign in with Apple lifecycle source is implemented, but final Apple
+  identifiers/keys, hosted migration and function deployment, primary-App-ID
+  event registration/delivery, the one-minute Vault/Cron worker, existing-user
+  recapture cutover, rotation/rollback drills, and physical-iPhone/TestFlight
+  evidence remain open.
 - The reverse-trial environment/validator contract contradicts its app-granted
   implementation.
 - App Store privacy, export, metadata, subscriptions, reviewer packet, and

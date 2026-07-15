@@ -18,6 +18,12 @@ const USER_B = '22222222-2222-4222-8222-222222222222';
 const SESSION_A = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const SESSION_B = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const REFRESH_A = 'refresh-token-a';
+const APPLE_BOOTSTRAP = Object.freeze({
+  appleUser: 'apple-subject',
+  authorizationCode: 'single-use-authorization-code',
+  identityToken: 'apple-identity-token',
+  nonce: 'a'.repeat(43),
+});
 
 function base64Url(value: string): string {
   return btoa(value).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
@@ -159,6 +165,7 @@ describe('strict canonical Supabase URL classification', () => {
     ['/graphql/v1', 'graphql'],
     ['/realtime/v1/websocket', 'realtime'],
     ['/functions/v1/data-export', 'functions'],
+    ['/functions/v1/apple-auth-lifecycle', 'apple_auth_lifecycle'],
     ['/functions/v1/account-deletion', 'account_deletion'],
     ['/future/v99/new-surface', 'unknown'],
   ] as const)('classifies canonical same-origin %s as %s', (path, expected) => {
@@ -688,6 +695,481 @@ describe('explicit Auth request allowlist and lineage', () => {
         }),
       ),
       'SUPABASE_REMOTE_REQUEST_TARGET_REJECTED',
+    );
+  });
+});
+
+describe('composite Sign in with Apple bootstrap permit', () => {
+  const freshAppleBody = {
+    provider: 'apple',
+    id_token: APPLE_BOOTSTRAP.identityToken,
+    nonce: APPLE_BOOTSTRAP.nonce,
+    gotrue_meta_security: {},
+  };
+  const captureBody = { action: 'capture', ...APPLE_BOOTSTRAP };
+  const activeLifecycleResponse = {
+    status: 'active',
+    generation: 1,
+    nextValidationAt: '2026-07-16T12:00:00.000Z',
+  };
+
+  it('keeps a fresh session closed until exact auth and lifecycle capture both validate', async () => {
+    const admission = controller();
+    const transport = vi.fn(async (input: string | URL | Request) =>
+      (input instanceof Request ? input.url : input.toString()).includes('/auth/v1/')
+        ? jsonResponse(sessionPayload())
+        : jsonResponse(activeLifecycleResponse),
+    );
+    const gated = admission.createFetch(transport);
+
+    await admission.runWithPermit(
+      { purpose: 'apple_auth_bootstrap', credentials: APPLE_BOOTSTRAP },
+      async () => {
+        expect(admission.snapshot().state).toBe('closed');
+        await gated(`${SUPABASE_URL}/auth/v1/token?grant_type=id_token`, {
+          method: 'POST',
+          headers: jsonHeaders(PUBLIC_KEY),
+          body: JSON.stringify(freshAppleBody),
+        });
+        expect(admission.snapshot().state).toBe('closed');
+        await gated(`${SUPABASE_URL}/functions/v1/apple-auth-lifecycle`, {
+          method: 'POST',
+          headers: jsonHeaders(TOKEN_A),
+          body: JSON.stringify(captureBody),
+        });
+        expect(admission.snapshot().state).toBe('closed');
+      },
+    );
+
+    expect(transport).toHaveBeenCalledTimes(2);
+    expect(admission.snapshot()).toMatchObject({ state: 'closed', subject: null });
+  });
+
+  it('preserves the anonymous UUID, requires the rotated bearer, and rotates only after capture', async () => {
+    const admission = controller();
+    const previous = activate(admission);
+    const transport = vi.fn(async (input: string | URL | Request) =>
+      (input instanceof Request ? input.url : input.toString()).includes('/auth/v1/')
+        ? jsonResponse(sessionPayload(TOKEN_A_ROTATED))
+        : jsonResponse(activeLifecycleResponse),
+    );
+    const gated = admission.createFetch(transport);
+
+    await admission.runWithPermit(
+      { purpose: 'apple_auth_bootstrap', credentials: APPLE_BOOTSTRAP, binding: previous },
+      async () => {
+        await gated(`${SUPABASE_URL}/auth/v1/token?grant_type=id_token`, {
+          method: 'POST',
+          headers: jsonHeaders(TOKEN_A),
+          body: JSON.stringify({ ...freshAppleBody, link_identity: true }),
+        });
+        expect(admission.hasActiveBinding(TOKEN_A, USER_A)).toBe(true);
+        await gated(`${SUPABASE_URL}/functions/v1/apple-auth-lifecycle`, {
+          method: 'POST',
+          headers: jsonHeaders(TOKEN_A_ROTATED),
+          body: JSON.stringify(captureBody),
+        });
+        expect(admission.hasActiveBinding(TOKEN_A, USER_A)).toBe(true);
+      },
+    );
+
+    expect(admission.snapshot()).toMatchObject({ state: 'active', subject: USER_A });
+    expect(admission.hasActiveBinding(TOKEN_A_ROTATED, USER_A)).toBe(true);
+    expect(admission.hasActiveBinding(TOKEN_A, USER_A)).toBe(false);
+  });
+
+  it('uses the previous exact bearer when same-user linking returns no replacement token', async () => {
+    const admission = controller();
+    const previous = activate(admission);
+    const transport = vi
+      .fn<() => Promise<Response>>()
+      .mockResolvedValueOnce(jsonResponse({ user: { id: USER_A } }))
+      .mockResolvedValueOnce(jsonResponse(activeLifecycleResponse));
+    const gated = admission.createFetch(transport);
+
+    await admission.runWithPermit(
+      { purpose: 'apple_auth_bootstrap', credentials: APPLE_BOOTSTRAP, binding: previous },
+      async () => {
+        await gated(`${SUPABASE_URL}/auth/v1/token?grant_type=id_token`, {
+          method: 'POST',
+          headers: jsonHeaders(TOKEN_A),
+          body: JSON.stringify({ ...freshAppleBody, link_identity: true }),
+        });
+        await gated(`${SUPABASE_URL}/functions/v1/apple-auth-lifecycle`, {
+          method: 'POST',
+          headers: jsonHeaders(TOKEN_A),
+          body: JSON.stringify(captureBody),
+        });
+      },
+    );
+
+    expect(admission.hasActiveBinding(TOKEN_A, USER_A)).toBe(true);
+  });
+
+  it('never lets Supabase consume the Apple authorization code as an ID-token access_token', async () => {
+    const admission = controller();
+    const transport = ordinaryTransport();
+
+    await expectCode(
+      admission.runWithPermit(
+        { purpose: 'apple_auth_bootstrap', credentials: APPLE_BOOTSTRAP },
+        () =>
+          admission.createFetch(transport)(`${SUPABASE_URL}/auth/v1/token?grant_type=id_token`, {
+            method: 'POST',
+            headers: jsonHeaders(PUBLIC_KEY),
+            body: JSON.stringify({
+              ...freshAppleBody,
+              access_token: APPLE_BOOTSTRAP.authorizationCode,
+            }),
+          }),
+      ),
+      'SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED',
+    );
+
+    expect(transport).not.toHaveBeenCalled();
+    expect(admission.snapshot().state).toBe('closed');
+  });
+
+  it.each([
+    {
+      label: 'wrong endpoint',
+      path: '/functions/v1/catalog-search',
+      bearerToken: TOKEN_A,
+      body: captureBody,
+    },
+    {
+      label: 'query ambiguity',
+      path: '/functions/v1/apple-auth-lifecycle?retry=true',
+      bearerToken: TOKEN_A,
+      body: captureBody,
+    },
+    {
+      label: 'wrong bearer',
+      path: '/functions/v1/apple-auth-lifecycle',
+      bearerToken: TOKEN_B,
+      body: captureBody,
+    },
+    {
+      label: 'wrong authorization code',
+      path: '/functions/v1/apple-auth-lifecycle',
+      bearerToken: TOKEN_A,
+      body: { ...captureBody, authorizationCode: 'different-code' },
+    },
+    {
+      label: 'extra body field',
+      path: '/functions/v1/apple-auth-lifecycle',
+      bearerToken: TOKEN_A,
+      body: { ...captureBody, retry: true },
+    },
+  ])('rejects the second request for $label before dispatch', async (testCase) => {
+    const admission = controller();
+    const transport = vi.fn(async () => jsonResponse(sessionPayload()));
+    const gated = admission.createFetch(transport);
+
+    await expectCode(
+      admission.runWithPermit(
+        { purpose: 'apple_auth_bootstrap', credentials: APPLE_BOOTSTRAP },
+        async () => {
+          await gated(`${SUPABASE_URL}/auth/v1/token?grant_type=id_token`, {
+            method: 'POST',
+            headers: jsonHeaders(PUBLIC_KEY),
+            body: JSON.stringify(freshAppleBody),
+          });
+          await gated(`${SUPABASE_URL}${testCase.path}`, {
+            method: 'POST',
+            headers: jsonHeaders(testCase.bearerToken),
+            body: JSON.stringify(testCase.body),
+          });
+        },
+      ),
+      'SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED',
+    );
+    expect(transport).toHaveBeenCalledOnce();
+    expect(admission.snapshot().state).toBe('closed');
+  });
+
+  it('rejects partial provider success and never rotates the anonymous binding', async () => {
+    const admission = controller();
+    const previous = activate(admission);
+    const transport = vi
+      .fn<() => Promise<Response>>()
+      .mockResolvedValueOnce(jsonResponse(sessionPayload(TOKEN_A_ROTATED)))
+      .mockResolvedValueOnce(jsonResponse({ error: 'temporarily_unavailable' }, 503));
+    const gated = admission.createFetch(transport);
+
+    await expectCode(
+      admission.runWithPermit(
+        { purpose: 'apple_auth_bootstrap', credentials: APPLE_BOOTSTRAP, binding: previous },
+        async () => {
+          await gated(`${SUPABASE_URL}/auth/v1/token?grant_type=id_token`, {
+            method: 'POST',
+            headers: jsonHeaders(TOKEN_A),
+            body: JSON.stringify({ ...freshAppleBody, link_identity: true }),
+          });
+          await gated(`${SUPABASE_URL}/functions/v1/apple-auth-lifecycle`, {
+            method: 'POST',
+            headers: jsonHeaders(TOKEN_A_ROTATED),
+            body: JSON.stringify(captureBody),
+          });
+        },
+      ),
+      'SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED',
+    );
+
+    expect(admission.hasActiveBinding(TOKEN_A, USER_A)).toBe(true);
+    expect(admission.hasActiveBinding(TOKEN_A_ROTATED, USER_A)).toBe(false);
+  });
+
+  it('rejects a forged active response and an auth-only partial operation', async () => {
+    for (const lifecyclePayload of [
+      { ...activeLifecycleResponse, generation: 0 },
+      { ...activeLifecycleResponse, generation: '9223372036854775808' },
+      { ...activeLifecycleResponse, status: 'blocked' },
+      { ...activeLifecycleResponse, extra: true },
+    ]) {
+      const admission = controller();
+      const transport = vi
+        .fn<() => Promise<Response>>()
+        .mockResolvedValueOnce(jsonResponse(sessionPayload()))
+        .mockResolvedValueOnce(jsonResponse(lifecyclePayload));
+      const gated = admission.createFetch(transport);
+      await expectCode(
+        admission.runWithPermit(
+          { purpose: 'apple_auth_bootstrap', credentials: APPLE_BOOTSTRAP },
+          async () => {
+            await gated(`${SUPABASE_URL}/auth/v1/token?grant_type=id_token`, {
+              method: 'POST',
+              headers: jsonHeaders(PUBLIC_KEY),
+              body: JSON.stringify(freshAppleBody),
+            });
+            await gated(`${SUPABASE_URL}/functions/v1/apple-auth-lifecycle`, {
+              method: 'POST',
+              headers: jsonHeaders(TOKEN_A),
+              body: JSON.stringify(captureBody),
+            });
+          },
+        ),
+        'SUPABASE_REMOTE_REQUEST_BINDING_REJECTED',
+      );
+    }
+
+    const authOnly = controller();
+    await expectCode(
+      authOnly.runWithPermit(
+        { purpose: 'apple_auth_bootstrap', credentials: APPLE_BOOTSTRAP },
+        () =>
+          authOnly.createFetch(async () => jsonResponse(sessionPayload()))(
+            `${SUPABASE_URL}/auth/v1/token?grant_type=id_token`,
+            {
+              method: 'POST',
+              headers: jsonHeaders(PUBLIC_KEY),
+              body: JSON.stringify(freshAppleBody),
+            },
+          ),
+      ),
+      'SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED',
+    );
+  });
+
+  it('rejects a rapid second Apple bootstrap while the first semantic lease is active', async () => {
+    const admission = controller();
+    let releaseAuth!: (response: Response) => void;
+    const transport = vi.fn(async (input: string | URL | Request) => {
+      const url = input instanceof Request ? input.url : input.toString();
+      if (url.includes('/auth/v1/')) {
+        return new Promise<Response>((resolve) => {
+          releaseAuth = resolve;
+        });
+      }
+      return jsonResponse(activeLifecycleResponse);
+    });
+    const gated = admission.createFetch(transport);
+    const first = admission.runWithPermit(
+      { purpose: 'apple_auth_bootstrap', credentials: APPLE_BOOTSTRAP },
+      async () => {
+        await gated(`${SUPABASE_URL}/auth/v1/token?grant_type=id_token`, {
+          method: 'POST',
+          headers: jsonHeaders(PUBLIC_KEY),
+          body: JSON.stringify(freshAppleBody),
+        });
+        await gated(`${SUPABASE_URL}/functions/v1/apple-auth-lifecycle`, {
+          method: 'POST',
+          headers: jsonHeaders(TOKEN_A),
+          body: JSON.stringify(captureBody),
+        });
+      },
+    );
+    await expectCode(
+      admission.runWithPermit(
+        { purpose: 'apple_auth_bootstrap', credentials: APPLE_BOOTSTRAP },
+        async () => undefined,
+      ),
+      'SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED',
+    );
+
+    await vi.waitFor(() => expect(transport).toHaveBeenCalledOnce());
+    releaseAuth(jsonResponse(sessionPayload()));
+    await first;
+    expect(transport).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('native Apple credential invalidation permit', () => {
+  async function invalidate(
+    admission: SupabaseRemoteRequestAdmissionController,
+    binding: SupabaseRemoteSessionBinding,
+    reason: 'not_found' | 'revoked' = 'revoked',
+  ): Promise<void> {
+    await admission.runWithPermit(
+      {
+        purpose: 'apple_credential_invalid',
+        binding,
+        appleUser: APPLE_BOOTSTRAP.appleUser,
+        reason,
+      },
+      () =>
+        admission.createFetch(async () => jsonResponse({ status: 'blocked' }))(
+          `${SUPABASE_URL}/functions/v1/apple-auth-lifecycle`,
+          {
+            method: 'POST',
+            headers: jsonHeaders(binding.accessToken),
+            body: JSON.stringify({
+              action: 'credential_invalid',
+              appleUser: APPLE_BOOTSTRAP.appleUser,
+              reason,
+            }),
+          },
+        ),
+    );
+  }
+
+  it('admits one exact request for an active or closed persisted session binding', async () => {
+    const active = controller();
+    const activeBinding = activate(active);
+    await invalidate(active, activeBinding, 'revoked');
+    expect(active.hasActiveBinding(TOKEN_A, USER_A)).toBe(true);
+
+    const closed = controller();
+    const persistedBinding = parseSupabaseRemoteSessionBinding(TOKEN_A, USER_A)!;
+    await invalidate(closed, persistedBinding, 'not_found');
+    expect(closed.snapshot()).toMatchObject({ state: 'closed', subject: null });
+  });
+
+  it.each([
+    {
+      label: 'wrong endpoint',
+      path: '/functions/v1/data-export',
+      bearerToken: TOKEN_A,
+      body: {
+        action: 'credential_invalid',
+        appleUser: APPLE_BOOTSTRAP.appleUser,
+        reason: 'revoked',
+      },
+    },
+    {
+      label: 'wrong bearer',
+      path: '/functions/v1/apple-auth-lifecycle',
+      bearerToken: TOKEN_B,
+      body: {
+        action: 'credential_invalid',
+        appleUser: APPLE_BOOTSTRAP.appleUser,
+        reason: 'revoked',
+      },
+    },
+    {
+      label: 'wrong reason',
+      path: '/functions/v1/apple-auth-lifecycle',
+      bearerToken: TOKEN_A,
+      body: {
+        action: 'credential_invalid',
+        appleUser: APPLE_BOOTSTRAP.appleUser,
+        reason: 'not_found',
+      },
+    },
+    {
+      label: 'extra field',
+      path: '/functions/v1/apple-auth-lifecycle',
+      bearerToken: TOKEN_A,
+      body: {
+        action: 'credential_invalid',
+        appleUser: APPLE_BOOTSTRAP.appleUser,
+        reason: 'revoked',
+        retry: true,
+      },
+    },
+  ])('rejects $label before dispatch', async (testCase) => {
+    const admission = controller();
+    const binding = activate(admission);
+    const transport = ordinaryTransport();
+    await expectCode(
+      admission.runWithPermit(
+        {
+          purpose: 'apple_credential_invalid',
+          binding,
+          appleUser: APPLE_BOOTSTRAP.appleUser,
+          reason: 'revoked',
+        },
+        () =>
+          admission.createFetch(transport)(`${SUPABASE_URL}${testCase.path}`, {
+            method: 'POST',
+            headers: jsonHeaders(testCase.bearerToken),
+            body: JSON.stringify(testCase.body),
+          }),
+      ),
+      'SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED',
+    );
+    expect(transport).not.toHaveBeenCalled();
+  });
+
+  it('rejects an unpermitted call and a forged blocked response', async () => {
+    const admission = controller();
+    const binding = activate(admission);
+    const descriptor = {
+      method: 'POST',
+      headers: jsonHeaders(TOKEN_A),
+      body: JSON.stringify({
+        action: 'credential_invalid',
+        appleUser: APPLE_BOOTSTRAP.appleUser,
+        reason: 'revoked',
+      }),
+    };
+    await expectCode(
+      admission.createFetch(ordinaryTransport())(
+        `${SUPABASE_URL}/functions/v1/apple-auth-lifecycle`,
+        descriptor,
+      ),
+      'SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED',
+    );
+    await expectCode(
+      admission.runWithPermit(
+        {
+          purpose: 'apple_credential_invalid',
+          binding,
+          appleUser: APPLE_BOOTSTRAP.appleUser,
+          reason: 'revoked',
+        },
+        () =>
+          admission.createFetch(async () => jsonResponse({ status: 'blocked', extra: true }))(
+            `${SUPABASE_URL}/functions/v1/apple-auth-lifecycle`,
+            descriptor,
+          ),
+      ),
+      'SUPABASE_REMOTE_REQUEST_BINDING_REJECTED',
+    );
+  });
+
+  it('does not poison bearerless recovery/status lanes after invalidation', async () => {
+    const admission = controller();
+    await invalidate(admission, parseSupabaseRemoteSessionBinding(TOKEN_A, USER_A)!);
+    await admission.runWithPermit({ purpose: 'account_deletion', action: 'status' }, () =>
+      admission.createFetch(async () => jsonResponse({ status: 'none' }))(
+        `${SUPABASE_URL}/functions/v1/account-deletion`,
+        {
+          method: 'POST',
+          headers: jsonHeaders(),
+          body: JSON.stringify({ action: 'status', capability: 'opaque' }),
+        },
+      ),
     );
   });
 });

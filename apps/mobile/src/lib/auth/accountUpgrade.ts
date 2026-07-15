@@ -2,11 +2,15 @@ import type { Session, SupabaseClient } from '@supabase/supabase-js';
 
 import {
   requireSupabaseRemoteSessionBinding,
+  runWithSupabaseAppleAuthBootstrapPermit,
   runWithSupabaseFreshAuthPermit,
   runWithSupabaseIdentityUpgradePermit,
 } from '@/lib/supabase/remoteRequestGate';
 
-export type AccountProvider = 'apple' | 'google';
+import type { AppleSignInCredential } from './apple';
+import { captureAppleAuthLifecycle } from './appleAuthLifecycleClient';
+
+export type AccountProviderCredential = { provider: 'google'; token: string };
 
 export type PendingEmailAccountCode =
   | {
@@ -40,10 +44,23 @@ const UPGRADE_INCOMPLETE_ERROR = 'Account upgrade did not create a permanent ide
 const STALE_EMAIL_CODE_ERROR = 'This email code is no longer valid for the current session.';
 const ACTIVE_SESSION_SIGN_IN_ERROR =
   'Sign-in cannot replace an existing authenticated account. Sign out first.';
+const INVALID_APPLE_CREDENTIAL_ERROR = 'Sign in with Apple returned an invalid credential.';
 
 function normalizeRequired(value: string, label: string): string {
   const normalized = value.trim();
   if (!normalized) throw new Error(`${label} is required.`);
+  return normalized;
+}
+
+function normalizeAppleValue(value: string, maximum: number): string {
+  const normalized = value.trim();
+  if (
+    normalized.length === 0 ||
+    normalized.length > maximum ||
+    /[\u0000-\u001f\u007f]/u.test(normalized)
+  ) {
+    throw new Error(INVALID_APPLE_CREDENTIAL_ERROR);
+  }
   return normalized;
 }
 
@@ -77,9 +94,11 @@ function assertSameUser(
 export async function authenticateWithProviderToken(
   auth: AccountUpgradeAuthClient,
   currentSession: Session | null,
-  credentials: { provider: AccountProvider; token: string },
+  credentials: AccountProviderCredential,
 ): Promise<void> {
   const token = normalizeRequired(credentials.token, 'Provider token');
+  const linkProviderIdentity = () => auth.linkIdentity({ provider: 'google', token });
+  const signInWithProvider = () => auth.signInWithIdToken({ provider: 'google', token });
   const anonymousUserId = currentSession?.user.is_anonymous ? currentSession.user.id : null;
 
   if (anonymousUserId) {
@@ -89,10 +108,7 @@ export async function authenticateWithProviderToken(
       anonymousUserId,
     );
     const { data, error } = await runWithSupabaseIdentityUpgradePermit(binding, () =>
-      auth.linkIdentity({
-        provider: credentials.provider,
-        token,
-      }),
+      linkProviderIdentity(),
     );
     if (error) throw error;
     assertSameUser(anonymousUserId, data, true);
@@ -100,13 +116,75 @@ export async function authenticateWithProviderToken(
   }
   if (currentSession !== null) throw new Error(ACTIVE_SESSION_SIGN_IN_ERROR);
 
-  const { error } = await runWithSupabaseFreshAuthPermit(() =>
-    auth.signInWithIdToken({
-      provider: credentials.provider,
-      token,
-    }),
-  );
+  const { error } = await runWithSupabaseFreshAuthPermit(() => signInWithProvider());
   if (error) throw error;
+}
+
+/**
+ * Apple is deliberately separate from generic provider auth: its one-use
+ * authorization code must reach the sealed server vault before the deferred
+ * Supabase session is eligible for publication.
+ */
+export async function authenticateWithAppleCredential(
+  auth: AccountUpgradeAuthClient,
+  currentSession: Session | null,
+  credential: AppleSignInCredential,
+): Promise<void> {
+  const capture = Object.freeze({
+    appleUser: normalizeAppleValue(credential.appleUser, 512),
+    authorizationCode: normalizeAppleValue(credential.authorizationCode, 4_096),
+    identityToken: normalizeAppleValue(credential.idToken, 16_384),
+    nonce: normalizeAppleValue(credential.nonce, 43),
+  });
+  if (!/^[A-Za-z0-9_-]{43}$/u.test(capture.nonce)) {
+    throw new Error(INVALID_APPLE_CREDENTIAL_ERROR);
+  }
+
+  const anonymousUserId = currentSession?.user.is_anonymous ? currentSession.user.id : null;
+  if (currentSession !== null && anonymousUserId === null) {
+    throw new Error(ACTIVE_SESSION_SIGN_IN_ERROR);
+  }
+  const previousBinding = anonymousUserId
+    ? requireSupabaseRemoteSessionBinding(currentSession!.access_token, anonymousUserId)
+    : undefined;
+
+  await runWithSupabaseAppleAuthBootstrapPermit(capture, previousBinding, async () => {
+    const authentication = anonymousUserId
+      ? await auth.linkIdentity({
+          nonce: capture.nonce,
+          provider: 'apple',
+          token: capture.identityToken,
+        })
+      : await auth.signInWithIdToken({
+          nonce: capture.nonce,
+          provider: 'apple',
+          token: capture.identityToken,
+        });
+    if (authentication.error) throw authentication.error;
+
+    if (anonymousUserId) {
+      assertSameUser(anonymousUserId, authentication.data, true);
+    } else {
+      const authenticatedUser = authentication.data.user ?? authentication.data.session?.user;
+      if (
+        !authentication.data.session ||
+        !authenticatedUser ||
+        authentication.data.session.user.id !== authenticatedUser.id ||
+        authenticatedUser.is_anonymous !== false
+      ) {
+        throw new Error(UPGRADE_INCOMPLETE_ERROR);
+      }
+    }
+
+    const captureSession = authentication.data.session ?? currentSession;
+    if (
+      captureSession === null ||
+      (anonymousUserId !== null && captureSession.user.id !== anonymousUserId)
+    ) {
+      throw new Error(IDENTITY_CHANGED_ERROR);
+    }
+    await captureAppleAuthLifecycle(captureSession.access_token, capture);
+  });
 }
 
 /**
