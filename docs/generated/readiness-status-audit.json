@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T04:26:44.202Z",
+  "generatedAt": "2026-07-15T04:29:35.835Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -77,7 +77,7 @@
     "android": "not_applicable"
   },
   "status": "pass",
-  "strict": false,
+  "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-13",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",

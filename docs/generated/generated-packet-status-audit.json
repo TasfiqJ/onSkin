@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-15T04:27:15.041Z",
+  "generatedAt": "2026-07-15T04:29:36.270Z",
   "status": "pass",
-  "strict": false,
+  "strict": true,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
   "generatedRoots": [
     "docs/phase-3/generated",
