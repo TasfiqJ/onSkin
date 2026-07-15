@@ -25,9 +25,7 @@ const authRefreshProtectiveFetch = createSupabaseAuthRefreshProtectiveFetch({
   fetchImplementation: (input, init) => fetch(input, init),
   supabaseUrl: env.supabaseUrl,
 });
-const remotelyAdmittedFetch = createSupabaseRemoteRequestGatedFetch(
-  authRefreshProtectiveFetch,
-);
+const remotelyAdmittedFetch = createSupabaseRemoteRequestGatedFetch(authRefreshProtectiveFetch);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -118,13 +116,9 @@ export async function refreshPersistedSupabaseSessionCandidate(
   }
   const user = isRecord(payload) && isRecord(payload.user) ? payload.user : null;
   const accessToken =
-    isRecord(payload) && typeof payload.access_token === 'string'
-      ? payload.access_token
-      : null;
+    isRecord(payload) && typeof payload.access_token === 'string' ? payload.access_token : null;
   const nextRefreshToken =
-    isRecord(payload) && typeof payload.refresh_token === 'string'
-      ? payload.refresh_token
-      : null;
+    isRecord(payload) && typeof payload.refresh_token === 'string' ? payload.refresh_token : null;
   const claims = parseSupabaseAccessTokenClaims(accessToken);
   if (
     !isRecord(payload) ||

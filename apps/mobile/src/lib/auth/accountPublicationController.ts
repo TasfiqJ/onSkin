@@ -374,11 +374,7 @@ export class AccountPublicationController {
       if (state.kind !== 'reserved' || !sameBinding(state, binding)) {
         throw controllerError('ACCOUNT_PUBLICATION_BINDING_REJECTED');
       }
-      const result = await this.exchange(
-        'publication_activate',
-        state.capability,
-        binding,
-      );
+      const result = await this.exchange('publication_activate', state.capability, binding);
       if (
         result !== 'active' ||
         this.state.kind !== 'reserved' ||
@@ -416,11 +412,7 @@ export class AccountPublicationController {
         throw controllerError('ACCOUNT_PUBLICATION_ADMISSION_CLOSED');
       }
       try {
-        const result = await this.exchange(
-          'publication_renew',
-          state.capability,
-          binding,
-        );
+        const result = await this.exchange('publication_renew', state.capability, binding);
         if (
           result !== 'active' ||
           this.state.kind !== 'active' ||

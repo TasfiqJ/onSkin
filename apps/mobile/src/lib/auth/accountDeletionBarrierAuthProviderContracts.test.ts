@@ -23,9 +23,7 @@ describe('AuthProvider account deletion barrier integration', () => {
       'const localDataDecision = await activeAccountDeletionOwnsLocalData(',
     );
     expect(boundary).toContain('barrierState.ownerSubject,');
-    expect(boundary).toContain(
-      'if (transitionSession.user.id !== barrierState.ownerSubject) {',
-    );
+    expect(boundary).toContain('if (transitionSession.user.id !== barrierState.ownerSubject) {');
     expect(boundary).toContain('targetUserId = barrierState.ownerSubject;');
     expect(
       boundary.indexOf('if (transitionSession.user.id !== barrierState.ownerSubject) {'),
@@ -62,9 +60,7 @@ describe('AuthProvider account deletion barrier integration', () => {
     expect(boundary.indexOf('(await preserveLocalDataForForcedSignOut())')).toBeLessThan(
       boundary.indexOf('await clearRejectedSessionActivityDurably({'),
     );
-    expect(boundary).toContain(
-      'clearPersistedSession: clearPersistedSessionAfterRemoteDrain',
-    );
+    expect(boundary).toContain('clearPersistedSession: clearPersistedSessionAfterRemoteDrain');
     expect(boundary).toContain(
       '...(resumeAuthorizedPrivateCleanup ? { clearAccountIsolatedState } : {}),',
     );
@@ -94,9 +90,7 @@ describe('AuthProvider account deletion barrier integration', () => {
     ).toBeLessThan(boundary.indexOf('await clearRejectedSessionActivityDurably({'));
     expect(boundary).toContain('rejectedSessionLocalSignOutAttempted = true;');
     expect(boundary).not.toContain('supabase.auth.signOut(');
-    expect(boundary).toContain(
-      'clearPersistedSession: clearPersistedSessionAfterRemoteDrain',
-    );
+    expect(boundary).toContain('clearPersistedSession: clearPersistedSessionAfterRemoteDrain');
     expect(boundary).toContain(
       'clearAuthDerivedLocalActivity(revokedCredentialActivityDependencies)',
     );

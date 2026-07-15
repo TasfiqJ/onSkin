@@ -175,8 +175,7 @@ vi.mock('@/lib/supabase/remoteRequestGate', () => ({
   beginSupabaseRemoteDeletionBoundary: mocks.beginSupabaseRemoteDeletionBoundary,
   closeSupabaseRemoteRequestBoundary: mocks.closeSupabaseRemoteRequestBoundary,
   requireSupabaseRemoteSessionBinding: mocks.requireSupabaseRemoteSessionBinding,
-  runWithSupabaseAccountDeletionRequestPermit:
-    mocks.runWithSupabaseAccountDeletionRequestPermit,
+  runWithSupabaseAccountDeletionRequestPermit: mocks.runWithSupabaseAccountDeletionRequestPermit,
 }));
 
 vi.mock('./localDeviceExport', () => ({

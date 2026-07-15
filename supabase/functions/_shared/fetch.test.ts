@@ -25,12 +25,7 @@ Deno.test('fetch timeout remains active while a response body stalls after heade
   };
 
   const startedAt = performance.now();
-  const response = await fetchWithTimeout(
-    'https://example.test/stalled-body',
-    {},
-    25,
-    fakeFetch,
-  );
+  const response = await fetchWithTimeout('https://example.test/stalled-body', {}, 25, fakeFetch);
   let rejected = false;
   try {
     await readLimitedResponseText(response, 1_024);

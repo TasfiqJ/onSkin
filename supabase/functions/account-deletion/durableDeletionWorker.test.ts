@@ -182,9 +182,7 @@ Deno.test('provider capacity defers the exact claim and stops leasing the backlo
     },
     executors: executors(() =>
       Promise.reject(
-        new AccountDeletionWorkerCapacityError(
-          'DELETION_WORKER_PROVIDER_CAPACITY_EXHAUSTED',
-        ),
+        new AccountDeletionWorkerCapacityError('DELETION_WORKER_PROVIDER_CAPACITY_EXHAUSTED'),
       ),
     ),
     deadlineAtMs: 10_000,

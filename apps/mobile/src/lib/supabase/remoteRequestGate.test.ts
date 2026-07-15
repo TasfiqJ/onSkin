@@ -44,7 +44,10 @@ describe('process-wide Supabase remote request gate wrappers', () => {
   it('derives only an exact subject/session binding', () => {
     expect(requireSupabaseRemoteSessionBinding(BINDING.accessToken, SUBJECT)).toEqual(BINDING);
     expect(() =>
-      requireSupabaseRemoteSessionBinding(BINDING.accessToken, '22222222-2222-4222-8222-222222222222'),
+      requireSupabaseRemoteSessionBinding(
+        BINDING.accessToken,
+        '22222222-2222-4222-8222-222222222222',
+      ),
     ).toThrow('SUPABASE_REMOTE_REQUEST_BINDING_REJECTED');
   });
 

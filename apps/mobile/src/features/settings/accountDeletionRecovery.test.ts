@@ -840,9 +840,7 @@ describe('account-deletion local terminal commit', () => {
     const close = vi
       .spyOn(supabaseRemoteRequestAdmission, 'close')
       .mockRejectedValueOnce(
-        new SupabaseRemoteRequestAdmissionError(
-          'SUPABASE_REMOTE_REQUEST_DRAIN_QUARANTINED',
-        ),
+        new SupabaseRemoteRequestAdmissionError('SUPABASE_REMOTE_REQUEST_DRAIN_QUARANTINED'),
       )
       .mockResolvedValue(undefined);
     const waitForResidual = vi
@@ -859,9 +857,7 @@ describe('account-deletion local terminal commit', () => {
       expect(waitForResidual.mock.invocationCallOrder[0]).toBeLessThan(
         close.mock.invocationCallOrder[1]!,
       );
-      expect(close.mock.invocationCallOrder[1]).toBeLessThan(
-        close.mock.invocationCallOrder[2]!,
-      );
+      expect(close.mock.invocationCallOrder[1]).toBeLessThan(close.mock.invocationCallOrder[2]!);
       expect(close.mock.invocationCallOrder[2]).toBeLessThan(
         mocks.clearPersistedSupabaseSession.mock.invocationCallOrder[0]!,
       );

@@ -94,10 +94,11 @@ describe('account publication AuthProvider integration', () => {
     expect(provider).toContain('const context = await entitlementOwnerContextForUser(userId);');
     expect(provider).toContain('getUncachedCustomerInfo()');
     expect(provider).toContain('result?.requiresUncachedRefresh');
-    const durablePublish = provider.indexOf(
-      'const result = await publishCustomerInfoEvidence({',
+    const durablePublish = provider.indexOf('const result = await publishCustomerInfoEvidence({');
+    const reassert = provider.indexOf(
+      'assertRevenueCatResultCurrent(customerInfo);',
+      durablePublish,
     );
-    const reassert = provider.indexOf('assertRevenueCatResultCurrent(customerInfo);', durablePublish);
     expect(durablePublish).toBeGreaterThan(-1);
     expect(reassert).toBeGreaterThan(durablePublish);
     expect(provider).not.toContain('saveVerifiedEntitlement');

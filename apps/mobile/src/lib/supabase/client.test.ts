@@ -118,9 +118,7 @@ describe('controlled Supabase session storage', () => {
 
     expect(h.fetch).toHaveBeenCalledOnce();
     const [url, init] = h.fetch.mock.calls[0] as [string, RequestInit];
-    expect(url).toBe(
-      'https://project.supabase.co/auth/v1/token?grant_type=refresh_token',
-    );
+    expect(url).toBe('https://project.supabase.co/auth/v1/token?grant_type=refresh_token');
     expect(init).toMatchObject({
       body: JSON.stringify({ refresh_token: 'current-refresh-token' }),
       method: 'POST',
@@ -142,10 +140,7 @@ describe('controlled Supabase session storage', () => {
     const current = JSON.stringify({ ...sessionPayload(), expires_at: 4_000_000_000 });
     h.values.set(STORAGE_KEY, current);
     h.fetch.mockResolvedValue(
-      Response.json(
-        { code: 'session_not_found', message: 'terminal' },
-        { status: 400 },
-      ),
+      Response.json({ code: 'session_not_found', message: 'terminal' }, { status: 400 }),
     );
 
     let observed: unknown;

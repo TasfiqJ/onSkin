@@ -271,44 +271,43 @@ Deno.test('preflight rejects missing and stale bearer sessions before database w
   assert(!h.calls.some((call) => call.startsWith('barrier:')), 'no stale-owner lookup');
 });
 
-Deno.test('database-revoked sessions cannot preflight, consume intake quota, or begin', async () => {
-  for (const action of ['preflight', 'begin'] as const) {
-    const h = harness();
-    if (action === 'preflight') {
-      h.dependencies.barrierState = () =>
-        Promise.reject(
-          new DurableDeletionDatabaseError('DELETION_DATABASE_SESSION_REJECTED'),
-        );
-    } else {
-      h.dependencies.consumeIntakeRateLimit = () =>
-        Promise.reject(
-          new DurableDeletionDatabaseError('DELETION_DATABASE_SESSION_REJECTED'),
-        );
+Deno.test(
+  'database-revoked sessions cannot preflight, consume intake quota, or begin',
+  async () => {
+    for (const action of ['preflight', 'begin'] as const) {
+      const h = harness();
+      if (action === 'preflight') {
+        h.dependencies.barrierState = () =>
+          Promise.reject(new DurableDeletionDatabaseError('DELETION_DATABASE_SESSION_REJECTED'));
+      } else {
+        h.dependencies.consumeIntakeRateLimit = () =>
+          Promise.reject(new DurableDeletionDatabaseError('DELETION_DATABASE_SESSION_REJECTED'));
+      }
+      const response = await createDurableDeletionHttpHandler(h.dependencies)(
+        request(
+          action === 'preflight'
+            ? { action }
+            : {
+                action,
+                idempotencyKey: IDEMPOTENCY,
+                statusCapability: CAPABILITY,
+              },
+          { authorization: 'Bearer signed-out-jwt' },
+        ),
+      );
+      assert(response.status === 401, 'database session rejection remains authoritative');
+      assert(
+        (await responseBody(response)).error === 'ACCOUNT_DELETION_SESSION_REJECTED',
+        'stale session exposes only the stable rejection code',
+      );
+      assert(!h.calls.some((call) => call.startsWith('begin:')), 'stale session cannot begin');
+      assert(
+        action !== 'preflight' || !h.calls.some((call) => call.startsWith('intake-rate:')),
+        'preflight rejection cannot consume intake quota',
+      );
     }
-    const response = await createDurableDeletionHttpHandler(h.dependencies)(
-      request(
-        action === 'preflight'
-          ? { action }
-          : {
-              action,
-              idempotencyKey: IDEMPOTENCY,
-              statusCapability: CAPABILITY,
-            },
-        { authorization: 'Bearer signed-out-jwt' },
-      ),
-    );
-    assert(response.status === 401, 'database session rejection remains authoritative');
-    assert(
-      (await responseBody(response)).error === 'ACCOUNT_DELETION_SESSION_REJECTED',
-      'stale session exposes only the stable rejection code',
-    );
-    assert(!h.calls.some((call) => call.startsWith('begin:')), 'stale session cannot begin');
-    assert(
-      action !== 'preflight' || !h.calls.some((call) => call.startsWith('intake-rate:')),
-      'preflight rejection cannot consume intake quota',
-    );
-  }
-});
+  },
+);
 
 Deno.test('preflight validates the authenticated subject before every barrier lookup', async () => {
   const h = harness();

@@ -132,9 +132,7 @@ Deno.test('database gateway preserves only the exact session-rejection SQLSTATE'
       'DELETION_DATABASE_UNAVAILABLE',
     ],
   ] as const) {
-    const gateway = new DurableDeletionDatabaseGateway(
-      new QueueClient([{ data: null, error }]),
-    );
+    const gateway = new DurableDeletionDatabaseGateway(new QueueClient([{ data: null, error }]));
     let code = 'none';
     try {
       await gateway.barrierState(USER_ID, SESSION_ID);

@@ -311,36 +311,30 @@ export async function createDurableDeletionRuntime(
     now,
     fetcher: fetchWithTimeout,
   });
-  function revenueCatBudgetDomain(
-    request: { url: string; init: RequestInit },
-  ): 'customer-information' | 'project-configuration' {
+  function revenueCatBudgetDomain(request: {
+    url: string;
+    init: RequestInit;
+  }): 'customer-information' | 'project-configuration' {
     let url: URL;
     try {
       url = new URL(request.url);
     } catch {
       throw new DurableDeletionRuntimeError('DELETION_RUNTIME_CONFIGURATION_INVALID');
     }
-    return url.pathname === '/v2/projects'
-      ? 'project-configuration'
-      : 'customer-information';
+    return url.pathname === '/v2/projects' ? 'project-configuration' : 'customer-information';
   }
   async function acquireRevenueCatProviderBudget(
     domain: 'customer-information' | 'project-configuration',
   ): Promise<void> {
     let allowed = false;
     try {
-      allowed = await gateway.consumeRevenueCatProviderBudget(
-        revenueCatProviderBudgetKey,
-        domain,
-      );
+      allowed = await gateway.consumeRevenueCatProviderBudget(revenueCatProviderBudgetKey, domain);
     } catch {
       // A missing distributed quota decision must stop this worker slice,
       // not fan out unmetered calls or burn attempts across the backlog.
     }
     if (!allowed) {
-      throw new AccountDeletionWorkerCapacityError(
-        'DELETION_WORKER_PROVIDER_CAPACITY_EXHAUSTED',
-      );
+      throw new AccountDeletionWorkerCapacityError('DELETION_WORKER_PROVIDER_CAPACITY_EXHAUSTED');
     }
   }
 
@@ -628,14 +622,10 @@ export async function createDurableDeletionRuntime(
     const deadlineAtMs = now() + WORKER_BUDGET_MS;
     return await runAccountDeletionWorker({
       gateway: {
-        reapExpiredPublicationLeases: (limit) =>
-          gateway.reapExpiredPublicationLeases(limit),
+        reapExpiredPublicationLeases: (limit) => gateway.reapExpiredPublicationLeases(limit),
         claimNext: (mode) => gateway.claimNext(mode),
         deferProviderCapacity: (claim) =>
-          gateway.deferRevenueCatProviderCapacity(
-            claim,
-            new Date(now() + 65_000).toISOString(),
-          ),
+          gateway.deferRevenueCatProviderCapacity(claim, new Date(now() + 65_000).toISOString()),
         listReadyToFinalize: (limit) => gateway.listReadyToFinalize(limit),
         async finalize(candidate) {
           await gateway.finalize({

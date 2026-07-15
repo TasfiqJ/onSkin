@@ -132,10 +132,7 @@ async function closeRemoteBeforeAuthStorageMutation(): Promise<void> {
     await closeSupabaseRemoteRequestBoundary();
   } catch (error) {
     if (
-      !isSupabaseRemoteRequestAdmissionError(
-        error,
-        'SUPABASE_REMOTE_REQUEST_DRAIN_QUARANTINED',
-      )
+      !isSupabaseRemoteRequestAdmissionError(error, 'SUPABASE_REMOTE_REQUEST_DRAIN_QUARANTINED')
     ) {
       throw error;
     }
@@ -447,21 +444,18 @@ export async function fetchAccountDeletionStatus(
           { action: 'status', timeoutMs: ACCOUNT_DELETION_REQUEST_TIMEOUT_MS },
           transport,
           (gatedTransport) =>
-            gatedTransport(
-              new URL('/functions/v1/account-deletion', env.supabaseUrl).toString(),
-              {
-                method: 'POST',
-                headers: {
-                  apikey: env.supabasePublishableKey,
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ action: 'status', capability: statusCapability }),
-                cache: 'no-store',
-                credentials: 'omit',
-                signal: controller.signal,
+            gatedTransport(new URL('/functions/v1/account-deletion', env.supabaseUrl).toString(), {
+              method: 'POST',
+              headers: {
+                apikey: env.supabasePublishableKey,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
               },
-            ),
+              body: JSON.stringify({ action: 'status', capability: statusCapability }),
+              cache: 'no-store',
+              credentials: 'omit',
+              signal: controller.signal,
+            }),
         );
 
         if (![200, 202, 404, 410].includes(response.status)) {

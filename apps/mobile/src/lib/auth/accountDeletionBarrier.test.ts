@@ -225,10 +225,11 @@ describe('account deletion barrier preflight', () => {
 
   it('rejects a valid-looking response attested for a foreign owner subject', async () => {
     const foreignSubject = '33333333-3333-4333-8333-333333333333';
-    const transport = vi.fn(async () =>
-      new Response(JSON.stringify({ status: 'clear', ownerSubject: foreignSubject }), {
-        status: 200,
-      }),
+    const transport = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ status: 'clear', ownerSubject: foreignSubject }), {
+          status: 200,
+        }),
     );
 
     await expect(

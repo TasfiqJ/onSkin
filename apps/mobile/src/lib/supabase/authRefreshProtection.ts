@@ -91,11 +91,7 @@ function responseErrorCode(value: unknown): string | null {
 }
 
 function decodeBase64Url(value: string): Uint8Array | null {
-  if (
-    value.length === 0 ||
-    value.length > JWT_PAYLOAD_MAX_CHARS ||
-    value.length % 4 === 1
-  ) {
+  if (value.length === 0 || value.length > JWT_PAYLOAD_MAX_CHARS || value.length % 4 === 1) {
     return null;
   }
   const output = new Uint8Array(Math.floor((value.length * 6) / 8));
@@ -142,9 +138,7 @@ export type SupabaseAccessTokenClaims = Readonly<{
 }>;
 
 /** Bounded claims needed to bind and persist a server-validated refresh. */
-export function parseSupabaseAccessTokenClaims(
-  token: unknown,
-): SupabaseAccessTokenClaims | null {
+export function parseSupabaseAccessTokenClaims(token: unknown): SupabaseAccessTokenClaims | null {
   if (typeof token !== 'string') return null;
   const payload = decodeJwtPayload(token);
   if (
@@ -182,10 +176,7 @@ function isValidRefreshSuccess(value: unknown): boolean {
   if (payload.token_type !== undefined && payload.token_type !== 'bearer') return false;
 
   const jwtClaims = parseSupabaseAccessTokenClaims(payload.access_token);
-  return Boolean(
-    jwtClaims &&
-      jwtClaims.subject === user.id,
-  );
+  return Boolean(jwtClaims && jwtClaims.subject === user.id);
 }
 
 /**
@@ -229,7 +220,7 @@ export function isDefinitiveSupabaseRefreshRejection(error: unknown): boolean {
   if (isAuthSessionMissingError(error)) return true;
   return Boolean(
     isAuthApiError(error) &&
-      typeof error.code === 'string' &&
-      DEFINITIVE_REFRESH_ERROR_CODES.has(error.code),
+    typeof error.code === 'string' &&
+    DEFINITIVE_REFRESH_ERROR_CODES.has(error.code),
   );
 }

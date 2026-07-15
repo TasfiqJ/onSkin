@@ -39,7 +39,10 @@ function protectedFetch(response: Response) {
   const fetchImplementation = vi.fn(async () => response);
   return {
     fetchImplementation,
-    run: createSupabaseAuthRefreshProtectiveFetch({ fetchImplementation, supabaseUrl: SUPABASE_URL }),
+    run: createSupabaseAuthRefreshProtectiveFetch({
+      fetchImplementation,
+      supabaseUrl: SUPABASE_URL,
+    }),
   };
 }
 
@@ -59,7 +62,9 @@ describe('Supabase auth refresh protective fetch', () => {
     const { run } = protectedFetch(response);
 
     await expect(run(REFRESH_URL, { method: 'POST' })).resolves.toBe(response);
-    await expect(response.json()).resolves.toMatchObject({ refresh_token: 'rotated-refresh-token' });
+    await expect(response.json()).resolves.toMatchObject({
+      refresh_token: 'rotated-refresh-token',
+    });
   });
 
   it.each([
@@ -165,9 +170,9 @@ describe('Supabase auth refresh protective fetch', () => {
   it('recognizes Request input and leaves non-refresh or external URLs untouched', async () => {
     const refreshResponse = validSessionResponse();
     const refresh = protectedFetch(refreshResponse);
-    await expect(runRequest(refresh.run, new Request(REFRESH_URL, { method: 'POST' }))).resolves.toBe(
-      refreshResponse,
-    );
+    await expect(
+      runRequest(refresh.run, new Request(REFRESH_URL, { method: 'POST' })),
+    ).resolves.toBe(refreshResponse);
 
     const malformed = new Response('not json');
     const passthrough = protectedFetch(malformed);

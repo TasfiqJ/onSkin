@@ -266,9 +266,7 @@ function projectionResponse(
   };
 }
 
-function projectionRpcBuilder(
-  ...results: readonly Readonly<{ data: unknown; error: unknown }>[]
-) {
+function projectionRpcBuilder(...results: readonly Readonly<{ data: unknown; error: unknown }>[]) {
   const abortSignal = vi.fn();
   for (const result of results) abortSignal.mockResolvedValueOnce(result);
   const builder = { abortSignal };

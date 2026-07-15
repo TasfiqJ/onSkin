@@ -183,9 +183,9 @@ describe('AccountPublicationController', () => {
     nativeResult.resolve('settled-safely');
     await expect(inFlight).resolves.toBe('settled-safely');
     expect(h.controller.resumeAdmission()).toBe(true);
-    await expect(
-      h.controller.runOperation('offering', async () => 'resumed'),
-    ).resolves.toBe('resumed');
+    await expect(h.controller.runOperation('offering', async () => 'resumed')).resolves.toBe(
+      'resumed',
+    );
   });
 
   it('refreshes both conservative freshness clocks only after a successful renewal', async () => {

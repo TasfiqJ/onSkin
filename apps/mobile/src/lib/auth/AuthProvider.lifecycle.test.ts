@@ -607,9 +607,7 @@ beforeEach(() => {
   h.invalidateEntitlementQueries.mockReset().mockResolvedValue(undefined);
   h.loadEntitlement.mockReset().mockResolvedValue(null);
   h.prepareLocalDataForSession.mockReset().mockResolvedValue({ cleared: false, resetRoute: false });
-  h.entitlementOwnerContextForUser
-    .mockReset()
-    .mockResolvedValue({ ownerBinding: 'a'.repeat(64) });
+  h.entitlementOwnerContextForUser.mockReset().mockResolvedValue({ ownerBinding: 'a'.repeat(64) });
   h.publishCustomerInfoEvidence.mockReset().mockResolvedValue({
     status: 'committed',
     disposition: 'applied',
@@ -841,24 +839,25 @@ describe('AuthProvider cold restore and foreground publication lifecycle', () =>
       } as LocalOwnerProof,
     },
     { label: 'quarantined', proof: { kind: 'quarantined' } as LocalOwnerProof },
-  ])('does not mutate or mount $label local data from an offline cached session', async ({
-    proof,
-  }) => {
-    const restored = session(USER_A, SESSION_A, 'offline-closed', 'refresh-offline');
-    h.auth.getSession.mockResolvedValueOnce({ data: { session: restored }, error: null });
-    h.fetchBarrier.mockRejectedValueOnce(new Error('network unavailable'));
-    h.readLocalDataOwnerProof.mockResolvedValueOnce(proof);
+  ])(
+    'does not mutate or mount $label local data from an offline cached session',
+    async ({ proof }) => {
+      const restored = session(USER_A, SESSION_A, 'offline-closed', 'refresh-offline');
+      h.auth.getSession.mockResolvedValueOnce({ data: { session: restored }, error: null });
+      h.fetchBarrier.mockRejectedValueOnce(new Error('network unavailable'));
+      h.readLocalDataOwnerProof.mockResolvedValueOnce(proof);
 
-    await mount();
+      await mount();
 
-    expect(currentAuth?.session).toBeNull();
-    expect(currentAuth?.initializing).toBe(false);
-    expect(currentAuth?.sessionBoundaryError).toBe(true);
-    expect(h.prepareLocalDataForSession).not.toHaveBeenCalled();
-    expect(h.state.events).not.toContain(`reserve:${restored.access_token}`);
-    expect(h.state.events).not.toContain(`activate:${restored.access_token}`);
-    expect(h.auth.startAutoRefresh).not.toHaveBeenCalled();
-  });
+      expect(currentAuth?.session).toBeNull();
+      expect(currentAuth?.initializing).toBe(false);
+      expect(currentAuth?.sessionBoundaryError).toBe(true);
+      expect(h.prepareLocalDataForSession).not.toHaveBeenCalled();
+      expect(h.state.events).not.toContain(`reserve:${restored.access_token}`);
+      expect(h.state.events).not.toContain(`activate:${restored.access_token}`);
+      expect(h.auth.startAutoRefresh).not.toHaveBeenCalled();
+    },
+  );
 
   it('fails closed when the offline local-owner proof cannot be validated', async () => {
     const restored = session(USER_A, SESSION_A, 'offline-corrupt', 'refresh-offline');
@@ -1145,38 +1144,38 @@ describe('AuthProvider cold restore and foreground publication lifecycle', () =>
       expectedError: true,
       result: { status: 'blocked', reason: 'credential_check_failed' } as const,
     },
-  ])('keeps Apple foreground publication closed for $result.status evidence', async ({
-    expectedError,
-    result,
-  }) => {
-    const owner = appleSession(USER_A, SESSION_A, 'apple-owner', 'refresh-apple-owner');
-    h.checkAppleCredentialForSession
-      .mockResolvedValueOnce({ status: 'valid' })
-      .mockResolvedValueOnce(result);
-    h.auth.getSession.mockResolvedValueOnce({ data: { session: owner }, error: null });
-    await mount();
+  ])(
+    'keeps Apple foreground publication closed for $result.status evidence',
+    async ({ expectedError, result }) => {
+      const owner = appleSession(USER_A, SESSION_A, 'apple-owner', 'refresh-apple-owner');
+      h.checkAppleCredentialForSession
+        .mockResolvedValueOnce({ status: 'valid' })
+        .mockResolvedValueOnce(result);
+      h.auth.getSession.mockResolvedValueOnce({ data: { session: owner }, error: null });
+      await mount();
 
-    h.state.events.length = 0;
-    h.fetchBarrier.mockClear();
-    h.auth.refreshSession.mockClear();
-    await emitAppState('inactive');
-    await emitAppState('active');
-    await flush();
+      h.state.events.length = 0;
+      h.fetchBarrier.mockClear();
+      h.auth.refreshSession.mockClear();
+      await emitAppState('inactive');
+      await emitAppState('active');
+      await flush();
 
-    expect(currentAuth?.session).toBeNull();
-    expect(currentAuth?.initializing).toBe(false);
-    expect(currentAuth?.sessionBoundaryError).toBe(expectedError);
-    expect(h.state.admissionPaused).toBe(true);
-    expect(h.auth.refreshSession).not.toHaveBeenCalled();
-    expect(h.fetchBarrier).not.toHaveBeenCalled();
-    expect(h.state.events.some((event) => event.startsWith('reserve:'))).toBe(false);
-    expect(h.state.events.some((event) => event.startsWith('activate:'))).toBe(false);
-    if (result.status === 'invalid') {
-      expect(h.clearPersistedSession).toHaveBeenCalled();
-    } else {
-      expect(h.clearPersistedSession).not.toHaveBeenCalled();
-    }
-  });
+      expect(currentAuth?.session).toBeNull();
+      expect(currentAuth?.initializing).toBe(false);
+      expect(currentAuth?.sessionBoundaryError).toBe(expectedError);
+      expect(h.state.admissionPaused).toBe(true);
+      expect(h.auth.refreshSession).not.toHaveBeenCalled();
+      expect(h.fetchBarrier).not.toHaveBeenCalled();
+      expect(h.state.events.some((event) => event.startsWith('reserve:'))).toBe(false);
+      expect(h.state.events.some((event) => event.startsWith('activate:'))).toBe(false);
+      if (result.status === 'invalid') {
+        expect(h.clearPersistedSession).toHaveBeenCalled();
+      } else {
+        expect(h.clearPersistedSession).not.toHaveBeenCalled();
+      }
+    },
+  );
 
   it('keeps local access when foreground token refresh is offline', async () => {
     const owner = session(USER_A, SESSION_A, 'owner', 'refresh-owner');
@@ -1782,14 +1781,12 @@ describe('AuthProvider cold restore and foreground publication lifecycle', () =>
     h.customerInfoToStoredEntitlement.mockImplementation((customerInfo) =>
       customerInfo === first ? firstEntitlement : secondEntitlement,
     );
-    h.publishCustomerInfoEvidence
-      .mockReturnValueOnce(firstPublish.promise)
-      .mockResolvedValueOnce({
-        status: 'committed',
-        disposition: 'applied',
-        snapshot: { hasConflict: false, activeStoreEntitlement: secondEntitlement },
-        requiresUncachedRefresh: false,
-      });
+    h.publishCustomerInfoEvidence.mockReturnValueOnce(firstPublish.promise).mockResolvedValueOnce({
+      status: 'committed',
+      disposition: 'applied',
+      snapshot: { hasConflict: false, activeStoreEntitlement: secondEntitlement },
+      requiresUncachedRefresh: false,
+    });
 
     await mount();
     const listener = h.state.customerInfoListener;

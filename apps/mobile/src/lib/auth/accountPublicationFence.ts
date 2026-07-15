@@ -223,9 +223,7 @@ export async function exchangeAccountPublicationFence(
               headers: {
                 Accept: 'application/json',
                 apikey: env.supabasePublishableKey,
-                ...(authenticated
-                  ? { Authorization: `Bearer ${binding!.accessToken}` }
-                  : {}),
+                ...(authenticated ? { Authorization: `Bearer ${binding!.accessToken}` } : {}),
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({ action, capability }),

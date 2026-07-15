@@ -16,8 +16,8 @@ const remoteGateMocks = vi.hoisted(() => ({
     subject,
   })),
   runFresh: vi.fn(async <T>(operation: () => T | Promise<T>) => operation()),
-  runIdentityUpgrade: vi.fn(
-    async <T>(_binding: unknown, operation: () => T | Promise<T>) => operation(),
+  runIdentityUpgrade: vi.fn(async <T>(_binding: unknown, operation: () => T | Promise<T>) =>
+    operation(),
   ),
 }));
 
@@ -79,9 +79,7 @@ afterEach(() => {
     subject,
   }));
   remoteGateMocks.runFresh.mockImplementation(async (operation) => operation());
-  remoteGateMocks.runIdentityUpgrade.mockImplementation(async (_binding, operation) =>
-    operation(),
-  );
+  remoteGateMocks.runIdentityUpgrade.mockImplementation(async (_binding, operation) => operation());
 });
 
 describe('account upgrade', () => {
@@ -227,9 +225,7 @@ describe('account upgrade', () => {
 
     await expect(
       requestEmailAccountCode(auth, explicitSession(auth), 'tas@example.com'),
-    ).rejects.toThrow(
-      'already been registered',
-    );
+    ).rejects.toThrow('already been registered');
     expect(spies.signInWithOtp).not.toHaveBeenCalled();
   });
 
@@ -255,9 +251,7 @@ describe('account upgrade', () => {
 
     await expect(
       requestEmailAccountCode(auth, explicitSession(auth), 'tas@example.com'),
-    ).rejects.toThrow(
-      'cannot replace an existing authenticated account',
-    );
+    ).rejects.toThrow('cannot replace an existing authenticated account');
 
     expect(remoteGateMocks.runFresh).not.toHaveBeenCalled();
     expect(spies.signInWithOtp).not.toHaveBeenCalled();
@@ -309,13 +303,7 @@ describe('account upgrade', () => {
     };
 
     await expect(
-      verifyEmailAccountCode(
-        auth,
-        explicitSession(auth),
-        pending,
-        'tas@example.com',
-        '123456',
-      ),
+      verifyEmailAccountCode(auth, explicitSession(auth), pending, 'tas@example.com', '123456'),
     ).rejects.toThrow('no longer valid for the current session');
     expect(spies.verifyOtp).not.toHaveBeenCalled();
   });
@@ -335,13 +323,7 @@ describe('account upgrade', () => {
     };
 
     await expect(
-      verifyEmailAccountCode(
-        auth,
-        explicitSession(auth),
-        pending,
-        'tas@example.com',
-        '123456',
-      ),
+      verifyEmailAccountCode(auth, explicitSession(auth), pending, 'tas@example.com', '123456'),
     ).rejects.toThrow('did not create a permanent identity');
   });
 
@@ -359,13 +341,7 @@ describe('account upgrade', () => {
       otpType: 'email',
     };
 
-    await verifyEmailAccountCode(
-      auth,
-      explicitSession(auth),
-      pending,
-      'tas@example.com',
-      '123456',
-    );
+    await verifyEmailAccountCode(auth, explicitSession(auth), pending, 'tas@example.com', '123456');
 
     expect(remoteGateMocks.runFresh).toHaveBeenCalledWith(expect.any(Function));
     expect(spies.verifyOtp).toHaveBeenCalledWith({
@@ -385,13 +361,7 @@ describe('account upgrade', () => {
     };
 
     await expect(
-      verifyEmailAccountCode(
-        auth,
-        explicitSession(auth),
-        pending,
-        'tas@example.com',
-        '123456',
-      ),
+      verifyEmailAccountCode(auth, explicitSession(auth), pending, 'tas@example.com', '123456'),
     ).rejects.toThrow('no longer valid for the current session');
 
     expect(remoteGateMocks.runFresh).not.toHaveBeenCalled();
@@ -423,9 +393,7 @@ describe('account upgrade', () => {
 
     await expect(
       requestEmailAccountCode(auth, explicitSession(auth), 'tas@example.com'),
-    ).rejects.toThrow(
-      'SUPABASE_REMOTE_REQUEST_BINDING_REJECTED',
-    );
+    ).rejects.toThrow('SUPABASE_REMOTE_REQUEST_BINDING_REJECTED');
 
     expect(spies.updateUser).not.toHaveBeenCalled();
     expect(spies.signInWithOtp).not.toHaveBeenCalled();

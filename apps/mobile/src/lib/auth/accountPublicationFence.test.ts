@@ -172,12 +172,7 @@ describe('account publication fence transport', () => {
         }),
     );
     await expect(
-      exchangeAccountPublicationFence(
-        'publication_reserve',
-        CAPABILITY,
-        BINDING,
-        oversized,
-      ),
+      exchangeAccountPublicationFence('publication_reserve', CAPABILITY, BINDING, oversized),
     ).rejects.toThrow('ACCOUNT_PUBLICATION_UNAVAILABLE');
 
     const leakingTransport = vi.fn(async () => {
@@ -193,19 +188,19 @@ describe('account publication fence transport', () => {
     expect(String(error)).not.toContain(CAPABILITY);
   });
 
-  it.each([
-    'SUPABASE_REMOTE_REQUEST_BINDING_REJECTED',
-    'SUPABASE_REMOTE_REQUEST_RESULT_STALE',
-  ])('fails closed before transport when the exact-bound permit rejects with %s', async (code) => {
-    const transport = vi.fn();
-    remoteGateMock.runDeletionPermit.mockRejectedValueOnce(new Error(code));
+  it.each(['SUPABASE_REMOTE_REQUEST_BINDING_REJECTED', 'SUPABASE_REMOTE_REQUEST_RESULT_STALE'])(
+    'fails closed before transport when the exact-bound permit rejects with %s',
+    async (code) => {
+      const transport = vi.fn();
+      remoteGateMock.runDeletionPermit.mockRejectedValueOnce(new Error(code));
 
-    await expect(
-      exchangeAccountPublicationFence('publication_reserve', CAPABILITY, BINDING, transport),
-    ).rejects.toThrow('ACCOUNT_PUBLICATION_UNAVAILABLE');
+      await expect(
+        exchangeAccountPublicationFence('publication_reserve', CAPABILITY, BINDING, transport),
+      ).rejects.toThrow('ACCOUNT_PUBLICATION_UNAVAILABLE');
 
-    expect(transport).not.toHaveBeenCalled();
-  });
+      expect(transport).not.toHaveBeenCalled();
+    },
+  );
 
   it('binds only canonical matching subject and session claims', () => {
     const accessToken = jwt({ sub: SUBJECT, session_id: SESSION_ID });

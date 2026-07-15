@@ -92,7 +92,9 @@ describe('account session isolation integration', () => {
     expect(provider).toContain('subscribeToAccountDeletionIntakeHold((active) =>');
     expect(provider).toContain('if (accountDeletionIntakeBoundaryActiveRef.current)');
     expect(provider).toContain("if (event === 'TOKEN_REFRESHED') {");
-    expect(provider).toContain('void Promise.resolve().then(() => handleRejectedSessionRef.current());');
+    expect(provider).toContain(
+      'void Promise.resolve().then(() => handleRejectedSessionRef.current());',
+    );
     expect(actions).toContain('Authorization: `Bearer ${owner.accessToken}`');
     expect(actions).toContain('requestAccountDeletionRecovery();');
     expect(actions).not.toContain('await _completeLocalSignOut()');

@@ -466,21 +466,11 @@ function isEmailOtpBody(body: Record<string, unknown>): boolean {
   );
 }
 
-function isProviderTokenBody(
-  body: Record<string, unknown>,
-  requireIdentityLink: boolean,
-): boolean {
+function isProviderTokenBody(body: Record<string, unknown>, requireIdentityLink: boolean): boolean {
   return (
     hasOnlyKeys(
       body,
-      [
-        'provider',
-        'id_token',
-        'access_token',
-        'nonce',
-        'link_identity',
-        'gotrue_meta_security',
-      ],
+      ['provider', 'id_token', 'access_token', 'nonce', 'link_identity', 'gotrue_meta_security'],
       requireIdentityLink
         ? ['provider', 'id_token', 'link_identity', 'gotrue_meta_security']
         : ['provider', 'id_token', 'gotrue_meta_security'],
@@ -513,11 +503,7 @@ function isOtpVerificationBody(
 
 function isEmailUpgradeBody(body: Record<string, unknown>): boolean {
   return (
-    hasOnlyKeys(
-      body,
-      ['email', 'code_challenge', 'code_challenge_method'],
-      ['email'],
-    ) &&
+    hasOnlyKeys(body, ['email', 'code_challenge', 'code_challenge_method'], ['email']) &&
     isBoundedRequiredString(body.email) &&
     (body.code_challenge === undefined ||
       body.code_challenge === null ||
@@ -609,10 +595,7 @@ function parseDeletionAction(bodyText: string | null): string | null {
   return body !== null && typeof body.action === 'string' ? body.action : null;
 }
 
-function combineAbortSignals(
-  gateSignal: AbortSignal,
-  callerSignal: AbortSignal,
-): CombinedSignal {
+function combineAbortSignals(gateSignal: AbortSignal, callerSignal: AbortSignal): CombinedSignal {
   const controller = new AbortController();
   const abort = () => controller.abort();
   if (gateSignal.aborted || callerSignal.aborted) {
@@ -862,10 +845,7 @@ function snapshotPermit(permit: SupabaseRemoteRequestPermit): SupabaseRemoteRequ
   return Object.freeze({ ...permit, binding, timeoutMs });
 }
 
-async function readBodyBytes(
-  body: Request | Response,
-  maximumBytes: number,
-): Promise<Uint8Array> {
+async function readBodyBytes(body: Request | Response, maximumBytes: number): Promise<Uint8Array> {
   const contentLength = body.headers.get('content-length');
   if (contentLength !== null) {
     const parsed = Number(contentLength);
@@ -997,9 +977,7 @@ function selfConsistentFreshSession(value: Record<string, unknown>): boolean {
         ? (parseSupabaseRemoteSessionBinding(value.access_token, userId)?.sessionId ?? '')
         : '',
   });
-  return (
-    binding !== null && isBoundedRequiredString(value.refresh_token, REFRESH_TOKEN_MAX_CHARS)
-  );
+  return binding !== null && isBoundedRequiredString(value.refresh_token, REFRESH_TOKEN_MAX_CHARS);
 }
 
 /**
@@ -1380,8 +1358,7 @@ export class SupabaseRemoteRequestAdmissionController {
           if (scope.nextBinding !== null) {
             const state = this.state;
             if (
-              (permit.purpose !== 'auth_refresh' &&
-                permit.purpose !== 'auth_identity_upgrade') ||
+              (permit.purpose !== 'auth_refresh' && permit.purpose !== 'auth_identity_upgrade') ||
               state.kind === 'closed' ||
               state.kind === 'deletion' ||
               !exactBinding(state.binding, permit.binding)
@@ -1482,10 +1459,7 @@ export class SupabaseRemoteRequestAdmissionController {
     return bearer === permit.binding.accessToken;
   }
 
-  private authorize(
-    request: CanonicalRequestSnapshot,
-    body: string | null,
-  ): Authorization {
+  private authorize(request: CanonicalRequestSnapshot, body: string | null): Authorization {
     const target = request.target;
     if (target === 'external' || target === 'unknown' || target === 'realtime') {
       throw admissionError('SUPABASE_REMOTE_REQUEST_TARGET_REJECTED');

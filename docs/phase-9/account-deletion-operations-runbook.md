@@ -268,10 +268,10 @@ Configuration, applied per API key or developer as applicable. The deletion
 runtime therefore uses the database, not one Edge process, to enforce fixed UTC
 minute budgets keyed by a one-way credential binding:
 
-| RevenueCat domain | Deletion-lane budget | Workflow calls |
-| ----------------- | -------------------- | -------------- |
-| Customer Information | 225/minute | customer mapping, lookup, reconciliation, and deletion |
-| Project Configuration | 25/minute | `GET /v2/projects` project attestation |
+| RevenueCat domain     | Deletion-lane budget | Workflow calls                                         |
+| --------------------- | -------------------- | ------------------------------------------------------ |
+| Customer Information  | 225/minute           | customer mapping, lookup, reconciliation, and deletion |
+| Project Configuration | 25/minute            | `GET /v2/projects` project attestation                 |
 
 These values deliberately keep two adjacent full local buckets below the
 documented provider limits: 450 is below 480 and 50 is below 60. They are a
@@ -384,19 +384,19 @@ repeat the freeze proof, and only then retry the migration.
     rehearsal checks against staging. Do not provision Cron while boot or auth
     is failing.
 11. In the private Supabase Vault UI, create exactly one secret named
-   `account_deletion_project_url` containing the exact hosted project origin,
-   and exactly one `account_deletion_worker_secret` containing the same value
-   as the Edge worker secret. Do not put either value in the SQL file.
+    `account_deletion_project_url` containing the exact hosted project origin,
+    and exactly one `account_deletion_worker_secret` containing the same value
+    as the Edge worker secret. Do not put either value in the SQL file.
 12. Run `supabase/ops/account-deletion-work-lane.sql` as the project Postgres
-   owner. It validates Vault, replaces only the canonical named job, and
-   schedules `{"action":"work"}` every two minutes with a 110-second
-   `pg_net` timeout. The two-minute cadence leaves a ten-second margin after
-   the timeout before the next enqueue; the 90-second worker budget remains
-   below both the 120-second database claim lease and Supabase's documented
-   150-second free-plan wall-clock/request-idle limit.
+    owner. It validates Vault, replaces only the canonical named job, and
+    schedules `{"action":"work"}` every two minutes with a 110-second
+    `pg_net` timeout. The two-minute cadence leaves a ten-second margin after
+    the timeout before the next enqueue; the 90-second worker budget remains
+    below both the 120-second database claim lease and Supabase's documented
+    150-second free-plan wall-clock/request-idle limit.
 13. Prove a missing and a fake worker header return `401`, then observe a
-   Vault-backed run return `200` with `status=worked`. Never paste the real
-   worker secret into a retained transcript.
+    Vault-backed run return `200` with `status=worked`. Never paste the real
+    worker secret into a retained transcript.
 14. While general intake remains frozen, execute one explicitly authorized
     disposable staging canary through `begin`,
     authenticated `preflight`, and capability-only `status`, including clear

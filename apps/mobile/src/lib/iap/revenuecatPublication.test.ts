@@ -356,9 +356,9 @@ describe('RevenueCat publication integration', () => {
     await expect(getUncachedCustomerInfo()).resolves.toBe(customerInfo);
     expect(mocks.purchases.invalidateCustomerInfoCache).toHaveBeenCalledOnce();
     expect(mocks.purchases.getCustomerInfo).toHaveBeenCalledOnce();
-    expect(
-      mocks.purchases.invalidateCustomerInfoCache.mock.invocationCallOrder[0],
-    ).toBeLessThan(mocks.purchases.getCustomerInfo.mock.invocationCallOrder[0]!);
+    expect(mocks.purchases.invalidateCustomerInfoCache.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.purchases.getCustomerInfo.mock.invocationCallOrder[0]!,
+    );
   });
 
   it('reports listener persistence failures but ignores a typed closed boundary', async () => {

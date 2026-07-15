@@ -200,9 +200,7 @@ function requiresControlledSessionRefresh(candidate: Session, nowMs = Date.now()
   return claims === null || claims.expiresAt * 1_000 <= nowMs + CONTROLLED_SESSION_REFRESH_LEAD_MS;
 }
 
-async function revokeSupabaseRefreshTokens(
-  binding: SupabaseRemoteSessionBinding,
-): Promise<void> {
+async function revokeSupabaseRefreshTokens(binding: SupabaseRemoteSessionBinding): Promise<void> {
   let timeout: ReturnType<typeof setTimeout> | undefined;
   const deadline = new Promise<never>((_resolve, reject) => {
     timeout = setTimeout(
@@ -212,10 +210,7 @@ async function revokeSupabaseRefreshTokens(
   });
   try {
     const result = await runWithSupabaseAuthLogoutPermit(binding, () =>
-      Promise.race([
-        supabase.auth.admin.signOut(binding.accessToken, 'global'),
-        deadline,
-      ]),
+      Promise.race([supabase.auth.admin.signOut(binding.accessToken, 'global'), deadline]),
     );
     if (result.error) throw result.error;
   } finally {
@@ -251,9 +246,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const clearPersistedSessionAfterRemoteDrainRef = useRef<() => Promise<void>>(
     clearPersistedSupabaseSession,
   );
-  const closeRemoteRequestAuthorityRef = useRef<() => Promise<void>>(
-    () => Promise.resolve(),
-  );
+  const closeRemoteRequestAuthorityRef = useRef<() => Promise<void>>(() => Promise.resolve());
   const accountDeletionIntakeBoundaryActiveRef = useRef(isAccountDeletionIntakeHoldActive());
   const deferredAccountDeletionAuthBoundaryRef = useRef<{
     session: Session | null;
@@ -350,13 +343,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    function closeRemoteRequestAuthority(options: {
-      preserveEnteredDeletion?: boolean;
-    } = {}): Promise<void> {
-      if (
-        options.preserveEnteredDeletion &&
-        supabaseRemoteRequestSnapshot().state === 'deletion'
-      ) {
+    function closeRemoteRequestAuthority(
+      options: {
+        preserveEnteredDeletion?: boolean;
+      } = {},
+    ): Promise<void> {
+      if (options.preserveEnteredDeletion && supabaseRemoteRequestSnapshot().state === 'deletion') {
         return remoteRequestDrainPromiseRef.current;
       }
       const drain = closeSupabaseRemoteRequestBoundary();
@@ -374,10 +366,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await remoteRequestDrainPromiseRef.current;
       } catch (error: unknown) {
         if (
-          !isSupabaseRemoteRequestAdmissionError(
-            error,
-            'SUPABASE_REMOTE_REQUEST_DRAIN_QUARANTINED',
-          )
+          !isSupabaseRemoteRequestAdmissionError(error, 'SUPABASE_REMOTE_REQUEST_DRAIN_QUARANTINED')
         ) {
           throw error;
         }
@@ -390,8 +379,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await awaitRemoteRequestAuthorityClosed();
       await clearPersistedSupabaseSession();
     }
-    clearPersistedSessionAfterRemoteDrainRef.current =
-      clearPersistedSessionAfterRemoteDrain;
+    clearPersistedSessionAfterRemoteDrainRef.current = clearPersistedSessionAfterRemoteDrain;
 
     function showSessionBoundary(
       nextSession: Session | null,
@@ -784,10 +772,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const remoteDrain = closeRemoteRequestAuthority();
       await Promise.all([revenueCatDrain, remoteDrain.catch(() => undefined)]);
       await awaitRemoteRequestAuthorityClosed();
-      return setSupabaseRemoteRequestCandidate(
-        candidate.access_token,
-        candidate.user.id,
-      );
+      return setSupabaseRemoteRequestCandidate(candidate.access_token, candidate.user.id);
     }
 
     async function refreshRemotePublicationCandidate(
@@ -797,11 +782,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const refreshed = await runWithSupabaseAuthRefreshPermit(
         binding,
         candidate.refresh_token,
-        () =>
-          refreshPersistedSupabaseSessionCandidate(
-            candidate.refresh_token,
-            candidate.user.id,
-          ),
+        () => refreshPersistedSupabaseSessionCandidate(candidate.refresh_token, candidate.user.id),
       );
       if (
         refreshed.user.id !== candidate.user.id ||
@@ -956,7 +937,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 // later foreground or online retry obtains server proof.
                 commercePreflightVerified = false;
                 targetUserId = localOwnerSubject;
-                devWarn('[auth] commerce preflight unavailable; retaining local-only access', error);
+                devWarn(
+                  '[auth] commerce preflight unavailable; retaining local-only access',
+                  error,
+                );
               }
             }
             if (!mounted || seq !== sessionChangeSeqRef.current) return;
@@ -972,8 +956,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                   localDataOwnerBinding(localOwnerSubject),
                 ]);
                 exactLocalOwner =
-                  ownerProof.kind === 'owned' &&
-                  ownerProof.ownerBinding === expectedOwnerBinding;
+                  ownerProof.kind === 'owned' && ownerProof.ownerBinding === expectedOwnerBinding;
               } catch (error: unknown) {
                 devWarn('[auth] local owner proof unavailable during offline restore', error);
               }
@@ -1072,10 +1055,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               await publicationDrainPromiseRef.current;
               if (!mounted || seq !== sessionChangeSeqRef.current) return;
               if (AppState.currentState === 'active') {
-                await reserveRevenueCatPublication(
-                  targetUserId,
-                  latestPendingSession.access_token,
-                );
+                await reserveRevenueCatPublication(targetUserId, latestPendingSession.access_token);
                 if (!mounted || seq !== sessionChangeSeqRef.current) return;
               }
               if (AppState.currentState === 'active') {
@@ -1098,10 +1078,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 throw new Error('ACCOUNT_PUBLICATION_SESSION_REJECTED');
               }
               if (AppState.currentState === 'active' && latestPendingSession) {
-                activateSupabaseRemoteRequest(
-                  latestPendingSession.access_token,
-                  targetUserId,
-                );
+                activateSupabaseRemoteRequest(latestPendingSession.access_token, targetUserId);
               }
             } catch (error: unknown) {
               if (!mounted || seq !== sessionChangeSeqRef.current) return;
@@ -2017,10 +1994,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const bufferedCustomerInfo: CustomerInfo[] = [];
       cleanup = await subscribeToCustomerInfoUpdates(
         (customerInfo) => {
-        if (bufferingInitialRead) {
-          bufferedCustomerInfo.push(customerInfo);
-          return initialListenerWrites;
-        }
+          if (bufferingInitialRead) {
+            bufferedCustomerInfo.push(customerInfo);
+            return initialListenerWrites;
+          }
           return publishTicketBoundCustomerInfo(customerInfo).then((result) => {
             if (result?.requiresUncachedRefresh || result?.status === 'conflict') {
               scheduleUncachedRefresh();
@@ -2226,14 +2203,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const result = await getAppleIdToken();
         if (!result) return false;
         await runFreshAuthentication(() =>
-          authenticateWithProviderToken(
-            supabase.auth,
-            session,
-            {
-              provider: 'apple',
-              token: result.idToken,
-            },
-          ),
+          authenticateWithProviderToken(supabase.auth, session, {
+            provider: 'apple',
+            token: result.idToken,
+          }),
         );
         pendingEmailCodeRef.current = null;
         return true;
@@ -2244,14 +2217,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const result = await getGoogleIdToken();
         if (!result) return false;
         await runFreshAuthentication(() =>
-          authenticateWithProviderToken(
-            supabase.auth,
-            session,
-            {
-              provider: 'google',
-              token: result.idToken,
-            },
-          ),
+          authenticateWithProviderToken(supabase.auth, session, {
+            provider: 'google',
+            token: result.idToken,
+          }),
         );
         pendingEmailCodeRef.current = null;
         return true;

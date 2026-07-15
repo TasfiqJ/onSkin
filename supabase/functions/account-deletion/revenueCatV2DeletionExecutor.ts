@@ -1186,10 +1186,7 @@ function retryAt(
   const now = checkedNow(options.clock);
   const next =
     now +
-    Math.max(
-      options.retryDelayMs,
-      Math.min(providerMinimumDelayMs, MAX_PROVIDER_RETRY_AFTER_MS),
-    );
+    Math.max(options.retryDelayMs, Math.min(providerMinimumDelayMs, MAX_PROVIDER_RETRY_AFTER_MS));
   if (!Number.isSafeInteger(next)) {
     throw new RevenueCatV2DeletionExecutorError('REVENUECAT_V2_EXECUTOR_INPUT_INVALID');
   }
@@ -1761,10 +1758,7 @@ async function reconcile(
     const batchIndexes = state.customerObservations
       .map((observation, index) => (observation === null ? index : -1))
       .filter((index) => index >= 0)
-      .slice(
-        0,
-        Math.min(REVENUECAT_V2_MAX_RECONCILIATION_CONCURRENCY, availableRequests),
-      );
+      .slice(0, Math.min(REVENUECAT_V2_MAX_RECONCILIATION_CONCURRENCY, availableRequests));
     if (batchIndexes.length === 0) {
       await budgetRetry(options, claim, state);
       return;
@@ -1816,9 +1810,7 @@ async function reconcile(
         continue;
       }
       if (result.error !== null) {
-        disposition = classifyRevenueCatV2ReconciliationTransportFailure(
-          'before_request_started',
-        );
+        disposition = classifyRevenueCatV2ReconciliationTransportFailure('before_request_started');
       }
       if (disposition === null) {
         unresolved = true;
@@ -1826,10 +1818,7 @@ async function reconcile(
       }
       if (disposition.kind === 'retryable') {
         retryableResultCode ??= disposition.resultCode;
-        retryableMinimumDelayMs = Math.max(
-          retryableMinimumDelayMs,
-          result.providerMinimumDelayMs,
-        );
+        retryableMinimumDelayMs = Math.max(retryableMinimumDelayMs, result.providerMinimumDelayMs);
         continue;
       }
       if (disposition.kind === 'action_required') {
@@ -1848,20 +1837,11 @@ async function reconcile(
       return;
     }
     if (unresolved) {
-      await recordActionRequired(
-        options,
-        claim,
-        'REVENUECAT_V2_TERMINAL_VERIFICATION_UNRESOLVED',
-      );
+      await recordActionRequired(options, claim, 'REVENUECAT_V2_TERMINAL_VERIFICATION_UNRESOLVED');
       return;
     }
     if (retryableResultCode !== null) {
-      await recordRetry(
-        options,
-        claim,
-        retryableResultCode,
-        retryableMinimumDelayMs,
-      );
+      await recordRetry(options, claim, retryableResultCode, retryableMinimumDelayMs);
       return;
     }
     if (!hasDeadlineReserve(options, context)) return;
@@ -2087,10 +2067,7 @@ async function executeRevenueCatV2Deletion(
     // Keep completed project pagination, but never lend a customer 404 to a
     // later claim. Persist the cleared snapshot before re-reading the customer.
     await persistState(options, claim, state);
-  } else if (
-    state.phase === 'already_absent' &&
-    state.absenceClaimBinding !== claimBinding
-  ) {
+  } else if (state.phase === 'already_absent' && state.absenceClaimBinding !== claimBinding) {
     state = {
       version: REVENUECAT_V2_EXECUTOR_STATE_VERSION,
       phase: 'preflight',

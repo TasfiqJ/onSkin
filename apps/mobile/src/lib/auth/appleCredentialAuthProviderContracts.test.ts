@@ -25,9 +25,9 @@ describe('AuthProvider Apple credential revocation integration', () => {
 
     expect(start).toBeGreaterThan(-1);
     expect(end).toBeGreaterThan(start);
-    expect(boundary.indexOf('persistInvalidationMarker: () => markAppleCredentialQuarantined()')).toBeLessThan(
-      boundary.indexOf('async signOut() {'),
-    );
+    expect(
+      boundary.indexOf('persistInvalidationMarker: () => markAppleCredentialQuarantined()'),
+    ).toBeLessThan(boundary.indexOf('async signOut() {'));
     expect(boundary).toContain('await revokeSupabaseRefreshTokens(invalidatedBinding);');
     expect(boundary).not.toContain('supabase.auth.signOut(');
     expect(boundary).toContain('clearRejectedSessionActivityDurably({');

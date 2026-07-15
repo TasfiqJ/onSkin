@@ -356,9 +356,7 @@ function makeHarness(
         harness.events.push('provider_permit');
         if (harness.failPermit) {
           return Promise.reject(
-            new AccountDeletionWorkerCapacityError(
-              'DELETION_WORKER_PROVIDER_CAPACITY_EXHAUSTED',
-            ),
+            new AccountDeletionWorkerCapacityError('DELETION_WORKER_PROVIDER_CAPACITY_EXHAUSTED'),
           );
         }
         return Promise.resolve();
@@ -733,52 +731,55 @@ Deno.test('project and alias pagination resume from every persisted cursor', asy
   assert(aliasCalls.length === 2, 'validated alias cursor must resume exactly');
 });
 
-Deno.test('found-customer pagination progresses across more than twenty distinct claims', async () => {
-  const projectPages = 25;
-  const harness = makeHarness(
-    (request) => {
-      const method = String(request.init.method);
-      const url = new URL(request.url);
-      if (url.pathname === '/v2/projects') {
-        const cursor = url.searchParams.get('starting_after');
-        const page = cursor === null ? 0 : Number(cursor.slice('page-project-'.length)) + 1;
-        const id = page === projectPages - 1 ? PROJECT_ID : `page-project-${page}`;
-        return {
-          status: 200,
-          body: projectsBody({
-            projects: [{ id, createdAt: PROJECT_CREATED }],
-            nextStartingAfter: page === projectPages - 1 ? null : id,
-          }),
-        };
-      }
-      if (method === 'DELETE') {
-        return {
-          status: 200,
-          body: { object: 'customer', id: CUSTOMER_ID, deleted_at: DELETED_AT },
-        };
-      }
-      if (url.pathname.endsWith('/aliases')) {
-        return { status: 200, body: aliasPageBody({ aliases: [], nextStartingAfter: null }) };
-      }
-      return { status: 200, body: customerBody() };
-    },
-    { maxRequests: 1 },
-  );
+Deno.test(
+  'found-customer pagination progresses across more than twenty distinct claims',
+  async () => {
+    const projectPages = 25;
+    const harness = makeHarness(
+      (request) => {
+        const method = String(request.init.method);
+        const url = new URL(request.url);
+        if (url.pathname === '/v2/projects') {
+          const cursor = url.searchParams.get('starting_after');
+          const page = cursor === null ? 0 : Number(cursor.slice('page-project-'.length)) + 1;
+          const id = page === projectPages - 1 ? PROJECT_ID : `page-project-${page}`;
+          return {
+            status: 200,
+            body: projectsBody({
+              projects: [{ id, createdAt: PROJECT_CREATED }],
+              nextStartingAfter: page === projectPages - 1 ? null : id,
+            }),
+          };
+        }
+        if (method === 'DELETE') {
+          return {
+            status: 200,
+            body: { object: 'customer', id: CUSTOMER_ID, deleted_at: DELETED_AT },
+          };
+        }
+        if (url.pathname.endsWith('/aliases')) {
+          return { status: 200, body: aliasPageBody({ aliases: [], nextStartingAfter: null }) };
+        }
+        return { status: 200, body: customerBody() };
+      },
+      { maxRequests: 1 },
+    );
 
-  for (let attempt = 1; attempt <= projectPages + 3; attempt += 1) {
-    await run(harness, dispatchClaimForAttempt(attempt));
-  }
-  assert(payloadState(harness).phase === 'reconciling', 'pagination must eventually dispatch');
-  assert(
-    harness.calls.filter((call) => new URL(call.url).pathname === '/v2/projects').length ===
-      projectPages,
-    'each project page is fetched exactly once despite claim rotation',
-  );
-  assert(
-    harness.calls.filter((call) => call.method === 'DELETE').length === 1,
-    'completed found-customer evidence dispatches only once',
-  );
-});
+    for (let attempt = 1; attempt <= projectPages + 3; attempt += 1) {
+      await run(harness, dispatchClaimForAttempt(attempt));
+    }
+    assert(payloadState(harness).phase === 'reconciling', 'pagination must eventually dispatch');
+    assert(
+      harness.calls.filter((call) => new URL(call.url).pathname === '/v2/projects').length ===
+        projectPages,
+      'each project page is fetched exactly once despite claim rotation',
+    );
+    assert(
+      harness.calls.filter((call) => call.method === 'DELETE').length === 1,
+      'completed found-customer evidence dispatches only once',
+    );
+  },
+);
 
 Deno.test('one claim can verify the maximum encoded RevenueCat identity family', async () => {
   const aliases = Array.from({ length: 64 }, (_value, index) => ({
@@ -859,7 +860,10 @@ Deno.test('one claim can verify the maximum encoded RevenueCat identity family',
   await run(harness, nextReconcileClaim(), NOW + 90_000);
   const roundCalls = harness.calls.slice(callsBeforeRound);
   assert(roundCalls.length === 67, '66 customer identities plus aliases endpoint fit one claim');
-  assert(roundCalls.every((call) => call.method === 'GET'), 'maximum round is read-only');
+  assert(
+    roundCalls.every((call) => call.method === 'GET'),
+    'maximum round is read-only',
+  );
   assert(
     simulatedNow - NOW === 60_000,
     'fourteen-wide batches complete 67 reads at the maximum allowed latency inside the claim',
@@ -897,9 +901,7 @@ Deno.test('a response that reaches the worker deadline cannot record DB absence'
   assert(state.phase === 'reconciling', 'deadline exhaustion remains reconciliation-only');
   assert(state.providerProbeInFlight, 'write-ahead marker preserves conservative recovery');
   assert(
-    !harness.outcomes.some(
-      (outcome) => outcome.resultCode === 'REVENUECAT_V2_DELETION_VERIFIED',
-    ),
+    !harness.outcomes.some((outcome) => outcome.resultCode === 'REVENUECAT_V2_DELETION_VERIFIED'),
     'deadline-crossing evidence cannot complete deletion',
   );
 });
@@ -1061,9 +1063,7 @@ Deno.test('an interrupted reconciliation probe resets and repeats the full round
     if (state.phase !== 'reconciling') return null;
     const observed = state.customerObservations.filter((entry) => entry !== null).length;
     if (observed > 0) reconciliationWrites += 1;
-    return observed === 4 &&
-        state.aliasesObservation !== null &&
-        !state.providerProbeInFlight
+    return observed === 4 && state.aliasesObservation !== null && !state.providerProbeInFlight
       ? 'before'
       : null;
   };
@@ -1108,9 +1108,7 @@ Deno.test('a later reconciliation claim discards every partial target observatio
     if (state.phase !== 'reconciling') return null;
     const observed = state.customerObservations.filter((entry) => entry !== null).length;
     if (observed > 0) reconciliationWrites += 1;
-    return observed === 4 &&
-        state.aliasesObservation === null &&
-        !state.providerProbeInFlight
+    return observed === 4 && state.aliasesObservation === null && !state.providerProbeInFlight
       ? 'after'
       : null;
   };
@@ -1288,9 +1286,9 @@ Deno.test(
     harness.failReset = false;
     harness.persistFault = (state) =>
       state.phase === 'reconciling' &&
-        !state.presenceResetRequired &&
-        state.customerObservations.every((entry) => entry === null) &&
-        state.aliasesObservation === null
+      !state.presenceResetRequired &&
+      state.customerObservations.every((entry) => entry === null) &&
+      state.aliasesObservation === null
         ? 'before'
         : null;
     try {
@@ -1324,109 +1322,98 @@ Deno.test(
       'one post-reset round cannot complete deletion',
     );
     assert(
-      !harness.outcomes.some(
-        (outcome) => outcome.resultCode === 'REVENUECAT_V2_DELETION_VERIFIED',
-      ),
+      !harness.outcomes.some((outcome) => outcome.resultCode === 'REVENUECAT_V2_DELETION_VERIFIED'),
       'pre-reset and post-reset absence evidence must never combine',
     );
   },
 );
 
-Deno.test(
-  'an already-absent round is reset before deleting a reappeared customer',
-  async () => {
-    let providerPresent = false;
-    const harness = makeHarness((request) => {
-      const method = String(request.init.method);
-      if (request.url.endsWith('/v2/projects')) {
-        return {
-          status: 200,
-          body: projectsBody({
-            projects: [{ id: PROJECT_ID, createdAt: PROJECT_CREATED }],
-            nextStartingAfter: null,
-          }),
-        };
-      }
-      if (method === 'DELETE') {
-        providerPresent = false;
-        return {
-          status: 200,
-          body: { object: 'customer', id: CUSTOMER_ID, deleted_at: DELETED_AT },
-        };
-      }
-      if (!providerPresent) {
-        return { status: 404, body: providerError('resource_missing', false) };
-      }
-      if (request.url.endsWith('/aliases')) {
-        return {
-          status: 200,
-          body: aliasPageBody({ aliases: [], nextStartingAfter: null }),
-        };
-      }
-      return { status: 200, body: customerBody() };
-    });
-
-    await run(harness, dispatchClaim());
-    assert(harness.absenceObservationCount === 1, 'initial absence records round one');
-    const afterInitialAbsence = payloadState(harness);
-    assert(afterInitialAbsence.phase === 'preflight', 'next absence round starts preflight');
-    assert(
-      afterInitialAbsence.priorAbsenceObservation,
-      'state remembers that a database absence may have been recorded',
-    );
-
-    providerPresent = true;
-    harness.failReset = true;
-    try {
-      await run(harness, nextDispatchClaim());
-      throw new Error('expected reset-before-delete failure');
-    } catch (error) {
-      assert(!(error instanceof RevenueCatV2DeletionExecutorError), 'expected gateway failure');
+Deno.test('an already-absent round is reset before deleting a reappeared customer', async () => {
+  let providerPresent = false;
+  const harness = makeHarness((request) => {
+    const method = String(request.init.method);
+    if (request.url.endsWith('/v2/projects')) {
+      return {
+        status: 200,
+        body: projectsBody({
+          projects: [{ id: PROJECT_ID, createdAt: PROJECT_CREATED }],
+          nextStartingAfter: null,
+        }),
+      };
     }
-    assert(
-      harness.calls.every((call) => call.method !== 'DELETE'),
-      'reappeared customer cannot be deleted before the database reset',
-    );
-    const foundBeforeReset = payloadState(harness);
-    assert(foundBeforeReset.phase === 'preflight', 'found evidence remains resumable');
-    assert(foundBeforeReset.customerSnapshot?.kind === 'found', 'reappearance is persisted');
-    assert(foundBeforeReset.priorAbsenceObservation, 'failed reset remains durably required');
+    if (method === 'DELETE') {
+      providerPresent = false;
+      return {
+        status: 200,
+        body: { object: 'customer', id: CUSTOMER_ID, deleted_at: DELETED_AT },
+      };
+    }
+    if (!providerPresent) {
+      return { status: 404, body: providerError('resource_missing', false) };
+    }
+    if (request.url.endsWith('/aliases')) {
+      return {
+        status: 200,
+        body: aliasPageBody({ aliases: [], nextStartingAfter: null }),
+      };
+    }
+    return { status: 200, body: customerBody() };
+  });
 
-    harness.failReset = false;
+  await run(harness, dispatchClaim());
+  assert(harness.absenceObservationCount === 1, 'initial absence records round one');
+  const afterInitialAbsence = payloadState(harness);
+  assert(afterInitialAbsence.phase === 'preflight', 'next absence round starts preflight');
+  assert(
+    afterInitialAbsence.priorAbsenceObservation,
+    'state remembers that a database absence may have been recorded',
+  );
+
+  providerPresent = true;
+  harness.failReset = true;
+  try {
     await run(harness, nextDispatchClaim());
-    assert(
-      Number(harness.absenceObservationCount) === 0,
-      'successful reset clears the old round',
-    );
-    assert(
-      harness.calls.filter((call) => call.method === 'DELETE').length === 1,
-      'DELETE is dispatched once only after reset persistence',
-    );
+    throw new Error('expected reset-before-delete failure');
+  } catch (error) {
+    assert(!(error instanceof RevenueCatV2DeletionExecutorError), 'expected gateway failure');
+  }
+  assert(
+    harness.calls.every((call) => call.method !== 'DELETE'),
+    'reappeared customer cannot be deleted before the database reset',
+  );
+  const foundBeforeReset = payloadState(harness);
+  assert(foundBeforeReset.phase === 'preflight', 'found evidence remains resumable');
+  assert(foundBeforeReset.customerSnapshot?.kind === 'found', 'reappearance is persisted');
+  assert(foundBeforeReset.priorAbsenceObservation, 'failed reset remains durably required');
 
-    await run(harness, reconcileClaim());
-    assert(harness.absenceObservationCount === 1, 'first post-delete absence is nonterminal');
-    assertDeepEqual(
-      harness.outcomes.at(-1),
-      {
-        kind: 'retryable',
-        resultCode: 'REVENUECAT_V2_QUIESCENCE_PENDING',
-        retryAt: '2026-07-13T12:06:00.000Z',
-      },
-      'old and post-delete absence rounds cannot combine',
-    );
+  harness.failReset = false;
+  await run(harness, nextDispatchClaim());
+  assert(Number(harness.absenceObservationCount) === 0, 'successful reset clears the old round');
+  assert(
+    harness.calls.filter((call) => call.method === 'DELETE').length === 1,
+    'DELETE is dispatched once only after reset persistence',
+  );
 
-    await run(harness, nextReconcileClaim());
-    assert(
-      Number(harness.absenceObservationCount) === 2,
-      'second fresh round reaches quorum',
-    );
-    assertDeepEqual(
-      harness.outcomes.at(-1),
-      { kind: 'succeeded', resultCode: 'REVENUECAT_V2_DELETION_VERIFIED' },
-      'only two post-reset rounds complete deletion',
-    );
-  },
-);
+  await run(harness, reconcileClaim());
+  assert(harness.absenceObservationCount === 1, 'first post-delete absence is nonterminal');
+  assertDeepEqual(
+    harness.outcomes.at(-1),
+    {
+      kind: 'retryable',
+      resultCode: 'REVENUECAT_V2_QUIESCENCE_PENDING',
+      retryAt: '2026-07-13T12:06:00.000Z',
+    },
+    'old and post-delete absence rounds cannot combine',
+  );
+
+  await run(harness, nextReconcileClaim());
+  assert(Number(harness.absenceObservationCount) === 2, 'second fresh round reaches quorum');
+  assertDeepEqual(
+    harness.outcomes.at(-1),
+    { kind: 'succeeded', resultCode: 'REVENUECAT_V2_DELETION_VERIFIED' },
+    'only two post-reset rounds complete deletion',
+  );
+});
 
 Deno.test(
   'a crash before persisting a preflight reappearance resets before the next probe',
@@ -1452,8 +1439,8 @@ Deno.test(
     providerPresent = true;
     harness.persistFault = (state) =>
       state.phase === 'preflight' &&
-        state.customerSnapshot?.kind === 'found' &&
-        !state.providerProbeInFlight
+      state.customerSnapshot?.kind === 'found' &&
+      !state.providerProbeInFlight
         ? 'before'
         : null;
     try {
@@ -1510,8 +1497,8 @@ Deno.test(
     };
     harness.persistFault = (state) =>
       state.phase === 'reconciling' &&
-        !state.providerProbeInFlight &&
-        state.customerObservations.some((entry) => entry?.kind === 'present')
+      !state.providerProbeInFlight &&
+      state.customerObservations.some((entry) => entry?.kind === 'present')
         ? 'before'
         : null;
     try {

@@ -198,9 +198,9 @@ describe('strict canonical Supabase URL classification', () => {
     'https://project.supabase.co/path',
     'https://project.supabase.co/?key=value',
   ])('rejects a non-canonical configured origin: %s', (url) => {
-    expect(
-      () => new SupabaseRemoteRequestAdmissionController(url),
-    ).toThrowError(expect.objectContaining({ code: 'SUPABASE_REMOTE_REQUEST_TARGET_REJECTED' }));
+    expect(() => new SupabaseRemoteRequestAdmissionController(url)).toThrowError(
+      expect.objectContaining({ code: 'SUPABASE_REMOTE_REQUEST_TARGET_REJECTED' }),
+    );
   });
 });
 
@@ -285,10 +285,7 @@ describe('state transitions and ordinary transport', () => {
     activate(admission);
     const transport = ordinaryTransport();
 
-    await expectCode(
-      admission.createFetch(transport)(url, { headers: bearer(TOKEN_A) }),
-      code,
-    );
+    await expectCode(admission.createFetch(transport)(url, { headers: bearer(TOKEN_A) }), code);
     expect(transport).not.toHaveBeenCalled();
   });
 
@@ -314,15 +311,16 @@ describe('state transitions and ordinary transport', () => {
     const admission = controller();
     activate(admission);
     let streamController!: ReadableStreamDefaultController<Uint8Array>;
-    const transport = vi.fn(async () =>
-      new Response(
-        new ReadableStream<Uint8Array>({
-          start(received) {
-            streamController = received;
-          },
-        }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } },
-      ),
+    const transport = vi.fn(
+      async () =>
+        new Response(
+          new ReadableStream<Uint8Array>({
+            start(received) {
+              streamController = received;
+            },
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        ),
     );
     let returned = false;
     const response = admission
@@ -345,8 +343,9 @@ describe('state transitions and ordinary transport', () => {
   it('rejects manual redirects and mismatched response URLs', async () => {
     const admission = controller();
     activate(admission);
-    const redirect = vi.fn(async () =>
-      new Response(null, { status: 302, headers: { Location: 'https://evil.example' } }),
+    const redirect = vi.fn(
+      async () =>
+        new Response(null, { status: 302, headers: { Location: 'https://evil.example' } }),
     );
     await expectCode(
       admission.createFetch(redirect)(`${SUPABASE_URL}/rest/v1/profiles`, {
@@ -442,10 +441,11 @@ describe('explicit Auth request allowlist and lineage', () => {
 
     await expectCode(
       admission.runWithPermit({ purpose: 'auth_fresh_sign_in' }, () =>
-        admission.createFetch(transport)(
-          `${SUPABASE_URL}/auth/v1/token?grant_type=id_token`,
-          { method: 'POST', headers: jsonHeaders(PUBLIC_KEY), body },
-        ),
+        admission.createFetch(transport)(`${SUPABASE_URL}/auth/v1/token?grant_type=id_token`, {
+          method: 'POST',
+          headers: jsonHeaders(PUBLIC_KEY),
+          body,
+        }),
       ),
       'SUPABASE_REMOTE_REQUEST_TARGET_REJECTED',
     );
@@ -514,14 +514,11 @@ describe('explicit Auth request allowlist and lineage', () => {
     await admission.runWithPermit(
       { purpose: 'auth_refresh', binding, refreshToken: REFRESH_A },
       () =>
-        admission.createFetch(transport)(
-          `${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,
-          {
-            method: 'POST',
-            headers: jsonHeaders(PUBLIC_KEY),
-            body: JSON.stringify({ refresh_token: REFRESH_A }),
-          },
-        ),
+        admission.createFetch(transport)(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+          method: 'POST',
+          headers: jsonHeaders(PUBLIC_KEY),
+          body: JSON.stringify({ refresh_token: REFRESH_A }),
+        }),
     );
 
     expect(admission.snapshot()).toMatchObject({
@@ -542,17 +539,12 @@ describe('explicit Auth request allowlist and lineage', () => {
     const transport = ordinaryTransport();
 
     await expectCode(
-      admission.runWithPermit(
-        { purpose: 'auth_refresh', binding, refreshToken: REFRESH_A },
-        () =>
-          admission.createFetch(transport)(
-            `${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,
-            {
-              method: 'POST',
-              headers: jsonHeaders(PUBLIC_KEY),
-              body: JSON.stringify({ refresh_token: 'different-token' }),
-            },
-          ),
+      admission.runWithPermit({ purpose: 'auth_refresh', binding, refreshToken: REFRESH_A }, () =>
+        admission.createFetch(transport)(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+          method: 'POST',
+          headers: jsonHeaders(PUBLIC_KEY),
+          body: JSON.stringify({ refresh_token: 'different-token' }),
+        }),
       ),
       'SUPABASE_REMOTE_REQUEST_PERMIT_REJECTED',
     );
@@ -596,17 +588,14 @@ describe('explicit Auth request allowlist and lineage', () => {
     const binding = admission.setCandidate(TOKEN_A, USER_A);
 
     await expectCode(
-      admission.runWithPermit(
-        { purpose: 'auth_refresh', binding, refreshToken: REFRESH_A },
-        () =>
-          admission.createFetch(async () => jsonResponse(sessionPayload(responseToken, responseUser)))(
-            `${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,
-            {
-              method: 'POST',
-              headers: jsonHeaders(PUBLIC_KEY),
-              body: JSON.stringify({ refresh_token: REFRESH_A }),
-            },
-          ),
+      admission.runWithPermit({ purpose: 'auth_refresh', binding, refreshToken: REFRESH_A }, () =>
+        admission.createFetch(async () =>
+          jsonResponse(sessionPayload(responseToken, responseUser)),
+        )(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+          method: 'POST',
+          headers: jsonHeaders(PUBLIC_KEY),
+          body: JSON.stringify({ refresh_token: REFRESH_A }),
+        }),
       ),
       'SUPABASE_REMOTE_REQUEST_BINDING_REJECTED',
     );
@@ -769,14 +758,12 @@ describe('typed account-deletion permits', () => {
 
     for (const testCase of cases) {
       await expect(
-        admission.runWithPermit(
-          { purpose: 'account_deletion', action: 'preflight', binding },
-          () =>
-            admission.createFetch(transport)(`${SUPABASE_URL}${testCase.path}`, {
-              method: 'POST',
-              headers: jsonHeaders(TOKEN_A),
-              body: testCase.body,
-            }),
+        admission.runWithPermit({ purpose: 'account_deletion', action: 'preflight', binding }, () =>
+          admission.createFetch(transport)(`${SUPABASE_URL}${testCase.path}`, {
+            method: 'POST',
+            headers: jsonHeaders(TOKEN_A),
+            body: testCase.body,
+          }),
         ),
       ).rejects.toBeInstanceOf(Error);
     }
@@ -1043,9 +1030,9 @@ describe('semantic leases, timeout quarantine, drain, and stale completion', () 
 
     await expectCode(request, 'SUPABASE_REMOTE_REQUEST_RESULT_STALE');
     expect((await rotation).accessToken).toBe(TOKEN_A_ROTATED);
-    await expect(
-      admission.rotateActiveBinding(previous, TOKEN_A, USER_A),
-    ).rejects.toMatchObject({ code: 'SUPABASE_REMOTE_REQUEST_BINDING_REJECTED' });
+    await expect(admission.rotateActiveBinding(previous, TOKEN_A, USER_A)).rejects.toMatchObject({
+      code: 'SUPABASE_REMOTE_REQUEST_BINDING_REJECTED',
+    });
   });
 
   it('enters deletion synchronously with exact binding and drains old work', async () => {
@@ -1073,11 +1060,7 @@ describe('semantic leases, timeout quarantine, drain, and stale completion', () 
     const connect = vi.fn(async () => undefined);
 
     await expectCode(
-      admission.runRealtime(
-        'wss://project.supabase.co/realtime/v1/websocket',
-        binding,
-        connect,
-      ),
+      admission.runRealtime('wss://project.supabase.co/realtime/v1/websocket', binding, connect),
       'SUPABASE_REMOTE_REQUEST_TARGET_REJECTED',
     );
     expect(connect).not.toHaveBeenCalled();
