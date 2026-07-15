@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-15T20:35:41.171Z
-Git SHA: 4abdcac4f1de24429f23b40a03d2e3196e41993f
+Generated at: 2026-07-15T23:49:36.355Z
+Git SHA: 82c9e722ed220e31f13d32e5a3d4df9d6ecdfb75
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -54,7 +54,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 25674 | d3121bec90301e1bd3cb5129105946ef524d96f3edc3fa9f5c8e5a072713e7c5 |
+| package.json | present | 26529 | 7efcdf7c170856b835cbb6dc08d5b6f64ef47f751035c1be7fc92957863771a5 |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
 | apps/mobile/src/lib/launch/phase7.ts | present | 6185 | 875babca48f518e13c897550ae2b0feb66346ba700f8ffba8aad9560f07b1d46 |
@@ -137,10 +137,10 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts | present | 3425 | d4b9128f7a7309f2117d3df3ef5016950bf4cd9a58ce2a253dc3517288fda6e1 |
 | apps/mobile/src/features/trend/trendRoutes.test.ts | present | 3695 | 3f4c93276730c9725fe274b70587c539316f924f03ef6b328aaa7dff2739bab7 |
 | apps/mobile/src/features/trend/useTrend.ts | present | 3487 | f2ba58512a8322ad112f66d79762743c97856d2770a248185f71e065b9609df5 |
-| supabase/functions/catalog-lookup/index.ts | present | 8930 | 7d3ba29cfa384e7eb20fd93fa0e4ec9471da057bcc6385c10fa4a00122bbe17a |
+| supabase/functions/catalog-lookup/index.ts | present | 10954 | e6bf8011b1545fba24540b9c5acbb66ca51084ccee2406b01ba854279219a420 |
 | supabase/functions/catalog-lookup/catalogContract.ts | present | 641 | e205eae032c22fab88748e3f7b47a92ba65c74b0fa9f4372e03896839af45f94 |
 | supabase/functions/catalog-lookup/catalogContract.test.ts | present | 1683 | 5ae64b92a6baa5707bdea6e6aff7d59ef04e5138354a75e772c1d8ba7b31a6ec |
-| supabase/functions/catalog-search/index.ts | present | 7424 | f9ac2957764962226fcaf7e938b7b7a6b2d934de75bb0e49f1d79c66bb45ea15 |
+| supabase/functions/catalog-search/index.ts | present | 9031 | 5f99ed4d6662d03f2b8946e9bc38374aae09de2c66d660833be22432329f7cd6 |
 | supabase/functions/catalog-search/catalogContract.ts | present | 1994 | 3b51d16f5b8d5b24a9f87d2e445c28391c8f6407d39150f4085910da97f380e0 |
 | supabase/functions/catalog-search/catalogContract.test.ts | present | 3949 | 18adc4c4572004285afab509ab0d100daeaaa905ce5895d1783a0a792d15cc59 |
 | supabase/migrations/20260711000038_shelf_freshness_invariants.sql | present | 1973 | 672df1e56fac4cdfc6bf641c3249221aaacf630439d28898a79ace2d25181bcd |
@@ -149,16 +149,16 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | scripts/phase7/check-core-loop.mjs | present | 22088 | 8df23d34ca7998dc25c04e6fc9ea8e816fbc5cc6cbebed7bbcd16acf0e0653ca |
 | scripts/phase7/check-core-loop-smoke.mjs | present | 13728 | 73b7341ddc39904dda7ca1fa689dee67d69009c3ccb67f142937219eac7f18e0 |
 | scripts/e2e/human-e2e-manifest.mjs | present | 75305 | 15a92f3558f39b6c8efb47159e43270a532de13dfeae5f02f56fdca385eca9b7 |
-| scripts/phase9/lib.mjs | present | 24200 | 4b1c8b7bb69b2d489c0b455022b2568bb9d3a8e6cc91ead4e6c8e09376bd3e5a |
+| scripts/phase9/lib.mjs | present | 24292 | 463a0aa7832651f966fe437216da56c7c50349f8016c9ab5cf0b5e52fb0bc2c5 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
-| docs/USER_FLOW_TREE.md | present | 378984 | 019abc9d719b00d076dd4a94c8cad70b25257bfa745abefeebe0a6329b5ce66f |
-| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | cff94ddc52d62952b034756406b095b22c7388594c6218b4e235434b224366aa |
-| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | 52ee6c89fa062026ac2e1794ad07b815ca0b042277bbd798a3c419596c84e553 |
-| docs/phase-5/generated/device-qa-packet.json | present | 26528 | efc58675e12d1c8142b5236ed81edcddac54c88f3319049a7fcb982e10cd8be4 |
-| docs/phase-5/generated/device-qa-packet.md | present | 23039 | 631f22b29614aaf1ee1b00efa1e3e9c7e6f919adb6a4c66e8339a8fef72e258f |
-| docs/phase-6/generated/payments-qa-packet.json | present | 17984 | ad21dfb78be6a07f3eeb26a9c2d046cf7296802fd6f6c1b3962bb5854256e454 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 11870 | 883786b2f97a5b7e7e4db5060fc411da66dd12931eb03eda376b96f978c7b546 |
+| docs/USER_FLOW_TREE.md | present | 382133 | ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 39091e9d716cfbbb44a01b510ee36af413a3225e7fde3e3789cd0362df6b63fd |
+| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | febfb52bdcaf0608f847585fac5275027c5d1d0a8b41f6db2f4b4b759a4ddaf1 |
+| docs/phase-5/generated/device-qa-packet.json | present | 26528 | 33363905562ed276f813cf18335e93cdad4690d07cb85b97513a6ffd3dd8a33c |
+| docs/phase-5/generated/device-qa-packet.md | present | 23039 | 0f7314d558f082747dd19fa4fd6929bcdb272988c202ee233138ff682ae149bd |
+| docs/phase-6/generated/payments-qa-packet.json | present | 17985 | bb945a4f939ef3872cf14efaa8b5911085f7cfb5b213524897ac5aaaeb27fa07 |
+| docs/phase-6/generated/payments-qa-packet.md | present | 11871 | a9a59a300bac7bc215a705c6636e39116008e06d0d07c2c7490fff93bdc633eb |
 | docs/phase-7/surface-inventory.md | present | 7793 | 50c0f72fb317e36588a30559cd254dcb3b7ebaa7c73b8b4ba4dfb9ea35350fd6 |
 | docs/phase-7/launch-claim-matrix.md | present | 4322 | 7027d6d21f2cc7c3bb6944f003f9aeac6a09efea8dc2785280f6a3da44bb6b6b |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4725 | f57bd8b15489b66c4dbee486f3e15190eb2e4752420308dfb71883372348cdd1 |
