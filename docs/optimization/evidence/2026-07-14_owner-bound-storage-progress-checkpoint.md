@@ -48,3 +48,5 @@ That screenshot predates the final dev-only proof revision. The final code clear
 3. Add executable delayed account-A to account-B Shelf coverage; the current source/contract proof is not a substitute for the runtime matrix.
 4. Continue the repository-wide inventory of account-scoped local/server reads and writes, including onboarding, trend, routine-order, and recommendation paths.
 5. Capture native operation counts and latency for OPT-112 before changing its status from `implemented` to `verified`.
+
+Follow-up: item 2 and the equivalent encrypted-photo hung-read drain were implemented at `955717c44fc12dde2235ac76bd203966bc4d5f60`; see [2026-07-14_hung-private-read-isolation-checkpoint.md](./2026-07-14_hung-private-read-isolation-checkpoint.md). The other follow-up items remain open.
