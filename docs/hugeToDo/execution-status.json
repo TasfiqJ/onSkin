@@ -737,7 +737,7 @@
       "id": "DB-09",
       "status": "in_progress",
       "blockedBy": ["DB-06", "DB-07", "DB-08", "ACCT-03"],
-      "nextAction": "The combined credential-free run passed two resets across all 53 migrations through 0054, 73/73 RLS tables, the exact 50-private-table classification, and 261 pgTAP assertions (46 schema + 215 health-consent lifecycle); schema lint and shadow drift were also clean. Run the exhaustive 50-private-table access-control matrix against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, and configured Turnstile behavior; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
+      "nextAction": "The combined credential-free run passed two resets across all 53 migrations through 0054, 77/77 RLS tables, the exact 54-private-table classification (40 directly queryable + 14 sealed), and 261 pgTAP assertions (46 schema + 215 health-consent lifecycle); schema lint and shadow drift were also clean. Run the exhaustive 54-private-table access-control matrix against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, and configured Turnstile behavior; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",

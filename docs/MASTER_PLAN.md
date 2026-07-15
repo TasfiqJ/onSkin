@@ -754,8 +754,8 @@ Expo mobile app
 [Confirmed] The source candidate has 53 migrations through
 `20260715000054_health_consent_withdrawal_lifecycle.sql`. The combined local verification
 passed two clean resets, 261 pgTAP assertions (46 schema + 215 health-consent lifecycle),
-database lint, an empty shadow diff, 73/73 public tables with RLS, and an exact
-50-private-table classification. Phase 9 health-consent verification passed 104 Deno tests
+database lint, an empty shadow diff, 77/77 public tables with RLS, and an exact
+54-private-table classification (40 directly queryable + 14 sealed). Phase 9 health-consent verification passed 104 Deno tests
 plus 7 evidence tests. The authority-lane rehearsals
 pass on PostgreSQL 15 and 17. Focused server suites pass 20/20 subscription reconciliation,
 8/8 subscription grants, 20/20 atomic RevenueCat webhook, and 215/215 durable deletion;

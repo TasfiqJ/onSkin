@@ -251,8 +251,8 @@ Review consent gate from this document alone.
 
 The credential-free combined local database candidate was replayed from scratch
 twice on 2026-07-15 after the red-team fixes: all 53 migrations through `0054`
-applied, all 73 public tables had RLS, the 50-table private classification
-matched 30 owner-linked + 10 service-only + 10 sealed tables, and all 261 pgTAP
+applied, all 77 public tables had RLS, the 54-table private classification
+matched 30 owner-linked + 10 directly service-only + 14 sealed tables, and all 261 pgTAP
 assertions passed (46 schema + 215 health-consent lifecycle). Schema lint,
 migration-shadow comparison, empty drift, temporary type generation, formatting,
 and repository-diff checks also passed. Phase 9 health-consent verification

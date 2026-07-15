@@ -1,6 +1,6 @@
 # Readiness Status Audit
 
-Generated: 2026-07-15T04:29:35.835Z
+Generated: 2026-07-15T20:19:36.423Z
 Status: pass
 Strict mode: yes
 
@@ -13,9 +13,9 @@ Required release platforms: ios. Android release evidence: not_applicable.
 
 ## Summary
 
-- Evidence date: 2026-07-13
-- Expected mobile test baseline: 244 mobile test files / 2780 tests
-- Actual mobile test files found: 244
+- Evidence date: 2026-07-15
+- Expected mobile test baseline: 266 mobile test files / 3026 tests
+- Actual mobile test files found: 266
 - Blockers: 0
 - Warnings: 0
 
@@ -23,8 +23,8 @@ Required release platforms: ios. Android release evidence: not_applicable.
 
 | Doc                      | Date       | Expected date | Current test phrase | Manifest evidence | Stale patterns | Missing commands |
 | ------------------------ | ---------- | ------------- | ------------------- | ----------------- | -------------- | ---------------- |
-| LAUNCH_READINESS.md      | 2026-07-13 | 2026-07-13    | yes                 | yes               | 0              | 0                |
-| BLOCKERS.md              | 2026-07-13 | 2026-07-13    | yes                 | yes               | 0              | 0                |
+| LAUNCH_READINESS.md      | 2026-07-15 | 2026-07-15    | yes                 | yes               | 0              | 0                |
+| BLOCKERS.md              | 2026-07-15 | 2026-07-15    | yes                 | yes               | 0              | 0                |
 | docs/TESTING_STRATEGY.md | n/a        | n/a           | n/a                 | n/a               | n/a            | 0                |
 
 ## Required Launch Commands

@@ -1,6 +1,6 @@
 # Blockers - iOS All-Features Launch Gates
 
-Date: 2026-07-13
+Date: 2026-07-15
 
 Everything here needs a founder decision, account, API key, payment method,
 legal/clinical signoff, production service, real-device verification, or beta
@@ -101,8 +101,10 @@ Read this with:
 10. Performance baseline and scale evidence are not measured on supported
     physical devices or beta telemetry.
 11. Closed beta not run.
-12. Health-consent withdrawal has no approved non-destructive product/data
-    contract.
+12. Health-consent withdrawal now has a purpose-scoped, non-account-deleting
+    source candidate and local Expo-web/database evidence, but all 15 installed
+    copy tuples remain `draft_blocked`; hosted worker/Storage/processor/backup,
+    physical-iPhone, and professional privacy/legal approval evidence are absent.
 13. Sign in with Apple still lacks authorization-code plus nonce/state capture,
     an encrypted rotating refresh-token vault, daily validation, canonical
     signed server-notification ingress, and an authoritative session-access
@@ -152,8 +154,8 @@ Phase 5 native-device packet has been refreshed for the current progress
 capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
-confirmation instead of requiring a native alert. A clean `main` rerun on
-2026-07-15 passes root typecheck, lint, and 244 mobile test files / 2780 tests.
+confirmation instead of requiring a native alert. The current integrated source checkpoint
+on 2026-07-15 passes root typecheck, lint, and 266 mobile test files / 3026 tests.
 The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
@@ -369,10 +371,10 @@ attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains 52 migrations through `20260714000053`, targeted current RPC
-types, 12 deploy-by-default Edge Functions, a staging deploy wrapper, and an
+The repo contains 53 migrations through `20260715000054`, targeted hand-maintained
+RPC types with DB-08 still open, 13 deploy-by-default Edge Functions, a staging deploy wrapper, and an
 exhaustive live-project RLS harness. The isolated DB-05 gate passes two clean
-migration-plus-seed resets, structural pgTAP across all 70 RLS-enabled public
+migration-plus-seed resets, 261 pgTAP assertions across all 77 RLS-enabled public
 tables, error-level schema lint, and an empty migration-shadow drift check.
 PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system and
 the separate RevenueCat/app-grant entitlement authorities.
@@ -388,6 +390,13 @@ through an owner-derived RPC. Bounded authenticated reconciliation uses only a
 fresh provider `request_date`. Focused deletion, reconciliation, grant, webhook,
 auth, RLS, policy, and data-rights source gates pass.
 
+Migration `0054` adds the non-destructive health-consent lifecycle, append-only
+copy review history, processing epochs, dependent-consent operations, a
+retry-bounded worker lane, and fail-closed mobile admission/cleanup gates. Its
+local database, Deno, mobile, and Expo-web evidence passes; all installed copy
+remains `draft_blocked`, and no hosted worker/Storage/Cron/Vault or legal
+approval is claimed.
+
 This is not a hosted deployment or provider proof. Full generated-type parity,
 hosted RLS/Cron/Vault/concurrency, old/tampered-client containment,
 cross-owner community-handle cleanup, complete Sign in with Apple server
@@ -399,15 +408,16 @@ Next action:
 - fill `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY`;
 - run `npm run phase2:check-env:strict`;
-- apply all 52 reviewed migrations through `0053` with
+- apply all 53 reviewed migrations through `0054` with
   `scripts/phase2/deploy-supabase-staging.ps1`;
 - regenerate `packages/types/src/database.types.ts`;
-- deploy the exact 12-function manifest, including `subscription-reconciliation`;
+- deploy the exact 13-function manifest, including `health-consent-worker` and
+  `subscription-reconciliation`;
 - run Security Advisor and Performance Advisor;
 - configure anonymous Auth and Turnstile, then run
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
 - retain clean-revision, redacted artifacts covering both permanent users, the
-  signed-anonymous user, the no-session client, all 47 private tables, exact
+  signed-anonymous user, the no-session client, all 54 private tables, exact
   database/Storage outcomes, publication/deletion concurrency, provider
   interruption/recreation, and zero cleanup residue;
 - obtain an approved old/tampered-client control and finish the SIWA

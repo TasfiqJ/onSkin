@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T04:29:35.835Z",
+  "generatedAt": "2026-07-15T20:19:36.423Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -79,34 +79,34 @@
   "status": "pass",
   "strict": true,
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
-  "evidenceDate": "2026-07-13",
+  "evidenceDate": "2026-07-15",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 244,
-  "expectedMobileTests": 2780,
-  "actualMobileTestFiles": 244,
-  "expectedTestPhrase": "244 mobile test files / 2780 tests",
+  "expectedMobileTestFiles": 266,
+  "expectedMobileTests": 3026,
+  "actualMobileTestFiles": 266,
+  "expectedTestPhrase": "266 mobile test files / 3026 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
       "requireCurrentEvidence": true,
-      "date": "2026-07-13",
-      "expectedDate": "2026-07-13",
+      "date": "2026-07-15",
+      "expectedDate": "2026-07-15",
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 244,
-          "tests": 2780,
-          "source": "244 mobile test files / 2780 tests"
+          "testFiles": 266,
+          "tests": 3026,
+          "source": "266 mobile test files / 3026 tests"
         },
         {
-          "testFiles": 244,
-          "tests": 2780,
-          "source": "244 mobile test files / 2780 tests"
+          "testFiles": 266,
+          "tests": 3026,
+          "source": "266 mobile test files / 3026 tests"
         },
         {
-          "testFiles": 244,
-          "tests": 2780,
-          "source": "244 mobile test files / 2780 tests"
+          "testFiles": 266,
+          "tests": 3026,
+          "source": "266 mobile test files / 3026 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -117,14 +117,14 @@
     {
       "path": "BLOCKERS.md",
       "requireCurrentEvidence": true,
-      "date": "2026-07-13",
-      "expectedDate": "2026-07-13",
+      "date": "2026-07-15",
+      "expectedDate": "2026-07-15",
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 244,
-          "tests": 2780,
-          "source": "244 mobile test files / 2780 tests"
+          "testFiles": 266,
+          "tests": 3026,
+          "source": "266 mobile test files / 3026 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -136,13 +136,13 @@
       "path": "docs/TESTING_STRATEGY.md",
       "requireCurrentEvidence": false,
       "date": null,
-      "expectedDate": "2026-07-13",
+      "expectedDate": "2026-07-15",
       "hasExpectedTestPhrase": false,
       "testBaselines": [
         {
-          "testFiles": 244,
-          "tests": 2780,
-          "source": "244 test files / 2,780 tests"
+          "testFiles": 266,
+          "tests": 3026,
+          "source": "266 test files / 3,026 tests"
         }
       ],
       "unexpectedTestBaselines": [],

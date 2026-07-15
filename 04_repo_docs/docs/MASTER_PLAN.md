@@ -751,13 +751,16 @@ Expo mobile app
 
 ### 2026-07-15 Integrated Source Checkpoint
 
-[Confirmed] The source candidate has 52 migrations through
-`20260714000053_entitlement_authority_lanes.sql`. Local verification passes two clean
-resets, pgTAP, database lint, and an empty shadow diff, and the authority-lane rehearsals
+[Confirmed] The source candidate has 53 migrations through
+`20260715000054_health_consent_withdrawal_lifecycle.sql`. The combined local verification
+passed two clean resets, 261 pgTAP assertions (46 schema + 215 health-consent lifecycle),
+database lint, an empty shadow diff, 77/77 public tables with RLS, and an exact
+54-private-table classification (40 directly queryable + 14 sealed). Phase 9 health-consent verification passed 104 Deno tests
+plus 7 evidence tests. The authority-lane rehearsals
 pass on PostgreSQL 15 and 17. Focused server suites pass 20/20 subscription reconciliation,
 8/8 subscription grants, 20/20 atomic RevenueCat webhook, and 215/215 durable deletion;
-the focused mobile server contract passes 2/2. The integrated repository passes 244 test
-files / 2,780 tests plus typecheck, lint, and format.
+the focused mobile server contract passes 2/2. The mobile workspace passes 266 test files /
+3,026 tests plus typecheck and lint.
 
 [Confirmed] This checkpoint centralizes exact-session remote admission and controlled
 refresh, synchronously closes Supabase and RevenueCat publication during account

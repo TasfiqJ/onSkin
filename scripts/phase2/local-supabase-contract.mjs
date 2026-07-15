@@ -126,7 +126,7 @@ check(
 check(/reset 1 of 2/u.test(runner) && /reset 2 of 2/u.test(runner), 'Verify two clean resets.');
 check(/DB-08 remains open/u.test(runner), 'Temporary type output must not close DB-08.');
 
-check(/select plan\(27\)/u.test(tests), 'The structural pgTAP plan must remain explicit.');
+check(/select plan\(46\)/u.test(tests), 'The structural pgTAP plan must remain explicit.');
 check(
   !/public\.(?:digest|gen_random_bytes)\s*\(/u.test(accountDeletionMigration),
   'pgcrypto functions must use the pinned image extension namespace.',
@@ -136,7 +136,7 @@ check(
   'pgTAP must verify migration history.',
 );
 check(
-  /73::bigint/u.test(tests) && /relrowsecurity/u.test(tests),
+  /77::bigint/u.test(tests) && /relrowsecurity/u.test(tests),
   'pgTAP must verify the RLS table inventory.',
 );
 check(

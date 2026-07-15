@@ -61,8 +61,9 @@ The current source checkpoint passes:
 - PostgreSQL 15 and 17 account-publication and entitlement-authority rehearsals.
 - The combined database run completed two clean local Supabase resets across all 53
   migrations through `20260715000054_health_consent_withdrawal_lifecycle.sql`, plus 261
-  pgTAP assertions (46 schema + 215 health-consent lifecycle), 73/73 public tables with RLS,
-  an exact 50-private-table classification, database lint, and an empty shadow diff.
+  pgTAP assertions (46 schema + 215 health-consent lifecycle), 77/77 public tables with RLS,
+  an exact 54-private-table classification (40 directly queryable + 14 sealed), database lint,
+  and an empty shadow diff.
 - Subscription reconciliation 20/20, subscription grants 8/8, atomic RevenueCat webhook
   20/20, durable account deletion 215/215, and the focused mobile server contract 2/2.
 - Health-consent Phase 9 verification: 104 Deno tests plus 7 evidence tests.

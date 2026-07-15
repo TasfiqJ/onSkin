@@ -97,7 +97,7 @@ RevenueCat
   authenticated reconciliation -> provider request_date watermark
 
 External data
-  Open Beauty Facts exports/API
+  Reviewed Open Beauty Facts offline artifacts (request-time API disabled)
   CosIng ingredient data
 
 Observability
@@ -195,8 +195,8 @@ controller, and central remote gate have focused process-death, configure-in-fli
 lost-release, caller-detachment, and child-request-settlement coverage. This is source
 evidence, not proof of a race-free hosted lifecycle.
 
-Migration `20260714000053_entitlement_authority_lanes.sql` completes the current set of
-52 migrations and separates commerce authority: `entitlements` is the ordered RevenueCat
+Migration `20260714000053_entitlement_authority_lanes.sql` separates commerce authority:
+`entitlements` is the ordered RevenueCat
 projection, while `reverse_trial_grants` is the independent app-issued no-card lane. An
 owner-derived, no-argument `auth.uid()` projection RPC returns both without accepting a
 caller-selected user ID. Authenticated reconciliation performs a bounded RevenueCat v1
@@ -205,16 +205,26 @@ it never fabricates provider order. The mobile store durably journals native tra
 admission before purchase or restore can be repeated, and keeps unresolved ownership or
 confirmation state visible and fail-closed.
 
-The full 52-migration chain passes two clean local resets, pgTAP, database lint, and an
-empty shadow diff; the publication/entitlement lane rehearsals pass on PostgreSQL 15 and 17. Hosted clean-reset, Cron/Vault/concurrency, live RevenueCat and App Store sandbox,
+Migration `20260715000054_health_consent_withdrawal_lifecycle.sql` brings the current chain
+to 53 migrations. It adds a non-account-deleting health-consent lifecycle, processing-epoch
+write barrier, service-only durable worker claims, relational/Storage absence attestation,
+and cross-owner community-evidence detachment. The combined local checkpoint passed two
+clean resets, 261 pgTAP assertions (46 schema + 215 health-consent lifecycle), database lint,
+and an empty shadow diff; all 77 public tables had RLS enabled, with 54 classified as private
+(40 directly queryable and 14 sealed from direct API-role access).
+Phase 9 health-consent verification passed 104 Deno tests plus 7 evidence tests, and the
+mobile workspace passed typecheck, lint, and 3,026 tests across 266 files. The
+publication/entitlement lane rehearsals pass
+on PostgreSQL 15 and 17. Hosted clean-reset, Cron/Vault/concurrency, live RevenueCat and App Store sandbox,
 provider interruption and recreation, physical-iPhone, professional, privacy/security/
 legal, and App Review evidence remain required. Old or tampered clients still require an
 approved provider block, enforceable mandatory-version/zero-installed-cohort proof, or
 continuing re-deletion control. The Sign in with Apple authorization-code capture and
 state/nonce binding, encrypted rotating token vault, daily token validation, canonical
 signed server-notification ingress, and authoritative session-access fence remain open.
-Non-destructive health-consent withdrawal plus the exact privacy report, policy/support
-URLs, and non-expiring demo review access are also launch blockers.
+Hosted non-destructive health-consent worker/Storage/backup and physical-iPhone proof,
+approved final consent copy, the exact privacy report, policy/support URLs, and non-expiring
+demo review access are also launch blockers.
 
 Client APIs:
 

@@ -153,8 +153,7 @@ async function createLiveUser(admin, label, cleanupUsers) {
   const healthGrant = await client.rpc('grant_health_data_consent', {
     p_expected_epoch: 0,
     p_version: 'draft-v1-2026-07-10',
-    p_consent_text_hash:
-      '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+    p_consent_text_hash: '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
   });
   if (healthGrant.error) throw healthGrant.error;
   return { id: createdUser.id, client };
@@ -177,8 +176,7 @@ async function createSignedAnonymousUser(cleanupUsers) {
   const healthGrant = await client.rpc('grant_health_data_consent', {
     p_expected_epoch: 0,
     p_version: 'draft-v1-2026-07-10',
-    p_consent_text_hash:
-      '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+    p_consent_text_hash: '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
   });
   if (healthGrant.error) throw healthGrant.error;
   return { id: data.user.id, client };
@@ -383,8 +381,7 @@ async function main() {
       const { data, error } = await user.client.rpc('grant_health_data_consent', {
         p_expected_epoch: 0,
         p_version: 'draft-v1-2026-07-10',
-        p_consent_text_hash:
-          '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+        p_consent_text_hash: '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
       });
       if (error) throw error;
       assert(
@@ -2275,21 +2272,21 @@ async function main() {
     await runCheck('service-only private table positive controls', async () => {
       const absentUuid = '00000000-0000-0000-0000-000000000000';
       const absentDigest = '0'.repeat(64);
-      registerSealedPrivateTableProbe(
-        'health_processing_states',
-        'user_id',
-        absentUuid,
-      );
-      registerSealedPrivateTableProbe(
-        'health_consent_withdrawal_operations',
-        'id',
-        absentUuid,
-      );
+      registerSealedPrivateTableProbe('health_processing_states', 'user_id', absentUuid);
+      registerSealedPrivateTableProbe('health_consent_withdrawal_operations', 'id', absentUuid);
       registerSealedPrivateTableProbe(
         'health_consent_withdrawal_steps',
         'operation_id',
         absentUuid,
       );
+      registerSealedPrivateTableProbe(
+        'health_consent_copy_registry',
+        'consent_text_hash',
+        absentDigest,
+      );
+      registerSealedPrivateTableProbe('health_consent_copy_review_events', 'id', absentUuid);
+      registerSealedPrivateTableProbe('health_dependent_consent_operations', 'id', absentUuid);
+      registerSealedPrivateTableProbe('health_dependent_consent_states', 'user_id', absentUuid);
       registerSealedPrivateTableProbe(
         'account_publication_leases',
         'capability_digest',
@@ -2400,7 +2397,7 @@ async function main() {
       registerPrivateTableProbe('edge_rate_limits', 'key_hash', rateLimit.key_hash);
     });
 
-    await runCheck('all 50 private tables have access-control probes', async () => {
+    await runCheck('all 54 private tables have access-control probes', async () => {
       const registeredTables = [...privateTableProbes.keys()].sort();
       const expectedTables = [...PRIVATE_PUBLIC_TABLES].sort();
       assert(
@@ -2518,6 +2515,10 @@ async function main() {
       }
     }
     for (const [table, probe] of privateTableProbes) {
+      // Direct table privileges are intentionally absent for sealed tables,
+      // including service_role. Their residue is attested through the narrow
+      // lifecycle RPC/rehearsal lanes, not through an impossible admin read.
+      if (probe.sealed === true) continue;
       const remaining = await admin.from(table).select(probe.column).eq(probe.column, probe.value);
       if (remaining.error) {
         errors.push(

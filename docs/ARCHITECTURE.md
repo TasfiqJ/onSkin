@@ -210,7 +210,8 @@ to 53 migrations. It adds a non-account-deleting health-consent lifecycle, proce
 write barrier, service-only durable worker claims, relational/Storage absence attestation,
 and cross-owner community-evidence detachment. The combined local checkpoint passed two
 clean resets, 261 pgTAP assertions (46 schema + 215 health-consent lifecycle), database lint,
-and an empty shadow diff; all 73 public tables had RLS enabled, with 50 classified as private.
+and an empty shadow diff; all 77 public tables had RLS enabled, with 54 classified as private
+(40 directly queryable and 14 sealed from direct API-role access).
 Phase 9 health-consent verification passed 104 Deno tests plus 7 evidence tests, and the
 mobile workspace passed typecheck, lint, and 3,026 tests across 266 files. The
 publication/entitlement lane rehearsals pass
