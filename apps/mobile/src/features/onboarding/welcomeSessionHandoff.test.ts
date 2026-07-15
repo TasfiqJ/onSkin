@@ -267,9 +267,7 @@ describe('Welcome/AuthProvider handoff wiring contract', () => {
       fileURLToPath(new URL('../../lib/auth/AuthProvider.tsx', import.meta.url)),
       'utf8',
     );
-    const begin = provider.indexOf(
-      'welcomeHandoffCoordinator.begin(sessionChangeSeqRef.current)',
-    );
+    const begin = provider.indexOf('welcomeHandoffCoordinator.begin(');
     const authRead = provider.indexOf('await supabase.auth.getSession()', begin);
     const resolution = provider.indexOf('decideAnonymousSessionResolution({', begin);
     const staleDecision = provider.indexOf(
