@@ -4,16 +4,23 @@ import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'reac
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
+import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 import type { GatedFeature } from '@onskin/types';
 
 import { ComplianceRow } from './ComplianceRow';
-import { PAYWALL_COPY, UPSELL_COPY } from './copy';
+import { paywallPurchasePresentation, PAYWALL_COPY, UPSELL_COPY } from './copy';
 import { dismissPaywall, paywallDismissFallbackForFeature } from './dismissPaywall';
-import { canStartContextualReverseTrial, shouldLoadContextualOffering } from './entitlement';
+import {
+  canStartContextualReverseTrial,
+  isEntitlementEvidenceUncertain,
+  shouldLoadContextualOffering,
+} from './entitlement';
 import { PAYWALL_FEEDBACK, PaywallFeedback, type PaywallFeedbackState } from './PaywallFeedback';
 import { planPriceDisplay } from './priceDisplay';
 import { useEntitlement, useEntitlementActions } from './useEntitlement';
+import { usePaidActionHold } from './usePaidActionHold';
 import { useSubscriptionOffering } from './useSubscriptionOffering';
 
 // Feature gate (docs/08 §3.2/§4). When the user is Pro (incl. the reverse trial /
@@ -24,11 +31,24 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const { fontScale = 1, height, width } = useWindowDimensions();
   const isFocused = useIsFocused();
   const pathname = usePathname();
-  const { data, isLoading } = useEntitlement();
-  const { startReverseTrial, startTrial } = useEntitlementActions();
-  const offering = useSubscriptionOffering({ enabled: shouldLoadContextualOffering(data) });
+  const ownerScope = useOwnerQueryScope();
+  const {
+    data,
+    isError,
+    isLoading,
+    isVerificationRetrying,
+    refetch,
+    retryVerification,
+  } = useEntitlement();
+  const { purchase, startReverseTrial } = useEntitlementActions();
+  const entitlementChecking = isLoading || (!data && !isError);
+  const entitlementUncertain = !data ? isError : isEntitlementEvidenceUncertain(data);
+  const locked = data ? !data.isPro && !entitlementUncertain : false;
+  const offering = useSubscriptionOffering({
+    enabled: isFocused && locked && shouldLoadContextualOffering(data),
+  });
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
-  const locked = data ? !data.isPro : false;
+  const paidAction = usePaidActionHold(ownerScope.generation);
   const compactPaywall = height < 640;
   const shortPaywall = height < 600;
   const ultraShortPaywall = height < 460;
@@ -92,7 +112,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
 
   if (!isFocused) return null;
 
-  if (isLoading || !data) {
+  if (entitlementChecking) {
     return (
       <Screen edges={['top', 'bottom']}>
         <View className="flex-1 justify-center">
@@ -121,6 +141,63 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
     );
   }
 
+  if (entitlementUncertain) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <View className="flex-row justify-end pt-1">
+          <RouteIconButton
+            accessibilityLabel="Maybe later"
+            glyph="x"
+            tone="muted"
+            onPress={() => dismissPaywall(router, paywallDismissFallback)}
+          />
+        </View>
+        <View className="flex-1 justify-center pb-8">
+          <View
+            className="rounded-card bg-paper-raised p-5"
+            style={{ borderWidth: 1, borderColor: colors.hairline }}
+          >
+            <View
+              className="mb-4 h-10 w-10 items-center justify-center rounded-[12px]"
+              style={{ backgroundColor: colors.clayTint }}
+            >
+              <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: colors.clay }} />
+            </View>
+            <Text variant="label" tone="muted">
+              PRO ACCESS
+            </Text>
+            <Text
+              accessibilityRole="alert"
+              variant="title"
+              className="mt-2"
+              style={{ fontSize: 28, lineHeight: 32 }}
+            >
+              Access temporarily unavailable
+            </Text>
+            <Text variant="body" tone="muted" className="mt-2">
+              We could not verify your plan. This Pro-only screen stays protected while you try
+              again.
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Retry plan verification"
+              disabled={isVerificationRetrying}
+              onPress={() => void retryVerification()}
+              className="mt-5 min-h-[48px] items-center justify-center rounded-pill px-4"
+              style={{
+                backgroundColor: isVerificationRetrying ? colors.mutedLight : colors.clay,
+              }}
+            >
+              <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
+                {isVerificationRetrying ? 'Checking...' : 'Retry'}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Screen>
+    );
+  }
+
   if (!locked) return <>{children}</>;
 
   const copy = UPSELL_COPY[feature];
@@ -130,6 +207,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
       : 'Unlock Pro.'
     : copy.title;
   const annual = offering.data?.annual ?? null;
+  const offeringResolved = offering.data !== undefined;
+  const purchasePresentation = paywallPurchasePresentation(annual);
   const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
   const priceIntroLabel = lapsedEntitlement ? 'Restore Pro for' : annualDisplay.introLabel;
@@ -137,28 +216,61 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
     ? lapsedReverseTrial
       ? PAYWALL_COPY.reoffer.keepCta
       : PAYWALL_COPY.downgrade.renewCta
-    : PAYWALL_COPY.offer.cta;
+    : purchasePresentation.cta;
+  const purchaseKind = lapsedReverseTrial
+    ? ('reoffer_purchase' as const)
+    : lapsedEntitlement
+      ? ('downgrade_purchase' as const)
+      : ('upsell_purchase' as const);
 
   function onStartTrial() {
+    if (!offeringResolved || paidAction.isHeld) return;
     setActionFeedback(null);
     if (!canPurchase) {
       setActionFeedback(PAYWALL_FEEDBACK.storePricingUnavailable(offering.data?.reason));
       return;
     }
-    startTrial.mutate(undefined, {
-      onSuccess: (result) => {
-        if (result.active) router.replace('/paywall/success');
-        else if (!result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
+    purchase.mutate(
+      {
+        kind: purchaseKind,
+        expectedEvidenceIdentity: data?.evidenceIdentity ?? null,
       },
-      onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
-    });
+      {
+        onSuccess: (result) => {
+          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+          const outcome = paidAction.resolve(result);
+          if (outcome.kind === 'success') {
+            router.replace({
+              pathname: '/paywall/success',
+              params: { receipt: outcome.receiptId },
+            });
+          } else if (outcome.kind === 'active_without_receipt') {
+            void refetch();
+          } else if (outcome.kind === 'inactive' && !result.cancelled) {
+            setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
+          }
+        },
+        onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
+      },
+    );
   }
 
   function onStartReverseTrial() {
+    if (paidAction.isHeld) return;
     setActionFeedback(null);
-    startReverseTrial.mutate(undefined, {
-      onError: () => setActionFeedback(PAYWALL_FEEDBACK.exploreFirstUnavailable),
-    });
+    startReverseTrial.mutate(
+      {
+        kind: 'reverse_trial',
+        expectedEvidenceIdentity: data?.evidenceIdentity ?? null,
+      },
+      {
+        onError: () => {
+          if (isOwnerQueryScopeCurrent(ownerScope)) {
+            setActionFeedback(PAYWALL_FEEDBACK.exploreFirstUnavailable);
+          }
+        },
+      },
+    );
   }
 
   return (
@@ -406,7 +518,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         <Pressable
           accessibilityLabel={primaryCtaLabel}
           accessibilityRole="button"
-          disabled={startTrial.isPending}
+          disabled={!offeringResolved || paidAction.isHeld || purchase.isPending}
           onPress={onStartTrial}
           className={
             narrowShortPaywall
@@ -423,7 +535,9 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           }
           style={[
             microShortDeferredCtaStyle,
-            { backgroundColor: canPurchase ? colors.clay : colors.mutedLight },
+            {
+              backgroundColor: canPurchase && !paidAction.isHeld ? colors.clay : colors.mutedLight,
+            },
           ]}
         >
           <Text
@@ -444,7 +558,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
           <Pressable
             accessibilityLabel={`${PAYWALL_COPY.offer.exploreTitle}. ${PAYWALL_COPY.offer.exploreBody}`}
             accessibilityRole="button"
-            disabled={startReverseTrial.isPending}
+            disabled={paidAction.isHeld || startReverseTrial.isPending}
             onPress={onStartReverseTrial}
             className={
               ultraShortPaywall
@@ -516,7 +630,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
         ) : null}
         <PaywallFeedback
           compact={compactPaywall}
-          feedback={actionFeedback}
+          feedback={paidAction.feedback ?? actionFeedback}
           className={
             shortPaywall
               ? 'mt-1.5 rounded-card px-3 py-2'

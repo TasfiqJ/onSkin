@@ -83,6 +83,45 @@ describe('local private-data contract registry', () => {
       mode: 'include',
       transform: 'safe_scalar_or_json',
     });
+    expect(prompt?.codec).toEqual({
+      status: 'enforced',
+      codecId: 'subscription_prompt',
+      currentVersion: 3,
+      legacyVersions: [0, 1, 2],
+    });
+  });
+
+  it('registers rollback-readable proof and sidecar codecs only on known cleanup keys', () => {
+    const proof = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'onskin.entitlement.v2',
+    );
+    const sidecar = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'onskin.entitlement.v1',
+    );
+
+    expect(proof).toMatchObject({
+      lifecycle: 'current',
+      codec: {
+        codecId: 'entitlement_cache_rollback_bridge',
+        currentVersion: 0,
+        legacyVersions: [1],
+      },
+    });
+    expect(sidecar).toMatchObject({
+      lifecycle: 'current',
+      codec: {
+        codecId: 'entitlement_legacy_or_revenuecat_sidecar',
+        currentVersion: 2,
+        legacyVersions: [0, 1],
+      },
+      ownerBinding: { status: 'enforced', mode: 'private_kv_account_boundary' },
+      cleanup: { status: 'enforced', mode: 'authorized_private_kv_bulk' },
+    });
+    expect(
+      LOCAL_PRIVATE_KEY_REGISTRY.some(
+        (entry) => entry.key === 'onskin.entitlement.revenuecatEmpty.v1' as never,
+      ),
+    ).toBe(false);
   });
 
   it('tracks durable Ask operation identities in codec v2 while retaining v0/v1 readers', () => {

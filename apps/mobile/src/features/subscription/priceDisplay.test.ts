@@ -16,6 +16,7 @@ function packageView(overrides: Partial<SubscriptionPackageView> = {}): Subscrip
     periodLabel: 'year',
     subscriptionPeriod: 'P1Y',
     trialDays: 14,
+    trialEligibility: 'eligible',
     introLabel: '14 days free',
     canPurchase: true,
     ...overrides,
@@ -50,8 +51,23 @@ describe('subscription price display', () => {
 
     expect(display.priceLabel).toBe('$59.99');
     expect(display.pricePerMonthLabel).toBe('$4.99');
+    expect(display.introLabel).toBe('Start 14 days free, then');
     expect(display.reason).toBeNull();
     expect(planLineLabel(display)).toBe('$59.99/year');
+  });
+
+  it('never promises a trial unless RevenueCat proves exact eligibility', () => {
+    for (const trialEligibility of ['ineligible', 'unknown'] as const) {
+      const offering: SubscriptionOfferingView = {
+        status: 'available',
+        offeringId: 'current',
+        annual: packageView({ trialEligibility, introLabel: null }),
+        monthly: packageView({ plan: 'monthly', trialEligibility, introLabel: null }),
+        winBack: null,
+      };
+
+      expect(planPriceDisplay('annual', offering).introLabel).toBe('Subscribe for');
+    }
   });
 
   it('keeps development fallback pricing with a user-facing disabled-store reason', () => {

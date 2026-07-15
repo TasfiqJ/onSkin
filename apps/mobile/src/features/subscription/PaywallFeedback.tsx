@@ -21,6 +21,14 @@ export const PAYWALL_FEEDBACK = {
     title: 'Purchase unavailable',
     body: 'We could not open the store purchase sheet. Please try again.',
   },
+  verificationPending: {
+    title: 'Store verification pending',
+    body: 'The store result could not be verified yet. Do not purchase again. Check your connection, retry verification, or use Restore.',
+  },
+  purchasePending: {
+    title: 'Purchase pending',
+    body: 'Approval or payment is still pending. Do not purchase again. Access will unlock after the store confirms it; use Restore if needed.',
+  },
   exploreFirstUnavailable: {
     title: 'Explore first unavailable',
     body: 'We could not start the no-card Pro week for this account.',

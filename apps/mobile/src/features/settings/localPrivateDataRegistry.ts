@@ -287,15 +287,20 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
   }),
   privateData({
     key: 'onskin.entitlement.v1',
-    lifecycle: 'legacy_read',
-    codec: jsonCodec('entitlement_cache', 1, [0]),
+    lifecycle: 'current',
+    // Known-key rollback bridge: v2 is the strict RevenueCat revocation +
+    // trusted-proof-marker sidecar; raw v0 and envelope v1 remain legacy
+    // entitlement readers.
+    codec: jsonCodec('entitlement_legacy_or_revenuecat_sidecar', 2, [0, 1]),
     typedRead: typedDomainRead,
-    export: include('subscription', 'legacy_entitlement_cache'),
+    export: include('subscription', 'entitlement_legacy_or_revenuecat_sidecar'),
   }),
   privateData({
     key: 'onskin.entitlement.v2',
     lifecycle: 'current',
-    codec: jsonCodec('entitlement_cache', 1, [0]),
+    // Rollback bridge: current writers intentionally emit the normalized raw
+    // v0 record; readers also accept the former strict v1 envelope.
+    codec: jsonCodec('entitlement_cache_rollback_bridge', 0, [1]),
     typedRead: typedDomainRead,
     export: include('subscription', 'entitlement_cache'),
   }),
@@ -438,7 +443,7 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
   privateData({
     key: 'onskin.subscription.promptedExpiry',
     lifecycle: 'current',
-    codec: jsonCodec('subscription_prompt', 2, [0, 1]),
+    codec: jsonCodec('subscription_prompt', 3, [0, 1, 2]),
     typedRead: typedDomainRead,
     export: include('subscription', 'prompted_expiry', 'safe_scalar_or_json'),
   }),

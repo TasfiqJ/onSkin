@@ -18,6 +18,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BehaviouralTriggers } from '@/features/notifications/BehaviouralTriggers';
 import { pendingLifecycleRouteResult } from '@/features/subscription/lifecycle';
 import { currentRoutineType } from '@/features/today/useToday';
+import { useAuth } from '@/lib/auth/AuthProvider';
 import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
@@ -26,10 +27,15 @@ import { colors } from '@/theme/tokens';
 // when Pro has lapsed (docs/08 §6/§13). Pure local check, offline-safe, fires once
 // per expiry; gated taps surface the contextual upsell thereafter.
 function useExpiryReoffer() {
+  const { user } = useAuth();
   const ownerScope = useOwnerQueryScope();
+  const storeUserId = user?.id ?? null;
   useEffect(() => {
+    if (!storeUserId) return;
     let mounted = true;
-    void pendingLifecycleRouteResult(new Date().toISOString()).then((result) => {
+    void pendingLifecycleRouteResult(new Date().toISOString(), {
+      expectedStoreUserId: storeUserId,
+    }).then((result) => {
       if (!mounted || result.status !== 'route' || !isOwnerQueryScopeCurrent(ownerScope)) {
         return;
       }
@@ -42,7 +48,7 @@ function useExpiryReoffer() {
     return () => {
       mounted = false;
     };
-  }, [ownerScope]);
+  }, [ownerScope, storeUserId]);
 }
 
 type TabIconName = 'today' | 'progress' | 'shelf' | 'you';

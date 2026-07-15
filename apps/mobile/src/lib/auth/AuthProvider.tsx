@@ -11,11 +11,17 @@ import {
   type ReactNode,
 } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
 
 import {
-  clearStoreEntitlementIfRevenueCatVerifiedEmpty,
-  saveVerifiedEntitlement,
+  acceptRevenueCatVerifiedEmpty,
+  acceptTrustedRevenueCatEntitlement,
 } from '@/features/subscription/store';
+import {
+  publishEntitlementQueryAcceptance,
+  publishEntitlementVerificationFailure,
+} from '@/features/subscription/entitlementQuery';
+import { deferEntitlementTrialReminder } from '@/features/subscription/entitlementReminder';
 import {
   beginEncryptedPhotoAccountBoundary,
   endEncryptedPhotoAccountBoundary,
@@ -28,17 +34,18 @@ import {
   decideAnonymousSessionResolution,
   type PendingAnonymousOnboardingHandoff,
 } from '@/features/onboarding/welcomeSessionHandoff';
-import { isSupabaseConfigured } from '@/lib/env';
+import { env, isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE } from '@/lib/errors/userFacing';
 import {
   configureRevenueCat,
-  customerInfoToStoredEntitlement,
+  classifyRevenueCatEntitlement,
   getCustomerInfo,
   prepareRevenueCatIdentityForSessionPublication,
   subscribeToCustomerInfoUpdates,
 } from '@/lib/iap/revenuecat';
 import { devWarn } from '@/lib/observability/safeLog';
 import { setSentryUser } from '@/lib/observability/sentry';
+import { ownerQueryPrefixes, type OwnerQueryScope } from '@/lib/query/queryKeys';
 import {
   beginPrivateKVAccountBoundary,
   endPrivateKVAccountBoundary,
@@ -122,6 +129,7 @@ type AccountIsolationE2EGlobal = typeof globalThis & {
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
   const accountIsolationE2EFixture = useMemo(() => getAccountIsolationE2EFixture(), []);
   const [session, setSession] = useState<Session | null>(null);
   const [completedSessionPublication, setCompletedSessionPublication] = useState(0);
@@ -500,14 +508,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await configureRevenueCat(revenueCatOwner);
       lease.assertCurrent();
       if (!canWriteForUser()) return;
-      const current = await getCustomerInfo(revenueCatOwner);
-      lease.assertCurrent();
-      if (!canWriteForUser()) return;
-      const entitlement = current ? customerInfoToStoredEntitlement(current) : null;
-      if (entitlement) await saveVerifiedEntitlement(entitlement);
-      else if (current) await clearStoreEntitlementIfRevenueCatVerifiedEmpty();
-      lease.assertCurrent();
-      if (!canWriteForUser()) return;
+      const ownerScope: OwnerQueryScope = { generation: lease.generation };
 
       const listenerGeneration = lease.generation;
       cleanup = await subscribeToCustomerInfoUpdates(revenueCatOwner, (customerInfo) => {
@@ -515,14 +516,87 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         void runAccountGenerationOperation(async (callbackLease) => {
           if (callbackLease.generation !== listenerGeneration || !canWriteForUser()) return;
           callbackLease.assertCurrent();
-          const next = customerInfoToStoredEntitlement(customerInfo);
-          if (next) await saveVerifiedEntitlement(next);
-          else await clearStoreEntitlementIfRevenueCatVerifiedEmpty();
+          const classified = classifyRevenueCatEntitlement(customerInfo, userId);
+          const callbackScope: OwnerQueryScope = { generation: callbackLease.generation };
+          if (classified.status === 'untrusted') {
+            publishEntitlementVerificationFailure(
+              queryClient,
+              callbackScope,
+              new Date().toISOString(),
+            );
+            return;
+          }
+          const acceptance = classified.entitlement
+            ? await acceptTrustedRevenueCatEntitlement(classified.entitlement)
+            : classified.emptyEvidence
+              ? await acceptRevenueCatVerifiedEmpty(classified.emptyEvidence)
+              : null;
+          if (!acceptance) return;
+          callbackLease.assertCurrent();
+          if (!canWriteForUser()) return;
+          const published = publishEntitlementQueryAcceptance(
+            queryClient,
+            callbackScope,
+            acceptance,
+            new Date().toISOString(),
+            env.appEnvironment,
+          );
+          deferEntitlementTrialReminder(callbackScope, published);
+          await queryClient.invalidateQueries({
+            queryKey: ownerQueryPrefixes.entitlement(callbackScope),
+          });
           callbackLease.assertCurrent();
         }).catch((error: unknown) => {
           devWarn('[revenuecat] listener update failed', error);
         });
       });
+      lease.assertCurrent();
+      if (!canWriteForUser()) {
+        cleanup();
+        cleanup = null;
+        return;
+      }
+
+      const current = await getCustomerInfo(revenueCatOwner);
+      lease.assertCurrent();
+      if (!canWriteForUser()) return;
+      try {
+        const classified = current
+          ? classifyRevenueCatEntitlement(current, userId)
+          : null;
+        if (classified?.status === 'untrusted') {
+          publishEntitlementVerificationFailure(
+            queryClient,
+            ownerScope,
+            new Date().toISOString(),
+          );
+          return;
+        }
+        const acceptance = classified?.entitlement
+          ? await acceptTrustedRevenueCatEntitlement(classified.entitlement)
+          : classified?.emptyEvidence
+            ? await acceptRevenueCatVerifiedEmpty(classified.emptyEvidence)
+            : null;
+        if (acceptance) {
+          lease.assertCurrent();
+          if (!canWriteForUser()) return;
+          const published = publishEntitlementQueryAcceptance(
+            queryClient,
+            ownerScope,
+            acceptance,
+            new Date().toISOString(),
+            env.appEnvironment,
+          );
+          deferEntitlementTrialReminder(ownerScope, published);
+          await queryClient.invalidateQueries({
+            queryKey: ownerQueryPrefixes.entitlement(ownerScope),
+          });
+        }
+      } catch (error: unknown) {
+        devWarn('[revenuecat] initial entitlement update failed', error);
+      }
+      lease.assertCurrent();
+      if (!canWriteForUser()) return;
       if (cancelled && cleanup) cleanup();
     }).catch((error: unknown) => {
       devWarn('[revenuecat] configuration failed', error);
@@ -532,7 +606,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       cancelled = true;
       if (cleanup) cleanup();
     };
-  }, [accountIsolationE2EFixture, initializing, session?.user.id]);
+  }, [accountIsolationE2EFixture, initializing, queryClient, session?.user.id]);
 
   const value = useMemo<AuthContextValue>(() => {
     const user = session?.user ?? null;

@@ -10,6 +10,7 @@ import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { requestReviewAfterValue } from '@/features/review/prompt';
 import { applySettingsPrivacyChoice } from '@/features/settings/applyPrivacyChoice';
 import { deleteAccount, exportData, withdrawHealthDataConsent } from '@/features/settings/actions';
+import { isEntitlementEvidenceUncertain } from '@/features/subscription/entitlement';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
@@ -113,10 +114,7 @@ function ConsentReadState({
 }) {
   if (state.isUnavailable) {
     return (
-      <View
-        accessibilityRole="alert"
-        className="mb-2 rounded-[12px] bg-clay-tint px-4 py-3"
-      >
+      <View accessibilityRole="alert" className="mb-2 rounded-[12px] bg-clay-tint px-4 py-3">
         <Text variant="bodySm" className="font-sans-semibold">
           {label} status unavailable
         </Text>
@@ -368,19 +366,22 @@ export default function YouScreen() {
     consents,
     (latest) => latest.marketing === true,
   );
-  const commerceConsentControl = consentManagementState(
-    commerceConsent,
-    (value) => value === true,
-  );
-  const { data: ent } = useEntitlement();
+  const commerceConsentControl = consentManagementState(commerceConsent, (value) => value === true);
+  const { data: ent, isError: entitlementError, isLoading: entitlementLoading } = useEntitlement();
   const accountLabel = isAnonymous ? 'Guest (not saved)' : (user?.email ?? 'Signed in');
-  const planLabel = ent?.inReverseTrial
-    ? 'Exploring Pro'
-    : ent?.inTrial
-      ? 'Free trial · Pro'
-      : ent?.isPro
-        ? `${BRAND.proName} · active`
-        : 'Free plan';
+  const entitlementUncertain = !ent ? entitlementError : isEntitlementEvidenceUncertain(ent);
+  const planLabel =
+    entitlementLoading || (!ent && !entitlementError)
+      ? 'Checking plan'
+      : !ent || entitlementUncertain
+        ? 'Plan status unavailable'
+        : ent.inReverseTrial
+          ? 'Exploring Pro'
+          : ent.inTrial
+            ? 'Free trial · Pro'
+            : ent.isPro
+              ? `${BRAND.proName} · active`
+              : 'Free plan';
   const compactPhone = height < 640 || width < 430;
   const supportFloorTextPressureYou =
     width <= 390 && height < 700 && (fontScale >= 1.3 || Platform.OS === 'web');
@@ -843,9 +844,7 @@ export default function YouScreen() {
               <Toggle
                 accessibilityLabel="Share data with partners for where-to-buy"
                 value={commerceConsentControl.value}
-                disabled={
-                  savingPrivacy === 'data_sharing' || !commerceConsentControl.canChange
-                }
+                disabled={savingPrivacy === 'data_sharing' || !commerceConsentControl.canChange}
                 onChange={(v) => void setConsent('data_sharing', v, 'commerce')}
               />
             </Row>
@@ -970,9 +969,7 @@ export default function YouScreen() {
                 <Toggle
                   accessibilityLabel="Share data with partners"
                   value={commerceConsentControl.value}
-                  disabled={
-                    savingPrivacy === 'data_sharing' || !commerceConsentControl.canChange
-                  }
+                  disabled={savingPrivacy === 'data_sharing' || !commerceConsentControl.canChange}
                   onChange={(v) => void setConsent('data_sharing', v, 'privacy')}
                 />
               </Row>

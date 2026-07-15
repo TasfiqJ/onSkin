@@ -7,14 +7,13 @@ import { RouteIconButton, Text } from '@/components/ui';
 import { openPolicy, PRIVACY_URL, TERMS_URL } from '@/features/subscription/ComplianceRow';
 import { shouldTrackSubscriptionCancelIntent } from '@/features/subscription/cancelIntent';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
+import { isEntitlementEvidenceUncertain } from '@/features/subscription/entitlement';
+import { PLANS } from '@/features/subscription/plans';
+import { restoreFeedbackMessage } from '@/features/subscription/restoreFeedback';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
-import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
-import {
-  MANAGE_SUBSCRIPTION_URL_ANDROID,
-  MANAGE_SUBSCRIPTION_URL_IOS,
-} from '@/lib/iap/revenuecat';
+import { MANAGE_SUBSCRIPTION_URL_ANDROID, MANAGE_SUBSCRIPTION_URL_IOS } from '@/lib/iap/revenuecat';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { APP_YOU_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -82,9 +81,14 @@ function Row({
 
 export default function SubscriptionScreen() {
   const { height, width } = useWindowDimensions();
-  const { data } = useEntitlement();
+  const {
+    data,
+    isError,
+    isLoading,
+    isVerificationRetrying,
+    retryVerification,
+  } = useEntitlement();
   const { manage, restore } = useEntitlementActions();
-  const offering = useSubscriptionOffering();
   const [subscriptionFeedback, setSubscriptionFeedback] = useState<string | null>(null);
   const ultraShortSubscription = height < 460;
   const splitShortSubscription = height < 410;
@@ -94,8 +98,9 @@ export default function SubscriptionScreen() {
   const freePlanTitle = supportFloorSubscription ? 'Free plan' : PAYWALL_COPY.manage.freeTitle;
   const upgradeCtaLabel = supportFloorSubscription ? 'See Pro' : PAYWALL_COPY.manage.upgradeCta;
   const restoreLabel = supportFloorSubscription ? 'Restore' : PAYWALL_COPY.manage.restoreRow;
-  const isPro = data?.isPro ?? false;
-
+  const entitlementChecking = isLoading || (!data && !isError);
+  const entitlementUncertain = !data ? isError : isEntitlementEvidenceUncertain(data);
+  const isPro = data?.isPro === true && !entitlementUncertain;
   async function openStore() {
     setSubscriptionFeedback(null);
     track('manage_subscription_opened');
@@ -136,10 +141,7 @@ export default function SubscriptionScreen() {
     setSubscriptionFeedback(null);
     restore.mutate(undefined, {
       onSuccess: (result) => {
-        const message = result.active
-          ? 'Your active subscription is restored on this device.'
-          : 'No active subscription was found for this account.';
-        setSubscriptionFeedback(message);
+        setSubscriptionFeedback(restoreFeedbackMessage(result));
       },
       onError: () => {
         setSubscriptionFeedback(RESTORE_UNAVAILABLE_MESSAGE);
@@ -153,11 +155,13 @@ export default function SubscriptionScreen() {
     if (!opened) setSubscriptionFeedback(POLICY_LINK_UNAVAILABLE_MESSAGE);
   }
 
+  const currentPlan = Object.values(PLANS).find((plan) => plan.productId === data?.productId);
+  const exactEntitlementPriceLabel = currentPlan ? data?.priceLabel : null;
   const periodLabel = data?.inReverseTrial
     ? 'Reverse trial'
     : data?.inTrial
       ? 'Free trial'
-      : `${BRAND.proName}${data?.priceLabel ? ` · ${data.priceLabel}` : offering.data?.annual ? ` · ${offering.data.annual.priceLabel}` : ''}`;
+      : `${BRAND.proName}${exactEntitlementPriceLabel ? ` · ${exactEntitlementPriceLabel}` : ''}`;
   const isAppGrantedAccess = data?.store === 'app_granted';
   const isReverseTrialAccess = isAppGrantedAccess && data?.inReverseTrial === true;
   const manageLabel =
@@ -308,61 +312,114 @@ export default function SubscriptionScreen() {
           </>
         ) : (
           <>
-            <View
-              className={
-                supportFloorSubscription
-                  ? 'mb-1 rounded-card bg-paper-raised p-2'
-                  : splitShortSubscription
-                    ? 'mb-2 rounded-card bg-paper-raised p-3'
-                    : compactSubscription
-                      ? 'mb-3 rounded-card bg-paper-raised p-4'
-                      : 'mb-4 rounded-card bg-paper-raised p-5'
-              }
-              style={{ borderWidth: 1, borderColor: colors.hairline }}
-            >
-              <Text
-                variant="titleSm"
-                style={supportFloorSubscription ? { fontSize: 19, lineHeight: 22 } : undefined}
-              >
-                {freePlanTitle}
-              </Text>
-              {hideFreeSubscriptionBody ? null : (
-                <Text
-                  variant="bodySm"
-                  tone="muted"
-                  className={compactSubscription ? 'mt-1.5' : 'mt-2'}
-                  style={{ lineHeight: compactSubscription ? 19 : 21 }}
-                >
-                  {PAYWALL_COPY.manage.freeBody}
-                </Text>
-              )}
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={PAYWALL_COPY.manage.upgradeCta}
-                onPress={() => router.push('/paywall/upsell?feature=full_routine')}
+            {entitlementChecking || entitlementUncertain ? (
+              <View
                 className={
                   supportFloorSubscription
-                    ? 'mt-1.5 h-[44px] items-center justify-center rounded-pill'
+                    ? 'mb-1 rounded-card bg-paper-raised p-2'
                     : splitShortSubscription
-                      ? 'mt-2.5 h-[48px] items-center justify-center rounded-pill'
+                      ? 'mb-2 rounded-card bg-paper-raised p-3'
                       : compactSubscription
-                        ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
-                        : 'mt-4 h-[50px] items-center justify-center rounded-pill'
+                        ? 'mb-3 rounded-card bg-paper-raised p-4'
+                        : 'mb-4 rounded-card bg-paper-raised p-5'
                 }
-                style={{ backgroundColor: colors.clay }}
+                style={{ borderWidth: 1, borderColor: colors.hairline }}
               >
                 <Text
-                  className="font-sans-semibold"
-                  style={{
-                    color: colors.paper,
-                    fontSize: supportFloorSubscription ? 13 : 16,
-                    lineHeight: supportFloorSubscription ? 15 : undefined,
-                  }}
+                  accessibilityRole={entitlementUncertain ? 'alert' : undefined}
+                  variant="titleSm"
+                  style={supportFloorSubscription ? { fontSize: 19, lineHeight: 22 } : undefined}
                 >
-                  {upgradeCtaLabel}
+                  {entitlementUncertain ? 'Plan status unavailable' : 'Checking your plan'}
                 </Text>
-              </Pressable>
-            </View>
+                <Text variant="bodySm" tone="muted" className="mt-1.5">
+                  {entitlementUncertain
+                    ? 'We could not verify this plan. Retry before changing access.'
+                    : 'Confirming your subscription before we show plan options.'}
+                </Text>
+                {entitlementUncertain ? (
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="Retry plan verification"
+                    disabled={isVerificationRetrying}
+                    onPress={() => void retryVerification()}
+                    className={
+                      supportFloorSubscription
+                        ? 'mt-1.5 h-[44px] items-center justify-center rounded-pill'
+                        : 'mt-3 h-[48px] items-center justify-center rounded-pill'
+                    }
+                    style={{
+                      backgroundColor: isVerificationRetrying
+                        ? colors.mutedLight
+                        : colors.clay,
+                    }}
+                  >
+                    <Text
+                      className="font-sans-semibold"
+                      style={{ color: colors.paper, fontSize: supportFloorSubscription ? 13 : 16 }}
+                    >
+                      {isVerificationRetrying ? 'Checking...' : 'Retry'}
+                    </Text>
+                  </Pressable>
+                ) : null}
+              </View>
+            ) : (
+              <View
+                className={
+                  supportFloorSubscription
+                    ? 'mb-1 rounded-card bg-paper-raised p-2'
+                    : splitShortSubscription
+                      ? 'mb-2 rounded-card bg-paper-raised p-3'
+                      : compactSubscription
+                        ? 'mb-3 rounded-card bg-paper-raised p-4'
+                        : 'mb-4 rounded-card bg-paper-raised p-5'
+                }
+                style={{ borderWidth: 1, borderColor: colors.hairline }}
+              >
+                <Text
+                  variant="titleSm"
+                  style={supportFloorSubscription ? { fontSize: 19, lineHeight: 22 } : undefined}
+                >
+                  {freePlanTitle}
+                </Text>
+                {hideFreeSubscriptionBody ? null : (
+                  <Text
+                    variant="bodySm"
+                    tone="muted"
+                    className={compactSubscription ? 'mt-1.5' : 'mt-2'}
+                    style={{ lineHeight: compactSubscription ? 19 : 21 }}
+                  >
+                    {PAYWALL_COPY.manage.freeBody}
+                  </Text>
+                )}
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={PAYWALL_COPY.manage.upgradeCta}
+                  onPress={() => router.push('/paywall/upsell?feature=full_routine')}
+                  className={
+                    supportFloorSubscription
+                      ? 'mt-1.5 h-[44px] items-center justify-center rounded-pill'
+                      : splitShortSubscription
+                        ? 'mt-2.5 h-[48px] items-center justify-center rounded-pill'
+                        : compactSubscription
+                          ? 'mt-3 h-[48px] items-center justify-center rounded-pill'
+                          : 'mt-4 h-[50px] items-center justify-center rounded-pill'
+                  }
+                  style={{ backgroundColor: colors.clay }}
+                >
+                  <Text
+                    className="font-sans-semibold"
+                    style={{
+                      color: colors.paper,
+                      fontSize: supportFloorSubscription ? 13 : 16,
+                      lineHeight: supportFloorSubscription ? 15 : undefined,
+                    }}
+                  >
+                    {upgradeCtaLabel}
+                  </Text>
+                </Pressable>
+              </View>
+            )}
             <View
               className={
                 supportFloorSubscription
@@ -392,7 +449,7 @@ export default function SubscriptionScreen() {
               />
               {feedbackLabel}
             </View>
-            {data?.expired ? (
+            {!entitlementChecking && !entitlementUncertain && data?.expired ? (
               <Pressable
                 accessibilityRole="button"
                 onPress={() => router.push('/paywall/winback')}

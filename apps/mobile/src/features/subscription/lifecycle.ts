@@ -23,12 +23,14 @@ import { readEntitlementCache } from './store';
 /**
  * The reverse-trial / paid expiry -> re-offer / graceful-downgrade trigger.
  *
- * A V2 record is a two-phase delivery journal. `prepared` means navigation may
+ * A V3 record is a two-phase delivery journal with an explicit superseded
+ * terminal state. `prepared` means navigation may
  * be retried after a new JS process starts. Only the mounted target paywall may
  * acknowledge `presented`, after its real surface has committed.
  */
 const PROMPT_KEY = 'onskin.subscription.promptedExpiry';
-const SCHEMA_VERSION = 2 as const;
+const SCHEMA_VERSION = 3 as const;
+const PREVIOUS_SCHEMA_VERSION = 2 as const;
 const LEGACY_SCHEMA_VERSION = 1 as const;
 const OPAQUE_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -64,7 +66,8 @@ type LifecyclePromptReservationFailure = Exclude<
   { status: 'route' } | { status: 'none' }
 >;
 
-type PromptPhase = 'prepared' | 'presented';
+type PromptPhase = 'prepared' | 'presented' | 'superseded';
+type PreviousPromptPhase = Exclude<PromptPhase, 'superseded'>;
 
 type PromptedExpiryEnvelope = {
   version: typeof SCHEMA_VERSION;
@@ -78,7 +81,7 @@ type PromptedExpiryEnvelope = {
 type DecodedPromptState =
   | { format: 'absent' }
   | { format: 'legacy_presented'; expiresAt: string }
-  | { format: 'v2'; envelope: PromptedExpiryEnvelope };
+  | { format: 'envelope'; envelope: PromptedExpiryEnvelope };
 
 export type LifecyclePromptPersistedState =
   | { format: 'legacy_presented'; expiresAt: string; phase: 'presented' }
@@ -165,6 +168,10 @@ function isLifecycleRoute(value: unknown): value is LifecycleRoute {
 }
 
 function isPromptPhase(value: unknown): value is PromptPhase {
+  return value === 'prepared' || value === 'presented' || value === 'superseded';
+}
+
+function isPreviousPromptPhase(value: unknown): value is PreviousPromptPhase {
   return value === 'prepared' || value === 'presented';
 }
 
@@ -222,7 +229,7 @@ function decodePromptState(raw: string | null): DecodedPromptState {
   }
 
   if (
-    parsed.version !== SCHEMA_VERSION ||
+    (parsed.version !== PREVIOUS_SCHEMA_VERSION && parsed.version !== SCHEMA_VERSION) ||
     !hasExactKeys(parsed, [
       'version',
       'expiresAt',
@@ -238,6 +245,14 @@ function decodePromptState(raw: string | null): DecodedPromptState {
   const expiresAt = canonicalRFC3339(parsed.expiresAt);
   const promptId = normalizeOpaqueId(parsed.promptId);
   const deliverySessionId = normalizeOpaqueId(parsed.deliverySessionId);
+  const phase =
+    parsed.version === PREVIOUS_SCHEMA_VERSION
+      ? isPreviousPromptPhase(parsed.phase)
+        ? parsed.phase
+        : null
+      : isPromptPhase(parsed.phase)
+        ? parsed.phase
+        : null;
   if (
     !expiresAt ||
     parsed.expiresAt !== expiresAt ||
@@ -246,20 +261,20 @@ function decodePromptState(raw: string | null): DecodedPromptState {
     parsed.promptId !== promptId ||
     !deliverySessionId ||
     parsed.deliverySessionId !== deliverySessionId ||
-    !isPromptPhase(parsed.phase)
+    !phase
   ) {
     throw new Error(SUBSCRIPTION_PROMPT_INVALID);
   }
 
   return {
-    format: 'v2',
+    format: 'envelope',
     envelope: {
       version: SCHEMA_VERSION,
       expiresAt,
       route: parsed.route,
       promptId,
       deliverySessionId,
-      phase: parsed.phase,
+      phase,
     },
   };
 }
@@ -364,7 +379,7 @@ function reservationFailure(error: unknown): LifecyclePromptReservationFailure {
 
 async function exactPromptReadback(
   lease: AccountGenerationLease,
-  expectedRaw: string,
+  expectedRaw: string | null,
 ): Promise<boolean> {
   try {
     const stored = await awaitAccountGenerationLease(lease, () => getPrivateItem(PROMPT_KEY));
@@ -381,7 +396,7 @@ function routeForPeriod(periodType: string | null | undefined): LifecycleRoute {
 }
 
 function expiryForState(state: Exclude<DecodedPromptState, { format: 'absent' }>): string {
-  return state.format === 'v2' ? state.envelope.expiresAt : state.expiresAt;
+  return state.format === 'envelope' ? state.envelope.expiresAt : state.expiresAt;
 }
 
 /**
@@ -392,6 +407,7 @@ function expiryForState(state: Exclude<DecodedPromptState, { format: 'absent' }>
  */
 export async function pendingLifecycleRouteResult(
   nowISO: string,
+  options: { expectedStoreUserId?: string } = {},
 ): Promise<LifecyclePromptReservationResult> {
   const canonicalNow = canonicalRFC3339(nowISO);
   if (!canonicalNow) return { status: 'unavailable', reason: 'invalid_clock' };
@@ -401,7 +417,9 @@ export async function pendingLifecycleRouteResult(
     return await runAccountGenerationOperation(async (lease) => {
       let entitlementRead: Awaited<ReturnType<typeof readEntitlementCache>>;
       try {
-        entitlementRead = await awaitAccountGenerationLease(lease, readEntitlementCache);
+        entitlementRead = await awaitAccountGenerationLease(lease, () =>
+          readEntitlementCache({ expectedStoreUserId: options.expectedStoreUserId }),
+        );
       } catch {
         lease.assertCurrent();
         return { status: 'unavailable', reason: 'entitlement_unavailable' };
@@ -443,6 +461,7 @@ export async function pendingLifecycleRouteResult(
               if (current.format === 'legacy_presented') return raw;
               if (
                 current.envelope.phase === 'presented' ||
+                current.envelope.phase === 'superseded' ||
                 current.envelope.deliverySessionId === DELIVERY_SESSION_ID
               ) {
                 return raw;
@@ -499,8 +518,11 @@ export async function pendingLifecycleRouteResult(
 /** Compatibility adapter for the existing fire-and-forget mount effect. Typed
  * callers should use `pendingLifecycleRouteResult`; visible navigation remains
  * intentionally unchanged while failures now stay observable to domain code. */
-export async function pendingLifecycleRoute(nowISO: string): Promise<LifecyclePrompt | null> {
-  const result = await pendingLifecycleRouteResult(nowISO);
+export async function pendingLifecycleRoute(
+  nowISO: string,
+  options: { expectedStoreUserId?: string } = {},
+): Promise<LifecyclePrompt | null> {
+  const result = await pendingLifecycleRouteResult(nowISO, options);
   return result.status === 'route' ? result.prompt : null;
 }
 
@@ -524,9 +546,10 @@ export async function acknowledgeLifecyclePromptPresented(
           updatePrivateItem(PROMPT_KEY, (raw) => {
             const current = decodePromptState(raw);
             if (
-              current.format !== 'v2' ||
+              current.format !== 'envelope' ||
               current.envelope.promptId !== promptId ||
-              current.envelope.route !== prompt.route
+              current.envelope.route !== prompt.route ||
+              current.envelope.phase === 'superseded'
             ) {
               return raw;
             }
@@ -543,6 +566,57 @@ export async function acknowledgeLifecyclePromptPresented(
       } catch {
         // Exact readback decides whether a commit-then-reject acknowledgement
         // is durable. Other failures remain retryable as `prepared`.
+        lease.assertCurrent();
+      }
+
+      lease.assertCurrent();
+      if (!matched || expectedRaw === null) return false;
+      return exactPromptReadback(lease, expectedRaw);
+    });
+  } catch (error) {
+    if (error instanceof AccountGenerationLeaseError) return false;
+    return false;
+  }
+}
+
+/**
+ * Settle an exact prepared delivery that no longer matches the authoritative
+ * entitlement. The V3 terminal phase is deliberately distinct from
+ * `presented`: a stale deep link must not claim that the offer was shown. A V2
+ * rollback binary classifies V3 as unsupported and preserves the bytes.
+ */
+export async function supersedeLifecyclePrompt(prompt: LifecyclePrompt): Promise<boolean> {
+  const promptId = normalizeOpaqueId(prompt.promptId);
+  if (!promptId || !isLifecycleRoute(prompt.route)) return false;
+
+  try {
+    return await runAccountGenerationOperation(async (lease) => {
+      let expectedRaw: string | null = null;
+      let matched = false;
+
+      try {
+        await awaitAccountGenerationLease(lease, () =>
+          updatePrivateItem(PROMPT_KEY, (raw) => {
+            const current = decodePromptState(raw);
+            if (
+              current.format !== 'envelope' ||
+              current.envelope.promptId !== promptId ||
+              current.envelope.route !== prompt.route ||
+              current.envelope.phase === 'presented'
+            ) {
+              return raw;
+            }
+
+            matched = true;
+            const superseded: PromptedExpiryEnvelope =
+              current.envelope.phase === 'superseded'
+                ? current.envelope
+                : { ...current.envelope, phase: 'superseded' };
+            expectedRaw = encodePromptState(superseded);
+            return expectedRaw;
+          }),
+        );
+      } catch {
         lease.assertCurrent();
       }
 

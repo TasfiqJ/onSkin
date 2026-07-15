@@ -1,6 +1,7 @@
 import type { GatedFeature } from '@onskin/types';
 
 import { BRAND } from '@/lib/brand';
+import type { SubscriptionPackageView } from '@/lib/iap/revenuecat';
 
 /**
  * Centralised, honest-by-design paywall + lifecycle copy (docs/08 §9/§12, the
@@ -30,10 +31,15 @@ export const PAYWALL_COPY = {
     ],
     annualBadge: 'Annual · best value',
     cta: 'Start free trial',
+    subscribeCta: 'Subscribe to Pro',
     trialReassurance: 'We’ll remind you 2 days before the trial ends · cancel anytime',
+    purchaseReassurance:
+      'The App Store confirms the price and renewal terms before purchase · cancel anytime',
     // The honest auto-renew disclosure (Apple 3.1.2 / ARLs). Plain, below the CTA.
     autoRenewDisclosure:
       'Your free trial converts to the annual plan and auto-renews unless cancelled at least 24 hours before it ends. Cancel anytime in your account settings.',
+    standardAutoRenewDisclosure:
+      'Your annual plan starts after App Store confirmation and auto-renews unless cancelled at least 24 hours before the renewal date. Cancel anytime in your account settings.',
     exploreTitle: 'Explore first. 7 days of Pro',
     exploreBody: 'No credit card. See your routine work, then decide.',
     trustBlock: 'Reviewed by dermatologists · photos stay on your device · no data sales',
@@ -68,21 +74,59 @@ export const PAYWALL_COPY = {
   // Purchase success (design 05, docs/08 §3.3).
   success: {
     titleFor: (name: string | null) => (name ? `You’re all set, ${name}.` : 'You’re all set.'),
-    bodyFor: (price: string) =>
-      `Your 14 days of Pro start now. We’ll remind you 2 days before it converts to ${price}/year. Cancel anytime.`,
-    metaFor: (endDate: string, price: string) => `trial ends ${endDate} · renews ${price}/yr`,
-    metaRowsFor: (endDate: string, price: string) => [
+    bodyForTrial: (
+      willRenew: boolean,
+      renewalPrice: string | null,
+      renewalPeriod: string | null,
+    ) =>
+      willRenew && renewalPrice && renewalPeriod
+        ? `Your Pro trial is active now. We’ll remind you 2 days before it renews at ${renewalPrice}/${renewalPeriod}. Cancel anytime.`
+        : 'Your Pro trial is active now and will not renew.',
+    metaRowsForTrial: (
+      endDate: string,
+      willRenew: boolean,
+      renewalPrice: string | null,
+      renewalPeriod: string | null,
+    ) => [
       `trial ends ${endDate}`,
-      `renews ${price}/yr`,
+      willRenew && renewalPrice && renewalPeriod
+        ? `renews at ${renewalPrice}/${renewalPeriod}`
+        : 'does not renew',
     ],
-    // Paid path (win-back / direct purchase): there is no trial, so do not promise
-    // a trial conversion. The amount the user actually paid is the one shown.
-    bodyForPaid: (price: string) =>
-      `Pro is active now. Your plan renews at ${price}/year. Cancel anytime.`,
-    metaForPaid: (endDate: string, price: string) => `active until ${endDate} · renews ${price}/yr`,
-    metaRowsForPaid: (endDate: string, price: string) => [
+    bodyForPaid: (
+      action: 'purchase' | 'winback',
+      purchasePrice: string,
+      purchasePeriod: string,
+      offerDuration: string | null,
+      willRenew: boolean,
+      renewalPrice: string | null,
+      renewalPeriod: string | null,
+    ) => {
+      const opening =
+        action === 'winback'
+          ? `Your welcome-back offer is active at ${purchasePrice}/${purchasePeriod} for ${offerDuration}.`
+          : `Pro is active now at ${purchasePrice}/${purchasePeriod}.`;
+      return willRenew && renewalPrice && renewalPeriod
+        ? `${opening} After that, it renews at ${renewalPrice}/${renewalPeriod}. Cancel anytime.`
+        : `${opening} It will not renew.`;
+    },
+    metaRowsForPaid: (
+      action: 'purchase' | 'winback',
+      endDate: string,
+      purchasePrice: string,
+      purchasePeriod: string,
+      offerDuration: string | null,
+      willRenew: boolean,
+      renewalPrice: string | null,
+      renewalPeriod: string | null,
+    ) => [
+      action === 'winback'
+        ? `welcome-back price ${purchasePrice}/${purchasePeriod} for ${offerDuration}`
+        : `plan price ${purchasePrice}/${purchasePeriod}`,
       `active until ${endDate}`,
-      `renews ${price}/yr`,
+      willRenew && renewalPrice && renewalPeriod
+        ? `then renews at ${renewalPrice}/${renewalPeriod}`
+        : 'does not renew',
     ],
     cta: 'See tonight’s routine',
   },
@@ -119,17 +163,50 @@ export const PAYWALL_COPY = {
     title: 'Here’s what your timeline could show by autumn.',
     body: 'Skin rewards consistency. If you’d like to pick it back up, we kept your place.',
     offerLabel: 'A welcome-back offer',
+    termsFor: (offerDuration: string, renewalPrice: string, renewalPeriod: string) =>
+      `for ${offerDuration} · then renews at ${renewalPrice}/${renewalPeriod}`,
     cta: 'Come back to Pro',
     declineCta: 'No thanks',
   },
   // The trial-end pre-charge reminder content (delivered by doc 7; docs/08 §6).
   trialReminder: {
     title: 'Your free trial ends in 2 days',
-    bodyFor: (date: string, price: string) =>
-      `On ${date} you’ll move to ${price}/year. Happy to stay? Nothing to do. Not for you? Cancel in one tap. No hard feelings.`,
+    bodyFor: (date: string, price: string | null) =>
+      price
+        ? `On ${date} you’ll move to ${price}/year. Happy to stay? Nothing to do. Not for you? Cancel in one tap. No hard feelings.`
+        : `Your free trial ends on ${date}. Check the App Store for the current renewal price. You can manage or cancel there anytime.`,
     footnote: 'we remind you before we ever charge. Apple sends one too',
   },
 } as const;
+
+type TrialCopyPackage = Pick<SubscriptionPackageView, 'trialDays' | 'trialEligibility'>;
+
+/** Never present trial language unless the store proves this exact package is eligible. */
+export function paywallPurchasePresentation(pack: TrialCopyPackage | null | undefined): {
+  cta: string;
+  reassurance: string;
+  autoRenewDisclosure: string;
+  hasEligibleTrial: boolean;
+} {
+  const hasEligibleTrial =
+    pack?.trialEligibility === 'eligible' &&
+    Number.isInteger(pack.trialDays) &&
+    (pack.trialDays ?? 0) > 0;
+
+  return hasEligibleTrial
+    ? {
+        cta: PAYWALL_COPY.offer.cta,
+        reassurance: PAYWALL_COPY.offer.trialReassurance,
+        autoRenewDisclosure: PAYWALL_COPY.offer.autoRenewDisclosure,
+        hasEligibleTrial,
+      }
+    : {
+        cta: PAYWALL_COPY.offer.subscribeCta,
+        reassurance: PAYWALL_COPY.offer.purchaseReassurance,
+        autoRenewDisclosure: PAYWALL_COPY.offer.standardAutoRenewDisclosure,
+        hasEligibleTrial,
+      };
+}
 
 /** Contextual upsell copy, framed around the specific gated feature (design 04). */
 export const UPSELL_COPY: Record<GatedFeature, { title: string; body: string }> = {

@@ -1,14 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
-import { cancelTrialReminder, scheduleTrialReminder } from '@/features/notifications/deliver';
 import { track } from '@/lib/analytics/track';
-import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
+import {
+  awaitAccountGenerationLease,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { env } from '@/lib/env';
 import {
-  customerInfoToStoredEntitlement,
+  classifyRevenueCatEntitlement,
   purchasePackage,
   purchaseWinBackPackage,
+  refreshCustomerInfo,
   restorePurchases,
   showNativeManageSubscriptions,
 } from '@/lib/iap/revenuecat';
@@ -20,33 +24,57 @@ import {
 } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
-import { deriveState, type StoredEntitlement, type SubscriptionState } from './entitlement';
 import {
-  clearStoreEntitlementIfRevenueCatVerifiedEmpty,
+  deriveState,
+  type StoredEntitlement,
+  type SubscriptionState,
+} from './entitlement';
+import {
+  activeResult,
+  publishedActionResult,
+  type EntitlementActionResult,
+} from './entitlementActionResult';
+import {
+  assertEntitlementActionAllowed,
+  type EntitlementActionInput,
+  type EntitlementActionKind,
+} from './entitlementActionGuard';
+import {
+  advanceEntitlementStateAtBoundary,
+  entitlementBoundaryScheduler,
+  nextEntitlementTrustBoundary,
+} from './entitlementBoundaryScheduler';
+import {
+  entitlementRevenueCatRefreshCoordinator,
+  entitlementServerCoordinator,
+  entitlementVerificationRetryCoordinator,
+} from './entitlementCoordinator';
+import { deferEntitlementTrialReminder } from './entitlementReminder';
+import { applyRefreshedCustomerInfo } from './entitlementRevenueCatRefresh';
+import { mintPurchaseSuccessReceipt } from './purchaseSuccessReceipt';
+import { prepareRevenueCatActionProof } from './entitlementPurchaseAttribution';
+import {
+  entitlementQueryOptions,
+  publishEntitlementQueryAcceptance,
+  publishEntitlementVerificationFailure,
+  loadEntitlementLocalSnapshot,
+  selectEntitlementQueryState,
+  type EntitlementLocalSnapshot,
+} from './entitlementQuery';
+import {
+  acceptRevenueCatVerifiedEmpty,
+  acceptTrustedRevenueCatEntitlement,
   downgradeToFree,
   fetchServerEntitlement,
   loadEntitlement,
-  readEntitlementCache,
-  saveVerifiedEntitlement,
   startReverseTrialOnServer,
+  type EntitlementAcceptance,
 } from './store';
 
 const MAX_E2E_ENTITLEMENT_DELAY_MS = 3_000;
 
-export type EntitlementActionResult = {
-  active: boolean;
-  cancelled?: boolean;
-  offerUnavailable?: boolean;
-  entitlement: StoredEntitlement | null;
-};
-
-function activeResult(
-  entitlement: StoredEntitlement | null,
-  extras?: Omit<EntitlementActionResult, 'active' | 'entitlement'>,
-): EntitlementActionResult {
-  const active = entitlement ? deriveState(entitlement, new Date().toISOString()).isPro : false;
-  return { active, entitlement, ...extras };
-}
+export type { EntitlementActionResult };
+export type { EntitlementActionInput };
 
 function e2eEntitlementDelayMs(): number {
   if (env.appEnvironment !== 'development') return 0;
@@ -171,132 +199,489 @@ function e2eEntitlementState(): SubscriptionState | null {
   );
 }
 
+type PersistedRevenueCatResult = Readonly<{
+  actionEntitlement: StoredEntitlement | null;
+  acceptedEntitlement: StoredEntitlement | null;
+  publishedState: SubscriptionState;
+  persisted: boolean;
+  verificationPending: boolean;
+}>;
+
+type PaidStoreResult =
+  | Awaited<ReturnType<typeof purchasePackage>>
+  | Awaited<ReturnType<typeof purchaseWinBackPackage>>;
+
 async function persistRevenueCatResult(
   input: {
-    customerInfo?: Parameters<typeof customerInfoToStoredEntitlement>[0];
+    customerInfo?: Parameters<typeof classifyRevenueCatEntitlement>[0];
+    productId?: string;
     packageId?: string;
     offeringId?: string;
     priceLabel?: string;
+    purchasePriceLabel?: string;
+    purchasePeriodLabel?: string;
+    offerDurationLabel?: string;
+    renewalPriceLabel?: string;
+    renewalPeriodLabel?: string;
   },
   assertCurrentOwner: () => void,
-): Promise<StoredEntitlement | null> {
+  publishAcceptance: (acceptance: EntitlementAcceptance) => SubscriptionState,
+  publishVerificationFailure: () => SubscriptionState,
+  ownerScope: ReturnType<typeof useOwnerQueryScope>,
+  configuredAppUserId: string,
+): Promise<PersistedRevenueCatResult | null> {
   if (!input.customerInfo) return null;
-  const entitlement = customerInfoToStoredEntitlement(input.customerInfo);
+  const classified = classifyRevenueCatEntitlement(
+    input.customerInfo,
+    configuredAppUserId,
+  );
+  if (classified.status === 'untrusted') {
+    assertCurrentOwner();
+    const publishedState = publishVerificationFailure();
+    return {
+      actionEntitlement: null,
+      acceptedEntitlement: null,
+      publishedState,
+      persisted: false,
+      verificationPending: true,
+    };
+  }
+  const entitlement = classified.entitlement;
   if (!entitlement) {
     assertCurrentOwner();
-    await clearStoreEntitlementIfRevenueCatVerifiedEmpty();
+    if (!classified.emptyEvidence) return null;
+    const acceptance = await acceptRevenueCatVerifiedEmpty(classified.emptyEvidence);
     assertCurrentOwner();
-    await cancelTrialReminder();
+    const published = publishAcceptance(acceptance);
     assertCurrentOwner();
-    return null;
+    deferEntitlementTrialReminder(ownerScope, published);
+    assertCurrentOwner();
+    return {
+      actionEntitlement: null,
+      acceptedEntitlement: acceptance.entitlement,
+      publishedState: published,
+      persisted: acceptance.persisted,
+      verificationPending: !acceptance.persisted,
+    };
   }
 
-  const withAttribution: StoredEntitlement = {
-    ...entitlement,
-    packageId: input.packageId ?? entitlement.packageId ?? null,
-    offeringId: input.offeringId ?? entitlement.offeringId ?? null,
-    priceLabel: input.priceLabel ?? entitlement.priceLabel ?? null,
+  const attributed = prepareRevenueCatActionProof(entitlement, input);
+  const withAttribution = attributed.entitlement;
+  assertCurrentOwner();
+  const acceptance = await acceptTrustedRevenueCatEntitlement(withAttribution);
+  assertCurrentOwner();
+  const published = publishAcceptance(acceptance);
+  assertCurrentOwner();
+  deferEntitlementTrialReminder(ownerScope, published);
+  assertCurrentOwner();
+  const nowISO = new Date().toISOString();
+  const actionIdentity = deriveState(withAttribution, nowISO).evidenceIdentity;
+  const acceptedIdentity = acceptance.entitlement
+    ? deriveState(acceptance.entitlement, nowISO).evidenceIdentity
+    : null;
+  return {
+    actionEntitlement:
+      attributed.actionProductMatched &&
+      actionIdentity !== null &&
+      actionIdentity === acceptedIdentity
+        ? withAttribution
+        : null,
+    acceptedEntitlement: acceptance.entitlement,
+    publishedState: published,
+    persisted: acceptance.persisted,
+    verificationPending:
+      !acceptance.persisted || !attributed.actionProductMatched,
   };
-  assertCurrentOwner();
-  await saveVerifiedEntitlement(withAttribution);
-  assertCurrentOwner();
-
-  if (withAttribution.isActive && withAttribution.periodType === 'trial') {
-    assertCurrentOwner();
-    await scheduleTrialReminder();
-  } else {
-    assertCurrentOwner();
-    await cancelTrialReminder();
-  }
-  assertCurrentOwner();
-
-  return withAttribution;
 }
 
 export function useEntitlement(options: { enabled?: boolean } = {}) {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
   const ownerScope = useOwnerQueryScope();
-  return useQuery<SubscriptionState>({
-    queryKey: queryKeys.entitlement(ownerScope),
-    enabled: options.enabled ?? true,
-    retry: 0,
-    queryFn: () =>
-      runOwnerQueryOperation(ownerScope, async (lease) => {
+  const query = useQuery(
+    entitlementQueryOptions({
+      ownerScope,
+      enabled: options.enabled,
+      loadLocal: async (lease): Promise<EntitlementLocalSnapshot> => {
         const e2eDelay = e2eEntitlementDelayMs();
-        if (e2eDelay > 0) await wait(e2eDelay);
+        if (e2eDelay > 0) {
+          await awaitAccountGenerationLease(lease, () => wait(e2eDelay));
+        }
 
         const e2e = e2eEntitlementState();
-        if (e2e) return e2e;
-
-        const local = await readEntitlementCache();
-        const server = await fetchServerEntitlement(lease.assertCurrent);
-        const localProof = local.status === 'available' ? local.entitlement : null;
-        return deriveState(server ?? localProof, new Date().toISOString());
-      }),
+        if (e2e) return { state: e2e, shouldReconcile: false };
+        return loadEntitlementLocalSnapshot(lease, {
+          expectedStoreUserId: user?.id,
+        });
+      },
+      reconcile: () =>
+        entitlementServerCoordinator.reconcile({
+          ownerScope,
+          fetchServer: fetchServerEntitlement,
+          publish: (acceptance) => {
+            const nowISO = new Date().toISOString();
+            publishEntitlementQueryAcceptance(
+              queryClient,
+              ownerScope,
+              acceptance,
+              nowISO,
+              env.appEnvironment,
+            );
+          },
+        }),
+      selectCurrentState: (incoming) =>
+        selectEntitlementQueryState(
+          queryClient.getQueryData<SubscriptionState>(queryKeys.entitlement(ownerScope)),
+          incoming,
+        ),
+    }),
+  );
+  const verificationRetry = useMutation({
+    mutationFn: () => {
+      const appUserId = user?.id;
+      return entitlementVerificationRetryCoordinator.retry({
+        ownerScope,
+        refreshLocal: async (lease) => {
+          lease.assertCurrent();
+          await query.refetch();
+          lease.assertCurrent();
+        },
+        ...(appUserId
+          ? {
+              refreshRevenueCat: async (lease: AccountGenerationLease) => {
+                lease.assertCurrent();
+                await entitlementRevenueCatRefreshCoordinator.refresh({
+                  ownerScope,
+                  refresh: async (refreshLease) => {
+                    const customerInfo = await refreshCustomerInfo({
+                      appUserId,
+                      lease: refreshLease,
+                    });
+                    refreshLease.assertCurrent();
+                    if (!customerInfo) return;
+                    await applyRefreshedCustomerInfo({
+                      customerInfo,
+                      configuredAppUserId: appUserId,
+                      assertCurrentOwner: refreshLease.assertCurrent,
+                      publishAcceptance: (acceptance) => {
+                        refreshLease.assertCurrent();
+                        if (!isOwnerQueryScopeCurrent(ownerScope)) {
+                          throw new Error('ENTITLEMENT_OWNER_STALE');
+                        }
+                        return publishEntitlementQueryAcceptance(
+                          queryClient,
+                          ownerScope,
+                          acceptance,
+                          new Date().toISOString(),
+                          env.appEnvironment,
+                        );
+                      },
+                      publishVerificationFailure: () => {
+                        refreshLease.assertCurrent();
+                        if (!isOwnerQueryScopeCurrent(ownerScope)) {
+                          throw new Error('ENTITLEMENT_OWNER_STALE');
+                        }
+                        return publishEntitlementVerificationFailure(
+                          queryClient,
+                          ownerScope,
+                          new Date().toISOString(),
+                        );
+                      },
+                      onPublished: (published) => {
+                        deferEntitlementTrialReminder(ownerScope, published);
+                      },
+                    });
+                    refreshLease.assertCurrent();
+                  },
+                });
+                lease.assertCurrent();
+              },
+            }
+          : {}),
+        reconcileServer: async (lease) => {
+          lease.assertCurrent();
+          await entitlementServerCoordinator.reconcile({
+            ownerScope,
+            fetchServer: fetchServerEntitlement,
+            publish: (acceptance) => {
+              lease.assertCurrent();
+              if (!isOwnerQueryScopeCurrent(ownerScope)) {
+                throw new Error('ENTITLEMENT_OWNER_STALE');
+              }
+              publishEntitlementQueryAcceptance(
+                queryClient,
+                ownerScope,
+                acceptance,
+                new Date().toISOString(),
+                env.appEnvironment,
+              );
+            },
+            force: true,
+          });
+          lease.assertCurrent();
+        },
+      });
+    },
+    retry: 0,
   });
+  useEffect(() => {
+    if (!query.data || !isOwnerQueryScopeCurrent(ownerScope)) return;
+    const nowMs = Date.now();
+    let advancedRawCache = false;
+    queryClient.setQueryData<SubscriptionState>(
+      queryKeys.entitlement(ownerScope),
+      (current) => {
+        if (!current) return current;
+        const advanced = advanceEntitlementStateAtBoundary(current, nowMs);
+        advancedRawCache = advanced !== current;
+        return advanced;
+      },
+    );
+    if (advancedRawCache) {
+      void queryClient.invalidateQueries({
+        queryKey: ownerQueryPrefixes.entitlement(ownerScope),
+      });
+      return;
+    }
+    const boundaryMs = nextEntitlementTrustBoundary(query.data, nowMs);
+    if (boundaryMs === null) return;
+    return entitlementBoundaryScheduler.subscribe(
+      `entitlement:${ownerScope.generation}`,
+      boundaryMs,
+      (event) => {
+        if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+        queryClient.setQueryData<SubscriptionState>(
+          queryKeys.entitlement(ownerScope),
+          (current) =>
+            current
+              ? advanceEntitlementStateAtBoundary(current, Date.now(), event)
+              : current,
+        );
+        void queryClient.invalidateQueries({
+          queryKey: ownerQueryPrefixes.entitlement(ownerScope),
+        });
+      },
+    );
+  }, [ownerScope, query.data, queryClient]);
+  return {
+    ...query,
+    isVerificationRetrying: verificationRetry.isPending,
+    retryVerification: () => verificationRetry.mutateAsync(),
+  };
 }
 
 export function useEntitlementActions() {
   const qc = useQueryClient();
   const { user } = useAuth();
   const ownerScope = useOwnerQueryScope();
+  const publishAcceptance = (acceptance: EntitlementAcceptance) => {
+    if (!isOwnerQueryScopeCurrent(ownerScope)) throw new Error('ENTITLEMENT_OWNER_STALE');
+    return publishEntitlementQueryAcceptance(
+      qc,
+      ownerScope,
+      acceptance,
+      new Date().toISOString(),
+      env.appEnvironment,
+    );
+  };
+  const publishVerificationFailure = () => {
+    if (!isOwnerQueryScopeCurrent(ownerScope)) throw new Error('ENTITLEMENT_OWNER_STALE');
+    return publishEntitlementVerificationFailure(
+      qc,
+      ownerScope,
+      new Date().toISOString(),
+    );
+  };
   const revenueCatOwner = (lease: AccountGenerationLease) => {
     if (!user?.id) throw new Error('REVENUECAT_OWNER_REQUIRED');
     return { appUserId: user.id, lease } as const;
   };
+  const assertActionAtCommit = (
+    lease: AccountGenerationLease,
+    input: EntitlementActionInput,
+    allowedKinds: readonly EntitlementActionKind[],
+  ): SubscriptionState => {
+    lease.assertCurrent();
+    if (!isOwnerQueryScopeCurrent(ownerScope)) throw new Error('ENTITLEMENT_OWNER_STALE');
+    const key = queryKeys.entitlement(ownerScope);
+    const current = qc.getQueryData<SubscriptionState>(key);
+    const advanced = current
+      ? advanceEntitlementStateAtBoundary(current, Date.now())
+      : current;
+    if (advanced && advanced !== current) qc.setQueryData(key, advanced);
+    assertEntitlementActionAllowed(advanced, input, allowedKinds, user?.id);
+    return advanced;
+  };
   const invalidate = () => {
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return Promise.resolve();
-    return qc.invalidateQueries({ queryKey: ownerQueryPrefixes.entitlement(ownerScope) });
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+    try {
+      void qc
+        .invalidateQueries({ queryKey: ownerQueryPrefixes.entitlement(ownerScope) })
+        .catch(() => undefined);
+    } catch {
+      // Mutation settlement is independent of a background refetch.
+    }
+  };
+  const reconcileInBackground = () => {
+    void entitlementServerCoordinator
+      .reconcile({
+        ownerScope,
+        fetchServer: fetchServerEntitlement,
+        publish: (acceptance) => {
+          publishAcceptance(acceptance);
+        },
+      })
+      .catch(() => undefined);
+  };
+  const finishPaidAction = async (
+    lease: AccountGenerationLease,
+    result: PaidStoreResult,
+    action: 'purchase' | 'winback',
+  ): Promise<EntitlementActionResult> => {
+    lease.assertCurrent();
+    if (result.cancelled) return activeResult(null, { cancelled: true });
+    if (result.pending) {
+      reconcileInBackground();
+      return activeResult(null, { pending: true });
+    }
+    if (result.purchaseMayHaveCompleted && !result.customerInfo) {
+      reconcileInBackground();
+      return activeResult(null, {
+        verificationPending: true,
+        purchaseMayHaveCompleted: true,
+      });
+    }
+
+    let persisted: PersistedRevenueCatResult | null;
+    try {
+      persisted = await persistRevenueCatResult(
+        result,
+        lease.assertCurrent,
+        publishAcceptance,
+        publishVerificationFailure,
+        ownerScope,
+        revenueCatOwner(lease).appUserId,
+      );
+    } catch {
+      if (result.customerInfo) {
+        reconcileInBackground();
+        return activeResult(null, {
+          verificationPending: true,
+          purchaseMayHaveCompleted: true,
+        });
+      }
+      throw new Error('ENTITLEMENT_POST_PURCHASE_VERIFICATION_FAILED');
+    }
+    lease.assertCurrent();
+    if (!persisted) return activeResult(null);
+
+    const actionIdentity = persisted.actionEntitlement
+      ? deriveState(persisted.actionEntitlement, new Date().toISOString()).evidenceIdentity
+      : null;
+    const actionProofWon = Boolean(
+      result.purchased &&
+        persisted.persisted &&
+        actionIdentity &&
+        persisted.publishedState.isPro &&
+        actionIdentity === persisted.publishedState.evidenceIdentity,
+    );
+    if (result.purchaseMayHaveCompleted || persisted.verificationPending || !actionProofWon) {
+      reconcileInBackground();
+      return publishedActionResult(
+        persisted.publishedState,
+        persisted.acceptedEntitlement,
+        {
+          verificationPending: true,
+          purchaseMayHaveCompleted: true,
+        },
+      );
+    }
+
+    const successReceiptId = mintPurchaseSuccessReceipt(
+      ownerScope,
+      persisted.actionEntitlement,
+      persisted.publishedState,
+      {
+        action,
+        completed: true,
+        commercialTerms: {
+          purchasePriceLabel: result.purchasePriceLabel,
+          purchasePeriodLabel: result.purchasePeriodLabel,
+          offerDurationLabel: result.offerDurationLabel,
+          renewalPriceLabel: result.renewalPriceLabel,
+          renewalPeriodLabel: result.renewalPeriodLabel,
+        },
+      },
+    );
+    const won = persisted.actionEntitlement;
+    if (won?.isActive) {
+      track(action === 'winback' ? 'winback_converted' : won.periodType === 'trial'
+        ? 'trial_started'
+        : 'purchase_completed', {
+        source: 'revenuecat',
+        period_type: won.periodType,
+      });
+    }
+    return publishedActionResult(
+      persisted.publishedState,
+      persisted.acceptedEntitlement,
+      { ...(successReceiptId ? { successReceiptId } : {}) },
+    );
   };
 
   const startReverseTrial = useMutation({
-    mutationFn: () =>
+    mutationFn: (input: EntitlementActionInput) =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const entitlement = await startReverseTrialOnServer(lease.assertCurrent);
+        assertActionAtCommit(lease, input, ['reverse_trial']);
+        const owner = revenueCatOwner(lease);
+        const started = await startReverseTrialOnServer(
+          lease.assertCurrent,
+          owner.appUserId,
+          () => assertActionAtCommit(lease, input, ['reverse_trial']),
+        );
         lease.assertCurrent();
-        track('reverse_trial_started', { source: entitlement.source ?? 'server' });
-        return activeResult(entitlement);
+        const published = publishAcceptance(started);
+        lease.assertCurrent();
+        if (started.started && started.entitlement) {
+          track('reverse_trial_started', {
+            source: started.entitlement.source ?? 'server',
+          });
+        }
+        return publishedActionResult(published, started.entitlement);
       }),
     onSettled: invalidate,
   });
 
   const startTrial = useMutation({
-    mutationFn: () =>
+    mutationFn: (input: EntitlementActionInput) =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const result = await purchasePackage(revenueCatOwner(lease), 'annual');
-        const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
-        lease.assertCurrent();
-        if (!entitlement) return activeResult(null, { cancelled: result.cancelled });
-
-        if (entitlement.isActive && entitlement.periodType === 'trial') {
-          track('trial_started', {
-            source: 'revenuecat',
-            period_type: entitlement.periodType,
-          });
-        } else if (entitlement.isActive) {
-          track('purchase_completed', {
-            source: 'revenuecat',
-            period_type: entitlement.periodType,
-          });
-        }
-        return activeResult(entitlement, { cancelled: result.cancelled });
+        assertActionAtCommit(lease, input, ['onboarding_purchase']);
+        const result = await purchasePackage(
+          revenueCatOwner(lease),
+          'annual',
+          () => assertActionAtCommit(lease, input, ['onboarding_purchase']),
+        );
+        return finishPaidAction(lease, result, 'purchase');
       }),
     onSettled: invalidate,
     retry: 0,
   });
 
   const purchase = useMutation({
-    mutationFn: () =>
+    mutationFn: (input: EntitlementActionInput) =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const result = await purchasePackage(revenueCatOwner(lease), 'annual');
-        const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
-        lease.assertCurrent();
-        if (entitlement?.isActive) {
-          track('purchase_completed', {
-            source: 'revenuecat',
-            period_type: entitlement.periodType,
-          });
-        }
-        return activeResult(entitlement, { cancelled: result.cancelled });
+        const allowedKinds = [
+          'upsell_purchase',
+          'downgrade_purchase',
+          'reoffer_purchase',
+        ] as const;
+        assertActionAtCommit(lease, input, allowedKinds);
+        const result = await purchasePackage(
+          revenueCatOwner(lease),
+          'annual',
+          () => assertActionAtCommit(lease, input, allowedKinds),
+        );
+        return finishPaidAction(lease, result, 'purchase');
       }),
     onSettled: invalidate,
     retry: 0,
@@ -307,19 +692,57 @@ export function useEntitlementActions() {
       runOwnerQueryOperation(ownerScope, async (lease) => {
         track('restore_tapped');
         const result = await restorePurchases(revenueCatOwner(lease));
-        const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
-        return activeResult(entitlement);
+        let persisted: PersistedRevenueCatResult | null;
+        try {
+          persisted = await persistRevenueCatResult(
+            result,
+            lease.assertCurrent,
+            publishAcceptance,
+            publishVerificationFailure,
+            ownerScope,
+            revenueCatOwner(lease).appUserId,
+          );
+        } catch {
+          if (result.customerInfo) {
+            reconcileInBackground();
+            return activeResult(null, { verificationPending: true });
+          }
+          throw new Error('ENTITLEMENT_RESTORE_VERIFICATION_FAILED');
+        }
+        if (!persisted) return activeResult(null, { storePurchaseFound: false });
+        if (persisted.verificationPending) {
+          reconcileInBackground();
+          return publishedActionResult(
+            persisted.publishedState,
+            persisted.acceptedEntitlement,
+            { verificationPending: true },
+          );
+        }
+        return publishedActionResult(
+          persisted.publishedState,
+          persisted.acceptedEntitlement,
+          { storePurchaseFound: result.restored },
+        );
       }),
     onSettled: invalidate,
     retry: 0,
   });
 
   const downgrade = useMutation({
-    mutationFn: () =>
+    mutationFn: (input: EntitlementActionInput) =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
+        const state = assertActionAtCommit(lease, input, [
+          'decline_expired_reverse_trial',
+        ]);
+        if (!state.evidenceIdentity) {
+          throw new Error('ENTITLEMENT_ACTION_PRECONDITION_FAILED');
+        }
+        const downgraded = await downgradeToFree(
+          state.evidenceIdentity,
+          revenueCatOwner(lease).appUserId,
+        );
         lease.assertCurrent();
-        await downgradeToFree();
-        lease.assertCurrent();
+        if (!downgraded) throw new Error('ENTITLEMENT_ACTION_PRECONDITION_FAILED');
         track('reverse_trial_expired');
         return activeResult(await loadEntitlement());
       }),
@@ -327,21 +750,17 @@ export function useEntitlementActions() {
   });
 
   const winback = useMutation({
-    mutationFn: () =>
+    mutationFn: (input: EntitlementActionInput) =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
-        const result = await purchaseWinBackPackage(revenueCatOwner(lease));
-        const entitlement = await persistRevenueCatResult(result, lease.assertCurrent);
-        lease.assertCurrent();
-        if (entitlement?.isActive) {
-          track('winback_converted', {
-            source: 'revenuecat',
-            period_type: entitlement.periodType,
-          });
-        }
-        return activeResult(entitlement, {
-          cancelled: result.cancelled,
-          offerUnavailable: result.offerUnavailable,
-        });
+        assertActionAtCommit(lease, input, ['winback_purchase']);
+        const result = await purchaseWinBackPackage(
+          revenueCatOwner(lease),
+          () => assertActionAtCommit(lease, input, ['winback_purchase']),
+        );
+        const settled = await finishPaidAction(lease, result, 'winback');
+        return result.offerUnavailable
+          ? { ...settled, offerUnavailable: true }
+          : settled;
       }),
     onSettled: invalidate,
     retry: 0,

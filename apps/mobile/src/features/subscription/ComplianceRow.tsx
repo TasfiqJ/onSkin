@@ -7,6 +7,7 @@ import { openExternalHttpsUrl } from '@/lib/navigation/externalOpen';
 import { colors } from '@/theme/tokens';
 
 import { useEntitlementActions } from './useEntitlement';
+import { restoreFeedbackMessage } from './restoreFeedback';
 
 // Terms · Privacy · Restore. Apple Guideline 3.1.2 requires all three present and
 // FUNCTIONAL in the paywall binary (docs/08 §3.1/§7). Terms/Privacy open the policy
@@ -19,12 +20,6 @@ export const PRIVACY_URL = POLICY_LINKS.privacy.url;
 
 const POLICY_LINK_UNAVAILABLE_MESSAGE =
   'Link unavailable. We could not open this policy link. Please try again.';
-
-function restoreFeedbackMessage(active: boolean): string {
-  return active
-    ? 'Your active subscription is restored on this device.'
-    : 'No active subscription was found for this account.';
-}
 
 export function openPolicy(url: string): Promise<boolean> {
   return openExternalHttpsUrl(url, {
@@ -59,7 +54,7 @@ export function ComplianceRow({
     setFeedback(null);
     restore.mutate(undefined, {
       onSuccess: (result) => {
-        const message = restoreFeedbackMessage(result.active);
+        const message = restoreFeedbackMessage(result);
         setFeedback(message);
       },
       onError: () => {

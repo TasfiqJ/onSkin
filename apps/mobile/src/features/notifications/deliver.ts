@@ -5,8 +5,6 @@ import { Platform } from 'react-native';
 import type { NotificationKind, NotificationTier } from '@onskin/types';
 
 import { PAYWALL_COPY } from '@/features/subscription/copy';
-import { PLANS } from '@/features/subscription/plans';
-import { loadEntitlement } from '@/features/subscription/store';
 import {
   awaitAccountGenerationLease,
   runAccountGenerationOperation,
@@ -267,24 +265,19 @@ function fmtShortDate(iso: string): string {
 }
 
 /** Schedule the fixed-ID one-shot pre-charge reminder for an active carded trial. */
-export async function scheduleTrialReminder(): Promise<void> {
+export type TrialReminderInput = Readonly<{
+  expiresAt: string;
+  priceLabel: string | null;
+}>;
+
+export async function scheduleTrialReminder(input: TrialReminderInput): Promise<void> {
   await runSerializedNotificationOperation(async (lease) => {
     if (Platform.OS === 'web') return;
     await awaitAccountGenerationLease(lease, () =>
       cancelNativeScheduledNotificationExact(TRIAL_REMINDER_ID),
     );
     lease.assertCurrent();
-    const entitlement = await loadEntitlement();
-    lease.assertCurrent();
-    if (
-      !entitlement ||
-      !entitlement.isActive ||
-      entitlement.periodType !== 'trial' ||
-      !entitlement.expiresAt
-    ) {
-      return;
-    }
-    const expiresAt = entitlement.expiresAt;
+    const expiresAt = input.expiresAt;
     const fireAt = new Date(expiresAt).getTime() - 2 * 86_400_000;
     if (fireAt <= Date.now()) return;
     await awaitAccountGenerationLease(lease, () =>
@@ -292,10 +285,7 @@ export async function scheduleTrialReminder(): Promise<void> {
         identifier: TRIAL_REMINDER_ID,
         content: {
           title: PAYWALL_COPY.trialReminder.title,
-          body: PAYWALL_COPY.trialReminder.bodyFor(
-            fmtShortDate(expiresAt),
-            entitlement.priceLabel ?? PLANS.annual.priceLabel,
-          ),
+          body: PAYWALL_COPY.trialReminder.bodyFor(fmtShortDate(expiresAt), input.priceLabel),
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DATE,

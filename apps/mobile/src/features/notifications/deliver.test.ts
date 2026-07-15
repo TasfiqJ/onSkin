@@ -72,16 +72,10 @@ vi.mock('./copy', () => ({
 vi.mock('@/features/subscription/copy', () => ({
   PAYWALL_COPY: {
     trialReminder: {
-      bodyFor: vi.fn((date: string, price: string) => `Trial ends ${date} at ${price}`),
+      bodyFor: vi.fn((date: string, price: string | null) =>
+        price ? `Trial ends ${date} at ${price}` : `Trial ends ${date}; check the App Store`,
+      ),
       title: 'Your free trial ends in 2 days',
-    },
-  },
-}));
-
-vi.mock('@/features/subscription/plans', () => ({
-  PLANS: {
-    annual: {
-      priceLabel: '$49.99',
     },
   },
 }));
@@ -417,14 +411,10 @@ describe('scheduleTrialReminder', () => {
 
     try {
       const { scheduleTrialReminder } = await import('./deliver');
-      mocks.loadEntitlement.mockResolvedValueOnce({
-        isActive: true,
-        periodType: 'trial',
+      await scheduleTrialReminder({
         expiresAt: '2026-07-12T12:00:00.000Z',
         priceLabel: 'CA$69.99',
       });
-
-      await scheduleTrialReminder();
 
       expect(mocks.scheduleNotificationAsync).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -439,18 +429,41 @@ describe('scheduleTrialReminder', () => {
     }
   });
 
+  it('does not invent a hardcoded renewal price when exact store metadata is absent', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-07-05T12:00:00.000Z'));
+
+    try {
+      const { scheduleTrialReminder } = await import('./deliver');
+      await scheduleTrialReminder({
+        expiresAt: '2026-07-12T12:00:00.000Z',
+        priceLabel: null,
+      });
+
+      expect(mocks.scheduleNotificationAsync).toHaveBeenCalledWith(
+        expect.objectContaining({
+          content: {
+            body: 'Trial ends Jul 12; check the App Store',
+            title: 'Your free trial ends in 2 days',
+          },
+        }),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('surfaces a native trial scheduling failure to its caller', async () => {
     const { scheduleTrialReminder } = await import('./deliver');
     const nativeError = new Error('trial schedule unavailable');
-    mocks.loadEntitlement.mockResolvedValueOnce({
-      isActive: true,
-      periodType: 'trial',
-      expiresAt: '2099-07-12T12:00:00.000Z',
-      priceLabel: 'CA$69.99',
-    });
     mocks.scheduleNotificationAsync.mockRejectedValueOnce(nativeError);
 
-    await expect(scheduleTrialReminder()).rejects.toBe(nativeError);
+    await expect(
+      scheduleTrialReminder({
+        expiresAt: '2099-07-12T12:00:00.000Z',
+        priceLabel: 'CA$69.99',
+      }),
+    ).rejects.toBe(nativeError);
 
     expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith('onskin-trial-reminder');
     expect(mocks.scheduleNotificationAsync).toHaveBeenCalledTimes(1);
@@ -461,7 +474,12 @@ describe('scheduleTrialReminder', () => {
     const cancelError = new Error('trial cancellation unavailable');
     mocks.cancelScheduledNotificationAsync.mockRejectedValueOnce(cancelError);
 
-    await expect(scheduleTrialReminder()).rejects.toBe(cancelError);
+    await expect(
+      scheduleTrialReminder({
+        expiresAt: '2099-07-12T12:00:00.000Z',
+        priceLabel: 'CA$69.99',
+      }),
+    ).rejects.toBe(cancelError);
 
     expect(mocks.loadEntitlement).not.toHaveBeenCalled();
     expect(mocks.scheduleNotificationAsync).not.toHaveBeenCalled();

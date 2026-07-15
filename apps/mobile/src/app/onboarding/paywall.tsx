@@ -6,17 +6,26 @@ import { Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { getQuizCompletionState } from '@/features/onboarding/quiz';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
-import { PAYWALL_COPY } from '@/features/subscription/copy';
+import { paywallPurchasePresentation, PAYWALL_COPY } from '@/features/subscription/copy';
+import {
+  DirectPaywallLoading,
+  DirectPaywallRecovery,
+  DirectPaywallRedirecting,
+} from '@/features/subscription/DirectPaywallResolution';
+import { directPaywallDecision } from '@/features/subscription/directPaywallPolicy';
 import {
   PAYWALL_FEEDBACK,
   PaywallFeedback,
   type PaywallFeedbackState,
 } from '@/features/subscription/PaywallFeedback';
 import { planLineLabel, planPriceDisplay } from '@/features/subscription/priceDisplay';
-import { useEntitlementActions } from '@/features/subscription/useEntitlement';
+import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
+import { usePaidActionHold } from '@/features/subscription/usePaidActionHold';
 import { useSubscriptionOffering } from '@/features/subscription/useSubscriptionOffering';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
+import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
+import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { colors } from '@/theme/tokens';
 
 // 10 · Onboarding offer. Two honest paths (docs/08 §3.1, design 01). "Start free
@@ -55,11 +64,21 @@ function ValueProp({ label, compact }: { label: string; compact?: boolean }) {
 export default function PaywallScreen() {
   const { fontScale = 1, height, width } = useWindowDimensions();
   const { goals, quizAnswers, computeResult } = useOnboarding();
+  const ownerScope = useOwnerQueryScope();
+  const entitlement = useEntitlement();
+  const decision = directPaywallDecision('onboarding', {
+    state: entitlement.data,
+    isLoading: entitlement.isLoading,
+    isError: entitlement.isError,
+  });
   const { startTrial, startReverseTrial } = useEntitlementActions();
-  const offering = useSubscriptionOffering();
+  const offering = useSubscriptionOffering({ enabled: decision.loadOffering });
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
+  const paidAction = usePaidActionHold(ownerScope.generation);
   const annual = offering.data?.annual ?? null;
-  const canPurchase = offering.data?.status === 'available' && annual?.canPurchase;
+  const purchasePresentation = paywallPurchasePresentation(annual);
+  const canPurchase =
+    decision.allowPurchase && offering.data?.status === 'available' && annual?.canPurchase;
   const annualDisplay = planPriceDisplay('annual', offering.data);
   const monthlyDisplay = planPriceDisplay('monthly', offering.data);
   const monthlyEquivalent = annualDisplay.pricePerMonthLabel;
@@ -72,33 +91,80 @@ export default function PaywallScreen() {
   const headerCompliancePaywall = compactPaywall;
 
   function onStartTrial() {
+    if (!decision.allowPurchase || paidAction.isHeld) return;
     setActionFeedback(null);
     if (!canPurchase) {
       setActionFeedback(PAYWALL_FEEDBACK.storePricingUnavailable(offering.data?.reason));
       return;
     }
-    startTrial.mutate(undefined, {
-      onSuccess: (result) => {
-        if (result.active) router.replace('/paywall/success');
-        else if (!result.cancelled) setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
+    startTrial.mutate(
+      {
+        kind: 'onboarding_purchase',
+        expectedEvidenceIdentity: entitlement.data?.evidenceIdentity ?? null,
       },
-      onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
-    });
+      {
+        onSuccess: (result) => {
+          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+          const outcome = paidAction.resolve(result);
+          if (outcome.kind === 'success') {
+            router.replace({
+              pathname: '/paywall/success',
+              params: { receipt: outcome.receiptId },
+            });
+          } else if (outcome.kind === 'active_without_receipt') {
+            router.replace('/routine/plan');
+          } else if (outcome.kind === 'inactive' && !result.cancelled) {
+            setActionFeedback(PAYWALL_FEEDBACK.purchaseNotActive);
+          }
+        },
+        onError: () => setActionFeedback(PAYWALL_FEEDBACK.purchaseUnavailable),
+      },
+    );
   }
 
   function onStartReverseTrial() {
+    if (!decision.allowReverseTrial || paidAction.isHeld) return;
     setActionFeedback(null);
-    startReverseTrial.mutate(undefined, {
-      onSuccess: (result) => {
-        if (result.active) router.replace('/routine/plan');
+    startReverseTrial.mutate(
+      {
+        kind: 'reverse_trial',
+        expectedEvidenceIdentity: entitlement.data?.evidenceIdentity ?? null,
       },
-      onError: () => setActionFeedback(PAYWALL_FEEDBACK.exploreFirstUnavailable),
-    });
+      {
+        onSuccess: (result) => {
+          if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+          if (result.active) router.replace('/routine/plan');
+        },
+        onError: () => setActionFeedback(PAYWALL_FEEDBACK.exploreFirstUnavailable),
+      },
+    );
   }
 
   useEffect(() => {
+    if (!decision.trackPresentation) return;
     track('paywall_shown', { count: goals.length });
-  }, [goals.length]);
+  }, [decision.trackPresentation, goals.length]);
+
+  useEffect(() => {
+    if (decision.phase !== 'redirect' || !isOwnerQueryScopeCurrent(ownerScope)) return;
+    if (decision.redirect === 'routine_plan') {
+      router.replace('/routine/plan');
+      return;
+    }
+    router.replace('/(tabs)/today');
+  }, [decision.phase, decision.redirect, ownerScope]);
+
+  if (decision.phase === 'loading') return <DirectPaywallLoading />;
+  if (decision.phase === 'recovery') {
+    return (
+      <DirectPaywallRecovery
+        isRetrying={entitlement.isVerificationRetrying}
+        onClose={() => router.replace('/onboarding/reveal')}
+        onRetry={() => void entitlement.retryVerification()}
+      />
+    );
+  }
+  if (decision.phase === 'redirect') return <DirectPaywallRedirecting />;
 
   // Personalized headline from the quiz axes (sign convention per the reveal: axes
   // >= 0.5 is the positive pole). Only when the quiz was actually taken.
@@ -228,17 +294,21 @@ export default function PaywallScreen() {
         {/* primary CTA */}
         <Pressable
           accessibilityRole="button"
-          disabled={!canPurchase || startTrial.isPending}
+          disabled={
+            !decision.allowPurchase || !canPurchase || paidAction.isHeld || startTrial.isPending
+          }
           onPress={onStartTrial}
           className={
             compactPaywall
               ? 'mt-2 h-[48px] items-center justify-center rounded-pill'
               : 'mt-5 h-[54px] items-center justify-center rounded-pill'
           }
-          style={{ backgroundColor: canPurchase ? colors.clay : colors.mutedLight }}
+          style={{
+            backgroundColor: canPurchase && !paidAction.isHeld ? colors.clay : colors.mutedLight,
+          }}
         >
           <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 17 }}>
-            {PAYWALL_COPY.offer.cta}
+            {purchasePresentation.cta}
           </Text>
         </Pressable>
         <Text
@@ -247,13 +317,13 @@ export default function PaywallScreen() {
           className={compactPaywall ? 'mt-1 text-center' : 'mt-2.5 text-center'}
           style={compactPaywall ? { fontSize: 11, lineHeight: 14 } : undefined}
         >
-          {PAYWALL_COPY.offer.trialReassurance}
+          {purchasePresentation.reassurance}
         </Text>
 
         {/* the second honest path. The reverse trial */}
         <Pressable
           accessibilityRole="button"
-          disabled={startReverseTrial.isPending}
+          disabled={!decision.allowReverseTrial || paidAction.isHeld || startReverseTrial.isPending}
           onPress={onStartReverseTrial}
           className={
             compactPaywall
@@ -302,7 +372,10 @@ export default function PaywallScreen() {
           <Text style={{ color: colors.clay, fontSize: 18 }}>›</Text>
         </Pressable>
 
-        <PaywallFeedback compact={compactPaywall} feedback={actionFeedback} />
+        <PaywallFeedback
+          compact={compactPaywall}
+          feedback={paidAction.feedback ?? actionFeedback}
+        />
 
         {/* compliance (Apple 3.1.2) */}
         {headerCompliancePaywall ? null : <ComplianceRow />}
@@ -314,7 +387,7 @@ export default function PaywallScreen() {
           className="px-2 text-center"
           style={{ fontSize: 10.5, lineHeight: 15 }}
         >
-          {PAYWALL_COPY.offer.autoRenewDisclosure}
+          {purchasePresentation.autoRenewDisclosure}
         </Text>
 
         {/* trust block. Below the plans (Flo pattern) */}

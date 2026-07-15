@@ -12,8 +12,9 @@ export type PlanPriceDisplay = {
 };
 
 function packageDisplay(pack: SubscriptionPackageView, reason: string | null): PlanPriceDisplay {
+  const eligibleTrialDays = pack.trialEligibility === 'eligible' ? pack.trialDays : null;
   return {
-    introLabel: pack.trialDays ? `Start ${pack.trialDays} days free, then` : 'Subscribe for',
+    introLabel: eligibleTrialDays ? `Start ${eligibleTrialDays} days free, then` : 'Subscribe for',
     priceLabel: pack.priceLabel,
     periodLabel: pack.periodLabel,
     pricePerMonthLabel: pack.pricePerMonthLabel,

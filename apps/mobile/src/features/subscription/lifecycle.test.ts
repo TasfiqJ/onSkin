@@ -13,6 +13,7 @@ import {
   pendingLifecycleRoute,
   pendingLifecycleRouteResult,
   readLifecyclePromptState,
+  supersedeLifecyclePrompt,
   type LifecyclePrompt,
 } from './lifecycle';
 
@@ -101,6 +102,7 @@ function entitlement(overrides: Record<string, unknown> = {}): Record<string, un
     isActive: false,
     expiresAt: EXPIRES_AT,
     periodType: 'reverse_trial',
+    storeUserId: 'owner-a',
     ...overrides,
   };
 }
@@ -128,11 +130,18 @@ describe('subscription expiry lifecycle prompt', () => {
     mocks.entitlement = entitlement();
     mocks.readEntitlementCache
       .mockReset()
-      .mockImplementation(async () =>
-        mocks.entitlement
+      .mockImplementation(async (options: { expectedStoreUserId?: string } = {}) => {
+        if (
+          mocks.entitlement &&
+          options.expectedStoreUserId &&
+          mocks.entitlement.storeUserId !== options.expectedStoreUserId
+        ) {
+          return { status: 'unavailable', entitlement: null };
+        }
+        return mocks.entitlement
           ? { status: 'available', entitlement: mocks.entitlement }
-          : { status: 'absent', entitlement: null },
-      );
+          : { status: 'absent', entitlement: null };
+      });
     mocks.physicalWrites = 0;
     mocks.promptReadOverride = null;
     mocks.storage.clear();
@@ -310,7 +319,7 @@ describe('subscription expiry lifecycle prompt', () => {
       route: '/paywall/reoffer',
     });
     expect(storedEnvelope()).toEqual({
-      version: 2,
+      version: 3,
       expiresAt: EXPIRES_AT,
       route: '/paywall/reoffer',
       promptId: prompt?.promptId,
@@ -334,6 +343,19 @@ describe('subscription expiry lifecycle prompt', () => {
     expect(vi.mocked(privateKV.updatePrivateItem).mock.invocationCallOrder[0]).toBeLessThan(
       vi.mocked(privateKV.getPrivateItem).mock.invocationCallOrder[0]!,
     );
+  });
+
+  it('does not reserve or navigate from owner-A proof under owner B', async () => {
+    await expect(
+      pendingLifecycleRouteResult(NOW, { expectedStoreUserId: 'owner-b' }),
+    ).resolves.toEqual({ status: 'unavailable', reason: 'entitlement_unavailable' });
+
+    expect(mocks.readEntitlementCache).toHaveBeenCalledWith({
+      expectedStoreUserId: 'owner-b',
+    });
+    expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
+    expect(privateKV.getPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.has(KEY)).toBe(false);
   });
 
   it('suppresses duplicate delivery attempts in the same JS process', async () => {
@@ -395,6 +417,90 @@ describe('subscription expiry lifecycle prompt', () => {
       }),
     ).resolves.toBe(false);
     expect(mocks.storage.get(KEY)).toBe(settled);
+  });
+
+  it('settles an exact stale delivery as superseded without claiming presentation', async () => {
+    const prompt = (await pendingLifecycleRoute(NOW)) as LifecyclePrompt;
+
+    await expect(supersedeLifecyclePrompt(prompt)).resolves.toBe(true);
+    expect(storedEnvelope()).toMatchObject({ version: 3, phase: 'superseded' });
+    await expect(readLifecyclePromptState()).resolves.toMatchObject({
+      status: 'available',
+      state: { phase: 'superseded' },
+    });
+    await expect(acknowledgeLifecyclePromptPresented(prompt)).resolves.toBe(false);
+    await expect(pendingLifecycleRoute(NOW)).resolves.toBeNull();
+    expect(storedEnvelope().phase).toBe('superseded');
+  });
+
+  it('upgrades a superseded V2 delivery to V3 that rollback V2 preserves as unsupported', async () => {
+    mocks.storage.set(KEY, preparedEnvelope());
+
+    await expect(
+      supersedeLifecyclePrompt({
+        promptId: REPLAY_PROMPT_ID,
+        route: '/paywall/reoffer',
+      }),
+    ).resolves.toBe(true);
+    const raw = mocks.storage.get(KEY) as string;
+    const parsed = JSON.parse(raw) as { version: number; phase: string };
+    expect(parsed).toMatchObject({ version: 3, phase: 'superseded' });
+
+    const rollbackV2Classification = parsed.version > 2 ? 'unsupported_version' : 'decodable';
+    expect(rollbackV2Classification).toBe('unsupported_version');
+    expect(mocks.storage.get(KEY)).toBe(raw);
+    await expect(pendingLifecycleRoute(NOW)).resolves.toBeNull();
+    expect(mocks.storage.get(KEY)).toBe(raw);
+  });
+
+  it('does not supersede a prompt through the wrong lifecycle route', async () => {
+    const prompt = (await pendingLifecycleRoute(NOW)) as LifecyclePrompt;
+    const prepared = mocks.storage.get(KEY);
+
+    await expect(
+      supersedeLifecyclePrompt({
+        promptId: prompt.promptId,
+        route: '/paywall/downgrade',
+      }),
+    ).resolves.toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(prepared);
+    expect(storedEnvelope().phase).toBe('prepared');
+  });
+
+  it('uses exact readback to distinguish supersede commit-then-reject from no commit', async () => {
+    mocks.storage.set(KEY, preparedEnvelope());
+    mocks.updateFailure = 'after';
+
+    await expect(
+      supersedeLifecyclePrompt({
+        promptId: REPLAY_PROMPT_ID,
+        route: '/paywall/reoffer',
+      }),
+    ).resolves.toBe(true);
+    expect(storedEnvelope()).toMatchObject({ version: 3, phase: 'superseded' });
+
+    mocks.storage.set(KEY, preparedEnvelope());
+    mocks.updateFailure = 'before';
+    await expect(
+      supersedeLifecyclePrompt({
+        promptId: REPLAY_PROMPT_ID,
+        route: '/paywall/reoffer',
+      }),
+    ).resolves.toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(preparedEnvelope());
+  });
+
+  it('never rewrites an already-presented prompt as superseded', async () => {
+    mocks.storage.set(KEY, preparedEnvelope({ phase: 'presented' }));
+    const original = mocks.storage.get(KEY);
+
+    await expect(
+      supersedeLifecyclePrompt({
+        promptId: REPLAY_PROMPT_ID,
+        route: '/paywall/reoffer',
+      }),
+    ).resolves.toBe(false);
+    expect(mocks.storage.get(KEY)).toBe(original);
   });
 
   it('routes a lapsed paid period to graceful downgrade', async () => {
@@ -768,7 +874,7 @@ describe('subscription expiry lifecycle prompt', () => {
     ],
     [
       'future state',
-      JSON.stringify({ version: 3, expiresAt: EXPIRES_AT }),
+      JSON.stringify({ version: 4, expiresAt: EXPIRES_AT }),
       { status: 'unsupported_version' },
     ],
   ] as const)('classifies and preserves %s', async (_label, stored, result) => {

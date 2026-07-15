@@ -38,4 +38,27 @@ describe('RevenueCat identity boundary', () => {
     expect(coordinator).toContain('await this.logOutAndProveAnonymous(adapter);');
     expect(coordinator).toContain('await this.logInAndProveExpected(adapter, context);');
   });
+
+  it('owner-fences exact trial eligibility and keeps unknown platforms fail closed', () => {
+    const source = readFileSync(REVENUECAT_SOURCE, 'utf8');
+
+    expect(source).toContain("if (Platform.OS !== 'ios') return unknown;");
+    expect(source).toContain(
+      '(current) => current.checkTrialOrIntroductoryPriceEligibility(productIds)',
+    );
+    expect(source).toContain('context.lease.assertCurrent();');
+    expect(source).toContain("trialEligibility: 'unknown'");
+    expect(source).toContain("trialEligibility === 'eligible'");
+    expect(source).toContain('introLabel: null');
+  });
+
+  it('keeps finite win-back terms separate from standard renewal terms', () => {
+    const source = readFileSync(REVENUECAT_SOURCE, 'utf8');
+
+    expect(source).toContain('purchasePeriodLabel: revenueCatPeriodLabel');
+    expect(source).toContain('purchasePriceLabel: winBackOffer.priceString');
+    expect(source).toContain('offerDurationLabel: revenueCatOfferDurationLabel');
+    expect(source).toContain('renewalPriceLabel: annualPackage.product.priceString');
+    expect(source).toContain("renewalPeriodLabel: periodLabelFor('annual', annualPackage)");
+  });
 });

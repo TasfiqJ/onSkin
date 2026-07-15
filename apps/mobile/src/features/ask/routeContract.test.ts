@@ -259,6 +259,12 @@ describe('Ask route launch contracts', () => {
     expect(source).toContain('groundedTurnsQueryOptions');
     expect(source).toContain('const cloudGateEnabled = phase7Flags.cloudAsk || quotaFixtureEnabled');
     expect(source).toContain('useEntitlement({ enabled: cloudGateEnabled })');
+    expect(source).toContain('isEntitlementEvidenceUncertain(ent)');
+    expect(source).toContain('ent !== undefined && !entitlementUncertain');
+    expect(source).not.toContain(
+      'entitlement.isSuccess && ent !== undefined && !entitlementUncertain',
+    );
+    expect(source).toContain('cloudGateEnabled &&\n    entitlementResolved &&');
     expect(source).toContain('requiresTrialGroundedQuota(ent)');
     expect(source).toContain('groundedTurnsQueryOptions(ownerScope, period, trialQuotaRequired)');
     expect(source).toContain('const cloudGroundingReady =');

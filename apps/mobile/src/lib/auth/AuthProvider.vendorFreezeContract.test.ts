@@ -59,12 +59,14 @@ describe('AuthProvider account-deletion vendor freeze contract', () => {
     const source = readFileSync(AUTH_PROVIDER_SOURCE, 'utf8');
     const effect = source.indexOf('const revenueCatOwner = { appUserId: userId, lease } as const;');
     const configure = source.indexOf('await configureRevenueCat(revenueCatOwner);', effect);
-    const read = source.indexOf('await getCustomerInfo(revenueCatOwner);', configure);
+    const listenerGeneration = source.indexOf(
+      'const listenerGeneration = lease.generation;',
+      configure,
+    );
     const subscribe = source.indexOf(
       'subscribeToCustomerInfoUpdates(revenueCatOwner',
-      read,
+      listenerGeneration,
     );
-    const listenerGeneration = source.indexOf('const listenerGeneration = lease.generation;', read);
     const callbackOperation = source.indexOf(
       'runAccountGenerationOperation(async (callbackLease)',
       subscribe,
@@ -73,13 +75,14 @@ describe('AuthProvider account-deletion vendor freeze contract', () => {
       'callbackLease.generation !== listenerGeneration',
       callbackOperation,
     );
+    const read = source.indexOf('await getCustomerInfo(revenueCatOwner);', callbackOwnerCheck);
 
     expect(effect).toBeGreaterThan(-1);
     expect(configure).toBeGreaterThan(effect);
-    expect(read).toBeGreaterThan(configure);
-    expect(listenerGeneration).toBeGreaterThan(read);
+    expect(listenerGeneration).toBeGreaterThan(configure);
     expect(subscribe).toBeGreaterThan(listenerGeneration);
     expect(callbackOperation).toBeGreaterThan(subscribe);
     expect(callbackOwnerCheck).toBeGreaterThan(callbackOperation);
+    expect(read).toBeGreaterThan(callbackOwnerCheck);
   });
 });

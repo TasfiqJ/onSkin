@@ -39,6 +39,7 @@ import {
   recordFreeConflictCheckRuleId,
   type ConflictQuotaRead,
 } from '@/features/subscription/conflictQuota';
+import { isEntitlementEvidenceUncertain } from '@/features/subscription/entitlement';
 import { ProGate } from '@/features/subscription/ProGate';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
@@ -252,8 +253,14 @@ export default function ConflictSheet() {
   const quotaAvailable =
     conflictQuota?.status === 'missing' || conflictQuota?.status === 'available';
   const quotaRuleIds = conflictQuota?.ruleIds ?? [];
+  const entitlementUncertain =
+    (!entitlement.data && entitlement.isError) ||
+    isEntitlementEvidenceUncertain(entitlement.data);
   const access =
-    conflict && entitlement.data && (entitlement.data.isPro || conflictQuota)
+    conflict &&
+    entitlement.data &&
+    !entitlementUncertain &&
+    (entitlement.data.isPro || conflictQuota)
       ? conflictCheckAccess({
           isPro: entitlement.data.isPro,
           ruleId: conflict.rule.id,
@@ -298,6 +305,19 @@ export default function ConflictSheet() {
   }, [access?.shouldRecord, conflictRuleId]);
 
   const quotaClaimPending = !entitlement.data?.isPro && access?.shouldRecord === true;
+  if (conflict && entitlementUncertain) {
+    return (
+      <ProGate feature="conflict_checks">
+        <ConflictFrame
+          backdrop={backdrop}
+          sheetBg={sheetBg}
+          grabber={grabber}
+          conflict={conflict}
+          onDismiss={dismiss}
+        />
+      </ProGate>
+    );
+  }
   if (
     conflict &&
     (entitlement.isLoading ||

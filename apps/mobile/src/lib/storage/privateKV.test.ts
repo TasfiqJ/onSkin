@@ -5,6 +5,7 @@ import { LOCAL_PRIVATE_READ_ONLY_KEYS } from '@/features/settings/localPrivateDa
 import {
   assertPrivateKVReadable,
   beginPrivateKVAccountBoundary,
+  clearPrivateKVContentKey,
   endPrivateKVAccountBoundary,
   getPrivateItem,
   getPrivateItems,
@@ -746,6 +747,42 @@ describe('private KV encrypted storage', () => {
     await drain;
     expect(drainFinished).toBe(true);
     expect(mocks.asyncStorage.has('onskin.account-a')).toBe(true);
+  });
+
+  it('lets an old-build cleanup remove the v1 sidecar and v2 proof before recreating the next-account key', async () => {
+    const v1 = 'onskin.entitlement.v1';
+    const v2 = 'onskin.entitlement.v2';
+    await setPrivateItem(
+      v1,
+      JSON.stringify({
+        version: 2,
+        revenueCatEmpty: null,
+        trustedRevenueCatProof: {
+          storeUserId: 'owner-a',
+          proofIdentity: '["trusted-owner-a-proof"]',
+        },
+      }),
+    );
+    await setPrivateItem(v2, JSON.stringify({ source: 'revenuecat', storeUserId: 'owner-a' }));
+    const ownerAKey = mocks.secureStorage.get(privateKVEncryptionInfo.secureStoreKey);
+    expect(ownerAKey).toBeTruthy();
+
+    beginPrivateKVAccountBoundary();
+    try {
+      await waitForPrivateKVWritesToSettle();
+      await removePrivateItemsForAuthorizedReset([v1, v2], 'account_isolation');
+      await clearPrivateKVContentKey();
+    } finally {
+      endPrivateKVAccountBoundary();
+    }
+    expect(mocks.asyncStorage.has(v1)).toBe(false);
+    expect(mocks.asyncStorage.has(v2)).toBe(false);
+    expect(mocks.secureStorage.has(privateKVEncryptionInfo.secureStoreKey)).toBe(false);
+
+    await expect(setPrivateItem('onskin.account-b', 'owner-b-value')).resolves.toBeUndefined();
+    await expect(getPrivateItem('onskin.account-b')).resolves.toBe('owner-b-value');
+    expect(mocks.secureStorage.get(privateKVEncryptionInfo.secureStoreKey)).toBeTruthy();
+    expect(mocks.secureStorage.get(privateKVEncryptionInfo.secureStoreKey)).not.toBe(ownerAKey);
   });
 
   it('tracks a queued same-key mutation until the account boundary rejects it', async () => {

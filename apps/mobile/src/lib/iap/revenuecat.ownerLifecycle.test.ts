@@ -27,8 +27,10 @@ const mocks = vi.hoisted(() => {
       anonymous = false;
       userId = configuration.appUserID;
     }),
+    checkTrialOrIntroductoryPriceEligibility: vi.fn(async () => ({})),
     getAppUserID: vi.fn(async () => userId),
     getCustomerInfo: vi.fn(),
+    invalidateCustomerInfoCache: vi.fn<() => Promise<void>>(async () => undefined),
     getEligibleWinBackOffersForPackage: vi.fn(async () => undefined),
     getOfferings: vi.fn(),
     isAnonymous: vi.fn(async () => anonymous),
@@ -77,12 +79,19 @@ vi.mock('@/lib/auth/accountDeletionVendorFreezeRuntime', () => ({
 
 vi.mock('react-native-purchases', () => ({
   default: {
+    ENTITLEMENT_VERIFICATION_MODE: { INFORMATIONAL: 'INFORMATIONAL' },
     LOG_LEVEL: { DEBUG: 'DEBUG', WARN: 'WARN' },
-    PURCHASES_ERROR_CODE: { PURCHASE_CANCELLED_ERROR: 'PURCHASE_CANCELLED' },
+    PURCHASES_ERROR_CODE: {
+      PAYMENT_PENDING_ERROR: 'PAYMENT_PENDING',
+      PURCHASE_CANCELLED_ERROR: 'PURCHASE_CANCELLED',
+    },
     addCustomerInfoUpdateListener: mocks.addCustomerInfoUpdateListener,
+    checkTrialOrIntroductoryPriceEligibility:
+      mocks.checkTrialOrIntroductoryPriceEligibility,
     configure: mocks.configure,
     getAppUserID: mocks.getAppUserID,
     getCustomerInfo: mocks.getCustomerInfo,
+    invalidateCustomerInfoCache: mocks.invalidateCustomerInfoCache,
     getEligibleWinBackOffersForPackage: mocks.getEligibleWinBackOffersForPackage,
     getOfferings: mocks.getOfferings,
     isAnonymous: mocks.isAnonymous,
@@ -110,6 +119,40 @@ afterEach(() => {
 });
 
 describe('RevenueCat facade owner lifecycle', () => {
+  it('single-flights an owner-fenced cache invalidation and CustomerInfo refresh', async () => {
+    vi.stubGlobal('__DEV__', false);
+    const { configureRevenueCat, refreshCustomerInfo } = await import('./revenuecat');
+    const ownerId = '11111111-1111-4111-8111-111111111111';
+    await runAccountGenerationOperation((lease) =>
+      configureRevenueCat({ appUserId: ownerId, lease }),
+    );
+    mocks.invalidateCustomerInfoCache.mockClear();
+    mocks.getCustomerInfo.mockClear();
+    mocks.getOfferings.mockClear();
+    const invalidated = deferred<void>();
+    const info = { originalAppUserId: ownerId };
+    mocks.invalidateCustomerInfoCache.mockReturnValueOnce(invalidated.promise);
+    mocks.getCustomerInfo.mockResolvedValueOnce(info);
+
+    const first = runAccountGenerationOperation((lease) =>
+      refreshCustomerInfo({ appUserId: ownerId, lease }),
+    );
+    const second = runAccountGenerationOperation((lease) =>
+      refreshCustomerInfo({ appUserId: ownerId, lease }),
+    );
+    await vi.waitFor(() => expect(mocks.invalidateCustomerInfoCache).toHaveBeenCalledOnce());
+    expect(mocks.getCustomerInfo).not.toHaveBeenCalled();
+    invalidated.resolve();
+
+    await expect(first).resolves.toBe(info);
+    await expect(second).resolves.toBe(info);
+    expect(mocks.getCustomerInfo).toHaveBeenCalledOnce();
+    expect(mocks.invalidateCustomerInfoCache.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.getCustomerInfo.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.getOfferings).not.toHaveBeenCalled();
+  });
+
   it('keeps reads in deletion drain while letting account isolation detach them', async () => {
     vi.stubGlobal('__DEV__', false);
     const {

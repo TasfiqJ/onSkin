@@ -7,6 +7,7 @@ import { useRecommendations } from '@/features/recommendations/useRecommendation
 import { usePlan } from '@/features/routine/usePlan';
 import { useProfileBits } from '@/features/scheduler/profile';
 import { useShelf } from '@/features/shelf/useShelf';
+import { isEntitlementEvidenceUncertain } from '@/features/subscription/entitlement';
 import { useEntitlement } from '@/features/subscription/useEntitlement';
 import { track } from '@/lib/analytics/track';
 import { phase7Flags } from '@/lib/launch/phase7';
@@ -51,14 +52,18 @@ export function useAsk() {
   const profile = useProfileBits();
   const entitlement = useEntitlement({ enabled: cloudGateEnabled });
   const { data: ent } = entitlement;
+  const entitlementUncertain = isEntitlementEvidenceUncertain(ent);
+  // TanStack retains the last successful data when a background refetch
+  // fails. Its explicit evidence boundary remains the access authority; a
+  // transport status must not discard a still-fresh local proof.
+  const entitlementResolved = ent !== undefined && !entitlementUncertain;
   const ownerScope = useOwnerQueryScope();
   const boundary = useLocalDateBoundary();
   const period = boundary.localDate.slice(0, 7);
   const trialQuotaRequired =
     quotaFixtureEnabled ||
     (cloudGateEnabled &&
-      entitlement.isSuccess &&
-      ent !== undefined &&
+      entitlementResolved &&
       requiresTrialGroundedQuota(ent));
   const turnsOptions = useMemo(
     () => groundedTurnsQueryOptions(ownerScope, period, trialQuotaRequired),
@@ -73,7 +78,7 @@ export function useAsk() {
   const { isSuccess, isError } = readiness;
   const cloudGroundingReady =
     cloudGateEnabled &&
-    entitlement.isSuccess &&
+    entitlementResolved &&
     (!trialQuotaRequired || turns.isSuccess);
 
   const ctx = useMemo<AskContext>(() => {

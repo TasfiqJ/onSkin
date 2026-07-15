@@ -397,7 +397,9 @@ describe('Settings route contracts', () => {
     );
     expect(timing).toContain("'Quiet hours are off until both a start and end time are set.'");
     expect(timing).toContain("{quietHoursEnabled ? SETTINGS_COPY.quietLabel : 'Quiet hours off'}");
-    expect(timing).toContain("{quietHoursEnabled ? 'Turn off quiet hours' : 'Turn on quiet hours'}");
+    expect(timing).toContain(
+      "{quietHoursEnabled ? 'Turn off quiet hours' : 'Turn on quiet hours'}",
+    );
     expect(timing).toContain('? { quietStart: null, quietEnd: null }');
     expect(timing).not.toContain("fmtTime(p.quietStart ?? '22:00')");
     expect(timing).not.toContain("fmtTime(p.quietEnd ?? '07:00')");
@@ -651,6 +653,40 @@ describe('Settings route contracts', () => {
     expect(source).not.toContain(
       '<Row label={PAYWALL_COPY.manage.restoreRow} last onPress={onRestore} />',
     );
+  });
+
+  it('does not present unresolved or uncertain entitlement evidence as Free', () => {
+    const subscription = readAppRoute('settings/subscription.tsx');
+    const you = readAppRoute('(tabs)/you.tsx');
+    const statusBranch = subscription.indexOf('{entitlementChecking || entitlementUncertain ? (');
+    const freeBranch = subscription.indexOf('{freePlanTitle}');
+    const restoreRows = subscription.indexOf('label={restoreLabel}', freeBranch);
+
+    expect(subscription).toContain('isEntitlementEvidenceUncertain');
+    expect(subscription).toContain('const entitlementChecking = isLoading || (!data && !isError);');
+    expect(subscription).toContain(
+      'const entitlementUncertain = !data ? isError : isEntitlementEvidenceUncertain(data);',
+    );
+    expect(subscription).toContain('Plan status unavailable');
+    expect(subscription).toContain('Checking your plan');
+    expect(subscription).toContain('accessibilityLabel="Retry plan verification"');
+    expect(subscription).toContain('onPress={() => void retryVerification()}');
+    expect(subscription).toContain('disabled={isVerificationRetrying}');
+    expect(subscription).not.toContain('useSubscriptionOffering');
+    expect(statusBranch).toBeGreaterThan(-1);
+    expect(freeBranch).toBeGreaterThan(statusBranch);
+    expect(restoreRows).toBeGreaterThan(freeBranch);
+    expect(subscription).toContain(
+      '{!entitlementChecking && !entitlementUncertain && data?.expired ? (',
+    );
+
+    expect(you).toContain('isLoading: entitlementLoading');
+    expect(you).toContain('isError: entitlementError');
+    expect(you).toContain('entitlementLoading || (!ent && !entitlementError)');
+    expect(you).toContain("? 'Checking plan'");
+    expect(you).toContain('const entitlementUncertain = !ent');
+    expect(you).toContain(': isEntitlementEvidenceUncertain(ent);');
+    expect(you).toContain("? 'Plan status unavailable'");
   });
 
   it('tracks store-backed cancel intent separately from generic subscription management', () => {

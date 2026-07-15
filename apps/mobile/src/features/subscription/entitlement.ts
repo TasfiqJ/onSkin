@@ -28,6 +28,17 @@ export type StoredEntitlement = {
   priceLabel?: string | null;
 };
 
+export type EntitlementEvidenceStatus =
+  | 'fresh'
+  | 'reconciliation_due'
+  | 'stale'
+  | 'expired'
+  | 'invalid'
+  | 'absent'
+  | 'unavailable'
+  | 'corrupt'
+  | 'unsupported_version';
+
 export type SubscriptionState = {
   tier: SubscriptionTier;
   isPro: boolean;
@@ -46,13 +57,43 @@ export type SubscriptionState = {
   source: StoredEntitlement['source'];
   environment: StoredEntitlement['environment'];
   verifiedAt: string | null;
+  /** Configured, owner-fenced RevenueCat app user id for this proof. */
+  storeUserId: string | null;
+  /** Stable identity of the authoritative row before time-derived fields are
+   * cleared. It is only used to order equal-verification-time cache updates. */
+  evidenceIdentity: string | null;
+  /** Newest authoritative non-authorizing store observation retained while an
+   * independent app grant wins. It blocks delayed older store grants. */
+  storeRevocationVerifiedAt?: string | null;
+  storeRevocationStoreUserId?: string | null;
   inReverseTrial: boolean;
   inTrial: boolean;
   /** Had an entitlement that has lapsed. Drives the graceful downgrade + win-back. */
   expired: boolean;
+  /** Why this local cache may or may not authorize access. */
+  evidenceStatus: EntitlementEvidenceStatus;
 };
 
 const MS_PER_DAY = 86_400_000;
+
+function evidenceIdentity(e: StoredEntitlement | null): string | null {
+  if (!e) return null;
+  return JSON.stringify([
+    e.source ?? null,
+    e.verifiedAt ?? null,
+    e.tier,
+    e.isActive,
+    e.periodType,
+    e.store,
+    e.productId,
+    e.expiresAt,
+    e.willRenew,
+    e.grantedAt,
+    e.environment ?? null,
+    e.offeringId ?? null,
+    e.packageId ?? null,
+  ]);
+}
 
 /** Whole days from `nowISO` until `expiresAt` (≥0; null when no expiry). */
 export function daysUntil(expiresAt: string | null, nowISO: string): number | null {
@@ -67,7 +108,13 @@ function isLive(e: StoredEntitlement, nowISO: string): boolean {
   return true;
 }
 
-export function deriveState(e: StoredEntitlement | null, nowISO: string): SubscriptionState {
+export function deriveState(
+  e: StoredEntitlement | null,
+  nowISO: string,
+  evidenceStatus?: EntitlementEvidenceStatus,
+): SubscriptionState {
+  const resolvedEvidence =
+    evidenceStatus ?? (!e ? 'absent' : isLive(e, nowISO) ? 'fresh' : 'expired');
   const free: SubscriptionState = {
     tier: 'free',
     isPro: false,
@@ -83,13 +130,21 @@ export function deriveState(e: StoredEntitlement | null, nowISO: string): Subscr
     source: e?.source ?? null,
     environment: e?.environment ?? null,
     verifiedAt: e?.verifiedAt ?? null,
+    storeUserId: e?.storeUserId ?? null,
+    evidenceIdentity: evidenceIdentity(e),
+    storeRevocationVerifiedAt: null,
+    storeRevocationStoreUserId: null,
     inReverseTrial: false,
     inTrial: false,
-    expired: false,
+    expired: resolvedEvidence === 'expired',
+    evidenceStatus: resolvedEvidence,
   };
   if (!e || !e.tier) return free;
 
-  if (isLive(e, nowISO)) {
+  if (
+    isLive(e, nowISO) &&
+    (resolvedEvidence === 'fresh' || resolvedEvidence === 'reconciliation_due')
+  ) {
     return {
       tier: e.tier,
       isPro: true,
@@ -105,13 +160,18 @@ export function deriveState(e: StoredEntitlement | null, nowISO: string): Subscr
       source: e.source ?? null,
       environment: e.environment ?? null,
       verifiedAt: e.verifiedAt ?? null,
+      storeUserId: e.storeUserId ?? null,
+      evidenceIdentity: evidenceIdentity(e),
+      storeRevocationVerifiedAt: null,
+      storeRevocationStoreUserId: null,
       inReverseTrial: e.periodType === 'reverse_trial',
       inTrial: e.periodType === 'trial',
       expired: false,
+      evidenceStatus: resolvedEvidence,
     };
   }
-  // A record exists but has lapsed → free, but flagged as expired for honest framing.
-  return { ...free, expired: true };
+  // Expired is distinct from stale, corrupt, or otherwise uncertain evidence.
+  return free;
 }
 
 /** Convenience for the gate sites (docs/08 §4. Gate at the UI). */
@@ -120,14 +180,31 @@ export function isProState(s: SubscriptionState): boolean {
 }
 
 /**
+ * Evidence failures are not a verified Free state. Callers must keep paid
+ * content closed while presenting recovery UI instead of a paywall or upgrade
+ * prompt until reconciliation produces authoritative evidence.
+ */
+export function isEntitlementEvidenceUncertain(
+  s: Pick<SubscriptionState, 'evidenceStatus'> | null | undefined,
+): boolean {
+  return (
+    s?.evidenceStatus === 'stale' ||
+    s?.evidenceStatus === 'invalid' ||
+    s?.evidenceStatus === 'unavailable' ||
+    s?.evidenceStatus === 'corrupt' ||
+    s?.evidenceStatus === 'unsupported_version'
+  );
+}
+
+/**
  * The no-card reverse trial is a first-value path, not a repeat win-back.
  * Contextual gates can offer it only to a free user with no prior entitlement
  * record; lapsed reverse trials and paid expiries should see the paid re-offer.
  */
 export function canStartContextualReverseTrial(
-  s: Pick<SubscriptionState, 'expired' | 'isPro' | 'priorPeriodType'>,
+  s: Pick<SubscriptionState, 'evidenceStatus' | 'expired' | 'isPro' | 'priorPeriodType'>,
 ): boolean {
-  return !s.isPro && !s.expired && s.priorPeriodType === null;
+  return s.evidenceStatus === 'absent' && !s.isPro && !s.expired && s.priorPeriodType === null;
 }
 
 /**
@@ -136,7 +213,7 @@ export function canStartContextualReverseTrial(
  * user from paying the native-store/configuration startup cost on every gate.
  */
 export function shouldLoadContextualOffering(
-  s: Pick<SubscriptionState, 'isPro'> | null | undefined,
+  s: Pick<SubscriptionState, 'evidenceStatus' | 'isPro'> | null | undefined,
 ): boolean {
-  return s?.isPro === false;
+  return s?.isPro === false && (s.evidenceStatus === 'absent' || s.evidenceStatus === 'expired');
 }

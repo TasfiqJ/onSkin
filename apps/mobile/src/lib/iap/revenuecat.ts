@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 import type {
   CustomerInfo,
   CustomerInfoUpdateListener,
+  IntroEligibility,
   PurchasesOfferings,
   PurchasesPackage,
   PurchasesWinBackOffer,
@@ -11,7 +12,10 @@ import type {
 
 import type { StoredEntitlement } from '@/features/subscription/entitlement';
 import { PLANS } from '@/features/subscription/plans';
-import type { AccountGenerationLease } from '@/lib/auth/accountGeneration';
+import {
+  awaitAccountGenerationLease,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
 import { accountDeletionVendorWritesBlocked } from '@/lib/auth/accountDeletionVendorFreezeRuntime';
 import { BRAND } from '@/lib/brand';
 import { env } from '@/lib/env';
@@ -25,6 +29,15 @@ import {
   type RevenueCatOwnerStamp,
 } from '@/lib/iap/revenuecatOwnerCoordinator';
 import { createRevenueCatOperationBarrier } from '@/lib/iap/revenuecatOperationBarrier';
+import {
+  mapRevenueCatTrialEligibility,
+  type TrialEligibility,
+} from '@/lib/iap/revenuecatTrialEligibility';
+import {
+  comparableWinBackPercentOff,
+  revenueCatOfferDurationLabel,
+  revenueCatPeriodLabel,
+} from '@/lib/iap/revenuecatWinBackTerms';
 import { safeExternalHttpsUrl } from '@/lib/navigation/externalUrl';
 
 export type SubscriptionPackageView = {
@@ -38,6 +51,7 @@ export type SubscriptionPackageView = {
   periodLabel: 'year' | 'month';
   subscriptionPeriod: string | null;
   trialDays: number | null;
+  trialEligibility: TrialEligibility;
   introLabel: string | null;
   canPurchase: boolean;
 };
@@ -48,9 +62,12 @@ export type WinBackOfferView = {
   packageId: string;
   offeringId: string;
   priceLabel: string;
-  originalPriceLabel: string;
+  originalPriceLabel: string | null;
   percentOff: number | null;
   periodLabel: string;
+  offerDurationLabel: string;
+  renewalPriceLabel: string;
+  renewalPeriodLabel: 'year' | 'month';
   canPurchase: boolean;
 };
 
@@ -83,11 +100,18 @@ export type SubscriptionOfferingView =
 type PurchaseResult = {
   purchased: boolean;
   cancelled?: boolean;
+  pending?: boolean;
+  purchaseMayHaveCompleted?: boolean;
   offerUnavailable?: boolean;
   productId?: string;
   packageId?: string;
   offeringId?: string;
   priceLabel?: string;
+  purchasePriceLabel?: string;
+  purchasePeriodLabel?: string;
+  offerDurationLabel?: string;
+  renewalPriceLabel?: string;
+  renewalPeriodLabel?: 'year' | 'month';
   customerInfo?: CustomerInfo;
 };
 
@@ -99,6 +123,10 @@ type NativePurchaseResult = {
 type RevenueCatAdapter = RevenueCatIdentityAdapter & {
   addCustomerInfoUpdateListener: (listener: CustomerInfoUpdateListener) => void;
   getCustomerInfo: () => Promise<CustomerInfo>;
+  invalidateCustomerInfoCache: () => Promise<void>;
+  checkTrialOrIntroductoryPriceEligibility: (
+    productIds: string[],
+  ) => Promise<Record<string, IntroEligibility>>;
   getEligibleWinBackOffersForPackage: (
     pack: PurchasesPackage,
   ) => Promise<PurchasesWinBackOffer[] | undefined>;
@@ -109,6 +137,7 @@ type RevenueCatAdapter = RevenueCatIdentityAdapter & {
     offer: PurchasesWinBackOffer,
   ) => Promise<NativePurchaseResult>;
   purchaseCancelledErrorCode: string;
+  paymentPendingErrorCode: string;
   removeCustomerInfoUpdateListener: (listener: CustomerInfoUpdateListener) => boolean;
   restorePurchases: () => Promise<CustomerInfo>;
   showManageSubscriptions: () => Promise<void>;
@@ -121,6 +150,13 @@ type OwnerTaggedOfferings = {
 
 let cachedOfferings: OwnerTaggedOfferings | null = null;
 let adapterPromise: Promise<RevenueCatAdapter> | null = null;
+let customerInfoRefreshFlight:
+  | Readonly<{
+      appUserId: string;
+      generation: number;
+      promise: Promise<CustomerInfo | null>;
+    }>
+  | null = null;
 const ownerCoordinator = new RevenueCatOwnerCoordinator();
 const deletionOperationBarrier = createRevenueCatOperationBarrier(
   accountDeletionVendorWritesBlocked,
@@ -132,6 +168,7 @@ const STORE_CHECKOUT_UNAVAILABLE_REASON =
 const PREVIEW_CHECKOUT_DISABLED_REASON =
   'Store checkout is unavailable in this preview. You can keep exploring.';
 const REVENUECAT_SESSION_PUBLICATION_TIMEOUT_MS = 2_000;
+const TRUSTED_VERIFICATION_RESULTS = new Set(['VERIFIED', 'VERIFIED_ON_DEVICE']);
 
 export type RevenueCatOperationContext = Readonly<{
   appUserId: string;
@@ -194,8 +231,24 @@ function entitlementInfo(customerInfo: CustomerInfo) {
   );
 }
 
-function hasActiveEntitlement(customerInfo: CustomerInfo): boolean {
-  return Boolean(customerInfo.entitlements.active[env.revenueCatEntitlementId]);
+type RevenueCatVerificationValue = string | null | undefined;
+
+function verificationIsTrusted(value: RevenueCatVerificationValue): boolean {
+  if (TRUSTED_VERIFICATION_RESULTS.has(value ?? '')) return true;
+  return env.appEnvironment === 'development' &&
+    (value === 'NOT_REQUESTED' || value === undefined || value === null);
+}
+
+function customerInfoVerification(customerInfo: CustomerInfo): RevenueCatVerificationValue {
+  return (
+    customerInfo.entitlements as CustomerInfo['entitlements'] & {
+      verification?: string;
+    }
+  ).verification;
+}
+
+function entitlementVerification(info: ReturnType<typeof entitlementInfo>): RevenueCatVerificationValue {
+  return (info as (NonNullable<typeof info> & { verification?: string }) | null)?.verification;
 }
 
 function mapStore(store: RevenueCatStore | string | null | undefined): StoredEntitlement['store'] {
@@ -287,6 +340,7 @@ function packageToView(
   plan: PlanId,
   pack: PurchasesPackage,
   canPurchase: boolean,
+  trialEligibility: TrialEligibility,
 ): SubscriptionPackageView {
   const trialDays = trialDaysForPackage(pack);
   return {
@@ -300,7 +354,9 @@ function packageToView(
     periodLabel: periodLabelFor(plan, pack),
     subscriptionPeriod: pack.product.subscriptionPeriod,
     trialDays,
-    introLabel: trialDays ? `${trialDays} days free` : null,
+    trialEligibility,
+    introLabel:
+      trialDays && trialEligibility === 'eligible' ? `${trialDays} days free` : null,
     canPurchase,
   };
 }
@@ -318,7 +374,8 @@ function developmentFallbackPackage(plan: PlanId): SubscriptionPackageView {
     periodLabel: p.unit,
     subscriptionPeriod: plan === 'annual' ? 'P1Y' : 'P1M',
     trialDays: p.trialDays || null,
-    introLabel: p.trialDays ? `${p.trialDays} days free` : null,
+    trialEligibility: 'unknown',
+    introLabel: null,
     canPurchase: false,
   };
 }
@@ -380,6 +437,8 @@ async function loadRevenueCatIdentityAdapter(): Promise<RevenueCatAdapter> {
             apiKey,
             appUserID: appUserId,
             automaticDeviceIdentifierCollectionEnabled: false,
+            entitlementVerificationMode:
+              Purchases.ENTITLEMENT_VERIFICATION_MODE.INFORMATIONAL,
           });
           // Mark only after the barrier admitted the callback and the native
           // bridge call returned without throwing. A pre-dispatch barrier
@@ -397,6 +456,12 @@ async function loadRevenueCatIdentityAdapter(): Promise<RevenueCatAdapter> {
       },
       getAppUserID: () => Purchases.getAppUserID(),
       getCustomerInfo: () => runDeletionTracked(() => Purchases.getCustomerInfo()),
+      invalidateCustomerInfoCache: () =>
+        runDeletionTracked(() => Purchases.invalidateCustomerInfoCache()),
+      checkTrialOrIntroductoryPriceEligibility: (productIds) =>
+        runDeletionTracked(() =>
+          Purchases.checkTrialOrIntroductoryPriceEligibility(productIds),
+        ),
       getEligibleWinBackOffersForPackage: (pack) =>
         runDeletionTracked(() => Purchases.getEligibleWinBackOffersForPackage(pack)),
       getOfferings: () => runDeletionTracked(() => Purchases.getOfferings()),
@@ -411,6 +476,7 @@ async function loadRevenueCatIdentityAdapter(): Promise<RevenueCatAdapter> {
       purchasePackageWithWinBackOffer: (pack, offer) =>
         runDeletionTracked(() => Purchases.purchasePackageWithWinBackOffer(pack, offer)),
       purchaseCancelledErrorCode: Purchases.PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR,
+      paymentPendingErrorCode: Purchases.PURCHASES_ERROR_CODE.PAYMENT_PENDING_ERROR,
       removeCustomerInfoUpdateListener: (listener) =>
         Purchases.removeCustomerInfoUpdateListener(listener),
       restorePurchases: () => runDeletionTracked(() => Purchases.restorePurchases()),
@@ -457,6 +523,37 @@ async function fetchOfferings(
   return offerings;
 }
 
+async function trialEligibilityForPackages(
+  context: RevenueCatOperationContext,
+  packages: PurchasesPackage[],
+): Promise<Map<string, TrialEligibility>> {
+  const unknown = new Map(
+    packages.map((pack) => [pack.product.identifier, 'unknown' as const]),
+  );
+  if (Platform.OS !== 'ios') return unknown;
+  const adapter = await requireConfigured(context, 'trial eligibility');
+  if (!adapter) return unknown;
+
+  try {
+    const productIds = [...new Set(packages.map((pack) => pack.product.identifier))];
+    const response = await ownerCoordinator.runRead(
+      ownerContext(context),
+      loadRevenueCatIdentityAdapter,
+      (current) => current.checkTrialOrIntroductoryPriceEligibility(productIds),
+    );
+    context.lease.assertCurrent();
+    return new Map(
+      productIds.map((productId) => [
+        productId,
+        mapRevenueCatTrialEligibility(Platform.OS, response[productId]?.status),
+      ]),
+    );
+  } catch {
+    context.lease.assertCurrent();
+    return unknown;
+  }
+}
+
 async function winBackViewForPackage(
   context: RevenueCatOperationContext,
   pack: PurchasesPackage,
@@ -478,10 +575,15 @@ async function winBackViewForPackage(
   const offer: PurchasesWinBackOffer | undefined = offers?.[0];
   if (!offer) return null;
 
-  const percentOff =
-    pack.product.price > 0
-      ? Math.round(Math.max(0, 1 - offer.price / pack.product.price) * 100)
-      : null;
+  const periodLabel = revenueCatPeriodLabel(offer);
+  const offerDurationLabel = revenueCatOfferDurationLabel(offer);
+  if (!periodLabel || !offerDurationLabel) return null;
+  const percentOff = comparableWinBackPercentOff({
+    offerPeriod: offer.period,
+    standardPeriod: pack.product.subscriptionPeriod,
+    offerPrice: offer.price,
+    standardPrice: pack.product.price,
+  });
 
   return {
     offerId: offer.identifier,
@@ -489,12 +591,12 @@ async function winBackViewForPackage(
     packageId: pack.identifier,
     offeringId: pack.presentedOfferingContext?.offeringIdentifier ?? pack.offeringIdentifier,
     priceLabel: offer.priceString,
-    originalPriceLabel: pack.product.priceString,
+    originalPriceLabel: percentOff === null ? null : pack.product.priceString,
     percentOff,
-    periodLabel:
-      offer.cycles > 1
-        ? `${offer.cycles} ${offer.periodUnit.toLowerCase()}s`
-        : offer.periodUnit.toLowerCase(),
+    periodLabel,
+    offerDurationLabel,
+    renewalPriceLabel: pack.product.priceString,
+    renewalPeriodLabel: periodLabelFor('annual', pack),
     canPurchase: true,
   };
 }
@@ -613,42 +715,158 @@ export async function getSubscriptionOffering(
     return unavailableOffering(STORE_CHECKOUT_UNAVAILABLE_REASON);
   }
 
+  const [trialEligibility, winBack] = await Promise.all([
+    trialEligibilityForPackages(context, [annual, monthly]),
+    winBackViewForPackage(context, annual),
+  ]);
+  context.lease.assertCurrent();
+
   return {
     status: 'available',
     offeringId: current.identifier,
-    annual: packageToView('annual', annual, true),
-    monthly: packageToView('monthly', monthly, true),
-    winBack: await winBackViewForPackage(context, annual),
+    annual: packageToView(
+      'annual',
+      annual,
+      true,
+      trialEligibility.get(annual.product.identifier) ?? 'unknown',
+    ),
+    monthly: packageToView(
+      'monthly',
+      monthly,
+      true,
+      trialEligibility.get(monthly.product.identifier) ?? 'unknown',
+    ),
+    winBack,
   };
 }
 
-export function customerInfoToStoredEntitlement(
+export type RevenueCatEntitlementClassification =
+  | Readonly<{
+      status: 'trusted';
+      entitlement: StoredEntitlement | null;
+      emptyEvidence: Readonly<{
+        verifiedAt: string;
+        managementUrl: string | null;
+        storeUserId: string;
+      }> | null;
+    }>
+  | Readonly<{
+      status: 'untrusted';
+      reason: 'failed' | 'not_requested' | 'unsupported';
+    }>;
+
+function effectiveAccessExpiration(
   customerInfo: CustomerInfo,
-): StoredEntitlement | null {
+  info: NonNullable<ReturnType<typeof entitlementInfo>>,
+): string | null {
+  const subscriptionInfo =
+    customerInfo.subscriptionsByProductIdentifier[info.productIdentifier];
+  const requestTime = Date.parse(customerInfo.requestDate);
+  const expirationTime = info.expirationDate
+    ? Date.parse(info.expirationDate)
+    : Number.NaN;
+  const graceTime = subscriptionInfo?.gracePeriodExpiresDate
+    ? Date.parse(subscriptionInfo.gracePeriodExpiresDate)
+    : Number.NaN;
+
+  if (!info.isActive) return info.expirationDate;
+  if (Number.isFinite(requestTime)) {
+    const futureBoundaries = [expirationTime, graceTime].filter(
+      (time) => Number.isFinite(time) && time > requestTime,
+    );
+    if (futureBoundaries.length > 0) {
+      return new Date(Math.max(...futureBoundaries)).toISOString();
+    }
+  }
+  if (info.expirationDate && !Number.isFinite(expirationTime)) {
+    // Preserve malformed provider bytes so the strict cache boundary rejects
+    // them instead of silently converting them into an unbounded grant.
+    return info.expirationDate;
+  }
+  // RevenueCat can report active billing-recovery access without a usable
+  // future boundary. The verifiedAt proof cap closes this within 72 hours.
+  return null;
+}
+
+export function classifyRevenueCatEntitlement(
+  customerInfo: CustomerInfo,
+  configuredAppUserId: string,
+): RevenueCatEntitlementClassification {
+  assertAppUserId(configuredAppUserId);
   const info = entitlementInfo(customerInfo);
-  if (!info) return null;
+  const overallVerification = customerInfoVerification(customerInfo);
+  const selectedVerification = entitlementVerification(info);
+  if (overallVerification === 'FAILED' || selectedVerification === 'FAILED') {
+    return { status: 'untrusted', reason: 'failed' };
+  }
+  if (
+    !verificationIsTrusted(overallVerification) ||
+    (info !== null && !verificationIsTrusted(selectedVerification))
+  ) {
+    return { status: 'untrusted', reason: 'not_requested' };
+  }
+  if (!info) {
+    return {
+      status: 'trusted',
+      entitlement: null,
+      emptyEvidence: {
+        verifiedAt: customerInfo.requestDate,
+        managementUrl: safeExternalHttpsUrl(customerInfo.managementURL),
+        storeUserId: configuredAppUserId,
+      },
+    };
+  }
+  if (
+    (info.periodType !== null &&
+      info.periodType !== undefined &&
+      mapPeriod(info.periodType) === null) ||
+    (info.store !== null && info.store !== undefined && mapStore(info.store) === null)
+  ) {
+    return { status: 'untrusted', reason: 'unsupported' };
+  }
   const subscriptionInfo = customerInfo.subscriptionsByProductIdentifier[info.productIdentifier];
+  const expiresAt = effectiveAccessExpiration(customerInfo, info);
+  const mappedPeriod = mapPeriod(info.periodType);
+  if (
+    info.isActive &&
+    (mappedPeriod === 'trial' || mappedPeriod === 'intro' || mappedPeriod === 'prepaid') &&
+    expiresAt === null
+  ) {
+    return { status: 'untrusted', reason: 'unsupported' };
+  }
 
   return {
-    tier: info.identifier === 'pro_plus' ? 'pro_plus' : 'pro',
-    isActive: info.isActive,
-    periodType: mapPeriod(info.periodType),
-    store: mapStore(info.store),
-    productId: info.productIdentifier ?? null,
-    expiresAt: info.expirationDate,
-    willRenew: info.willRenew,
-    grantedAt: info.originalPurchaseDate,
-    source: 'revenuecat',
-    environment: mapEnvironment(info.store, info.isSandbox),
-    managementUrl: safeExternalHttpsUrl(
-      customerInfo.managementURL ?? subscriptionInfo?.managementURL,
-    ),
-    verifiedAt: customerInfo.requestDate,
-    offeringId: null,
-    packageId: null,
-    storeUserId: customerInfo.originalAppUserId,
-    priceLabel: null,
+    status: 'trusted',
+    entitlement: {
+      tier: info.identifier === 'pro_plus' ? 'pro_plus' : 'pro',
+      isActive: info.isActive,
+      periodType: mappedPeriod,
+      store: mapStore(info.store),
+      productId: info.productIdentifier ?? null,
+      expiresAt,
+      willRenew: info.willRenew,
+      grantedAt: info.originalPurchaseDate,
+      source: 'revenuecat',
+      environment: mapEnvironment(info.store, info.isSandbox),
+      managementUrl: safeExternalHttpsUrl(
+        customerInfo.managementURL ?? subscriptionInfo?.managementURL,
+      ),
+      verifiedAt: customerInfo.requestDate,
+      offeringId: null,
+      packageId: null,
+      storeUserId: configuredAppUserId,
+      priceLabel: null,
+    },
+    emptyEvidence: null,
   };
+}
+
+function hasTrustedActiveEntitlement(
+  customerInfo: CustomerInfo,
+  configuredAppUserId: string,
+): boolean {
+  const result = classifyRevenueCatEntitlement(customerInfo, configuredAppUserId);
+  return result.status === 'trusted' && Boolean(result.entitlement?.isActive);
 }
 
 /**
@@ -658,6 +876,7 @@ export function customerInfoToStoredEntitlement(
 export async function purchasePackage(
   context: RevenueCatOperationContext,
   plan: PlanId,
+  assertCanDispatch?: () => void,
 ): Promise<PurchaseResult> {
   const adapter = await requireConfigured(context, 'purchase');
   if (!adapter) return { purchased: false };
@@ -671,24 +890,42 @@ export async function purchasePackage(
   }
   if (accountDeletionVendorWritesBlocked()) return { purchased: false };
 
+  let nativeDispatchStarted = false;
   try {
     const result = await ownerCoordinator.runHazard(
       ownerContext(context),
       'purchase',
       loadRevenueCatIdentityAdapter,
-      (current) => current.purchasePackage(selectedPackage),
+      (current) => {
+        assertCanDispatch?.();
+        nativeDispatchStarted = true;
+        return current.purchasePackage(selectedPackage);
+      },
     );
+    if (result.productIdentifier !== selectedPackage.product.identifier) {
+      return {
+        purchased: false,
+        productId: result.productIdentifier,
+        customerInfo: result.customerInfo,
+        purchaseMayHaveCompleted: true,
+      };
+    }
     return {
-      purchased: hasActiveEntitlement(result.customerInfo),
+      purchased: hasTrustedActiveEntitlement(result.customerInfo, context.appUserId),
       productId: result.productIdentifier,
       packageId: selectedPackage.identifier,
       offeringId:
         selectedPackage.presentedOfferingContext?.offeringIdentifier ??
         selectedPackage.offeringIdentifier,
       priceLabel: selectedPackage.product.priceString,
+      purchasePriceLabel: selectedPackage.product.priceString,
+      purchasePeriodLabel: periodLabelFor(plan, selectedPackage),
+      renewalPriceLabel: selectedPackage.product.priceString,
+      renewalPeriodLabel: periodLabelFor(plan, selectedPackage),
       customerInfo: result.customerInfo,
     };
   } catch (error) {
+    if (!nativeDispatchStarted) throw error;
     const purchasesError = error as { code?: string; userCancelled?: boolean };
     if (
       purchasesError.userCancelled ||
@@ -696,12 +933,19 @@ export async function purchasePackage(
     ) {
       return { purchased: false, cancelled: true };
     }
-    throw error;
+    if (
+      adapter.paymentPendingErrorCode &&
+      purchasesError.code === adapter.paymentPendingErrorCode
+    ) {
+      return { purchased: false, pending: true };
+    }
+    return { purchased: false, purchaseMayHaveCompleted: true };
   }
 }
 
 export async function purchaseWinBackPackage(
   context: RevenueCatOperationContext,
+  assertCanDispatch?: () => void,
 ): Promise<PurchaseResult> {
   const adapter = await requireConfigured(context, 'win-back purchase');
   if (!adapter) return { purchased: false };
@@ -711,6 +955,7 @@ export async function purchaseWinBackPackage(
   if (!annualPackage || Platform.OS !== 'ios') return { purchased: false, offerUnavailable: true };
 
   let offers: PurchasesWinBackOffer[] | undefined;
+  let nativeDispatchStarted = false;
   try {
     offers = await ownerCoordinator.runRead(
       ownerContext(context),
@@ -729,19 +974,37 @@ export async function purchaseWinBackPackage(
       ownerContext(context),
       'winback',
       loadRevenueCatIdentityAdapter,
-      (current) => current.purchasePackageWithWinBackOffer(annualPackage, winBackOffer),
+      (current) => {
+        assertCanDispatch?.();
+        nativeDispatchStarted = true;
+        return current.purchasePackageWithWinBackOffer(annualPackage, winBackOffer);
+      },
     );
+    if (result.productIdentifier !== annualPackage.product.identifier) {
+      return {
+        purchased: false,
+        productId: result.productIdentifier,
+        customerInfo: result.customerInfo,
+        purchaseMayHaveCompleted: true,
+      };
+    }
     return {
-      purchased: hasActiveEntitlement(result.customerInfo),
+      purchased: hasTrustedActiveEntitlement(result.customerInfo, context.appUserId),
       productId: result.productIdentifier,
       packageId: annualPackage.identifier,
       offeringId:
         annualPackage.presentedOfferingContext?.offeringIdentifier ??
         annualPackage.offeringIdentifier,
-      priceLabel: winBackOffer.priceString,
+      priceLabel: annualPackage.product.priceString,
+      purchasePriceLabel: winBackOffer.priceString,
+      purchasePeriodLabel: revenueCatPeriodLabel(winBackOffer) ?? undefined,
+      offerDurationLabel: revenueCatOfferDurationLabel(winBackOffer) ?? undefined,
+      renewalPriceLabel: annualPackage.product.priceString,
+      renewalPeriodLabel: periodLabelFor('annual', annualPackage),
       customerInfo: result.customerInfo,
     };
   } catch (error) {
+    if (!nativeDispatchStarted) throw error;
     const purchasesError = error as { code?: string; userCancelled?: boolean };
     if (
       purchasesError.userCancelled ||
@@ -749,7 +1012,13 @@ export async function purchaseWinBackPackage(
     ) {
       return { purchased: false, cancelled: true };
     }
-    throw error;
+    if (
+      adapter.paymentPendingErrorCode &&
+      purchasesError.code === adapter.paymentPendingErrorCode
+    ) {
+      return { purchased: false, pending: true };
+    }
+    return { purchased: false, purchaseMayHaveCompleted: true };
   }
 }
 
@@ -770,7 +1039,10 @@ export async function restorePurchases(
     loadRevenueCatIdentityAdapter,
     (current) => current.restorePurchases(),
   );
-  return { restored: hasActiveEntitlement(customerInfo), customerInfo };
+  return {
+    restored: hasTrustedActiveEntitlement(customerInfo, context.appUserId),
+    customerInfo,
+  };
 }
 
 export async function getCustomerInfo(
@@ -783,6 +1055,45 @@ export async function getCustomerInfo(
     loadRevenueCatIdentityAdapter,
     (current) => current.getCustomerInfo(),
   );
+}
+
+/** Owner-fenced, single-flight network refresh used by explicit recovery Retry. */
+export async function refreshCustomerInfo(
+  context: RevenueCatOperationContext,
+): Promise<CustomerInfo | null> {
+  const active = customerInfoRefreshFlight;
+  if (
+    active &&
+    active.appUserId === context.appUserId &&
+    active.generation === context.lease.generation
+  ) {
+    return awaitAccountGenerationLease(context.lease, () => active.promise);
+  }
+
+  const promise = (async () => {
+    const adapter = await requireConfigured(context, 'customer info refresh');
+    if (!adapter) return null;
+    return ownerCoordinator.runRead(
+      ownerContext(context),
+      loadRevenueCatIdentityAdapter,
+      async (current) => {
+        await current.invalidateCustomerInfoCache();
+        context.lease.assertCurrent();
+        return current.getCustomerInfo();
+      },
+    );
+  })();
+  const flight = {
+    appUserId: context.appUserId,
+    generation: context.lease.generation,
+    promise,
+  } as const;
+  customerInfoRefreshFlight = flight;
+  try {
+    return await awaitAccountGenerationLease(context.lease, () => promise);
+  } finally {
+    if (customerInfoRefreshFlight === flight) customerInfoRefreshFlight = null;
+  }
 }
 
 export async function subscribeToCustomerInfoUpdates(
