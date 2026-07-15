@@ -253,6 +253,62 @@ describe('rescheduleReminders', () => {
     expect(mocks.scheduleNotificationAsync).toHaveBeenCalledTimes(3);
   });
 
+  it('detaches a never-settling schedule inventory read and queued owner-A work at the boundary', async () => {
+    const { rescheduleReminders } = await import('./deliver');
+    const ownerAPrefs = { ...prefs, timezone: 'Etc/GMT+7' };
+
+    await rescheduleReminders(ownerAPrefs);
+
+    let resolveInventory!: (requests: { identifier: string }[]) => void;
+    let markInventoryStarted!: () => void;
+    const inventoryStarted = new Promise<void>((resolve) => {
+      markInventoryStarted = resolve;
+    });
+    mocks.getAllScheduledNotificationsAsync.mockImplementationOnce(() => {
+      markInventoryStarted();
+      return new Promise((resolve) => {
+        resolveInventory = resolve;
+      });
+    });
+
+    const inventory = rescheduleReminders(ownerAPrefs);
+    const queued = rescheduleReminders({
+      ...ownerAPrefs,
+      amEnabled: false,
+      pmEnabled: false,
+      captureReminders: false,
+    });
+    const inventoryResult = inventory.catch((error: unknown) => error);
+    const queuedResult = queued.catch((error: unknown) => error);
+    await inventoryStarted;
+
+    beginAccountGenerationBoundary();
+    boundaryActive = true;
+    await waitForAccountGenerationOperationsToSettle();
+
+    await expect(inventoryResult).resolves.toMatchObject({
+      code: 'ACCOUNT_GENERATION_CHANGED',
+    });
+    await expect(queuedResult).resolves.toMatchObject({
+      code: 'ACCOUNT_GENERATION_CHANGED',
+    });
+
+    resolveInventory([]);
+    await Promise.resolve();
+    endAccountGenerationBoundary();
+    boundaryActive = false;
+
+    await expect(
+      rescheduleReminders({
+        ...ownerAPrefs,
+        amEnabled: false,
+        pmEnabled: false,
+        captureReminders: false,
+        timezone: 'America/Edmonton',
+      }),
+    ).resolves.toBeUndefined();
+  });
+
   it('keeps preference persistence and reconciliation in one queue before later delivery', async () => {
     const { notifyBehavioural, saveAndRescheduleNotifPrefs } = await import('./deliver');
     const disabledPrefs: NotifPrefs = {
@@ -636,7 +692,14 @@ describe('notifyBehavioural', () => {
     await started;
     beginAccountGenerationBoundary();
     boundaryActive = true;
+    let drainSettled = false;
+    const draining = waitForAccountGenerationOperationsToSettle().then(() => {
+      drainSettled = true;
+    });
+    await Promise.resolve();
+    expect(drainSettled).toBe(false);
     releaseSchedule('owner-a-notification');
+    await draining;
 
     await expect(notification).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
     expect(mocks.cancelScheduledNotificationAsync).toHaveBeenCalledWith('owner-a-notification');
@@ -646,35 +709,51 @@ describe('notifyBehavioural', () => {
     );
   });
 
-  it('keeps a detached notification-log mirror scoped to owner A across an A-to-B boundary', async () => {
-    const { notifyBehavioural } = await import('./deliver');
-    mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'owner-a' } } });
-    let releaseInsert!: (value: { error: null }) => void;
-    let markInsertStarted!: () => void;
-    const insertStarted = new Promise<void>((resolve) => {
-      markInsertStarted = resolve;
-    });
-    mocks.insertNotificationLogAbortSignal.mockImplementationOnce(() => {
-      markInsertStarted();
-      return new Promise((resolve) => {
-        releaseInsert = resolve;
+  it.each(['resolve', 'reject'] as const)(
+    'detaches an owner-A notification-log mirror before its late %s and permits owner B delivery',
+    async (lateOutcome) => {
+      const { notifyBehavioural } = await import('./deliver');
+      mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'owner-a' } } });
+      let resolveOwnerA!: (value: { error: null }) => void;
+      let rejectOwnerA!: (error: Error) => void;
+      let markInsertStarted!: () => void;
+      const insertStarted = new Promise<void>((resolve) => {
+        markInsertStarted = resolve;
       });
-    });
+      mocks.insertNotificationLogAbortSignal.mockImplementationOnce(() => {
+        markInsertStarted();
+        return new Promise((resolve, reject) => {
+          resolveOwnerA = resolve;
+          rejectOwnerA = reject;
+        });
+      });
 
-    const notification = notifyBehavioural('replenishment', '12:00');
-    await expect(notification).resolves.toBe(true);
-    await insertStarted;
-    beginAccountGenerationBoundary();
-    boundaryActive = true;
-    releaseInsert({ error: null });
-    await waitForAccountGenerationOperationsToSettle();
-    endAccountGenerationBoundary();
-    boundaryActive = false;
+      await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(true);
+      await insertStarted;
+      beginAccountGenerationBoundary();
+      boundaryActive = true;
+      await waitForAccountGenerationOperationsToSettle();
+      endAccountGenerationBoundary();
+      boundaryActive = false;
 
-    expect(mocks.insertNotificationLog).toHaveBeenCalledWith({
-      user_id: 'owner-a',
-      tier: 'behavioural',
-      kind: 'replenishment',
-    });
-  });
+      mocks.getUser.mockResolvedValueOnce({ data: { user: { id: 'owner-b' } } });
+      await expect(notifyBehavioural('replenishment', '12:00')).resolves.toBe(true);
+      await waitForAccountGenerationOperationsToSettle();
+
+      expect(mocks.insertNotificationLog).toHaveBeenNthCalledWith(1, {
+        user_id: 'owner-a',
+        tier: 'behavioural',
+        kind: 'replenishment',
+      });
+      expect(mocks.insertNotificationLog).toHaveBeenNthCalledWith(2, {
+        user_id: 'owner-b',
+        tier: 'behavioural',
+        kind: 'replenishment',
+      });
+
+      if (lateOutcome === 'resolve') resolveOwnerA({ error: null });
+      else rejectOwnerA(new Error('late notification mirror failure'));
+      await Promise.resolve();
+    },
+  );
 });

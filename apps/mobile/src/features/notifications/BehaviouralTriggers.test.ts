@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 import { createOwnerQueryScope } from '@/lib/query/queryKeys';
 
@@ -121,39 +122,53 @@ describe('behavioural trigger preference gate', () => {
     expect(mocks.notifyBehavioural).toHaveBeenCalledWith('replenishment', '12:00');
   });
 
-  it('drops an owner-A replenishment decision when the account changes during the fresh read', async () => {
-    mocks.hasReplenishmentSignal.mockReset();
-    mocks.hasReplenishmentSignal.mockReturnValue(true);
-    mocks.notifyBehavioural.mockReset();
-    const ownerA = createOwnerQueryScope();
-    let releaseRead!: (result: {
-      isSuccess: boolean;
-      data: { items: never[]; archive: never[] };
-    }) => void;
-    let markReadStarted!: () => void;
-    const readStarted = new Promise<void>((resolve) => {
-      markReadStarted = resolve;
-    });
-    const decision = notifyReplenishmentFromFreshShelf(
-      ownerA,
-      () => {
-        markReadStarted();
-        return new Promise((resolve) => {
-          releaseRead = resolve;
-        });
-      },
-      '12:00',
-    );
-    await readStarted;
+  it.each(['resolve', 'reject'] as const)(
+    'detaches an owner-A Shelf refetch and contains its late %s without sending',
+    async (lateOutcome) => {
+      mocks.hasReplenishmentSignal.mockReset();
+      mocks.hasReplenishmentSignal.mockReturnValue(true);
+      mocks.notifyBehavioural.mockReset();
+      const ownerA = createOwnerQueryScope();
+      let resolveRead!: (result: {
+        isSuccess: boolean;
+        data: { items: never[]; archive: never[] };
+      }) => void;
+      let rejectRead!: (error: Error) => void;
+      let markReadStarted!: () => void;
+      const readStarted = new Promise<void>((resolve) => {
+        markReadStarted = resolve;
+      });
+      const decision = notifyReplenishmentFromFreshShelf(
+        ownerA,
+        () => {
+          markReadStarted();
+          return new Promise((resolve, reject) => {
+            resolveRead = resolve;
+            rejectRead = reject;
+          });
+        },
+        '12:00',
+      );
+      await readStarted;
 
-    beginAccountGenerationBoundary();
-    boundaryActive = true;
-    releaseRead({ isSuccess: true, data: { items: [], archive: [] } });
+      beginAccountGenerationBoundary();
+      boundaryActive = true;
 
-    await expect(decision).resolves.toBe(false);
-    expect(mocks.hasReplenishmentSignal).not.toHaveBeenCalled();
-    expect(mocks.notifyBehavioural).not.toHaveBeenCalled();
-  });
+      await waitForAccountGenerationOperationsToSettle();
+      await expect(decision).resolves.toBe(false);
+      expect(mocks.hasReplenishmentSignal).not.toHaveBeenCalled();
+      expect(mocks.notifyBehavioural).not.toHaveBeenCalled();
+
+      if (lateOutcome === 'resolve') {
+        resolveRead({ isSuccess: true, data: { items: [], archive: [] } });
+      } else {
+        rejectRead(new Error('late Shelf failure'));
+      }
+      await Promise.resolve();
+      expect(mocks.hasReplenishmentSignal).not.toHaveBeenCalled();
+      expect(mocks.notifyBehavioural).not.toHaveBeenCalled();
+    },
+  );
 
   it('treats only the preferences used by mounted background triggers as relevant', () => {
     expect(anyBehaviouralTriggerEnabled(undefined)).toBe(false);

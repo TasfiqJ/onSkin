@@ -7,6 +7,7 @@ import { PAYWALL_COPY } from '@/features/subscription/copy';
 import { PLANS } from '@/features/subscription/plans';
 import { loadEntitlement } from '@/features/subscription/store';
 import {
+  awaitAccountGenerationLease,
   runAccountGenerationOperation,
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
@@ -49,14 +50,18 @@ async function preferenceScheduleIdentifiersAreHealthy(
   if (prefs.captureReminders) expected.add(CAPTURE_REMINDER_ID);
 
   try {
-    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    const scheduled = await awaitAccountGenerationLease(lease, () =>
+      Notifications.getAllScheduledNotificationsAsync(),
+    );
     lease.assertCurrent();
     const actual = scheduled
       .map((request) => request.identifier)
-      .filter((identifier) => PREFERENCE_REMINDER_IDS.includes(
-        identifier as (typeof PREFERENCE_REMINDER_IDS)[number],
-      ));
-    return actual.length === expected.size && actual.every((identifier) => expected.has(identifier));
+      .filter((identifier) =>
+        PREFERENCE_REMINDER_IDS.includes(identifier as (typeof PREFERENCE_REMINDER_IDS)[number]),
+      );
+    return (
+      actual.length === expected.size && actual.every((identifier) => expected.has(identifier))
+    );
   } catch {
     lease.assertCurrent();
     return false;
@@ -76,10 +81,15 @@ function runSerializedNotificationOperation<T>(
     const tail = previous.then(() => gate);
     notificationOperationTail = tail;
 
-    await previous;
     try {
+      await awaitAccountGenerationLease(lease, () => previous);
       lease.assertCurrent();
       return await operation(lease);
+    } catch (error) {
+      // Preserve account-generation cancellation over a queued/native error
+      // that settles after the boundary has already invalidated this owner.
+      lease.assertCurrent();
+      throw error;
     } finally {
       release();
       if (notificationOperationTail === tail) notificationOperationTail = Promise.resolve();
@@ -314,12 +324,20 @@ async function mirrorBehaviouralDelivery(
       const owner = await captureAuthenticatedAccountOwner(lease);
       if (!owner) return;
       lease.assertCurrent();
-      const { error } = await supabase
-        .from('notification_log')
-        .insert({ user_id: owner.userId, tier, kind })
-        .abortSignal(lease.signal);
+      let result: { error: unknown };
+      try {
+        result = await awaitAccountGenerationLease(lease, () =>
+          supabase
+            .from('notification_log')
+            .insert({ user_id: owner.userId, tier, kind })
+            .abortSignal(lease.signal),
+        );
+      } catch (error) {
+        lease.assertCurrent();
+        throw error;
+      }
       lease.assertCurrent();
-      if (error) throw error;
+      if (result.error) throw result.error;
     });
   } catch {
     // Optional owner-bound backend mirror; local cap truth is already durable.

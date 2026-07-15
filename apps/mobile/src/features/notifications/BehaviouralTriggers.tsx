@@ -5,6 +5,7 @@ import { hasReplenishmentSignal } from '@/features/recommendations/replenishment
 import { useProgress } from '@/features/routine/useProgress';
 import { useRamp } from '@/features/routine/useRamp';
 import { useShelf, type ShelfData } from '@/features/shelf/useShelf';
+import { awaitAccountGenerationLease } from '@/lib/auth/accountGeneration';
 import { runOwnerQueryOperation, type OwnerQueryScope } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
@@ -97,7 +98,13 @@ export async function notifyReplenishmentFromFreshShelf(
 ): Promise<boolean> {
   try {
     return await runOwnerQueryOperation(ownerScope, async (lease) => {
-      const freshShelf = await refetchShelf();
+      let freshShelf: Awaited<ReturnType<typeof refetchShelf>>;
+      try {
+        freshShelf = await awaitAccountGenerationLease(lease, refetchShelf);
+      } catch (error) {
+        lease.assertCurrent();
+        throw error;
+      }
       lease.assertCurrent();
       if (!freshShelf.isSuccess || !hasReplenishmentSignal(freshShelf.data)) return false;
       lease.assertCurrent();

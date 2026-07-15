@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
+  waitForAccountGenerationOperationsToSettle,
 } from '@/lib/auth/accountGeneration';
 
 import { DEFAULT_PREFS, type NotifPrefs } from './store';
@@ -86,27 +87,49 @@ describe('notification onboarding choice', () => {
     expect(d.saveAndReschedule).toHaveBeenCalledWith({ amEnabled: false, pmEnabled: false });
   });
 
-  it('does not apply owner-A permission results after an account boundary starts', async () => {
-    const d = deps(true);
-    let releasePermission!: (granted: boolean) => void;
-    let markStarted!: () => void;
-    const started = new Promise<void>((resolve) => {
-      markStarted = resolve;
-    });
-    d.requestPermission.mockImplementationOnce(() => {
-      markStarted();
-      return new Promise<boolean>((resolve) => {
-        releasePermission = resolve;
+  it.each(['resolve', 'reject'] as const)(
+    'detaches a pending owner-A permission prompt and contains its late %s',
+    async (lateOutcome) => {
+      const d = deps(true);
+      let resolvePermission!: (granted: boolean) => void;
+      let rejectPermission!: (error: Error) => void;
+      let markStarted!: () => void;
+      const started = new Promise<void>((resolve) => {
+        markStarted = resolve;
       });
-    });
+      d.requestPermission.mockImplementationOnce(() => {
+        markStarted();
+        return new Promise<boolean>((resolve, reject) => {
+          resolvePermission = resolve;
+          rejectPermission = reject;
+        });
+      });
 
-    const accepting = acceptRoutineReminderSoftAsk(d);
-    await started;
-    beginAccountGenerationBoundary();
-    boundaryActive = true;
-    releasePermission(true);
+      const accepting = acceptRoutineReminderSoftAsk(d);
+      const rejected = expect(accepting).rejects.toMatchObject({
+        code: 'ACCOUNT_GENERATION_CHANGED',
+      });
+      await started;
+      beginAccountGenerationBoundary();
+      boundaryActive = true;
 
-    await expect(accepting).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+      await waitForAccountGenerationOperationsToSettle();
+      await rejected;
+      expect(d.saveAndReschedule).not.toHaveBeenCalled();
+
+      if (lateOutcome === 'resolve') resolvePermission(true);
+      else rejectPermission(new Error('late permission failure'));
+      await Promise.resolve();
+      expect(d.saveAndReschedule).not.toHaveBeenCalled();
+    },
+  );
+
+  it('preserves a same-owner permission failure', async () => {
+    const d = deps(true);
+    const permissionError = new Error('permission unavailable');
+    d.requestPermission.mockRejectedValueOnce(permissionError);
+
+    await expect(acceptRoutineReminderSoftAsk(d)).rejects.toBe(permissionError);
     expect(d.saveAndReschedule).not.toHaveBeenCalled();
   });
 });

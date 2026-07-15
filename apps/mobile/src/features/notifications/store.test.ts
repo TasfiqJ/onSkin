@@ -617,4 +617,58 @@ describe('notification preference store', () => {
 
     expect(mocks.upsert).not.toHaveBeenCalled();
   });
+
+  it.each(['resolve', 'reject'] as const)(
+    'releases a never-settling owner-A mirror queue before its late %s so owner B can mirror',
+    async (lateOutcome) => {
+      mocks.storage.set(KEY, currentRaw());
+      let resolveOwnerA!: (value: { error: null }) => void;
+      let rejectOwnerA!: (error: Error) => void;
+      let markOwnerAStarted!: () => void;
+      const ownerAStarted = new Promise<void>((resolve) => {
+        markOwnerAStarted = resolve;
+      });
+      mocks.upsertAbortSignal.mockImplementationOnce(() => {
+        markOwnerAStarted();
+        return new Promise<{ error: null }>((resolve, reject) => {
+          resolveOwnerA = resolve;
+          rejectOwnerA = reject;
+        });
+      });
+
+      await saveNotifPrefs({ amEnabled: true });
+      await ownerAStarted;
+      beginAccountGenerationBoundary();
+      boundaryActive = true;
+
+      await waitForAccountGenerationOperationsToSettle();
+      endAccountGenerationBoundary();
+      boundaryActive = false;
+
+      mocks.getUser.mockResolvedValue({
+        data: { user: { id: 'user-2' } },
+        error: null,
+      });
+      await saveNotifPrefs({ pmEnabled: true });
+      await settleMirrors();
+
+      expect(mocks.upsert).toHaveBeenCalledTimes(2);
+      expect(mocks.upsert).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ user_id: 'user-1', am_reminder_enabled: true }),
+      );
+      expect(mocks.upsert).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          user_id: 'user-2',
+          am_reminder_enabled: true,
+          pm_reminder_enabled: true,
+        }),
+      );
+
+      if (lateOutcome === 'resolve') resolveOwnerA({ error: null });
+      else rejectOwnerA(new Error('late preference mirror failure'));
+      await Promise.resolve();
+    },
+  );
 });

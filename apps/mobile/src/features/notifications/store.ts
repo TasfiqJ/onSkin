@@ -1,4 +1,8 @@
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+  type AccountGenerationLease,
+} from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import {
   readPrivateItem,
@@ -457,7 +461,10 @@ function toDbTime(hm: string | null): string | null {
 
 let mirrorTail: Promise<void> = Promise.resolve();
 
-async function runSerializedMirror<T>(operation: () => Promise<T>): Promise<T> {
+async function runSerializedMirror<T>(
+  lease: AccountGenerationLease,
+  operation: () => Promise<T>,
+): Promise<T> {
   const previous = mirrorTail.catch(() => undefined);
   let release!: () => void;
   const gate = new Promise<void>((resolve) => {
@@ -465,9 +472,15 @@ async function runSerializedMirror<T>(operation: () => Promise<T>): Promise<T> {
   });
   const tail = previous.then(() => gate);
   mirrorTail = tail;
-  await previous;
   try {
+    await awaitAccountGenerationLease(lease, () => previous);
+    lease.assertCurrent();
     return await operation();
+  } catch (error) {
+    // Do not let an old queued/transport error replace owner-boundary
+    // cancellation, and always release the queue for the next generation.
+    lease.assertCurrent();
+    throw error;
   } finally {
     release();
     if (mirrorTail === tail) mirrorTail = Promise.resolve();
@@ -479,32 +492,40 @@ async function mirror(p: NotifPrefs): Promise<void> {
   const snapshot = Object.freeze({ ...p });
   try {
     await runAccountGenerationOperation(async (lease) => {
-      await runSerializedMirror(async () => {
+      await runSerializedMirror(lease, async () => {
         lease.assertCurrent();
         const owner = await captureAuthenticatedAccountOwner(lease);
         if (!owner) return;
         lease.assertCurrent();
-        const { error } = await supabase
-          .from('notification_preferences')
-          .upsert({
-            user_id: owner.userId,
-            am_reminder_time: toDbTime(snapshot.amTime),
-            pm_reminder_time: toDbTime(snapshot.pmTime),
-            am_reminder_enabled: snapshot.amEnabled,
-            pm_reminder_enabled: snapshot.pmEnabled,
-            streak_nudges: snapshot.streakNudges,
-            replenishment_alerts: snapshot.replenishmentAlerts,
-            capture_reminders: snapshot.captureReminders,
-            quiet_hours_start: toDbTime(snapshot.quietStart),
-            quiet_hours_end: toDbTime(snapshot.quietEnd),
-            timezone: snapshot.timezone,
-            live_activity_enabled: snapshot.liveActivityEnabled,
-            promotional_opt_in: snapshot.promotionalOptIn,
-            lockscreen_discreet: snapshot.lockscreenDiscreet,
-          })
-          .abortSignal(lease.signal);
+        let result: { error: unknown };
+        try {
+          result = await awaitAccountGenerationLease(lease, () =>
+            supabase
+              .from('notification_preferences')
+              .upsert({
+                user_id: owner.userId,
+                am_reminder_time: toDbTime(snapshot.amTime),
+                pm_reminder_time: toDbTime(snapshot.pmTime),
+                am_reminder_enabled: snapshot.amEnabled,
+                pm_reminder_enabled: snapshot.pmEnabled,
+                streak_nudges: snapshot.streakNudges,
+                replenishment_alerts: snapshot.replenishmentAlerts,
+                capture_reminders: snapshot.captureReminders,
+                quiet_hours_start: toDbTime(snapshot.quietStart),
+                quiet_hours_end: toDbTime(snapshot.quietEnd),
+                timezone: snapshot.timezone,
+                live_activity_enabled: snapshot.liveActivityEnabled,
+                promotional_opt_in: snapshot.promotionalOptIn,
+                lockscreen_discreet: snapshot.lockscreenDiscreet,
+              })
+              .abortSignal(lease.signal),
+          );
+        } catch (error) {
+          lease.assertCurrent();
+          throw error;
+        }
         lease.assertCurrent();
-        if (error) throw error;
+        if (result.error) throw result.error;
       });
     });
   } catch {

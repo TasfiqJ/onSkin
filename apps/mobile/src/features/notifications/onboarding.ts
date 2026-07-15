@@ -1,4 +1,7 @@
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  awaitAccountGenerationLease,
+  runAccountGenerationOperation,
+} from '@/lib/auth/accountGeneration';
 
 import { requestPermission, saveAndRescheduleNotifPrefs } from './deliver';
 import type { NotifPrefs, NotifPrefsSaveResult } from './store';
@@ -20,7 +23,13 @@ export async function acceptRoutineReminderSoftAsk(
   deps: NotificationOnboardingDeps = defaultDeps,
 ): Promise<boolean> {
   return runAccountGenerationOperation(async (lease) => {
-    const granted = await deps.requestPermission();
+    let granted: boolean;
+    try {
+      granted = await awaitAccountGenerationLease(lease, deps.requestPermission);
+    } catch (error) {
+      lease.assertCurrent();
+      throw error;
+    }
     lease.assertCurrent();
     await deps.saveAndReschedule(
       granted ? ROUTINE_REMINDERS_ON : ROUTINE_REMINDERS_OFF,
