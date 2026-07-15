@@ -1,8 +1,8 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-15T04:28:35.523Z
+Generated: 2026-07-15T20:21:30.111Z
 Status: blocked
-Git SHA: c6a0f7b466211c0ad34a27134eea7cbeb17fc0be
+Git SHA: 21fae74518aefdd015cd6c8dc95699421104ae97
 Git status: clean
 
 ## Public Identity
@@ -70,8 +70,8 @@ Git status: clean
 
 ## Source Hashes
 
-- `.env.example`: `b82d2217b2ef5fced6fb857dcbd7d713ce15fb7fe746cd75b4963307bcf02658`
-- `package.json`: `851d5a88cf5461d88015f461b53b9ba71b8bd45ea2093018e8f5d36164495113`
+- `.env.example`: `7350e24144ebf44cd060c6c82772e59c1ac9a4945da383f2ba9b71b9dd951213`
+- `package.json`: `d3121bec90301e1bd3cb5129105946ef524d96f3edc3fa9f5c8e5a072713e7c5`
 - `docs/hugeToDo/launch-contract.json`: `43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b`
 - `scripts/launch/contract.mjs`: `6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d`
 - `apps/mobile/app.config.js`: `3c8de04b4d7452e7c41922d4202e934f8f201769be01095503b3969ad3fde0a5`
@@ -83,7 +83,7 @@ Git status: clean
 - `apps/mobile/src/features/growth/shareCard.ts`: `e8254e8c72c51ea30f3fad1d9259e6c810c114bea2ee3d5bcabe89b00c936436`
 - `apps/mobile/src/app/share/conflict/[ruleId].tsx`: `0bd46e014ebcb0e3f2affaacfda83b2685137028564bca5a717fa7ac81f038db`
 - `apps/mobile/src/features/review/policy.ts`: `ae0deae45bf76323f0ce33832cb34d961d5bec065c5177ef6f8eb34df37b21fe`
-- `apps/mobile/src/features/review/prompt.ts`: `e4b1678c10dc04c56f55b9756afeb006410c50255229d3b3143f234d01b236d9`
+- `apps/mobile/src/features/review/prompt.ts`: `c8d002cd9d7297b262e199074e3af4971bc7d752f62afa884ad04c924971f43b`
 - `apps/mobile/src/lib/legal/storeMetadata.ts`: `eb209dc51a5639c1eaae942a9c5426a3044b15a49e0db8e636d3775f55acbb7c`
 - `docs/phase-8/source-of-truth.md`: `a37b4c9915e4433a7aeda3ca42b5131578cf77394e0b8bbf200bcd9a8ceb22e9`
 - `docs/phase-8/link-routing-runbook.md`: `4f794fbe84a313a34441cff9ffbc7a363a0e555fdc23e0248f685ff9e8fe92cd`
@@ -103,19 +103,19 @@ Git status: clean
 - `docs/phase-8/public-site/.well-known/assetlinks.template.json`: `1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319`
 - `docs/HUMAN_SIMULATED_E2E_TESTING.md`: `db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8`
 - `docs/E2E_TESTING_CHECKLIST.md`: `1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f`
-- `docs/USER_FLOW_TREE.md`: `1de6bed099cfdc527c730313228f09cc01dbe43a21b9d35d743cfbad50ba678c`
-- `docs/e2e/generated/human-e2e-manifest.json`: `099f933244a956e7de2c31e79c74cc28ca7add2f71ceb8f873b62f2319508464`
-- `docs/e2e/generated/human-e2e-manifest.md`: `ede586d07bfcc6b1c3924a7c3df88751bab311868701157b482f5ae8b5b6044a`
-- `docs/phase-5/generated/device-qa-packet.json`: `8674f5e039b31de02c3c16a4c0707495f9539beb1a1a680100f893fcda012cd5`
-- `docs/phase-5/generated/device-qa-packet.md`: `09c0cc8443caaa270d76be3206e56a3584cbc184d01df47249e1250701aeefda`
-- `docs/phase-6/generated/payments-qa-packet.json`: `ecd8d2900e8a383c6bf187d6ae900c9d0e1fca50b6bcc81858d14655a19c02f2`
-- `docs/phase-6/generated/payments-qa-packet.md`: `37cc91beca9de5e70d93538bcead7310b4526459133a1872ab4d7c2c174ad83c`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `b7e3ad3bf735a0c6bf895adc3c9285f9f95233f18415f36e830f5f940181a318`
-- `docs/phase-7/generated/core-loop-qa-packet.md`: `3d0978bfba6c326bee0c30f32b46ba7ad6f4632be72b5b94ffe5394fb807369c`
+- `docs/USER_FLOW_TREE.md`: `019abc9d719b00d076dd4a94c8cad70b25257bfa745abefeebe0a6329b5ce66f`
+- `docs/e2e/generated/human-e2e-manifest.json`: `9af984f7adcb87b6d2dfe674c3ea1f62488c1c78057aa43e7e8920dd8856e836`
+- `docs/e2e/generated/human-e2e-manifest.md`: `c9debcd96b9f5303b1c0adf7fe12297a3ccf7836805c6d61292c4d2975b25818`
+- `docs/phase-5/generated/device-qa-packet.json`: `4eac9303ac2043c576106b3dfdb5eb9d03ba201a39a410b5ca889a0be29005b4`
+- `docs/phase-5/generated/device-qa-packet.md`: `6f1cac023aa404dd47beb159e239bc3e51afb6208a9ec3340c0cec2feeb032f1`
+- `docs/phase-6/generated/payments-qa-packet.json`: `dc2b0be40fb9603c0f99f8ec7130109fbc329abfff82112920aafc9b7ee95764`
+- `docs/phase-6/generated/payments-qa-packet.md`: `8bc4c1be060bb546f4e55a9998bf5845d68e7995638fadd85b81ec801c661dcb`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `7ba92e77cc21147908b71b3f6b6f8cb50efffc1effa323a79c4b8314f470e8b4`
+- `docs/phase-7/generated/core-loop-qa-packet.md`: `b438fea29cd5df980123b6a9f72201430907507455f2ef638eed8cd8aeb40a46`
 - `scripts/phase8/build-growth-store-qa-packet.mjs`: `417068519980f0e79e36d565a3deac14de38804daa59d0b5773d88fc89768461`
 - `scripts/phase8/check-growth-store-readiness.mjs`: `014ac3f8dfd4baae43b57c494c778688c180ae996f8cb8b29f0a2660211902a7`
 - `scripts/phase8/check-growth-store-smoke.mjs`: `89cc87c5da60b6eb86ae112c93eb1995309c82dc2336995113dd5a37b8c37a98`
-- `scripts/phase9/lib.mjs`: `4a3308895a90563fa0edd328e3829105eccb45ee74a838e6fede07b8de7ba8cc`
+- `scripts/phase9/lib.mjs`: `4b1c8b7bb69b2d489c0b455022b2568bb9d3a8e6cc91ead4e6c8e09376bd3e5a`
 - `supabase/migrations/20260616000028_phase8_growth.sql`: `9f0deaa909e7a5641c405b4b68870e58e3d143cb5956f2794e092ba704276e44`
 - `supabase/functions/growth-event/index.ts`: `3cba0b97b40c090b061d24009a297c846489891a37b256b1bf47bdfeb95412d1`
 - `supabase/functions/waitlist/index.ts`: `63094a4fe2d065bc33c03af69b80cf55308c00192cc50eb51da6e65ae18d8782`
