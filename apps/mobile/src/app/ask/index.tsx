@@ -335,11 +335,81 @@ function SuggestedPrompt({
   );
 }
 
+function AskComposer({
+  compactPhone,
+  hidden,
+  onSubmit,
+  supportFloorPhone,
+}: {
+  compactPhone: boolean;
+  hidden: boolean;
+  onSubmit: (question: string) => void;
+  supportFloorPhone: boolean;
+}) {
+  const [draft, setDraft] = useState('');
+  const draftRef = useRef('');
+
+  const updateDraft = (nextDraft: string) => {
+    draftRef.current = nextDraft;
+    setDraft(nextDraft);
+  };
+
+  const submitDraft = () => {
+    const question = draftRef.current.trim();
+    if (question.length === 0) return;
+
+    // Clear the synchronous source before publishing so Return and a near-simultaneous
+    // Send press cannot publish the same analytics/message operation twice.
+    draftRef.current = '';
+    setDraft('');
+    onSubmit(question);
+  };
+
+  // Keep this leaf mounted while private-data recovery temporarily replaces the route
+  // body. Returning null preserves its raw draft without rerendering the history.
+  if (hidden) return null;
+
+  return (
+    <View className={supportFloorPhone ? 'pb-2' : compactPhone ? 'pb-6' : 'pb-5'}>
+      <View
+        className="flex-row items-center gap-2.5 rounded-[16px] bg-paper-raised px-3.5 py-2.5"
+        style={{ borderWidth: 1, borderColor: colors.hairlineStrong }}
+      >
+        <TextInput
+          value={draft}
+          onChangeText={updateDraft}
+          onSubmitEditing={submitDraft}
+          placeholder={ASK_COPY.home.inputPlaceholder}
+          placeholderTextColor={colors.mutedLight}
+          accessibilityLabel={ASK_COPY.home.inputA11y}
+          returnKeyType="send"
+          className="flex-1 text-[13px]"
+          style={{ color: colors.ink, minHeight: 48, paddingVertical: 0 }}
+        />
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Send"
+          onPress={submitDraft}
+          className="h-[48px] w-[48px] items-center justify-center rounded-[14px]"
+          style={{ backgroundColor: colors.ink }}
+        >
+          <Text style={{ color: colors.cream, fontSize: 15 }}>↑</Text>
+        </Pressable>
+      </View>
+      <Text
+        className="mt-2 text-center font-mono"
+        style={{ color: colors.muted, fontSize: 10, lineHeight: 14 }}
+      >
+        {ASK_COPY.home.disclosureFooter}
+      </Text>
+    </View>
+  );
+}
+
 export default function AskScreen() {
   const { height, width } = useWindowDimensions();
   const { ask, askSuggested, isError, isFetching, isLoading, hasShelf, retry } = useAsk();
   const [messages, setMessages] = useState<Msg[]>([]);
-  const [input, setInput] = useState('');
   const idRef = useRef(0);
   const ledRef = useRef(false);
   const scrollRef = useRef<ScrollView>(null);
@@ -380,13 +450,6 @@ export default function AskScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, hasShelf]);
 
-  const onSend = () => {
-    const q = input.trim();
-    if (q.length === 0) return;
-    pushTurn(q, ask(q));
-    setInput('');
-  };
-
   const empty = messages.length === 0;
   const compactPhone = height < 640;
   const shortPhone = height < 520;
@@ -402,9 +465,9 @@ export default function AskScreen() {
         : EMPTY_PROMPT_ORDER;
   const promptLabels = supportFloorPhone ? SUPPORT_FLOOR_PROMPT_LABELS : ASK_COPY.home.prompts;
 
-  if (isError) {
-    return (
-      <Screen edges={['top', 'bottom']}>
+  return (
+    <Screen edges={['top', 'bottom']}>
+      {isError ? (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 24 }}
@@ -417,14 +480,13 @@ export default function AskScreen() {
             exitLabel="Back to Today"
           />
         </ScrollView>
-      </Screen>
-    );
-  }
+      ) : null}
 
-  return (
-    <Screen edges={['top', 'bottom']}>
       {/* Header */}
-      <View className="flex-row items-center gap-3 pb-1 pt-1">
+      <View
+        className="flex-row items-center gap-3 pb-1 pt-1"
+        style={isError ? { display: 'none' } : undefined}
+      >
         <RouteIconButton
           accessibilityLabel="Back"
           onPress={() => backOrReplace(router, APP_HOME_ROUTE)}
@@ -449,6 +511,7 @@ export default function AskScreen() {
       <ScrollView
         ref={scrollRef}
         className="flex-1"
+        style={isError ? { display: 'none' } : undefined}
         showsVerticalScrollIndicator={false}
         contentContainerClassName={compactPhone ? 'pb-6' : 'pb-4'}
       >
@@ -532,40 +595,13 @@ export default function AskScreen() {
         )}
       </ScrollView>
 
-      {/* Input bar */}
-      <View className={supportFloorPhone ? 'pb-2' : compactPhone ? 'pb-6' : 'pb-5'}>
-        <View
-          className="flex-row items-center gap-2.5 rounded-[16px] bg-paper-raised px-3.5 py-2.5"
-          style={{ borderWidth: 1, borderColor: colors.hairlineStrong }}
-        >
-          <TextInput
-            value={input}
-            onChangeText={setInput}
-            onSubmitEditing={onSend}
-            placeholder={ASK_COPY.home.inputPlaceholder}
-            placeholderTextColor={colors.mutedLight}
-            accessibilityLabel={ASK_COPY.home.inputA11y}
-            returnKeyType="send"
-            className="flex-1 text-[13px]"
-            style={{ color: colors.ink, minHeight: 48, paddingVertical: 0 }}
-          />
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Send"
-            onPress={onSend}
-            className="h-[48px] w-[48px] items-center justify-center rounded-[14px]"
-            style={{ backgroundColor: colors.ink }}
-          >
-            <Text style={{ color: colors.cream, fontSize: 15 }}>↑</Text>
-          </Pressable>
-        </View>
-        <Text
-          className="mt-2 text-center font-mono"
-          style={{ color: colors.muted, fontSize: 10, lineHeight: 14 }}
-        >
-          {ASK_COPY.home.disclosureFooter}
-        </Text>
-      </View>
+      <AskComposer
+        key="ask-composer"
+        compactPhone={compactPhone}
+        hidden={isError}
+        onSubmit={(question) => pushTurn(question, ask(question))}
+        supportFloorPhone={supportFloorPhone}
+      />
     </Screen>
   );
 }

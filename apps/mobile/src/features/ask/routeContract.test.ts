@@ -95,6 +95,51 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain('mt-3 min-h-[48px] self-start items-center justify-center');
   });
 
+  it('isolates raw composer typing state from the Ask history tree', () => {
+    const home = readAppRoute('ask/index.tsx');
+    const composerStart = home.indexOf('function AskComposer({');
+    const screenStart = home.indexOf('export default function AskScreen()');
+    const composer = home.slice(composerStart, screenStart);
+    const screen = home.slice(screenStart);
+
+    expect(composerStart).toBeGreaterThan(0);
+    expect(screenStart).toBeGreaterThan(composerStart);
+    expect(composer).toContain("const [draft, setDraft] = useState('');");
+    expect(composer).toContain("const draftRef = useRef('');");
+    expect(screen).not.toContain("const [draft, setDraft] = useState('');");
+    expect(screen).not.toContain("const [input, setInput] = useState('');");
+    expect(screen).toContain('<AskComposer');
+    expect(screen).toContain('key="ask-composer"');
+    expect(screen).toContain('hidden={isError}');
+    expect(screen).not.toContain('if (isError)');
+    expect(composer).toContain('if (hidden) return null;');
+  });
+
+  it('uses one trim, blank-rejection, and publish path for Return and Send', () => {
+    const home = readAppRoute('ask/index.tsx');
+    const composerStart = home.indexOf('function AskComposer({');
+    const screenStart = home.indexOf('export default function AskScreen()');
+    const composer = home.slice(composerStart, screenStart);
+    const screen = home.slice(screenStart);
+    const clearRef = composer.indexOf(
+      "draftRef.current = '';",
+      composer.indexOf('const submitDraft'),
+    );
+    const clearState = composer.indexOf("setDraft('');", clearRef);
+    const publish = composer.indexOf('onSubmit(question);', clearState);
+
+    expect(composer).toContain('const question = draftRef.current.trim();');
+    expect(composer).toContain('if (question.length === 0) return;');
+    expect(composer).toContain('onSubmitEditing={submitDraft}');
+    expect(composer).toContain('onPress={submitDraft}');
+    expect(clearRef).toBeGreaterThan(0);
+    expect(clearState).toBeGreaterThan(clearRef);
+    expect(publish).toBeGreaterThan(clearState);
+    expect(composer.match(/onSubmit\(question\);/g)).toHaveLength(1);
+    expect(screen).toContain('onSubmit={(question) => pushTurn(question, ask(question))}');
+    expect(screen.match(/ask\(question\)/g)).toHaveLength(1);
+  });
+
   it('keeps Ask answer what/why/how labels readable on 320px phones', () => {
     const home = readAppRoute('ask/index.tsx');
 
