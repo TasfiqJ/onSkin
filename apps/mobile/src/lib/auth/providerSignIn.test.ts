@@ -6,6 +6,8 @@ import {
   createProviderSignInCoordinator,
   ProviderSignInInFlightError,
   ProviderSignInRequestSupersededError,
+  requestTokenFromLazyProviderModule,
+  type ProviderTokenRequester,
 } from './providerSignIn';
 
 function deferred<T>() {
@@ -157,6 +159,58 @@ describe('provider sign-in coordinator', () => {
     await expect(
       setupResult.coordinator.run('google', requestGoogleToken, setupResult.dependencies),
     ).resolves.toBe(true);
+  });
+
+  it('loads a provider module only after the synchronous prompt lock is owned', async () => {
+    const setupResult = setup();
+    const moduleLoad = deferred<ProviderTokenRequester>();
+    const openNativeProviderUi = vi.fn(async () => ({ idToken: 'apple-token' }));
+    const loadRequestToken = vi.fn(async () => {
+      expect(setupResult.coordinator.isInFlight()).toBe(true);
+      return moduleLoad.promise;
+    });
+
+    const appleRequest = setupResult.coordinator.run(
+      'apple',
+      (assertRequestCurrent) =>
+        requestTokenFromLazyProviderModule(loadRequestToken, assertRequestCurrent),
+      setupResult.dependencies,
+    );
+    const googleRequestToken = vi.fn(async () => ({ idToken: 'google-token' }));
+    const googleRequest = setupResult.coordinator.run(
+      'google',
+      googleRequestToken,
+      setupResult.dependencies,
+    );
+
+    expect(loadRequestToken).toHaveBeenCalledTimes(1);
+    await expect(googleRequest).rejects.toBeInstanceOf(ProviderSignInInFlightError);
+    expect(googleRequestToken).not.toHaveBeenCalled();
+
+    moduleLoad.resolve(openNativeProviderUi);
+    await expect(appleRequest).resolves.toBe(true);
+    expect(openNativeProviderUi).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not open native provider UI when a module load resolves after an auth transition', async () => {
+    const setupResult = setup();
+    const moduleLoad = deferred<ProviderTokenRequester>();
+    const openNativeProviderUi = vi.fn(async () => ({ idToken: 'stale-apple-token' }));
+    const request = setupResult.coordinator.run(
+      'apple',
+      (assertRequestCurrent) =>
+        requestTokenFromLazyProviderModule(async () => moduleLoad.promise, assertRequestCurrent),
+      setupResult.dependencies,
+    );
+
+    setupResult.setPublishedSession(signedIn('owner-b'));
+    setupResult.setAuthTransitionEpoch(5);
+    moduleLoad.resolve(openNativeProviderUi);
+
+    await expect(request).rejects.toBeInstanceOf(ProviderSignInRequestSupersededError);
+    expect(openNativeProviderUi).not.toHaveBeenCalled();
+    expect(setupResult.authenticate).not.toHaveBeenCalled();
+    expect(setupResult.coordinator.isInFlight()).toBe(false);
   });
 
   it('captures the exact session fingerprint before opening native provider UI', async () => {

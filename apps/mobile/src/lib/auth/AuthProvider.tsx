@@ -71,13 +71,12 @@ import {
   verifyEmailAccountCode,
   type PendingEmailAccountCode,
 } from './accountUpgrade';
-import { getAppleIdToken } from './apple';
 import { createAuthMutationFence } from './authMutationFence';
-import { getGoogleIdToken } from './google';
 import { clearAccountIsolatedState, prepareLocalDataForSession } from './localAccountIsolation';
 import {
   createProviderAuthTransitionTracker,
   createProviderSignInCoordinator,
+  requestTokenFromLazyProviderModule,
 } from './providerSignIn';
 import { createProviderAuthCommitCoordinator } from './providerAuthCommit';
 import { latestSessionForCompletedBoundary } from './sessionBoundary';
@@ -574,44 +573,60 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async signInWithApple() {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
-        const authenticated = await providerSignInCoordinator.run('apple', getAppleIdToken, {
-          authenticate: (provider, token, expectedSession, assertRequestCurrent) =>
-            providerAuthCommitCoordinator.runExclusive(() => {
-              assertRequestCurrent();
-              return authenticateWithProviderToken(
-                supabase.auth,
-                { provider, token },
-                expectedSession,
-                assertRequestCurrent,
-                runSupabaseAuthStorageMutation,
-              );
-            }),
-          getAuthTransitionEpoch: providerAuthTransitionTracker.getEpoch,
-          getPublishedSessionFingerprint: () => publishedProviderSessionRef.current,
-          isSessionStable: () => !sessionBoundaryActiveRef.current,
-        });
+        const authenticated = await providerSignInCoordinator.run(
+          'apple',
+          (assertRequestCurrent) =>
+            requestTokenFromLazyProviderModule(
+              async () => (await import('./apple')).getAppleIdToken,
+              assertRequestCurrent,
+            ),
+          {
+            authenticate: (provider, token, expectedSession, assertRequestCurrent) =>
+              providerAuthCommitCoordinator.runExclusive(() => {
+                assertRequestCurrent();
+                return authenticateWithProviderToken(
+                  supabase.auth,
+                  { provider, token },
+                  expectedSession,
+                  assertRequestCurrent,
+                  runSupabaseAuthStorageMutation,
+                );
+              }),
+            getAuthTransitionEpoch: providerAuthTransitionTracker.getEpoch,
+            getPublishedSessionFingerprint: () => publishedProviderSessionRef.current,
+            isSessionStable: () => !sessionBoundaryActiveRef.current,
+          },
+        );
         if (authenticated) pendingEmailCodeRef.current = null;
         return authenticated;
       },
       async signInWithGoogle() {
         if (!isSupabaseConfigured) throw new Error(AUTH_UNAVAILABLE_MESSAGE);
 
-        const authenticated = await providerSignInCoordinator.run('google', getGoogleIdToken, {
-          authenticate: (provider, token, expectedSession, assertRequestCurrent) =>
-            providerAuthCommitCoordinator.runExclusive(() => {
-              assertRequestCurrent();
-              return authenticateWithProviderToken(
-                supabase.auth,
-                { provider, token },
-                expectedSession,
-                assertRequestCurrent,
-                runSupabaseAuthStorageMutation,
-              );
-            }),
-          getAuthTransitionEpoch: providerAuthTransitionTracker.getEpoch,
-          getPublishedSessionFingerprint: () => publishedProviderSessionRef.current,
-          isSessionStable: () => !sessionBoundaryActiveRef.current,
-        });
+        const authenticated = await providerSignInCoordinator.run(
+          'google',
+          (assertRequestCurrent) =>
+            requestTokenFromLazyProviderModule(
+              async () => (await import('./google')).getGoogleIdToken,
+              assertRequestCurrent,
+            ),
+          {
+            authenticate: (provider, token, expectedSession, assertRequestCurrent) =>
+              providerAuthCommitCoordinator.runExclusive(() => {
+                assertRequestCurrent();
+                return authenticateWithProviderToken(
+                  supabase.auth,
+                  { provider, token },
+                  expectedSession,
+                  assertRequestCurrent,
+                  runSupabaseAuthStorageMutation,
+                );
+              }),
+            getAuthTransitionEpoch: providerAuthTransitionTracker.getEpoch,
+            getPublishedSessionFingerprint: () => publishedProviderSessionRef.current,
+            isSessionStable: () => !sessionBoundaryActiveRef.current,
+          },
+        );
         if (authenticated) pendingEmailCodeRef.current = null;
         return authenticated;
       },

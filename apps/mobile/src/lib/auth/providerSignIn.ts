@@ -27,6 +27,10 @@ export class ProviderSignInRequestSupersededError extends Error {
 
 type ProviderTokenResult = { idToken: string } | null;
 
+export type ProviderTokenRequester = (
+  assertRequestCurrent: () => void,
+) => Promise<ProviderTokenResult>;
+
 type ProviderSignInRequest = Readonly<{
   authTransitionEpoch: number;
   expectedSession: AuthSessionFingerprint;
@@ -58,6 +62,21 @@ export type ProviderAuthTransitionTracker = {
   getEpoch: () => number;
   observe: (fingerprint: AuthSessionFingerprint) => boolean;
 };
+
+/**
+ * Keeps provider implementation modules out of AuthProvider root evaluation.
+ * The coordinator invokes this only after installing its synchronous request
+ * lock. Reasserting after the module await prevents a stale load from opening
+ * native provider UI for a newer auth owner.
+ */
+export async function requestTokenFromLazyProviderModule(
+  loadRequestToken: () => Promise<ProviderTokenRequester>,
+  assertRequestCurrent: () => void,
+): Promise<ProviderTokenResult> {
+  const requestToken = await loadRequestToken();
+  assertRequestCurrent();
+  return requestToken(assertRequestCurrent);
+}
 
 function copyFingerprint(fingerprint: AuthSessionFingerprint): AuthSessionFingerprint {
   if (fingerprint.status === 'signed_out') return Object.freeze({ status: 'signed_out' });
