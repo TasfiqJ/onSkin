@@ -227,12 +227,12 @@
   ],
   "categoryCounts": {
     "data-store": 92,
-    "edge-function": 11,
+    "edge-function": 12,
     "feature-flag": 17,
     "generated-packet": 30,
     "native-module": 43,
     "route": 90,
-    "vendor-call": 13
+    "vendor-call": 14
   },
   "items": [
     {
@@ -946,6 +946,13 @@
       "id": "edge-function:subscription-grants",
       "category": "edge-function",
       "source": "supabase/functions/subscription-grants/index.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
+    },
+    {
+      "id": "edge-function:subscription-reconciliation",
+      "category": "edge-function",
+      "source": "supabase/functions/subscription-reconciliation/index.ts",
       "featureIds": ["F-11", "F-12"],
       "readiness": "simulated"
     },
@@ -2300,6 +2307,13 @@
       "source": "apps/mobile/src/features/catalog/client.ts",
       "featureIds": ["F-04"],
       "readiness": "stubbed"
+    },
+    {
+      "id": "vendor-call:origin:www.revenuecat.com",
+      "category": "vendor-call",
+      "source": "apps/mobile/src/lib/iap/revenuecat.ts",
+      "featureIds": ["F-11", "F-12"],
+      "readiness": "simulated"
     },
     {
       "id": "vendor-call:sdk:google-sign-in",

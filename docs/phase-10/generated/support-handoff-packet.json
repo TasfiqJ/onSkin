@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-14T00:08:48.241Z",
+  "generatedAt": "2026-07-15T04:24:08.121Z",
   "status": "pass",
   "strict": false,
-  "gitSha": "4304f19a7546098ccb14a3961aab8fe5e9858324",
-  "gitStatus": "",
+  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
+  "gitStatus": "M docs/hugeToDo/feature-inventory.json",
   "purpose": "Support-desk setup packet for in-app beta feedback query parameters, category routing, severity SLA, and escalation owners.",
   "handoffContract": {
     "supportUrlEnv": "EXPO_PUBLIC_SUPPORT_URL",
@@ -178,8 +178,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 22309,
-      "sha256": "a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e"
+      "bytes": 24237,
+      "sha256": "851d5a88cf5461d88015f461b53b9ba71b8bd45ea2093018e8f5d36164495113"
     },
     {
       "path": "scripts/phase10/build-support-handoff-packet.mjs",
@@ -207,5 +207,7 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 10 support handoff packet generated with a dirty Git worktree; do not use it as final support-desk evidence."
+  ]
 }

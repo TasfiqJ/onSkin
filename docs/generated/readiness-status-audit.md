@@ -1,8 +1,8 @@
 # Readiness Status Audit
 
-Generated: 2026-07-14T00:13:21.522Z
+Generated: 2026-07-15T04:25:02.638Z
 Status: pass
-Strict mode: yes
+Strict mode: no
 
 This generated audit keeps the launch source-of-truth docs aligned with
 the latest committed human-simulated E2E evidence and current verification
@@ -14,8 +14,8 @@ Required release platforms: ios. Android release evidence: not_applicable.
 ## Summary
 
 - Evidence date: 2026-07-13
-- Expected mobile test baseline: 211 mobile test files / 2262 tests
-- Actual mobile test files found: 211
+- Expected mobile test baseline: 244 mobile test files / 2780 tests
+- Actual mobile test files found: 244
 - Blockers: 0
 - Warnings: 0
 

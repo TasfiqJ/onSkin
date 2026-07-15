@@ -1,6 +1,6 @@
 # Launch Readiness
 
-Date: 2026-07-15
+Date: 2026-07-13
 
 This is the fast source of truth for what exists, what is simulated, and what
 still blocks a paid public launch.

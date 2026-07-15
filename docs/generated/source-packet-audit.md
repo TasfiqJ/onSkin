@@ -1,8 +1,8 @@
 # Source Packet Audit
 
-Generated: 2026-07-14T00:12:05.490Z
+Generated: 2026-07-15T04:24:21.751Z
 Status: pass
-Strict mode: yes
+Strict mode: no
 
 This generated audit checks the original `04_repo_docs` source packet and
 verifies that its strategy docs are represented in the active `docs/` tree.
@@ -25,16 +25,16 @@ the top-level packet markdown shape changes without updating the audit.
 
 | Packet doc                     | Active docs status | AGENTS.md | CLAUDE.md | Packet SHA-256 |
 | ------------------------------ | ------------------ | --------- | --------- | -------------- |
-| ARCHITECTURE.md                | identical          | yes       | yes       | bddf81d30d8a   |
+| ARCHITECTURE.md                | identical          | yes       | yes       | 97425b02c80a   |
 | CODEX_IMPLEMENTATION_PROMPT.md | identical          | yes       | yes       | 33b4152b5cfd   |
 | CODE_REVIEW.md                 | identical          | yes       | yes       | 83db5ca6e5ad   |
-| DECISIONS.md                   | identical          | yes       | yes       | 274d03c294f3   |
+| DECISIONS.md                   | identical          | yes       | yes       | 683d1a8439a5   |
 | FEATURE_INDEX.md               | identical          | yes       | yes       | 9e6897ce97f4   |
-| MASTER_PLAN.md                 | identical          | yes       | yes       | 89f355a4d693   |
+| MASTER_PLAN.md                 | identical          | yes       | yes       | 6e4d6b4ff26e   |
 | MASTER_PLAN_UPDATE_PATCH.md    | identical          | yes       | yes       | 634edff435fa   |
 | PRODUCT_REQUIREMENTS.md        | identical          | yes       | yes       | 406d2987034a   |
 | ROADMAP.md                     | identical          | yes       | yes       | c8e0e97427a4   |
-| TESTING_STRATEGY.md            | identical          | yes       | yes       | cea93cca79db   |
+| TESTING_STRATEGY.md            | identical          | yes       | yes       | d77ad89df54d   |
 
 ## Top-Level Packet Files
 
@@ -49,16 +49,16 @@ the top-level packet markdown shape changes without updating the audit.
 | ------------------------------------------------ | ----- | ------------ |
 | 04_repo_docs/AGENTS.md                           | 3385  | ef580a3f1d66 |
 | 04_repo_docs/README.md                           | 2924  | b7ebba84d0dd |
-| 04_repo_docs/docs/ARCHITECTURE.md                | 13419 | bddf81d30d8a |
+| 04_repo_docs/docs/ARCHITECTURE.md                | 18881 | 97425b02c80a |
 | 04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md | 8516  | 33b4152b5cfd |
 | 04_repo_docs/docs/CODE_REVIEW.md                 | 1985  | 83db5ca6e5ad |
-| 04_repo_docs/docs/DECISIONS.md                   | 45384 | 274d03c294f3 |
+| 04_repo_docs/docs/DECISIONS.md                   | 56660 | 683d1a8439a5 |
 | 04_repo_docs/docs/FEATURE_INDEX.md               | 4097  | 9e6897ce97f4 |
-| 04_repo_docs/docs/MASTER_PLAN.md                 | 55528 | 89f355a4d693 |
+| 04_repo_docs/docs/MASTER_PLAN.md                 | 59102 | 6e4d6b4ff26e |
 | 04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md    | 1473  | 634edff435fa |
 | 04_repo_docs/docs/PRODUCT_REQUIREMENTS.md        | 5865  | 406d2987034a |
 | 04_repo_docs/docs/ROADMAP.md                     | 3596  | c8e0e97427a4 |
-| 04_repo_docs/docs/TESTING_STRATEGY.md            | 7409  | cea93cca79db |
+| 04_repo_docs/docs/TESTING_STRATEGY.md            | 9805  | d77ad89df54d |
 
 ## Blockers
 

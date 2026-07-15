@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T00:11:07.226Z",
+  "generatedAt": "2026-07-15T04:24:08.154Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,15 +73,15 @@
     ]
   },
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "59bf64ba58377dd7a9a3bacaff61b95c22395e87",
-  "gitStatus": "",
+  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
+  "gitStatus": "M docs/hugeToDo/feature-inventory.json",
   "files": [
     {
       "packet": "packetContract",
       "path": "package.json",
       "exists": true,
-      "bytes": 22309,
-      "sha256": "a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e"
+      "bytes": 24237,
+      "sha256": "851d5a88cf5461d88015f461b53b9ba71b8bd45ea2093018e8f5d36164495113"
     },
     {
       "packet": "packetContract",
@@ -178,8 +178,8 @@
       "packet": "packetContract",
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 20344,
-      "sha256": "01fd4497bb9bb34e80f51a8daa76513edb383c6cb68686b22e72b8e4d8cf5665"
+      "bytes": 22989,
+      "sha256": "4a3308895a90563fa0edd328e3829105eccb45ee74a838e6fede07b8de7ba8cc"
     },
     {
       "packet": "packetContract",
@@ -297,29 +297,29 @@
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 111319,
-      "sha256": "82b1cb3fbf5c34ef7c6e60def48ba3800febba243608c6b3d5d6aecfe9709f7d"
+      "bytes": 119475,
+      "sha256": "14e81ca3ebdca03acb5fabfbb32dfdcb3eeba6ba7e8ce8a122f48fd319d17e8e"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 73523,
-      "sha256": "7cf950cfae68bca0098f2e13cc89293e41b9c4730bc57bb028274396913d1f02"
+      "bytes": 78755,
+      "sha256": "8275e8ee860e0fdf1bf61f4eba01f93c42bb419b6225743e40033ecafb424dca"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 115474,
-      "sha256": "fb4114de181e8c3a99d92dc029d79c3f0c26e0221e4ebd2679207975f47fb6f3"
+      "bytes": 123764,
+      "sha256": "c3020551abb6a79a5e16a30551c40f1d4bdb129a75f0730dbf75de77df119067"
     },
     {
       "packet": "clinical",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 86913,
-      "sha256": "a69d6617946da38ff45aff4048a72472b2815896c6a95a7678bcb60e39a9e665"
+      "bytes": 92274,
+      "sha256": "8b78cac888b2ea7f65875b6557b68bea78c23726f5b98911734846641f831271"
     },
     {
       "packet": "clinical",
@@ -374,29 +374,29 @@
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.json",
       "exists": true,
-      "bytes": 111319,
-      "sha256": "82b1cb3fbf5c34ef7c6e60def48ba3800febba243608c6b3d5d6aecfe9709f7d"
+      "bytes": 119475,
+      "sha256": "14e81ca3ebdca03acb5fabfbb32dfdcb3eeba6ba7e8ce8a122f48fd319d17e8e"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-worklist.md",
       "exists": true,
-      "bytes": 73523,
-      "sha256": "7cf950cfae68bca0098f2e13cc89293e41b9c4730bc57bb028274396913d1f02"
+      "bytes": 78755,
+      "sha256": "8275e8ee860e0fdf1bf61f4eba01f93c42bb419b6225743e40033ecafb424dca"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.json",
       "exists": true,
-      "bytes": 115474,
-      "sha256": "fb4114de181e8c3a99d92dc029d79c3f0c26e0221e4ebd2679207975f47fb6f3"
+      "bytes": 123764,
+      "sha256": "c3020551abb6a79a5e16a30551c40f1d4bdb129a75f0730dbf75de77df119067"
     },
     {
       "packet": "cosmeticChemistry",
       "path": "docs/phase-3/generated/review-operator-queue.md",
       "exists": true,
-      "bytes": 86913,
-      "sha256": "a69d6617946da38ff45aff4048a72472b2815896c6a95a7678bcb60e39a9e665"
+      "bytes": 92274,
+      "sha256": "8b78cac888b2ea7f65875b6557b68bea78c23726f5b98911734846641f831271"
     },
     {
       "packet": "cosmeticChemistry",
@@ -479,8 +479,8 @@
       "packet": "privacyPlatform",
       "path": "docs/store-privacy-inventory.md",
       "exists": true,
-      "bytes": 10419,
-      "sha256": "9f2926c7b9d514261e2441481cbb4a5716dd3c577844be5754b24d689d2ac864"
+      "bytes": 21854,
+      "sha256": "8543da0e266a036f2ae283c1f9e898ae1c67919746d28777389b6d824295cfe6"
     },
     {
       "packet": "privacyPlatform",
@@ -500,8 +500,8 @@
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/features/settings/actions.ts",
       "exists": true,
-      "bytes": 8475,
-      "sha256": "2694b10eab06294abef612a907cd426f43ac3242ca338dca4224db9013b8d06f"
+      "bytes": 23180,
+      "sha256": "68edc50c8361304e00a50d95371d7a5a3b44c2c6172ba947db489cd089234dd7"
     },
     {
       "packet": "privacyPlatform",
@@ -598,15 +598,15 @@
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/lib/auth/localAccountIsolation.ts",
       "exists": true,
-      "bytes": 4728,
-      "sha256": "9ec3488e1760322f842f0b46ed2b8bd4e08fdc370186c5e24a1472d996e5340b"
+      "bytes": 4831,
+      "sha256": "1af3f7888388489d53c7ce7a803d4ed657a182e48dba5a83a7b300ab4a527509"
     },
     {
       "packet": "privacyPlatform",
       "path": "apps/mobile/src/lib/auth/localAccountIsolation.test.ts",
       "exists": true,
-      "bytes": 8846,
-      "sha256": "dcefcaa46e57ea396b3690081070e3e940fc49521d1544c831637d8b90b753cf"
+      "bytes": 10246,
+      "sha256": "31c934fe2297e2fc7e81d190b2af08ce73e59e625e4fd6a51102d1772e31ab22"
     },
     {
       "packet": "privacyPlatform",
@@ -668,8 +668,8 @@
       "packet": "privacyPlatform",
       "path": "supabase/functions/account-deletion/index.ts",
       "exists": true,
-      "bytes": 12999,
-      "sha256": "910099e3293553b83b5b55b0a923021a316ff8e01af67a59f538e2db9d805490"
+      "bytes": 1558,
+      "sha256": "b1039343476c5bf034f6c593e6933e8b08a688189ccd5964c189decb0d57cf91"
     },
     {
       "packet": "privacyPlatform",
@@ -689,15 +689,15 @@
       "packet": "privacyPlatform",
       "path": "supabase/functions/account-deletion/providerDeletion.ts",
       "exists": true,
-      "bytes": 11026,
-      "sha256": "0aa0f2b92f7473d3d57444d909a7669ea4955d3d6c451f49396358f00b3dc1b0"
+      "bytes": 11122,
+      "sha256": "ab2afbf0ea3beb53373df06b0e073f77b70c2f8d76fd5afa9c23d6d67010d746"
     },
     {
       "packet": "privacyPlatform",
       "path": "supabase/functions/account-deletion/providerDeletion.test.ts",
       "exists": true,
-      "bytes": 17446,
-      "sha256": "ce9e10bedcbd3a85f42009a79c9d4a7c5db9450c7cd1cc6ff8081b6b99e81d81"
+      "bytes": 17762,
+      "sha256": "336488fc323c9dcf681e2df7781ece7bf144974fa705b6bd42c01a5d377e4fbf"
     },
     {
       "packet": "privacyPlatform",
@@ -731,8 +731,8 @@
       "packet": "privacyPlatform",
       "path": "supabase/functions/data-export/index.ts",
       "exists": true,
-      "bytes": 17220,
-      "sha256": "63742bf8fb230789275eeb5ef7d3044dbf3d60e408643a6c85c43d7782cf4bb1"
+      "bytes": 17249,
+      "sha256": "53a7a11d835f71405c3404fe624e235f0b2ef701d42a466226df8c650ff789e5"
     },
     {
       "packet": "privacyPlatform",
@@ -794,8 +794,8 @@
       "packet": "privacyPlatform",
       "path": "scripts/phase9/data-rights-smoke.mjs",
       "exists": true,
-      "bytes": 39492,
-      "sha256": "5a040c40ef5876dd10699509a92c99ebab30ab6e362dcd06d51dbadbf43c930f"
+      "bytes": 62397,
+      "sha256": "8c2f1606232c803343bf323f11ce0cbc69d683e9ac355a1bb181872923f35179"
     },
     {
       "packet": "privacyPlatform",
@@ -808,15 +808,15 @@
       "packet": "privacyPlatform",
       "path": "scripts/phase9/live-data-rights.mjs",
       "exists": true,
-      "bytes": 43632,
-      "sha256": "9e394c076a62b5604a0842441d01edb19cde3b90e057cae354862f7f0b525216"
+      "bytes": 63735,
+      "sha256": "48de113bf49720a6f2a3ad95a72bb194d861d7d9cc6868607160f008c9ec72de"
     },
     {
       "packet": "privacyPlatform",
       "path": "scripts/phase2/check-env.mjs",
       "exists": true,
-      "bytes": 12471,
-      "sha256": "4b46946953830817527a3d4998bd9cb7be4c6d07b3fd60d284659ae0384da449"
+      "bytes": 21150,
+      "sha256": "639e9ac3e68fd15bfed16a8c1c06e881bd2befa9e6ae10bfba8e99cb25fbcf4e"
     },
     {
       "packet": "privacyPlatform",
@@ -826,5 +826,7 @@
       "sha256": "8ad2be6cecfd8be4d73679041204015edb17e492b398e7a59467542da9bace41"
     }
   ],
-  "warnings": []
+  "warnings": [
+    "Phase 3 review packet generated with a dirty Git worktree; do not use it as final reviewer signoff evidence."
+  ]
 }

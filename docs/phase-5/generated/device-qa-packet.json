@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T00:14:11.317Z",
+  "generatedAt": "2026-07-15T04:23:56.103Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,8 +73,8 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "b23e5a7e5a6fac6578e3370b2e036dbe01a15ad9",
-  "gitStatus": "",
+  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
+  "gitStatus": "M docs/hugeToDo/feature-inventory.json",
   "buildEvidence": {
     "iosBuildId": "",
     "androidBuildId": null,
@@ -221,8 +221,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 22309,
-      "sha256": "a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e"
+      "bytes": 24237,
+      "sha256": "851d5a88cf5461d88015f461b53b9ba71b8bd45ea2093018e8f5d36164495113"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -257,14 +257,14 @@
     {
       "path": "apps/mobile/package.json",
       "exists": true,
-      "bytes": 2728,
-      "sha256": "e42fd1a118b9421f68ab3ac48c97f3d8af1500efcbfbe5c3672fbd963bf15dc0"
+      "bytes": 2764,
+      "sha256": "ef04a12aebbca208dd7e59fe9c71a88eee3f07d110cea3a0f856ce8069bb5bab"
     },
     {
       "path": "apps/mobile/src/app/_layout.tsx",
       "exists": true,
-      "bytes": 2918,
-      "sha256": "0cdfb18b35b11fb1080241b1ffcc90fb291b0eac85b7a89c152da2b202ed17db"
+      "bytes": 3270,
+      "sha256": "5803900edbe126b14652ec378b91185e35ca97e62ed939e71c3681de14ca44fe"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/progress.tsx",
@@ -281,8 +281,8 @@
     {
       "path": "apps/mobile/src/app/(tabs)/you.tsx",
       "exists": true,
-      "bytes": 37329,
-      "sha256": "ef9b7c6e0e1e848d60577c19a936d91d228421de548af6f157a762ac38f303bf"
+      "bytes": 37678,
+      "sha256": "ae455ec772dd8d043934560db7b4d68e052fe9093b1c71e73e994147f12872f8"
     },
     {
       "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -401,14 +401,14 @@
     {
       "path": "apps/mobile/src/features/notifications/store.ts",
       "exists": true,
-      "bytes": 10712,
-      "sha256": "a378d37a92aaf8d6a916a1e1f76cdcb5c7ab9f987357931587ab2fc3089fb8e9"
+      "bytes": 10741,
+      "sha256": "cbf85a75c7afdd144be264831256e43daf1b2087a60a66bdd2bd607bf1fb4d81"
     },
     {
       "path": "apps/mobile/src/features/notifications/store.test.ts",
       "exists": true,
-      "bytes": 8192,
-      "sha256": "23c6fa428c62edad422ac7406d3f3db129f2892248d5e39c481fe174dd84f5fe"
+      "bytes": 8235,
+      "sha256": "ae3ba429a00c6681dad809b4a4f2415c7050e9820a48bea900e26fe1cf051ba6"
     },
     {
       "path": "apps/mobile/src/features/notifications/replenishmentOptInMigration.test.ts",
@@ -539,8 +539,8 @@
     {
       "path": "apps/mobile/src/features/shelf/mutations.ts",
       "exists": true,
-      "bytes": 4996,
-      "sha256": "f589aa77cb90e541e0e0c7db52406825f9b535bd1f0c64af7dbf37acebe33e65"
+      "bytes": 5028,
+      "sha256": "b23315180096a84aa1a6fd3f034a7f65ab09162b9ef6b8f9bae5c199df30a38f"
     },
     {
       "path": "apps/mobile/src/features/shelf/paoProvenance.ts",
@@ -587,8 +587,8 @@
     {
       "path": "packages/types/src/database.types.ts",
       "exists": true,
-      "bytes": 37970,
-      "sha256": "daaa58b525c9ab8cbb36aca1e29967ce541401bc6a01396f85b37e7fd1c214ef"
+      "bytes": 39076,
+      "sha256": "bb2096a9a6a4c0d93e787727446794df35849ce2fbb43c289c6073e2637880b4"
     },
     {
       "path": "supabase/migrations/20260710000036_photo_quality_provenance.sql",
@@ -617,14 +617,14 @@
     {
       "path": "apps/mobile/src/features/notifications/deliver.ts",
       "exists": true,
-      "bytes": 9520,
-      "sha256": "91cfffe66cd3dbcd09248a016967ad6eb9d446cc5d8967871d265190590fa943"
+      "bytes": 10851,
+      "sha256": "41786e7e77cce30f649155196c2dba236a3eba264ec46a285fd37f7cbbce46ad"
     },
     {
       "path": "apps/mobile/src/lib/iap/revenuecat.ts",
       "exists": true,
-      "bytes": 18317,
-      "sha256": "f89981290f02bc355ca4ac279b9e660c86d480a9c6e54b041a4d600f0468b105"
+      "bytes": 37620,
+      "sha256": "6e6aab0795c6455d9465af89f3b35b0b1a56866b868aa0bfeab2eeaf3661809d"
     },
     {
       "path": "apps/mobile/src/lib/applock/AppLockProvider.tsx",
@@ -677,38 +677,38 @@
     {
       "path": "scripts/e2e/human-e2e-manifest.mjs",
       "exists": true,
-      "bytes": 59344,
-      "sha256": "38e229c125f6c077d68722ff792825f750610f1e8610008c61834e9f43e6cfe9"
+      "bytes": 72843,
+      "sha256": "6ebdbc979cbe2008cabda4eb138badcdf9a580597f02c8e48e9c9202fa38c1df"
     },
     {
       "path": "scripts/phase2/supabase-rls-smoke.mjs",
       "exists": true,
-      "bytes": 14007,
-      "sha256": "9ed9d074bed5179bc8dc03310f95441dab8a943a16b52866587517e3610e4d8a"
+      "bytes": 14337,
+      "sha256": "0adb471c6c071282495b1ced9d825960e84a828bb3145a3ab09396ac9857ec15"
     },
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 20344,
-      "sha256": "01fd4497bb9bb34e80f51a8daa76513edb383c6cb68686b22e72b8e4d8cf5665"
+      "bytes": 22989,
+      "sha256": "4a3308895a90563fa0edd328e3829105eccb45ee74a838e6fede07b8de7ba8cc"
     },
     {
       "path": "scripts/phase9/live-supabase-adversarial.mjs",
       "exists": true,
-      "bytes": 83599,
-      "sha256": "bb8656691c4d6ff7d2e7320e71d62453bb73025b058698f97ba9da0b31d39825"
+      "bytes": 86172,
+      "sha256": "71059d19c1ee90b095ecddbcbebe36fc235fb529d1fe5c895c12d0653e02dd70"
     },
     {
       "path": "scripts/phase9/rls-adversarial-smoke.mjs",
       "exists": true,
-      "bytes": 10182,
-      "sha256": "4963345f6cb78d6c370d50e8e0595e71dd656f74d7a924ad9faef5475c557e3b"
+      "bytes": 10412,
+      "sha256": "3a0045cced731c7363e5ed6953ab92172a91961e8d3eb51a2a92905bc8e3be80"
     },
     {
       "path": "scripts/phase9/rls-adversarial.mjs",
       "exists": true,
-      "bytes": 19676,
-      "sha256": "a04518fd001aef534da936645b94d4e60ba7e0b377490ea16985fbb88e3e826b"
+      "bytes": 21134,
+      "sha256": "4916f6f0da5e915573dba923058887fca2e154913d165ddaba6e4315cfd81489"
     },
     {
       "path": "docs/DEVICE_SUPPORT_POLICY.md",
@@ -731,20 +731,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 358943,
-      "sha256": "059cf974dc272f3b410ee65bc2b3ef5dcf9b5363c5a277bd7ecd39eeb9f396e6"
+      "bytes": 373686,
+      "sha256": "1de6bed099cfdc527c730313228f09cc01dbe43a21b9d35d743cfbad50ba678c"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
-      "bytes": 41722,
-      "sha256": "fddcdc2850d6f6e04ee2ce4231d0594566a8ba75a8139e020e47c08de15eb2ab"
+      "bytes": 45470,
+      "sha256": "10e71178edcde089211e8dbfb570c1111da443db54856668249ebcf795e67326"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
-      "bytes": 16508,
-      "sha256": "e1b5fd170718368b2c671f896ed23f5b767faa4078e7e957a08c93972f878476"
+      "bytes": 19027,
+      "sha256": "d3fdb28a97c3f66e5ddd7c15d23e991098f7f67852bfb87f5191a6fb93714f7b"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
@@ -796,5 +796,7 @@
     "Missing PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS=true (native Supabase catalog lookup and no-match/error fallback).",
     "Missing PHASE5_ACCESSIBILITY_QA_PASS=true (VoiceOver labels, traversal, and 44 pt controls)."
   ],
-  "warnings": []
+  "warnings": [
+    "Phase 5 device QA packet generated with a dirty Git worktree; do not use it as final native-device evidence."
+  ]
 }

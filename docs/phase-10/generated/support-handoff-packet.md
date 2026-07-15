@@ -1,9 +1,9 @@
 # Phase 10 Beta Support Handoff Packet
 
-Generated: 2026-07-14T00:08:48.241Z
+Generated: 2026-07-15T04:24:08.121Z
 Status: pass
-Git SHA: 4304f19a7546098ccb14a3961aab8fe5e9858324
-Git status: clean
+Git SHA: 91b3dea40bf81057561b406eee08cf394921cdb8
+Git status: DIRTY
 
 This generated packet converts the in-app Beta feedback route into exact
 support-desk setup instructions. It does not prove the external desk exists;
@@ -50,11 +50,11 @@ SLA reports before `PHASE10_SUPPORT_DESK_PASS=true` can be set.
 
 ## Warnings
 
-- None.
+- Phase 10 support handoff packet generated with a dirty Git worktree; do not use it as final support-desk evidence.
 
 ## Source Hashes
 
-- `package.json`: `a16ee01cccdf30fd34b0b956590cf4c750ab927f89db8f507e0df10010663b4e`
+- `package.json`: `851d5a88cf5461d88015f461b53b9ba71b8bd45ea2093018e8f5d36164495113`
 - `scripts/phase10/build-support-handoff-packet.mjs`: `ea5ded8fefa3a0258b71c7cf26f16365cab41add4882a90bc12b8601805cc20a`
 - `scripts/phase10/lib.mjs`: `ede0cba473e147f80438708cbdfb9dbe1a178186997292ad9ee62e38912a7f2a`
 - `apps/mobile/src/app/settings/beta-feedback.tsx`: `0fa17f838f101c1340c11afe026c8efa4fa11534fd12a2d18eb89e0c944954ea`

@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-14T00:09:05.929Z",
+  "generatedAt": "2026-07-15T04:23:56.079Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "133822a75fa14bb5ae7f66a42562ef9506d1474c",
-  "gitStatus": "",
+  "gitSha": "91b3dea40bf81057561b406eee08cf394921cdb8",
+  "gitStatus": "M docs/hugeToDo/feature-inventory.json",
   "summary": {
     "itemCount": 10,
     "domainCounts": {
@@ -20,7 +20,7 @@
     "sourcePathCount": 149,
     "missingSourcePathCount": 0,
     "blockerCount": 0,
-    "warningCount": 0
+    "warningCount": 1
   },
   "items": [
     {
@@ -47,8 +47,8 @@
         {
           "path": ".env.example",
           "exists": true,
-          "bytes": 16403,
-          "sha256": "6b4ec777ad4ba73c3e79b0be8be7ed710f31aaddeb0e0e00496eb6c7db99448c"
+          "bytes": 20536,
+          "sha256": "b82d2217b2ef5fced6fb857dcbd7d713ce15fb7fe746cd75b4963307bcf02658"
         },
         {
           "path": "scripts/phase4/check-source-env.mjs",
@@ -138,20 +138,20 @@
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
           "exists": true,
-          "bytes": 8187,
-          "sha256": "3ea57934c0e3a102de119b9ccf8644bbceab1cc488bdcb0dd4f0fea7583e7689"
+          "bytes": 8216,
+          "sha256": "26366a89aea995023bea428ab2035c996c2d313a9f7eeb41c72a7ec2afaba736"
         },
         {
           "path": "supabase/functions/catalog-search/index.ts",
           "exists": true,
-          "bytes": 5093,
-          "sha256": "7d3986fb22d0463989ae885aed8ac77070e90a2597a9188d3c8358f5d6c09e96"
+          "bytes": 5122,
+          "sha256": "0c0c6ba57620fb9d555c9e9bac1b6640c430ebe3f1400cdfebaeaa1324688362"
         },
         {
           "path": "supabase/functions/catalog-report/index.ts",
           "exists": true,
-          "bytes": 4637,
-          "sha256": "92277aa7dc9ac044ecce389534ae9c58e99a10ecf5e038f7736ffaf6f5268abc"
+          "bytes": 4582,
+          "sha256": "22bfc7ac5d043b4672be693009fcaac01759264146b9c3923f41022a59144d71"
         }
       ]
     },
@@ -571,8 +571,8 @@
         {
           "path": "apps/mobile/src/features/shelf/mutations.ts",
           "exists": true,
-          "bytes": 4996,
-          "sha256": "f589aa77cb90e541e0e0c7db52406825f9b535bd1f0c64af7dbf37acebe33e65"
+          "bytes": 5028,
+          "sha256": "b23315180096a84aa1a6fd3f034a7f65ab09162b9ef6b8f9bae5c199df30a38f"
         },
         {
           "path": "apps/mobile/src/features/shelf/pairedConflicts.ts",
@@ -595,14 +595,14 @@
         {
           "path": "apps/mobile/src/features/shelf/scanLog.test.ts",
           "exists": true,
-          "bytes": 4472,
-          "sha256": "8510e109ebd01569344f623ff002576a588d39a6bc04592685c242852551ce0f"
+          "bytes": 4515,
+          "sha256": "d93692e10f75f58c867192f53e998b4daee2ece6ce9c52ee3e5d7eb6ceeabc51"
         },
         {
           "path": "apps/mobile/src/features/shelf/scanLog.ts",
           "exists": true,
-          "bytes": 1867,
-          "sha256": "0a00c94a4de9c3dedc2815b64340e9195c4f26971910f58fd8ca8066315bc28d"
+          "bytes": 1896,
+          "sha256": "a6f0105d95e3732e37d4427d86ebd90d017c95b4f4258626f9f5595c76881eda"
         },
         {
           "path": "apps/mobile/src/features/shelf/shelfRoutes.test.ts",
@@ -757,8 +757,8 @@
         {
           "path": "apps/mobile/src/features/recommendations/store.ts",
           "exists": true,
-          "bytes": 6565,
-          "sha256": "cc1e9f9912d59f6fc026fa14add69b5e1ee71ac1f6c3c6b39c0b3cc25d3d2a06"
+          "bytes": 6594,
+          "sha256": "2055ba89d9372e9cc1906cbedf6d01ec17dbf954ea72486ba1edf7d0f948b105"
         },
         {
           "path": "apps/mobile/src/features/recommendations/useRecommendations.test.ts",
@@ -775,8 +775,8 @@
         {
           "path": "supabase/functions/catalog-report/index.ts",
           "exists": true,
-          "bytes": 4637,
-          "sha256": "92277aa7dc9ac044ecce389534ae9c58e99a10ecf5e038f7736ffaf6f5268abc"
+          "bytes": 4582,
+          "sha256": "22bfc7ac5d043b4672be693009fcaac01759264146b9c3923f41022a59144d71"
         },
         {
           "path": "supabase/functions/catalog-report/privacy.ts",
@@ -848,8 +848,8 @@
         {
           "path": "docs/USER_FLOW_TREE.md",
           "exists": true,
-          "bytes": 358943,
-          "sha256": "059cf974dc272f3b410ee65bc2b3ef5dcf9b5363c5a277bd7ecd39eeb9f396e6"
+          "bytes": 373686,
+          "sha256": "1de6bed099cfdc527c730313228f09cc01dbe43a21b9d35d743cfbad50ba678c"
         },
         {
           "path": "apps/mobile/src/app/onboarding/products.tsx",
@@ -914,14 +914,14 @@
         {
           "path": "apps/mobile/src/features/notifications/store.ts",
           "exists": true,
-          "bytes": 10712,
-          "sha256": "a378d37a92aaf8d6a916a1e1f76cdcb5c7ab9f987357931587ab2fc3089fb8e9"
+          "bytes": 10741,
+          "sha256": "cbf85a75c7afdd144be264831256e43daf1b2087a60a66bdd2bd607bf1fb4d81"
         },
         {
           "path": "apps/mobile/src/features/notifications/store.test.ts",
           "exists": true,
-          "bytes": 8192,
-          "sha256": "23c6fa428c62edad422ac7406d3f3db129f2892248d5e39c481fe174dd84f5fe"
+          "bytes": 8235,
+          "sha256": "ae3ba429a00c6681dad809b4a4f2415c7050e9820a48bea900e26fe1cf051ba6"
         },
         {
           "path": "apps/mobile/src/features/notifications/replenishmentOptInMigration.test.ts",
@@ -986,8 +986,8 @@
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
           "exists": true,
-          "bytes": 8187,
-          "sha256": "3ea57934c0e3a102de119b9ccf8644bbceab1cc488bdcb0dd4f0fea7583e7689"
+          "bytes": 8216,
+          "sha256": "26366a89aea995023bea428ab2035c996c2d313a9f7eeb41c72a7ec2afaba736"
         },
         {
           "path": "supabase/functions/catalog-lookup/catalogContract.ts",
@@ -1004,8 +1004,8 @@
         {
           "path": "supabase/functions/catalog-search/index.ts",
           "exists": true,
-          "bytes": 5093,
-          "sha256": "7d3986fb22d0463989ae885aed8ac77070e90a2597a9188d3c8358f5d6c09e96"
+          "bytes": 5122,
+          "sha256": "0c0c6ba57620fb9d555c9e9bac1b6640c430ebe3f1400cdfebaeaa1324688362"
         },
         {
           "path": "supabase/functions/catalog-search/catalogContract.ts",
@@ -1078,8 +1078,8 @@
         {
           "path": "supabase/functions/catalog-report/index.ts",
           "exists": true,
-          "bytes": 4637,
-          "sha256": "92277aa7dc9ac044ecce389534ae9c58e99a10ecf5e038f7736ffaf6f5268abc"
+          "bytes": 4582,
+          "sha256": "22bfc7ac5d043b4672be693009fcaac01759264146b9c3923f41022a59144d71"
         },
         {
           "path": "supabase/functions/catalog-report/privacy.ts",
@@ -1188,5 +1188,7 @@
     }
   ],
   "blockers": [],
-  "warnings": []
+  "warnings": [
+    "Phase 4 source worklist generated with a dirty Git worktree; do not use it as final catalog-source evidence."
+  ]
 }

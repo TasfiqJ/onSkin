@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-14T00:12:05.490Z",
+  "generatedAt": "2026-07-15T04:24:21.751Z",
   "status": "pass",
-  "strict": true,
+  "strict": false,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
   "sourceRoot": "04_repo_docs",
   "activeDocsDir": "docs",
@@ -37,8 +37,8 @@
     },
     {
       "path": "04_repo_docs/docs/ARCHITECTURE.md",
-      "bytes": 13419,
-      "sha256": "bddf81d30d8a6f00fe76dff632dbf12b985b5eca9bad4ef55ea6114dd4791d04"
+      "bytes": 18881,
+      "sha256": "97425b02c80ae321ce746c19c05236d2553bb4c807accdd2d33161cb3fa70257"
     },
     {
       "path": "04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md",
@@ -52,8 +52,8 @@
     },
     {
       "path": "04_repo_docs/docs/DECISIONS.md",
-      "bytes": 45384,
-      "sha256": "274d03c294f37d8140b53086827afe7ae943ddac94243770a97d985b166611ad"
+      "bytes": 56660,
+      "sha256": "683d1a8439a52cefcf8c6bda2c4b1b554e6fe1e375d52e5123c22e185ba86c91"
     },
     {
       "path": "04_repo_docs/docs/FEATURE_INDEX.md",
@@ -62,8 +62,8 @@
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN.md",
-      "bytes": 55528,
-      "sha256": "89f355a4d6936c8c2c52a1d93ec592cce00da8ef84446cae48eab166d5b90b56"
+      "bytes": 59102,
+      "sha256": "6e4d6b4ff26e771e60b9e8e7dbd491025fa4d39d45c1201a7508677b207bbfdd"
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md",
@@ -82,8 +82,8 @@
     },
     {
       "path": "04_repo_docs/docs/TESTING_STRATEGY.md",
-      "bytes": 7409,
-      "sha256": "cea93cca79db1e88c410c1427b09144d939250804346d8518a023fc5fab0ff8f"
+      "bytes": 9805,
+      "sha256": "d77ad89df54d259fb1edd0f4ef6ee5f5eb40a50fb003f2fdf184a5acd0fc24f3"
     }
   ],
   "docs": [
@@ -92,10 +92,10 @@
       "title": "Architecture",
       "sourcePath": "04_repo_docs/docs/ARCHITECTURE.md",
       "activePath": "docs/ARCHITECTURE.md",
-      "sourceBytes": 13419,
-      "activeBytes": 13419,
-      "sourceSha256": "bddf81d30d8a6f00fe76dff632dbf12b985b5eca9bad4ef55ea6114dd4791d04",
-      "activeSha256": "bddf81d30d8a6f00fe76dff632dbf12b985b5eca9bad4ef55ea6114dd4791d04",
+      "sourceBytes": 18881,
+      "activeBytes": 18881,
+      "sourceSha256": "97425b02c80ae321ce746c19c05236d2553bb4c807accdd2d33161cb3fa70257",
+      "activeSha256": "97425b02c80ae321ce746c19c05236d2553bb4c807accdd2d33161cb3fa70257",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -131,10 +131,10 @@
       "title": "Decisions",
       "sourcePath": "04_repo_docs/docs/DECISIONS.md",
       "activePath": "docs/DECISIONS.md",
-      "sourceBytes": 45384,
-      "activeBytes": 45384,
-      "sourceSha256": "274d03c294f37d8140b53086827afe7ae943ddac94243770a97d985b166611ad",
-      "activeSha256": "274d03c294f37d8140b53086827afe7ae943ddac94243770a97d985b166611ad",
+      "sourceBytes": 56660,
+      "activeBytes": 56660,
+      "sourceSha256": "683d1a8439a52cefcf8c6bda2c4b1b554e6fe1e375d52e5123c22e185ba86c91",
+      "activeSha256": "683d1a8439a52cefcf8c6bda2c4b1b554e6fe1e375d52e5123c22e185ba86c91",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -157,10 +157,10 @@
       "title": "Master Plan",
       "sourcePath": "04_repo_docs/docs/MASTER_PLAN.md",
       "activePath": "docs/MASTER_PLAN.md",
-      "sourceBytes": 55528,
-      "activeBytes": 55528,
-      "sourceSha256": "89f355a4d6936c8c2c52a1d93ec592cce00da8ef84446cae48eab166d5b90b56",
-      "activeSha256": "89f355a4d6936c8c2c52a1d93ec592cce00da8ef84446cae48eab166d5b90b56",
+      "sourceBytes": 59102,
+      "activeBytes": 59102,
+      "sourceSha256": "6e4d6b4ff26e771e60b9e8e7dbd491025fa4d39d45c1201a7508677b207bbfdd",
+      "activeSha256": "6e4d6b4ff26e771e60b9e8e7dbd491025fa4d39d45c1201a7508677b207bbfdd",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -209,10 +209,10 @@
       "title": "Testing Strategy",
       "sourcePath": "04_repo_docs/docs/TESTING_STRATEGY.md",
       "activePath": "docs/TESTING_STRATEGY.md",
-      "sourceBytes": 7409,
-      "activeBytes": 7409,
-      "sourceSha256": "cea93cca79db1e88c410c1427b09144d939250804346d8518a023fc5fab0ff8f",
-      "activeSha256": "cea93cca79db1e88c410c1427b09144d939250804346d8518a023fc5fab0ff8f",
+      "sourceBytes": 9805,
+      "activeBytes": 9805,
+      "sourceSha256": "d77ad89df54d259fb1edd0f4ef6ee5f5eb40a50fb003f2fdf184a5acd0fc24f3",
+      "activeSha256": "d77ad89df54d259fb1edd0f4ef6ee5f5eb40a50fb003f2fdf184a5acd0fc24f3",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
