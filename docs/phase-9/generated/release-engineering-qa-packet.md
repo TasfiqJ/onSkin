@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-15T20:35:42.598Z
+Generated: 2026-07-15T23:50:10.230Z
 Status: blocked
-Git SHA: 4abdcac4f1de24429f23b40a03d2e3196e41993f
+Git SHA: 009593477f701b9aa5b731fc52c905696715051e
 Git status: clean
 
 ## Release Identity
@@ -75,16 +75,16 @@ Git status: clean
 
 ## Source Hashes
 
-- `.env.example`: `7350e24144ebf44cd060c6c82772e59c1ac9a4945da383f2ba9b71b9dd951213`
+- `.env.example`: `5aa550d77c765a4cdb3feaec88c6ab63b8cb2cdc3b15781d9d358474f123e9ff`
 - `docs/hugeToDo/launch-contract.json`: `43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b`
 - `docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md`: `b3aa6768944665294ecc730c23a4834d150cb09328571befa0edd145697783b5`
 - `scripts/launch/contract.mjs`: `6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d`
-- `package.json`: `d3121bec90301e1bd3cb5129105946ef524d96f3edc3fa9f5c8e5a072713e7c5`
-- `.github/workflows/quality.yml`: `de65e53f1890803983f94d1188e24cba680051a08b11f980e7927326d6473b28`
+- `package.json`: `7efcdf7c170856b835cbb6dc08d5b6f64ef47f751035c1be7fc92957863771a5`
+- `.github/workflows/quality.yml`: `d27c7356a1a117dbbb70996d661cd9467926e29f1bc49cad428130014f847305`
 - `package-lock.json`: `6ea97349506cb741693afc9ab7313c881c4d688e7bcf9f8944c787076951d30e`
 - `.github/workflows/security.yml`: `72951da24cdf28c6b5c62b75e0f6b3659ea6e8b46440e609a213d8943ca13c70`
-- `supabase/config.toml`: `d9611198f104f626fde54fbb6843678427002860211319263a5dd8c8f78a4aa6`
-- `supabase/functions/manifest.json`: `2d7e6c82ae5f323a8b908c69e9cee80f872cc8030fdd9591d4b755656f4af12d`
+- `supabase/config.toml`: `9e9a43474b23512ede53dc855800a5671da39255ad65babec0263241bc08154a`
+- `supabase/functions/manifest.json`: `f1edd4c553de12f1cbd609e26ecf771b96e25c4d66e2c5b4b35faf8642e1085a`
 - `apps/mobile/app.base.json`: `24e1d20a0c61544d2ecb71e39dacafcb17d03a3f20fc7f8e80bf449d900d005c`
 - `apps/mobile/app.config.js`: `3c8de04b4d7452e7c41922d4202e934f8f201769be01095503b3969ad3fde0a5`
 - `apps/mobile/eas.json`: `1672ae9cdd6fbd4c23c5e468fcbe24e761a5fbfa64279d0627328a981dd8c657`
@@ -143,11 +143,11 @@ Git status: clean
 - `apps/mobile/src/lib/auth/accountGeneration.test.ts`: `d372f38fcf8f24a4c07c3b19e5b7b428ffc4a4d8837d24c065cfa36bfae849d1`
 - `apps/mobile/src/lib/auth/localAccountIsolation.ts`: `1af3f7888388489d53c7ce7a803d4ed657a182e48dba5a83a7b300ab4a527509`
 - `apps/mobile/src/lib/auth/localAccountIsolation.test.ts`: `31c934fe2297e2fc7e81d190b2af08ce73e59e625e4fd6a51102d1772e31ab22`
-- `apps/mobile/src/lib/auth/apple.ts`: `830335de64c3bab09efd0903469fcdd7b2a5c7d922dd35156cf20e29aa6ca287`
+- `apps/mobile/src/lib/auth/apple.ts`: `ba35fc4aa35ed8f15bf0bf6acf200f135e7fecbf6ab022bc1f9366754925c53f`
 - `supabase/functions/account-deletion/appleDeletionExecutor.test.ts`: `e55f09381821abd93b0a8b54b9a67ada8260a6b880c5227f719e71f3335590d3`
 - `supabase/functions/account-deletion/appleDeletionExecutor.ts`: `bc30e1f1cb3a15f5203e3038191c830c47cf556fb05877d9679178b60a1229c9`
-- `supabase/functions/account-deletion/appleDeletionNetwork.test.ts`: `ee001a55706803551f1f36ca37aff77eff2b75c0b032c15d3e9516bf52b1c9f0`
-- `supabase/functions/account-deletion/appleDeletionNetwork.ts`: `e9d674a8e1520619a96bd054f9331cb0b9da0df8913a61f639a3e2d674c0da08`
+- `supabase/functions/account-deletion/appleDeletionNetwork.test.ts`: `263e1d01c306e26b806b172c89fe8da11107c7d16e6e181aaf917caef9dc93ca`
+- `supabase/functions/account-deletion/appleDeletionNetwork.ts`: `755073322aea362153c29c2a7114041903fcf398c5d1d026a09eb37e75a02c88`
 - `supabase/functions/account-deletion/authDeletionExecutor.test.ts`: `dd57439418166e2110e3173badb2df40f325eb382dbed924893b39d056109c1e`
 - `supabase/functions/account-deletion/authDeletionExecutor.ts`: `63bed68c219a5eec579454b5ec907cf037a4b9bdde118629949687bab1e3a1e6`
 - `supabase/functions/account-deletion/deletionProviderNetwork.test.ts`: `e40fc09581b7d085425e0d75d8c4f990ef4158c7e41aafde21304a156f484230`
@@ -156,16 +156,16 @@ Git status: clean
 - `supabase/functions/account-deletion/durableDeletionCore.ts`: `5d4ad54e94c9c930f56dcaeeaa7a08b6f1841bf0899a8fc83cae4abd9f97598a`
 - `supabase/functions/account-deletion/durableDeletionCrypto.test.ts`: `9999256ad988831805838f53e45e94d32a355ddfbacf3cea68b8b0c35dedb8cb`
 - `supabase/functions/account-deletion/durableDeletionCrypto.ts`: `5ad0225c135733d25e38b4186cf9cc845822f556ae1763350d63aa9cfb0a6c52`
-- `supabase/functions/account-deletion/durableDeletionDatabaseGateway.test.ts`: `40e1b0878bf323e11ecb792f43e29228dcc10b344e9462e7b14aa48e646aefb5`
-- `supabase/functions/account-deletion/durableDeletionDatabaseGateway.ts`: `73589890fb8fbce18a339c02099a144608ddf8b37a3258ae7a9838c90e68e3d4`
+- `supabase/functions/account-deletion/durableDeletionDatabaseGateway.test.ts`: `10841c7d286cb9df20a25ea65c6b48f4fded8efd4be9accdc3c17fbfde8fec5a`
+- `supabase/functions/account-deletion/durableDeletionDatabaseGateway.ts`: `9b7cd32ca6d8b50b8e5210579f6044de09859ca646aea21aca6a76d2d75c7958`
 - `supabase/functions/account-deletion/durableDeletionEncryptedStateStore.test.ts`: `ec655cd1c3a05dcb3cabf1c83211184b24fd73061b144e10bec94e752394c9d1`
 - `supabase/functions/account-deletion/durableDeletionEncryptedStateStore.ts`: `de77756d9e062d5562478e10417a1a81ad13ea41677b31b7982f093e6aa395fb`
 - `supabase/functions/account-deletion/durableDeletionHttpHandler.test.ts`: `2f2021465dd0f0ed855c0ab2f137e295483b9375181d9484ef1b85aa3552a236`
 - `supabase/functions/account-deletion/durableDeletionHttpHandler.ts`: `1a32239694ee96b6ace4c21e86446d78c1fa1bbd3db2fad77d272fee988f42e5`
-- `supabase/functions/account-deletion/durableDeletionPayloads.test.ts`: `422ac0f1a9e18a66c36debe7073023ffab963f513de21b5dbd03e54321d3e663`
-- `supabase/functions/account-deletion/durableDeletionPayloads.ts`: `26ad525bfcb75e7d989ff878c0aba2f7c8a6d172f36d0f8be945e454f90baa01`
-- `supabase/functions/account-deletion/durableDeletionRuntime.test.ts`: `90e2935a0f4dd49bdce76454ddd97ee9fc87314d19e23962f4e6902f9be30e07`
-- `supabase/functions/account-deletion/durableDeletionRuntime.ts`: `fd1074b5870a322d30f12c8c53332e4b67441e54a5ebd1677e5d9afb6344f797`
+- `supabase/functions/account-deletion/durableDeletionPayloads.test.ts`: `38ce30de1e46b8156876e66684aa4355422c34b1a3a637d85fe38c0b92da6881`
+- `supabase/functions/account-deletion/durableDeletionPayloads.ts`: `c44a87c7139758453926e7369f172ac4e73551ebd0d100dc9ce73bea01c52dcf`
+- `supabase/functions/account-deletion/durableDeletionRuntime.test.ts`: `67f2494679d30ad995b8e0f511ac0868c0c9642ad94cb8bf660f68c23f470424`
+- `supabase/functions/account-deletion/durableDeletionRuntime.ts`: `5d3f7b1c565016dbfd3bd6288c14f8c1a6b58a60a94815eb3bc85926cae8976f`
 - `supabase/functions/account-deletion/durableDeletionRuntimeCore.test.ts`: `cd765768338f221b05a0ba47f4c81788ad01f2c338d4fcb62582891d0553d3f8`
 - `supabase/functions/account-deletion/durableDeletionRuntimeCore.ts`: `34aa1d7af765ed0820c284068b8e01d7f8798fc9cc5a25d1d189adf07ab45bca`
 - `supabase/functions/account-deletion/durableDeletionWorker.test.ts`: `2ef47426e7c1c8d56a077318170f43b7a6975297cca214f8963142f3ce64ae04`
@@ -193,31 +193,31 @@ Git status: clean
 - `supabase/functions/_shared/rateLimitOwnership.test.ts`: `bb87d0d1237e89f69328bb380d8def4d38fb11e30028a347cacd6bf587abe8ee`
 - `supabase/functions/_shared/revenueCatIdentityTombstone.ts`: `69a7ef49ce80686fc0b503604219a4fbea1ac0439d58da83849615da22b6b9b3`
 - `supabase/functions/_shared/revenueCatIdentityTombstone.test.ts`: `8471d17bcc33bb67c49c9ac1f5bb3f0d3a4adf019acf31652c62f1e7bbe1ddcd`
-- `supabase/functions/data-export/index.ts`: `04069ff5b37dfbff770070e6554e8213fe31206e9d6d5e8a6db6b10baf8be0e0`
+- `supabase/functions/data-export/index.ts`: `3743c7a665c8f6f885bf4787a7809174874391373d488892be6367b2d2830908`
 - `supabase/functions/data-export/exportCore.ts`: `ef8828ff0f29dff17cebfca4064860ec2549a249023d9621385d7bce70a9a9bd`
 - `supabase/functions/data-export/exportCore.test.ts`: `f952985bb4a7d3679c5d4752896c72e25540f002ddb0a49ba1c510fe5c335b3b`
 - `supabase/functions/data-export/exportRegistry.ts`: `2535337af91faa1150aa41fb2d1608385eef6cb0787682399ec0475d7cc6fb41`
 - `supabase/functions/data-export/exportRegistry.test.ts`: `6680aaeafc26910dffeca595130a07f13e9f669b27424f40da724883756d9194`
-- `supabase/functions/consent-withdrawal/index.ts`: `ee7324f11dbe77db59a9d0e24c55b871ebdea571f7f8a6ff69f12a2549e2e157`
+- `supabase/functions/consent-withdrawal/index.ts`: `758fc421c25906db740c15e77e3a3f444dc3b598c5e44bb1ad265bdee182fb0c`
 - `supabase/functions/catalog-report/deletionBarrier.test.ts`: `4703409af5da252706febf1b5e72682ef2fa48caf72558645cf170eec7d2cfda`
 - `supabase/functions/order-report-poll/index.ts`: `5709d7128e0e151148a704a8e19d06220bd6d8959eb5f8a7071b0acc7f1f4b81`
 - `supabase/functions/order-report-poll/orderAttributionCore.ts`: `434abcf6f1f7424d503fcec137bd799dc66b520c26d0e76bd36d0820f1dfa7f0`
 - `supabase/functions/order-report-poll/orderAttributionCore.test.ts`: `63105c5562be39504a68075984320cb2105d8f84be04d67d282135f79fb30f6b`
-- `supabase/functions/subscription-grants/index.ts`: `9033c8a722fa813d78928b02ac91bbb5e9fccdf3733953c3fa770a805e33f69e`
-- `supabase/functions/subscription-reconciliation/index.ts`: `d562c65329d0c40a92619d6a0b395459fcc6757219028adeb08f6c91040f605e`
+- `supabase/functions/subscription-grants/index.ts`: `811d35ed95e12e9ae4a6f9dc5d025986f6aebd4300603fab7cdb3877a8e6394d`
+- `supabase/functions/subscription-reconciliation/index.ts`: `e89374b53796fb4317a15088bcc3c29907be07a546c361cffa54fe328c40c254`
 - `supabase/functions/subscription-reconciliation/publicationLease.ts`: `c9a14414a30e17579b381bcdfb87b48216a610d755b3cc1cb7b0bdfbe4520248`
 - `supabase/functions/subscription-reconciliation/publicationLease.test.ts`: `62aa58fa50f9de6211d0f2f038397b03856d082a53e3f138048ba733363a2e8a`
 - `supabase/functions/subscription-reconciliation/reconciliationCore.ts`: `704d863946f59c8744cd949c7875f07dfdf9215e8ec51291c5fe1f63c6f06043`
 - `supabase/functions/subscription-reconciliation/reconciliationCore.test.ts`: `cff4523c5cf1305f90be5889ad366582f32717804fe4d99d524cebf5c7b87ec3`
 - `supabase/functions/subscription-reconciliation/reconciliationContract.test.ts`: `1d724448169cc36cba21d0efd84d2e586a820e718bac1f025d974ea77e1c75b1`
 - `supabase/functions/_shared/verifiedAuthSessionClaims.ts`: `39db868ee1aa517c95b03102990793d52ad45079b6b18bbebb5640ee44207443`
-- `supabase/functions/catalog-search/index.ts`: `f9ac2957764962226fcaf7e938b7b7a6b2d934de75bb0e49f1d79c66bb45ea15`
+- `supabase/functions/catalog-search/index.ts`: `5f99ed4d6662d03f2b8946e9bc38374aae09de2c66d660833be22432329f7cd6`
 - `supabase/functions/catalog-search/catalogContract.ts`: `3b51d16f5b8d5b24a9f87d2e445c28391c8f6407d39150f4085910da97f380e0`
 - `supabase/functions/catalog-search/catalogContract.test.ts`: `18adc4c4572004285afab509ab0d100daeaaa905ce5895d1783a0a792d15cc59`
-- `supabase/functions/catalog-lookup/index.ts`: `7d3ba29cfa384e7eb20fd93fa0e4ec9471da057bcc6385c10fa4a00122bbe17a`
+- `supabase/functions/catalog-lookup/index.ts`: `e6bf8011b1545fba24540b9c5acbb66ca51084ccee2406b01ba854279219a420`
 - `supabase/functions/catalog-lookup/catalogContract.ts`: `e205eae032c22fab88748e3f7b47a92ba65c74b0fa9f4372e03896839af45f94`
 - `supabase/functions/catalog-lookup/catalogContract.test.ts`: `5ae64b92a6baa5707bdea6e6aff7d59ef04e5138354a75e772c1d8ba7b31a6ec`
-- `supabase/functions/catalog-report/index.ts`: `4eec64a1c25be201a2200be9056b986d3cd32391d06777b1de37cb7dbc2cdcf1`
+- `supabase/functions/catalog-report/index.ts`: `880ce46ef60f12c719c20c5584d35def6de24e08dcbd9358cdb6791a67c0807f`
 - `supabase/functions/catalog-report/privacy.ts`: `9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e`
 - `supabase/functions/catalog-report/privacy.test.ts`: `db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac`
 - `supabase/functions/revenuecat-webhook/index.ts`: `8044179aa075d3789c676f266d65c1aa74a7832e4c4ce0e08a59cec38118b33f`
@@ -240,20 +240,20 @@ Git status: clean
 - `supabase/migrations/20260713000052_account_publication_fence.sql`: `b19dcada637f30c4a7756711aed2ad6809877f2e043fc79c9c36ed107169b05d`
 - `supabase/migrations/20260714000053_entitlement_authority_lanes.sql`: `d1aba134336ccb38292134dc5e10528b6a9370489413e5bd2b7992c03525cec1`
 - `supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql`: `8bee91bcaedd3909b2f033ddbce47f1960e366fa30d6442a10b889941f3ad524`
-- `scripts/phase9/lib.mjs`: `4b1c8b7bb69b2d489c0b455022b2568bb9d3a8e6cc91ead4e6c8e09376bd3e5a`
+- `scripts/phase9/lib.mjs`: `463a0aa7832651f966fe437216da56c7c50349f8016c9ab5cf0b5e52fb0bc2c5`
 - `scripts/phase2/supabase-rls-smoke.mjs`: `8f1641ccf40b4733a577e454191041b47dbe239f1af691e4eb2109e8ce237762`
 - `scripts/phase9/release-contact-smoke.mjs`: `d1808486b8747f40e8212ac71e5fa8a21ae8cd8198db63d0ad4cc0c80a6a4e0a`
 - `scripts/phase9/evidence-normalization-smoke.mjs`: `2de1e09c5988c4546cd543cd6fae6c3a90884b112775b7f579a1776ce3bb2be5`
-- `scripts/phase9/release-smoke.mjs`: `3b046993f7da92d40a780d5b14071011e550dd946581defabd18a4c427128da2`
-- `scripts/phase9/rls-adversarial-smoke.mjs`: `fa71a4f722e2a16a63e54b82db4845b8385a9462343b5c180843202edd9962c8`
-- `scripts/phase9/rls-adversarial.mjs`: `4787fdfe8370598f568eb475e889f1c15f2c01f6372131961de053afd00a2509`
+- `scripts/phase9/release-smoke.mjs`: `ca77700d9d4540712f6da5472bfa1cc1113073df0f5df5ef7897ea2c052879e9`
+- `scripts/phase9/rls-adversarial-smoke.mjs`: `6f9b66ef4c03e915d68e7566308dead939144a88824c9beb970d11c641c9b2f0`
+- `scripts/phase9/rls-adversarial.mjs`: `5bbce51da46c5a98e0e7bffeacc796e8fdf41633c2398ca1a75d6d256d537ed9`
 - `scripts/phase9/edge-function-manifest-check.mjs`: `f6bbf56e72aa4cac92a40bbb7d1cf28f3179d707ad1ddf3ef6e37349e95ad6a2`
 - `scripts/phase9/edge-function-manifest-lib.mjs`: `57deb682b6cd1e23e5c820366c94e1676c68d0d16c141d108235e8f5a129c0fd`
 - `scripts/phase9/edge-function-manifest-smoke.mjs`: `f9766fc6e70ab30459a0d28a77316179b5cd0f9fd8aba3241d4061da177d10c7`
 - `scripts/phase9/build-release-qa-packet.mjs`: `231a8d8a7568b44eaf451617fded5f4910ba6438c77aff6e473c0acd5a391ff4`
-- `scripts/phase9/live-supabase-adversarial.mjs`: `04655c7f180eab859ddb1edd9a8a52654db70418d7eb86de4428f9df45ecd9c1`
+- `scripts/phase9/live-supabase-adversarial.mjs`: `9e4e460d33df040a8fc2b8d62837cce826281f0d246f0dd1b8d5dc91a58df157`
 - `scripts/phase9/live-edge-auth.mjs`: `fb6732b68710779acade64da955e0db0522dda69d7b2825b8eae65d939604158`
-- `scripts/phase9/live-data-rights.mjs`: `09ec415fb85071cba9a483ad07c94936713612ce00bbb92c25ee1609c6de5c11`
+- `scripts/phase9/live-data-rights.mjs`: `0e6d7604437b35fa2e9f1fa2a6afbee6743cac829f58f0861e9aff46a28df13a`
 - `scripts/phase9/live-consent-withdrawal.mjs`: `0135ea69f7f7ffe3aa1ef58e208eb77fe63865d69c76c65d69421400121fd54b`
 - `scripts/phase9/consent-withdrawal-evidence.mjs`: `8ba1841b7c8f41f7056dc06ef04f353d801f45c525575574058489b7fe9f865e`
 - `scripts/phase9/consent-withdrawal-evidence.test.mjs`: `c43aaa6ad85cd3b4fb13fd248a925bf0109304528519b99ab7fe88d9a9d0bec8`
@@ -272,14 +272,14 @@ Git status: clean
 - `scripts/phase9/service-writer-deletion-barriers-postgres-rehearsal.sql`: `45dcf34c01b53d77245c08105432e5d47e07df3e7d32f0c3bf205b866657e39b`
 - `scripts/phase9/entitlement-authority-lanes-postgres-rehearsal.sql`: `1717baff7788481ece8fdc21170822b5bbf6f3f9e28e761d83e1fe989f1a9fbc`
 - `scripts/phase9/consent-withdrawal-smoke.mjs`: `b8a6d98bcc469f28b12b278bdeb475abead8b3eaed2ce2490c4cc2d14132fae2`
-- `scripts/phase9/supabase-policy-lint.mjs`: `89b60416278ffd20eb1443b163195419211349edd4410fdb038aeeeb9658f626`
+- `scripts/phase9/supabase-policy-lint.mjs`: `0e95f2369730db305c553dcdab24848ba25674fad0546dec4d09bf89d089535d`
 - `scripts/phase9/security-ci-smoke.mjs`: `49d0e8eb01e28497347e8d2e82d20a40ce487987e97bc592523ad7bafa3060a2`
 - `scripts/phase9/privacy-payload-audit.mjs`: `4f8c1bba9c1b9f8dbb29b8f7dee5b8688a16e609a4b455797ed6472ec5db5fc7`
 - `scripts/phase9/dependency-sbom.mjs`: `0b36b22f21004af4913cd1c72b0f247765b888a3461ee074a3758a8c3d8df351`
 - `scripts/phase9/store-build-inspect.mjs`: `01a6f0f239edcb670b244202fc2b930f94eb46762e556a7021f190752cdcc8db`
-- `docs/phase-9/source-of-truth.md`: `19c40fedb84f4fd32ee58a0e39eb7147e1d115858155bef26cd5d319e34a833b`
-- `docs/phase-9/data-inventory.md`: `3294bc8232122165fc5e30ddeb474f02ea3837f333d0d19f85266ba49f18f21c`
-- `docs/phase-9/edge-function-auth-matrix.md`: `eaf4fcb6043179656a127708e913090c5e9f78624e42b60b858d13775a10ca23`
+- `docs/phase-9/source-of-truth.md`: `abf13053b59ea8e6126628225b55306f9f8cb98dc2b2398229154cb5cc1ac97c`
+- `docs/phase-9/data-inventory.md`: `7fe8598c762f712155900bf42ade9fa46903aea37397e6269683e85b9e5b09f6`
+- `docs/phase-9/edge-function-auth-matrix.md`: `3c83e21900172bc49a8a9414f5f0f527591ceace89f8d3904e49f067c488c01c`
 - `docs/phase-9/observability-payload-audit.md`: `c30c1c814567abb58bbcb1b345c20522e789381f8eee945e8a3268712fcaa709`
 - `docs/phase-9/security-scanner-evidence.md`: `878d37533e0f2cd94a77a774917e829f7436e854816ae9caf623e498c45f8566`
 - `docs/phase-9/rollout-rollback-plan.md`: `7bb4e30b3c5ce98e595cf743b066eb954d44097cf9d4fbc88f656b50bc0983ab`
