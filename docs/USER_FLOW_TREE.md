@@ -962,6 +962,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The app shows stable share-unavailable copy, leaves the user on the photo detail, deletes any temporary decrypted export, and does not include notes or promise redaction.
   - Evidence: Alert text, route state, share helper cleanup assertion, and native share-sheet log when available.
   - Current local evidence: 2026-07-08 In-app browser Expo web at 320 x 568 with `EXPO_PUBLIC_E2E_PROGRESS_PHOTOS=populated`, `EXPO_PUBLIC_E2E_ENTITLEMENT=store_pro`, and `EXPO_PUBLIC_E2E_SHARE_PHOTO_FAILURE=1` opens `/progress/e2e-front-2026-04-01`, verifies the photo detail actions are fully visible 48 px controls, taps the share icon, shows a route-owned confirmation panel with fully visible Cancel and Share photo controls, confirms share failure, stays on the same photo route, and renders the share-unavailable copy as an accessible alert with zero horizontal overflow and no browser warn/error logs. Evidence is in `test-results/human-e2e/2026-07-08/progress-photo-detail-share-failure-current/`.
+- Branch: fast single-photo note typing and blur save
+  - Priority: Important
+  - Automate later: Yes, after the native harness is selected.
+  - Action: Open a populated single-photo detail, focus the note field, type a long note quickly while the photo remains visible, then dismiss the keyboard to blur the field. Open a different photo detail and repeat before returning to the first photo.
+  - Expected result: Each keystroke rerenders only the note-editor leaf, not the full detail image shell or `PhotoImage`. Blurring preserves the existing save behavior and commits the latest draft through the parent photo mutation. The editor is keyed by photo ID so an unsaved draft cannot leak to another photo. The note wrapper, input geometry, focus, placeholder, multiline behavior, and visible photo remain unchanged.
+  - Evidence: React Profiler keystroke commits, supported-iPhone keyboard/focus screenshots or video, persisted-note reload, and focused source contracts.
+  - Current verification status: Focused source contracts cover leaf-owned draft state, latest-draft blur commit, parent-owned mutation, photo-ID remounting, unchanged note geometry, and an unmodified/unmemoized `PhotoImage` subtree. Human-simulated typing, React Profiler, persisted-note reload, and native keyboard/focus proof remain open because no Browser backend or native simulator is available in this task.
 - Branch: single-photo delete confirmation failure
   - Priority: Important
   - Automate later: Yes

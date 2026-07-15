@@ -446,6 +446,49 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain('onPress: () => void sharePhotoImageOnly(photo)');
   });
 
+  it('isolates single-photo note typing below the full detail image shell', () => {
+    const source = readAppRoute('progress/[id].tsx');
+    const editorStart = source.indexOf('function PhotoNoteEditor({');
+    const detailStart = source.indexOf('function PhotoDetailScreenContent()');
+    const editor = source.slice(editorStart, detailStart);
+    const detail = source.slice(detailStart);
+
+    expect(editorStart).toBeGreaterThan(-1);
+    expect(detailStart).toBeGreaterThan(editorStart);
+    expect(editor).toContain('initialNotes: string;');
+    expect(editor).toContain('onCommit: (notes: string) => void;');
+    expect(editor).toContain('const [draft, setDraft] = useState(initialNotes);');
+    expect(editor).toContain('const draftRef = useRef(initialNotes);');
+    expect(editor).toContain('draftRef.current = notes;');
+    expect(editor).toContain('<TextInput');
+    expect(editor).toContain('value={draft}');
+    expect(editor).toContain('onChangeText={updateDraft}');
+    expect(editor).toContain('onBlur={() => onCommit(draftRef.current)}');
+    expect(editor).toContain('placeholder={PHOTO_COPY.detail.notePlaceholder}');
+    expect(editor).toContain('placeholderTextColor="rgba(244,239,231,0.35)"');
+    expect(editor).toContain('multiline');
+    expect(editor).toContain('borderRadius: 16');
+    expect(editor).toContain("backgroundColor: 'rgba(244,239,231,0.06)'");
+    expect(editor).toContain('padding: 16');
+    expect(editor).toContain('marginBottom: \'auto\'');
+    expect(editor).toContain("fontFamily: 'HankenGrotesk-Regular'");
+    expect(editor).toContain('fontSize: 13.5');
+    expect(editor).toContain('lineHeight: 20');
+    expect(editor).toContain('minHeight: 24');
+    expect(editor).not.toContain('usePhotoActions');
+    expect(editor).not.toContain('<PhotoImage');
+
+    expect(detail).toContain('const { reference, remove, note } = usePhotoActions();');
+    expect(detail).toContain('<PhotoImage uri={photo.localUri} style={{ flex: 1 }} />');
+    expect(detail).toContain('<PhotoNoteEditor');
+    expect(detail).toContain('key={photo.id}');
+    expect(detail).toContain("initialNotes={photo.notes ?? ''}");
+    expect(detail).toContain('onCommit={(notes) => note.mutate({ id: photo.id, notes })}');
+    expect(detail).not.toContain('const [draft, setDraft]');
+    expect(detail).not.toContain('<TextInput');
+    expect(source).not.toContain('memo(PhotoImage');
+  });
+
   it('recovers direct review entries without a captured photo', () => {
     const source = readAppRoute('progress/review.tsx');
     const copy = readSource('features/photos/copy.ts');

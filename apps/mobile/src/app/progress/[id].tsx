@@ -27,6 +27,52 @@ function e2ePhotoDeleteFailure(): boolean {
   return process.env.EXPO_PUBLIC_E2E_PHOTO_DELETE_FAILURE === '1';
 }
 
+function PhotoNoteEditor({
+  initialNotes,
+  onCommit,
+}: {
+  initialNotes: string;
+  onCommit: (notes: string) => void;
+}) {
+  const [draft, setDraft] = useState(initialNotes);
+  const draftRef = useRef(initialNotes);
+
+  const updateDraft = (notes: string) => {
+    draftRef.current = notes;
+    setDraft(notes);
+  };
+
+  return (
+    <View
+      style={{
+        borderRadius: 16,
+        backgroundColor: 'rgba(244,239,231,0.06)',
+        padding: 16,
+        marginBottom: 'auto',
+      }}
+    >
+      <Text variant="label" style={{ color: 'rgba(244,239,231,0.4)', marginBottom: 6 }}>
+        {PHOTO_COPY.detail.noteLabel.toUpperCase()}
+      </Text>
+      <TextInput
+        value={draft}
+        onChangeText={updateDraft}
+        onBlur={() => onCommit(draftRef.current)}
+        placeholder={PHOTO_COPY.detail.notePlaceholder}
+        placeholderTextColor="rgba(244,239,231,0.35)"
+        multiline
+        style={{
+          fontFamily: 'HankenGrotesk-Regular',
+          fontSize: 13.5,
+          color: 'rgba(244,239,231,0.85)',
+          lineHeight: 20,
+          minHeight: 24,
+        }}
+      />
+    </View>
+  );
+}
+
 function PhotoDetailScreenContent() {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
@@ -35,7 +81,6 @@ function PhotoDetailScreenContent() {
   const { data } = usePhotos('front');
   const { reference, remove, note } = usePhotoActions();
   const photo = data?.all.find((p) => p.id === id);
-  const [draft, setDraft] = useState(photo?.notes ?? '');
   const [shareConfirmVisible, setShareConfirmVisible] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
@@ -340,33 +385,11 @@ function PhotoDetailScreenContent() {
         ) : null}
 
         {/* note */}
-        <View
-          style={{
-            borderRadius: 16,
-            backgroundColor: 'rgba(244,239,231,0.06)',
-            padding: 16,
-            marginBottom: 'auto',
-          }}
-        >
-          <Text variant="label" style={{ color: 'rgba(244,239,231,0.4)', marginBottom: 6 }}>
-            {PHOTO_COPY.detail.noteLabel.toUpperCase()}
-          </Text>
-          <TextInput
-            value={draft}
-            onChangeText={setDraft}
-            onBlur={() => note.mutate({ id, notes: draft })}
-            placeholder={PHOTO_COPY.detail.notePlaceholder}
-            placeholderTextColor="rgba(244,239,231,0.35)"
-            multiline
-            style={{
-              fontFamily: 'HankenGrotesk-Regular',
-              fontSize: 13.5,
-              color: 'rgba(244,239,231,0.85)',
-              lineHeight: 20,
-              minHeight: 24,
-            }}
-          />
-        </View>
+        <PhotoNoteEditor
+          key={photo.id}
+          initialNotes={photo.notes ?? ''}
+          onCommit={(notes) => note.mutate({ id: photo.id, notes })}
+        />
 
         {!shareConfirmVisible && !deleteConfirmVisible ? (
           <View style={{ flexDirection: 'row', gap: 8, paddingTop: 16 }}>
