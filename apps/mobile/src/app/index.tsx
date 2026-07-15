@@ -13,7 +13,6 @@ import {
   decideAnonymousOnboardingHandoff,
   isAnonymousOnboardingRequestSuperseded,
 } from '@/features/onboarding/welcomeSessionHandoff';
-import { clearLocalPrivateData } from '@/features/settings/localPrivateData';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { isSupabaseConfigured } from '@/lib/env';
@@ -86,6 +85,7 @@ export default function WelcomeScreen() {
     async function resetLocalState() {
       setResetting(true);
       try {
+        const { clearLocalPrivateData } = await import('@/features/settings/localPrivateData');
         await clearLocalPrivateData();
       } catch {
         // Dev-only E2E fixture reset; keep the app reachable if one cleanup backend is unavailable.

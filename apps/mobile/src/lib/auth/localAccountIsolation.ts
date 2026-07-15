@@ -5,7 +5,6 @@ import {
   endEncryptedPhotoAccountBoundary,
   waitForEncryptedPhotoWritesToSettle,
 } from '@/features/photos/encryptedStorage';
-import { clearLocalPrivateData } from '@/features/settings/localPrivateData';
 import { queryClient } from '@/lib/query/queryClient';
 import {
   beginPrivateKVAccountBoundary,
@@ -45,7 +44,10 @@ export type LocalAccountIsolationDependencies = {
 const defaultDependencies: LocalAccountIsolationDependencies = {
   claimOwnership: claimLocalDataOwnership,
   clearCleanupRequired: clearLocalDataCleanupRequired,
-  clearPersistedPrivateData: clearLocalPrivateData,
+  clearPersistedPrivateData: async () => {
+    const { clearLocalPrivateData } = await import('@/features/settings/localPrivateData');
+    await clearLocalPrivateData();
+  },
   clearPlaintextStaging: async () => {
     const { scavengePlaintextStaging } = await import('@/lib/storage/plaintextStaging');
     return scavengePlaintextStaging();

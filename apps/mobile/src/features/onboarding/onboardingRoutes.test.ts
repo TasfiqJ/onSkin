@@ -100,7 +100,14 @@ describe('onboarding route contracts', () => {
     expect(source).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
     expect(source).toContain("process.env.EXPO_PUBLIC_E2E_LOCAL_RESET !== '1'");
     expect(source).toContain("return value === 'local'");
-    expect(source).toContain('clearLocalPrivateData');
+    expect(source).not.toMatch(
+      /import\s+{\s*clearLocalPrivateData\s*}\s+from\s+['"]@\/features\/settings\/localPrivateData['"]/,
+    );
+    expect(source).toContain("await import('@/features/settings/localPrivateData')");
+    expect(source.indexOf('if (!shouldRunE2ELocalReset(params.e2eReset)) return;')).toBeLessThan(
+      source.indexOf("await import('@/features/settings/localPrivateData')"),
+    );
+    expect(source).toContain('await clearLocalPrivateData();');
     expect(source).toContain('queryClient.clear()');
     expect(source).toContain("router.replace('/')");
     expect(source).toContain('...onboardingStatusQueryOptions(ownerScope)');
