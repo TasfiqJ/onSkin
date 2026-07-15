@@ -515,6 +515,7 @@ export async function fetchServerEntitlement(
         .select('*')
         .eq('user_id', owner.userId)
         .limit(1)
+        .abortSignal(lease.signal)
         .maybeSingle();
       lease.assertCurrent();
       assertCurrentOwner();

@@ -12,6 +12,7 @@ import {
   clearEntitlement,
   clearStoreEntitlementIfRevenueCatVerifiedEmpty,
   downgradeToFree,
+  fetchServerEntitlement,
   loadEntitlement,
   readEntitlementCache,
   saveVerifiedEntitlement,
@@ -33,6 +34,7 @@ const mocks = vi.hoisted(() => ({
   getUser: vi.fn(),
   getSession: vi.fn(),
   invoke: vi.fn(),
+  from: vi.fn(),
 }));
 
 vi.mock('@/lib/env', () => ({
@@ -108,7 +110,7 @@ vi.mock('@/lib/supabase/client', () => ({
     functions: {
       invoke: mocks.invoke,
     },
-    from: vi.fn(),
+    from: mocks.from,
   },
 }));
 
@@ -172,12 +174,57 @@ describe('subscription entitlement cache', () => {
       error: null,
     });
     mocks.invoke.mockReset();
+    mocks.from.mockReset();
     mocks.env.appEnvironment = 'development';
     mocks.isSupabaseConfigured = false;
   });
 
   afterEach(() => {
     endAccountGenerationBoundary();
+  });
+
+  it('aborts a delayed server entitlement read when the account generation changes', async () => {
+    mocks.isSupabaseConfigured = true;
+    let rejectQuery!: (reason?: unknown) => void;
+    let observeSignal!: (signal: AbortSignal) => void;
+    const signalObserved = new Promise<AbortSignal>((resolve) => {
+      observeSignal = resolve;
+    });
+    const pendingQuery = new Promise<never>((_resolve, reject) => {
+      rejectQuery = reject;
+    });
+    const builder = {
+      select: vi.fn(),
+      eq: vi.fn(),
+      limit: vi.fn(),
+      abortSignal: vi.fn(),
+      maybeSingle: vi.fn(() => pendingQuery),
+    };
+    builder.select.mockReturnValue(builder);
+    builder.eq.mockReturnValue(builder);
+    builder.limit.mockReturnValue(builder);
+    builder.abortSignal.mockImplementation((signal: AbortSignal) => {
+      observeSignal(signal);
+      signal.addEventListener(
+        'abort',
+        () => rejectQuery(Object.assign(new Error('aborted'), { name: 'AbortError' })),
+        { once: true },
+      );
+      return builder;
+    });
+    mocks.from.mockReturnValue(builder);
+
+    const request = fetchServerEntitlement();
+    const signal = await signalObserved;
+
+    beginAccountGenerationBoundary();
+
+    expect(signal.aborted).toBe(true);
+    await expect(request).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
+    expect(mocks.from).toHaveBeenCalledWith('entitlements');
+    expect(builder.abortSignal).toHaveBeenCalledWith(signal);
+    expect(builder.maybeSingle).toHaveBeenCalledTimes(1);
+    expect(mocks.writes).toBe(0);
   });
 
   it('grants and persists a versioned development reverse trial when Supabase is not configured', async () => {
