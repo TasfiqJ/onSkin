@@ -34,6 +34,23 @@ export function createLocalDateBoundaryStore(initial: LocalDateBoundaryIdentity)
 
 const initialSnapshot = readLocalDateBoundarySnapshot();
 const store = createLocalDateBoundaryStore(identityFromSnapshot(initialSnapshot));
+let registeredBoundaryReconciler: (() => void) | null = null;
+
+/** Register the app-lifetime coordinator without making pure date consumers
+ * import React Native's AppState module in Node/unit-test environments. */
+export function registerLocalDateBoundaryReconciler(reconcile: () => void): void {
+  registeredBoundaryReconciler = reconcile;
+}
+
+/** Synchronously publish the current identity through the configured coordinator.
+ * The direct fallback keeps routine controls safe before app bootstrap completes. */
+export function reconcileLocalDateBoundarySnapshot(): void {
+  if (registeredBoundaryReconciler) {
+    registeredBoundaryReconciler();
+    return;
+  }
+  publishLocalDateBoundarySnapshot(readLocalDateBoundarySnapshot());
+}
 
 export function publishLocalDateBoundarySnapshot(snapshot: LocalDateBoundarySnapshot): boolean {
   return store.publish(identityFromSnapshot(snapshot));

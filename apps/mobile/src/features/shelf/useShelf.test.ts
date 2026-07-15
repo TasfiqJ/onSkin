@@ -1,17 +1,66 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { detectConflicts, isReassuring } from '@/features/intelligence/engine';
 import { conflictKey } from '@/features/intelligence/conflictIdentity';
 import { STARTER_RULES } from '@/features/intelligence/rules';
+import { queryKeys } from '@/lib/query/queryKeys';
 
 import { isEstimatedExpiry } from './expiry';
 import { formatShelfMetaLine, SHELF_META_SEPARATOR } from './metadata';
 import { pairedProductIdsForResolvedConflicts } from './pairedConflicts';
 import type { ShelfProduct } from './store';
+import { useShelf, useShelfFromBoundary } from './useShelf';
+
+const mocks = vi.hoisted(() => ({
+  boundary: { localDate: '2026-07-15', timeZone: 'America/Toronto' },
+  ownerScope: { generation: 7, ownerId: 'owner-a' },
+  useLocalDateBoundary: vi.fn(),
+  useOwnerQueryScope: vi.fn(),
+  useQuery: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-query', () => ({
+  useQuery: mocks.useQuery,
+}));
+
+vi.mock('@/lib/query/localDateBoundaryStore', () => ({
+  reconcileLocalDateBoundarySnapshot: vi.fn(),
+  useLocalDateBoundary: mocks.useLocalDateBoundary,
+}));
+
+vi.mock('@/lib/query/useOwnerQueryScope', () => ({
+  useOwnerQueryScope: mocks.useOwnerQueryScope,
+}));
+
+vi.mock('@/features/intelligence/overrides', () => ({
+  loadConflictChoices: vi.fn(),
+}));
+
+vi.mock('@/features/scheduler/profile', () => ({
+  readProfileBitsWithLease: vi.fn(),
+}));
+
+vi.mock('./store', () => ({
+  loadShelf: vi.fn(),
+}));
 
 const profile = { sensitivity: 'sensitive', pregnancy: false } as const;
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  mocks.useLocalDateBoundary.mockReturnValue(mocks.boundary);
+  mocks.useOwnerQueryScope.mockReturnValue(mocks.ownerScope);
+  mocks.useQuery.mockReturnValue({
+    data: undefined,
+    isError: false,
+    isFetching: false,
+    isPending: true,
+    isSuccess: false,
+    refetch: vi.fn(),
+  });
+});
 
 function shelfProduct(overrides: Partial<ShelfProduct> = {}): ShelfProduct {
   return {
@@ -111,6 +160,34 @@ describe('shelf paired badge resolution gate', () => {
     expect(
       pairedProductIdsForResolvedConflicts([conflict!], new Set([key]), new Set([key])),
     ).toEqual(new Set());
+  });
+});
+
+describe('Shelf local-date source sharing', () => {
+  it('uses the exact route-owned boundary without mounting another date subscription', () => {
+    const boundary = { localDate: '2026-08-01', timeZone: 'Europe/Paris' };
+
+    useShelfFromBoundary(boundary);
+
+    expect(mocks.useLocalDateBoundary).not.toHaveBeenCalled();
+    expect(mocks.useOwnerQueryScope).toHaveBeenCalledOnce();
+    expect(mocks.useQuery).toHaveBeenCalledOnce();
+    expect(mocks.useQuery.mock.calls[0]?.[0]).toMatchObject({
+      queryKey: queryKeys.shelf(mocks.ownerScope, boundary),
+      networkMode: 'always',
+      retry: false,
+      retryOnMount: false,
+    });
+  });
+
+  it('preserves the standalone hook by delegating its subscribed boundary', () => {
+    useShelf();
+
+    expect(mocks.useLocalDateBoundary).toHaveBeenCalledOnce();
+    expect(mocks.useQuery).toHaveBeenCalledOnce();
+    expect(mocks.useQuery.mock.calls[0]?.[0]).toMatchObject({
+      queryKey: queryKeys.shelf(mocks.ownerScope, mocks.boundary),
+    });
   });
 });
 

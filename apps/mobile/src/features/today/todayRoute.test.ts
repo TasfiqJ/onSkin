@@ -8,25 +8,55 @@ function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
 }
 
+function readTodayFeature(path: string): string {
+  return readFileSync(`${APP_DIR}/../features/today/${path}`, 'utf8');
+}
+
 describe('Today route mobile contracts', () => {
+  it('owns one route observer graph instead of remounting standalone data hooks', () => {
+    const today = readAppRoute('(tabs)/today.tsx');
+    const viewModel = readTodayFeature('useTodayViewModel.ts');
+
+    expect(today.match(/useLocalDateBoundary\(\)/g)).toHaveLength(1);
+    expect(today.match(/useShelfFromBoundary\(boundary\)/g)).toHaveLength(1);
+    expect(today.match(/useTodayViewModel\(\{ boundary, routineType, shelf \}\)/g)).toHaveLength(1);
+    expect(viewModel).toContain('usePlanFromSources(shelf, profile)');
+    expect(viewModel).toContain('useRampFromPlan(plan, boundary)');
+    expect(viewModel).toContain('useCycleFromSources(shelf, profile, ramp, boundary)');
+    expect(viewModel).toContain('useProgressFromBoundary(boundary)');
+    expect(today).not.toMatch(/\busePlan\(/);
+    expect(today).not.toMatch(/\buseProgress\(/);
+    expect(today).not.toMatch(/\buseCycle\(/);
+    expect(today).not.toMatch(/<ReverseTrialBanner(?:\s|>)/);
+    expect(today).not.toMatch(/<RecommendationsTeaser(?:\s|>)/);
+  });
+
   it('keeps check-offs closed until private completion history is readable', () => {
     const today = readAppRoute('(tabs)/today.tsx');
+    const viewModel = readTodayFeature('useTodayViewModel.ts');
     const streak = readAppRoute('routine/streak.tsx');
     const welcomeBack = readAppRoute('routine/welcome-back.tsx');
 
     expect(today).toContain(
       'completionQuery.isPending || completionQuery.isError || completionMutationFailed',
     );
-    expect(today).toContain('retry: false');
-    const store = readFileSync(`${APP_DIR}/../features/today/completionsStore.ts`, 'utf8');
+    expect(viewModel).toContain('retry: false');
+    expect(viewModel).toContain("networkMode: 'always'");
+    const store = readTodayFeature('completionsStore.ts');
     expect(store).toContain('EXPO_PUBLIC_E2E_COMPLETION_STORAGE_FAILURE');
     expect(store).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
-    expect(today).toContain("typeof __DEV__ !== 'undefined'");
-    expect(today).toContain("EXPO_PUBLIC_E2E_COMPLETION_STORAGE_FAILURE === 'today_once'");
+    expect(viewModel).toContain("typeof __DEV__ !== 'undefined'");
+    expect(viewModel).toContain("EXPO_PUBLIC_E2E_COMPLETION_STORAGE_FAILURE === 'today_once'");
+    expect(viewModel).toContain('EXPO_PUBLIC_E2E_COMPLETION_COMMIT_DELAY_MS');
+    expect(viewModel).toContain('MAX_E2E_COMPLETION_COMMIT_DELAY_MS = 3_000');
+    expect(viewModel).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
     expect(today).toContain('<CompletionHistoryState');
-    expect(today).toContain('catch {\n      setCompletionMutationFailed(true);');
-    expect(today).toContain('if (result.isSuccess) setCompletionMutationFailed(false);');
-    expect(today).toContain('onRetry={() => void retryCompletionHistory()}');
+    expect(viewModel).toContain(
+      'const completionMutationFailed = completionMutationFailureScope === completionActionScope;',
+    );
+    expect(viewModel).toContain('setCompletionMutationFailureScope(completionActionScope);');
+    expect(viewModel).toContain('failedScope === completionActionScope ? null : failedScope');
+    expect(today).toContain('onRetry={() => void todayViewModel.retryCompletionHistory()}');
     for (const source of [streak, welcomeBack]) {
       expect(source).toContain('progressQuery.isPending || progressQuery.isError');
       expect(source).toContain('<CompletionHistoryState');
@@ -41,8 +71,8 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain("router.push('/routine/streak')");
     expect(source).toContain('function streakLabel(days: number): string');
     expect(source).toContain("days === 1 ? 'day' : 'days'");
-    expect(source).toContain('{streakLabel(progress.streak)}');
-    expect(source).not.toContain('{progress.streak} days');
+    expect(source).toContain('{streakLabel(streak)}');
+    expect(source).not.toContain('{streak} days');
     expect(source).toContain('min-h-[48px]');
     expect(source).not.toContain('min-h-[44px]');
     expect(source).toContain('px-4 py-2.5');
@@ -96,9 +126,9 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('Review pregnancy and breastfeeding setting');
     expect(source).toContain("router.push('/settings/skin-profile?returnTo=today')");
     expect(source).toContain("contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}");
-    expect(source).toContain('<ReverseTrialBanner compact={compactPhone} />');
-    expect(source).toContain('<ReverseTrialBanner compact={compactPhone} tone="night" />');
-    expect(source).toContain("className={compactPhone ? 'mt-3' : 'mt-4'}");
+    expect(source.match(/<ReverseTrialBannerFromEntitlement/g)).toHaveLength(1);
+    expect(source).toContain("tone={dark ? 'night' : 'light'}");
+    expect(source).toContain("className={compact ? 'mt-3' : 'mt-4'}");
     expect(source).toContain("? 'mt-4 rounded-card bg-paper-raised'");
     expect(source).toContain(": 'mt-6 rounded-card bg-paper-raised'");
     expect(source).toContain('paddingTop: compactPhone ? 18 : 22');
@@ -126,12 +156,26 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('lineHeight: compact ? 16 : undefined');
     expect(source).not.toContain('numberOfLines={compact ? 1 : undefined}');
     expect(source.match(/<CheckRow[\s\S]*?compact=\{compactPhone\}/g)).toHaveLength(2);
-    expect(source).toContain('const [recommendationDismissFailed, setRecommendationDismissFailed]');
-    expect(source).toContain('<RecommendationsTeaser');
-    expect(source).toContain('compact={compactRecommendationPrompt}');
+    expect(source).toContain('const TodayHeader = memo(function TodayHeader');
+    expect(source).toContain('const CheckRow = memo(function CheckRow');
+    expect(source).toContain('}, areCheckRowPropsEqual);');
+    expect(source).toContain('actionIdentity={amActionIdentity}');
+    expect(source).toContain('actionIdentity={pmActionIdentity}');
+    expect(source.match(/todayViewModel\.completionActionScope/g)).toHaveLength(2);
+    expect(source.match(/committing=\{todayViewModel\.isCompletionPending\(k\)\}/g)).toHaveLength(
+      2,
+    );
+    expect(source).toContain('SAVING');
+    expect(source).toContain('<RecommendationsTeaserFromSources');
+    expect(source).toContain(
+      'const [recommendationDismissFailed, setRecommendationDismissFailed] = useState(false);',
+    );
     expect(source).toContain('dismissFailed={recommendationDismissFailed}');
-    expect(source).toContain('onDismissFailure={() => setRecommendationDismissFailed(true)}');
-    expect(source).toContain('onDismissSuccess={() => setRecommendationDismissFailed(false)}');
+    expect(source).toContain('onDismissFailure={markRecommendationDismissFailure}');
+    expect(source).toContain('onDismissSuccess={clearRecommendationDismissFailure}');
+    expect(source).toContain('profile={todayViewModel.recommendationProfile}');
+    expect(source).toContain('shelf={todayViewModel.recommendationShelf}');
+    expect(source).toContain('compact={compactRecommendationPrompt}');
     expect(source).toContain('{showRecommendations ? (');
     expect(source).not.toContain('<RecommendationsTeaser compact={compactPhone} showGapPrompt />');
     expect(source).toContain('phase7Flags.cloudAsk && !compactPhone');
@@ -178,24 +222,29 @@ describe('Today route mobile contracts', () => {
 
   it('tracks cycle-night completion from the PM local-first check-off path only', () => {
     const source = readAppRoute('(tabs)/today.tsx');
+    const viewModel = readTodayFeature('useTodayViewModel.ts');
 
-    expect(source).toContain(
-      "import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';",
+    expect(viewModel).toContain(
+      "import { reserveCycleNightCompletionAnalyticsForOwner } from './cycleNightAnalytics';",
     );
-    expect(source).toContain("track('routine_checkoff_completed', { moment });");
-    expect(source).toContain("track('first_checkoff_completed', { moment });");
-    expect(source).toContain('shouldTrackCycleNightCompleted({');
-    expect(source).toContain('completedBefore: done');
-    expect(source).toContain('completedKey: key');
+    expect(viewModel).toContain("track('routine_checkoff_completed', { moment });");
+    expect(viewModel).toContain("track('first_checkoff_completed', { moment });");
+    expect(viewModel).toContain('reserveCycleNightCompletionAnalyticsForOwner({');
+    expect(viewModel).toContain('completedAfter: result.completedSteps');
+    expect(viewModel).toContain('changed: result.changed');
+    expect(viewModel).toContain("cycleNightReceipt.status === 'reserved'");
+    expect(viewModel).toContain('isOwnerQueryScopeCurrent(ownerScope)');
     expect(source).toContain("phase: 'PM'");
     expect(source).toContain('cTonight?.night.productId &&');
     expect(source).toContain('!paused &&');
     expect(source).toContain('!skippedTonight &&');
     expect(source).toContain('!recoveryActive,');
     expect(source).toContain('stepKeys: pmStepKeys');
-    expect(source).toContain("track('cycle_night_completed', { moment: 'pm', source: 'today' })");
-    const eventIndex = source.indexOf("track('cycle_night_completed'");
-    const eventCall = source.slice(eventIndex, eventIndex + 120);
+    expect(viewModel).toContain(
+      "track('cycle_night_completed', { moment: 'pm', source: 'today' })",
+    );
+    const eventIndex = viewModel.indexOf("track('cycle_night_completed'");
+    const eventCall = viewModel.slice(eventIndex, viewModel.indexOf(';', eventIndex) + 1);
     expect(eventCall).not.toMatch(/product|slot|step|skin|goal/i);
   });
 });

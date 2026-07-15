@@ -613,6 +613,7 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Current local evidence: `test-results/human-e2e/2026-07-07/today-checkoff-persistence/`
 - Current local evidence: `test-results/human-e2e/2026-07-08/today-empty-and-cycle-current/`
 - Current local evidence: `test-results/human-e2e/2026-07-08/today-checkoff-append-only/`
+- Current 390 x 844 route-model evidence: 2026-07-15 headless Chrome Expo web completes the maintained first-session flow, dispatches two same-rectangle touches while each AM and PM durable write is still pending, verifies the target is disabled with `SAVING`, repeats the completed AM row, reloads the page, and retains exact `1 of 1` AM/PM completion with zero geometry issues and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-15/today-opt114-final/`.
 
 ### Path A: Happy Path
 
@@ -642,6 +643,25 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Action: Complete a step, relaunch the app, and return to Today.
   - Expected result: The state remains correct.
   - Evidence: Video or screenshot sequence.
+- Branch: repeated tap while a completion is saving
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Tap the same incomplete routine row rapidly more than once while its durable write is pending, then tap the completed row again.
+  - Expected result: The row exposes one honest saving state, only one durable append is attempted for that owner/date/step, completion remains checked, and duplicate taps do not replay activation analytics, haptics, review prompts, or remove the completion.
+  - Evidence: Before/during/after UI snapshots plus the completion-store or browser transcript.
+- Branch: completion storage unavailable or interrupted
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Open Today with the local completion read unavailable, or force the next completion write to fail, then choose Retry after storage becomes available.
+  - Expected result: Today fails closed without showing a false `0 of N`, does not emit success feedback for a failed write, retains an accessible recovery action, and publishes only the exact durable snapshot after Retry succeeds.
+  - Evidence: Failure/recovery screenshots plus storage and browser logs.
+  - Current local recovery evidence: 2026-07-15 Codex in-app Browser at 390 x 844 opens `/today?routine=AM` with `EXPO_PUBLIC_E2E_COMPLETION_STORAGE_FAILURE=today_once`, verifies `Check-ins unavailable`, the byte-preservation explanation, and the uniquely named `Retry loading check-ins` action, then activates Retry and reaches the truthful empty-routine surface in place. DOM snapshots and terminal output are retained in the Codex task transcript; the focused store/view-model contracts cover failed-write publication and retry.
+- Branch: open screen crosses the AM/PM boundary
+  - Priority: Important
+  - Automate later: Yes
+  - Action: Keep Today open as local time crosses 17:00 without navigating or remounting the route.
+  - Expected result: The visible routine switches from Morning to Evening at the boundary while an explicit `?routine=AM` or `?routine=PM` development/test override remains stable.
+  - Evidence: Fake-clock component contract plus pre/post visible-state snapshots on a compatible surface.
 - Branch: compact PM cycle strip labels
   - Priority: Critical
   - Automate later: Yes

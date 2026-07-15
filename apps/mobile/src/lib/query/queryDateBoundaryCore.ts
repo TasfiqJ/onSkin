@@ -163,11 +163,7 @@ export function millisecondsUntilNextTimeZoneOffsetChange(
   const initialOffset = readOffset(now);
   let previousElapsed = 0;
 
-  for (
-    let elapsed = OFFSET_PROBE_MS;
-    elapsed <= OFFSET_HORIZON_MS;
-    elapsed += OFFSET_PROBE_MS
-  ) {
+  for (let elapsed = OFFSET_PROBE_MS; elapsed <= OFFSET_HORIZON_MS; elapsed += OFFSET_PROBE_MS) {
     if (readOffset(new Date(start + elapsed)) === initialOffset) {
       previousElapsed = elapsed;
       continue;
@@ -202,14 +198,25 @@ function localTimeZone(now: Date): string {
   return `${zone}|offset:${now.getTimezoneOffset()}`;
 }
 
+/** Cheap identity read for render-time coherence checks; it does not probe the
+ * next DST transition or allocate a boundary timer deadline. */
+export function readLocalDateBoundaryIdentity(
+  now = new Date(),
+): Pick<LocalDateBoundarySnapshot, 'localDate' | 'timeZone'> {
+  return {
+    localDate: localDateText(now),
+    timeZone: localTimeZone(now),
+  };
+}
+
 export function readLocalDateBoundarySnapshot(now = new Date()): LocalDateBoundarySnapshot {
   const nextDay = new Date(now);
   nextDay.setHours(24, 0, 0, 25);
   const untilNextDay = Math.max(1_000, nextDay.getTime() - now.getTime());
   const untilOffsetChange = millisecondsUntilNextTimeZoneOffsetChange(now);
+  const identity = readLocalDateBoundaryIdentity(now);
   return {
-    localDate: localDateText(now),
-    timeZone: localTimeZone(now),
+    ...identity,
     millisecondsUntilNextDay:
       untilOffsetChange === null ? untilNextDay : Math.min(untilNextDay, untilOffsetChange),
   };

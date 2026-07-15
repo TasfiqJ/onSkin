@@ -118,17 +118,26 @@ export function ShelfDataUnavailableNotice({
   );
 }
 
-export function ShelfDataAvailabilityGate({
-  children,
-  onExit,
-  exitLabel,
-}: {
+export type ShelfAvailabilityQuery = Pick<
+  ReturnType<typeof useShelf>,
+  'isPending' | 'isError' | 'isFetching' | 'refetch'
+>;
+
+export type ShelfDataAvailabilityBoundaryProps = {
+  query: ShelfAvailabilityQuery;
   children: ReactNode;
   onExit?: () => void;
   exitLabel?: string;
-}) {
+};
+
+/** Render Shelf availability from a query already owned by the current route. */
+export function ShelfDataAvailabilityBoundary({
+  query,
+  children,
+  onExit,
+  exitLabel,
+}: ShelfDataAvailabilityBoundaryProps) {
   const insets = useSafeAreaInsets();
-  const query = useShelf();
 
   if (!query.isPending && !query.isError) return children;
 
@@ -168,4 +177,12 @@ export function ShelfDataAvailabilityGate({
       />
     </ScrollView>
   );
+}
+
+export type ShelfDataAvailabilityGateProps = Omit<ShelfDataAvailabilityBoundaryProps, 'query'>;
+
+/** Standalone Shelf boundary. Route view models should pass their owned query above. */
+export function ShelfDataAvailabilityGate(props: ShelfDataAvailabilityGateProps) {
+  const query = useShelf();
+  return <ShelfDataAvailabilityBoundary {...props} query={query} />;
 }

@@ -16,8 +16,8 @@ import {
 describe('local private-data contract registry', () => {
   it('is structurally valid and assigns every export destination once', () => {
     expect(validateLocalPrivateKeyRegistry()).toEqual([]);
-    expect(LOCAL_PRIVATE_KEY_REGISTRY).toHaveLength(46);
-    expect(LOCAL_PRIVATE_DATA_KEYS).toHaveLength(37);
+    expect(LOCAL_PRIVATE_KEY_REGISTRY).toHaveLength(47);
+    expect(LOCAL_PRIVATE_DATA_KEYS).toHaveLength(38);
     expect(LOCAL_PRIVATE_SECURE_STORE_KEYS).toHaveLength(2);
     expect(LOCAL_PRIVATE_METADATA_KEYS).toHaveLength(4);
     expect(LOCAL_PRIVATE_CONTROL_KEYS).toHaveLength(3);
@@ -92,9 +92,7 @@ describe('local private-data contract registry', () => {
   });
 
   it('registers rollback-readable proof and sidecar codecs only on known cleanup keys', () => {
-    const proof = LOCAL_PRIVATE_KEY_REGISTRY.find(
-      (entry) => entry.key === 'onskin.entitlement.v2',
-    );
+    const proof = LOCAL_PRIVATE_KEY_REGISTRY.find((entry) => entry.key === 'onskin.entitlement.v2');
     const sidecar = LOCAL_PRIVATE_KEY_REGISTRY.find(
       (entry) => entry.key === 'onskin.entitlement.v1',
     );
@@ -119,7 +117,7 @@ describe('local private-data contract registry', () => {
     });
     expect(
       LOCAL_PRIVATE_KEY_REGISTRY.some(
-        (entry) => entry.key === 'onskin.entitlement.revenuecatEmpty.v1' as never,
+        (entry) => entry.key === ('onskin.entitlement.revenuecatEmpty.v1' as never),
       ),
     ).toBe(false);
   });
@@ -134,6 +132,33 @@ describe('local private-data contract registry', () => {
       codecId: 'ask_grounded_turns',
       currentVersion: 2,
       legacyVersions: [0, 1],
+    });
+  });
+
+  it('registers owner-bound cycle-night analytics receipts for at-most-once publication', () => {
+    const receipts = LOCAL_PRIVATE_KEY_REGISTRY.find(
+      (entry) => entry.key === 'onskin.cycleNightAnalytics.v1',
+    );
+
+    expect(receipts).toMatchObject({
+      lifecycle: 'current',
+      codec: {
+        status: 'enforced',
+        codecId: 'cycle_night_analytics_receipts',
+        currentVersion: 1,
+        legacyVersions: [],
+      },
+      typedRead: { status: 'enforced', mode: 'domain_result' },
+      mutation: { status: 'enforced', mode: 'private_kv_atomic_transform' },
+      ownerBinding: { status: 'enforced', mode: 'private_kv_account_boundary' },
+      export: {
+        status: 'enforced',
+        mode: 'include',
+        section: 'activity_and_app_state',
+        field: 'cycle_night_analytics_receipts',
+        transform: 'structured_json',
+      },
+      cleanup: { status: 'enforced', mode: 'authorized_private_kv_bulk' },
     });
   });
 

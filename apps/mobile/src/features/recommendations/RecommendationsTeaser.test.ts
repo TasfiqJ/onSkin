@@ -70,20 +70,56 @@ describe('RecommendationsTeaser mobile contracts', () => {
     expect(source).toContain('accessibilityState={{ disabled: dismissing }}');
   });
 
-  it('keeps dismissal single-flight until the committed cache update removes the prompt', () => {
+  it('keeps dismissal route-owned and single-flight across prompt unmounts', () => {
     const source = readFileSync(`${RECS_DIR}/RecommendationsTeaser.tsx`, 'utf8');
     const handler = source.slice(
       source.indexOf('const dismiss = async () => {'),
       source.indexOf('\n\n  const openRecommendation'),
     );
-    const publishIndex = handler.indexOf('publishCommittedRecommendationDismissal');
 
     expect(handler).toContain('if (dismissInFlightRef.current) return;');
     expect(handler).toContain('dismissInFlightRef.current = true;');
-    expect(handler).toContain('if (!canPublish()) return;');
-    expect(publishIndex).toBeGreaterThan(-1);
-    expect(handler.lastIndexOf('setDismissing(false);')).toBeLessThan(publishIndex);
-    expect(publishIndex).toBeLessThan(handler.indexOf('onDismissSuccess();'));
+    expect(handler).toContain('await runRecommendationDismissalMutation');
+    expect(handler).toContain('onFailure: onDismissFailure');
+    expect(handler).toContain('onSuccess: onDismissSuccess');
+    expect(handler).toContain("if (outcome === 'failed' && mountedRef.current)");
+    expect(handler).not.toContain('await dismissRecommendation');
     expect(handler).not.toContain('await qc.invalidateQueries');
+
+    expect(source).toContain('if (mountedRef.current) setLocalDismissFailed(true);');
+    expect(source).toContain('if (mountedRef.current) setLocalDismissFailed(false);');
+    expect(source.indexOf('if (mountedRef.current) setLocalDismissFailed(true);')).toBeLessThan(
+      source.indexOf('onDismissFailure?.();'),
+    );
+    expect(source.indexOf('if (mountedRef.current) setLocalDismissFailed(false);')).toBeLessThan(
+      source.indexOf('onDismissSuccess?.();'),
+    );
+  });
+
+  it('reuses route-owned Shelf/profile sources while preserving the standalone teaser', () => {
+    const source = readFileSync(`${RECS_DIR}/RecommendationsTeaser.tsx`, 'utf8');
+    const standaloneStart = source.indexOf('export function RecommendationsTeaser(');
+    const sharedStart = source.indexOf('function RecommendationsTeaserFromSourcesImpl(');
+    const standalone = source.slice(standaloneStart, sharedStart);
+    const shared = source.slice(sharedStart);
+
+    expect(source).toContain('export type RecommendationsTeaserProps = {');
+    expect(source).toContain('export type RecommendationsTeaserFromSourcesProps =');
+    expect(source).toContain('shelf: RecommendationShelfSource;');
+    expect(source).toContain('profile: RecommendationProfileSource;');
+    expect(standalone).toContain('const recommendations = useRecommendations();');
+    expect(standalone).toContain(
+      '<RecommendationsTeaserContent {...props} recommendations={recommendations} />',
+    );
+    expect(shared).toContain(
+      'const recommendations = useRecommendationsFromSources(shelf, profile);',
+    );
+    expect(shared).toContain(
+      '<RecommendationsTeaserContent {...props} recommendations={recommendations} />',
+    );
+    expect(shared).toContain(
+      'export const RecommendationsTeaserFromSources = memo(RecommendationsTeaserFromSourcesImpl);',
+    );
+    expect(shared).not.toContain('useRecommendations();');
   });
 });

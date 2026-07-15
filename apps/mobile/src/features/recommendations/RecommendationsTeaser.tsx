@@ -1,23 +1,23 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
-import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
 import { REC_COPY } from './copy';
+import { runRecommendationDismissalMutation } from './dismissalMutation';
 import {
-  containRecommendationDismissalFailure,
-  publishCommittedRecommendationDismissal,
-} from './dismissalMutation';
-import { dismissRecommendation } from './store';
-import { useRecommendations } from './useRecommendations';
+  useRecommendations,
+  useRecommendationsFromSources,
+  type RecommendationProfileSource,
+  type RecommendationShelfSource,
+} from './useRecommendations';
 
 // The recommendation surfaces ON Today (docs/09 §7.1/§7.2): a calm "For you" entry
 // card + the in-routine SPF gap prompt (design 04). Inline, dismissible, never
@@ -92,7 +92,6 @@ function GapPrompt({
   const dismissInFlightRef = useRef(false);
   const [dismissing, setDismissing] = useState(false);
   const compactTitle = 'No SPF this morning';
-  const canPublish = () => mountedRef.current && isOwnerQueryScopeCurrent(ownerScope);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -108,23 +107,14 @@ function GapPrompt({
     if (dismissInFlightRef.current) return;
     dismissInFlightRef.current = true;
     setDismissing(true);
-    try {
-      await dismissRecommendation(ownerScope, recId);
-    } catch {
-      await containRecommendationDismissalFailure(qc, ownerScope, {
-        isMounted: () => mountedRef.current,
-        onFailure: onDismissFailure,
-        onRelease: () => {
-          dismissInFlightRef.current = false;
-          setDismissing(false);
-        },
-      });
-      return;
+    const outcome = await runRecommendationDismissalMutation(qc, ownerScope, recId, {
+      onFailure: onDismissFailure,
+      onSuccess: onDismissSuccess,
+    });
+    if (outcome === 'failed' && mountedRef.current) {
+      dismissInFlightRef.current = false;
+      setDismissing(false);
     }
-
-    if (!publishCommittedRecommendationDismissal(qc, ownerScope, recId)) return;
-    if (!canPublish()) return;
-    onDismissSuccess();
     // The synchronous cache patch removes this prompt before the strict reread,
     // so its actions stay unavailable until this component unmounts.
   };
@@ -332,28 +322,47 @@ function DismissalFailureNotice({
   );
 }
 
-export function RecommendationsTeaser({
-  compact = false,
-  showGapPrompt = false,
-  dismissFailed: controlledDismissFailed,
-  onDismissFailure,
-  onDismissSuccess,
-}: {
+export type RecommendationsTeaserProps = {
   compact?: boolean;
   showGapPrompt?: boolean;
   dismissFailed?: boolean;
   onDismissFailure?: () => void;
   onDismissSuccess?: () => void;
-}) {
+};
+
+export type RecommendationsTeaserFromSourcesProps = RecommendationsTeaserProps & {
+  shelf: RecommendationShelfSource;
+  profile: RecommendationProfileSource;
+};
+
+type RecommendationsTeaserQuery = ReturnType<typeof useRecommendationsFromSources>;
+
+function RecommendationsTeaserContent({
+  recommendations,
+  compact = false,
+  showGapPrompt = false,
+  dismissFailed: controlledDismissFailed,
+  onDismissFailure,
+  onDismissSuccess,
+}: RecommendationsTeaserProps & { recommendations: RecommendationsTeaserQuery }) {
+  const mountedRef = useRef(true);
   const [localDismissFailed, setLocalDismissFailed] = useState(false);
   const dismissFailed = controlledDismissFailed ?? localDismissFailed;
-  const { result, isError, isFetching, isSuccess, retry } = useRecommendations();
+  const { result, isError, isFetching, isSuccess, retry } = recommendations;
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
   const markDismissFailure = () => {
-    setLocalDismissFailed(true);
+    if (mountedRef.current) setLocalDismissFailed(true);
     onDismissFailure?.();
   };
   const clearDismissFailure = () => {
-    setLocalDismissFailed(false);
+    if (mountedRef.current) setLocalDismissFailed(false);
     onDismissSuccess?.();
   };
   const retryAfterDismissFailure = async (): Promise<{ isError: boolean }> => {
@@ -406,3 +415,21 @@ export function RecommendationsTeaser({
     </>
   );
 }
+
+/** Standalone teaser consumer. Route view models should prefer shared sources. */
+export function RecommendationsTeaser(props: RecommendationsTeaserProps) {
+  const recommendations = useRecommendations();
+  return <RecommendationsTeaserContent {...props} recommendations={recommendations} />;
+}
+
+/** Render the Today teaser from route-owned Shelf and profile query snapshots. */
+function RecommendationsTeaserFromSourcesImpl({
+  shelf,
+  profile,
+  ...props
+}: RecommendationsTeaserFromSourcesProps) {
+  const recommendations = useRecommendationsFromSources(shelf, profile);
+  return <RecommendationsTeaserContent {...props} recommendations={recommendations} />;
+}
+
+export const RecommendationsTeaserFromSources = memo(RecommendationsTeaserFromSourcesImpl);

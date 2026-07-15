@@ -7,7 +7,7 @@ import {
   type AccountGenerationLease,
 } from '@/lib/auth/accountGeneration';
 import { useAuth } from '@/lib/auth/AuthProvider';
-import { env } from '@/lib/env';
+import { env, isSupabaseConfigured } from '@/lib/env';
 import {
   classifyRevenueCatEntitlement,
   purchasePackage,
@@ -496,6 +496,11 @@ export function useEntitlementActions() {
     if (!user?.id) throw new Error('REVENUECAT_OWNER_REQUIRED');
     return { appUserId: user.id, lease } as const;
   };
+  const reverseTrialStoreUserId = () => {
+    if (user?.id) return user.id;
+    if (env.appEnvironment === 'development' && !isSupabaseConfigured) return undefined;
+    throw new Error('REVENUECAT_OWNER_REQUIRED');
+  };
   const assertActionAtCommit = (
     lease: AccountGenerationLease,
     input: EntitlementActionInput,
@@ -633,10 +638,10 @@ export function useEntitlementActions() {
     mutationFn: (input: EntitlementActionInput) =>
       runOwnerQueryOperation(ownerScope, async (lease) => {
         assertActionAtCommit(lease, input, ['reverse_trial']);
-        const owner = revenueCatOwner(lease);
+        const storeUserId = reverseTrialStoreUserId();
         const started = await startReverseTrialOnServer(
           lease.assertCurrent,
-          owner.appUserId,
+          storeUserId,
           () => assertActionAtCommit(lease, input, ['reverse_trial']),
         );
         lease.assertCurrent();

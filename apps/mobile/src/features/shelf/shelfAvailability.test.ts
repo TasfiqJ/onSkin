@@ -41,6 +41,27 @@ describe('Shelf private-data availability contract', () => {
     expect(gate).not.toContain('Nothing was changed');
   });
 
+  it('lets route view models reuse an owned Shelf query without changing the standalone gate', () => {
+    const hook = read('features/shelf/useShelf.ts');
+    const gate = read('features/shelf/ShelfDataAvailabilityGate.tsx');
+    const boundaryStart = gate.indexOf('export function ShelfDataAvailabilityBoundary');
+    const standaloneStart = gate.indexOf('export function ShelfDataAvailabilityGate');
+    const boundary = gate.slice(boundaryStart, standaloneStart);
+    const standalone = gate.slice(standaloneStart);
+
+    expect(hook).toContain(
+      'export function useShelfFromBoundary(boundary: LocalDateBoundaryIdentity)',
+    );
+    expect(hook).toContain('return useShelfFromBoundary(boundary);');
+    expect(gate).toContain('export type ShelfAvailabilityQuery = Pick<');
+    expect(gate).toContain('export type ShelfDataAvailabilityBoundaryProps = {');
+    expect(gate).toContain('query: ShelfAvailabilityQuery;');
+    expect(boundary).toContain('query,');
+    expect(boundary).not.toContain('useShelf()');
+    expect(standalone).toContain('const query = useShelf();');
+    expect(standalone).toContain('<ShelfDataAvailabilityBoundary {...props} query={query} />');
+  });
+
   it('prevents unreadable Shelf state from becoming routine, Ask, or purchase guidance', () => {
     const plan = read('features/routine/usePlan.ts');
     const ramp = read('features/routine/useRamp.ts');
@@ -80,7 +101,9 @@ describe('Shelf private-data availability contract', () => {
     }
 
     expect(read('app/(tabs)/shelf.tsx')).toContain('isError ? (');
-    expect(read('app/(tabs)/today.tsx')).toContain('<ShelfDataAvailabilityGate>');
+    const today = read('app/(tabs)/today.tsx');
+    expect(today).toContain('<ShelfDataAvailabilityBoundary query={shelf}>');
+    expect(today).toContain('const shelf = useShelfFromBoundary(boundary);');
     expect(read('app/onboarding/products.tsx')).toContain('<ShelfDataAvailabilityGate');
     expect(read('app/onboarding/reveal.tsx')).toContain('planResult.isError');
     const routineLayout = read('app/routine/_layout.tsx');

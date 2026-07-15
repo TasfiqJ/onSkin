@@ -18,7 +18,10 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { isSupabaseConfigured } from '@/lib/env';
 import { isRequestCancellation, runRequestWithLease } from '@/lib/network/requestPolicy';
-import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import {
+  useLocalDateBoundary,
+  type LocalDateBoundaryIdentity,
+} from '@/lib/query/localDateBoundaryStore';
 import {
   queryKeys,
   runOwnerQueryOperation,
@@ -165,13 +168,16 @@ async function loadServerLongestStreak(lease: AccountGenerationLease): Promise<n
   }
 }
 
-export function useProgress() {
+/** Read Progress using a local-day identity already owned by the current route. */
+export function useProgressFromBoundary(boundary: LocalDateBoundaryIdentity) {
   const ownerScope = useOwnerQueryScope();
-  const boundary = useLocalDateBoundary();
   const { localDate: todayISO } = boundary;
 
   return useQuery<ProgressData>({
     queryKey: queryKeys.progress(ownerScope, boundary),
+    // Local encrypted completion history remains authoritative while offline;
+    // optional server reconciliation already fails soft inside the query.
+    networkMode: 'always',
     refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
     refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
     retry: 1,
@@ -188,8 +194,7 @@ export function useProgress() {
         let serverLongest: number;
         try {
           [localSummary, completions, serverLongest] = await settleOwnerQueryOperations(lease, [
-            (childLease) =>
-              awaitAccountGenerationLease(childLease, () => getCompletionSummary()),
+            (childLease) => awaitAccountGenerationLease(childLease, () => getCompletionSummary()),
             (childLease) => loadServerCompletions(localDateString(lookback), childLease),
             (childLease) => loadServerLongestStreak(childLease),
           ] as const);
@@ -252,4 +257,10 @@ export function useProgress() {
         };
       }),
   });
+}
+
+/** Standalone Progress consumer. Route view models should share their boundary. */
+export function useProgress() {
+  const boundary = useLocalDateBoundary();
+  return useProgressFromBoundary(boundary);
 }

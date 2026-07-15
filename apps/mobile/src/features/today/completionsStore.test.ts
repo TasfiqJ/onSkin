@@ -14,6 +14,7 @@ import {
   COMPLETION_LOG_UNAVAILABLE,
   COMPLETION_LOG_UNSUPPORTED_VERSION,
   clearCompletions,
+  commitCompletion,
   getCompletedSteps,
   getCompletionSummary,
   getCountByDate,
@@ -173,6 +174,46 @@ describe('today completion persistence', () => {
     expect(mocks.storage.has(FIRST_COMPLETION_KEY)).toBe(false);
   });
 
+  it('returns the exact durable day snapshot without a post-commit store read', async () => {
+    const first = await commitCompletion('AM:cleanser', DAY);
+
+    expect(first).toEqual({
+      status: 'committed',
+      done: true,
+      firstEver: true,
+      changed: true,
+      date: DAY,
+      completedSteps: new Set(['AM:cleanser']),
+    });
+    expect(mocks.writes).toBe(1);
+
+    const second = await commitCompletion('PM:retinol', DAY);
+    expect(second).toEqual({
+      status: 'committed',
+      done: true,
+      firstEver: false,
+      changed: true,
+      date: DAY,
+      completedSteps: new Set(['AM:cleanser', 'PM:retinol']),
+    });
+    expect(mocks.writes).toBe(2);
+  });
+
+  it('distinguishes an idempotent repeat from a newly inserted completion', async () => {
+    await commitCompletion('AM:cleanser', DAY);
+    const writesAfterFirst = mocks.writes;
+
+    await expect(commitCompletion('AM:cleanser', DAY)).resolves.toEqual({
+      status: 'committed',
+      done: true,
+      firstEver: false,
+      changed: false,
+      date: DAY,
+      completedSteps: new Set(['AM:cleanser']),
+    });
+    expect(mocks.writes).toBe(writesAfterFirst);
+  });
+
   it('preserves an existing completion and does not re-fire first-ever activation', async () => {
     await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
       done: true,
@@ -329,6 +370,17 @@ describe('today completion persistence', () => {
     expect(new Set(storedDays()[DAY])).toEqual(new Set(stepKeys));
     expect(results.filter((result) => result.firstEver)).toHaveLength(1);
     expect(mocks.storage.has(FIRST_COMPLETION_KEY)).toBe(false);
+  });
+
+  it('marks exactly one of 100 simultaneous same-step commits as changed', async () => {
+    const results = await Promise.all(
+      Array.from({ length: 100 }, () => commitCompletion('AM:cleanser', DAY)),
+    );
+
+    expect(results.filter((result) => result.changed)).toHaveLength(1);
+    expect(results.filter((result) => result.firstEver)).toHaveLength(1);
+    expect(results.every((result) => result.completedSteps.has('AM:cleanser'))).toBe(true);
+    expect(mocks.writes).toBe(1);
   });
 
   it('cancels a delayed owner-A marker read before any owner-B log write or result', async () => {

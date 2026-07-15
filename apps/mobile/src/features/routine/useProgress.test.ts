@@ -297,6 +297,10 @@ describe('useProgress local-first contract', () => {
     expect(source.match(/runRequestWithLease\(/g)).toHaveLength(2);
     expect(source).toContain("endpoint: 'progress_completions'");
     expect(source).toContain("endpoint: 'progress_longest_streak'");
+    expect(source).toContain("networkMode: 'always'");
+    expect(source).toContain(
+      'export function useProgressFromBoundary(boundary: LocalDateBoundaryIdentity)',
+    );
     expect(source).toContain('deadlineMs: OPTIONAL_PROGRESS_READ_DEADLINE_MS');
     expect(source).toContain('maxResponseBytes: COMPLETIONS_RESPONSE_LIMIT_BYTES');
     expect(source).toContain('maxResponseBytes: LONGEST_STREAK_RESPONSE_LIMIT_BYTES');

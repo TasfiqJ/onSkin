@@ -50,6 +50,24 @@ export type CompletionLogRead =
       days: null;
     };
 
+export type CompletionCommitResult =
+  | {
+      status: 'committed';
+      done: true;
+      firstEver: boolean;
+      changed: boolean;
+      date: string;
+      completedSteps: Set<string>;
+    }
+  | {
+      status: 'rejected' | 'cancelled';
+      done: boolean;
+      firstEver: false;
+      changed: false;
+      date: string | null;
+      completedSteps: Set<string>;
+    };
+
 type LegacyFirstCompletionRead =
   | { status: 'available'; recorded: boolean }
   | { status: 'unavailable' | 'corrupt' | 'unsupported_version'; recorded: null };
@@ -292,20 +310,29 @@ export function isBeyondBackfillCap(date: string, today: string = localDateStrin
   return normalizedDate < cutoff || normalizedDate > maxFuture;
 }
 
-/** Idempotently record a step's completion for a day. Returns whether it is done and
- *  whether this was the user's first-ever completion (the north-star activation moment).
- *  Dates outside the server completion window (docs/03 §6) are rejected. */
-// Repeated check-offs preserve the row because v1 completions are append-only.
-export async function toggleCompletion(
+/**
+ * Idempotently commit a step completion and return the exact durable day snapshot.
+ * The snapshot is captured inside the atomic private-KV transform but is not
+ * returned until that transform has durably resolved, so callers can publish it
+ * directly without rereading/decrypting the whole completion log.
+ */
+export async function commitCompletion(
   key: string,
   date: string = localDateString(),
-): Promise<{ done: boolean; firstEver: boolean }> {
+): Promise<CompletionCommitResult> {
   const normalizedKey = normalizeStepKey(key);
   const normalizedDate = normalizeLocalDateISO(date);
   if (!normalizedKey || !normalizedDate || isBeyondBackfillCap(normalizedDate)) {
     // Outside the server completion window: do not record, report it as not-done.
     const existing = await getCompletedSteps(normalizedDate ?? date);
-    return { done: normalizedKey ? existing.has(normalizedKey) : false, firstEver: false };
+    return {
+      status: 'rejected',
+      done: normalizedKey ? existing.has(normalizedKey) : false,
+      firstEver: false,
+      changed: false,
+      date: normalizedDate,
+      completedSteps: new Set(existing),
+    };
   }
   try {
     return await runAccountGenerationOperation(async (lease) => {
@@ -315,7 +342,7 @@ export async function toggleCompletion(
       );
       lease.assertCurrent();
 
-      let result = { done: false, firstEver: false };
+      let result: Extract<CompletionCommitResult, { status: 'committed' }> | undefined;
       lease.assertCurrent();
       await updatePrivateItem(KEY, (current) => {
         const decoded = decodeCompletionLog(current);
@@ -331,8 +358,12 @@ export async function toggleCompletion(
         log[normalizedDate] = [...day];
 
         result = {
+          status: 'committed',
           done: true,
           firstEver: !alreadyCompleted && !hadAny && !firstCompletionRecorded,
+          changed: !alreadyCompleted,
+          date: normalizedDate,
+          completedSteps: new Set(day),
         };
         const nextFirstCompletionRecorded = firstCompletionRecorded || hadAny || !alreadyCompleted;
         if (
@@ -345,6 +376,7 @@ export async function toggleCompletion(
         return encodeCompletionLog(log, nextFirstCompletionRecorded);
       });
       lease.assertCurrent();
+      if (!result) throw new Error('COMPLETION_COMMIT_NOT_APPLIED');
       return result;
     });
   } catch (error) {
@@ -352,10 +384,29 @@ export async function toggleCompletion(
     // account replacement cancels the old owner's interaction without routing
     // an unhandled rejection into the new session.
     if (error instanceof AccountGenerationLeaseError) {
-      return { done: false, firstEver: false };
+      return {
+        status: 'cancelled',
+        done: false,
+        firstEver: false,
+        changed: false,
+        date: normalizedDate,
+        completedSteps: new Set(),
+      };
     }
     throw error;
   }
+}
+
+/**
+ * Backward-compatible completion API for callers that do not publish caches.
+ * Repeated check-offs preserve the row because completions are append-only.
+ */
+export async function toggleCompletion(
+  key: string,
+  date: string = localDateString(),
+): Promise<{ done: boolean; firstEver: boolean }> {
+  const result = await commitCompletion(key, date);
+  return { done: result.done, firstEver: result.firstEver };
 }
 
 /** Dates with at least one completion (the streak's "completion days"). */

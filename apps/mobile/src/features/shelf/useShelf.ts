@@ -22,7 +22,10 @@ import { tagsForIngredientList } from '@/features/intelligence/tags';
 import { readProfileBitsWithLease } from '@/features/scheduler/profile';
 import { localDateString } from '@/features/today/useToday';
 import { awaitAccountGenerationLease } from '@/lib/auth/accountGeneration';
-import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import {
+  useLocalDateBoundary,
+  type LocalDateBoundaryIdentity,
+} from '@/lib/query/localDateBoundaryStore';
 import {
   queryKeys,
   runOwnerQueryOperation,
@@ -131,9 +134,13 @@ export function applyConflictChoicesToShelfData(
   };
 }
 
-export function useShelf() {
+/**
+ * Read Shelf data using a route-owned local-day identity. Date-sensitive route
+ * view models should share the exact boundary snapshot with every child query
+ * instead of mounting another local-date subscription for each domain hook.
+ */
+export function useShelfFromBoundary(boundary: LocalDateBoundaryIdentity) {
   const ownerScope = useOwnerQueryScope();
-  const boundary = useLocalDateBoundary();
   const { localDate: today } = boundary;
 
   const query = useQuery<ShelfData>({
@@ -155,8 +162,7 @@ export function useShelf() {
         const [products, profileBits, conflictChoices] = await settleOwnerQueryOperations(lease, [
           (childLease) => awaitAccountGenerationLease(childLease, () => loadShelf()),
           (childLease) => readProfileBitsWithLease(childLease),
-          (childLease) =>
-            awaitAccountGenerationLease(childLease, () => loadConflictChoices()),
+          (childLease) => awaitAccountGenerationLease(childLease, () => loadConflictChoices()),
         ] as const);
         lease.assertCurrent();
         const profile: EngineProfile = {
@@ -275,6 +281,12 @@ export function useShelf() {
     // authoritative while the current private read is unavailable.
     data: query.isSuccess ? query.data : undefined,
   };
+}
+
+/** Standalone Shelf consumer. Route view models should prefer the shared boundary hook. */
+export function useShelf() {
+  const boundary = useLocalDateBoundary();
+  return useShelfFromBoundary(boundary);
 }
 
 /** Chronological tiebreak within a sort bucket: soonest surfaced-expiry first, items

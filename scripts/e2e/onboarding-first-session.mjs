@@ -204,6 +204,7 @@ function startExpoServer() {
       EXPO_PUBLIC_E2E_APP_LOCK_ENABLED: 'false',
       ...(accountUpgradeMode ? { EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE: 'email_same_user' } : {}),
       ...(accountIsolationMode ? { EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION: 'signout_clear_retry' } : {}),
+      EXPO_PUBLIC_E2E_COMPLETION_COMMIT_DELAY_MS: '1200',
       EXPO_PUBLIC_E2E_LOCAL_RESET: '1',
     },
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -400,7 +401,7 @@ function rectByTextExpression(label, exact) {
   })()`;
 }
 
-async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } = {}) {
+async function clickableRectByText(client, label, { exact = true, timeoutMs = 30_000 } = {}) {
   const startedAt = Date.now();
   let rect = null;
 
@@ -415,16 +416,32 @@ async function clickByText(client, label, { exact = true, timeoutMs = 30_000 } =
     rect.disabled !== true && rect.ariaDisabled !== 'true',
     `Clickable text is disabled: ${label}`,
   );
+  return rect;
+}
 
+async function dispatchTouch(client, rect, id = 1) {
   await client.send('Input.dispatchTouchEvent', {
-    touchPoints: [{ force: 1, id: 1, radiusX: 2, radiusY: 2, x: rect.x, y: rect.y }],
+    touchPoints: [{ force: 1, id, radiusX: 2, radiusY: 2, x: rect.x, y: rect.y }],
     type: 'touchStart',
   });
   await client.send('Input.dispatchTouchEvent', {
     touchPoints: [],
     type: 'touchEnd',
   });
+}
+
+async function clickByText(client, label, options = {}) {
+  const rect = await clickableRectByText(client, label, options);
+
+  await dispatchTouch(client, rect);
   await delay(250);
+  return rect;
+}
+
+async function rapidDoubleTouchByText(client, label, options = {}) {
+  const rect = await clickableRectByText(client, label, options);
+  await dispatchTouch(client, rect, 1);
+  await dispatchTouch(client, rect, 2);
   return rect;
 }
 
@@ -639,6 +656,12 @@ function assertInteractiveControl(snapshot, label) {
   assert(control.hitOk, `${label} center is not hittable at ${snapshot.url}.`);
   assert(control.width >= 44, `${label} control is too narrow: ${control.width}px.`);
   assert(control.height >= 44, `${label} control is too short: ${control.height}px.`);
+}
+
+function assertDisabledControl(snapshot, label) {
+  const control = snapshot.controls.find((item) => item.label.includes(label));
+  assert(control, `${snapshot.url} did not expose a control labeled ${label}.`);
+  assert(control.disabled === true, `${label} was not disabled while its write was pending.`);
 }
 
 function collectProblemLogs(events) {
@@ -904,7 +927,7 @@ async function run() {
     }
 
     await waitForPath(client, '/onboarding/paywall');
-    await waitForText(client, 'Start free trial');
+    await waitForText(client, 'Subscribe to Pro');
     await waitForText(client, 'Explore first', 30_000);
     const paywall = await captureStep(client, '17-paywall-current');
     await screenshot(client, '17-paywall');
@@ -966,11 +989,31 @@ async function run() {
     const todayAmBefore = await captureStep(client, '21-today-am-before-checkoff');
     assertInteractiveControl(todayAmBefore, 'Mineral SPF 50');
     assert(todayAmBefore.bodyText.includes('0 of 1'), 'AM routine did not start at 0 of 1.');
-    await clickByText(client, 'Mineral SPF 50', { exact: false });
+    await rapidDoubleTouchByText(client, 'Mineral SPF 50', { exact: false });
+    await waitForText(client, 'SAVING', 10_000);
+    const todayAmSaving = await captureStep(client, '21a-today-am-saving');
+    assertDisabledControl(todayAmSaving, 'Mineral SPF 50');
     await waitForText(client, '1 of 1', 30_000);
     const todayAmAfter = await captureStep(client, '22-today-am-after-checkoff');
     assertInteractiveControl(todayAmAfter, 'Mineral SPF 50');
     assert(todayAmAfter.bodyText.includes('1 of 1'), 'AM check-off did not reach 1 of 1.');
+    await clickByText(client, 'Mineral SPF 50', { exact: false });
+    const todayAmAfterRepeat = await captureStep(client, '22a-today-am-after-repeat-checkoff');
+    assert(
+      todayAmAfterRepeat.bodyText.includes('1 of 1'),
+      'A repeated AM check-off removed the append-only completion.',
+    );
+    await client.send('Page.reload', { ignoreCache: false });
+    await waitForPath(client, '/today', 30_000);
+    await waitForText(client, 'Morning routine', 30_000);
+    await waitForText(client, '1 of 1', 30_000);
+    await scrollTextIntoView(client, 'Mineral SPF 50', { exact: false });
+    const todayAmAfterReload = await captureStep(client, '22b-today-am-after-reload');
+    assertInteractiveControl(todayAmAfterReload, 'Mineral SPF 50');
+    assert(
+      todayAmAfterReload.bodyText.includes('1 of 1'),
+      'AM completion did not persist after a page reload.',
+    );
 
     await client.send('Page.navigate', { url: `${baseUrl}/today?routine=PM` });
     await waitForPath(client, '/today', 30_000);
@@ -982,7 +1025,7 @@ async function run() {
     });
     assertInteractiveControl(todayPmBefore, 'Glycolic 7%');
     assert(todayPmBefore.bodyText.includes('0 of 1'), 'PM routine did not start at 0 of 1.');
-    await clickByText(client, 'Glycolic 7%', { exact: false });
+    await rapidDoubleTouchByText(client, 'Glycolic 7%', { exact: false });
     await waitForText(client, '1 of 1', 30_000);
     const todayPmAfter = await captureStep(client, '24-today-pm-after-checkoff', {
       assertClean: false,
@@ -1079,7 +1122,10 @@ async function run() {
       routinePlan,
       todayAfterStart,
       todayAmBefore,
+      todayAmSaving,
       todayAmAfter,
+      todayAmAfterRepeat,
+      todayAmAfterReload,
       todayPmBefore,
       todayPmAfter,
       ...(accountBeforeSignOut ? { accountBeforeSignOut } : {}),
@@ -1142,7 +1188,10 @@ async function run() {
         '19-routine-plan-current.png',
         '20-today-after-start-current.png',
         '21-today-am-before-checkoff.png',
+        '21a-today-am-saving.png',
         '22-today-am-after-checkoff.png',
+        '22a-today-am-after-repeat-checkoff.png',
+        '22b-today-am-after-reload.png',
         '23-today-pm-before-checkoff.png',
         '24-today-pm-after-checkoff.png',
         ...(accountIsolationMode
@@ -1160,7 +1209,7 @@ async function run() {
         ? 'Recovered from an invalid deterministic email code, completed the account route with the valid code, then finished activation through AM and PM check-offs.'
         : accountIsolationMode
           ? 'Completed activation, failed one account cleanup safely behind the transition gate, retried, signed out, and proved direct Shelf and Today routes could not expose account A data.'
-          : 'Completed onboarding through Explore first, routine plan, Start today, AM check-off, and PM cycle check-off.',
+          : 'Completed onboarding through Explore first, routine plan, Start today, same-rectangle double-touch AM/PM check-offs, disabled AM saving state, append-only repeat, AM reload persistence, and PM cycle completion.',
       overflowXByStep,
       productNames: productNames.map((product) => product.name),
       reveal: {
@@ -1202,7 +1251,7 @@ async function run() {
         startTodayLedToToday: todayAfterStart.url.includes('/today'),
       },
       startCommand: shouldStartServer
-        ? `${accountUpgradeMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user ' : ''}${accountIsolationMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry ' : ''}EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
+        ? `${accountUpgradeMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_UPGRADE=email_same_user ' : ''}${accountIsolationMode ? 'EXPO_PUBLIC_E2E_ACCOUNT_ISOLATION=signout_clear_retry ' : ''}EXPO_PUBLIC_E2E_COMPLETION_COMMIT_DELAY_MS=1200 EXPO_PUBLIC_E2E_LOCAL_RESET=1 npm --workspace apps/mobile run web -- --port ${appPort} --host localhost`
         : `Existing Expo web at ${baseUrl}`,
       startUrl: `${baseUrl}/?e2eReset=local`,
       steps: [

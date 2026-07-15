@@ -3,10 +3,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
-import { useRamp } from '@/features/routine/useRamp';
-import { useShelf } from '@/features/shelf/useShelf';
+import { usePlanFromSources } from '@/features/routine/usePlan';
+import { useRampFromPlan, type RampQueryResult } from '@/features/routine/useRamp';
+import { useShelfFromBoundary } from '@/features/shelf/useShelf';
 import { track } from '@/lib/analytics/track';
-import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import {
+  useLocalDateBoundary,
+  type LocalDateBoundaryIdentity,
+} from '@/lib/query/localDateBoundaryStore';
 import {
   queryKeys,
   runOwnerQueryOperation,
@@ -94,25 +98,48 @@ export type CycleQueryResult = {
   isError: boolean;
   isFetching: boolean;
   isSuccess: boolean;
-  retry: () => Promise<void>;
+  retry: () => Promise<{ isError: boolean }>;
 };
 
-export function useCycle(): CycleQueryResult {
-  const shelf = useShelf();
+export type CycleShelfSource = Pick<
+  ReturnType<typeof useShelfFromBoundary>,
+  'data' | 'isError' | 'isFetching' | 'isLoading' | 'isSuccess'
+>;
+export type CycleProfileSource = Pick<
+  ReturnType<typeof useProfileBits>,
+  'data' | 'isError' | 'isFetching' | 'isLoading' | 'isSuccess'
+>;
+export type CycleRampSource = Pick<
+  RampQueryResult,
+  'items' | 'isError' | 'isFetching' | 'isLoading' | 'isSuccess'
+>;
+
+/**
+ * Build the active schedule from route-owned Shelf/profile/ramp snapshots. This
+ * hook owns only the independently keyed cycle-config observer.
+ */
+export function useCycleFromSources(
+  shelf: CycleShelfSource,
+  profile: CycleProfileSource,
+  ramp: CycleRampSource,
+  boundary: LocalDateBoundaryIdentity,
+): CycleQueryResult {
   const ownerScope = useOwnerQueryScope();
-  const boundary = useLocalDateBoundary();
   const { localDate: today } = boundary;
   const cfg = useQuery({
     queryKey: queryKeys.cycleConfig(ownerScope, boundary),
     queryFn: () => runOwnerQueryOperation(ownerScope, loadCycleConfigWithLease),
-    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
-    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
+    networkMode: 'always',
+    retry: false,
+    retryOnMount: false,
+    refetchOnReconnect: (query) =>
+      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
+    refetchOnWindowFocus: (query) =>
+      query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
   });
-  const profile = useProfileBits();
   // Live ramp state (the same source tolerance.tsx writes), so the user's actual
   // ramped frequency reaches the scheduler instead of every active defaulting to
   // the class cap (docs/05 §4: freq = min(ramp.freq_per_week, frequency_cap)).
-  const ramp = useRamp();
   const cadenceReady = canUseRoutineCadence();
   // Per-product ramp frequency keyed by engineProduct.id (== user_product id ==
   // rampStore key), built from the merged plan-initial + persisted-override ramp.
@@ -219,13 +246,10 @@ export function useCycle(): CycleQueryResult {
     cadenceReady,
   ]);
 
-  async function retry(): Promise<void> {
-    await Promise.all([
-      shelf.isError ? shelf.refetch() : Promise.resolve(),
-      cfg.isError ? cfg.refetch() : Promise.resolve(),
-      profile.isError ? profile.refetch() : Promise.resolve(),
-      ramp.isError ? ramp.retry() : Promise.resolve(),
-    ]);
+  async function retry(): Promise<{ isError: boolean }> {
+    if (!cfg.isError) return { isError: false };
+    const result = await cfg.refetch();
+    return { isError: result.isError };
   }
 
   return {
@@ -236,6 +260,36 @@ export function useCycle(): CycleQueryResult {
     isSuccess:
       shelf.isSuccess && cfg.isSuccess && profile.isSuccess && ramp.isSuccess && data !== undefined,
     retry,
+  };
+}
+
+/** Standalone cycle consumer. Route view models should prefer shared sources. */
+export function useCycle(): CycleQueryResult {
+  const boundary = useLocalDateBoundary();
+  const shelf = useShelfFromBoundary(boundary);
+  const profile = useProfileBits();
+  const plan = usePlanFromSources(shelf, profile);
+  // Keep the plan-derived initial cadence and the persisted ramp override on the
+  // same route-owned source graph as Shelf and profile.
+  const ramp = useRampFromPlan(plan, boundary);
+  const cycle = useCycleFromSources(shelf, profile, ramp, boundary);
+
+  return {
+    ...cycle,
+    retry: async () => {
+      const results = await Promise.all([
+        shelf.isError ? shelf.refetch() : Promise.resolve(),
+        profile.isError ? profile.refetch() : Promise.resolve(),
+        plan.isError ? plan.retry() : Promise.resolve(),
+        ramp.isError ? ramp.retry() : Promise.resolve(),
+        cycle.isError ? cycle.retry() : Promise.resolve(),
+      ]);
+      return {
+        isError: results.some(
+          (result) => result && typeof result === 'object' && 'isError' in result && result.isError,
+        ),
+      };
+    },
   };
 }
 

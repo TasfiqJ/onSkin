@@ -5,7 +5,10 @@ import {
   createLocalDateBoundaryCoordinator,
   readLocalDateBoundarySnapshot,
 } from './queryDateBoundaryCore';
-import { publishLocalDateBoundarySnapshot } from './localDateBoundaryStore';
+import {
+  publishLocalDateBoundarySnapshot,
+  registerLocalDateBoundaryReconciler,
+} from './localDateBoundaryStore';
 import { DATE_SENSITIVE_QUERY_PREFIXES } from './queryKeys';
 
 type QueryInvalidator = Pick<QueryClient, 'invalidateQueries'>;
@@ -35,6 +38,7 @@ export function configureQueryDateBoundary(client: QueryInvalidator) {
     readSnapshot: readLocalDateBoundarySnapshot,
     setTimer: setBoundaryTimer,
   });
+  registerLocalDateBoundaryReconciler(() => coordinator?.reconcile());
   return coordinator.configure();
 }
 

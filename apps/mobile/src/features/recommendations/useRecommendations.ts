@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { classifyRole } from '@/features/routine/sequencing';
 import { useProfileBits } from '@/features/scheduler/profile';
 import type { ShelfProduct } from '@/features/shelf/store';
-import { useShelf } from '@/features/shelf/useShelf';
+import { useShelf, type ShelfData } from '@/features/shelf/useShelf';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
 import { recommend, type RecReplenishmentItem, type RecResult, type RecShelfItem } from './engine';
@@ -24,10 +24,13 @@ function isFragranced(p: ShelfProduct): boolean {
   return [p.name, ...p.ingredients].some((t) => /fragrance|parfum|perfume/i.test(t));
 }
 
-export type RecommendationShelfSource = Pick<
-  ReturnType<typeof useShelf>,
-  'data' | 'isError' | 'isFetching' | 'isLoading' | 'isSuccess'
->;
+export type RecommendationShelfSource = Readonly<{
+  data: ShelfData | undefined;
+  isError: boolean;
+  isFetching: boolean;
+  isLoading: boolean;
+  isSuccess: boolean;
+}>;
 export type RecommendationProfileSource = Pick<
   ReturnType<typeof useProfileBits>,
   'data' | 'isError' | 'isFetching' | 'isLoading' | 'isSuccess'

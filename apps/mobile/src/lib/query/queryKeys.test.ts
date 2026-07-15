@@ -506,6 +506,7 @@ describe('owner-scoped query keys', () => {
     const photos = read('features/photos/usePhotos.ts');
     const entitlement = read('features/subscription/useEntitlement.ts');
     const today = read('app/(tabs)/today.tsx');
+    const todayViewModel = read('features/today/useTodayViewModel.ts');
     const dateBoundary = read('lib/query/queryDateBoundary.ts');
     const queryClient = read('lib/query/queryClient.ts');
     const root = read('app/_layout.tsx');
@@ -515,12 +516,20 @@ describe('owner-scoped query keys', () => {
     expect(cycle).toContain('queryKeys.cycleConfig(ownerScope, boundary)');
     expect(photos).toContain('queryKeys.photos(ownerScope, boundary, series)');
     expect(entitlement).toContain('queryKeys.entitlement(ownerScope)');
-    expect(today).toContain('queryKeys.completions(ownerScope, boundary)');
+    expect(todayViewModel).toContain('queryKeys.completions(ownerScope, boundary)');
     expect(dateBoundary).toContain("refetchType: 'none'");
-    for (const source of [progress, photos, today]) {
+    for (const source of [progress, photos]) {
       expect(source).toContain('refetchOnReconnect: shouldRefetchCurrentLocalDayQuery');
       expect(source).toContain('refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery');
     }
+    expect(today).toContain('const boundary = useLocalDateBoundary();');
+    expect(todayViewModel).toContain('refetchOnReconnect: (query) =>');
+    expect(todayViewModel).toContain('refetchOnWindowFocus: (query) =>');
+    expect(
+      todayViewModel.match(
+        /query\.state\.status !== 'error' && shouldRefetchCurrentLocalDayQuery\(query\)/g,
+      ),
+    ).toHaveLength(2);
     expect(shelf).toContain('refetchOnReconnect: (activeQuery) =>');
     expect(shelf).toContain('refetchOnWindowFocus: (activeQuery) =>');
     expect(

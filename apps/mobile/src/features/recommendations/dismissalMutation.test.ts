@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   beginAccountGenerationBoundary,
@@ -10,18 +10,33 @@ import { createOwnerQueryScope, queryKeys } from '@/lib/query/queryKeys';
 import {
   containRecommendationDismissalFailure,
   publishCommittedRecommendationDismissal,
+  runRecommendationDismissalMutation,
 } from './dismissalMutation';
 import type { RecommendationInputs } from './store';
 
+const mocks = vi.hoisted(() => ({
+  dismissRecommendation: vi.fn(),
+}));
+
+vi.mock('./store', () => ({
+  dismissRecommendation: mocks.dismissRecommendation,
+}));
+
 function deferred<T>() {
   let resolve!: (value: T) => void;
-  const promise = new Promise<T>((done) => {
+  let reject!: (reason: unknown) => void;
+  const promise = new Promise<T>((done, fail) => {
     resolve = done;
+    reject = fail;
   });
-  return { promise, resolve };
+  return { promise, reject, resolve };
 }
 
 describe('committed recommendation dismissal cache publication', () => {
+  beforeEach(() => {
+    mocks.dismissRecommendation.mockReset();
+  });
+
   it('still resets shared owner state after the originating surface unmounts', async () => {
     const client = new QueryClient();
     const ownerScope = createOwnerQueryScope();
@@ -83,4 +98,111 @@ describe('committed recommendation dismissal cache publication', () => {
     expect(invalidate).not.toHaveBeenCalled();
     client.clear();
   });
+
+  it('delivers success to the initiating route after the prompt unmounts and coalesces a remount', async () => {
+    const client = new QueryClient();
+    const ownerScope = createOwnerQueryScope();
+    const queryKey = queryKeys.recommendations(ownerScope);
+    const pendingWrite = deferred<void>();
+    const firstOnFailure = vi.fn();
+    const firstOnSuccess = vi.fn();
+    const remountOnFailure = vi.fn();
+    const remountOnSuccess = vi.fn();
+    let promptMounted = true;
+    mocks.dismissRecommendation.mockReturnValue(pendingWrite.promise);
+    client.setQueryData<RecommendationInputs>(queryKey, {
+      prefs: { values: ['vegan'], budget: 'mid', formats: ['gel'] },
+      dismissed: [],
+    });
+
+    const first = runRecommendationDismissalMutation(client, ownerScope, 'gap:spf', {
+      onFailure: firstOnFailure,
+      onSuccess: () => {
+        expect(promptMounted).toBe(false);
+        firstOnSuccess();
+      },
+    });
+    promptMounted = false;
+    const fromRemountedPrompt = runRecommendationDismissalMutation(
+      client,
+      ownerScope,
+      'gap:spf',
+      { onFailure: remountOnFailure, onSuccess: remountOnSuccess },
+    );
+
+    expect(fromRemountedPrompt).toBe(first);
+    await Promise.resolve();
+    expect(mocks.dismissRecommendation).toHaveBeenCalledOnce();
+    pendingWrite.resolve();
+
+    await expect(first).resolves.toBe('committed');
+    expect(firstOnSuccess).toHaveBeenCalledOnce();
+    expect(firstOnFailure).not.toHaveBeenCalled();
+    expect(remountOnSuccess).not.toHaveBeenCalled();
+    expect(remountOnFailure).not.toHaveBeenCalled();
+    expect(client.getQueryData<RecommendationInputs>(queryKey)?.dismissed).toEqual(['gap:spf']);
+    client.clear();
+  });
+
+  it('delivers failure after prompt unmount and awaits strict fail-closed recovery', async () => {
+    const client = new QueryClient();
+    const ownerScope = createOwnerQueryScope();
+    const pendingWrite = deferred<void>();
+    const pendingReset = deferred<void>();
+    const reset = vi.spyOn(client, 'resetQueries').mockReturnValue(pendingReset.promise);
+    const onFailure = vi.fn();
+    const onSuccess = vi.fn();
+    let promptMounted = true;
+    mocks.dismissRecommendation.mockReturnValue(pendingWrite.promise);
+
+    const mutation = runRecommendationDismissalMutation(client, ownerScope, 'gap:spf', {
+      onFailure: () => {
+        expect(promptMounted).toBe(false);
+        onFailure();
+      },
+      onSuccess,
+    });
+    promptMounted = false;
+    await Promise.resolve();
+    pendingWrite.reject(new Error('storage unavailable'));
+    await Promise.resolve();
+
+    expect(onFailure).toHaveBeenCalledOnce();
+    expect(onSuccess).not.toHaveBeenCalled();
+    expect(reset).toHaveBeenCalledTimes(2);
+    pendingReset.resolve();
+    await expect(mutation).resolves.toBe('failed');
+    client.clear();
+  });
+
+  it.each(['resolve', 'reject'] as const)(
+    'drops %s settlement after the initiating owner becomes stale',
+    async (settlement) => {
+      const client = new QueryClient();
+      const ownerScope = createOwnerQueryScope();
+      const pendingWrite = deferred<void>();
+      const setQueryData = vi.spyOn(client, 'setQueryData');
+      const resetQueries = vi.spyOn(client, 'resetQueries');
+      const onFailure = vi.fn();
+      const onSuccess = vi.fn();
+      mocks.dismissRecommendation.mockReturnValue(pendingWrite.promise);
+
+      const mutation = runRecommendationDismissalMutation(client, ownerScope, 'gap:spf', {
+        onFailure,
+        onSuccess,
+      });
+      await Promise.resolve();
+      beginAccountGenerationBoundary();
+      endAccountGenerationBoundary();
+      if (settlement === 'resolve') pendingWrite.resolve();
+      else pendingWrite.reject(new Error('owner changed'));
+
+      await expect(mutation).resolves.toBe('stale_owner');
+      expect(onFailure).not.toHaveBeenCalled();
+      expect(onSuccess).not.toHaveBeenCalled();
+      expect(setQueryData).not.toHaveBeenCalled();
+      expect(resetQueries).not.toHaveBeenCalled();
+      client.clear();
+    },
+  );
 });

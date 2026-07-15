@@ -12,13 +12,23 @@ const COMPLETION_TOKEN = /^[0-9a-f]{64}$/i;
 const REQUEST_ID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-const anonymousCompletionClient = createClient(env.supabaseUrl, env.supabasePublishableKey, {
-  auth: {
-    autoRefreshToken: false,
-    detectSessionInUrl: false,
-    persistSession: false,
-  },
-});
+function createAnonymousCompletionClient() {
+  return createClient(env.supabaseUrl, env.supabasePublishableKey, {
+    auth: {
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+      persistSession: false,
+      storageKey: 'onskin-account-deletion-completion-anonymous',
+    },
+  });
+}
+
+let anonymousCompletionClient: ReturnType<typeof createAnonymousCompletionClient> | null = null;
+
+function getAnonymousCompletionClient() {
+  anonymousCompletionClient ??= createAnonymousCompletionClient();
+  return anonymousCompletionClient;
+}
 
 export type AccountDeletionCompletion = Readonly<{
   requestId: string;
@@ -92,7 +102,7 @@ export async function lookupAccountDeletionCompletion(
       signal,
     },
     async ({ signal: attemptSignal }) => {
-      const request = anonymousCompletionClient.rpc('account_deletion_completion_status', {
+      const request = getAnonymousCompletionClient().rpc('account_deletion_completion_status', {
         p_completion_token_hash: completionTokenHash,
       });
       const { data, error } = await request.abortSignal(attemptSignal);

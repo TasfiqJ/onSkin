@@ -1085,4 +1085,32 @@ describe('paywall mobile contracts', () => {
     expect(settings).toContain('openedNative = await manage.mutateAsync();');
     expect(settings).not.toContain('showNativeManageSubscriptions()');
   });
+
+  it('keeps the ownerless reverse-trial fixture development-only and Supabase-unconfigured', () => {
+    const actions = readSource('features/subscription/useEntitlement.ts');
+
+    expect(actions).toContain("import { env, isSupabaseConfigured } from '@/lib/env';");
+    expect(actions).toContain('const reverseTrialStoreUserId = () => {');
+    expect(actions).toContain('if (user?.id) return user.id;');
+    expect(actions).toContain(
+      "if (env.appEnvironment === 'development' && !isSupabaseConfigured) return undefined;",
+    );
+    expect(actions).toMatch(
+      /const reverseTrialStoreUserId = \(\) => \{[\s\S]*?throw new Error\('REVENUECAT_OWNER_REQUIRED'\);[\s\S]*?\};/,
+    );
+    const reverseTrialBlock = actions.match(
+      /const startReverseTrial = useMutation\(\{[\s\S]*?const startTrial = useMutation/,
+    )?.[0];
+    expect(reverseTrialBlock).toBeDefined();
+    expect(reverseTrialBlock).toContain('const storeUserId = reverseTrialStoreUserId();');
+    expect(reverseTrialBlock).toMatch(
+      /startReverseTrialOnServer\(\s*lease\.assertCurrent,\s*storeUserId,\s*\(\) =>/,
+    );
+    expect(
+      reverseTrialBlock?.match(/assertActionAtCommit\(lease, input, \['reverse_trial'\]\)/g),
+    ).toHaveLength(2);
+    expect(actions).not.toMatch(
+      /assertActionAtCommit\(lease, input, \['reverse_trial'\]\);\s+const owner = revenueCatOwner\(lease\);/,
+    );
+  });
 });

@@ -1,6 +1,6 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import type { RoutineType } from '@onskin/types';
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
@@ -9,32 +9,26 @@ import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { ActiveScheduleUnavailableNotice } from '@/features/scheduler/ActiveScheduleUnavailableNotice';
 import type { SchedulerSlot } from '@/features/scheduler/orchestrate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
-import { hasUseTogetherChoiceBetween, useCycle } from '@/features/scheduler/useCycle';
-import { usePlan } from '@/features/routine/usePlan';
-import { useProgress } from '@/features/routine/useProgress';
-import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
-import { requestReviewAfterValue } from '@/features/review/prompt';
+import { hasUseTogetherChoiceBetween } from '@/features/scheduler/useCycle';
+import { RecommendationsTeaserFromSources } from '@/features/recommendations/RecommendationsTeaser';
 import {
   PRIVATE_GUIDANCE_AVAILABILITY_COPY,
-  ShelfDataAvailabilityGate,
+  ShelfDataAvailabilityBoundary,
   ShelfDataUnavailableNotice,
 } from '@/features/shelf/ShelfDataAvailabilityGate';
-import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
+import { useShelfFromBoundary } from '@/features/shelf/useShelf';
+import { ReverseTrialBannerFromEntitlement } from '@/features/subscription/ReverseTrialBanner';
+import type { SubscriptionState } from '@/features/subscription/entitlement';
 import { CompletionHistoryState } from '@/features/today/CompletionHistoryState';
-import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
-import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';
-import { currentRoutineType, localClockLabel } from '@/features/today/useToday';
-import { track } from '@/lib/analytics/track';
+import { stepKey } from '@/features/today/completionsStore';
+import { useTodayViewModel } from '@/features/today/useTodayViewModel';
+import { localClockLabel, useCurrentRoutineType } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
 import { phase7Flags } from '@/lib/launch/phase7';
-import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
 import {
-  isOwnerQueryScopeCurrent,
-  ownerQueryPrefixes,
-  queryKeys,
-  shouldRefetchCurrentLocalDayQuery,
-} from '@/lib/query/queryKeys';
-import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
+  useLocalDateBoundary,
+  type LocalDateBoundaryIdentity,
+} from '@/lib/query/localDateBoundaryStore';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -113,6 +107,66 @@ function cycleStripLabel(slot: SchedulerSlot, compact: boolean): string {
   if (slot === 'recover') return 'Reco\nver';
   return 'Active';
 }
+
+const TodayHeader = memo(function TodayHeader({
+  clockLabel,
+  compact,
+  dark,
+  dateLabel,
+  entitlement,
+  streak,
+}: {
+  clockLabel: string;
+  compact: boolean;
+  dark: boolean;
+  dateLabel: string;
+  entitlement: SubscriptionState | undefined;
+  streak: number;
+}) {
+  return (
+    <>
+      <ReverseTrialBannerFromEntitlement
+        compact={compact}
+        data={entitlement}
+        tone={dark ? 'night' : 'light'}
+      />
+      {dark ? (
+        <>
+          <Text variant="label" tone="inverseMuted" className="font-mono mt-1">
+            {dateLabel.toUpperCase()} · {clockLabel}
+          </Text>
+          <Text variant="titleLg" tone="inverse" className="mt-2">
+            Good evening.
+          </Text>
+        </>
+      ) : (
+        <>
+          <View className="mt-1 flex-row items-start justify-between">
+            <Text variant="label" tone="muted" className="font-mono mt-1">
+              {dateLabel.toUpperCase()}
+            </Text>
+            {streak > 0 ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="View your streak and adherence"
+                onPress={() => router.push('/routine/streak')}
+                className="min-h-[48px] flex-row items-center gap-1.5 rounded-pill bg-clay-tint px-4 py-2.5"
+              >
+                <View className="h-1.5 w-1.5 rounded-full bg-clay" />
+                <Text className="font-sans-bold text-[13px]" style={{ color: colors.clayDeep }}>
+                  {streakLabel(streak)}
+                </Text>
+              </Pressable>
+            ) : null}
+          </View>
+          <Text variant="titleLg" className={compact ? 'mt-3' : 'mt-4'}>
+            Good morning.
+          </Text>
+        </>
+      )}
+    </>
+  );
+});
 
 function EmptyRoutineCard({
   compact = false,
@@ -262,23 +316,28 @@ function Check({ color = colors.paper }: { color?: string }) {
   );
 }
 
-function CheckRow({
-  compact = false,
-  name,
-  sub,
-  state,
-  dark,
-  first,
-  onPress,
-}: {
+type CheckRowProps = {
+  actionIdentity: string;
   compact?: boolean;
+  committing: boolean;
   name: string;
   sub?: string;
   state: 'done' | 'next' | 'pending';
   dark: boolean;
   first?: boolean;
   onPress: () => void;
-}) {
+};
+
+const CheckRow = memo(function CheckRow({
+  compact = false,
+  committing,
+  name,
+  sub,
+  state,
+  dark,
+  first,
+  onPress,
+}: CheckRowProps) {
   const accent = dark ? colors.clayBright : colors.clay;
   const displaySub = sub && compact ? compactRoutineInstruction(sub) : sub;
   const nameLineCount = compact ? 2 : undefined;
@@ -287,12 +346,12 @@ function CheckRow({
   return (
     <Pressable
       accessibilityRole="checkbox"
-      accessibilityState={{ checked: state === 'done' }}
+      accessibilityState={{ busy: committing, checked: state === 'done', disabled: committing }}
       accessibilityLabel={name}
       aria-checked={state === 'done'}
+      disabled={committing}
       onPress={() => {
-        if (state === 'done') return;
-        haptics.success();
+        if (state === 'done' || committing) return;
         onPress();
       }}
       className={cn('flex-row items-center', compact ? 'gap-3 py-2.5' : 'gap-3.5 py-3')}
@@ -351,58 +410,89 @@ function CheckRow({
           </Text>
         ) : null}
       </View>
-      {state === 'next' ? (
+      {committing ? (
+        <Text className="font-mono text-[11px]" style={{ color: accent }}>
+          SAVING
+        </Text>
+      ) : state === 'next' ? (
         <Text className="font-mono text-[11px]" style={{ color: accent }}>
           NEXT
         </Text>
       ) : null}
     </Pressable>
   );
+}, areCheckRowPropsEqual);
+
+function areCheckRowPropsEqual(previous: CheckRowProps, next: CheckRowProps): boolean {
+  return (
+    previous.actionIdentity === next.actionIdentity &&
+    previous.compact === next.compact &&
+    previous.committing === next.committing &&
+    previous.name === next.name &&
+    previous.sub === next.sub &&
+    previous.state === next.state &&
+    previous.dark === next.dark &&
+    previous.first === next.first
+  );
 }
 
 export default function TodayScreen() {
+  const boundary = useLocalDateBoundary();
+  const shelf = useShelfFromBoundary(boundary);
+  const routineType = useCurrentRoutineType(boundary);
+
+  if (routineType === null) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <View
+          accessibilityLabel="Updating your local routine"
+          accessibilityLiveRegion="polite"
+          className="flex-1 items-center justify-center"
+        >
+          <Text variant="bodySm" tone="muted">
+            Updating your local routine…
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
+
   return (
-    <ShelfDataAvailabilityGate>
-      <TodayScreenContent />
-    </ShelfDataAvailabilityGate>
+    <ShelfDataAvailabilityBoundary query={shelf}>
+      <TodayScreenContent boundary={boundary} routineType={routineType} shelf={shelf} />
+    </ShelfDataAvailabilityBoundary>
   );
 }
 
-function TodayScreenContent() {
+function TodayScreenContent({
+  boundary,
+  routineType,
+  shelf,
+}: {
+  boundary: LocalDateBoundaryIdentity;
+  routineType: Extract<RoutineType, 'AM' | 'PM'>;
+  shelf: ReturnType<typeof useShelfFromBoundary>;
+}) {
   const { height, width } = useWindowDimensions();
-  const type = currentRoutineType();
-  const dark = type === 'PM';
-  const planQuery = usePlan();
-  const { data: planData } = planQuery;
-  const { data: progress } = useProgress();
-  const cycleQuery = useCycle();
-  const { data: cycleData } = cycleQuery;
-  const qc = useQueryClient();
-  const ownerScope = useOwnerQueryScope();
-  const boundary = useLocalDateBoundary();
-  const { localDate: today } = boundary;
-  const completionReadFixturePending = useRef(
-    typeof __DEV__ !== 'undefined' &&
-      __DEV__ &&
-      process.env.EXPO_PUBLIC_E2E_COMPLETION_STORAGE_FAILURE === 'today_once',
-  );
-  const completionQuery = useQuery({
-    queryKey: queryKeys.completions(ownerScope, boundary),
-    retry: false,
-    refetchOnReconnect: shouldRefetchCurrentLocalDayQuery,
-    refetchOnWindowFocus: shouldRefetchCurrentLocalDayQuery,
-    queryFn: async () => {
-      if (completionReadFixturePending.current) {
-        completionReadFixturePending.current = false;
-        throw new Error('E2E_COMPLETION_STORAGE_UNAVAILABLE');
-      }
-      return getCompletedSteps(today);
-    },
-  });
-  const [completionMutationFailed, setCompletionMutationFailed] = useState(false);
   const [recommendationDismissFailed, setRecommendationDismissFailed] = useState(false);
-  const { data: doneData } = completionQuery;
-  const done = doneData ?? new Set<string>();
+  const markRecommendationDismissFailure = useCallback(
+    () => setRecommendationDismissFailed(true),
+    [],
+  );
+  const clearRecommendationDismissFailure = useCallback(
+    () => setRecommendationDismissFailed(false),
+    [],
+  );
+  const type = routineType;
+  const dark = type === 'PM';
+  const todayViewModel = useTodayViewModel({ boundary, routineType, shelf });
+  const planQuery = todayViewModel.plan;
+  const { data: planData } = planQuery;
+  const { data: progress } = todayViewModel.progress;
+  const cycleQuery = todayViewModel.cycle;
+  const { data: cycleData } = cycleQuery;
+  const completionQuery = todayViewModel.completion;
+  const { completionMutationFailed, done } = todayViewModel;
   const hasExamplePlan = planData?.isExample === true;
   const hasRealRoutine = Boolean(planData && !planData.isExample);
   const plan = hasRealRoutine ? planData?.plan : undefined;
@@ -424,48 +514,6 @@ function TodayScreenContent() {
   const tonightSlot = cTonight?.night.slot ?? null;
   const cycleStripNights = cycleData?.weekAhead.map((projected) => projected.night) ?? [];
 
-  // Persist the check-off to the local-first store, fire the activation metric on the
-  // first-ever completion, and refresh Today + the streak/heat-map (docs/03 §6).
-  async function toggle(
-    key: string,
-    context?: { phase: 'AM' | 'PM'; cycleActive: boolean; stepKeys: readonly string[] },
-  ) {
-    try {
-      const result = await toggleCompletion(key, today);
-      if (result.done) {
-        const moment = type.toLowerCase();
-        track('routine_checkoff_completed', { moment });
-        if (result.firstEver) track('first_checkoff_completed', { moment });
-        const checkoffPhase = context?.phase ?? (type === 'PM' ? 'PM' : 'AM');
-        if (
-          shouldTrackCycleNightCompleted({
-            completedBefore: done,
-            completedKey: key,
-            cycleActive: context?.cycleActive === true,
-            phase: checkoffPhase,
-            stepKeys: context?.stepKeys ?? [],
-            completionDone: result.done,
-          })
-        ) {
-          track('cycle_night_completed', { moment: 'pm', source: 'today' });
-        }
-      }
-      if (result.done && (progress?.streak ?? 0) >= 6)
-        void requestReviewAfterValue('seven_checkoff_days');
-      if (isOwnerQueryScopeCurrent(ownerScope)) {
-        await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.completions(ownerScope) });
-        await qc.invalidateQueries({ queryKey: ownerQueryPrefixes.progress(ownerScope) });
-      }
-    } catch {
-      setCompletionMutationFailed(true);
-    }
-  }
-
-  async function retryCompletionHistory() {
-    const result = await completionQuery.refetch();
-    if (result.isSuccess) setCompletionMutationFailed(false);
-  }
-
   const rowState = (key: string, firstUndoneKey: string | null): 'done' | 'next' | 'pending' =>
     done.has(key) ? 'done' : key === firstUndoneKey ? 'next' : 'pending';
 
@@ -486,6 +534,22 @@ function TodayScreenContent() {
     cycle != null &&
     (cadenceWithheldCount === 0 || height >= 932);
 
+  if (planQuery.isLoading) {
+    return (
+      <Screen edges={['top', 'bottom']}>
+        <View
+          accessibilityLabel="Opening your routine"
+          accessibilityLiveRegion="polite"
+          className="flex-1 items-center justify-center"
+        >
+          <Text variant="bodySm" tone="muted">
+            Opening your routine…
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
+
   if (planQuery.isError) {
     return (
       <Screen edges={['top', 'bottom']}>
@@ -495,7 +559,7 @@ function TodayScreenContent() {
         >
           <ShelfDataUnavailableNotice
             copy={PRIVATE_GUIDANCE_AVAILABILITY_COPY}
-            onRetry={planQuery.retry}
+            onRetry={todayViewModel.retryPrivateGuidance}
             retrying={planQuery.isFetching}
           />
         </ScrollView>
@@ -509,7 +573,7 @@ function TodayScreenContent() {
         <CompletionHistoryState
           failed={completionQuery.isError || completionMutationFailed}
           retrying={completionQuery.isFetching}
-          onRetry={() => void retryCompletionHistory()}
+          onRetry={() => void todayViewModel.retryCompletionHistory()}
         />
       </Screen>
     );
@@ -518,8 +582,9 @@ function TodayScreenContent() {
   // ---- AM ----
   if (!dark) {
     const steps = plan?.am ?? [];
-    const firstUndone =
-      steps.map((s) => stepKey('AM', s.productId)).find((k) => !done.has(k)) ?? null;
+    const amStepKeys = steps.map((step) => stepKey('AM', step.productId));
+    const amActionIdentity = `${todayViewModel.completionActionScope}:AM:${amStepKeys.join('|')}`;
+    const firstUndone = amStepKeys.find((key) => !done.has(key)) ?? null;
     const doneCount = steps.filter((s) => done.has(stepKey('AM', s.productId))).length;
     return (
       <Screen edges={['top']}>
@@ -527,29 +592,14 @@ function TodayScreenContent() {
           showsVerticalScrollIndicator={false}
           contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
         >
-          <ReverseTrialBanner compact={compactPhone} />
-          <View className="mt-1 flex-row items-start justify-between">
-            <Text variant="label" tone="muted" className="font-mono mt-1">
-              {dateLabel.toUpperCase()}
-            </Text>
-            {progress && progress.streak > 0 ? (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="View your streak and adherence"
-                onPress={() => router.push('/routine/streak')}
-                className="min-h-[48px] flex-row items-center gap-1.5 rounded-pill bg-clay-tint px-4 py-2.5"
-              >
-                <View className="h-1.5 w-1.5 rounded-full bg-clay" />
-                <Text className="font-sans-bold text-[13px]" style={{ color: colors.clayDeep }}>
-                  {streakLabel(progress.streak)}
-                </Text>
-              </Pressable>
-            ) : null}
-          </View>
-
-          <Text variant="titleLg" className={compactPhone ? 'mt-3' : 'mt-4'}>
-            Good morning.
-          </Text>
+          <TodayHeader
+            clockLabel={clockLabel}
+            compact={compactPhone}
+            dark={false}
+            dateLabel={dateLabel}
+            entitlement={todayViewModel.entitlement.data}
+            streak={progress?.streak ?? 0}
+          />
 
           {cadenceWithheldCount > 0 ? (
             <CadenceWithheldNotice
@@ -562,7 +612,7 @@ function TodayScreenContent() {
           {scheduleUnavailable ? (
             <ActiveScheduleUnavailableNotice
               className="mt-4"
-              onRetry={() => void cycleQuery.retry()}
+              onRetry={() => void todayViewModel.retrySchedule()}
               retrying={cycleQuery.isFetching}
             />
           ) : null}
@@ -597,6 +647,8 @@ function TodayScreenContent() {
                 const k = stepKey('AM', s.productId);
                 return (
                   <CheckRow
+                    actionIdentity={amActionIdentity}
+                    committing={todayViewModel.isCompletionPending(k)}
                     key={k}
                     name={s.name}
                     sub={s.instruction}
@@ -604,7 +656,13 @@ function TodayScreenContent() {
                     dark={false}
                     compact={compactPhone}
                     first={i === 0}
-                    onPress={() => void toggle(k)}
+                    onPress={() =>
+                      void todayViewModel.completeStep(k, {
+                        phase: 'AM',
+                        cycleActive: false,
+                        stepKeys: amStepKeys,
+                      })
+                    }
                   />
                 );
               })}
@@ -613,12 +671,14 @@ function TodayScreenContent() {
 
           {/* For you. Recommendations + the in-routine SPF gap prompt (docs/09 §7) */}
           {showRecommendations ? (
-            <RecommendationsTeaser
+            <RecommendationsTeaserFromSources
               compact={compactRecommendationPrompt}
-              showGapPrompt
               dismissFailed={recommendationDismissFailed}
-              onDismissFailure={() => setRecommendationDismissFailed(true)}
-              onDismissSuccess={() => setRecommendationDismissFailed(false)}
+              onDismissFailure={markRecommendationDismissFailure}
+              onDismissSuccess={clearRecommendationDismissFailure}
+              profile={todayViewModel.recommendationProfile}
+              shelf={todayViewModel.recommendationShelf}
+              showGapPrompt
             />
           ) : null}
 
@@ -724,6 +784,10 @@ function TodayScreenContent() {
   );
   const hasScheduledRetinoid = cycledStep?.role === 'treatment';
   const pmStepKeys = pmSteps.map((s) => stepKey('PM', s.productId));
+  const pmCycleActive = Boolean(
+    cycle && cTonight?.night.productId && !paused && !skippedTonight && !recoveryActive,
+  );
+  const pmActionIdentity = `${todayViewModel.completionActionScope}:PM:${pmCycleActive}:${pmStepKeys.join('|')}`;
   const firstUndonePm = pmStepKeys.find((k) => !done.has(k)) ?? null;
   const donePm = pmSteps.filter((s) => done.has(stepKey('PM', s.productId))).length;
   const suppressedAcidName =
@@ -746,13 +810,14 @@ function TodayScreenContent() {
         showsVerticalScrollIndicator={false}
         contentContainerClassName={compactPhone ? 'pb-28' : 'pb-6'}
       >
-        <ReverseTrialBanner compact={compactPhone} tone="night" />
-        <Text variant="label" tone="inverseMuted" className="font-mono mt-1">
-          {dateLabel.toUpperCase()} · {clockLabel}
-        </Text>
-        <Text variant="titleLg" tone="inverse" className="mt-2">
-          Good evening.
-        </Text>
+        <TodayHeader
+          clockLabel={clockLabel}
+          compact={compactPhone}
+          dark
+          dateLabel={dateLabel}
+          entitlement={todayViewModel.entitlement.data}
+          streak={progress?.streak ?? 0}
+        />
 
         {/* Recovery / pause banner. The scheduler's disruption state (docs/05 §7) */}
         {cycleData?.recovery.active ? (
@@ -842,7 +907,7 @@ function TodayScreenContent() {
         {scheduleUnavailable ? (
           <ActiveScheduleUnavailableNotice
             className="mt-4"
-            onRetry={() => void cycleQuery.retry()}
+            onRetry={() => void todayViewModel.retrySchedule()}
             retrying={cycleQuery.isFetching}
             tone="night"
           />
@@ -926,6 +991,8 @@ function TodayScreenContent() {
                 const k = stepKey('PM', s.productId);
                 return (
                   <CheckRow
+                    actionIdentity={pmActionIdentity}
+                    committing={todayViewModel.isCompletionPending(k)}
                     key={k}
                     name={s.name}
                     sub={pmDisplaySub(s, hasScheduledRetinoid)}
@@ -934,15 +1001,9 @@ function TodayScreenContent() {
                     compact={compactPhone}
                     first={i === 0}
                     onPress={() =>
-                      void toggle(k, {
+                      void todayViewModel.completeStep(k, {
                         phase: 'PM',
-                        cycleActive: Boolean(
-                          cycle &&
-                          cTonight?.night.productId &&
-                          !paused &&
-                          !skippedTonight &&
-                          !recoveryActive,
-                        ),
+                        cycleActive: pmCycleActive,
                         stepKeys: pmStepKeys,
                       })
                     }

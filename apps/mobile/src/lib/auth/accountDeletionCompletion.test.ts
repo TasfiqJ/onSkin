@@ -85,6 +85,18 @@ describe('account-deletion completion capability', () => {
     expect(mocks.rpc).toHaveBeenCalledWith('account_deletion_completion_status', {
       p_completion_token_hash: TOKEN_HASH,
     });
+    expect(mocks.createClient).toHaveBeenCalledWith(
+      'https://example.supabase.co',
+      'publishable-key',
+      {
+        auth: {
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+          persistSession: false,
+          storageKey: 'onskin-account-deletion-completion-anonymous',
+        },
+      },
+    );
     expect(mocks.runRequest).toHaveBeenCalledWith(
       expect.objectContaining({
         endpoint: 'account_deletion',

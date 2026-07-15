@@ -9,7 +9,7 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { createOwnerQueryScope, ownerQueryPrefixes, queryKeys } from '@/lib/query/queryKeys';
 
-import { useRamp, type RampItem } from './useRamp';
+import { useRamp, useRampFromPlan, type RampItem, type RampPlanSource } from './useRamp';
 
 type MockRampQueryResult = {
   data: RampItem[] | undefined;
@@ -46,10 +46,15 @@ const mocks = vi.hoisted(() => ({
     isFetching: false,
     isLoading: false,
     isSuccess: true,
-    retry: vi.fn(async () => undefined),
+    retry: vi.fn(async (): Promise<{ isError: boolean }> => ({ isError: false })),
   },
   queryOptions: null as Record<string, unknown> | null,
   stepUpRamp: vi.fn(),
+  useLocalDateBoundary: vi.fn(() => ({
+    localDate: '2026-07-14',
+    timeZone: 'America/Toronto',
+  })),
+  usePlan: vi.fn(),
   useQuery: vi.fn((options: Record<string, unknown>): MockRampQueryResult => {
     mocks.queryOptions = options;
     return {
@@ -73,10 +78,7 @@ vi.mock('@tanstack/react-query', async (importOriginal) => {
 });
 
 vi.mock('@/lib/query/localDateBoundaryStore', () => ({
-  useLocalDateBoundary: () => ({
-    localDate: '2026-07-14',
-    timeZone: 'America/Toronto',
-  }),
+  useLocalDateBoundary: mocks.useLocalDateBoundary,
 }));
 
 vi.mock('@/lib/query/useOwnerQueryScope', () => ({
@@ -90,7 +92,7 @@ vi.mock('./rampStore', () => ({
 }));
 
 vi.mock('./usePlan', () => ({
-  usePlan: () => mocks.planResult,
+  usePlan: mocks.usePlan,
 }));
 
 type Deferred<T> = Readonly<{
@@ -119,6 +121,11 @@ const OWNER_B_RAMP = {
   freqPerWeek: 1,
   startedAt: '2026-07-01',
 };
+
+const BOUNDARY = {
+  localDate: '2026-07-14',
+  timeZone: 'America/Toronto',
+} as const;
 
 function useCapturedRampQuery(): {
   queryFn: () => Promise<RampItem[]>;
@@ -166,6 +173,11 @@ beforeEach(() => {
   mocks.queryOptions = null;
   mocks.stepUpRamp.mockReset();
   mocks.stepUpRamp.mockResolvedValue(undefined);
+  mocks.useLocalDateBoundary.mockClear();
+  mocks.usePlan.mockReset();
+  mocks.usePlan.mockReturnValue(mocks.planResult);
+  mocks.planResult.retry.mockReset();
+  mocks.planResult.retry.mockResolvedValue({ isError: false });
   mocks.useQuery.mockReset();
   mocks.useQuery.mockImplementation((options: Record<string, unknown>) => {
     mocks.queryOptions = options;
@@ -177,6 +189,92 @@ beforeEach(() => {
       isSuccess: false,
       refetch: vi.fn(async () => undefined),
     };
+  });
+});
+
+describe('ramp source ownership', () => {
+  it('uses the supplied day, runs offline, and retries only the owned ramp query', async () => {
+    const upstreamRetry = vi.fn(async () => ({ isError: true }));
+    const rampRefetch = vi.fn(async () => ({ isError: false }));
+    mocks.useQuery.mockImplementationOnce((options: Record<string, unknown>) => {
+      mocks.queryOptions = options;
+      return {
+        data: undefined,
+        isError: true,
+        isFetching: false,
+        isPending: false,
+        isSuccess: false,
+        refetch: rampRefetch,
+      };
+    });
+
+    const plan = { ...mocks.planResult, retry: upstreamRetry } as unknown as RampPlanSource;
+    const result = useRampFromPlan(plan, BOUNDARY);
+
+    expect(mocks.queryOptions).toMatchObject({
+      enabled: true,
+      networkMode: 'always',
+      queryKey: queryKeys.ramp(mocks.ownerScope, BOUNDARY, 'retinol'),
+    });
+    await expect(result.retry()).resolves.toEqual({ isError: false });
+    expect(rampRefetch).toHaveBeenCalledOnce();
+    expect(upstreamRetry).not.toHaveBeenCalled();
+    expect(mocks.usePlan).not.toHaveBeenCalled();
+    expect(mocks.useLocalDateBoundary).not.toHaveBeenCalled();
+  });
+
+  it('reports a persistent owned ramp failure', async () => {
+    const rampRefetch = vi.fn(async () => ({ isError: true }));
+    mocks.useQuery.mockImplementationOnce((options: Record<string, unknown>) => {
+      mocks.queryOptions = options;
+      return {
+        data: undefined,
+        isError: true,
+        isFetching: false,
+        isPending: false,
+        isSuccess: false,
+        refetch: rampRefetch,
+      };
+    });
+
+    const result = useRampFromPlan(mocks.planResult as unknown as RampPlanSource, BOUNDARY);
+
+    await expect(result.retry()).resolves.toEqual({ isError: true });
+    expect(rampRefetch).toHaveBeenCalledOnce();
+  });
+
+  it('leaves route-owned Plan recovery to the caller', async () => {
+    const upstreamRetry = vi.fn(async () => ({ isError: false }));
+    const plan = {
+      data: undefined,
+      isError: true,
+      isFetching: false,
+      isLoading: false,
+      isSuccess: false,
+      retry: upstreamRetry,
+    } as unknown as RampPlanSource;
+    const result = useRampFromPlan(plan, BOUNDARY);
+
+    expect(result.isError).toBe(true);
+    await expect(result.retry()).resolves.toEqual({ isError: false });
+    expect(upstreamRetry).not.toHaveBeenCalled();
+  });
+
+  it('keeps standalone Plan recovery and reports its persistent failure', async () => {
+    const upstreamRetry = vi.fn(async () => ({ isError: true }));
+    mocks.usePlan.mockReturnValueOnce({
+      data: undefined,
+      isError: true,
+      isFetching: false,
+      isLoading: false,
+      isSuccess: false,
+      retry: upstreamRetry,
+    });
+
+    const result = useRamp();
+
+    await expect(result.retry()).resolves.toEqual({ isError: true });
+    expect(upstreamRetry).toHaveBeenCalledOnce();
   });
 });
 

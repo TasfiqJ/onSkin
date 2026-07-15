@@ -4,6 +4,7 @@ import { localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
+import { isSupabaseConfigured } from '@/lib/env';
 import { devWarn } from '@/lib/observability/safeLog';
 import {
   isOwnerQueryScopeCurrent,
@@ -71,6 +72,7 @@ async function performShelfMirrorUpsertForOwner(
   ownerScope: OwnerQueryScope,
   p: ShelfProduct,
 ): Promise<void> {
+  if (!isSupabaseConfigured) return;
   try {
     await runOwnerQueryOperation(ownerScope, async (lease) => {
       const owner = await captureAuthenticatedAccountOwner(lease);
@@ -125,6 +127,7 @@ async function performShelfMirrorDeleteForOwner(
   ownerScope: OwnerQueryScope,
   id: string,
 ): Promise<void> {
+  if (!isSupabaseConfigured) return;
   try {
     await runOwnerQueryOperation(ownerScope, async (lease) => {
       const owner = await captureAuthenticatedAccountOwner(lease);

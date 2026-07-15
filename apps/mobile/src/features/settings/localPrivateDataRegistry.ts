@@ -264,6 +264,13 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     export: include('shelf_and_routine', 'completion_history'),
   }),
   privateData({
+    key: 'onskin.cycleNightAnalytics.v1',
+    lifecycle: 'current',
+    codec: jsonCodec('cycle_night_analytics_receipts', 1),
+    typedRead: typedDomainRead,
+    export: include('activity_and_app_state', 'cycle_night_analytics_receipts'),
+  }),
+  privateData({
     key: 'onskin.conflict.overrides',
     lifecycle: 'current',
     codec: jsonCodec('conflict_choices', 1, [0]),
@@ -505,11 +512,10 @@ export const LOCAL_PRIVATE_KEY_REGISTRY = [
     storage: 'async_storage_control',
     lifecycle: 'metadata',
     discovery: 'production_literal',
-    codec: scalarCodec(
-      'photo_key_presence_marker',
-      'v1:created:<sha256>|v1:pending:<sha256>',
-      ['1', 'v1:created'],
-    ),
+    codec: scalarCodec('photo_key_presence_marker', 'v1:created:<sha256>|v1:pending:<sha256>', [
+      '1',
+      'v1:created',
+    ]),
     typedRead: enforced({ mode: 'control_state_machine' as const }),
     mutation: enforced({ mode: 'replace_only_control' as const }),
     ownerBinding: enforced({ mode: 'photo_account_generation' as const }),

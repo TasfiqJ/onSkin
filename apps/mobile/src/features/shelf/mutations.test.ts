@@ -31,6 +31,7 @@ const mocks = vi.hoisted(() => {
     from: vi.fn(() => ({ delete: remove, upsert })),
     getUser: vi.fn(),
     invalidateQueries: vi.fn(),
+    isSupabaseConfigured: true,
     ownerScope: { generation: 0 },
     reAddProduct: vi.fn(),
     remove,
@@ -47,6 +48,11 @@ const mocks = vi.hoisted(() => {
 vi.mock('@/lib/observability/safeLog', () => ({ devWarn: mocks.devWarn }));
 vi.mock('@/lib/analytics/track', () => ({ track: mocks.track }));
 vi.mock('@/lib/auth/AuthProvider', () => ({ useAuth: () => ({ user: mocks.user }) }));
+vi.mock('@/lib/env', () => ({
+  get isSupabaseConfigured() {
+    return mocks.isSupabaseConfigured;
+  },
+}));
 vi.mock('@tanstack/react-query', () => ({
   useQueryClient: () => ({
     invalidateQueries: mocks.invalidateQueries,
@@ -134,6 +140,7 @@ describe('shelf owner-bound mirrors', () => {
     mocks.from.mockClear();
     mocks.getUser.mockReset();
     mocks.invalidateQueries.mockReset();
+    mocks.isSupabaseConfigured = true;
     mocks.ownerScope = createOwnerQueryScope();
     mocks.reAddProduct.mockReset();
     mocks.remove.mockClear();
@@ -197,6 +204,17 @@ describe('shelf owner-bound mirrors', () => {
       { onConflict: 'id' },
     );
     expect(mocks.upsertAbortSignal).toHaveBeenCalledWith(expect.any(AbortSignal));
+  });
+
+  it('skips owner capture and network mirrors when Supabase is unconfigured', async () => {
+    mocks.isSupabaseConfigured = false;
+
+    await mirrorShelfUpsertForOwner(createOwnerQueryScope(), PRODUCT);
+    await mirrorShelfDeleteForOwner(createOwnerQueryScope(), PRODUCT.id);
+
+    expect(mocks.getUser).not.toHaveBeenCalled();
+    expect(mocks.from).not.toHaveBeenCalled();
+    expect(mocks.devWarn).not.toHaveBeenCalled();
   });
 
   it('aborts the owner-scoped delete through the generation lease signal', async () => {

@@ -32,6 +32,7 @@ vi.mock('@tanstack/react-query', () => ({
 }));
 
 vi.mock('@/lib/query/localDateBoundaryStore', () => ({
+  reconcileLocalDateBoundarySnapshot: vi.fn(),
   useLocalDateBoundary: () => ({
     localDate: '2026-07-10',
     timeZone: 'America/Toronto',

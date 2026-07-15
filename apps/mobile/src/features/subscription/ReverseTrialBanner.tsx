@@ -5,19 +5,22 @@ import { Text } from '@/components/ui';
 import { colors } from '@/theme/tokens';
 
 import { PAYWALL_COPY } from './copy';
+import type { SubscriptionState } from './entitlement';
 import { useEntitlement } from './useEntitlement';
 
 // A calm, non-nagging "you're exploring Pro" banner (design 02, docs/08 §6/§12).
 // Renders only during the reverse trial; taps through to the manage/keep screen.
 // During a carded trial we stay quiet (the 2-day reminder + manage screen cover it).
-export function ReverseTrialBanner({
-  compact = false,
-  tone = 'light',
-}: {
+export type ReverseTrialBannerProps = {
   compact?: boolean;
   tone?: 'light' | 'night';
-}) {
-  const { data } = useEntitlement();
+};
+
+export function ReverseTrialBannerFromEntitlement({
+  data,
+  compact = false,
+  tone = 'light',
+}: ReverseTrialBannerProps & { data: SubscriptionState | undefined }) {
   if (!data?.inReverseTrial) return null;
   const daysLeft = data.daysLeft ?? 0;
   const night = tone === 'night';
@@ -65,4 +68,10 @@ export function ReverseTrialBanner({
       <Text style={{ color: night ? colors.clayBright : colors.clay, fontSize: 18 }}>›</Text>
     </Pressable>
   );
+}
+
+/** Standalone banner. Route view models should pass their owned entitlement data. */
+export function ReverseTrialBanner(props: ReverseTrialBannerProps) {
+  const { data } = useEntitlement();
+  return <ReverseTrialBannerFromEntitlement {...props} data={data} />;
 }

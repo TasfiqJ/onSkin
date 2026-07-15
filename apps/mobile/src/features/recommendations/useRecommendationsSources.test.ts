@@ -1,6 +1,15 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useRecommendations, useRecommendationsFromSources } from './useRecommendations';
+import {
+  useRecommendations,
+  useRecommendationsFromSources,
+  type RecommendationProfileSource,
+  type RecommendationShelfSource,
+} from './useRecommendations';
+
+const RECOMMENDATIONS_DIR = fileURLToPath(new URL('./', import.meta.url));
 
 const mocks = vi.hoisted(() => ({
   prefsRefetch: vi.fn(),
@@ -94,31 +103,42 @@ describe('shared-source recommendations', () => {
   });
 
   it('retries only its owned preferences query', async () => {
-    const shelfRefetch = vi.fn(async () => ({ isError: false }));
-    const profileRefetch = vi.fn(async () => ({ isError: false }));
-    const recommendations = useRecommendationsFromSources(
-      {
-        data: undefined,
-        isError: true,
-        isFetching: false,
-        isLoading: false,
-        isSuccess: false,
-        refetch: shelfRefetch,
-      } as never,
-      {
-        data: undefined,
-        isError: true,
-        isFetching: false,
-        isLoading: false,
-        isSuccess: false,
-        refetch: profileRefetch,
-      } as never,
-    );
+    const shelf: RecommendationShelfSource = {
+      data: undefined,
+      isError: true,
+      isFetching: false,
+      isLoading: false,
+      isSuccess: false,
+    };
+    const profile: RecommendationProfileSource = {
+      data: undefined,
+      isError: true,
+      isFetching: false,
+      isLoading: false,
+      isSuccess: false,
+    };
+    const recommendations = useRecommendationsFromSources(shelf, profile);
 
     await recommendations.retry();
 
     expect(mocks.prefsRefetch).toHaveBeenCalledOnce();
-    expect(shelfRefetch).not.toHaveBeenCalled();
-    expect(profileRefetch).not.toHaveBeenCalled();
+    expect(mocks.useShelf).not.toHaveBeenCalled();
+    expect(mocks.useProfileBits).not.toHaveBeenCalled();
+  });
+
+  it('keeps the shared Shelf contract limited to recommendation inputs', () => {
+    const source = readFileSync(`${RECOMMENDATIONS_DIR}/useRecommendations.ts`, 'utf8');
+    const contract = source.slice(
+      source.indexOf('export type RecommendationShelfSource'),
+      source.indexOf('export type RecommendationProfileSource'),
+    );
+
+    expect(contract).toContain('data: ShelfData | undefined;');
+    expect(contract).toContain('isError: boolean;');
+    expect(contract).toContain('isFetching: boolean;');
+    expect(contract).toContain('isLoading: boolean;');
+    expect(contract).toContain('isSuccess: boolean;');
+    expect(contract).not.toContain('ReturnType<typeof useShelf>');
+    expect(contract).not.toContain('refetch');
   });
 });
