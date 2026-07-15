@@ -335,6 +335,101 @@ describe('encrypted photo storage', () => {
     endEncryptedPhotoAccountBoundary();
   });
 
+  it('keeps a share-file read on the mutation drain because it can publish plaintext', async () => {
+    const encrypted = await createAuthenticatedPhotoEnvelope('delayed-share');
+    let releaseRead!: () => void;
+    let markReadStarted!: () => void;
+    const readGate = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.readAsStringAsync.mockImplementationOnce(async (uri: string) => {
+      markReadStarted();
+      await readGate;
+      const raw = mocks.files.get(uri);
+      if (raw == null) throw new Error(`missing file: ${uri}`);
+      return raw;
+    });
+    mocks.writeAsStringAsync.mockClear();
+
+    const share = createPhotoShareFile(encrypted.uri);
+    const outcome = share.then(
+      (value) => ({ status: 'resolved' as const, value }),
+      (error: unknown) => ({ status: 'rejected' as const, error }),
+    );
+    await readStarted;
+    beginEncryptedPhotoAccountBoundary();
+    try {
+      let drainFinished = false;
+      const drain = waitForEncryptedPhotoWritesToSettle().then(() => {
+        drainFinished = true;
+      });
+      await Promise.resolve();
+      expect(drainFinished).toBe(false);
+
+      releaseRead();
+      const rejected = await outcome;
+      expect(rejected.status).toBe('rejected');
+      expect((rejected as { error: Error }).error.message).toBe(
+        PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+      );
+      await drain;
+      expect(drainFinished).toBe(true);
+      expect(mocks.writeAsStringAsync).not.toHaveBeenCalled();
+    } finally {
+      releaseRead();
+      endEncryptedPhotoAccountBoundary();
+    }
+  });
+
+  it('drains an exported encrypted-file delete that crosses an account boundary', async () => {
+    const encrypted = await createAuthenticatedPhotoEnvelope('delayed-direct-delete');
+    let releaseDelete!: () => void;
+    let markDeleteStarted!: () => void;
+    const deleteGate = new Promise<void>((resolve) => {
+      releaseDelete = resolve;
+    });
+    const deleteStarted = new Promise<void>((resolve) => {
+      markDeleteStarted = resolve;
+    });
+    mocks.deleteAsync.mockImplementationOnce(async (uri: string) => {
+      markDeleteStarted();
+      await deleteGate;
+      mocks.files.delete(uri);
+    });
+
+    const deletion = deleteEncryptedPhoto(encrypted.uri);
+    const outcome = deletion.then(
+      () => ({ status: 'resolved' as const }),
+      (error: unknown) => ({ status: 'rejected' as const, error }),
+    );
+    await deleteStarted;
+    beginEncryptedPhotoAccountBoundary();
+    try {
+      let drainFinished = false;
+      const drain = waitForEncryptedPhotoWritesToSettle().then(() => {
+        drainFinished = true;
+      });
+      await Promise.resolve();
+      expect(drainFinished).toBe(false);
+
+      releaseDelete();
+      const rejected = await outcome;
+      expect(rejected.status).toBe('rejected');
+      expect((rejected as { error: Error }).error.message).toBe(
+        PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+      );
+      await drain;
+      expect(drainFinished).toBe(true);
+      expect(mocks.files.has(encrypted.uri)).toBe(false);
+    } finally {
+      releaseDelete();
+      endEncryptedPhotoAccountBoundary();
+    }
+  });
+
   it('decrypts notes without writing the key-creation marker', async () => {
     const ciphertext = await encryptPhotoNote('account A note');
     mocks.asyncStorage.delete(CONTENT_KEY_MARKER);
@@ -368,7 +463,7 @@ describe('encrypted photo storage', () => {
     expect(mocks.deleteAsync).not.toHaveBeenCalled();
   });
 
-  it('drains but does not publish a decrypt result after an account boundary begins', async () => {
+  it('detaches a never-resolving decrypt from the write drain and suppresses its late plaintext', async () => {
     const encrypted = await createAuthenticatedPhotoEnvelope('delayed-owner-a-decrypt');
     let releaseRead!: () => void;
     let markReadStarted!: () => void;
@@ -387,21 +482,115 @@ describe('encrypted photo storage', () => {
     });
 
     const decrypt = decryptPhotoToDataUri(encrypted.uri);
+    let plaintextPublished = false;
+    const outcome = decrypt.then(
+      (value) => {
+        plaintextPublished = true;
+        return { status: 'resolved' as const, value };
+      },
+      (error: unknown) => ({ status: 'rejected' as const, error }),
+    );
     await readStarted;
     beginEncryptedPhotoAccountBoundary();
     try {
-      let drainFinished = false;
-      const drain = waitForEncryptedPhotoWritesToSettle().then(() => {
-        drainFinished = true;
-      });
-      await Promise.resolve();
-      expect(drainFinished).toBe(false);
+      // The native read is still unresolved. Pure reads must not pin the
+      // mutation drain or the public owner-bound wrapper.
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+      await expect(waitForEncryptedPhotoWritesToSettle()).resolves.toBeUndefined();
+      const rejected = await outcome;
+      expect(rejected.status).toBe('rejected');
+      expect((rejected as { error: Error }).error.message).toBe(
+        PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+      );
+      expect(plaintextPublished).toBe(false);
 
+      // A non-cancellable native completion after invalidation remains
+      // rejection-handled and cannot reach the public result.
       releaseRead();
-      await expect(decrypt).rejects.toThrow(PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
-      await drain;
-      expect(drainFinished).toBe(true);
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(plaintextPublished).toBe(false);
     } finally {
+      releaseRead();
+      endEncryptedPhotoAccountBoundary();
+    }
+  });
+
+  it('detaches a never-resolving key read from both drains on account-generation change', async () => {
+    const ciphertext = await encryptPhotoNote('owner A secret note');
+    let rejectKeyRead!: (error: Error) => void;
+    let markKeyReadStarted!: () => void;
+    const keyReadStarted = new Promise<void>((resolve) => {
+      markKeyReadStarted = resolve;
+    });
+    const keyRead = new Promise<string>((_resolve, reject) => {
+      rejectKeyRead = reject;
+    });
+    mocks.getItemAsync.mockImplementationOnce(() => {
+      markKeyReadStarted();
+      return keyRead;
+    });
+
+    let plaintextPublished = false;
+    const decrypt = decryptPhotoNote(ciphertext);
+    const outcome = decrypt.then(
+      (value) => {
+        plaintextPublished = true;
+        return { status: 'resolved' as const, value };
+      },
+      (error: unknown) => ({ status: 'rejected' as const, error }),
+    );
+    await keyReadStarted;
+    beginAccountGenerationBoundary();
+    try {
+      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
+      await expect(waitForEncryptedPhotoWritesToSettle()).resolves.toBeUndefined();
+      const rejected = await outcome;
+      expect(rejected.status).toBe('rejected');
+      expect((rejected as { error: Error }).error.message).toBe(ACCOUNT_GENERATION_CHANGED);
+      expect(plaintextPublished).toBe(false);
+      await expect(decryptPhotoNote(ciphertext)).rejects.toThrow(ACCOUNT_GENERATION_CHANGED);
+
+      // The detached SecureStore read can fail much later. The read wrapper
+      // retains a rejection handler even though its public promise is settled.
+      rejectKeyRead(new Error('late native key-read failure'));
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(plaintextPublished).toBe(false);
+    } finally {
+      rejectKeyRead(new Error('late native key-read failure'));
+      endAccountGenerationBoundary();
+    }
+  });
+
+  it('keeps reads and write-capable pass-throughs blocked until nested photo boundaries end', async () => {
+    const ciphertext = await encryptPhotoNote('baseline note');
+    beginEncryptedPhotoAccountBoundary();
+    beginEncryptedPhotoAccountBoundary();
+
+    try {
+      await expect(decryptPhotoNote(ciphertext)).rejects.toThrow(
+        PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+      );
+      await expect(decryptPhotoNote(null)).rejects.toThrow(
+        PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+      );
+      await expect(decryptPhotoToDataUri('file://cache/plaintext.jpg')).rejects.toThrow(
+        PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+      );
+      await expect(createPhotoShareFile('file://cache/plaintext.jpg')).rejects.toThrow(
+        PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+      );
+
+      endEncryptedPhotoAccountBoundary();
+      await expect(decryptPhotoNote(ciphertext)).rejects.toThrow(
+        PHOTO_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+      );
+
+      endEncryptedPhotoAccountBoundary();
+      await expect(decryptPhotoNote(ciphertext)).resolves.toBe('baseline note');
+    } finally {
+      endEncryptedPhotoAccountBoundary();
       endEncryptedPhotoAccountBoundary();
     }
   });

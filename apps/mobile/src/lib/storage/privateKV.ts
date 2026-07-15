@@ -93,25 +93,79 @@ type EnvelopeClassification =
 
 let contentKeyCreation: Promise<Uint8Array> | null = null;
 const failedReadSnapshots = new Map<string, string>();
-const inFlightOperations = new Set<Promise<unknown>>();
+type ActivePrivateRead = Readonly<{
+  generation: number;
+  invalidate: () => void;
+}>;
+
+const activeReadOperations = new Set<ActivePrivateRead>();
+const inFlightMutationOperations = new Set<Promise<unknown>>();
 const privateMutationTails = new Map<string, Promise<void>>();
 let accountBoundaryWriteBlocked = false;
 let accountBoundaryWriteBlockDepth = 0;
 let accountBoundaryGeneration = 0;
 
-async function runAccountScopedPrivateOperation<T>(
+function accountBoundaryError(): Error {
+  return new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+}
+
+function runAccountScopedPrivateRead<T>(
+  operation: (generation: number) => Promise<T>,
+): Promise<T> {
+  if (accountBoundaryWriteBlocked) return Promise.reject(accountBoundaryError());
+  const generation = accountBoundaryGeneration;
+
+  return new Promise<T>((resolve, reject) => {
+    let settled = false;
+    let activeRead!: ActivePrivateRead;
+    const finish = (callback: () => void) => {
+      if (settled) return;
+      settled = true;
+      activeReadOperations.delete(activeRead);
+      callback();
+    };
+    activeRead = Object.freeze({
+      generation,
+      invalidate: () => finish(() => reject(accountBoundaryError())),
+    });
+    activeReadOperations.add(activeRead);
+
+    let pending: Promise<T>;
+    try {
+      pending = operation(generation);
+    } catch (error) {
+      finish(() => reject(error));
+      return;
+    }
+
+    void Promise.resolve(pending).then(
+      (value) => {
+        try {
+          assertAccountScopedPrivateOperationAllowed(generation);
+          finish(() => resolve(value));
+        } catch (error) {
+          finish(() => reject(error));
+        }
+      },
+      (error: unknown) => finish(() => reject(error)),
+    );
+  });
+}
+
+/** Mutation-only coordinator retained by the destructive account-boundary drain. */
+async function runAccountScopedPrivateMutation<T>(
   operation: (generation: number) => Promise<T>,
 ): Promise<T> {
   if (accountBoundaryWriteBlocked) {
-    throw new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+    throw accountBoundaryError();
   }
   const generation = accountBoundaryGeneration;
   const pending = operation(generation);
-  inFlightOperations.add(pending);
+  inFlightMutationOperations.add(pending);
   try {
     return await pending;
   } finally {
-    inFlightOperations.delete(pending);
+    inFlightMutationOperations.delete(pending);
   }
 }
 
@@ -151,7 +205,7 @@ async function runSerializedPrivateMutations<T>(
 
 function assertAccountScopedPrivateOperationAllowed(generation: number): void {
   if (accountBoundaryWriteBlocked || generation !== accountBoundaryGeneration) {
-    throw new Error(PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY);
+    throw accountBoundaryError();
   }
 }
 
@@ -364,9 +418,10 @@ async function assertRoutineRemovalReadable(key: string, raw: string | null): Pr
 
 export async function getPrivateItem(key: string): Promise<string | null> {
   return withOperationTiming('private_kv_read', () =>
-    runAccountScopedPrivateOperation(async () => {
+    runAccountScopedPrivateRead(async (generation) => {
       assertPrivateDataKey(key);
       const raw = await AsyncStorage.getItem(key);
+      assertAccountScopedPrivateOperationAllowed(generation);
       if (raw === null) {
         failedReadSnapshots.delete(key);
         return null;
@@ -386,9 +441,11 @@ export async function getPrivateItem(key: string): Promise<string | null> {
       try {
         contentKey = await getExistingContentKey();
       } catch (error) {
+        assertAccountScopedPrivateOperationAllowed(generation);
         rememberFailedRead(key, raw);
         throw error;
       }
+      assertAccountScopedPrivateOperationAllowed(generation);
       if (!contentKey) {
         rememberFailedRead(key, raw);
         throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
@@ -448,67 +505,84 @@ export async function readPrivateItem(key: string): Promise<PrivateKVReadResult>
   }
 }
 
+async function getPrivateItemsForGeneration(
+  keys: readonly string[],
+  generation: number,
+): Promise<Map<string, string | null>> {
+  for (const key of keys) assertPrivateDataKey(key);
+  const entries = await AsyncStorage.multiGet([...keys]);
+  assertAccountScopedPrivateOperationAllowed(generation);
+  const result = new Map<string, string | null>();
+  const encryptedEntries: [string, PrivateEnvelope, string][] = [];
+
+  for (const [key, raw] of entries) {
+    if (raw === null) {
+      failedReadSnapshots.delete(key);
+      result.set(key, null);
+      continue;
+    }
+    const classification = classifyEnvelope(key, raw);
+    if (classification.kind === 'current') {
+      encryptedEntries.push([key, classification.envelope, raw]);
+    } else if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
+      rememberFailedRead(key, raw);
+      throw envelopeClassificationError(classification.kind);
+    } else {
+      failedReadSnapshots.delete(key);
+      result.set(key, raw);
+    }
+  }
+
+  if (encryptedEntries.length === 0) return result;
+  let contentKey: Uint8Array | null;
+  try {
+    contentKey = await getExistingContentKey();
+  } catch (error) {
+    assertAccountScopedPrivateOperationAllowed(generation);
+    for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
+    throw error;
+  }
+  assertAccountScopedPrivateOperationAllowed(generation);
+  if (!contentKey) {
+    for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
+    throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
+  }
+  for (const [key, envelope, raw] of encryptedEntries) {
+    try {
+      result.set(key, decryptEnvelope(envelope, contentKey));
+      failedReadSnapshots.delete(key);
+    } catch {
+      rememberFailedRead(key, raw);
+      throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
+    }
+  }
+  return result;
+}
+
 export async function getPrivateItems(
   keys: readonly string[],
 ): Promise<Map<string, string | null>> {
   return withOperationTiming('private_kv_batch_read', () =>
-    runAccountScopedPrivateOperation(async () => {
-      for (const key of keys) assertPrivateDataKey(key);
-      const entries = await AsyncStorage.multiGet([...keys]);
-      const result = new Map<string, string | null>();
-      const encryptedEntries: [string, PrivateEnvelope, string][] = [];
-
-      for (const [key, raw] of entries) {
-        if (raw === null) {
-          failedReadSnapshots.delete(key);
-          result.set(key, null);
-          continue;
-        }
-        const classification = classifyEnvelope(key, raw);
-        if (classification.kind === 'current') {
-          encryptedEntries.push([key, classification.envelope, raw]);
-        } else if (classification.kind === 'malformed' || classification.kind === 'unsupported') {
-          rememberFailedRead(key, raw);
-          throw envelopeClassificationError(classification.kind);
-        } else {
-          failedReadSnapshots.delete(key);
-          result.set(key, raw);
-        }
-      }
-
-      if (encryptedEntries.length === 0) return result;
-      let contentKey: Uint8Array | null;
-      try {
-        contentKey = await getExistingContentKey();
-      } catch (error) {
-        for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
-        throw error;
-      }
-      if (!contentKey) {
-        for (const [key, , raw] of encryptedEntries) rememberFailedRead(key, raw);
-        throw new Error(PRIVATE_KV_CONTENT_KEY_MISSING);
-      }
-      for (const [key, envelope, raw] of encryptedEntries) {
-        try {
-          result.set(key, decryptEnvelope(envelope, contentKey));
-          failedReadSnapshots.delete(key);
-        } catch {
-          rememberFailedRead(key, raw);
-          throw new Error(PRIVATE_KV_DECRYPTION_FAILED);
-        }
-      }
-      return result;
-    }),
+    runAccountScopedPrivateRead((generation) =>
+      getPrivateItemsForGeneration(keys, generation),
+    ),
   );
 }
 
 /** Verify every private-KV envelope without creating key material or retaining plaintext. */
 export async function assertPrivateKVReadable(): Promise<void> {
-  const keys = (await AsyncStorage.getAllKeys()).filter(
-    (key) => key !== PRIVATE_KV_CONTENT_KEY_NAME && !isKnownForeignStorageKey(key),
+  return withOperationTiming('private_kv_batch_read', () =>
+    runAccountScopedPrivateRead(async (generation) => {
+      const allKeys = await AsyncStorage.getAllKeys();
+      assertAccountScopedPrivateOperationAllowed(generation);
+      const keys = allKeys.filter(
+        (key) => key !== PRIVATE_KV_CONTENT_KEY_NAME && !isKnownForeignStorageKey(key),
+      );
+      if (keys.length === 0) return;
+      await getPrivateItemsForGeneration(keys, generation);
+      assertAccountScopedPrivateOperationAllowed(generation);
+    }),
   );
-  if (keys.length === 0) return;
-  await getPrivateItems(keys);
 }
 
 const CONFLICT_CHOICE_STORAGE_KEY = 'onskin.conflict.overrides';
@@ -537,7 +611,7 @@ export async function updatePrivateItem(
   updater: (current: string | null) => string | null,
 ): Promise<void> {
   return withOperationTiming('private_kv_write', () =>
-    runAccountScopedPrivateOperation((generation) =>
+    runAccountScopedPrivateMutation((generation) =>
       runSerializedPrivateMutations([key], async () => {
         assertPrivateDataKeyWritable(key);
         assertAccountScopedPrivateOperationAllowed(generation);
@@ -613,14 +687,17 @@ export async function updatePrivateItem(
 }
 
 export function beginPrivateKVAccountBoundary(): void {
-  if (accountBoundaryWriteBlockDepth === 0) accountBoundaryGeneration += 1;
+  if (accountBoundaryWriteBlockDepth === 0) {
+    accountBoundaryGeneration += 1;
+    for (const read of [...activeReadOperations]) read.invalidate();
+  }
   accountBoundaryWriteBlockDepth += 1;
   accountBoundaryWriteBlocked = true;
 }
 
 export async function waitForPrivateKVWritesToSettle(): Promise<void> {
-  while (inFlightOperations.size > 0) {
-    await Promise.allSettled([...inFlightOperations]);
+  while (inFlightMutationOperations.size > 0) {
+    await Promise.allSettled([...inFlightMutationOperations]);
   }
 }
 
@@ -631,7 +708,7 @@ export function endPrivateKVAccountBoundary(): void {
 
 export async function removePrivateItem(key: string): Promise<void> {
   return withOperationTiming('private_kv_remove', () =>
-    runAccountScopedPrivateOperation((generation) =>
+    runAccountScopedPrivateMutation((generation) =>
       runSerializedPrivateMutations([key], async () => {
         assertPrivateDataKey(key);
         assertAccountScopedPrivateOperationAllowed(generation);
@@ -650,7 +727,7 @@ export async function removePrivateItem(key: string): Promise<void> {
 }
 
 export async function multiRemovePrivateItems(keys: readonly string[]): Promise<void> {
-  return runAccountScopedPrivateOperation((generation) =>
+  return runAccountScopedPrivateMutation((generation) =>
     runSerializedPrivateMutations(keys, async () => {
       const uniqueKeys = [...new Set(keys)];
       for (const key of uniqueKeys) assertPrivateDataKey(key);
@@ -709,11 +786,11 @@ export async function removePrivateItemsForAuthorizedReset(
       await AsyncStorage.multiRemove(uniqueKeys);
       for (const key of uniqueKeys) failedReadSnapshots.delete(key);
     });
-    inFlightOperations.add(pending);
+    inFlightMutationOperations.add(pending);
     try {
       await pending;
     } finally {
-      inFlightOperations.delete(pending);
+      inFlightMutationOperations.delete(pending);
     }
   });
 }

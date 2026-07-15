@@ -34,6 +34,7 @@ describe('account session isolation integration', () => {
     const isolation = readSource('lib/auth/localAccountIsolation.ts');
     const accountGeneration = readSource('lib/auth/accountGeneration.ts');
     const privateKV = readSource('lib/storage/privateKV.ts');
+    const encryptedStorage = readSource('features/photos/encryptedStorage.ts');
     const actions = readSource('features/settings/actions.ts');
     const supabaseClient = readSource('lib/supabase/client.ts');
 
@@ -71,7 +72,20 @@ describe('account session isolation integration', () => {
     expect(accountGeneration).toContain('generation !== accountGeneration');
     expect(privateKV).toContain('PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY');
     expect(privateKV).toContain('generation !== accountBoundaryGeneration');
-    expect(privateKV).toContain('return runAccountScopedPrivateOperation');
+    expect(privateKV).toContain('function runAccountScopedPrivateRead');
+    expect(privateKV).toContain('async function runAccountScopedPrivateMutation');
+    expect(privateKV).toContain('const inFlightMutationOperations');
+    expect(privateKV).toContain('for (const read of [...activeReadOperations]) read.invalidate();');
+    expect(privateKV).toContain('while (inFlightMutationOperations.size > 0)');
+    expect(privateKV).not.toContain('const inFlightOperations');
+    expect(encryptedStorage).toContain('function runAccountScopedPhotoRead');
+    expect(encryptedStorage).toContain('async function runAccountScopedPhotoMutation');
+    expect(encryptedStorage).toContain('const inFlightPhotoMutations');
+    expect(encryptedStorage).toContain(
+      'for (const invalidate of [...activePhotoReadInvalidators]) invalidate();',
+    );
+    expect(encryptedStorage).toContain('while (inFlightPhotoMutations.size > 0)');
+    expect(encryptedStorage).not.toContain('const inFlightPhotoOperations');
     expect(actions).toContain('await completeLocalSignOut();');
     expect(actions).not.toContain('clearAccountIsolatedState');
     expect(supabaseClient).toContain('export async function clearPersistedSupabaseSession');

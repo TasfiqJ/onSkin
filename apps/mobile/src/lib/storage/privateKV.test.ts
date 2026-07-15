@@ -36,8 +36,13 @@ import {
 
 const mocks = vi.hoisted(() => ({
   asyncStorage: new Map<string, string>(),
+  getAllKeysGate: null as Promise<void> | null,
+  getAllKeysStarted: null as (() => void) | null,
   getItemGate: null as Promise<void> | null,
+  getItemSnapshotBeforeGate: false,
   getItemStarted: null as (() => void) | null,
+  multiGetGate: null as Promise<void> | null,
+  multiGetStarted: null as (() => void) | null,
   platformOS: 'ios',
   removeItemGate: null as Promise<void> | null,
   removeItemStarted: null as (() => void) | null,
@@ -60,14 +65,26 @@ vi.mock('react-native', () => ({
 vi.mock('@react-native-async-storage/async-storage', () => ({
   default: {
     getItem: vi.fn(async (key: string) => {
+      const snapshotBeforeGate = mocks.getItemSnapshotBeforeGate;
+      const snapshot = snapshotBeforeGate
+        ? (mocks.asyncStorage.get(key) ?? null)
+        : null;
       mocks.getItemStarted?.();
       if (mocks.getItemGate) await mocks.getItemGate;
-      return mocks.asyncStorage.get(key) ?? null;
+      return snapshotBeforeGate ? snapshot : (mocks.asyncStorage.get(key) ?? null);
     }),
-    getAllKeys: vi.fn(async () => [...mocks.asyncStorage.keys()]),
-    multiGet: vi.fn(async (keys: string[]) =>
-      keys.map((key) => [key, mocks.asyncStorage.get(key) ?? null] as [string, string | null]),
-    ),
+    getAllKeys: vi.fn(async () => {
+      mocks.getAllKeysStarted?.();
+      if (mocks.getAllKeysGate) await mocks.getAllKeysGate;
+      return [...mocks.asyncStorage.keys()];
+    }),
+    multiGet: vi.fn(async (keys: string[]) => {
+      mocks.multiGetStarted?.();
+      if (mocks.multiGetGate) await mocks.multiGetGate;
+      return keys.map(
+        (key) => [key, mocks.asyncStorage.get(key) ?? null] as [string, string | null],
+      );
+    }),
     setItem: vi.fn(async (key: string, value: string) => {
       mocks.setItemStarted?.();
       if (mocks.setItemGate) await mocks.setItemGate;
@@ -108,8 +125,13 @@ vi.mock('expo-secure-store', () => ({
 describe('private KV encrypted storage', () => {
   beforeEach(() => {
     mocks.asyncStorage.clear();
+    mocks.getAllKeysGate = null;
+    mocks.getAllKeysStarted = null;
     mocks.getItemGate = null;
+    mocks.getItemSnapshotBeforeGate = false;
     mocks.getItemStarted = null;
+    mocks.multiGetGate = null;
+    mocks.multiGetStarted = null;
     mocks.platformOS = 'ios';
     mocks.removeItemGate = null;
     mocks.removeItemStarted = null;
@@ -483,6 +505,199 @@ describe('private KV encrypted storage', () => {
       PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
     );
     expect(mocks.asyncStorage.has('onskin.account-b')).toBe(false);
+  });
+
+  it('invalidates active never-resolving reads without adding them to the mutation drain', async () => {
+    let readsStartedCount = 0;
+    let markReadsStarted!: () => void;
+    const readsStarted = new Promise<void>((resolve) => {
+      markReadsStarted = resolve;
+    });
+    mocks.getItemGate = new Promise<void>(() => undefined);
+    mocks.getItemStarted = () => {
+      readsStartedCount += 1;
+      if (readsStartedCount === 2) markReadsStarted();
+    };
+
+    const rawRead = getPrivateItem('onskin.account-a.raw');
+    const typedRead = readPrivateItem('onskin.account-a.typed');
+    const rawRejection = expect(rawRead).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+    );
+    await readsStarted;
+
+    beginPrivateKVAccountBoundary();
+    try {
+      await rawRejection;
+      await expect(typedRead).resolves.toEqual({
+        status: 'unavailable',
+        reason: 'account_boundary',
+      });
+      await expect(waitForPrivateKVWritesToSettle()).resolves.toBeUndefined();
+    } finally {
+      endPrivateKVAccountBoundary();
+    }
+  });
+
+  it('invalidates a never-resolving batch read without holding the mutation drain', async () => {
+    let markReadStarted!: () => void;
+    const readStarted = new Promise<void>((resolve) => {
+      markReadStarted = resolve;
+    });
+    mocks.multiGetGate = new Promise<void>(() => undefined);
+    mocks.multiGetStarted = markReadStarted;
+
+    const read = getPrivateItems(['onskin.account-a.batch']);
+    const rejection = expect(read).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+    );
+    await readStarted;
+
+    beginPrivateKVAccountBoundary();
+    try {
+      await rejection;
+      await expect(waitForPrivateKVWritesToSettle()).resolves.toBeUndefined();
+    } finally {
+      endPrivateKVAccountBoundary();
+    }
+  });
+
+  it('coordinates a never-resolving full-audit enumeration with the read boundary', async () => {
+    let markEnumerationStarted!: () => void;
+    const enumerationStarted = new Promise<void>((resolve) => {
+      markEnumerationStarted = resolve;
+    });
+    mocks.getAllKeysGate = new Promise<void>(() => undefined);
+    mocks.getAllKeysStarted = markEnumerationStarted;
+
+    const audit = assertPrivateKVReadable();
+    const rejection = expect(audit).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+    );
+    await enumerationStarted;
+
+    beginPrivateKVAccountBoundary();
+    try {
+      await rejection;
+      await expect(waitForPrivateKVWritesToSettle()).resolves.toBeUndefined();
+    } finally {
+      endPrivateKVAccountBoundary();
+    }
+  });
+
+  it('blocks reads until the outermost nested account boundary ends', async () => {
+    const markReadStarted = vi.fn();
+    mocks.getItemStarted = markReadStarted;
+    let boundaryDepth = 0;
+
+    try {
+      beginPrivateKVAccountBoundary();
+      boundaryDepth += 1;
+      beginPrivateKVAccountBoundary();
+      boundaryDepth += 1;
+
+      await expect(readPrivateItem('onskin.account-b')).resolves.toEqual({
+        status: 'unavailable',
+        reason: 'account_boundary',
+      });
+      endPrivateKVAccountBoundary();
+      boundaryDepth -= 1;
+      await expect(readPrivateItem('onskin.account-b')).resolves.toEqual({
+        status: 'unavailable',
+        reason: 'account_boundary',
+      });
+      expect(markReadStarted).not.toHaveBeenCalled();
+
+      endPrivateKVAccountBoundary();
+      boundaryDepth -= 1;
+      mocks.asyncStorage.set('onskin.account-b', 'owner-b-value');
+      await expect(getPrivateItem('onskin.account-b')).resolves.toBe('owner-b-value');
+      expect(markReadStarted).toHaveBeenCalledOnce();
+    } finally {
+      while (boundaryDepth > 0) {
+        endPrivateKVAccountBoundary();
+        boundaryDepth -= 1;
+      }
+    }
+  });
+
+  it('prevents a late owner-A read from clearing owner-B failed-read protection', async () => {
+    const key = 'onskin.account-boundary.failed-read';
+    mocks.asyncStorage.set(key, 'owner-a-legacy');
+    mocks.getItemSnapshotBeforeGate = true;
+    let releaseOwnerARead!: () => void;
+    let markOwnerAReadStarted!: () => void;
+    mocks.getItemGate = new Promise<void>((resolve) => {
+      releaseOwnerARead = resolve;
+    });
+    const ownerAReadStarted = new Promise<void>((resolve) => {
+      markOwnerAReadStarted = resolve;
+    });
+    mocks.getItemStarted = markOwnerAReadStarted;
+
+    const ownerARead = getPrivateItem(key);
+    const ownerARejection = expect(ownerARead).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+    );
+    await ownerAReadStarted;
+    beginPrivateKVAccountBoundary();
+    await ownerARejection;
+    endPrivateKVAccountBoundary();
+
+    mocks.getItemGate = null;
+    mocks.getItemSnapshotBeforeGate = false;
+    mocks.getItemStarted = null;
+    const ownerBMalformed = JSON.stringify({
+      version: privateKVEncryptionInfo.version,
+      nonceHex: '00',
+      ciphertextHex: '00'.repeat(16),
+    });
+    mocks.asyncStorage.set(key, ownerBMalformed);
+    await expect(getPrivateItem(key)).rejects.toThrow(PRIVATE_KV_ENVELOPE_INVALID);
+
+    releaseOwnerARead();
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+
+    await expect(setPrivateItem(key, 'replacement')).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_AFTER_READ_FAILURE,
+    );
+    expect(mocks.asyncStorage.get(key)).toBe(ownerBMalformed);
+  });
+
+  it('consumes a late SecureStore rejection without recording an owner-A failed snapshot', async () => {
+    const key = 'onskin.account-boundary.secure-read';
+    await setPrivateItem(key, 'owner-a-value');
+    let releaseSecureRead!: () => void;
+    let markSecureReadStarted!: () => void;
+    mocks.secureGetGate = new Promise<void>((resolve) => {
+      releaseSecureRead = resolve;
+    });
+    const secureReadStarted = new Promise<void>((resolve) => {
+      markSecureReadStarted = resolve;
+    });
+    mocks.secureGetStarted = markSecureReadStarted;
+    mocks.secureGetThrows = true;
+
+    const ownerARead = getPrivateItem(key);
+    const ownerARejection = expect(ownerARead).rejects.toThrow(
+      PRIVATE_KV_WRITE_BLOCKED_ACCOUNT_BOUNDARY,
+    );
+    await secureReadStarted;
+    beginPrivateKVAccountBoundary();
+    try {
+      await ownerARejection;
+      await expect(waitForPrivateKVWritesToSettle()).resolves.toBeUndefined();
+      releaseSecureRead();
+      await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    } finally {
+      endPrivateKVAccountBoundary();
+    }
+
+    mocks.secureGetGate = null;
+    mocks.secureGetStarted = null;
+    mocks.secureGetThrows = false;
+    await expect(setPrivateItem(key, 'owner-b-value')).resolves.toBeUndefined();
+    await expect(getPrivateItem(key)).resolves.toBe('owner-b-value');
   });
 
   it('rejects a write that had not reached storage before the boundary began', async () => {
