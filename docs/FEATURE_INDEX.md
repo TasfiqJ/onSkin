@@ -20,7 +20,7 @@
 |  16 | Commerce/replenishment                  | Required   | High       | consent, FTC, partner           | inert / launch-blocked            | TBD        |
 |  17 | Community/Skin Notes                    | Required   | High       | moderation, legal, experts      | stubbed / launch-blocked          | TBD        |
 |  18 | Trend insights                          | Required   | High       | engine, fairness/legal review   | simulated / launch-blocked        | TBD        |
-|  19 | Widgets/live activities                 | Required   | High       | native targets                  | inert                             | TBD        |
+|  19 | Widgets/live activities                 | Required   | High       | native atomic host + device QA  | source scaffold / launch-blocked  | TBD        |
 |  20 | Admin/operator review tooling           | Required   | Medium     | backend, reviewer workflow      | partial                           | TBD        |
 
 ## Inclusion Rules

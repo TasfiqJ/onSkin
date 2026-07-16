@@ -123,6 +123,123 @@ require(String(rootPkg.scripts?.['phase5:ios-extension-contract:smoke'] ?? '').i
   'scripts/phase5/widget-privacy-manifest.test.mjs',
 ), 'The Phase 5 iOS extension smoke command must run the widget privacy-manifest tests.');
 
+const widgetRuntimeGateSource = readFileSync(
+  resolve(root, 'apps/mobile/src/features/widgets/runtimeGate.ts'),
+  'utf8',
+);
+const widgetRuntimeGateTestSource = readFileSync(
+  resolve(root, 'apps/mobile/src/features/widgets/runtimeGate.test.ts'),
+  'utf8',
+);
+const widgetControllerCoreSource = readFileSync(
+  resolve(root, 'apps/mobile/src/features/widgets/controllerCore.ts'),
+  'utf8',
+);
+const widgetControllerCoreTestSource = readFileSync(
+  resolve(root, 'apps/mobile/src/features/widgets/controllerCore.test.ts'),
+  'utf8',
+);
+const appConfigSource = readFileSync(resolve(root, 'apps/mobile/app.config.js'), 'utf8');
+const appConfigTestSource = readFileSync(
+  resolve(root, 'apps/mobile/src/lib/appConfig.test.ts'),
+  'utf8',
+);
+const phase7Source = readFileSync(resolve(root, 'apps/mobile/src/lib/launch/phase7.ts'), 'utf8');
+const phase7TestSource = readFileSync(
+  resolve(root, 'apps/mobile/src/lib/launch/phase7.test.ts'),
+  'utf8',
+);
+require(/input\.platform === 'ios'/.test(widgetRuntimeGateSource) &&
+  /input\.iosWidgetExtensionBuildEnabled === true/.test(widgetRuntimeGateSource) &&
+  /input\.appEnvironment !== 'production'/.test(widgetRuntimeGateSource) &&
+  /ROUTINE_WIDGET_INTERACTIVE_PUBLICATION_ENABLED:\s*false\s*=\s*false/.test(
+    widgetRuntimeGateSource,
+  ), 'Widget runtime must require exact iOS/non-production extension opt-in and keep interactive publication hard-disabled.');
+require(/rejects missing, string, numeric, and otherwise truthy config values/.test(
+  widgetRuntimeGateTestSource,
+) &&
+  /keeps interactive publication compile-time hard-disabled/.test(
+    widgetRuntimeGateTestSource,
+  ), 'Widget runtime gate tests must pin exact-boolean opt-in and the hard-disabled interactive contract.');
+const widgetControllerOrder = [
+  'await dependencies.resolveActions(',
+  'await dependencies.completeAction(',
+  'await dependencies.acknowledgeActions(tokens)',
+  'dependencies.replaceTimeline()',
+].map((needle) => widgetControllerCoreSource.indexOf(needle));
+require(widgetControllerOrder.every((index) => index >= 0) &&
+  widgetControllerOrder.every((index, position) =>
+    position === 0 ? true : index > widgetControllerOrder[position - 1],
+  ) &&
+  /acknowledged !== tokens\.length/.test(widgetControllerCoreSource) &&
+  /replacementReceipt !== ROUTINE_WIDGET_TIMELINE_REPLACED/.test(widgetControllerCoreSource) &&
+  /capturedGeneration !== this\.generation/.test(widgetControllerCoreSource) &&
+  !/from ['"]expo-widgets['"]/.test(
+    widgetControllerCoreSource,
+  ), 'The unmounted widget controller core must remain injected and enforce resolve -> canonical completion -> exact acknowledgement -> synchronous replacement with generation invalidation.');
+require(/preserves resolve -> completion -> exact ack -> replace ordering/.test(
+  widgetControllerCoreTestSource,
+) &&
+  /never writes a %s token but permits the caller to prune it/.test(
+    widgetControllerCoreTestSource,
+  ) &&
+  /preserves the timeline when a canonical completion fails or is rejected/.test(
+    widgetControllerCoreTestSource,
+  ) &&
+  /invalidation after a canonical completion prevents stale acknowledgement and replacement/.test(
+    widgetControllerCoreTestSource,
+  ) &&
+  /rejects an async replacement callback instead of reporting a committed timeline/.test(
+    widgetControllerCoreTestSource,
+  ), 'Widget controller tests must pin fail-closed reconciliation, pruning, ordering, and generation invalidation.');
+require(/\(isProduction \|\| appEnvironment === 'production'\) &&\s*iosWidgetExtensionBuildEnabled/.test(
+  appConfigSource,
+) &&
+  /Production iOS widget extension builds remain blocked/.test(appConfigSource) &&
+  /keeps the unfinished iOS extension out of ordinary builds and requires an exact opt-in/.test(
+    appConfigTestSource,
+  ), 'Production variant or production runtime must reject the iOS extension opt-in and retain a pinned app-config test.');
+require(/nativeWidgets:\s*false/.test(phase7Source) &&
+  /expect\(phase7Flags\.widgets\)\.toBe\(false\)/.test(
+    phase7TestSource,
+  ), 'The public Phase 7 widget capability must remain hard-disabled and covered by tests.');
+const widgetRuntimeSmoke = String(rootPkg.scripts?.['phase5:widget-runtime-contract:smoke'] ?? '');
+for (const file of [
+  'runtimeGate.test.ts',
+  'controllerCore.test.ts',
+  'actionRegistry.test.ts',
+  'contract.test.ts',
+  'widgetViews.test.ts',
+]) {
+  require(widgetRuntimeSmoke.includes(
+    file,
+  ), `The Phase 5 widget runtime smoke command must run ${file}.`);
+}
+require(String(rootPkg.scripts?.['phase5:verify'] ?? '').includes(
+  'phase5:widget-runtime-contract:smoke',
+) &&
+  String(rootPkg.scripts?.['launch:verify'] ?? '').includes(
+    'phase5:widget-runtime-contract:smoke',
+  ), 'Phase 5 and launch verification must run the explicit widget runtime contract smoke.');
+for (const script of [
+  'phase5:widget-lifecycle-evidence',
+  'phase5:widget-lifecycle-evidence:strict',
+  'phase5:widget-lifecycle-evidence:smoke',
+  'phase5:widget-lifecycle-evidence:template',
+  'phase5:widget-lifecycle-evidence:template:check',
+]) {
+  require(Boolean(rootPkg.scripts?.[script]), `Root package is missing ${script}.`);
+}
+require(String(rootPkg.scripts?.['phase5:verify'] ?? '').includes(
+  'phase5:widget-lifecycle-evidence:smoke',
+) &&
+  String(rootPkg.scripts?.['phase5:verify'] ?? '').includes(
+    'phase5:widget-lifecycle-evidence:template:check',
+  ) &&
+  String(rootPkg.scripts?.['launch:verify'] ?? '').includes(
+    'phase5:widget-lifecycle-evidence',
+  ), 'Phase 5 and launch verification must execute the artifact-bound widget lifecycle evidence gates.');
+
 require(Boolean(pkg.dependencies?.['expo-camera']), 'expo-camera dependency is missing.');
 require(Boolean(
   pkg.dependencies?.['expo-apple-authentication'],
@@ -295,23 +412,46 @@ const qaPacketBuilder = readFileSync(
   resolve(root, 'scripts/phase5/build-device-qa-packet.mjs'),
   'utf8',
 );
-require(/function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
+const qaPacketSmoke = readFileSync(
+  resolve(root, 'scripts/phase5/device-qa-packet-smoke.mjs'),
+  'utf8',
+);
+require(/validateWidgetLifecycleEvidence/.test(qaPacketBuilder) &&
+  /PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH/.test(qaPacketBuilder) &&
+  /widgetLifecycleEvidence/.test(
+    qaPacketBuilder,
+  ), 'Phase 5 device QA packet must validate and retain artifact-bound widget lifecycle evidence; booleans alone are insufficient.');
+require(/rejects widget booleans without artifact-bound evidence/.test(qaPacketSmoke) &&
+  /widgetLifecycleEvidence\.summary\.baseArtifactCount === 11/.test(qaPacketSmoke) &&
+  /widgetLifecycleEvidence\.summary\.proofAttachmentCount === 4/.test(
+    qaPacketSmoke,
+  ), 'Phase 5 QA packet smoke must reject boolean-only widget claims and require all 11 parsed base artifacts/reports plus typed proofs.');
+require(/function gitStatusExcludingGeneratedPacket\(validatedEvidencePaths = \[\]\)/.test(
+  qaPacketBuilder,
+) &&
   /device-qa-packet\.json/.test(qaPacketBuilder) &&
   /device-qa-packet\.md/.test(qaPacketBuilder) &&
-  /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(
+  /gitStatus = gitStatusExcludingGeneratedPacket\(validatedWidgetEvidencePaths\)/.test(
     qaPacketBuilder,
-  ), 'Phase 5 device QA packet must ignore only its own generated outputs when recording Git status.');
+  ), 'Phase 5 device QA packet must ignore only its own generated outputs and fully validated lifecycle evidence when recording Git status.');
 require(/Phase 5 device QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
+  /if \(strict\) blockers\.push\(dirtyMessage\)/.test(qaPacketBuilder) &&
+  /strict Phase 5 QA packet rejects a dirty source worktree/.test(qaPacketSmoke) &&
+  /non-strict Phase 5 QA packet warns on dirty source/.test(qaPacketSmoke) &&
   /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(
     qaPacketBuilder,
-  ), 'Phase 5 device QA packet must warn on dirty worktrees and expose Git status in Markdown.');
+  ), 'Phase 5 strict QA must reject dirty source, while non-strict warns and Markdown exposes Git status.');
 for (const file of [
+  '.env.example',
   'package.json',
   'package-lock.json',
   'docs/hugeToDo/launch-contract.json',
   'scripts/launch/contract.mjs',
   'apps/mobile/app.base.json',
   'apps/mobile/app.config.js',
+  'apps/mobile/src/lib/appConfig.test.ts',
+  'apps/mobile/src/lib/launch/phase7.ts',
+  'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js',
   'apps/mobile/eas.json',
   'apps/mobile/package.json',
@@ -335,6 +475,10 @@ for (const file of [
   'apps/mobile/src/features/widgets/actionRegistry.test.ts',
   'apps/mobile/src/features/widgets/contract.ts',
   'apps/mobile/src/features/widgets/contract.test.ts',
+  'apps/mobile/src/features/widgets/controllerCore.ts',
+  'apps/mobile/src/features/widgets/controllerCore.test.ts',
+  'apps/mobile/src/features/widgets/runtimeGate.ts',
+  'apps/mobile/src/features/widgets/runtimeGate.test.ts',
   'apps/mobile/src/features/widgets/TodayWidget.ios.tsx',
   'apps/mobile/src/features/widgets/TonightActivity.ios.tsx',
   'apps/mobile/src/features/widgets/widgetViews.test.ts',
@@ -348,6 +492,9 @@ for (const file of [
   'scripts/phase5/ios-extension-contract.mjs',
   'scripts/phase5/ios-extension-contract.test.mjs',
   'scripts/phase5/widget-privacy-manifest.test.mjs',
+  'scripts/phase5/widget-lifecycle-evidence-contract.mjs',
+  'scripts/phase5/check-widget-lifecycle-evidence.mjs',
+  'scripts/phase5/widget-lifecycle-evidence-smoke.mjs',
   'scripts/phase5/resolve-ios-extension-config.mjs',
   'scripts/phase5/check-performance-evidence.mjs',
   'scripts/phase5/device-qa-packet-smoke.mjs',
@@ -363,9 +510,11 @@ for (const file of [
   'docs/HUMAN_SIMULATED_E2E_TESTING.md',
   'docs/E2E_TESTING_CHECKLIST.md',
   'docs/USER_FLOW_TREE.md',
+  'docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md',
   'docs/e2e/generated/human-e2e-manifest.json',
   'docs/e2e/generated/human-e2e-manifest.md',
   'docs/phase-5/native-build-runbook.md',
+  'docs/phase-5/widget-lifecycle-evidence.template.json',
   'docs/phase-5/device-qa-checklist.md',
   'docs/phase-5/performance-evidence-runbook.md',
   'docs/phase-5/performance-evidence.template.json',

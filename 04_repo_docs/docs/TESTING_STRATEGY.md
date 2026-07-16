@@ -98,8 +98,8 @@ The current post-0055 local gate passed two clean resets, exact 54-migration
 history, the full structural pgTAP suite plus 114/114 Apple lifecycle
 assertions, schema lint, an empty migration shadow diff, temporary type
 generation, 20/20 focused Apple event/lifecycle Edge tests, and the 47-test
-Apple auth work lane. The current full mobile suite also passes 273 test files /
-3139 tests. The race assertions include terminal-before-lifecycle,
+Apple auth work lane. The current full mobile suite also passes 275 test files /
+3161 tests. The race assertions include terminal-before-lifecycle,
 terminal-before-identity, capture-time no-retry reconciliation, and no code
 dispatch after the committed `blocked` result.
 
@@ -253,6 +253,10 @@ The current root sweep must include these non-mutating gates:
 - `npm run docs:generated-packet-status-audit:check`
 - `npm run e2e:human:manifest:check`
 - `npm run phase5:check-native-config`
+- `npm run phase5:widget-runtime-contract:smoke`
+- `npm run phase5:widget-lifecycle-evidence`
+- `npm run phase5:widget-lifecycle-evidence:smoke`
+- `npm run phase5:widget-lifecycle-evidence:template:check`
 - `npm run phase7:check-core-loop`
 - `npm run phase8:check-growth-store`
 - `npm run phase10:beta-analytics-audit`

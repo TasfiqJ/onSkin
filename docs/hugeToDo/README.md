@@ -19,6 +19,7 @@ Start here:
 - [BRAND-03 Knockout Search Record](./BRAND-03-knockout-search-record-2026-07-12.md)
 - [BRAND-03 Governed Public-Research Evidence](./evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json)
 - [IOS-10 Export-Compliance Gate](./IOS-10-EXPORT-COMPLIANCE-GATE.md)
+- [IOS-02 Widget Lifecycle Source Checkpoint](./IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md)
 - [US Wave 1 Privacy and Consumer-Health Law Gate](./US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md)
 - [Health-Consent Withdrawal, Processor, and Retention Matrix](./HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md)
 - [Health Processor Inventory v1](./health-processor-inventory-v1.json)
@@ -53,6 +54,19 @@ qualified-counsel analysis plus a written decision. BRAND-07 remains the later
 authenticated reservation gate. No candidate is described as legally clear,
 available, registrable, non-infringing, reserved, Apple-approved, or guaranteed
 to pass App Review.
+
+IOS-02 is also an `in_progress` source checkpoint, not a released native
+feature. A strict runtime gate and unmounted reconciliation core now exist, but
+interactive publication stays hard-disabled until a native atomic App Group
+outbox/CAS and unconditional privacy cleanup are implemented. Stock Expo 56
+uses `staleDate: nil`, so production Live Activity start remains prohibited.
+Signed-archive, final-identity, entitlement, privacy-manifest, process-death,
+accessibility, interaction, and physical-iPhone evidence remain open. Strict
+completion requires the schema-v2 lifecycle packet: three typed raw signed ZIPs,
+four canonical parsed entitlement/privacy reports, four canonical scenario
+reports, and typed scenario proofs, all cross-bound to the exact source, build,
+identities, device where applicable, and unique hashes. Setting QA booleans alone
+cannot clear IOS-02.
 
 The Sign in with Apple lifecycle is also a source checkpoint, not launch
 clearance. Migration 0055 and the mobile/Edge contracts implement nonce/state

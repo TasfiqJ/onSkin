@@ -25,8 +25,8 @@ const outJson =
   process.env.READINESS_STATUS_AUDIT_JSON ?? 'docs/generated/readiness-status-audit.json';
 const outMd = process.env.READINESS_STATUS_AUDIT_MD ?? 'docs/generated/readiness-status-audit.md';
 
-const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 273);
-const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 3139);
+const expectedMobileTestFiles = Number(process.env.READINESS_TEST_FILES ?? 275);
+const expectedMobileTests = Number(process.env.READINESS_TESTS ?? 3161);
 
 const staleTestPatterns = [
   /\b170\s+(?:mobile\s+)?test files?\b/i,
@@ -169,6 +169,8 @@ const requiredLaunchCommands = [
   'npm run e2e:human:manifest:check',
   'npm run docs:generated-packet-status-audit:check',
   'npm run phase5:check-native-config',
+  'npm run phase5:widget-runtime-contract:smoke',
+  'npm run phase5:widget-lifecycle-evidence',
   'npm run phase7:check-core-loop',
   'npm run phase8:check-growth-store',
   'npm run phase10:beta-analytics-audit',
@@ -191,6 +193,11 @@ const requiredPackageScripts = [
   'docs:performance-readiness-audit',
   'docs:performance-readiness-audit:strict',
   'docs:performance-readiness-audit:check',
+  'phase5:widget-runtime-contract:smoke',
+  'phase5:widget-lifecycle-evidence',
+  'phase5:widget-lifecycle-evidence:strict',
+  'phase5:widget-lifecycle-evidence:smoke',
+  'phase5:widget-lifecycle-evidence:template:check',
 ];
 
 const requiredLaunchVerifyScriptParts = [
@@ -204,6 +211,10 @@ const requiredLaunchVerifyScriptParts = [
   'e2e:human:manifest:check',
   'phase3:review-signoff-template:smoke',
   'phase5:check-native-config',
+  'phase5:widget-runtime-contract:smoke',
+  'phase5:widget-lifecycle-evidence',
+  'phase5:widget-lifecycle-evidence:smoke',
+  'phase5:widget-lifecycle-evidence:template:check',
   'phase7:check-core-loop',
   'phase8:check-growth-store',
   'phase9:release-smoke',

@@ -1,13 +1,288 @@
 #!/usr/bin/env node
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
+import {
+  createWidgetLifecycleEvidenceTemplate,
+  WIDGET_LIFECYCLE_EVIDENCE_SCHEMA_VERSION,
+  WIDGET_LIFECYCLE_SUPPORTED_FAMILIES,
+} from './widget-lifecycle-evidence-contract.mjs';
+
 const scriptDir = dirname(fileURLToPath(import.meta.url));
-const root = resolve(scriptDir, '..', '..');
-const packetPath = resolve(scriptDir, 'build-device-qa-packet.mjs');
+const sourceRoot = resolve(scriptDir, '..', '..');
+const fixtureRoot = mkdtempSync(join(tmpdir(), 'routinekind-phase5-repo-'));
+const packetOutDirs = [];
+process.on('exit', () => {
+  for (const path of packetOutDirs) rmSync(path, { recursive: true, force: true });
+  rmSync(fixtureRoot, { recursive: true, force: true });
+});
+
+function git(cwd, args) {
+  const result = spawnSync('git', args, { cwd, encoding: 'utf8' });
+  if (result.status !== 0) {
+    throw new Error(`git ${args.join(' ')} failed:\n${result.stdout}\n${result.stderr}`);
+  }
+  return String(result.stdout ?? '').trim();
+}
+
+git(dirname(fixtureRoot), ['clone', '--quiet', '--no-local', sourceRoot, fixtureRoot]);
+const changedPaths = git(sourceRoot, [
+  '-c',
+  'core.quotepath=false',
+  'status',
+  '--short',
+  '--untracked-files=all',
+])
+  .split(/\r?\n/)
+  .filter(Boolean)
+  .flatMap((line) => line.slice(3).split(' -> '))
+  .map((path) => path.trim().replaceAll('\\', '/'));
+for (const path of changedPaths) {
+  const source = resolve(sourceRoot, path);
+  if (!existsSync(source)) continue;
+  const target = resolve(fixtureRoot, path);
+  mkdirSync(dirname(target), { recursive: true });
+  copyFileSync(source, target);
+}
+git(fixtureRoot, ['config', 'user.email', 'phase5-smoke@example.invalid']);
+git(fixtureRoot, ['config', 'user.name', 'Phase 5 Smoke']);
+git(fixtureRoot, ['add', '-A']);
+git(fixtureRoot, ['commit', '--quiet', '-m', 'Phase 5 smoke source']);
+
+const root = fixtureRoot;
+const packetPath = resolve(root, 'scripts/phase5/build-device-qa-packet.mjs');
+const iosBuildId = '9f7b48e1-7a52-4efb-9d93-3e93a2bf13e5';
+const appBundleIdentifier = 'com.routinekind.phase5smoke';
+const extensionBundleIdentifier = `${appBundleIdentifier}.ExpoWidgetsTarget`;
+const appGroupIdentifier = `group.${appBundleIdentifier}`;
+const appleTeamId = 'ABCDE12345';
+const capturedAt = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+const signedAt = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+const widgetEvidenceRelativeRoot = `docs/phase-5/evidence/widget-lifecycle/device-packet-smoke-${process.pid}`;
+const widgetEvidenceAbsoluteRoot = resolve(root, widgetEvidenceRelativeRoot);
+const allowedWidgetEvidenceRoot = `${resolve(
+  root,
+  'docs/phase-5/evidence/widget-lifecycle',
+)}${sep}`;
+if (!widgetEvidenceAbsoluteRoot.startsWith(allowedWidgetEvidenceRoot)) {
+  throw new Error('Unsafe Phase 5 widget evidence smoke path.');
+}
+
+function currentGitSha() {
+  const result = spawnSync('git', ['rev-parse', 'HEAD'], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  if (result.status !== 0 || !/^[0-9a-f]{40}$/i.test(String(result.stdout).trim())) {
+    throw new Error('Phase 5 smoke could not resolve the current Git SHA.');
+  }
+  return String(result.stdout).trim().toLowerCase();
+}
+
+function sha256(bytes) {
+  return createHash('sha256').update(bytes).digest('hex');
+}
+
+function artifact(relativePath, bytes, mediaType) {
+  writeFileSync(resolve(root, relativePath), bytes);
+  return { path: relativePath, sha256: sha256(bytes), mediaType };
+}
+
+function zipArtifact(relativePath, label) {
+  return artifact(
+    relativePath,
+    Buffer.concat([
+      Buffer.from([0x50, 0x4b, 0x03, 0x04]),
+      Buffer.from(`${label}\n`.padEnd(64, '.')),
+    ]),
+    'application/zip',
+  );
+}
+
+function jsonArtifact(relativePath, value) {
+  return artifact(
+    relativePath,
+    Buffer.from(`${JSON.stringify(value, null, 2)}\n`, 'utf8'),
+    'application/json',
+  );
+}
+
+function textArtifact(relativePath, value) {
+  return artifact(relativePath, Buffer.from(`${value}\n`, 'utf8'), 'text/plain');
+}
+
+function reportBinding(evidence, device) {
+  return {
+    sourceGitSha: evidence.sourceGitSha,
+    easIosBuildId: evidence.build.easIosBuildId,
+    identifiers: {
+      appBundleIdentifier,
+      extensionBundleIdentifier,
+      appGroupIdentifier,
+      teamIdentifier: appleTeamId,
+    },
+    rawArtifactSha256: {
+      appBundle: evidence.signedArtifacts.appBundle.sha256,
+      archive: evidence.signedArtifacts.archive.sha256,
+      extensionBundle: evidence.signedArtifacts.extensionBundle.sha256,
+    },
+    device,
+  };
+}
+
+function writeWidgetEvidenceFixture() {
+  mkdirSync(widgetEvidenceAbsoluteRoot, { recursive: true });
+  const evidence = createWidgetLifecycleEvidenceTemplate();
+  evidence.capturedAt = capturedAt;
+  evidence.sourceGitSha = currentGitSha();
+  evidence.build.easIosBuildId = iosBuildId;
+  evidence.device.model = 'iPhone 15 Pro';
+  evidence.device.osVersion = 'iOS 18.5';
+  evidence.identifiers.appBundleIdentifier = appBundleIdentifier;
+  evidence.identifiers.extensionBundleIdentifier = extensionBundleIdentifier;
+  evidence.identifiers.appGroupIdentifier = appGroupIdentifier;
+  evidence.identifiers.teamIdentifier = appleTeamId;
+  evidence.signoff.decision = 'pass';
+  evidence.signoff.signedOffBy = 'Tas Mohammed';
+  evidence.signoff.signedAt = signedAt;
+
+  evidence.signedArtifacts.archive = zipArtifact(
+    `${widgetEvidenceRelativeRoot}/candidate.xcarchive.zip`,
+    `archive ${iosBuildId}`,
+  );
+  evidence.signedArtifacts.appBundle = zipArtifact(
+    `${widgetEvidenceRelativeRoot}/candidate.app.zip`,
+    `app ${iosBuildId}`,
+  );
+  evidence.signedArtifacts.extensionBundle = zipArtifact(
+    `${widgetEvidenceRelativeRoot}/candidate.appex.zip`,
+    `extension ${iosBuildId}`,
+  );
+
+  const privacyClaims = {
+    accessedApiTypes: [
+      { apiType: 'NSPrivacyAccessedAPICategoryUserDefaults', reasons: ['1C8F.1'] },
+    ],
+    collectedDataTypes: [],
+    tracking: false,
+    trackingDomains: [],
+  };
+  for (const [key, reportType, bundleIdentifier, extension] of [
+    ['appEntitlements', 'app-entitlements', appBundleIdentifier, false],
+    ['extensionEntitlements', 'extension-entitlements', extensionBundleIdentifier, true],
+  ]) {
+    evidence.signedArtifacts[key] = jsonArtifact(
+      `${widgetEvidenceRelativeRoot}/${reportType}.json`,
+      {
+        schemaVersion: WIDGET_LIFECYCLE_EVIDENCE_SCHEMA_VERSION,
+        capturedAt,
+        reportType,
+        binding: reportBinding(evidence, null),
+        claims: {
+          appGroups: [appGroupIdentifier],
+          applicationIdentifier: `${appleTeamId}.${bundleIdentifier}`,
+          apsEnvironment: extension ? null : 'development',
+          bundleIdentifier,
+          codeSignatureValid: true,
+          serviceCapabilityKeys: ['com.apple.security.application-groups'],
+          teamIdentifier: appleTeamId,
+        },
+      },
+    );
+  }
+  for (const [key, reportType] of [
+    ['appPrivacyManifest', 'app-privacy-manifest'],
+    ['extensionPrivacyManifest', 'extension-privacy-manifest'],
+  ]) {
+    evidence.signedArtifacts[key] = jsonArtifact(
+      `${widgetEvidenceRelativeRoot}/${reportType}.json`,
+      {
+        schemaVersion: WIDGET_LIFECYCLE_EVIDENCE_SCHEMA_VERSION,
+        capturedAt,
+        reportType,
+        binding: reportBinding(evidence, null),
+        claims: privacyClaims,
+      },
+    );
+  }
+
+  const claims = {
+    archiveInspection: {
+      appCodeSignatureValid: true,
+      appPrivacyManifestEmbedded: true,
+      extensionCodeSignatureValid: true,
+      extensionEmbedded: true,
+      extensionPrivacyManifestEmbedded: true,
+      frequentUpdatesEnabled: false,
+      identitiesMatch: true,
+      unapprovedExtensionCapabilitiesAbsent: true,
+    },
+    interactionPrivacy: {
+      accountDeletionCleanup: true,
+      accountSwitchCleanup: true,
+      atomicConcurrentCheckOff: true,
+      corruptBytesCleanup: true,
+      expiredTokenNoWrite: true,
+      expiryCleanup: true,
+      healthConsentWithdrawalCleanup: true,
+      killedAppReconciliation: true,
+      lockedStateRedaction: true,
+      nativeActionImplementation: 'append_only_app_group_outbox',
+      repeatedTapIdempotent: true,
+      signOutCleanup: true,
+      staleTokenNoWrite: true,
+      unknownTokenNoWrite: true,
+    },
+    liveActivity: {
+      consentWithdrawalCleanup: true,
+      deviceRestartRecovery: true,
+      disablementCleanup: true,
+      explicitEnd: true,
+      lockedStateRedaction: true,
+      processDeathRecovery: true,
+      staleDateNonNull: true,
+    },
+    widgetDevice: {
+      accessibilityPass: true,
+      coldStartDeepLinkPass: true,
+      killedAppDeepLinkPass: true,
+      lockedStateRedaction: true,
+      supportedFamilies: [...WIDGET_LIFECYCLE_SUPPORTED_FAMILIES],
+      warmDeepLinkPass: true,
+    },
+  };
+  for (const id of Object.keys(claims)) {
+    const proof = textArtifact(
+      `${widgetEvidenceRelativeRoot}/${id}-proof.txt`,
+      `Typed proof transcript for ${id} and build ${iosBuildId}`,
+    );
+    evidence.scenarioArtifacts[id] = jsonArtifact(`${widgetEvidenceRelativeRoot}/${id}.json`, {
+      schemaVersion: WIDGET_LIFECYCLE_EVIDENCE_SCHEMA_VERSION,
+      capturedAt,
+      reportType: id,
+      binding: reportBinding(evidence, id === 'archiveInspection' ? null : { ...evidence.device }),
+      claims: claims[id],
+      proofAttachments: [proof],
+    });
+  }
+  const relativePath = `${widgetEvidenceRelativeRoot}/evidence.json`;
+  writeFileSync(resolve(root, relativePath), `${JSON.stringify(evidence, null, 2)}\n`);
+  return relativePath;
+}
+
+const widgetEvidencePath = writeWidgetEvidenceFixture();
 
 const passthroughKeys = [
   'ComSpec',
@@ -29,13 +304,16 @@ const processBaseEnv = Object.fromEntries(
 );
 
 const validEvidence = {
-  PHASE5_IOS_BUILD_ID: '9f7b48e1-7a52-4efb-9d93-3e93a2bf13e5',
+  PHASE5_IOS_BUILD_ID: iosBuildId,
   PHASE5_ANDROID_BUILD_ID:
     'https://expo.dev/accounts/routinekind/projects/mobile/builds/7a4d74ae-2acd-4af5-931f-b768565bcd64',
   PHASE5_IOS_DEVICE: 'iPhone 15 Pro / iOS 18.5',
   PHASE5_ANDROID_DEVICE: 'Pixel 8 / Android 15',
   PHASE5_QA_SIGNOFF: 'true',
   PHASE5_SIGNED_OFF_BY: 'Tas Mohammed',
+  APP_IOS_BUNDLE_IDENTIFIER: appBundleIdentifier,
+  APPLE_TEAM_ID: appleTeamId,
+  PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH: widgetEvidencePath,
   PHASE5_DEVICE_QA_PASS: 'true',
   PHASE5_INSTALL_QA_PASS: 'true',
   PHASE5_CAMERA_PERMISSION_QA_PASS: 'true',
@@ -49,12 +327,17 @@ const validEvidence = {
   PHASE5_SENTRY_NATIVE_QA_PASS: 'true',
   PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS: 'true',
   PHASE5_ACCESSIBILITY_QA_PASS: 'true',
+  PHASE5_WIDGET_ARCHIVE_QA_PASS: 'true',
+  PHASE5_WIDGET_DEVICE_QA_PASS: 'true',
+  PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS: 'true',
+  PHASE5_LIVE_ACTIVITY_QA_PASS: 'true',
   PHASE5_NATIVE_OCR_QA_PASS: 'false',
 };
 
-function run(extraEnv) {
+function run(extraEnv, strict = true) {
   const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase5-qa-'));
-  const result = spawnSync(process.execPath, [packetPath, '--strict'], {
+  packetOutDirs.push(outDir);
+  const result = spawnSync(process.execPath, [packetPath, ...(strict ? ['--strict'] : [])], {
     cwd: root,
     encoding: 'utf8',
     env: {
@@ -68,11 +351,11 @@ function run(extraEnv) {
   return result;
 }
 
-function runWithDirtyWorktree(extraEnv) {
+function runWithDirtyWorktree(extraEnv, strict = true) {
   const markerPath = join(root, `.phase5-smoke-dirty-${process.pid}.tmp`);
   writeFileSync(markerPath, 'temporary Phase 5 dirty-worktree smoke marker\n');
   try {
-    return run(extraEnv);
+    return run(extraEnv, strict);
   } finally {
     rmSync(markerPath, { force: true });
   }
@@ -98,6 +381,42 @@ const cases = [
       return (
         result.status === 1 &&
         /Missing PHASE5_BARCODE_QA_PASS=true \(physical-device barcode scan and checksum matrix\)/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects missing widget interaction/privacy evidence',
+    result: run({ PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS: 'false' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Missing PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS=true \(atomic widget interaction plus lock, expiry, sign-out, account-switch, and consent-withdrawal cleanup\)/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects missing Live Activity lifecycle evidence',
+    result: run({ PHASE5_LIVE_ACTIVITY_QA_PASS: 'false' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Missing PHASE5_LIVE_ACTIVITY_QA_PASS=true \(physical-iPhone Live Activity stale, end, process-death, restart, and locked-state behavior\)/.test(
+          output(result),
+        )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet rejects widget booleans without artifact-bound evidence',
+    result: run({ PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH: '' }),
+    expect(result) {
+      return (
+        result.status === 1 &&
+        /Missing PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH; widget booleans do not substitute for artifact-bound archive\/device\/lifecycle evidence/.test(
           output(result),
         )
       );
@@ -217,6 +536,12 @@ const cases = [
       const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
       return (
         packet.buildEvidence.signedOffBy === 'Tas Mohammed' &&
+        packet.widgetLifecycleEvidence.status === 'pass' &&
+        packet.widgetLifecycleEvidence.summary.artifactCount === 15 &&
+        packet.widgetLifecycleEvidence.summary.baseArtifactCount === 11 &&
+        packet.widgetLifecycleEvidence.summary.proofAttachmentCount === 4 &&
+        packet.widgetLifecycleEvidence.summary.scenarioCount === 4 &&
+        /^[0-9a-f]{64}$/i.test(packet.widgetLifecycleEvidence.sha256) &&
         /^[0-9a-f]{40}$/i.test(packet.gitSha) &&
         typeof packet.gitStatus === 'string' &&
         Array.isArray(packet.warnings) &&
@@ -263,20 +588,44 @@ const cases = [
           (file) => file.path === 'docs/phase-5/performance-evidence.template.json',
         ) &&
         packet.files.some((file) => file.path === 'docs/e2e/generated/human-e2e-manifest.json') &&
-        packet.files.some((file) => file.path === 'docs/e2e/generated/human-e2e-manifest.md')
+        packet.files.some((file) => file.path === 'docs/e2e/generated/human-e2e-manifest.md') &&
+        [
+          'apps/mobile/src/features/widgets/runtimeGate.ts',
+          'apps/mobile/src/features/widgets/runtimeGate.test.ts',
+          'apps/mobile/src/features/widgets/controllerCore.ts',
+          'apps/mobile/src/features/widgets/controllerCore.test.ts',
+        ].every((path) =>
+          packet.files.some(
+            (file) => file.path === path && /^[0-9a-f]{64}$/i.test(file.sha256 ?? ''),
+          ),
+        )
       );
     },
   },
   {
-    name: 'strict Phase 5 QA packet warns when generated from a dirty worktree',
+    name: 'strict Phase 5 QA packet rejects a dirty source worktree',
     result: runWithDirtyWorktree({}),
+    expect(result) {
+      if (result.status !== 1) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return (
+        packet.gitStatus.includes(`.phase5-smoke-dirty-${process.pid}.tmp`) &&
+        packet.blockers.includes(
+          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle evidence; do not use it as final native-device evidence.',
+        )
+      );
+    },
+  },
+  {
+    name: 'non-strict Phase 5 QA packet warns on dirty source without claiming clearance',
+    result: runWithDirtyWorktree({}, false),
     expect(result) {
       if (result.status !== 0) return false;
       const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
       return (
         packet.gitStatus.includes(`.phase5-smoke-dirty-${process.pid}.tmp`) &&
         packet.warnings.includes(
-          'Phase 5 device QA packet generated with a dirty Git worktree; do not use it as final native-device evidence.',
+          'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle evidence; do not use it as final native-device evidence.',
         )
       );
     },

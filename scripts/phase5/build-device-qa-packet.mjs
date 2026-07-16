@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
+import { isAbsolute, join, posix, relative, resolve } from 'node:path';
 import {
   command,
   evidenceFlagEnabled,
-  gitStatusExcludingGeneratedEvidence,
   normalizeNamedSignoff,
   placeholderEnvValue,
 } from '../phase9/lib.mjs';
@@ -15,6 +14,10 @@ import {
   loadLaunchContract,
   platformRequirementStatus,
 } from '../launch/contract.mjs';
+import {
+  validateWidgetLifecycleEvidence,
+  WIDGET_LIFECYCLE_EVIDENCE_ROOT,
+} from './widget-lifecycle-evidence-contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -28,6 +31,7 @@ const packetOutputPaths = [
 ].map((path) => path.replace(/\\/g, '/'));
 
 const requiredFiles = [
+  '.env.example',
   'package.json',
   'package-lock.json',
   'docs/hugeToDo/launch-contract.json',
@@ -38,6 +42,9 @@ const requiredFiles = [
   'apps/mobile/eas.json',
   'apps/mobile/package.json',
   'apps/mobile/src/app/_layout.tsx',
+  'apps/mobile/src/lib/appConfig.test.ts',
+  'apps/mobile/src/lib/launch/phase7.ts',
+  'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/src/app/(tabs)/progress.tsx',
   'apps/mobile/src/app/(tabs)/shelf.tsx',
   'apps/mobile/src/app/(tabs)/you.tsx',
@@ -72,6 +79,10 @@ const requiredFiles = [
   'apps/mobile/src/features/widgets/actionRegistry.test.ts',
   'apps/mobile/src/features/widgets/contract.ts',
   'apps/mobile/src/features/widgets/contract.test.ts',
+  'apps/mobile/src/features/widgets/controllerCore.ts',
+  'apps/mobile/src/features/widgets/controllerCore.test.ts',
+  'apps/mobile/src/features/widgets/runtimeGate.ts',
+  'apps/mobile/src/features/widgets/runtimeGate.test.ts',
   'apps/mobile/src/features/widgets/TodayWidget.ios.tsx',
   'apps/mobile/src/features/widgets/TonightActivity.ios.tsx',
   'apps/mobile/src/features/widgets/widgetViews.test.ts',
@@ -118,6 +129,9 @@ const requiredFiles = [
   'scripts/phase5/ios-extension-contract.mjs',
   'scripts/phase5/ios-extension-contract.test.mjs',
   'scripts/phase5/widget-privacy-manifest.test.mjs',
+  'scripts/phase5/widget-lifecycle-evidence-contract.mjs',
+  'scripts/phase5/check-widget-lifecycle-evidence.mjs',
+  'scripts/phase5/widget-lifecycle-evidence-smoke.mjs',
   'scripts/phase5/resolve-ios-extension-config.mjs',
   'scripts/phase5/check-performance-evidence.mjs',
   'scripts/phase5/device-qa-packet-smoke.mjs',
@@ -133,9 +147,11 @@ const requiredFiles = [
   'docs/HUMAN_SIMULATED_E2E_TESTING.md',
   'docs/E2E_TESTING_CHECKLIST.md',
   'docs/USER_FLOW_TREE.md',
+  'docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md',
   'docs/e2e/generated/human-e2e-manifest.json',
   'docs/e2e/generated/human-e2e-manifest.md',
   'docs/phase-5/native-build-runbook.md',
+  'docs/phase-5/widget-lifecycle-evidence.template.json',
   'docs/phase-5/device-qa-checklist.md',
   'docs/phase-5/performance-evidence-runbook.md',
   'docs/phase-5/performance-evidence.template.json',
@@ -171,6 +187,22 @@ const scenarios = [
     'Performance',
     'predeclared thresholds plus supported-device startup, intake, barcode, routine, and encrypted-photo load/memory evidence',
   ],
+  [
+    'Widget archive',
+    'macOS archive contains the signed extension, expected App Group entitlement, target privacy manifest, final identities, and no unapproved capabilities',
+  ],
+  [
+    'Widget families and deep links',
+    'small, medium, inline, and rectangular families render and redact correctly; final-brand Today deep links survive cold start and recovery',
+  ],
+  [
+    'Widget interaction and privacy lifecycle',
+    'concurrent/repeated check-offs, app killed/relaunched, lock state, stale/unknown tokens, sign-out, account switch, consent withdrawal, expiry, and corrupt shared bytes',
+  ],
+  [
+    'Live Activity lifecycle',
+    'start, update, stale, complete, explicit end, app process death, device restart, lock-screen redaction, and disabled-state cleanup',
+  ],
 ];
 
 const requiredQaEvidenceFlags = [
@@ -199,6 +231,22 @@ const requiredQaEvidenceFlags = [
     'native Supabase catalog lookup and no-match/error fallback',
   ],
   ['PHASE5_ACCESSIBILITY_QA_PASS', 'VoiceOver labels, traversal, and 44 pt controls'],
+  [
+    'PHASE5_WIDGET_ARCHIVE_QA_PASS',
+    'signed archive extension, App Group entitlement, target privacy manifest, and capability inspection',
+  ],
+  [
+    'PHASE5_WIDGET_DEVICE_QA_PASS',
+    'physical-iPhone widget families, cold-start deep links, process death, and accessibility',
+  ],
+  [
+    'PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS',
+    'atomic widget interaction plus lock, expiry, sign-out, account-switch, and consent-withdrawal cleanup',
+  ],
+  [
+    'PHASE5_LIVE_ACTIVITY_QA_PASS',
+    'physical-iPhone Live Activity stale, end, process-death, restart, and locked-state behavior',
+  ],
 ];
 
 const optionalQaEvidenceFlags = [
@@ -232,12 +280,60 @@ function envValue(name) {
   return String(process.env[name] ?? '').trim();
 }
 
+function normalizedWidgetEvidencePath(value) {
+  if (
+    typeof value !== 'string' ||
+    value !== value.trim() ||
+    !value ||
+    value.includes('\\') ||
+    value.includes('%') ||
+    /\s/.test(value) ||
+    isAbsolute(value) ||
+    /^[A-Za-z]:/.test(value) ||
+    /^[a-z][a-z0-9+.-]*:/i.test(value)
+  ) {
+    return null;
+  }
+  const normalized = posix.normalize(value);
+  return normalized === value &&
+    !normalized.startsWith('../') &&
+    !normalized.includes('/../') &&
+    normalized.startsWith(WIDGET_LIFECYCLE_EVIDENCE_ROOT)
+    ? normalized
+    : null;
+}
+
 function readJson(path) {
   return JSON.parse(readFileSync(resolve(root, path), 'utf8'));
 }
 
-function gitStatusExcludingGeneratedPacket() {
-  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
+function normalizedGitPath(path) {
+  return String(path ?? '')
+    .trim()
+    .replaceAll('\\', '/')
+    .replace(/^\.\//, '');
+}
+
+function gitStatusExcludingGeneratedPacket(validatedEvidencePaths = []) {
+  const excluded = new Set(
+    [...packetOutputPaths, ...validatedEvidencePaths].map(normalizedGitPath),
+  );
+  return command('git', [
+    '-c',
+    'core.quotepath=false',
+    'status',
+    '--short',
+    '--untracked-files=all',
+  ])
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean)
+    .filter((line) => {
+      const paths = line.slice(3).split(' -> ').map(normalizedGitPath).filter(Boolean);
+      return paths.length === 0 || !paths.every((path) => excluded.has(path));
+    })
+    .join('\n')
+    .trim();
 }
 
 function looksLikeEasBuildEvidence(value) {
@@ -325,14 +421,100 @@ let gitSha = 'unknown';
 let gitStatus = 'unknown';
 try {
   gitSha = command('git', ['rev-parse', 'HEAD']).trim();
-  gitStatus = gitStatusExcludingGeneratedPacket();
 } catch {
-  warnings.push('Git SHA/status could not be captured.');
+  warnings.push('Git SHA could not be captured.');
+}
+const rawWidgetLifecycleEvidencePath = envValue('PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH');
+const normalizedWidgetLifecycleEvidencePath = normalizedWidgetEvidencePath(
+  rawWidgetLifecycleEvidencePath,
+);
+let widgetLifecycleEvidence = {
+  path: normalizedWidgetLifecycleEvidencePath,
+  status: 'blocked',
+  sha256: null,
+  artifacts: [],
+  summary: {
+    artifactCount: 0,
+    baseArtifactCount: 0,
+    requiredBaseArtifactCount: 11,
+    minimumProofAttachmentCount: 4,
+    proofAttachmentCount: 0,
+    scenarioCount: 0,
+  },
+  binding: null,
+};
+let validatedWidgetEvidencePaths = [];
+if (!rawWidgetLifecycleEvidencePath) {
+  blockers.push(
+    'Missing PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH; widget booleans do not substitute for artifact-bound archive/device/lifecycle evidence.',
+  );
+} else if (!normalizedWidgetLifecycleEvidencePath) {
+  blockers.push(
+    `PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH must be a normalized repo-relative JSON path under ${WIDGET_LIFECYCLE_EVIDENCE_ROOT}.`,
+  );
+} else {
+  const evidenceFile = hashFile(normalizedWidgetLifecycleEvidencePath);
+  if (!evidenceFile.exists) {
+    blockers.push(
+      `Widget lifecycle evidence file does not exist: ${normalizedWidgetLifecycleEvidencePath}.`,
+    );
+  } else {
+    try {
+      const evidence = readJson(normalizedWidgetLifecycleEvidencePath);
+      const validation = validateWidgetLifecycleEvidence(evidence, {
+        root,
+        expectedGitSha: gitSha,
+        expectedBuildId: buildEvidence.iosBuildId,
+        expectedSignedOffBy: rawSignedOffBy,
+        expectedAppBundleIdentifier: envValue('APP_IOS_BUNDLE_IDENTIFIER'),
+        expectedTeamIdentifier: envValue('APPLE_TEAM_ID'),
+      });
+      for (const error of validation.errors) {
+        blockers.push(`Widget lifecycle evidence: ${error}`);
+      }
+      for (const warning of validation.warnings) {
+        warnings.push(`Widget lifecycle evidence: ${warning}`);
+      }
+      widgetLifecycleEvidence = {
+        path: normalizedWidgetLifecycleEvidencePath,
+        status: validation.errors.length === 0 ? 'pass' : 'blocked',
+        sha256: evidenceFile.sha256,
+        artifacts: validation.artifacts,
+        summary: validation.summary,
+        binding: {
+          sourceGitSha: evidence.sourceGitSha ?? null,
+          easIosBuildId: evidence.build?.easIosBuildId ?? null,
+          appBundleIdentifier: evidence.identifiers?.appBundleIdentifier ?? null,
+          extensionBundleIdentifier: evidence.identifiers?.extensionBundleIdentifier ?? null,
+          appGroupIdentifier: evidence.identifiers?.appGroupIdentifier ?? null,
+          teamIdentifier: evidence.identifiers?.teamIdentifier ?? null,
+          device: evidence.device ?? null,
+          signedOffBy: evidence.signoff?.signedOffBy ?? null,
+        },
+      };
+      if (validation.errors.length === 0) {
+        validatedWidgetEvidencePaths = [
+          normalizedWidgetLifecycleEvidencePath,
+          ...validation.artifacts.map(({ path }) => path),
+        ];
+      }
+    } catch (error) {
+      blockers.push(
+        `Widget lifecycle evidence is not valid JSON: ${error instanceof Error ? error.message : String(error)}.`,
+      );
+    }
+  }
+}
+try {
+  gitStatus = gitStatusExcludingGeneratedPacket(validatedWidgetEvidencePaths);
+} catch {
+  warnings.push('Git status could not be captured.');
 }
 if (gitStatus.length > 0) {
-  warnings.push(
-    'Phase 5 device QA packet generated with a dirty Git worktree; do not use it as final native-device evidence.',
-  );
+  const dirtyMessage =
+    'Phase 5 device QA packet generated with a dirty Git worktree outside its generated output and validated lifecycle evidence; do not use it as final native-device evidence.';
+  if (strict) blockers.push(dirtyMessage);
+  else warnings.push(dirtyMessage);
 }
 if (!buildEvidence.iosBuildId) blockers.push('Missing PHASE5_IOS_BUILD_ID.');
 else if (!looksLikeEasBuildEvidence(buildEvidence.iosBuildId)) {
@@ -380,6 +562,7 @@ const packet = {
   gitStatus,
   buildEvidence,
   qaEvidence,
+  widgetLifecycleEvidence,
   nativeOcr: {
     enabledInAnyBuild: nativeOcrEnabled,
     qaRequired: nativeOcrEnabled,
@@ -405,6 +588,12 @@ const evidenceRows = Object.entries(qaEvidence).map(([key, evidence]) => [
   evidence.required ? 'required' : 'not required',
   evidence.passed ? 'PASS' : 'BLOCKED',
   evidence.label,
+]);
+const widgetArtifactRows = widgetLifecycleEvidence.artifacts.map((artifact) => [
+  artifact.id,
+  artifact.path,
+  String(artifact.bytes),
+  artifact.sha256,
 ]);
 const mdPath = join(outDir, 'device-qa-packet.md');
 writeFileSync(
@@ -432,6 +621,19 @@ writeFileSync(
     '## QA Evidence',
     '',
     markdownTable(['Key', 'Requirement', 'Status', 'Evidence scope'], evidenceRows),
+    '',
+    '## Widget Lifecycle Evidence',
+    '',
+    `- Status: ${widgetLifecycleEvidence.status === 'pass' ? 'PASS' : 'BLOCKED'}`,
+    `- Evidence path: ${widgetLifecycleEvidence.path ?? 'BLOCKED'}`,
+    `- Evidence SHA-256: ${widgetLifecycleEvidence.sha256 ?? 'BLOCKED'}`,
+    `- Verified base artifacts/reports: ${widgetLifecycleEvidence.summary.baseArtifactCount}/${widgetLifecycleEvidence.summary.requiredBaseArtifactCount}`,
+    `- Verified proof attachments: ${widgetLifecycleEvidence.summary.proofAttachmentCount} (minimum ${widgetLifecycleEvidence.summary.minimumProofAttachmentCount})`,
+    `- Verified scenarios: ${widgetLifecycleEvidence.summary.scenarioCount}/4`,
+    '',
+    widgetArtifactRows.length > 0
+      ? markdownTable(['Artifact', 'Path', 'Bytes', 'SHA-256'], widgetArtifactRows)
+      : 'No verified widget lifecycle artifacts attached.',
     '',
     '## Scenarios',
     '',

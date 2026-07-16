@@ -26,21 +26,50 @@ personalized roots/counts/status are privacy-sensitive. Future encrypted
 registry schemas are preserved rather than overwritten. Completion analytics
 now fire only for a newly inserted append-only completion, not a repeated tap.
 
+An injected, unmounted reconciliation core now rejects malformed, oversized,
+unordered, clock-rollback, stale, and cross-context timeline input; groups and
+deduplicates tokens; resolves all inputs before the first canonical write;
+requires idempotent canonical completion and exact acknowledgement before a
+synchronous replacement; serializes callers; and invalidates stale account
+generations. The native runtime gate opens only for iOS plus the exact QA-build
+boolean in a non-production environment. Interactive publication remains a
+compile-time literal `false` pending a native atomic App Group action outbox or
+equivalent compare-and-swap protocol.
+
+The Phase 5 native packet now refuses boolean-only widget clearance. Its
+schema-v2 lifecycle contract binds current HEAD, exact EAS build UUID/URL,
+final app/extension/App Group/Team identity, physical iPhone/iOS, and named
+signoff to three typed raw signed ZIPs, four canonical parsed
+entitlement/privacy reports, four canonical scenario reports, and typed
+scenario proofs. Every report repeats the source/build/identity/raw-hash
+binding; device reports repeat the physical-device tuple; duplicate paths or
+bytes are rejected. The checked-in template is blocked by default and no real
+archive/device evidence is claimed.
+
+Today completion persistence now returns the exact post-mutation day snapshot
+from the same serialized encrypted-store update that decides insertion. Cycle
+night analytics uses that snapshot and the exact scheduled PM key set, so two
+concurrent final-step writes yield exactly one completion decision and repeated
+same-key taps yield exactly one insertion. This fixes the local decision race;
+it does not claim the analytics transport is durable or production-enabled.
+
 This is deliberately disabled scaffolding, not a shippable native feature.
 Ordinary builds exclude the extension plugins and Live Activity capability;
 development/staging QA requires the exact build opt-in, while production
 config hard-errors if that opt-in is present. Stock Expo uses
-`staleDate: nil`, and its App Group timeline retains historical entries, so no
-production Live Activity may start and no personalized widget may be enabled
-until a controller reconciles pending actions, replaces/prunes the whole
-timeline on expiry/withdrawal/sign-out/account change, and passes macOS archive
-inspection plus physical-iPhone killed-app/privacy/accessibility/deep-link QA.
+`staleDate: nil`, and its app/extension processes replace the shared whole
+timeline without a native atomic primitive. No production Live Activity may
+start and no interactive/personalized widget may be enabled until a native
+host mounts safe reconciliation plus unconditional expiry/withdrawal/sign-out/
+account-change deletion, and passes macOS archive inspection plus
+physical-iPhone killed-app/privacy/accessibility/deep-link QA.
 The final cleared app scheme must also regenerate the exact deep-link allowlist.
 
 Verification passes 16/16 extension/privacy contract tests, 43/43 focused
-widget/action tests, root typecheck and lint, and 273 mobile test files / 3139
+widget/action tests at the first source checkpoint, the expanded 62-test widget
+runtime contract, root typecheck and lint, and 275 mobile test files / 3161
 tests. Apple review, legal clearance, signed-binary privacy-manifest placement,
-and commercial outcomes are not claimed.
+analytics delivery, and commercial outcomes are not claimed.
 
 ## 2026-07-15
 

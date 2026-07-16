@@ -164,7 +164,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The current integrated source checkpoint
-on 2026-07-15 passes root typecheck, lint, and 273 mobile test files / 3139 tests.
+on 2026-07-16 passes root typecheck, lint, and 275 mobile test files / 3161 tests.
 The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
@@ -1136,12 +1136,17 @@ Exit criteria:
 
 Status: `launch-blocked`
 
-In-app previews exist. Required WidgetKit and ActivityKit targets do not.
+In-app previews and a production-disabled extension source scaffold now exist,
+including a privacy-minimized contract, encrypted capability map, isolated
+views, exact runtime gate, and tested unmounted reconciliation core. A signed
+release target and production-safe runtime do not yet exist.
 
 Exit criteria:
 
-- implement WidgetKit and ActivityKit targets, App Group data sharing,
-  timelines/lifecycle, privacy redaction, deep links, and failure behavior;
+- implement a native atomic App Group action outbox or equivalent CAS,
+  registration/host wiring, unconditional expiry/withdrawal/sign-out/account
+  deletion/redaction, deterministic Live Activity stale/end behavior, final
+  deep links, and signed-archive capability/privacy-manifest inspection;
 - pass the supported physical-iPhone matrix.
 
 ## B-ROUTINE-PERSIST - Server routine/cycle persistence

@@ -54,6 +54,13 @@ Completed in repo:
   extension-target `PrivacyInfo.xcprivacy` declarations for App Group
   UserDefaults reason `1C8F.1`. Ordinary builds omit the target and production
   config rejects its QA-only opt-in.
+- IOS-02 now also has an injected, unmounted reconciliation core with strict
+  bounded timeline decoding, cross-entry token deduplication,
+  resolve-all-before-write validation, canonical idempotent completion, exact
+  acknowledgement before synchronous replacement, serialized callers, and
+  account-generation invalidation. Its runtime gate requires iOS, an exact
+  extension-build boolean, and a non-production environment. Interactive
+  publication remains a literal hard `false`.
 - A structured performance-evidence template, strict validator, and smoke suite
   now require predeclared thresholds, supported physical-device/build proof,
   repeated raw supported-iPhone measurements including post-capture analysis,
@@ -64,6 +71,13 @@ Completed in repo:
   for install, camera permission recovery, barcode, label capture, progress
   photos, encrypted photo storage, notifications, share sheet, RevenueCat,
   Sentry, Supabase catalog calls, accessibility, and conditional native OCR.
+- Widget flags cannot clear the packet by themselves. A separate strict
+  schema-v2 lifecycle artifact binds current source HEAD, exact EAS build,
+  final app/extension/App Group/Team IDs, physical iPhone and named signoff to
+  three typed raw signed ZIPs, four canonical parsed entitlement/privacy
+  reports, four canonical scenario reports, and typed scenario proofs. Every
+  report repeats the source/build/identity/raw-hash binding, device reports
+  repeat the physical-device tuple, and duplicate paths or bytes are rejected.
 - The generated QA packet hashes the human-simulated E2E rules, user-flow tree,
   manifest generator, and generated manifest so native QA reviewers can see
   which local UI evidence contract the build was checked against.
@@ -82,12 +96,15 @@ Still blocked before beta:
 - RevenueCat Test Store/sandbox native smoke.
 - Sentry native crash/source-map smoke.
 - Notification timing matrix on supported iPhones and iOS versions.
-- WidgetKit/ActivityKit registration and lifecycle controller, including
-  pending-action reconciliation before whole-timeline replacement, historical
-  App Group byte pruning on expiry/withdrawal/sign-out/account transition, and
-  a deterministic killed-app Live Activity end/redaction path. Stock
-  `expo-widgets` uses `staleDate: nil`, so production Live Activity start stays
-  prohibited until that path is replaced and proven.
+- Native WidgetKit/ActivityKit host registration and lifecycle integration.
+  The tested pure controller is not mounted and cannot by itself make the
+  extension and app processes atomic. A native append-only App Group action
+  outbox or equivalent native compare-and-swap protocol must precede
+  interactive publication. An unconditional deletion/redaction lane must prune
+  corrupt or historical App Group bytes on expiry, withdrawal, sign-out, and
+  account transition. Stock `expo-widgets` uses `staleDate: nil`, so production
+  Live Activity start stays prohibited until a deterministic killed-app
+  stale/end path replaces it and is proven.
 - macOS archive inspection proving the extension privacy manifest is inside the
   signed `.appex`, followed by physical-iPhone widget families, locked-state
   privacy, interaction, deep-link, process-death, accessibility, and withdrawal
