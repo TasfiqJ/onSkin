@@ -24,6 +24,16 @@ describe('Shelf mutation failure cache containment', () => {
       conflictChoices: {},
       reassurances: [],
       banner: null,
+      profile: {
+        consentCurrent: true,
+        goals: [],
+        moisture: 'balanced',
+        pregnancy: false,
+        pregnancySafety: 'clear',
+        pregnancyStatus: 'none',
+        sensitivity: 'neutral',
+        source: 'local',
+      },
     } satisfies ShelfData;
     client.setQueryData(queryKey, cached);
 

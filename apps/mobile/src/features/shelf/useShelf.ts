@@ -19,7 +19,7 @@ import { loadConflictChoices } from '@/features/intelligence/overrides';
 import { expiryBadge, type ExpiryBadge } from '@/features/intelligence/pao';
 import { shippableRules } from '@/features/intelligence/rules';
 import { tagsForIngredientList } from '@/features/intelligence/tags';
-import { readProfileBitsWithLease } from '@/features/scheduler/profile';
+import { readProfileBitsWithLease, type ProfileBits } from '@/features/scheduler/profile';
 import { localDateString } from '@/features/today/useToday';
 import { awaitAccountGenerationLease } from '@/lib/auth/accountGeneration';
 import {
@@ -70,6 +70,8 @@ export type ShelfData = {
   reassurances: DetectedConflict[];
   /** The top noteworthy (non-reassuring) interaction for the calm shelf banner. */
   banner: DetectedConflict | null;
+  /** Exact owner-leased profile snapshot used to derive this Shelf result. */
+  profile: ProfileBits;
 };
 
 /** True when the product's surfaced expiry is only an estimate (a category PAO
@@ -153,6 +155,10 @@ export function useShelfFromBoundary(boundary: LocalDateBoundaryIdentity) {
     refetchOnWindowFocus: (activeQuery) =>
       activeQuery.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(activeQuery),
     retry: false,
+    // Shelf is app-owned encrypted local state. A successful snapshot stays
+    // authoritative until an explicit mutation/profile invalidation or the
+    // local-date query key changes; routine tab/stack remounts must not reread it.
+    staleTime: Infinity,
     // A later observer mounting after an unreadable private-store result must
     // not silently retry behind the recovery notice. Recovery is deliberate:
     // the user taps Try again, which calls refetch on the existing query.
@@ -270,16 +276,21 @@ export function useShelfFromBoundary(boundary: LocalDateBoundaryIdentity) {
           conflictChoices,
           reassurances,
           banner,
+          profile: profileBits,
         };
       }),
   });
 
+  const refreshingStaleSnapshot = query.isSuccess && query.isStale;
   return {
     ...query,
-    // React Query may retain a prior successful value after a background read
-    // fails. Shelf-derived guidance must never treat that stale snapshot as
-    // authoritative while the current private read is unavailable.
-    data: query.isSuccess ? query.data : undefined,
+    // Invalidation can leave an old successful value in the cache while an
+    // inactive observer is remounted. Hide that embedded profile/conflict
+    // snapshot until the strict private reread succeeds.
+    data: query.isSuccess && !refreshingStaleSnapshot ? query.data : undefined,
+    isLoading: query.isLoading || refreshingStaleSnapshot,
+    isPending: query.isPending || refreshingStaleSnapshot,
+    isSuccess: query.isSuccess && !refreshingStaleSnapshot,
   };
 }
 

@@ -35,9 +35,7 @@ function isAbortOrAccountGenerationError(error: unknown): boolean {
   );
 }
 
-export async function readMonkBandWithLease(
-  lease: AccountGenerationLease,
-): Promise<number | null> {
+export async function readMonkBandWithLease(lease: AccountGenerationLease): Promise<number | null> {
   lease.assertCurrent();
   try {
     const { data } = await awaitAccountGenerationLease(lease, () =>
@@ -60,27 +58,42 @@ export async function readMonkBandWithLease(
   }
 }
 
-export function useTrendConsent() {
+type TrendQueryOptions = { enabled?: boolean };
+
+export function useTrendConsent(options: TrendQueryOptions = {}) {
   const ownerScope = useOwnerQueryScope();
   return useQuery({
     queryKey: queryKeys.trendConsent(ownerScope),
     queryFn: () => runOwnerQueryOperation(ownerScope, isTrendInsightsConsentedWithLease),
+    enabled: options.enabled,
     networkMode: 'always',
   });
 }
 
-export function useMonkBand() {
+export function useMonkBand(options: TrendQueryOptions = {}) {
   const ownerScope = useOwnerQueryScope();
   return useQuery({
     queryKey: queryKeys.monkBand(ownerScope),
     queryFn: () => runOwnerQueryOperation(ownerScope, readMonkBandWithLease),
+    enabled: options.enabled,
   });
 }
 
-export function useTrendInsight() {
-  const consent = useTrendConsent();
-  const photos = usePhotos('front');
-  const monk = useMonkBand();
+export type TrendPhotoSource = Pick<
+  ReturnType<typeof usePhotos>,
+  'data' | 'isLoading' | 'isSuccess'
+>;
+
+/** Derive trend state from the exact photo snapshot already owned by a route. */
+export function useTrendInsightFromPhotos(
+  photos: TrendPhotoSource,
+  options: TrendQueryOptions = {},
+) {
+  const enabled = options.enabled !== false;
+  const consent = useTrendConsent({ enabled: enabled && photos.isSuccess });
+  const monk = useMonkBand({
+    enabled: enabled && consent.isSuccess && consent.data === true && photos.isSuccess,
+  });
 
   const insight = useMemo(() => {
     if (
@@ -122,4 +135,10 @@ export function useTrendInsight() {
     insight,
     isLoading: consent.isLoading || photos.isLoading || monk.isLoading,
   };
+}
+
+/** Standalone trend consumer. Route view models should pass their photo source. */
+export function useTrendInsight() {
+  const photos = usePhotos('front');
+  return useTrendInsightFromPhotos(photos);
 }

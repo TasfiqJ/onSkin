@@ -194,16 +194,14 @@ describe('routine order owner-bound query', () => {
       isSuccess: false,
       refetch: mocks.profileRefetch,
     });
-    mocks.useQuery.mockReturnValueOnce(
-      {
-        data: undefined,
-        isError: true,
-        isFetching: false,
-        isPending: false,
-        isSuccess: false,
-        refetch: routineOrderRefetch,
-      } as never,
-    );
+    mocks.useQuery.mockReturnValueOnce({
+      data: undefined,
+      isError: true,
+      isFetching: false,
+      isPending: false,
+      isSuccess: false,
+      refetch: routineOrderRefetch,
+    } as never);
 
     const result = usePlan();
 
@@ -217,16 +215,14 @@ describe('routine order owner-bound query', () => {
     const shelfRefetch = vi.fn(async () => ({ isError: false }));
     const profileRefetch = vi.fn(async () => ({ isError: false }));
     const routineOrderRefetch = vi.fn(async () => ({ isError: false }));
-    mocks.useQuery.mockReturnValueOnce(
-      {
-        data: undefined,
-        isError: true,
-        isFetching: false,
-        isPending: false,
-        isSuccess: false,
-        refetch: routineOrderRefetch,
-      } as never,
-    );
+    mocks.useQuery.mockReturnValueOnce({
+      data: undefined,
+      isError: true,
+      isFetching: false,
+      isPending: false,
+      isSuccess: false,
+      refetch: routineOrderRefetch,
+    } as never);
 
     const result = usePlanFromSources(
       {
@@ -256,16 +252,14 @@ describe('routine order owner-bound query', () => {
 
   it('reports a persistent routine-order retry failure to the route owner', async () => {
     const routineOrderRefetch = vi.fn(async () => ({ isError: true }));
-    mocks.useQuery.mockReturnValueOnce(
-      {
-        data: undefined,
-        isError: true,
-        isFetching: false,
-        isPending: false,
-        isSuccess: false,
-        refetch: routineOrderRefetch,
-      } as never,
-    );
+    mocks.useQuery.mockReturnValueOnce({
+      data: undefined,
+      isError: true,
+      isFetching: false,
+      isPending: false,
+      isSuccess: false,
+      refetch: routineOrderRefetch,
+    } as never);
 
     const result = usePlanFromSources(
       {
@@ -275,6 +269,16 @@ describe('routine order owner-bound query', () => {
           conflictChoices: {},
           conflicts: [],
           items: [],
+          profile: {
+            consentCurrent: true,
+            goals: [],
+            moisture: 'balanced',
+            pregnancy: false,
+            pregnancySafety: 'clear',
+            pregnancyStatus: 'none',
+            sensitivity: 'neutral',
+            source: 'local',
+          },
           reassurances: [],
           unresolvedConflicts: [],
         },

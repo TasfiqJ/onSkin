@@ -1,6 +1,15 @@
-import { router } from 'expo-router';
-import { useState } from 'react';
-import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { router, useIsFocused } from 'expo-router';
+import { createContext, memo, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  useWindowDimensions,
+  View,
+  type ListRenderItemInfo,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+} from 'react-native';
 
 import {
   Button,
@@ -15,7 +24,8 @@ import { conflictDetailRoute } from '@/features/intelligence/conflictIdentity';
 import { bannerSubhead, bannerTitle, severityLabel } from '@/features/intelligence/presentation';
 import { trackProductAddStarted, type ProductAddStartSource } from '@/features/shelf/analytics';
 import { ShelfDataUnavailableNotice } from '@/features/shelf/ShelfDataAvailabilityGate';
-import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
+import { useShelfFromBoundary, type ShelfData, type ShelfItem } from '@/features/shelf/useShelf';
+import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
 import { haptics } from '@/theme/haptics';
 import { colors } from '@/theme/tokens';
 
@@ -30,6 +40,44 @@ const SUBHEAD: Record<Filter, string> = {
   actives: 'The potent ingredients in your routine.',
   expiring: 'Soonest first. The honest reasons to replace something.',
 };
+
+type ShelfViewState = {
+  filter: Filter;
+  getScrollOffset: () => number;
+  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  setFilter: (filter: Filter) => void;
+};
+
+const ShelfViewStateContext = createContext<ShelfViewState | null>(null);
+
+function useShelfViewState(): ShelfViewState {
+  const state = useContext(ShelfViewStateContext);
+  if (!state) throw new Error('ShelfViewStateProvider is missing');
+  return state;
+}
+
+function ShelfViewStateProvider({ children }: { children: React.ReactNode }) {
+  const [filter, setFilter] = useState<Filter>('all');
+  const scrollOffsets = useRef<Record<Filter, number>>({ all: 0, actives: 0, expiring: 0 });
+  const onScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      scrollOffsets.current[filter] = Math.max(0, event.nativeEvent.contentOffset.y);
+    },
+    [filter],
+  );
+  const getScrollOffset = useCallback(() => scrollOffsets.current[filter], [filter]);
+  const state = useMemo(
+    () => ({
+      filter,
+      getScrollOffset,
+      onScroll,
+      setFilter,
+    }),
+    [filter, getScrollOffset, onScroll],
+  );
+
+  return <ShelfViewStateContext.Provider value={state}>{children}</ShelfViewStateContext.Provider>;
+}
 
 function ScanShelfButton({ source }: { source: ProductAddStartSource }) {
   return (
@@ -48,11 +96,13 @@ function ScanShelfButton({ source }: { source: ProductAddStartSource }) {
   );
 }
 
-function ProductCard({ item }: { item: ShelfItem }) {
+type ProductCardProps = Pick<ShelfItem, 'id' | 'name' | 'metaLine' | 'badge'>;
+
+const ProductCard = memo(function ProductCard({ id, name, metaLine, badge }: ProductCardProps) {
   // Only the countdown card carries the faint accent border (design screen 05);
   // expired/safety cards stay on the neutral hairline. The firmer badge already
   // signals attention.
-  const attention = item.badge.kind === 'countdown';
+  const attention = badge.kind === 'countdown';
   return (
     <View
       style={[
@@ -64,33 +114,33 @@ function ProductCard({ item }: { item: ShelfItem }) {
     >
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`${item.name}, ${item.badge.label}`}
+        accessibilityLabel={`${name}, ${badge.label}`}
         onPress={() => {
           haptics.select();
-          router.push(`/shelf/${item.id}`);
+          router.push(`/shelf/${id}`);
         }}
         style={({ pressed }) => [pressed ? { opacity: 0.85 } : null]}
         className="flex-row items-center gap-3.5"
       >
-        <StripedThumb size={50} radius={14} faded={item.badge.kind === 'expired'} />
+        <StripedThumb size={50} radius={14} faded={badge.kind === 'expired'} />
         <View className="flex-1">
           <Text variant="body" className="font-sans-semibold">
-            {item.name}
+            {name}
           </Text>
-          {item.metaLine ? (
+          {metaLine ? (
             <Text variant="bodySm" tone="muted" className="mt-0.5">
-              {item.metaLine}
+              {metaLine}
             </Text>
           ) : null}
         </View>
-        <ExpiryBadge badge={item.badge} />
+        <ExpiryBadge badge={badge} />
       </Pressable>
       {/* Proactive, honest PAO-triggered replenishment nudge on the card itself
             (docs/04 §6): a quiet "Replace ->" on countdown/expired items. */}
-      {item.badge.kind === 'countdown' || item.badge.kind === 'expired' ? (
+      {badge.kind === 'countdown' || badge.kind === 'expired' ? (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`Replace ${item.name}`}
+          accessibilityLabel={`Replace ${name}`}
           className="ml-[64px] mt-2 min-h-[48px] min-w-[84px] self-start items-center justify-center rounded-pill border border-clay/20 bg-clay-tint px-3 py-2"
           style={({ pressed }) => [
             {
@@ -101,7 +151,7 @@ function ProductCard({ item }: { item: ShelfItem }) {
           ]}
           onPress={() => {
             haptics.select();
-            router.push(`/shelf/replenish?id=${item.id}`);
+            router.push(`/shelf/replenish?id=${id}`);
           }}
         >
           <Text variant="bodySm" tone="clay" className="font-sans-semibold">
@@ -111,7 +161,7 @@ function ProductCard({ item }: { item: ShelfItem }) {
       ) : null}
     </View>
   );
-}
+});
 
 function EmptyShelf({
   archiveCount,
@@ -337,9 +387,213 @@ function SkeletonShelf({ compactFilterLabels }: { compactFilterLabels: boolean }
   );
 }
 
-export default function ShelfScreen() {
-  const { data, isError, isFetching, isLoading, refetch } = useShelf();
-  const [filter, setFilter] = useState<Filter>('all');
+type ShelfListRow = ProductCardProps & {
+  active: boolean;
+  expiring: boolean;
+};
+
+function shelfRowKey(item: ShelfListRow) {
+  return item.id;
+}
+
+function renderShelfRow({ item }: ListRenderItemInfo<ShelfListRow>) {
+  return <ProductCard id={item.id} name={item.name} metaLine={item.metaLine} badge={item.badge} />;
+}
+
+function ShelfRowSeparator() {
+  return <View className="h-2.5" />;
+}
+
+const ShelfListTitle = memo(function ShelfListTitle({ productCount }: { productCount: number }) {
+  return (
+    <View className="mt-2 flex-row items-baseline justify-between">
+      <Text variant="title" className="text-[38px] leading-[40px]">
+        Shelf
+      </Text>
+      <Text variant="label" tone="muted">
+        {productCount} product{productCount === 1 ? '' : 's'}
+      </Text>
+    </View>
+  );
+});
+
+function ShelfFilterControls({ compactFilterLabels }: { compactFilterLabels: boolean }) {
+  const { filter, setFilter } = useShelfViewState();
+
+  return (
+    <>
+      <View className={compactFilterLabels ? 'mt-3.5 flex-row gap-2' : 'mt-3.5 flex-row gap-2.5'}>
+        {(['all', 'actives', 'expiring'] as Filter[]).map((filterOption) => (
+          <SegmentChip
+            key={filterOption}
+            accessibilityLabel={
+              filterOption === 'all' ? 'All' : filterOption === 'actives' ? 'Actives' : 'Expiring'
+            }
+            label={
+              filterOption === 'all'
+                ? 'All'
+                : filterOption === 'actives'
+                  ? 'Actives'
+                  : compactFilterLabels
+                    ? '7d'
+                    : 'Expiring'
+            }
+            selected={filter === filterOption}
+            className={compactFilterLabels ? 'px-2.5' : undefined}
+            onPress={() => setFilter(filterOption)}
+          />
+        ))}
+      </View>
+
+      <Text variant="bodySm" tone="muted" className="mt-3">
+        {SUBHEAD[filter]}
+      </Text>
+    </>
+  );
+}
+
+const ShelfListInsights = memo(function ShelfListInsights({
+  banner,
+  productCount,
+}: {
+  banner: ShelfData['banner'];
+  productCount: number;
+}) {
+  return (
+    <>
+      {banner ? (
+        <ConflictBanner
+          className="mt-4"
+          title={bannerTitle(banner)}
+          subhead={bannerSubhead(banner)}
+          severityPill={severityLabel(banner.computedSeverity)}
+          onReview={() => {
+            haptics.select();
+            router.push(conflictDetailRoute(banner));
+          }}
+        />
+      ) : null}
+      <RoutineHandoffCard hasConflict={Boolean(banner)} productCount={productCount} />
+    </>
+  );
+});
+
+const ShelfListHeader = memo(function ShelfListHeader({
+  banner,
+  compactFilterLabels,
+  productCount,
+}: {
+  banner: ShelfData['banner'];
+  compactFilterLabels: boolean;
+  productCount: number;
+}) {
+  return (
+    <View className="pb-4">
+      <ShelfListTitle productCount={productCount} />
+      <ShelfFilterControls compactFilterLabels={compactFilterLabels} />
+      <ShelfListInsights banner={banner} productCount={productCount} />
+    </View>
+  );
+});
+
+const ShelfListFooter = memo(function ShelfListFooter({ archiveCount }: { archiveCount: number }) {
+  return (
+    <>
+      {archiveCount > 0 ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`View archive, ${archiveCount} archived ${
+            archiveCount === 1 ? 'product' : 'products'
+          }`}
+          className="mt-6 min-h-[48px] items-center justify-center py-2"
+          onPress={() => {
+            haptics.select();
+            router.push('/shelf/archive');
+          }}
+        >
+          <Text variant="label" tone="muted">
+            View archive ({archiveCount}) →
+          </Text>
+        </Pressable>
+      ) : null}
+
+      <View className="mt-6 items-center pb-2">
+        <ScanShelfButton source="scan_inline" />
+      </View>
+    </>
+  );
+});
+
+function LoadedShelf({
+  items,
+  banner,
+  archiveCount,
+  compactFilterLabels,
+}: {
+  items: ShelfItem[];
+  banner: ShelfData['banner'];
+  archiveCount: number;
+  compactFilterLabels: boolean;
+}) {
+  const { filter, getScrollOffset, onScroll } = useShelfViewState();
+  const rows = useMemo<ShelfListRow[]>(
+    () =>
+      items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        metaLine: item.metaLine,
+        badge: item.badge,
+        active: item.engineProduct.tags.some((tag) => ACTIVE_TAGS.has(tag)),
+        expiring: item.badge.kind === 'countdown' || item.badge.kind === 'expired',
+      })),
+    [items],
+  );
+  const filteredRows = useMemo(() => {
+    if (filter === 'actives') return rows.filter((item) => item.active);
+    if (filter === 'expiring') return rows.filter((item) => item.expiring);
+    return rows;
+  }, [filter, rows]);
+  const initialContentOffset = useMemo(() => ({ x: 0, y: getScrollOffset() }), [getScrollOffset]);
+  const listHeader = useMemo(
+    () => (
+      <ShelfListHeader
+        banner={banner}
+        compactFilterLabels={compactFilterLabels}
+        productCount={items.length}
+      />
+    ),
+    [banner, compactFilterLabels, items.length],
+  );
+  const listFooter = useMemo(() => <ShelfListFooter archiveCount={archiveCount} />, [archiveCount]);
+
+  return (
+    <FlatList
+      className="flex-1"
+      data={filteredRows}
+      keyExtractor={shelfRowKey}
+      renderItem={renderShelfRow}
+      ItemSeparatorComponent={ShelfRowSeparator}
+      showsVerticalScrollIndicator={false}
+      contentContainerClassName="pb-32"
+      contentOffset={initialContentOffset}
+      onScroll={onScroll}
+      scrollEventThrottle={32}
+      ListHeaderComponent={listHeader}
+      ListEmptyComponent={
+        <Text variant="bodySm" tone="muted" className="mt-4 text-center">
+          {filter === 'expiring'
+            ? 'Nothing needs replacing right now.'
+            : 'No products match this filter.'}
+        </Text>
+      }
+      ListFooterComponent={listFooter}
+    />
+  );
+}
+
+function FocusedShelfScreen() {
+  const boundary = useLocalDateBoundary();
+  const { data, isError, isFetching, isLoading, refetch } = useShelfFromBoundary(boundary);
   const { height } = useWindowDimensions();
   const compactShelf = height < 640;
   const shortShelf = height < 520;
@@ -348,11 +602,6 @@ export default function ShelfScreen() {
 
   const items = data?.items ?? [];
   const archiveCount = data?.archive.length ?? 0;
-  const filtered = items.filter((i) => {
-    if (filter === 'actives') return i.engineProduct.tags.some((t) => ACTIVE_TAGS.has(t));
-    if (filter === 'expiring') return i.badge.kind === 'countdown' || i.badge.kind === 'expired';
-    return true;
-  });
 
   const showLoading = isLoading && items.length === 0;
   const isEmpty = !isLoading && items.length === 0;
@@ -386,94 +635,21 @@ export default function ShelfScreen() {
           />
         </>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-32">
-          <View className="mt-2 flex-row items-baseline justify-between">
-            <Text variant="title" className="text-[38px] leading-[40px]">
-              Shelf
-            </Text>
-            <Text variant="label" tone="muted">
-              {items.length} product{items.length === 1 ? '' : 's'}
-            </Text>
-          </View>
-
-          <View
-            className={compactFilterLabels ? 'mt-3.5 flex-row gap-2' : 'mt-3.5 flex-row gap-2.5'}
-          >
-            {(['all', 'actives', 'expiring'] as Filter[]).map((f) => (
-              <SegmentChip
-                key={f}
-                accessibilityLabel={f === 'all' ? 'All' : f === 'actives' ? 'Actives' : 'Expiring'}
-                label={
-                  f === 'all'
-                    ? 'All'
-                    : f === 'actives'
-                      ? 'Actives'
-                      : compactFilterLabels
-                        ? '7d'
-                        : 'Expiring'
-                }
-                selected={filter === f}
-                className={compactFilterLabels ? 'px-2.5' : undefined}
-                onPress={() => setFilter(f)}
-              />
-            ))}
-          </View>
-
-          <Text variant="bodySm" tone="muted" className="mt-3">
-            {SUBHEAD[filter]}
-          </Text>
-
-          {data?.banner ? (
-            <ConflictBanner
-              className="mt-4"
-              title={bannerTitle(data.banner)}
-              subhead={bannerSubhead(data.banner)}
-              severityPill={severityLabel(data.banner.computedSeverity)}
-              onReview={() => {
-                haptics.select();
-                router.push(conflictDetailRoute(data.banner!));
-              }}
-            />
-          ) : null}
-
-          <RoutineHandoffCard hasConflict={Boolean(data?.banner)} productCount={items.length} />
-
-          <View className="mt-4 gap-2.5">
-            {filtered.map((item) => (
-              <ProductCard key={item.id} item={item} />
-            ))}
-            {filtered.length === 0 ? (
-              <Text variant="bodySm" tone="muted" className="mt-4 text-center">
-                {filter === 'expiring'
-                  ? 'Nothing needs replacing right now.'
-                  : 'No products match this filter.'}
-              </Text>
-            ) : null}
-          </View>
-
-          {archiveCount > 0 ? (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={`View archive, ${archiveCount} archived ${
-                archiveCount === 1 ? 'product' : 'products'
-              }`}
-              className="mt-6 min-h-[48px] items-center justify-center py-2"
-              onPress={() => {
-                haptics.select();
-                router.push('/shelf/archive');
-              }}
-            >
-              <Text variant="label" tone="muted">
-                View archive ({archiveCount}) →
-              </Text>
-            </Pressable>
-          ) : null}
-
-          <View className="mt-6 items-center pb-2">
-            <ScanShelfButton source="scan_inline" />
-          </View>
-        </ScrollView>
+        <LoadedShelf
+          items={items}
+          banner={data?.banner ?? null}
+          archiveCount={archiveCount}
+          compactFilterLabels={compactFilterLabels}
+        />
       )}
     </Screen>
+  );
+}
+
+export default function ShelfScreen() {
+  const isFocused = useIsFocused();
+
+  return (
+    <ShelfViewStateProvider>{isFocused ? <FocusedShelfScreen /> : null}</ShelfViewStateProvider>
   );
 }

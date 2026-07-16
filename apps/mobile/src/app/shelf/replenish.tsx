@@ -15,7 +15,7 @@ import { COMMERCE_COPY } from '@/features/commerce/copy';
 import { isSafetyCriticalCategory } from '@/features/shelf/categories';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { SHELF_REPLENISHMENT_ALREADY_REPLACED } from '@/features/shelf/store';
-import { useShelf } from '@/features/shelf/useShelf';
+import { useShelfRouteSources } from '@/features/shelf/ShelfRouteSources';
 import { track } from '@/lib/analytics/track';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { isOwnerQueryScopeCurrent } from '@/lib/query/queryKeys';
@@ -28,7 +28,8 @@ import { haptics } from '@/theme/haptics';
 // consent (B-PRIVACY) and the catalog (B-CATALOG-SEED).
 export default function ReplenishScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data } = useShelf();
+  const { shelf } = useShelfRouteSources();
+  const { data } = shelf;
   const m = useShelfMutations();
   const ownerScope = useOwnerQueryScope();
   const [similarFeedback, setSimilarFeedback] = useState<{

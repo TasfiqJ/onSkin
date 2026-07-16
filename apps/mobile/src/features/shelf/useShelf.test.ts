@@ -177,7 +177,38 @@ describe('Shelf local-date source sharing', () => {
       networkMode: 'always',
       retry: false,
       retryOnMount: false,
+      staleTime: Infinity,
     });
+  });
+
+  it('hides invalidated embedded profile and conflict data until the private reread succeeds', () => {
+    const staleData = {
+      items: [{ id: 'old-product' }],
+      archive: [],
+      conflicts: [],
+      unresolvedConflicts: [],
+      conflictChoices: {},
+      reassurances: [],
+      banner: { rule: { id: 'old-guidance' } },
+      profile: { pregnancyStatus: 'none' },
+    };
+    mocks.useQuery.mockReturnValue({
+      data: staleData,
+      isError: false,
+      isFetching: true,
+      isLoading: false,
+      isPending: false,
+      isStale: true,
+      isSuccess: true,
+      refetch: vi.fn(),
+    });
+
+    const result = useShelfFromBoundary(mocks.boundary);
+
+    expect(result.data).toBeUndefined();
+    expect(result.isLoading).toBe(true);
+    expect(result.isPending).toBe(true);
+    expect(result.isSuccess).toBe(false);
   });
 
   it('preserves the standalone hook by delegating its subscribed boundary', () => {

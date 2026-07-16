@@ -107,7 +107,17 @@ describe('Progress route mobile contracts', () => {
     const photosHook = readSource('features/photos/usePhotos.ts');
     const copy = readSource('features/photos/copy.ts');
 
-    for (const source of routeSources) {
+    const [progressTab, ...standaloneRoutes] = routeSources;
+    expect(progressTab).toContain(
+      "import { PhotoStorageBoundary } from '@/features/photos/PhotoStorageGate';",
+    );
+    expect(progressTab).toContain('<PhotoStorageBoundary query={viewModel.photos} tone="paper">');
+    expect(progressTab).toContain('</PhotoStorageBoundary>');
+    expect(progressTab.indexOf('<PhotoTimelineLockGate>')).toBeLessThan(
+      progressTab.indexOf('<ProgressRouteBoundary'),
+    );
+
+    for (const source of standaloneRoutes) {
       expect(source).toContain(
         "import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';",
       );
@@ -117,17 +127,18 @@ describe('Progress route mobile contracts', () => {
         source.indexOf('<PhotoStorageGate'),
       );
     }
-    expect(routeSources[0]).toContain('<PhotoStorageGate tone="paper">');
-    for (const source of routeSources.slice(1)) {
+    for (const source of standaloneRoutes) {
       expect(source).toContain(
         '<PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>',
       );
     }
     expect(readAppRoute('progress/about.tsx')).not.toContain('PhotoStorageGate');
 
-    expect(storageGate).toContain(
-      "const { isError, isFetching, isPending, refetch } = usePhotos('front');",
-    );
+    expect(storageGate).toContain('export function PhotoStorageBoundary({');
+    expect(storageGate).toContain('const { isError, isFetching, isPending, refetch } = query;');
+    expect(storageGate).toContain('export function PhotoStorageGate(props: PhotoStorageGateProps)');
+    expect(storageGate).toContain("const query = usePhotos('front');");
+    expect(storageGate).toContain('<PhotoStorageBoundary {...props} query={query} />');
     expect(storageGate).toContain('if (!isPending && !isError) return children;');
     expect(storageGate).toContain('const result = await refetch();');
     expect(storageGate).toContain('if (result.isError) setRetryFailed(true);');
@@ -254,7 +265,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain(
       'accessibilityValue={{ text: PHOTO_COPY.capture.consentReadLoadingBody }}',
     );
-    expect(source).toContain("accessibilityState={{ busy: retrying, disabled: retrying }}");
+    expect(source).toContain('accessibilityState={{ busy: retrying, disabled: retrying }}');
     expect(source).toContain("'Retry reading saved photo choice'");
     expect(source).toContain('retrying={currentConsentReadState.retrying}');
     expect(source).toContain('onRetry={() => loadPhotoCaptureConsent(true)}');
@@ -263,7 +274,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('consentGrantInFlightRef.current = true');
     expect(source).toContain('PhotoCaptureConsentStateChangedError');
     expect(source).toContain('result: error.result');
-    expect(source).toContain('writeUncertain={consentSaveFailure === \'uncertain\'}');
+    expect(source).toContain("writeUncertain={consentSaveFailure === 'uncertain'}");
     expect(source).toContain('router.replace(APP_PROGRESS_ROUTE)');
   });
 
@@ -470,7 +481,7 @@ describe('Progress route mobile contracts', () => {
     expect(editor).toContain('borderRadius: 16');
     expect(editor).toContain("backgroundColor: 'rgba(244,239,231,0.06)'");
     expect(editor).toContain('padding: 16');
-    expect(editor).toContain('marginBottom: \'auto\'');
+    expect(editor).toContain("marginBottom: 'auto'");
     expect(editor).toContain("fontFamily: 'HankenGrotesk-Regular'");
     expect(editor).toContain('fontSize: 13.5');
     expect(editor).toContain('lineHeight: 20');
@@ -555,9 +566,9 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain(
       'className="flex-1"\n          accessibilityLabel="Dismiss photo picker"',
     );
-    expect(source).toContain(
-      "import { FlatList, Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';",
-    );
+    expect(source).toContain('FlatList,');
+    expect(source).toContain('SectionList,');
+    expect(source).toContain("} from 'react-native';");
     expect(source).toContain('const { height: viewportHeight } = useWindowDimensions();');
     expect(source).toContain('const sheetMaxHeight = Math.max(0, viewportHeight - 44);');
     expect(source).toContain('const insets = useSafeAreaInsets();');
@@ -607,13 +618,56 @@ describe('Progress route mobile contracts', () => {
     expect(picker).not.toContain('removeClippedSubviews');
   });
 
+  it('owns one Progress photo/date source and virtualizes timeline rows with SectionList', () => {
+    const source = readAppRoute('(tabs)/progress.tsx');
+    const viewModel = readSource('features/photos/useProgressRouteViewModel.ts');
+    const photosHook = readSource('features/photos/usePhotos.ts');
+
+    expect(source.match(/useLocalDateBoundary\(\)/g)).toHaveLength(1);
+    expect(source.match(/useProgressRouteViewModel\(boundary\)/g)).toHaveLength(1);
+    expect(source).not.toContain("usePhotos('front')");
+    expect(viewModel).toContain("const photos = usePhotosFromBoundary(boundary, 'front');");
+    expect(photosHook).toContain('export function usePhotosFromBoundary(');
+    expect(photosHook).toContain('return usePhotosFromBoundary(boundary, series);');
+    expect(source).toContain('<SectionList');
+    expect(source).toContain('sections={sections}');
+    expect(source).toContain('keyExtractor={(item) => item.key}');
+    expect(source).toContain('renderItem={renderTimelineRow}');
+    expect(source).toContain('stickySectionHeadersEnabled={false}');
+    expect(source).toContain('initialNumToRender={6}');
+    expect(source).toContain('maxToRenderPerBatch={6}');
+    expect(source).toContain('windowSize={7}');
+    expect(source).toContain('const TimelinePhotosRow = memo(');
+    expect(source).not.toContain('{data.monthGroups.map(');
+  });
+
+  it('tears down image-bearing Progress content on blur while retaining only mode state', () => {
+    const source = readAppRoute('(tabs)/progress.tsx');
+    const gate = readSource('features/subscription/ProGate.tsx');
+
+    expect(gate).toContain('const isFocused = useIsFocused();');
+    expect(gate).toContain('if (!isFocused) return null;');
+    expect(source.indexOf('<ProGate feature="photo_timeline">')).toBeLessThan(
+      source.indexOf('<ProgressRouteBoundary'),
+    );
+    expect(source).toContain(
+      "const [mode, setMode] = useState<'compare' | 'timeline'>('compare');",
+    );
+    expect(source).toContain('<ProgressRouteBoundary mode={mode} onModeChange={setMode} />');
+    expect(source).toContain('function ProgressTrendBoundary({');
+    expect(source).toContain('return phase7Flags.trend ? (');
+    expect(source).not.toContain('useTrendInsightFromPhotos(photos, { enabled: false })');
+  });
+
   it('plays real local time-lapse frames with finite and reduced-motion-safe controls', () => {
     const source = readAppRoute('(tabs)/progress.tsx');
     const player = readSource('features/photos/PhotoTimelapse.tsx');
 
     expect(source).toContain("import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';");
     expect(source).toContain("import { timelapseFrames } from '@/features/photos/timelapse';");
-    expect(source).toContain('const frames = timelapseFrames(data.series);');
+    expect(source).toContain(
+      'const frames = useMemo(() => timelapseFrames(data.series), [data.series]);',
+    );
     expect(source).toContain('{frames.length > 1 ? (');
     expect(source).toContain(
       'accessibilityLabel="Play a quiet time-lapse of your local photo series"',

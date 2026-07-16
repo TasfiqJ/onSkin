@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import type { ReactNode } from 'react';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -21,10 +21,9 @@ import { expirySourceLabel, paoSourceLabel } from '@/features/shelf/labels';
 import { LocalDateField } from '@/features/shelf/LocalDateField';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { editedPaoSource } from '@/features/shelf/paoProvenance';
-import { useShelf } from '@/features/shelf/useShelf';
+import { useShelfRouteSources, type ShelfRouteSources } from '@/features/shelf/ShelfRouteSources';
+import { useShelfDetailViewModel } from '@/features/shelf/useShelfDetailViewModel';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
-import { usePlan } from '@/features/routine/usePlan';
-import { useCycle } from '@/features/scheduler/useCycle';
 import { localDateString } from '@/features/today/useToday';
 import { cn } from '@/lib/cn';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -149,6 +148,105 @@ function RoutineUsageCard({
   );
 }
 
+function RoutineGuidanceUnavailableCard({
+  retrying,
+  onRetry,
+}: {
+  retrying: boolean;
+  onRetry: () => Promise<unknown>;
+}) {
+  return (
+    <View
+      accessibilityLiveRegion="polite"
+      accessibilityRole="alert"
+      className="mt-2.5 rounded-[16px] border border-hairline bg-paper-raised px-4 py-3.5"
+    >
+      <Text variant="label" tone="clay" className="font-mono uppercase">
+        Routine role
+      </Text>
+      <Text variant="bodySm" className="mt-1 font-sans-semibold">
+        Routine guidance unavailable
+      </Text>
+      <Text variant="bodySm" tone="muted" className="mt-1">
+        We could not safely read the private schedule data for this product. Its Shelf details are
+        unchanged.
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ disabled: retrying }}
+        disabled={retrying}
+        onPress={() => void onRetry()}
+        className="mt-2 min-h-[48px] self-start items-center justify-center rounded-pill border border-hairline-strong bg-paper px-4 py-2"
+        style={{ opacity: retrying ? 0.68 : 1 }}
+      >
+        <Text variant="bodySm" className="font-sans-semibold" tone="clay">
+          {retrying ? 'Trying again...' : 'Retry routine guidance'}
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
+function RoutineGuidanceLoadingCard() {
+  return (
+    <View
+      accessibilityLabel="Checking routine placement"
+      className="rounded-[18px] bg-greige-chip p-4"
+      style={{ borderWidth: 1, borderColor: colors.hairline }}
+    >
+      <Text variant="label" tone="clay" className="font-mono uppercase">
+        Routine role
+      </Text>
+      <Text variant="bodySm" tone="muted" className="mt-1.5">
+        Checking your saved routine placement…
+      </Text>
+    </View>
+  );
+}
+
+const ProductRoutineGuidance = memo(function ProductRoutineGuidance({
+  productId,
+  routeSources,
+}: {
+  productId: string;
+  routeSources: ShelfRouteSources;
+}) {
+  const viewModel = useShelfDetailViewModel(routeSources);
+  const { plan } = viewModel;
+  const cycleQuery = viewModel.cycle;
+  const { data: cycleData } = cycleQuery;
+
+  let usage: RoutineUsage | null = null;
+  let cycleTimingRequired = false;
+  if (plan.data && !plan.data.isExample) {
+    const pm = plan.data.plan.pm.find((step) => step.productId === productId);
+    if (pm) {
+      cycleTimingRequired = pm.cadence === 'cycle';
+      const cycleNightNumbers = cycleData?.cycle?.nights
+        .filter((night) => night.productId === productId)
+        .map((night) => night.index + 1);
+      usage = {
+        phase: 'Evening routine',
+        cycleNightNumbers: cycleNightNumbers?.length ? cycleNightNumbers : undefined,
+      };
+    } else if (plan.data.plan.am.find((step) => step.productId === productId)) {
+      usage = { phase: 'Morning routine' };
+    }
+  }
+  const scheduleUnavailable = cycleTimingRequired && canUseRoutineCadence() && cycleQuery.isError;
+
+  if (viewModel.routineGuidanceError) {
+    return (
+      <RoutineGuidanceUnavailableCard
+        retrying={viewModel.routineGuidanceFetching}
+        onRetry={viewModel.retryRoutineGuidance}
+      />
+    );
+  }
+  if (viewModel.routineGuidanceLoading) return <RoutineGuidanceLoadingCard />;
+  return <RoutineUsageCard scheduleUnavailable={scheduleUnavailable} usage={usage} />;
+});
+
 function ProductDetailActionSheet({
   title,
   body,
@@ -255,10 +353,8 @@ export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { height, width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const { data } = useShelf();
-  const plan = usePlan();
-  const cycleQuery = useCycle();
-  const { data: cycleData } = cycleQuery;
+  const routeSources = useShelfRouteSources();
+  const { data } = routeSources.shelf;
   const m = useShelfMutations();
   const [editOpen, setEditOpen] = useState(false);
   const [exactOpenedDate, setExactOpenedDate] = useState<string | null>(null);
@@ -340,25 +436,6 @@ export default function ProductDetailScreen() {
   const conflicts = (data?.conflicts ?? []).filter(
     (c) => c.productAId === id || c.productBId === id,
   );
-
-  // Where it's used. From the live plan (skipped for the example fallback).
-  let usage: RoutineUsage | null = null;
-  let cycleTimingRequired = false;
-  if (plan.data && !plan.data.isExample) {
-    const pm = plan.data.plan.pm.find((s) => s.productId === id);
-    if (pm) {
-      cycleTimingRequired = pm.cadence === 'cycle';
-      const cycleNightNumbers = cycleData?.cycle?.nights
-        .filter((night) => night.productId === id)
-        .map((night) => night.index + 1);
-      usage = {
-        phase: 'Evening routine',
-        cycleNightNumbers: cycleNightNumbers?.length ? cycleNightNumbers : undefined,
-      };
-    } else if (plan.data.plan.am.find((s) => s.productId === id))
-      usage = { phase: 'Morning routine' };
-  }
-  const scheduleUnavailable = cycleTimingRequired && canUseRoutineCadence() && cycleQuery.isError;
 
   const otherName = (c: DetectedConflict) =>
     (c.productAId === id ? c.productBName : c.productAName) ?? 'another product';
@@ -868,9 +945,7 @@ export default function ProductDetailScreen() {
           })}
 
           {/* Where it's used */}
-          {!archived ? (
-            <RoutineUsageCard scheduleUnavailable={scheduleUnavailable} usage={usage} />
-          ) : null}
+          {!archived ? <ProductRoutineGuidance productId={id} routeSources={routeSources} /> : null}
         </ScrollView>
       </View>
 

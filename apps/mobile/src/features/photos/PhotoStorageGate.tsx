@@ -15,9 +15,24 @@ type PhotoStorageGateProps = {
   onExit?: () => void;
 };
 
-export function PhotoStorageGate({ children, tone = 'night', onExit }: PhotoStorageGateProps) {
+export type PhotoStorageQuery = Pick<
+  ReturnType<typeof usePhotos>,
+  'isError' | 'isFetching' | 'isPending' | 'refetch'
+>;
+
+export type PhotoStorageBoundaryProps = PhotoStorageGateProps & {
+  query: PhotoStorageQuery;
+};
+
+/** Render storage availability from the photo query already owned by a route. */
+export function PhotoStorageBoundary({
+  children,
+  query,
+  tone = 'night',
+  onExit,
+}: PhotoStorageBoundaryProps) {
   const insets = useSafeAreaInsets();
-  const { isError, isFetching, isPending, refetch } = usePhotos('front');
+  const { isError, isFetching, isPending, refetch } = query;
   const [retryFailed, setRetryFailed] = useState(false);
   const night = tone === 'night';
   const backgroundColor = night ? NIGHT_BG : colors.paper;
@@ -130,4 +145,10 @@ export function PhotoStorageGate({ children, tone = 'night', onExit }: PhotoStor
       </View>
     </ScrollView>
   );
+}
+
+/** Standalone boundary retained for direct routes that do not own a photo source. */
+export function PhotoStorageGate(props: PhotoStorageGateProps) {
+  const query = usePhotos('front');
+  return <PhotoStorageBoundary {...props} query={query} />;
 }

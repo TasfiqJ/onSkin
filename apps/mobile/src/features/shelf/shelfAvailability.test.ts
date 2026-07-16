@@ -32,7 +32,11 @@ describe('Shelf private-data availability contract', () => {
     expect(hook).toContain('retryOnMount: false');
     expect(hook).toContain("networkMode: 'always'");
     expect(hook).toContain("activeQuery.state.status !== 'error'");
-    expect(hook).toContain('data: query.isSuccess ? query.data : undefined');
+    expect(hook).toContain('const refreshingStaleSnapshot = query.isSuccess && query.isStale;');
+    expect(hook).toContain(
+      'data: query.isSuccess && !refreshingStaleSnapshot ? query.data : undefined',
+    );
+    expect(hook).toContain('isPending: query.isPending || refreshingStaleSnapshot');
 
     const gate = read('features/shelf/ShelfDataAvailabilityGate.tsx');
     expect(gate).toContain('the private Shelf data this screen needs');
@@ -88,8 +92,18 @@ describe('Shelf private-data availability contract', () => {
   });
 
   it('gates every Shelf-derived route before it can render an empty or stale state', () => {
+    const shelfLayout = read('app/shelf/_layout.tsx');
+    expect(shelfLayout).toContain('ShelfRouteSourcesProvider');
+    expect(shelfLayout).toContain('useShelfRouteSources');
+    expect(shelfLayout).toContain('<ShelfDataAvailabilityBoundary');
+    expect(shelfLayout).toContain('query={shelf}');
+    expect(shelfLayout).toContain(
+      'screenLayout={(props) => <ShelfScreenLayout>{props.children}</ShelfScreenLayout>}',
+    );
+    expect(shelfLayout).not.toContain('screenLayout={ShelfScreenLayout}');
+    expect(shelfLayout).not.toContain('<ShelfDataAvailabilityGate');
+
     for (const path of [
-      'app/shelf/_layout.tsx',
       'app/ask/_layout.tsx',
       'app/conflict/_layout.tsx',
       'app/share/_layout.tsx',
@@ -111,6 +125,36 @@ describe('Shelf private-data availability contract', () => {
     expect(routineLayout).toContain("'plan'");
     expect(routineLayout).not.toContain('<ShelfDataAvailabilityGate>{stack}');
     expect(read('app/routine/plan.tsx')).toContain('if (planQuery.isError)');
+  });
+
+  it('shares one owner/date Shelf source across the Shelf stack and its derived detail graph', () => {
+    const sources = read('features/shelf/ShelfRouteSources.tsx');
+    const detailViewModel = read('features/shelf/useShelfDetailViewModel.ts');
+    const detail = read('app/shelf/[id].tsx');
+    const archive = read('app/shelf/archive.tsx');
+    const replenish = read('app/shelf/replenish.tsx');
+    const shelfHook = read('features/shelf/useShelf.ts');
+
+    expect(sources.match(/useLocalDateBoundary\(\)/g)).toHaveLength(1);
+    expect(sources).toContain('const shelf = useShelfFromBoundary(boundary);');
+    expect(sources).toContain('ShelfRouteSourcesContext.Provider');
+    expect(detailViewModel).toContain('const plan = usePlanFromSources(shelf, profile);');
+    expect(detailViewModel).toContain('const ramp = useRampFromPlan(plan, boundary);');
+    expect(detailViewModel).toContain(
+      'const cycle = useCycleFromSources(shelf, profile, ramp, boundary);',
+    );
+    expect(shelfHook).toContain('profile: profileBits');
+    expect(detail).toContain('const routeSources = useShelfRouteSources();');
+    expect(detail).toContain('function ProductRoutineGuidance({');
+    expect(detail).toContain('const viewModel = useShelfDetailViewModel(routeSources);');
+    expect(detail).toContain(
+      '<ProductRoutineGuidance productId={id} routeSources={routeSources} />',
+    );
+    expect(detail).not.toContain('useShelf()');
+    expect(detail).not.toContain('usePlan()');
+    expect(detail).not.toContain('useCycle()');
+    expect(archive).toContain('const { shelf } = useShelfRouteSources();');
+    expect(replenish).toContain('const { shelf } = useShelfRouteSources();');
   });
 
   it('keeps replenishment atomic, retry-stable, and mirror-ordered', () => {

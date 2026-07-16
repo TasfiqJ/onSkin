@@ -9,7 +9,12 @@ import {
 } from '@/lib/auth/accountGeneration';
 import { createOwnerQueryScope, queryKeys, type OwnerQueryScope } from '@/lib/query/queryKeys';
 
-import { useMonkBand, useTrendConsent, useTrendInsight } from './useTrend';
+import {
+  useMonkBand,
+  useTrendConsent,
+  useTrendInsight,
+  useTrendInsightFromPhotos,
+} from './useTrend';
 
 const mocks = vi.hoisted(() => ({
   abortSignal: vi.fn(),
@@ -292,6 +297,33 @@ describe('owner-bound trend queries', () => {
 
     expect(result.consented).toBe(true);
     expect(result.isLoading).toBe(false);
+    expect(result.insight).toMatchObject({ monkBand: 8 });
+  });
+
+  it('derives from a route-owned photo snapshot without mounting a standalone photo observer', () => {
+    mocks.consentResult = {
+      data: true,
+      isError: false,
+      isLoading: false,
+      isSuccess: true,
+    };
+    const photos = {
+      data: { series: [{}, {}, {}] },
+      isError: false,
+      isLoading: false,
+      isSuccess: true,
+    } as unknown as Parameters<typeof useTrendInsightFromPhotos>[0];
+    mocks.monkResult = {
+      data: 8,
+      isError: false,
+      isLoading: false,
+      isSuccess: true,
+    };
+
+    const result = useTrendInsightFromPhotos(photos);
+
+    expect(mocks.usePhotos).not.toHaveBeenCalled();
+    expect(result).toMatchObject({ consented: true, isLoading: false });
     expect(result.insight).toMatchObject({ monkBand: 8 });
   });
 

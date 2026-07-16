@@ -1,16 +1,22 @@
 import { router, Stack } from 'expo-router';
 
-import { ShelfDataAvailabilityGate } from '@/features/shelf/ShelfDataAvailabilityGate';
+import { ShelfDataAvailabilityBoundary } from '@/features/shelf/ShelfDataAvailabilityGate';
+import {
+  ShelfRouteSourcesProvider,
+  useShelfRouteSources,
+} from '@/features/shelf/ShelfRouteSources';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 
 function ShelfScreenLayout({ children }: { children: React.ReactNode }) {
+  const { shelf } = useShelfRouteSources();
   return (
-    <ShelfDataAvailabilityGate
+    <ShelfDataAvailabilityBoundary
+      query={shelf}
       onExit={() => backOrReplace(router, APP_SHELF_ROUTE)}
       exitLabel="Back to Shelf"
     >
       {children}
-    </ShelfDataAvailabilityGate>
+    </ShelfDataAvailabilityBoundary>
   );
 }
 
@@ -18,25 +24,30 @@ function ShelfScreenLayout({ children }: { children: React.ReactNode }) {
 // IntakeProvider keeps one transient draft across onboarding and Shelf routes.
 export default function ShelfLayout() {
   return (
-    <Stack screenLayout={ShelfScreenLayout} screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="scan" />
-      <Stack.Screen name="search" />
-      <Stack.Screen name="manual" />
-      <Stack.Screen name="ocr" />
-      <Stack.Screen name="[id]" />
-      <Stack.Screen name="archive" />
-      <Stack.Screen
-        name="no-match"
-        options={{ presentation: 'transparentModal', animation: 'fade' }}
-      />
-      <Stack.Screen
-        name="opened"
-        options={{ presentation: 'transparentModal', animation: 'fade' }}
-      />
-      <Stack.Screen
-        name="replenish"
-        options={{ presentation: 'transparentModal', animation: 'fade' }}
-      />
-    </Stack>
+    <ShelfRouteSourcesProvider>
+      <Stack
+        screenLayout={(props) => <ShelfScreenLayout>{props.children}</ShelfScreenLayout>}
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name="scan" />
+        <Stack.Screen name="search" />
+        <Stack.Screen name="manual" />
+        <Stack.Screen name="ocr" />
+        <Stack.Screen name="[id]" />
+        <Stack.Screen name="archive" />
+        <Stack.Screen
+          name="no-match"
+          options={{ presentation: 'transparentModal', animation: 'fade' }}
+        />
+        <Stack.Screen
+          name="opened"
+          options={{ presentation: 'transparentModal', animation: 'fade' }}
+        />
+        <Stack.Screen
+          name="replenish"
+          options={{ presentation: 'transparentModal', animation: 'fade' }}
+        />
+      </Stack>
+    </ShelfRouteSourcesProvider>
   );
 }

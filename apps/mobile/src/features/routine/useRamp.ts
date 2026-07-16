@@ -74,6 +74,7 @@ export function useRampFromPlan(
     refetchOnWindowFocus: (query) =>
       query.state.status !== 'error' && shouldRefetchCurrentLocalDayQuery(query),
     retry: false,
+    retryOnMount: false,
     enabled: hasRampInputs,
     queryFn: () =>
       runOwnerQueryOperation(ownerScope, async (lease) => {

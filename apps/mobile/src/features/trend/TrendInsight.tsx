@@ -7,15 +7,17 @@ import { colors } from '@/theme/tokens';
 
 import { TREND_COPY } from './copy';
 import { isCelebratedState } from './trend';
-import { useTrendInsight } from './useTrend';
+import { useTrendInsight, type useTrendInsightFromPhotos } from './useTrend';
+
+type TrendInsightSource = ReturnType<typeof useTrendInsightFromPhotos>;
 
 // 03/04 · The calm output line (docs/12 §6, design 03/04). One descriptive line,
 // surfaced ONLY above the Minimal-Detectable-Change floor and ONLY when opted in.
 // Cosmetic verbs, observation not grade, no number. "Consistent / no detectable change"
 // is a CELEBRATED first-class output (adherence win), never a flat line to feel bad
 // about; "lighting varied" / "no clear change yet" are honest, never invented trends.
-export function TrendInsight() {
-  const { consented, insight } = useTrendInsight();
+export function TrendInsightFromSource({ source }: { source: TrendInsightSource }) {
+  const { consented, insight } = source;
 
   useEffect(() => {
     if (!consented || !insight) return;
@@ -63,4 +65,9 @@ export function TrendInsight() {
       ) : null}
     </View>
   );
+}
+
+export function TrendInsight() {
+  const source = useTrendInsight();
+  return <TrendInsightFromSource source={source} />;
 }

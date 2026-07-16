@@ -257,7 +257,7 @@ describe('Shelf route mobile contracts', () => {
   it('keeps Shelf card replace nudges buffered above sub-pixel 44px targets', () => {
     const source = readAppRoute('(tabs)/shelf.tsx');
 
-    expect(source).toContain('accessibilityLabel={`Replace ${item.name}`}');
+    expect(source).toContain('accessibilityLabel={`Replace ${name}`}');
     expect(source).toContain('className="rounded-[18px] bg-paper-raised p-4"');
     expect(source).toContain('className="flex-row items-center gap-3.5"');
     expect(source).toContain('ml-[64px] mt-2 min-h-[48px] min-w-[84px]');
@@ -269,6 +269,47 @@ describe('Shelf route mobile contracts', () => {
     expect(source).not.toContain('hitSlop={6}');
     expect(source).not.toContain('className="mt-1 self-start"');
     expect(source).not.toContain('event.stopPropagation()');
+  });
+
+  it('virtualizes growing Shelf collections and releases the tab source on blur', () => {
+    const main = readAppRoute('(tabs)/shelf.tsx');
+    const archive = readAppRoute('shelf/archive.tsx');
+
+    expect(main).toContain('<FlatList');
+    expect(main).toContain('keyExtractor={shelfRowKey}');
+    expect(main).toContain('ListHeaderComponent={');
+    expect(main).toContain('ListFooterComponent={');
+    expect(main).toContain('ListEmptyComponent={');
+    expect(main).toContain('const ProductCard = memo(function ProductCard({');
+    expect(main).toContain('function FocusedShelfScreen()');
+    expect(main).toContain('const boundary = useLocalDateBoundary();');
+    expect(main).toContain('useShelfFromBoundary(boundary)');
+    expect(main).toContain('const isFocused = useIsFocused();');
+    expect(main).toContain('<ShelfViewStateProvider>');
+    expect(main).toContain('{isFocused ? <FocusedShelfScreen /> : null}');
+    expect(main).toContain('const scrollOffsets = useRef<Record<Filter, number>>');
+    expect(main).toContain('contentOffset={initialContentOffset}');
+    expect(main).toContain('onScroll={onScroll}');
+    expect(main).toContain('const ShelfListTitle = memo(function ShelfListTitle');
+    expect(main).toContain('const ShelfListInsights = memo(function ShelfListInsights');
+    expect(main).toContain('const ShelfListFooter = memo(function ShelfListFooter');
+    expect(main).toContain('ListHeaderComponent={listHeader}');
+    expect(main).toContain('ListFooterComponent={listFooter}');
+    expect(main).not.toContain('useShelf()');
+    expect(main).not.toContain('filteredRows.map(');
+
+    expect(archive).toContain('<FlatList');
+    expect(archive).toContain('keyExtractor={(item) => item.id}');
+    expect(archive).toContain('ListEmptyComponent={ArchiveEmptyState}');
+    expect(archive).toContain('const ArchiveCard = memo(function ArchiveCard({');
+    expect(archive).not.toContain('archive.map(');
+
+    for (const source of [main, archive]) {
+      expect(source).not.toContain('getItemLayout=');
+      expect(source).not.toContain('removeClippedSubviews=');
+      expect(source).not.toContain('initialNumToRender=');
+      expect(source).not.toContain('windowSize=');
+    }
   });
 
   it('keeps the Shelf scan action from overlaying product cards on short phones', () => {
@@ -292,7 +333,8 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('<SkeletonShelf compactFilterLabels={compactFilterLabels} />');
     expect(source).toContain("label={compactFilterLabels && l === 'Expiring' ? '7d' : l}");
     expect(source).toContain("? '7d'");
-    expect(source).toContain('accessibilityLabel={f ===');
+    expect(source).toContain("filterOption === 'all'");
+    expect(source).toContain("filterOption === 'actives'");
     expect(source).toContain("className={compactFilterLabels ? 'px-2.5' : undefined}");
     expect(source).toContain('const isEmpty = !isLoading && items.length === 0;');
     expect(source).toContain('splitShort: boolean;');
@@ -328,7 +370,7 @@ describe('Shelf route mobile contracts', () => {
 
     expect(source).toContain('function RoutineHandoffCard');
     expect(source).toContain(
-      '<RoutineHandoffCard hasConflict={Boolean(data?.banner)} productCount={items.length} />',
+      '<RoutineHandoffCard hasConflict={Boolean(banner)} productCount={productCount} />',
     );
     expect(source).toContain('First routine');
     expect(source).toContain('Build my routine');
@@ -414,7 +456,9 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('resolveCommerceConsentRead(');
     expect(source).toContain('mountedRef.current = false;');
     expect(source).toContain('similarRequestRef.current += 1;');
-    expect(source).toContain('if (similarPendingRef.current || !isOwnerQueryScopeCurrent(ownerScope))');
+    expect(source).toContain(
+      'if (similarPendingRef.current || !isOwnerQueryScopeCurrent(ownerScope))',
+    );
     expect(source).toContain(
       'accessibilityState={{ busy: similarPending, disabled: similarPending }}',
     );
@@ -770,7 +814,9 @@ describe('Shelf route mobile contracts', () => {
       'const submissionAttemptRef = useRef<ShelfAddSubmissionAttempt | null>(null);',
     );
     expect(source).toContain('submissionAttemptRef.current = attempt;');
-    expect(source).toContain('const addedProduct = await m.add(attempt.input, attempt.operationId);');
+    expect(source).toContain(
+      'const addedProduct = await m.add(attempt.input, attempt.operationId);',
+    );
     expect(source).toContain('await m.acknowledgeAdd(attempt.productId);');
     expect(source).toContain('params: { addedProductId: productId }');
     expect(source).not.toContain("name: draft.name || 'Product'");
@@ -903,14 +949,33 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('Not placed in a routine yet.');
     expect(source).toContain('Build an AM/PM draft from your shelf.');
     expect(source).toContain("router.push('/routine/plan')");
-    expect(source).toContain("import { useCycle } from '@/features/scheduler/useCycle';");
-    expect(source).toContain('const cycleQuery = useCycle();');
+    expect(source).toContain(
+      "import { useShelfDetailViewModel } from '@/features/shelf/useShelfDetailViewModel';",
+    );
+    expect(source).toContain('const viewModel = useShelfDetailViewModel(routeSources);');
+    expect(source).toContain('const cycleQuery = viewModel.cycle;');
     expect(source).toContain('const { data: cycleData } = cycleQuery;');
     expect(source).toContain('cycleNightNumbers: cycleNightNumbers?.length');
     expect(source).toContain("usage.cycleNightNumbers.join(', ')");
     expect(source).not.toContain('pm.cyclingNight');
     expect(source).toContain('<RoutineUsageCard scheduleUnavailable={scheduleUnavailable}');
     expect(source).toContain('usage={usage}');
+    expect(source).toContain('if (viewModel.routineGuidanceError) {');
+    expect(source).toContain('<RoutineGuidanceUnavailableCard');
+    expect(source).toContain('onRetry={viewModel.retryRoutineGuidance}');
+    expect(source).toContain(
+      'if (viewModel.routineGuidanceLoading) return <RoutineGuidanceLoadingCard />;',
+    );
+    expect(source).toContain(
+      '<ProductRoutineGuidance productId={id} routeSources={routeSources} />',
+    );
+    expect(source.match(/useShelfDetailViewModel\(routeSources\)/g)).toHaveLength(1);
+    expect(source).toMatch(
+      /!archived\s*\?\s*<ProductRoutineGuidance productId=\{id\} routeSources=\{routeSources\} \/>\s*:\s*null/,
+    );
+    expect(source).toContain(
+      'const ProductRoutineGuidance = memo(function ProductRoutineGuidance({',
+    );
   });
 
   it('keys repeated product-detail conflict rows by rule and product pair', () => {

@@ -138,7 +138,7 @@ describe('Conflict route contracts', () => {
     expect(identity).toContain('const subjectProductId = c.productAId ?? c.productBId');
     expect(detail).toContain('subjectProductId?: string | string[];');
     expect(detail).toContain('candidate.productAId === subjectProductId');
-    expect(shelf).toContain('router.push(conflictDetailRoute(data.banner!))');
+    expect(shelf).toContain('router.push(conflictDetailRoute(banner))');
     expect(product).toContain('router.push(conflictDetailRoute(c))');
   });
 

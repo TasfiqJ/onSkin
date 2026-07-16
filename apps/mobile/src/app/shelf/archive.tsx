@@ -1,8 +1,10 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { memo } from 'react';
+import { FlatList, Pressable, View, type ListRenderItem } from 'react-native';
 
 import { RouteIconButton, Screen, StripedThumb, Text } from '@/components/ui';
-import { useShelf, type ShelfItem } from '@/features/shelf/useShelf';
+import { useShelfRouteSources } from '@/features/shelf/ShelfRouteSources';
+import type { ShelfItem } from '@/features/shelf/useShelf';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
 
@@ -23,37 +25,52 @@ function monthLabel(iso: string | null): string | null {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short' });
 }
 
-function ArchiveCard({ item }: { item: ShelfItem }) {
-  const p = item.product;
-  const weeks = weeksUsed(p.createdAt, p.finishedAt);
-  const when = monthLabel(p.finishedAt);
+type ArchiveCardProps = {
+  createdAt: ShelfItem['product']['createdAt'];
+  finishedAt: ShelfItem['product']['finishedAt'];
+  name: ShelfItem['product']['name'];
+  productId: ShelfItem['product']['id'];
+  repurchaseCount: ShelfItem['product']['repurchaseCount'];
+  status: ShelfItem['product']['status'];
+};
+
+const ArchiveCard = memo(function ArchiveCard({
+  createdAt,
+  finishedAt,
+  name,
+  productId,
+  repurchaseCount,
+  status,
+}: ArchiveCardProps) {
+  const weeks = weeksUsed(createdAt, finishedAt);
+  const when = monthLabel(finishedAt);
   const meta =
-    p.status === 'finished'
+    status === 'finished'
       ? `finished ${when ?? ''}${weeks ? ` · used ${weeks} week${weeks === 1 ? '' : 's'}` : ''}`.trim()
       : `discarded ${when ?? ''}`.trim();
 
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${p.name}, ${meta}`}
+      accessibilityLabel={`${name}, ${meta}`}
       onPress={() => {
         haptics.select();
-        router.push(`/shelf/${p.id}`);
+        router.push(`/shelf/${productId}`);
       }}
       className="flex-row items-center gap-3.5 rounded-[18px] bg-paper-warm px-4 py-3.5"
     >
       <StripedThumb light size={48} radius={14} faded />
       <View className="flex-1">
         <Text variant="bodySm" tone="muted" className="font-sans-semibold">
-          {p.name}
+          {name}
         </Text>
         <Text variant="label" tone="muted" className="mt-0.5">
           {meta}
         </Text>
       </View>
-      {p.status === 'finished' && p.repurchaseCount > 1 ? (
+      {status === 'finished' && repurchaseCount > 1 ? (
         <View className="rounded-pill bg-sage-tint px-2.5 py-1.5">
-          <Text className="font-sans-bold text-[11px] text-sage">{p.repurchaseCount}× bought</Text>
+          <Text className="font-sans-bold text-[11px] text-sage">{repurchaseCount}× bought</Text>
         </View>
       ) : (
         <Text variant="label" tone="muted">
@@ -62,10 +79,38 @@ function ArchiveCard({ item }: { item: ShelfItem }) {
       )}
     </Pressable>
   );
+});
+
+function ArchiveSeparator() {
+  return <View className="h-2.5" />;
 }
 
+function ArchiveEmptyState() {
+  return (
+    <Text variant="bodySm" tone="muted" className="mt-8 text-center">
+      Nothing archived yet. When you finish or discard a product, it&apos;ll move here.
+    </Text>
+  );
+}
+
+const renderArchiveItem: ListRenderItem<ShelfItem> = ({ item }) => {
+  const product = item.product;
+
+  return (
+    <ArchiveCard
+      createdAt={product.createdAt}
+      finishedAt={product.finishedAt}
+      name={product.name}
+      productId={product.id}
+      repurchaseCount={product.repurchaseCount}
+      status={product.status}
+    />
+  );
+};
+
 export default function ArchiveScreen() {
-  const { data } = useShelf();
+  const { shelf } = useShelfRouteSources();
+  const { data } = shelf;
   const archive = data?.archive ?? [];
 
   return (
@@ -110,19 +155,15 @@ export default function ArchiveScreen() {
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
-        {archive.length === 0 ? (
-          <Text variant="bodySm" tone="muted" className="mt-8 text-center">
-            Nothing archived yet. When you finish or discard a product, it&apos;ll move here.
-          </Text>
-        ) : (
-          <View className="mt-5 gap-2.5">
-            {archive.map((item) => (
-              <ArchiveCard key={item.id} item={item} />
-            ))}
-          </View>
-        )}
-      </ScrollView>
+      <FlatList
+        data={archive}
+        keyExtractor={(item) => item.id}
+        renderItem={renderArchiveItem}
+        ItemSeparatorComponent={ArchiveSeparator}
+        ListEmptyComponent={ArchiveEmptyState}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 32, paddingTop: archive.length === 0 ? 0 : 20 }}
+      />
     </Screen>
   );
 }

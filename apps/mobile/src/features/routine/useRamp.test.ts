@@ -215,6 +215,8 @@ describe('ramp source ownership', () => {
       enabled: true,
       networkMode: 'always',
       queryKey: queryKeys.ramp(mocks.ownerScope, BOUNDARY, 'retinol'),
+      retry: false,
+      retryOnMount: false,
     });
     await expect(result.retry()).resolves.toEqual({ isError: false });
     expect(rampRefetch).toHaveBeenCalledOnce();

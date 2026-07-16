@@ -2,7 +2,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { PhotoSeries } from '@onskin/types';
 
-import { useLocalDateBoundary } from '@/lib/query/localDateBoundaryStore';
+import {
+  useLocalDateBoundary,
+  type LocalDateBoundaryIdentity,
+} from '@/lib/query/localDateBoundaryStore';
 import {
   isOwnerQueryScopeCurrent,
   ownerQueryPrefixes,
@@ -109,9 +112,16 @@ function e2eProgressStorageFailure(): Error | null {
   return new Error('E2E_PROGRESS_STORAGE_UNAVAILABLE');
 }
 
-export function usePhotos(series: PhotoSeries = 'front') {
+/**
+ * Read and derive one photo timeline from a local-day identity already owned by
+ * the current route. This keeps nested storage/trend/presentation boundaries
+ * from mounting duplicate photo observers and midnight subscriptions.
+ */
+export function usePhotosFromBoundary(
+  boundary: LocalDateBoundaryIdentity,
+  series: PhotoSeries = 'front',
+) {
   const ownerScope = useOwnerQueryScope();
-  const boundary = useLocalDateBoundary();
   const { localDate: todayYmd } = boundary;
   return useQuery({
     queryKey: queryKeys.photos(ownerScope, boundary, series),
@@ -140,6 +150,15 @@ export function usePhotos(series: PhotoSeries = 'front') {
   });
 }
 
+/** Standalone photo consumer. Route view models should prefer the shared boundary. */
+export function usePhotos(series: PhotoSeries = 'front') {
+  const boundary = useLocalDateBoundary();
+  return usePhotosFromBoundary(boundary, series);
+}
+
+export type PhotosQueryResult = ReturnType<typeof usePhotosFromBoundary>;
+export type PhotosQueryData = NonNullable<PhotosQueryResult['data']>;
+
 export function usePhotoActions() {
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
@@ -149,18 +168,15 @@ export function usePhotoActions() {
   };
 
   const add = useMutation({
-    mutationFn: (input: NewPhoto) =>
-      runOwnerQueryOperation(ownerScope, () => addPhoto(input)),
+    mutationFn: (input: NewPhoto) => runOwnerQueryOperation(ownerScope, () => addPhoto(input)),
     onSettled: invalidate,
   });
   const reference = useMutation({
-    mutationFn: (id: string) =>
-      runOwnerQueryOperation(ownerScope, () => setReference(id)),
+    mutationFn: (id: string) => runOwnerQueryOperation(ownerScope, () => setReference(id)),
     onSettled: invalidate,
   });
   const remove = useMutation({
-    mutationFn: (id: string) =>
-      runOwnerQueryOperation(ownerScope, () => removePhoto(id)),
+    mutationFn: (id: string) => runOwnerQueryOperation(ownerScope, () => removePhoto(id)),
     onSettled: invalidate,
   });
   const note = useMutation({
