@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T23:48:50.807Z",
+  "generatedAt": "2026-07-16T00:00:12.034Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin-main-pay06\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "2be7a7c07b33cc15a03d84e6a91f54f555be631d",
+  "gitSha": "c2d3ea709895932950fe1df1be33ec799634733c",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -186,13 +186,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 46713,
-      "sha256": "209f8be3a5fa485d0d633d60be0a20b6708238b27e310acbb52c7c85949de7a5"
+      "sha256": "29cb3eeff3fc79909a55ed22ff6424efe23b5c20d4209585ac37662e5dbd1205"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 28928,
-      "sha256": "de59e374092fe3c66f6b54aad6c57eae1915638f646e2085d9d83f650efffbf0"
+      "sha256": "01f6fcc271f4aa453be2cd0c809e274953a54932415a6882b420a5fc11040aa6"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -210,13 +210,13 @@
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
       "bytes": 7475,
-      "sha256": "fc4f54c48dd7e5657c170469a07ce2c02194b250db93589b021ebb2b36571e74"
+      "sha256": "00c002afcf07b7a5a9be78071e6dda3d54ef5d0b7f0278b37372f40c37860035"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 4055,
-      "sha256": "d6b9894c5f7b0c275634ee770cba5c0d144e4037a5d8a11a45913143ab53bdb8"
+      "sha256": "ba49073389201c043cc1fcb80079862bfc9024beac53078265f5c6c3bca8996d"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",

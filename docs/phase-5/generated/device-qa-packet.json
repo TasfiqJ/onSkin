@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T23:47:51.481Z",
+  "generatedAt": "2026-07-16T00:00:12.781Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,7 +73,7 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "2be7a7c07b33cc15a03d84e6a91f54f555be631d",
+  "gitSha": "c2d3ea709895932950fe1df1be33ec799634733c",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -738,13 +738,13 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 48121,
-      "sha256": "39091e9d716cfbbb44a01b510ee36af413a3225e7fde3e3789cd0362df6b63fd"
+      "sha256": "8488f8435ad27af743d3a45d8286f5f121c546c3dadbda2cfe499e947f40fa28"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 19687,
-      "sha256": "febfb52bdcaf0608f847585fac5275027c5d1d0a8b41f6db2f4b4b759a4ddaf1"
+      "sha256": "720e6a6388e0448f614f4b96574d0690fa0537a1765a3c0333b8bb48d4a79e8e"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
