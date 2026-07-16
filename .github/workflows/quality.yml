@@ -144,6 +144,10 @@ jobs:
           npm run phase9:view-shot-privacy:test
           npm run phase9:ios-privacy-source-audit:test
           npm run phase9:ios-privacy-source-audit:check
+          npm run phase9:ios-archive-privacy-evidence:test
+          npm run phase9:release-candidate-git-contract:test
+          npm run phase9:verification-wiring:test
+          npm run phase9:store-build-inspect:check
 
       - name: Check Expo dependency compatibility
         working-directory: apps/mobile

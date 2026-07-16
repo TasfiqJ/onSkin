@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "kind": "ios_archive_privacy_evidence_index",
+  "source": {
+    "gitSha": "REPLACE_WITH_40_CHARACTER_LOWERCASE_GIT_SHA",
+    "iosPrivacySourceAudit": {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    },
+    "ledgerHashes": {
+      "nativePackagesSha256": "REPLACE_WITH_SOURCE_AUDIT_LEDGER_SHA256",
+      "privacyManifestsSha256": "REPLACE_WITH_SOURCE_AUDIT_LEDGER_SHA256",
+      "podspecsSha256": "REPLACE_WITH_SOURCE_AUDIT_LEDGER_SHA256",
+      "xcframeworksSha256": "REPLACE_WITH_SOURCE_AUDIT_LEDGER_SHA256",
+      "frameworksSha256": "REPLACE_WITH_SOURCE_AUDIT_LEDGER_SHA256",
+      "nativeBinaryFilesSha256": "REPLACE_WITH_SOURCE_AUDIT_LEDGER_SHA256",
+      "appleSdkIntersectionsSha256": "REPLACE_WITH_SOURCE_AUDIT_LEDGER_SHA256"
+    }
+  },
+  "archive": {
+    "format": "xcarchive_zip",
+    "immutable": false,
+    "file": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/REPLACE_WITH_ARCHIVE_NAME.xcarchive.zip",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    }
+  },
+  "build": {
+    "appVersion": "REPLACE_WITH_APP_VERSION",
+    "buildNumber": "REPLACE_WITH_BUILD_NUMBER",
+    "bundleIdentifier": "REPLACE_WITH_BUNDLE_IDENTIFIER",
+    "teamIdentifier": "REPLACE_WITH_APPLE_TEAM_IDENTIFIER",
+    "builtAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+  },
+  "toolchain": {
+    "easBuildImage": "macos-tahoe-26.4-xcode-26.4",
+    "xcodeVersion": "REPLACE_WITH_RESOLVED_XCODE_VERSION",
+    "iosSdkVersion": "REPLACE_WITH_RESOLVED_IOS_SDK_VERSION",
+    "nodeVersion": "REPLACE_WITH_RESOLVED_NODE_VERSION",
+    "cocoaPodsVersion": "REPLACE_WITH_RESOLVED_COCOAPODS_VERSION"
+  },
+  "provenance": {
+    "easBuildId": "REPLACE_WITH_LOWERCASE_EAS_BUILD_UUID",
+    "easGitCommitSha": "REPLACE_WITH_40_CHARACTER_LOWERCASE_GIT_SHA",
+    "easCliVersion": "21.0.1",
+    "easBuildLog": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/eas-build.log",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    },
+    "macosVersion": "REPLACE_WITH_RESOLVED_MACOS_VERSION",
+    "xcodeBuild": "REPLACE_WITH_RESOLVED_XCODE_BUILD",
+    "fastlaneVersion": "REPLACE_WITH_RESOLVED_FASTLANE_VERSION"
+  },
+  "artifacts": {
+    "nativeLock": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/Podfile.lock",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    },
+    "privacyManifestLedger": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/privacy-manifest-ledger.json",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    },
+    "mergedPrivacyReport": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/merged-privacy-report.pdf",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    },
+    "requiredReasonApiReport": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/required-reason-api-report.json",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    },
+    "nativeBinaryLedger": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/native-binary-ledger.json",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    },
+    "sdkSignatureReport": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/sdk-signatures.txt",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    },
+    "entitlementsSigningReport": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/entitlements-signing.txt",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    },
+    "symbolsProcessingReport": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/symbols-processing.txt",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    },
+    "trafficStorageReconciliation": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/traffic-storage-reconciliation.json",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    },
+    "appPrivacyAnswers": {
+      "path": "docs/phase-9/release-candidates/REPLACE_WITH_RC_ID/evidence/ios/app-privacy-answers.json",
+      "sha256": "REPLACE_WITH_LOWERCASE_SHA256",
+      "sizeBytes": 0,
+      "capturedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP"
+    }
+  },
+  "review": {
+    "privacy": {
+      "name": "REPLACE_WITH_NAMED_PRIVACY_REVIEWER",
+      "reviewedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP",
+      "decision": "REPLACE_WITH_APPROVE_AFTER_REVIEW"
+    },
+    "release": {
+      "name": "REPLACE_WITH_DISTINCT_NAMED_RELEASE_OWNER",
+      "reviewedAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP",
+      "decision": "REPLACE_WITH_APPROVE_AFTER_REVIEW"
+    }
+  },
+  "attestations": {
+    "archiveInspected": false,
+    "evidenceComplete": false,
+    "sourceAuditMatched": false,
+    "artifactsImmutable": false
+  }
+}

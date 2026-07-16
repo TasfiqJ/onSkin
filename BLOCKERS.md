@@ -884,6 +884,16 @@ generated native source have separate validators; and no production archive,
 merged report, SDK signature, runtime data-flow, label, legal, or App Review
 proof is implied.
 
+The repository now also has a strict archive-evidence-index path: the EAS
+configuration requires committed input, and retained evidence must record the
+exact source SHA, build UUID, and log; one direct RC-only evidence commit must
+contain normal HEAD-bound metadata; the archive,
+log, and ten review artifacts must be hash-bound inside that RC; and the
+manifest identity must match. No completed production RC index or underlying
+archive/report set exists yet. Index validation proves binding and named review
+metadata, not the truth of opaque reports, so this blocker remains
+`launch-blocked`.
+
 Exit criteria:
 
 - inspect the exact archived iOS build and reconcile its privacy manifest,

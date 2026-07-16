@@ -1,8 +1,11 @@
 # Phase 9 Source Of Truth
 
-Phase 9 turns the exact release candidate into evidence. A build is not release-ready until the release-candidate folder for that build contains the exact git SHA, native build IDs, EAS channel/runtime, Supabase project, RevenueCat project, Sentry project, PostHog project, store records, QA evidence, rollback proof, and named signoff.
+Phase 9 turns the exact release candidate into evidence. A build is not release-ready until the release-candidate folder for that build contains the exact build-source Git SHA, iOS EAS build ID, EAS channel/runtime, Supabase project, RevenueCat project, Sentry project, PostHog project, App Store records, QA evidence, rollback proof, and named signoff.
 
-Do not treat generated scripts or templates as launch evidence. Non-strict checks prove the repo has the right gates. Strict checks require live staging/production evidence and named owner approval.
+Do not treat generated scripts or templates as launch evidence. Non-strict
+checks prove the repo has the right gates. Strict checks require recorded live
+staging/production evidence and named-owner approval metadata, but the checks
+do not authenticate the owner or substitute for the underlying human review.
 
 ## Seven-Figure Standard
 
@@ -10,9 +13,27 @@ At a seven-figure subscription target, trust defects become revenue defects. Pha
 
 ## Release Candidate Rule
 
-Every evidence packet must point to one immutable source revision and one pair of native builds. Evidence from an earlier build can inform investigation, but it does not sign off a later release candidate.
+Every evidence packet must point to one immutable source revision and one exact
+production iOS build. Evidence from an earlier build can inform investigation,
+but it does not sign off a later release candidate. Android release evidence is
+not applicable under the current iOS-only launch contract.
 
-Before any `PHASE9_*_PASS=true` flag or `PHASE9_SIGNED_OFF_BY` value is accepted, set `PHASE9_RELEASE_CANDIDATE_DIR` to a non-template folder under `docs/phase-9/release-candidates/`. The Git worktree must be clean, the folder must contain the full RC packet, the manifest `Git SHA` must match the commit being verified, every RC file must be customized from the template, and every `TBD` or `BLOCKED` placeholder in the RC folder must be replaced with reviewed evidence.
+The RC manifest `Build-source Git SHA` is the revision uploaded to EAS, not the
+later evidence commit. The clean checkout must be exactly one non-merge
+evidence commit whose direct parent is that source revision, and every changed
+path in the evidence commit must be confined to the selected RC folder. Every
+RC metadata file must be a normal tracked file matching HEAD. This permits
+hash/signoff evidence to be recorded after a build without allowing later code,
+dependency, config, policy, verifier, ignored-file, or RC mutation to inherit
+that binary's evidence.
+
+The RC's tracked `signoff.md` Security/privacy owner/date must match the archive
+JSON privacy review, and its Release manager owner/date must match the JSON
+release review and `PHASE9_SIGNED_OFF_BY`. This identity binding prevents
+contradictory reviewer metadata; it does not authenticate a person or prove the
+underlying review truthful.
+
+Before any `PHASE9_*_PASS=true` flag or `PHASE9_SIGNED_OFF_BY` value is accepted, set `PHASE9_RELEASE_CANDIDATE_DIR` to a non-template folder under `docs/phase-9/release-candidates/`. The Git worktree must be clean, the folder must contain the full RC packet, the manifest build-source SHA must match `PHASE9_IOS_SOURCE_GIT_SHA`, every RC file must be customized from the template and bound to the evidence commit, and every unresolved placeholder must be replaced with reviewed evidence.
 
 Generated QA packets are supporting artifacts, not launch signoff by themselves. The packet must hash the packet builder, every Phase 9 verifier script, `.env.example`, the RC template/source docs required by the smoke gate, and any selected RC folder, and its Markdown summary must show whether it was generated from a clean or dirty Git worktree so reviewers can reject stale or mixed-worktree evidence.
 
@@ -70,10 +91,35 @@ manifest.
 
 The audit excludes first-party/linked source, generated prebuild, resolved
 CocoaPods/SPM output, and the production archive. Separate first-party config
-validators and exact archive inspection must cover those surfaces. Before
-IOS-09 can close, retain one immutable production `.xcarchive`, build
-identity/hash, resolved native lock, merged privacy report, per-bundle manifest
-ledger, required-API use/declaration report, SDK signature evidence,
+validators and exact archive inspection must cover those surfaces. The typed
+archive-evidence-index gate accepts only a repository-confined, regular
+`.xcarchive.zip` or IPA. From the exact collected and hash-bound bytes, it
+applies bounded ZIP flag/version/extra-field, path/collision,
+contiguous-record, size, CRC, and DEFLATE checks and requires one exact
+IPA/xcarchive app layout. It parses XML/binary app and archive property lists,
+matches bundle/version/build/executable/team/application-path identity, and
+requires the executable and `_CodeSignature/CodeResources`. It structurally
+parses the embedded provisioning profile's CMS SignedData and matches its team,
+App-ID prefix, production-distribution, iOS-platform, and build-time/current
+validity fields. It then binds the container's size/hash to the current source
+SHA, source-audit hash and ledgers, EAS UUID/Git SHA/log, release identity,
+resolved toolchain, ten exact evidence artifacts, four explicit attestations,
+and distinct named privacy and release approval metadata. It rejects path
+escapes, links/hardlinks, duplicate/colliding paths or byte regions,
+stale/tampered files, malformed or duplicate-key JSON, mutable image aliases,
+false attestations, placeholder reviewers, and timestamp inversions.
+The validator's pass means only that this evidence index is internally
+consistent, contains the parsed release identity, and contains distinct named
+approval metadata. It does not authenticate those reviewers, prove their
+approvals truthful, cryptographically verify the app code signature, trust the
+provisioning-profile CMS signature, validate DER-Encoded-Profile, interpret
+privacy/API reports, or machine-interpret any other evidence report. It never
+claims legal compliance or App Store acceptance.
+
+Before IOS-09 can close, retain the exact completed
+`ios-archive-privacy-evidence.json`, archive file, resolved native lock, merged
+privacy report, per-bundle manifest ledger, required-API use/declaration
+report, native-binary and SDK-signature evidence,
 signing/entitlements/symbols/processing results, and supported-device evidence.
 STORE-04 separately requires observed traffic/storage reconciled to final App
 Privacy answers and named privacy/legal review. Source validity is not legal
@@ -92,9 +138,11 @@ The credential-free behavioral smoke and static contract prove the harness/sourc
 
 - Final brand/domain/store identity must be approved.
 - Live Supabase staging and production RLS tests must be run.
-- Production Apple/Google/RevenueCat/PostHog/Sentry accounts must be configured.
+- Production Apple, Google OAuth for iPhone, RevenueCat, PostHog, and Sentry
+  accounts must be configured.
 - Physical iPhone QA must be attached; Android is source-health work, not iOS
   launch evidence.
-- App Store and Play review packets must be completed from the final metadata.
+- The App Store review packet must be completed from the final metadata; Google
+  Play review evidence is not applicable under the current iOS-only contract.
 - Closed beta metrics and launch kill criteria must be evaluated.
 - Legal/privacy/clinical signoff must be named.

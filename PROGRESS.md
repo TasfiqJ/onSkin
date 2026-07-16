@@ -22,13 +22,42 @@ source-resource bindings still requiring archive proof, 139 podspecs, 16
 XCFramework candidates, no standalone framework or `.a`/`.dylib` candidates,
 ten Apple SDK-list intersections, zero errors, and 15 warnings. Its JSON and
 Markdown hashes are
-`5c8af950830d0ab57cf451295f13e4d24f31e82afc3de0e38608f7bc782f5390`
+`a378f36e32ed1e82630620c8083ee019544f07cd98fad9b074fd2cc075fe673f`
 and
-`3ad0c5c619bbe94b6406e21b4f4bdc28a64fae208b09aa42dbbeeda4a0a5e384`.
+`569be827aac3048642bb849bf0ac8f263be7a77b842c8df1a301598546e823c3`.
+
+A separate typed archive-evidence-index validator now inspects the exact
+hash-bound `.xcarchive.zip` or IPA bytes. It applies bounded ZIP
+flag/version/extra-field, path/collision, contiguous-record, CRC, and DEFLATE
+checks; requires one exact IPA/xcarchive app layout; parses XML or binary app
+and archive property lists; and matches bundle, version, build, executable,
+team, and application path. It structurally parses the embedded provisioning
+profile's CMS SignedData and matches its team, App-ID prefix, production
+distribution, iOS platform, and build-time/current validity fields. It binds
+the container, source audit and all ledgers, EAS build UUID/Git SHA/log, exact
+release identity, resolved toolchain, ten archive-review artifacts, four
+attestations, and distinct named privacy/release approval metadata. It confines
+every raw artifact to the selected RC, requires a single direct
+source-to-evidence commit, rejects ignored/untracked/modified/index-flagged
+metadata, cross-checks the RC manifest, and binds the Security/privacy and
+Release manager names/dates across the JSON review, tracked signoff, and
+`PHASE9_SIGNED_OFF_BY`. The EAS configuration requires committed input, pins
+CLI `21.0.1` and full image
+`macos-tahoe-26.4-xcode-26.4`, and records the resolved environment because Expo
+may still apply minor image updates. Current focused results are 233
+archive-index and RC cross-binding tests (231 pass, two Windows
+symlink-capability skips), 13/13
+Git-provenance tests, and 9/9 structural package/CI-wiring tests.
+
+This validates the evidence index, parsed release identity, and named-review
+metadata binding. It does not cryptographically verify the app code signature,
+trust the provisioning-profile CMS signature, validate DER-Encoded-Profile,
+machine-interpret every opaque report, prove that an attestation is truthful,
+or convert missing device, legal, or App Store evidence into a pass.
 
 The source scope excludes first-party/linked code, generated Expo prebuild,
 evaluated CocoaPods/SPM resolution, and the production archive. IOS-09 and
-STORE-04 remain `in_progress` pending the exact production `.xcarchive`, build
+STORE-04 remain `in_progress` pending the exact production `.xcarchive.zip` or IPA, build
 identity/hash, resolved lock, merged report, manifest and required-API ledgers,
 SDK signatures, signing/entitlements/symbols/processing review, observed
 traffic/storage-to-label reconciliation, and named privacy/legal/device

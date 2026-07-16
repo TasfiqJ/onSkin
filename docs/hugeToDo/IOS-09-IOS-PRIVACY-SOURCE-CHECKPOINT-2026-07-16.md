@@ -37,6 +37,25 @@ relationships remain explicitly labeled as source inferences in
 `docs/phase-9/ios-sdk-package-mapping.json`; they are not represented as Apple
 statements or archive observations.
 
+## Reviewed Expo Build Environment
+
+The production, staging, and development profiles now use Expo's full image
+name `macos-tahoe-26.4-xcode-26.4`, not the mutable `sdk-56` alias. Expo's
+[current infrastructure inventory](https://docs.expo.dev/build-reference/infrastructure/)
+maps it to macOS 26.4.1, Xcode 26.4 build 17E202, iOS SDK 26.4, Node 22.22.2,
+CocoaPods 1.16.2, and Fastlane 2.233.1. Expo states that a specific image name
+is consistent but can receive minor updates; it is not a digest. Every build
+must therefore retain its resolved environment and log.
+
+The [current EAS CLI reference](https://docs.expo.dev/eas/cli/) identifies CLI
+21.0.1. `eas.json` pins that exact version and sets `cli.requireCommit=true`.
+Expo's [build-configuration documentation](https://docs.expo.dev/build-reference/build-configuration/)
+describes the committed-input prompt. The retained EAS UUID, build-log hash,
+and `easGitCommitSha` must still match the source record; `requireCommit` alone
+is not archive provenance. Production auto-increment remains enabled, so the
+post-increment build number is captured as release evidence rather than falsely
+claimed to be source content.
+
 ## `react-native-view-shot` Manifest Repair
 
 Installed `react-native-view-shot` 5.1.0 supplied
@@ -99,18 +118,78 @@ The checked result binds these inputs:
 - Apple baseline SHA-256:
   `fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921`;
 - repository mapping SHA-256:
-  `4071fc20df9224447ce1a1f978b9441e223a4907e45e41408c04228abddc9f8b`;
+  `334a4ce9e94c58e44e28305d0ab6f98f92de01d5cf638301e90fa7cb105b8fc9`;
 - `package-lock.json` SHA-256:
-  `55762337b9b049e7efe536a004dbbd855d7f672d8ba1f145fa4bb5b2409770d1`;
+  `a83a88fbf2310d2457e3e31b85fedaa54fe7e5e354ca02d9700e51229526835f`;
 - generated JSON report SHA-256:
-  `5c8af950830d0ab57cf451295f13e4d24f31e82afc3de0e38608f7bc782f5390`;
+  `a378f36e32ed1e82630620c8083ee019544f07cd98fad9b074fd2cc075fe673f`;
   and
 - generated Markdown report SHA-256:
-  `3ad0c5c619bbe94b6406e21b4f4bdc28a64fae208b09aa42dbbeeda4a0a5e384`.
+  `569be827aac3048642bb849bf0ac8f263be7a77b842c8df1a301598546e823c3`.
 
 The machine and human-readable ledgers are
 `docs/phase-9/generated/ios-privacy-source-audit.json` and
 `docs/phase-9/generated/ios-privacy-source-audit.md`.
+
+## Archive Evidence Index Gate
+
+`scripts/phase9/ios-archive-privacy-evidence.mjs` provides a strict typed
+evidence-index loader. It reads the exact collected and hash-bound bytes for one
+regular `.xcarchive.zip` or IPA; applies bounded ZIP flag/version/extra-field,
+path/collision, contiguous-record, size, CRC, and DEFLATE checks; and requires
+one exact IPA/xcarchive app layout. It parses XML and binary app/archive
+property lists and matches the bundle identifier, version, build, executable,
+team, and xcarchive application path. It also requires the executable and
+`_CodeSignature/CodeResources`, structurally parses the embedded provisioning
+profile's CMS SignedData, and matches structured team, App-ID prefix,
+production-distribution, iOS-platform, and build-time/current validity fields.
+It binds that container to the exact source audit and ledgers, EAS build
+UUID/Git SHA/log, release identity, reviewed image and resolved environment,
+ten archive-review artifacts, four asserted boolean attestations, and distinct
+named privacy and release-approval metadata. All raw build/review references
+must live under the selected RC's `evidence/ios/` subtree.
+
+`scripts/phase9/release-candidate-git-contract.mjs` requires the packet to be
+one non-merge evidence commit whose direct parent is the build-source commit.
+Every required metadata file must be a normal, single-link tracked file matching
+HEAD; ignored/untracked metadata outside the permitted raw evidence subtree,
+worktree drift, skip-worktree/assume-unchanged flags, later RC mutations, and
+changes outside the RC fail. The manifest repeats and
+must match the source SHA, EAS UUID, iOS version/build, bundle identifier, and
+production channel.
+
+`scripts/phase9/ios-release-candidate-cross-binding.mjs` gives the store
+inspector a separately tested evidence-present contract. It matches the exact
+reviewed toolchain and provenance, confines every reference, rejects duplicate
+or ambiguous manifest/store fields, and hash-binds the exact trimmed
+Security/privacy and Release manager identities. Their `signoff.md` names and
+calendar dates must match the archive JSON privacy/release review timestamps,
+and the Release manager must be the exact `PHASE9_SIGNED_OFF_BY` identity. This
+rejects contradictory metadata; it does not authenticate a reviewer or prove
+an approval truthful.
+
+The gate is intentionally named an evidence-index validator. It verifies
+identity, hashes, declared ordering, confinement, bounded ZIP-container
+integrity/layout, parsed property-list and provisioning fields, and named-review
+metadata. It does not cryptographically verify the app code signature, trust
+the provisioning-profile CMS signature, validate DER-Encoded-Profile,
+interpret privacy manifests, API use, or any opaque review report, prove an
+attestation truthful, or establish Apple/legal acceptance. Those substantive
+checks remain the responsibility of the exact retained artifacts and qualified
+reviewers.
+
+The focused local suites currently pass:
+
+- archive evidence index and RC cross-binding: 233 tests, 231 pass and two
+  expected Windows file-symlink-capability skips;
+- release-candidate Git provenance: 13/13; and
+- structural package-script/CI wiring: 9/9.
+
+The wiring audit pins exact verifier definitions, requires fail-closed parent
+`&&` chains, and requires the unfiltered pull-request/push-to-main workflow to
+run the exact commands once, in order, on `ubuntu-latest` without conditions,
+custom shell, injected environment, or `continue-on-error`. This proves checked
+configuration, not that a remote CI run or App Store review occurred.
 
 ## Scope Boundary
 
@@ -143,8 +222,8 @@ Accordingly:
 IOS-09 and STORE-04 remain `in_progress` until the frozen release candidate has
 all of the following, cross-bound to one immutable source revision and build:
 
-1. the exact production `.xcarchive` and its build identity and cryptographic
-   hash;
+1. the exact production `.xcarchive.zip` or IPA and its build identity and
+   cryptographic hash;
 2. the exact resolved `Podfile.lock` and any applicable SPM resolution record;
 3. the archive's merged privacy report plus a complete per-bundle privacy
    manifest ledger;

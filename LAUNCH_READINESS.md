@@ -56,8 +56,14 @@ evidence through 2026-07-13:
   XCFramework candidates, ten Apple SDK-list intersections, zero errors, and
   15 warnings. First-party and generated native source use separate validators;
   evaluated CocoaPods/SPM resolution and the production archive are outside
-  this audit. IOS-09 and STORE-04 remain `in_progress` pending the exact
-  production archive/build/lock, merged privacy and required-API reports, SDK
+  this audit. A separate hash-bound evidence-index validator now requires the
+  exact EAS build UUID/source SHA/log, full reviewed image and resolved
+  toolchain, one direct RC-only evidence commit, HEAD-bound metadata, ten
+  candidate-local archive-review artifacts, and distinct named approval metadata; its
+  package/CI wiring is structurally fail-closed. No completed production index
+  or underlying archive/report set exists, and index validation does not
+  machine-interpret opaque reports. IOS-09 and STORE-04 remain `in_progress`
+  pending the exact `.xcarchive.zip` or IPA/build/lock, merged privacy and required-API reports, SDK
   signatures, signing/entitlements/symbols/processing review, observed
   traffic/storage-to-label reconciliation, and named privacy/legal/device
   signoffs. This does not establish legal compliance, Apple acceptance, or a
@@ -75,7 +81,7 @@ evidence through 2026-07-13:
   history through `0055`, the full structural pgTAP suite plus 114/114 Apple
   lifecycle assertions, schema lint, empty migration-shadow drift, temporary
   types, 20/20 focused Apple Edge tests, and the 47-test Apple auth work lane.
-  The full mobile baseline is 275 test files / 3161 tests. This is not hosted
+  The full mobile baseline is 275 test files / 3162 tests. This is not hosted
   Supabase/Apple/RevenueCat, StoreKit, physical-iPhone, professional-review,
   production, or App Store evidence.
 
@@ -89,7 +95,7 @@ evidence through 2026-07-13:
   two fixed E2E defects, zero horizontal overflow, no sub-44 visible controls,
   no dialogs, and no unexpected browser errors. Evidence:
   `test-results/human-e2e/2026-07-11/shelf-freshness-provenance-current/`.
-  The current baseline is 275 mobile test files / 3161 tests. Staging deployment
+  The current baseline is 275 mobile test files / 3162 tests. Staging deployment
   of both migrations, owner/second-user RLS, reviewed region-matched catalog
   responses, native notification delivery, physical-device relaunch and
   accessibility, and named cosmetic-chemistry review remain external gates.

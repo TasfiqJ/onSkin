@@ -4,5 +4,8 @@
 | ------ | -------- | ------ | --- | -------- | ------------- | ------------ | ----- | ------------------ | ---------------------------------- | ------ | -------- | ------ | ---- | ----- |
 | QA-001 | iOS      | TBD    | TBD | TBD      | Fresh free    | Online       | Light | Install/onboarding | Opens final brand, no placeholders | TBD    | TBD      | TBD    | TBD  | TBD   |
 | QA-002 | iOS      | TBD    | TBD | TBD      | Apple paid    | Online       | Dark  | Restore            | Pro restored from RevenueCat       | TBD    | TBD      | TBD    | TBD  | TBD   |
-| QA-003 | Android  | TBD    | TBD | TBD      | Google free   | Slow network | Light | Barcode/search     | Intake fallback safe               | TBD    | TBD      | TBD    | TBD  | TBD   |
-| QA-004 | Android  | TBD    | TBD | TBD      | Expired paid  | Online       | Dark  | Paywall            | Pro revoked, no stale grant        | TBD    | TBD      | TBD    | TBD  | TBD   |
+| QA-003 | iOS      | TBD    | TBD | TBD      | Google free   | Slow network | Light | Barcode/search     | Intake fallback safe               | TBD    | TBD      | TBD    | TBD  | TBD   |
+| QA-004 | iOS      | TBD    | TBD | TBD      | Expired paid  | Online       | Dark  | Paywall            | Pro revoked, no stale grant        | TBD    | TBD      | TBD    | TBD  | TBD   |
+
+Android device QA is not applicable under the current iOS-only launch
+contract. Google in QA-003 means Google Sign-In on iPhone, not Google Play.

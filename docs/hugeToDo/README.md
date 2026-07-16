@@ -79,7 +79,12 @@ and generated native sources have separate validators, while evaluated
 CocoaPods/SPM output, the production archive, merged privacy report, required
 API use, SDK signatures, entitlements, symbols, processing warnings, observed
 traffic/storage, final labels, and named privacy/legal/device signoffs remain
-open. Source validity does not establish legal compliance, App Review
+open. A typed archive-evidence-index path now binds the EAS source/build/log,
+full reviewed image and resolved toolchain, `.xcarchive.zip` or IPA, ten
+candidate-local review artifacts, a single tracked RC-only evidence commit,
+manifest identity, and distinct named approval metadata. No completed production index
+or underlying archive evidence has been supplied; the validator proves index
+integrity, not the truth of opaque reports. Source validity does not establish legal compliance, App Review
 acceptance, or revenue.
 
 The Sign in with Apple lifecycle is also a source checkpoint, not launch

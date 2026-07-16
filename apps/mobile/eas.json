@@ -1,7 +1,8 @@
 {
   "cli": {
-    "version": ">= 16.0.0",
-    "appVersionSource": "local"
+    "version": "21.0.1",
+    "appVersionSource": "local",
+    "requireCommit": true
   },
   "build": {
     "development": {
@@ -9,7 +10,7 @@
       "distribution": "internal",
       "channel": "development",
       "ios": {
-        "image": "sdk-56"
+        "image": "macos-tahoe-26.4-xcode-26.4"
       },
       "env": {
         "APP_VARIANT": "development",
@@ -23,7 +24,7 @@
       "distribution": "internal",
       "channel": "staging",
       "ios": {
-        "image": "sdk-56"
+        "image": "macos-tahoe-26.4-xcode-26.4"
       },
       "env": {
         "APP_VARIANT": "staging",
@@ -38,7 +39,7 @@
       "distribution": "store",
       "channel": "production",
       "ios": {
-        "image": "sdk-56"
+        "image": "macos-tahoe-26.4-xcode-26.4"
       },
       "env": {
         "APP_VARIANT": "production",

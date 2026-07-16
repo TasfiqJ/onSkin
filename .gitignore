@@ -44,6 +44,10 @@ yarn-error.*
 *.log
 test-results/
 
+# Raw release-candidate archives/reports stay in the approved evidence store.
+# The committed RC JSON records their exact paths, sizes, hashes, and reviews.
+/docs/phase-9/release-candidates/*/evidence/
+
 # OS
 .DS_Store
 *.pem

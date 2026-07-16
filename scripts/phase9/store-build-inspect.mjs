@@ -2,6 +2,7 @@
 import { createRequire } from 'node:module';
 
 import {
+  abs,
   block,
   envSnapshot,
   evidenceFlagEnabled,
@@ -19,9 +20,25 @@ import {
   loadLaunchContract,
   platformRequirementStatus,
 } from '../launch/contract.mjs';
+import {
+  IosArchivePrivacyEvidenceError,
+  loadAndValidateIosArchivePrivacyEvidence,
+} from './ios-archive-privacy-evidence.mjs';
+import { auditIosReleaseCandidateCrossBinding } from './ios-release-candidate-cross-binding.mjs';
+import { auditReleaseCandidateGitContract } from './release-candidate-git-contract.mjs';
 import { auditIosPrivacySource } from './ios-privacy-contract.mjs';
 
-const errors = [];
+const cliArguments = process.argv.slice(2);
+const allowedCliArguments = new Set(['--check', '--strict']);
+const cliErrors = [];
+for (const argument of cliArguments) {
+  if (!allowedCliArguments.has(argument)) cliErrors.push(`Unknown argument: ${argument}.`);
+  if (cliArguments.indexOf(argument) !== cliArguments.lastIndexOf(argument)) {
+    cliErrors.push(`Duplicate argument: ${argument}.`);
+  }
+}
+const checkOnly = cliArguments.includes('--check');
+const errors = [...new Set(cliErrors)];
 const warnings = [];
 const env = envSnapshot();
 const launchContract = loadLaunchContract();
@@ -32,10 +49,30 @@ const artifacts = {};
 const require = createRequire(import.meta.url);
 const appConfigPath = require.resolve('../../apps/mobile/app.config.js');
 const variants = ['development', 'staging', 'production'];
+const reviewedIosBuildEnvironment = Object.freeze({
+  easCliVersion: '21.0.1',
+  image: 'macos-tahoe-26.4-xcode-26.4',
+  imagePinScope: 'expo-specific-name-minor-updates-possible',
+  macosVersion: '26.4.1',
+  xcodeVersion: '26.4',
+  xcodeBuild: '17E202',
+  iosSdkVersion: '26.4',
+  nodeVersion: '22.22.2',
+  cocoapodsVersion: '1.16.2',
+  fastlaneVersion: '2.233.1',
+  reviewedAt: '2026-07-16',
+  source: 'https://docs.expo.dev/build-reference/infrastructure/',
+  cliSource: 'https://docs.expo.dev/eas/cli/',
+});
+const releaseCandidateEvidencePath =
+  /^docs\/phase-9\/release-candidates\/(rc-[a-z0-9]+(?:-[a-z0-9]+)*)\/ios-archive-privacy-evidence\.json$/;
+const canonicalEasBuildId =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const productionIdentityConfigErrorPatterns = [
   /BRAND_LEGAL_CLEARANCE=cleared/,
   /explicit final native identity env values/,
 ];
+
 let iosPrivacySourceAudit = null;
 try {
   iosPrivacySourceAudit = auditIosPrivacySource();
@@ -106,6 +143,12 @@ block(
   eas?.cli?.appVersionSource === 'local',
   'EAS appVersionSource must stay local for reviewed release manifests.',
 );
+block(errors, eas?.cli?.version === '21.0.1', 'EAS CLI must be pinned to reviewed version 21.0.1.');
+block(
+  errors,
+  eas?.cli?.requireCommit === true,
+  'EAS builds must require a committed Git source before upload.',
+);
 block(
   errors,
   eas?.build?.production?.channel === 'production',
@@ -153,8 +196,8 @@ for (const variant of variants) {
   );
   block(
     errors,
-    profile.ios?.image === 'sdk-56',
-    `EAS ${variant} build must use the reviewed Expo SDK 56 iOS image alias.`,
+    profile.ios?.image === reviewedIosBuildEnvironment.image,
+    `EAS ${variant} build must use the reviewed full Expo iOS image name.`,
   );
 }
 
@@ -245,10 +288,137 @@ if (androidReleaseRequired) {
   }
 }
 
-for (const [key, label] of [
-  ['PHASE9_IOS_ARTIFACT', 'iOS artifact'],
-  ...(androidReleaseRequired ? [['PHASE9_ANDROID_ARTIFACT', 'Android artifact']] : []),
-]) {
+let iosArchivePrivacyEvidence = null;
+let iosArchivePrivacyEvidenceIndexValidated = false;
+const iosArchivePrivacyEvidencePath = env.PHASE9_IOS_ARCHIVE_PRIVACY_EVIDENCE_PATH;
+if (iosArchivePrivacyEvidencePath) {
+  const productionConfig = variantConfigs.production;
+  const sourceGitSha = env.PHASE9_IOS_SOURCE_GIT_SHA ?? '';
+  const expectedEasBuildId = env.PHASE9_IOS_EAS_BUILD_ID ?? '';
+  const evidencePathMatch = releaseCandidateEvidencePath.exec(iosArchivePrivacyEvidencePath);
+  const evidencePathMatchesRc = Boolean(evidencePathMatch);
+  const releaseCandidateDirectory = evidencePathMatch
+    ? `docs/phase-9/release-candidates/${evidencePathMatch[1]}`
+    : null;
+  block(
+    errors,
+    evidencePathMatchesRc,
+    'PHASE9_IOS_ARCHIVE_PRIVACY_EVIDENCE_PATH must name the completed JSON in one non-template RC folder.',
+  );
+  block(
+    errors,
+    /^[0-9a-f]{40}$/.test(sourceGitSha),
+    'PHASE9_IOS_SOURCE_GIT_SHA must be the exact lowercase build-source commit.',
+  );
+  block(
+    errors,
+    canonicalEasBuildId.test(expectedEasBuildId),
+    'PHASE9_IOS_EAS_BUILD_ID must be the canonical lowercase EAS build UUID.',
+  );
+  let releaseCandidateGitValid = false;
+  if (/^[0-9a-f]{40}$/.test(sourceGitSha) && evidencePathMatchesRc) {
+    try {
+      const gitAudit = auditReleaseCandidateGitContract({
+        root: abs('.'),
+        sourceGitSha,
+        releaseCandidateDir: releaseCandidateDirectory,
+        requiredTrackedFiles: [
+          iosArchivePrivacyEvidencePath,
+          `${releaseCandidateDirectory}/manifest.md`,
+          `${releaseCandidateDirectory}/signoff.md`,
+          `${releaseCandidateDirectory}/store-review-packet.md`,
+        ],
+      });
+      releaseCandidateGitValid = gitAudit.status === 'pass';
+      for (const error of gitAudit.errors) {
+        block(errors, false, `iOS release-candidate Git contract: ${error}`);
+      }
+    } catch {
+      block(errors, false, 'The iOS release-candidate Git contract could not be evaluated.');
+    }
+  }
+
+  if (!productionConfig) {
+    block(
+      errors,
+      false,
+      'iOS archive privacy evidence cannot be validated until production identity config resolves.',
+    );
+  } else if (releaseCandidateGitValid && canonicalEasBuildId.test(expectedEasBuildId)) {
+    try {
+      iosArchivePrivacyEvidence = loadAndValidateIosArchivePrivacyEvidence(
+        iosArchivePrivacyEvidencePath,
+        {
+          root: abs('.'),
+          expectedSourceGitSha: sourceGitSha,
+          expectedBuild: {
+            appVersion: productionConfig.version,
+            buildNumber: env.PHASE9_IOS_BUILD_NUMBER ?? '',
+            bundleIdentifier: productionConfig.ios?.bundleIdentifier,
+            teamIdentifier: env.PHASE9_APPLE_TEAM_ID ?? '',
+          },
+        },
+      );
+      const validatedProvenance = iosArchivePrivacyEvidence.validation.provenance;
+
+      const archive = iosArchivePrivacyEvidence.validation.archive;
+      const candidateReferences = [
+        archive.file,
+        validatedProvenance.easBuildLog,
+        ...Object.values(iosArchivePrivacyEvidence.validation.artifacts),
+      ];
+      const manifestPath = `${releaseCandidateDirectory}/manifest.md`;
+      const storePacketPath = `${releaseCandidateDirectory}/store-review-packet.md`;
+      const signoffPath = `${releaseCandidateDirectory}/signoff.md`;
+      const crossBinding = auditIosReleaseCandidateCrossBinding({
+        releaseCandidateDirectory,
+        references: candidateReferences,
+        manifestSource: read(manifestPath),
+        storePacketSource: read(storePacketPath),
+        signoffSource: read(signoffPath),
+        sourceGitSha,
+        expectedEasBuildId,
+        reviewedBuildEnvironment: reviewedIosBuildEnvironment,
+        signedOffBy: env.PHASE9_SIGNED_OFF_BY,
+        validation: iosArchivePrivacyEvidence.validation,
+      });
+      for (const error of crossBinding.errors) {
+        block(errors, false, `iOS release-candidate cross-binding: ${error}`);
+      }
+
+      iosArchivePrivacyEvidenceIndexValidated = releaseCandidateGitValid && crossBinding.validated;
+      artifacts.PHASE9_IOS_ARTIFACT = {
+        format: archive.format,
+        path: archive.file.path,
+        sha256: archive.file.sha256,
+        sizeBytes: archive.file.sizeBytes,
+      };
+      artifacts.PHASE9_IOS_EAS_BUILD_LOG = {
+        easBuildId: validatedProvenance.easBuildId,
+        easGitCommitSha: validatedProvenance.easGitCommitSha,
+        path: validatedProvenance.easBuildLog.path,
+        sha256: validatedProvenance.easBuildLog.sha256,
+        sizeBytes: validatedProvenance.easBuildLog.sizeBytes,
+      };
+    } catch (error) {
+      const detail =
+        error instanceof IosArchivePrivacyEvidenceError
+          ? `${error.code} at ${error.path}`
+          : 'unexpected validator failure';
+      block(errors, false, `iOS archive privacy evidence is invalid (${detail}).`);
+    }
+  }
+} else {
+  warn(
+    warnings,
+    false,
+    'Exact iOS archive evidence not supplied: set PHASE9_IOS_ARCHIVE_PRIVACY_EVIDENCE_PATH to the completed RC JSON.',
+  );
+}
+
+for (const [key, label] of androidReleaseRequired
+  ? [['PHASE9_ANDROID_ARTIFACT', 'Android artifact']]
+  : []) {
   const path = env[key];
   if (path && exists(path)) artifacts[key] = { path, sha256: hash(path) };
   else warn(warnings, false, `${label} not supplied for hashing: set ${key}=path.`);
@@ -283,8 +453,8 @@ warn(
 );
 warn(
   warnings,
-  false,
-  'Exact production archive privacy verification remains required: merged privacy report, manifest ledger, required-reason APIs, SDK signatures, entitlements, symbols, binary processing, observed traffic, and App Privacy answers.',
+  iosArchivePrivacyEvidenceIndexValidated,
+  'A hash-bound, named-reviewed production archive evidence index remains required: archive, aggregate privacy report PDF, manifest ledger, required-reason APIs, SDK signatures, entitlements, symbols, binary processing, observed traffic, and App Privacy answers. Index validation proves archive-container integrity, release-identity binding, file binding, and matching review metadata; it does not prove opaque report truth, Apple trust, legal compliance, or App Store acceptance.',
 );
 warn(
   warnings,
@@ -299,77 +469,84 @@ if (androidReleaseRequired) {
   );
 }
 
-write(
-  'docs/phase-9/generated/store-build-inspection.json',
-  `${JSON.stringify(
-    {
-      generatedAt: new Date().toISOString(),
-      launchContract: launchContractSnapshot(launchContract),
-      platformStatus: {
-        ios: platformRequirementStatus('ios', launchContract),
-        android: platformRequirementStatus('android', launchContract),
-      },
-      app: {
-        name: app.name,
-        slug: app.slug,
-        version: app.version,
-        runtimeVersion: app.runtimeVersion,
-        scheme: app.scheme,
-        iosBundleIdentifier: app.ios?.bundleIdentifier,
-        androidPackage: app.android?.package,
-        androidAllowBackup: app.android?.allowBackup ?? true,
-        androidPermissions: [...androidPermissions],
-      },
-      easBuildProfiles: Object.fromEntries(
-        variants.map((variant) => [
-          variant,
-          {
-            channel: eas.build?.[variant]?.channel ?? null,
-            iosImage: eas.build?.[variant]?.ios?.image ?? null,
-            distribution: eas.build?.[variant]?.distribution ?? null,
-            developmentClient: eas.build?.[variant]?.developmentClient === true,
-            appVariant: eas.build?.[variant]?.env?.APP_VARIANT ?? null,
-            appEnvironment: eas.build?.[variant]?.env?.EXPO_PUBLIC_APP_ENV ?? null,
-          },
-        ]),
-      ),
-      resolvedVariants: Object.fromEntries(
-        variants.map((variant) => [
-          variant,
-          variantConfigs[variant]
-            ? {
-                name: variantConfigs[variant].name,
-                scheme: variantConfigs[variant].scheme,
-                iosBundleIdentifier: variantConfigs[variant].ios?.bundleIdentifier,
-                androidPackage: variantConfigs[variant].android?.package,
-                androidAllowBackup: variantConfigs[variant].android?.allowBackup ?? true,
-                appVariant: variantConfigs[variant].extra?.appVariant,
-                appEnvironment: variantConfigs[variant].extra?.appEnvironment,
-              }
-            : {
-                error: variantResults[variant].error,
-              },
-        ]),
-      ),
-      artifacts,
-      iosPrivacySourceAudit: iosPrivacySourceAudit
-        ? {
-            status: iosPrivacySourceAudit.status,
-            claims: iosPrivacySourceAudit.claims,
-            scope: iosPrivacySourceAudit.scope,
-            summary: iosPrivacySourceAudit.summary,
-            inputs: iosPrivacySourceAudit.inputs,
-            ledgerHashes: iosPrivacySourceAudit.ledgerHashes,
-            archiveReviewerMetadataFlag: evidenceFlagEnabled(env.PHASE9_IOS_PRIVACY_REPORT_PASS),
-            archiveEvidenceValidated: false,
-          }
-        : null,
-      blockers: errors,
-      warnings,
+const inspectionOutput = `${JSON.stringify(
+  {
+    generatedAt: new Date().toISOString(),
+    launchContract: launchContractSnapshot(launchContract),
+    platformStatus: {
+      ios: platformRequirementStatus('ios', launchContract),
+      android: platformRequirementStatus('android', launchContract),
     },
-    null,
-    2,
-  )}\n`,
-);
+    app: {
+      name: app.name,
+      slug: app.slug,
+      version: app.version,
+      runtimeVersion: app.runtimeVersion,
+      scheme: app.scheme,
+      iosBundleIdentifier: app.ios?.bundleIdentifier,
+      androidPackage: app.android?.package,
+      androidAllowBackup: app.android?.allowBackup ?? true,
+      androidPermissions: [...androidPermissions],
+    },
+    easBuildProfiles: Object.fromEntries(
+      variants.map((variant) => [
+        variant,
+        {
+          channel: eas.build?.[variant]?.channel ?? null,
+          iosImage: eas.build?.[variant]?.ios?.image ?? null,
+          distribution: eas.build?.[variant]?.distribution ?? null,
+          developmentClient: eas.build?.[variant]?.developmentClient === true,
+          appVariant: eas.build?.[variant]?.env?.APP_VARIANT ?? null,
+          appEnvironment: eas.build?.[variant]?.env?.EXPO_PUBLIC_APP_ENV ?? null,
+        },
+      ]),
+    ),
+    reviewedIosBuildEnvironment,
+    resolvedVariants: Object.fromEntries(
+      variants.map((variant) => [
+        variant,
+        variantConfigs[variant]
+          ? {
+              name: variantConfigs[variant].name,
+              scheme: variantConfigs[variant].scheme,
+              iosBundleIdentifier: variantConfigs[variant].ios?.bundleIdentifier,
+              androidPackage: variantConfigs[variant].android?.package,
+              androidAllowBackup: variantConfigs[variant].android?.allowBackup ?? true,
+              appVariant: variantConfigs[variant].extra?.appVariant,
+              appEnvironment: variantConfigs[variant].extra?.appEnvironment,
+            }
+          : {
+              error: variantResults[variant].error,
+            },
+      ]),
+    ),
+    artifacts,
+    iosArchivePrivacyEvidence,
+    iosPrivacySourceAudit: iosPrivacySourceAudit
+      ? {
+          status: iosPrivacySourceAudit.status,
+          claims: iosPrivacySourceAudit.claims,
+          scope: iosPrivacySourceAudit.scope,
+          summary: iosPrivacySourceAudit.summary,
+          inputs: iosPrivacySourceAudit.inputs,
+          ledgerHashes: iosPrivacySourceAudit.ledgerHashes,
+          archiveReviewerMetadataFlag: evidenceFlagEnabled(env.PHASE9_IOS_PRIVACY_REPORT_PASS),
+          archiveEvidenceIndexValidated: iosArchivePrivacyEvidenceIndexValidated,
+          archiveCodeSignatureCryptographicallyVerified: false,
+          archiveContainerIntegrityMachineValidated:
+            iosArchivePrivacyEvidence?.validation.archive.containerIntegrity ?? false,
+          provisioningCmsSignatureTrusted: false,
+        }
+      : null,
+    blockers: errors,
+    warnings,
+  },
+  null,
+  2,
+)}\n`;
+
+if (!checkOnly) {
+  write('docs/phase-9/generated/store-build-inspection.json', inspectionOutput);
+}
 
 printResult('Phase 9 store build inspection', errors, warnings);

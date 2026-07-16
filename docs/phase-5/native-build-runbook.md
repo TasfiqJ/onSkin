@@ -15,13 +15,23 @@ Current Android source configuration intentionally pins compile/target SDK to
 API 36 while keeping min SDK at API 29. This is maintenance posture only; it
 does not add Android to the release contract.
 
-Every iOS profile explicitly uses the Expo `sdk-56` build-image alias. Expo's
-current infrastructure maps that alias to Xcode 26.4 and the iOS 26 SDK, which
-satisfies Apple's upload floor in force since April 28, 2026. The alias is a
-selection rule, not evidence: retain the EAS build-log section that names the
-resolved image, Xcode version, and SDK for every candidate. Stop building if
-Expo remaps the alias below Apple's then-current floor or if the resolved
-toolchain differs from the reviewed configuration.
+Every iOS profile explicitly uses Expo's full reviewed image name
+`macos-tahoe-26.4-xcode-26.4`. Expo's 2026-07-08 infrastructure inventory maps
+that image to macOS 26.4.1, Xcode 26.4 build 17E202, Node 22.22.2, CocoaPods
+1.16.2, and Fastlane 2.233.1. Xcode 26.4 satisfies Apple's upload floor in
+force since April 28, 2026. Expo documents a full image name as a consistent
+environment with possible minor updates, not a cryptographic image digest.
+Retain the EAS build ID and build-log section that names the resolved image and
+tool versions for every candidate. Stop building if the resolved environment
+differs from the reviewed configuration or Apple's then-current floor.
+
+The EAS CLI is pinned to the current reviewed `21.0.1`, and
+`cli.requireCommit=true` requires committed input before upload. Retain the EAS
+build UUID, exact Git commit metadata, CLI version, and full build log; the
+archive evidence index requires the EAS Git SHA to equal the build-source SHA.
+Production `autoIncrement` means the post-increment build number must be taken
+from the finished build record and cross-bound to the archive/manifest rather
+than assumed from source.
 
 The Progress review pipeline includes native ML Kit face detection and Expo
 image manipulation. Any build created before those dependencies were added is
@@ -42,8 +52,9 @@ photo image or metadata request during local save.
 - `staging`: internal beta candidate, `APP_VARIANT=staging`, native camera enabled, native OCR disabled until ML Kit/Vision is added and verified.
 - `production`: production channel only after brand/legal clearance and store credentials are complete.
 
-All three profiles use the `sdk-56` iOS image alias. Production builds must not
-silently fall back to a different profile or toolchain.
+All three profiles use `macos-tahoe-26.4-xcode-26.4` for build/test parity.
+Production builds must not silently fall back to a different profile or
+toolchain.
 
 ## Required Commands
 
@@ -87,9 +98,17 @@ PHASE5_SIGNED_OFF_BY="Tas Mohammed" \
 npm run phase5:qa-packet:strict
 ```
 
-Retain the EAS log proving the resolved `sdk-56` image, Xcode 26.4 or later,
-and iOS 26 SDK or later alongside the generated packet. Re-check Apple's
-current upload requirement immediately before every App Store candidate.
+Retain the EAS UUID/Git SHA/log proving CLI 21.0.1, the resolved full image
+name, macOS 26.4.1, Xcode 26.4 build 17E202, iOS 26.4 SDK, Node 22.22.2,
+CocoaPods 1.16.2, and Fastlane 2.233.1 alongside the generated packet. Re-check
+Expo's supported-image inventory, CLI reference, and Apple's current upload
+requirement immediately before every App Store candidate.
+
+Official references: [EAS Build infrastructure](https://docs.expo.dev/build-reference/infrastructure/),
+[selecting a base image](https://docs.expo.dev/build/eas-json/#selecting-a-base-image),
+the [EAS CLI reference](https://docs.expo.dev/eas/cli/),
+[build configuration](https://docs.expo.dev/build-reference/build-configuration/),
+and the [Expo SDK 56 changelog](https://expo.dev/changelog/sdk-56).
 
 Record the supported-device performance baseline separately. Generate the
 blocked schema before testing, set owner-approved p95 thresholds before the

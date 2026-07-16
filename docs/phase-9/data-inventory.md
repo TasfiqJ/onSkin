@@ -1,6 +1,10 @@
 # Phase 9 Data Inventory
 
-This inventory is the source for export, deletion, App Store privacy labels, Google Play Data safety, support escalation, and incident response. It must be rechecked for every release candidate.
+This inventory is the source for export, deletion, App Store privacy labels,
+support escalation, and incident response. It must be rechecked for every
+release candidate. Google Play Data Safety is not applicable under the current
+iOS-only launch contract and requires a separate platform review before Android
+returns to release scope.
 
 ## Sign in with Apple Lifecycle Data
 
@@ -259,7 +263,11 @@ Supabase session tokens are stored locally through `LargeSecureStore`: the conte
 
 OS app-switcher snapshots are treated as a privacy boundary. The root mobile provider overlays a neutral app privacy shield whenever app state is not active, so local-only photos, routines, shelf, Ask, community, and settings screens should not appear in app-switcher previews. App content does not mount until the encrypted app-lock preference resolves; preference failure assumes locked. After app-wide authentication, the Progress tab and direct capture, review, and detail entries share a separate foreground-scoped photo-timeline unlock that is cleared whenever the app leaves active state. The shield uses the runtime app display name rather than a hardcoded legacy brand. This still needs real-device verification because snapshot timing and native authentication ordering are platform-specific.
 
-Android Auto Backup is disabled in app config for the same local-only data classes. Store-build inspection blocks `allowBackup` regressions across resolved development, staging, and production configs; binary QA must still inspect the built Android manifest and iOS backup/keychain restore behavior.
+Android Auto Backup remains disabled as source-health defense in app config,
+and store-build inspection blocks `allowBackup` regressions across resolved
+development, staging, and production configs. Android binary QA is not a
+current release gate. The exact production iOS build must still pass physical-
+iPhone backup and keychain restore testing.
 
 ## Third Parties
 
@@ -271,4 +279,7 @@ Android Auto Backup is disabled in app config for the same local-only data class
 
 ## Review Requirement
 
-If a launch feature writes a new user-owned or user-linked table, add it to `data-export`, `account-deletion` cascade/scrub coverage, the privacy labels/Data safety source, and the RLS adversarial matrix before enabling it.
+If a launch feature writes a new user-owned or user-linked table, add it to
+`data-export`, `account-deletion` cascade/scrub coverage, the Apple App Privacy
+source, and the RLS adversarial matrix before enabling it. Add a separate Data
+Safety review only if Android returns to release scope.

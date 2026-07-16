@@ -51,7 +51,7 @@ therefore explicitly `null`, never guessed. Every mapping remains
 artifact-name evidence must never be presented as proof that a listed SDK,
 privacy manifest, or signature is present in the release archive.
 
-Before release review, inventory the exact immutable `.xcarchive`, hash its
+Before release review, inventory the exact immutable `.xcarchive.zip` or IPA, hash its
 Podfile.lock (or other native-resolution record), every privacy manifest and
 merged privacy report, and every framework/XCFramework/static-library/dylib
 ledger. Reconcile those archive observations against the current Apple pages
@@ -74,3 +74,9 @@ manifest. The installed-source scope also excludes linked workspaces,
 first-party app/extension sources, generated prebuild output, resolved
 CocoaPods/SPM contents, and the release archive; those require their existing
 first-party config gates and exact production-archive evidence.
+
+The typed archive-evidence-index gate binds one candidate's EAS UUID/source
+SHA/log, archive container, source audit, resolved environment, ten review
+artifacts, and named approval metadata through a single tracked RC-only evidence
+commit. It verifies identity and hash integrity, not the substantive truth of
+opaque report contents or App Store/legal acceptance.

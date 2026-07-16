@@ -15,17 +15,21 @@ tokens are not evaluated CocoaPods output, candidate framework names are not
 resolved SDK identities, and source manifests do not prove bundle inclusion or
 signatures. First-party and generated prebuild sources have separate validators;
 CocoaPods/SPM resolution and the exact production archive remain release gates.
+The RC evidence-index validator can bind their files, EAS provenance, and
+named approval metadata to one candidate, but it does not machine-interpret opaque
+report contents.
 
 Strict release signoff requires:
 
 - lockfile present and generated from the release SHA
 - no unapproved high or critical vulnerabilities
-- exact production `.xcarchive`, build identity/hash, and resolved native lock
-  retained
+- exact production `.xcarchive.zip` or IPA, EAS build/source/log,
+  build identity/hash, and resolved native lock retained
 - merged privacy report, per-bundle manifests, required-reason APIs, resolved
   SDK identities/signatures, entitlements/signing, symbols, binary metadata,
   and processing warnings reviewed for iOS submission
-- Android native dependencies checked for target API and 16 KB compatibility
+- Android dependency/release checks are N/A under the current iOS-only launch
+  contract and must be restored before Android re-enters scope
 - Sentry source maps/symbolication plan recorded
 - generated inventory attached to the RC packet
 

@@ -17,9 +17,12 @@ import {
   productionUrl,
   read,
   requiredPhase9EvidenceKeys,
+  strict,
   warn,
 } from './lib.mjs';
 import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
+import { auditReleaseCandidateGitContract } from './release-candidate-git-contract.mjs';
+import { auditVerificationWiring } from './verification-wiring-contract.mjs';
 
 const errors = [];
 const warnings = [];
@@ -83,6 +86,13 @@ const localVerifierFiles = [
   'scripts/phase9/ios-privacy-contract.mjs',
   'scripts/phase9/ios-privacy-source-audit.mjs',
   'scripts/phase9/ios-privacy-source-audit.test.mjs',
+  'scripts/phase9/ios-archive-privacy-evidence.mjs',
+  'scripts/phase9/ios-archive-privacy-evidence.test.mjs',
+  'scripts/phase9/ios-release-candidate-cross-binding.mjs',
+  'scripts/phase9/release-candidate-git-contract.mjs',
+  'scripts/phase9/release-candidate-git-contract.test.mjs',
+  'scripts/phase9/verification-wiring-contract.mjs',
+  'scripts/phase9/verification-wiring-contract.test.mjs',
 ];
 
 const requiredFiles = [
@@ -112,6 +122,7 @@ const requiredFiles = [
   'docs/phase-9/release-candidates/_template/manual-qa-matrix.md',
   'docs/phase-9/release-candidates/_template/security-review.md',
   'docs/phase-9/release-candidates/_template/privacy-review.md',
+  'docs/phase-9/release-candidates/_template/ios-archive-privacy-evidence.json',
   'docs/phase-9/release-candidates/_template/payments-review.md',
   'docs/phase-9/release-candidates/_template/observability-review.md',
   'docs/phase-9/release-candidates/_template/store-review-packet.md',
@@ -452,7 +463,12 @@ for (const script of [
   'phase9:ios-privacy-source-audit',
   'phase9:ios-privacy-source-audit:check',
   'phase9:ios-privacy-source-audit:test',
+  'phase9:ios-archive-privacy-evidence:test',
+  'phase9:release-candidate-git-contract:test',
+  'phase9:verification-wiring:test',
   'phase9:store-build-inspect',
+  'phase9:store-build-inspect:check',
+  'phase9:store-build-inspect:strict',
   'phase9:dependency-sbom',
   'phase9:qa-packet',
   'phase9:verify',
@@ -460,12 +476,29 @@ for (const script of [
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
-const iosPrivacyVerifierScripts = [
-  'phase9:view-shot-privacy:check',
-  'phase9:view-shot-privacy:test',
-  'phase9:ios-privacy-source-audit:test',
-  'phase9:ios-privacy-source-audit:check',
-];
+const iosPrivacyVerifierDefinitions = {
+  'phase9:view-shot-privacy:check':
+    'node scripts/phase9/patch-react-native-view-shot-privacy.mjs --check',
+  'phase9:view-shot-privacy:test':
+    'node --test scripts/phase9/patch-react-native-view-shot-privacy.test.mjs',
+  'phase9:ios-privacy-source-audit:test':
+    'node --test scripts/phase9/ios-privacy-source-audit.test.mjs',
+  'phase9:ios-privacy-source-audit:check':
+    'node scripts/phase9/ios-privacy-source-audit.mjs --check --strict',
+  'phase9:ios-archive-privacy-evidence:test':
+    'node --test scripts/phase9/ios-archive-privacy-evidence.test.mjs',
+  'phase9:release-candidate-git-contract:test':
+    'node --test scripts/phase9/release-candidate-git-contract.test.mjs',
+  'phase9:verification-wiring:test':
+    'node --test scripts/phase9/verification-wiring-contract.test.mjs',
+  'phase9:store-build-inspect:check': 'node scripts/phase9/store-build-inspect.mjs --check',
+};
+block(
+  errors,
+  packageJson.scripts?.['phase9:store-build-inspect:strict'] ===
+    'node scripts/phase9/store-build-inspect.mjs --check --strict',
+  'Strict iOS archive/store inspection must be check-only so it cannot dirty the immutable RC.',
+);
 block(
   errors,
   packageJson.scripts?.postinstall ===
@@ -478,14 +511,13 @@ block(
     'npm --prefix ../.. run phase9:view-shot-privacy:check',
   'The EAS post-install hook must fail closed on the reviewed patched manifest state.',
 );
-for (const script of iosPrivacyVerifierScripts) {
-  block(
-    errors,
-    (packageJson.scripts?.['phase9:verify'] ?? '').includes(`npm run ${script}`) &&
-      (packageJson.scripts?.['launch:verify'] ?? '').includes(`npm run ${script}`) &&
-      has('.github/workflows/quality.yml', new RegExp(`npm run ${script.replaceAll(':', '\\:')}`)),
-    `Phase 9, launch, and CI verification must run ${script}.`,
-  );
+const iosPrivacyWiring = auditVerificationWiring({
+  packageJson,
+  workflowText: read('.github/workflows/quality.yml'),
+  verifierDefinitions: iosPrivacyVerifierDefinitions,
+});
+for (const error of iosPrivacyWiring.errors) {
+  block(errors, false, `iOS privacy verification wiring is invalid: ${error}`);
 }
 for (const output of [
   'docs/phase-9/generated/ios-privacy-source-audit.json',
@@ -869,6 +901,12 @@ function markdownTableValue(source, label) {
   );
 }
 
+function validSignoffDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/u.test(value)) return false;
+  const parsed = new Date(`${value}T00:00:00.000Z`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().startsWith(value);
+}
+
 for (const [key, validate] of [
   ['EXPO_PUBLIC_PRIVACY_URL', productionUrl],
   ['EXPO_PUBLIC_TERMS_URL', productionUrl],
@@ -902,22 +940,6 @@ const releaseCandidateDir = String(env.PHASE9_RELEASE_CANDIDATE_DIR ?? '')
   .replace(/\\/g, '/')
   .replace(/\/+$/g, '');
 if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
-  let gitStatus = '';
-  try {
-    gitStatus = command('git', ['status', '--short']).trim();
-  } catch {
-    block(
-      errors,
-      false,
-      'Current Git status could not be read for release-candidate verification.',
-    );
-  }
-  block(
-    errors,
-    gitStatus.length === 0,
-    'Phase 9 evidence/signoff claims require a clean Git worktree.',
-  );
-
   block(
     errors,
     !placeholder(releaseCandidateDir),
@@ -926,7 +948,7 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
   if (!placeholder(releaseCandidateDir)) {
     block(
       errors,
-      /^docs\/phase-9\/release-candidates\/(?!_template(?:\/|$))[^/]+$/.test(releaseCandidateDir),
+      /^docs\/phase-9\/release-candidates\/rc-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(releaseCandidateDir),
       'PHASE9_RELEASE_CANDIDATE_DIR must point to one immutable non-template folder under docs/phase-9/release-candidates/.',
     );
 
@@ -937,6 +959,7 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
       'manual-qa-matrix.md',
       'security-review.md',
       'privacy-review.md',
+      'ios-archive-privacy-evidence.json',
       'payments-review.md',
       'observability-review.md',
       'store-review-packet.md',
@@ -946,15 +969,23 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
     ];
     const rcFiles = rcFileNames.map((file) => `${releaseCandidateDir}/${file}`);
 
-    for (const file of rcFiles)
+    block(
+      errors,
+      env.PHASE9_IOS_ARCHIVE_PRIVACY_EVIDENCE_PATH ===
+        `${releaseCandidateDir}/ios-archive-privacy-evidence.json`,
+      'PHASE9_IOS_ARCHIVE_PRIVACY_EVIDENCE_PATH must bind the claimed RC archive-evidence JSON.',
+    );
+
+    for (const file of rcFiles) {
       block(errors, exists(file), `${file} is missing from claimed release-candidate evidence.`);
+    }
 
     for (const file of rcFiles) {
       if (!exists(file)) continue;
       block(
         errors,
-        !/\b(?:TBD|BLOCKED)\b/.test(read(file)),
-        `${file} must not contain TBD/BLOCKED placeholders when Phase 9 evidence is claimed.`,
+        !/(?:\b(?:tbd|blocked|pending|todo|unknown)\b|replace_with_)/iu.test(read(file)),
+        `${file} must not contain unresolved placeholders when Phase 9 evidence is claimed.`,
       );
     }
     for (const name of rcFileNames) {
@@ -968,32 +999,102 @@ if (claimedPhase9EvidenceKeys.length > 0 || claimedPhase9Signoff) {
       );
     }
 
-    const manifestPath = `${releaseCandidateDir}/manifest.md`;
-    if (exists(manifestPath)) {
-      const manifestSource = read(manifestPath);
-      const manifestSha = markdownTableValue(manifestSource, 'Git SHA');
-      let currentSha = '';
-      try {
-        currentSha = command('git', ['rev-parse', 'HEAD']).trim();
-      } catch {
+    const signoffPath = `${releaseCandidateDir}/signoff.md`;
+    if (exists(signoffPath)) {
+      const expectedAreas = [
+        'Product',
+        'Engineering',
+        'Security/privacy',
+        'Legal/clinical claims',
+        'Payments/finance',
+        'Support',
+        'Release manager',
+      ];
+      const rows = read(signoffPath)
+        .split(/\r?\n/u)
+        .filter((line) => /^\|.*\|$/u.test(line))
+        .map((line) =>
+          line
+            .slice(1, -1)
+            .split('|')
+            .map((cell) => cell.trim()),
+        )
+        .filter((cells) => cells.length === 5);
+      const signoffs = new Map();
+      for (const area of expectedAreas) {
+        const matchingRows = rows.filter((row) => row[0] === area);
+        block(errors, matchingRows.length === 1, `${signoffPath} must contain one ${area} row.`);
+        if (matchingRows.length !== 1) continue;
+        const [, owner, decision, date, residualRisk] = matchingRows[0];
+        const normalizedOwner = normalizeNamedSignoff(owner);
+        block(errors, Boolean(normalizedOwner), `${signoffPath} ${area} must name a real owner.`);
+        block(errors, decision === 'APPROVE', `${signoffPath} ${area} decision must be APPROVE.`);
         block(
           errors,
-          false,
-          'Current Git SHA could not be read for release-candidate verification.',
+          validSignoffDate(date),
+          `${signoffPath} ${area} must use a real YYYY-MM-DD date.`,
         );
+        block(
+          errors,
+          Boolean(residualRisk) &&
+            !/(?:\b(?:tbd|blocked|pending|todo|unknown)\b|replace_with_)/iu.test(residualRisk),
+          `${signoffPath} ${area} must record reviewed residual risk.`,
+        );
+        if (normalizedOwner) signoffs.set(area, normalizedOwner);
       }
       block(
         errors,
-        /^[a-f0-9]{40}$/i.test(manifestSha),
-        `${manifestPath} must contain a full 40-character Git SHA.`,
+        signoffs.get('Release manager') === normalizeNamedSignoff(env.PHASE9_SIGNED_OFF_BY),
+        'PHASE9_SIGNED_OFF_BY must match the RC release-manager signoff owner.',
       );
-      if (currentSha && /^[a-f0-9]{40}$/i.test(manifestSha)) {
+      block(
+        errors,
+        signoffs.get('Security/privacy') !== signoffs.get('Release manager'),
+        'Security/privacy and release-manager signoffs must be distinct people.',
+      );
+    }
+
+    const manifestPath = `${releaseCandidateDir}/manifest.md`;
+    if (exists(manifestPath)) {
+      const manifestSource = read(manifestPath);
+      const manifestSha = markdownTableValue(manifestSource, 'Build-source Git SHA');
+      block(
+        errors,
+        /^[a-f0-9]{40}$/.test(manifestSha),
+        `${manifestPath} must contain the full lowercase build-source Git SHA.`,
+      );
+      if (/^[a-f0-9]{40}$/.test(manifestSha)) {
         block(
           errors,
-          manifestSha.toLowerCase() === currentSha.toLowerCase(),
-          `${manifestPath} Git SHA must match the current commit (${currentSha}).`,
+          env.PHASE9_IOS_SOURCE_GIT_SHA === manifestSha,
+          'PHASE9_IOS_SOURCE_GIT_SHA must match the RC manifest build-source SHA.',
         );
+        try {
+          const gitAudit = auditReleaseCandidateGitContract({
+            root: process.cwd(),
+            sourceGitSha: manifestSha,
+            releaseCandidateDir,
+            requiredTrackedFiles: rcFiles,
+          });
+          for (const error of gitAudit.errors) {
+            block(errors, false, `Phase 9 release-candidate Git contract: ${error}`);
+          }
+        } catch {
+          block(errors, false, 'Phase 9 release-candidate Git contract could not be evaluated.');
+        }
       }
+    }
+  }
+
+  if (strict) {
+    try {
+      command(process.execPath, ['scripts/phase9/store-build-inspect.mjs', '--check', '--strict']);
+    } catch {
+      block(
+        errors,
+        false,
+        'Strict Phase 9 release smoke requires strict archive/store inspection to pass for the same environment.',
+      );
     }
   }
 }

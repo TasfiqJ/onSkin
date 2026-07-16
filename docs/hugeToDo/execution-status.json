@@ -615,7 +615,7 @@
       "id": "IOS-08",
       "status": "blocked",
       "blockedBy": ["IOS-07"],
-      "nextAction": "Run the exact EAS production profile and retain the build log proving sdk-56 resolved to Xcode 26 or later and the iOS 26 SDK or later; re-check Apple's upload requirement on the build date.",
+      "nextAction": "Run EAS CLI 21.0.1 with committed input and the exact production profile pinned to macos-tahoe-26.4-xcode-26.4; retain the build UUID, Git SHA, full log, post-increment build number, and resolved environment, then re-check Expo's inventories and Apple's upload requirement on the build date.",
       "evidenceRefs": [
         "apps/mobile/eas.json",
         "docs/phase-5/native-build-runbook.md",
@@ -626,12 +626,18 @@
       "id": "IOS-09",
       "status": "in_progress",
       "blockedBy": ["IOS-08", "H-08"],
-      "nextAction": "Freeze and hash the exact production xcarchive and build identity, retain its Podfile.lock or SPM resolution, then inspect the merged privacy report, per-bundle manifest ledger, required-reason APIs, resolved SDK identities/signatures, entitlements/signing, symbols, binary metadata, and every App Store processing warning. Reconcile the archive to the source audit without treating source-valid manifests or review booleans as archive proof.",
+      "nextAction": "Complete the RC ios-archive-privacy-evidence.json with the exact .xcarchive.zip or IPA, EAS UUID/source SHA/log, resolved lock and environment, merged privacy report, per-bundle manifest and required-reason ledgers, SDK/signature, entitlement/signing, symbol/binary/processing, traffic/storage, and App Privacy artifacts. Record it in one direct tracked RC-only evidence commit with distinct named approval metadata, then run phase9:store-build-inspect:strict; do not treat index validation, source-valid manifests, or review booleans as proof of opaque report contents.",
       "evidenceRefs": [
         "docs/hugeToDo/IOS-09-IOS-PRIVACY-SOURCE-CHECKPOINT-2026-07-16.md",
         "scripts/phase9/ios-privacy-source-audit.mjs",
         "docs/phase-9/generated/ios-privacy-source-audit.json",
         "docs/phase-9/generated/ios-privacy-source-audit.md",
+        "scripts/phase9/ios-archive-privacy-evidence.mjs",
+        "scripts/phase9/ios-archive-privacy-evidence.test.mjs",
+        "scripts/phase9/ios-release-candidate-cross-binding.mjs",
+        "scripts/phase9/release-candidate-git-contract.mjs",
+        "scripts/phase9/release-candidate-git-contract.test.mjs",
+        "docs/phase-9/release-candidates/_template/ios-archive-privacy-evidence.json",
         "scripts/phase9/store-build-inspect.mjs",
         "docs/phase-9/generated/store-build-inspection.json",
         "docs/phase-9/dependency-sbom.md",
@@ -1848,11 +1854,12 @@
     {
       "id": "STORE-04",
       "status": "in_progress",
-      "blockedBy": ["STORE-03", "H-07"],
-      "nextAction": "Use the installed-source audit only as an input, then reconcile the exact production archive plus observed release-candidate traffic and storage to every first-party and SDK data category, purpose, linkage, tracking, retention, and sharing answer. Obtain named privacy/legal review and publish the final privacy choices URL before completing App Privacy.",
+      "blockedBy": ["STORE-03", "IOS-09", "H-07"],
+      "nextAction": "Use the installed-source audit only as an input, complete the hash-bound RC evidence index, and reconcile its exact production archive plus observed traffic/storage artifacts to every first-party and SDK data category, purpose, linkage, tracking, retention, and sharing answer. Obtain named privacy/legal review tied to that same EAS build and publish the final privacy choices URL before completing App Privacy.",
       "evidenceRefs": [
         "docs/hugeToDo/IOS-09-IOS-PRIVACY-SOURCE-CHECKPOINT-2026-07-16.md",
         "docs/phase-9/generated/ios-privacy-source-audit.json",
+        "docs/phase-9/release-candidates/_template/ios-archive-privacy-evidence.json",
         "docs/store-privacy-inventory.md",
         "docs/phase-9/observability-payload-audit.md",
         "docs/hugeToDo/APPLE_REVIEW_FEATURE_ACCEPTANCE_MATRIX.md",
@@ -1885,10 +1892,12 @@
       "id": "STORE-07",
       "status": "in_progress",
       "blockedBy": ["STORE-06", "H-01", "H-05", "H-08"],
-      "nextAction": "After all native, legal, privacy, payment, and production gates close, build the frozen production candidate, inspect the exact artifact, select it in App Store Connect, and resolve all processing, export, privacy, entitlement, symbol, signature, and SDK warnings until Ready for Review.",
+      "nextAction": "After all native, legal, privacy, payment, and production gates close, validate the completed tracked RC evidence index with phase9:store-build-inspect:strict, select that exact bundle/version/build in App Store Connect, and retain hash-bound processing/upload evidence while resolving every export, privacy, entitlement, symbol, signature, and SDK warning until Ready for Review.",
       "evidenceRefs": [
         "scripts/phase9/store-build-inspect.mjs",
         "docs/phase-9/generated/store-build-inspection.json",
+        "docs/phase-9/release-candidates/_template/ios-archive-privacy-evidence.json",
+        "docs/phase-9/release-candidates/_template/store-review-packet.md",
         "docs/phase-5/native-build-runbook.md",
         "docs/phase-11/store-release-plan.md"
       ]

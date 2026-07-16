@@ -99,7 +99,7 @@ function checkedRoot(rootValue) {
   const absolute = resolve(rootValue);
   let stat;
   try {
-    stat = lstatSync(absolute);
+    stat = lstatSync(absolute, { bigint: true });
   } catch (error) {
     fail('ROOT_MISSING', 'The repository root does not exist.', error);
   }
@@ -156,7 +156,7 @@ function checkedPath(root, relativePath, expectedType) {
     current = join(current, segment);
     let stat;
     try {
-      stat = lstatSync(current);
+      stat = lstatSync(current, { bigint: true });
     } catch (error) {
       fail('PATH_RACE', 'A pinned dependency path changed while it was inspected.', error);
     }
@@ -185,7 +185,11 @@ function checkedPath(root, relativePath, expectedType) {
     fail('PATH_ESCAPE', 'A pinned dependency path resolves outside the repository root.');
   }
 
-  return Object.freeze({ absolute: current, relative: relativePath, stat: lstatSync(current) });
+  return Object.freeze({
+    absolute: current,
+    relative: relativePath,
+    stat: lstatSync(current, { bigint: true }),
+  });
 }
 
 function sameFileIdentity(left, right) {
@@ -194,24 +198,24 @@ function sameFileIdentity(left, right) {
 
 function readCheckedFile(root, relativePath, maximumBytes) {
   const file = checkedPath(root, relativePath, 'file');
-  if (file.stat.size <= 0 || file.stat.size > maximumBytes) {
+  if (file.stat.size <= 0n || file.stat.size > BigInt(maximumBytes)) {
     fail('FILE_SIZE', `The pinned file has an invalid size: ${relativePath}.`);
   }
 
   let descriptor;
   try {
     descriptor = openSync(file.absolute, constants.O_RDONLY);
-    const opened = fstatSync(descriptor);
+    const opened = fstatSync(descriptor, { bigint: true });
     if (!opened.isFile() || !sameFileIdentity(file.stat, opened)) {
       fail('PATH_RACE', 'A pinned dependency file changed while it was opened.');
     }
     const bytes = readFileSync(descriptor);
-    const finished = fstatSync(descriptor);
+    const finished = fstatSync(descriptor, { bigint: true });
     if (
       !sameFileIdentity(opened, finished) ||
       opened.size !== finished.size ||
-      opened.mtimeMs !== finished.mtimeMs ||
-      bytes.length !== finished.size
+      opened.mtimeNs !== finished.mtimeNs ||
+      BigInt(bytes.length) !== finished.size
     ) {
       fail('PATH_RACE', 'A pinned dependency file changed while it was read.');
     }
@@ -344,7 +348,7 @@ function atomicPatch(root, original) {
     descriptor = openSync(
       temporaryPath,
       constants.O_CREAT | constants.O_EXCL | constants.O_WRONLY,
-      original.stat.mode & 0o777,
+      Number(original.stat.mode & 0o777n),
     );
     temporaryCreated = true;
     writeFileSync(descriptor, PATCHED_MANIFEST_BYTES);
@@ -352,7 +356,7 @@ function atomicPatch(root, original) {
     closeSync(descriptor);
     descriptor = undefined;
 
-    const temporaryStat = lstatSync(temporaryPath);
+    const temporaryStat = lstatSync(temporaryPath, { bigint: true });
     const temporaryBytes = readFileSync(temporaryPath);
     if (
       temporaryStat.isSymbolicLink() ||
@@ -368,7 +372,7 @@ function atomicPatch(root, original) {
     if (
       !sameFileIdentity(original.stat, current.stat) ||
       current.stat.size !== original.stat.size ||
-      current.stat.mtimeMs !== original.stat.mtimeMs
+      current.stat.mtimeNs !== original.stat.mtimeNs
     ) {
       fail('PATH_RACE', 'The privacy manifest changed before atomic replacement.');
     }

@@ -234,10 +234,13 @@ packets:
 npm run launch:verify
 ```
 
-This command runs the source-packet, Tas-owned blocker, readiness-status, strict
-brand, device-support-policy, performance-readiness, generated-packet, and
-human-E2E manifest checks; the Phase 5 native config guard; the Phase 7
-core-loop and Phase 8 growth/store code gates; Phase 9 release smoke, Phase 10
+This command first checks the exact third-party privacy patch, installed-source
+audit, typed archive evidence index, release-candidate Git provenance, active
+package/CI wiring, and non-writing store inspector. It then runs the
+source-packet, Tas-owned blocker, readiness-status, strict brand,
+device-support-policy, performance-readiness, generated-packet, and human-E2E
+manifest checks; the Phase 5 native config guard; the Phase 7 core-loop and
+Phase 8 growth/store code gates; Phase 9 release smoke, Phase 10
 beta readiness, Phase 10 beta analytics audit, Phase 11 launch readiness, and
 launch ring gates; then typecheck, lint, and tests. It does not replace the
 phase packet builders after generated evidence changes.
@@ -245,6 +248,14 @@ phase packet builders after generated evidence changes.
 The current root sweep must include these non-mutating gates:
 
 - `npm run docs:source-packet-audit:check`
+- `npm run phase9:view-shot-privacy:check`
+- `npm run phase9:view-shot-privacy:test`
+- `npm run phase9:ios-privacy-source-audit:test`
+- `npm run phase9:ios-privacy-source-audit:check`
+- `npm run phase9:ios-archive-privacy-evidence:test`
+- `npm run phase9:release-candidate-git-contract:test`
+- `npm run phase9:verification-wiring:test`
+- `npm run phase9:store-build-inspect:check`
 - `npm run docs:tas-todo-audit:check`
 - `npm run docs:readiness-status-audit:check`
 - `npm run brand:audit:strict`

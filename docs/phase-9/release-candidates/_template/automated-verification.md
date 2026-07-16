@@ -5,6 +5,11 @@
 | Typecheck             | TBD        | TBD    | TBD      |
 | Lint                  | TBD        | TBD    | TBD      |
 | Unit tests            | TBD        | TBD    | TBD      |
+| iOS privacy patch     | TBD        | TBD    | TBD      |
+| iOS source audit      | TBD        | TBD    | TBD      |
+| Archive index tests   | TBD        | TBD    | TBD      |
+| RC Git contract       | TBD        | TBD    | TBD      |
+| Verification wiring   | TBD        | TBD    | TBD      |
 | Phase 9 release smoke | TBD        | TBD    | TBD      |
 | RLS contract smoke    | TBD        | TBD    | TBD      |
 | RLS adversarial       | TBD        | TBD    | TBD      |

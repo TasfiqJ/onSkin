@@ -352,11 +352,16 @@ require(existsSync(
   resolve(root, 'apps/mobile/src/features/native/camera/barcode.ts'),
 ), 'Barcode normalization module is missing.');
 
+require(eas.cli?.version === '21.0.1', 'EAS CLI must be pinned to the reviewed 21.0.1 release.');
+require(eas.cli?.requireCommit === true, 'EAS builds must require committed source before upload.');
+require(eas.cli?.appVersionSource ===
+  'local', 'EAS app-version source must remain local for reviewed release manifests.');
+
 for (const profile of ['development', 'staging', 'production']) {
   const env = eas.build?.[profile]?.env ?? {};
   require(Boolean(eas.build?.[profile]), `EAS profile ${profile} is missing.`);
   require(eas.build?.[profile]?.ios?.image ===
-    'sdk-56', `EAS profile ${profile} must use the Expo SDK 56 iOS image alias (currently Xcode 26.4 / iOS 26 SDK); confirm the resolved image and toolchain in every build log.`);
+    'macos-tahoe-26.4-xcode-26.4', `EAS profile ${profile} must use the reviewed full Expo iOS image name (Xcode 26.4 / iOS 26.4 SDK); confirm the resolved image and toolchain in every build log because Expo may apply minor image updates.`);
   require(env.APP_VARIANT === profile, `EAS profile ${profile} must set APP_VARIANT=${profile}.`);
   require(env.EXPO_PUBLIC_NATIVE_CAMERA_ENABLED ===
     'true', `EAS profile ${profile} must enable native camera explicitly.`);
