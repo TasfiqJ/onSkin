@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-16T03:41:05.701Z",
+  "generatedAt": "2026-07-16T04:23:20.775Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "250eb9d70cd0413aa0c10b4523bb41be50b68847",
+  "gitSha": "3b4bbdf75af48c8f474571b6e7fd310c4e359e19",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -43,8 +43,8 @@
       "requiredReviewer": "qualified trademark, copyright, and product/FTO counsel",
       "path": "docs/phase-3/ip-fto-review-log.md",
       "exists": true,
-      "bytes": 5378,
-      "sha256": "86a8a2ce8a7172b87e04769a7f605f3b714f154de88b4e20952e5f83ee27cac5"
+      "bytes": 5970,
+      "sha256": "1390a72dfca7fad682173b6f097497b3bedba65c15c4e0391d1dfca2894ae0f1"
     }
   ],
   "summary": {
@@ -60,7 +60,7 @@
       "notCleared": 22,
       "blocked": 15
     },
-    "sourcePathCount": 408,
+    "sourcePathCount": 415,
     "missingSourcePathCount": 0,
     "signedItemCount": 0,
     "unsignedReleaseDispositionCount": 0,
@@ -2888,25 +2888,67 @@
       "domain": "ipFto",
       "requiredReviewer": "qualified trademark, copyright, and product/FTO counsel",
       "area": "Brand and trademark clearance",
-      "sourceText": "`docs/brand-decision-memo.md`, `docs/brand-evidence.md`, `apps/mobile/app.base.json`, `apps/mobile/app.config.js`",
-      "currentBehavior": "RoutineKind is a working candidate only",
+      "sourceText": "`docs/brand-decision-memo.md`, `docs/brand-evidence.md`, `docs/hugeToDo/BRAND-01-naming-brief.md`, `docs/hugeToDo/BRAND-02-scored-longlist.md`, `docs/hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md`, `docs/hugeToDo/BRAND-04-recommendation.md`, `docs/hugeToDo/BRAND-05-counsel-clearance-packet.md`, `docs/hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/query-ledger.md`, `docs/hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json`, `apps/mobile/app.base.json`, `apps/mobile/app.config.js`",
+      "currentBehavior": "Working sequence for counsel review is RoutineKind, Ritunera, then lower-confidence Ritualoom; Rituvia is suspended",
       "reviewer": "TBD",
       "date": "TBD",
       "status": "Blocked",
       "statusBucket": "blocked",
-      "notes": "Counsel, domain/store/package/social reservation evidence required.",
+      "notes": "Counsel must independently clear or reject the exact sequence and review the recorded comparators. Preliminary search completion is not clearance. Later founder selection and asset reservations are separate identity gates.",
       "sourcePaths": [
         {
           "path": "docs/brand-decision-memo.md",
           "exists": true,
-          "bytes": 5729,
-          "sha256": "30f89ff0e2cffab9c53911815f8f9e9b41279396b74976c07f18dc21089bcf99"
+          "bytes": 6469,
+          "sha256": "c2506dfb241232eb5bab07ed5aa4a5d24900790a36c54eed6af7d615d767b612"
         },
         {
           "path": "docs/brand-evidence.md",
           "exists": true,
-          "bytes": 14591,
-          "sha256": "f532064e51df74c5aa3bce5c4867541a50cc33bfe35ec68bb9b4d741617363e4"
+          "bytes": 16884,
+          "sha256": "2a3dd031af6306949384b2ccdcadc1753a2624917eb06df6a6f4ededa8343b4d"
+        },
+        {
+          "path": "docs/hugeToDo/BRAND-01-naming-brief.md",
+          "exists": true,
+          "bytes": 6817,
+          "sha256": "4f3c0538267266d6f5524fd975ff88f550eceef0a9c1c1fb27b0aa795972c1c8"
+        },
+        {
+          "path": "docs/hugeToDo/BRAND-02-scored-longlist.md",
+          "exists": true,
+          "bytes": 11085,
+          "sha256": "a739776fc8ea0a379a5a84f408d2ca41d5f296041c092f91b86cf1261233094d"
+        },
+        {
+          "path": "docs/hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md",
+          "exists": true,
+          "bytes": 39101,
+          "sha256": "e06e30ed883175f267b4b179310388cc91b5fb80c30e9c15890424295d8adfc2"
+        },
+        {
+          "path": "docs/hugeToDo/BRAND-04-recommendation.md",
+          "exists": true,
+          "bytes": 6763,
+          "sha256": "235a4a4f23f22db1e3beab5fae20225db39d6f793d8295152fb3686cabe39cc1"
+        },
+        {
+          "path": "docs/hugeToDo/BRAND-05-counsel-clearance-packet.md",
+          "exists": true,
+          "bytes": 25569,
+          "sha256": "26e61d98d50f182a00ca1d3ad62ba512b5a88425b8bca7055b50602494cdaed8"
+        },
+        {
+          "path": "docs/hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/query-ledger.md",
+          "exists": true,
+          "bytes": 10268,
+          "sha256": "ce1554dad59bdca4134f1c170556b98d988b9440c0e1d090b06a08432fdecbb3"
+        },
+        {
+          "path": "docs/hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json",
+          "exists": true,
+          "bytes": 3674,
+          "sha256": "432f31667d8d145524059e3791cbb2fad1a857bf89017f9c2f5c58c1e307ea8d"
         },
         {
           "path": "apps/mobile/app.base.json",
@@ -2922,7 +2964,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "cde5e46969ab3347a61d04e8922c66ccb96f3c574174eb499f479045f706c385",
+      "reviewSnapshotSha256": "1c735156525fc46cbf9d53c403be2c9696f76b52022345fffc370336043384ae",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -3210,12 +3252,12 @@
         {
           "path": "docs/brand-decision-memo.md",
           "exists": true,
-          "bytes": 5729,
-          "sha256": "30f89ff0e2cffab9c53911815f8f9e9b41279396b74976c07f18dc21089bcf99"
+          "bytes": 6469,
+          "sha256": "c2506dfb241232eb5bab07ed5aa4a5d24900790a36c54eed6af7d615d767b612"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "cc2ec257a383805bff4eee340b7b0171c6bdeff37fb730a8d3806f1c3c660e3b",
+      "reviewSnapshotSha256": "a191de682d4388380ef6e5bdd7992a2b86cfc8d5a412cbdfaa615f3d3beac1c5",
       "signoff": null,
       "signoffStatus": "not-applicable"
     }

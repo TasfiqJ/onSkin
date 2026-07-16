@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-16T03:41:05.701Z
+Generated: 2026-07-16T04:23:20.775Z
 Status: pass
-Git SHA: 250eb9d70cd0413aa0c10b4523bb41be50b68847
+Git SHA: 3b4bbdf75af48c8f474571b6e7fd310c4e359e19
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -13,7 +13,7 @@ reviewers must inspect before launch gates can close.
 ## Summary
 
 - Review items: 37
-- Source files hashed: 408
+- Source files hashed: 415
 - Missing source files: 0
 - Current detached signoffs: 0
 - Release dispositions missing signoff: 0
@@ -55,7 +55,7 @@ reviewers must inspect before launch gates can close.
 | privacySecurity   | Account deletion and data export                  | Blocked     | TBD      | TBD  | not-applicable | 15      | 0               |
 | privacySecurity   | Analytics and crash payloads                      | Not cleared | TBD      | TBD  | not-applicable | 16      | 0               |
 | privacySecurity   | Auth and processor posture                        | Blocked     | TBD      | TBD  | not-applicable | 50      | 0               |
-| ipFto             | Brand and trademark clearance                     | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
+| ipFto             | Brand and trademark clearance                     | Blocked     | TBD      | TBD  | not-applicable | 11      | 0               |
 | ipFto             | Native identifiers and callbacks                  | Blocked     | TBD      | TBD  | not-applicable | 3       | 0               |
 | ipFto             | Onboarding quiz FTO                               | Blocked     | TBD      | TBD  | not-applicable | 4       | 0               |
 | ipFto             | Public positioning differentiation                | Not cleared | TBD      | TBD  | not-applicable | 3       | 0               |
@@ -875,15 +875,22 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `cde5e46969ab3347a61d04e8922c66ccb96f3c574174eb499f479045f706c385`
+- Review snapshot SHA-256: `1c735156525fc46cbf9d53c403be2c9696f76b52022345fffc370336043384ae`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
-- Review-log notes: Counsel, domain/store/package/social reservation evidence required.
+- Review-log notes: Counsel must independently clear or reject the exact sequence and review the recorded comparators. Preliminary search completion is not clearance. Later founder selection and asset reservations are separate identity gates.
 
 Sources:
 
-- `docs/brand-decision-memo.md` - 5729 bytes - sha256 `30f89ff0e2cffab9c53911815f8f9e9b41279396b74976c07f18dc21089bcf99`
-- `docs/brand-evidence.md` - 14591 bytes - sha256 `f532064e51df74c5aa3bce5c4867541a50cc33bfe35ec68bb9b4d741617363e4`
+- `docs/brand-decision-memo.md` - 6469 bytes - sha256 `c2506dfb241232eb5bab07ed5aa4a5d24900790a36c54eed6af7d615d767b612`
+- `docs/brand-evidence.md` - 16884 bytes - sha256 `2a3dd031af6306949384b2ccdcadc1753a2624917eb06df6a6f4ededa8343b4d`
+- `docs/hugeToDo/BRAND-01-naming-brief.md` - 6817 bytes - sha256 `4f3c0538267266d6f5524fd975ff88f550eceef0a9c1c1fb27b0aa795972c1c8`
+- `docs/hugeToDo/BRAND-02-scored-longlist.md` - 11085 bytes - sha256 `a739776fc8ea0a379a5a84f408d2ca41d5f296041c092f91b86cf1261233094d`
+- `docs/hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md` - 39101 bytes - sha256 `e06e30ed883175f267b4b179310388cc91b5fb80c30e9c15890424295d8adfc2`
+- `docs/hugeToDo/BRAND-04-recommendation.md` - 6763 bytes - sha256 `235a4a4f23f22db1e3beab5fae20225db39d6f793d8295152fb3686cabe39cc1`
+- `docs/hugeToDo/BRAND-05-counsel-clearance-packet.md` - 25569 bytes - sha256 `26e61d98d50f182a00ca1d3ad62ba512b5a88425b8bca7055b50602494cdaed8`
+- `docs/hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/query-ledger.md` - 10268 bytes - sha256 `ce1554dad59bdca4134f1c170556b98d988b9440c0e1d090b06a08432fdecbb3`
+- `docs/hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json` - 3674 bytes - sha256 `432f31667d8d145524059e3791cbb2fad1a857bf89017f9c2f5c58c1e307ea8d`
 - `apps/mobile/app.base.json` - 2949 bytes - sha256 `24e1d20a0c61544d2ecb71e39dacafcb17d03a3f20fc7f8e80bf449d900d005c`
 - `apps/mobile/app.config.js` - 12565 bytes - sha256 `3c8de04b4d7452e7c41922d4202e934f8f201769be01095503b3969ad3fde0a5`
 
@@ -973,7 +980,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `cc2ec257a383805bff4eee340b7b0171c6bdeff37fb730a8d3806f1c3c660e3b`
+- Review snapshot SHA-256: `a191de682d4388380ef6e5bdd7992a2b86cfc8d5a412cbdfaa615f3d3beac1c5`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Final watermark, domain, Universal Links/App Links, and attribution copy.
@@ -988,7 +995,7 @@ Sources:
 - `apps/mobile/src/features/growth/shareLandingRoute.test.ts` - 1531 bytes - sha256 `a2359a07e6efe0b61846a85c42757284975ebedd05e2085dc6e8a9589da546ae`
 - `apps/mobile/src/features/growth/shareLinks.ts` - 1224 bytes - sha256 `0173ed4e39393e7c16a597b305f15c02b471f70041574ca785d161137a4b7e4d`
 - `docs/14-growth-to-seven-figures.md` - 57855 bytes - sha256 `a88aa20f72a65f653000e1c445878403e6effb983cc40181168e7de804a1dfd0`
-- `docs/brand-decision-memo.md` - 5729 bytes - sha256 `30f89ff0e2cffab9c53911815f8f9e9b41279396b74976c07f18dc21089bcf99`
+- `docs/brand-decision-memo.md` - 6469 bytes - sha256 `c2506dfb241232eb5bab07ed5aa4a5d24900790a36c54eed6af7d615d767b612`
 
 ## Blockers
 
