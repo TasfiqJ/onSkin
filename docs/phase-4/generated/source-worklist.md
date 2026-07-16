@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-16T19:55:45.921Z
+Generated: 2026-07-16T20:08:32.347Z
 Status: pass
-Git SHA: 728bb3b364d3ce094cbdc53da7c1d673420e0585
+Git SHA: d06ae896efeab43e53e09733cae555dc57895fdb
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -146,7 +146,7 @@ Sources:
 - `scripts/phase4/catalog-qa-report-smoke.mjs` - 5504 bytes - sha256 `43e8b217e0a8276e0299f2477ddb3b4ab9536521d745514be2a48e68e7bf97a1`
 - `scripts/phase4/import-obf-snapshot.mjs` - 4856 bytes - sha256 `bf5721fac6d5b11e0ca0c99b2b883330af6eb22c66763ed316ebe98b229597bf`
 - `scripts/phase4/import-cosing-dictionary.mjs` - 4085 bytes - sha256 `ca08b1f6a8986c00f9850b6f87ec5de5250a7ad217f28c382674016f3bf0244b`
-- `scripts/docs/generated-packet-status-audit.mjs` - 11726 bytes - sha256 `0618ffa7f0651f696d9a6243e5840bb3f35531c7dbd3844916f3e6d77f63bbdb`
+- `scripts/docs/generated-packet-status-audit.mjs` - 12271 bytes - sha256 `64e5738be3438fb22f53537838b40e865165124e3695d2ff75cb811e9ed9b7f9`
 
 ### beta-coverage - Closed-beta catalog coverage and correction loop
 

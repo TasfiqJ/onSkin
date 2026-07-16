@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T19:56:11.217Z",
+  "generatedAt": "2026-07-16T20:08:53.033Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\ios-privacy-source\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "728bb3b364d3ce094cbdc53da7c1d673420e0585",
+  "gitSha": "d06ae896efeab43e53e09733cae555dc57895fdb",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -186,13 +186,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 46713,
-      "sha256": "3fe8478cbbb2bbba32dd531751e61a689f56edb568023cb9d0d5c0ca3f25b485"
+      "sha256": "3e6099394d8dd1606d76f1a0d6120804a1b99bcc4a32a672a07eb71ea577e261"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 28928,
-      "sha256": "55df90c1a5dbd640dbb892ee54cc927bfa3158e6af4f890a7ad748dc13e8179e"
+      "sha256": "d6531abd8d0dac31bb75cfd44690b0eae57f84e78ab7348aa730deb7553db718"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -210,13 +210,13 @@
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
       "bytes": 7504,
-      "sha256": "422aeceee3a590f26aa0d2450c0439400056de675c8db017a35064470322b3d3"
+      "sha256": "1e76bce15a55a297a61f14e9eb28a364796a1f3acf5a3bf78e709936d6203a9a"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 4055,
-      "sha256": "9613f7c4893bd1f6926882b8cd3f3304ec1cd6d43ba261ecb7dd0b0d26489c3d"
+      "sha256": "ce025a5144e04589e7a35319a335108fbdb572bf3896d03841e2ef22b5683ddc"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",
