@@ -6,6 +6,33 @@ This is an engineering draft for Apple App Privacy and Google Play Data Safety.
 Counsel must review it against the final policies and actual production
 configuration before store submission.
 
+## iOS Privacy Source Evidence Boundary
+
+The 2026-07-16 deterministic installed-source audit reports
+`archive_required`: 63 native npm packages, 14/14 source-valid privacy
+manifests, 14 manifest-resource source bindings still requiring archive
+verification, 139 podspecs, 16 XCFramework candidates, no standalone framework
+or `.a`/`.dylib` candidates, ten exact Apple SDK-list intersections, zero
+errors, and 15 warnings. It also verifies the exact-hash repair for the invalid
+empty `NSPrivacyAccessedAPITypes` array in the reviewed
+`react-native-view-shot` source.
+
+This result is an engineering input to this inventory, not a store answer. Ruby
+podspec tokens are source candidates rather than evaluated CocoaPods or archive
+proof. The audit excludes first-party/linked source, generated Expo prebuild,
+resolved CocoaPods/SPM output, and the production archive; first-party sources
+have separate validators and the other surfaces remain gates.
+
+Before App Privacy answers are completed, reconcile the exact production
+`.xcarchive`, build identity/hash, resolved `Podfile.lock`/SPM record, merged
+privacy report, manifest and required-API ledgers, SDK signatures,
+signing/entitlements/symbols/processing results, and observed network/storage
+behavior to every category, purpose, linkage, tracking, sharing, and retention
+answer. Named privacy/legal and supported-device signoffs must reference that
+same release evidence and the final published URLs. Source-valid does not mean
+archive-valid, label-complete, legally compliant, Apple-approved, or
+commercially successful.
+
 ## Data Categories
 
 | Category                   | Current app use                                                                                                                                                                        | Shared with                                                         | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |

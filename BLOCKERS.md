@@ -872,6 +872,18 @@ Source manifests and draft policy packets do not establish what the frozen
 release binary actually sends or stores, and placeholder links or a
 short-lived/privileged account cannot support App Review.
 
+Current source checkpoint: the deterministic installed-npm audit reports
+`archive_required` with 63 native packages, 14/14 source-valid manifests, 14
+manifest-resource source candidates still requiring archive verification, 139
+podspecs, 16 XCFramework candidates, ten Apple SDK-list intersections, zero
+errors, and 15 warnings. The exact-hash repair removes the invalid empty
+`NSPrivacyAccessedAPITypes` array from the reviewed `react-native-view-shot`
+source and fails closed on drift. This closes the known installed-source defect
+only. Ruby podspec tokens are not evaluated CocoaPods output; first-party and
+generated native source have separate validators; and no production archive,
+merged report, SDK signature, runtime data-flow, label, legal, or App Review
+proof is implied.
+
 Exit criteria:
 
 - inspect the exact archived iOS build and reconcile its privacy manifest,

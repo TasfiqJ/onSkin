@@ -19,6 +19,7 @@ import {
   loadLaunchContract,
   platformRequirementStatus,
 } from '../launch/contract.mjs';
+import { auditIosPrivacySource } from './ios-privacy-contract.mjs';
 
 const errors = [];
 const warnings = [];
@@ -35,6 +36,21 @@ const productionIdentityConfigErrorPatterns = [
   /BRAND_LEGAL_CLEARANCE=cleared/,
   /explicit final native identity env values/,
 ];
+let iosPrivacySourceAudit = null;
+try {
+  iosPrivacySourceAudit = auditIosPrivacySource();
+  block(
+    errors,
+    iosPrivacySourceAudit.status !== 'source_invalid',
+    `Installed iOS privacy source audit is invalid (${iosPrivacySourceAudit.summary.errorCount} errors).`,
+  );
+} catch (error) {
+  block(
+    errors,
+    false,
+    `Installed iOS privacy source audit could not run: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
 
 function appConfigForVariant(variant) {
   const previousVariant = process.env.APP_VARIANT;
@@ -263,7 +279,12 @@ if (androidReleaseRequired) {
 warn(
   warnings,
   evidenceFlagEnabled(env.PHASE9_IOS_PRIVACY_REPORT_PASS),
-  'Missing iOS privacy report/privacy manifest evidence: PHASE9_IOS_PRIVACY_REPORT_PASS=true.',
+  'Missing iOS privacy-report reviewer metadata flag: PHASE9_IOS_PRIVACY_REPORT_PASS=true. This flag is not archive evidence.',
+);
+warn(
+  warnings,
+  false,
+  'Exact production archive privacy verification remains required: merged privacy report, manifest ledger, required-reason APIs, SDK signatures, entitlements, symbols, binary processing, observed traffic, and App Privacy answers.',
 );
 warn(
   warnings,
@@ -331,6 +352,18 @@ write(
         ]),
       ),
       artifacts,
+      iosPrivacySourceAudit: iosPrivacySourceAudit
+        ? {
+            status: iosPrivacySourceAudit.status,
+            claims: iosPrivacySourceAudit.claims,
+            scope: iosPrivacySourceAudit.scope,
+            summary: iosPrivacySourceAudit.summary,
+            inputs: iosPrivacySourceAudit.inputs,
+            ledgerHashes: iosPrivacySourceAudit.ledgerHashes,
+            archiveReviewerMetadataFlag: evidenceFlagEnabled(env.PHASE9_IOS_PRIVACY_REPORT_PASS),
+            archiveEvidenceValidated: false,
+          }
+        : null,
       blockers: errors,
       warnings,
     },

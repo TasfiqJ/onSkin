@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "generatedFromOfficialSource": {
+    "url": "https://developer.apple.com/support/third-party-SDK-requirements/",
+    "retrievedAt": "2026-07-16",
+    "sourceTitle": "Third-party SDK requirements"
+  },
+  "effectiveRequirements": {
+    "toolchain": {
+      "effectiveDate": "2026-04-28",
+      "minimumXcodeMajor": 26,
+      "minimumIosSdkMajor": 26,
+      "scope": "Apps uploaded to App Store Connect"
+    },
+    "requiredReasonApis": {
+      "effectiveDate": "2024-05-01",
+      "scope": "App code and included third-party SDK code"
+    },
+    "thirdPartySdks": {
+      "privacyManifestRequired": true,
+      "signatureRequiredForBinaryDependencies": true,
+      "anyVersionAndRepackagedSdkIncluded": true
+    }
+  },
+  "requiredReasonApiCategories": [
+    {
+      "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+      "allowedReasonIds": ["DDA9.1", "C617.1", "3B52.1", "0A2A.1"]
+    },
+    {
+      "category": "NSPrivacyAccessedAPICategorySystemBootTime",
+      "allowedReasonIds": ["35F9.1", "8FFB.1", "3D61.1"]
+    },
+    {
+      "category": "NSPrivacyAccessedAPICategoryDiskSpace",
+      "allowedReasonIds": ["85F4.1", "E174.1", "7D9E.1", "B728.1"]
+    },
+    {
+      "category": "NSPrivacyAccessedAPICategoryActiveKeyboards",
+      "allowedReasonIds": ["3EC4.1", "54BD.1"]
+    },
+    {
+      "category": "NSPrivacyAccessedAPICategoryUserDefaults",
+      "allowedReasonIds": ["CA92.1", "1C8F.1", "C56D.1", "AC6B.1"]
+    }
+  ],
+  "requiredThirdPartySdks": [
+    "Abseil",
+    "AFNetworking",
+    "Alamofire",
+    "AppAuth",
+    "BoringSSL / openssl_grpc",
+    "Capacitor",
+    "Charts",
+    "connectivity_plus",
+    "Cordova",
+    "device_info_plus",
+    "DKImagePickerController",
+    "DKPhotoGallery",
+    "FBAEMKit",
+    "FBLPromises",
+    "FBSDKCoreKit",
+    "FBSDKCoreKit_Basics",
+    "FBSDKLoginKit",
+    "FBSDKShareKit",
+    "file_picker",
+    "FirebaseABTesting",
+    "FirebaseAuth",
+    "FirebaseCore",
+    "FirebaseCoreDiagnostics",
+    "FirebaseCoreExtension",
+    "FirebaseCoreInternal",
+    "FirebaseCrashlytics",
+    "FirebaseDynamicLinks",
+    "FirebaseFirestore",
+    "FirebaseInstallations",
+    "FirebaseMessaging",
+    "FirebaseRemoteConfig",
+    "Flutter",
+    "flutter_inappwebview",
+    "flutter_local_notifications",
+    "fluttertoast",
+    "FMDB",
+    "geolocator_apple",
+    "GoogleDataTransport",
+    "GoogleSignIn",
+    "GoogleToolboxForMac",
+    "GoogleUtilities",
+    "grpcpp",
+    "GTMAppAuth",
+    "GTMSessionFetcher",
+    "hermes",
+    "image_picker_ios",
+    "IQKeyboardManager",
+    "IQKeyboardManagerSwift",
+    "Kingfisher",
+    "leveldb",
+    "Lottie",
+    "MBProgressHUD",
+    "nanopb",
+    "OneSignal",
+    "OneSignalCore",
+    "OneSignalExtension",
+    "OneSignalOutcomes",
+    "OpenSSL",
+    "OrderedSet",
+    "package_info",
+    "package_info_plus",
+    "path_provider",
+    "path_provider_ios",
+    "Promises",
+    "Protobuf",
+    "Reachability",
+    "RealmSwift",
+    "RxCocoa",
+    "RxRelay",
+    "RxSwift",
+    "SDWebImage",
+    "share_plus",
+    "shared_preferences_ios",
+    "SnapKit",
+    "sqflite",
+    "Starscream",
+    "SVProgressHUD",
+    "SwiftyGif",
+    "SwiftyJSON",
+    "Toast",
+    "UnityFramework",
+    "url_launcher",
+    "url_launcher_ios",
+    "video_player_avfoundation",
+    "wakelock",
+    "webview_flutter_wkwebview"
+  ],
+  "semanticRules": [
+    {
+      "id": "APPLE_FACT_BOUNDARY",
+      "rule": "This file contains Apple-published facts only; repository aliases and inclusion judgments belong in ios-sdk-package-mapping.json."
+    },
+    {
+      "id": "HASH_CANONICALIZATION",
+      "rule": "SDK-list hashes use UTF-8 bytes for names joined by LF with one terminal LF; sortedSha256 uses ascending Unicode code-point order."
+    },
+    {
+      "id": "REQUIRED_REASON_EXACTNESS",
+      "rule": "A reason ID is valid only for the category in which Apple publishes it; categories and reason IDs are case-sensitive."
+    },
+    {
+      "id": "SDK_LIST_EXACTNESS",
+      "rule": "requiredThirdPartySdks must contain 86 unique, case-sensitive names in Apple-published order."
+    },
+    {
+      "id": "SDK_REQUIREMENT_SCOPE",
+      "rule": "Apple includes any version of a listed SDK and SDKs that repackage a listed SDK; a source match does not prove archive inclusion."
+    },
+    {
+      "id": "TOOLCHAIN_MINIMUM",
+      "rule": "On or after 2026-04-28, an iOS App Store Connect upload must use Xcode 26 or later and the iOS 26 SDK or later."
+    }
+  ],
+  "provenance": {
+    "officialSources": [
+      {
+        "url": "https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitype",
+        "retrievedAt": "2026-07-16",
+        "sourceTitle": "NSPrivacyAccessedAPIType"
+      },
+      {
+        "url": "https://developer.apple.com/news/upcoming-requirements/",
+        "retrievedAt": "2026-07-16",
+        "sourceTitle": "Upcoming Requirements"
+      },
+      {
+        "url": "https://developer.apple.com/support/third-party-SDK-requirements/",
+        "retrievedAt": "2026-07-16",
+        "sourceTitle": "Third-party SDK requirements"
+      }
+    ],
+    "requiredThirdPartySdkCount": 86,
+    "publishedOrderSha256": "1f22a3111f95c0afb64849e785c4ade36dd22ff536a2f6a63118dd5ca6ac2cca",
+    "sortedSha256": "85fc210619400bc347bcff7c6cc843eac83a4e7969d6716b954bd03428b049a1",
+    "hashCanonicalization": "UTF-8; LF separator; one terminal LF; sorted digest uses ascending Unicode code-point order"
+  }
+}

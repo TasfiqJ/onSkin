@@ -2,13 +2,34 @@
 
 `npm run phase9:dependency-sbom` writes generated dependency inventory artifacts to `docs/phase-9/generated/`.
 
+The separate `npm run phase9:ios-privacy-source-audit:check` gate binds the
+reviewed Apple baseline, repository SDK mapping, lockfile, and installed native
+npm package source. Its current result is `archive_required`: 63 native
+packages, 14/14 source-valid privacy manifests, 14 source bindings requiring
+archive verification, 139 podspecs, 16 XCFramework candidates, ten exact Apple
+SDK-list intersections, zero errors, and 15 warnings. The generated evidence is
+`docs/phase-9/generated/ios-privacy-source-audit.{json,md}`.
+
+That source audit is not the release SBOM or binary inspection. Ruby podspec
+tokens are not evaluated CocoaPods output, candidate framework names are not
+resolved SDK identities, and source manifests do not prove bundle inclusion or
+signatures. First-party and generated prebuild sources have separate validators;
+CocoaPods/SPM resolution and the exact production archive remain release gates.
+
 Strict release signoff requires:
 
 - lockfile present and generated from the release SHA
 - no unapproved high or critical vulnerabilities
-- SDK privacy manifests/signatures reviewed for iOS submission
+- exact production `.xcarchive`, build identity/hash, and resolved native lock
+  retained
+- merged privacy report, per-bundle manifests, required-reason APIs, resolved
+  SDK identities/signatures, entitlements/signing, symbols, binary metadata,
+  and processing warnings reviewed for iOS submission
 - Android native dependencies checked for target API and 16 KB compatibility
 - Sentry source maps/symbolication plan recorded
 - generated inventory attached to the RC packet
 
 Set `PHASE9_DEPENDENCY_AUDIT_PASS=true` only after the release owner has reviewed the generated inventory and vulnerability results.
+The flag is review metadata only. It cannot replace the source audit, exact
+archive evidence, observed runtime reconciliation, or named professional and
+device signoffs.

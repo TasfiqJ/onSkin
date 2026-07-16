@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "eas-build-post-install": "npm --prefix ../.. run phase9:view-shot-privacy:check",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",

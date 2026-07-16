@@ -601,6 +601,8 @@ export const generatedEvidenceOutputPaths = Object.freeze([
   'docs/phase-8/generated/growth-store-qa-packet.md',
   'docs/phase-9/generated/dependency-inventory.json',
   'docs/phase-9/generated/dependency-inventory.md',
+  'docs/phase-9/generated/ios-privacy-source-audit.json',
+  'docs/phase-9/generated/ios-privacy-source-audit.md',
   'docs/phase-9/generated/live-catalog-rate-limit.json',
   'docs/phase-9/generated/live-catalog-rate-limit.md',
   'docs/phase-9/generated/live-consent-withdrawal.json',

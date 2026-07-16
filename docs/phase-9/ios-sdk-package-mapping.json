@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "generatedAgainst": {
+    "baselinePath": "docs/phase-9/apple-ios-privacy-baseline.json",
+    "baselineSchemaVersion": 1,
+    "sha256": "fe04db2c5ce694c4f0269f9056aec49dd528e8421b54079a4fc2b97254c90921"
+  },
+  "mappings": [
+    {
+      "packageName": "@react-native-google-signin/google-signin",
+      "version": "16.1.2",
+      "lockIntegrity": {
+        "packageLockPath": "package-lock.json",
+        "packageLockSha256": "55762337b9b049e7efe536a004dbbd855d7f672d8ba1f145fa4bb5b2409770d1",
+        "entries": [
+          {
+            "path": "node_modules/@react-native-google-signin/google-signin",
+            "version": "16.1.2",
+            "integrity": "sha512-1hf4pRmpnS5t0dHtqU72Q1FmWzsCZR2Sm3uVQbbfMKeNPl5TKjpAsP6F8QTZ9L+Q6Cnn9tL9BXpDCb1nyutdCQ=="
+          }
+        ]
+      },
+      "nativeArtifactNames": [
+        "GoogleSignIn.framework",
+        "GoogleSignIn.xcframework",
+        "GoogleSignInSwift.framework",
+        "GoogleSignInSwift.xcframework"
+      ],
+      "appleSdkMatches": [
+        {
+          "canonicalName": "GoogleSignIn",
+          "matchBasis": "The pinned RNGoogleSignin.podspec directly declares GoogleSignIn using package GoogleSignInPodVersion ~> 9.0.",
+          "status": "direct_source_candidate"
+        }
+      ],
+      "notes": {
+        "evidenceLevel": "source_candidate",
+        "repoAliases": ["GoogleSignIn", "GoogleSignInSwift", "RNGoogleSignin"],
+        "sourcePins": [
+          {
+            "path": "node_modules/@react-native-google-signin/google-signin/RNGoogleSignin.podspec",
+            "sha256": "50e4c8ec91bb448f4cb5d7dd291b0baea940607a5d3cb6230a96958cb9bb6493"
+          },
+          {
+            "path": "node_modules/@react-native-google-signin/google-signin/package.json",
+            "sha256": "550ee99143b8098cd2ba673a8487fc8b5eca79880f64541d3ddb5393cfd5f2b3"
+          }
+        ],
+        "nativeInventory": {
+          "podfileLock": {
+            "path": "apps/mobile/ios/Podfile.lock",
+            "status": "absent",
+            "sha256": null
+          },
+          "privacyManifestLedger": {
+            "status": "unavailable_without_release_archive",
+            "sha256": null
+          },
+          "xcframeworkLedger": {
+            "status": "unavailable_without_release_archive",
+            "sha256": null
+          }
+        },
+        "neverClaimArchiveRules": [
+          "Do not claim GoogleSignIn, its privacy manifest, or its signature is present from npm or podspec evidence.",
+          "Do not promote this match beyond source_candidate until the exact release archive, Podfile.lock, privacy-manifest ledger, and framework/XCFramework ledger are hashed and reviewed."
+        ]
+      },
+      "archiveRequired": true
+    },
+    {
+      "packageName": "expo-image",
+      "version": "56.0.11",
+      "lockIntegrity": {
+        "packageLockPath": "package-lock.json",
+        "packageLockSha256": "55762337b9b049e7efe536a004dbbd855d7f672d8ba1f145fa4bb5b2409770d1",
+        "entries": [
+          {
+            "path": "node_modules/expo-image",
+            "version": "56.0.11",
+            "integrity": "sha512-k2xwxGk14xi6zxmEGAU4rUTb1lK5qf0y0Qb8+Jaggnul0KaJJxcq9qvyDp9iyJBW35cp9isONAUnNtIiooZ/Pw=="
+          }
+        ]
+      },
+      "nativeArtifactNames": ["SDWebImage.framework", "SDWebImage.xcframework"],
+      "appleSdkMatches": [
+        {
+          "canonicalName": "SDWebImage",
+          "matchBasis": "The pinned ExpoImage podspec directly declares SDWebImage ~> 5.21.0; its SPM config also names the SDWebImage product.",
+          "status": "direct_source_candidate"
+        }
+      ],
+      "notes": {
+        "evidenceLevel": "source_candidate",
+        "repoAliases": ["ExpoImage", "SDWebImage"],
+        "sourcePins": [
+          {
+            "path": "node_modules/expo-image/ios/ExpoImage.podspec",
+            "sha256": "de1c67fa42920094c4175f04a3900f6cdc9f260c49a35b7e3e33106c2e5963af"
+          },
+          {
+            "path": "node_modules/expo-image/package.json",
+            "sha256": "bc18fb241977d9a9c7740e83a86026b5fe27a4497b62ab98b6d03054e44a81a1"
+          },
+          {
+            "path": "node_modules/expo-image/spm.config.json",
+            "sha256": "2f6299021d698ff6a36a33777c9edd8b3f2f3705c81a6d9fc9c8925fc64740d0"
+          }
+        ],
+        "nativeInventory": {
+          "podfileLock": {
+            "path": "apps/mobile/ios/Podfile.lock",
+            "status": "absent",
+            "sha256": null
+          },
+          "privacyManifestLedger": {
+            "status": "unavailable_without_release_archive",
+            "sha256": null
+          },
+          "xcframeworkLedger": {
+            "status": "unavailable_without_release_archive",
+            "sha256": null
+          }
+        },
+        "neverClaimArchiveRules": [
+          "Do not claim SDWebImage, its privacy manifest, or its signature is present from npm, podspec, or SPM source evidence.",
+          "Do not promote this match beyond source_candidate until the exact release archive, Podfile.lock, privacy-manifest ledger, and framework/XCFramework ledger are hashed and reviewed."
+        ]
+      },
+      "archiveRequired": true
+    },
+    {
+      "packageName": "react-native",
+      "version": "0.85.3",
+      "lockIntegrity": {
+        "packageLockPath": "package-lock.json",
+        "packageLockSha256": "55762337b9b049e7efe536a004dbbd855d7f672d8ba1f145fa4bb5b2409770d1",
+        "entries": [
+          {
+            "path": "node_modules/hermes-compiler",
+            "version": "250829098.0.10",
+            "integrity": "sha512-TcRlZ0/TlyfJqquRFAWoyElVNnkdYRi/sEp4/Qy8/GYxjg8j2cS9D4MjuaQ+qimkmLN7AmO+44IznRf06mAr0w=="
+          },
+          {
+            "path": "node_modules/react-native",
+            "version": "0.85.3",
+            "integrity": "sha512-HN/fGC+3nZVcDNcw7gfbM/DuqZAvI9Mz+/SxuhODaua4JY0BPzhfTzWXRyTR4mRgMHmShTPpH2PYMTxvZrsdZA=="
+          }
+        ]
+      },
+      "nativeArtifactNames": [
+        "hermes.framework",
+        "hermes.xcframework",
+        "hermesvm.framework",
+        "hermesvm.xcframework"
+      ],
+      "appleSdkMatches": [
+        {
+          "canonicalName": "hermes",
+          "matchBasis": "React Native pins Hermes and its hermes-engine podspec names vendored hermesvm framework/XCFramework candidates.",
+          "status": "source_candidate"
+        }
+      ],
+      "notes": {
+        "evidenceLevel": "source_candidate",
+        "repoAliases": ["hermes", "hermes-engine", "hermesvm"],
+        "sourcePins": [
+          {
+            "path": "node_modules/hermes-compiler/package.json",
+            "sha256": "8fab03a9b8abd2873187f1829ef7cb11025275905cb7f8a95016dfff5e6c32dc"
+          },
+          {
+            "path": "node_modules/react-native/package.json",
+            "sha256": "2c945faa3eed346414a413848efb9340bd021728298fd6d08967c239d0755194"
+          },
+          {
+            "path": "node_modules/react-native/sdks/.hermesversion",
+            "sha256": "7759e8e85b4f56916773b822aeadc3d66ac82327f1ca63c204c812193e38fca4"
+          },
+          {
+            "path": "node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec",
+            "sha256": "045e80789aac0da530f9f02969732cd1d27314185fedc7dcf6220eed014f696e"
+          },
+          {
+            "path": "node_modules/react-native/sdks/hermes-engine/version.properties",
+            "sha256": "87599fb070ac668de3093186daaab1338878dc52ab43367884d29e9a9096c18b"
+          }
+        ],
+        "nativeInventory": {
+          "podfileLock": {
+            "path": "apps/mobile/ios/Podfile.lock",
+            "status": "absent",
+            "sha256": null
+          },
+          "privacyManifestLedger": {
+            "status": "unavailable_without_release_archive",
+            "sha256": null
+          },
+          "xcframeworkLedger": {
+            "status": "unavailable_without_release_archive",
+            "sha256": null
+          }
+        },
+        "neverClaimArchiveRules": [
+          "Do not treat the hermes-compiler npm package as proof that the Apple-listed hermes SDK is linked into an iOS archive.",
+          "Do not promote this match beyond source_candidate until the exact release archive, Podfile.lock, privacy-manifest ledger, and framework/XCFramework ledger are hashed and reviewed."
+        ]
+      },
+      "archiveRequired": true
+    }
+  ]
+}

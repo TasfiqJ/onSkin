@@ -78,11 +78,20 @@ const localVerifierFiles = [
   'scripts/phase9/privacy-payload-audit.mjs',
   'scripts/phase9/dependency-sbom.mjs',
   'scripts/phase9/store-build-inspect.mjs',
+  'scripts/phase9/patch-react-native-view-shot-privacy.mjs',
+  'scripts/phase9/patch-react-native-view-shot-privacy.test.mjs',
+  'scripts/phase9/ios-privacy-contract.mjs',
+  'scripts/phase9/ios-privacy-source-audit.mjs',
+  'scripts/phase9/ios-privacy-source-audit.test.mjs',
 ];
 
 const requiredFiles = [
+  'package.json',
+  'package-lock.json',
+  'apps/mobile/package.json',
   'docs/hugeToDo/launch-contract.json',
   'docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md',
+  'docs/hugeToDo/IOS-09-IOS-PRIVACY-SOURCE-CHECKPOINT-2026-07-16.md',
   'scripts/launch/contract.mjs',
   'docs/phase-9/source-of-truth.md',
   'docs/phase-9/data-inventory.md',
@@ -93,6 +102,9 @@ const requiredFiles = [
   'docs/phase-9/incident-response-plan.md',
   'docs/phase-9/beta-evidence-summary.md',
   'docs/phase-9/dependency-sbom.md',
+  'docs/phase-9/apple-ios-privacy-baseline.json',
+  'docs/phase-9/ios-sdk-package-mapping.json',
+  'docs/phase-9/ios-privacy-baseline-notes.md',
   'docs/phase-9/release-candidates/README.md',
   'docs/phase-9/release-candidates/_template/manifest.md',
   'docs/phase-9/release-candidates/_template/commands.md',
@@ -317,6 +329,7 @@ for (const key of [
 }
 
 const packageJson = JSON.parse(read('package.json'));
+const mobilePackageJson = JSON.parse(read('apps/mobile/package.json'));
 const edgeFunctionManifest = JSON.parse(read('supabase/functions/manifest.json'));
 const integerInRange = (value, min, max) => {
   const parsed = Number(value);
@@ -433,6 +446,12 @@ for (const script of [
   'phase9:consent-withdrawal',
   'phase9:live-consent-withdrawal',
   'phase9:privacy-payload-audit',
+  'phase9:view-shot-privacy:patch',
+  'phase9:view-shot-privacy:check',
+  'phase9:view-shot-privacy:test',
+  'phase9:ios-privacy-source-audit',
+  'phase9:ios-privacy-source-audit:check',
+  'phase9:ios-privacy-source-audit:test',
   'phase9:store-build-inspect',
   'phase9:dependency-sbom',
   'phase9:qa-packet',
@@ -440,6 +459,43 @@ for (const script of [
   'docs:generated-packet-status-audit:strict',
 ]) {
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
+}
+const iosPrivacyVerifierScripts = [
+  'phase9:view-shot-privacy:check',
+  'phase9:view-shot-privacy:test',
+  'phase9:ios-privacy-source-audit:test',
+  'phase9:ios-privacy-source-audit:check',
+];
+block(
+  errors,
+  packageJson.scripts?.postinstall ===
+    'node scripts/phase9/patch-react-native-view-shot-privacy.mjs',
+  'Root postinstall must run the exact reviewed react-native-view-shot privacy patch.',
+);
+block(
+  errors,
+  mobilePackageJson.scripts?.['eas-build-post-install'] ===
+    'npm --prefix ../.. run phase9:view-shot-privacy:check',
+  'The EAS post-install hook must fail closed on the reviewed patched manifest state.',
+);
+for (const script of iosPrivacyVerifierScripts) {
+  block(
+    errors,
+    (packageJson.scripts?.['phase9:verify'] ?? '').includes(`npm run ${script}`) &&
+      (packageJson.scripts?.['launch:verify'] ?? '').includes(`npm run ${script}`) &&
+      has('.github/workflows/quality.yml', new RegExp(`npm run ${script.replaceAll(':', '\\:')}`)),
+    `Phase 9, launch, and CI verification must run ${script}.`,
+  );
+}
+for (const output of [
+  'docs/phase-9/generated/ios-privacy-source-audit.json',
+  'docs/phase-9/generated/ios-privacy-source-audit.md',
+]) {
+  block(
+    errors,
+    read('scripts/phase9/lib.mjs').includes(`'${output}'`),
+    `Generated evidence exclusions must include ${output}.`,
+  );
 }
 block(
   errors,

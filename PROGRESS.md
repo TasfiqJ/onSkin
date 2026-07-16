@@ -6,6 +6,35 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-16
 
+### IOS-09 deterministic iOS privacy source checkpoint
+
+Added a pinned, fail-closed audit of the installed iOS npm dependency source
+and an exact-hash repair for the invalid empty `NSPrivacyAccessedAPITypes`
+array in `react-native-view-shot` 5.1.0. The 2026-07-16 upstream review found
+the latest published 5.1.1 package still carried the invalid form. The repair
+accepts only the reviewed package/lock/original hash or the idempotent target
+hash, runs at install time, and is rechecked without mutation in the EAS mobile
+post-install hook.
+
+The deterministic report is `archive_required`: 63 native packages, 14
+privacy manifests, all 14 source-valid and zero source-invalid, 14
+source-resource bindings still requiring archive proof, 139 podspecs, 16
+XCFramework candidates, no standalone framework or `.a`/`.dylib` candidates,
+ten Apple SDK-list intersections, zero errors, and 15 warnings. Its JSON and
+Markdown hashes are
+`5c8af950830d0ab57cf451295f13e4d24f31e82afc3de0e38608f7bc782f5390`
+and
+`3ad0c5c619bbe94b6406e21b4f4bdc28a64fae208b09aa42dbbeeda4a0a5e384`.
+
+The source scope excludes first-party/linked code, generated Expo prebuild,
+evaluated CocoaPods/SPM resolution, and the production archive. IOS-09 and
+STORE-04 remain `in_progress` pending the exact production `.xcarchive`, build
+identity/hash, resolved lock, merged report, manifest and required-API ledgers,
+SDK signatures, signing/entitlements/symbols/processing review, observed
+traffic/storage-to-label reconciliation, and named privacy/legal/device
+signoffs. No legal compliance, Apple acceptance, or commercial outcome is
+claimed.
+
 ### IOS-02 disabled WidgetKit/ActivityKit source checkpoint
 
 The iOS-only extension source now pins the reviewed Expo SDK 56

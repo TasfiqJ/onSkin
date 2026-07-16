@@ -48,6 +48,21 @@ evidence through 2026-07-13:
   deep links, signed `.app`/`.appex` inspection, and physical-iPhone privacy,
   accessibility, withdrawal, and interaction evidence remain blockers.
 
+- IOS-09 now has a deterministic installed-source privacy audit and an
+  exact-hash repair for the invalid empty required-API array shipped in the
+  reviewed `react-native-view-shot` package. The source result is
+  `archive_required`: 63 native packages, 14/14 source-valid manifests, 14
+  source bindings still requiring archive proof, 139 podspecs, 16
+  XCFramework candidates, ten Apple SDK-list intersections, zero errors, and
+  15 warnings. First-party and generated native source use separate validators;
+  evaluated CocoaPods/SPM resolution and the production archive are outside
+  this audit. IOS-09 and STORE-04 remain `in_progress` pending the exact
+  production archive/build/lock, merged privacy and required-API reports, SDK
+  signatures, signing/entitlements/symbols/processing review, observed
+  traffic/storage-to-label reconciliation, and named privacy/legal/device
+  signoffs. This does not establish legal compliance, Apple acceptance, or a
+  commercial outcome.
+
 - The source-only account-publication, entitlement-authority, health-consent,
   and Sign in with Apple checkpoint now places Supabase requests, controlled
   session refresh, RevenueCat identity, purchases/Restore, account deletion,

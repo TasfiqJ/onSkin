@@ -50,6 +50,36 @@ type generation, 20/20 focused Apple event/lifecycle Edge tests, and the
 47-test Apple auth work lane. This evidence is local and disposable; it does not
 replace reviewed hosted, provider-delivery, stale-JWT, or physical-device proof.
 
+## iOS Privacy Source Audit Boundary
+
+The deterministic installed-source audit is a required pre-archive gate. It
+pins Apple's reviewed privacy baseline, the repository's explicit SDK mapping,
+`package-lock.json`, installed package identities, strict plist semantics,
+podspec source tokens, bounded native artifact candidates, and the generated
+JSON/Markdown ledgers. The current result is `archive_required`: 63 native
+packages, 14/14 source-valid privacy manifests, 14 manifest-resource source
+bindings requiring archive verification, 139 podspecs, 16 XCFramework
+candidates, no standalone frameworks or `.a`/`.dylib` candidates, ten exact
+Apple SDK-list intersections, zero errors, and 15 warnings.
+
+The `react-native-view-shot` repair is exact-hash and fail-closed. It changes
+only the reviewed invalid empty `NSPrivacyAccessedAPITypes` key, and EAS runs a
+read-only post-install check so drift cannot silently pass. This is installed
+source validation, not evidence that evaluated Pods or a bundle contains the
+manifest.
+
+The audit excludes first-party/linked source, generated prebuild, resolved
+CocoaPods/SPM output, and the production archive. Separate first-party config
+validators and exact archive inspection must cover those surfaces. Before
+IOS-09 can close, retain one immutable production `.xcarchive`, build
+identity/hash, resolved native lock, merged privacy report, per-bundle manifest
+ledger, required-API use/declaration report, SDK signature evidence,
+signing/entitlements/symbols/processing results, and supported-device evidence.
+STORE-04 separately requires observed traffic/storage reconciled to final App
+Privacy answers and named privacy/legal review. Source validity is not legal
+clearance, App Review acceptance, or revenue proof, and a review boolean cannot
+substitute for the evidence.
+
 ## RLS Evidence Contract
 
 The migration-derived public-schema inventory is 80 tables: 30 owner-client private tables, 10 directly service-only private tables, 17 sealed service-private lifecycle tables, and 23 authenticated catalog/editorial tables. Migration `0054` adds seven force-RLS, sealed health-consent lifecycle/copy tables; migration `0055` adds three force-RLS, sealed Apple lifecycle/capture/event tables. Every table must be classified exactly once and have RLS enabled. The hosted matrix must register all 57 private tables exactly once: the 40 directly queryable tables receive row-positive owner/cross-user, real signed-anonymous, and publishable-key-with-no-session probes, while all 17 sealed tables must deny direct access to every API role, including `service_role`. These identities and denial lanes are not interchangeable.

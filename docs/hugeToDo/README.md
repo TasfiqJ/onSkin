@@ -20,6 +20,7 @@ Start here:
 - [BRAND-03 Governed Public-Research Evidence](./evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json)
 - [IOS-10 Export-Compliance Gate](./IOS-10-EXPORT-COMPLIANCE-GATE.md)
 - [IOS-02 Widget Lifecycle Source Checkpoint](./IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md)
+- [IOS-09 iOS Privacy Source Checkpoint](./IOS-09-IOS-PRIVACY-SOURCE-CHECKPOINT-2026-07-16.md)
 - [US Wave 1 Privacy and Consumer-Health Law Gate](./US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md)
 - [Health-Consent Withdrawal, Processor, and Retention Matrix](./HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md)
 - [Health Processor Inventory v1](./health-processor-inventory-v1.json)
@@ -67,6 +68,19 @@ four canonical parsed entitlement/privacy reports, four canonical scenario
 reports, and typed scenario proofs, all cross-bound to the exact source, build,
 identities, device where applicable, and unique hashes. Setting QA booleans alone
 cannot clear IOS-02.
+
+IOS-09 now has a deterministic installed-source privacy audit and an exact-hash
+repair for the invalid empty `NSPrivacyAccessedAPITypes` array shipped by the
+reviewed `react-native-view-shot` package. The current result is
+`archive_required`: 63 native packages, 14/14 source-valid manifests, 139
+podspecs, 16 XCFramework candidates, ten Apple SDK-list intersections, zero
+errors, and 15 warnings. These are npm-source observations only. First-party
+and generated native sources have separate validators, while evaluated
+CocoaPods/SPM output, the production archive, merged privacy report, required
+API use, SDK signatures, entitlements, symbols, processing warnings, observed
+traffic/storage, final labels, and named privacy/legal/device signoffs remain
+open. Source validity does not establish legal compliance, App Review
+acceptance, or revenue.
 
 The Sign in with Apple lifecycle is also a source checkpoint, not launch
 clearance. Migration 0055 and the mobile/Edge contracts implement nonce/state
