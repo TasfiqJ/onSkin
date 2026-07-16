@@ -10,7 +10,7 @@ import {
   ROUTINE_ORDER_UNAVAILABLE,
   ROUTINE_ORDER_UNSUPPORTED_VERSION,
   routineOrderOverrideForPhase,
-  saveRoutineOrderOverrides,
+  saveRoutineOrderOverridePatch,
 } from './orderStore';
 
 const mocks = vi.hoisted(() => ({
@@ -18,6 +18,7 @@ const mocks = vi.hoisted(() => ({
   updatePrivateItem: vi.fn(),
   storage: new Map<string, string>(),
   updateFailure: null as Error | null,
+  persistedWrites: 0,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -58,6 +59,7 @@ describe('routine order persistence', () => {
     mocks.updatePrivateItem.mockReset();
     mocks.storage.clear();
     mocks.updateFailure = null;
+    mocks.persistedWrites = 0;
     mocks.readPrivateItem.mockImplementation(async (key: string) => {
       const value = mocks.storage.get(key);
       return value === undefined ? { status: 'absent' } : { status: 'available', value };
@@ -65,7 +67,10 @@ describe('routine order persistence', () => {
     mocks.updatePrivateItem.mockImplementation(
       async (key: string, updater: (current: string | null) => string | null) => {
         if (mocks.updateFailure) throw mocks.updateFailure;
-        const next = updater(mocks.storage.get(key) ?? null);
+        const current = mocks.storage.get(key) ?? null;
+        const next = updater(current);
+        if (next === current) return;
+        mocks.persistedWrites += 1;
         if (next === null) mocks.storage.delete(key);
         else mocks.storage.set(key, next);
       },
@@ -93,7 +98,7 @@ describe('routine order persistence', () => {
     });
     await expect(loadRoutineOrderOverrides()).rejects.toThrow(ROUTINE_ORDER_INVALID);
     await expect(
-      saveRoutineOrderOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] }),
+      saveRoutineOrderOverridePatch({ am: ['cleanser'] }),
     ).rejects.toThrow(ROUTINE_ORDER_INVALID);
     expect(mocks.storage.get(KEY)).toBe(malformed);
 
@@ -105,7 +110,7 @@ describe('routine order persistence', () => {
     });
     await expect(loadRoutineOrderOverrides()).rejects.toThrow(ROUTINE_ORDER_UNSUPPORTED_VERSION);
     await expect(
-      saveRoutineOrderOverrides({ schemaVersion: 1, am: ['cleanser'], pm: [] }),
+      saveRoutineOrderOverridePatch({ am: ['cleanser'] }),
     ).rejects.toThrow(ROUTINE_ORDER_UNSUPPORTED_VERSION);
     expect(mocks.storage.get(KEY)).toBe(future);
 
@@ -191,7 +196,7 @@ describe('routine order persistence', () => {
   });
 
   it('removes storage when both phases return to canonical order', async () => {
-    await expect(saveRoutineOrderOverrides({ schemaVersion: 1, am: [], pm: [] })).resolves.toEqual({
+    await expect(saveRoutineOrderOverridePatch({ am: [], pm: [] })).resolves.toEqual({
       schemaVersion: 1,
       am: [],
       pm: [],
@@ -202,9 +207,50 @@ describe('routine order persistence', () => {
   it('propagates private-storage failures instead of claiming a save succeeded', async () => {
     mocks.updateFailure = new Error('storage unavailable');
 
+    await expect(saveRoutineOrderOverridePatch({ am: ['b', 'a'] })).rejects.toThrow(
+      'storage unavailable',
+    );
+  });
+
+  it('rejects a malformed write patch before touching prior bytes', async () => {
+    const prior = JSON.stringify({ schemaVersion: 1, am: ['cleanser'], pm: ['retinol'] });
+    mocks.storage.set(KEY, prior);
+
     await expect(
-      saveRoutineOrderOverrides({ schemaVersion: 1, am: ['b', 'a'], pm: [] }),
-    ).rejects.toThrow('storage unavailable');
+      saveRoutineOrderOverridePatch({ am: [' cleanser '] }),
+    ).rejects.toThrow(ROUTINE_ORDER_INVALID);
+    expect(mocks.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.get(KEY)).toBe(prior);
+  });
+
+  it('does zero persisted writes for an identical current phase patch', async () => {
+    const prior = JSON.stringify({ pm: ['retinol'], am: ['cleanser'], schemaVersion: 1 });
+    mocks.storage.set(KEY, prior);
+
+    await expect(saveRoutineOrderOverridePatch({ am: ['cleanser'] })).resolves.toEqual({
+      schemaVersion: 1,
+      am: ['cleanser'],
+      pm: ['retinol'],
+    });
+    expect(mocks.persistedWrites).toBe(0);
+    expect(mocks.storage.get(KEY)).toBe(prior);
+  });
+
+  it('preserves the latest AM and PM state across 100 simultaneous phase patches', async () => {
+    await Promise.all(
+      Array.from({ length: 100 }, (_, index) =>
+        saveRoutineOrderOverridePatch(
+          index % 2 === 0 ? { am: [`am-${index}`] } : { pm: [`pm-${index}`] },
+        ),
+      ),
+    );
+
+    await expect(loadRoutineOrderOverrides()).resolves.toEqual({
+      schemaVersion: 1,
+      am: ['am-98'],
+      pm: ['pm-99'],
+    });
+    expect(mocks.persistedWrites).toBe(100);
   });
 });
 

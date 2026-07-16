@@ -25,7 +25,7 @@ describe('persistent routine order route contracts', () => {
 
   it('awaits the encrypted save before updating cache, tracking success, and leaving', () => {
     const source = readSource('app/routine/reorder.tsx');
-    const saveIndex = source.indexOf('const saved = await saveRoutineOrderOverrides');
+    const saveIndex = source.indexOf('const saved = await saveRoutineOrderOverridePatch');
     const cacheIndex = source.indexOf('queryClient.setQueryData', saveIndex);
     const trackIndex = source.indexOf("track('routine_edited'", cacheIndex);
     const exitIndex = source.indexOf('backOrReplace(router);', trackIndex);
@@ -34,6 +34,8 @@ describe('persistent routine order route contracts', () => {
     expect(source).toContain('if (saveInFlight.current || persistenceUnavailable) return;');
     expect(source).toContain('saveInFlight.current = true;');
     expect(source).toContain('saveInFlight.current = false;');
+    expect(source).toContain('...(amChanged');
+    expect(source).toContain('...(pmChanged');
     expect(source).toContain('mode: changedPhase');
     expect(source).not.toContain('phase: changedPhase');
     expect(cacheIndex).toBeGreaterThan(saveIndex);

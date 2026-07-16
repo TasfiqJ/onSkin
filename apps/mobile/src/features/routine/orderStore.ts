@@ -16,6 +16,10 @@ export type RoutineOrderOverrides = {
   pm: string[];
 };
 
+export type RoutineOrderOverridePatch = Partial<
+  Record<RoutineOrderPhase, readonly string[]>
+>;
+
 export type RoutineOrderStateRead =
   | { status: 'absent'; overrides: RoutineOrderOverrides }
   | {
@@ -102,6 +106,27 @@ function hasOverrides(value: RoutineOrderOverrides): boolean {
   return value.am.length > 0 || value.pm.length > 0;
 }
 
+function sameIds(left: readonly string[], right: readonly string[]): boolean {
+  return left.length === right.length && left.every((id, index) => id === right[index]);
+}
+
+function normalizeOverridePatch(patch: RoutineOrderOverridePatch): RoutineOrderOverridePatch {
+  if (!isRecord(patch)) throw new Error(ROUTINE_ORDER_INVALID);
+  const keys = Object.keys(patch);
+  if (keys.some((key) => key !== 'am' && key !== 'pm')) {
+    throw new Error(ROUTINE_ORDER_INVALID);
+  }
+
+  const normalized: RoutineOrderOverridePatch = {};
+  for (const phase of ['am', 'pm'] as const) {
+    if (!Object.prototype.hasOwnProperty.call(patch, phase)) continue;
+    const ids = normalizeIds(patch[phase]);
+    if (!ids || ids.changed) throw new Error(ROUTINE_ORDER_INVALID);
+    normalized[phase] = ids.ids;
+  }
+  return normalized;
+}
+
 function decodeOverrides(raw: string): {
   overrides: RoutineOrderOverrides;
   format: 'current' | 'legacy';
@@ -167,24 +192,41 @@ export async function loadRoutineOrderOverrides(): Promise<RoutineOrderOverrides
   throw new Error(ROUTINE_ORDER_UNAVAILABLE);
 }
 
-export async function saveRoutineOrderOverrides(
-  value: RoutineOrderOverrides,
+/**
+ * Atomically apply only the phases edited by this caller. A whole-record
+ * replacement can serialize correctly and still erase a concurrent edit to
+ * the other phase when it was computed from an older UI snapshot.
+ */
+export async function saveRoutineOrderOverridePatch(
+  patch: RoutineOrderOverridePatch,
 ): Promise<RoutineOrderOverrides> {
-  const normalized = normalizeOverrides(value);
-  const next = normalized?.value ?? emptyOverrides();
+  const normalizedPatch = normalizeOverridePatch(patch);
+  let saved: RoutineOrderOverrides | null = null;
   await updatePrivateItem(STORAGE_KEY, (current) => {
-    if (current !== null) void decodeOverrides(current);
+    const decoded = current === null ? null : decodeOverrides(current);
+    const previous = decoded?.overrides ?? emptyOverrides();
+    const next: RoutineOrderOverrides = {
+      schemaVersion: 1,
+      am: normalizedPatch.am ? [...normalizedPatch.am] : previous.am,
+      pm: normalizedPatch.pm ? [...normalizedPatch.pm] : previous.pm,
+    };
+    saved = next;
+
+    if (
+      decoded?.format === 'current' &&
+      sameIds(previous.am, next.am) &&
+      sameIds(previous.pm, next.pm)
+    ) {
+      return current;
+    }
     return hasOverrides(next) ? JSON.stringify(next) : null;
   });
-  return next;
+  if (!saved) throw new Error('ROUTINE_ORDER_WRITE_FAILED');
+  return saved;
 }
 
 function stepIds(steps: readonly PlanStep[]): string[] {
   return steps.map((step) => step.productId);
-}
-
-function sameIds(left: readonly string[], right: readonly string[]): boolean {
-  return left.length === right.length && left.every((id, index) => id === right[index]);
 }
 
 /**

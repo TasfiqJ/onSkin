@@ -1,0 +1,12 @@
+{
+  "afterReload": {
+    "morning": [
+      "E2E Ceramide Moisturizer. Step 1 of 2",
+      "E2E Cream Cleanser. Step 2 of 2"
+    ],
+    "evening": [
+      "E2E Cream Cleanser. Step 1 of 2",
+      "E2E Ceramide Moisturizer. Step 2 of 2"
+    ]
+  }
+}

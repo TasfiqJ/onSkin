@@ -1,0 +1,106 @@
+{
+  "before": {
+    "controls": [
+      {
+        "disabled": false,
+        "height": 48,
+        "label": "Cancel",
+        "width": 66
+      },
+      {
+        "disabled": false,
+        "height": 48,
+        "label": "Save",
+        "width": 51
+      },
+      {
+        "disabled": false,
+        "height": 48,
+        "label": "Morning",
+        "width": 167
+      },
+      {
+        "disabled": false,
+        "height": 48,
+        "label": "Evening",
+        "width": 167
+      },
+      {
+        "disabled": false,
+        "height": 56,
+        "label": "E2E Cream Cleanser. Step 1 of 2",
+        "width": 342
+      },
+      {
+        "disabled": false,
+        "height": 56,
+        "label": "E2E Ceramide Moisturizer. Step 2 of 2",
+        "width": 342
+      }
+    ],
+    "dialogs": 0,
+    "document": {
+      "clientWidth": 390,
+      "scrollWidth": 390
+    },
+    "url": "http://localhost:8290/routine/reorder",
+    "viewport": {
+      "height": 845,
+      "width": 390
+    }
+  },
+  "after": {
+    "controls": [
+      {
+        "disabled": false,
+        "height": 48,
+        "label": "Cancel",
+        "width": 66
+      },
+      {
+        "disabled": false,
+        "height": 48,
+        "label": "Save",
+        "width": 51
+      },
+      {
+        "disabled": false,
+        "height": 48,
+        "label": "Morning",
+        "width": 167
+      },
+      {
+        "disabled": false,
+        "height": 48,
+        "label": "Evening",
+        "width": 167
+      },
+      {
+        "disabled": false,
+        "height": 56,
+        "label": "E2E Cream Cleanser. Step 1 of 2",
+        "width": 342
+      },
+      {
+        "disabled": false,
+        "height": 56,
+        "label": "E2E Ceramide Moisturizer. Step 2 of 2",
+        "width": 342
+      }
+    ],
+    "dialogs": 0,
+    "document": {
+      "clientWidth": 390,
+      "scrollWidth": 390
+    },
+    "selectedTabs": [
+      "Evening"
+    ],
+    "url": "http://localhost:8290/routine/reorder",
+    "viewport": {
+      "height": 845,
+      "width": 390
+    }
+  },
+  "jsDialogPresent": false
+}

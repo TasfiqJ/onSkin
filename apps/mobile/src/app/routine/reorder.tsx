@@ -7,7 +7,7 @@ import { Screen, Text } from '@/components/ui';
 import type { PlanStep } from '@/features/routine/generate';
 import {
   routineOrderOverrideForPhase,
-  saveRoutineOrderOverrides,
+  saveRoutineOrderOverridePatch,
   type RoutineOrderPhase,
   type RoutineOrderOverrides,
 } from '@/features/routine/orderStore';
@@ -206,20 +206,27 @@ function ReorderEditor({
         throw new Error('E2E_ROUTINE_ORDER_SAVE_FAILURE');
       }
 
-      const saved = await saveRoutineOrderOverrides({
-        schemaVersion: 1,
-        am: routineOrderOverrideForPhase(
-          canonical.am,
-          orders.am,
-          previousOverrides.am,
-          activeProductIds,
-        ),
-        pm: routineOrderOverrideForPhase(
-          canonical.pm,
-          orders.pm,
-          previousOverrides.pm,
-          activeProductIds,
-        ),
+      const saved = await saveRoutineOrderOverridePatch({
+        ...(amChanged
+          ? {
+              am: routineOrderOverrideForPhase(
+                canonical.am,
+                orders.am,
+                previousOverrides.am,
+                activeProductIds,
+              ),
+            }
+          : {}),
+        ...(pmChanged
+          ? {
+              pm: routineOrderOverrideForPhase(
+                canonical.pm,
+                orders.pm,
+                previousOverrides.pm,
+                activeProductIds,
+              ),
+            }
+          : {}),
       });
       if (isOwnerQueryScopeCurrent(ownerScope)) {
         queryClient.setQueryData(queryKeys.routineOrder(ownerScope), saved);
