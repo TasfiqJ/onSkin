@@ -592,8 +592,11 @@ block(
     /createDurableDeletionHttpHandler/.test(deletionSource) &&
     /EdgeRuntime/.test(deletionSource) &&
     /waitUntil\(work\)/.test(deletionSource) &&
-    /Deno\.serve\(createDurableDeletionHttpHandler\(dependencies\)\)/.test(deletionSource),
-  'Account deletion entrypoint must compose the durable runtime, mixed HTTP boundary, and best-effort EdgeRuntime acceleration.',
+    /const handler = createDurableDeletionHttpHandler\(dependencies\)/.test(deletionSource) &&
+    /Deno\.serve\(\(request\) => stagingTrafficFreezeResponse\(\) \?\? handler\(request\)\)/.test(
+      deletionSource,
+    ),
+  'Account deletion entrypoint must compose the durable runtime, mixed HTTP boundary, best-effort EdgeRuntime acceleration, and staging freeze before handler admission.',
 );
 const deletionMethodIndex = deletionHandlerSource.search(/request\.method !== ['"]POST['"]/);
 const deletionLengthIndex = deletionHandlerSource.indexOf(
