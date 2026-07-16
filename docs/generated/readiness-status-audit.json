@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T05:52:52.226Z",
+  "generatedAt": "2026-07-16T07:27:28.874Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -81,10 +81,10 @@
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-15",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 273,
-  "expectedMobileTests": 3139,
-  "actualMobileTestFiles": 273,
-  "expectedTestPhrase": "273 mobile test files / 3139 tests",
+  "expectedMobileTestFiles": 275,
+  "expectedMobileTests": 3161,
+  "actualMobileTestFiles": 275,
+  "expectedTestPhrase": "275 mobile test files / 3161 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -94,24 +94,24 @@
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 273,
-          "tests": 3139,
-          "source": "273 test files / 3139 tests"
+          "testFiles": 275,
+          "tests": 3161,
+          "source": "275 test files / 3161 tests"
         },
         {
-          "testFiles": 273,
-          "tests": 3139,
-          "source": "273 mobile test files / 3139 tests"
+          "testFiles": 275,
+          "tests": 3161,
+          "source": "275 mobile test files / 3161 tests"
         },
         {
-          "testFiles": 273,
-          "tests": 3139,
-          "source": "273 mobile test files / 3139 tests"
+          "testFiles": 275,
+          "tests": 3161,
+          "source": "275 mobile test files / 3161 tests"
         },
         {
-          "testFiles": 273,
-          "tests": 3139,
-          "source": "273 mobile test files / 3139 tests"
+          "testFiles": 275,
+          "tests": 3161,
+          "source": "275 mobile test files / 3161 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -127,9 +127,9 @@
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 273,
-          "tests": 3139,
-          "source": "273 mobile test files / 3139 tests"
+          "testFiles": 275,
+          "tests": 3161,
+          "source": "275 mobile test files / 3161 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -150,9 +150,9 @@
           "source": "266 test files / 3,026 tests"
         },
         {
-          "testFiles": 273,
-          "tests": 3139,
-          "source": "273 test files /\n3139 tests"
+          "testFiles": 275,
+          "tests": 3161,
+          "source": "275 test files /\n3161 tests"
         }
       ],
       "unexpectedTestBaselines": [
@@ -225,6 +225,8 @@
     "npm run e2e:human:manifest:check",
     "npm run docs:generated-packet-status-audit:check",
     "npm run phase5:check-native-config",
+    "npm run phase5:widget-runtime-contract:smoke",
+    "npm run phase5:widget-lifecycle-evidence",
     "npm run phase7:check-core-loop",
     "npm run phase8:check-growth-store",
     "npm run phase10:beta-analytics-audit",
@@ -245,7 +247,12 @@
     "docs:device-support-policy-audit:check",
     "docs:performance-readiness-audit",
     "docs:performance-readiness-audit:strict",
-    "docs:performance-readiness-audit:check"
+    "docs:performance-readiness-audit:check",
+    "phase5:widget-runtime-contract:smoke",
+    "phase5:widget-lifecycle-evidence",
+    "phase5:widget-lifecycle-evidence:strict",
+    "phase5:widget-lifecycle-evidence:smoke",
+    "phase5:widget-lifecycle-evidence:template:check"
   ],
   "requiredLaunchVerifyScriptParts": [
     "docs:source-packet-audit:check",
@@ -258,6 +265,10 @@
     "e2e:human:manifest:check",
     "phase3:review-signoff-template:smoke",
     "phase5:check-native-config",
+    "phase5:widget-runtime-contract:smoke",
+    "phase5:widget-lifecycle-evidence",
+    "phase5:widget-lifecycle-evidence:smoke",
+    "phase5:widget-lifecycle-evidence:template:check",
     "phase7:check-core-loop",
     "phase8:check-growth-store",
     "phase9:release-smoke",

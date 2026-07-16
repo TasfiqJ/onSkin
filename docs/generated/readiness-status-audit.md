@@ -1,6 +1,6 @@
 # Readiness Status Audit
 
-Generated: 2026-07-16T05:52:52.226Z
+Generated: 2026-07-16T07:27:28.874Z
 Status: pass
 Strict mode: yes
 
@@ -14,8 +14,8 @@ Required release platforms: ios. Android release evidence: not_applicable.
 ## Summary
 
 - Evidence date: 2026-07-15
-- Expected mobile test baseline: 273 mobile test files / 3139 tests
-- Actual mobile test files found: 273
+- Expected mobile test baseline: 275 mobile test files / 3161 tests
+- Actual mobile test files found: 275
 - Blockers: 0
 - Warnings: 0
 
@@ -41,6 +41,8 @@ Required release platforms: ios. Android release evidence: not_applicable.
 - `npm run e2e:human:manifest:check`
 - `npm run docs:generated-packet-status-audit:check`
 - `npm run phase5:check-native-config`
+- `npm run phase5:widget-runtime-contract:smoke`
+- `npm run phase5:widget-lifecycle-evidence`
 - `npm run phase7:check-core-loop`
 - `npm run phase8:check-growth-store`
 - `npm run phase10:beta-analytics-audit`
