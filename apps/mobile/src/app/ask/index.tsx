@@ -1,10 +1,39 @@
 import { router } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
+import { memo, Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  TextInput,
+  View,
+  useWindowDimensions,
+  type ListRenderItem,
+  type ViewToken,
+} from 'react-native';
 
 import { RouteIconButton, Screen, Text } from '@/components/ui';
 import type { AskAnswer } from '@/features/ask/answer';
 import { ASK_COPY } from '@/features/ask/copy';
+import {
+  ASK_HISTORY_PAGE_SIZE,
+  latestAskHistoryStart,
+  nextAskLatestScrollAttempt,
+  previousAskHistoryPage,
+  type AskLatestScrollProgress,
+} from '@/features/ask/historyWindow';
+import {
+  recordAskAcceptedTurn,
+  recordAskHistoryCommit,
+  recordAskLogicalMessageCount,
+  recordAskMessageRender,
+  recordAskVisibleMessageCount,
+  readAskRenderDiagnostics,
+} from '@/features/ask/renderDiagnostics';
+import {
+  buildAskStressHistory,
+  parseAskStressHistoryTurns,
+  type AskStressHistoryMessage,
+} from '@/features/ask/stressHistoryFixture';
 import { useAskViewModel } from '@/features/ask/useAsk';
 import {
   PRIVATE_GUIDANCE_AVAILABILITY_COPY,
@@ -23,9 +52,7 @@ import { colors } from '@/theme/tokens';
 // template-bounded, never free-generated. Calm, reactive, non-anthropomorphic: no persona,
 // no re-engagement, ends cleanly. Disclosed honestly as AI, never marketed as "AI".
 
-type Msg =
-  | { id: string; role: 'user'; text: string }
-  | { id: string; role: 'assistant'; answer: AskAnswer };
+type Msg = AskStressHistoryMessage;
 
 type SuggestedPromptKey = 'conflict' | 'tonight' | 'fit';
 
@@ -37,6 +64,54 @@ const SUPPORT_FLOOR_PROMPT_LABELS: Record<SuggestedPromptKey, string> = {
   tonight: 'Plan tonight',
   fit: 'Check product fit',
 };
+
+function devAskStressHistoryTurns(): number {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return 0;
+  return parseAskStressHistoryTurns(process.env.EXPO_PUBLIC_E2E_ASK_HISTORY_TURNS);
+}
+
+const ASK_STRESS_HISTORY_TURNS = devAskStressHistoryTurns();
+
+type AskHistoryState = {
+  messages: Msg[];
+  visibleStartIndex: number;
+};
+
+type PendingAskLatestScroll = AskLatestScrollProgress & {
+  messageId: string;
+};
+
+type PendingAskPrependAnchor = {
+  retries: number;
+  targetIndex: number;
+};
+
+type AskScrollToIndexFailure = {
+  averageItemLength: number;
+  index: number;
+};
+
+function askMessageKey(message: Msg): string {
+  return message.id;
+}
+
+function recordAskHistoryProfilerCommit(): void {
+  recordAskHistoryCommit();
+  publishAskRenderDiagnostics();
+}
+
+function publishAskRenderDiagnostics(): void {
+  if (typeof __DEV__ === 'undefined' || !__DEV__ || typeof document === 'undefined') return;
+
+  const list = document.getElementById('ask-history-list');
+  if (!list) return;
+  const diagnostics = readAskRenderDiagnostics();
+  list.setAttribute('data-ask-accepted-turns', String(diagnostics.acceptedTurns));
+  list.setAttribute('data-ask-history-commits', String(diagnostics.historyCommits));
+  list.setAttribute('data-ask-logical-messages', String(diagnostics.logicalMessages));
+  list.setAttribute('data-ask-message-renders', String(diagnostics.messageRenders));
+  list.setAttribute('data-ask-visible-messages', String(diagnostics.visibleMessages));
+}
 
 function MonoBadge({ label, tone }: { label: string; tone: 'deterministic' | 'fit' | 'escalate' }) {
   const bg = tone === 'deterministic' ? colors.sageTint : colors.clayTint;
@@ -90,9 +165,17 @@ function TriadRow({ label, text }: { label: string; text: string }) {
   );
 }
 
-function AnswerCard({ answer, compact = false }: { answer: AskAnswer; compact?: boolean }) {
-  const [reported, setReported] = useState(false);
-
+function AnswerCard({
+  answer,
+  compact = false,
+  onReport,
+  reported,
+}: {
+  answer: AskAnswer;
+  compact?: boolean;
+  onReport: () => void;
+  reported: boolean;
+}) {
   if (answer.kind === 'escalate') {
     return (
       <View className={compact ? 'mb-2 max-w-[88%] self-start' : 'mb-3 max-w-[88%] self-start'}>
@@ -264,8 +347,7 @@ function AnswerCard({ answer, compact = false }: { answer: AskAnswer; compact?: 
         accessibilityLabel="Report a problem with this answer"
         onPress={() => {
           if (reported) return;
-          setReported(true);
-          track('ask_reported_problem', { kind: answer.kind });
+          onReport();
         }}
         className={
           compact
@@ -299,6 +381,33 @@ function UserBubble({ text, compact = false }: { text: string; compact?: boolean
     </View>
   );
 }
+
+type AskMessageRowProps = {
+  compact: boolean;
+  message: Msg;
+  onReport: (messageId: string, kind: AskAnswer['kind']) => void;
+};
+
+const AskMessageRow = memo(function AskMessageRow({
+  compact,
+  message,
+  onReport,
+}: AskMessageRowProps) {
+  recordAskMessageRender();
+
+  if (message.role === 'user') {
+    return <UserBubble text={message.text} compact={compact} />;
+  }
+
+  return (
+    <AnswerCard
+      answer={message.answer}
+      compact={compact}
+      reported={message.reported === true}
+      onReport={() => onReport(message.id, message.answer.kind)}
+    />
+  );
+});
 
 function SuggestedPrompt({
   label,
@@ -408,43 +517,241 @@ function AskComposer({
 
 export default function AskScreen() {
   const { height, width } = useWindowDimensions();
-  const { ask, askSuggested, isError, isFetching, isLoading, hasShelf, retry } =
+  const { ask, askSuggested, isError, isFetching, isLoading, isSuccess, hasShelf, retry } =
     useAskViewModel();
-  const [messages, setMessages] = useState<Msg[]>([]);
+  const [history, setHistory] = useState<AskHistoryState>({
+    messages: [],
+    visibleStartIndex: 0,
+  });
+  const { messages, visibleStartIndex } = history;
   const idRef = useRef(0);
   const ledRef = useRef(false);
-  const scrollRef = useRef<ScrollView>(null);
+  const reportedIdsRef = useRef(new Set<string>());
+  const stressHistoryAppliedRef = useRef(false);
+  const pendingScrollToLatestRef = useRef<PendingAskLatestScroll | null>(null);
+  const pendingPrependAnchorRef = useRef<PendingAskPrependAnchor | null>(null);
+  const latestWindowReadyRef = useRef(true);
+  const scrollRef = useRef<FlatList<Msg>>(null);
 
   useEffect(() => {
     track('ask_opened');
   }, []);
 
-  const nextId = () => {
+  useEffect(() => {
+    recordAskLogicalMessageCount(messages.length);
+    publishAskRenderDiagnostics();
+  }, [messages.length]);
+
+  const nextId = useCallback(() => {
     idRef.current += 1;
     return `m${idRef.current}`;
-  };
+  }, []);
 
-  const pushTurn = (
-    question: string,
-    answer: AskAnswer,
-    options: { scrollToEnd?: boolean } = {},
-  ) => {
-    setMessages((m) => [
-      ...m,
-      { id: nextId(), role: 'user', text: question },
-      { id: nextId(), role: 'assistant', answer },
-    ]);
-    if (options.scrollToEnd !== false) {
-      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 50);
+  const pushTurn = useCallback(
+    (question: string, answer: AskAnswer, options: { scrollToEnd?: boolean } = {}) => {
+      recordAskAcceptedTurn();
+      const userMessage: Msg = { id: nextId(), role: 'user', text: question };
+      const assistantMessage: Msg = {
+        id: nextId(),
+        role: 'assistant',
+        answer,
+        reported: false,
+      };
+      const scrollToLatest = options.scrollToEnd !== false;
+      if (scrollToLatest) {
+        latestWindowReadyRef.current = false;
+        pendingPrependAnchorRef.current = null;
+        pendingScrollToLatestRef.current = {
+          attempts: 0,
+          lastAttemptedHeight: -1,
+          messageId: assistantMessage.id,
+        };
+      }
+      setHistory((currentHistory) => {
+        const nextMessages = [...currentHistory.messages, userMessage, assistantMessage];
+        return {
+          messages: nextMessages,
+          visibleStartIndex: scrollToLatest
+            ? latestAskHistoryStart(nextMessages.length)
+            : currentHistory.visibleStartIndex,
+        };
+      });
+    },
+    [nextId],
+  );
+
+  const handleHistoryContentSizeChange = useCallback((_width: number, contentHeight: number) => {
+    const pending = pendingScrollToLatestRef.current;
+    if (!pending) return;
+    if (!Number.isFinite(contentHeight) || contentHeight <= 0) {
+      // React Native Web can briefly report a collapsed list while variable-height
+      // rows settle. Never turn that transient measurement into a scroll-to-top,
+      // and allow the prior positive height to be retried after recovery.
+      pending.lastAttemptedHeight = -1;
+      return;
     }
-  };
+    const nextAttempt = nextAskLatestScrollAttempt(pending, contentHeight);
+    if (!nextAttempt) return;
+    pending.attempts = nextAttempt.attempts;
+    pending.lastAttemptedHeight = nextAttempt.lastAttemptedHeight;
+    // The validated content height is the exact current extent; the scroll view
+    // clamps this oversized offset to its real bottom. The latest page is bounded,
+    // so retries cannot walk the complete transcript.
+    scrollRef.current?.scrollToOffset({ animated: false, offset: contentHeight });
+    if (nextAttempt.exhausted) {
+      pendingScrollToLatestRef.current = null;
+      latestWindowReadyRef.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!pendingPrependAnchorRef.current) return;
+
+    let secondFrame: number | null = null;
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        const pending = pendingPrependAnchorRef.current;
+        if (pending) {
+          scrollRef.current?.scrollToIndex({
+            animated: false,
+            index: pending.targetIndex,
+            viewPosition: 0,
+          });
+          if (pendingPrependAnchorRef.current === pending && pending.retries === 0) {
+            pendingPrependAnchorRef.current = null;
+          }
+        }
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      if (secondFrame !== null) cancelAnimationFrame(secondFrame);
+    };
+  }, [visibleStartIndex]);
+
+  const handleHistoryScrollToIndexFailed = useCallback((failure: AskScrollToIndexFailure) => {
+    const pending = pendingPrependAnchorRef.current;
+    if (!pending || pending.targetIndex !== failure.index) return;
+
+    // Older pages prepend in one bounded batch. This fallback is therefore at most
+    // one page estimate, never an unbounded walk through the complete transcript.
+    scrollRef.current?.scrollToOffset({
+      animated: false,
+      offset: failure.averageItemLength * failure.index,
+    });
+
+    if (pending.retries >= 1) {
+      pendingPrependAnchorRef.current = null;
+      return;
+    }
+    pending.retries += 1;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const retry = pendingPrependAnchorRef.current;
+        if (!retry) return;
+        scrollRef.current?.scrollToIndex({
+          animated: false,
+          index: retry.targetIndex,
+          viewPosition: 0,
+        });
+        if (pendingPrependAnchorRef.current === retry) {
+          pendingPrependAnchorRef.current = null;
+        }
+      });
+    });
+  }, []);
+
+  const [handleHistoryViewabilityChange] = useState(
+    () =>
+      ({ viewableItems }: { viewableItems: ViewToken<Msg>[] }) => {
+        const pending = pendingScrollToLatestRef.current;
+        if (
+          pending &&
+          viewableItems.some(
+            (viewToken) => viewToken.isViewable && viewToken.item.id === pending.messageId,
+          )
+        ) {
+          pendingScrollToLatestRef.current = null;
+          latestWindowReadyRef.current = true;
+        }
+      },
+  );
+
+  const loadEarlierHistory = useCallback(() => {
+    if (
+      !latestWindowReadyRef.current ||
+      pendingPrependAnchorRef.current ||
+      visibleStartIndex === 0
+    ) {
+      return;
+    }
+
+    const previousPage = previousAskHistoryPage(visibleStartIndex);
+    pendingPrependAnchorRef.current = {
+      retries: 0,
+      targetIndex: previousPage.prependedMessages,
+    };
+    setHistory((currentHistory) => ({
+      ...currentHistory,
+      visibleStartIndex: previousPage.visibleStartIndex,
+    }));
+  }, [visibleStartIndex]);
+
+  const reportAnswer = useCallback((messageId: string, kind: AskAnswer['kind']) => {
+    if (reportedIdsRef.current.has(messageId)) return;
+    reportedIdsRef.current.add(messageId);
+    track('ask_reported_problem', { kind });
+    setHistory((currentHistory) => ({
+      ...currentHistory,
+      messages: currentHistory.messages.map((message) =>
+        message.id === messageId && message.role === 'assistant'
+          ? { ...message, reported: true }
+          : message,
+      ),
+    }));
+  }, []);
+
+  useEffect(() => {
+    if (ASK_STRESS_HISTORY_TURNS === 0 || stressHistoryAppliedRef.current || !isSuccess) {
+      return;
+    }
+
+    stressHistoryAppliedRef.current = true;
+    ledRef.current = true;
+    const fixtureMessages = buildAskStressHistory(
+      ASK_STRESS_HISTORY_TURNS,
+      askSuggested('tonight'),
+    );
+    const latestMessage = fixtureMessages.at(-1);
+    if (latestMessage) {
+      latestWindowReadyRef.current = false;
+      pendingScrollToLatestRef.current = {
+        attempts: 0,
+        lastAttemptedHeight: -1,
+        messageId: latestMessage.id,
+      };
+    }
+    setHistory({
+      messages: fixtureMessages,
+      visibleStartIndex: latestAskHistoryStart(fixtureMessages.length),
+    });
+  }, [askSuggested, isSuccess]);
 
   // Proactive first answer (docs/13 §9/§14, "the conversion linchpin"): once the
   // context is ready and the user has a shelf, the assistant LEADS with a free,
   // deterministic answer about their own shelf rather than waiting for a good
   // question. Fires once. Users with an empty shelf still see the suggested prompts.
   useEffect(() => {
-    if (ledRef.current || isLoading || !hasShelf || messages.length > 0) return;
+    if (
+      ASK_STRESS_HISTORY_TURNS > 0 ||
+      ledRef.current ||
+      isLoading ||
+      !hasShelf ||
+      messages.length > 0
+    ) {
+      return;
+    }
     ledRef.current = true;
     track('ask_proactive_lead_shown');
     pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), { scrollToEnd: false });
@@ -452,6 +759,14 @@ export default function AskScreen() {
   }, [isLoading, hasShelf]);
 
   const empty = messages.length === 0;
+  const visibleMessages = useMemo(
+    () => messages.slice(visibleStartIndex),
+    [messages, visibleStartIndex],
+  );
+  useEffect(() => {
+    recordAskVisibleMessageCount(visibleMessages.length);
+    publishAskRenderDiagnostics();
+  }, [visibleMessages.length]);
   const compactPhone = height < 640;
   const shortPhone = height < 520;
   const ultraShortPhone = height < 460;
@@ -465,6 +780,10 @@ export default function AskScreen() {
         ? SHORT_PHONE_EMPTY_PROMPT_ORDER
         : EMPTY_PROMPT_ORDER;
   const promptLabels = supportFloorPhone ? SUPPORT_FLOOR_PROMPT_LABELS : ASK_COPY.home.prompts;
+  const renderMessage = useCallback<ListRenderItem<Msg>>(
+    ({ item }) => <AskMessageRow message={item} compact={shortPhone} onReport={reportAnswer} />,
+    [reportAnswer, shortPhone],
+  );
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -509,78 +828,87 @@ export default function AskScreen() {
         </Text>
       </View>
 
-      <ScrollView
-        ref={scrollRef}
-        className="flex-1"
-        style={isError ? { display: 'none' } : undefined}
-        showsVerticalScrollIndicator={false}
-        contentContainerClassName={compactPhone ? 'pb-6' : 'pb-4'}
-      >
-        {empty ? (
-          <View className={shortPhone ? 'pt-0' : 'pt-1'}>
-            {!shortPhone ? (
-              <View className="mb-3 flex-row flex-wrap gap-1.5">
-                {ASK_COPY.home.pills.map((p) => (
-                  <View
-                    key={p}
-                    className="rounded-pill px-2.5 py-1"
-                    style={{ backgroundColor: colors.greige }}
-                  >
-                    <Text className="font-mono text-[9.5px]" style={{ color: colors.mutedStrong }}>
-                      {p}
-                    </Text>
-                  </View>
+      <Profiler id="ask-history" onRender={recordAskHistoryProfilerCommit}>
+        <FlatList
+          ref={scrollRef}
+          nativeID="ask-history-list"
+          className="flex-1"
+          style={isError ? { display: 'none' } : undefined}
+          data={visibleMessages}
+          keyExtractor={askMessageKey}
+          renderItem={renderMessage}
+          initialNumToRender={ASK_HISTORY_PAGE_SIZE}
+          maxToRenderPerBatch={8}
+          windowSize={7}
+          keyboardShouldPersistTaps="handled"
+          onContentSizeChange={handleHistoryContentSizeChange}
+          onScrollToIndexFailed={handleHistoryScrollToIndexFailed}
+          onStartReached={loadEarlierHistory}
+          onStartReachedThreshold={0}
+          onViewableItemsChanged={handleHistoryViewabilityChange}
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName={compactPhone ? 'pb-6' : 'pb-4'}
+          ListHeaderComponent={empty ? null : <View className={shortPhone ? 'pt-1' : 'pt-3'} />}
+          ListEmptyComponent={
+            <View className={shortPhone ? 'pt-0' : 'pt-1'}>
+              {!shortPhone ? (
+                <View className="mb-3 flex-row flex-wrap gap-1.5">
+                  {ASK_COPY.home.pills.map((p) => (
+                    <View
+                      key={p}
+                      className="rounded-pill px-2.5 py-1"
+                      style={{ backgroundColor: colors.greige }}
+                    >
+                      <Text
+                        className="font-mono text-[9.5px]"
+                        style={{ color: colors.mutedStrong }}
+                      >
+                        {p}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              ) : null}
+              {ultraShortPhone || supportFloorPhone ? null : (
+                <Text
+                  variant="body"
+                  tone="muted"
+                  className={shortPhone ? 'mb-2 text-[12px]' : 'mb-3 text-[12.5px]'}
+                  style={{ lineHeight: shortPhone ? 18 : 19 }}
+                >
+                  {ASK_COPY.home.intro}
+                </Text>
+              )}
+              <Text
+                className={
+                  ultraShortPhone
+                    ? 'mb-1 font-mono text-[9px] uppercase'
+                    : shortPhone
+                      ? 'mb-1.5 font-mono text-[10px] uppercase'
+                      : 'mb-2 font-mono text-[10px] uppercase'
+                }
+                style={{ color: colors.mutedLight, letterSpacing: 1 }}
+              >
+                {ASK_COPY.home.groundedEyebrow}
+              </Text>
+              <View className={shortPhone ? 'gap-1.5' : 'gap-2'}>
+                {emptyPromptOrder.map((promptKey) => (
+                  <SuggestedPrompt
+                    key={promptKey}
+                    label={promptLabels[promptKey]}
+                    supportFloor={supportFloorPhone}
+                    onPress={() =>
+                      pushTurn(ASK_COPY.home.prompts[promptKey], askSuggested(promptKey), {
+                        scrollToEnd: false,
+                      })
+                    }
+                  />
                 ))}
               </View>
-            ) : null}
-            {ultraShortPhone || supportFloorPhone ? null : (
-              <Text
-                variant="body"
-                tone="muted"
-                className={shortPhone ? 'mb-2 text-[12px]' : 'mb-3 text-[12.5px]'}
-                style={{ lineHeight: shortPhone ? 18 : 19 }}
-              >
-                {ASK_COPY.home.intro}
-              </Text>
-            )}
-            <Text
-              className={
-                ultraShortPhone
-                  ? 'mb-1 font-mono text-[9px] uppercase'
-                  : shortPhone
-                    ? 'mb-1.5 font-mono text-[10px] uppercase'
-                    : 'mb-2 font-mono text-[10px] uppercase'
-              }
-              style={{ color: colors.mutedLight, letterSpacing: 1 }}
-            >
-              {ASK_COPY.home.groundedEyebrow}
-            </Text>
-            <View className={shortPhone ? 'gap-1.5' : 'gap-2'}>
-              {emptyPromptOrder.map((promptKey) => (
-                <SuggestedPrompt
-                  key={promptKey}
-                  label={promptLabels[promptKey]}
-                  supportFloor={supportFloorPhone}
-                  onPress={() =>
-                    pushTurn(ASK_COPY.home.prompts[promptKey], askSuggested(promptKey), {
-                      scrollToEnd: false,
-                    })
-                  }
-                />
-              ))}
             </View>
-          </View>
-        ) : (
-          <View className={shortPhone ? 'pt-1' : 'pt-3'}>
-            {messages.map((m) =>
-              m.role === 'user' ? (
-                <UserBubble key={m.id} text={m.text} compact={shortPhone} />
-              ) : (
-                <AnswerCard key={m.id} answer={m.answer} compact={shortPhone} />
-              ),
-            )}
-            {/* Suggested prompts kept as a follow-up affordance after the lead. */}
-            {!compactPhone ? (
+          }
+          ListFooterComponent={
+            empty || compactPhone ? null : (
               <View className="mt-2 gap-2.5">
                 <SuggestedPrompt
                   label={ASK_COPY.home.prompts.tonight}
@@ -591,10 +919,10 @@ export default function AskScreen() {
                   onPress={() => pushTurn(ASK_COPY.home.prompts.fit, askSuggested('fit'))}
                 />
               </View>
-            ) : null}
-          </View>
-        )}
-      </ScrollView>
+            )
+          }
+        />
+      </Profiler>
 
       <AskComposer
         key="ask-composer"

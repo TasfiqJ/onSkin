@@ -85,11 +85,11 @@ describe('Ask route launch contracts', () => {
 
     expect(home).toContain('mt-2 min-h-[48px] self-start justify-center py-1');
     expect(home).toContain("'mt-1 min-h-[48px] self-start justify-center'");
-    expect(home).toContain('function AnswerCard({ answer, compact = false }');
+    expect(home).toContain('function AnswerCard({');
     expect(home).toContain('function UserBubble({ text, compact = false }');
     expect(home).toContain("className={shortPhone ? 'pt-1' : 'pt-3'}");
-    expect(home).toContain('<UserBubble key={m.id} text={m.text} compact={shortPhone} />');
-    expect(home).toContain('<AnswerCard key={m.id} answer={m.answer} compact={shortPhone} />');
+    expect(home).toContain('<UserBubble');
+    expect(home).toContain('<AnswerCard');
     expect(home).toContain('className="h-[48px] w-[48px] items-center justify-center');
     expect(home).toContain('minHeight: 48');
     expect(home).toContain('mt-3 min-h-[48px] self-start items-center justify-center');
@@ -113,6 +113,118 @@ describe('Ask route launch contracts', () => {
     expect(screen).toContain('hidden={isError}');
     expect(screen).not.toContain('if (isError)');
     expect(composer).toContain('if (hidden) return null;');
+  });
+
+  it('virtualizes Ask history with stable recycler identities and memoized rows', () => {
+    const home = readAppRoute('ask/index.tsx');
+    const screenStart = home.indexOf('export default function AskScreen()');
+    const screen = home.slice(screenStart);
+
+    expect(home).toContain('FlatList');
+    expect(home).toMatch(/const AskMessageRow = memo(?:<[^\r\n]+>)?\(/);
+    expect(screen).toContain('const scrollRef = useRef<FlatList<Msg>>(null);');
+    expect(screen).toMatch(/const renderMessage = useCallback(?:<[^\r\n]+>)?\(/);
+    expect(screen).toContain('renderItem={renderMessage}');
+    expect(screen).toContain('keyExtractor={askMessageKey}');
+    const historyWindow = readAskFeature('historyWindow.ts');
+    expect(historyWindow).toContain('export const ASK_HISTORY_PAGE_SIZE = 16;');
+    expect(screen).toContain('latestAskHistoryStart(nextMessages.length)');
+    expect(screen).toContain('previousAskHistoryPage(visibleStartIndex)');
+    expect(screen).toContain('initialNumToRender={ASK_HISTORY_PAGE_SIZE}');
+    expect(screen).toContain('maxToRenderPerBatch={8}');
+    expect(screen).toContain('windowSize={7}');
+    expect(screen).toContain('pendingScrollToLatestRef');
+    expect(screen).toContain('onContentSizeChange={handleHistoryContentSizeChange}');
+    expect(screen).toContain('onViewableItemsChanged={handleHistoryViewabilityChange}');
+    expect(screen).toContain('messages.slice(visibleStartIndex)');
+    expect(screen).toContain('data={visibleMessages}');
+    expect(screen).toContain('onStartReached={loadEarlierHistory}');
+    expect(screen).toContain('onStartReachedThreshold={0}');
+    expect(screen).toContain('pendingPrependAnchorRef');
+    expect(screen).toContain('retries: 0');
+    expect(screen).toContain('targetIndex: previousPage.prependedMessages');
+    expect(screen).toContain('index: pending.targetIndex');
+    expect(screen).toContain('onScrollToIndexFailed={handleHistoryScrollToIndexFailed}');
+    expect(historyWindow).toContain('MAX_ASK_SCROLL_TO_LATEST_ATTEMPTS = 8');
+    expect(screen).toContain('nextAskLatestScrollAttempt(pending, contentHeight)');
+    expect(screen).toContain('latestWindowReadyRef.current = true;');
+    expect(screen).toContain('contentHeight <= 0');
+    expect(screen).toContain('pending.lastAttemptedHeight = -1;');
+    expect(screen).toContain('offset: contentHeight');
+    expect(screen).not.toContain('inverted=');
+    expect(screen).not.toContain('setTimeout(() => scrollRef.current?.scrollToEnd');
+    expect(screen).toContain('ListEmptyComponent=');
+    expect(screen).toContain('ListFooterComponent=');
+    expect(screen).not.toContain('{messages.map((m) =>');
+    expect(screen).not.toContain('{messages.map((message) =>');
+  });
+
+  it('keeps the capped 100-turn stress history fixture development-only', () => {
+    const home = readAppRoute('ask/index.tsx');
+    const fixture = readAskFeature('stressHistoryFixture.ts');
+    const screenStart = home.indexOf('export default function AskScreen()');
+    const screen = home.slice(screenStart);
+    const devGateStart = home.indexOf('function devAskStressHistoryTurns(): number');
+    const devGate = home.slice(devGateStart, devGateStart + 360);
+
+    expect(devGateStart).toBeGreaterThan(0);
+    expect(devGate).toContain("typeof __DEV__ === 'undefined' || !__DEV__");
+    expect(devGate).toContain('parseAskStressHistoryTurns(');
+    expect(devGate).toContain('process.env.EXPO_PUBLIC_E2E_ASK_HISTORY_TURNS');
+    expect(screen).toContain('stressHistoryAppliedRef.current');
+    expect(screen).toContain('!isSuccess');
+    expect(screen).toContain('buildAskStressHistory(');
+    expect(fixture).toContain('export const MAX_ASK_STRESS_HISTORY_TURNS = 100;');
+    expect(fixture).toContain('Math.min(turns, MAX_ASK_STRESS_HISTORY_TURNS)');
+    expect(fixture).toContain('id: `ask-stress-assistant-${stableTurn}`');
+  });
+
+  it('records content-free Ask commit, row-render, logical-message, and accepted-turn diagnostics', () => {
+    const home = readAppRoute('ask/index.tsx');
+    const diagnostics = readAskFeature('renderDiagnostics.ts');
+
+    expect(home).toContain('<Profiler id="ask-history"');
+    expect(home).toContain('recordAskHistoryCommit();');
+    expect(home).toContain('recordAskMessageRender();');
+    expect(home).toContain('recordAskAcceptedTurn();');
+    expect(home).toContain('nativeID="ask-history-list"');
+    expect(home).toContain("list.setAttribute('data-ask-accepted-turns'");
+    expect(home).toContain("list.setAttribute('data-ask-history-commits'");
+    expect(home).toContain("list.setAttribute('data-ask-logical-messages'");
+    expect(home).toContain("list.setAttribute('data-ask-message-renders'");
+    expect(home).toContain("list.setAttribute('data-ask-visible-messages'");
+    expect(diagnostics).toContain('acceptedTurns: number;');
+    expect(diagnostics).toContain('historyCommits: number;');
+    expect(diagnostics).toContain('logicalMessages: number;');
+    expect(diagnostics).toContain('messageRenders: number;');
+    expect(diagnostics).toContain('visibleMessages: number;');
+    expect(diagnostics).toContain('export function recordAskHistoryCommit(): void');
+    expect(diagnostics).toContain('export function recordAskLogicalMessageCount(count: number)');
+    expect(diagnostics).toContain('export function recordAskMessageRender(): void');
+    expect(diagnostics).toContain('export function recordAskAcceptedTurn(): void');
+    expect(diagnostics).toContain('export function recordAskVisibleMessageCount(count: number)');
+    expect(diagnostics).not.toContain('question: string');
+    expect(diagnostics).not.toContain('answer: AskAnswer');
+  });
+
+  it('owns report state above recycled answer rows so acknowledgements persist', () => {
+    const home = readAppRoute('ask/index.tsx');
+    const answerCardStart = home.indexOf('function AnswerCard({');
+    const userBubbleStart = home.indexOf('function UserBubble(', answerCardStart);
+    const answerCard = home.slice(answerCardStart, userBubbleStart);
+    const screenStart = home.indexOf('export default function AskScreen()');
+    const screen = home.slice(screenStart);
+
+    expect(answerCardStart).toBeGreaterThan(0);
+    expect(userBubbleStart).toBeGreaterThan(answerCardStart);
+    expect(answerCard).toContain('reported');
+    expect(answerCard).toContain('onReport');
+    expect(answerCard).not.toContain('useState(');
+    expect(screen).toContain('const reportedIdsRef = useRef(new Set<string>());');
+    expect(screen).toContain('if (reportedIdsRef.current.has(messageId)) return;');
+    expect(screen).toContain('reportedIdsRef.current.add(messageId);');
+    expect(screen).toContain('? { ...message, reported: true }');
+    expect(home).toContain('message.reported');
   });
 
   it('binds the route to the shared-snapshot Ask view model', () => {
@@ -240,27 +352,24 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain('useWindowDimensions');
     expect(home).toContain('const compactPhone = height < 640');
     expect(home).toContain('options: { scrollToEnd?: boolean } = {}');
-    expect(home).toContain('if (options.scrollToEnd !== false)');
+    expect(home).toContain('const scrollToLatest = options.scrollToEnd !== false;');
     expect(home).toContain(
       "pushTurn(ASK_COPY.home.prompts.conflict, askSuggested('conflict'), { scrollToEnd: false })",
     );
-    expect(home).toContain(
-      'pushTurn(ASK_COPY.home.prompts[promptKey], askSuggested(promptKey), {\n                      scrollToEnd: false,',
+    expect(home).toMatch(
+      /pushTurn\(ASK_COPY\.home\.prompts\[promptKey\], askSuggested\(promptKey\), \{\s+scrollToEnd: false,/,
     );
-    expect(home).toContain('{!compactPhone ? (');
   });
 
   it('hides post-answer suggested prompts on compact phones so they do not peek under the composer', () => {
     const home = readAppRoute('ask/index.tsx');
-    const followUpStart = home.indexOf('Suggested prompts kept as a follow-up affordance');
-    const followUpEnd = home.indexOf('</ScrollView>', followUpStart);
-    const followUpBlock = home.slice(followUpStart, followUpEnd);
+    const footerStart = home.indexOf('ListFooterComponent={');
+    const followUpEnd = home.indexOf('</Profiler>', footerStart);
+    const followUpBlock = home.slice(footerStart, followUpEnd);
 
-    expect(followUpStart).toBeGreaterThan(0);
-    expect(followUpEnd).toBeGreaterThan(followUpStart);
-    expect(followUpBlock.indexOf('{!compactPhone ? (')).toBeLessThan(
-      followUpBlock.indexOf('<SuggestedPrompt'),
-    );
+    expect(footerStart).toBeGreaterThan(0);
+    expect(followUpEnd).toBeGreaterThan(footerStart);
+    expect(followUpBlock).toContain('empty || compactPhone ? null : (');
     expect(followUpBlock).toContain('label={ASK_COPY.home.prompts.tonight}');
     expect(followUpBlock).toContain('label={ASK_COPY.home.prompts.fit}');
   });
@@ -272,7 +381,9 @@ describe('Ask route launch contracts', () => {
 
     expect(source).toContain("import { useQuery } from '@tanstack/react-query';");
     expect(source).toContain('groundedTurnsQueryOptions');
-    expect(source).toContain('const cloudGateEnabled = phase7Flags.cloudAsk || quotaFixtureEnabled');
+    expect(source).toContain(
+      'const cloudGateEnabled = phase7Flags.cloudAsk || quotaFixtureEnabled',
+    );
     expect(source).toContain('useEntitlement({ enabled: cloudGateEnabled })');
     expect(source).toContain('isEntitlementEvidenceUncertain(ent)');
     expect(source).toContain('ent !== undefined && !entitlementUncertain');
