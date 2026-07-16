@@ -364,6 +364,10 @@ function CompareView({
         <View style={{ flex: 1 }} />
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel={
+            sideBySide ? 'Use draggable comparison' : 'Use side-by-side comparison'
+          }
+          accessibilityHint="Provides a non-gesture view of both selected photos"
           accessibilityState={{ selected: sideBySide }}
           onPress={() => setSideBySide((v) => !v)}
           className="min-h-[48px] items-center justify-center rounded-pill px-4 py-2"

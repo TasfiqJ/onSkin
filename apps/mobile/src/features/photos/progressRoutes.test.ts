@@ -760,4 +760,25 @@ describe('Progress route mobile contracts', () => {
     );
     expect(slider).not.toContain('className="rounded-pill px-3.5 py-1.5"');
   });
+
+  it('exposes an adjustable comparison value and a non-gesture presentation', () => {
+    const source = readAppRoute('(tabs)/progress.tsx');
+    const slider = readSource('features/photos/CompareSlider.tsx');
+
+    expect(slider).toContain('accessibilityRole="adjustable"');
+    expect(slider).toContain('accessibilityValue={{');
+    expect(slider).toContain('aria-valuenow={dividerPercent}');
+    expect(slider).toContain('aria-valuetext={compareDividerValueText(dividerPercent)}');
+    expect(slider).toContain("width: '100%',");
+    expect(slider).toContain("height: '100%',");
+    expect(slider).toContain("{ name: 'decrement', label: 'Show less of the before photo' }");
+    expect(slider).toContain("{ name: 'increment', label: 'Show more of the before photo' }");
+    expect(slider).toContain(
+      'onAccessibilityAction={(event) => adjustDivider(event.nativeEvent.actionName)}',
+    );
+    expect(slider).toContain('Use Side by side for a non-gesture view.');
+    expect(source).toContain("'Use side-by-side comparison'");
+    expect(source).toContain("'Use draggable comparison'");
+    expect(source).toContain('Provides a non-gesture view of both selected photos');
+  });
 });

@@ -1,10 +1,10 @@
 # Maximum Optimization Implementation Status
 
 Audit date: 2026-07-12 (America/Toronto; execution time not recorded)
-Last updated: 2026-07-16 (America/Toronto; recommendation-preference atomic no-op checkpoint)
+Last updated: 2026-07-16 (America/Toronto; Progress comparison accessibility checkpoint)
 Branch: `optimization`
 Baseline SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
-Current checkpoint parent SHA: `77c2434257a12060fb94aa152256149fdc776b50`
+Current checkpoint parent SHA: `f04fc6e0ad00b529c616d0203544770d44376e1c`
 Baseline: [BASELINE.md](./BASELINE.md)
 Decision index: [DECISIONS.md](./DECISIONS.md)
 Evidence rules: [evidence/README.md](./evidence/README.md)
@@ -141,7 +141,7 @@ Durable local evidence now includes deterministic iOS/Android dirty-worktree exp
 | ------- | ----------- | ------------------------------------- | ------------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
 | OPT-201 | not-started | —                                     | —                   | No screenshot/device pass            | OPT-DEC-007 and device-policy reconciliation are `not-started`. Decide theme and standardize system bars.                  |
 | OPT-202 | not-started | —                                     | —                   | No API/device matrix                 | Re-enable predictive back only after route-by-route native E2E under the approved Android scope.                           |
-| OPT-203 | not-started | —; target comparison/gesture controls | —                   | No VoiceOver/TalkBack artifact       | Add adjustable actions/value text and non-gesture presentation, then test both screen readers.                             |
+| OPT-203 | implemented | `CompareSlider.tsx`; `compareAccessibility.ts`; named side-by-side route control | Deterministic accessibility policy tests; Progress route contracts; `evidence/2026-07-16_progress-comparison-accessibility-checkpoint.md`; `test-results/human-e2e/2026-07-16/progress-comparison-accessibility-current/` | Focused 2 files / 25 tests PASS; full root 317 files / 3,928 tests PASS; root typecheck and zero-warning lint PASS; actual Expo-web semantic/interaction pass at 1281 x 720 PASS | The divider exposes date context, bounded spoken value, deterministic native increment/decrement actions, explicit Expo-web range semantics, and a full-size target; Side-by-side is the named non-gesture presentation. Release verification remains open for native VoiceOver on supported iOS; TalkBack is resilience evidence outside the current V1 Android scope. |
 | OPT-204 | not-started | —                                     | —                   | No device setting pass               | Inventory all continuous/crossfade/artificial-wait animation and add Reduce Motion/platform-scale behavior.                |
 | OPT-205 | not-started | —                                     | —                   | No visual regression review          | Standardize loading, error, offline, unavailable, corrupt, locked, and destructive states without collapsing meanings.     |
 | OPT-206 | not-started | —                                     | —                   | No screenshot matrix                 | Add long-string/pseudo-localization fixtures and verify critical routes at large text sizes.                               |

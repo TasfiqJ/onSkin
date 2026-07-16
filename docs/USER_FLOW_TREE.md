@@ -886,6 +886,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
+- Branch: accessible comparison actions and non-gesture presentation
+  - Priority: Important
+  - Automate later: Yes, after the native accessibility harness is selected.
+  - Action: Open populated Progress in Compare mode; focus the before/after divider; invoke decrement and increment screen-reader actions; activate Side-by-side; change the first date; return to draggable comparison.
+  - Expected result: The divider names both selected dates, exposes a 0-100 value and calm visible-before percentage, moves by deterministic bounded steps, and occupies the full practical handle target. Side-by-side is a named non-gesture presentation that removes the divider and shows both photos; its return action is also named. Date selection updates the divider label. No announcement grades, scores, or judges the user's skin.
+  - Evidence: Native VoiceOver/TalkBack action transcript and focus recording, accessible-tree/range snapshot, target geometry, comparison screenshots, and focused policy/route tests.
+  - Current local evidence (2026-07-16): Codex in-app browser Expo web with the populated local fixture exposes one date-aware slider with min 0, max 100, now 52, and `52 percent of the before photo visible`; the final semantic target measures about 46 x 46 px. The named Side-by-side action removes the slider and renders both photos, its name changes to `Use draggable comparison`, and the named first-photo dialog updates Apr 1 to May 12 before returning to the date-aware slider. The run found and fixed missing Expo-web range attributes plus a 46 x 24 semantic target. Focused 25-test and full 3,928-test suites pass. Evidence is in `test-results/human-e2e/2026-07-16/progress-comparison-accessibility-current/` and `docs/e2e-bug-reports/2026-07-16-progress-comparison-accessibility-semantics.md`. The available browser was 1281 x 720 and did not expose device emulation; native VoiceOver/TalkBack invocation, focus announcements, and new supported-phone evidence remain open.
 - Branch: sensitive image cache and lifecycle boundary
   - Priority: Critical
   - Automate later: Yes, with a native filesystem/memory harness after the native E2E decision.
