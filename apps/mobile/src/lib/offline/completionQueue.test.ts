@@ -4,6 +4,7 @@ import {
   beginAccountGenerationBoundary,
   endAccountGenerationBoundary,
 } from '@/lib/auth/accountGeneration';
+import * as privateKV from '@/lib/storage/privateKV';
 
 import {
   COMPLETION_QUEUE_INVALID,
@@ -222,6 +223,39 @@ describe('offline completion queue (docs/01 §6)', () => {
     expect(mocks.writes).toBe(0);
   });
 
+  it.each([
+    [
+      'extra envelope field',
+      { version: 1, items: [base], extra: true },
+    ],
+    [
+      'duplicate current identity',
+      { version: 1, items: [base, { ...base, enqueuedAt: '2026-06-25T09:00:00.000Z' }] },
+    ],
+    [
+      'noncanonical current row',
+      {
+        version: 1,
+        items: [{ ...base, userId: ' u1 ', enqueuedAt: '2026-06-25T08:00:00Z' }],
+      },
+    ],
+    [
+      'extra current row field',
+      { version: 1, items: [{ ...base, extra: true }] },
+    ],
+  ])('preserves strict-current corruption with %s', async (_label, value) => {
+    const original = JSON.stringify(value);
+    mocks.storage.set(KEY, original);
+
+    await expect(readCompletionQueue()).resolves.toEqual({ status: 'corrupt', items: null });
+    await expect(enqueueCompletion({ ...base, stepId: 's2' })).rejects.toThrow(
+      COMPLETION_QUEUE_INVALID,
+    );
+
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
+  });
+
   it('normalizes a valid legacy queue in memory without rewriting a read', async () => {
     const original = JSON.stringify([
       {
@@ -249,8 +283,8 @@ describe('offline completion queue (docs/01 §6)', () => {
     expect(storedItems()).toEqual([base, next]);
   });
 
-  it('serializes simultaneous enqueues without losing a writer', async () => {
-    const rows = Array.from({ length: 40 }, (_, index) => ({
+  it('serializes 100 simultaneous enqueues without losing a writer', async () => {
+    const rows = Array.from({ length: 100 }, (_, index) => ({
       ...base,
       stepId: `s${index}`,
     }));
@@ -258,6 +292,19 @@ describe('offline completion queue (docs/01 §6)', () => {
     await Promise.all(rows.map((row) => enqueueCompletion(row)));
 
     expect(new Set(storedItems().map(completionKey))).toEqual(new Set(rows.map(completionKey)));
+    expect(mocks.writes).toBe(100);
+  });
+
+  it.each([
+    ['legacy', JSON.stringify([base])],
+    ['current', JSON.stringify({ version: 1, items: [base] })],
+  ])('does zero persisted writes for an identical %s enqueue', async (_format, original) => {
+    mocks.storage.set(KEY, original);
+
+    await enqueueCompletion({ ...base, enqueuedAt: '2026-06-25T09:00:00.000Z' });
+
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
   });
 
   it('preserves an enqueue that lands while an older flush is in flight', async () => {
@@ -302,6 +349,21 @@ describe('offline completion queue (docs/01 §6)', () => {
     await expect(flushing).rejects.toMatchObject({ code: 'ACCOUNT_GENERATION_CHANGED' });
     expect(mocks.insertSignals).toHaveLength(1);
     expect(mocks.insertSignals[0]?.aborted).toBe(true);
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.writes).toBe(0);
+  });
+
+  it('does zero persisted writes when a transient flush removes no legacy rows', async () => {
+    const original = JSON.stringify([base]);
+    mocks.storage.set(KEY, original);
+    mocks.currentUserId = 'u1';
+    mocks.insertError = { code: 'TEMPORARY_NETWORK_FAILURE' };
+
+    await expect(flushCompletions(new Date(2026, 5, 25, 9))).resolves.toEqual({
+      flushed: 0,
+      remaining: 1,
+    });
+
     expect(mocks.storage.get(KEY)).toBe(original);
     expect(mocks.writes).toBe(0);
   });
@@ -360,7 +422,9 @@ describe('offline completion queue (docs/01 §6)', () => {
     await enqueueCompletion({ ...base, userId: '   ' });
     await enqueueCompletion({ ...base, completedDate: '2026-02-31' });
 
-    expect(storedItems()).toEqual([]);
+    expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.storage.has(KEY)).toBe(false);
+    expect(mocks.writes).toBe(0);
   });
 
   it('normalizes pending-read dates before matching queued step ids', async () => {

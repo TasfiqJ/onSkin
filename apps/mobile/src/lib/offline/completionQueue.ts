@@ -54,17 +54,45 @@ function hasOwn(value: Record<string, unknown>, key: string): boolean {
   return Object.prototype.hasOwnProperty.call(value, key);
 }
 
+function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  const keys = Object.keys(value);
+  return keys.length === expected.length && expected.every((key) => hasOwn(value, key));
+}
+
 function queueError(code: string): Error {
   return new Error(code);
 }
 
-function normalizePendingList(value: unknown): PendingCompletion[] {
+function normalizePendingList(value: unknown, strictCurrent = false): PendingCompletion[] {
   if (!Array.isArray(value)) throw queueError(COMPLETION_QUEUE_INVALID);
   const out: PendingCompletion[] = [];
   for (const row of value) {
     const normalized = normalizePendingCompletion(row);
     if (!normalized) throw queueError(COMPLETION_QUEUE_INVALID);
-    if (!out.some((existing) => completionKey(existing) === completionKey(normalized))) {
+    if (strictCurrent) {
+      if (
+        !isRecord(row) ||
+        !hasExactKeys(row, [
+          'userId',
+          'routineId',
+          'stepId',
+          'completedDate',
+          'enqueuedAt',
+        ]) ||
+        row.userId !== normalized.userId ||
+        row.routineId !== normalized.routineId ||
+        row.stepId !== normalized.stepId ||
+        row.completedDate !== normalized.completedDate ||
+        row.enqueuedAt !== normalized.enqueuedAt
+      ) {
+        throw queueError(COMPLETION_QUEUE_INVALID);
+      }
+    }
+    const duplicate = out.some(
+      (existing) => completionKey(existing) === completionKey(normalized),
+    );
+    if (duplicate && strictCurrent) throw queueError(COMPLETION_QUEUE_INVALID);
+    if (!duplicate) {
       out.push(normalized);
     }
   }
@@ -93,7 +121,10 @@ function decodePending(raw: string | null): PendingCompletion[] {
     }
     throw queueError(COMPLETION_QUEUE_INVALID);
   }
-  return normalizePendingList(parsed.items);
+  if (!hasExactKeys(parsed, ['version', 'items'])) {
+    throw queueError(COMPLETION_QUEUE_INVALID);
+  }
+  return normalizePendingList(parsed.items, true);
 }
 
 function encodePending(items: PendingCompletion[]): string {
@@ -129,7 +160,13 @@ export async function getPendingCompletions(): Promise<PendingCompletion[]> {
 }
 
 export async function enqueueCompletion(rec: PendingCompletion): Promise<void> {
-  await updatePrivateItem(KEY, (current) => encodePending(withQueued(decodePending(current), rec)));
+  const normalized = normalizePendingCompletion(rec);
+  if (!normalized) return;
+  await updatePrivateItem(KEY, (current) => {
+    const pending = decodePending(current);
+    const next = withQueued(pending, normalized);
+    return next === pending ? current : encodePending(next);
+  });
 }
 
 /** Step ids checked off but not yet synced, for a given local day (read merge). */
@@ -197,9 +234,13 @@ export async function flushCompletions(
     let remaining = pending.length;
     await updatePrivateItem(KEY, (current) => {
       const latest = decodePending(current);
+      if (removeKeys.size === 0) {
+        remaining = latest.length;
+        return current;
+      }
       const next = latest.filter((rec) => !removeKeys.has(completionKey(rec)));
       remaining = next.length;
-      return encodePending(next);
+      return next.length === latest.length ? current : encodePending(next);
     });
     lease.assertCurrent();
     return { flushed, remaining };
