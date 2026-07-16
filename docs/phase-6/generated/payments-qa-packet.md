@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-16T19:57:09.406Z
-Git SHA: d0ca70b910de5b7f80f14f193bef8a0b4a44f868
+Generated at: 2026-07-16T20:12:28.186Z
+Git SHA: a5d531924556dc05f9607fe0b398d4d994de51b8
 Git status: clean
 Required inputs committed and byte-matched to HEAD: yes
 Tracked secret environment files absent: yes
@@ -156,8 +156,8 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
 | docs/USER_FLOW_TREE.md | present | 382133 | ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8 |
-| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 52bf102a252a0b77abd58de633008ac2e8f279882a6eade663cec42b9f393ad1 |
-| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | d16cafa15d46bc975775ff12e461fcabc799812f4d7b3d6528570396f4750024 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 677501cf58901f9262aeb32207105bc3ace9326b072226ed9387107daf2780ab |
+| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | 66104c7cfc4a68eff95c29211f07edb74200f99b036cd2088b7723ef3a555c75 |
 | docs/phase-6/payments-runbook.md | present | 11302 | 676492b480b32f12c6fe829962f33a3f31bd597f2e2f4a7aa319e63e0f1da821 |
 | docs/phase-6/payments-qa-checklist.md | present | 7870 | 847c0775f45ae6eb6afcc78acc33d38ca128e14db1d32723cac7003d5d6fd2d5 |
 | docs/phase-6/phase-6-exit-review.md | present | 4798 | 85e5e80e3d3b14d12cbeae0a4abdbf7a66eba1128b527705bf076a6957fbba28 |
