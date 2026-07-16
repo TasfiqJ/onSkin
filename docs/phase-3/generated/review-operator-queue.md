@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-16T15:24:31.294Z
+Generated: 2026-07-16T18:12:50.804Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 5dd7053290160d461fab9cfe0ffb885b5f6daa4c
+Git SHA: e5045d6fe64665eeb40f58e9eb254e4dd86e3201
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -437,7 +437,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `6c06422cab91cd33a7bb6d9f76ea7e2e6f26e04194130593130fccefdeda4bc7`
+- Review snapshot SHA-256: `f1988447f61066e9a05c3c5d7d1644d0a82a063f11c5236b3fb254a7acf394e0`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -446,7 +446,7 @@ Sources:
 Sources:
 
 - `docs/phase-3/consent-matrix.md` - 10237 bytes - sha256 `a50b3b1baf6c996409b85df19899ac3e80482dbd2043b02677ccec4cccf38130`
-- `docs/store-privacy-inventory.md` - 23428 bytes - sha256 `d708b7883fe186496b8b4f2fcaeea04a547d8499dad590868a2657aa7edc632c`
+- `docs/store-privacy-inventory.md` - 23996 bytes - sha256 `c7ee117f25e7b225948cfd28a1e55e676601da6d70510cb503cc870d39a92104`
 - `docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md` - 32996 bytes - sha256 `91b3cf005056be01faaed0fe845bb5beef4068dfcb32753b581edf4a10f8deb4`
 - `docs/hugeToDo/health-processor-inventory-v1.json` - 3039 bytes - sha256 `fe43760534c95ef96f53d9c5375d2c8646a14230d3dc5f34fb36a73b80990674`
 - `docs/hugeToDo/credential-inventory.json` - 22214 bytes - sha256 `8424ffa22560bc3a82d0b820cc79d509e2de54dea5c1a0ae353ad09ada160d3f`

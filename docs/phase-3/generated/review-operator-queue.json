@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-16T15:24:31.294Z",
+  "generatedAt": "2026-07-16T18:12:50.804Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "5dd7053290160d461fab9cfe0ffb885b5f6daa4c",
+  "gitSha": "e5045d6fe64665eeb40f58e9eb254e4dd86e3201",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
     "bytes": 136545,
-    "sha256": "7103d1072477c7d1b6f4b73a5ec8b46893079723bedc2f0da87ce7f9ee2a145a",
-    "currentSha256": "7103d1072477c7d1b6f4b73a5ec8b46893079723bedc2f0da87ce7f9ee2a145a"
+    "sha256": "1b434bc20fdfe7637081402f6c123716dab89b839995c7e45d3eb7f16aa1dbea",
+    "currentSha256": "1b434bc20fdfe7637081402f6c123716dab89b839995c7e45d3eb7f16aa1dbea"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -1284,7 +1284,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "6c06422cab91cd33a7bb6d9f76ea7e2e6f26e04194130593130fccefdeda4bc7",
+      "reviewSnapshotSha256": "f1988447f61066e9a05c3c5d7d1644d0a82a063f11c5236b3fb254a7acf394e0",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1301,8 +1301,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 23428,
-          "sha256": "d708b7883fe186496b8b4f2fcaeea04a547d8499dad590868a2657aa7edc632c"
+          "bytes": 23996,
+          "sha256": "c7ee117f25e7b225948cfd28a1e55e676601da6d70510cb503cc870d39a92104"
         },
         {
           "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
