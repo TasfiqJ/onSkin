@@ -14,9 +14,19 @@
 
 ### Final Project Name Recommendation
 
-[Decision] Rebrand before launch. Use `RoutineKind` as the working name until trademark/domain/social clearance is complete.
+[Decision] Rebrand before launch. Use `RoutineKind` only as the working
+engineering identity and first counsel candidate. The current sequence for
+counsel review is `RoutineKind`, `Ritunera`, then lower-confidence `Ritualoom`;
+`Rituvia` is suspended. No candidate is final until founder-approved, covered
+by qualified counsel's written decision, and supported by authenticated
+reservation evidence.
 
-[Confirmed] The current code and docs use `OnSkin`, `onskin`, `onskin://`, and `com.onskin.app`. Existing public competitors use the exact `OnSkin` name in the same skincare/cosmetic scanner category.
+[Confirmed] Current launch-facing local/native defaults use `RoutineKind`.
+Remaining `OnSkin`, `onskin`, `onskin://`, and `com.onskin.app` references are
+classified internal namespaces, fail-closed compatibility guards, or historical
+records; `npm run brand:audit:strict` enforces that boundary. Existing public
+competitors still use the exact `OnSkin` name in the same skincare/cosmetic
+scanner category, so the legacy identity remains launch-blocked.
 
 [Researched] The public OnSkin listing describes a beauty product scanner with over 8M users and a 2M product database. Source: [OnSkin App Store](https://apps.apple.com/kz/app/onskin-beauty-product-scanner/id1630768985), [OnSkin website](https://onskin.com/).
 
@@ -96,11 +106,17 @@ owned products -> shelf intelligence -> reviewed conflicts -> routine plan -> da
 
 **Project name ideas**
 
-- [Decision] RoutineKind
-- [Needs Research] ShelfWise
-- [Needs Research] LayerWise
-- [Needs Research] RoutineCabinet
-- [Needs Research] SkinCycle Journal
+- [Decision under uncertainty] `RoutineKind` — first counsel candidate and
+  working engineering identity; exact YouTube handle is occupied and the
+  `Routine` field is crowded.
+- [Decision under uncertainty] `Ritunera` — backup 1; current UK and public
+  handle leads require counsel review.
+- [Decision under uncertainty] `Ritualoom` — lower-confidence backup 2; the
+  `RITUAL` beauty/wellness field is crowded.
+- [Decision] `Rituvia` — suspended and retained only as an adverse comparator.
+
+The governed current research record is
+[`BRAND-03-knockout-search-record-2026-07-12.md`](./hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md).
 
 **One-sentence description**
 
@@ -959,8 +975,11 @@ Goal: remove existential brand risk.
 
 Done criteria:
 
-- final name selected
-- counsel/domain/social checks recorded
+- final name is founder-approved and covered by qualified counsel's written
+  decision for the exact use, countries, classes, and conditions
+- authenticated domain, store-name, package, scheme, and public-handle
+  reservations are recorded; each receipt proves only its specific reservation
+  and not trademark availability or Apple acceptance
 - public code/config/copy migration plan
 
 ### Phase 1: Launch Gates

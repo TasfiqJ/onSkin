@@ -1,9 +1,9 @@
 # BRAND-03 Knockout Search Record
 
 Initial search date: 2026-07-12 America/Toronto / 2026-07-13 UTC
-Latest refresh: 2026-07-15 20:10-20:20 America/Toronto / 2026-07-16
-00:10-00:20 UTC
-Working counsel sequence: `RoutineKind`, `Ritunera`, `Ritualoom`
+Latest refresh: 2026-07-15 23:48 through 2026-07-16 00:00
+America/Toronto / 2026-07-16 03:48-04:00 UTC
+Working sequence for counsel review: `RoutineKind`, `Ritunera`, `Ritualoom`
 Suspended candidate: `Rituvia`
 Purpose: preliminary knockout only; not a comprehensive search, reservation,
 legal opinion, or availability statement
@@ -21,18 +21,24 @@ not establish an approved launch territory.
 | Google Play public search                   | US English quoted search; exact rendered-title marker                                                                             | No exact marker in the completed public screen; not a Play Console check                       |
 | Broad web/common law                        | Exact quoted names, spelling variants, skincare/app/beauty context, and known-product follow-up                                   | Refreshed 2026-07-15; material `Rituva` and `Retuvia` leads suspend `Rituvia`                  |
 | Domains                                     | Registry RDAP for `.com` and `.app`; DNS and live-page follow-up where relevant                                                   | Refreshed 2026-07-15; no checkout, hold, purchase, or reservation                              |
-| Public social handles                       | 25 exact, site-restricted searches across Instagram, X, YouTube, Facebook, and Threads; TikTok blocked by robots                  | Refreshed 2026-07-15; every candidate handle remains **unverified**, not available             |
+| Public social handles                       | Indexed and direct public checks across Instagram, X, YouTube, Facebook, and Threads; no authenticated claim or reservation       | Refreshed 2026-07-16; exact YouTube `@routinekind` is occupied and Facebook `ritunera` redirects |
 | CIPO                                        | Official Canadian database; exact, wildcard, spelling/phonetic-form, component, and target-class review                           | Refreshed 2026-07-15; database reported update 2026-07-15                                      |
 | USPTO                                       | Official federal system; exact, prefix, spelling/phonetic-form, live target-class, full-result pagination, and TSDR status review | Refreshed 2026-07-15; preliminary screen only, not counsel clearance                           |
 | IP Australia                                | Official Quick Search; exact and selected spelling variants                                                                       | Refreshed 2026-07-15; no exact result for the working sequence or suspended `Rituvia`          |
-| UKIPO                                       | Official search entry reached; result service presented a CAPTCHA                                                                 | **Not verified**; no CAPTCHA bypass attempted                                                  |
+| UKIPO                                       | Official Similar search, all statuses, full displayed filing range, no class filter, 50 rows per page                             | Refreshed 2026-07-16; complete displayed result sets reviewed for the three-name sequence and `Rituvia` |
 | WIPO Global Brand Database / Madrid Monitor | Official scope, terms, and search-method documentation reviewed                                                                   | **Not verified**; mandatory compliant interactive/counsel search                               |
-| EUIPO / TMview                              | Official availability guidance, TMview help, and API terms reviewed                                                               | **Not verified**; mandatory compliant interactive/counsel search if EU is in scope             |
+| EUIPO / TMview                              | Live TMview Contains/Fuzzy queries; official scope, help, and availability limitations reviewed                                   | Refreshed 2026-07-16; exact/fuzzy preliminary grid retained, not an official-register or clearance result |
 
 Every zero below is limited to the stated query, database, date, and returned
 result set. It does not establish registrability, non-infringement, priority,
 common-law absence, company-name availability, store reservation, or Apple
 approval.
+
+The exact 2026-07-16 procedures, query modes, result-set bounds, material rows,
+limitations, and primary links are retained in the governed
+[`query-ledger.md`](./evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/query-ledger.md)
+and
+[`evidence.json`](./evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json).
 
 ## Apple App Store public screen
 
@@ -156,17 +162,38 @@ successful checkout. No domain was purchased, held, or placed in a cart.
 
 ## Social record
 
-On 2026-07-15, exact quoted searches for each of `RoutineKind`, `Routine Kind`,
-`Ritunera`, `Ritualoom`, and `Rituvia`, individually restricted to Instagram,
-X, YouTube, Facebook, and Threads, returned zero indexed hits: 25 query
-combinations. TikTok blocked automated access.
+The 2026-07-16 refresh supplemented the earlier 25 exact, site-restricted
+queries with direct public path checks. It found two definite path constraints:
 
-This does not establish handle availability. Private, dormant, unindexed,
-recently created, localized, or platform-reserved accounts remain invisible.
-No direct authenticated claim was performed. Counsel/founder must check the
-exact lowercase handle plus `get`, `app`, and `hq` variants immediately before
-authorized reservation on Instagram, TikTok, X, YouTube, Facebook, Threads,
-Pinterest, and Reddit.
+- [YouTube `@routinekind`](https://www.youtube.com/@routinekind) resolves to an
+  existing entertainment/kindness channel, canonical ID
+  `UCTzMIlczrCXofrWMdAwf3RA`, with 319 subscribers and 34 videos during the
+  check. A cleared `RoutineKind` launch would need a different YouTube handle.
+- [Facebook `ritunera`](https://www.facebook.com/ritunera) redirects to
+  `facebook.com/ritu.nera/`, an existing personal public identity. The exact
+  Facebook path must not be described as available. The individual's display
+  name was intentionally omitted because it is unnecessary to prove the path
+  constraint.
+
+The operating [Rituva](https://www.byrituva.com/) skincare site also links
+public `byrituva` Instagram, Facebook, and YouTube identities, reinforcing the
+same-category comparator. Exact Instagram checks returned generic public
+shells for the working sequence; X returned 404; YouTube returned 404 for
+`Ritunera` and `Ritualoom`; Facebook returned generic shells for
+`RoutineKind` and `Ritualoom`; and Threads redirected to login. Those signals
+do not establish availability.
+
+Private, dormant, unindexed, recently created, localized, or
+platform-reserved accounts remain invisible. No login, claim, reservation, or
+account mutation occurred. Authenticated reservation of the selected name and
+fallback variants belongs to BRAND-07 after BRAND-06 clearance; it is not a
+BRAND-03 availability claim.
+
+Narrow public UK Companies House searches returned no exact `RoutineKind`,
+`Ritunera`, or `Ritualoom` company. This is not company-name availability and
+does not cover US state or Canadian corporate/trade-name registers. Florida's
+public record continued to show `RETUVIA LLC` active, document
+`L25000088905`, with a 2026 annual report filed 2026-02-07.
 
 ## CIPO official Canadian database
 
@@ -225,7 +252,7 @@ statuses in [TSDR](https://tsdr.uspto.gov/). Syntax follows the
 
 | Candidate/form          | Official query summary                                                                                                          | Result and coverage                                                    |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| RoutineKind             | Exact `RoutineKind`, spaced form, `routinekind*`, three tested spelling/phonetic forms, and combined `routin*` + `kind*`        | 0 each; all statuses or live scope as stated in the retained query log |
+| RoutineKind             | Exact `RoutineKind`, spaced form, `routinekind*`, three tested spelling/phonetic forms, and combined `routin*` + `kind*`        | 0 each in the summarized all-status or live scope; the raw 2026-07-15 request grid was not separately retained |
 | Routine component       | `CM:routin* AND TARGET AND LD:true`                                                                                             | 97; all 97 screened                                                    |
 | Rootin/Rutin components | `rootin*` and `rutin*` target-class live controls                                                                               | 9 and 2; all screened                                                  |
 | Ritunera                | Exact, spaced, `ritun*`, `ritu?era`, fuzzy `~1`, and tested `Ritoonera`, `Ritunaira`, `Reetunera`, `Retunera`, `Retinera` forms | 0 each                                                                 |
@@ -275,67 +302,100 @@ variations. These results are narrow preliminary inputs only:
 
 ## UKIPO gate
 
-The official [UK trade mark search](https://www.gov.uk/search-for-trademark)
-was reached, but the result service presented a CAPTCHA. No bypass or automated
-substitute was attempted. The UK result grid is therefore **not verified** and
-must be run manually or by counsel if the UK is in scope.
+The live [UK trade mark search](https://www.gov.uk/search-for-trademark) was
+rerun using `Word` + `Similar`, all statuses, no class filter, the full displayed
+filing range (`1876-01-01` through `2026-07-16`), and 50 rows per page. Every
+displayed row was reviewed because each result set fit on one page.
 
-## WIPO, Madrid, and EUIPO/TMview gate
+| Query       | Displayed results | Exact result | Material preliminary leads |
+| ----------- | ----------------: | ------------ | -------------------------- |
+| RoutineKind |                 0 | 0            | None in the returned set   |
+| Ritunera    |                23 | 0            | Registered `Trunera` in classes 7 and 9; registered `RITUZENA` in class 5 |
+| Ritualoom   |                 4 | 0            | `Virtualoom`, dead `TRAILOOM`, published `ULTRAROOM`, and refused `UltraZoom`; this narrow set does not replace a `RITUAL`-component review |
+| Rituvia     |                13 | 0            | Published `Ritjuva` in classes 5 and 32; protected `TUTIVIA` and `RITRIVA`; registered `INTUVIA` and `VITRUVIA PHYSIOTHERAPY`; dead `Retivia` |
 
-The WIPO Global Brand Database, Madrid Monitor, and EUIPO/TMview result grids
-remain **not verified**. No candidate count was obtained, so none is recorded
-as zero, clear, or available.
+Direct records retained for counsel include
+[`Trunera` UK00004238833](https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00004238833)
+and
+[`Ritjuva` UK00004409049](https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00004409049).
+The latter was filed 2026-06-29, displayed `Application Published`, and covered
+dietary supplements in class 5 and non-alcoholic aperitifs in class 32.
 
-Automated substitutes were not used because
-[WIPO's terms](https://www.wipo.int/en/web/global-brand-database/terms_and_conditions)
-prohibit automated querying/scraping, Madrid Monitor states that it has no
-public search API and disallows automatic querying, and the
-[EUIPO search API](https://dev.euipo.europa.eu/product/trademark-search_100)
-requires an authenticated subscription unavailable here.
+Current official journal records also confirm that the `RITUAL` formative is
+active in skincare, beauty, wellness, education, and adjacent goods/services:
 
-Relevant official search facts:
+- [`TIFFA RITUAL` UK00004336606](https://www.ipo.gov.uk/t-tmj/tm-journals/2026-009/UK00004336606.html), class 3 cosmetics and skincare;
+- [`DERMASOMA RITUAL ARC` UK00004337982](https://www.ipo.gov.uk/t-tmj/tm-journals/2026-009/UK00004337982.html), classes 35, 41, and 44; and
+- [`RITUAL OF GIANTS` UK00004340568](https://www.ipo.gov.uk/t-tmj/tm-journals/2026-010/UK00004340568.html), classes 3 and 5.
 
-- [WIPO pre-filing guidance](https://www.wipo.int/en/web/madrid-system/how_to/search/index)
-  says the Global Brand Database covers more than 50 million records from more
-  than 70 databases, but national/regional registers still need searching.
-- The [Global Brand Database guide](https://www.wipo.int/documents/d/global-brand-database/docs-en-user-guide.pdf?download=true)
-  supports exact-expression, fuzzy, phonetic, embedded, stemming, class, and
-  Boolean methods; reports/downloads are capped at 180 records.
-- [Madrid Monitor](https://www3.wipo.int/madrid/monitor/en/index.jsp) supports
-  exact, fuzzy, phonetic, wildcard, and Nice-class searches and states ordinary
-  data is updated daily.
-- [TMview help](https://www.tmdn.org/static/tmdsview/tmview/helpFiles/en/help.html)
-  supports phrase, fuzzy, wildcard, and class searches, and warns that some
-  offices do not apply unsupported criteria.
-- [EUIPO's availability FAQ](https://www.euipo.europa.eu/en/help-centre/tm/faq-search-availability)
-  warns that even zero results are non-exhaustive and adjacent classes can
-  matter.
+These are preliminary query results, not a UK legal opinion or availability
+statement. Counsel must review the complete records, owners, priority,
+goods/services, status histories, and marketplace use if the UK is approved.
 
-The compliant manual/counsel matrix must cover classes 9, 35, 41, 42, 44, and
-45 and include exact, fuzzy, phonetic, wildcard, translation/transliteration,
-owner, goods/services, status, territory/designation, and complete result-cap
-review for `RoutineKind`, `Routine Kind`, `Ritunera`, `Ritualoom`, and the
-rejected `Rituvia` comparator plus its close leads.
+## EUIPO / TMview live preliminary grid
+
+[TMview](https://www.tmdn.org/tmview/get-detail?lang=en) was queried in live
+`Contains` and `Fuzzy` modes. TMview is coordinated through the European Union
+Intellectual Property Network, but it expressly warns that it is not an
+official register and that its data has no legal effect.
+
+| Query       | Contains | Fuzzy | Reviewed result-set boundary |
+| ----------- | -------: | ----: | ---------------------------- |
+| RoutineKind |        0 |     0 | Complete displayed sets      |
+| Ritunera    |        0 |     1 | `RITUXERA`, Egypt, registered, class 5 |
+| Ritualoom   |        0 |     0 | Complete displayed sets; no separate `RITUAL` component grid in this refresh |
+| Rituvia     |        0 |     7 | Complete displayed set; included `ITUVIA`, `RITUXIMAB RITUVA`, and `RITULIA` |
+| Retuvia     | Not run  |    77 | Only the first 30 displayed rows were reviewed; no claim is made about the remaining 47 |
+
+`RITULIA` was shown as filed in Argentina on 2026-06-23 in class 5 for goods
+including dermatological creams. The `Retuvia` control surfaced numerous near
+forms including `RENUVIA`, `REJUVIA`, `REDUVIA`, and `Rentuvia` across
+health, beauty, software, and service contexts. These are leads for formal
+review, not conclusions about confusion or priority.
+
+## WIPO Global Brand Database and Madrid Monitor gate
+
+The official
+[WIPO Global Brand Database](https://www.wipo.int/en/web/global-brand-database)
+landing page and [Madrid Monitor](https://www3.wipo.int/madrid/monitor/en/) were
+reached. No candidate grid was run or recorded because the applicable WIPO
+terms prohibit automated querying/scraping and the available research surface
+did not support a compliant retained interactive search. No WIPO or Madrid
+candidate is therefore recorded as zero, clear, or available.
+
+[WIPO pre-filing guidance](https://www.wipo.int/en/web/madrid-system/how_to/search/index)
+also says national and regional registers must still be searched. The compliant
+manual/counsel matrix must cover the founder-approved countries and relevant
+classes 9, 35, 41, 42, 44, and 45, using exact, fuzzy, phonetic, wildcard,
+translation/transliteration, owner, goods/services, status,
+territory/designation, and complete result-cap review for `RoutineKind`,
+`Routine Kind`, `Ritunera`, `Ritualoom`, and the rejected `Rituvia` comparator
+plus its close leads. This formal work is owned by BRAND-06.
 
 ## Search conclusion
 
-The provisional counsel sequence after the 2026-07-15 refresh is:
+The provisional sequence for counsel review after the 2026-07-16 refresh is:
 
 1. `RoutineKind` — strongest product fit; no exact result in the checked public
-   store or official national queries, but the `Routine` field is crowded and
-   the composite may be weak.
-2. `Ritunera` — strongest coined backup; narrow exact/variant screens are
-   encouraging, but the `RITU-`/`RITUAL` field and linguistic risk remain.
+   store or preliminary register queries, but the `Routine` field is crowded,
+   the composite may be weak, and exact YouTube handle `@routinekind` is
+   occupied.
+2. `Ritunera` — strongest coined backup; narrow exact/variant screens returned
+   no exact result, but the `RITU-`/`RITUAL` field, registered UK class-9
+   `Trunera`, Facebook path redirect, and linguistic risk remain.
 3. `Ritualoom` — lower-confidence replacement backup; no exact hit in the
-   checked Apple, CIPO, USPTO, IP Australia, common-law, or RDAP screens, but it
-   deliberately adopts a very crowded `RITUAL` root.
+   checked Apple, CIPO, USPTO, IP Australia, UKIPO, TMview, common-law, or RDAP
+   screens, but it deliberately adopts a very crowded `RITUAL` root.
 
 `Rituvia` is suspended from the working shortlist because active `Rituva`
-skincare use, `Retuvia` beauty-sector use, `RITUVÉ`, its registered `.com`, and
-the crowded `RITU-` field materially outweigh its prior product score.
+skincare use, `Retuvia` beauty-sector use, `RITUVÉ`, its registered `.com`,
+UK `Ritjuva`, TMview `RITULIA`, and the crowded `RITU-` field materially
+outweigh its prior product score.
 
 None of these names is cleared, available, registrable, non-infringing,
-reserved, approved by Apple, or approved for production. BRAND-03 remains
-`in_progress` until the compliant WIPO/Madrid, UKIPO, EUIPO/TMview (if in
-scope), direct handle, company-name, and counsel searches are complete for the
-founder-approved launch countries.
+reserved, approved by Apple, or approved for production. BRAND-03 is complete
+only for its declared, reproducible preliminary public-knockout scope. Formal
+WIPO/Madrid and final-country searching, comprehensive common-law and
+company-name work, linguistic review, and the written legal decision remain
+BRAND-06. Authenticated store, domain, identifier, and social reservation work
+remains BRAND-07 after a candidate is counsel-cleared and founder-approved.

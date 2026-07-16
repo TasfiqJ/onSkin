@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "evidenceId": "brand03-public-knockout-2026-07-16",
+  "workItemIds": ["BRAND-03"],
+  "featureIds": ["brand_identity"],
+  "gatedSurfaceIds": [],
+  "environment": "public-research",
+  "appVersion": "0.1.0",
+  "buildNumber": "not-applicable",
+  "gitCommit": "799844b821e683afb906782d94b2191352eb9302",
+  "sourceHashes": {
+    "docs/hugeToDo/BRAND-02-scored-longlist.md": "2c9752448b0016331add4f67a8220cb9a3aa00c8181f5572f1403646f99131f1",
+    "docs/hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md": "f90f1490ed523f8350aa170fc592c3577ad9075f3bc74e7b3aadd675b4d63872",
+    "docs/hugeToDo/BRAND-04-recommendation.md": "ad979a107af6b5589897df9afad731406bb247ed2d0e905207413c6fe3272cc1",
+    "docs/hugeToDo/BRAND-05-counsel-clearance-packet.md": "b557d0a348977ab212d8e223b15cf8154a611c266052b6edee0ca94bd362f38e",
+    "docs/hugeToDo/execution-status.json": "d30d4f3aa8a4ea1502c08b63c9c4ea6e523ce082f71511f19837ff389c9d6882",
+    "docs/phase-3/ip-fto-review-log.md": "86a8a2ce8a7172b87e04769a7f605f3b714f154de88b4e20952e5f83ee27cac5",
+    "query-ledger.md": "ce1554dad59bdca4134f1c170556b98d988b9440c0e1d090b06a08432fdecbb3"
+  },
+  "startedAt": "2026-07-16T03:48:07.662Z",
+  "completedAt": "2026-07-16T04:00:18.129Z",
+  "operatorRole": "Codex public-research operator",
+  "deviceOrRuntime": "Codex in-app browser and public web sources; no authenticated accounts",
+  "commandsOrProcedure": [
+    "Reviewed the source-bound three-name sequence for counsel review and suspended comparator.",
+    "Ran current TMview Contains and Fuzzy searches and reviewed every returned row for the working sequence and the seven-row Rituvia fuzzy set.",
+    "Ran current UKIPO Similar searches across all statuses and the full displayed date range with up to 50 rows per page.",
+    "Reviewed direct material UKIPO records and current official UK journal entries.",
+    "Reached WIPO Global Brand Database and Madrid Monitor official interfaces but did not automate restricted candidate queries.",
+    "Checked direct public handle, UK company, adverse company, domain, store, and common-law signals without login or reservation."
+  ],
+  "result": "pass",
+  "findings": [
+    "The declared public knockout scope has a dated query ledger with exact modes, results, limitations, and primary evidence links.",
+    "RoutineKind, Ritunera, and Ritualoom had no exact TMview Contains row; TMview Fuzzy returned one pharmaceutical near form for Ritunera and none for the other two.",
+    "UKIPO Similar returned no RoutineKind row, 23 Ritunera algorithmic rows including registered class-9 Trunera, and four non-sector Ritualoom algorithmic rows.",
+    "RoutineKind's exact YouTube handle is occupied and Ritunera's exact Facebook path redirects to an existing public identity.",
+    "Rituvia remains suspended; a 2026 RITULIA dermatological-cream filing and published UK Ritjuva health filing add to the existing Rituva, Retuvia, and RITUVÉ evidence.",
+    "Formal legal clearance, comprehensive WIPO/Madrid and final-country searches, authenticated reservations, and Apple approval were not claimed and remain separate gates."
+  ],
+  "redactionsApplied": [
+    "Retained only public business, mark, application, and channel facts needed for issue spotting.",
+    "Retained no credentials, account session data, CAPTCHA data, private identifiers, screenshots, cookies, tokens, or raw browser state.",
+    "No form, filing, purchase, reservation, message, or account mutation occurred."
+  ],
+  "retentionClass": "release-qa",
+  "deleteOrReviewAt": "2027-07-16",
+  "rollbackRef": "not-applicable: read-only research; supersede through a new source-bound evidence record"
+}

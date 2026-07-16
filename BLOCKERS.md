@@ -74,10 +74,12 @@ Read this with:
 ## Current Launch Gates
 
 1. RoutineKind working identity is implemented locally and remains the first
-   counsel candidate. The refreshed provisional sequence is `RoutineKind`,
-   `Ritunera`, `Ritualoom`; `Rituvia` is suspended after material `Rituva`
-   skincare and `Retuvia` beauty-sector findings. Legal clearance, compliant
-   remaining grids, reservations, and production identity evidence are open.
+   candidate in the sequence for counsel review. The provisional sequence is
+   `RoutineKind`, `Ritunera`, `Ritualoom`; `Rituvia` is suspended. The governed
+   2026-07-16 public knockout is complete for its declared preliminary scope.
+   Comprehensive WIPO/Madrid, final-country, company/trade-name, common-law,
+   linguistic, legal-decision, reservation, and production-identity evidence
+   remain open.
 2. Supabase project not live.
 3. RevenueCat not live.
 4. Apple Developer/App Store Connect and Google OAuth for iPhone are not verified.
@@ -337,16 +339,20 @@ That technical audit result is not legal clearance, trademark clearance,
 domain registration, App Store name reservation, or final production identity
 evidence. Production native config still fails closed unless
 `BRAND_LEGAL_CLEARANCE=cleared` and explicit final identity env values are set.
+That flag is an operator-supplied build assertion, not evidence that counsel
+issued an opinion.
 
-The dated 2026-07-15 knockout refresh completed current Apple public-store,
-CIPO, USPTO, IP Australia, RDAP, indexed common-law, and indexed social screens.
-It retains `RoutineKind` first, `Ritunera` backup 1, and lower-confidence
-`Ritualoom` backup 2. It suspends `Rituvia`: active `Rituva` differs by one
-letter and sells routine-based skincare, `Retuvia` is an active Florida-company
-hair-products lead, `RITUVÉ` is a further close storefront lead, and
-`rituvia.com` is registered. WIPO/Madrid, UKIPO, EUIPO/TMview if in scope,
-direct authenticated handle/company-name checks, and formal counsel searches
-remain unverified. No name is cleared, available, reserved, or Apple-approved.
+The governed 2026-07-16 knockout refresh completed the declared Apple public
+store, CIPO, USPTO, IP Australia, RDAP, common-law, public-handle, UKIPO, and
+TMview preliminary scope. It retains `RoutineKind` first, `Ritunera` backup 1,
+and lower-confidence `Ritualoom` backup 2. It records occupied YouTube
+`@routinekind`, a redirecting Facebook `ritunera` path, UK class-9 `Trunera`,
+and the dense `RITUAL` field. It suspends `Rituvia` after `Rituva`, `Retuvia`,
+`RITUVÉ`, `Ritjuva`, `RITULIA`, and registered `rituvia.com` evidence.
+Comprehensive WIPO/Madrid, final-country, company/trade-name, common-law,
+linguistic, and qualified-counsel review remain open. Authenticated reservations
+remain a later gate. No name is cleared, available, registrable,
+non-infringing, reserved, or Apple-approved.
 
 Risk:
 
@@ -367,10 +373,12 @@ Next action:
 - Ask counsel to clear or reject the exact `RoutineKind`, `Ritunera`, and
   `Ritualoom` sequence and review the rejected `Rituvia` comparators; do not
   revert to `OnSkin` unless counsel explicitly clears it.
-- Complete compliant WIPO/Madrid, UKIPO, EUIPO/TMview if in scope, company-name,
-  direct-handle, and comprehensive common-law searches for approved countries.
-- Run registrar, App Store Connect, social-handle, paid
-  search, and common-law checks for the final candidate.
+- Have qualified counsel independently reproduce and expand the preliminary
+  grids and complete WIPO/Madrid, final-country, company/trade-name,
+  common-law, linguistic, priority, and goods/services analysis.
+- After written counsel decision and founder selection, run authenticated
+  registrar, App Store Connect, package, scheme, and social-handle reservation
+  checks. Each receipt proves only its specific reservation at that time.
 - Use `docs/brand-decision-memo.md` to record the final identity decision.
 
 Exit criteria:

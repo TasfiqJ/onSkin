@@ -6,9 +6,12 @@ Purpose: turn the master plan into executable engineering slices without weakeni
 
 ## Current Strategic Position
 
-- Working brand candidate and engineering default: `RoutineKind`.
+- Working engineering default and first candidate in the sequence for counsel
+  review: `RoutineKind`; backups are `Ritunera` and lower-confidence
+  `Ritualoom`; `Rituvia` is suspended.
 - Final brand status: not legally cleared; production builds still require
-  explicit final identity env values and `BRAND_LEGAL_CLEARANCE=cleared`.
+  explicit final identity env values and `BRAND_LEGAL_CLEARANCE=cleared`. The
+  value is a fail-closed build assertion, not evidence of a legal opinion.
 - Public position: private skincare shelf and routine tracker, not generic scanner, AI beauty analyzer, or shopping marketplace.
 - Launch loop: add owned products -> get useful reviewed insight -> see AM/PM routine -> complete Today check-off -> understand private progress -> pay after value.
 - Release scope: iOS-only, every feature in `docs/FEATURE_INDEX.md` required;
@@ -16,7 +19,9 @@ Purpose: turn the master plan into executable engineering slices without weakeni
 
 ## Rebrand Migration Checklist
 
-Do not create production accounts or store records until final brand clearance exists.
+Do not create production accounts or store records until the founder selects a
+candidate covered by qualified counsel's written decision for the exact use,
+countries, classes, and conditions.
 
 1. Inventory public identity references.
 

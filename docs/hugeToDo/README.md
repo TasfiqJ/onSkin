@@ -16,6 +16,8 @@ Start here:
 - [DB-05 Credential-Free Local Reset Evidence](./DB-05-LOCAL-RESET-2026-07-14.md)
 - [DB-06 Fresh-Staging Deployment Source Checkpoint](./DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md)
 - [Legacy Brand Compatibility Checkpoint](./BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md)
+- [BRAND-03 Knockout Search Record](./BRAND-03-knockout-search-record-2026-07-12.md)
+- [BRAND-03 Governed Public-Research Evidence](./evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json)
 - [IOS-10 Export-Compliance Gate](./IOS-10-EXPORT-COMPLIANCE-GATE.md)
 - [US Wave 1 Privacy and Consumer-Health Law Gate](./US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md)
 - [Health-Consent Withdrawal, Processor, and Retention Matrix](./HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md)
@@ -39,6 +41,18 @@ of functions, public frozen responses, hosted Auth controls, migrations,
 schema, Storage, and all Cron jobs. It leaves `DB06_TRAFFIC_FREEZE=frozen` for a
 separate downstream live-gate release. No approved hosted target was used and
 no live DB-06 evidence directory exists.
+
+BRAND-03 is complete only for the governed 2026-07-16 preliminary public
+knockout scope. The sequence for counsel review remains `RoutineKind`,
+`Ritunera`, then lower-confidence `Ritualoom`; `Rituvia` is suspended. The
+record includes UKIPO, TMview, public-handle, national-register, store, domain,
+and common-law issue spotting with explicit result-set limits. BRAND-06 remains
+externally pending for comprehensive WIPO/Madrid, final-country,
+company/trade-name, common-law, linguistic, priority, goods/services, and
+qualified-counsel analysis plus a written decision. BRAND-07 remains the later
+authenticated reservation gate. No candidate is described as legally clear,
+available, registrable, non-infringing, reserved, Apple-approved, or guaranteed
+to pass App Review.
 
 The Sign in with Apple lifecycle is also a source checkpoint, not launch
 clearance. Migration 0055 and the mobile/Edge contracts implement nonce/state

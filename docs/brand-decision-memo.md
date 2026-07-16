@@ -1,8 +1,9 @@
 # Brand Decision Memo
 
-Date: 2026-07-04
+Date: 2026-07-16
 
-Status: provisional founder/product decision, pending trademark counsel.
+Status: provisional product sequence, pending founder launch-country decision,
+qualified trademark counsel, and authenticated reservation evidence.
 
 ## Decision
 
@@ -11,15 +12,17 @@ clearance. The default Phase 2 path is to prepare a rebrand before creating
 production Apple, Google, Supabase, RevenueCat, Sentry, PostHog, domain, and
 policy infrastructure.
 
-Working candidate for clearance: `RoutineKind`
+Working sequence for counsel review: `RoutineKind`, `Ritunera`, then
+lower-confidence `Ritualoom`. `Rituvia` is suspended and retained only as an
+adverse comparator.
 
 Candidate identifiers, if cleared:
 
 | Asset                   | Candidate                                         |
 | ----------------------- | ------------------------------------------------- |
 | App display name        | `RoutineKind`                                     |
-| App subtitle            | `Skincare shelf and routine tracker`              |
-| Domain target           | `routinekind.app` first, `routinekind.com` second |
+| App subtitle            | `Skincare shelf & routines`                       |
+| Domain target           | `routinekind.com` first, `routinekind.app` second |
 | URL scheme              | `routinekind`                                     |
 | iOS bundle ID           | `com.routinekind.app`                             |
 | Android package         | `com.routinekind.app`                             |
@@ -30,14 +33,21 @@ Candidate identifiers, if cleared:
 This candidate is not legally cleared. It is the current engineering default so
 development/staging work can proceed without entrenching the conflicted
 `OnSkin` identity. Production builds still require explicit final identity env
-values plus `BRAND_LEGAL_CLEARANCE=cleared`.
+values plus `BRAND_LEGAL_CLEARANCE=cleared`; the value is a fail-closed build
+assertion, not evidence of a legal opinion.
 
-The 2026-07-09 public screening refresh found no exact `RoutineKind` App Store
-or Google Play title in the checked public surfaces and no DNS record for
-`routinekind.app` or `routinekind.com`. It also surfaced adjacent app names
-using `Routine`, `Routinery`, `MyRoutine`, and `Kind App`. Treat that as
-counsel input only; it is not clearance, reservation, or proof that the name is
-safe to launch.
+The governed 2026-07-16 public knockout refresh completed the declared Apple,
+Google Play, common-law, domain, public-handle, CIPO, USPTO, IP Australia,
+UKIPO, and TMview preliminary scope. It found no exact candidate in the stated
+queries but surfaced material risks: a crowded `Routine` field, occupied
+YouTube `@routinekind`, UK class-9 `Trunera`, an occupied/redirecting Facebook
+`ritunera` path, and a dense `RITUAL` beauty/wellness field. `Rituvia` remains
+suspended after same/adjacent-sector and near-mark evidence. See the
+[`BRAND-03 search record`](./hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md)
+and its governed
+[`evidence record`](./hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json).
+Treat all of this as counsel input only; it is not clearance, reservation, or
+proof that any name is safe to launch.
 
 ## Why Keeping OnSkin Is High Risk
 

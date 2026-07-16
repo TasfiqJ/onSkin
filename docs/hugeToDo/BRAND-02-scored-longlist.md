@@ -1,7 +1,7 @@
 # BRAND-02 Scored Longlist
 
 Initial scoring date: 2026-07-12 (America/Toronto)
-Evidence refresh: 2026-07-15 (America/Toronto)
+Evidence refresh: 2026-07-16 (America/Toronto / UTC boundary)
 Status: scored screening artifact; not legal clearance or availability
 
 ## Method
@@ -54,6 +54,8 @@ Risks:
   including software, skincare, beauty, and service adjacency;
 - CIPO includes `Skin&Routine` in classes 3, 9, 35, 42, and 44 and `Routine
 Review` in 42, 44, and 45;
+- exact YouTube handle `@routinekind` is occupied and requires a different
+  handle strategy if the mark is later cleared;
 - enforceability and registrability may be weaker than for a coined word;
 - `Kind` means “child” in German and Dutch, an ambiguity requiring launch-market
   linguistic review, though no offensive meaning was identified here.
@@ -65,7 +67,7 @@ pronunciation: `rih-too-NEH-ruh`.
 
 Strengths:
 
-- most distinctive candidate in this list;
+- highest internal distinctiveness score in this list;
 - no exact Apple title, exact CIPO result, `ritun*` CIPO result, or RDAP record
   for the checked `.com` and `.app` domains was found;
 - no exact or tested narrow-form USPTO result was found;
@@ -77,8 +79,11 @@ Risks:
 - the product category is not self-evident without a subtitle;
 - meaning and pronunciation need native-speaker review in every approved launch
   country;
-- WIPO/Madrid, EUIPO/TMview, UKIPO, direct handles, and comprehensive
-  common-law/counsel searches remain unverified.
+- UKIPO Similar surfaced registered `Trunera` in class 9, TMview fuzzy surfaced
+  pharmaceutical `RITUXERA` in class 5, and Facebook `ritunera` redirects to an
+  existing public identity;
+- comprehensive WIPO/Madrid, final-country, company/trade-name, linguistic,
+  common-law, and counsel searches remain open.
 
 ### 3. Ritualoom
 
@@ -89,8 +94,9 @@ Strengths:
 
 - memorable, visually distinctive, and compatible with routine-building;
 - no exact Apple title, CIPO result, USPTO exact/prefix result, IP Australia
-  exact result, or indexed exact commercial use was identified in the dated
-  screens;
+  exact result, exact match within the four-row UKIPO Similar set, TMview
+  Contains/Fuzzy result, or indexed exact commercial use was identified in the
+  dated screens;
 - `.com` and `.app` returned no RDAP registry object in the point-in-time
   check.
 
@@ -99,6 +105,8 @@ Risks:
 - the `RITUAL` root is exceptionally crowded: the refreshed USPTO screen found
   189 live target-class `ritual*` records, and CIPO returned 163 `ritual*`
   records across all statuses;
+- current UK journal records include `RITUAL`-formative skincare, beauty,
+  wellness, and adjacent filings;
 - `loom` can sound mystical or ominous in English and may weaken the calm,
   evidence-aware voice;
 - spelling, pronunciation, linguistic meaning, and confusing similarity need
@@ -108,14 +116,15 @@ Risks:
 
 - `Shelfkind`: strong immediate fit, but `shelfkind.com` is registered, and CIPO
   includes `EVERSHELF` in classes 9/42 and `Shelf Health` in 9/35/44.
-- `CalmCabinet`: clear but too descriptive, too storage-specific, and difficult
-  to defend as the product expands.
+- `CalmCabinet`: easy to understand but descriptively weak, too
+  storage-specific, and difficult to defend as the product expands; no legal
+  clearance conclusion is stated.
 
 ## Knockout reasons
 
 | Candidate   | Evidence-based reason                                                                                                                                                                                                                                                                                 |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Rituvia     | Active [Rituva](https://www.byrituva.com/) differs by one letter and sells routine-based skincare; [Retuvia](https://www.retuvia.com/) is an active Florida-company beauty lead; `RITUVÉ` is a further close storefront lead; `rituvia.com` is registered; and the `RITU-`/`RITUAL` field is crowded. |
+| Rituvia     | Active [Rituva](https://www.byrituva.com/) differs by one letter and sells routine-based skincare; [Retuvia](https://www.retuvia.com/) is an active Florida-company beauty lead; `RITUVÉ` is a further close storefront lead; `rituvia.com` is registered; UK `Ritjuva` and TMview `RITULIA` add near-form health/skincare inputs; and the `RITU-`/`RITUAL` field is crowded. |
 | OnSkin      | Exact incumbent skincare scanner at [onskin.com](https://onskin.com/) and on the [App Store](https://apps.apple.com/us/app/onskin-beauty-product-scanner/id1630768985).                                                                                                                               |
 | RoutineNest | Exact active routine website with a skincare-routine category: [routinenest.com](https://www.routinenest.com/).                                                                                                                                                                                       |
 | Rutiva      | Exact active payments technology brand at [rutiva.tech](https://www.rutiva.tech/) plus public wellness/social use.                                                                                                                                                                                    |

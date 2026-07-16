@@ -1,9 +1,11 @@
 # Brand Evidence Packet
 
-Date: 2026-07-09
+Date: 2026-07-16
 
-Purpose: give the founder and trademark counsel a clean packet for deciding
-whether this product can launch as `OnSkin`. This is evidence, not legal advice.
+Purpose: give the founder and qualified trademark counsel a source-bound packet
+for rejecting the conflicted `OnSkin` identity and clearing or rejecting the
+current three-name sequence. This is preliminary evidence, not legal advice,
+clearance, availability, reservation, or Apple approval.
 
 ## Existing Public OnSkin Evidence
 
@@ -29,10 +31,11 @@ Current engineering defaults in `apps/mobile/app.base.json` after the
 | Android package | `com.routinekind.app` |
 
 Production builds still require explicit final identity environment values and
-`BRAND_LEGAL_CLEARANCE=cleared`. These defaults reduce accidental use of the
-conflicted `OnSkin` identity in dev/staging, but they are not trademark
-clearance, domain registration, App Store name reservation, or Google Play
-package reservation.
+`BRAND_LEGAL_CLEARANCE=cleared`. That value is a fail-closed build assertion,
+not evidence that counsel issued an opinion. These defaults reduce accidental
+use of the conflicted `OnSkin` identity in dev/staging, but they are not
+trademark clearance, domain registration, App Store name reservation, or
+Google Play package reservation.
 
 Legacy `OnSkin`, `onskin`, `onskin://`, `com.onskin.app`, and placeholder
 `onskin.app` references remain high risk where they are still present in
@@ -41,6 +44,24 @@ public/review-needed launch references are gone; remaining hits are classified
 as guard rails, internal namespaces, or historical context. The final production
 app name, project refs, domains, store records, and OAuth allow-lists still need
 real clearance and reservation.
+
+## Current Counsel Packet
+
+The current product sequence is `RoutineKind`, `Ritunera`, then
+lower-confidence `Ritualoom`. `Rituvia` is suspended and retained only as an
+adverse comparator. The dated search record and governed evidence preserve the
+queries, returned-set boundaries, material leads, source links, and limitations:
+
+- [`BRAND-03 knockout search record`](./hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md)
+- [`BRAND-04 recommendation`](./hugeToDo/BRAND-04-recommendation.md)
+- [`BRAND-05 counsel clearance packet`](./hugeToDo/BRAND-05-counsel-clearance-packet.md)
+- [`BRAND-03 query ledger`](./hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/query-ledger.md)
+- [`BRAND-03 governed evidence`](./hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json)
+
+The public knockout is complete only for its declared preliminary scope. It
+does not replace counsel's WIPO/Madrid, final-country, common-law,
+company/trade-name, linguistic, priority, goods/services, or
+likelihood-of-confusion analysis.
 
 ## DNS Checks
 
@@ -102,10 +123,14 @@ common `routine` and `kind` terms in mobile-app contexts.
 
 ## Initial Trademark Search Notes
 
-Initial web search did not produce a conclusive clearance answer. Counsel should
-run a proper search through USPTO, WIPO/Madrid, Canadian CIPO, EUIPO/UKIPO if
-international launch is planned, app stores, domains, social handles, and common
-law usage.
+The governed preliminary screen now covers the declared public Apple, Google
+Play, common-law, domain, handle, CIPO, USPTO, IP Australia, UKIPO, and TMview
+queries. WIPO/Madrid candidate grids were not run because the available surface
+could not be used for compliant retained automated querying. Formal BRAND-06
+therefore still requires counsel to independently reproduce and expand the
+national searches and complete WIPO/Madrid, every approved launch country,
+common-law, company/trade-name, linguistic, priority, goods/services, and
+likelihood-of-confusion analysis.
 
 Useful official starting point:
 
@@ -121,15 +146,24 @@ Useful official starting point:
    the incumbent uses `onskin.com` and appears to use `@onskin.app` socially?
 4. Would a subtitle or differentiated logo meaningfully reduce confusion, or is
    a full rebrand required?
-5. If a rebrand is recommended, are `RoutineKind`, `routinekind.com`, and
-   `routinekind.app` viable candidates after full clearance?
+5. Clear or reject, in order, `RoutineKind`, `Ritunera`, and `Ritualoom` for the
+   founder-approved countries and actual goods/services. Confirm whether
+   `Rituvia` should remain a permanent do-not-use entry.
+6. If a candidate is cleared, what exact spelling, ownership, classes,
+   territory, filing/reservation sequence, coexistence limits, monitoring, and
+   evidence conditions apply to its `.com`, `.app`, App Store name, bundle ID,
+   URL scheme, and public social identities?
 
 ## Packet For Counsel
 
-- Current `apps/mobile/app.json` identifiers
+- Current `apps/mobile/app.base.json` defaults and `apps/mobile/app.config.js`
+  production guards
 - Screenshots or PDFs of `onskin.com`, App Store listing, Google Play listing,
   and social handle
 - This app's practical V1 scope from `docs/v1-scope-freeze.md`
 - Store listing draft, once written
 - Target launch countries
-- Candidate rebrand list and domain targets
+- BRAND-01 through BRAND-05 plus the governed BRAND-03 query ledger/evidence
+- Candidate domain, store-name, package, scheme, and handle targets. A receipt
+  proves only the specific asset reservation at that time; it does not prove
+  trademark availability, registrability, non-infringement, or Apple acceptance

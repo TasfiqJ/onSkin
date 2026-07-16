@@ -7044,14 +7044,37 @@ Refreshed BRAND-03 evidence through official Apple public search, CIPO, USPTO,
 IP Australia, and registry RDAP sources plus indexed common-law/social screens.
 The USPTO pass reviewed all 97 live target-class `routin*` records and closed
 the old first-100 gap by paging all 192 live target-class `ritu*` records. The
-current counsel sequence is `RoutineKind`, `Ritunera`, then lower-confidence
-`Ritualoom`. `Rituvia` is suspended: active `Rituva` differs by one letter and
-sells routine-based skincare, active Florida-company `Retuvia` targets hair
-products, `RITUVÉ` is another close storefront lead, and `rituvia.com` is
+current sequence for counsel review is `RoutineKind`, `Ritunera`, then
+lower-confidence `Ritualoom`. `Rituvia` is suspended: active `Rituva` differs
+by one letter and sells routine-based skincare, active Florida-company
+`Retuvia` targets hair products, `RITUVÉ` is another close storefront lead,
+and `rituvia.com` is
 registered. WIPO/Madrid, UKIPO, EUIPO/TMview if in scope, authenticated direct
 handles/company names, founder-approved countries, and comprehensive counsel
 review remain open. No candidate is described as clear, available, reserved,
 or Apple-approved.
+
+### BRAND-03 governed public knockout completion (2026-07-16)
+
+Completed BRAND-03 for its declared preliminary public scope and retained a
+governed query ledger/evidence record bound to source revision
+`799844b821e683afb906782d94b2191352eb9302`. The refresh added complete displayed
+UKIPO Similar sets for the three-name sequence and suspended `Rituvia`, TMview
+Contains/Fuzzy grids with explicit result-set bounds, direct public-handle
+constraints, and current UK journal leads. Material inputs include occupied
+YouTube `@routinekind`, a redirecting Facebook `ritunera` path, registered UK
+class-9 `Trunera`, `RITULIA` goods including dermatological creams, published
+UK `Ritjuva`, and a dense current `RITUAL` skincare/beauty field. The retained
+personal-data footprint was minimized by omitting an unrelated individual's
+display name.
+
+This completion is not trademark clearance. No candidate is called available,
+registrable, non-infringing, reserved, Apple-approved, or production-ready.
+BRAND-06 remains externally pending for founder-approved countries, qualified
+counsel's independent WIPO/Madrid, final-country, company/trade-name,
+common-law, linguistic, priority, and goods/services analysis plus written
+decision. BRAND-07 remains the authenticated reservation gate after counsel and
+founder selection.
 
 ## Open questions for the founder
 
@@ -7060,9 +7083,11 @@ and the Phase 1 docs under `docs/`.
 
 Highest priority:
 
-1. Brand decision: keep `OnSkin` only with written counsel clearance; otherwise
-   clear and execute the rebrand path. `RoutineKind` is the working clearance
-   candidate, not a final legal conclusion.
+1. Brand decision: reject the conflicted `OnSkin` path; confirm launch countries
+   and owner entity; have qualified counsel accept or reject `RoutineKind`,
+   `Ritunera`, and `Ritualoom` for the exact proposed use; then founder-select
+   and authenticate reservations. `RoutineKind` is only the working engineering
+   identity and first candidate for review.
 2. Assign account owners and billing for Supabase, Apple, Google, RevenueCat,
    PostHog, Sentry, Turnstile, and domain registration.
 3. Retain counsel for privacy, terms, consumer-health-data, subscription, store

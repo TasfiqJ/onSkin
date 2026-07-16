@@ -15,8 +15,8 @@ external accounts.
 
 | Item                  | Decision needed                                              | Current Phase 1 state                                                                    |
 | --------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| Brand name            | Keep `OnSkin` only with counsel clearance; otherwise rebrand | Default path is rebrand; `RoutineKind` is the working candidate for clearance            |
-| Domain                | Final policy, support, app link, and fallback domain         | Target candidate `routinekind.app`; registrar and legal clearance required               |
+| Brand name            | Reject conflicted `OnSkin`; select only after written counsel decision and founder approval | Sequence for counsel review is `RoutineKind`, `Ritunera`, then lower-confidence `Ritualoom`; `Rituvia` is suspended |
+| Domain                | Final policy, support, app link, and fallback domain         | Provisional first-candidate order is `routinekind.com`, then `routinekind.app`; authenticated reservation and legal decision required |
 | iOS bundle ID         | Final App Store identifier                                   | Candidate `com.routinekind.app` if rebrand clears                                        |
 | Android package       | Final Play package identifier                                | Candidate `com.routinekind.app` if rebrand clears                                        |
 | URL scheme            | Final deep link scheme                                       | Candidate `routinekind` if rebrand clears                                                |

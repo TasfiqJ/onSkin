@@ -1,6 +1,6 @@
 # Source Packet Audit
 
-Generated: 2026-07-16T00:37:10.889Z
+Generated: 2026-07-16T04:22:14.165Z
 Status: pass
 Strict mode: yes
 
@@ -30,10 +30,10 @@ the top-level packet markdown shape changes without updating the audit.
 | CODE_REVIEW.md                 | identical          | yes       | yes       | 83db5ca6e5ad   |
 | DECISIONS.md                   | identical          | yes       | yes       | c2c32b6b786a   |
 | FEATURE_INDEX.md               | identical          | yes       | yes       | 9e6897ce97f4   |
-| MASTER_PLAN.md                 | identical          | yes       | yes       | 3dbfc808c538   |
+| MASTER_PLAN.md                 | identical          | yes       | yes       | 2a218b10382b   |
 | MASTER_PLAN_UPDATE_PATCH.md    | identical          | yes       | yes       | 634edff435fa   |
 | PRODUCT_REQUIREMENTS.md        | identical          | yes       | yes       | 406d2987034a   |
-| ROADMAP.md                     | identical          | yes       | yes       | c8e0e97427a4   |
+| ROADMAP.md                     | identical          | yes       | yes       | 8a4bdfadfcc7   |
 | TESTING_STRATEGY.md            | identical          | yes       | yes       | 420cd150a688   |
 
 ## Top-Level Packet Files
@@ -54,10 +54,10 @@ the top-level packet markdown shape changes without updating the audit.
 | 04_repo_docs/docs/CODE_REVIEW.md                 | 1985  | 83db5ca6e5ad |
 | 04_repo_docs/docs/DECISIONS.md                   | 60391 | c2c32b6b786a |
 | 04_repo_docs/docs/FEATURE_INDEX.md               | 4097  | 9e6897ce97f4 |
-| 04_repo_docs/docs/MASTER_PLAN.md                 | 60417 | 3dbfc808c538 |
+| 04_repo_docs/docs/MASTER_PLAN.md                 | 61722 | 2a218b10382b |
 | 04_repo_docs/docs/MASTER_PLAN_UPDATE_PATCH.md    | 1473  | 634edff435fa |
 | 04_repo_docs/docs/PRODUCT_REQUIREMENTS.md        | 5865  | 406d2987034a |
-| 04_repo_docs/docs/ROADMAP.md                     | 3596  | c8e0e97427a4 |
+| 04_repo_docs/docs/ROADMAP.md                     | 3814  | 8a4bdfadfcc7 |
 | 04_repo_docs/docs/TESTING_STRATEGY.md            | 14517 | 420cd150a688 |
 
 ## Blockers

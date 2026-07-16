@@ -17,8 +17,11 @@ Features:
 
 Done criteria:
 
-- final name chosen or counsel-cleared
-- bundle/package/scheme/domain decided
+- final name is both founder-approved and covered by qualified trademark
+  counsel's written clearance decision for the approved countries and actual
+  goods/services
+- bundle/package/scheme/domain and public handle variants are authenticated,
+  reserved under authorized accounts, and evidenced
 - no production account is created under conflicted identity
 
 Risks:

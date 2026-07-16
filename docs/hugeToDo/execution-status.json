@@ -330,33 +330,35 @@
     },
     {
       "id": "BRAND-03",
-      "status": "in_progress",
+      "status": "complete",
       "blockedBy": [],
-      "nextAction": "The 2026-07-15 refresh completed current Apple public-store, CIPO, USPTO, IP Australia, RDAP, indexed common-law, and indexed social screens. It suspended Rituvia after finding active one-letter-near Rituva routine-based skincare plus Retuvia beauty-sector and RITUVÉ leads, and moved lower-confidence Ritualoom into backup 2. Complete compliant interactive WIPO Global Brand Database/Madrid Monitor, UKIPO, EUIPO/TMview if in scope, direct authenticated handle/company-name checks, and comprehensive counsel searches in founder-approved launch countries. Do not record an unavailable grid as zero or call any candidate clear, available, reserved, or Apple-approved.",
+      "nextAction": "Preserve the governed 2026-07-16 public-knockout record. It completes the declared Apple, Google Play, CIPO, USPTO, IP Australia, RDAP, common-law, public-handle, UKIPO, and TMview preliminary scope; records occupied YouTube @routinekind and redirecting Facebook ritunera paths plus Trunera, RITULIA, and Ritjuva leads; and leaves comprehensive WIPO/Madrid, final-country, company/trade-name, linguistic, and legal review to BRAND-06. Authenticated reservation is BRAND-07. Do not call any candidate clear, available, registrable, non-infringing, reserved, or Apple-approved.",
       "evidenceRefs": [
         "docs/hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md",
-        "docs/hugeToDo/BRAND-05-counsel-clearance-packet.md"
+        "docs/hugeToDo/BRAND-05-counsel-clearance-packet.md",
+        "docs/hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/query-ledger.md",
+        "docs/hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json"
       ]
     },
     {
       "id": "BRAND-04",
       "status": "complete",
       "blockedBy": [],
-      "nextAction": "Keep RoutineKind provisional until BRAND-03 and BRAND-06 close. Retain Ritunera as backup 1 and lower-confidence Ritualoom as backup 2; keep Rituvia suspended as a rejected comparator unless counsel supplies a written contrary opinion.",
+      "nextAction": "Keep the RoutineKind, Ritunera, then lower-confidence Ritualoom sequence provisional until BRAND-06 closes. Keep Rituvia suspended as a rejected comparator unless qualified counsel supplies a written opinion accepting the exact proposed use, countries, classes, and conditions.",
       "evidenceRefs": ["docs/hugeToDo/BRAND-04-recommendation.md"]
     },
     {
       "id": "BRAND-05",
       "status": "complete",
       "blockedBy": [],
-      "nextAction": "Give counsel the refreshed RoutineKind/Ritunera/Ritualoom packet and the rejected Rituvia/Rituva/Retuvia/RITUVÉ comparator evidence. Append the missing compliant official result grids and counsel's signed conditions without converting preliminary zeros into availability claims.",
+      "nextAction": "Give counsel the refreshed RoutineKind/Ritunera/Ritualoom packet, governed public-knockout ledger, and rejected Rituvia/Rituva/Retuvia/RITUVÉ comparator evidence. Append counsel's WIPO/Madrid, final-country, company/trade-name, common-law, linguistic, and signed decision records without converting preliminary zeros or reservations into availability claims.",
       "evidenceRefs": ["docs/hugeToDo/BRAND-05-counsel-clearance-packet.md"]
     },
     {
       "id": "BRAND-06",
       "status": "external_pending",
-      "blockedBy": ["BRAND-03", "H-06", "H-07"],
-      "nextAction": "Founder confirms launch countries and retains qualified trademark counsel to clear or reject the exact RoutineKind/Ritunera/Ritualoom sequence, review the suspended Rituvia comparators, and approve one exact winner with written conditions.",
+      "blockedBy": ["H-06", "H-07"],
+      "nextAction": "Founder confirms launch countries and retains qualified trademark counsel to independently search and clear or reject the exact RoutineKind/Ritunera/Ritualoom sequence for the actual goods/services, review the suspended Rituvia comparators, and issue a written decision with countries, classes, conditions, and exact spelling.",
       "evidenceRefs": ["docs/hugeToDo/BRAND-05-counsel-clearance-packet.md"]
     },
     {
@@ -1481,10 +1483,11 @@
       "id": "REV-01",
       "status": "external_pending",
       "blockedBy": ["BRAND-10", "H-07"],
-      "nextAction": "Complete the missing official result-grid searches, have qualified trademark counsel issue dated clearance for the exact final mark and launch countries, and retain the founder's written identity approval.",
+      "nextAction": "Have qualified trademark counsel independently complete WIPO/Madrid and approved final-country searches, expand the preliminary national/common-law/company-name/linguistic analysis, issue a dated written decision for the exact final mark, countries, classes, goods/services, and conditions, and retain the founder's written identity approval.",
       "evidenceRefs": [
         "docs/hugeToDo/BRAND-03-knockout-search-record-2026-07-12.md",
         "docs/hugeToDo/BRAND-05-counsel-clearance-packet.md",
+        "docs/hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json",
         "docs/hugeToDo/FOUNDER_ENROLLMENT_AND_EXTERNAL_GATES_PACKET.md"
       ]
     },

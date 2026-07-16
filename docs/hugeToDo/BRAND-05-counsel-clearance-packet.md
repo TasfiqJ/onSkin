@@ -1,7 +1,7 @@
 # BRAND-05 Counsel-Ready Clearance Packet
 
 Prepared: 2026-07-12 (America/Toronto); official-source evidence refreshed
-2026-07-15 America/Toronto / 2026-07-16 UTC
+through 2026-07-16 UTC
 Requested decision: written clearance/rejection and conditions for one winner
 and two backups
 Candidates in priority order: `RoutineKind`, `Ritunera`, `Ritualoom`
@@ -213,7 +213,8 @@ Priority common-law/store leads:
   [Routinique](https://www.routinique.com/) personalized skincare-routine use;
 - same-sector [Rituva](https://www.byrituva.com/) skincare, adjacent
   [Retuvia](https://www.retuvia.com/) hair-product use, the lower-confidence
-  `RITUVÉ` storefront, and parked [rituvia.com](https://rituvia.com/);
+  `RITUVÉ` storefront, parked [rituvia.com](https://rituvia.com/), published UK
+  `Ritjuva`, and TMview `RITULIA` for goods including dermatological creams;
 - dense `Rituals` and `Ritual Skincare` common-law/formative use relevant to
   `Ritualoom`;
 - hard-collision records listed in
@@ -221,25 +222,28 @@ Priority common-law/store leads:
 
 ## Domain, store, and social status
 
-Point-in-time public checks were refreshed on 2026-07-15.
+Point-in-time public checks were refreshed through 2026-07-16 UTC.
 
-| Candidate   | `.com`                                       | `.app`                                       | Public Apple exact title            | Social handles |
-| ----------- | -------------------------------------------- | -------------------------------------------- | ----------------------------------- | -------------- |
-| RoutineKind | No RDAP record returned; checkout unverified | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
-| Ritunera    | No RDAP record returned; checkout unverified | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
-| Ritualoom   | No RDAP record returned; checkout unverified | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
+| Candidate   | `.com`                                       | `.app`                                       | Public Apple exact title            | Direct public-handle observation |
+| ----------- | -------------------------------------------- | -------------------------------------------- | ----------------------------------- | -------------------------------- |
+| RoutineKind | No RDAP record returned; checkout unverified | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | YouTube `@routinekind` is occupied; other checked paths were inconclusive |
+| Ritunera    | No RDAP record returned; checkout unverified | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Facebook `ritunera` redirects to an existing identity; other checked paths were inconclusive |
+| Ritualoom   | No RDAP record returned; checkout unverified | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Checked public paths were inconclusive |
 
 Rejected comparator `Rituvia`: `.com` registered 2025-06-14 and parked/offered
 for sale; `.app` returned no RDAP record; no exact public Apple title in the
-four checked storefronts; handles unverified.
+four checked storefronts. The operating Rituva skincare site links public
+`byrituva` social profiles.
 
 No purchase, cart hold, App Store Connect record, handle claim, company-name
 reservation, or trademark filing was made.
 
 RDAP 404 and DNS non-resolution do not prove that a name is registrable or can
 be purchased. The Apple public Search API does not expose unpublished/reserved
-App Store Connect names. Social checks were index-based, not authenticated
-handle claims.
+App Store Connect names. Public social checks were not authenticated handle
+claims. A later reservation receipt proves only that specific asset/account
+reservation at that time; it does not prove trademark availability,
+registrability, non-infringement, or Apple acceptance.
 
 ## Required search scope before opinion
 
@@ -251,9 +255,11 @@ handle claims.
   review;
 - WIPO Global Brand Database/Madrid Monitor and national registers for every
   approved country;
-- EUIPO/TMview if EU launch or near-term expansion is planned;
-- UKIPO if the UK is approved; the preliminary result service presented a
-  CAPTCHA and was not bypassed;
+- independently reproduce and expand the preliminary UKIPO Similar grid,
+  direct records, and current `RITUAL` journal leads if the UK is approved;
+- independently reproduce and expand the preliminary TMview Contains/Fuzzy
+  grid and search official EUIPO/national registers if EU launch or near-term
+  expansion is planned;
 - US state and Canadian corporate/trade-name sources as applicable;
 - common-law web, app stores, domains, social accounts, company names, product
   databases, advertising, and marketplaces, including the `Rituva`, `Retuvia`,
@@ -286,22 +292,25 @@ encounters a name claim.
    [`BRAND-03-knockout-search-record-2026-07-12.md`](./BRAND-03-knockout-search-record-2026-07-12.md)
 4. Recommendation:
    [`BRAND-04-recommendation.md`](./BRAND-04-recommendation.md)
-5. Existing incumbent evidence:
+5. Governed public-knockout query ledger and evidence:
+   [`query-ledger.md`](./evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/query-ledger.md),
+   [`evidence.json`](./evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json)
+6. Existing incumbent evidence:
    [`brand-evidence.md`](../brand-evidence.md)
-6. Product requirements:
+7. Product requirements:
    [`PRODUCT_REQUIREMENTS.md`](../PRODUCT_REQUIREMENTS.md)
-7. Rebrand gate/checklist:
+8. Rebrand gate/checklist:
    [`rebrand-and-core-loop-migration-checklist.md`](../rebrand-and-core-loop-migration-checklist.md)
-8. All-features execution contract:
+9. All-features execution contract:
    [`IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md`](./IOS_ALL_FEATURES_CODEX_EXECUTION_PLAN.md)
 
 ## Founder/counsel handoff checklist
 
 - [ ] Founder confirms launch countries.
 - [ ] Founder confirms applicant/owner legal entity with counsel.
-- [ ] Counsel independently reproduces/expands USPTO and CIPO, and runs the
-      still-unverified WIPO, Madrid, EUIPO/TMview (if in scope), company-name,
-      and common-law searches.
+- [ ] Counsel independently reproduces/expands the preliminary national and
+      TMview grids, and runs WIPO, Madrid, official final-country,
+      company/trade-name, common-law, and linguistic searches.
 - [ ] Counsel records exact spelling, countries, classes, conditions, and date.
 - [ ] Founder approves one counsel-cleared candidate.
 - [ ] Authorized account checks App Store name and identifier availability.
