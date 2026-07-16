@@ -461,7 +461,7 @@ sent` feedback with no dialog when catalog reporting is unavailable, and
   `test-results/human-e2e/2026-07-08/progress-photo-paywall-header-compliance-current/`.
 - `npm run typecheck` passed.
 - `npm run lint` passed.
-- `npm test` passed: 275 mobile test files / 3161 tests.
+- `npm test` passed: 275 mobile test files / 3162 tests.
 - `npm run launch:verify` is the root non-mutating readiness sweep for source
   changes that should not rebuild packets. It runs the source-packet,
   Tas-owned blocker, readiness-status, strict brand, device-support-policy,
@@ -504,7 +504,7 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   physical-device tuple; widget booleans alone cannot clear it.
 - `npm --workspace apps/mobile run typecheck` passed.
 - `npm --workspace apps/mobile run lint` passed.
-- `npm --workspace apps/mobile run test` passed: 275 mobile test files / 3161 tests.
+- `npm --workspace apps/mobile run test` passed: 275 mobile test files / 3162 tests.
 - `npm run format:check` passed across maintained source, scripts, configs, and
   documentation. Generated evidence packets remain governed by their dedicated
   schema/freshness/hash audits, and generated Supabase database types remain

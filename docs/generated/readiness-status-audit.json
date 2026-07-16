@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T07:32:12.423Z",
+  "generatedAt": "2026-07-16T20:02:55.518Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -82,9 +82,9 @@
   "evidenceDate": "2026-07-15",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
   "expectedMobileTestFiles": 275,
-  "expectedMobileTests": 3161,
+  "expectedMobileTests": 3162,
   "actualMobileTestFiles": 275,
-  "expectedTestPhrase": "275 mobile test files / 3161 tests",
+  "expectedTestPhrase": "275 mobile test files / 3162 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -95,23 +95,23 @@
       "testBaselines": [
         {
           "testFiles": 275,
-          "tests": 3161,
-          "source": "275 test files / 3161 tests"
+          "tests": 3162,
+          "source": "275 test files / 3162 tests"
         },
         {
           "testFiles": 275,
-          "tests": 3161,
-          "source": "275 mobile test files / 3161 tests"
+          "tests": 3162,
+          "source": "275 mobile test files / 3162 tests"
         },
         {
           "testFiles": 275,
-          "tests": 3161,
-          "source": "275 mobile test files / 3161 tests"
+          "tests": 3162,
+          "source": "275 mobile test files / 3162 tests"
         },
         {
           "testFiles": 275,
-          "tests": 3161,
-          "source": "275 mobile test files / 3161 tests"
+          "tests": 3162,
+          "source": "275 mobile test files / 3162 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -128,8 +128,8 @@
       "testBaselines": [
         {
           "testFiles": 275,
-          "tests": 3161,
-          "source": "275 mobile test files / 3161 tests"
+          "tests": 3162,
+          "source": "275 mobile test files / 3162 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -160,6 +160,11 @@
           "testFiles": 266,
           "tests": 3026,
           "source": "266 test files / 3,026 tests"
+        },
+        {
+          "testFiles": 275,
+          "tests": 3161,
+          "source": "275 test files /\n3161 tests"
         }
       ],
       "missingManifestNeedles": [
