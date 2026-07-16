@@ -8,6 +8,9 @@ import {
   applyToleranceToRamps,
   ensureRamp,
   getStoredRamps,
+  MAX_RAMP_PRODUCT_ID_CHARS,
+  MAX_RAMP_RECORD_CHARS,
+  MAX_RAMP_RECORDS,
   readStoredRamps,
   RAMP_STATE_INVALID,
   RAMP_STATE_STALE,
@@ -21,6 +24,8 @@ const mocks = vi.hoisted(() => ({
   tails: new Map<string, Promise<void>>(),
   readStatus: null as null | 'unavailable' | 'corrupt' | 'unsupported_version',
   updateFailure: null as Error | null,
+  updateFailureAfterCommit: null as Error | null,
+  persistedWrites: 0,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -49,9 +54,14 @@ vi.mock('@/lib/storage/privateKV', () => ({
       await previous;
       try {
         if (mocks.updateFailure) throw mocks.updateFailure;
-        const next = updater(mocks.storage.get(key) ?? null);
-        if (next === null) mocks.storage.delete(key);
-        else mocks.storage.set(key, next);
+        const current = mocks.storage.get(key) ?? null;
+        const next = updater(current);
+        if (next !== current) {
+          mocks.persistedWrites += 1;
+          if (next === null) mocks.storage.delete(key);
+          else mocks.storage.set(key, next);
+        }
+        if (mocks.updateFailureAfterCommit) throw mocks.updateFailureAfterCommit;
       } finally {
         release();
         if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
@@ -71,6 +81,8 @@ describe('routine ramp persistence', () => {
     mocks.tails.clear();
     mocks.readStatus = null;
     mocks.updateFailure = null;
+    mocks.updateFailureAfterCommit = null;
+    mocks.persistedWrites = 0;
     vi.clearAllMocks();
   });
 
@@ -163,6 +175,35 @@ describe('routine ramp persistence', () => {
     expect(mocks.storage.get(KEY)).toBe(malformed);
   });
 
+  it('rejects noncanonical legacy rows without inventing dates or dropping fields', async () => {
+    const missingDates = JSON.stringify({
+      retinol: {
+        freqPerWeek: 2,
+        targetPerWeek: 3,
+        toleranceState: 'building',
+      },
+    });
+    mocks.storage.set(KEY, missingDates);
+    await expect(readStoredRamps()).resolves.toEqual({ status: 'corrupt', ramps: null });
+    expect(mocks.storage.get(KEY)).toBe(missingDates);
+
+    const extraField = JSON.stringify({
+      retinol: {
+        freqPerWeek: 2,
+        targetPerWeek: 3,
+        toleranceState: 'building',
+        startedAt: '2026-01-01',
+        lastStepUp: null,
+        invented: true,
+      },
+    });
+    mocks.storage.set(KEY, extraField);
+    await expect(readStoredRamps()).resolves.toEqual({ status: 'corrupt', ramps: null });
+    await expect(stepUpRamp('retinol', 3)).rejects.toThrow(RAMP_STATE_INVALID);
+    expect(mocks.storage.get(KEY)).toBe(extraField);
+    expect(mocks.persistedWrites).toBe(0);
+  });
+
   it('preserves future-version bytes and refuses to downgrade them', async () => {
     const original = JSON.stringify({ version: 2, ramps: {} });
     mocks.storage.set(KEY, original);
@@ -191,8 +232,91 @@ describe('routine ramp persistence', () => {
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
-  it('serializes simultaneous product seeds without losing a writer', async () => {
-    const productIds = Array.from({ length: 30 }, (_, index) => `product-${index}`);
+  it('rejects invalid mutation input before private storage I/O', async () => {
+    const oversizedId = 'x'.repeat(MAX_RAMP_PRODUCT_ID_CHARS + 1);
+
+    await expect(
+      ensureRamp(oversizedId, {
+        freqPerWeek: 2,
+        targetPerWeek: 3,
+        toleranceState: 'building',
+      }),
+    ).rejects.toThrow(RAMP_STATE_INVALID);
+    await expect(
+      ensureRamp('retinol', {
+        freqPerWeek: 8,
+        targetPerWeek: 3,
+        toleranceState: 'building',
+      }),
+    ).rejects.toThrow(RAMP_STATE_INVALID);
+    await expect(stepUpRamp(oversizedId, 3)).rejects.toThrow(RAMP_STATE_INVALID);
+    await expect(
+      applyToleranceToRamps('unknown' as Parameters<typeof applyToleranceToRamps>[0]),
+    ).rejects.toThrow(RAMP_STATE_INVALID);
+
+    expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
+    expect(mocks.persistedWrites).toBe(0);
+  });
+
+  it('preserves oversized and over-limit current records as corruption', async () => {
+    const oversized = 'x'.repeat(MAX_RAMP_RECORD_CHARS + 1);
+    mocks.storage.set(KEY, oversized);
+    await expect(readStoredRamps()).resolves.toEqual({ status: 'corrupt', ramps: null });
+    await expect(stepUpRamp('retinol', 3)).rejects.toThrow(RAMP_STATE_INVALID);
+    expect(mocks.storage.get(KEY)).toBe(oversized);
+
+    const overLimit = JSON.stringify({
+      version: 1,
+      ramps: Object.fromEntries(
+        Array.from({ length: MAX_RAMP_RECORDS + 1 }, (_, index) => [
+          `product-${index}`,
+          {
+            freqPerWeek: 2,
+            targetPerWeek: 3,
+            toleranceState: 'building',
+            startedAt: '2026-01-01',
+            lastStepUp: null,
+          },
+        ]),
+      ),
+    });
+    mocks.storage.set(KEY, overLimit);
+    await expect(readStoredRamps()).resolves.toEqual({ status: 'corrupt', ramps: null });
+    await expect(applyToleranceToRamps('a_bit_dry')).rejects.toThrow(RAMP_STATE_INVALID);
+    expect(mocks.storage.get(KEY)).toBe(overLimit);
+    expect(mocks.persistedWrites).toBe(0);
+  });
+
+  it('preserves a full valid log instead of evicting an existing ramp', async () => {
+    const ramps = Object.fromEntries(
+      Array.from({ length: MAX_RAMP_RECORDS }, (_, index) => [
+        `product-${index}`,
+        {
+          freqPerWeek: 2,
+          targetPerWeek: 3,
+          toleranceState: 'building',
+          startedAt: '2026-01-01',
+          lastStepUp: null,
+        },
+      ]),
+    );
+    const original = JSON.stringify({ version: 1, ramps });
+    mocks.storage.set(KEY, original);
+
+    await expect(
+      ensureRamp('product-over-limit', {
+        freqPerWeek: 2,
+        targetPerWeek: 3,
+        toleranceState: 'building',
+      }),
+    ).rejects.toThrow(RAMP_STATE_INVALID);
+
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.persistedWrites).toBe(0);
+  });
+
+  it('serializes 100 simultaneous product seeds without losing a writer', async () => {
+    const productIds = Array.from({ length: 100 }, (_, index) => `product-${index}`);
 
     await Promise.all(
       productIds.map((productId) =>
@@ -208,6 +332,40 @@ describe('routine ramp persistence', () => {
     expect(Object.keys(stored)).toHaveLength(productIds.length);
     expect(new Set(Object.keys(stored))).toEqual(new Set(productIds));
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toMatchObject({ version: 1 });
+    expect(mocks.persistedWrites).toBe(100);
+  });
+
+  it('performs zero writes when ensure finds a current or legacy ramp', async () => {
+    const ramp = {
+      freqPerWeek: 2,
+      targetPerWeek: 3,
+      toleranceState: 'building',
+      startedAt: '2026-01-01',
+      lastStepUp: null,
+    } as const;
+    const current = JSON.stringify({ version: 1, ramps: { retinol: ramp } });
+    mocks.storage.set(KEY, current);
+    await expect(
+      ensureRamp('retinol', {
+        freqPerWeek: 7,
+        targetPerWeek: 7,
+        toleranceState: 'steady',
+      }),
+    ).resolves.toEqual(ramp);
+    expect(mocks.storage.get(KEY)).toBe(current);
+    expect(mocks.persistedWrites).toBe(0);
+
+    const legacy = JSON.stringify({ retinol: ramp });
+    mocks.storage.set(KEY, legacy);
+    await expect(
+      ensureRamp('retinol', {
+        freqPerWeek: 7,
+        targetPerWeek: 7,
+        toleranceState: 'steady',
+      }),
+    ).resolves.toEqual(ramp);
+    expect(mocks.storage.get(KEY)).toBe(legacy);
+    expect(mocks.persistedWrites).toBe(0);
   });
 
   it('leaves the prior envelope intact when an atomic write fails', async () => {
@@ -224,6 +382,25 @@ describe('routine ramp persistence', () => {
     expect(mocks.storage.get(KEY)).toBe(original);
   });
 
+  it('retries an ambiguously committed desired step-up without a second write', async () => {
+    await ensureRamp('retinol', {
+      freqPerWeek: 2,
+      targetPerWeek: 4,
+      toleranceState: 'building',
+    });
+    mocks.updateFailureAfterCommit = new Error('PRIVATE_WRITE_RESULT_UNKNOWN');
+
+    await expect(stepUpRamp('retinol', 3)).rejects.toThrow('PRIVATE_WRITE_RESULT_UNKNOWN');
+    expect(mocks.persistedWrites).toBe(2);
+
+    mocks.updateFailureAfterCommit = null;
+    await expect(stepUpRamp('retinol', 3)).resolves.toBeUndefined();
+    await expect(getStoredRamps()).resolves.toMatchObject({
+      retinol: { freqPerWeek: 3, targetPerWeek: 4, toleranceState: 'steady' },
+    });
+    expect(mocks.persistedWrites).toBe(2);
+  });
+
   it('retries one offered step-up idempotently at the exact desired frequency', async () => {
     await ensureRamp('retinol', {
       freqPerWeek: 2,
@@ -232,11 +409,28 @@ describe('routine ramp persistence', () => {
     });
 
     await stepUpRamp('retinol', 3);
+    const afterFirstStepUp = mocks.storage.get(KEY);
     await stepUpRamp('retinol', 3);
 
     await expect(getStoredRamps()).resolves.toMatchObject({
       retinol: { freqPerWeek: 3, targetPerWeek: 4, toleranceState: 'steady' },
     });
+    expect(mocks.storage.get(KEY)).toBe(afterFirstStepUp);
+    expect(mocks.persistedWrites).toBe(2);
+  });
+
+  it('never raises a paused ramp through the legacy no-desired-frequency API', async () => {
+    await ensureRamp('retinol', {
+      freqPerWeek: 1,
+      targetPerWeek: 4,
+      toleranceState: 'paused_irritation',
+    });
+    const original = mocks.storage.get(KEY);
+
+    await expect(stepUpRamp('retinol')).rejects.toThrow(RAMP_STATE_STALE);
+
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.persistedWrites).toBe(1);
   });
 
   it('refuses a stale desired step-up after a concurrent de-escalation', async () => {
@@ -305,6 +499,7 @@ describe('routine ramp persistence', () => {
     );
 
     await applyToleranceToRamps('irritated');
+    const afterFirstAnswer = mocks.storage.get(KEY);
     await applyToleranceToRamps('irritated');
 
     expect(JSON.parse(mocks.storage.get(KEY) ?? '{}').ramps.retinol).toMatchObject({
@@ -312,6 +507,29 @@ describe('routine ramp persistence', () => {
       targetPerWeek: 4,
       toleranceState: 'paused_irritation',
     });
+    expect(mocks.storage.get(KEY)).toBe(afterFirstAnswer);
+    expect(mocks.persistedWrites).toBe(1);
+  });
+
+  it('performs zero writes for unchanged tolerance answers in current and legacy records', async () => {
+    const ramp = {
+      freqPerWeek: 2,
+      targetPerWeek: 3,
+      toleranceState: 'building',
+      startedAt: '2026-01-01',
+      lastStepUp: null,
+    } as const;
+    const current = JSON.stringify({ version: 1, ramps: { retinol: ramp } });
+    mocks.storage.set(KEY, current);
+    await applyToleranceToRamps('a_bit_dry');
+    expect(mocks.storage.get(KEY)).toBe(current);
+    expect(mocks.persistedWrites).toBe(0);
+
+    const legacy = JSON.stringify({ retinol: ramp });
+    mocks.storage.set(KEY, legacy);
+    await applyToleranceToRamps('a_bit_dry');
+    expect(mocks.storage.get(KEY)).toBe(legacy);
+    expect(mocks.persistedWrites).toBe(0);
   });
 
   it('keeps valid legacy logs readable until an explicit mutation migrates them', async () => {
