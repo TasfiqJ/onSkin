@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T18:13:37.319Z",
+  "generatedAt": "2026-07-16T19:56:48.038Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,7 +73,7 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "b20650293e6e9542ab4489577e15486e77d52718",
+  "gitSha": "56d2f6ef745e5734870a99669cc851851d111bdf",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -272,8 +272,8 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 23004,
-      "sha256": "d38a8520b9664114bee56f823beffba23c0f49a4213d70f4b319f5ce81e71fbe"
+      "bytes": 25653,
+      "sha256": "668f23c9f7fbb2098868ed170f1352eafdda85184256297701a2458736ca71ad"
     },
     {
       "path": "package.json",
@@ -920,8 +920,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 24406,
-      "sha256": "4c52e937ddea7a47fba80f69d80d6d586e9c236750cefb9500362352e1cb270e"
+      "bytes": 24487,
+      "sha256": "0eb82d148d6cc293b6cea56baecb0f24172e04e548a57d8815e951eb6ce66ff4"
     },
     {
       "path": "scripts/phase9/live-supabase-adversarial.mjs",
@@ -975,13 +975,13 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 48121,
-      "sha256": "ac2501c7780a03d6d86e6f7cf9de7b110850a5014d79d51375ca6fbf3a5622d2"
+      "sha256": "52bf102a252a0b77abd58de633008ac2e8f279882a6eade663cec42b9f393ad1"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 19687,
-      "sha256": "272f805d3087062e9197e0bed5231fb805a6e7cf8a6cb53c803d4159a1ecef94"
+      "sha256": "d16cafa15d46bc975775ff12e461fcabc799812f4d7b3d6528570396f4750024"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
