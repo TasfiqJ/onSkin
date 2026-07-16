@@ -520,7 +520,7 @@ export async function savePreferences(
     await updatePrivateItem(PREF_KEY, (current) => {
       if (current !== null) {
         const decoded = decodePreferences(current);
-        if (decoded.format === 'current' && samePreferences(decoded.preferences, normalized)) {
+        if (samePreferences(decoded.preferences, normalized)) {
           return current;
         }
       }

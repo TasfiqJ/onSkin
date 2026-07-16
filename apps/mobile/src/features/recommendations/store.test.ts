@@ -484,6 +484,48 @@ describe('recommendation local store recovery', () => {
     expect(mocks.getUser).toHaveBeenCalledTimes(1);
   });
 
+  it('performs an identical legacy preference save as an exact zero-write no-op', async () => {
+    const legacy = JSON.stringify({
+      values: ['fragrance_free'],
+      budget: 'mid',
+      formats: ['cream'],
+    });
+    mocks.storage.set(PREF_KEY, legacy);
+
+    await savePreferences(ownerScope(), {
+      values: ['fragrance_free'],
+      budget: 'mid',
+      formats: ['cream'],
+    });
+    await waitForAccountGenerationOperationsToSettle();
+
+    expect(mocks.storage.get(PREF_KEY)).toBe(legacy);
+    expect(mocks.writes).toBe(0);
+    expect(mocks.getUser).not.toHaveBeenCalled();
+    expect(mocks.upsert).not.toHaveBeenCalled();
+  });
+
+  it('serializes 100 full-snapshot preference saves in invocation order', async () => {
+    const scope = ownerScope();
+    const snapshots: Parameters<typeof savePreferences>[1][] = Array.from(
+      { length: 100 },
+      (_, index) => ({
+        values: index % 2 === 0 ? ['vegan'] : ['fragrance_free'],
+        budget: index % 3 === 0 ? ('drugstore' as const) : ('mid' as const),
+        formats: [`format-${index}`],
+      }),
+    );
+
+    await Promise.all(snapshots.map((snapshot) => savePreferences(scope, snapshot)));
+
+    expect(mocks.writes).toBe(100);
+    expect(JSON.parse(mocks.storage.get(PREF_KEY) ?? '{}')).toEqual({
+      version: 1,
+      preferences: snapshots.at(-1),
+    });
+    await vi.waitFor(() => expect(mocks.getUser).toHaveBeenCalledTimes(100));
+  });
+
   it('rejects malformed runtime preference mutations without normalizing over prior bytes', async () => {
     const original = currentPreferences();
     mocks.storage.set(PREF_KEY, original);
