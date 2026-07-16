@@ -1,24 +1,29 @@
 type RoutinePhase = 'AM' | 'PM';
 
 export function shouldTrackCycleNightCompleted({
-  completedBefore,
+  completedStepKeysAfter,
   completedKey,
   cycleActive,
   phase,
   stepKeys,
-  completionDone,
+  completionInserted,
 }: {
-  completedBefore: ReadonlySet<string>;
+  completedStepKeysAfter: ReadonlySet<string>;
   completedKey: string;
   cycleActive: boolean;
   phase: RoutinePhase;
   stepKeys: readonly string[];
-  completionDone: boolean;
+  completionInserted: boolean;
 }): boolean {
-  if (!completionDone || phase !== 'PM' || !cycleActive || stepKeys.length === 0) return false;
+  if (
+    !completionInserted ||
+    phase !== 'PM' ||
+    !cycleActive ||
+    stepKeys.length === 0 ||
+    !stepKeys.includes(completedKey)
+  ) {
+    return false;
+  }
 
-  const completedAfter = new Set(completedBefore);
-  completedAfter.add(completedKey);
-
-  return stepKeys.every((key) => completedAfter.has(key));
+  return stepKeys.every((key) => completedStepKeysAfter.has(key));
 }

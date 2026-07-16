@@ -33,6 +33,11 @@
   shelf intake, reviewed guidance, routine builder, Today check-off, photos,
   reminders, payments, privacy controls, share cards, deferred surfaces, and
   analytics instead of accepting only broad Phase 7 evidence flags.
+- Today completion persistence now returns the exact post-insert day snapshot
+  from its serialized encrypted-store mutation. Cycle-night eligibility uses
+  that snapshot plus the exact scheduled PM keys, so concurrent final-step
+  writes produce one eligible event and repeated same-key taps remain one
+  insertion. Phase 7 hashes the persistence, decision helper, route, and tests.
 
 ## Seven-figure readiness assessment
 
@@ -56,6 +61,9 @@ The idea is not validated as a seven-figure business until a closed beta proves 
 - RevenueCat store QA evidence from Phase 6 strict gates.
 - Export/delete/withdraw QA evidence.
 - Beta evidence dashboard connected to real analytics.
+- A consent-aware durable analytics transport/outbox with delivery evidence;
+  the local event-decision fixes do not make the current sanitizer-only
+  `track()` path a production analytics pipeline.
 - Granular scenario QA evidence for every Phase 7 core-loop checklist group.
 
 ## Do-not-ship rule

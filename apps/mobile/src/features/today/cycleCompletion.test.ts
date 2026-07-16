@@ -8,12 +8,12 @@ describe('cycle night completion analytics gate', () => {
   it('fires when the latest PM check-off completes every scheduled cycle-night step', () => {
     expect(
       shouldTrackCycleNightCompleted({
-        completedBefore: new Set(['PM:cleanser', 'PM:retinoid']),
+        completedStepKeysAfter: new Set(stepKeys),
         completedKey: 'PM:moisturiser',
         cycleActive: true,
         phase: 'PM',
         stepKeys,
-        completionDone: true,
+        completionInserted: true,
       }),
     ).toBe(true);
   });
@@ -21,57 +21,70 @@ describe('cycle night completion analytics gate', () => {
   it('waits until all PM steps are complete', () => {
     expect(
       shouldTrackCycleNightCompleted({
-        completedBefore: new Set(['PM:cleanser']),
+        completedStepKeysAfter: new Set(['PM:cleanser', 'PM:retinoid']),
         completedKey: 'PM:retinoid',
         cycleActive: true,
         phase: 'PM',
         stepKeys,
-        completionDone: true,
+        completionInserted: true,
       }),
     ).toBe(false);
   });
 
   it('does not fire for AM, non-cycle, empty, or rejected completions', () => {
-    const completedBefore = new Set(['PM:cleanser', 'PM:retinoid']);
+    const completedStepKeysAfter = new Set(stepKeys);
 
     expect(
       shouldTrackCycleNightCompleted({
-        completedBefore,
+        completedStepKeysAfter,
         completedKey: 'PM:moisturiser',
         cycleActive: true,
         phase: 'AM',
         stepKeys,
-        completionDone: true,
+        completionInserted: true,
       }),
     ).toBe(false);
     expect(
       shouldTrackCycleNightCompleted({
-        completedBefore,
+        completedStepKeysAfter,
         completedKey: 'PM:moisturiser',
         cycleActive: false,
         phase: 'PM',
         stepKeys,
-        completionDone: true,
+        completionInserted: true,
       }),
     ).toBe(false);
     expect(
       shouldTrackCycleNightCompleted({
-        completedBefore,
+        completedStepKeysAfter,
         completedKey: 'PM:moisturiser',
         cycleActive: true,
         phase: 'PM',
         stepKeys: [],
-        completionDone: true,
+        completionInserted: true,
       }),
     ).toBe(false);
     expect(
       shouldTrackCycleNightCompleted({
-        completedBefore,
+        completedStepKeysAfter,
         completedKey: 'PM:moisturiser',
         cycleActive: true,
         phase: 'PM',
         stepKeys,
-        completionDone: false,
+        completionInserted: false,
+      }),
+    ).toBe(false);
+  });
+
+  it('does not fire when the inserted key is outside the scheduled PM step set', () => {
+    expect(
+      shouldTrackCycleNightCompleted({
+        completedStepKeysAfter: new Set([...stepKeys, 'PM:legacy-step']),
+        completedKey: 'PM:legacy-step',
+        cycleActive: true,
+        phase: 'PM',
+        stepKeys,
+        completionInserted: true,
       }),
     ).toBe(false);
   });

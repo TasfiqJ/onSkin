@@ -33,6 +33,14 @@ type CompletionLogEnvelope = {
   days: Log;
 };
 
+export type ToggleCompletionResult = {
+  done: boolean;
+  inserted: boolean;
+  firstEver: boolean;
+  /** Exact day snapshot produced by the same serialized mutation as `inserted`. */
+  completedStepKeysAfter: ReadonlySet<string>;
+};
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -196,7 +204,7 @@ export function isBeyondBackfillCap(date: string, today: string = localDateStrin
 export async function toggleCompletion(
   key: string,
   date: string = localDateString(),
-): Promise<{ done: boolean; inserted: boolean; firstEver: boolean }> {
+): Promise<ToggleCompletionResult> {
   return runCurrentHealthDataOperation(async (lease) => {
     const normalizedKey = normalizeStepKey(key);
     const normalizedDate = normalizeLocalDateISO(date);
@@ -208,11 +216,17 @@ export async function toggleCompletion(
         done: normalizedKey ? existing.has(normalizedKey) : false,
         inserted: false,
         firstEver: false,
+        completedStepKeysAfter: existing,
       };
     }
     const firstCompletionAlreadyMarked = await hasFirstCompletionMarker(lease);
     lease.assertCurrent();
-    let result = { done: false, inserted: false, firstEver: false };
+    let result: ToggleCompletionResult = {
+      done: false,
+      inserted: false,
+      firstEver: false,
+      completedStepKeysAfter: new Set(),
+    };
     let shouldMarkFirstCompletion = false;
     await updatePrivateItem(KEY, (current) => {
       lease.assertCurrent();
@@ -227,6 +241,7 @@ export async function toggleCompletion(
         done: true,
         inserted: !alreadyCompleted,
         firstEver: !alreadyCompleted && !hadAny && !firstCompletionAlreadyMarked,
+        completedStepKeysAfter: new Set(day),
       };
       shouldMarkFirstCompletion = hadAny || result.firstEver;
       lease.assertCurrent();

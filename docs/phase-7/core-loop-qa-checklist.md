@@ -44,6 +44,9 @@ or live-service evidence is captured, reviewed, and linked in the Phase 7 packet
 
 - AM/PM plan persists after app restart.
 - Check-off works offline, then online, without duplicate records.
+- Concurrent final PM check-offs use the atomic post-mutation snapshot and make
+  exactly one cycle-night analytics decision; repeated same-key taps make one
+  insertion and one routine-check-off decision.
 - Undo/re-check behaves predictably.
 - Timezone and date rollover do not reset the wrong day.
 - Recovery/pause/skipped states do not contradict the routine.

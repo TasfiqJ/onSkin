@@ -157,12 +157,16 @@ describe('Today route mobile contracts', () => {
     );
     expect(source).toContain("track('routine_checkoff_completed', { moment });");
     expect(source).toContain("track('first_checkoff_completed', { moment });");
+    expect(source).toContain('if (result.inserted) {');
     expect(source).toContain('shouldTrackCycleNightCompleted({');
-    expect(source).toContain('completedBefore: done');
+    expect(source).toContain('completedStepKeysAfter: result.completedStepKeysAfter');
     expect(source).toContain('completedKey: key');
     expect(source).toContain("phase: 'PM'");
     expect(source).toContain('cycleActive: routine.cycleActive');
     expect(source).toContain('stepKeys: pmStepKeys');
+    expect(source).toContain('completionInserted: result.inserted');
+    expect(source).not.toContain('completedBefore: done');
+    expect(source).toContain('if (result.inserted && (progress?.streak ?? 0) >= 6) {');
     expect(source).toContain("track('cycle_night_completed', { moment: 'pm', source: 'today' })");
     const eventIndex = source.indexOf("track('cycle_night_completed'");
     const eventCall = source.slice(eventIndex, eventIndex + 120);

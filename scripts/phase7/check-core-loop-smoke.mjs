@@ -268,6 +268,27 @@ const cases = [
           (file) => file.path === 'apps/mobile/src/features/routine/activationAnalytics.test.ts',
         ) &&
         result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/today/completionsStore.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/today/completionsStore.test.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/today/cycleCompletion.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/today/cycleCompletion.test.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/today/routineProjection.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/today/routineProjection.test.ts',
+        ) &&
+        result.packet.files.some(
+          (file) => file.path === 'apps/mobile/src/features/today/todayRoute.test.ts',
+        ) &&
+        result.packet.files.some(
           (file) => file.path === 'apps/mobile/src/features/trend/copy.ts',
         ) &&
         result.packet.files.some(

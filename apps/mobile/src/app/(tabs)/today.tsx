@@ -388,12 +388,12 @@ export default function TodayScreen() {
         const checkoffPhase = context?.phase ?? (type === 'PM' ? 'PM' : 'AM');
         if (
           shouldTrackCycleNightCompleted({
-            completedBefore: done,
+            completedStepKeysAfter: result.completedStepKeysAfter,
             completedKey: key,
             cycleActive: context?.cycleActive === true,
             phase: checkoffPhase,
             stepKeys: context?.stepKeys ?? [],
-            completionDone: result.inserted,
+            completionInserted: result.inserted,
           })
         ) {
           track('cycle_night_completed', { moment: 'pm', source: 'today' });

@@ -76,6 +76,14 @@ const requiredFiles = [
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/src/components/launch/DeferredSurface.tsx',
+  'apps/mobile/src/app/(tabs)/today.tsx',
+  'apps/mobile/src/features/today/completionsStore.ts',
+  'apps/mobile/src/features/today/completionsStore.test.ts',
+  'apps/mobile/src/features/today/cycleCompletion.ts',
+  'apps/mobile/src/features/today/cycleCompletion.test.ts',
+  'apps/mobile/src/features/today/routineProjection.ts',
+  'apps/mobile/src/features/today/routineProjection.test.ts',
+  'apps/mobile/src/features/today/todayRoute.test.ts',
   'docs/phase-7/surface-inventory.md',
   'docs/phase-7/launch-claim-matrix.md',
   'docs/phase-7/beta-evidence-dashboard.md',
@@ -147,6 +155,7 @@ for (const file of [
   'apps/mobile/src/app/cycle/week.tsx',
   'apps/mobile/src/app/cycle/why-tonight.tsx',
   'apps/mobile/src/app/routine/plan.tsx',
+  'apps/mobile/src/app/(tabs)/today.tsx',
   'apps/mobile/src/features/scheduler/cadence.ts',
   'apps/mobile/src/features/scheduler/customCycle.ts',
   'apps/mobile/src/features/scheduler/customCycle.test.ts',
@@ -156,8 +165,13 @@ for (const file of [
   'apps/mobile/src/features/scheduler/orchestrate.ts',
   'apps/mobile/src/features/scheduler/orchestrate.test.ts',
   'apps/mobile/src/features/scheduler/useCycle.ts',
+  'apps/mobile/src/features/today/completionsStore.ts',
+  'apps/mobile/src/features/today/completionsStore.test.ts',
   'apps/mobile/src/features/today/cycleCompletion.ts',
   'apps/mobile/src/features/today/cycleCompletion.test.ts',
+  'apps/mobile/src/features/today/routineProjection.ts',
+  'apps/mobile/src/features/today/routineProjection.test.ts',
+  'apps/mobile/src/features/today/todayRoute.test.ts',
   'apps/mobile/src/lib/launch/phase7.ts',
   'apps/mobile/src/lib/launch/phase7.test.ts',
   'apps/mobile/src/components/launch/DeferredSurface.tsx',
@@ -334,6 +348,11 @@ const routineGenerateTest = read('apps/mobile/src/features/routine/generate.test
 const routineReviewGateTest = read('apps/mobile/src/features/routine/reviewGate.test.ts');
 const schedulerOrchestrateTest = read('apps/mobile/src/features/scheduler/orchestrate.test.ts');
 const todayTab = read('apps/mobile/src/app/(tabs)/today.tsx');
+const todayCompletionsStore = read('apps/mobile/src/features/today/completionsStore.ts');
+const todayCompletionsStoreTest = read('apps/mobile/src/features/today/completionsStore.test.ts');
+const todayCycleCompletion = read('apps/mobile/src/features/today/cycleCompletion.ts');
+const todayCycleCompletionTest = read('apps/mobile/src/features/today/cycleCompletion.test.ts');
+const todayRouteTest = read('apps/mobile/src/features/today/todayRoute.test.ts');
 const progressReview = read('apps/mobile/src/app/progress/review.tsx');
 const shelfMutations = read('apps/mobile/src/features/shelf/mutations.ts');
 const betaDashboard = read('docs/phase-7/beta-evidence-dashboard.md');
@@ -397,6 +416,31 @@ require(/recordRoutinePlanAnalytics/.test(routinePlan) &&
 require(/if\s*\(result\.inserted\)\s*\{[\s\S]{0,200}track\(\s*'routine_checkoff_completed'\s*,\s*\{\s*moment\s*\}\s*\);[\s\S]{0,120}if\s*\(result\.firstEver\)\s*track\(\s*'first_checkoff_completed'\s*,\s*\{\s*moment\s*\}\s*\);/.test(
   todayTab,
 ), 'Today check-off flow must emit routine_checkoff_completed only for a newly inserted completion and first_checkoff_completed only for the first-ever completion.');
+require(/completedStepKeysAfter:\s*ReadonlySet<string>/.test(todayCompletionsStore) &&
+  /completedStepKeysAfter:\s*new Set\(day\)/.test(todayCompletionsStore) &&
+  /serializes simultaneous retries of one step as exactly one insertion/.test(
+    todayCompletionsStoreTest,
+  ) &&
+  /identifies exactly one completed cycle night when the final two steps race/.test(
+    todayCompletionsStoreTest,
+  ), 'Today completion persistence must return the exact post-insert day snapshot from its serialized mutation and pin same-key plus final-two-step concurrency tests.');
+require(/completedStepKeysAfter:\s*result\.completedStepKeysAfter/.test(todayTab) &&
+  /completionInserted:\s*result\.inserted/.test(todayTab) &&
+  !/completedBefore:\s*done/.test(todayTab) &&
+  /!stepKeys\.includes\(completedKey\)/.test(todayCycleCompletion) &&
+  /stepKeys\.every\(\(key\)\s*=>\s*completedStepKeysAfter\.has\(key\)\)/.test(
+    todayCycleCompletion,
+  ) &&
+  /does not fire when the inserted key is outside the scheduled PM step set/.test(
+    todayCycleCompletionTest,
+  ) &&
+  /completedStepKeysAfter:\s*result\.completedStepKeysAfter/.test(todayRouteTest) &&
+  /expect\(source\)\.not\.toContain\('completedBefore: done'\)/.test(
+    todayRouteTest,
+  ), 'Today cycle-night analytics must use the atomic post-insert snapshot, require inserted-key membership, and reject the stale render snapshot.');
+require(/if\s*\(result\.inserted\s*&&\s*\(progress\?\.streak\s*\?\?\s*0\)\s*>=\s*6\)\s*\{[\s\S]{0,100}requestReviewAfterValue\('seven_checkoff_days'\)/.test(
+  todayTab,
+), 'Today must request a review only after a newly inserted check-off reaches the value threshold.');
 require(/shippableRules\(\)/.test(routineGenerate) &&
   /canUseRoutineCadence\(\)/.test(routineGenerate) &&
   /does not surface unreviewed conflict guidance through the default production generator/.test(
@@ -414,6 +458,8 @@ require(/shippableRules\(\)/.test(routineGenerate) &&
     schedulerOrchestrateTest,
   ), 'Phase 7 must pin production-mode tests that withhold unreviewed conflict and routine-cadence guidance until B-DERM-REVIEW closes.');
 require(/shouldTrackCycleNightCompleted/.test(todayTab) &&
+  /completedStepKeysAfter:\s*result\.completedStepKeysAfter/.test(todayTab) &&
+  /completionInserted:\s*result\.inserted/.test(todayTab) &&
   /track\('cycle_night_completed', \{ moment: 'pm', source: 'today' \}/.test(
     todayTab,
   ), 'Today PM check-off flow must emit privacy-safe cycle_night_completed when a cycle night is completed.');

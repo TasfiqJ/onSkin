@@ -15,6 +15,7 @@ import {
   isBeyondBackfillCap,
   toggleCompletion,
 } from './completionsStore';
+import { shouldTrackCycleNightCompleted } from './cycleCompletion';
 
 const mocks = vi.hoisted(() => ({
   storage: new Map<string, string>(),
@@ -130,6 +131,7 @@ describe('today completion persistence', () => {
       done: true,
       inserted: true,
       firstEver: true,
+      completedStepKeysAfter: new Set(['AM:cleanser']),
     });
 
     await expect(getCompletedSteps(DAY)).resolves.toEqual(new Set(['AM:cleanser']));
@@ -142,11 +144,13 @@ describe('today completion persistence', () => {
       done: true,
       inserted: true,
       firstEver: true,
+      completedStepKeysAfter: new Set(['AM:cleanser']),
     });
     await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
       done: true,
       inserted: false,
       firstEver: false,
+      completedStepKeysAfter: new Set(['AM:cleanser']),
     });
 
     expect(mocks.storage.get(FIRST_COMPLETION_KEY)).toBe('true');
@@ -161,6 +165,7 @@ describe('today completion persistence', () => {
       done: true,
       inserted: false,
       firstEver: false,
+      completedStepKeysAfter: new Set(['AM:cleanser']),
     });
 
     expect(mocks.storage.get(FIRST_COMPLETION_KEY)).toBe('true');
@@ -214,6 +219,53 @@ describe('today completion persistence', () => {
     expect(results.filter((result) => result.firstEver)).toHaveLength(1);
   });
 
+  it('serializes simultaneous retries of one step as exactly one insertion', async () => {
+    const results = await Promise.all(
+      Array.from({ length: 20 }, () => toggleCompletion('PM:retinoid', DAY)),
+    );
+
+    expect(results.every((result) => result.done)).toBe(true);
+    expect(results.filter((result) => result.inserted)).toHaveLength(1);
+    expect(results.filter((result) => result.firstEver)).toHaveLength(1);
+    expect(
+      results.every(
+        (result) =>
+          result.completedStepKeysAfter.size === 1 &&
+          result.completedStepKeysAfter.has('PM:retinoid'),
+      ),
+    ).toBe(true);
+    expect(storedDays()).toEqual({ [DAY]: ['PM:retinoid'] });
+  });
+
+  it('identifies exactly one completed cycle night when the final two steps race', async () => {
+    const stepKeys = ['PM:cleanser', 'PM:retinoid', 'PM:moisturiser'] as const;
+    await toggleCompletion(stepKeys[0], DAY);
+
+    const completions = await Promise.all(
+      stepKeys.slice(1).map(async (completedKey) => ({
+        completedKey,
+        result: await toggleCompletion(completedKey, DAY),
+      })),
+    );
+
+    expect(
+      completions.filter(({ completedKey, result }) =>
+        shouldTrackCycleNightCompleted({
+          completedStepKeysAfter: result.completedStepKeysAfter,
+          completedKey,
+          cycleActive: true,
+          phase: 'PM',
+          stepKeys,
+          completionInserted: result.inserted,
+        }),
+      ),
+    ).toHaveLength(1);
+    expect(completions.map(({ result }) => result.completedStepKeysAfter.size).sort()).toEqual([
+      2, 3,
+    ]);
+    expect(new Set(storedDays()[DAY])).toEqual(new Set(stepKeys));
+  });
+
   it('preserves future-version bytes and refuses to downgrade them', async () => {
     const original = JSON.stringify({ version: 2, days: { [DAY]: ['AM:cleanser'] } });
     mocks.storage.set(KEY, original);
@@ -259,11 +311,13 @@ describe('today completion persistence', () => {
       done: false,
       inserted: false,
       firstEver: false,
+      completedStepKeysAfter: new Set(),
     });
     await expect(toggleCompletion('AM:cleanser', '2026-02-31')).resolves.toEqual({
       done: false,
       inserted: false,
       firstEver: false,
+      completedStepKeysAfter: new Set(),
     });
 
     expect(mocks.storage.has(KEY)).toBe(false);
