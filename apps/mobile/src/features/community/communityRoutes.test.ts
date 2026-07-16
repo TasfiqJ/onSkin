@@ -167,7 +167,9 @@ describe('Community route contracts', () => {
     expect(source).toContain('const shared = await shareSkinNote(note);');
     expect(source).toContain('if (!shared) {');
     expect(source).toContain('setShareFeedback(SHARE_FAILURE_MESSAGE);');
-    expect(source).toContain('scrollRef.current?.scrollToEnd({ animated: true });');
+    expect(source).toContain(
+      'scrollRef.current?.scrollToEnd({ animated: motionAllowed(reduceMotion) });',
+    );
     expect(source).toContain('ref={scrollRef}');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('className="mt-3 text-center"');

@@ -18,6 +18,10 @@ import { parseLocalDate } from '@/features/photos/timeline';
 import { useCaptureAnalysis } from '@/features/photos/useCaptureAnalysis';
 import { usePhotoActions, type PhotosQueryData } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
+import {
+  motionAwareModalAnimation,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
 import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { isOwnerQueryScopeCurrent, runOwnerQueryOperation } from '@/lib/query/queryKeys';
@@ -604,6 +608,7 @@ function ReviewScreenContent({
 export default function ReviewScreen() {
   const navigation = useNavigation();
   const ownerScope = useOwnerQueryScope();
+  const reduceMotion = useReduceMotionPreference();
   const params = useLocalSearchParams<{ captureSessionId?: string }>();
   const captureSessionId = isNonBlank(params.captureSessionId ?? null)
     ? params.captureSessionId!
@@ -670,7 +675,12 @@ export default function ReviewScreen() {
           </ProgressPhotoRouteSource>
         </PhotoTimelineLockGate>
       </ProGate>
-      <Modal animationType="fade" onRequestClose={retryCleanup} transparent visible={cleanupFailed}>
+      <Modal
+        animationType={motionAwareModalAnimation(reduceMotion, 'fade')}
+        onRequestClose={retryCleanup}
+        transparent
+        visible={cleanupFailed}
+      >
         <View
           style={{
             flex: 1,

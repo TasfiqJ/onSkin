@@ -27,6 +27,10 @@ import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
 import { requestReviewAfterValue } from '@/features/review/prompt';
 import { applySettingsPrivacyChoice } from '@/features/settings/applyPrivacyChoice';
 import {
+  motionAllowed,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
+import {
   beginDataRightsConfirmation,
   beginDataRightsOperation,
   cancelDataRightsConfirmation,
@@ -1469,6 +1473,7 @@ const YouDataSection = memo(function YouDataSection() {
 });
 
 const YouMutationSections = memo(function YouMutationSections() {
+  const reduceMotion = useReduceMotionPreference();
   recordYouMutationShellRender();
   usePublishYouRenderDiagnostics();
   const { fontScale = 1, height, width } = useWindowDimensions();
@@ -1591,14 +1596,14 @@ const YouMutationSections = memo(function YouMutationSections() {
     cancelDataRightsConfirmationScroll();
     const scrollToConfirmation = () => {
       scrollRef.current?.scrollTo({
-        animated: true,
+        animated: motionAllowed(reduceMotion),
         y: Math.max(scrollY.current + DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE, 0),
       });
     };
 
     confirmationScrollFrameRef.current = requestAnimationFrame(scrollToConfirmation);
     confirmationScrollRetryRef.current = setTimeout(scrollToConfirmation, 80);
-  }, [cancelDataRightsConfirmationScroll]);
+  }, [cancelDataRightsConfirmationScroll, reduceMotion]);
 
   const onPrivacyCardLayout = useCallback(
     (event: LayoutChangeEvent) => {

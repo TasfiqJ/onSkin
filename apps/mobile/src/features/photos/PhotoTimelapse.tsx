@@ -1,15 +1,9 @@
 import { useEffect, useState } from 'react';
-import {
-  AccessibilityInfo,
-  AppState,
-  Modal,
-  Pressable,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import { AppState, Modal, Pressable, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
+import { useReduceMotionPreference } from '@/lib/accessibility/useReduceMotionPreference';
 import { colors } from '@/theme/tokens';
 
 import { PhotoImage } from './PhotoImage';
@@ -86,8 +80,8 @@ export function PhotoTimelapse({
 }) {
   const { fontScale, height, width } = useWindowDimensions();
   const [index, setIndex] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const [reduceMotion, setReduceMotion] = useState<boolean | null>(null);
+  const [playingIntent, setPlaying] = useState<boolean | null>(null);
+  const reduceMotion = useReduceMotionPreference();
   const frameCount = frames.length;
   const safeIndex = Math.min(Math.max(index, 0), Math.max(frameCount - 1, 0));
   const current = frames[safeIndex] ?? null;
@@ -97,23 +91,7 @@ export function PhotoTimelapse({
   const imageHeight = Math.max(180, Math.min(height - pressureChrome, (width - 32) * (4 / 3), 540));
   const imageWidth = Math.min(width - 32, imageHeight * (3 / 4), 430);
   const progress = timelapseProgress(safeIndex, frameCount);
-
-  useEffect(() => {
-    let mounted = true;
-    void AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
-      if (!mounted) return;
-      setReduceMotion(enabled);
-      setPlaying(!enabled && frameCount > 1);
-    });
-    const subscription = AccessibilityInfo.addEventListener('reduceMotionChanged', (enabled) => {
-      setReduceMotion(enabled);
-      if (enabled) setPlaying(false);
-    });
-    return () => {
-      mounted = false;
-      subscription.remove();
-    };
-  }, [frameCount]);
+  const playing = reduceMotion === false && frameCount > 1 && playingIntent !== false;
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
@@ -149,7 +127,7 @@ export function PhotoTimelapse({
       setPlaying(true);
       return;
     }
-    setPlaying((currentPlaying) => !currentPlaying);
+    setPlaying(!playing);
   }
 
   function close() {

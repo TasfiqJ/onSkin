@@ -8,6 +8,10 @@ import { COMMUNITY_COPY } from '@/features/community/copy';
 import { evidencePill, noteById } from '@/features/community/notes';
 import { isNoteHelpful, setNoteHelpful } from '@/features/community/reactionStore';
 import { SHARE_FAILURE_MESSAGE, shareSkinNote } from '@/features/community/shareNote';
+import {
+  motionAllowed,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
 import { APP_COMMUNITY_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { isOwnerQueryScopeCurrent, queryKeys } from '@/lib/query/queryKeys';
@@ -20,6 +24,7 @@ import { colors } from '@/theme/tokens';
 // mandatory "not medical advice" footer. The only reaction is a structured "This
 // helped" (the docs/09 flywheel signal). No like count, no author to follow.
 export default function NoteDetail() {
+  const reduceMotion = useReduceMotionPreference();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { height, width } = useWindowDimensions();
   const qc = useQueryClient();
@@ -75,7 +80,7 @@ export default function NoteDetail() {
     if (!shared) {
       setShareFeedback(SHARE_FAILURE_MESSAGE);
       requestAnimationFrame(() => {
-        scrollRef.current?.scrollToEnd({ animated: true });
+        scrollRef.current?.scrollToEnd({ animated: motionAllowed(reduceMotion) });
       });
     }
   };

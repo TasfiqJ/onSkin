@@ -419,7 +419,9 @@ describe('Progress route mobile contracts', () => {
     );
     expect(source).toContain('const actionFeedback = deleteFeedback ?? shareFeedback;');
     expect(source).toContain('function nudgeActionFeedbackIntoView()');
-    expect(source).toContain('scrollRef.current?.scrollToEnd({ animated: true })');
+    expect(source).toContain(
+      'scrollRef.current?.scrollToEnd({ animated: motionAllowed(reduceMotion) })',
+    );
     expect(source).toContain('requestAnimationFrame(scrollToEnd);');
     expect(source).toContain('setTimeout(scrollToEnd, 280);');
     expect(source).toContain('<ScrollView');
@@ -694,6 +696,7 @@ describe('Progress route mobile contracts', () => {
   it('plays real local time-lapse frames with finite and reduced-motion-safe controls', () => {
     const source = readAppRoute('(tabs)/progress.tsx');
     const player = readSource('features/photos/PhotoTimelapse.tsx');
+    const preference = readSource('lib/accessibility/useReduceMotionPreference.ts');
 
     expect(source).toContain("import { PhotoTimelapse } from '@/features/photos/PhotoTimelapse';");
     expect(source).toContain("import { timelapseFrames } from '@/features/photos/timelapse';");
@@ -708,8 +711,9 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('<PhotoTimelapse');
     expect(source).not.toContain('TIMELAPSE_UNAVAILABLE');
 
-    expect(player).toContain('AccessibilityInfo.isReduceMotionEnabled()');
-    expect(player).toContain("AccessibilityInfo.addEventListener('reduceMotionChanged'");
+    expect(player).toContain('useReduceMotionPreference()');
+    expect(preference).toContain('AccessibilityInfo.isReduceMotionEnabled()');
+    expect(preference).toContain("AccessibilityInfo.addEventListener('reduceMotionChanged'");
     expect(player).toContain("AppState.addEventListener('change'");
     expect(player).toContain("if (state !== 'active') setPlaying(false);");
     expect(player).toContain('reduceMotion !== false');

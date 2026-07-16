@@ -5,6 +5,10 @@ import { Animated, Easing, Platform, View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { getQuizCompletionState } from '@/features/onboarding/quiz';
+import {
+  shouldReduceMotion,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -25,6 +29,8 @@ export default function AnalyzingScreen() {
   const simulatedProfileSaveFailureUsed = useRef(false);
   const profileSaveFailureMode = devProfileSaveFailureMode();
   const useNativeAnimationDriver = Platform.OS !== 'web';
+  const reduceMotion = useReduceMotionPreference();
+  const renderStaticPulse = shouldReduceMotion(reduceMotion);
 
   useEffect(() => {
     if (!quizCompletion.complete) {
@@ -37,6 +43,47 @@ export default function AnalyzingScreen() {
     }
 
     track('personalization_shown');
+    let cancelled = false;
+
+    // Persist the local completion record before reveal. Without that durable
+    // signal, a cold start can force the user back through onboarding.
+    const profileSave =
+      profileSaveFailureMode === 'once' && !simulatedProfileSaveFailureUsed.current
+        ? (() => {
+            simulatedProfileSaveFailureUsed.current = true;
+            return Promise.reject(new Error('E2E_PROFILE_SAVE_FAILURE'));
+          })()
+        : persistSkinProfile();
+
+    void profileSave
+      .then(() => {
+        if (cancelled) return;
+        router.replace('/onboarding/reveal');
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setSaveError(true);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    goals.length,
+    persistSkinProfile,
+    profileSaveFailureMode,
+    quizCompletion.complete,
+    retryKey,
+  ]);
+
+  useEffect(() => {
+    if (renderStaticPulse || saveError) {
+      pulse.stopAnimation();
+      pulse.setValue(0);
+      return;
+    }
+
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulse, {
@@ -54,49 +101,15 @@ export default function AnalyzingScreen() {
       ]),
     );
     loop.start();
+    return () => loop.stop();
+  }, [pulse, renderStaticPulse, saveError, useNativeAnimationDriver]);
 
-    let revealTimer: ReturnType<typeof setTimeout> | null = null;
-    let cancelled = false;
-
-    // Persist the local completion record before reveal. Without that durable
-    // signal, a cold start can force the user back through onboarding.
-    const profileSave =
-      profileSaveFailureMode === 'once' && !simulatedProfileSaveFailureUsed.current
-        ? (() => {
-            simulatedProfileSaveFailureUsed.current = true;
-            return Promise.reject(new Error('E2E_PROFILE_SAVE_FAILURE'));
-          })()
-        : persistSkinProfile();
-
-    void profileSave
-      .then(() => {
-        if (cancelled) return;
-        revealTimer = setTimeout(() => router.replace('/onboarding/reveal'), 2600);
-      })
-      .catch(() => {
-        if (!cancelled) {
-          loop.stop();
-          setSaveError(true);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-      loop.stop();
-      if (revealTimer) clearTimeout(revealTimer);
-    };
-  }, [
-    goals.length,
-    persistSkinProfile,
-    profileSaveFailureMode,
-    pulse,
-    quizCompletion.complete,
-    retryKey,
-    useNativeAnimationDriver,
-  ]);
-
-  const scale = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1.15] });
-  const opacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0.85] });
+  const scale = renderStaticPulse
+    ? 1
+    : pulse.interpolate({ inputRange: [0, 1], outputRange: [0.9, 1.15] });
+  const opacity = renderStaticPulse
+    ? 0.65
+    : pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0.85] });
 
   if (saveError) {
     return (

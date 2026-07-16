@@ -265,7 +265,9 @@ describe('onboarding route contracts', () => {
     expect(products).toContain('const scrollRef = useRef<ScrollView>(null)');
     expect(products).not.toContain('scrollRef.current?.scrollToEnd({ animated: true })');
     expect(products).not.toContain('scrollToShelfList');
-    expect(products).toContain('scrollRef.current?.scrollTo({ y: 0, animated: true })');
+    expect(products).toContain(
+      'scrollRef.current?.scrollTo({ y: 0, animated: motionAllowed(reduceMotion) })',
+    );
     expect(products).toContain('inputRef.current?.focus()');
     expect(goals).toContain("splitShortPhone ? 'mt-3' : compactPhone ? 'mt-5' : 'mt-8'");
     expect(goals).toContain('function CompactGoalCard');
@@ -559,7 +561,9 @@ describe('onboarding route contracts', () => {
     );
     expect(source).not.toMatch(/<ScrollView\s+className="flex-1 overflow-hidden"/);
     expect(source).toContain('const scrollRef = useRef<ScrollView>(null)');
-    expect(source).toContain('scrollRef.current?.scrollTo({ y: 0, animated: true })');
+    expect(source).toContain(
+      'scrollRef.current?.scrollTo({ y: 0, animated: motionAllowed(reduceMotion) })',
+    );
     expect(source.indexOf('HEALTH_DATA_CONSENT.declinedTitle')).toBeLessThan(
       source.indexOf('<Card className={compactPhone'),
     );

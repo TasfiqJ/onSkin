@@ -11,6 +11,10 @@ import { askConsentQueryOptions } from '@/features/ask/consentQuery';
 import { ASK_COPY } from '@/features/ask/copy';
 import { clearAskStore, setAskConsentLocal } from '@/features/ask/store';
 import { BRAND } from '@/lib/brand';
+import {
+  motionAllowed,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { consentManagementState } from '@/lib/consent/consentQuery';
 import { phase7Flags } from '@/lib/launch/phase7';
 import { APP_ASK_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -63,6 +67,7 @@ function Bullet({ kind, text }: { kind: 'keep' | 'never'; text: string }) {
 }
 
 export default function AskConsentScreen() {
+  const reduceMotion = useReduceMotionPreference();
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
   const [saving, setSaving] = useState(false);
@@ -92,7 +97,7 @@ export default function AskConsentScreen() {
   const showSaveFailure = () => {
     setSaveFailed(true);
     requestAnimationFrame(() => {
-      scrollRef.current?.scrollToEnd({ animated: true });
+      scrollRef.current?.scrollToEnd({ animated: motionAllowed(reduceMotion) });
     });
   };
 

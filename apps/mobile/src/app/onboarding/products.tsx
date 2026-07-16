@@ -20,6 +20,10 @@ import { useIntake } from '@/features/shelf/IntakeContext';
 import { useShelfMutations } from '@/features/shelf/mutations';
 import { ShelfDataAvailabilityGate } from '@/features/shelf/ShelfDataAvailabilityGate';
 import { useShelf } from '@/features/shelf/useShelf';
+import {
+  motionAllowed,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -133,6 +137,7 @@ export default function ProductsScreen() {
 }
 
 function ProductsScreenContent() {
+  const reduceMotion = useReduceMotionPreference();
   const { fontScale = 1, height, width } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
   const inputRef = useRef<TextInput>(null);
@@ -190,7 +195,7 @@ function ProductsScreenContent() {
   }, []);
 
   function focusNextProduct() {
-    scrollRef.current?.scrollTo({ y: 0, animated: true });
+    scrollRef.current?.scrollTo({ y: 0, animated: motionAllowed(reduceMotion) });
     requestAnimationFrame(() => inputRef.current?.focus());
   }
 

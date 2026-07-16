@@ -13,6 +13,10 @@ import { sharePhotoImageOnly } from '@/features/photos/sharePhoto';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotoActions, type PhotosQueryData } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
+import {
+  motionAllowed,
+  useReduceMotionPreference,
+} from '@/lib/accessibility/useReduceMotionPreference';
 import { track } from '@/lib/analytics/track';
 import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -75,6 +79,7 @@ function PhotoNoteEditor({
 }
 
 function PhotoDetailScreenContent({ photos }: { photos: PhotosQueryData }) {
+  const reduceMotion = useReduceMotionPreference();
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
   const compact = height < 640;
@@ -203,7 +208,8 @@ function PhotoDetailScreenContent({ photos }: { photos: PhotosQueryData }) {
   const actionFeedback = deleteFeedback ?? shareFeedback;
 
   function nudgeActionFeedbackIntoView() {
-    const scrollToEnd = () => scrollRef.current?.scrollToEnd({ animated: true });
+    const scrollToEnd = () =>
+      scrollRef.current?.scrollToEnd({ animated: motionAllowed(reduceMotion) });
     requestAnimationFrame(scrollToEnd);
     setTimeout(scrollToEnd, 120);
     setTimeout(scrollToEnd, 280);
