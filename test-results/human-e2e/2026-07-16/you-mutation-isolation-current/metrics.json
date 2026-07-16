@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-16",
+  "route": "http://localhost:8237/you?section=privacy",
+  "surface": "expo-web-development-in-app-browser",
+  "primary_viewport": {
+    "requested": { "width": 390, "height": 844 },
+    "observed": { "width": 390, "height": 845 },
+    "horizontal_overflow_px": 0
+  },
+  "protected_owners": [
+    "screen",
+    "mutation_shell",
+    "account",
+    "subscription",
+    "static_overview"
+  ],
+  "runs": {
+    "consent_double_click": {
+      "action_start_delta": 1,
+      "render_deltas": {
+        "consent_coordinator": 4,
+        "commerce": 3,
+        "privacy": 3,
+        "screen": 0,
+        "mutation_shell": 0,
+        "account": 0,
+        "subscription": 0,
+        "static_overview": 0,
+        "security": 0,
+        "policies": 0,
+        "data": 0,
+        "data_rights_coordinator": 0
+      },
+      "shared_switches_checked": true
+    },
+    "app_lock_double_click": {
+      "action_start_delta": 1,
+      "render_deltas": { "security": 3 },
+      "all_other_render_deltas": 0,
+      "alert": "Choice not saved / App lock is not available on this device right now."
+    },
+    "policy_double_click": {
+      "action_start_delta": 1,
+      "render_deltas": { "policies": 3 },
+      "all_other_render_deltas": 0,
+      "dialog_count": 0
+    },
+    "export_double_click": {
+      "action_start_delta": 1,
+      "pending_render_deltas": {
+        "data_rights_coordinator": 1,
+        "privacy": 1,
+        "data": 1
+      },
+      "settled_render_deltas": {
+        "data_rights_coordinator": 3,
+        "privacy": 3,
+        "data": 3
+      },
+      "all_other_render_deltas": 0,
+      "pending_label": "Preparing...",
+      "pending_export_disabled": true,
+      "pending_delete_disabled": true,
+      "dialog_count": 0
+    },
+    "withdraw_confirmation_cancel": {
+      "destructive_start_delta": 0,
+      "open_render_deltas": {
+        "data_rights_coordinator": 1,
+        "privacy": 1,
+        "data": 1
+      },
+      "cancelled_render_deltas": {
+        "data_rights_coordinator": 2,
+        "privacy": 2,
+        "data": 2
+      },
+      "all_other_render_deltas": 0
+    },
+    "delete_confirmation_cancel": {
+      "destructive_start_delta": 0,
+      "open_render_deltas": {
+        "data_rights_coordinator": 1,
+        "privacy": 1,
+        "data": 1
+      },
+      "cancelled_render_deltas": {
+        "data_rights_coordinator": 2,
+        "privacy": 2,
+        "data": 2
+      },
+      "all_other_render_deltas": 0
+    }
+  },
+  "responsive": {
+    "compact": {
+      "requested": { "width": 375, "height": 667 },
+      "observed": { "width": 376, "height": 668 },
+      "delete_button_height_px": 55.99211502075195,
+      "cancel_button_height_px": 55.99211502075195,
+      "horizontal_overflow_px": 0
+    },
+    "tall": {
+      "requested": { "width": 430, "height": 932 },
+      "observed": { "width": 430, "height": 932 },
+      "privacy_heading_y_px": 35.891990661621094,
+      "policies_heading_y_px": 359.7694396972656,
+      "data_heading_y_px": 1579.520751953125,
+      "horizontal_overflow_px": 0
+    }
+  },
+  "browser": {
+    "dialog_count": 0,
+    "error_count": 0,
+    "expected_warning_count": 6
+  }
+}

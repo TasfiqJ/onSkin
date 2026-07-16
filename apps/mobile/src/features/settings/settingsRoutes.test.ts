@@ -8,6 +8,14 @@ function readAppRoute(path: string): string {
   return readFileSync(`${APP_DIR}/${path}`, 'utf8');
 }
 
+function sourceBetween(source: string, start: string, end: string): string {
+  const startIndex = source.indexOf(start);
+  const endIndex = source.indexOf(end, startIndex + start.length);
+  expect(startIndex, `missing source boundary: ${start}`).toBeGreaterThanOrEqual(0);
+  expect(endIndex, `missing source boundary: ${end}`).toBeGreaterThan(startIndex);
+  return source.slice(startIndex, endIndex);
+}
+
 function expectTouchableRouteIcon(route: string): void {
   const source = readAppRoute(route);
 
@@ -97,10 +105,12 @@ describe('Settings route contracts', () => {
     );
     expect(you).toContain('const nextPrivacyCardY = event.nativeEvent.layout.y;');
     expect(you).toContain('privacyCardY.current = nextPrivacyCardY;');
-    expect(you).toContain('if (privacyDirectEntry) {');
+    expect(you).toContain('onLayout={onPrivacyCardLayout}');
+    expect(you).toContain('<Card className="mt-4" onLayout={onLayout}>');
+    expect(you).toContain('if (!privacyDirectEntry) return;');
     expect(you).toContain('const scrollToCurrentPrivacyCard = () => {');
     expect(you).toContain(
-      'nextPrivacyCardY -\n                      PRIVACY_DIRECT_ENTRY_TOP_OFFSET +',
+      'nextPrivacyCardY - PRIVACY_DIRECT_ENTRY_TOP_OFFSET + privacyDirectEntryScrollNudge',
     );
     expect(you).toContain('requestAnimationFrame(scrollToCurrentPrivacyCard);');
     expect(you).toContain('setTimeout(scrollToCurrentPrivacyCard, 80);');
@@ -125,10 +135,17 @@ describe('Settings route contracts', () => {
     expect(you).toContain('{privacyDirectEntry ? null : (');
     expect(you).toContain('<Card className="mt-4">');
 
-    const privacyAnchorIndex = you.indexOf('const nextPrivacyCardY = event.nativeEvent.layout.y;');
-    expect(privacyAnchorIndex).toBeGreaterThan(you.indexOf('SECURITY'));
-    expect(privacyAnchorIndex).toBeGreaterThan(you.indexOf('REMINDERS'));
-    expect(you.indexOf('PRIVACY &amp; CONSENT')).toBeGreaterThan(privacyAnchorIndex);
+    const shell = sourceBetween(
+      you,
+      'const YouMutationSections = memo(',
+      'export default function',
+    );
+    expect(shell.indexOf('<YouPrivacySection')).toBeGreaterThan(
+      shell.indexOf('<YouSecuritySection'),
+    );
+    expect(shell.indexOf('<YouPrivacySection')).toBeGreaterThan(
+      shell.indexOf('<YouStaticUtilitySections'),
+    );
   });
 
   it('keeps direct-entry exits safe for account and reminder settings', () => {
@@ -454,16 +471,17 @@ describe('Settings route contracts', () => {
     expect(source).toContain('className="h-[44px] w-[44px] items-center justify-center"');
     expect(source).toContain('accessibilityLabel={hint ? `${label}. ${hint}` : label}');
     expect(source).toContain("onPress={() => router.push('/settings/subscription')}");
-    expect(source).toContain("import { useEffect, useRef, useState } from 'react';");
-    expect(source).toContain('const [policyFeedback, setPolicyFeedback] = useState<{');
-    expect(source).toContain('key: PolicyLinkKey;');
-    expect(source).toContain('message: string;');
+    expect(source).toContain('const YouPoliciesSection = memo(');
+    expect(source).toContain('const [policyFeedback, setPolicyFeedback] = useState<PolicyFeedback');
+    expect(source).toContain('const pendingPolicyRef = useRef<PolicyLinkKey | null>(null);');
     expect(source).toContain(
       "const POLICY_LINK_UNAVAILABLE_MESSAGE =\n  'Link unavailable. We could not open this policy link. Please try again.';",
     );
-    expect(source).toContain('async function openPolicyRow(row: (typeof POLICY_ROWS)[number])');
+    expect(source).toContain('const openPolicyRow = useCallback(');
+    expect(source).toContain('if (pendingPolicyRef.current !== null) return;');
+    expect(source).toContain('recordYouPolicyStart();');
     expect(source).toContain('setPolicyFeedback(null);');
-    expect(source).toContain('const opened = await openPolicyUrl(row.url);');
+    expect(source).toContain('opened = await openPolicyUrl(row.url);');
     expect(source).toContain("if (row.key === 'support')");
     expect(source).toContain(
       "track('support_contact_opened', { source: 'settings', result: 'opened' });",
@@ -475,10 +493,9 @@ describe('Settings route contracts', () => {
     expect(source).toContain(
       'setPolicyFeedback({ key: row.key, message: POLICY_LINK_UNAVAILABLE_MESSAGE });',
     );
-    expect(source).toContain('<View\n              key={row.key}');
-    expect(source).toContain(
-      'compact={compactPhone}\n                onPress={() => void openPolicyRow(row)}',
-    );
+    expect(source).toContain('key={row.key}');
+    expect(source).toContain('disabled={pendingPolicy !== null}');
+    expect(source).toContain('onPress={() => void openPolicyRow(row)}');
     expect(source).toContain('policyFeedback?.key === row.key');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).not.toContain(
@@ -486,6 +503,71 @@ describe('Settings route contracts', () => {
     );
     expect(source).not.toContain(
       'onPress={() => void openPolicyRow(row)}\n                accessibilityRole="button"',
+    );
+
+    const policyOwner = sourceBetween(
+      source,
+      'const YouPoliciesSection = memo(',
+      'const YouDataSection = memo(',
+    );
+    expect(policyOwner.indexOf('if (pendingPolicyRef.current !== null) return;')).toBeLessThan(
+      policyOwner.indexOf('pendingPolicyRef.current = row.key;'),
+    );
+    expect(policyOwner.indexOf('pendingPolicyRef.current = row.key;')).toBeLessThan(
+      policyOwner.indexOf('recordYouPolicyStart();'),
+    );
+    expect(policyOwner.indexOf('recordYouPolicyStart();')).toBeLessThan(
+      policyOwner.indexOf('opened = await openPolicyUrl(row.url);'),
+    );
+    expect(policyOwner.indexOf('await waitForDuplicateActivationFrame();')).toBeLessThan(
+      policyOwner.indexOf('pendingPolicyRef.current = null;'),
+    );
+  });
+
+  it('keeps You mutations below memoized route, account, subscription, and static owners', () => {
+    const source = readAppRoute('(tabs)/you.tsx');
+    const screen = sourceBetween(source, 'export default function YouScreen()', '\n}');
+    const shell = sourceBetween(
+      source,
+      'const YouMutationSections = memo(',
+      'export default function YouScreen()',
+    );
+    const staticOverview = sourceBetween(
+      source,
+      'const YouStaticOverview = memo(',
+      'function ConsentFeedbackText',
+    );
+
+    for (const [owner, counter] of [
+      ['YouAccountCard', 'recordYouAccountRender'],
+      ['YouSubscriptionCard', 'recordYouSubscriptionRender'],
+      ['YouStaticOverview', 'recordYouStaticOverviewRender'],
+      ['YouCommerceSection', 'recordYouCommerceRender'],
+      ['YouSecuritySection', 'recordYouSecurityRender'],
+      ['YouPrivacySection', 'recordYouPrivacyRender'],
+      ['YouPoliciesSection', 'recordYouPoliciesRender'],
+      ['YouDataSection', 'recordYouDataRender'],
+    ] as const) {
+      expect(source).toContain(`const ${owner} = memo(`);
+      expect(source).toContain(`${counter}();`);
+    }
+
+    expect(screen).toContain('recordYouScreenRender();');
+    expect(screen).toContain('return <YouMutationSections />;');
+    expect(screen).not.toMatch(/use(?:State|Query|Auth|Entitlement|AppLock)/);
+    expect(shell).toContain('<YouConsentCoordinator>');
+    expect(shell).toContain('<YouDataRightsCoordinator');
+    expect(shell).not.toMatch(/use(?:Query|Auth|Entitlement|AppLock)/);
+    expect(staticOverview).not.toMatch(/use(?:State|Query|Auth|Entitlement|AppLock)/);
+    expect(source).not.toContain('useMutation(');
+
+    const consentOwner = sourceBetween(
+      source,
+      'const YouConsentCoordinator = memo(',
+      'const YouDataRightsCoordinator = memo(',
+    );
+    expect(consentOwner.indexOf('await waitForDuplicateActivationFrame();')).toBeLessThan(
+      consentOwner.indexOf('savingPrivacyRef.current = false;'),
     );
   });
 
@@ -554,7 +636,9 @@ describe('Settings route contracts', () => {
     expect(source).toContain('{secondaryRoutineRows.length > 0 ? (');
     expect(source).toContain('const COMPACT_SECONDARY_ROUTINE_TOP_MARGIN = 48;');
     expect(source).toContain('const SHORT_PHONE_SECONDARY_ROUTINE_TOP_MARGIN = 104;');
-    expect(source).toContain('<Card\n            className="p-3"');
+    expect(source).toContain(
+      '<Card className="p-3" style={{ marginTop: secondaryRoutineTopMargin }}>',
+    );
     expect(source).toContain('marginTop: secondaryRoutineTopMargin');
     expect(source).toContain('? TALL_TEXT_PRESSURE_SECONDARY_ROUTINE_TOP_MARGIN');
     expect(source).toContain('? SUPPORT_FLOOR_SECONDARY_ROUTINE_TOP_MARGIN');
@@ -576,8 +660,8 @@ describe('Settings route contracts', () => {
     expect(source).toContain('style={compact ? { fontSize: 14, lineHeight: 17 } : undefined}');
     expect(source).not.toContain('numberOfLines={compact ? 1 : undefined}');
     expect(source).toContain('style={compact ? { fontSize: 12, lineHeight: 16 } : undefined}');
-    expect(source).toContain(
-      "supportFloorPrivacyEntry || ultraShortPrivacyEntry\n                ? undefined\n                : 'Off by default. Opt in anytime.'",
+    expect(source).toMatch(
+      /supportFloorPrivacyEntry\s*\|\|\s*ultraShortPrivacyEntry\s*\?\s*undefined\s*:\s*'Off by default\. Opt in anytime\.'/,
     );
     expect(source).toContain('hint={ultraShortPrivacyEntry ? undefined : POLICY_HINTS[row.key]}');
     expect(source).toMatch(

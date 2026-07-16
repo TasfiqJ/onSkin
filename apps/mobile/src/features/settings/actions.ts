@@ -304,6 +304,8 @@ async function waitForExportE2EDelay(signal: AbortSignal): Promise<void> {
 
 export async function exportData(): Promise<boolean> {
   return runAccountGenerationOperation(async (lease) => {
+    await waitForExportE2EDelay(lease.signal);
+    lease.assertCurrent();
     let expectedUserId: string | null = null;
     if (isSupabaseConfigured) {
       const { data, error } = await awaitAccountGenerationLease(lease, () =>
@@ -317,8 +319,6 @@ export async function exportData(): Promise<boolean> {
     }
 
     const localDeviceData = await collectLocalDeviceExportData();
-    lease.assertCurrent();
-    await waitForExportE2EDelay(lease.signal);
     lease.assertCurrent();
     let serverAccountData: unknown | null = null;
     let serverAccountDataStatus: MobileDataExportBundle['server_account_data_status'] =

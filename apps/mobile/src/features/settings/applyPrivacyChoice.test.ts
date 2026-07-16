@@ -50,33 +50,38 @@ describe('settings privacy choice application', () => {
     const source = readSource('app/(tabs)/you.tsx');
 
     expect(source).toContain('applySettingsPrivacyChoice');
-    expect(source).toContain(
-      "type PrivacyFeedbackKey = 'marketing' | 'data_sharing' | 'app_lock';",
-    );
-    expect(source).toContain(
-      "type PrivacyFeedbackPlacement = 'commerce' | 'privacy' | 'security';",
-    );
+    expect(source).toContain("type PrivacyFeedbackKey = 'marketing' | 'data_sharing';");
+    expect(source).toContain("type PrivacyFeedbackPlacement = 'commerce' | 'privacy';");
     expect(source).toContain("const PRIVACY_CHOICE_SAVE_FAILED_TITLE = 'Choice not saved';");
-    expect(source).toContain('const [privacyFeedback, setPrivacyFeedback] = useState<{');
+    expect(source).toContain(
+      'const [privacyFeedback, setPrivacyFeedback] = useState<PrivacyFeedback',
+    );
     expect(source).toContain('const [savingAppLock, setSavingAppLock] = useState(false);');
-    expect(source).toContain('function renderPrivacyFeedback(');
-    expect(source).toContain('async function setAppLockChoice(enabled: boolean)');
-    expect(source).toContain("renderPrivacyFeedback('app_lock', 'security')");
+    expect(source).toContain('function ConsentFeedbackText(');
+    expect(source).toContain('const setAppLockChoice = useCallback(');
+    expect(source).toContain('const [appLockFeedback, setAppLockFeedback]');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('{PRIVACY_CHOICE_SAVE_FAILED_TITLE}');
     expect(source).toContain(
       'setPrivacyFeedback({ key: type, placement, message: privacyChoiceUserMessage() })',
     );
-    expect(source).toContain("placement: 'security'");
-    expect(source).toContain("onChange={(v) => void setConsent('data_sharing', v, 'commerce')}");
-    expect(source).toContain("onChange={(v) => void setConsent('marketing', v, 'privacy')}");
-    expect(source).toContain("onChange={(v) => void setConsent('data_sharing', v, 'privacy')}");
+    expect(source).toContain(
+      "onChange={(value) => void setConsent('data_sharing', value, 'commerce')}",
+    );
+    expect(source).toContain(
+      "onChange={(value) => void setConsent('marketing', value, 'privacy')}",
+    );
+    expect(source).toContain(
+      "onChange={(value) => void setConsent('data_sharing', value, 'privacy')}",
+    );
     expect(source).not.toContain("Alert.alert('Choice not saved'");
     expect(source).not.toContain("Alert.alert('Encrypted cloud backup'");
     expect(source).toContain(
-      "disabled={savingPrivacy === 'marketing' || !marketingConsentControl.canChange}",
+      'disabled={savingPrivacy !== null || !marketingConsentControl.canChange}',
     );
-    expect(source).toContain("savingPrivacy === 'data_sharing' || !commerceConsentControl.canChange");
+    expect(
+      source.match(/disabled=\{savingPrivacy !== null \|\| !commerceConsentControl\.canChange\}/g),
+    ).toHaveLength(2);
     expect(source).toContain('latestConsentsQueryOptions(ownerScope)');
     expect(source).toContain('commerceConsentQueryOptions(ownerScope)');
     expect(source).toContain('const marketingConsentControl = consentManagementState(');
@@ -85,14 +90,24 @@ describe('settings privacy choice application', () => {
     expect(source).toContain('value={commerceConsentControl.value}');
     expect(source).toContain('!marketingConsentControl.canChange');
     expect(source).toContain('!commerceConsentControl.canChange');
-    expect(source).toContain('onRetry={() => void consents.refetch()}');
-    expect(source).toContain('onRetry={() => void commerceConsent.refetch()}');
+    expect(source).toContain('onRetry={retryMarketingConsent}');
+    expect(source).toContain('onRetry={retryCommerceConsent}');
     expect(source).toContain("if (type !== 'data_sharing') throw error;");
     expect(source).not.toContain("if (type === 'data_sharing' && granted)");
     expect(source).not.toContain('await setCommerceConsentLocal(false).catch(() => undefined);');
     expect(source).toContain('label="Progress photo storage"');
     expect(source).toContain('Cloud backup is not available in this build.');
     expect(source).toContain('Device only');
+
+    const guard = source.indexOf('if (savingPrivacyRef.current) return;');
+    const claim = source.indexOf('savingPrivacyRef.current = true;', guard);
+    const count = source.indexOf('recordYouConsentStart();', claim);
+    const firstAwait = source.indexOf('await applySettingsPrivacyChoice({', count);
+    expect(guard).toBeGreaterThanOrEqual(0);
+    expect(claim).toBeGreaterThan(guard);
+    expect(count).toBeGreaterThan(claim);
+    expect(firstAwait).toBeGreaterThan(count);
+
     expect(source).not.toContain('setCloudBackupEnabled');
     expect(source).not.toContain('getCloudBackupEnabled');
     expect(source).not.toContain("track('cloud_backup_opted_in')");

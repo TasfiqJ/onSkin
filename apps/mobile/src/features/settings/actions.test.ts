@@ -455,16 +455,45 @@ describe('settings data export', () => {
   it('keeps the You tab from treating unavailable sharing as a successful export', () => {
     const source = readSource('app/(tabs)/you.tsx');
     const actions = readSource('features/settings/actions.ts');
+    const staticImports = source.slice(0, source.indexOf('const POLICY_ROWS'));
+    const exportOwner = source.slice(
+      source.indexOf('const startExport = useCallback('),
+      source.indexOf('const runAction = useCallback('),
+    );
 
     expect(actions).toContain('if (isSupabaseConfigured)');
     expect(actions).toContain('collectLocalDeviceExportData()');
     expect(actions).toContain("serverAccountDataStatus = 'included'");
-    expect(source).toContain('onSuccess: (shared)');
+    const exportAction = actions.slice(actions.indexOf('export async function exportData()'));
+    expect(exportAction.indexOf('await waitForExportE2EDelay(lease.signal);')).toBeLessThan(
+      exportAction.indexOf('await collectLocalDeviceExportData();'),
+    );
+    expect(source).toContain("const { exportData } = await import('@/features/settings/actions');");
+    expect(source).toContain('const shared = await exportData();');
+    expect(staticImports).not.toContain('@/features/settings/actions');
+    expect(exportOwner.indexOf("beginDataRightsOperation(stateRef.current, 'export'")).toBeLessThan(
+      exportOwner.indexOf('stateRef.current = next;'),
+    );
+    expect(exportOwner.indexOf('stateRef.current = next;')).toBeLessThan(
+      exportOwner.indexOf('recordYouExportStart();'),
+    );
+    expect(exportOwner.indexOf('recordYouExportStart();')).toBeLessThan(
+      exportOwner.indexOf("await import('@/features/settings/actions')"),
+    );
+    expect(exportOwner.indexOf("await import('@/features/settings/actions')")).toBeLessThan(
+      exportOwner.indexOf('!isOwnerQueryScopeCurrent(ownerScope)'),
+    );
+    expect(exportOwner.indexOf('!isOwnerQueryScopeCurrent(ownerScope)')).toBeLessThan(
+      exportOwner.indexOf('const shared = await exportData();'),
+    );
+    expect(exportOwner.indexOf('await waitForDuplicateActivationFrame();')).toBeLessThan(
+      exportOwner.indexOf('settleOperation(operationId);'),
+    );
     expect(source).toContain('if (!shared)');
     expect(source).toContain('title: EXPORT_UNAVAILABLE_TITLE');
     expect(source).toContain('message: EXPORT_UNAVAILABLE_MESSAGE');
     expect(source).toContain('title: EXPORT_FAILED_TITLE');
-    expect(source).toContain('message,');
+    expect(source).toContain('message: dataRightsUserMessage()');
     expect(source).toContain('function InlineNoticeCard(');
     expect(source).toContain('accessibilityRole="alert"');
     expect(source).toContain('Export unavailable');
@@ -991,34 +1020,69 @@ describe('settings account deletion and consent withdrawal', () => {
     expect(mocks.signOut).not.toHaveBeenCalled();
   });
 
-  it('keeps You-tab destructive data-rights actions route-owned and retryable', () => {
+  it('keeps You-tab destructive data-rights actions section-owned, exclusive, and retryable', () => {
     const source = readSource('app/(tabs)/you.tsx');
+    const stateMachine = readSource('features/settings/youDataRightsState.ts');
+    const staticImports = source.slice(0, source.indexOf('const POLICY_ROWS'));
+    const destructiveOwner = source.slice(
+      source.indexOf('const runAction = useCallback('),
+      source.indexOf('const context = useMemo<DataRightsContextValue>'),
+    );
 
-    expect(source).toContain(
+    expect(stateMachine).toContain(
       "type PendingDataRightsAction = 'withdraw_health_data' | 'delete_account';",
     );
+    expect(source).toContain('const YouDataRightsCoordinator = memo(');
     expect(source).toContain('const [privacyActionFeedback, setPrivacyActionFeedback]');
     expect(source).toContain('const [dataRightsFeedback, setDataRightsFeedback]');
-    expect(source).toContain('const [confirmingDataRightsAction, setConfirmingDataRightsAction]');
+    expect(source).toContain('const stateRef = useRef<DataRightsState>(IDLE_DATA_RIGHTS_STATE);');
+    expect(source).toContain('beginDataRightsConfirmation(stateRef.current, action)');
+    expect(source).toContain("beginDataRightsOperation(stateRef.current, 'export', operationId)");
+    expect(source).toContain('beginDataRightsOperation(stateRef.current, action, operationId)');
+    expect(source).toContain('recordYouDestructiveStart();');
+    expect(
+      destructiveOwner.indexOf('beginDataRightsOperation(stateRef.current, action'),
+    ).toBeLessThan(destructiveOwner.indexOf('stateRef.current = next;'));
+    expect(destructiveOwner.indexOf('stateRef.current = next;')).toBeLessThan(
+      destructiveOwner.indexOf('recordYouDestructiveStart();'),
+    );
+    expect(destructiveOwner.indexOf('recordYouDestructiveStart();')).toBeLessThan(
+      destructiveOwner.indexOf("await import('@/features/settings/actions')"),
+    );
+    expect(destructiveOwner.indexOf("await import('@/features/settings/actions')")).toBeLessThan(
+      destructiveOwner.indexOf('!isOwnerQueryScopeCurrent(ownerScope)'),
+    );
+    expect(destructiveOwner.indexOf('!isOwnerQueryScopeCurrent(ownerScope)')).toBeLessThan(
+      destructiveOwner.indexOf('await actions.withdrawHealthDataConsent(signOut)'),
+    );
     expect(source).toContain('function InlineConfirmCard(');
     expect(source).toContain('const DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE = 144;');
     expect(source).toContain('const scrollY = useRef(0);');
-    expect(source).toContain('function nudgeDataRightsConfirmationIntoView()');
+    expect(source).toContain('const nudgeDataRightsConfirmationIntoView = useCallback(');
     expect(source).toContain('scrollY.current + DATA_RIGHTS_CONFIRMATION_SCROLL_NUDGE');
     expect(source).toContain('scrollEventThrottle={16}');
-    expect(source).toContain('function promptWithdrawHealthData()');
-    expect(source).toContain('function promptDeleteAccount()');
-    expect(source).toContain('async function runWithdrawHealthData()');
-    expect(source).toContain('async function runDeleteAccount()');
+    expect(source).toContain("promptAction('withdraw_health_data')");
+    expect(source).toContain("promptAction('delete_account')");
+    expect(source).toContain("runAction('withdraw_health_data')");
+    expect(source).toContain("runAction('delete_account')");
+    expect(source).toContain('{confirmingWithdraw || withdrawing ? (');
+    expect(source).toContain("confirmLabel={withdrawing ? 'Working...' : 'Withdraw & delete'}");
+    expect(source).toContain('disabled={withdrawing}');
+    expect(source).toContain('{confirmingDelete || deleting ? (');
+    expect(source).toContain("confirmLabel={deleting ? 'Working...' : 'Delete'}");
+    expect(source).toContain('disabled={deleting}');
     expect(source).toContain('WITHDRAW_HEALTH_DATA_CONFIRM_TITLE');
     expect(source).toContain('WITHDRAW_HEALTH_DATA_FAILED_TITLE');
     expect(source).toContain('DELETE_ACCOUNT_CONFIRM_TITLE');
     expect(source).toContain('DELETE_ACCOUNT_FAILED_TITLE');
-    expect(source).toContain('onCancel={cancelDataRightsConfirmation}');
-    expect(source).toContain('onConfirm={() => void runWithdrawHealthData()}');
-    expect(source).toContain('onConfirm={() => void runDeleteAccount()}');
-    expect(source).toContain('setDataRightsFeedback(null);');
-    expect(source).toContain('setPrivacyActionFeedback(null);');
+    expect(source).toContain('onCancel={cancelConfirmation}');
+    expect(source).toContain("onConfirm={() => runAction('withdraw_health_data')}");
+    expect(source).toContain("onConfirm={() => runAction('delete_account')}");
+    expect(source).toContain('clearFeedback();');
+    expect(source).toContain('onConfirmationDismissed={cancelDataRightsConfirmationScroll}');
+    expect(source).toContain('cancelAnimationFrame(confirmationScrollFrameRef.current);');
+    expect(source).toContain('clearTimeout(confirmationScrollRetryRef.current);');
+    expect(staticImports).not.toContain('@/features/settings/actions');
     expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain('import { Alert');
   });
