@@ -394,10 +394,9 @@ require(/recordRoutinePlanAnalytics/.test(routinePlan) &&
   /track\('conflict_detected'/.test(
     routinePlan,
   ), 'Routine plan must emit routine_plan_viewed, reserve routine_created for real plans with executable steps, and emit first_useful_insight plus conflict_detected.');
-require(/done[\s\S]{0,160}track\('routine_checkoff_completed'/.test(todayTab) &&
-  /firstEver[\s\S]{0,80}track\('first_checkoff_completed'/.test(
-    todayTab,
-  ), 'Today check-off flow must emit routine_checkoff_completed and first_checkoff_completed.');
+require(/if\s*\(result\.inserted\)\s*\{[\s\S]{0,200}track\(\s*'routine_checkoff_completed'\s*,\s*\{\s*moment\s*\}\s*\);[\s\S]{0,120}if\s*\(result\.firstEver\)\s*track\(\s*'first_checkoff_completed'\s*,\s*\{\s*moment\s*\}\s*\);/.test(
+  todayTab,
+), 'Today check-off flow must emit routine_checkoff_completed only for a newly inserted completion and first_checkoff_completed only for the first-ever completion.');
 require(/shippableRules\(\)/.test(routineGenerate) &&
   /canUseRoutineCadence\(\)/.test(routineGenerate) &&
   /does not surface unreviewed conflict guidance through the default production generator/.test(
