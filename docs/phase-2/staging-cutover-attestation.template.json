@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "environment": "staging",
+  "projectRefLast4": null,
+  "projectRefFingerprint": null,
+  "sourceGitCommit": null,
+  "rollbackRef": null,
+  "reviewedAt": null,
+  "validUntil": null,
+  "retentionReviewAt": null,
+  "migrationPlanSha256": null,
+  "noDashboardSchemaMutation": true,
+  "rollbackPointOperatorAttested": null,
+  "attestationRoles": [
+    "privacy-reviewer",
+    "release-owner",
+    "rollback-owner",
+    "security-reviewer"
+  ],
+  "trafficProviderFreeze": {
+    "mode": "closed-ingress-zero-cohort",
+    "evidenceFile": "traffic-provider-freeze.json",
+    "evidenceSha256": null
+  },
+  "boundaries": {
+    "accountDeletion": {
+      "mode": "zero-cohort",
+      "evidenceFile": "account-deletion.json",
+      "evidenceSha256": null
+    },
+    "publicationFence": {
+      "mode": "zero-cohort",
+      "evidenceFile": "publication-fence.json",
+      "evidenceSha256": null
+    },
+    "entitlementAuthority": {
+      "mode": "zero-cohort",
+      "evidenceFile": "entitlement-authority.json",
+      "evidenceSha256": null
+    },
+    "healthConsent": {
+      "mode": "zero-cohort",
+      "evidenceFile": "health-consent.json",
+      "evidenceSha256": null
+    },
+    "appleAuth": {
+      "mode": "zero-cohort",
+      "evidenceFile": "apple-auth.json",
+      "evidenceSha256": null
+    }
+  }
+}

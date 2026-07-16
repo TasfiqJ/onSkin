@@ -4,6 +4,7 @@
 //
 // BLOCKED: B-SHOPMY. Without an approved brand API key this stays an inert no-op.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts';
 import { fetchWithTimeout, readLimitedResponseJson } from '../_shared/fetch.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import {
@@ -61,6 +62,8 @@ function authorizedSchedulerRequest(req: Request): boolean {
 }
 
 Deno.serve(async (req) => {
+  const frozen = stagingTrafficFreezeResponse();
+  if (frozen) return frozen;
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405, { Allow: 'POST' });
 
   if (!shopmyBrandKey) {

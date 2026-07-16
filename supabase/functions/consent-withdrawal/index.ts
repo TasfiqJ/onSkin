@@ -5,13 +5,10 @@
 // only after that proof to append the revocation ledger row and perform the
 // promised cleanup for prior cloud/shared data.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts';
 import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader, bearerToken } from '../_shared/auth.ts';
-import {
-  contentLengthTooLarge,
-  readLimitedJson,
-  userEdgeBodyMaxBytes,
-} from '../_shared/body.ts';
+import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import { readEdgeAppEnvironment } from '../_shared/env.ts';
 import { readSupabasePublishableKey } from '../_shared/supabasePublishableKey.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
@@ -42,8 +39,7 @@ type EdgeSupabaseClient = any;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers':
-    'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
@@ -72,10 +68,7 @@ async function requireSameAccountAccess(
   return result.ok ? null : json({ error: result.error }, result.status);
 }
 
-async function ownerClaimToken(
-  userId: string,
-  operationId: string,
-): Promise<string> {
+async function ownerClaimToken(userId: string, operationId: string): Promise<string> {
   const encoder = new TextEncoder();
   ownerClaimHmacKey ??= await crypto.subtle.importKey(
     'raw',
@@ -89,13 +82,14 @@ async function ownerClaimToken(
     ownerClaimHmacKey,
     encoder.encode(`health-owner-claim-v1|${userId}|${operationId}`),
   );
-  return Array.from(
-    new Uint8Array(signature),
-    (byte) => byte.toString(16).padStart(2, '0'),
-  ).join('');
+  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, '0')).join(
+    '',
+  );
 }
 
 Deno.serve(async (req) => {
+  const frozen = stagingTrafficFreezeResponse();
+  if (frozen) return frozen;
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
@@ -132,9 +126,7 @@ Deno.serve(async (req) => {
   if (parsed instanceof Response) return parsed;
 
   const healthRequest = parseHealthLifecycleRequest(parsed);
-  const granularRequest = healthRequest
-    ? null
-    : parseGranularWithdrawalRequest(parsed);
+  const granularRequest = healthRequest ? null : parseGranularWithdrawalRequest(parsed);
   if (!healthRequest && !granularRequest) {
     return json({ error: 'INVALID_BODY' }, 400);
   }
@@ -155,14 +147,11 @@ Deno.serve(async (req) => {
         const claimed = (async () => {
           const claimToken = await ownerClaimToken(userId, operationId);
           // Audited RPC contract: 'claim_health_consent_withdrawal_for_owner'.
-          const { data, error } = await admin.rpc(
-            'claim_health_consent_withdrawal_for_owner',
-            {
-              p_user_id: userId,
-              p_operation_id: operationId,
-              p_claim_token: claimToken,
-            },
-          );
+          const { data, error } = await admin.rpc('claim_health_consent_withdrawal_for_owner', {
+            p_user_id: userId,
+            p_operation_id: operationId,
+            p_claim_token: claimToken,
+          });
           const row = Array.isArray(data) && data.length === 1 ? data[0] : null;
           if (
             error ||
@@ -193,19 +182,19 @@ Deno.serve(async (req) => {
           const claimToken = await claimOperation(operationId);
           return claimToken
             ? admin.rpc('prepare_health_data_consent_withdrawal', {
-              p_operation_id: operationId,
-              p_claim_token: claimToken,
-            })
+                p_operation_id: operationId,
+                p_claim_token: claimToken,
+              })
             : { data: null, error: 'HEALTH_WITHDRAWAL_CLAIM_UNAVAILABLE' };
         },
         listStorage: async (operationId, limit) => {
           const claimToken = await claimOperation(operationId);
           return claimToken
             ? admin.rpc('list_health_consent_storage_work', {
-              p_operation_id: operationId,
-              p_limit: limit,
-              p_claim_token: claimToken,
-            })
+                p_operation_id: operationId,
+                p_limit: limit,
+                p_claim_token: claimToken,
+              })
             : { data: null, error: 'HEALTH_WITHDRAWAL_CLAIM_UNAVAILABLE' };
         },
         removeStorage: (paths) => admin.storage.from('photos').remove(paths),
@@ -213,9 +202,9 @@ Deno.serve(async (req) => {
           const claimToken = await claimOperation(operationId);
           return claimToken
             ? admin.rpc('complete_health_data_consent_withdrawal', {
-              p_operation_id: operationId,
-              p_claim_token: claimToken,
-            })
+                p_operation_id: operationId,
+                p_claim_token: claimToken,
+              })
             : { data: null, error: 'HEALTH_WITHDRAWAL_CLAIM_UNAVAILABLE' };
         },
         reconsent: (request) =>
@@ -252,8 +241,7 @@ Deno.serve(async (req) => {
           p_version: request.version,
           p_consent_text_hash: request.consentTextHash,
         }),
-      cleanup: (operation) =>
-        runAuthenticatedHealthDependentCleanup(admin, operation),
+      cleanup: (operation) => runAuthenticatedHealthDependentCleanup(admin, operation),
       complete: (operationId) =>
         admin.rpc('complete_health_dependent_consent_withdrawal', {
           p_operation_id: operationId,

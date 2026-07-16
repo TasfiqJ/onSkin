@@ -82,8 +82,40 @@ npm run phase2:check-env:strict
 npm run phase2:rls-smoke
 ```
 
-The deploy wrapper links the project, pushes migrations, deploys required Edge
-Functions, and regenerates `packages/types/src/database.types.ts`.
+The DB-06 wrapper is fresh-staging-only; it is not an incremental or production
+deployment path. It requires a clean fetched `origin/main`, exports and verifies
+an immutable Git snapshot, and refuses any pre-existing public object, migration
+ID, deployed function, Auth cohort, Storage bucket/object, or Cron job. It
+deploys all 54 migrations through `0055` and all 16 default functions from that
+snapshot. Linked generated types are retained only after exact local/linked
+hash parity; the wrapper does **not** replace
+`packages/types/src/database.types.ts`, which remains DB-08 work.
+
+Before execution, prepare the main cutover attestation, one
+`traffic-provider-freeze.json`, and five schema-v2 zero-cohort boundary files as
+documented in
+`docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md`.
+Observations must be no more than 30 minutes old at the initial pre-mutation
+gate. Both cutover `validUntil` and the covering freeze `holdUntil` must have at
+least 12 hours remaining before the first mutation and seven hours immediately
+before migration push; the freeze spans at most 24 hours and retains at least
+one hour at completion. It records closed staging client/key distribution, Auth
+signup and every
+reviewed provider/hook/integration, provider callbacks/retries, Apple
+notifications, schedules, and Edge ingress. Retained traffic references accept
+only approved-prefix local non-secret ticket/artifact IDs; URLs, email-like
+values, and provider/account/project identifiers fail closed.
+
+The wrapper sets `DB06_TRAFFIC_FREEZE=frozen`, and every one of the 16 Edge
+entrypoints checks the shared freeze guard before request business logic. The
+exact eight `verifyJwt: false` functions must return HTTP `503`, exact
+`DB06_STAGING_TRAFFIC_FROZEN`, and `Cache-Control: no-store`. Immediately before
+migration push, the runner revalidates cutover bytes and rereads the exact
+function inventory, public freeze responses, hosted Auth freeze, migrations,
+schema, Storage, and all Cron jobs. A passing packet cannot omit those proofs.
+The runner revalidates cutover hashes at completion and never unfreezes the
+target; release requires a separately recorded downstream live gate. No hosted
+DB-06 run or live acceptance evidence exists yet because ACCT-03 remains open.
 
 The first durable account-deletion cutover is an exception: predeploy the new
 fail-closed `account-deletion` function before applying migrations 0048-0051,
@@ -114,7 +146,7 @@ marked or exchanged. This no-retry recovery path must remain intact during
 deployment; duplicate Apple delivery is opportunistic only.
 
 The current local 0055 gate passed two clean resets, exact 54-migration history,
-the full structural pgTAP suite plus 109/109 Apple assertions, database lint,
+the full structural pgTAP suite plus 114/114 Apple assertions, database lint,
 an empty migration shadow diff, temporary type generation, 20/20 focused
 event/lifecycle Edge tests, and the 47-test Apple auth work lane. Hosted
 migration history and live service behavior remain separate evidence gates.

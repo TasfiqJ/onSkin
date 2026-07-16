@@ -1,6 +1,7 @@
 // Exact barcode lookup against the reviewed local catalog only. Bulk import
 // may use reviewed offline artifacts; lookup payloads never go to a catalog provider.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts';
 import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
@@ -131,6 +132,8 @@ async function requestBarcode(req: Request): Promise<string | null | Response> {
 }
 
 Deno.serve(async (req) => {
+  const frozen = stagingTrafficFreezeResponse();
+  if (frozen) return frozen;
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }

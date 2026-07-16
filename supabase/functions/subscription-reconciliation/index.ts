@@ -3,6 +3,7 @@
 // fetches a fresh bounded provider response, then invokes the service-only
 // snapshot RPC with RevenueCat request_date as the only watermark.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts';
 import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/accountAccess.ts';
 import { bearerAuthorizationHeader, bearerToken } from '../_shared/auth.ts';
 import {
@@ -112,6 +113,8 @@ async function enforceRateLimit(
 }
 
 Deno.serve(async (req) => {
+  const frozen = stagingTrafficFreezeResponse();
+  if (frozen) return frozen;
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
   if (contentLengthTooLarge(req, maxBodyBytes)) return json({ error: 'payload_too_large' }, 413);

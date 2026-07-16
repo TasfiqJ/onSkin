@@ -710,11 +710,17 @@
       "id": "DB-06",
       "status": "in_progress",
       "blockedBy": ["ACCT-03"],
-      "nextAction": "Extend the staging procedure to retain the required before-and-after evidence package, then deploy in reviewed order and capture schema counts, migration IDs and checksums, function versions and hashes, generated-type hash, operator, time, rollback point, and redacted logs.",
+      "nextAction": "After ACCT-03 creates an approved empty staging project, prepare the full-target-bound cutover record, traffic/provider-freeze artifact, and five schema-v2 zero-cohort boundary files outside the worktree; close client/key distribution, hosted Auth, provider callback/retry, Apple notification, schedule, and Edge ingress; then execute the clean origin/main fresh-staging procedure. Review its mandatory before/immediate-pre-migration/after proofs, keep DB06_TRAFFIC_FREEZE=frozen, and release only through a separately recorded downstream live gate. No hosted run or live evidence exists yet.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase2/deploy-supabase-staging.ps1",
-        "docs/phase-2-production-infrastructure-runbook.md"
+        "scripts/phase2/deploy-supabase-staging.mjs",
+        "scripts/phase2/staging-deployment-evidence-lib.mjs",
+        "docs/phase-2-production-infrastructure-runbook.md",
+        "docs/phase-2/staging-cutover-attestation.template.json",
+        "docs/phase-2/staging-traffic-provider-freeze-attestation.template.json",
+        "docs/phase-2/staging-zero-cohort-boundary-attestation.template.json",
+        "docs/hugeToDo/DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md"
       ]
     },
     {

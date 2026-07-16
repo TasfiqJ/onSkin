@@ -402,6 +402,23 @@ private tables: 40 directly queryable plus 17 sealed.
 PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system and
 the separate RevenueCat/app-grant entitlement authorities.
 
+The DB-06 source procedure is now complete for a first empty staging project.
+It deploys only a Git-blob-verified immutable clean-main snapshot through the
+pinned native CLI, requires confirmed child-process settlement, binds every
+linked operation to the expected target, and rejects any public/migration/
+function/Auth/Storage/all-Cron state. It retains a full-target-bound cutover
+record, one traffic/provider-freeze artifact, five schema-v2 redacted boundary
+files, and exact before/pre-migration/after inventories. The runner sets
+`DB06_TRAFFIC_FREEZE=frozen`, guards all 16 Edge entrypoints, canaries the exact
+eight `verifyJwt: false` endpoints, and immediately rereads functions, public
+freeze responses, hosted Auth controls, migrations, schema, Storage, and all
+Cron jobs before migration push. A `pass` cannot omit these proofs, cutover
+hashes are revalidated at completion, and DB-06 never unfreezes staging. A
+post-mutation failure stays remote-state-unknown and never claims containment;
+unconfirmed Windows containment preserves its recovery state and stable
+fingerprint. No hosted run or live packet exists, so DB-06 remains
+`in_progress` and blocked by ACCT-03.
+
 Migrations `0048`-`0052` provide the durable deletion operation, provider-step,
 barrier, guarded-writer, identity-tombstone, exact-session publication-lease,
 drain, settling, and repeated-absence contracts. Mobile now places every
@@ -436,16 +453,27 @@ provider-event proof, and staging/production provider evidence remain open.
 
 Next action:
 
-- create staging and production projects after the brand decision;
+- create an approved empty staging project after the brand/account/data-map
+  gates;
 - fill `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY`;
 - run `npm run phase2:check-env:strict`;
-- apply all 54 reviewed migrations through `0055` with
-  `scripts/phase2/deploy-supabase-staging.ps1`;
-- regenerate `packages/types/src/database.types.ts`;
-- deploy the exact 16-function manifest, including `apple-auth-lifecycle`,
-  `apple-account-events`, `apple-auth-worker`, `health-consent-worker`, and
-  `subscription-reconciliation`;
+- prepare the current full-target-bound cutover record, traffic/provider-freeze
+  artifact, and five schema-v2 redacted boundary files outside the worktree;
+- close client/key distribution, Auth signup/anonymous signup/providers/hooks/
+  SAML/OAuth/SSO/third-party integrations, provider callbacks and retries,
+  Apple notifications, and scheduled ingress; capture observations within 30
+  minutes; require both `validUntil` and the covering freeze `holdUntil` to have
+  at least 12 hours remaining before the first mutation and seven hours
+  immediately before migration push, inside a maximum 24-hour freeze window;
+- run `scripts/phase2/deploy-supabase-staging.ps1`; it predeploys the exact
+  guarded 16-function manifest, canaries the eight public-gateway functions,
+  immediately rereads the full empty-target boundary, applies all 54 migrations
+  through `0055`, redeploys the manifest, retains linked types without changing
+  repository types, and leaves `DB06_TRAFFIC_FREEZE=frozen`;
+- release the freeze only through a separately recorded downstream live gate;
+- after DB-06 live review, complete DB-08's deliberate
+  `packages/types/src/database.types.ts` replacement;
 - run Security Advisor and Performance Advisor;
 - configure anonymous Auth and Turnstile, then run
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
@@ -455,7 +483,8 @@ Next action:
   interruption/recreation, and zero cleanup residue;
 - obtain an approved old/tampered-client control and prove the source-complete
   SIWA authorization-code/token/server-event lifecycle against hosted Apple
-  and Supabase services before production.
+  and Supabase services before production; and
+- use only the separately reviewed DB-12/DB-13 procedure for production.
 
 Exit criteria:
 

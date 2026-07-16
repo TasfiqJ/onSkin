@@ -1,6 +1,6 @@
 # Phase 2 Status
 
-Date: 2026-07-04
+Date: 2026-07-15
 
 ## Done In Repo
 
@@ -12,13 +12,44 @@ Date: 2026-07-04
 - PostHog event names/properties are sanitized, but direct mobile capture and identify are intentionally disabled until consent, deletion-barrier, regional configuration, retention, and live payload gates pass.
 - Sentry initializes at app startup with privacy-conservative defaults.
 - Supabase Edge Functions prefer publishable/secret key env names.
-- Phase 2 env audit, Supabase RLS smoke test, and Supabase staging deploy scripts
-  are added.
+- Phase 2 env audit and Supabase RLS smoke test are added.
+- The DB-06 fresh-staging deploy path is source-complete: it binds a clean
+  `origin/main` SHA and expected target, deploys only a Git-blob-verified
+  immutable snapshot through the native pinned Supabase CLI `2.109.1`, refuses
+  public/migration/function/Auth/Storage/all-Cron state, validates and retains a
+  full-target-bound cutover record, one traffic/provider-freeze artifact, and
+  five schema-v2 boundary files, predeploys all 16 functions before 54
+  migrations through `0055`, retains before/pre-migration/after
+  schema/migration/function/type evidence, and fails closed without retaining
+  raw CLI output or provider digests.
+- DB-06 actively closes ingress: the runner sets
+  `DB06_TRAFFIC_FREEZE=frozen`; all 16 Edge handlers have a first-request freeze
+  guard; and the exact eight `verifyJwt: false` functions must return HTTP 503,
+  exact `DB06_STAGING_TRAFFIC_FROZEN`, and `Cache-Control: no-store`. The
+  hosted Auth gate requires signup, anonymous signup, all 26 reviewed external
+  providers, seven reviewed hooks, SAML, OAuth server, custom OAuth, SSO, and
+  third-party integrations to remain disabled.
+- Immediately before migration push, DB-06 revalidates the cutover bytes and
+  rereads the exact function inventory, public freeze responses, Auth freeze,
+  empty migration inventory, schema, Storage, and all Cron jobs. The final pass
+  contract rejects omitted proof, requires 80 public/80 RLS tables, one
+  `photos` bucket, zero Auth cohort/Storage objects/Cron jobs, and revalidates
+  the cutover artifacts at completion. DB-06 never unfreezes staging; release
+  belongs to a separate recorded downstream live gate.
+- DB-06 timeout/interruption/output-limit handling terminates the complete child
+  process tree before finalizing evidence. When Windows containment is
+  unconfirmed, it preserves the cancellation signal and runtime root and emits
+  a stable recovery fingerprint. Every post-mutation failure remains
+  remote-state-unknown and, when safe, carries a best-effort read-only snapshot;
+  no failure is mislabeled as contained.
+- DB-06 retains linked generated types only after exact local/linked hash parity
+  and deliberately leaves repository type replacement to DB-08.
 - Store/privacy inventory and production infrastructure runbook are documented.
 
 ## Not Done Because It Requires External Accounts
 
-- Supabase staging/production projects are not created or linked.
+- Supabase staging/production projects are not approved, created, or linked; no
+  DB-06 hosted evidence packet exists.
 - Edge Functions are not deployed to a live project.
 - RLS smoke tests have not run against a live Supabase project.
 - Apple/Google app records, OAuth clients, and store metadata are not created.
@@ -31,7 +62,12 @@ Date: 2026-07-04
 
 ## Current Go/No-Go
 
-No-go for public launch. The repo now has the Phase 2 scaffolding needed to make
-real infrastructure setup disciplined, but launch readiness still depends on
-brand clearance, external accounts, production secrets, device QA, legal review,
-clinical review, catalog data, and closed beta demand proof.
+DB-06 remains `in_progress` and `blockedBy: ["ACCT-03"]`. No approved hosted
+staging target was used and no live evidence directory was created.
+
+No-go for public launch. The repo now has a reviewed source contract for a first
+empty staging deployment, but that contract is not a deployment. Launch
+readiness still depends on brand clearance, external accounts, a real hosted
+DB-06 packet and downstream live matrices, production secrets, physical-iPhone
+QA, legal/privacy/security/clinical review, catalog rights/data, and closed-beta
+demand proof.

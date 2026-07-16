@@ -7,6 +7,7 @@
 //   * Idempotency key = event.id; RevenueCat delivery is at-least-once.
 //   * Cancellation stops renewal but keeps access until expiration.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts';
 import { parseRevenueCatIdentityTombstoneKeyring } from '../_shared/revenueCatIdentityTombstone.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import {
@@ -156,6 +157,8 @@ async function verifySignature(
 }
 
 Deno.serve(async (req) => {
+  const frozen = stagingTrafficFreezeResponse();
+  if (frozen) return frozen;
   if (req.method !== 'POST') return json('method not allowed', 405);
 
   if (!webhookAuth && !signingSecret) {

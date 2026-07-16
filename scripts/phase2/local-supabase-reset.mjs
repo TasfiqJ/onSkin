@@ -1,24 +1,65 @@
 #!/usr/bin/env node
 
-import { spawn } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
-import { cp, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
+import {
+  cp,
+  lstat,
+  mkdtemp,
+  readFile,
+  readdir,
+  realpath,
+  rm,
+  stat,
+  writeFile,
+} from 'node:fs/promises';
 import net from 'node:net';
 import { tmpdir } from 'node:os';
-import { dirname, join, relative, resolve, sep } from 'node:path';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 
 import { installSignalCleanup } from './local-supabase-signal-cleanup.mjs';
 import { assertLocalOnlyInvocation } from './local-supabase-target-guard.mjs';
+import { ContainedCommandError, runContainedCommand } from './contained-command.mjs';
+import { reportsPinnedEmptySchemaDiff } from './schema-diff-evidence.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
 const EXPECTED_MIGRATION_COUNT = 54;
 const EXPECTED_LATEST_MIGRATION = '20260715000055';
+const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
+const LOCAL_CLI_MAX_OUTPUT_BYTES = 8 * 1024 * 1024;
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(SCRIPT_DIR, '..', '..');
-const SOURCE_SUPABASE_DIR = join(REPO_ROOT, 'supabase');
-const CLI_ENTRYPOINT = join(REPO_ROOT, 'node_modules', 'supabase', 'dist', 'supabase.js');
+const sourceSupabaseOverride = process.env.DB05_SOURCE_SUPABASE_DIR?.trim();
+if (sourceSupabaseOverride && !isAbsolute(sourceSupabaseOverride)) {
+  throw new Error('DB05_SOURCE_SUPABASE_DIR must be an absolute path when provided.');
+}
+const SOURCE_SUPABASE_DIR = sourceSupabaseOverride
+  ? resolve(sourceSupabaseOverride)
+  : join(REPO_ROOT, 'supabase');
+if (sourceSupabaseOverride) {
+  const sourceMetadata = await lstat(SOURCE_SUPABASE_DIR).catch(() => null);
+  const canonicalSource = await realpath(SOURCE_SUPABASE_DIR).catch(() => null);
+  if (
+    !sourceMetadata?.isDirectory() ||
+    sourceMetadata.isSymbolicLink() ||
+    !canonicalSource ||
+    basename(canonicalSource).toLowerCase() !== 'supabase'
+  ) {
+    throw new Error('DB05_SOURCE_SUPABASE_DIR must resolve to a regular supabase directory.');
+  }
+}
+const cliBinaryOverride = process.env.DB05_SUPABASE_CLI_BINARY?.trim();
+const inheritParentProcessGroupValue = process.env.DB05_INHERIT_PARENT_PROCESS_GROUP?.trim() ?? '';
+if (!['', '1'].includes(inheritParentProcessGroupValue)) {
+  throw new Error('DB05_INHERIT_PARENT_PROCESS_GROUP is invalid.');
+}
+const INHERIT_PARENT_PROCESS_GROUP = inheritParentProcessGroupValue === '1';
+if (cliBinaryOverride && !isAbsolute(cliBinaryOverride)) {
+  throw new Error('DB05_SUPABASE_CLI_BINARY must be an absolute path when provided.');
+}
+let CLI_COMMAND = process.execPath;
+let CLI_ARGUMENT_PREFIX = [join(REPO_ROOT, 'node_modules', 'supabase', 'dist', 'supabase.js')];
 const mode = process.argv[2] ?? '--verify';
 
 if (!['--reset-only', '--verify'].includes(mode) || process.argv.length > 3) {
@@ -45,11 +86,32 @@ childEnv.DO_NOT_TRACK = '1';
 childEnv.SUPABASE_TELEMETRY_DISABLED = '1';
 
 const sourcePackage = JSON.parse(await readFile(join(REPO_ROOT, 'package.json'), 'utf8'));
-const installedPackage = JSON.parse(
-  await readFile(join(REPO_ROOT, 'node_modules', 'supabase', 'package.json'), 'utf8'),
-);
 if (sourcePackage.devDependencies?.supabase !== PINNED_CLI_VERSION) {
   throw new Error(`package.json must pin supabase exactly to ${PINNED_CLI_VERSION}.`);
+}
+let installedPackage;
+if (cliBinaryOverride) {
+  const binaryMetadata = await lstat(cliBinaryOverride).catch(() => null);
+  const canonicalBinary = await realpath(cliBinaryOverride).catch(() => null);
+  if (
+    !binaryMetadata?.isFile() ||
+    binaryMetadata.isSymbolicLink() ||
+    !canonicalBinary ||
+    !['supabase', 'supabase.exe'].includes(basename(canonicalBinary).toLowerCase())
+  ) {
+    throw new Error('DB05_SUPABASE_CLI_BINARY must resolve to a regular Supabase CLI binary.');
+  }
+  const binaryPackageRoot = resolve(dirname(canonicalBinary), '..');
+  installedPackage = JSON.parse(await readFile(join(binaryPackageRoot, 'package.json'), 'utf8'));
+  if (!/^@supabase\/cli-[a-z0-9-]+$/u.test(String(installedPackage.name ?? ''))) {
+    throw new Error('DB05_SUPABASE_CLI_BINARY package identity is invalid.');
+  }
+  CLI_COMMAND = canonicalBinary;
+  CLI_ARGUMENT_PREFIX = [];
+} else {
+  installedPackage = JSON.parse(
+    await readFile(join(REPO_ROOT, 'node_modules', 'supabase', 'package.json'), 'utf8'),
+  );
 }
 if (installedPackage.version !== PINNED_CLI_VERSION) {
   throw new Error(
@@ -149,39 +211,51 @@ function sanitizedTail(value) {
     .join('\n');
 }
 
-async function runLocalCli(label, args, { quiet = false } = {}) {
+async function runLocalCli(
+  label,
+  args,
+  {
+    quiet = false,
+    timeoutMs = LOCAL_CLI_TIMEOUT_MS,
+    maxOutputBytes = LOCAL_CLI_MAX_OUTPUT_BYTES,
+  } = {},
+) {
   assertLocalOnlyInvocation(label, args);
+  if (
+    !Number.isSafeInteger(timeoutMs) ||
+    timeoutMs <= 0 ||
+    !Number.isSafeInteger(maxOutputBytes) ||
+    maxOutputBytes <= 0
+  ) {
+    throw new Error('Local Supabase CLI bounds are invalid.');
+  }
 
   if (!quiet) process.stdout.write(`[db05-local] ${label}...\n`);
-  const child = spawn(
-    process.execPath,
-    [CLI_ENTRYPOINT, ...args, '--workdir', sandboxRoot, '--yes'],
-    {
-      cwd: sandboxRoot,
-      env: childEnv,
-      shell: false,
-      windowsHide: true,
-    },
-  );
-  const stdout = [];
-  const stderr = [];
-  child.stdout.on('data', (chunk) => stdout.push(Buffer.from(chunk)));
-  child.stderr.on('data', (chunk) => stderr.push(Buffer.from(chunk)));
-  const done = new Promise((resolveExit, rejectExit) => {
-    child.once('error', rejectExit);
-    child.once('close', resolveExit);
+  const controller = new AbortController();
+  const done = runContainedCommand({
+    command: CLI_COMMAND,
+    args: [...CLI_ARGUMENT_PREFIX, ...args, '--workdir', sandboxRoot, '--yes'],
+    cwd: sandboxRoot,
+    environment: childEnv,
+    timeoutMs,
+    maxOutputBytes,
+    signal: controller.signal,
+    inheritParentProcessGroup: INHERIT_PARENT_PROCESS_GROUP,
   });
-  activeCliProcess = { child, done };
-  const exitCode = await done.finally(() => {
-    if (activeCliProcess?.child === child) activeCliProcess = undefined;
-  });
-  const output = Buffer.concat(stdout).toString('utf8');
-  const errors = Buffer.concat(stderr).toString('utf8');
-  if (exitCode !== 0) {
-    throw new Error(
-      `${label} failed (exit ${exitCode}).\n${sanitizedTail(`${output}\n${errors}`)}`,
-    );
+  activeCliProcess = { abort: () => controller.abort(), done };
+  let result;
+  try {
+    result = await done;
+  } catch (error) {
+    if (error instanceof ContainedCommandError) {
+      throw new Error(`Local Supabase CLI ${error.originReason}.`);
+    }
+    throw error;
+  } finally {
+    if (activeCliProcess?.done === done) activeCliProcess = undefined;
   }
+  const output = result.stdout;
+  const errors = result.stderr;
   if (!quiet) process.stdout.write(`[db05-local] ${label}: PASS\n`);
   return { output, errors };
 }
@@ -189,8 +263,8 @@ async function runLocalCli(label, args, { quiet = false } = {}) {
 async function terminateActiveCliProcess() {
   const active = activeCliProcess;
   if (!active) return;
-  active.child.kill('SIGTERM');
-  await Promise.race([active.done.catch(() => {}), delay(5000)]);
+  active.abort();
+  await Promise.race([active.done.catch(() => {}), delay(35_000)]);
 }
 
 function cleanupSandbox() {
@@ -308,7 +382,7 @@ try {
     ]);
 
     const driftPath = join(sandboxRoot, 'db05-drift.sql');
-    await runLocalCli('compare local schema to migration shadow', [
+    const driftCommand = await runLocalCli('compare local schema to migration shadow', [
       'db',
       'diff',
       '--local',
@@ -317,7 +391,17 @@ try {
       '--output',
       driftPath,
     ]);
-    const drift = await readFile(driftPath, 'utf8').catch(() => '');
+    const driftMetadata = await stat(driftPath).catch(() => null);
+    if (
+      !driftMetadata?.isFile() &&
+      !reportsPinnedEmptySchemaDiff({
+        stdout: driftCommand.output,
+        stderr: driftCommand.errors,
+      })
+    ) {
+      throw new Error('Local schema diff artifact is missing.');
+    }
+    const drift = driftMetadata?.isFile() ? await readFile(driftPath, 'utf8') : '';
     const semanticDrift = drift
       .replace(/--[^\r\n]*/gu, '')
       .replace(/\/\*[\s\S]*?\*\//gu, '')

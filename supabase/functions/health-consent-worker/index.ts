@@ -2,6 +2,7 @@
 // withdrawal. Gateway JWT verification is disabled because this private route
 // authenticates a scheduler-held 256-bit secret and uses only service RPCs.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts';
 import { readEdgeAppEnvironment } from '../_shared/env.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import { runHealthDependentCleanup } from '../consent-withdrawal/dependentCleanupRuntime.ts';
@@ -27,16 +28,9 @@ if (!/^https:\/\/[a-z0-9.-]+$/i.test(supabaseUrl)) {
   throw new Error('HEALTH_WORKER_CONFIGURATION_INVALID');
 }
 
-function intEnv(
-  name: string,
-  fallback: number,
-  minimum: number,
-  maximum: number,
-): number {
+function intEnv(name: string, fallback: number, minimum: number, maximum: number): number {
   const value = Number(Deno.env.get(name));
-  return Number.isSafeInteger(value) && value >= minimum && value <= maximum
-    ? value
-    : fallback;
+  return Number.isSafeInteger(value) && value >= minimum && value <= maximum ? value : fallback;
 }
 
 const claimLimit = intEnv(
@@ -45,24 +39,9 @@ const claimLimit = intEnv(
   1,
   HEALTH_WORKER_MAX_CLAIM_LIMIT,
 );
-const storageBatchSize = intEnv(
-  'HEALTH_CONSENT_WORKER_STORAGE_BATCH_SIZE',
-  100,
-  1,
-  100,
-);
-const maxStorageBatches = intEnv(
-  'HEALTH_CONSENT_WORKER_MAX_STORAGE_BATCHES',
-  5,
-  1,
-  100,
-);
-const budgetMs = intEnv(
-  'HEALTH_CONSENT_WORKER_BUDGET_MS',
-  45_000,
-  1_000,
-  55_000,
-);
+const storageBatchSize = intEnv('HEALTH_CONSENT_WORKER_STORAGE_BATCH_SIZE', 100, 1, 100);
+const maxStorageBatches = intEnv('HEALTH_CONSENT_WORKER_MAX_STORAGE_BATCHES', 5, 1, 100);
+const budgetMs = intEnv('HEALTH_CONSENT_WORKER_BUDGET_MS', 45_000, 1_000, 55_000);
 const retryAfterSeconds = intEnv(
   'HEALTH_CONSENT_WORKER_RETRY_AFTER_SECONDS',
   60,
@@ -83,9 +62,8 @@ const admin: any = createClient(supabaseUrl, readSupabaseSecretKey(), {
 });
 
 function randomClaimToken(): string {
-  return Array.from(
-    crypto.getRandomValues(new Uint8Array(32)),
-    (byte) => byte.toString(16).padStart(2, '0'),
+  return Array.from(crypto.getRandomValues(new Uint8Array(32)), (byte) =>
+    byte.toString(16).padStart(2, '0'),
   ).join('');
 }
 
@@ -121,8 +99,7 @@ const handler = createHealthConsentWorkerHttpHandler({
                 p_limit: limit,
                 p_claim_token: claimToken,
               }),
-            removeStorage: (paths) =>
-              admin.storage.from('photos').remove(paths),
+            removeStorage: (paths) => admin.storage.from('photos').remove(paths),
             complete: (operationId, claimToken) =>
               admin.rpc('complete_health_data_consent_withdrawal', {
                 p_operation_id: operationId,
@@ -159,21 +136,17 @@ const handler = createHealthConsentWorkerHttpHandler({
                 p_limit: limit,
                 p_claim_token: claimToken,
               }),
-            removeStorage: (paths) =>
-              admin.storage.from('photos').remove(paths),
+            removeStorage: (paths) => admin.storage.from('photos').remove(paths),
             complete: (operationId) =>
               admin.rpc('complete_health_dependent_consent_withdrawal', {
                 p_operation_id: operationId,
               }),
             markActionRequired: (operationId, claimToken, resultCode) =>
-              admin.rpc(
-                'mark_health_dependent_consent_withdrawal_action_required',
-                {
-                  p_operation_id: operationId,
-                  p_claim_token: claimToken,
-                  p_result_code: resultCode,
-                },
-              ),
+              admin.rpc('mark_health_dependent_consent_withdrawal_action_required', {
+                p_operation_id: operationId,
+                p_claim_token: claimToken,
+                p_result_code: resultCode,
+              }),
             defer: (operationId, claimToken, resultCode, delaySeconds) =>
               admin.rpc('defer_health_dependent_consent_withdrawal', {
                 p_operation_id: operationId,
@@ -186,4 +159,4 @@ const handler = createHealthConsentWorkerHttpHandler({
     });
   },
 });
-Deno.serve(handler);
+Deno.serve((request) => stagingTrafficFreezeResponse() ?? handler(request));

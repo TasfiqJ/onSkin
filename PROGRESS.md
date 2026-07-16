@@ -6,6 +6,51 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-15
 
+### DB-06 fresh-staging deployment source checkpoint
+
+The fresh-staging-only DB-06 procedure now deploys 54 migrations through
+`0055` and all 16 default Edge Functions only from a Git-blob-verified immutable
+snapshot of a clean, freshly fetched `origin/main` commit. The pinned native
+Supabase CLI is executed directly with bounded output/time and complete
+process-tree settlement. Every linked command rechecks the expected target; the
+procedure refuses pre-existing public schema, migration, function, Auth,
+Storage, or any Cron state. On Windows, an unconfirmed job-object shutdown
+preserves its cancellation signal/runtime root and emits a stable recovery
+fingerprint instead of claiming containment.
+
+The evidence contract now retains exact before/pre-migration/after schema,
+migration, function-version/hash/JWT, hosted Auth-freeze, public-freeze-canary,
+aggregate configuration-name, and local/linked type-hash results. It binds and
+retains a full-target-fingerprint operator attestation, one
+traffic/provider-freeze artifact, and five schema-v2 redacted boundary files.
+Cutover observations must be at most 30 minutes old at the initial gate. Both
+`validUntil` and the covering freeze `holdUntil` must have at least 12 hours
+remaining before the first mutation and seven hours immediately before
+migration push, inside a maximum 24-hour freeze window. The final gate still
+requires current validity and at least one hour of freeze hold.
+
+The runner sets `DB06_TRAFFIC_FREEZE=frozen`, statically guards all 16 Edge
+entrypoints, and canaries the exact eight `verifyJwt: false` endpoints for HTTP
+503, exact `DB06_STAGING_TRAFFIC_FROZEN`, and `Cache-Control: no-store`. Hosted
+Auth requires signup, anonymous signup, all 26 reviewed external providers,
+seven reviewed hooks, SAML/OAuth/custom OAuth, SSO, and third-party integrations
+closed. Immediately before migration push, the runner revalidates cutover bytes
+and rereads the exact functions, canaries, Auth, migrations, schema, Storage,
+and all Cron jobs. A `pass` cannot omit these proofs. Final acceptance remains
+80 public/80 RLS tables, one `photos` bucket, and zero Auth cohort, Storage
+objects, or Cron jobs.
+
+The runner revalidates cutover artifacts at completion and never unfreezes the
+target; only a separately recorded downstream live gate may release it. A
+post-mutation failure remains remote-state-unknown; after confirmed process
+shutdown the runner attempts a read-only snapshot without claiming containment.
+
+Focused parser, source-integrity, cutover, redaction, recovery, and process-tree
+tests plus the static wrapper/orchestration contract pass. This is source-only:
+ACCT-03 is still open, no hosted staging project or DB-06 live packet exists,
+DB-06 remains `in_progress`, and DB-08 still owns deliberate repository type
+replacement.
+
 ### Source-only account-publication and entitlement-authority checkpoint
 
 Commits `a6a5d4a69`, `a7266ce09`, `134aba540`, `87646c935`, and `6869b7f07`

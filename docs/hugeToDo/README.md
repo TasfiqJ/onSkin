@@ -14,6 +14,7 @@ Start here:
 - [Accounts and Vendor Decision Packet](./ACCOUNTS_AND_VENDOR_DECISION_PACKET.md)
 - [DB-01–DB-11 Gap Matrix](./DB-01-11-GAP-MATRIX-2026-07-13.md)
 - [DB-05 Credential-Free Local Reset Evidence](./DB-05-LOCAL-RESET-2026-07-14.md)
+- [DB-06 Fresh-Staging Deployment Source Checkpoint](./DB-06-STAGING-DEPLOYMENT-SOURCE-CHECKPOINT-2026-07-15.md)
 - [Legacy Brand Compatibility Checkpoint](./BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md)
 - [IOS-10 Export-Compliance Gate](./IOS-10-EXPORT-COMPLIANCE-GATE.md)
 - [US Wave 1 Privacy and Consumer-Health Law Gate](./US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md)
@@ -30,6 +31,14 @@ The health-withdrawal matrix and inventory are source-candidate controls, not
 production clearance. In particular, an empty separately reconciled external
 processor list does not remove Supabase database, Storage, backup, DPA, region,
 worker, or live zero-residue evidence gates.
+
+DB-06 is also a source checkpoint and remains `in_progress`, blocked by
+`ACCT-03`. The fresh-only path covers 54 migrations through `0055`, all 16 Edge
+functions, an active traffic/provider freeze, and an immediate pre-push reread
+of functions, public frozen responses, hosted Auth controls, migrations,
+schema, Storage, and all Cron jobs. It leaves `DB06_TRAFFIC_FREEZE=frozen` for a
+separate downstream live-gate release. No approved hosted target was used and
+no live DB-06 evidence directory exists.
 
 The Sign in with Apple lifecycle is also a source checkpoint, not launch
 clearance. Migration 0055 and the mobile/Edge contracts implement nonce/state

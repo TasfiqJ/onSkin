@@ -545,6 +545,19 @@ phase5:performance-evidence:strict` rejects unsupported devices, post-hoc
   live-harness, or rehearsal contracts; the audit prints an explicit
   non-clearance notice and does not close the legal/final-identity gate. See
   `docs/hugeToDo/BRAND-LEGACY-COMPATIBILITY-CHECKPOINT-2026-07-14.md`.
+- The DB-06 fresh-staging source procedure now binds an immutable clean
+  `origin/main` snapshot, 54 migrations through `0055`, and all 16 guarded Edge
+  functions. It requires a main cutover record, one traffic/provider-freeze
+  artifact, five schema-v2 zero-cohort files, closed hosted Auth/provider/
+  client/scheduled ingress, and fresh observations. The runner sets and retains
+  `DB06_TRAFFIC_FREEZE=frozen`, canaries the exact eight `verifyJwt: false`
+  endpoints, and immediately rereads functions, frozen responses, Auth,
+  migrations, schema, Storage, and all Cron jobs before push. A `pass` cannot
+  omit these proofs; final acceptance requires 80 public/80 RLS tables, one
+  `photos` bucket, and zero Auth cohort, Storage objects, or Cron jobs. This is
+  source hardening only: DB-06 remains `in_progress`, blocked by `ACCT-03`, no
+  hosted staging run or live packet exists, and release requires a separately
+  recorded downstream live gate.
 - The DB-09 source contract now classifies all 80 migrated public tables,
   registers all 57 private tables exactly once, binds the 40 directly queryable
   tables to permanent-user, signed-anonymous, and no-session probes, and proves
@@ -661,8 +674,9 @@ Re-run the relevant checks after any production-readiness change.
    and production identity evidence are unresolved.
    Existing public `OnSkin` surfaces remain a direct customer-confusion and
    trademark risk if the app reverts to the legacy name.
-2. Supabase project is not live, migrations are not applied to production, and
-   RLS has not been tested with real users.
+2. No approved hosted staging project or DB-06 live evidence packet exists;
+   migrations are not applied to production, the DB-06 freeze has not been
+   exercised against a live target, and RLS has not been tested with real users.
 3. RevenueCat is not live; purchases, restore, renewal, refunds, and webhook
    entitlement sync are not production-real.
 4. Apple Developer/App Store Connect and Google OAuth for iPhone are not

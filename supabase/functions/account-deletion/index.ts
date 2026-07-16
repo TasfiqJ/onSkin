@@ -2,6 +2,7 @@
 // inside this function because capability-only status and the scheduler lane
 // are unauthenticated by Supabase Auth and use separate high-entropy secrets.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { stagingTrafficFreezeResponse } from '../_shared/stagingTrafficFreeze.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import { createDurableDeletionHttpHandler } from './durableDeletionHttpHandler.ts';
 import {
@@ -35,4 +36,5 @@ function schedule(work: Promise<void>): void {
 }
 
 const dependencies = await createDurableDeletionRuntime({ client, schedule });
-Deno.serve(createDurableDeletionHttpHandler(dependencies));
+const handler = createDurableDeletionHttpHandler(dependencies);
+Deno.serve((request) => stagingTrafficFreezeResponse() ?? handler(request));
