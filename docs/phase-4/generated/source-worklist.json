@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-16T05:42:43.729Z",
+  "generatedAt": "2026-07-16T07:27:57.306Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "601689374eb102cbc73503927d92c50786d456e6",
+  "gitSha": "19516499296dfacebacc34b4c74bfd044047a23f",
   "gitStatus": "",
   "summary": {
     "itemCount": 10,
@@ -47,8 +47,8 @@
         {
           "path": ".env.example",
           "exists": true,
-          "bytes": 22495,
-          "sha256": "5aa550d77c765a4cdb3feaec88c6ab63b8cb2cdc3b15781d9d358474f123e9ff"
+          "bytes": 22688,
+          "sha256": "1a54949355754f897407c1ae1452d759f435be21a55096288639e3d676523508"
         },
         {
           "path": "scripts/phase4/check-source-env.mjs",
