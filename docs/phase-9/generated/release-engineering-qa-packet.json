@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T03:36:25.349Z",
+  "generatedAt": "2026-07-16T03:40:00.936Z",
   "status": "blocked",
   "launchContract": {
     "schemaVersion": 1,
@@ -77,7 +77,7 @@
     "ios": "required",
     "android": "not_applicable"
   },
-  "gitSha": "04a454223ca17ef02734b50c5e52a8985aed971c",
+  "gitSha": "60cd49eeacd1a2ed807521a4bff518c1e16c2a36",
   "gitStatus": "",
   "releaseIdentity": {
     "appEnvironment": "development",
@@ -310,7 +310,7 @@
     "scripts/phase9/live-revenuecat-webhook.mjs": "4545d0e4f192577e0ba1cc41a3cffaeca80e01cb417e82d9892803bdd42f3e5a",
     "scripts/phase9/edge-auth-smoke.mjs": "fcbff20c707e4dd5e4251a6264981ab3e5d9899804fd0fe259008d2c9b3044b6",
     "scripts/phase9/edge-functions-check.mjs": "dd2be657d2c12ce50d79c90e039a04bd14c2578f8a9e6e0630f454136e7cc3c3",
-    "scripts/phase9/data-rights-smoke.mjs": "137ecf949372f66b7cae93652d3b044a37e69a57cea934a2f840a95d31abf811",
+    "scripts/phase9/data-rights-smoke.mjs": "4d90550cdc4de906bfe9cdb22d73d3cf92880efd84e871f448a390e42c92474d",
     "scripts/phase9/account-deletion-lifecycle-postgres-rehearsal.sql": "f6b8bd75591d30c7d492ac42879eaaecaf4893db3842c595a9bec6bc3746ab44",
     "scripts/phase9/account-service-scrub-postgres-rehearsal.sql": "b4898279189ebca369eaa9f212632d0a903917fe137c8ccbbec994cb3c34743a",
     "scripts/phase9/revenuecat-deletion-barrier-postgres-rehearsal.sql": "13cbcb1b61f105875a71717e38d4d5b1ffb04ecf2c6cc77506ba78f09995bc4b",

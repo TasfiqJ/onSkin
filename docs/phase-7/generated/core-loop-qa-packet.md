@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-16T03:36:24.188Z
-Git SHA: 04a454223ca17ef02734b50c5e52a8985aed971c
+Generated at: 2026-07-16T03:39:59.635Z
+Git SHA: 60cd49eeacd1a2ed807521a4bff518c1e16c2a36
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -153,12 +153,12 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
 | docs/USER_FLOW_TREE.md | present | 382133 | ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8 |
-| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 5a17724825813999e486df1350b54977fba82246060bed24f80325aab54c21bd |
-| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | eabf75437089c4b2122bcb9bca46406ee169ae6befe36a283ae8d26b92f6820a |
-| docs/phase-5/generated/device-qa-packet.json | present | 26528 | cdd4b3323af03bcf6cdfa8097b688317c55c990ce14a0b83bfe6e99f452caa27 |
-| docs/phase-5/generated/device-qa-packet.md | present | 23039 | 7aa0235d84619bf388e3dc95103998686007322ea551b335915cc3d5ca8d8955 |
-| docs/phase-6/generated/payments-qa-packet.json | present | 17985 | 19351f39f22a2725952bdd4d7fb9fd33d3f415f97fd55274ce0866468675508c |
-| docs/phase-6/generated/payments-qa-packet.md | present | 11871 | 1ee2e758c2631cd24369bcbf526d14e16fe0ddbd92b4390bb406ac818edd6173 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 9b6ca3113dae7c48a43f8db62f5f284099598e4422970521cd5d00ce88fbb5d6 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | 493bc65f33dede0d370f2756fb988141b33bced1fc28f6078071433dad0cddea |
+| docs/phase-5/generated/device-qa-packet.json | present | 26528 | 0d16b76865ce65406d92e58a18f21925d1f220ced20682c4cd2c0017af958dff |
+| docs/phase-5/generated/device-qa-packet.md | present | 23039 | b447217ffe3a192a8f60a3f79bbaa692bce5f836fed9f1f5ead0866b9ba5154b |
+| docs/phase-6/generated/payments-qa-packet.json | present | 17985 | ab67fb2d3e66df0d793378e74fb7038e92aede53686fead226e6307792b66a4b |
+| docs/phase-6/generated/payments-qa-packet.md | present | 11871 | b9177a8aeeaa2636f1d25a929efd8871e0580a996c34ac71c23812514aff2ded |
 | docs/phase-7/surface-inventory.md | present | 7793 | 50c0f72fb317e36588a30559cd254dcb3b7ebaa7c73b8b4ba4dfb9ea35350fd6 |
 | docs/phase-7/launch-claim-matrix.md | present | 4322 | 7027d6d21f2cc7c3bb6944f003f9aeac6a09efea8dc2785280f6a3da44bb6b6b |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4725 | f57bd8b15489b66c4dbee486f3e15190eb2e4752420308dfb71883372348cdd1 |
