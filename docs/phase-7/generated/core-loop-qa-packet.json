@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T07:32:46.765Z",
+  "generatedAt": "2026-07-16T15:27:39.072Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "0b8edd8b072ea30a7c2ac8513ae8a35b69668d7c",
+  "gitSha": "5dd7053290160d461fab9cfe0ffb885b5f6daa4c",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -188,8 +188,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 28671,
-      "sha256": "62816a283a697651aae19a3b17796d0810a1850ffa30e73263c9de9eeec58a3d"
+      "bytes": 29829,
+      "sha256": "9ac1ae585e96d92766992718348a3c79ddae316f227dff88842fb1ed0374f575"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -788,8 +788,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 24292,
-      "sha256": "463a0aa7832651f966fe437216da56c7c50349f8016c9ab5cf0b5e52fb0bc2c5"
+      "bytes": 24406,
+      "sha256": "4c52e937ddea7a47fba80f69d80d6d586e9c236750cefb9500362352e1cb270e"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",

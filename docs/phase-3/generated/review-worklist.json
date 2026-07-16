@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-16T05:41:38.361Z",
+  "generatedAt": "2026-07-16T15:24:29.824Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "4634c981dad0d244d5a5bbef36c2c715691af5a3",
+  "gitSha": "5dd7053290160d461fab9cfe0ffb885b5f6daa4c",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -1770,8 +1770,8 @@
         {
           "path": "docs/store-privacy-inventory.md",
           "exists": true,
-          "bytes": 21854,
-          "sha256": "8543da0e266a036f2ae283c1f9e898ae1c67919746d28777389b6d824295cfe6"
+          "bytes": 23428,
+          "sha256": "d708b7883fe186496b8b4f2fcaeea04a547d8499dad590868a2657aa7edc632c"
         },
         {
           "path": "docs/hugeToDo/HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md",
@@ -2141,7 +2141,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "f0dbcba9e0e2a3281f0e8843db7b54a5132626483d7a133c4cdbb74018d3a30a",
+      "reviewSnapshotSha256": "6c06422cab91cd33a7bb6d9f76ea7e2e6f26e04194130593130fccefdeda4bc7",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },

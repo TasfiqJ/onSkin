@@ -1,12 +1,12 @@
 # Phase 9 Dependency Inventory
 
-Generated: 2026-07-14T06:29:32.406Z
-Package count: 1083
+Generated: 2026-07-16T15:25:00.496Z
+Package count: 1100
 Lockfile version: 3
 
 ## Vulnerabilities
 
-`{"info":0,"low":0,"moderate":0,"high":0,"critical":0,"total":0}`
+- npm audit not run in this invocation.
 
 ## Audit Findings
 
@@ -26,6 +26,7 @@ Lockfile version: 3
 
 ## Warnings
 
+- npm audit was not run; set PHASE9_RUN_NPM_AUDIT=true in release CI.
 - Missing dependency/SBOM signoff: PHASE9_DEPENDENCY_AUDIT_PASS=true.
 
 ## Packages
@@ -160,7 +161,7 @@ Lockfile version: 3
 - `@expo/sdk-runtime-versions` 1.0.0
 - `@expo/spawn-async` 1.8.0
 - `@expo/sudo-prompt` 9.3.2
-- `@expo/ui` 56.0.21
+- `@expo/ui` 56.0.22
 - `@expo/ws-tunnel` 2.0.0
 - `@expo/xcpretty` 4.4.4
 - `@humanfs/core` 0.19.2
@@ -181,6 +182,8 @@ Lockfile version: 3
 - `@jridgewell/trace-mapping` 0.3.31
 - `@napi-rs/wasm-runtime` 1.1.6
 - `@noble/ciphers` 2.2.0
+- `@noble/curves` 1.9.7
+- `@noble/hashes` 1.8.0
 - `@nodelib/fs.scandir` 2.1.5
 - `@nodelib/fs.stat` 2.0.5
 - `@nodelib/fs.walk` 1.2.8
@@ -285,6 +288,14 @@ Lockfile version: 3
 - `@sinclair/typebox` 0.27.10
 - `@standard-schema/spec` 1.1.0
 - `@supabase/auth-js` 2.108.1
+- `@supabase/cli-darwin-arm64` 2.109.1
+- `@supabase/cli-darwin-x64` 2.109.1
+- `@supabase/cli-linux-arm64` 2.109.1
+- `@supabase/cli-linux-arm64-musl` 2.109.1
+- `@supabase/cli-linux-x64` 2.109.1
+- `@supabase/cli-linux-x64-musl` 2.109.1
+- `@supabase/cli-windows-arm64` 2.109.1
+- `@supabase/cli-windows-x64` 2.109.1
 - `@supabase/functions-js` 2.108.1
 - `@supabase/phoenix` 0.4.2
 - `@supabase/postgrest-js` 2.108.1
@@ -488,6 +499,9 @@ Lockfile version: 3
 - `dnssd-advertise` 1.1.6
 - `doctrine` 2.1.0
 - `dunder-proto` 1.0.1
+- `eciesjs` 0.5.0
+- `eciesjs/node_modules/@ecies/ciphers` 0.2.6
+- `eciesjs/node_modules/@noble/ciphers` 1.3.0
 - `ee-first` 1.1.1
 - `electron-to-chromium` 1.5.372
 - `emoji-regex` 8.0.0
@@ -578,6 +592,7 @@ Lockfile version: 3
 - `expo-system-ui` 56.0.5
 - `expo-updates-interface` 56.0.2
 - `expo-web-browser` 56.0.5
+- `expo-widgets` 56.0.23
 - `expo/node_modules/@expo/cli` 56.1.19
 - `expo/node_modules/@expo/cli/node_modules/@expo/router-server` 56.0.16
 - `expo/node_modules/@expo/env` 2.3.1
@@ -710,6 +725,7 @@ Lockfile version: 3
 - `jest-worker/node_modules/supports-color` 8.1.1
 - `jimp-compact` 0.16.1
 - `jiti` 1.21.7
+- `jose` 6.2.3
 - `jpeg-js` 0.4.4
 - `js-tokens` 4.0.0
 - `js-yaml` 4.2.0
@@ -930,6 +946,7 @@ Lockfile version: 3
 - `react-remove-scroll` 2.7.2
 - `react-remove-scroll-bar` 2.3.8
 - `react-style-singleton` 2.2.3
+- `react-test-renderer` 19.2.3
 - `read-cache` 1.0.0
 - `readdirp` 3.6.0
 - `readdirp/node_modules/picomatch` 2.3.2
@@ -1021,6 +1038,7 @@ Lockfile version: 3
 - `styleq` 0.1.3
 - `sucrase` 3.35.1
 - `sucrase/node_modules/commander` 4.1.1
+- `supabase` 2.109.1
 - `supports-color` 7.2.0
 - `supports-hyperlinks` 2.3.0
 - `supports-preserve-symlinks-flag` 1.0.0

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T07:33:05.193Z",
+  "generatedAt": "2026-07-16T15:24:43.263Z",
   "objective": "Phase 8 growth loop and store readiness",
   "launchContract": {
     "schemaVersion": 1,
@@ -78,7 +78,7 @@
     "android": "not_applicable"
   },
   "status": "blocked",
-  "gitSha": "dec8b38b98bd80f529551cdb517ba9771743d76b",
+  "gitSha": "5dd7053290160d461fab9cfe0ffb885b5f6daa4c",
   "gitStatus": "",
   "publicIdentity": {
     "finalBrandDomain": null,
@@ -133,8 +133,8 @@
     ]
   },
   "sourceHashes": {
-    ".env.example": "1a54949355754f897407c1ae1452d759f435be21a55096288639e3d676523508",
-    "package.json": "62816a283a697651aae19a3b17796d0810a1850ffa30e73263c9de9eeec58a3d",
+    ".env.example": "32ff3fcaea32204c1e56f9b3624199c5613ad46401471548217d7d83ce849a6b",
+    "package.json": "9ac1ae585e96d92766992718348a3c79ddae316f227dff88842fb1ed0374f575",
     "docs/hugeToDo/launch-contract.json": "43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b",
     "scripts/launch/contract.mjs": "6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d",
     "apps/mobile/app.config.js": "3ba2df3aff44ced390047424120090f5effc4479abbc074854475f2db9e8fc7a",
@@ -169,16 +169,16 @@
     "docs/USER_FLOW_TREE.md": "ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8",
     "docs/e2e/generated/human-e2e-manifest.json": "12a1166209b20760be86a4a70d0c875a0de789553906f7656e51d54815dbd00e",
     "docs/e2e/generated/human-e2e-manifest.md": "7152a25efe24e4feb08e1d035236707b2c8d2bc6ab69cf493652f64616179755",
-    "docs/phase-5/generated/device-qa-packet.json": "5d64ac46e303eb46c1d062cd022ea63c9dd5affeabd83aef4568c78a689320c7",
-    "docs/phase-5/generated/device-qa-packet.md": "54344476c053593c303508bb1297f2334954abf01bcab3bb22ea72f0a68703de",
-    "docs/phase-6/generated/payments-qa-packet.json": "f9ec7129af05c8277dd6c9596b76dde3301e62af5d8ce7a4bf8762669791f3e6",
-    "docs/phase-6/generated/payments-qa-packet.md": "c6b522e2dd9560eda6f7bc5b5be83e006ea96013f81d3d8234fd2a2afebfdeac",
-    "docs/phase-7/generated/core-loop-qa-packet.json": "0d07abcee2ba967a0483fe831742eb33f43bdedf3606e19035d45007e16ba0d3",
-    "docs/phase-7/generated/core-loop-qa-packet.md": "926cb5cda0a86830296bdc5652a3a28d059abd530d6d1794c668dfac5f24be48",
+    "docs/phase-5/generated/device-qa-packet.json": "41a7a258ab9ee65bd5fcfdc127a5b48707f42fd85107eb803f484451ae45840f",
+    "docs/phase-5/generated/device-qa-packet.md": "9d1f07c68800370e5382c1f623c466743fff7cc56d057b54c80fa38ae5de6391",
+    "docs/phase-6/generated/payments-qa-packet.json": "367a4c85a8f0e8c6dbf1e1c31134b0793d8f07c181d57da22d94c9ce82daa6a2",
+    "docs/phase-6/generated/payments-qa-packet.md": "b5cc2397bbe599ffb012b268657cd035b8c4676490aca623ddf63d91a106d1f4",
+    "docs/phase-7/generated/core-loop-qa-packet.json": "3a3924cc6474fd8277e5da29916078f388c0c1ec3c38b6cc959b83633cebf728",
+    "docs/phase-7/generated/core-loop-qa-packet.md": "6fc43936122f907749795e6bf192312bc3dbddeb2a2c22dcd2c5747e2035f452",
     "scripts/phase8/build-growth-store-qa-packet.mjs": "417068519980f0e79e36d565a3deac14de38804daa59d0b5773d88fc89768461",
     "scripts/phase8/check-growth-store-readiness.mjs": "014ac3f8dfd4baae43b57c494c778688c180ae996f8cb8b29f0a2660211902a7",
     "scripts/phase8/check-growth-store-smoke.mjs": "89cc87c5da60b6eb86ae112c93eb1995309c82dc2336995113dd5a37b8c37a98",
-    "scripts/phase9/lib.mjs": "463a0aa7832651f966fe437216da56c7c50349f8016c9ab5cf0b5e52fb0bc2c5",
+    "scripts/phase9/lib.mjs": "4c52e937ddea7a47fba80f69d80d6d586e9c236750cefb9500362352e1cb270e",
     "supabase/migrations/20260616000028_phase8_growth.sql": "9f0deaa909e7a5641c405b4b68870e58e3d143cb5956f2794e092ba704276e44",
     "supabase/functions/growth-event/index.ts": "af59ae32fabd9310558274109db8cdd53455d09dc26074efb4758373f63a1770",
     "supabase/functions/waitlist/index.ts": "d798455f90ccf72a5505e2dd5e42c3225d05ae5a4f3d8a2fcfc63cb86ed8c6ac"

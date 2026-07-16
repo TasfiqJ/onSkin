@@ -1,8 +1,8 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-16T07:30:34.799Z
-Status: pass
-Strict mode: yes
+Generated: 2026-07-16T15:28:50.974Z
+Status: blocked
+Strict mode: no
 
 This generated audit scans committed phase packet outputs for dirty-worktree
 status and stale recorded file hashes. It does not prove external launch
@@ -11,12 +11,12 @@ being treated as trustworthy launch evidence.
 
 ## Summary
 
-- Generated files scanned: 49
+- Generated files scanned: 51
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 1836
-- Stale hash references: 0
-- Blockers: 0
+- Hash references checked: 2005
+- Stale hash references: 8
+- Blockers: 8
 - Warnings: 0
 
 ## Files
@@ -47,12 +47,14 @@ being treated as trustworthy launch evidence.
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-6/generated/payments-qa-packet.json            | json | 0                  | 0                          | 61        | 0               |
 | docs/phase-6/generated/payments-qa-packet.md              | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 115       | 0               |
+| docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 115       | 4               |
 | docs/phase-7/generated/core-loop-qa-packet.md             | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-8/generated/growth-store-qa-packet.json        | json | 0                  | 0                          | 49        | 0               |
+| docs/phase-8/generated/growth-store-qa-packet.json        | json | 0                  | 0                          | 49        | 4               |
 | docs/phase-8/generated/growth-store-qa-packet.md          | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/dependency-inventory.json          | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/dependency-inventory.md            | md   | 0                  | 0                          | 0         | 0               |
+| docs/phase-9/generated/ios-privacy-source-audit.json      | json | 0                  | 0                          | 156       | 0               |
+| docs/phase-9/generated/ios-privacy-source-audit.md        | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-catalog-rate-limit.json       | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-catalog-rate-limit.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-consent-withdrawal.json       | json | 0                  | 0                          | 0         | 0               |
@@ -69,13 +71,20 @@ being treated as trustworthy launch evidence.
 | docs/phase-9/generated/live-revenuecat-webhook.md         | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.json     | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/live-supabase-adversarial.md       | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 224       | 0               |
+| docs/phase-9/generated/release-engineering-qa-packet.json | json | 0                  | 0                          | 234       | 0               |
 | docs/phase-9/generated/release-engineering-qa-packet.md   | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-9/generated/store-build-inspection.json        | json | 0                  | 0                          | 0         | 0               |
+| docs/phase-9/generated/store-build-inspection.json        | json | 0                  | 0                          | 3         | 0               |
 
 ## Blockers
 
-- None.
+- docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.106 -> docs/phase-5/generated/device-qa-packet.json: sha256 does not match current file.
+- docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.107 -> docs/phase-5/generated/device-qa-packet.md: sha256 does not match current file.
+- docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.108 -> docs/phase-6/generated/payments-qa-packet.json: sha256 does not match current file.
+- docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.109 -> docs/phase-6/generated/payments-qa-packet.md: sha256 does not match current file.
+- docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-5/generated/device-qa-packet.json -> docs/phase-5/generated/device-qa-packet.json: sha256 does not match current file.
+- docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-5/generated/device-qa-packet.md -> docs/phase-5/generated/device-qa-packet.md: sha256 does not match current file.
+- docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-7/generated/core-loop-qa-packet.json -> docs/phase-7/generated/core-loop-qa-packet.json: sha256 does not match current file.
+- docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-7/generated/core-loop-qa-packet.md -> docs/phase-7/generated/core-loop-qa-packet.md: sha256 does not match current file.
 
 ## Warnings
 

@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-16T07:32:46.765Z
-Git SHA: 0b8edd8b072ea30a7c2ac8513ae8a35b69668d7c
+Generated at: 2026-07-16T15:27:39.072Z
+Git SHA: 5dd7053290160d461fab9cfe0ffb885b5f6daa4c
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -54,7 +54,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 28671 | 62816a283a697651aae19a3b17796d0810a1850ffa30e73263c9de9eeec58a3d |
+| package.json | present | 29829 | 9ac1ae585e96d92766992718348a3c79ddae316f227dff88842fb1ed0374f575 |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
 | apps/mobile/src/lib/launch/phase7.ts | present | 6338 | 9969f0d98da0668ad54ff65c9414c2b0b86f7a85ccff1645040369382cac6b01 |
@@ -154,7 +154,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | scripts/phase7/check-core-loop.mjs | present | 25279 | 77cc10007e15f2184881013701569b97b9d88248167a8dab0691e733b33230ba |
 | scripts/phase7/check-core-loop-smoke.mjs | present | 14687 | 3a89f50c25b252afdbfd9e93d5ebd189a0a56378b0f7c71f25cae2911c8ec789 |
 | scripts/e2e/human-e2e-manifest.mjs | present | 75305 | 15a92f3558f39b6c8efb47159e43270a532de13dfeae5f02f56fdca385eca9b7 |
-| scripts/phase9/lib.mjs | present | 24292 | 463a0aa7832651f966fe437216da56c7c50349f8016c9ab5cf0b5e52fb0bc2c5 |
+| scripts/phase9/lib.mjs | present | 24406 | 4c52e937ddea7a47fba80f69d80d6d586e9c236750cefb9500362352e1cb270e |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
 | docs/USER_FLOW_TREE.md | present | 382133 | ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8 |

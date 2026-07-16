@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T07:28:30.099Z",
+  "generatedAt": "2026-07-16T15:24:37.466Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -72,8 +72,8 @@
       "paid_measurement"
     ]
   },
-  "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin-main-pay06\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "dc0e1fe78b00d7b5fc9e462f43cae4bc24994f81",
+  "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\ios-privacy-source\\docs\\phase-4\\beta-coverage-input.json",
+  "gitSha": "5dd7053290160d461fab9cfe0ffb885b5f6daa4c",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -83,8 +83,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 28671,
-      "sha256": "62816a283a697651aae19a3b17796d0810a1850ffa30e73263c9de9eeec58a3d"
+      "bytes": 29829,
+      "sha256": "9ac1ae585e96d92766992718348a3c79ddae316f227dff88842fb1ed0374f575"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -101,8 +101,8 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 22688,
-      "sha256": "1a54949355754f897407c1ae1452d759f435be21a55096288639e3d676523508"
+      "bytes": 22784,
+      "sha256": "32ff3fcaea32204c1e56f9b3624199c5613ad46401471548217d7d83ce849a6b"
     },
     {
       "path": "scripts/phase4/build-source-worklist.mjs",
@@ -161,8 +161,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 24292,
-      "sha256": "463a0aa7832651f966fe437216da56c7c50349f8016c9ab5cf0b5e52fb0bc2c5"
+      "bytes": 24406,
+      "sha256": "4c52e937ddea7a47fba80f69d80d6d586e9c236750cefb9500362352e1cb270e"
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
@@ -186,13 +186,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 46713,
-      "sha256": "54685ef6c853aa0e41e749c6e2c59ec07a7cb609b911674d5d0b22d6ac04de21"
+      "sha256": "3f840779c7fb3b1a17aeace5d6ba00515b0bbb7e5c149afaa6605a400f0ffd63"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 28928,
-      "sha256": "123db6013c658648c1f872e1996ade4049690e073282b81c168e030cd8c99926"
+      "sha256": "c8c5842b50dbbcee0c16227ad20e64d26e7db328037fb78a38c25886c52c6750"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -209,14 +209,14 @@
     {
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
-      "bytes": 7475,
-      "sha256": "ac722d62ee748546ece116085c101980cfe2a8bd75e4048a7ed5fa42e58f2989"
+      "bytes": 7504,
+      "sha256": "1bdaf3e6a9dc7c75499dd5ad53ad701609bb4ec77ac1e7a3adbbebf40cc950d3"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 4055,
-      "sha256": "5cfb32fe58f5a86f92eb79be45b3c7b5bfe07edea82020f3751af8a6f5965920"
+      "sha256": "68fdd110253f69a34ce2cefe8443300794159b19811db8091666718c41282a96"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",

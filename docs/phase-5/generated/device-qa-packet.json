@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T07:32:23.901Z",
+  "generatedAt": "2026-07-16T15:28:35.777Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,7 +73,7 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "f1e29978f748d333a72c3c8dd8d0b88abd53573f",
+  "gitSha": "5dd7053290160d461fab9cfe0ffb885b5f6daa4c",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -272,20 +272,20 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 22688,
-      "sha256": "1a54949355754f897407c1ae1452d759f435be21a55096288639e3d676523508"
+      "bytes": 22784,
+      "sha256": "32ff3fcaea32204c1e56f9b3624199c5613ad46401471548217d7d83ce849a6b"
     },
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 28671,
-      "sha256": "62816a283a697651aae19a3b17796d0810a1850ffa30e73263c9de9eeec58a3d"
+      "bytes": 29829,
+      "sha256": "9ac1ae585e96d92766992718348a3c79ddae316f227dff88842fb1ed0374f575"
     },
     {
       "path": "package-lock.json",
       "exists": true,
-      "bytes": 556954,
-      "sha256": "07a211bcfeb5bec011c024b3962b0a77fbfbdb0f936109b04e7b830c446665f1"
+      "bytes": 557054,
+      "sha256": "55762337b9b049e7efe536a004dbbd855d7f672d8ba1f145fa4bb5b2409770d1"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -326,8 +326,8 @@
     {
       "path": "apps/mobile/package.json",
       "exists": true,
-      "bytes": 2824,
-      "sha256": "9b423a7365aaec0744b51c3212ce1489a99aa45da510722472deb5489547cd43"
+      "bytes": 2911,
+      "sha256": "029c87cc99ed0e8cf775d9ade4172d2d099e9a9505de2b8f4c69669d9a20147d"
     },
     {
       "path": "apps/mobile/src/app/_layout.tsx",
@@ -920,8 +920,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 24292,
-      "sha256": "463a0aa7832651f966fe437216da56c7c50349f8016c9ab5cf0b5e52fb0bc2c5"
+      "bytes": 24406,
+      "sha256": "4c52e937ddea7a47fba80f69d80d6d586e9c236750cefb9500362352e1cb270e"
     },
     {
       "path": "scripts/phase9/live-supabase-adversarial.mjs",

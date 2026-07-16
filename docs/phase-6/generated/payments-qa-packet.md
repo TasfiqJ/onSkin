@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-16T07:32:36.626Z
-Git SHA: 13f510a6e7db3aba2b3202e4f1e949b967c34a4c
+Generated at: 2026-07-16T15:29:14.795Z
+Git SHA: 5dd7053290160d461fab9cfe0ffb885b5f6daa4c
 Git status: clean
 
 Strict completion requires real RevenueCat offering review and store restore evidence for every contract-required platform, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -53,8 +53,8 @@ Strict completion requires real RevenueCat offering review and store restore evi
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| .env.example | present | 22688 | 1a54949355754f897407c1ae1452d759f435be21a55096288639e3d676523508 |
-| package.json | present | 28671 | 62816a283a697651aae19a3b17796d0810a1850ffa30e73263c9de9eeec58a3d |
+| .env.example | present | 22784 | 32ff3fcaea32204c1e56f9b3624199c5613ad46401471548217d7d83ce849a6b |
+| package.json | present | 29829 | 9ac1ae585e96d92766992718348a3c79ddae316f227dff88842fb1ed0374f575 |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md | present | 11287 | b3aa6768944665294ecc730c23a4834d150cb09328571befa0edd145697783b5 |
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
@@ -105,7 +105,7 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | scripts/phase9/account-service-scrub-postgres-rehearsal.sql | present | 26077 | b4898279189ebca369eaa9f212632d0a903917fe137c8ccbbec994cb3c34743a |
 | scripts/phase9/live-data-rights.mjs | present | 65161 | 0e6d7604437b35fa2e9f1fa2a6afbee6743cac829f58f0861e9aff46a28df13a |
 | scripts/e2e/human-e2e-manifest.mjs | present | 75305 | 15a92f3558f39b6c8efb47159e43270a532de13dfeae5f02f56fdca385eca9b7 |
-| scripts/phase9/lib.mjs | present | 24292 | 463a0aa7832651f966fe437216da56c7c50349f8016c9ab5cf0b5e52fb0bc2c5 |
+| scripts/phase9/lib.mjs | present | 24406 | 4c52e937ddea7a47fba80f69d80d6d586e9c236750cefb9500362352e1cb270e |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
 | docs/USER_FLOW_TREE.md | present | 382133 | ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8 |

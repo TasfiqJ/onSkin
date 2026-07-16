@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-16T07:30:34.799Z",
-  "status": "pass",
-  "strict": true,
+  "generatedAt": "2026-07-16T15:28:50.974Z",
+  "status": "blocked",
+  "strict": false,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
   "generatedRoots": [
     "docs/phase-3/generated",
@@ -213,7 +213,7 @@
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 115,
-      "staleHashReferenceCount": 0
+      "staleHashReferenceCount": 4
     },
     {
       "path": "docs/phase-7/generated/core-loop-qa-packet.md",
@@ -229,7 +229,7 @@
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 49,
-      "staleHashReferenceCount": 0
+      "staleHashReferenceCount": 4
     },
     {
       "path": "docs/phase-8/generated/growth-store-qa-packet.md",
@@ -249,6 +249,22 @@
     },
     {
       "path": "docs/phase-9/generated/dependency-inventory.md",
+      "kind": "md",
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.json",
+      "kind": "json",
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 156,
+      "staleHashReferenceCount": 0
+    },
+    {
+      "path": "docs/phase-9/generated/ios-privacy-source-audit.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
@@ -388,7 +404,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 224,
+      "hashReferenceCount": 234,
       "staleHashReferenceCount": 0
     },
     {
@@ -404,7 +420,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 0,
+      "hashReferenceCount": 3,
       "staleHashReferenceCount": 0
     }
   ],
@@ -414,14 +430,23 @@
     "docs:generated-packet-status-audit:check"
   ],
   "summary": {
-    "generatedFileCount": 49,
+    "generatedFileCount": 51,
     "dirtyTextFileCount": 0,
     "nonEmptyGitStatusFileCount": 0,
-    "hashReferenceCount": 1836,
-    "staleHashReferenceCount": 0,
-    "blockerCount": 0,
+    "hashReferenceCount": 2005,
+    "staleHashReferenceCount": 8,
+    "blockerCount": 8,
     "warningCount": 0
   },
-  "blockers": [],
+  "blockers": [
+    "docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.106 -> docs/phase-5/generated/device-qa-packet.json: sha256 does not match current file.",
+    "docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.107 -> docs/phase-5/generated/device-qa-packet.md: sha256 does not match current file.",
+    "docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.108 -> docs/phase-6/generated/payments-qa-packet.json: sha256 does not match current file.",
+    "docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.109 -> docs/phase-6/generated/payments-qa-packet.md: sha256 does not match current file.",
+    "docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-5/generated/device-qa-packet.json -> docs/phase-5/generated/device-qa-packet.json: sha256 does not match current file.",
+    "docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-5/generated/device-qa-packet.md -> docs/phase-5/generated/device-qa-packet.md: sha256 does not match current file.",
+    "docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-7/generated/core-loop-qa-packet.json -> docs/phase-7/generated/core-loop-qa-packet.json: sha256 does not match current file.",
+    "docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-7/generated/core-loop-qa-packet.md -> docs/phase-7/generated/core-loop-qa-packet.md: sha256 does not match current file."
+  ],
   "warnings": []
 }
