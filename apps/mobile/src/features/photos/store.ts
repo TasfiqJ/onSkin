@@ -152,6 +152,23 @@ export type PhotoRecord = PhotoMeta & {
   keyId: string | null;
 };
 
+/**
+ * The exact owner-local snapshot that was durably committed by a mutation.
+ * Query consumers use this to publish cache state without decrypting the
+ * private photo store a second time.
+ */
+export type PhotoMutationCommit<TResult> = Readonly<{
+  result: TResult;
+  photos: PhotoRecord[];
+}>;
+
+function photoMutationCommit<TResult>(
+  result: TResult,
+  photos: PhotoRecord[],
+): PhotoMutationCommit<TResult> {
+  return { result, photos };
+}
+
 type PhotoStoreFormat = 'legacy' | 'v2';
 type PhotoStoreUnavailableReason =
   | PrivateKVReadFailureReason
@@ -856,7 +873,7 @@ export async function loadPhotos(): Promise<PhotoRecord[]> {
   throw photoStoreReadError(result);
 }
 
-export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
+export async function addPhoto(input: NewPhoto): Promise<PhotoMutationCommit<PhotoRecord>> {
   return runPhotoStoreMutation(async () => {
     const items = await loadPhotosForMutationUnlocked();
     const committedCapture = input.captureSessionId
@@ -866,7 +883,7 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
       if (input.captureSessionId) {
         await cleanupPlaintextStagingOperation(input.captureSessionId, 'photo_capture_jpeg');
       }
-      return committedCapture;
+      return photoMutationCommit(committedCapture, items);
     }
 
     const sourceNeedsEncryption = Boolean(input.localUri && !isEncryptedPhotoUri(input.localUri));
@@ -946,18 +963,18 @@ export async function addPhoto(input: NewPhoto): Promise<PhotoRecord> {
       await cleanupPlaintextStagingOperation(rec.captureSessionId, 'photo_capture_jpeg');
     }
     await writeStoredEnvelope({ items: storedItems, mutation: null });
-    return rec;
+    return photoMutationCommit(rec, [rec, ...items]);
   });
 }
 
 export async function updatePhoto(
   id: string,
   patch: Partial<Pick<PhotoRecord, 'notes' | 'timeOfDay' | 'faceRegionRedacted'>>,
-): Promise<void> {
-  await runPhotoStoreMutation(async () => {
+): Promise<PhotoMutationCommit<void>> {
+  return runPhotoStoreMutation(async () => {
     const items = await loadPhotosForMutationUnlocked();
     const index = items.findIndex((item) => item.id === id);
-    if (index < 0) return;
+    if (index < 0) return photoMutationCommit(undefined, items);
     const current = items[index]!;
     const next = { ...current, ...patch };
     if (
@@ -965,18 +982,20 @@ export async function updatePhoto(
       current.timeOfDay === next.timeOfDay &&
       current.faceRegionRedacted === next.faceRegionRedacted
     ) {
-      return;
+      return photoMutationCommit(undefined, items);
     }
-    await writeSettledItems(items.map((item, itemIndex) => (itemIndex === index ? next : item)));
+    const nextItems = items.map((item, itemIndex) => (itemIndex === index ? next : item));
+    await writeSettledItems(nextItems);
+    return photoMutationCommit(undefined, nextItems);
   });
 }
 
-export async function removePhoto(id: string): Promise<void> {
-  await runAccountGenerationOperation(async (lease) => {
-    const removed = await runPhotoStoreMutation(async () => {
+export async function removePhoto(id: string): Promise<PhotoMutationCommit<void>> {
+  return runAccountGenerationOperation(async (lease) => {
+    const localCommit = await runPhotoStoreMutation(async () => {
       const items = await loadPhotosForMutationUnlocked();
       const targetIndex = items.findIndex((item) => item.id === id);
-      if (targetIndex < 0) return false;
+      if (targetIndex < 0) return photoMutationCommit(false, items);
       const target = items[targetIndex]!;
       const affectedUris = encryptedUrisForRecord(target);
       target && assertCanonicalRecordUris(target);
@@ -1004,45 +1023,48 @@ export async function removePhoto(id: string): Promise<void> {
       });
       await finalizeEncryptedPhotoDeletions(affectedUris, operationId);
       await writeStoredEnvelope({ items: nextStoredItems, mutation: null });
-      return true;
+      return photoMutationCommit(true, items.filter((_item, index) => index !== targetIndex));
     });
     lease.assertCurrent();
-    if (!removed) return;
-    try {
-      const owner = await captureAuthenticatedAccountOwner(lease);
-      if (!owner) return;
-      lease.assertCurrent();
-      await supabase
-        .from('photos')
-        .delete()
-        .eq('id', id)
-        .eq('user_id', owner.userId)
-        .abortSignal(lease.signal);
-      lease.assertCurrent();
-    } catch {
-      lease.assertCurrent();
-      /* best-effort */
+    if (localCommit.result) {
+      try {
+        const owner = await captureAuthenticatedAccountOwner(lease);
+        if (owner) {
+          lease.assertCurrent();
+          await supabase
+            .from('photos')
+            .delete()
+            .eq('id', id)
+            .eq('user_id', owner.userId)
+            .abortSignal(lease.signal);
+          lease.assertCurrent();
+        }
+      } catch {
+        lease.assertCurrent();
+        /* best-effort */
+      }
     }
+    return photoMutationCommit(undefined, localCommit.photos);
   });
 }
 
 /** Make `id` the reference for its series. */
-export async function setReference(id: string): Promise<void> {
-  await runPhotoStoreMutation(async () => {
+export async function setReference(id: string): Promise<PhotoMutationCommit<void>> {
+  return runPhotoStoreMutation(async () => {
     const items = await loadPhotosForMutationUnlocked();
     const target = items.find((item) => item.id === id);
-    if (!target) return;
+    if (!target) return photoMutationCommit(undefined, items);
     if (
       target.isReference &&
       items.every((item) => item.series !== target.series || item.isReference === (item.id === id))
     ) {
-      return;
+      return photoMutationCommit(undefined, items);
     }
-    await writeSettledItems(
-      items.map((item) =>
-        item.series === target.series ? { ...item, isReference: item.id === id } : item,
-      ),
+    const nextItems = items.map((item) =>
+      item.series === target.series ? { ...item, isReference: item.id === id } : item,
     );
+    await writeSettledItems(nextItems);
+    return photoMutationCommit(undefined, nextItems);
   });
 }
 

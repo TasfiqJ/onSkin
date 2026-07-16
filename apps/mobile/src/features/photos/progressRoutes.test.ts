@@ -104,6 +104,7 @@ describe('Progress route mobile contracts', () => {
       readAppRoute('progress/[id].tsx'),
     ];
     const storageGate = readSource('features/photos/PhotoStorageGate.tsx');
+    const routeSource = readSource('features/photos/ProgressPhotoRouteSource.tsx');
     const photosHook = readSource('features/photos/usePhotos.ts');
     const copy = readSource('features/photos/copy.ts');
 
@@ -119,33 +120,43 @@ describe('Progress route mobile contracts', () => {
 
     for (const source of standaloneRoutes) {
       expect(source).toContain(
-        "import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';",
+        "import { ProgressPhotoRouteSource } from '@/features/photos/ProgressPhotoRouteSource';",
       );
-      expect(source).toContain('<PhotoStorageGate');
-      expect(source).toContain('</PhotoStorageGate>');
+      expect(source).toContain('<ProgressPhotoRouteSource');
+      expect(source).toContain('</ProgressPhotoRouteSource>');
       expect(source.indexOf('<PhotoTimelineLockGate>')).toBeLessThan(
-        source.indexOf('<PhotoStorageGate'),
+        source.indexOf('<ProgressPhotoRouteSource'),
       );
     }
     for (const source of standaloneRoutes) {
       expect(source).toContain(
-        '<PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>',
+        '<ProgressPhotoRouteSource onExit={() => router.replace(APP_PROGRESS_ROUTE)}>',
       );
+      expect(source).not.toContain("usePhotos('front')");
     }
-    expect(readAppRoute('progress/about.tsx')).not.toContain('PhotoStorageGate');
+    expect(readAppRoute('progress/about.tsx')).not.toContain('ProgressPhotoRouteSource');
 
     expect(storageGate).toContain('export function PhotoStorageBoundary({');
-    expect(storageGate).toContain('const { isError, isFetching, isPending, refetch } = query;');
+    expect(storageGate).toContain(
+      'const { isError, isFetchedAfterMount, isFetching, isPending, refetch } = query;',
+    );
     expect(storageGate).toContain('export function PhotoStorageGate(props: PhotoStorageGateProps)');
     expect(storageGate).toContain("const query = usePhotos('front');");
     expect(storageGate).toContain('<PhotoStorageBoundary {...props} query={query} />');
-    expect(storageGate).toContain('if (!isPending && !isError) return children;');
+    expect(storageGate).toContain("'observing' | 'forcing' | 'failed' | 'validated'");
+    expect(storageGate).toContain('const [forceValidationOnMount] = useState(');
+    expect(storageGate).toContain('const result = await entryRefetch();');
     expect(storageGate).toContain('const result = await refetch();');
-    expect(storageGate).toContain('if (result.isError) setRetryFailed(true);');
+    expect(storageGate).toContain('if (result.isError)');
+    expect(storageGate).toContain('if (entryValidated && !isPending && !storageUnavailable)');
     expect(storageGate).toContain('accessibilityRole="alert"');
-    expect(storageGate).toContain('accessibilityState={{ disabled: isFetching }}');
+    expect(storageGate).toContain('accessibilityState={{ disabled: retryBusy }}');
     expect(storageGate).toContain('className="min-h-[56px]');
     expect(storageGate).toContain('className="min-h-[48px]');
+    expect(routeSource.match(/useLocalDateBoundary\(\)/g)).toHaveLength(1);
+    expect(routeSource.match(/usePhotosFromBoundary\(boundary, 'front'\)/g)).toHaveLength(1);
+    expect(routeSource).toContain('<PhotoStorageBoundary query={query} onExit={onExit}>');
+    expect(routeSource).toContain('{query.data ? children(query.data) : null}');
     expect(copy).toContain("title: 'Your timeline could not open.'");
     expect(copy).toContain('Your photos and notes were not changed.');
 
@@ -312,7 +323,7 @@ describe('Progress route mobile contracts', () => {
     expect(review).toContain('lightingScore: analysis.lighting.score');
     expect(review).toContain("? ('post_capture_measurement' as const)");
     expect(review).toContain('qualitySource,');
-    expect(review).toContain("data?.reference?.qualitySource === 'post_capture_measurement'");
+    expect(review).toContain("photos.reference?.qualitySource === 'post_capture_measurement'");
     expect(review).toContain('.mutateAsync({');
     expect(review).toContain('.then(() => {');
     expect(review).toContain('const saveInFlightRef = useRef(false);');
@@ -460,7 +471,7 @@ describe('Progress route mobile contracts', () => {
   it('isolates single-photo note typing below the full detail image shell', () => {
     const source = readAppRoute('progress/[id].tsx');
     const editorStart = source.indexOf('function PhotoNoteEditor({');
-    const detailStart = source.indexOf('function PhotoDetailScreenContent()');
+    const detailStart = source.indexOf('function PhotoDetailScreenContent({ photos }');
     const editor = source.slice(editorStart, detailStart);
     const detail = source.slice(detailStart);
 
@@ -525,7 +536,7 @@ describe('Progress route mobile contracts', () => {
   it('keeps the first saved photo wired to both baseline analytics names', () => {
     const source = readAppRoute('progress/review.tsx');
 
-    expect(source).toContain('const wasEmpty = (data?.count ?? 0) === 0;');
+    expect(source).toContain('const wasEmpty = photos.count === 0;');
     expect(source).toContain("track('photo_captured', { on_device: true })");
     expect(source).not.toContain('result: verdict.flag');
     expect(source).toContain("track('first_photo_captured')");

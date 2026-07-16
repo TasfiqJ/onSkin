@@ -10,13 +10,13 @@ import { cleanupCapturedPhoto, resolveCapturedPhoto } from '@/features/photos/ca
 import { PHOTO_COPY, QUALITY_NOTE } from '@/features/photos/copy';
 import { localDay } from '@/features/photos/date';
 import { PhotoImage } from '@/features/photos/PhotoImage';
-import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
+import { ProgressPhotoRouteSource } from '@/features/photos/ProgressPhotoRouteSource';
 import type { FramingAssessment, LightingAssessment } from '@/features/photos/captureAnalysis';
 import { reviewQuality } from '@/features/photos/quality';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { useCaptureAnalysis } from '@/features/photos/useCaptureAnalysis';
-import { usePhotoActions, usePhotos } from '@/features/photos/usePhotos';
+import { usePhotoActions, type PhotosQueryData } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
 import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -113,11 +113,13 @@ type CaptureSourceState =
 
 type ReviewScreenContentProps = {
   cleanupInFlight: boolean;
+  photos: PhotosQueryData;
   setCriticalOperationInFlight: (inFlight: boolean) => void;
 };
 
 function ReviewScreenContent({
   cleanupInFlight,
+  photos,
   setCriticalOperationInFlight,
 }: ReviewScreenContentProps) {
   const insets = useSafeAreaInsets();
@@ -160,7 +162,6 @@ function ReviewScreenContent({
     fixtureName: params.analysisFixture,
   });
 
-  const { data } = usePhotos('front');
   const { add } = usePhotoActions();
   const [saveFailed, setSaveFailed] = useState(false);
   const saveInFlightRef = useRef(false);
@@ -193,8 +194,8 @@ function ReviewScreenContent({
   }, [captureLookupRevision, captureSessionId, ownerScope]);
 
   const refLighting =
-    data?.reference?.qualitySource === 'post_capture_measurement'
-      ? data.reference.lightingScore
+    photos.reference?.qualitySource === 'post_capture_measurement'
+      ? photos.reference.lightingScore
       : null;
   const verdict = reviewQuality({
     framing: analysis.framing,
@@ -231,7 +232,7 @@ function ReviewScreenContent({
     saveInFlightRef.current = true;
     setCriticalOperationInFlight(true);
     setSaveFailed(false);
-    const wasEmpty = (data?.count ?? 0) === 0;
+    const wasEmpty = photos.count === 0;
     void add
       .mutateAsync({
         takenLocalDate,
@@ -654,24 +655,22 @@ export default function ReviewScreen() {
     <>
       <ProGate feature="photo_timeline">
         <PhotoTimelineLockGate>
-          <PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
-            <CaptureAnalysisProvider>
-              <ReviewScreenContent
-                cleanupInFlight={cleanupInFlight}
-                setCriticalOperationInFlight={(inFlight) => {
-                  criticalOperationInFlightRef.current = inFlight;
-                }}
-              />
-            </CaptureAnalysisProvider>
-          </PhotoStorageGate>
+          <ProgressPhotoRouteSource onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
+            {(photos) => (
+              <CaptureAnalysisProvider>
+                <ReviewScreenContent
+                  cleanupInFlight={cleanupInFlight}
+                  photos={photos}
+                  setCriticalOperationInFlight={(inFlight) => {
+                    criticalOperationInFlightRef.current = inFlight;
+                  }}
+                />
+              </CaptureAnalysisProvider>
+            )}
+          </ProgressPhotoRouteSource>
         </PhotoTimelineLockGate>
       </ProGate>
-      <Modal
-        animationType="fade"
-        onRequestClose={retryCleanup}
-        transparent
-        visible={cleanupFailed}
-      >
+      <Modal animationType="fade" onRequestClose={retryCleanup} transparent visible={cleanupFailed}>
         <View
           style={{
             flex: 1,

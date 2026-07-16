@@ -690,7 +690,10 @@ describe('photo local store journal', () => {
         lightingScore: 0.88,
         qualitySource: 'post_capture_measurement',
       }),
-    ).resolves.toMatchObject({ id, localUri: photoUri(id), localOnly: true });
+    ).resolves.toMatchObject({
+      result: { id, localUri: photoUri(id), localOnly: true },
+      photos: [{ id, localUri: photoUri(id), localOnly: true }],
+    });
 
     expect(envelope()).toMatchObject({ version: 2, mutation: null });
     expect(envelope().items).toHaveLength(1);
@@ -772,6 +775,39 @@ describe('photo local store journal', () => {
     await setReference(id);
 
     expect(mocks.writeAttempts).toBe(before);
+  });
+
+  it('returns the exact post-commit snapshot for update, reference, and remove', async () => {
+    const firstId = uuid(1);
+    const secondId = uuid(2);
+    seedSettled([
+      storedPhoto(firstId, { isReference: true }),
+      storedPhoto(secondId, { isReference: false }),
+    ]);
+    mocks.finalFiles.add(photoUri(firstId));
+
+    await expect(updatePhoto(secondId, { timeOfDay: 'evening' })).resolves.toMatchObject({
+      result: undefined,
+      photos: [
+        { id: firstId, isReference: true, notes: null },
+        { id: secondId, isReference: false, notes: null, timeOfDay: 'evening' },
+      ],
+    });
+    const referenceCommit = await setReference(secondId);
+    expect(referenceCommit).toMatchObject({
+      result: undefined,
+      photos: [
+        { id: firstId, isReference: false },
+        { id: secondId, isReference: true },
+      ],
+    });
+    const removeCommit = await removePhoto(firstId);
+    expect(removeCommit).toMatchObject({
+      result: undefined,
+      photos: [{ id: secondId, isReference: true }],
+    });
+
+    await expect(loadPhotos()).resolves.toEqual(removeCommit.photos);
   });
 
   it('recovers delete after a crash midway through exact quarantine staging', async () => {
@@ -878,8 +914,16 @@ describe('photo local store journal', () => {
 
   it('requires the capture session only when plaintext encryption is requested', async () => {
     await expect(addPhoto({ takenLocalDate: '2026-07-03' })).resolves.toMatchObject({
-      localUri: null,
-      captureSessionId: null,
+      result: {
+        localUri: null,
+        captureSessionId: null,
+      },
+      photos: [
+        {
+          localUri: null,
+          captureSessionId: null,
+        },
+      ],
     });
 
     capture(CAPTURE_B);

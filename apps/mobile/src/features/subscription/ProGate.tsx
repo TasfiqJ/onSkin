@@ -27,9 +27,18 @@ import { useSubscriptionOffering } from './useSubscriptionOffering';
 // carded trial), render the feature; otherwise render a calm, honest contextual
 // paywall framed around THIS feature, with the same compliance posture. Dismissible,
 // never nagging. The infra is generic. Applying it to more surfaces is mechanical.
-export function ProGate({ feature, children }: { feature: GatedFeature; children: ReactNode }) {
-  const { fontScale = 1, height, width } = useWindowDimensions();
+type ProGateProps = { feature: GatedFeature; children: ReactNode };
+
+export function ProGate(props: ProGateProps) {
   const isFocused = useIsFocused();
+
+  if (!isFocused) return null;
+
+  return <FocusedProGate {...props} />;
+}
+
+function FocusedProGate({ feature, children }: ProGateProps) {
+  const { fontScale = 1, height, width } = useWindowDimensions();
   const pathname = usePathname();
   const ownerScope = useOwnerQueryScope();
   const {
@@ -45,7 +54,7 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const entitlementUncertain = !data ? isError : isEntitlementEvidenceUncertain(data);
   const locked = data ? !data.isPro && !entitlementUncertain : false;
   const offering = useSubscriptionOffering({
-    enabled: isFocused && locked && shouldLoadContextualOffering(data),
+    enabled: locked && shouldLoadContextualOffering(data),
   });
   const [actionFeedback, setActionFeedback] = useState<PaywallFeedbackState | null>(null);
   const paidAction = usePaidActionHold(ownerScope.generation);
@@ -107,10 +116,8 @@ export function ProGate({ feature, children }: { feature: GatedFeature; children
   const paywallDismissFallback = paywallDismissFallbackForFeature(feature);
 
   useEffect(() => {
-    if (isFocused && locked) track('contextual_paywall_shown', { feature });
-  }, [isFocused, locked, feature]);
-
-  if (!isFocused) return null;
+    if (locked) track('contextual_paywall_shown', { feature });
+  }, [locked, feature]);
 
   if (entitlementChecking) {
     return (

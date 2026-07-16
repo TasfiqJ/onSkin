@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -17,7 +17,7 @@ type PhotoStorageGateProps = {
 
 export type PhotoStorageQuery = Pick<
   ReturnType<typeof usePhotos>,
-  'isError' | 'isFetching' | 'isPending' | 'refetch'
+  'isError' | 'isFetchedAfterMount' | 'isFetching' | 'isPending' | 'refetch'
 >;
 
 export type PhotoStorageBoundaryProps = PhotoStorageGateProps & {
@@ -32,16 +32,83 @@ export function PhotoStorageBoundary({
   onExit,
 }: PhotoStorageBoundaryProps) {
   const insets = useSafeAreaInsets();
-  const { isError, isFetching, isPending, refetch } = query;
+  const { isError, isFetchedAfterMount, isFetching, isPending, refetch } = query;
+  const validationAttemptRef = useRef(0);
+  const mountedRef = useRef(false);
+  const [entryRefetch] = useState<PhotoStorageQuery['refetch']>(() => refetch);
+  const [forceValidationOnMount] = useState(
+    () => !isError && !isFetchedAfterMount && !isFetching && !isPending,
+  );
+  const [entryValidation, setEntryValidation] = useState<
+    'observing' | 'forcing' | 'failed' | 'validated'
+  >(
+    isError && !isFetching && !isPending
+      ? 'failed'
+      : forceValidationOnMount
+        ? 'forcing'
+        : 'observing',
+  );
+  const [retryInFlight, setRetryInFlight] = useState(false);
   const [retryFailed, setRetryFailed] = useState(false);
   const night = tone === 'night';
   const backgroundColor = night ? NIGHT_BG : colors.paper;
   const foregroundColor = night ? colors.cream : colors.ink;
   const mutedColor = night ? 'rgba(244,239,231,0.68)' : colors.muted;
 
-  if (!isPending && !isError) return children;
+  useEffect(() => {
+    mountedRef.current = true;
+    if (!forceValidationOnMount) {
+      return () => {
+        mountedRef.current = false;
+        validationAttemptRef.current += 1;
+      };
+    }
 
-  if (isPending) {
+    const attempt = ++validationAttemptRef.current;
+
+    async function validateEntry() {
+      try {
+        const result = await entryRefetch();
+        if (!mountedRef.current || attempt !== validationAttemptRef.current) return;
+        setEntryValidation(result.isError ? 'failed' : 'validated');
+      } catch {
+        if (!mountedRef.current || attempt !== validationAttemptRef.current) return;
+        setEntryValidation('failed');
+      }
+    }
+
+    void validateEntry();
+
+    return () => {
+      mountedRef.current = false;
+      validationAttemptRef.current += 1;
+    };
+  }, [entryRefetch, forceValidationOnMount]);
+
+  useEffect(() => {
+    if (entryValidation !== 'observing' || !isFetchedAfterMount || isFetching || isPending) {
+      return;
+    }
+
+    let active = true;
+    const outcome = isError ? 'failed' : 'validated';
+    void Promise.resolve().then(() => {
+      if (active) setEntryValidation(outcome);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [entryValidation, isError, isFetchedAfterMount, isFetching, isPending]);
+
+  const entryValidated = entryValidation === 'validated';
+  const showInitialLoading = entryValidation === 'forcing' || entryValidation === 'observing';
+  const showQueryLoading = entryValidated && isPending;
+  const storageUnavailable = entryValidation === 'failed' || isError || retryInFlight;
+
+  if (entryValidated && !isPending && !storageUnavailable) return children;
+
+  if (showInitialLoading || showQueryLoading) {
     return (
       <View
         accessibilityLabel={PHOTO_COPY.storage.loading}
@@ -57,11 +124,32 @@ export function PhotoStorageBoundary({
   }
 
   async function retry() {
-    if (isFetching) return;
+    if (isFetching || retryInFlight) return;
+    const attempt = ++validationAttemptRef.current;
     setRetryFailed(false);
-    const result = await refetch();
-    if (result.isError) setRetryFailed(true);
+    setRetryInFlight(true);
+
+    try {
+      const result = await refetch();
+      if (!mountedRef.current || attempt !== validationAttemptRef.current) return;
+      if (result.isError) {
+        setEntryValidation('failed');
+        setRetryFailed(true);
+      } else {
+        setEntryValidation('validated');
+      }
+    } catch {
+      if (!mountedRef.current || attempt !== validationAttemptRef.current) return;
+      setEntryValidation('failed');
+      setRetryFailed(true);
+    } finally {
+      if (mountedRef.current && attempt === validationAttemptRef.current) {
+        setRetryInFlight(false);
+      }
+    }
   }
+
+  const retryBusy = isFetching || retryInFlight;
 
   return (
     <ScrollView
@@ -110,20 +198,20 @@ export function PhotoStorageBoundary({
       <View className="mt-7 gap-2.5">
         <Pressable
           accessibilityRole="button"
-          accessibilityState={{ disabled: isFetching }}
-          disabled={isFetching}
+          accessibilityState={{ disabled: retryBusy }}
+          disabled={retryBusy}
           onPress={() => void retry()}
           className="min-h-[56px] items-center justify-center rounded-pill px-6 py-3"
           style={{
             backgroundColor: night ? colors.cream : colors.ink,
-            opacity: isFetching ? 0.68 : 1,
+            opacity: retryBusy ? 0.68 : 1,
           }}
         >
           <Text
             className="font-sans-semibold"
             style={{ color: night ? NIGHT_BG : colors.paper, fontSize: 16 }}
           >
-            {isFetching ? PHOTO_COPY.storage.retrying : PHOTO_COPY.storage.retry}
+            {retryBusy ? PHOTO_COPY.storage.retrying : PHOTO_COPY.storage.retry}
           </Text>
         </Pressable>
         {onExit ? (

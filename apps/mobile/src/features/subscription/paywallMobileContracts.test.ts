@@ -15,6 +15,42 @@ function readAppRoute(path: string): string {
 }
 
 describe('paywall mobile contracts', () => {
+  it('keeps the subscription hook graph unmounted while a contextual gate is unfocused', () => {
+    const proGate = readSource('features/subscription/ProGate.tsx');
+    const shellStart = proGate.indexOf('export function ProGate(');
+    const focusedStart = proGate.indexOf('function FocusedProGate(');
+    const hocStart = proGate.indexOf('/** HOC to gate a whole screen behind Pro');
+    const focusShell = proGate.slice(shellStart, focusedStart);
+    const focusedGate = proGate.slice(focusedStart, hocStart);
+
+    expect(shellStart).toBeGreaterThanOrEqual(0);
+    expect(focusedStart).toBeGreaterThan(shellStart);
+    expect(hocStart).toBeGreaterThan(focusedStart);
+    expect(focusShell).toContain('const isFocused = useIsFocused();');
+    expect(focusShell).toContain('if (!isFocused) return null;');
+    expect(focusShell).toContain('return <FocusedProGate {...props} />;');
+
+    for (const focusedOnlyHook of [
+      'useWindowDimensions(',
+      'usePathname(',
+      'useOwnerQueryScope(',
+      'useEntitlement(',
+      'useEntitlementActions(',
+      'useSubscriptionOffering(',
+      'usePaidActionHold(',
+      'useState<',
+      'useEffect(',
+    ]) {
+      expect(focusShell).not.toContain(focusedOnlyHook);
+      expect(focusedGate).toContain(focusedOnlyHook);
+    }
+
+    expect(focusedGate).not.toContain('useIsFocused(');
+    expect(focusedGate).toContain('const entitlementChecking = isLoading || (!data && !isError);');
+    expect(focusedGate).toContain('if (!locked) return <>{children}</>;');
+    expect(focusedGate).toContain("if (locked) track('contextual_paywall_shown', { feature });");
+  });
+
   it('acknowledges durable lifecycle prompts only from their mounted target surfaces', () => {
     const tabs = readAppRoute('(tabs)/_layout.tsx');
     const reoffer = readAppRoute('paywall/reoffer.tsx');
@@ -358,9 +394,7 @@ describe('paywall mobile contracts', () => {
 
     expect(proGate).toContain("import { router, useIsFocused, usePathname } from 'expo-router';");
     expect(proGate).toContain('const isFocused = useIsFocused();');
-    expect(proGate).toContain(
-      "if (isFocused && locked) track('contextual_paywall_shown', { feature });",
-    );
+    expect(proGate).toContain("if (locked) track('contextual_paywall_shown', { feature });");
     expect(proGate.indexOf('if (!isFocused) return null;')).toBeLessThan(
       proGate.indexOf('if (entitlementChecking)'),
     );
@@ -454,7 +488,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('PAYWALL_COPY.offer.exploreTitle');
     expect(proGate).toContain('PAYWALL_COPY.offer.exploreBody');
     expect(entitlement).toContain('s.priorPeriodType === null');
-    expect(proGate).toContain('enabled: isFocused && locked && shouldLoadContextualOffering(data)');
+    expect(proGate).toContain('enabled: locked && shouldLoadContextualOffering(data)');
   });
 
   it('keeps lapsed contextual paywalls on paid recovery copy', () => {
@@ -551,7 +585,7 @@ describe('paywall mobile contracts', () => {
     expect(useEntitlement).toContain(
       'await awaitAccountGenerationLease(lease, () => wait(e2eDelay));',
     );
-    expect(proGate).toContain('enabled: isFocused && locked && shouldLoadContextualOffering(data)');
+    expect(proGate).toContain('enabled: locked && shouldLoadContextualOffering(data)');
     expect(offering).toContain('enabled?: boolean;');
     expect(offering).toContain('enabled,');
   });
@@ -574,7 +608,7 @@ describe('paywall mobile contracts', () => {
     expect(proGate).toContain('Access temporarily unavailable');
     expect(proGate).toContain('accessibilityLabel="Retry plan verification"');
     expect(proGate).toContain('onPress={() => void retryVerification()}');
-    expect(proGate).toContain('enabled: isFocused && locked && shouldLoadContextualOffering(data)');
+    expect(proGate).toContain('enabled: locked && shouldLoadContextualOffering(data)');
     expect(entitlement).toContain("s?.evidenceStatus === 'stale'");
     expect(entitlement).toContain("s?.evidenceStatus === 'unsupported_version'");
   });

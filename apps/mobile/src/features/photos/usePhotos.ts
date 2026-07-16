@@ -1,6 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+  type QueryKey,
+} from '@tanstack/react-query';
 
-import type { PhotoSeries } from '@onskin/types';
+import { PHOTO_SERIES, type PhotoSeries } from '@onskin/types';
 
 import {
   useLocalDateBoundary,
@@ -8,10 +14,12 @@ import {
 } from '@/lib/query/localDateBoundaryStore';
 import {
   isOwnerQueryScopeCurrent,
+  LOCAL_DAY_QUERY_NAMESPACE,
   ownerQueryPrefixes,
   queryKeys,
   runOwnerQueryOperation,
   shouldRefetchCurrentLocalDayQuery,
+  type OwnerQueryScope,
 } from '@/lib/query/queryKeys';
 import { useOwnerQueryScope } from '@/lib/query/useOwnerQueryScope';
 
@@ -31,6 +39,7 @@ import {
   setReference,
   updatePhoto,
   type NewPhoto,
+  type PhotoMutationCommit,
   type PhotoRecord,
 } from './store';
 
@@ -112,6 +121,62 @@ function e2eProgressStorageFailure(): Error | null {
   return new Error('E2E_PROGRESS_STORAGE_UNAVAILABLE');
 }
 
+export function derivePhotosQueryData(
+  photos: PhotoRecord[],
+  series: PhotoSeries,
+  todayYmd: string,
+) {
+  const inSeries = forSeries(photos, series);
+  return {
+    all: photos,
+    series: inSeries,
+    count: photos.length,
+    metadata: metadataLine(photos),
+    comparePair: defaultComparePair(photos, { series }),
+    monthGroups: groupByMonth(photos, series, todayYmd),
+    milestones: detectMilestones(photos, series),
+    reference: referenceFor(photos, series),
+  };
+}
+
+export type PhotosQueryData = ReturnType<typeof derivePhotosQueryData>;
+
+const PHOTO_SERIES_SET = new Set<string>(PHOTO_SERIES);
+
+function photoQueryIdentity(queryKey: QueryKey): { series: PhotoSeries; todayYmd: string } | null {
+  if (
+    queryKey[0] !== 'photos' ||
+    queryKey[3] !== LOCAL_DAY_QUERY_NAMESPACE ||
+    typeof queryKey[4] !== 'string' ||
+    typeof queryKey[6] !== 'string' ||
+    !PHOTO_SERIES_SET.has(queryKey[6])
+  ) {
+    return null;
+  }
+  return { todayYmd: queryKey[4], series: queryKey[6] as PhotoSeries };
+}
+
+/** Publish one durable snapshot into every already-owned local-day/series view. */
+export function publishPhotoMutationSnapshot(
+  queryClient: Pick<QueryClient, 'getQueriesData' | 'setQueryData'>,
+  ownerScope: OwnerQueryScope,
+  photos: PhotoRecord[],
+): void {
+  if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+  const cachedQueries = queryClient.getQueriesData<PhotosQueryData>({
+    queryKey: ownerQueryPrefixes.photos(ownerScope),
+  });
+  for (const [queryKey] of cachedQueries) {
+    if (!isOwnerQueryScopeCurrent(ownerScope)) return;
+    const identity = photoQueryIdentity(queryKey);
+    if (!identity) continue;
+    queryClient.setQueryData(
+      queryKey,
+      derivePhotosQueryData(photos, identity.series, identity.todayYmd),
+    );
+  }
+}
+
 /**
  * Read and derive one photo timeline from a local-day identity already owned by
  * the current route. This keeps nested storage/trend/presentation boundaries
@@ -134,17 +199,7 @@ export function usePhotosFromBoundary(
         const fixture = e2eProgressPhotoFixture();
         if (!fixture) await recoverPhotoStoreMutations();
         const photos = fixture ?? (await loadPhotos());
-        const inSeries = forSeries(photos, series);
-        return {
-          all: photos,
-          series: inSeries,
-          count: photos.length,
-          metadata: metadataLine(photos),
-          comparePair: defaultComparePair(photos, { series }),
-          monthGroups: groupByMonth(photos, series, todayYmd),
-          milestones: detectMilestones(photos, series),
-          reference: referenceFor(photos, series),
-        };
+        return derivePhotosQueryData(photos, series, todayYmd);
       }),
     retry: 0,
   });
@@ -157,32 +212,32 @@ export function usePhotos(series: PhotoSeries = 'front') {
 }
 
 export type PhotosQueryResult = ReturnType<typeof usePhotosFromBoundary>;
-export type PhotosQueryData = NonNullable<PhotosQueryResult['data']>;
 
 export function usePhotoActions() {
   const qc = useQueryClient();
   const ownerScope = useOwnerQueryScope();
-  const invalidate = () => {
-    if (!isOwnerQueryScopeCurrent(ownerScope)) return Promise.resolve();
-    return qc.invalidateQueries({ queryKey: ownerQueryPrefixes.photos(ownerScope) });
+  const commit = async <TResult>(
+    operation: () => Promise<PhotoMutationCommit<TResult>>,
+  ): Promise<TResult> => {
+    const committed = await runOwnerQueryOperation(ownerScope, operation);
+    if (isOwnerQueryScopeCurrent(ownerScope)) {
+      publishPhotoMutationSnapshot(qc, ownerScope, committed.photos);
+    }
+    return committed.result;
   };
 
   const add = useMutation({
-    mutationFn: (input: NewPhoto) => runOwnerQueryOperation(ownerScope, () => addPhoto(input)),
-    onSettled: invalidate,
+    mutationFn: (input: NewPhoto) => commit(() => addPhoto(input)),
   });
   const reference = useMutation({
-    mutationFn: (id: string) => runOwnerQueryOperation(ownerScope, () => setReference(id)),
-    onSettled: invalidate,
+    mutationFn: (id: string) => commit(() => setReference(id)),
   });
   const remove = useMutation({
-    mutationFn: (id: string) => runOwnerQueryOperation(ownerScope, () => removePhoto(id)),
-    onSettled: invalidate,
+    mutationFn: (id: string) => commit(() => removePhoto(id)),
   });
   const note = useMutation({
     mutationFn: ({ id, notes }: { id: string; notes: string }) =>
-      runOwnerQueryOperation(ownerScope, () => updatePhoto(id, { notes })),
-    onSettled: invalidate,
+      commit(() => updatePhoto(id, { notes })),
   });
 
   return { add, reference, remove, note };

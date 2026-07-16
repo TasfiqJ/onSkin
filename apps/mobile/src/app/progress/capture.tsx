@@ -27,9 +27,9 @@ import {
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { localDay, timeOfDayNow } from '@/features/photos/date';
 import { PhotoImage } from '@/features/photos/PhotoImage';
-import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
-import { usePhotos } from '@/features/photos/usePhotos';
+import { ProgressPhotoRouteSource } from '@/features/photos/ProgressPhotoRouteSource';
+import type { PhotosQueryData } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
@@ -730,7 +730,7 @@ function PermissionGate({
   );
 }
 
-function CaptureScreenContent() {
+function CaptureScreenContent({ photos }: { photos: PhotosQueryData }) {
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
   const ownerScope = useOwnerQueryScope();
@@ -762,7 +762,6 @@ function CaptureScreenContent() {
     () => devProgressCaptureFailureMode() === 'once',
   );
   const progressCameraPermissionMode = devProgressCameraPermissionMode();
-  const { data } = usePhotos('front');
 
   const canPublish = useCallback(
     () => mountedRef.current && isOwnerQueryScopeCurrent(ownerScope),
@@ -891,7 +890,7 @@ function CaptureScreenContent() {
     progressCameraPermissionMode === 'denied_no_retry' ? false : (permission?.canAskAgain ?? true);
   const captureReady =
     (canShowCamera && cameraReady && !photoCaptureFailed) || simulateProgressCaptureFailureOnce;
-  const referenceUri = data?.reference?.localUri ?? null;
+  const referenceUri = photos.reference?.localUri ?? null;
   const retryCaptureCleanup = (onSuccess: () => void) => {
     if (cleanupInFlightRef.current) return;
     const retryCleanup = captureCleanupRetryRef.current;
@@ -1378,9 +1377,9 @@ export default function CaptureScreen() {
   return (
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
-        <PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
-          <CaptureScreenContent />
-        </PhotoStorageGate>
+        <ProgressPhotoRouteSource onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
+          {(photos) => <CaptureScreenContent photos={photos} />}
+        </ProgressPhotoRouteSource>
       </PhotoTimelineLockGate>
     </ProGate>
   );

@@ -6,11 +6,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RouteIconButton, Text } from '@/components/ui';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
-import { PhotoStorageGate } from '@/features/photos/PhotoStorageGate';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
+import { ProgressPhotoRouteSource } from '@/features/photos/ProgressPhotoRouteSource';
 import { sharePhotoImageOnly } from '@/features/photos/sharePhoto';
 import { parseLocalDate } from '@/features/photos/timeline';
-import { usePhotoActions, usePhotos } from '@/features/photos/usePhotos';
+import { usePhotoActions, type PhotosQueryData } from '@/features/photos/usePhotos';
 import { ProGate } from '@/features/subscription/ProGate';
 import { track } from '@/lib/analytics/track';
 import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -73,14 +73,13 @@ function PhotoNoteEditor({
   );
 }
 
-function PhotoDetailScreenContent() {
+function PhotoDetailScreenContent({ photos }: { photos: PhotosQueryData }) {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
   const compact = height < 640;
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data } = usePhotos('front');
   const { reference, remove, note } = usePhotoActions();
-  const photo = data?.all.find((p) => p.id === id);
+  const photo = photos.all.find((p) => p.id === id);
   const [shareConfirmVisible, setShareConfirmVisible] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
@@ -626,9 +625,9 @@ export default function PhotoDetailScreen() {
   return (
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
-        <PhotoStorageGate onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
-          <PhotoDetailScreenContent />
-        </PhotoStorageGate>
+        <ProgressPhotoRouteSource onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
+          {(photos) => <PhotoDetailScreenContent photos={photos} />}
+        </ProgressPhotoRouteSource>
       </PhotoTimelineLockGate>
     </ProGate>
   );

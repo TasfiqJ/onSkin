@@ -1,8 +1,4 @@
-import {
-  MutationObserver,
-  QueryClient,
-  type MutationObserverOptions,
-} from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -17,14 +13,17 @@ import {
   queryKeys,
   type OwnerQueryScope,
 } from '@/lib/query/queryKeys';
+import type { LocalDateBoundaryIdentity } from '@/lib/query/localDateBoundaryStore';
 
-import { usePhotoActions } from './usePhotos';
-import type { NewPhoto, PhotoRecord } from './store';
+import { derivePhotosQueryData, usePhotoActions } from './usePhotos';
+import type { NewPhoto, PhotoMutationCommit, PhotoRecord } from './store';
 
 const mocks = vi.hoisted(() => ({
   addPhoto: vi.fn(),
+  loadPhotos: vi.fn(),
   ownerScope: { generation: 0 },
   queryClient: null as unknown,
+  recoverPhotoStoreMutations: vi.fn(),
   removePhoto: vi.fn(),
   setReference: vi.fn(),
   updatePhoto: vi.fn(),
@@ -46,23 +45,15 @@ vi.mock('@/lib/query/useOwnerQueryScope', () => ({
 
 vi.mock('./store', () => ({
   addPhoto: mocks.addPhoto,
-  loadPhotos: vi.fn(),
-  recoverPhotoStoreMutations: vi.fn(),
+  loadPhotos: mocks.loadPhotos,
+  recoverPhotoStoreMutations: mocks.recoverPhotoStoreMutations,
   removePhoto: mocks.removePhoto,
   setReference: mocks.setReference,
   updatePhoto: mocks.updatePhoto,
 }));
 
-type CapturedMutation<TInput, TResult> = MutationObserverOptions<
-  TResult,
-  Error,
-  TInput,
-  unknown
-> & {
+type CapturedMutation<TInput, TResult> = {
   mutationFn: (input: TInput) => Promise<TResult>;
-  onSettled: NonNullable<
-    MutationObserverOptions<TResult, Error, TInput, unknown>['onSettled']
-  >;
 };
 
 type NoteInput = { id: string; notes: string };
@@ -78,21 +69,6 @@ function useCapturedPhotoActions(): CapturedPhotoActions {
   return usePhotoActions() as unknown as CapturedPhotoActions;
 }
 
-function mutationExecutor<TInput, TResult>(
-  client: QueryClient,
-  mutation: CapturedMutation<TInput, TResult>,
-) {
-  const onSettled = vi.fn(mutation.onSettled);
-  const observer = new MutationObserver<TResult, Error, TInput, unknown>(client, {
-    ...mutation,
-    onSettled,
-  });
-  return {
-    mutate: (input: TInput) => observer.mutate(input),
-    onSettled,
-  };
-}
-
 type Deferred<T> = Readonly<{
   promise: Promise<T>;
   resolve: (value: T) => void;
@@ -106,30 +82,92 @@ function deferred<T>(): Deferred<T> {
   return { promise, resolve };
 }
 
+function photo(
+  id: string,
+  series: PhotoRecord['series'],
+  takenLocalDate: string,
+  isReference = false,
+): PhotoRecord {
+  return {
+    id,
+    series,
+    takenLocalDate,
+    takenAt: `${takenLocalDate}T12:00:00.000Z`,
+    timeOfDay: 'morning',
+    alignmentScore: null,
+    lightingScore: null,
+    headRoll: null,
+    headYaw: null,
+    headPitch: null,
+    qualitySource: null,
+    isReference,
+    referencePhotoId: null,
+    captureSessionId: null,
+    localUri: null,
+    notes: null,
+    localOnly: true,
+    storagePath: null,
+    faceRegionRedacted: false,
+    isEncrypted: false,
+    encryptedLocalUri: null,
+    thumbnailLocalUri: null,
+    encryptionVersion: 'none',
+    keyId: null,
+  };
+}
+
 const boundary = {
   localDate: '2026-07-14',
   timeZone: 'America/Toronto',
 } as const;
+const earlierBoundary = {
+  localDate: '2026-06-10',
+  timeZone: 'America/Vancouver',
+} as const;
 const newPhoto: NewPhoto = { takenLocalDate: '2026-07-14' };
-const noteInput: NoteInput = { id: 'photo-a', notes: 'owner A note' };
-const photoRecord = { id: 'photo-a' } as PhotoRecord;
+const noteInput: NoteInput = { id: 'front-new', notes: 'owner A note' };
+const committedPhotos = [
+  photo('front-new', 'front', '2026-07-14'),
+  photo('left-only', 'left', '2026-06-01', true),
+  photo('front-old', 'front', '2026-05-01', true),
+];
+const addedPhoto = committedPhotos[0]!;
+
 const actionCases = [
-  ['add', newPhoto, mocks.addPhoto, [newPhoto]],
-  ['reference', 'photo-a', mocks.setReference, ['photo-a']],
-  ['remove', 'photo-a', mocks.removePhoto, ['photo-a']],
-  ['note', noteInput, mocks.updatePhoto, ['photo-a', { notes: 'owner A note' }]],
+  ['add', newPhoto, mocks.addPhoto, [newPhoto], addedPhoto],
+  ['reference', 'front-new', mocks.setReference, ['front-new'], undefined],
+  ['remove', 'front-new', mocks.removePhoto, ['front-new'], undefined],
+  [
+    'note',
+    noteInput,
+    mocks.updatePhoto,
+    ['front-new', { notes: 'owner A note' }],
+    undefined,
+  ],
 ] as const;
 
 function nextOwnerScope(owner: OwnerQueryScope): OwnerQueryScope {
   return Object.freeze({ generation: owner.generation + 1 });
 }
 
-function photoQueryKey(owner: OwnerQueryScope) {
-  return queryKeys.photos(owner, boundary, 'front');
+function photoQueryKey(
+  owner: OwnerQueryScope,
+  dateBoundary: LocalDateBoundaryIdentity = boundary,
+  series: PhotoRecord['series'] = 'front',
+) {
+  return queryKeys.photos(owner, dateBoundary, series);
 }
 
 function seedOwnerCaches(client: QueryClient, ownerA: OwnerQueryScope, ownerB: OwnerQueryScope) {
-  client.setQueryData(photoQueryKey(ownerA), 'owner-a-photos');
+  const oldPhotos = [photo('cached-old', 'front', '2026-01-01', true)];
+  client.setQueryData(
+    photoQueryKey(ownerA),
+    derivePhotosQueryData(oldPhotos, 'front', boundary.localDate),
+  );
+  client.setQueryData(
+    photoQueryKey(ownerA, earlierBoundary, 'left'),
+    derivePhotosQueryData(oldPhotos, 'left', earlierBoundary.localDate),
+  );
   client.setQueryData(photoQueryKey(ownerB), 'owner-b-photos');
 }
 
@@ -142,14 +180,14 @@ describe('owner-bound photo actions', () => {
 
     client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
     mocks.queryClient = client;
-    mocks.addPhoto.mockReset();
-    mocks.addPhoto.mockResolvedValue(photoRecord);
-    mocks.removePhoto.mockReset();
-    mocks.removePhoto.mockResolvedValue(undefined);
-    mocks.setReference.mockReset();
-    mocks.setReference.mockResolvedValue(undefined);
-    mocks.updatePhoto.mockReset();
-    mocks.updatePhoto.mockResolvedValue(undefined);
+    mocks.addPhoto.mockReset().mockResolvedValue({ result: addedPhoto, photos: committedPhotos });
+    mocks.loadPhotos.mockReset();
+    mocks.recoverPhotoStoreMutations.mockReset();
+    mocks.removePhoto.mockReset().mockResolvedValue({ result: undefined, photos: committedPhotos });
+    mocks.setReference
+      .mockReset()
+      .mockResolvedValue({ result: undefined, photos: committedPhotos });
+    mocks.updatePhoto.mockReset().mockResolvedValue({ result: undefined, photos: committedPhotos });
     mocks.useMutation.mockReset();
     mocks.useMutation.mockImplementation((options: Record<string, unknown>) => options);
 
@@ -164,64 +202,99 @@ describe('owner-bound photo actions', () => {
   });
 
   it.each(actionCases)(
-    'runs rejected stale owner-A %s through onSettled without store entry or invalidation',
+    'publishes the exact committed snapshot after owner-A %s without invalidation or reread',
+    async (actionName, input, storeCall, expectedStoreArgs, expectedResult) => {
+      const ownerB = nextOwnerScope(ownerA);
+      seedOwnerCaches(client, ownerA, ownerB);
+      const malformedOwnerKey = [...ownerQueryPrefixes.photos(ownerA), 'not-local-day'] as const;
+      client.setQueryData(malformedOwnerKey, 'leave-me-alone');
+      const invalidate = vi.spyOn(client, 'invalidateQueries');
+      const setQueryData = vi.spyOn(client, 'setQueryData');
+      const actions = useCapturedPhotoActions();
+      const mutation = actions[actionName] as unknown as CapturedMutation<typeof input, unknown>;
+
+      await expect(mutation.mutationFn(input)).resolves.toEqual(expectedResult);
+
+      expect(storeCall).toHaveBeenCalledExactlyOnceWith(...expectedStoreArgs);
+      expect(invalidate).not.toHaveBeenCalled();
+      expect(mocks.loadPhotos).not.toHaveBeenCalled();
+      expect(mocks.recoverPhotoStoreMutations).not.toHaveBeenCalled();
+      expect(setQueryData).toHaveBeenCalledTimes(2);
+      expect(client.getQueryData(photoQueryKey(ownerA))).toEqual(
+        derivePhotosQueryData(committedPhotos, 'front', boundary.localDate),
+      );
+      expect(client.getQueryData(photoQueryKey(ownerA, earlierBoundary, 'left'))).toEqual(
+        derivePhotosQueryData(committedPhotos, 'left', earlierBoundary.localDate),
+      );
+      expect(client.getQueryData(photoQueryKey(ownerB))).toBe('owner-b-photos');
+      expect(client.getQueryData(malformedOwnerKey)).toBe('leave-me-alone');
+      expect(client.getQueryState(photoQueryKey(ownerA))?.isInvalidated).toBe(false);
+      expect(client.getQueryState(photoQueryKey(ownerB))?.isInvalidated).toBe(false);
+    },
+  );
+
+  it.each(actionCases)(
+    'keeps every cache byte-stable and performs no reread when owner-A %s fails',
     async (actionName, input, storeCall) => {
       const ownerB = nextOwnerScope(ownerA);
       seedOwnerCaches(client, ownerA, ownerB);
+      const ownerAFrontBefore = client.getQueryData(photoQueryKey(ownerA));
+      const ownerALeftBefore = client.getQueryData(
+        photoQueryKey(ownerA, earlierBoundary, 'left'),
+      );
       const invalidate = vi.spyOn(client, 'invalidateQueries');
+      const setQueryData = vi.spyOn(client, 'setQueryData');
+      storeCall.mockRejectedValueOnce(new Error('PRIVATE_STORE_UNAVAILABLE'));
       const actions = useCapturedPhotoActions();
       const mutation = actions[actionName] as unknown as CapturedMutation<typeof input, unknown>;
-      const executor = mutationExecutor(client, mutation);
 
-      beginAccountGenerationBoundary();
-      endAccountGenerationBoundary();
-      expect(createOwnerQueryScope()).toEqual(ownerB);
+      await expect(mutation.mutationFn(input)).rejects.toThrow('PRIVATE_STORE_UNAVAILABLE');
 
-      await expect(executor.mutate(input)).rejects.toMatchObject({
-        code: ACCOUNT_GENERATION_CHANGED,
-      });
-
-      expect(executor.onSettled).toHaveBeenCalledOnce();
-      expect(storeCall).not.toHaveBeenCalled();
       expect(invalidate).not.toHaveBeenCalled();
-      expect(client.getQueryState(photoQueryKey(ownerA))?.isInvalidated).toBe(false);
-      expect(client.getQueryState(photoQueryKey(ownerB))?.isInvalidated).toBe(false);
+      expect(setQueryData).not.toHaveBeenCalled();
+      expect(mocks.loadPhotos).not.toHaveBeenCalled();
+      expect(mocks.recoverPhotoStoreMutations).not.toHaveBeenCalled();
+      expect(client.getQueryData(photoQueryKey(ownerA))).toBe(ownerAFrontBefore);
+      expect(client.getQueryData(photoQueryKey(ownerA, earlierBoundary, 'left'))).toBe(
+        ownerALeftBefore,
+      );
       expect(client.getQueryData(photoQueryKey(ownerB))).toBe('owner-b-photos');
     },
   );
 
   it.each(actionCases)(
-    'invalidates exactly owner A after a successful same-owner %s action',
-    async (actionName, input, storeCall, expectedStoreArgs) => {
+    'rejects stale owner-A %s before store entry or cache publication',
+    async (actionName, input, storeCall) => {
       const ownerB = nextOwnerScope(ownerA);
       seedOwnerCaches(client, ownerA, ownerB);
       const invalidate = vi.spyOn(client, 'invalidateQueries');
+      const setQueryData = vi.spyOn(client, 'setQueryData');
       const actions = useCapturedPhotoActions();
       const mutation = actions[actionName] as unknown as CapturedMutation<typeof input, unknown>;
-      const executor = mutationExecutor(client, mutation);
 
-      await expect(executor.mutate(input)).resolves.not.toThrow();
+      beginAccountGenerationBoundary();
+      endAccountGenerationBoundary();
+      expect(createOwnerQueryScope()).toEqual(ownerB);
 
-      expect(executor.onSettled).toHaveBeenCalledOnce();
-      expect(storeCall).toHaveBeenCalledExactlyOnceWith(...expectedStoreArgs);
-      expect(invalidate).toHaveBeenCalledExactlyOnceWith({
-        queryKey: ownerQueryPrefixes.photos(ownerA),
+      await expect(mutation.mutationFn(input)).rejects.toMatchObject({
+        code: ACCOUNT_GENERATION_CHANGED,
       });
-      expect(client.getQueryState(photoQueryKey(ownerA))?.isInvalidated).toBe(true);
-      expect(client.getQueryState(photoQueryKey(ownerB))?.isInvalidated).toBe(false);
+
+      expect(storeCall).not.toHaveBeenCalled();
+      expect(invalidate).not.toHaveBeenCalled();
+      expect(setQueryData).not.toHaveBeenCalled();
       expect(client.getQueryData(photoQueryKey(ownerB))).toBe('owner-b-photos');
     },
   );
 
-  it('keeps an in-scope write drain-held and suppresses invalidation when it settles in a boundary', async () => {
+  it('drains a started write and suppresses publication when its owner becomes stale', async () => {
     const ownerB = nextOwnerScope(ownerA);
     seedOwnerCaches(client, ownerA, ownerB);
-    const invalidate = vi.spyOn(client, 'invalidateQueries');
-    const pendingWrite = deferred<PhotoRecord>();
+    const setQueryData = vi.spyOn(client, 'setQueryData');
+    const pendingWrite = deferred<PhotoMutationCommit<PhotoRecord>>();
     mocks.addPhoto.mockReturnValueOnce(pendingWrite.promise);
     const actions = useCapturedPhotoActions();
-    const executor = mutationExecutor(client, actions.add);
-    const outcome = executor.mutate(newPhoto).then(
+    const outcome = actions.add.mutationFn(newPhoto).then(
       (value) => ({ status: 'resolved' as const, value }),
       (error: unknown) => ({ status: 'rejected' as const, error }),
     );
@@ -235,55 +308,15 @@ describe('owner-bound photo actions', () => {
     await Promise.resolve();
     expect(drained).toBe(false);
 
-    pendingWrite.resolve(photoRecord);
+    pendingWrite.resolve({ result: addedPhoto, photos: committedPhotos });
     await expect(outcome).resolves.toMatchObject({
       status: 'rejected',
       error: { message: ACCOUNT_GENERATION_CHANGED },
     });
     await expect(drain).resolves.toBeUndefined();
+    endAccountGenerationBoundary();
 
-    expect(executor.onSettled).toHaveBeenCalledOnce();
-    expect(invalidate).not.toHaveBeenCalled();
-    expect(client.getQueryState(photoQueryKey(ownerA))?.isInvalidated).toBe(false);
-    expect(client.getQueryState(photoQueryKey(ownerB))?.isInvalidated).toBe(false);
+    expect(setQueryData).not.toHaveBeenCalled();
     expect(client.getQueryData(photoQueryKey(ownerB))).toBe('owner-b-photos');
-  });
-
-  it('keeps a hung owner-A prefix invalidation outside the drain and isolated from owner B', async () => {
-    const ownerB = nextOwnerScope(ownerA);
-    seedOwnerCaches(client, ownerA, ownerB);
-    const releaseInvalidation = deferred<void>();
-    const originalInvalidate = client.invalidateQueries.bind(client);
-    const invalidate = vi
-      .spyOn(client, 'invalidateQueries')
-      .mockImplementationOnce(async (filters) => {
-        await originalInvalidate(filters);
-        await releaseInvalidation.promise;
-      });
-    const actions = useCapturedPhotoActions();
-    const executor = mutationExecutor(client, actions.add);
-    let mutationSettled = false;
-    const mutation = executor.mutate(newPhoto).then(() => {
-      mutationSettled = true;
-    });
-    await vi.waitFor(() => expect(invalidate).toHaveBeenCalledOnce());
-
-    beginAccountGenerationBoundary();
-    try {
-      await expect(waitForAccountGenerationOperationsToSettle()).resolves.toBeUndefined();
-      expect(mutationSettled).toBe(false);
-      expect(client.getQueryState(photoQueryKey(ownerA))?.isInvalidated).toBe(true);
-      expect(client.getQueryState(photoQueryKey(ownerB))?.isInvalidated).toBe(false);
-      expect(client.getQueryData(photoQueryKey(ownerB))).toBe('owner-b-photos');
-    } finally {
-      endAccountGenerationBoundary();
-      releaseInvalidation.resolve();
-    }
-
-    await expect(mutation).resolves.toBeUndefined();
-    expect(executor.onSettled).toHaveBeenCalledOnce();
-    expect(invalidate).toHaveBeenCalledExactlyOnceWith({
-      queryKey: ownerQueryPrefixes.photos(ownerA),
-    });
   });
 });
