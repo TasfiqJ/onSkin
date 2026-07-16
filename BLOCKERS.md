@@ -73,8 +73,11 @@ Read this with:
 
 ## Current Launch Gates
 
-1. RoutineKind working identity is implemented locally, but legal/store/domain
-   clearance and production identity evidence are unresolved.
+1. RoutineKind working identity is implemented locally and remains the first
+   counsel candidate. The refreshed provisional sequence is `RoutineKind`,
+   `Ritunera`, `Ritualoom`; `Rituvia` is suspended after material `Rituva`
+   skincare and `Retuvia` beauty-sector findings. Legal clearance, compliant
+   remaining grids, reservations, and production identity evidence are open.
 2. Supabase project not live.
 3. RevenueCat not live.
 4. Apple Developer/App Store Connect and Google OAuth for iPhone are not verified.
@@ -105,10 +108,14 @@ Read this with:
     source candidate and local Expo-web/database evidence, but all 15 installed
     copy tuples remain `draft_blocked`; hosted worker/Storage/processor/backup,
     physical-iPhone, and professional privacy/legal approval evidence are absent.
-13. Sign in with Apple still lacks authorization-code plus nonce/state capture,
-    an encrypted rotating refresh-token vault, daily validation, canonical
-    signed server-notification ingress, and an authoritative session-access
-    fence. `TRANSFERRED` is fail-closed pending a formal transfer decision.
+13. Sign in with Apple now has a locally verified source candidate for
+    nonce/state and one-use-code capture, encrypted versioned refresh-token
+    retention, daily validation, signed server events, native invalidation,
+    deletion-vault reuse, and exact-session access denial. Hosted deployment,
+    primary-App-ID event delivery, Vault/Cron continuity, recapture/key-rotation
+    drills, stale-JWT proof, physical-iPhone/TestFlight evidence, and
+    professional approval remain launch-blocking. `TRANSFERRED` remains
+    fail-closed pending a formal transfer decision.
 14. The exact release privacy report, live policy/support URLs, and
     non-expiring App Review demo access/instructions do not exist.
 
@@ -331,6 +338,16 @@ domain registration, App Store name reservation, or final production identity
 evidence. Production native config still fails closed unless
 `BRAND_LEGAL_CLEARANCE=cleared` and explicit final identity env values are set.
 
+The dated 2026-07-15 knockout refresh completed current Apple public-store,
+CIPO, USPTO, IP Australia, RDAP, indexed common-law, and indexed social screens.
+It retains `RoutineKind` first, `Ritunera` backup 1, and lower-confidence
+`Ritualoom` backup 2. It suspends `Rituvia`: active `Rituva` differs by one
+letter and sells routine-based skincare, `Retuvia` is an active Florida-company
+hair-products lead, `RITUVÉ` is a further close storefront lead, and
+`rituvia.com` is registered. WIPO/Madrid, UKIPO, EUIPO/TMview if in scope,
+direct authenticated handle/company-name checks, and formal counsel searches
+remain unverified. No name is cleared, available, reserved, or Apple-approved.
+
 Risk:
 
 - trademark/customer-confusion exposure if the app reverts to `OnSkin` or uses
@@ -347,8 +364,11 @@ Risk:
 Next action:
 
 - Give counsel `docs/brand-evidence.md`.
-- Ask counsel to clear or reject `RoutineKind` as the final app identity; do not
+- Ask counsel to clear or reject the exact `RoutineKind`, `Ritunera`, and
+  `Ritualoom` sequence and review the rejected `Rituvia` comparators; do not
   revert to `OnSkin` unless counsel explicitly clears it.
+- Complete compliant WIPO/Madrid, UKIPO, EUIPO/TMview if in scope, company-name,
+  direct-handle, and comprehensive common-law searches for approved countries.
 - Run registrar, App Store Connect, social-handle, paid
   search, and common-law checks for the final candidate.
 - Use `docs/brand-decision-memo.md` to record the final identity decision.
@@ -364,18 +384,21 @@ Exit criteria:
   typecheck/lint/tests pass.
 
 Default until cleared: do not launch as `OnSkin`, and do not treat
-`RoutineKind` as final until counsel and store/domain reservation evidence are
-attached.
+`RoutineKind` as final, do not advance `Rituvia`, and do not freeze any
+replacement until counsel and store/domain reservation evidence are attached.
 
 ## B-SUPABASE - Live backend
 
 Status: `source-hardened / live-blocked`
 
-The repo contains 53 migrations through `20260715000054`, targeted hand-maintained
-RPC types with DB-08 still open, 13 deploy-by-default Edge Functions, a staging deploy wrapper, and an
-exhaustive live-project RLS harness. The isolated DB-05 gate passes two clean
-migration-plus-seed resets, 261 pgTAP assertions across all 77 RLS-enabled public
-tables, error-level schema lint, and an empty migration-shadow drift check.
+The repo contains 54 migrations through `20260715000055`, targeted hand-maintained
+RPC types with DB-08 still open, 16 deploy-by-default Edge Functions, a staging
+deploy wrapper, and an exhaustive live-project RLS harness. The current local
+gate passes two clean migration-plus-seed resets, exact 54-migration history,
+the full structural pgTAP suite plus 114/114 Apple lifecycle assertions,
+error-level schema lint, an empty migration-shadow drift check, and temporary
+type generation. The migration-derived inventory is 80 RLS tables and 57
+private tables: 40 directly queryable plus 17 sealed.
 PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system and
 the separate RevenueCat/app-grant entitlement authorities.
 
@@ -397,10 +420,19 @@ local database, Deno, mobile, and Expo-web evidence passes; all installed copy
 remains `draft_blocked`, and no hosted worker/Storage/Cron/Vault or legal
 approval is claimed.
 
+Migration `0055` adds the Sign in with Apple lifecycle authority: owner/subject/
+client-bound encrypted refresh-token vaulting, nonce/state and one-use-code
+capture, daily validation, signed terminal-event reconciliation, native
+invalidation, deletion-vault reuse, and exact-session denial across RLS, photo
+Storage, authenticated Edge Functions, writes, and direct authenticated helper
+RPCs. The focused Apple Edge suite passes 20/20 and the complete Apple auth work
+lane passes 47 tests. This is local disposable evidence, not hosted or device
+proof.
+
 This is not a hosted deployment or provider proof. Full generated-type parity,
 hosted RLS/Cron/Vault/concurrency, old/tampered-client containment,
-cross-owner community-handle cleanup, complete Sign in with Apple server
-lifecycle, and staging/production provider evidence remain open.
+cross-owner community-handle cleanup, Sign in with Apple deployment and
+provider-event proof, and staging/production provider evidence remain open.
 
 Next action:
 
@@ -408,20 +440,22 @@ Next action:
 - fill `EXPO_PUBLIC_SUPABASE_URL`,
   `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY`;
 - run `npm run phase2:check-env:strict`;
-- apply all 53 reviewed migrations through `0054` with
+- apply all 54 reviewed migrations through `0055` with
   `scripts/phase2/deploy-supabase-staging.ps1`;
 - regenerate `packages/types/src/database.types.ts`;
-- deploy the exact 13-function manifest, including `health-consent-worker` and
+- deploy the exact 16-function manifest, including `apple-auth-lifecycle`,
+  `apple-account-events`, `apple-auth-worker`, `health-consent-worker`, and
   `subscription-reconciliation`;
 - run Security Advisor and Performance Advisor;
 - configure anonymous Auth and Turnstile, then run
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
 - retain clean-revision, redacted artifacts covering both permanent users, the
-  signed-anonymous user, the no-session client, all 54 private tables, exact
+  signed-anonymous user, the no-session client, all 57 private tables, exact
   database/Storage outcomes, publication/deletion concurrency, provider
   interruption/recreation, and zero cleanup residue;
-- obtain an approved old/tampered-client control and finish the SIWA
-  authorization-code/token/server-event lifecycle before production.
+- obtain an approved old/tampered-client control and prove the source-complete
+  SIWA authorization-code/token/server-event lifecycle against hosted Apple
+  and Supabase services before production.
 
 Exit criteria:
 
@@ -435,7 +469,7 @@ Exit criteria:
 
 ## B-APPLE - Apple Developer and App Store Connect
 
-Status: `stubbed`
+Status: `source-hardened / external-blocked`
 
 Apple account and App Store records should be created only under the
 counsel-cleared final identity. Do not use legacy `OnSkin` identifiers.
@@ -444,10 +478,10 @@ Next action:
 
 - create App ID under cleared bundle ID;
 - configure Sign in with Apple;
-- create server-side token exchange/revocation credentials, store usable Apple
-  refresh tokens in the reviewed rotating vault, validate them on the approved
-  schedule, and handle the native credential-state listener plus Apple's signed
-  server notifications;
+- configure the final server-side token exchange/revocation credentials and
+  versioned vault secrets, deploy the reviewed Apple lifecycle functions,
+  provision the one-minute Vault/Cron lane, and register the signed event
+  endpoint for the primary App ID;
 - verify exact automatic revocation plus the manual iPhone Settings fallback,
   including durable notice recovery, on a signed physical-iPhone build;
 - create App Store Connect app;
@@ -465,22 +499,28 @@ Exit criteria:
 
 Status: `launch-blocked`
 
-The source binds Apple credential checks and deletion revocation attempts to the
-authenticated Supabase subject and retains a durable manual fallback. Commit
-`6869b7f07` also maps Apple `TRANSFERRED` to the fail-closed
-`credential_transferred` publication state; it is no longer accepted as valid
-or mislabeled as revoked. The mobile authorization path still discards the
-single-use authorization code and its state/nonce context after the identity
-token handoff. There is no encrypted rotating Apple token vault, daily
-refresh-token validation, canonical signed server-notification ingress, or
-authoritative session-access fence. Before launch, the exact signed iOS build
-and backend must demonstrate that a fresh code is exchanged only by the trusted
-server, the resulting refresh token is encrypted and account-bound,
-rotation/retry cannot cross users, revocation uses the intended
-client/team/key identity, and Apple's server events are authenticated,
-deduplicated, ordered, and reconciled without accepting a caller-supplied
-subject. Product/counsel must also approve either a formal no-transfer policy or
-a tested app/team-transfer migration before changing the fail-closed behavior.
+The source now implements the complete candidate lifecycle. Native sign-in uses
+a 32-byte CSPRNG nonce/state, sends only the SHA-256 nonce to Apple, captures the
+single-use authorization code, and defers session publication until the trusted
+server verifies and seals the result. Migration `0055` and the Apple Edge
+functions provide owner/subject/client-bound versioned encrypted refresh-token
+retention, daily validation, signed terminal-event ingestion and reconciliation,
+native invalidation, deletion-vault reuse, and exact-session denial across RLS,
+photo Storage, authenticated Edge Functions, writes, and direct authenticated
+helper RPCs. `TRANSFERRED` remains fail-closed as `credential_transferred`.
+
+The local gate passes two clean resets, exact 54-migration history through
+`0055`, the full structural suite plus 114/114 Apple pgTAP assertions, schema
+lint, empty shadow diff, temporary type generation, 20/20 focused Apple Edge
+tests, and the 47-test Apple auth work lane. These results close the source
+implementation gap only. Before launch, reviewed staging/production and the
+exact signed iOS build must prove primary-App-ID event delivery, one-minute
+Vault/Cron continuity, existing-account recapture and mandatory-version cutover,
+key rotation/rollback with zero-row or reauthentication evidence, stale JWT and
+multi-device drain denial, provider interruption/recreation, deletion, backup/
+restore, and physical-iPhone/TestFlight behavior. Product/counsel must approve
+either a formal no-transfer policy or a tested app/team-transfer migration
+before changing the fail-closed behavior.
 
 Exit criteria:
 

@@ -1,14 +1,15 @@
 # BRAND-05 Counsel-Ready Clearance Packet
 
 Prepared: 2026-07-12 (America/Toronto); official-source evidence refreshed
-2026-07-14
+2026-07-15 America/Toronto / 2026-07-16 UTC
 Requested decision: written clearance/rejection and conditions for one winner
 and two backups
-Candidates in priority order: `RoutineKind`, `Ritunera`, `Rituvia`
+Candidates in priority order: `RoutineKind`, `Ritunera`, `Ritualoom`
+Rejected comparator requiring review: `Rituvia`
 
 ## Important limitation
 
-This is attorney work product input, not legal advice or a clearance opinion.
+This is input for counsel, not legal advice or a clearance opinion.
 The public and official-database screens are preliminary and incomplete. No
 candidate is labeled available, cleared, registrable, non-infringing, reserved,
 or Apple-approved.
@@ -69,7 +70,7 @@ Please identify how the opinion changes if the initial country list changes.
 | -------: | ----------------------- | ----------------- | --------------------------- | ------------------------------------ |
 |        1 | RoutineKind             | `roo-TEEN kind`   | `Skincare shelf & routines` | `routinekind.com`, `routinekind.app` |
 |        2 | Ritunera                | `rih-too-NEH-ruh` | `Skincare shelf & routines` | `ritunera.com`, `ritunera.app`       |
-|        3 | Rituvia                 | `rih-TOO-vee-uh`  | `Skincare shelf & routines` | `rituvia.com`, `rituvia.app`         |
+|        3 | Ritualoom               | `RIT-yoo-uh-loom` | `Skincare shelf & routines` | `ritualoom.com`, `ritualoom.app`     |
 
 The initial request is for word-mark analysis. Logo/design work should not be
 used to rescue an unsafe word mark.
@@ -83,6 +84,10 @@ used to rescue an unsafe word mark.
 - How material are `MYROUTINE AI`, `ROUTINE RESET`, `ROOTINE`, `ROUTINE
 BEAUTY`, `THE LAST ROUTINE`, `ROUTINESPOT`, `Skin&Routine`, `Routine Review`,
   and other same-class routine marks?
+- How material are current marketplace uses by
+  [Routine Skincare](https://www.routineskin.com/) for peptide-based skincare
+  and [Routinique](https://www.routinique.com/) for personalized AM/PM skincare
+  routines, reminders, and product matching?
 - Should separate use of `Routine Kind` with a space be avoided?
 - Does use for community, commerce, or future professional services change the
   risk materially?
@@ -97,14 +102,29 @@ BEAUTY`, `THE LAST ROUTINE`, `ROUTINESPOT`, `Skin&Routine`, `Routine Review`,
   any relevant jurisdiction?
 - Are there linguistic or transliteration risks in approved launch countries?
 
-### Rituvia
+### Ritualoom
 
-- How material are the multiple U.S./Canadian `RITUAL` registrations, U.S.
-  `RITUWELL` class 44, Canadian `RITU` classes 9/35/42, `RITUALITY` classes
-  9/41/42, `RITUO` class 10, `RITUZENA` class 5, and other `RITU-` marks?
-- Does a parked but registered `.com` create negotiation, cybersquatting,
-  confusion, or brand-control risk?
-- Is the pharmaceutical sound a clearance or regulatory-positioning concern?
+- Is a compound built on `RITUAL` registrable and practically enforceable in a
+  field with 189 live USPTO target-class `ritual*` records, 163 CIPO `ritual*`
+  records across all statuses, and active `Rituals`/`Ritual Skincare` uses?
+- How material are the exact `RITUAL`, `RITUALITY`, `RYTUAL`, and other
+  software, skincare, beauty, wellness, and hosted-service records?
+- Does `loom` reduce confusion enough, or does its mystical/ominous English
+  sense undermine the product position?
+- Are the proposed spelling, stress, and linguistic meaning acceptable in each
+  approved launch country?
+
+### Rejected comparator: Rituvia
+
+- Confirm whether active [Rituva](https://www.byrituva.com/) routine-based
+  skincare use, active Florida-company [Retuvia](https://www.retuvia.com/)
+  hair-product use, the `RITUVÉ` storefront lead, and the crowded `RITU-` field
+  justify the product team's suspension decision.
+- Identify any priority, territorial, company-name, unregistered-rights,
+  passing-off, or expansion facts that should be preserved even though the
+  candidate is no longer recommended.
+- Advise whether `Rituvia` should be a permanent `Do not use` entry rather than
+  merely a rejected comparator.
 
 ## Draft Nice classes for counsel to confirm or prune
 
@@ -136,44 +156,50 @@ the actual launch behavior rather than copying these descriptions verbatim.
 The dated search record contains query details and limitations:
 [`BRAND-03-knockout-search-record-2026-07-12.md`](./BRAND-03-knockout-search-record-2026-07-12.md).
 
-The 2026-07-14 official-system refresh returned no exact finalist record in the
-performed USPTO or CIPO queries. That is a narrow knockout observation, not a
-clearance conclusion. Broad live target-class screens produced the following
-U.S. leads for independent counsel review.
+The 2026-07-15 official-system refresh returned no exact working-candidate
+record in the performed USPTO or CIPO queries. That is a narrow knockout
+observation, not a clearance conclusion. The USPTO screen fully paged all 192
+live target-class `ritu*` results and reviewed all 97 live target-class
+`routin*` results. Broad screens produced the following priority leads for
+independent counsel review.
 
 Priority U.S. federal leads:
 
-| Lead / TSDR record                                                                                                                                                                                                                                                           | Serial              | Status/classes shown on refresh date | Candidate relevance                             |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------ | ----------------------------------------------- |
-| [MYROUTINE AI](https://tsdr.uspto.gov/#caseNumber=97572754&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                           | 97572754            | Registered; 42, 44                   | RoutineKind; skincare routine/services          |
-| [ROUTINE RESET](https://tsdr.uspto.gov/#caseNumber=79402625&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                          | 79402625            | Registered; 3, 9, 16, 35, 41         | RoutineKind; skincare/software/content          |
-| [ROOTINE](https://tsdr.uspto.gov/#caseNumber=98477283&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                | 98477283            | Pending/non-final action; 5, 9, 44   | RoutineKind; phonetic/software/beauty adjacency |
-| [ROUTINE BEAUTY](https://tsdr.uspto.gov/#caseNumber=99559783&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) and [second filing](https://tsdr.uspto.gov/#caseNumber=99559788&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) | 99559783 / 99559788 | Pending/non-final actions; 44        | RoutineKind; exact sector/component             |
-| [THE LAST ROUTINE](https://tsdr.uspto.gov/#caseNumber=99924586&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                       | 99924586            | Pending/awaiting examination; 35, 42 | RoutineKind; commerce/hosted-software services  |
-| [ROUTINESPOT](https://tsdr.uspto.gov/#caseNumber=99039495&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                            | 99039495            | Live intent-to-use; 9, 41, 45        | RoutineKind; software/community adjacency       |
-| [RITUAL](https://tsdr.uspto.gov/#caseNumber=88223161&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 88223161            | Registered; 9, 41, 44                | Ritunera/Rituvia formative/software/beauty      |
-| [RITUAL](https://tsdr.uspto.gov/#caseNumber=97166601&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 97166601            | Registered; 41, 44                   | Ritunera/Rituvia; skincare/content              |
-| [RITUAL](https://tsdr.uspto.gov/#caseNumber=90133821&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 90133821            | Registered; 9, 38, 42                | Ritunera/Rituvia; mobile/hosted software        |
-| [RITUAL](https://tsdr.uspto.gov/#caseNumber=88123883&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 88123883            | Registered; 42                       | Ritunera/Rituvia; hosted software               |
-| [RITUWELL](https://tsdr.uspto.gov/#caseNumber=90419964&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                               | 90419964            | Registered; 44                       | Ritunera/Rituvia; close prefix/beauty services  |
+| Lead / TSDR record                                                                                                                                                                                                                                                           | Serial              | Status/classes shown on refresh date  | Candidate relevance                             |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------- | ----------------------------------------------- |
+| [MYROUTINE AI](https://tsdr.uspto.gov/#caseNumber=97572754&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                           | 97572754            | Registered; 42, 44                    | RoutineKind; skincare routine/services          |
+| [ROUTINE RESET](https://tsdr.uspto.gov/#caseNumber=79402625&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                          | 79402625            | Registered; 3, 9, 16, 35, 41          | RoutineKind; skincare/software/content          |
+| [ROOTINE](https://tsdr.uspto.gov/#caseNumber=98477283&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                | 98477283            | Pending/non-final action; 5, 9, 44    | RoutineKind; phonetic/software/beauty adjacency |
+| [ROUTINE BEAUTY](https://tsdr.uspto.gov/#caseNumber=99559783&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) and [second filing](https://tsdr.uspto.gov/#caseNumber=99559788&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) | 99559783 / 99559788 | Pending/non-final actions; 44         | RoutineKind; exact sector/component             |
+| [THE LAST ROUTINE](https://tsdr.uspto.gov/#caseNumber=99924586&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                       | 99924586            | Pending/awaiting examination; 35, 42  | RoutineKind; commerce/hosted-software services  |
+| [ROUTINESPOT](https://tsdr.uspto.gov/#caseNumber=99039495&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                            | 99039495            | Live intent-to-use; 9, 41, 45         | RoutineKind; software/community adjacency       |
+| [ROOTINES](https://tsdr.uspto.gov/#caseNumber=90592385&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) and [second filing](https://tsdr.uspto.gov/#caseNumber=90592394&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)       | 90592385 / 90592394 | Registered; 9, 42                     | RoutineKind; phonetic/software adjacency        |
+| [RITU](https://tsdr.uspto.gov/#caseNumber=99708318&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                   | 99708318            | Awaiting examination; 5, 7, 9, 42, 43 | Ritunera; short prefix in core classes          |
+| [RYTUAL](https://tsdr.uspto.gov/#caseNumber=99930513&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 99930513            | Awaiting examination; 3, 9, 10, 42    | Ritunera/Ritualoom; phonetic core-class lead    |
+| [RITUALITY](https://tsdr.uspto.gov/#caseNumber=99348107&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                              | 99348107            | Non-final Office action; 9, 41, 42    | Ritualoom; formative/software lead              |
+| [RITUAL](https://tsdr.uspto.gov/#caseNumber=88223161&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 88223161            | Registered; 9, 41, 44                 | Ritunera/Ritualoom; software/beauty             |
+| [RITUAL](https://tsdr.uspto.gov/#caseNumber=97166601&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 97166601            | Registered; 41, 44                    | Ritunera/Ritualoom; skincare/content            |
+| [RITUAL](https://tsdr.uspto.gov/#caseNumber=90133821&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 90133821            | Registered; 9, 38, 42                 | Ritunera/Ritualoom; mobile/hosted software      |
+| [RITUAL](https://tsdr.uspto.gov/#caseNumber=88123883&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 | 88123883            | Registered; 42                        | Ritunera/Ritualoom; hosted software             |
+| [RITUWELL](https://tsdr.uspto.gov/#caseNumber=90419964&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                               | 90419964            | Registered; 44                        | Ritunera; close prefix/beauty services          |
 
 Priority Canadian leads:
 
-| Lead              | Application | Status/classes shown on refresh date | Candidate relevance                           |
-| ----------------- | ----------- | ------------------------------------ | --------------------------------------------- |
-| Skin&Routine      | 2412865     | Advertised; 3, 9, 35, 42, 44         | RoutineKind; same sector/classes              |
-| Routine Review    | 2047002     | Registered; 42, 44, 45               | RoutineKind; software/beauty-adjacent         |
-| ONLY ROUTINE      | 2439042     | Formalized; 3, 35                    | RoutineKind; cosmetics/retail component       |
-| BrainCare Routine | 2421884     | Searched; 5, 9, 41, 44               | RoutineKind; software/health/education        |
-| RITU              | 2430190     | Searched; 7, 9, 11, 35, 42, 43       | Ritunera/Rituvia short-prefix/software lead   |
-| RITUALITY         | 2475082     | Formalized; 9, 41, 42                | Ritunera/Rituvia formative/software lead      |
-| RITUAL            | 1726451     | Registered; 9                        | Rituvia/Ritunera formative field              |
-| RITUAL            | 1919057     | Registered; 42                       | Rituvia/Ritunera formative field              |
-| RITUO             | 2348061     | Registered; 10                       | Rituvia visual/phonetic and medical adjacency |
-| RITUZENA          | 1840101     | Registered; 5                        | Rituvia visual/phonetic and pharma adjacency  |
-| RITUWELL          | 2061745     | Abandoned section 36; 44             | Inactive in Canada; related live U.S. record  |
-| EVERSHELF         | 2372521     | Registered; 9, 42                    | Explains removal of Shelfkind                 |
-| Shelf Health      | 2475967     | Formalized; 9, 35, 44                | Explains removal of Shelfkind                 |
+| Lead              | Application | Status/classes shown on refresh date | Candidate relevance                            |
+| ----------------- | ----------- | ------------------------------------ | ---------------------------------------------- |
+| Skin&Routine      | 2412865     | Advertised; 3, 9, 35, 42, 44         | RoutineKind; same sector/classes               |
+| Routine Review    | 2047002     | Registered; 42, 44, 45               | RoutineKind; software/beauty-adjacent          |
+| ONLY ROUTINE      | 2439042     | Formalized; 3, 35                    | RoutineKind; cosmetics/retail component        |
+| BrainCare Routine | 2421884     | Searched; 5, 9, 41, 44               | RoutineKind; software/health/education         |
+| RITU              | 2430190     | Searched; 7, 9, 11, 35, 42, 43       | Ritunera; short-prefix/software lead           |
+| RITUALITY         | 2475082     | Formalized; 9, 41, 42                | Ritualoom; formative/software lead             |
+| RITUAL            | 1726451     | Registered; 9                        | Ritunera/Ritualoom formative field             |
+| RITUAL            | 1919057     | Registered; 42                       | Ritunera/Ritualoom formative field             |
+| RITUO             | 2348061     | Registered; 10                       | Ritunera and rejected Rituvia comparator       |
+| RITUZENA          | 1840101     | Registered; 5                        | Ritunera and rejected Rituvia comparator       |
+| RITUWELL          | 2061745     | Abandoned section 36; 44             | Inactive Canada record; related live U.S. mark |
+| EVERSHELF         | 2372521     | Registered; 9, 42                    | Explains removal of Shelfkind                  |
+| Shelf Health      | 2475967     | Formalized; 9, 35, 44                | Explains removal of Shelfkind                  |
 
 Priority common-law/store leads:
 
@@ -183,19 +209,29 @@ Priority common-law/store leads:
   and [Google Play](https://play.google.com/store/apps/details?id=skin.care.product.scanner.skincare.cosmetic.ingredient.checker&hl=en_US);
 - routine-app adjacency such as `Routine Planner`, `RoutineFlow`, `MyRoutine`,
   and the exact [RoutineNest](https://www.routinenest.com/) website;
-- parked [rituvia.com](https://rituvia.com/) registration;
+- same-sector [Routine Skincare](https://www.routineskin.com/) product use and
+  [Routinique](https://www.routinique.com/) personalized skincare-routine use;
+- same-sector [Rituva](https://www.byrituva.com/) skincare, adjacent
+  [Retuvia](https://www.retuvia.com/) hair-product use, the lower-confidence
+  `RITUVÉ` storefront, and parked [rituvia.com](https://rituvia.com/);
+- dense `Rituals` and `Ritual Skincare` common-law/formative use relevant to
+  `Ritualoom`;
 - hard-collision records listed in
   [`BRAND-02-scored-longlist.md`](./BRAND-02-scored-longlist.md).
 
 ## Domain, store, and social status
 
-Point-in-time public checks were refreshed on 2026-07-14.
+Point-in-time public checks were refreshed on 2026-07-15.
 
-| Candidate   | `.com`                                         | `.app`                                       | Public Apple exact title            | Social handles |
-| ----------- | ---------------------------------------------- | -------------------------------------------- | ----------------------------------- | -------------- |
-| RoutineKind | No RDAP record returned; checkout unverified   | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
-| Ritunera    | No RDAP record returned; checkout unverified   | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
-| Rituvia     | Registered 2025-06-14; parked/offered for sale | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
+| Candidate   | `.com`                                       | `.app`                                       | Public Apple exact title            | Social handles |
+| ----------- | -------------------------------------------- | -------------------------------------------- | ----------------------------------- | -------------- |
+| RoutineKind | No RDAP record returned; checkout unverified | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
+| Ritunera    | No RDAP record returned; checkout unverified | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
+| Ritualoom   | No RDAP record returned; checkout unverified | No RDAP record returned; checkout unverified | None in checked US/CA/GB/AU results | Unverified     |
+
+Rejected comparator `Rituvia`: `.com` registered 2025-06-14 and parked/offered
+for sale; `.app` returned no RDAP record; no exact public Apple title in the
+four checked storefronts; handles unverified.
 
 No purchase, cart hold, App Store Connect record, handle claim, company-name
 reservation, or trademark filing was made.
@@ -216,9 +252,12 @@ handle claims.
 - WIPO Global Brand Database/Madrid Monitor and national registers for every
   approved country;
 - EUIPO/TMview if EU launch or near-term expansion is planned;
+- UKIPO if the UK is approved; the preliminary result service presented a
+  CAPTCHA and was not bypassed;
 - US state and Canadian corporate/trade-name sources as applicable;
 - common-law web, app stores, domains, social accounts, company names, product
-  databases, advertising, and marketplaces;
+  databases, advertising, and marketplaces, including the `Rituva`, `Retuvia`,
+  `RITUVÉ`, `Rituals`, and `Ritual Skincare` leads;
 - linguistic screening by native speakers for every approved launch country;
 - registrability and use analysis for each actual class and service.
 

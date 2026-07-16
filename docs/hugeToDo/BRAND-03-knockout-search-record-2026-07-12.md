@@ -1,9 +1,10 @@
 # BRAND-03 Knockout Search Record
 
 Initial search date: 2026-07-12 America/Toronto / 2026-07-13 UTC
-Official-source refresh: 2026-07-14 America/Toronto
-Candidates: `RoutineKind`, `Ritunera`, `Rituvia`; additional screens for
-`Ritualoom` and `Shelfkind`
+Latest refresh: 2026-07-15 20:10-20:20 America/Toronto / 2026-07-16
+00:10-00:20 UTC
+Working counsel sequence: `RoutineKind`, `Ritunera`, `Ritualoom`
+Suspended candidate: `Rituvia`
 Purpose: preliminary knockout only; not a comprehensive search, reservation,
 legal opinion, or availability statement
 
@@ -14,284 +15,327 @@ not establish an approved launch territory.
 
 ## Coverage summary
 
-| Surface                    | Coverage                                                                                                           | Result status                                                                      |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
-| Apple public Search API    | US, Canada, UK, Australia; exact candidate, spaced `Routine Kind`, and returned near names                         | Refreshed 2026-07-14; no exact published title for the three finalists             |
-| Google Play public search  | US English quoted search; exact rendered-title marker                                                              | Completed; no exact marker for the three finalists                                 |
-| Broad web/common law       | Exact quoted names, skincare/app/trademark context, known-product collision follow-up                              | Refreshed 2026-07-14 as a public-web screen; inherently incomplete                 |
-| Domains                    | DNS plus registry RDAP for `.com` and `.app`                                                                       | Refreshed 2026-07-14; not a registrar checkout, hold, or reservation               |
-| Public social handles      | Search-engine indexing for Instagram, X, YouTube, Facebook, Threads; TikTok blocked by robots                      | Refreshed 2026-07-14; handle ownership remains **unverified**                      |
-| CIPO                       | Exact, wildcard, phonetic-form, and component queries in the official Canadian database                            | Refreshed 2026-07-14; database still showed last update 2026-07-08                 |
-| USPTO                      | Exact/all-status and live target-class prefix queries in the official federal Trademark Search system              | Knockout refreshed 2026-07-14; **not** a comprehensive clearance or counsel search |
-| WIPO Global Brand Database | Official coverage/help pages reachable; WIPO prohibits automated querying and no interactive browser was available | **Not verified**; mandatory manual/counsel search                                  |
-| EUIPO/TMview               | Official availability guidance reachable; result interface unavailable without an interactive browser              | **Not verified**; mandatory manual/counsel search if EU is in scope                |
+| Surface                                     | Coverage                                                                                                                          | Current result status                                                                          |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Apple public Search API                     | US, Canada, UK, Australia; exact candidate, spaced `Routine Kind`, returned adjacency, and `limit=200` controls                   | Refreshed 2026-07-15; no exact published title for the working sequence or suspended `Rituvia` |
+| Google Play public search                   | US English quoted search; exact rendered-title marker                                                                             | No exact marker in the completed public screen; not a Play Console check                       |
+| Broad web/common law                        | Exact quoted names, spelling variants, skincare/app/beauty context, and known-product follow-up                                   | Refreshed 2026-07-15; material `Rituva` and `Retuvia` leads suspend `Rituvia`                  |
+| Domains                                     | Registry RDAP for `.com` and `.app`; DNS and live-page follow-up where relevant                                                   | Refreshed 2026-07-15; no checkout, hold, purchase, or reservation                              |
+| Public social handles                       | 25 exact, site-restricted searches across Instagram, X, YouTube, Facebook, and Threads; TikTok blocked by robots                  | Refreshed 2026-07-15; every candidate handle remains **unverified**, not available             |
+| CIPO                                        | Official Canadian database; exact, wildcard, spelling/phonetic-form, component, and target-class review                           | Refreshed 2026-07-15; database reported update 2026-07-15                                      |
+| USPTO                                       | Official federal system; exact, prefix, spelling/phonetic-form, live target-class, full-result pagination, and TSDR status review | Refreshed 2026-07-15; preliminary screen only, not counsel clearance                           |
+| IP Australia                                | Official Quick Search; exact and selected spelling variants                                                                       | Refreshed 2026-07-15; no exact result for the working sequence or suspended `Rituvia`          |
+| UKIPO                                       | Official search entry reached; result service presented a CAPTCHA                                                                 | **Not verified**; no CAPTCHA bypass attempted                                                  |
+| WIPO Global Brand Database / Madrid Monitor | Official scope, terms, and search-method documentation reviewed                                                                   | **Not verified**; mandatory compliant interactive/counsel search                               |
+| EUIPO / TMview                              | Official availability guidance, TMview help, and API terms reviewed                                                               | **Not verified**; mandatory compliant interactive/counsel search if EU is in scope             |
 
-WIPO itself says its global database is not a substitute for national/regional
-register searches and that absence does not establish availability:
-[Global Brand Database](https://www.wipo.int/en/web/global-brand-database) and
-[FAQ](https://www.wipo.int/en/web/global-brand-database/faqs_branddb). EUIPO
-likewise says to search for the same and similar signs and notes that unregistered
-rights can matter: [EUIPO availability guidance](https://www.euipo.europa.eu/en/trade-marks/before-applying/availability).
+Every zero below is limited to the stated query, database, date, and returned
+result set. It does not establish registrability, non-infringement, priority,
+common-law absence, company-name availability, store reservation, or Apple
+approval.
 
-## Apple App Store
+## Apple App Store public screen
 
 Official query form:
 
 `https://itunes.apple.com/search?term={candidate}&entity=software&country={country}&limit=50`
 
-The finalist rows below were rerun on 2026-07-14. “Exact” means a
-case-insensitive equality comparison against the public response's `trackName`;
-it is not fuzzy matching.
+The table was rerun on 2026-07-15. A cell is `exact / returned`; exact means
+case-insensitive equality against `trackName`, not fuzzy matching. Parentheses
+show the returned count from a separate `limit=200` control, which also had
+zero exact matches.
 
-| Query        |                    US |        CA |        GB |        AU | Notable returned adjacency                                            |
-| ------------ | --------------------: | --------: | --------: | --------: | --------------------------------------------------------------------- |
-| RoutineKind  | 0 exact / 45 returned |    0 / 45 |    0 / 44 |    0 / 45 | `Routine Planner`, `RoutineFlow`, `Me+`, `MyRoutine`, `Routinery`     |
-| Routine Kind | 0 exact / 48 returned |    0 / 49 |    0 / 46 |    0 / 48 | Spaced-form control; routine and habit apps, no exact published title |
-| Ritunera     |                 0 / 4 |     0 / 3 |     0 / 3 |     0 / 3 | Returned titles were unrelated                                        |
-| Rituvia      |                 0 / 1 |     0 / 1 |     0 / 1 |     0 / 1 | Unrelated `myRivadiUgento`                                            |
-| Ritualoom    |                0 / 41 |    0 / 42 |    0 / 42 |    0 / 42 | UK response included `Rituals Home & Body Cosmetics`                  |
-| Shelfkind    |                0 / 39 | Not rerun | Not rerun | Not rerun | Many books/shelf apps; no exact title                                 |
+| Query               |           US |           CA |           GB |           AU | Notable adjacency                                                 |
+| ------------------- | -----------: | -----------: | -----------: | -----------: | ----------------------------------------------------------------- |
+| RoutineKind         | 0 / 45 (171) | 0 / 45 (156) | 0 / 43 (171) | 0 / 45 (164) | Routine, habit, and planner apps                                  |
+| Routine Kind        | 0 / 48 (180) | 0 / 48 (166) | 0 / 46 (176) | 0 / 48 (174) | Spaced-form control; same crowded field                           |
+| Ritunera            |    0 / 4 (4) |    0 / 3 (3) |    0 / 3 (3) |    0 / 3 (3) | Returned titles unrelated                                         |
+| Ritualoom           | 0 / 41 (171) | 0 / 43 (170) | 0 / 44 (159) | 0 / 43 (169) | Includes `Rituals Home & Body Cosmetics` in current US/GB results |
+| Rituvia (suspended) |    0 / 2 (2) |    0 / 2 (2) |    0 / 2 (2) |    0 / 2 (2) | `Rit Play` and `myRivadiUgento`, neither skincare                 |
 
-Reproducible finalist links:
+Reproducible links:
 
 - [RoutineKind US](https://itunes.apple.com/search?term=RoutineKind&entity=software&country=us&limit=50)
 - [Routine Kind US](https://itunes.apple.com/search?term=Routine%20Kind&entity=software&country=us&limit=50)
 - [Ritunera US](https://itunes.apple.com/search?term=Ritunera&entity=software&country=us&limit=50)
+- [Ritualoom US](https://itunes.apple.com/search?term=Ritualoom&entity=software&country=us&limit=50)
 - [Rituvia US](https://itunes.apple.com/search?term=Rituvia&entity=software&country=us&limit=50)
 
-Substitute `ca`, `gb`, or `au` for the `country` parameter to reproduce the
-other jurisdiction storefront queries. Returned counts and titles are volatile.
-
-The Apple public API is not App Store Connect and does not expose reserved or
-unpublished names. Apple says another developer may already use a name and that
-a trademark-rights holder can submit a claim; real reservation therefore
-requires an authorized App Store Connect record:
+Substitute `ca`, `gb`, or `au` for the country parameter. Returned counts are
+volatile. Apple documents a 1-200 search-result limit in the
+[Search API reference](https://performance-partners.apple.com/search-api).
+The API cannot expose reserved, unpublished, or pending App Store Connect
+records. Authorized reservation still requires an App Store Connect record:
 [Add a new app](https://developer.apple.com/help/app-store-connect/create-an-app-record/add-a-new-app/).
 
-Apple also currently limits the app name field to 2–30 characters. All three
-finalist strings fit that mechanical limit, but that is not a name reservation,
-rights decision, or review approval:
+Apple limits an app name to 2-30 characters. The working candidates satisfy
+that mechanical limit, but this is not a rights or review conclusion:
 [App information reference](https://developer.apple.com/help/app-store-connect/reference/app-information/app-information/).
 
 ## Google Play public screen
 
-Quoted US English search pages returned HTTP 200 and no exact rendered-title
-marker for `RoutineKind`, `Ritunera`, `Rituvia`, or `Ritualoom` in the checked
-HTML. This is a weak public screen, not a Play Console or package reservation.
+The completed quoted US-English search pages returned HTTP 200 and no exact
+rendered-title marker for `RoutineKind`, `Ritunera`, `Ritualoom`, or `Rituvia`.
+This is a weak public-index screen, not a Play Console or package reservation.
+Android release is out of scope, but public Play use remains relevant
+common-law and customer-confusion input.
 
 - [RoutineKind](https://play.google.com/store/search?q=%22RoutineKind%22&c=apps&hl=en_US&gl=US)
 - [Ritunera](https://play.google.com/store/search?q=%22Ritunera%22&c=apps&hl=en_US&gl=US)
+- [Ritualoom](https://play.google.com/store/search?q=%22Ritualoom%22&c=apps&hl=en_US&gl=US)
 - [Rituvia](https://play.google.com/store/search?q=%22Rituvia%22&c=apps&hl=en_US&gl=US)
-
-Android release is out of scope, but public Play use remains relevant common-law
-and customer-confusion input.
 
 ## Broad web and common-law screen
 
-The public-web screen was refreshed on 2026-07-14 with `"RoutineKind" app
-skincare software`, `"Ritunera" app skincare software`, `"Rituvia" app
-skincare software`, and `"Routine Kind" skincare app`, plus exact quoted and
-site-restricted store/social variants.
+The 2026-07-15 screen used exact quoted names and spelling variants with app,
+skincare, beauty, software, trademark, company, social, and store context.
+Public indexing is incomplete and cannot reveal all unregistered use.
 
-| Candidate   | Exact/common-law observation                                                                             | Interpretation                                                                                        |
-| ----------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| RoutineKind | Results included programming identifiers such as a `RoutineKind` type, not an identified consumer brand. | No exact consumer brand found in the checked index; common words and routine apps remain adjacent.    |
-| Ritunera    | No meaningful exact commercial result found in the checked index.                                        | Encouraging only; not proof of non-use.                                                               |
-| Rituvia     | `rituvia.com` still redirected to a GoDaddy sale page displaying a USD $500 asking price.                | Domain is registered; no operating product was identified on the parked page. No purchase authorized. |
-| Ritualoom   | No meaningful exact commercial result found in the checked index.                                        | Ritual-formative field remains crowded.                                                               |
-| Shelfkind   | Exact term appeared as a generic/code/fandom label; `shelfkind.com` is registered.                       | No identified skincare app, but domain and shelf-formative risk remain.                               |
+| Candidate                  | Current observation                                                                                                                                                                                                                                                                 | Screening disposition                                                                                                                      |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| RoutineKind / Routine Kind | Exact-token results were programming/documentation identifiers; the spaced phrase produced generic-language use. No exact consumer brand was identified. Same-sector adjacency includes [Routine Skin](https://www.routineskin.com/) and [Routinique](https://www.routinique.com/). | Retain as provisional first counsel candidate. The crowded `Routine` field and weak/common components remain material.                     |
+| Ritunera                   | No meaningful exact commercial result appeared in the checked broad or site-restricted index.                                                                                                                                                                                       | Retain as provisional backup 1. Phonetic, linguistic, `RITU-`, and trademark review remains mandatory.                                     |
+| Ritualoom                  | No exact indexed commercial result was identified. Skincare/wellness uses of `Ritual` are dense, including [Rituals skincare](https://www.rituals.com/en-gb/beauty/skincare) and [Ritual Skincare](https://ritualskincare.co/).                                                     | Promote only as lower-confidence provisional backup 2. Exact-screen evidence is better than `Rituvia`, but the formative field is crowded. |
+| Rituvia                    | Active near names now exist in the same or adjacent beauty field, and its `.com` is registered.                                                                                                                                                                                     | **Suspend; do not advance without counsel.**                                                                                               |
 
-Known hard collisions from the longlist are linked in
+### Material Rituvia-adjacent leads
+
+1. **Rituva — high materiality.** [Rituva](https://www.byrituva.com/)
+   presents an operating, climate-aware skincare system in India. Its
+   [Night Routine](https://www.byrituva.com/collection/night-routine) offers a
+   sequential five-product skincare routine for sale, and its
+   [terms](https://www.byrituva.com/page/terms-conditions) identify the brand
+   under Sable Sanjivani Healthwits. `Rituva` differs from `Rituvia` by one
+   letter and operates in the same skincare/routine field. Official RDAP shows
+   [rituva.com](https://rdap.verisign.com/com/v1/domain/rituva.com) and
+   [byrituva.com](https://rdap.verisign.com/com/v1/domain/byrituva.com) as
+   registered. The site links public `byrituva` social profiles, but profile
+   ownership/activity was not independently authenticated.
+2. **Retuvia — medium materiality.** [Retuvia](https://www.retuvia.com/) is an
+   under-construction hair-products site. The official
+   [Florida corporate record](https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResults?inquiryType=EntityName&searchTerm=RETUVIA%20LLC)
+   lists `RETUVIA LLC`, filed 2025-02-21 and active on the refresh date.
+   [retuvia.com RDAP](https://rdap.verisign.com/com/v1/domain/retuvia.com)
+   returns a registered record. This is a beauty-sector lead, not proof of
+   trademark priority.
+3. **RITUVÉ — lower-confidence lead.** [rituve.com](https://www.rituve.com/)
+   displays a password-protected `RITUVÉ` Shopify storefront, and
+   [RDAP](https://rdap.verisign.com/com/v1/domain/rituve.com) returns a
+   registered record. The public goods/category were not visible, so relevance
+   is unverified.
+
+Known hard collisions from the original longlist remain recorded in
 [`BRAND-02-scored-longlist.md`](./BRAND-02-scored-longlist.md).
 
 ## Domain record
 
-Point-in-time checks used DNS and the applicable registry RDAP service:
+Point-in-time checks used the official registry RDAP services:
 
 - `.com`: `https://rdap.verisign.com/com/v1/domain/{domain}`
 - `.app`: `https://pubapi.registry.google/rdap/domain/{domain}`
 
-Finalist DNS and RDAP checks were rerun on 2026-07-14.
+| Domain          | RDAP HTTP | Recorded conclusion                                              |
+| --------------- | --------: | ---------------------------------------------------------------- |
+| routinekind.com |       404 | No current registry object returned; checkout remains unverified |
+| routinekind.app |       404 | No current registry object returned; checkout remains unverified |
+| ritunera.com    |       404 | No current registry object returned; checkout remains unverified |
+| ritunera.app    |       404 | No current registry object returned; checkout remains unverified |
+| ritualoom.com   |       404 | No current registry object returned; checkout remains unverified |
+| ritualoom.app   |       404 | No current registry object returned; checkout remains unverified |
+| rituvia.com     |       200 | Registered and parked/offered for sale                           |
+| rituvia.app     |       404 | No current registry object returned; checkout remains unverified |
 
-| Domain          | DNS                              | RDAP HTTP | Recorded conclusion                                                   |
-| --------------- | -------------------------------- | --------: | --------------------------------------------------------------------- |
-| routinekind.com | NXDOMAIN/no A                    |       404 | No registry record returned; registration/checkout remains unverified |
-| routinekind.app | NXDOMAIN/no A                    |       404 | No registry record returned; registration/checkout remains unverified |
-| ritunera.com    | NXDOMAIN/no A                    |       404 | No registry record returned; registration/checkout remains unverified |
-| ritunera.app    | NXDOMAIN/no A                    |       404 | No registry record returned; registration/checkout remains unverified |
-| rituvia.com     | `13.248.169.48`, `76.223.54.146` |       200 | Registered and parked/offered for sale                                |
-| rituvia.app     | NXDOMAIN/no A                    |       404 | No registry record returned; registration/checkout remains unverified |
-| ritualoom.com   | NXDOMAIN/no A                    |       404 | No registry record returned; registration/checkout remains unverified |
-| ritualoom.app   | NXDOMAIN/no A                    |       404 | No registry record returned; registration/checkout remains unverified |
-| shelfkind.com   | Resolved                         |       200 | Registered; ownership/use not verified                                |
-| shelfkind.app   | NXDOMAIN/no A                    |       404 | No registry record returned; registration/checkout remains unverified |
+The [rituvia.com RDAP record](https://rdap.verisign.com/com/v1/domain/rituvia.com)
+shows creation 2025-06-14, expiry 2027-06-14, registrar Key-Systems GmbH, and
+Afternic nameservers. Its point-in-time
+[sales page](https://forsale.godaddy.com/forsale/rituvia.com) asked USD 500 or
+USD 250/month lease-to-own. No purchase is authorized or recommended.
 
-The official Verisign RDAP record for `rituvia.com` showed registration on
-2025-06-14, expiration on 2027-06-14, a last-change timestamp of 2026-06-15,
-registrar Key-Systems GmbH, and Afternic nameservers:
-[Verisign RDAP record](https://rdap.verisign.com/com/v1/domain/rituvia.com).
-
-NXDOMAIN and RDAP 404 do not guarantee registrability, price, eligibility, or a
+RDAP 404 is not proof of registrability, price, eligibility, reservation, or a
 successful checkout. No domain was purchased, held, or placed in a cart.
 
 ## Social record
 
-On 2026-07-14, search-engine queries for each exact finalist string restricted
-to Instagram, X, YouTube, Facebook, and Threads returned no indexed result.
-TikTok blocked automated access. Direct handle availability, dormant/private
-accounts, impersonation variants, and platform reservation were not verifiable.
-Every handle is therefore recorded as `unverified`, not `available`.
+On 2026-07-15, exact quoted searches for each of `RoutineKind`, `Routine Kind`,
+`Ritunera`, `Ritualoom`, and `Rituvia`, individually restricted to Instagram,
+X, YouTube, Facebook, and Threads, returned zero indexed hits: 25 query
+combinations. TikTok blocked automated access.
 
-Counsel/founder should manually check at least the exact lowercase handle plus
-`get`, `app`, and `hq` variants immediately before reservation on Instagram,
-TikTok, X, YouTube, Facebook, Threads, Pinterest, and Reddit.
+This does not establish handle availability. Private, dormant, unindexed,
+recently created, localized, or platform-reserved accounts remain invisible.
+No direct authenticated claim was performed. Counsel/founder must check the
+exact lowercase handle plus `get`, `app`, and `hq` variants immediately before
+authorized reservation on Instagram, TikTok, X, YouTube, Facebook, Threads,
+Pinterest, and Reddit.
 
-## CIPO official database
+## CIPO official Canadian database
 
 Official source: [Canadian Trademarks Database](https://ised-isde.canada.ca/cipo/trademark-search/srch?lang=eng).
-On the 2026-07-14 refresh, the database page still reported last update
-`2026-07-08`. Searches used the official page's JSON `POST` method to
-`/cipo/trademark-search/srch?lang=eng` with `searchfield1=tmlookup_ext` (`TM
-lookup`), `maxReturn=1000`, all statuses and types, and the query in
-`textfield1`. CIPO recommends searching
-phonetic equivalents, synonyms, translations, and the separate elements of a
-multiword mark: [CIPO confusion guidance](https://ised-isde.canada.ca/site/canadian-intellectual-property-office/en/trademarks/additional-search-options#confusion).
+On 2026-07-15 the database reported last update `2026-07-15`. Searches used the
+official JSON `POST` endpoint with `searchfield1=tmlookup_ext`, `maxReturn=5000`,
+all statuses/types, and the exact query in `textfield1`.
 
-| Candidate   | Exact/near queries                                                          | Result                                          |
-| ----------- | --------------------------------------------------------------------------- | ----------------------------------------------- |
-| RoutineKind | `"RoutineKind"`, `"Routine Kind"`, `routin?kind`, `routin*kind`             | 0 each                                          |
-| Ritunera    | `"Ritunera"`, `ritun*`, `ritu?era`, `"Ritoonera"`, `"Ritunaira"`            | 0 each                                          |
-| Rituvia     | `"Rituvia"`, `rituv*`, `ritu?ia`, `"Ritubia"`, `"Ritovia"`                  | 0 each                                          |
-| Ritualoom   | exact checked through public screens; CIPO `ritual*` component set reviewed | No exact recorded; 163 ritual-formative results |
-| Shelfkind   | `"Shelfkind"`, `shelf*kind`, `"shelf kind"`                                 | 0 each                                          |
+CIPO recommends searching phonetic equivalents, synonyms, English/French
+translations, and separate multiword elements:
+[additional search options](https://ised-isde.canada.ca/site/canadian-intellectual-property-office/en/trademarks/additional-search-options).
+
+| Candidate           | Exact/near queries returning zero                                                                                                                                      |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| RoutineKind         | `"RoutineKind"`, `"Routine Kind"`, `routin?kind`, `routin*kind`, `RoutinKind`, `Routine Kynd`, `Ruteen Kind`, `Rutine Kind`, `Routine Gentil`, `Routine Bienveillante` |
+| Ritunera            | `"Ritunera"`, `ritun*`, `ritu?era`, `"Ritoonera"`, `"Ritunaira"`, `Ritun Era`, `Ritonera`, `Retunera`                                                                  |
+| Ritualoom           | `"Ritualoom"`, `ritualoom*`, `ritua?oom`, `"Ritual Loom"`, `"Ritualum"`, `"Ritualume"`                                                                                 |
+| Rituvia (suspended) | `"Rituvia"`, `rituv*`, `ritu?ia`, `"Ritubia"`, `"Ritovia"`, `Ritu Via`, `Rituvya`, `Rituvie`                                                                           |
 
 Broad component queries are intentionally overinclusive. Across all statuses,
-`routine` returned 44 records (14 with any class 9, 35, 41, 42, 44, or 45),
-`kind` returned 639 (276 in those target classes), `ritu*` returned 189 (67 in
-target classes), and `ritual*` returned 163 (58 in target classes). Counts show
-field density, not confusing similarity.
+`routine` returned 44 records (14 in any target class 9, 35, 41, 42, 44, or
+45), `kind` 639 (276 target-class), `ritu*` 189 (67 target-class), and
+`ritual*` 163 (58 target-class). Counts show field density, not confusing
+similarity.
 
-Material adjacent CIPO records include:
+Material adjacent Canadian leads include:
 
-| Mark                                                                                        | Application | Status shown         | Nice classes         | Why counsel should review                                         |
-| ------------------------------------------------------------------------------------------- | ----------- | -------------------- | -------------------- | ----------------------------------------------------------------- |
-| [Skin&Routine](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2412865?lang=eng)      | 2412865     | Advertised           | 3, 9, 35, 42, 44     | Same sector and exact `Routine` component                         |
-| [Routine Review](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2047002?lang=eng)    | 2047002     | Registered           | 42, 44, 45           | Software/beauty-adjacent service classes                          |
-| [ONLY ROUTINE](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2439042?lang=eng)      | 2439042     | Formalized           | 3, 35                | New routine-formative cosmetics/retail lead                       |
-| [BrainCare Routine](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2421884?lang=eng) | 2421884     | Searched             | 5, 9, 41, 44         | Routine-formative software/health/education lead                  |
-| [RITU](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2430190?lang=eng)              | 2430190     | Searched             | 7, 9, 11, 35, 42, 43 | Short `RITU-` standard-character lead in software/services        |
-| [RITUALITY](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2475082?lang=eng)         | 2475082     | Formalized           | 9, 41, 42            | `RITU-`/ritual formative in software and hosted services          |
-| [RITUAL](https://ised-isde.canada.ca/cipo/trademark-search/pdf/1726451?lang=eng)            | 1726451     | Registered           | 9                    | Exact crowded root in software class                              |
-| [RITUAL](https://ised-isde.canada.ca/cipo/trademark-search/pdf/1919057?lang=eng)            | 1919057     | Registered           | 42                   | Exact crowded root in technology-services class                   |
-| [RITUO](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2348061?lang=eng)             | 2348061     | Registered           | 10                   | Close short `RITU-` visual/phonetic form in medical-device class  |
-| [RITUZENA](https://ised-isde.canada.ca/cipo/trademark-search/pdf/1840101?lang=eng)          | 1840101     | Registered           | 5                    | Close `RITU-` form in pharmaceutical class                        |
-| [RITUWELL](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2061745?lang=eng)          | 2061745     | Abandoned section 36 | 44                   | Inactive Canadian counterpart; status must not be treated as live |
-| EVERSHELF                                                                                   | 2372521     | Registered           | 9, 42                | Software/technology shelf-formative mark                          |
-| Shelf Health                                                                                | 2475967     | Formalized           | 9, 35, 44            | Shelf plus health-adjacent goods/services                         |
+| Mark                                                                                        | Application | Status shown         | Classes              | Why counsel should review                        |
+| ------------------------------------------------------------------------------------------- | ----------: | -------------------- | -------------------- | ------------------------------------------------ |
+| [Skin&Routine](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2412865?lang=eng)      |     2412865 | Advertised           | 3, 9, 35, 42, 44     | Same sector and exact `Routine` component        |
+| [Routine Review](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2047002?lang=eng)    |     2047002 | Registered           | 42, 44, 45           | Software/beauty-adjacent services                |
+| [ONLY ROUTINE](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2439042?lang=eng)      |     2439042 | Formalized           | 3, 35                | Routine-formative cosmetics/retail               |
+| [BrainCare Routine](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2421884?lang=eng) |     2421884 | Searched             | 5, 9, 41, 44         | Software/health/education adjacency              |
+| [RITU](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2430190?lang=eng)              |     2430190 | Searched             | 7, 9, 11, 35, 42, 43 | Short `RITU-` software/services lead             |
+| [RITUALITY](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2475082?lang=eng)         |     2475082 | Formalized           | 9, 41, 42            | `RITUAL-` software/hosted-services lead          |
+| [RITUAL](https://ised-isde.canada.ca/cipo/trademark-search/pdf/1726451?lang=eng)            |     1726451 | Registered           | 9                    | Exact crowded root in software                   |
+| [RITUAL](https://ised-isde.canada.ca/cipo/trademark-search/pdf/1919057?lang=eng)            |     1919057 | Registered           | 42                   | Exact crowded root in technology services        |
+| [RITUO](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2348061?lang=eng)             |     2348061 | Registered           | 10                   | Close short form in medical devices              |
+| [RITUZENA](https://ised-isde.canada.ca/cipo/trademark-search/pdf/1840101?lang=eng)          |     1840101 | Registered           | 5                    | Close form in pharmaceuticals                    |
+| [RITUWELL](https://ised-isde.canada.ca/cipo/trademark-search/pdf/2061745?lang=eng)          |     2061745 | Abandoned section 36 | 44                   | Inactive Canadian record; related live US record |
+| EVERSHELF                                                                                   |     2372521 | Registered           | 9, 42                | Shelf-formative software/technology mark         |
+| Shelf Health                                                                                |     2475967 | Formalized           | 9, 35, 44            | Shelf plus health-adjacent goods/services        |
 
-These records are leads, not conclusions about confusion. Counsel must review
-the full goods/services, owners, dates, status histories, and marketplace use.
+These are leads, not conclusions. Counsel must review complete records,
+priority, goods/services, status histories, owners, and marketplace use.
 
 ## USPTO official federal database
 
-On 2026-07-14, queries were submitted to the
-[request endpoint](https://tmsearch.uspto.gov/prod-v1-0-0/tmsearch) used by the
-official public [Trademark Search system](https://tmsearch.uspto.gov/). The
-endpoint accepts POST requests and does not provide a stable query-result
-permalink, so the exact query strings are preserved below. Search syntax
-follows the [system help](https://tmsearch.uspto.gov/?page=help) (`CM` =
-combined mark field, `IC` = international class, `LD:true` = live). “All
-statuses” below omits the `LD` filter. The target-class set was 9, 35, 41, 42,
-44, and 45.
+The 2026-07-15 refresh used the request endpoint behind the official
+[Trademark Search](https://tmsearch.uspto.gov/) system and verified material
+statuses in [TSDR](https://tsdr.uspto.gov/). Syntax follows the
+[system help](https://tmsearch.uspto.gov/?page=help): `CM` is combined mark,
+`IC` is international class, and `LD:true` is live. Target classes were 009,
+035, 041, 042, 044, and 045. The endpoint's observed page cap was 100;
+`track_total_hits:true` supplied totals.
 
-| Candidate   | Official-system query                                                                   | Scope                       | Result                               |
-| ----------- | --------------------------------------------------------------------------------------- | --------------------------- | ------------------------------------ |
-| RoutineKind | `CM:"routinekind"`                                                                      | All statuses                | 0                                    |
-| RoutineKind | `CM:"routine kind"`                                                                     | All statuses                | 0                                    |
-| RoutineKind | `CM:routin* AND CM:kind* AND LD:true`                                                   | Live                        | 0                                    |
-| RoutineKind | `CM:routin* AND (IC:009 OR IC:035 OR IC:041 OR IC:042 OR IC:044 OR IC:045) AND LD:true` | Live target-class component | 97; all 97 returned records reviewed |
-| Ritunera    | `CM:"ritunera"`                                                                         | All statuses                | 0                                    |
-| Ritunera    | `CM:ritun*`                                                                             | All statuses                | 0                                    |
-| Ritunera    | `CM:ritun* AND (IC:009 OR IC:035 OR IC:041 OR IC:042 OR IC:044 OR IC:045) AND LD:true`  | Live target-class prefix    | 0                                    |
-| Rituvia     | `CM:"rituvia"`                                                                          | All statuses                | 0                                    |
-| Rituvia     | `CM:rituv*`                                                                             | All statuses                | 0                                    |
-| Rituvia     | `CM:ritu* AND (IC:009 OR IC:035 OR IC:041 OR IC:042 OR IC:044 OR IC:045) AND LD:true`   | Live target-class component | 192; first 100 returned reviewed     |
+| Candidate/form          | Official query summary                                                                                                          | Result and coverage                                                    |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| RoutineKind             | Exact `RoutineKind`, spaced form, `routinekind*`, three tested spelling/phonetic forms, and combined `routin*` + `kind*`        | 0 each; all statuses or live scope as stated in the retained query log |
+| Routine component       | `CM:routin* AND TARGET AND LD:true`                                                                                             | 97; all 97 screened                                                    |
+| Rootin/Rutin components | `rootin*` and `rutin*` target-class live controls                                                                               | 9 and 2; all screened                                                  |
+| Ritunera                | Exact, spaced, `ritun*`, `ritu?era`, fuzzy `~1`, and tested `Ritoonera`, `Ritunaira`, `Reetunera`, `Retunera`, `Retinera` forms | 0 each                                                                 |
+| Ritualoom               | `CM:"ritualoom"`, `CM:ritualoom*`, and target-class live `CM:ritualo*`                                                          | 0 each                                                                 |
+| Rituvia (suspended)     | Exact, spaced, `rituv*`, `ritu?ia`, fuzzy `~1`, and tested `Ritubia`, `Ritovia`, `Reetuvia` forms                               | 0 each                                                                 |
+| Shared `RITU-` field    | `CM:ritu* AND TARGET AND LD:true`                                                                                               | 192; fully paged and screened as 100 + 92                              |
+| `RITUAL-` field         | `CM:ritual* AND TARGET AND LD:true`                                                                                             | 189; contained in the fully screened `ritu*` set                       |
+| Exact quoted `RITUAL`   | `CM:"ritual" AND TARGET AND LD:true`                                                                                            | 129; contained in the fully screened set                               |
 
-The broad prefix queries are intentionally overinclusive. The 100-record cap on
-the reviewed `ritu*` response means that component set was **not** fully
-reviewed. Zero exact/prefix results do not establish availability, because
-unregistered rights, other spellings, phonetic equivalents, translations,
-design marks, related goods/services outside the draft classes, and state or
-foreign rights may matter.
+Material TSDR-verified leads include:
 
-Material live U.S. leads from the reviewed result sets include:
+| Mark                                                                                                                                                                                                                                                                           |              Serial | Status on refresh                | Classes          | Owner                                     |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------: | -------------------------------- | ---------------- | ----------------------------------------- |
+| [MYROUTINE AI](https://tsdr.uspto.gov/#caseNumber=97572754&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                             |            97572754 | Registered                       | 42, 44           | La Roche-Posay Laboratoire Dermatologique |
+| [ROUTINE RESET](https://tsdr.uspto.gov/#caseNumber=79402625&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                            |            79402625 | Registered                       | 3, 9, 16, 35, 41 | Skin Rocks Ltd                            |
+| [ROOTINE](https://tsdr.uspto.gov/#caseNumber=98477283&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                  |            98477283 | Live; non-final Office action    | 5, 9, 44         | RHODIUM, INC.                             |
+| ROUTINE BEAUTY [99559783](https://tsdr.uspto.gov/#caseNumber=99559783&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) / [99559788](https://tsdr.uspto.gov/#caseNumber=99559788&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) | 99559783 / 99559788 | Live; non-final Office actions   | 44               | Routine Beauty, LLC                       |
+| [THE LAST ROUTINE](https://tsdr.uspto.gov/#caseNumber=99924586&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                         |            99924586 | Live; awaiting examination       | 35, 42           | SkinStack LLC                             |
+| [ROUTINESPOT](https://tsdr.uspto.gov/#caseNumber=99039495&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                              |            99039495 | Live; statement-of-use extension | 9, 41, 45        | Routinespot LLC                           |
+| ROOTINES [90592385](https://tsdr.uspto.gov/#caseNumber=90592385&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) / [90592394](https://tsdr.uspto.gov/#caseNumber=90592394&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)       | 90592385 / 90592394 | Registered                       | 9, 42            | ASD.AI, LLC                               |
+| [ROUTINE.AI](https://tsdr.uspto.gov/#caseNumber=99680491&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) / [ROUTINEX.AI](https://tsdr.uspto.gov/#caseNumber=99680440&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)           | 99680491 / 99680440 | Live; assigned for examination   | 42               | Hunter Ethan Group, LLC                   |
+| [RITU](https://tsdr.uspto.gov/#caseNumber=99708318&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                     |            99708318 | Live; awaiting examination       | 5, 7, 9, 42, 43  | DU-JOUR TECHNOLOGY CORP.                  |
+| [RYTUAL](https://tsdr.uspto.gov/#caseNumber=99930513&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                   |            99930513 | Live; awaiting examination       | 3, 9, 10, 42     | SVH Corp.                                 |
+| [RITUALITY](https://tsdr.uspto.gov/#caseNumber=99348107&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                |            99348107 | Live; non-final Office action    | 9, 41, 42        | Rituality World Co.                       |
+| [RITUWELL](https://tsdr.uspto.gov/#caseNumber=90419964&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                 |            90419964 | Registered                       | 44               | Jodi Larry                                |
+| [RITUAL](https://tsdr.uspto.gov/#caseNumber=88223161&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                   |            88223161 | Registered                       | 9, 41, 44        | Ritual Media, PBC                         |
+| [RITUAL](https://tsdr.uspto.gov/#caseNumber=97166601&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                   |            97166601 | Registered                       | 41, 44           | Ritual Skincare                           |
+| [RITUAL](https://tsdr.uspto.gov/#caseNumber=90133821&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                                   |            90133821 | Registered                       | 9, 38, 42        | Ritual Mobile, Inc.                       |
 
-| Candidate relevance | Mark / official status record                                                                                                                                                                                                                                              | Serial              | Status as of 2026-07-14                        | Classes          | Current owner shown                       |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ---------------------------------------------- | ---------------- | ----------------------------------------- |
-| RoutineKind         | [MYROUTINE AI](https://tsdr.uspto.gov/#caseNumber=97572754&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                         | 97572754            | Registered; status date 2024-08-06             | 42, 44           | La Roche-Posay Laboratoire Dermatologique |
-| RoutineKind         | [ROUTINE RESET](https://tsdr.uspto.gov/#caseNumber=79402625&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                        | 79402625            | Registered; status date 2025-08-26             | 3, 9, 16, 35, 41 | Skin Rocks Ltd                            |
-| RoutineKind         | [ROOTINE](https://tsdr.uspto.gov/#caseNumber=98477283&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                              | 98477283            | Pending; non-final action dated 2026-02-18     | 5, 9, 44         | RHODIUM, INC.                             |
-| RoutineKind         | [ROUTINE BEAUTY](https://tsdr.uspto.gov/#caseNumber=99559783&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) / [second filing](https://tsdr.uspto.gov/#caseNumber=99559788&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch) | 99559783 / 99559788 | Pending; non-final actions dated 2026-06-08    | 44               | Routine Beauty, LLC                       |
-| RoutineKind         | [THE LAST ROUTINE](https://tsdr.uspto.gov/#caseNumber=99924586&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                     | 99924586            | Pending; awaiting examination as of 2026-07-06 | 35, 42           | SkinStack LLC                             |
-| RoutineKind         | [ROUTINESPOT](https://tsdr.uspto.gov/#caseNumber=99039495&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                          | 99039495            | Live intent-to-use filing; status 2026-04-27   | 9, 41, 45        | Routinespot LLC                           |
-| Ritunera/Rituvia    | [RITUAL](https://tsdr.uspto.gov/#caseNumber=88223161&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                               | 88223161            | Registered; status date 2020-09-15             | 9, 41, 44        | Ritual Media, PBC                         |
-| Ritunera/Rituvia    | [RITUAL](https://tsdr.uspto.gov/#caseNumber=97166601&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                               | 97166601            | Registered; status date 2023-01-17             | 41, 44           | Ritual Skincare                           |
-| Ritunera/Rituvia    | [RITUAL](https://tsdr.uspto.gov/#caseNumber=90133821&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                               | 90133821            | Registered; status date 2023-02-14             | 9, 38, 42        | Ritual Mobile, Inc.                       |
-| Ritunera/Rituvia    | [RITUAL](https://tsdr.uspto.gov/#caseNumber=88123883&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                               | 88123883            | Registered; sections 8/15 accepted 2025-10-02  | 42               | Ritual Technologies Inc.                  |
-| Ritunera/Rituvia    | [RITUWELL](https://tsdr.uspto.gov/#caseNumber=90419964&caseSearchType=US_APPLICATION&caseType=DEFAULT&searchType=statusSearch)                                                                                                                                             | 90419964            | Registered; status date 2022-05-03             | 44               | Jodi Larry                                |
+The expanded `ritu*` pass closes the prior first-100 coverage gap. It does not
+turn the federal screen into a comprehensive search or likelihood-of-confusion
+opinion.
 
-These are screening leads, not likelihood-of-confusion findings. Counsel must
-review the complete identifications, prosecution histories, priority, market
-use, related-company portfolios, and both live and dead records. The official
-USPTO guidance says similarity can arise from appearance, sound, meaning, or
-commercial impression and that related goods/services matter:
-[why search similar trademarks](https://www.uspto.gov/trademarks/basics/why-search-similar-trademarks).
+## IP Australia official database
 
-USPTO also explains that a comprehensive clearance search extends beyond its
-federal database to state databases and the internet:
-[federal searching guidance](https://www.uspto.gov/trademarks/search/federal-trademark-searching).
+Official source: [Australian Trade Mark Search](https://search.ipaustralia.gov.au/trademarks).
+The 2026-07-15 Quick Search returned zero for:
 
-## WIPO and EUIPO/TMview gate
+- `RoutineKind`, `Routine Kind`, `RoutinKind`, and `Routine Kynd`;
+- `Ritunera`, `Ritoonera`, `Ritunaira`, and `Ritonera`;
+- exact `Ritualoom`;
+- `Rituvia`, `Rituvya`, `Ritovia`, and `Ritubia`.
 
-No negative conclusion is recorded for WIPO or EUIPO/TMview. WIPO's terms bar
-automated queries, and no compliant interactive browser session was available,
-so the Global Brand Database result grid was not searched. WIPO itself says its
-database is not a substitute for national/regional registers and absence does
-not establish availability:
-[GBD FAQ](https://www.wipo.int/en/web/global-brand-database/faqs_branddb) and
-[terms](https://www.wipo.int/en/web/global-brand-database/terms_and_conditions).
+IP Australia warns that a search is not enough and recommends searching
+variations. These results are narrow preliminary inputs only:
+[trade mark guidance](https://www.ipaustralia.gov.au/trade-marks).
 
-EUIPO's public availability guidance was reviewed, but no TMview/EUIPO result
-grid was searched. Its documented trademark-search API requires a subscribed,
-authenticated client, which was not available:
-[EUIPO availability guidance](https://www.euipo.europa.eu/en/trade-marks/before-applying/availability) and
-[EUIPO trademark-search API](https://dev.euipo.europa.eu/product/trademark-search_100).
+## UKIPO gate
 
-Required manual/counsel work remains:
+The official [UK trade mark search](https://www.gov.uk/search-for-trademark)
+was reached, but the result service presented a CAPTCHA. No bypass or automated
+substitute was attempted. The UK result grid is therefore **not verified** and
+must be run manually or by counsel if the UK is in scope.
 
-1. Independently reproduce and expand the USPTO screen across live/dead exact,
-   spacing, plural, wildcard, phonetic, translation, design, owner, and related
-   goods/services queries.
-2. Run WIPO Global Brand Database exact/fuzzy/phonetic searches plus Madrid
-   Monitor and national registers for every approved launch country.
-3. Run EUIPO/TMview exact/fuzzy/phonetic searches if any EU country is in launch
-   or near-term expansion scope.
-4. Search state/provincial company names, business registries, common-law use,
-   stores, social handles, and relevant marketplaces.
+## WIPO, Madrid, and EUIPO/TMview gate
+
+The WIPO Global Brand Database, Madrid Monitor, and EUIPO/TMview result grids
+remain **not verified**. No candidate count was obtained, so none is recorded
+as zero, clear, or available.
+
+Automated substitutes were not used because
+[WIPO's terms](https://www.wipo.int/en/web/global-brand-database/terms_and_conditions)
+prohibit automated querying/scraping, Madrid Monitor states that it has no
+public search API and disallows automatic querying, and the
+[EUIPO search API](https://dev.euipo.europa.eu/product/trademark-search_100)
+requires an authenticated subscription unavailable here.
+
+Relevant official search facts:
+
+- [WIPO pre-filing guidance](https://www.wipo.int/en/web/madrid-system/how_to/search/index)
+  says the Global Brand Database covers more than 50 million records from more
+  than 70 databases, but national/regional registers still need searching.
+- The [Global Brand Database guide](https://www.wipo.int/documents/d/global-brand-database/docs-en-user-guide.pdf?download=true)
+  supports exact-expression, fuzzy, phonetic, embedded, stemming, class, and
+  Boolean methods; reports/downloads are capped at 180 records.
+- [Madrid Monitor](https://www3.wipo.int/madrid/monitor/en/index.jsp) supports
+  exact, fuzzy, phonetic, wildcard, and Nice-class searches and states ordinary
+  data is updated daily.
+- [TMview help](https://www.tmdn.org/static/tmdsview/tmview/helpFiles/en/help.html)
+  supports phrase, fuzzy, wildcard, and class searches, and warns that some
+  offices do not apply unsupported criteria.
+- [EUIPO's availability FAQ](https://www.euipo.europa.eu/en/help-centre/tm/faq-search-availability)
+  warns that even zero results are non-exhaustive and adjacent classes can
+  matter.
+
+The compliant manual/counsel matrix must cover classes 9, 35, 41, 42, 44, and
+45 and include exact, fuzzy, phonetic, wildcard, translation/transliteration,
+owner, goods/services, status, territory/designation, and complete result-cap
+review for `RoutineKind`, `Routine Kind`, `Ritunera`, `Ritualoom`, and the
+rejected `Rituvia` comparator plus its close leads.
 
 ## Search conclusion
 
-- `OnSkin` remains a hard reject.
-- No exact finalist record was returned by the performed USPTO, CIPO, or public
-  Apple title queries. That narrow observation is not a clearance conclusion.
-- `RoutineKind`, `Ritunera`, and `Rituvia` remain candidates only because the
-  knockout screen did not identify an automatic exact-name rejection; live
-  adjacent U.S./Canadian records and incomplete official/common-law coverage
-  still require counsel.
-- None is cleared, available, reserved, or approved for production.
-- `RoutineKind` carries the highest observed component/crowding risk, including
-  same-class routine and skincare leads; `Ritunera` carries pronunciation,
-  `RITU-`/ritual-formative, and category-learning risk; `Rituvia` carries the
-  same formative-field risk plus a registered `.com` and pharmaceutical-sound
-  risk.
-- Formal counsel review and actual authorized reservation are release blockers.
+The provisional counsel sequence after the 2026-07-15 refresh is:
+
+1. `RoutineKind` — strongest product fit; no exact result in the checked public
+   store or official national queries, but the `Routine` field is crowded and
+   the composite may be weak.
+2. `Ritunera` — strongest coined backup; narrow exact/variant screens are
+   encouraging, but the `RITU-`/`RITUAL` field and linguistic risk remain.
+3. `Ritualoom` — lower-confidence replacement backup; no exact hit in the
+   checked Apple, CIPO, USPTO, IP Australia, common-law, or RDAP screens, but it
+   deliberately adopts a very crowded `RITUAL` root.
+
+`Rituvia` is suspended from the working shortlist because active `Rituva`
+skincare use, `Retuvia` beauty-sector use, `RITUVÉ`, its registered `.com`, and
+the crowded `RITU-` field materially outweigh its prior product score.
+
+None of these names is cleared, available, registrable, non-infringing,
+reserved, approved by Apple, or approved for production. BRAND-03 remains
+`in_progress` until the compliant WIPO/Madrid, UKIPO, EUIPO/TMview (if in
+scope), direct handle, company-name, and counsel searches are complete for the
+founder-approved launch countries.

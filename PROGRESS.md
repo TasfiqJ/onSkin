@@ -6977,6 +6977,37 @@ DB-10 remains source-open because the service-only account-deletion scrub still
 ignores database errors and misses retained subscription alias/transfer arrays;
 that is the next bounded checkpoint.
 
+### Apple lifecycle and BRAND-03 truth-refresh checkpoint (2026-07-15)
+
+Completed and pushed the source-hardened Sign in with Apple lifecycle through
+`origin/main` checkpoint `97f9c138604230732d546471265e6d713b116570`.
+Migration `0055`, native/mobile admission, and the Apple Edge functions now
+cover 32-byte nonce/state generation, one-use authorization-code capture,
+owner/subject/client-bound versioned encrypted refresh-token retention, daily
+validation, signed terminal events, native invalidation, deletion-vault reuse,
+and exact-session denial across RLS, private photo Storage, authenticated Edge
+Functions, writes, and direct authenticated helper RPCs. The current local gate
+passes two clean resets, exact 54-migration history through `0055`, the full
+structural suite plus 114/114 Apple pgTAP assertions, schema lint, empty shadow
+diff, temporary types, 20/20 focused Apple Edge tests, the 47-test Apple auth
+work lane, and 269 mobile test files / 3087 tests. Hosted Apple/Supabase
+deployment, primary-App-ID event delivery, Vault/Cron continuity, recapture and
+key-rotation drills, stale-JWT proof, physical-iPhone/TestFlight evidence, and
+professional review remain launch-blocking.
+
+Refreshed BRAND-03 evidence through official Apple public search, CIPO, USPTO,
+IP Australia, and registry RDAP sources plus indexed common-law/social screens.
+The USPTO pass reviewed all 97 live target-class `routin*` records and closed
+the old first-100 gap by paging all 192 live target-class `ritu*` records. The
+current counsel sequence is `RoutineKind`, `Ritunera`, then lower-confidence
+`Ritualoom`. `Rituvia` is suspended: active `Rituva` differs by one letter and
+sells routine-based skincare, active Florida-company `Retuvia` targets hair
+products, `RITUVÉ` is another close storefront lead, and `rituvia.com` is
+registered. WIPO/Madrid, UKIPO, EUIPO/TMview if in scope, authenticated direct
+handles/company names, founder-approved countries, and comprehensive counsel
+review remain open. No candidate is described as clear, available, reserved,
+or Apple-approved.
+
 ## Open questions for the founder
 
 See [BLOCKERS.md](BLOCKERS.md), [LAUNCH_READINESS.md](LAUNCH_READINESS.md),
