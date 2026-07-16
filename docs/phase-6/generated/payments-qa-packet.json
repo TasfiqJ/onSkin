@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T00:37:14.994Z",
+  "generatedAt": "2026-07-16T03:34:14.491Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -81,7 +81,7 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "7bc82c4142062b5ddf405117958831b5ae9bd475",
+  "gitSha": "17f1452be2da1f4423266b403b78d143b677f175",
   "gitStatus": "",
   "productionConfig": {
     "productionAppEnvironment": true,
@@ -167,8 +167,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 26529,
-      "sha256": "7efcdf7c170856b835cbb6dc08d5b6f64ef47f751035c1be7fc92957863771a5"
+      "bytes": 27145,
+      "sha256": "ffa939c5bebc307cd3fb47a3e9a2c1b42bca299a742abd9af280ad995cc12c8f"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -257,20 +257,20 @@
     {
       "path": "supabase/functions/revenuecat-webhook/index.ts",
       "exists": true,
-      "bytes": 7763,
-      "sha256": "8044179aa075d3789c676f266d65c1aa74a7832e4c4ce0e08a59cec38118b33f"
+      "bytes": 7924,
+      "sha256": "5a8f373654768965232ee87b0aa407806d369a33e3ac7598a3d850fde480e0f6"
     },
     {
       "path": "supabase/functions/subscription-grants/index.ts",
       "exists": true,
-      "bytes": 4351,
-      "sha256": "811d35ed95e12e9ae4a6f9dc5d025986f6aebd4300603fab7cdb3877a8e6394d"
+      "bytes": 4512,
+      "sha256": "6aea31f612dc3ef6cb0011df0c126f26150b3d8d4c9d2eae4b6266e22815e8d0"
     },
     {
       "path": "supabase/functions/subscription-reconciliation/index.ts",
       "exists": true,
-      "bytes": 11468,
-      "sha256": "e89374b53796fb4317a15088bcc3c29907be07a546c361cffa54fe328c40c254"
+      "bytes": 11629,
+      "sha256": "e1c30509a29a2b6e7b56bf7f5dc8b6aa82c50d2c876a52f4ebc2ff55ab773821"
     },
     {
       "path": "supabase/functions/subscription-reconciliation/publicationLease.ts",
@@ -311,8 +311,8 @@
     {
       "path": "supabase/functions/account-deletion/index.ts",
       "exists": true,
-      "bytes": 1558,
-      "sha256": "b1039343476c5bf034f6c593e6933e8b08a688189ccd5964c189decb0d57cf91"
+      "bytes": 1722,
+      "sha256": "d4fd2917de31d91d010788a3c45d390de61fefd770f090ff5f1242f385b2f7f2"
     },
     {
       "path": "supabase/functions/account-deletion/providerDeletion.ts",
@@ -341,8 +341,8 @@
     {
       "path": "supabase/functions/order-report-poll/index.ts",
       "exists": true,
-      "bytes": 5391,
-      "sha256": "5709d7128e0e151148a704a8e19d06220bd6d8959eb5f8a7071b0acc7f1f4b81"
+      "bytes": 5552,
+      "sha256": "8574b39ddfac908f1fa156b5c8e64fed8899f682563dff1fdc6981ec4e81d8ce"
     },
     {
       "path": "supabase/functions/order-report-poll/orderAttributionCore.ts",

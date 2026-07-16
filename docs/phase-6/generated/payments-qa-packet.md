@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-16T00:37:14.994Z
-Git SHA: 7bc82c4142062b5ddf405117958831b5ae9bd475
+Generated at: 2026-07-16T03:34:14.491Z
+Git SHA: 17f1452be2da1f4423266b403b78d143b677f175
 Git status: clean
 
 Strict completion requires real RevenueCat offering review and store restore evidence for every contract-required platform, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -54,7 +54,7 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
 | .env.example | present | 22495 | 5aa550d77c765a4cdb3feaec88c6ab63b8cb2cdc3b15781d9d358474f123e9ff |
-| package.json | present | 26529 | 7efcdf7c170856b835cbb6dc08d5b6f64ef47f751035c1be7fc92957863771a5 |
+| package.json | present | 27145 | ffa939c5bebc307cd3fb47a3e9a2c1b42bca299a742abd9af280ad995cc12c8f |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md | present | 11287 | b3aa6768944665294ecc730c23a4834d150cb09328571befa0edd145697783b5 |
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
@@ -69,21 +69,21 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | apps/mobile/src/app/paywall/downgrade.tsx | present | 5579 | 4eb6fed57d358c1f2503be13cd8571f99adc157b362be3776e723285cd4ef92e |
 | apps/mobile/src/app/paywall/winback.tsx | present | 7658 | 74c02e7dd2118b1c8a7fb05db47693b35f2b6fb037c95c080c33232eb1529104 |
 | apps/mobile/src/app/settings/subscription.tsx | present | 15690 | bd57b2f188f7631787f4bc3cb418b1247c9d67962f8c939c63aed1c1afff7772 |
-| supabase/functions/revenuecat-webhook/index.ts | present | 7763 | 8044179aa075d3789c676f266d65c1aa74a7832e4c4ce0e08a59cec38118b33f |
-| supabase/functions/subscription-grants/index.ts | present | 4351 | 811d35ed95e12e9ae4a6f9dc5d025986f6aebd4300603fab7cdb3877a8e6394d |
-| supabase/functions/subscription-reconciliation/index.ts | present | 11468 | e89374b53796fb4317a15088bcc3c29907be07a546c361cffa54fe328c40c254 |
+| supabase/functions/revenuecat-webhook/index.ts | present | 7924 | 5a8f373654768965232ee87b0aa407806d369a33e3ac7598a3d850fde480e0f6 |
+| supabase/functions/subscription-grants/index.ts | present | 4512 | 6aea31f612dc3ef6cb0011df0c126f26150b3d8d4c9d2eae4b6266e22815e8d0 |
+| supabase/functions/subscription-reconciliation/index.ts | present | 11629 | e1c30509a29a2b6e7b56bf7f5dc8b6aa82c50d2c876a52f4ebc2ff55ab773821 |
 | supabase/functions/subscription-reconciliation/publicationLease.ts | present | 5726 | c9a14414a30e17579b381bcdfb87b48216a610d755b3cc1cb7b0bdfbe4520248 |
 | supabase/functions/subscription-reconciliation/publicationLease.test.ts | present | 7149 | 62aa58fa50f9de6211d0f2f038397b03856d082a53e3f138048ba733363a2e8a |
 | supabase/functions/subscription-reconciliation/reconciliationCore.ts | present | 14210 | 704d863946f59c8744cd949c7875f07dfdf9215e8ec51291c5fe1f63c6f06043 |
 | supabase/functions/subscription-reconciliation/reconciliationCore.test.ts | present | 11386 | cff4523c5cf1305f90be5889ad366582f32717804fe4d99d524cebf5c7b87ec3 |
 | supabase/functions/subscription-reconciliation/reconciliationContract.test.ts | present | 4242 | 1d724448169cc36cba21d0efd84d2e586a820e718bac1f025d974ea77e1c75b1 |
 | supabase/functions/_shared/verifiedAuthSessionClaims.ts | present | 2358 | 39db868ee1aa517c95b03102990793d52ad45079b6b18bbebb5640ee44207443 |
-| supabase/functions/account-deletion/index.ts | present | 1558 | b1039343476c5bf034f6c593e6933e8b08a688189ccd5964c189decb0d57cf91 |
+| supabase/functions/account-deletion/index.ts | present | 1722 | d4fd2917de31d91d010788a3c45d390de61fefd770f090ff5f1242f385b2f7f2 |
 | supabase/functions/account-deletion/providerDeletion.ts | present | 11122 | ab2afbf0ea3beb53373df06b0e073f77b70c2f8d76fd5afa9c23d6d67010d746 |
 | supabase/functions/account-deletion/providerDeletion.test.ts | present | 17762 | 336488fc323c9dcf681e2df7781ece7bf144974fa705b6bd42c01a5d377e4fbf |
 | supabase/functions/account-deletion/serviceRoleCleanup.ts | present | 3440 | f8d8d06f9fdf4b940af912773c6293eeb4530df110c8279b7d58788f344f053d |
 | supabase/functions/account-deletion/serviceRoleCleanup.test.ts | present | 16530 | e93c3fe4cd82445ad5833a148ec5aaee95eb95b17b29e02170693623b3f4f95a |
-| supabase/functions/order-report-poll/index.ts | present | 5391 | 5709d7128e0e151148a704a8e19d06220bd6d8959eb5f8a7071b0acc7f1f4b81 |
+| supabase/functions/order-report-poll/index.ts | present | 5552 | 8574b39ddfac908f1fa156b5c8e64fed8899f682563dff1fdc6981ec4e81d8ce |
 | supabase/functions/order-report-poll/orderAttributionCore.ts | present | 10537 | 434abcf6f1f7424d503fcec137bd799dc66b520c26d0e76bd36d0820f1dfa7f0 |
 | supabase/functions/order-report-poll/orderAttributionCore.test.ts | present | 14124 | 63105c5562be39504a68075984320cb2105d8f84be04d67d282135f79fb30f6b |
 | supabase/migrations/20260615000027_phase6_payments.sql | present | 3061 | ac68e551a04d938548f93da78994984786e29b3bfdda51d52f39f7371e6b6865 |

@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-16T00:38:15.542Z
+Generated: 2026-07-16T03:34:15.615Z
 Status: blocked
-Git SHA: 4840bfaa2f184fac55e6dabaf06f810fad2c24e8
+Git SHA: 17f1452be2da1f4423266b403b78d143b677f175
 Git status: clean
 
 ## Release Identity
@@ -79,12 +79,12 @@ Git status: clean
 - `docs/hugeToDo/launch-contract.json`: `43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b`
 - `docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md`: `b3aa6768944665294ecc730c23a4834d150cb09328571befa0edd145697783b5`
 - `scripts/launch/contract.mjs`: `6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d`
-- `package.json`: `7efcdf7c170856b835cbb6dc08d5b6f64ef47f751035c1be7fc92957863771a5`
+- `package.json`: `ffa939c5bebc307cd3fb47a3e9a2c1b42bca299a742abd9af280ad995cc12c8f`
 - `.github/workflows/quality.yml`: `d27c7356a1a117dbbb70996d661cd9467926e29f1bc49cad428130014f847305`
 - `package-lock.json`: `6ea97349506cb741693afc9ab7313c881c4d688e7bcf9f8944c787076951d30e`
 - `.github/workflows/security.yml`: `72951da24cdf28c6b5c62b75e0f6b3659ea6e8b46440e609a213d8943ca13c70`
 - `supabase/config.toml`: `9e9a43474b23512ede53dc855800a5671da39255ad65babec0263241bc08154a`
-- `supabase/functions/manifest.json`: `f1edd4c553de12f1cbd609e26ecf771b96e25c4d66e2c5b4b35faf8642e1085a`
+- `supabase/functions/manifest.json`: `b7407274cdbd956909f1a26884ea1ab1d15db1add070f38e68d1d7d94b9cb5ff`
 - `apps/mobile/app.base.json`: `24e1d20a0c61544d2ecb71e39dacafcb17d03a3f20fc7f8e80bf449d900d005c`
 - `apps/mobile/app.config.js`: `3c8de04b4d7452e7c41922d4202e934f8f201769be01095503b3969ad3fde0a5`
 - `apps/mobile/eas.json`: `1672ae9cdd6fbd4c23c5e468fcbe24e761a5fbfa64279d0627328a981dd8c657`
@@ -172,7 +172,7 @@ Git status: clean
 - `supabase/functions/account-deletion/durableDeletionWorker.ts`: `72ee02092659ddebc72e975f2e5222bb7936050deb6b4e9ea73227a4e111bd27`
 - `supabase/functions/account-deletion/durableProviderDeletion.test.ts`: `10eee00dcae5b2e9961c23ff096049ad4c2fb1d7289d233c5c853bcab9cab6cb`
 - `supabase/functions/account-deletion/durableProviderDeletion.ts`: `57cbc94e8d6807c45c9f92a66f321cce853679a0504cf48906d4160c8e3875ea`
-- `supabase/functions/account-deletion/index.ts`: `b1039343476c5bf034f6c593e6933e8b08a688189ccd5964c189decb0d57cf91`
+- `supabase/functions/account-deletion/index.ts`: `d4fd2917de31d91d010788a3c45d390de61fefd770f090ff5f1242f385b2f7f2`
 - `supabase/functions/account-deletion/localDeletionExecutors.test.ts`: `6bb2b9104ac7f479afe9b6f9019fb64276351e81a93b66670f0a12ede6cc1914`
 - `supabase/functions/account-deletion/photoStorageCleanup.test.ts`: `447cc4ff465f1de1c4bfe86b32fa41bc777bc3c9a95a95a9822d039d99744361`
 - `supabase/functions/account-deletion/photoStorageCleanup.ts`: `b693eedf3521d6e3214e0e0ccb84704b8f72c7931b32a954b61c1f4988ff14a6`
@@ -193,34 +193,34 @@ Git status: clean
 - `supabase/functions/_shared/rateLimitOwnership.test.ts`: `bb87d0d1237e89f69328bb380d8def4d38fb11e30028a347cacd6bf587abe8ee`
 - `supabase/functions/_shared/revenueCatIdentityTombstone.ts`: `69a7ef49ce80686fc0b503604219a4fbea1ac0439d58da83849615da22b6b9b3`
 - `supabase/functions/_shared/revenueCatIdentityTombstone.test.ts`: `8471d17bcc33bb67c49c9ac1f5bb3f0d3a4adf019acf31652c62f1e7bbe1ddcd`
-- `supabase/functions/data-export/index.ts`: `3743c7a665c8f6f885bf4787a7809174874391373d488892be6367b2d2830908`
+- `supabase/functions/data-export/index.ts`: `78097b7d4cbbcdd3bb4194ccb97d7fcf3217af111b9de64d72238006a23bcd94`
 - `supabase/functions/data-export/exportCore.ts`: `ef8828ff0f29dff17cebfca4064860ec2549a249023d9621385d7bce70a9a9bd`
 - `supabase/functions/data-export/exportCore.test.ts`: `f952985bb4a7d3679c5d4752896c72e25540f002ddb0a49ba1c510fe5c335b3b`
 - `supabase/functions/data-export/exportRegistry.ts`: `2535337af91faa1150aa41fb2d1608385eef6cb0787682399ec0475d7cc6fb41`
 - `supabase/functions/data-export/exportRegistry.test.ts`: `6680aaeafc26910dffeca595130a07f13e9f669b27424f40da724883756d9194`
-- `supabase/functions/consent-withdrawal/index.ts`: `758fc421c25906db740c15e77e3a3f444dc3b598c5e44bb1ad265bdee182fb0c`
+- `supabase/functions/consent-withdrawal/index.ts`: `96ebbcf4dfc9f5d4d12c38871706f82ff0d4618546041acca85b804ee8631d99`
 - `supabase/functions/catalog-report/deletionBarrier.test.ts`: `4703409af5da252706febf1b5e72682ef2fa48caf72558645cf170eec7d2cfda`
-- `supabase/functions/order-report-poll/index.ts`: `5709d7128e0e151148a704a8e19d06220bd6d8959eb5f8a7071b0acc7f1f4b81`
+- `supabase/functions/order-report-poll/index.ts`: `8574b39ddfac908f1fa156b5c8e64fed8899f682563dff1fdc6981ec4e81d8ce`
 - `supabase/functions/order-report-poll/orderAttributionCore.ts`: `434abcf6f1f7424d503fcec137bd799dc66b520c26d0e76bd36d0820f1dfa7f0`
 - `supabase/functions/order-report-poll/orderAttributionCore.test.ts`: `63105c5562be39504a68075984320cb2105d8f84be04d67d282135f79fb30f6b`
-- `supabase/functions/subscription-grants/index.ts`: `811d35ed95e12e9ae4a6f9dc5d025986f6aebd4300603fab7cdb3877a8e6394d`
-- `supabase/functions/subscription-reconciliation/index.ts`: `e89374b53796fb4317a15088bcc3c29907be07a546c361cffa54fe328c40c254`
+- `supabase/functions/subscription-grants/index.ts`: `6aea31f612dc3ef6cb0011df0c126f26150b3d8d4c9d2eae4b6266e22815e8d0`
+- `supabase/functions/subscription-reconciliation/index.ts`: `e1c30509a29a2b6e7b56bf7f5dc8b6aa82c50d2c876a52f4ebc2ff55ab773821`
 - `supabase/functions/subscription-reconciliation/publicationLease.ts`: `c9a14414a30e17579b381bcdfb87b48216a610d755b3cc1cb7b0bdfbe4520248`
 - `supabase/functions/subscription-reconciliation/publicationLease.test.ts`: `62aa58fa50f9de6211d0f2f038397b03856d082a53e3f138048ba733363a2e8a`
 - `supabase/functions/subscription-reconciliation/reconciliationCore.ts`: `704d863946f59c8744cd949c7875f07dfdf9215e8ec51291c5fe1f63c6f06043`
 - `supabase/functions/subscription-reconciliation/reconciliationCore.test.ts`: `cff4523c5cf1305f90be5889ad366582f32717804fe4d99d524cebf5c7b87ec3`
 - `supabase/functions/subscription-reconciliation/reconciliationContract.test.ts`: `1d724448169cc36cba21d0efd84d2e586a820e718bac1f025d974ea77e1c75b1`
 - `supabase/functions/_shared/verifiedAuthSessionClaims.ts`: `39db868ee1aa517c95b03102990793d52ad45079b6b18bbebb5640ee44207443`
-- `supabase/functions/catalog-search/index.ts`: `5f99ed4d6662d03f2b8946e9bc38374aae09de2c66d660833be22432329f7cd6`
+- `supabase/functions/catalog-search/index.ts`: `17a04d342b331e58d3f4bb295cc3e76db2786fea29a2e57252f02cea34b7c79a`
 - `supabase/functions/catalog-search/catalogContract.ts`: `3b51d16f5b8d5b24a9f87d2e445c28391c8f6407d39150f4085910da97f380e0`
 - `supabase/functions/catalog-search/catalogContract.test.ts`: `18adc4c4572004285afab509ab0d100daeaaa905ce5895d1783a0a792d15cc59`
-- `supabase/functions/catalog-lookup/index.ts`: `e6bf8011b1545fba24540b9c5acbb66ca51084ccee2406b01ba854279219a420`
+- `supabase/functions/catalog-lookup/index.ts`: `b486e95fe9a6ad78cadc41f0ee41a6a2c8d49c1d9f76a3c8e0b80b3378acae06`
 - `supabase/functions/catalog-lookup/catalogContract.ts`: `e205eae032c22fab88748e3f7b47a92ba65c74b0fa9f4372e03896839af45f94`
 - `supabase/functions/catalog-lookup/catalogContract.test.ts`: `5ae64b92a6baa5707bdea6e6aff7d59ef04e5138354a75e772c1d8ba7b31a6ec`
-- `supabase/functions/catalog-report/index.ts`: `880ce46ef60f12c719c20c5584d35def6de24e08dcbd9358cdb6791a67c0807f`
+- `supabase/functions/catalog-report/index.ts`: `fe0631b3297d361ff1f66b7818669af102314eb1b709b7a70f7662971730dd1e`
 - `supabase/functions/catalog-report/privacy.ts`: `9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e`
 - `supabase/functions/catalog-report/privacy.test.ts`: `db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac`
-- `supabase/functions/revenuecat-webhook/index.ts`: `8044179aa075d3789c676f266d65c1aa74a7832e4c4ce0e08a59cec38118b33f`
+- `supabase/functions/revenuecat-webhook/index.ts`: `5a8f373654768965232ee87b0aa407806d369a33e3ac7598a3d850fde480e0f6`
 - `supabase/functions/revenuecat-webhook/webhookCore.ts`: `b4e1b8b677c7d4a419ccec00f288643debd4cd810bab5ef72f58819c4734e154`
 - `supabase/functions/revenuecat-webhook/webhookCore.test.ts`: `e892bcec5deba6a27572f53b87e9acb4fea87fba3fbda134388719f3fa949390`
 - `supabase/functions/subscription-grants/deletionBarrierContract.test.ts`: `30ca9f7926bef7371a658484fd58b15c7229e650cbf622eb8f92b19af943cab2`

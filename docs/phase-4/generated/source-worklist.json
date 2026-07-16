@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-16T00:37:13.166Z",
+  "generatedAt": "2026-07-16T03:34:12.275Z",
   "purpose": "Machine-readable Phase 4 catalog source, curation, beta coverage, and operations worklist.",
   "strict": false,
-  "gitSha": "7bc82c4142062b5ddf405117958831b5ae9bd475",
+  "gitSha": "17f1452be2da1f4423266b403b78d143b677f175",
   "gitStatus": "",
   "summary": {
     "itemCount": 10,
@@ -138,20 +138,20 @@
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
           "exists": true,
-          "bytes": 10954,
-          "sha256": "e6bf8011b1545fba24540b9c5acbb66ca51084ccee2406b01ba854279219a420"
+          "bytes": 11115,
+          "sha256": "b486e95fe9a6ad78cadc41f0ee41a6a2c8d49c1d9f76a3c8e0b80b3378acae06"
         },
         {
           "path": "supabase/functions/catalog-search/index.ts",
           "exists": true,
-          "bytes": 9031,
-          "sha256": "5f99ed4d6662d03f2b8946e9bc38374aae09de2c66d660833be22432329f7cd6"
+          "bytes": 9192,
+          "sha256": "17a04d342b331e58d3f4bb295cc3e76db2786fea29a2e57252f02cea34b7c79a"
         },
         {
           "path": "supabase/functions/catalog-report/index.ts",
           "exists": true,
-          "bytes": 7233,
-          "sha256": "880ce46ef60f12c719c20c5584d35def6de24e08dcbd9358cdb6791a67c0807f"
+          "bytes": 7394,
+          "sha256": "fe0631b3297d361ff1f66b7818669af102314eb1b709b7a70f7662971730dd1e"
         }
       ]
     },
@@ -775,8 +775,8 @@
         {
           "path": "supabase/functions/catalog-report/index.ts",
           "exists": true,
-          "bytes": 7233,
-          "sha256": "880ce46ef60f12c719c20c5584d35def6de24e08dcbd9358cdb6791a67c0807f"
+          "bytes": 7394,
+          "sha256": "fe0631b3297d361ff1f66b7818669af102314eb1b709b7a70f7662971730dd1e"
         },
         {
           "path": "supabase/functions/catalog-report/privacy.ts",
@@ -986,8 +986,8 @@
         {
           "path": "supabase/functions/catalog-lookup/index.ts",
           "exists": true,
-          "bytes": 10954,
-          "sha256": "e6bf8011b1545fba24540b9c5acbb66ca51084ccee2406b01ba854279219a420"
+          "bytes": 11115,
+          "sha256": "b486e95fe9a6ad78cadc41f0ee41a6a2c8d49c1d9f76a3c8e0b80b3378acae06"
         },
         {
           "path": "supabase/functions/catalog-lookup/catalogContract.ts",
@@ -1004,8 +1004,8 @@
         {
           "path": "supabase/functions/catalog-search/index.ts",
           "exists": true,
-          "bytes": 9031,
-          "sha256": "5f99ed4d6662d03f2b8946e9bc38374aae09de2c66d660833be22432329f7cd6"
+          "bytes": 9192,
+          "sha256": "17a04d342b331e58d3f4bb295cc3e76db2786fea29a2e57252f02cea34b7c79a"
         },
         {
           "path": "supabase/functions/catalog-search/catalogContract.ts",
@@ -1078,8 +1078,8 @@
         {
           "path": "supabase/functions/catalog-report/index.ts",
           "exists": true,
-          "bytes": 7233,
-          "sha256": "880ce46ef60f12c719c20c5584d35def6de24e08dcbd9358cdb6791a67c0807f"
+          "bytes": 7394,
+          "sha256": "fe0631b3297d361ff1f66b7818669af102314eb1b709b7a70f7662971730dd1e"
         },
         {
           "path": "supabase/functions/catalog-report/privacy.ts",

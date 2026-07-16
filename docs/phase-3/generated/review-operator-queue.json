@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-16T00:37:12.241Z",
+  "generatedAt": "2026-07-16T03:34:11.169Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "7bc82c4142062b5ddf405117958831b5ae9bd475",
+  "gitSha": "17f1452be2da1f4423266b403b78d143b677f175",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
     "bytes": 134170,
-    "sha256": "91ea0a6aec592b99d7789d1bbaad60d24ee7dc1599e8d7d8b1fce617520ec149",
-    "currentSha256": "91ea0a6aec592b99d7789d1bbaad60d24ee7dc1599e8d7d8b1fce617520ec149"
+    "sha256": "e0dc5276f8c46ed8cbaaa8ca267fc5b49a83ef10b46c83bdf683d4f331257d5b",
+    "currentSha256": "e0dc5276f8c46ed8cbaaa8ca267fc5b49a83ef10b46c83bdf683d4f331257d5b"
   },
   "reviewReadiness": "external-blocked",
   "summary": {
@@ -563,7 +563,7 @@
       "requiredReviewer": "qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "85d9e040eb8531fc0ff48dad125747b1f0e0daf8f22914cfc8688386f68b17dd",
+      "reviewSnapshotSha256": "c15a3126f0dfe25ab83161d694a68ea0cfa9d134a5a91532eb41cf2bb205be60",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -694,8 +694,8 @@
         {
           "path": "supabase/functions/order-report-poll/index.ts",
           "exists": true,
-          "bytes": 5391,
-          "sha256": "5709d7128e0e151148a704a8e19d06220bd6d8959eb5f8a7071b0acc7f1f4b81"
+          "bytes": 5552,
+          "sha256": "8574b39ddfac908f1fa156b5c8e64fed8899f682563dff1fdc6981ec4e81d8ce"
         }
       ]
     },
@@ -759,7 +759,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "7f3d49fab98d5c47ff5b4b6c605a09c0b4955e1a154ee5e3d2df321bd17cb444",
+      "reviewSnapshotSha256": "f41d87b13dddbeeeea6a360476a2d31ec30fbb20d2c77f7c7c7b087e2646dac9",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -806,14 +806,14 @@
         {
           "path": "supabase/functions/account-deletion/index.ts",
           "exists": true,
-          "bytes": 1558,
-          "sha256": "b1039343476c5bf034f6c593e6933e8b08a688189ccd5964c189decb0d57cf91"
+          "bytes": 1722,
+          "sha256": "d4fd2917de31d91d010788a3c45d390de61fefd770f090ff5f1242f385b2f7f2"
         },
         {
           "path": "supabase/functions/data-export/index.ts",
           "exists": true,
-          "bytes": 22497,
-          "sha256": "3743c7a665c8f6f885bf4787a7809174874391373d488892be6367b2d2830908"
+          "bytes": 22658,
+          "sha256": "78097b7d4cbbcdd3bb4194ccb97d7fcf3217af111b9de64d72238006a23bcd94"
         },
         {
           "path": "supabase/functions/data-export/exportCore.ts",
@@ -1242,7 +1242,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "d2a89bd9eb79cc914f86b0be732330dcfec1f90b8b0afc998fa6aac5415afdfd",
+      "reviewSnapshotSha256": "0be6b1999826ff244553d834c90d773f977edb6df63a96f0f9d0203fafd8cad0",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.",
@@ -1541,8 +1541,8 @@
         {
           "path": "supabase/functions/consent-withdrawal/index.ts",
           "exists": true,
-          "bytes": 10539,
-          "sha256": "758fc421c25906db740c15e77e3a3f444dc3b598c5e44bb1ad265bdee182fb0c"
+          "bytes": 10637,
+          "sha256": "96ebbcf4dfc9f5d4d12c38871706f82ff0d4618546041acca85b804ee8631d99"
         },
         {
           "path": "supabase/functions/consent-withdrawal/healthLifecycleCore.ts",
@@ -1589,8 +1589,8 @@
         {
           "path": "supabase/functions/health-consent-worker/index.ts",
           "exists": true,
-          "bytes": 6573,
-          "sha256": "d8b819e959eaf114a130771de7d9940a7f62716e47983c781f8318fe97ec3a45"
+          "bytes": 6570,
+          "sha256": "007625709369e66ef26fe7f9ec3d5ec2846108a63e0b2e5414925bb4d4d04963"
         },
         {
           "path": "supabase/functions/health-consent-worker/workerCore.test.ts",
@@ -3141,7 +3141,7 @@
       "requiredReviewer": "privacy counsel plus technical security owner",
       "reviewer": "TBD",
       "date": "TBD",
-      "reviewSnapshotSha256": "8ee8331ecb0d91ef59411fd0dc79664efa0a8315fca5df3ca9e9150a623cc90f",
+      "reviewSnapshotSha256": "646b6fdd553e65f3de905500055e814a9e3ae8bce5034b28dc253394e4ca8d83",
       "signoffStatus": "not-applicable",
       "signoffPath": null,
       "operatorAction": "Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.",
@@ -3242,8 +3242,8 @@
         {
           "path": "supabase/functions/growth-event/index.ts",
           "exists": true,
-          "bytes": 9749,
-          "sha256": "3cba0b97b40c090b061d24009a297c846489891a37b256b1bf47bdfeb95412d1"
+          "bytes": 9910,
+          "sha256": "af59ae32fabd9310558274109db8cdd53455d09dc26074efb4758373f63a1770"
         }
       ]
     },

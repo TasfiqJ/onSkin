@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-16T00:37:12.241Z
+Generated: 2026-07-16T03:34:11.169Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 7bc82c4142062b5ddf405117958831b5ae9bd475
+Git SHA: 17f1452be2da1f4423266b403b78d143b677f175
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -256,7 +256,7 @@ Sources:
 - External owner: Founder + qualified legal counsel
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `85d9e040eb8531fc0ff48dad125747b1f0e0daf8f22914cfc8688386f68b17dd`
+- Review snapshot SHA-256: `c15a3126f0dfe25ab83161d694a68ea0cfa9d134a5a91532eb41cf2bb205be60`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -284,7 +284,7 @@ Sources:
 - `apps/mobile/src/features/commerce/store.ts` - 2567 bytes - sha256 `932dae44db15aaf7456a997ac59c10d4fc1e5dc319241567ec6cd13fdbddba08`
 - `apps/mobile/src/features/commerce/useCommerce.ts` - 1609 bytes - sha256 `a542c1503fe78f280f0d98e369e49a4d35209a1f261ef138b95526225072135c`
 - `apps/mobile/src/features/commerce/WhereToBuy.tsx` - 9240 bytes - sha256 `928812bf1f63a3af964dba397d94e52599474a9677b211f29202036939dccc90`
-- `supabase/functions/order-report-poll/index.ts` - 5391 bytes - sha256 `5709d7128e0e151148a704a8e19d06220bd6d8959eb5f8a7071b0acc7f1f4b81`
+- `supabase/functions/order-report-poll/index.ts` - 5552 bytes - sha256 `8574b39ddfac908f1fa156b5c8e64fed8899f682563dff1fdc6981ec4e81d8ce`
 
 ### P0 - Legal/regulatory - Store metadata and review notes
 
@@ -313,7 +313,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `7f3d49fab98d5c47ff5b4b6c605a09c0b4955e1a154ee5e3d2df321bd17cb444`
+- Review snapshot SHA-256: `f41d87b13dddbeeeea6a360476a2d31ec30fbb20d2c77f7c7c7b087e2646dac9`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -327,8 +327,8 @@ Sources:
 - `apps/mobile/src/lib/storage/privateKV.ts` - 26761 bytes - sha256 `8d81f1091e59e824f2db61a2699defe04d48330b77ac0720264fe5d80cad8c69`
 - `apps/mobile/src/lib/storage/privateKV.test.ts` - 31043 bytes - sha256 `aed5c6cbd8fcd6faa8db3bbe469d0b509d6cc95822c8e0b7d254171a77d6b8ba`
 - `apps/mobile/src/lib/legal/policyLinks.ts` - 722 bytes - sha256 `0fe9cf269e6b5e48119771f7b111d1620c095ffe35bb6ac56f63c2cd2ec1c863`
-- `supabase/functions/account-deletion/index.ts` - 1558 bytes - sha256 `b1039343476c5bf034f6c593e6933e8b08a688189ccd5964c189decb0d57cf91`
-- `supabase/functions/data-export/index.ts` - 22497 bytes - sha256 `3743c7a665c8f6f885bf4787a7809174874391373d488892be6367b2d2830908`
+- `supabase/functions/account-deletion/index.ts` - 1722 bytes - sha256 `d4fd2917de31d91d010788a3c45d390de61fefd770f090ff5f1242f385b2f7f2`
+- `supabase/functions/data-export/index.ts` - 22658 bytes - sha256 `78097b7d4cbbcdd3bb4194ccb97d7fcf3217af111b9de64d72238006a23bcd94`
 - `supabase/functions/data-export/exportCore.ts` - 16251 bytes - sha256 `ef8828ff0f29dff17cebfca4064860ec2549a249023d9621385d7bce70a9a9bd`
 - `supabase/functions/data-export/exportCore.test.ts` - 12978 bytes - sha256 `f952985bb4a7d3679c5d4752896c72e25540f002ddb0a49ba1c510fe5c335b3b`
 - `supabase/functions/data-export/exportRegistry.ts` - 9516 bytes - sha256 `2535337af91faa1150aa41fb2d1608385eef6cb0787682399ec0475d7cc6fb41`
@@ -430,7 +430,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `d2a89bd9eb79cc914f86b0be732330dcfec1f90b8b0afc998fa6aac5415afdfd`
+- Review snapshot SHA-256: `0be6b1999826ff244553d834c90d773f977edb6df63a96f0f9d0203fafd8cad0`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -486,7 +486,7 @@ Sources:
 - `apps/mobile/src/lib/consent/withdrawal.test.ts` - 13554 bytes - sha256 `a8756f43ce2e8cd74c32d0cb1432e58844f0dcbe1f506549f015e4f985838df6`
 - `apps/mobile/src/lib/consent/withdrawal.ts` - 10772 bytes - sha256 `b7d21990c41149b67ffc4654fc1aa6a0a9d730d5d762a0a3a3508389635c229f`
 - `apps/mobile/src/features/settings/actions.ts` - 21753 bytes - sha256 `d43c040013c0a79c7a91c329aa68a98d9f40406151fe9ca7b5f6d7f3b563dc91`
-- `supabase/functions/consent-withdrawal/index.ts` - 10539 bytes - sha256 `758fc421c25906db740c15e77e3a3f444dc3b598c5e44bb1ad265bdee182fb0c`
+- `supabase/functions/consent-withdrawal/index.ts` - 10637 bytes - sha256 `96ebbcf4dfc9f5d4d12c38871706f82ff0d4618546041acca85b804ee8631d99`
 - `supabase/functions/consent-withdrawal/healthLifecycleCore.ts` - 20351 bytes - sha256 `25d76ec364824bbff6dc69346471ac87bcfcbc5a0de78db9e75e45ffa0e6b3af`
 - `supabase/functions/health-consent-worker/combinedWorkerCore.test.ts` - 2190 bytes - sha256 `653fe3dce6575ba1e3814dc8f2eb56536b96761ae5e4521110904b3ed5f0d89b`
 - `supabase/functions/health-consent-worker/combinedWorkerCore.ts` - 2121 bytes - sha256 `280379691c708b09a2e229df23a811faf36949aa37163961a7c7977621829a3b`
@@ -494,7 +494,7 @@ Sources:
 - `supabase/functions/health-consent-worker/dependentWorkerCore.ts` - 16907 bytes - sha256 `22c67e77b0817ccbf33e4795a8ed7aabfe1d2903cf69d486a2e8552dd8ad86d6`
 - `supabase/functions/health-consent-worker/httpHandler.test.ts` - 4400 bytes - sha256 `c59cfe60a470b03481f57d6db10b42b6d49c517a000e3a0c16f4454c84e27f2c`
 - `supabase/functions/health-consent-worker/httpHandler.ts` - 3424 bytes - sha256 `733fa7d440cd2e57474e19f36bfac1605afe22714ecb3d8caf732d6ae1cfb1fe`
-- `supabase/functions/health-consent-worker/index.ts` - 6573 bytes - sha256 `d8b819e959eaf114a130771de7d9940a7f62716e47983c781f8318fe97ec3a45`
+- `supabase/functions/health-consent-worker/index.ts` - 6570 bytes - sha256 `007625709369e66ef26fe7f9ec3d5ec2846108a63e0b2e5414925bb4d4d04963`
 - `supabase/functions/health-consent-worker/workerCore.test.ts` - 13267 bytes - sha256 `028b66b1cfd00f38b80afa5cda514e0251716eabfe50b5f4329698ce37a32f27`
 - `supabase/functions/health-consent-worker/workerCore.ts` - 14560 bytes - sha256 `c2dc458dfffc1d410833c1c73284fc3d45750df1a7cd38364e6b798c5144790c`
 - `supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql` - 238933 bytes - sha256 `8bee91bcaedd3909b2f033ddbce47f1960e366fa30d6442a10b889941f3ad524`
@@ -1002,7 +1002,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `8ee8331ecb0d91ef59411fd0dc79664efa0a8315fca5df3ca9e9150a623cc90f`
+- Review snapshot SHA-256: `646b6fdd553e65f3de905500055e814a9e3ae8bce5034b28dc253394e4ca8d83`
 - Detached signoff: not-applicable
 - Operator action: Send this packet to the required reviewer and capture name, credential, date, decision, conditions, and exact source hashes.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -1025,7 +1025,7 @@ Sources:
 - `apps/mobile/src/lib/observability/sentry.test.ts` - 4915 bytes - sha256 `89b25d7a9934a167c8dd57d603ce94a9f5c56753c976af00eb8b442c526232af`
 - `apps/mobile/src/lib/observability/sentry.ts` - 3603 bytes - sha256 `591ffcd81e9f012aaeacc4bc55c769d001d657b626b10f9a2a6fa2668e9aa2ed`
 - `apps/mobile/src/lib/observability/startupInstrumentation.test.ts` - 922 bytes - sha256 `48cfcaf78e54fd4d8c25c8f6af7e0999d18537ec8f717ce5a736cb3ebca6de37`
-- `supabase/functions/growth-event/index.ts` - 9749 bytes - sha256 `3cba0b97b40c090b061d24009a297c846489891a37b256b1bf47bdfeb95412d1`
+- `supabase/functions/growth-event/index.ts` - 9910 bytes - sha256 `af59ae32fabd9310558274109db8cdd53455d09dc26074efb4758373f63a1770`
 
 ### P1 - Privacy/security - Photo privacy and local storage
 

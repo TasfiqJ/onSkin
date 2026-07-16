@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-16T00:37:13.605Z
+Generated: 2026-07-16T03:34:12.748Z
 
-Git SHA: 7bc82c4142062b5ddf405117958831b5ae9bd475
+Git SHA: 17f1452be2da1f4423266b403b78d143b677f175
 
 Git status: clean
 
@@ -30,7 +30,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-| package.json | present | 26529 | 7efcdf7c170856b835cbb6dc08d5b6f64ef47f751035c1be7fc92957863771a5 |
+| package.json | present | 27145 | ffa939c5bebc307cd3fb47a3e9a2c1b42bca299a742abd9af280ad995cc12c8f |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
 | scripts/phase4/catalog-qa-report.mjs | present | 6961 | 86168235bfe785f680fdbdca89d6640fe2674627a1afdaf27669b0b24d750596 |
@@ -43,7 +43,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | scripts/phase4/check-source-env.mjs | present | 2989 | ad8eaa253c3dd97fd6ea09a1cdbf11fb1aec96212a90a610e690a74981989a1a |
 | scripts/phase4/check-source-env-smoke.mjs | present | 3933 | 462b2461ca7948033e90e2b1183eda50b4df658393863472680b7d06d4906ede |
 | scripts/phase4/catalog-qa-report-smoke.mjs | present | 5504 | 43e8b217e0a8276e0299f2477ddb3b4ab9536521d745514be2a48e68e7bf97a1 |
-| supabase/functions/catalog-report/index.ts | present | 7233 | 880ce46ef60f12c719c20c5584d35def6de24e08dcbd9358cdb6791a67c0807f |
+| supabase/functions/catalog-report/index.ts | present | 7394 | fe0631b3297d361ff1f66b7818669af102314eb1b709b7a70f7662971730dd1e |
 | supabase/functions/catalog-report/privacy.ts | present | 3504 | 9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e |
 | supabase/functions/catalog-report/privacy.test.ts | present | 4009 | db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac |
 | supabase/functions/deno.lock | present | 2282 | 0f8de63ed60182b56865cfa47c666866b631ed4681c79345ec31a720565d1a3a |
@@ -52,7 +52,7 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | docs/phase-4/beta-coverage-report.md | present | 2125 | d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2021 | 49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534 |
 | docs/phase-4/catalog-source-memo-open-beauty-facts.md | present | 4263 | 9b14b91a64c721d3f2c3a172c38f31afe881282ca50d96f1ecdef2e4e5c13626 |
-| docs/phase-4/generated/source-worklist.json | present | 46713 | 9f29c596c6699f18c33000feca2e558969e1eec6158da731d0767681b0872822 |
-| docs/phase-4/generated/source-worklist.md | present | 28928 | 462f2e4d358be2f1e00858af63a6ba610dafb88a94270480c29a15df6ad683f8 |
+| docs/phase-4/generated/source-worklist.json | present | 46713 | c41e6897180c939ba280536b331fabb7cb7830793b7e43c2b38fa6bf6b74b008 |
+| docs/phase-4/generated/source-worklist.md | present | 28928 | c3f8cb0ff7e2b6f458e8b944dad139ab39c143b40ca8a744890b7860ab124d72 |
 | docs/phase-4/odbl-compliance-memo.md | present | 2019 | 0fe9bc07e3c4d34129ac8f8f2ba410a64e6caa0d77a3b7994198e0b4d9e18e69 |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |

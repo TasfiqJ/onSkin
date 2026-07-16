@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T00:37:14.528Z",
+  "generatedAt": "2026-07-16T03:34:13.925Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,7 +73,7 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "7bc82c4142062b5ddf405117958831b5ae9bd475",
+  "gitSha": "17f1452be2da1f4423266b403b78d143b677f175",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -221,8 +221,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 26529,
-      "sha256": "7efcdf7c170856b835cbb6dc08d5b6f64ef47f751035c1be7fc92957863771a5"
+      "bytes": 27145,
+      "sha256": "ffa939c5bebc307cd3fb47a3e9a2c1b42bca299a742abd9af280ad995cc12c8f"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
