@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T05:53:06.699Z",
+  "generatedAt": "2026-07-16T07:28:44.425Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,7 +73,7 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "97855f742b3f63417c776e49fd38320e050a8778",
+  "gitSha": "19f20df3ad869f00f194f317285e4e5174947845",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -153,11 +153,46 @@
       "required": true,
       "passed": false
     },
+    "PHASE5_WIDGET_ARCHIVE_QA_PASS": {
+      "label": "signed archive extension, App Group entitlement, target privacy manifest, and capability inspection",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_WIDGET_DEVICE_QA_PASS": {
+      "label": "physical-iPhone widget families, cold-start deep links, process death, and accessibility",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS": {
+      "label": "atomic widget interaction plus lock, expiry, sign-out, account-switch, and consent-withdrawal cleanup",
+      "required": true,
+      "passed": false
+    },
+    "PHASE5_LIVE_ACTIVITY_QA_PASS": {
+      "label": "physical-iPhone Live Activity stale, end, process-death, restart, and locked-state behavior",
+      "required": true,
+      "passed": false
+    },
     "PHASE5_NATIVE_OCR_QA_PASS": {
       "label": "native OCR real-label text recognition",
       "required": false,
       "passed": false
     }
+  },
+  "widgetLifecycleEvidence": {
+    "path": null,
+    "status": "blocked",
+    "sha256": null,
+    "artifacts": [],
+    "summary": {
+      "artifactCount": 0,
+      "baseArtifactCount": 0,
+      "requiredBaseArtifactCount": 11,
+      "minimumProofAttachmentCount": 4,
+      "proofAttachmentCount": 0,
+      "scenarioCount": 0
+    },
+    "binding": null
   },
   "nativeOcr": {
     "enabledInAnyBuild": false,
@@ -215,14 +250,36 @@
     {
       "surface": "Performance",
       "scenario": "predeclared thresholds plus supported-device startup, intake, barcode, routine, and encrypted-photo load/memory evidence"
+    },
+    {
+      "surface": "Widget archive",
+      "scenario": "macOS archive contains the signed extension, expected App Group entitlement, target privacy manifest, final identities, and no unapproved capabilities"
+    },
+    {
+      "surface": "Widget families and deep links",
+      "scenario": "small, medium, inline, and rectangular families render and redact correctly; final-brand Today deep links survive cold start and recovery"
+    },
+    {
+      "surface": "Widget interaction and privacy lifecycle",
+      "scenario": "concurrent/repeated check-offs, app killed/relaunched, lock state, stale/unknown tokens, sign-out, account switch, consent withdrawal, expiry, and corrupt shared bytes"
+    },
+    {
+      "surface": "Live Activity lifecycle",
+      "scenario": "start, update, stale, complete, explicit end, app process death, device restart, lock-screen redaction, and disabled-state cleanup"
     }
   ],
   "files": [
     {
+      "path": ".env.example",
+      "exists": true,
+      "bytes": 22688,
+      "sha256": "1a54949355754f897407c1ae1452d759f435be21a55096288639e3d676523508"
+    },
+    {
       "path": "package.json",
       "exists": true,
-      "bytes": 27392,
-      "sha256": "c345ff12fa6b984db00861701fda8f32ed56127de09f0a62cbd8dc86997bfbf7"
+      "bytes": 28671,
+      "sha256": "62816a283a697651aae19a3b17796d0810a1850ffa30e73263c9de9eeec58a3d"
     },
     {
       "path": "package-lock.json",
@@ -277,6 +334,24 @@
       "exists": true,
       "bytes": 3469,
       "sha256": "89197d975de81cc9c1a1e808a0ede821ee126bd0c8d9867a7e537897e75df529"
+    },
+    {
+      "path": "apps/mobile/src/lib/appConfig.test.ts",
+      "exists": true,
+      "bytes": 32573,
+      "sha256": "5d4e3a81efa8c971a8990a55eaf84917429beea8da509ae5d4294f3a4733c9eb"
+    },
+    {
+      "path": "apps/mobile/src/lib/launch/phase7.ts",
+      "exists": true,
+      "bytes": 6338,
+      "sha256": "9969f0d98da0668ad54ff65c9414c2b0b86f7a85ccff1645040369382cac6b01"
+    },
+    {
+      "path": "apps/mobile/src/lib/launch/phase7.test.ts",
+      "exists": true,
+      "bytes": 8407,
+      "sha256": "2d633e139d356fdce0e6b966e1675a017fcc4b4a0ddbc5679149fc942331681f"
     },
     {
       "path": "apps/mobile/src/app/(tabs)/progress.tsx",
@@ -437,14 +512,14 @@
     {
       "path": "apps/mobile/src/features/today/completionsStore.ts",
       "exists": true,
-      "bytes": 11109,
-      "sha256": "bd337ef9cc928e1841048720bea944a7264f7a58780dc8e6e1fd05b3c3bcd1bb"
+      "bytes": 11485,
+      "sha256": "107d01dff838d426aa7ade51617133fa8ede21482e348871fe8ce5063b1f09cc"
     },
     {
       "path": "apps/mobile/src/features/today/completionsStore.test.ts",
       "exists": true,
-      "bytes": 11979,
-      "sha256": "1a1aefc82beaca2d1d98be0f603de8ce554e74a0171bd73093658271c442b512"
+      "bytes": 14015,
+      "sha256": "67870a090332a812bfc72dcc0edd535eff5d42b05e2ce2aab99b1e7d2d4aa8bd"
     },
     {
       "path": "apps/mobile/src/features/today/routineProjection.ts",
@@ -481,6 +556,30 @@
       "exists": true,
       "bytes": 10669,
       "sha256": "a46aaf08ac5010c943daed7aacf2c59bb926e12aec7025bf12ce8711d2858754"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/controllerCore.ts",
+      "exists": true,
+      "bytes": 12161,
+      "sha256": "d34506835b819bdda1068a3fd5079ae15b541235b05cd536100dd86e86c9bc46"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/controllerCore.test.ts",
+      "exists": true,
+      "bytes": 17360,
+      "sha256": "61a640390b41c77b667e0572d221ea853231b8a20425fc344179189a01387edc"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/runtimeGate.ts",
+      "exists": true,
+      "bytes": 1453,
+      "sha256": "3434acaae49709276156cb6ea1a15d2803f17a85015689435b779f752c89504c"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/runtimeGate.test.ts",
+      "exists": true,
+      "bytes": 2552,
+      "sha256": "1aa285290a6d54516bfa6d411e1e890a2a896e019bd57b6412b826600c505315"
     },
     {
       "path": "apps/mobile/src/features/widgets/TodayWidget.ios.tsx",
@@ -731,14 +830,14 @@
     {
       "path": "scripts/phase5/build-device-qa-packet.mjs",
       "exists": true,
-      "bytes": 19026,
-      "sha256": "22b435f603af349989b208983922d2f5b1426084ea8daa2a0eaabfcc664dfe0c"
+      "bytes": 26881,
+      "sha256": "2983d6fa95f11679b6064e77319535e638e28583ceee30659fbc1c2da458eeba"
     },
     {
       "path": "scripts/phase5/check-native-config.mjs",
       "exists": true,
-      "bytes": 18291,
-      "sha256": "4176a9a526a55f3cde82e128ef865425c13f1c2f56d07c87b3e68e23e41024cd"
+      "bytes": 25775,
+      "sha256": "69a2dd4e612e5540495e067ed2d74afe9076b42c407981c6821f6d0d914d4794"
     },
     {
       "path": "scripts/phase5/ios-extension-contract.mjs",
@@ -759,6 +858,24 @@
       "sha256": "6816ac68ef2dd05b377db940f0983c04b2be36b30f19015082a6c422ec5c0bf8"
     },
     {
+      "path": "scripts/phase5/widget-lifecycle-evidence-contract.mjs",
+      "exists": true,
+      "bytes": 33906,
+      "sha256": "445c1e68ca2e681f99d1bb0fef91eb80dc90eac8fc3e31bdf9b9955c0081b9ee"
+    },
+    {
+      "path": "scripts/phase5/check-widget-lifecycle-evidence.mjs",
+      "exists": true,
+      "bytes": 6419,
+      "sha256": "abce1293471ae30f2e7435f8bee6178816f9dad8dd5d2d50a61b19517bb67d1c"
+    },
+    {
+      "path": "scripts/phase5/widget-lifecycle-evidence-smoke.mjs",
+      "exists": true,
+      "bytes": 20506,
+      "sha256": "e000bc0d50774b4d06a28458345b3301fe29e6ed682916a3f71df44dcf9bcd95"
+    },
+    {
       "path": "scripts/phase5/resolve-ios-extension-config.mjs",
       "exists": true,
       "bytes": 1012,
@@ -773,8 +890,8 @@
     {
       "path": "scripts/phase5/device-qa-packet-smoke.mjs",
       "exists": true,
-      "bytes": 11087,
-      "sha256": "23eb183c424391c61ea78d72e5139a2577344c59c5f7b19ccc01bad174661dc6"
+      "bytes": 23670,
+      "sha256": "3055f788ab400bb93eb3239c49418ecc2a2cc9b9138bd02bbd76f384a0170f85"
     },
     {
       "path": "scripts/phase5/performance-evidence-contract.mjs",
@@ -849,16 +966,22 @@
       "sha256": "ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8"
     },
     {
+      "path": "docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md",
+      "exists": true,
+      "bytes": 8021,
+      "sha256": "d19dc43ee8e8b5a4bbd0cf4ba08759ca7de5179044c323c15fd8ae8d45f43be2"
+    },
+    {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 48121,
-      "sha256": "820debf73a4459e6aac652c01cdb1035ea79a52caf1ad732794df5b67e3e041b"
+      "sha256": "fa4ee53995afcbc714c783ebfccc0864acd2b26899599e7eedfa25d6860a3ecf"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 19687,
-      "sha256": "bd4cb7b4a57b1331a37040a69068a1af5a16a1d666c22fdddc41b17943c566e6"
+      "sha256": "fa2d0447ea6af3ab06498db5d22ecfda7fc0e45841075cc7c230eee6d7229ef8"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
@@ -867,10 +990,16 @@
       "sha256": "9446a6f631caf4ed18d56db6d3fc9e487f51b3df65e826dba520674a251775ec"
     },
     {
+      "path": "docs/phase-5/widget-lifecycle-evidence.template.json",
+      "exists": true,
+      "bytes": 1817,
+      "sha256": "2e418fa8ded0e4b1419183c713015fcf8d08cdb40ed7befb757e81b737972c80"
+    },
+    {
       "path": "docs/phase-5/device-qa-checklist.md",
       "exists": true,
-      "bytes": 9129,
-      "sha256": "c4a71d7005ea50a24a2775fc2b00c4b474ef18f44224a1f061b2a5281d8eb98f"
+      "bytes": 11787,
+      "sha256": "1b48dc382b7360f013a854949869897e59b7bff9e22d81bc353c8d2add12db13"
     },
     {
       "path": "docs/phase-5/performance-evidence-runbook.md",
@@ -887,11 +1016,12 @@
     {
       "path": "docs/phase-5/phase-5-exit-review.md",
       "exists": true,
-      "bytes": 6749,
-      "sha256": "ac9a17505aa11ac76ff825533aa6e4bb1b6318298db37b2a4087c57649d7323b"
+      "bytes": 7980,
+      "sha256": "d024dbbb9fb2d58d34f846e1f1fba7e276ee05ca0e0500681480e93c08181dba"
     }
   ],
   "blockers": [
+    "Missing PHASE5_WIDGET_LIFECYCLE_EVIDENCE_PATH; widget booleans do not substitute for artifact-bound archive/device/lifecycle evidence.",
     "Missing PHASE5_IOS_BUILD_ID.",
     "Missing PHASE5_IOS_DEVICE.",
     "Missing PHASE5_QA_SIGNOFF=true.",
@@ -908,7 +1038,11 @@
     "Missing PHASE5_REVENUECAT_NATIVE_QA_PASS=true (RevenueCat native configure, offering, purchase, and restore smoke).",
     "Missing PHASE5_SENTRY_NATIVE_QA_PASS=true (Sentry native crash/source-map smoke).",
     "Missing PHASE5_SUPABASE_CATALOG_NATIVE_QA_PASS=true (native Supabase catalog lookup and no-match/error fallback).",
-    "Missing PHASE5_ACCESSIBILITY_QA_PASS=true (VoiceOver labels, traversal, and 44 pt controls)."
+    "Missing PHASE5_ACCESSIBILITY_QA_PASS=true (VoiceOver labels, traversal, and 44 pt controls).",
+    "Missing PHASE5_WIDGET_ARCHIVE_QA_PASS=true (signed archive extension, App Group entitlement, target privacy manifest, and capability inspection).",
+    "Missing PHASE5_WIDGET_DEVICE_QA_PASS=true (physical-iPhone widget families, cold-start deep links, process death, and accessibility).",
+    "Missing PHASE5_WIDGET_INTERACTION_PRIVACY_QA_PASS=true (atomic widget interaction plus lock, expiry, sign-out, account-switch, and consent-withdrawal cleanup).",
+    "Missing PHASE5_LIVE_ACTIVITY_QA_PASS=true (physical-iPhone Live Activity stale, end, process-death, restart, and locked-state behavior)."
   ],
   "warnings": []
 }
