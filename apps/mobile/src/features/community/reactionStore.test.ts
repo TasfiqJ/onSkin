@@ -6,6 +6,9 @@ import {
   COMMUNITY_REACTIONS_INVALID,
   COMMUNITY_REACTIONS_UNAVAILABLE,
   COMMUNITY_REACTIONS_UNSUPPORTED_VERSION,
+  MAX_COMMUNITY_REACTION_IDS,
+  MAX_COMMUNITY_REACTION_ID_CHARS,
+  MAX_COMMUNITY_REACTIONS_RECORD_CHARS,
   isNoteHelpful,
   readCommunityReactions,
   setNoteHelpful,
@@ -17,6 +20,7 @@ const mocks = vi.hoisted(() => ({
   readStatus: null as null | 'unavailable' | 'corrupt' | 'unsupported_version',
   updateFailure: null as Error | null,
   updateFailureAfterCommit: null as Error | null,
+  persistedWrites: 0,
 }));
 
 vi.mock('@/lib/storage/privateKV', () => ({
@@ -45,9 +49,13 @@ vi.mock('@/lib/storage/privateKV', () => ({
       await previous;
       try {
         if (mocks.updateFailure) throw mocks.updateFailure;
-        const next = updater(mocks.storage.get(key) ?? null);
-        if (next === null) mocks.storage.delete(key);
-        else mocks.storage.set(key, next);
+        const current = mocks.storage.get(key) ?? null;
+        const next = updater(current);
+        if (next !== current) {
+          mocks.persistedWrites += 1;
+          if (next === null) mocks.storage.delete(key);
+          else mocks.storage.set(key, next);
+        }
         if (mocks.updateFailureAfterCommit) throw mocks.updateFailureAfterCommit;
       } finally {
         release();
@@ -69,6 +77,7 @@ describe('community reaction store', () => {
     mocks.readStatus = null;
     mocks.updateFailure = null;
     mocks.updateFailureAfterCommit = null;
+    mocks.persistedWrites = 0;
     vi.clearAllMocks();
   });
 
@@ -106,7 +115,7 @@ describe('community reaction store', () => {
 
     await expect(readCommunityReactions()).resolves.toEqual({ status: 'corrupt', noteIds: null });
     await expect(isNoteHelpful('note-a')).rejects.toThrow(COMMUNITY_REACTIONS_INVALID);
-    await expect(setNoteHelpful('note-a', true)).rejects.toThrow('PRIVATE_STRING_SET_INVALID');
+    await expect(setNoteHelpful('note-a', true)).rejects.toThrow(COMMUNITY_REACTIONS_INVALID);
 
     expect(mocks.storage.get(KEY)).toBe(original);
   });
@@ -121,7 +130,7 @@ describe('community reaction store', () => {
     });
     await expect(isNoteHelpful('note-a')).rejects.toThrow(COMMUNITY_REACTIONS_UNSUPPORTED_VERSION);
     await expect(setNoteHelpful('note-a', true)).rejects.toThrow(
-      'PRIVATE_STRING_SET_UNSUPPORTED_VERSION',
+      COMMUNITY_REACTIONS_UNSUPPORTED_VERSION,
     );
 
     expect(mocks.storage.get(KEY)).toBe(original);
@@ -137,6 +146,15 @@ describe('community reaction store', () => {
       noteIds: null,
     });
     await expect(isNoteHelpful('note-a')).rejects.toThrow(COMMUNITY_REACTIONS_UNAVAILABLE);
+  });
+
+  it('maps a thrown private read to unavailable instead of an empty set', async () => {
+    vi.mocked(privateKV.readPrivateItem).mockRejectedValueOnce(new Error('NATIVE_READ_FAILED'));
+
+    await expect(readCommunityReactions()).resolves.toEqual({
+      status: 'unavailable',
+      noteIds: null,
+    });
   });
 
   it('forwards private envelope corruption and future-version status', async () => {
@@ -164,7 +182,7 @@ describe('community reaction store', () => {
     mocks.storage.set(KEY, original);
 
     await expect(readCommunityReactions()).resolves.toEqual({ status: 'corrupt', noteIds: null });
-    await expect(setNoteHelpful('note-c', true)).rejects.toThrow('PRIVATE_STRING_SET_INVALID');
+    await expect(setNoteHelpful('note-c', true)).rejects.toThrow(COMMUNITY_REACTIONS_INVALID);
 
     expect(mocks.storage.get(KEY)).toBe(original);
   });
@@ -177,6 +195,79 @@ describe('community reaction store', () => {
       version: 1,
       values: ['note-a'],
     });
+    expect(mocks.persistedWrites).toBe(1);
+    expect(privateKV.updatePrivateItem).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects oversized ids before private storage I/O', async () => {
+    const oversizedId = 'x'.repeat(MAX_COMMUNITY_REACTION_ID_CHARS + 1);
+
+    await expect(setNoteHelpful(oversizedId, true)).rejects.toThrow(
+      COMMUNITY_REACTIONS_INVALID,
+    );
+    await expect(isNoteHelpful(oversizedId)).rejects.toThrow(COMMUNITY_REACTIONS_INVALID);
+
+    expect(privateKV.updatePrivateItem).not.toHaveBeenCalled();
+    expect(privateKV.readPrivateItem).not.toHaveBeenCalled();
+    expect(mocks.persistedWrites).toBe(0);
+  });
+
+  it('preserves oversized record bytes as corruption', async () => {
+    const original = 'x'.repeat(MAX_COMMUNITY_REACTIONS_RECORD_CHARS + 1);
+    mocks.storage.set(KEY, original);
+
+    await expect(readCommunityReactions()).resolves.toEqual({ status: 'corrupt', noteIds: null });
+    await expect(setNoteHelpful('note-a', true)).rejects.toThrow(COMMUNITY_REACTIONS_INVALID);
+
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.persistedWrites).toBe(0);
+  });
+
+  it('preserves a full bounded set instead of evicting an older reaction', async () => {
+    const noteIds = Array.from(
+      { length: MAX_COMMUNITY_REACTION_IDS },
+      (_, index) => `note-${index}`,
+    );
+    const original = JSON.stringify({ version: 1, values: noteIds });
+    mocks.storage.set(KEY, original);
+
+    await expect(setNoteHelpful('note-over-limit', true)).rejects.toThrow(
+      COMMUNITY_REACTIONS_INVALID,
+    );
+
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.persistedWrites).toBe(0);
+  });
+
+  it('classifies an over-limit collection as corrupt without rewriting it', async () => {
+    const original = JSON.stringify({
+      version: 1,
+      values: Array.from(
+        { length: MAX_COMMUNITY_REACTION_IDS + 1 },
+        (_, index) => `note-${index}`,
+      ),
+    });
+    mocks.storage.set(KEY, original);
+
+    await expect(readCommunityReactions()).resolves.toEqual({ status: 'corrupt', noteIds: null });
+    await expect(setNoteHelpful('note-a', false)).rejects.toThrow(COMMUNITY_REACTIONS_INVALID);
+
+    expect(mocks.storage.get(KEY)).toBe(original);
+    expect(mocks.persistedWrites).toBe(0);
+  });
+
+  it('performs zero durable writes for identical current and legacy desired states', async () => {
+    const current = JSON.stringify({ version: 1, values: ['note-a'] });
+    mocks.storage.set(KEY, current);
+    await expect(setNoteHelpful('note-a', true)).resolves.toBe(true);
+    expect(mocks.storage.get(KEY)).toBe(current);
+    expect(mocks.persistedWrites).toBe(0);
+
+    const legacy = JSON.stringify(['note-a']);
+    mocks.storage.set(KEY, legacy);
+    await expect(setNoteHelpful('note-a', true)).resolves.toBe(true);
+    expect(mocks.storage.get(KEY)).toBe(legacy);
+    expect(mocks.persistedWrites).toBe(0);
   });
 
   it('serializes simultaneous desired-state writes without losing an update', async () => {
@@ -191,6 +282,20 @@ describe('community reaction store', () => {
       version: 1,
       values: ['note-a', 'note-b', 'note-c'],
     });
+  });
+
+  it('retains all 100 simultaneous distinct reaction writes', async () => {
+    const noteIds = Array.from({ length: 100 }, (_, index) => `note-${index}`);
+
+    await expect(Promise.all(noteIds.map((noteId) => setNoteHelpful(noteId, true)))).resolves.toEqual(
+      Array.from({ length: 100 }, () => true),
+    );
+
+    expect(JSON.parse(mocks.storage.get(KEY) ?? '{}')).toEqual({
+      version: 1,
+      values: noteIds,
+    });
+    expect(mocks.persistedWrites).toBe(100);
   });
 
   it('rejects a failed desired-state write without publishing the opposite durable state', async () => {
@@ -220,5 +325,6 @@ describe('community reaction store', () => {
       version: 1,
       values: ['note-a'],
     });
+    expect(mocks.persistedWrites).toBe(1);
   });
 });
