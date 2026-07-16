@@ -647,7 +647,12 @@ function gitStatusLinePaths(line) {
 export function gitStatusExcludingPaths(excludedPaths = []) {
   const excluded = new Set(excludedPaths.map(normalizeRepoPath));
 
-  return command('git', ['status', '--short'])
+  return command('git', [
+    'status',
+    '--porcelain=v1',
+    '--untracked-files=all',
+    '--ignore-submodules=none',
+  ])
     .split(/\r?\n/)
     .map((line) => line.trimEnd())
     .filter(Boolean)

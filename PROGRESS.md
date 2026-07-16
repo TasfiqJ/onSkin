@@ -6,6 +6,46 @@ See [DECISIONS.md](DECISIONS.md) for implementation choices and
 
 ## 2026-07-16
 
+### Phase 6 durable RevenueCat deletion contract refresh
+
+Replaced the stale Phase 6 source assertion that searched the account-deletion
+entrypoint for the removed RevenueCat V1 subscriber DELETE. A separately tested
+contract now binds the active entrypoint through the durable work lane and V2
+executor to the exact project/customer DELETE builder. Strict production checks
+require the bounded `REVENUECAT_PROJECT_ID` and `REVENUECAT_V2_SECRET_API_KEY`
+used by that path while retaining `REVENUECAT_SECRET_API_KEY` for authenticated
+legacy V1 reconciliation. Their syntax checks are not treated as proof of
+provider access: strict completion additionally requires a non-secret
+attestation plus a hashed redacted artifact that cross-binds the exact
+production project, SHA-256 key binding fingerprint, permissions, observations,
+named reviewer, and disposable-customer exercise. These identifiers and records
+are explicitly not treated as independent proof of access.
+
+The Phase 6 QA packet now hashes the root/mobile build manifests, every declared
+payment/entitlement/deletion migration, the full payment-root TypeScript/TSX
+dependency and sibling-test closure, and the full transitive durable-deletion
+runtime/test closure. The four reviewed deletion source modules are additionally
+bound to exact canonical SHA-256 pins before AST invariants run. Strict packet
+mode fails closed on dirty, unavailable, or noncanonical Git provenance; forces
+all untracked/submodule status regardless of local Git config; proves each input
+is committed at and byte-matches HEAD; rejects tracked secret `.env*` files; and
+excludes only its own two outputs.
+
+Production server credentials are accepted only from protected runtime secret
+storage, local untracked `.env`, or the invoking process and must meet bounded
+high-entropy formats. Canonical duplicate-free redacted evidence cross-binds
+separate legacy V1 and V2 key fingerprints plus the exact project, permissions,
+V2 read/delete/absence observations, legacy V1 CustomerInfo 200, named reviewer,
+and current timestamp. Embedded/configured secrets, tainted reviewer fields,
+uncommitted artifacts, and bytes differing from HEAD fail closed. The runbook
+and checklist document these controls and treat Android evidence as not
+applicable under the iOS-only launch contract.
+
+The source, Git-provenance, and access-evidence contracts pass 71/71, the Phase
+6 smoke passes 25/25, the focused deletion suite passes 68/68, and the complete
+account-deletion suite passes 222/222. These are local source-contract results,
+not live RevenueCat, StoreKit, physical-device, legal, or App Store evidence.
+
 ### IOS-09 deterministic iOS privacy source checkpoint
 
 Added a pinned, fail-closed audit of the installed iOS npm dependency source

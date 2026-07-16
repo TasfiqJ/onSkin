@@ -4,18 +4,30 @@ import { resolve } from 'node:path';
 import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
 
 import {
+  command,
   evidenceFlagEnabled,
-  normalizeNamedSignoff,
   placeholderEnvValue,
   productionUrl,
 } from '../phase9/lib.mjs';
+import { auditRevenueCatDeletionSourceContract } from './payments-source-contract.mjs';
+import {
+  auditRevenueCatV2AccessEvidence,
+  normalizePhase6Reviewer,
+} from './payments-revenuecat-access-evidence.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
+const checkNowMs = Date.now();
 const launchContract = loadLaunchContract(root);
 const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const errors = [];
 const warnings = [];
+const SERVER_SECRET_ENV_NAMES = Object.freeze([
+  'REVENUECAT_WEBHOOK_AUTH',
+  'REVENUECAT_WEBHOOK_SIGNING_SECRET',
+  'REVENUECAT_SECRET_API_KEY',
+  'REVENUECAT_V2_SECRET_API_KEY',
+]);
 
 function read(path) {
   return readFileSync(resolve(root, path), 'utf8');
@@ -67,13 +79,81 @@ function finalProductId(value) {
   );
 }
 
+function exactProductionValue(value) {
+  const exact = String(value ?? '');
+  return exact.length > 0 && exact === exact.trim() && !placeholderEnvValue(exact) ? exact : null;
+}
+
+function revenueCatProjectId(value) {
+  const exact = exactProductionValue(value);
+  return exact !== null && /^proj[A-Za-z0-9]{5,251}$/.test(exact);
+}
+
+function revenueCatV2SecretKey(value) {
+  const exact = exactProductionValue(value);
+  return (
+    exact !== null && /^sk_[A-Za-z0-9]{20,997}$/.test(exact) && new Set(exact.slice(3)).size >= 8
+  );
+}
+
+function revenueCatV1SecretKey(value) {
+  const exact = exactProductionValue(value);
+  return (
+    exact !== null && /^sk_[A-Za-z0-9]{20,509}$/.test(exact) && new Set(exact.slice(3)).size >= 8
+  );
+}
+
+function webhookSharedAuth(value) {
+  const exact = exactProductionValue(value);
+  return exact !== null && /^[A-Za-z0-9_-]{32,256}$/.test(exact) && new Set(exact).size >= 8;
+}
+
+function webhookSigningSecret(value) {
+  const exact = exactProductionValue(value);
+  return (
+    exact !== null &&
+    /^whsec_[A-Za-z0-9_-]{32,256}$/.test(exact) &&
+    new Set(exact.slice(6)).size >= 8
+  );
+}
+
+function trackedServerSecretLeaks(...environments) {
+  return SERVER_SECRET_ENV_NAMES.filter((name) =>
+    environments.some(
+      (environment) => Object.hasOwn(environment, name) && !placeholderEnvValue(environment[name]),
+    ),
+  );
+}
+
+function mergeProductionEnvironment(example, local, easEnvironment, processEnvironment) {
+  const merged = { ...example, ...easEnvironment, ...local, ...processEnvironment };
+  for (const name of SERVER_SECRET_ENV_NAMES) {
+    merged[name] = Object.hasOwn(processEnvironment, name)
+      ? processEnvironment[name]
+      : Object.hasOwn(local, name)
+        ? local[name]
+        : '';
+  }
+  return merged;
+}
+
 const pkg = readJson('apps/mobile/package.json');
 const rootPkg = readJson('package.json');
 const eas = readJson('apps/mobile/eas.json');
 const exampleEnv = parseEnv(read('.env.example'));
 const localEnv = envFile();
 const productionEasEnv = eas.build?.production?.env ?? {};
-const prodEnv = { ...exampleEnv, ...localEnv, ...productionEasEnv, ...process.env };
+const trackedSecretLeaks = trackedServerSecretLeaks(exampleEnv, productionEasEnv);
+const prodEnv = mergeProductionEnvironment(exampleEnv, localEnv, productionEasEnv, process.env);
+let trackedSecretEnvironmentFiles = null;
+try {
+  trackedSecretEnvironmentFiles = command('git', ['ls-tree', '-r', '--name-only', 'HEAD'])
+    .split(/\r?\n/)
+    .map((path) => path.replaceAll('\\', '/').trim())
+    .filter((path) => /(^|\/)\.env(?:\.|$)/.test(path) && path !== '.env.example');
+} catch {
+  trackedSecretEnvironmentFiles = null;
+}
 
 require(Boolean(
   pkg.dependencies?.['react-native-purchases'],
@@ -87,22 +167,65 @@ require(Boolean(
 require(Boolean(rootPkg.scripts?.['phase6:verify']), 'Root package is missing phase6:verify.');
 
 const qaPacketBuilder = read('scripts/phase6/build-payments-qa-packet.mjs');
+const gitProvenanceContract = read('scripts/phase6/payments-git-provenance.mjs');
+const sharedLaunchLibrary = read('scripts/phase9/lib.mjs');
 require(/function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
   /payments-qa-packet\.json/.test(qaPacketBuilder) &&
   /payments-qa-packet\.md/.test(qaPacketBuilder) &&
-  /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(
+  /gitStatusExcludingPaths\(packetOutputPaths\)/.test(qaPacketBuilder) &&
+  !/gitStatusExcludingGeneratedEvidence/.test(qaPacketBuilder) &&
+  /capturedGitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(
     qaPacketBuilder,
   ), 'Phase 6 payments QA packet must ignore only its own generated outputs when recording Git status.');
-require(/Phase 6 payments QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
-  /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(
+require(/--porcelain=v1/.test(sharedLaunchLibrary) &&
+  /--untracked-files=all/.test(sharedLaunchLibrary) &&
+  /--ignore-submodules=none/.test(
+    sharedLaunchLibrary,
+  ), 'Phase 6 Git status must force porcelain output, all untracked files, and submodule inspection regardless of local Git config.');
+require(/auditPhase6GitProvenance/.test(qaPacketBuilder) &&
+  /blockers\.push\(\.\.\.gitProvenance\.blockers\)/.test(qaPacketBuilder) &&
+  /warnings\.push\(\.\.\.gitProvenance\.warnings\)/.test(qaPacketBuilder) &&
+  /gitProvenanceCaptured: gitProvenance\.captured/.test(qaPacketBuilder) &&
+  /'UNAVAILABLE'/.test(qaPacketBuilder) &&
+  /Phase 6 payments QA packet generated with a dirty Git worktree/.test(gitProvenanceContract) &&
+  /Phase 6 final payments evidence requires a clean Git worktree/.test(gitProvenanceContract) &&
+  /Phase 6 Git provenance is unavailable or noncanonical/.test(
+    gitProvenanceContract,
+  ), 'Phase 6 payments QA packet must block unavailable, noncanonical, or dirty Git provenance and expose truthful status.');
+require(/requiredFilesMissingFromHead/.test(qaPacketBuilder) &&
+  /requiredFilesDifferFromHead/.test(qaPacketBuilder) &&
+  /git', \['hash-object'/.test(qaPacketBuilder) &&
+  /trackedSecretEnvironmentFiles/.test(
     qaPacketBuilder,
-  ), 'Phase 6 payments QA packet must warn on dirty worktrees and expose Git status in Markdown.');
+  ), 'Phase 6 payments QA packet must require every input to be committed and byte-matched to HEAD and reject tracked secret env files.');
+require(/collectLocalTypeScriptDependencyAndTestClosure/.test(qaPacketBuilder) &&
+  /paymentDependencyFiles/.test(qaPacketBuilder) &&
+  /localTypeScriptFiles\('apps\/mobile\/src\/features\/subscription'\)/.test(qaPacketBuilder) &&
+  /localTypeScriptFiles\('supabase\/functions\/revenuecat-webhook'\)/.test(
+    qaPacketBuilder,
+  ), 'Phase 6 payments QA packet must include source and sibling-test dependency closures for durable deletion and every payment domain.');
+require(/auditRevenueCatV2AccessEvidence/.test(qaPacketBuilder) &&
+  /revenueCatV2AccessEvidence\.artifactSha256/.test(qaPacketBuilder) &&
+  /revenueCatV2AccessEvidence\.v2SecretKeyFingerprintSha256/.test(qaPacketBuilder) &&
+  /revenueCatV2AccessEvidence\.legacyV1SecretKeyFingerprintSha256/.test(qaPacketBuilder) &&
+  /revenueCatV2AccessEvidence\.errors/.test(
+    qaPacketBuilder,
+  ), 'Phase 6 payments QA packet must hash and cross-bind exact project/key redacted RevenueCat access evidence.');
 for (const file of [
   'package.json',
+  'package-lock.json',
+  'apps/mobile/package.json',
+  'apps/mobile/eas.json',
+  'supabase/functions/deno.lock',
   'docs/hugeToDo/launch-contract.json',
   'scripts/launch/contract.mjs',
   'apps/mobile/src/lib/iap/revenuecat.ts',
+  'apps/mobile/src/lib/iap/revenuecat.test.ts',
+  'apps/mobile/src/lib/iap/revenuecatPublication.test.ts',
   'apps/mobile/src/features/subscription/store.ts',
+  'apps/mobile/src/features/subscription/entitlement.ts',
+  'apps/mobile/src/features/subscription/entitlementEvidence.ts',
+  'apps/mobile/src/features/subscription/entitlementEvidence.test.ts',
   'apps/mobile/src/features/subscription/useEntitlement.ts',
   'apps/mobile/src/features/subscription/useSubscriptionOffering.ts',
   'apps/mobile/src/app/onboarding/paywall.tsx',
@@ -112,10 +235,28 @@ for (const file of [
   'apps/mobile/src/app/paywall/winback.tsx',
   'apps/mobile/src/app/settings/subscription.tsx',
   'supabase/functions/revenuecat-webhook/index.ts',
+  'supabase/functions/revenuecat-webhook/webhookCore.ts',
+  'supabase/functions/revenuecat-webhook/webhookCore.test.ts',
   'supabase/functions/subscription-grants/index.ts',
+  'supabase/functions/subscription-grants/grantErrors.ts',
+  'supabase/functions/subscription-grants/grantErrors.test.ts',
   'supabase/functions/account-deletion/index.ts',
+  'supabase/functions/account-deletion/durableDeletionRuntime.ts',
+  'supabase/functions/account-deletion/durableDeletionRuntime.test.ts',
+  'supabase/functions/account-deletion/durableProviderDeletion.ts',
+  'supabase/functions/account-deletion/durableProviderDeletion.test.ts',
+  'supabase/functions/account-deletion/revenueCatV2DeletionExecutor.ts',
+  'supabase/functions/account-deletion/revenueCatV2DeletionExecutor.test.ts',
   'supabase/migrations/20260615000027_phase6_payments.sql',
+  'supabase/migrations/20260612000009_entitlements.sql',
+  'supabase/migrations/20260613000020_subscription_extensions.sql',
   'supabase/migrations/20260707000035_phase6_reverse_trial_atomic_grant.sql',
+  'supabase/migrations/20260713000041_revenuecat_webhook_atomic_projection.sql',
+  'supabase/migrations/20260713000048_account_deletion_lifecycle_and_rate_limit_ownership.sql',
+  'supabase/migrations/20260713000049_revenuecat_deletion_barrier_guard.sql',
+  'supabase/migrations/20260713000050_service_writer_deletion_barriers.sql',
+  'supabase/migrations/20260713000051_revenuecat_identity_tombstones.sql',
+  'supabase/migrations/20260713000052_account_publication_fence.sql',
   'apps/mobile/src/features/subscription/paywallMobileContracts.test.ts',
   'apps/mobile/src/features/subscription/store.test.ts',
   'apps/mobile/src/features/subscription/entitlement.test.ts',
@@ -123,6 +264,12 @@ for (const file of [
   'scripts/phase6/build-payments-qa-packet.mjs',
   'scripts/phase6/check-payments-env.mjs',
   'scripts/phase6/check-payments-env-smoke.mjs',
+  'scripts/phase6/payments-git-provenance.mjs',
+  'scripts/phase6/payments-git-provenance.test.mjs',
+  'scripts/phase6/payments-revenuecat-access-evidence.mjs',
+  'scripts/phase6/payments-revenuecat-access-evidence.test.mjs',
+  'scripts/phase6/payments-source-contract.mjs',
+  'scripts/phase6/payments-source-contract.test.mjs',
   'scripts/e2e/human-e2e-manifest.mjs',
   'scripts/phase9/lib.mjs',
   'docs/HUMAN_SIMULATED_E2E_TESTING.md',
@@ -133,6 +280,7 @@ for (const file of [
   'docs/phase-6/payments-runbook.md',
   'docs/phase-6/payments-qa-checklist.md',
   'docs/phase-6/phase-6-exit-review.md',
+  'docs/phase-6/revenuecat-v2-access-evidence.template.json',
 ]) {
   require(qaPacketBuilder.includes(`'${file}'`) ||
     qaPacketBuilder.includes(`"${file}"`), `Phase 6 payments QA packet must hash ${file}.`);
@@ -157,14 +305,13 @@ require(has(
     'supabase/functions/revenuecat-webhook/index.ts',
     /JSON\.parse\(rawBody\s*\|\|\s*'\{\}'\)/,
   ), 'RevenueCat webhook must read the bounded raw request body before JSON parsing.');
-require(has(
-  'supabase/functions/account-deletion/index.ts',
-  /DELETE/,
-), 'Account deletion does not call RevenueCat customer deletion.');
-require(has(
-  'supabase/functions/account-deletion/index.ts',
-  /api\.revenuecat\.com\/v1\/subscribers/,
-), 'Account deletion is missing RevenueCat subscriber deletion endpoint.');
+const revenueCatDeletionSourceContract = auditRevenueCatDeletionSourceContract({
+  entrypoint: read('supabase/functions/account-deletion/index.ts'),
+  runtime: read('supabase/functions/account-deletion/durableDeletionRuntime.ts'),
+  executor: read('supabase/functions/account-deletion/revenueCatV2DeletionExecutor.ts'),
+  providerDeletion: read('supabase/functions/account-deletion/durableProviderDeletion.ts'),
+});
+for (const error of revenueCatDeletionSourceContract.errors) require(false, error);
 require(has(
   'apps/mobile/src/features/subscription/useEntitlement.ts',
   /if \(env\.appEnvironment !== 'development'\) return null;/,
@@ -239,16 +386,48 @@ warn(
   '.env.example must document REVENUECAT_SECRET_API_KEY.',
 );
 warn(
-  !placeholderEnvValue(prodEnv.REVENUECAT_WEBHOOK_AUTH),
-  'Missing production RevenueCat webhook shared auth.',
+  Object.hasOwn(exampleEnv, 'REVENUECAT_PROJECT_ID'),
+  '.env.example must document REVENUECAT_PROJECT_ID.',
 );
 warn(
-  !placeholderEnvValue(prodEnv.REVENUECAT_WEBHOOK_SIGNING_SECRET),
-  'Missing production RevenueCat webhook signing secret.',
+  Object.hasOwn(exampleEnv, 'REVENUECAT_V2_SECRET_API_KEY'),
+  '.env.example must document REVENUECAT_V2_SECRET_API_KEY.',
 );
 warn(
-  !placeholderEnvValue(prodEnv.REVENUECAT_SECRET_API_KEY),
-  'Missing production RevenueCat secret API key.',
+  Object.hasOwn(exampleEnv, 'PHASE6_REVENUECAT_V2_CUSTOMER_DELETE_ACCESS_PASS'),
+  '.env.example must document PHASE6_REVENUECAT_V2_CUSTOMER_DELETE_ACCESS_PASS.',
+);
+warn(
+  Object.hasOwn(exampleEnv, 'PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH'),
+  '.env.example must document PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH.',
+);
+warn(
+  trackedSecretLeaks.length === 0,
+  'Tracked templates/build config must not contain production server secrets.',
+);
+warn(
+  trackedSecretEnvironmentFiles !== null && trackedSecretEnvironmentFiles.length === 0,
+  'Git HEAD must be inspectable and must not contain a tracked secret .env file.',
+);
+warn(
+  webhookSharedAuth(prodEnv.REVENUECAT_WEBHOOK_AUTH),
+  'Production RevenueCat webhook shared auth must be a high-entropy 32-256 character token.',
+);
+warn(
+  webhookSigningSecret(prodEnv.REVENUECAT_WEBHOOK_SIGNING_SECRET),
+  'Production RevenueCat webhook signing secret must be a high-entropy whsec_ token.',
+);
+warn(
+  revenueCatV1SecretKey(prodEnv.REVENUECAT_SECRET_API_KEY),
+  'REVENUECAT_SECRET_API_KEY must be a final high-entropy sk_-prefixed legacy V1 key.',
+);
+warn(
+  revenueCatProjectId(prodEnv.REVENUECAT_PROJECT_ID),
+  'REVENUECAT_PROJECT_ID must be a final proj-prefixed production project ID.',
+);
+warn(
+  revenueCatV2SecretKey(prodEnv.REVENUECAT_V2_SECRET_API_KEY),
+  'REVENUECAT_V2_SECRET_API_KEY must be a final sk_-prefixed V2 secret key.',
 );
 warn(
   prodEnv.BRAND_LEGAL_CLEARANCE === 'cleared',
@@ -269,10 +448,22 @@ const externalEvidence = [
 for (const key of externalEvidence) {
   warn(evidenceFlagEnabled(process.env[key]), `Missing external Phase 6 evidence: ${key}.`);
 }
+const signedOffBy = normalizePhase6Reviewer(process.env.PHASE6_SIGNED_OFF_BY, prodEnv);
+const revenueCatV2AccessEvidence = auditRevenueCatV2AccessEvidence({
+  root,
+  evidencePath: String(process.env.PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH ?? ''),
+  nowMs: checkNowMs,
+  projectId: String(prodEnv.REVENUECAT_PROJECT_ID ?? ''),
+  v2SecretKey: String(prodEnv.REVENUECAT_V2_SECRET_API_KEY ?? ''),
+  legacySecretKey: String(prodEnv.REVENUECAT_SECRET_API_KEY ?? ''),
+  signedOffBy,
+});
+for (const evidenceError of revenueCatV2AccessEvidence.errors) warn(false, evidenceError);
 warn(
-  Boolean(normalizeNamedSignoff(process.env.PHASE6_SIGNED_OFF_BY)),
-  'Missing external Phase 6 evidence: PHASE6_SIGNED_OFF_BY.',
+  evidenceFlagEnabled(process.env.PHASE6_REVENUECAT_V2_CUSTOMER_DELETE_ACCESS_PASS),
+  'Missing external Phase 6 evidence: PHASE6_REVENUECAT_V2_CUSTOMER_DELETE_ACCESS_PASS=true. The flag only records review of retained production project/access evidence; it does not itself prove access or permissions.',
 );
+warn(Boolean(signedOffBy), 'Missing external Phase 6 evidence: PHASE6_SIGNED_OFF_BY.');
 
 console.log('Phase 6 payments/entitlements check');
 if (!androidReleaseRequired) {

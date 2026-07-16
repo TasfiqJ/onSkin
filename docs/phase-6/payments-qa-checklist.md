@@ -3,7 +3,8 @@
 ## Store Products
 
 - RevenueCat current offering returns annual and monthly packages.
-- Prices are localized on iOS and Android.
+- Prices are localized on iOS. Android product/key/license evidence is not
+  applicable while the active launch contract is iOS-only.
 - Production build has no Test Store key.
 - Missing offering disables purchase and does not grant Pro.
 
@@ -68,9 +69,12 @@
 
 ## Account Deletion
 
-- Deletion copy says Apple or Google billing continues until store cancellation.
-- Edge Function calls RevenueCat customer deletion with secret API key.
-- RevenueCat deletion failure prevents a false success response.
+- Deletion copy says App Store billing continues until the user cancels in the App Store.
+- Edge Function uses the configured project and V2 secret key to dispatch the
+  exact durable RevenueCat V2 project/customer DELETE request.
+- The worker reconciles the complete customer/alias family after dispatch;
+  missing, ambiguous, contradictory, or failed provider evidence prevents a
+  false success response.
 - Support can identify the user with Supabase UUID before deletion.
 
 ## Evidence Required For Strict Exit
@@ -79,22 +83,60 @@
 clean`, current payment source hashes, current human-E2E manifest hashes,
   final RevenueCat/payment config evidence, and named signoff.
 - `EXPO_PUBLIC_REVENUECAT_IOS_KEY=<final appl_ key>`
-- `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY=<final goog_ key>`
+- `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` is not applicable for the current
+  iOS-only launch contract
 - `EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID=pro`
 - `EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID=<final store product id>`
 - `EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID=<final store product id>`
 - The no-card reverse trial has no Store product ID; its app-granted entitlement
   records `product_id=null`, `offering_id=null`, and `package_id=null`.
-- `REVENUECAT_WEBHOOK_AUTH=<production shared auth>`
-- `REVENUECAT_WEBHOOK_SIGNING_SECRET=<production signing secret>`
-- `REVENUECAT_SECRET_API_KEY=<production secret API key>`
+- `REVENUECAT_WEBHOOK_AUTH=<32-256 ASCII letters/digits/_/- with at least eight
+distinct characters>`
+- `REVENUECAT_WEBHOOK_SIGNING_SECRET=<whsec_ plus 32-256 ASCII
+letters/digits/_/- with at least eight distinct suffix characters>`
+- `REVENUECAT_SECRET_API_KEY=<sk_ plus 20-509 ASCII alphanumerics with at least
+eight distinct suffix characters; production legacy V1 reconciliation key>`
+- `REVENUECAT_PROJECT_ID=<exact untrimmed proj plus 5-251 ASCII alphanumerics>`
+- `REVENUECAT_V2_SECRET_API_KEY=<sk_ plus 20-997 ASCII alphanumerics with at
+least eight distinct suffix characters; production V2 customer read/write
+key>`
+- All four server credentials above come from protected runtime secret storage,
+  an untracked local `.env`, or the invoking process. None may be copied into
+  `.env.example`, production `eas.json`, another tracked `.env*`, or the client;
+  each production value is exact, untrimmed, and non-placeholder.
+- `PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH=<completed redacted repo-relative
+JSON copied from docs/phase-6/revenuecat-v2-access-evidence.template.json>`
+- The packet hashes that completed JSON and cross-binds its exact non-secret
+  project ID, separate lowercase SHA-256 binding fingerprints for the exact
+  legacy V1 and V2 keys, named reviewer, and timestamp to configuration and
+  Phase 6 signoff. The direct regular non-symlink file is 1-65,536 bytes,
+  canonical duplicate-free UTF-8 JSON, committed at and byte-matches HEAD. Its
+  exact schema says complete/redacted/production, `reviewedBy` exactly matches
+  `PHASE6_SIGNED_OFF_BY`, and it contains neither configured key nor
+  secret-shaped reviewer text. `reviewedAt` is no more than seven days old or
+  five minutes ahead of the captured check clock.
+- Retained redacted evidence records the exact production project and V2 key's
+  Bearer-authenticated project-list HTTP 200, V2 customer read-before HTTP 200,
+  customer DELETE HTTP 200 or 202, read-after HTTP 404, full-family absence
+  reconciliation, plus legacy V1 CustomerInfo HTTP 200. It binds
+  `project_configuration:projects:read` and
+  `customer_information:customers:read_write`. Key syntax and a boolean flag
+  are not proof of access or permissions; neither fingerprint nor the structured
+  review record is independent proof. Any authorization error, mismatch,
+  missing/tampered artifact, or incomplete observation remains blocking.
+- The generated packet shows clean, canonical Git provenance and proves every
+  required source, test, manifest, migration, and evidence input is committed
+  at and byte-matches HEAD; ignored/untracked/index-hidden inputs fail closed.
 - `BRAND_LEGAL_CLEARANCE=cleared`
 - `EXPO_PUBLIC_PRIVACY_URL=<production HTTPS URL>`
 - `EXPO_PUBLIC_TERMS_URL=<production HTTPS URL>`
 - `EXPO_PUBLIC_SUPPORT_URL=<production HTTPS URL>`
 - `PHASE6_RC_OFFERING_REVIEWED=true`
 - `PHASE6_IOS_SANDBOX_RESTORE_PASS=true`
-- `PHASE6_ANDROID_LICENSE_TEST_PASS=true`
+- `PHASE6_ANDROID_LICENSE_TEST_PASS` is not applicable for the current iOS-only
+  launch contract
+- `PHASE6_REVENUECAT_V2_CUSTOMER_DELETE_ACCESS_PASS=true` only after the retained
+  evidence above was reviewed; this attestation does not itself prove access
 - `PHASE6_WEBHOOK_HMAC_TEST_PASS=true`
 - `PHASE6_FINANCE_SIGNOFF=true`
 - `PHASE6_SIGNED_OFF_BY=<name>`
