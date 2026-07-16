@@ -294,7 +294,7 @@ function runChecker(cwd, evidencePath, extraEnv = {}) {
 
 const temporaryRoots = [];
 function temporaryRoot() {
-  const root = mkdtempSync(join(tmpdir(), 'onskin-widget-lifecycle-'));
+  const root = mkdtempSync(join(tmpdir(), 'routinekind-widget-lifecycle-'));
   temporaryRoots.push(root);
   return root;
 }
