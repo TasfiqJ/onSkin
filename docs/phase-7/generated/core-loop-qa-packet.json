@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T07:29:12.233Z",
+  "generatedAt": "2026-07-16T07:32:46.765Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "b8fb0cea73e633e14f852fd4e961046252f31314",
+  "gitSha": "0b8edd8b072ea30a7c2ac8513ae8a35b69668d7c",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -813,37 +813,37 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 48121,
-      "sha256": "fa4ee53995afcbc714c783ebfccc0864acd2b26899599e7eedfa25d6860a3ecf"
+      "sha256": "12a1166209b20760be86a4a70d0c875a0de789553906f7656e51d54815dbd00e"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 19687,
-      "sha256": "fa2d0447ea6af3ab06498db5d22ecfda7fc0e45841075cc7c230eee6d7229ef8"
+      "sha256": "7152a25efe24e4feb08e1d035236707b2c8d2bc6ab69cf493652f64616179755"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
       "bytes": 35960,
-      "sha256": "dc3a0e4947db34690729d5c821390b38faec65241cede216e25d63dcc8fded43"
+      "sha256": "5d64ac46e303eb46c1d062cd022ea63c9dd5affeabd83aef4568c78a689320c7"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 31766,
-      "sha256": "0d2fb1026afe71d309f65bd71275a061ef88c103ea46d7b86bda25318c51c039"
+      "sha256": "54344476c053593c303508bb1297f2334954abf01bcab3bb22ea72f0a68703de"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
       "bytes": 17985,
-      "sha256": "4ec3b13e1f9fee34804765fb76e51cd195594e79ea828c586132a9d3d118b1b7"
+      "sha256": "f9ec7129af05c8277dd6c9596b76dde3301e62af5d8ce7a4bf8762669791f3e6"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
       "bytes": 11871,
-      "sha256": "ea2b3225544c4d5e15afed21643d6016006b210502454e9c7ea46b973dd7179d"
+      "sha256": "c6b522e2dd9560eda6f7bc5b5be83e006ea96013f81d3d8234fd2a2afebfdeac"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",
