@@ -33,10 +33,17 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/features/onboarding/skinProfileStore', () => ({
   readStoredSkinProfile: vi.fn(
-    async (): Promise<StoredSkinProfileRead> =>
-      mocks.storedProfile
-        ? { status: 'available', profile: mocks.storedProfile }
-        : { status: mocks.localStatus as 'missing' | 'unavailable' | 'invalid', profile: null },
+    async (): Promise<StoredSkinProfileRead> => {
+      if (mocks.storedProfile) return { status: 'available', profile: mocks.storedProfile };
+      if (mocks.localStatus === 'missing') return { status: 'missing', profile: null };
+      if (mocks.localStatus === 'unsupported_version') {
+        return { status: 'unsupported_version', profile: null };
+      }
+      if (mocks.localStatus === 'invalid') {
+        return { status: 'invalid', profile: null, reason: 'invalid_record' };
+      }
+      return { status: 'unavailable', profile: null, reason: 'storage_unavailable' };
+    },
   ),
   updateStoredPregnancyStatus: mocks.updateStoredPregnancyStatus,
 }));

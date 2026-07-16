@@ -1,7 +1,13 @@
 import type { GoalId, PregnancyStatus, SkinAxis } from '@onskin/types';
 import { GOALS, SKIN_AXES } from '@onskin/types';
 
-import { getPrivateItem, removePrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
+import {
+  readPrivateItem,
+  removePrivateItem,
+  type PrivateKVReadFailureReason,
+  type PrivateKVReadResult,
+  updatePrivateItem,
+} from '@/lib/storage/privateKV';
 
 import type { SkinProfileResult } from './quiz';
 
@@ -30,7 +36,16 @@ export type StoredSkinProfile = {
 
 export type StoredSkinProfileRead =
   | { status: 'available'; profile: StoredSkinProfile }
-  | { status: 'missing' | 'unavailable' | 'invalid' | 'unsupported_version'; profile: null };
+  | { status: 'missing'; profile: null }
+  | { status: 'unavailable'; profile: null; reason: PrivateKVReadFailureReason }
+  | {
+      status: 'invalid';
+      profile: null;
+      reason:
+        | Extract<PrivateKVReadResult, { status: 'corrupt' }>['reason']
+        | 'invalid_record';
+    }
+  | { status: 'unsupported_version'; profile: null };
 
 type StoredSkinProfileEnvelope = {
   version: typeof SCHEMA_VERSION;
@@ -239,26 +254,37 @@ function encodeStoredSkinProfile(profile: StoredSkinProfile): string {
 }
 
 export async function readStoredSkinProfile(): Promise<StoredSkinProfileRead> {
-  let raw: string | null;
-  try {
-    raw = await getPrivateItem(KEY);
-  } catch {
-    return { status: 'unavailable', profile: null };
+  const stored = await readPrivateItem(KEY);
+  if (stored.status === 'absent') return { status: 'missing', profile: null };
+  if (stored.status === 'unavailable') {
+    return { status: 'unavailable', profile: null, reason: stored.reason };
   }
-  if (raw === null) return { status: 'missing', profile: null };
+  if (stored.status === 'corrupt') {
+    return { status: 'invalid', profile: null, reason: stored.reason };
+  }
+  if (stored.status === 'unsupported_version') {
+    return { status: 'unsupported_version', profile: null };
+  }
   try {
-    return { status: 'available', profile: decodeStoredSkinProfile(raw) };
+    return { status: 'available', profile: decodeStoredSkinProfile(stored.value) };
   } catch (error) {
     if (error instanceof Error && error.message === SKIN_PROFILE_UNSUPPORTED_VERSION) {
       return { status: 'unsupported_version', profile: null };
     }
-    return { status: 'invalid', profile: null };
+    return { status: 'invalid', profile: null, reason: 'invalid_record' };
   }
 }
 
+/** Genuine absence is the only nullable state. Unreadable bytes fail closed. */
 export async function getStoredSkinProfile(): Promise<StoredSkinProfile | null> {
   const result = await readStoredSkinProfile();
-  return result.status === 'available' ? result.profile : null;
+  if (result.status === 'available') return result.profile;
+  if (result.status === 'missing') return null;
+  if (result.status === 'unsupported_version') {
+    throw new Error(SKIN_PROFILE_UNSUPPORTED_VERSION);
+  }
+  if (result.status === 'invalid') throw new Error(SKIN_PROFILE_INVALID);
+  throw new Error(SKIN_PROFILE_UNAVAILABLE);
 }
 
 export type LocalOnboardingStatus = 'complete' | 'missing';
@@ -283,7 +309,10 @@ export async function setStoredSkinProfile(rec: StoredSkinProfile): Promise<void
   const normalized = normalizeStoredSkinProfile(rec);
   if (!normalized) throw new Error('INVALID_SKIN_PROFILE_RECORD');
   await updatePrivateItem(KEY, (current) => {
-    if (current !== null) decodeStoredSkinProfile(current);
+    if (current !== null) {
+      const decoded = decodeStoredSkinProfile(current);
+      if (canonicalJson(decoded) === canonicalJson(normalized)) return current;
+    }
     return encodeStoredSkinProfile(normalized);
   });
 }
@@ -298,6 +327,10 @@ export async function updateStoredPregnancyStatus(
   await updatePrivateItem(KEY, (currentRaw) => {
     if (currentRaw === null) throw new Error(SKIN_PROFILE_UNAVAILABLE);
     const current = decodeStoredSkinProfile(currentRaw);
+    if (current.result.pregnancyStatus === pregnancyStatus) {
+      next = current;
+      return currentRaw;
+    }
     next = {
       ...current,
       result: { ...current.result, pregnancyStatus },

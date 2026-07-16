@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { PrivateKVReadResult } from '@/lib/storage/privateKV';
+
 import {
   getStoredSkinProfile,
   isOnboardedLocal,
@@ -18,14 +20,19 @@ const mocks = vi.hoisted(() => {
   const storage = new Map<string, string>();
   return {
     storage,
-    getPrivateItem: vi.fn(async (key: string) => storage.get(key) ?? null),
+    readPrivateItem: vi.fn(async (key: string): Promise<PrivateKVReadResult> => {
+      const value = storage.get(key);
+      return value === undefined ? { status: 'absent' } : { status: 'available', value };
+    }),
+    privateReadOverride: null as PrivateKVReadResult | null,
     tails: new Map<string, Promise<void>>(),
+    persistedWrites: 0,
     updateFailure: null as Error | null,
   };
 });
 
 vi.mock('@/lib/storage/privateKV', () => ({
-  getPrivateItem: mocks.getPrivateItem,
+  readPrivateItem: mocks.readPrivateItem,
   removePrivateItem: vi.fn(async (key: string) => {
     mocks.storage.delete(key);
   }),
@@ -40,9 +47,13 @@ vi.mock('@/lib/storage/privateKV', () => ({
       await previous;
       try {
         if (mocks.updateFailure) throw mocks.updateFailure;
-        const next = updater(mocks.storage.get(key) ?? null);
-        if (next === null) mocks.storage.delete(key);
-        else mocks.storage.set(key, next);
+        const current = mocks.storage.get(key) ?? null;
+        const next = updater(current);
+        if (next !== current) {
+          mocks.persistedWrites += 1;
+          if (next === null) mocks.storage.delete(key);
+          else mocks.storage.set(key, next);
+        }
       } finally {
         release();
         if (mocks.tails.get(key) === tail) mocks.tails.delete(key);
@@ -75,25 +86,35 @@ const RESULT: SkinProfileResult = {
 describe('skin profile local onboarding gate store', () => {
   beforeEach(() => {
     mocks.storage.clear();
-    mocks.getPrivateItem.mockReset();
-    mocks.getPrivateItem.mockImplementation(async (key: string) => mocks.storage.get(key) ?? null);
+    mocks.privateReadOverride = null;
+    mocks.readPrivateItem.mockReset();
+    mocks.readPrivateItem.mockImplementation(async (key: string) => {
+      if (mocks.privateReadOverride) return mocks.privateReadOverride;
+      const value = mocks.storage.get(key);
+      return value === undefined ? { status: 'absent' } : { status: 'available', value };
+    });
     mocks.tails.clear();
+    mocks.persistedWrites = 0;
     mocks.updateFailure = null;
   });
 
   it('preserves malformed skin profile JSON for explicit recovery', async () => {
     mocks.storage.set(KEY, '{not-json');
 
-    await expect(getStoredSkinProfile()).resolves.toBeNull();
+    await expect(getStoredSkinProfile()).rejects.toThrow(SKIN_PROFILE_INVALID);
     await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_INVALID);
     expect(mocks.storage.get(KEY)).toBe('{not-json');
-    await expect(readStoredSkinProfile()).resolves.toEqual({ status: 'invalid', profile: null });
+    await expect(readStoredSkinProfile()).resolves.toEqual({
+      status: 'invalid',
+      profile: null,
+      reason: 'invalid_record',
+    });
   });
 
   it('preserves wrong-shaped skin profile records for explicit recovery', async () => {
     mocks.storage.set(KEY, JSON.stringify({ goals: ['clear_skin'], completedAt: '2026-07-07' }));
 
-    await expect(getStoredSkinProfile()).resolves.toBeNull();
+    await expect(getStoredSkinProfile()).rejects.toThrow(SKIN_PROFILE_INVALID);
     await expect(readLocalOnboardingStatus()).rejects.toThrow(SKIN_PROFILE_INVALID);
     expect(mocks.storage.has(KEY)).toBe(true);
   });
@@ -135,7 +156,7 @@ describe('skin profile local onboarding gate store', () => {
       }),
     );
 
-    await expect(getStoredSkinProfile()).resolves.toBeNull();
+    await expect(getStoredSkinProfile()).rejects.toThrow(SKIN_PROFILE_INVALID);
     await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_INVALID);
     expect(mocks.storage.has(KEY)).toBe(true);
   });
@@ -150,7 +171,7 @@ describe('skin profile local onboarding gate store', () => {
       }),
     );
 
-    await expect(getStoredSkinProfile()).resolves.toBeNull();
+    await expect(getStoredSkinProfile()).rejects.toThrow(SKIN_PROFILE_INVALID);
     await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_INVALID);
     expect(mocks.storage.has(KEY)).toBe(true);
   });
@@ -158,19 +179,50 @@ describe('skin profile local onboarding gate store', () => {
   it('distinguishes a private-storage read failure from an absent profile', async () => {
     const preserved = JSON.stringify({ version: 99, opaque: 'keep-me' });
     mocks.storage.set(KEY, preserved);
-    mocks.getPrivateItem.mockRejectedValueOnce(new Error('secure storage unavailable'));
+    mocks.privateReadOverride = {
+      status: 'unavailable',
+      reason: 'content_key_storage_unavailable',
+    };
 
     await expect(readStoredSkinProfile()).resolves.toEqual({
       status: 'unavailable',
       profile: null,
+      reason: 'content_key_storage_unavailable',
     });
-    mocks.getPrivateItem.mockRejectedValueOnce(new Error('secure storage unavailable'));
+    await expect(getStoredSkinProfile()).rejects.toThrow(SKIN_PROFILE_UNAVAILABLE);
     await expect(isOnboardedLocal()).rejects.toThrow(SKIN_PROFILE_UNAVAILABLE);
     expect(mocks.storage.get(KEY)).toBe(preserved);
+    mocks.privateReadOverride = null;
     mocks.storage.delete(KEY);
+    await expect(getStoredSkinProfile()).resolves.toBeNull();
     await expect(readLocalOnboardingStatus()).resolves.toBe('missing');
     await expect(isOnboardedLocal()).resolves.toBe(false);
   });
+
+  it.each([
+    [
+      { status: 'corrupt', reason: 'decryption_failed' } as const,
+      { status: 'invalid', profile: null, reason: 'decryption_failed' } as const,
+      SKIN_PROFILE_INVALID,
+    ],
+    [
+      { status: 'unsupported_version' } as const,
+      { status: 'unsupported_version', profile: null } as const,
+      SKIN_PROFILE_UNSUPPORTED_VERSION,
+    ],
+  ])(
+    'preserves typed private-store state %o instead of translating it to absence',
+    async (stored, expected, code) => {
+      const original = 'encrypted-private-envelope';
+      mocks.storage.set(KEY, original);
+      mocks.privateReadOverride = stored;
+
+      await expect(readStoredSkinProfile()).resolves.toEqual(expected);
+      await expect(getStoredSkinProfile()).rejects.toThrow(code);
+      await expect(readLocalOnboardingStatus()).rejects.toThrow(code);
+      expect(mocks.storage.get(KEY)).toBe(original);
+    },
+  );
 
   it('saves only valid skin profile records', async () => {
     await setStoredSkinProfile({
@@ -232,7 +284,12 @@ describe('skin profile local onboarding gate store', () => {
     ] as const) {
       mocks.storage.set(KEY, raw);
 
-      await expect(readStoredSkinProfile()).resolves.toEqual({ status, profile: null });
+      await expect(readStoredSkinProfile()).resolves.toEqual(
+        status === 'invalid'
+          ? { status, profile: null, reason: 'invalid_record' }
+          : { status, profile: null },
+      );
+      await expect(getStoredSkinProfile()).rejects.toThrow(code);
       await expect(isOnboardedLocal()).rejects.toThrow(code);
       await expect(setStoredSkinProfile(validProfile)).rejects.toThrow(code);
       await expect(updateStoredPregnancyStatus('pregnant')).rejects.toThrow(code);
@@ -261,6 +318,45 @@ describe('skin profile local onboarding gate store', () => {
       goals: ['hydration'],
       completedAt: '2026-07-08T00:00:00.000Z',
     });
+  });
+
+  it('does zero persisted writes for a semantically identical profile and status', async () => {
+    const profile: StoredSkinProfile = {
+      result: RESULT,
+      goals: ['clear_skin'],
+      completedAt: '2026-07-07T00:00:00.000Z',
+    };
+    const reorderedBytes = JSON.stringify({ profile, version: 1 });
+    mocks.storage.set(KEY, reorderedBytes);
+
+    await setStoredSkinProfile(profile);
+    await expect(updateStoredPregnancyStatus('none')).resolves.toEqual(profile);
+
+    expect(mocks.persistedWrites).toBe(0);
+    expect(mocks.storage.get(KEY)).toBe(reorderedBytes);
+  });
+
+  it('preserves a valid profile across 100 simultaneous pregnancy-status transforms', async () => {
+    await setStoredSkinProfile({
+      result: RESULT,
+      goals: ['clear_skin'],
+      completedAt: '2026-07-07T00:00:00.000Z',
+    });
+    mocks.persistedWrites = 0;
+    const statuses: StoredSkinProfile['result']['pregnancyStatus'][] = Array.from(
+      { length: 100 },
+      (_, index) => (index % 2 === 0 ? 'pregnant' : 'breastfeeding'),
+    );
+
+    const results = await Promise.all(statuses.map(updateStoredPregnancyStatus));
+
+    expect(results.map((profile) => profile.result.pregnancyStatus)).toEqual(statuses);
+    await expect(getStoredSkinProfile()).resolves.toMatchObject({
+      result: { pregnancyStatus: 'breastfeeding' },
+      goals: ['clear_skin'],
+      completedAt: '2026-07-07T00:00:00.000Z',
+    });
+    expect(mocks.persistedWrites).toBe(100);
   });
 
   it('keeps the prior profile intact when an atomic write fails', async () => {
