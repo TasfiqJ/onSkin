@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-16T00:37:49.449Z
-Git SHA: 9a58ef0c22d409e4c02e3a11f9b9fead529c6c2e
+Generated at: 2026-07-16T03:34:52.882Z
+Git SHA: e28620a7fc3a0e49bf102d584d18c88c1752e75d
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -54,7 +54,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 26529 | 7efcdf7c170856b835cbb6dc08d5b6f64ef47f751035c1be7fc92957863771a5 |
+| package.json | present | 27145 | ffa939c5bebc307cd3fb47a3e9a2c1b42bca299a742abd9af280ad995cc12c8f |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
 | apps/mobile/src/lib/launch/phase7.ts | present | 6185 | 875babca48f518e13c897550ae2b0feb66346ba700f8ffba8aad9560f07b1d46 |
@@ -137,10 +137,10 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts | present | 3425 | d4b9128f7a7309f2117d3df3ef5016950bf4cd9a58ce2a253dc3517288fda6e1 |
 | apps/mobile/src/features/trend/trendRoutes.test.ts | present | 3695 | 3f4c93276730c9725fe274b70587c539316f924f03ef6b328aaa7dff2739bab7 |
 | apps/mobile/src/features/trend/useTrend.ts | present | 3487 | f2ba58512a8322ad112f66d79762743c97856d2770a248185f71e065b9609df5 |
-| supabase/functions/catalog-lookup/index.ts | present | 10954 | e6bf8011b1545fba24540b9c5acbb66ca51084ccee2406b01ba854279219a420 |
+| supabase/functions/catalog-lookup/index.ts | present | 11115 | b486e95fe9a6ad78cadc41f0ee41a6a2c8d49c1d9f76a3c8e0b80b3378acae06 |
 | supabase/functions/catalog-lookup/catalogContract.ts | present | 641 | e205eae032c22fab88748e3f7b47a92ba65c74b0fa9f4372e03896839af45f94 |
 | supabase/functions/catalog-lookup/catalogContract.test.ts | present | 1683 | 5ae64b92a6baa5707bdea6e6aff7d59ef04e5138354a75e772c1d8ba7b31a6ec |
-| supabase/functions/catalog-search/index.ts | present | 9031 | 5f99ed4d6662d03f2b8946e9bc38374aae09de2c66d660833be22432329f7cd6 |
+| supabase/functions/catalog-search/index.ts | present | 9192 | 17a04d342b331e58d3f4bb295cc3e76db2786fea29a2e57252f02cea34b7c79a |
 | supabase/functions/catalog-search/catalogContract.ts | present | 1994 | 3b51d16f5b8d5b24a9f87d2e445c28391c8f6407d39150f4085910da97f380e0 |
 | supabase/functions/catalog-search/catalogContract.test.ts | present | 3949 | 18adc4c4572004285afab509ab0d100daeaaa905ce5895d1783a0a792d15cc59 |
 | supabase/migrations/20260711000038_shelf_freshness_invariants.sql | present | 1973 | 672df1e56fac4cdfc6bf641c3249221aaacf630439d28898a79ace2d25181bcd |
@@ -155,10 +155,10 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/USER_FLOW_TREE.md | present | 382133 | ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8 |
 | docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 75aa96c871c3a2118c122090f5847ce8d0f4f10473092b3bf81bc5ade30da58f |
 | docs/e2e/generated/human-e2e-manifest.md | present | 19687 | 38208755a2228f4fe46b0e6f47b81b0050b5187a90522c8f5d1dc33b7e873a9a |
-| docs/phase-5/generated/device-qa-packet.json | present | 26528 | fd160bf7a5e9b6eb65914c2a44d36935e904d4acc423ff9d50330bfc3def16c6 |
-| docs/phase-5/generated/device-qa-packet.md | present | 23039 | 543b69a46a95fb1591588084ce77e0450c5fe2dd75a16511031f2a565fcd4716 |
-| docs/phase-6/generated/payments-qa-packet.json | present | 17985 | a54815b959b3fd59d81a6920a6d0316c1aef959126d871a2040f7364ca219fb0 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 11871 | defa8ec1abd0e21af7f446bf6ed8c47f7d179b30616f73fcb1cdd34f27a8be4c |
+| docs/phase-5/generated/device-qa-packet.json | present | 26528 | c0e63549dcd925083f95b17cdcb14ab7905396aa20a0df4d2659a1cd1d13208e |
+| docs/phase-5/generated/device-qa-packet.md | present | 23039 | ae174341f9a68c2a581a2c9387f3d6471d2f2f736662faddb3ee02123ae68864 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 17985 | 77525124a573325f428a26bc0d023188e3e404375c869a3fd97e8c360e5de9b4 |
+| docs/phase-6/generated/payments-qa-packet.md | present | 11871 | 925a1aadfe287767e064510e80c7f08930a58cca60ae61ea9d8ee100c32ac167 |
 | docs/phase-7/surface-inventory.md | present | 7793 | 50c0f72fb317e36588a30559cd254dcb3b7ebaa7c73b8b4ba4dfb9ea35350fd6 |
 | docs/phase-7/launch-claim-matrix.md | present | 4322 | 7027d6d21f2cc7c3bb6944f003f9aeac6a09efea8dc2785280f6a3da44bb6b6b |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4725 | f57bd8b15489b66c4dbee486f3e15190eb2e4752420308dfb71883372348cdd1 |
