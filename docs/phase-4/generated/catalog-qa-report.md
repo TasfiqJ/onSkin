@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-16T18:12:53.353Z
+Generated: 2026-07-16T19:56:04.329Z
 
-Git SHA: e5045d6fe64665eeb40f58e9eb254e4dd86e3201
+Git SHA: 728bb3b364d3ce094cbdc53da7c1d673420e0585
 
 Git status: clean
 
@@ -47,12 +47,12 @@ Launch clear reason: No. This report only validates the local fixture/export out
 | supabase/functions/catalog-report/privacy.ts | present | 3504 | 9dee03b20211d5b3fcb2e05ad4be85a00112dd00f03fc6e5c834969381f0e44e |
 | supabase/functions/catalog-report/privacy.test.ts | present | 4009 | db9b6d1c812679297295c5afb6c8d0226c99f94b8aedefff620111d4fa9d7bac |
 | supabase/functions/deno.lock | present | 2282 | 0f8de63ed60182b56865cfa47c666866b631ed4681c79345ec31a720565d1a3a |
-| scripts/phase9/lib.mjs | present | 24406 | 4c52e937ddea7a47fba80f69d80d6d586e9c236750cefb9500362352e1cb270e |
+| scripts/phase9/lib.mjs | present | 24487 | 0eb82d148d6cc293b6cea56baecb0f24172e04e548a57d8815e951eb6ce66ff4 |
 | docs/FOR_TAS_TO_DO.md | present | 11191 | a02a5647d2491966a701743128fbacab0dc57bf72f0067b305be98ffd469d56c |
 | docs/phase-4/beta-coverage-report.md | present | 2125 | d657465c6bdf76f6084fd361cee5bb96c3ad5f92fecf99f93fc9d1cba8f3999d |
 | docs/phase-4/catalog-source-memo-cosing.md | present | 2021 | 49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534 |
 | docs/phase-4/catalog-source-memo-open-beauty-facts.md | present | 4263 | 9b14b91a64c721d3f2c3a172c38f31afe881282ca50d96f1ecdef2e4e5c13626 |
-| docs/phase-4/generated/source-worklist.json | present | 46713 | 89d0673f3c3fceeae053bd0878aca71d5cd6bc35237f5acd92bba1f441894ddc |
-| docs/phase-4/generated/source-worklist.md | present | 28928 | c797a04b234b6d1ba69383df23de56c7bdb566260b2efb98bc3c26de8111a26e |
+| docs/phase-4/generated/source-worklist.json | present | 46713 | 3fe8478cbbb2bbba32dd531751e61a689f56edb568023cb9d0d5c0ca3f25b485 |
+| docs/phase-4/generated/source-worklist.md | present | 28928 | 55df90c1a5dbd640dbb892ee54cc927bfa3158e6af4f890a7ad748dc13e8179e |
 | docs/phase-4/odbl-compliance-memo.md | present | 2019 | 0fe9bc07e3c4d34129ac8f8f2ba410a64e6caa0d77a3b7994198e0b4d9e18e69 |
 | docs/phase-4/phase-4-exit-review.md | present | 2235 | 1d6760669e7c416ff4cca57995660d67c7b7225fc0f5a40edb88421596f0b5a3 |

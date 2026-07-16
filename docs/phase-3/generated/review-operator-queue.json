@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-16T18:12:50.804Z",
+  "generatedAt": "2026-07-16T19:55:31.925Z",
   "purpose": "Operator queue for Phase 3 legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO review handoffs.",
   "strict": false,
-  "gitSha": "e5045d6fe64665eeb40f58e9eb254e4dd86e3201",
+  "gitSha": "728bb3b364d3ce094cbdc53da7c1d673420e0585",
   "gitStatus": "",
   "sourceWorklist": {
     "path": "docs/phase-3/generated/review-worklist.json",
     "exists": true,
     "bytes": 136545,
-    "sha256": "1b434bc20fdfe7637081402f6c123716dab89b839995c7e45d3eb7f16aa1dbea",
-    "currentSha256": "1b434bc20fdfe7637081402f6c123716dab89b839995c7e45d3eb7f16aa1dbea"
+    "sha256": "fccb1422d96a3a806a90439dc2a174fc6c5edbebc321e38045ac613370358e4a",
+    "currentSha256": "fccb1422d96a3a806a90439dc2a174fc6c5edbebc321e38045ac613370358e4a"
   },
   "reviewReadiness": "external-blocked",
   "summary": {

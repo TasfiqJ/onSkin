@@ -1,8 +1,8 @@
 # Phase 4 Catalog Source Worklist
 
-Generated: 2026-07-16T18:12:49.303Z
+Generated: 2026-07-16T19:55:45.921Z
 Status: pass
-Git SHA: e5045d6fe64665eeb40f58e9eb254e4dd86e3201
+Git SHA: 728bb3b364d3ce094cbdc53da7c1d673420e0585
 Git status: clean
 
 This generated worklist is an operator handoff for the catalog/source launch
@@ -50,7 +50,7 @@ Required evidence:
 
 Sources:
 
-- `.env.example` - 23004 bytes - sha256 `d38a8520b9664114bee56f823beffba23c0f49a4213d70f4b319f5ce81e71fbe`
+- `.env.example` - 25653 bytes - sha256 `668f23c9f7fbb2098868ed170f1352eafdda85184256297701a2458736ca71ad`
 - `scripts/phase4/check-source-env.mjs` - 2989 bytes - sha256 `ad8eaa253c3dd97fd6ea09a1cdbf11fb1aec96212a90a610e690a74981989a1a`
 - `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 4263 bytes - sha256 `9b14b91a64c721d3f2c3a172c38f31afe881282ca50d96f1ecdef2e4e5c13626`
 - `docs/phase-4/catalog-source-memo-cosing.md` - 2021 bytes - sha256 `49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534`
