@@ -239,7 +239,7 @@ describe('catalog client E2E fixtures', () => {
       manualFallback: true,
     });
 
-    expect(mocks.track).toHaveBeenCalledWith('catalog_search', { result: 'no_match' });
+    expect(mocks.track).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
@@ -271,8 +271,56 @@ describe('catalog client E2E fixtures', () => {
       ],
     });
 
-    expect(mocks.track).toHaveBeenCalledWith('catalog_search', { result: 'matched' });
+    expect(mocks.track).not.toHaveBeenCalled();
     expect(mocks.invoke).not.toHaveBeenCalled();
+  });
+
+  it('supports a bounded dev-only catalog render-stress fixture', async () => {
+    process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT = 'stress';
+
+    const response = await searchCatalog('render fixture');
+
+    expect(response).toMatchObject({ result: 'matched' });
+    expect(response.products).toHaveLength(12);
+    expect(response.products?.map((product) => product.id)).toEqual(
+      Array.from(
+        { length: 12 },
+        (_, index) => `e2e-catalog-stress-${String(index + 1).padStart(2, '0')}`,
+      ),
+    );
+    expect(mocks.track).not.toHaveBeenCalled();
+    expect(mocks.invoke).not.toHaveBeenCalled();
+  });
+
+  it('rejects short sanitized queries locally without transport or analytics', async () => {
+    process.env.EXPO_PUBLIC_E2E_CATALOG_SEARCH_RESULT = 'stress';
+
+    await expect(searchCatalog('a%')).resolves.toEqual({
+      result: 'too_short',
+      products: [],
+      manualFallback: true,
+    });
+
+    expect(mocks.track).not.toHaveBeenCalled();
+    expect(mocks.invoke).not.toHaveBeenCalled();
+  });
+
+  it('normalizes and bounds the query before invoking catalog-search', async () => {
+    mocks.isSupabaseConfigured = true;
+    mocks.invoke.mockResolvedValueOnce({
+      data: { result: 'no_match', products: [] },
+      error: null,
+    });
+    const query = `  ${'a'.repeat(90)}   cleanser  `;
+
+    await expect(searchCatalog(query)).resolves.toEqual({ result: 'no_match', products: [] });
+
+    expect(mocks.invoke).toHaveBeenCalledWith('catalog-search', {
+      body: { query: 'a'.repeat(80), limit: 12 },
+      headers: { Authorization: 'Bearer token-a' },
+      signal: expect.any(AbortSignal),
+    });
+    expect(mocks.track).not.toHaveBeenCalled();
   });
 
   it('ignores catalog search fixtures outside development runtime', async () => {

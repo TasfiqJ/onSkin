@@ -1,5 +1,5 @@
 import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { memo, Profiler, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   Platform,
   Pressable,
@@ -20,6 +20,23 @@ import {
 } from '@/features/catalog/client';
 import { catalogQualityLabel, sourceDisplayName } from '@/features/catalog/copy';
 import type { CatalogQualityGrade } from '@/features/catalog/quality';
+import {
+  CATALOG_SEARCH_MAX_QUERY_LENGTH,
+  isCatalogSearchQueryEligible,
+  normalizeCatalogSearchQuery,
+} from '@/features/catalog/searchQuery';
+import { CatalogSearchRequestCoordinator } from '@/features/catalog/searchRequestCoordinator';
+import {
+  readCatalogSearchRenderDiagnostics,
+  recordCatalogSearchCancelled,
+  recordCatalogSearchCardRender,
+  recordCatalogSearchComposerCommit,
+  recordCatalogSearchDraftChange,
+  recordCatalogSearchDuplicateSubmit,
+  recordCatalogSearchPublished,
+  recordCatalogSearchResultsCommit,
+  recordCatalogSearchStarted,
+} from '@/features/catalog/searchRenderDiagnostics';
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { PRODUCT_CATEGORIES, type ProductCategory } from '@/features/shelf/categories';
 import { useIntake } from '@/features/shelf/IntakeContext';
@@ -51,6 +68,16 @@ const CATALOG_WRONG_MATCH_NOT_SENT = {
     'Catalog reporting is not configured on this build. Add by hand or choose another match.',
 };
 
+type FeedbackCopy = Readonly<{
+  title: string;
+  message: string;
+}>;
+
+type WrongMatchFeedback = FeedbackCopy &
+  Readonly<{
+    productKey: string;
+  }>;
+
 function normalizeCategory(value: string | null | undefined): ProductCategory | null {
   return value && categoryIds.has(value as ProductCategory) ? (value as ProductCategory) : null;
 }
@@ -63,17 +90,214 @@ function productKey(product: CatalogProductSummary): string {
   return product.id ?? `${product.source}-${product.barcode}-${product.name}`;
 }
 
+function publishCatalogSearchRenderDiagnostics(): void {
+  if (typeof __DEV__ === 'undefined' || !__DEV__ || typeof document === 'undefined') return;
+
+  const results = document.getElementById('catalog-search-results');
+  if (!results) return;
+  const diagnostics = readCatalogSearchRenderDiagnostics();
+  results.setAttribute('data-catalog-composer-commits', String(diagnostics.composerCommits));
+  results.setAttribute(
+    'data-catalog-composer-duration-total-ms',
+    String(diagnostics.composerDurationTotalMs),
+  );
+  results.setAttribute(
+    'data-catalog-composer-duration-max-ms',
+    String(diagnostics.composerDurationMaxMs),
+  );
+  results.setAttribute('data-catalog-draft-changes', String(diagnostics.draftChanges));
+  results.setAttribute('data-catalog-results-commits', String(diagnostics.resultsCommits));
+  results.setAttribute('data-catalog-card-renders', String(diagnostics.cardRenders));
+  results.setAttribute('data-catalog-search-starts', String(diagnostics.searchStarts));
+  results.setAttribute('data-catalog-cancellations', String(diagnostics.cancellations));
+  results.setAttribute('data-catalog-publications', String(diagnostics.publications));
+  results.setAttribute('data-catalog-duplicate-submits', String(diagnostics.duplicateSubmits));
+}
+
+function recordCatalogComposerProfilerCommit(
+  _id: string,
+  _phase: 'mount' | 'update' | 'nested-update',
+  actualDuration: number,
+): void {
+  recordCatalogSearchComposerCommit(actualDuration);
+  publishCatalogSearchRenderDiagnostics();
+}
+
+function recordCatalogResultsProfilerCommit(): void {
+  recordCatalogSearchResultsCommit();
+  publishCatalogSearchRenderDiagnostics();
+}
+
+type CatalogSearchComposerProps = Readonly<{
+  initialQuery: string;
+  searching: boolean;
+  onDraftChange: (draft: string) => void;
+  onSubmit: (draft: string) => void;
+}>;
+
+const CatalogSearchComposer = memo(function CatalogSearchComposer({
+  initialQuery,
+  searching,
+  onDraftChange,
+  onSubmit,
+}: CatalogSearchComposerProps) {
+  const initialDraft = normalizeCatalogSearchQuery(initialQuery);
+  const [draft, setDraft] = useState(initialDraft);
+  const draftRef = useRef(initialDraft);
+  const canSubmit = isCatalogSearchQueryEligible(draft);
+  const canPressSearch = canSubmit && !searching;
+
+  const updateDraft = useCallback(
+    (next: string) => {
+      const bounded = next.slice(0, CATALOG_SEARCH_MAX_QUERY_LENGTH);
+      if (bounded === draftRef.current) return;
+      draftRef.current = bounded;
+      recordCatalogSearchDraftChange();
+      setDraft(bounded);
+      onDraftChange(bounded);
+    },
+    [onDraftChange],
+  );
+
+  const handleNativeChange = useCallback(
+    (event: NativeSyntheticEvent<TextInputChangeEventData> & { target?: { value?: string } }) => {
+      const next = event.nativeEvent.text ?? event.target?.value;
+      if (typeof next === 'string') updateDraft(next);
+    },
+    [updateDraft],
+  );
+
+  const submitDraft = useCallback(() => {
+    if (isCatalogSearchQueryEligible(draftRef.current)) onSubmit(draftRef.current);
+  }, [onSubmit]);
+
+  return (
+    <View className="mt-4 flex-row items-center gap-2">
+      <TextInput
+        accessibilityLabel="Catalog search query"
+        value={draft}
+        maxLength={CATALOG_SEARCH_MAX_QUERY_LENGTH}
+        onChange={handleNativeChange}
+        onChangeText={updateDraft}
+        onSubmitEditing={submitDraft}
+        placeholder="Brand or product name"
+        placeholderTextColor={colors.mutedLight}
+        className="h-[50px] min-w-0 flex-1 rounded-[14px] border border-hairline bg-paper-raised px-4 font-sans-medium text-[15px] text-ink"
+        returnKeyType="search"
+      />
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ busy: searching, disabled: !canPressSearch }}
+        disabled={!canPressSearch}
+        onPress={submitDraft}
+        className={cn(
+          'h-[50px] min-w-[72px] shrink-0 items-center justify-center rounded-[14px] px-3',
+          canPressSearch ? 'bg-ink' : 'bg-greige-chip',
+        )}
+      >
+        <Text
+          className="font-sans-semibold text-[14px]"
+          tone={canPressSearch ? 'inverse' : 'muted'}
+        >
+          Search
+        </Text>
+      </Pressable>
+    </View>
+  );
+});
+
+type CatalogResultCardProps = Readonly<{
+  product: CatalogProductSummary;
+  reporting: boolean;
+  feedback: FeedbackCopy | null;
+  onChoose: (product: CatalogProductSummary) => void;
+  onReport: (product: CatalogProductSummary) => void;
+}>;
+
+const CatalogResultCard = memo(function CatalogResultCard({
+  product,
+  reporting,
+  feedback,
+  onChoose,
+  onReport,
+}: CatalogResultCardProps) {
+  recordCatalogSearchCardRender();
+
+  return (
+    <View className="rounded-[16px] border border-hairline bg-paper-raised px-4 py-3.5">
+      <Text variant="body" className="font-sans-semibold">
+        {product.name}
+      </Text>
+      <Text variant="bodySm" tone="muted" className="mt-0.5">
+        {[
+          product.brand,
+          sourceDisplayName(product.source),
+          catalogQualityLabel(product.quality_grade),
+        ]
+          .filter(Boolean)
+          .join(' / ')}
+      </Text>
+      {product.barcode ? (
+        <Text variant="label" tone="muted" className="mt-1">
+          barcode {product.barcode}
+        </Text>
+      ) : null}
+      <View className="mt-3 flex-row flex-wrap gap-2">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Use ${product.name} match`}
+          onPress={() => onChoose(product)}
+          className="min-h-[48px] flex-1 basis-[148px] items-center justify-center rounded-pill bg-ink px-4 py-2"
+        >
+          <Text variant="bodySm" tone="inverse" className="font-sans-semibold">
+            Use this match
+          </Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ busy: reporting, disabled: reporting }}
+          disabled={reporting}
+          onPress={() => onReport(product)}
+          className="min-h-[48px] flex-1 basis-[148px] items-center justify-center rounded-pill border border-hairline bg-paper px-4 py-2"
+        >
+          <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+            {reporting ? 'Sending report...' : 'Not this product'}
+          </Text>
+        </Pressable>
+      </View>
+      {feedback ? (
+        <View accessibilityRole="alert" className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3">
+          <Text variant="label" style={{ color: colors.clayDeep }}>
+            {feedback.title}
+          </Text>
+          <Text
+            variant="bodySm"
+            className="mt-1"
+            style={{ color: colors.clayDeep, lineHeight: 19 }}
+          >
+            {feedback.message}
+          </Text>
+        </View>
+      ) : null}
+    </View>
+  );
+});
+
 export default function CatalogSearchScreen() {
   const { update, reset } = useIntake();
   const isFocused = useIsFocused();
   const { e2eQuery } = useLocalSearchParams<{ e2eQuery?: string | string[] }>();
   const rawE2EQuery = Array.isArray(e2eQuery) ? e2eQuery[0] : (e2eQuery ?? '');
-  const initialSearchQuery =
-    typeof __DEV__ !== 'undefined' && __DEV__ && Platform.OS === 'web' ? rawE2EQuery : '';
+  const initialSearchQuery = normalizeCatalogSearchQuery(
+    typeof __DEV__ !== 'undefined' && __DEV__ && Platform.OS === 'web' ? rawE2EQuery : '',
+  );
   const autoSearchStarted = useRef(false);
-  const activeSearch = useRef<AbortController | null>(null);
+  const searchRequestsRef = useRef<CatalogSearchRequestCoordinator | null>(null);
+  searchRequestsRef.current ??= new CatalogSearchRequestCoordinator();
+  const searchRequests = searchRequestsRef.current;
   const mounted = useRef(true);
-  const [query, setQuery] = useState(() => initialSearchQuery.slice(0, 120));
+  const latestDraftRef = useRef(initialSearchQuery);
+  const reportingWrongMatchIdRef = useRef<string | null>(null);
   const [results, setResults] = useState<CatalogProductSummary[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [lastNoMatchQuery, setLastNoMatchQuery] = useState<string | null>(null);
@@ -83,35 +307,55 @@ export default function CatalogSearchScreen() {
     message: string;
   } | null>(null);
   const [reportingWrongMatchId, setReportingWrongMatchId] = useState<string | null>(null);
-  const [wrongMatchFeedback, setWrongMatchFeedback] = useState<{
-    productKey: string;
-    title: string;
-    message: string;
-  } | null>(null);
+  const [wrongMatchFeedback, setWrongMatchFeedback] = useState<WrongMatchFeedback | null>(null);
   const [searching, setSearching] = useState(false);
-  const canSearch = query.trim().length >= 2 && !searching;
 
-  const handleQueryChange = (
-    event: NativeSyntheticEvent<TextInputChangeEventData> & { target?: { value?: string } },
-  ) => {
-    const next = event.nativeEvent.text ?? event.target?.value;
-    if (typeof next === 'string') setQuery(next);
-  };
+  const abortActiveSearch = useCallback(
+    (publishIdle = true) => {
+      if (!searchRequests.cancel()) return false;
+      recordCatalogSearchCancelled();
+      if (publishIdle && mounted.current) setSearching(false);
+      publishCatalogSearchRenderDiagnostics();
+      return true;
+    },
+    [searchRequests],
+  );
+
+  const handleDraftChange = useCallback(
+    (draft: string) => {
+      latestDraftRef.current = draft;
+      const active = searchRequests.current();
+      if (active && normalizeCatalogSearchQuery(draft) !== active.query) abortActiveSearch();
+    },
+    [abortActiveSearch, searchRequests],
+  );
 
   const runSearch = useCallback(
-    async (queryOverride?: string) => {
-      const cleaned = (queryOverride ?? query).trim();
-      if (cleaned.length < 2 || searching) return;
+    async (submittedQuery: string) => {
+      const cleaned = normalizeCatalogSearchQuery(submittedQuery);
+      if (!isCatalogSearchQueryEligible(cleaned)) return;
+
+      const begin = searchRequests.begin(cleaned);
+      if (begin.kind === 'duplicate') {
+        recordCatalogSearchDuplicateSubmit();
+        publishCatalogSearchRenderDiagnostics();
+        return;
+      }
+      if (begin.superseded) {
+        recordCatalogSearchCancelled();
+        publishCatalogSearchRenderDiagnostics();
+      }
+
+      const { controller } = begin.request;
+      recordCatalogSearchStarted();
       setSearching(true);
       setLastNoMatchQuery(null);
       setMissingProductFeedback(null);
       setWrongMatchFeedback(null);
-      activeSearch.current?.abort();
-      const controller = new AbortController();
-      activeSearch.current = controller;
       try {
         const response = await searchCatalog(cleaned, { signal: controller.signal });
-        if (controller.signal.aborted) return;
+        if (!searchRequests.canPublish(controller, mounted.current)) return;
+        track('catalog_search', { result: response.result });
         setResults(response.products ?? []);
         const noProducts = !response.products?.length;
         setMessage(
@@ -123,37 +367,45 @@ export default function CatalogSearchScreen() {
         );
         if (response.result === 'no_match' && noProducts) setLastNoMatchQuery(cleaned);
         if (noProducts) track('catalog_lookup_no_match', { lookup_type: 'search' });
+        recordCatalogSearchPublished();
       } catch (error) {
-        if (controller.signal.aborted || isRequestCancellation(error)) return;
+        if (!searchRequests.canPublish(controller, mounted.current) || isRequestCancellation(error))
+          return;
+        track('catalog_search', { result: 'error' });
         setResults([]);
         setMessage("Couldn't reach the product catalog. Add this product by hand for now.");
+        recordCatalogSearchPublished();
       } finally {
-        if (activeSearch.current === controller) {
-          activeSearch.current = null;
-          if (mounted.current) setSearching(false);
-        }
+        if (searchRequests.finish(controller) && mounted.current) setSearching(false);
       }
     },
-    [query, searching],
+    [searchRequests],
+  );
+
+  const submitSearch = useCallback(
+    (draft: string) => {
+      void runSearch(draft);
+    },
+    [runSearch],
   );
 
   useEffect(() => {
-    if (!initialSearchQuery || autoSearchStarted.current) return;
+    if (!isFocused || !initialSearchQuery || autoSearchStarted.current) return;
     autoSearchStarted.current = true;
     void runSearch(initialSearchQuery);
-  }, [initialSearchQuery, runSearch]);
+  }, [initialSearchQuery, isFocused, runSearch]);
 
-  useEffect(() => {
-    if (!isFocused) activeSearch.current?.abort();
-  }, [isFocused]);
+  useLayoutEffect(() => {
+    if (!isFocused) abortActiveSearch();
+  }, [abortActiveSearch, isFocused]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
-      activeSearch.current?.abort();
+      abortActiveSearch(false);
     };
-  }, []);
+  }, [abortActiveSearch]);
 
   const reportMissingProduct = async () => {
     if (!lastNoMatchQuery || reportingMissingProduct) return;
@@ -173,81 +425,97 @@ export default function CatalogSearchScreen() {
     setReportingMissingProduct(false);
   };
 
-  const reportWrongMatch = async (product: CatalogProductSummary) => {
+  const reportWrongMatch = useCallback(async (product: CatalogProductSummary) => {
     const key = productKey(product);
-    if (reportingWrongMatchId) return;
+    if (reportingWrongMatchIdRef.current) return;
 
+    reportingWrongMatchIdRef.current = key;
     setReportingWrongMatchId(key);
     setWrongMatchFeedback(null);
     const sourceName = sourceDisplayName(product.source);
-    const result = await reportCatalogIssue({
-      correctionType: 'wrong_match',
-      productId: product.id,
-      barcode: product.barcode,
-      description: 'wrong_match reported from catalog search result',
-      proposedPayload: {
-        productName: product.name,
-        brand: product.brand,
+    try {
+      const result = await reportCatalogIssue({
+        correctionType: 'wrong_match',
+        productId: product.id,
         barcode: product.barcode,
-        category: product.category,
-        sourceName,
-        sourceUrl: product.source_url ?? null,
-        qualityIssue: 'wrong_match',
-      },
-      clientContext: {
-        addedVia: 'search',
-        quality: normalizeQuality(product.quality_grade),
-        source: product.source,
-        platform: Platform.OS,
-        route: 'shelf_search',
-      },
-    });
-    setWrongMatchFeedback({
-      productKey: key,
-      ...(result.ok ? CATALOG_WRONG_MATCH_SENT : CATALOG_WRONG_MATCH_NOT_SENT),
-    });
-    setReportingWrongMatchId(null);
-  };
+        description: 'wrong_match reported from catalog search result',
+        proposedPayload: {
+          productName: product.name,
+          brand: product.brand,
+          barcode: product.barcode,
+          category: product.category,
+          sourceName,
+          sourceUrl: product.source_url ?? null,
+          qualityIssue: 'wrong_match',
+        },
+        clientContext: {
+          addedVia: 'search',
+          quality: normalizeQuality(product.quality_grade),
+          source: product.source,
+          platform: Platform.OS,
+          route: 'shelf_search',
+        },
+      });
+      if (mounted.current) {
+        setWrongMatchFeedback({
+          productKey: key,
+          ...(result.ok ? CATALOG_WRONG_MATCH_SENT : CATALOG_WRONG_MATCH_NOT_SENT),
+        });
+      }
+    } catch {
+      if (mounted.current) {
+        setWrongMatchFeedback({ productKey: key, ...CATALOG_WRONG_MATCH_NOT_SENT });
+      }
+    } finally {
+      reportingWrongMatchIdRef.current = null;
+      if (mounted.current) setReportingWrongMatchId(null);
+    }
+  }, []);
 
-  const goManual = () => {
+  const goManual = useCallback(() => {
     haptics.select();
     trackProductAddStarted('catalog_manual');
-    reset({ addedVia: 'manual', name: query.trim() });
+    reset({ addedVia: 'manual', name: latestDraftRef.current.trim() });
     router.replace('/shelf/manual');
-  };
+  }, [reset]);
 
-  const chooseProduct = (product: CatalogProductSummary) => {
-    haptics.select();
-    const provenance = catalogIntakeProvenance(product);
-    const parsed = product.rawIngredientsText
-      ? parseIngredientText(product.rawIngredientsText)
-      : null;
-    update({
-      name: product.name,
-      brand: product.brand,
-      category: normalizeCategory(product.category),
-      barcode: product.barcode,
-      catalogProductId: product.id,
-      catalogSourceId: provenance.catalogSourceId,
-      catalogSource: product.source,
-      catalogSourceName: product.catalog_sources?.display_name ?? sourceDisplayName(product.source),
-      catalogSourceRef: product.source_ref ?? null,
-      catalogSourceUrl: product.source_url ?? null,
-      catalogSourceSnapshotDate: product.source_snapshot_date ?? null,
-      catalogMatchQuality: normalizeQuality(product.quality_grade),
-      dataQualityScore: product.data_quality_score ?? null,
-      ingredientParseStatus: parsed?.status ?? product.ingredient_parse_status ?? null,
-      ingredientParseConfidence: parsed?.confidence ?? product.ingredient_parse_confidence ?? null,
-      parserVersion: parsed?.parserVersion ?? null,
-      sourceDisclosureAckAt: new Date().toISOString(),
-      ingredients: parsed?.tokens.map((token) => token.displayName) ?? [],
-      paoMonths: provenance.paoMonths,
-      paoSource: provenance.paoSource,
-      expiryDate: provenance.expiryDate,
-      addedVia: 'search',
-    });
-    router.push('/shelf/opened');
-  };
+  const chooseProduct = useCallback(
+    (product: CatalogProductSummary) => {
+      haptics.select();
+      const provenance = catalogIntakeProvenance(product);
+      const parsed = product.rawIngredientsText
+        ? parseIngredientText(product.rawIngredientsText)
+        : null;
+      update({
+        name: product.name,
+        brand: product.brand,
+        category: normalizeCategory(product.category),
+        barcode: product.barcode,
+        catalogProductId: product.id,
+        catalogSourceId: provenance.catalogSourceId,
+        catalogSource: product.source,
+        catalogSourceName:
+          product.catalog_sources?.display_name ?? sourceDisplayName(product.source),
+        catalogSourceRef: product.source_ref ?? null,
+        catalogSourceUrl: product.source_url ?? null,
+        catalogSourceSnapshotDate: product.source_snapshot_date ?? null,
+        catalogMatchQuality: normalizeQuality(product.quality_grade),
+        dataQualityScore: product.data_quality_score ?? null,
+        ingredientParseStatus: parsed?.status ?? product.ingredient_parse_status ?? null,
+        ingredientParseConfidence:
+          parsed?.confidence ?? product.ingredient_parse_confidence ?? null,
+        parserVersion: parsed?.parserVersion ?? null,
+        sourceDisclosureAckAt: new Date().toISOString(),
+        ingredients: parsed?.tokens.map((token) => token.displayName) ?? [],
+        paoMonths: provenance.paoMonths,
+        paoSource: provenance.paoSource,
+        expiryDate: provenance.expiryDate,
+        addedVia: 'search',
+      });
+      router.push('/shelf/opened');
+    },
+    [update],
+  );
 
   return (
     <Screen edges={['top', 'bottom']}>
@@ -262,154 +530,81 @@ export default function CatalogSearchScreen() {
         <View className="w-[44px]" />
       </View>
 
-      <View className="mt-4 flex-row items-center gap-2">
-        <TextInput
-          accessibilityLabel="Catalog search query"
-          value={query}
-          onChange={handleQueryChange}
-          onChangeText={setQuery}
-          onSubmitEditing={() => void runSearch()}
-          placeholder="Brand or product name"
-          placeholderTextColor={colors.mutedLight}
-          className="h-[50px] min-w-0 flex-1 rounded-[14px] border border-hairline bg-paper-raised px-4 font-sans-medium text-[15px] text-ink"
-          returnKeyType="search"
+      <Profiler id="catalog-search-composer" onRender={recordCatalogComposerProfilerCommit}>
+        <CatalogSearchComposer
+          initialQuery={initialSearchQuery}
+          searching={searching}
+          onDraftChange={handleDraftChange}
+          onSubmit={submitSearch}
         />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ busy: searching, disabled: !canSearch }}
-          disabled={!canSearch}
-          onPress={() => void runSearch()}
-          className={cn(
-            'h-[50px] min-w-[72px] shrink-0 items-center justify-center rounded-[14px] px-3',
-            canSearch ? 'bg-ink' : 'bg-greige-chip',
-          )}
-        >
-          <Text className="font-sans-semibold text-[14px]" tone={canSearch ? 'inverse' : 'muted'}>
-            Search
-          </Text>
-        </Pressable>
-      </View>
+      </Profiler>
 
       <Text variant="bodySm" tone="muted" className="mt-3">
         Search uses the {BRAND.appName} catalog only. Public API search is not used for live typing.
       </Text>
 
-      <ScrollView
-        className="flex-1"
-        showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-4"
-      >
-        {message ? (
-          <View className="mt-4 rounded-[16px] bg-greige-chip px-4 py-3.5">
-            <Text variant="bodySm" tone="muted">
-              {message}
-            </Text>
-            {lastNoMatchQuery ? (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{ busy: reportingMissingProduct }}
-                disabled={reportingMissingProduct}
-                onPress={reportMissingProduct}
-                className="mt-3 min-h-[48px] self-start items-center justify-center rounded-pill px-1"
-              >
-                <Text variant="bodySm" tone="clay" className="font-sans-semibold">
-                  {reportingMissingProduct ? 'Sending report...' : 'Report missing product'}
-                </Text>
-              </Pressable>
-            ) : null}
-            {missingProductFeedback ? (
-              <View
-                accessibilityRole="alert"
-                className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3"
-              >
-                <Text variant="label" style={{ color: colors.clayDeep }}>
-                  {missingProductFeedback.title}
-                </Text>
-                <Text
-                  variant="bodySm"
-                  className="mt-1"
-                  style={{ color: colors.clayDeep, lineHeight: 19 }}
+      <Profiler id="catalog-search-results" onRender={recordCatalogResultsProfilerCommit}>
+        <ScrollView
+          nativeID="catalog-search-results"
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="pb-4"
+        >
+          {message ? (
+            <View className="mt-4 rounded-[16px] bg-greige-chip px-4 py-3.5">
+              <Text variant="bodySm" tone="muted">
+                {message}
+              </Text>
+              {lastNoMatchQuery ? (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityState={{ busy: reportingMissingProduct }}
+                  disabled={reportingMissingProduct}
+                  onPress={reportMissingProduct}
+                  className="mt-3 min-h-[48px] self-start items-center justify-center rounded-pill px-1"
                 >
-                  {missingProductFeedback.message}
-                </Text>
-              </View>
-            ) : null}
-          </View>
-        ) : null}
-
-        <View className="mt-4 gap-2.5">
-          {results.map((product) => {
-            const key = productKey(product);
-            const reportingThisMatch = reportingWrongMatchId === key;
-            const feedback = wrongMatchFeedback?.productKey === key ? wrongMatchFeedback : null;
-
-            return (
-              <View
-                key={key}
-                className="rounded-[16px] border border-hairline bg-paper-raised px-4 py-3.5"
-              >
-                <Text variant="body" className="font-sans-semibold">
-                  {product.name}
-                </Text>
-                <Text variant="bodySm" tone="muted" className="mt-0.5">
-                  {[
-                    product.brand,
-                    sourceDisplayName(product.source),
-                    catalogQualityLabel(product.quality_grade),
-                  ]
-                    .filter(Boolean)
-                    .join(' / ')}
-                </Text>
-                {product.barcode ? (
-                  <Text variant="label" tone="muted" className="mt-1">
-                    barcode {product.barcode}
+                  <Text variant="bodySm" tone="clay" className="font-sans-semibold">
+                    {reportingMissingProduct ? 'Sending report...' : 'Report missing product'}
                   </Text>
-                ) : null}
-                <View className="mt-3 flex-row flex-wrap gap-2">
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel={`Use ${product.name} match`}
-                    onPress={() => chooseProduct(product)}
-                    className="min-h-[48px] flex-1 basis-[148px] items-center justify-center rounded-pill bg-ink px-4 py-2"
+                </Pressable>
+              ) : null}
+              {missingProductFeedback ? (
+                <View
+                  accessibilityRole="alert"
+                  className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3"
+                >
+                  <Text variant="label" style={{ color: colors.clayDeep }}>
+                    {missingProductFeedback.title}
+                  </Text>
+                  <Text
+                    variant="bodySm"
+                    className="mt-1"
+                    style={{ color: colors.clayDeep, lineHeight: 19 }}
                   >
-                    <Text variant="bodySm" tone="inverse" className="font-sans-semibold">
-                      Use this match
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityState={{ busy: reportingThisMatch, disabled: reportingThisMatch }}
-                    disabled={reportingThisMatch}
-                    onPress={() => reportWrongMatch(product)}
-                    className="min-h-[48px] flex-1 basis-[148px] items-center justify-center rounded-pill border border-hairline bg-paper px-4 py-2"
-                  >
-                    <Text variant="bodySm" tone="clay" className="font-sans-semibold">
-                      {reportingThisMatch ? 'Sending report...' : 'Not this product'}
-                    </Text>
-                  </Pressable>
+                    {missingProductFeedback.message}
+                  </Text>
                 </View>
-                {feedback ? (
-                  <View
-                    accessibilityRole="alert"
-                    className="mt-2.5 rounded-[14px] bg-clay-tint px-4 py-3"
-                  >
-                    <Text variant="label" style={{ color: colors.clayDeep }}>
-                      {feedback.title}
-                    </Text>
-                    <Text
-                      variant="bodySm"
-                      className="mt-1"
-                      style={{ color: colors.clayDeep, lineHeight: 19 }}
-                    >
-                      {feedback.message}
-                    </Text>
-                  </View>
-                ) : null}
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
+              ) : null}
+            </View>
+          ) : null}
+
+          <View className="mt-4 gap-2.5">
+            {results.map((product) => {
+              const key = productKey(product);
+              return (
+                <CatalogResultCard
+                  key={key}
+                  product={product}
+                  reporting={reportingWrongMatchId === key}
+                  feedback={wrongMatchFeedback?.productKey === key ? wrongMatchFeedback : null}
+                  onChoose={chooseProduct}
+                  onReport={reportWrongMatch}
+                />
+              );
+            })}
+          </View>
+        </ScrollView>
+      </Profiler>
 
       <View className="pb-8 pt-2">
         <Button label="Add by hand" variant="ghost" onPress={goManual} />

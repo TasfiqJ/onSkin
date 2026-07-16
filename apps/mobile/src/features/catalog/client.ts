@@ -7,6 +7,7 @@ import { invokeEdgeFunction } from '@/lib/network/edgeFunctions';
 import { isRequestCancellation, RequestPolicyError } from '@/lib/network/requestPolicy';
 
 import type { CatalogQualityGrade } from './quality';
+import { isCatalogSearchQueryEligible, normalizeCatalogSearchQuery } from './searchQuery';
 
 export type CatalogPaoExpiryRecord = {
   pao_months?: number | null;
@@ -223,6 +224,33 @@ function devCatalogSearchFixture():
     };
     return { result: 'matched', product, products: [product] };
   }
+  if (fixture === 'stress') {
+    const products = Array.from({ length: 12 }, (_, index): CatalogProductSummary => {
+      const position = String(index + 1).padStart(2, '0');
+      return {
+        id: `e2e-catalog-stress-${position}`,
+        barcode: `0000000000${position}`,
+        name: `Catalog fixture ${position}`,
+        brand: 'Render Lab',
+        category: 'serum',
+        region: 'US',
+        default_pao_months: null,
+        source: 'onskin_catalog',
+        catalog_source_id: null,
+        source_ref: `e2e:${position}`,
+        source_url: null,
+        source_snapshot_date: '2026-07-16',
+        quality_grade: 'unverified',
+        review_status: 'fixture',
+        data_quality_score: null,
+        ingredient_parse_status: null,
+        ingredient_parse_confidence: null,
+        product_pao_expiry: [],
+        rawIngredientsText: null,
+      };
+    });
+    return { result: 'matched', product: products[0]!, products };
+  }
   return null;
 }
 
@@ -274,29 +302,34 @@ export async function searchCatalog(
   query: string,
   options: CatalogRequestOptions = {},
 ): Promise<CatalogLookupResponse & { products?: CatalogProductSummary[] }> {
+  const normalizedQuery = normalizeCatalogSearchQuery(query);
+  if (!isCatalogSearchQueryEligible(normalizedQuery)) {
+    return { result: 'too_short', products: [], manualFallback: true };
+  }
   await waitForDevCatalogSearchDelay(options.signal);
   if (options.signal?.aborted) {
     return { result: 'error', products: [], manualFallback: true };
   }
   const fixture = devCatalogSearchFixture();
-  if (fixture) {
-    track('catalog_search', { result: fixture.result });
-    return fixture;
-  }
+  if (fixture) return fixture;
   if (!isSupabaseConfigured) return { result: 'offline', products: [], manualFallback: true };
   try {
     const data = await invokeEdgeFunction<
       CatalogLookupResponse & { products?: CatalogProductSummary[] }
     >('catalog-search', {
-      body: { query, limit: 12 },
+      body: { query: normalizedQuery, limit: 12 },
       signal: options.signal,
     });
-    track('catalog_search', { result: data?.result ?? 'unknown' });
+    if (options.signal?.aborted) {
+      return { result: 'error', products: [], manualFallback: true };
+    }
     return data ?? { result: 'error', products: [], manualFallback: true };
   } catch (error) {
     if (isRequestCancellation(error)) throw error;
+    if (options.signal?.aborted) {
+      return { result: 'error', products: [], manualFallback: true };
+    }
     const result = unavailableResult(error);
-    track('catalog_search', { result });
     return { result, products: [], manualFallback: true };
   }
 }
@@ -331,14 +364,17 @@ type CatalogReportContextKey =
   | 'buildNumber'
   | 'route';
 
-export async function reportCatalogIssue(input: {
-  correctionType: CatalogCorrectionType;
-  productId?: string | null;
-  barcode?: string | null;
-  description?: string | null;
-  proposedPayload?: Partial<Record<CatalogReportPayloadKey, CatalogReportScalar>>;
-  clientContext?: Partial<Record<CatalogReportContextKey, CatalogReportScalar>>;
-}, options: CatalogRequestOptions = {}): Promise<{ ok: boolean; offline?: boolean }> {
+export async function reportCatalogIssue(
+  input: {
+    correctionType: CatalogCorrectionType;
+    productId?: string | null;
+    barcode?: string | null;
+    description?: string | null;
+    proposedPayload?: Partial<Record<CatalogReportPayloadKey, CatalogReportScalar>>;
+    clientContext?: Partial<Record<CatalogReportContextKey, CatalogReportScalar>>;
+  },
+  options: CatalogRequestOptions = {},
+): Promise<{ ok: boolean; offline?: boolean }> {
   track('catalog_correction_reported', { correction_type: input.correctionType });
   if (!isSupabaseConfigured) return { ok: false, offline: true };
 
@@ -349,9 +385,7 @@ export async function reportCatalogIssue(input: {
     if (isRequestCancellation(error)) throw error;
     return {
       ok: false,
-      ...(error instanceof RequestPolicyError && error.kind === 'offline'
-        ? { offline: true }
-        : {}),
+      ...(error instanceof RequestPolicyError && error.kind === 'offline' ? { offline: true } : {}),
     };
   }
 }

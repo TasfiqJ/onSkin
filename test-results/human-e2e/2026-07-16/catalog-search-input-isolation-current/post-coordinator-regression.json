@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-16",
+  "surface": "Expo web development build in Codex in-app browser",
+  "purpose": "post-review production coordinator regression",
+  "fixture": {
+    "result": "stress",
+    "delayMs": 5000,
+    "externalServices": false
+  },
+  "viewport": {
+    "width": 1281,
+    "height": 720,
+    "classification": "desktop regression only; supported-phone layout claims remain limited to metrics.json"
+  },
+  "supersededRequest": {
+    "beforeDraftEdit": {
+      "searchStarts": 1,
+      "cancellations": 0,
+      "publications": 0,
+      "resultsCommits": 2,
+      "cardRenders": 0
+    },
+    "immediatelyAfterDraftEdit": {
+      "searchStarts": 1,
+      "cancellations": 1,
+      "publications": 0,
+      "resultsCommits": 3,
+      "cardRenders": 0
+    },
+    "afterDelayPlus200Ms": {
+      "searchStarts": 1,
+      "cancellations": 1,
+      "publications": 0,
+      "resultsCommits": 3,
+      "cardRenders": 0
+    }
+  },
+  "duplicateAndRecovery": {
+    "before": {
+      "searchStarts": 0,
+      "cancellations": 0,
+      "duplicateSubmits": 0,
+      "publications": 0,
+      "cardRenders": 0,
+      "resultsCommits": 1
+    },
+    "afterTwoReturns": {
+      "searchStarts": 1,
+      "cancellations": 0,
+      "duplicateSubmits": 1,
+      "publications": 0,
+      "cardRenders": 0,
+      "resultsCommits": 2
+    },
+    "afterSupersedeAndReplacement": {
+      "searchStarts": 2,
+      "cancellations": 1,
+      "duplicateSubmits": 1,
+      "publications": 1,
+      "cardRenders": 12,
+      "resultsCommits": 5,
+      "visibleCards": 12
+    }
+  },
+  "layout": {
+    "horizontalOverflowPx": 0,
+    "inputHeightPx": 50.000003814697266,
+    "searchHeightPx": 50.000003814697266
+  },
+  "browserHealthArtifact": "browser-console-post-coordinator.json",
+  "claimBoundary": "This rerun validates coordinator integration on Expo web after the review refactor. It does not replace the supported-phone or typing-profile evidence in metrics.json."
+}

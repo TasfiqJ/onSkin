@@ -156,10 +156,12 @@ describe('Shelf route mobile contracts', () => {
     const source = readAppRoute('shelf/search.tsx');
 
     expect(source).toContain('reportCatalogIssue');
-    expect(source).toContain('const reportWrongMatch = async (product: CatalogProductSummary)');
+    expect(source).toContain(
+      'const reportWrongMatch = useCallback(async (product: CatalogProductSummary)',
+    );
     expect(source).toContain('useLocalSearchParams');
     expect(source).toContain("typeof __DEV__ !== 'undefined' && __DEV__ && Platform.OS === 'web'");
-    expect(source).toContain('initialSearchQuery.slice(0, 120)');
+    expect(source).toContain('const initialSearchQuery = normalizeCatalogSearchQuery(');
     expect(source).toContain('const autoSearchStarted = useRef(false);');
     expect(source).toContain('void runSearch(initialSearchQuery);');
     expect(source).toContain("correctionType: 'wrong_match'");
@@ -170,13 +172,65 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('sourceUrl: product.source_url ?? null');
     expect(source).toContain("route: 'shelf_search'");
     expect(source).toContain('CATALOG_WRONG_MATCH_NOT_SENT');
+    expect(source).toContain('} catch {');
+    expect(source).toContain('} finally {');
+    expect(source).toContain('reportingWrongMatchIdRef.current = null;');
     expect(source).toContain('Use this match');
     expect(source).toContain('Not this product');
     expect(source).toContain('min-h-[48px] flex-1 basis-[148px]');
     expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain("reset({ addedVia: 'manual', name: query.trim() })");
+    expect(source).toContain("reset({ addedVia: 'manual', name: latestDraftRef.current.trim() })");
     expect(source).not.toContain('Alert.alert');
     expect(source).not.toContain('import { Alert');
+  });
+
+  it('isolates bounded catalog typing from result cards and rejects stale publications', () => {
+    const source = readAppRoute('shelf/search.tsx');
+    const diagnostics = readFeatureFile('../catalog/searchRenderDiagnostics.ts');
+    const screenStart = source.indexOf('export default function CatalogSearchScreen()');
+    const screenSource = source.slice(screenStart);
+
+    expect(source).toContain('const CatalogSearchComposer = memo(function CatalogSearchComposer');
+    expect(source).toContain('const [draft, setDraft] = useState(initialDraft);');
+    expect(source).toContain('const draftRef = useRef(initialDraft);');
+    expect(source).toContain('maxLength={CATALOG_SEARCH_MAX_QUERY_LENGTH}');
+    expect(screenSource).not.toContain('const [query, setQuery]');
+    expect(source).toContain('const CatalogResultCard = memo(function CatalogResultCard');
+    expect(source).toContain('recordCatalogSearchCardRender();');
+    expect(source).toContain('<Profiler id="catalog-search-composer"');
+    expect(source).toContain('<Profiler id="catalog-search-results"');
+    expect(source).toContain('nativeID="catalog-search-results"');
+    expect(source).toContain(
+      'const searchRequestsRef = useRef<CatalogSearchRequestCoordinator | null>(null);',
+    );
+    expect(source).toContain(
+      'searchRequestsRef.current ??= new CatalogSearchRequestCoordinator();',
+    );
+    expect(source).toContain('const searchRequests = searchRequestsRef.current;');
+    expect(source).toContain('const begin = searchRequests.begin(cleaned);');
+    expect(source).toContain("if (begin.kind === 'duplicate')");
+    expect(source).toContain('recordCatalogSearchDuplicateSubmit();');
+    expect(source).toContain('if (begin.superseded)');
+    expect(source).toContain(
+      'if (!searchRequests.canPublish(controller, mounted.current)) return;',
+    );
+    expect(source).toContain("track('catalog_search', { result: response.result });");
+    expect(source.indexOf('searchRequests.canPublish(controller, mounted.current)')).toBeLessThan(
+      source.indexOf("track('catalog_search', { result: response.result })"),
+    );
+    expect(source).toContain('searchRequests.finish(controller)');
+    expect(source).toContain('normalizeCatalogSearchQuery(draft) !== active.query');
+    expect(source).toContain('recordCatalogSearchCancelled();');
+    expect(source).toContain('recordCatalogSearchPublished();');
+    expect(source).toContain(
+      'if (!isFocused || !initialSearchQuery || autoSearchStarted.current) return;',
+    );
+    expect(source).toContain('useLayoutEffect(() => {');
+    expect(source).toContain('if (!isFocused) abortActiveSearch();');
+    expect(source).toContain('mounted.current = false;');
+    expect(diagnostics).not.toContain('query: string');
+    expect(diagnostics).not.toContain('productName: string');
+    expect(diagnostics).not.toContain('products: CatalogProductSummary');
   });
 
   it('keeps barcode no-match recovery visible on the shortest supported phones', () => {
