@@ -230,7 +230,7 @@
     "edge-function": 16,
     "feature-flag": 16,
     "generated-packet": 30,
-    "native-module": 43,
+    "native-module": 44,
     "route": 90,
     "vendor-call": 13
   },
@@ -1628,6 +1628,13 @@
       "source": "apps/mobile/package.json",
       "featureIds": ["F-02"],
       "readiness": "implemented"
+    },
+    {
+      "id": "native-module:expo-widgets",
+      "category": "native-module",
+      "source": "apps/mobile/package.json",
+      "featureIds": ["F-02", "F-03", "F-06", "F-07"],
+      "readiness": "needs-device-verification"
     },
     {
       "id": "native-module:posthog-react-native",

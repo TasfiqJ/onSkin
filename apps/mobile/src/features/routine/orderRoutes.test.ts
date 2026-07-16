@@ -47,13 +47,16 @@ describe('persistent routine order route contracts', () => {
   it('applies overrides centrally without changing canonical cycle-night authority', () => {
     const usePlan = readSource('features/routine/usePlan.ts');
     const today = readSource('app/(tabs)/today.tsx');
+    const todayProjection = readSource('features/today/routineProjection.ts');
 
     expect(usePlan).toContain('applyRoutineOrderOverrides(canonicalPlan, orderOverrides)');
     expect(usePlan).toContain('canonicalPlan,');
-    expect(today).toContain('const scheduledCyclePlanStep =');
-    expect(today).toContain('order: scheduledCyclePlanStep?.order ?? 40');
-    expect(today).toContain('cTonight?.night.productId');
-    expect(today).toContain("const hasScheduledRetinoid = cycledStep?.role === 'treatment';");
+    expect(todayProjection).toContain('const scheduledCyclePlanStep =');
+    expect(todayProjection).toContain('order: scheduledCyclePlanStep?.order ?? 40');
+    expect(todayProjection).toContain('tonight?.night.productId');
+    expect(todayProjection).toContain(
+      "const hasScheduledRetinoid = cycledStep?.role === 'treatment';",
+    );
     expect(today).toContain('pmDisplaySub(s, hasScheduledRetinoid)');
   });
 

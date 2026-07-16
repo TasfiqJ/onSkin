@@ -189,14 +189,14 @@ export function isBeyondBackfillCap(date: string, today: string = localDateStrin
   return normalizedDate < cutoff || normalizedDate > maxFuture;
 }
 
-/** Idempotently record a step's completion for a day. Returns whether it is done and
- *  whether this was the user's first-ever completion (the north-star activation moment).
+/** Idempotently record a step's completion for a day. Returns whether it is done,
+ *  whether a row was inserted, and whether this was the user's first-ever completion.
  *  Dates outside the server completion window (docs/03 §6) are rejected. */
 // Repeated check-offs preserve the row because v1 completions are append-only.
 export async function toggleCompletion(
   key: string,
   date: string = localDateString(),
-): Promise<{ done: boolean; firstEver: boolean }> {
+): Promise<{ done: boolean; inserted: boolean; firstEver: boolean }> {
   return runCurrentHealthDataOperation(async (lease) => {
     const normalizedKey = normalizeStepKey(key);
     const normalizedDate = normalizeLocalDateISO(date);
@@ -204,11 +204,15 @@ export async function toggleCompletion(
       // Outside the server completion window: do not record, report it as not-done.
       const existing = await getCompletedStepsForLease(normalizedDate ?? date, lease);
       lease.assertCurrent();
-      return { done: normalizedKey ? existing.has(normalizedKey) : false, firstEver: false };
+      return {
+        done: normalizedKey ? existing.has(normalizedKey) : false,
+        inserted: false,
+        firstEver: false,
+      };
     }
     const firstCompletionAlreadyMarked = await hasFirstCompletionMarker(lease);
     lease.assertCurrent();
-    let result = { done: false, firstEver: false };
+    let result = { done: false, inserted: false, firstEver: false };
     let shouldMarkFirstCompletion = false;
     await updatePrivateItem(KEY, (current) => {
       lease.assertCurrent();
@@ -221,6 +225,7 @@ export async function toggleCompletion(
 
       result = {
         done: true,
+        inserted: !alreadyCompleted,
         firstEver: !alreadyCompleted && !hadAny && !firstCompletionAlreadyMarked,
       };
       shouldMarkFirstCompletion = hadAny || result.firstEver;

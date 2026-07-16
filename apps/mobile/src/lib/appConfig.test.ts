@@ -107,6 +107,7 @@ const APP_ENV_KEYS = [
   'EXPO_PUBLIC_FINAL_BRAND_DOMAIN',
   'EXPO_PUBLIC_APP_STORE_URL',
   'EXPO_PUBLIC_PLAY_STORE_URL',
+  'IOS_WIDGET_EXTENSION_BUILD_ENABLED',
 ] as const;
 
 function buildExpoConfig(
@@ -202,6 +203,38 @@ describe('Expo app identity config', () => {
 
     expect(expo.ios.usesAppleSignIn).toBe(true);
     expect(pluginNames).toContain('expo-apple-authentication');
+  });
+
+  it('keeps the unfinished iOS extension out of ordinary builds and requires an exact opt-in', () => {
+    const ordinary = buildExpoConfig({});
+    const qa = buildExpoConfig({ IOS_WIDGET_EXTENSION_BUILD_ENABLED: 'true' });
+    const pluginNames = (expo: ReturnType<typeof buildExpoConfig>) =>
+      (expo.plugins ?? []).map((plugin: unknown) => (Array.isArray(plugin) ? plugin[0] : plugin));
+
+    expect(pluginNames(ordinary)).not.toContain('expo-widgets');
+    expect(pluginNames(ordinary)).not.toContain('./plugins/withRoutineKindWidgetPrivacyManifest');
+    expect(ordinary.ios.infoPlist.NSSupportsLiveActivities).toBeUndefined();
+    expect(ordinary.extra.iosWidgetExtensionBuildEnabled).toBe(false);
+    expect(pluginNames(qa)).toContain('expo-widgets');
+    expect(pluginNames(qa)).toContain('./plugins/withRoutineKindWidgetPrivacyManifest');
+    expect(qa.ios.infoPlist.NSSupportsLiveActivities).toBe(true);
+    expect(qa.extra.iosWidgetExtensionBuildEnabled).toBe(true);
+    expect(() => buildExpoConfig({ IOS_WIDGET_EXTENSION_BUILD_ENABLED: 'enabled' })).toThrow(
+      /IOS_WIDGET_EXTENSION_BUILD_ENABLED must be true or false/,
+    );
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'production',
+        IOS_WIDGET_EXTENSION_BUILD_ENABLED: 'true',
+      }),
+    ).toThrow(/Production iOS widget extension builds remain blocked/);
+    expect(() =>
+      buildExpoConfig({
+        APP_VARIANT: 'staging',
+        EXPO_PUBLIC_APP_ENV: 'production',
+        IOS_WIDGET_EXTENSION_BUILD_ENABLED: 'true',
+      }),
+    ).toThrow(/Production iOS widget extension builds remain blocked/);
   });
 
   it('uses production identity only when the production variant is explicit', () => {

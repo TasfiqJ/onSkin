@@ -7,9 +7,7 @@ import {
 import { AUTH_DERIVED_CLEANUP_REQUIRED_KEY } from '@/lib/auth/authDerivedCleanupRequired';
 import { APPLE_CREDENTIAL_QUARANTINE_KEY } from '@/lib/auth/appleCredentialQuarantine';
 import { brandCachePrefix } from '@/lib/brand';
-import {
-  HEALTH_DEPENDENT_CONSENT_RECOVERY_KEY_PREFIX,
-} from '@/lib/consent/dependentConsentRecoveryContract';
+import { HEALTH_DEPENDENT_CONSENT_RECOVERY_KEY_PREFIX } from '@/lib/consent/dependentConsentRecoveryContract';
 import {
   LEGACY_PLAINTEXT_STAGING_JOURNAL_KEY,
   PLAINTEXT_STAGING_JOURNAL_KEY,
@@ -48,6 +46,7 @@ export const LOCAL_PRIVATE_DATA_KEYS = [
   'routinekind.healthDataLifecycle.v1',
   'routinekind.routineActivation.v1',
   'routinekind.routineOrder.v1',
+  'routinekind.widgetActionMap.v1',
   'onskin.shelf.v1',
   'onskin.skinprofile.v1',
   'onskin.subscription.freeConflictCheckRuleIds.v1',

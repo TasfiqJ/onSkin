@@ -4,6 +4,44 @@ Tracks the build against docs/00 §"build order". One slice per commit.
 See [DECISIONS.md](DECISIONS.md) for implementation choices and
 [BLOCKERS.md](BLOCKERS.md) for everything waiting on the founder.
 
+## 2026-07-16
+
+### IOS-02 disabled WidgetKit/ActivityKit source checkpoint
+
+The iOS-only extension source now pins the reviewed Expo SDK 56
+`expo-widgets`/`@expo/ui` artifacts by package range, exact lockfile version,
+registry URL, and integrity. One derived, variant-isolated
+`ExpoWidgetsTarget` contract permits only the required iPhone widget families,
+one App Group, no APNs entitlement, no frequent updates, and no Android/iPad
+generation. A companion config plugin writes and attaches an idempotent
+`PrivacyInfo.xcprivacy` to the extension target with Apple UserDefaults reason
+`1C8F.1`; the main app declares the same App Group reason.
+
+The source includes a closed App Group schema, lowercase UUIDv4 capabilities,
+encrypted owner/epoch/account/date/phase-bound action mapping, a pure
+profile-safe Today projection, and isolated WidgetKit/ActivityKit views. It
+fails generic on unknown fields, clock rollback, stale state, or an authority
+window over five minutes; stale Live Activity state carries zero counts, and
+personalized roots/counts/status are privacy-sensitive. Future encrypted
+registry schemas are preserved rather than overwritten. Completion analytics
+now fire only for a newly inserted append-only completion, not a repeated tap.
+
+This is deliberately disabled scaffolding, not a shippable native feature.
+Ordinary builds exclude the extension plugins and Live Activity capability;
+development/staging QA requires the exact build opt-in, while production
+config hard-errors if that opt-in is present. Stock Expo uses
+`staleDate: nil`, and its App Group timeline retains historical entries, so no
+production Live Activity may start and no personalized widget may be enabled
+until a controller reconciles pending actions, replaces/prunes the whole
+timeline on expiry/withdrawal/sign-out/account change, and passes macOS archive
+inspection plus physical-iPhone killed-app/privacy/accessibility/deep-link QA.
+The final cleared app scheme must also regenerate the exact deep-link allowlist.
+
+Verification passes 16/16 extension/privacy contract tests, 43/43 focused
+widget/action tests, root typecheck and lint, and 273 mobile test files / 3139
+tests. Apple review, legal clearance, signed-binary privacy-manifest placement,
+and commercial outcomes are not claimed.
+
 ## 2026-07-15
 
 ### DB-06 fresh-staging deployment source checkpoint
@@ -7035,7 +7073,7 @@ Functions, writes, and direct authenticated helper RPCs. The current local gate
 passes two clean resets, exact 54-migration history through `0055`, the full
 structural suite plus 114/114 Apple pgTAP assertions, schema lint, empty shadow
 diff, temporary types, 20/20 focused Apple Edge tests, the 47-test Apple auth
-work lane, and 269 mobile test files / 3087 tests. Hosted Apple/Supabase
+work lane, and 273 mobile test files / 3139 tests. Hosted Apple/Supabase
 deployment, primary-App-ID event delivery, Vault/Cron continuity, recapture and
 key-rotation drills, stale-JWT proof, physical-iPhone/TestFlight evidence, and
 professional review remain launch-blocking.

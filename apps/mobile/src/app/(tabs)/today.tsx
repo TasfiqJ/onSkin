@@ -6,7 +6,7 @@ import { Button, Screen, Text } from '@/components/ui';
 import { AskTeaser } from '@/features/ask/AskTeaser';
 import type { SchedulerSlot } from '@/features/scheduler/orchestrate';
 import { friendlyWeekday, slotLabel } from '@/features/scheduler/projection';
-import { hasUseTogetherChoiceBetween, useCycle } from '@/features/scheduler/useCycle';
+import { useCycle } from '@/features/scheduler/useCycle';
 import { usePlan } from '@/features/routine/usePlan';
 import { useProgress } from '@/features/routine/useProgress';
 import { RecommendationsTeaser } from '@/features/recommendations/RecommendationsTeaser';
@@ -14,6 +14,7 @@ import { requestReviewAfterValue } from '@/features/review/prompt';
 import { ReverseTrialBanner } from '@/features/subscription/ReverseTrialBanner';
 import { getCompletedSteps, stepKey, toggleCompletion } from '@/features/today/completionsStore';
 import { shouldTrackCycleNightCompleted } from '@/features/today/cycleCompletion';
+import { projectTodayRoutine } from '@/features/today/routineProjection';
 import { currentRoutineType, localClockLabel, localDateString } from '@/features/today/useToday';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
@@ -38,12 +39,6 @@ const ROUTINE_CARD_SHADOW =
         shadowRadius: 2,
         shadowOffset: { width: 0, height: 1 },
       };
-
-function slotInstruction(slot: SchedulerSlot): string {
-  if (slot === 'retinoid') return 'Apply to dry skin · pea-sized · avoid the eye area.';
-  if (slot === 'exfoliate') return 'A thin layer. Exfoliation night only.';
-  return 'Barrier support. Keep it simple.';
-}
 
 // PM display sub overrides for the known retinoid-night roles (design 05). Display
 // only, the toggle key (stepKey) is unchanged. Falls back to the step's instruction.
@@ -358,24 +353,23 @@ export default function TodayScreen() {
     queryFn: () => getCompletedSteps(today),
   });
   const done = doneData ?? new Set<string>();
-  const hasExamplePlan = planData?.isExample === true;
-  const hasRealRoutine = Boolean(planData && !planData.isExample);
-  const plan = hasRealRoutine ? planData?.plan : undefined;
-  const safetyExclusionCount = plan?.safetyExclusions.length ?? 0;
-  const cadenceWithheldCount = plan?.cadenceWithheld.length ?? 0;
-  const safetyExcludedIds = new Set(
-    plan?.safetyExclusions.map((exclusion) => exclusion.productId) ?? [],
-  );
-
-  // The orchestrated, profile-aware cycle drives tonight everywhere (so pregnancy
-  // suppression etc. is never contradicted by a hardcoded surface. Review fix).
-  const cycle = hasRealRoutine ? (cycleData?.cycle ?? null) : null;
-  const cTonight = cycleData?.tonight ?? null;
-  const skippedTonight = cycleData?.skippedTonight ?? false;
-  const recoveryActive = cycleData?.recovery.active ?? false;
-  const paused = cycleData?.paused ?? false;
-  const tonightSlot = cTonight?.night.slot ?? null;
-  const cycleStripNights = cycleData?.weekAhead.map((projected) => projected.night) ?? [];
+  // One pure, fail-closed projection now drives Today and native glance surfaces.
+  // It never exposes the design-only example plan and applies the orchestrated
+  // pause/skip/recovery/staging/profile-safety rules before publishing steps.
+  const routine = projectTodayRoutine({ planData, cycleData, completedStepKeys: done });
+  const {
+    hasExamplePlan,
+    hasRealRoutine,
+    safetyExclusionCount,
+    cadenceWithheldCount,
+    cycle,
+    tonight: cTonight,
+    skippedTonight,
+    recoveryActive,
+    paused,
+    tonightSlot,
+    cycleStripNights,
+  } = routine;
 
   // Persist the check-off to the local-first store, fire the activation metric on the
   // first-ever completion, and refresh Today + the streak/heat-map (docs/03 §6).
@@ -387,7 +381,7 @@ export default function TodayScreen() {
       lease.assertCurrent();
       const result = await toggleCompletion(key, today);
       lease.assertCurrent();
-      if (result.done) {
+      if (result.inserted) {
         const moment = type.toLowerCase();
         track('routine_checkoff_completed', { moment });
         if (result.firstEver) track('first_checkoff_completed', { moment });
@@ -399,14 +393,14 @@ export default function TodayScreen() {
             cycleActive: context?.cycleActive === true,
             phase: checkoffPhase,
             stepKeys: context?.stepKeys ?? [],
-            completionDone: result.done,
+            completionDone: result.inserted,
           })
         ) {
           track('cycle_night_completed', { moment: 'pm', source: 'today' });
         }
       }
       lease.assertCurrent();
-      if (result.done && (progress?.streak ?? 0) >= 6) {
+      if (result.inserted && (progress?.streak ?? 0) >= 6) {
         await requestReviewAfterValue('seven_checkoff_days');
         lease.assertCurrent();
       }
@@ -439,10 +433,7 @@ export default function TodayScreen() {
 
   // ---- AM ----
   if (!dark) {
-    const steps = plan?.am ?? [];
-    const firstUndone =
-      steps.map((s) => stepKey('AM', s.productId)).find((k) => !done.has(k)) ?? null;
-    const doneCount = steps.filter((s) => done.has(stepKey('AM', s.productId))).length;
+    const { steps, firstUndoneKey: firstUndone, completedCount: doneCount } = routine.am;
     return (
       <Screen edges={['top']}>
         <ScrollView
@@ -599,54 +590,14 @@ export default function TodayScreen() {
   }
 
   // ---- PM (dark). Driven by the orchestrated, profile-aware cycle ----
-  const nightNumber = cTonight ? cTonight.index + 1 : 0;
-  const nightTotal = cycle?.lengthNights ?? 0;
-  // Tonight's cycled active comes from the engine (suppressed correctly for
-  // pregnancy etc.). Not from a hardcoded literal. Skipped, recovery, AND
-  // paused/travel nights all drop the potent active so the evening trims to the
-  // stable barrier basics the pause/travel banners promise (docs/05 §6.4).
-  const scheduledCyclePlanStep = cTonight?.night.productId
-    ? plan?.pm.find((step) => step.productId === cTonight.night.productId)
-    : undefined;
-  const cycledStep =
-    !skippedTonight &&
-    !recoveryActive &&
-    !paused &&
-    cTonight?.night.productId &&
-    !safetyExcludedIds.has(cTonight.night.productId)
-      ? {
-          productId: cTonight.night.productId,
-          name: cTonight.night.productName ?? 'Tonight’s active',
-          instruction: slotInstruction(cTonight.night.slot),
-          order: scheduledCyclePlanStep?.order ?? 40,
-          role:
-            scheduledCyclePlanStep?.role ??
-            (cTonight.night.slot === 'retinoid' ? ('treatment' as const) : undefined),
-        }
-      : null;
-  const dailyPm = (plan?.pm ?? []).filter(
-    (step) => step.cadence !== 'cycle' && !safetyExcludedIds.has(step.productId),
-  );
-  const pmSteps = [...dailyPm, ...(cycledStep ? [cycledStep] : [])].sort(
-    (a, b) => a.order - b.order,
-  );
-  const hasScheduledRetinoid = cycledStep?.role === 'treatment';
-  const pmStepKeys = pmSteps.map((s) => stepKey('PM', s.productId));
-  const firstUndonePm = pmStepKeys.find((k) => !done.has(k)) ?? null;
-  const donePm = pmSteps.filter((s) => done.has(stepKey('PM', s.productId))).length;
-  const suppressedAcidName =
-    tonightSlot === 'retinoid' && cycle
-      ? (cycle.nights.find(
-          (night) =>
-            night.slot === 'exfoliate' &&
-            !hasUseTogetherChoiceBetween(
-              cycleData?.conflictChoices ?? [],
-              cTonight?.night.productId,
-              night.productId,
-            ),
-        )?.productName ?? null)
-      : null;
-  const nextAcidISO = cycleData?.nextAcidNight ?? null;
+  const { nightNumber, nightTotal, hasScheduledRetinoid, suppressedAcidName, nextAcidISO } =
+    routine;
+  const {
+    steps: pmSteps,
+    stepKeys: pmStepKeys,
+    firstUndoneKey: firstUndonePm,
+    completedCount: donePm,
+  } = routine.pm;
 
   return (
     <Screen tone="night" edges={['top']}>
@@ -835,13 +786,7 @@ export default function TodayScreen() {
                     onPress={() =>
                       void toggle(k, {
                         phase: 'PM',
-                        cycleActive: Boolean(
-                          cycle &&
-                          cTonight?.night.productId &&
-                          !paused &&
-                          !skippedTonight &&
-                          !recoveryActive,
-                        ),
+                        cycleActive: routine.cycleActive,
                         stepKeys: pmStepKeys,
                       })
                     }

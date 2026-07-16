@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-16T04:24:45.915Z
+Generated: 2026-07-16T05:48:23.573Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 49
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 1799
+- Hash references checked: 1818
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -43,7 +43,7 @@ being treated as trustworthy launch evidence.
 | docs/phase-4/generated/obf-fixture-import.json            | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/source-worklist.json               | json | 0                  | 0                          | 149       | 0               |
 | docs/phase-4/generated/source-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 93        | 0               |
+| docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 112       | 0               |
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-6/generated/payments-qa-packet.json            | json | 0                  | 0                          | 61        | 0               |
 | docs/phase-6/generated/payments-qa-packet.md              | md   | 0                  | 0                          | 0         | 0               |

@@ -8,6 +8,7 @@ import {
 import {
   buildMobileDataExportBundle,
   collectLocalDeviceExportData,
+  LOCAL_DEVICE_EXPORT_EXCLUDED_STORAGE_KEYS,
   LOCAL_DEVICE_EXPORT_STORAGE_KEYS,
 } from './localDeviceExport';
 
@@ -41,12 +42,13 @@ describe('local device data export', () => {
   });
 
   it('accounts for every encrypted local private-data key exactly once', () => {
-    expect([...LOCAL_DEVICE_EXPORT_STORAGE_KEYS].sort()).toEqual(
-      [...LOCAL_PRIVATE_DATA_KEYS].sort(),
-    );
-    expect(new Set(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).size).toBe(
-      LOCAL_DEVICE_EXPORT_STORAGE_KEYS.length,
-    );
+    const accountedKeys = [
+      ...LOCAL_DEVICE_EXPORT_STORAGE_KEYS,
+      ...LOCAL_DEVICE_EXPORT_EXCLUDED_STORAGE_KEYS,
+    ];
+    expect(accountedKeys.sort()).toEqual([...LOCAL_PRIVATE_DATA_KEYS].sort());
+    expect(new Set(accountedKeys).size).toBe(accountedKeys.length);
+    expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('routinekind.widgetActionMap.v1');
   });
 
   it('never reads or exports durable privacy-request recovery capabilities', async () => {

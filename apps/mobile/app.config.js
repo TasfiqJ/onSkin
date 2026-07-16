@@ -4,6 +4,7 @@ const { assertReleaseReadyReviewEvidence } = require('./phase3-review-evidence')
 const launchContract = require('../../docs/hugeToDo/launch-contract.json');
 
 const APP_VARIANTS = new Set(['development', 'staging', 'production']);
+const IOS_WIDGET_EXTENSION_BUILD_ENV = 'IOS_WIDGET_EXTENSION_BUILD_ENABLED';
 
 function readVariantEnv(name, value, defaultValue) {
   const rawValue = value === undefined ? defaultValue : value;
@@ -14,12 +15,29 @@ function readVariantEnv(name, value, defaultValue) {
   );
 }
 
+function readOptionalBooleanEnv(name, value) {
+  if (value === undefined) return false;
+  const candidate = typeof value === 'string' ? value.trim().toLowerCase() : '';
+  if (candidate === 'true') return true;
+  if (candidate === 'false') return false;
+  throw new Error(`${name} must be true or false; got ${value ?? '<unset>'}.`);
+}
+
 const variant = readVariantEnv('APP_VARIANT', process.env.APP_VARIANT, 'development');
 const appEnvironment =
   process.env.EXPO_PUBLIC_APP_ENV === undefined
     ? variant
     : readVariantEnv('EXPO_PUBLIC_APP_ENV', process.env.EXPO_PUBLIC_APP_ENV);
 const isProduction = variant === 'production';
+const iosWidgetExtensionBuildEnabled = readOptionalBooleanEnv(
+  IOS_WIDGET_EXTENSION_BUILD_ENV,
+  process.env[IOS_WIDGET_EXTENSION_BUILD_ENV],
+);
+if ((isProduction || appEnvironment === 'production') && iosWidgetExtensionBuildEnabled) {
+  throw new Error(
+    'Production iOS widget extension builds remain blocked until lifecycle, withdrawal cleanup, privacy, signed-binary, and physical-device evidence gates are implemented and bound to a separate production clearance.',
+  );
+}
 const androidReleaseRequired = launchContract.release.platforms.includes('android');
 const legacyIdentityPattern = /(^|[./:_-])onskin($|[./:_-])|onskin/i;
 const CONTROL_CHAR_RE = /[\u0000-\u001F\u007F]/;
@@ -67,49 +85,65 @@ function buildPlugins(plugins, permissionCopy) {
   const sentryOrg = process.env.SENTRY_ORG;
   const sentryProject = process.env.SENTRY_PROJECT;
 
-  return plugins.map((plugin) => {
+  return plugins.flatMap((plugin) => {
     const name = pluginName(plugin);
+
+    // Keep incomplete native extension source out of ordinary and store
+    // binaries. Dedicated QA builds opt in explicitly; production config still
+    // has to pass every identity, review, and evidence gate below.
+    if (
+      (name === 'expo-widgets' || name === './plugins/withRoutineKindWidgetPrivacyManifest') &&
+      !iosWidgetExtensionBuildEnabled
+    ) {
+      return [];
+    }
 
     if (name === 'expo-camera') {
       return [
-        name,
-        {
-          ...pluginOptions(plugin),
-          cameraPermission: permissionCopy.cameraPermission,
-        },
+        [
+          name,
+          {
+            ...pluginOptions(plugin),
+            cameraPermission: permissionCopy.cameraPermission,
+          },
+        ],
       ];
     }
 
     if (name === 'expo-local-authentication') {
       return [
-        name,
-        {
-          ...pluginOptions(plugin),
-          faceIDPermission: permissionCopy.faceIDPermission,
-        },
+        [
+          name,
+          {
+            ...pluginOptions(plugin),
+            faceIDPermission: permissionCopy.faceIDPermission,
+          },
+        ],
       ];
     }
 
     if (name === 'expo-font') {
-      return [name, createExpoFontPluginOptions()];
+      return [[name, createExpoFontPluginOptions()]];
     }
 
     if (name === '@react-native-google-signin/google-signin' && googleIosUrlScheme) {
-      return [name, { iosUrlScheme: googleIosUrlScheme }];
+      return [[name, { iosUrlScheme: googleIosUrlScheme }]];
     }
 
     if (name === '@sentry/react-native' && sentryOrg && sentryProject) {
       return [
-        name,
-        {
-          url: 'https://sentry.io/',
-          organization: sentryOrg,
-          project: sentryProject,
-        },
+        [
+          name,
+          {
+            url: 'https://sentry.io/',
+            organization: sentryOrg,
+            project: sentryProject,
+          },
+        ],
       ];
     }
 
-    return plugin;
+    return [plugin];
   });
 }
 
@@ -327,6 +361,10 @@ module.exports = () => {
     NSCameraUsageDescription: permissionCopy.cameraUsageDescription,
     NSFaceIDUsageDescription: permissionCopy.faceIDUsageDescription,
   };
+  if (!iosWidgetExtensionBuildEnabled) {
+    delete expo.ios.infoPlist.NSSupportsLiveActivities;
+    delete expo.ios.infoPlist.NSSupportsLiveActivitiesFrequentUpdates;
+  }
   assertProductionIdentity(expo, permissionCopy);
   assertProductionReviewClearance();
   applyProductionExportCompliance(expo);
@@ -354,6 +392,7 @@ module.exports = () => {
     publicLinkDomain: finalDomain,
     appStoreUrl,
     playStoreUrl,
+    iosWidgetExtensionBuildEnabled,
   };
 
   return { expo };

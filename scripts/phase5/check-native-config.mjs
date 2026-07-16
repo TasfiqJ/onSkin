@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { isReleasePlatformRequired, loadLaunchContract } from '../launch/contract.mjs';
+import {
+  validateIosExtensionConfig,
+  validateIosExtensionVariantIsolation,
+} from './ios-extension-contract.mjs';
 
 const strict = process.argv.includes('--strict');
 const root = process.cwd();
@@ -16,6 +21,10 @@ function pluginNames(plugins) {
   return new Set((plugins ?? []).map((plugin) => (Array.isArray(plugin) ? plugin[0] : plugin)));
 }
 
+function pluginNameList(plugins) {
+  return (plugins ?? []).map((plugin) => (Array.isArray(plugin) ? plugin[0] : plugin));
+}
+
 function pluginOptions(plugins, name) {
   const plugin = (plugins ?? []).find((candidate) =>
     Array.isArray(candidate) ? candidate[0] === name : candidate === name,
@@ -28,8 +37,10 @@ function pluginOptions(plugins, name) {
 const app = readJson('apps/mobile/app.base.json').expo;
 const eas = readJson('apps/mobile/eas.json');
 const pkg = readJson('apps/mobile/package.json');
+const packageLock = readJson('package-lock.json');
 const rootPkg = readJson('package.json');
 const plugins = pluginNames(app.plugins);
+const orderedPlugins = pluginNameList(app.plugins);
 const buildProperties = pluginOptions(app.plugins, 'expo-build-properties');
 const androidPermissions = new Set(app.android?.permissions ?? []);
 const errors = [];
@@ -42,6 +53,75 @@ function require(condition, message) {
 function warn(condition, message) {
   if (!condition) warnings.push(message);
 }
+
+function resolveNonProductionExpoConfig(variant) {
+  const probe = spawnSync(
+    process.execPath,
+    [resolve(root, 'scripts/phase5/resolve-ios-extension-config.mjs'), variant],
+    {
+      cwd: root,
+      encoding: 'utf8',
+      env: { ...process.env },
+      windowsHide: true,
+    },
+  );
+  if (probe.status !== 0) {
+    errors.push(
+      `${variant}: Expo iOS extension config could not be resolved: ${String(
+        probe.stderr || probe.stdout || 'unknown probe failure',
+      ).trim()}`,
+    );
+    return null;
+  }
+  try {
+    return JSON.parse(probe.stdout);
+  } catch {
+    errors.push(`${variant}: Expo iOS extension config probe returned invalid JSON.`);
+    return null;
+  }
+}
+
+const iosWidgetIdentities = [];
+for (const variant of ['development', 'staging']) {
+  const resolvedConfig = resolveNonProductionExpoConfig(variant);
+  if (!resolvedConfig) continue;
+  const validation = validateIosExtensionConfig({
+    config: resolvedConfig,
+    packageJson: pkg,
+    packageLock,
+    variant,
+  });
+  errors.push(...validation.errors);
+  if (validation.identity) iosWidgetIdentities.push(validation.identity);
+}
+errors.push(...validateIosExtensionVariantIsolation(iosWidgetIdentities));
+require(iosWidgetIdentities.length ===
+  2, 'Both development and staging iOS widget extension identities must resolve.');
+
+const widgetPluginIndex = orderedPlugins.indexOf('expo-widgets');
+const widgetPrivacyPluginName = './plugins/withRoutineKindWidgetPrivacyManifest';
+const widgetPrivacyPluginIndexes = orderedPlugins.flatMap((name, index) =>
+  name === widgetPrivacyPluginName ? [index] : [],
+);
+const userDefaultsPrivacyEntries = (
+  app.ios?.privacyManifests?.NSPrivacyAccessedAPITypes ?? []
+).filter((entry) => entry.NSPrivacyAccessedAPIType === 'NSPrivacyAccessedAPICategoryUserDefaults');
+require(userDefaultsPrivacyEntries.length === 1 &&
+  Array.isArray(userDefaultsPrivacyEntries[0]?.NSPrivacyAccessedAPITypeReasons) &&
+  userDefaultsPrivacyEntries[0].NSPrivacyAccessedAPITypeReasons.length === 1 &&
+  userDefaultsPrivacyEntries[0].NSPrivacyAccessedAPITypeReasons[0] ===
+    '1C8F.1', 'The main iOS privacy manifest must declare exactly UserDefaults reason 1C8F.1 for App Group access.');
+require(widgetPluginIndex >= 0 &&
+  widgetPrivacyPluginIndexes.length === 1 &&
+  widgetPrivacyPluginIndexes[0] ===
+    widgetPluginIndex +
+      1, 'The widget privacy-manifest plugin must appear exactly once, immediately after expo-widgets.');
+require(existsSync(
+  resolve(root, 'apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js'),
+), 'The widget extension privacy-manifest config plugin source is missing.');
+require(String(rootPkg.scripts?.['phase5:ios-extension-contract:smoke'] ?? '').includes(
+  'scripts/phase5/widget-privacy-manifest.test.mjs',
+), 'The Phase 5 iOS extension smoke command must run the widget privacy-manifest tests.');
 
 require(Boolean(pkg.dependencies?.['expo-camera']), 'expo-camera dependency is missing.');
 require(Boolean(
@@ -227,11 +307,14 @@ require(/Phase 5 device QA packet generated with a dirty Git worktree/.test(qaPa
   ), 'Phase 5 device QA packet must warn on dirty worktrees and expose Git status in Markdown.');
 for (const file of [
   'package.json',
+  'package-lock.json',
   'docs/hugeToDo/launch-contract.json',
   'scripts/launch/contract.mjs',
   'apps/mobile/app.base.json',
   'apps/mobile/app.config.js',
+  'apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js',
   'apps/mobile/eas.json',
+  'apps/mobile/package.json',
   'apps/mobile/src/app/_layout.tsx',
   'apps/mobile/src/app/(tabs)/progress.tsx',
   'apps/mobile/src/app/(tabs)/you.tsx',
@@ -243,12 +326,29 @@ for (const file of [
   'apps/mobile/src/features/photos/useCaptureAnalysis.ts',
   'apps/mobile/src/features/photos/useDetectedFaces.native.ts',
   'apps/mobile/src/features/photos/useDetectedFaces.ts',
+  'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
+  'apps/mobile/src/features/today/completionsStore.ts',
+  'apps/mobile/src/features/today/completionsStore.test.ts',
+  'apps/mobile/src/features/today/routineProjection.ts',
+  'apps/mobile/src/features/today/routineProjection.test.ts',
+  'apps/mobile/src/features/widgets/actionRegistry.ts',
+  'apps/mobile/src/features/widgets/actionRegistry.test.ts',
+  'apps/mobile/src/features/widgets/contract.ts',
+  'apps/mobile/src/features/widgets/contract.test.ts',
+  'apps/mobile/src/features/widgets/TodayWidget.ios.tsx',
+  'apps/mobile/src/features/widgets/TonightActivity.ios.tsx',
+  'apps/mobile/src/features/widgets/widgetViews.test.ts',
   'packages/types/src/database.types.ts',
   'supabase/migrations/20260710000036_photo_quality_provenance.sql',
   'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
   'apps/mobile/src/lib/iap/revenuecat.ts',
+  'apps/mobile/src/lib/consent/healthDataWriteAdmission.ts',
   'scripts/phase5/build-device-qa-packet.mjs',
   'scripts/phase5/check-native-config.mjs',
+  'scripts/phase5/ios-extension-contract.mjs',
+  'scripts/phase5/ios-extension-contract.test.mjs',
+  'scripts/phase5/widget-privacy-manifest.test.mjs',
+  'scripts/phase5/resolve-ios-extension-config.mjs',
   'scripts/phase5/check-performance-evidence.mjs',
   'scripts/phase5/device-qa-packet-smoke.mjs',
   'scripts/phase5/performance-evidence-contract.mjs',

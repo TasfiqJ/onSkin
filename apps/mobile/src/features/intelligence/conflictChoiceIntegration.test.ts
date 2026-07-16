@@ -46,12 +46,12 @@ describe('conflict choice integration contracts', () => {
   });
 
   it('suppresses repeat separation copy for use-together while keeping the guided schedule firm', () => {
-    const today = readSource('app/(tabs)/today.tsx');
+    const todayProjection = readSource('features/today/routineProjection.ts');
     const week = readSource('app/cycle/week.tsx');
     const whyTonight = readSource('app/cycle/why-tonight.tsx');
     const detail = readSource('app/shelf/[id].tsx');
 
-    expect(today).toContain('hasUseTogetherChoiceBetween(');
+    expect(todayProjection).toContain('hasUseTogetherChoiceBetween(');
     expect(week).toContain('hasUseTogetherChoiceBetween(');
     expect(whyTonight).toContain('Guided check-offs keep one potent active per night');
     expect(detail).toContain('Guided check-offs stay on the reviewed one-active schedule.');

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T03:34:13.307Z",
+  "generatedAt": "2026-07-16T05:42:46.640Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin-main-pay06\\docs\\phase-4\\beta-coverage-input.json",
-  "gitSha": "17f1452be2da1f4423266b403b78d143b677f175",
+  "gitSha": "622988e31fd7e572bdc9a841c6f922cdaea43152",
   "gitStatus": "",
   "inputArtifact": {
     "path": "docs/phase-4/beta-coverage-input.json",
@@ -83,8 +83,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 27145,
-      "sha256": "ffa939c5bebc307cd3fb47a3e9a2c1b42bca299a742abd9af280ad995cc12c8f"
+      "bytes": 27392,
+      "sha256": "c345ff12fa6b984db00861701fda8f32ed56127de09f0a62cbd8dc86997bfbf7"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -186,13 +186,13 @@
       "path": "docs/phase-4/generated/source-worklist.json",
       "exists": true,
       "bytes": 46713,
-      "sha256": "c41e6897180c939ba280536b331fabb7cb7830793b7e43c2b38fa6bf6b74b008"
+      "sha256": "4f0ac301dcf6f697b9c9bb9a324b001d19aaa53020eb417b466ef600f552c757"
     },
     {
       "path": "docs/phase-4/generated/source-worklist.md",
       "exists": true,
       "bytes": 28928,
-      "sha256": "c3f8cb0ff7e2b6f458e8b944dad139ab39c143b40ca8a744890b7860ab124d72"
+      "sha256": "d0acaa9533c54a45fb8a40d203ae3a41afa6296194324826897efae4b10bfe38"
     },
     {
       "path": "docs/phase-4/observability-dashboard.md",
@@ -210,13 +210,13 @@
       "path": "docs/phase-4/generated/catalog-qa-report.json",
       "exists": true,
       "bytes": 7475,
-      "sha256": "5a14c91ac7aec44e0e826b1f944691a92931ad134101a65e1654777dc8f9e017"
+      "sha256": "29705e6420239745b815f5246ac4a209bd2c3fc4bb3a5ec0b10759a7900773ea"
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
       "exists": true,
       "bytes": 4055,
-      "sha256": "2352bd04ddc326a97aef0cd825504ffce5d90d8c1d32b0f07475f43e96ee4e0f"
+      "sha256": "2bb7b9afbe38fc30148b2e94584e01d1dac538fc2a2aa7b8422e7e101cefe098"
     },
     {
       "path": "docs/phase-10/beta-event-schema.md",

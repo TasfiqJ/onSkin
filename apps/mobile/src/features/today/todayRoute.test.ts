@@ -55,16 +55,18 @@ describe('Today route mobile contracts', () => {
       "className={tight ? 'mt-2 min-h-[52px] py-3' : compact ? 'mt-3' : 'mt-5'}",
     );
     expect(source.match(/short=\{shortEmptyRoutine\}/g)).toHaveLength(2);
-    expect(source).toContain('const hasExamplePlan = planData?.isExample === true;');
-    expect(source).toContain('const hasRealRoutine = Boolean(planData && !planData.isExample);');
-    expect(source).toContain('const plan = hasRealRoutine ? planData?.plan : undefined;');
-    expect(source).toContain('const cycle = hasRealRoutine ? (cycleData?.cycle ?? null) : null;');
-    expect(source).toContain('const safetyExcludedIds = new Set(');
-    expect(source).toContain('!safetyExcludedIds.has(cTonight.night.productId)');
-    expect(source).toContain("step.cadence !== 'cycle' && !safetyExcludedIds.has(step.productId)");
+    expect(source).toContain(
+      "import { projectTodayRoutine } from '@/features/today/routineProjection';",
+    );
+    expect(source).toContain(
+      'const routine = projectTodayRoutine({ planData, cycleData, completedStepKeys: done });',
+    );
+    expect(source).toContain('hasExamplePlan,');
+    expect(source).toContain('hasRealRoutine,');
+    expect(source).toContain('safetyExclusionCount,');
+    expect(source).toContain('cadenceWithheldCount,');
     expect(source).not.toContain('step.cyclingNight');
     expect(source).toContain('function CadenceWithheldNotice');
-    expect(source).toContain('const cadenceWithheldCount = plan?.cadenceWithheld.length ?? 0;');
     expect(source).toContain('Timing is not set for ${count} ${productLabel}.');
     expect(source).toContain("router.push('/routine/plan')");
     expect(source.match(/<CadenceWithheldNotice/g)).toHaveLength(2);
@@ -122,14 +124,13 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain("if (slot === 'recover') return 'Reco\\nver';");
     expect(source).toContain('const { height, width } = useWindowDimensions();');
     expect(source).toContain('const compactCycleStrip = compactPhone || width < 430;');
-    expect(source).toContain('const nightNumber = cTonight ? cTonight.index + 1 : 0');
-    expect(source).toContain('const nightTotal = cycle?.lengthNights ?? 0');
+    expect(source).toContain(
+      'const { nightNumber, nightTotal, hasScheduledRetinoid, suppressedAcidName, nextAcidISO } =',
+    );
     expect(source).toContain('const label = cycleStripLabel(n.slot, compactCycleStrip);');
     expect(source).toContain('const accessibilityLabel = slotLabel(n.slot);');
     expect(source).toContain('{cycle ? (');
-    expect(source).toContain(
-      'const cycleStripNights = cycleData?.weekAhead.map((projected) => projected.night) ?? [];',
-    );
+    expect(source).toContain('cycleStripNights,');
     expect(source).toContain('cycleStripNights.map((n, i) =>');
     expect(source).toContain('const active = i === 0;');
     expect(source).not.toContain('cycle.nights.map((n, i) =>');
@@ -160,10 +161,7 @@ describe('Today route mobile contracts', () => {
     expect(source).toContain('completedBefore: done');
     expect(source).toContain('completedKey: key');
     expect(source).toContain("phase: 'PM'");
-    expect(source).toContain('cTonight?.night.productId &&');
-    expect(source).toContain('!paused &&');
-    expect(source).toContain('!skippedTonight &&');
-    expect(source).toContain('!recoveryActive,');
+    expect(source).toContain('cycleActive: routine.cycleActive');
     expect(source).toContain('stepKeys: pmStepKeys');
     expect(source).toContain("track('cycle_night_completed', { moment: 'pm', source: 'today' })");
     const eventIndex = source.indexOf("track('cycle_night_completed'");

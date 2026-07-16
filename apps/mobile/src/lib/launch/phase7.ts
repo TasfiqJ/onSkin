@@ -25,8 +25,9 @@ const productionSurfaceReady = env.appEnvironment !== 'production' || finalDomai
 
 // Environment flags can expose only capabilities that actually exist in the
 // release binary. These literals are intentionally not environment-driven:
-// widgets have no native targets, community has no submission/moderation or
-// aggregate-data path, and Trend has no validated engine. Keeping those facts
+// widget source is build-gated until lifecycle and device proof are complete,
+// community has no submission/moderation or aggregate-data path, and Trend has
+// no validated engine. Keeping those facts
 // here prevents a release configuration mistake from turning previews,
 // placeholder data, or consent scaffolding into a customer-facing promise.
 export const phase7Capabilities = Object.freeze({
@@ -100,8 +101,9 @@ export const deferredSurfaceCopy: Record<DeferredSurfaceKind, DeferredSurfaceCop
   },
   widgets: {
     title: 'Widgets are not in this beta',
-    body: 'Today check-offs and reminders work inside the app. No native home-screen widget or live activity target ships in this release.',
-    detail: 'This route does not offer a preview, OS control, or paid widget upgrade.',
+    body: 'Today check-offs and reminders work inside the app. This build does not enable a customer-ready home-screen widget or Live Activity.',
+    detail:
+      'Native source stays gated until lifecycle, privacy, signed-binary, and physical-device evidence pass. This route offers no preview, OS control, or paid widget upgrade.',
     cta: 'Back',
   },
   shareCard: {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T00:37:11.267Z",
+  "generatedAt": "2026-07-16T05:48:13.404Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -81,10 +81,10 @@
   "purpose": "Audit source-of-truth launch readiness docs for current evidence dates, non-mutating verification commands, and stale test-count baselines.",
   "evidenceDate": "2026-07-15",
   "humanE2eManifestPath": "docs/e2e/generated/human-e2e-manifest.json",
-  "expectedMobileTestFiles": 269,
-  "expectedMobileTests": 3087,
-  "actualMobileTestFiles": 269,
-  "expectedTestPhrase": "269 mobile test files / 3087 tests",
+  "expectedMobileTestFiles": 273,
+  "expectedMobileTests": 3139,
+  "actualMobileTestFiles": 273,
+  "expectedTestPhrase": "273 mobile test files / 3139 tests",
   "docs": [
     {
       "path": "LAUNCH_READINESS.md",
@@ -94,24 +94,24 @@
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 269,
-          "tests": 3087,
-          "source": "269 test files / 3087 tests"
+          "testFiles": 273,
+          "tests": 3139,
+          "source": "273 test files / 3139 tests"
         },
         {
-          "testFiles": 269,
-          "tests": 3087,
-          "source": "269 mobile test files / 3087 tests"
+          "testFiles": 273,
+          "tests": 3139,
+          "source": "273 mobile test files / 3139 tests"
         },
         {
-          "testFiles": 269,
-          "tests": 3087,
-          "source": "269 mobile test files / 3087 tests"
+          "testFiles": 273,
+          "tests": 3139,
+          "source": "273 mobile test files / 3139 tests"
         },
         {
-          "testFiles": 269,
-          "tests": 3087,
-          "source": "269 mobile test files / 3087 tests"
+          "testFiles": 273,
+          "tests": 3139,
+          "source": "273 mobile test files / 3139 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -127,9 +127,9 @@
       "hasExpectedTestPhrase": true,
       "testBaselines": [
         {
-          "testFiles": 269,
-          "tests": 3087,
-          "source": "269 mobile test files / 3087 tests"
+          "testFiles": 273,
+          "tests": 3139,
+          "source": "273 mobile test files / 3139 tests"
         }
       ],
       "unexpectedTestBaselines": [],
@@ -150,9 +150,9 @@
           "source": "266 test files / 3,026 tests"
         },
         {
-          "testFiles": 269,
-          "tests": 3087,
-          "source": "269 test files /\n3087 tests"
+          "testFiles": 273,
+          "tests": 3139,
+          "source": "273 test files /\n3139 tests"
         }
       ],
       "unexpectedTestBaselines": [

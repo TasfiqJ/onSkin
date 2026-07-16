@@ -18,7 +18,16 @@
       "icon": "./assets/expo.icon",
       "infoPlist": {
         "NSCameraUsageDescription": "RoutineKind uses the camera to scan product barcodes, capture ingredient labels, and take guided progress photos. Camera processing happens on your device; no faceprint is stored.",
-        "NSFaceIDUsageDescription": "RoutineKind uses Face ID to keep your private photo timeline for your eyes only."
+        "NSFaceIDUsageDescription": "RoutineKind uses Face ID to keep your private photo timeline for your eyes only.",
+        "NSSupportsLiveActivities": true
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": ["1C8F.1"]
+          }
+        ]
       }
     },
     "android": {
@@ -88,6 +97,31 @@
         }
       ],
       "expo-localization",
+      [
+        "expo-widgets",
+        {
+          "enableAndroid": false,
+          "enablePushNotifications": false,
+          "frequentUpdates": false,
+          "widgets": [
+            {
+              "name": "RoutineKindToday",
+              "displayName": "Today",
+              "description": "See today’s routine progress and check off the next step.",
+              "ios": {
+                "supportedFamilies": [
+                  "systemSmall",
+                  "systemMedium",
+                  "accessoryRectangular",
+                  "accessoryInline"
+                ]
+              },
+              "android": null
+            }
+          ]
+        }
+      ],
+      "./plugins/withRoutineKindWidgetPrivacyManifest",
       "@sentry/react-native"
     ],
     "experiments": {

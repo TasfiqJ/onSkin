@@ -98,8 +98,8 @@ The current post-0055 local gate passed two clean resets, exact 54-migration
 history, the full structural pgTAP suite plus 114/114 Apple lifecycle
 assertions, schema lint, an empty migration shadow diff, temporary type
 generation, 20/20 focused Apple event/lifecycle Edge tests, and the 47-test
-Apple auth work lane. The current full mobile suite also passes 269 test files /
-3087 tests. The race assertions include terminal-before-lifecycle,
+Apple auth work lane. The current full mobile suite also passes 273 test files /
+3139 tests. The race assertions include terminal-before-lifecycle,
 terminal-before-identity, capture-time no-retry reconciliation, and no code
 dispatch after the committed `blocked` result.
 

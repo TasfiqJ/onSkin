@@ -47,6 +47,13 @@ Completed in repo:
 - Photo timeline/detail/compare render through encrypted-aware image loading.
 - Photo deletion removes local encrypted files.
 - Phase 5 config check and device QA packet generator added.
+- IOS-02 has a production-disabled iOS extension source scaffold with one
+  variant-derived WidgetKit/App Group target, exact reviewed Expo dependency
+  locks, a closed privacy-minimized timeline/action contract, encrypted
+  capability mapping, fail-generic privacy-sensitive views, and main plus
+  extension-target `PrivacyInfo.xcprivacy` declarations for App Group
+  UserDefaults reason `1C8F.1`. Ordinary builds omit the target and production
+  config rejects its QA-only opt-in.
 - A structured performance-evidence template, strict validator, and smoke suite
   now require predeclared thresholds, supported physical-device/build proof,
   repeated raw supported-iPhone measurements including post-capture analysis,
@@ -75,6 +82,16 @@ Still blocked before beta:
 - RevenueCat Test Store/sandbox native smoke.
 - Sentry native crash/source-map smoke.
 - Notification timing matrix on supported iPhones and iOS versions.
+- WidgetKit/ActivityKit registration and lifecycle controller, including
+  pending-action reconciliation before whole-timeline replacement, historical
+  App Group byte pruning on expiry/withdrawal/sign-out/account transition, and
+  a deterministic killed-app Live Activity end/redaction path. Stock
+  `expo-widgets` uses `staleDate: nil`, so production Live Activity start stays
+  prohibited until that path is replaced and proven.
+- macOS archive inspection proving the extension privacy manifest is inside the
+  signed `.appex`, followed by physical-iPhone widget families, locked-state
+  privacy, interaction, deep-link, process-death, accessibility, and withdrawal
+  QA using the final cleared app identity.
 - Passing `phase5:performance-evidence:strict` artifact with owner-defined
   pre-measurement thresholds and real supported-device raw measurements.
 - Brand/legal clearance for production identifiers.

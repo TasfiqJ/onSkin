@@ -36,6 +36,7 @@ export const HEALTH_PURPOSE_PRIVATE_DATA_KEYS = [
   'routinekind.cycle.v2',
   'routinekind.routineActivation.v1',
   'routinekind.routineOrder.v1',
+  'routinekind.widgetActionMap.v1',
   'onskin.shelf.v1',
   'onskin.skinprofile.v1',
   'onskin.subscription.freeConflictCheckRuleIds.v1',
@@ -50,6 +51,7 @@ export type HealthDataWriteLease = Readonly<{
   epoch: number;
   ownerUserId: string;
   accountGeneration: number;
+  expiresAt: number | null;
 }>;
 
 export type HealthDataWriteOperationLease = HealthDataWriteLease &
@@ -76,6 +78,7 @@ export function captureHealthDataWriteLease(expectedOwnerUserId?: string): Healt
     epoch: active.epoch,
     ownerUserId: active.ownerUserId,
     accountGeneration: active.accountGeneration,
+    expiresAt: active.expiresAt,
   });
 }
 

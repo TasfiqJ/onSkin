@@ -14,12 +14,17 @@ type LocalExportSection =
   | 'subscription';
 
 type LocalExportSpec = {
-  key: Exclude<LocalPrivateDataKey, 'onskin.photos.v1'>;
+  key: Exclude<LocalPrivateDataKey, 'onskin.photos.v1' | 'routinekind.widgetActionMap.v1'>;
   section: LocalExportSection;
   field: string;
 };
 
 const PHOTO_RECORDS_KEY = 'onskin.photos.v1' as const;
+
+/** Ephemeral security capabilities are accounted for but never read into an export. */
+export const LOCAL_DEVICE_EXPORT_EXCLUDED_STORAGE_KEYS = [
+  'routinekind.widgetActionMap.v1',
+] as const satisfies readonly LocalPrivateDataKey[];
 
 const LOCAL_EXPORT_SPECS = [
   { key: 'onskin.ageVerified', section: 'account_and_privacy', field: 'age_verified' },
@@ -402,6 +407,11 @@ export async function collectLocalDeviceExportData(
         data_class: 'privacy_request_recovery_capabilities',
         reason:
           'Owner bindings, idempotency keys, and recovery capabilities used to finish deletion or consent-withdrawal requests are security control data and are never exported.',
+      },
+      {
+        data_class: 'widget_action_capabilities',
+        reason:
+          'Ephemeral widget action tokens, owner bindings, and private step mappings are security control data and are never exported.',
       },
     ],
   };

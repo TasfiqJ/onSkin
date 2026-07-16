@@ -128,6 +128,7 @@ describe('today completion persistence', () => {
   it('persists a normal check-off in the versioned envelope across fresh Today reads', async () => {
     await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
       done: true,
+      inserted: true,
       firstEver: true,
     });
 
@@ -139,10 +140,12 @@ describe('today completion persistence', () => {
   it('preserves an existing completion and does not re-fire first-ever activation', async () => {
     await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
       done: true,
+      inserted: true,
       firstEver: true,
     });
     await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
       done: true,
+      inserted: false,
       firstEver: false,
     });
 
@@ -156,6 +159,7 @@ describe('today completion persistence', () => {
 
     await expect(toggleCompletion('AM:cleanser', DAY)).resolves.toEqual({
       done: true,
+      inserted: false,
       firstEver: false,
     });
 
@@ -206,6 +210,7 @@ describe('today completion persistence', () => {
     const results = await Promise.all(stepKeys.map((key) => toggleCompletion(key, DAY)));
 
     expect(new Set(storedDays()[DAY])).toEqual(new Set(stepKeys));
+    expect(results.filter((result) => result.inserted)).toHaveLength(stepKeys.length);
     expect(results.filter((result) => result.firstEver)).toHaveLength(1);
   });
 
@@ -252,10 +257,12 @@ describe('today completion persistence', () => {
   it('does not persist empty step keys or invalid completion dates', async () => {
     await expect(toggleCompletion('   ', DAY)).resolves.toEqual({
       done: false,
+      inserted: false,
       firstEver: false,
     });
     await expect(toggleCompletion('AM:cleanser', '2026-02-31')).resolves.toEqual({
       done: false,
+      inserted: false,
       firstEver: false,
     });
 
