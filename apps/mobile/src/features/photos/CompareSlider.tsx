@@ -15,7 +15,7 @@ import { PhotoImage } from './PhotoImage';
 // the two photos and their dates. expo-image renders each encrypted on-device file;
 // the flat fallback appears only when a legacy or damaged record has no usable bytes.
 
-export type ComparePhoto = { uri: string | null; date: string; tone: string };
+export type ComparePhoto = { id: string; uri: string | null; date: string; tone: string };
 const HANDLE_SHADOW =
   Platform.OS === 'web'
     ? { boxShadow: '0 3px 12px rgba(0, 0, 0, 0.28)' }
@@ -27,11 +27,15 @@ const HANDLE_SHADOW =
         elevation: 4,
       };
 
-function Panel({ photo }: { photo: ComparePhoto }) {
+function Panel({ photo, active }: { photo: ComparePhoto; active: boolean }) {
   if (photo.uri) {
     return (
       <PhotoImage
         uri={photo.uri}
+        photoId={photo.id}
+        rendition="display"
+        requestPriority="interactive"
+        active={active}
         style={{ flex: 1 }}
         contentFit="cover"
         fallbackTone={photo.tone}
@@ -83,12 +87,14 @@ export function CompareSlider({
   before,
   after,
   sideBySide,
+  active = true,
   onPickBefore,
   onPickAfter,
 }: {
   before: ComparePhoto;
   after: ComparePhoto;
   sideBySide: boolean;
+  active?: boolean;
   onPickBefore?: () => void;
   onPickAfter?: () => void;
 }) {
@@ -126,11 +132,11 @@ export function CompareSlider({
       <View className="flex-row gap-2">
         {[before, after].map((p, i) => (
           <View
-            key={i}
+            key={`${i}:${p.id}`}
             className="flex-1 overflow-hidden rounded-card"
             style={{ height: 368, borderWidth: 1, borderColor: colors.hairline }}
           >
-            <Panel photo={p} />
+            <Panel photo={p} active={active} />
             <View className="absolute left-2.5 top-2.5">
               <DateChip
                 date={p.date}
@@ -154,7 +160,7 @@ export function CompareSlider({
         <View style={{ flex: 1 }}>
           {/* base = after (right side) */}
           <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-            <Panel photo={after} />
+            <Panel photo={after} active={active} />
           </View>
           {/* before clipped to the left */}
           <Animated.View
@@ -164,7 +170,7 @@ export function CompareSlider({
             ]}
           >
             <View style={{ width: w, height: '100%' }}>
-              <Panel photo={before} />
+              <Panel photo={before} active={active} />
             </View>
           </Animated.View>
           {/* divider */}

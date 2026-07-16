@@ -10,6 +10,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 
 import { configureNotifications } from '@/features/notifications/startup';
 import { OnboardingProvider } from '@/features/onboarding/OnboardingContext';
+import { prepareSensitiveImageDiskCacheMigration } from '@/features/photos/sensitiveImageDiskCache';
 import { IntakeProvider } from '@/features/shelf/IntakeContext';
 import { AppLockProvider } from '@/lib/applock/AppLockProvider';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
@@ -25,6 +26,9 @@ import { useFontDecision } from '@/theme/fontLoader';
 
 initSentry();
 markStartupPhase('javascript_started');
+// Privacy migration only: older builds could have inherited expo-image's disk
+// cache default. PhotoImage also gates decrypt until this scrub proves complete.
+void prepareSensitiveImageDiskCacheMigration();
 void SplashScreen.preventAutoHideAsync();
 
 // Keep root notification handler startup minimal. Business-store/scheduling

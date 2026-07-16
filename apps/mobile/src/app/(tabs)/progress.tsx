@@ -6,6 +6,7 @@ import {
   Pressable,
   ScrollView,
   SectionList,
+  type ViewToken,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -36,6 +37,11 @@ import { colors } from '@/theme/tokens';
 // reachable from Today + You). Local-only, no scores, app-locked, your own eyes.
 
 const SAGE = '#9DB18A';
+const PHOTO_VIEWABILITY_CONFIG = { itemVisiblePercentThreshold: 40 } as const;
+
+function sameStringSet(left: ReadonlySet<string>, right: ReadonlySet<string>): boolean {
+  return left.size === right.size && [...left].every((value) => right.has(value));
+}
 function short(ymd: string): string {
   return parseLocalDate(ymd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
@@ -151,19 +157,25 @@ function FirstRun({ compact = false }: { compact?: boolean }) {
 // ── Compare-pair picker (docs/06 §4: "tap a date to change") ─────────────────
 type PhotoLite = PhotosQueryData['series'][number];
 type TrendInsightSource = ReturnType<typeof useTrendInsightFromPhotos>;
+type CompareSelection = Readonly<{ beforeId?: string; afterId?: string }>;
+type CompareSelectionTarget = 'before' | 'after';
 function PairPickerPhoto({
   id,
   localUri,
+  thumbnailLocalUri,
   takenLocalDate,
   target,
   selected,
+  active,
   onSelect,
 }: {
   id: PhotoLite['id'];
   localUri: PhotoLite['localUri'];
+  thumbnailLocalUri: PhotoLite['thumbnailLocalUri'];
   takenLocalDate: PhotoLite['takenLocalDate'];
   target: 'first' | 'second';
   selected: boolean;
+  active: boolean;
   onSelect: (id: string) => void;
 }) {
   return (
@@ -176,8 +188,15 @@ function PairPickerPhoto({
       style={{ width: 92, aspectRatio: 3 / 4 }}
       className="overflow-hidden rounded-[12px]"
     >
-      {localUri ? (
-        <PhotoImage uri={localUri} style={{ flex: 1 }} />
+      {(thumbnailLocalUri ?? localUri) ? (
+        <PhotoImage
+          uri={thumbnailLocalUri ?? localUri}
+          photoId={id}
+          rendition="thumbnail"
+          requestPriority="visible"
+          active={active}
+          style={{ flex: 1 }}
+        />
       ) : (
         <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
       )}
@@ -217,6 +236,16 @@ function PairPicker({
   const title = which === 'before' ? 'Choose the first photo' : 'Choose the second photo';
   const target = which === 'before' ? 'first' : 'second';
   const latestFirstPhotos = useMemo(() => photos.slice().reverse(), [photos]);
+  const [visiblePhotoIds, setVisiblePhotoIds] = useState<ReadonlySet<string>>(() => new Set());
+  const onPickerViewableItemsChanged = useCallback(
+    ({ viewableItems }: { viewableItems: ViewToken<PhotoLite>[] }) => {
+      const next = new Set(
+        viewableItems.filter((item) => item.isViewable).map((item) => item.item.id),
+      );
+      setVisiblePhotoIds((current) => (sameStringSet(current, next) ? current : next));
+    },
+    [],
+  );
 
   return (
     <Modal
@@ -256,15 +285,24 @@ function PairPicker({
             horizontal
             data={latestFirstPhotos}
             keyExtractor={(photo) => photo.id}
+            extraData={visiblePhotoIds}
+            initialNumToRender={4}
+            maxToRenderPerBatch={4}
+            windowSize={5}
+            getItemLayout={(_data, index) => ({ length: 102, offset: 102 * index, index })}
+            viewabilityConfig={PHOTO_VIEWABILITY_CONFIG}
+            onViewableItemsChanged={onPickerViewableItemsChanged}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ gap: 10 }}
             renderItem={({ item: photo }) => (
               <PairPickerPhoto
                 id={photo.id}
                 localUri={photo.localUri}
+                thumbnailLocalUri={photo.thumbnailLocalUri}
                 takenLocalDate={photo.takenLocalDate}
                 target={target}
                 selected={photo.id === selectedId}
+                active={which !== null && visiblePhotoIds.has(photo.id)}
                 onSelect={onSelect}
               />
             )}
@@ -276,10 +314,17 @@ function PairPicker({
 }
 
 // ── Compare (design screen 04) ───────────────────────────────────────────────
-function CompareView({ data }: { data: PhotosQueryData }) {
+function CompareView({
+  data,
+  selection,
+  onSelectPhoto,
+}: {
+  data: PhotosQueryData;
+  selection: CompareSelection;
+  onSelectPhoto: (target: CompareSelectionTarget, id: string) => void;
+}) {
   const [sideBySide, setSideBySide] = useState(false);
   const [picking, setPicking] = useState<'before' | 'after' | null>(null);
-  const [pick, setPick] = useState<{ beforeId?: string; afterId?: string }>({});
   const dflt = data.comparePair;
 
   if (!dflt) {
@@ -303,13 +348,13 @@ function CompareView({ data }: { data: PhotosQueryData }) {
 
   // Resolve the active pair: a user pick (docs/06 §4 "any two captures") or the
   // default earliest-vs-latest.
-  const before = (pick.beforeId && data.series.find((p) => p.id === pick.beforeId)) || dflt.before;
-  const after = (pick.afterId && data.series.find((p) => p.id === pick.afterId)) || dflt.after;
+  const before =
+    (selection.beforeId && data.series.find((p) => p.id === selection.beforeId)) || dflt.before;
+  const after =
+    (selection.afterId && data.series.find((p) => p.id === selection.afterId)) || dflt.after;
 
   function choose(id: string) {
-    setPick((prev) =>
-      picking === 'before' ? { ...prev, beforeId: id } : { ...prev, afterId: id },
-    );
+    if (picking) onSelectPhoto(picking, id);
     setPicking(null);
   }
 
@@ -334,9 +379,20 @@ function CompareView({ data }: { data: PhotosQueryData }) {
         </Pressable>
       </View>
       <CompareSlider
-        before={{ uri: before.localUri, date: short(before.takenLocalDate), tone: '#E7E0D5' }}
-        after={{ uri: after.localUri, date: short(after.takenLocalDate), tone: '#DACFBE' }}
+        before={{
+          id: before.id,
+          uri: before.localUri,
+          date: short(before.takenLocalDate),
+          tone: '#E7E0D5',
+        }}
+        after={{
+          id: after.id,
+          uri: after.localUri,
+          date: short(after.takenLocalDate),
+          tone: '#DACFBE',
+        }}
         sideBySide={sideBySide}
+        active={picking === null}
         onPickBefore={() => setPicking('before')}
         onPickAfter={() => setPicking('after')}
       />
@@ -411,8 +467,10 @@ function buildTimelineSections(data: PhotosQueryData): TimelineSection[] {
 
 const TimelinePhotosRow = memo(function TimelinePhotosRow({
   photos,
+  active,
 }: {
   photos: readonly PhotoLite[];
+  active: boolean;
 }) {
   return (
     <View className="mb-2 flex-row" style={{ gap: 8 }}>
@@ -425,8 +483,15 @@ const TimelinePhotosRow = memo(function TimelinePhotosRow({
           style={{ width: '31.6%', aspectRatio: 3 / 4 }}
           className="overflow-hidden rounded-[12px]"
         >
-          {photo.localUri ? (
-            <PhotoImage uri={photo.localUri} style={{ flex: 1 }} />
+          {(photo.thumbnailLocalUri ?? photo.localUri) ? (
+            <PhotoImage
+              uri={photo.thumbnailLocalUri ?? photo.localUri}
+              photoId={photo.id}
+              rendition="thumbnail"
+              requestPriority="visible"
+              active={active}
+              style={{ flex: 1 }}
+            />
           ) : (
             <View className="flex-1" style={{ backgroundColor: colors.greigeDeep }} />
           )}
@@ -483,15 +548,30 @@ function TimelineView({
   header: ReactNode;
 }) {
   const [timelapseVisible, setTimelapseVisible] = useState(false);
+  const [visibleRowKeys, setVisibleRowKeys] = useState<ReadonlySet<string>>(() => new Set());
   const frames = useMemo(() => timelapseFrames(data.series), [data.series]);
   const sections = useMemo(() => buildTimelineSections(data), [data]);
   const renderTimelineRow = useCallback(
     ({ item }: { item: TimelineRow }) =>
       item.kind === 'photos' ? (
-        <TimelinePhotosRow photos={item.photos} />
+        <TimelinePhotosRow
+          photos={item.photos}
+          active={!timelapseVisible && visibleRowKeys.has(item.key)}
+        />
       ) : (
         <TimelineMilestoneCard milestone={item.milestone} />
       ),
+    [timelapseVisible, visibleRowKeys],
+  );
+  const onTimelineViewableItemsChanged = useCallback(
+    ({ viewableItems }: { viewableItems: ViewToken<TimelineRow>[] }) => {
+      const next = new Set(
+        viewableItems
+          .filter((item) => item.isViewable && item.item.kind === 'photos')
+          .map((item) => item.item.key),
+      );
+      setVisibleRowKeys((current) => (sameStringSet(current, next) ? current : next));
+    },
     [],
   );
 
@@ -500,7 +580,10 @@ function TimelineView({
       <SectionList
         sections={sections}
         keyExtractor={(item) => item.key}
+        extraData={visibleRowKeys}
         renderItem={renderTimelineRow}
+        viewabilityConfig={PHOTO_VIEWABILITY_CONFIG}
+        onViewableItemsChanged={onTimelineViewableItemsChanged}
         renderSectionHeader={({ section }) => (
           <Text variant="label" tone="muted" className="mb-2.5 mt-3" style={{ letterSpacing: 1 }}>
             {section.title}
@@ -618,16 +701,27 @@ function ProgressTrendBoundary({
   data,
   mode,
   onModeChange,
+  compareSelection,
+  onSelectComparisonPhoto,
   photos,
 }: {
   data: PhotosQueryData;
   mode: 'compare' | 'timeline';
   onModeChange: (mode: 'compare' | 'timeline') => void;
+  compareSelection: CompareSelection;
+  onSelectComparisonPhoto: (target: CompareSelectionTarget, id: string) => void;
   photos: PhotosQueryResult;
 }) {
   const source = useTrendInsightFromPhotos(photos);
   return (
-    <PhotoProgressContent data={data} mode={mode} onModeChange={onModeChange} trend={source} />
+    <PhotoProgressContent
+      data={data}
+      mode={mode}
+      onModeChange={onModeChange}
+      compareSelection={compareSelection}
+      onSelectComparisonPhoto={onSelectComparisonPhoto}
+      trend={source}
+    />
   );
 }
 
@@ -635,11 +729,15 @@ function PhotoProgressContent({
   data,
   mode,
   onModeChange,
+  compareSelection,
+  onSelectComparisonPhoto,
   trend,
 }: {
   data: PhotosQueryData;
   mode: 'compare' | 'timeline';
   onModeChange: (mode: 'compare' | 'timeline') => void;
+  compareSelection: CompareSelection;
+  onSelectComparisonPhoto: (target: CompareSelectionTarget, id: string) => void;
   trend: TrendInsightSource | null;
 }) {
   const { height } = useWindowDimensions();
@@ -677,7 +775,11 @@ function PhotoProgressContent({
           contentContainerClassName={compactFirstRun ? 'pb-28' : 'pb-8'}
         >
           {populatedHeader}
-          <CompareView data={data} />
+          <CompareView
+            data={data}
+            selection={compareSelection}
+            onSelectPhoto={onSelectComparisonPhoto}
+          />
         </ScrollView>
       )}
     </Screen>
@@ -689,11 +791,15 @@ function PhotoProgressTab({
   data,
   mode,
   onModeChange,
+  compareSelection,
+  onSelectComparisonPhoto,
   photoSource,
 }: {
   data: PhotosQueryData;
   mode: 'compare' | 'timeline';
   onModeChange: (mode: 'compare' | 'timeline') => void;
+  compareSelection: CompareSelection;
+  onSelectComparisonPhoto: (target: CompareSelectionTarget, id: string) => void;
   photoSource: PhotosQueryResult;
 }) {
   return phase7Flags.trend ? (
@@ -701,19 +807,32 @@ function PhotoProgressTab({
       data={data}
       mode={mode}
       onModeChange={onModeChange}
+      compareSelection={compareSelection}
+      onSelectComparisonPhoto={onSelectComparisonPhoto}
       photos={photoSource}
     />
   ) : (
-    <PhotoProgressContent data={data} mode={mode} onModeChange={onModeChange} trend={null} />
+    <PhotoProgressContent
+      data={data}
+      mode={mode}
+      onModeChange={onModeChange}
+      compareSelection={compareSelection}
+      onSelectComparisonPhoto={onSelectComparisonPhoto}
+      trend={null}
+    />
   );
 }
 
 function ProgressRouteBoundary({
   mode,
   onModeChange,
+  compareSelection,
+  onSelectComparisonPhoto,
 }: {
   mode: 'compare' | 'timeline';
   onModeChange: (mode: 'compare' | 'timeline') => void;
+  compareSelection: CompareSelection;
+  onSelectComparisonPhoto: (target: CompareSelectionTarget, id: string) => void;
 }) {
   const boundary = useLocalDateBoundary();
   const viewModel = useProgressRouteViewModel(boundary);
@@ -724,6 +843,8 @@ function ProgressRouteBoundary({
         data={viewModel.photos.data!}
         mode={mode}
         onModeChange={onModeChange}
+        compareSelection={compareSelection}
+        onSelectComparisonPhoto={onSelectComparisonPhoto}
         photoSource={viewModel.photos}
       />
     </PhotoStorageBoundary>
@@ -735,14 +856,25 @@ function ProgressRouteBoundary({
 // onboarding; it locks to the contextual upsell only once Pro lapses.
 export default function ProgressScreen() {
   // ProGate deliberately unmounts the image-bearing subtree on blur. Keep only
-  // the non-sensitive presentation mode above it so returning users land where
-  // they left off without retaining decoded photos or picker state.
+  // non-sensitive presentation mode and opaque pair IDs above it so returning
+  // users keep context without retaining decoded photos or picker UI state.
   const [mode, setMode] = useState<'compare' | 'timeline'>('compare');
+  const [compareSelection, setCompareSelection] = useState<CompareSelection>({});
+  const selectComparisonPhoto = useCallback((target: CompareSelectionTarget, id: string) => {
+    setCompareSelection((current) =>
+      target === 'before' ? { ...current, beforeId: id } : { ...current, afterId: id },
+    );
+  }, []);
 
   return (
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
-        <ProgressRouteBoundary mode={mode} onModeChange={setMode} />
+        <ProgressRouteBoundary
+          mode={mode}
+          onModeChange={setMode}
+          compareSelection={compareSelection}
+          onSelectComparisonPhoto={selectComparisonPhoto}
+        />
       </PhotoTimelineLockGate>
     </ProGate>
   );

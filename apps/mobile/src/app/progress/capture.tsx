@@ -1157,7 +1157,13 @@ function CaptureScreenContent({ photos }: { photos: PhotosQueryData }) {
               transform: [{ translateX: 8 }, { translateY: -6 }],
             }}
           >
-            <PhotoImage uri={referenceUri} style={{ flex: 1 }} />
+            <PhotoImage
+              uri={referenceUri}
+              photoId={photos.reference?.id}
+              rendition="display"
+              requestPriority="interactive"
+              style={{ flex: 1 }}
+            />
           </View>
         ) : (
           <View

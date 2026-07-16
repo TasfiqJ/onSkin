@@ -225,6 +225,9 @@ export function PhotoTimelapse({
                 <PhotoImage
                   key={current.id}
                   uri={current.localUri}
+                  photoId={current.id}
+                  rendition="display"
+                  requestPriority="interactive"
                   accessible={false}
                   contentFit="contain"
                   fallbackTone={colors.nightSurface}

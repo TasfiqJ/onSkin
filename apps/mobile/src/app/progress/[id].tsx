@@ -8,6 +8,7 @@ import { PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
 import { ProgressPhotoRouteSource } from '@/features/photos/ProgressPhotoRouteSource';
+import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
 import { sharePhotoImageOnly } from '@/features/photos/sharePhoto';
 import { parseLocalDate } from '@/features/photos/timeline';
 import { usePhotoActions, type PhotosQueryData } from '@/features/photos/usePhotos';
@@ -222,6 +223,9 @@ function PhotoDetailScreenContent({ photos }: { photos: PhotosQueryData }) {
     try {
       if (e2ePhotoDeleteFailure()) throw new Error('E2E_PHOTO_DELETE_FAILURE');
       await remove.mutateAsync(id);
+      // Publication and coordinator teardown are synchronous; do not strand an
+      // already-durable deletion on an unbounded native cache-clear promise.
+      void purgeSensitiveImageMemory();
       closeToProgress();
     } catch {
       setDeleteFeedback(PHOTO_COPY.detail.deleteUnavailable);
@@ -284,7 +288,13 @@ function PhotoDetailScreenContent({ photos }: { photos: PhotosQueryData }) {
           }}
         >
           {photo.localUri ? (
-            <PhotoImage uri={photo.localUri} style={{ flex: 1 }} />
+            <PhotoImage
+              uri={photo.localUri}
+              photoId={photo.id}
+              rendition="display"
+              requestPriority="interactive"
+              style={{ flex: 1 }}
+            />
           ) : (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
               <Text variant="label" style={{ color: 'rgba(244,239,231,0.3)' }}>

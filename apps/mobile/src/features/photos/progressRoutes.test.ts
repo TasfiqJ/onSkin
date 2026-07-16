@@ -501,7 +501,10 @@ describe('Progress route mobile contracts', () => {
     expect(editor).not.toContain('<PhotoImage');
 
     expect(detail).toContain('const { reference, remove, note } = usePhotoActions();');
-    expect(detail).toContain('<PhotoImage uri={photo.localUri} style={{ flex: 1 }} />');
+    expect(detail).toContain('uri={photo.localUri}');
+    expect(detail).toContain('photoId={photo.id}');
+    expect(detail).toContain('rendition="display"');
+    expect(detail).toContain('requestPriority="interactive"');
     expect(detail).toContain('<PhotoNoteEditor');
     expect(detail).toContain('key={photo.id}');
     expect(detail).toContain("initialNotes={photo.notes ?? ''}");
@@ -599,7 +602,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain('onPress={() => {}}');
   });
 
-  it('virtualizes the latest-first comparison picker with default FlatList tuning', () => {
+  it('virtualizes and viewability-gates thumbnail-first comparison picker demand', () => {
     const source = readAppRoute('(tabs)/progress.tsx');
     const pickerStart = source.indexOf('function PairPickerPhoto');
     const picker = source.slice(pickerStart, source.indexOf('function CompareView', pickerStart));
@@ -616,16 +619,23 @@ describe('Progress route mobile contracts', () => {
     expect(picker).toContain('contentContainerStyle={{ gap: 10 }}');
     expect(picker).toContain('renderItem={({ item: photo }) => (');
     expect(picker).toContain('localUri={photo.localUri}');
-    expect(picker).toContain('{localUri ? (');
-    expect(picker).toContain('<PhotoImage uri={localUri} style={{ flex: 1 }} />');
+    expect(picker).toContain('thumbnailLocalUri={photo.thumbnailLocalUri}');
+    expect(picker).toContain('{(thumbnailLocalUri ?? localUri) ? (');
+    expect(picker).toContain('uri={thumbnailLocalUri ?? localUri}');
+    expect(picker).toContain('photoId={id}');
+    expect(picker).toContain('rendition="thumbnail"');
+    expect(picker).toContain('requestPriority="visible"');
+    expect(picker).toContain('active={which !== null && visiblePhotoIds.has(photo.id)}');
+    expect(picker).toContain('viewabilityConfig={PHOTO_VIEWABILITY_CONFIG}');
+    expect(picker).toContain('onViewableItemsChanged={onPickerViewableItemsChanged}');
     expect(picker).toContain('style={{ width: 92, aspectRatio: 3 / 4 }}');
     expect(picker).toContain('accessibilityHint="Updates the side-by-side comparison pair"');
     expect(picker).toContain('accessibilityState={{ selected }}');
     expect(picker).toContain('onPress={() => onSelect(id)}');
     expect(picker).not.toContain('<ScrollView');
-    expect(picker).not.toContain('initialNumToRender');
-    expect(picker).not.toContain('maxToRenderPerBatch');
-    expect(picker).not.toContain('windowSize');
+    expect(picker).toContain('initialNumToRender={4}');
+    expect(picker).toContain('maxToRenderPerBatch={4}');
+    expect(picker).toContain('windowSize={5}');
     expect(picker).not.toContain('removeClippedSubviews');
   });
 
@@ -644,6 +654,10 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain('sections={sections}');
     expect(source).toContain('keyExtractor={(item) => item.key}');
     expect(source).toContain('renderItem={renderTimelineRow}');
+    expect(source).toContain('viewabilityConfig={PHOTO_VIEWABILITY_CONFIG}');
+    expect(source).toContain('onViewableItemsChanged={onTimelineViewableItemsChanged}');
+    expect(source).toContain('uri={photo.thumbnailLocalUri ?? photo.localUri}');
+    expect(source).toContain('active={!timelapseVisible && visibleRowKeys.has(item.key)}');
     expect(source).toContain('stickySectionHeadersEnabled={false}');
     expect(source).toContain('initialNumToRender={6}');
     expect(source).toContain('maxToRenderPerBatch={6}');
@@ -652,7 +666,7 @@ describe('Progress route mobile contracts', () => {
     expect(source).not.toContain('{data.monthGroups.map(');
   });
 
-  it('tears down image-bearing Progress content on blur while retaining only mode state', () => {
+  it('tears down image-bearing Progress content while retaining lightweight presentation state', () => {
     const source = readAppRoute('(tabs)/progress.tsx');
     const gate = readSource('features/subscription/ProGate.tsx');
 
@@ -664,7 +678,14 @@ describe('Progress route mobile contracts', () => {
     expect(source).toContain(
       "const [mode, setMode] = useState<'compare' | 'timeline'>('compare');",
     );
-    expect(source).toContain('<ProgressRouteBoundary mode={mode} onModeChange={setMode} />');
+    expect(source).toContain(
+      'const [compareSelection, setCompareSelection] = useState<CompareSelection>({});',
+    );
+    expect(source).toContain('const selectComparisonPhoto = useCallback(');
+    expect(source).toContain('compareSelection={compareSelection}');
+    expect(source).toContain('onSelectComparisonPhoto={selectComparisonPhoto}');
+    expect(source).toContain('selection={compareSelection}');
+    expect(source).toContain('if (picking) onSelectPhoto(picking, id);');
     expect(source).toContain('function ProgressTrendBoundary({');
     expect(source).toContain('return phase7Flags.trend ? (');
     expect(source).not.toContain('useTrendInsightFromPhotos(photos, { enabled: false })');
