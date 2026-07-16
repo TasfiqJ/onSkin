@@ -1,8 +1,8 @@
 # Phase 9 Release Engineering QA Packet
 
-Generated: 2026-07-15T23:50:10.230Z
+Generated: 2026-07-16T00:01:00.323Z
 Status: blocked
-Git SHA: 009593477f701b9aa5b731fc52c905696715051e
+Git SHA: e0b6c771baad3872b0623b8f64a32c173ec1d997
 Git status: clean
 
 ## Release Identity
@@ -146,7 +146,7 @@ Git status: clean
 - `apps/mobile/src/lib/auth/apple.ts`: `ba35fc4aa35ed8f15bf0bf6acf200f135e7fecbf6ab022bc1f9366754925c53f`
 - `supabase/functions/account-deletion/appleDeletionExecutor.test.ts`: `e55f09381821abd93b0a8b54b9a67ada8260a6b880c5227f719e71f3335590d3`
 - `supabase/functions/account-deletion/appleDeletionExecutor.ts`: `bc30e1f1cb3a15f5203e3038191c830c47cf556fb05877d9679178b60a1229c9`
-- `supabase/functions/account-deletion/appleDeletionNetwork.test.ts`: `263e1d01c306e26b806b172c89fe8da11107c7d16e6e181aaf917caef9dc93ca`
+- `supabase/functions/account-deletion/appleDeletionNetwork.test.ts`: `de51412cfad83e03f82d0637b47fd2ec2c2e776d61266d68e0525757cd07602e`
 - `supabase/functions/account-deletion/appleDeletionNetwork.ts`: `755073322aea362153c29c2a7114041903fcf398c5d1d026a09eb37e75a02c88`
 - `supabase/functions/account-deletion/authDeletionExecutor.test.ts`: `dd57439418166e2110e3173badb2df40f325eb382dbed924893b39d056109c1e`
 - `supabase/functions/account-deletion/authDeletionExecutor.ts`: `63bed68c219a5eec579454b5ec907cf037a4b9bdde118629949687bab1e3a1e6`
@@ -156,7 +156,7 @@ Git status: clean
 - `supabase/functions/account-deletion/durableDeletionCore.ts`: `5d4ad54e94c9c930f56dcaeeaa7a08b6f1841bf0899a8fc83cae4abd9f97598a`
 - `supabase/functions/account-deletion/durableDeletionCrypto.test.ts`: `9999256ad988831805838f53e45e94d32a355ddfbacf3cea68b8b0c35dedb8cb`
 - `supabase/functions/account-deletion/durableDeletionCrypto.ts`: `5ad0225c135733d25e38b4186cf9cc845822f556ae1763350d63aa9cfb0a6c52`
-- `supabase/functions/account-deletion/durableDeletionDatabaseGateway.test.ts`: `10841c7d286cb9df20a25ea65c6b48f4fded8efd4be9accdc3c17fbfde8fec5a`
+- `supabase/functions/account-deletion/durableDeletionDatabaseGateway.test.ts`: `5f8e0b2319656dc585d0a74386aebdbc623a0cc2b35fdbd3297547ee363790c2`
 - `supabase/functions/account-deletion/durableDeletionDatabaseGateway.ts`: `9b7cd32ca6d8b50b8e5210579f6044de09859ca646aea21aca6a76d2d75c7958`
 - `supabase/functions/account-deletion/durableDeletionEncryptedStateStore.test.ts`: `ec655cd1c3a05dcb3cabf1c83211184b24fd73061b144e10bec94e752394c9d1`
 - `supabase/functions/account-deletion/durableDeletionEncryptedStateStore.ts`: `de77756d9e062d5562478e10417a1a81ad13ea41677b31b7982f093e6aa395fb`
@@ -164,7 +164,7 @@ Git status: clean
 - `supabase/functions/account-deletion/durableDeletionHttpHandler.ts`: `1a32239694ee96b6ace4c21e86446d78c1fa1bbd3db2fad77d272fee988f42e5`
 - `supabase/functions/account-deletion/durableDeletionPayloads.test.ts`: `38ce30de1e46b8156876e66684aa4355422c34b1a3a637d85fe38c0b92da6881`
 - `supabase/functions/account-deletion/durableDeletionPayloads.ts`: `c44a87c7139758453926e7369f172ac4e73551ebd0d100dc9ce73bea01c52dcf`
-- `supabase/functions/account-deletion/durableDeletionRuntime.test.ts`: `67f2494679d30ad995b8e0f511ac0868c0c9642ad94cb8bf660f68c23f470424`
+- `supabase/functions/account-deletion/durableDeletionRuntime.test.ts`: `5d3803afe5b7d2a91769cc92aa4ec6a3c7dbef28c317fe5beadef48cb05470dd`
 - `supabase/functions/account-deletion/durableDeletionRuntime.ts`: `5d3f7b1c565016dbfd3bd6288c14f8c1a6b58a60a94815eb3bc85926cae8976f`
 - `supabase/functions/account-deletion/durableDeletionRuntimeCore.test.ts`: `cd765768338f221b05a0ba47f4c81788ad01f2c338d4fcb62582891d0553d3f8`
 - `supabase/functions/account-deletion/durableDeletionRuntimeCore.ts`: `34aa1d7af765ed0820c284068b8e01d7f8798fc9cc5a25d1d189adf07ab45bca`
