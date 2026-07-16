@@ -1,8 +1,8 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-16T15:41:39.655Z
+Generated: 2026-07-16T19:57:59.468Z
 Status: blocked
-Git SHA: 34317aa8ff28996c6e38c0983cfa4b4c08b0c1a9
+Git SHA: 533b9a39ca4142c8beec4302201a0cc71776b267
 Git status: clean
 
 ## Public Identity
@@ -70,8 +70,8 @@ Git status: clean
 
 ## Source Hashes
 
-- `.env.example`: `32ff3fcaea32204c1e56f9b3624199c5613ad46401471548217d7d83ce849a6b`
-- `package.json`: `9ac1ae585e96d92766992718348a3c79ddae316f227dff88842fb1ed0374f575`
+- `.env.example`: `668f23c9f7fbb2098868ed170f1352eafdda85184256297701a2458736ca71ad`
+- `package.json`: `fd993bc9293613b455acb9aa6df2d0ce195cbe8fd91b422176e2b011886b5b57`
 - `docs/hugeToDo/launch-contract.json`: `43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b`
 - `scripts/launch/contract.mjs`: `6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d`
 - `apps/mobile/app.config.js`: `3ba2df3aff44ced390047424120090f5effc4479abbc074854475f2db9e8fc7a`
@@ -104,18 +104,18 @@ Git status: clean
 - `docs/HUMAN_SIMULATED_E2E_TESTING.md`: `db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8`
 - `docs/E2E_TESTING_CHECKLIST.md`: `1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f`
 - `docs/USER_FLOW_TREE.md`: `ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8`
-- `docs/e2e/generated/human-e2e-manifest.json`: `5563a1e4692d096fa235ad0914b88188a3ff07452f937c47bfefb3e53fd73ba2`
-- `docs/e2e/generated/human-e2e-manifest.md`: `9a17e7a2a18b1f8ae7bee6ac9ee281e90dad2d8f62e63d58807d35f1706863e9`
-- `docs/phase-5/generated/device-qa-packet.json`: `6e0bcb646d6bb9d63714a5d730ee83dc905f536af39d4e112402b08ef67023d4`
-- `docs/phase-5/generated/device-qa-packet.md`: `b7e018c77084796dd782659ea842c064b6ecf6b134d6791f5e2a1259bd65364a`
-- `docs/phase-6/generated/payments-qa-packet.json`: `7b4ee25a9b18d04c19a1f54e51f7596c3b9c22836cfbcafd9b38b13cfa25bad0`
-- `docs/phase-6/generated/payments-qa-packet.md`: `d26a5a70bd993d0726c6fef39b924d14ba64f9a26bc70ca417328141870e48b1`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `24d5b03f7d8d0bbe83c92d0c7fa4e180024ff325b0a71c653a3c15f1f225b51f`
-- `docs/phase-7/generated/core-loop-qa-packet.md`: `e09a42bcfd3ab739c33c088c9ddc064e6c02466bb27325d7894fbc3b829e7480`
+- `docs/e2e/generated/human-e2e-manifest.json`: `52bf102a252a0b77abd58de633008ac2e8f279882a6eade663cec42b9f393ad1`
+- `docs/e2e/generated/human-e2e-manifest.md`: `d16cafa15d46bc975775ff12e461fcabc799812f4d7b3d6528570396f4750024`
+- `docs/phase-5/generated/device-qa-packet.json`: `81c2e4c510449ca766dc8a99eede6a167ae9203b29f548da7fa1f573a80b0872`
+- `docs/phase-5/generated/device-qa-packet.md`: `98c293a16c7f4fcb961a038afe45e31ce20ab68a26726d2df6329f9b0bce8c0c`
+- `docs/phase-6/generated/payments-qa-packet.json`: `dbf01ed84fa6dd5010cb6b6fab5319d61b557275953b659c1741d8f8acb1e71c`
+- `docs/phase-6/generated/payments-qa-packet.md`: `b67c5862d16629df60b993d3dda873076e34472523f8c8f43f0d0bd7058d631c`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `ee8cc4d816318aa9543336bea3edf40edd2d6b5473bd5d84e44ec2cc1dbe8c17`
+- `docs/phase-7/generated/core-loop-qa-packet.md`: `93712ca322c17e5244efd3d282860e4079d6b5d7fb3647efcad7297ce2b8e2c6`
 - `scripts/phase8/build-growth-store-qa-packet.mjs`: `417068519980f0e79e36d565a3deac14de38804daa59d0b5773d88fc89768461`
 - `scripts/phase8/check-growth-store-readiness.mjs`: `014ac3f8dfd4baae43b57c494c778688c180ae996f8cb8b29f0a2660211902a7`
 - `scripts/phase8/check-growth-store-smoke.mjs`: `89cc87c5da60b6eb86ae112c93eb1995309c82dc2336995113dd5a37b8c37a98`
-- `scripts/phase9/lib.mjs`: `4c52e937ddea7a47fba80f69d80d6d586e9c236750cefb9500362352e1cb270e`
+- `scripts/phase9/lib.mjs`: `0eb82d148d6cc293b6cea56baecb0f24172e04e548a57d8815e951eb6ce66ff4`
 - `supabase/migrations/20260616000028_phase8_growth.sql`: `9f0deaa909e7a5641c405b4b68870e58e3d143cb5956f2794e092ba704276e44`
 - `supabase/functions/growth-event/index.ts`: `af59ae32fabd9310558274109db8cdd53455d09dc26074efb4758373f63a1770`
 - `supabase/functions/waitlist/index.ts`: `d798455f90ccf72a5505e2dd5e42c3225d05ae5a4f3d8a2fcfc63cb86ed8c6ac`
