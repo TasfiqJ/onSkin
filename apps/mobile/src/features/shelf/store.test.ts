@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   acknowledgeProductAdd,
-  addProduct,
+  addProduct as addProductWithOperation,
   clearShelf,
   loadShelf,
   readShelfState,
@@ -15,6 +15,8 @@ import {
   SHELF_STATE_UNAVAILABLE,
   SHELF_STATE_UNSUPPORTED_VERSION,
   updateProduct,
+  type NewShelfProduct,
+  type ShelfAddOwner,
 } from './store';
 
 const mocks = vi.hoisted(() => ({
@@ -79,6 +81,12 @@ vi.mock('@/lib/storage/privateKV', () => ({
 const KEY = 'onskin.shelf.v1';
 const runtime = globalThis as typeof globalThis & { __DEV__?: boolean };
 const originalDev = runtime.__DEV__;
+let testAddOperationId = 0;
+
+function addProduct(input: NewShelfProduct, owner: Partial<ShelfAddOwner> = {}) {
+  const operationId = owner.operationId ?? `test-add-operation-${++testAddOperationId}`;
+  return addProductWithOperation(input, { ...owner, operationId });
+}
 
 function storedProducts(): unknown[] {
   const parsed = JSON.parse(mocks.storage.get(KEY) ?? '{}') as {
@@ -111,12 +119,32 @@ describe('shelf local store recovery', () => {
     mocks.readOverride = null;
     mocks.updateCalls = 0;
     mocks.writeCalls = 0;
+    testAddOperationId = 0;
   });
 
   afterEach(() => {
     delete process.env.EXPO_PUBLIC_E2E_SHELF_STORAGE_FAILURE;
     if (originalDev === undefined) delete runtime.__DEV__;
     else runtime.__DEV__ = originalDev;
+  });
+
+  it('requires caller-owned operation identity before entering private storage', async () => {
+    await expect(
+      addProductWithOperation(
+        { name: 'No implicit operation', addedVia: 'manual' },
+        undefined as never,
+      ),
+    ).rejects.toThrow(SHELF_STATE_INVALID);
+    await expect(
+      addProductWithOperation(
+        { name: 'Padded operation', addedVia: 'manual' },
+        { operationId: ' padded-operation ' },
+      ),
+    ).rejects.toThrow(SHELF_STATE_INVALID);
+
+    expect(mocks.updateCalls).toBe(0);
+    expect(mocks.writeCalls).toBe(0);
+    expect(mocks.storage.size).toBe(0);
   });
 
   it('distinguishes absence from valid empty current and legacy shelves without writing', async () => {

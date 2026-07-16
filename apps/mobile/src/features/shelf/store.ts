@@ -120,7 +120,12 @@ export type ShelfAddOwner = Readonly<{
   /** Captured account-generation assertion supplied by the public hook. */
   assertCurrent?: () => void;
   /** Stable caller-owned identity for one explicit add intent. */
-  operationId?: string;
+  operationId: string;
+}>;
+
+type ShelfOperationOwner = Readonly<{
+  ownerId?: string;
+  assertCurrent?: () => void;
 }>;
 
 type ShelfAddOperation = {
@@ -552,18 +557,19 @@ async function digestAddIdentity(namespace: string, value: string): Promise<stri
   return normalized;
 }
 
-function normalizedAddOwnerId(owner: ShelfAddOwner | undefined): string {
+function normalizedAddOwnerId(owner: ShelfOperationOwner | undefined): string {
   if (owner?.ownerId === undefined) return LOCAL_UNCLAIMED_ADD_OWNER;
   const ownerId = owner.ownerId.trim();
   if (!ownerId || ownerId.length > 512) throw new Error(SHELF_STATE_INVALID);
   return ownerId;
 }
 
-function normalizedAddOperationId(owner: ShelfAddOwner | undefined): string {
-  const operationId = owner?.operationId ?? Crypto.randomUUID();
+function normalizedAddOperationId(owner: ShelfAddOwner): string {
+  const operationId = owner?.operationId;
   if (
     typeof operationId !== 'string' ||
     operationId.trim().length === 0 ||
+    operationId.trim() !== operationId ||
     operationId.length > 128
   ) {
     throw new Error(SHELF_STATE_INVALID);
@@ -571,13 +577,13 @@ function normalizedAddOperationId(owner: ShelfAddOwner | undefined): string {
   return operationId;
 }
 
-function assertShelfAddOwnerCurrent(owner: ShelfAddOwner | undefined): void {
+function assertShelfAddOwnerCurrent(owner: ShelfOperationOwner | undefined): void {
   owner?.assertCurrent?.();
 }
 
 async function shelfAddIdentity(
   product: ShelfProduct,
-  owner: ShelfAddOwner | undefined,
+  owner: ShelfOperationOwner | undefined,
 ): Promise<{ ownerHash: string; inputHash: string }> {
   assertShelfAddOwnerCurrent(owner);
   const ownerId = normalizedAddOwnerId(owner);
@@ -603,7 +609,7 @@ async function shelfAddIdentity(
  */
 export async function addProduct(
   input: NewShelfProduct,
-  owner?: ShelfAddOwner,
+  owner: ShelfAddOwner,
 ): Promise<ShelfProduct> {
   const ts = nowISO();
   const freshness = normalizeShelfFreshness(input);
@@ -704,7 +710,7 @@ export async function addProduct(
 async function addOperationWasAcknowledged(
   productId: string,
   ownerHash: string,
-  owner: ShelfAddOwner | undefined,
+  owner: ShelfOperationOwner | undefined,
 ): Promise<boolean> {
   assertShelfAddOwnerCurrent(owner);
   let stored: Awaited<ReturnType<typeof readPrivateItem>>;
@@ -736,7 +742,7 @@ async function addOperationWasAcknowledged(
 /** Idempotently tombstones that the current UI received an add result. */
 export async function acknowledgeProductAdd(
   productId: string,
-  owner?: ShelfAddOwner,
+  owner?: ShelfOperationOwner,
 ): Promise<void> {
   const normalizedProductId = nonEmptyString(productId);
   if (!normalizedProductId) throw new Error(SHELF_STATE_INVALID);
