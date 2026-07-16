@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T05:41:41.183Z",
+  "generatedAt": "2026-07-16T07:27:43.564Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,15 +73,15 @@
     ]
   },
   "purpose": "Phase 3 legal, clinical, cosmetic chemistry, IP/FTO, privacy, and platform review packet.",
-  "gitSha": "d9982b5b47ae9911d1ad19ca9b3ff1ad1664c5f2",
+  "gitSha": "19acf0b63b4ae3834d47d19e03336df0fa38be65",
   "gitStatus": "",
   "files": [
     {
       "packet": "packetContract",
       "path": "package.json",
       "exists": true,
-      "bytes": 27392,
-      "sha256": "c345ff12fa6b984db00861701fda8f32ed56127de09f0a62cbd8dc86997bfbf7"
+      "bytes": 28671,
+      "sha256": "62816a283a697651aae19a3b17796d0810a1850ffa30e73263c9de9eeec58a3d"
     },
     {
       "packet": "packetContract",
