@@ -827,7 +827,7 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('const splitShortPhone = viewportHeight < 410;');
     expect(source).toContain("state === 'review' ? 'pb-28' : ultraShortPhone ? 'pb-3' : 'pb-5'");
     expect(source).toContain("? 'mt-2 h-[140px]'");
-    expect(source).toContain(": ultraShortPhone\n                ? 'mt-3 h-[176px]'");
+    expect(source).toContain(": ultraShortPhone ? 'mt-3 h-[176px]' : 'mt-4 h-[230px]'");
     expect(source).toContain("ultraShortPhone ? 'top-[48px] h-[78px]' : 'top-[64px] h-[96px]'");
     expect(source).toContain("className={ultraShortPhone ? 'min-h-[52px] py-3' : undefined}");
     expect(source).toContain('{!splitShortPhone ? (');
@@ -835,6 +835,34 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toMatch(/\{state === 'review' \? \(\s*<Button label="Looks right\. Continue"/);
     expect(source).not.toContain('Alert.alert(CAMERA_FAILURE_COPY.labelCaptureTitle');
     expect(source).not.toContain('contentContainerClassName="pb-5"');
+  });
+
+  it('isolates bounded OCR typing from capture rendering and submits the exact latest draft', () => {
+    const source = readAppRoute('shelf/ocr.tsx');
+
+    expect(source).toContain('const OcrCapturePanel = memo(');
+    expect(source).toContain('const OcrReviewEditor = memo(');
+    expect(source).toContain('const OcrParsedPreview = memo(');
+    expect(source).toContain("const rawTextRef = useRef('');");
+    expect(source).toContain('const [rawText, setRawText] = useState(boundedInitialText);');
+    expect(source).toContain('rawTextRef.current = bounded;');
+    expect(source).toContain('setTimeout(() => setPreviewText(rawText), OCR_PREVIEW_DEBOUNCE_MS)');
+    expect(source).toContain('return parseIngredientText(previewText);');
+    expect(source).toContain('<OcrParsedPreview previewText={previewText} />');
+    expect(source).toContain('maxLength={OCR_INGREDIENT_TEXT_MAX_LENGTH}');
+    expect(source).toContain('allActiveTokens.slice(0, OCR_PREVIEW_ACTIVE_TOKEN_LIMIT)');
+    expect(source).toContain('key={token.position}');
+    expect(source).toContain('onDraftChange={handleReviewDraftChange}');
+    expect(source).toContain('onEligibilityChange={setCanContinue}');
+    expect(source).toContain('initialText={reviewInitialText}');
+    expect(source).toContain('setReviewInitialText(rawTextRef.current);');
+    expect(source).toContain('const rawText = rawTextRef.current;');
+    expect(source).toContain('const parsed = parseIngredientText(rawText);');
+    expect(source).toContain('if (cleanupInFlightRef.current) return;');
+    expect(source).toContain('recordOcrExactSubmission();');
+    expect(source).toContain('data-ocr-capture-panel-renders');
+    expect(source).not.toContain("const [rawText, setRawText] = useState('');");
+    expect(source).not.toContain('useMemo(() => parseIngredientText(rawText)');
   });
 
   it('keeps barcode lookup outcomes wired to the owner-scoped shelf scan log', () => {
