@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T00:00:07.470Z",
+  "generatedAt": "2026-07-16T00:37:11.267Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -93,6 +93,11 @@
       "expectedDate": "2026-07-15",
       "hasExpectedTestPhrase": true,
       "testBaselines": [
+        {
+          "testFiles": 269,
+          "tests": 3087,
+          "source": "269 test files / 3087 tests"
+        },
         {
           "testFiles": 269,
           "tests": 3087,
