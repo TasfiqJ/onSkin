@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-16T15:28:50.974Z",
-  "status": "blocked",
+  "generatedAt": "2026-07-16T15:32:06.507Z",
+  "status": "pass",
   "strict": false,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
   "generatedRoots": [
@@ -213,7 +213,7 @@
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 115,
-      "staleHashReferenceCount": 4
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-7/generated/core-loop-qa-packet.md",
@@ -229,7 +229,7 @@
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
       "hashReferenceCount": 49,
-      "staleHashReferenceCount": 4
+      "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-8/generated/growth-store-qa-packet.md",
@@ -434,19 +434,10 @@
     "dirtyTextFileCount": 0,
     "nonEmptyGitStatusFileCount": 0,
     "hashReferenceCount": 2005,
-    "staleHashReferenceCount": 8,
-    "blockerCount": 8,
+    "staleHashReferenceCount": 0,
+    "blockerCount": 0,
     "warningCount": 0
   },
-  "blockers": [
-    "docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.106 -> docs/phase-5/generated/device-qa-packet.json: sha256 does not match current file.",
-    "docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.107 -> docs/phase-5/generated/device-qa-packet.md: sha256 does not match current file.",
-    "docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.108 -> docs/phase-6/generated/payments-qa-packet.json: sha256 does not match current file.",
-    "docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.109 -> docs/phase-6/generated/payments-qa-packet.md: sha256 does not match current file.",
-    "docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-5/generated/device-qa-packet.json -> docs/phase-5/generated/device-qa-packet.json: sha256 does not match current file.",
-    "docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-5/generated/device-qa-packet.md -> docs/phase-5/generated/device-qa-packet.md: sha256 does not match current file.",
-    "docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-7/generated/core-loop-qa-packet.json -> docs/phase-7/generated/core-loop-qa-packet.json: sha256 does not match current file.",
-    "docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-7/generated/core-loop-qa-packet.md -> docs/phase-7/generated/core-loop-qa-packet.md: sha256 does not match current file."
-  ],
+  "blockers": [],
   "warnings": []
 }

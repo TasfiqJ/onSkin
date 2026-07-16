@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T15:27:39.072Z",
+  "generatedAt": "2026-07-16T15:31:56.837Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "purpose": "Phase 7 closed-beta core-loop launch QA packet.",
-  "gitSha": "5dd7053290160d461fab9cfe0ffb885b5f6daa4c",
+  "gitSha": "61feca9b448db5309907212ee08ac7abe9b9dc08",
   "gitStatus": "",
   "evidence": {
     "brandReady": false,
@@ -825,25 +825,25 @@
       "path": "docs/phase-5/generated/device-qa-packet.json",
       "exists": true,
       "bytes": 35960,
-      "sha256": "5d64ac46e303eb46c1d062cd022ea63c9dd5affeabd83aef4568c78a689320c7"
+      "sha256": "76e8ced3a472ccf7d49f43205d2e5e8f0bf9ff31cc4db107ded08cc6cbbfb3f6"
     },
     {
       "path": "docs/phase-5/generated/device-qa-packet.md",
       "exists": true,
       "bytes": 31766,
-      "sha256": "54344476c053593c303508bb1297f2334954abf01bcab3bb22ea72f0a68703de"
+      "sha256": "6b28d235a18cae20fb1a53410605a4e40406a0f6a300bda06dc8b40610503749"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.json",
       "exists": true,
       "bytes": 17985,
-      "sha256": "f9ec7129af05c8277dd6c9596b76dde3301e62af5d8ce7a4bf8762669791f3e6"
+      "sha256": "02a68a6d734fa3724f6cc1dbadf03f816b9da4d6de6bc86c7f3e052599d5b12b"
     },
     {
       "path": "docs/phase-6/generated/payments-qa-packet.md",
       "exists": true,
       "bytes": 11871,
-      "sha256": "c6b522e2dd9560eda6f7bc5b5be83e006ea96013f81d3d8234fd2a2afebfdeac"
+      "sha256": "a3d362946f94dca56ca98a1112d1ff4c22aa117080df7aee11c950a393c1ae8c"
     },
     {
       "path": "docs/phase-7/surface-inventory.md",

@@ -1,7 +1,7 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-16T15:28:50.974Z
-Status: blocked
+Generated: 2026-07-16T15:32:06.507Z
+Status: pass
 Strict mode: no
 
 This generated audit scans committed phase packet outputs for dirty-worktree
@@ -15,8 +15,8 @@ being treated as trustworthy launch evidence.
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
 - Hash references checked: 2005
-- Stale hash references: 8
-- Blockers: 8
+- Stale hash references: 0
+- Blockers: 0
 - Warnings: 0
 
 ## Files
@@ -47,9 +47,9 @@ being treated as trustworthy launch evidence.
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-6/generated/payments-qa-packet.json            | json | 0                  | 0                          | 61        | 0               |
 | docs/phase-6/generated/payments-qa-packet.md              | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 115       | 4               |
+| docs/phase-7/generated/core-loop-qa-packet.json           | json | 0                  | 0                          | 115       | 0               |
 | docs/phase-7/generated/core-loop-qa-packet.md             | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-8/generated/growth-store-qa-packet.json        | json | 0                  | 0                          | 49        | 4               |
+| docs/phase-8/generated/growth-store-qa-packet.json        | json | 0                  | 0                          | 49        | 0               |
 | docs/phase-8/generated/growth-store-qa-packet.md          | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/dependency-inventory.json          | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-9/generated/dependency-inventory.md            | md   | 0                  | 0                          | 0         | 0               |
@@ -77,14 +77,7 @@ being treated as trustworthy launch evidence.
 
 ## Blockers
 
-- docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.106 -> docs/phase-5/generated/device-qa-packet.json: sha256 does not match current file.
-- docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.107 -> docs/phase-5/generated/device-qa-packet.md: sha256 does not match current file.
-- docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.108 -> docs/phase-6/generated/payments-qa-packet.json: sha256 does not match current file.
-- docs/phase-7/generated/core-loop-qa-packet.json has stale hash reference files.109 -> docs/phase-6/generated/payments-qa-packet.md: sha256 does not match current file.
-- docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-5/generated/device-qa-packet.json -> docs/phase-5/generated/device-qa-packet.json: sha256 does not match current file.
-- docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-5/generated/device-qa-packet.md -> docs/phase-5/generated/device-qa-packet.md: sha256 does not match current file.
-- docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-7/generated/core-loop-qa-packet.json -> docs/phase-7/generated/core-loop-qa-packet.json: sha256 does not match current file.
-- docs/phase-8/generated/growth-store-qa-packet.json has stale hash reference sourceHashes.docs/phase-7/generated/core-loop-qa-packet.md -> docs/phase-7/generated/core-loop-qa-packet.md: sha256 does not match current file.
+- None.
 
 ## Warnings
 

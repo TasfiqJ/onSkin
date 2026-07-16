@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-16T15:27:39.072Z
-Git SHA: 5dd7053290160d461fab9cfe0ffb885b5f6daa4c
+Generated at: 2026-07-16T15:31:56.837Z
+Git SHA: 61feca9b448db5309907212ee08ac7abe9b9dc08
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -160,10 +160,10 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | docs/USER_FLOW_TREE.md | present | 382133 | ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8 |
 | docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 12a1166209b20760be86a4a70d0c875a0de789553906f7656e51d54815dbd00e |
 | docs/e2e/generated/human-e2e-manifest.md | present | 19687 | 7152a25efe24e4feb08e1d035236707b2c8d2bc6ab69cf493652f64616179755 |
-| docs/phase-5/generated/device-qa-packet.json | present | 35960 | 5d64ac46e303eb46c1d062cd022ea63c9dd5affeabd83aef4568c78a689320c7 |
-| docs/phase-5/generated/device-qa-packet.md | present | 31766 | 54344476c053593c303508bb1297f2334954abf01bcab3bb22ea72f0a68703de |
-| docs/phase-6/generated/payments-qa-packet.json | present | 17985 | f9ec7129af05c8277dd6c9596b76dde3301e62af5d8ce7a4bf8762669791f3e6 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 11871 | c6b522e2dd9560eda6f7bc5b5be83e006ea96013f81d3d8234fd2a2afebfdeac |
+| docs/phase-5/generated/device-qa-packet.json | present | 35960 | 76e8ced3a472ccf7d49f43205d2e5e8f0bf9ff31cc4db107ded08cc6cbbfb3f6 |
+| docs/phase-5/generated/device-qa-packet.md | present | 31766 | 6b28d235a18cae20fb1a53410605a4e40406a0f6a300bda06dc8b40610503749 |
+| docs/phase-6/generated/payments-qa-packet.json | present | 17985 | 02a68a6d734fa3724f6cc1dbadf03f816b9da4d6de6bc86c7f3e052599d5b12b |
+| docs/phase-6/generated/payments-qa-packet.md | present | 11871 | a3d362946f94dca56ca98a1112d1ff4c22aa117080df7aee11c950a393c1ae8c |
 | docs/phase-7/surface-inventory.md | present | 7793 | 50c0f72fb317e36588a30559cd254dcb3b7ebaa7c73b8b4ba4dfb9ea35350fd6 |
 | docs/phase-7/launch-claim-matrix.md | present | 4322 | 7027d6d21f2cc7c3bb6944f003f9aeac6a09efea8dc2785280f6a3da44bb6b6b |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4725 | f57bd8b15489b66c4dbee486f3e15190eb2e4752420308dfb71883372348cdd1 |
