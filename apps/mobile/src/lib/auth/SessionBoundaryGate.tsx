@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { Button, StateLoading, StateNotice, Text } from '@/components/ui';
 import { markStartupPhase } from '@/lib/observability/operationTiming';
 import { colors } from '@/theme/tokens';
 
@@ -73,9 +73,7 @@ export function SessionBoundaryGate({ children }: { children: ReactNode }) {
         className="flex-1 items-center justify-center px-7"
         style={{ backgroundColor: colors.paper }}
       >
-        <Text variant="bodySm" tone="muted" className="text-center">
-          {COPY.loading}
-        </Text>
+        <StateLoading label={COPY.loading} />
       </View>
     );
   }
@@ -92,20 +90,14 @@ export function SessionBoundaryGate({ children }: { children: ReactNode }) {
       }}
       showsVerticalScrollIndicator={false}
     >
-      <View accessibilityLiveRegion="polite" accessibilityRole="alert">
-        <Text variant="label" style={{ color: colors.clayDeep, textAlign: 'center' }}>
-          {COPY.eyebrow}
-        </Text>
-        <Text
-          variant="title"
-          className="mt-3"
-          style={{ color: colors.ink, fontSize: 30, lineHeight: 34, textAlign: 'center' }}
-        >
-          {COPY.title}
-        </Text>
-        <Text variant="bodySm" tone="muted" className="mt-3 text-center" style={{ lineHeight: 22 }}>
-          {COPY.body}
-        </Text>
+      <StateNotice
+        kind="unavailable"
+        presentation="plain"
+        align="center"
+        title={COPY.title}
+        body={COPY.body}
+        accessibilityLabel={`${COPY.eyebrow}. ${COPY.title}`}
+      >
         {e2eFixture?.mode === 'owner_marker_future' ? (
           <Text
             variant="label"
@@ -123,18 +115,13 @@ export function SessionBoundaryGate({ children }: { children: ReactNode }) {
                   : 'Recovery fixture failed: local bytes changed or cleanup started.'}
           </Text>
         ) : null}
-      </View>
-
-      <Pressable
-        accessibilityRole="button"
-        className="mt-7 min-h-[56px] items-center justify-center rounded-pill px-6 py-3"
-        onPress={() => void retryBoundary()}
-        style={{ backgroundColor: colors.ink }}
-      >
-        <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
-          {COPY.retry}
-        </Text>
-      </Pressable>
+        <Button
+          accessibilityLabel="Retry securing account data"
+          className="mt-7"
+          label={COPY.retry}
+          onPress={() => void retryBoundary()}
+        />
+      </StateNotice>
     </ScrollView>
   );
 }

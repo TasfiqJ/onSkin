@@ -167,6 +167,7 @@ describe('Commerce route contracts', () => {
     const whereToBuy = readFeatureFile('WhereToBuy.tsx');
     const stackDetail = readAppRoute('commerce/stack/[slug].tsx');
     const notice = readFeatureFile('CommerceLinkNotice.tsx');
+    const stateNotice = readFeatureFile('../../components/ui/StateNotice.tsx');
 
     expect(whereToBuy).not.toContain('Alert');
     expect(stackDetail).not.toContain('Alert');
@@ -174,8 +175,10 @@ describe('Commerce route contracts', () => {
     expect(stackDetail).toContain('CommerceLinkNotice');
     expect(whereToBuy).toContain('setLinkFeedback');
     expect(stackDetail).toContain('setLinkFeedback');
-    expect(notice).toContain('accessibilityRole="alert"');
-    expect(notice).toContain('colors.clayTint');
+    expect(notice).toContain('<StateNotice');
+    expect(notice).toContain("kind={feedback.kind ?? 'error'}");
+    expect(stateNotice).toContain("alert ? 'alert' : undefined");
+    expect(stateNotice).toContain('backgroundColor: tokens.background');
   });
 
   it('keeps retailer handoff and feedback inside the initiating owner scope', () => {

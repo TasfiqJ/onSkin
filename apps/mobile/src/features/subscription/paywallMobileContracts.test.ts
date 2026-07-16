@@ -868,11 +868,14 @@ describe('paywall mobile contracts', () => {
 
   it('keeps purchase and restore recovery route-owned instead of native alerts', () => {
     const feedback = readSource('features/subscription/PaywallFeedback.tsx');
+    const stateNotice = readSource('components/ui/StateNotice.tsx');
     const externalOpen = readSource('lib/navigation/externalOpen.ts');
 
     expect(feedback).toContain('export function PaywallFeedback');
-    expect(feedback).toContain('accessibilityRole="alert"');
+    expect(feedback).toContain('<StateNotice');
+    expect(feedback).toContain('kind={feedback.kind}');
     expect(feedback).toContain('PAYWALL_FEEDBACK');
+    expect(stateNotice).toContain("alert ? 'alert' : undefined");
     expect(externalOpen).toContain('alertOnFailure?: boolean');
     expect(externalOpen).not.toContain('Alert.alert');
     expect(externalOpen).not.toContain('import { Alert');

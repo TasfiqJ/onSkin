@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { StateNotice, Text } from '@/components/ui';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { appLockUserMessage } from '@/lib/errors/userFacing';
@@ -51,38 +51,26 @@ export function PhotoTimelineLockGate({ children }: { children: ReactNode }) {
         >
           <Text style={{ color: SAGE, fontSize: 30 }}>🔒</Text>
         </View>
-        <Text
-          variant="title"
-          style={{ color: colors.cream, fontSize: 30, lineHeight: 33, textAlign: 'center' }}
-        >
-          {PHOTO_COPY.lock.title}
-        </Text>
-        <Text
-          variant="bodySm"
-          className="mt-2.5 text-center"
-          style={{ color: 'rgba(244,239,231,0.6)', maxWidth: 280, lineHeight: 21 }}
-        >
-          {PHOTO_COPY.lock.body}
-        </Text>
+        <StateNotice
+          kind="locked"
+          tone="night"
+          presentation="plain"
+          align="center"
+          title={PHOTO_COPY.lock.title}
+          body={PHOTO_COPY.lock.body}
+          style={{ maxWidth: 300 }}
+        />
         {lockFeedback ? (
-          <View
-            className="mt-4 rounded-[16px] px-4 py-3"
-            style={{
-              maxWidth: 300,
-              borderWidth: 1,
-              borderColor: 'rgba(244,239,231,0.16)',
-              backgroundColor: 'rgba(244,239,231,0.1)',
-            }}
-          >
-            <Text
-              accessibilityRole="alert"
-              variant="bodySm"
-              className="text-center"
-              style={{ color: colors.cream, lineHeight: 20 }}
-            >
-              {lockFeedback}
-            </Text>
-          </View>
+          <StateNotice
+            kind="error"
+            tone="night"
+            compact
+            align="center"
+            className="mt-4"
+            title="Unlock unavailable"
+            body={lockFeedback}
+            style={{ maxWidth: 300 }}
+          />
         ) : null}
         <Pressable
           accessibilityRole="button"

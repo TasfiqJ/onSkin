@@ -3,7 +3,7 @@ import { router, useIsFocused, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, Screen, StateNotice, Text } from '@/components/ui';
 import {
   classifyOnboardingStatusFailure,
   decideWelcomeOnboardingGate,
@@ -202,19 +202,20 @@ export default function WelcomeScreen() {
     return (
       <Screen>
         <View className="flex-1 justify-center">
-          <View accessibilityLiveRegion="polite" accessibilityRole="alert">
-            <Text variant="title">{title}</Text>
-            <Text variant="body" tone="muted" className="mt-4">
-              {body}
-            </Text>
-          </View>
-          <Button
-            accessibilityLabel="Retry checking onboarding progress"
-            className="mt-7"
-            disabled={onboarded.isFetching}
-            label={onboarded.isFetching ? 'Trying again...' : 'Try again'}
-            onPress={() => void onboarded.refetch()}
-          />
+          <StateNotice
+            kind={failureKind === 'invalid_profile' ? 'corrupt' : 'unavailable'}
+            presentation="plain"
+            title={title}
+            body={body}
+          >
+            <Button
+              accessibilityLabel="Retry checking onboarding progress"
+              className="mt-7"
+              disabled={onboarded.isFetching}
+              label={onboarded.isFetching ? 'Trying again...' : 'Try again'}
+              onPress={() => void onboarded.refetch()}
+            />
+          </StateNotice>
         </View>
       </Screen>
     );
@@ -237,15 +238,14 @@ export default function WelcomeScreen() {
       </View>
       <View className="pb-4">
         {beginError ? (
-          <View
-            accessibilityLiveRegion="polite"
-            accessibilityRole="alert"
+          <StateNotice
+            kind="error"
+            compact
+            align="center"
             className="mb-4"
-          >
-            <Text variant="bodySm" tone="clay" className="text-center">
-              We couldn&apos;t start your private session. Check your connection and try again.
-            </Text>
-          </View>
+            title="Private session not started"
+            body="We couldn't start your private session. Check your connection and try again."
+          />
         ) : null}
         <Button
           label={beginError ? 'Try again' : 'Begin'}

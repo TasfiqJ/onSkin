@@ -10,7 +10,7 @@ import {
   type TextInputChangeEventData,
 } from 'react-native';
 
-import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
+import { Button, RouteIconButton, Screen, StateLoading, StateNotice, Text } from '@/components/ui';
 import { parseIngredientText } from '@/features/catalog/ingredientParser';
 import {
   catalogIntakeProvenance,
@@ -77,6 +77,12 @@ type WrongMatchFeedback = FeedbackCopy &
   Readonly<{
     productKey: string;
   }>;
+
+type CatalogSearchNotice = Readonly<{
+  kind: 'empty' | 'offline' | 'error';
+  title: string;
+  body: string;
+}>;
 
 function normalizeCategory(value: string | null | undefined): ProductCategory | null {
   return value && categoryIds.has(value as ProductCategory) ? (value as ProductCategory) : null;
@@ -299,7 +305,7 @@ export default function CatalogSearchScreen() {
   const latestDraftRef = useRef(initialSearchQuery);
   const reportingWrongMatchIdRef = useRef<string | null>(null);
   const [results, setResults] = useState<CatalogProductSummary[]>([]);
-  const [message, setMessage] = useState<string | null>(null);
+  const [notice, setNotice] = useState<CatalogSearchNotice | null>(null);
   const [lastNoMatchQuery, setLastNoMatchQuery] = useState<string | null>(null);
   const [reportingMissingProduct, setReportingMissingProduct] = useState(false);
   const [missingProductFeedback, setMissingProductFeedback] = useState<{
@@ -349,6 +355,7 @@ export default function CatalogSearchScreen() {
       const { controller } = begin.request;
       recordCatalogSearchStarted();
       setSearching(true);
+      setNotice(null);
       setLastNoMatchQuery(null);
       setMissingProductFeedback(null);
       setWrongMatchFeedback(null);
@@ -358,12 +365,26 @@ export default function CatalogSearchScreen() {
         track('catalog_search', { result: response.result });
         setResults(response.products ?? []);
         const noProducts = !response.products?.length;
-        setMessage(
-          response.result === 'offline' || response.result === 'error'
-            ? "Couldn't reach the product catalog. Add this product by hand for now."
-            : !noProducts
-              ? null
-              : 'No catalog match yet. Add it by hand for now.',
+        setNotice(
+          response.result === 'offline'
+            ? {
+                kind: 'offline',
+                title: 'Catalog offline',
+                body: "Couldn't reach the product catalog. Your Shelf still works, and you can add this product by hand.",
+              }
+            : response.result === 'error'
+              ? {
+                  kind: 'error',
+                  title: 'Catalog search failed',
+                  body: "Couldn't search the product catalog. Add this product by hand or try again.",
+                }
+              : noProducts
+                ? {
+                    kind: 'empty',
+                    title: 'No catalog match',
+                    body: 'No reviewed catalog match yet. Add it by hand for now.',
+                  }
+                : null,
         );
         if (response.result === 'no_match' && noProducts) setLastNoMatchQuery(cleaned);
         if (noProducts) track('catalog_lookup_no_match', { lookup_type: 'search' });
@@ -373,7 +394,11 @@ export default function CatalogSearchScreen() {
           return;
         track('catalog_search', { result: 'error' });
         setResults([]);
-        setMessage("Couldn't reach the product catalog. Add this product by hand for now.");
+        setNotice({
+          kind: 'error',
+          title: 'Catalog search failed',
+          body: "Couldn't search the product catalog. Add this product by hand or try again.",
+        });
         recordCatalogSearchPublished();
       } finally {
         if (searchRequests.finish(controller) && mounted.current) setSearching(false);
@@ -550,11 +575,15 @@ export default function CatalogSearchScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerClassName="pb-4"
         >
-          {message ? (
-            <View className="mt-4 rounded-[16px] bg-greige-chip px-4 py-3.5">
-              <Text variant="bodySm" tone="muted">
-                {message}
-              </Text>
+          {searching ? (
+            <StateLoading label="Searching the catalog..." className="mt-6 py-6" />
+          ) : notice ? (
+            <StateNotice
+              kind={notice.kind}
+              className="mt-4"
+              title={notice.title}
+              body={notice.body}
+            >
               {lastNoMatchQuery ? (
                 <Pressable
                   accessibilityRole="button"
@@ -585,23 +614,25 @@ export default function CatalogSearchScreen() {
                   </Text>
                 </View>
               ) : null}
-            </View>
+            </StateNotice>
           ) : null}
 
           <View className="mt-4 gap-2.5">
-            {results.map((product) => {
-              const key = productKey(product);
-              return (
-                <CatalogResultCard
-                  key={key}
-                  product={product}
-                  reporting={reportingWrongMatchId === key}
-                  feedback={wrongMatchFeedback?.productKey === key ? wrongMatchFeedback : null}
-                  onChoose={chooseProduct}
-                  onReport={reportWrongMatch}
-                />
-              );
-            })}
+            {searching
+              ? null
+              : results.map((product) => {
+                  const key = productKey(product);
+                  return (
+                    <CatalogResultCard
+                      key={key}
+                      product={product}
+                      reporting={reportingWrongMatchId === key}
+                      feedback={wrongMatchFeedback?.productKey === key ? wrongMatchFeedback : null}
+                      onChoose={chooseProduct}
+                      onReport={reportWrongMatch}
+                    />
+                  );
+                })}
           </View>
         </ScrollView>
       </Profiler>

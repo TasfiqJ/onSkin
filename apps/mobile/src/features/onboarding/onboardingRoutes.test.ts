@@ -50,7 +50,9 @@ describe('onboarding route contracts', () => {
     expect(route).toContain("type VerificationStatus = 'checking' | 'ready' | 'error';");
     expect(route).toContain("result.status === 'absent' || result.status === 'available'");
     expect(route).toContain("if (verificationStatus === 'error')");
-    expect(route).toContain('accessibilityRole="alert"');
+    expect(route).toContain('<StateNotice');
+    expect(route).toContain('kind="unavailable"');
+    expect(route).toContain('<StateLoading');
     expect(route).toContain('accessibilityLabel="Retry age confirmation"');
     expect(route).toContain('className="mt-7 min-h-[56px]"');
     expect(route).toContain("onPress={() => void checkAgeVerification('retry')}");
@@ -80,7 +82,8 @@ describe('onboarding route contracts', () => {
     expect(source).toContain("label={saving ? 'Saving...' : 'Continue'}");
     expect(source).toContain('disabled={!valid || saving}');
     expect(source).toContain('Your birth date was not stored.');
-    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('title="Age confirmation not saved"');
+    expect(source).toContain('kind="error"');
   });
 
   it('keeps account creation copy honest about local-first routine state', () => {
@@ -153,7 +156,9 @@ describe('onboarding route contracts', () => {
     expect(stop).toBeGreaterThan(inlineError);
     expect(navigate).toBeGreaterThan(stop);
     expect(source).toContain("if (onboardingGate === 'error')");
-    expect(source).toContain('accessibilityRole="alert"');
+    expect(source).toContain('<StateNotice');
+    expect(source).toContain("failureKind === 'invalid_profile' ? 'corrupt' : 'unavailable'");
+    expect(source).toContain('title="Private session not started"');
     expect(source).toContain('accessibilityLabel="Retry checking onboarding progress"');
     expect(source).toContain("label={onboarded.isFetching ? 'Trying again...' : 'Try again'}");
     expect(source).toContain("label={beginError ? 'Try again' : 'Begin'}");

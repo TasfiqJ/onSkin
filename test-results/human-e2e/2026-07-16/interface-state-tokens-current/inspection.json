@@ -1,0 +1,80 @@
+{
+  "date": "2026-07-16",
+  "surface": "Expo web in Codex in-app browser",
+  "viewport": {
+    "width": 1281,
+    "height": 720,
+    "devicePixelRatio": 1.03
+  },
+  "cases": [
+    {
+      "id": "private-storage-unavailable",
+      "screenshot": "private-storage-unavailable.jpg",
+      "role": "alert",
+      "roleCount": 1,
+      "visibleStateLabel": "Unavailable",
+      "title": "Your private data could not open.",
+      "retryCount": 1,
+      "noticeBox": {
+        "x": 27.99,
+        "y": 279.7,
+        "width": 1224.6,
+        "height": 160.97
+      }
+    },
+    {
+      "id": "private-storage-unavailable-persistent-retry",
+      "screenshot": "private-storage-unavailable-retry.jpg",
+      "role": "alert",
+      "roleCount": 1,
+      "visibleStateLabel": "Unavailable",
+      "detail": "It is still unavailable. Your encrypted data remains unchanged.",
+      "retryCount": 1
+    },
+    {
+      "id": "catalog-loading",
+      "screenshot": "catalog-loading.png",
+      "role": "progressbar",
+      "roleCount": 1,
+      "visibleStateLabel": "Loading",
+      "title": "Searching the catalog...",
+      "searchDisabled": true
+    },
+    {
+      "id": "catalog-empty",
+      "screenshot": "catalog-empty.jpg",
+      "role": "status content",
+      "visibleStateLabel": "Nothing here yet",
+      "title": "No catalog match",
+      "reportRecoveryCount": 1,
+      "manualRecoveryCount": 1
+    },
+    {
+      "id": "catalog-offline",
+      "screenshot": "catalog-offline.png",
+      "role": "alert",
+      "roleCount": 1,
+      "visibleStateLabel": "Offline",
+      "title": "Catalog offline",
+      "manualRecoveryCount": 1,
+      "noticeBox": {
+        "x": 24.0,
+        "y": 169.96,
+        "width": 1232.58,
+        "height": 118.92
+      }
+    }
+  ],
+  "javascriptDialog": false,
+  "expectedWarnings": [
+    "placeholder Supabase configuration",
+    "Expo Notifications web limitation"
+  ],
+  "unexpectedFeatureErrors": 0,
+  "limitations": [
+    "No supported-iOS appearance review",
+    "No VoiceOver announcement-order pass",
+    "No Dynamic Type pass",
+    "No dark-surface visual regression review"
+  ]
+}

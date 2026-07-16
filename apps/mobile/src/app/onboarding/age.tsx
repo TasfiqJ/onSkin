@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform, ScrollView, TextInput, View, useWindowDimensions } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, Screen, StateLoading, StateNotice, Text } from '@/components/ui';
 import {
   getDobValidationError,
   isValidDob,
@@ -166,9 +166,7 @@ export default function AgeGateScreen() {
           accessibilityLiveRegion="polite"
           className="flex-1 items-center justify-center"
         >
-          <Text variant="bodySm" tone="muted" className="text-center">
-            {AGE_VERIFICATION_STORAGE_COPY.loading}
-          </Text>
+          <StateLoading label={AGE_VERIFICATION_STORAGE_COPY.loading} />
         </View>
       </Screen>
     );
@@ -181,33 +179,27 @@ export default function AgeGateScreen() {
           contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingVertical: 32 }}
           showsVerticalScrollIndicator={false}
         >
-          <View accessibilityLiveRegion="polite" accessibilityRole="alert">
-            <Text variant="label" tone="clay" className="text-center">
-              {AGE_VERIFICATION_STORAGE_COPY.eyebrow}
-            </Text>
-            <Text variant="title" className="mt-3 text-center">
-              {AGE_VERIFICATION_STORAGE_COPY.title}
-            </Text>
-            <Text variant="bodySm" tone="muted" className="mt-3 text-center">
-              {AGE_VERIFICATION_STORAGE_COPY.body}
-            </Text>
-            {retryFailed ? (
-              <Text variant="bodySm" className="mt-3 text-center">
-                {AGE_VERIFICATION_STORAGE_COPY.retryFailed}
-              </Text>
-            ) : null}
-          </View>
-          <Button
-            accessibilityLabel="Retry age confirmation"
-            className="mt-7 min-h-[56px]"
-            disabled={retrying}
-            label={
-              retrying
-                ? AGE_VERIFICATION_STORAGE_COPY.retrying
-                : AGE_VERIFICATION_STORAGE_COPY.retry
-            }
-            onPress={() => void checkAgeVerification('retry')}
-          />
+          <StateNotice
+            kind="unavailable"
+            presentation="plain"
+            align="center"
+            title={AGE_VERIFICATION_STORAGE_COPY.title}
+            body={AGE_VERIFICATION_STORAGE_COPY.body}
+            detail={retryFailed ? AGE_VERIFICATION_STORAGE_COPY.retryFailed : null}
+            accessibilityLabel={`${AGE_VERIFICATION_STORAGE_COPY.eyebrow}. ${AGE_VERIFICATION_STORAGE_COPY.title}`}
+          >
+            <Button
+              accessibilityLabel="Retry age confirmation"
+              className="mt-7 min-h-[56px]"
+              disabled={retrying}
+              label={
+                retrying
+                  ? AGE_VERIFICATION_STORAGE_COPY.retrying
+                  : AGE_VERIFICATION_STORAGE_COPY.retry
+              }
+              onPress={() => void checkAgeVerification('retry')}
+            />
+          </StateNotice>
         </ScrollView>
       </Screen>
     );
@@ -273,13 +265,24 @@ export default function AgeGateScreen() {
           </View>
 
           {saveFailed ? (
-            <Text variant="bodySm" tone="clay" className="mt-5" accessibilityRole="alert">
-              {AGE_VERIFICATION_STORAGE_COPY.saveFailed}
-            </Text>
+            <StateNotice
+              kind="error"
+              compact
+              className="mt-5"
+              title="Age confirmation not saved"
+              body={AGE_VERIFICATION_STORAGE_COPY.saveFailed}
+            />
           ) : validationError || blocked ? (
-            <Text variant="bodySm" tone="clay" className="mt-5" accessibilityRole="alert">
-              {validationError ?? `You need to be at least ${MINIMUM_AGE} to use ${BRAND.appName}.`}
-            </Text>
+            <StateNotice
+              kind="error"
+              compact
+              className="mt-5"
+              title="Check your date of birth"
+              body={
+                validationError ??
+                `You need to be at least ${MINIMUM_AGE} to use ${BRAND.appName}.`
+              }
+            />
           ) : null}
         </ScrollView>
       </View>

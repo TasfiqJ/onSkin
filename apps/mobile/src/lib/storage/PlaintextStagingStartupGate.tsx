@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 
+import { Button, StateLoading, StateNotice } from '@/components/ui';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { colors } from '@/theme/tokens';
 
 import { preparePrivateStorageForSession } from './privateStorageStartup';
 
@@ -63,43 +65,27 @@ function PrivateStorageStartupAttempt({
         justifyContent: 'center',
         gap: 16,
         paddingHorizontal: 32,
-        backgroundColor: '#F4EFE7',
+        backgroundColor: colors.cream,
       }}
     >
       {status === 'pending' ? (
-        <>
-          <ActivityIndicator color="#201B15" />
-          <Text style={{ color: '#625B52', textAlign: 'center' }}>Preparing private storage</Text>
-        </>
+        <StateLoading label="Preparing private storage" />
       ) : (
-        <>
-          <View accessibilityRole="alert">
-            <Text
-              style={{ color: '#201B15', fontSize: 20, fontWeight: '600', textAlign: 'center' }}
-            >
-              Private storage needs attention
-            </Text>
-            <Text style={{ color: '#625B52', lineHeight: 21, marginTop: 8, textAlign: 'center' }}>
-              OnSkin stayed closed because private storage could not be prepared safely. Try again
-              before continuing.
-            </Text>
-          </View>
-          <Pressable
-            accessibilityRole="button"
+        <StateNotice
+          kind="error"
+          presentation="plain"
+          align="center"
+          title="Private storage needs attention"
+          body="OnSkin stayed closed because private storage could not be prepared safely. Try again before continuing."
+          style={{ width: '100%', maxWidth: 420 }}
+        >
+          <Button
+            accessibilityLabel="Retry preparing private storage"
+            className="mt-6"
+            label="Try again"
             onPress={onRetry}
-            style={{
-              minHeight: 52,
-              minWidth: 160,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 999,
-              backgroundColor: '#201B15',
-              paddingHorizontal: 24,
-            }}
-          >
-            <Text style={{ color: '#F4EFE7', fontSize: 16, fontWeight: '600' }}>Try again</Text>
-          </Pressable>
-        </>
+          />
+        </StateNotice>
       )}
     </View>
   );

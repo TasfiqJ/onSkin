@@ -36,6 +36,7 @@ describe('ramp availability contract', () => {
     const layout = read('app/cycle/_layout.tsx');
     const gate = read('features/scheduler/CycleDataAvailabilityGate.tsx');
     const notice = read('features/scheduler/ActiveScheduleUnavailableNotice.tsx');
+    const stateNotice = read('components/ui/StateNotice.tsx');
     const today = read('app/(tabs)/today.tsx');
     const plan = read('app/routine/plan.tsx');
     const ramp = read('app/routine/ramp.tsx');
@@ -47,8 +48,9 @@ describe('ramp availability contract', () => {
     expect(gate).toContain('if (!query.isLoading && !query.isError) return children;');
     expect(gate).toContain('<ActiveScheduleUnavailableNotice');
     expect(notice).toContain('Active schedule unavailable');
-    expect(notice).toContain('Your saved cadence wasn&apos;t reset');
-    expect(notice).toContain('accessibilityRole="alert"');
+    expect(notice).toContain("Your saved cadence wasn't reset");
+    expect(notice).toContain('kind="unavailable"');
+    expect(stateNotice).toContain("alert ? 'alert' : undefined");
     expect(notice).toContain('Retry loading active schedule');
 
     expect(today).toContain('plan?.cycle != null && canUseRoutineCadence() && cycleQuery.isError');

@@ -352,6 +352,7 @@ describe('app lock local authentication', () => {
     const accountOperations = readSource('lib/applock/accountOperations.ts');
     const preferenceDecision = readSource('lib/applock/preferenceDecision.ts');
     const timelineGate = readSource('features/photos/PhotoTimelineLockGate.tsx');
+    const stateNotice = readSource('components/ui/StateNotice.tsx');
     const youTab = readSource('app/(tabs)/you.tsx');
 
     expect(provider).toContain('attemptAppUnlockForCurrentAccount({');
@@ -411,7 +412,8 @@ describe('app lock local authentication', () => {
     expect(timelineGate).toContain('unlockPhotoTimeline()');
     expect(timelineGate).toContain('locked && appUnlocked');
     expect(timelineGate).toContain('setLockFeedback(appLockUserMessage());');
-    expect(timelineGate).toContain('accessibilityRole="alert"');
+    expect(timelineGate).toContain('kind="error"');
+    expect(stateNotice).toContain("alert ? 'alert' : undefined");
     expect(timelineGate).not.toContain("Alert.alert('Photo timeline locked'");
     expect(timelineGate).not.toContain('LocalAuthentication.authenticateAsync');
 

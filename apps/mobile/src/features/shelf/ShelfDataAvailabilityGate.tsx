@@ -1,8 +1,8 @@
 import { useState, type ReactNode } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { Button, StateLoading, StateNotice } from '@/components/ui';
 import { colors } from '@/theme/tokens';
 
 import { useShelf } from './useShelf';
@@ -63,57 +63,32 @@ export function ShelfDataUnavailableNotice({
 
   return (
     <View className="w-full max-w-[420px] self-center">
-      <View accessibilityLiveRegion="polite" accessibilityRole="alert">
-        <Text variant="label" style={{ color: colors.clayDeep, textAlign: 'center' }}>
-          {copy.eyebrow}
-        </Text>
-        <Text
-          variant="title"
-          className="mt-3"
-          style={{ color: colors.ink, fontSize: 30, lineHeight: 34, textAlign: 'center' }}
-        >
-          {copy.title}
-        </Text>
-        <Text variant="bodySm" tone="muted" className="mt-3 text-center" style={{ lineHeight: 22 }}>
-          {copy.body}
-        </Text>
-        {retryFailed ? (
-          <Text
-            variant="bodySm"
-            className="mt-3 text-center"
-            style={{ color: colors.ink, lineHeight: 20 }}
-          >
-            {copy.retryFailed}
-          </Text>
-        ) : null}
-      </View>
-
-      <View className="mt-7 gap-2.5">
-        <Pressable
-          accessibilityLabel={retryAccessibilityLabel}
-          accessibilityRole="button"
-          accessibilityState={{ disabled: retrying }}
-          disabled={retrying}
-          onPress={() => void retry()}
-          className="min-h-[56px] items-center justify-center rounded-pill px-6 py-3"
-          style={{ backgroundColor: colors.ink, opacity: retrying ? 0.68 : 1 }}
-        >
-          <Text className="font-sans-semibold" style={{ color: colors.paper, fontSize: 16 }}>
-            {retrying ? copy.retrying : copy.retry}
-          </Text>
-        </Pressable>
-        {onExit ? (
-          <Pressable
-            accessibilityRole="button"
-            onPress={onExit}
-            className="min-h-[48px] items-center justify-center rounded-pill border border-hairline-strong bg-paper-raised px-6 py-3"
-          >
-            <Text className="font-sans-semibold" style={{ color: colors.ink, fontSize: 15 }}>
-              {exitLabel}
-            </Text>
-          </Pressable>
-        ) : null}
-      </View>
+      <StateNotice
+        kind="unavailable"
+        presentation="plain"
+        align="center"
+        title={copy.title}
+        body={copy.body}
+        detail={retryFailed ? copy.retryFailed : null}
+        accessibilityLabel={`${copy.eyebrow}. ${copy.title}`}
+      >
+        <View className="mt-7 w-full gap-2.5">
+          <Button
+            accessibilityLabel={retryAccessibilityLabel}
+            disabled={retrying}
+            label={retrying ? copy.retrying : copy.retry}
+            onPress={() => void retry()}
+          />
+          {onExit ? (
+            <Button
+              className="min-h-[48px] py-3"
+              label={exitLabel}
+              onPress={onExit}
+              variant="ghost"
+            />
+          ) : null}
+        </View>
+      </StateNotice>
     </View>
   );
 }
@@ -149,9 +124,7 @@ export function ShelfDataAvailabilityBoundary({
         className="flex-1 items-center justify-center px-7"
         style={{ backgroundColor: colors.paper }}
       >
-        <Text variant="bodySm" tone="muted" className="text-center">
-          {SHELF_AVAILABILITY_COPY.loading}
-        </Text>
+        <StateLoading label={SHELF_AVAILABILITY_COPY.loading} />
       </View>
     );
   }

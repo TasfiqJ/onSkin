@@ -20,7 +20,15 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 
-import { Button, Card, Screen, Text, ToggleSwitch } from '@/components/ui';
+import {
+  Button,
+  Card,
+  Screen,
+  StateLoading,
+  StateNotice,
+  Text,
+  ToggleSwitch,
+} from '@/components/ui';
 import { commerceConsentQueryOptions } from '@/features/commerce/consentQuery';
 import { setCommerceConsentLocal } from '@/features/commerce/store';
 import { CONSENT_COPY_VERSION } from '@/features/onboarding/consentCopy';
@@ -198,15 +206,17 @@ function ConsentReadState({
 }) {
   if (state.isUnavailable) {
     return (
-      <View accessibilityRole="alert" className="mb-2 rounded-[12px] bg-clay-tint px-4 py-3">
-        <Text variant="bodySm" className="font-sans-semibold">
-          {label} status unavailable
-        </Text>
-        <Text variant="bodySm" tone="muted" className="mt-1">
-          {state.hasVerifiedValue
+      <StateNotice
+        kind="unavailable"
+        compact
+        className="mb-2"
+        title={`${label} status unavailable`}
+        body={
+          state.hasVerifiedValue
             ? 'The last confirmed choice is shown. You can turn an active choice off, or try the read again.'
-            : 'We could not safely read this choice. Nothing was changed, and the switch remains unavailable.'}
-        </Text>
+            : 'We could not safely read this choice. Nothing was changed, and the switch remains unavailable.'
+        }
+      >
         <Button
           accessibilityLabel={`Retry ${label} consent status`}
           className="mt-2"
@@ -215,21 +225,12 @@ function ConsentReadState({
           variant="ghost"
           onPress={onRetry}
         />
-      </View>
+      </StateNotice>
     );
   }
 
   if (!state.isChecking) return null;
-  return (
-    <Text
-      accessibilityLiveRegion="polite"
-      variant="bodySm"
-      tone="muted"
-      className="pb-2 text-center"
-    >
-      Checking {label.toLowerCase()} consent...
-    </Text>
-  );
+  return <StateLoading label={`Checking ${label.toLowerCase()} consent...`} className="pb-2" />;
 }
 
 function Row({
@@ -345,18 +346,14 @@ function InlineNoticeCard({
   className?: string;
 }) {
   return (
-    <View className={`${className} rounded-[12px] bg-clay-tint px-4 py-3`}>
-      <Text
-        accessibilityRole="alert"
-        variant="bodySm"
-        className="text-center"
-        style={{ color: colors.clayDeep, lineHeight: 20 }}
-      >
-        {notice.title}
-        {'\n'}
-        {notice.message}
-      </Text>
-    </View>
+    <StateNotice
+      kind="error"
+      compact
+      align="center"
+      className={className}
+      title={notice.title}
+      body={notice.message}
+    />
   );
 }
 
@@ -376,17 +373,14 @@ function InlineConfirmCard({
   onConfirm: () => void;
 }) {
   return (
-    <View className="mt-2 rounded-[12px] bg-clay-tint px-4 py-3">
-      <Text
-        accessibilityRole="alert"
-        variant="bodySm"
-        className="text-center"
-        style={{ color: colors.clayDeep, lineHeight: 20 }}
-      >
-        {title}
-        {'\n'}
-        {message}
-      </Text>
+    <StateNotice
+      kind="destructive"
+      compact
+      align="center"
+      className="mt-2"
+      title={title}
+      body={message}
+    >
       <Button
         className="mt-3"
         label={confirmLabel}
@@ -401,7 +395,7 @@ function InlineConfirmCard({
         disabled={disabled}
         onPress={onCancel}
       />
-    </View>
+    </StateNotice>
   );
 }
 

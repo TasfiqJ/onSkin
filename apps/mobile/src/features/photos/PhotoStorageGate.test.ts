@@ -98,7 +98,11 @@ vi.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
 }));
 
-vi.mock('@/components/ui', () => ({ Text: 'Text' }));
+vi.mock('@/components/ui', () => ({
+  Button: 'Pressable',
+  StateLoading: 'StateLoading',
+  StateNotice: 'StateNotice',
+}));
 vi.mock('@/features/photos/usePhotos', () => ({ usePhotos: vi.fn() }));
 vi.mock('@/theme/tokens', () => ({
   colors: {

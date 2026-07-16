@@ -677,9 +677,14 @@ describe('Shelf route mobile contracts', () => {
     expect(source).toContain('missing_product reported from catalog search');
     expect(source).toContain("route: 'shelf_search'");
     expect(source).toContain('accessibilityRole="alert"');
-    expect(source).toContain(
-      "Couldn't reach the product catalog. Add this product by hand for now.",
-    );
+    expect(source).toContain("kind: 'offline'");
+    expect(source).toContain("title: 'Catalog offline'");
+    expect(source).toContain("kind: 'error'");
+    expect(source).toContain("title: 'Catalog search failed'");
+    expect(source).toContain("kind: 'empty'");
+    expect(source).toContain("title: 'No catalog match'");
+    expect(source).toContain('<StateLoading label="Searching the catalog..."');
+    expect(source).toContain('<StateNotice');
     expect(source).not.toContain('backend');
     expect(source).not.toContain(
       '\n      <Button label="Add by hand" variant="ghost" onPress={goManual} />\n    </Screen>',

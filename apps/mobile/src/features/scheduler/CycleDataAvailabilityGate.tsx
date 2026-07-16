@@ -1,11 +1,10 @@
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 
-import { Button, RouteIconButton, Screen, Text } from '@/components/ui';
+import { Button, RouteIconButton, Screen, StateLoading } from '@/components/ui';
 import { canUseRoutineCadence } from '@/features/routine/reviewGate';
 import { backOrReplace } from '@/lib/navigation/safeBack';
-import { colors } from '@/theme/tokens';
 
 import { ActiveScheduleUnavailableNotice } from './ActiveScheduleUnavailableNotice';
 import { useCycle } from './useCycle';
@@ -30,12 +29,7 @@ export function CycleDataAvailabilityGate({ children }: { children: ReactNode })
             retrying={query.isFetching}
           />
         ) : (
-          <View accessibilityLiveRegion="polite" className="items-center px-6 py-12">
-            <ActivityIndicator color={colors.clay} />
-            <Text variant="bodySm" tone="muted" className="mt-3 text-center">
-              Opening your active schedule...
-            </Text>
-          </View>
+          <StateLoading label="Opening your active schedule..." className="px-6 py-12" />
         )}
       </View>
       <Button

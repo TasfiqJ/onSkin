@@ -22,11 +22,13 @@ describe('account session isolation integration', () => {
     );
     expect(gate).toContain('if (!initializing && !sessionBoundaryError) return children;');
     expect(gate).toContain("loading: 'Securing account data...'");
-    expect(gate).toContain('accessibilityRole="alert"');
+    expect(gate).toContain('<StateNotice');
+    expect(gate).toContain('kind="unavailable"');
+    expect(gate).toContain('<StateLoading');
     expect(gate).toContain('setE2EStorageProof(null);');
     expect(gate).toContain('await retrySessionBoundary();');
     expect(gate).toContain('onPress={() => void retryBoundary()}');
-    expect(gate).toContain('min-h-[56px]');
+    expect(gate).toContain('accessibilityLabel="Retry securing account data"');
   });
 
   it('drains private writes, clears query memory, and keeps failed cleanup gated', () => {

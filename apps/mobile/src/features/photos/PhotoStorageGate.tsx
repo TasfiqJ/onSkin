@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Text } from '@/components/ui';
+import { Button, StateLoading, StateNotice } from '@/components/ui';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { usePhotos } from '@/features/photos/usePhotos';
 import { colors } from '@/theme/tokens';
@@ -52,8 +52,6 @@ export function PhotoStorageBoundary({
   const [retryFailed, setRetryFailed] = useState(false);
   const night = tone === 'night';
   const backgroundColor = night ? NIGHT_BG : colors.paper;
-  const foregroundColor = night ? colors.cream : colors.ink;
-  const mutedColor = night ? 'rgba(244,239,231,0.68)' : colors.muted;
 
   useEffect(() => {
     mountedRef.current = true;
@@ -116,9 +114,7 @@ export function PhotoStorageBoundary({
         className="flex-1 items-center justify-center px-7"
         style={{ backgroundColor }}
       >
-        <Text variant="bodySm" style={{ color: mutedColor, textAlign: 'center' }}>
-          {PHOTO_COPY.storage.loading}
-        </Text>
+        <StateLoading label={PHOTO_COPY.storage.loading} tone={night ? 'night' : 'paper'} />
       </View>
     );
   }
@@ -163,74 +159,34 @@ export function PhotoStorageBoundary({
       }}
       showsVerticalScrollIndicator={false}
     >
-      <View accessibilityLiveRegion="polite" accessibilityRole="alert">
-        <Text
-          variant="label"
-          style={{ color: night ? 'rgba(244,239,231,0.48)' : colors.clayDeep, textAlign: 'center' }}
-        >
-          {PHOTO_COPY.storage.eyebrow}
-        </Text>
-        <Text
-          variant="title"
-          className="mt-3"
-          style={{ color: foregroundColor, fontSize: 30, lineHeight: 34, textAlign: 'center' }}
-        >
-          {PHOTO_COPY.storage.title}
-        </Text>
-        <Text
-          variant="bodySm"
-          className="mt-3 text-center"
-          style={{ color: mutedColor, lineHeight: 22 }}
-        >
-          {PHOTO_COPY.storage.body}
-        </Text>
-        {retryFailed ? (
-          <Text
-            variant="bodySm"
-            className="mt-3 text-center"
-            style={{ color: foregroundColor, lineHeight: 20 }}
-          >
-            {PHOTO_COPY.storage.retryFailed}
-          </Text>
-        ) : null}
-      </View>
-
-      <View className="mt-7 gap-2.5">
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ disabled: retryBusy }}
-          disabled={retryBusy}
-          onPress={() => void retry()}
-          className="min-h-[56px] items-center justify-center rounded-pill px-6 py-3"
-          style={{
-            backgroundColor: night ? colors.cream : colors.ink,
-            opacity: retryBusy ? 0.68 : 1,
-          }}
-        >
-          <Text
-            className="font-sans-semibold"
-            style={{ color: night ? NIGHT_BG : colors.paper, fontSize: 16 }}
-          >
-            {retryBusy ? PHOTO_COPY.storage.retrying : PHOTO_COPY.storage.retry}
-          </Text>
-        </Pressable>
-        {onExit ? (
-          <Pressable
-            accessibilityRole="button"
-            onPress={onExit}
-            className="min-h-[48px] items-center justify-center rounded-pill px-6 py-3"
-            style={{
-              backgroundColor: night ? 'rgba(244,239,231,0.1)' : colors.paperRaised,
-              borderColor: night ? 'rgba(244,239,231,0.12)' : colors.hairlineStrong,
-              borderWidth: 1,
-            }}
-          >
-            <Text className="font-sans-semibold" style={{ color: foregroundColor, fontSize: 15 }}>
-              {PHOTO_COPY.storage.exit}
-            </Text>
-          </Pressable>
-        ) : null}
-      </View>
+      <StateNotice
+        kind="unavailable"
+        tone={night ? 'night' : 'paper'}
+        presentation="plain"
+        align="center"
+        title={PHOTO_COPY.storage.title}
+        body={PHOTO_COPY.storage.body}
+        detail={retryFailed ? PHOTO_COPY.storage.retryFailed : null}
+        accessibilityLabel={`${PHOTO_COPY.storage.eyebrow}. ${PHOTO_COPY.storage.title}`}
+      >
+        <View className="mt-7 w-full gap-2.5">
+          <Button
+            accessibilityLabel="Retry opening progress photos"
+            disabled={retryBusy}
+            label={retryBusy ? PHOTO_COPY.storage.retrying : PHOTO_COPY.storage.retry}
+            onPress={() => void retry()}
+            variant={night ? 'inverse' : 'primary'}
+          />
+          {onExit ? (
+            <Button
+              className="min-h-[48px] py-3"
+              label={PHOTO_COPY.storage.exit}
+              onPress={onExit}
+              variant={night ? 'inverseGhost' : 'ghost'}
+            />
+          ) : null}
+        </View>
+      </StateNotice>
     </ScrollView>
   );
 }

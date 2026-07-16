@@ -41,6 +41,8 @@ describe('global private data availability gate', () => {
 
   it('keeps failure recovery accessible, retryable, and development-only', () => {
     const gate = readSource('lib/storage/PrivateDataAvailabilityGate.tsx');
+    const stateNotice = readSource('components/ui/StateNotice.tsx');
+    const button = readSource('components/ui/Button.tsx');
 
     expect(gate).toContain("if (typeof __DEV__ === 'undefined' || !__DEV__) return null;");
     expect(gate).toContain('EXPO_PUBLIC_E2E_PRIVATE_STORAGE_FAILURE');
@@ -48,9 +50,11 @@ describe('global private data availability gate', () => {
     expect(gate).toContain("fixture === 'unavailable_once'");
     expect(gate).toContain("fixture === 'foreground_once'");
     expect(gate).toContain("check('foreground')");
-    expect(gate).toContain('accessibilityRole="alert"');
-    expect(gate).toContain('accessibilityState={{ disabled: retrying }}');
-    expect(gate).toContain('className="mt-7 min-h-[56px]');
+    expect(gate).toContain('kind="unavailable"');
+    expect(stateNotice).toContain("alert ? 'alert' : undefined");
+    expect(gate).toContain('disabled={retrying}');
+    expect(gate).toContain('className="mt-7"');
+    expect(button).toContain("'min-h-[56px]");
     expect(gate).toContain("title: 'Your private data could not open.'");
     expect(gate).not.toContain('E2E_PRIVATE_STORAGE_UNAVAILABLE}</');
   });

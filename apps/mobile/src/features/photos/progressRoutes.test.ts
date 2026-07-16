@@ -149,9 +149,11 @@ describe('Progress route mobile contracts', () => {
     expect(storageGate).toContain('const result = await refetch();');
     expect(storageGate).toContain('if (result.isError)');
     expect(storageGate).toContain('if (entryValidated && !isPending && !storageUnavailable)');
-    expect(storageGate).toContain('accessibilityRole="alert"');
-    expect(storageGate).toContain('accessibilityState={{ disabled: retryBusy }}');
-    expect(storageGate).toContain('className="min-h-[56px]');
+    expect(storageGate).toContain('<StateNotice');
+    expect(storageGate).toContain('kind="unavailable"');
+    expect(storageGate).toContain('<StateLoading');
+    expect(storageGate).toContain('disabled={retryBusy}');
+    expect(storageGate).toContain('accessibilityLabel="Retry opening progress photos"');
     expect(storageGate).toContain('className="min-h-[48px]');
     expect(routeSource.match(/useLocalDateBoundary\(\)/g)).toHaveLength(1);
     expect(routeSource.match(/usePhotosFromBoundary\(boundary, 'front'\)/g)).toHaveLength(1);
