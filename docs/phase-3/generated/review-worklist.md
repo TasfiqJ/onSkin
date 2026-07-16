@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-16T03:34:10.677Z
+Generated: 2026-07-16T03:41:05.701Z
 Status: pass
-Git SHA: 17f1452be2da1f4423266b403b78d143b677f175
+Git SHA: 250eb9d70cd0413aa0c10b4523bb41be50b68847
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -752,7 +752,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `f41d87b13dddbeeeea6a360476a2d31ec30fbb20d2c77f7c7c7b087e2646dac9`
+- Review snapshot SHA-256: `b9c42a0a50eca9988c861b276bc82b82b85d958e0c1a19faa27a551af23dae72`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Must prove owner-scoped staging server data, seeded local coverage, reverse-trial/service-event completeness, deletion/vendor scrubbing, redaction, and native cache cleanup.
@@ -771,7 +771,7 @@ Sources:
 - `supabase/functions/data-export/exportCore.test.ts` - 12978 bytes - sha256 `f952985bb4a7d3679c5d4752896c72e25540f002ddb0a49ba1c510fe5c335b3b`
 - `supabase/functions/data-export/exportRegistry.ts` - 9516 bytes - sha256 `2535337af91faa1150aa41fb2d1608385eef6cb0787682399ec0475d7cc6fb41`
 - `supabase/functions/data-export/exportRegistry.test.ts` - 7293 bytes - sha256 `6680aaeafc26910dffeca595130a07f13e9f669b27424f40da724883756d9194`
-- `scripts/phase9/data-rights-smoke.mjs` - 63743 bytes - sha256 `137ecf949372f66b7cae93652d3b044a37e69a57cea934a2f840a95d31abf811`
+- `scripts/phase9/data-rights-smoke.mjs` - 63915 bytes - sha256 `4d90550cdc4de906bfe9cdb22d73d3cf92880efd84e871f448a390e42c92474d`
 - `supabase/functions/_shared/storagePath.ts` - 591 bytes - sha256 `9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594`
 - `supabase/functions/_shared/storagePath.test.ts` - 1355 bytes - sha256 `3caf9cbb38b676c4a96dd9ae3f19479c205a90d31bb83fee7c7474bc76a2a2e9`
 

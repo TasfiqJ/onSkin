@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-16T03:34:10.677Z",
+  "generatedAt": "2026-07-16T03:41:05.701Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "17f1452be2da1f4423266b403b78d143b677f175",
+  "gitSha": "250eb9d70cd0413aa0c10b4523bb41be50b68847",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -2428,8 +2428,8 @@
         {
           "path": "scripts/phase9/data-rights-smoke.mjs",
           "exists": true,
-          "bytes": 63743,
-          "sha256": "137ecf949372f66b7cae93652d3b044a37e69a57cea934a2f840a95d31abf811"
+          "bytes": 63915,
+          "sha256": "4d90550cdc4de906bfe9cdb22d73d3cf92880efd84e871f448a390e42c92474d"
         },
         {
           "path": "supabase/functions/_shared/storagePath.ts",
@@ -2445,7 +2445,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "f41d87b13dddbeeeea6a360476a2d31ec30fbb20d2c77f7c7c7b087e2646dac9",
+      "reviewSnapshotSha256": "b9c42a0a50eca9988c861b276bc82b82b85d958e0c1a19faa27a551af23dae72",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
