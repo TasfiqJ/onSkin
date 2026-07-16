@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T15:41:58.612Z",
+  "generatedAt": "2026-07-16T20:09:21.655Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
@@ -196,7 +196,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 61,
+      "hashReferenceCount": 174,
       "staleHashReferenceCount": 0
     },
     {
@@ -404,7 +404,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 234,
+      "hashReferenceCount": 242,
       "staleHashReferenceCount": 0
     },
     {
@@ -433,7 +433,7 @@
     "generatedFileCount": 51,
     "dirtyTextFileCount": 0,
     "nonEmptyGitStatusFileCount": 0,
-    "hashReferenceCount": 2005,
+    "hashReferenceCount": 2126,
     "staleHashReferenceCount": 0,
     "blockerCount": 0,
     "warningCount": 0
