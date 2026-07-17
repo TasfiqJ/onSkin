@@ -1,8 +1,8 @@
 # Phase 3 Reviewer Worklist
 
-Generated: 2026-07-17T00:26:13.042Z
+Generated: 2026-07-17T07:44:46.596Z
 Status: pass
-Git SHA: d651358561e1153f3d66104672bed9a2bd4a0032
+Git SHA: 6241c23a30673d7ee9a0504a52d069ba4ea04d8d
 Git status: clean
 
 This generated worklist converts the legal, clinical, cosmetic chemistry,
@@ -173,14 +173,14 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `c15a3126f0dfe25ab83161d694a68ea0cfa9d134a5a91532eb41cf2bb205be60`
+- Review snapshot SHA-256: `f07f4cd138d3d7a00d87794a78d23e5bcaf6a34aaec0c8b42380c66ea6d9a361`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: FTC disclosure, partner data sharing, source rights, order reports.
 
 Sources:
 
-- `docs/phase-4/odbl-compliance-memo.md` - 2019 bytes - sha256 `0fe9bc07e3c4d34129ac8f8f2ba410a64e6caa0d77a3b7994198e0b4d9e18e69`
+- `docs/phase-4/odbl-compliance-memo.md` - 4938 bytes - sha256 `b8ed9a0b3216590e15d50b7ee7a0326b4b22d206f92fec0361bc2602b04280c1`
 - `apps/mobile/src/features/commerce/attribution.test.ts` - 5254 bytes - sha256 `8d759dcc16a3324d872895664b9dfc23b35224190d2441588782a2cdaa257d43`
 - `apps/mobile/src/features/commerce/attribution.ts` - 4062 bytes - sha256 `1c69b53246f2396a00620ef2b032e18c481aff3682fd1b44b29d75e7fd44ac51`
 - `apps/mobile/src/features/commerce/claimsafety.test.ts` - 4518 bytes - sha256 `73a396b16adcce8d9736fb7ce578e8b88a54cf255aa625a6e35ceb71565562d9`
@@ -875,7 +875,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `3d0bbc4c8e84b530ac00e01225bec4a57a2d6954b45e46a4d93ed053371d7f7e`
+- Review snapshot SHA-256: `31fda6a360e4479b80aff335c8a464764b9404de307a16550eb9c68537131a87`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Counsel must independently clear or reject the exact sequence and review the recorded comparators. Preliminary search completion is not clearance. Later founder selection and asset reservations are separate identity gates.
@@ -892,7 +892,7 @@ Sources:
 - `docs/hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/query-ledger.md` - 10268 bytes - sha256 `ce1554dad59bdca4134f1c170556b98d988b9440c0e1d090b06a08432fdecbb3`
 - `docs/hugeToDo/evidence/BRAND-03/public-research/brand03-public-knockout-2026-07-16/evidence.json` - 3674 bytes - sha256 `432f31667d8d145524059e3791cbb2fad1a857bf89017f9c2f5c58c1e307ea8d`
 - `apps/mobile/app.base.json` - 3981 bytes - sha256 `c741d1b60cc04f354955316d29a581274b208789dc8c357c49494a3584bfbb84`
-- `apps/mobile/app.config.js` - 14367 bytes - sha256 `c9e4be78be838845732086cf769fede87290aaa930b294d7675dc0703623626d`
+- `apps/mobile/app.config.js` - 15355 bytes - sha256 `2355312e00ff824a4092e5ab8d0a16b35e0e4910afaffaa1edf15f18d7f2ce43`
 
 ### ipFto - Native identifiers and callbacks
 
@@ -900,7 +900,7 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `ecc675f29f3ff9f43f31f9307ab47461b05bcada8f5fbceba54a632681b2fc85`
+- Review snapshot SHA-256: `f0b9ac3c1967f5a52d7314fc26c9c428ad65c5145fab90aba2593e99d5df3677`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: Final bundle ID, package ID, URL scheme, and auth callback allow-lists.
@@ -908,7 +908,7 @@ Sources:
 Sources:
 
 - `apps/mobile/app.base.json` - 3981 bytes - sha256 `c741d1b60cc04f354955316d29a581274b208789dc8c357c49494a3584bfbb84`
-- `apps/mobile/app.config.js` - 14367 bytes - sha256 `c9e4be78be838845732086cf769fede87290aaa930b294d7675dc0703623626d`
+- `apps/mobile/app.config.js` - 15355 bytes - sha256 `2355312e00ff824a4092e5ab8d0a16b35e0e4910afaffaa1edf15f18d7f2ce43`
 - `supabase/config.toml` - 3705 bytes - sha256 `9e9a43474b23512ede53dc855800a5671da39255ad65babec0263241bc08154a`
 
 ### ipFto - Onboarding quiz FTO
@@ -952,16 +952,16 @@ Sources:
 - Status: Blocked
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `fc264bffbcc2c05bf2b863a53ad2e9d8c5571edc65bc966255f1f1e3f63f9a27`
+- Review snapshot SHA-256: `044cc4ca1b8657a3febfd6c1e54d74550daea9d3f2b4fe236c81bf53ccfdd1f9`
 - Detached signoff: not-applicable
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
 - Review-log notes: ODbL/source/image-rights posture and attribution obligations.
 
 Sources:
 
-- `docs/phase-4/catalog-source-memo-cosing.md` - 2021 bytes - sha256 `49e53a77408706bf3511f991b4050b888cb7f17e6f7d559bd69b4de6808cb534`
-- `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 4263 bytes - sha256 `9b14b91a64c721d3f2c3a172c38f31afe881282ca50d96f1ecdef2e4e5c13626`
-- `docs/phase-4/odbl-compliance-memo.md` - 2019 bytes - sha256 `0fe9bc07e3c4d34129ac8f8f2ba410a64e6caa0d77a3b7994198e0b4d9e18e69`
+- `docs/phase-4/catalog-source-memo-cosing.md` - 6696 bytes - sha256 `4e8b2194655050f0df044e377ffb52d5b9a67e5bb96fc36618b9cf732b6baaa4`
+- `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 10516 bytes - sha256 `dc69c90116e1db72810201c435677990ecc9a716da1786663efd35de6aec90c0`
+- `docs/phase-4/odbl-compliance-memo.md` - 4938 bytes - sha256 `b8ed9a0b3216590e15d50b7ee7a0326b4b22d206f92fec0361bc2602b04280c1`
 - `apps/mobile/src/features/catalog/client.test.ts` - 12335 bytes - sha256 `92250d319ea33fc14bb57c0bf131e732847762036f9ed132788033aea0c78dbd`
 - `apps/mobile/src/features/catalog/client.ts` - 11357 bytes - sha256 `ac891d9253e2f2d81be440eda468ab02d0f9e3afddb84822be14f9a48f451438`
 - `apps/mobile/src/features/catalog/copy.ts` - 1913 bytes - sha256 `b182cec74cb72f850e83dcca14a5548c6277d73a9eaac229f6062e665090f958`

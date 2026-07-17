@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T00:27:08.440Z",
+  "generatedAt": "2026-07-17T07:45:45.445Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
@@ -37,8 +37,8 @@
     },
     {
       "path": "04_repo_docs/docs/ARCHITECTURE.md",
-      "bytes": 24523,
-      "sha256": "50fc550e4fd8bd2ffc960ca964ad58c02a5ceefc2aceaae5bb8cd5d703d0d206"
+      "bytes": 24626,
+      "sha256": "0191c37e835f0119d185ef7a6635cde8f564d08fa49a1d6345f4161d0ef729c8"
     },
     {
       "path": "04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md",
@@ -52,8 +52,8 @@
     },
     {
       "path": "04_repo_docs/docs/DECISIONS.md",
-      "bytes": 60391,
-      "sha256": "c2c32b6b786a5ca983a1975910db360010874960d65bf31f3142f0d5e787918c"
+      "bytes": 60502,
+      "sha256": "0565092540614a51cdbd83b36a980578e09e36c3dbb3f329e5ed99e9b5a158c2"
     },
     {
       "path": "04_repo_docs/docs/FEATURE_INDEX.md",
@@ -92,10 +92,10 @@
       "title": "Architecture",
       "sourcePath": "04_repo_docs/docs/ARCHITECTURE.md",
       "activePath": "docs/ARCHITECTURE.md",
-      "sourceBytes": 24523,
-      "activeBytes": 24523,
-      "sourceSha256": "50fc550e4fd8bd2ffc960ca964ad58c02a5ceefc2aceaae5bb8cd5d703d0d206",
-      "activeSha256": "50fc550e4fd8bd2ffc960ca964ad58c02a5ceefc2aceaae5bb8cd5d703d0d206",
+      "sourceBytes": 24626,
+      "activeBytes": 24626,
+      "sourceSha256": "0191c37e835f0119d185ef7a6635cde8f564d08fa49a1d6345f4161d0ef729c8",
+      "activeSha256": "0191c37e835f0119d185ef7a6635cde8f564d08fa49a1d6345f4161d0ef729c8",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -131,10 +131,10 @@
       "title": "Decisions",
       "sourcePath": "04_repo_docs/docs/DECISIONS.md",
       "activePath": "docs/DECISIONS.md",
-      "sourceBytes": 60391,
-      "activeBytes": 60391,
-      "sourceSha256": "c2c32b6b786a5ca983a1975910db360010874960d65bf31f3142f0d5e787918c",
-      "activeSha256": "c2c32b6b786a5ca983a1975910db360010874960d65bf31f3142f0d5e787918c",
+      "sourceBytes": 60502,
+      "activeBytes": 60502,
+      "sourceSha256": "0565092540614a51cdbd83b36a980578e09e36c3dbb3f329e5ed99e9b5a158c2",
+      "activeSha256": "0565092540614a51cdbd83b36a980578e09e36c3dbb3f329e5ed99e9b5a158c2",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true

@@ -1,8 +1,8 @@
 # Catalog QA Report
 
-Generated: 2026-07-17T07:44:55.294Z
+Generated: 2026-07-17T07:44:56.759Z
 
-Source: open_beauty_facts
+Source: cosing
 
 Transform status: fixture
 
@@ -12,9 +12,9 @@ Build-source Git SHA: not verified
 
 Git status: clean
 
-Records: 2
+Records: 3
 
-Rejected records: 1
+Rejected records: 0
 
 Blockers: none
 
@@ -30,7 +30,7 @@ Launch clear reason: No. Source-transform QA is only one gate; launch still requ
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-| docs/phase-4/generated/obf-fixture-import.json | present | 4077 | bc86d7ab2daf6db510693e130609bd07e6231c098f4de60199d7cde8271ffced |
+| docs/phase-4/generated/cosing-fixture-import.json | present | 3996 | 377aef6a49c635745d99390c1ea843bbe3bfc3b90138293dfc29909b1123d313 |
 
 ## Source Hashes
 

@@ -1,7 +1,7 @@
 # Generated Phase 7 Core Loop QA Packet
 
-Generated at: 2026-07-17T00:25:48.394Z
-Git SHA: 1f2874043ba9fc248312008333c1601f38db8bb5
+Generated at: 2026-07-17T07:45:13.748Z
+Git SHA: 6241c23a30673d7ee9a0504a52d069ba4ea04d8d
 Git status: clean
 
 Strict completion requires real brand/legal clearance, Supabase RLS evidence, clinical review, catalog import evidence, device QA, RevenueCat QA, privacy/export/delete QA, analytics dashboard readiness, and a named owner.
@@ -54,7 +54,7 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| package.json | present | 31779 | 85289af8e3524cee2cdafba5c29813017a2fd3a9b1ac41e05d99e5e116340f5a |
+| package.json | present | 32272 | 1355fd9c03faea3cb3742522e15221a2d05a67f3aaff3113ef1b7dcbdc3996f7 |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | scripts/launch/contract.mjs | present | 6676 | 6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d |
 | apps/mobile/src/lib/launch/phase7.ts | present | 6338 | 9969f0d98da0668ad54ff65c9414c2b0b86f7a85ccff1645040369382cac6b01 |
@@ -142,28 +142,28 @@ Strict completion requires real brand/legal clearance, Supabase RLS evidence, cl
 | apps/mobile/src/features/trend/fairnessPrivacyGate.test.ts | present | 3425 | d4b9128f7a7309f2117d3df3ef5016950bf4cd9a58ce2a253dc3517288fda6e1 |
 | apps/mobile/src/features/trend/trendRoutes.test.ts | present | 3695 | 3f4c93276730c9725fe274b70587c539316f924f03ef6b328aaa7dff2739bab7 |
 | apps/mobile/src/features/trend/useTrend.ts | present | 3487 | f2ba58512a8322ad112f66d79762743c97856d2770a248185f71e065b9609df5 |
-| supabase/functions/catalog-lookup/index.ts | present | 11115 | b486e95fe9a6ad78cadc41f0ee41a6a2c8d49c1d9f76a3c8e0b80b3378acae06 |
-| supabase/functions/catalog-lookup/catalogContract.ts | present | 641 | e205eae032c22fab88748e3f7b47a92ba65c74b0fa9f4372e03896839af45f94 |
-| supabase/functions/catalog-lookup/catalogContract.test.ts | present | 1683 | 5ae64b92a6baa5707bdea6e6aff7d59ef04e5138354a75e772c1d8ba7b31a6ec |
-| supabase/functions/catalog-search/index.ts | present | 9192 | 17a04d342b331e58d3f4bb295cc3e76db2786fea29a2e57252f02cea34b7c79a |
-| supabase/functions/catalog-search/catalogContract.ts | present | 1994 | 3b51d16f5b8d5b24a9f87d2e445c28391c8f6407d39150f4085910da97f380e0 |
-| supabase/functions/catalog-search/catalogContract.test.ts | present | 3949 | 18adc4c4572004285afab509ab0d100daeaaa905ce5895d1783a0a792d15cc59 |
+| supabase/functions/catalog-lookup/index.ts | present | 10199 | 231dd6175ac99232bf7b263e2152311e8d8ccbe9dd008dcdb12c5321926f27c1 |
+| supabase/functions/catalog-lookup/catalogContract.ts | present | 80 | 9707c48c48465b279c2112d84a8a1459867c395490d3c184aaa4e6c2fbc7f81a |
+| supabase/functions/catalog-lookup/catalogContract.test.ts | present | 10179 | 9946994b92b29ec59f15bfc5b2f226e8c54b206f2b32834be3d049f6026d2eb1 |
+| supabase/functions/catalog-search/index.ts | present | 9227 | 640842b71581aac2f7a01870d27a8e951614bc282e5686cbf9d9564ad5c810fc |
+| supabase/functions/catalog-search/catalogContract.ts | present | 1343 | 62cc1e0d2e62d37187922e4ed1766b12d8ca8aa48cdebf3e3271ea6ae7ce417e |
+| supabase/functions/catalog-search/catalogContract.test.ts | present | 3041 | dd91fb0c009da68074d795d7819149d9bb970e47c2fba6bbdfc7a08f7f53922d |
 | supabase/migrations/20260711000038_shelf_freshness_invariants.sql | present | 1973 | 672df1e56fac4cdfc6bf641c3249221aaacf630439d28898a79ace2d25181bcd |
 | supabase/migrations/20260711000039_replenishment_alert_opt_in.sql | present | 372 | eac60d4bf92f465ad2264c509f8e0a2f412b5780f862cf602b8ff16e1e2e1299 |
-| scripts/phase7/build-core-loop-qa-packet.mjs | present | 15135 | f2ca0c928b9d798aba00a8814f7673ac018e7d193af7299a96f95925cddd629d |
-| scripts/phase7/check-core-loop.mjs | present | 25279 | 77cc10007e15f2184881013701569b97b9d88248167a8dab0691e733b33230ba |
-| scripts/phase7/check-core-loop-smoke.mjs | present | 14687 | 3a89f50c25b252afdbfd9e93d5ebd189a0a56378b0f7c71f25cae2911c8ec789 |
+| scripts/phase7/build-core-loop-qa-packet.mjs | present | 15159 | f289a4e0313669eca0284b540374815ee15ccb75fb6b0ae366a352b39f1a9031 |
+| scripts/phase7/check-core-loop.mjs | present | 25381 | ec74e0247668ad49707b762c75a417429affacdedaadb4b3661910cf12507c1c |
+| scripts/phase7/check-core-loop-smoke.mjs | present | 14513 | 844fe14d085cf6ccb6722ba152e619a5cba502a1f1c65e52765048e52b869f6e |
 | scripts/e2e/human-e2e-manifest.mjs | present | 75305 | 15a92f3558f39b6c8efb47159e43270a532de13dfeae5f02f56fdca385eca9b7 |
-| scripts/phase9/lib.mjs | present | 24487 | 0eb82d148d6cc293b6cea56baecb0f24172e04e548a57d8815e951eb6ce66ff4 |
+| scripts/phase9/lib.mjs | present | 24601 | 62cd70bb40e6792b8626922a38bdba9fa1e20a7539ddbbe1de43644d6ce18411 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
-| docs/USER_FLOW_TREE.md | present | 398587 | 14be278a1f1d0a14d1d5d5ffffb0fe82fdc89f38479e82d9b3b8606e9cea9a1f |
-| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 91499428e76938d01826dd760888c65129b5bde37f4c8bac98dfdc7915e8585f |
-| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | c662775245067ea876359602b379caa33c30fdc1f31b6452ac750e2b27cfe4fd |
-| docs/phase-5/generated/device-qa-packet.json | present | 45847 | c0510fb25fefa88a3015a6829462d2c108c0f2555a3e9256660a3395995a579c |
-| docs/phase-5/generated/device-qa-packet.md | present | 40567 | ae7fff6830c78cf671784a78325f233bbd4013d33b69018c3c3107eb0f4b8820 |
-| docs/phase-6/generated/payments-qa-packet.json | present | 43154 | 980de38ab75ba02f366fa17ab2e5e55918aa0c40b932bdba6f0f928d0b6eede3 |
-| docs/phase-6/generated/payments-qa-packet.md | present | 29633 | f5255035fa4b57a5c7e8d729b5daa7ef71fb58f1c98b5e0038aaea8656472679 |
+| docs/USER_FLOW_TREE.md | present | 398658 | 4ae6f3e4706026d040f89f487bb3782a76160f4f55cf117e07142cfa331db3a0 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | dd3df0d37d27548c746e21d970375c671489f3f137d28ba2b741d82934115aa4 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | 1dc13b093b6e57436a3d8af16330bf5ddc3f76948cf535033834f559879ca6f3 |
+| docs/phase-5/generated/device-qa-packet.json | present | 45847 | 6854231e263e231fcbdd120120c935f8b56b081bd83053ec18dac4060073dacd |
+| docs/phase-5/generated/device-qa-packet.md | present | 40567 | 20ad3e89c0740fe9cf1cf44ce3c3aadd42b50518a4bdd86c1bfccc703b1b1eff |
+| docs/phase-6/generated/payments-qa-packet.json | present | 43448 | 38097c3b83595b6960227a40136074f7f19524da7418131583eff67ebd0c079e |
+| docs/phase-6/generated/payments-qa-packet.md | present | 29821 | 43939725b9e1b95f410d8e15769bdf92c2c251ebebd9dd02a3bcba815b5ee940 |
 | docs/phase-7/surface-inventory.md | present | 9071 | 784ec337b865238eeaee6074371ce43bd9891b3dd5bfcf6fdbf7b71c818d350c |
 | docs/phase-7/launch-claim-matrix.md | present | 4322 | 7027d6d21f2cc7c3bb6944f003f9aeac6a09efea8dc2785280f6a3da44bb6b6b |
 | docs/phase-7/beta-evidence-dashboard.md | present | 4725 | f57bd8b15489b66c4dbee486f3e15190eb2e4752420308dfb71883372348cdd1 |

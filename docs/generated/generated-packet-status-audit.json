@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T00:27:11.870Z",
+  "generatedAt": "2026-07-17T07:45:47.446Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit committed generated phase packets so dirty-worktree and stale-hash packet output cannot be mistaken for final evidence.",
@@ -132,11 +132,27 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 27,
+      "hashReferenceCount": 44,
       "staleHashReferenceCount": 0
     },
     {
       "path": "docs/phase-4/generated/catalog-qa-report.md",
+      "kind": "md",
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 0,
+      "staleHashReferenceCount": 0
+    },
+    {
+      "path": "docs/phase-4/generated/cosing-catalog-qa-report.json",
+      "kind": "json",
+      "dirtyTextMatchCount": 0,
+      "nonEmptyGitStatusCount": 0,
+      "hashReferenceCount": 44,
+      "staleHashReferenceCount": 0
+    },
+    {
+      "path": "docs/phase-4/generated/cosing-catalog-qa-report.md",
       "kind": "md",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
@@ -164,7 +180,7 @@
       "kind": "json",
       "dirtyTextMatchCount": 0,
       "nonEmptyGitStatusCount": 0,
-      "hashReferenceCount": 149,
+      "hashReferenceCount": 199,
       "staleHashReferenceCount": 0
     },
     {
@@ -430,10 +446,10 @@
     "docs:generated-packet-status-audit:check"
   ],
   "summary": {
-    "generatedFileCount": 51,
+    "generatedFileCount": 53,
     "dirtyTextFileCount": 0,
     "nonEmptyGitStatusFileCount": 0,
-    "hashReferenceCount": 2228,
+    "hashReferenceCount": 2339,
     "staleHashReferenceCount": 0,
     "blockerCount": 0,
     "warningCount": 0

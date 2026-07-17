@@ -1,9 +1,9 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-17T00:25:30.809Z
-Git SHA: ddaf13358fd1b38db645eb574e40df2b2d903a04
+Generated at: 2026-07-17T07:45:11.601Z
+Git SHA: 6241c23a30673d7ee9a0504a52d069ba4ea04d8d
 Git status: clean
-Required inputs committed and byte-matched to HEAD: yes
+Required inputs committed and byte-matched to HEAD: BLOCKED
 Tracked secret environment files absent: yes
 
 Strict completion requires real RevenueCat offering review and store restore evidence for every contract-required platform, webhook HMAC replay evidence, finance signoff, and a named owner.
@@ -67,11 +67,11 @@ Strict completion requires real RevenueCat offering review and store restore evi
 
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
-| .env.example | present | 25653 | 668f23c9f7fbb2098868ed170f1352eafdda85184256297701a2458736ca71ad |
-| package.json | present | 31779 | 85289af8e3524cee2cdafba5c29813017a2fd3a9b1ac41e05d99e5e116340f5a |
+| .env.example | present | 27455 | 0984b7c39628ce57f90fc39918b7863b7878335cf3c04fa33a69f1abd9bc5117 |
+| package.json | present | 32272 | 1355fd9c03faea3cb3742522e15221a2d05a67f3aaff3113ef1b7dcbdc3996f7 |
 | package-lock.json | present | 557143 | 0b817f6d89ea2b318e59d3bbc83203047ade24ab7496ba6ff2c91ff14356f850 |
 | apps/mobile/package.json | present | 2897 | c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80 |
-| apps/mobile/eas.json | present | 1477 | 54ff13dfed579d16f30e1b7ff095bde79bee8bd4280150090e1da66e1ba4cbb6 |
+| apps/mobile/eas.json | present | 1478 | bf0aa5a8d6df31283433c1fd17eca55de67ba34a58457059d607844e84938944 |
 | supabase/functions/deno.lock | present | 2282 | 0f8de63ed60182b56865cfa47c666866b631ed4681c79345ec31a720565d1a3a |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
 | docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md | present | 11287 | b3aa6768944665294ecc730c23a4834d150cb09328571befa0edd145697783b5 |
@@ -137,9 +137,9 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | apps/mobile/src/features/subscription/store.test.ts | present | 32970 | 9074c92b587abc09f8df3e1d05c3fb4c0e95a38fd9a6ef6f4e00361a678e385d |
 | apps/mobile/src/features/subscription/entitlement.test.ts | present | 3970 | 2ef807ac5ae4b4bdf0d83e47c3a37c7d1de4eb425c436fec17177991616a273a |
 | apps/mobile/src/features/subscription/serverContracts.test.ts | present | 7049 | daca502833a84b5c01167cbe3b1c0c72e2042bc6514cbda4e56329f284f3f5be |
-| scripts/phase6/build-payments-qa-packet.mjs | present | 32780 | a2dab123bfe37998053a83e37fc6338ea576db916ea49cd9e0428ae4133a6650 |
-| scripts/phase6/check-payments-env.mjs | present | 20288 | 498d6aa19890a60815b6b70827e18aa7c3656e7057b66aa004b32f1e7ced9ddd |
-| scripts/phase6/check-payments-env-smoke.mjs | present | 28944 | a00eebd347a8ada213256e2f1d72663f5bcbdff531d2c6538472fe5f245f0a83 |
+| scripts/phase6/build-payments-qa-packet.mjs | present | 32804 | bd9d4b833789b3cf924193afc3135884d7990bf9df0ab5142e76ccc0d22d621b |
+| scripts/phase6/check-payments-env.mjs | present | 20250 | b018c4df1d878a0eea7eb427f7a845c384dcebbfa586f4181b64111d8b7daf44 |
+| scripts/phase6/check-payments-env-smoke.mjs | present | 28764 | b6cada023cb1540a68acb31404a4a144606c4d7553dcdbf99277c2c540f8ee7a |
 | scripts/phase6/payments-git-provenance.mjs | present | 1409 | 0bafbaf1f9481a739880d5cfb51dedc1b7d7c0919dabddd35ebc239416e3f7a0 |
 | scripts/phase6/payments-git-provenance.test.mjs | present | 3384 | 38e99203fbcfe288b77198d6fc4d3202e884ba6ffc457a24377bfabb203426b7 |
 | scripts/phase6/payments-revenuecat-access-evidence.mjs | present | 11388 | 013c798d7bef14efafc95d00e841fc5e4a90e28a998f96aac43b43aad72c1372 |
@@ -148,16 +148,16 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | scripts/phase6/payments-source-contract.test.mjs | present | 23395 | b3c8c9488f437e03e7ae6b807a21b6db061045b90f0124e5c2dd6b14fbb16e80 |
 | scripts/phase2/check-env.mjs | present | 21920 | c12bcc548afae7cae1992c290ef65f5a425ccbbb52edba1b4931a3e7a3d2298a |
 | scripts/phase2/check-env-smoke.mjs | present | 25482 | 8b9de5340f2fb90f70d9d70f3ea0d1598e7507d3d7abed3890da145f82d0f270 |
-| scripts/phase9/supabase-policy-lint.mjs | present | 13160 | 0e95f2369730db305c553dcdab24848ba25674fad0546dec4d09bf89d089535d |
+| scripts/phase9/supabase-policy-lint.mjs | present | 13395 | 04b7bd623132e10c8dc75df91b115351bc03358d0ae203234fd60f36ad90891f |
 | scripts/phase9/account-service-scrub-postgres-rehearsal.sql | present | 26077 | b4898279189ebca369eaa9f212632d0a903917fe137c8ccbbec994cb3c34743a |
 | scripts/phase9/live-data-rights.mjs | present | 65161 | 0e6d7604437b35fa2e9f1fa2a6afbee6743cac829f58f0861e9aff46a28df13a |
 | scripts/e2e/human-e2e-manifest.mjs | present | 75305 | 15a92f3558f39b6c8efb47159e43270a532de13dfeae5f02f56fdca385eca9b7 |
-| scripts/phase9/lib.mjs | present | 24487 | 0eb82d148d6cc293b6cea56baecb0f24172e04e548a57d8815e951eb6ce66ff4 |
+| scripts/phase9/lib.mjs | present | 24601 | 62cd70bb40e6792b8626922a38bdba9fa1e20a7539ddbbe1de43644d6ce18411 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
-| docs/USER_FLOW_TREE.md | present | 398587 | 14be278a1f1d0a14d1d5d5ffffb0fe82fdc89f38479e82d9b3b8606e9cea9a1f |
-| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 91499428e76938d01826dd760888c65129b5bde37f4c8bac98dfdc7915e8585f |
-| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | c662775245067ea876359602b379caa33c30fdc1f31b6452ac750e2b27cfe4fd |
+| docs/USER_FLOW_TREE.md | present | 398658 | 4ae6f3e4706026d040f89f487bb3782a76160f4f55cf117e07142cfa331db3a0 |
+| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | dd3df0d37d27548c746e21d970375c671489f3f137d28ba2b741d82934115aa4 |
+| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | 1dc13b093b6e57436a3d8af16330bf5ddc3f76948cf535033834f559879ca6f3 |
 | docs/phase-6/payments-runbook.md | present | 11302 | 676492b480b32f12c6fe829962f33a3f31bd597f2e2f4a7aa319e63e0f1da821 |
 | docs/phase-6/payments-qa-checklist.md | present | 7870 | 847c0775f45ae6eb6afcc78acc33d38ca128e14db1d32723cac7003d5d6fd2d5 |
 | docs/phase-6/phase-6-exit-review.md | present | 4798 | 85e5e80e3d3b14d12cbeae0a4abdbf7a66eba1128b527705bf076a6957fbba28 |
@@ -244,6 +244,8 @@ Strict completion requires real RevenueCat offering review and store restore evi
 
 ## Blockers
 
+- Phase 6 required input bytes differ from HEAD: docs/e2e/generated/human-e2e-manifest.json.
+- Phase 6 required input bytes differ from HEAD: docs/e2e/generated/human-e2e-manifest.md.
 - Missing PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH.
 - Missing final EXPO_PUBLIC_REVENUECAT_IOS_KEY.
 - Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.

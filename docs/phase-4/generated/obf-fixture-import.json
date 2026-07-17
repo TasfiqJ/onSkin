@@ -1,10 +1,72 @@
 {
-  "generatedAt": "2026-07-16T18:12:50.643Z",
-  "inputPath": "C:\\Users\\jasim\\Desktop\\onSkin\\.claude\\worktrees\\ios-privacy-source\\scripts\\phase4\\fixtures\\obf-sample.jsonl",
+  "generatedAt": "2026-07-17T07:44:52.445Z",
+  "schemaVersion": 2,
+  "status": "fixture",
+  "inputPath": "scripts/phase4/fixtures/obf-sample.jsonl",
   "inputSha256": "c9a150c17cac824f78a85671544bea22fa04156dbbc4693b6ff3538a6205a8e5",
   "source": "open_beauty_facts",
-  "importMode": "export_or_fixture",
-  "warning": "Fixture import only. Production bulk import must use approved export artifacts and legal/source review.",
+  "sourceComponentId": "obf_odbl_component",
+  "sourcePolicy": {
+    "policyId": "catalog-source-policy-v1",
+    "sha256": "79005f1111af670bb8ce11d128627ecde9a59a8f323e2cf9170dfe50c8c2a050"
+  },
+  "sourceApproval": null,
+  "transformerCandidate": null,
+  "sourceSnapshot": {
+    "date": null,
+    "url": null,
+    "artifactSha256": "c9a150c17cac824f78a85671544bea22fa04156dbbc4693b6ff3538a6205a8e5",
+    "bytes": 747
+  },
+  "importMode": "fixture",
+  "parserVersion": "phase4-obf-transform-v2",
+  "transformedPayloadContract": {
+    "contractId": "catalog-transformed-payload-v1",
+    "schemaVersion": 1,
+    "digestAlgorithm": "SHA-256",
+    "canonicalization": "canonical-json-sorted-object-keys",
+    "recordStage": "before-source-snapshot-date-enrichment",
+    "excludedRecordFields": [
+      "sourceSnapshotDate"
+    ],
+    "sourceSnapshotDateBinding": {
+      "signedApprovalPath": "artifact.snapshotDate",
+      "manifestPath": "sourceSnapshot.date",
+      "recordField": "sourceSnapshotDate"
+    }
+  },
+  "transformedPayloadSha256": "0515fa4afac9f50fa2840c84a3162fa4125820fe33359fdce54572984b427f48",
+  "projectedFields": [
+    "code",
+    "product_name",
+    "brands",
+    "categories_tags",
+    "ingredients_text",
+    "last_modified_t"
+  ],
+  "sourceIsolationMode": "separate_source_component_pending_legal_classification",
+  "licenses": {
+    "database": {
+      "name": "Open Database License 1.0",
+      "url": "https://opendatacommons.org/licenses/odbl/1-0/"
+    },
+    "contents": {
+      "name": "Database Contents License 1.0",
+      "url": "https://opendatacommons.org/licenses/dbcl/1-0/"
+    },
+    "images": {
+      "name": "CC BY-SA; additional depicted packaging, copyright, trademark, and personality rights may apply",
+      "url": "https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/",
+      "allowed": false
+    }
+  },
+  "controls": {
+    "runtimeRequests": false,
+    "imagesIncluded": false,
+    "contributionBack": false,
+    "productionApprovalRequired": true
+  },
+  "warning": "Fixture import only. This artifact is never production catalog data.",
   "totals": {
     "inputRecords": 3,
     "acceptedProducts": 2,
@@ -19,11 +81,14 @@
       "category": "cleanser",
       "ingredientsText": "Aqua / Water / Eau, Glycerin, Niacinamide, Phenoxyethanol",
       "source": "open_beauty_facts",
+      "sourceComponentId": "obf_odbl_component",
       "sourceRef": "1234567890123",
       "sourceUrl": "https://world.openbeautyfacts.org/product/1234567890123",
-      "sourceSnapshotDate": "2026-01-01",
+      "sourceRecordModifiedDate": "2026-01-01",
+      "sourceArtifactSha256": "c9a150c17cac824f78a85671544bea22fa04156dbbc4693b6ff3538a6205a8e5",
       "qualityGrade": "limited",
-      "reviewStatus": "unreviewed"
+      "reviewStatus": "unreviewed",
+      "sourceSnapshotDate": null
     },
     {
       "barcode": "2234567890123",
@@ -32,11 +97,14 @@
       "category": "spf",
       "ingredientsText": "Active ingredients: Zinc Oxide 10%; Inactive ingredients: Water, Glycerin, Dimethicone",
       "source": "open_beauty_facts",
+      "sourceComponentId": "obf_odbl_component",
       "sourceRef": "2234567890123",
       "sourceUrl": "https://world.openbeautyfacts.org/product/2234567890123",
-      "sourceSnapshotDate": "2026-01-01",
+      "sourceRecordModifiedDate": "2026-01-01",
+      "sourceArtifactSha256": "c9a150c17cac824f78a85671544bea22fa04156dbbc4693b6ff3538a6205a8e5",
       "qualityGrade": "limited",
-      "reviewStatus": "unreviewed"
+      "reviewStatus": "unreviewed",
+      "sourceSnapshotDate": null
     }
   ],
   "rejected": [

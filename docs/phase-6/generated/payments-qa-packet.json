@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T00:25:30.809Z",
+  "generatedAt": "2026-07-17T07:45:11.601Z",
   "purpose": "Phase 6 payments, entitlements, restore, webhook, and account-deletion QA packet.",
   "launchContract": {
     "schemaVersion": 1,
@@ -81,12 +81,15 @@
     "iosSandboxRestore": "blocked",
     "androidLicenseTest": "not_applicable"
   },
-  "gitSha": "ddaf13358fd1b38db645eb574e40df2b2d903a04",
+  "gitSha": "6241c23a30673d7ee9a0504a52d069ba4ea04d8d",
   "gitStatus": "",
   "gitProvenanceCaptured": true,
   "headFileTrackingCaptured": true,
   "requiredFilesMissingFromHead": [],
-  "requiredFilesDifferFromHead": [],
+  "requiredFilesDifferFromHead": [
+    "docs/e2e/generated/human-e2e-manifest.json",
+    "docs/e2e/generated/human-e2e-manifest.md"
+  ],
   "trackedSecretEnvironmentFiles": [],
   "revenueCatV2AccessEvidence": {
     "valid": false,
@@ -180,14 +183,14 @@
     {
       "path": ".env.example",
       "exists": true,
-      "bytes": 25653,
-      "sha256": "668f23c9f7fbb2098868ed170f1352eafdda85184256297701a2458736ca71ad"
+      "bytes": 27455,
+      "sha256": "0984b7c39628ce57f90fc39918b7863b7878335cf3c04fa33a69f1abd9bc5117"
     },
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 31779,
-      "sha256": "85289af8e3524cee2cdafba5c29813017a2fd3a9b1ac41e05d99e5e116340f5a"
+      "bytes": 32272,
+      "sha256": "1355fd9c03faea3cb3742522e15221a2d05a67f3aaff3113ef1b7dcbdc3996f7"
     },
     {
       "path": "package-lock.json",
@@ -204,8 +207,8 @@
     {
       "path": "apps/mobile/eas.json",
       "exists": true,
-      "bytes": 1477,
-      "sha256": "54ff13dfed579d16f30e1b7ff095bde79bee8bd4280150090e1da66e1ba4cbb6"
+      "bytes": 1478,
+      "sha256": "bf0aa5a8d6df31283433c1fd17eca55de67ba34a58457059d607844e84938944"
     },
     {
       "path": "supabase/functions/deno.lock",
@@ -600,20 +603,20 @@
     {
       "path": "scripts/phase6/build-payments-qa-packet.mjs",
       "exists": true,
-      "bytes": 32780,
-      "sha256": "a2dab123bfe37998053a83e37fc6338ea576db916ea49cd9e0428ae4133a6650"
+      "bytes": 32804,
+      "sha256": "bd9d4b833789b3cf924193afc3135884d7990bf9df0ab5142e76ccc0d22d621b"
     },
     {
       "path": "scripts/phase6/check-payments-env.mjs",
       "exists": true,
-      "bytes": 20288,
-      "sha256": "498d6aa19890a60815b6b70827e18aa7c3656e7057b66aa004b32f1e7ced9ddd"
+      "bytes": 20250,
+      "sha256": "b018c4df1d878a0eea7eb427f7a845c384dcebbfa586f4181b64111d8b7daf44"
     },
     {
       "path": "scripts/phase6/check-payments-env-smoke.mjs",
       "exists": true,
-      "bytes": 28944,
-      "sha256": "a00eebd347a8ada213256e2f1d72663f5bcbdff531d2c6538472fe5f245f0a83"
+      "bytes": 28764,
+      "sha256": "b6cada023cb1540a68acb31404a4a144606c4d7553dcdbf99277c2c540f8ee7a"
     },
     {
       "path": "scripts/phase6/payments-git-provenance.mjs",
@@ -666,8 +669,8 @@
     {
       "path": "scripts/phase9/supabase-policy-lint.mjs",
       "exists": true,
-      "bytes": 13160,
-      "sha256": "0e95f2369730db305c553dcdab24848ba25674fad0546dec4d09bf89d089535d"
+      "bytes": 13395,
+      "sha256": "04b7bd623132e10c8dc75df91b115351bc03358d0ae203234fd60f36ad90891f"
     },
     {
       "path": "scripts/phase9/account-service-scrub-postgres-rehearsal.sql",
@@ -690,8 +693,8 @@
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
-      "bytes": 24487,
-      "sha256": "0eb82d148d6cc293b6cea56baecb0f24172e04e548a57d8815e951eb6ce66ff4"
+      "bytes": 24601,
+      "sha256": "62cd70bb40e6792b8626922a38bdba9fa1e20a7539ddbbe1de43644d6ce18411"
     },
     {
       "path": "docs/HUMAN_SIMULATED_E2E_TESTING.md",
@@ -708,20 +711,20 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 398587,
-      "sha256": "14be278a1f1d0a14d1d5d5ffffb0fe82fdc89f38479e82d9b3b8606e9cea9a1f"
+      "bytes": 398658,
+      "sha256": "4ae6f3e4706026d040f89f487bb3782a76160f4f55cf117e07142cfa331db3a0"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 48121,
-      "sha256": "91499428e76938d01826dd760888c65129b5bde37f4c8bac98dfdc7915e8585f"
+      "sha256": "dd3df0d37d27548c746e21d970375c671489f3f137d28ba2b741d82934115aa4"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 19687,
-      "sha256": "c662775245067ea876359602b379caa33c30fdc1f31b6452ac750e2b27cfe4fd"
+      "sha256": "1dc13b093b6e57436a3d8af16330bf5ddc3f76948cf535033834f559879ca6f3"
     },
     {
       "path": "docs/phase-6/payments-runbook.md",
@@ -1223,6 +1226,8 @@
     }
   ],
   "blockers": [
+    "Phase 6 required input bytes differ from HEAD: docs/e2e/generated/human-e2e-manifest.json.",
+    "Phase 6 required input bytes differ from HEAD: docs/e2e/generated/human-e2e-manifest.md.",
     "Missing PHASE6_REVENUECAT_V2_ACCESS_EVIDENCE_PATH.",
     "Missing final EXPO_PUBLIC_REVENUECAT_IOS_KEY.",
     "Missing final EXPO_PUBLIC_REVENUECAT_ANNUAL_PRODUCT_ID.",

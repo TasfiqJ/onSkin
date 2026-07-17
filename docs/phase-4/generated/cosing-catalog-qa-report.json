@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T07:44:55.294Z",
+  "generatedAt": "2026-07-17T07:44:56.759Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -72,18 +72,18 @@
       "paid_measurement"
     ]
   },
-  "inputPath": "docs/phase-4/generated/obf-fixture-import.json",
+  "inputPath": "docs/phase-4/generated/cosing-fixture-import.json",
   "gitSha": "6241c23a30673d7ee9a0504a52d069ba4ea04d8d",
   "buildSourceGitSha": null,
   "gitStatus": "",
-  "source": "open_beauty_facts",
+  "source": "cosing",
   "status": "fixture",
   "importMode": "fixture",
   "inputArtifact": {
-    "path": "docs/phase-4/generated/obf-fixture-import.json",
+    "path": "docs/phase-4/generated/cosing-fixture-import.json",
     "exists": true,
-    "bytes": 4077,
-    "sha256": "bc86d7ab2daf6db510693e130609bd07e6231c098f4de60199d7cde8271ffced"
+    "bytes": 3996,
+    "sha256": "377aef6a49c635745d99390c1ea843bbe3bfc3b90138293dfc29909b1123d313"
   },
   "transformedPayloadContract": {
     "contractId": "catalog-transformed-payload-v1",
@@ -100,8 +100,8 @@
       "recordField": "sourceSnapshotDate"
     }
   },
-  "transformedPayloadSha256": "0515fa4afac9f50fa2840c84a3162fa4125820fe33359fdce54572984b427f48",
-  "recomputedTransformSha256": "0515fa4afac9f50fa2840c84a3162fa4125820fe33359fdce54572984b427f48",
+  "transformedPayloadSha256": "81172042f6df5c824df696f6f07eab6a448d341bf050490a77ed8886636598e7",
+  "recomputedTransformSha256": "81172042f6df5c824df696f6f07eab6a448d341bf050490a77ed8886636598e7",
   "sourceHashes": [
     {
       "path": "package.json",
@@ -363,8 +363,8 @@
     }
   ],
   "totals": {
-    "records": 2,
-    "rejectedRecords": 1,
+    "records": 3,
+    "rejectedRecords": 0,
     "missingCategory": 0,
     "missingIngredients": 0,
     "duplicateIdentifiers": 0,
