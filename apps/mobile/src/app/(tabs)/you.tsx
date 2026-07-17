@@ -73,6 +73,7 @@ import { track } from '@/lib/analytics/track';
 import { useAppLock } from '@/lib/applock/AppLockProvider';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { BRAND } from '@/lib/brand';
+import { localDiagnosticsAccessEnabled } from '@/lib/diagnostics/localDiagnosticsAccess';
 import { recordConsent } from '@/lib/consent/consent';
 import {
   consentManagementState,
@@ -1149,6 +1150,14 @@ const YouStaticUtilitySections = memo(function YouStaticUtilitySections({
           compact={compactPhone}
           onPress={() => router.push('/settings/beta-feedback')}
         />
+        {localDiagnosticsAccessEnabled() ? (
+          <Row
+            label="Local diagnostics"
+            hint="Development-only content-free health and timing snapshot."
+            compact={compactPhone}
+            onPress={() => router.push('/settings/diagnostics' as Href)}
+          />
+        ) : null}
       </Card>
     </>
   );

@@ -1690,6 +1690,13 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 
 ### Branches
 
+- Branch: development-only content-free local diagnostics
+  - Priority: Important
+  - Automate later: Yes
+  - Action: In a development build, open You, scroll to Help, tap `Local diagnostics`, inspect every section, tap `Refresh diagnostics`, then use Back. Repeat by direct-opening `/settings/diagnostics`. Run once with every diagnostics source forced to fail. Attempt the same direct route in a non-development/production environment.
+  - Expected result: Development and development-compiled staging builds show one fixed-schema snapshot containing only version strings, an eight-hex account-generation prefix or safe absence/unavailability, enums, counts, timestamps, and bounded timing aggregates. Refresh remains single-result/latest-request safe and Back returns to You. A source failure affects only its own field and renders `unavailable`, `unknown`, `not run`, zero, or the fixed epoch without raw errors. The screen and You link are absent from production, and direct production entry redirects to You. No keys, tokens, complete user IDs, filenames, record values, search strings, photo identifiers, operation identifiers, or raw query keys are rendered or serialized.
+  - Evidence: `test-results/human-e2e/2026-07-17/local-diagnostics-healthy-current/`, `test-results/human-e2e/2026-07-17/local-diagnostics-failure-drill-current/`, and `test-results/human-e2e/2026-07-17/local-diagnostics-production-gate-current/`; accessible visible-text snapshots; refresh/back/entry interaction checks; browser warning/error review; fixed-schema privacy/failure/timeout tests; and `docs/e2e-bug-reports/2026-07-17-local-diagnostics-web-storage-warning.md`.
+  - Open Question: Native iOS proof of disk-space, notification-schedule, build-number/runtime-version, and app-lock/vault values remains required before treating those adapters as release-device diagnostics.
 - Branch: direct-entry settings exits
   - Priority: Important
   - Automate later: Yes

@@ -38,6 +38,14 @@ export type StartupPhaseSample = Readonly<{
   elapsedMs: number;
 }>;
 
+export type OperationTimingAggregate = Readonly<{
+  name: OperationTimingName;
+  count: number;
+  errorCount: number;
+  p50Ms: number;
+  p95Ms: number;
+}>;
+
 const MAX_OPERATION_SAMPLES = 200;
 const operationSamples: OperationTimingSample[] = [];
 const startupSamples = new Map<StartupPhaseName, StartupPhaseSample>();
@@ -106,6 +114,29 @@ export function markStartupPhase(phase: StartupPhaseName, now: () => number = mo
 
 export function readOperationTimingSamples(): readonly OperationTimingSample[] {
   return operationSamples.map((sample) => ({ ...sample }));
+}
+
+function percentile(sorted: readonly number[], quantile: number): number {
+  if (sorted.length === 0) return 0;
+  const index = Math.min(Math.ceil(sorted.length * quantile) - 1, sorted.length - 1);
+  return sorted[Math.max(index, 0)] ?? 0;
+}
+
+export function readOperationTimingAggregates(): readonly OperationTimingAggregate[] {
+  return OPERATION_TIMING_NAMES.flatMap((name) => {
+    const samples = operationSamples.filter((sample) => sample.name === name);
+    if (samples.length === 0) return [];
+    const durations = samples.map((sample) => sample.durationMs).sort((a, b) => a - b);
+    return [
+      {
+        name,
+        count: samples.length,
+        errorCount: samples.filter((sample) => sample.outcome === 'error').length,
+        p50Ms: percentile(durations, 0.5),
+        p95Ms: percentile(durations, 0.95),
+      },
+    ];
+  });
 }
 
 export function readStartupPhaseSamples(): readonly StartupPhaseSample[] {

@@ -865,6 +865,46 @@ export async function readPhotos(): Promise<PhotoStoreReadResult> {
   }
 }
 
+export type PhotoMutationJournalDiagnostics = Readonly<{
+  status: 'absent' | 'available' | 'corrupt' | 'unavailable' | 'unsupported_version';
+  count: number;
+}>;
+
+/** Development diagnostics boundary. It returns only a 0/1 journal count and
+ * typed availability; photo records, operation identifiers, and paths never
+ * cross this boundary. This read never repairs or rewrites the store. */
+export async function readPhotoMutationJournalDiagnostics(): Promise<PhotoMutationJournalDiagnostics> {
+  try {
+    return await runPhotoStoreMutation(async (lease) => {
+      let stored: Awaited<ReturnType<typeof readPrivateItem>>;
+      try {
+        stored = await awaitAccountGenerationLease(lease, () => readPrivateItem(KEY));
+        lease.assertCurrent();
+      } catch {
+        return { status: 'unavailable', count: 0 };
+      }
+
+      if (stored.status === 'absent') return { status: 'absent', count: 0 };
+      if (stored.status !== 'available') return { status: stored.status, count: 0 };
+
+      try {
+        const decoded = decodePhotoStore(stored.value);
+        return { status: 'available', count: decoded.mutation === null ? 0 : 1 };
+      } catch (error) {
+        return {
+          status:
+            error instanceof Error && error.message === PHOTO_METADATA_UNSUPPORTED
+              ? 'unsupported_version'
+              : 'corrupt',
+          count: 0,
+        };
+      }
+    });
+  } catch {
+    return { status: 'unavailable', count: 0 };
+  }
+}
+
 /** Compatibility boundary for query consumers that use rejection as their
  * recovery signal. New storage-aware consumers should use `readPhotos`. */
 export async function loadPhotos(): Promise<PhotoRecord[]> {

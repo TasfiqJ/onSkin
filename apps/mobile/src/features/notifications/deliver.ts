@@ -112,6 +112,24 @@ export async function getPermissionStatus(): Promise<'granted' | 'denied' | 'und
   }
 }
 
+export async function readNotificationScheduleHealth(): Promise<
+  'healthy' | 'mismatch' | 'not_applicable' | 'unavailable'
+> {
+  if (Platform.OS === 'web') return 'not_applicable';
+  try {
+    return await runAccountGenerationOperation(async (lease) => {
+      const read = await awaitAccountGenerationLease(lease, readNotifPrefs);
+      lease.assertCurrent();
+      if (read.status !== 'available' && read.status !== 'absent') return 'unavailable';
+      return (await preferenceScheduleIdentifiersAreHealthy(read.prefs, lease))
+        ? 'healthy'
+        : 'mismatch';
+    });
+  } catch {
+    return 'unavailable';
+  }
+}
+
 /** The OS prompt. Fired only after the in-app soft ask is accepted. */
 export async function requestPermission(): Promise<boolean> {
   try {

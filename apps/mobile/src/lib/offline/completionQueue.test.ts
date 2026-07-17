@@ -15,6 +15,8 @@ import {
   getPendingCompletions,
   pendingStepIdsForDate,
   readCompletionQueue,
+  readCompletionSyncDiagnostics,
+  resetCompletionSyncDiagnosticsForTests,
 } from './completionQueue';
 import { completionKey, isStale, withQueued, type PendingCompletion } from './completionQueue.pure';
 
@@ -136,6 +138,7 @@ describe('offline completion queue (docs/01 §6)', () => {
     mocks.insertGate = null;
     mocks.onInsert = null;
     mocks.insertError = null;
+    resetCompletionSyncDiagnosticsForTests();
     vi.clearAllMocks();
   });
 
@@ -366,6 +369,21 @@ describe('offline completion queue (docs/01 §6)', () => {
 
     expect(mocks.storage.get(KEY)).toBe(original);
     expect(mocks.writes).toBe(0);
+    expect(readCompletionSyncDiagnostics()).toMatchObject({ result: 'pending' });
+  });
+
+  it('records only a content-free sync result and timestamp', async () => {
+    expect(readCompletionSyncDiagnostics()).toEqual({ result: 'not_run', at: null });
+
+    await expect(flushCompletions(new Date(2026, 5, 25, 9))).resolves.toEqual({
+      flushed: 0,
+      remaining: 0,
+    });
+
+    const diagnostics = readCompletionSyncDiagnostics();
+    expect(diagnostics.result).toBe('idle');
+    expect(new Date(diagnostics.at ?? '').toISOString()).toBe(diagnostics.at);
+    expect(Object.keys(diagnostics).sort()).toEqual(['at', 'result']);
   });
 
   it('preserves future-version bytes and refuses to downgrade them', async () => {

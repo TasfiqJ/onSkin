@@ -159,6 +159,27 @@ describe('rescheduleReminders', () => {
     mocks.sentThisWeekForTierLocal.mockResolvedValue({ status: 'available', count: 0 });
   });
 
+  it('reports content-free notification schedule health', async () => {
+    const { readNotificationScheduleHealth } = await import('./deliver');
+    mocks.getAllScheduledNotificationsAsync.mockResolvedValue([
+      { identifier: 'onskin-am-reminder' },
+      { identifier: 'onskin-pm-reminder' },
+      { identifier: 'onskin-capture-reminder' },
+    ]);
+
+    await expect(readNotificationScheduleHealth()).resolves.toBe('healthy');
+
+    mocks.getAllScheduledNotificationsAsync.mockResolvedValue([{ identifier: 'unrelated' }]);
+    await expect(readNotificationScheduleHealth()).resolves.toBe('mismatch');
+  });
+
+  it('fails notification schedule diagnostics closed without exposing errors', async () => {
+    const { readNotificationScheduleHealth } = await import('./deliver');
+    mocks.readNotifPrefs.mockRejectedValueOnce(new Error('private schedule payload'));
+
+    await expect(readNotificationScheduleHealth()).resolves.toBe('unavailable');
+  });
+
   it('shifts scheduled reminders inside quiet hours to the quiet-hours end', async () => {
     const { rescheduleReminders } = await import('./deliver');
 

@@ -1,5 +1,8 @@
 import { supabase } from '@/lib/supabase/client';
-import { runAccountGenerationOperation } from '@/lib/auth/accountGeneration';
+import {
+  AccountGenerationLeaseError,
+  runAccountGenerationOperation,
+} from '@/lib/auth/accountGeneration';
 import { captureAuthenticatedAccountOwner } from '@/lib/auth/authenticatedAccountOwner';
 import { readPrivateItem, updatePrivateItem } from '@/lib/storage/privateKV';
 
@@ -40,6 +43,25 @@ export type CompletionQueueRead =
   | { status: 'unavailable'; items: null }
   | { status: 'corrupt'; items: null }
   | { status: 'unsupported_version'; items: null };
+
+export type CompletionSyncDiagnostics = Readonly<{
+  result: 'cancelled' | 'failed' | 'idle' | 'not_run' | 'pending' | 'signed_out' | 'synced';
+  at: string | null;
+}>;
+
+let completionSyncDiagnostics: CompletionSyncDiagnostics = { result: 'not_run', at: null };
+
+function recordCompletionSyncResult(result: CompletionSyncDiagnostics['result']): void {
+  completionSyncDiagnostics = { result, at: new Date().toISOString() };
+}
+
+export function readCompletionSyncDiagnostics(): CompletionSyncDiagnostics {
+  return { ...completionSyncDiagnostics };
+}
+
+export function resetCompletionSyncDiagnosticsForTests(): void {
+  completionSyncDiagnostics = { result: 'not_run', at: null };
+}
 
 type CompletionQueueEnvelope = {
   version: typeof SCHEMA_VERSION;
@@ -187,16 +209,22 @@ export async function pendingStepIdsForDate(date: string): Promise<Set<string>> 
  * a different signed-in user (they can't pass the current session's RLS). Safe to
  * call repeatedly; a no-op when the queue is empty or there's no session yet.
  */
-export async function flushCompletions(
+async function flushCompletionsWithDiagnostics(
   now: Date = new Date(),
-): Promise<{ flushed: number; remaining: number }> {
+): Promise<{
+  flushed: number;
+  remaining: number;
+  syncResult: Exclude<CompletionSyncDiagnostics['result'], 'cancelled' | 'failed' | 'not_run'>;
+}> {
   return runAccountGenerationOperation(async (lease) => {
     const pending = await getPendingCompletions();
     lease.assertCurrent();
-    if (pending.length === 0) return { flushed: 0, remaining: 0 };
+    if (pending.length === 0) return { flushed: 0, remaining: 0, syncResult: 'idle' };
 
     const userId = (await captureAuthenticatedAccountOwner(lease))?.userId;
-    if (!userId) return { flushed: 0, remaining: pending.length }; // no session yet; retry later
+    if (!userId) {
+      return { flushed: 0, remaining: pending.length, syncResult: 'signed_out' };
+    }
 
     const removeKeys = new Set<string>();
     let flushed = 0;
@@ -243,6 +271,23 @@ export async function flushCompletions(
       return next.length === latest.length ? current : encodePending(next);
     });
     lease.assertCurrent();
-    return { flushed, remaining };
+    return {
+      flushed,
+      remaining,
+      syncResult: remaining > 0 ? 'pending' : flushed > 0 ? 'synced' : 'idle',
+    };
   });
+}
+
+export async function flushCompletions(
+  now: Date = new Date(),
+): Promise<{ flushed: number; remaining: number }> {
+  try {
+    const { flushed, remaining, syncResult } = await flushCompletionsWithDiagnostics(now);
+    recordCompletionSyncResult(syncResult);
+    return { flushed, remaining };
+  } catch (error) {
+    recordCompletionSyncResult(error instanceof AccountGenerationLeaseError ? 'cancelled' : 'failed');
+    throw error;
+  }
 }
