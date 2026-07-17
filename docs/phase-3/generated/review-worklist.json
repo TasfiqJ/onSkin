@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-16T19:55:26.785Z",
+  "generatedAt": "2026-07-17T00:26:13.042Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "728bb3b364d3ce094cbdc53da7c1d673420e0585",
+  "gitSha": "d651358561e1153f3d66104672bed9a2bd4a0032",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -1425,8 +1425,8 @@
         {
           "path": "apps/mobile/src/features/routine/usePlan.ts",
           "exists": true,
-          "bytes": 4535,
-          "sha256": "92e5b7140b6be49dec636b593e10147e238359d5a070e3d4eb9edc5da186506a"
+          "bytes": 5509,
+          "sha256": "9c2c9f016081bacfd5ea599a9127b34ac242686fe1ded5a7322d12ade9e5217a"
         },
         {
           "path": "apps/mobile/src/features/routine/useProgress.test.ts",
@@ -1443,12 +1443,12 @@
         {
           "path": "apps/mobile/src/features/routine/useRamp.ts",
           "exists": true,
-          "bytes": 2799,
-          "sha256": "4afdff266ee89a94b0f1f18741e4eefcc022da242461623f9afbac31b21914ab"
+          "bytes": 3113,
+          "sha256": "3648defb7ba0910823d8cefc2246c6d4752b4078778530f0371dce71f5e3bc7d"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "295ff55de4029cfba00453d1c2d5ea7bb25ed9ed64abd4679f8db167581b713b",
+      "reviewSnapshotSha256": "04a769df56eff23f9cf60fdee28e4ebd8f07f2a055bab6da178148aa2f831920",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1570,8 +1570,8 @@
         {
           "path": "apps/mobile/src/features/scheduler/useCycle.ts",
           "exists": true,
-          "bytes": 9736,
-          "sha256": "df816c55106af838e0d6c9a0e2a83bdec2d54859dca4463a3e5a54fcc28abf87"
+          "bytes": 10274,
+          "sha256": "19f53607aa158df0c4f05a51972d9d3a3ba598141ebe07ae8a0f80725ada31bc"
         },
         {
           "path": "apps/mobile/src/features/scheduler/useCycleAnalytics.test.ts",
@@ -1587,7 +1587,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "8a4f5506bbc92776a4796703324f5c45c034953e4cd537eed18e73f19792ed6b",
+      "reviewSnapshotSha256": "c8ee86626aa5b5f09722900cdddd68c0abfcbc8b0663ad61faf302aea79f6e15",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -1830,32 +1830,32 @@
         {
           "path": "apps/mobile/src/features/healthConsent/HealthDataActivationMount.test.ts",
           "exists": true,
-          "bytes": 3174,
-          "sha256": "15fceedf37e58d8f888ae9651e092becea9e7ae656387f29a604d12a0a8456e9"
+          "bytes": 6015,
+          "sha256": "959dc00e71eaf0053908c2ad3095177b9dab19d535ea21e3549f9d76ec1bd8b7"
         },
         {
           "path": "apps/mobile/src/features/healthConsent/HealthDataActivationMount.tsx",
           "exists": true,
-          "bytes": 2316,
-          "sha256": "4b18a884aa2ed05e495bc7945a2870f425dc7d459769fb1f00aeea0295d98c42"
+          "bytes": 3261,
+          "sha256": "aef498d084e3233bba3ed43315193e52a3b308e5a6d0f37108cb66ea3c114611"
         },
         {
           "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
           "exists": true,
-          "bytes": 6188,
-          "sha256": "7ee157173cc9a6935f584f4bde381be2fdb541afe2fd5e4587feaa2f2f34ce10"
+          "bytes": 6504,
+          "sha256": "f56e2bbb8c971ac55fa0f677c351f3a1bbd323a981f0ce15fbba4dc61b446f71"
         },
         {
           "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx",
           "exists": true,
-          "bytes": 28752,
-          "sha256": "91134bf963df37258dc617f1ead2d5a763692a74494447e02ca01214c1631032"
+          "bytes": 31585,
+          "sha256": "9caaf70078a24d3aacec87691bbe56a73314726d3c2f89edad33f340079478a9"
         },
         {
           "path": "apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts",
           "exists": true,
-          "bytes": 12021,
-          "sha256": "b9984cb0cc74623a5d10c7b856b96988ba0adead89bf120cb7f8889593eb87a9"
+          "bytes": 12354,
+          "sha256": "cace0f73d9bc3f95aad8c3e5fbad2036e942dea56523098256b94f992e0a5904"
         },
         {
           "path": "apps/mobile/src/features/healthConsent/lifecycle.test.ts",
@@ -1908,14 +1908,14 @@
         {
           "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts",
           "exists": true,
-          "bytes": 7033,
-          "sha256": "cdcd5e53de81f2c81cd580c3307dc57912494c10a7eaac2bbc1fc5f86b306940"
+          "bytes": 9432,
+          "sha256": "0f3f77f32bd7a72991dcfbb3d42981c6f086db09580fa652affafcf0902bab96"
         },
         {
           "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.ts",
           "exists": true,
-          "bytes": 5619,
-          "sha256": "3665d08fa1e10954980d445aaf8b8703258d0832756de7b0dab43d5947230f64"
+          "bytes": 6449,
+          "sha256": "06c7c5d8c7129d01d28ff258339e09ff114d5f8077fe35462832cb52380aee71"
         },
         {
           "path": "apps/mobile/src/lib/consent/consent.test.ts",
@@ -2010,8 +2010,8 @@
         {
           "path": "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts",
           "exists": true,
-          "bytes": 5852,
-          "sha256": "779125aa255d795177ed9c49b1ab73b481d4941aa6ca036549f46d838fd16e0d"
+          "bytes": 5929,
+          "sha256": "f99ebd3f1f5120671e7702b0c7e1a55adde2f316bb8ddb9a0b5e5fedeb1af109"
         },
         {
           "path": "apps/mobile/src/lib/consent/healthDataWriteAdmissionContracts.test.ts",
@@ -2141,7 +2141,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "f1988447f61066e9a05c3c5d7d1644d0a82a063f11c5236b3fb254a7acf394e0",
+      "reviewSnapshotSha256": "fabd4dfa9c4d4087256dc3b8dcac25a8bf17fef0e4bbad599f846901103c118d",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2362,14 +2362,14 @@
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.ts",
           "exists": true,
-          "bytes": 12557,
-          "sha256": "fb2fa4c460fd789701a57e6b5b6f57d246d0723fec0fe9c2f1da130649ad19c4"
+          "bytes": 12735,
+          "sha256": "5bac79d437c1a3446a2bb3c84c99aa5a67485a0f48ac1d08c27e1120279ddbbb"
         },
         {
           "path": "apps/mobile/src/features/settings/localDeviceExport.test.ts",
           "exists": true,
-          "bytes": 10141,
-          "sha256": "d67a164ef2f801d312a63881962ac5499f39c7fe13fe8bd8758121ef89791a7a"
+          "bytes": 10334,
+          "sha256": "33f7d0b41d5325c56f08b3d0a4601b5aa6840eac0c8c7d5bf544deb1f06fc470"
         },
         {
           "path": "apps/mobile/src/lib/storage/privateKV.ts",
@@ -2445,7 +2445,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "44fc6fd3d181854c07b1965f9f4f2d238849a5f49a622d6d40d194b8bad1d430",
+      "reviewSnapshotSha256": "f902736ebf6cd7fc4d3fe64302c17013b9fdef98cef5fa9d6770cfd9a502e894",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2465,8 +2465,8 @@
         {
           "path": "apps/mobile/src/lib/analytics/eventRegistry.ts",
           "exists": true,
-          "bytes": 4175,
-          "sha256": "c00e23a2c6bdcc6a081dbbea7c7905933ed9ef5929f15a5341b37a6c0dc96cae"
+          "bytes": 4208,
+          "sha256": "154066b64567d5ab25cb77e3a6a614f7b604e41ddb3d109c70dc84335b1353cc"
         },
         {
           "path": "apps/mobile/src/lib/analytics/postHogPersistenceCleanup.test.ts",
@@ -2560,7 +2560,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "646b6fdd553e65f3de905500055e814a9e3ae8bce5034b28dc253394e4ca8d83",
+      "reviewSnapshotSha256": "738714365fa0fe1c00c38c4f8ec450c815704d8e29eb4384bca4c13b28e69d59",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2598,8 +2598,8 @@
         {
           "path": "apps/mobile/src/lib/auth/accountDeletionPublication.integration.test.ts",
           "exists": true,
-          "bytes": 21277,
-          "sha256": "f8871c921b1af255acc3ebd6257b060bea1c31c89dcda5706e8a0f6315d03158"
+          "bytes": 21839,
+          "sha256": "36bef420183dcaa3a592ce01de5bda1863abf77072cac84b651bc51447902213"
         },
         {
           "path": "apps/mobile/src/lib/auth/accountGeneration.test.ts",
@@ -2748,8 +2748,8 @@
         {
           "path": "apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts",
           "exists": true,
-          "bytes": 2730,
-          "sha256": "e5cfe741d884cabfe3aac0c344a62c09a590cab75bcc1d4b1b365744d625227c"
+          "bytes": 3206,
+          "sha256": "f87bb763c40d79063eb119f77ce625131a8788d89367a08d3da065bc59428fef"
         },
         {
           "path": "apps/mobile/src/lib/auth/authDerivedCleanupRequired.test.ts",
@@ -2766,14 +2766,14 @@
         {
           "path": "apps/mobile/src/lib/auth/AuthProvider.lifecycle.test.ts",
           "exists": true,
-          "bytes": 88869,
-          "sha256": "87ee0fc3aa0463e034b9176c3890c31f60409321cc24842a7cb29fa5f2a91884"
+          "bytes": 90811,
+          "sha256": "1896f769677740c7e588db4d5f958e2bc7755f0079ed252163683b3e50b17edd"
         },
         {
           "path": "apps/mobile/src/lib/auth/AuthProvider.tsx",
           "exists": true,
-          "bytes": 99108,
-          "sha256": "b5824cfe7e1fc40b586fcc950e445112cb274cccf54a270eb1747ee89cf8040e"
+          "bytes": 101190,
+          "sha256": "3c6c45c4247763a2ee9d89d66739cd97cf432f2cdbe0efb6b0d39178e3215bf9"
         },
         {
           "path": "apps/mobile/src/lib/auth/google.ts",
@@ -2796,14 +2796,14 @@
         {
           "path": "apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts",
           "exists": true,
-          "bytes": 2007,
-          "sha256": "6c6250ac58f1294ec40a1feba2d740a16157a1f8053e61176fe7eb7bfc963657"
+          "bytes": 4294,
+          "sha256": "84ba1cd1399c52eec30611a3059040ff76b54643e6f5850d78f4272bf39e0642"
         },
         {
           "path": "apps/mobile/src/lib/auth/revokedCredentialActivity.ts",
           "exists": true,
-          "bytes": 1702,
-          "sha256": "1bac374a4ad42ebece8141e09f03a351fef285318bfb1823d4a215e39fb8d3f5"
+          "bytes": 2303,
+          "sha256": "6a8eba9cd60438dec56b9c78428e8cce1870cb4f2c9f42328ef63591ea441b8c"
         },
         {
           "path": "apps/mobile/src/lib/auth/sessionBoundary.test.ts",
@@ -2879,7 +2879,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "8ab077cca193fb32b50a6fbdc9ae00676b01562a30e5d0b2909738adfe136f73",
+      "reviewSnapshotSha256": "4c1bed154524d49dcca78196ebbf92c91a0abc502a2ff890c71f06e174befe6a",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2959,12 +2959,12 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 14170,
-          "sha256": "3ba2df3aff44ced390047424120090f5effc4479abbc074854475f2db9e8fc7a"
+          "bytes": 14367,
+          "sha256": "c9e4be78be838845732086cf769fede87290aaa930b294d7675dc0703623626d"
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "1be3208afdb3fb68750d6b68dad7eced3b3a7e14bbf72b70617f0c8a44d03b8d",
+      "reviewSnapshotSha256": "3d0bbc4c8e84b530ac00e01225bec4a57a2d6954b45e46a4d93ed053371d7f7e",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2990,8 +2990,8 @@
         {
           "path": "apps/mobile/app.config.js",
           "exists": true,
-          "bytes": 14170,
-          "sha256": "3ba2df3aff44ced390047424120090f5effc4479abbc074854475f2db9e8fc7a"
+          "bytes": 14367,
+          "sha256": "c9e4be78be838845732086cf769fede87290aaa930b294d7675dc0703623626d"
         },
         {
           "path": "supabase/config.toml",
@@ -3001,7 +3001,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "683dbc3fd95dcb8240e94083d3647936e6a1d11423bf71ea09b384d4ac019297",
+      "reviewSnapshotSha256": "ecc675f29f3ff9f43f31f9307ab47461b05bcada8f5fbceba54a632681b2fc85",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },

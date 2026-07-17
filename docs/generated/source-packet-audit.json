@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T20:01:53.928Z",
+  "generatedAt": "2026-07-17T00:27:08.440Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
@@ -58,7 +58,7 @@
     {
       "path": "04_repo_docs/docs/FEATURE_INDEX.md",
       "bytes": 4097,
-      "sha256": "efacf98661293330011ed9c6c27e3f38e4865ed97df435f7598712f58a3ea8e0"
+      "sha256": "df76f6afa3ceb8379c0b498daa50c41e5e6545b2187f320d3c2738a05f17a55f"
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN.md",
@@ -83,7 +83,7 @@
     {
       "path": "04_repo_docs/docs/TESTING_STRATEGY.md",
       "bytes": 15308,
-      "sha256": "f6b083a0a1fb813b165fa0c6e28b49ac416ec014d9d111571c0b95a09dbea8f0"
+      "sha256": "1b6644a70cb6fe6e87d669e76ef36cf6800ed11fddd3713fcbf2a9fe5aa18647"
     }
   ],
   "docs": [
@@ -146,8 +146,8 @@
       "activePath": "docs/FEATURE_INDEX.md",
       "sourceBytes": 4097,
       "activeBytes": 4097,
-      "sourceSha256": "efacf98661293330011ed9c6c27e3f38e4865ed97df435f7598712f58a3ea8e0",
-      "activeSha256": "efacf98661293330011ed9c6c27e3f38e4865ed97df435f7598712f58a3ea8e0",
+      "sourceSha256": "df76f6afa3ceb8379c0b498daa50c41e5e6545b2187f320d3c2738a05f17a55f",
+      "activeSha256": "df76f6afa3ceb8379c0b498daa50c41e5e6545b2187f320d3c2738a05f17a55f",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -211,8 +211,8 @@
       "activePath": "docs/TESTING_STRATEGY.md",
       "sourceBytes": 15308,
       "activeBytes": 15308,
-      "sourceSha256": "f6b083a0a1fb813b165fa0c6e28b49ac416ec014d9d111571c0b95a09dbea8f0",
-      "activeSha256": "f6b083a0a1fb813b165fa0c6e28b49ac416ec014d9d111571c0b95a09dbea8f0",
+      "sourceSha256": "1b6644a70cb6fe6e87d669e76ef36cf6800ed11fddd3713fcbf2a9fe5aa18647",
+      "activeSha256": "1b6644a70cb6fe6e87d669e76ef36cf6800ed11fddd3713fcbf2a9fe5aa18647",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true

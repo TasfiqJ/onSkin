@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T20:13:34.892Z",
+  "generatedAt": "2026-07-17T00:26:50.048Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -201,18 +201,18 @@
       "mapping": {
         "path": "docs/phase-9/ios-sdk-package-mapping.json",
         "bytes": 8352,
-        "sha256": "334a4ce9e94c58e44e28305d0ab6f98f92de01d5cf638301e90fa7cb105b8fc9"
+        "sha256": "923b527df8b7950b28214a996056fe0667ba34b64de295d47cf17cfb21248aa1"
       },
       "packageLock": {
         "path": "package-lock.json",
-        "bytes": 557144,
-        "sha256": "a83a88fbf2310d2457e3e31b85fedaa54fe7e5e354ca02d9700e51229526835f"
+        "bytes": 557143,
+        "sha256": "0b817f6d89ea2b318e59d3bbc83203047ade24ab7496ba6ff2c91ff14356f850"
       }
     },
     "ledgerHashes": {
-      "nativePackagesSha256": "5d8ec3abccafb6e028c28412f23ce3ccd666261017a5a3dcbc85d040cb43e453",
+      "nativePackagesSha256": "63a06f5f7ab8d619623c9461ccf29bfd50ee4d576d686aa4ead7320419880dff",
       "privacyManifestsSha256": "a03117b95f9b43f102b12c1eea4c0396c483067529bed82c38cd34663ab734f7",
-      "podspecsSha256": "2e626ff863242776896682521fd503822de22294ff7174df538449147c79f0ba",
+      "podspecsSha256": "a6c71e6ea42a8b22cb9bdaaa9b4aea0f79cc0e42cdac6c2cb728742f01beeb3e",
       "xcframeworksSha256": "a794063d65e2f7b1c086beffcdf37fb0cd15009f35e6dbbc091e81a7eced54c6",
       "frameworksSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
       "nativeBinaryFilesSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",

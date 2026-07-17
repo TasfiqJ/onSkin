@@ -1,8 +1,8 @@
 # Phase 8 Growth Store QA Packet
 
-Generated: 2026-07-16T20:13:10.294Z
+Generated: 2026-07-17T00:26:22.027Z
 Status: blocked
-Git SHA: cc2d632172b44bd1beab3c24c65b91f36f2f3a2d
+Git SHA: d651358561e1153f3d66104672bed9a2bd4a0032
 Git status: clean
 
 ## Public Identity
@@ -71,10 +71,10 @@ Git status: clean
 ## Source Hashes
 
 - `.env.example`: `668f23c9f7fbb2098868ed170f1352eafdda85184256297701a2458736ca71ad`
-- `package.json`: `fd993bc9293613b455acb9aa6df2d0ce195cbe8fd91b422176e2b011886b5b57`
+- `package.json`: `85289af8e3524cee2cdafba5c29813017a2fd3a9b1ac41e05d99e5e116340f5a`
 - `docs/hugeToDo/launch-contract.json`: `43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b`
 - `scripts/launch/contract.mjs`: `6a3ced1c0e7e54ef7db31e848aeeebd3617a77db02c3b51c98d6ee3789a9007d`
-- `apps/mobile/app.config.js`: `3ba2df3aff44ced390047424120090f5effc4479abbc074854475f2db9e8fc7a`
+- `apps/mobile/app.config.js`: `c9e4be78be838845732086cf769fede87290aaa930b294d7675dc0703623626d`
 - `apps/mobile/src/lib/env.ts`: `22ebe3a408c87b87be7da9e4a2282feba8620d88405b43216eb961966bfb5b31`
 - `apps/mobile/src/lib/launch/phase8.ts`: `8149b2ab7984be03fd26ff44d3d680e422473dd79b7ad559558138cad4cf6ff9`
 - `apps/mobile/src/lib/growth/attribution.ts`: `80c9c4089fed353e7443deb38f9baa6ebb56b466a4fc07f2ce2caeb4f71f55e2`
@@ -103,15 +103,15 @@ Git status: clean
 - `docs/phase-8/public-site/.well-known/assetlinks.template.json`: `1ec260dc15dc08af510cd49b83e4c63a3a369e1f9560bf174fc8b34aa097d319`
 - `docs/HUMAN_SIMULATED_E2E_TESTING.md`: `db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8`
 - `docs/E2E_TESTING_CHECKLIST.md`: `1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f`
-- `docs/USER_FLOW_TREE.md`: `ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8`
-- `docs/e2e/generated/human-e2e-manifest.json`: `677501cf58901f9262aeb32207105bc3ace9326b072226ed9387107daf2780ab`
-- `docs/e2e/generated/human-e2e-manifest.md`: `66104c7cfc4a68eff95c29211f07edb74200f99b036cd2088b7723ef3a555c75`
-- `docs/phase-5/generated/device-qa-packet.json`: `f04881339f7948c5aa541a4d5c2c2170952d66180e09e258250a60d4aab9ff7d`
-- `docs/phase-5/generated/device-qa-packet.md`: `34ba0dc9548ae4897590270d95b36236a9fdb52e8a9a888bf358562b27140abe`
-- `docs/phase-6/generated/payments-qa-packet.json`: `078f97f5fe745e80a279b10d1fe9ff73949686675bb1c2f879d82b0ab9c6dea8`
-- `docs/phase-6/generated/payments-qa-packet.md`: `cec2870fd1c7b255216dbd2a5f8cf387ce32ebad075bc63b74f3fa2579bf10b9`
-- `docs/phase-7/generated/core-loop-qa-packet.json`: `130d99b844173cac23b9061c0692a95259fbf40bde7021f695fc8331052ddb7f`
-- `docs/phase-7/generated/core-loop-qa-packet.md`: `66ee4b1b3535c2076ce99967301d3be8325ead4a250159135df899fd1f245e1d`
+- `docs/USER_FLOW_TREE.md`: `14be278a1f1d0a14d1d5d5ffffb0fe82fdc89f38479e82d9b3b8606e9cea9a1f`
+- `docs/e2e/generated/human-e2e-manifest.json`: `91499428e76938d01826dd760888c65129b5bde37f4c8bac98dfdc7915e8585f`
+- `docs/e2e/generated/human-e2e-manifest.md`: `c662775245067ea876359602b379caa33c30fdc1f31b6452ac750e2b27cfe4fd`
+- `docs/phase-5/generated/device-qa-packet.json`: `c0510fb25fefa88a3015a6829462d2c108c0f2555a3e9256660a3395995a579c`
+- `docs/phase-5/generated/device-qa-packet.md`: `ae7fff6830c78cf671784a78325f233bbd4013d33b69018c3c3107eb0f4b8820`
+- `docs/phase-6/generated/payments-qa-packet.json`: `980de38ab75ba02f366fa17ab2e5e55918aa0c40b932bdba6f0f928d0b6eede3`
+- `docs/phase-6/generated/payments-qa-packet.md`: `f5255035fa4b57a5c7e8d729b5daa7ef71fb58f1c98b5e0038aaea8656472679`
+- `docs/phase-7/generated/core-loop-qa-packet.json`: `1d01c0e5216c9dd3c89b88c8a610f136c65153c2b6810ebac3a3557ae637d76c`
+- `docs/phase-7/generated/core-loop-qa-packet.md`: `26e22802b2c43a52c94685f680279ecedfd3f40c64a7c55df476eedc399d9d79`
 - `scripts/phase8/build-growth-store-qa-packet.mjs`: `417068519980f0e79e36d565a3deac14de38804daa59d0b5773d88fc89768461`
 - `scripts/phase8/check-growth-store-readiness.mjs`: `014ac3f8dfd4baae43b57c494c778688c180ae996f8cb8b29f0a2660211902a7`
 - `scripts/phase8/check-growth-store-smoke.mjs`: `89cc87c5da60b6eb86ae112c93eb1995309c82dc2336995113dd5a37b8c37a98`
