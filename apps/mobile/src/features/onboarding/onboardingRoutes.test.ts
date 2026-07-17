@@ -265,7 +265,7 @@ describe('onboarding route contracts', () => {
     );
     expect(products).toContain('const compactFooterAdds = compactPhone && name.trim().length > 0');
     expect(products).toContain('const inputRef = useRef<TextInput>(null)');
-    expect(products).toContain('placeholder="e.g. Retinol serum"');
+    expect(products).toContain("placeholder={pseudoLocalizeString('e.g. Retinol serum')}");
     expect(products).not.toContain('placeholder="e.g. Retinol 0.3% Night Serum"');
     expect(products).toContain('const scrollRef = useRef<ScrollView>(null)');
     expect(products).not.toContain('scrollRef.current?.scrollToEnd({ animated: true })');

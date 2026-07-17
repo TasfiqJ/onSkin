@@ -1,7 +1,9 @@
-import { Pressable, type PressableProps, Text } from 'react-native';
+import { Pressable, type PressableProps } from 'react-native';
 
 import { cn } from '@/lib/cn';
 import { haptics } from '@/theme/haptics';
+
+import { Text } from './Text';
 
 // Pill buttons (design spec). primary = ink (light screens), accent = clay (the
 // paywall CTA), inverse = paper (on dark "night" screens), and ghost variants

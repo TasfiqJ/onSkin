@@ -17,6 +17,7 @@ import {
   motionAllowed,
   useReduceMotionPreference,
 } from '@/lib/accessibility/useReduceMotionPreference';
+import { pseudoLocalizeString } from '@/lib/accessibility/pseudoLocalization';
 import { track } from '@/lib/analytics/track';
 import { APP_PROGRESS_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -63,7 +64,7 @@ function PhotoNoteEditor({
         value={draft}
         onChangeText={updateDraft}
         onBlur={() => onCommit(draftRef.current)}
-        placeholder={PHOTO_COPY.detail.notePlaceholder}
+        placeholder={pseudoLocalizeString(PHOTO_COPY.detail.notePlaceholder)}
         placeholderTextColor="rgba(244,239,231,0.35)"
         multiline
         style={{

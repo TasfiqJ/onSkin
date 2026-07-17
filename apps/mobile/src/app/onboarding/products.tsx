@@ -24,6 +24,7 @@ import {
   motionAllowed,
   useReduceMotionPreference,
 } from '@/lib/accessibility/useReduceMotionPreference';
+import { pseudoLocalizeString } from '@/lib/accessibility/pseudoLocalization';
 import { track } from '@/lib/analytics/track';
 import { colors } from '@/theme/tokens';
 
@@ -323,7 +324,7 @@ function ProductsScreenContent() {
               accessibilityLabel="Product name"
               value={name}
               onChangeText={setName}
-              placeholder="e.g. Retinol serum"
+              placeholder={pseudoLocalizeString('e.g. Retinol serum')}
               placeholderTextColor={colors.mutedLight}
               className="rounded-card border border-hairline bg-paper px-4 py-3.5 font-sans text-base text-ink"
               returnKeyType="done"

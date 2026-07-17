@@ -490,7 +490,9 @@ describe('Progress route mobile contracts', () => {
     expect(editor).toContain('value={draft}');
     expect(editor).toContain('onChangeText={updateDraft}');
     expect(editor).toContain('onBlur={() => onCommit(draftRef.current)}');
-    expect(editor).toContain('placeholder={PHOTO_COPY.detail.notePlaceholder}');
+    expect(editor).toContain(
+      'placeholder={pseudoLocalizeString(PHOTO_COPY.detail.notePlaceholder)}',
+    );
     expect(editor).toContain('placeholderTextColor="rgba(244,239,231,0.35)"');
     expect(editor).toContain('multiline');
     expect(editor).toContain('borderRadius: 16');

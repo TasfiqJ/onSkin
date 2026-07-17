@@ -1,0 +1,120 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 425.765625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦ÏÍš ŧħéëŕéë åä çøóñƒļïíçŧ øóñ ṁýÿ šħéëļƒ?⟧",
+      "label": "⟦ÏÍš ŧħéëŕéë åä çøóñƒļïíçŧ øóñ ṁýÿ šħéëļƒ?⟧ ›",
+      "partialClip": false,
+      "rect": {
+        "bottom": 465.5625,
+        "height": 79.59375,
+        "left": 24,
+        "right": 351,
+        "top": 385.96875,
+        "visibleHeight": 79.59375,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 158.5,
+        "y": 570.40625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Ask a question about your shelf",
+      "partialClip": false,
+      "rect": {
+        "bottom": 594.40625,
+        "height": 48,
+        "left": 39,
+        "right": 278,
+        "top": 546.40625,
+        "visibleHeight": 48,
+        "visibleWidth": 239,
+        "width": 239
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 312,
+        "y": 570.40625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "↑",
+      "label": "Send",
+      "partialClip": false,
+      "rect": {
+        "bottom": 594.40625,
+        "height": 48,
+        "left": 288,
+        "right": 336,
+        "top": 546.40625,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8300/ask",
+  "textOverflows": [],
+  "textStart": "< ✦ ⟦ÅÄšķ⟧ ⟦ķñøóŵš ýÿøóüúŕ šħéëļƒ⟧ ⟦éëṽïíđéëñçéë-ğŕøóüúñđéëđ⟧ ⟦þŕïíṽåäŧéë⟧ ⟦ÅÄšķ åäɓøóüúŧ ýÿøóüúŕ øóŵñ šħéëļƒ, ŕøóüúŧïíñéë åäñđ çøóñƒļïíçŧš. ÏÍ åäñšŵéëŕ ƒŕøóṁ ŔøóüúŧïíñéëĶïíñđ'š éëṽïíđéëñçéë ɓåäšéë, åäñđ ÏÍ'ļļ ŧéëļļ ýÿøóüú ŵħéëñ ÏÍ đøóñ'ŧ ķñøóŵ.⟧ ⟦ĞŔØÓÜÚÑĐÉËĐ ÏÍÑ ÝŸØÓÜÚŔ ŠĦÉËĻƑ ŔÏÍĞĦŦ ÑØÓŴ⟧ ⟦ÏÍš ŧħéëŕéë åä çøóñƒļïíçŧ øóñ ṁýÿ šħéëļƒ?⟧ › ↑ ⟦ÅÄÏÍ åäđṽïíšøóŕ · đïíšçļøóšéëđ ħøóñéëšŧļýÿ · ýÿøóüúŕ çøóñŧéëẍŧ šŧåäýÿš øóñ ŧħïíš đéëṽïíçéë⟧",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/ask",
+  "scaledCount": 12,
+  "textScale": 1.2,
+  "url": "http://localhost:8300/ask",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

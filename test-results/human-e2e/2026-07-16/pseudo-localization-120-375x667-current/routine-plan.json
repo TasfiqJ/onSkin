@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 51.828125,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ŧéëŕṁš⟧",
+      "label": "⟦Ŧéëŕṁš⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 24,
+        "right": 79.65625,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 55.65625,
+        "width": 55.65625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 131.1796875,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Þŕïíṽåäçýÿ⟧",
+      "label": "⟦Þŕïíṽåäçýÿ⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 94.078125,
+        "right": 168.28125,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 74.203125,
+        "width": 74.203125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 222.5625,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ŕéëšŧøóŕéë⟧",
+      "label": "⟦Ŕéëšŧøóŕéë⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 182.703125,
+        "right": 262.421875,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 79.71875,
+        "width": 79.71875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 327,
+        "y": 24
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦ẍ⟧",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 48,
+        "height": 48,
+        "left": 303,
+        "right": 351,
+        "top": 0,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 244.40625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Šüúɓšçŕïíɓéë ŧøó Þŕøó⟧",
+      "label": "Subscribe to Pro",
+      "partialClip": false,
+      "rect": {
+        "bottom": 268.40625,
+        "height": 48,
+        "left": 24,
+        "right": 351,
+        "top": 220.40625,
+        "visibleHeight": 48,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 187.5,
+        "y": 302.8046875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦ÉËẍþļøóŕéë ƒïíŕšŧ⟧",
+      "label": "Explore first. 7 days of Pro. No credit card. See your routine work, then decide.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 327.203125,
+        "height": 48.796875,
+        "left": 24,
+        "right": 351,
+        "top": 278.40625,
+        "visibleHeight": 48.796875,
+        "visibleWidth": 327,
+        "width": 327
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8300/routine/adaptation",
+  "textOverflows": [],
+  "textStart": "⟦Ŧéëŕṁš⟧ · ⟦Þŕïíṽåäçýÿ⟧ · ⟦Ŕéëšŧøóŕéë⟧ ⟦ẍ⟧ ⟦ÜÚñļøóçķ ýÿøóüúŕ ƒüúļļ ŕøóüúŧïíñéë.⟧ ⟦Šŧøóŕéë þŕïíçïíñğ⟧ ⟦Çħéëçķïíñğ þŕïíçéë⟧ ⟦Šüúɓšçŕïíɓéë ŧøó Þŕøó⟧ ⟦ÉËẍþļøóŕéë ƒïíŕšŧ⟧ ⟦Ñøó çåäŕđ ñéëéëđéëđ.⟧ ›",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/routine/plan",
+  "scaledCount": 13,
+  "textScale": 1.2,
+  "url": "http://localhost:8300/routine/plan",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

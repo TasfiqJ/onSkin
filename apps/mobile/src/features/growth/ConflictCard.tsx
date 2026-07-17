@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 
+import { Text } from '@/components/ui';
 import { isReassuring, type DetectedConflict } from '@/features/intelligence/engine';
 import {
   bannerSubhead,

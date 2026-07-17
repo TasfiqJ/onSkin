@@ -1,0 +1,120 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 141.4375,
+        "y": 288.1953125
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ƒŕåäğŕåäñçéë-ƒŕéëéë⟧",
+      "label": "⟦Ƒŕåäğŕåäñçéë-ƒŕéëéë⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 313.59375,
+        "height": 50.796875,
+        "left": 24,
+        "right": 258.875,
+        "top": 262.796875,
+        "visibleHeight": 50.796875,
+        "visibleWidth": 234.875,
+        "width": 234.875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 85.6640625,
+        "y": 346.9921875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ṽéëğåäñ⟧",
+      "label": "⟦Ṽéëğåäñ⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 372.390625,
+        "height": 50.796875,
+        "left": 24,
+        "right": 147.328125,
+        "top": 321.59375,
+        "visibleHeight": 50.796875,
+        "visibleWidth": 123.328125,
+        "width": 123.328125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 129.75,
+        "y": 405.7890625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Çŕüúéëļŧýÿ-ƒŕéëéë⟧",
+      "label": "⟦Çŕüúéëļŧýÿ-ƒŕéëéë⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 431.1875,
+        "height": 50.796875,
+        "left": 24,
+        "right": 235.5,
+        "top": 380.390625,
+        "visibleHeight": 50.796875,
+        "visibleWidth": 211.5,
+        "width": 211.5
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8300/recommendations/preferences",
+  "textOverflows": [],
+  "textStart": "< ⟦Þŕéëƒéëŕéëñçéëš⟧ ⟦Ŕéëçøóṁṁéëñđåäŧïíøóñ þŕéëƒéëŕéëñçéëš⟧ ⟦Ŧħéëšéë šħåäþéë ŵħåäŧ ƒïíŧš ýÿøóüú. Ŧħéëýÿ ñéëṽéëŕ çħåäñğéë ŵħåäŧ šéëļļš.⟧ ⟦ṼÅÄĻÜÚÉËŠ⟧ ⟦Ƒŕåäğŕåäñçéë-ƒŕéëéë⟧ ⟦Ṽéëğåäñ⟧ ⟦Çŕüúéëļŧýÿ-ƒŕéëéë⟧ ⟦Ñøóñ-çøóṁéëđøóğéëñïíç⟧ ⟦Šüúšŧåäïíñåäɓļéë⟧ ⟦ƁÜÚĐĞÉËŦ⟧ ⟦Đŕüúğšŧøóŕéë⟧ ⟦Ṁïíđ-ŕåäñğéë⟧ ⟦Þŕéëṁïíüúṁ⟧ ⟦ŦÉËẌŦÜÚŔÉË⟧ ⟦Ğéëļ⟧ ⟦Çŕéëåäṁ⟧ ⟦Ƒļüúïíđ⟧ ⟦Ɓåäļṁ⟧ ⟦ØÖïíļ⟧ ✦ ⟦Ŵéë þŕïíøóŕïíŧïíšéë øóþŧïíøóñš ŧħåäŧ ƒïíŧ ŧħéëšéë.⟧",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/recommendations/preferences",
+  "scaledCount": 22,
+  "textScale": 1.2,
+  "url": "http://localhost:8300/recommendations/preferences",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,145 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 187.5,
+        "y": 383.8359375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦ÅÄđđ þŕøóđüúçŧš⟧",
+      "label": "⟦ÅÄđđ þŕøóđüúçŧš⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 414.234375,
+        "height": 60.796875,
+        "left": 45,
+        "right": 330,
+        "top": 353.4375,
+        "visibleHeight": 60.796875,
+        "visibleWidth": 285,
+        "width": 285
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 56.625,
+        "y": 620
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 647,
+        "height": 54,
+        "left": 13,
+        "right": 100.25,
+        "top": 593,
+        "visibleHeight": 54,
+        "visibleWidth": 87.25,
+        "width": 87.25
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 143.875,
+        "y": 620
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 647,
+        "height": 54,
+        "left": 100.25,
+        "right": 187.5,
+        "top": 593,
+        "visibleHeight": 54,
+        "visibleWidth": 87.25,
+        "width": 87.25
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 231.125,
+        "y": 620
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 647,
+        "height": 54,
+        "left": 187.5,
+        "right": 274.75,
+        "top": 593,
+        "visibleHeight": 54,
+        "visibleWidth": 87.25,
+        "width": 87.25
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 318.375,
+        "y": 620
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 647,
+        "height": 54,
+        "left": 274.75,
+        "right": 362,
+        "top": 593,
+        "visibleHeight": 54,
+        "visibleWidth": 87.25,
+        "width": 87.25
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8300/today",
+  "textOverflows": [],
+  "textStart": "⟦ƑŔÏÍĐÅÄÝŸ, ĴÜÚĻÝŸ 17⟧ ⟦Ğøóøóđ ṁøóŕñïíñğ.⟧ ⟦ÑØÓ ŔØÓÜÚŦÏÍÑÉË ÝŸÉËŦ⟧ ⟦Ɓüúïíļđ åä ŕøóüúŧïíñéë ƒŕøóṁ ýÿøóüúŕ šħéëļƒ.⟧ ⟦ÅÄđđ ŧħéë þŕøóđüúçŧš ýÿøóüú üúšéë åäñđ Ŧøóđåäýÿ ŵïíļļ ɓéëçøóṁéë ýÿøóüúŕ ÅÄṀ/ÞṀ çħéëçķļïíšŧ.⟧ ⟦ÅÄđđ þŕøóđüúçŧš⟧ ⟦Ŧøóđåäýÿ⟧ ⟦Þŕøóğ.⟧ ⟦Šħéëļƒ⟧ ⟦ÝŸøóüú⟧",
+  "viewport": {
+    "width": 375,
+    "height": 667
+  },
+  "route": "/today",
+  "scaledCount": 6,
+  "textScale": 1.2,
+  "url": "http://localhost:8300/today",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

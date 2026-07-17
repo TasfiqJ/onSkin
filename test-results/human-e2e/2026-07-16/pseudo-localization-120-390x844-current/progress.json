@@ -1,0 +1,270 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 51.828125,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ŧéëŕṁš⟧",
+      "label": "⟦Ŧéëŕṁš⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 24,
+        "right": 79.65625,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 55.65625,
+        "width": 55.65625
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 131.1796875,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Þŕïíṽåäçýÿ⟧",
+      "label": "⟦Þŕïíṽåäçýÿ⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 94.078125,
+        "right": 168.28125,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 74.203125,
+        "width": 74.203125
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 222.5625,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ŕéëšŧøóŕéë⟧",
+      "label": "⟦Ŕéëšŧøóŕéë⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 182.703125,
+        "right": 262.421875,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 79.71875,
+        "width": 79.71875
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 342,
+        "y": 28
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦ẍ⟧",
+      "label": "Maybe later",
+      "partialClip": false,
+      "rect": {
+        "bottom": 52,
+        "height": 48,
+        "left": 318,
+        "right": 366,
+        "top": 4,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 574.59375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Šüúɓšçŕïíɓéë ŧøó Þŕøó⟧",
+      "label": "Subscribe to Pro",
+      "partialClip": false,
+      "rect": {
+        "bottom": 601.59375,
+        "height": 54,
+        "left": 24,
+        "right": 366,
+        "top": 547.59375,
+        "visibleHeight": 54,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 714.796875
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦ÉËẍþļøóŕéë ƒïíŕšŧ⟧",
+      "label": "Explore first. 7 days of Pro. No credit card. See your routine work, then decide.",
+      "partialClip": true,
+      "rect": {
+        "bottom": 758.796875,
+        "height": 69.203125,
+        "left": 24,
+        "right": 366,
+        "top": 689.59375,
+        "visibleHeight": 50.40625,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 58.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 13,
+        "right": 104,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 91,
+        "width": 91
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 149.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 104,
+        "right": 195,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 91,
+        "width": 91
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 240.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 195,
+        "right": 286,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 91,
+        "width": 91
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 331.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 286,
+        "right": 377,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 91,
+        "width": 91
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8299/progress",
+  "textOverflows": [],
+  "textStart": "⟦Ŧéëŕṁš⟧ · ⟦Þŕïíṽåäçýÿ⟧ · ⟦Ŕéëšŧøóŕéë⟧ ⟦ẍ⟧ ⟦ÜÚñļøóçķ ýÿøóüúŕ þŕïíṽåäŧéë þħøóŧøó ŧïíṁéëļïíñéë.⟧ ⟦Ŵåäŧçħ ýÿøóüúŕ šķïíñ çħåäñğéë øóṽéëŕ ŵéëéëķš. Ğüúïíđéëđ çåäþŧüúŕéë, øóñ-đéëṽïíçéë øóñļýÿ, ñéëṽéëŕ šçøóŕéëđ. Þåäŕŧ øóƒ ŔøóüúŧïíñéëĶïíñđ Þŕøó.⟧ ⟦Šŧøóŕéë þŕïíçïíñğ⟧ ⟦Çħéëçķïíñğ þŕïíçéë⟧ ⟦Šüúɓšçŕïíɓéë ŧøó Þŕøó⟧ ⟦ÉËẍþļøóŕéë ƒïíŕšŧ⟧ ⟦Ñøó çåäŕđ ñéëéëđéëđ.⟧ › ⟦Ŧøóđåäýÿ⟧ ⟦Þŕøóğ.⟧ ⟦Šħéëļƒ⟧ ⟦ÝŸøóüú⟧",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/progress",
+  "scaledCount": 14,
+  "textScale": 1.2,
+  "url": "http://localhost:8299/progress",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

@@ -1,0 +1,120 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 48,
+        "y": 32
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "<",
+      "label": "Back",
+      "partialClip": false,
+      "rect": {
+        "bottom": 56,
+        "height": 48,
+        "left": 24,
+        "right": 72,
+        "top": 8,
+        "visibleHeight": 48,
+        "visibleWidth": 48,
+        "width": 48
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 130.53125,
+        "y": 97
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "INPUT",
+      "hitText": "",
+      "label": "Catalog search query",
+      "partialClip": false,
+      "rect": {
+        "bottom": 122,
+        "height": 50,
+        "left": 24,
+        "right": 237.0625,
+        "top": 72,
+        "visibleHeight": 50,
+        "visibleWidth": 213.0625,
+        "width": 213.0625
+      },
+      "role": "input",
+      "tag": "INPUT",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 305.53125,
+        "y": 97
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Šéëåäŕçħ⟧",
+      "label": "⟦Šéëåäŕçħ⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 122,
+        "height": 50,
+        "left": 245.0625,
+        "right": 366,
+        "top": 72,
+        "visibleHeight": 50,
+        "visibleWidth": 120.9375,
+        "width": 120.9375
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 781.6015625
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦ÅÄđđ ɓýÿ ħåäñđ⟧",
+      "label": "⟦ÅÄđđ ɓýÿ ħåäñđ⟧",
+      "partialClip": false,
+      "rect": {
+        "bottom": 812,
+        "height": 60.796875,
+        "left": 24,
+        "right": 366,
+        "top": 751.203125,
+        "visibleHeight": 60.796875,
+        "visibleWidth": 342,
+        "width": 342
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8299/shelf/search",
+  "textOverflows": [],
+  "textStart": "< ⟦Šéëåäŕçħ çåäŧåäļøóğ⟧ ⟦Šéëåäŕçħ⟧ ⟦Šéëåäŕçħ üúšéëš ŧħéë⟧ ⟦ŔøóüúŧïíñéëĶïíñđ⟧ ⟦çåäŧåäļøóğ øóñļýÿ. Þüúɓļïíç ÅÄÞÏÍ šéëåäŕçħ ïíš ñøóŧ üúšéëđ ƒøóŕ ļïíṽéë ŧýÿþïíñğ.⟧ ⟦ÅÄđđ ɓýÿ ħåäñđ⟧",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/shelf/search",
+  "scaledCount": 5,
+  "textScale": 1.2,
+  "url": "http://localhost:8299/shelf/search",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

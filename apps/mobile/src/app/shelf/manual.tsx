@@ -19,6 +19,7 @@ import {
   type ProductCategory,
 } from '@/features/shelf/categories';
 import { useIntake } from '@/features/shelf/IntakeContext';
+import { pseudoLocalizeString } from '@/lib/accessibility/pseudoLocalization';
 import { track } from '@/lib/analytics/track';
 import { cn } from '@/lib/cn';
 import { APP_SHELF_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
@@ -242,7 +243,7 @@ export default function ManualAddScreen() {
               accessibilityLabel="Product name"
               value={name}
               onChangeText={setName}
-              placeholder="e.g. Gentle Retinol Night Serum"
+              placeholder={pseudoLocalizeString('e.g. Gentle Retinol Night Serum')}
               placeholderTextColor={colors.mutedLight}
               className={cn(inputClass, compactManualPhone ? 'h-[48px]' : 'h-[50px]')}
             />
@@ -255,7 +256,7 @@ export default function ManualAddScreen() {
                 accessibilityLabel="Brand"
                 value={brand}
                 onChangeText={setBrand}
-                placeholder="Brand"
+                placeholder={pseudoLocalizeString('Brand')}
                 placeholderTextColor={colors.mutedLight}
                 className={cn(inputClass, compactManualPhone ? 'h-[48px]' : 'h-[50px]')}
               />
@@ -307,7 +308,7 @@ export default function ManualAddScreen() {
                 accessibilityLabel="Ingredients"
                 value={ingredients}
                 onChangeText={setIngredients}
-                placeholder="Paste or type the INCI list…"
+                placeholder={pseudoLocalizeString('Paste or type the INCI list…')}
                 placeholderTextColor={colors.mutedLight}
                 multiline
                 className={cn(

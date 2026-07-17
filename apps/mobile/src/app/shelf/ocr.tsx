@@ -52,6 +52,7 @@ import {
   cleanupStagedCapture,
 } from '@/features/photos/captureStaging';
 import { useIntake } from '@/features/shelf/IntakeContext';
+import { pseudoLocalizeString } from '@/lib/accessibility/pseudoLocalization';
 import { cn } from '@/lib/cn';
 import { track } from '@/lib/analytics/track';
 import { env } from '@/lib/env';
@@ -377,7 +378,7 @@ const OcrReviewEditor = memo(function OcrReviewEditor({
           maxLength={OCR_INGREDIENT_TEXT_MAX_LENGTH}
           onChangeText={updateRawText}
           multiline
-          placeholder="Type or paste the INCI list from the label"
+          placeholder={pseudoLocalizeString('Type or paste the INCI list from the label')}
           placeholderTextColor={colors.mutedLight}
           className="mt-2 min-h-[132px] rounded-[16px] border border-hairline bg-paper-raised p-4 font-sans text-[14px] leading-5 text-ink"
           textAlignVertical="top"

@@ -8,9 +8,10 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { AppState, Pressable, ScrollView, Text, View, type AppStateStatus } from 'react-native';
+import { AppState, Pressable, ScrollView, View, type AppStateStatus } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { Text } from '@/components/ui';
 import { BRAND } from '@/lib/brand';
 import { appLockUserMessage } from '@/lib/errors/userFacing';
 import { colors } from '@/theme/tokens';

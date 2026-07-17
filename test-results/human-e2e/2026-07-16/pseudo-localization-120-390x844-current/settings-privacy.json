@@ -1,0 +1,170 @@
+{
+  "controls": [
+    {
+      "center": {
+        "x": 320,
+        "y": 106.59375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Marketing emails",
+      "partialClip": false,
+      "rect": {
+        "bottom": 130.59375,
+        "height": 48,
+        "left": 294,
+        "right": 346,
+        "top": 82.59375,
+        "visibleHeight": 48,
+        "visibleWidth": 52,
+        "width": 52
+      },
+      "role": "switch",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 195,
+        "y": 206.2109375
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "⟦Ŕéëçøóŕđš ŵïíŧħđŕåäŵåäļ åäñđ đéëļéëŧéëš çøóļļéëçŧéëđ ħéëåäļŧħ đåäŧåä.⟧",
+      "label": "Withdraw health-data consent. Records withdrawal and deletes collected health data.",
+      "partialClip": false,
+      "rect": {
+        "bottom": 258.421875,
+        "height": 104.421875,
+        "left": 44,
+        "right": 346,
+        "top": 154,
+        "visibleHeight": 104.421875,
+        "visibleWidth": 302,
+        "width": 302
+      },
+      "role": "button",
+      "tag": "BUTTON",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 58.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Today tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 13,
+        "right": 104,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 91,
+        "width": 91
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 149.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Progress tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 104,
+        "right": 195,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 91,
+        "width": 91
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 240.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "Shelf tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 195,
+        "right": 286,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 91,
+        "width": 91
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    },
+    {
+      "center": {
+        "x": 331.5,
+        "y": 797
+      },
+      "centerBlocked": false,
+      "hitInside": true,
+      "hitTag": "DIV",
+      "hitText": "",
+      "label": "You tab",
+      "partialClip": false,
+      "rect": {
+        "bottom": 824,
+        "height": 54,
+        "left": 286,
+        "right": 377,
+        "top": 770,
+        "visibleHeight": 54,
+        "visibleWidth": 91,
+        "width": 91
+      },
+      "role": "tab",
+      "tag": "DIV",
+      "tinyTarget": false
+    }
+  ],
+  "horizontalOverflow": 0,
+  "issueCount": 0,
+  "issues": [],
+  "location": "http://localhost:8299/you?section=privacy",
+  "textOverflows": [],
+  "textStart": "⟦ÝŸøóüú⟧ ⟦ÅÄÇÇØÖÜÚÑŦ⟧ ⟦Šïíğñéëđ ïíñ⟧ ⟦Šïíğñ øóüúŧ⟧ ⟦ŠÜÚƁŠÇŔÏÍÞŦÏÍØÖÑ⟧ ⟦Ṁåäñåäğéë šüúɓšçŕïíþŧïíøóñ⟧ ⟦Ƒŕéëéë þļåäñ⟧ > ⟦ÝŸØÖÜÚŔ ŔØÖÜÚŦÏÍÑÉË⟧ ⟦ÝŸøóüúŕ þļåäñ⟧ > ⟦ÉËđïíŧ ŧħéë øóŕđéëŕ⟧ > ⟦Ŕéëŧïíñøóïíđ ŕåäṁþ⟧ > ⟦ṀØÖŔÉË ŔØÖÜÚŦÏÍÑÉË⟧ ⟦Šŧŕéëåäķ & åäđħéëŕéëñçéë⟧ > ⟦Ŵéëéëķļýÿ çħéëçķ-ïíñ⟧ > ⟦Ŕéëçéëñŧ çħåäñğéëš⟧ > ⟦ŠÉËÇÜÚŔÏÍŦÝŸ⟧ ⟦ÅÄþþ ļøóçķ⟧ ⟦Ŕéëǫüúïíŕéë ýÿøóüúŕ þħøóñéë'š üúñļøóçķ ŧøó øóþéëñ ŧħéë åäþþ åäñđ ýÿøóüúŕ þħøóŧøó ŧïíṁéëļïíñéë.⟧ ⟦Þŕøóğŕéëšš þħøóŧøó šŧøóŕåäğéë⟧ ⟦ÉËñçŕýÿþŧéëđ øóñ ŧħïíš đéëṽïíçéë. Çļøóüúđ ɓåäçķüúþ ïíš ñøóŧ åäṽåäïíļåäɓļéë ïíñ ŧħïíš ɓüúïíļđ.⟧ ⟦Đéëṽïíçéë øóñļýÿ⟧ ⟦ÞŔÏÍṼÅÄÇÝŸ & ÇØÖÑŠÉËÑŦ⟧ ⟦Ṁåäŕķéëŧïíñğ éëṁåäïíļš⟧ ⟦ØÖƒƒ ɓýÿ đéëƒåäüúļŧ. ØÖþŧ ïíñ åäñýÿŧïíṁéë.⟧ ⟦Ŵïíŧħđŕåäŵ ħéëåäļŧħ-đåäŧåä çøóñšéëñŧ⟧ ⟦Ŕéëçøóŕđš ŵïíŧħđŕåäŵåäļ åäñđ đéëļéëŧéëš çøóļļéëçŧéëđ ħéëåäļŧħ đåäŧåä.⟧ > ⟦ÞØÖĻÏÍÇÏÍÉËŠ⟧ ⟦Þŕïíṽåäçýÿ þøóļïíçýÿ⟧ ⟦Ŵħåäŧ đåäŧåä ŵéë çøóļļéëçŧ, üúšéë, åäñđ šħåäŕéë.⟧ > ⟦Çøóñšüúṁéëŕ ħéëåäļŧħ þŕïíṽå",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/settings/privacy",
+  "scaledCount": 59,
+  "textScale": 1.2,
+  "url": "http://localhost:8299/settings/privacy",
+  "disallowedLogCount": 0,
+  "disallowedLogs": []
+}

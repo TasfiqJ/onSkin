@@ -9,6 +9,10 @@ const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const isWindows = process.platform === 'win32';
 const today = new Date().toISOString().slice(0, 10);
 const scale = Number(process.env.TEXT_PRESSURE_SCALE ?? 1.2);
+const pseudoLocale = process.env.TEXT_PRESSURE_PSEUDO_LOCALE ?? 'off';
+if (!['off', 'expanded'].includes(pseudoLocale)) {
+  throw new Error('TEXT_PRESSURE_PSEUDO_LOCALE must be "off" or "expanded".');
+}
 const evidenceDir =
   process.env.TEXT_PRESSURE_EVIDENCE_DIR ??
   path.join(
@@ -28,6 +32,11 @@ const viewport = {
 };
 const entitlementLoadingText = 'Checking your access';
 const entitlementWaitMs = positiveNumber(process.env.TEXT_PRESSURE_ENTITLEMENT_WAIT_MS, 35_000);
+const startupLoadingLabels = [
+  'Opening your private data...',
+  'Preparing private storage',
+  'Securing account data...',
+];
 
 const defaultRoutes = [
   '/today',
@@ -181,7 +190,10 @@ async function waitForUrl(url, timeoutMs = 120_000) {
 
   while (Date.now() - startedAt < timeoutMs) {
     try {
-      const response = await fetch(url, { redirect: 'manual' });
+      const response = await fetch(url, {
+        redirect: 'manual',
+        signal: AbortSignal.timeout(5_000),
+      });
       if (response.status < 500) return;
     } catch (error) {
       lastError = error;
@@ -199,7 +211,7 @@ async function readJson(url, timeoutMs = 30_000) {
 
   while (Date.now() - startedAt < timeoutMs) {
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, { signal: AbortSignal.timeout(2_000) });
       if (response.ok) return await response.json();
     } catch (error) {
       lastError = error;
@@ -287,6 +299,7 @@ function startExpoServer() {
       BROWSER: 'none',
       CI: '1',
       EXPO_PUBLIC_E2E_APP_LOCK_ENABLED: 'false',
+      EXPO_PUBLIC_E2E_PSEUDO_LOCALE: pseudoLocale === 'expanded' ? 'expanded' : '',
       EXPO_PUBLIC_E2E_TODAY_ROUTINE: 'pm',
     },
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -316,15 +329,28 @@ function startBrowser(browserPath, userDataDir) {
       '--no-default-browser-check',
       '--disable-background-networking',
       '--disable-extensions',
+      '--disable-gpu',
       '--disable-sync',
+      '--enable-logging=stderr',
       '--hide-scrollbars',
       'about:blank',
     ],
     {
-      stdio: 'ignore',
+      stdio: ['ignore', 'pipe', 'pipe'],
       windowsHide: true,
     },
   );
+}
+
+function captureBrowserLog(child) {
+  const logPath = path.join(evidenceDir, 'browser.log');
+  const logLines = [];
+  const append = (chunk) => {
+    logLines.push(chunk.toString());
+    writeFileSync(logPath, logLines.join(''));
+  };
+  child.stdout.on('data', append);
+  child.stderr.on('data', append);
 }
 
 class CdpClient {
@@ -338,6 +364,14 @@ class CdpClient {
       this.ws.addEventListener('error', reject, { once: true });
     });
     this.ws.addEventListener('message', (event) => this.handleMessage(event));
+    this.ws.addEventListener('close', () => {
+      this.rejectPending(new Error('Chrome DevTools connection closed.'));
+    });
+  }
+
+  rejectPending(error) {
+    for (const { reject } of this.pending.values()) reject(error);
+    this.pending.clear();
   }
 
   handleMessage(event) {
@@ -359,11 +393,27 @@ class CdpClient {
 
   async send(method, params = {}) {
     await this.ready;
+    if (this.ws.readyState !== WebSocket.OPEN) {
+      throw new Error(`Chrome DevTools connection is not open for ${method}.`);
+    }
     const id = this.nextId;
     this.nextId += 1;
 
     return await new Promise((resolve, reject) => {
-      this.pending.set(id, { reject, resolve });
+      const timeout = setTimeout(() => {
+        this.pending.delete(id);
+        reject(new Error(`Chrome DevTools command timed out: ${method}`));
+      }, 30_000);
+      this.pending.set(id, {
+        reject: (error) => {
+          clearTimeout(timeout);
+          reject(error);
+        },
+        resolve: (value) => {
+          clearTimeout(timeout);
+          resolve(value);
+        },
+      });
       this.ws.send(JSON.stringify({ id, method, params }));
     });
   }
@@ -451,6 +501,16 @@ async function waitForEntitlementSettled(client) {
     client,
     `!document.body?.innerText?.includes(${JSON.stringify(entitlementLoadingText)})`,
     entitlementWaitMs,
+  );
+}
+
+async function waitForStartupSettled(client) {
+  await waitForExpression(
+    client,
+    `!Array.from(document.querySelectorAll('[aria-label]')).some((element) => ${JSON.stringify(
+      startupLoadingLabels,
+    )}.includes(element.getAttribute('aria-label')))`,
+    60_000,
   );
 }
 
@@ -570,6 +630,29 @@ const auditExpression = `(() => {
       node.getAttribute('aria-hidden') !== 'true'
     );
   };
+  const visibleBounds = (node, rect) => {
+    const bounds = {
+      bottom: Math.min(rect.bottom, viewport.height),
+      left: Math.max(rect.left, 0),
+      right: Math.min(rect.right, viewport.width),
+      top: Math.max(rect.top, 0),
+    };
+
+    for (let current = node.parentElement; current && current !== body; current = current.parentElement) {
+      const style = getComputedStyle(current);
+      const ancestorRect = current.getBoundingClientRect();
+      if (['auto', 'clip', 'hidden', 'scroll'].includes(style.overflowX)) {
+        bounds.left = Math.max(bounds.left, ancestorRect.left);
+        bounds.right = Math.min(bounds.right, ancestorRect.right);
+      }
+      if (['auto', 'clip', 'hidden', 'scroll'].includes(style.overflowY)) {
+        bounds.top = Math.max(bounds.top, ancestorRect.top);
+        bounds.bottom = Math.min(bounds.bottom, ancestorRect.bottom);
+      }
+    }
+
+    return bounds;
+  };
   const labelOf = (node) =>
     node.getAttribute('aria-label') ||
     node.getAttribute('title') ||
@@ -582,16 +665,20 @@ const auditExpression = `(() => {
     .map((node) => {
       const rect = node.getBoundingClientRect();
       if (!isVisible(node, rect)) return null;
-      const visibleWidth = Math.max(0, Math.min(rect.right, viewport.width) - Math.max(rect.left, 0));
-      const visibleHeight = Math.max(0, Math.min(rect.bottom, viewport.height) - Math.max(rect.top, 0));
+      const bounds = visibleBounds(node, rect);
+      const visibleWidth = Math.max(0, bounds.right - bounds.left);
+      const visibleHeight = Math.max(0, bounds.bottom - bounds.top);
+      if (visibleWidth <= 0 || visibleHeight <= 0) return null;
       const center = {
-        x: Math.max(0, Math.min(viewport.width - 1, rect.left + rect.width / 2)),
-        y: Math.max(0, Math.min(viewport.height - 1, rect.top + rect.height / 2)),
+        x: Math.max(0, Math.min(viewport.width - 1, bounds.left + visibleWidth / 2)),
+        y: Math.max(0, Math.min(viewport.height - 1, bounds.top + visibleHeight / 2)),
       };
       const hit = document.elementFromPoint(center.x, center.y);
       const hitInside = Boolean(hit && (node === hit || node.contains(hit)));
       const role = node.getAttribute('role') || node.tagName.toLowerCase();
       const label = labelOf(node).replace(/\\s+/g, ' ').trim().slice(0, 140);
+      const horizontalClip = visibleWidth + 1 < rect.width;
+      const verticalClip = visibleHeight + 1 < rect.height;
       return {
         center,
         centerBlocked: !hitInside,
@@ -599,7 +686,7 @@ const auditExpression = `(() => {
         hitTag: hit?.tagName ?? null,
         hitText: hit?.innerText?.replace(/\\s+/g, ' ').trim().slice(0, 140) ?? null,
         label,
-        partialClip: rect.top < 0 || rect.bottom > viewport.height || rect.left < 0 || rect.right > viewport.width,
+        partialClip: horizontalClip || verticalClip,
         rect: {
           bottom: rect.bottom,
           height: rect.height,
@@ -612,7 +699,7 @@ const auditExpression = `(() => {
         },
         role,
         tag: node.tagName,
-        tinyTarget: visibleHeight < 44 || visibleWidth < 44,
+        tinyTarget: rect.height < 44 || rect.width < 44,
       };
     })
     .filter(Boolean);
@@ -622,7 +709,10 @@ const auditExpression = `(() => {
     if (control.role === 'tab') continue;
     if (control.tinyTarget) issues.push({ control, type: 'tinyTarget' });
     if (control.centerBlocked) issues.push({ control, type: 'centerBlocked' });
-    if (control.partialClip && Math.min(control.rect.visibleHeight, control.rect.height) < 44) {
+    if (
+      control.partialClip &&
+      Math.min(control.rect.visibleHeight, control.rect.height) < 44
+    ) {
       issues.push({ control, type: 'partialClip' });
     }
   }
@@ -660,6 +750,7 @@ async function auditRoute(client, route) {
   await client.send('Page.navigate', { url });
   await waitForRoute(client, url);
   await waitForLoad(client);
+  await waitForStartupSettled(client);
   await waitForEntitlementSettled(client);
   await delay(350);
   const scaledCount = await evaluate(client, pressureExpression());
@@ -729,6 +820,7 @@ async function run() {
     baseUrl,
     evidenceDir,
     generatedAt: new Date().toISOString(),
+    pseudoLocale,
     routeCount: routes.length,
     scale,
     status: 'pass',
@@ -743,6 +835,7 @@ async function run() {
 
     const browserPath = findBrowserPath();
     browser = startBrowser(browserPath, userDataDir);
+    captureBrowserLog(browser);
     await readJson(`http://127.0.0.1:${debugPort}/json/version`);
     client = await connectToPage();
     await client.send('Emulation.setDeviceMetricsOverride', {
@@ -804,17 +897,19 @@ async function run() {
     writeFileSync(
       path.join(evidenceDir, 'report.md'),
       [
-        '# Text-Pressure Route Audit',
+        '# Text-Pressure And Pseudo-Localization Route Audit',
         '',
         `Generated: ${summary.generatedAt}`,
         `Viewport: ${viewport.width} x ${viewport.height}`,
         `Text pressure scale: ${scale}`,
+        `Pseudo locale: ${pseudoLocale}`,
         `Status: ${summary.status}`,
         `Failed routes: ${failedRoutes.length} / ${routes.length}`,
         '',
-        'This Expo web pass multiplies direct text-node font sizes and line heights after',
-        'route render, then checks visible controls for clipping, blocked hit targets,',
-        'sub-44 px visible targets, horizontal overflow, and unexpected browser logs.',
+        'This Expo web pass optionally expands and accents user-facing copy at the shared',
+        'text boundary, multiplies direct text-node font sizes and line heights after route',
+        'render, then checks visible controls for clipping, blocked hit targets, sub-44 px',
+        'visible targets, horizontal overflow, and unexpected browser logs.',
         '',
         '## Failed Routes',
         '',

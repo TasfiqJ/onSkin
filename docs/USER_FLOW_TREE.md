@@ -183,6 +183,17 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: The Today tab scene uses the night background behind the PM route, while non-Today tabs keep the paper background so there is no paper strip or flash around the night Today surface.
   - Evidence: Phone-width screenshot, route snapshot, and computed background colors.
   - Current local evidence: 2026-07-08 headless Chrome Expo web at 320 x 568 and 390 x 568 verified PM Today uses dark bottom-scene samples around the floating tab bar after the fix, Progress/Shelf/You use paper samples, tab labels and hit targets remain correct, exactly one tab is selected, and horizontal overflow is zero. Evidence is in `test-results/human-e2e/2026-07-08/navigation-tabbar-polish/`.
+- Branch: pseudo-localized long strings on supported phones
+  - Priority: Important
+  - Automate later: Yes
+  - Entry state: Local Expo web with `TEXT_PRESSURE_PSEUDO_LOCALE=expanded`, text scale `1.2`, and placeholder local account/storage state.
+  - Action: Direct-open Today, Progress, Routine Plan, Recommendation Preferences, Privacy, Ask, Shelf Search, and the contextual full-routine upsell at 375 x 667 and 390 x 844.
+  - Expected result: Visible prose is bracketed, accented, and expanded through the shared text boundary; prose input placeholders expand; data-format placeholders and internal enums remain unchanged; the route is past startup loaders; visible controls remain complete, 44 px+, and center-hit-testable; text does not overflow its own box; the page has no horizontal overflow or unexpected browser warning/error.
+  - Invalid/recovery branch: An unsupported pseudo-locale value fails closed to normal copy, and a closed Chrome/CDP connection fails the audit instead of hanging or passing partial artifacts.
+  - Back/refresh branch: Every direct route starts from a fresh navigation and waits for session/private-storage/entitlement startup gates to settle before capture.
+  - Accessibility branch: Phone Ask uses a compact visible title and a single complete suggestion under combined long-copy/text pressure while preserving the full Ask title as its accessibility label; scroll-clipped controls are intersected with their real ancestor viewport before hit-testing.
+  - Evidence: Two eight-route screenshot/JSON matrices plus focused policy/inventory tests.
+  - Current evidence: 2026-07-17 headless Chrome Expo web passed all 16 route/viewport cases at 375 x 667 and 390 x 844 with expanded pseudo-localized copy and 120% text pressure. Both final summaries report zero clipped visible controls, zero undersized controls, zero blocked centers, zero text/horizontal overflow, and zero disallowed browser logs. Evidence is in `test-results/human-e2e/2026-07-16/pseudo-localization-120-375x667-current/`, `test-results/human-e2e/2026-07-16/pseudo-localization-120-390x844-current/`, and `docs/e2e-bug-reports/2026-07-17-pseudo-localization-ask-pressure.md`. Native iOS localization, Dynamic Type, VoiceOver, keyboard, and bidirectional-layout review remain open.
 - Branch: keyboard or text-scale pressure
   - Priority: Important
   - Automate later: Yes

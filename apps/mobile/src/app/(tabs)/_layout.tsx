@@ -7,7 +7,6 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  Text,
   View,
   useWindowDimensions,
   type StyleProp,
@@ -15,6 +14,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { Text } from '@/components/ui';
 import { BehaviouralTriggers } from '@/features/notifications/BehaviouralTriggers';
 import { pendingLifecycleRouteResult } from '@/features/subscription/lifecycle';
 import { currentRoutineType } from '@/features/today/useToday';

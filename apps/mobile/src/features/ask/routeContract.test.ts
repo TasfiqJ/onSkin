@@ -296,16 +296,21 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain("conflict: 'Conflicts'");
     expect(home).toContain("tonight: 'Plan tonight'");
     expect(home).toContain("fit: 'Check product fit'");
-    expect(home).toContain('const { height, width } = useWindowDimensions();');
+    expect(home).toContain('const { fontScale = 1, height, width } = useWindowDimensions();');
     expect(home).toContain('const shortPhone = height < 520');
     expect(home).toContain('const ultraShortPhone = height < 460;');
     expect(home).toContain('const splitShortPhone = height < 410;');
     expect(home).toContain('const supportFloorPhone = width <= 320 && height < 520;');
-    expect(home).toContain("const visibleTitle = compactPhone ? 'Ask' : ASK_COPY.home.title;");
+    expect(home).toContain(
+      "const visibleTitle = compactPhone || width <= 430 ? 'Ask' : ASK_COPY.home.title;",
+    );
     expect(home).toContain('accessibilityLabel={ASK_COPY.home.title}');
     expect(home).toContain('{visibleTitle}');
     expect(home).toContain('const emptyPromptOrder =');
-    expect(home).toContain('ultraShortPhone || splitShortPhone');
+    expect(home).toContain('const longPromptPressure =');
+    expect(home).toContain('Object.values(presentedPromptLabels)');
+    expect(home).toContain('fontScale >= 1.2');
+    expect(home).toContain('ultraShortPhone || splitShortPhone || longPromptPressure');
     expect(home).toContain('? SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER');
     expect(home).toContain('? SHORT_PHONE_EMPTY_PROMPT_ORDER');
     expect(home).toContain(
@@ -329,7 +334,7 @@ describe('Ask route launch contracts', () => {
     expect(home).toContain(
       'const promptLabels = supportFloorPhone ? SUPPORT_FLOOR_PROMPT_LABELS : ASK_COPY.home.prompts;',
     );
-    expect(home).toContain('label={promptLabels[promptKey]}');
+    expect(home).toContain('label={presentedPromptLabels[promptKey]}');
     expect(home).toContain('supportFloor={supportFloorPhone}');
     expect(home).toContain('askSuggested(promptKey)');
     expect(home).not.toContain('py-3.5');

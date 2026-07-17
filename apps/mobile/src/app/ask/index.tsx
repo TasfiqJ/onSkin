@@ -39,6 +39,7 @@ import {
   PRIVATE_GUIDANCE_AVAILABILITY_COPY,
   ShelfDataUnavailableNotice,
 } from '@/features/shelf/ShelfDataAvailabilityGate';
+import { pseudoLocalizeString } from '@/lib/accessibility/pseudoLocalization';
 import { track } from '@/lib/analytics/track';
 import { APP_HOME_ROUTE, backOrReplace } from '@/lib/navigation/safeBack';
 import { haptics } from '@/theme/haptics';
@@ -488,7 +489,7 @@ function AskComposer({
           value={draft}
           onChangeText={updateDraft}
           onSubmitEditing={submitDraft}
-          placeholder={ASK_COPY.home.inputPlaceholder}
+          placeholder={pseudoLocalizeString(ASK_COPY.home.inputPlaceholder)}
           placeholderTextColor={colors.mutedLight}
           accessibilityLabel={ASK_COPY.home.inputA11y}
           returnKeyType="send"
@@ -516,7 +517,7 @@ function AskComposer({
 }
 
 export default function AskScreen() {
-  const { height, width } = useWindowDimensions();
+  const { fontScale = 1, height, width } = useWindowDimensions();
   const { ask, askSuggested, isError, isFetching, isLoading, isSuccess, hasShelf, retry } =
     useAskViewModel();
   const [history, setHistory] = useState<AskHistoryState>({
@@ -772,14 +773,23 @@ export default function AskScreen() {
   const ultraShortPhone = height < 460;
   const splitShortPhone = height < 410;
   const supportFloorPhone = width <= 320 && height < 520;
-  const visibleTitle = compactPhone ? 'Ask' : ASK_COPY.home.title;
+  const visibleTitle = compactPhone || width <= 430 ? 'Ask' : ASK_COPY.home.title;
+  const promptLabels = supportFloorPhone ? SUPPORT_FLOOR_PROMPT_LABELS : ASK_COPY.home.prompts;
+  const presentedPromptLabels: Record<SuggestedPromptKey, string> = {
+    conflict: pseudoLocalizeString(promptLabels.conflict),
+    fit: pseudoLocalizeString(promptLabels.fit),
+    tonight: pseudoLocalizeString(promptLabels.tonight),
+  };
+  const longPromptPressure =
+    width <= 390 &&
+    height < 700 &&
+    (fontScale >= 1.2 || Object.values(presentedPromptLabels).some((label) => label.length > 40));
   const emptyPromptOrder =
-    ultraShortPhone || splitShortPhone
+    ultraShortPhone || splitShortPhone || longPromptPressure
       ? SPLIT_SHORT_PHONE_EMPTY_PROMPT_ORDER
       : shortPhone
         ? SHORT_PHONE_EMPTY_PROMPT_ORDER
         : EMPTY_PROMPT_ORDER;
-  const promptLabels = supportFloorPhone ? SUPPORT_FLOOR_PROMPT_LABELS : ASK_COPY.home.prompts;
   const renderMessage = useCallback<ListRenderItem<Msg>>(
     ({ item }) => <AskMessageRow message={item} compact={shortPhone} onReport={reportAnswer} />,
     [reportAnswer, shortPhone],
@@ -819,7 +829,7 @@ export default function AskScreen() {
         </View>
         <Text
           variant="title"
-          className="text-[24px]"
+          className="flex-1 text-[24px]"
           accessibilityRole="header"
           accessibilityLabel={ASK_COPY.home.title}
           numberOfLines={1}
@@ -895,7 +905,7 @@ export default function AskScreen() {
                 {emptyPromptOrder.map((promptKey) => (
                   <SuggestedPrompt
                     key={promptKey}
-                    label={promptLabels[promptKey]}
+                    label={presentedPromptLabels[promptKey]}
                     supportFloor={supportFloorPhone}
                     onPress={() =>
                       pushTurn(ASK_COPY.home.prompts[promptKey], askSuggested(promptKey), {

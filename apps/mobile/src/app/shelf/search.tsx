@@ -40,6 +40,7 @@ import {
 import { trackProductAddStarted } from '@/features/shelf/analytics';
 import { PRODUCT_CATEGORIES, type ProductCategory } from '@/features/shelf/categories';
 import { useIntake } from '@/features/shelf/IntakeContext';
+import { pseudoLocalizeString } from '@/lib/accessibility/pseudoLocalization';
 import { track } from '@/lib/analytics/track';
 import { BRAND } from '@/lib/brand';
 import { cn } from '@/lib/cn';
@@ -186,7 +187,7 @@ const CatalogSearchComposer = memo(function CatalogSearchComposer({
         onChange={handleNativeChange}
         onChangeText={updateDraft}
         onSubmitEditing={submitDraft}
-        placeholder="Brand or product name"
+        placeholder={pseudoLocalizeString('Brand or product name')}
         placeholderTextColor={colors.mutedLight}
         className="h-[50px] min-w-0 flex-1 rounded-[14px] border border-hairline bg-paper-raised px-4 font-sans-medium text-[15px] text-ink"
         returnKeyType="search"
