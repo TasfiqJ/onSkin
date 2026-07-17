@@ -1,10 +1,11 @@
 # Optimization Decision Index
 
-Date: 2026-07-12 (America/Toronto)
+Date: 2026-07-17 (America/Toronto)
 Branch: `optimization`
-Baseline/current SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
+Baseline SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
+Current checkpoint parent SHA: `3d01a10d173aba21d9997865b2f0f522a965a863`
 
-This file records optimization-specific decision needs and links to authoritative decision updates. It does not approve product, privacy, architecture, device-support, release, or operational changes by itself. No decision below is approved at this baseline.
+This file records optimization-specific decision needs and links to authoritative decision updates. It does not approve product, privacy, architecture, device-support, release, or operational changes by itself. Current statuses derive only from the authoritative sources named in each row.
 
 Consolidated decision input: [OPEN_DECISION_PACKET.md](./OPEN_DECISION_PACKET.md).
 
@@ -18,7 +19,7 @@ Consolidated decision input: [OPEN_DECISION_PACKET.md](./OPEN_DECISION_PACKET.md
 | OPT-DEC-005 | Production performance telemetry under current privacy constraints.                                                | `not-started` | Privacy/security decision and allowlisted content-free schema.                                                                              | Local monotonic markers and native offline profiling.                              |
 | OPT-DEC-006 | EAS Update adoption versus store-only releases and correction of OTA claims.                                       | `not-started` | Product/release decision, runtime-version and rollback policy if adopted.                                                                   | Signed store-build and migration compatibility planning.                           |
 | OPT-DEC-007 | Full dark mode versus explicit light-only launch.                                                                  | `not-started` | Product/design/accessibility decision and route/system-bar evidence.                                                                        | Fix theme-independent accessibility and semantic-state behavior.                   |
-| OPT-DEC-008 | Android Baseline Profile/Macrobenchmark ownership and CI device strategy.                                          | `not-started` | Platform ownership and maintainability decision after the device-policy conflict is resolved.                                               | Manual/release profiling plans and platform-neutral benchmarks.                    |
+| OPT-DEC-008 | Android Baseline Profile/Macrobenchmark ownership and CI device strategy for a future Android release.                     | `deferred`    | `docs/DECISIONS.md`, `docs/DEVICE_SUPPORT_POLICY.md`, and `docs/hugeToDo/launch-contract.json` exclude Android from this release; reactivate only with an authoritative Android release/ownership decision. | Keep shared Android configuration healthy and continue platform-neutral measurement; do not add a generated native harness without an owner/device strategy. |
 | OPT-DEC-009 | Photo dimensions, format, quality, thumbnail tiers, and visual acceptance set.                                     | `not-started` | Product/privacy/quality decision supported by representative image evidence.                                                                | Build content-free fixture and measurement harnesses.                              |
 | OPT-DEC-010 | Absolute binary, memory, startup, interaction, and backend latency gates.                                          | `not-started` | Two clean release baselines, threshold owner, and independent signoff owner.                                                                | Record suggested targets as proposals only and collect non-acceptance diagnostics. |
 

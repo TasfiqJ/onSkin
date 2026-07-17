@@ -1,10 +1,10 @@
 # Maximum Optimization Implementation Status
 
 Audit date: 2026-07-12 (America/Toronto; execution time not recorded)
-Last updated: 2026-07-16 (America/Toronto; interface state token checkpoint)
+Last updated: 2026-07-17 (America/Toronto; Android Baseline Profile scope decision)
 Branch: `optimization`
 Baseline SHA: `fc5d512f7e0ccbab8d3b5a2beb4268dd8a24595f`
-Current checkpoint parent SHA: `a4fb0d41fa3d71de94df27ebb836b1c2fc6e27c1`
+Current checkpoint parent SHA: `3d01a10d173aba21d9997865b2f0f522a965a863`
 Baseline: [BASELINE.md](./BASELINE.md)
 Decision index: [DECISIONS.md](./DECISIONS.md)
 Evidence rules: [evidence/README.md](./evidence/README.md)
@@ -23,7 +23,12 @@ Allowed statuses are `not-started`, `investigating`, `implemented`, `verified`, 
 
 Root typecheck, lint, and tests passed. Mobile typecheck, lint, and tests passed with 197 files and 2,112 tests. Expo dependency validation passed. Expo Doctor passed 21/21 with a Sentry organization/project environment warning. The performance-readiness audit passed. The source-packet audit failed because generated JSON/Markdown artifacts are stale. The device-support audit failed because generated artifacts are stale and source phrase mismatches remain. The launch-contract verifier passed an iOS-only, all-features contract covering 20 features and 14 surfaces, with Android marked not applicable.
 
-That newer launch contract conflicts with older dual-platform product, architecture, device-policy, and optimization documents. Until authoritative sources are reconciled, this ledger retains both iOS and Android optimization work and does not convert Android rows to `not-applicable`.
+The accepted launch decision and device policy make Android release evidence not
+applicable to the current iOS-only release. Platform-neutral correctness and
+healthy shared Android configuration remain in scope. Android-native release,
+device, and benchmark rows may be `not-applicable` only when the task is
+explicitly platform-conditional and records a source-backed reactivation
+trigger; broader dual-platform source cleanup remains tracked by `OPT-DEC-000`.
 
 Durable local evidence now includes deterministic iOS/Android dirty-worktree export reports, a content-free verification summary, and selectively reviewed E2E artifacts force-added from the otherwise ignored `test-results` tree. Signed builds, physical-device traces, approved thresholds, owners, and approvals have not been invented.
 
@@ -146,7 +151,7 @@ Durable local evidence now includes deterministic iOS/Android dirty-worktree exp
 | OPT-204 | implemented | Shared Reduce Motion hook/policy; onboarding pulse and reveal; navigation, modal, scroll, and time-lapse owners | Source inventory/policy/route tests; `evidence/2026-07-16_reduce-motion-coverage-checkpoint.md`; `test-results/human-e2e/2026-07-16/reduce-motion-current/` | Focused 8 files / 123 tests PASS; full root 319 files / 3,936 tests PASS; root typecheck and zero-warning lint PASS; actual reduced-motion Expo-web interaction pass at 1281 x 720 PASS | Unknown preference fails safe; autoplay, continuous pulse, animated scroll, slide/fade presentation, and the artificial onboarding wait are suppressed. Release verification remains open for a supported-iOS device-setting pass. |
 | OPT-205 | implemented | `stateTokens.ts`; shared `StateNotice` / `StateLoading`; startup, private-storage, Shelf, photo/lock, scheduler, completion-history, notification, commerce, subscription, onboarding, and You adopters | Token/inventory/route/compatibility suites; `evidence/2026-07-16_interface-state-token-checkpoint.md`; `test-results/human-e2e/2026-07-16/interface-state-tokens-current/` | Focused 12 files / 274 tests and compatibility 5 files / 40 tests PASS; full root 321 files / 3,944 tests PASS; root typecheck and zero-warning lint PASS; actual Expo-web rendered-state pass at 1281 x 720 PASS | Eight visibly named paper/night meanings, progress/alert semantics, and recovery ownership are centralized; catalog loading/empty/offline are distinct. Plan-required supported-iOS visual regression, VoiceOver, Dynamic Type, and night-surface review remain open. |
 | OPT-206 | implemented | Shared `Text` pseudo-localization boundary; prose-placeholder adapters; phone Ask long-copy density; hardened text-pressure route audit | Policy/inventory/Ask route suites; `evidence/2026-07-17_pseudo-localization-checkpoint.md`; two supported-phone screenshot matrices | Focused 3 files / 26 tests and full root 323 files / 3,951 tests PASS; root typecheck and zero-warning lint PASS; actual Expo-web 375 x 667 and 390 x 844 matrices, 8 routes each, expanded copy at 120% text pressure PASS | Exact development-only fixture expands/accent-wraps visible prose without changing internal values or data-format placeholders. Native iOS localized-copy, Dynamic Type, VoiceOver, keyboard, and bidi verification remain open. |
-| OPT-207 | not-started | —                                     | —                   | No macrobenchmark comparison         | OPT-DEC-008 and Android platform-scope reconciliation are `not-started`. Add only with maintainable ownership/CI strategy. |
+| OPT-207 | not-applicable | No committed Android native project or Android release/benchmark profile | `evidence/2026-07-17_android-baseline-profile-scope-decision.md`; accepted launch decision; device policy; launch contract; native-project ignore rules | Source audit confirms iOS-only release, absent generated Android project, and no benchmark owner/device CI; macrobenchmark comparison intentionally not fabricated | The plan's maintainability precondition is false for this release. Reactivate before Android release only after platform ownership, a committed or reproducibly patched native harness, signed benchmark variants, and a CI/physical-device strategy are approved. |
 | OPT-208 | not-started | —                                     | —                   | No security review/failure drill     | Define production gating and content-free schema before adding a local diagnostics surface.                                |
 | OPT-209 | not-started | —                                     | —                   | No actual artifact diff              | Investigate only supported modular configuration for Sentry, RevenueCat, Router, and measured contributors.                |
 | OPT-210 | not-started | —                                     | —                   | No signed artifact/visual comparison | Inventory icon/assets and optimize only with fidelity and signed-size evidence.                                            |
