@@ -89,6 +89,27 @@ This decision is based on product fit and current repo momentum, not loyalty to 
   evidence remain open.
 - Status: locally verified source; production rollout gated.
 
+### A-008: Reviewed, Transactional Catalog Promotion
+
+- Decision: source approval and record approval are separate gates. Approved
+  offline OBF/CosIng transforms enter sealed staging first; exact hashes,
+  reviewer dispositions, dedupe conflicts, immutable lineage, and one atomic
+  promotion are recorded before any projection row exists. Runtime API roles
+  cannot approve, promote, roll back, or directly mutate the global catalog.
+  Rollback withdraws only the affected batch and blocks its orphaned
+  projection rows instead of deleting catalog identities referenced by a
+  user's shelf, correction history, or lookup history.
+- Criteria: fixture exclusion, complete production-row traceability,
+  response-loss-safe idempotency, deterministic conflict handling,
+  transaction isolation, and fail-closed source withdrawal.
+- Risk: the deliberately conservative insert-only path sends cross-source or
+  natural-key collisions to review rather than merging them automatically.
+  Dedicated operator roles and UI remain CAT-08 work; until then,
+  approval/promotion/rollback stay migration-owner-only. Real source approvals,
+  hosted concurrency/rollback evidence, and the curated beta catalog remain
+  launch gates.
+- Status: implementation candidate; production rollout gated.
+
 ### A-005: One Fail-Closed Pregnancy-Safety Profile Contract
 
 - Decision: the encrypted local skin profile is the V1 authority for pregnancy/breastfeeding status, and it can be read or changed only with a granted consent record whose version and SHA-256 text hash match the current health-data copy. Malformed or unreadable local profile/consent records are preserved and fail closed; they never trigger a server fallback. When no local profile exists, the newest server profile may supply non-safety axes/goals, but its pregnancy status is always treated as unknown because a local V1 edit may be newer. Shelf, Plan, scheduler, Today, recommendations, and conflict explanations consume the shared `ProfileBits` reader. Only a successfully read explicit local `none` clears caution; affirmative, prefer-not, unknown, missing, and unavailable states remain cautious without an inferred pregnancy claim. Exclusions are derived from the launch-gated docs/02 safety rules, not a parallel table: production accepts only rules carrying recorded review metadata, while development/staging can exercise starter rules for review. Eligible reviewed rules remove retinoids and hydroquinone and remove BHA unless every threshold-bearing active percentage is unambiguously tag-associated and confirmed low, before sequence, cadence, cycle, ramp, replacement recommendations, or Today. If the separate cadence review gate is closed, all treatment/exfoliant placement is withheld instead of becoming an unassigned daily step. Writes persist locally first, disable competing selection input while pending, and invalidate every dependent query.
@@ -113,6 +134,7 @@ Supabase
   RLS
   Edge Functions
   catalog/rules/routine data
+  sealed catalog staging, reviews, revisions, promotion, and rollback evidence
   entitlements (RevenueCat projection)
   reverse_trial_grants (independent no-card grant)
   account publication leases and deletion barriers
@@ -161,6 +183,8 @@ Core tables:
 - `subscription_events`
 - `account_publication_leases`
 - `catalog_reports`
+- `catalog_import_batches`
+- private catalog staging, review, revision, effect, and promotion ledgers
 - `apple_auth_lifecycles`
 - `apple_auth_capture_operations`
 - `apple_auth_server_events`

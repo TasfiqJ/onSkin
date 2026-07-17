@@ -5,7 +5,7 @@
 |   1 | Rebrand and identity migration          | Required   | Medium     | founder/counsel                 | launch-blocked                    | TBD        |
 |   2 | Onboarding, age gate, consent           | Required   | Medium     | legal/privacy copy              | implemented / needs final review  | TBD        |
 |   3 | Shelf intake: manual/search/barcode/OCR | Required   | High       | catalog, camera, local store    | needs device/catalog/OCR QA       | TBD        |
-|   4 | Product catalog import and quality      | Required   | High       | OBF/CosIng/source review        | stubbed / launch-blocked          | TBD        |
+|   4 | Product catalog import and quality      | Required   | High       | OBF/CosIng/source review        | source candidate / launch-blocked | TBD        |
 |   5 | Reviewed conflict engine                | Required   | High       | clinical/cosmetic review        | launch-blocked                    | TBD        |
 |   6 | Routine builder                         | Required   | High       | shelf, profile, rules           | implemented / needs review        | TBD        |
 |   7 | Today check-off and adherence           | Required   | Medium     | routine plan, local store       | implemented                       | TBD        |

@@ -64,6 +64,10 @@ Required for:
 - Apple capture -> encrypted lifecycle -> daily validation -> access fence;
   native/server-event invalidation -> session denial -> durable deletion
 - catalog lookup/search/report
+- catalog approved-transform -> sealed staging -> complete row review ->
+  transactional promotion -> serving verification -> non-destructive rollback,
+  including exact replay, changed replay, duplicate keys, partial chunks,
+  source withdrawal, and retained shelf/correction references
 
 ## 2026-07-15 Source Checkpoint
 
@@ -172,6 +176,14 @@ Run or maintain:
 
 - RLS smoke/adversarial tests.
 - Two-reset full migration replay, pgTAP, database lint, and empty shadow diff.
+- Catalog lifecycle ACL and lineage tests: fixture/candidate rejection,
+  zero-warning QA binding, exact clean-HEAD authority-file inventory,
+  SQL/JavaScript canonical normalized-record parity, per-field receipt-tamper
+  rejection, contiguous stage digests, immutable reviews and revisions,
+  advisory-lock ordering, all-or-nothing promotion, direct service-role DML
+  denial, positive ingredient/source read gates, and non-destructive batch
+  rollback. Hosted evidence must add two independent sessions and retry
+  complete transactions on serialization failure.
 - Sealed Apple table/function ACL tests; active/non-Apple/blocked/stale-session
   RLS and Storage tests; direct authenticated RPC fence tests; and terminal
   Apple-event-to-deletion assertions.
