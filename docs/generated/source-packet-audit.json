@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T07:45:45.445Z",
+  "generatedAt": "2026-07-17T11:00:35.594Z",
   "status": "pass",
   "strict": true,
   "purpose": "Audit the original 04_repo_docs strategy packet against the active docs/ source-of-truth tree.",
@@ -37,8 +37,8 @@
     },
     {
       "path": "04_repo_docs/docs/ARCHITECTURE.md",
-      "bytes": 24626,
-      "sha256": "0191c37e835f0119d185ef7a6635cde8f564d08fa49a1d6345f4161d0ef729c8"
+      "bytes": 26089,
+      "sha256": "f9baaa6ddcd442035b3d8b9dc5c4f1284eb8957f6d34af8dd20d908613cf9a6f"
     },
     {
       "path": "04_repo_docs/docs/CODEX_IMPLEMENTATION_PROMPT.md",
@@ -52,13 +52,13 @@
     },
     {
       "path": "04_repo_docs/docs/DECISIONS.md",
-      "bytes": 60502,
-      "sha256": "0565092540614a51cdbd83b36a980578e09e36c3dbb3f329e5ed99e9b5a158c2"
+      "bytes": 62106,
+      "sha256": "75d8fd154e1404e7ef222bd42b3cadf6b92cc871a88b2d3dcc7183adf6009a7b"
     },
     {
       "path": "04_repo_docs/docs/FEATURE_INDEX.md",
       "bytes": 4097,
-      "sha256": "df76f6afa3ceb8379c0b498daa50c41e5e6545b2187f320d3c2738a05f17a55f"
+      "sha256": "80272c51b6c1faa5f590c6bf6439612c376d85e4143db5357982da475264d10d"
     },
     {
       "path": "04_repo_docs/docs/MASTER_PLAN.md",
@@ -82,8 +82,8 @@
     },
     {
       "path": "04_repo_docs/docs/TESTING_STRATEGY.md",
-      "bytes": 15308,
-      "sha256": "1b6644a70cb6fe6e87d669e76ef36cf6800ed11fddd3713fcbf2a9fe5aa18647"
+      "bytes": 16161,
+      "sha256": "8cbe5c00065308a76a6316b4cb481ab79cdd059e46c4de5f18cfe51590b7cf13"
     }
   ],
   "docs": [
@@ -92,10 +92,10 @@
       "title": "Architecture",
       "sourcePath": "04_repo_docs/docs/ARCHITECTURE.md",
       "activePath": "docs/ARCHITECTURE.md",
-      "sourceBytes": 24626,
-      "activeBytes": 24626,
-      "sourceSha256": "0191c37e835f0119d185ef7a6635cde8f564d08fa49a1d6345f4161d0ef729c8",
-      "activeSha256": "0191c37e835f0119d185ef7a6635cde8f564d08fa49a1d6345f4161d0ef729c8",
+      "sourceBytes": 26089,
+      "activeBytes": 26089,
+      "sourceSha256": "f9baaa6ddcd442035b3d8b9dc5c4f1284eb8957f6d34af8dd20d908613cf9a6f",
+      "activeSha256": "f9baaa6ddcd442035b3d8b9dc5c4f1284eb8957f6d34af8dd20d908613cf9a6f",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -131,10 +131,10 @@
       "title": "Decisions",
       "sourcePath": "04_repo_docs/docs/DECISIONS.md",
       "activePath": "docs/DECISIONS.md",
-      "sourceBytes": 60502,
-      "activeBytes": 60502,
-      "sourceSha256": "0565092540614a51cdbd83b36a980578e09e36c3dbb3f329e5ed99e9b5a158c2",
-      "activeSha256": "0565092540614a51cdbd83b36a980578e09e36c3dbb3f329e5ed99e9b5a158c2",
+      "sourceBytes": 62106,
+      "activeBytes": 62106,
+      "sourceSha256": "75d8fd154e1404e7ef222bd42b3cadf6b92cc871a88b2d3dcc7183adf6009a7b",
+      "activeSha256": "75d8fd154e1404e7ef222bd42b3cadf6b92cc871a88b2d3dcc7183adf6009a7b",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -146,8 +146,8 @@
       "activePath": "docs/FEATURE_INDEX.md",
       "sourceBytes": 4097,
       "activeBytes": 4097,
-      "sourceSha256": "df76f6afa3ceb8379c0b498daa50c41e5e6545b2187f320d3c2738a05f17a55f",
-      "activeSha256": "df76f6afa3ceb8379c0b498daa50c41e5e6545b2187f320d3c2738a05f17a55f",
+      "sourceSha256": "80272c51b6c1faa5f590c6bf6439612c376d85e4143db5357982da475264d10d",
+      "activeSha256": "80272c51b6c1faa5f590c6bf6439612c376d85e4143db5357982da475264d10d",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true
@@ -209,10 +209,10 @@
       "title": "Testing Strategy",
       "sourcePath": "04_repo_docs/docs/TESTING_STRATEGY.md",
       "activePath": "docs/TESTING_STRATEGY.md",
-      "sourceBytes": 15308,
-      "activeBytes": 15308,
-      "sourceSha256": "1b6644a70cb6fe6e87d669e76ef36cf6800ed11fddd3713fcbf2a9fe5aa18647",
-      "activeSha256": "1b6644a70cb6fe6e87d669e76ef36cf6800ed11fddd3713fcbf2a9fe5aa18647",
+      "sourceBytes": 16161,
+      "activeBytes": 16161,
+      "sourceSha256": "8cbe5c00065308a76a6316b4cb481ab79cdd059e46c4de5f18cfe51590b7cf13",
+      "activeSha256": "8cbe5c00065308a76a6316b4cb481ab79cdd059e46c4de5f18cfe51590b7cf13",
       "identical": true,
       "mentionedInRootAgents": true,
       "mentionedInClaude": true

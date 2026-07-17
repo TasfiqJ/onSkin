@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-17T07:44:46.596Z",
+  "generatedAt": "2026-07-17T10:59:44.910Z",
   "purpose": "Machine-readable Phase 3 reviewer worklist for legal, clinical, cosmetic chemistry, privacy/security, and IP/FTO launch gates.",
   "strict": false,
-  "gitSha": "6241c23a30673d7ee9a0504a52d069ba4ea04d8d",
+  "gitSha": "f01fe110b3a225de70bf4ff7c585e2d772a38ddb",
   "gitStatus": "",
   "reviewLogs": [
     {
@@ -442,8 +442,8 @@
         {
           "path": "docs/phase-4/odbl-compliance-memo.md",
           "exists": true,
-          "bytes": 4938,
-          "sha256": "b8ed9a0b3216590e15d50b7ee7a0326b4b22d206f92fec0361bc2602b04280c1"
+          "bytes": 5099,
+          "sha256": "ed14fda2e129ee22293ab5d28433626971c0ba8998034547e5f15dc23746c191"
         },
         {
           "path": "apps/mobile/src/features/commerce/attribution.test.ts",
@@ -567,7 +567,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "f07f4cd138d3d7a00d87794a78d23e5bcaf6a34aaec0c8b42380c66ea6d9a361",
+      "reviewSnapshotSha256": "a39977e52b2bfe89268e1bf9ea3a4b346dbcec2390f54c80473317ef66a80d8c",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -2428,8 +2428,8 @@
         {
           "path": "scripts/phase9/data-rights-smoke.mjs",
           "exists": true,
-          "bytes": 63915,
-          "sha256": "4d90550cdc4de906bfe9cdb22d73d3cf92880efd84e871f448a390e42c92474d"
+          "bytes": 64113,
+          "sha256": "f2349d336fb4e3967f99703b57cd52013ea2b9b68f8dbeb30a596a5ab174385f"
         },
         {
           "path": "supabase/functions/_shared/storagePath.ts",
@@ -2445,7 +2445,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "f902736ebf6cd7fc4d3fe64302c17013b9fdef98cef5fa9d6770cfd9a502e894",
+      "reviewSnapshotSha256": "30321d89f2d1fee569dc173e2cafa92cd5dc9852e57f7f63196b5aedf9b6d04e",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },
@@ -3107,14 +3107,14 @@
         {
           "path": "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
           "exists": true,
-          "bytes": 10516,
-          "sha256": "dc69c90116e1db72810201c435677990ecc9a716da1786663efd35de6aec90c0"
+          "bytes": 10698,
+          "sha256": "e9214896b57d59414865dd221ae14f8ca811a47190d1b1ab247781f389c424bf"
         },
         {
           "path": "docs/phase-4/odbl-compliance-memo.md",
           "exists": true,
-          "bytes": 4938,
-          "sha256": "b8ed9a0b3216590e15d50b7ee7a0326b4b22d206f92fec0361bc2602b04280c1"
+          "bytes": 5099,
+          "sha256": "ed14fda2e129ee22293ab5d28433626971c0ba8998034547e5f15dc23746c191"
         },
         {
           "path": "apps/mobile/src/features/catalog/client.test.ts",
@@ -3184,7 +3184,7 @@
         }
       ],
       "requiredEvidence": "Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.",
-      "reviewSnapshotSha256": "044cc4ca1b8657a3febfd6c1e54d74550daea9d3f2b4fe236c81bf53ccfdd1f9",
+      "reviewSnapshotSha256": "3a92e49b047ccea289eecc649bda2f297be4142b8a766dfee8415ae06e8e9d2f",
       "signoff": null,
       "signoffStatus": "not-applicable"
     },

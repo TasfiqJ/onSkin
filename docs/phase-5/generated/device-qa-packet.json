@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T07:45:10.049Z",
+  "generatedAt": "2026-07-17T10:59:46.494Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,7 +73,7 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "6241c23a30673d7ee9a0504a52d069ba4ea04d8d",
+  "gitSha": "f01fe110b3a225de70bf4ff7c585e2d772a38ddb",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -278,8 +278,8 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 32272,
-      "sha256": "1355fd9c03faea3cb3742522e15221a2d05a67f3aaff3113ef1b7dcbdc3996f7"
+      "bytes": 32606,
+      "sha256": "32d39d3ba7389bc0d968090df49590ddae46dd632cf0ef7cd7b840b581640211"
     },
     {
       "path": "package-lock.json",
@@ -1190,32 +1190,32 @@
     {
       "path": "scripts/phase2/supabase-rls-smoke.mjs",
       "exists": true,
-      "bytes": 16069,
-      "sha256": "2d9020d2905f89e8826cb529a8c593506b2bb8f476498a67a2a55d0211483cdf"
+      "bytes": 15730,
+      "sha256": "92496af3ef973c7b596da164c5950e8cc17c829e68e00530614a8730d0ae88d4"
     },
     {
       "path": "scripts/phase9/lib.mjs",
       "exists": true,
       "bytes": 24601,
-      "sha256": "62cd70bb40e6792b8626922a38bdba9fa1e20a7539ddbbe1de43644d6ce18411"
+      "sha256": "76b51c49b63d383bd8ab639536233d5ed52e088c71f8c4911944b2c06852eaf8"
     },
     {
       "path": "scripts/phase9/live-supabase-adversarial.mjs",
       "exists": true,
-      "bytes": 89812,
-      "sha256": "393cec0ce902a62312d7468c378c95c20651079eea522679428f6d47cbd787b2"
+      "bytes": 88954,
+      "sha256": "6082167b051ca0d5d72758de4e55098d2e371b0102a619ddd2141bdfb5f1e861"
     },
     {
       "path": "scripts/phase9/rls-adversarial-smoke.mjs",
       "exists": true,
-      "bytes": 11352,
-      "sha256": "6f9b66ef4c03e915d68e7566308dead939144a88824c9beb970d11c641c9b2f0"
+      "bytes": 11441,
+      "sha256": "d65370be1fb57a7a10e34c95c57349aaaf6b98fcbf798fb714dc9a6ef36190a5"
     },
     {
       "path": "scripts/phase9/rls-adversarial.mjs",
       "exists": true,
-      "bytes": 21399,
-      "sha256": "5bbce51da46c5a98e0e7bffeacc796e8fdf41633c2398ca1a75d6d256d537ed9"
+      "bytes": 21339,
+      "sha256": "548c568ade627640239cf8f1ac2de7dc9bda574b72036247693799680241704b"
     },
     {
       "path": "docs/DEVICE_SUPPORT_POLICY.md",
@@ -1251,13 +1251,13 @@
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 48121,
-      "sha256": "dd3df0d37d27548c746e21d970375c671489f3f137d28ba2b741d82934115aa4"
+      "sha256": "80b24c29816321fef57ee95e00c0e78030734a77a35d9a79bbe2146405d5be7b"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 19687,
-      "sha256": "1dc13b093b6e57436a3d8af16330bf5ddc3f76948cf535033834f559879ca6f3"
+      "sha256": "71e49436132ed06985c74dbd765cbfe5363ee308d8004810938144b633e06dfb"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T07:44:55.294Z",
+  "generatedAt": "2026-07-17T10:59:45.832Z",
   "launchContract": {
     "schemaVersion": 1,
     "programId": "ios-all-features-2026",
@@ -73,7 +73,7 @@
     ]
   },
   "inputPath": "docs/phase-4/generated/obf-fixture-import.json",
-  "gitSha": "6241c23a30673d7ee9a0504a52d069ba4ea04d8d",
+  "gitSha": "f01fe110b3a225de70bf4ff7c585e2d772a38ddb",
   "buildSourceGitSha": null,
   "gitStatus": "",
   "source": "open_beauty_facts",
@@ -104,10 +104,16 @@
   "recomputedTransformSha256": "0515fa4afac9f50fa2840c84a3162fa4125820fe33359fdce54572984b427f48",
   "sourceHashes": [
     {
+      "path": ".github/workflows/quality.yml",
+      "exists": true,
+      "bytes": 8913,
+      "sha256": "6be83291bcedd89aa9aea732e0254adf6180c13291a2838b097012f02497eaf4"
+    },
+    {
       "path": "package.json",
       "exists": true,
-      "bytes": 32272,
-      "sha256": "1355fd9c03faea3cb3742522e15221a2d05a67f3aaff3113ef1b7dcbdc3996f7"
+      "bytes": 32606,
+      "sha256": "32d39d3ba7389bc0d968090df49590ddae46dd632cf0ef7cd7b840b581640211"
     },
     {
       "path": "package-lock.json",
@@ -160,14 +166,14 @@
     {
       "path": "scripts/phase4/catalog-qa-report.mjs",
       "exists": true,
-      "bytes": 27681,
-      "sha256": "a029d3d586a64f9feb1edba9d953817b294cbc0ea7e1192b446785b45bac264b"
+      "bytes": 26987,
+      "sha256": "44f66cf82c7676af4e89355726c396565bbc476271218c7c2e9b6e8954f24977"
     },
     {
       "path": "scripts/phase4/build-source-worklist.mjs",
       "exists": true,
-      "bytes": 27155,
-      "sha256": "156fdd20c50e541b65ce4d0901cc7cad5b9d41afd68b8ca4b215657889d7d46c"
+      "bytes": 29178,
+      "sha256": "d2c52e971c3708050412b1b4eb5edeb9fa43c10383cc925cb6434baf8ab6f45f"
     },
     {
       "path": "scripts/phase4/beta-coverage-report.mjs",
@@ -184,20 +190,20 @@
     {
       "path": "scripts/phase4/import-obf-snapshot.mjs",
       "exists": true,
-      "bytes": 12508,
-      "sha256": "13a0c91365efac1224ae0a6a31eace9d14bca292740045dc0c4eae30199c7046"
+      "bytes": 12929,
+      "sha256": "3efd8d761fec3fa19ec1fd90e0445c46c684382bb0624fd76f0fc5c4f49b2608"
     },
     {
       "path": "scripts/phase4/import-cosing-dictionary.mjs",
       "exists": true,
-      "bytes": 13294,
-      "sha256": "75ecc3a48664af5daed702231210c4c0e8757fecd14241d5c781e0a794434538"
+      "bytes": 13351,
+      "sha256": "470016b20d8e5ecb4be94fb83d891c051cb10f42d702d60cde284466579da47a"
     },
     {
       "path": "scripts/phase4/import-fixture-smoke.mjs",
       "exists": true,
-      "bytes": 15318,
-      "sha256": "c6f0c7101bc8f2cc738fa2f7e15deaedfa9edb9961f56b78366c44997fbd4711"
+      "bytes": 17697,
+      "sha256": "d2a79e6d4558b18a5dd02a69dfccb2133c764767d326b881ab39a0afd235d26b"
     },
     {
       "path": "scripts/phase4/check-source-env.mjs",
@@ -214,8 +220,32 @@
     {
       "path": "scripts/phase4/catalog-qa-report-smoke.mjs",
       "exists": true,
-      "bytes": 9666,
-      "sha256": "1125775a1e89634042149037a190fe78206731f673e2b54983e57f171aed3744"
+      "bytes": 13868,
+      "sha256": "610987b742671fc1b9503ff8f19d3e7151283811ba1c7a35b1e3ee8d73f9a112"
+    },
+    {
+      "path": "scripts/phase4/catalog-promotion-contract.mjs",
+      "exists": true,
+      "bytes": 121311,
+      "sha256": "b0e248aa0e7696357deb53bfd49b7a9da516f6d5818e7fc89d1fb0b91a54bad0"
+    },
+    {
+      "path": "scripts/phase4/catalog-promotion-contract.test.mjs",
+      "exists": true,
+      "bytes": 61364,
+      "sha256": "3e7631a11cfc2446d26041b447fd1b6b4687d37021517037be2fed9659b61c04"
+    },
+    {
+      "path": "scripts/phase4/build-catalog-stage-envelope.mjs",
+      "exists": true,
+      "bytes": 619,
+      "sha256": "cc36fcee8961ab7239ccc606342253acf9cf7c1d2c5daf6910b56da93eefb2f6"
+    },
+    {
+      "path": "scripts/phase4/complete-catalog-database-receipts.mjs",
+      "exists": true,
+      "bytes": 705,
+      "sha256": "f73f48b6ee641e7ae05bfeb0de2e4b2ced73492f838bbc94470a03f2f3db41df"
     },
     {
       "path": "scripts/phase4/catalog-source-policy-audit.mjs",
@@ -226,14 +256,50 @@
     {
       "path": "scripts/phase4/source-policy.mjs",
       "exists": true,
-      "bytes": 83646,
-      "sha256": "8c718e7ae413af329141f204d8df6f8ecf979bb575a6fe5f2ee8a013af3497a5"
+      "bytes": 86618,
+      "sha256": "9e7659ea3f52c7f69196e9ecdd2759f95bb363fac243cb600b58ffaf90e58e0e"
     },
     {
       "path": "scripts/phase4/source-policy.test.mjs",
       "exists": true,
-      "bytes": 37974,
-      "sha256": "70ae4c562a1587cf8f20c1d4f68732eaba4cc1139d4f12dd911beaee35909fde"
+      "bytes": 38524,
+      "sha256": "12c69f6082cd11f667f9c605713930b1f6c21f17c6c7042005173a20b7ce9f2f"
+    },
+    {
+      "path": "scripts/phase2/local-supabase-contract.mjs",
+      "exists": true,
+      "bytes": 5473,
+      "sha256": "ad5beccd0323328693201f1febeb0a7483f9190132c9ff6f54f9d19fdb1326b2"
+    },
+    {
+      "path": "scripts/phase2/local-supabase-reset.mjs",
+      "exists": true,
+      "bytes": 16736,
+      "sha256": "996b659829dc99de19f90c14b5bb8cc67b4081e5cf0e5b41252324f3bd66e3e2"
+    },
+    {
+      "path": "scripts/phase9/lib.mjs",
+      "exists": true,
+      "bytes": 24601,
+      "sha256": "76b51c49b63d383bd8ab639536233d5ed52e088c71f8c4911944b2c06852eaf8"
+    },
+    {
+      "path": "scripts/phase9/rls-adversarial-smoke.mjs",
+      "exists": true,
+      "bytes": 11441,
+      "sha256": "d65370be1fb57a7a10e34c95c57349aaaf6b98fcbf798fb714dc9a6ef36190a5"
+    },
+    {
+      "path": "scripts/phase9/supabase-function-acl.test.mjs",
+      "exists": true,
+      "bytes": 3485,
+      "sha256": "15bb9b38166c18e0682735d6854c91609b0a91f07dc4889a33d750cda886a3fc"
+    },
+    {
+      "path": "scripts/phase9/supabase-policy-lint.mjs",
+      "exists": true,
+      "bytes": 13721,
+      "sha256": "f9aec69c488609b67c9e721e33adc0ea2ec8cca500ae3133ff5036eace8587ea"
     },
     {
       "path": "supabase/migrations/20260614000026_phase4_catalog.sql",
@@ -248,16 +314,46 @@
       "sha256": "0d4543effd4eb5c6d5e036b96d777b217bf853fb0c9587575429a28f14d7793c"
     },
     {
+      "path": "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+      "exists": true,
+      "bytes": 144722,
+      "sha256": "926ba3a453bbe46e8ba97167049f5dda1fb22a59248dee1b9a216d4cc30b7ce7"
+    },
+    {
+      "path": "supabase/tests/database/schema_contract.test.sql",
+      "exists": true,
+      "bytes": 21980,
+      "sha256": "034d35a86f153dd93b4a5c664ac23297cfa65ffc9bb4afce18f7dd30e61c3763"
+    },
+    {
+      "path": "supabase/tests/database/catalog_import_lifecycle.test.sql",
+      "exists": true,
+      "bytes": 105451,
+      "sha256": "da1c1d0e30be9bc271d66449336b83901d2f4f90d9b1429df5f58aa9c182e9ce"
+    },
+    {
       "path": "supabase/functions/catalog-lookup/index.ts",
       "exists": true,
       "bytes": 10199,
       "sha256": "231dd6175ac99232bf7b263e2152311e8d8ccbe9dd008dcdb12c5321926f27c1"
     },
     {
+      "path": "supabase/functions/catalog-lookup/catalogContract.test.ts",
+      "exists": true,
+      "bytes": 10760,
+      "sha256": "aaf0321ab9002bf966b9d287a01ea6f732bea03932abed03299b7d2a1e47ce2b"
+    },
+    {
       "path": "supabase/functions/catalog-search/index.ts",
       "exists": true,
       "bytes": 9227,
       "sha256": "640842b71581aac2f7a01870d27a8e951614bc282e5686cbf9d9564ad5c810fc"
+    },
+    {
+      "path": "supabase/functions/catalog-search/catalogContract.test.ts",
+      "exists": true,
+      "bytes": 3041,
+      "sha256": "dd91fb0c009da68074d795d7819149d9bb970e47c2fba6bbdfc7a08f7f53922d"
     },
     {
       "path": "supabase/functions/catalog-report/index.ts",
@@ -282,12 +378,6 @@
       "exists": true,
       "bytes": 2282,
       "sha256": "0f8de63ed60182b56865cfa47c666866b631ed4681c79345ec31a720565d1a3a"
-    },
-    {
-      "path": "scripts/phase9/lib.mjs",
-      "exists": true,
-      "bytes": 24601,
-      "sha256": "62cd70bb40e6792b8626922a38bdba9fa1e20a7539ddbbe1de43644d6ce18411"
     },
     {
       "path": "docs/FOR_TAS_TO_DO.md",
@@ -322,8 +412,14 @@
     {
       "path": "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
       "exists": true,
-      "bytes": 10516,
-      "sha256": "dc69c90116e1db72810201c435677990ecc9a716da1786663efd35de6aec90c0"
+      "bytes": 10698,
+      "sha256": "e9214896b57d59414865dd221ae14f8ca811a47190d1b1ab247781f389c424bf"
+    },
+    {
+      "path": "docs/phase-4/catalog-import-promotion-runbook.md",
+      "exists": true,
+      "bytes": 15598,
+      "sha256": "9ec04f9b12e9865d7a56c7476c220701e0ac93dfb9ae3644b8518cbbacf1139f"
     },
     {
       "path": "docs/phase-4/catalog-source-policy.json",
@@ -352,14 +448,14 @@
     {
       "path": "docs/phase-4/odbl-compliance-memo.md",
       "exists": true,
-      "bytes": 4938,
-      "sha256": "b8ed9a0b3216590e15d50b7ee7a0326b4b22d206f92fec0361bc2602b04280c1"
+      "bytes": 5099,
+      "sha256": "ed14fda2e129ee22293ab5d28433626971c0ba8998034547e5f15dc23746c191"
     },
     {
       "path": "docs/phase-4/phase-4-exit-review.md",
       "exists": true,
-      "bytes": 4624,
-      "sha256": "5a6fdd10f79545aa570fb70d62e4b31e7044583bf7da4769451a1330ba36d6b1"
+      "bytes": 5375,
+      "sha256": "d425e45c2f5d04263b6925bd66f0d6662a6722c5486d344581942edf1ac1d7e9"
     }
   ],
   "totals": {

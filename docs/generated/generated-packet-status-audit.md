@@ -1,6 +1,6 @@
 # Generated Packet Status Audit
 
-Generated: 2026-07-17T07:45:47.446Z
+Generated: 2026-07-17T11:00:36.827Z
 Status: pass
 Strict mode: yes
 
@@ -14,7 +14,7 @@ being treated as trustworthy launch evidence.
 - Generated files scanned: 53
 - Files with dirty text: 0
 - Files with non-empty gitStatus: 0
-- Hash references checked: 2339
+- Hash references checked: 2381
 - Stale hash references: 0
 - Blockers: 0
 - Warnings: 0
@@ -37,13 +37,13 @@ being treated as trustworthy launch evidence.
 | docs/phase-3/generated/review-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/beta-coverage-report.json          | json | 0                  | 0                          | 27        | 0               |
 | docs/phase-4/generated/beta-coverage-report.md            | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-4/generated/catalog-qa-report.json             | json | 0                  | 0                          | 44        | 0               |
+| docs/phase-4/generated/catalog-qa-report.json             | json | 0                  | 0                          | 60        | 0               |
 | docs/phase-4/generated/catalog-qa-report.md               | md   | 0                  | 0                          | 0         | 0               |
-| docs/phase-4/generated/cosing-catalog-qa-report.json      | json | 0                  | 0                          | 44        | 0               |
+| docs/phase-4/generated/cosing-catalog-qa-report.json      | json | 0                  | 0                          | 60        | 0               |
 | docs/phase-4/generated/cosing-catalog-qa-report.md        | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/cosing-fixture-import.json         | json | 0                  | 0                          | 0         | 0               |
 | docs/phase-4/generated/obf-fixture-import.json            | json | 0                  | 0                          | 0         | 0               |
-| docs/phase-4/generated/source-worklist.json               | json | 0                  | 0                          | 199       | 0               |
+| docs/phase-4/generated/source-worklist.json               | json | 0                  | 0                          | 209       | 0               |
 | docs/phase-4/generated/source-worklist.md                 | md   | 0                  | 0                          | 0         | 0               |
 | docs/phase-5/generated/device-qa-packet.json              | json | 0                  | 0                          | 171       | 0               |
 | docs/phase-5/generated/device-qa-packet.md                | md   | 0                  | 0                          | 0         | 0               |

@@ -1,9 +1,9 @@
 # Phase 3 Review Operator Queue
 
-Generated: 2026-07-17T07:44:48.005Z
+Generated: 2026-07-17T10:59:45.066Z
 Status: pass
 Review readiness: external-blocked
-Git SHA: 6241c23a30673d7ee9a0504a52d069ba4ea04d8d
+Git SHA: f01fe110b3a225de70bf4ff7c585e2d772a38ddb
 Git status: clean
 
 This generated queue turns the Phase 3 reviewer worklist into the operating
@@ -134,7 +134,7 @@ Sources:
 - External owner: Founder + trademark/IP/FTO counsel
 - Required reviewer: qualified trademark, copyright, and product/FTO counsel
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `044cc4ca1b8657a3febfd6c1e54d74550daea9d3f2b4fe236c81bf53ccfdd1f9`
+- Review snapshot SHA-256: `3a92e49b047ccea289eecc649bda2f297be4142b8a766dfee8415ae06e8e9d2f`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -143,8 +143,8 @@ Sources:
 Sources:
 
 - `docs/phase-4/catalog-source-memo-cosing.md` - 6696 bytes - sha256 `4e8b2194655050f0df044e377ffb52d5b9a67e5bb96fc36618b9cf732b6baaa4`
-- `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 10516 bytes - sha256 `dc69c90116e1db72810201c435677990ecc9a716da1786663efd35de6aec90c0`
-- `docs/phase-4/odbl-compliance-memo.md` - 4938 bytes - sha256 `b8ed9a0b3216590e15d50b7ee7a0326b4b22d206f92fec0361bc2602b04280c1`
+- `docs/phase-4/catalog-source-memo-open-beauty-facts.md` - 10698 bytes - sha256 `e9214896b57d59414865dd221ae14f8ca811a47190d1b1ab247781f389c424bf`
+- `docs/phase-4/odbl-compliance-memo.md` - 5099 bytes - sha256 `ed14fda2e129ee22293ab5d28433626971c0ba8998034547e5f15dc23746c191`
 - `apps/mobile/src/features/catalog/client.test.ts` - 12335 bytes - sha256 `92250d319ea33fc14bb57c0bf131e732847762036f9ed132788033aea0c78dbd`
 - `apps/mobile/src/features/catalog/client.ts` - 11357 bytes - sha256 `ac891d9253e2f2d81be440eda468ab02d0f9e3afddb84822be14f9a48f451438`
 - `apps/mobile/src/features/catalog/copy.ts` - 1913 bytes - sha256 `b182cec74cb72f850e83dcca14a5548c6277d73a9eaac229f6062e665090f958`
@@ -263,7 +263,7 @@ Sources:
 - External owner: Founder + qualified legal counsel
 - Required reviewer: qualified attorney with consumer health, subscriptions, privacy, advertising, and app-platform experience
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `f07f4cd138d3d7a00d87794a78d23e5bcaf6a34aaec0c8b42380c66ea6d9a361`
+- Review snapshot SHA-256: `a39977e52b2bfe89268e1bf9ea3a4b346dbcec2390f54c80473317ef66a80d8c`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -271,7 +271,7 @@ Sources:
 
 Sources:
 
-- `docs/phase-4/odbl-compliance-memo.md` - 4938 bytes - sha256 `b8ed9a0b3216590e15d50b7ee7a0326b4b22d206f92fec0361bc2602b04280c1`
+- `docs/phase-4/odbl-compliance-memo.md` - 5099 bytes - sha256 `ed14fda2e129ee22293ab5d28433626971c0ba8998034547e5f15dc23746c191`
 - `apps/mobile/src/features/commerce/attribution.test.ts` - 5254 bytes - sha256 `8d759dcc16a3324d872895664b9dfc23b35224190d2441588782a2cdaa257d43`
 - `apps/mobile/src/features/commerce/attribution.ts` - 4062 bytes - sha256 `1c69b53246f2396a00620ef2b032e18c481aff3682fd1b44b29d75e7fd44ac51`
 - `apps/mobile/src/features/commerce/claimsafety.test.ts` - 4518 bytes - sha256 `73a396b16adcce8d9736fb7ce578e8b88a54cf255aa625a6e35ceb71565562d9`
@@ -320,7 +320,7 @@ Sources:
 - External owner: Founder + privacy counsel + technical security owner
 - Required reviewer: privacy counsel plus technical security owner
 - Current reviewer/date: TBD / TBD
-- Review snapshot SHA-256: `f902736ebf6cd7fc4d3fe64302c17013b9fdef98cef5fa9d6770cfd9a502e894`
+- Review snapshot SHA-256: `30321d89f2d1fee569dc173e2cafa92cd5dc9852e57f7f63196b5aedf9b6d04e`
 - Detached signoff: not-applicable
 - Operator action: Resolve the prerequisite in docs/FOR_TAS_TO_DO.md, then send this exact packet to the required reviewer.
 - Required evidence: Named reviewer, credential, review date, decision, conditions, and approval tied to the exact source hashes.
@@ -340,7 +340,7 @@ Sources:
 - `supabase/functions/data-export/exportCore.test.ts` - 12978 bytes - sha256 `f952985bb4a7d3679c5d4752896c72e25540f002ddb0a49ba1c510fe5c335b3b`
 - `supabase/functions/data-export/exportRegistry.ts` - 9516 bytes - sha256 `2535337af91faa1150aa41fb2d1608385eef6cb0787682399ec0475d7cc6fb41`
 - `supabase/functions/data-export/exportRegistry.test.ts` - 7293 bytes - sha256 `6680aaeafc26910dffeca595130a07f13e9f669b27424f40da724883756d9194`
-- `scripts/phase9/data-rights-smoke.mjs` - 63915 bytes - sha256 `4d90550cdc4de906bfe9cdb22d73d3cf92880efd84e871f448a390e42c92474d`
+- `scripts/phase9/data-rights-smoke.mjs` - 64113 bytes - sha256 `f2349d336fb4e3967f99703b57cd52013ea2b9b68f8dbeb30a596a5ab174385f`
 - `supabase/functions/_shared/storagePath.ts` - 591 bytes - sha256 `9367ade3719c7b7e38a7b090da7d904dd574bb43e29222bf5e8a839d3b377594`
 - `supabase/functions/_shared/storagePath.test.ts` - 1355 bytes - sha256 `3caf9cbb38b676c4a96dd9ae3f19479c205a90d31bb83fee7c7474bc76a2a2e9`
 
