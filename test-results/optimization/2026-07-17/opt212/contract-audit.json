@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-17T07:45:00.000Z",
+  "parentSha": "e72da9a06b01590e5a32ab5c7685ee7c4497dbdf",
+  "contractStatus": "definition-only",
+  "dashboardDomains": 5,
+  "metricDefinitions": 15,
+  "productionThresholdsConfigured": 0,
+  "liveUrlsConfigured": 0,
+  "namedPrimaryOwnersConfigured": 0,
+  "namedBackupOwnersConfigured": 0,
+  "contentFree": true,
+  "forbiddenFieldCount": 15,
+  "pass": true
+}

@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "status": "definition-only",
+  "privacy": {
+    "contentFree": true,
+    "allowedDimensions": [
+      "environment",
+      "release",
+      "build",
+      "platform",
+      "os_class",
+      "device_memory_class",
+      "route_enum",
+      "error_enum"
+    ],
+    "forbiddenFields": [
+      "user_id",
+      "account_id",
+      "email",
+      "name",
+      "search_text",
+      "barcode",
+      "product_name",
+      "ingredient_text",
+      "photo_uri",
+      "photo_bytes",
+      "routine_content",
+      "health_profile",
+      "access_token",
+      "refresh_token",
+      "receipt"
+    ]
+  },
+  "acceptance": {
+    "requiredBeforeLive": [
+      "namedPrimaryOwner",
+      "namedBackupOwner",
+      "liveUrl",
+      "refreshCadenceMinutes",
+      "approvedThresholds",
+      "sourceValidationEvidence",
+      "ringFilter",
+      "platformFilter",
+      "buildFilter",
+      "lastReviewedAt"
+    ],
+    "productionThresholdPolicy": "Thresholds must be approved before observing production results and cannot be inferred from this contract or its exercise fixture."
+  },
+  "dashboards": [
+    {
+      "id": "release_health",
+      "title": "Release health",
+      "status": "blocked-external",
+      "ownerRole": "release-on-call",
+      "liveUrl": null,
+      "refreshCadenceMinutes": null,
+      "sources": ["Sentry release health", "App Store Connect"],
+      "filters": ["environment", "release", "build", "platform", "os_class"],
+      "metrics": [
+        {
+          "id": "crash_free_sessions_percent",
+          "unit": "percent",
+          "direction": "higher-is-better",
+          "productionThreshold": null
+        },
+        {
+          "id": "fatal_crash_count",
+          "unit": "count",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        },
+        {
+          "id": "release_adoption_percent",
+          "unit": "percent",
+          "direction": "context-only",
+          "productionThreshold": null
+        }
+      ],
+      "runbookSection": "release-health"
+    },
+    {
+      "id": "artifact_governance",
+      "title": "Artifact and performance governance",
+      "status": "blocked-external",
+      "ownerRole": "mobile-release-engineering",
+      "liveUrl": null,
+      "refreshCadenceMinutes": null,
+      "sources": [
+        "optimization export statistics",
+        "signed artifact inspection",
+        "device evidence packets"
+      ],
+      "filters": ["release", "build", "platform"],
+      "metrics": [
+        {
+          "id": "bundle_regression_bytes",
+          "unit": "bytes",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        },
+        {
+          "id": "signed_download_size_bytes",
+          "unit": "bytes",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        },
+        {
+          "id": "performance_gate_failures",
+          "unit": "count",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        }
+      ],
+      "runbookSection": "artifact-performance"
+    },
+    {
+      "id": "data_rights",
+      "title": "Privacy and data-rights operations",
+      "status": "blocked-external",
+      "ownerRole": "privacy-operations",
+      "liveUrl": null,
+      "refreshCadenceMinutes": null,
+      "sources": ["Supabase operation aggregates", "support aggregate"],
+      "filters": ["environment", "release", "build", "platform", "error_enum"],
+      "metrics": [
+        {
+          "id": "deletion_oldest_pending_minutes",
+          "unit": "minutes",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        },
+        {
+          "id": "export_failure_count",
+          "unit": "count",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        },
+        {
+          "id": "consent_withdrawal_failure_count",
+          "unit": "count",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        }
+      ],
+      "runbookSection": "data-rights"
+    },
+    {
+      "id": "payment_entitlement",
+      "title": "Payment and entitlement maintenance",
+      "status": "blocked-external",
+      "ownerRole": "revenue-operations",
+      "liveUrl": null,
+      "refreshCadenceMinutes": null,
+      "sources": ["RevenueCat aggregates", "Supabase entitlement aggregates", "store health"],
+      "filters": ["environment", "release", "build", "platform", "error_enum"],
+      "metrics": [
+        {
+          "id": "webhook_oldest_unprocessed_minutes",
+          "unit": "minutes",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        },
+        {
+          "id": "entitlement_projection_failure_count",
+          "unit": "count",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        },
+        {
+          "id": "restore_failure_count",
+          "unit": "count",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        }
+      ],
+      "runbookSection": "payment-entitlement"
+    },
+    {
+      "id": "backend_maintenance",
+      "title": "Backend maintenance and retention",
+      "status": "blocked-external",
+      "ownerRole": "backend-on-call",
+      "liveUrl": null,
+      "refreshCadenceMinutes": null,
+      "sources": ["Supabase logs and aggregate maintenance reports"],
+      "filters": ["environment", "release", "error_enum"],
+      "metrics": [
+        {
+          "id": "edge_error_count",
+          "unit": "count",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        },
+        {
+          "id": "retention_backlog_count",
+          "unit": "count",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        },
+        {
+          "id": "unowned_slow_query_count",
+          "unit": "count",
+          "direction": "lower-is-better",
+          "productionThreshold": null
+        }
+      ],
+      "runbookSection": "backend-maintenance"
+    }
+  ]
+}

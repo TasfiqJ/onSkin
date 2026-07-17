@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "exerciseOnly": true,
+  "incidentId": "OPT212-DRILL-001",
+  "observedAt": "2026-07-17T07:45:00.000Z",
+  "severity": "P1",
+  "issueClass": "native_crash",
+  "dashboardId": "release_health",
+  "signals": [
+    {
+      "metricId": "crash_free_sessions_percent",
+      "state": "critical",
+      "sampleCount": 50
+    }
+  ],
+  "currentArtifact": {
+    "environment": "synthetic-staging",
+    "release": "synthetic-rc-2",
+    "build": "synthetic-42",
+    "sourceSha": "2222222222222222222222222222222222222222",
+    "runtimeFingerprint": "synthetic-native-runtime-b",
+    "changeClass": "native"
+  },
+  "rollbackTarget": {
+    "release": "synthetic-rc-1",
+    "build": "synthetic-41",
+    "sourceSha": "1111111111111111111111111111111111111111",
+    "runtimeFingerprint": "synthetic-native-runtime-a",
+    "reviewed": true
+  },
+  "expectedDecision": {
+    "freezeRollout": true,
+    "otaAllowed": false,
+    "rollbackPath": "binary_halt_hotfix",
+    "exerciseClosure": "complete-with-live-monitoring-blocker"
+  }
+}
