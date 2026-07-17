@@ -5,6 +5,7 @@ import { clearLocalPrivateData } from './localPrivateData';
 const mocks = vi.hoisted(() => ({
   cancelAllScheduledNotificationsAsync: vi.fn(),
   clearEncryptedPhotoStorage: vi.fn(),
+  clearRoutineWidgetNativeState: vi.fn(),
   clearPrivateKVContentKey: vi.fn(),
   deleteAsync: vi.fn(),
   multiRemove: vi.fn(),
@@ -42,6 +43,10 @@ vi.mock('@/features/photos/encryptedStorage', () => ({
   clearEncryptedPhotoStorage: mocks.clearEncryptedPhotoStorage,
 }));
 
+vi.mock('@/features/widgets/lifecycleCoordinator', () => ({
+  clearRoutineWidgetLifecycleForPrivacy: mocks.clearRoutineWidgetNativeState,
+}));
+
 vi.mock('@/lib/analytics/track', () => ({
   resetAnalyticsIdentity: mocks.resetAnalyticsIdentity,
 }));
@@ -58,6 +63,7 @@ describe('local private data cleanup', () => {
   beforeEach(() => {
     mocks.cancelAllScheduledNotificationsAsync.mockReset();
     mocks.clearEncryptedPhotoStorage.mockReset();
+    mocks.clearRoutineWidgetNativeState.mockReset();
     mocks.clearPrivateKVContentKey.mockReset();
     mocks.deleteAsync.mockReset();
     mocks.multiRemove.mockReset();
@@ -68,6 +74,7 @@ describe('local private data cleanup', () => {
 
     mocks.cancelAllScheduledNotificationsAsync.mockResolvedValue(undefined);
     mocks.clearEncryptedPhotoStorage.mockResolvedValue(undefined);
+    mocks.clearRoutineWidgetNativeState.mockResolvedValue(undefined);
     mocks.clearPrivateKVContentKey.mockResolvedValue(undefined);
     mocks.deleteAsync.mockResolvedValue(undefined);
     mocks.multiRemove.mockResolvedValue(undefined);
@@ -92,6 +99,10 @@ describe('local private data cleanup', () => {
         'onskin.photo.content_key_created.v1',
         'onskin.skinprofile.v1',
       ]),
+    );
+    expect(mocks.clearRoutineWidgetNativeState).toHaveBeenCalledOnce();
+    expect(mocks.clearRoutineWidgetNativeState.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.multiRemove.mock.invocationCallOrder[0]!,
     );
     expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain('routinekind.localDataOwnerHash.v1');
     expect(mocks.multiRemove.mock.calls[0]?.[0]).not.toContain(
@@ -154,6 +165,22 @@ describe('local private data cleanup', () => {
     expect(mocks.multiRemove).toHaveBeenCalledTimes(1);
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledTimes(1);
     expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledTimes(1);
+  });
+
+  it('retains every owner proof when native widget privacy cleanup fails', async () => {
+    mocks.clearRoutineWidgetNativeState.mockRejectedValueOnce(
+      new Error('native widget cleanup unavailable'),
+    );
+
+    await expect(clearLocalPrivateData()).rejects.toThrow(
+      'LOCAL_PRIVATE_DATA_CLEAR_FAILED:routine_widget_native_state',
+    );
+
+    expect(mocks.clearRoutineWidgetNativeState).toHaveBeenCalledOnce();
+    expect(mocks.multiRemove).toHaveBeenCalledTimes(1);
+    expect(mocks.clearEncryptedPhotoStorage).toHaveBeenCalledOnce();
+    expect(mocks.clearPrivateKVContentKey).toHaveBeenCalledOnce();
+    expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledOnce();
   });
 
   it('fails closed if the final owner-proof removal cannot be committed', async () => {

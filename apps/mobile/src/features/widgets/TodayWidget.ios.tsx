@@ -29,9 +29,11 @@ export const RoutineKindTodayWidgetLayout = (
     'deepLink',
     'interactionRevision',
     'localDate',
+    'ownerGeneration',
     'pendingActionTokens',
     'phase',
     'schemaVersion',
+    'snapshotNonce',
     'staleAtMs',
     'status',
     'totalCount',
@@ -40,6 +42,15 @@ export const RoutineKindTodayWidgetLayout = (
   const propsAreRecord = typeof props === 'object' && props !== null && !Array.isArray(props);
   const actualKeys = propsAreRecord ? Object.keys(props).sort() : [];
   const tokenPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const ownerBindingIsSafe =
+    propsAreRecord &&
+    typeof props.ownerGeneration === 'string' &&
+    props.ownerGeneration === props.ownerGeneration.toLowerCase() &&
+    tokenPattern.test(props.ownerGeneration) &&
+    typeof props.snapshotNonce === 'string' &&
+    props.snapshotNonce === props.snapshotNonce.toLowerCase() &&
+    tokenPattern.test(props.snapshotNonce) &&
+    props.ownerGeneration !== props.snapshotNonce;
   const actionTokensAreSafe =
     propsAreRecord &&
     Array.isArray(props.actionTokens) &&
@@ -91,7 +102,8 @@ export const RoutineKindTodayWidgetLayout = (
     propsAreRecord &&
     actualKeys.length === expectedKeys.length &&
     actualKeys.every((key, index) => key === expectedKeys[index]) &&
-    props.schemaVersion === 1 &&
+    props.schemaVersion === 2 &&
+    ownerBindingIsSafe &&
     ['disabled', 'empty', 'ready', 'complete', 'stale'].includes(props.status) &&
     ['AM', 'PM', 'none'].includes(props.phase) &&
     localDateIsSafe &&
@@ -209,7 +221,9 @@ export const RoutineKindTodayWidgetLayout = (
         const pressedAtMs = Date.now();
         if (pressedAtMs < props.updatedAtMs || pressedAtMs >= props.staleAtMs) {
           return {
-            schemaVersion: 1,
+            schemaVersion: 2,
+            ownerGeneration: props.ownerGeneration,
+            snapshotNonce: props.snapshotNonce,
             status: 'stale',
             phase: 'none',
             localDate: props.localDate,
@@ -226,7 +240,9 @@ export const RoutineKindTodayWidgetLayout = (
         const actionToken = props.actionTokens[0];
         const completedCount = props.completedCount + 1;
         return {
-          schemaVersion: 1,
+          schemaVersion: 2,
+          ownerGeneration: props.ownerGeneration,
+          snapshotNonce: props.snapshotNonce,
           status: completedCount === props.totalCount ? 'complete' : 'ready',
           phase: props.phase,
           localDate: props.localDate,

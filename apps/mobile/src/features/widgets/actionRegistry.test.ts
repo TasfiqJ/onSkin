@@ -10,7 +10,9 @@ import {
 import {
   acknowledgeRoutineWidgetActionTokens,
   clearRoutineWidgetActions,
+  discardRoutineWidgetPreparedActions,
   prepareRoutineWidgetActions,
+  retainOnlyPublishedRoutineWidgetActions,
   resolveRoutineWidgetActionTokens,
   ROUTINE_WIDGET_ACTION_AUTHORITY_STALE,
   ROUTINE_WIDGET_ACTION_EXPIRY_OUTSIDE_LEASE,
@@ -18,9 +20,11 @@ import {
   ROUTINE_WIDGET_ACTION_REGISTRY_INVALID,
   ROUTINE_WIDGET_ACTION_REGISTRY_KEY,
   ROUTINE_WIDGET_ACTION_REGISTRY_UNSUPPORTED_VERSION,
+  ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY,
 } from './actionRegistry';
 
 const mocks = vi.hoisted(() => ({
+  removeFailures: new Set<string>(),
   storage: new Map<string, string>(),
   uuids: [] as string[],
   fallbackUuidCounter: 100,
@@ -38,6 +42,7 @@ vi.mock('expo-crypto', () => ({
 vi.mock('@/lib/storage/privateKV', () => ({
   getPrivateItem: vi.fn(async (key: string) => mocks.storage.get(key) ?? null),
   removePrivateItem: vi.fn(async (key: string) => {
+    if (mocks.removeFailures.has(key)) throw new Error(`remove failed:${key}`);
     mocks.storage.delete(key);
   }),
   updatePrivateItem: vi.fn(
@@ -52,6 +57,8 @@ vi.mock('@/lib/storage/privateKV', () => ({
 
 const NOW = Date.parse('2026-07-16T12:00:00.000Z');
 const DAY = '2026-07-16';
+const OWNER_GENERATION = '00000000-0000-4000-8000-0000000000a1';
+const OWNER_GENERATION_B = '00000000-0000-4000-8000-0000000000b1';
 const SNAPSHOT = '00000000-0000-4000-8000-000000000001';
 const TOKEN_A = '00000000-0000-4000-8000-000000000002';
 const TOKEN_B = '00000000-0000-4000-8000-000000000003';
@@ -68,16 +75,17 @@ function openLease(options: { ownerUserId?: string; verifiedAt?: string | null }
   });
 }
 
-function storedEnvelope(): Record<string, unknown> {
-  return JSON.parse(mocks.storage.get(ROUTINE_WIDGET_ACTION_REGISTRY_KEY) ?? '{}') as Record<
-    string,
-    unknown
-  >;
+function storedRegistry(): { version?: number; snapshots?: Record<string, unknown>[] } {
+  return JSON.parse(mocks.storage.get(ROUTINE_WIDGET_ACTION_REGISTRY_KEY) ?? '{}') as {
+    version?: number;
+    snapshots?: Record<string, unknown>[];
+  };
 }
 
 async function prepare(expiresAt = NOW + 60_000) {
   mocks.uuids.push(SNAPSHOT, TOKEN_A, TOKEN_B);
   return prepareRoutineWidgetActions({
+    ownerGeneration: OWNER_GENERATION,
     localDate: DAY,
     phase: 'PM',
     stepKeys: ['PM:cleanser', 'PM:moisturizer'],
@@ -85,13 +93,37 @@ async function prepare(expiresAt = NOW + 60_000) {
   });
 }
 
-function resolve(tokens: readonly string[]) {
-  return resolveRoutineWidgetActionTokens({ tokens, localDate: DAY, phase: 'PM' });
+function resolve(
+  tokens: readonly string[],
+  overrides: Partial<{
+    ownerGeneration: string;
+    snapshotNonce: string;
+    localDate: string;
+    phase: 'AM' | 'PM';
+    createdAtMs: number;
+  }> = {},
+) {
+  return resolveRoutineWidgetActionTokens({
+    events: tokens.map((token) => ({ token, createdAtMs: overrides.createdAtMs ?? NOW })),
+    ownerGeneration: overrides.ownerGeneration ?? OWNER_GENERATION,
+    snapshotNonce: overrides.snapshotNonce ?? SNAPSHOT,
+    localDate: overrides.localDate ?? DAY,
+    phase: overrides.phase ?? 'PM',
+  });
+}
+
+function acknowledge(tokens: readonly string[], snapshotNonce = SNAPSHOT, createdAtMs = NOW) {
+  return acknowledgeRoutineWidgetActionTokens({
+    events: tokens.map((token) => ({ token, createdAtMs })),
+    ownerGeneration: OWNER_GENERATION,
+    snapshotNonce,
+  });
 }
 
 async function prepareReplacement(expiresAt: number) {
   mocks.uuids.push(SNAPSHOT_2, TOKEN_C);
   return prepareRoutineWidgetActions({
+    ownerGeneration: OWNER_GENERATION,
     localDate: DAY,
     phase: 'PM',
     stepKeys: ['PM:replacement'],
@@ -99,12 +131,13 @@ async function prepareReplacement(expiresAt: number) {
   });
 }
 
-describe('encrypted routine widget action registry', () => {
+describe('encrypted multi-snapshot routine widget action registry', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.setSystemTime(NOW);
     clearActiveHealthProcessingEpoch();
     mocks.storage.clear();
+    mocks.removeFailures.clear();
     mocks.uuids = [];
     mocks.fallbackUuidCounter = 100;
     vi.clearAllMocks();
@@ -116,154 +149,168 @@ describe('encrypted routine widget action registry', () => {
     vi.useRealTimers();
   });
 
-  it('returns only opaque tokens while keeping the exact authority and step mapping private', async () => {
+  it('returns only opaque binding values while keeping owner and step mappings private', async () => {
     const lease = activeHealthProcessingLeaseSnapshot();
-
-    const prepared = await prepare();
-    expect(prepared).toEqual({
+    await expect(prepare()).resolves.toEqual({
       actionTokens: [TOKEN_A, TOKEN_B],
+      ownerGeneration: OWNER_GENERATION,
       snapshotNonce: SNAPSHOT,
     });
 
-    expect(Object.keys(prepared).sort()).toEqual(['actionTokens', 'snapshotNonce']);
-    const stored = storedEnvelope();
-    expect(stored).toEqual({
-      version: 1,
-      ownerUserId: 'owner-a',
-      processingEpoch: 7,
-      processingGeneration: lease?.generation,
-      accountGeneration: 0,
-      localDate: DAY,
-      phase: 'PM',
-      snapshotNonce: SNAPSHOT,
-      createdAt: NOW,
-      expiresAt: NOW + 60_000,
-      actions: [
-        { token: TOKEN_A, stepKey: 'PM:cleanser' },
-        { token: TOKEN_B, stepKey: 'PM:moisturizer' },
-      ],
-    });
-  });
-
-  it('resolves current tokens and never reveals a step for an unknown capability', async () => {
-    await prepare();
-
-    await expect(resolve([TOKEN_B, UNKNOWN_TOKEN])).resolves.toEqual([
-      { token: TOKEN_B, stepKey: 'PM:moisturizer', status: 'resolved' },
-      { token: UNKNOWN_TOKEN, stepKey: null, status: 'unknown' },
+    const stored = storedRegistry();
+    expect(stored.version).toBe(2);
+    expect(stored.snapshots).toEqual([
+      {
+        ownerUserId: 'owner-a',
+        ownerGeneration: OWNER_GENERATION,
+        processingEpoch: 7,
+        processingGeneration: lease?.generation,
+        accountGeneration: 0,
+        localDate: DAY,
+        phase: 'PM',
+        snapshotNonce: SNAPSHOT,
+        createdAt: NOW,
+        expiresAt: NOW + 60_000,
+        actions: [
+          { token: TOKEN_A, stepKey: 'PM:cleanser' },
+          { token: TOKEN_B, stepKey: 'PM:moisturizer' },
+        ],
+      },
     ]);
   });
 
-  it('rejects a token transplanted into a different widget date, phase, or snapshot', async () => {
+  it('retains snapshot A while B is prepared and resolves each only by exact identity', async () => {
     await prepare();
+    await prepareReplacement(NOW + 90_000);
 
-    for (const request of [
-      { tokens: [TOKEN_A], localDate: '2026-07-15', phase: 'PM' as const },
-      { tokens: [TOKEN_A], localDate: DAY, phase: 'AM' as const },
-      {
-        tokens: [TOKEN_A],
-        localDate: DAY,
-        phase: 'PM' as const,
-        snapshotNonce: UNKNOWN_TOKEN,
-      },
-    ]) {
-      await expect(resolveRoutineWidgetActionTokens(request)).resolves.toEqual([
-        { token: TOKEN_A, stepKey: null, status: 'stale' },
-      ]);
-    }
+    expect(storedRegistry().snapshots).toHaveLength(2);
+    await expect(resolve([TOKEN_A])).resolves.toEqual([
+      { token: TOKEN_A, stepKey: 'PM:cleanser', status: 'resolved' },
+    ]);
+    await expect(resolve([TOKEN_C], { snapshotNonce: SNAPSHOT_2 })).resolves.toEqual([
+      { token: TOKEN_C, stepKey: 'PM:replacement', status: 'resolved' },
+    ]);
+    await expect(resolve([TOKEN_A], { snapshotNonce: SNAPSHOT_2 })).resolves.toEqual([
+      { token: TOKEN_A, stepKey: null, status: 'unknown' },
+    ]);
   });
 
-  it('acknowledges only requested capabilities and deletes the empty registry', async () => {
+  it('discards a never-published retry and prunes superseded mappings after native replacement', async () => {
     await prepare();
+    await prepareReplacement(NOW + 60_000);
+    expect(storedRegistry().snapshots).toHaveLength(2);
 
-    await expect(acknowledgeRoutineWidgetActionTokens([TOKEN_A])).resolves.toBe(1);
-    expect(storedEnvelope().actions).toEqual([{ token: TOKEN_B, stepKey: 'PM:moisturizer' }]);
-    await expect(acknowledgeRoutineWidgetActionTokens([TOKEN_A])).resolves.toBe(0);
-    await expect(acknowledgeRoutineWidgetActionTokens([TOKEN_B])).resolves.toBe(1);
+    await discardRoutineWidgetPreparedActions({
+      ownerGeneration: OWNER_GENERATION,
+      snapshotNonce: SNAPSHOT_2,
+    });
+    expect(storedRegistry().snapshots?.map(({ snapshotNonce }) => snapshotNonce)).toEqual([
+      SNAPSHOT,
+    ]);
+
+    await prepareReplacement(NOW + 60_000);
+    await retainOnlyPublishedRoutineWidgetActions({
+      ownerGeneration: OWNER_GENERATION,
+      snapshotNonce: SNAPSHOT_2,
+    });
+    expect(storedRegistry().snapshots?.map(({ snapshotNonce }) => snapshotNonce)).toEqual([
+      SNAPSHOT_2,
+    ]);
+    await expect(resolve([TOKEN_A])).resolves.toEqual([
+      { token: TOKEN_A, stepKey: null, status: 'unknown' },
+    ]);
+
+    await retainOnlyPublishedRoutineWidgetActions({
+      ownerGeneration: OWNER_GENERATION,
+      snapshotNonce: null,
+    });
     expect(mocks.storage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
   });
 
-  it('fails closed after the capability expires while its health lease is still current', async () => {
+  it('rejects transplanted owner generation, snapshot, date, and phase', async () => {
+    await prepare();
+    await expect(resolve([TOKEN_A], { ownerGeneration: OWNER_GENERATION_B })).resolves.toEqual([
+      { token: TOKEN_A, stepKey: null, status: 'unknown' },
+    ]);
+    await expect(resolve([TOKEN_A], { snapshotNonce: UNKNOWN_TOKEN })).resolves.toEqual([
+      { token: TOKEN_A, stepKey: null, status: 'unknown' },
+    ]);
+    await expect(resolve([TOKEN_A], { localDate: '2026-07-15' })).resolves.toEqual([
+      { token: TOKEN_A, stepKey: null, status: 'stale' },
+    ]);
+    await expect(resolve([TOKEN_A], { phase: 'AM' })).resolves.toEqual([
+      { token: TOKEN_A, stepKey: null, status: 'stale' },
+    ]);
+  });
+
+  it('acknowledges only the exact snapshot and preserves other in-flight snapshots', async () => {
+    await prepare();
+    await prepareReplacement(NOW + 90_000);
+
+    await expect(acknowledge([TOKEN_A])).resolves.toBe(1);
+    expect(storedRegistry().snapshots?.[0]?.actions).toEqual([
+      { token: TOKEN_B, stepKey: 'PM:moisturizer' },
+    ]);
+    await expect(acknowledge([TOKEN_C], SNAPSHOT_2)).resolves.toBe(1);
+    expect(storedRegistry().snapshots).toHaveLength(1);
+    await expect(acknowledge([TOKEN_B])).resolves.toBe(1);
+    expect(mocks.storage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
+  });
+
+  it('reconciles a proven pre-expiry native acceptance after display expiry', async () => {
     await prepare(NOW + 30_000);
     vi.advanceTimersByTime(30_000);
-
     await expect(resolve([TOKEN_A])).resolves.toEqual([
+      { token: TOKEN_A, stepKey: 'PM:cleanser', status: 'resolved' },
+    ]);
+    await expect(acknowledge([TOKEN_A])).resolves.toBe(1);
+  });
+
+  it('rejects event-time transplants at or outside the accepted snapshot window', async () => {
+    await prepare(NOW + 30_000);
+    await expect(resolve([TOKEN_A], { createdAtMs: NOW - 1 })).resolves.toEqual([
       { token: TOKEN_A, stepKey: null, status: 'expired' },
     ]);
-    await expect(acknowledgeRoutineWidgetActionTokens([TOKEN_A])).rejects.toThrow(
+    vi.advanceTimersByTime(30_000);
+    await expect(resolve([TOKEN_A], { createdAtMs: NOW + 30_000 })).resolves.toEqual([
+      { token: TOKEN_A, stepKey: null, status: 'expired' },
+    ]);
+    await expect(acknowledge([TOKEN_A], SNAPSHOT, NOW + 30_000)).rejects.toThrow(
       'ROUTINE_WIDGET_ACTION_EXPIRED',
     );
-
-    await expect(prepareReplacement(NOW + 90_000)).resolves.toEqual({
-      actionTokens: [TOKEN_C],
-      snapshotNonce: SNAPSHOT_2,
-    });
-    await expect(resolve([TOKEN_C])).resolves.toEqual([
-      { token: TOKEN_C, stepKey: 'PM:replacement', status: 'resolved' },
-    ]);
   });
 
-  it('fails closed if the device clock moves before the registry creation time', async () => {
-    await prepare();
-    vi.setSystemTime(NOW - 1);
-
-    await expect(resolve([TOKEN_A])).resolves.toEqual([
-      { token: TOKEN_A, stepKey: null, status: 'stale' },
-    ]);
-    await expect(acknowledgeRoutineWidgetActionTokens([TOKEN_A])).rejects.toThrow(
-      ROUTINE_WIDGET_ACTION_AUTHORITY_STALE,
-    );
-  });
-
-  it('fails closed after a same-owner status renewal changes the processing generation', async () => {
+  it('fails closed on clock rollback, lease renewal, and owner transition', async () => {
     await prepare(NOW + 120_000);
-    vi.advanceTimersByTime(10_000);
-    openLease({ verifiedAt: new Date(NOW + 10_000).toISOString() });
-
+    vi.setSystemTime(NOW - 1);
     await expect(resolve([TOKEN_A])).resolves.toEqual([
       { token: TOKEN_A, stepKey: null, status: 'stale' },
     ]);
-    await expect(acknowledgeRoutineWidgetActionTokens([TOKEN_A])).rejects.toThrow(
-      ROUTINE_WIDGET_ACTION_AUTHORITY_STALE,
-    );
+    await expect(acknowledge([TOKEN_A])).rejects.toThrow(ROUTINE_WIDGET_ACTION_AUTHORITY_STALE);
 
-    await expect(prepareReplacement(NOW + 90_000)).resolves.toEqual({
-      actionTokens: [TOKEN_C],
-      snapshotNonce: SNAPSHOT_2,
-    });
-    await expect(resolve([TOKEN_C])).resolves.toEqual([
-      { token: TOKEN_C, stepKey: 'PM:replacement', status: 'resolved' },
+    vi.setSystemTime(NOW + 10_000);
+    openLease({ verifiedAt: new Date(NOW + 10_000).toISOString() });
+    await expect(resolve([TOKEN_A])).resolves.toEqual([
+      { token: TOKEN_A, stepKey: null, status: 'stale' },
     ]);
-  });
 
-  it('does not expose a prior owner mapping after an owner transition', async () => {
-    await prepare();
     clearActiveHealthProcessingEpoch();
     openLease({ ownerUserId: 'owner-b' });
-
     await expect(resolve([TOKEN_A])).resolves.toEqual([
       { token: TOKEN_A, stepKey: null, status: 'stale' },
     ]);
-    await expect(prepareReplacement(NOW + 60_000)).resolves.toEqual({
-      actionTokens: [TOKEN_C],
-      snapshotNonce: SNAPSHOT_2,
-    });
-    expect(storedEnvelope().ownerUserId).toBe('owner-b');
   });
 
-  it('replaces malformed state but preserves an unsupported future schema', async () => {
+  it('replaces malformed state during preparation but preserves a future schema', async () => {
     await prepare();
-    const malformed = JSON.stringify({ ...storedEnvelope(), unexpected: true });
+    const malformed = JSON.stringify({ ...storedRegistry(), unexpected: true });
     mocks.storage.set(ROUTINE_WIDGET_ACTION_REGISTRY_KEY, malformed);
-
     await expect(resolve([TOKEN_A])).rejects.toThrow(ROUTINE_WIDGET_ACTION_REGISTRY_INVALID);
-    await expect(prepareReplacement(NOW + 30_000)).resolves.toEqual({
-      actionTokens: [TOKEN_C],
+    await expect(prepareReplacement(NOW + 30_000)).resolves.toMatchObject({
       snapshotNonce: SNAPSHOT_2,
     });
-    expect(mocks.storage.get(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).not.toBe(malformed);
 
-    const future = JSON.stringify({ ...storedEnvelope(), version: 2 });
+    const future = JSON.stringify({ version: 3, snapshots: [] });
     mocks.storage.set(ROUTINE_WIDGET_ACTION_REGISTRY_KEY, future);
     await expect(resolve([TOKEN_A])).rejects.toThrow(
       ROUTINE_WIDGET_ACTION_REGISTRY_UNSUPPORTED_VERSION,
@@ -271,6 +318,7 @@ describe('encrypted routine widget action registry', () => {
     mocks.uuids.push('00000000-0000-4000-8000-000000000012');
     await expect(
       prepareRoutineWidgetActions({
+        ownerGeneration: OWNER_GENERATION,
         localDate: DAY,
         phase: 'PM',
         stepKeys: [],
@@ -280,34 +328,58 @@ describe('encrypted routine widget action registry', () => {
     expect(mocks.storage.get(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(future);
   });
 
-  it('rejects invalid bindings and any expiry beyond the active five-minute authority', async () => {
-    mocks.uuids.push(SNAPSHOT);
+  it('rejects invalid bindings and expiry beyond the five-minute authority', async () => {
     await expect(
       prepareRoutineWidgetActions({
+        ownerGeneration: OWNER_GENERATION,
+        snapshotNonce: OWNER_GENERATION,
+        localDate: DAY,
+        phase: 'PM',
+        stepKeys: ['PM:cleanser'],
+        expiresAt: NOW + 60_000,
+      }),
+    ).rejects.toThrow(ROUTINE_WIDGET_ACTION_INPUT_INVALID);
+    mocks.uuids.push(SNAPSHOT, TOKEN_A);
+    await expect(
+      prepareRoutineWidgetActions({
+        ownerGeneration: OWNER_GENERATION,
         localDate: DAY,
         phase: 'PM',
         stepKeys: ['AM:cleanser'],
         expiresAt: NOW + 60_000,
       }),
     ).rejects.toThrow(ROUTINE_WIDGET_ACTION_INPUT_INVALID);
-
     mocks.uuids.push(SNAPSHOT, TOKEN_A);
     await expect(
       prepareRoutineWidgetActions({
+        ownerGeneration: OWNER_GENERATION,
         localDate: DAY,
         phase: 'PM',
         stepKeys: ['PM:cleanser'],
         expiresAt: NOW + HEALTH_PROCESSING_STATUS_LEASE_MS + 1,
       }),
     ).rejects.toThrow(ROUTINE_WIDGET_ACTION_EXPIRY_OUTSIDE_LEASE);
-    expect(mocks.storage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
   });
 
-  it('keeps deletion available after health processing closes', async () => {
+  it('keeps current and legacy deletion lanes available after health processing closes', async () => {
     await prepare();
+    mocks.storage.set(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY, '{"version":1}');
     clearActiveHealthProcessingEpoch();
-
     await expect(clearRoutineWidgetActions()).resolves.toBeUndefined();
     expect(mocks.storage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(false);
+    expect(mocks.storage.has(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY)).toBe(false);
+  });
+
+  it('attempts both capability-key removals when either encrypted deletion fails', async () => {
+    await prepare();
+    mocks.storage.set(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY, '{"version":1}');
+    mocks.removeFailures.add(ROUTINE_WIDGET_ACTION_REGISTRY_KEY);
+    clearActiveHealthProcessingEpoch();
+
+    await expect(clearRoutineWidgetActions()).rejects.toThrow(
+      `remove failed:${ROUTINE_WIDGET_ACTION_REGISTRY_KEY}`,
+    );
+    expect(mocks.storage.has(ROUTINE_WIDGET_ACTION_REGISTRY_KEY)).toBe(true);
+    expect(mocks.storage.has(ROUTINE_WIDGET_LEGACY_ACTION_REGISTRY_KEY)).toBe(false);
   });
 });

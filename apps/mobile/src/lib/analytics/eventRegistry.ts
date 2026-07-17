@@ -19,6 +19,7 @@ export const ANALYTICS_ALLOWED_EVENTS = [
   'commerce_consent_declined',
   'commerce_consent_granted',
   'community_consent_granted',
+  'community_consent_withdrawn',
   'comparison_viewed',
   'conflict_detected',
   'conflict_overridden',

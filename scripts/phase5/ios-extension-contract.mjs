@@ -20,7 +20,7 @@ const REVIEWED_DEPENDENCY_LOCKS = Object.freeze({
       'sha512-B6CXc+WJg2GE4KF6LrCPTf+ozMWKMG9TAVc//gQYUsLzFZzm0vCgUqXRiaNJ6BukpHoZPLKsQZ95VsSyTVda3A==',
   }),
   'expo-widgets': Object.freeze({
-    specifier: '~56.0.23',
+    specifier: '56.0.23',
     path: 'node_modules/expo-widgets',
     version: '56.0.23',
     resolved: 'https://registry.npmjs.org/expo-widgets/-/expo-widgets-56.0.23.tgz',

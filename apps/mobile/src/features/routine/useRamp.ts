@@ -22,10 +22,15 @@ export type RampItem = {
 export function useRamp(): {
   items: RampItem[];
   isLoading: boolean;
+  isError: boolean;
+  sourceReady: boolean;
+  isExample: boolean;
   acceptStepUp: (productId: string) => Promise<void>;
 } {
   const qc = useQueryClient();
-  const { data: planData, isLoading: planLoading } = usePlan();
+  const plan = usePlan();
+  const planData = plan.data;
+  const planLoading = plan.isLoading;
   const planRamps = planData?.plan.ramp ?? [];
   const today = localDateString();
   const keyIds = planRamps.map((r) => r.productId).join(',');
@@ -74,5 +79,14 @@ export function useRamp(): {
     });
   }
 
-  return { items: q.data ?? [], isLoading: planLoading || q.isLoading, acceptStepUp };
+  const isLoading = planLoading || q.isLoading;
+  const isError = plan.isError || q.isError;
+  return {
+    items: q.data ?? [],
+    isLoading,
+    isError,
+    sourceReady: Boolean(plan.sourceReady && !isLoading && !isError && q.data !== undefined),
+    isExample: plan.isExample,
+    acceptStepUp,
+  };
 }

@@ -2,6 +2,8 @@ import { useEffect, type ReactNode } from 'react';
 import { View } from 'react-native';
 
 import { Button, Text } from '@/components/ui';
+import { RoutineWidgetLifecycleSlot } from '@/features/widgets/RoutineWidgetLifecycleHost';
+import type { RoutineWidgetLifecycleAuthorityInput } from '@/features/widgets/lifecycleCoordinator';
 
 /**
  * Keeps the mounted route tree under one stable parent while the durable
@@ -13,11 +15,15 @@ export function MountedGoalsActivationInterlock({
   children,
   activationPending,
   failed,
+  routineWidgetAuthority,
+  privacyCheckMessage = null,
   onAcknowledge,
 }: {
   children?: ReactNode;
   activationPending: boolean;
   failed: boolean;
+  routineWidgetAuthority: RoutineWidgetLifecycleAuthorityInput | null;
+  privacyCheckMessage?: string | null;
   onAcknowledge: () => Promise<void>;
 }) {
   // The goals route and its empty providers must commit before the durable
@@ -28,14 +34,17 @@ export function MountedGoalsActivationInterlock({
     void onAcknowledge();
   }, [activationPending, onAcknowledge]);
 
+  const interactionBlocked = activationPending || privacyCheckMessage !== null;
+
   return (
     <View className="flex-1">
       <View
         className="flex-1"
-        pointerEvents={activationPending ? 'none' : 'auto'}
-        accessibilityElementsHidden={activationPending}
-        importantForAccessibility={activationPending ? 'no-hide-descendants' : 'auto'}
+        pointerEvents={interactionBlocked ? 'none' : 'auto'}
+        accessibilityElementsHidden={interactionBlocked}
+        importantForAccessibility={interactionBlocked ? 'no-hide-descendants' : 'auto'}
       >
+        <RoutineWidgetLifecycleSlot authority={routineWidgetAuthority} />
         {children}
       </View>
       {activationPending ? (
@@ -66,6 +75,18 @@ export function MountedGoalsActivationInterlock({
               />
             </>
           ) : null}
+        </View>
+      ) : privacyCheckMessage !== null ? (
+        <View
+          accessibilityViewIsModal
+          className="absolute inset-0 items-center justify-center bg-paper px-6"
+        >
+          <Text variant="eyebrow" tone="clay" className="text-center">
+            PRIVACY CHECK
+          </Text>
+          <Text variant="title" className="mt-2 text-center">
+            {privacyCheckMessage}
+          </Text>
         </View>
       ) : null}
     </View>

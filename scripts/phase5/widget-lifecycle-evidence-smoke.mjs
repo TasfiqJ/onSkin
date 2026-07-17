@@ -112,6 +112,7 @@ function privacyClaims() {
 function scenarioClaims(id) {
   if (id === 'archiveInspection') {
     return {
+      appGroupEntitlementsMatch: true,
       appCodeSignatureValid: true,
       appPrivacyManifestEmbedded: true,
       extensionCodeSignatureValid: true,
@@ -119,6 +120,10 @@ function scenarioClaims(id) {
       extensionPrivacyManifestEmbedded: true,
       frequentUpdatesEnabled: false,
       identitiesMatch: true,
+      interactivePublicationEnabled: true,
+      lifecycleVersion: 1,
+      liveActivityStartEnabled: true,
+      sqlite3Linked: true,
       unapprovedExtensionCapabilitiesAbsent: true,
     };
   }
@@ -126,17 +131,29 @@ function scenarioClaims(id) {
     return {
       accountDeletionCleanup: true,
       accountSwitchCleanup: true,
+      allOrRedactReconciliation: true,
       atomicConcurrentCheckOff: true,
+      authorityNonceCas: true,
+      boundedCrossProcessLock: true,
+      canonicalSnapshotEquality: true,
       corruptBytesCleanup: true,
       expiredTokenNoWrite: true,
       expiryCleanup: true,
+      foreignOwnerCleanup: true,
       healthConsentWithdrawalCleanup: true,
       killedAppReconciliation: true,
       lockedStateRedaction: true,
-      nativeActionImplementation: 'append_only_app_group_outbox',
+      nativeActionImplementation: 'sqlite_app_group_outbox_cas',
+      outboxCommittedBeforeIntentReturn: true,
+      oversizedBytesCleanup: true,
+      ownerSnapshotBinding: true,
       repeatedTapIdempotent: true,
       signOutCleanup: true,
+      sqliteTimelineAuthority: true,
       staleTokenNoWrite: true,
+      tombstoneCleanup: true,
+      twoEntryStaleTimeline: true,
+      unclaimedOwnerCleanup: true,
       unknownTokenNoWrite: true,
     };
   }
@@ -145,18 +162,24 @@ function scenarioClaims(id) {
       consentWithdrawalCleanup: true,
       deviceRestartRecovery: true,
       disablementCleanup: true,
-      explicitEnd: true,
+      explicitCompletionEnd: true,
+      finiteStaleDeadline: true,
+      immediatePrivacyEnd: true,
       lockedStateRedaction: true,
+      ownerFilteredRecovery: true,
       processDeathRecovery: true,
-      staleDateNonNull: true,
+      startUpdateAuthorization: true,
     };
   }
   return {
     accessibilityPass: true,
     coldStartDeepLinkPass: true,
+    dynamicTypePass: true,
     killedAppDeepLinkPass: true,
     lockedStateRedaction: true,
+    repeatedConcurrentInteractionPass: true,
     supportedFamilies: [...WIDGET_LIFECYCLE_SUPPORTED_FAMILIES],
+    voiceOverPass: true,
     warmDeepLinkPass: true,
   };
 }
@@ -523,7 +546,7 @@ test('strict CLI rejects missing evidence and source/build/signoff environment m
   );
 });
 
-test('checked-in operator template exactly matches schema v2', () => {
+test('checked-in operator template exactly matches schema v3', () => {
   const result = spawnSync(process.execPath, [checker, '--check-template'], {
     cwd: repoRoot,
     encoding: 'utf8',

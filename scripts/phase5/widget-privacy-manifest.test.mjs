@@ -9,11 +9,17 @@ const require = createRequire(import.meta.url);
 const plist = require('@expo/plist').default;
 const {
   APP_GROUP_USER_DEFAULTS_REASON,
+  LIVE_ACTIVITY_START_ENABLED_KEY,
   PRIVACY_MANIFEST_FILENAME,
   TARGET_NAME,
   USER_DEFAULTS_API_TYPE,
+  WIDGET_LIFECYCLE_VERSION,
+  WIDGET_LIFECYCLE_VERSION_KEY,
+  WIDGET_DEEP_LINK_KEY,
+  WIDGET_PUBLICATION_ENABLED_KEY,
   ensureWidgetPrivacyManifestResource,
   mergeWidgetPrivacyManifest,
+  writeWidgetLifecycleConfiguration,
   writeWidgetPrivacyManifest,
 } = require('../../apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js');
 
@@ -190,6 +196,38 @@ test('writes a stable target manifest after expo-widgets and preserves invalid s
       /not a valid plist and was preserved/,
     );
     assert.equal(readFileSync(manifestPath, 'utf8'), corrupt);
+  } finally {
+    rmSync(platformRoot, { recursive: true, force: true });
+  }
+});
+
+test('writes immutable disabled lifecycle flags into the generated extension plist', () => {
+  const platformRoot = mkdtempSync(path.join(tmpdir(), 'routinekind-widget-flags-'));
+  const targetDirectory = path.join(platformRoot, TARGET_NAME);
+  const infoPlistPath = path.join(targetDirectory, 'Info.plist');
+  try {
+    mkdirSync(targetDirectory, { recursive: true });
+    writeFileSync(
+      infoPlistPath,
+      plist.build({ NSExtension: {}, UnrelatedSignedSetting: 'preserved' }),
+    );
+    assert.equal(
+      writeWidgetLifecycleConfiguration(
+        platformRoot,
+        TARGET_NAME,
+        'routinekind-development://today',
+      ),
+      infoPlistPath,
+    );
+    const first = readFileSync(infoPlistPath, 'utf8');
+    const value = plist.parse(first);
+    assert.equal(value[WIDGET_LIFECYCLE_VERSION_KEY], WIDGET_LIFECYCLE_VERSION);
+    assert.equal(value[WIDGET_PUBLICATION_ENABLED_KEY], false);
+    assert.equal(value[LIVE_ACTIVITY_START_ENABLED_KEY], false);
+    assert.equal(value[WIDGET_DEEP_LINK_KEY], 'routinekind-development://today');
+    assert.equal(value.UnrelatedSignedSetting, 'preserved');
+    writeWidgetLifecycleConfiguration(platformRoot, TARGET_NAME, 'routinekind-development://today');
+    assert.equal(readFileSync(infoPlistPath, 'utf8'), first);
   } finally {
     rmSync(platformRoot, { recursive: true, force: true });
   }

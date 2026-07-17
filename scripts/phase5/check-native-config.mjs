@@ -154,44 +154,56 @@ require(/input\.platform === 'ios'/.test(widgetRuntimeGateSource) &&
   /input\.appEnvironment !== 'production'/.test(widgetRuntimeGateSource) &&
   /ROUTINE_WIDGET_INTERACTIVE_PUBLICATION_ENABLED:\s*false\s*=\s*false/.test(
     widgetRuntimeGateSource,
-  ), 'Widget runtime must require exact iOS/non-production extension opt-in and keep interactive publication hard-disabled.');
+  ) &&
+  /ROUTINE_LIVE_ACTIVITY_START_ENABLED:\s*false\s*=\s*false/.test(
+    widgetRuntimeGateSource,
+  ), 'Widget runtime must require exact iOS/non-production extension opt-in and keep interactive publication plus Live Activity start independently hard-disabled.');
 require(/rejects missing, string, numeric, and otherwise truthy config values/.test(
   widgetRuntimeGateTestSource,
 ) &&
-  /keeps interactive publication compile-time hard-disabled/.test(
+  /keeps interactive publication compile-time hard-disabled/.test(widgetRuntimeGateTestSource) &&
+  /keeps Live Activity start\/update independently compile-time hard-disabled/.test(
     widgetRuntimeGateTestSource,
-  ), 'Widget runtime gate tests must pin exact-boolean opt-in and the hard-disabled interactive contract.');
+  ), 'Widget runtime gate tests must pin exact-boolean opt-in and both hard-disabled interactive contracts.');
 const widgetControllerOrder = [
-  'await dependencies.resolveActions(',
+  'await dependencies.resolveActions({',
   'await dependencies.completeAction(',
-  'await dependencies.acknowledgeActions(tokens)',
-  'dependencies.replaceTimeline()',
+  'const nativeResult =',
+  'await dependencies.acknowledgeActions({',
 ].map((needle) => widgetControllerCoreSource.indexOf(needle));
 require(widgetControllerOrder.every((index) => index >= 0) &&
   widgetControllerOrder.every((index, position) =>
     position === 0 ? true : index > widgetControllerOrder[position - 1],
   ) &&
-  /acknowledged !== tokens\.length/.test(widgetControllerCoreSource) &&
-  /replacementReceipt !== ROUTINE_WIDGET_TIMELINE_REPLACED/.test(widgetControllerCoreSource) &&
+  /acknowledged !== acceptedTokens\.length/.test(widgetControllerCoreSource) &&
+  /expectedRevision: outbox\.records\[outbox\.records\.length - 1\]/.test(
+    widgetControllerCoreSource,
+  ) &&
+  /dependencies\.commitReconciliation\(reconciliationInput\)/.test(widgetControllerCoreSource) &&
+  /dependencies\.commitCapturedReconciliation\(\{\s*\.\.\.reconciliationInput,\s*quiescenceNonce,\s*\}\)/.test(
+    widgetControllerCoreSource,
+  ) &&
+  /record\.snapshotNonce !== first\.snapshotNonce/.test(widgetControllerCoreSource) &&
+  /outbox\.authorityNonce !== authority\.authorityNonce/.test(widgetControllerCoreSource) &&
   /capturedGeneration !== this\.generation/.test(widgetControllerCoreSource) &&
   !/from ['"]expo-widgets['"]/.test(
     widgetControllerCoreSource,
-  ), 'The unmounted widget controller core must remain injected and enforce resolve -> canonical completion -> exact acknowledgement -> synchronous replacement with generation invalidation.');
-require(/preserves resolve -> completion -> exact ack -> replace ordering/.test(
+  ), 'The widget controller core must remain injected and enforce native outbox binding, resolve -> canonical completion -> normal or captured native CAS/redaction -> exact private acknowledgement, with generation invalidation.');
+require(/orders resolve-all, canonical writes, native CAS, then private acknowledgement/.test(
   widgetControllerCoreTestSource,
 ) &&
-  /never writes a %s token but permits the caller to prune it/.test(
+  /passes only resolved tokens so any unknown capability atomically redacts native state/.test(
     widgetControllerCoreTestSource,
   ) &&
-  /preserves the timeline when a canonical completion fails or is rejected/.test(
+  /does not consume native or private state after a canonical failure/.test(
     widgetControllerCoreTestSource,
   ) &&
-  /invalidation after a canonical completion prevents stale acknowledgement and replacement/.test(
+  /invalidates an awaiting generation before native CAS or private acknowledgement/.test(
     widgetControllerCoreTestSource,
   ) &&
-  /rejects an async replacement callback instead of reporting a committed timeline/.test(
+  /rejects a mixed snapshot batch before any canonical or private work/.test(
     widgetControllerCoreTestSource,
-  ), 'Widget controller tests must pin fail-closed reconciliation, pruning, ordering, and generation invalidation.');
+  ), 'Widget controller tests must pin one-binding native outbox reconciliation, all-or-redact ordering, and generation invalidation.');
 require(/\(isProduction \|\| appEnvironment === 'production'\) &&\s*iosWidgetExtensionBuildEnabled/.test(
   appConfigSource,
 ) &&
@@ -206,7 +218,14 @@ require(/nativeWidgets:\s*false/.test(phase7Source) &&
 const widgetRuntimeSmoke = String(rootPkg.scripts?.['phase5:widget-runtime-contract:smoke'] ?? '');
 for (const file of [
   'runtimeGate.test.ts',
+  'nativeLifecycleContract.test.ts',
+  'nativeLifecycleBridge.test.ts',
+  'nativeOutboxModel.test.ts',
+  'ownerAuthority.test.ts',
   'controllerCore.test.ts',
+  'lifecycleCoordinator.test.ts',
+  'lifecycleRuntime.test.ts',
+  'RoutineWidgetLifecycleHost.test.ts',
   'actionRegistry.test.ts',
   'contract.test.ts',
   'widgetViews.test.ts',
@@ -482,6 +501,22 @@ for (const file of [
   'apps/mobile/src/features/widgets/contract.test.ts',
   'apps/mobile/src/features/widgets/controllerCore.ts',
   'apps/mobile/src/features/widgets/controllerCore.test.ts',
+  'apps/mobile/src/features/widgets/nativeLifecycle.ts',
+  'apps/mobile/src/features/widgets/nativeLifecycle.ios.ts',
+  'apps/mobile/src/features/widgets/nativeLifecycleContract.ts',
+  'apps/mobile/src/features/widgets/nativeLifecycleContract.test.ts',
+  'apps/mobile/src/features/widgets/nativeLifecycleBridge.test.ts',
+  'apps/mobile/src/features/widgets/nativeOutboxModel.ts',
+  'apps/mobile/src/features/widgets/nativeOutboxModel.test.ts',
+  'apps/mobile/src/features/widgets/ownerAuthority.ts',
+  'apps/mobile/src/features/widgets/ownerAuthority.test.ts',
+  'apps/mobile/src/features/widgets/lifecycleCoordinator.ts',
+  'apps/mobile/src/features/widgets/lifecycleCoordinator.test.ts',
+  'apps/mobile/src/features/widgets/lifecycleRuntime.ts',
+  'apps/mobile/src/features/widgets/lifecycleRuntime.ios.ts',
+  'apps/mobile/src/features/widgets/lifecycleRuntime.test.ts',
+  'apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.tsx',
+  'apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.test.ts',
   'apps/mobile/src/features/widgets/runtimeGate.ts',
   'apps/mobile/src/features/widgets/runtimeGate.test.ts',
   'apps/mobile/src/features/widgets/TodayWidget.ios.tsx',
@@ -492,6 +527,36 @@ for (const file of [
   'supabase/migrations/20260713000045_anonymous_photo_storage_guard.sql',
   'apps/mobile/src/lib/iap/revenuecat.ts',
   'apps/mobile/src/lib/consent/healthDataWriteAdmission.ts',
+  'apps/mobile/src/features/healthConsent/HealthDataActivationMount.tsx',
+  'apps/mobile/src/features/healthConsent/HealthDataActivationMount.test.ts',
+  'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx',
+  'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts',
+  'apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts',
+  'apps/mobile/src/features/healthConsent/selectiveCleanup.ts',
+  'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
+  'apps/mobile/src/features/settings/accountDeletionRecovery.ts',
+  'apps/mobile/src/features/settings/accountDeletionRecovery.test.ts',
+  'apps/mobile/src/features/settings/localPrivateData.ts',
+  'apps/mobile/src/features/settings/localPrivateData.test.ts',
+  'apps/mobile/src/lib/auth/AuthProvider.tsx',
+  'apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts',
+  'apps/mobile/src/lib/auth/revokedCredentialActivity.ts',
+  'apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts',
+  'scripts/postinstall.mjs',
+  'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
+  'scripts/phase5/patch-expo-widgets-lifecycle.test.mjs',
+  'scripts/phase5/expo-widgets-lifecycle-source.test.mjs',
+  'scripts/phase5/expo-widgets-56.0.23/RoutineKindWidgetLifecycleStore.swift',
+  'scripts/phase5/expo-widgets-56.0.23/AppIntent.swift',
+  'scripts/phase5/expo-widgets-56.0.23/EntryView.swift',
+  'scripts/phase5/expo-widgets-56.0.23/ExpoWidgets.podspec',
+  'scripts/phase5/expo-widgets-56.0.23/LiveActivity.swift',
+  'scripts/phase5/expo-widgets-56.0.23/LiveActivityFactory.swift',
+  'scripts/phase5/expo-widgets-56.0.23/TimelineProvider.swift',
+  'scripts/phase5/expo-widgets-56.0.23/Utils.swift',
+  'scripts/phase5/expo-widgets-56.0.23/WidgetLiveActivity.swift',
+  'scripts/phase5/expo-widgets-56.0.23/WidgetObject.swift',
+  'scripts/phase5/expo-widgets-56.0.23/WidgetsModule.swift',
   'scripts/phase5/build-device-qa-packet.mjs',
   'scripts/phase5/check-native-config.mjs',
   'scripts/phase5/ios-extension-contract.mjs',

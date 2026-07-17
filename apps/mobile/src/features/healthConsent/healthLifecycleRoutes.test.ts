@@ -113,7 +113,7 @@ describe('health lifecycle route contract', () => {
     expect(mountedInterlock).toContain('{children}');
     expect(mountedInterlock).toContain('if (!activationPending) return;');
     expect(mountedInterlock).toContain('void onAcknowledge()');
-    expect(mountedInterlock).toContain("pointerEvents={activationPending ? 'none' : 'auto'}");
+    expect(mountedInterlock).toContain("pointerEvents={interactionBlocked ? 'none' : 'auto'}");
     expect(mountedInterlock).toContain('{activationPending ? (');
     expect(acknowledgement).toContain('completeHealthDataActivationRoute');
     expect(acknowledgement).toContain('releaseHealthDataActivationRoute');
@@ -128,7 +128,7 @@ describe('health lifecycle route contract', () => {
     const gate = read('features/healthConsent/HealthDataLifecycleGate.tsx');
     const pendingBranch = gate.slice(
       gate.indexOf('if (!healthDataChildrenMayMount(gateSnapshot))'),
-      gate.indexOf("record.state === 'active' &&\n    isSupabaseConfigured"),
+      gate.indexOf('const privacyCheckMessage'),
     );
     const releasedBranch = gate.slice(
       gate.indexOf('// Keep the navigator and its browser-history adapter under the same parent'),
@@ -237,6 +237,11 @@ describe('health lifecycle route contract', () => {
     );
     expect(gate).toContain('if (isAccountGenerationLeaseError(error)) return;');
     expect(gate).toContain('generation: lease.generation');
-    expect(gate).toContain('if (!clearExactProcessingLease(scheduledLease, ownerUserId)) return;');
+    expect(gate).toContain('drainRoutineWidgetOutboxBeforeHealthLeaseClose');
+    expect(gate).toContain('ROUTINE_WIDGET_RECONCILIATION_HEADROOM_MS');
+    expect(gate).toContain('expiresAt - ROUTINE_WIDGET_RECONCILIATION_HEADROOM_MS - Date.now()');
+    expect(gate.match(/beginProcessingLeaseClose\(/g)).toHaveLength(2);
+    expect(gate).toContain('privacyCheckMessage={privacyCheckMessage}');
+    expect(gate).toContain("? 'Securing recent routine updates'");
   });
 });

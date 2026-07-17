@@ -38,3 +38,11 @@ export function routineWidgetRuntimeEnabled(): boolean {
  * protocol) is implemented and verified on physical devices.
  */
 export const ROUTINE_WIDGET_INTERACTIVE_PUBLICATION_ENABLED: false = false;
+
+/**
+ * Live Activity initiation has a separate signed native Info.plist flag. Keep
+ * its JS half independently hard-disabled so enabling widget timelines cannot
+ * accidentally make a start/update call against a build whose native activity
+ * gate remains closed. Cleanup/end calls remain allowed.
+ */
+export const ROUTINE_LIVE_ACTIVITY_START_ENABLED: false = false;

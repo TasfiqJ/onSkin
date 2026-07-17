@@ -68,13 +68,19 @@ block(
 );
 block(
   errors,
-  /posthog\?\.capture\(safeEvent,\s*safeProps\)/.test(trackSource),
-  'PostHog capture must use the sanitized event name.',
+  /void sanitizeAnalyticsProps\(props\)/.test(trackSource) &&
+    !/import\(['"]posthog-react-native['"]\)/.test(trackSource) &&
+    !/\.capture\(/.test(trackSource) &&
+    !/\.identify\(/.test(trackSource) &&
+    !/\.flush\(/.test(trackSource),
+  'Direct mobile analytics transport must remain disabled while every event and property still passes the launch-gated sanitizers.',
 );
 block(
   errors,
-  !/posthog\?\.capture\(event/.test(trackSource),
-  'PostHog capture must not receive the raw event name.',
+  !/posthog\?\.capture\(event/.test(trackSource) &&
+    !/export function identify/.test(trackSource) &&
+    !/pseudonymousUserId/.test(trackSource),
+  'Mobile analytics must not expose a direct vendor identity or raw-event capture path.',
 );
 block(
   errors,
@@ -123,23 +129,23 @@ block(
 );
 block(
   errors,
-  /pseudonymousUserId/.test(trackSource),
-  'Analytics identify must pseudonymize raw user IDs before vendor calls.',
+  !/\.identify\(/.test(trackSource),
+  'Analytics must not establish a persistent mobile vendor identity before the approved consent-aware transport exists.',
 );
 block(
   errors,
-  /posthog\?\.identify\(pseudonymousId/.test(trackSource),
-  'PostHog identify must use a pseudonymous user ID.',
+  !/posthog\?\.identify\(/.test(trackSource),
+  'PostHog identify must remain absent from the launch-gated mobile analytics path.',
 );
 block(
   errors,
-  /captureAppLifecycleEvents:\s*false/.test(trackSource),
-  'PostHog automatic lifecycle capture must stay disabled.',
+  !/captureAppLifecycleEvents:\s*true/.test(trackSource),
+  'PostHog automatic lifecycle capture must never be enabled.',
 );
 block(
   errors,
-  /enableSessionReplay:\s*false/.test(trackSource),
-  'PostHog session replay must stay disabled.',
+  !/enableSessionReplay:\s*true/.test(trackSource) && !/sessionReplay:\s*true/.test(trackSource),
+  'PostHog session replay must never be enabled.',
 );
 block(
   errors,
@@ -158,8 +164,10 @@ block(
 );
 block(
   errors,
-  /pseudonymousUserId/.test(sentrySource),
-  'Sentry setUser must pseudonymize raw user IDs before vendor calls.',
+  /user:\s*undefined/.test(sentrySource) &&
+    !/Sentry\.setUser/.test(sentrySource) &&
+    !/pseudonymousUserId/.test(sentrySource),
+  'Sentry must drop user payloads and must not attach a stable raw or pseudonymous account identity.',
 );
 block(
   errors,
@@ -262,8 +270,8 @@ block(
 );
 block(
   errors,
-  /devWarn/.test(trackSource),
-  'Analytics dev warnings must not log raw exception objects.',
+  !/console\.(?:log|warn|error)\(/.test(trackSource) && !/devWarn\(/.test(trackSource),
+  'Analytics tracking must not log events, properties, or raw exception objects.',
 );
 block(
   errors,
@@ -283,16 +291,19 @@ block(
 block(
   errors,
   /export async function resetAnalyticsIdentity/.test(trackSource) &&
-    /posthog\?\.reset\(\)/.test(trackSource),
-  'PostHog client identity must expose an account-boundary reset.',
+    /await purgeLegacyPostHogPersistence\(\)/.test(trackSource),
+  'Analytics account-boundary cleanup must purge every legacy PostHog persistence backend.',
 );
 block(
   errors,
   /export async function resetRevenueCatIdentity/.test(revenueCatSource) &&
-    /await Purchases\.logOut\(\)/.test(revenueCatSource) &&
-    /configuredForUserId = null/.test(revenueCatSource) &&
-    /cachedOfferings = null/.test(revenueCatSource),
-  'RevenueCat client identity reset must log out and clear cached account/offering state.',
+    /await rawSealRevenueCatIdentity\(\)/.test(revenueCatSource) &&
+    /accountPublicationController\.beginDrain\('account_boundary'\)/.test(revenueCatSource) &&
+    /configuredBinding = null/.test(revenueCatSource) &&
+    /configurePromise = null/.test(revenueCatSource) &&
+    /cachedOfferings = null/.test(revenueCatSource) &&
+    !/Purchases\.logOut\(\)/.test(revenueCatSource),
+  'RevenueCat account-boundary cleanup must close publication and seal cached identity state without creating an anonymous logOut identity.',
 );
 block(
   errors,

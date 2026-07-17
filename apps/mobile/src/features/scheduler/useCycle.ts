@@ -127,7 +127,15 @@ function daysSince(iso: string): number {
   return Math.round((Date.now() - new Date(iso).getTime()) / 86_400_000);
 }
 
-export function useCycle(): { data: CycleData | undefined; isLoading: boolean } {
+export type CycleHookResult = {
+  data: CycleData | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  sourceReady: boolean;
+  isExample: boolean;
+};
+
+export function useCycle(): CycleHookResult {
   const shelf = useShelf();
   const today = useCycleLocalDate();
   const cfg = useQuery({ queryKey: ['cycleConfig', today], queryFn: loadCycleConfig });
@@ -218,9 +226,23 @@ export function useCycle(): { data: CycleData | undefined; isLoading: boolean } 
     };
   }, [shelf.data, cfg.data, profile.data, freqByProductId, today, cadenceReady]);
 
+  const isLoading = shelf.isLoading || cfg.isLoading || profile.isLoading || ramp.isLoading;
+  const isError = shelf.isError || cfg.isError || profile.isError || ramp.isError;
   return {
     data,
-    isLoading: shelf.isLoading || cfg.isLoading || profile.isLoading || ramp.isLoading,
+    isLoading,
+    isError,
+    sourceReady: Boolean(
+      !isLoading &&
+      !isError &&
+      shelf.data !== undefined &&
+      cfg.data !== undefined &&
+      profile.data !== undefined &&
+      profile.data.source !== 'unavailable' &&
+      ramp.sourceReady &&
+      data !== undefined,
+    ),
+    isExample: ramp.isExample,
   };
 }
 

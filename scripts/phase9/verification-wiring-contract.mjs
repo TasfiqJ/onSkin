@@ -3,7 +3,7 @@ import { parseDocument } from 'yaml';
 const SCRIPT_NAME = /^[a-z0-9][a-z0-9:-]*$/;
 const SAFE_PARENT_COMMAND = /^(?:npm run [a-z0-9][a-z0-9:-]*|npm test)$/;
 const DEFAULT_WORKFLOW_JOB = 'checks';
-const DEFAULT_WORKFLOW_STEP = 'Verify installed iOS privacy sources';
+const DEFAULT_WORKFLOW_STEP = 'Verify installed iOS native sources';
 
 function isRecord(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);

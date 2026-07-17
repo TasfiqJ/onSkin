@@ -55,6 +55,21 @@ const liveHarnessFiles = [
 ];
 
 const localVerifierFiles = [
+  'scripts/postinstall.mjs',
+  'scripts/phase5/patch-expo-widgets-lifecycle.mjs',
+  'scripts/phase5/patch-expo-widgets-lifecycle.test.mjs',
+  'scripts/phase5/expo-widgets-lifecycle-source.test.mjs',
+  'scripts/phase5/expo-widgets-56.0.23/RoutineKindWidgetLifecycleStore.swift',
+  'scripts/phase5/expo-widgets-56.0.23/AppIntent.swift',
+  'scripts/phase5/expo-widgets-56.0.23/EntryView.swift',
+  'scripts/phase5/expo-widgets-56.0.23/ExpoWidgets.podspec',
+  'scripts/phase5/expo-widgets-56.0.23/LiveActivity.swift',
+  'scripts/phase5/expo-widgets-56.0.23/LiveActivityFactory.swift',
+  'scripts/phase5/expo-widgets-56.0.23/TimelineProvider.swift',
+  'scripts/phase5/expo-widgets-56.0.23/Utils.swift',
+  'scripts/phase5/expo-widgets-56.0.23/WidgetLiveActivity.swift',
+  'scripts/phase5/expo-widgets-56.0.23/WidgetObject.swift',
+  'scripts/phase5/expo-widgets-56.0.23/WidgetsModule.swift',
   'scripts/phase9/release-contact-smoke.mjs',
   'scripts/phase9/evidence-normalization-smoke.mjs',
   'scripts/phase9/release-smoke.mjs',
@@ -101,6 +116,7 @@ const requiredFiles = [
   'apps/mobile/package.json',
   'docs/hugeToDo/launch-contract.json',
   'docs/hugeToDo/PAY-06-ENTITLEMENT-AUTHORITY-LANES-2026-07-14.md',
+  'docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md',
   'docs/hugeToDo/IOS-09-IOS-PRIVACY-SOURCE-CHECKPOINT-2026-07-16.md',
   'scripts/launch/contract.mjs',
   'docs/phase-9/source-of-truth.md',
@@ -130,7 +146,46 @@ const requiredFiles = [
   'docs/phase-9/release-candidates/_template/incident-plan.md',
   'docs/phase-9/release-candidates/_template/signoff.md',
   '.github/workflows/quality.yml',
+  'apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js',
   'apps/mobile/src/app/_layout.tsx',
+  'apps/mobile/src/features/widgets/actionRegistry.ts',
+  'apps/mobile/src/features/widgets/actionRegistry.test.ts',
+  'apps/mobile/src/features/widgets/contract.ts',
+  'apps/mobile/src/features/widgets/contract.test.ts',
+  'apps/mobile/src/features/widgets/controllerCore.ts',
+  'apps/mobile/src/features/widgets/controllerCore.test.ts',
+  'apps/mobile/src/features/widgets/nativeLifecycle.ts',
+  'apps/mobile/src/features/widgets/nativeLifecycle.ios.ts',
+  'apps/mobile/src/features/widgets/nativeLifecycleContract.ts',
+  'apps/mobile/src/features/widgets/nativeLifecycleContract.test.ts',
+  'apps/mobile/src/features/widgets/nativeLifecycleBridge.test.ts',
+  'apps/mobile/src/features/widgets/nativeOutboxModel.ts',
+  'apps/mobile/src/features/widgets/nativeOutboxModel.test.ts',
+  'apps/mobile/src/features/widgets/ownerAuthority.ts',
+  'apps/mobile/src/features/widgets/ownerAuthority.test.ts',
+  'apps/mobile/src/features/widgets/lifecycleCoordinator.ts',
+  'apps/mobile/src/features/widgets/lifecycleCoordinator.test.ts',
+  'apps/mobile/src/features/widgets/lifecycleRuntime.ts',
+  'apps/mobile/src/features/widgets/lifecycleRuntime.ios.ts',
+  'apps/mobile/src/features/widgets/lifecycleRuntime.test.ts',
+  'apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.tsx',
+  'apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.test.ts',
+  'apps/mobile/src/features/widgets/runtimeGate.ts',
+  'apps/mobile/src/features/widgets/runtimeGate.test.ts',
+  'apps/mobile/src/features/widgets/TodayWidget.ios.tsx',
+  'apps/mobile/src/features/widgets/TonightActivity.ios.tsx',
+  'apps/mobile/src/features/widgets/widgetViews.test.ts',
+  'apps/mobile/src/features/healthConsent/HealthDataActivationMount.tsx',
+  'apps/mobile/src/features/healthConsent/HealthDataActivationMount.test.ts',
+  'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx',
+  'apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts',
+  'apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts',
+  'apps/mobile/src/features/healthConsent/selectiveCleanup.ts',
+  'apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts',
+  'apps/mobile/src/lib/auth/AuthProvider.tsx',
+  'apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts',
+  'apps/mobile/src/lib/auth/revokedCredentialActivity.ts',
+  'apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts',
   'apps/mobile/src/features/settings/AccountDeletionRecoveryGate.tsx',
   'apps/mobile/src/features/settings/accountDeletionClientState.ts',
   'apps/mobile/src/features/settings/accountDeletionClientState.test.ts',
@@ -139,6 +194,8 @@ const requiredFiles = [
   'apps/mobile/src/features/settings/accountDeletionRecoveryGate.test.ts',
   'apps/mobile/src/features/settings/actions.ts',
   'apps/mobile/src/features/settings/actions.test.ts',
+  'apps/mobile/src/features/settings/localPrivateData.ts',
+  'apps/mobile/src/features/settings/localPrivateData.test.ts',
   'apps/mobile/src/features/settings/localPrivateDataKeys.ts',
   'apps/mobile/src/features/settings/localPrivateDataKeys.test.ts',
   'supabase/config.toml',
@@ -431,6 +488,10 @@ block(
 );
 
 for (const script of [
+  'postinstall:check',
+  'phase5:expo-widgets-lifecycle:patch',
+  'phase5:expo-widgets-lifecycle:check',
+  'phase5:expo-widgets-lifecycle:test',
   'phase9:release-smoke',
   'phase9:rls-adversarial-smoke',
   'phase9:rls-adversarial',
@@ -477,8 +538,9 @@ for (const script of [
   block(errors, Boolean(packageJson.scripts?.[script]), `package.json is missing ${script}.`);
 }
 const iosPrivacyVerifierDefinitions = {
-  'phase9:view-shot-privacy:check':
-    'node scripts/phase9/patch-react-native-view-shot-privacy.mjs --check',
+  'postinstall:check': 'node scripts/postinstall.mjs --check',
+  'phase5:expo-widgets-lifecycle:test':
+    'node --test scripts/phase5/patch-expo-widgets-lifecycle.test.mjs scripts/phase5/expo-widgets-lifecycle-source.test.mjs',
   'phase9:view-shot-privacy:test':
     'node --test scripts/phase9/patch-react-native-view-shot-privacy.test.mjs',
   'phase9:ios-privacy-source-audit:test':
@@ -501,15 +563,14 @@ block(
 );
 block(
   errors,
-  packageJson.scripts?.postinstall ===
-    'node scripts/phase9/patch-react-native-view-shot-privacy.mjs',
-  'Root postinstall must run the exact reviewed react-native-view-shot privacy patch.',
+  packageJson.scripts?.postinstall === 'node scripts/postinstall.mjs',
+  'Root postinstall must run the exact reviewed composite native-source patch installer.',
 );
 block(
   errors,
   mobilePackageJson.scripts?.['eas-build-post-install'] ===
-    'npm --prefix ../.. run phase9:view-shot-privacy:check',
-  'The EAS post-install hook must fail closed on the reviewed patched manifest state.',
+    'npm --prefix ../.. run postinstall:check',
+  'The EAS post-install hook must fail closed on every reviewed patched native source.',
 );
 const iosPrivacyWiring = auditVerificationWiring({
   packageJson,

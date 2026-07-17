@@ -94,6 +94,8 @@ const h = vi.hoisted(() => {
     onlineManager,
     authenticateWithAppleCredential: vi.fn(),
     clearAuthDerivedCleanupRequired: vi.fn(async () => {}),
+    clearRoutineWidgetActions: vi.fn(async () => {}),
+    clearRoutineWidgetLifecycleForPrivacy: vi.fn(async () => {}),
     checkAppleCredentialForSession: vi.fn<(_user: User) => Promise<AppleCheckResult>>(async () => ({
       status: 'not_applicable',
     })),
@@ -183,6 +185,12 @@ vi.mock('@/features/photos/encryptedStorage', () => ({
 }));
 vi.mock('@/features/photos/sensitiveImageMemory', () => ({ purgeSensitiveImageMemory: vi.fn() }));
 vi.mock('@/features/notifications/deliver', () => ({ rescheduleReminders: vi.fn() }));
+vi.mock('@/features/widgets/actionRegistry', () => ({
+  clearRoutineWidgetActions: h.clearRoutineWidgetActions,
+}));
+vi.mock('@/features/widgets/lifecycleCoordinator', () => ({
+  clearRoutineWidgetLifecycleForPrivacy: h.clearRoutineWidgetLifecycleForPrivacy,
+}));
 vi.mock('@/lib/env', () => ({
   env: {
     supabasePublishableKey: 'publishable-key',
@@ -603,6 +611,8 @@ beforeEach(() => {
   h.authenticateWithAppleCredential.mockReset();
   h.checkAppleCredentialForSession.mockReset().mockResolvedValue({ status: 'not_applicable' });
   h.clearAuthDerivedCleanupRequired.mockReset().mockResolvedValue(undefined);
+  h.clearRoutineWidgetActions.mockReset().mockResolvedValue(undefined);
+  h.clearRoutineWidgetLifecycleForPrivacy.mockReset().mockResolvedValue(undefined);
   h.clearPersistedSession.mockReset().mockResolvedValue(undefined);
   h.markAuthDerivedCleanupRequired.mockReset().mockResolvedValue(undefined);
   h.readAuthDerivedCleanupRequired.mockReset().mockResolvedValue(false);
@@ -1076,6 +1086,41 @@ describe('AuthProvider cold restore and foreground publication lifecycle', () =>
     expect(h.state.events).toContain(`activate:${replacement.access_token}`);
   });
 
+  it('closes native widget admission immediately and awaits its purge before B preflight', async () => {
+    const owner = session(USER_A, SESSION_A, 'widget-owner', 'refresh-widget-owner');
+    const replacement = session(
+      USER_B,
+      SESSION_B,
+      'widget-replacement',
+      'refresh-widget-replacement',
+    );
+    h.auth.getSession.mockResolvedValueOnce({ data: { session: owner }, error: null });
+    await mount();
+
+    const widgetPurge = deferred<void>();
+    h.clearRoutineWidgetLifecycleForPrivacy
+      .mockReset()
+      .mockImplementationOnce(() => widgetPurge.promise);
+    h.clearRoutineWidgetActions.mockClear();
+    h.fetchBarrier.mockClear();
+    h.state.events.length = 0;
+
+    await emitAuthState('SIGNED_IN', replacement);
+
+    expect(h.clearRoutineWidgetLifecycleForPrivacy).toHaveBeenCalledOnce();
+    expect(h.clearRoutineWidgetActions).toHaveBeenCalledOnce();
+    expect(currentAuth?.session).toBeNull();
+    expect(currentAuth?.initializing).toBe(true);
+    expect(h.fetchBarrier).not.toHaveBeenCalled();
+    expect(h.state.events).not.toContain(`reserve:${replacement.access_token}`);
+
+    widgetPurge.resolve();
+    await flush();
+
+    expect(h.fetchBarrier).toHaveBeenCalledWith(replacement.access_token, USER_B);
+    expect(currentAuth?.session?.access_token).toBe(replacement.access_token);
+  });
+
   it('closes admission and never activates a stale account changed during reserve', async () => {
     const staleOwner = session(USER_A, SESSION_A, 'stale-owner', 'refresh-stale');
     const replacement = session(USER_B, SESSION_B, 'replacement', 'refresh-replacement');
@@ -1470,6 +1515,7 @@ describe('AuthProvider cold restore and foreground publication lifecycle', () =>
     expect(h.state.events).not.toContain(`preflight:${refreshed.access_token}`);
     expect(h.state.events).not.toContain(`reserve:${refreshed.access_token}`);
     expect(h.state.events).not.toContain(`activate:${refreshed.access_token}`);
+    expect(h.clearRoutineWidgetActions).toHaveBeenCalled();
   });
 
   it('durably commits local sign-out before awaiting remote token revocation', async () => {

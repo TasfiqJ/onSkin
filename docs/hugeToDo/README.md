@@ -56,18 +56,49 @@ authenticated reservation gate. No candidate is described as legally clear,
 available, registrable, non-infringing, reserved, Apple-approved, or guaranteed
 to pass App Review.
 
-IOS-02 is also an `in_progress` source checkpoint, not a released native
-feature. A strict runtime gate and unmounted reconciliation core now exist, but
-interactive publication stays hard-disabled until a native atomic App Group
-outbox/CAS and unconditional privacy cleanup are implemented. Stock Expo 56
-uses `staleDate: nil`, so production Live Activity start remains prohibited.
-Signed-archive, final-identity, entitlement, privacy-manifest, process-death,
-accessibility, interaction, and physical-iPhone evidence remain open. Strict
-completion requires the schema-v2 lifecycle packet: three typed raw signed ZIPs,
-four canonical parsed entitlement/privacy reports, four canonical scenario
-reports, and typed scenario proofs, all cross-bound to the exact source, build,
-identities, device where applicable, and unique hashes. Setting QA booleans alone
-cannot clear IOS-02.
+IOS-02 is also an `in_progress` native source checkpoint, not a released
+feature. The reviewed source candidate now replaces the RoutineKind stock
+whole-value timeline path with an App Group SQLite authority, rotating
+authority-nonce CAS, a durable action outbox, an exact current-plus-stale
+timeline, owner/snapshot-bound reconciliation, finite RoutineKind Live Activity
+deadlines, a generation-bound coordinator/host slot, lock-held lease-close
+quiescence, and unconditional native privacy cleanup across withdrawal,
+deletion, sign-out, and account-boundary paths. At a planned health-lease close,
+the same cross-process store lock that guards App Intent append durably records
+an exact quiescence receipt and captures the final outbox before releasing the
+lock. One receipt/authority/owner/snapshot/revision-bound reconciliation may
+commit a nonempty captured outbox before the receipt is replaced by the ordinary
+closed sentinel; an empty capture is converted under the same lock before
+quiescence returns. Native `outbox_pending` publication and stale-Activity
+results are bounded retryable states, so accepted actions remain durable for a
+later foreground pass rather than being purged. Privacy reduction otherwise
+durably verifies `privacy-closing-v1` and returns a synchronous closed-admission
+receipt before the queued full purge. Withdrawal and account cleanup start this
+native closure at the boundary before JavaScript writer drains or
+replacement-owner publication. The exact `expo-widgets` `56.0.23` patch is
+hash-pinned and checked during local and EAS installation.
+
+Interactive publication and Live Activity start nevertheless remain disabled
+by literal generated Info.plist flags; ordinary JavaScript or OTA configuration
+cannot enable them. The current five-minute health-processing status lease,
+with 30 seconds reserved for reconciliation, makes personalized widget content
+short-lived. A reviewed longer purpose-limited local-display authorization is
+still required before enabling a persistent personalized widget. The current
+WidgetKit provider/render path also synchronously takes the exclusive `flock`
+and opens SQLite read-write, so Instruments and contention measurements on
+supported physical iPhones remain a release gate.
+
+This Windows checkpoint has no Xcode or Swift compiler and therefore does not
+prove that the patched source compiles, that a WidgetKit/ActivityKit extension
+is generated or signed, or that a binary contains the expected SQLite linkage,
+entitlements, capabilities, privacy manifest, and final identity. Signed-
+archive, physical-iPhone, process-death/restart, locked-state, accessibility,
+interaction, cleanup, actual ActivityKit dismissal, privacy/legal/security
+review, and App Review evidence remain open. The artifact-bound lifecycle
+packet must still bind the exact source, build, identities, signed artifacts,
+reports, physical device, scenario proofs, and named signoff. Setting QA
+booleans or passing source tests alone cannot clear IOS-02, establish legal
+compliance, guarantee Apple acceptance, or support a revenue claim.
 
 IOS-09 now has a deterministic installed-source privacy audit and an exact-hash
 repair for the invalid empty `NSPrivacyAccessedAPITypes` array shipped by the

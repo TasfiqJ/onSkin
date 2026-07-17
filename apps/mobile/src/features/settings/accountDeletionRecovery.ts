@@ -3,6 +3,8 @@ import type { Session } from '@supabase/supabase-js';
 
 import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
 import { clearPendingHealthWithdrawalIntentByOwnerBinding } from '@/features/healthConsent/pendingIntent';
+import { clearRoutineWidgetActions } from '@/features/widgets/actionRegistry';
+import { clearRoutineWidgetLifecycleForPrivacy } from '@/features/widgets/lifecycleCoordinator';
 import { clearAllDependentConsentWithdrawalTombstonesByOwnerBinding } from '@/lib/consent/dependentConsentLocal';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
 import { clearAuthDerivedLocalActivity } from '@/lib/auth/revokedCredentialActivity';
@@ -170,6 +172,8 @@ const clearDefaultAuthDerivedActivity = () =>
   clearAuthDerivedLocalActivity({
     cancelQueries: () => queryClient.cancelQueries(),
     cancelScheduledNotifications: () => Notifications.cancelAllScheduledNotificationsAsync(),
+    clearRoutineWidgetActions,
+    clearRoutineWidgetNativeState: clearRoutineWidgetLifecycleForPrivacy,
     clearQueries: () => queryClient.clear(),
     purgeSensitiveImageMemory,
     resetAnalyticsIdentity,
@@ -193,8 +197,7 @@ const defaultFinalizationDependencies: AccountDeletionFinalizationDependencies =
   ...defaultSessionDependencies,
   convertStoreSafetyNotice: convertStoreTransactionNoticeForTerminalDeletion,
   clearHealthWithdrawalIntent: clearPendingHealthWithdrawalIntentByOwnerBinding,
-  clearDependentWithdrawalRecovery:
-    clearAllDependentConsentWithdrawalTombstonesByOwnerBinding,
+  clearDependentWithdrawalRecovery: clearAllDependentConsentWithdrawalTombstonesByOwnerBinding,
   queueAppleNotice: queueAppleManualRevocationNotice,
   clearCompletedState: clearCompletedAccountDeletionState,
 };
@@ -203,6 +206,14 @@ const defaultAcceptedDependencies: AcceptedAccountDeletionDependencies = {
   ...defaultSessionDependencies,
   markAccepted: (ownerBinding) => markAccountDeletionIntakeState('accepted', ownerBinding),
 };
+
+function beginAuthDerivedActivityCleanup(operation: () => Promise<void>): Promise<void> {
+  try {
+    return operation();
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
 
 async function verifyPersistedRecoveryUser(accessToken: string) {
   const claims = parseSupabaseAccessTokenClaims(accessToken);
@@ -492,6 +503,11 @@ export async function quarantineAccountDeletionSession(
   },
 ): Promise<void> {
   let firstFailure: unknown = null;
+  // The auth-derived cleanup begins with synchronous native widget admission
+  // closure. Start and retain this exact promise before isolated-state work so
+  // a stalled purge cannot delay the cross-process privacy boundary.
+  const authDerivedCleanup = beginAuthDerivedActivityCleanup(dependencies.clearAuthDerivedActivity);
+  void authDerivedCleanup.catch(() => undefined);
   if (options.clearIsolatedState) {
     try {
       await dependencies.clearIsolatedState();
@@ -500,23 +516,14 @@ export async function quarantineAccountDeletionSession(
     }
   }
   try {
-    await dependencies.clearAuthDerivedActivity();
+    await authDerivedCleanup;
   } catch (error) {
     firstFailure ??= error;
   }
   if (firstFailure) throw firstFailure;
 }
 
-/** Clear both Supabase in-memory/persisted auth and every account-local surface. */
-export async function completeAccountDeletionLocalSignOut(
-  dependencies: AccountDeletionSessionDependencies = defaultSessionDependencies,
-  options: AccountDeletionCleanupOptions = {
-    clearSession: true,
-    clearIsolatedState: true,
-    quarantineUnclaimedLocalData: false,
-    retainLocalDataOwner: false,
-  },
-): Promise<void> {
+function validateAccountDeletionCleanupOptions(options: AccountDeletionCleanupOptions): void {
   const mustPreserveBeforeSignOut =
     options.retainLocalDataOwner || options.quarantineUnclaimedLocalData;
   if (
@@ -525,6 +532,20 @@ export async function completeAccountDeletionLocalSignOut(
   ) {
     throw accountDeletionRecoveryError('ACCOUNT_DELETION_COMPLETION_INVALID');
   }
+}
+
+async function completeAccountDeletionLocalSignOutWithStartedCleanup(
+  dependencies: AccountDeletionSessionDependencies,
+  options: AccountDeletionCleanupOptions,
+  authDerivedCleanup: Promise<void>,
+): Promise<void> {
+  const mustPreserveBeforeSignOut =
+    options.retainLocalDataOwner || options.quarantineUnclaimedLocalData;
+  // Admission was closed synchronously when this promise was created. Do not
+  // mutate owner proof or the encrypted Auth session until the exact queued
+  // purge also succeeds; otherwise a crash could strand native prior-owner
+  // state after its recovery credential has already been removed.
+  await authDerivedCleanup;
   let firstFailure: unknown = null;
   let preservationCommitted = !mustPreserveBeforeSignOut;
   if (options.retainLocalDataOwner) {
@@ -556,12 +577,30 @@ export async function completeAccountDeletionLocalSignOut(
       firstFailure ??= error;
     }
   }
-  try {
-    await dependencies.clearAuthDerivedActivity();
-  } catch (error) {
-    firstFailure ??= error;
-  }
   if (firstFailure) throw firstFailure;
+}
+
+/** Clear both Supabase in-memory/persisted auth and every account-local surface. */
+export async function completeAccountDeletionLocalSignOut(
+  dependencies: AccountDeletionSessionDependencies = defaultSessionDependencies,
+  options: AccountDeletionCleanupOptions = {
+    clearSession: true,
+    clearIsolatedState: true,
+    quarantineUnclaimedLocalData: false,
+    retainLocalDataOwner: false,
+  },
+): Promise<void> {
+  validateAccountDeletionCleanupOptions(options);
+  // Start native widget/activity admission closure before owner preservation or
+  // encrypted-session mutation. Observe this same cleanup promise after the
+  // other destructive stages so failures remain retryable and deterministic.
+  const authDerivedCleanup = beginAuthDerivedActivityCleanup(dependencies.clearAuthDerivedActivity);
+  void authDerivedCleanup.catch(() => undefined);
+  await completeAccountDeletionLocalSignOutWithStartedCleanup(
+    dependencies,
+    options,
+    authDerivedCleanup,
+  );
 }
 
 /** Persist capability proof before the retained retry session is destroyed. */
@@ -575,11 +614,21 @@ export async function acceptAccountDeletionAndSignOut(
     retainLocalDataOwner: false,
   },
 ): Promise<void> {
-  if (record.version !== 2) {
+  if (record.version !== 2 || !STATUS_CAPABILITY_PATTERN.test(record.ownerBinding)) {
     throw accountDeletionRecoveryError('ACCOUNT_DELETION_COMPLETION_INVALID');
   }
+  validateAccountDeletionCleanupOptions(options);
+  // Closing the cross-process surface cannot wait for a SecureStore marker.
+  // Begin it now, then pass the same promise into local sign-out so no second
+  // cleanup can hide or reorder its result.
+  const authDerivedCleanup = beginAuthDerivedActivityCleanup(dependencies.clearAuthDerivedActivity);
+  void authDerivedCleanup.catch(() => undefined);
   await dependencies.markAccepted(record.ownerBinding);
-  await completeAccountDeletionLocalSignOut(dependencies, options);
+  await completeAccountDeletionLocalSignOutWithStartedCleanup(
+    dependencies,
+    options,
+    authDerivedCleanup,
+  );
 }
 
 /**
@@ -604,6 +653,12 @@ export async function finalizeCompletedAccountDeletion(
   if (record.version !== 2 || !STATUS_CAPABILITY_PATTERN.test(record.ownerBinding)) {
     throw accountDeletionRecoveryError('ACCOUNT_DELETION_COMPLETION_INVALID');
   }
+  validateAccountDeletionCleanupOptions(options);
+  // Terminal proof already authorizes privacy reduction. Quiesce native widget
+  // admission before any store-safety or withdrawal journal can stall, and
+  // observe this exact cleanup before Auth/session mutation below.
+  const authDerivedCleanup = beginAuthDerivedActivityCleanup(dependencies.clearAuthDerivedActivity);
+  void authDerivedCleanup.catch(() => undefined);
   // The server has terminally deleted this subject. Remove the final local
   // owner correlation before any later cleanup failure can leave it retained.
   // The ownerless tombstone remains a device-only purchase safety bit.
@@ -616,7 +671,11 @@ export async function finalizeCompletedAccountDeletion(
   // account-local cleanup. Only this server-proven terminal owner binding may
   // retire its namespace; failures keep the completed deletion proof retryable.
   await dependencies.clearDependentWithdrawalRecovery?.(record.ownerBinding);
-  await completeAccountDeletionLocalSignOut(dependencies, options);
+  await completeAccountDeletionLocalSignOutWithStartedCleanup(
+    dependencies,
+    options,
+    authDerivedCleanup,
+  );
   if (record.notice === 'remove_apple_authorization') {
     dependencies.queueAppleNotice();
     // The completed record remains the durable notice authority until the

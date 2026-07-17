@@ -143,6 +143,37 @@ is enabled in the build; otherwise OCR remains hidden from launch claims.
 
 `app.base.json` uses `runtimeVersion.policy=fingerprint` and is consumed by `app.config.js`. Any native dependency, plugin, permission, or app config change must ship through a new native binary, not only OTA.
 
+## RoutineKind Widget Lifecycle Candidate
+
+IOS-02 patches only the exact lockfile-installed `expo-widgets` 56.0.23 native
+sources. Root postinstall applies both reviewed native patches, and
+`npm run postinstall:check` plus
+`npm run phase5:expo-widgets-lifecycle:test` must pass before any EAS upload.
+Do not accept a changed package version, source hash, missing patch file, or
+unverified installed output.
+
+The RoutineKind candidate treats the bounded SQLite App Group database as the
+sole timeline/action authority. App Group UserDefaults is layout/presentation
+storage, not an interaction transaction. The native flow uses rotating
+authority-nonce compare-and-swap, persists its outbox before AppIntent returns,
+binds actions to opaque owner and snapshot generations, publishes a current and
+future-stale entry, and redacts on non-exact reconciliation. Privacy reduction
+durably verifies the `privacy-closing-v1` sentinel and returns a synchronous
+closed-admission receipt before queued full cleanup leaves a closed authority
+tombstone. The mounted app host serializes activation and release with privacy
+cleanup. Only the custom RoutineKind Activity path receives the finite
+stale/recovery/end policy; this does not change every generic Expo activity.
+The closed receipt proves admission denial, not completed ActivityKit dismissal.
+
+The checked-in publication and Live Activity start switches are deliberately
+signed `false`. Windows source and model tests do not compile Swift or prove
+CocoaPods linkage, App Group/signing entitlements, `.appex` embedding, runtime
+locking, ActivityKit recovery, App Review, or legal clearance. First produce
+and inspect a reviewed macOS/Xcode archive with the switches disabled. After
+the final cleared identity and deep-link allowlist exist, make a separately
+audited enabling change, rebuild, cross-bind the exact source/archive/identity,
+and execute the Critical physical-iPhone branches in `docs/USER_FLOW_TREE.md`.
+
 ## Launch Gates
 
 - Barcode scan cannot be marketed until the physical-iPhone scan matrix passes.
@@ -154,8 +185,9 @@ is enabled in the build; otherwise OCR remains hidden from launch claims.
   Do not describe the current camera overlay as real-time face or lighting
   guidance; measurement occurs after capture.
 - Reminders remain "gentle" and inexact; no exact-alarm permission is requested.
-- Widgets and Live Activities are launch-required; do not build the release
-  candidate until real WidgetKit/ActivityKit targets and device evidence exist.
+- Widgets and Live Activities are launch-required; do not call any build a
+  release candidate until the exact patched target compiles, the enabled signed
+  archive passes inspection, and all required physical-iPhone evidence exists.
 
 Primary toolchain references:
 

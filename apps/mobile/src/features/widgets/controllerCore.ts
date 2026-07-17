@@ -1,38 +1,37 @@
 import type {
   ResolvedRoutineWidgetAction,
-  RoutineWidgetActionPhase,
+  RoutineWidgetActionAcknowledgementRequest,
   RoutineWidgetActionResolutionRequest,
 } from './actionRegistry';
+import { normalizeRoutineWidgetOpaqueUuid } from './contract';
 import {
-  normalizeRoutineWidgetProps,
-  ROUTINE_WIDGET_MAX_STEPS,
-  type RoutineWidgetProps,
-} from './contract';
+  ROUTINE_WIDGET_NATIVE_LIFECYCLE_VERSION,
+  decodeRoutineWidgetNativeAuthority,
+  decodeRoutineWidgetNativeOutboxJSON,
+  type RoutineWidgetNativeAuthority,
+  type RoutineWidgetNativeOutbox,
+  type RoutineWidgetNativeReconciliationResult,
+} from './nativeLifecycleContract';
 
-export const ROUTINE_WIDGET_MAX_TIMELINE_ENTRIES = 32;
-
-export const ROUTINE_WIDGET_TIMELINE_INVALID = 'ROUTINE_WIDGET_TIMELINE_INVALID';
-export const ROUTINE_WIDGET_PENDING_ACTIONS_INVALID = 'ROUTINE_WIDGET_PENDING_ACTIONS_INVALID';
+export const ROUTINE_WIDGET_NATIVE_AUTHORITY_INVALID = 'ROUTINE_WIDGET_NATIVE_AUTHORITY_INVALID';
+export const ROUTINE_WIDGET_NATIVE_OUTBOX_INVALID = 'ROUTINE_WIDGET_NATIVE_OUTBOX_INVALID';
 export const ROUTINE_WIDGET_ACTION_RESOLUTION_INVALID = 'ROUTINE_WIDGET_ACTION_RESOLUTION_INVALID';
 export const ROUTINE_WIDGET_CANONICAL_COMPLETION_REJECTED =
   'ROUTINE_WIDGET_CANONICAL_COMPLETION_REJECTED';
+export const ROUTINE_WIDGET_NATIVE_RECONCILIATION_INVALID =
+  'ROUTINE_WIDGET_NATIVE_RECONCILIATION_INVALID';
 export const ROUTINE_WIDGET_ACTION_ACKNOWLEDGEMENT_INCOMPLETE =
   'ROUTINE_WIDGET_ACTION_ACKNOWLEDGEMENT_INCOMPLETE';
-export const ROUTINE_WIDGET_TIMELINE_REPLACEMENT_NOT_COMMITTED =
-  'ROUTINE_WIDGET_TIMELINE_REPLACEMENT_NOT_COMMITTED';
 export const ROUTINE_WIDGET_RECONCILIATION_INVALIDATED =
   'ROUTINE_WIDGET_RECONCILIATION_INVALIDATED';
 
-/** Receipt returned only after the synchronous native timeline write returns. */
-export const ROUTINE_WIDGET_TIMELINE_REPLACED = Symbol('ROUTINE_WIDGET_TIMELINE_REPLACED');
-
 type RoutineWidgetControllerErrorCode =
-  | typeof ROUTINE_WIDGET_TIMELINE_INVALID
-  | typeof ROUTINE_WIDGET_PENDING_ACTIONS_INVALID
+  | typeof ROUTINE_WIDGET_NATIVE_AUTHORITY_INVALID
+  | typeof ROUTINE_WIDGET_NATIVE_OUTBOX_INVALID
   | typeof ROUTINE_WIDGET_ACTION_RESOLUTION_INVALID
   | typeof ROUTINE_WIDGET_CANONICAL_COMPLETION_REJECTED
+  | typeof ROUTINE_WIDGET_NATIVE_RECONCILIATION_INVALID
   | typeof ROUTINE_WIDGET_ACTION_ACKNOWLEDGEMENT_INCOMPLETE
-  | typeof ROUTINE_WIDGET_TIMELINE_REPLACEMENT_NOT_COMMITTED
   | typeof ROUTINE_WIDGET_RECONCILIATION_INVALIDATED;
 
 export class RoutineWidgetControllerError extends Error {
@@ -52,15 +51,29 @@ export type RoutineWidgetCanonicalCompletionResult = Readonly<{
 }>;
 
 export type RoutineWidgetControllerDependencies = Readonly<{
-  acknowledgeActions: (tokens: readonly string[]) => Promise<number>;
+  acknowledgeActions: (request: RoutineWidgetActionAcknowledgementRequest) => Promise<number>;
+  commitReconciliation: (input: {
+    acceptedTokens: readonly string[];
+    expectedAuthorityNonce: string;
+    expectedRevision: number;
+    ownerGeneration: string;
+    snapshotNonce: string;
+  }) => RoutineWidgetNativeReconciliationResult;
+  commitCapturedReconciliation: (input: {
+    acceptedTokens: readonly string[];
+    expectedAuthorityNonce: string;
+    expectedRevision: number;
+    ownerGeneration: string;
+    quiescenceNonce: string;
+    snapshotNonce: string;
+  }) => RoutineWidgetNativeReconciliationResult;
   completeAction: (
     stepKey: string,
     localDate: string,
   ) => Promise<RoutineWidgetCanonicalCompletionResult>;
   now?: () => number;
-  readTimeline: () => Promise<unknown>;
-  /** Must return the receipt only after synchronously committing the prepared replacement. */
-  replaceTimeline: () => typeof ROUTINE_WIDGET_TIMELINE_REPLACED;
+  readAuthority: () => RoutineWidgetNativeAuthority;
+  readOutbox: (expectedAuthorityNonce: string) => RoutineWidgetNativeOutbox;
   resolveActions: (
     request: RoutineWidgetActionResolutionRequest,
   ) => Promise<readonly ResolvedRoutineWidgetAction[]>;
@@ -70,30 +83,28 @@ export type RoutineWidgetReconciliationResult = Readonly<{
   acknowledgedTokenCount: number;
   completedStepCount: number;
   ignoredTokenCount: number;
-  pendingTokenCount: number;
+  nativeStatus: 'committed' | 'redacted' | 'empty';
+  outboxRecordCount: number;
   resolvedTokenCount: number;
-  timelineEntryCount: number;
 }>;
 
-type NormalizedTimelineEntry = Readonly<{
-  dateMs: number;
-  props: RoutineWidgetProps;
+export type RoutineWidgetCapturedOutboxInput = Readonly<{
+  expectedAuthorityNonce: string;
+  expectedOwnerGeneration: string;
+  outbox: RoutineWidgetNativeOutbox;
+  quiescenceNonce: string;
 }>;
 
-type PendingGroup = {
+type BoundOutbox = Readonly<{
+  authorityNonce: string;
   localDate: string;
-  phase: RoutineWidgetActionPhase;
-  tokens: string[];
-};
-
-type ResolvedCompletion = Readonly<{
-  localDate: string;
-  stepKey: string;
-  token: string;
+  ownerGeneration: string;
+  phase: 'AM' | 'PM';
+  records: RoutineWidgetNativeOutbox['records'];
+  snapshotNonce: string;
 }>;
 
-const TIMELINE_ENTRY_KEYS = ['date', 'props'];
-const RESOLVED_ACTION_KEYS = ['status', 'stepKey', 'token'];
+const RESOLUTION_KEYS = ['status', 'stepKey', 'token'].sort();
 const MAX_STEP_KEY_LENGTH = 512;
 
 function fail(code: RoutineWidgetControllerErrorCode): never {
@@ -104,112 +115,85 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+function exactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
   const keys = Object.keys(value).sort();
-  const sortedExpected = [...expected].sort();
-  return (
-    keys.length === sortedExpected.length &&
-    keys.every((key, index) => key === sortedExpected[index])
-  );
-}
-
-function normalizeTimeline(value: unknown): NormalizedTimelineEntry[] {
-  if (!Array.isArray(value) || value.length > ROUTINE_WIDGET_MAX_TIMELINE_ENTRIES) {
-    fail(ROUTINE_WIDGET_TIMELINE_INVALID);
-  }
-
-  const entries: NormalizedTimelineEntry[] = [];
-  let priorDateMs = -1;
-  for (const candidate of value) {
-    if (!isRecord(candidate) || !hasExactKeys(candidate, TIMELINE_ENTRY_KEYS)) {
-      fail(ROUTINE_WIDGET_TIMELINE_INVALID);
-    }
-    if (!(candidate.date instanceof Date)) fail(ROUTINE_WIDGET_TIMELINE_INVALID);
-    const dateMs = candidate.date.getTime();
-    if (!Number.isSafeInteger(dateMs) || dateMs < 0 || dateMs <= priorDateMs) {
-      fail(ROUTINE_WIDGET_TIMELINE_INVALID);
-    }
-    const props = normalizeRoutineWidgetProps(candidate.props);
-    if (!props) fail(ROUTINE_WIDGET_TIMELINE_INVALID);
-    entries.push(Object.freeze({ dateMs, props }));
-    priorDateMs = dateMs;
-  }
-  return entries;
+  return keys.length === expected.length && keys.every((key, index) => key === expected[index]);
 }
 
 function safeNow(now: () => number): number {
   const value = now();
-  if (!Number.isSafeInteger(value) || value < 0) fail(ROUTINE_WIDGET_TIMELINE_INVALID);
+  if (!Number.isSafeInteger(value) || value < 0) fail(ROUTINE_WIDGET_NATIVE_OUTBOX_INVALID);
   return value;
 }
 
-function pendingGroups(
-  entries: readonly NormalizedTimelineEntry[],
-  nowMs: number,
-): { groups: PendingGroup[]; pendingTokenCount: number } {
-  const allPendingTokens = new Set<string>();
-  const eligibleTokens = new Map<string, string>();
-  const groups = new Map<string, PendingGroup>();
+function normalizeAuthority(
+  value: RoutineWidgetNativeAuthority,
+  expectedOwnerGeneration: string,
+): RoutineWidgetNativeAuthority {
+  let authority: RoutineWidgetNativeAuthority;
+  try {
+    authority = decodeRoutineWidgetNativeAuthority(value);
+  } catch {
+    fail(ROUTINE_WIDGET_NATIVE_AUTHORITY_INVALID);
+  }
+  if (!authority.enabled || authority.ownerGeneration !== expectedOwnerGeneration) {
+    fail(ROUTINE_WIDGET_NATIVE_AUTHORITY_INVALID);
+  }
+  return authority;
+}
 
-  for (const { props } of entries) {
-    for (const token of props.pendingActionTokens) {
-      allPendingTokens.add(token);
-      if (allPendingTokens.size > ROUTINE_WIDGET_MAX_STEPS) {
-        fail(ROUTINE_WIDGET_PENDING_ACTIONS_INVALID);
-      }
-    }
-
+function normalizeOutbox(
+  value: RoutineWidgetNativeOutbox,
+  authority: RoutineWidgetNativeAuthority,
+): BoundOutbox | null {
+  let outbox: RoutineWidgetNativeOutbox;
+  try {
+    outbox = decodeRoutineWidgetNativeOutboxJSON(JSON.stringify(value));
+  } catch {
+    fail(ROUTINE_WIDGET_NATIVE_OUTBOX_INVALID);
+  }
+  if (outbox.authorityNonce !== authority.authorityNonce) {
+    fail(ROUTINE_WIDGET_NATIVE_OUTBOX_INVALID);
+  }
+  const first = outbox.records[0];
+  if (!first) return null;
+  if (first.ownerGeneration !== authority.ownerGeneration) {
+    fail(ROUTINE_WIDGET_NATIVE_OUTBOX_INVALID);
+  }
+  for (const record of outbox.records) {
     if (
-      (props.status !== 'ready' && props.status !== 'complete') ||
-      (props.phase !== 'AM' && props.phase !== 'PM') ||
-      nowMs < props.updatedAtMs ||
-      nowMs >= props.staleAtMs
+      record.ownerGeneration !== first.ownerGeneration ||
+      record.snapshotNonce !== first.snapshotNonce ||
+      record.localDate !== first.localDate ||
+      record.phase !== first.phase ||
+      record.staleAtMs !== first.staleAtMs
     ) {
-      continue;
-    }
-
-    const groupKey = `${props.localDate}\u0000${props.phase}`;
-    let group = groups.get(groupKey);
-    if (!group) {
-      const created: PendingGroup = {
-        localDate: props.localDate,
-        phase: props.phase,
-        tokens: [],
-      };
-      groups.set(groupKey, created);
-      group = created;
-    }
-    for (const token of props.pendingActionTokens) {
-      const existingGroup = eligibleTokens.get(token);
-      if (existingGroup !== undefined && existingGroup !== groupKey) {
-        fail(ROUTINE_WIDGET_PENDING_ACTIONS_INVALID);
-      }
-      if (existingGroup === undefined) {
-        eligibleTokens.set(token, groupKey);
-        group.tokens.push(token);
-      }
+      fail(ROUTINE_WIDGET_NATIVE_OUTBOX_INVALID);
     }
   }
-
-  return {
-    groups: [...groups.values()].filter(({ tokens }) => tokens.length > 0),
-    pendingTokenCount: allPendingTokens.size,
-  };
+  return Object.freeze({
+    authorityNonce: outbox.authorityNonce,
+    localDate: first.localDate,
+    ownerGeneration: first.ownerGeneration,
+    phase: first.phase,
+    records: outbox.records,
+    snapshotNonce: first.snapshotNonce,
+  });
 }
 
 function normalizeResolution(
   value: readonly ResolvedRoutineWidgetAction[],
-  group: PendingGroup,
+  tokens: readonly string[],
+  phase: 'AM' | 'PM',
 ): ResolvedRoutineWidgetAction[] {
-  if (!Array.isArray(value) || value.length !== group.tokens.length) {
+  if (!Array.isArray(value) || value.length !== tokens.length) {
     fail(ROUTINE_WIDGET_ACTION_RESOLUTION_INVALID);
   }
-
   return value.map((candidate, index) => {
-    if (!isRecord(candidate) || !hasExactKeys(candidate, RESOLVED_ACTION_KEYS)) {
+    if (!isRecord(candidate) || !exactKeys(candidate, RESOLUTION_KEYS)) {
       fail(ROUTINE_WIDGET_ACTION_RESOLUTION_INVALID);
     }
-    if (candidate.token !== group.tokens[index]) {
+    if (candidate.token !== tokens[index] || !normalizeRoutineWidgetOpaqueUuid(candidate.token)) {
       fail(ROUTINE_WIDGET_ACTION_RESOLUTION_INVALID);
     }
     if (candidate.status === 'resolved') {
@@ -218,8 +202,8 @@ function normalizeResolution(
         candidate.stepKey.length === 0 ||
         candidate.stepKey.length > MAX_STEP_KEY_LENGTH ||
         candidate.stepKey !== candidate.stepKey.trim() ||
-        !candidate.stepKey.startsWith(`${group.phase}:`) ||
-        candidate.stepKey.length === group.phase.length + 1
+        !candidate.stepKey.startsWith(`${phase}:`) ||
+        candidate.stepKey.length === phase.length + 1
       ) {
         fail(ROUTINE_WIDGET_ACTION_RESOLUTION_INVALID);
       }
@@ -231,8 +215,8 @@ function normalizeResolution(
     }
     if (
       (candidate.status === 'unknown' ||
-        candidate.status === 'stale' ||
-        candidate.status === 'expired') &&
+        candidate.status === 'expired' ||
+        candidate.status === 'stale') &&
       candidate.stepKey === null
     ) {
       return Object.freeze({
@@ -245,90 +229,169 @@ function normalizeResolution(
   });
 }
 
-function uniqueCompletions(actions: readonly ResolvedCompletion[]): ResolvedCompletion[] {
-  const completions = new Map<string, ResolvedCompletion>();
-  for (const action of actions) {
-    const key = `${action.localDate}\u0000${action.stepKey}`;
-    if (!completions.has(key)) completions.set(key, action);
-  }
-  return [...completions.values()];
-}
-
-async function reconcileRoutineWidgetTimeline(
+async function reconcileBoundRoutineWidgetNativeOutbox(
+  outbox: BoundOutbox | null,
+  quiescenceNonce: string | null,
   dependencies: RoutineWidgetControllerDependencies,
   assertCurrent: () => void,
 ): Promise<RoutineWidgetReconciliationResult> {
-  assertCurrent();
-  const timeline = normalizeTimeline(await dependencies.readTimeline());
-  assertCurrent();
-  const nowMs = safeNow(dependencies.now ?? Date.now);
-  const pending = pendingGroups(timeline, nowMs);
-  const resolved: ResolvedCompletion[] = [];
-
-  // Resolve every group before the first canonical health-data write. A bad or
-  // incomplete resolver response therefore cannot create a partial write set.
-  for (const group of pending.groups) {
-    assertCurrent();
-    const resolution = normalizeResolution(
-      await dependencies.resolveActions({
-        tokens: group.tokens,
-        localDate: group.localDate,
-        phase: group.phase,
-      }),
-      group,
-    );
-    assertCurrent();
-    for (const action of resolution) {
-      if (action.status !== 'resolved') continue;
-      resolved.push({ token: action.token, stepKey: action.stepKey, localDate: group.localDate });
-    }
+  if (outbox === null) {
+    return Object.freeze({
+      acknowledgedTokenCount: 0,
+      completedStepCount: 0,
+      ignoredTokenCount: 0,
+      nativeStatus: 'empty',
+      outboxRecordCount: 0,
+      resolvedTokenCount: 0,
+    });
   }
 
-  const completions = uniqueCompletions(resolved);
-  for (const completion of completions) {
+  const events = outbox.records.map(({ actionToken, createdAtMs }) =>
+    Object.freeze({ token: actionToken, createdAtMs }),
+  );
+  const tokens = events.map(({ token }) => token);
+  const nowMs = safeNow(dependencies.now ?? Date.now);
+  let resolution: ResolvedRoutineWidgetAction[];
+  if (events.some(({ createdAtMs }) => createdAtMs > nowMs)) {
+    resolution = tokens.map((token) =>
+      Object.freeze({ token, stepKey: null, status: 'expired' as const }),
+    );
+  } else {
     assertCurrent();
-    const result = await dependencies.completeAction(completion.stepKey, completion.localDate);
+    resolution = normalizeResolution(
+      await dependencies.resolveActions({
+        events,
+        ownerGeneration: outbox.ownerGeneration,
+        snapshotNonce: outbox.snapshotNonce,
+        localDate: outbox.localDate,
+        phase: outbox.phase,
+      }),
+      tokens,
+      outbox.phase,
+    );
     assertCurrent();
-    if (!result || result.done !== true || typeof result.inserted !== 'boolean') {
+  }
+
+  // A resolver response is validated in full before the first canonical write.
+  const resolved = resolution.filter(
+    (action): action is Extract<ResolvedRoutineWidgetAction, { status: 'resolved' }> =>
+      action.status === 'resolved',
+  );
+  const uniqueCompletions = new Map<string, string>();
+  for (const action of resolved) uniqueCompletions.set(action.stepKey, action.stepKey);
+  for (const stepKey of uniqueCompletions.values()) {
+    assertCurrent();
+    const completion = await dependencies.completeAction(stepKey, outbox.localDate);
+    assertCurrent();
+    if (!completion || completion.done !== true || typeof completion.inserted !== 'boolean') {
       fail(ROUTINE_WIDGET_CANONICAL_COMPLETION_REJECTED);
     }
   }
 
-  if (resolved.length > 0) {
-    const tokens = resolved.map(({ token }) => token);
+  const acceptedTokens = resolved.map(({ token }) => token);
+  assertCurrent();
+  const reconciliationInput = {
+    acceptedTokens,
+    expectedAuthorityNonce: outbox.authorityNonce,
+    expectedRevision: outbox.records[outbox.records.length - 1]!.revision,
+    ownerGeneration: outbox.ownerGeneration,
+    snapshotNonce: outbox.snapshotNonce,
+  };
+  const nativeResult =
+    quiescenceNonce === null
+      ? dependencies.commitReconciliation(reconciliationInput)
+      : dependencies.commitCapturedReconciliation({
+          ...reconciliationInput,
+          quiescenceNonce,
+        });
+  assertCurrent();
+  if (
+    !nativeResult ||
+    (nativeResult.status !== 'committed' && nativeResult.status !== 'redacted') ||
+    (nativeResult.status === 'committed' && acceptedTokens.length !== tokens.length)
+  ) {
+    fail(ROUTINE_WIDGET_NATIVE_RECONCILIATION_INVALID);
+  }
+
+  if (acceptedTokens.length > 0) {
+    const acceptedTokenSet = new Set(acceptedTokens);
     assertCurrent();
-    const acknowledged = await dependencies.acknowledgeActions(tokens);
+    const acknowledged = await dependencies.acknowledgeActions({
+      events: events.filter(({ token }) => acceptedTokenSet.has(token)),
+      ownerGeneration: outbox.ownerGeneration,
+      snapshotNonce: outbox.snapshotNonce,
+    });
     assertCurrent();
-    if (!Number.isSafeInteger(acknowledged) || acknowledged !== tokens.length) {
+    if (!Number.isSafeInteger(acknowledged) || acknowledged !== acceptedTokens.length) {
       fail(ROUTINE_WIDGET_ACTION_ACKNOWLEDGEMENT_INCOMPLETE);
     }
   }
 
-  // expo-widgets updateTimeline is synchronous. Keeping this commit callback
-  // synchronous lets the generation assertion and native dispatch occupy one
-  // JavaScript turn with no stale continuation gap.
-  assertCurrent();
-  const replacementReceipt = dependencies.replaceTimeline();
-  if (replacementReceipt !== ROUTINE_WIDGET_TIMELINE_REPLACED) {
-    fail(ROUTINE_WIDGET_TIMELINE_REPLACEMENT_NOT_COMMITTED);
-  }
-
   return Object.freeze({
-    timelineEntryCount: timeline.length,
-    pendingTokenCount: pending.pendingTokenCount,
-    ignoredTokenCount: pending.pendingTokenCount - resolved.length,
-    resolvedTokenCount: resolved.length,
-    completedStepCount: completions.length,
-    acknowledgedTokenCount: resolved.length,
+    acknowledgedTokenCount: acceptedTokens.length,
+    completedStepCount: uniqueCompletions.size,
+    ignoredTokenCount: tokens.length - acceptedTokens.length,
+    nativeStatus: nativeResult.status,
+    outboxRecordCount: tokens.length,
+    resolvedTokenCount: acceptedTokens.length,
   });
 }
 
-/**
- * Serializes all timeline reads and reconciliation writes. invalidate() closes
- * the captured generation synchronously; an in-flight canonical completion may
- * have succeeded, but its idempotency makes retry safe and the stale operation
- * can no longer acknowledge capabilities or replace the App Group timeline.
- */
+async function reconcileRoutineWidgetNativeOutbox(
+  expectedOwnerGeneration: string,
+  dependencies: RoutineWidgetControllerDependencies,
+  assertCurrent: () => void,
+): Promise<RoutineWidgetReconciliationResult> {
+  if (normalizeRoutineWidgetOpaqueUuid(expectedOwnerGeneration) === null) {
+    fail(ROUTINE_WIDGET_NATIVE_AUTHORITY_INVALID);
+  }
+  assertCurrent();
+  const authority = normalizeAuthority(dependencies.readAuthority(), expectedOwnerGeneration);
+  assertCurrent();
+  const outbox = normalizeOutbox(dependencies.readOutbox(authority.authorityNonce), authority);
+  assertCurrent();
+  return reconcileBoundRoutineWidgetNativeOutbox(outbox, null, dependencies, assertCurrent);
+}
+
+async function reconcileCapturedRoutineWidgetNativeOutbox(
+  input: RoutineWidgetCapturedOutboxInput,
+  dependencies: RoutineWidgetControllerDependencies,
+  assertCurrent: () => void,
+): Promise<RoutineWidgetReconciliationResult> {
+  const expectedAuthorityNonce = normalizeRoutineWidgetOpaqueUuid(input.expectedAuthorityNonce);
+  const expectedOwnerGeneration = normalizeRoutineWidgetOpaqueUuid(input.expectedOwnerGeneration);
+  const quiescenceNonce = normalizeRoutineWidgetOpaqueUuid(input.quiescenceNonce);
+  if (
+    expectedAuthorityNonce === null ||
+    expectedOwnerGeneration === null ||
+    expectedAuthorityNonce === expectedOwnerGeneration ||
+    quiescenceNonce === null ||
+    quiescenceNonce === expectedAuthorityNonce ||
+    quiescenceNonce === expectedOwnerGeneration
+  ) {
+    fail(ROUTINE_WIDGET_NATIVE_AUTHORITY_INVALID);
+  }
+  const authority = normalizeAuthority(
+    {
+      schemaVersion: ROUTINE_WIDGET_NATIVE_LIFECYCLE_VERSION,
+      authorityNonce: expectedAuthorityNonce,
+      enabled: true,
+      ownerGeneration: expectedOwnerGeneration,
+    },
+    expectedOwnerGeneration,
+  );
+  assertCurrent();
+  const outbox = normalizeOutbox(input.outbox, authority);
+  assertCurrent();
+  return reconcileBoundRoutineWidgetNativeOutbox(
+    outbox,
+    quiescenceNonce,
+    dependencies,
+    assertCurrent,
+  );
+}
+
+/** Serializes native reads, canonical writes, native CAS, and private acknowledgement. */
 export class RoutineWidgetReconciliationCoordinator {
   private generation = 0;
   private tail: Promise<void> = Promise.resolve();
@@ -338,6 +401,7 @@ export class RoutineWidgetReconciliationCoordinator {
   }
 
   reconcile(
+    expectedOwnerGeneration: string,
     dependencies: RoutineWidgetControllerDependencies,
   ): Promise<RoutineWidgetReconciliationResult> {
     const capturedGeneration = this.generation;
@@ -348,7 +412,32 @@ export class RoutineWidgetReconciliationCoordinator {
     };
     const operation = this.tail.then(() => {
       assertCurrent();
-      return reconcileRoutineWidgetTimeline(dependencies, assertCurrent);
+      return reconcileRoutineWidgetNativeOutbox(
+        expectedOwnerGeneration,
+        dependencies,
+        assertCurrent,
+      );
+    });
+    this.tail = operation.then(
+      () => undefined,
+      () => undefined,
+    );
+    return operation;
+  }
+
+  reconcileCaptured(
+    input: RoutineWidgetCapturedOutboxInput,
+    dependencies: RoutineWidgetControllerDependencies,
+  ): Promise<RoutineWidgetReconciliationResult> {
+    const capturedGeneration = this.generation;
+    const assertCurrent = () => {
+      if (capturedGeneration !== this.generation) {
+        fail(ROUTINE_WIDGET_RECONCILIATION_INVALIDATED);
+      }
+    };
+    const operation = this.tail.then(() => {
+      assertCurrent();
+      return reconcileCapturedRoutineWidgetNativeOutbox(input, dependencies, assertCurrent);
     });
     this.tail = operation.then(
       () => undefined,

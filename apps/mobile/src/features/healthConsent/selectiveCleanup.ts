@@ -14,6 +14,7 @@ import {
 } from '@/features/photos/encryptedStorage';
 import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
 import { clearGeneratedPrivateCacheFiles } from '@/features/settings/localPrivateData';
+import { clearRoutineWidgetLifecycleForPrivacy } from '@/features/widgets/lifecycleCoordinator';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
 import {
   beginAccountGenerationBoundaryFromLease,
@@ -66,6 +67,13 @@ export async function clearHealthPurposeLocalData(ownerUserId: string): Promise<
     }
     return beginAccountGenerationBoundaryFromLease(lease);
   });
+  // The App Group is a separate process boundary. Close its native admission
+  // immediately after the exact-owner proof becomes destructive authority;
+  // awaiting JS/account writer drains first would let a stalled writer keep
+  // prior-owner counts visible and AppIntents admissible indefinitely. Keep
+  // this exact promise so its queued purge is still observed in-order below.
+  const routineWidgetPrivacyCleanup = clearRoutineWidgetLifecycleForPrivacy();
+  void routineWidgetPrivacyCleanup.catch(() => undefined);
   beginPrivateKVAccountBoundary();
   beginEncryptedPhotoAccountBoundary();
   try {
@@ -73,6 +81,9 @@ export async function clearHealthPurposeLocalData(ownerUserId: string): Promise<
     await attempt(waitForPrivateKVWritesToSettle);
     await attempt(waitForEncryptedPhotoWritesToSettle);
     await attempt(waitForHealthNotificationOperationsToSettle);
+    // Admission is already synchronously closed. Observe the same queued purge
+    // before local records remove evidence needed to retry this boundary.
+    await attempt(() => routineWidgetPrivacyCleanup);
     await attempt(() => queryClient.cancelQueries());
     await attempt(() => purgeSensitiveImageMemory());
     // Analytics identity and every legacy PostHog persistence key are part of

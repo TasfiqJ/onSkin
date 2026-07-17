@@ -80,7 +80,7 @@ function pluginOptions(plugin) {
     : {};
 }
 
-function buildPlugins(plugins, permissionCopy) {
+function buildPlugins(plugins, permissionCopy, widgetDeepLink) {
   const googleIosUrlScheme = process.env.EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME;
   const sentryOrg = process.env.SENTRY_ORG;
   const sentryProject = process.env.SENTRY_PROJECT;
@@ -141,6 +141,10 @@ function buildPlugins(plugins, permissionCopy) {
           },
         ],
       ];
+    }
+
+    if (name === './plugins/withRoutineKindWidgetPrivacyManifest') {
+      return [[name, { ...pluginOptions(plugin), deepLink: widgetDeepLink }]];
     }
 
     return [plugin];
@@ -384,7 +388,7 @@ module.exports = () => {
   }
   if (appStoreUrl) expo.ios.appStoreUrl = appStoreUrl;
   if (playStoreUrl) expo.android.playStoreUrl = playStoreUrl;
-  expo.plugins = buildPlugins(expo.plugins, permissionCopy);
+  expo.plugins = buildPlugins(expo.plugins, permissionCopy, `${expo.scheme}://today`);
   expo.extra = {
     ...(expo.extra ?? {}),
     appVariant: variant,

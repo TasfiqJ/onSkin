@@ -1,6 +1,8 @@
 export type AuthDerivedActivityDependencies = {
   cancelQueries: () => void | Promise<unknown>;
   cancelScheduledNotifications: () => void | Promise<unknown>;
+  clearRoutineWidgetActions: () => void | Promise<unknown>;
+  clearRoutineWidgetNativeState: () => void | Promise<unknown>;
   clearQueries: () => void | Promise<unknown>;
   purgeSensitiveImageMemory: () => void | Promise<unknown>;
   resetAnalyticsIdentity: () => void | Promise<unknown>;
@@ -23,8 +25,16 @@ export async function clearAuthDerivedLocalActivity(
     }
   };
 
+  // This operation closes native App Group admission synchronously before its
+  // purge promise settles. Start it before any query/vendor await so a hung JS
+  // drain cannot leave prior-owner widget counts or AppIntents live.
+  const routineWidgetCleanup = Promise.all([
+    attempt('routine_widget_native_state', dependencies.clearRoutineWidgetNativeState),
+    attempt('routine_widget_actions', dependencies.clearRoutineWidgetActions),
+  ]);
   await attempt('cancel_queries_before', dependencies.cancelQueries);
   await attempt('clear_queries_before', dependencies.clearQueries);
+  await routineWidgetCleanup;
   await attempt('sensitive_image_memory', dependencies.purgeSensitiveImageMemory);
   await attempt('scheduled_notifications', dependencies.cancelScheduledNotifications);
   await attempt('analytics_identity', dependencies.resetAnalyticsIdentity);

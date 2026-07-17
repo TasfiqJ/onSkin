@@ -633,13 +633,24 @@ As of this document date:
 - Production config deliberately fails closed without final brand and Phase 3
   review clearance.
 - All Phase 7 and Phase 8 public feature flags are false.
-- Community aggregates/submissions, trend engine, and native widgets have
-  hardcoded incapability paths that require implementation, not flag changes.
+- Community aggregates/submissions and the trend engine retain hardcoded
+  incapability paths that require implementation, not flag changes. Native
+  widgets now have a RoutineKind-specific SQLite/CAS/outbox source candidate,
+  but publication and Live Activity start remain disabled by literal signed
+  flags and cannot be enabled by an environment or OTA flag alone.
 - Native OCR is disabled in every EAS profile.
 - Cloud Ask lacks a completed production provider/gateway/safety contract.
 - Commerce lacks an approved live rail.
 - Community lacks complete live moderation operations.
-- Widgets and Live Activities lack finished native targets.
+- Widgets and Live Activities now have a hash-pinned `expo-widgets` native
+  patch, typed bridge, owner-bound coordinator/host source, deterministic stale
+  handling, and unconditional cleanup call sites. They still lack a
+  macOS-compiled and signed final-identity target plus archive and supported
+  physical-iPhone evidence, so feature 19 remains launch-blocked.
+- The active IOS-02 work was performed in a Windows workspace without Xcode or
+  a Swift compiler. Local source/model/static tests do not prove Swift
+  compilation, code signing, entitlements, device behavior, privacy/legal
+  compliance, App Review acceptance, or revenue.
 - Cross-platform validators still require Android and must be migrated.
 - The Supabase staging deploy wrapper has missing functions/auth/secrets.
 - Native Sign in with Apple lifecycle source is implemented, but final Apple

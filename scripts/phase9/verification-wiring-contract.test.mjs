@@ -44,7 +44,7 @@ ${rootExtra}jobs:
   checks:
     runs-on: ${runsOn}
 ${jobExtra}    steps:
-      - name: Verify installed iOS privacy sources
+      - name: Verify installed iOS native sources
 ${stepExtra}        run: |
 ${run
   .split('\n')
@@ -134,7 +134,7 @@ test('rejects conditional, non-failing, custom-shell, environment, and duplicate
     assert.match(result.errors.join('\n'), /exactly name and run/u);
   }
 
-  const duplicateStep = `      - name: Verify installed iOS privacy sources
+  const duplicateStep = `      - name: Verify installed iOS native sources
         run: |
           npm run phase9:privacy:check
           npm run phase9:privacy:test

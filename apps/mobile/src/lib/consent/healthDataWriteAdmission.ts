@@ -37,6 +37,8 @@ export const HEALTH_PURPOSE_PRIVATE_DATA_KEYS = [
   'routinekind.routineActivation.v1',
   'routinekind.routineOrder.v1',
   'routinekind.widgetActionMap.v1',
+  'routinekind.widgetActionMap.v2',
+  'routinekind.widgetOwnerAuthority.v1',
   'onskin.shelf.v1',
   'onskin.skinprofile.v1',
   'onskin.subscription.freeConflictCheckRuleIds.v1',

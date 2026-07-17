@@ -29,6 +29,8 @@ import {
 } from '@/features/photos/encryptedStorage';
 import { purgeSensitiveImageMemory } from '@/features/photos/sensitiveImageMemory';
 import { rescheduleReminders } from '@/features/notifications/deliver';
+import { clearRoutineWidgetActions } from '@/features/widgets/actionRegistry';
+import { clearRoutineWidgetLifecycleForPrivacy } from '@/features/widgets/lifecycleCoordinator';
 import { isSupabaseConfigured } from '@/lib/env';
 import { AUTH_UNAVAILABLE_MESSAGE } from '@/lib/errors/userFacing';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
@@ -159,6 +161,8 @@ type AccountIsolationE2EGlobal = typeof globalThis & {
 const revokedCredentialActivityDependencies = {
   cancelQueries: () => queryClient.cancelQueries(),
   cancelScheduledNotifications: () => Notifications.cancelAllScheduledNotificationsAsync(),
+  clearRoutineWidgetActions,
+  clearRoutineWidgetNativeState: clearRoutineWidgetLifecycleForPrivacy,
   clearQueries: () => queryClient.clear(),
   purgeSensitiveImageMemory,
   resetAnalyticsIdentity,
@@ -260,6 +264,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const retrySessionRestoreRef = useRef<(() => Promise<void>) | null>(null);
   const publicationDrainPromiseRef = useRef<Promise<void> | null>(null);
   const remoteRequestDrainPromiseRef = useRef<Promise<void>>(Promise.resolve());
+  const routineWidgetPrivacyDrainPromiseRef = useRef<Promise<void>>(Promise.resolve());
   const clearPersistedSessionAfterRemoteDrainRef = useRef<() => Promise<void>>(
     clearPersistedSupabaseSession,
   );
@@ -398,6 +403,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     clearPersistedSessionAfterRemoteDrainRef.current = clearPersistedSessionAfterRemoteDrain;
 
+    function closeRoutineWidgetPrivacyAuthority(): Promise<void> {
+      // clearRoutineWidgetLifecycleForPrivacy closes the native App Group
+      // admission synchronously before returning its queued purge. Start the
+      // private action-capability deletion in the same boundary: sign-out must
+      // preserve skincare records, but cannot retain tappable prior-owner
+      // tokens. Observe both promises before any account may publish again.
+      let nativeCleanup: ReturnType<typeof clearRoutineWidgetLifecycleForPrivacy>;
+      try {
+        nativeCleanup = clearRoutineWidgetLifecycleForPrivacy();
+      } catch (error) {
+        nativeCleanup = Promise.reject(error);
+      }
+      let actionCleanup: ReturnType<typeof clearRoutineWidgetActions>;
+      try {
+        actionCleanup = clearRoutineWidgetActions();
+      } catch (error) {
+        actionCleanup = Promise.reject(error);
+      }
+      const drain = Promise.allSettled([nativeCleanup, actionCleanup]).then((results) => {
+        const nativeResult = results[0]!;
+        const actionResult = results[1]!;
+        if (nativeResult.status === 'rejected') throw nativeResult.reason;
+        if (actionResult.status === 'rejected') throw actionResult.reason;
+      });
+      routineWidgetPrivacyDrainPromiseRef.current = drain;
+      void drain.catch(() => undefined);
+      return drain;
+    }
+
     function showSessionBoundary(
       nextSession: Session | null,
       reason: 'account_boundary' | 'app_backgrounded' | 'account_deletion' = 'account_boundary',
@@ -412,6 +446,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       closeRemoteRequestAuthority({
         preserveEnteredDeletion: reason === 'account_deletion',
       });
+      if (reason !== 'app_backgrounded') closeRoutineWidgetPrivacyAuthority();
       const publicationDrain = closeRevenueCatPublication(reason);
       publicationDrainPromiseRef.current = publicationDrain;
       void publicationDrain.catch(() => {
@@ -531,6 +566,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       authBoundaryEpochRef.current += 1;
       cancelPublicationRecoveryRef.current();
       cancelControlledSessionRefreshRef.current();
+      closeRoutineWidgetPrivacyAuthority();
       const publicationDrain = closeRevenueCatPublication('account_boundary');
       publicationDrainPromiseRef.current = publicationDrain;
       void publicationDrain.catch(() => {});
@@ -881,6 +917,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const previousTransition = existing?.promise;
       const seq = ++sessionChangeSeqRef.current;
+      let routineWidgetPrivacyDrain: Promise<void> | null = null;
       if (
         !sameLocalSession &&
         (nextSession !== null ||
@@ -889,14 +926,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           targetUserId !== activeUserIdRef.current)
       ) {
         showSessionBoundary(nextSession);
+        routineWidgetPrivacyDrain = routineWidgetPrivacyDrainPromiseRef.current;
       }
 
       const promise = (async () => {
-        if (previousTransition) await previousTransition;
-        if (!mounted || seq !== sessionChangeSeqRef.current) return;
-        const previousUserId = activeUserIdRef.current;
-
         try {
+          if (previousTransition) await previousTransition;
+          if (routineWidgetPrivacyDrain) await routineWidgetPrivacyDrain;
+          if (!mounted || seq !== sessionChangeSeqRef.current) return;
+          const previousUserId = activeUserIdRef.current;
           if (transitionSession === null && !accountIsolationE2EFixture) {
             await awaitRemoteRequestAuthorityClosed();
           }

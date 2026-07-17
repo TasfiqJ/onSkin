@@ -71,8 +71,7 @@ vi.mock('@/features/healthConsent/pendingIntent', () => ({
 }));
 
 vi.mock('@/lib/consent/dependentConsentLocal', () => ({
-  clearAllDependentConsentWithdrawalTombstonesByOwnerBinding:
-    peripheral.clearDependentRecovery,
+  clearAllDependentConsentWithdrawalTombstonesByOwnerBinding: peripheral.clearDependentRecovery,
 }));
 
 vi.mock('@/features/settings/localPrivateData', () => ({
@@ -200,18 +199,16 @@ describe('account-deletion foreign-owner preservation lifecycle', () => {
     ).resolves.toBe('cleared');
 
     expect(order).toEqual([
+      'derived',
       'store-safety',
       'dependent-recovery',
       'retained-owner',
       'session',
-      'derived',
       'recovery-proof',
     ]);
     expect(storage.get(LOCAL_DATA_OWNER_HASH_KEY)).toBe(OWNER_B);
     expect(storage.get(LOCAL_DATA_RETAINED_OWNER_HASH_KEY)).toBe(OWNER_B);
-    expect(peripheral.clearDependentRecovery).toHaveBeenCalledExactlyOnceWith(
-      'a1'.repeat(32),
-    );
+    expect(peripheral.clearDependentRecovery).toHaveBeenCalledExactlyOnceWith('a1'.repeat(32));
 
     const dependencies = isolationDependencies();
     await expect(prepareLocalDataForSession('user-b', null, dependencies)).resolves.toEqual({
@@ -294,10 +291,10 @@ describe('account-deletion foreign-owner preservation lifecycle', () => {
     ).resolves.toBe('cleared');
 
     expect(order).toEqual([
+      'derived',
       'store-safety',
       'unclaimed-quarantine',
       'session',
-      'derived',
       'recovery-proof',
     ]);
     expect(storage.get(LOCAL_DATA_UNCLAIMED_QUARANTINE_KEY)).toBe('1');

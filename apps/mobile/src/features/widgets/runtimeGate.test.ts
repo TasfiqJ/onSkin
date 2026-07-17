@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  ROUTINE_LIVE_ACTIVITY_START_ENABLED,
   ROUTINE_WIDGET_INTERACTIVE_PUBLICATION_ENABLED,
   evaluateRoutineWidgetRuntimeGate,
   routineWidgetRuntimeEnabled,
@@ -94,5 +95,9 @@ describe('routine widget native runtime gate', () => {
 
   it('keeps interactive publication compile-time hard-disabled', () => {
     expect(ROUTINE_WIDGET_INTERACTIVE_PUBLICATION_ENABLED).toBe(false);
+  });
+
+  it('keeps Live Activity start/update independently compile-time hard-disabled', () => {
+    expect(ROUTINE_LIVE_ACTIVITY_START_ENABLED).toBe(false);
   });
 });

@@ -104,7 +104,7 @@ traffic/storage-to-label reconciliation, and named privacy/legal/device
 signoffs. No legal compliance, Apple acceptance, or commercial outcome is
 claimed.
 
-### IOS-02 disabled WidgetKit/ActivityKit source checkpoint
+### IOS-02 signed-disabled WidgetKit/ActivityKit lifecycle source candidate
 
 The iOS-only extension source now pins the reviewed Expo SDK 56
 `expo-widgets`/`@expo/ui` artifacts by package range, exact lockfile version,
@@ -122,20 +122,71 @@ fails generic on unknown fields, clock rollback, stale state, or an authority
 window over five minutes; stale Live Activity state carries zero counts, and
 personalized roots/counts/status are privacy-sensitive. Future encrypted
 registry schemas are preserved rather than overwritten. Completion analytics
-now fire only for a newly inserted append-only completion, not a repeated tap.
+fire only for a newly inserted append-only completion, not a repeated tap.
 
-An injected, unmounted reconciliation core now rejects malformed, oversized,
-unordered, clock-rollback, stale, and cross-context timeline input; groups and
-deduplicates tokens; resolves all inputs before the first canonical write;
-requires idempotent canonical completion and exact acknowledgement before a
-synchronous replacement; serializes callers; and invalidates stale account
-generations. The native runtime gate opens only for iOS plus the exact QA-build
-boolean in a non-production environment. Interactive publication remains a
-compile-time literal `false` pending a native atomic App Group action outbox or
-equivalent compare-and-swap protocol.
+The exact lockfile-installed `expo-widgets` 56.0.23 native sources now have an
+eleven-file, hash-pinned patch candidate. RoutineKind timeline/action authority
+lives in a bounded SQLite App Group store; UserDefaults remains
+presentation/layout-only. A rotating authority nonce gates compare-and-swap
+activation/publication/reconciliation. AppIntent persists its native outbox
+before returning, actions carry opaque owner/snapshot generations, timelines
+contain a current entry plus a future generic stale entry, and non-exact
+reconciliation redacts instead of retaining optimistic personalized state.
+The planned lease-close path now acquires the same cross-process store lock as
+App Intent, validates exact owner and authority, durably writes a random
+quiescence receipt, and captures the exact final outbox before releasing the
+lock. A separate receipt/authority/owner/snapshot/revision-bound commit may
+reconcile a nonempty captured outbox once and replaces the receipt with the
+closed sentinel before releasing the lock. An empty capture is converted to the
+generic closing sentinel under the same lock before quiescence returns.
+Ordinary reconciliation stays denied after quiescence. Privacy reduction
+otherwise first durably creates and verifies `privacy-closing-v1` and returns a
+synchronous closed-admission receipt. The queued full cleanup leaves a closed
+authority tombstone and asks every activity using the shared
+`LiveActivityAttributes` type, including legacy non-RoutineKind aliases, to
+redact/end. The receipt proves admission closure, not completed ActivityKit
+dismissal.
+
+The app-side lifecycle host is mounted at a stable sibling slot so pending to
+released health-data activation does not remount the router subtree. One
+process-global queue orders activation, reconciliation, release, expiry,
+withdrawal, sign-out, deletion, and owner transition. Private owner authority
+is encrypted and never written to the App Group; canonical idempotent completion
+precedes native CAS/redaction, which precedes private capability acknowledgement.
+The host withholds publication for failed, unresolved, unavailable, or
+example-derived plan/cycle sources; only confirmed Free state is an explicit
+disabled transition. Native `outbox_pending` publication and typed stale Live
+Activity results are bounded retryable concurrency states. Exhausted attempts
+leave an accepted action in the durable outbox for a later foreground refresh
+instead of treating it as cleanup corruption. Live Activity start/update also
+requires the exact signed deep link, reauthorizes after the ActivityKit
+operation, and requests immediate generic end if authority changed during the
+call. Post-start typed stale handling rereads current JS instances and awaits
+their end requests before retry. Global push-to-start token observation and
+emission is removed because those tokens are not owner-bound/revocable;
+per-activity push remains signed `false` and authority-gated. The
+signed-disabled lane is clear-only, so it cannot publish personalized state.
+
+Cleanup is boundary-first. Health withdrawal closes native App Group admission
+immediately after exact-owner destructive authority is established and before
+JavaScript/private/photo writer drains; account boundaries start native closure
+and encrypted action-capability deletion before a replacement owner can publish.
+The queued purge is still awaited before owner/quarantine proofs are released,
+and failed cleanup remains retry-gated.
+
+Two source-candidate limitations remain product blockers even before native
+compilation. The current health-processing status lease is five minutes and
+publication reserves 30 seconds for final reconciliation, so personalized
+widget display lasts at most roughly four and a half minutes from a fresh
+verification and can be shorter. A reviewed purpose-limited longer local-display
+authorization is required for a useful persistent personalized widget. The
+WidgetKit provider/render read path also synchronously takes the exclusive
+cross-process `flock` and opens SQLite read-write; its lock wait, busy timeout,
+schema work, memory, and contention behavior need Instruments evidence on the
+oldest supported and current physical iPhones.
 
 The Phase 5 native packet now refuses boolean-only widget clearance. Its
-schema-v2 lifecycle contract binds current HEAD, exact EAS build UUID/URL,
+schema-v3 lifecycle contract binds current HEAD, exact EAS build UUID/URL,
 final app/extension/App Group/Team identity, physical iPhone/iOS, and named
 signoff to three typed raw signed ZIPs, four canonical parsed
 entitlement/privacy reports, four canonical scenario reports, and typed
@@ -151,22 +202,24 @@ concurrent final-step writes yield exactly one completion decision and repeated
 same-key taps yield exactly one insertion. This fixes the local decision race;
 it does not claim the analytics transport is durable or production-enabled.
 
-This is deliberately disabled scaffolding, not a shippable native feature.
-Ordinary builds exclude the extension plugins and Live Activity capability;
-development/staging QA requires the exact build opt-in, while production
-config hard-errors if that opt-in is present. Stock Expo uses
-`staleDate: nil`, and its app/extension processes replace the shared whole
-timeline without a native atomic primitive. No production Live Activity may
-start and no interactive/personalized widget may be enabled until a native
-host mounts safe reconciliation plus unconditional expiry/withdrawal/sign-out/
-account-change deletion, and passes macOS archive inspection plus
-physical-iPhone killed-app/privacy/accessibility/deep-link QA.
-The final cleared app scheme must also regenerate the exact deep-link allowlist.
+This is an implemented source candidate, not a shippable native feature.
+RoutineKind interactive publication and Live Activity start remain signed
+Info.plist configuration `false`. The finite stale/recovery/end policy applies
+only to the custom RoutineKind Activity path, not every generic Expo activity.
+This Windows host can verify hashes, TypeScript contracts, model races, cleanup
+ordering, and source invariants, but it cannot compile Swift, link SQLite,
+inspect a signed archive/`.app`/`.appex`, or prove extension-process locking,
+render performance, and ActivityKit behavior on a physical iPhone. Final
+cleared identifiers/deep links, macOS compile/archive inspection, a separately
+audited enabling change, cross-bound lifecycle evidence, and the full
+physical-iPhone killed-app/reboot/privacy/accessibility/interaction/withdrawal
+matrix remain mandatory.
 
-Verification passes 16/16 extension/privacy contract tests, 43/43 focused
-widget/action tests at the first source checkpoint, the expanded 62-test widget
-runtime contract, root typecheck and lint, and 275 mobile test files / 3161
-tests. Apple review, legal clearance, signed-binary privacy-manifest placement,
+Targeted verification passes the installed-source hash/installer gates, the
+expanded widget lifecycle/runtime suite, cleanup/adversarial authority tests,
+mobile typecheck, and the Phase 5/9 wiring smoke gates. The complete repository
+baseline and generated packets are rerun after the source checkpoint is clean.
+Apple review, legal clearance, signed-binary privacy-manifest placement,
 analytics delivery, and commercial outcomes are not claimed.
 
 ## 2026-07-15

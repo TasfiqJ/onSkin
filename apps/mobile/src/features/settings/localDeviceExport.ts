@@ -14,7 +14,13 @@ type LocalExportSection =
   | 'subscription';
 
 type LocalExportSpec = {
-  key: Exclude<LocalPrivateDataKey, 'onskin.photos.v1' | 'routinekind.widgetActionMap.v1'>;
+  key: Exclude<
+    LocalPrivateDataKey,
+    | 'onskin.photos.v1'
+    | 'routinekind.widgetActionMap.v1'
+    | 'routinekind.widgetActionMap.v2'
+    | 'routinekind.widgetOwnerAuthority.v1'
+  >;
   section: LocalExportSection;
   field: string;
 };
@@ -24,6 +30,8 @@ const PHOTO_RECORDS_KEY = 'onskin.photos.v1' as const;
 /** Ephemeral security capabilities are accounted for but never read into an export. */
 export const LOCAL_DEVICE_EXPORT_EXCLUDED_STORAGE_KEYS = [
   'routinekind.widgetActionMap.v1',
+  'routinekind.widgetActionMap.v2',
+  'routinekind.widgetOwnerAuthority.v1',
 ] as const satisfies readonly LocalPrivateDataKey[];
 
 const LOCAL_EXPORT_SPECS = [

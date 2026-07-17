@@ -5,16 +5,33 @@
 > this document is superseded by `docs/hugeToDo/launch-contract.json`; the
 > privacy, accessibility, lifecycle, and physical-device gates remain binding.
 
-> **2026-07-16 implementation status:** The repository contains a
-> production-disabled iOS extension source scaffold and a tested, unmounted
-> reconciliation core. Interactive publication remains hard-disabled because
-> the reviewed Expo 56 implementation performs cross-process whole-timeline
-> replacement without a native atomic outbox/CAS. Production Live Activity
-> start is also prohibited because the reviewed start/update/end paths use
-> `staleDate: nil`. The binding source findings and enablement gates are in
+> **2026-07-16 implementation status:** The repository now contains an
+> **implemented iOS source candidate** for the exact-pinned `expo-widgets`
+> `56.0.23` dependency: the app-side generation-bound lifecycle
+> bridge/coordinator/host; a native App Group SQLite store protected by a POSIX
+> lock and `BEGIN IMMEDIATE` transactions; opaque owner-authority rotation;
+> bounded snapshots; an App Intent outbox append committed before return;
+> native compare-and-swap reconciliation; lock-held health-lease quiescence that
+> captures the exact final outbox and permits one exact receipt-bound commit;
+> typed outbox-pending and stale-Activity retries; a parse-independent,
+> boundary-first privacy lane that durably verifies `privacy-closing-v1` and
+> returns a closed-admission receipt before its queued purge; and deterministic
+> Live Activity stale, recovery, and end-request paths. This corrects
+> the earlier scaffold-only finding recorded in
 > `docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md`.
-> Product intent below is not a claim that these native surfaces are currently
-> enabled, sold, App-Review-approved, or safe to ship.
+> It is still **not a compiled or signed iOS artifact**, has no physical-iPhone
+> proof, and is not enabled for customers: interactive publication and the
+> public native-widgets capability remain literal `false`; the generated
+> `RoutineKindWidgetInteractivePublicationEnabled` and
+> `RoutineKindLiveActivityStartEnabled` Info.plist values are also literal
+> `false`. Ordinary shipping config does not generate the extension or
+> advertise Live Activities, and
+> `/routine/widgets` remains an honest unavailable recovery route. Source
+> implementation is not Apple approval, legal clearance, or permission to
+> claim the feature in App Store metadata. Its current health-status authority
+> also makes personalized display short-lived, and its synchronous
+> exclusive-lock/read-write-SQLite render path still requires Instruments and
+> device contention evidence.
 
 _The engagement & delivery layer · local-first reminders with permission-priming · notification tiers, timing, quiet hours & lock-screen discretion · the calm, forgiving streak & weekly adherence · home-screen widgets (including interactive check-off) · Live Activities for the evening routine._
 
@@ -193,23 +210,107 @@ A widget shows **one to three data points, readable in under two seconds** — "
 
 Each is a separate, user-chosen widget; none crams multiple of these together.
 
+**IOS-02 launch source candidate:** the checked-in `RoutineKindToday` target
+implements one privacy-bounded Today experience across exactly four declared
+WidgetKit families: `systemSmall`, `systemMedium`, `accessoryInline`, and
+`accessoryRectangular`. The content concepts above remain the product
+selection model; they are not evidence that four separate extension targets,
+`systemLarge`, `accessoryCircular`, or a separate StandBy layout currently
+ship. Those claims require a signed archive and physical-device evidence.
+
 #### 5.3 Interactive check-off (the notable enhancement)
 
 With **iOS 17 interactive widgets** (WidgetKit handling taps without opening the app) and Android's `RemoteViews`, the **Today's-progress widget lets the user check off a step from the home screen** — collapsing the activation action (docs/01 §7's north-star) to a **single home-screen tap**. The check-off writes a `routine_completions` row through the same idempotent, offline-safe path (docs/03 §6), and the widget reflects the new state on its next timeline reload. This materially lowers the friction of the daily habit and is a current capability docs/00 predated.
 
+In the iOS source candidate, the extension does **not** independently author a
+canonical completion. The App Intent validates the bounded opaque action,
+durably appends it to the native outbox before `perform()` returns, and asks
+WidgetKit to reload. The generation-bound app host later resolves the action
+through the same canonical local completion path, atomically compare-and-swaps
+the replacement snapshot and outbox acknowledgement in native storage, and
+only then acknowledges the private app registry. Concurrent and repeated taps
+therefore converge idempotently; unknown, foreign-owner, stale, or expired
+tokens cannot create a completion. This is implemented source behavior, not
+device-verified behavior, and the interactive publication flag remains
+literal `false`.
+
+Before a scheduled health lease closes, native quiescence takes the same
+cross-process store lock as App Intent append, validates the exact owner and
+authority, durably writes a random receipt, and captures the exact final outbox
+before releasing the lock. Ordinary operations are then denied. One separate
+receipt/authority/owner/snapshot/revision-bound commit can reconcile only that
+nonempty captured outbox and revokes the receipt before releasing the lock. An
+empty capture replaces the structured receipt with the generic closing sentinel
+under the same lock before quiescence returns. Native `outbox_pending`
+publication and typed stale Live Activity outcomes are retryable concurrency
+states; bounded retry exhaustion leaves accepted actions durable for a later
+foreground refresh rather than purging them.
+
 #### 5.4 Sizes, Lock Screen, StandBy
 
-- **Home Screen:** small (2×2), medium (4×2), large (4×4) — small = tonight's step or streak; medium = today's routine progress with check-off; large = the cycle week + progress.
-- **Lock Screen widgets** (inline / circular / rectangular) — a circular ring for today's progress or an inline "next step" line.
-- **StandBy** (bedside) — a calm "tonight's step" display for the PM routine.
+- **IOS-02 launch families:** Home Screen `systemSmall` and `systemMedium`,
+  plus Lock Screen `accessoryInline` and `accessoryRectangular`. Shared or
+  locked surfaces fail generic and never reveal product, step, condition, or
+  owner detail without current authority.
+- **Future concepts, not launch evidence:** `systemLarge`,
+  `accessoryCircular`, and a separately optimized StandBy layout remain
+  product options until implemented and added to the signed/device matrix.
+- **Android:** Glance/ongoing-notification work is outside the current
+  iPhone-only release contract and cannot substitute for IOS-02 evidence.
 
 #### 5.5 Data sharing & refresh
 
-- **iOS** WidgetKit is SwiftUI-only; data is shared from the RN app via **App Groups + UserDefaults**; a small native module calls **`WidgetCenter.shared.reloadAllTimelines()` sparingly** (Apple throttles reloads) on meaningful state changes (a check-off, a new day, a cycle rollover). **Android** uses **Glance**. Widgets refresh on a **system-managed schedule** (TimelineProvider) — not real-time — so timelines are provided with sensible target reload times (next routine time, midnight rollover).
+- **iOS** WidgetKit runs separately from the app. For `RoutineKindToday`, the
+  source candidate uses an **App Group SQLite lifecycle store**, not
+  `UserDefaults` whole-timeline replacement as the authority. A process-shared
+  lock plus immediate transactions protect owner authority, the current
+  snapshot, and the append-only action outbox. Shared payloads use a closed,
+  bounded schema with random, user-independent owner generations and no user
+  ID or user-derived hash. Publication, reconciliation, expiry, account
+  transitions, and privacy withdrawal reload the RoutineKind WidgetKit timeline
+  only after their native transaction. Health withdrawal starts native closure
+  immediately after exact-owner destructive authority and before JavaScript,
+  private-store, or photo writer drains; Auth boundaries close native admission
+  and delete encrypted action capabilities before a replacement owner can
+  publish. Privacy cleanup can invalidate/purge raw native state even when
+  payload bytes cannot be parsed. Timeline refresh remains system-managed, so
+  source correctness does not establish refresh latency or rendering quality
+  on a real device. **Android** uses **Glance** in the later, non-launch scope.
+
+- The personalized timeline deadline is capped by the five-minute
+  health-processing status lease and reserves 30 seconds for final
+  reconciliation. Even after a fresh status verification, detail can remain
+  current for at most roughly four and a half minutes and can be shorter when
+  publication starts later. A reviewed, purpose-limited longer local-display
+  authorization is required before the widget can provide useful persistent
+  personalized content; this source checkpoint does not invent one.
 
 ### 6. Live Activities (iOS) / ongoing notifications (Android)
 
-For the **PM skin-cycling session**, an optional **Live Activity** (iOS ActivityKit, 16.2+, via `expo-widgets`) displays **"tonight's step" in real time** on the Lock Screen and Dynamic Island — e.g., "Retinoid night · 1 of 3," advancing as the user checks off steps, ending when the routine completes. The Android equivalent is an **ongoing notification**. Lifecycle: **started** at the PM reminder (or when the user opens the evening routine), **updated** on each check-off, **ended** on completion or after a timeout. It shares the same WidgetKit extension as the widgets and is **opt-in** (some users won't want routine content on their Lock Screen — §3.6 discretion applies). A natural, low-pressure fit for the cycling "tonight's step" display (docs/00 §6).
+For the **PM skin-cycling session**, an optional `RoutineKindEvening` Live
+Activity (iOS ActivityKit via the exact-pinned `expo-widgets` source) displays
+the current evening progress on the Lock Screen and Dynamic Island. The source
+candidate now derives a bounded deterministic `staleDate` from strict props,
+updates only under current owner/snapshot authority, recovers existing
+instances for reconciliation after app-process death, and requests immediate
+generic final content/end on completion, expiry, disablement, sign-out, account
+switch, deletion, health-consent withdrawal, invalid state, or stale timeout.
+Start/update reauthorizes after the ActivityKit operation and asks a newly stale
+instance to end immediately if authority changed during the call. Native
+quiescence/cleanup schedules or awaits the end request, but a synchronous
+closed-admission receipt does **not** prove that ActivityKit has removed the
+presentation. Reboot/process-death behavior and actual removal latency still
+require physical-device proof. The customer start path remains disabled and
+ordinary shipping config does not advertise Live Activities, so this paragraph
+is product intent plus implemented-source status—not a shipped capability. The
+Android ongoing notification remains later scope.
+
+The start path requires the exact signed RoutineKind deep link before
+`Activity.request`. A typed stale result after start rereads current JavaScript
+instances and awaits their immediate end requests before retry. Global
+push-to-start token observation/emission is intentionally removed because those
+tokens are not owner-bound or revocable; per-activity push remains signed
+`false` and current-authority-gated.
 
 ### 7. Data model — extends docs/01 `notification_preferences` + streak caching
 
@@ -266,11 +367,26 @@ The **streak computation** (`recompute_streak`, security-definer, D-011/D-012; d
 
 - **Notifications:** `expo-notifications` for **local notifications** (routine reminders, capture nudges) with timezone-correct scheduling; **Android 14**: inexact alarms / **WorkManager** by default, `canScheduleExactAlarms()` guarded before any exact API (or crash), `USE_EXACT_ALARM` not claimed; **iOS**: standard notifications with the single opt-in prompt, time-sensitive only where justified; **push** for win-backs via native **APNs/FCM + Supabase Edge Functions** (docs/00 §6).
 - **Frequency-cap engine:** before sending any behavioural/promotional notification, check `notification_log` against the per-tier weekly cap and `quiet_hours`; suppress or defer if exceeded.
-- **Widgets:** **iOS** WidgetKit (SwiftUI) via `expo-apple-targets` / `expo-widgets`, **App Groups + UserDefaults** for data, `WidgetCenter.reloadAllTimelines()` sparingly; **iOS 17 interactive widgets** for check-off (AppIntents); **Android** Glance with `RemoteViews` interactivity; TimelineProvider supplies entries with target reloads (next routine time, midnight).
-- **Live Activities:** ActivityKit (iOS 16.2+) via `expo-widgets`; start/update/end lifecycle tied to the PM routine; Android ongoing notification equivalent.
+- **Widgets:** **iOS** WidgetKit (SwiftUI) via the exact-pinned
+  `expo-widgets` source; App Group SQLite authority with a native durable
+  outbox/CAS and one-shot final-quiescence lifecycle; RoutineKind timeline
+  reload only after meaningful native transitions; four launch families
+  (`systemSmall`/`systemMedium`/`accessoryInline`/`accessoryRectangular`).
+  The publication flag remains false until signed and device gates pass.
+  **Android** Glance/`RemoteViews` is later scope.
+- **Live Activities:** ActivityKit via the exact-pinned `expo-widgets` source;
+  deterministic stale/update/recovery/end source paths tied to the PM routine.
+  The start/config flags remain false until signed and physical-device gates
+  pass; the Android ongoing-notification equivalent is later scope.
 - **Streak:** `recompute_streak` security-definer function (D-011/D-012), `profiles` cache via trigger, `streak_freezes` ledger; all offline-safe and idempotent (docs/03 §6).
 - **PostHog instrumentation:** `notification_prompt_shown`/`_granted`/`_denied` (docs/01 §7), `notification_sent` (tier/kind), `notification_opened`, `reminder_time_set`, `streak_freeze_applied`, `streak_milestone_reached`, `widget_added`, `widget_checkoff_completed`, `live_activity_started`. Wire `widget_checkoff_completed` and reminder-driven opens into the activation/retention analysis. Never log notification _content_ or health detail.
-- **Performance:** widget timeline generation is cheap and cached; the frequency-cap check is a single indexed query; reminder scheduling is local and battery-friendly (inexact alarms).
+- **Performance:** the frequency-cap check is a single indexed query and
+  reminder scheduling is local and battery-friendly (inexact alarms). The
+  RoutineKind WidgetKit provider/render read path is not yet performance-cleared:
+  it synchronously acquires the exclusive cross-process `flock` and opens SQLite
+  read-write. Instruments must measure lock wait, schema/read work, memory,
+  timeout, and AppIntent/publication/cleanup contention on supported physical
+  iPhones before the signed flag can be enabled.
 
 ---
 
@@ -284,7 +400,14 @@ Re-engagement and habit-anchoring are where subscription retention is decided, a
 - **Restraint is what makes the retention durable.** The same evidence that says reminders/streaks/widgets drive retention says **over-notification and pressure-streaks destroy it** (>6 pushes/week → 3.4× uninstall; hollow-grind streaks erode the experience). OnSkin's tiered, capped, forgiving, discreet design captures the upside _without_ the churn — which is why the calm approach is the seven-figure approach, not a softer alternative to it.
 - **It compounds the trust thesis.** A calm, private, non-manipulative engagement layer (discreet lock-screen content, no dark patterns, no data sold) reinforces the privacy-as-trust word-of-mouth engine behind Yuka's $7.3M (docs/01 §7) — the opposite of the "Duo desperation" pattern users increasingly resent.
 
-**Verdict: yes — the reminders/streaks/widgets layer is a seven-figure, retention-defining surface**, _provided_ it is built calmly: tiered and frequency-capped notifications at user-set times, a forgiving and achievable streak framed as weekly adherence, glanceable (and interactive) widgets, and an opt-in Live Activity — all discreet and claim-safe. The documented failure modes (notification fatigue, streak-anxiety, lock-screen leakage) are real and are exactly what the calm design prevents.
+**Business hypothesis:** the reminders/streaks/widgets layer can be a
+retention-defining surface _provided_ it is built calmly: tiered and
+frequency-capped notifications at user-set times, a forgiving and achievable
+streak framed as weekly adherence, glanceable (and interactive) widgets, and an
+opt-in Live Activity—all discreet and claim-safe. The documented failure modes
+(notification fatigue, streak-anxiety, lock-screen leakage) are real and are
+exactly what the calm design is intended to mitigate. This hypothesis is not a
+revenue forecast or guarantee.
 
 ---
 
@@ -330,7 +453,23 @@ Re-engagement and habit-anchoring are where subscription retention is decided, a
 - **Permission-priming and opt-in lift figures are largely vendor-sourced** (OneSignal/CleverTap/Adjust; docs/01 §8) — the _direction_ (soft-ask at the value moment) is well established; treat the magnitudes directionally. _Medium-high confidence on direction._
 - **The forgiving streak is the retention-optimal _and_ humane choice** (freeze −21% churn; leniency ↑ DAU; achievable threshold ↑ D14; over-pressure → hollow engagement), but these are platform case studies (Duolingo), not RCTs; the principle is robust and converges with Lally (docs/03 §6). _Medium-high confidence; hold the calm line._
 - **Streak-anxiety and dark patterns are a real risk if the calm constraints slip** — a future growth push toward loss-aversion mechanics would both violate the brand and, per the evidence, erode long-term retention; D-032's guardrails are load-bearing. _High confidence — this is a design constraint._
-- **Widget and Live Activity refresh is system-throttled, not real-time** (TimelineProvider; Apple throttles `reloadAllTimelines`); the interactive-widget check-off updates on the next reload, not instantly — design copy and expectations around this. _High confidence on the constraint._
+- **Widget and Live Activity presentation remains system-managed, not a
+  real-time rendering guarantee.** The App Intent must durably append before
+  returning and the canonical state converges through the native transaction,
+  but WidgetKit controls when the refreshed timeline is rendered. Measure
+  actual latency and stale/end behavior on supported physical iPhones.
+  _High confidence on the platform constraint; device evidence open._
+- **The present personalized-display lifetime is intentionally short.** A
+  five-minute health-status lease plus 30-second reconciliation headroom is a
+  fail-closed source posture, not a useful long-lived home-screen contract. A
+  longer purpose-limited local-display authorization needs explicit product,
+  privacy, legal, implementation, and device review. _High confidence on the
+  current limitation; the longer authorization is undecided._
+- **The current native read path may contend inside WidgetKit's execution
+  budget.** Provider/render reads synchronously take an exclusive `flock` and
+  open SQLite read-write. Source bounds do not establish acceptable latency;
+  Instruments and physical-device contention evidence are required. _High
+  confidence that measurement is required; performance is unknown._
 - **Interactive widgets require iOS 17+ (Android long-supported)**; older iOS falls back to a tap-to-open widget — verify the fallback and the AppIntents wiring on-device. _Medium confidence pending device testing._
 - **Health-adjacent content on lock screens / shared home screens is a privacy exposure** that discreet-by-default content and local-notification handling mitigate; the win-back push copy and any condition-specific detail need legal/DPIA review (B-PRIVACY). _High confidence that discretion is required._
 - **Android-14 exact-alarm handling is a crash risk if mishandled** (`canScheduleExactAlarms()` must be checked); routine reminders are fine on inexact alarms, but verify timing acceptability on-device. _Medium-high confidence; verify at build._

@@ -138,9 +138,10 @@ jobs:
       - name: Install from lockfile
         run: npm ci
 
-      - name: Verify installed iOS privacy sources
+      - name: Verify installed iOS native sources
         run: |
-          npm run phase9:view-shot-privacy:check
+          npm run postinstall:check
+          npm run phase5:expo-widgets-lifecycle:test
           npm run phase9:view-shot-privacy:test
           npm run phase9:ios-privacy-source-audit:test
           npm run phase9:ios-privacy-source-audit:check

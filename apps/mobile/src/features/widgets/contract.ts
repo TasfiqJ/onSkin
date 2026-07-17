@@ -9,7 +9,7 @@ export const ROUTINE_WIDGET_TODAY_DEEP_LINKS = {
 } as const;
 export const ROUTINE_WIDGET_TODAY_DEEP_LINK = ROUTINE_WIDGET_TODAY_DEEP_LINKS.production;
 export const ROUTINE_WIDGET_CHECK_OFF_TARGET = 'widget-action:complete-next' as const;
-export const ROUTINE_WIDGET_SCHEMA_VERSION = 1 as const;
+export const ROUTINE_WIDGET_SCHEMA_VERSION = 2 as const;
 export const ROUTINE_WIDGET_MAX_STEPS = 32;
 
 export type RoutineWidgetAppVariant = keyof typeof ROUTINE_WIDGET_TODAY_DEEP_LINKS;
@@ -27,6 +27,8 @@ export type RoutineWidgetStatus = 'disabled' | 'empty' | 'ready' | 'complete' | 
  */
 export type RoutineWidgetProps = {
   schemaVersion: typeof ROUTINE_WIDGET_SCHEMA_VERSION;
+  ownerGeneration: string;
+  snapshotNonce: string;
   status: RoutineWidgetStatus;
   phase: RoutineWidgetPhase;
   localDate: string;
@@ -42,6 +44,8 @@ export type RoutineWidgetProps = {
 
 export type RoutineLiveActivityProps = {
   schemaVersion: typeof ROUTINE_WIDGET_SCHEMA_VERSION;
+  ownerGeneration: string;
+  snapshotNonce: string;
   status: 'in_progress' | 'complete' | 'stale';
   completedCount: number;
   totalCount: number;
@@ -57,9 +61,11 @@ const EXPECTED_KEYS = [
   'deepLink',
   'interactionRevision',
   'localDate',
+  'ownerGeneration',
   'pendingActionTokens',
   'phase',
   'schemaVersion',
+  'snapshotNonce',
   'staleAtMs',
   'status',
   'totalCount',
@@ -67,7 +73,9 @@ const EXPECTED_KEYS = [
 ].sort();
 const LIVE_ACTIVITY_EXPECTED_KEYS = [
   'completedCount',
+  'ownerGeneration',
   'schemaVersion',
+  'snapshotNonce',
   'staleAtMs',
   'status',
   'totalCount',
@@ -110,6 +118,12 @@ function normalizedTokens(value: unknown): string[] | null {
   return tokens;
 }
 
+export function normalizeRoutineWidgetOpaqueUuid(value: unknown): string | null {
+  return typeof value === 'string' && value === value.toLowerCase() && TOKEN_RE.test(value)
+    ? value
+    : null;
+}
+
 export function isRoutineWidgetDeepLink(value: unknown): value is RoutineWidgetTodayDeepLink {
   return (
     value === ROUTINE_WIDGET_TODAY_DEEP_LINKS.development ||
@@ -138,6 +152,9 @@ export function normalizeRoutineWidgetProps(value: unknown): RoutineWidgetProps 
     return null;
   }
   if (value.schemaVersion !== ROUTINE_WIDGET_SCHEMA_VERSION) return null;
+  const ownerGeneration = normalizeRoutineWidgetOpaqueUuid(value.ownerGeneration);
+  const snapshotNonce = normalizeRoutineWidgetOpaqueUuid(value.snapshotNonce);
+  if (!ownerGeneration || !snapshotNonce || ownerGeneration === snapshotNonce) return null;
   if (
     typeof value.status !== 'string' ||
     !['disabled', 'empty', 'ready', 'complete', 'stale'].includes(value.status)
@@ -207,6 +224,8 @@ export function normalizeRoutineWidgetProps(value: unknown): RoutineWidgetProps 
 
   return {
     schemaVersion: ROUTINE_WIDGET_SCHEMA_VERSION,
+    ownerGeneration,
+    snapshotNonce,
     status,
     phase,
     localDate: value.localDate,
@@ -222,6 +241,8 @@ export function normalizeRoutineWidgetProps(value: unknown): RoutineWidgetProps 
 }
 
 export function createRoutineWidgetProps(input: {
+  ownerGeneration: string;
+  snapshotNonce: string;
   status?: 'disabled' | 'empty' | 'stale';
   phase?: Exclude<RoutineWidgetPhase, 'none'>;
   localDate: string;
@@ -240,6 +261,8 @@ export function createRoutineWidgetProps(input: {
     (totalCount === 0 ? 'empty' : completedCount === totalCount ? 'complete' : 'ready');
   const candidate: RoutineWidgetProps = {
     schemaVersion: ROUTINE_WIDGET_SCHEMA_VERSION,
+    ownerGeneration: input.ownerGeneration,
+    snapshotNonce: input.snapshotNonce,
     status: derivedStatus,
     phase:
       derivedStatus === 'disabled' || derivedStatus === 'stale' ? 'none' : (input.phase ?? 'AM'),
@@ -288,6 +311,8 @@ export function applyRoutineWidgetOptimisticCheckOff(
   if (pressedAtMs < props.updatedAtMs || pressedAtMs >= props.staleAtMs) {
     return normalizeRoutineWidgetProps({
       schemaVersion: ROUTINE_WIDGET_SCHEMA_VERSION,
+      ownerGeneration: props.ownerGeneration,
+      snapshotNonce: props.snapshotNonce,
       status: 'stale',
       phase: 'none',
       localDate: props.localDate,
@@ -307,6 +332,8 @@ export function applyRoutineWidgetOptimisticCheckOff(
   const completedCount = props.completedCount + 1;
   return normalizeRoutineWidgetProps({
     schemaVersion: ROUTINE_WIDGET_SCHEMA_VERSION,
+    ownerGeneration: props.ownerGeneration,
+    snapshotNonce: props.snapshotNonce,
     status: completedCount === props.totalCount ? 'complete' : 'ready',
     phase: props.phase,
     localDate: props.localDate,
@@ -332,6 +359,9 @@ export function normalizeRoutineLiveActivityProps(value: unknown): RoutineLiveAc
     return null;
   }
   if (value.schemaVersion !== ROUTINE_WIDGET_SCHEMA_VERSION) return null;
+  const ownerGeneration = normalizeRoutineWidgetOpaqueUuid(value.ownerGeneration);
+  const snapshotNonce = normalizeRoutineWidgetOpaqueUuid(value.snapshotNonce);
+  if (!ownerGeneration || !snapshotNonce || ownerGeneration === snapshotNonce) return null;
   if (
     typeof value.status !== 'string' ||
     !['in_progress', 'complete', 'stale'].includes(value.status)
@@ -367,6 +397,8 @@ export function normalizeRoutineLiveActivityProps(value: unknown): RoutineLiveAc
 
   return {
     schemaVersion: ROUTINE_WIDGET_SCHEMA_VERSION,
+    ownerGeneration,
+    snapshotNonce,
     status: value.status as RoutineLiveActivityProps['status'],
     completedCount: value.completedCount,
     totalCount: value.totalCount,
@@ -388,6 +420,8 @@ export function routineLiveActivityProps(
       : 'in_progress';
   return normalizeRoutineLiveActivityProps({
     schemaVersion: ROUTINE_WIDGET_SCHEMA_VERSION,
+    ownerGeneration: props.ownerGeneration,
+    snapshotNonce: props.snapshotNonce,
     status,
     completedCount: stale ? 0 : props.completedCount,
     totalCount: stale ? 0 : props.totalCount,

@@ -41,6 +41,14 @@ function recoveryJwt(subject = USER_A): string {
   return `${header}.${payload}.signature`;
 }
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((next) => {
+    resolve = next;
+  });
+  return { promise, resolve };
+}
+
 const mocks = vi.hoisted(() => ({
   cancelQueries: vi.fn(),
   cancelScheduledNotifications: vi.fn(),
@@ -51,6 +59,8 @@ const mocks = vi.hoisted(() => ({
   clearPersistedSupabaseSession: vi.fn(),
   convertStoreTransactionNoticeForTerminalDeletion: vi.fn(),
   clearQueries: vi.fn(),
+  clearRoutineWidgetActions: vi.fn(),
+  clearRoutineWidgetNativeState: vi.fn(),
   getSession: vi.fn(),
   getUser: vi.fn(),
   localDataOwnerBinding: vi.fn(),
@@ -71,6 +81,14 @@ vi.mock('expo-notifications', () => ({
 
 vi.mock('@/features/photos/sensitiveImageMemory', () => ({
   purgeSensitiveImageMemory: mocks.purgeSensitiveImageMemory,
+}));
+
+vi.mock('@/features/widgets/lifecycleCoordinator', () => ({
+  clearRoutineWidgetLifecycleForPrivacy: mocks.clearRoutineWidgetNativeState,
+}));
+
+vi.mock('@/features/widgets/actionRegistry', () => ({
+  clearRoutineWidgetActions: mocks.clearRoutineWidgetActions,
 }));
 
 vi.mock('@/features/healthConsent/pendingIntent', () => ({
@@ -195,6 +213,8 @@ beforeEach(() => {
   mocks.clearPersistedSupabaseSession.mockResolvedValue(undefined);
   mocks.convertStoreTransactionNoticeForTerminalDeletion.mockResolvedValue(undefined);
   mocks.clearQueries.mockReturnValue(undefined);
+  mocks.clearRoutineWidgetNativeState.mockResolvedValue(undefined);
+  mocks.clearRoutineWidgetActions.mockResolvedValue(undefined);
   mocks.getSession.mockResolvedValue({
     data: { session: { access_token: 'quarantined-access-token', user: { id: USER_A } } },
     error: null,
@@ -228,7 +248,9 @@ describe('account-deletion recovery session boundary', () => {
     expect(mocks.cancelQueries).toHaveBeenCalledTimes(2);
     expect(mocks.clearQueries).toHaveBeenCalledTimes(2);
     expect(mocks.purgeSensitiveImageMemory).toHaveBeenCalledOnce();
+    expect(mocks.clearRoutineWidgetNativeState).toHaveBeenCalledOnce();
     expect(mocks.cancelScheduledNotifications).toHaveBeenCalledOnce();
+    expect(mocks.clearRoutineWidgetNativeState).toHaveBeenCalledOnce();
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledOnce();
     expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledOnce();
     expect(mocks.getSession).not.toHaveBeenCalled();
@@ -245,6 +267,7 @@ describe('account-deletion recovery session boundary', () => {
     expect(mocks.cancelQueries).toHaveBeenCalledTimes(2);
     expect(mocks.clearQueries).toHaveBeenCalledTimes(2);
     expect(mocks.cancelScheduledNotifications).toHaveBeenCalledOnce();
+    expect(mocks.clearRoutineWidgetNativeState).toHaveBeenCalledOnce();
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledOnce();
     expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledOnce();
     expect(mocks.getSession).not.toHaveBeenCalled();
@@ -263,9 +286,7 @@ describe('account-deletion recovery session boundary', () => {
     expect(mocks.cancelScheduledNotifications).toHaveBeenCalledOnce();
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledOnce();
     expect(mocks.resetRevenueCatIdentity).toHaveBeenCalledOnce();
-    expect(
-      mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding,
-    ).not.toHaveBeenCalled();
+    expect(mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding).not.toHaveBeenCalled();
   });
 
   it('persists acceptance before clearing a committed-response-loss retry session', async () => {
@@ -291,10 +312,45 @@ describe('account-deletion recovery session boundary', () => {
       }),
     ).resolves.toBeUndefined();
 
-    expect(order).toEqual(['accepted', 'session', 'local', 'derived']);
-    expect(
-      mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding,
-    ).not.toHaveBeenCalled();
+    expect(order).toEqual(['derived', 'accepted', 'session', 'local']);
+    expect(mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding).not.toHaveBeenCalled();
+  });
+
+  it('closes native admission before accepted-marker I/O and awaits that purge before session clear', async () => {
+    const acceptedMarker = deferred<void>();
+    const authDerivedCleanup = deferred<void>();
+    const clearAuthDerivedActivity = vi.fn(() => authDerivedCleanup.promise);
+    const markAccepted = vi.fn(async () => {
+      await acceptedMarker.promise;
+      return { ...RECORD_A, state: 'accepted' } as const;
+    });
+    const clearSession = vi.fn(async () => {});
+
+    const completion = acceptAccountDeletionAndSignOut(RECORD_A, {
+      markAccepted,
+      clearSession,
+      clearIsolatedState: vi.fn(async () => {}),
+      clearAuthDerivedActivity,
+      quarantineUnclaimedLocalData: vi.fn(async () => {}),
+      retainLocalDataOwner: vi.fn(async () => {}),
+    });
+
+    expect(clearAuthDerivedActivity).toHaveBeenCalledOnce();
+    expect(markAccepted).toHaveBeenCalledOnce();
+    expect(clearAuthDerivedActivity.mock.invocationCallOrder[0]).toBeLessThan(
+      markAccepted.mock.invocationCallOrder[0]!,
+    );
+    expect(clearSession).not.toHaveBeenCalled();
+
+    acceptedMarker.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(clearSession).not.toHaveBeenCalled();
+
+    authDerivedCleanup.resolve();
+    await completion;
+    expect(clearSession).toHaveBeenCalledOnce();
+    expect(clearAuthDerivedActivity).toHaveBeenCalledOnce();
   });
 
   it('attempts all three cleanup stages and reports the first failure', async () => {
@@ -311,6 +367,50 @@ describe('account-deletion recovery session boundary', () => {
     ).rejects.toThrow('session clear unavailable');
 
     expect(clearIsolatedState).toHaveBeenCalledOnce();
+    expect(clearAuthDerivedActivity).toHaveBeenCalledOnce();
+  });
+
+  it('starts native-bearing auth cleanup before owner retention and observes that same promise', async () => {
+    let releaseOwnerRetention!: () => void;
+    let releaseAuthDerivedCleanup!: () => void;
+    const retainLocalDataOwner = vi.fn(
+      () => new Promise<void>((resolve) => (releaseOwnerRetention = resolve)),
+    );
+    const clearAuthDerivedActivity = vi.fn(
+      () => new Promise<void>((resolve) => (releaseAuthDerivedCleanup = resolve)),
+    );
+    const clearSession = vi.fn(async () => {});
+
+    const completion = completeAccountDeletionLocalSignOut(
+      {
+        clearSession,
+        clearIsolatedState: vi.fn(async () => {}),
+        clearAuthDerivedActivity,
+        quarantineUnclaimedLocalData: vi.fn(async () => {}),
+        retainLocalDataOwner,
+      },
+      {
+        clearSession: true,
+        clearIsolatedState: false,
+        quarantineUnclaimedLocalData: false,
+        retainLocalDataOwner: true,
+      },
+    );
+
+    expect(clearAuthDerivedActivity).toHaveBeenCalledOnce();
+    expect(retainLocalDataOwner).not.toHaveBeenCalled();
+    expect(clearSession).not.toHaveBeenCalled();
+
+    releaseAuthDerivedCleanup();
+    await vi.waitFor(() => expect(retainLocalDataOwner).toHaveBeenCalledOnce());
+    expect(clearAuthDerivedActivity.mock.invocationCallOrder[0]).toBeLessThan(
+      retainLocalDataOwner.mock.invocationCallOrder[0]!,
+    );
+    expect(clearSession).not.toHaveBeenCalled();
+
+    releaseOwnerRetention();
+    await vi.waitFor(() => expect(clearSession).toHaveBeenCalledOnce());
+    await completion;
     expect(clearAuthDerivedActivity).toHaveBeenCalledOnce();
   });
 });
@@ -886,6 +986,45 @@ describe('account-deletion local terminal commit', () => {
     }
   });
 
+  it('closes native admission before terminal journal I/O and awaits that purge before session clear', async () => {
+    const storeSafety = deferred<void>();
+    const authDerivedCleanup = deferred<void>();
+    const clearAuthDerivedActivity = vi.fn(() => authDerivedCleanup.promise);
+    const convertStoreSafetyNotice = vi.fn(() => storeSafety.promise);
+    const clearSession = vi.fn(async () => {});
+
+    const completion = finalizeCompletedAccountDeletion(
+      { ...completed, notice: null },
+      {
+        clearSession,
+        clearIsolatedState: vi.fn(async () => {}),
+        clearAuthDerivedActivity,
+        quarantineUnclaimedLocalData: vi.fn(async () => {}),
+        retainLocalDataOwner: vi.fn(async () => {}),
+        convertStoreSafetyNotice,
+        queueAppleNotice: vi.fn(),
+        clearCompletedState: vi.fn(async () => {}),
+      },
+    );
+
+    expect(clearAuthDerivedActivity).toHaveBeenCalledOnce();
+    expect(convertStoreSafetyNotice).toHaveBeenCalledOnce();
+    expect(clearAuthDerivedActivity.mock.invocationCallOrder[0]).toBeLessThan(
+      convertStoreSafetyNotice.mock.invocationCallOrder[0]!,
+    );
+    expect(clearSession).not.toHaveBeenCalled();
+
+    storeSafety.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(clearSession).not.toHaveBeenCalled();
+
+    authDerivedCleanup.resolve();
+    await completion;
+    expect(clearSession).toHaveBeenCalledOnce();
+    expect(clearAuthDerivedActivity).toHaveBeenCalledOnce();
+  });
+
   it('keeps the completed capability durable until Apple instructions are acknowledged', async () => {
     const order: string[] = [];
     await expect(
@@ -911,7 +1050,7 @@ describe('account-deletion local terminal commit', () => {
       }),
     ).resolves.toBe('manual_notice_pending');
 
-    expect(order).toEqual(['store-safety', 'session', 'local', 'derived', 'notice']);
+    expect(order).toEqual(['derived', 'store-safety', 'session', 'local', 'notice']);
   });
 
   it('removes capability after local cleanup when no manual notice remains', async () => {
@@ -941,13 +1080,13 @@ describe('account-deletion local terminal commit', () => {
         },
       ),
     ).resolves.toBe('cleared');
-    expect(order).toEqual(['store-safety', 'session', 'local', 'derived', 'capability']);
+    expect(order).toEqual(['derived', 'store-safety', 'session', 'local', 'capability']);
   });
 
   it('clears only the terminally deleted owner withdrawal journal', async () => {
-    await expect(
-      finalizeCompletedAccountDeletion({ ...completed, notice: null }),
-    ).resolves.toBe('cleared');
+    await expect(finalizeCompletedAccountDeletion({ ...completed, notice: null })).resolves.toBe(
+      'cleared',
+    );
 
     expect(mocks.clearPendingHealthWithdrawalIntentByOwnerBinding).toHaveBeenCalledOnce();
     expect(mocks.clearPendingHealthWithdrawalIntentByOwnerBinding).toHaveBeenCalledWith(OWNER_A);
@@ -961,22 +1100,22 @@ describe('account-deletion local terminal commit', () => {
       new Error('completion proof delete lost'),
     );
 
-    await expect(
-      finalizeCompletedAccountDeletion({ ...completed, notice: null }),
-    ).rejects.toThrow('completion proof delete lost');
-    await expect(
-      finalizeCompletedAccountDeletion({ ...completed, notice: null }),
-    ).resolves.toBe('cleared');
+    await expect(finalizeCompletedAccountDeletion({ ...completed, notice: null })).rejects.toThrow(
+      'completion proof delete lost',
+    );
+    await expect(finalizeCompletedAccountDeletion({ ...completed, notice: null })).resolves.toBe(
+      'cleared',
+    );
 
-    expect(
-      mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding,
-    ).toHaveBeenCalledTimes(2);
-    expect(
-      mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding,
-    ).toHaveBeenNthCalledWith(1, OWNER_A);
-    expect(
-      mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding,
-    ).toHaveBeenNthCalledWith(2, OWNER_A);
+    expect(mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding).toHaveBeenCalledTimes(2);
+    expect(mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding).toHaveBeenNthCalledWith(
+      1,
+      OWNER_A,
+    );
+    expect(mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding).toHaveBeenNthCalledWith(
+      2,
+      OWNER_A,
+    );
   });
 
   it('keeps terminal recovery retryable when dependent cleanup fails', async () => {
@@ -984,18 +1123,16 @@ describe('account-deletion local terminal commit', () => {
       new Error('dependent recovery unavailable'),
     );
 
-    await expect(
-      finalizeCompletedAccountDeletion({ ...completed, notice: null }),
-    ).rejects.toThrow('dependent recovery unavailable');
+    await expect(finalizeCompletedAccountDeletion({ ...completed, notice: null })).rejects.toThrow(
+      'dependent recovery unavailable',
+    );
     expect(mocks.clearPersistedSupabaseSession).not.toHaveBeenCalled();
     expect(mocks.clearCompletedAccountDeletionState).not.toHaveBeenCalled();
 
-    await expect(
-      finalizeCompletedAccountDeletion({ ...completed, notice: null }),
-    ).resolves.toBe('cleared');
-    expect(
-      mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding,
-    ).toHaveBeenCalledTimes(2);
+    await expect(finalizeCompletedAccountDeletion({ ...completed, notice: null })).resolves.toBe(
+      'cleared',
+    );
+    expect(mocks.clearDependentConsentWithdrawalTombstonesByOwnerBinding).toHaveBeenCalledTimes(2);
   });
 
   it('finalizes completed A evidence without erasing B private data', async () => {

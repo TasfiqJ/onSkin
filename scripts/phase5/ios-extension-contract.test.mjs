@@ -10,13 +10,13 @@ function fixture(variant = 'development') {
   const appBundleIdentifier = `com.routinekind.app.${variant}`;
   return {
     packageJson: {
-      dependencies: { '@expo/ui': '~56.0.22', 'expo-widgets': '~56.0.23' },
+      dependencies: { '@expo/ui': '~56.0.22', 'expo-widgets': '56.0.23' },
     },
     packageLock: {
       lockfileVersion: 3,
       packages: {
         'apps/mobile': {
-          dependencies: { '@expo/ui': '~56.0.22', 'expo-widgets': '~56.0.23' },
+          dependencies: { '@expo/ui': '~56.0.22', 'expo-widgets': '56.0.23' },
         },
         'node_modules/@expo/ui': {
           version: '56.0.22',

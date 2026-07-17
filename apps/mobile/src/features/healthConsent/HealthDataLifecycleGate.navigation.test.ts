@@ -36,6 +36,13 @@ vi.mock('@/features/subscription/useEntitlement', () => ({
   useEntitlement: () => ({ data: null }),
   useEntitlementActions: () => ({ restore: { isPending: false, mutate: vi.fn() } }),
 }));
+vi.mock('@/features/widgets/lifecycleRuntime', () => ({
+  ROUTINE_WIDGET_RECONCILIATION_HEADROOM_MS: 0,
+  drainRoutineWidgetOutboxBeforeHealthLeaseClose: vi.fn(async () => ({ status: 'skipped' })),
+}));
+vi.mock('@/features/widgets/RoutineWidgetLifecycleHost', () => ({
+  RoutineWidgetLifecycleSlot: () => null,
+}));
 vi.mock('@/lib/auth/AuthProvider', () => ({
   useAuth: () => ({ initializing: false, signOut: vi.fn(), user: null }),
 }));

@@ -49,6 +49,8 @@ describe('local device data export', () => {
     expect(accountedKeys.sort()).toEqual([...LOCAL_PRIVATE_DATA_KEYS].sort());
     expect(new Set(accountedKeys).size).toBe(accountedKeys.length);
     expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('routinekind.widgetActionMap.v1');
+    expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('routinekind.widgetActionMap.v2');
+    expect(LOCAL_DEVICE_EXPORT_STORAGE_KEYS).not.toContain('routinekind.widgetOwnerAuthority.v1');
   });
 
   it('never reads or exports durable privacy-request recovery capabilities', async () => {

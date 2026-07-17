@@ -16,10 +16,14 @@ import {
 const TOKEN_ONE = '00000000-0000-4000-8000-000000000001';
 const TOKEN_TWO = '00000000-0000-4000-8000-000000000002';
 const TOKEN_THREE = '00000000-0000-4000-8000-000000000003';
+const OWNER_GENERATION = '00000000-0000-4000-8000-0000000000a1';
+const SNAPSHOT_NONCE = '00000000-0000-4000-8000-0000000000b1';
 const TOKEN_ALPHA = 'deadbeef-dead-4ead-8bad-deadbeef0001';
 
 function readyProps() {
   return createRoutineWidgetProps({
+    ownerGeneration: OWNER_GENERATION,
+    snapshotNonce: SNAPSHOT_NONCE,
     phase: 'PM',
     localDate: '2026-07-16',
     completedCount: 1,
@@ -235,7 +239,9 @@ describe('interactive widget pending-action outbox', () => {
 describe('routine Live Activity closed schema', () => {
   it('rejects unknown and internally inconsistent state', () => {
     const valid = {
-      schemaVersion: 1,
+      schemaVersion: 2,
+      ownerGeneration: OWNER_GENERATION,
+      snapshotNonce: SNAPSHOT_NONCE,
       status: 'in_progress',
       completedCount: 1,
       totalCount: 3,
@@ -261,7 +267,9 @@ describe('routine Live Activity closed schema', () => {
 
   it('accepts only the five-minute Live Activity lease boundary', () => {
     const valid = {
-      schemaVersion: 1,
+      schemaVersion: 2,
+      ownerGeneration: OWNER_GENERATION,
+      snapshotNonce: SNAPSHOT_NONCE,
       status: 'in_progress',
       completedCount: 1,
       totalCount: 3,
@@ -280,7 +288,9 @@ describe('routine Live Activity closed schema', () => {
       totalCount: 3,
     });
     expect(routineLiveActivityProps(pm, 10_000)).toEqual({
-      schemaVersion: 1,
+      schemaVersion: 2,
+      ownerGeneration: OWNER_GENERATION,
+      snapshotNonce: SNAPSHOT_NONCE,
       status: 'stale',
       completedCount: 0,
       totalCount: 0,
@@ -288,7 +298,9 @@ describe('routine Live Activity closed schema', () => {
       staleAtMs: 10_000,
     });
     expect(routineLiveActivityProps(pm, 999)).toEqual({
-      schemaVersion: 1,
+      schemaVersion: 2,
+      ownerGeneration: OWNER_GENERATION,
+      snapshotNonce: SNAPSHOT_NONCE,
       status: 'stale',
       completedCount: 0,
       totalCount: 0,

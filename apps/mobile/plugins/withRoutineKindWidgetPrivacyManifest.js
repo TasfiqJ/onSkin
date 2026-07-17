@@ -8,6 +8,12 @@ const TARGET_NAME = 'ExpoWidgetsTarget';
 const PRIVACY_MANIFEST_FILENAME = 'PrivacyInfo.xcprivacy';
 const USER_DEFAULTS_API_TYPE = 'NSPrivacyAccessedAPICategoryUserDefaults';
 const APP_GROUP_USER_DEFAULTS_REASON = '1C8F.1';
+const WIDGET_LIFECYCLE_VERSION_KEY = 'RoutineKindWidgetLifecycleVersion';
+const WIDGET_PUBLICATION_ENABLED_KEY = 'RoutineKindWidgetInteractivePublicationEnabled';
+const LIVE_ACTIVITY_START_ENABLED_KEY = 'RoutineKindLiveActivityStartEnabled';
+const WIDGET_DEEP_LINK_KEY = 'RoutineKindWidgetDeepLink';
+const WIDGET_LIFECYCLE_VERSION = 1;
+const WIDGET_DEEP_LINK_RE = /^[a-z][a-z0-9+.-]{0,63}:\/\/today$/;
 
 const REQUIRED_WIDGET_PRIVACY_MANIFEST = Object.freeze({
   NSPrivacyAccessedAPITypes: Object.freeze([
@@ -87,6 +93,36 @@ function writeWidgetPrivacyManifest(platformProjectRoot, targetName = TARGET_NAM
     fs.writeFileSync(manifestPath, contents, 'utf8');
   }
   return manifestPath;
+}
+
+function writeWidgetLifecycleConfiguration(
+  platformProjectRoot,
+  targetName = TARGET_NAME,
+  deepLink,
+) {
+  const infoPlistPath = path.join(platformProjectRoot, targetName, 'Info.plist');
+  if (!fs.existsSync(infoPlistPath)) {
+    throw new Error(
+      `${targetName}/Info.plist is missing. Place this plugin after expo-widgets so its iOS target is generated first.`,
+    );
+  }
+  let infoPlist;
+  try {
+    infoPlist = plist.parse(fs.readFileSync(infoPlistPath, 'utf8'));
+  } catch (error) {
+    throw new Error(`Widget Info.plist is invalid and was preserved: ${infoPlistPath}`, {
+      cause: error,
+    });
+  }
+  infoPlist[WIDGET_LIFECYCLE_VERSION_KEY] = WIDGET_LIFECYCLE_VERSION;
+  infoPlist[WIDGET_PUBLICATION_ENABLED_KEY] = false;
+  infoPlist[LIVE_ACTIVITY_START_ENABLED_KEY] = false;
+  infoPlist[WIDGET_DEEP_LINK_KEY] = deepLink;
+  const contents = plist.build(infoPlist);
+  if (fs.readFileSync(infoPlistPath, 'utf8') !== contents) {
+    fs.writeFileSync(infoPlistPath, contents, 'utf8');
+  }
+  return infoPlistPath;
 }
 
 function findTargetUuid(project, targetName) {
@@ -233,11 +269,27 @@ function ensureWidgetPrivacyManifestResource(
 
 const withRoutineKindWidgetPrivacyManifest = (config, props = {}) => {
   const targetName = props.targetName ?? TARGET_NAME;
+  const deepLink = props.deepLink;
+  if (typeof deepLink !== 'string' || !WIDGET_DEEP_LINK_RE.test(deepLink)) {
+    throw new Error('The widget lifecycle requires one exact signed deepLink ending in ://today.');
+  }
+
+  config.ios ??= {};
+  config.ios.infoPlist ??= {};
+  config.ios.infoPlist[WIDGET_LIFECYCLE_VERSION_KEY] = WIDGET_LIFECYCLE_VERSION;
+  config.ios.infoPlist[WIDGET_PUBLICATION_ENABLED_KEY] = false;
+  config.ios.infoPlist[LIVE_ACTIVITY_START_ENABLED_KEY] = false;
+  config.ios.infoPlist[WIDGET_DEEP_LINK_KEY] = deepLink;
 
   config = withDangerousMod(config, [
     'ios',
     async (modConfig) => {
       writeWidgetPrivacyManifest(modConfig.modRequest.platformProjectRoot, targetName);
+      writeWidgetLifecycleConfiguration(
+        modConfig.modRequest.platformProjectRoot,
+        targetName,
+        deepLink,
+      );
       return modConfig;
     },
   ]);
@@ -250,10 +302,16 @@ const withRoutineKindWidgetPrivacyManifest = (config, props = {}) => {
 
 module.exports = withRoutineKindWidgetPrivacyManifest;
 module.exports.APP_GROUP_USER_DEFAULTS_REASON = APP_GROUP_USER_DEFAULTS_REASON;
+module.exports.LIVE_ACTIVITY_START_ENABLED_KEY = LIVE_ACTIVITY_START_ENABLED_KEY;
 module.exports.PRIVACY_MANIFEST_FILENAME = PRIVACY_MANIFEST_FILENAME;
 module.exports.REQUIRED_WIDGET_PRIVACY_MANIFEST = REQUIRED_WIDGET_PRIVACY_MANIFEST;
 module.exports.TARGET_NAME = TARGET_NAME;
 module.exports.USER_DEFAULTS_API_TYPE = USER_DEFAULTS_API_TYPE;
+module.exports.WIDGET_LIFECYCLE_VERSION = WIDGET_LIFECYCLE_VERSION;
+module.exports.WIDGET_LIFECYCLE_VERSION_KEY = WIDGET_LIFECYCLE_VERSION_KEY;
+module.exports.WIDGET_PUBLICATION_ENABLED_KEY = WIDGET_PUBLICATION_ENABLED_KEY;
+module.exports.WIDGET_DEEP_LINK_KEY = WIDGET_DEEP_LINK_KEY;
 module.exports.ensureWidgetPrivacyManifestResource = ensureWidgetPrivacyManifestResource;
 module.exports.mergeWidgetPrivacyManifest = mergeWidgetPrivacyManifest;
+module.exports.writeWidgetLifecycleConfiguration = writeWidgetLifecycleConfiguration;
 module.exports.writeWidgetPrivacyManifest = writeWidgetPrivacyManifest;

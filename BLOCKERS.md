@@ -164,7 +164,7 @@ capture route hash; strict Phase 5, Phase 7, and Phase 8 still require the
 founder/reviewer/device evidence listed in `docs/FOR_TAS_TO_DO.md`. The Phase 9
 privacy payload audit now accepts the route-owned progress-photo share
 confirmation instead of requiring a native alert. The current integrated source checkpoint
-on 2026-07-16 passes root typecheck, lint, and 275 mobile test files / 3162 tests.
+on 2026-07-16 passes root typecheck, lint, and 282 mobile test files / 3251 tests.
 The human-simulated E2E manifest now
 combines the complete 2026-07-09 viewport baseline with the 2026-07-10
 `390 x 844 local Progress time-lapse` and reduced-motion pass in
@@ -1083,7 +1083,11 @@ Risk:
 - slow post-capture analysis makes a private progress-photo habit feel stalled,
   while analyzer timeouts can hide device-specific incompatibility;
 - slow local photo loading or high memory use in photo timeline weakens the
-  progress moat and can cause native crashes under real photo volume.
+  progress moat and can cause native crashes under real photo volume;
+- the RoutineKind WidgetKit provider/render read path synchronously acquires an
+  exclusive cross-process `flock` and opens SQLite read-write, so contention,
+  schema work, or busy waits can consume the extension execution budget and
+  leave the system presenting stale/generic content.
 
 Next action:
 
@@ -1098,6 +1102,10 @@ Next action:
   quality labels reach terminal measured or unavailable states;
 - measure local photo loading and memory use in photo timeline with realistic
   encrypted local photo volume;
+- use Instruments and extension diagnostics on the oldest supported and current
+  physical iPhones to measure RoutineKind provider/render lock wait, read-write
+  SQLite open/schema/read work, memory, timeout, and concurrent
+  AppIntent/publication/cleanup pressure;
 - set explicit beta pass/fail thresholds before recruiting testers;
 - generate `docs/phase-5/performance-evidence.template.json`, define thresholds
   before the first run, record every raw observation, collect the complete
@@ -1158,18 +1166,46 @@ Exit criteria:
 
 Status: `launch-blocked`
 
-In-app previews and a production-disabled extension source scaffold now exist,
-including a privacy-minimized contract, encrypted capability map, isolated
-views, exact runtime gate, and tested unmounted reconciliation core. A signed
-release target and production-safe runtime do not yet exist.
+In-app previews and a signed-disabled native lifecycle source candidate now
+exist. The exact `expo-widgets` 56.0.23 patch uses a bounded SQLite App Group
+authority, rotating-nonce CAS, durable action outbox, owner/snapshot binding,
+lock-held final-outbox quiescence, two-entry stale timeline, typed
+`outbox_pending`/stale-Activity retries, finite RoutineKind Activity lifecycle,
+and a closed cleanup tombstone; UserDefaults is presentation-only. A nonempty
+quiescence capture permits only one exact receipt/authority/owner/snapshot/
+revision-bound commit before native admission remains closed; an empty capture
+revokes the structured receipt under the same lock before returning. The stable
+mounted app host serializes activation/reconciliation with expiry, withdrawal,
+sign-out, deletion, and account switches, while privacy and account boundaries
+start native closure before JavaScript writer drains or replacement-owner
+publication. A close receipt proves admission denial, not completed ActivityKit
+dismissal.
+
+Publication and Live Activity start remain literal generated Info.plist
+`false`. The five-minute health-processing status lease reserves 30 seconds for
+reconciliation, making personalized widget display short-lived pending a
+reviewed longer purpose-limited local-display authorization. The synchronous
+exclusive-`flock`, read-write-SQLite WidgetKit render path requires Instruments
+and device contention proof. Windows source/model tests prove none of Swift
+compilation, signed extension/archive embedding, physical-iPhone cross-process
+runtime behavior, actual ActivityKit removal, App Review, or legal clearance.
+No macOS compile, signed archive, or physical-iPhone evidence exists.
 
 Exit criteria:
 
-- implement a native atomic App Group action outbox or equivalent CAS,
-  registration/host wiring, unconditional expiry/withdrawal/sign-out/account
-  deletion/redaction, deterministic Live Activity stale/end behavior, final
-  deep links, and signed-archive capability/privacy-manifest inspection;
-- pass the supported physical-iPhone matrix.
+- compile and link the exact hash-pinned sources under the reviewed macOS/Xcode
+  toolchain and inspect a disabled signed `.app`/`.appex`, entitlements,
+  privacy manifests, lifecycle flags, deployment target, and SQLite linkage;
+- approve and implement a fit-for-purpose local-display authorization lifetime,
+  or accept a generic widget after the current short lease, with privacy/legal
+  review and truthful disclosure;
+- profile synchronous WidgetKit SQLite/`flock` rendering under contention with
+  Instruments on the oldest supported and current physical iPhones;
+- clear the final identity/deep links, separately audit the enabling change,
+  rebuild, and cross-bind source, archive, identity, and typed evidence; and
+- pass the supported physical-iPhone interaction/concurrency/replay,
+  process-death/reboot, expiry/privacy-cleanup, locked-state, deep-link,
+  actual ActivityKit-removal timing, accessibility, and Dynamic Type matrix.
 
 ## B-ROUTINE-PERSIST - Server routine/cycle persistence
 

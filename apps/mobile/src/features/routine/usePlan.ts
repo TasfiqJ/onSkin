@@ -47,6 +47,18 @@ export type PlanResult = {
   activeProductIds: string[];
 };
 
+export type PlanHookResult = {
+  data: PlanResult | undefined;
+  /** True only while one or more canonical inputs are still loading. */
+  isLoading: boolean;
+  /** True when any canonical input query failed, even if React Query retained cached data. */
+  isError: boolean;
+  /** True only when every canonical input is current and structurally available. */
+  sourceReady: boolean;
+  /** Explicitly identifies the Maya design fallback without requiring callers to inspect data. */
+  isExample: boolean;
+};
+
 function loadRoutineOrderForCurrentHealthLease(): Promise<RoutineOrderOverrides> {
   return runCurrentHealthDataOperation(async (lease) => {
     lease.assertCurrent();
@@ -56,7 +68,7 @@ function loadRoutineOrderForCurrentHealthLease(): Promise<RoutineOrderOverrides>
   });
 }
 
-export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } {
+export function usePlan(): PlanHookResult {
   const shelf = useShelf();
   const profile = useProfileBits();
   const routineOrder = useQuery({
@@ -65,8 +77,18 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
     retry: 1,
     staleTime: Infinity,
   });
-  if (shelf.isLoading || profile.isLoading || routineOrder.isLoading) {
-    return { data: undefined, isLoading: true };
+  const isLoading = shelf.isLoading || profile.isLoading || routineOrder.isLoading;
+  const isError = shelf.isError || profile.isError || routineOrder.isError;
+  const sourceReady = Boolean(
+    !isLoading &&
+    !isError &&
+    shelf.data !== undefined &&
+    profile.data !== undefined &&
+    profile.data.source !== 'unavailable' &&
+    routineOrder.data !== undefined,
+  );
+  if (isLoading) {
+    return { data: undefined, isLoading: true, isError, sourceReady: false, isExample: false };
   }
 
   const orderOverrides = routineOrder.data ?? { schemaVersion: 1, am: [], pm: [] };
@@ -100,30 +122,38 @@ export function usePlan(): { data: PlanResult | undefined; isLoading: boolean } 
       shippableRules(),
       shelf.data?.conflictChoices,
     );
+    const data: PlanResult = {
+      plan: applyRoutineOrderOverrides(canonicalPlan, orderOverrides),
+      canonicalPlan,
+      isExample: false,
+      profileLabel: routinePlanProfileLabel(profile.data ?? null, false),
+      orderOverrides,
+      orderPersistenceUnavailable: routineOrder.isError,
+      activeProductIds: items.map((item) => item.id),
+    };
     return {
-      data: {
-        plan: applyRoutineOrderOverrides(canonicalPlan, orderOverrides),
-        canonicalPlan,
-        isExample: false,
-        profileLabel: routinePlanProfileLabel(profile.data ?? null, false),
-        orderOverrides,
-        orderPersistenceUnavailable: routineOrder.isError,
-        activeProductIds: items.map((item) => item.id),
-      },
+      data,
       isLoading: false,
+      isError,
+      sourceReady,
+      isExample: false,
     };
   }
   const canonicalPlan = generatePlan(MAYA_PRODUCTS, MAYA_PROFILE, shippableRules());
+  const data: PlanResult = {
+    plan: canonicalPlan,
+    canonicalPlan,
+    isExample: true,
+    profileLabel: routinePlanProfileLabel(null, true),
+    orderOverrides,
+    orderPersistenceUnavailable: routineOrder.isError,
+    activeProductIds: [],
+  };
   return {
-    data: {
-      plan: canonicalPlan,
-      canonicalPlan,
-      isExample: true,
-      profileLabel: routinePlanProfileLabel(null, true),
-      orderOverrides,
-      orderPersistenceUnavailable: routineOrder.isError,
-      activeProductIds: [],
-    },
+    data,
     isLoading: false,
+    isError,
+    sourceReady,
+    isExample: true,
   };
 }

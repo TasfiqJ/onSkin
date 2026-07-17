@@ -7,6 +7,10 @@ import { HEALTH_DATA_CONSENT } from '@/features/onboarding/consentCopy';
 import { deleteAccount, exportData } from '@/features/settings/actions';
 import { subscriptionStorefrontCopy } from '@/features/subscription/storefrontCopy';
 import { useEntitlement, useEntitlementActions } from '@/features/subscription/useEntitlement';
+import {
+  drainRoutineWidgetOutboxBeforeHealthLeaseClose,
+  ROUTINE_WIDGET_RECONCILIATION_HEADROOM_MS,
+} from '@/features/widgets/lifecycleRuntime';
 import { useAuth } from '@/lib/auth/AuthProvider';
 import { isAccountGenerationLeaseError } from '@/lib/auth/accountGeneration';
 import {
@@ -65,6 +69,10 @@ function clearExactProcessingLease(
     generation: lease.generation,
     accountGeneration: lease.accountGeneration,
   });
+}
+
+function processingLeaseAuthorityKey(ownerUserId: string, processingEpoch: number): string {
+  return JSON.stringify([ownerUserId, processingEpoch]);
 }
 
 function unconsentedRouteMayMount(segments: readonly string[]): boolean {
@@ -472,6 +480,19 @@ export function HealthDataLifecycleGate({ children }: { children: ReactNode }) {
   const activationReleasePromiseRef = useRef<Promise<void> | null>(null);
   const record = gateSnapshot.record;
   const [reconcileRevision, setReconcileRevision] = useState(0);
+  const activeLeaseAuthorityKey =
+    ownerUserId !== null && record?.ownerUserId === ownerUserId && record.state === 'active'
+      ? processingLeaseAuthorityKey(ownerUserId, record.processingEpoch)
+      : null;
+  const [leaseClosePendingAuthorityKey, setLeaseClosePendingAuthorityKey] = useState<string | null>(
+    null,
+  );
+  const leaseClosePending =
+    activeLeaseAuthorityKey !== null && leaseClosePendingAuthorityKey === activeLeaseAuthorityKey;
+  const leaseClosePromiseRef = useRef<{
+    authorityKey: string;
+    promise: Promise<void>;
+  } | null>(null);
   const [activationReleaseFailureOwner, setActivationReleaseFailureOwner] = useState<string | null>(
     null,
   );
@@ -489,12 +510,64 @@ export function HealthDataLifecycleGate({ children }: { children: ReactNode }) {
     [],
   );
 
+  const beginProcessingLeaseClose = useCallback(
+    (
+      scheduledLease: ActiveHealthProcessingLeaseSnapshot | null,
+      processingEpoch: number,
+    ): Promise<void> => {
+      if (!ownerUserId) return Promise.resolve();
+      const authorityKey = processingLeaseAuthorityKey(ownerUserId, processingEpoch);
+      const existing = leaseClosePromiseRef.current;
+      if (existing?.authorityKey === authorityKey) return existing.promise;
+      setLeaseClosePendingAuthorityKey(authorityKey);
+      const pending = (async () => {
+        try {
+          await drainRoutineWidgetOutboxBeforeHealthLeaseClose({
+            ownerUserId,
+            processingEpoch,
+          });
+        } catch {
+          // The drain closes native admission even on failure/timeout. Lease
+          // closure below remains mandatory and never waits beyond its bound.
+        }
+        const cleared = clearExactProcessingLease(scheduledLease, ownerUserId);
+        if (!cleared) return;
+        const current = gateSnapshotRef.current.record;
+        if (current?.ownerUserId === ownerUserId && current.state === 'active') {
+          commitLifecycleRecord(verificationRequiredRecord({ ownerUserId, previous: current }));
+        }
+        setReconcileRevision((revision) => revision + 1);
+      })();
+      const operation = { authorityKey, promise: pending };
+      leaseClosePromiseRef.current = operation;
+      const settle = () => {
+        if (leaseClosePromiseRef.current === operation) {
+          leaseClosePromiseRef.current = null;
+          setLeaseClosePendingAuthorityKey((current) =>
+            current === authorityKey ? null : current,
+          );
+        }
+      };
+      void pending.then(settle, settle);
+      return pending;
+    },
+    [commitLifecycleRecord, ownerUserId],
+  );
+
+  useEffect(() => {
+    const operation = leaseClosePromiseRef.current;
+    if (operation !== null && operation.authorityKey !== activeLeaseAuthorityKey) {
+      leaseClosePromiseRef.current = null;
+    }
+  }, [activeLeaseAuthorityKey]);
+
   useEffect(() => {
     clearActiveHealthProcessingEpoch();
     reconciliationBaselineRef.current = null;
     const empty = createHealthDataGateSnapshot();
     gateSnapshotRef.current = empty;
     activationReleasePromiseRef.current = null;
+    leaseClosePromiseRef.current = null;
   }, [ownerUserId]);
 
   useEffect(() => {
@@ -614,23 +687,19 @@ export function HealthDataLifecycleGate({ children }: { children: ReactNode }) {
     void reconcile();
     const appState = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
-        const cleared = clearExactProcessingLease(
-          activeHealthProcessingLeaseSnapshot(ownerUserId),
-          ownerUserId,
-        );
-        if (!cleared) return;
         const current = gateSnapshotRef.current.record;
-        if (current?.ownerUserId === ownerUserId && current.state === 'active') {
-          commitLifecycleRecord(verificationRequiredRecord({ ownerUserId, previous: current }));
-        }
-        void reconcile();
+        if (current?.ownerUserId !== ownerUserId || current.state !== 'active') return;
+        void beginProcessingLeaseClose(
+          activeHealthProcessingLeaseSnapshot(ownerUserId),
+          current.processingEpoch,
+        );
       }
     });
     return () => {
       active = false;
       appState.remove();
     };
-  }, [commitLifecycleRecord, ownerUserId, reconcileRevision]);
+  }, [beginProcessingLeaseClose, commitLifecycleRecord, ownerUserId, reconcileRevision]);
 
   useEffect(() => {
     if (!isSupabaseConfigured || record?.ownerUserId !== ownerUserId || record.state !== 'active') {
@@ -639,18 +708,18 @@ export function HealthDataLifecycleGate({ children }: { children: ReactNode }) {
     const expiresAt = record.serverVerifiedAt
       ? healthProcessingStatusLeaseExpiresAt(record.serverVerifiedAt)
       : null;
-    const delay = expiresAt === null ? 0 : Math.max(0, expiresAt - Date.now());
+    const delay =
+      expiresAt === null
+        ? 0
+        : Math.max(0, expiresAt - ROUTINE_WIDGET_RECONCILIATION_HEADROOM_MS - Date.now());
     const scheduledLease = activeHealthProcessingLeaseSnapshot(ownerUserId);
     const timer = setTimeout(() => {
-      if (!clearExactProcessingLease(scheduledLease, ownerUserId)) return;
       const current = gateSnapshotRef.current.record;
-      if (current?.ownerUserId === ownerUserId && current.state === 'active') {
-        commitLifecycleRecord(verificationRequiredRecord({ ownerUserId, previous: current }));
-      }
-      setReconcileRevision((revision) => revision + 1);
+      if (current?.ownerUserId !== ownerUserId || current.state !== 'active') return;
+      void beginProcessingLeaseClose(scheduledLease, current.processingEpoch);
     }, delay);
     return () => clearTimeout(timer);
-  }, [commitLifecycleRecord, ownerUserId, record]);
+  }, [beginProcessingLeaseClose, ownerUserId, record]);
 
   if (initializing) return null;
   // The Welcome route must be able to create the first anonymous account.
@@ -696,6 +765,7 @@ export function HealthDataLifecycleGate({ children }: { children: ReactNode }) {
         <MountedGoalsActivationInterlock
           activationPending
           failed={activationReleaseFailureOwner === record.ownerUserId}
+          routineWidgetAuthority={null}
           onAcknowledge={acknowledgeMountedGoalsRoute}
         >
           {children}
@@ -715,24 +785,14 @@ export function HealthDataLifecycleGate({ children }: { children: ReactNode }) {
       </Screen>
     );
   }
-  if (
-    record.state === 'active' &&
-    isSupabaseConfigured &&
-    !isHealthProcessingStatusLeaseCurrent(record.serverVerifiedAt)
-  ) {
-    return (
-      <Screen>
-        <View className="flex-1 justify-center">
-          <Text variant="eyebrow" tone="clay" className="text-center">
-            PRIVACY CHECK
-          </Text>
-          <Text variant="title" className="mt-2 text-center">
-            Revalidating health-data access
-          </Text>
-        </View>
-      </Screen>
-    );
-  }
+  const privacyCheckMessage =
+    record.state === 'active' && leaseClosePending
+      ? 'Securing recent routine updates'
+      : record.state === 'active' &&
+          isSupabaseConfigured &&
+          !isHealthProcessingStatusLeaseCurrent(record.serverVerifiedAt)
+        ? 'Revalidating health-data access'
+        : null;
   // Local consent alone is never enough to mount a direct health route. The
   // reconciled server lifecycle is authoritative, including when a stale local
   // grant survives on a device whose server state is still unconsented.
@@ -758,6 +818,12 @@ export function HealthDataLifecycleGate({ children }: { children: ReactNode }) {
     <MountedGoalsActivationInterlock
       activationPending={false}
       failed={false}
+      routineWidgetAuthority={
+        record.state === 'active'
+          ? { ownerUserId: record.ownerUserId, processingEpoch: record.processingEpoch }
+          : null
+      }
+      privacyCheckMessage={privacyCheckMessage}
       onAcknowledge={acknowledgeMountedGoalsRoute}
     >
       {children}

@@ -145,6 +145,7 @@ vi.mock('@/lib/query/queryClient', () => ({
 vi.mock('@/lib/storage/privateKV', () => ({
   beginPrivateKVAccountBoundary: vi.fn(),
   endPrivateKVAccountBoundary: vi.fn(),
+  removePrivateItem: vi.fn(async () => {}),
   waitForPrivateKVWritesToSettle: vi.fn(async () => {}),
 }));
 vi.mock('../supabase/client', () => ({
@@ -194,8 +195,14 @@ vi.mock('./localAccountIsolation', () => ({
 }));
 vi.mock('./revokedCredentialActivity', () => ({ clearAuthDerivedLocalActivity: vi.fn() }));
 vi.mock('./sessionOwner', () => ({
+  localDataOwnerBinding: vi.fn(async () => 'integration-owner-binding'),
   markLocalDataCleanupRequired: vi.fn(async () => {}),
   preserveLocalDataForForcedSignOut: vi.fn(async () => 'retain'),
+  readLocalDataOwnerProof: vi.fn(async () => ({
+    kind: 'owned',
+    ownerBinding: 'integration-owner-binding',
+    retained: false,
+  })),
   readLocalDataOwnership: vi.fn(async () => 'match'),
 }));
 vi.mock('./sessionInvalidation', () => ({
@@ -408,6 +415,11 @@ beforeEach(() => {
 
 afterEach(async () => {
   h.state.releaseFenceGate?.resolve(response({ status: 'released' }));
+  // A resolved gate owns one Response body. Clear it before unmount triggers a
+  // second publication release so the transport creates a fresh Response
+  // instead of reusing an already-consumed body and poisoning the next test's
+  // fail-closed controller state.
+  h.state.releaseFenceGate = null;
   if (renderer) {
     await act(async () => renderer?.unmount());
     renderer = null;

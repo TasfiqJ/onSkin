@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   cancelNotifications: vi.fn(async () => {}),
   cancelQueries: vi.fn(async () => {}),
   clearCache: vi.fn(async () => {}),
+  clearNativeWidgets: vi.fn(async () => {}),
   clearPhotos: vi.fn(async () => {}),
   clearQueries: vi.fn(),
   endAccount: vi.fn(),
@@ -49,6 +50,9 @@ vi.mock('@/features/photos/sensitiveImageMemory', () => ({
 }));
 vi.mock('@/features/settings/localPrivateData', () => ({
   clearGeneratedPrivateCacheFiles: mocks.clearCache,
+}));
+vi.mock('@/features/widgets/lifecycleCoordinator', () => ({
+  clearRoutineWidgetLifecycleForPrivacy: mocks.clearNativeWidgets,
 }));
 vi.mock('@/lib/analytics/track', () => ({
   resetAnalyticsIdentity: mocks.resetAnalyticsIdentity,
@@ -98,7 +102,11 @@ describe('health-purpose local cleanup', () => {
     expect(mocks.beginPrivate).toHaveBeenCalledOnce();
     expect(mocks.beginPhoto).toHaveBeenCalledOnce();
     expect(mocks.multiRemove).toHaveBeenCalledWith([...HEALTH_PURPOSE_PRIVATE_DATA_KEYS]);
+    expect(HEALTH_PURPOSE_PRIVATE_DATA_KEYS).toEqual(
+      expect.arrayContaining(['routinekind.widgetActionMap.v1', 'routinekind.widgetActionMap.v2']),
+    );
     expect(mocks.clearPhotos).toHaveBeenCalledOnce();
+    expect(mocks.clearNativeWidgets).toHaveBeenCalledOnce();
     expect(mocks.purgeImages).toHaveBeenCalledOnce();
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledOnce();
     expect(mocks.waitNotifications).toHaveBeenCalledTimes(2);
@@ -108,6 +116,36 @@ describe('health-purpose local cleanup', () => {
     expect(mocks.endPrivate).toHaveBeenCalledOnce();
     expect(mocks.endAccount).toHaveBeenCalledOnce();
     expect(order).toEqual(['end-private', 'end-account', 'trial-reminder']);
+    expect(mocks.clearNativeWidgets.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.waitAccount.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.clearNativeWidgets.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.waitPrivate.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.clearNativeWidgets.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.waitPhoto.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.clearNativeWidgets.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.waitNotifications.mock.invocationCallOrder[0]!,
+    );
+    expect(mocks.clearNativeWidgets.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.multiRemove.mock.invocationCallOrder[0]!,
+    );
+  });
+
+  it('closes native widget admission before a tracked writer can stall withdrawal', async () => {
+    let releaseAccountWriter!: () => void;
+    mocks.waitAccount.mockImplementationOnce(
+      () => new Promise<void>((resolve) => (releaseAccountWriter = resolve)),
+    );
+
+    const cleanup = clearHealthPurposeLocalData('owner-a');
+    await vi.waitFor(() => expect(mocks.clearNativeWidgets).toHaveBeenCalledOnce());
+    expect(mocks.waitAccount).toHaveBeenCalledOnce();
+    expect(mocks.waitPrivate).not.toHaveBeenCalled();
+
+    releaseAccountWriter();
+    await cleanup;
   });
 
   it('does not include account, App Lock, entitlement, or store-safety authority', () => {
@@ -144,6 +182,22 @@ describe('health-purpose local cleanup', () => {
     expect(mocks.resetAnalyticsIdentity).toHaveBeenCalledOnce();
     expect(mocks.multiRemove).toHaveBeenCalledOnce();
     expect(mocks.clearPhotos).toHaveBeenCalledOnce();
+    expect(mocks.endPhoto).toHaveBeenCalledOnce();
+    expect(mocks.endPrivate).toHaveBeenCalledOnce();
+    expect(mocks.endAccount).toHaveBeenCalledOnce();
+  });
+
+  it('attempts all later teardown while native widget privacy cleanup remains retryable', async () => {
+    mocks.clearNativeWidgets.mockRejectedValueOnce(new Error('app group unavailable'));
+
+    await expect(clearHealthPurposeLocalData('owner-a')).rejects.toThrow(
+      'HEALTH_PURPOSE_LOCAL_CLEAR_FAILED',
+    );
+
+    expect(mocks.clearNativeWidgets).toHaveBeenCalledOnce();
+    expect(mocks.multiRemove).toHaveBeenCalledOnce();
+    expect(mocks.clearPhotos).toHaveBeenCalledOnce();
+    expect(mocks.cancelNotifications).toHaveBeenCalledTimes(2);
     expect(mocks.endPhoto).toHaveBeenCalledOnce();
     expect(mocks.endPrivate).toHaveBeenCalledOnce();
     expect(mocks.endAccount).toHaveBeenCalledOnce();

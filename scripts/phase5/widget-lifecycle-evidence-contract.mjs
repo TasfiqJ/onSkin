@@ -12,7 +12,7 @@ import { extname, isAbsolute, posix, relative, resolve, sep } from 'node:path';
 
 import { normalizeNamedSignoff, placeholderEnvValue } from '../phase9/lib.mjs';
 
-export const WIDGET_LIFECYCLE_EVIDENCE_SCHEMA_VERSION = 2;
+export const WIDGET_LIFECYCLE_EVIDENCE_SCHEMA_VERSION = 3;
 export const WIDGET_LIFECYCLE_EVIDENCE_ROOT = 'docs/phase-5/evidence/widget-lifecycle/';
 export const WIDGET_LIFECYCLE_SUPPORTED_FAMILIES = Object.freeze([
   'accessoryInline',
@@ -105,6 +105,7 @@ const PRIVACY_CLAIM_KEYS = [
 const ACCESSED_API_KEYS = ['apiType', 'reasons'];
 const SIGNOFF_KEYS = ['decision', 'signedAt', 'signedOffBy'];
 const ARCHIVE_CLAIM_KEYS = [
+  'appGroupEntitlementsMatch',
   'appCodeSignatureValid',
   'appPrivacyManifestEmbedded',
   'extensionCodeSignatureValid',
@@ -112,39 +113,61 @@ const ARCHIVE_CLAIM_KEYS = [
   'extensionPrivacyManifestEmbedded',
   'frequentUpdatesEnabled',
   'identitiesMatch',
+  'interactivePublicationEnabled',
+  'lifecycleVersion',
+  'liveActivityStartEnabled',
+  'sqlite3Linked',
   'unapprovedExtensionCapabilitiesAbsent',
 ];
 const INTERACTION_CLAIM_KEYS = [
   'accountDeletionCleanup',
   'accountSwitchCleanup',
+  'allOrRedactReconciliation',
   'atomicConcurrentCheckOff',
+  'authorityNonceCas',
+  'boundedCrossProcessLock',
+  'canonicalSnapshotEquality',
   'corruptBytesCleanup',
   'expiredTokenNoWrite',
   'expiryCleanup',
+  'foreignOwnerCleanup',
   'healthConsentWithdrawalCleanup',
   'killedAppReconciliation',
   'lockedStateRedaction',
   'nativeActionImplementation',
+  'outboxCommittedBeforeIntentReturn',
+  'oversizedBytesCleanup',
+  'ownerSnapshotBinding',
   'repeatedTapIdempotent',
   'signOutCleanup',
+  'sqliteTimelineAuthority',
   'staleTokenNoWrite',
+  'tombstoneCleanup',
+  'twoEntryStaleTimeline',
+  'unclaimedOwnerCleanup',
   'unknownTokenNoWrite',
 ];
 const LIVE_ACTIVITY_CLAIM_KEYS = [
   'consentWithdrawalCleanup',
   'deviceRestartRecovery',
   'disablementCleanup',
-  'explicitEnd',
+  'explicitCompletionEnd',
+  'finiteStaleDeadline',
+  'immediatePrivacyEnd',
   'lockedStateRedaction',
+  'ownerFilteredRecovery',
   'processDeathRecovery',
-  'staleDateNonNull',
+  'startUpdateAuthorization',
 ];
 const WIDGET_DEVICE_CLAIM_KEYS = [
   'accessibilityPass',
   'coldStartDeepLinkPass',
+  'dynamicTypePass',
   'killedAppDeepLinkPass',
   'lockedStateRedaction',
+  'repeatedConcurrentInteractionPass',
   'supportedFamilies',
+  'voiceOverPass',
   'warmDeepLinkPass',
 ];
 const GIT_SHA = /^[0-9a-f]{40}$/;
@@ -158,10 +181,7 @@ const MAX_JSON_BYTES = 1024 * 1024;
 const MAX_ATTACHMENT_BYTES = 512 * 1024 * 1024;
 const MAX_TEXT_BYTES = 10 * 1024 * 1024;
 const MAX_PROOF_ATTACHMENTS = 8;
-const NATIVE_ACTION_IMPLEMENTATIONS = new Set([
-  'append_only_app_group_outbox',
-  'versioned_compare_and_swap',
-]);
+const NATIVE_ACTION_IMPLEMENTATIONS = new Set(['sqlite_app_group_outbox_cas']);
 const MEDIA_TYPES = Object.freeze({
   json: 'application/json',
   zip: 'application/zip',
@@ -700,12 +720,17 @@ function validateScenarioClaims(id, claims, prefix, errors) {
     if (!exactKeys(claims, ARCHIVE_CLAIM_KEYS, prefix, errors)) return;
     allTrueClaims(
       claims,
-      ARCHIVE_CLAIM_KEYS.filter((key) => key !== 'frequentUpdatesEnabled'),
+      ARCHIVE_CLAIM_KEYS.filter(
+        (key) => key !== 'frequentUpdatesEnabled' && key !== 'lifecycleVersion',
+      ),
       prefix,
       errors,
     );
     if (claims.frequentUpdatesEnabled !== false) {
       errors.push(`${prefix}.frequentUpdatesEnabled must be false.`);
+    }
+    if (claims.lifecycleVersion !== 1) {
+      errors.push(`${prefix}.lifecycleVersion must be 1.`);
     }
     return;
   }
@@ -718,9 +743,7 @@ function validateScenarioClaims(id, claims, prefix, errors) {
       errors,
     );
     if (!NATIVE_ACTION_IMPLEMENTATIONS.has(claims.nativeActionImplementation)) {
-      errors.push(
-        `${prefix}.nativeActionImplementation must be append_only_app_group_outbox or versioned_compare_and_swap.`,
-      );
+      errors.push(`${prefix}.nativeActionImplementation must be sqlite_app_group_outbox_cas.`);
     }
     return;
   }

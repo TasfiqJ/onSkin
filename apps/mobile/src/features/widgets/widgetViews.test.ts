@@ -49,6 +49,8 @@ vi.mock('expo-widgets', () => ({
 const TOKEN_ONE = '00000000-0000-4000-8000-000000000001';
 const TOKEN_TWO = '00000000-0000-4000-8000-000000000002';
 const TOKEN_THREE = '00000000-0000-4000-8000-000000000003';
+const OWNER_GENERATION = '00000000-0000-4000-8000-0000000000a1';
+const SNAPSHOT_NONCE = '00000000-0000-4000-8000-0000000000b1';
 
 type ModifierMarker = { modifier: string; args: unknown[] };
 
@@ -92,6 +94,8 @@ function environment(
 
 function interactiveProps(): RoutineWidgetProps {
   const base = createRoutineWidgetProps({
+    ownerGeneration: OWNER_GENERATION,
+    snapshotNonce: SNAPSHOT_NONCE,
     phase: 'PM',
     localDate: '2026-07-16',
     completedCount: 1,
@@ -183,9 +187,11 @@ describe('RoutineKind Today WidgetKit view', () => {
         'deepLink',
         'interactionRevision',
         'localDate',
+        'ownerGeneration',
         'pendingActionTokens',
         'phase',
         'schemaVersion',
+        'snapshotNonce',
         'staleAtMs',
         'status',
         'totalCount',
@@ -234,6 +240,8 @@ describe('RoutineKind Today WidgetKit view', () => {
   it('treats an explicit stale status as generic even before its timestamp expires', () => {
     vi.spyOn(Date, 'now').mockReturnValue(2_000);
     const stale = createRoutineWidgetProps({
+      ownerGeneration: OWNER_GENERATION,
+      snapshotNonce: SNAPSHOT_NONCE,
       status: 'stale',
       localDate: '2026-07-16',
       deepLink: ROUTINE_WIDGET_TODAY_DEEP_LINK,
@@ -297,7 +305,9 @@ describe('RoutineKind Today WidgetKit view', () => {
 
 describe('RoutineKind passive Evening Live Activity view', () => {
   const props: RoutineLiveActivityProps = {
-    schemaVersion: 1,
+    schemaVersion: 2,
+    ownerGeneration: OWNER_GENERATION,
+    snapshotNonce: SNAPSHOT_NONCE,
     status: 'in_progress',
     completedCount: 1,
     totalCount: 3,

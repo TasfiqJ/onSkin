@@ -1163,6 +1163,263 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
   - Expected result: Controls have roles, labels, and visible feedback without trapping focus.
   - Evidence: UI snapshot or accessibility notes.
 
+## Flow: IOS-02 Native Widgets And RoutineKind Live Activity
+
+- Goal: A supported iPhone user can glance at current routine state, deep-link
+  safely into Today, and complete an eligible step from an interactive widget
+  without cross-account disclosure, lost actions, or stale Live Activity
+  residue.
+- Persona: A signed-in iOS 17+ user with current health-data authority, plus
+  users whose authority expires or changes while a widget or Live Activity is
+  still installed.
+- Entry state: A signed QA build containing the exact reviewed app, WidgetKit
+  extension, App Group, App Intent, and ActivityKit target; test accounts A and
+  B; App Lock and device-lock fixtures; and controllable current, stale,
+  malformed, oversized, foreign, and unclaimed native state.
+- Start screen/URL/window: `RoutineKindToday` in `systemSmall`,
+  `systemMedium`, `accessoryInline`, and `accessoryRectangular`; the
+  `RoutineKindEvening` Live Activity on the Lock Screen/Dynamic Island; and
+  the app in warm, cold, killed, signed-out, switching-account, and
+  post-reboot states.
+- Success state: Every valid action converges exactly once through the
+  canonical completion path; every invalid or obsolete state fails generic;
+  every authority-ending transition purges/redacts shared state and ends the
+  Live Activity; and no route or assistive-technology announcement bypasses
+  authentication, App Lock, or health-data authority.
+- Priority: Critical
+- Automate later: Yes. Retain source contract/model tests, then add signed
+  native harness assertions and human physical-iPhone evidence.
+- Surface: Signed iOS 17+ physical-device builds only. Simulator, unit,
+  snapshot, Expo web, and unsigned source inspection cannot satisfy this flow.
+- Evidence folder:
+  `docs/phase-5/evidence/widget-lifecycle/<source-sha>/<build-id>/` plus the
+  human run under
+  `test-results/human-e2e/YYYY-MM-DD/ios-02-widget-lifecycle/`.
+- Current source status (2026-07-16): An implemented source candidate now
+  includes the generation-bound app lifecycle host/native bridge and an App
+  Group SQLite owner/snapshot/outbox lifecycle protected by a POSIX lock and
+  immediate transactions, with native compare-and-swap reconciliation and
+  lock-held lease-close quiescence. Quiescence durably captures the exact final
+  outbox and permits one exact receipt-bound commit for a nonempty capture; an
+  empty capture revokes its structured receipt under the same lock before
+  returning. Typed `outbox_pending`/stale-Activity outcomes retry without
+  purging accepted actions. A parse-independent, boundary-first privacy lane
+  durably verifies `privacy-closing-v1` and returns a closed-admission receipt
+  before its queued purge. Live Activity stale/recovery/end-request paths exist,
+  but a close receipt does not prove ActivityKit removed the presentation. The
+  source has not been compiled or signed on macOS and has no physical-iPhone
+  proof.
+  `RoutineKindWidgetInteractivePublicationEnabled` and
+  `RoutineKindLiveActivityStartEnabled` remain literal generated-Info.plist
+  `false`; `ROUTINE_WIDGET_INTERACTIVE_PUBLICATION_ENABLED` and
+  `phase7Capabilities.nativeWidgets` also remain literal `false`. Ordinary
+  shipping config does not generate the extension or advertise Live
+  Activities. The five-minute health-status lease also makes personalized
+  display short-lived pending a reviewed longer local-display authorization,
+  and synchronous exclusive-`flock`/read-write-SQLite rendering still requires
+  Instruments evidence. No branch below is currently passed.
+
+### IOS-02 Critical Branches
+
+- Branch: four declared WidgetKit families
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Add `RoutineKindToday` as `systemSmall`, `systemMedium`,
+    `accessoryInline`, and `accessoryRectangular`. Exercise current,
+    partially completed, completed, stale, and generic/redacted timelines in
+    light/dark mode on the oldest-supported and current iPhone classes.
+  - Expected result: All four—and only the four declared launch
+    families—render family-appropriate, bounded content without clipping,
+    placeholder leakage, user/owner identifiers, or unsupported controls.
+    Stale or unauthorised state renders generic rather than last-known private
+    detail.
+  - Evidence: Signed-target family declaration, one timestamped screenshot per
+    family/state/device class, timeline receipt, source/build/identity hashes,
+    and device console excerpt with no extension crash.
+- Branch: health-authority display lifetime
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Publish immediately after a fresh health-status verification and
+    again late in the same lease; observe every family through the
+    30-second-headroom boundary and lease expiry. Repeat after background,
+    foreground, relaunch, clock change, withdrawal, and re-consent. Separately
+    exercise any proposed longer purpose-limited local-display authorization.
+  - Expected result: Current source never presents personalized detail beyond
+    the exact health-authority deadline and becomes generic no later than the
+    five-minute lease less reconciliation headroom. A longer display lifetime
+    ships only if its distinct purpose, duration, withdrawal behavior, copy,
+    and local-only data handling are implemented and approved; no status lease
+    is silently repurposed into indefinite home-screen authority.
+  - Evidence: Server-status/lease receipt, publication/stale timestamps,
+    frame-by-frame family recording, background/relaunch log, proposed
+    authorization contract, and named privacy/legal/release decision.
+- Branch: WidgetKit SQLite render performance under contention
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Use Instruments and extension diagnostics on the oldest supported
+    and current iPhone while provider/render reads overlap App Intent append,
+    app publication, quiescence, cleanup, process relaunch, and device lock.
+  - Expected result: Synchronous exclusive-`flock` acquisition, read-write
+    SQLite open/schema/read work, memory, and fallback behavior stay inside
+    predeclared extension budgets with no watchdog termination, blank/private
+    fallback, unbounded wait, or interaction loss.
+  - Evidence: Instruments traces, signposts, raw duration/memory samples,
+    contention matrix, extension/watchdog logs, predeclared thresholds, and
+    named performance signoff bound to source/build/device identity.
+- Branch: warm, cold, and killed-app deep links
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Tap every widget and Live Activity link with the app foregrounded,
+    terminated from memory, and cold after reboot; repeat while signed out,
+    App Lock is engaged, and health-data authority is resolving or closed.
+  - Expected result: The link reaches the canonical Today destination only
+    after the normal session, App Lock, and private-data gates. It never
+    flashes another owner's routine, exposes a stale step, lands on a dead
+    modal, or treats `/routine/widgets` as a native management screen.
+  - Evidence: Uncut warm/cold/killed screen recording, launch/deep-link logs,
+    final route snapshot, App Lock focus order, and process-state timestamps.
+- Branch: concurrent and repeated interactive actions
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With the app killed and then while app reconciliation overlaps,
+    press two distinct valid actions concurrently and repeat the same action
+    rapidly before and after a timeline reload. Relaunch and repeat after a
+    forced process kill between native append and app reconciliation. Finally,
+    race a valid tap immediately before, during, and after health-lease
+    quiescence.
+  - Expected result: Each App Intent durably appends before returning; distinct
+    eligible actions are retained, the repeated token is idempotent, canonical
+    completions occur exactly once, and the replacement snapshot/outbox
+    acknowledgement commits natively before the private registry is
+    acknowledged. Quiescence takes the same native lock, captures every append
+    that won the boundary and rejects every later append, then permits exactly
+    one receipt/authority/owner/snapshot/revision-bound final commit for a
+    nonempty capture before ordinary closed admission resumes. An empty capture
+    revokes the receipt under the lock before returning. No whole-timeline or
+    lease-close race loses or resurrects an accepted action.
+  - Evidence: Redacted native SQLite/outbox receipts, canonical completion-log
+    diff, intent/reconciliation ordering log, pre/post-relaunch widget
+    screenshots, and an exact-once assertion report.
+- Branch: unknown, stale, expired, and foreign actions
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Invoke an unknown action token; a token from an older snapshot; a
+    token exactly at and after `staleAtMs`; an already acknowledged token;
+    and a token bound to another owner generation or invalidated authority.
+  - Expected result: None creates or mutates a canonical completion. The
+    extension and app fail closed, obsolete outbox state is redacted or
+    rejected, the current owner's valid state is not overwritten, and no token,
+    owner, product, or step detail appears in feedback or logs.
+  - Evidence: One redacted native/canonical before-and-after report per case,
+    boundary-time trace, visible generic state, and log privacy audit.
+- Branch: malformed, future-schema, and oversized shared payload
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Inject truncated JSON, wrong types, duplicate/overlong fields, a
+    future schema version, an oversized timeline/outbox/props payload, corrupt
+    SQLite bytes, and a malformed bridge response; then trigger render,
+    interaction, reconciliation, and privacy cleanup.
+  - Expected result: Rendering and interaction fail generic with no crash,
+    partial private render, canonical completion, or fallback acceptance.
+    Present-but-malformed/future native state is not mistaken for
+    not-configured state. The privacy kill lane can durably verify the
+    `privacy-closing-v1` sentinel, return a closed-admission receipt, rotate
+    authority, purge raw shared state, reload timelines, and end activities
+    without first decoding the corrupt payload; any cleanup failure remains
+    closed and retryable. The receipt alone does not prove ActivityKit finished
+    dismissal.
+  - Evidence: Fault-injection manifest and hashes, extension/app crash logs,
+    generic-state screenshots, cleanup receipt, post-cleanup App Group
+    inspection, and retry proof.
+- Branch: locked-state and shared-surface redaction
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Lock the device and engage App Lock while current routine details
+    exist; inspect all four widget families and every Live Activity region
+    before unlock, during unlock, after backgrounding, and after authority
+    becomes unavailable.
+  - Expected result: Lock Screen, shared, unavailable-authority, and transition
+    frames reveal only approved generic copy—never product, active, condition,
+    step, adherence, account, user ID/hash, owner generation, or action token.
+    Unlock republishes detail only after current authority is recaptured; no
+    stale frame bridges owners or foreground sessions.
+  - Evidence: Lock/unlock recording, screenshots of every shared region,
+    frame-by-frame privacy review, and shared-container/log string audit.
+- Branch: expiry, sign-out, switch, deletion, withdrawal, foreign, and unclaimed cleanup
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Separately trigger health-lease expiry, sign-out, A→B and B→A
+    account switches, server-confirmed account deletion, health-data consent
+    withdrawal, a foreign owner generation, and native state with no claimable
+    owner. Interrupt each path before/during cleanup and relaunch.
+  - Expected result: The account/privacy boundary closes native admission and
+    encrypted action capabilities before JavaScript writer drains or
+    replacement-owner publication. The process-global serialized lifecycle
+    then rotates native authority, destroys snapshot/outbox/private token
+    mappings, reloads WidgetKit, and requests immediate generic ActivityKit end
+    before ownership proofs are released. Account B never sees A's state;
+    foreign and unclaimed state is purged/redacted rather than adopted. A
+    cleanup failure retains the minimum quarantine/owner proofs needed for safe
+    retry, exposes no private content, and cannot be bypassed by relaunch or a
+    new sign-in. Evidence must separately prove when ActivityKit actually
+    removes the presentation; a closed-admission receipt is insufficient.
+  - Evidence: Separate before/after App Group and private-registry reports for
+    all seven cases, activity enumeration, timeline reload log, forced-failure
+    retry trace, cross-account screenshots, and zero-residual assertion.
+- Branch: `RoutineKindEvening` lifecycle, process death, and reboot
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: In an explicitly enabled signed QA build, opt in and start the
+    evening activity; update every step; let it become stale; complete early;
+    disable it; kill the app during each phase; and reboot with active, stale,
+    malformed, and already-completed instances.
+  - Expected result: Start/update accepts only current strict props with a
+    deterministic bounded `staleDate` and the exact signed RoutineKind deep
+    link, then reauthorizes after the ActivityKit operation and immediately
+    requests generic end if the boundary changed. Post-start typed stale
+    handling rereads current JS instances and awaits their end requests before
+    retry. Global push-to-start token observation/emission remains absent;
+    per-activity push remains signed `false` and current-authority-gated.
+    Recovery enumerates and reconciles existing instances after process death;
+    completion, stale timeout, disablement, invalid authority, cleanup, and
+    withdrawal request immediate approved generic final content/end. Device
+    evidence proves the actual dismissal interval and eventual zero-instance
+    state. Reboot cannot revive private or completed state, create duplicates,
+    or leave an orphaned activity.
+  - Evidence: Full lifecycle/reboot recordings, ActivityKit instance reports,
+    stale-date timestamps, start/update/end ordering logs, lock-screen/Dynamic
+    Island screenshots, and zero-orphan assertion.
+- Branch: VoiceOver and Dynamic Type
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: With VoiceOver enabled, traverse and activate every exposed widget
+    and Live Activity control. Repeat every family/state at all supported
+    Dynamic Type sizes, including accessibility sizes, in light/dark mode and
+    with generic redaction active.
+  - Expected result: Reading order, labels, values, hints, and action outcomes
+    are concise and unambiguous; private hidden text is neither visible nor
+    announced; controls remain operable; and important state is not conveyed
+    only by colour. Text may simplify within WidgetKit's fixed geometry but
+    never clips into misleading or privacy-revealing fragments.
+  - Evidence: VoiceOver transcript and uncut activation recording, screenshot
+    grid for every family/type-size/state combination, contrast audit, and
+    named accessibility signoff.
+- Branch: customer flags and unavailable web route remain closed
+  - Priority: Critical
+  - Automate later: Yes
+  - Action: Build ordinary development, preview, and production configs without
+    the explicit native QA opt-in; try environment overrides; then open
+    `/routine/widgets` on Expo web as free, reverse-trial, and Pro users.
+  - Expected result: Ordinary builds omit the widget extension and Live
+    Activity advertisement, interactive publication and public capability stay
+    false, and production rejects an unsafe override. Expo web always shows the
+    same explicit unavailable surface with no preview, check-off, Activity
+    control, or purchase solicitation; `Back to Today` remains usable. This
+    branch stays closed until the signed IOS-02 evidence gate intentionally
+    changes the product contract.
+  - Evidence: Generated-config diffs, flag/route contract tests, production
+    rejection output, and the existing/current 375 x 667 web route recording.
+
 ## Flow: Personalized Recommendations
 
 - Goal: A user can review independent For You recommendations, tune recommendation preferences, and escape stale/direct recommendation links without getting trapped.

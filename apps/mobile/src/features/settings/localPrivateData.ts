@@ -4,6 +4,7 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { clearEncryptedPhotoStorage } from '@/features/photos/encryptedStorage';
+import { clearRoutineWidgetLifecycleForPrivacy } from '@/features/widgets/lifecycleCoordinator';
 import { resetAnalyticsIdentity } from '@/lib/analytics/track';
 import { resetRevenueCatIdentity } from '@/lib/iap/revenuecat';
 import {
@@ -51,13 +52,19 @@ export async function clearLocalPrivateData(): Promise<void> {
   const metadataWithoutOwnerProof = LOCAL_PRIVATE_METADATA_KEYS.filter(
     (key) => !ownerProofKeys.includes(key as (typeof ownerProofKeys)[number]),
   );
+  const failed: string[] = [];
+  // Complete the owner-agnostic native privacy kill lane before starting any
+  // destructive JS storage operation. If it fails, continue attempting every
+  // other purge but retain all ownership/quarantine proofs for a safe retry.
+  try {
+    await clearRoutineWidgetLifecycleForPrivacy();
+  } catch {
+    failed.push('routine_widget_native_state');
+  }
   const operations = [
     {
       label: 'registered_records',
-      promise: AsyncStorage.multiRemove([
-        ...LOCAL_PRIVATE_DATA_KEYS,
-        ...metadataWithoutOwnerProof,
-      ]),
+      promise: AsyncStorage.multiRemove([...LOCAL_PRIVATE_DATA_KEYS, ...metadataWithoutOwnerProof]),
     },
     { label: 'encrypted_photos', promise: clearEncryptedPhotoStorage() },
     { label: 'private_kv_key', promise: clearPrivateKVContentKey() },
@@ -73,8 +80,10 @@ export async function clearLocalPrivateData(): Promise<void> {
     { label: 'revenuecat_identity', promise: resetRevenueCatIdentity() },
   ] as const;
   const results = await Promise.allSettled(operations.map(({ promise }) => promise));
-  const failed = results.flatMap((result, index) =>
-    result.status === 'rejected' ? [operations[index]!.label] : [],
+  failed.push(
+    ...results.flatMap((result, index) =>
+      result.status === 'rejected' ? [operations[index]!.label] : [],
+    ),
   );
   if (failed.length > 0) throw new Error(`LOCAL_PRIVATE_DATA_CLEAR_FAILED:${failed.join(',')}`);
 

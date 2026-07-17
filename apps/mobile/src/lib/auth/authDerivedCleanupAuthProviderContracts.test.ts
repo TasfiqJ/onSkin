@@ -34,6 +34,17 @@ function expectDurableCleanupOrdering(source: string): void {
 }
 
 describe('AuthProvider durable auth-derived cleanup recovery', () => {
+  it('includes native widget and encrypted action-capability kill lanes in the canonical dependency set', () => {
+    const dependencies = functionSlice(
+      'const revokedCredentialActivityDependencies = {',
+      'const activeAccountDeletionOwnerProofDependencies = {',
+    );
+    expect(dependencies).toContain(
+      'clearRoutineWidgetNativeState: clearRoutineWidgetLifecycleForPrivacy,',
+    );
+    expect(dependencies).toContain('clearRoutineWidgetActions,');
+  });
+
   it('commits crash recovery before every forced sign-out and clears it only after cleanup', () => {
     expectDurableCleanupOrdering(
       functionSlice(
