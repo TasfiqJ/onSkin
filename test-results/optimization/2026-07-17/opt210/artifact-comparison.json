@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-17T07:00:00.000Z",
+  "parentSha": "c3656e0e1b9d5033bf7485ee3afa863d8e6f0381",
+  "iosProductionExport": {
+    "baselineStats": "../opt209/no-web-replay-ios-stats.json",
+    "candidateStats": "candidate-ios-stats.json",
+    "baselineTotalBytes": 10648483,
+    "candidateTotalBytes": 10648482,
+    "aggregateDeltaBytes": -1,
+    "baselineExportedAssetBytes": 23136,
+    "candidateExportedAssetBytes": 23136,
+    "exportedAssetDeltaBytes": 0,
+    "exportedAssetManifestIdentical": true,
+    "exportedAssetManifestSha256": "aaaa30583e16e543a269bda5f20129458b47b4875503413d4f8f1fc142fc5e61"
+  },
+  "webProductionExport": {
+    "baselineStats": "../opt209/no-web-replay-web-stats.json",
+    "candidateStats": "candidate-web-stats.json",
+    "baselineTotalBytes": 9539843,
+    "candidateTotalBytes": 9538941,
+    "aggregateDeltaBytes": -902,
+    "baselineExportedAssetBytes": 695373,
+    "candidateExportedAssetBytes": 695373,
+    "exportedAssetDeltaBytes": 0,
+    "exportedAssetManifestIdentical": true,
+    "exportedAssetManifestSha256": "e2c6aa192aebdace4eddec1af5e481f790e504ee880a797217e7fe4c565fb4fb",
+    "baselineFaviconBytes": 14510,
+    "candidateFaviconBytes": 14510,
+    "faviconIdentical": true,
+    "faviconSha256": "8184b2ca6c201c87bade03c6d01497e4cd1a416046ca8a48db0ae3c3c758fc8c"
+  },
+  "interpretation": {
+    "attributableProductionExportAssetDeltaBytes": 0,
+    "aggregateExportDeltasAttributedToSourcePngOptimization": false,
+    "reason": "Expo normalizes configured icon and favicon inputs; native app icon and splash resources are compiled during prebuild/build rather than shipped as Metro export assets."
+  },
+  "signedArtifact": {
+    "available": false,
+    "sizeClaimMade": false
+  }
+}

@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 1,
+  "platform": "web",
+  "generatedAt": "2026-07-17T07:00:00.000Z",
+  "sourceSha": "c3656e0e1b9d5033bf7485ee3afa863d8e6f0381",
+  "files": {
+    "totalCount": 122,
+    "totalBytes": 9538941
+  },
+  "bundles": {
+    "count": 10,
+    "bytes": 6741345,
+    "gzipBytes": 1733300,
+    "brotliBytes": 1335664,
+    "javascript": {
+      "count": 10,
+      "bytes": 6741345
+    },
+    "hermes": {
+      "count": 0,
+      "bytes": 0
+    },
+    "files": [
+      {
+        "path": "_expo/static/js/web/NotificationPreferenceScheduleReconciler-a60e5597dea4d74dbcb6fb234d94dbdf.js",
+        "kind": "javascript",
+        "bytes": 1141,
+        "gzipBytes": 682,
+        "brotliBytes": 594
+      },
+      {
+        "path": "_expo/static/js/web/__common-244d106937cb525ebd3b605ead7217c9.js",
+        "kind": "javascript",
+        "bytes": 1708,
+        "gzipBytes": 851,
+        "brotliBytes": 761
+      },
+      {
+        "path": "_expo/static/js/web/__expo-metro-runtime-ca88ce45de15d2ac89a7562550e82da7.js",
+        "kind": "javascript",
+        "bytes": 10550,
+        "gzipBytes": 4098,
+        "brotliBytes": 3721
+      },
+      {
+        "path": "_expo/static/js/web/actions-1e0c9624cd5b38cd5a70a629fe8b1c47.js",
+        "kind": "javascript",
+        "bytes": 10609,
+        "gzipBytes": 4223,
+        "brotliBytes": 3693
+      },
+      {
+        "path": "_expo/static/js/web/entry-dc628d08ba6aa4e0ea81d1b99baa90ea.js",
+        "kind": "javascript",
+        "bytes": 5457360,
+        "gzipBytes": 1415223,
+        "brotliBytes": 1073657
+      },
+      {
+        "path": "_expo/static/js/web/google-8fa33618b5c28fcb09175caff9de2915.js",
+        "kind": "javascript",
+        "bytes": 4204,
+        "gzipBytes": 1421,
+        "brotliBytes": 1221
+      },
+      {
+        "path": "_expo/static/js/web/index-0e769f94125caaa271c81b680da85e29.js",
+        "kind": "javascript",
+        "bytes": 45900,
+        "gzipBytes": 15133,
+        "brotliBytes": 13347
+      },
+      {
+        "path": "_expo/static/js/web/index-82f560e6c762cf7f5c21c5ac9452af1d.js",
+        "kind": "javascript",
+        "bytes": 897193,
+        "gzipBytes": 207258,
+        "brotliBytes": 168217
+      },
+      {
+        "path": "_expo/static/js/web/index-de34f55b6f8a6d22909550a626227a0c.js",
+        "kind": "javascript",
+        "bytes": 309091,
+        "gzipBytes": 82951,
+        "brotliBytes": 69215
+      },
+      {
+        "path": "_expo/static/js/web/localPrivateData-759c53d1b2428a8bff51778b3b706f9e.js",
+        "kind": "javascript",
+        "bytes": 3589,
+        "gzipBytes": 1460,
+        "brotliBytes": 1238
+      }
+    ]
+  },
+  "sourceMaps": {
+    "shipped": false,
+    "count": 0,
+    "bytes": 0,
+    "files": []
+  },
+  "assets": {
+    "count": 26,
+    "bytes": 695373,
+    "byExtension": [
+      {
+        "extension": ".png",
+        "count": 18,
+        "bytes": 20261
+      },
+      {
+        "extension": ".ttf",
+        "count": 8,
+        "bytes": 675112
+      }
+    ]
+  },
+  "fonts": {
+    "count": 8,
+    "bytes": 675112,
+    "files": [
+      {
+        "path": "assets/__node_modules/@expo-google-fonts/hanken-grotesk/400Regular/HankenGrotesk_400Regular.2e544d6119b4e635f6cc5a47800523bb.ttf",
+        "bytes": 66576
+      },
+      {
+        "path": "assets/__node_modules/@expo-google-fonts/hanken-grotesk/500Medium/HankenGrotesk_500Medium.a822d33614b51eb05478e0e29cf757f3.ttf",
+        "bytes": 66576
+      },
+      {
+        "path": "assets/__node_modules/@expo-google-fonts/hanken-grotesk/600SemiBold/HankenGrotesk_600SemiBold.b016ff502f15ce9b59c453304c74fb48.ttf",
+        "bytes": 66520
+      },
+      {
+        "path": "assets/__node_modules/@expo-google-fonts/hanken-grotesk/700Bold/HankenGrotesk_700Bold.14d2af6df606492d846389d2108dae50.ttf",
+        "bytes": 66508
+      },
+      {
+        "path": "assets/__node_modules/@expo-google-fonts/ibm-plex-mono/400Regular/IBMPlexMono_400Regular.b112f77f65b1766764ee122703ebdcd0.ttf",
+        "bytes": 133796
+      },
+      {
+        "path": "assets/__node_modules/@expo-google-fonts/ibm-plex-mono/500Medium/IBMPlexMono_500Medium.eddb5e5647bc7910fd2417321769f58d.ttf",
+        "bytes": 134956
+      },
+      {
+        "path": "assets/__node_modules/@expo-google-fonts/instrument-serif/400Regular/InstrumentSerif_400Regular.1e3bf8f4e9f996285924f99ebc80e546.ttf",
+        "bytes": 69312
+      },
+      {
+        "path": "assets/__node_modules/@expo-google-fonts/instrument-serif/400Regular_Italic/InstrumentSerif_400Regular_Italic.4036d1c3db2f215c15e9c022fb4644c8.ttf",
+        "bytes": 70868
+      }
+    ]
+  },
+  "largestFiles": [
+    {
+      "path": "_expo/static/js/web/entry-dc628d08ba6aa4e0ea81d1b99baa90ea.js",
+      "bytes": 5457360
+    },
+    {
+      "path": "_expo/static/js/web/index-82f560e6c762cf7f5c21c5ac9452af1d.js",
+      "bytes": 897193
+    },
+    {
+      "path": "_expo/static/js/web/index-de34f55b6f8a6d22909550a626227a0c.js",
+      "bytes": 309091
+    },
+    {
+      "path": "assets/__node_modules/@expo-google-fonts/ibm-plex-mono/500Medium/IBMPlexMono_500Medium.eddb5e5647bc7910fd2417321769f58d.ttf",
+      "bytes": 134956
+    },
+    {
+      "path": "assets/__node_modules/@expo-google-fonts/ibm-plex-mono/400Regular/IBMPlexMono_400Regular.b112f77f65b1766764ee122703ebdcd0.ttf",
+      "bytes": 133796
+    },
+    {
+      "path": "assets/__node_modules/@expo-google-fonts/instrument-serif/400Regular_Italic/InstrumentSerif_400Regular_Italic.4036d1c3db2f215c15e9c022fb4644c8.ttf",
+      "bytes": 70868
+    },
+    {
+      "path": "assets/__node_modules/@expo-google-fonts/instrument-serif/400Regular/InstrumentSerif_400Regular.1e3bf8f4e9f996285924f99ebc80e546.ttf",
+      "bytes": 69312
+    },
+    {
+      "path": "assets/__node_modules/@expo-google-fonts/hanken-grotesk/400Regular/HankenGrotesk_400Regular.2e544d6119b4e635f6cc5a47800523bb.ttf",
+      "bytes": 66576
+    },
+    {
+      "path": "assets/__node_modules/@expo-google-fonts/hanken-grotesk/500Medium/HankenGrotesk_500Medium.a822d33614b51eb05478e0e29cf757f3.ttf",
+      "bytes": 66576
+    },
+    {
+      "path": "assets/__node_modules/@expo-google-fonts/hanken-grotesk/600SemiBold/HankenGrotesk_600SemiBold.b016ff502f15ce9b59c453304c74fb48.ttf",
+      "bytes": 66520
+    },
+    {
+      "path": "assets/__node_modules/@expo-google-fonts/hanken-grotesk/700Bold/HankenGrotesk_700Bold.14d2af6df606492d846389d2108dae50.ttf",
+      "bytes": 66508
+    },
+    {
+      "path": "_expo/static/js/web/index-0e769f94125caaa271c81b680da85e29.js",
+      "bytes": 45900
+    },
+    {
+      "path": "_expo/static/css/web-18d5116329b80750ad6e1c46d732a14c.css",
+      "bytes": 25458
+    },
+    {
+      "path": "(tabs)/progress.html",
+      "bytes": 24952
+    },
+    {
+      "path": "(tabs)/shelf.html",
+      "bytes": 24952
+    },
+    {
+      "path": "(tabs)/today.html",
+      "bytes": 24952
+    },
+    {
+      "path": "(tabs)/you.html",
+      "bytes": 24952
+    },
+    {
+      "path": "ask/consent.html",
+      "bytes": 24952
+    },
+    {
+      "path": "ask/index.html",
+      "bytes": 24952
+    },
+    {
+      "path": "commerce/consent.html",
+      "bytes": 24952
+    },
+    {
+      "path": "commerce/stack/[slug].html",
+      "bytes": 24952
+    },
+    {
+      "path": "commerce/stacks.html",
+      "bytes": 24952
+    },
+    {
+      "path": "commerce/transparency.html",
+      "bytes": 24952
+    },
+    {
+      "path": "community/ask.html",
+      "bytes": 24952
+    },
+    {
+      "path": "community/index.html",
+      "bytes": 24952
+    },
+    {
+      "path": "community/note/[id].html",
+      "bytes": 24952
+    },
+    {
+      "path": "community/people-like-you.html",
+      "bytes": 24952
+    },
+    {
+      "path": "conflict/[ruleId].html",
+      "bytes": 24952
+    },
+    {
+      "path": "cycle/disruption.html",
+      "bytes": 24952
+    },
+    {
+      "path": "cycle/phased-intro.html",
+      "bytes": 24952
+    },
+    {
+      "path": "cycle/procedure.html",
+      "bytes": 24952
+    },
+    {
+      "path": "cycle/recovery.html",
+      "bytes": 24952
+    },
+    {
+      "path": "cycle/settings.html",
+      "bytes": 24952
+    },
+    {
+      "path": "cycle/week.html",
+      "bytes": 24952
+    },
+    {
+      "path": "cycle/why-tonight.html",
+      "bytes": 24952
+    },
+    {
+      "path": "index.html",
+      "bytes": 24952
+    },
+    {
+      "path": "onboarding/account.html",
+      "bytes": 24952
+    },
+    {
+      "path": "onboarding/age.html",
+      "bytes": 24952
+    },
+    {
+      "path": "onboarding/analyzing.html",
+      "bytes": 24952
+    },
+    {
+      "path": "onboarding/consent.html",
+      "bytes": 24952
+    },
+    {
+      "path": "onboarding/goals.html",
+      "bytes": 24952
+    },
+    {
+      "path": "onboarding/notifications.html",
+      "bytes": 24952
+    },
+    {
+      "path": "onboarding/paywall.html",
+      "bytes": 24952
+    },
+    {
+      "path": "onboarding/products.html",
+      "bytes": 24952
+    },
+    {
+      "path": "onboarding/quiz.html",
+      "bytes": 24952
+    },
+    {
+      "path": "onboarding/reveal.html",
+      "bytes": 24952
+    },
+    {
+      "path": "paywall/downgrade.html",
+      "bytes": 24952
+    },
+    {
+      "path": "paywall/reoffer.html",
+      "bytes": 24952
+    },
+    {
+      "path": "paywall/success.html",
+      "bytes": 24952
+    },
+    {
+      "path": "paywall/upsell.html",
+      "bytes": 24952
+    }
+  ]
+}
