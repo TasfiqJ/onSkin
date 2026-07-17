@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-17T07:30:00.000Z",
+  "parentSha": "f3de3ea12223820abac8114d51a929e1ef74a4ea",
+  "oversizedThresholdLines": 500,
+  "routeFileCount": 93,
+  "oversizedRouteCount": 17,
+  "measuredRouteCount": 7,
+  "measuredRoutes": [
+    {
+      "route": "apps/mobile/src/app/(tabs)/today.tsx",
+      "lines": 1048,
+      "boundaryCount": 3,
+      "proof": "query observers -8/17; local-date subscriptions -8/9",
+      "pass": true
+    },
+    {
+      "route": "apps/mobile/src/app/(tabs)/progress.tsx",
+      "lines": 890,
+      "boundaryCount": 3,
+      "proof": "one route-owned date/photo source; virtualized and focus-gated children",
+      "pass": true
+    },
+    {
+      "route": "apps/mobile/src/app/(tabs)/shelf.tsx",
+      "lines": 655,
+      "boundaryCount": 3,
+      "proof": "virtualized stable rows; static shells isolated from filter rerenders",
+      "pass": true
+    },
+    {
+      "route": "apps/mobile/src/app/ask/index.tsx",
+      "lines": 946,
+      "boundaryCount": 3,
+      "proof": "typing delta: history commits 0, row renders 0",
+      "pass": true
+    },
+    {
+      "route": "apps/mobile/src/app/shelf/search.tsx",
+      "lines": 646,
+      "boundaryCount": 3,
+      "proof": "80 keystrokes: result commits 0, result-card renders 0",
+      "pass": true
+    },
+    {
+      "route": "apps/mobile/src/app/shelf/ocr.tsx",
+      "lines": 740,
+      "boundaryCount": 4,
+      "proof": "128 keystrokes: route/capture/preview render deltas 0; one settled parse",
+      "pass": true
+    },
+    {
+      "route": "apps/mobile/src/app/(tabs)/you.tsx",
+      "lines": 1700,
+      "boundaryCount": 6,
+      "proof": "all measured mutation gestures: unrelated owner render deltas 0",
+      "pass": true
+    }
+  ],
+  "unmeasuredOversizedRoutes": [
+    { "path": "apps/mobile/src/app/progress/capture.tsx", "lines": 1392 },
+    { "path": "apps/mobile/src/app/shelf/[id].tsx", "lines": 1080 },
+    { "path": "apps/mobile/src/app/conflict/[ruleId].tsx", "lines": 962 },
+    { "path": "apps/mobile/src/app/cycle/settings.tsx", "lines": 763 },
+    { "path": "apps/mobile/src/app/progress/review.tsx", "lines": 732 },
+    { "path": "apps/mobile/src/app/progress/[id].tsx", "lines": 651 },
+    { "path": "apps/mobile/src/app/shelf/scan.tsx", "lines": 643 },
+    { "path": "apps/mobile/src/app/routine/plan.tsx", "lines": 598 },
+    { "path": "apps/mobile/src/app/routine/reorder.tsx", "lines": 508 },
+    { "path": "apps/mobile/src/app/(tabs)/_layout.tsx", "lines": 504 }
+  ],
+  "allMeasuredBoundariesPresent": true,
+  "allMeasuredEvidencePresent": true,
+  "pass": true
+}

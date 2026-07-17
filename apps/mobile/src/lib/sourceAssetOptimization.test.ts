@@ -17,7 +17,7 @@ const activePngSources = [
 ];
 
 type OptimizationSummary = {
-  assets: Array<{ path: string; savedBytes: number }>;
+  assets: { path: string; savedBytes: number }[];
   savedBytes: number;
 };
 
