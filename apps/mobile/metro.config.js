@@ -10,7 +10,11 @@ const path = require('path');
 const projectRoot = __dirname;
 const monorepoRoot = path.resolve(projectRoot, '../..');
 
-const config = getSentryExpoConfig(projectRoot);
+const config = getSentryExpoConfig(projectRoot, {
+  // Session replay is prohibited by the privacy contract. The supported
+  // Sentry resolver flag keeps its web packages out of production exports.
+  includeWebReplay: false,
+});
 
 // 1. Watch all files in the monorepo (so changes in packages/* trigger reloads).
 config.watchFolders = [monorepoRoot];

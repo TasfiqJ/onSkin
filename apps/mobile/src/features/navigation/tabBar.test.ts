@@ -22,6 +22,10 @@ describe('tab bar treatment', () => {
   it('uses a legible Wealthsimple-style floating app tab bar instead of the old dot marker', () => {
     const source = readAppRoute('(tabs)/_layout.tsx');
 
+    expect(source).toContain(
+      "import type { BottomTabBarProps } from 'expo-router/js-tabs';",
+    );
+    expect(source).not.toContain('expo-router/build/');
     expect(source).toContain('FLOATING_TAB_BAR_HEIGHT = 66');
     expect(source).toContain('FLOATING_TAB_BAR_CLEARANCE');
     expect(source).toContain('FLOATING_TAB_BAR_SIDE_MARGIN');

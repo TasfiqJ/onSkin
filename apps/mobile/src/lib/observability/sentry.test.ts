@@ -16,11 +16,14 @@ vi.mock('react-native', () => ({
 }));
 
 const SENTRY_SOURCE = fileURLToPath(new URL('./sentry.ts', import.meta.url));
+const METRO_CONFIG_SOURCE = fileURLToPath(new URL('../../../metro.config.js', import.meta.url));
 
 describe('Sentry privacy configuration', () => {
   it('keeps automatic sensitive capture surfaces disabled', () => {
     const source = readFileSync(SENTRY_SOURCE, 'utf8');
+    const metroConfig = readFileSync(METRO_CONFIG_SOURCE, 'utf8');
 
+    expect(metroConfig).toContain('includeWebReplay: false');
     expect(source).toContain('sendDefaultPii: false');
     expect(source).toContain('tracesSampleRate: 0');
     expect(source).toContain('enableCaptureFailedRequests: false');
