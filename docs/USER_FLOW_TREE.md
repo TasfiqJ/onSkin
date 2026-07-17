@@ -39,6 +39,43 @@ This file maps human-simulated E2E branches for OnSkin. Update it before testing
 - Growth and sharing flows: share cards and conflict screens.
 - Trend, community, commerce, and Ask surfaces.
 
+## Flow: Launch Theme And Route-Level System Bars
+
+- Goal: Status icons retain readable contrast while a user moves between the
+  launch app's paper surfaces and intentional night surfaces.
+- Persona: Any supported-iPhone user, regardless of the device appearance
+  setting.
+- Entry state: The device is set to Light or Dark appearance and the app opens
+  on a paper route.
+- Start screen/URL/window: `/today?routine=AM`, then PM Today, `/cycle/week`,
+  `/shelf/scan`, Progress capture/review/detail, onboarding reveal, commerce
+  transparency, win-back, and standard/safety conflict variants.
+- Success state: The launch UI remains intentionally light-only; paper routes
+  use dark status icons, full night routes use light status icons, and returning
+  or crossing a gated paper paywall restores dark icons without a stale frame.
+- Priority: Important
+- Automate later: Yes, through native iOS screenshot/UI testing.
+- Surface: Supported iPhone is authoritative. Expo web may verify route palette
+  and transitions but does not render native status icons.
+- Evidence: Source/config contract and Expo config resolution; supported-iPhone
+  screenshots in both device appearance settings remain release-device QA.
+
+### Branches
+
+- Branch: device appearance is Dark while a paper route is active
+  - Expected result: The app does not silently switch to an unreviewed dark
+    palette; the paper surface and dark status icons remain deterministic.
+- Branch: enter and leave an intentional night route
+  - Expected result: Status icons become light only while the night surface is
+    mounted, then return to dark on the destination paper route.
+- Branch: Pro access gate replaces a night feature
+  - Expected result: The paper access/paywall surface uses the root dark-icon
+    policy; a hidden night child cannot override it.
+- Branch: Android predictive back
+  - Expected result: No launch claim is made. The flag remains disabled because
+    Android is outside the accepted release contract; route-by-route Android
+    native E2E is required before a future enablement.
+
 ## Flow: App Private Data Availability
 
 - Goal: A user never sees encrypted local state misrepresented as empty/default when the shared private-data key is unavailable.

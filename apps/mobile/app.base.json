@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "routinekind",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "runtimeVersion": {
       "policy": "fingerprint"
     },
@@ -58,10 +58,7 @@
         {
           "backgroundColor": "#F5F1EA",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 120,
-          "dark": {
-            "backgroundColor": "#1C1815"
-          }
+          "imageWidth": 120
         }
       ],
       "expo-font",

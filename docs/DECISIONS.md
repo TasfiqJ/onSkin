@@ -286,3 +286,33 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Evidence: RevenueCat reports hard paywalls convert better but first-session aha is critical; this category benefits from experiencing value.
 - Risk: if users do not engage during the trial, value is given away.
 - Status: Proposed.
+
+## Appearance Decisions
+
+### 2026-07-17 - Ship An Explicit Light-Only UI With Route-Owned Night Contrast
+
+- Decision: V1 launches with `userInterfaceStyle` fixed to `light`, one light
+  splash configuration, and dark status icons on paper surfaces. The existing
+  intentionally dark product surfaces remain dark and mount light status icons
+  only while visible: PM Today, onboarding reveal, commerce transparency, cycle
+  week, Shelf scan, Progress capture/review/detail, win-back, and the safety
+  conflict variant. Shared `Screen` owns paper/night contrast; direct dark roots
+  use the same two-tone policy. Transparent sheets inherit the underlying route
+  status style because their sheet tone does not fill the status-bar area.
+- Alternatives: advertise full automatic dark mode without a complete semantic
+  token/route/accessibility pass; remove intentional night surfaces; or let each
+  route choose untyped literal icon styles.
+- Criteria: deterministic launch appearance, readable system-icon contrast,
+  no unreviewed palette selected by device appearance, minimal route-specific
+  code, and a reversible path to a future full dark-mode review.
+- Evidence: the resolved Expo public config reports `userInterfaceStyle=light`;
+  a source/config contract covers the root default, shared `Screen`, direct
+  full-night routes, dynamic safety conflict, light-only splash, and retained
+  Android back flag. See
+  `docs/optimization/evidence/2026-07-17_theme-system-bar-and-predictive-back-scope.md`.
+- Risk: native status icons and launch-screen transitions cannot be proven by
+  Expo web. Supported-iPhone screenshots in both device appearance settings,
+  including gated and back-navigation transitions, remain release-device QA.
+  Full dark mode requires a new reviewed semantic-token, route, Dynamic Type,
+  contrast, VoiceOver, screenshot, and rollback matrix.
+- Status: Accepted.

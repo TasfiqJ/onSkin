@@ -1,10 +1,12 @@
 import { CameraView, useCameraPermissions, type BarcodeScanningResult } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
+import { statusBarStyleForSurface } from '@/theme/systemBarPolicy';
 import {
   catalogIntakeProvenance,
   lookupBarcode,
@@ -332,6 +334,7 @@ export default function ScanScreen() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-night">
+      <StatusBar style={statusBarStyleForSurface('night')} />
       <View
         className="flex-1 px-6"
         style={[

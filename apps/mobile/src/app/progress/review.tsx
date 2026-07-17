@@ -1,10 +1,12 @@
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { usePreventRemove } from 'expo-router/react-navigation';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
+import { statusBarStyleForSurface } from '@/theme/systemBarPolicy';
 import { CaptureAnalysisProvider } from '@/features/photos/CaptureAnalysisProvider';
 import { cleanupCapturedPhoto, resolveCapturedPhoto } from '@/features/photos/captureStaging';
 import { PHOTO_COPY, QUALITY_NOTE } from '@/features/photos/copy';
@@ -663,6 +665,7 @@ export default function ReviewScreen() {
           <ProgressPhotoRouteSource onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
             {(photos) => (
               <CaptureAnalysisProvider>
+                <StatusBar style={statusBarStyleForSurface('night')} />
                 <ReviewScreenContent
                   cleanupInFlight={cleanupInFlight}
                   photos={photos}

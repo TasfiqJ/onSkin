@@ -1,9 +1,11 @@
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui';
+import { statusBarStyleForSurface } from '@/theme/systemBarPolicy';
 import { ComplianceRow } from '@/features/subscription/ComplianceRow';
 import { PAYWALL_COPY } from '@/features/subscription/copy';
 import {
@@ -127,6 +129,7 @@ export default function WinbackScreen() {
         paddingHorizontal: 30,
       }}
     >
+      <StatusBar style={statusBarStyleForSurface('night')} />
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}

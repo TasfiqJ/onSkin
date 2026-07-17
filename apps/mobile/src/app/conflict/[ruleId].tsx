@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
@@ -14,6 +15,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Text } from '@/components/ui';
 import { InContextNote } from '@/features/community/InContextNote';
+import {
+  statusBarStyleForSurface,
+  type SystemSurfaceTone,
+} from '@/theme/systemBarPolicy';
 import { noteForTags } from '@/features/community/notes';
 import type { DetectedConflict } from '@/features/intelligence/engine';
 import type { ConflictChoices, ConflictUserChoice } from '@/features/intelligence/conflictChoices';
@@ -312,6 +317,7 @@ export default function ConflictSheet() {
           backdrop={backdrop}
           sheetBg={sheetBg}
           grabber={grabber}
+          surfaceTone={isSafety ? 'night' : 'paper'}
           conflict={conflict}
           onDismiss={dismiss}
         />
@@ -325,7 +331,12 @@ export default function ConflictSheet() {
       (!entitlement.data.isPro && !conflictQuota) ||
       quotaClaimPending)
   ) {
-    return <View className="flex-1" style={{ backgroundColor: backdrop }} />;
+    return (
+      <>
+        <StatusBar style={statusBarStyleForSurface(isSafety ? 'night' : 'paper')} />
+        <View className="flex-1" style={{ backgroundColor: backdrop }} />
+      </>
+    );
   }
 
   if (access && !access.allowed) {
@@ -335,6 +346,7 @@ export default function ConflictSheet() {
           backdrop={backdrop}
           sheetBg={sheetBg}
           grabber={grabber}
+          surfaceTone={isSafety ? 'night' : 'paper'}
           conflict={conflict}
           onDismiss={dismiss}
         />
@@ -347,6 +359,7 @@ export default function ConflictSheet() {
       backdrop={backdrop}
       sheetBg={sheetBg}
       grabber={grabber}
+      surfaceTone={isSafety ? 'night' : 'paper'}
       conflict={conflict}
       onDismiss={dismiss}
     />
@@ -357,12 +370,14 @@ function ConflictFrame({
   backdrop,
   sheetBg,
   grabber,
+  surfaceTone,
   conflict,
   onDismiss,
 }: {
   backdrop: string;
   sheetBg: string;
   grabber: string;
+  surfaceTone: SystemSurfaceTone;
   conflict: DetectedConflict | undefined;
   onDismiss: () => void;
 }) {
@@ -465,6 +480,7 @@ function ConflictFrame({
 
   return (
     <View className="flex-1 justify-end" style={{ backgroundColor: backdrop }}>
+      <StatusBar style={statusBarStyleForSurface(surfaceTone)} />
       <Pressable
         aria-hidden
         className="absolute inset-0"

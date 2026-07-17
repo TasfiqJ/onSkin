@@ -1,9 +1,11 @@
 import { router, useLocalSearchParams } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useRef, useState } from 'react';
 import { Pressable, ScrollView, TextInput, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
+import { statusBarStyleForSurface } from '@/theme/systemBarPolicy';
 import { PHOTO_COPY } from '@/features/photos/copy';
 import { PhotoImage } from '@/features/photos/PhotoImage';
 import { PhotoTimelineLockGate } from '@/features/photos/PhotoTimelineLockGate';
@@ -643,7 +645,12 @@ export default function PhotoDetailScreen() {
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
         <ProgressPhotoRouteSource onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
-          {(photos) => <PhotoDetailScreenContent photos={photos} />}
+          {(photos) => (
+            <>
+              <StatusBar style={statusBarStyleForSurface('night')} />
+              <PhotoDetailScreenContent photos={photos} />
+            </>
+          )}
         </ProgressPhotoRouteSource>
       </PhotoTimelineLockGate>
     </ProGate>

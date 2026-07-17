@@ -1,11 +1,13 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useIsFocused } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { RouteIconButton, Text } from '@/components/ui';
 import { CAMERA_FAILURE_COPY } from '@/features/native/camera/failureCopy';
+import { statusBarStyleForSurface } from '@/theme/systemBarPolicy';
 import { PHOTO_CAPTURE_CONSENT } from '@/features/onboarding/consentCopy';
 import { applyPhotoCaptureConsent } from '@/features/photos/applyCaptureConsent';
 import {
@@ -1384,7 +1386,12 @@ export default function CaptureScreen() {
     <ProGate feature="photo_timeline">
       <PhotoTimelineLockGate>
         <ProgressPhotoRouteSource onExit={() => router.replace(APP_PROGRESS_ROUTE)}>
-          {(photos) => <CaptureScreenContent photos={photos} />}
+          {(photos) => (
+            <>
+              <StatusBar style={statusBarStyleForSurface('night')} />
+              <CaptureScreenContent photos={photos} />
+            </>
+          )}
         </ProgressPhotoRouteSource>
       </PhotoTimelineLockGate>
     </ProGate>
