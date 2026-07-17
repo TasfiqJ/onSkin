@@ -435,7 +435,7 @@ const metrics = {
 const report = {
   generatedAt: new Date().toISOString(),
   launchContract: launchContractSnapshot(launchContract),
-  inputPath,
+  inputPath: repoRelative(inputPath),
   gitSha,
   gitStatus,
   inputArtifact,

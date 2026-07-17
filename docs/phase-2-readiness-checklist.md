@@ -1,6 +1,7 @@
 # Phase 2 Readiness Checklist
 
 Date: 2026-07-15
+Updated: 2026-07-17 for migration `0056`
 
 Phase 2 should not start until naming, account ownership, environments, and
 secret handling are clear enough that production infrastructure will not need to
@@ -13,22 +14,22 @@ external accounts.
 
 ## Required Before Infrastructure Setup
 
-| Item                  | Decision needed                                              | Current Phase 1 state                                                                    |
-| --------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| Brand name            | Reject conflicted `OnSkin`; select only after written counsel decision and founder approval | Sequence for counsel review is `RoutineKind`, `Ritunera`, then lower-confidence `Ritualoom`; `Rituvia` is suspended |
-| Domain                | Final policy, support, app link, and fallback domain         | Provisional first-candidate order is `routinekind.com`, then `routinekind.app`; authenticated reservation and legal decision required |
-| iOS bundle ID         | Final App Store identifier                                   | Candidate `com.routinekind.app` if rebrand clears                                        |
-| Android package       | Final Play package identifier                                | Candidate `com.routinekind.app` if rebrand clears                                        |
-| URL scheme            | Final deep link scheme                                       | Candidate `routinekind` if rebrand clears                                                |
-| Environment split     | Naming for dev/staging/prod                                  | Use `development`, `staging`, `production`                                               |
-| Supabase projects     | Project names and region                                     | Create separate staging and production projects after brand decision                     |
-| RevenueCat project    | App and entitlement naming                                   | Create after final app identity; entitlement `pro` remains stable unless pricing changes |
-| Apple account owner   | Human owner and billing                                      | Founder to assign                                                                        |
-| Google account owner  | Human owner and billing                                      | Founder to assign                                                                        |
-| Secret storage        | Where `.env` and server secrets live                         | Use local `.env` for dev only; production secrets in provider dashboards/CI secret store |
-| Account owner email   | Durable admin email                                          | Founder to assign before account creation                                                |
-| Billing owner         | Card/account for paid services                               | Founder to assign                                                                        |
-| Branch/release policy | How release candidates are cut                               | Keep docs/code on main; create release branches only after RC checklist exists           |
+| Item                  | Decision needed                                                                             | Current Phase 1 state                                                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Brand name            | Reject conflicted `OnSkin`; select only after written counsel decision and founder approval | Sequence for counsel review is `RoutineKind`, `Ritunera`, then lower-confidence `Ritualoom`; `Rituvia` is suspended                   |
+| Domain                | Final policy, support, app link, and fallback domain                                        | Provisional first-candidate order is `routinekind.com`, then `routinekind.app`; authenticated reservation and legal decision required |
+| iOS bundle ID         | Final App Store identifier                                                                  | Candidate `com.routinekind.app` if rebrand clears                                                                                     |
+| Android package       | Final Play package identifier                                                               | Candidate `com.routinekind.app` if rebrand clears                                                                                     |
+| URL scheme            | Final deep link scheme                                                                      | Candidate `routinekind` if rebrand clears                                                                                             |
+| Environment split     | Naming for dev/staging/prod                                                                 | Use `development`, `staging`, `production`                                                                                            |
+| Supabase projects     | Project names and region                                                                    | Create separate staging and production projects after brand decision                                                                  |
+| RevenueCat project    | App and entitlement naming                                                                  | Create after final app identity; entitlement `pro` remains stable unless pricing changes                                              |
+| Apple account owner   | Human owner and billing                                                                     | Founder to assign                                                                                                                     |
+| Google account owner  | Human owner and billing                                                                     | Founder to assign                                                                                                                     |
+| Secret storage        | Where `.env` and server secrets live                                                        | Use local `.env` for dev only; production secrets in provider dashboards/CI secret store                                              |
+| Account owner email   | Durable admin email                                                                         | Founder to assign before account creation                                                                                             |
+| Billing owner         | Card/account for paid services                                                              | Founder to assign                                                                                                                     |
+| Branch/release policy | How release candidates are cut                                                              | Keep docs/code on main; create release branches only after RC checklist exists                                                        |
 
 ## Environment Naming
 
@@ -56,7 +57,7 @@ clears the brand.
    `traffic-provider-freeze.json`, and five schema-v2 redacted zero-cohort
    boundary files for migrations `0048`/`0052`/`0053`/`0054`/`0055`. Bind them
    to the clean `origin/main` SHA, full target fingerprint, rollback point,
-   exact 54-migration plan hash where required, and explicit future
+   exact 55-migration plan hash where required, and explicit future
    retention-review checkpoint. At the initial pre-mutation gate, all
    observations must be no more than 30 minutes old. The freeze must cover the
    main record's `validUntil` and span no more than 24 hours. Both `validUntil`
@@ -82,7 +83,7 @@ clears the brand.
 7. Require the immediate pre-push gate to revalidate cutover bytes and reread
    the exact function inventory, public freeze canaries, Auth freeze, empty
    migration inventory, schema, Storage, and all Cron jobs before applying the
-   54 migrations. That gate reparses the unchanged artifact bytes/hashes and
+   55 migrations. That gate reparses the unchanged artifact bytes/hashes and
    proves their current `validUntil`/`holdUntil` plus the seven-hour remaining
    completion budget; it does not pretend the initial operator observations
    were recaptured. The procedure redeploys the

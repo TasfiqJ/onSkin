@@ -197,8 +197,13 @@ block(
   /createDurableDeletionRuntime/.test(accountDeletionIndex) &&
     /createDurableDeletionHttpHandler/.test(accountDeletionIndex) &&
     /readSupabaseSecretKey/.test(accountDeletionIndex) &&
-    /Deno\.serve\(createDurableDeletionHttpHandler\(dependencies\)\)/.test(accountDeletionIndex),
-  'account-deletion entrypoint must compose the validated durable runtime and mixed-auth HTTP handler with server-only credentials.',
+    accountDeletionIndex.includes(
+      'const handler = createDurableDeletionHttpHandler(dependencies);',
+    ) &&
+    accountDeletionIndex.includes(
+      'Deno.serve((request) => stagingTrafficFreezeResponse() ?? handler(request));',
+    ),
+  'account-deletion entrypoint must compose the validated durable runtime and mixed-auth HTTP handler with server-only credentials behind the freeze-first wrapper.',
 );
 block(
   errors,
@@ -480,23 +485,43 @@ block(
 );
 block(
   errors,
-  /proposed_payload:\s*proposedPayload\.value/.test(catalogReport),
+  /p_proposed_payload:\s*proposedPayload\.value/.test(catalogReport),
   'catalog-report must write sanitized proposed payloads only.',
 );
 block(
   errors,
-  /client_context:\s*clientContext\.value/.test(catalogReport),
+  /p_client_context:\s*clientContext\.value/.test(catalogReport),
   'catalog-report must write sanitized client context only.',
 );
 block(
   errors,
-  !/proposed_payload:\s*body\.proposedPayload/.test(catalogReport),
+  !/p_proposed_payload:\s*body\.proposedPayload/.test(catalogReport),
   'catalog-report must not persist raw proposedPayload.',
 );
 block(
   errors,
-  !/client_context:\s*body\.clientContext/.test(catalogReport),
+  !/p_client_context:\s*body\.clientContext/.test(catalogReport),
   'catalog-report must not persist raw clientContext.',
+);
+block(
+  errors,
+  /readSupabaseSecretKey/.test(catalogReport) &&
+    /admin\.rpc\(['"]submit_catalog_correction['"]/.test(catalogReport) &&
+    !/\.from\(['"]catalog_corrections['"]\)/.test(catalogReport),
+  'catalog-report must create serving-control corrections only through the service-only RPC.',
+);
+block(
+  errors,
+  /\[HEALTH_PROCESSING_EPOCH_HEADER\]:\s*healthProcessingEpoch/.test(catalogReport) &&
+    /p_expected_health_epoch:\s*healthProcessingEpoch/.test(catalogReport),
+  'catalog-report must bind the service RPC and its write trigger to the exact caller health epoch.',
+);
+block(
+  errors,
+  /CATALOG_REPORT_RATE_LIMITED/.test(catalogReport) &&
+    /rate_limited/.test(catalogReport) &&
+    /Retry-After/.test(catalogReport),
+  'catalog-report must map its account-serialized database limit to a stable 429 response.',
 );
 block(
   errors,
@@ -557,7 +582,7 @@ for (const [label, source, scope, firstBodyMarker, firstWorkMarker] of [
     catalogLookup,
     'catalog-lookup',
     'requestBarcode(req)',
-    ".from('product_barcodes')",
+    'admin.rpc(CATALOG_LOOKUP_RPC',
   ],
 ]) {
   block(

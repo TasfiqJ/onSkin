@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "registryId": "catalog-source-trust-v1",
+  "policyId": "catalog-source-policy-v1",
+  "epoch": 0,
+  "status": "pending_external_reviewer_keys",
+  "updatedAt": null,
+  "reviewers": [],
+  "rootSignature": null
+}

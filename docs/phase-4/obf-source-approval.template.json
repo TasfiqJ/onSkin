@@ -1,0 +1,202 @@
+{
+  "$comment": "Template only. Keep decision pending until every exact-byte binding and evidence record is populated, then sign the canonical JSON without the signatures property using two distinct active Ed25519 keys from the fixed trust registry.",
+  "schemaVersion": 1,
+  "signatureEnvelopeVersion": "catalog-source-approval-signature-v1",
+  "policyId": "catalog-source-policy-v1",
+  "policySha256": "REPLACE_WITH_RAW_POLICY_FILE_SHA256",
+  "trustRegistry": {
+    "registryId": "catalog-source-trust-v1",
+    "sha256": "REPLACE_WITH_RAW_TRUST_REGISTRY_FILE_SHA256"
+  },
+  "releaseScope": {
+    "scopeId": "catalog-release-scope-v1",
+    "sha256": "REPLACE_WITH_RAW_RELEASE_SCOPE_FILE_SHA256"
+  },
+  "transformer": {
+    "path": "scripts/phase4/import-obf-snapshot.mjs",
+    "parserVersion": "phase4-obf-transform-v2",
+    "files": [
+      {
+        "path": "scripts/phase4/import-obf-snapshot.mjs",
+        "sha256": "REPLACE_WITH_ENTRY_TRANSFORMER_SHA256"
+      },
+      {
+        "path": "scripts/phase4/source-policy.mjs",
+        "sha256": "REPLACE_WITH_POLICY_ENGINE_SHA256"
+      },
+      {
+        "path": "apps/mobile/app.config.js",
+        "sha256": "REPLACE_WITH_APP_CONFIG_SHA256"
+      },
+      {
+        "path": "apps/mobile/app.base.json",
+        "sha256": "REPLACE_WITH_APP_BASE_SHA256"
+      },
+      { "path": "apps/mobile/eas.json", "sha256": "REPLACE_WITH_EAS_JSON_SHA256" },
+      {
+        "path": "apps/mobile/package.json",
+        "sha256": "REPLACE_WITH_MOBILE_PACKAGE_SHA256"
+      },
+      {
+        "path": "apps/mobile/phase3-review-evidence.js",
+        "sha256": "REPLACE_WITH_PHASE3_REVIEW_GATE_SHA256"
+      },
+      {
+        "path": "docs/hugeToDo/launch-contract.json",
+        "sha256": "REPLACE_WITH_LAUNCH_CONTRACT_SHA256"
+      },
+      { "path": "package.json", "sha256": "REPLACE_WITH_PACKAGE_JSON_SHA256" },
+      { "path": "package-lock.json", "sha256": "REPLACE_WITH_PACKAGE_LOCK_SHA256" }
+    ],
+    "runtime": { "node": "REPLACE_WITH_EXACT_NODE_VERSION" },
+    "gitCommitSha": "REPLACE_WITH_EXACT_GIT_COMMIT_SHA",
+    "gitTreeSha": "REPLACE_WITH_EXACT_GIT_TREE_SHA",
+    "sha256": "REPLACE_WITH_CANONICAL_TRANSFORMER_BUNDLE_SHA256"
+  },
+  "sourceKey": "open_beauty_facts",
+  "decision": "pending",
+  "reviewId": "REPLACE_WITH_IMMUTABLE_REVIEW_RECORD_ID",
+  "decisionEvidence": {
+    "recordId": "REPLACE_WITH_SIGNED_DECISION_RECORD_ID",
+    "uri": "https://example.invalid/replace-with-retained-decision-evidence",
+    "sha256": "REPLACE_WITH_DECISION_EVIDENCE_SHA256"
+  },
+  "reviewedAt": "REPLACE_WITH_STRICT_UTC_RFC3339_INSTANT",
+  "expiresAt": "REPLACE_WITH_STRICT_UTC_RFC3339_INSTANT_WITHIN_366_DAYS",
+  "artifact": {
+    "sha256": "REPLACE_WITH_EXACT_ARTIFACT_SHA256",
+    "bytes": 0,
+    "snapshotDate": "REPLACE_WITH_YYYY-MM-DD",
+    "sourceUrl": "REPLACE_WITH_APPROVED_HTTPS_OBF_OR_OFF_DATA_EXPORT_URL",
+    "upstreamSha256": "REPLACE_WITH_UPSTREAM_FILE_SHA256",
+    "acquisitionEvidenceUri": "https://example.invalid/replace-with-retained-acquisition-evidence",
+    "acquisitionEvidenceSha256": "REPLACE_WITH_ACQUISITION_EVIDENCE_SHA256",
+    "transformationRecordContractId": "catalog-transformed-payload-v1",
+    "transformationRecordSha256": "REPLACE_WITH_TRANSFORMATION_RECORD_SHA256"
+  },
+  "termsSnapshot": {
+    "capturedAt": "REPLACE_WITH_STRICT_UTC_RFC3339_INSTANT",
+    "sourceUrls": [
+      "https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/license-be-on-the-legal-side/",
+      "https://opendatacommons.org/licenses/odbl/1-0/",
+      "https://opendatacommons.org/licenses/dbcl/1-0/"
+    ],
+    "evidence": {
+      "recordId": "REPLACE_WITH_TERMS_SNAPSHOT_RECORD_ID",
+      "uri": "https://example.invalid/replace-with-retained-terms-snapshot",
+      "sha256": "REPLACE_WITH_TERMS_SNAPSHOT_SHA256"
+    }
+  },
+  "attribution": {
+    "publicUrl": "https://example.invalid/catalog-sources",
+    "copyApproved": false,
+    "noticeLocale": "en-US",
+    "noticeText": "REPLACE_WITH_COUNSEL_APPROVED_EXACT_PUBLIC_ATTRIBUTION_NOTICE",
+    "noticeSha256": "REPLACE_WITH_EXACT_NOTICE_TEXT_SHA256",
+    "publicSurfaceArtifactSha256": "REPLACE_WITH_EXACT_RENDERED_PUBLIC_SURFACE_SHA256",
+    "publicSurfaceEvidenceUri": "https://example.invalid/replace-with-retained-attribution-render",
+    "sourceDatabaseUrl": "https://world.openbeautyfacts.org/",
+    "machineReadableDelivery": {
+      "status": "deployed_before_production_promotion",
+      "publicUrl": "https://example.invalid/catalog-sources/open-beauty-facts-data",
+      "owner": "REPLACE_WITH_NAMED_SOURCE_OBLIGATION_OWNER",
+      "artifactSha256": "REPLACE_WITH_MACHINE_READABLE_DELIVERY_SHA256",
+      "evidence": {
+        "recordId": "REPLACE_WITH_DELIVERY_EVIDENCE_RECORD_ID",
+        "uri": "https://example.invalid/replace-with-retained-delivery-evidence",
+        "sha256": "REPLACE_WITH_DELIVERY_EVIDENCE_SHA256"
+      }
+    }
+  },
+  "scope": {
+    "appIdentity": {
+      "displayName": "REPLACE_WITH_CLEARED_APP_NAME",
+      "bundleId": "REPLACE_WITH_FINAL_BUNDLE_ID",
+      "version": "REPLACE_WITH_RELEASE_VERSION",
+      "build": "REPLACE_WITH_RELEASE_BUILD",
+      "publicHost": "REPLACE_WITH_FINAL_PUBLIC_HOST",
+      "supportEmail": "REPLACE_WITH_FINAL_SUPPORT_EMAIL"
+    },
+    "territories": ["US"],
+    "fields": [
+      "code",
+      "product_name",
+      "brands",
+      "categories_tags",
+      "ingredients_text",
+      "last_modified_t"
+    ]
+  },
+  "determinations": {
+    "attribution": "approved_for_exact_public_surface",
+    "imageRights": "images_prohibited",
+    "contributionBack": "disabled",
+    "corrections": "first_party_correction_workflow_only",
+    "thirdPartyContentRights": "approved_for_exact_textual_fields_and_nominative_use",
+    "sourceTermsSnapshot": "exact_terms_snapshot_retained",
+    "databaseClassification": "REPLACE_WITH_derivative_database_OR_collective_database_component",
+    "shareAlikeImplementation": "REPLACE_WITH_POLICY_MATCHING_MACHINE_READABLE_IMPLEMENTATION"
+  },
+  "operations": {
+    "sourceObligationOwner": "REPLACE_WITH_NAMED_OWNER",
+    "correctionOwner": "REPLACE_WITH_NAMED_OWNER",
+    "correctionSlaDays": 7,
+    "sourceObligationEvidence": {
+      "recordId": "REPLACE_WITH_OBLIGATION_RUNBOOK_RECORD_ID",
+      "uri": "https://example.invalid/replace-with-retained-obligation-runbook",
+      "sha256": "REPLACE_WITH_OBLIGATION_RUNBOOK_SHA256"
+    },
+    "correctionRunbookEvidence": {
+      "recordId": "REPLACE_WITH_CORRECTION_RUNBOOK_RECORD_ID",
+      "uri": "https://example.invalid/replace-with-retained-correction-runbook",
+      "sha256": "REPLACE_WITH_CORRECTION_RUNBOOK_SHA256"
+    }
+  },
+  "controls": {
+    "offlineImportOnly": true,
+    "imagesIncluded": false,
+    "runtimeRequests": false,
+    "contributionBack": false,
+    "databaseComponentId": "obf_odbl_component"
+  },
+  "allowedUses": ["offline_export_import", "product_facts"],
+  "forbiddenUses": [
+    "runtime_api",
+    "search_as_you_type_api",
+    "api_crawling",
+    "product_images",
+    "automatic_contribution_back"
+  ],
+  "reviewers": {
+    "legal": {
+      "keyId": "REPLACE_WITH_ACTIVE_TRUSTED_LEGAL_KEY_ID",
+      "reviewerId": "REPLACE_WITH_REGISTRY_LEGAL_REVIEWER_ID",
+      "independenceGroup": "REPLACE_WITH_REGISTRY_LEGAL_INDEPENDENCE_GROUP",
+      "publicKeySha256": "REPLACE_WITH_REGISTRY_LEGAL_PUBLIC_KEY_SHA256",
+      "name": "REPLACE_WITH_REGISTRY_LEGAL_REVIEWER_NAME",
+      "qualification": "REPLACE_WITH_REGISTRY_LEGAL_QUALIFICATION",
+      "approvedAt": "REPLACE_WITH_STRICT_UTC_RFC3339_INSTANT"
+    },
+    "engineering": {
+      "keyId": "REPLACE_WITH_ACTIVE_TRUSTED_ENGINEERING_KEY_ID",
+      "reviewerId": "REPLACE_WITH_REGISTRY_ENGINEERING_REVIEWER_ID",
+      "independenceGroup": "REPLACE_WITH_REGISTRY_ENGINEERING_INDEPENDENCE_GROUP",
+      "publicKeySha256": "REPLACE_WITH_REGISTRY_ENGINEERING_PUBLIC_KEY_SHA256",
+      "name": "REPLACE_WITH_REGISTRY_ENGINEERING_REVIEWER_NAME",
+      "qualification": "REPLACE_WITH_REGISTRY_ENGINEERING_QUALIFICATION",
+      "approvedAt": "REPLACE_WITH_STRICT_UTC_RFC3339_INSTANT"
+    }
+  },
+  "signatures": {
+    "legal": {
+      "algorithm": "Ed25519",
+      "keyId": "REPLACE_WITH_ACTIVE_TRUSTED_LEGAL_KEY_ID",
+      "valueBase64": "REPLACE_WITH_LEGAL_SIGNATURE_OVER_CANONICAL_APPROVAL_PAYLOAD"
+    },
+    "engineering": {
+      "algorithm": "Ed25519",
+      "keyId": "REPLACE_WITH_ACTIVE_TRUSTED_ENGINEERING_KEY_ID",
+      "valueBase64": "REPLACE_WITH_ENGINEERING_SIGNATURE_OVER_CANONICAL_APPROVAL_PAYLOAD"
+    }
+  }
+}

@@ -95,8 +95,10 @@ files. Do not claim a PDF design spec exists unless it is restored to `docs/`.
 - Treat catalog fixture imports as test data only. Product-specific
   recommendations require source-approved, reviewed, correction-free products
   with `verified` or `usable` quality.
-- Do not promise Open Beauty Facts contribution-back or display source images
-  until ODbL/source/image-rights review and the queue operation are approved.
+- Do not promise or implement Open Beauty Facts contribution-back in the current
+  launch architecture, and do not display source images. Any future external
+  recipient or image use requires a new reviewed privacy/legal/architecture
+  decision rather than an environment flag or queue activation.
 - Do not market AI skin scores, skin age, disease diagnosis, percentage
   improvement, or unreviewed clinical recommendations.
 

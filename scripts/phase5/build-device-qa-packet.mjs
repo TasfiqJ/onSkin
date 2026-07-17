@@ -5,6 +5,7 @@ import { isAbsolute, join, posix, relative, resolve } from 'node:path';
 import {
   command,
   evidenceFlagEnabled,
+  gitStatusExcludingGeneratedEvidence,
   normalizeNamedSignoff,
   placeholderEnvValue,
 } from '../phase9/lib.mjs';
@@ -353,33 +354,8 @@ function readJson(path) {
   return JSON.parse(readFileSync(resolve(root, path), 'utf8'));
 }
 
-function normalizedGitPath(path) {
-  return String(path ?? '')
-    .trim()
-    .replaceAll('\\', '/')
-    .replace(/^\.\//, '');
-}
-
 function gitStatusExcludingGeneratedPacket(validatedEvidencePaths = []) {
-  const excluded = new Set(
-    [...packetOutputPaths, ...validatedEvidencePaths].map(normalizedGitPath),
-  );
-  return command('git', [
-    '-c',
-    'core.quotepath=false',
-    'status',
-    '--short',
-    '--untracked-files=all',
-  ])
-    .split(/\r?\n/)
-    .map((line) => line.trimEnd())
-    .filter(Boolean)
-    .filter((line) => {
-      const paths = line.slice(3).split(' -> ').map(normalizedGitPath).filter(Boolean);
-      return paths.length === 0 || !paths.every((path) => excluded.has(path));
-    })
-    .join('\n')
-    .trim();
+  return gitStatusExcludingGeneratedEvidence([...packetOutputPaths, ...validatedEvidencePaths]);
 }
 
 function looksLikeEasBuildEvidence(value) {

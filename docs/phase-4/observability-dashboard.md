@@ -1,6 +1,6 @@
 # Phase 4 Catalog Observability Dashboard
 
-Date: 2026-07-04
+Date: 2026-07-17
 
 ## Required Metrics
 
@@ -14,7 +14,8 @@ Date: 2026-07-04
 | Wrong-match reports              | `catalog_corrections`                      | all open/triaged rows block rec eligibility             |
 | Missing-product reports          | `catalog_corrections`                      | feed curation priority                                  |
 | Recommendation-eligible products | products quality model                     | visible by category and routine role                    |
-| OBF queue status                 | `obf_contribution_queue`                   | no user promise until live                              |
+| First-party correction backlog   | `catalog_corrections`                      | seven-day triage SLA; no external source publication    |
+| Held-row serving probes          | catalog barcode/search RPCs                | zero ineligible rows returned                           |
 | Import QA blockers               | `catalog_quality_reports`                  | zero blockers before launch batch                       |
 
 ## Events
@@ -38,3 +39,6 @@ Do not send full ingredient lists, product photos, user notes, or health profile
 - Parser unknown-token rate exceeds 15% for a launch category.
 - Any product with `quality_grade` lower than `usable` is used in a product-specific recommendation.
 - OBF import uses API search/bulk calls instead of export artifacts.
+- Any source without production/legal approval, or any active correction, is
+  returned by barcode/search or direct authenticated reads.
+- Any first-party report is forwarded to OBF, CosIng, or another source.

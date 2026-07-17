@@ -43,6 +43,7 @@ yarn-debug.*
 yarn-error.*
 *.log
 test-results/
+/artifacts/phase4/
 
 # Raw release-candidate archives/reports stay in the approved evidence store.
 # The committed RC JSON records their exact paths, sizes, hashes, and reviews.

@@ -384,6 +384,17 @@ function runWithDirtyWorktree(extraEnv, strict = true) {
   }
 }
 
+function runWithDirtyGeneratedEvidence(extraEnv, strict = true) {
+  const generatedPath = resolve(root, 'docs/phase-3/generated/review-worklist.json');
+  const original = readFileSync(generatedPath);
+  writeFileSync(generatedPath, Buffer.concat([original, Buffer.from('\n')]));
+  try {
+    return run(extraEnv, strict);
+  } finally {
+    writeFileSync(generatedPath, original);
+  }
+}
+
 function output(result) {
   return `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
 }
@@ -664,6 +675,18 @@ const cases = [
             (file) => file.path === path && /^[0-9a-f]{64}$/i.test(file.sha256 ?? ''),
           ),
         )
+      );
+    },
+  },
+  {
+    name: 'strict Phase 5 QA packet ignores central generated evidence changes',
+    result: runWithDirtyGeneratedEvidence({}),
+    expect(result) {
+      if (result.status !== 0) return false;
+      const packet = JSON.parse(readFileSync(join(result.outDir, 'device-qa-packet.json'), 'utf8'));
+      return (
+        !packet.gitStatus.includes('docs/phase-3/generated/review-worklist.json') &&
+        !packet.blockers.some((blocker) => /dirty Git worktree/.test(blocker))
       );
     },
   },

@@ -71,6 +71,7 @@ if (appEnv === 'production' && process.env.PHASE2_ALLOW_PRODUCTION_SMOKE !== '1'
 }
 
 const admin = createClient(supabaseUrl, secretKey, {
+  global: { headers: { 'x-health-processing-epoch': '1' } },
   auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
 });
 
@@ -182,8 +183,7 @@ async function main() {
       const { data, error } = await user.client.rpc('grant_health_data_consent', {
         p_expected_epoch: 0,
         p_version: 'draft-v1-2026-07-10',
-        p_consent_text_hash:
-          '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
+        p_consent_text_hash: '7957a2811fff0e8cefc6f7180b751ec45688fe99421978eedae05b96c2f251fd',
       });
       if (error) throw error;
       assert(
@@ -294,12 +294,22 @@ async function main() {
       'catalog product auth read',
     );
 
-    const correction = await insertOne(userA.client, 'catalog_corrections', {
-      user_id: userA.id,
-      product_id: catalogProduct.id,
-      correction_type: 'wrong_match',
-      description: 'phase4 smoke correction',
+    const correctionWrite = await admin.rpc('submit_catalog_correction', {
+      p_user_id: userA.id,
+      p_expected_health_epoch: 1,
+      p_product_id: catalogProduct.id,
+      p_barcode: null,
+      p_correction_type: 'wrong_match',
+      p_description: 'phase4 smoke correction',
+      p_proposed_payload: {},
+      p_client_context: { route: 'phase2-rls-smoke' },
     });
+    if (correctionWrite.error) throw correctionWrite.error;
+    assert(
+      Array.isArray(correctionWrite.data) && correctionWrite.data.length === 1,
+      'catalog correction service RPC did not return exactly one row',
+    );
+    const correction = correctionWrite.data[0];
     await expectOwnRead(
       userA.client,
       'catalog_corrections',
@@ -313,6 +323,14 @@ async function main() {
       'id',
       correction.id,
       'catalog correction cross-user read',
+    );
+    await expectBlocked(
+      'catalog correction owner direct insert',
+      userA.client.from('catalog_corrections').insert({
+        user_id: userA.id,
+        product_id: catalogProduct.id,
+        correction_type: 'wrong_match',
+      }),
     );
     await expectBlocked(
       'catalog correction cross-user insert',

@@ -12,10 +12,7 @@ import {
 } from '../_shared/healthProcessingEpoch.ts';
 import { readSupabasePublishableKey } from '../_shared/supabasePublishableKey.ts';
 import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
-import {
-  CATALOG_LOOKUP_PRODUCT_SELECT,
-  REVIEWED_CATALOG_FRESHNESS_FILTER,
-} from './catalogContract.ts';
+import { CATALOG_LOOKUP_RPC } from './catalogContract.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const publishableKey = readSupabasePublishableKey();
@@ -208,77 +205,54 @@ Deno.serve(async (req) => {
   );
   if (catalogAccountError) return catalogAccountError;
 
-  const { data: barcodeRow, error: barcodeError } = await admin
-    .from('product_barcodes')
-    .select('barcode, product_id, confidence')
-    .eq('barcode', barcode)
-    .maybeSingle();
-  if (barcodeError) return json({ error: 'lookup_failed' }, 500);
+  const { data: eligibleProducts, error: lookupError } = await admin.rpc(CATALOG_LOOKUP_RPC, {
+    p_barcode: barcode,
+  });
+  if (lookupError) return json({ error: 'lookup_failed' }, 500);
 
-  if (barcodeRow?.product_id) {
-    const productHealthError = await requireActiveHealthProcessing(
+  const product = eligibleProducts?.[0] ?? null;
+  if (product) {
+    const persistHealthError = await requireActiveHealthProcessing(
       caller,
       userId,
       healthProcessingEpoch,
     );
-    if (productHealthError) return productHealthError;
-    const productAccountError = await requireSameAccountAccess(
+    if (persistHealthError) return persistHealthError;
+    const persistAccountError = await requireSameAccountAccess(
       caller,
       userId,
       initialAccountAccess.snapshot,
     );
-    if (productAccountError) return productAccountError;
+    if (persistAccountError) return persistAccountError;
 
-    const { data: product, error: productError } = await admin
-      .from('products')
-      .select(CATALOG_LOOKUP_PRODUCT_SELECT)
-      .eq('id', barcodeRow.product_id)
-      .eq(REVIEWED_CATALOG_FRESHNESS_FILTER.column, REVIEWED_CATALOG_FRESHNESS_FILTER.value)
-      .maybeSingle();
-    if (productError) return json({ error: 'lookup_failed' }, 500);
-    if (product) {
-      const persistHealthError = await requireActiveHealthProcessing(
+    // The direct-write trigger atomically rechecks active state and this exact epoch.
+    const { error: eventError } = await caller.from('catalog_lookup_events').insert({
+      user_id: userId,
+      lookup_type: 'barcode',
+      barcode,
+      result: 'matched',
+      matched_product_id: product.id,
+      source_key: product.source,
+      quality_grade: product.quality_grade,
+    });
+
+    if (eventError) {
+      const withdrawalError = await requireActiveHealthProcessing(
         caller,
         userId,
         healthProcessingEpoch,
       );
-      if (persistHealthError) return persistHealthError;
-      const persistAccountError = await requireSameAccountAccess(
-        caller,
-        userId,
-        initialAccountAccess.snapshot,
-      );
-      if (persistAccountError) return persistAccountError;
-
-      // The direct-write trigger atomically rechecks active state and this exact epoch.
-      const { error: eventError } = await caller.from('catalog_lookup_events').insert({
-        user_id: userId,
-        lookup_type: 'barcode',
-        barcode,
-        result: 'matched',
-        matched_product_id: product.id,
-        source_key: product.source,
-        quality_grade: product.quality_grade,
-      });
-
-      if (eventError) {
-        const withdrawalError = await requireActiveHealthProcessing(
-          caller,
-          userId,
-          healthProcessingEpoch,
-        );
-        return withdrawalError ?? json({ error: 'lookup_failed' }, 500);
-      }
-
-      const responseAccountError = await requireSameAccountAccess(
-        caller,
-        userId,
-        initialAccountAccess.snapshot,
-      );
-      if (responseAccountError) return responseAccountError;
-
-      return json({ result: 'matched', product: { ...product, barcode } });
+      return withdrawalError ?? json({ error: 'lookup_failed' }, 500);
     }
+
+    const responseAccountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (responseAccountError) return responseAccountError;
+
+    return json({ result: 'matched', product: { ...product, barcode } });
   }
 
   const fallbackHealthError = await requireActiveHealthProcessing(

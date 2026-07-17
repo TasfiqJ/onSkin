@@ -980,14 +980,16 @@ Current implementation note:
 
 - Phase 4 catalog schema, source metadata, import batches, barcode tables,
   ingredient-list parse tables, quality grades, correction reports,
-  contribution queue, and lookup observability tables exist locally.
+  a legacy-held contribution table, and lookup observability tables exist
+  locally.
 - Mobile shelf rows now carry catalog source/quality/parse metadata, product
   detail shows source and quality, catalog search is wired through an Edge
   Function, and users can report catalog issues.
 - `scripts/phase4/*` can run a fixture import and generated QA report. The
   fixture is not a production catalog.
-- Open Beauty Facts contribution-back is intentionally not promised in the UI
-  until the source workflow is legally and operationally approved.
+- External contribution is excluded from the current launch architecture. The
+  legacy queue/flag are inert; a future source recipient requires a new reviewed
+  privacy/legal/architecture decision.
 
 Next action:
 
@@ -1003,9 +1005,11 @@ Exit criteria:
 - beta users get meaningful barcode/OCR/manual match outcomes;
 - catalog miss/wrong-match reports are tracked;
 - recommendations can reference real products where appropriate;
-- OBF contribution-back obligations are handled or not promised.
+- OBF attribution/share-alike/offer-of-data obligations are handled without
+  treating user-report publication as an assumed duty; reports remain
+  first-party and external contribution is not promised.
 
-## B-CATALOG-SOURCE-REVIEW - Catalog source, attribution, and API identity
+## B-CATALOG-SOURCE-REVIEW - Catalog source, attribution, and release identity
 
 Status: `launch-blocked`
 
@@ -1015,7 +1019,11 @@ Exit criteria:
 - `npm run phase4:check-source-env:strict` passes;
 - CosIng source memo is reviewed;
 - Open Beauty Facts source memo is reviewed;
-- source attribution copy is approved under final brand.
+- source attribution copy is approved under final brand;
+- the externally root-signed reviewer registry and separately pinned current
+  epoch/raw-file hash validate;
+- fixed US release scope, distinct legal/engineering signed source approvals,
+  and signed exact EAS/archive/App Store build evidence all match the release.
 
 ## B-ODBL-REVIEW - Open Beauty Facts / ODbL posture
 
@@ -1027,7 +1035,10 @@ Exit criteria:
 - any public derivative database/share-alike obligations have an owner;
 - product images remain disabled unless image-rights handling is approved;
 - bulk imports use exports, not API crawling;
-- attribution is visible in product detail and policy/source pages.
+- attribution is visible in product detail and policy/source pages;
+- the current filtering/normalization transform uses the conservative
+  derivative-database machine-readable-delivery path unless a new reviewed
+  transformer/policy revision implements a different counsel conclusion.
 
 ## B-CURATED-CATALOG - First reviewed launch batch
 
@@ -1039,7 +1050,9 @@ Exit criteria:
 - product rows have source/ref/snapshot/provenance;
 - recommendable rows are `verified` or `usable`, reviewed, and correction-free;
 - sunscreen/OTC-adjacent products have separate review and expiry handling;
-- import QA has zero blockers.
+- OBF and CosIng import QA have zero blockers/warnings;
+- migration `0056` is hosted-verified and serves only positive-eligible,
+  correction-free rows from production/legal-approved sources.
 
 ## B-CATALOG-COVERAGE - Beta catalog usefulness
 
@@ -1053,15 +1066,21 @@ Exit criteria:
 - priority gaps are fed back into curation;
 - users can complete the shelf-to-routine loop even when catalog matching fails.
 
-## B-SHELF-CONTRIB - Unmatched product contribution-back
+## B-SHELF-CONTRIB - First-party missing-product and wrong-match operation
 
 Status: `launch-blocked`
 
 Exit criteria:
 
-- unmatched product workflow is legally and operationally defined;
-- user-facing copy does not promise contribution unless the pipeline exists;
-- OBF obligations are satisfied if using OBF-derived data.
+- owner-scoped reports are minimized, privacy-authorized, deletion/withdrawal
+  covered, and operated to the recorded triage SLA;
+- open/triaged corrections immediately suppress affected rows from serving and
+  product-specific recommendations;
+- no lookup or report is sent to OBF, CosIng, or another source, and user-facing
+  copy does not promise external contribution;
+- OBF obligations are satisfied through the counsel-approved attribution,
+  share-alike, offer-of-data, and source-delivery posture rather than assumed
+  user-data transmission.
 
 ## B-PERFORMANCE - Performance baseline and scale evidence
 

@@ -183,9 +183,10 @@ Supabase Edge Functions:
 
 Account deletion uses a service-role-only transactional RPC for database rows that
 cannot be safely erased through caller RLS. Commerce click-token ownership is unique;
-deleting a click nulls its order-attribution token. OBF contribution payloads require a
-live Auth owner, are deleted inside the same scrub, and cascade on direct Auth deletion;
-legacy null-owner payloads are purged by migration. Account-only subscription events are
+deleting a click nulls its order-attribution token. Any legacy-held OBF contribution
+payload rows require a live Auth owner, are deleted inside the same scrub, and cascade on
+direct Auth deletion; legacy null-owner payloads are purged by migration. The launch
+architecture has no writer or external-publication path for that table. Account-only subscription events are
 deleted, while shared events retain another live Auth owner and remove the deleting user
 from every scalar, alias, and transfer field. The Edge caller accepts only an exact
 zero-residue RPC attestation.

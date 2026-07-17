@@ -29,9 +29,11 @@ The EAS CLI is pinned to the current reviewed `21.0.1`, and
 `cli.requireCommit=true` requires committed input before upload. Retain the EAS
 build UUID, exact Git commit metadata, CLI version, and full build log; the
 archive evidence index requires the EAS Git SHA to equal the build-source SHA.
-Production `autoIncrement` means the post-increment build number must be taken
-from the finished build record and cross-bound to the archive/manifest rather
-than assumed from source.
+Production uses local app-version source with `autoIncrement=false`. Manually
+advance and review `CATALOG_RELEASE_IOS_BUILD_NUMBER` before freezing the build
+commit; dynamic app config embeds that exact value. The finished archive and
+App Store record must still be inspected and cross-bound to the same build
+number rather than trusting configuration alone.
 
 The Progress review pipeline includes native ML Kit face detection and Expo
 image manipulation. Any build created before those dependencies were added is

@@ -24,8 +24,8 @@ import { ContainedCommandError, runContainedCommand } from './contained-command.
 import { reportsPinnedEmptySchemaDiff } from './schema-diff-evidence.mjs';
 
 const PINNED_CLI_VERSION = '2.109.1';
-const EXPECTED_MIGRATION_COUNT = 54;
-const EXPECTED_LATEST_MIGRATION = '20260715000055';
+const EXPECTED_MIGRATION_COUNT = 55;
+const EXPECTED_LATEST_MIGRATION = '20260717000056';
 const LOCAL_CLI_TIMEOUT_MS = 15 * 60_000;
 const LOCAL_CLI_MAX_OUTPUT_BYTES = 8 * 1024 * 1024;
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));

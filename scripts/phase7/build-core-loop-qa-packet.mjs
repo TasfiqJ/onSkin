@@ -5,7 +5,7 @@ import { join, relative, resolve } from 'node:path';
 import {
   command,
   evidenceFlagEnabled,
-  gitStatusExcludingPaths,
+  gitStatusExcludingGeneratedEvidence,
   normalizeNamedSignoff,
 } from '../phase9/lib.mjs';
 import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs';
@@ -235,7 +235,7 @@ for (const scenario of scenarios) {
 }
 
 function gitStatusExcludingGeneratedPacket() {
-  return gitStatusExcludingPaths(packetOutputPaths);
+  return gitStatusExcludingGeneratedEvidence(packetOutputPaths);
 }
 
 function hashFile(path) {

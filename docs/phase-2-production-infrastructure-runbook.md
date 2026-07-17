@@ -1,6 +1,7 @@
 # Phase 2 Production Infrastructure Runbook
 
 Date: 2026-07-15
+Updated: 2026-07-17 for migration `0056`
 
 Phase 2 is now scaffolded in code, but it is not externally complete. Do not
 create irreversible production accounts under `OnSkin` until
@@ -26,8 +27,8 @@ create irreversible production accounts under `OnSkin` until
 - `scripts/phase2/supabase-rls-smoke.mjs`: two-user plus anonymous RLS smoke
   test for profiles, skin profiles, shelf, routines, consents, and entitlements.
 - `scripts/phase2/deploy-supabase-staging.ps1` plus the Node orchestrator and
-  evidence contract: fresh-staging-only deployment of 54 migrations through
-  `0055` and all 16 default functions with pre-migration compatibility deploy,
+  evidence contract: fresh-staging-only deployment of 55 migrations through
+  `0056` and all 16 default functions with pre-migration compatibility deploy,
   exact before/after inventories, hosted pgTAP/lint/drift checks, local/linked
   type parity, Git-blob-verified immutable deployment inputs, bounded redacted
   logs/process trees, active closed-ingress enforcement, and manifest-last
@@ -94,7 +95,7 @@ create irreversible production accounts under `OnSkin` until
    copied into these retained fields.
 7. Run the fresh-staging wrapper. It sets `DB06_TRAFFIC_FREEZE=frozen` with the
    staging environment before predeploy, predeploys and reads back the complete
-   compatible 16-function manifest before migrations `0048`-`0055`, and proves
+   compatible 16-function manifest before migrations `0048`-`0056`, and proves
    all 16 entrypoints contain the first-request freeze guard. It live-canaries
    the exact eight `verifyJwt: false` endpoints for HTTP `503`, exact
    `DB06_STAGING_TRAFFIC_FROZEN` JSON error, and `Cache-Control: no-store`.
@@ -104,7 +105,7 @@ create irreversible production accounts under `OnSkin` until
    freeze, empty migration inventory, public schema and Storage inventory, and
    **all** Cron jobs. This is a current live-state/hold gate, not a claim that
    the initial operator observations were recaptured. Only then does it apply
-   all 54 migrations in source order, redeploy the same manifest, and retain
+   all 55 migrations in source order, redeploy the same manifest, and retain
    the complete redacted evidence package. Completion repeats the immutable
    artifact/current-validity/current-hold checks. The evidence records the
    required and actual remaining milliseconds at the initial, immediate, and

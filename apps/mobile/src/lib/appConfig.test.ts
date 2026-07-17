@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 
 const requireConfig = createRequire(import.meta.url);
 const APP_CONFIG_PATH = requireConfig.resolve('../../app.config.js');
+const EAS_CONFIG_PATH = requireConfig.resolve('../../eas.json');
 const REVIEW_EVIDENCE_PATH = requireConfig.resolve('../../phase3-review-evidence.js');
 
 type ReviewSourceRecord = {
@@ -93,6 +94,7 @@ const APP_ENV_KEYS = [
   'EXPORT_COMPLIANCE_CLEARANCE',
   'APP_ENCRYPTION_CLASSIFICATION',
   'APP_ENCRYPTION_EXPORT_COMPLIANCE_CODE',
+  'CATALOG_RELEASE_IOS_BUILD_NUMBER',
   'APP_DISPLAY_NAME',
   'EXPO_PUBLIC_APP_DISPLAY_NAME',
   'APP_SLUG',
@@ -107,6 +109,7 @@ const APP_ENV_KEYS = [
   'EXPO_PUBLIC_FINAL_BRAND_DOMAIN',
   'EXPO_PUBLIC_APP_STORE_URL',
   'EXPO_PUBLIC_PLAY_STORE_URL',
+  'EXPO_PUBLIC_SUPPORT_EMAIL',
   'IOS_WIDGET_EXTENSION_BUILD_ENABLED',
 ] as const;
 
@@ -121,7 +124,20 @@ function buildExpoConfig(
     delete process.env[key];
   }
 
-  Object.assign(process.env, env);
+  const effectiveEnv = { ...env };
+  if (
+    String(env.APP_VARIANT ?? '')
+      .trim()
+      .toLowerCase() === 'production'
+  ) {
+    if (!Object.hasOwn(env, 'CATALOG_RELEASE_IOS_BUILD_NUMBER')) {
+      effectiveEnv.CATALOG_RELEASE_IOS_BUILD_NUMBER = '1';
+    }
+    if (!Object.hasOwn(env, 'EXPO_PUBLIC_SUPPORT_EMAIL')) {
+      effectiveEnv.EXPO_PUBLIC_SUPPORT_EMAIL = 'support@routinekind.app';
+    }
+  }
+  Object.assign(process.env, effectiveEnv);
   if (options.releaseReadyReviewEvidence) {
     runtime.__ROUTINEKIND_PHASE3_REVIEW_TEST_WORKLIST__ =
       reviewEvidence.createReleaseReadyTestWorklist();
@@ -262,7 +278,62 @@ describe('Expo app identity config', () => {
     expect(expo.android.package).toBe('com.routinekind.app');
     expect(expo.extra.appVariant).toBe('production');
     expect(expo.extra.appEnvironment).toBe('production');
+    expect(expo.extra.supportEmail).toBe('support@routinekind.app');
+    expect(expo.ios.buildNumber).toBe('1');
     expect(expo.ios.infoPlist.ITSAppUsesNonExemptEncryption).toBe(false);
+  });
+
+  it('uses the exact reviewed local iOS build number without EAS auto-increment', () => {
+    const eas = JSON.parse(readFileSync(EAS_CONFIG_PATH, 'utf8'));
+    expect(eas.cli.appVersionSource).toBe('local');
+    expect(eas.build.production.autoIncrement).toBe(false);
+
+    const baseEnv = {
+      APP_VARIANT: 'production',
+      EXPO_PUBLIC_APP_ENV: 'production',
+      BRAND_LEGAL_CLEARANCE: 'cleared',
+      PHASE3_RELEASE_CLEARANCE: 'cleared',
+      EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
+      APP_ENCRYPTION_CLASSIFICATION: 'exempt',
+      APP_DISPLAY_NAME: 'RoutineKind',
+      APP_SLUG: 'routinekind',
+      APP_SCHEME: 'routinekind',
+      APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+    } as const;
+    const expo = buildExpoConfig(
+      { ...baseEnv, CATALOG_RELEASE_IOS_BUILD_NUMBER: '42' },
+      { releaseReadyReviewEvidence: true },
+    );
+    expect(expo.ios.buildNumber).toBe('42');
+    for (const invalid of ['', '0', '01', '-1', '1.5', 'pending']) {
+      expect(() =>
+        buildExpoConfig(
+          { ...baseEnv, CATALOG_RELEASE_IOS_BUILD_NUMBER: invalid },
+          { releaseReadyReviewEvidence: true },
+        ),
+      ).toThrow(/exact reviewed positive decimal build number/);
+    }
+  });
+
+  it('binds a final support email into the resolved production Expo config', () => {
+    expect(() =>
+      buildExpoConfig(
+        {
+          APP_VARIANT: 'production',
+          EXPO_PUBLIC_APP_ENV: 'production',
+          BRAND_LEGAL_CLEARANCE: 'cleared',
+          PHASE3_RELEASE_CLEARANCE: 'cleared',
+          EXPORT_COMPLIANCE_CLEARANCE: 'cleared',
+          APP_ENCRYPTION_CLASSIFICATION: 'exempt',
+          APP_DISPLAY_NAME: 'RoutineKind',
+          APP_SLUG: 'routinekind',
+          APP_SCHEME: 'routinekind',
+          APP_IOS_BUNDLE_IDENTIFIER: 'com.routinekind.app',
+          EXPO_PUBLIC_SUPPORT_EMAIL: 'pending@example.com',
+        },
+        { releaseReadyReviewEvidence: true },
+      ),
+    ).toThrow(/final non-placeholder EXPO_PUBLIC_SUPPORT_EMAIL/);
   });
 
   it('does not require Android production identity for the iOS-only launch contract', () => {
@@ -537,6 +608,7 @@ describe('Expo app identity config', () => {
       'https://routinekind.test',
       'https://routinekind.invalid',
       'https://routinekind.example',
+      'http://routinekind.app',
       'https://routinekind.app?redirect=https://evil.example',
       'https://routinekind.app:444',
       'https://user:pass@routinekind.app',

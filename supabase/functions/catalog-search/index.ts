@@ -265,5 +265,6 @@ Deno.serve(async (req) => {
   return json({
     result: data?.length ? 'matched' : 'no_match',
     products: data ?? [],
+    manualFallback: !data?.length,
   });
 });

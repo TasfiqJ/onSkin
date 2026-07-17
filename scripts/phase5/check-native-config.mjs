@@ -453,11 +453,12 @@ require(/rejects widget booleans without artifact-bound evidence/.test(qaPacketS
 require(/function gitStatusExcludingGeneratedPacket\(validatedEvidencePaths = \[\]\)/.test(
   qaPacketBuilder,
 ) &&
+  /gitStatusExcludingGeneratedEvidence/.test(qaPacketBuilder) &&
   /device-qa-packet\.json/.test(qaPacketBuilder) &&
   /device-qa-packet\.md/.test(qaPacketBuilder) &&
   /gitStatus = gitStatusExcludingGeneratedPacket\(validatedWidgetEvidencePaths\)/.test(
     qaPacketBuilder,
-  ), 'Phase 5 device QA packet must ignore only its own generated outputs and fully validated lifecycle evidence when recording Git status.');
+  ), 'Phase 5 device QA packet must ignore central generated evidence, its own outputs, and only fully validated lifecycle evidence when recording Git status.');
 require(/Phase 5 device QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
   /if \(strict\) blockers\.push\(dirtyMessage\)/.test(qaPacketBuilder) &&
   /strict Phase 5 QA packet rejects a dirty source worktree/.test(qaPacketSmoke) &&

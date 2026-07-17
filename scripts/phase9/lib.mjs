@@ -587,6 +587,8 @@ export const generatedEvidenceOutputPaths = Object.freeze([
   'docs/phase-4/generated/beta-coverage-report.md',
   'docs/phase-4/generated/catalog-qa-report.json',
   'docs/phase-4/generated/catalog-qa-report.md',
+  'docs/phase-4/generated/cosing-catalog-qa-report.json',
+  'docs/phase-4/generated/cosing-catalog-qa-report.md',
   'docs/phase-4/generated/cosing-fixture-import.json',
   'docs/phase-4/generated/obf-fixture-import.json',
   'docs/phase-4/generated/source-worklist.json',

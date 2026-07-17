@@ -6,11 +6,13 @@ import { type AccountAccessSnapshot, preflightAccountAccess } from '../_shared/a
 import { bearerAuthorizationHeader } from '../_shared/auth.ts';
 import { contentLengthTooLarge, readLimitedJson, userEdgeBodyMaxBytes } from '../_shared/body.ts';
 import {
+  HEALTH_PROCESSING_EPOCH_HEADER,
   healthProcessingCallerHeaders,
   preflightActiveHealthProcessing,
   readHealthProcessingEpochHeader,
 } from '../_shared/healthProcessingEpoch.ts';
 import { readSupabasePublishableKey } from '../_shared/supabasePublishableKey.ts';
+import { readSupabaseSecretKey } from '../_shared/supabaseSecretKey.ts';
 import {
   allowedContextKeys,
   allowedPayloadKeys,
@@ -25,7 +27,9 @@ import {
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const publishableKey = readSupabasePublishableKey();
+const serviceKey = readSupabaseSecretKey();
 const maxBodyBytes = userEdgeBodyMaxBytes();
+const catalogReportRetryAfterSeconds = 15 * 60;
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -36,10 +40,10 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-function json(body: unknown, status = 200): Response {
+function json(body: unknown, status = 200, headers: HeadersInit = {}): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json', ...headers },
   });
 }
 
@@ -91,6 +95,31 @@ async function requestBody(req: Request): Promise<Record<string, unknown> | Resp
   if (body instanceof Response) return body;
   if (!isPlainObject(body)) return json({ error: 'bad_json' }, 400);
   return assertAllowedKeys(body, allowedTopLevelKeys, 'unexpected_field') ?? body;
+}
+
+function hasExactDatabaseError(error: unknown, message: string): boolean {
+  return isPlainObject(error) && error.message === message;
+}
+
+type CorrectionResult = {
+  id: string;
+  status: 'open';
+  created_at: string;
+};
+
+function correctionResult(data: unknown): CorrectionResult | null {
+  if (!Array.isArray(data) || data.length !== 1 || !isPlainObject(data[0])) return null;
+  const row = data[0];
+  if (
+    typeof row.id !== 'string' ||
+    !UUID_RE.test(row.id) ||
+    row.status !== 'open' ||
+    typeof row.created_at !== 'string' ||
+    !row.created_at
+  ) {
+    return null;
+  }
+  return { id: row.id, status: 'open', created_at: row.created_at };
 }
 
 Deno.serve(async (req) => {
@@ -174,31 +203,57 @@ Deno.serve(async (req) => {
   );
   if (persistAccountError) return persistAccountError;
 
-  // The direct-write trigger atomically rechecks active state and this exact epoch.
-  const { data: correction, error } = await caller
-    .from('catalog_corrections')
-    .insert({
-      user_id: userId,
-      product_id: productId,
-      barcode: normalizeBarcode(body.barcode),
-      correction_type: correctionType,
-      description,
-      proposed_payload: proposedPayload.value,
-      client_context: clientContext.value,
-    })
-    .select('id, status, created_at')
-    .single();
+  // Only the service-only RPC can create a serving hold. It fixes workflow
+  // fields server-side and atomically rechecks account state plus this epoch;
+  // its trigger receives the same exact epoch as defense in depth.
+  const admin = createClient(supabaseUrl, serviceKey, {
+    global: {
+      headers: { [HEALTH_PROCESSING_EPOCH_HEADER]: healthProcessingEpoch },
+    },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { data, error } = await admin.rpc('submit_catalog_correction', {
+    p_user_id: userId,
+    p_expected_health_epoch: healthProcessingEpoch,
+    p_product_id: productId,
+    p_barcode: normalizeBarcode(body.barcode),
+    p_correction_type: correctionType,
+    p_description: description,
+    p_proposed_payload: proposedPayload.value,
+    p_client_context: clientContext.value,
+  });
   if (error) {
     const withdrawalError = await requireActiveHealthProcessing(
       caller,
       userId,
       healthProcessingEpoch,
     );
-    return withdrawalError ?? json({ error: 'report_failed' }, 500);
+    if (withdrawalError) return withdrawalError;
+    const accountError = await requireSameAccountAccess(
+      caller,
+      userId,
+      initialAccountAccess.snapshot,
+    );
+    if (accountError) return accountError;
+    if (hasExactDatabaseError(error, 'CATALOG_REPORT_RATE_LIMITED')) {
+      return json({ error: 'rate_limited' }, 429, {
+        'Retry-After': String(catalogReportRetryAfterSeconds),
+      });
+    }
+    return json({ error: 'report_failed' }, 500);
   }
+
+  const correction = correctionResult(data);
+  if (!correction) return json({ error: 'report_failed' }, 500);
 
   noteSuppressedObfContributionRequest(correctionType);
 
+  const responseHealthError = await requireActiveHealthProcessing(
+    caller,
+    userId,
+    healthProcessingEpoch,
+  );
+  if (responseHealthError) return responseHealthError;
   const responseAccountError = await requireSameAccountAccess(
     caller,
     userId,

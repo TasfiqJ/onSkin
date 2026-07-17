@@ -346,15 +346,12 @@ const cases = [
     },
   },
   {
-    name: 'Phase 7 packet reports dirty upstream generated evidence',
+    name: 'Phase 7 packet ignores dirty upstream generated evidence',
     result: runPacketWithDirtyUpstreamEvidence({ ...validPublicIdentity, ...validEvidence }),
     expect(result) {
       return (
         result.status === 0 &&
-        result.packet.gitStatus.includes('docs/e2e/generated/human-e2e-manifest.json') &&
-        result.packet.warnings.includes(
-          'Phase 7 core-loop QA packet generated with a dirty Git worktree; do not use it as final core-loop evidence.',
-        )
+        !result.packet.gitStatus.includes('docs/e2e/generated/human-e2e-manifest.json')
       );
     },
   },

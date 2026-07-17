@@ -1,12 +1,31 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, relative, resolve } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { relative, resolve } from 'node:path';
 import { command, gitStatusExcludingGeneratedEvidence } from '../phase9/lib.mjs';
 import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs';
+import {
+  CATALOG_TRANSFORMED_PAYLOAD_CONTRACT,
+  assertSafeOutputPath,
+  canonicalJson,
+  catalogReleaseIdentityFromRepository,
+  catalogTransformedPayloadSha256,
+  catalogTransformerDescriptor,
+  loadCatalogReleaseBuildEvidence,
+  loadCatalogReleaseScope,
+  loadCatalogSourcePolicy,
+  loadCatalogSourceTrustRegistry,
+  parseCatalogControlJson,
+  parseCatalogEvidenceJson,
+  sha256,
+  validateProductionApproval,
+  validateCatalogReleaseBuildEvidence,
+  writeTextFilesAtomically,
+} from './source-policy.mjs';
 
 const root = process.cwd();
 const launchContract = loadLaunchContract(root);
+const sourcePolicy = loadCatalogSourcePolicy(root);
 const inputPath = resolve(
   root,
   process.argv[2] ?? 'docs/phase-4/generated/obf-fixture-import.json',
@@ -16,12 +35,18 @@ const jsonOutputPath = resolve(
   process.argv[3] ?? 'docs/phase-4/generated/catalog-qa-report.json',
 );
 const mdOutputPath = jsonOutputPath.replace(/\.json$/i, '.md');
-const reportOutputPaths = [jsonOutputPath, mdOutputPath].map((path) =>
-  relative(root, path).replace(/\\/g, '/'),
-);
+if (mdOutputPath === jsonOutputPath) {
+  throw new Error('Catalog QA JSON output path must end in .json.');
+}
 
 const requiredSourceHashPaths = [
   'package.json',
+  'package-lock.json',
+  'apps/mobile/app.config.js',
+  'apps/mobile/app.base.json',
+  'apps/mobile/eas.json',
+  'apps/mobile/package.json',
+  'apps/mobile/phase3-review-evidence.js',
   'docs/hugeToDo/launch-contract.json',
   'scripts/launch/contract.mjs',
   'scripts/phase4/catalog-qa-report.mjs',
@@ -34,6 +59,13 @@ const requiredSourceHashPaths = [
   'scripts/phase4/check-source-env.mjs',
   'scripts/phase4/check-source-env-smoke.mjs',
   'scripts/phase4/catalog-qa-report-smoke.mjs',
+  'scripts/phase4/catalog-source-policy-audit.mjs',
+  'scripts/phase4/source-policy.mjs',
+  'scripts/phase4/source-policy.test.mjs',
+  'supabase/migrations/20260614000026_phase4_catalog.sql',
+  'supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql',
+  'supabase/functions/catalog-lookup/index.ts',
+  'supabase/functions/catalog-search/index.ts',
   'supabase/functions/catalog-report/index.ts',
   'supabase/functions/catalog-report/privacy.ts',
   'supabase/functions/catalog-report/privacy.test.ts',
@@ -41,38 +73,552 @@ const requiredSourceHashPaths = [
   'scripts/phase9/lib.mjs',
   'docs/FOR_TAS_TO_DO.md',
   'docs/phase-4/beta-coverage-report.md',
+  'docs/phase-4/catalog-release-scope.json',
+  'docs/phase-4/catalog-release-build-evidence.json',
   'docs/phase-4/catalog-source-memo-cosing.md',
   'docs/phase-4/catalog-source-memo-open-beauty-facts.md',
-  'docs/phase-4/generated/source-worklist.json',
-  'docs/phase-4/generated/source-worklist.md',
+  'docs/phase-4/catalog-source-policy.json',
+  'docs/phase-4/catalog-source-trust-registry.json',
+  'docs/phase-4/obf-source-approval.template.json',
+  'docs/phase-4/cosing-source-approval.template.json',
   'docs/phase-4/odbl-compliance-memo.md',
   'docs/phase-4/phase-4-exit-review.md',
 ];
 
-const manifest = JSON.parse(readFileSync(inputPath, 'utf8'));
-const products = Array.isArray(manifest.products) ? manifest.products : [];
-const rejected = Array.isArray(manifest.rejected) ? manifest.rejected : [];
-
+const manifestBytes = readFileSync(inputPath);
+const manifest = parseCatalogEvidenceJson(manifestBytes, 'Catalog transform manifest');
 const blockers = [];
 const warnings = [];
+const digestPattern = /^[0-9a-f]{64}$/i;
 
-const missingCategory = products.filter((product) => !product.category);
-const missingIngredients = products.filter((product) => !product.ingredientsText);
-const duplicateBarcodes = products
-  .map((product) => product.barcode)
-  .filter((barcode, index, all) => all.indexOf(barcode) !== index);
+const sourceContracts = {
+  open_beauty_facts: {
+    componentId: 'obf_odbl_component',
+    parserVersion: 'phase4-obf-transform-v2',
+    transformerPath: 'scripts/phase4/import-obf-snapshot.mjs',
+    approvedImportMode: 'approved_offline_export',
+    isolation(source) {
+      return source.sourceIsolationMode;
+    },
+    records: Array.isArray(manifest.products) ? manifest.products : [],
+    rejected: Array.isArray(manifest.rejected) ? manifest.rejected : [],
+  },
+  cosing: {
+    componentId: 'cosing_reference_component',
+    parserVersion: 'phase4-cosing-transform-v2',
+    transformerPath: 'scripts/phase4/import-cosing-dictionary.mjs',
+    approvedImportMode: 'approved_offline_snapshot',
+    isolation(source) {
+      return source.databaseCombinationMode;
+    },
+    records: Array.isArray(manifest.ingredients) ? manifest.ingredients : [],
+    rejected: [],
+  },
+};
+const sourceKey = typeof manifest.source === 'string' ? manifest.source : '';
+const contract = Object.hasOwn(sourceContracts, sourceKey) ? sourceContracts[sourceKey] : null;
+const policySource = Object.hasOwn(sourcePolicy.policy.sources, sourceKey)
+  ? sourcePolicy.policy.sources[sourceKey]
+  : null;
 
-if (duplicateBarcodes.length > 0)
-  blockers.push(`Duplicate barcodes: ${[...new Set(duplicateBarcodes)].join(', ')}`);
-if (missingCategory.length > 0)
-  warnings.push(`${missingCategory.length} accepted products have no mapped category.`);
-if (missingIngredients.length > 0)
-  warnings.push(`${missingIngredients.length} accepted products have no ingredient text.`);
-if (products.length < 1) blockers.push('No accepted products in import output.');
+function exactKeys(value, expected) {
+  return (
+    value &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    JSON.stringify(Object.keys(value).sort()) === JSON.stringify([...expected].sort())
+  );
+}
+
+function duplicateValues(values) {
+  const seen = new Set();
+  const duplicates = new Set();
+  for (const value of values) {
+    if (value === null || value === undefined) continue;
+    if (seen.has(value)) duplicates.add(value);
+    seen.add(value);
+  }
+  return [...duplicates];
+}
+
+function decodeEvidenceBase64(value, label) {
+  if (typeof value !== 'string' || value.length % 4 !== 0) {
+    blockers.push(`${label} is not canonical base64.`);
+    return null;
+  }
+  const bytes = Buffer.from(value, 'base64');
+  if (bytes.toString('base64') !== value) {
+    blockers.push(`${label} is not canonical base64.`);
+    return null;
+  }
+  return bytes;
+}
+
+function verifyEmbeddedSnapshot(snapshot, currentBundle, currentValue, label) {
+  const bytes = decodeEvidenceBase64(snapshot?.manifestBytesBase64, `${label} bytes`);
+  if (!bytes) return null;
+  let parsed = null;
+  try {
+    parsed = parseCatalogControlJson(bytes, label);
+  } catch (error) {
+    blockers.push(`${label} is invalid: ${error.message}`);
+    return null;
+  }
+  if (
+    snapshot?.sha256 !== sha256(bytes) ||
+    snapshot.sha256 !== currentBundle.sha256 ||
+    canonicalJson(parsed) !== canonicalJson(snapshot?.manifest ?? null) ||
+    canonicalJson(parsed) !== canonicalJson(currentValue)
+  ) {
+    blockers.push(`${label} does not exactly match its retained bytes and current fixed file.`);
+  }
+  return parsed;
+}
+
+if (manifest.schemaVersion !== 2) blockers.push('Import manifest schemaVersion must be 2.');
+if (!contract || !policySource) blockers.push('Import manifest source is unsupported.');
+if (contract && manifest.sourceComponentId !== contract.componentId) {
+  blockers.push('Import manifest source component is missing or incorrect.');
+}
+if (
+  manifest.sourcePolicy?.policyId !== sourcePolicy.policy.policyId ||
+  manifest.sourcePolicy?.sha256 !== sourcePolicy.sha256
+) {
+  blockers.push('Import manifest source-policy identity/hash is missing or stale.');
+}
+if (!digestPattern.test(manifest.inputSha256 ?? '')) {
+  blockers.push('Import manifest inputSha256 is invalid.');
+}
+if (
+  manifest.sourceSnapshot?.artifactSha256 !== manifest.inputSha256 ||
+  !Number.isInteger(manifest.sourceSnapshot?.bytes) ||
+  manifest.sourceSnapshot.bytes < 1
+) {
+  blockers.push('Import manifest source snapshot byte/hash binding is invalid.');
+}
+if (contract && manifest.parserVersion !== contract.parserVersion) {
+  blockers.push('Import manifest parserVersion is missing or unsupported.');
+}
+if (
+  canonicalJson(manifest.transformedPayloadContract ?? null) !==
+  canonicalJson(CATALOG_TRANSFORMED_PAYLOAD_CONTRACT)
+) {
+  blockers.push('Import manifest transformed-payload contract is missing or unsupported.');
+}
+if (
+  policySource &&
+  JSON.stringify(manifest.projectedFields) !== JSON.stringify(policySource.allowedFields)
+) {
+  blockers.push('Import manifest projected fields do not match the frozen policy projection.');
+}
+if (contract && manifest.sourceIsolationMode !== contract.isolation(policySource)) {
+  blockers.push('Import manifest does not preserve the required source-isolation mode.');
+}
+
+const expectedControls =
+  manifest.source === 'cosing'
+    ? {
+        runtimeRequests: false,
+        imagesIncluded: false,
+        contributionBack: false,
+        productionApprovalRequired: true,
+        claimsAuthority: 'informative_reference_only',
+      }
+    : {
+        runtimeRequests: false,
+        imagesIncluded: false,
+        contributionBack: false,
+        productionApprovalRequired: true,
+      };
+if (canonicalJson(manifest.controls ?? null) !== canonicalJson(expectedControls)) {
+  blockers.push('Import manifest external-recipient/image/contribution controls are unsafe.');
+}
+if (manifest.source === 'open_beauty_facts' && manifest.licenses?.images?.allowed !== false) {
+  blockers.push('Import manifest must keep OBF product images disabled.');
+}
+
+let recomputedTransformSha256 = null;
+if (contract && policySource) {
+  const recordsWithoutSnapshotDate = contract.records.map((record) => {
+    const copy = { ...record };
+    for (const field of CATALOG_TRANSFORMED_PAYLOAD_CONTRACT.excludedRecordFields) {
+      delete copy[field];
+    }
+    return copy;
+  });
+  recomputedTransformSha256 = catalogTransformedPayloadSha256({
+    controls: expectedControls,
+    inputSha256: manifest.inputSha256,
+    parserVersion: contract.parserVersion,
+    projectedFields: policySource.allowedFields,
+    records: recordsWithoutSnapshotDate,
+    rejected: contract.rejected,
+    sourceComponentId: contract.componentId,
+    sourceIsolationMode: contract.isolation(policySource),
+    sourceKey: manifest.source,
+  });
+  if (
+    manifest.transformedPayloadSha256 !== recomputedTransformSha256 ||
+    !digestPattern.test(manifest.transformedPayloadSha256 ?? '')
+  ) {
+    blockers.push('Import manifest transformed payload digest does not match its exact records.');
+  }
+}
+
+let trustBundle = null;
+let releaseBundle = null;
+let releaseBuildBundle = null;
+try {
+  trustBundle = loadCatalogSourceTrustRegistry(root);
+} catch (error) {
+  blockers.push(`Current trust registry is invalid: ${error.message}`);
+}
+try {
+  releaseBundle = loadCatalogReleaseScope(root);
+} catch (error) {
+  blockers.push(`Current release scope is invalid: ${error.message}`);
+}
+try {
+  releaseBuildBundle = loadCatalogReleaseBuildEvidence(root, {
+    releaseScope: releaseBundle?.scope ?? null,
+    releaseScopeSha256: releaseBundle?.sha256 ?? null,
+    trustRegistry: trustBundle?.registry ?? null,
+    trustRegistrySha256: trustBundle?.sha256 ?? null,
+  });
+} catch (error) {
+  blockers.push(`Current release build evidence is invalid: ${error.message}`);
+}
+
+if (manifest.status === 'fixture') {
+  if (
+    manifest.importMode !== 'fixture' ||
+    manifest.sourceApproval !== null ||
+    manifest.transformerCandidate !== null ||
+    manifest.sourceSnapshot?.date !== null ||
+    manifest.sourceSnapshot?.url !== null
+  ) {
+    blockers.push('Fixture manifest must be approval-free, snapshot-neutral fixture evidence.');
+  }
+} else if (manifest.status === 'candidate_transform_not_approved') {
+  blockers.push('Unsigned candidate transforms can never pass catalog QA or promotion.');
+  if (
+    manifest.importMode !== 'candidate_hash_only' ||
+    manifest.sourceApproval !== null ||
+    !digestPattern.test(manifest.transformerCandidate?.sha256 ?? '')
+  ) {
+    blockers.push('Candidate transform marker/transformer binding is malformed.');
+  }
+} else if (manifest.status === 'approved_transform' && contract) {
+  if (manifest.importMode !== contract.approvedImportMode) {
+    blockers.push('Approved transform importMode does not match its source policy.');
+  }
+  const sourceApproval = manifest.sourceApproval;
+  if (
+    !exactKeys(sourceApproval, [
+      'manifest',
+      'manifestBytesBase64',
+      'manifestSha256',
+      'releaseBuildEvidenceSnapshot',
+      'releaseScopeSnapshot',
+      'transformerSnapshot',
+      'trustRegistrySnapshot',
+    ])
+  ) {
+    blockers.push('Approved transform sourceApproval envelope has missing or extra fields.');
+  }
+  const approvalBytes = decodeEvidenceBase64(
+    sourceApproval?.manifestBytesBase64,
+    'Source approval manifest bytes',
+  );
+  let approval = null;
+  if (approvalBytes) {
+    try {
+      approval = parseCatalogControlJson(approvalBytes, 'Retained source approval');
+    } catch (error) {
+      blockers.push(`Retained source approval is invalid: ${error.message}`);
+    }
+    if (
+      sourceApproval?.manifestSha256 !== sha256(approvalBytes) ||
+      canonicalJson(approval) !== canonicalJson(sourceApproval?.manifest ?? null)
+    ) {
+      blockers.push('Source approval object does not match its retained exact bytes/hash.');
+    }
+  }
+  if (trustBundle) {
+    verifyEmbeddedSnapshot(
+      sourceApproval?.trustRegistrySnapshot,
+      trustBundle,
+      trustBundle.registry,
+      'Retained trust-registry snapshot',
+    );
+  }
+  if (releaseBundle) {
+    verifyEmbeddedSnapshot(
+      sourceApproval?.releaseScopeSnapshot,
+      releaseBundle,
+      releaseBundle.scope,
+      'Retained release-scope snapshot',
+    );
+  }
+  if (sourceApproval && releaseBuildBundle) {
+    verifyEmbeddedSnapshot(
+      sourceApproval.releaseBuildEvidenceSnapshot,
+      releaseBuildBundle,
+      releaseBuildBundle.evidence,
+      'Retained release-build-evidence snapshot',
+    );
+  }
+  let transformer = null;
+  try {
+    transformer = catalogTransformerDescriptor(
+      root,
+      contract.transformerPath,
+      contract.parserVersion,
+      releaseBuildBundle?.evidence.status === 'verified'
+        ? { sourceCommitSha: releaseBuildBundle.evidence.easBuild?.gitCommitSha ?? '' }
+        : undefined,
+    );
+    if (canonicalJson(transformer) !== canonicalJson(sourceApproval?.transformerSnapshot ?? null)) {
+      blockers.push('Retained transformer snapshot does not match the current exact bundle.');
+    }
+  } catch (error) {
+    blockers.push(`Current transformer descriptor is unavailable: ${error.message}`);
+  }
+  let releaseRuntimeIdentity = null;
+  let releaseRuntimeEasBuild = null;
+  if (releaseBundle?.scope.status === 'approved') {
+    try {
+      const resolvedRelease = catalogReleaseIdentityFromRepository(root, process.env, {
+        includeEvidence: true,
+      });
+      releaseRuntimeIdentity = resolvedRelease.identity;
+      releaseRuntimeEasBuild = resolvedRelease.easBuild;
+    } catch (error) {
+      blockers.push(`Current production release identity is invalid: ${error.message}`);
+    }
+  }
+  if (releaseBuildBundle && releaseBundle && trustBundle) {
+    const buildErrors = validateCatalogReleaseBuildEvidence(releaseBuildBundle.evidence, {
+      releaseScope: releaseBundle.scope,
+      releaseScopeSha256: releaseBundle.sha256,
+      requireVerified: true,
+      trustRegistry: trustBundle.registry,
+      trustRegistrySha256: trustBundle.sha256,
+      now: new Date(),
+    });
+    blockers.push(...buildErrors.map((error) => `Release build evidence: ${error}`));
+    if (
+      releaseBuildBundle.evidence.status === 'verified' &&
+      canonicalJson(releaseBuildBundle.evidence.easBuild ?? null) !==
+        canonicalJson(releaseRuntimeEasBuild)
+    ) {
+      blockers.push(
+        'Release build evidence does not match the current exact EAS build ID/profile/platform/commit/resolved Expo config.',
+      );
+    }
+  }
+  if (approval && trustBundle && releaseBundle && transformer) {
+    const approvalErrors = validateProductionApproval({
+      approval,
+      artifactSha256: manifest.inputSha256,
+      artifactBytes: manifest.sourceSnapshot?.bytes,
+      policy: sourcePolicy.policy,
+      policySha256: sourcePolicy.sha256,
+      releaseScope: releaseBundle.scope,
+      releaseRuntimeIdentity,
+      releaseScopeSha256: releaseBundle.sha256,
+      sourceKey: manifest.source,
+      transformer,
+      transformedPayloadSha256: recomputedTransformSha256,
+      trustRegistry: trustBundle.registry,
+      trustRegistrySha256: trustBundle.sha256,
+      trustRoot: trustBundle.trustedRoot,
+      now: new Date(),
+    });
+    blockers.push(...approvalErrors.map((error) => `Current approval revalidation: ${error}`));
+    if (
+      manifest.sourceSnapshot?.date !== approval.artifact?.snapshotDate ||
+      manifest.sourceSnapshot?.url !== approval.artifact?.sourceUrl ||
+      manifest.sourceSnapshot?.bytes !== approval.artifact?.bytes
+    ) {
+      blockers.push(
+        'Manifest source snapshot does not exactly match the signed approval artifact.',
+      );
+    }
+  }
+} else {
+  blockers.push('Import manifest status must be fixture or an exactly approved transform.');
+}
+
+let missingCategory = [];
+let missingIngredients = [];
+let provenanceDrift = [];
+let imageFields = [];
+let duplicateIdentifiers = [];
+
+if (manifest.source === 'open_beauty_facts') {
+  const products = contract?.records ?? [];
+  const allowedKeys = [
+    'barcode',
+    'name',
+    'brand',
+    'category',
+    'ingredientsText',
+    'source',
+    'sourceComponentId',
+    'sourceRef',
+    'sourceUrl',
+    'sourceRecordModifiedDate',
+    'sourceArtifactSha256',
+    'qualityGrade',
+    'reviewStatus',
+    'sourceSnapshotDate',
+  ];
+  duplicateIdentifiers = duplicateValues(
+    products.map((product) => (product && typeof product === 'object' ? product.barcode : null)),
+  );
+  if (duplicateIdentifiers.length) {
+    blockers.push(`Duplicate barcodes: ${duplicateIdentifiers.join(', ')}`);
+  }
+  missingCategory = products.filter(
+    (product) => !product || typeof product !== 'object' || !product.category,
+  );
+  missingIngredients = products.filter(
+    (product) => !product || typeof product !== 'object' || !product.ingredientsText,
+  );
+  provenanceDrift = products.filter(
+    (product) =>
+      !product ||
+      typeof product !== 'object' ||
+      !exactKeys(product, allowedKeys) ||
+      !/^\d{8,14}$/.test(product.barcode ?? '') ||
+      typeof product.name !== 'string' ||
+      product.source !== 'open_beauty_facts' ||
+      product.sourceComponentId !== contract.componentId ||
+      product.sourceRef !== product.barcode ||
+      product.sourceUrl !== `https://world.openbeautyfacts.org/product/${product.barcode}` ||
+      product.sourceArtifactSha256 !== manifest.inputSha256 ||
+      product.sourceSnapshotDate !== manifest.sourceSnapshot?.date ||
+      !['limited', 'unverified'].includes(product.qualityGrade) ||
+      product.reviewStatus !== 'unreviewed',
+  );
+  imageFields = products.flatMap((product, index) =>
+    Object.keys(product && typeof product === 'object' ? product : {})
+      .filter((key) => /^image/i.test(key))
+      .map((key) => `${index}:${key}`),
+  );
+  if (missingCategory.length)
+    warnings.push(`${missingCategory.length} accepted products have no mapped category.`);
+  if (missingIngredients.length)
+    warnings.push(`${missingIngredients.length} accepted products have no ingredient text.`);
+  if (products.length < 1) blockers.push('No accepted products in OBF import output.');
+  if (
+    manifest.totals?.inputRecords !== products.length + contract.rejected.length ||
+    manifest.totals?.acceptedProducts !== products.length ||
+    manifest.totals?.rejectedRecords !== contract.rejected.length ||
+    manifest.totals?.withIngredientText !== products.length - missingIngredients.length
+  ) {
+    blockers.push('OBF manifest totals do not match its exact records.');
+  }
+} else if (manifest.source === 'cosing') {
+  const ingredients = contract?.records ?? [];
+  const allowedKeys = [
+    'inciName',
+    'displayName',
+    'casNumber',
+    'ecNumber',
+    'annexStatus',
+    'sourceRef',
+    'sourceRecordStatus',
+    'glossaryDecision',
+    'source',
+    'sourceComponentId',
+    'sourceArtifactSha256',
+    'reviewStatus',
+    'synonyms',
+    'sourceSnapshotDate',
+  ];
+  for (const [label, values] of [
+    [
+      'INCI names',
+      ingredients.map((value) =>
+        typeof value?.inciName === 'string' ? value.inciName.normalize('NFKC').toUpperCase() : null,
+      ),
+    ],
+    [
+      'CosIng references',
+      ingredients.map((value) =>
+        typeof value?.sourceRef === 'string' ? value.sourceRef.toUpperCase() : null,
+      ),
+    ],
+    ['CAS numbers', ingredients.map((value) => value?.casNumber)],
+    ['EC numbers', ingredients.map((value) => value?.ecNumber)],
+  ]) {
+    const duplicates = duplicateValues(values);
+    if (duplicates.length) {
+      duplicateIdentifiers.push(...duplicates);
+      blockers.push(`Duplicate ${label}: ${duplicates.join(', ')}`);
+    }
+  }
+  provenanceDrift = ingredients.filter((ingredient) => {
+    const synonymsValid =
+      Array.isArray(ingredient?.synonyms) &&
+      ingredient.synonyms.every((value) => typeof value === 'string');
+    const synonymKeys = synonymsValid
+      ? ingredient.synonyms.map((value) => value.normalize('NFKC').toUpperCase())
+      : [];
+    return (
+      !ingredient ||
+      typeof ingredient !== 'object' ||
+      !exactKeys(ingredient, allowedKeys) ||
+      typeof ingredient.inciName !== 'string' ||
+      typeof ingredient.displayName !== 'string' ||
+      !/^[A-Za-z0-9][A-Za-z0-9._:/-]{0,199}$/.test(ingredient.sourceRef ?? '') ||
+      ingredient.sourceRecordStatus !== 'active' ||
+      ingredient.glossaryDecision !== policySource.requiredGlossaryDecision ||
+      ingredient.source !== 'cosing' ||
+      ingredient.sourceComponentId !== contract.componentId ||
+      ingredient.sourceArtifactSha256 !== manifest.inputSha256 ||
+      ingredient.sourceSnapshotDate !== manifest.sourceSnapshot?.date ||
+      ingredient.reviewStatus !== 'unreviewed' ||
+      !synonymsValid ||
+      ingredient.synonyms.length > policySource.transformLimits.maxSynonymsPerRecord ||
+      new Set(synonymKeys).size !== synonymKeys.length ||
+      synonymKeys.includes(ingredient.inciName.normalize('NFKC').toUpperCase())
+    );
+  });
+  imageFields = ingredients.flatMap((ingredient, index) =>
+    Object.keys(ingredient && typeof ingredient === 'object' ? ingredient : {})
+      .filter((key) => /^image/i.test(key))
+      .map((key) => `${index}:${key}`),
+  );
+  if (ingredients.length < 1) blockers.push('No ingredients in CosIng import output.');
+  const synonymCount = ingredients.reduce(
+    (sum, ingredient) =>
+      sum + (Array.isArray(ingredient?.synonyms) ? ingredient.synonyms.length : 0),
+    0,
+  );
+  if (
+    manifest.totals?.inputRows !== ingredients.length ||
+    manifest.totals?.ingredients !== ingredients.length ||
+    manifest.totals?.synonyms !== synonymCount
+  ) {
+    blockers.push('CosIng manifest totals do not match its exact records.');
+  }
+}
+
+if (provenanceDrift.length) {
+  blockers.push(`${provenanceDrift.length} records violate the exact content/provenance contract.`);
+}
+if (imageFields.length) {
+  blockers.push(
+    `Image fields are forbidden in external-source transforms: ${imageFields.join(', ')}`,
+  );
+}
 
 function repoRelative(path) {
   const candidate = relative(root, path).replace(/\\/g, '/');
-  return candidate && !candidate.startsWith('..') ? candidate : path;
+  return candidate && !candidate.startsWith('..') ? candidate : 'external-evidence-artifact';
 }
 
 function hashAbsolute(path, label = repoRelative(path)) {
@@ -86,16 +632,24 @@ function hashAbsolute(path, label = repoRelative(path)) {
   };
 }
 
-function hashRepoFile(path) {
-  return hashAbsolute(resolve(root, path), path);
-}
-
-function gitStatusExcludingGeneratedReport() {
-  return gitStatusExcludingGeneratedEvidence(reportOutputPaths);
-}
-
+const reportMode = manifest.status === 'fixture' ? 'fixture' : 'production';
+const safeJsonOutputPath = assertSafeOutputPath({
+  inputPath,
+  mode: reportMode,
+  outputPath: jsonOutputPath,
+  root,
+});
+const safeMarkdownOutputPath = assertSafeOutputPath({
+  inputPath,
+  mode: reportMode,
+  outputPath: mdOutputPath,
+  root,
+});
+const reportOutputPaths = [safeJsonOutputPath, safeMarkdownOutputPath].map((path) =>
+  relative(root, path).replace(/\\/g, '/'),
+);
 const inputArtifact = hashAbsolute(inputPath);
-const sourceHashes = requiredSourceHashPaths.map(hashRepoFile);
+const sourceHashes = requiredSourceHashPaths.map((path) => hashAbsolute(resolve(root, path), path));
 for (const sourceHash of sourceHashes) {
   if (!sourceHash.exists) blockers.push(`Missing source hash input ${sourceHash.path}.`);
 }
@@ -104,7 +658,7 @@ let gitSha = 'unknown';
 let gitStatus = 'unknown';
 try {
   gitSha = command('git', ['rev-parse', 'HEAD']).trim();
-  gitStatus = gitStatusExcludingGeneratedReport();
+  gitStatus = gitStatusExcludingGeneratedEvidence(reportOutputPaths);
 } catch {
   warnings.push('Git SHA/status could not be captured.');
 }
@@ -116,35 +670,40 @@ if (gitStatus.length > 0) {
 
 const localQaClear = blockers.length === 0 && warnings.length === 0;
 const launchClearReason =
-  'No. This report only validates the local fixture/export output; launch clearance still requires final source identity, ODbL/CosIng legal review, curated batch QA, beta coverage, and reviewer signoff.';
-
+  'No. Source-transform QA is only one gate; launch still requires final source identity/legal evidence, curated record review, beta coverage, signed binary/device evidence, deployment, and named signoff.';
 const report = {
   generatedAt: new Date().toISOString(),
   launchContract: launchContractSnapshot(launchContract),
-  inputPath,
+  inputPath: repoRelative(inputPath),
   gitSha,
+  buildSourceGitSha:
+    releaseBuildBundle?.evidence.status === 'verified'
+      ? (releaseBuildBundle.evidence.easBuild?.gitCommitSha ?? null)
+      : null,
   gitStatus,
   source: manifest.source,
+  status: manifest.status,
   importMode: manifest.importMode,
   inputArtifact,
+  transformedPayloadContract: manifest.transformedPayloadContract ?? null,
+  transformedPayloadSha256: manifest.transformedPayloadSha256 ?? null,
+  recomputedTransformSha256,
   sourceHashes,
   totals: {
-    inputRecords: manifest.totals?.inputRecords ?? null,
-    acceptedProducts: products.length,
-    rejectedRecords: rejected.length,
-    withIngredientText: products.filter((product) => product.ingredientsText).length,
+    records: contract?.records.length ?? 0,
+    rejectedRecords: contract?.rejected.length ?? 0,
     missingCategory: missingCategory.length,
     missingIngredients: missingIngredients.length,
+    duplicateIdentifiers: duplicateIdentifiers.length,
+    provenanceDrift: provenanceDrift.length,
+    imageFields: imageFields.length,
   },
-  blockers,
-  warnings,
+  blockers: [...new Set(blockers)],
+  warnings: [...new Set(warnings)],
   localQaClear,
   launchClear: false,
   launchClearReason,
 };
-
-mkdirSync(dirname(jsonOutputPath), { recursive: true });
-writeFileSync(jsonOutputPath, `${JSON.stringify(report, null, 2)}\n`);
 
 const markdownRows = sourceHashes
   .map((sourceHash) =>
@@ -154,30 +713,40 @@ const markdownRows = sourceHashes
   )
   .join('\n');
 const dirtyDetails = gitStatus.length ? `\nDirty paths:\n\n\`\`\`\n${gitStatus}\n\`\`\`\n\n` : '\n';
-writeFileSync(
-  mdOutputPath,
+const markdown =
   `# Catalog QA Report\n\nGenerated: ${report.generatedAt}\n\n` +
-    `Git SHA: ${report.gitSha}\n\n` +
-    `Git status: ${report.gitStatus.length ? 'DIRTY' : 'clean'}\n` +
-    dirtyDetails +
-    `Accepted products: ${report.totals.acceptedProducts}\n\n` +
-    `Rejected records: ${report.totals.rejectedRecords}\n\n` +
-    `Blockers: ${blockers.length ? blockers.join('; ') : 'none'}\n\n` +
-    `Warnings: ${warnings.length ? warnings.join('; ') : 'none'}\n\n` +
-    `Local fixture QA clear: ${report.localQaClear ? 'yes' : 'no'}\n\n` +
-    `Launch clear: no\n\n` +
-    `Launch clear reason: ${report.launchClearReason}\n\n` +
-    `## Input Artifact\n\n` +
-    `| Path | Status | Bytes | SHA-256 |\n` +
-    `| --- | --- | ---: | --- |\n` +
-    (inputArtifact.exists
-      ? `| ${inputArtifact.path} | present | ${inputArtifact.bytes} | ${inputArtifact.sha256} |\n\n`
-      : `| ${inputArtifact.path} | missing |  |  |\n\n`) +
-    `## Source Hashes\n\n` +
-    `| Path | Status | Bytes | SHA-256 |\n` +
-    `| --- | --- | ---: | --- |\n` +
-    `${markdownRows}\n`,
+  `Source: ${report.source ?? 'unknown'}\n\n` +
+  `Transform status: ${report.status ?? 'unknown'}\n\n` +
+  `Git SHA: ${report.gitSha}\n\n` +
+  `Build-source Git SHA: ${report.buildSourceGitSha ?? 'not verified'}\n\n` +
+  `Git status: ${report.gitStatus.length ? 'DIRTY' : 'clean'}\n` +
+  dirtyDetails +
+  `Records: ${report.totals.records}\n\n` +
+  `Rejected records: ${report.totals.rejectedRecords}\n\n` +
+  `Blockers: ${report.blockers.length ? report.blockers.join('; ') : 'none'}\n\n` +
+  `Warnings: ${report.warnings.length ? report.warnings.join('; ') : 'none'}\n\n` +
+  `Local QA clear: ${report.localQaClear ? 'yes' : 'no'}\n\n` +
+  `Launch clear: no\n\n` +
+  `Launch clear reason: ${report.launchClearReason}\n\n` +
+  `## Input Artifact\n\n| Path | Status | Bytes | SHA-256 |\n| --- | --- | ---: | --- |\n` +
+  `| ${inputArtifact.path} | present | ${inputArtifact.bytes} | ${inputArtifact.sha256} |\n\n` +
+  `## Source Hashes\n\n| Path | Status | Bytes | SHA-256 |\n| --- | --- | ---: | --- |\n` +
+  `${markdownRows}\n`;
+
+const allowReplace = manifest.status === 'fixture';
+writeTextFilesAtomically(
+  [
+    { path: safeJsonOutputPath, content: `${JSON.stringify(report, null, 2)}\n` },
+    { path: safeMarkdownOutputPath, content: markdown },
+  ],
+  { allowReplace },
 );
 
-console.log(`Wrote ${jsonOutputPath}`);
-console.log(`Blockers ${blockers.length}; warnings ${warnings.length}.`);
+console.log(`Wrote ${safeJsonOutputPath}`);
+console.log(`Blockers ${report.blockers.length}; warnings ${report.warnings.length}.`);
+if (
+  report.blockers.length > 0 ||
+  (manifest.status === 'approved_transform' && report.warnings.length > 0)
+) {
+  process.exitCode = 1;
+}

@@ -586,16 +586,10 @@ const cases = [
     },
   },
   {
-    name: 'Phase 6 strict packet rejects dirty unrelated generated evidence',
+    name: 'Phase 6 strict packet ignores dirty central generated evidence',
     result: runPacketWithDirtyUnrelatedGeneratedEvidence({}, ['--strict']),
     expect(result) {
-      return (
-        result.status === 1 &&
-        result.packet.gitStatus.includes('docs/phase-3/generated/review-worklist.json') &&
-        result.packet.blockers.includes(
-          'Phase 6 final payments evidence requires a clean Git worktree.',
-        )
-      );
+      return !result.packet.gitStatus.includes('docs/phase-3/generated/review-worklist.json');
     },
   },
   {

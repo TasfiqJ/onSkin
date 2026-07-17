@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "scopeId": "catalog-release-scope-v1",
+  "status": "pending_external_identity_and_territory_approval",
+  "appIdentity": null,
+  "territories": ["US"],
+  "attribution": null,
+  "approvedAt": null,
+  "expiresAt": null,
+  "evidence": {
+    "identity": null,
+    "territory": null,
+    "attributionSurface": null
+  }
+}

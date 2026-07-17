@@ -726,7 +726,6 @@ async function main() {
   let user = null;
   let stalePreflightUser = null;
   let stalePreflightUserDeleted = false;
-  const correctionIds = [];
 
   try {
     user = await createLiveUser(admin);
@@ -1117,7 +1116,6 @@ async function main() {
       const body = parseJson(response.text);
       const correctionId = body?.correction?.id;
       assert(correctionId, 'catalog-report did not return a correction id.');
-      correctionIds.push(correctionId);
 
       const { data, error } = await admin
         .from('catalog_corrections')
@@ -1158,27 +1156,9 @@ async function main() {
     });
   } finally {
     if (user?.id) {
-      if (correctionIds.length > 0) {
-        const { error } = await admin.from('catalog_corrections').delete().in('id', correctionIds);
-        if (error) errors.push(`Catalog correction cleanup failed: ${redactedErrorKind(error)}`);
-      }
       for (const table of ['catalog_lookup_events', 'entitlements', 'reverse_trial_grants']) {
         const { error } = await admin.from(table).delete().eq('user_id', user.id);
         if (error) errors.push(`${table} cleanup failed: ${redactedErrorKind(error)}`);
-      }
-      for (const table of [
-        'catalog_corrections',
-        'catalog_lookup_events',
-        'entitlements',
-        'reverse_trial_grants',
-      ]) {
-        try {
-          if ((await countRows(admin, table, 'user_id', user.id)) !== 0) {
-            errors.push(`${table} cleanup left residual rows.`);
-          }
-        } catch (error) {
-          errors.push(`${table} cleanup verification failed: ${redactedErrorKind(error)}`);
-        }
       }
       const { error } = await admin.auth.admin.deleteUser(user.id);
       if (error) errors.push(`Edge auth user cleanup failed: ${redactedErrorKind(error)}`);
@@ -1191,6 +1171,20 @@ async function main() {
           errors.push(
             `Edge auth user cleanup verification failed: ${redactedErrorKind(verifyError)}`,
           );
+        }
+      }
+      for (const table of [
+        'catalog_corrections',
+        'catalog_lookup_events',
+        'entitlements',
+        'reverse_trial_grants',
+      ]) {
+        try {
+          if ((await countRows(admin, table, 'user_id', user.id)) !== 0) {
+            errors.push(`${table} cleanup left residual rows.`);
+          }
+        } catch (cleanupError) {
+          errors.push(`${table} cleanup verification failed: ${redactedErrorKind(cleanupError)}`);
         }
       }
     }

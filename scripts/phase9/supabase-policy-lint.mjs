@@ -88,6 +88,7 @@ const serviceCallableDefiners = new Set([
   'list_account_photo_storage_objects(uuid, text, integer)',
   'list_health_consent_storage_work(uuid, integer, text)',
   'list_health_dependent_consent_storage_work(uuid, integer, text)',
+  'lookup_catalog_product_by_barcode(text)',
   'invalidate_apple_auth_for_session(uuid, uuid, text, text)',
   'invalidate_apple_auth_lifecycle(uuid, bigint, text, text)',
   'mark_health_dependent_consent_withdrawal_action_required(uuid, text, text)',
@@ -107,7 +108,10 @@ const serviceCallableDefiners = new Set([
   'renew_account_publication_lease(uuid, uuid, text)',
   'reserve_account_publication_lease(uuid, uuid, text)',
   'reset_account_deletion_revenuecat_absence_observations(uuid, text, text)',
+  'review_catalog_correction(uuid, bigint, text, text, text)',
   'scrub_account_service_rows(uuid)',
+  'search_catalog_products(text, integer)',
+  'submit_catalog_correction(uuid, bigint, uuid, text, text, text, jsonb, jsonb)',
   'mark_apple_auth_capture_exchange_started(uuid, uuid, uuid)',
   'update_account_deletion_step_payload(uuid, text, text, bytea)',
 ]);

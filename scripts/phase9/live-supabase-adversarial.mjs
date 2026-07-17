@@ -1352,13 +1352,22 @@ async function main() {
     });
 
     await runCheck('catalog and commerce telemetry isolation', async () => {
-      const catalogCorrection = await insertOne(userA.client, 'catalog_corrections', {
-        user_id: userA.id,
-        correction_type: 'missing_product',
-        description: 'Phase 9 RLS correction.',
-        proposed_payload: { productName: 'Phase 9 Cleanser' },
-        client_context: { surface: 'phase9-live-adversarial' },
+      const correctionWrite = await admin.rpc('submit_catalog_correction', {
+        p_user_id: userA.id,
+        p_expected_health_epoch: 1,
+        p_product_id: null,
+        p_barcode: null,
+        p_correction_type: 'missing_product',
+        p_description: 'Phase 9 RLS correction.',
+        p_proposed_payload: { productName: 'Phase 9 Cleanser' },
+        p_client_context: { route: 'phase9-live-adversarial' },
       });
+      if (correctionWrite.error) throw correctionWrite.error;
+      assert(
+        Array.isArray(correctionWrite.data) && correctionWrite.data.length === 1,
+        'catalog correction service RPC did not return exactly one row.',
+      );
+      const catalogCorrection = correctionWrite.data[0];
       registerPrivateTableProbe('catalog_corrections', 'id', catalogCorrection.id);
       await expectVisible(
         userA.client,
@@ -1373,6 +1382,12 @@ async function main() {
         'id',
         catalogCorrection.id,
         'catalog correction cross-user read',
+      );
+      await expectBlockedInsert(
+        'catalog correction owner direct insert',
+        userA.client
+          .from('catalog_corrections')
+          .insert({ user_id: userA.id, correction_type: 'missing_product' }),
       );
       await expectBlockedInsert(
         'catalog correction cross-user insert',

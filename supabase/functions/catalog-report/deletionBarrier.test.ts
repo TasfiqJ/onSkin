@@ -7,7 +7,7 @@ function compact(value: string): string {
 }
 
 Deno.test(
-  'catalog-report suppresses OBF queueing until the RPC has an atomic health epoch guard',
+  'catalog-report confines serving-control correction intake to its health-bound service RPC',
   async () => {
     const source = compact(await Deno.readTextFile(new URL('./index.ts', import.meta.url)));
     assert(
@@ -23,8 +23,10 @@ Deno.test(
       'catalog-report must not mutate the contribution queue directly.',
     );
     assert(
-      !source.includes('readSupabaseSecretKey'),
-      'the disabled contribution lane must not retain a service-role client.',
+      source.includes('readSupabaseSecretKey') &&
+        source.includes("await admin.rpc('submit_catalog_correction'") &&
+        !source.includes("from('catalog_corrections')"),
+      'the service credential must be used only through the guarded correction RPC, never direct table DML.',
     );
   },
 );
@@ -55,7 +57,7 @@ Deno.test(
 );
 
 Deno.test(
-  'catalog-report deployment does not require a service secret for a disabled lane',
+  'catalog-report deployment requires one hosted-compatible service secret tuple for correction intake',
   async () => {
     const manifest = JSON.parse(
       await Deno.readTextFile(new URL('../manifest.json', import.meta.url)),
@@ -65,8 +67,11 @@ Deno.test(
     const definition = manifest.functions?.['catalog-report'];
     assert(definition !== undefined, 'catalog-report must remain in the Edge manifest.');
     assert(
-      Array.isArray(definition.requiredSecrets) && definition.requiredSecrets.length === 0,
-      'suppressed contribution-back must not retain an unused service-role credential.',
+      JSON.stringify(definition.requiredSecrets) ===
+        JSON.stringify([
+          ['SUPABASE_SECRET_KEYS', 'SUPABASE_SECRET_KEY', 'SUPABASE_SERVICE_ROLE_KEY'],
+        ]),
+      'the guarded correction RPC must resolve exactly one supported service-key source.',
     );
     assert(
       definition.optionalEnvironment?.includes('OBF_CONTRIBUTION_ENABLED') === true,

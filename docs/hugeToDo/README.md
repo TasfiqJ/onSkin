@@ -24,6 +24,14 @@ Start here:
 - [US Wave 1 Privacy and Consumer-Health Law Gate](./US_WAVE1_PRIVACY_AND_CONSUMER_HEALTH_LAW_GATE.md)
 - [Health-Consent Withdrawal, Processor, and Retention Matrix](./HEALTH-CONSENT-WITHDRAWAL-PROCESSOR-RETENTION-MATRIX-2026-07-15.md)
 - [Health Processor Inventory v1](./health-processor-inventory-v1.json)
+- [CAT-01 Phase 4 Catalog Control Index](../phase-4/README.md)
+- [CAT-01 Catalog Source Release Runbook](../phase-4/catalog-source-release-runbook.md)
+- [CAT-01 Open Beauty Facts Source-Rights Checkpoint](../phase-4/catalog-source-memo-open-beauty-facts.md)
+- [CAT-01 CosIng Source-Rights Checkpoint](../phase-4/catalog-source-memo-cosing.md)
+- [CAT-01 Fixed Source Policy](../phase-4/catalog-source-policy.json)
+- [CAT-01 Pending Reviewer Trust Registry](../phase-4/catalog-source-trust-registry.json)
+- [CAT-01 Pending Release Scope](../phase-4/catalog-release-scope.json)
+- [CAT-01 Pending Release-Build Evidence](../phase-4/catalog-release-build-evidence.json)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -36,8 +44,40 @@ production clearance. In particular, an empty separately reconciled external
 processor list does not remove Supabase database, Storage, backup, DPA, region,
 worker, or live zero-residue evidence gates.
 
+CAT-01 is also an `in_progress` source-control checkpoint, not production
+catalog clearance. OBF and CosIng imports are offline-only and exact-artifact
+bound; fixtures and hash-only candidates cannot be promoted. Production
+validation requires a current externally root-signed reviewer registry with a
+separately pinned epoch/raw-file hash, fixed US release scope, distinct legal
+and engineering signatures over each exact source approval, the same committed
+transformer and deterministic payload, signed production EAS/archive/App Store
+build evidence, and zero-warning source-specific QA. The current OBF transformer
+accepts only the conservative derivative-database machine-readable-delivery
+implementation; counsel must still decide the legal posture, and a different
+classification requires a new reviewed policy/transformer revision.
+
+The CAT-01 audit permits only three coherent control states:
+pending/pending/pending baseline; active/approved/pending build-candidate commit
+A; and active/approved/verified release descendant B. EAS builds clean A, and B
+may add only the verified evidence bound to A without transformer/config drift.
+Every other trust/scope/build combination fails closed.
+
+Migration `0056` supplies the local fail-closed serving boundary: barcode and
+search share service-role-only positive eligibility rules, direct reads cannot
+bypass source withdrawal, live corrections suppress rows, and held reasons use
+the same no-match/manual fallback. Missing-product and wrong-match reports stay
+inside OnSkin's first-party correction operation; OBF/CosIng are not runtime
+recipients and the legacy contribution lane is inert. External legal/source
+decisions, cleared identity and live URLs, actual source artifacts, active
+reviewer keys, production EAS/archive/App Store evidence, hosted database
+verification, transactional CAT-02 promotion/rollback, beta coverage, device
+QA, and named signoffs remain open. These controls support accurate source and
+health-information handling under current Apple App Review, FDA cosmetics-claim,
+and FTC health-claim guidance, but cannot guarantee App Review, legal
+compliance, or revenue.
+
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only path covers 54 migrations through `0055`, all 16 Edge
+`ACCT-03`. The fresh-only path covers 55 migrations through `0056`, all 16 Edge
 functions, an active traffic/provider freeze, and an immediate pre-push reread
 of functions, public frozen responses, hosted Auth controls, migrations,
 schema, Storage, and all Cron jobs. It leaves `DB06_TRAFFIC_FREEZE=frozen` for a

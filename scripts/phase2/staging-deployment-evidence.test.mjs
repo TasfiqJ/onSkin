@@ -259,12 +259,12 @@ function cutoverFixture(overrides = {}, trafficFreezeOverrides = {}) {
 test('current reviewed source inventory is deterministic and exact', () => {
   assertCurrentSourceContract(source);
   const second = buildSourceInventory(repoRoot);
-  assert.equal(source.migrationCount, 54);
-  assert.equal(source.latestMigrationId, '20260715000055');
+  assert.equal(source.migrationCount, 55);
+  assert.equal(source.latestMigrationId, '20260717000056');
   assert.equal(source.functionCount, 16);
   assert.equal(source.migrationSetSha256, second.migrationSetSha256);
   assert.equal(source.functionSetSha256, second.functionSetSha256);
-  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 54);
+  assert.equal(new Set(source.migrations.map(({ sha256: hash }) => hash)).size, 55);
 });
 
 test('schema parser accepts only one complete non-negative count row', () => {
@@ -344,7 +344,10 @@ test('migration probes and inventory reject ambiguous, duplicate, or unordered o
 
 test('remote migration history must be an exact source prefix', () => {
   const prefix = source.migrations.slice(0, 4).map(({ id }) => id);
-  assert.equal(assertRemoteMigrationPrefix(source, prefix).length, 50);
+  assert.equal(
+    assertRemoteMigrationPrefix(source, prefix).length,
+    source.migrationCount - prefix.length,
+  );
   const divergent = [...prefix];
   divergent[2] = '20260701099999';
   errorCode(
@@ -785,7 +788,7 @@ test('generated-type summaries require a real Database surface and an exact loca
   );
 });
 
-test('completed deployment requires 54 migrations, all functions, 80 RLS tables, config, and type parity', () => {
+test('completed deployment requires 55 migrations, all functions, 80 RLS tables, config, and type parity', () => {
   const functions = parseFunctionInventory(JSON.stringify(functionRows()), source, {
     requireComplete: true,
   });
@@ -973,7 +976,7 @@ function passManifestInput(steps) {
       },
     },
     after: {
-      migrationCount: 54,
+      migrationCount: 55,
       migrationIds: source.migrations.map(({ id }) => id),
       functions,
       schema: afterSchema,

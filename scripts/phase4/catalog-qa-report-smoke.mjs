@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(scriptDir, '..', '..');
 const reportPath = resolve(scriptDir, 'catalog-qa-report.mjs');
+const obfImporterPath = resolve(scriptDir, 'import-obf-snapshot.mjs');
+const cosingImporterPath = resolve(scriptDir, 'import-cosing-dictionary.mjs');
+const obfFixturePath = resolve(root, 'scripts/phase4/fixtures/obf-sample.jsonl');
+const cosingFixturePath = resolve(root, 'scripts/phase4/fixtures/cosing-sample.csv');
 
 const passthroughKeys = [
   'ComSpec',
@@ -21,156 +24,250 @@ const passthroughKeys = [
   'USERPROFILE',
   'WINDIR',
 ];
-
 const processBaseEnv = Object.fromEntries(
   passthroughKeys
     .map((key) => [key, process.env[key]])
     .filter(([, value]) => typeof value === 'string' && value.length > 0),
 );
 
-const validManifest = {
-  generatedAt: '2026-07-08T00:00:00.000Z',
-  inputPath: 'fixture',
-  source: 'open_beauty_facts',
-  importMode: 'export_or_fixture',
-  totals: {
-    inputRecords: 2,
-  },
-  products: [
-    {
-      barcode: '1234567890123',
-      name: 'Fixture Cleanser',
-      category: 'cleanser',
-      ingredientsText: 'Aqua, Glycerin',
-    },
-  ],
-  rejected: [
-    {
-      code: '3234567890123',
-      reason: 'not_skin_care_category',
-    },
-  ],
-};
+function output(result) {
+  return `${result.stdout ?? ''}\n${result.stderr ?? ''}`.trim();
+}
 
-function runReport({ manifest = validManifest, dirtyMarker = false } = {}) {
-  const outDir = mkdtempSync(join(tmpdir(), 'routinekind-phase4-qa-report-'));
-  const inputPath = resolve(outDir, 'obf-fixture-import.json');
-  const outputPath = resolve(outDir, 'catalog-qa-report.json');
+function runNode(args) {
+  return spawnSync(process.execPath, args, {
+    cwd: root,
+    encoding: 'utf8',
+    env: processBaseEnv,
+  });
+}
+
+const artifactRoot = resolve(root, 'artifacts/phase4');
+mkdirSync(artifactRoot, { recursive: true });
+const outDir = mkdtempSync(join(artifactRoot, 'qa-report-smoke-'));
+
+function importFixture(importerPath, fixturePath, outputPath) {
+  const result = runNode([importerPath, '--fixture', fixturePath, outputPath]);
+  if (result.status !== 0) throw new Error(`Fixture import failed:\n${output(result)}`);
+  return JSON.parse(readFileSync(outputPath, 'utf8'));
+}
+
+function runReport({ manifest, name, dirtyMarker = false }) {
+  const inputPath = resolve(outDir, `${name}-input.json`);
+  const outputPath = resolve(outDir, `${name}-report.json`);
   const markerPath = resolve(root, `.phase4-qa-report-smoke-dirty-${process.pid}.tmp`);
-
-  writeFileSync(inputPath, `${JSON.stringify(manifest, null, 2)}\n`);
-  if (dirtyMarker) writeFileSync(markerPath, 'temporary Phase 4 dirty-worktree smoke marker\n');
-
+  writeFileSync(inputPath, `${JSON.stringify(manifest, null, 2)}\n`, { flag: 'wx' });
+  if (dirtyMarker) writeFileSync(markerPath, 'temporary dirty-worktree marker\n', { flag: 'wx' });
   try {
-    const result = spawnSync(process.execPath, [reportPath, inputPath, outputPath], {
-      cwd: root,
-      encoding: 'utf8',
-      env: processBaseEnv,
-    });
+    const result = runNode([reportPath, inputPath, outputPath]);
     const packet = JSON.parse(readFileSync(outputPath, 'utf8'));
     const markdown = readFileSync(outputPath.replace(/\.json$/i, '.md'), 'utf8');
     return { ...result, packet, markdown };
   } finally {
     if (dirtyMarker) rmSync(markerPath, { force: true });
-    rmSync(outDir, { force: true, recursive: true });
   }
 }
 
-const requiredSourceHashes = [
-  'package.json',
-  'scripts/phase4/catalog-qa-report.mjs',
-  'scripts/phase4/build-source-worklist.mjs',
-  'scripts/phase4/beta-coverage-report.mjs',
-  'scripts/phase4/beta-coverage-report-smoke.mjs',
-  'scripts/phase4/import-obf-snapshot.mjs',
-  'scripts/phase4/import-cosing-dictionary.mjs',
-  'scripts/phase4/import-fixture-smoke.mjs',
-  'scripts/phase4/check-source-env.mjs',
-  'scripts/phase4/check-source-env-smoke.mjs',
-  'scripts/phase4/catalog-qa-report-smoke.mjs',
-  'supabase/functions/catalog-report/index.ts',
-  'supabase/functions/catalog-report/privacy.ts',
-  'supabase/functions/catalog-report/privacy.test.ts',
-  'supabase/functions/deno.lock',
-  'scripts/phase9/lib.mjs',
-  'docs/FOR_TAS_TO_DO.md',
-  'docs/phase-4/beta-coverage-report.md',
-  'docs/phase-4/catalog-source-memo-cosing.md',
-  'docs/phase-4/catalog-source-memo-open-beauty-facts.md',
-  'docs/phase-4/odbl-compliance-memo.md',
-  'docs/phase-4/phase-4-exit-review.md',
-];
+try {
+  const obfFixtureOutput = resolve(outDir, 'obf-fixture.json');
+  const cosingFixtureOutput = resolve(outDir, 'cosing-fixture.json');
+  const obfManifest = importFixture(obfImporterPath, obfFixturePath, obfFixtureOutput);
+  const cosingManifest = importFixture(cosingImporterPath, cosingFixturePath, cosingFixtureOutput);
 
-const cases = [
-  {
-    name: 'catalog QA report writes Git provenance and source hashes',
-    result: runReport(),
-    expect(result) {
-      const sourceHashes = Object.fromEntries(
-        result.packet.sourceHashes.map((sourceHash) => [sourceHash.path, sourceHash]),
-      );
-      return (
-        result.status === 0 &&
-        /^[0-9a-f]{40}$/i.test(result.packet.gitSha) &&
-        typeof result.packet.gitStatus === 'string' &&
-        result.packet.inputArtifact.exists === true &&
-        requiredSourceHashes.every((path) => sourceHashes[path]?.exists === true) &&
-        result.markdown.includes('Git status:') &&
-        result.markdown.includes('## Source Hashes')
-      );
-    },
-  },
-  {
-    name: 'catalog QA report warns when generated from a dirty worktree',
-    result: runReport({ dirtyMarker: true }),
-    expect(result) {
-      return (
-        result.status === 0 &&
-        result.packet.gitStatus.includes(`.phase4-qa-report-smoke-dirty-${process.pid}.tmp`) &&
-        result.packet.warnings.includes(
-          'Catalog QA report generated with a dirty Git worktree; do not use it as final catalog-source evidence.',
-        ) &&
-        result.markdown.includes('Git status: DIRTY')
-      );
-    },
-  },
-  {
-    name: 'catalog QA report keeps duplicate barcode blockers',
-    result: runReport({
-      manifest: {
-        ...validManifest,
-        products: [
-          ...validManifest.products,
-          {
-            barcode: '1234567890123',
-            name: 'Duplicate Cleanser',
-            category: 'cleanser',
-            ingredientsText: 'Aqua',
-          },
-        ],
+  const cases = [
+    {
+      name: 'OBF fixture QA validates exact transform/source hashes',
+      result: runReport({ manifest: obfManifest, name: 'obf-valid' }),
+      expect(result) {
+        const paths = new Set(result.packet.sourceHashes.map((entry) => entry.path));
+        return (
+          result.status === 0 &&
+          result.packet.source === 'open_beauty_facts' &&
+          result.packet.blockers.length === 0 &&
+          result.packet.transformedPayloadContract?.contractId ===
+            'catalog-transformed-payload-v1' &&
+          result.packet.transformedPayloadSha256 === result.packet.recomputedTransformSha256 &&
+          paths.has('docs/phase-4/catalog-source-trust-registry.json') &&
+          paths.has('docs/phase-4/catalog-release-scope.json') &&
+          paths.has('supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql') &&
+          result.markdown.includes('## Source Hashes')
+        );
       },
-    }),
-    expect(result) {
-      return (
-        result.status === 0 &&
-        result.packet.blockers.includes('Duplicate barcodes: 1234567890123') &&
-        result.markdown.includes('Duplicate barcodes: 1234567890123')
-      );
     },
-  },
-];
+    {
+      name: 'CosIng fixture QA validates provenance and glossary scope',
+      result: runReport({ manifest: cosingManifest, name: 'cosing-valid' }),
+      expect(result) {
+        return (
+          result.status === 0 &&
+          result.packet.source === 'cosing' &&
+          result.packet.blockers.length === 0 &&
+          result.packet.totals.records === 3 &&
+          result.packet.transformedPayloadSha256 === result.packet.recomputedTransformSha256
+        );
+      },
+    },
+    {
+      name: 'QA report records dirty-worktree provenance without clearing launch',
+      result: runReport({ manifest: obfManifest, name: 'dirty', dirtyMarker: true }),
+      expect(result) {
+        return (
+          result.status === 0 &&
+          result.packet.gitStatus.includes(`.phase4-qa-report-smoke-dirty-${process.pid}.tmp`) &&
+          result.packet.warnings.some((warning) => warning.includes('dirty Git worktree')) &&
+          result.packet.launchClear === false &&
+          result.markdown.includes('Git status: DIRTY')
+        );
+      },
+    },
+    {
+      name: 'missing transformed-payload contract is a hard nonzero QA blocker',
+      result: runReport({
+        name: 'missing-payload-contract',
+        manifest: { ...obfManifest, transformedPayloadContract: undefined },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.blockers.includes(
+            'Import manifest transformed-payload contract is missing or unsupported.',
+          )
+        );
+      },
+    },
+    {
+      name: 'snapshot-date enrichment remains separately bound outside the payload digest',
+      result: runReport({
+        name: 'snapshot-date-drift',
+        manifest: {
+          ...obfManifest,
+          products: [
+            { ...obfManifest.products[0], sourceSnapshotDate: '2026-07-16' },
+            ...obfManifest.products.slice(1),
+          ],
+        },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.transformedPayloadSha256 === result.packet.recomputedTransformSha256 &&
+          result.packet.blockers.some((blocker) =>
+            blocker.includes('records violate the exact content/provenance contract'),
+          )
+        );
+      },
+    },
+    {
+      name: 'duplicate OBF barcode is a hard nonzero QA blocker',
+      result: runReport({
+        name: 'duplicate-obf',
+        manifest: {
+          ...obfManifest,
+          totals: {
+            ...obfManifest.totals,
+            acceptedProducts: obfManifest.totals.acceptedProducts + 1,
+          },
+          products: [...obfManifest.products, { ...obfManifest.products[0] }],
+        },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.blockers.some((blocker) => blocker.includes('Duplicate barcodes')) &&
+          result.packet.localQaClear === false &&
+          result.markdown.includes('Duplicate barcodes')
+        );
+      },
+    },
+    {
+      name: 'unsigned candidate manifest is a hard nonzero promotion blocker',
+      result: runReport({
+        name: 'candidate-obf',
+        manifest: {
+          ...obfManifest,
+          status: 'candidate_transform_not_approved',
+          importMode: 'candidate_hash_only',
+          transformerCandidate: { sha256: 'a'.repeat(64) },
+        },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.blockers.includes(
+            'Unsigned candidate transforms can never pass catalog QA or promotion.',
+          )
+        );
+      },
+    },
+    {
+      name: 'forged approved status is revalidated against current trust and release scope',
+      result: runReport({
+        name: 'forged-approved',
+        manifest: {
+          ...obfManifest,
+          status: 'approved_transform',
+          importMode: 'approved_offline_export',
+          sourceApproval: {
+            manifest: {},
+            manifestBytesBase64: Buffer.from('{}\n').toString('base64'),
+            manifestSha256: '0'.repeat(64),
+            releaseScopeSnapshot: {},
+            transformerSnapshot: {},
+            trustRegistrySnapshot: {},
+          },
+        },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.blockers.some((blocker) =>
+            /retained exact bytes|revalidation|trust-registry snapshot|release-scope snapshot/i.test(
+              blocker,
+            ),
+          )
+        );
+      },
+    },
+    {
+      name: 'prototype-like source names become blockers instead of inherited contracts',
+      result: runReport({
+        name: 'prototype-source',
+        manifest: { ...obfManifest, source: '__proto__' },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.blockers.includes('Import manifest source is unsupported.')
+        );
+      },
+    },
+    {
+      name: 'malformed CosIng record shapes become blockers instead of crashing QA',
+      result: runReport({
+        name: 'cosing-null-record',
+        manifest: { ...cosingManifest, ingredients: [null] },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.blockers.some((blocker) => blocker.includes('content/provenance contract'))
+        );
+      },
+    },
+  ];
 
-let failed = false;
-for (const testCase of cases) {
-  if (testCase.expect(testCase.result)) {
-    console.log(`OK ${testCase.name}`);
-    continue;
+  let failed = false;
+  for (const testCase of cases) {
+    if (testCase.expect(testCase.result)) {
+      console.log(`OK ${testCase.name}`);
+    } else {
+      failed = true;
+      console.error(`FAIL ${testCase.name}`);
+      console.error(output(testCase.result));
+      console.error(JSON.stringify(testCase.result.packet, null, 2));
+    }
   }
-
-  failed = true;
-  console.error(`FAIL ${testCase.name}`);
-  const output = `${testCase.result.stdout ?? ''}\n${testCase.result.stderr ?? ''}`.trim();
-  if (output) console.error(output);
+  if (failed) process.exitCode = 1;
+} finally {
+  rmSync(outDir, { force: true, recursive: true });
 }
-
-if (failed) process.exit(1);

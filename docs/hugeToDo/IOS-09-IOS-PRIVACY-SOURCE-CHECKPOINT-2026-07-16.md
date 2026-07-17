@@ -52,9 +52,10 @@ The [current EAS CLI reference](https://docs.expo.dev/eas/cli/) identifies CLI
 Expo's [build-configuration documentation](https://docs.expo.dev/build-reference/build-configuration/)
 describes the committed-input prompt. The retained EAS UUID, build-log hash,
 and `easGitCommitSha` must still match the source record; `requireCommit` alone
-is not archive provenance. Production auto-increment remains enabled, so the
-post-increment build number is captured as release evidence rather than falsely
-claimed to be source content.
+is not archive provenance. Production auto-increment is disabled: the reviewed
+positive-decimal build number is embedded by dynamic app config before the
+build-source commit is frozen, then independently cross-checked against the
+finished archive and App Store evidence.
 
 ## `react-native-view-shot` Manifest Repair
 

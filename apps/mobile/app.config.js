@@ -50,6 +50,8 @@ const RESERVED_PRODUCTION_HOSTNAME =
   /(?:^localhost$|\.localhost$|\.local$|\.test$|\.invalid$|\.example$)/;
 const EXPORT_CLASSIFICATIONS = new Set(['exempt', 'non_exempt']);
 const MAX_APPLE_EXPORT_COMPLIANCE_CODE_LENGTH = 1024;
+const IOS_BUILD_NUMBER_PATTERN = /^[1-9]\d{0,17}$/;
+const SUPPORT_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const variantSuffix =
   {
@@ -164,7 +166,7 @@ function normalizeDomain(value) {
   }
 
   if (
-    (url.protocol !== 'https:' && url.protocol !== 'http:') ||
+    url.protocol !== 'https:' ||
     url.username ||
     url.password ||
     url.search ||
@@ -326,6 +328,31 @@ function applyProductionExportCompliance(expo) {
   expo.ios.infoPlist.ITSEncryptionExportComplianceCode = complianceCode;
 }
 
+function applyProductionReleaseBinding(expo) {
+  if (!isProduction) return '';
+
+  const buildNumber = String(process.env.CATALOG_RELEASE_IOS_BUILD_NUMBER ?? '').trim();
+  if (!IOS_BUILD_NUMBER_PATTERN.test(buildNumber)) {
+    throw new Error(
+      'Production iOS config requires CATALOG_RELEASE_IOS_BUILD_NUMBER as the exact reviewed positive decimal build number.',
+    );
+  }
+
+  const supportEmail = String(process.env.EXPO_PUBLIC_SUPPORT_EMAIL ?? '').trim();
+  if (
+    !SUPPORT_EMAIL_PATTERN.test(supportEmail) ||
+    CONTROL_CHAR_RE.test(supportEmail) ||
+    placeholderEnvValue(supportEmail)
+  ) {
+    throw new Error(
+      'Production iOS config requires a final non-placeholder EXPO_PUBLIC_SUPPORT_EMAIL.',
+    );
+  }
+
+  expo.ios.buildNumber = buildNumber;
+  return supportEmail;
+}
+
 module.exports = () => {
   const expo = JSON.parse(JSON.stringify(base.expo));
   const baseScheme = expo.scheme;
@@ -372,6 +399,7 @@ module.exports = () => {
   assertProductionIdentity(expo, permissionCopy);
   assertProductionReviewClearance();
   applyProductionExportCompliance(expo);
+  const productionSupportEmail = applyProductionReleaseBinding(expo);
   if (finalDomain) {
     expo.ios.associatedDomains = Array.from(
       new Set([...(expo.ios.associatedDomains ?? []), `applinks:${finalDomain}`]),
@@ -396,6 +424,7 @@ module.exports = () => {
     publicLinkDomain: finalDomain,
     appStoreUrl,
     playStoreUrl,
+    supportEmail: productionSupportEmail,
     iosWidgetExtensionBuildEnabled,
   };
 

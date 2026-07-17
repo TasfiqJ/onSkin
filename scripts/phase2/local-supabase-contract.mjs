@@ -45,10 +45,10 @@ check(
   lockJson.packages?.['node_modules/supabase']?.version === '2.109.1',
   'Lockfile Supabase CLI version must match the exact package pin.',
 );
-check(migrations.length === 54, `Expected 54 migration files; found ${migrations.length}.`);
+check(migrations.length === 55, `Expected 55 migration files; found ${migrations.length}.`);
 check(
-  migrations.at(-1)?.startsWith('20260715000055_'),
-  'The latest migration must remain 20260715000055.',
+  migrations.at(-1)?.startsWith('20260717000056_'),
+  'The latest migration must remain 20260717000056.',
 );
 check(
   new Set(migrations.map((name) => name.slice(0, 14))).size === migrations.length,

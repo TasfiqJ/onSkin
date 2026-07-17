@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "evidenceId": "catalog-release-build-evidence-v1",
+  "status": "pending_eas_archive_and_app_store_evidence",
+  "releaseScope": null,
+  "trustRegistry": null,
+  "easBuild": null,
+  "archive": null,
+  "appStoreRelease": null,
+  "territories": ["US"],
+  "evidence": {
+    "resolvedExpoConfig": null,
+    "easBuildMetadata": null,
+    "archiveInspection": null,
+    "appStoreRelease": null
+  },
+  "verifiedAt": null,
+  "verifier": null,
+  "signature": null
+}

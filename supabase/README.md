@@ -231,7 +231,15 @@ zero-row/recapture evidence, unresolved terminal-event key-version handling,
 monitoring,
 containment, and forward-only rollback.
 
-Catalog lookup/search/report functions are Phase 4 infrastructure. Bulk product
-imports must use approved export artifacts and `scripts/phase4/*`, not API
-crawling. Open Beauty Facts live lookup stays disabled unless `OBF_API_ENABLED`
-and a final `OBF_USER_AGENT` are configured.
+Catalog lookup/search/report functions are Phase 4 infrastructure. They query
+only promoted OnSkin catalog rows; no user barcode, search, OCR text, or report
+is sent to Open Beauty Facts (OBF). OBF/CosIng candidate data may be transformed
+only from separately acquired offline artifacts whose exact SHA-256, source URL,
+snapshot date, permitted fields, and review decision are bound by an approval
+manifest. The import scripts perform no network I/O. `OBF_API_ENABLED`,
+`OBF_USER_AGENT`, and contribution flags have no runtime authority; OBF is not a
+recipient and correction reports remain inside OnSkin. Product Opener's
+[current API documentation](https://openfoodfacts.github.io/openfoodfacts-server/api/)
+identifies v3 as current and v2 as deprecated, but OnSkin calls neither.
+Counsel must classify the exact OBF component and approve any ODbL attribution,
+share-alike, or offer-of-data duties before production promotion.

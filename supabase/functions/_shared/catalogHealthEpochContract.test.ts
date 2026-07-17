@@ -11,7 +11,11 @@ const firstSensitiveOperations = {
     'await enforceRateLimit(',
     'await readLimitedJson(req, maxBodyBytes',
   ],
-  'catalog-report': ['const parsed = await requestBody(req)'],
+  'catalog-report': [
+    'const parsed = await requestBody(req)',
+    'const admin = createClient(supabaseUrl, serviceKey',
+    "await admin.rpc('submit_catalog_correction'",
+  ],
 } as const;
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -92,9 +96,7 @@ Deno.test(
         'const bodyHealthError = await requireActiveHealthProcessing(',
         'const barcode = await requestBarcode(req)',
         'const catalogHealthError = await requireActiveHealthProcessing(',
-        ".from('product_barcodes')",
-        'const productHealthError = await requireActiveHealthProcessing(',
-        ".from('products')",
+        'await admin.rpc(CATALOG_LOOKUP_RPC',
         'const persistHealthError = await requireActiveHealthProcessing(',
         ".from('catalog_lookup_events')",
         "return json({ result: 'matched'",
@@ -132,7 +134,7 @@ Deno.test('catalog search rechecks after body and admin work before persistence'
 });
 
 Deno.test(
-  'catalog report rechecks after body work and relies on atomic insert admission',
+  'catalog report rechecks after body work and relies on atomic service-RPC admission',
   async () => {
     const source = await Deno.readTextFile(new URL('../catalog-report/index.ts', import.meta.url));
     assertOrdered(
@@ -141,11 +143,21 @@ Deno.test(
         'const initialHealthError = await requireActiveHealthProcessing(',
         'const parsed = await requestBody(req)',
         'const persistHealthError = await requireActiveHealthProcessing(',
-        ".from('catalog_corrections')",
+        'const admin = createClient(supabaseUrl, serviceKey',
+        "await admin.rpc('submit_catalog_correction'",
         'noteSuppressedObfContributionRequest(correctionType)',
+        'const responseHealthError = await requireActiveHealthProcessing(',
         "return json({ result: 'reported'",
       ],
       'catalog report gate order',
+    );
+    assert(
+      source.includes('headers: { [HEALTH_PROCESSING_EPOCH_HEADER]: healthProcessingEpoch }'),
+      'catalog report must forward the exact caller epoch to the service RPC trigger.',
+    );
+    assert(
+      !source.includes("from('catalog_corrections')"),
+      'catalog report must not retain direct correction-table DML.',
     );
   },
 );
@@ -166,7 +178,7 @@ Deno.test(
     assertOrdered(
       source,
       [
-        ".from('product_barcodes')",
+        'await admin.rpc(CATALOG_LOOKUP_RPC',
         'const fallbackHealthError = await requireActiveHealthProcessing(',
         ".from('catalog_lookup_events')",
         "return json({ result: 'no_match', manualFallback: true });",

@@ -45,6 +45,7 @@ const launchContract = loadLaunchContract();
 const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const app = JSON.parse(read('apps/mobile/app.base.json')).expo;
 const eas = JSON.parse(read('apps/mobile/eas.json'));
+const appConfigSource = read('apps/mobile/app.config.js');
 const artifacts = {};
 const require = createRequire(import.meta.url);
 const appConfigPath = require.resolve('../../apps/mobile/app.config.js');
@@ -161,8 +162,14 @@ block(
 );
 block(
   errors,
-  eas?.build?.production?.autoIncrement === true,
-  'Production EAS build should auto-increment native build numbers.',
+  eas?.build?.production?.autoIncrement === false,
+  'Production EAS build must not auto-increment the reviewed native build number.',
+);
+block(
+  errors,
+  /CATALOG_RELEASE_IOS_BUILD_NUMBER/.test(appConfigSource) &&
+    /expo\.ios\.buildNumber\s*=\s*buildNumber/.test(appConfigSource),
+  'Production app config must embed the exact reviewed CATALOG_RELEASE_IOS_BUILD_NUMBER.',
 );
 block(
   errors,

@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import {
   block,
   evidenceFlagEnabled,
+  generatedEvidenceOutputPaths,
   gitStatusExcludingGeneratedEvidence,
   printResult,
   read,
@@ -235,6 +236,17 @@ for (const [value, expected] of [
     errors,
     evidenceFlagEnabled(value) === expected,
     `evidenceFlagEnabled(${JSON.stringify(value)}) must be ${expected}.`,
+  );
+}
+
+for (const path of [
+  'docs/phase-4/generated/cosing-catalog-qa-report.json',
+  'docs/phase-4/generated/cosing-catalog-qa-report.md',
+]) {
+  block(
+    errors,
+    generatedEvidenceOutputPaths.includes(path),
+    `generatedEvidenceOutputPaths must include ${path}.`,
   );
 }
 

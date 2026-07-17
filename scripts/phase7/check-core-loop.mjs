@@ -140,9 +140,10 @@ const humanE2eManifestBuilder = read('scripts/e2e/human-e2e-manifest.mjs');
 require(/function gitStatusExcludingGeneratedPacket\(\)/.test(qaPacketBuilder) &&
   /core-loop-qa-packet\.json/.test(qaPacketBuilder) &&
   /core-loop-qa-packet\.md/.test(qaPacketBuilder) &&
+  /gitStatusExcludingGeneratedEvidence\(packetOutputPaths\)/.test(qaPacketBuilder) &&
   /gitStatus = gitStatusExcludingGeneratedPacket\(\)/.test(
     qaPacketBuilder,
-  ), 'Phase 7 core-loop QA packet must ignore only its own generated outputs when recording Git status.');
+  ), 'Phase 7 core-loop QA packet must ignore central generated evidence and its own outputs when recording Git status.');
 require(/Phase 7 core-loop QA packet generated with a dirty Git worktree/.test(qaPacketBuilder) &&
   /Git status: \$\{packet\.gitStatus \? 'DIRTY' : 'clean'\}/.test(
     qaPacketBuilder,

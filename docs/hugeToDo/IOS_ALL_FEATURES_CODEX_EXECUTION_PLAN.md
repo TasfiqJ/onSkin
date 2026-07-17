@@ -348,17 +348,17 @@ shadow diff, temporary types, 20/20 focused event/lifecycle Edge tests, and the
 
 ## 14. Catalog, Shelf, Camera, Barcode, and Native OCR
 
-| ID     | Owner | Codex deliverable                                                                                                           | Acceptance                                                                      |
-| ------ | ----- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| CAT-01 | C/R   | Complete OBF/CosIng licensing, attribution, image-rights, contribution, and correction posture                              | Approved source memos and production identifiers exist                          |
-| CAT-02 | C     | Build reviewed import, normalization, provenance, dedupe, QA, correction, and rollback pipelines                            | Fixture data is excluded; every production record is traceable                  |
-| CAT-03 | C     | Curate a production launch catalog from representative beta shelves                                                         | Catalog reaches signed coverage/quality targets                                 |
-| CAT-04 | C     | Complete search, barcode, wrong-match, no-match, manual fallback, and catalog-report flows                                  | Every failure has a safe recovery and owner-scoped report                       |
-| CAT-05 | C     | Implement real iOS-native OCR with editable confidence-aware output                                                         | Clear, curved, tiny, multilingual, and glare-heavy labels pass real-device QA   |
-| CAT-06 | C     | Complete camera permission, denied/permanently-denied, Settings handoff, mount/capture failure, retry, and offline behavior | Physical iPhone evidence passes                                                 |
-| CAT-07 | C/R   | Complete reviewed Shelf freshness, PAO, printed expiry, source precedence, provenance, and unknown-state behavior           | Chemistry/legal review and live data evidence pass                              |
-| CAT-08 | C     | Add catalog/admin correction tooling and operational queues                                                                 | Authorized operators can review sources/reports without direct database editing |
-| CAT-09 | C     | Measure search/barcode/OCR completion, misses, wrong matches, unknown tokens, latency, and support impact                   | Dashboards and thresholds are production-ready                                  |
+| ID     | Owner | Codex deliverable                                                                                                                    | Acceptance                                                                                                                                               |
+| ------ | ----- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CAT-01 | C/R   | Complete OBF/CosIng exact-artifact, attribution, image-rights, database-classification, no-runtime-recipient, and correction posture | Counsel-approved source decisions and production artifact identifiers exist; imports stay offline/hash-bound and runtime lookup/contribution stay absent |
+| CAT-02 | C     | Build reviewed import, normalization, provenance, dedupe, QA, correction, and rollback pipelines                                     | Fixture data is excluded; every production record is traceable                                                                                           |
+| CAT-03 | C     | Curate a production launch catalog from representative beta shelves                                                                  | Catalog reaches signed coverage/quality targets                                                                                                          |
+| CAT-04 | C     | Complete search, barcode, wrong-match, no-match, manual fallback, and catalog-report flows                                           | Every failure has a safe recovery and owner-scoped report                                                                                                |
+| CAT-05 | C     | Implement real iOS-native OCR with editable confidence-aware output                                                                  | Clear, curved, tiny, multilingual, and glare-heavy labels pass real-device QA                                                                            |
+| CAT-06 | C     | Complete camera permission, denied/permanently-denied, Settings handoff, mount/capture failure, retry, and offline behavior          | Physical iPhone evidence passes                                                                                                                          |
+| CAT-07 | C/R   | Complete reviewed Shelf freshness, PAO, printed expiry, source precedence, provenance, and unknown-state behavior                    | Chemistry/legal review and live data evidence pass                                                                                                       |
+| CAT-08 | C     | Add catalog/admin correction tooling and operational queues                                                                          | Authorized operators can review sources/reports without direct database editing                                                                          |
+| CAT-09 | C     | Measure search/barcode/OCR completion, misses, wrong matches, unknown tokens, latency, and support impact                            | Dashboards and thresholds are production-ready                                                                                                           |
 
 ## 15. Reviewed Guidance, Core Loop, and Recommendations
 
@@ -555,7 +555,14 @@ fails closed without corrupting data:
 - Creator links and paid measurement.
 - Widgets/Live Activities publication.
 - Review prompt.
-- OBF live API/contribution.
+- Catalog source-artifact promotion/import.
+
+OBF request-time API access and external contribution are excluded from the
+launch architecture, not hidden behind a kill switch. Product Opener documents
+API v3 as current and v2 as deprecated, but OnSkin calls neither. Any future
+proposal to add OBF as a runtime recipient is a new privacy, legal, architecture,
+and release decision. Counsel must first classify the exact OBF database use and
+approve the resulting ODbL obligations.
 
 A kill switch is an incident control, not a way to submit an unfinished feature.
 Every feature must first pass its full launch gate while enabled.

@@ -673,7 +673,7 @@
       "id": "IOS-08",
       "status": "blocked",
       "blockedBy": ["IOS-07"],
-      "nextAction": "Run EAS CLI 21.0.1 with committed input and the exact production profile pinned to macos-tahoe-26.4-xcode-26.4; retain the build UUID, Git SHA, full log, post-increment build number, and resolved environment, then re-check Expo's inventories and Apple's upload requirement on the build date.",
+      "nextAction": "Manually advance and review the positive-decimal iOS build number, embed it through production app config with EAS auto-increment disabled, then run EAS CLI 21.0.1 from committed input using the production profile pinned to macos-tahoe-26.4-xcode-26.4; retain the build UUID, Git SHA, full log, exact resolved environment/build number, and re-check Expo's inventories and Apple's upload requirement on the build date.",
       "evidenceRefs": [
         "apps/mobile/eas.json",
         "docs/phase-5/native-build-runbook.md",
@@ -1047,10 +1047,31 @@
     },
     {
       "id": "CAT-01",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["DB-03", "BRAND-06"],
-      "nextAction": "Complete and capture acceptance evidence: Complete OBF/CosIng licensing, attribution, image-rights, contribution, and correction posture",
-      "evidenceRefs": []
+      "nextAction": "Obtain the external root-signed reviewer registry and approved fixed US scope; manually advance the reviewed iOS build number and create clean active/approved/pending build commit A; build A without EAS auto-increment; bind its real EAS/archive/App Store evidence in evidence-only descendant B; obtain dual-signed exact OBF/CosIng approvals; run zero-warning source QA and hosted migration-0056 serving verification. Runtime source transport, images, and external contribution remain outside launch scope.",
+      "evidenceRefs": [
+        "docs/phase-4/README.md",
+        "docs/phase-4/catalog-source-release-runbook.md",
+        "docs/phase-4/catalog-source-policy.json",
+        "docs/phase-4/catalog-source-trust-registry.json",
+        "docs/phase-4/catalog-release-scope.json",
+        "docs/phase-4/catalog-release-build-evidence.json",
+        "docs/phase-4/obf-source-approval.template.json",
+        "docs/phase-4/cosing-source-approval.template.json",
+        "scripts/phase4/catalog-source-policy-audit.mjs",
+        "scripts/phase4/source-policy.mjs",
+        "scripts/phase4/source-policy.test.mjs",
+        "scripts/phase4/import-obf-snapshot.mjs",
+        "scripts/phase4/import-cosing-dictionary.mjs",
+        "scripts/phase4/catalog-qa-report.mjs",
+        "docs/phase-4/catalog-source-memo-open-beauty-facts.md",
+        "docs/phase-4/catalog-source-memo-cosing.md",
+        "docs/phase-4/odbl-compliance-memo.md",
+        "docs/phase-4/first-curated-product-batch.md",
+        "supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql",
+        "supabase/tests/database/catalog_serving_gate.test.sql"
+      ]
     },
     {
       "id": "CAT-02",
