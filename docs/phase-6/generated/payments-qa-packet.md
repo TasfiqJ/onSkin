@@ -1,7 +1,7 @@
 # Generated Phase 6 Payments QA Packet
 
-Generated at: 2026-07-16T20:12:28.186Z
-Git SHA: a5d531924556dc05f9607fe0b398d4d994de51b8
+Generated at: 2026-07-17T00:25:30.809Z
+Git SHA: ddaf13358fd1b38db645eb574e40df2b2d903a04
 Git status: clean
 Required inputs committed and byte-matched to HEAD: yes
 Tracked secret environment files absent: yes
@@ -68,9 +68,9 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | Path | Status | Bytes | SHA-256 |
 | --- | --- | --- | --- |
 | .env.example | present | 25653 | 668f23c9f7fbb2098868ed170f1352eafdda85184256297701a2458736ca71ad |
-| package.json | present | 30739 | fd993bc9293613b455acb9aa6df2d0ce195cbe8fd91b422176e2b011886b5b57 |
-| package-lock.json | present | 557144 | a83a88fbf2310d2457e3e31b85fedaa54fe7e5e354ca02d9700e51229526835f |
-| apps/mobile/package.json | present | 2911 | 029c87cc99ed0e8cf775d9ade4172d2d099e9a9505de2b8f4c69669d9a20147d |
+| package.json | present | 31779 | 85289af8e3524cee2cdafba5c29813017a2fd3a9b1ac41e05d99e5e116340f5a |
+| package-lock.json | present | 557143 | 0b817f6d89ea2b318e59d3bbc83203047ade24ab7496ba6ff2c91ff14356f850 |
+| apps/mobile/package.json | present | 2897 | c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80 |
 | apps/mobile/eas.json | present | 1477 | 54ff13dfed579d16f30e1b7ff095bde79bee8bd4280150090e1da66e1ba4cbb6 |
 | supabase/functions/deno.lock | present | 2282 | 0f8de63ed60182b56865cfa47c666866b631ed4681c79345ec31a720565d1a3a |
 | docs/hugeToDo/launch-contract.json | present | 2935 | 43bea3c862d7e36c7e8d744b87bcf21f65d721500e71e1f1cfa7492fbb14ee4b |
@@ -155,9 +155,9 @@ Strict completion requires real RevenueCat offering review and store restore evi
 | scripts/phase9/lib.mjs | present | 24487 | 0eb82d148d6cc293b6cea56baecb0f24172e04e548a57d8815e951eb6ce66ff4 |
 | docs/HUMAN_SIMULATED_E2E_TESTING.md | present | 10431 | db247b2acad570745d13b73913e3a18bef5ba9e4ea8d682322adfac7daa131d8 |
 | docs/E2E_TESTING_CHECKLIST.md | present | 3632 | 1f37a8c5f6565073dfc4998dd2a46d6c3fbe6cba8f8dc4662039321af75be95f |
-| docs/USER_FLOW_TREE.md | present | 382133 | ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8 |
-| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 677501cf58901f9262aeb32207105bc3ace9326b072226ed9387107daf2780ab |
-| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | 66104c7cfc4a68eff95c29211f07edb74200f99b036cd2088b7723ef3a555c75 |
+| docs/USER_FLOW_TREE.md | present | 398587 | 14be278a1f1d0a14d1d5d5ffffb0fe82fdc89f38479e82d9b3b8606e9cea9a1f |
+| docs/e2e/generated/human-e2e-manifest.json | present | 48121 | 91499428e76938d01826dd760888c65129b5bde37f4c8bac98dfdc7915e8585f |
+| docs/e2e/generated/human-e2e-manifest.md | present | 19687 | c662775245067ea876359602b379caa33c30fdc1f31b6452ac750e2b27cfe4fd |
 | docs/phase-6/payments-runbook.md | present | 11302 | 676492b480b32f12c6fe829962f33a3f31bd597f2e2f4a7aa319e63e0f1da821 |
 | docs/phase-6/payments-qa-checklist.md | present | 7870 | 847c0775f45ae6eb6afcc78acc33d38ca128e14db1d32723cac7003d5d6fd2d5 |
 | docs/phase-6/phase-6-exit-review.md | present | 4798 | 85e5e80e3d3b14d12cbeae0a4abdbf7a66eba1128b527705bf076a6957fbba28 |
