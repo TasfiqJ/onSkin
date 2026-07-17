@@ -48,22 +48,24 @@ staging. It contains no customer or product content.
 | Freeze rollout                              | yes                                               |
 | Compare current/target runtime fingerprints | yes                                               |
 | Rollback target previously reviewed         | yes                                               |
-| EAS Update eligible                         | no; native change and runtime mismatch            |
+| EAS Update eligible                         | no; accepted release policy is store-only         |
 | Selected path                               | halt expansion and use binary/store hotfix        |
 | Local exercise                              | pass                                              |
 | Incident closure                            | withheld pending independent live recovery signal |
 
 The smoke matrix also proves:
 
-- a reviewed JS-only defect with an exact runtime-fingerprint match selects
-  `eas_update_rollback`;
+- a reviewed JS-only defect with an exact runtime-fingerprint match still
+  selects `binary_halt_hotfix` under the accepted store-only policy;
 - a privacy incident selects `privacy_containment_and_review`, not a client
   rollback;
 - a content-bearing `email` field is rejected.
 
 The runbook adds the same explicit server, payment, privacy, artifact, and
-backend containment boundaries, plus closure criteria and the native-vs-OTA
-fingerprint gate already required by the Phase 11 drill.
+backend containment boundaries, plus closure criteria and the store-binary
+recovery gate required by the accepted update-delivery policy. This corrects
+the earlier theoretical EAS Update branch, which was not a configured release
+capability.
 
 ## Honest Acceptance Boundary
 
@@ -74,8 +76,7 @@ exercise passes and is regression-tested. OPT-212 is still `implemented`, not
 - named primary and backup responders;
 - validated live data sources and dashboard URLs;
 - pre-approved production thresholds and refresh cadence;
-- staging/production channel, update, function, migration, or binary rollback
-  identifiers;
+- staging/production function, migration, or binary rollback identifiers;
 - an independent live recovery signal.
 
 The exercise correctly ends as `complete-with-live-monitoring-blocker` instead
@@ -95,7 +96,8 @@ of inventing those facts.
 
 - `node scripts/optimization/maintenance-incident-exercise.mjs --json` — PASS.
 - `node scripts/optimization/maintenance-incident-exercise-smoke.mjs` — PASS
-  for native, compatible JS, privacy, and forbidden-content scenarios.
+  for store-only native and compatible-JS recovery, privacy, policy drift, and
+  forbidden-content scenarios.
 - Focused maintenance exercise — 1 file / 1 test PASS.
 - Full root tests — 327 files / 3,963 tests PASS.
 - Root typecheck — 2 workspaces PASS.

@@ -38,7 +38,7 @@ requires a separate reviewed schema and privacy decision.
 
 | ID                    | Maintenance decision                                | Required external wiring                                    |
 | --------------------- | --------------------------------------------------- | ----------------------------------------------------------- |
-| `release_health`      | halt/continue rollout; native vs JS recovery        | Sentry/App Store source, links, owners, cadence, thresholds |
+| `release_health`      | halt/continue rollout; store-binary recovery        | Sentry/App Store source, links, owners, cadence, thresholds |
 | `artifact_governance` | accept/reject bundle, signed size, and device gates | CI/signed artifact/device sources and approved budgets      |
 | `data_rights`         | contain deletion/export/withdrawal failures         | Supabase/support aggregate source and privacy owner         |
 | `payment_entitlement` | contain restore/webhook/projection failures         | RevenueCat/store/Supabase sources and revenue owner         |
@@ -52,7 +52,7 @@ For P0/P1:
 2. Record incident ID, severity, environment, release, build, source SHA,
    runtime fingerprint, and content-free error enum.
 3. Freeze rollout/marketing expansion.
-4. Preserve immutable build/update/function/migration identifiers.
+4. Preserve immutable build/function/migration identifiers.
 5. Select the matching dashboard and confirm its source is current.
 6. Notify privacy, revenue, clinical/claims, or store roles when the issue class
    requires them.
@@ -62,18 +62,17 @@ do not downgrade the incident because a signal is missing.
 
 ## Rollback Decision
 
-An EAS Update rollback is eligible only when all are true:
+V1 uses store-bundled client releases. EAS Update is disabled and is not an
+incident-recovery path, including for a JS/assets-only change with an identical
+runtime fingerprint. Halt expansion and use a reviewed binary/store hotfix for
+client defects. The fingerprint remains useful for identifying the exact
+artifact and migration boundary.
 
-- the defect and repair are JS/assets only;
-- current and target runtime fingerprints are exact matches;
-- no plugin, entitlement, permission, privacy manifest, export declaration,
-  WidgetKit/ActivityKit, or native dependency changed;
-- the rollback target was previously reviewed;
-- the production channel/update IDs are retained.
-
-Otherwise halt expansion and use the binary/store hotfix path. Server, payment,
-and privacy incidents use their explicit feature/function/provider containment
-paths; a client OTA must not disguise a server or native rollback.
+Server, payment, and privacy incidents use their explicit
+feature/function/provider containment paths; a client binary must not disguise
+a server-side or provider rollback. Any future EAS Update adoption must first
+complete the independent reactivation gate in
+`docs/UPDATE_DELIVERY_POLICY.md`.
 
 ## Dashboard-Specific Containment
 
@@ -81,7 +80,7 @@ paths; a client OTA must not disguise a server or native rollback.
 
 - Halt the affected ring.
 - Check build adoption and crash/error enums without event content.
-- Apply the runtime-fingerprint decision above.
+- Confirm the store-only policy and preserve the runtime fingerprint as artifact identity.
 - Re-run startup, privacy, payment, data-rights, owner-isolation, and affected
   flow smoke on the recovery artifact.
 
@@ -121,8 +120,9 @@ communication is ready, and a written review owns follow-up changes.
 
 The local OPT-212 exercise intentionally finishes as
 `complete-with-live-monitoring-blocker`: it proves the decision mechanics and
-correctly refuses OTA for a native/runtime-incompatible crash, but it cannot
-confirm recovery without live sources and named responders.
+correctly refuses OTA for both native and compatible-JS client incidents under
+the accepted store-only policy, but it cannot confirm recovery without live
+sources and named responders.
 
 Run locally:
 

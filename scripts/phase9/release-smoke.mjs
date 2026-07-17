@@ -27,6 +27,8 @@ const env = envSnapshot();
 const exampleEnv = envFile('.env.example');
 const launchContract = loadLaunchContract();
 const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
+const appBase = JSON.parse(read('apps/mobile/app.base.json')).expo;
+const easConfig = JSON.parse(read('apps/mobile/eas.json'));
 
 const phase7EvidenceKeys = [
   'PHASE7_BRAND_READY',
@@ -280,9 +282,16 @@ if (androidReleaseRequired) {
 }
 block(
   errors,
-  has('apps/mobile/eas.json', /"production"/) &&
-    has('apps/mobile/eas.json', /"channel":\s*"production"/),
-  'eas.json must define a production channel.',
+  appBase.updates?.enabled === false && appBase.updates?.checkAutomatically === 'NEVER',
+  'app.base.json must enforce store-only update delivery.',
+);
+block(
+  errors,
+  !Object.hasOwn(appBase.updates ?? {}, 'url') &&
+    Object.values(easConfig.build ?? {}).every(
+      (profile) => !Object.hasOwn(profile ?? {}, 'channel'),
+    ),
+  'Store-only EAS profiles must not declare an update URL or channel.',
 );
 block(
   errors,

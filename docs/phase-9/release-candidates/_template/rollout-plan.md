@@ -7,7 +7,7 @@
 | Support owner               | TBD   | TBD      |
 | Privacy/legal owner         | TBD   | TBD      |
 | Hotfix publisher            | TBD   | TBD      |
-| OTA rollback decision       | TBD   | TBD      |
+| Store-only delivery check   | TBD   | TBD      |
 | Binary hotfix decision      | TBD   | TBD      |
 | Store halt procedure        | TBD   | TBD      |
 | Feature flags/kill switches | TBD   | TBD      |

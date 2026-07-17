@@ -316,3 +316,32 @@ Use this format for every significant product, architecture, pricing, privacy, o
   Full dark mode requires a new reviewed semantic-token, route, Dynamic Type,
   contrast, VoiceOver, screenshot, and rollback matrix.
 - Status: Accepted.
+
+## Release Delivery Decisions
+
+### 2026-07-17 - Ship Client Changes Only In Store-Bundled Binaries
+
+- Decision: V1 client JavaScript, assets, native code, plugins, permissions,
+  entitlements, privacy configuration, and app configuration ship only in
+  reviewed App Store binaries. EAS Build and Submit remain supported, while
+  EAS Update is disabled, is not a direct mobile dependency, has no update URL
+  or build-profile channel, and is not an incident rollback path. The
+  `runtimeVersion` fingerprint remains an artifact and migration compatibility
+  identity, not proof of OTA capability.
+- Alternatives: fully adopt EAS Update with governed runtime compatibility,
+  immutable update identity, staged rollout, rollback/forward-fix exercises,
+  prior-runtime migration testing, named ownership, and production monitoring;
+  or leave ambiguous channel and OTA claims in release documentation.
+- Criteria: shipped behavior must match repository configuration; recovery must
+  not bypass store-reviewed privacy/native changes; encrypted-storage and
+  native migrations must remain binary-compatible; no unavailable capability
+  may appear in launch, incident, or compliance claims.
+- Evidence: `docs/UPDATE_DELIVERY_POLICY.md`, `docs/ARCHITECTURE.md` A-007,
+  `apps/mobile/app.base.json`, `apps/mobile/eas.json`, and
+  `scripts/optimization/store-only-release-audit.mjs`.
+- Risk: client fixes require a new binary and store rollout, so incident
+  response must emphasize rollout halt, server/flag/provider containment when
+  appropriate, and a reviewed hotfix. Future EAS Update adoption requires the
+  complete reactivation gate in `docs/UPDATE_DELIVERY_POLICY.md` and cannot be
+  inferred from the fingerprint policy.
+- Status: Accepted.

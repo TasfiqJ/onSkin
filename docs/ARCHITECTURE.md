@@ -64,6 +64,21 @@ This decision is based on product fit and current repo momentum, not loyalty to 
   moderation, reliability, and operational dependencies.
 - Status: active.
 
+### A-007: Store-Bundled Client Update Delivery
+
+- Decision: V1 client code and assets ship only inside reviewed App Store
+  binaries. EAS Build/Submit remain build and distribution tools; EAS Update is
+  disabled, uninstalled as a direct dependency, and unavailable for incident
+  rollback. Runtime fingerprints remain artifact/migration compatibility
+  identities, not OTA capability. `docs/UPDATE_DELIVERY_POLICY.md` supersedes
+  older conditional or historical OTA instructions.
+- Criteria: release behavior must match installed native dependencies and
+  resolved configuration; no channel, rollback, or recovery capability may be
+  claimed without a signed staging drill and named operational ownership.
+- Risk: JavaScript/asset hotfixes require a new App Store binary and review.
+  Reactivation requires the complete gate in the update-delivery policy.
+- Status: active.
+
 ### A-005: One Fail-Closed Pregnancy-Safety Profile Contract
 
 - Decision: the encrypted local skin profile is the V1 authority for pregnancy/breastfeeding status, and it can be read or changed only with a granted consent record whose version and SHA-256 text hash match the current health-data copy. Malformed or unreadable local profile/consent records are preserved and fail closed; they never trigger a server fallback. When no local profile exists, the newest server profile may supply non-safety axes/goals, but its pregnancy status is always treated as unknown because a local V1 edit may be newer. Shelf, Plan, scheduler, Today, recommendations, and conflict explanations consume the shared `ProfileBits` reader. Only a successfully read explicit local `none` clears caution; affirmative, prefer-not, unknown, missing, and unavailable states remain cautious without an inferred pregnancy claim. Exclusions are derived from the launch-gated docs/02 safety rules, not a parallel table: production accepts only rules carrying recorded review metadata, while development/staging can exercise starter rules for review. Eligible reviewed rules remove retinoids and hydroquinone and remove BHA unless every threshold-bearing active percentage is unambiguously tag-associated and confirmed low, before sequence, cadence, cycle, ramp, replacement recommendations, or Today. If the separate cadence review gate is closed, all treatment/exfoliant placement is withheld instead of becoming an unassigned daily step. Writes persist locally first, disable competing selection input while pending, and invalidate every dependent query.

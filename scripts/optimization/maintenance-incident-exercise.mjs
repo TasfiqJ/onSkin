@@ -67,6 +67,13 @@ export function validateDashboardContract(input) {
   if (contract.status !== 'definition-only') {
     throw new Error('Unreviewed contract must remain definition-only.');
   }
+  const releasePolicy = requireObject(contract.releasePolicy, 'contract.releasePolicy');
+  if (
+    releasePolicy.clientDelivery !== 'store-build-only' ||
+    releasePolicy.easUpdateEnabled !== false
+  ) {
+    throw new Error('Maintenance contract must enforce the accepted store-only policy.');
+  }
   const privacy = requireObject(contract.privacy, 'contract.privacy');
   if (privacy.contentFree !== true) throw new Error('Dashboard contract must be content-free.');
   if (!Array.isArray(privacy.forbiddenFields) || privacy.forbiddenFields.length === 0) {
@@ -143,7 +150,8 @@ export function exerciseIncident(contractInput, scenarioInput) {
   if (target.reviewed !== true) throw new Error('Rollback target must be previously reviewed.');
   const sameRuntime = current.runtimeFingerprint === target.runtimeFingerprint;
   const jsOnly = issueClass === 'js_bug' && current.changeClass === 'js';
-  const otaAllowed = jsOnly && sameRuntime;
+  const easUpdateEnabled = contractInput.releasePolicy.easUpdateEnabled;
+  const otaAllowed = easUpdateEnabled && jsOnly && sameRuntime;
   const rollbackPath =
     issueClass === 'server_failure'
       ? 'server_function_or_flag_rollback'
@@ -177,6 +185,7 @@ export function exerciseIncident(contractInput, scenarioInput) {
       rolloutFrozen: true,
       runtimeFingerprintCompared: true,
       rollbackTargetReviewed: true,
+      storeOnlyPolicyEnforced: !easUpdateEnabled,
       otaRejectedWhenIneligible: !otaAllowed,
       expectedDecisionMatched: true,
       liveRecoverySignalAvailable: false,

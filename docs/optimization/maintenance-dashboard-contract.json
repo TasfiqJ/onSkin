@@ -1,6 +1,10 @@
 {
   "schemaVersion": 1,
   "status": "definition-only",
+  "releasePolicy": {
+    "clientDelivery": "store-build-only",
+    "easUpdateEnabled": false
+  },
   "privacy": {
     "contentFree": true,
     "allowedDimensions": [

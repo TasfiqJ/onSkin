@@ -28,12 +28,13 @@ jsScenario.incidentId = 'OPT212-DRILL-002';
 jsScenario.issueClass = 'js_bug';
 jsScenario.currentArtifact.changeClass = 'js';
 jsScenario.rollbackTarget.runtimeFingerprint = jsScenario.currentArtifact.runtimeFingerprint;
-jsScenario.expectedDecision.otaAllowed = true;
-jsScenario.expectedDecision.rollbackPath = 'eas_update_rollback';
+jsScenario.expectedDecision.otaAllowed = false;
+jsScenario.expectedDecision.rollbackPath = 'binary_halt_hotfix';
 const jsResult = exerciseIncident(contract, jsScenario);
-assert.equal(jsResult.decision.otaAllowed, true);
-assert.equal(jsResult.decision.rollbackPath, 'eas_update_rollback');
-console.log('OK reviewed JS-only same-runtime incident selects EAS Update rollback');
+assert.equal(jsResult.decision.otaAllowed, false);
+assert.equal(jsResult.decision.rollbackPath, 'binary_halt_hotfix');
+assert.equal(jsResult.checks.storeOnlyPolicyEnforced, true);
+console.log('OK store-only policy keeps same-runtime JS incident on binary hotfix path');
 
 const privacyScenario = structuredClone(scenario);
 privacyScenario.incidentId = 'OPT212-DRILL-003';
@@ -56,3 +57,11 @@ const unsafeScenario = structuredClone(scenario);
 unsafeScenario.email = 'synthetic@example.invalid';
 assert.throws(() => exerciseIncident(contract, unsafeScenario), /forbidden field/);
 console.log('OK content-bearing incident fields fail closed');
+
+const updateEnabledContract = structuredClone(contract);
+updateEnabledContract.releasePolicy.easUpdateEnabled = true;
+assert.throws(
+  () => validateDashboardContract(updateEnabledContract),
+  /accepted store-only policy/,
+);
+console.log('OK maintenance contract rejects unreviewed EAS Update enablement');

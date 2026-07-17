@@ -8,11 +8,11 @@
 
 ## 2. Immediate containment
 
-- Disable affected feature flag or release channel.
+- Halt the affected store rollout or disable the matching reviewed feature flag.
 - For RevenueCat webhook abuse: remove webhook endpoint or rotate `REVENUECAT_WEBHOOK_AUTH` and `REVENUECAT_WEBHOOK_SIGNING_SECRET`.
 - For cloud photo/Ask/vendor leak: disable cloud feature flags and block related Edge Function routes.
 - For RLS/storage exposure: revoke public access, patch migration/policy, and pause production traffic.
-- For app release issue: use EAS Update only if the change is JS-safe for the current runtime; otherwise submit emergency native update.
+- For an app release issue: halt expansion and submit a reviewed emergency store binary. EAS Update is not enabled for V1.
 
 ## 3. Secret rotation
 

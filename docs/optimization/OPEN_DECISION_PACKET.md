@@ -117,19 +117,22 @@ Safe independent work remains listed so an open choice does not stop unrelated c
 
 ## OPT-DEC-006 — EAS Update Versus Store-Only Releases
 
-- Choice required: adopt EAS Update with runtime/version/rollback ownership or remove/correct OTA
-  claims and operate store-only releases.
-- Recommendation: use store-only releases until an owner approves runtime compatibility, migration
-  rules, staged rollout, rollback/forward-fix drills, and incident response.
+- Status: resolved and accepted on 2026-07-17.
+- Decision: use store-bundled client releases only for V1 and remove/correct
+  active OTA claims. EAS Update is disabled, is not a direct dependency, has no
+  URL/channel configuration, and is not an incident-recovery path.
+- Authoritative policy: `docs/UPDATE_DELIVERY_POLICY.md`,
+  `docs/ARCHITECTURE.md` A-007, and `docs/DECISIONS.md`.
 - Alternatives: fully governed EAS Update with immutable runtime versions and a tested rollback
   channel.
 - User impact: delivery speed versus binary/runtime consistency and rollback confidence.
 - Privacy/security impact: OTA must not bypass store-reviewed native privacy/config changes or load
   JavaScript incompatible with encrypted storage migrations.
-- Migration/rollback: no OTA across incompatible storage/native boundaries; every adopted update
-  needs a previous-runtime install/upgrade/rollback test.
-- Safe work now: signed store-build planning and correcting documentation that implies unavailable
-  OTA behavior.
+- Migration/rollback: all client recovery uses a reviewed store binary. A
+  future EAS Update proposal must pass the seven reactivation gates in the
+  authoritative policy, including previous-runtime install/upgrade/rollback
+  tests.
+- Verification: `node scripts/optimization/store-only-release-audit.mjs`.
 
 ## OPT-DEC-007 — Theme Scope
 

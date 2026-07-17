@@ -27,6 +27,12 @@ const launchContract = loadLaunchContract();
 const androidReleaseRequired = isReleasePlatformRequired('android', launchContract);
 const app = JSON.parse(read('apps/mobile/app.base.json')).expo;
 const eas = JSON.parse(read('apps/mobile/eas.json'));
+const mobilePackage = JSON.parse(read('apps/mobile/package.json'));
+const directMobileDependencies = {
+  ...(mobilePackage.dependencies ?? {}),
+  ...(mobilePackage.devDependencies ?? {}),
+  ...(mobilePackage.optionalDependencies ?? {}),
+};
 const artifacts = {};
 const require = createRequire(import.meta.url);
 const appConfigPath = require.resolve('../../apps/mobile/app.config.js');
@@ -74,7 +80,23 @@ block(errors, Boolean(app.version), 'App version is missing.');
 block(
   errors,
   app.runtimeVersion?.policy === 'fingerprint',
-  'runtimeVersion must use the fingerprint policy for native-compatible OTA updates.',
+  'runtimeVersion must use the fingerprint policy for artifact and migration compatibility.',
+);
+block(errors, app.updates?.enabled === false, 'Store-only builds must set updates.enabled=false.');
+block(
+  errors,
+  app.updates?.checkAutomatically === 'NEVER',
+  'Store-only builds must set updates.checkAutomatically=NEVER.',
+);
+block(
+  errors,
+  !Object.hasOwn(app.updates ?? {}, 'url'),
+  'Store-only builds must not configure an update URL.',
+);
+block(
+  errors,
+  !Object.hasOwn(directMobileDependencies, 'expo-updates'),
+  'Store-only builds must not include expo-updates as a direct dependency.',
 );
 block(errors, Boolean(app.ios?.bundleIdentifier), 'iOS bundle identifier is missing.');
 if (androidReleaseRequired) {
@@ -92,8 +114,8 @@ block(
 );
 block(
   errors,
-  eas?.build?.production?.channel === 'production',
-  'Production EAS build must use production channel.',
+  !Object.hasOwn(eas?.build?.production ?? {}, 'channel'),
+  'Store-only production EAS builds must not declare an update channel.',
 );
 block(
   errors,
@@ -122,8 +144,8 @@ for (const variant of variants) {
   if (!profile) continue;
   block(
     errors,
-    profile.channel === variant,
-    `EAS ${variant} build must publish to ${variant} channel.`,
+    !Object.hasOwn(profile, 'channel'),
+    `Store-only EAS ${variant} build must not declare an update channel.`,
   );
   block(
     errors,
@@ -193,6 +215,16 @@ for (const variant of variants) {
     errors,
     config.extra?.appEnvironment === variant,
     `Resolved ${variant} config extra.appEnvironment mismatch.`,
+  );
+  block(
+    errors,
+    config.updates?.enabled === false && config.updates?.checkAutomatically === 'NEVER',
+    `Resolved ${variant} config must keep store-only updates disabled.`,
+  );
+  block(
+    errors,
+    !Object.hasOwn(config.updates ?? {}, 'url'),
+    `Resolved ${variant} config must not contain an update URL.`,
   );
   block(
     errors,
@@ -292,6 +324,8 @@ write(
         name: app.name,
         slug: app.slug,
         version: app.version,
+        updateDelivery: 'store-build-only',
+        updates: app.updates,
         runtimeVersion: app.runtimeVersion,
         scheme: app.scheme,
         iosBundleIdentifier: app.ios?.bundleIdentifier,

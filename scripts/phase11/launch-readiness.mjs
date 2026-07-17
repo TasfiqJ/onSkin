@@ -149,9 +149,10 @@ block(
 );
 block(
   errors,
-  has('apps/mobile/eas.json', /"production"/) &&
-    has('apps/mobile/eas.json', /"channel":\s*"production"/),
-  'eas.json must define production channel.',
+  has('apps/mobile/app.base.json', /"enabled":\s*false/) &&
+    has('apps/mobile/app.base.json', /"checkAutomatically":\s*"NEVER"/) &&
+    !has('apps/mobile/eas.json', /"channel"\s*:/),
+  'Store-only update delivery must disable Expo updates and omit EAS channels.',
 );
 block(
   errors,
@@ -200,8 +201,9 @@ block(
 );
 block(
   errors,
-  has('docs/phase-11/incident-rollback-drill.md', /eas update:rollback/i),
-  'Incident drill must include EAS Update rollback path.',
+  has('docs/UPDATE_DELIVERY_POLICY.md', /Status:\s*accepted launch policy/i) &&
+    has('docs/UPDATE_DELIVERY_POLICY.md', /store-bundled client releases only/i),
+  'Accepted update-delivery policy must define the store-only incident path.',
 );
 block(
   errors,

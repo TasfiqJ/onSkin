@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+import assert from 'node:assert/strict';
+
+import {
+  auditStoreOnlyRelease,
+  readStoreOnlyReleaseInputs,
+} from './store-only-release-audit.mjs';
+
+const inputs = readStoreOnlyReleaseInputs();
+const result = auditStoreOnlyRelease(inputs);
+assert.equal(result.status, 'pass');
+assert.equal(result.clientDelivery, 'store-build-only');
+assert.equal(result.easUpdateEnabled, false);
+console.log('OK accepted store-only release policy passes');
+
+const updateEnabled = structuredClone(inputs);
+updateEnabled.app.updates.enabled = true;
+assert.throws(() => auditStoreOnlyRelease(updateEnabled), /updates.enabled must be false/);
+console.log('OK enabled Expo updates fail closed');
+
+const updateUrl = structuredClone(inputs);
+updateUrl.app.updates.url = 'https://u.expo.dev/synthetic';
+assert.throws(() => auditStoreOnlyRelease(updateUrl), /omit updates.url/);
+console.log('OK unexpected update URL fails closed');
+
+const directDependency = structuredClone(inputs);
+directDependency.mobilePackage.dependencies['expo-updates'] = '0.0.0-synthetic';
+assert.throws(() => auditStoreOnlyRelease(directDependency), /must not directly depend/);
+console.log('OK direct expo-updates dependency fails closed');
+
+const channel = structuredClone(inputs);
+channel.eas.build.production.channel = 'production';
+assert.throws(() => auditStoreOnlyRelease(channel), /must omit channel/);
+console.log('OK unexpected EAS channel fails closed');
+
+const maintenanceMismatch = structuredClone(inputs);
+maintenanceMismatch.maintenanceContract.releasePolicy.easUpdateEnabled = true;
+assert.throws(() => auditStoreOnlyRelease(maintenanceMismatch), /Maintenance contract/);
+console.log('OK maintenance release-policy drift fails closed');

@@ -348,11 +348,11 @@
   - Proves `consent-withdrawal` logs only a stable `CONSENT_WITHDRAWAL_FAILED` failure code and never raw exception messages.
   - Proves the consent-withdrawal RLS migration makes the latest consent row authoritative for future sensitive writes.
 - `scripts/phase9/store-build-inspect.mjs`
-  - Proves EAS build profiles publish only to matching development/staging/production channels.
+  - Proves all EAS build profiles omit update channels and resolved configs keep Expo updates disabled without an update URL.
   - Proves dev/staging use internal distribution and production uses store distribution without a development client.
   - Proves resolved dev/staging/prod configs have isolated schemes, bundle IDs, Android package names, and public environment metadata.
   - Proves Android Auto Backup stays disabled in the base config and every resolved app variant.
-  - Proves `runtimeVersion.policy` remains `fingerprint` for native-compatible OTA targeting.
+  - Proves `runtimeVersion.policy` remains `fingerprint` for artifact and migration compatibility.
 - `scripts/phase9/release-smoke.mjs`
   - Proves claimed Phase 9 evidence/signoff requires `PHASE9_RELEASE_CANDIDATE_DIR`.
   - Proves claimed Phase 9 evidence/signoff fails from a dirty Git worktree.
@@ -485,7 +485,7 @@
 - RevenueCat native sandbox matrix: purchase, restore, cancel, renewal, billing issue, store refund/refund webhook, sandbox/production separation, and RevenueCat dashboard timeline samples.
 - Real-device QA: camera, encrypted photo render/share/cache cleanup, EXIF/GPS absence in saved/shared photo files, shelf share-card tmpfile cleanup, generic lock-screen notification copy, app-switcher privacy shield, account switch/session replacement, anonymous-to-provider linking, reinstall, offline/online, biometric app lock.
 - Sentry/PostHog payload sample review with no photos, prompts, tokens, URLs, product shelf details, pregnancy flags, or skin concerns.
-- Binary scans: MobSF/MASTG-style APK/IPA review, app permissions, Android `allowBackup=false`, iOS backup/keychain restore behavior, debug flags, OTA channel/runtime, and EAS Update branch/channel evidence from the Expo dashboard.
+- Binary scans: MobSF/MASTG-style APK/IPA review, app permissions, Android `allowBackup=false`, iOS backup/keychain restore behavior, debug flags, runtime fingerprint, and signed resolved-config evidence that Expo updates remain disabled with no update URL/channel.
 
 ## Tool gaps to close
 

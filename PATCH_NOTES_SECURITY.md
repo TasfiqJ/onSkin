@@ -254,12 +254,12 @@
 - Why safe: Camera `exif: false` is useful but should not be the only privacy boundary. If a platform preserves metadata despite that flag, or if a legacy/imported image reaches the helper, GPS/location/camera metadata must not persist in encrypted storage or leave through the OS share sheet.
 - Regression: `metadata.test.ts` proves JPEG EXIF/IPTC/comment and PNG EXIF/text/time chunks are removed. `phase9:privacy-payload-audit` fails if storage/share no longer call the metadata stripper.
 
-## OTA and build channel isolation
+## Build-profile and store-only delivery isolation
 
-- Files: `apps/mobile/eas.json`, `scripts/phase9/store-build-inspect.mjs`, `docs/phase-9/generated/store-build-inspection.json`.
-- Change: Production EAS builds now explicitly use `distribution: store`. Store build inspection validates fingerprint runtime policy, local app version source, channel/env parity for development/staging/production, internal distribution for non-production, no production development client, and resolved app config isolation for display name, scheme, iOS bundle identifier, Android package, `extra.appVariant`, and `extra.appEnvironment`.
-- Why safe: A staging or development OTA update must not be able to target production binaries, and native-incompatible updates must stay scoped by the fingerprint runtime policy.
-- Regression: `phase9:store-build-inspect` now fails if a build profile can publish to the wrong channel or if resolved variant identifiers collapse back to production values.
+- Files: `apps/mobile/app.base.json`, `apps/mobile/eas.json`, `scripts/phase9/store-build-inspect.mjs`, `scripts/optimization/store-only-release-audit.mjs`, `docs/UPDATE_DELIVERY_POLICY.md`.
+- Change: V1 client delivery is explicitly store-bundled. Expo updates and automatic checks are disabled, no update URL or EAS channel is configured, the mobile package has no direct `expo-updates` dependency, and production EAS builds retain `distribution: store`. Runtime fingerprints remain artifact/migration compatibility identities. Resolved app config isolation still covers display name, scheme, iOS bundle identifier, Android package, `extra.appVariant`, and `extra.appEnvironment`.
+- Why safe: Release documentation and incident recovery now match the shipped capability. A JavaScript or native client change cannot bypass the reviewed binary, privacy configuration, migration boundary, or store rollout path.
+- Regression: The store-only audit and Phase 9 release gates fail on enabled Expo updates, an update URL, a direct dependency, any profile channel, maintenance-policy drift, or collapsed variant identifiers.
 
 ## Cross-owner FK RLS hardening
 

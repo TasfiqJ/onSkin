@@ -40,7 +40,7 @@ photo image or metadata request during local save.
 
 - `development`: internal dev client, `APP_VARIANT=development`, native camera enabled, native OCR disabled.
 - `staging`: internal beta candidate, `APP_VARIANT=staging`, native camera enabled, native OCR disabled until ML Kit/Vision is added and verified.
-- `production`: production channel only after brand/legal clearance and store credentials are complete.
+- `production`: store-distributed production build only after brand/legal clearance and store credentials are complete.
 
 All three profiles use the `sdk-56` iOS image alias. Production builds must not
 silently fall back to a different profile or toolchain.
@@ -122,7 +122,11 @@ is enabled in the build; otherwise OCR remains hidden from launch claims.
 
 ## Native Runtime Policy
 
-`app.base.json` uses `runtimeVersion.policy=fingerprint` and is consumed by `app.config.js`. Any native dependency, plugin, permission, or app config change must ship through a new native binary, not only OTA.
+`app.base.json` uses `runtimeVersion.policy=fingerprint` and is consumed by
+`app.config.js`. That fingerprint identifies artifact/migration compatibility;
+it does not enable OTA delivery. V1 has Expo updates disabled and ships every
+native, JavaScript, asset, plugin, permission, or app-config change through a
+new reviewed store binary. See `docs/UPDATE_DELIVERY_POLICY.md`.
 
 ## Launch Gates
 
