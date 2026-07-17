@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T20:12:09.482Z",
+  "generatedAt": "2026-07-17T00:25:14.969Z",
   "purpose": "Phase 5 native device QA packet for contract-required release platforms.",
   "launchContract": {
     "schemaVersion": 1,
@@ -73,7 +73,7 @@
       "paid_measurement"
     ]
   },
-  "gitSha": "4f72ce50f60ddee704209032a2e4fa355184746e",
+  "gitSha": "003429a5ff845b7b0960ecb090dc80e24f8ab6fa",
   "gitStatus": "",
   "buildEvidence": {
     "iosBuildId": "",
@@ -278,14 +278,14 @@
     {
       "path": "package.json",
       "exists": true,
-      "bytes": 30739,
-      "sha256": "fd993bc9293613b455acb9aa6df2d0ce195cbe8fd91b422176e2b011886b5b57"
+      "bytes": 31779,
+      "sha256": "85289af8e3524cee2cdafba5c29813017a2fd3a9b1ac41e05d99e5e116340f5a"
     },
     {
       "path": "package-lock.json",
       "exists": true,
-      "bytes": 557144,
-      "sha256": "a83a88fbf2310d2457e3e31b85fedaa54fe7e5e354ca02d9700e51229526835f"
+      "bytes": 557143,
+      "sha256": "0b817f6d89ea2b318e59d3bbc83203047ade24ab7496ba6ff2c91ff14356f850"
     },
     {
       "path": "docs/hugeToDo/launch-contract.json",
@@ -308,14 +308,14 @@
     {
       "path": "apps/mobile/app.config.js",
       "exists": true,
-      "bytes": 14170,
-      "sha256": "3ba2df3aff44ced390047424120090f5effc4479abbc074854475f2db9e8fc7a"
+      "bytes": 14367,
+      "sha256": "c9e4be78be838845732086cf769fede87290aaa930b294d7675dc0703623626d"
     },
     {
       "path": "apps/mobile/plugins/withRoutineKindWidgetPrivacyManifest.js",
       "exists": true,
-      "bytes": 9177,
-      "sha256": "b573a7788813188fffb677845307d7b6c10b7d703c43d505f661ca1057638b57"
+      "bytes": 11739,
+      "sha256": "ab40bcc6285d40e21343adcb02885c5cd920c36cd669f04994b536955795a292"
     },
     {
       "path": "apps/mobile/eas.json",
@@ -326,8 +326,8 @@
     {
       "path": "apps/mobile/package.json",
       "exists": true,
-      "bytes": 2911,
-      "sha256": "029c87cc99ed0e8cf775d9ade4172d2d099e9a9505de2b8f4c69669d9a20147d"
+      "bytes": 2897,
+      "sha256": "c328396d64378a47dd6bd99172a6c6e1abbc562e0c290ad1fc08fcb3dd4fdd80"
     },
     {
       "path": "apps/mobile/src/app/_layout.tsx",
@@ -506,8 +506,8 @@
     {
       "path": "apps/mobile/src/features/settings/localPrivateDataKeys.ts",
       "exists": true,
-      "bytes": 3831,
-      "sha256": "298e7b68320b0d666a25754889580fd02bc6ed43a5db56f92e0d98d991b64bc0"
+      "bytes": 3908,
+      "sha256": "4719d14c1e46cad997f876df5a9ce096aa0c77170406fc16b7c8d200de206c6c"
     },
     {
       "path": "apps/mobile/src/features/today/completionsStore.ts",
@@ -536,68 +536,164 @@
     {
       "path": "apps/mobile/src/features/widgets/actionRegistry.ts",
       "exists": true,
-      "bytes": 15406,
-      "sha256": "37e32120a767cab386401a40287c8eb734b541f3408e30481d37886eeb59f96a"
+      "bytes": 22058,
+      "sha256": "af9d5ca47782617109572cd512c7d81933b5d282fafbc0748406eaf2d59c4f36"
     },
     {
       "path": "apps/mobile/src/features/widgets/actionRegistry.test.ts",
       "exists": true,
-      "bytes": 10700,
-      "sha256": "ce958ef0822929f3f532b69f25512e0be53f8a02e033887ed1e7e1fd3a770ce9"
+      "bytes": 14076,
+      "sha256": "9f97d586f1cc6c5560efca341b0f8f7dfa0ba8176a602e3ee2bd5401113901b6"
     },
     {
       "path": "apps/mobile/src/features/widgets/contract.ts",
       "exists": true,
-      "bytes": 13422,
-      "sha256": "aad9620d1b98e661ce8d44b5b74207942f2a2d18fd7458c28db9d15c786412d4"
+      "bytes": 14787,
+      "sha256": "195bf6536bb7bea1c9ef72155842fcb230deae1cd62e37d52e389d545ed09542"
     },
     {
       "path": "apps/mobile/src/features/widgets/contract.test.ts",
       "exists": true,
-      "bytes": 10669,
-      "sha256": "a46aaf08ac5010c943daed7aacf2c59bb926e12aec7025bf12ce8711d2858754"
+      "bytes": 11183,
+      "sha256": "1d40717f65310d132598a6269d4006da3b7e3e8fba490db004e6e4a21db1d85c"
     },
     {
       "path": "apps/mobile/src/features/widgets/controllerCore.ts",
       "exists": true,
-      "bytes": 12161,
-      "sha256": "d34506835b819bdda1068a3fd5079ae15b541235b05cd536100dd86e86c9bc46"
+      "bytes": 15274,
+      "sha256": "86765f983473dcaa6934f166450e08caec0f889fdd4cc7bb8099390f861c8171"
     },
     {
       "path": "apps/mobile/src/features/widgets/controllerCore.test.ts",
       "exists": true,
-      "bytes": 17360,
-      "sha256": "61a640390b41c77b667e0572d221ea853231b8a20425fc344179189a01387edc"
+      "bytes": 14670,
+      "sha256": "468d73e40a10bdbe2d07d7e7a03004800511baf200eb117b3e3a124978dd4aca"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycle.ts",
+      "exists": true,
+      "bytes": 2570,
+      "sha256": "0ecc49ad825975855551a777221e656e7fa102e10c63373c4994d4e3a6f77a96"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycle.ios.ts",
+      "exists": true,
+      "bytes": 7262,
+      "sha256": "394eb86df043e3acabb724c444db6c80afe6bfd43d149ef0238a287a042405d9"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycleContract.ts",
+      "exists": true,
+      "bytes": 13864,
+      "sha256": "1aaa8a94df26295c8a481a45f3a7cc0ed63667e548cb4525e86a59a88b852c43"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycleContract.test.ts",
+      "exists": true,
+      "bytes": 10177,
+      "sha256": "8c366f100e79bac1279b8a6eb3ee80d520c78f421d82b29e080a4e8569ea62a4"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeLifecycleBridge.test.ts",
+      "exists": true,
+      "bytes": 8137,
+      "sha256": "adab9010f0e2d95e4b7f9ee4e9eb798e3b1137b2bbec164963ad549928a3600e"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeOutboxModel.ts",
+      "exists": true,
+      "bytes": 14365,
+      "sha256": "2db73d4539a00dafde867f44867a1cb7a5fefa8886532b613a6ffaf366e38606"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/nativeOutboxModel.test.ts",
+      "exists": true,
+      "bytes": 9997,
+      "sha256": "38bb579d7baba39f39d35bd0f51a3bdf8151f7c23a4fc6f8ba4ae1bb519e175f"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/ownerAuthority.ts",
+      "exists": true,
+      "bytes": 6313,
+      "sha256": "e45df7bc8f800090ef3d25d764d156347087fd4142980dcd87cab1629a177cb4"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/ownerAuthority.test.ts",
+      "exists": true,
+      "bytes": 5295,
+      "sha256": "a360db685b2e7e62d74c35328ddd4af48d4541908da32a69fe47139b000c534c"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleCoordinator.ts",
+      "exists": true,
+      "bytes": 7164,
+      "sha256": "ab1c66830cda9363df3d65cb35da475fc28d5f70c24c31b48b928032be7e011f"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleCoordinator.test.ts",
+      "exists": true,
+      "bytes": 9735,
+      "sha256": "529860dd43fe49b64a9db8d317b95f9758cfb7f1e0567792520eb6528059e9c6"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleRuntime.ts",
+      "exists": true,
+      "bytes": 709,
+      "sha256": "f9ed010986a993bb429a30a234d2bcc8aefe5f8bce3f9a580dcb0a62443f33a4"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleRuntime.ios.ts",
+      "exists": true,
+      "bytes": 23539,
+      "sha256": "cc89270a85b95265e6363225dd34032b55341b43e0a5ae1abe6543ed06654300"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/lifecycleRuntime.test.ts",
+      "exists": true,
+      "bytes": 28415,
+      "sha256": "1cf66bbd5076b6ef09ef75b7c8816021fb148f537a7c1d9be7b3d93557b4c786"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.tsx",
+      "exists": true,
+      "bytes": 7497,
+      "sha256": "6bff134c0afb37c1c9eb5ea7bef662e24fae3ebfa28955dd45ad7e11f70b4efc"
+    },
+    {
+      "path": "apps/mobile/src/features/widgets/RoutineWidgetLifecycleHost.test.ts",
+      "exists": true,
+      "bytes": 11866,
+      "sha256": "fe83b689aab10197e2182dd7a1739889c4e5b3278a2ae51e25589c03945bcbc9"
     },
     {
       "path": "apps/mobile/src/features/widgets/runtimeGate.ts",
       "exists": true,
-      "bytes": 1453,
-      "sha256": "3434acaae49709276156cb6ea1a15d2803f17a85015689435b779f752c89504c"
+      "bytes": 1822,
+      "sha256": "942a2d9d0814b66a81c88f7efd3fa6f42728e04668710cd96c3ff19f9be1de62"
     },
     {
       "path": "apps/mobile/src/features/widgets/runtimeGate.test.ts",
       "exists": true,
-      "bytes": 2552,
-      "sha256": "1aa285290a6d54516bfa6d411e1e890a2a896e019bd57b6412b826600c505315"
+      "bytes": 2749,
+      "sha256": "ab36b67f279f124cd5e7bc617e9c8c0130e65443923992414788ada0c43f88ba"
     },
     {
       "path": "apps/mobile/src/features/widgets/TodayWidget.ios.tsx",
       "exists": true,
-      "bytes": 10283,
-      "sha256": "3714690c812c13acf942a52a93c80c4369f8ff21add4698b3b515af5cb340bd5"
+      "bytes": 10975,
+      "sha256": "efb4571aba3dde4b4439346cfed99a0a265a6f8148049daf1d601c7ea46ee3b1"
     },
     {
       "path": "apps/mobile/src/features/widgets/TonightActivity.ios.tsx",
       "exists": true,
-      "bytes": 5437,
-      "sha256": "e33edf5b2979f2121f5dd62b065e632dce6c19c1571be178b8477b40a500ba51"
+      "bytes": 6027,
+      "sha256": "8a0d9bceaf8e9c8945d2cc2b303286fe3a012378f3603b0cb984a041852a5a5b"
     },
     {
       "path": "apps/mobile/src/features/widgets/widgetViews.test.ts",
       "exists": true,
-      "bytes": 15662,
-      "sha256": "d17941a72782e13386cbe972afd8a0dd0a13ad0dc69970c62b37865fa7b885c5"
+      "bytes": 16068,
+      "sha256": "2f0d6bd74e85223f207850a255af3699cde61ecaabb0abe3860259470b95e7d2"
     },
     {
       "path": "apps/mobile/src/features/photos/analyzePhotoLighting.ts",
@@ -812,8 +908,188 @@
     {
       "path": "apps/mobile/src/lib/consent/healthDataWriteAdmission.ts",
       "exists": true,
-      "bytes": 5852,
-      "sha256": "779125aa255d795177ed9c49b1ab73b481d4941aa6ca036549f46d838fd16e0d"
+      "bytes": 5929,
+      "sha256": "f99ebd3f1f5120671e7702b0c7e1a55adde2f316bb8ddb9a0b5e5fedeb1af109"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataActivationMount.tsx",
+      "exists": true,
+      "bytes": 3261,
+      "sha256": "aef498d084e3233bba3ed43315193e52a3b308e5a6d0f37108cb66ea3c114611"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataActivationMount.test.ts",
+      "exists": true,
+      "bytes": 6015,
+      "sha256": "959dc00e71eaf0053908c2ad3095177b9dab19d535ea21e3549f9d76ec1bd8b7"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.tsx",
+      "exists": true,
+      "bytes": 31585,
+      "sha256": "9caaf70078a24d3aacec87691bbe56a73314726d3c2f89edad33f340079478a9"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/HealthDataLifecycleGate.navigation.test.ts",
+      "exists": true,
+      "bytes": 6504,
+      "sha256": "f56e2bbb8c971ac55fa0f677c351f3a1bbd323a981f0ce15fbba4dc61b446f71"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/healthLifecycleRoutes.test.ts",
+      "exists": true,
+      "bytes": 12354,
+      "sha256": "cace0f73d9bc3f95aad8c3e5fbad2036e942dea56523098256b94f992e0a5904"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.ts",
+      "exists": true,
+      "bytes": 6449,
+      "sha256": "06c7c5d8c7129d01d28ff258339e09ff114d5f8077fe35462832cb52380aee71"
+    },
+    {
+      "path": "apps/mobile/src/features/healthConsent/selectiveCleanup.test.ts",
+      "exists": true,
+      "bytes": 9432,
+      "sha256": "0f3f77f32bd7a72991dcfbb3d42981c6f086db09580fa652affafcf0902bab96"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/accountDeletionRecovery.ts",
+      "exists": true,
+      "bytes": 27535,
+      "sha256": "99fe75f7e600a0f196320a327f6e87129374cd61f037a83a8d895bea1607802f"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/accountDeletionRecovery.test.ts",
+      "exists": true,
+      "bytes": 47485,
+      "sha256": "a462392d1194d1b1a646df7fb097be052553c1027ea8511c00a09516853da72b"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/localPrivateData.ts",
+      "exists": true,
+      "bytes": 3951,
+      "sha256": "ba17444995321551319ebbfcdfad029236c833ba5a7e28e04d738c9a99d80f47"
+    },
+    {
+      "path": "apps/mobile/src/features/settings/localPrivateData.test.ts",
+      "exists": true,
+      "bytes": 8845,
+      "sha256": "9c591a86b41792b70558db93e682c3aa2b0fa035db604242c6de81918559976e"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/AuthProvider.tsx",
+      "exists": true,
+      "bytes": 101190,
+      "sha256": "3c6c45c4247763a2ee9d89d66739cd97cf432f2cdbe0efb6b0d39178e3215bf9"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/authDerivedCleanupAuthProviderContracts.test.ts",
+      "exists": true,
+      "bytes": 3206,
+      "sha256": "f87bb763c40d79063eb119f77ce625131a8788d89367a08d3da065bc59428fef"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/revokedCredentialActivity.ts",
+      "exists": true,
+      "bytes": 2303,
+      "sha256": "6a8eba9cd60438dec56b9c78428e8cce1870cb4f2c9f42328ef63591ea441b8c"
+    },
+    {
+      "path": "apps/mobile/src/lib/auth/revokedCredentialActivity.test.ts",
+      "exists": true,
+      "bytes": 4294,
+      "sha256": "84ba1cd1399c52eec30611a3059040ff76b54643e6f5850d78f4272bf39e0642"
+    },
+    {
+      "path": "scripts/postinstall.mjs",
+      "exists": true,
+      "bytes": 732,
+      "sha256": "0d68d89b51fda8a8c8c64ebfb12d5abf95c64add1c158f36786a8e3ca3f97bf7"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.mjs",
+      "exists": true,
+      "bytes": 16330,
+      "sha256": "03ec26b5f20db80db15ed40189693b9cd43cba03d98f74ec2682170443b039c7"
+    },
+    {
+      "path": "scripts/phase5/patch-expo-widgets-lifecycle.test.mjs",
+      "exists": true,
+      "bytes": 9064,
+      "sha256": "aa66857e2dac860c90d86079411a93ee0d843e72dc4342986c4c5a797e02be8b"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-lifecycle-source.test.mjs",
+      "exists": true,
+      "bytes": 21309,
+      "sha256": "5f1f608d340f3f0582ccf1876f492d5c192645b420b16f35c9ae2370a5985874"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-56.0.23/RoutineKindWidgetLifecycleStore.swift",
+      "exists": true,
+      "bytes": 75208,
+      "sha256": "6b01f4e2cd54874eab2a8e5cb773e4dc87992d7ac179cf490ec88044fe5ef8bc"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-56.0.23/AppIntent.swift",
+      "exists": true,
+      "bytes": 5242,
+      "sha256": "12f011532fd24abc3d8809eb4ee94b679ea8335bf1b77ae8d1cefcc0ea5e7310"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-56.0.23/EntryView.swift",
+      "exists": true,
+      "bytes": 1564,
+      "sha256": "35d07280d61a55fa159b7f9f30e32bbb3bf8ec4a350a7b0d6e73987bd4e11112"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-56.0.23/ExpoWidgets.podspec",
+      "exists": true,
+      "bytes": 1933,
+      "sha256": "616a1ec19f9a6e09474163ca0ae0df9ca3823395a16c16e914a17c376d5aee0a"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-56.0.23/LiveActivity.swift",
+      "exists": true,
+      "bytes": 4663,
+      "sha256": "f7e0548a5057743d27e0748b521e1e2873794f55be39b6f7739f22a57af17770"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-56.0.23/LiveActivityFactory.swift",
+      "exists": true,
+      "bytes": 3599,
+      "sha256": "a612cab3a7071b7c12277b5230b7988432d5e15d565c0504301ebb922d2fbdaf"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-56.0.23/TimelineProvider.swift",
+      "exists": true,
+      "bytes": 1538,
+      "sha256": "63d077ce0ea7d8d875f2af0dc15c7d6706e9d154f3ea747c4209353a4a51328e"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-56.0.23/Utils.swift",
+      "exists": true,
+      "bytes": 4387,
+      "sha256": "d32a56a95515badc2abed0603e6fe14214a895e8ef5f4fcd5f7f1ac236f5688b"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-56.0.23/WidgetLiveActivity.swift",
+      "exists": true,
+      "bytes": 3647,
+      "sha256": "2b12bc9aa8d900f5e9ad72e00e396a607f5dc6fdbd033a9b917b2062b8e67717"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-56.0.23/WidgetObject.swift",
+      "exists": true,
+      "bytes": 1332,
+      "sha256": "ef703f95a235024a169a0a35aea301af5ded638fb9d572e278d7a283c729fe6a"
+    },
+    {
+      "path": "scripts/phase5/expo-widgets-56.0.23/WidgetsModule.swift",
+      "exists": true,
+      "bytes": 7567,
+      "sha256": "48cba3cdba4ad6de32cabf84769a59fcd8dc474f03de1e94a9d6c329fcb2b172"
     },
     {
       "path": "apps/mobile/src/lib/applock/AppLockProvider.tsx",
@@ -830,38 +1106,38 @@
     {
       "path": "scripts/phase5/build-device-qa-packet.mjs",
       "exists": true,
-      "bytes": 26881,
-      "sha256": "2983d6fa95f11679b6064e77319535e638e28583ceee30659fbc1c2da458eeba"
+      "bytes": 29806,
+      "sha256": "4ad7870338e41621966d35a653ee065eced5a07eadca4d8999171e216d608b77"
     },
     {
       "path": "scripts/phase5/check-native-config.mjs",
       "exists": true,
-      "bytes": 26163,
-      "sha256": "2ecb6f49348d0d8d2b032dac70223086e1bcb187ec9dfbe1dc43fada0c840bfe"
+      "bytes": 30095,
+      "sha256": "0342a8f4183f3fe34569fe9d5d41d388cc71a026c1d525825e16536e29102133"
     },
     {
       "path": "scripts/phase5/ios-extension-contract.mjs",
       "exists": true,
-      "bytes": 8252,
-      "sha256": "e9f4bc9a761a06c7893c570ce51bf9fc25fdbcc6d96ceea4cc5ae56d771f41b0"
+      "bytes": 8251,
+      "sha256": "c7ae2e2398c7d5a16032374daf4d47b22fb7631b01b681f293fa57c0216c50b9"
     },
     {
       "path": "scripts/phase5/ios-extension-contract.test.mjs",
       "exists": true,
-      "bytes": 5493,
-      "sha256": "c09ab97934a45cdfd867803791bbe7ad3324dde860e504a8f9217b3fa795726a"
+      "bytes": 5491,
+      "sha256": "2194cc6cbda679a660e27a8a6723d8fdc885d559332540e652b14bcc340c3f49"
     },
     {
       "path": "scripts/phase5/widget-privacy-manifest.test.mjs",
       "exists": true,
-      "bytes": 8097,
-      "sha256": "6816ac68ef2dd05b377db940f0983c04b2be36b30f19015082a6c422ec5c0bf8"
+      "bytes": 9655,
+      "sha256": "95c2e440e887a8c04b9583680262147ea1e50c04f658baa9aa8289d439e54a78"
     },
     {
       "path": "scripts/phase5/widget-lifecycle-evidence-contract.mjs",
       "exists": true,
-      "bytes": 33906,
-      "sha256": "445c1e68ca2e681f99d1bb0fef91eb80dc90eac8fc3e31bdf9b9955c0081b9ee"
+      "bytes": 34621,
+      "sha256": "f84a981e276249238bcec135fc48a5f823c8f47ab297cb9ca40ef50692bd795f"
     },
     {
       "path": "scripts/phase5/check-widget-lifecycle-evidence.mjs",
@@ -872,8 +1148,8 @@
     {
       "path": "scripts/phase5/widget-lifecycle-evidence-smoke.mjs",
       "exists": true,
-      "bytes": 20511,
-      "sha256": "f1c879a15e5cc06e91e30a9af8e9f927c6ff0ba7144212e10dc5298ae0f34014"
+      "bytes": 21332,
+      "sha256": "b3fafa47e360645fdc30bedcaa7c174cfc2aa0c6532bb24b2f89c33d4ae2c228"
     },
     {
       "path": "scripts/phase5/resolve-ios-extension-config.mjs",
@@ -890,8 +1166,8 @@
     {
       "path": "scripts/phase5/device-qa-packet-smoke.mjs",
       "exists": true,
-      "bytes": 23670,
-      "sha256": "3055f788ab400bb93eb3239c49418ecc2a2cc9b9138bd02bbd76f384a0170f85"
+      "bytes": 27559,
+      "sha256": "9dff1677045e0b4f8d0b03b89b3eb6fd33a465e75f44b61c4c34b1fddbde1321"
     },
     {
       "path": "scripts/phase5/performance-evidence-contract.mjs",
@@ -962,44 +1238,44 @@
     {
       "path": "docs/USER_FLOW_TREE.md",
       "exists": true,
-      "bytes": 382133,
-      "sha256": "ed2da42899c932830f77ebf16b1aa14d34c604651304bb7ae0d93ad8cb8fcfe8"
+      "bytes": 398587,
+      "sha256": "14be278a1f1d0a14d1d5d5ffffb0fe82fdc89f38479e82d9b3b8606e9cea9a1f"
     },
     {
       "path": "docs/hugeToDo/IOS-02-WIDGET-LIFECYCLE-SOURCE-CHECKPOINT-2026-07-16.md",
       "exists": true,
-      "bytes": 8021,
-      "sha256": "d19dc43ee8e8b5a4bbd0cf4ba08759ca7de5179044c323c15fd8ae8d45f43be2"
+      "bytes": 16843,
+      "sha256": "6dd7a2416a0e35b416e1f765906dec003f621e8cc5b8032f4c0ca3e9ff7fca68"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.json",
       "exists": true,
       "bytes": 48121,
-      "sha256": "677501cf58901f9262aeb32207105bc3ace9326b072226ed9387107daf2780ab"
+      "sha256": "91499428e76938d01826dd760888c65129b5bde37f4c8bac98dfdc7915e8585f"
     },
     {
       "path": "docs/e2e/generated/human-e2e-manifest.md",
       "exists": true,
       "bytes": 19687,
-      "sha256": "66104c7cfc4a68eff95c29211f07edb74200f99b036cd2088b7723ef3a555c75"
+      "sha256": "c662775245067ea876359602b379caa33c30fdc1f31b6452ac750e2b27cfe4fd"
     },
     {
       "path": "docs/phase-5/native-build-runbook.md",
       "exists": true,
-      "bytes": 8125,
-      "sha256": "8800256f23105b43ac9965756a6463b8b2b35f6a63b1ddffcea6075d6f41c75f"
+      "bytes": 10164,
+      "sha256": "7765d50776a27565a0ec5f92397eaa176ce00daab9d62e3525a8a234f94bc3a3"
     },
     {
       "path": "docs/phase-5/widget-lifecycle-evidence.template.json",
       "exists": true,
       "bytes": 1817,
-      "sha256": "2e418fa8ded0e4b1419183c713015fcf8d08cdb40ed7befb757e81b737972c80"
+      "sha256": "3fc18b04333f85bcdc1344dd9553b97d55818692de0046ba96e9f98435cc2936"
     },
     {
       "path": "docs/phase-5/device-qa-checklist.md",
       "exists": true,
-      "bytes": 11787,
-      "sha256": "1b48dc382b7360f013a854949869897e59b7bff9e22d81bc353c8d2add12db13"
+      "bytes": 16788,
+      "sha256": "166b5d86624d2cd44ce59f920714aa6771c51330587c318eec579fe5de4e6800"
     },
     {
       "path": "docs/phase-5/performance-evidence-runbook.md",
@@ -1016,8 +1292,8 @@
     {
       "path": "docs/phase-5/phase-5-exit-review.md",
       "exists": true,
-      "bytes": 7980,
-      "sha256": "d024dbbb9fb2d58d34f846e1f1fba7e276ee05ca0e0500681480e93c08181dba"
+      "bytes": 8619,
+      "sha256": "ebfae8ef2a17162db581c670270e6e404332f11c817b4fa4dbaa8b64c434fc80"
     }
   ],
   "blockers": [
