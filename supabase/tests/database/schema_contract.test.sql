@@ -31,14 +31,14 @@ select is(
 
 select is(
   (select count(*) from supabase_migrations.schema_migrations),
-  55::bigint,
-  'all 55 repository migrations are recorded'
+  56::bigint,
+  'all 56 repository migrations are recorded'
 );
 
 select is(
   (select max(version) from supabase_migrations.schema_migrations),
-  '20260717000056'::text,
-  'migration history reaches the catalog serving eligibility gate'
+  '20260717000057'::text,
+  'migration history reaches the catalog import lifecycle gate'
 );
 
 select is(

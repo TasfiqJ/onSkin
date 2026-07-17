@@ -12,6 +12,10 @@ const servingGateMigrationUrl = new URL(
   '../../migrations/20260717000056_catalog_serving_eligibility_gate.sql',
   import.meta.url,
 );
+const importLifecycleMigrationUrl = new URL(
+  '../../migrations/20260717000057_catalog_import_lifecycle.sql',
+  import.meta.url,
+);
 
 Deno.test('catalog lookup uses the service-only production eligibility RPC', async () => {
   const sql = compact(await Deno.readTextFile(servingGateMigrationUrl));
@@ -155,11 +159,19 @@ Deno.test('barcode and direct catalog lanes cannot launder held child evidence',
 
 Deno.test('source attribution is bounded and base review metadata stays sealed', async () => {
   const sql = compact(await Deno.readTextFile(servingGateMigrationUrl));
+  const lifecycleSql = compact(await Deno.readTextFile(importLifecycleMigrationUrl));
 
   assert(
     sql.includes('drop policy if exists "catalog_sources_read_all" on public.catalog_sources') &&
       sql.includes('revoke select on public.catalog_sources from public, anon, authenticated'),
     'client API roles must not retain direct catalog_sources reads',
+  );
+  assert(
+    lifecycleSql.includes('alter table public.catalog_sources force row level security') &&
+      lifecycleSql.includes(
+        'revoke all on table public.catalog_sources from public, anon, authenticated, service_role',
+      ),
+    'catalog source release authority must deny direct reads and writes to every API role, including service_role',
   );
   assert(
     sql.includes('create or replace view public.recommendable_catalog_products') &&

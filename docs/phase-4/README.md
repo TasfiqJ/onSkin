@@ -4,6 +4,9 @@ Status: engineering source checkpoint; not production approved
 
 Start with the
 [CAT-01 catalog source release runbook](./catalog-source-release-runbook.md).
+Then use the
+[CAT-02 import/promotion/rollback runbook](./catalog-import-promotion-runbook.md)
+for the independent record-review and database lifecycle.
 The current checked-in trust registry, release scope, release-build evidence,
 and source-approval templates are deliberately pending and cannot authorize an
 import.
@@ -28,6 +31,7 @@ import.
 - [Catalog observability dashboard](./observability-dashboard.md)
 - [Beta coverage report requirements](./beta-coverage-report.md)
 - [Phase 4 exit review](./phase-4-exit-review.md)
+- [CAT-02 catalog import, promotion, and rollback](./catalog-import-promotion-runbook.md)
 
 The only launch source flow is: acquire offline source bytes; create a
 non-promotable candidate from a clean committed transformer; obtain an active
@@ -44,5 +48,12 @@ OBF/CosIng are not runtime recipients. Source images and external contribution
 are excluded. Missing-product and wrong-match reports remain first-party, and
 migration `0056` hides every source/product that lacks positive legal,
 production, review, quality, eligibility, mapping, and correction evidence.
+Migration `0057` adds the local source candidate for sealed, replay-safe
+staging; per-record review; exact-key conflict detection; immutable lineage;
+transactional insert-only promotion; and non-destructive batch rollback. It
+also closes legacy broad ingredient/brand/category read paths and removes
+direct API-role global-catalog mutation. Real approved artifacts, dedicated
+CAT-08 operator identities, hosted concurrency/rollback evidence, and a
+reviewed launch catalog are still absent.
 Passing these source controls does not guarantee Apple acceptance, legal
 compliance, product efficacy, or revenue.

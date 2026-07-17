@@ -3,6 +3,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CATALOG_QA_LAUNCH_CLEAR_REASON, CATALOG_QA_SOURCE_HASH_PATHS } from './source-policy.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(scriptDir, '..', '..');
@@ -87,9 +88,18 @@ try {
           result.packet.transformedPayloadContract?.contractId ===
             'catalog-transformed-payload-v1' &&
           result.packet.transformedPayloadSha256 === result.packet.recomputedTransformSha256 &&
+          typeof result.packet.gitStatus === 'string' &&
+          result.packet.launchClear === false &&
+          result.packet.launchClearReason === CATALOG_QA_LAUNCH_CLEAR_REASON &&
+          result.packet.sourceHashes.length === CATALOG_QA_SOURCE_HASH_PATHS.length &&
+          result.packet.sourceHashes.every(
+            (entry, index) => entry.path === CATALOG_QA_SOURCE_HASH_PATHS[index],
+          ) &&
           paths.has('docs/phase-4/catalog-source-trust-registry.json') &&
           paths.has('docs/phase-4/catalog-release-scope.json') &&
+          paths.has('scripts/phase4/complete-catalog-database-receipts.mjs') &&
           paths.has('supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql') &&
+          paths.has('supabase/migrations/20260717000057_catalog_import_lifecycle.sql') &&
           result.markdown.includes('## Source Hashes')
         );
       },
@@ -151,6 +161,96 @@ try {
         return (
           result.status !== 0 &&
           result.packet.transformedPayloadSha256 === result.packet.recomputedTransformSha256 &&
+          result.packet.blockers.some((blocker) =>
+            blocker.includes('records violate the exact content/provenance contract'),
+          )
+        );
+      },
+    },
+    {
+      name: 'missing OBF source-record date is a hard provenance blocker',
+      result: runReport({
+        name: 'missing-source-record-date',
+        manifest: {
+          ...obfManifest,
+          products: [
+            { ...obfManifest.products[0], sourceRecordModifiedDate: null },
+            ...obfManifest.products.slice(1),
+          ],
+        },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.blockers.some((blocker) =>
+            blocker.includes('records violate the exact content/provenance contract'),
+          )
+        );
+      },
+    },
+    {
+      name: 'invalid calendar OBF source-record date is a hard provenance blocker',
+      result: runReport({
+        name: 'invalid-source-record-date',
+        manifest: {
+          ...obfManifest,
+          products: [
+            { ...obfManifest.products[0], sourceRecordModifiedDate: '2026-02-31' },
+            ...obfManifest.products.slice(1),
+          ],
+        },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.blockers.some((blocker) =>
+            blocker.includes('records violate the exact content/provenance contract'),
+          )
+        );
+      },
+    },
+    {
+      name: 'OBF source-record date after its snapshot is a hard provenance blocker',
+      result: runReport({
+        name: 'future-source-record-date',
+        manifest: {
+          ...obfManifest,
+          sourceSnapshot: { ...obfManifest.sourceSnapshot, date: '2025-12-31' },
+          products: obfManifest.products.map((product) => ({
+            ...product,
+            sourceSnapshotDate: '2025-12-31',
+          })),
+        },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.transformedPayloadSha256 === result.packet.recomputedTransformSha256 &&
+          result.packet.blockers.some((blocker) =>
+            blocker.includes('records violate the exact content/provenance contract'),
+          )
+        );
+      },
+    },
+    {
+      name: 'OBF field bounds are independently enforced by QA',
+      result: runReport({
+        name: 'obf-field-bounds',
+        manifest: {
+          ...obfManifest,
+          products: [
+            {
+              ...obfManifest.products[0],
+              name: ` ${'x'.repeat(200)}`,
+              ingredientsText: 'x'.repeat(20_001),
+            },
+            ...obfManifest.products.slice(1),
+          ],
+        },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
           result.packet.blockers.some((blocker) =>
             blocker.includes('records violate the exact content/provenance contract'),
           )
@@ -246,6 +346,30 @@ try {
       result: runReport({
         name: 'cosing-null-record',
         manifest: { ...cosingManifest, ingredients: [null] },
+      }),
+      expect(result) {
+        return (
+          result.status !== 0 &&
+          result.packet.blockers.some((blocker) => blocker.includes('content/provenance contract'))
+        );
+      },
+    },
+    {
+      name: 'CosIng field bounds and normalized synonym collisions are QA blockers',
+      result: runReport({
+        name: 'cosing-field-bounds',
+        manifest: {
+          ...cosingManifest,
+          ingredients: [
+            {
+              ...cosingManifest.ingredients[0],
+              displayName: ` ${cosingManifest.ingredients[0].displayName}`,
+              casNumber: 'not-a-cas',
+              synonyms: ['A B', 'A\u00a0\u2009B'],
+            },
+            ...cosingManifest.ingredients.slice(1),
+          ],
+        },
       }),
       expect(result) {
         return (

@@ -68,7 +68,9 @@ Do not:
 - Client copy now avoids claiming unmatched products are contributed back.
 - Migration `20260717000056_catalog_serving_eligibility_gate.sql` keeps every
   unapproved source and every unreviewed, below-usable, ineligible, or
-  correction-open row out of barcode/search/recommendation serving.
+  operator-held row out of barcode/search/recommendation serving. Migration
+  `20260717000057_catalog_import_lifecycle.sql` adds exact batch lineage and
+  non-destructive withdrawal without activating any contribution recipient.
 
 ## Exit Criteria
 

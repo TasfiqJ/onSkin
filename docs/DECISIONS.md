@@ -388,6 +388,31 @@ Use this format for every significant product, architecture, pricing, privacy, o
 - Risk: native camera/OCR and widgets require custom build QA.
 - Status: Accepted.
 
+### 2026-07-17 - Separate Catalog Source Approval, Row Review, And Promotion
+
+- Decision: An approved offline source transform is not a reviewed catalog
+  row. Production ingestion uses a sealed, hash-bound staging lifecycle;
+  explicit per-record dispositions and exact-key conflict review; one
+  transactionally locked insert-only promotion; immutable batch-to-record
+  lineage; and non-destructive batch withdrawal. Shared runtime roles may
+  stage and verify bounded evidence but cannot approve, promote, roll back, or
+  directly write the global catalog. Those authority-changing operations stay
+  migration-owner-only until CAT-08 supplies dedicated operator identities.
+- Type: Architecture / Privacy / Legal / Launch
+- Alternatives: direct service-role upserts, automatic fuzzy merges,
+  source-approval-as-row-approval, hard-delete rollback, or source-wide
+  withdrawal for every bad batch.
+- Criteria: fixture exclusion, exact provenance for every production row,
+  least privilege, retry-safe idempotency, collision safety, preservation of
+  shelf/correction references, and fail-closed serving.
+- Evidence: migration `20260717000057_catalog_import_lifecycle.sql`, its pgTAP
+  contract, the Phase 4 promotion-envelope contract, and the CAT-02 runbook.
+- Risk: the conservative path creates a human review queue and does not solve
+  launch coverage. Real dual-signed source approvals, dedicated operators,
+  representative beta data, hosted concurrency/rollback drills, and
+  professional review remain external gates.
+- Status: Accepted for the source architecture; production rollout gated.
+
 ### 2026-07-06 - Deterministic Rules Over AI For Safety
 
 - Decision: Conflict, pregnancy, routine sequencing, PAO, and safety guidance must be deterministic and reviewer-backed.

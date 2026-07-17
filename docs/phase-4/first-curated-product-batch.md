@@ -118,12 +118,17 @@ or revoked key, missing deployed attribution/data surface, or warning-bearing
 production QA packet fails closed. A missing or changed transformed-payload
 contract, digest mismatch, or snapshot-date binding mismatch also fails closed.
 
-The transform performs no network I/O and is not a database promotion. CAT-02
-must still provide transactional staging, dedupe/conflict review, promotion,
-and rollback before any approved rows can enter the production catalog. OBF
+The transform performs no network I/O and is not a database promotion. The
+local CAT-02 source candidate now provides a content-addressed review envelope,
+sealed transactional staging, exact-key conflict review, immutable lineage,
+insert-only promotion, verification, and non-destructive rollback through
+migration `0057`. Follow the
+[CAT-02 runbook](./catalog-import-promotion-runbook.md). No real approved
+artifact or reviewed row overlay exists in this repository, no hosted drill
+has run, and no production row has been promoted. OBF
 database classification and the resulting attribution/share-alike/offer-of-data
 operations remain counsel decisions; no runtime source lookup, image import, or
 external contribution is authorized by this command. Migration `0056` then
 keeps every source that lacks production/legal approval, and every unreviewed,
-below-usable, ineligible, or correction-open product, out of barcode, search,
+below-usable, ineligible, or operator-held product, out of barcode, search,
 recommendation, and direct authenticated serving paths.

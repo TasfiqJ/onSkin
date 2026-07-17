@@ -107,16 +107,12 @@ async function createSmokeUser(label, cleanupUsers) {
   return { id: createdUser.id, client };
 }
 
-async function cleanup(users, catalogProductIds = []) {
+async function cleanup(users) {
   const failures = [];
   for (const user of users) {
     if (!user?.id) continue;
     const { error } = await admin.auth.admin.deleteUser(user.id);
     if (error) failures.push(`user:${redactedErrorKind(error)}`);
-  }
-  for (const productId of catalogProductIds) {
-    const { error } = await admin.from('products').delete().eq('id', productId);
-    if (error) failures.push(`catalog-product:${redactedErrorKind(error)}`);
   }
   assert(failures.length === 0, `Smoke cleanup failed (${failures.join(', ')}).`);
 }
@@ -170,7 +166,6 @@ async function expectNoAffectedRows(label, promise) {
 }
 
 const users = [];
-const catalogProductIds = [];
 
 async function main() {
   try {
@@ -272,35 +267,27 @@ async function main() {
       }),
     );
 
-    const catalogProduct = await insertOne(
-      admin,
-      'products',
-      {
+    await expectBlocked(
+      'catalog direct service insert',
+      admin.from('products').insert({
         name: `Phase 4 Catalog Product ${randomUUID().slice(0, 8)}`,
         brand: 'Smoke Test',
         category: 'cleanser',
         source: 'curated',
         quality_grade: 'limited',
         review_status: 'unreviewed',
-      },
-      'id, name',
+      }),
     );
-    catalogProductIds.push(catalogProduct.id);
-    await expectOwnRead(
-      userA.client,
-      'products',
-      'id',
-      catalogProduct.id,
-      'catalog product auth read',
-    );
+
+    const missingBarcode = `9${Date.now().toString().slice(-13).padStart(13, '0')}`;
 
     const correctionWrite = await admin.rpc('submit_catalog_correction', {
       p_user_id: userA.id,
       p_expected_health_epoch: 1,
-      p_product_id: catalogProduct.id,
-      p_barcode: null,
-      p_correction_type: 'wrong_match',
-      p_description: 'phase4 smoke correction',
+      p_product_id: null,
+      p_barcode: missingBarcode,
+      p_correction_type: 'missing_product',
+      p_description: 'phase4 smoke missing-product report',
       p_proposed_payload: {},
       p_client_context: { route: 'phase2-rls-smoke' },
     });
@@ -328,16 +315,18 @@ async function main() {
       'catalog correction owner direct insert',
       userA.client.from('catalog_corrections').insert({
         user_id: userA.id,
-        product_id: catalogProduct.id,
-        correction_type: 'wrong_match',
+        product_id: null,
+        barcode: missingBarcode,
+        correction_type: 'missing_product',
       }),
     );
     await expectBlocked(
       'catalog correction cross-user insert',
       userB.client.from('catalog_corrections').insert({
         user_id: userA.id,
-        product_id: catalogProduct.id,
-        correction_type: 'wrong_match',
+        product_id: null,
+        barcode: missingBarcode,
+        correction_type: 'missing_product',
       }),
     );
 
@@ -345,9 +334,9 @@ async function main() {
       user_id: userA.id,
       lookup_type: 'search',
       query: 'phase4 smoke',
-      result: 'matched',
-      matched_product_id: catalogProduct.id,
-      quality_grade: 'limited',
+      result: 'no_match',
+      matched_product_id: null,
+      quality_grade: null,
     });
     await expectOwnRead(
       userA.client,
@@ -507,7 +496,7 @@ async function main() {
 
     console.log('OK Supabase RLS smoke tests passed.');
   } finally {
-    await cleanup(users, catalogProductIds);
+    await cleanup(users);
   }
 }
 

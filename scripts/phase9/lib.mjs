@@ -79,8 +79,6 @@ export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
   'subscriptions_events',
   'order_attributions',
   'obf_contribution_queue',
-  'catalog_import_batches',
-  'catalog_quality_reports',
   'community_moderation_events',
   'waitlist_signups',
   'growth_events',
@@ -92,6 +90,9 @@ export const SERVICE_ONLY_PRIVATE_TABLES = Object.freeze([
 // evidence must prove they are sealed rather than pretending an admin client
 // can create or read a positive-control row.
 export const SEALED_SERVICE_PRIVATE_TABLES = Object.freeze([
+  'catalog_sources',
+  'catalog_import_batches',
+  'catalog_quality_reports',
   'health_processing_states',
   'health_consent_withdrawal_operations',
   'health_consent_withdrawal_steps',
@@ -125,7 +126,6 @@ export const AUTHENTICATED_CATALOG_TABLES = Object.freeze([
   'creator_stack_items',
   'community_topics',
   'community_notes',
-  'catalog_sources',
   'brands',
   'product_categories',
   'product_barcodes',

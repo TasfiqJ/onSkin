@@ -98,7 +98,7 @@ function rejectedText(value, maxLength) {
 }
 
 function sourceRecordModifiedDate(value) {
-  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) return null;
+  if (!Number.isSafeInteger(value) || value < 0) return null;
   const date = new Date(value * 1000);
   return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
 }
@@ -153,7 +153,7 @@ const rejected = [];
 
 for (const record of records) {
   const barcode = normalizeBarcode(record.code);
-  const name = normalizeText(record.product_name, 300);
+  const name = normalizeText(record.product_name, 200);
   const brand = normalizeText(record.brands, 300);
   const brandValid = record.brands == null || record.brands === '' || brand !== null;
   const tagsValid =
@@ -166,9 +166,18 @@ for (const record of records) {
   const ingredientsText = normalizeText(record.ingredients_text, 20_000);
   const ingredientsValid =
     record.ingredients_text == null || record.ingredients_text === '' || ingredientsText !== null;
+  const modifiedDate = sourceRecordModifiedDate(record.last_modified_t);
   const beauty = isBeautyCandidate(tags);
 
-  if (!barcode || !name || !brandValid || !tagsValid || !ingredientsValid || !beauty) {
+  if (
+    !barcode ||
+    !name ||
+    !brandValid ||
+    !tagsValid ||
+    !ingredientsValid ||
+    !modifiedDate ||
+    !beauty
+  ) {
     rejected.push({
       code: rejectedText(record.code, 64),
       product_name: rejectedText(record.product_name, 300),
@@ -182,7 +191,9 @@ for (const record of records) {
               ? 'invalid_categories_tags'
               : !ingredientsValid
                 ? 'invalid_ingredients_text'
-                : 'not_skin_care_category',
+                : !modifiedDate
+                  ? 'missing_or_invalid_source_record_modified_date'
+                  : 'not_skin_care_category',
     });
     continue;
   }
@@ -197,7 +208,7 @@ for (const record of records) {
     sourceComponentId: sourcePolicyEntry.componentId,
     sourceRef: barcode,
     sourceUrl: `https://world.openbeautyfacts.org/product/${barcode}`,
-    sourceRecordModifiedDate: sourceRecordModifiedDate(record.last_modified_t),
+    sourceRecordModifiedDate: modifiedDate,
     sourceArtifactSha256: inputSha256,
     qualityGrade: ingredientsText ? 'limited' : 'unverified',
     reviewStatus: 'unreviewed',
@@ -244,6 +255,16 @@ const approval =
         transformerPath: TRANSFORMER_PATH,
       })
     : null;
+if (
+  approval &&
+  products.some(
+    (product) => product.sourceRecordModifiedDate > approval.approval.artifact.snapshotDate,
+  )
+) {
+  throw new Error(
+    'OBF source record modified date cannot be later than the signed source snapshot date.',
+  );
+}
 const promotableProducts = products.map((product) => ({
   ...product,
   sourceSnapshotDate: approval?.approval.artifact.snapshotDate ?? null,

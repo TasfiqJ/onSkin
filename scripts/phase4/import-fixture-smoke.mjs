@@ -209,6 +209,49 @@ try {
     }
   }
 
+  const invalidModifiedFixturePath = resolve(
+    dirname(obfFixturePath),
+    `.tmp-invalid-modified-${process.pid}.jsonl`,
+  );
+  try {
+    const validRecord = JSON.parse(
+      readFileSync(obfFixturePath, 'utf8').split(/\r?\n/u).find(Boolean),
+    );
+    const invalidRecord = { ...validRecord, code: '9234567890123' };
+    delete invalidRecord.last_modified_t;
+    writeFileSync(
+      invalidModifiedFixturePath,
+      `${JSON.stringify(validRecord)}\n${JSON.stringify(invalidRecord)}\n`,
+      { flag: 'wx' },
+    );
+    const invalidModifiedOutputPath = resolve(outDir, 'invalid-modified-obf.json');
+    const invalidModifiedResult = runImporter([
+      obfImporterPath,
+      '--fixture',
+      invalidModifiedFixturePath,
+      invalidModifiedOutputPath,
+    ]);
+    const invalidModifiedManifest =
+      invalidModifiedResult.status === 0
+        ? JSON.parse(readFileSync(invalidModifiedOutputPath, 'utf8'))
+        : null;
+    if (
+      invalidModifiedResult.status !== 0 ||
+      invalidModifiedManifest?.totals?.acceptedProducts !== 1 ||
+      invalidModifiedManifest?.totals?.rejectedRecords !== 1 ||
+      invalidModifiedManifest?.rejected?.[0]?.reason !==
+        'missing_or_invalid_source_record_modified_date'
+    ) {
+      failed = true;
+      console.error('FAIL OBF transform did not reject a missing source record modified date.');
+      console.error(output(invalidModifiedResult));
+    } else {
+      console.log('OK OBF transform rejects a missing source record modified date');
+    }
+  } finally {
+    rmSync(invalidModifiedFixturePath, { force: true });
+  }
+
   failed =
     !expectFailure({
       name: 'OBF import without an explicit mode fails closed',
@@ -387,6 +430,25 @@ try {
         '--candidate',
         duplicateCosingPath,
         resolve(outDir, 'duplicate-cosing-output.json'),
+      ],
+      pattern: /duplicate INCI name/,
+    }) || failed;
+
+  const normalizedDuplicateCosingPath = resolve(outDir, 'normalized-duplicate-cosing.csv');
+  writeFileSync(
+    normalizedDuplicateCosingPath,
+    `${cosingLines[0]}\nALPHA BETA,Alpha Beta,100-00-1,200-000-1,,,COSING-A,active,EU_2025_1175\nALPHA\u00a0\u2009BETA,Alpha Beta Variant,100-00-2,200-000-2,,,COSING-B,active,EU_2025_1175\n`,
+    { flag: 'wx' },
+  );
+  failed =
+    !expectFailure({
+      name: 'CosIng transform uses shared Unicode whitespace collision identity',
+      message: 'Unicode-equivalent CosIng INCI identifiers were accepted.',
+      args: [
+        cosingImporterPath,
+        '--candidate',
+        normalizedDuplicateCosingPath,
+        resolve(outDir, 'normalized-duplicate-cosing-output.json'),
       ],
       pattern: /duplicate INCI name/,
     }) || failed;

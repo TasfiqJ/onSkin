@@ -838,7 +838,7 @@
       "id": "DB-09",
       "status": "in_progress",
       "blockedBy": ["DB-06", "DB-07", "DB-08", "ACCT-03"],
-      "nextAction": "The 0055 local gate now passes two clean resets, exact 54-migration history through 0055, the full structural suite plus 114/114 Apple lifecycle pgTAP, database lint, an empty migration shadow diff, and temporary type generation. The expected inventory is 80 RLS tables and 57 private tables (40 directly queryable + 17 sealed) with exact-session Apple access controls. Run the exhaustive 57-private-table matrix against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, stale Apple JWT/session cases, and configured Turnstile behavior; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
+      "nextAction": "The local source gate now covers 56 migrations through 0057, with 80 RLS tables and 58 private tables classified as 38 directly queryable plus 20 sealed. Catalog sources, lifecycle ledgers, exact-session Apple state, and other sealed authorities cannot be reached directly by API roles. Run the exhaustive 58-private-table matrix against reviewed staging and production with permanent users, real signed-anonymous Auth, an unauthenticated publishable-key client, stale Apple JWT/session cases, configured Turnstile behavior, and the CAT-02 catalog RPC/serving boundary; retain redacted clean-revision artifacts and prove cleanup leaves no synthetic rows, users, objects, or sealed lifecycle artifacts.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "scripts/phase9/live-supabase-adversarial.mjs",
@@ -856,6 +856,8 @@
         "supabase/migrations/20260715000054_health_consent_withdrawal_lifecycle.sql",
         "supabase/migrations/20260715000055_apple_auth_lifecycle.sql",
         "supabase/tests/database/apple_auth_lifecycle.test.sql",
+        "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+        "supabase/tests/database/catalog_import_lifecycle.test.sql",
         "docs/phase-9/apple-auth-lifecycle-operations-runbook.md",
         "docs/phase-9/generated/live-supabase-adversarial.json"
       ]
@@ -864,7 +866,7 @@
       "id": "DB-10",
       "status": "in_progress",
       "blockedBy": ["DB-09", "ACCT-03"],
-      "nextAction": "Local source composes the migration-0052 publication lease, migration-0054 non-destructive health withdrawal, and migration-0055 Sign in with Apple authority. The 0055 replay gate passes two clean resets, exact 54/0055 history, the full structural suite plus 114/114 Apple pgTAP, lint, empty shadow diff, temporary types, 20/20 focused event/lifecycle Edge tests, and the 47-test Apple auth work lane. The Apple candidate implements nonce/state and one-use code capture, owner/subject/client-bound encrypted refresh tokens, daily validation, signed terminal events, no-retry terminal-event reconciliation before code exchange, native invalidation, deletion-vault reuse, and exact-session denial across RLS, photo Storage, authenticated Edge functions, writes, and direct authenticated helper RPCs. Every successful daily validation atomically advances the current subject digest and freshly sealed vault envelope, but dormant, deferred, or failing rows do not advance from configuration alone. Prove the complete candidate end to end in reviewed staging and production: every publication path fenced, stale JWT/session denial, existing-Apple-account recapture/mandatory-version cutover, primary-App-ID event delivery, one-minute Vault/Cron continuity, key rotation/rollback with zero-row or reauth evidence, multi-device drain, deletion and health workers, Storage/backup, provider interruption/recreation, post-delete denial, 60-second export URL expiry, and terminal fresh reconsent. Obtain the documented old/tampered-client control, close cross-owner community handles and retention decisions, and complete physical-iPhone/TestFlight and professional-review matrices. Do not describe the end-to-end lifecycle as race-free or launch-ready before those gates pass.",
+      "nextAction": "Local source composes the migration-0052 publication lease, migration-0054 non-destructive health withdrawal, migration-0055 Sign in with Apple authority, migration-0056 catalog serving gate, and migration-0057 transactional catalog lifecycle. The Apple candidate implements nonce/state and one-use code capture, owner/subject/client-bound encrypted refresh tokens, daily validation, signed terminal events, no-retry terminal-event reconciliation before code exchange, native invalidation, deletion-vault reuse, and exact-session denial. CAT-02 adds sealed provenance, immutable projection lineage, dependency-closed serving, and non-destructive rollback. Prove the complete candidate end to end in reviewed staging and production: every publication path fenced; stale JWT/session denial; Apple recapture, signed events, Cron, key rotation and deletion; CAT-02 two-connection collision, replay, correction, source-withdrawal, promotion and rollback races; Storage/backup; provider interruption/recreation; post-delete denial; export expiry; and terminal fresh reconsent. Obtain the old/tampered-client control and complete physical-iPhone/TestFlight and professional-review matrices. Do not describe any end-to-end lifecycle as race-free or launch-ready before those gates pass.",
       "evidenceRefs": [
         "docs/hugeToDo/DB-01-11-GAP-MATRIX-2026-07-13.md",
         "supabase/functions/account-deletion",
@@ -1075,10 +1077,18 @@
     },
     {
       "id": "CAT-02",
-      "status": "not_started",
+      "status": "in_progress",
       "blockedBy": ["CAT-01"],
-      "nextAction": "Complete and capture acceptance evidence: Build reviewed import, normalization, provenance, dedupe, QA, correction, and rollback pipelines",
-      "evidenceRefs": []
+      "nextAction": "The local source candidate now provides strict offline envelope/receipt completion tooling and migration 0057 for signed provenance, bounded staging, Unicode-aware normalization/dedupe, receipt-bound dual review, transactional promotion, immutable correction lineage, dependency-closed serving, and non-destructive rollback. Obtain the real CAT-01 approvals, production artifacts, reviewer keys/signatures, and zero-warning QA; deploy 0057 to reviewed staging; then execute the documented two-connection retry, collision, correction, source-withdrawal, promotion, rollback, scale, and serving-path drill before any production batch.",
+      "evidenceRefs": [
+        "docs/phase-4/catalog-import-promotion-runbook.md",
+        "scripts/phase4/catalog-promotion-contract.mjs",
+        "scripts/phase4/catalog-promotion-contract.test.mjs",
+        "scripts/phase4/build-catalog-stage-envelope.mjs",
+        "scripts/phase4/complete-catalog-database-receipts.mjs",
+        "supabase/migrations/20260717000057_catalog_import_lifecycle.sql",
+        "supabase/tests/database/catalog_import_lifecycle.test.sql"
+      ]
     },
     {
       "id": "CAT-03",

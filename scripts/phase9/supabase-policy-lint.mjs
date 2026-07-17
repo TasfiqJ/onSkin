@@ -54,6 +54,7 @@ const serviceCallableDefiners = new Set([
   'apply_apple_auth_server_event(text, text, text[], text[], text, text, text, timestamptz, text)',
   'begin_account_deletion(uuid, uuid, text, text, timestamptz, bytea, bytea, bytea)',
   'begin_apple_auth_capture(uuid, uuid, uuid, text, text[], text[], text, text)',
+  'begin_catalog_import(text, text, text, date, text, text, text, text, jsonb, text, text, text, text, text, text, text, integer, integer, integer, text)',
   'claim_due_health_consent_withdrawals(text, integer)',
   'claim_due_health_dependent_consent_withdrawals(text, integer)',
   'claim_health_consent_withdrawal_for_owner(uuid, uuid, text)',
@@ -77,6 +78,7 @@ const serviceCallableDefiners = new Set([
   'establish_revenuecat_deletion_identity_barrier(uuid, text, smallint, text[], text[], timestamptz)',
   'expire_app_granted_reverse_trials()',
   'finalize_account_deletion(uuid, text, smallint, timestamptz)',
+  'finalize_catalog_import(uuid, text, integer)',
   'fail_apple_auth_capture(uuid, uuid, text)',
   'get_account_deletion_barrier_state(uuid, uuid)',
   'get_account_deletion_receipt(text, smallint)',
@@ -111,9 +113,11 @@ const serviceCallableDefiners = new Set([
   'review_catalog_correction(uuid, bigint, text, text, text)',
   'scrub_account_service_rows(uuid)',
   'search_catalog_products(text, integer)',
+  'stage_catalog_import_chunk(uuid, text, integer, integer, jsonb)',
   'submit_catalog_correction(uuid, bigint, uuid, text, text, text, jsonb, jsonb)',
   'mark_apple_auth_capture_exchange_started(uuid, uuid, uuid)',
   'update_account_deletion_step_payload(uuid, text, text, bytea)',
+  'verify_catalog_import(uuid, text, text, text)',
 ]);
 
 for (const [allowlistName, allowlist] of [

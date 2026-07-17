@@ -31,6 +31,11 @@ Implemented locally:
 - Product search, barcode lookup, and correction-report Edge Function scaffolds
   plus migration `0056`'s shared fail-closed serving gate for positive source,
   review, quality, eligibility, mapping, and live-correction evidence.
+- CAT-02's local content-addressed stage-envelope contract and migration
+  `0057`: sealed idempotent staging, owner-only review/promotion/rollback,
+  exact-key conflict handling, immutable projection lineage, direct API-role
+  catalog-DML denial, positive ingredient/reference read gates, and
+  non-destructive batch retirement.
 - Mobile shelf source/quality disclosure, search fallback, parser-backed OCR, and report issue flow.
 - Explicit exclusion of external contribution from the launch architecture;
   reports remain in the first-party correction operation, and restoring a
@@ -49,6 +54,9 @@ The implementation intentionally keeps production catalog use blocked until:
   approvals, and signed exact EAS/archive/App Store evidence exist for the same
   release;
 - curated launch batch is built from real approved sources;
+- exact row-review overlays and dedicated CAT-08 operator identities exist;
+- the two-session hosted CAT-02 staging/promotion/serialization/rollback drill
+  passes with complete redacted receipts and zero projection drift;
 - beta coverage report exists;
 - clinical/legal/cosmetic-chemist review clears product guidance;
 - native barcode/OCR camera work is verified on devices.
@@ -79,10 +87,13 @@ The unresolved commercial risk is coverage. A polished catalog architecture does
   checked-in pending templates alone cannot authorize import.
 - Exact OBF/CosIng candidate hashes, source bytes, approvals, production
   transforms, and zero-warning source-specific QA reports are retained.
-- First curated batch imported.
+- First curated batch reviewed and promoted through CAT-02; no fixture,
+  candidate, direct table write, or unresolved conflict is present.
 - Import QA report has zero blockers.
 - Product recommendations use only eligible products.
-- Hosted database evidence through migration `0056` proves barcode, search,
-  recommendation, and direct reads fail closed for every held source/product.
+- Hosted database evidence through migration `0057` proves the import
+  lifecycle, rollback/reference preservation, and barcode, search,
+  recommendation, product, ingredient, synonym, and child reads fail closed
+  for every held source/record.
 - Closed beta coverage meets threshold.
 - App copy and attribution approved under final brand.

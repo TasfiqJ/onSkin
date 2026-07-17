@@ -71,7 +71,8 @@ Migration `20260717000056_catalog_serving_eligibility_gate.sql` makes barcode
 and search use service-role-only RPCs over a shared positive eligibility
 boundary. It hides sources without production/legal approval and products that
 are inactive, unreviewed, below `usable`, recommendation-ineligible, or subject
-to unresolved/live open corrections. Barcode mappings also require review;
+to an operator-reviewed `triaged`/`accepted` correction hold. Untrusted open
+intake remains owner-scoped. Barcode mappings also require review;
 direct authenticated reads cannot bypass source withdrawal. Every held reason
 uses the same no-match/manual fallback.
 
@@ -122,7 +123,9 @@ cannot guarantee Apple or legal acceptance.
   EAS/archive/App Store build evidence all validate for the same release.
 - Release-network evidence proves OBF is not a runtime recipient and no user correction is published externally. Any future proposal is out of this launch scope and must begin as a new privacy/legal/architecture decision rather than enabling existing flags.
 - QA report proves category filtering, barcode quality, parser confidence, and unresolved-correction gates.
-- Hosted migration `0056` evidence proves ineligible sources/products cannot be
-  returned by barcode, search, recommendation, or direct authenticated reads.
+- Hosted migrations `0056`/`0057` evidence proves ineligible sources/products
+  cannot be returned by barcode, search, recommendation, or direct
+  authenticated reads, and every promoted OBF projection retains exact batch
+  lineage and non-destructive rollback evidence.
 - Attribution and report-issue UI are visible before product-level recommendations use OBF-derived rows.
 - Counsel records whether the OBF component is a derivative or collective database and approves the resulting attribution, share-alike, and offer-of-data operations.

@@ -2287,7 +2287,10 @@ async function main() {
     await runCheck('service-only private table positive controls', async () => {
       const absentUuid = '00000000-0000-0000-0000-000000000000';
       const absentDigest = '0'.repeat(64);
+      registerSealedPrivateTableProbe('catalog_sources', 'id', absentUuid);
       registerSealedPrivateTableProbe('health_processing_states', 'user_id', absentUuid);
+      registerSealedPrivateTableProbe('catalog_import_batches', 'id', absentUuid);
+      registerSealedPrivateTableProbe('catalog_quality_reports', 'id', absentUuid);
       registerSealedPrivateTableProbe('health_consent_withdrawal_operations', 'id', absentUuid);
       registerSealedPrivateTableProbe(
         'health_consent_withdrawal_steps',
@@ -2360,33 +2363,6 @@ async function main() {
       trackServiceCleanup('obf_contribution_queue', 'id', contribution.id);
       registerPrivateTableProbe('obf_contribution_queue', 'id', contribution.id);
 
-      const catalogSource = await admin
-        .from('catalog_sources')
-        .select('id')
-        .eq('source_key', 'curated')
-        .single();
-      if (catalogSource.error) throw catalogSource.error;
-      const importBatch = await insertOne(admin, 'catalog_import_batches', {
-        source_id: catalogSource.data.id,
-        batch_type: 'manual_review',
-        snapshot_date: isoDate(-30),
-        manifest: { phase9: true },
-        status: 'blocked',
-        created_by: 'phase9-live-adversarial',
-      });
-      trackServiceCleanup('catalog_import_batches', 'id', importBatch.id);
-      registerPrivateTableProbe('catalog_import_batches', 'id', importBatch.id);
-
-      const qualityReport = await insertOne(admin, 'catalog_quality_reports', {
-        batch_id: importBatch.id,
-        report_type: 'phase9_live_adversarial',
-        metrics: { phase9: true },
-        blocker_count: 1,
-        warning_count: 0,
-      });
-      trackServiceCleanup('catalog_quality_reports', 'id', qualityReport.id);
-      registerPrivateTableProbe('catalog_quality_reports', 'id', qualityReport.id);
-
       const waitlistSignup = await insertOne(admin, 'waitlist_signups', {
         email: `phase9-${randomUUID()}@example.invalid`,
         source: 'phase9-live-adversarial',
@@ -2415,7 +2391,7 @@ async function main() {
       registerPrivateTableProbe('edge_rate_limits', 'key_hash', rateLimit.key_hash);
     });
 
-    await runCheck('all 57 private tables have access-control probes', async () => {
+    await runCheck('all 58 private tables have access-control probes', async () => {
       const registeredTables = [...privateTableProbes.keys()].sort();
       const expectedTables = [...PRIVATE_PUBLIC_TABLES].sort();
       assert(

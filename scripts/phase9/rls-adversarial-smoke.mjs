@@ -61,10 +61,13 @@ test('canonical table inventory is exhaustive and duplicate-free', () => {
       (table) => !HEALTH_PURPOSE_READ_FENCED_TABLES.includes(table),
     ),
   );
-  assert.equal(SERVICE_ONLY_PRIVATE_TABLES.length, 10);
-  assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 17);
+  assert.equal(SERVICE_ONLY_PRIVATE_TABLES.length, 8);
+  assert.equal(SEALED_SERVICE_PRIVATE_TABLES.length, 20);
   assert.deepEqual(
     [
+      'catalog_sources',
+      'catalog_import_batches',
+      'catalog_quality_reports',
       'health_consent_copy_registry',
       'health_consent_copy_review_events',
       'health_dependent_consent_operations',
@@ -81,10 +84,10 @@ test('canonical table inventory is exhaustive and duplicate-free', () => {
     ...SERVICE_ONLY_PRIVATE_TABLES,
     ...SEALED_SERVICE_PRIVATE_TABLES,
   ]);
-  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 57);
+  assert.equal(new Set(PRIVATE_PUBLIC_TABLES).size, 58);
   assert.equal(
     PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_SERVICE_PRIVATE_TABLES.includes(table)).length,
-    40,
+    38,
   );
   assert.deepEqual(
     tableClassificationIssues({

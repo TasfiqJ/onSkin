@@ -5,6 +5,8 @@ import { relative, resolve } from 'node:path';
 import { command, gitStatusExcludingGeneratedEvidence } from '../phase9/lib.mjs';
 import { launchContractSnapshot, loadLaunchContract } from '../launch/contract.mjs';
 import {
+  CATALOG_QA_LAUNCH_CLEAR_REASON,
+  CATALOG_QA_SOURCE_HASH_PATHS,
   CATALOG_TRANSFORMED_PAYLOAD_CONTRACT,
   assertSafeOutputPath,
   canonicalJson,
@@ -15,6 +17,7 @@ import {
   loadCatalogReleaseScope,
   loadCatalogSourcePolicy,
   loadCatalogSourceTrustRegistry,
+  normalizeCatalogCosingKey,
   parseCatalogControlJson,
   parseCatalogEvidenceJson,
   sha256,
@@ -38,52 +41,6 @@ const mdOutputPath = jsonOutputPath.replace(/\.json$/i, '.md');
 if (mdOutputPath === jsonOutputPath) {
   throw new Error('Catalog QA JSON output path must end in .json.');
 }
-
-const requiredSourceHashPaths = [
-  'package.json',
-  'package-lock.json',
-  'apps/mobile/app.config.js',
-  'apps/mobile/app.base.json',
-  'apps/mobile/eas.json',
-  'apps/mobile/package.json',
-  'apps/mobile/phase3-review-evidence.js',
-  'docs/hugeToDo/launch-contract.json',
-  'scripts/launch/contract.mjs',
-  'scripts/phase4/catalog-qa-report.mjs',
-  'scripts/phase4/build-source-worklist.mjs',
-  'scripts/phase4/beta-coverage-report.mjs',
-  'scripts/phase4/beta-coverage-report-smoke.mjs',
-  'scripts/phase4/import-obf-snapshot.mjs',
-  'scripts/phase4/import-cosing-dictionary.mjs',
-  'scripts/phase4/import-fixture-smoke.mjs',
-  'scripts/phase4/check-source-env.mjs',
-  'scripts/phase4/check-source-env-smoke.mjs',
-  'scripts/phase4/catalog-qa-report-smoke.mjs',
-  'scripts/phase4/catalog-source-policy-audit.mjs',
-  'scripts/phase4/source-policy.mjs',
-  'scripts/phase4/source-policy.test.mjs',
-  'supabase/migrations/20260614000026_phase4_catalog.sql',
-  'supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql',
-  'supabase/functions/catalog-lookup/index.ts',
-  'supabase/functions/catalog-search/index.ts',
-  'supabase/functions/catalog-report/index.ts',
-  'supabase/functions/catalog-report/privacy.ts',
-  'supabase/functions/catalog-report/privacy.test.ts',
-  'supabase/functions/deno.lock',
-  'scripts/phase9/lib.mjs',
-  'docs/FOR_TAS_TO_DO.md',
-  'docs/phase-4/beta-coverage-report.md',
-  'docs/phase-4/catalog-release-scope.json',
-  'docs/phase-4/catalog-release-build-evidence.json',
-  'docs/phase-4/catalog-source-memo-cosing.md',
-  'docs/phase-4/catalog-source-memo-open-beauty-facts.md',
-  'docs/phase-4/catalog-source-policy.json',
-  'docs/phase-4/catalog-source-trust-registry.json',
-  'docs/phase-4/obf-source-approval.template.json',
-  'docs/phase-4/cosing-source-approval.template.json',
-  'docs/phase-4/odbl-compliance-memo.md',
-  'docs/phase-4/phase-4-exit-review.md',
-];
 
 const manifestBytes = readFileSync(inputPath);
 const manifest = parseCatalogEvidenceJson(manifestBytes, 'Catalog transform manifest');
@@ -139,6 +96,22 @@ function duplicateValues(values) {
     seen.add(value);
   }
   return [...duplicates];
+}
+
+function isCalendarDate(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/u.test(value)) return false;
+  const parsed = Date.parse(`${value}T00:00:00.000Z`);
+  return !Number.isNaN(parsed) && new Date(parsed).toISOString().slice(0, 10) === value;
+}
+
+function isBoundedText(value, max) {
+  return (
+    typeof value === 'string' &&
+    value.length >= 1 &&
+    value.length <= max &&
+    value === value.trim() &&
+    !/[\u0000-\u001f\u007f]/u.test(value)
+  );
 }
 
 function decodeEvidenceBase64(value, label) {
@@ -492,11 +465,17 @@ if (manifest.source === 'open_beauty_facts') {
       typeof product !== 'object' ||
       !exactKeys(product, allowedKeys) ||
       !/^\d{8,14}$/.test(product.barcode ?? '') ||
-      typeof product.name !== 'string' ||
+      !isBoundedText(product.name, 200) ||
+      (product.brand !== null && !isBoundedText(product.brand, 300)) ||
+      (product.category !== null && !isBoundedText(product.category, 100)) ||
+      (product.ingredientsText !== null && !isBoundedText(product.ingredientsText, 20_000)) ||
       product.source !== 'open_beauty_facts' ||
       product.sourceComponentId !== contract.componentId ||
       product.sourceRef !== product.barcode ||
       product.sourceUrl !== `https://world.openbeautyfacts.org/product/${product.barcode}` ||
+      !isCalendarDate(product.sourceRecordModifiedDate) ||
+      (isCalendarDate(manifest.sourceSnapshot?.date) &&
+        product.sourceRecordModifiedDate > manifest.sourceSnapshot.date) ||
       product.sourceArtifactSha256 !== manifest.inputSha256 ||
       product.sourceSnapshotDate !== manifest.sourceSnapshot?.date ||
       !['limited', 'unverified'].includes(product.qualityGrade) ||
@@ -542,13 +521,13 @@ if (manifest.source === 'open_beauty_facts') {
     [
       'INCI names',
       ingredients.map((value) =>
-        typeof value?.inciName === 'string' ? value.inciName.normalize('NFKC').toUpperCase() : null,
+        typeof value?.inciName === 'string' ? normalizeCatalogCosingKey(value.inciName) : null,
       ),
     ],
     [
       'CosIng references',
       ingredients.map((value) =>
-        typeof value?.sourceRef === 'string' ? value.sourceRef.toUpperCase() : null,
+        typeof value?.sourceRef === 'string' ? normalizeCatalogCosingKey(value.sourceRef) : null,
       ),
     ],
     ['CAS numbers', ingredients.map((value) => value?.casNumber)],
@@ -563,16 +542,23 @@ if (manifest.source === 'open_beauty_facts') {
   provenanceDrift = ingredients.filter((ingredient) => {
     const synonymsValid =
       Array.isArray(ingredient?.synonyms) &&
-      ingredient.synonyms.every((value) => typeof value === 'string');
+      ingredient.synonyms.every((value) => isBoundedText(value, 300));
     const synonymKeys = synonymsValid
-      ? ingredient.synonyms.map((value) => value.normalize('NFKC').toUpperCase())
+      ? ingredient.synonyms.map((value) => normalizeCatalogCosingKey(value))
       : [];
     return (
       !ingredient ||
       typeof ingredient !== 'object' ||
       !exactKeys(ingredient, allowedKeys) ||
-      typeof ingredient.inciName !== 'string' ||
-      typeof ingredient.displayName !== 'string' ||
+      !isBoundedText(ingredient.inciName, 300) ||
+      !isBoundedText(ingredient.displayName, 300) ||
+      (ingredient.casNumber !== null &&
+        (typeof ingredient.casNumber !== 'string' ||
+          !/^\d{2,7}-\d{2}-\d$/u.test(ingredient.casNumber))) ||
+      (ingredient.ecNumber !== null &&
+        (typeof ingredient.ecNumber !== 'string' ||
+          !/^\d{3}-\d{3}-\d$/u.test(ingredient.ecNumber))) ||
+      (ingredient.annexStatus !== null && !isBoundedText(ingredient.annexStatus, 500)) ||
       !/^[A-Za-z0-9][A-Za-z0-9._:/-]{0,199}$/.test(ingredient.sourceRef ?? '') ||
       ingredient.sourceRecordStatus !== 'active' ||
       ingredient.glossaryDecision !== policySource.requiredGlossaryDecision ||
@@ -584,7 +570,7 @@ if (manifest.source === 'open_beauty_facts') {
       !synonymsValid ||
       ingredient.synonyms.length > policySource.transformLimits.maxSynonymsPerRecord ||
       new Set(synonymKeys).size !== synonymKeys.length ||
-      synonymKeys.includes(ingredient.inciName.normalize('NFKC').toUpperCase())
+      synonymKeys.includes(normalizeCatalogCosingKey(ingredient.inciName))
     );
   });
   imageFields = ingredients.flatMap((ingredient, index) =>
@@ -649,7 +635,9 @@ const reportOutputPaths = [safeJsonOutputPath, safeMarkdownOutputPath].map((path
   relative(root, path).replace(/\\/g, '/'),
 );
 const inputArtifact = hashAbsolute(inputPath);
-const sourceHashes = requiredSourceHashPaths.map((path) => hashAbsolute(resolve(root, path), path));
+const sourceHashes = CATALOG_QA_SOURCE_HASH_PATHS.map((path) =>
+  hashAbsolute(resolve(root, path), path),
+);
 for (const sourceHash of sourceHashes) {
   if (!sourceHash.exists) blockers.push(`Missing source hash input ${sourceHash.path}.`);
 }
@@ -669,8 +657,6 @@ if (gitStatus.length > 0) {
 }
 
 const localQaClear = blockers.length === 0 && warnings.length === 0;
-const launchClearReason =
-  'No. Source-transform QA is only one gate; launch still requires final source identity/legal evidence, curated record review, beta coverage, signed binary/device evidence, deployment, and named signoff.';
 const report = {
   generatedAt: new Date().toISOString(),
   launchContract: launchContractSnapshot(launchContract),
@@ -702,7 +688,7 @@ const report = {
   warnings: [...new Set(warnings)],
   localQaClear,
   launchClear: false,
-  launchClearReason,
+  launchClearReason: CATALOG_QA_LAUNCH_CLEAR_REASON,
 };
 
 const markdownRows = sourceHashes

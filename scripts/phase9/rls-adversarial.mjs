@@ -79,29 +79,29 @@ block(
 );
 block(
   errors,
-  SERVICE_ONLY_PRIVATE_TABLES.length === 10,
-  `Service-only private-table inventory must contain 10 tables; found ${SERVICE_ONLY_PRIVATE_TABLES.length}.`,
+  SERVICE_ONLY_PRIVATE_TABLES.length === 8,
+  `Service-only private-table inventory must contain 8 tables; found ${SERVICE_ONLY_PRIVATE_TABLES.length}.`,
 );
 block(
   errors,
-  SEALED_SERVICE_PRIVATE_TABLES.length === 17,
-  `Sealed service-only private-table inventory must contain 17 tables; found ${SEALED_SERVICE_PRIVATE_TABLES.length}.`,
+  SEALED_SERVICE_PRIVATE_TABLES.length === 20,
+  `Sealed service-only private-table inventory must contain 20 tables; found ${SEALED_SERVICE_PRIVATE_TABLES.length}.`,
 );
 block(
   errors,
-  AUTHENTICATED_CATALOG_TABLES.length === 23,
-  `Authenticated catalog/editorial inventory must contain 23 tables; found ${AUTHENTICATED_CATALOG_TABLES.length}.`,
+  AUTHENTICATED_CATALOG_TABLES.length === 22,
+  `Authenticated catalog/editorial inventory must contain 22 tables; found ${AUTHENTICATED_CATALOG_TABLES.length}.`,
 );
 block(
   errors,
-  PRIVATE_PUBLIC_TABLES.length === 57,
-  `Combined private-table inventory must contain 57 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
+  PRIVATE_PUBLIC_TABLES.length === 58,
+  `Combined private-table inventory must contain 58 tables; found ${PRIVATE_PUBLIC_TABLES.length}.`,
 );
 block(
   errors,
-  PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_SERVICE_PRIVATE_TABLES.includes(table))
-    .length === 40,
-  'Directly queryable private-table inventory must contain 40 tables.',
+  PRIVATE_PUBLIC_TABLES.filter((table) => !SEALED_SERVICE_PRIVATE_TABLES.includes(table)).length ===
+    38,
+  'Directly queryable private-table inventory must contain 38 tables.',
 );
 
 for (const table of SEALED_SERVICE_PRIVATE_TABLES) {
@@ -181,8 +181,6 @@ block(
 );
 
 const serviceOnlyExportExclusions = new Set([
-  'catalog_import_batches',
-  'catalog_quality_reports',
   'community_moderation_events',
   'waitlist_signups',
   'growth_events',
@@ -461,7 +459,7 @@ block(
 );
 
 const requiredLiveHarnessChecks = [
-  'all 57 private tables have access-control probes',
+  'all 58 private tables have access-control probes',
   'routine conflict swapped canonical pair',
   'routine conflict duplicate canonical identity',
   'Shelf provenance matrix',

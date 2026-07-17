@@ -12,6 +12,7 @@ import {
   catalogTransformerDescriptor,
   loadAndValidateProductionApproval,
   loadCatalogSourcePolicy,
+  normalizeCatalogCosingKey,
   parseImportArgs,
   writeJsonAtomically,
 } from './source-policy.mjs';
@@ -161,7 +162,12 @@ const rows = csvRows.map((values, index) => {
 });
 
 function boundedText(value, label, { max = 300, required = false } = {}) {
-  if (typeof value !== 'string' || /[\u0000-\u001f\u007f]/.test(value) || value.length > max) {
+  if (
+    typeof value !== 'string' ||
+    /[\u0000-\u001f\u007f]/.test(value) ||
+    value.length > max ||
+    value !== value.trim()
+  ) {
     throw new Error(`${label} is invalid or exceeds ${max} characters.`);
   }
   if (required && value.length === 0) throw new Error(`${label} is required.`);
@@ -169,7 +175,7 @@ function boundedText(value, label, { max = 300, required = false } = {}) {
 }
 
 function duplicateKey(value) {
-  return value.normalize('NFKC').toLocaleUpperCase('en-US');
+  return normalizeCatalogCosingKey(value);
 }
 
 const ingredients = rows.map((row, index) => {

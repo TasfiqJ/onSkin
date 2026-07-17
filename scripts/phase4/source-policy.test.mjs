@@ -28,6 +28,7 @@ import {
   loadCatalogReleaseScope,
   loadCatalogSourcePolicy,
   loadCatalogSourceTrustRegistry,
+  normalizeCatalogCosingKey,
   parseCatalogControlJson,
   parseImportArgs,
   releaseBuildEvidenceSigningPayload,
@@ -47,6 +48,17 @@ const { policy } = policyBundle;
 const now = new Date('2026-07-16T13:00:00.000Z');
 const digest = 'a'.repeat(64);
 const evidenceDigest = 'e'.repeat(64);
+
+test('CosIng authority normalization shares exact NFKC whitespace and uppercase semantics', () => {
+  assert.equal(normalizeCatalogCosingKey(' A\u00a0\u2009B\ufeff '), 'A B');
+  assert.equal(
+    normalizeCatalogCosingKey('\uff27\uff2c\uff39\uff23\uff25\uff32\uff29\uff2e'),
+    'GLYCERIN',
+  );
+  assert.equal(normalizeCatalogCosingKey('A\u030a'), normalizeCatalogCosingKey('\u00c5'));
+  assert.equal(normalizeCatalogCosingKey('ß'), 'SS');
+  assert.throws(() => normalizeCatalogCosingKey(null), /requires text/u);
+});
 
 function evidence(recordId) {
   return {

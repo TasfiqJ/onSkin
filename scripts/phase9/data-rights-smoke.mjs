@@ -318,10 +318,19 @@ block(
 );
 block(
   errors,
-  JSON.stringify([...new Set(serviceOnlyDenylist)].sort()) ===
-    JSON.stringify([...SERVICE_ONLY_PRIVATE_TABLES].sort()) &&
-    serviceOnlyDenylist.length === SERVICE_ONLY_PRIVATE_TABLES.length,
-  'Runtime export denylist must exactly match the canonical service-only private-table inventory.',
+  (() => {
+    const expectedExportDenylist = [
+      ...SERVICE_ONLY_PRIVATE_TABLES,
+      'catalog_import_batches',
+      'catalog_quality_reports',
+    ].sort();
+    return (
+      JSON.stringify([...new Set(serviceOnlyDenylist)].sort()) ===
+        JSON.stringify(expectedExportDenylist) &&
+      serviceOnlyDenylist.length === expectedExportDenylist.length
+    );
+  })(),
+  'Runtime export denylist must exactly cover direct service-only tables and the two sealed global catalog ledgers.',
 );
 block(
   errors,

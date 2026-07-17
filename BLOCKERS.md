@@ -399,14 +399,16 @@ replacement until counsel and store/domain reservation evidence are attached.
 
 Status: `source-hardened / live-blocked`
 
-The repo contains 54 migrations through `20260715000055`, targeted hand-maintained
+The repo contains 56 migrations through `20260717000057`, targeted hand-maintained
 RPC types with DB-08 still open, 16 deploy-by-default Edge Functions, a staging
-deploy wrapper, and an exhaustive live-project RLS harness. The current local
-gate passes two clean migration-plus-seed resets, exact 54-migration history,
-the full structural pgTAP suite plus 114/114 Apple lifecycle assertions,
-error-level schema lint, an empty migration-shadow drift check, and temporary
-type generation. The migration-derived inventory is 80 RLS tables and 57
-private tables: 40 directly queryable plus 17 sealed.
+deploy wrapper, and an exhaustive live-project RLS harness. The migration-derived
+source inventory is 80 RLS tables and 58 private tables: 38 directly queryable
+plus 20 sealed. The last executed CAT-02 Docker baseline passed a reset and the
+then-current 35-assertion partial suite. The final source expands that contract
+to 214 statically matched assertions; a fresh 56-migration reset, the current
+pgTAP execution, error-level schema lint, migration-shadow drift check, and
+temporary type generation remain required before this revision can claim local
+database replay evidence.
 PostgreSQL 15/17 rehearsals pass for the durable deletion/publication system and
 the separate RevenueCat/app-grant entitlement authorities.
 
@@ -454,6 +456,16 @@ RPCs. The focused Apple Edge suite passes 20/20 and the complete Apple auth work
 lane passes 47 tests. This is local disposable evidence, not hosted or device
 proof.
 
+Migrations `0056` and `0057` add the catalog serving and transactional import
+boundaries. Runtime lookup/search and authenticated catalog reads require
+positive source, batch, projection, correction, quality, review, and dependency
+eligibility. Direct API-role catalog mutation is denied. The owner-only CAT-02
+lane provides signed provenance and receipt-bound review, bounded replay-safe
+staging, Unicode-aware collision detection, immutable projection lineage,
+one-transaction insert-only promotion, and non-destructive rollback. This is a
+local source candidate; no real source approval, hosted batch, concurrency
+drill, or production catalog is claimed.
+
 This is not a hosted deployment or provider proof. Full generated-type parity,
 hosted RLS/Cron/Vault/concurrency, old/tampered-client containment,
 cross-owner community-handle cleanup, Sign in with Apple deployment and
@@ -476,8 +488,8 @@ Next action:
   immediately before migration push, inside a maximum 24-hour freeze window;
 - run `scripts/phase2/deploy-supabase-staging.ps1`; it predeploys the exact
   guarded 16-function manifest, canaries the eight public-gateway functions,
-  immediately rereads the full empty-target boundary, applies all 54 migrations
-  through `0055`, redeploys the manifest, retains linked types without changing
+  immediately rereads the full empty-target boundary, applies all 56 migrations
+  through `0057`, redeploys the manifest, retains linked types without changing
   repository types, and leaves `DB06_TRAFFIC_FREEZE=frozen`;
 - release the freeze only through a separately recorded downstream live gate;
 - after DB-06 live review, complete DB-08's deliberate
@@ -486,7 +498,7 @@ Next action:
 - configure anonymous Auth and Turnstile, then run
   `npm run phase9:live-supabase-adversarial:strict` in staging and production;
 - retain clean-revision, redacted artifacts covering both permanent users, the
-  signed-anonymous user, the no-session client, all 57 private tables, exact
+  signed-anonymous user, the no-session client, all 58 private tables, exact
   database/Storage outcomes, publication/deletion concurrency, provider
   interruption/recreation, and zero cleanup residue;
 - obtain an approved old/tampered-client control and prove the source-complete
@@ -534,7 +546,7 @@ Exit criteria:
 
 ## B-SIWA-SERVER-LIFECYCLE - Sign in with Apple token and event proof
 
-Status: `launch-blocked`
+Status: `source-hardened / launch-blocked`
 
 The source now implements the complete candidate lifecycle. Native sign-in uses
 a 32-byte CSPRNG nonce/state, sends only the SHA-256 nonce to Apple, captures the
@@ -985,8 +997,11 @@ Current implementation note:
 - Mobile shelf rows now carry catalog source/quality/parse metadata, product
   detail shows source and quality, catalog search is wired through an Edge
   Function, and users can report catalog issues.
-- `scripts/phase4/*` can run a fixture import and generated QA report. The
-  fixture is not a production catalog.
+- `scripts/phase4/*` can run fixture transforms and QA, construct a strict
+  dual-signed stage envelope, and complete database-authoritative receipts.
+  Migrations `0056`/`0057` supply fail-closed serving plus transactional
+  promotion/correction/rollback with immutable lineage. Fixtures and local
+  lifecycle tests are not a production catalog or hosted race proof.
 - External contribution is excluded from the current launch architecture. The
   legacy queue/flag are inert; a future source recipient requires a new reviewed
   privacy/legal/architecture decision.
@@ -1052,7 +1067,10 @@ Exit criteria:
 - sunscreen/OTC-adjacent products have separate review and expiry handling;
 - OBF and CosIng import QA have zero blockers/warnings;
 - migration `0056` is hosted-verified and serves only positive-eligible,
-  correction-free rows from production/legal-approved sources.
+  correction-free rows from production/legal-approved sources;
+- migration `0057` passes the hosted two-connection replay, conflict,
+  correction, source-withdrawal, promotion, dependency-serving, and rollback
+  drill for the exact reviewed batch.
 
 ## B-CATALOG-COVERAGE - Beta catalog usefulness
 
@@ -1074,8 +1092,9 @@ Exit criteria:
 
 - owner-scoped reports are minimized, privacy-authorized, deletion/withdrawal
   covered, and operated to the recorded triage SLA;
-- open/triaged corrections immediately suppress affected rows from serving and
-  product-specific recommendations;
+- operator-reviewed `triaged`/`accepted` correction holds immediately suppress
+  affected rows from serving and product-specific recommendations; an
+  unreviewed report alone does not become catalog authority;
 - no lookup or report is sent to OBF, CosIng, or another source, and user-facing
   copy does not promise external contribution;
 - OBF obligations are satisfied through the counsel-approved attribution,

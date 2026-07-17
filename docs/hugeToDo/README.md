@@ -32,6 +32,10 @@ Start here:
 - [CAT-01 Pending Reviewer Trust Registry](../phase-4/catalog-source-trust-registry.json)
 - [CAT-01 Pending Release Scope](../phase-4/catalog-release-scope.json)
 - [CAT-01 Pending Release-Build Evidence](../phase-4/catalog-release-build-evidence.json)
+- [CAT-02 Catalog Import, Promotion, and Rollback Runbook](../phase-4/catalog-import-promotion-runbook.md)
+- [CAT-02 Transactional Lifecycle Migration](../../supabase/migrations/20260717000057_catalog_import_lifecycle.sql)
+- [CAT-02 Adversarial Database Contract](../../supabase/tests/database/catalog_import_lifecycle.test.sql)
+- [CAT-02 Offline Promotion Contract](../../scripts/phase4/catalog-promotion-contract.mjs)
 - [Phase 9 Sign in with Apple Lifecycle Operations Runbook](../phase-9/apple-auth-lifecycle-operations-runbook.md)
 
 Execution state and dependency artifacts in this directory are generated or
@@ -64,20 +68,31 @@ Every other trust/scope/build combination fails closed.
 
 Migration `0056` supplies the local fail-closed serving boundary: barcode and
 search share service-role-only positive eligibility rules, direct reads cannot
-bypass source withdrawal, live corrections suppress rows, and held reasons use
+bypass source withdrawal, operator-reviewed `triaged` or `accepted` correction
+holds suppress rows, and held reasons use
 the same no-match/manual fallback. Missing-product and wrong-match reports stay
 inside OnSkin's first-party correction operation; OBF/CosIng are not runtime
 recipients and the legacy contribution lane is inert. External legal/source
 decisions, cleared identity and live URLs, actual source artifacts, active
 reviewer keys, production EAS/archive/App Store evidence, hosted database
-verification, transactional CAT-02 promotion/rollback, beta coverage, device
-QA, and named signoffs remain open. These controls support accurate source and
-health-information handling under current Apple App Review, FDA cosmetics-claim,
-and FTC health-claim guidance, but cannot guarantee App Review, legal
-compliance, or revenue.
+verification, beta coverage, device QA, and named signoffs remain open.
+
+Migration `0057` and the CAT-02 offline tooling now provide a local
+source-control candidate for signed provenance, exact receipt-bound review,
+bounded staging, Unicode-aware dedupe/conflict detection, one-transaction
+promotion, dependency-closed serving, immutable correction lineage, and
+non-destructive rollback. No real OBF/CosIng batch has been approved, staged,
+promoted, or rolled back, and local single-connection evidence cannot replace
+the required hosted two-connection race/retry drill. The current 214-assertion
+pgTAP contract is statically plan-matched but still requires a fresh Docker
+reset and execution; the last executed CAT-02 baseline covered only an earlier
+35-assertion revision. These controls support
+accurate source and health-information handling under current Apple App Review,
+FDA cosmetics-claim, and FTC health-claim guidance, but cannot guarantee App
+Review, legal compliance, or revenue.
 
 DB-06 is also a source checkpoint and remains `in_progress`, blocked by
-`ACCT-03`. The fresh-only path covers 55 migrations through `0056`, all 16 Edge
+`ACCT-03`. The fresh-only path covers 56 migrations through `0057`, all 16 Edge
 functions, an active traffic/provider freeze, and an immediate pre-push reread
 of functions, public frozen responses, hosted Auth controls, migrations,
 schema, Storage, and all Cron jobs. It leaves `DB06_TRAFFIC_FREEZE=frozen` for a

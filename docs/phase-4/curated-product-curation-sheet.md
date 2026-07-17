@@ -29,11 +29,11 @@ Build the first launch catalog from real beta shelves and common U.S. products. 
 | Quality grade     | yes                            | `verified`, `usable`, `limited`, `unverified`, or `blocked`.                       |
 | Review status     | yes                            | Product recs require `reviewed`.                                                   |
 | PAO/expiry        | optional                       | Unknown stays unknown. No fake expiry.                                             |
-| Correction status | yes                            | Product recs blocked by open/triaged corrections.                                  |
+| Correction status | yes                            | Product recs blocked by operator-reviewed triaged/accepted holds.                  |
 
 ## Product Quality Labels
 
-- `verified`: reviewed source, barcode/product identity confirmed, ingredient parse high confidence, category reviewed, no open corrections.
+- `verified`: reviewed source, barcode/product identity confirmed, ingredient parse high confidence, category reviewed, and no operator-reviewed serving hold.
 - `usable`: sourced enough for shelf/routine behavior, but not ideal for public rec ranking.
 - `limited`: may be searchable/scannable, not eligible for product-specific recommendations.
 - `unverified`: fallback display only.

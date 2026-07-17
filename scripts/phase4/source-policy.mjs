@@ -41,6 +41,69 @@ export const CATALOG_TRANSFORMED_PAYLOAD_CONTRACT = Object.freeze({
     recordField: 'sourceSnapshotDate',
   }),
 });
+export const CATALOG_QA_LAUNCH_CLEAR_REASON =
+  'No. Source-transform QA is only one gate; launch still requires final source identity/legal evidence, curated record review, beta coverage, signed binary/device evidence, deployment, and named signoff.';
+export const CATALOG_QA_SOURCE_HASH_PATHS = Object.freeze([
+  '.github/workflows/quality.yml',
+  'package.json',
+  'package-lock.json',
+  'apps/mobile/app.config.js',
+  'apps/mobile/app.base.json',
+  'apps/mobile/eas.json',
+  'apps/mobile/package.json',
+  'apps/mobile/phase3-review-evidence.js',
+  'docs/hugeToDo/launch-contract.json',
+  'scripts/launch/contract.mjs',
+  'scripts/phase4/catalog-qa-report.mjs',
+  'scripts/phase4/build-source-worklist.mjs',
+  'scripts/phase4/beta-coverage-report.mjs',
+  'scripts/phase4/beta-coverage-report-smoke.mjs',
+  'scripts/phase4/import-obf-snapshot.mjs',
+  'scripts/phase4/import-cosing-dictionary.mjs',
+  'scripts/phase4/import-fixture-smoke.mjs',
+  'scripts/phase4/check-source-env.mjs',
+  'scripts/phase4/check-source-env-smoke.mjs',
+  'scripts/phase4/catalog-qa-report-smoke.mjs',
+  'scripts/phase4/catalog-promotion-contract.mjs',
+  'scripts/phase4/catalog-promotion-contract.test.mjs',
+  'scripts/phase4/build-catalog-stage-envelope.mjs',
+  'scripts/phase4/complete-catalog-database-receipts.mjs',
+  'scripts/phase4/catalog-source-policy-audit.mjs',
+  'scripts/phase4/source-policy.mjs',
+  'scripts/phase4/source-policy.test.mjs',
+  'scripts/phase2/local-supabase-contract.mjs',
+  'scripts/phase2/local-supabase-reset.mjs',
+  'scripts/phase9/lib.mjs',
+  'scripts/phase9/rls-adversarial-smoke.mjs',
+  'scripts/phase9/supabase-function-acl.test.mjs',
+  'scripts/phase9/supabase-policy-lint.mjs',
+  'supabase/migrations/20260614000026_phase4_catalog.sql',
+  'supabase/migrations/20260717000056_catalog_serving_eligibility_gate.sql',
+  'supabase/migrations/20260717000057_catalog_import_lifecycle.sql',
+  'supabase/tests/database/schema_contract.test.sql',
+  'supabase/tests/database/catalog_import_lifecycle.test.sql',
+  'supabase/functions/catalog-lookup/index.ts',
+  'supabase/functions/catalog-lookup/catalogContract.test.ts',
+  'supabase/functions/catalog-search/index.ts',
+  'supabase/functions/catalog-search/catalogContract.test.ts',
+  'supabase/functions/catalog-report/index.ts',
+  'supabase/functions/catalog-report/privacy.ts',
+  'supabase/functions/catalog-report/privacy.test.ts',
+  'supabase/functions/deno.lock',
+  'docs/FOR_TAS_TO_DO.md',
+  'docs/phase-4/beta-coverage-report.md',
+  'docs/phase-4/catalog-release-scope.json',
+  'docs/phase-4/catalog-release-build-evidence.json',
+  'docs/phase-4/catalog-source-memo-cosing.md',
+  'docs/phase-4/catalog-source-memo-open-beauty-facts.md',
+  'docs/phase-4/catalog-import-promotion-runbook.md',
+  'docs/phase-4/catalog-source-policy.json',
+  'docs/phase-4/catalog-source-trust-registry.json',
+  'docs/phase-4/obf-source-approval.template.json',
+  'docs/phase-4/cosing-source-approval.template.json',
+  'docs/phase-4/odbl-compliance-memo.md',
+  'docs/phase-4/phase-4-exit-review.md',
+]);
 
 const SHA256_PATTERN = /^[0-9a-f]{64}$/i;
 const RFC3339_UTC_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
@@ -53,6 +116,8 @@ const SUPPORT_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PLACEHOLDER_PATTERN =
   /(?:^|[\s._-])(example|placeholder|replace|sample|test|todo|tbd|unknown)(?:$|[\s._-])/i;
 const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001f\u007f]/;
+const CATALOG_CANONICAL_WHITESPACE_PATTERN =
+  /[\u0009-\u000d\u0020\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/gu;
 const RESERVED_HOST_PATTERN =
   /(?:^|\.)(?:localhost|local|invalid|test|example(?:\.com|\.org|\.net)?)$/i;
 
@@ -194,6 +259,17 @@ const SOURCE_SECURITY_INVARIANTS = {
 
 export function sha256(value) {
   return createHash('sha256').update(value).digest('hex');
+}
+
+export function normalizeCatalogCosingKey(value) {
+  if (typeof value !== 'string') {
+    throw new Error('CosIng normalization requires text.');
+  }
+  return value
+    .normalize('NFKC')
+    .replace(CATALOG_CANONICAL_WHITESPACE_PATTERN, ' ')
+    .replace(/^ +| +$/gu, '')
+    .toUpperCase();
 }
 
 function decodeUtf8(bytes, label) {
@@ -1974,25 +2050,7 @@ export function catalogTransformerDescriptor(
 export function assertCatalogSourceTreeClean(root) {
   const status = gitOutput(
     root,
-    [
-      'status',
-      '--porcelain=v1',
-      '--untracked-files=all',
-      '--',
-      'docs/phase-4/catalog-release-build-evidence.json',
-      'docs/phase-4/catalog-release-scope.json',
-      'docs/phase-4/catalog-source-policy.json',
-      'docs/phase-4/catalog-source-trust-registry.json',
-      'scripts/phase4',
-      'apps/mobile/app.config.js',
-      'apps/mobile/app.base.json',
-      'apps/mobile/eas.json',
-      'apps/mobile/package.json',
-      'apps/mobile/phase3-review-evidence.js',
-      'docs/hugeToDo/launch-contract.json',
-      'package.json',
-      'package-lock.json',
-    ],
+    ['status', '--porcelain=v1', '--untracked-files=all', '--', ...CATALOG_QA_SOURCE_HASH_PATHS],
     'Catalog source-tree cleanliness check',
   );
   if (status) {

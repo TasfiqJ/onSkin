@@ -215,21 +215,32 @@ commands above.
 ## 8. Stage, Promote, Serve, and Roll Back
 
 CAT-01 produces approved transform evidence; it does not mutate the database.
-CAT-02 must load into staging, perform dedupe/conflict and human review, and
-promote or roll back transactionally.
+CAT-02 uses the exact procedure in
+[`catalog-import-promotion-runbook.md`](./catalog-import-promotion-runbook.md):
+build a content-addressed review envelope, load it into sealed staging, perform
+exact-key dedupe/conflict and human row review, and promote or roll back in one
+locked transaction.
 
-Migration `20260717000056_catalog_serving_eligibility_gate.sql` must be present
-and pass its pgTAP contract on the exact hosted revision. Its service-only
+For OBF, accepted transform rows require an integer `last_modified_t` that
+converts to a valid calendar date no later than the signed artifact snapshot.
+Missing, malformed, or post-snapshot record dates are rejected rather than
+replaced with the import time.
+
+Migrations `20260717000056_catalog_serving_eligibility_gate.sql` and
+`20260717000057_catalog_import_lifecycle.sql` must be present and pass their
+pgTAP contracts on the exact hosted revision. The former's service-only
 barcode and search RPCs share one fail-closed eligibility boundary. A row is
 servable only when its source is production-approved and legal-approved; the
 product is active, reviewed, `verified` or `usable`, recommendation-eligible,
-and correction-free; and its barcode mapping is reviewed when barcode lookup
-is used. Live open/triaged corrections suppress serving even if a denormalized
-counter drifts. Direct authenticated reads cannot bypass source withdrawal.
+and free of an operator-reviewed correction hold; and its barcode mapping is
+reviewed when barcode lookup is used. Operator-reviewed `triaged`/`accepted`
+corrections suppress serving even if a denormalized counter drifts. Untrusted
+open intake remains owner-scoped and cannot become a cross-user denial
+mechanism. Direct authenticated reads cannot bypass source withdrawal.
 
 Unknown and held rows return the same no-match/manual fallback so internal
-review or legal status is not disclosed. Opening a first-party correction must
-suppress the row immediately. Emergency containment sets the affected source
+review or legal status is not disclosed. Operator triage converts a credible
+first-party report into a global hold. Emergency containment sets the affected source
 to not production-approved, verifies both RPCs and direct reads return no rows,
 then follows the CAT-02 batch rollback procedure. No rollback step publishes a
 user report to OBF or CosIng.
@@ -244,7 +255,7 @@ Retain together:
 - dual-signed OBF/CosIng approvals and their reviewed evidence bytes;
 - exact production transform outputs and zero-warning QA reports;
 - signed EAS/archive/App Store release-build evidence;
-- hosted migration/reset/pgTAP/type/schema-diff evidence through `0056`;
+- hosted migration/reset/pgTAP/type/schema-diff evidence through `0057`;
 - catalog promotion, rollback, correction-SLA, and named reviewer/operator
   records.
 
